@@ -1,68 +1,60 @@
+import { DASH, fantraxTime } from "@epl/core";
 import Section from "../../components/shell/Section";
-import { FACT_LABEL, QUIET_FIGURE, ROW_RULE } from "@/app/desk";
+import { IndexCell } from "../../components/league/TableCells";
+import { MUTE, PlateHead } from "../../components/league/TableHeads";
+import { BOARD, HEAD_CELL, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
 import type { PlayerMove } from "./dossier";
-import { DASH } from "@epl/core";
 
-// Every move this league has made with him: claimed, dropped, traded.
-//
-// **This is what Championship Manager's Transfer tab is for.** The game lists a
-// player's moves between clubs; ours lists his between managers, which is the
-// same question a draft league asks. The draft pick above says how he arrived and
-// this says what has happened since.
-//
-// Fantrax's own date string, verbatim — "Wed Aug 12, 2026, 9:14AM". It carries no
-// offset, so making an instant of it would mean assuming a timezone on data we do
-// not control, and every other reader of this feed prints it the same way.
-//
-// A pending move is drawn quiet and labelled. Fantrax distinguishes executed from
-// proposed and the default filter hides the proposals; carrying the flag is what
-// stops a reader mistaking one for the other.
+// Every claim, drop and trade this league has made with him, newest first, on the house table:
+// the date in CM's index block, then the move and the two sides of it.
 
-/** Fantrax's own words for what happened, in ours. Their vocabulary is theirs and
- *  this is a label at the point of drawing, never a value anything compares. */
-const KIND: Record<string, string> = {
-  claim: "Claimed",
-  drop: "Dropped",
-  trade: "Traded",
-};
+/** Fantrax's own words for what happened, in ours. */
+const KIND: Readonly<Record<string, string>> = { claim: "Claimed", drop: "Dropped", trade: "Traded" };
 
 export default function Moves({ moves }: { moves: readonly PlayerMove[] }) {
-  if (moves.length === 0) {
-    // A man nobody has moved. True of most of the pool most weeks, and it is an
-    // answer rather than a read that failed.
-    return (
-      <Section title="Business" aside="This league">
-        <p className="text-sm text-muted">No claim, drop or trade involving him.</p>
-      </Section>
-    );
-  }
-
   return (
     <Section title="Business" aside="This league">
-      <ul className="flex flex-col">
-        {moves.map(({ transaction, fromName, toName }) => (
-          <li
-            key={`${transaction.setId}-${transaction.kind}-${transaction.processedAt ?? ""}`}
-            className={`flex min-h-7 flex-wrap items-baseline gap-x-2 py-1 ${ROW_RULE} ${
-              transaction.executed ? "" : "text-faint"
-            }`}
-          >
-            <span className="text-sm font-bold">
-              {KIND[transaction.kind] ?? transaction.kind}
-            </span>
-            <span className={FACT_LABEL}>
-              {/* Null on either side is not a gap: nobody owns a free agent, and
-                  a dropped man goes to the pool rather than to a manager. */}
-              {fromName === null ? null : <>from {fromName} </>}
-              {toName === null ? null : <>to {toName}</>}
-            </span>
-            {transaction.executed ? null : (
-              <span className="text-2xs uppercase text-faint">Pending</span>
-            )}
-            <span className={QUIET_FIGURE}>{transaction.processedAt ?? DASH}</span>
-          </li>
-        ))}
-      </ul>
+      {moves.length === 0 ? (
+        <p className="text-sm text-muted">No claim, drop or trade involving him.</p>
+      ) : (
+        <div className={SCROLL}>
+          <table className={BOARD}>
+            <thead>
+              <tr className="text-2xs">
+                <th scope="col" className={HEAD_CELL}>
+                  <span className={MUTE}>Date</span>
+                </th>
+                {["Move", "From", "To"].map((head) => (
+                  <PlateHead key={head}>{head}</PlateHead>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {moves.map(({ transaction, fromName, toName }) => (
+                <tr
+                  key={`${transaction.setId}-${transaction.kind}-${transaction.processedAt ?? ""}`}
+                  className={`${ROW_RULE} ${transaction.executed ? "" : "text-faint"}`}
+                >
+                  <IndexCell className="whitespace-nowrap">
+                    {fantraxTime(transaction.processedAt ?? "")?.replace(/ \S+$/, "") ?? DASH}
+                  </IndexCell>
+                  <td className={`cm-row px-1.5 ${ROW_NAME}`}>
+                    {KIND[transaction.kind] ?? transaction.kind}
+                    {transaction.executed ? null : <span className="pl-2 text-2xs uppercase text-faint">Pending</span>}
+                  </td>
+                  <td className="px-1.5 text-sm text-muted">{side(transaction.fromTeamId, fromName)}</td>
+                  <td className="px-1.5 text-sm text-ink">{side(transaction.toTeamId, toName)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </Section>
   );
+}
+
+/** One side of a move: the pool where there is no team, a dash for a team we cannot name. */
+function side(teamId: string | null, name: string | null): string {
+  return teamId === null ? "The pool" : (name ?? DASH);
 }

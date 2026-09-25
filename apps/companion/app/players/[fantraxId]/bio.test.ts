@@ -47,29 +47,16 @@ describe("bornLine", () => {
   });
 });
 
-describe("bornLine, with where he is from", () => {
+describe("bornLine, with his country", () => {
   it("puts the country after the birth date, as CM puts the nationality", () => {
     // `cm9900/11.jpg`: `Born 2.10.79 (Age 19). English.` — one line, both facts.
-    expect(bornLine("1994-09-08", today, "Maia, Portugal")).toBe(
-      "Born 8.9.94 (Age 31). Portugal.",
-    );
-  });
-
-  it("takes the country off the end and drops the town", () => {
-    expect(bornLine("1994-09-08", today, "Santo Tirso, Portugal")).toContain("Portugal.");
-    expect(bornLine("1994-09-08", today, "Santo Tirso, Portugal")).not.toContain("Santo Tirso");
-  });
-
-  it("reads a bare country as the country", () => {
-    expect(bornLine("1994-09-08", today, "Brazil")).toBe("Born 8.9.94 (Age 31). Brazil.");
+    expect(bornLine("2000-07-21", today, "Norway")).toBe("Born 21.7.00 (Age 26). Norway.");
   });
 
   it("says only what it has", () => {
-    // Fantrax pads the personal block with empty rows, so both halves go missing
-    // independently and neither absence may invent the other.
     expect(bornLine("1994-09-08", today, "")).toBe("Born 8.9.94 (Age 31).");
     expect(bornLine("1994-09-08", today, "   ")).toBe("Born 8.9.94 (Age 31).");
-    expect(bornLine(null, today, "Maia, Portugal")).toBe("Portugal.");
+    expect(bornLine(null, today, "Portugal")).toBe("Portugal.");
     expect(bornLine(null, today, null)).toBeNull();
   });
 });

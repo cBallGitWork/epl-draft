@@ -2,15 +2,12 @@ import { columnLabel, DASH } from "@epl/core";
 import type { TeamStats } from "@epl/core";
 import {
   BOARD_FIGURE,
-  HEAD_CELL,
-  HEAD_PLATE,
-  HEAD_PLATE_END,
   PANEL_FLUSH,
   ROW_NAME,
   ROW_RULE,
   SCROLL,
 } from "@/app/desk";
-import { MUTE } from "./TableHeads";
+import { MUTE, PlateHead } from "./TableHeads";
 
 // Championship Manager's attribute grid, for a squad's season.
 //
@@ -98,41 +95,23 @@ export default function SeasonGrid({
                     {/* The bevel goes on a block inside each cell and never on
                         the cell: these tables collapse their borders, so a strip
                         of bevelled cells loses its inner edges (desk.css). */}
-                    <th scope="col" className="p-0 font-bold">
-                      <span className={HEAD_PLATE_END}>
-                        <span className={MUTE}>Rank</span>
-                      </span>
-                    </th>
-                    <th scope="col" className={HEAD_CELL}>
-                      <span className={HEAD_PLATE}>
-                        <span className={MUTE}>Player</span>
-                      </span>
-                    </th>
+                    <PlateHead at="end">
+                      <span className={MUTE}>Rank</span>
+                    </PlateHead>
+                    <PlateHead>
+                      <span className={MUTE}>Player</span>
+                    </PlateHead>
                     {group.columns.map((column) => {
                       const { name, definition } = columnLabel(column);
                       return (
-                        <th
-                          key={column.code}
-                          scope="col"
-                          // Fantrax's own sentence, which is where this league's
-                          // rules are published — what counts as a clean sheet
-                          // is theirs, not ours, and this header is the only
-                          // place in the payload it appears.
-                          title={definition === null ? name : `${name} — ${definition}`}
-                          className="p-0 font-bold"
-                        >
-                          <span className={HEAD_PLATE_END}>
-                            {column.code}
-                          </span>
-                        </th>
+                        // Fantrax's own sentence is where this league's rules are published, so the title carries it.
+                        <PlateHead key={column.code} at="end" title={definition === null ? name : `${name} — ${definition}`}>
+                          {column.code}
+                        </PlateHead>
                       );
                     })}
-                    <th scope="col" className="p-0 font-bold" title="Fantasy points, Fantrax's own">
-                      <span className={HEAD_PLATE_END}>FPts</span>
-                    </th>
-                    <th scope="col" className="p-0 font-bold" title="Fantasy points a game">
-                      <span className={HEAD_PLATE_END}>FP/G</span>
-                    </th>
+                    <PlateHead at="end" title="Fantasy points, Fantrax's own">FPts</PlateHead>
+                    <PlateHead at="end" title="Fantasy points a game">FP/G</PlateHead>
                   </tr>
                 </thead>
 

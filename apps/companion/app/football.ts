@@ -9,6 +9,7 @@ import {
   type MatchSheet,
   type PlayerMatchStats,
   fetchLive,
+  fetchRegions,
   mapFixtures,
   mapLiveStats,
   mapMatchSheets,
@@ -19,7 +20,7 @@ import {
 } from "@epl/core";
 import { now, replayAt } from "./clock";
 import { roundGoals } from "./commentary";
-import { LIVE_REVALIDATE, PAGE_REVALIDATE, POLL } from "./config";
+import { LIVE_REVALIDATE, PAGE_REVALIDATE, POLL, SEASON_CODE_LIFE } from "./config";
 
 // One football snapshot per window, shared by everything that needs it.
 //
@@ -87,6 +88,11 @@ export const seasonFixtures: () => Promise<Fixture[]> = unstable_cache(
   ["season-fixtures"],
   { revalidate: PAGE_REVALIDATE },
 );
+
+/** FPL's country list, which a `region` id points into. It does not change within a season. */
+export const regions = unstable_cache(async () => fetchRegions(), ["fpl-regions"], {
+  revalidate: SEASON_CODE_LIFE,
+});
 
 /** One round's match sheets — who did what in each of its ten fixtures.
  *

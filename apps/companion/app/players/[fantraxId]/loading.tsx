@@ -4,7 +4,7 @@ import Skeleton from "../../components/shell/Skeleton";
 // a `loading.tsx` serves its segment and everything under it.
 //
 // So what it reserves is the CHROME the four share and nothing below it: the
-// plated bar, the tab strip, the caption. Those three are the same height on
+// plated bar and the tab strip. Those two are the same height on
 // every tab, which is what makes reserving them honest — the block under them is
 // a different shape on each, and a skeleton that guessed at one would settle the
 // page and then move it again.
@@ -30,9 +30,6 @@ export default function Loading() {
           </div>
         ))}
       </div>
-
-      {/* The caption's own box. */}
-      <Skeleton width="100%" height="2rem" />
 
       {/* One block under it, no taller than the shortest view's, so nothing
           reserves room a tab will not fill. */}

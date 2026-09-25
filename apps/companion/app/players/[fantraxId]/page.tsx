@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { clubById } from "@epl/core";
+import { availabilityOf, clubById } from "@epl/core";
 import type { FootballPlayer, PlayerMatch } from "@epl/core";
 import { footballNow } from "../../football";
 import Nothing from "../../components/shell/Nothing";
@@ -7,15 +7,15 @@ import { PANEL } from "@/app/desk";
 import ButtonLink from "../../components/shell/ButtonLink";
 import { POOL } from "../routes";
 import AttributeGrid from "./AttributeGrid";
+import type { GridWord } from "./AttributeGrid";
 import FixtureRun from "./FixtureRun";
 import NoProfile from "./NoProfile";
 import PlayerShell from "./PlayerShell";
 import Portrait from "./Portrait";
-import Projection from "./Projection";
+import Rankings from "./Rankings";
 import RealPosition from "./RealPosition";
 import SeasonTable from "./SeasonTable";
-import { fantraxProjection } from "./draft";
-import { playerGrid, realPosition } from "./grid";
+import { playerGrid, playerStanding, realPosition } from "./grid";
 import { joinMatches } from "./matchRows";
 import { gameLog } from "./scouting";
 import { scouting } from "./scouting";
@@ -46,11 +46,8 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
   if ("unavailable" in found) return <NoProfile code={found.unavailable} />;
 
   const { intel, football } = found;
-  // The grid needs the whole division in hand, because every rating is a
-  // percentile. It is the snapshot every other screen keeps warm, so this costs
-  // FPL nothing — and it is null for a man the bridge has never settled, who has
-  // no footballer to scout.
-  const grid = football === null ? null : await playerGrid(football.player);
+  const [grid, standing] =
+    football === null ? [null, null] : await Promise.all([playerGrid(football.player), playerStanding(football.player)]);
   const position = football === null ? null : realPosition(football.player.code);
   // What he has done in the round on screen and what is coming. Both read the
   // snapshot and the calendar every other screen already holds, so they cost FPL
@@ -96,10 +93,16 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
               </Nothing>
             </section>
           ) : (
-            <AttributeGrid attributes={grid} />
+            <AttributeGrid
+              attributes={grid}
+              words={words(football?.player ?? null, standing)}
+              group={standing?.group ?? null}
+            />
           )}
         </div>
       </div>
+
+      {standing === null ? null : <Rankings ranked={standing.ranked} group={standing.group} />}
 
       {/* **CM puts the appearances table on the profile** (`cm9900/11.jpg`), and
           so does this (Craig, 4 Sep 2026: "the season totals are on the main
@@ -120,15 +123,6 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
           means delete (CODE_RULES §2), and `contribution()` in core is still
           there if Data ever wants a round view. */}
       {run === null ? null : <FixtureRun run={run} />}
-
-      {/* Fantrax's own guess at his round — a different claim from every FPL
-          measurement above it, and it says so in its own heading. Streamed
-          because it reads the league's rosters and the live payload, and gated
-          inside that read: their projection covers the fielded eleven only, so
-          the number appearing at all would state a lineup. */}
-      <Suspense fallback={null}>
-        <Projected fantraxId={fantraxId} ownerTeamId={intel.ownerTeamId} />
-      </Suspense>
 
       {/* **What he actually is, last and loudest** (Craig, 4 Sep 2026), which is
           where `cm9900/11.jpg` puts it: `Defender/Defensive Midfielder
@@ -155,17 +149,6 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
   );
 }
 
-/** Fantrax's guess at his round, read behind the boundary above. */
-async function Projected({
-  fantraxId,
-  ownerTeamId,
-}: {
-  fantraxId: string;
-  ownerTeamId: string | null;
-}) {
-  return <Projection projection={await fantraxProjection(fantraxId, ownerTeamId)} />;
-}
-
 /** His season's two rows, read behind the boundary above. `element-summary` is
  *  cached on his season-stable code, so Data's copy of this costs nothing after
  *  the first of the two is drawn. */
@@ -180,4 +163,22 @@ async function Season({
 }) {
   const [rows, snapshot] = await Promise.all([gameLog(player), footballNow()]);
   return <SeasonTable rows={joinMatches(rows, paid, clubById(snapshot))} season={season} />;
+}
+
+/** CM's worded rows under the ratings: the foot he shoots with (never a keeper's), and FPL's chance he plays. */
+function words(player: FootballPlayer | null, standing: { keeper: boolean; foot: string | null } | null): GridWord[] {
+  const availability = availabilityOf(player);
+  const condition =
+    player === null
+      ? null
+      : availability.state === "fit"
+        ? "100%"
+        : availability.chance !== null
+          ? `${availability.chance}%`
+          : availability.label;
+  const foot = { name: "Preferred Foot", value: standing?.foot ?? null, title: "the foot he shoots with, off the shot map" };
+  return [
+    ...(standing?.keeper ? [] : [foot]),
+    { name: "Condition", value: condition, title: "FPL's chance of him playing the next round" },
+  ];
 }

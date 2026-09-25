@@ -6,6 +6,7 @@ import {
   mapFixtures,
   mapLiveStats,
   mapPlayers,
+  countryOf,
   roundPlayed,
 } from "./map";
 
@@ -15,7 +16,7 @@ const bootstrap = (over: Partial<RawBootstrap> = {}): RawBootstrap => ({
     {
       id: 1, code: 154561, web_name: "Raya", first_name: "David", second_name: "Raya Martín",
       team: 1, element_type: 1, squad_number: 22, status: "a", news: "",
-      chance_of_playing_next_round: null, opta_code: "p123",
+      chance_of_playing_next_round: null, opta_code: "p123", region: 199,
       // Season totals as FPL sends them: the counts as numbers, the expected
       // trio as strings. Real figures rather than zeros, so the mapper's
       // string-to-number coercion is actually under test.
@@ -88,6 +89,10 @@ describe("mapPlayers", () => {
     const [p] = mapPlayers(bootstrap());
     expect(p.code).toBe(154561);
     expect(p.fullName).toBe("David Raya Martín");
+  });
+
+  it("carries FPL's country id, not a birthplace", () => {
+    expect(mapPlayers(bootstrap())[0].region).toBe(199);
   });
 
   it("carries the three the competition itself counts", () => {
@@ -301,5 +306,22 @@ describe("roundPlayed", () => {
     // answers, and only one of them should fail a freshness check.
     expect(roundPlayed(events, 39)).toBeNull();
     expect(roundPlayed({ events: [] } as unknown as RawBootstrap, 1)).toBeNull();
+  });
+});
+
+describe("countryOf", () => {
+  const regions = [
+    { id: 161, name: "Norway" },
+    { id: 199, name: "Spain" },
+  ];
+
+  it("names the country FPL files him under", () => {
+    // Haaland is 161, Norway; Fantrax's birthplace says Leeds, England.
+    expect(countryOf(161, regions)).toBe("Norway");
+  });
+
+  it("says nothing for a man FPL has not filed, or an id it has not listed", () => {
+    expect(countryOf(null, regions)).toBeNull();
+    expect(countryOf(4, regions)).toBeNull();
   });
 });

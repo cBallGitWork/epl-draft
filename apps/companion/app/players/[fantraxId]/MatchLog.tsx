@@ -1,233 +1,138 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
-import Section from "../../components/shell/Section";
-import { ROW_RULE, SCROLL } from "@/app/desk";
-import type { MatchRow } from "./matchRows";
 import { DASH } from "@epl/core";
+import ClubLabel from "../../components/football/ClubLabel";
+import ScrollBoard from "../../components/league/ScrollBoard";
+import { IndexCell } from "../../components/league/TableCells";
+import { MUTE, PlateHead } from "../../components/league/TableHeads";
+import { standoutCuts, standoutInk, type StandoutCut } from "../../components/league/standout";
+import Section from "../../components/shell/Section";
+import { BOARD, FIGURE, HEAD_CELL, PINNED_NAME, PINNED_TILE, ROW_RULE } from "@/app/desk";
 import { matchHref } from "../../prem/match/[id]/matchRoutes";
+import type { MatchRow } from "./matchRows";
 
-// His season, match by match, with both accounts of every match on one line and
-// the sum of them at the foot.
-//
-// **Championship Manager's shape**: rows of appearances, columns of statistics
-// (`cm9900/11.jpg`). A figure GRID says nothing about form at all, which is what
-// this replaced (Craig, 4 Sep 2026: "Grids is absolutely terrible").
-//
-// **The sum lives above this, not under it.** `SeasonTable` draws the Total and
-// Per 90 rows as their own section (Craig, 4 Sep 2026: "Maybe we need a season
-// data and match log section?"). Two sections rather than a table with a foot,
-// because the season is a question a reader asks WITHOUT reading the matches —
-// and because it is where the pitch maps land when they arrive.
-//
-// **Two provenances on one row, and the head says which is which.** Everything
-// left of the rule is FPL's measurement of the play. Everything right of it is
-// Fantrax's scoring of it, including `FPts` — the only per-match source of our
-// league's points anywhere, because FPL's points are FPL's under FPL's rules.
-//
-// Fantrax's half dashes where their "Recent Games" window does not reach. That
-// is not a nought: it is a match nobody showed us.
-//
-// Sideways rather than hidden, matching the pool table and the game log it grew
-// out of: this is a scouting surface and nothing on it is dropped behind a
-// breakpoint.
+// Every match of his season on the house board (Craig, 25 Sep 2026: "this table is not like our
+// normal CM standards, use the shared code"): bevelled plates over the figures, the round in CM's
+// blue index block, the opponent pinned beside it, and each column's standouts lit as a board lights
+// them. Left of the rule is FPL's account of the match; right of it Fantrax's, including `FPts`.
 
-const dash = <span className="text-faint">—</span>;
-const two = (value: number | null) =>
-  value === null ? dash : value.toFixed(2);
+interface Column {
+  head: string;
+  title: string;
+  of: (row: MatchRow) => number | null;
+  /** Decimal places, for the expected figures. */
+  digits?: number;
+  /** A yes-or-no column, printed `Y` or a dash. */
+  flag?: boolean;
+  /** The first of Fantrax's columns, which carries the rule. */
+  rule?: boolean;
+}
+
+const COLUMNS: readonly Column[] = [
+  { head: "Min", title: "Minutes played", of: (r) => r.fpl.match.minutes },
+  { head: "G", title: "Goals", of: (r) => r.fpl.match.goals },
+  { head: "A", title: "Assists", of: (r) => r.fpl.match.assists },
+  { head: "CS", title: "Clean sheet", of: (r) => (r.fpl.match.cleanSheet ? 1 : 0), flag: true },
+  { head: "Sv", title: "Saves", of: (r) => r.fpl.match.saves },
+  { head: "xG", title: "Expected goals", of: (r) => r.fpl.match.expectedGoals, digits: 2 },
+  { head: "xA", title: "Expected assists", of: (r) => r.fpl.match.expectedAssists, digits: 2 },
+  { head: "Def", title: "Defensive contribution", of: (r) => r.fpl.match.defensiveContribution },
+  { head: "BPS", title: "FPL's bonus-points score", of: (r) => r.fpl.match.bps },
+  { head: "B", title: "Bonus points", of: (r) => r.fpl.match.bonus },
+  { head: "FPL", title: "FPL's points, under FPL's rules — not this league's", of: (r) => r.fpl.match.fplPoints },
+  { head: "FPts", title: "This league's points for the match — Fantrax's own", of: (r) => r.paid?.points ?? null, rule: true },
+  { head: "S", title: "Shots — Fantrax's own", of: (r) => r.paid?.shots ?? null },
+  { head: "SOT", title: "Shots on target — Fantrax's own", of: (r) => r.paid?.shotsOnTarget ?? null },
+  { head: "FC", title: "Fouls committed — Fantrax's own", of: (r) => r.paid?.foulsCommitted ?? null },
+  { head: "FS", title: "Fouls suffered — Fantrax's own", of: (r) => r.paid?.foulsSuffered ?? null },
+  { head: "Off", title: "Offsides — Fantrax's own", of: (r) => r.paid?.offsides ?? null },
+];
+
+/** A column's standouts over his matches: its best in orange, its top quarter in yellow. */
+const SHARES = { good: 0.25, best: 0.1 };
+
+const RULE = "border-l border-line";
 
 export default function MatchLog({ rows }: { rows: readonly MatchRow[] }) {
   if (rows.length === 0) {
-    // True in August for every footballer in the league, and it is a season
-    // nobody has played rather than a read that failed.
     return (
       <Section title="Every match" aside="FPL's own · Fantrax's own">
-        <p className="text-sm text-muted">
-          No match he has played yet this season.
-        </p>
+        <p className="text-sm text-muted">No match he has played yet this season.</p>
       </Section>
     );
   }
 
+  const cuts = new Map<string, StandoutCut>(
+    COLUMNS.map((column) => [column.head, standoutCuts(rows.map(column.of), SHARES, { of: rows.length })]),
+  );
   const covered = rows.filter((row) => row.paid !== null).length;
 
   return (
     <Section title="Every match" aside="FPL's own · Fantrax's own">
-      <div className={SCROLL}>
-        <table className="w-full min-w-[52rem] border-collapse text-2xs">
-          <thead className="border-b border-line text-faint">
-            <tr>
-              <Head label="GW" align="left" />
-              <Head label="Opp" align="left" />
-              <Head
-                label="Res"
-                title="The score, from his club's point of view — tap it for the match"
-              />
-              <Head label="Min" title="Minutes played" />
-              <Head label="G" title="Goals" />
-              <Head label="A" title="Assists" />
-              <Head label="CS" title="Clean sheet" />
-              <Head label="Sv" title="Saves" />
-              <Head label="xG" title="Expected goals" />
-              <Head label="xA" title="Expected assists" />
-              <Head label="Def" title="Defensive contribution" />
-              <Head label="BPS" title="FPL's bonus-points score" />
-              <Head label="B" title="Bonus points" />
-              <Head
-                label="FPL"
-                title="FPL's points, under FPL's rules — not this league's"
-              />
-              {/* Everything from here is Fantrax's, and the rule says so. */}
-              <Head
-                label="FPts"
-                title="This league's points for the match — Fantrax's own"
-                rule
-              />
-              <Head
-                label="S"
-                title="Shots — Fantrax's own; FPL does not publish it"
-              />
-              <Head label="SOT" title="Shots on target — Fantrax's own" />
-              <Head label="FC" title="Fouls committed — Fantrax's own" />
-              <Head label="FS" title="Fouls suffered — Fantrax's own" />
-              <Head label="Off" title="Offsides — Fantrax's own" />
+      <ScrollBoard>
+        <table className={BOARD}>
+          <thead>
+            <tr className="text-2xs">
+              <th scope="col" className={`${HEAD_CELL} ${PINNED_TILE} min-w-8 bg-surface lg:min-w-9`}>
+                <span className={MUTE}>Gameweek</span>
+              </th>
+              <th scope="col" className={`${HEAD_CELL} ${PINNED_NAME} left-8 lg:left-9`}>
+                <span className={MUTE}>Opponent</span>
+              </th>
+              <PlateHead at="centre" title="The score, from his club's point of view — tap it for the match" className="whitespace-nowrap">
+                Res
+              </PlateHead>
+              {COLUMNS.map((column) => (
+                <PlateHead key={column.head} at="centre" title={column.title} className={`whitespace-nowrap ${column.rule ? RULE : ""}`}>
+                  {column.head}
+                </PlateHead>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {rows.map(({ fpl, paid }) => (
-              <tr
-                key={`${fpl.match.gameweek}-${fpl.match.fixtureId}`}
-                className={ROW_RULE}
-              >
-                <td className="numeric py-1 pr-2 text-faint">
-                  {fpl.match.gameweek}
-                </td>
-                <td className="whitespace-nowrap py-1 pr-2 font-bold">
-                  {fpl.opponent?.shortName ?? DASH}
-                  <span className="pl-1 text-3xs font-normal text-faint">
-                    {fpl.match.home ? "H" : "A"}
+            {rows.map((row) => (
+              <tr key={`${row.fpl.match.gameweek}-${row.fpl.match.fixtureId}`} className={`${ROW_RULE} hover:bg-raised`}>
+                <IndexCell className={PINNED_TILE}>{row.fpl.match.gameweek ?? DASH}</IndexCell>
+                <td className={`${PINNED_NAME} left-8 px-1.5 lg:left-9`}>
+                  <span className="flex items-center gap-1.5 whitespace-nowrap">
+                    {row.fpl.opponent ? <ClubLabel club={row.fpl.opponent} /> : DASH}
+                    <span className="text-2xs text-faint">{row.fpl.match.home ? "H" : "A"}</span>
                   </span>
                 </td>
-                <Score row={fpl} />
-                <Cell value={fpl.match.minutes} />
-                <Cell value={fpl.match.goals} loud={fpl.match.goals > 0} />
-                <Cell value={fpl.match.assists} loud={fpl.match.assists > 0} />
-                <Cell value={fpl.match.cleanSheet ? "Y" : dash} />
-                <Cell value={fpl.match.saves} />
-                <Cell value={two(fpl.match.expectedGoals)} />
-                <Cell value={two(fpl.match.expectedAssists)} />
-                <Cell value={fpl.match.defensiveContribution ?? dash} />
-                <Cell value={fpl.match.bps} />
-                <Cell value={fpl.match.bonus} loud={fpl.match.bonus > 0} />
-                <td className="numeric px-1 text-right font-bold">
-                  {fpl.match.fplPoints}
-                </td>
-                {/* Fantrax's half. A match outside their window is a dash on all
-                    six, never a row of noughts. */}
-                <td className="numeric border-l border-line px-1 text-right font-bold text-mid">
-                  {paid?.points ?? dash}
-                </td>
-                <Cell value={paid?.shots ?? dash} />
-                <Cell value={paid?.shotsOnTarget ?? dash} />
-                <Cell value={paid?.foulsCommitted ?? dash} />
-                <Cell value={paid?.foulsSuffered ?? dash} />
-                <Cell value={paid?.offsides ?? dash} />
+                <Score row={row.fpl} />
+                {COLUMNS.map((column) => (
+                  <Figure key={column.head} column={column} value={column.of(row)} cut={cuts.get(column.head)} />
+                ))}
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
-      {/* How far our league's half actually reaches, said out loud rather than
-          left as a column of dashes a reader has to interpret. */}
+      </ScrollBoard>
       {covered < rows.length ? (
         <p className="pt-1 text-2xs text-faint">
-          Fantrax&apos;s columns cover his last {covered} of {rows.length}{" "}
-          matches. Their table is &ldquo;Recent Games&rdquo; and they do not
-          publish how far back it goes.
+          Fantrax&apos;s columns cover his last {covered} of {rows.length} matches.
         </p>
       ) : null}
     </Section>
   );
 }
 
-function Head({
-  label,
-  align = "right",
-  title,
-  rule = false,
-}: {
-  label: string;
-  align?: "left" | "right";
-  title?: string;
-  rule?: boolean;
-}) {
-  return (
-    <th
-      scope="col"
-      title={title}
-      className={`whitespace-nowrap py-1.5 font-bold ${rule ? "border-l border-line" : ""} ${
-        align === "left" ? "pr-2 text-left" : "px-1 text-right"
-      }`}
-    >
-      {label}
-    </th>
-  );
+/** One figure, centred, lit when it stands out; a dash where nobody measured it. */
+function Figure({ column, value, cut }: { column: Column; value: number | null; cut: StandoutCut | undefined }) {
+  const shown =
+    value === null ? DASH : column.flag ? (value > 0 ? "Y" : DASH) : column.digits ? value.toFixed(column.digits) : value;
+  const ink = value === null ? "text-faint" : standoutInk(value, cut, "high") || (value === 0 ? "text-muted" : "");
+  return <td className={`${FIGURE} ${column.rule ? RULE : ""} ${ink}`}>{shown}</td>;
 }
 
-/** A figure. Nought is drawn quiet rather than absent — FPL measured it, and a
- *  dash here would say it had not.
- *
- *  **Takes a node, not a number**, which is what let nine hand-written `<td>`s
- *  in this file collapse into it: the columns that hold a decimal, a dash or a
- *  `?? dash` were writing `numeric px-1 text-right text-muted` out again because
- *  the component would only take a `number`. */
-function Cell({ value, loud = false }: { value: ReactNode; loud?: boolean }) {
-  return (
-    <td
-      className={`numeric px-1 text-right ${loud ? "font-bold text-mid" : "text-muted"}`}
-    >
-      {value}
-    </td>
-  );
-}
-
-/** The score his way round, coloured by the result, and a way into the match.
- *
- *  The direction slot, both halves: a win is green, a loss is red, a draw quiet.
- *  This is one of the four places a result's DIRECTION is the reason for printing
- *  it at all, which is the whole test for spending those two colours. */
+/** The score his way round, green for a win and red for a loss, and a way into the match. */
 function Score({ row }: { row: MatchRow["fpl"] }) {
   const { match } = row;
-  const result =
-    match.scored > match.conceded
-      ? "won"
-      : match.scored < match.conceded
-        ? "lost"
-        : "drew";
+  const result = match.scored > match.conceded ? "won" : match.scored < match.conceded ? "lost" : "drew";
+  const ink = result === "lost" ? "text-bad" : result === "won" ? "text-up" : "text-muted";
   return (
-    <td
-      className={`numeric whitespace-nowrap px-1 text-right ${
-        result === "lost"
-          ? "text-bad"
-          : result === "won"
-            ? "font-bold text-up"
-            : "text-muted"
-      }`}
-    >
-      {/* **A tappable score is a CONTROL and takes the control floor**, 44 on a
-          phone and 36 on the desk (DESIGN §6). It was 14px of text the moment it
-          became a link and `tapfit` reported it at both widths — first at 390,
-          and then at 1440 when the desk was let off with `lg:min-h-0`.
-          A control never relaxes; only a row does.
-          
-          The cost is real and is the price of the link: one cell at 36px makes
-          the whole row 36px, so this table is less dense than the appearances
-          table CM draws beside it. CM's could be dense because nothing in it was
-          clickable. Justified right so the figure keeps its column while the
-          target grows around it. */}
-      <Link
-        href={matchHref(match.fixtureId, "overview")}
-        className="flex min-h-11 items-center justify-end hover:underline lg:min-h-9"
-      >
+    <td className={`${FIGURE} whitespace-nowrap ${ink}`}>
+      {/* A tappable score is a control, so it takes the control floor: 44 under a thumb, 36 on a desk. */}
+      <Link href={matchHref(match.fixtureId, "overview")} className="flex min-h-11 items-center justify-center hover:underline lg:min-h-9">
         <span className="sr-only">{`${result} `}</span>
         {match.scored}–{match.conceded}
       </Link>

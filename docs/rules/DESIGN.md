@@ -364,7 +364,7 @@ is more specific than a palette; it is the reason the token names in
 | Live red | `--color-live` | **a match in play**, and nothing else | 5.4 |
 | League red | `--color-league` | the league's own mark. Chrome only | 3.2 |
 | Deep league red | `--color-league-deep` | the same red as a **ground with text on it** | — |
-| Peak | `--color-peak` | **the best figure in its column on a board** (a match's, the pool's), as ink — CM's orange, over the accent's yellow for the rest of the column's standouts | — |
+| Peak | `--color-peak` | **the best figure in its column on a board** (a match's, the pool's), as ink — CM's orange, over the accent's yellow for the rest of the column's standouts; and a 16–20 on the attribute grid, as CM 01/02 sets it | — |
 | Cream | `--color-cream` | ink on a colour plate | — |
 | Quiet on a plate | `--color-faint-plate` | the same **quiet** as `--color-faint`, on the blue plate that will not carry it | — |
 | Doubt | `--color-doubt-out` `-major` `-slight` | **how likely he is to MISS**, as a ramp of three. A ground, never ink | ink 5.5 · 7.1 · 9.5 |

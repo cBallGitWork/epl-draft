@@ -25,7 +25,7 @@ export { getFootballSnapshot } from "./snapshot";
 // The two reads `getFootballSnapshot` does not serve, both wanted by scripts:
 // the whole-season fixture list (it fetches one gameweek) and the raw bootstrap
 // (it returns a mapped snapshot, and the bridge needs FPL's own field names).
-export { fetchBootstrap, fetchFixtures } from "./fpl/client";
+export { fetchBootstrap, fetchFixtures, fetchRegions } from "./fpl/client";
 // One round's live feed, and the mapper that turns it into per-FIXTURE figures.
 // `getFootballSnapshot` reads both for the round it is building; a match screen
 // wants an OLDER round, which is the whole reason these are reachable on their
@@ -108,6 +108,8 @@ export type { IntelTouches, Touch, TouchCentre, TouchPlayer } from "./intel/touc
 // publishes a shot as distance from the attacking goal and a touch the other way
 // round, and `intel/shots.ts` records how that was settled.
 export { assistsOf, shotIntel, shotsInFixture, shotsOf } from "./intel/shots";
+export { careerIntel, seasonKey } from "./intel/careers";
+export type { IntelCareers } from "./intel/careers";
 // A window of recent gameweeks, for narrowing the intel to recent form.
 export { fixtureGameweeks, gameweekSpan, inGameweeks, lastPlayed } from "./intel/window";
 export type { IntelShots, Shot } from "./intel/shots";
@@ -124,10 +126,12 @@ export { mapPastSeasons } from "./seasons";
 export type { PastSeason } from "./seasons";
 // Championship Manager's attribute grid, rated out of play we already measure.
 // Ours, never Sports Interactive's — `attributes.ts` says why there is no feed.
-export { attributes } from "./attributes";
-export type { Attribute, Scouted } from "./attributes";
+export { attributes, preferredFoot, shotLine } from "./attributes";
+export type { Attribute, Scouted, ShotLine } from "./attributes";
+export { KEEPER_RANKINGS, OUTFIELD_RANKINGS, rankings } from "./rankings";
+export type { Ranked } from "./rankings";
 export { KEEPER_ONLY, OUTFIELD_ONLY } from "./attributes";
-export { mapFixtures } from "./fpl/map";
+export { countryOf, mapFixtures } from "./fpl/map";
 export {
   adjacentGameweeks,
   clubById,

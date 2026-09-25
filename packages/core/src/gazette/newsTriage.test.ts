@@ -16,7 +16,7 @@ const man = (name: string) => ({
   slot: { fantraxId: name, position: "M", status: "ACTIVE" },
   player: {
     id: 1, code: 1, name, fullName: name, clubId: 1,
-    status: "a", news: "", chanceOfPlaying: null, optaCode: null, birthDate: null, newsAdded: null, season: NO_SEASON,
+    status: "a", news: "", chanceOfPlaying: null, optaCode: null, birthDate: null, region: null, newsAdded: null, season: NO_SEASON,
   },
   stats: [],
 });

@@ -6,7 +6,7 @@ import type {
   FootballSnapshot,
   PlayerMatchStats,
 } from "../types";
-import type { RawBootstrap, RawFixture, RawLive, RawLiveElement } from "./raw";
+import type { RawBootstrap, RawFixture, RawLive, RawLiveElement, RawRegion } from "./raw";
 
 // Pure raw → domain transformation. No I/O, no dates from the clock, no network:
 // everything this needs arrives as an argument, so it is fully unit-testable and
@@ -34,6 +34,7 @@ export function mapPlayers(raw: RawBootstrap): FootballPlayer[] {
     chanceOfPlaying: e.chance_of_playing_next_round ?? null,
     optaCode: e.opta_code ?? null,
     birthDate: e.birth_date ?? null,
+    region: e.region ?? null,
     season: {
       // `NUMERIC` throughout, not just on the expected trio: these are scraped
       // fields on a payload we do not control, and the counts arriving as
@@ -60,6 +61,11 @@ export function mapPlayers(raw: RawBootstrap): FootballPlayer[] {
       bps: NUMERIC(e.bps),
     },
   }));
+}
+
+/** The country behind a `region` id, or null when FPL has filed none or listed none. */
+export function countryOf(region: number | null, regions: readonly RawRegion[]): string | null {
+  return regions.find((r) => r.id === region)?.name ?? null;
 }
 
 export function mapFixtures(raw: RawFixture[]): Fixture[] {

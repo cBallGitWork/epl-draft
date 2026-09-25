@@ -10,15 +10,12 @@ import { positionsFromList } from "../../../positions";
 import { playerHref } from "../../../players/routes";
 import {
   BOARD_FIGURE,
-  HEAD_CELL,
-  HEAD_PLATE,
-  HEAD_PLATE_END,
   PANEL_FLUSH,
   ROW_NAME,
   ROW_RULE,
   SCROLL,
 } from "@/app/desk";
-import { MUTE } from "../../../components/league/TableHeads";
+import { MUTE, PlateHead } from "../../../components/league/TableHeads";
 
 // One squad's season, in Championship Manager's own stat-screen grammar.
 //
@@ -124,24 +121,16 @@ export default function StatBoard({
         <table className="w-full border-collapse whitespace-nowrap">
           <thead>
             <tr className="text-3xs uppercase">
-              <th scope="col" className="p-0 font-bold">
-                <span className={HEAD_PLATE_END}>
-                  <span className={MUTE}>Rank</span>
-                </span>
-              </th>
-              <th scope="col" className={HEAD_CELL}>
-                <span className={HEAD_PLATE}>
-                  <span className={MUTE}>Player</span>
-                </span>
-              </th>
+              <PlateHead at="end">
+                <span className={MUTE}>Rank</span>
+              </PlateHead>
+              <PlateHead>
+                <span className={MUTE}>Player</span>
+              </PlateHead>
               {/* Position is a column here for the reason it is one on the squad
                   list: a man eligible at two cannot be filed under one letter. */}
-              <th scope="col" className={HEAD_CELL}>
-                <span className={HEAD_PLATE}>Pos</span>
-              </th>
-              <th scope="col" className={HEAD_CELL}>
-                <span className={HEAD_PLATE}>Club</span>
-              </th>
+              <PlateHead>Pos</PlateHead>
+              <PlateHead>Club</PlateHead>
               {measures.map((measure) => (
                 <SortHead
                   key={measure.key}

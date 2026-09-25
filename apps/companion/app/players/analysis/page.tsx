@@ -48,7 +48,7 @@ import { seasonFixtures } from "../../football";
 //
 // **Both halves are read in parallel and neither blocks the other's frame.** The
 // bar needs both men, so it waits; the grids are streamed, because each is a
-// percentile over the whole division and the screen is worth showing before they
+// percentile over his position group and the screen is worth showing before they
 // land.
 
 export const revalidate = 30;
@@ -240,7 +240,7 @@ export default async function ComparePage({
         </div>
       ) : null}
 
-      {/* Streamed: each grid is a percentile over the whole division. */}
+      {/* Streamed: each grid is a percentile over his position group. */}
       {view === "attributes" ? (
         <Suspense fallback={<StackWaiting />}>
           <Grids left={one_} right={second === null ? null : two} names={{ a: names.a, b: second === null ? null : names.b }} />

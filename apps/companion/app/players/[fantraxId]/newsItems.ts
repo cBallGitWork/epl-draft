@@ -39,10 +39,18 @@ export function inbox(stories: readonly PlayerStory[]): NewsItem[] {
   return stories
     .map((story) => ({
       id: story.id,
-      headline: story.headline,
+      headline: whole(story.headline, story.content),
       body: story.content,
       analysis: story.analysis,
       at: story.at,
     }))
     .sort((a, b) => (b.at ?? -Infinity) - (a.at ?? -Infinity));
+}
+
+/** Fantrax's headline, or the story's whole first sentence where they cut it at "...". */
+function whole(headline: string, content: string): string {
+  const cut = headline.trim().replace(/(\.\.\.|…)$/, "").trim();
+  if (cut === headline.trim() || !content.startsWith(cut)) return headline;
+  const end = content.indexOf(". ", cut.length);
+  return end === -1 ? content.trim() : content.slice(0, end + 1);
 }

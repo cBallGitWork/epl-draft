@@ -2,35 +2,17 @@ import TabStrip from "../../components/shell/TabStrip";
 import type { Tab } from "../../components/shell/TabStrip";
 import { playerHref } from "../routes";
 
-// The four views of one player.
-//
-// **Five, which is Championship Manager's own count.** CM draws
-// `Profile | Injuries & Bans | Contract | Transfer | History`
-// (`cm9900/11.jpg`), and each of ours answers the same question under a name a
-// manager would look for:
-//
-//   Profile   the man — his attributes, and what he actually plays
-//   Data      this season in numbers, which is the modern addition
-//   News      CM's `Injuries & Bans`: can he play, and what is being said
-//   Transfer  CM's `Contract` and `Transfer` together — what he cost, what he
-//             is worth, and when he signed. We hold one fact about a
-//             footballer's employment, and a plate over one date is a tab that
-//             opens on a sentence.
-//   History   his record, season by season and match by match
-//
-// **Fitness folded into News** (Craig, 4 Sep 2026: "Fitness could be doubled in
-// with news"). They were two tabs asking one question — whether he plays — with
-// FPL's availability on one and Fantrax's line about him on the other, each
-// half an answer.
+// The four views of one player: Profile (the man), Data (his record, a season at a time), News
+// (CM's Injuries & Bans) and Transfer (CM's Contract and Transfer). History folded into Data on
+// 25 Sep 2026 (Craig: "maybe we merge data and history together").
 
-export type PlayerTab = "profile" | "data" | "news" | "transfer" | "history";
+export type PlayerTab = "profile" | "data" | "news" | "transfer";
 
 const TABS = (fantraxId: string): readonly (Tab & { key: PlayerTab })[] => [
   { key: "profile", href: playerHref(fantraxId), label: "Profile" },
   { key: "data", href: `${playerHref(fantraxId)}/data`, label: "Data" },
   { key: "news", href: `${playerHref(fantraxId)}/news`, label: "News" },
   { key: "transfer", href: `${playerHref(fantraxId)}/transfer`, label: "Transfer" },
-  { key: "history", href: `${playerHref(fantraxId)}/history`, label: "History" },
 ];
 
 export default function PlayerTabs({

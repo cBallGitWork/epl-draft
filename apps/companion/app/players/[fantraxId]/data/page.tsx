@@ -1,38 +1,40 @@
 import { Suspense } from "react";
-import { clubById } from "@epl/core";
-import type { FootballPlayer, PlayerMatch } from "@epl/core";
+import { clubById, seasonKey } from "@epl/core";
+import type { FootballPlayer, PastSeason, PlayerMatch } from "@epl/core";
 import Nothing from "../../../components/shell/Nothing";
-import { PANEL } from "@/app/desk";
+import { LABEL, PANEL } from "@/app/desk";
 import { footballNow } from "../../../football";
+import { intelCareers } from "../../../intel";
+import QuerySelect from "../../QuerySelect";
+import { ALL_SEASONS, playerDataHref } from "../../routes";
+import BornLine from "../BornLine";
 import MatchLog from "../MatchLog";
+import PastSeasons from "../PastSeasons";
 import SeasonTable from "../SeasonTable";
 import NoProfile from "../NoProfile";
 import PlayerShell from "../PlayerShell";
 import { TableWaiting } from "../Waiting";
-import { joinMatches } from "../matchRows";
+import { pastSeasons } from "../grid";
+import { joinMatches, totalsOf } from "../matchRows";
+import type { MatchRow } from "../matchRows";
 import { gameLog } from "../scouting";
 import { subject } from "../subject";
 
-// This season, match by match (Craig, 4 Sep 2026: "Data should have each match
-// listed or rows... clicking on the score").
-//
-// One table in Championship Manager's own shape — rows of matches, columns of
-// statistics, the sum at the foot — rather than the two figure grids this
-// replaced. A grid of season totals cannot show form, which is the question a
-// manager actually arrives with, and the totals it did show are the table's own
-// last two rows now.
-//
-// **"as default" is the word to keep.** What this tab wants next is a season
-// picker and the pitch maps — heat, shot, pass. Neither is here and neither is
-// close: FPL publishes no shot LOCATION at all, and the sister repo's Understat
-// data, which has it, has not been exported to `data/intel/`. That is a pipeline
-// job upstream before it is a screen job here, and `docs/ui/player.md` says so
-// rather than this file implying otherwise.
+// His record, one season at a time (Craig, 25 Sep 2026: "maybe we merge data and history together,
+// shows current season by default with other seasons on a dropdown"): this season's appearances
+// and every match by default, a past season's line from FPL's history, or every season with the
+// club he was at. History folded in here and its route sends a reader to "All seasons".
 
 export const revalidate = 30;
 
-export default async function PlayerData({ params }: { params: Promise<{ fantraxId: string }> }) {
-  const { fantraxId } = await params;
+export default async function PlayerData({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ fantraxId: string }>;
+  searchParams: Promise<{ season?: string }>;
+}) {
+  const [{ fantraxId }, { season: chosen = "" }] = await Promise.all([params, searchParams]);
   const found = await subject(fantraxId);
   if ("unavailable" in found) return <NoProfile code={found.unavailable} />;
 
@@ -42,42 +44,93 @@ export default async function PlayerData({ params }: { params: Promise<{ fantrax
     <PlayerShell subject={found} fantraxId={fantraxId} current="data">
       {football === null ? (
         <section className={PANEL}>
-          <Nothing title="No match log for this man">
-            Every row is FPL&apos;s measurement of a Premier League match, and FPL has never listed
-            him.
+          <Nothing title="No record for this man">
+            Every row is FPL&apos;s measurement of a Premier League match, and FPL has never listed him.
           </Nothing>
         </section>
       ) : (
-        // Behind a boundary because `element-summary` is the only request on this
-        // screen FPL has not already answered for somebody else. Fantrax's half is
-        // already in hand from the profile that opened the page.
-        <Suspense fallback={<TableWaiting />}>
-          <Log player={football.player} paid={intel.matches} season={intel.season} />
-        </Suspense>
+        <>
+          <BornLine player={football.player} />
+          <Suspense fallback={<TableWaiting />}>
+            <Record
+              player={football.player}
+              fantraxId={fantraxId}
+              chosen={chosen}
+              paid={intel.matches}
+              season={intel.season}
+            />
+          </Suspense>
+        </>
       )}
-
     </PlayerShell>
   );
 }
 
-/** Both sections behind one boundary. They are one read — the same joined rows
- *  summed and then listed — so splitting them would draw two skeletons for one
- *  wait. */
-async function Log({
+/** The picker and the season it picks, behind one boundary: the reads are shared. */
+async function Record({
   player,
+  fantraxId,
+  chosen,
   paid,
   season,
 }: {
   player: FootballPlayer;
+  fantraxId: string;
+  chosen: string;
   paid: PlayerMatch[];
   season: string | null;
 }) {
-  const [rows, snapshot] = await Promise.all([gameLog(player), footballNow()]);
-  const joined = joinMatches(rows, paid, clubById(snapshot));
+  const [past, log, snapshot] = await Promise.all([pastSeasons(player), gameLog(player), footballNow()]);
+  const joined = joinMatches(log, paid, clubById(snapshot));
+  const clubs = intelCareers.get(player.code) ?? new Map<string, string>();
+  const label = season ?? "This season";
+  const options = [
+    { value: "", label },
+    ...past.map((row) => ({ value: row.season.replace("/", "-"), label: row.season })),
+    { value: ALL_SEASONS, label: "All seasons" },
+  ];
+  const value = options.some((option) => option.value === chosen) ? chosen : "";
+  const picked = past.find((row) => row.season.replace("/", "-") === value);
+
   return (
     <>
-      <SeasonTable rows={joined} season={season} />
-      <MatchLog rows={joined} />
+      <section className={`${PANEL} lg:flex-row lg:items-center`}>
+        <span className={LABEL}>Season</span>
+        <div className="lg:w-64">
+          <QuerySelect name="season" label="Season" value={value} options={options} action={playerDataHref(fantraxId)}>
+            {null}
+          </QuerySelect>
+        </div>
+      </section>
+      {value === ALL_SEASONS ? (
+        <PastSeasons seasons={past} current={thisSeason(joined, label)} clubs={clubs} />
+      ) : picked ? (
+        <PastSeasons seasons={[picked]} clubs={clubs} />
+      ) : (
+        <>
+          <SeasonTable rows={joined} season={season} club={clubs.get(seasonKey(label) ?? "") ?? null} />
+          <MatchLog rows={joined} />
+        </>
+      )}
     </>
   );
+}
+
+/** This season as one line of the career table, or null before he has played. */
+function thisSeason(rows: readonly MatchRow[], season: string): PastSeason | null {
+  const t = totalsOf(rows);
+  if (t.minutes === 0) return null;
+  return {
+    season,
+    minutes: t.minutes,
+    goals: t.goals,
+    assists: t.assists,
+    cleanSheets: t.cleanSheets,
+    goalsConceded: t.conceded,
+    yellowCards: t.yellowCards,
+    redCards: t.redCards,
+    saves: t.saves,
+    bonus: t.bonus,
+    fplPoints: t.fplPoints,
+  };
 }

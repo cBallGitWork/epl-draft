@@ -1,8 +1,8 @@
 # `/players/[fantraxId]` — one player
 
 Championship Manager's player profile (`reference/cm9900/11.jpg`), for a Fantrax
-draft league. A plated bar in his club's colour, five tabs, his birth date in a
-box under them, and one cyan line saying what he actually is.
+draft league. A plated bar in his club's colour, four tabs, and one cyan line saying
+what he actually is.
 
 One profile per tap, never a sweep of the 697 — that is the whole politeness
 policy toward Fantrax, and it is why nothing here may loop over `getPlayerProfile`.
@@ -19,13 +19,13 @@ derived the same four from the same object.
   306px into the 282 a 390 phone gives the bar, so it shipped truncated.
   Only the pool's longest names (~24 characters) truncate now, and `PageHeader`
   truncating is shared behaviour rather than this screen's decision.
-- **The caption** — `Born 5.3.93 (Age 33).`, from FPL's `birth_date`, in CM's own
-  unpadded `d.m.yy`. Null for 19 of 652, and then the box carries the view's name
-  instead. It stops after the age: CM's nationality has no source we hold — FPL's
-  `region` is an opaque integer over 67 values with no lookup published, and
-  Fantrax's birthplace is a label inside a list of English strings.
-- **The tabs** — Profile · Data · News · Transfer · History. **Five, which is
-  Championship Manager's own count.** Fitness folded into News on 4 Sep 2026
+- **The born line** — `Born 21.7.00 (Age 26). Norway.`, from FPL's `birth_date` in CM's own
+  unpadded `d.m.yy`, then his country: FPL's `region`, named by `/api/regions/`, never
+  Fantrax's birthplace (which put Haaland, born in Leeds, down as England). **On Data
+  only** (Craig, 25 Sep 2026: "only have this on the data section, remove elsewhere");
+  it had been in every tab's shell.
+- **The tabs** — Profile · Data · News · Transfer. **Five until 25 Sep 2026**, CM's own
+  count, when History folded into Data. Fitness folded into News on 4 Sep 2026
   (Craig: "Fitness could be doubled in with news") — they were two tabs asking
   one question with half an answer each. Which of them is hollow is decided from
   the SUBJECT, not from the page you are on; each route used to pass its own
@@ -41,18 +41,24 @@ derived the same four from the same object.
 
 ## Profile
 
-1. **The portrait**, 176px on his club's colour, crest top-left. Beside the grid
-   on the desk and above it on a phone — a single column at 1440 left 900px of
-   nothing between every label and its value, which is a phone layout stretched.
-2. **The attribute grid** — three columns of `label · 1–20` on the desk, two on a
-   phone. Every rating is OURS, derived, and says what from on hover.
+1. **The portrait**, his club's colour behind the cut-out, crest top-left: a banner across a
+   phone showing the whole cut-out, and on a desk a 208px column as tall as the grid, filled
+   to its foot (Craig, 25 Sep 2026: "cut off mid box").
+2. **The attribute grid** — CM 01/02's: alphabetical down three columns on the desk and two
+   on a phone, 16–20 in CM's orange and 11–15 in amber, with **Preferred Foot** (off the shot
+   map) and **Condition** (FPL's chance he plays) as its worded rows. Every rating is OURS
+   and rated **within his position group** (Craig, 25 Sep 2026: "compare to just attackers,
+   defenders to just defenders"): the sister repo's line, gathered into goalkeepers,
+   defenders, midfielders and forwards; a man with no line is rated against everyone. The
+   shot and touch maps add Heading, Long Shots, Creativity (chances set up), Penalty Taking
+   and Teamwork; a keeper gets his own eight.
+   **Rankings** sit under it: his season totals and his place among the same group
+   ("rankings for data such as xg").
 3. **The real position**, in cyan — the first thing in the app entitled to that
    slot (see below).
-4. **The run to come**, FPL's, then **Fantrax's projection**, theirs and gated on
-   the lineup. Together these answer docs/rules/PRODUCT.md's third-most-frequent job,
-   "should I start this player". *The round just gone was here and is gone*
-   (Craig, 4 Sep 2026: "Remove gameweek so far") — one round of one man's figures
-   is a Data question. The card that drew it was deleted rather than moved.
+4. **The run to come**, the next eight across the row, in FPL's difficulty. *Fantrax's projection for the round was
+   here and is gone* (Craig, 25 Sep 2026: "remove row"), with the mapper that read
+   it; the round just gone went on 4 Sep ("Remove gameweek so far").
 5. **Season** — the same Total and Per 90 rows Data opens with. CM puts the
    appearances table on the profile and so does this; a summary belongs on the
    overview as well as above the detail, which is not the duplication that moved
@@ -64,14 +70,22 @@ derived the same four from the same object.
 
 ## Data
 
-This season, in Championship Manager's own shape: rows of matches against columns
-of statistics, in two sections.
+His record, one season at a time (Craig, 25 Sep 2026: "maybe we merge data and history
+together, shows current season by default with other seasons on a dropdown"). **History
+is gone as a tab** and `/history` redirects to `?season=all`; the strip is four plates.
 
-- **Season** — `Total` and `Per 90`, the row labels in CM's index block. Both
-  references agree on this: `cm9900/11.jpg` closes a profile with an appearances
-  table, and FPL's own player page closes the same table with Totals and Per 90.
-- **Every match** — one row per match, most recent first. The score links to
-  `/prem/match/[id]`.
+- **The born line**, then a **Season** picker: this season (the default), each season
+  FPL's history lists, and **All seasons**. It is `?season=`, so a shared link keeps it.
+- **This season** — CM's appearances table headed with his club, then **Every match**:
+  the house board (Craig: "not like our normal CM standards, use the shared code") —
+  bevelled plates over the figures, the round in CM's blue index block and the opponent's
+  crest pinned beside it, and each column's best in CM's orange and its top quarter in
+  yellow, as the pool board lights them. The score links to `/prem/match/[id]`.
+- **A past season** — FPL's line for that season, with the club.
+- **All seasons** — every season with the **club he was at** ("mention what clubs he
+  played for"), from the sister's identity store (`intel/careers`). A club is printed only
+  against a season FPL lists: the store has Haaland at City in 21-22, when he was not in
+  the league.
 
 **Two provenances on one row, with a rule between them.** Left of it is FPL's
 measurement of the play — minutes, goals, xG, xA, defensive contribution, BPS,
@@ -98,13 +112,12 @@ manager actually arrives with.
 
 ## News
 
-Championship Manager's news screen, which is an email client: a list of dated rows
-at the top, newest first, and the newest opened underneath with its headline
-centred in yellow over its body.
-
-The accent is right here by our own rules and not only by CM's: DESIGN §3 gives it
-to *yours · selected · active*, and the opened item is the selected one — the
-single place on this screen where anything is.
+**Mail's own shape** (Craig, 25 Sep 2026: "should match the Email/news section"): the
+dated list beside the letter on a desk and above it on a phone, the open row on CM's red
+ground, and the story opened in Mail's `Letter`, from "Fantrax's news desk". **The preview
+is the whole first sentence** ("text on preview line cuts off too early"): Fantrax cuts its
+headline at about a hundred characters with "...", so where the story begins with the cut
+headline its first sentence stands in, over two lines.
 
 **Fantrax's stories and nothing else** (Craig, 4 Sep 2026: "Remove the FPL part").
 FPL publishes one availability line, and that is a STATE rather than a story —
@@ -122,57 +135,27 @@ one line twice under itself. A transfer story has a longer body and gets both.
 
 ## Transfer
 
-**Business** — every claim, drop and trade this league has made with him, newest
-first, with both sides named. This is what CM's Transfer tab is for: the game
-lists a player's moves between clubs and ours lists his between managers. A
-pending move is drawn quiet and labelled, because Fantrax distinguishes proposed
-from executed and the default filter hides the proposals.
+CM's Transfer tab for our league (Craig, 25 Sep 2026: "improve this page so its more CM
+like"), in four blocks:
 
-Then the draft pick, our league's row — whose he is and what the commissioner
-deems him eligible for — and the whole-of-Fantrax market: ADP, percent drafted,
-and the two ownership percentages, which are every league on the site and not
-ours.
+1. **Transfer status** — CM's label-and-value lines: who holds him (a team, or "Free
+   agent" / "Waivers" in Fantrax's words), how and when he joined that team (the latest
+   executed move that put him there, or "In the draft"), and his draft pick with what it
+   is worth against Fantrax's ranking (`+15 on his pick`).
+2. **Business** — every claim, drop and trade with him, newest first, on the house table:
+   the date in the index block, then the move, from and to ("The pool" for no team).
+3. **The cyan line**, how he arrived: `Taken by 123 with pick 21 of round 3.`
+4. **The way out**, worded for what the reader can do: "Claim him on Fantrax" for a man
+   nobody holds, "Offer a trade on Fantrax" for a rival's, "Open on Fantrax" for his own.
 
-It carries **no fantasy-points figure, no season row, no prose and no note**
-(Craig, 4 Sep 2026: "Remove at this club and In this league sections too. Keep it
-clean", then "strip out all the unneeded Info"). What is left is how he arrived,
-what has happened since, and what the rest of Fantrax will pay.
-
-**Draft is one row and disappears for a man the draft did not take.** It used to
-draw a sentence — "Undrafted. He came off the waiver wire, which cost a claim
-rather than a pick." — which is a paragraph in a panel restating what the Business
-list below already shows as a dated claim. The market block lost its note for the
-same reason: it explained a heading that already said it.
-
-**No fantasy-points figure appears on this tab** (Craig, 4 Sep 2026: "Remove all
-unneeded info from transfer tab like stats"). Fantrax mixes his scoring into two
-of the blocks it hands over — `FPts` and `FP/G` in the league row, and those plus
-his positional rank among the whole-of-Fantrax numbers — and all of it is Data's
-job now, in Data's shape. A points total in two places on one screen is a reader
-checking whether they agree.
-
-The scoring rows are dropped by name; the two ownership rows are KEPT by name. The
-asymmetry is deliberate: `FPts` and `FP/G` are stable labels, and the rank's is not
-— it carries the position (`Rank G/Ov`, `Rank D/Ov`) and cannot be matched by a
-fixed string.
-
-**CM's `Contract` is not folded in here, and was for one commit.** It drew FPL's
-`team_join_date` as an "At this club · Joined" row — a stand-in for Fantrax's own
-`TEAM_SERVICE_TIME`, which is now reachable through `tab` and unread. The stand-in
-went with the strip; the real thing is a mapping job.
+The whole-of-Fantrax block (drafted %, ADP, rostered %) stays gone (4 Sep 2026).
 
 ## History
 
-His match log and his previous seasons, both FPL's, then what he has been worth
-in this league by the categories that pay, which is Fantrax's. The third block
-names the league in its heading because it sits under two headed "FPL's own".
-
-**Previous seasons shows only the columns that are real in every season.** FPL
-writes every key on every row back to 2014/15, so a statistic it did not collect
-that year arrives as a nought rather than as an absence — `starts`, the expected
-family, tackles and defensive contribution all read zero for Maguire's 2021/22,
-a season in which he played 2,513 minutes. Minutes stands in for appearances, which FPL has never
-published here at all. `fpl/raw.ts` carries the count.
+Folded into Data on 25 Sep 2026; see above. **The seasons table shows only the columns
+that are real in every season.** FPL writes every key on every row back to 2014/15, so a
+statistic it did not collect that year arrives as a nought rather than an absence;
+`fpl/raw.ts` carries the count.
 
 ## The attributes
 
@@ -182,14 +165,14 @@ screen. So every rating here is derived from play we already measure, on CM's 1�
 scale, and **what we cannot measure gets no row** — Pace, Acceleration, Agility,
 Balance, Bravery and Flair are absent rather than invented.
 
-Ratings are a **percentile within the division, against everyone who has played**,
-never within a position: a defender's Finishing comes out low and a striker's
-Marking comes out low, which is what CM shows. It is the fraction he is strictly
-better than, not the midpoint of his tie — 203 of the 225 men past the minutes
-floor have made no saves, so a midrank put every outfielder at Handling 10.
+Ratings are a **percentile within his position group, against the men in it who have played**
+(since 25 Sep 2026; they were rated against the whole division until then, so a striker's
+Marking came out low as CM's would). It is the fraction he is strictly better than, not the
+midpoint of his tie — 203 of the 225 men past the minutes floor have made no saves, so a
+midrank put every outfielder at Handling 10.
 
-The ratings are set in `--color-mid` (amber, "a figure"), not CM's yellow: yellow
-is `--color-accent` and means *yours · selected · active*.
+The ratings are set in CM's orange (`--color-peak`) from 16 and amber (`--color-mid`) from 11,
+never CM's yellow: yellow is `--color-accent` and means *yours · selected · active*.
 
 ## The cyan line
 
@@ -237,7 +220,7 @@ from FPL's fantasy classification.
   and worthless as a reading. It settles as the season fills, and it is left
   undamped deliberately: damping needs a confidence model nobody asked for, and
   turns a number that is honest-but-thin into one that cannot be explained.
-- **The grid is fifteen attributes against CM's thirty-one.** Shots, shots on
+- **The grid is sixteen attributes against CM's thirty-one.** Shots, shots on
   target, fouls committed, fouls suffered and offsides are Fantrax-only and would
   buy five more — Aggression, Dribbling, Technique among them. They are not in
   yet because a percentile needs the whole division and `getPlayerProfile` answers

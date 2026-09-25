@@ -1,17 +1,4 @@
-// Championship Manager's caption line: `Born 2.10.79 (Age 19). English.`
-//
-// Ours stops after the age, and that is a sourcing decision rather than a
-// design one. The date and the age come from FPL's `birth_date`, which we hold
-// and type. The nationality does not: FPL publishes `region` as an opaque
-// integer over 67 values with no lookup table anywhere, and Fantrax gives a
-// birthplace only as a label inside a list of English strings — reading it back
-// out by matching the word "Birthplace" would bind this line to their wording.
-// It stays in the facts block below the grid, rendered as what it is, and the
-// caption says the part we can state ourselves.
-//
-// CM's own date format, kept: `2.10.79` is day, month, two-digit year with no
-// padding. It is the one piece of 1999 typography on this screen that is
-// genuinely information rather than dress.
+// Championship Manager's caption line: `Born 2.10.79 (Age 19). English.`, in CM's unpadded d.m.yy.
 
 /** `Born 5.3.93 (Age 33).`, or null when FPL has not filled his date in.
  *
@@ -24,30 +11,16 @@
 export function bornLine(
   birthDate: string | null,
   now: Date,
-  /** Where he is from, as Fantrax writes it — `"Maia, Portugal"`. The COUNTRY is
-   *  taken off the end of it and the town dropped, because CM's line is a
-   *  nationality: `cm9900/11.jpg` reads `Born 2.10.79 (Age 19). English.` and
-   *  the Özil profile `Born 15.10.79 (Age 21). German (17 caps/2 goals).`
-   *
-   *  A country and a nationality are not the same word — CM writes "English"
-   *  where this writes "England" — and inventing the adjective would need a
-   *  table of demonyms nobody has checked. The country is the fact we hold. */
-  birthplace: string | null = null,
+  /** The country FPL files him under (`countryOf`), not where he was born. */
+  country: string | null = null,
 ): string | null {
   const born = parseIsoDate(birthDate);
-  const from = country(birthplace);
+  const from = country?.trim() || null;
   if (born === null) return from === null ? null : `${from}.`;
   const age = ageOn(born, now);
   const stamp = `${born.day}.${born.month}.${String(born.year % 100).padStart(2, "0")}`;
   const line = age === null ? `Born ${stamp}.` : `Born ${stamp} (Age ${age}).`;
   return from === null ? line : `${line} ${from}.`;
-}
-
-/** The country out of a birthplace. Null for an empty string or one Fantrax
- *  padded with nothing, which it does — `profile.ts` records the empty rows. */
-function country(birthplace: string | null): string | null {
-  const parts = (birthplace ?? "").split(",").map((part) => part.trim()).filter(Boolean);
-  return parts.length === 0 ? null : parts[parts.length - 1];
 }
 
 interface BornOn {

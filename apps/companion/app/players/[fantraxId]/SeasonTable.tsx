@@ -1,5 +1,6 @@
 import Section from "../../components/shell/Section";
-import { BOARD, BOARD_FIGURE, HEAD_CELL, HEAD_PLATE, HEAD_PLATE_END, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, BOARD_FIGURE, ROW_RULE, SCROLL } from "@/app/desk";
+import { PlateHead } from "../../components/league/TableHeads";
 import type { MatchRow } from "./matchRows";
 import { totalsOf } from "./matchRows";
 import { IndexCell } from "../../components/league/TableCells";
@@ -39,26 +40,27 @@ const whole = (value: number | null) => (value === null ? dash : String(value));
 export default function SeasonTable({
   rows,
   season,
+  club = null,
 }: {
   rows: readonly MatchRow[];
   season: string | null;
+  /** The club he is at, in the heading when the careers export names it. */
+  club?: string | null;
 }) {
   if (rows.length === 0) return null;
   const t = totalsOf(rows);
 
   return (
-    <Section title={season ? `Season · ${season}` : "Season"}>
+    <Section title={[season ? `Season · ${season}` : "Season", club].filter(Boolean).join(" · ")}>
       <div className={SCROLL}>
         <table className={BOARD}>
           <thead>
             <tr>
-              <th className={HEAD_CELL}>
-                <div className={HEAD_PLATE}>Competition</div>
-              </th>
+              <PlateHead>Competition</PlateHead>
               {COLUMNS.map((column) => (
-                <th key={column.head} className={HEAD_CELL} title={column.title}>
-                  <div className={HEAD_PLATE_END}>{column.head}</div>
-                </th>
+                <PlateHead key={column.head} at="end" title={column.title}>
+                  {column.head}
+                </PlateHead>
               ))}
             </tr>
           </thead>

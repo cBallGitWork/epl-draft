@@ -404,6 +404,28 @@ no match report."*
 
 ---
 
+## 7. `careers/26-27.json` — the club in each season
+
+One row per FPL code on this season's books, with the Premier League club the identity
+store has him at in each season it holds, newest first:
+
+```jsonc
+{ "manifest": { /* … */ }, "players": [
+  { "code": 441264, "seasons": [ { "season": "26-27", "club": "Sunderland" }, { "season": "25-26", "club": "Sunderland" } ] }
+] }
+```
+
+Joined `root_id` across `data/identity/persons/players/seasons/*`, the season's
+`current_team_id` named by `data/identity/teams/seasons/{season}`. **The store carries
+seasons a man was not in the league** (Haaland at City in 21-22), so the app prints a club
+only against a season FPL's own history lists. Written compact; 108 KB.
+
+**Exported by hand on 25 Sep 2026**, from a scratch script reading the sister repo
+read-only, because a session was committing there that day. `export-epl-draft` should
+take it over; until then the file is as fresh as that run.
+
+---
+
 ## The XI is fetched here, not exported
 
 Since 23 Sep 2026 this repo reads Scout's page itself. `npm run scout-xi` (every

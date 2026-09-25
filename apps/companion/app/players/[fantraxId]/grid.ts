@@ -1,85 +1,109 @@
 import {
   KEEPER_ONLY,
+  KEEPER_RANKINGS,
   OUTFIELD_ONLY,
+  OUTFIELD_RANKINGS,
   attributes,
+  clubById,
   mapPastSeasons,
   fetchElementSummary,
   onTheBooks,
+  preferredFoot,
+  rankings,
+  shotLine,
 } from "@epl/core";
-import type { Attribute, FootballPlayer, IntelPlayer, PastSeason, Scouted } from "@epl/core";
+import type { Attribute, FootballPlayer, IntelPlayer, PastSeason, Ranked, Scouted } from "@epl/core";
 import { unstable_cache } from "next/cache";
+import { cache } from "react";
 import { footballNow } from "../../football";
-import { intelSetPieces, intelSquads } from "../../intel";
+import { intelSetPieces, intelShots, intelSquads, intelTouches } from "../../intel";
 import { PAGE_REVALIDATE } from "../../config";
 
-// The Championship Manager half of the player screen: the attribute grid, the
-// real position under it, and the seasons behind it.
-//
-// The grid is the one read on this page that needs the WHOLE league in hand.
-// Every rating is a percentile, so a man cannot be rated without the population
-// he is being rated against — `attributes.ts` says why that is the only honest
-// way to turn a per-ninety rate into a 1-20. It costs nothing extra: the
-// snapshot is the read every other screen already keeps warm.
+// The Championship Manager half of the player screen: the attribute grid, his rankings, the real
+// position under them, and the seasons behind them. Every rating is a percentile, so this needs
+// the division in hand; it is the snapshot every other screen keeps warm.
 
-/** His grid, rated against everyone in the division who has played.
- *
- *  The set-piece shares come from the sister repo rather than FPL. FPL publishes
- *  an ORDER — first penalty taker, second — and the sister publishes a SHARE of
- *  the ones actually taken, which is the better reading of the same duty and the
- *  one already on disk for `/prem/club/[code]/set-pieces`. */
-export async function playerGrid(player: FootballPlayer): Promise<Attribute[]> {
+/** The sister's position lines, gathered into the groups a man is rated within. */
+const GROUP: Readonly<Record<string, string>> = {
+  GK: "goalkeepers",
+  CB: "defenders",
+  FB: "defenders",
+  DM: "midfielders",
+  CM: "midfielders",
+  AM: "midfielders",
+  WF: "forwards",
+  CF: "forwards",
+};
+
+/** His position group, or null where the sister has no line for him (23 of 296 regulars, 25 Sep 2026). */
+function groupOf(code: number): string | null {
+  const line = intelSquads.get(code)?.line;
+  return line ? (GROUP[line] ?? null) : null;
+}
+
+/** Every man on the books, with the sister's readings attached. Once per request. */
+const division = cache(async (): Promise<Scouted[]> => {
   const snapshot = await footballNow();
-  const shares = setPieceShares();
-  const scouted = (man: FootballPlayer): Scouted => ({
-    player: man,
-    setPieceShare: shares.get(man.code) ?? null,
-  });
-  // **Rated against EVERYONE, then filtered.** The percentile still runs over
-  // the whole division — a keeper's Handling means "better than most players",
-  // which is the only reading a percentile has — and what the position decides
-  // is which rows are worth printing, never what they are measured against.
-  //
-  // "The division" is the site rule's reading of it: the 104 who have left carry
-  // a frozen season, most of it nought, and rating a man against them is what
-  // makes an ordinary one look good.
-  const division = snapshot.players.filter(onTheBooks).map(scouted);
-  return keeperGrid(player.code)
-    ? attributes(scouted(player), division).filter((row) => !OUTFIELD_ONLY.includes(row.name))
-    : attributes(scouted(player), division).filter((row) => !KEEPER_ONLY.includes(row.name));
-}
-
-/** Whether to draw him a keeper's grid.
- *
- *  **The sister repo's real position, never FPL's `element_type`.** That one is
- *  a fantasy classification and the football layer refuses it by rule, which is
- *  also why this decision cannot live in `attributes.ts` — core has no position
- *  to ask. `line` is the export's own bucketing.
- *
- *  A man with no settled position — 146 of 651, all of them the ones whose
- *  position came from FPL's letter — gets the outfielder's grid. It is the
- *  commoner answer by twelve to one, and the two rows he loses by it are the two
- *  an outfielder is bottom of anyway. */
-function keeperGrid(code: number): boolean {
-  return intelSquads.get(code)?.line === "GK";
-}
-
-/** Every man's share of his club's set pieces, added across the three duties.
- *
- *  Null and nought are different answers and this returns neither for a man the
- *  file does not mention: `attributes` reads a missing key as "we were not told"
- *  and leaves the row blank, where a nought would say "takes none". A club with
- *  no entry at all leaves all eleven of them blank, which is correct — the
- *  export covers the clubs it covers. */
-function setPieceShares(): Map<number, number> {
-  const shares = new Map<number, number>();
-  for (const club of Object.values(intelSetPieces.clubs)) {
-    for (const duty of [club.penalties, club.freeKicks, club.corners]) {
-      for (const taker of duty ?? []) {
-        shares.set(taker.code, (shares.get(taker.code) ?? 0) + taker.share);
-      }
+  const clubs = clubById(snapshot);
+  const created = new Map<number, number>();
+  for (const shots of intelShots.values()) {
+    for (const shot of shots) {
+      if (shot.assistCode !== null) created.set(shot.assistCode, (created.get(shot.assistCode) ?? 0) + 1);
     }
   }
-  return shares;
+  return snapshot.players.filter(onTheBooks).map((player) => {
+    const pieces = intelSetPieces.clubs[clubs.get(player.clubId)?.shortName ?? ""];
+    const share = (duties: readonly ({ code: number; share: number }[] | undefined)[]) =>
+      pieces === undefined
+        ? null
+        : duties.flatMap((duty) => duty ?? []).reduce((sum, taker) => sum + (taker.code === player.code ? taker.share : 0), 0);
+    const touches = intelTouches.get(player.code);
+    return {
+      player,
+      penaltyShare: share([pieces?.penalties]),
+      setPieceShare: share([pieces?.freeKicks, pieces?.corners]),
+      shots: intelShots.size === 0 ? null : shotLine(intelShots.get(player.code) ?? [], created.get(player.code) ?? 0),
+      touches: touches === undefined ? null : touches.fixtures.reduce((sum, fixture) => sum + fixture.p.length / 2, 0),
+    };
+  });
+});
+
+/** Him, and who he is measured against: his group, or the whole division when he has none. */
+async function measured(player: FootballPlayer) {
+  const everyone = await division();
+  const group = groupOf(player.code);
+  const man = everyone.find((other) => other.player.code === player.code) ?? {
+    player,
+    penaltyShare: null,
+    setPieceShare: null,
+    shots: null,
+    touches: null,
+  };
+  const cohort = group === null ? everyone : everyone.filter((other) => groupOf(other.player.code) === group);
+  return { man, cohort, group, keeper: intelSquads.get(player.code)?.line === "GK" };
+}
+
+/** His grid, rated within his group; a keeper's rows for a keeper and an outfielder's for the rest. */
+export async function playerGrid(player: FootballPlayer): Promise<Attribute[]> {
+  const { man, cohort, keeper } = await measured(player);
+  const skip = keeper ? OUTFIELD_ONLY : KEEPER_ONLY;
+  return attributes(man, cohort).filter((row) => !skip.includes(row.name));
+}
+
+/** His season totals ranked within his group, the group's name, and whether he is a keeper. */
+export async function playerStanding(player: FootballPlayer): Promise<{
+  ranked: Ranked[];
+  group: string | null;
+  keeper: boolean;
+  foot: string | null;
+}> {
+  const { man, cohort, group, keeper } = await measured(player);
+  return {
+    ranked: rankings(man, cohort, keeper ? KEEPER_RANKINGS : OUTFIELD_RANKINGS),
+    group,
+    keeper,
+    foot: preferredFoot(man.shots),
+  };
 }
 
 /** What he actually plays, as the sister repo settled it.

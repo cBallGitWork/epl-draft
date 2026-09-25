@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { LeagueTransaction } from "@epl/core";
-import { movesOf } from "./dossier";
+import { joinedBy, movesOf } from "./dossier";
 
 const move = (over: Partial<LeagueTransaction> = {}): LeagueTransaction => ({
   setId: "s1", kind: "claim", fantraxId: "03gu4", playerName: "Harry Maguire",
@@ -72,5 +72,26 @@ describe("movesOf", () => {
 
   it("has nothing to say about a man nobody has moved", () => {
     expect(movesOf([], "03gu4", NAMES)).toEqual([]);
+  });
+});
+
+describe("joinedBy", () => {
+  it("is the latest executed move that put him with his holder", () => {
+    const moves = movesOf(
+      [
+        move({ setId: "new", toTeamId: "t1", processedAt: "Tue Sep 22, 2026, 5:00AM" }),
+        move({ setId: "old", toTeamId: "t1", processedAt: "Fri Sep 4, 2026, 8:00AM" }),
+        move({ setId: "pending", toTeamId: "t1", executed: false, processedAt: "Wed Sep 23, 2026, 5:00AM" }),
+      ],
+      "03gu4",
+      NAMES,
+    );
+    expect(joinedBy(moves, "t1")?.transaction.setId).toBe("new");
+  });
+
+  it("has none for a free agent, or a holder no move names", () => {
+    const moves = movesOf([move({ toTeamId: "t1" })], "03gu4", NAMES);
+    expect(joinedBy(moves, null)).toBeNull();
+    expect(joinedBy(moves, "t2")).toBeNull();
   });
 });

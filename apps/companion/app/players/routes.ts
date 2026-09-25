@@ -20,6 +20,14 @@ export function playerHref(fantraxId: string): string {
   return `${POOL}/${fantraxId}`;
 }
 
+/** The value of Data's season picker that shows every season with its club. */
+export const ALL_SEASONS = "all";
+
+/** One player's record, at a season the picker offers: `""` is this season, `ALL_SEASONS` every one. */
+export function playerDataHref(fantraxId: string, season = ""): string {
+  return season === "" ? `${playerHref(fantraxId)}/data` : `${playerHref(fantraxId)}/data?season=${season}`;
+}
+
 /** Two players side by side. The `?a=&b=` builder around it is deliberately not
  *  extracted: two sites, and one completes a pair being chosen while the other
  *  reverses a finished one. §1 leaves two alone. */
