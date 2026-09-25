@@ -1,4 +1,5 @@
 import { HIGHLIGHTS_PLAYLIST, YOUTUBE_FEED_BASE } from "../config";
+import { statusError } from "../http/errors";
 import { politeFetch } from "../http/fetch";
 
 // The one read this feature makes, and it is a public RSS feed.
@@ -25,6 +26,6 @@ export async function fetchHighlightsFeed(playlist = HIGHLIGHTS_PLAYLIST): Promi
   const res = await politeFetch(`${YOUTUBE_FEED_BASE}?playlist_id=${playlist}`);
   // Loudly, like the others: a caller that catches this can say highlights are
   // unavailable, where a default would print silence as "no highlights exist".
-  if (!res.ok) throw new Error(`YouTube playlist ${playlist} → ${res.status}`);
+  if (!res.ok) throw statusError("YouTube playlist", playlist, res.status);
   return await res.text();
 }
