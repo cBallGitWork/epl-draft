@@ -120,7 +120,7 @@ if (article) ROUTES.push(article);
 // token the palette has already had checked, and `inkOn` picking the ink for
 // each. Point it at a pale side (Fulham, Leeds, Spurs) by hand at least once.
 const club = await discover(cdp, "/prem", 'a[href^="/prem/club/"]');
-if (club) ROUTES.push(club, ...["set-pieces", "fixtures", "stats"].map((tab) => `${club}/${tab}`));
+if (club) ROUTES.push(club, ...["depth", "set-pieces", "fixtures", "stats"].map((tab) => `${club}/${tab}`));
 
 // One player's four screens, DISCOVERED off the pool rather than written down,
 // for the reason the team's and the club's are: a `fantraxId` names one man in
