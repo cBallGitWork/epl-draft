@@ -33,8 +33,11 @@ function filing(key: string): Filing {
 function run(overrides: Partial<Run>): Run {
   return {
     cap: 10,
+    budgetMs: Infinity,
+    elapsed: () => 0,
     commission: async (each) => filing(each.key),
     save: (_filings, ledger) => ledger,
+    say: () => {},
     ...overrides,
   };
 }
@@ -65,6 +68,25 @@ describe("a firing's loop", () => {
       },
     }));
     expect(seen).toEqual([[], ["a"]]);
+  });
+
+  it("the budget stops new commissions", async () => {
+    let clock = 0;
+    const commissioned: string[] = [];
+    const said: string[] = [];
+    const outcome = await fire(["a", "b", "c"].map(assignment), {}, run({
+      budgetMs: 100,
+      elapsed: () => clock,
+      commission: async (each) => {
+        commissioned.push(each.key);
+        clock += 60;
+        return filing(each.key);
+      },
+      say: (line) => said.push(line),
+    }));
+    expect(commissioned).toEqual(["a", "b"]);
+    expect(outcome.filings.map((each) => each.story.slug)).toEqual(["a", "b"]);
+    expect(said).toHaveLength(1);
   });
 
   it("saves nothing for a refusal or a failed call, and counts the failure", async () => {

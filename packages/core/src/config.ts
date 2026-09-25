@@ -150,6 +150,9 @@ export const FETCH_TIMEOUT_MS = 15_000;
 /** How long a model call may take. A whole column is minutes, not seconds. */
 export const MODEL_TIMEOUT_MS = 300_000;
 
+/** How long a firing may commission stories: half the Editions job's 20 minutes, so the story in flight and the commit still fit. */
+export const EDITION_BUDGET_MS = 600_000;
+
 /** Fantrax's public read surface. Unauthenticated, and — unlike FPL — it answers
  *  HTTP 200 even when it is refusing you (see league/fantrax/errors.ts). */
 export const FANTRAX_FXEA_BASE = "https://www.fantrax.com/fxea/general";

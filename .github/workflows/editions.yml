@@ -86,6 +86,7 @@ permissions:
 jobs:
   write:
     runs-on: ubuntu-latest
+    # EDITION_BUDGET_MS (core config.ts) is half of this; move the two together.
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4

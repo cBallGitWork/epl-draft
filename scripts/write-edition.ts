@@ -1,4 +1,5 @@
 import {
+  EDITION_BUDGET_MS,
   FANTRAX_LEAGUE_ID,
   requireLeague,
   FantraxError,
@@ -142,8 +143,12 @@ async function main(): Promise<void> {
 
   const { filings, failed } = await fire(assignments, ledger, {
     cap: STORY_CAP,
+    budgetMs: EDITION_BUDGET_MS,
+    // Real time since the process began, never `now`, which GAZETTA_NOW may set to another day.
+    elapsed: () => performance.now(),
     commission: commissioner(ctx, paper, now),
     save: (filed, book) => saveFiling(paper, filed, book, now),
+    say,
   });
   if (DRY_RUN) {
     console.log("\n--- dry run: nothing written ---");
