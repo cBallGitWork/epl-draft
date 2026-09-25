@@ -8,6 +8,8 @@
 // either of them. This is transport, not domain: it knows about status codes and
 // headers, and nothing about football or fantasy.
 
+import { HTTP_RETRY_AFTER_MAX_MS } from "../config";
+
 /** Only these deserve a second attempt.
  *
  *  429 is the provider asking us to slow down and 5xx is the provider having a
@@ -18,26 +20,18 @@ export function worthRetrying(status: number): boolean {
   return status === 429 || (status >= 500 && status < 600);
 }
 
-/** How long to wait before attempt `attempt` (1-based), in milliseconds.
- *
- *  `Retry-After` wins when the provider sends one — it is them telling us the
- *  answer, and guessing shorter is how a rate limit becomes a ban. Both forms
- *  are honoured: a count of seconds, and an HTTP date.
- *
- *  Otherwise exponential from `base`, with jitter. `jitter01` is a number in
- *  [0,1) supplied by the caller rather than drawn here, because randomness inside
- *  a pure function makes it untestable — §5's rule, and the reason this file has
- *  a test at all. Jitter matters: sixteen phones refreshing at 15:00 back off in
- *  lockstep without it, and retry as one burst. */
+/** Milliseconds before attempt `attempt` (1-based): never less than a stated `Retry-After`, and
+ *  null when that asks for more than `HTTP_RETRY_AFTER_MAX_MS`; otherwise exponential from `base`
+ *  with the caller's jitter in [0,1), so simultaneous callers do not retry as one burst. */
 export function retryDelay(
   attempt: number,
   retryAfter: string | null,
   base: number,
   jitter01: number,
   now: number,
-): number {
+): number | null {
   const stated = statedDelay(retryAfter, now);
-  if (stated !== null) return stated;
+  if (stated !== null) return stated > HTTP_RETRY_AFTER_MAX_MS ? null : stated;
 
   const exponential = base * 2 ** (attempt - 1);
   return Math.round(exponential * (1 + jitter01));

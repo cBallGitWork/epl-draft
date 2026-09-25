@@ -25,15 +25,16 @@ export async function politeFetch(url: string, init: RequestInit = {}): Promise<
     });
     if (res.ok || attempt > HTTP_RETRIES || !worthRetrying(res.status)) return res;
 
-    await sleep(
-      retryDelay(
-        attempt,
-        res.headers.get("Retry-After"),
-        HTTP_BACKOFF_BASE_MS,
-        Math.random(),
-        Date.now(),
-      ),
+    const delay = retryDelay(
+      attempt,
+      res.headers.get("Retry-After"),
+      HTTP_BACKOFF_BASE_MS,
+      Math.random(),
+      Date.now(),
     );
+    // A wait too long to sit through goes back to the caller as the refusal it is.
+    if (delay === null) return res;
+    await sleep(delay);
   }
 }
 

@@ -144,6 +144,9 @@ export const HTTP_RETRIES = 2;
 /** First backoff step in milliseconds; doubles per attempt, plus jitter. */
 export const HTTP_BACKOFF_BASE_MS = 500;
 
+/** Longest Retry-After worth waiting out; a longer one goes back at once rather than stall a render. */
+export const HTTP_RETRY_AFTER_MAX_MS = 5_000;
+
 /** How long one provider request may take before it is abandoned; the 1.3 MB bootstrap fits. */
 export const FETCH_TIMEOUT_MS = 15_000;
 
