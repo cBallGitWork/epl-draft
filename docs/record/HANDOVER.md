@@ -103,6 +103,15 @@ Each of these is in PLATFORM_NOTES, "What the pre-swap cleanup declined".
   cookie minted in the **v1** format (the `/shoot` skill has the new recipe; the old one is
   refused).
 
+## Where the stats are (added 25 Sep 2026)
+
+**`docs/providers/stats.md` lists every stat we hold or can fetch**: FPL, Fantrax (the served league
+and the stats league), the Premier League API and the sister repo's intel. Each row gives the
+provider field, the domain field, how complete it was when counted, and who reads it. It also lists
+what is fetched and read by nobody, and what was counted and refused. `scripts/stats-reference.test.ts`
+fails when a domain field it names moves, or when a stat type gains a number with no row. Read it
+before adding a figure to a screen.
+
 ## Still Craig's
 
 1. **Swap day, 10 Oct.** Set `FANTRAX_LEAGUE_ID=ayyoh3n2mr326v2o` in Vercel and redeploy
