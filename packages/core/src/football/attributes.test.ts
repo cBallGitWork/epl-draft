@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { attributes } from "./attributes";
-import type { Scouted } from "./attributes";
+import { attributes, preferredFoot, shotLine } from "./attributes";
+import type { Scouted, ShotLine } from "./attributes";
+import type { Shot } from "./intel/shots";
 import { NO_SEASON } from "./noSeason";
 import type { FootballPlayer, SeasonTotals } from "./types";
 
@@ -19,6 +20,9 @@ const man = (name: string, season: Partial<SeasonTotals>, setPieceShare: number 
     season: { ...NO_SEASON, ...season },
   } satisfies FootballPlayer,
   setPieceShare,
+  penaltyShare: setPieceShare,
+  shots: null,
+  touches: null,
 });
 
 /** Ten men on a spread of tackle rates, so a percentile has something to rank
@@ -137,5 +141,63 @@ describe("attributes", () => {
 
   it("is pure — the same inputs give the same grid", () => {
     expect(attributes(league[3], league)).toEqual(attributes(league[3], league));
+  });
+});
+
+describe("the shot map's rows", () => {
+  const line = (over: Partial<ShotLine>): ShotLine => ({
+    struck: 0, headers: 0, outsideBox: 0, created: 0, left: 0, right: 0, ...over,
+  });
+  const scouted = (name: string, shots: ShotLine | null) => ({
+    ...man(name, { minutes: 900, starts: 10 }),
+    shots,
+  });
+
+  it("rates heading on headed shots, and leaves it blank where the map is silent", () => {
+    const aerial = scouted("aerial", line({ headers: 6 }));
+    const grounded = scouted("grounded", line({ headers: 0 }));
+    const cohort = [aerial, grounded, ...league.map((m) => ({ ...m, shots: line({}) }))];
+    expect(ratingOf(attributes(aerial, cohort), "Heading")).toBeGreaterThan(
+      ratingOf(attributes(grounded, cohort), "Heading") ?? 0,
+    );
+    expect(ratingOf(attributes(scouted("unmapped", null), cohort), "Heading")).toBeNull();
+  });
+});
+
+describe("shotLine", () => {
+  const shot = (over: Partial<Shot>): Shot => ({
+    code: 1, fplFixtureId: 1, minute: 10, x: 90, y: 50, xg: 0.1, xgot: null, outcome: "miss",
+    situation: null, bodyPart: "right-foot", assistCode: null, pass: null, ...over,
+  });
+
+  it("counts a shot outside the box by distance and by width", () => {
+    const line = shotLine([shot({ x: 90, y: 50 }), shot({ x: 75, y: 50 }), shot({ x: 95, y: 5 })], 0);
+    expect(line.struck).toBe(3);
+    expect(line.outsideBox).toBe(2);
+  });
+
+  it("counts headers and each foot, and carries the chances he made", () => {
+    const line = shotLine([shot({ bodyPart: "head" }), shot({ bodyPart: "left-foot" }), shot({})], 4);
+    expect(line).toMatchObject({ headers: 1, left: 1, right: 1, created: 4 });
+  });
+});
+
+describe("preferredFoot", () => {
+  const feet = (left: number, right: number): ShotLine => ({
+    struck: left + right, headers: 0, outsideBox: 0, created: 0, left, right,
+  });
+
+  it("names the foot he shoots with", () => {
+    expect(preferredFoot(feet(1, 9))).toBe("Right");
+    expect(preferredFoot(feet(8, 1))).toBe("Left");
+  });
+
+  it("calls him two-footed when the weaker foot takes a third", () => {
+    expect(preferredFoot(feet(4, 6))).toBe("Either");
+  });
+
+  it("says nothing on too few shots or no map", () => {
+    expect(preferredFoot(feet(1, 3))).toBeNull();
+    expect(preferredFoot(null)).toBeNull();
   });
 });

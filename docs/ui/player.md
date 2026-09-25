@@ -41,11 +41,19 @@ derived the same four from the same object.
 
 ## Profile
 
-1. **The portrait**, 176px on his club's colour, crest top-left. Beside the grid
-   on the desk and above it on a phone — a single column at 1440 left 900px of
-   nothing between every label and its value, which is a phone layout stretched.
-2. **The attribute grid** — three columns of `label · 1–20` on the desk, two on a
-   phone. Every rating is OURS, derived, and says what from on hover.
+1. **The portrait**, his club's colour behind the cut-out, crest top-left: a banner across a
+   phone showing the whole cut-out, and on a desk a 208px column as tall as the grid, filled
+   to its foot (Craig, 25 Sep 2026: "cut off mid box").
+2. **The attribute grid** — CM 01/02's: alphabetical down three columns on the desk and two
+   on a phone, 16–20 in CM's orange and 11–15 in amber, with **Preferred Foot** (off the shot
+   map) and **Condition** (FPL's chance he plays) as its worded rows. Every rating is OURS
+   and rated **within his position group** (Craig, 25 Sep 2026: "compare to just attackers,
+   defenders to just defenders"): the sister repo's line, gathered into goalkeepers,
+   defenders, midfielders and forwards; a man with no line is rated against everyone. The
+   shot and touch maps add Heading, Long Shots, Creativity (chances set up), Penalty Taking
+   and Teamwork; a keeper gets his own eight.
+   **Rankings** sit under it: his season totals and his place among the same group
+   ("rankings for data such as xg").
 3. **The real position**, in cyan — the first thing in the app entitled to that
    slot (see below).
 4. **The run to come**, the next eight across the row, in FPL's difficulty. *Fantrax's projection for the round was

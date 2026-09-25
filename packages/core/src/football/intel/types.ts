@@ -134,7 +134,7 @@ export interface IntelClubPieces {
 export interface IntelSetPieces {
   manifest: IntelManifest;
   source: string | null;
-  /** By FPL club code as a string, because a JSON object's keys are strings. */
+  /** By FPL's three-letter club label, `ARS`. */
   clubs: Record<string, IntelClubPieces>;
 }
 
