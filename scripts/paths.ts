@@ -18,7 +18,8 @@ export const SNAPSHOT_ROOT = join(REPO_ROOT, "data", "snapshots", "fantrax");
  *  arbitrary choice is the tell that the file is in the wrong place. */
 export const POOL_ROOT = join(SNAPSHOT_ROOT, "pool");
 
-const LEAGUES_ROOT = join(SNAPSHOT_ROOT, "leagues");
+/** One directory per league archive, recorded or not. */
+export const LEAGUES_ROOT = join(SNAPSHOT_ROOT, "leagues");
 
 export const MAPPINGS_ROOT = join(REPO_ROOT, "data", "mappings");
 
