@@ -1,0 +1,4020 @@
+{
+ "manifest": {
+  "season": "26-27",
+  "gameweek": 6,
+  "exportedAt": "2026-09-25T13:45:10.701893+00:00",
+  "rows": 20,
+  "sources": [
+   {
+    "path": "hub:/roster/chart",
+    "mtime": null
+   }
+  ]
+ },
+ "clubs": {
+  "ARS": {
+   "formation": "4-2-3-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 154561,
+       "share": 0.944
+      },
+      {
+       "code": 109745,
+       "share": 0.0
+      },
+      {
+       "code": 437495,
+       "share": 0.056
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 226597,
+       "share": 0.942
+      },
+      {
+       "code": 448104,
+       "share": 0.058
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 462424,
+       "share": 0.0
+      },
+      {
+       "code": 199798,
+       "share": 0.758
+      },
+      {
+       "code": 500040,
+       "share": 0.242
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 466075,
+       "share": 0.905
+      },
+      {
+       "code": 448104,
+       "share": 0.095
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 445122,
+       "share": 0.845
+      },
+      {
+       "code": 198869,
+       "share": 0.155
+      },
+      {
+       "code": 500040,
+       "share": 0.0
+      },
+      {
+       "code": 481655,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "DM",
+     "label": "Defensive mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 204480,
+       "share": 0.75
+      },
+      {
+       "code": 499169,
+       "share": 0.575
+      },
+      {
+       "code": 208706,
+       "share": 0.547
+      },
+      {
+       "code": 481655,
+       "share": 0.0
+      },
+      {
+       "code": 219847,
+       "share": 0.128
+      }
+     ]
+    },
+    {
+     "slot": "LW",
+     "label": "Left wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 439509,
+       "share": 1.0
+      },
+      {
+       "code": 232413,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 184029,
+       "share": 0.697
+      },
+      {
+       "code": 232413,
+       "share": 0.16
+      },
+      {
+       "code": 616077,
+       "share": 0.067
+      },
+      {
+       "code": 219847,
+       "share": 0.048
+      },
+      {
+       "code": 223340,
+       "share": 0.029
+      }
+     ]
+    },
+    {
+     "slot": "RW",
+     "label": "Right wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 223340,
+       "share": 0.88
+      },
+      {
+       "code": 248857,
+       "share": 0.12
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 219847,
+       "share": 0.8
+      },
+      {
+       "code": 224117,
+       "share": 0.2
+      },
+      {
+       "code": 195384,
+       "share": 0.0
+      }
+     ]
+    }
+   ]
+  },
+  "AVL": {
+   "formation": "4-2-3-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 433969,
+       "share": 1.0
+      },
+      {
+       "code": 72147,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 149484,
+       "share": 0.895
+      },
+      {
+       "code": 244954,
+       "share": 0.0
+      },
+      {
+       "code": 245719,
+       "share": 0.038
+      },
+      {
+       "code": 487992,
+       "share": 0.023
+      },
+      {
+       "code": 199796,
+       "share": 0.023
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 184667,
+       "share": 0.757
+      },
+      {
+       "code": 245719,
+       "share": 0.19
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 441302,
+       "share": 0.0
+      },
+      {
+       "code": 487992,
+       "share": 0.851
+      },
+      {
+       "code": 184667,
+       "share": 0.074
+      },
+      {
+       "code": 214590,
+       "share": 0.074
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 199796,
+       "share": 0.697
+      },
+      {
+       "code": 214590,
+       "share": 0.303
+      },
+      {
+       "code": 606798,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "DM",
+     "label": "Defensive mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 226944,
+       "share": 0.978
+      },
+      {
+       "code": 448089,
+       "share": 0.862
+      },
+      {
+       "code": 449871,
+       "share": 0.0
+      },
+      {
+       "code": 88894,
+       "share": 0.159
+      },
+      {
+       "code": 515597,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LW",
+     "label": "Left wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 577285,
+       "share": 0.526
+      },
+      {
+       "code": 195546,
+       "share": 0.333
+      },
+      {
+       "code": 493105,
+       "share": 0.036
+      },
+      {
+       "code": 122806,
+       "share": 0.048
+      },
+      {
+       "code": 614071,
+       "share": 0.029
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 195546,
+       "share": 0.457
+      },
+      {
+       "code": 614071,
+       "share": 0.543
+      },
+      {
+       "code": 88894,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RW",
+     "label": "Right wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 122806,
+       "share": 0.854
+      },
+      {
+       "code": 638987,
+       "share": 0.146
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 517052,
+       "share": 0.956
+      },
+      {
+       "code": 690838,
+       "share": 0.0
+      },
+      {
+       "code": 173879,
+       "share": 0.044
+      },
+      {
+       "code": 195546,
+       "share": 0.0
+      }
+     ]
+    }
+   ]
+  },
+  "BOU": {
+   "formation": "4-2-3-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 457569,
+       "share": 1.0
+      },
+      {
+       "code": 230650,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 483067,
+       "share": 1.0
+      },
+      {
+       "code": 242882,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 463981,
+       "share": 0.989
+      },
+      {
+       "code": 242882,
+       "share": 0.011
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 494521,
+       "share": 1.0
+      },
+      {
+       "code": 575901,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 54469,
+       "share": 0.947
+      },
+      {
+       "code": 436893,
+       "share": 0.0
+      },
+      {
+       "code": 155408,
+       "share": 0.042
+      }
+     ]
+    },
+    {
+     "slot": "DM",
+     "label": "Defensive mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 503139,
+       "share": 0.929
+      },
+      {
+       "code": 200785,
+       "share": 0.731
+      },
+      {
+       "code": 155408,
+       "share": 0.298
+      },
+      {
+       "code": 158499,
+       "share": 0.042
+      },
+      {
+       "code": 614574,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LW",
+     "label": "Left wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 201658,
+       "share": 0.91
+      },
+      {
+       "code": 496208,
+       "share": 0.09
+      },
+      {
+       "code": 489888,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 560262,
+       "share": 0.0
+      },
+      {
+       "code": 222683,
+       "share": 0.0
+      },
+      {
+       "code": 158499,
+       "share": 0.836
+      },
+      {
+       "code": 201658,
+       "share": 0.043
+      },
+      {
+       "code": 503139,
+       "share": 0.043
+      }
+     ]
+    },
+    {
+     "slot": "RW",
+     "label": "Right wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 499604,
+       "share": 0.952
+      },
+      {
+       "code": 111317,
+       "share": 0.048
+      },
+      {
+       "code": 496208,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 444102,
+       "share": 0.987
+      },
+      {
+       "code": 561245,
+       "share": 0.013
+      }
+     ]
+    }
+   ]
+  },
+  "BRE": {
+   "formation": "4-2-3-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 200720,
+       "share": 0.99
+      },
+      {
+       "code": 507433,
+       "share": 0.01
+      },
+      {
+       "code": 235448,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 432830,
+       "share": 0.0
+      },
+      {
+       "code": 191866,
+       "share": 0.85
+      },
+      {
+       "code": 444765,
+       "share": 0.0
+      },
+      {
+       "code": 194010,
+       "share": 0.15
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 444765,
+       "share": 0.0
+      },
+      {
+       "code": 513086,
+       "share": 1.0
+      },
+      {
+       "code": 191866,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 249231,
+       "share": 0.927
+      },
+      {
+       "code": 194010,
+       "share": 0.073
+      },
+      {
+       "code": 613804,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 607464,
+       "share": 0.887
+      },
+      {
+       "code": 472713,
+       "share": 0.113
+      }
+     ]
+    },
+    {
+     "slot": "DM",
+     "label": "Defensive mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 204580,
+       "share": 0.895
+      },
+      {
+       "code": 513545,
+       "share": 0.793
+      },
+      {
+       "code": 508395,
+       "share": 0.312
+      },
+      {
+       "code": 207283,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LW",
+     "label": "Left wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 513418,
+       "share": 0.885
+      },
+      {
+       "code": 444180,
+       "share": 0.115
+      },
+      {
+       "code": 440089,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 207283,
+       "share": 0.0
+      },
+      {
+       "code": 440089,
+       "share": 0.457
+      },
+      {
+       "code": 244858,
+       "share": 0.164
+      },
+      {
+       "code": 508395,
+       "share": 0.272
+      },
+      {
+       "code": 543295,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RW",
+     "label": "Right wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 444180,
+       "share": 0.616
+      },
+      {
+       "code": 533463,
+       "share": 0.384
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 502500,
+       "share": 0.999
+      },
+      {
+       "code": 75115,
+       "share": 0.001
+      },
+      {
+       "code": 244858,
+       "share": 0.0
+      },
+      {
+       "code": 593174,
+       "share": 0.0
+      },
+      {
+       "code": 513418,
+       "share": 0.0
+      }
+     ]
+    }
+   ]
+  },
+  "BHA": {
+   "formation": "4-2-3-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 489639,
+       "share": 1.0
+      },
+      {
+       "code": 49262,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 83299,
+       "share": 0.75
+      },
+      {
+       "code": 222694,
+       "share": 0.25
+      },
+      {
+       "code": 204120,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 610799,
+       "share": 0.94
+      },
+      {
+       "code": 550090,
+       "share": 0.06
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 204120,
+       "share": 0.755
+      },
+      {
+       "code": 512123,
+       "share": 0.19
+      },
+      {
+       "code": 231416,
+       "share": 0.0
+      },
+      {
+       "code": 465730,
+       "share": 0.0
+      },
+      {
+       "code": 222694,
+       "share": 0.055
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 467779,
+       "share": 0.0
+      },
+      {
+       "code": 231416,
+       "share": 0.821
+      },
+      {
+       "code": 451490,
+       "share": 0.137
+      },
+      {
+       "code": 610799,
+       "share": 0.042
+      }
+     ]
+    },
+    {
+     "slot": "DM",
+     "label": "Defensive mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 60307,
+       "share": 0.973
+      },
+      {
+       "code": 509416,
+       "share": 0.506
+      },
+      {
+       "code": 592984,
+       "share": 0.392
+      },
+      {
+       "code": 204120,
+       "share": 0.08
+      },
+      {
+       "code": 219249,
+       "share": 0.047
+      }
+     ]
+    },
+    {
+     "slot": "LW",
+     "label": "Left wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 465730,
+       "share": 0.794
+      },
+      {
+       "code": 451340,
+       "share": 0.0
+      },
+      {
+       "code": 592031,
+       "share": 0.0
+      },
+      {
+       "code": 612855,
+       "share": 0.097
+      },
+      {
+       "code": 611695,
+       "share": 0.055
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 532529,
+       "share": 0.0
+      },
+      {
+       "code": 611695,
+       "share": 0.725
+      },
+      {
+       "code": 509416,
+       "share": 0.134
+      },
+      {
+       "code": 463067,
+       "share": 0.039
+      },
+      {
+       "code": 514254,
+       "share": 0.039
+      }
+     ]
+    },
+    {
+     "slot": "RW",
+     "label": "Right wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 514254,
+       "share": 0.868
+      },
+      {
+       "code": 592031,
+       "share": 0.0
+      },
+      {
+       "code": 219249,
+       "share": 0.074
+      },
+      {
+       "code": 231416,
+       "share": 0.0
+      },
+      {
+       "code": 463067,
+       "share": 0.057
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 647850,
+       "share": 0.705
+      },
+      {
+       "code": 463067,
+       "share": 0.23
+      },
+      {
+       "code": 608181,
+       "share": 0.0
+      },
+      {
+       "code": 219249,
+       "share": 0.033
+      },
+      {
+       "code": 612855,
+       "share": 0.033
+      }
+     ]
+    }
+   ]
+  },
+  "CHE": {
+   "formation": "3-4-2-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 98980,
+       "share": 0.934
+      },
+      {
+       "code": 549939,
+       "share": 0.066
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 460028,
+       "share": 0.708
+      },
+      {
+       "code": 551210,
+       "share": 0.195
+      },
+      {
+       "code": 444463,
+       "share": 0.097
+      }
+     ]
+    },
+    {
+     "slot": "CCB",
+     "label": "Centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 437499,
+       "share": 0.936
+      },
+      {
+       "code": 460028,
+       "share": 0.064
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 444463,
+       "share": 0.826
+      },
+      {
+       "code": 577016,
+       "share": 0.174
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left wing-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 551210,
+       "share": 0.534
+      },
+      {
+       "code": 498444,
+       "share": 0.453
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right wing-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 247632,
+       "share": 0.467
+      },
+      {
+       "code": 482609,
+       "share": 0.395
+      },
+      {
+       "code": 225796,
+       "share": 0.098
+      },
+      {
+       "code": 577016,
+       "share": 0.039
+      }
+     ]
+    },
+    {
+     "slot": "CM",
+     "label": "Central mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 514356,
+       "share": 0.565
+      },
+      {
+       "code": 56979,
+       "share": 0.499
+      },
+      {
+       "code": 543158,
+       "share": 0.262
+      },
+      {
+       "code": 225796,
+       "share": 0.434
+      },
+      {
+       "code": 486672,
+       "share": 0.24
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 244851,
+       "share": 0.75
+      },
+      {
+       "code": 244850,
+       "share": 0.857
+      },
+      {
+       "code": 247632,
+       "share": 0.236
+      },
+      {
+       "code": 624773,
+       "share": 0.149
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 475168,
+       "share": 0.75
+      },
+      {
+       "code": 50175,
+       "share": 0.25
+      },
+      {
+       "code": 247632,
+       "share": 0.0
+      }
+     ]
+    }
+   ]
+  },
+  "COV": {
+   "formation": "3-4-3",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 472739,
+       "share": 1.0
+      },
+      {
+       "code": 79602,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 231065,
+       "share": 0.909
+      },
+      {
+       "code": 539142,
+       "share": 0.0
+      },
+      {
+       "code": 80178,
+       "share": 0.091
+      }
+     ]
+    },
+    {
+     "slot": "CCB",
+     "label": "Centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 461102,
+       "share": 1.0
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 461102,
+       "share": 0.0
+      },
+      {
+       "code": 539142,
+       "share": 0.0
+      },
+      {
+       "code": 566213,
+       "share": 1.0
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left wing-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 173878,
+       "share": 1.0
+      },
+      {
+       "code": 80178,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right wing-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 451284,
+       "share": 0.75
+      },
+      {
+       "code": 204813,
+       "share": 0.25
+      },
+      {
+       "code": 661888,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "CM",
+     "label": "Central mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 168144,
+       "share": 0.943
+      },
+      {
+       "code": 428580,
+       "share": 0.72
+      },
+      {
+       "code": 661888,
+       "share": 0.337
+      }
+     ]
+    },
+    {
+     "slot": "LW",
+     "label": "Left wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 242893,
+       "share": 0.0
+      },
+      {
+       "code": 196100,
+       "share": 0.0
+      },
+      {
+       "code": 230730,
+       "share": 0.0
+      },
+      {
+       "code": 241293,
+       "share": 0.703
+      },
+      {
+       "code": 480457,
+       "share": 0.297
+      }
+     ]
+    },
+    {
+     "slot": "RW",
+     "label": "Right wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 501459,
+       "share": 0.0
+      },
+      {
+       "code": 469272,
+       "share": 0.031
+      },
+      {
+       "code": 480457,
+       "share": 0.672
+      },
+      {
+       "code": 241293,
+       "share": 0.297
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 210156,
+       "share": 0.0
+      },
+      {
+       "code": 627221,
+       "share": 0.19
+      },
+      {
+       "code": 230730,
+       "share": 0.532
+      },
+      {
+       "code": 218997,
+       "share": 0.137
+      },
+      {
+       "code": 469272,
+       "share": 0.07
+      }
+     ]
+    }
+   ]
+  },
+  "CRY": {
+   "formation": "3-4-2-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 172649,
+       "share": 0.0
+      },
+      {
+       "code": 121709,
+       "share": 1.0
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 515621,
+       "share": 0.0
+      },
+      {
+       "code": 651426,
+       "share": 0.563
+      },
+      {
+       "code": 605972,
+       "share": 0.33
+      },
+      {
+       "code": 220362,
+       "share": 0.0
+      },
+      {
+       "code": 223723,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "CCB",
+     "label": "Centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 220362,
+       "share": 0.0
+      },
+      {
+       "code": 223723,
+       "share": 0.75
+      },
+      {
+       "code": 427623,
+       "share": 0.183
+      },
+      {
+       "code": 152551,
+       "share": 0.067
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 427623,
+       "share": 0.681
+      },
+      {
+       "code": 651426,
+       "share": 0.249
+      },
+      {
+       "code": 220362,
+       "share": 0.0
+      },
+      {
+       "code": 152551,
+       "share": 0.069
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left wing-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 244723,
+       "share": 0.916
+      },
+      {
+       "code": 172850,
+       "share": 0.084
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right wing-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 570794,
+       "share": 0.897
+      },
+      {
+       "code": 242313,
+       "share": 0.103
+      }
+     ]
+    },
+    {
+     "slot": "CM",
+     "label": "Central mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 496221,
+       "share": 0.839
+      },
+      {
+       "code": 450063,
+       "share": 1.0
+      },
+      {
+       "code": 209400,
+       "share": 0.161
+      },
+      {
+       "code": 108413,
+       "share": 0.0
+      },
+      {
+       "code": 152551,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 488024,
+       "share": 0.746
+      },
+      {
+       "code": 232185,
+       "share": 0.555
+      },
+      {
+       "code": 209400,
+       "share": 0.509
+      },
+      {
+       "code": 205533,
+       "share": 0.191
+      },
+      {
+       "code": 433154,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 247412,
+       "share": 0.881
+      },
+      {
+       "code": 231747,
+       "share": 0.0
+      },
+      {
+       "code": 205533,
+       "share": 0.119
+      }
+     ]
+    }
+   ]
+  },
+  "EVE": {
+   "formation": "4-2-3-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 111234,
+       "share": 1.0
+      },
+      {
+       "code": 229600,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 480455,
+       "share": 0.887
+      },
+      {
+       "code": 106611,
+       "share": 0.113
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 17761,
+       "share": 1.0
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 224967,
+       "share": 0.992
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 154043,
+       "share": 0.811
+      },
+      {
+       "code": 513466,
+       "share": 0.0
+      },
+      {
+       "code": 512462,
+       "share": 0.189
+      }
+     ]
+    },
+    {
+     "slot": "DM",
+     "label": "Defensive mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 232928,
+       "share": 0.97
+      },
+      {
+       "code": 609873,
+       "share": 0.621
+      },
+      {
+       "code": 128295,
+       "share": 0.0
+      },
+      {
+       "code": 244860,
+       "share": 0.137
+      },
+      {
+       "code": 215413,
+       "share": 0.085
+      }
+     ]
+    },
+    {
+     "slot": "LW",
+     "label": "Left wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 114283,
+       "share": 0.66
+      },
+      {
+       "code": 550615,
+       "share": 0.34
+      },
+      {
+       "code": 215413,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 215413,
+       "share": 0.821
+      },
+      {
+       "code": 502697,
+       "share": 0.145
+      },
+      {
+       "code": 242898,
+       "share": 0.034
+      }
+     ]
+    },
+    {
+     "slot": "RW",
+     "label": "Right wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 496661,
+       "share": 0.302
+      },
+      {
+       "code": 242898,
+       "share": 0.678
+      },
+      {
+       "code": 513466,
+       "share": 0.0
+      },
+      {
+       "code": 550615,
+       "share": 0.02
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 586309,
+       "share": 0.906
+      },
+      {
+       "code": 502697,
+       "share": 0.02
+      },
+      {
+       "code": 550615,
+       "share": 0.02
+      },
+      {
+       "code": 114283,
+       "share": 0.02
+      },
+      {
+       "code": 242898,
+       "share": 0.02
+      }
+     ]
+    }
+   ]
+  },
+  "FUL": {
+   "formation": "4-2-3-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 80201,
+       "share": 1.0
+      },
+      {
+       "code": 86873,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 232892,
+       "share": 0.903
+      },
+      {
+       "code": 246301,
+       "share": 0.097
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 442299,
+       "share": 0.811
+      },
+      {
+       "code": 174874,
+       "share": 0.189
+      },
+      {
+       "code": 232892,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 169528,
+       "share": 0.918
+      },
+      {
+       "code": 184349,
+       "share": 0.082
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 166477,
+       "share": 0.937
+      },
+      {
+       "code": 167074,
+       "share": 0.063
+      }
+     ]
+    },
+    {
+     "slot": "DM",
+     "label": "Defensive mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 207189,
+       "share": 0.803
+      },
+      {
+       "code": 153366,
+       "share": 0.0
+      },
+      {
+       "code": 463210,
+       "share": 0.773
+      },
+      {
+       "code": 551050,
+       "share": 0.0
+      },
+      {
+       "code": 153133,
+       "share": 0.424
+      }
+     ]
+    },
+    {
+     "slot": "LW",
+     "label": "Left wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 153133,
+       "share": 0.517
+      },
+      {
+       "code": 571779,
+       "share": 0.483
+      },
+      {
+       "code": 560552,
+       "share": 0.0
+      },
+      {
+       "code": 477555,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 577725,
+       "share": 0.715
+      },
+      {
+       "code": 209289,
+       "share": 0.285
+      }
+     ]
+    },
+    {
+     "slot": "RW",
+     "label": "Right wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 477555,
+       "share": 0.908
+      },
+      {
+       "code": 184349,
+       "share": 0.031
+      },
+      {
+       "code": 166477,
+       "share": 0.031
+      },
+      {
+       "code": 153133,
+       "share": 0.031
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 551466,
+       "share": 1.0
+      },
+      {
+       "code": 244042,
+       "share": 0.0
+      },
+      {
+       "code": 631786,
+       "share": 0.0
+      }
+     ]
+    }
+   ]
+  },
+  "HUL": {
+   "formation": "3-4-3",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 473284,
+       "share": 1.0
+      },
+      {
+       "code": 167825,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 606930,
+       "share": 1.0
+      },
+      {
+       "code": 597462,
+       "share": 0.0
+      },
+      {
+       "code": 160817,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "CCB",
+     "label": "Centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 108416,
+       "share": 1.0
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 146426,
+       "share": 1.0
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left wing-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 232351,
+       "share": 1.0
+      },
+      {
+       "code": 169359,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right wing-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 193278,
+       "share": 1.0
+      }
+     ]
+    },
+    {
+     "slot": "CM",
+     "label": "Central mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 243413,
+       "share": 1.0
+      },
+      {
+       "code": 101282,
+       "share": 0.731
+      },
+      {
+       "code": 552946,
+       "share": 0.16
+      },
+      {
+       "code": 445028,
+       "share": 0.0
+      },
+      {
+       "code": 171270,
+       "share": 0.11
+      }
+     ]
+    },
+    {
+     "slot": "LW",
+     "label": "Left wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 608227,
+       "share": 0.793
+      },
+      {
+       "code": 243951,
+       "share": 0.207
+      }
+     ]
+    },
+    {
+     "slot": "RW",
+     "label": "Right wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 540324,
+       "share": 1.0
+      },
+      {
+       "code": 490884,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 169432,
+       "share": 1.0
+      },
+      {
+       "code": 631000,
+       "share": 0.0
+      }
+     ]
+    }
+   ]
+  },
+  "IPS": {
+   "formation": "4-2-3-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 240514,
+       "share": 0.793
+      },
+      {
+       "code": 108813,
+       "share": 0.207
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 449429,
+       "share": 0.793
+      },
+      {
+       "code": 183015,
+       "share": 0.0
+      },
+      {
+       "code": 216616,
+       "share": 0.207
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 219924,
+       "share": 0.888
+      },
+      {
+       "code": 183015,
+       "share": 0.112
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 455084,
+       "share": 1.0
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 216616,
+       "share": 0.793
+      },
+      {
+       "code": 176420,
+       "share": 0.207
+      },
+      {
+       "code": 572584,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "DM",
+     "label": "Defensive mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 212314,
+       "share": 0.926
+      },
+      {
+       "code": 218543,
+       "share": 0.863
+      },
+      {
+       "code": 501390,
+       "share": 0.211
+      },
+      {
+       "code": 216055,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LW",
+     "label": "Left wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 443261,
+       "share": 0.627
+      },
+      {
+       "code": 481624,
+       "share": 0.0
+      },
+      {
+       "code": 442967,
+       "share": 0.373
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 474120,
+       "share": 1.0
+      },
+      {
+       "code": 232457,
+       "share": 0.0
+      },
+      {
+       "code": 557012,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RW",
+     "label": "Right wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 531442,
+       "share": 0.0
+      },
+      {
+       "code": 461587,
+       "share": 0.862
+      },
+      {
+       "code": 481624,
+       "share": 0.041
+      },
+      {
+       "code": 232457,
+       "share": 0.024
+      },
+      {
+       "code": 572584,
+       "share": 0.024
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 543968,
+       "share": 1.0
+      },
+      {
+       "code": 147675,
+       "share": 0.0
+      },
+      {
+       "code": 431639,
+       "share": 0.0
+      }
+     ]
+    }
+   ]
+  },
+  "LEE": {
+   "formation": "3-4-2-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 432720,
+       "share": 0.849
+      },
+      {
+       "code": 155465,
+       "share": 0.151
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 522047,
+       "share": 1.0
+      }
+     ]
+    },
+    {
+     "slot": "CCB",
+     "label": "Centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 434752,
+       "share": 0.543
+      },
+      {
+       "code": 173774,
+       "share": 0.457
+      },
+      {
+       "code": 214225,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 214225,
+       "share": 0.0
+      },
+      {
+       "code": 220627,
+       "share": 0.852
+      },
+      {
+       "code": 173774,
+       "share": 0.148
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left wing-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 243526,
+       "share": 0.868
+      },
+      {
+       "code": 437497,
+       "share": 0.132
+      },
+      {
+       "code": 220627,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right wing-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 226182,
+       "share": 0.86
+      },
+      {
+       "code": 200617,
+       "share": 0.104
+      },
+      {
+       "code": 220627,
+       "share": 0.035
+      }
+     ]
+    },
+    {
+     "slot": "CM",
+     "label": "Central mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 199598,
+       "share": 0.996
+      },
+      {
+       "code": 248056,
+       "share": 0.753
+      },
+      {
+       "code": 466525,
+       "share": 0.251
+      },
+      {
+       "code": 486520,
+       "share": 0.0
+      },
+      {
+       "code": 180135,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 427637,
+       "share": 1.0
+      },
+      {
+       "code": 180135,
+       "share": 0.062
+      },
+      {
+       "code": 435997,
+       "share": 0.664
+      },
+      {
+       "code": 153682,
+       "share": 0.0
+      },
+      {
+       "code": 466525,
+       "share": 0.143
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 177815,
+       "share": 0.995
+      },
+      {
+       "code": 435997,
+       "share": 0.005
+      },
+      {
+       "code": 174594,
+       "share": 0.0
+      },
+      {
+       "code": 427637,
+       "share": 0.0
+      }
+     ]
+    }
+   ]
+  },
+  "LIV": {
+   "formation": "4-2-3-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 116535,
+       "share": 0.913
+      },
+      {
+       "code": 449027,
+       "share": 0.087
+      },
+      {
+       "code": 155503,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 97032,
+       "share": 1.0
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 606702,
+       "share": 1.0
+      },
+      {
+       "code": 647681,
+       "share": 0.0
+      },
+      {
+       "code": 171287,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 544877,
+       "share": 0.701
+      },
+      {
+       "code": 214285,
+       "share": 0.231
+      },
+      {
+       "code": 171287,
+       "share": 0.068
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 492777,
+       "share": 0.0
+      },
+      {
+       "code": 445087,
+       "share": 0.773
+      },
+      {
+       "code": 216094,
+       "share": 0.227
+      },
+      {
+       "code": 171287,
+       "share": 0.0
+      },
+      {
+       "code": 158983,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "DM",
+     "label": "Defensive mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 243016,
+       "share": 0.748
+      },
+      {
+       "code": 424876,
+       "share": 0.723
+      },
+      {
+       "code": 441266,
+       "share": 0.528
+      },
+      {
+       "code": 591386,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LW",
+     "label": "Left wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 482616,
+       "share": 0.811
+      },
+      {
+       "code": 243298,
+       "share": 0.189
+      },
+      {
+       "code": 611922,
+       "share": 0.0
+      },
+      {
+       "code": 551499,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 494595,
+       "share": 0.78
+      },
+      {
+       "code": 491501,
+       "share": 0.041
+      },
+      {
+       "code": 424876,
+       "share": 0.179
+      }
+     ]
+    },
+    {
+     "slot": "RW",
+     "label": "Right wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 551499,
+       "share": 0.533
+      },
+      {
+       "code": 243298,
+       "share": 0.213
+      },
+      {
+       "code": 611922,
+       "share": 0.08
+      },
+      {
+       "code": 216094,
+       "share": 0.077
+      },
+      {
+       "code": 223541,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 219168,
+       "share": 0.746
+      },
+      {
+       "code": 510663,
+       "share": 0.0
+      },
+      {
+       "code": 514514,
+       "share": 0.053
+      },
+      {
+       "code": 243298,
+       "share": 0.201
+      },
+      {
+       "code": 223541,
+       "share": 0.0
+      }
+     ]
+    }
+   ]
+  },
+  "MCI": {
+   "formation": "4-2-3-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 204936,
+       "share": 0.944
+      },
+      {
+       "code": 106921,
+       "share": 0.056
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 209036,
+       "share": 0.726
+      },
+      {
+       "code": 616222,
+       "share": 0.0
+      },
+      {
+       "code": 171314,
+       "share": 0.238
+      },
+      {
+       "code": 477424,
+       "share": 0.036
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 171314,
+       "share": 0.6
+      },
+      {
+       "code": 578153,
+       "share": 0.331
+      },
+      {
+       "code": 209036,
+       "share": 0.069
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 477424,
+       "share": 0.699
+      },
+      {
+       "code": 472769,
+       "share": 0.199
+      },
+      {
+       "code": 448514,
+       "share": 0.102
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 465351,
+       "share": 0.702
+      },
+      {
+       "code": 578153,
+       "share": 0.209
+      },
+      {
+       "code": 477064,
+       "share": 0.09
+      }
+     ]
+    },
+    {
+     "slot": "DM",
+     "label": "Defensive mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 215379,
+       "share": 0.959
+      },
+      {
+       "code": 637238,
+       "share": 0.304
+      },
+      {
+       "code": 448047,
+       "share": 0.737
+      },
+      {
+       "code": 472769,
+       "share": 0.0
+      },
+      {
+       "code": 209036,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LW",
+     "label": "Left wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 437730,
+       "share": 0.576
+      },
+      {
+       "code": 248875,
+       "share": 0.424
+      },
+      {
+       "code": 440993,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 466052,
+       "share": 0.717
+      },
+      {
+       "code": 448047,
+       "share": 0.085
+      },
+      {
+       "code": 472769,
+       "share": 0.08
+      },
+      {
+       "code": 437730,
+       "share": 0.031
+      },
+      {
+       "code": 465351,
+       "share": 0.025
+      }
+     ]
+    },
+    {
+     "slot": "RW",
+     "label": "Right wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 440993,
+       "share": 0.518
+      },
+      {
+       "code": 624777,
+       "share": 0.19
+      },
+      {
+       "code": 209244,
+       "share": 0.0
+      },
+      {
+       "code": 437730,
+       "share": 0.282
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 223094,
+       "share": 0.938
+      },
+      {
+       "code": 209244,
+       "share": 0.0
+      },
+      {
+       "code": 437730,
+       "share": 0.062
+      }
+     ]
+    }
+   ]
+  },
+  "MUN": {
+   "formation": "4-2-3-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 465247,
+       "share": 0.999
+      },
+      {
+       "code": 59735,
+       "share": 0.001
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 221820,
+       "share": 0.908
+      },
+      {
+       "code": 606745,
+       "share": 0.092
+      },
+      {
+       "code": 95658,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 95658,
+       "share": 0.891
+      },
+      {
+       "code": 209365,
+       "share": 0.0
+      },
+      {
+       "code": 550864,
+       "share": 0.109
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 106760,
+       "share": 0.856
+      },
+      {
+       "code": 596777,
+       "share": 0.144
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 216051,
+       "share": 0.798
+      },
+      {
+       "code": 230001,
+       "share": 0.202
+      }
+     ]
+    },
+    {
+     "slot": "DM",
+     "label": "Defensive mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 516895,
+       "share": 0.75
+      },
+      {
+       "code": 166989,
+       "share": 0.949
+      },
+      {
+       "code": 535301,
+       "share": 0.301
+      },
+      {
+       "code": 532605,
+       "share": 0.0
+      },
+      {
+       "code": 184341,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LW",
+     "label": "Left wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 176297,
+       "share": 0.75
+      },
+      {
+       "code": 430871,
+       "share": 0.0
+      },
+      {
+       "code": 596777,
+       "share": 0.233
+      },
+      {
+       "code": 493250,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 141746,
+       "share": 0.985
+      }
+     ]
+    },
+    {
+     "slot": "RW",
+     "label": "Right wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 446008,
+       "share": 0.783
+      },
+      {
+       "code": 493250,
+       "share": 0.0
+      },
+      {
+       "code": 576628,
+       "share": 0.111
+      },
+      {
+       "code": 458249,
+       "share": 0.023
+      },
+      {
+       "code": 184341,
+       "share": 0.038
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 430871,
+       "share": 0.719
+      },
+      {
+       "code": 485711,
+       "share": 0.168
+      },
+      {
+       "code": 446008,
+       "share": 0.0
+      },
+      {
+       "code": 458249,
+       "share": 0.051
+      },
+      {
+       "code": 166989,
+       "share": 0.024
+      }
+     ]
+    }
+   ]
+  },
+  "NEW": {
+   "formation": "4-2-3-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 470551,
+       "share": 1.0
+      },
+      {
+       "code": 554578,
+       "share": 0.0
+      },
+      {
+       "code": 98747,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 220237,
+       "share": 0.877
+      },
+      {
+       "code": 78916,
+       "share": 0.0
+      },
+      {
+       "code": 119471,
+       "share": 0.123
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 465642,
+       "share": 0.982
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 487838,
+       "share": 1.0
+      },
+      {
+       "code": 78916,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 463726,
+       "share": 0.0
+      },
+      {
+       "code": 441191,
+       "share": 0.722
+      },
+      {
+       "code": 547719,
+       "share": 0.221
+      },
+      {
+       "code": 114243,
+       "share": 0.056
+      }
+     ]
+    },
+    {
+     "slot": "DM",
+     "label": "Defensive mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 465694,
+       "share": 0.71
+      },
+      {
+       "code": 636852,
+       "share": 0.557
+      },
+      {
+       "code": 547719,
+       "share": 0.56
+      },
+      {
+       "code": 200089,
+       "share": 0.174
+      },
+      {
+       "code": 180974,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LW",
+     "label": "Left wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 201666,
+       "share": 0.821
+      },
+      {
+       "code": 611665,
+       "share": 0.16
+      },
+      {
+       "code": 180974,
+       "share": 0.0
+      },
+      {
+       "code": 232653,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 613221,
+       "share": 0.722
+      },
+      {
+       "code": 200089,
+       "share": 0.278
+      },
+      {
+       "code": 216646,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RW",
+     "label": "Right wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 114243,
+       "share": 0.894
+      },
+      {
+       "code": 449434,
+       "share": 0.0
+      },
+      {
+       "code": 201666,
+       "share": 0.06
+      },
+      {
+       "code": 200089,
+       "share": 0.023
+      },
+      {
+       "code": 613221,
+       "share": 0.023
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 538207,
+       "share": 0.0
+      },
+      {
+       "code": 216646,
+       "share": 0.974
+      },
+      {
+       "code": 611665,
+       "share": 0.026
+      }
+     ]
+    }
+   ]
+  },
+  "NFO": {
+   "formation": "3-4-2-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 85633,
+       "share": 0.987
+      },
+      {
+       "code": 221389,
+       "share": 0.013
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 575476,
+       "share": 0.806
+      },
+      {
+       "code": 575458,
+       "share": 0.068
+      },
+      {
+       "code": 470315,
+       "share": 0.126
+      }
+     ]
+    },
+    {
+     "slot": "CCB",
+     "label": "Centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 227444,
+       "share": 0.0
+      },
+      {
+       "code": 568420,
+       "share": 0.798
+      },
+      {
+       "code": 575476,
+       "share": 0.107
+      },
+      {
+       "code": 575458,
+       "share": 0.096
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 575458,
+       "share": 0.726
+      },
+      {
+       "code": 227444,
+       "share": 0.0
+      },
+      {
+       "code": 159506,
+       "share": 0.274
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left wing-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 215136,
+       "share": 0.876
+      },
+      {
+       "code": 470315,
+       "share": 0.124
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right wing-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 247348,
+       "share": 0.819
+      },
+      {
+       "code": 159506,
+       "share": 0.181
+      },
+      {
+       "code": 500151,
+       "share": 0.0
+      },
+      {
+       "code": 215136,
+       "share": 0.0
+      },
+      {
+       "code": 575458,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "CM",
+     "label": "Central mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 204561,
+       "share": 0.897
+      },
+      {
+       "code": 432714,
+       "share": 0.647
+      },
+      {
+       "code": 210462,
+       "share": 0.431
+      },
+      {
+       "code": 204968,
+       "share": 0.0
+      },
+      {
+       "code": 250199,
+       "share": 0.025
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 222531,
+       "share": 0.875
+      },
+      {
+       "code": 456512,
+       "share": 0.613
+      },
+      {
+       "code": 250199,
+       "share": 0.039
+      },
+      {
+       "code": 432714,
+       "share": 0.067
+      },
+      {
+       "code": 209046,
+       "share": 0.271
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 463034,
+       "share": 0.731
+      },
+      {
+       "code": 482973,
+       "share": 0.269
+      },
+      {
+       "code": 465680,
+       "share": 0.0
+      },
+      {
+       "code": 60689,
+       "share": 0.0
+      }
+     ]
+    }
+   ]
+  },
+  "TOT": {
+   "formation": "4-2-3-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 485055,
+       "share": 0.895
+      },
+      {
+       "code": 67089,
+       "share": 0.105
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 491279,
+       "share": 0.909
+      },
+      {
+       "code": 221466,
+       "share": 0.091
+      },
+      {
+       "code": 109646,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 469142,
+       "share": 0.999
+      },
+      {
+       "code": 109646,
+       "share": 0.001
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 122798,
+       "share": 0.795
+      },
+      {
+       "code": 487053,
+       "share": 0.205
+      },
+      {
+       "code": 115556,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 441164,
+       "share": 0.711
+      },
+      {
+       "code": 547701,
+       "share": 0.289
+      }
+     ]
+    },
+    {
+     "slot": "DM",
+     "label": "Defensive mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 202993,
+       "share": 0.878
+      },
+      {
+       "code": 432422,
+       "share": 0.901
+      },
+      {
+       "code": 570526,
+       "share": 0.08
+      },
+      {
+       "code": 551226,
+       "share": 0.106
+      },
+      {
+       "code": 547701,
+       "share": 0.035
+      }
+     ]
+    },
+    {
+     "slot": "LW",
+     "label": "Left wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 511499,
+       "share": 0.454
+      },
+      {
+       "code": 438234,
+       "share": 0.546
+      },
+      {
+       "code": 493362,
+       "share": 0.0
+      },
+      {
+       "code": 550839,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 551226,
+       "share": 0.618
+      },
+      {
+       "code": 232787,
+       "share": 0.382
+      },
+      {
+       "code": 550839,
+       "share": 0.0
+      },
+      {
+       "code": 493362,
+       "share": 0.0
+      },
+      {
+       "code": 460842,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RW",
+     "label": "Right wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 510281,
+       "share": 0.671
+      },
+      {
+       "code": 550839,
+       "share": 0.0
+      },
+      {
+       "code": 460842,
+       "share": 0.322
+      },
+      {
+       "code": 441164,
+       "share": 0.008
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 154566,
+       "share": 0.671
+      },
+      {
+       "code": 438234,
+       "share": 0.274
+      },
+      {
+       "code": 493362,
+       "share": 0.0
+      },
+      {
+       "code": 511499,
+       "share": 0.021
+      },
+      {
+       "code": 460842,
+       "share": 0.021
+      }
+     ]
+    }
+   ]
+  },
+  "SUN": {
+   "formation": "4-2-3-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 498016,
+       "share": 1.0
+      },
+      {
+       "code": 515046,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 223827,
+       "share": 0.584
+      },
+      {
+       "code": 201895,
+       "share": 0.352
+      },
+      {
+       "code": 167512,
+       "share": 0.064
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 135720,
+       "share": 0.873
+      },
+      {
+       "code": 200834,
+       "share": 0.0
+      },
+      {
+       "code": 223827,
+       "share": 0.127
+      },
+      {
+       "code": 167512,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 434399,
+       "share": 0.903
+      },
+      {
+       "code": 638411,
+       "share": 0.097
+      },
+      {
+       "code": 487676,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 200834,
+       "share": 0.669
+      },
+      {
+       "code": 93605,
+       "share": 0.227
+      },
+      {
+       "code": 167512,
+       "share": 0.037
+      },
+      {
+       "code": 487676,
+       "share": 0.067
+      }
+     ]
+    },
+    {
+     "slot": "DM",
+     "label": "Defensive mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 84450,
+       "share": 0.966
+      },
+      {
+       "code": 577669,
+       "share": 0.945
+      },
+      {
+       "code": 696104,
+       "share": 0.09
+      }
+     ]
+    },
+    {
+     "slot": "LW",
+     "label": "Left wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 536661,
+       "share": 0.857
+      },
+      {
+       "code": 549940,
+       "share": 0.143
+      },
+      {
+       "code": 549912,
+       "share": 0.0
+      },
+      {
+       "code": 484420,
+       "share": 0.0
+      },
+      {
+       "code": 461199,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 484420,
+       "share": 0.905
+      },
+      {
+       "code": 547027,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RW",
+     "label": "Right wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 93605,
+       "share": 0.773
+      },
+      {
+       "code": 487676,
+       "share": 0.227
+      },
+      {
+       "code": 699989,
+       "share": 0.0
+      },
+      {
+       "code": 554197,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 441264,
+       "share": 0.993
+      },
+      {
+       "code": 437505,
+       "share": 0.007
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

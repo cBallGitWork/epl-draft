@@ -1,5 +1,6 @@
 import type {
   IntelCareers,
+  IntelDepth,
   IntelMatch,
   IntelMatches,
   IntelPlayer,
@@ -10,12 +11,13 @@ import type {
   IntelStrength,
   IntelTouches,
   IntelXi,
+  ClubDepth,
   ClubStrength,
   ProjectedPlayer,
   Shot,
   TouchPlayer,
 } from "@epl/core";
-import { careerIntel, matchIntel, projectionIntel, shotIntel, squadIntel, strengthIntel, touchIntel } from "@epl/core";
+import { careerIntel, depthIntel, matchIntel, projectionIntel, shotIntel, squadIntel, strengthIntel, touchIntel } from "@epl/core";
 import squadsFile from "../../../data/intel/squads/26-27.json";
 import xiFile from "../../../data/intel/xi/26-27.json";
 import piecesFile from "../../../data/intel/set-pieces/26-27.json";
@@ -25,6 +27,7 @@ import shotsFile from "../../../data/intel/shots/26-27.json";
 import strengthFile from "../../../data/intel/strength/26-27.json";
 import projectionsFile from "../../../data/intel/projections/26-27.json";
 import careersFile from "../../../data/intel/careers/26-27.json";
+import depthFile from "../../../data/intel/depth/26-27.json";
 
 // Where the app supplies the sister repo's export.
 //
@@ -108,3 +111,6 @@ export const intelProjectionsManifest = (projectionsFile as unknown as IntelProj
 
 /** The club each man was at in each season the sister's identity store holds, by FPL code. */
 export const intelCareers: Map<number, Map<string, string>> = careerIntel(careersFile as unknown as IntelCareers);
+/** Each club's depth chart by its three-letter label, and the export's manifest for its date. */
+export const intelDepth: Map<string, ClubDepth> = depthIntel(depthFile as unknown as IntelDepth);
+export const intelDepthManifest = (depthFile as unknown as IntelDepth).manifest;

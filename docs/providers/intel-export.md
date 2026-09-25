@@ -423,6 +423,21 @@ only against a season FPL's own history lists. Written compact; 108 KB.
 **Exported by hand on 25 Sep 2026**, from a scratch script reading the sister repo
 read-only, because a session was committing there that day. `export-epl-draft` should
 take it over; until then the file is as fresh as that run.
+## 8. `depth/26-27.json` — the depth chart
+
+Each club's chart for its first dealt gameweek (`manifest.gameweek`), by FPL's three-letter
+label: the formation, and every shirt with the men in line for it, the chart's own order:
+
+```jsonc
+{ "manifest": { /* … gameweek: 6 */ }, "clubs": { "MCI": { "formation": "4-2-3-1", "slots": [
+  { "slot": "DM", "label": "Defensive mid", "shirts": 2, "holders": [ { "code": 461358, "share": 0.96 } ] }
+] } } }
+```
+
+Read from the hub's `GET /roster/chart?team=<label>` (`weeks[0].slots`), each holder's
+`player_id` keyed to an FPL code through the 26-27 identity store. 59 KB. **Exported by hand
+on 25 Sep 2026**, like §7 and for the same reason; `export-epl-draft` should take it over,
+and until then the chart is as fresh as that run (the club page says when).
 
 ---
 

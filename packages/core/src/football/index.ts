@@ -110,6 +110,8 @@ export type { IntelTouches, Touch, TouchCentre, TouchPlayer } from "./intel/touc
 export { assistsOf, shotIntel, shotsInFixture, shotsOf } from "./intel/shots";
 export { careerIntel, seasonKey } from "./intel/careers";
 export type { IntelCareers } from "./intel/careers";
+export { depthIntel, depthLines, spotsOf } from "./intel/depth";
+export type { ClubDepth, DepthHolder, DepthSlot, DepthSpot, IntelDepth } from "./intel/depth";
 // A window of recent gameweeks, for narrowing the intel to recent form.
 export { fixtureGameweeks, gameweekSpan, inGameweeks, lastPlayed } from "./intel/window";
 export type { IntelShots, Shot } from "./intel/shots";
