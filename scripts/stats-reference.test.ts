@@ -30,6 +30,9 @@ const STAT_TYPES: readonly { file: string; types: readonly string[] }[] = [
   { file: "packages/core/src/football/premierleague/sheetEvents.ts", types: ["PlManMatch", "PlSubstitution"] },
   { file: "packages/core/src/football/premierleague/goals.ts", types: ["PlGoal"] },
   { file: "packages/core/src/football/premierleague/assists.ts", types: ["StreamCredit"] },
+  { file: "packages/core/src/football/premierleague/breaks.ts", types: ["RoundBreak"] },
+  { file: "packages/core/src/football/premierleague/map.ts", types: ["PlCommentaryLine"] },
+  { file: "packages/core/src/football/rankings.ts", types: ["Ranked"] },
   {
     file: "packages/core/src/football/intel/types.ts",
     types: ["IntelPlayer", "IntelStarter", "IntelTaker", "IntelMatchPlayer", "IntelMatchEvent", "IntelMatchSide"],
@@ -53,15 +56,39 @@ const STAT_TYPES: readonly { file: string; types: readonly string[] }[] = [
   { file: "packages/core/src/league/form.ts", types: ["FormGame"] },
   { file: "packages/core/src/league/fantrax/profileTables.ts", types: ["PlayerMatch"] },
   { file: "packages/core/src/league/fantrax/playerNews.ts", types: ["PlayerStory"] },
+  { file: "packages/core/src/league/fantrax/draft.ts", types: ["DraftPick"] },
   { file: "packages/core/src/join/cleanSheets.ts", types: ["PendingCleanSheets"] },
+  { file: "packages/core/src/gazette/powerRanking.ts", types: ["PowerRow"] },
+  { file: "packages/core/src/gazette/predictions/record.ts", types: ["Marked", "Miss"] },
+  { file: "packages/core/src/gazette/predictions/sides.ts", types: ["RecentGame", "SideForm"] },
+  { file: "packages/core/src/gazette/types.ts", types: ["Pick"] },
   { file: "apps/companion/app/players/teams/teamRows.ts", types: ["PoolMan", "TeamRow"] },
 ];
 
-/** Stats written as text, a list or a table of tables, which no written-type rule can pick out. */
+/** Rows no written-type rule can pick out: text, lists, keys and objects, and the functions a row cites. */
 const NAMED = [
   "FootballPlayer.status",
   "FootballPlayer.news",
   "FootballPlayer.newsAdded",
+  "FootballPlayer.birthDate",
+  "FootballPlayer.optaCode",
+  "MatchEvent.fixtureCode",
+  "PlCommentaryLine.type",
+  "PlCommentaryLine.minute",
+  "PlSquadMan.position",
+  "PlTeamSheet.formation",
+  "IntelPlayer.position",
+  "IntelPlayer.secondaryPositions",
+  "IntelPlayer.positionSource",
+  "IntelPlayer.line",
+  "IntelClubXi.formation",
+  "IntelCareers.players",
+  "Shot.pass",
+  "TouchPlayer.fixtures",
+  "LiveSquadPoints.players",
+  "injuryMinutes()",
+  "playerCodes()",
+  "againstPick()",
   "PlMatchFacts.halfTime",
   "PlMatchFacts.referee",
   "IntelMatch.halfTime",
@@ -101,6 +128,8 @@ const NOT_MEASURES = new Set([
   "settled",
   "percent",
   "owned",
+  "playerCode",
+  "digits",
 ]);
 
 /** A count, a flag or a keyed bag of figures: what a stat type's measurements are written as. */
@@ -125,8 +154,9 @@ const STATS_LEAGUE = {
 const DOMAIN_HEADER = "Domain field (path:line)";
 const TOKEN = /`([A-Z][A-Za-z]*)\.([a-z][A-Za-z]*)`/g;
 const PATH = /((?:packages|apps|scripts)\/[^`\s|]+?\.tsx?):(\d+)/g;
-/** A named field or a cited path, in the order the cell writes them. */
-const CITATION = /`([A-Z][A-Za-z]*)\.([a-z][A-Za-z]*)`|((?:packages|apps|scripts)\/[^`\s|]+?\.tsx?):(\d+)/g;
+const CALL = /`(\w+)\(\)`/g;
+/** A named field, a named function or a cited path, in the order the cell writes them. */
+const CITATION = /`([A-Z][A-Za-z]*)\.([a-z][A-Za-z]*)`|`(\w+)\(\)`|((?:packages|apps|scripts)\/[^`\s|]+?\.tsx?):(\d+)/g;
 
 interface Field {
   written: string;
@@ -196,7 +226,8 @@ const rows = domainRows();
 const tokens = rows.flatMap(({ domain }) =>
   [...domain.matchAll(TOKEN)].map((m) => ({ type: m[1] ?? "", field: m[2] ?? "", cell: domain })),
 );
-const documented = new Set(tokens.map((t) => `${t.type}.${t.field}`));
+const calls = rows.flatMap(({ domain }) => [...domain.matchAll(CALL)].map((m) => `${m[1] ?? ""}()`));
+const documented = new Set([...tokens.map((t) => `${t.type}.${t.field}`), ...calls]);
 
 describe("docs/providers/stats.md", () => {
   it("is parsed at all, so a broken reader cannot pass by finding nothing", () => {
@@ -213,30 +244,38 @@ describe("docs/providers/stats.md", () => {
     expect(wrong).toEqual([]);
   });
 
-  it("cites the first line of the fields named before the path", () => {
+  it("cites the first line of the fields, or the line of the function, named before the path", () => {
     const wrong = rows.flatMap(({ domain }) => {
       const out: string[] = [];
       let named: string[] = [];
+      let called: string[] = [];
       for (const m of domain.matchAll(CITATION)) {
         if (m[1] !== undefined) {
           named.push(`${m[1]}.${m[2] ?? ""}`);
           continue;
         }
-        const file = m[3] ?? "";
-        const at = Number(m[4]);
+        if (m[3] !== undefined) {
+          called.push(m[3]);
+          continue;
+        }
+        const file = m[4] ?? "";
+        const at = Number(m[5]);
         const lines = linesOf(file);
         const found = named.map((name) => {
           const [type = "", field = ""] = name.split(".");
           return declared(file, type)?.get(field)?.line ?? Infinity;
         });
         const first = Math.min(...found);
+        const unmatched = called.filter((name) => !new RegExp(`function ${name}\\(`).test(lines?.[at - 1] ?? ""));
         if (lines === null) out.push(`${file} does not exist`);
+        else if (unmatched.length > 0) out.push(`${file}:${at} does not declare ${unmatched.join(", ")}`);
         else if (named.length === 0 ? at > lines.length : at !== first) {
           out.push(`${file}:${at} should be :${first} (${named.join(", ") || "past the end"})`);
         }
         named = [];
+        called = [];
       }
-      return out;
+      return [...out, ...called.map((name) => `${name}() is named with no path after it`)];
     });
     expect(wrong).toEqual([]);
   });
@@ -255,7 +294,7 @@ describe("docs/providers/stats.md", () => {
     expect(missing).toEqual([]);
   });
 
-  it("has a row for every stat written as text, a list or a table", () => {
+  it("has a row for every field and function the NAMED list holds", () => {
     expect(NAMED.filter((key) => !documented.has(key))).toEqual([]);
   });
 
