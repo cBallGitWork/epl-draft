@@ -112,13 +112,12 @@ manager actually arrives with.
 
 ## News
 
-Championship Manager's news screen, which is an email client: a list of dated rows
-at the top, newest first, and the newest opened underneath with its headline
-centred in yellow over its body.
-
-The accent is right here by our own rules and not only by CM's: DESIGN §3 gives it
-to *yours · selected · active*, and the opened item is the selected one — the
-single place on this screen where anything is.
+**Mail's own shape** (Craig, 25 Sep 2026: "should match the Email/news section"): the
+dated list beside the letter on a desk and above it on a phone, the open row on CM's red
+ground, and the story opened in Mail's `Letter`, from "Fantrax's news desk". **The preview
+is the whole first sentence** ("text on preview line cuts off too early"): Fantrax cuts its
+headline at about a hundred characters with "...", so where the story begins with the cut
+headline its first sentence stands in, over two lines.
 
 **Fantrax's stories and nothing else** (Craig, 4 Sep 2026: "Remove the FPL part").
 FPL publishes one availability line, and that is a STATE rather than a story —
