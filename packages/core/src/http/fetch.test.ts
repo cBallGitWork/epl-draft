@@ -1,15 +1,15 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, onTestFinished, vi } from "vitest";
 import { ProviderError } from "./errors";
 import { serve, statusOnly } from "./fakeFetch";
 import { politeFetch } from "./fetch";
 
-afterEach(() => {
-  vi.useRealTimers();
-  vi.unstubAllGlobals();
-});
+afterEach(() => vi.useRealTimers());
 
 function capture(): RequestInit[] {
   const seen: RequestInit[] = [];
+  onTestFinished(() => {
+    vi.unstubAllGlobals();
+  });
   vi.stubGlobal("fetch", async (_url: string, init: RequestInit) => {
     seen.push(init);
     return new Response("{}", { status: 200 });

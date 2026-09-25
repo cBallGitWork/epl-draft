@@ -5,10 +5,7 @@ import { FantraxError, errorEnvelope, pageErrorEnvelope, responseErrorEnvelope }
 import { fxpaRead, unwrapFxpa } from "./fxpa";
 import pageError from "./__fixtures__/fxpaPageError.json";
 
-afterEach(() => {
-  vi.useRealTimers();
-  vi.unstubAllGlobals();
-});
+afterEach(() => vi.useRealTimers());
 
 // The fxpa envelope, recorded 12 Aug 2026 by asking the real league for its
 // commissioner hub without a session.

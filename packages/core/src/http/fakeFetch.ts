@@ -1,10 +1,13 @@
-import { vi } from "vitest";
+import { onTestFinished, vi } from "vitest";
 
 // Test support only: stands in for the network, so no test ever reaches a provider.
 
-/** Stubs fetch to give each answer in turn, repeating the last; counts the calls. */
+/** Stubs fetch for this test to give each answer in turn, repeating the last; counts the calls. */
 export function serve(...answers: (() => Response)[]): { calls: number } {
   const count = { calls: 0 };
+  onTestFinished(() => {
+    vi.unstubAllGlobals();
+  });
   vi.stubGlobal("fetch", async () => {
     const answer = answers[Math.min(count.calls, answers.length - 1)];
     count.calls++;

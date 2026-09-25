@@ -1,9 +1,7 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { ProviderError } from "../http/errors";
 import { htmlPage, serve, statusOnly } from "../http/fakeFetch";
 import { fetchEntry, fetchPicks } from "./client";
-
-afterEach(() => vi.unstubAllGlobals());
 
 describe("fetchEntry", () => {
   it("answers null for an id FPL has never heard of", async () => {

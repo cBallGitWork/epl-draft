@@ -1,9 +1,7 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { ProviderError } from "../../http/errors";
 import { htmlPage, serve, statusOnly } from "../../http/fakeFetch";
 import { fetchPlFixture } from "./client";
-
-afterEach(() => vi.unstubAllGlobals());
 
 describe("Premier League client", () => {
   it("reads a web page in place of JSON as malformed", async () => {

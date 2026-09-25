@@ -1,12 +1,10 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { ProviderError } from "../../http/errors";
 import { htmlPage, serve, statusOnly } from "../../http/fakeFetch";
 import { fetchLeagueInfo } from "./client";
 import { FantraxError } from "./errors";
 
 const LEAGUE = "league-under-test";
-
-afterEach(() => vi.unstubAllGlobals());
 
 describe("fxea reads", () => {
   it("read a web page in place of JSON as malformed, not as a SyntaxError", async () => {
