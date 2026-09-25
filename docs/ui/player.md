@@ -188,14 +188,14 @@ screen. So every rating here is derived from play we already measure, on CM's 1�
 scale, and **what we cannot measure gets no row** — Pace, Acceleration, Agility,
 Balance, Bravery and Flair are absent rather than invented.
 
-Ratings are a **percentile within the division, against everyone who has played**,
-never within a position: a defender's Finishing comes out low and a striker's
-Marking comes out low, which is what CM shows. It is the fraction he is strictly
-better than, not the midpoint of his tie — 203 of the 225 men past the minutes
-floor have made no saves, so a midrank put every outfielder at Handling 10.
+Ratings are a **percentile within his position group, against the men in it who have played**
+(since 25 Sep 2026; they were rated against the whole division until then, so a striker's
+Marking came out low as CM's would). It is the fraction he is strictly better than, not the
+midpoint of his tie — 203 of the 225 men past the minutes floor have made no saves, so a
+midrank put every outfielder at Handling 10.
 
-The ratings are set in `--color-mid` (amber, "a figure"), not CM's yellow: yellow
-is `--color-accent` and means *yours · selected · active*.
+The ratings are set in CM's orange (`--color-peak`) from 16 and amber (`--color-mid`) from 11,
+never CM's yellow: yellow is `--color-accent` and means *yours · selected · active*.
 
 ## The cyan line
 
@@ -243,7 +243,7 @@ from FPL's fantasy classification.
   and worthless as a reading. It settles as the season fills, and it is left
   undamped deliberately: damping needs a confidence model nobody asked for, and
   turns a number that is honest-but-thin into one that cannot be explained.
-- **The grid is fifteen attributes against CM's thirty-one.** Shots, shots on
+- **The grid is sixteen attributes against CM's thirty-one.** Shots, shots on
   target, fouls committed, fouls suffered and offsides are Fantrax-only and would
   buy five more — Aggression, Dribbling, Technique among them. They are not in
   yet because a percentile needs the whole division and `getPlayerProfile` answers
