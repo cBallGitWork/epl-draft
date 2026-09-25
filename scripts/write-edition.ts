@@ -36,15 +36,16 @@ import { readXi } from "./edition/xi";
 import { deskState } from "./edition/desk";
 import { deskContext } from "./edition/context";
 import { fire, type Run } from "./edition/firing";
-import { persistFilings, readLedger, readPaperStories } from "./edition/persist";
+import { printStory, readLedger, readPaperStories, saveFiling } from "./edition/persist";
 
 // The newsroom's orchestrator, run from CI on a wide cron net.
 //
 // **Facts are live and prose is published — and published prose accumulates.**
 // Every firing asks the newsdesk what is new since the covered-keys were last
 // spent, takes the top of the running order up to the cap, writes each story
-// from its own scoped brief, and commits the lot — which bakes it into the
-// page. The common case is a firing that finds nothing and exits.
+// from its own scoped brief and saves it before the next, and CI commits the
+// lot — which bakes it into the page. The common case is a firing that finds
+// nothing and exits.
 //
 // **It never commits anything it has not validated.** These commits ride
 // `GITHUB_TOKEN` and so run no CI beside them, while changing what the app
@@ -139,7 +140,11 @@ async function main(): Promise<void> {
 
   const ctx = await deskContext({ snapshot, facts, clubs, byCode, info, period: round.period, ledger, sheet, xi, season, kickoffs, assignments, say });
 
-  const { filings, failed } = await fire(assignments, { cap: STORY_CAP, commission: commissioner(ctx, paper, now) });
+  const { filings, failed } = await fire(assignments, ledger, {
+    cap: STORY_CAP,
+    commission: commissioner(ctx, paper, now),
+    save: (filed, book) => saveFiling(paper, filed, book, now),
+  });
   if (DRY_RUN) {
     console.log("\n--- dry run: nothing written ---");
     return;
@@ -150,20 +155,20 @@ async function main(): Promise<void> {
     throw new Error(`All ${failed} attempted stories failed; nothing filed.`);
   }
 
-  // The picture, last and optional, and only for this firing's lead. Any
-  // failure costs the picture and never the paper.
+  // The lead's picture, last and optional: every story is already saved, so a failure costs only the picture.
   const lead = composePaper(
-    [...readPaperStories().filter((each) => each.leagueId === FANTRAX_LEAGUE_ID), ...filings.map((f) => f.story)],
+    [...paper.filter((each) => each.leagueId === FANTRAX_LEAGUE_ID), ...filings.map((f) => f.story)],
     now,
   )[0];
   const filing = filings.find((each) => each.story.slug === lead?.slug);
   // A columnist's own column runs his photograph, never a drawing over it.
   if (filing !== undefined && filing.story.image === null && filing.story.reporter === undefined) {
     const image = await drawSplash(filing.story);
-    if (image !== null) filing.story = { ...filing.story, image };
+    if (image !== null) {
+      filing.story = { ...filing.story, image };
+      printStory(paper, filings, filing.story, now);
+    }
   }
-
-  persistFilings(filings, ledger, now);
 }
 
 /** One assignment briefed, written, checked and filed; `paper` is the page as the firing found it. */

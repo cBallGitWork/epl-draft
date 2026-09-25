@@ -125,6 +125,8 @@ jobs:
         run: npm run edition
 
       - name: Commit the edition, if one was written
+        # Even after a failed or timed-out firing: the writer saves story by story, ledger last.
+        if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
