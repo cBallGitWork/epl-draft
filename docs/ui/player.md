@@ -70,14 +70,22 @@ derived the same four from the same object.
 
 ## Data
 
-This season, in Championship Manager's own shape: rows of matches against columns
-of statistics, in two sections.
+His record, one season at a time (Craig, 25 Sep 2026: "maybe we merge data and history
+together, shows current season by default with other seasons on a dropdown"). **History
+is gone as a tab** and `/history` redirects to `?season=all`; the strip is four plates.
 
-- **Season** — `Total` and `Per 90`, the row labels in CM's index block. Both
-  references agree on this: `cm9900/11.jpg` closes a profile with an appearances
-  table, and FPL's own player page closes the same table with Totals and Per 90.
-- **Every match** — one row per match, most recent first. The score links to
-  `/prem/match/[id]`.
+- **The born line**, then a **Season** picker: this season (the default), each season
+  FPL's history lists, and **All seasons**. It is `?season=`, so a shared link keeps it.
+- **This season** — CM's appearances table headed with his club, then **Every match**:
+  the house board (Craig: "not like our normal CM standards, use the shared code") —
+  bevelled plates over the figures, the round in CM's blue index block and the opponent's
+  crest pinned beside it, and each column's best in CM's orange and its top quarter in
+  yellow, as the pool board lights them. The score links to `/prem/match/[id]`.
+- **A past season** — FPL's line for that season, with the club.
+- **All seasons** — every season with the **club he was at** ("mention what clubs he
+  played for"), from the sister's identity store (`intel/careers`). A club is printed only
+  against a season FPL lists: the store has Haaland at City in 21-22, when he was not in
+  the league.
 
 **Two provenances on one row, with a rule between them.** Left of it is FPL's
 measurement of the play — minutes, goals, xG, xA, defensive contribution, BPS,
@@ -169,16 +177,10 @@ went with the strip; the real thing is a mapping job.
 
 ## History
 
-His match log and his previous seasons, both FPL's, then what he has been worth
-in this league by the categories that pay, which is Fantrax's. The third block
-names the league in its heading because it sits under two headed "FPL's own".
-
-**Previous seasons shows only the columns that are real in every season.** FPL
-writes every key on every row back to 2014/15, so a statistic it did not collect
-that year arrives as a nought rather than as an absence — `starts`, the expected
-family, tackles and defensive contribution all read zero for Maguire's 2021/22,
-a season in which he played 2,513 minutes. Minutes stands in for appearances, which FPL has never
-published here at all. `fpl/raw.ts` carries the count.
+Folded into Data on 25 Sep 2026; see above. **The seasons table shows only the columns
+that are real in every season.** FPL writes every key on every row back to 2014/15, so a
+statistic it did not collect that year arrives as a nought rather than an absence;
+`fpl/raw.ts` carries the count.
 
 ## The attributes
 

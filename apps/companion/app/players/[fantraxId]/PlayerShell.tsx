@@ -75,18 +75,8 @@ function heading(name: string, ownerName: string | null): string {
   return ownerName === null ? name : `${name} (${ownerName})`;
 }
 
-/** The views that have nothing behind them for this man.
- *
- *  **Decided from the SUBJECT, not from the page you are on.** Each of the four
- *  routes used to pass its own answer, so an unbridged player had the tab he was
- *  standing on greyed and the genuinely empty ones left bright — the strip
- *  disagreed with itself depending on where you had tapped from.
- *
- *  Only History. A man the bridge has never settled has no Premier League record
- *  at all, which is the whole of that tab; Profile still carries what Fantrax
- *  knows about him and Fitness still carries their news line, so neither is
- *  empty even though both lose their football half. Transfer never depends on
- *  the bridge. */
+/** The views with nothing behind them for this man, decided from him rather than from the tab you
+ *  are on: a man the bridge has never settled has no Premier League record, which is all of Data. */
 function hollow({ football }: Subject): readonly PlayerTab[] {
-  return football === null ? ["data", "history"] : [];
+  return football === null ? ["data"] : [];
 }

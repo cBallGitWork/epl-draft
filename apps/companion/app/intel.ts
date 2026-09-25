@@ -1,4 +1,5 @@
 import type {
+  IntelCareers,
   IntelMatch,
   IntelMatches,
   IntelPlayer,
@@ -14,7 +15,7 @@ import type {
   Shot,
   TouchPlayer,
 } from "@epl/core";
-import { matchIntel, projectionIntel, shotIntel, squadIntel, strengthIntel, touchIntel } from "@epl/core";
+import { careerIntel, matchIntel, projectionIntel, shotIntel, squadIntel, strengthIntel, touchIntel } from "@epl/core";
 import squadsFile from "../../../data/intel/squads/26-27.json";
 import xiFile from "../../../data/intel/xi/26-27.json";
 import piecesFile from "../../../data/intel/set-pieces/26-27.json";
@@ -23,6 +24,7 @@ import touchesFile from "../../../data/intel/touches/26-27.json";
 import shotsFile from "../../../data/intel/shots/26-27.json";
 import strengthFile from "../../../data/intel/strength/26-27.json";
 import projectionsFile from "../../../data/intel/projections/26-27.json";
+import careersFile from "../../../data/intel/careers/26-27.json";
 
 // Where the app supplies the sister repo's export.
 //
@@ -103,3 +105,6 @@ export const intelProjections: Map<number, ProjectedPlayer> = projectionIntel(
   projectionsFile as unknown as IntelProjections,
 );
 export const intelProjectionsManifest = (projectionsFile as unknown as IntelProjections).manifest;
+
+/** The club each man was at in each season the sister's identity store holds, by FPL code. */
+export const intelCareers: Map<number, Map<string, string>> = careerIntel(careersFile as unknown as IntelCareers);

@@ -23,14 +23,13 @@ import { playerHref } from "../routes";
 // FPL's availability on one and Fantrax's line about him on the other, each
 // half an answer.
 
-export type PlayerTab = "profile" | "data" | "news" | "transfer" | "history";
+export type PlayerTab = "profile" | "data" | "news" | "transfer";
 
 const TABS = (fantraxId: string): readonly (Tab & { key: PlayerTab })[] => [
   { key: "profile", href: playerHref(fantraxId), label: "Profile" },
   { key: "data", href: `${playerHref(fantraxId)}/data`, label: "Data" },
   { key: "news", href: `${playerHref(fantraxId)}/news`, label: "News" },
   { key: "transfer", href: `${playerHref(fantraxId)}/transfer`, label: "Transfer" },
-  { key: "history", href: `${playerHref(fantraxId)}/history`, label: "History" },
 ];
 
 export default function PlayerTabs({

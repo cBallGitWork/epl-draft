@@ -39,15 +39,18 @@ const whole = (value: number | null) => (value === null ? dash : String(value));
 export default function SeasonTable({
   rows,
   season,
+  club = null,
 }: {
   rows: readonly MatchRow[];
   season: string | null;
+  /** The club he is at, in the heading when the careers export names it. */
+  club?: string | null;
 }) {
   if (rows.length === 0) return null;
   const t = totalsOf(rows);
 
   return (
-    <Section title={season ? `Season · ${season}` : "Season"}>
+    <Section title={[season ? `Season · ${season}` : "Season", club].filter(Boolean).join(" · ")}>
       <div className={SCROLL}>
         <table className={BOARD}>
           <thead>

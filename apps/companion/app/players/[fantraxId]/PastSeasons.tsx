@@ -1,8 +1,8 @@
 import type { PastSeason } from "@epl/core";
 import Section from "../../components/shell/Section";
-import { BOARD, FIGURE, HEAD_CELL, HEAD_PLATE, HEAD_PLATE_CENTRE, ROW_RULE, SCROLL, TEXT } from "@/app/desk";
+import { BOARD, FIGURE, HEAD_CELL, HEAD_PLATE, HEAD_PLATE_CENTRE, ROW_NAME, ROW_RULE, SCROLL, TEXT } from "@/app/desk";
 import { IndexCell } from "../../components/league/TableCells";
-import { thousands } from "@epl/core";
+import { seasonKey, thousands } from "@epl/core";
 
 // Championship Manager's appearances table, at season scale (`cm9900/11.jpg`
 // draws `Apps Gls Con Pens Asts Yel Red MoM Av R` over six competition rows).
@@ -22,6 +22,7 @@ import { thousands } from "@epl/core";
 export default function PastSeasons({
   seasons,
   current,
+  clubs,
 }: {
   seasons: readonly PastSeason[];
   /** This season, drawn as the first row. **FPL's own arrangement** (Craig,
@@ -30,6 +31,8 @@ export default function PastSeasons({
    *  with the same heads one above the other is a reader checking whether they
    *  agree. Null for a man with no minutes this season. */
   current?: PastSeason | null;
+  /** The club he was at, by the sister store's season key (`"25-26"`); a season it lacks prints a dash. */
+  clubs: ReadonlyMap<string, string>;
 }) {
   if (seasons.length === 0 && !current) {
     // A debutant, and a real answer rather than an empty table. A heading over
@@ -45,13 +48,16 @@ export default function PastSeasons({
     // heads the same table "Previous Seasons" and this tab follows it: the
     // current season on top, the completed ones under. "Before this season" was
     // relative to a table that is no longer above it.
-    <Section title={current ? "Seasons" : "Previous seasons"}>
+    <Section title={rows.length === 1 ? `Season · ${rows[0].season}` : "Seasons"}>
       <div className={SCROLL}>
         <table className={BOARD}>
           <thead>
             <tr>
               <th className={HEAD_CELL}>
                 <div className={HEAD_PLATE}>Season</div>
+              </th>
+              <th className={HEAD_CELL}>
+                <div className={HEAD_PLATE}>Club</div>
               </th>
               {COLUMNS.map((column) => (
                 <th
@@ -75,6 +81,9 @@ export default function PastSeasons({
                     disagreed and the whole table re-rendered with a hydration
                     error. Invisible in the source and loud in the console. */}
                 <IndexCell>{season.season}</IndexCell>
+                <td className={`${ROW_NAME} whitespace-nowrap px-1.5`}>
+                  {clubs.get(seasonKey(season.season) ?? "") ?? <span className="text-faint">—</span>}
+                </td>
                 {COLUMNS.map((column) => (
                   <td key={column.head} className={`${FIGURE} ${TEXT.center}`}>
                     {/* Absence is a dash, never a nought — DESIGN §7. A season
