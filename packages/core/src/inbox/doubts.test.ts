@@ -153,8 +153,9 @@ describe("availabilityNews", () => {
   });
 
   it("carries the football layer's own box, filled only for an absence", () => {
-    expect(availabilityNews([banned()], 5, squads)[0].mark).toEqual({ label: "Sus", out: true });
-    expect(availabilityNews([note()], 5, squads)[0].mark).toEqual({ label: "Dbt", out: false });
+    expect(availabilityNews([banned()], 5, squads)[0].mark).toEqual({ label: "Sus", out: true, band: "out" });
+    expect(availabilityNews([note()], 5, squads)[0].mark).toEqual({ label: "Dbt", out: false, band: "slight" });
+    expect(availabilityNews([note({ chance: 25 })], 5, squads)[0].mark?.band).toBe("major");
   });
 
   it("goes red only for the reader's OWN man, and only when he is out", () => {

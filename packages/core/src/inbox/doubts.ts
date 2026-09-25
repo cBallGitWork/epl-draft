@@ -1,4 +1,5 @@
 import type { AvailabilityNote } from "../gazette/types";
+import { doubtBand } from "../football/playerState";
 import { doubtFrom, doubtLetter } from "./doubtLetter";
 import type { Side } from "./doubtLetter";
 import type { InboxItem } from "./types";
@@ -128,7 +129,7 @@ export function availabilityNews(
         about: doubtAbout(side, who, gameweek),
         teamId: note.teamId,
         // The football layer's own word and its own certainty.
-        mark: { label: note.label, out: note.out },
+        mark: { label: note.label, out: note.out, band: doubtBand(note) },
         // **His own man, definitely not playing.** Red is the row he has to act
         // on before the deadline; the opponent losing a player is news and not
         // bad news, and a filled box already says OUT on both.
