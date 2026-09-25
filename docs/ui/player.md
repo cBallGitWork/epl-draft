@@ -135,44 +135,20 @@ one line twice under itself. A transfer story has a longer body and gets both.
 
 ## Transfer
 
-**Business** — every claim, drop and trade this league has made with him, newest
-first, with both sides named. This is what CM's Transfer tab is for: the game
-lists a player's moves between clubs and ours lists his between managers. A
-pending move is drawn quiet and labelled, because Fantrax distinguishes proposed
-from executed and the default filter hides the proposals.
+CM's Transfer tab for our league (Craig, 25 Sep 2026: "improve this page so its more CM
+like"), in four blocks:
 
-Then the draft pick, our league's row — whose he is and what the commissioner
-deems him eligible for — and the whole-of-Fantrax market: ADP, percent drafted,
-and the two ownership percentages, which are every league on the site and not
-ours.
+1. **Transfer status** — CM's label-and-value lines: who holds him (a team, or "Free
+   agent" / "Waivers" in Fantrax's words), how and when he joined that team (the latest
+   executed move that put him there, or "In the draft"), and his draft pick with what it
+   is worth against Fantrax's ranking (`+15 on his pick`).
+2. **Business** — every claim, drop and trade with him, newest first, on the house table:
+   the date in the index block, then the move, from and to ("The pool" for no team).
+3. **The cyan line**, how he arrived: `Taken by 123 with pick 21 of round 3.`
+4. **The way out**, worded for what the reader can do: "Claim him on Fantrax" for a man
+   nobody holds, "Offer a trade on Fantrax" for a rival's, "Open on Fantrax" for his own.
 
-It carries **no fantasy-points figure, no season row, no prose and no note**
-(Craig, 4 Sep 2026: "Remove at this club and In this league sections too. Keep it
-clean", then "strip out all the unneeded Info"). What is left is how he arrived,
-what has happened since, and what the rest of Fantrax will pay.
-
-**Draft is one row and disappears for a man the draft did not take.** It used to
-draw a sentence — "Undrafted. He came off the waiver wire, which cost a claim
-rather than a pick." — which is a paragraph in a panel restating what the Business
-list below already shows as a dated claim. The market block lost its note for the
-same reason: it explained a heading that already said it.
-
-**No fantasy-points figure appears on this tab** (Craig, 4 Sep 2026: "Remove all
-unneeded info from transfer tab like stats"). Fantrax mixes his scoring into two
-of the blocks it hands over — `FPts` and `FP/G` in the league row, and those plus
-his positional rank among the whole-of-Fantrax numbers — and all of it is Data's
-job now, in Data's shape. A points total in two places on one screen is a reader
-checking whether they agree.
-
-The scoring rows are dropped by name; the two ownership rows are KEPT by name. The
-asymmetry is deliberate: `FPts` and `FP/G` are stable labels, and the rank's is not
-— it carries the position (`Rank G/Ov`, `Rank D/Ov`) and cannot be matched by a
-fixed string.
-
-**CM's `Contract` is not folded in here, and was for one commit.** It drew FPL's
-`team_join_date` as an "At this club · Joined" row — a stand-in for Fantrax's own
-`TEAM_SERVICE_TIME`, which is now reachable through `tab` and unread. The stand-in
-went with the strip; the real thing is a mapping job.
+The whole-of-Fantrax block (drafted %, ADP, rostered %) stays gone (4 Sep 2026).
 
 ## History
 

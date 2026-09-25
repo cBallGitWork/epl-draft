@@ -119,3 +119,9 @@ export function movesOf(
   }
   return keyed.sort((a, b) => b.key - a.key).map((entry) => entry.move);
 }
+
+/** How he came to his holder: the latest executed move that put him there, or null (a draft pick). */
+export function joinedBy(moves: readonly PlayerMove[], ownerTeamId: string | null): PlayerMove | null {
+  if (ownerTeamId === null) return null;
+  return moves.find((move) => move.transaction.executed && move.transaction.toTeamId === ownerTeamId) ?? null;
+}

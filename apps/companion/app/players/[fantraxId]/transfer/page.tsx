@@ -1,28 +1,22 @@
 import { Suspense } from "react";
 import { FANTRAX_PLAYER_BASE } from "@epl/core";
+import OutLink from "../../../components/shell/OutLink";
+import { readerTeamId } from "../../../squads";
+import { STATUS } from "../../status";
 import { StackWaiting } from "../Waiting";
 import Moves from "../Moves";
 import NoProfile from "../NoProfile";
-import Pedigree, { DraftLine } from "../Pedigree";
+import { DraftLine } from "../Pedigree";
 import PlayerShell from "../PlayerShell";
+import TransferStatus from "../TransferStatus";
 import { playerPedigree } from "../draft";
-import { playerMoves } from "../dossier";
+import { joinedBy, playerMoves } from "../dossier";
 import { subject } from "../subject";
-import OutLink from "../../../components/shell/OutLink";
+import type { Subject } from "../subject";
 
-// Championship Manager's `Transfer` tab: what he cost and what he is worth.
-//
-// CM's is a fee and a valuation. Ours is a draft pick, an average draft position
-// across every Fantrax league, and how many of them have him — which is the same
-// question a draft league asks instead. `Contract` is folded in here rather than
-// given a fifth plate: we hold one fact about his employment and it is a date.
-//
-// **No fantasy-points figure appears on this tab** (Craig, 4 Sep 2026: "Remove
-// all unneeded info from transfer tab like stats"). Fantrax mixes his scoring
-// into two of the blocks it hands over — `FPts` and `FP/G` in the league row, and
-// those plus his positional rank among the whole-of-Fantrax numbers — and all of
-// it is now Data's job, in Data's shape. A points total in two places on one
-// screen is a reader checking whether they agree.
+// Championship Manager's Transfer tab, for our league (Craig, 25 Sep 2026: "improve this page so
+// its more CM like"): his transfer status, his business as a table, how he arrived in cyan at the
+// foot, and the way out to Fantrax worded for what a reader can do with him.
 
 export const revalidate = 30;
 
@@ -32,72 +26,34 @@ export default async function PlayerTransfer({ params }: { params: Promise<{ fan
   if ("unavailable" in found) return <NoProfile code={found.unavailable} />;
 
   return (
-    <PlayerShell
-      subject={found}
-      fantraxId={fantraxId}
-      current="transfer"
-    >
-      {/* Streamed, because the ranking behind "four picks better than he cost"
-          is every drafted man's — the pool table, and the largest read in the
-          app. A league whose draft has not run prints nothing here, so the
-          fallback is nothing rather than a shape the page cannot fill. */}
+    <PlayerShell subject={found} fantraxId={fantraxId} current="transfer">
+      {/* Streamed: the pedigree reads the pool and the moves the league's transaction feed. */}
       <Suspense fallback={<StackWaiting />}>
-        <Draft fantraxId={fantraxId} />
+        <Business found={found} fantraxId={fantraxId} />
       </Suspense>
-
-      {/* Every claim, drop and trade this league has made with him. Streamed
-          for the same reason the draft is: it reads the league-wide transaction
-          feed, which is cached but not free on a cold window. */}
-      <Suspense fallback={<StackWaiting />}>
-        <Business fantraxId={fantraxId} />
-      </Suspense>
-
-      {/* Last on the tab, under the business, in cyan — the Profile's position
-          line in the same place doing the same job. */}
-      <Suspense fallback={null}>
-        <Origin fantraxId={fantraxId} />
-      </Suspense>
-
-      {/* **The way out, and this tab is the one that earns it.** Every other
-          screen answers a question; this one ends in an ACT — a claim, a drop, a
-          trade — and Fantrax is where all three happen. A screen that lists what
-          a manager could do with a player and then leaves him to find the man
-          again on another site is the dead end `fpl/page` names in its own
-          words.
-
-          One segment, and it was probed rather than guessed: their rows carry a
-          `urlName` slug and their own anchors use it, but the bundle declares
-          `player/:playerId` and a status code cannot tell you — the SPA serves
-          its shell with a 200 for an id that does not exist. `scorerId` is our
-          `fantraxId`, so this costs no read. PLATFORM_NOTES carries it. */}
-      <OutLink href={`${FANTRAX_PLAYER_BASE}/${fantraxId}`}>Open on Fantrax</OutLink>
-
-      {/* **The whole-of-Fantrax block is gone** (Craig, 4 Sep 2026: *"remove
-          Across every Fantrax league / Drafted 100% / ADP 1.84 / Ros 100% /
-          Start 100%"*). Four percentages about every league on the site, on a
-          tab whose question is what happened to him in OURS — and the one of
-          them that bears on our draft, how his cost compares to his ranking,
-          is already the figure beside the pick. */}
     </PlayerShell>
   );
 }
 
-/** Where he was taken and what he has repaid, read behind the boundary above.
- *  `playerPedigree` never answers null — a failed pool read comes back as an
- *  `origin: "unknown"` pedigree, so the card always has something to draw. */
-async function Draft({ fantraxId }: { fantraxId: string }) {
-  const { pedigree } = await playerPedigree(fantraxId);
-  return <Pedigree pedigree={pedigree} />;
-}
+/** Everything under the strip, behind one boundary: the panel needs both reads the table and the line do. */
+async function Business({ found, fantraxId }: { found: Subject; fantraxId: string }) {
+  const [{ pedigree, drafterName }, moves, reader] = await Promise.all([
+    playerPedigree(fantraxId),
+    playerMoves(fantraxId),
+    readerTeamId(),
+  ]);
+  const owner = found.intel.ownerTeamId;
+  const status = found.intel.league.find((row) => row.label === "Status/Team")?.value?.trim() ?? "";
+  const holder = found.ownerName ?? (STATUS[status] ?? (status || null));
+  const action = owner === null ? "Claim him on Fantrax" : owner === reader ? "Open on Fantrax" : "Offer a trade on Fantrax";
 
-/** His moves in this league, read behind the boundary above. */
-async function Business({ fantraxId }: { fantraxId: string }) {
-  return <Moves moves={await playerMoves(fantraxId)} />;
-}
-
-/** Where he came from, read behind its own boundary. It is the same cached pool
- *  read the Draft card makes, so the second call costs nothing. */
-async function Origin({ fantraxId }: { fantraxId: string }) {
-  const { pedigree, drafterName } = await playerPedigree(fantraxId);
-  return <DraftLine pedigree={pedigree} drafterName={drafterName} />;
+  return (
+    <>
+      <TransferStatus holder={holder} joined={joinedBy(moves, owner)} pedigree={pedigree} />
+      <Moves moves={moves} />
+      <DraftLine pedigree={pedigree} drafterName={drafterName} />
+      {/* `scorerId` is our `fantraxId`, and `player/:playerId` is the route their bundle declares. */}
+      <OutLink href={`${FANTRAX_PLAYER_BASE}/${fantraxId}`}>{action}</OutLink>
+    </>
+  );
 }
