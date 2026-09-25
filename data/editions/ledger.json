@@ -236,9 +236,17 @@
       "news:https://www.bbc.co.uk/sport/football/articles/crq5x1n12xexo",
       "news:https://www.bbc.co.uk/sport/football/articles/c6qjk1122e9jo",
       "news:https://www.bbc.co.uk/sport/football/articles/cmwyzjedq51lo",
-      "news:https://www.bbc.co.uk/sport/football/articles/c6eq8eygy4e5o"
+      "news:https://www.bbc.co.uk/sport/football/articles/c6eq8eygy4e5o",
+      "news:https://www.bbc.co.uk/sport/football/articles/ckeq8vq7rwe7o"
     ],
     "threads": [
+      {
+        "subject": "test31121's Gabriel asset",
+        "beat": "Gabriel named among the academy players in the market the BBC is tracking.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-25T14:21:15.715Z"
+      },
       {
         "subject": "test3331's Scott under transfer interest",
         "beat": "Chelsea reported to lead the race for the Bournemouth midfielder",
