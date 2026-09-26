@@ -70,6 +70,8 @@ export interface DeskState {
    *  answers them: finished is the last whistle gone, started is a first ball kicked. */
   finished: boolean;
   started: boolean;
+  /** The round's lineup deadline has passed, so every sheet in it is fixed and may be printed. */
+  locked: boolean;
   /** Every fixture of the round, most-consequential first (`fixtureStakes`). */
   stakes: readonly FixtureStake[];
   ties: readonly DeskTie[];
@@ -146,6 +148,12 @@ export function newsdesk(
     for (const kind of MONDAY_SET) {
       want({ kind, ...roundSlot(kind, desk.gameweek) });
     }
+  }
+
+  // The sheets as locked, from the deadline until the last whistle: not "before a ball is kicked",
+  // because a lock at 12:15 and a kickoff at 12:30 fall inside one cron's delay.
+  if (desk.locked && !desk.finished) {
+    want({ kind: "sheets", ...roundSlot("sheets", desk.gameweek) });
   }
 
   // Calls only while the round is being played: after the last whistle the

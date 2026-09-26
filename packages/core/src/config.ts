@@ -369,3 +369,29 @@ export const PREDICTIONS = {
   recentGames: 2,
   factsPerTie: 11,
 } as const;
+
+/** The team sheets at the lock: when a benched man is news, and how much the article carries. */
+export const SHEETS = {
+  /** A benched man is news with a goal or assist last time out, or this many goals and assists
+   *  over his last few rounds. At most this many benchings a side, and meeting points a fixture. */
+  benchForm: 2,
+  benchings: 2,
+  crossovers: 2,
+  /** Form over this many rounds: scoring in every one, this many goals, or this many goals and
+   *  assists together; at most this many men a side. */
+  formRounds: 3,
+  formGoals: 3,
+  formInvolvements: 4,
+  form: 2,
+  /** How far back a Fantrax report may name a doubtful or injured man's complaint: two months,
+   *  because an injury story can be old and still true. */
+  injuryDays: 60,
+  /** A side's notes beyond its changes, weightiest first: what a three-sentence paragraph can carry. */
+  notes: 3,
+  /** A side's paragraph: sentences and words at most; a phrase this long shared is an echo. */
+  sentences: 3,
+  words: 80,
+  echo: 5,
+  /** Paragraphs that may open with the same three words, a name blanked. */
+  openers: 2,
+} as const;

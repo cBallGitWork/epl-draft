@@ -1,4 +1,4 @@
-import { BANNED, banned } from "../banned";
+import { BANNED, banned, escapeRegExp } from "../banned";
 import { strangers } from "../strangers";
 import { CORE_MARK, type PastLine } from "./past";
 import type { PredictionCall } from "./pick";
@@ -103,7 +103,7 @@ export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
     everywhere(section, text, exempt([...LAWRO_BANNED, ...LAWRO_FAMOUS]));
     for (const [check, pattern] of TICS) if (pattern.test(text)) fault(section, check, "send-back", text.match(pattern)?.[0] ?? "");
     for (const side of sides) {
-      const hosting = text.match(new RegExp(`${escape(side)}${AT_HOME}`, "iu"));
+      const hosting = text.match(new RegExp(`${escapeRegExp(side)}${AT_HOME}`, "iu"));
       if (hosting !== null) fault(section, "a league side at home", "send-back", hosting[0]);
     }
     for (const sentence of sentences(text)) {
@@ -129,7 +129,7 @@ function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckCon
   if (men.length > LIMITS.men) fault(key, "a roll call, more than four men", "send-back", men.join(", "));
   // "Their Ballard" is not how anybody talks (Craig): Ballard, or test31's Ballard.
   for (const name of men) {
-    const owned = line.match(new RegExp(`\\b(?:their|his|our) ${escape(name)}\\b`, "iu"));
+    const owned = line.match(new RegExp(`\\b(?:their|his|our) ${escapeRegExp(name)}\\b`, "iu"));
     if (owned !== null) fault(key, "a possessive before a name", "send-back", owned[0]);
   }
   if (call.close) for (const word of banned(line, COMFORTABLE)) fault(key, "an easy win on a close tie", "send-back", word);
@@ -139,7 +139,7 @@ function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckCon
   const other = ctx.name(call.callsTeamId === call.homeTeamId ? call.awayTeamId : call.homeTeamId);
   for (const sentence of sentences(line)) {
     if (!sentence.includes(other) || NEGATION.test(sentence)) continue;
-    if (WIN.test(sentence) || new RegExp(`${BACKING.source}\\s+${escape(other)}`, "iu").test(sentence)) {
+    if (WIN.test(sentence) || new RegExp(`${BACKING.source}\\s+${escapeRegExp(other)}`, "iu").test(sentence)) {
       fault(key, "argues for the other side", "hard", sentence);
     }
   }
@@ -153,7 +153,7 @@ function columnRules(intro: string, prose: readonly [string, string][], ctx: Che
   if (wordCount(all) > LIMITS.column) fault("column", "length", "send-back", `${wordCount(all)} words`);
   if ((all.match(/\?/gu) ?? []).length > LIMITS.questions) fault("column", "more than two questions", "send-back", "?");
   for (const [phrase, cap] of LAWRO_CAPPED) {
-    const used = (all.match(new RegExp(`(?<![\\p{L}])${escape(phrase)}(?![\\p{L}])`, "giu")) ?? []).length;
+    const used = (all.match(new RegExp(`(?<![\\p{L}])${escapeRegExp(phrase)}(?![\\p{L}])`, "giu")) ?? []).length;
     if (used > cap) fault("column", "a habit used too often", "send-back", `${phrase} ×${used}`);
   }
   // Five ties in one column, and a reader hears the same words coming round (Craig).
@@ -171,10 +171,6 @@ function columnRules(intro: string, prose: readonly [string, string][], ctx: Che
   const lengths = sentences(all).map(wordCount);
   const mean = lengths.length === 0 ? 0 : lengths.reduce((sum, n) => sum + n, 0) / lengths.length;
   if (mean > 12) fault("column", "long sentences on average", "warn", `${mean.toFixed(1)} words`);
-}
-
-function escape(text: string): string {
-  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 /** The sub-editor's pencil: the trivial slips fixed rather than sent back. */

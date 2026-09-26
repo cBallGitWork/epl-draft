@@ -154,6 +154,7 @@ export function storyOfColumn(
       quiz: column.quiz,
       teamNews: column.teamNews,
       lineups: column.lineups,
+      sheets: column.sheets,
       record: column.record,
       skit: column.skit,
     },

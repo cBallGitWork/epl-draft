@@ -38,15 +38,14 @@ import {
   type IntelStrength,
   type LeagueInfo,
   type PredictionsTie,
-  type PlayerMatchStats,
   type PublishedStory,
-  type RecentGame,
   type SideForm,
   type StandingsRow,
 } from "@epl/core";
 import mapping from "../../data/mappings/fantrax.json";
 import { INTEL_SEASON, readIntel } from "../intel";
 import { readArchive } from "./persist";
+import { recentGames } from "./recent";
 
 // The round ahead, as Lawro may know it: its ties, both squads, and every call already made.
 // Three reads of its own, made only when his column is due; each refusal files nothing.
@@ -165,27 +164,6 @@ export async function predictionsDesk(input: {
     clubs: clubs.map((club) => club.name),
     doubts: [...new Set(men.filter((man) => man.availability.state !== "fit").map((man) => man.name))],
   };
-}
-
-/** Each man's last gameweeks, oldest first, a double summed; a man missing from a read did not play. */
-function recentGames(gameweeks: readonly number[], reads: readonly (readonly PlayerMatchStats[])[]): Map<number, RecentGame[]> {
-  const out = new Map<number, RecentGame[]>();
-  gameweeks.forEach((gameweek, at) => {
-    const rows = new Map<number, RecentGame>();
-    for (const row of reads[at] ?? []) {
-      const game = rows.get(row.playerId) ?? { gameweek, minutes: 0, goals: 0, assists: 0, cleanSheets: 0, points: 0 };
-      rows.set(row.playerId, {
-        gameweek,
-        minutes: game.minutes + row.minutes,
-        goals: game.goals + row.goals,
-        assists: game.assists + row.assists,
-        cleanSheets: game.cleanSheets + (row.cleanSheet ? 1 : 0),
-        points: game.points + row.fplPoints,
-      });
-    }
-    for (const [playerId, game] of rows) out.set(playerId, [...(out.get(playerId) ?? []), game]);
-  });
-  return out;
 }
 
 /** Each club's place by the sister repo's ratings, strongest first, by FPL club code. */

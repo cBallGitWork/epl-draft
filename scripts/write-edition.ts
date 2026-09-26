@@ -31,6 +31,7 @@ import { drawSplash } from "./edition/image";
 import { CARGO, headlineAndProse, prose } from "./edition/checks";
 import { writeSubedited } from "./edition/subedit";
 import { writeLawro } from "./edition/lawroWriter";
+import { writeSheets } from "./edition/sheetsWriter";
 import { presserDesk } from "./edition/presserWeek";
 import { readXi } from "./edition/xi";
 import { deskState } from "./edition/desk";
@@ -125,6 +126,7 @@ async function main(): Promise<void> {
       period: round.period,
       finished,
       started,
+      locked,
       lines: sheet.lines,
       xiGameweek: xi === null ? null : sheet.gameweek,
       ahead: ahead === undefined ? null : { period: ahead.period, gameweek: sheet.gameweek },
@@ -136,7 +138,7 @@ async function main(): Promise<void> {
   if (process.env.GAZETTA_QUEUE) return say(assignments.map((a) => a.key).join("\n"));
   if (assignments.length === 0) return say("Nothing new to report.");
 
-  const ctx = await deskContext({ snapshot, facts, clubs, byCode, info, period: round.period, ledger, sheet, xi, season, kickoffs, assignments, say });
+  const ctx = await deskContext({ snapshot, facts, clubs, byCode, info, period: round.period, gameweeks: round.gameweeks, ledger, sheet, xi, season, kickoffs, assignments, now, say });
 
   const filings: Filing[] = [];
   // Attempts, not assignments: a desk that refuses spends nothing and is an
@@ -190,9 +192,11 @@ async function main(): Promise<void> {
       // column back against the register and sends it back once if it reached
       // for a banned phrase.
       const column =
-        desk.lawro === undefined
-          ? await writeSubedited(desk.system, brief, say, assignment.kind)
-          : await writeLawro(desk.lawro, brief, desk.brief, say);
+        desk.sheets !== undefined
+          ? await writeSheets(desk.sheets, brief, say)
+          : desk.lawro === undefined
+            ? await writeSubedited(desk.system, brief, say, assignment.kind)
+            : await writeLawro(desk.lawro, brief, desk.brief, say);
       const filed = file(assignment, column, ctx, now);
       // Every name in the prose against every name in the brief. Eager, so it
       // warns rather than refuses — see `gazette/strangers.ts`.

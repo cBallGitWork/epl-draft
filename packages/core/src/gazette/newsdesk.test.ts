@@ -19,6 +19,7 @@ const desk = (over: Partial<DeskState> = {}): DeskState => ({
   period: 3,
   finished: false,
   started: true,
+  locked: false,
   stakes: [],
   ties: [],
   dealsInWindow: 0,
@@ -253,6 +254,15 @@ describe("newsdesk", () => {
     expect(kinds[0]).toBe("tie-report");
     // The Monday set follows the round's own reporting.
     expect(kinds).toContain("eleven");
+  });
+
+  it("files the sheets once the deadline passes, whether or not a ball is kicked, and never twice", () => {
+    const sheets = (over: Partial<DeskState>) => newsdesk(desk(over), none, NOW).filter((a) => a.kind === "sheets");
+    expect(sheets({ locked: false, started: false })).toEqual([]);
+    expect(sheets({ locked: true, started: false }).map((a) => a.key)).toEqual(["sheets:gw3"]);
+    expect(sheets({ locked: true, started: true }).map((a) => a.slug)).toEqual(["gw3-sheets"]);
+    expect(sheets({ locked: true, finished: true })).toEqual([]);
+    expect(newsdesk(desk({ locked: true }), (key) => key === "sheets:gw3", NOW).some((a) => a.kind === "sheets")).toBe(false);
   });
 
   it("files the elevens when the export holds the round ahead, and never twice", () => {
