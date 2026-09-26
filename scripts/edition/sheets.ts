@@ -2,8 +2,6 @@ import {
   FANTRAX_LEAGUE_ID,
   SHEETS,
   buildSheetsBrief,
-  fixtureLabel,
-  oppositionByClub,
   fetchLive,
   fetchPlayerStories,
   fetchPoolNews,
@@ -109,12 +107,22 @@ export async function sheetsDesk(input: {
     return club === undefined ? "an unknown club" : fullClubName(club.name);
   };
   const gameweek = gameweeks[0] ?? snapshot.gameweek;
-  const opposition = oppositionByClub(snapshot);
+  // His club's matches this period, off the same list the meetings are read from, so the two agree.
+  const matches = (clubId: number) =>
+    fixtures.flatMap((match) =>
+      match.homeClubId === clubId ? [{ home: true, other: match.awayClubId }] : match.awayClubId === clubId ? [{ home: false, other: match.homeClubId }] : [],
+    );
+  const described = (clubId: number, word: (match: { home: boolean; other: number }) => string, join: string) => {
+    const found = matches(clubId);
+    return found.length === 0 ? null : found.map(word).join(join);
+  };
   return {
     gameweek,
     ties,
-    brief: buildSheetsBrief({ gameweek, ties, clubName }),
-    against: (clubId) => fixtureLabel(opposition.get(clubId)),
+    // "at home to Everton", both halves of a double: the words a reporter would use for his match.
+    brief: buildSheetsBrief({ gameweek, ties, clubName, fixture: (clubId) => described(clubId, (match) => `${match.home ? "at home to" : "away to"} ${clubName(match.other)}`, " and ") }),
+    // "EVE (H)", as every pitch in the app labels a match.
+    against: (clubId) => described(clubId, (match) => `${clubs.get(match.other)?.shortName ?? "?"} (${match.home ? "H" : "A"})`, " · "),
   };
 }
 

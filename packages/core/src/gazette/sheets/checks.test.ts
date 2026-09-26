@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildSheetsBrief } from "../briefs/sheets";
 import { checkSheets } from "./checks";
-import { sheetsKey } from "./column";
 import { mergeSheets, readSheetsDraft } from "./draft";
 import { sheetsFacts, type TieFacts } from "./facts";
 import { side } from "./__fixtures__/sides";
@@ -24,11 +23,11 @@ function round(history = true): TieFacts[] {
 }
 
 function check(draft: Record<string, string>, ties = round()) {
-  const facts = buildSheetsBrief({ gameweek: 6, ties, clubName: (id) => `Club ${id}` });
+  const facts = buildSheetsBrief({ gameweek: 6, ties, clubName: (id) => `Club ${id}`, fixture: () => null });
   return checkSheets(new Map(Object.entries(draft)), { ties, facts }).map((fault) => [fault.section, fault.check, fault.severity]);
 }
 
-const GOOD = { h: "Team h make one change, with Haaland in for Eze.", w: "Team w are unchanged.", [sheetsKey("h", "w")]: "Haaland faces Pickford." };
+const GOOD = { h: "Team h make one change, with Haaland in for Eze and up against Pickford.", w: "Team w are unchanged." };
 
 describe("checkSheets", () => {
   it("passes a plain report of the facts", () => {
@@ -62,24 +61,21 @@ describe("checkSheets", () => {
 
   it("sends back American terms and a team-news phrase used too often", () => {
     expect(check({ ...GOOD, w: "Team w start Saka while Eze sits." })).toContainEqual(["w", "not British football English", "send-back"]);
+    expect(check({ ...GOOD, w: "Team w are unchanged, and Eze has recognized the defense." })).toContainEqual(["w", "not British football English", "send-back"]);
+    expect(check({ ...GOOD, w: "Team w are unchanged, and Eze is benched with a goal to his name." })).toContainEqual(["w", "a stock phrase no reporter uses", "send-back"]);
     expect(check({ ...GOOD, w: "Team w are unchanged, Saka with a goal in his last three rounds." })).toContainEqual(["w", "say gameweeks, not rounds", "send-back"]);
     expect(check({ ...GOOD, w: "Team w start Saka, and Eze is benched when he might have started." })).toContainEqual(["w", "the wrong tense: the match is still to come", "send-back"]);
     const twice = { ...GOOD, h: "Team h make one change, and Haaland comes into the side.", w: "Team w are unchanged, and Isak comes into the side." };
     expect(check(twice)).toContainEqual(["article", "a phrase used too often", "send-back"]);
   });
 
-  it("refuses a meeting line on a head-to-head where the sheets never meet", () => {
-    const apart = round().map((tie) => ({ ...tie, meets: [] }));
-    expect(check(GOOD, apart)).toContainEqual([sheetsKey("h", "w"), "a meeting the brief does not give", "hard"]);
-  });
 });
 
 describe("the draft", () => {
   it("reads the reply by team id and tidies the punctuation", () => {
-    const draft = readSheetsDraft({ ties: [{ homeTeamId: "h", awayTeamId: "w", home: "Team h make one change — Haaland.", away: "", between: "Haaland faces Pickford." }] }, round());
+    const draft = readSheetsDraft({ ties: [{ homeTeamId: "h", awayTeamId: "w", home: "Team h make one change — Haaland.", away: "" }] }, round());
     expect(draft.get("h")).toBe("Team h make one change, Haaland.");
     expect(draft.has("w")).toBe(false);
-    expect(draft.get(sheetsKey("h", "w"))).toBe("Haaland faces Pickford.");
   });
 
   it("keeps each section's first clean attempt, then its last with no hard fault, then nothing", () => {

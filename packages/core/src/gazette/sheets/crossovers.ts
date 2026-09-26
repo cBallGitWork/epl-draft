@@ -2,7 +2,7 @@ import { SHEETS } from "../../config";
 import type { Sheet, SheetMan } from "./sheet";
 
 // Where two sheets in one head-to-head meet on a real pitch: one side's attackers against the
-// other's defence in the same match, or both sides starting from one club's defence or attack.
+// other's defence in the same match, or both sides starting from one club's defence.
 
 export interface ClubPair {
   homeClubId: number;
@@ -11,7 +11,7 @@ export interface ClubPair {
 
 export type Crossover =
   | { kind: "facing"; attackTeamId: string; attackers: SheetMan[]; defendTeamId: string; defenders: SheetMan[]; fixture: ClubPair }
-  | { kind: "defence" | "attack"; clubId: number; home: SheetMan[]; away: SheetMan[] };
+  | { kind: "defence"; clubId: number; home: SheetMan[]; away: SheetMan[] };
 
 const BACK = new Set(["G", "D"]);
 const FRONT = new Set(["M", "F"]);
@@ -20,7 +20,8 @@ const ABSENT = new Set(["i", "s", "u", "n"]);
 
 /** The strongest few, in reading order: a forward against a keeper leads, then a shared defence. */
 export function crossovers(home: Sheet, away: Sheet, fixtures: readonly ClubPair[]): Crossover[] {
-  const found = [...facing(home, away, fixtures), ...facing(away, home, fixtures), ...shared(home, away, "defence"), ...shared(home, away, "attack")];
+  // Two sides fielding one club's attackers do not meet on the pitch, so a shared attack is not here.
+  const found = [...facing(home, away, fixtures), ...facing(away, home, fixtures), ...sharedDefence(home, away)];
   return found.sort(byWeight).slice(0, SHEETS.crossovers);
 }
 
@@ -36,9 +37,9 @@ function facing(attack: Sheet, defend: Sheet, fixtures: readonly ClubPair[]): Cr
   );
 }
 
-function shared(home: Sheet, away: Sheet, kind: "defence" | "attack"): Crossover[] {
-  const end = kind === "defence" ? BACK : FRONT;
-  const at = (sheet: Sheet) => playing(sheet).filter((man) => end.has(man.slot));
+function sharedDefence(home: Sheet, away: Sheet): Crossover[] {
+  const kind = "defence" as const;
+  const at = (sheet: Sheet) => playing(sheet).filter((man) => BACK.has(man.slot));
   const clubs = new Set(at(home).map((man) => man.player.clubId));
   return [...clubs].flatMap((clubId) => {
     const ours = at(home).filter((man) => man.player.clubId === clubId);
@@ -51,7 +52,7 @@ function playing(sheet: Sheet): Sheet["starters"] {
   return sheet.starters.filter((man) => !ABSENT.has(man.player.status));
 }
 
-const KIND_ORDER = ["facing", "defence", "attack"] as const;
+const KIND_ORDER = ["facing", "defence"] as const;
 
 /** Kind first, then a keeper in the firing line, then how many men it involves. */
 function byWeight(a: Crossover, b: Crossover): number {

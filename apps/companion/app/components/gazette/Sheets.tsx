@@ -4,7 +4,8 @@ import PitchRows from "../league/PitchRows";
 import { yoursInk } from "../../mine";
 
 // Team news at the lock, a head-to-head at a time: each side's paragraph, then its eleven on the
-// grass and its bench, as the BBC prints a side before kickoff. The names are printed, not written.
+// grass and its bench, as the BBC prints a side before kickoff. The names are printed, not written;
+// where the two sides meet on the pitch is woven into the paragraphs.
 
 /** The order a sheet reads down the grass, keeper first; the slot is Fantrax's, never his position. */
 const LINES = ["G", "D", "M", "F"];
@@ -41,7 +42,6 @@ export default function Sheets({
             {side(tie.home)}
             {side(tie.away)}
           </div>
-          {tie.between === "" ? null : <p className="pt-3 text-base leading-snug text-muted italic">{tie.between}</p>}
         </section>
       ))}
     </div>

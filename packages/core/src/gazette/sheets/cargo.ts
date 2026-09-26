@@ -19,11 +19,10 @@ export interface StorySheetSide {
   bench: StorySheetMan[];
 }
 
-/** One head-to-head, and where its two sheets meet on a real pitch. */
+/** One head-to-head. Where its two sheets meet on a real pitch is woven into the paragraphs. */
 export interface StorySheet {
   home: StorySheetSide;
   away: StorySheetSide;
-  between: string;
 }
 
 export function normalizeSheets(raw: unknown): StorySheet[] | undefined {
@@ -32,7 +31,7 @@ export function normalizeSheets(raw: unknown): StorySheet[] | undefined {
     const home = side(entry?.home);
     const away = side(entry?.away);
     if (home === null || away === null) return [];
-    return [{ home, away, between: typeof entry?.between === "string" ? entry.between : "" }];
+    return [{ home, away }];
   });
   return sheets.length === 0 ? undefined : sheets;
 }

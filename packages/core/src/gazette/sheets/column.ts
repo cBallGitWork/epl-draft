@@ -5,10 +5,8 @@ import type { SheetMan } from "./sheet";
 // The desk's half of the article: the headline, the deck, the printed elevens, and a plain line for
 // any side whose paragraph failed the editor twice. Nothing here is written by the model.
 
-/** A side's paragraph by team id, and each head-to-head's meeting line by `sheetsKey`. */
+/** A side's paragraph by team id. */
 export type SheetsDraft = ReadonlyMap<string, string>;
-
-export const sheetsKey = (homeTeamId: string, awayTeamId: string) => `${homeTeamId}-${awayTeamId}`;
 
 export function assembleSheets(input: {
   gameweek: number;
@@ -29,7 +27,6 @@ export function assembleSheets(input: {
   const sheets: StorySheet[] = ties.map((tie) => ({
     home: side(tie.home),
     away: side(tie.away),
-    between: tie.meets.length === 0 ? "" : (draft.get(sheetsKey(tie.home.sheet.teamId, tie.away.sheet.teamId)) ?? ""),
   }));
   return {
     headline: `Team news: Gameweek ${input.gameweek}`,

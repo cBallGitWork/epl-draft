@@ -371,7 +371,9 @@ previous period's stored rosters, debuts against every earlier period, a man ben
 despite his form (a return last time out, or goals and assists over his last three: Craig, "benched
 despite getting a goal/assist last week"; the projections are not read at all), a starter in form
 over his last three rounds, a starter with no fixture, Fantrax's own latest story on a
-starter, one who might not start for his club, and where the two sheets meet on a real pitch.
+starter, one who might not start for his club, and where the two sheets meet on a real pitch (a forward against a keeper or defence in the
+same match, or one club's defence on both sheets), woven into a paragraph with the real fixture and
+never a separate line.
 Each side's eleven stands on the app's own pitch, with his real fixture stamped in at filing, as
 the BBC's graphic does.
 

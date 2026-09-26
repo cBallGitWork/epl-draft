@@ -1,11 +1,11 @@
 import { pencil, type Fault } from "../predictions/checks";
-import { sheetsKey, type SheetsDraft } from "./column";
+import type { SheetsDraft } from "./column";
 import type { TieFacts } from "./facts";
 
 // The writer's reply read into sections, and the best of two attempts kept section by section.
 
-/** Each side's paragraph by team id and each head-to-head's meeting line by `sheetsKey`; a
- *  section the reply left out is absent, and a reply that is not the shape is empty. */
+/** Each side's paragraph by team id; a side the reply left out is absent, and a reply that is not
+ *  the shape is empty. */
 export function readSheetsDraft(raw: Record<string, unknown>, ties: readonly TieFacts[]): SheetsDraft {
   const rows = Array.isArray(raw.ties) ? raw.ties : [];
   const out = new Map<string, string>();
@@ -18,7 +18,6 @@ export function readSheetsDraft(raw: Record<string, unknown>, ties: readonly Tie
     };
     take(home, row?.home);
     take(away, row?.away);
-    take(sheetsKey(home, away), row?.between);
   }
   return out;
 }

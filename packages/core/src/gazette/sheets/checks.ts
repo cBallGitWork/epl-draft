@@ -4,9 +4,9 @@ import type { Fault, Severity } from "../predictions/checks";
 import { masked, ngrams, numbersIn, sentences, wordCount } from "../predictions/prose";
 import { DESK_BANNED } from "../predictions/words";
 import { strangers } from "../strangers";
-import { sheetsKey, type SheetsDraft } from "./column";
+import type { SheetsDraft } from "./column";
 import type { TeamFacts, TieFacts } from "./facts";
-import { SHEETS_AMERICAN, SHEETS_HOUSE, SHEETS_LEXICON } from "./words";
+import { AMERICAN_IZE, SHEETS_AMERICAN, SHEETS_HOUSE, SHEETS_LEXICON, SHEETS_STOCK } from "./words";
 
 // The editor for team news: every paragraph read against the facts it was written from. A hard
 // fault never prints (the side takes the desk's plain line); a send-back goes back once, quoted.
@@ -54,6 +54,8 @@ export function checkSheets(draft: SheetsDraft, ctx: SheetsCheck): Fault[] {
     for (const figure of numbersIn(text)) if (!known.has(figure)) fault(section, "a figure not in the brief", "hard", String(figure));
     for (const word of banned(masked(text, names), [...BANNED, ...DESK_BANNED, ...SHEETS_OPINION])) fault(section, "opinion or banned phrasing", "send-back", word);
     for (const word of banned(masked(text, names), SHEETS_AMERICAN)) fault(section, "not British football English", "send-back", word);
+    if (AMERICAN_IZE.test(masked(text, names))) fault(section, "not British football English", "send-back", masked(text, names).match(AMERICAN_IZE)?.[0] ?? "");
+    for (const phrase of banned(masked(text, names), SHEETS_STOCK)) fault(section, "a stock phrase no reporter uses", "send-back", phrase);
     for (const [not, say] of SHEETS_HOUSE) if (banned(masked(text, names), [not]).length > 0) fault(section, `say ${say}, not ${not}`, "send-back", not);
   };
 
@@ -86,14 +88,6 @@ export function checkSheets(draft: SheetsDraft, ctx: SheetsCheck): Fault[] {
     if (used > most) fault("article", "a phrase used too often", "send-back", `${phrase} ×${used}`);
   }
 
-  for (const tie of ctx.ties) {
-    const section = sheetsKey(tie.home.sheet.teamId, tie.away.sheet.teamId);
-    const text = draft.get(section) ?? "";
-    if (text.trim() === "") continue;
-    if (tie.meets.length === 0) fault(section, "a meeting the brief does not give", "hard", text.slice(0, 60));
-    common(section, text);
-    if (sentences(text).length > 1 || wordCount(text) > SHEETS.betweenWords) fault(section, "length", "send-back", `${wordCount(text)} words`);
-  }
   return faults;
 }
 

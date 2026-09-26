@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { benchings } from "./benchings";
 import type { StorySheet } from "./cargo";
 import { changesBetween, debuts } from "./changes";
-import { assembleSheets, plainLine, sheetsDeck, sheetsKey } from "./column";
+import { assembleSheets, plainLine, sheetsDeck } from "./column";
 import { crossovers } from "./crossovers";
 import { sheetsFacts } from "./facts";
 import { starterFlags } from "./flags";
@@ -160,13 +160,12 @@ describe("sheetsFacts and the column", () => {
 
   it("prints the eleven and the bench from the facts and the desk's line where a paragraph failed", () => {
     const ties = facts(new Map());
-    const column = assembleSheets({ gameweek: 6, ties, against: (clubId) => (clubId === 1 ? "EVE (H)" : null), draft: new Map([["w", "Team w start two men."], [sheetsKey("h", "w"), "Invented."]]) });
+    const column = assembleSheets({ gameweek: 6, ties, against: (clubId) => (clubId === 1 ? "EVE (H)" : null), draft: new Map([["w", "Team w start two men."]]) });
     expect(column.headline).toBe("Team news: Gameweek 6");
     expect(column.body).toBe("The deadline has passed and every line-up is locked. Here are all two, grouped by this week's head-to-heads.");
     const [sheet] = column.sheets as StorySheet[];
     expect(sheet.home.line).toBe("Team h name their first sheet in a 3-4-3.");
     expect(sheet.home.xi[0]).toMatchObject({ name: "Raya", slot: "G", against: "EVE (H)" });
     expect(sheet.away.line).toBe("Team w start two men.");
-    expect(sheet.between).toBe("");
   });
 });

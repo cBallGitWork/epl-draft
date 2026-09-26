@@ -394,7 +394,6 @@ export const SHEETS = {
   notes: 4,
   /** A side's paragraph: sentences and words at most; a phrase this long shared is an echo. */
   sentences: 3,
-  words: 70,
-  betweenWords: 40,
+  words: 80,
   echo: 5,
 } as const;

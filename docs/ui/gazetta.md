@@ -496,7 +496,8 @@ shot and read back.
 Added 26 Sep 2026. `sheets` files once the round's lineups lock: every manager's side as Fantrax
 holds it, grouped by the week's head-to-heads, in the BBC's team-news shape. `Sheets` prints a
 head-to-head under `Home v Away`, then for each side its paragraph, `{TEAM} XI · 3-4-3`, the eleven
-on the pitch, **`Substitutes:`**, and last the meeting line in italic muted ink.
+on the pitch, and **`Substitutes:`**. Where the two sides meet on the pitch is woven into a paragraph
+(Craig, 26 Sep 2026), never a line of its own.
 
 **The pitch is the app's own** (`PitchRows` + `PitchMarker`, as the Prem club eleven draws it), a
 colour plate under DESIGN §5, keeper at the top, lines by Fantrax slot. Under each name, his real

@@ -64,7 +64,7 @@ export function prose(story: PublishedStory): string {
     ...(extras.teamNews ?? []).flatMap((row) => (row.men ?? []).map((man) => man.note)),
     ...(extras.teamNews ?? []).map((row) => row.quote?.text),
     // Team news is its paragraphs; the elevens under them are printed from Fantrax.
-    ...(extras.sheets ?? []).flatMap((tie) => [tie.home.line, tie.away.line, tie.between]),
+    ...(extras.sheets ?? []).flatMap((tie) => [tie.home.line, tie.away.line]),
   ];
   // Each part on its own line, and every line is a sentence for the check's
   // purposes — a rank line opens with a capital the way a sentence does.

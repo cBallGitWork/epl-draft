@@ -21,6 +21,8 @@ export interface SheetsBrief {
   ties: readonly TieFacts[];
   /** A club's name as the paper prints it, by FPL club id. */
   clubName: (clubId: number) => string;
+  /** His club's match this gameweek in words, "at home to Everton"; null for none. */
+  fixture: (clubId: number) => string | null;
 }
 
 export function buildSheetsBrief(brief: SheetsBrief): string {
@@ -42,11 +44,16 @@ function fixture(tie: TieFacts, brief: SheetsBrief): string {
     side(tie.home, brief),
     side(tie.away, brief),
     meets(tie, brief),
-  ].join("\n\n");
+  ]
+    .filter((block) => block !== null)
+    .join("\n\n");
 }
 
 function side(team: TeamFacts, brief: SheetsBrief): string {
-  const man = (each: SheetMan) => `${each.player.name} (${each.slot}, ${brief.clubName(each.player.clubId)})`;
+  const man = (each: SheetMan) => {
+    const match = brief.fixture(each.player.clubId);
+    return `${each.player.name} (${each.slot}, ${brief.clubName(each.player.clubId)}${match === null ? "" : `, ${match}`})`;
+  };
   return [
     `SIDE ${team.sheet.teamName} [${team.sheet.teamId}]${team.formation === null ? "" : `, ${team.formation}`}`,
     `NAMED IN THE ELEVEN: ${team.sheet.starters.map(man).join("; ")}`,
@@ -96,9 +103,9 @@ function benched(benching: Benching): string {
   return [
     `${benching.dropped ? "DROPPED, DESPITE HIS FORM" : "BENCHED, DESPITE HIS FORM"}: ${man.player.name} (${man.slot}) is ${benching.dropped ? "dropped to the bench after starting last gameweek" : "on the bench"}.`,
     lastTime === "" ? "" : ` Last time out: ${lastTime}.`,
-    over === "" ? "" : ` Over his last ${benching.rounds} gameweeks: ${over}.`,
+    over === "" ? "" : ` Lately: ${over}.`,
     benching.again ? " He was benched last gameweek too." : "",
-    " Say he is benched despite that, and never why.",
+    " Say he is benched despite it, short: the goals and assists with lately, or last time out, never a count of gameweeks, and never why.",
   ].join("");
 }
 
@@ -123,12 +130,12 @@ function flagged(flag: StarterFlag, brief: SheetsBrief): string {
 
 function inForm(form: InForm): string {
   const did = returns(form.goals, form.assists, BACK.has(form.man.slot) ? form.cleanSheets : 0);
-  const every = form.scoredEvery ? `, scoring in each` : form.cleanEvery ? `, a clean sheet in each` : "";
-  return `IN FORM: ${form.man.player.name} (${form.man.slot}, named): ${did} in his last ${form.rounds} gameweeks${every}.`;
+  const each = form.scoredEvery ? ", scoring in every game" : form.cleanEvery ? ", a clean sheet in every game" : "";
+  return `IN FORM: ${form.man.player.name} (${form.man.slot}, named): ${did} lately${each}.`;
 }
 
-function meets(tie: TieFacts, brief: SheetsBrief): string {
-  if (tie.meets.length === 0) return "WHERE THE SHEETS MEET: nowhere this gameweek. Leave \"between\" empty.";
+function meets(tie: TieFacts, brief: SheetsBrief): string | null {
+  if (tie.meets.length === 0) return null;
   const whose = (teamId: string) => (teamId === tie.home.sheet.teamId ? tie.home : tie.away).sheet.teamName;
   const names = (men: readonly SheetMan[]) => men.map((man) => `${man.player.name} (${man.slot})`).join(", ");
   const lines = tie.meets.map((meet: Crossover) =>
@@ -136,7 +143,10 @@ function meets(tie: TieFacts, brief: SheetsBrief): string {
       ? `- ${whose(meet.attackTeamId)}'s ${names(meet.attackers)} against ${whose(meet.defendTeamId)}'s ${names(meet.defenders)}, in ${brief.clubName(meet.fixture.homeClubId)} v ${brief.clubName(meet.fixture.awayClubId)}.`
       : `- Both start from ${brief.clubName(meet.clubId)}'s ${meet.kind}: ${names(meet.home)} for ${tie.home.sheet.teamName}, ${names(meet.away)} for ${tie.away.sheet.teamName}.`,
   );
-  return ["WHERE THE SHEETS MEET, for \"between\" (one sentence, the first of these unless another reads plainer):", ...lines].join("\n");
+  return [
+    "WHERE THE TWO SHEETS MEET ON THE PITCH. Weave the first of these into ONE of the two paragraphs, the side it names first, as part of the story, with the real match. Never a sentence of its own tacked on the end, and never in both paragraphs.",
+    ...lines,
+  ].join("\n");
 }
 
 const ENTITIES: Record<string, string> = { "&amp;": "&", "&quot;": '"', "&#39;": "'", "&apos;": "'", "&lt;": "<", "&gt;": ">", "&nbsp;": " " };

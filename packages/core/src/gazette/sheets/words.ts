@@ -17,10 +17,24 @@ export const SHEETS_LEXICON: readonly (readonly [phrase: string, most: number])[
  *  "Gameweeks, not rounds"). */
 export const SHEETS_HOUSE: readonly (readonly [not: string, say: string])[] = [["rounds", "gameweeks"], ["round", "gameweek"]];
 
+/** Stock phrases a model reaches for and a reporter does not (Craig, 26 Sep 2026: "don't say to
+ *  his name, that's ai shite"), sent back wherever they appear. */
+export const SHEETS_STOCK: readonly string[] = [
+  "to his name", "of late", "the same span", "the same stretch", "the same run", "his recent run", "recent weeks",
+  "arrives with", "across his last", "over his last", "in his last", "so far this season", "brings with him",
+  "form to match", "rich vein", "purple patch", "in fine form", "in good form", "hot streak",
+];
+
 /** American, or no football reporter's word, sent back wherever it appears (Craig, 26 Sep 2026:
  *  "Don't say sits, that's an American term. Benched"). */
 export const SHEETS_AMERICAN: readonly string[] = [
   "sits", "sit", "sitting", "sat", "roster", "rosters", "lineup", "lineups", "center", "defense", "offense",
   "matchup", "matchups", "game-time", "questionable", "day-to-day", "slated", "tallied", "notched", "tapped",
   "soccer", "shutout", "shutouts", "benchwarmer", "go-to",
+  // Spelling: UK British, as The Times prints it.
+  "favorite", "favorites", "color", "colors", "honor", "labor", "neighbor", "rumor", "rumors", "program", "practicing",
+  "traveled", "traveling", "canceled", "fulfill", "skillful", "gray", "toward", "afterward", "meters", "kilometers",
 ];
+
+/** An American -ize, where The Times prints -ise; "size", "prize" and "seize" are not verbs of the kind. */
+export const AMERICAN_IZE = /\b(?!(?:size|sized|prize|prized|seize|seized|seizes|seizing)\b)\p{L}{2,}(?:ize|izes|ized|izing|ization)\b/iu;
