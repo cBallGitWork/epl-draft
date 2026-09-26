@@ -54,7 +54,7 @@ export default async function ColumnsPage() {
         <div className="flex flex-col gap-5 pt-4">
           <section className="flex flex-col">
             <Written story={lead} teams={paper.teams} />
-            <Extras story={lead} named={who} mine={paper.mine} />
+            <Extras story={lead} named={who} mine={paper.mine} snapshot={paper.snapshot} />
           </section>
           {rest.map((story) => (
             <Teaser key={story.slug} story={story} clubs={clubs} here={PAGE.href} />

@@ -94,7 +94,7 @@ export default async function StoryPage({ params }: { params: Promise<{ slug: st
           reader has chosen to read yet. */}
       <article className="pt-4">
         <Written story={story} teams={paper.teams} clubs={paper.snapshot ? clubById(paper.snapshot) : undefined} />
-        <Extras story={story} named={who} mine={paper.mine} />
+        <Extras story={story} named={who} mine={paper.mine} snapshot={paper.snapshot} />
       </article>
     </>
   );
