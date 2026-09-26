@@ -1,4 +1,4 @@
-import { benchings, type Benching, type Projected } from "./benchings";
+import { benchings, type Benching } from "./benchings";
 import { changesBetween, debuts, type SheetChanges } from "./changes";
 import { crossovers, type ClubPair, type Crossover } from "./crossovers";
 import { starterFlags, type FlagInput, type StarterFlag } from "./flags";
@@ -7,7 +7,7 @@ import type { RecentGame } from "../predictions/sides";
 import { fielded, formation, type Sheet, type SheetMan } from "./sheet";
 
 // Everything the team-news article may say, per head-to-head. Pure: the edge reads the rosters,
-// the projections and the fixtures, and hands them here as data.
+// the match reads, the news and the fixtures, and hands them here as data.
 
 export interface TeamFacts {
   sheet: Sheet;
@@ -34,7 +34,6 @@ export interface SheetsInput extends FlagInput {
   /** This round's sheets, and each side's earlier fielded ones, oldest first. */
   sheets: ReadonlyMap<string, Sheet>;
   history: ReadonlyMap<string, readonly Sheet[]>;
-  projected: (code: number) => Projected | null;
   /** The round's real fixtures, as club pairs. */
   fixtures: readonly ClubPair[];
   lastWrote: ReadonlyMap<string, string>;
@@ -53,7 +52,7 @@ export function sheetsFacts(input: SheetsInput): TieFacts[] {
       formation: formation(sheet),
       changes: changesBetween(sheet, history),
       debuts: debuts(sheet, history),
-      benchings: benchings(sheet, input.projected, history.at(-1)),
+      benchings: benchings(sheet, input.recent, history.at(-1)),
       flags: starterFlags(sheet, input),
       form: inForm(sheet, input.recent),
       lastWrote: input.lastWrote.get(teamId) ?? null,

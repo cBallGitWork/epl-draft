@@ -34,9 +34,15 @@ export function assembleSheets(input: {
   return {
     headline: `Team news: Gameweek ${input.gameweek}`,
     deck: sheetsDeck(ties),
-    body: "Every side as it stood at the deadline, by this week's head-to-heads.",
+    body: standfirst(ties),
     sheets,
   };
+}
+
+/** What the piece is, plainly (Craig, 26 Sep 2026: "'Every side as it stood' — what does that mean"). */
+export function standfirst(ties: readonly TieFacts[]): string {
+  const sides = ties.length * 2;
+  return `The deadline has passed and every line-up is locked. Here ${sides === 1 ? "is" : "are"} all ${inWords(sides)}, grouped by this week's head-to-heads.`;
 }
 
 /** "23 changes across ten sides, two debuts"; on the first round, only that it is the first. */

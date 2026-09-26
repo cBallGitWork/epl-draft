@@ -76,7 +76,6 @@ export { SHEETS_AMERICAN, SHEETS_LEXICON } from "./sheets/words";
 export { mergeSheets, readSheetsDraft } from "./sheets/draft";
 export { assembleSheets } from "./sheets/column";
 export type { Sheet } from "./sheets/sheet";
-export type { Projected } from "./sheets/benchings";
 export type { TieFacts } from "./sheets/facts";
 export type { SheetsDraft } from "./sheets/column";
 export type { StorySheetMan, StorySheetSide } from "./sheets/cargo";

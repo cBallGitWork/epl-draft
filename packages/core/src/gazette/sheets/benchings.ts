@@ -1,56 +1,47 @@
 import { SHEETS } from "../../config";
+import type { RecentGame } from "../predictions/sides";
 import { sitsFor, startsFor, type Sheet, type SheetMan } from "./sheet";
 
-// A benched man the projections say should have started: he is projected above the weakest
-// starter in his own slot. The paper states the order, never the sister model's FPL-scale number.
-
-/** The sister model's reading for a man this round; null where it has none. */
-export interface Projected {
-  points: number;
-  /** Chance he starts for his club, 0 to 1; null where the model gives none. */
-  start: number | null;
-}
+// A benched man whose form says he could be playing (Craig, 26 Sep 2026: "benched despite getting
+// a goal/assist last week"): a return last time out, or goals and assists over his last few rounds.
 
 export interface Benching {
   man: SheetMan;
-  /** The starter in his slot he is projected above. */
-  over: SheetMan;
-  /** Projected highest of everyone this side holds in his slot. */
-  best: boolean;
+  /** What he did last time out, and over the rounds read. */
+  last: RecentGame;
+  rounds: number;
+  goals: number;
+  assists: number;
+  cleanSheets: number;
   /** He was benched on this side's last sheet too. */
   again: boolean;
   /** He started on this side's last sheet, so he is dropped. */
   dropped: boolean;
 }
 
-export function benchings(sheet: Sheet, projected: (code: number) => Projected | null, before: Sheet | undefined): Benching[] {
-  const reading = (man: SheetMan) => projected(man.player.code);
-  const found = sheet.bench.flatMap((man) => {
-    const his = reading(man);
-    if (his === null || (his.start ?? 0) < SHEETS.benchStart) return [];
-    const rivals = sheet.starters
-      .filter((starter) => starter.slot === man.slot)
-      .flatMap((starter) => {
-        const theirs = reading(starter);
-        return theirs === null ? [] : [{ starter, points: theirs.points }];
-      })
-      .sort((a, b) => a.points - b.points);
-    const weakest = rivals[0];
-    if (weakest === undefined || his.points - weakest.points < SHEETS.benchMargin) return [];
-    const slot = [...sheet.starters, ...sheet.bench].filter((other) => other.slot === man.slot && other !== man);
+const BACK = new Set(["G", "D"]);
+
+export function benchings(sheet: Sheet, recent: (man: SheetMan) => readonly RecentGame[], before: Sheet | undefined): Benching[] {
+  const found = sheet.bench.flatMap((man): Benching[] => {
+    const games = recent(man).slice(-SHEETS.formRounds);
+    const last = games.at(-1);
+    if (last === undefined) return [];
+    const back = BACK.has(man.slot);
+    const sum = (key: "goals" | "assists" | "cleanSheets") => games.reduce((total, game) => total + game[key], 0);
+    const returned = last.goals > 0 || last.assists > 0 || (back && last.minutes > 0 && last.cleanSheets > 0);
+    if (!returned && sum("goals") + sum("assists") < SHEETS.benchForm) return [];
     return [{
-      margin: his.points - weakest.points,
-      benching: {
-        man,
-        over: weakest.starter,
-        best: slot.every((other) => (reading(other)?.points ?? -Infinity) < his.points),
-        again: before !== undefined && sitsFor(before, man.fantraxId),
-        dropped: before !== undefined && startsFor(before, man.fantraxId),
-      },
+      man,
+      last,
+      rounds: games.length,
+      goals: sum("goals"),
+      assists: sum("assists"),
+      cleanSheets: back ? sum("cleanSheets") : 0,
+      again: before !== undefined && sitsFor(before, man.fantraxId),
+      dropped: before !== undefined && startsFor(before, man.fantraxId),
     }];
   });
   return found
-    .sort((a, b) => b.margin - a.margin)
-    .slice(0, SHEETS.benchings)
-    .map((each) => each.benching);
+    .sort((a, b) => b.last.goals + b.last.assists - (a.last.goals + a.last.assists) || b.goals + b.assists - (a.goals + a.assists))
+    .slice(0, SHEETS.benchings);
 }

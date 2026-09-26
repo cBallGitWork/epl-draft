@@ -14,7 +14,6 @@ function round(history = true): TieFacts[] {
     pairings: [{ home: { teamId: "h" }, away: { teamId: "w" } }],
     sheets: new Map([["h", side("h", HOME, ["Eze:M:8"])], ["w", side("w", AWAY)]]),
     history: history ? new Map([["h", [side("h", [...HOME.slice(0, 3), "Eze:M:8"])]], ["w", [side("w", AWAY)]]]) : new Map(),
-    projected: () => null,
     fixtures: [{ homeClubId: 11, awayClubId: 12 }],
     lastWrote: new Map([["w", "Team w name an unchanged side with Saka on the right."]]),
     playing: new Set([1, 5, 8, 11, 12]),
@@ -25,7 +24,7 @@ function round(history = true): TieFacts[] {
 }
 
 function check(draft: Record<string, string>, ties = round()) {
-  const facts = buildSheetsBrief({ gameweek: 6, ties, clubName: (id) => `Club ${id}`, projected: false });
+  const facts = buildSheetsBrief({ gameweek: 6, ties, clubName: (id) => `Club ${id}` });
   return checkSheets(new Map(Object.entries(draft)), { ties, facts }).map((fault) => [fault.section, fault.check, fault.severity]);
 }
 

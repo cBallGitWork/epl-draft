@@ -3,7 +3,7 @@
 
 /** British team-news phrases, each allowed this many times in one article so none becomes a tic. */
 export const SHEETS_LEXICON: readonly (readonly [phrase: string, most: number])[] = [
-  ["keeps his place", 1], ["keep their places", 1], ["retains his place", 1], ["is recalled", 1], ["is restored", 1],
+  ["keeps his place", 1], ["retains his place", 1], ["is recalled", 1], ["is restored", 1],
   ["comes into the side", 1], ["comes in for", 2], ["makes way", 1], ["drops to the bench", 1], ["dropped to the bench", 2],
   ["misses out", 1], ["among the substitutes", 1], ["named on the bench", 1], ["handed a start", 1], ["full debut", 1],
   ["leads the line", 2], ["up front", 2], ["between the sticks", 1], ["in goal", 2], ["at the back", 3],

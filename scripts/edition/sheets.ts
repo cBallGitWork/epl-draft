@@ -13,9 +13,6 @@ import {
   mapPlayerStories,
   mapPoolNews,
   mapTeamRosters,
-  nextGameweeks,
-  projectedTotal,
-  projectionIntel,
   resolveRosters,
   sheetOf,
   sheetsFacts,
@@ -25,24 +22,21 @@ import {
   type Club,
   type Fixture,
   type FootballSnapshot,
-  type IntelProjections,
   type LeagueInfo,
   type PlayerStory,
   type RecentGame,
-  type Projected,
   type Sheet,
   type TieFacts,
 } from "@epl/core";
 import mapping from "../../data/mappings/fantrax.json";
-import { INTEL_SEASON, readIntel } from "../intel";
 import type { DeskFacts } from "./facts";
 import { readArchive } from "./persist";
 import { recentGames } from "./recent";
 import { readXi } from "./xi";
 
 // The reads behind team news at the lock, made only when the article is due: every earlier
-// period's rosters (for changes and debuts), the projections, the predicted elevens, the last few
-// rounds' match reads (for form), Fantrax's news, and what the paper wrote about each side last round.
+// period's rosters (for changes and debuts), the predicted elevens, the last few rounds' match reads
+// (for form and benchings), Fantrax's news, and what the paper wrote about each side last round.
 
 export interface SheetsDesk {
   gameweek: number;
@@ -86,7 +80,6 @@ export async function sheetsDesk(input: {
   const fixtures = input.season
     .filter((fixture) => fixture.gameweek !== null && gameweeks.includes(fixture.gameweek))
     .map((fixture) => ({ homeClubId: fixture.homeClubId, awayClubId: fixture.awayClubId }));
-  const projected = projectedIn(gameweeks);
   const xi = readXi(gameweeks[0]);
   const [recent, news] = await Promise.all([formRounds(gameweeks[0] ?? snapshot.gameweek), newsFor(facts, now)]);
 
@@ -94,7 +87,6 @@ export async function sheetsDesk(input: {
     pairings: facts.pairings,
     sheets: new Map(facts.teams.map((team) => [team.teamId, sheetOf(team)])),
     history,
-    projected: projected.reading,
     fixtures,
     lastWrote: lastWrote(period),
     recent: (man) => recent(man.player.id),
@@ -111,7 +103,6 @@ export async function sheetsDesk(input: {
     say("Sheets: no head-to-head has two fielded sides; nothing filed.");
     return null;
   }
-  if (!projected.covers) say(`Sheets: the projections do not reach gameweek ${gameweeks.join("+")}; no benching is news.`);
 
   const clubName = (clubId: number) => {
     const club = clubs.get(clubId);
@@ -122,7 +113,7 @@ export async function sheetsDesk(input: {
   return {
     gameweek,
     ties,
-    brief: buildSheetsBrief({ gameweek, ties, clubName, projected: projected.covers }),
+    brief: buildSheetsBrief({ gameweek, ties, clubName }),
     against: (clubId) => fixtureLabel(opposition.get(clubId)),
   };
 }
@@ -175,20 +166,6 @@ async function newsFor(facts: DeskFacts, now: string): Promise<Map<string, Playe
     });
   }
   return out;
-}
-
-/** The sister model's points over the period's gameweeks and his chance of starting the first. */
-function projectedIn(gameweeks: readonly number[]): { reading: (code: number) => Projected | null; covers: boolean } {
-  const projections = projectionIntel(readIntel<IntelProjections>("projections", `${INTEL_SEASON}.json`));
-  const covers = [...projections.values()].some((player) => player.gameweeks.some((week) => gameweeks.includes(week.gw)));
-  return {
-    covers,
-    reading: (code) => {
-      const player = projections.get(code);
-      const points = player === undefined ? null : projectedTotal(player, gameweeks);
-      return player === undefined || points === null ? null : { points, start: nextGameweeks(player, gameweeks)[0]?.start ?? null };
-    },
-  };
 }
 
 /** Each side's paragraph from the latest earlier team-news article, by team id. */

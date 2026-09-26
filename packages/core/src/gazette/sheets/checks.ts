@@ -18,7 +18,7 @@ export const SHEETS_OPINION: readonly string[] = [
   "impressive", "strong", "stronger", "weak", "weaker", "fresh", "confident", "confidence", "faith", "trust", "trusts",
   "key", "big", "should", "shouldn't", "must", "expect", "expects", "likely", "unlikely", "hope", "hopes",
   "will", "would", "clearly", "obviously", "perhaps", "presumably", "rewarded", "punished", "harsh",
-  "unlucky", "lucky", "decision", "rating", "rates", "rated", "opts", "opted", "elects", "elected", "chooses", "chose", "preferred",
+  "unlucky", "lucky", "decision", "rating", "rates", "rated", "in line to", "opts", "opted", "elects", "elected", "chooses", "chose", "preferred",
 ];
 
 const QUOTES = /["“”«»]/u;

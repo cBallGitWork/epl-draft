@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { benchings, type Projected } from "./benchings";
+import { benchings } from "./benchings";
 import type { StorySheet } from "./cargo";
 import { changesBetween, debuts } from "./changes";
 import { assembleSheets, plainLine, sheetsDeck, sheetsKey } from "./column";
@@ -8,7 +8,7 @@ import { sheetsFacts } from "./facts";
 import { starterFlags } from "./flags";
 import { inForm } from "./form";
 import { formation, sheetOf } from "./sheet";
-import { codeOf, man, rostered, side } from "./__fixtures__/sides";
+import { man, rostered, side } from "./__fixtures__/sides";
 
 const XI = ["Raya:G:1", "Saliba:D:1", "Gabriel:D:1", "Munoz:D:2", "Rice:M:1", "Saka:M:1", "Palmer:M:3", "Mbeumo:M:4", "Isak:F:5", "Wood:F:6", "Watkins:F:7"];
 
@@ -51,25 +51,26 @@ describe("changesBetween and debuts", () => {
 
 describe("benchings", () => {
   const sheet = side("a", XI, ["Eze:M:8", "Kepa:G:1"]);
-  const reading = (points: Record<string, number>, start = 0.9) => (code: number): Projected | null => {
-    const name = Object.keys(points).find((each) => codeOf(each) === code);
-    return name === undefined ? null : { points: points[name], start };
-  };
+  const game = (goals: number, assists = 0, cleanSheets = 0) => ({ gameweek: 1, minutes: 90, goals, assists, cleanSheets, points: 0 });
+  const form = (rounds: Record<string, ReturnType<typeof game>[]>) => (each: { player: { name: string } }) => rounds[each.player.name] ?? [];
 
-  it("names a benched man projected at least the margin above the weakest starter in his slot", () => {
-    const found = benchings(sheet, reading({ Eze: 6, Rice: 5, Saka: 7, Palmer: 4.5, Mbeumo: 5.5 }), undefined);
-    expect(found.map((each) => [each.man.player.name, each.over.player.name, each.best])).toEqual([["Eze", "Palmer", false]]);
+  it("names a benched man with a goal or assist last time out, or goals and assists across the rounds", () => {
+    expect(benchings(sheet, form({ Eze: [game(0), game(0), game(0, 1)] }), undefined).map((each) => each.man.player.name)).toEqual(["Eze"]);
+    expect(benchings(sheet, form({ Eze: [game(1), game(1), game(0)] }), undefined).map((each) => each.man.player.name)).toEqual(["Eze"]);
+    expect(benchings(sheet, form({ Kepa: [game(0, 0, 1), game(0, 0, 1), game(0, 0, 1)] }), undefined).map((each) => each.man.player.name)).toEqual(["Kepa"]);
   });
 
-  it("is quiet under the margin, on a man unlikely to start for his club, or with no reading", () => {
-    expect(benchings(sheet, reading({ Eze: 5, Palmer: 4.5 }), undefined)).toEqual([]);
-    expect(benchings(sheet, reading({ Eze: 9, Palmer: 4.5 }, 0.3), undefined)).toEqual([]);
-    expect(benchings(sheet, reading({ Palmer: 4.5 }), undefined)).toEqual([]);
+  it("is quiet on a benched man with nothing to show", () => {
+    expect(benchings(sheet, form({ Eze: [game(0), game(1), game(0)] }), undefined)).toEqual([]);
+    expect(benchings(sheet, () => [], undefined)).toEqual([]);
   });
 
-  it("says when he sat last round too, and when nobody in his slot is projected higher", () => {
-    const [found] = benchings(sheet, reading({ Eze: 9, Palmer: 4.5, Rice: 5 }), sheet);
-    expect(found).toMatchObject({ best: true, again: true });
+  it("says when he was dropped after starting last round, and when he was benched then too", () => {
+    const before = side("a", [...XI.slice(0, 6), "Eze:M:8"], ["Palmer:M:3", "Kepa:G:1"]);
+    const [eze] = benchings(sheet, form({ Eze: [game(0), game(0), game(1)] }), before);
+    expect(eze).toMatchObject({ dropped: true, again: false });
+    const [kepa] = benchings(sheet, form({ Kepa: [game(0), game(0), game(0, 0, 1)] }), before);
+    expect(kepa).toMatchObject({ dropped: false, again: true });
   });
 });
 
@@ -132,7 +133,6 @@ describe("sheetsFacts and the column", () => {
       pairings,
       sheets: new Map([["h", side("h", XI)], ["w", side("w", ["Pickford:G:12", "Haaland:F:11"])]]),
       history,
-      projected: () => null,
       fixtures: [],
       lastWrote: new Map(),
       playing: new Set([1, 2, 3, 4, 5, 6, 7, 11, 12]),
@@ -142,7 +142,7 @@ describe("sheetsFacts and the column", () => {
     });
 
   it("skips a head-to-head whose side fielded nobody, as a pre-draft period does", () => {
-    const empty = sheetsFacts({ pairings, history: new Map(), projected: () => null, fixtures: [], lastWrote: new Map(), playing: new Set<number>(), news: () => null, recent: () => [], predicted: () => null, sheets: new Map([["h", side("h", [])], ["w", side("w", XI)]]) });
+    const empty = sheetsFacts({ pairings, history: new Map(), fixtures: [], lastWrote: new Map(), playing: new Set<number>(), news: () => null, recent: () => [], predicted: () => null, sheets: new Map([["h", side("h", [])], ["w", side("w", XI)]]) });
     expect(empty).toEqual([]);
   });
 
@@ -162,6 +162,7 @@ describe("sheetsFacts and the column", () => {
     const ties = facts(new Map());
     const column = assembleSheets({ gameweek: 6, ties, against: (clubId) => (clubId === 1 ? "EVE (H)" : null), draft: new Map([["w", "Team w start two men."], [sheetsKey("h", "w"), "Invented."]]) });
     expect(column.headline).toBe("Team news: Gameweek 6");
+    expect(column.body).toBe("The deadline has passed and every line-up is locked. Here are all two, grouped by this week's head-to-heads.");
     const [sheet] = column.sheets as StorySheet[];
     expect(sheet.home.line).toBe("Team h name their first sheet in a 3-4-3.");
     expect(sheet.home.xi[0]).toMatchObject({ name: "Raya", slot: "G", against: "EVE (H)" });

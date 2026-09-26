@@ -367,9 +367,10 @@ Kind `sheets`, one article per round, keyed `sheets:gw{n}`, filed from the lock 
 finishes (not `!started`: a 12:15 lock and a 12:30 kickoff fall inside one cron's delay).
 Headline, deck and the elevens are the desk's; the model writes only each side's paragraph and
 each head-to-head's meeting line. Every fact is computed in `gazette/sheets/`: changes against the
-previous period's stored rosters, debuts against every earlier period, a benched man the sister
-model puts above the weakest starter in his slot (told as "might have started", never why), a man
-in form over his last three rounds, a starter with no fixture, Fantrax's own latest story on a
+previous period's stored rosters, debuts against every earlier period, a man benched or dropped
+despite his form (a return last time out, or goals and assists over his last three: Craig, "benched
+despite getting a goal/assist last week"; the projections are not read at all), a starter in form
+over his last three rounds, a starter with no fixture, Fantrax's own latest story on a
 starter, one who might not start for his club, and where the two sheets meet on a real pitch.
 Each side's eleven stands on the app's own pitch, with his real fixture stamped in at filing, as
 the BBC's graphic does.

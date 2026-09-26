@@ -21,8 +21,6 @@ export interface SheetsBrief {
   ties: readonly TieFacts[];
   /** A club's name as the paper prints it, by FPL club id. */
   clubName: (clubId: number) => string;
-  /** Whether this round had numbers to rate the benches by; without them no benching is news. */
-  projected: boolean;
 }
 
 export function buildSheetsBrief(brief: SheetsBrief): string {
@@ -32,7 +30,6 @@ export function buildSheetsBrief(brief: SheetsBrief): string {
     `TEAM NEWS, gameweek ${brief.gameweek}. The line-up deadline has passed and every sheet below is locked.`,
     `THE SIDES (use these names EXACTLY; the id in brackets is what you return, never the name): ${names}`,
     "SOURCES STAY OFF THE PAGE. Nothing here is to be credited to anyone: never write projected, projection, prediction, predicted, model, FPL, Fantrax's news, or a percentage. Report it the way a reporter who knows the game would.",
-    brief.projected ? null : "Nobody's place on the bench is news in itself this round. Do not say anyone should have started.",
     ...brief.ties.map((tie) => fixture(tie, brief)),
   ]
     .filter((block) => block !== null)
@@ -72,7 +69,7 @@ function notes(team: TeamFacts, brief: SheetsBrief): string[] {
     ...team.form.map(inForm),
     ...flags("news"),
     ...flags("unavailable"),
-    ...team.benchings.map((benching) => benched(benching, brief)),
+    ...team.benchings.map(benched),
     ...flags("may-not-start"),
   ].slice(0, SHEETS.notes);
 }
@@ -92,15 +89,26 @@ function debuts(team: TeamFacts): string | null {
     : `DEBUTS, a first start for this side: ${team.debuts.map((man) => man.player.name).join(", ")}`;
 }
 
-function benched(benching: Benching, brief: SheetsBrief): string {
-  const { man, over } = benching;
+function benched(benching: Benching): string {
+  const { man, last } = benching;
+  const lastTime = returns(last.goals, last.assists, BACK.has(man.slot) && last.minutes > 0 ? last.cleanSheets : 0);
+  const over = returns(benching.goals, benching.assists, benching.cleanSheets);
   return [
-    `${benching.dropped ? "DROPPED" : "BENCHED"}, THOUGH IN LINE TO START FOR ${brief.clubName(man.player.clubId).toUpperCase()}: ${man.player.name} (${man.slot}) is ${benching.dropped ? "dropped to the bench after starting last round" : "benched"}, and ${over.player.name} (${over.slot}) starts. ${man.player.name} is in line to start for ${brief.clubName(man.player.clubId)} this weekend.`,
-    benching.best ? ` He had the strongest case of anyone this side holds in the ${man.slot} slot.` : "",
+    `${benching.dropped ? "DROPPED, DESPITE HIS FORM" : "BENCHED, DESPITE HIS FORM"}: ${man.player.name} (${man.slot}) is ${benching.dropped ? "dropped to the bench after starting last round" : "on the bench"}.`,
+    lastTime === "" ? "" : ` Last time out: ${lastTime}.`,
+    over === "" ? "" : ` Over his last ${benching.rounds} rounds: ${over}.`,
     benching.again ? " He was benched last round too." : "",
-    " Say so in the present tense, naming his club, and never why.",
+    " Say he is benched despite that, and never why.",
   ].join("");
 }
+
+/** "2 goals, 1 assist, 1 clean sheet"; empty when there is nothing to count. */
+function returns(goals: number, assists: number, cleanSheets: number): string {
+  const count = (n: number, one: string, many: string) => (n > 0 ? `${n} ${n === 1 ? one : many}` : null);
+  return [count(goals, "goal", "goals"), count(assists, "assist", "assists"), count(cleanSheets, "clean sheet", "clean sheets")].filter((each) => each !== null).join(", ");
+}
+
+const BACK = new Set(["G", "D"]);
 
 function flagged(flag: StarterFlag, brief: SheetsBrief): string {
   const name = `${flag.man.player.name} (${flag.man.slot})`;
@@ -114,14 +122,9 @@ function flagged(flag: StarterFlag, brief: SheetsBrief): string {
 }
 
 function inForm(form: InForm): string {
-  const where = form.starts ? "named" : "on the bench";
-  const did = [
-    form.goals > 0 ? `${form.goals} ${form.goals === 1 ? "goal" : "goals"}` : null,
-    form.assists > 0 ? `${form.assists} ${form.assists === 1 ? "assist" : "assists"}` : null,
-    form.cleanSheets > 0 && form.man.slot !== "M" && form.man.slot !== "F" ? `${form.cleanSheets} ${form.cleanSheets === 1 ? "clean sheet" : "clean sheets"}` : null,
-  ].filter((each) => each !== null);
+  const did = returns(form.goals, form.assists, BACK.has(form.man.slot) ? form.cleanSheets : 0);
   const every = form.scoredEvery ? `, scoring in each` : form.cleanEvery ? `, a clean sheet in each` : "";
-  return `IN FORM: ${form.man.player.name} (${form.man.slot}, ${where}): ${did.join(", ")} in his last ${form.rounds} rounds${every}.`;
+  return `IN FORM: ${form.man.player.name} (${form.man.slot}, named): ${did} in his last ${form.rounds} rounds${every}.`;
 }
 
 function meets(tie: TieFacts, brief: SheetsBrief): string {

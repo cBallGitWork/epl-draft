@@ -372,11 +372,9 @@ export const PREDICTIONS = {
 
 /** The team sheets at the lock: when a benched man is news, and how much the article carries. */
 export const SHEETS = {
-  /** A benched man is news when the sister model projects him this many points above the weakest
-   *  starter in his slot, and gives him at least this chance of starting for his club. */
-  benchMargin: 1,
-  benchStart: 0.6,
-  /** At most this many benchings a side, and meeting points a fixture. */
+  /** A benched man is news with a goal or assist last time out, or this many goals and assists
+   *  over his last few rounds. At most this many benchings a side, and meeting points a fixture. */
+  benchForm: 2,
   benchings: 2,
   crossovers: 2,
   /** Form over this many rounds: scoring in every one, this many goals, or this many goals and
