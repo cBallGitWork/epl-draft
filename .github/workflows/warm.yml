@@ -37,8 +37,12 @@ on:
     # is its run COUNT and nothing else: 1,877 runs a month became 626, which was
     # 47% of the whole bill. The 5xx check below survives at four times an hour
     # through every window anybody is watching.
-    - cron: "*/15 11-22 * * 6,0"
-    - cron: "*/15 17-22 * * 1,5"
+    #
+    # **Thirty, not fifteen** (26 Sep 2026: 445 minutes in September). The cache
+    # goes cold after thirty seconds whatever the cadence, so the occasional slow
+    # first load is the whole cost.
+    - cron: "*/30 11-22 * * 6,0"
+    - cron: "*/30 17-22 * * 1,5"
   workflow_dispatch:
 
 # It reads. Nothing here writes anything, so it is granted nothing.
