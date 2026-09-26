@@ -20,6 +20,11 @@ export function playerHref(fantraxId: string): string {
   return `${POOL}/${fantraxId}`;
 }
 
+/** One story opened on his News tab. */
+export function playerStoryHref(fantraxId: string, storyId: string): string {
+  return `${playerHref(fantraxId)}/news?story=${encodeURIComponent(storyId)}`;
+}
+
 /** The value of Data's season picker that shows every season with its club. */
 export const ALL_SEASONS = "all";
 
