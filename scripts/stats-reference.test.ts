@@ -65,6 +65,7 @@ const STAT_TYPES: readonly { file: string; types: readonly string[] }[] = [
   { file: "packages/core/src/gazette/predictions/sides.ts", types: ["RecentGame", "SideForm", "SquadMan"] },
   { file: "packages/core/src/gazette/types.ts", types: ["Pick", "StorySide", "StoryResult"] },
   { file: "packages/core/src/gazette/extras.ts", types: ["StoryRank"] },
+  { file: "packages/core/src/gazette/wire.ts", types: ["WireTeam", "WirePlayer", "WireFacts"] },
   { file: "apps/companion/app/players/teams/teamRows.ts", types: ["PoolMan", "TeamRow"] },
 ];
 
@@ -184,12 +185,12 @@ const STATS_LEAGUE = {
 
 /** The rows of each section's tables with no Domain field column: only a count notices one go. */
 const PLAIN_ROWS: Record<string, number> = {
-  "Fetched but read by nobody": 30,
+  "Fetched but read by nobody": 31,
   "FPL bootstrap keys never typed": 11,
   "Computed in the app, not core": 13,
-  "Stored history and live-only reads": 16,
+  "Stored history and live-only reads": 18,
   "Counted and refused": 30,
-  "Where the record disagrees with the tree": 6,
+  "Where the record disagrees with the tree": 7,
 };
 
 const STATS_LEAGUE_SECTION = "Fantrax, the stats league";
