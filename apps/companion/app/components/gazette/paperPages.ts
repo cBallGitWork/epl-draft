@@ -31,7 +31,7 @@ export const PAPER_PAGES: readonly PaperPage[] = [
     // football that happened elsewhere — it is a wire service item, not opinion.
     kinds: [
       "tie-report", "match-report", "tie-call", "fixture-preview",
-      "news", "presser", "predicted-xi",
+      "news", "presser", "predicted-xi", "sheets",
     ],
   },
   {

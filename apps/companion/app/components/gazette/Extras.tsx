@@ -2,6 +2,7 @@ import type { PublishedStory } from "@epl/core";
 import Quiz from "./Quiz";
 import Ranks from "./Ranks";
 import Lineups from "./Lineups";
+import Sheets from "./Sheets";
 import TeamNews from "./TeamNews";
 
 // What a column filed BESIDE its prose, by kind.
@@ -24,5 +25,6 @@ export default function Extras({
   if (story.kind === "wire") return <Quiz story={story} />;
   if (story.kind === "presser") return <TeamNews story={story} />;
   if (story.kind === "predicted-xi") return <Lineups story={story} named={named} mine={mine} />;
+  if (story.kind === "sheets") return <Sheets story={story} named={named} mine={mine} />;
   return null;
 }
