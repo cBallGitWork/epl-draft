@@ -112,6 +112,11 @@ export { careerIntel, seasonKey } from "./intel/careers";
 export type { IntelCareers } from "./intel/careers";
 export { depthIntel, depthLines, spotsOf } from "./intel/depth";
 export type { ClubDepth, DepthHolder, DepthSlot, DepthSpot, IntelDepth } from "./intel/depth";
+// Season-to-date event counts off the stats league, in football terms and keyed on FPL code.
+export { STAT_COLUMNS } from "./intel/statKeys";
+export type { StatKey, StatKind } from "./intel/statKeys";
+export { columnDrift, per90, stat, statIntel } from "./intel/stats";
+export type { IntelStats, StatsRow } from "./intel/stats";
 // A window of recent gameweeks, for narrowing the intel to recent form.
 export { fixtureGameweeks, gameweekSpan, inGameweeks, lastPlayed } from "./intel/window";
 export type { IntelShots, Shot } from "./intel/shots";

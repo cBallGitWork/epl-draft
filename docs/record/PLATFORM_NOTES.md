@@ -3983,6 +3983,30 @@ fifteen-minute interval the match clock does not count, and enough stoppage that
 nothing is still live at the whistle. Named constants in `replay.ts`; the
 Premier League publishes no interval length and FPL publishes no clock at all.
 
+## The dummy league is the stats league, and its counts are a capture (26 Sep 2026)
+
+`w05aib75mtj36y1g`, recorded as `dummy` and named "ALLPOINTS" in Fantrax, enables every
+category at no points, so `getPlayerStats` by position group answers **77 scoring columns for
+601 outfielders and 19 for 86 keepers** (26 Sep 2026). `recorded.json` names it with
+`"stats": "dummy"`; `npm run stats` reads it once a day into `data/intel/stats/26-27.json`.
+
+- **A column is its `scipId`'s stat id**, `5010#6120#-1` → `6120`. The short names repeat
+  (`CS` twice, `CF` twice) and the id does not; the id is the same in both groups.
+- **Stored in football terms, keyed on FPL code.** The keys, labels and kinds live in
+  `packages/core/src/football/intel/statKeys.ts`, so the football layer types what it reads;
+  which Fantrax id fills which key is `scripts/stats/columns.ts`, the only place the two meet.
+  (The 25 Sep plan put the whole vocabulary in the script; typed keys in core replaced that.)
+- **Only men with minutes are stored**: a miss is no reading, and prints `—`.
+- **One source per figure per screen.** Fantrax's tackles are never printed beside FPL's.
+- **Fantrax's ball recoveries are FPL's** (Gross 10, Rice 17, the same in both, 26 Sep), so a
+  recovery-based attribute does not move when it changes source.
+- **"Shots Blocked" (`SB`) is his own shots that were blocked**, not blocks he made; no column
+  counts blocks made except inside Fantrax's `DFP`.
+- **19 men who have played are not in the bridge** on the first run (late signings the last
+  `npm run bridge` marked no-FPL-match: Q. Timber, Affengruber, Chilwell, Maitland-Niles…).
+  Their counts are not stored until the bridge knows them; `intel-check` names the number.
+- The script is `scripts/stats.ts`; the ingestion refactor moves it to `scripts/ingest/`.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Answered for

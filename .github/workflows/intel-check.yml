@@ -32,10 +32,11 @@ name: Intel staleness
 
 on:
   schedule:
-    # 05:25 UTC daily. Ahead of every `editions.yml` cron — the earliest is
-    # 06:15 on a Thursday — so a wrong export is reported before the desk looks
-    # rather than after it has quietly filed nothing.
-    - cron: "25 5 * * *"
+    # 05:55 UTC daily: after `ingest-stats.yml` at 05:40, and ahead of every
+    # `editions.yml` cron — the earliest is 06:15 on a Thursday — so a wrong
+    # export is reported before the desk looks rather than after it has quietly
+    # filed nothing.
+    - cron: "55 5 * * *"
   workflow_dispatch:
 
 permissions:

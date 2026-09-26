@@ -459,6 +459,26 @@ there.
 
 ---
 
+## The stats league's counts are fetched here, not exported
+
+Since 26 Sep 2026 `npm run stats` (05:40 UTC daily in `ingest-stats.yml`) reads
+`getPlayerStats` off the stats league, the `recorded.json` league named by
+`"stats"`, which enables every Fantrax category at no points. It reads the
+outfield sheet, then the keeper sheet, never both at once, and writes
+`data/intel/stats/26-27.json`: `columns` (our keys, from `football/intel/statKeys.ts`),
+`players[{code, values}]` for every man with minutes, and `unbridged` /
+`unbridgedWithMinutes` for the men the bridge could not key. 402 men and 76
+columns in 87 KB on the first run. `scripts/stats/columns.ts` is the one place a
+Fantrax stat id meets our key; OUTP and the three per-game rates are read and
+never stored.
+
+It rewrites the file only when a figure changed, and refuses without writing on a
+projection or when the league's columns no longer match the vocabulary
+(`--accept-drift` once the vocabulary says what the new ones are). The sister repo
+is not asked for these counts.
+
+---
+
 ## Not exported, and why
 
 **Pass maps.** *This paragraph said the FotMob pass-network builder was dead for
