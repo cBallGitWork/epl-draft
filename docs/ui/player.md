@@ -27,7 +27,7 @@ derived the same four from the same object.
 - **The tabs** — Profile · Data · News · Transfer. **Five until 25 Sep 2026**, CM's own
   count, when History folded into Data. Fitness folded into News on 4 Sep 2026
   (Craig: "Fitness could be doubled in with news") — they were two tabs asking
-  one question with half an answer each. Which of them is hollow is decided from
+  one question with half an answer each — and both now open on Profile (26 Sep). Which of them is hollow is decided from
   the SUBJECT, not from the page you are on; each route used to pass its own
   answer, so an unbridged man had the tab he was standing on greyed and the empty
   one left bright.
@@ -46,7 +46,7 @@ derived the same four from the same object.
    to its foot (Craig, 25 Sep 2026: "cut off mid box").
 2. **The attribute grid** — CM 01/02's: alphabetical down three columns on the desk and two
    on a phone, 16–20 in CM's orange and 11–15 in amber, with **Preferred Foot** (off the shot
-   map) and **Condition** (FPL's chance he plays) as its worded rows. Every rating is OURS
+   map) as its worded row. Every rating is OURS
    and rated **within his position group** (Craig, 25 Sep 2026: "compare to just attackers,
    defenders to just defenders"): the sister repo's line, gathered into goalkeepers,
    defenders, midfielders and forwards; a man with no line is rated against everyone. The
@@ -54,6 +54,12 @@ derived the same four from the same object.
    and Teamwork; a keeper gets his own eight.
    **Rankings** sit under it: his season totals and his place among the same group
    ("rankings for data such as xg").
+   **Fitness and Latest news** stand under it, side by side on a desk (Craig, 26 Sep 2026:
+   *"this page should contain the latest player news, and their fitness conditions"*).
+   Fitness is FPL's: his state beside its box, washed in the doubt ramp, **Condition** (his
+   chance of playing, moved out of the grid so it prints once), and FPL's own note, dated
+   by `news_added`. Latest news is the News tab's three newest rows, each opening its story
+   there. A man FPL has never listed gets the news alone.
 3. **The real position**, in cyan — the first thing in the app entitled to that
    slot (see below).
 4. **The run to come**, the next eight across the row, in FPL's difficulty. *Fantrax's projection for the round was
