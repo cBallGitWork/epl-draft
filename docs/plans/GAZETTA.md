@@ -367,13 +367,24 @@ Kind `sheets`, one article per round, keyed `sheets:gw{n}`, filed from the lock 
 finishes (not `!started`: a 12:15 lock and a 12:30 kickoff fall inside one cron's delay).
 Headline, deck and the elevens are the desk's; the model writes only each side's paragraph and
 each head-to-head's meeting line. Every fact is computed in `gazette/sheets/`: changes against the
-previous period's stored rosters, debuts against every earlier period, a benched man projected
-above the weakest starter in his slot (the sister model, stated as an order and never a figure),
-a starter with no fixture, one FPL doubts, one his club's predicted eleven leaves out, and where the
-two sheets meet on a real pitch. `sheets/checks.ts` refuses a wrong change count, a debut or an
-"unchanged" the facts do not give, and a stranger; it sends back opinion, a repeated opening, a
-phrase shared between sides, and a phrase from last round's paragraph. A side whose paragraph
-fails twice prints the desk's plain line.
+previous period's stored rosters, debuts against every earlier period, a benched man the sister
+model puts above the weakest starter in his slot (told as "might have started", never why), a man
+in form over his last three rounds, a starter with no fixture, Fantrax's own latest story on a
+starter, one who might not start for his club, and where the two sheets meet on a real pitch.
+Each side's eleven stands on the app's own pitch, with his real fixture stamped in at filing, as
+the BBC's graphic does.
+
+Craig, the same day, on the first write: *"Don't quote FPL or %'s, Fantrax has its own player
+summary which uses real sentences"*, *"Don't literally say projected or mention predicted elevens"*,
+*"Just say unchanged, don't count weeks"*, and *"you're a real sports reporter and your audience is
+a real reader"*. So no source is ever named, an unchanged side is only unchanged, and a man FPL
+lists unavailable whose Fantrax story predates the listing (Millar's goal for Hull, after his loan)
+gets the status in one word rather than the stale story.
+
+`sheets/checks.ts` refuses a wrong change count, a debut or an "unchanged" the facts do not give,
+a named source or a percentage, and a stranger; it sends back opinion, a count of unchanged rounds,
+a repeated opening, a phrase shared between sides, and a phrase from last round's paragraph. A side
+whose paragraph fails twice prints the desk's plain line.
 
 Left deliberately:
 
