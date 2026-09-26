@@ -16,6 +16,7 @@ import { presserEdition } from "./presserWeek";
 import { faceOf, type FaceContext } from "./faces";
 import type { RoundFacts } from "./facts";
 import type { PredictionsDesk } from "./predictions";
+import type { SheetsDesk } from "./sheets";
 import { storyOfColumn } from "./newsroom";
 import { COLUMNIST, STORY_BYLINE, editionName } from "./voice/bylines";
 import { presserHeadline } from "./voice/pressers";
@@ -38,6 +39,8 @@ export interface DeskContext {
   period: number;
   /** The round ahead as Lawro may know it; null unless his column is due this firing. */
   predictions: PredictionsDesk | null;
+  /** The locked sheets, their history and their brief; null unless team news is due this firing. */
+  sheets: SheetsDesk | null;
   /** This week's press-conference signals, for men the league holds. Empty until
    *  the intel export lands, which files no Team Sheet and spends nothing. */
   presserLines: PresserLine[];

@@ -2,6 +2,7 @@ import { FANTRAX_LEAGUE_ID, type Assignment, type Club, type Fixture, type Footb
 import type { DeskContext } from "./dispatch";
 import { withFootball, type DeskFacts } from "./facts";
 import { predictionsDesk } from "./predictions";
+import { sheetsDesk } from "./sheets";
 import type { readLedger } from "./persist";
 import type { presserDesk } from "./presserWeek";
 import { xiColumn, type readXi } from "./xi";
@@ -16,6 +17,8 @@ export async function deskContext(input: {
   byCode: Map<number, Club>;
   info: LeagueInfo;
   period: number;
+  /** The gameweeks the round's period scores. */
+  gameweeks: readonly number[];
   ledger: ReturnType<typeof readLedger>;
   sheet: ReturnType<typeof presserDesk>;
   xi: ReturnType<typeof readXi>;
@@ -24,7 +27,7 @@ export async function deskContext(input: {
   assignments: readonly Assignment[];
   say: (message: string) => void;
 }): Promise<DeskContext> {
-  const { snapshot, facts, clubs, byCode, info, period, ledger, sheet, xi, season, kickoffs, assignments, say } = input;
+  const { snapshot, facts, clubs, byCode, info, period, gameweeks, ledger, sheet, xi, season, kickoffs, assignments, say } = input;
   return {
     leagueId: FANTRAX_LEAGUE_ID,
     snapshot,
@@ -41,6 +44,8 @@ export async function deskContext(input: {
     period,
     // Lawro's reads are his own and made only when his column is due.
     predictions: await predictionsDesk({ assignments, info, snapshot, season, kickoffs, table: facts.table, business: facts.business, say }),
+    // The team sheets' reads are their own too, and every earlier period's rosters are among them.
+    sheets: await sheetsDesk({ assignments, info, snapshot, facts, period, gameweeks, season, clubs, say }),
     presserLines: sheet.lines,
     presserQuotes: sheet.quotes,
     presserTies: sheet.ties,

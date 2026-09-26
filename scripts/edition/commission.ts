@@ -12,6 +12,8 @@ import { FIXTURE_PREVIEW, MATCH_REPORT, TIE_CALL, TIE_REPORT } from "./voice/mat
 import { DODGERS, ELEVEN, POWER_RANKING, WIRE } from "./voice/columns";
 import { LAWRO } from "./voice/lawro";
 import type { PredictionsDesk } from "./predictions";
+import type { SheetsDesk } from "./sheets";
+import { SHEETS_VOICE } from "./voice/sheets";
 import { NEWS } from "./voice/news";
 import { PRESSER } from "./voice/pressers";
 import { edition, faceCtx, type DeskContext } from "./dispatch";
@@ -21,7 +23,7 @@ import { edition, faceCtx, type DeskContext } from "./dispatch";
 /** How a column comes to exist: a voice and a brief for a writer, or a set of
  *  facts the desk prints itself. */
 type Commission =
-  | { system: string; brief: string; lawro?: PredictionsDesk }
+  | { system: string; brief: string; lawro?: PredictionsDesk; sheets?: SheetsDesk }
   | { printed: Record<string, unknown> };
 
 export function prepare(assignment: Assignment, ctx: DeskContext): Commission | null {
@@ -37,6 +39,11 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
     if (desk === null) return null;
     const brief = buildLawroBrief({ ...desk, teams: ctx.info.teams.map(({ teamId, name }) => ({ teamId, name })) });
     return brief === null ? null : { system: LAWRO, brief, lawro: desk };
+  }
+
+  // Team news is written a paragraph a side through its own editor, from facts the desk already joined.
+  if (assignment.kind === "sheets") {
+    return ctx.sheets === null ? null : { system: SHEETS_VOICE, brief: ctx.sheets.brief, sheets: ctx.sheets };
   }
 
   const scoped =

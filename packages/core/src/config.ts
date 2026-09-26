@@ -369,3 +369,19 @@ export const PREDICTIONS = {
   recentGames: 2,
   factsPerTie: 11,
 } as const;
+
+/** The team sheets at the lock: when a benched man is news, and how much the article carries. */
+export const SHEETS = {
+  /** A benched man is news when the sister model projects him this many points above the weakest
+   *  starter in his slot, and gives him at least this chance of starting for his club. */
+  benchMargin: 1,
+  benchStart: 0.6,
+  /** At most this many benchings a side, and meeting points a fixture. */
+  benchings: 2,
+  crossovers: 2,
+  /** A side's paragraph: sentences and words at most; a phrase this long shared is an echo. */
+  sentences: 3,
+  words: 70,
+  betweenWords: 40,
+  echo: 5,
+} as const;

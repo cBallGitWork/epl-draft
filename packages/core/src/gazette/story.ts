@@ -33,6 +33,7 @@ export type StoryKind =
   | "dodgers"
   | "presser"
   | "predicted-xi"
+  | "sheets"
   | "news";
 
 /** Every kind, as data. `normalizeStory` refuses a story whose kind is not here,
@@ -41,7 +42,7 @@ export type StoryKind =
 export const STORY_KINDS: readonly StoryKind[] = [
   "match-report", "fixture-preview",
   "tie-call", "tie-report", "predictions", "eleven", "power-ranking",
-  "wire", "dodgers", "presser", "predicted-xi", "news",
+  "wire", "dodgers", "presser", "predicted-xi", "sheets", "news",
 ];
 
 export type { StoryExtras } from "./extras";
