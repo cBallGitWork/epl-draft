@@ -78,7 +78,7 @@ export type { Sheet } from "./sheets/sheet";
 export type { Projected } from "./sheets/benchings";
 export type { TieFacts } from "./sheets/facts";
 export type { SheetsDraft } from "./sheets/column";
-export type { StorySheetSide } from "./sheets/cargo";
+export type { StorySheetMan, StorySheetSide } from "./sheets/cargo";
 
 // Lawro's predictions: the calls, the record, his past, the brief, and the editor that reads him.
 export { buildLawroBrief } from "./briefs/predictions";

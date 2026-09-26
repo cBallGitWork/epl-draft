@@ -2,6 +2,8 @@ import { benchings, type Benching, type Projected } from "./benchings";
 import { changesBetween, debuts, type SheetChanges } from "./changes";
 import { crossovers, type ClubPair, type Crossover } from "./crossovers";
 import { starterFlags, type FlagInput, type StarterFlag } from "./flags";
+import { inForm, type InForm } from "./form";
+import type { RecentGame } from "../predictions/sides";
 import { fielded, formation, type Sheet, type SheetMan } from "./sheet";
 
 // Everything the team-news article may say, per head-to-head. Pure: the edge reads the rosters,
@@ -16,6 +18,7 @@ export interface TeamFacts {
   debuts: SheetMan[] | null;
   benchings: Benching[];
   flags: StarterFlag[];
+  form: InForm[];
   /** What the paper wrote about this side last round, so this one does not repeat it. */
   lastWrote: string | null;
 }
@@ -35,6 +38,8 @@ export interface SheetsInput extends FlagInput {
   /** The round's real fixtures, as club pairs. */
   fixtures: readonly ClubPair[];
   lastWrote: ReadonlyMap<string, string>;
+  /** His last few rounds' match reads, oldest first. */
+  recent: (man: SheetMan) => readonly RecentGame[];
 }
 
 /** One entry per head-to-head whose two sides both fielded a sheet. */
@@ -50,6 +55,7 @@ export function sheetsFacts(input: SheetsInput): TieFacts[] {
       debuts: debuts(sheet, history),
       benchings: benchings(sheet, input.projected, history.at(-1)),
       flags: starterFlags(sheet, input),
+      form: inForm(sheet, input.recent),
       lastWrote: input.lastWrote.get(teamId) ?? null,
     };
   };

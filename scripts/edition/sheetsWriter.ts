@@ -28,7 +28,7 @@ export async function writeSheets(desk: SheetsDesk, brief: string, say: (message
   const draft = mergeSheets(attempts);
   const plain = desk.ties.flatMap((tie) => [tie.home.sheet, tie.away.sheet]).filter((sheet) => !draft.has(sheet.teamId));
   if (plain.length > 0) say(`  ⚠ sheets: ${plain.length} sides print the desk's plain line; their paragraphs failed twice.`);
-  return assembleSheets({ gameweek: desk.gameweek, ties: desk.ties, draft });
+  return assembleSheets({ gameweek: desk.gameweek, ties: desk.ties, draft, against: desk.against });
 }
 
 function summary(faults: readonly Fault[]): string {

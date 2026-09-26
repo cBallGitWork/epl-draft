@@ -7,8 +7,6 @@ export interface SheetChanges {
   count: number;
   in: { man: SheetMan; from: "bench" | "signed" }[];
   out: { man: SheetMan; to: "bench" | "gone" }[];
-  /** How many rounds running the same eleven has now started, counting this one; 1 is a change. */
-  unchangedFor: number;
 }
 
 /** Null on a side's first sheet: there is nothing to have changed from. */
@@ -21,7 +19,6 @@ export function changesBetween(now: Sheet, history: readonly Sheet[]): SheetChan
     count: Math.max(came.length, went.length),
     in: came.map((man) => ({ man, from: sitsFor(before, man.fantraxId) ? "bench" : "signed" })),
     out: went.map((man) => ({ man, to: sitsFor(now, man.fantraxId) ? "bench" : "gone" })),
-    unchangedFor: unchangedRun(now, history),
   };
 }
 
@@ -29,14 +26,4 @@ export function changesBetween(now: Sheet, history: readonly Sheet[]): SheetChan
 export function debuts(now: Sheet, history: readonly Sheet[]): SheetMan[] | null {
   if (history.length === 0) return null;
   return now.starters.filter((man) => !history.some((sheet) => startsFor(sheet, man.fantraxId)));
-}
-
-function unchangedRun(now: Sheet, history: readonly Sheet[]): number {
-  let run = 1;
-  for (let at = history.length - 1; at >= 0 && sameEleven(now, history[at]); at -= 1) run += 1;
-  return run;
-}
-
-function sameEleven(a: Sheet, b: Sheet): boolean {
-  return a.starters.length === b.starters.length && a.starters.every((man) => startsFor(b, man.fantraxId));
 }

@@ -1,13 +1,22 @@
 // What a team-news story carries beside its prose: each head-to-head's two sides as printed, refused
 // field by field at the edge like every other story's cargo.
 
+/** One man on the sheet: his shirt name, his FPL code for the pitch, the slot he fills, and his
+ *  real match this round as it stood when filed ("EVE (H)"); null when his club has none. */
+export interface StorySheetMan {
+  name: string;
+  code: number;
+  slot: string;
+  against: string | null;
+}
+
 /** One side's block: its paragraph, then the eleven and the bench the desk printed from Fantrax. */
 export interface StorySheetSide {
   teamId: string;
   formation: string | null;
   line: string;
-  xi: string[];
-  bench: string[];
+  xi: StorySheetMan[];
+  bench: StorySheetMan[];
 }
 
 /** One head-to-head, and where its two sheets meet on a real pitch. */
@@ -32,17 +41,22 @@ export function normalizeSheets(raw: unknown): StorySheet[] | undefined {
 function side(raw: unknown): StorySheetSide | null {
   const each = raw as Partial<StorySheetSide> | null;
   if (each === null || typeof each !== "object" || typeof each.teamId !== "string" || each.teamId === "") return null;
-  const xi = names(each.xi);
+  const xi = men(each.xi);
   if (xi.length === 0) return null;
   return {
     teamId: each.teamId,
     formation: typeof each.formation === "string" && each.formation !== "" ? each.formation : null,
     line: typeof each.line === "string" ? each.line : "",
     xi,
-    bench: names(each.bench),
+    bench: men(each.bench),
   };
 }
 
-function names(raw: unknown): string[] {
-  return Array.isArray(raw) ? raw.filter((name): name is string => typeof name === "string" && name.trim() !== "") : [];
+function men(raw: unknown): StorySheetMan[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.flatMap((man: Partial<StorySheetMan> | null) =>
+    typeof man?.name === "string" && man.name.trim() !== "" && Number.isInteger(man.code) && (man.code as number) > 0 && typeof man.slot === "string"
+      ? [{ name: man.name, code: man.code as number, slot: man.slot, against: typeof man.against === "string" && man.against !== "" ? man.against : null }]
+      : [],
+  );
 }

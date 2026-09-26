@@ -379,6 +379,19 @@ export const SHEETS = {
   /** At most this many benchings a side, and meeting points a fixture. */
   benchings: 2,
   crossovers: 2,
+  /** Form over this many rounds: scoring in every one, this many goals, or this many goals and
+   *  assists together; at most this many men a side. */
+  formRounds: 3,
+  formGoals: 3,
+  formInvolvements: 4,
+  form: 2,
+  /** Fantrax stories this many days old or newer are news at the lock, or this many for a man
+   *  listed unavailable, whose injury story may be weeks old and still true; at most this many a
+   *  side, cut to this many sentences. */
+  newsDays: 7,
+  injuryDays: 60,
+  news: 3,
+  newsSentences: 2,
   /** A side's paragraph: sentences and words at most; a phrase this long shared is an echo. */
   sentences: 3,
   words: 70,

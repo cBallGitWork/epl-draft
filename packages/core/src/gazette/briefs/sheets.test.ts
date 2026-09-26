@@ -1,13 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { sheetsFacts } from "../sheets/facts";
-import { codeOf, man, side } from "../sheets/__fixtures__/sides";
+import { codeOf, side } from "../sheets/__fixtures__/sides";
 import { buildSheetsBrief } from "./sheets";
 
 const XI = ["Raya:G:1", "Saliba:D:1", "Rice:M:1", "Palmer:M:3", "Haaland:F:11"];
 
 function brief(history: boolean, projected = false) {
   const now = side("h", XI, ["Eze:M:8"]);
-  now.starters[2] = man("Rice:M:1", { status: "d", chanceOfPlaying: 75, news: "Knock - 75% chance of playing" });
   const ties = sheetsFacts({
     pairings: [{ home: { teamId: "h" }, away: { teamId: "w" } }],
     sheets: new Map([["h", now], ["w", side("w", ["Pickford:G:12"])]]),
@@ -16,7 +15,9 @@ function brief(history: boolean, projected = false) {
     fixtures: [{ homeClubId: 11, awayClubId: 12 }],
     lastWrote: new Map(),
     playing: new Set([1, 8, 11, 12]),
-    predicted: () => null,
+    news: (each) => (each.player.name === "Rice" ? { id: "1", headline: "Rice a doubt", content: "Rice has a knock and faces a late test.", analysis: null, at: 1 } : null),
+    recent: (each) => (each.player.name === "Haaland" ? [1, 2, 1].map((goals) => ({ gameweek: 1, minutes: 90, goals, assists: 0, cleanSheets: 0, points: 0 })) : []),
+    predicted: (each) => (each.player.name === "Saliba" ? false : null),
   });
   return buildSheetsBrief({ gameweek: 6, ties, clubName: (id) => `Club ${id}`, projected });
 }
@@ -29,17 +30,19 @@ describe("buildSheetsBrief", () => {
     expect(text).toContain("IN: Palmer (M, from the bench)");
     expect(text).toContain("OUT: Eze (M, to the bench)");
     expect(text).toContain("DEBUTS: none. Do not use the word debut about this side.");
-    expect(text).toContain("Eze (M) is on the bench, projected above Palmer (M), who starts.");
+    expect(text).toContain("ON THE BENCH, AND HE MIGHT HAVE STARTED: Eze (M) sits while Palmer (M) starts.");
     expect(text).toContain("STARTS WITH NO MATCH: Palmer (M). Club 3 do not play this round.");
-    expect(text).toContain("STARTS, FPL LISTS HIM DOUBTFUL: Rice (M), 75% chance of playing.");
+    expect(text).toContain("STARTS, IN THE NEWS (reported 1 Jan): Rice (M). Rice has a knock and faces a late test.");
+    expect(text).toContain("STARTS, BUT MIGHT NOT START FOR CLUB 1: Saliba (D).");
+    expect(text).toContain("IN FORM: Haaland (F, starts): 4 goals in his last 3 rounds, scoring in each.");
     expect(text).toContain("Team h's Haaland (F) against Team w's Pickford (G), in Club 11 v Club 12.");
-    expect(text).not.toMatch(/\b7\b|points: /u);
+    expect(text).not.toMatch(/\b7\b|points: |%|projected above|predicted eleven/u);
   });
 
   it("forbids changes and debuts on a first sheet, and a benching with no projections", () => {
     const text = brief(false);
     expect(text).toContain("FIRST SHEET: there is no earlier sheet to compare with.");
     expect(text).not.toContain("DEBUTS");
-    expect(text).toContain("No projections cover this round");
+    expect(text).toContain("Nobody's place on the bench is news in itself this round.");
   });
 });

@@ -25,9 +25,11 @@ export async function deskContext(input: {
   season: readonly Fixture[];
   kickoffs: readonly GameweekKickoff[];
   assignments: readonly Assignment[];
+  /** The firing's one instant. */
+  now: string;
   say: (message: string) => void;
 }): Promise<DeskContext> {
-  const { snapshot, facts, clubs, byCode, info, period, gameweeks, ledger, sheet, xi, season, kickoffs, assignments, say } = input;
+  const { snapshot, facts, clubs, byCode, info, period, gameweeks, ledger, sheet, xi, season, kickoffs, assignments, now, say } = input;
   return {
     leagueId: FANTRAX_LEAGUE_ID,
     snapshot,
@@ -45,7 +47,7 @@ export async function deskContext(input: {
     // Lawro's reads are his own and made only when his column is due.
     predictions: await predictionsDesk({ assignments, info, snapshot, season, kickoffs, table: facts.table, business: facts.business, say }),
     // The team sheets' reads are their own too, and every earlier period's rosters are among them.
-    sheets: await sheetsDesk({ assignments, info, snapshot, facts, period, gameweeks, season, clubs, say }),
+    sheets: await sheetsDesk({ assignments, info, snapshot, facts, period, gameweeks, season, clubs, now, say }),
     presserLines: sheet.lines,
     presserQuotes: sheet.quotes,
     presserTies: sheet.ties,

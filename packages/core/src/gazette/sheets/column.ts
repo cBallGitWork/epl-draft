@@ -1,4 +1,4 @@
-import type { StorySheet, StorySheetSide } from "./cargo";
+import type { StorySheet, StorySheetMan, StorySheetSide } from "./cargo";
 import type { TeamFacts, TieFacts } from "./facts";
 import type { SheetMan } from "./sheet";
 
@@ -10,18 +10,25 @@ export type SheetsDraft = ReadonlyMap<string, string>;
 
 export const sheetsKey = (homeTeamId: string, awayTeamId: string) => `${homeTeamId}-${awayTeamId}`;
 
-export function assembleSheets(input: { gameweek: number; ties: readonly TieFacts[]; draft: SheetsDraft }): Record<string, unknown> {
+export function assembleSheets(input: {
+  gameweek: number;
+  ties: readonly TieFacts[];
+  draft: SheetsDraft;
+  /** His club's match this round, "EVE (H)", by FPL club id; null for none. */
+  against: (clubId: number) => string | null;
+}): Record<string, unknown> {
   const { ties, draft } = input;
-  const printed = (team: TeamFacts): StorySheetSide => ({
+  const printed = (man: SheetMan): StorySheetMan => ({ name: named(man), code: man.player.code, slot: man.slot, against: input.against(man.player.clubId) });
+  const side = (team: TeamFacts): StorySheetSide => ({
     teamId: team.sheet.teamId,
     formation: team.formation,
     line: draft.get(team.sheet.teamId) || plainLine(team),
-    xi: team.sheet.starters.map(named),
-    bench: team.sheet.bench.map(named),
+    xi: team.sheet.starters.map(printed),
+    bench: team.sheet.bench.map(printed),
   });
   const sheets: StorySheet[] = ties.map((tie) => ({
-    home: printed(tie.home),
-    away: printed(tie.away),
+    home: side(tie.home),
+    away: side(tie.away),
     between: tie.meets.length === 0 ? "" : (draft.get(sheetsKey(tie.home.sheet.teamId, tie.away.sheet.teamId)) ?? ""),
   }));
   return {
@@ -58,6 +65,8 @@ export function plainLine(team: TeamFacts): string {
 function named(man: SheetMan): string {
   return man.player.name;
 }
+
+
 
 /** "A", "A and B", "A, B and C". */
 function listed(names: readonly string[]): string {

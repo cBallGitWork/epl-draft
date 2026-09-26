@@ -18,6 +18,8 @@ function round(history = true): TieFacts[] {
     fixtures: [{ homeClubId: 11, awayClubId: 12 }],
     lastWrote: new Map([["w", "Team w name an unchanged side with Saka on the right."]]),
     playing: new Set([1, 5, 8, 11, 12]),
+    news: () => null,
+    recent: () => [],
     predicted: () => null,
   });
 }
@@ -49,6 +51,12 @@ describe("checkSheets", () => {
     expect(check({ ...GOOD, h: "Team h make a bold call with one change." })).toContainEqual(["h", "opinion or banned phrasing", "send-back"]);
     expect(check({ ...GOOD, w: "Team h make one change." }).map((fault) => fault[1])).toContain("opens like another side's paragraph");
     expect(check({ ...GOOD, w: "Team w name an unchanged side with Saka on the right." })).toContainEqual(["w", "a phrase from last round's article", "send-back"]);
+  });
+
+  it("refuses a source or a percentage, and sends back a count of unchanged rounds", () => {
+    expect(check({ ...GOOD, w: "Team w start Saka, projected to play." })).toContainEqual(["w", "names a source or a percentage", "hard"]);
+    expect(check({ ...GOOD, w: "Team w start Saka at 75%." })).toContainEqual(["w", "names a source or a percentage", "hard"]);
+    expect(check({ ...GOOD, w: "Team w are unchanged for a sixth week." })).toContainEqual(["w", "counts the rounds", "send-back"]);
   });
 
   it("refuses a meeting line on a head-to-head where the sheets never meet", () => {

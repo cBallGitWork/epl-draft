@@ -14,13 +14,17 @@ import type { TeamFacts, TieFacts } from "./facts";
 export const SHEETS_OPINION: readonly string[] = [
   "bold", "brave", "gamble", "gambles", "risk", "risky", "surprise", "surprising", "surprisingly", "shock", "shocking",
   "curious", "curiously", "baffling", "bizarre", "strange", "strangely", "questionable", "puzzling", "odd", "oddly",
-  "impressive", "strong", "stronger", "weak", "weaker", "confident", "confidence", "faith", "trust", "trusts",
+  "impressive", "strong", "stronger", "weak", "weaker", "fresh", "confident", "confidence", "faith", "trust", "trusts",
   "key", "big", "should", "shouldn't", "must", "expect", "expects", "likely", "unlikely", "hope", "hopes",
-  "will", "would", "could", "might", "clearly", "obviously", "perhaps", "presumably", "rewarded", "punished", "harsh",
-  "unlucky", "lucky", "decision", "opts", "opted", "elects", "elected", "chooses", "chose", "preferred",
+  "will", "would", "clearly", "obviously", "perhaps", "presumably", "rewarded", "punished", "harsh",
+  "unlucky", "lucky", "decision", "rating", "rates", "rated", "opts", "opted", "elects", "elected", "chooses", "chose", "preferred",
 ];
 
 const QUOTES = /["“”«»]/u;
+/** Where a fact came from stays off the page: a reporter does not cite his workings. */
+const SOURCE = /%|\bper ?cent\b|\b(?:projected|projections?|predicted|predictions?|model|FPL|Fantrax)\b/iu;
+/** Unchanged is the whole of it (Craig, 26 Sep 2026): never how many rounds it has been. */
+const COUNTED = /\b(?:(?:second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|\d+(?:st|nd|rd|th)) (?:week|round|game|gameweek)|(?:weeks?|rounds?) running|in a row|on the (?:trot|spin))\b/iu;
 const COUNT = /\b([\p{L}\d]+) changes?\b/iu;
 const WORDS: Record<string, number> = { no: 0, one: 1, a: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11 };
 
@@ -40,6 +44,8 @@ export function checkSheets(draft: SheetsDraft, ctx: SheetsCheck): Fault[] {
 
   const common = (section: string, text: string) => {
     if (QUOTES.test(text)) fault(section, "quotation marks", "hard", text.match(QUOTES)?.[0] ?? "");
+    if (SOURCE.test(text)) fault(section, "names a source or a percentage", "hard", text.match(SOURCE)?.[0] ?? "");
+    if (COUNTED.test(text)) fault(section, "counts the rounds", "send-back", text.match(COUNTED)?.[0] ?? "");
     for (const name of strangers(text, ctx.facts)) fault(section, "a name not in the brief", "hard", name);
     for (const figure of numbersIn(text)) if (!known.has(figure)) fault(section, "a figure not in the brief", "hard", String(figure));
     for (const word of banned(masked(text, names), [...BANNED, ...DESK_BANNED, ...SHEETS_OPINION])) fault(section, "opinion or banned phrasing", "send-back", word);
@@ -97,7 +103,7 @@ function facts(section: string, text: string, team: TeamFacts, fault: Report): v
 function counts(tie: TieFacts): number[] {
   const side = (team: TeamFacts) => [
     team.sheet.starters.length, team.sheet.bench.length, team.changes?.in.length ?? 0, team.changes?.out.length ?? 0,
-    team.changes?.unchangedFor ?? 0, team.debuts?.length ?? 0, team.benchings.length, team.flags.length,
+    team.debuts?.length ?? 0, team.benchings.length, team.flags.length,
   ];
   const meets = tie.meets.flatMap((meet) => (meet.kind === "facing" ? [meet.attackers.length, meet.defenders.length] : [meet.home.length, meet.away.length]));
   return [...side(tie.home), ...side(tie.away), ...meets];

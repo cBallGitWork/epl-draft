@@ -15,6 +15,8 @@ export type Crossover =
 
 const BACK = new Set(["G", "D"]);
 const FRONT = new Set(["M", "F"]);
+/** Listed injured, suspended or gone: named on the sheet, meeting nobody on the pitch. */
+const ABSENT = new Set(["i", "s", "u", "n"]);
 
 /** The strongest few, in reading order: a forward against a keeper leads, then a shared defence. */
 export function crossovers(home: Sheet, away: Sheet, fixtures: readonly ClubPair[]): Crossover[] {
@@ -25,8 +27,8 @@ export function crossovers(home: Sheet, away: Sheet, fixtures: readonly ClubPair
 function facing(attack: Sheet, defend: Sheet, fixtures: readonly ClubPair[]): Crossover[] {
   return fixtures.flatMap((fixture) =>
     [[fixture.homeClubId, fixture.awayClubId], [fixture.awayClubId, fixture.homeClubId]].flatMap(([from, against]) => {
-      const attackers = attack.starters.filter((man) => FRONT.has(man.slot) && man.player.clubId === from);
-      const defenders = defend.starters.filter((man) => BACK.has(man.slot) && man.player.clubId === against);
+      const attackers = playing(attack).filter((man) => FRONT.has(man.slot) && man.player.clubId === from);
+      const defenders = playing(defend).filter((man) => BACK.has(man.slot) && man.player.clubId === against);
       return attackers.length === 0 || defenders.length === 0
         ? []
         : [{ kind: "facing" as const, attackTeamId: attack.teamId, attackers, defendTeamId: defend.teamId, defenders, fixture }];
@@ -36,13 +38,17 @@ function facing(attack: Sheet, defend: Sheet, fixtures: readonly ClubPair[]): Cr
 
 function shared(home: Sheet, away: Sheet, kind: "defence" | "attack"): Crossover[] {
   const end = kind === "defence" ? BACK : FRONT;
-  const at = (sheet: Sheet) => sheet.starters.filter((man) => end.has(man.slot));
+  const at = (sheet: Sheet) => playing(sheet).filter((man) => end.has(man.slot));
   const clubs = new Set(at(home).map((man) => man.player.clubId));
   return [...clubs].flatMap((clubId) => {
     const ours = at(home).filter((man) => man.player.clubId === clubId);
     const theirs = at(away).filter((man) => man.player.clubId === clubId);
     return theirs.length === 0 ? [] : [{ kind, clubId, home: ours, away: theirs }];
   });
+}
+
+function playing(sheet: Sheet): Sheet["starters"] {
+  return sheet.starters.filter((man) => !ABSENT.has(man.player.status));
 }
 
 const KIND_ORDER = ["facing", "defence", "attack"] as const;
