@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 
 // Holds `docs/providers/stats.md` to the tree, the way `revalidate.test.ts` holds the route literals.
 // (a) every `Type.field` in a Domain field cell is declared in that type, at the line the cell cites;
-// (b) every measurement a stat type carries has a row, so a new figure cannot arrive undocumented.
+// (b) every measurement a stat type carries has a row, and no row can be deleted without a test failing.
 
 const ROOT = join(import.meta.dirname, "..");
 const DOC = readFileSync(join(ROOT, "docs", "providers", "stats.md"), "utf8");
@@ -182,6 +182,17 @@ const STATS_LEAGUE = {
   ],
 };
 
+/** The rows of each section's tables with no Domain field column: only a count notices one go. */
+const PLAIN_ROWS: Record<string, number> = {
+  "Fetched but read by nobody": 30,
+  "FPL bootstrap keys never typed": 11,
+  "Computed in the app, not core": 13,
+  "Stored history and live-only reads": 16,
+  "Counted and refused": 30,
+  "Where the record disagrees with the tree": 6,
+};
+
+const STATS_LEAGUE_SECTION = "Fantrax, the stats league";
 const DOMAIN_HEADER = "Domain field (path:line)";
 const TOKEN = /`([A-Z][A-Za-z]*)\.([a-z][A-Za-z]*)`/g;
 const PATH = /((?:packages|apps|scripts)\/[^`\s|]+?\.tsx?):(\d+)/g;
@@ -221,16 +232,17 @@ function declared(file: string, type: string): Map<string, Field> | null {
 
 interface Row {
   cells: string[];
-  domain: string;
+  /** The Domain field cell, or null in a table that has no such column. */
+  domain: string | null;
   section: string;
   /** Which table of its section the row sits in, from 0. */
   table: number;
 }
 
-/** Every table row that carries a Domain field column, with the heading and table it sits under. */
-function domainRows(): Row[] {
+/** Every table body row, with the heading and table it sits under. */
+function tableRows(): Row[] {
   const out: Row[] = [];
-  let column = -1;
+  let column: number | null = null;
   let section = "";
   let table = -1;
   for (const line of DOC.split("\n")) {
@@ -239,26 +251,45 @@ function domainRows(): Row[] {
       table = -1;
     }
     if (!line.startsWith("|")) {
-      column = -1;
+      column = null;
       continue;
     }
     const cells = line.split(/(?<!\\)\|/).slice(1, -1).map((cell) => cell.trim());
-    if (cells.includes(DOMAIN_HEADER)) {
+    if (column === null) {
       column = cells.indexOf(DOMAIN_HEADER);
       table += 1;
-    } else if (column >= 0 && !/^-+$/.test(cells[0] ?? "")) {
-      out.push({ cells, domain: cells[column] ?? "", section, table });
+    } else if (!/^-+$/.test(cells[0] ?? "")) {
+      out.push({ cells, domain: column < 0 ? null : (cells[column] ?? ""), section, table });
     }
   }
   return out;
 }
 
-const rows = domainRows();
+/** A Domain cell's named fields and functions, written `Type.field` and `name()`. */
+function citesOf(domain: string): string[] {
+  return [
+    ...[...domain.matchAll(TOKEN)].map((m) => `${m[1] ?? ""}.${m[2] ?? ""}`),
+    ...[...domain.matchAll(CALL)].map((m) => `${m[1] ?? ""}()`),
+  ];
+}
+
+const all = tableRows();
+const rows = all.filter((row): row is Row & { domain: string } => row.domain !== null);
 const tokens = rows.flatMap(({ domain }) =>
   [...domain.matchAll(TOKEN)].map((m) => ({ type: m[1] ?? "", field: m[2] ?? "", cell: domain })),
 );
-const calls = rows.flatMap(({ domain }) => [...domain.matchAll(CALL)].map((m) => `${m[1] ?? ""}()`));
-const documented = new Set([...tokens.map((t) => `${t.type}.${t.field}`), ...calls]);
+const documented = new Set(rows.flatMap(({ domain }) => citesOf(domain)));
+
+/** Every measurement a stat type carries, as `Type.field`. */
+const measures = STAT_TYPES.flatMap(({ file, types }) =>
+  types.flatMap((type) =>
+    [...(declared(file, type) ?? [])]
+      .filter(([name, { written }]) => MEASURE.test(written) && !NOT_MEASURES.has(name))
+      .map(([name]) => `${type}.${name}`),
+  ),
+);
+/** What the tests below insist has a row: deleting the one row that cites it fails. */
+const required = new Set([...measures, ...NAMED]);
 
 describe("docs/providers/stats.md", () => {
   it("is parsed at all, so a broken reader cannot pass by finding nothing", () => {
@@ -312,21 +343,30 @@ describe("docs/providers/stats.md", () => {
   });
 
   it("has a row for every measurement a stat type carries", () => {
-    const missing = STAT_TYPES.flatMap(({ file, types }) =>
-      types.flatMap((type) => {
-        const fields = declared(file, type);
-        if (fields === null) return [`${type} is not declared in ${file}`];
-        return [...fields]
-          .filter(([name, { written }]) => MEASURE.test(written) && !NOT_MEASURES.has(name))
-          .map(([name]) => `${type}.${name}`)
-          .filter((key) => !documented.has(key));
-      }),
+    const undeclared = STAT_TYPES.flatMap(({ file, types }) =>
+      types.filter((type) => declared(file, type) === null).map((type) => `${type} is not declared in ${file}`),
     );
-    expect(missing).toEqual([]);
+    expect([...undeclared, ...measures.filter((key) => !documented.has(key))]).toEqual([]);
   });
 
   it("has a row for every field and function the NAMED list holds", () => {
     expect(NAMED.filter((key) => !documented.has(key))).toEqual([]);
+  });
+
+  it("gives every row a field or function of its own that the tests require, so deleting any row fails", () => {
+    const cited = rows
+      .filter((row) => row.section !== STATS_LEAGUE_SECTION)
+      .map((row) => ({ stat: row.cells[0] ?? "", cites: new Set(citesOf(row.domain)) }));
+    const times = new Map<string, number>();
+    for (const { cites } of cited) for (const key of cites) times.set(key, (times.get(key) ?? 0) + 1);
+    const shared = cited.filter(({ cites }) => ![...cites].some((key) => required.has(key) && times.get(key) === 1));
+    expect(shared.map(({ stat }) => stat)).toEqual([]);
+  });
+
+  it("keeps every row of the tables that have no Domain field column", () => {
+    const counted: Record<string, number> = {};
+    for (const row of all) if (row.domain === null) counted[row.section] = (counted[row.section] ?? 0) + 1;
+    expect(counted).toEqual(PLAIN_ROWS);
   });
 
   it("gives every stat type at least one measurement, so no entry in the list is vacuous", () => {
@@ -337,7 +377,7 @@ describe("docs/providers/stats.md", () => {
   });
 
   it("lists the stats league's columns in the probe's order, each at its own index", () => {
-    const league = rows.filter((row) => row.section === "Fantrax, the stats league");
+    const league = rows.filter((row) => row.section === STATS_LEAGUE_SECTION);
     const read = (table: number) =>
       league
         .filter((row) => row.table === table)
@@ -350,7 +390,7 @@ describe("docs/providers/stats.md", () => {
   });
 
   it("marks every stats-league column available, not captured, until a capture exists", () => {
-    const league = rows.filter((row) => row.section === "Fantrax, the stats league");
+    const league = rows.filter((row) => row.section === STATS_LEAGUE_SECTION);
     expect(league).toHaveLength(STATS_LEAGUE.outfield.length + STATS_LEAGUE.keepers.length);
     expect(league.filter((row) => row.domain !== "available, not captured")).toEqual([]);
   });
