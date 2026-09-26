@@ -54,7 +54,7 @@ function side(team: TeamFacts, brief: SheetsBrief): string {
     changes(team.changes),
     debuts(team),
     ...notes(team, brief),
-    team.lastWrote === null ? null : `LAST ROUND YOU WROTE about this side: "${team.lastWrote}" Do not reuse its angle, its opening or its phrases.`,
+    team.lastWrote === null ? null : `LAST GAMEWEEK YOU WROTE about this side: "${team.lastWrote}" Do not reuse its angle, its opening or its phrases.`,
   ]
     .filter((line) => line !== null)
     .join("\n");
@@ -76,10 +76,10 @@ function notes(team: TeamFacts, brief: SheetsBrief): string[] {
 
 function changes(changes: SheetChanges | null): string {
   if (changes === null) return "FIRST SHEET: there is no earlier sheet to compare with. Do not write about changes or debuts.";
-  if (changes.count === 0) return "UNCHANGED from last round. Say unchanged and never count the rounds.";
-  const came = changes.in.map((each) => `${each.man.player.name} (${each.man.slot}, ${each.from === "bench" ? "from the bench" : "new to the squad since last round"})`);
+  if (changes.count === 0) return "UNCHANGED from last gameweek. Say unchanged and never count the gameweeks.";
+  const came = changes.in.map((each) => `${each.man.player.name} (${each.man.slot}, ${each.from === "bench" ? "from the bench" : "new to the squad since last gameweek"})`);
   const went = changes.out.map((each) => `${each.man.player.name} (${each.man.slot}, ${each.to === "bench" ? "dropped to the bench" : "no longer in the squad"})`);
-  return [`CHANGES from last round's sheet: ${changes.count}.`, `  IN: ${came.join(", ")}`, `  OUT: ${went.join(", ")}`].join("\n");
+  return [`CHANGES from last gameweek's sheet: ${changes.count}.`, `  IN: ${came.join(", ")}`, `  OUT: ${went.join(", ")}`].join("\n");
 }
 
 function debuts(team: TeamFacts): string | null {
@@ -94,10 +94,10 @@ function benched(benching: Benching): string {
   const lastTime = returns(last.goals, last.assists, BACK.has(man.slot) && last.minutes > 0 ? last.cleanSheets : 0);
   const over = returns(benching.goals, benching.assists, benching.cleanSheets);
   return [
-    `${benching.dropped ? "DROPPED, DESPITE HIS FORM" : "BENCHED, DESPITE HIS FORM"}: ${man.player.name} (${man.slot}) is ${benching.dropped ? "dropped to the bench after starting last round" : "on the bench"}.`,
+    `${benching.dropped ? "DROPPED, DESPITE HIS FORM" : "BENCHED, DESPITE HIS FORM"}: ${man.player.name} (${man.slot}) is ${benching.dropped ? "dropped to the bench after starting last gameweek" : "on the bench"}.`,
     lastTime === "" ? "" : ` Last time out: ${lastTime}.`,
-    over === "" ? "" : ` Over his last ${benching.rounds} rounds: ${over}.`,
-    benching.again ? " He was benched last round too." : "",
+    over === "" ? "" : ` Over his last ${benching.rounds} gameweeks: ${over}.`,
+    benching.again ? " He was benched last gameweek too." : "",
     " Say he is benched despite that, and never why.",
   ].join("");
 }
@@ -113,7 +113,7 @@ const BACK = new Set(["G", "D"]);
 function flagged(flag: StarterFlag, brief: SheetsBrief): string {
   const name = `${flag.man.player.name} (${flag.man.slot})`;
   const club = brief.clubName(flag.man.player.clubId);
-  if (flag.kind === "no-fixture") return `NAMED, WITH NO MATCH: ${name}. ${club} do not play this round.`;
+  if (flag.kind === "no-fixture") return `NAMED, WITH NO MATCH: ${name}. ${club} do not play this gameweek.`;
   if (flag.kind === "unavailable") return `NAMED, BUT IS ${(STATUS[flag.man.player.status] ?? "a doubt").toUpperCase()}: ${name}. Say so plainly, and nothing about why.`;
   if (flag.kind === "may-not-start") return `NAMED, BUT MIGHT NOT START FOR ${club.toUpperCase()}: ${name}. Say he is named but might not start for ${club}, and no more.`;
   const reported = flag.story.at === null ? "" : ` (reported ${DAY.format(flag.story.at)})`;
@@ -124,11 +124,11 @@ function flagged(flag: StarterFlag, brief: SheetsBrief): string {
 function inForm(form: InForm): string {
   const did = returns(form.goals, form.assists, BACK.has(form.man.slot) ? form.cleanSheets : 0);
   const every = form.scoredEvery ? `, scoring in each` : form.cleanEvery ? `, a clean sheet in each` : "";
-  return `IN FORM: ${form.man.player.name} (${form.man.slot}, named): ${did} in his last ${form.rounds} rounds${every}.`;
+  return `IN FORM: ${form.man.player.name} (${form.man.slot}, named): ${did} in his last ${form.rounds} gameweeks${every}.`;
 }
 
 function meets(tie: TieFacts, brief: SheetsBrief): string {
-  if (tie.meets.length === 0) return "WHERE THE SHEETS MEET: nowhere this round. Leave \"between\" empty.";
+  if (tie.meets.length === 0) return "WHERE THE SHEETS MEET: nowhere this gameweek. Leave \"between\" empty.";
   const whose = (teamId: string) => (teamId === tie.home.sheet.teamId ? tie.home : tie.away).sheet.teamName;
   const names = (men: readonly SheetMan[]) => men.map((man) => `${man.player.name} (${man.slot})`).join(", ");
   const lines = tie.meets.map((meet: Crossover) =>

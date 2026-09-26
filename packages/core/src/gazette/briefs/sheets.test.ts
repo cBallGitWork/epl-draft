@@ -28,16 +28,16 @@ describe("buildSheetsBrief", () => {
   it("gives each side's sheet, its changes, the benched man above a starter, and its flags", () => {
     const text = brief(true);
     expect(text).toContain("NAMED IN THE ELEVEN: Raya (G, Club 1); Saliba (D, Club 1); Rice (M, Club 1); Palmer (M, Club 3); Haaland (F, Club 11)");
-    expect(text).toContain("CHANGES from last round's sheet: 1.");
+    expect(text).toContain("CHANGES from last gameweek's sheet: 1.");
     expect(text).toContain("IN: Palmer (M, from the bench)");
     expect(text).toContain("OUT: Eze (M, dropped to the bench)");
     expect(text).toContain("DEBUTS: none. Do not use the word debut about this side.");
-    expect(text).toContain("DROPPED, DESPITE HIS FORM: Eze (M) is dropped to the bench after starting last round. Last time out: 1 goal, 1 assist. Over his last 3 rounds: 1 goal, 3 assists.");
-    expect(text).toContain("NAMED, WITH NO MATCH: Palmer (M). Club 3 do not play this round.");
+    expect(text).toContain("DROPPED, DESPITE HIS FORM: Eze (M) is dropped to the bench after starting last gameweek. Last time out: 1 goal, 1 assist. Over his last 3 gameweeks: 1 goal, 3 assists.");
+    expect(text).toContain("NAMED, WITH NO MATCH: Palmer (M). Club 3 do not play this gameweek.");
     expect(text).toContain("NAMED, AND IN THE NEWS (reported 1 Jan): Rice (M). Rice has a knock and faces a late test.");
     // Five notes for one side: the four weightiest are kept, and the man who might not start is the one cut.
     expect(text).not.toContain("MIGHT NOT START");
-    expect(text).toContain("IN FORM: Haaland (F, named): 4 goals in his last 3 rounds, scoring in each.");
+    expect(text).toContain("IN FORM: Haaland (F, named): 4 goals in his last 3 gameweeks, scoring in each.");
     expect(text).toContain("Team h's Haaland (F) against Team w's Pickford (G), in Club 11 v Club 12.");
     expect(text).not.toMatch(/\b7\b|points: |%|projected above|predicted eleven/u);
   });

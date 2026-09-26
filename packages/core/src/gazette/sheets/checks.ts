@@ -6,7 +6,7 @@ import { DESK_BANNED } from "../predictions/words";
 import { strangers } from "../strangers";
 import { sheetsKey, type SheetsDraft } from "./column";
 import type { TeamFacts, TieFacts } from "./facts";
-import { SHEETS_AMERICAN, SHEETS_LEXICON } from "./words";
+import { SHEETS_AMERICAN, SHEETS_HOUSE, SHEETS_LEXICON } from "./words";
 
 // The editor for team news: every paragraph read against the facts it was written from. A hard
 // fault never prints (the side takes the desk's plain line); a send-back goes back once, quoted.
@@ -49,11 +49,12 @@ export function checkSheets(draft: SheetsDraft, ctx: SheetsCheck): Fault[] {
     if (QUOTES.test(text)) fault(section, "quotation marks", "hard", text.match(QUOTES)?.[0] ?? "");
     if (SOURCE.test(text)) fault(section, "names a source or a percentage", "hard", text.match(SOURCE)?.[0] ?? "");
     if (PAST.test(text)) fault(section, "the wrong tense: the match is still to come", "send-back", text.match(PAST)?.[0] ?? "");
-    if (COUNTED.test(text)) fault(section, "counts the rounds", "send-back", text.match(COUNTED)?.[0] ?? "");
+    if (COUNTED.test(text)) fault(section, "counts the gameweeks", "send-back", text.match(COUNTED)?.[0] ?? "");
     for (const name of strangers(text, ctx.facts)) fault(section, "a name not in the brief", "hard", name);
     for (const figure of numbersIn(text)) if (!known.has(figure)) fault(section, "a figure not in the brief", "hard", String(figure));
     for (const word of banned(masked(text, names), [...BANNED, ...DESK_BANNED, ...SHEETS_OPINION])) fault(section, "opinion or banned phrasing", "send-back", word);
     for (const word of banned(masked(text, names), SHEETS_AMERICAN)) fault(section, "not British football English", "send-back", word);
+    for (const [not, say] of SHEETS_HOUSE) if (banned(masked(text, names), [not]).length > 0) fault(section, `say ${say}, not ${not}`, "send-back", not);
   };
 
   for (const team of ctx.ties.flatMap((tie) => [tie.home, tie.away])) {

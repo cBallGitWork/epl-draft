@@ -13,6 +13,10 @@ export const SHEETS_LEXICON: readonly (readonly [phrase: string, most: number])[
   ["among the goals", 1], ["a brace", 1], ["on the scoresheet", 1], ["clean sheets", 2], ["in the goals", 1],
 ];
 
+/** The house's own word for a thing, sent back when another is used (Craig, 26 Sep 2026:
+ *  "Gameweeks, not rounds"). */
+export const SHEETS_HOUSE: readonly (readonly [not: string, say: string])[] = [["rounds", "gameweeks"], ["round", "gameweek"]];
+
 /** American, or no football reporter's word, sent back wherever it appears (Craig, 26 Sep 2026:
  *  "Don't say sits, that's an American term. Benched"). */
 export const SHEETS_AMERICAN: readonly string[] = [

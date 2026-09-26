@@ -63,7 +63,7 @@ export function plainLine(team: TeamFacts): string {
   const shape = team.formation === null ? "" : ` in a ${team.formation}`;
   const changes = team.changes;
   if (changes === null) return `${name} name their first sheet${shape}.`;
-  if (changes.count === 0) return `${name} name the same eleven as last round${shape}.`;
+  if (changes.count === 0) return `${name} name the same eleven as last gameweek${shape}.`;
   const came = changes.in.map((each) => named(each.man));
   return `${name} make ${inWords(changes.count)} ${changes.count === 1 ? "change" : "changes"}: ${listed(came)} ${came.length === 1 ? "comes" : "come"} in.`;
 }

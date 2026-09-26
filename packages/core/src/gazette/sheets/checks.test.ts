@@ -54,14 +54,15 @@ describe("checkSheets", () => {
     expect(check({ ...GOOD, w: "Team w name an unchanged side with Saka on the right." })).toContainEqual(["w", "a phrase from last round's article", "send-back"]);
   });
 
-  it("refuses a source or a percentage, and sends back a count of unchanged rounds", () => {
+  it("refuses a source or a percentage, and sends back a count of unchanged gameweeks", () => {
     expect(check({ ...GOOD, w: "Team w start Saka, projected to play." })).toContainEqual(["w", "names a source or a percentage", "hard"]);
     expect(check({ ...GOOD, w: "Team w start Saka at 75%." })).toContainEqual(["w", "names a source or a percentage", "hard"]);
-    expect(check({ ...GOOD, w: "Team w are unchanged for a sixth week." })).toContainEqual(["w", "counts the rounds", "send-back"]);
+    expect(check({ ...GOOD, w: "Team w are unchanged for a sixth week." })).toContainEqual(["w", "counts the gameweeks", "send-back"]);
   });
 
   it("sends back American terms and a team-news phrase used too often", () => {
     expect(check({ ...GOOD, w: "Team w start Saka while Eze sits." })).toContainEqual(["w", "not British football English", "send-back"]);
+    expect(check({ ...GOOD, w: "Team w are unchanged, Saka with a goal in his last three rounds." })).toContainEqual(["w", "say gameweeks, not rounds", "send-back"]);
     expect(check({ ...GOOD, w: "Team w start Saka, and Eze is benched when he might have started." })).toContainEqual(["w", "the wrong tense: the match is still to come", "send-back"]);
     const twice = { ...GOOD, h: "Team h make one change, and Haaland comes into the side.", w: "Team w are unchanged, and Isak comes into the side." };
     expect(check(twice)).toContainEqual(["article", "a phrase used too often", "send-back"]);
