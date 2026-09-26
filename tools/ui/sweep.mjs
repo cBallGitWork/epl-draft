@@ -160,19 +160,6 @@ if (match) ROUTES.push(...matchRoutes(match));
 const coming = await discover(cdp, "/prem/fixtures", 'a[href^="/prem/match/"]');
 if (coming && coming !== match) ROUTES.push(coming);
 
-// The player page a club's squad list links to, discovered off the club page for
-// the same reason the club is discovered off the table.
-if (club) await cdp.open(club, 2200);
-const linked = await cdp.js(
-  `(function(){
-     var out = {};
-     var p = document.querySelector('a[href^="/prem/player/"]');
-     if (p) out.player = p.getAttribute("href");
-     return JSON.stringify(out);
-   })()`,
-);
-const player = JSON.parse(linked || "{}").player;
-if (player) ROUTES.push(player);
 
 
 let failures = 0;

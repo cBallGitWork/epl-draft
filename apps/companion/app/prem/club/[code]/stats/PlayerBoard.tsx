@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import NameLink from "../NameLink";
 import type { FootballPlayer } from "@epl/core";
 import { SELECT } from "../../../../components/shell/ButtonLink";
 import { VIEWS, reading } from "./measures";
@@ -34,6 +34,8 @@ export interface Row {
   player: FootballPlayer;
   /** What our league files him at; empty when Fantrax has no opinion or would not answer. */
   positions: readonly string[];
+  /** His own page, or null when our league does not list him. */
+  href: string | null;
 }
 
 export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
@@ -147,14 +149,14 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
             </tr>
           </thead>
           <tbody>
-            {ordered.map(({ player, positions }) => (
+            {ordered.map(({ player, positions, href }) => (
               <tr key={player.id} className={`cm-row ${ROW_HOVER} ${doubtRow(player)}`}>
                 <PositionTile positions={positions} cell className={PINNED_TILE} />
                 <td className={`px-1.5 ${ROW_NAME} ${PINNED_NAME} left-10 text-ink lg:left-14 ${doubtRow(player)}`}>
-                  <Link href={`/prem/player/${player.code}`} className="cm-row flex min-h-11 w-36 items-center gap-2 hover:underline lg:w-auto">
+                  <NameLink href={href} className="cm-row flex min-h-11 w-36 items-center gap-2 lg:w-auto">
                     <span className="truncate">{player.fullName}</span>
                     <StateBox player={player} />
-                  </Link>
+                  </NameLink>
                 </td>
                 {measures.map((measure) => {
                   const value = player.season[measure.key];

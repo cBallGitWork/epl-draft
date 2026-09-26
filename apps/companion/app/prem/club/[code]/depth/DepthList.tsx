@@ -1,10 +1,9 @@
-import Link from "next/link";
 import type { DepthSpot, FootballPlayer } from "@epl/core";
 import { DASH } from "@epl/core";
 import StateBox from "../../../../components/football/StateBox";
 import { doubtRow } from "../../../../components/football/doubtRow";
 import { BOARD, ROW_NAME, ROW_RULE } from "@/app/desk";
-import { PLAYER } from "../../../routes";
+import NameLink from "../NameLink";
 
 // The same chart as a list, for a phone (Craig, 25 Sep 2026: "depth chart prob needs a list
 // review for mobile too"): a row per place, its shirt in the index block and the men in line
@@ -13,9 +12,11 @@ import { PLAYER } from "../../../routes";
 export default function DepthList({
   lines,
   playerOf,
+  hrefOf,
 }: {
   lines: readonly (readonly DepthSpot[])[];
   playerOf: (code: number) => FootballPlayer | null;
+  hrefOf: (code: number) => string | null;
 }) {
   const spots = lines.flat();
   const depth = Math.max(1, ...spots.map((spot) => spot.holders.length));
@@ -40,15 +41,15 @@ export default function DepthList({
                     {player === null ? (
                       <span className="text-faint">{holder === undefined ? "" : DASH}</span>
                     ) : (
-                      <Link
-                        href={`${PLAYER}/${player.code}`}
-                        className={`cm-row flex min-h-11 items-center gap-1 hover:underline ${ROW_NAME} ${
+                      <NameLink
+                        href={hrefOf(player.code)}
+                        className={`cm-row flex min-h-11 items-center gap-1 ${ROW_NAME} ${
                           rank === 0 ? "text-ink" : "font-normal text-muted"
                         }`}
                       >
                         <span className="truncate">{player.name}</span>
                         <StateBox player={player} />
-                      </Link>
+                      </NameLink>
                     )}
                   </td>
                 );
