@@ -384,6 +384,14 @@ a real reader"*. So no source is ever named, an unchanged side is only unchanged
 lists unavailable whose Fantrax story predates the listing (Millar's goal for Hull, after his loan)
 gets the status in one word rather than the stale story.
 
+Read over the same day by an editor and a UK team-news reporter (subagents). Their chief
+finding: the brief carried Fantrax's own sentences, and the writer copied them, credits, tense and
+international news included ("not certain to be risked for Portugal", "Rodon faces eight-to-10
+weeks"). The brief now carries no provider sentence: a man out or a doubt is a status and one
+injury word read off his latest Fantrax report (`flags.injuryIn`), the men out are one fact that
+leads the side, and each man carries his club and fixture in words. A pencil corrects a banned
+phrase that has one right answer ("sits on" → "is on") before the editor reads.
+
 `sheets/checks.ts` refuses a wrong change count, a debut or an "unchanged" the facts do not give,
 a named source or a percentage, and a stranger; it sends back opinion, a count of unchanged rounds,
 a repeated opening, a phrase shared between sides, and a phrase from last round's paragraph. A side

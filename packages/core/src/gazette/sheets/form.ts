@@ -2,18 +2,18 @@ import { SHEETS } from "../../config";
 import type { RecentGame } from "../predictions/sides";
 import { isBack, type Sheet, type SheetMan } from "./sheet";
 
-// A man in form over his last few rounds: goals in every one, goals piling up, or a keeper or
+// A man in form over his last few gameweeks: goals in every one, goals piling up, or a keeper or
 // defender who has not conceded. Football facts off the match reads, never fantasy points.
 
 export interface InForm {
   man: SheetMan;
-  /** Rounds read, and how many of them he played in. */
-  rounds: number;
+  /** Gameweeks read, and how many of them he played in. */
+  gameweeks: number;
   played: number;
   goals: number;
   assists: number;
   cleanSheets: number;
-  /** Scored, or kept a clean sheet, in every round read. */
+  /** Scored, or kept a clean sheet, in every gameweek read. */
   scoredEvery: boolean;
   cleanEvery: boolean;
 }
@@ -28,7 +28,7 @@ export function inForm(sheet: Sheet, recent: (man: SheetMan) => readonly RecentG
     const sum = (key: "goals" | "assists" | "cleanSheets") => played.reduce((total, game) => total + game[key], 0);
     const form: InForm = {
       man,
-      rounds: games.length,
+      gameweeks: games.length,
       played: played.length,
       goals: sum("goals"),
       assists: sum("assists"),

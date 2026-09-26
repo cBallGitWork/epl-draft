@@ -4,12 +4,10 @@ import {
   buildSheetsBrief,
   fetchLive,
   fetchPlayerStories,
-  fetchPoolNews,
   fetchTeamRosters,
   fullClubName,
   mapLiveStats,
   mapPlayerStories,
-  mapPoolNews,
   mapTeamRosters,
   resolveRosters,
   sheetOf,
@@ -40,7 +38,9 @@ export interface SheetsDesk {
   gameweek: number;
   ties: TieFacts[];
   brief: string;
-  /** His club's match this round, "EVE (H)", stamped into the filed sheet. */
+  /** Every club's name as the paper prints it, for the editor. */
+  clubs: string[];
+  /** His club's match this gameweek, "EVE (H)", stamped into the filed sheet. */
   against: (clubId: number) => string | null;
 }
 
@@ -120,6 +120,7 @@ export async function sheetsDesk(input: {
     gameweek,
     ties,
     // "at home to Everton", both halves of a double: the words a reporter would use for his match.
+    clubs: [...clubs.values()].map((club) => fullClubName(club.name)),
     brief: buildSheetsBrief({ gameweek, ties, clubName, fixture: (clubId) => described(clubId, (match) => `${match.home ? "at home to" : "away to"} ${clubName(match.other)}`, " and ") }),
     // "EVE (H)", as every pitch in the app labels a match.
     against: (clubId) => described(clubId, (match) => `${clubs.get(match.other)?.shortName ?? "?"} (${match.home ? "H" : "A"})`, " · "),
@@ -152,16 +153,11 @@ async function formRounds(first: number): Promise<(playerId: number) => RecentGa
     rounds.map((gameweek) => played.get(playerId)?.find((game) => game.gameweek === gameweek) ?? { gameweek, minutes: 0, goals: 0, assists: 0, cleanSheets: 0, points: 0 });
 }
 
-/** Fantrax's latest story on each starter: the pool's last day in one read, then the history of
- *  any starter FPL lists as unavailable, whose injury story can be weeks old and still the news. */
+/** Fantrax's latest report on each named man listed doubtful or out, for the complaint it names;
+ *  an injury story can be weeks old and still true. A man listed available carries no news. */
 async function newsFor(facts: DeskFacts, now: string): Promise<Map<string, PlayerStory>> {
-  const within = (days: number) => (story: PlayerStory | undefined) =>
-    story !== undefined && story.at !== null && story.at >= Date.parse(now) - days * 24 * 60 * 60 * 1000 ? story : undefined;
-  const fresh = within(SHEETS.newsDays);
-  const pool = await fetchPoolNews(FANTRAX_LEAGUE_ID).then(mapPoolNews).catch(() => ({}) as Record<string, PlayerStory>);
+  const since = Date.parse(now) - SHEETS.injuryDays * 24 * 60 * 60 * 1000;
   const out = new Map<string, PlayerStory>();
-  for (const [fantraxId, story] of Object.entries(pool)) if (fresh(story) !== undefined) out.set(fantraxId, story);
-
   const doubts = facts.teams
     .flatMap((team) => sheetOf(team).starters)
     .filter((man) => man.player.status !== "a");
@@ -169,8 +165,8 @@ async function newsFor(facts: DeskFacts, now: string): Promise<Map<string, Playe
     const batch = doubts.slice(at, at + HISTORY_BATCH);
     const reads = await Promise.all(batch.map((man) => fetchPlayerStories(FANTRAX_LEAGUE_ID, man.fantraxId).then(mapPlayerStories).catch(() => [])));
     batch.forEach((man, index) => {
-      const story = within(SHEETS.injuryDays)(reads[index][0]);
-      if (story !== undefined) out.set(man.fantraxId, story);
+      const story = reads[index][0];
+      if (story !== undefined && story.at !== null && story.at >= since) out.set(man.fantraxId, story);
     });
   }
   return out;

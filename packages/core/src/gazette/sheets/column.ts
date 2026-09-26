@@ -1,6 +1,6 @@
 import type { StorySheet, StorySheetMan, StorySheetSide } from "./cargo";
 import type { TeamFacts, TieFacts } from "./facts";
-import type { SheetMan } from "./sheet";
+import { printName, type SheetMan } from "./sheet";
 
 // The desk's half of the article: the headline, the deck, the printed elevens, and a plain line for
 // any side whose paragraph failed the editor twice. Nothing here is written by the model.
@@ -12,11 +12,11 @@ export function assembleSheets(input: {
   gameweek: number;
   ties: readonly TieFacts[];
   draft: SheetsDraft;
-  /** His club's match this round, "EVE (H)", by FPL club id; null for none. */
+  /** His club's match this gameweek, "EVE (H)", by FPL club id; null for none. */
   against: (clubId: number) => string | null;
 }): Record<string, unknown> {
   const { ties, draft } = input;
-  const printed = (man: SheetMan): StorySheetMan => ({ name: named(man), code: man.player.code, slot: man.slot, against: input.against(man.player.clubId) });
+  const printed = (man: SheetMan): StorySheetMan => ({ name: man.player.name, code: man.player.code, slot: man.slot, against: input.against(man.player.clubId) });
   const side = (team: TeamFacts): StorySheetSide => ({
     teamId: team.sheet.teamId,
     formation: team.formation,
@@ -31,42 +31,39 @@ export function assembleSheets(input: {
   return {
     headline: `Team news: Gameweek ${input.gameweek}`,
     deck: sheetsDeck(ties),
-    body: standfirst(ties),
+    body: standfirst(),
     sheets,
   };
 }
 
 /** What the piece is, plainly (Craig, 26 Sep 2026: "'Every side as it stood' — what does that mean"). */
-export function standfirst(ties: readonly TieFacts[]): string {
-  const sides = ties.length * 2;
-  return `The deadline has passed and every line-up is locked. Here ${sides === 1 ? "is" : "are"} all ${inWords(sides)}, grouped by this week's head-to-heads.`;
+export function standfirst(): string {
+  return "The deadline has passed. The line-ups, by head-to-head.";
 }
 
-/** "23 changes across ten sides, two debuts"; on the first round, only that it is the first. */
+/** "23 changes and two debuts"; "Every side unchanged"; on the first gameweek, that it is the first. */
 export function sheetsDeck(ties: readonly TieFacts[]): string {
   const teams = ties.flatMap((tie) => [tie.home, tie.away]);
-  const sides = `${inWords(teams.length)} ${teams.length === 1 ? "side" : "sides"}`;
-  if (teams.every((team) => team.changes === null)) return `The first sheets of the season, ${sides}.`;
+  if (teams.every((team) => team.changes === null)) return "The first line-ups of the season.";
   const changes = teams.reduce((sum, team) => sum + (team.changes?.count ?? 0), 0);
   const debuts = teams.reduce((sum, team) => sum + (team.debuts?.length ?? 0), 0);
-  const made = changes === 0 ? `No changes across ${sides}` : `${inWords(changes)} ${changes === 1 ? "change" : "changes"} across ${sides}`;
-  const clause = debuts === 0 ? "" : `, ${inWords(debuts)} ${debuts === 1 ? "debut" : "debuts"}`;
-  return `${capital(made)}${clause}.`;
+  if (changes === 0) return "Every side unchanged.";
+  const made = `${inWords(changes)} ${changes === 1 ? "change" : "changes"}`;
+  return `${capital(made)}${debuts === 0 ? "" : ` and ${inWords(debuts)} ${debuts === 1 ? "debut" : "debuts"}`}.`;
 }
 
 /** The fallback, and it says only what the facts say: "test31 make two changes: Saka and Isak come in." */
 export function plainLine(team: TeamFacts): string {
   const name = team.sheet.teamName;
   const shape = team.formation === null ? "" : ` in a ${team.formation}`;
+  const out = team.flags.flatMap((flag) => (flag.kind === "out" ? [printName(flag.man.player)] : []));
+  // Who cannot play leads the desk's line as it leads the writer's (the editor's rule, 26 Sep 2026).
+  const absent = out.length === 0 ? "" : ` ${listed(out)} ${out.length === 1 ? "is" : "are"} named but out this weekend.`;
   const changes = team.changes;
-  if (changes === null) return `${name} name their first sheet${shape}.`;
-  if (changes.count === 0) return `${name} name the same eleven as last gameweek${shape}.`;
-  const came = changes.in.map((each) => named(each.man));
-  return `${name} make ${inWords(changes.count)} ${changes.count === 1 ? "change" : "changes"}: ${listed(came)} ${came.length === 1 ? "comes" : "come"} in.`;
-}
-
-function named(man: SheetMan): string {
-  return man.player.name;
+  if (changes === null) return `${name} name their first sheet${shape}.${absent}`;
+  if (changes.count === 0) return absent === "" ? `${name} name the same eleven as last gameweek${shape}.` : `${name} are unchanged.${absent}`;
+  const came = changes.in.map((each) => printName(each.man.player));
+  return `${name} make ${inWords(changes.count)} ${changes.count === 1 ? "change" : "changes"}: ${listed(came)} ${came.length === 1 ? "comes" : "come"} in.${absent}`;
 }
 
 

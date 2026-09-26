@@ -3,13 +3,12 @@ import type { RecentGame } from "../predictions/sides";
 import { isBack, sitsFor, startsFor, type Sheet, type SheetMan } from "./sheet";
 
 // A benched man whose form says he could be playing (Craig, 26 Sep 2026: "benched despite getting
-// a goal/assist last week"): a return last time out, or goals and assists over his last few rounds.
+// a goal/assist last week"): a return last time out, or goals and assists over his last few gameweeks.
 
 export interface Benching {
   man: SheetMan;
-  /** What he did last time out, and over the rounds read. */
+  /** What he did last time out, and over the gameweeks read. */
   last: RecentGame;
-  rounds: number;
   goals: number;
   assists: number;
   cleanSheets: number;
@@ -31,7 +30,6 @@ export function benchings(sheet: Sheet, recent: (man: SheetMan) => readonly Rece
     return [{
       man,
       last,
-      rounds: games.length,
       goals: sum("goals"),
       assists: sum("assists"),
       cleanSheets: back ? sum("cleanSheets") : 0,

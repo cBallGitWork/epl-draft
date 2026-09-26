@@ -47,6 +47,11 @@ export function fielded(sheet: Sheet): boolean {
   return sheet.starters.length > 0;
 }
 
+/** The name a reporter prints: the surname without FPL's initial, "Fernandes" for "B.Fernandes". */
+export function printName(player: FootballPlayer): string {
+  return player.name.replace(/^(?:\p{Lu}\.\s*)+/u, "") || player.name;
+}
+
 /** A keeper or defender's slot, and a midfielder or forward's: the two ends of a side. */
 export const isBack = (slot: string) => slot === "G" || slot === "D";
 export const isFront = (slot: string) => slot === "M" || slot === "F";

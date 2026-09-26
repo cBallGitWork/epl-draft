@@ -383,17 +383,15 @@ export const SHEETS = {
   formGoals: 3,
   formInvolvements: 4,
   form: 2,
-  /** Fantrax stories this many days old or newer are news at the lock, or this many for a man
-   *  listed unavailable, whose injury story may be weeks old and still true; at most this many a
-   *  side, cut to this many sentences. */
-  newsDays: 7,
+  /** How far back a Fantrax report may name a doubtful or injured man's complaint: two months,
+   *  because an injury story can be old and still true. */
   injuryDays: 60,
-  news: 3,
-  newsSentences: 2,
-  /** A side's notes beyond its changes, weightiest first: what a two-or-three sentence paragraph can carry. */
-  notes: 4,
+  /** A side's notes beyond its changes, weightiest first: what a three-sentence paragraph can carry. */
+  notes: 3,
   /** A side's paragraph: sentences and words at most; a phrase this long shared is an echo. */
   sentences: 3,
   words: 80,
   echo: 5,
+  /** Paragraphs that may open with the same three words, a name blanked. */
+  openers: 2,
 } as const;

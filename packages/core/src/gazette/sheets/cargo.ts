@@ -2,7 +2,7 @@
 // field by field at the edge like every other story's cargo.
 
 /** One man on the sheet: his shirt name, his FPL code for the pitch, the slot he fills, and his
- *  real match this round as it stood when filed ("EVE (H)"); null when his club has none. */
+ *  real match this gameweek as it stood when filed ("EVE (H)"); null when his club has none. */
 export interface StorySheetMan {
   name: string;
   code: number;

@@ -5,9 +5,9 @@ import { changesBetween, debuts } from "./changes";
 import { assembleSheets, plainLine, sheetsDeck } from "./column";
 import { crossovers } from "./crossovers";
 import { sheetsFacts } from "./facts";
-import { starterFlags } from "./flags";
+import { injuryIn, starterFlags } from "./flags";
 import { inForm } from "./form";
-import { formation, sheetOf } from "./sheet";
+import { formation, printName, sheetOf } from "./sheet";
 import { man, rostered, side } from "./__fixtures__/sides";
 
 const XI = ["Raya:G:1", "Saliba:D:1", "Gabriel:D:1", "Munoz:D:2", "Rice:M:1", "Saka:M:1", "Palmer:M:3", "Mbeumo:M:4", "Isak:F:5", "Wood:F:6", "Watkins:F:7"];
@@ -18,6 +18,12 @@ describe("sheetOf", () => {
     expect(sheet.starters.map((each) => each.player.name)).toEqual(["Raya", "Saliba", "Rice", "Isak"]);
     expect(sheet.bench.map((each) => each.player.name)).toEqual(["Kepa"]);
     expect(formation(side("a", XI))).toBe("3-4-3");
+  });
+
+  it("prints a surname without FPL's initial", () => {
+    expect(printName(man("B.Fernandes:M:1").player)).toBe("Fernandes");
+    expect(printName(man("E.Le Fée:M:1").player)).toBe("Le Fée");
+    expect(printName(man("Saka:M:1").player)).toBe("Saka");
   });
 });
 
@@ -52,7 +58,7 @@ describe("changesBetween and debuts", () => {
 describe("benchings", () => {
   const sheet = side("a", XI, ["Eze:M:8", "Kepa:G:1"]);
   const game = (goals: number, assists = 0, cleanSheets = 0) => ({ gameweek: 1, minutes: 90, goals, assists, cleanSheets, points: 0 });
-  const form = (rounds: Record<string, ReturnType<typeof game>[]>) => (each: { player: { name: string } }) => rounds[each.player.name] ?? [];
+  const form = (games: Record<string, ReturnType<typeof game>[]>) => (each: { player: { name: string } }) => games[each.player.name] ?? [];
 
   it("names a benched man with a goal or assist last time out, or goals and assists across the rounds", () => {
     expect(benchings(sheet, form({ Eze: [game(0), game(0), game(0, 1)] }), undefined).map((each) => each.man.player.name)).toEqual(["Eze"]);
@@ -75,21 +81,28 @@ describe("benchings", () => {
 });
 
 describe("starterFlags", () => {
-  it("flags a starter whose club has no match, one in the news, and one who might not start for his club", () => {
-    const sheet = { ...side("a", []), starters: [man("Isak:F:5"), man("Saka:M:1"), man("Rice:M:1"), man("Wood:F:6")] };
-    const story = { id: "1", headline: "Saka limps off", content: "Saka limped off in training.", analysis: null, at: 1 };
-    const flags = starterFlags(sheet, { playing: new Set([1, 6]), news: (each) => (each.player.name === "Saka" ? story : null), predicted: (each) => (each.player.name === "Saka" || each.player.name === "Rice" ? false : null) });
-    expect(flags.map((flag) => [flag.kind, flag.man.player.name])).toEqual([["no-fixture", "Isak"], ["news", "Saka"], ["may-not-start", "Rice"]]);
+  it("flags a man whose club has no match, one out, one a doubt, and one who might not start for his club", () => {
+    const sheet = { ...side("a", []), starters: [man("Isak:F:5"), man("Saka:M:1", { status: "i" }), man("Dunk:D:1", { status: "d" }), man("Rice:M:1"), man("Foden:M:1", { status: "s" })] };
+    const report = { id: "1", headline: "", content: "Saka (hamstring) is out for a month.", analysis: null, at: 1 };
+    const flags = starterFlags(sheet, { playing: new Set([1, 6]), news: (each) => (each.player.name === "Saka" ? report : null), predicted: (each) => (each.player.name === "Rice" ? false : null) });
+    expect(flags.map((flag) => [flag.kind, flag.man.player.name, "injury" in flag ? flag.injury : undefined])).toEqual([
+      ["no-fixture", "Isak", undefined], ["out", "Saka", "hamstring"], ["doubt", "Dunk", null], ["may-not-start", "Rice", undefined], ["out", "Foden", null],
+    ]);
   });
 });
 
-describe("a stale story", () => {
-  it("gives way to the plain status when the listing is newer, and stands when it is not", () => {
+describe("injuryIn and a stale story", () => {
+  const report = (content: string, at = 1) => ({ id: "1", headline: "", content, analysis: null, at });
+  it("reads the complaint from the report's brackets, else its opening sentence, else nothing", () => {
+    expect(injuryIn(report("Rodon (hamstring) will be sidelined."))).toBe("hamstring");
+    expect(injuryIn(report("Dunk is ruled out with a stiff neck. He is back in training soon."))).toBe("neck");
+    expect(injuryIn(report("Wissa has started all five matches."))).toBeNull();
+  });
+
+  it("drops a report older than his listing, so a loan is not told as last month's goal", () => {
     const loaned = { ...side("a", []), starters: [man("Millar:M:1", { status: "u", newsAdded: "2026-09-10T00:00:00Z" })] };
-    const story = (at: number) => () => ({ id: "1", headline: "", content: "Millar scored.", analysis: null, at });
-    const flag = (at: number) => starterFlags(loaned, { playing: new Set([1]), news: story(at), predicted: () => null })[0]?.kind;
-    expect(flag(Date.parse("2026-08-29T00:00:00Z"))).toBe("unavailable");
-    expect(flag(Date.parse("2026-09-12T00:00:00Z"))).toBe("news");
+    const flags = (at: number) => starterFlags(loaned, { playing: new Set([1]), news: () => report("Millar (knee) scored.", at), predicted: () => null });
+    expect(flags(Date.parse("2026-08-29T00:00:00Z"))[0]).toMatchObject({ kind: "out", why: "unavailable", injury: null });
   });
 });
 
@@ -148,13 +161,13 @@ describe("sheetsFacts and the column", () => {
 
   it("files the first round as first sheets, with no changes and no debuts", () => {
     const ties = facts(new Map());
-    expect(sheetsDeck(ties)).toBe("The first sheets of the season, two sides.");
+    expect(sheetsDeck(ties)).toBe("The first line-ups of the season.");
     expect(plainLine(ties[0].home)).toBe("Team h name their first sheet in a 3-4-3.");
   });
 
   it("counts the round's changes and debuts into the deck, ignoring an empty earlier period", () => {
     const ties = facts(new Map([["h", [side("h", []), side("h", XI.slice(0, 10))]], ["w", [side("w", ["Pickford:G:12", "Haaland:F:11"])]]]));
-    expect(sheetsDeck(ties)).toBe("One change across two sides, one debut.");
+    expect(sheetsDeck(ties)).toBe("One change and one debut.");
     expect(plainLine(ties[0].home)).toBe("Team h make one change: Watkins comes in.");
   });
 
@@ -162,7 +175,7 @@ describe("sheetsFacts and the column", () => {
     const ties = facts(new Map());
     const column = assembleSheets({ gameweek: 6, ties, against: (clubId) => (clubId === 1 ? "EVE (H)" : null), draft: new Map([["w", "Team w start two men."]]) });
     expect(column.headline).toBe("Team news: Gameweek 6");
-    expect(column.body).toBe("The deadline has passed and every line-up is locked. Here are all two, grouped by this week's head-to-heads.");
+    expect(column.body).toBe("The deadline has passed. The line-ups, by head-to-head.");
     const [sheet] = column.sheets as StorySheet[];
     expect(sheet.home.line).toBe("Team h name their first sheet in a 3-4-3.");
     expect(sheet.home.xi[0]).toMatchObject({ name: "Raya", slot: "G", against: "EVE (H)" });

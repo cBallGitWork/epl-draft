@@ -9,7 +9,7 @@ import { SHEETS_VOICE, sheetsSendBack } from "./voice/sheets";
 /** The column ready to file. Throws only when the first call cannot be made at all, which leaves
  *  the key unspent for the next firing. */
 export async function writeSheets(desk: SheetsDesk, brief: string, say: (message: string) => void): Promise<Record<string, unknown>> {
-  const check = { ties: desk.ties, facts: brief };
+  const check = { ties: desk.ties, facts: brief, clubs: desk.clubs };
   const attempt = (raw: Record<string, unknown>): { draft: SheetsDraft; faults: Fault[] } => {
     const draft = readSheetsDraft(raw, desk.ties);
     return { draft, faults: checkSheets(draft, check) };
