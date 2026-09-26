@@ -277,8 +277,7 @@ with its row here in the same commit.**
 | `PANEL_FLUSH` | The same well with no spacing of its own, for a panel whose single child manages it — a board, a ledger, a grid. A different decision from `PANEL`, not `PANEL` minus two utilities. | 6 sites |
 | `HEADING_PLATE` | A heading between two panels, on a plate of its own: DESIGN §2's "nothing prints on the bare ground". | 3 sites: both Bench headings and `/squad`'s "Around the league" (23 Sep 2026) |
 | `HEAD_CELL` | The `<th>` a stats board's head plate sits in: no padding, because the plate carries it. | 3 boards — the same three that share `HEAD_PLATE` |
-| `FACT` | One stated fact in a stack: bordered, at the tap floor at both widths. | 4 files |
-| `FACT_LABEL` | The label half of a `FACT` row — takes the room the figure does not, and truncates rather than wrapping. The truncation is the part worth naming: a Fantrax label is a full sentence on some rows, and a row that wraps to three lines stops being a row. | 5 files |
+| `FACT_LABEL` | The label half of a fact row — takes the room the figure does not, and truncates rather than wrapping. The truncation is the part worth naming: a Fantrax label is a full sentence on some rows, and a row that wraps to three lines stops being a row. | 1 file, `league/Breakdown` (26 Sep 2026) |
 | `SUBMIT` | The button that submits a form it sits inside. | 3 sites |
 | `ROW_HOVER` | `ROW_RULE` plus the surface under a pointer: a board row nobody owns. | 5 Prem boards (23 Sep 2026) |
 | `PINNED_TILE` · `PINNED_NAME` | A board's frozen tile (or index block) and its frozen name column; the caller adds where the name starts. `bg-surface` is load-bearing: a transparent one lets the scrolled figures slide under the name. Were `STICKY_LEAD` plus four hand-written copies until 24 Sep 2026. | 6 files |
