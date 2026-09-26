@@ -491,6 +491,23 @@ matches survived, so an absence is stated and never silent.
 listing the desk printed from an export went out "by Franco Bell" until it was
 shot and read back.
 
+## The sheets at the lock are written a side at a time
+
+Added 26 Sep 2026. `sheets` files once the round's lineups lock: every manager's side as Fantrax
+holds it, grouped by the week's head-to-heads, in the BBC's team-news shape. `Sheets` prints a
+head-to-head under `Home v Away`, then for each side its paragraph, **`{Team} XI (3-4-3):`** and
+**`Substitutes:`**, and last the meeting line in italic muted ink.
+
+**The names are printed and the paragraph is written.** The eleven and the bench come off the
+roster in slot order, by the shirt name FPL gives; the model never sees them as something to copy.
+
+**Stacked on a phone, side by side from `@3xl`.** The reverse of `Lineups`' rule, for a reason it
+does not have: each side here is a paragraph, and two paragraphs at 390px are two 170px columns of
+prose. The `v` heading keeps it one match. At a desk one paragraph across the sheet was a
+1,100px line, so the sides split there.
+
+**The reader's own side is in `yoursInk`**, in the heading and on its XI label, and nowhere else.
+
 ## The columns
 
 The three columns are `components/gazette/`, under `Column` rather than the
@@ -544,7 +561,7 @@ Added 2 Sep 2026, when the writer filed its first columns.
 | Route | What |
 |---|---|
 | `/` | The front page. Page 1. |
-| `/paper/reports` | Page 2: `tie-report`, `match-report`, `tie-call`, `fixture-preview`, `news`, `presser`, `predicted-xi`. |
+| `/paper/reports` | Page 2: `tie-report`, `match-report`, `tie-call`, `fixture-preview`, `news`, `presser`, `predicted-xi`, `sheets`. |
 | `/paper/{slug}` | Any one story, printed whole. |
 | `/paper` | Redirects to `/` — a prefix is not a page. |
 

@@ -151,7 +151,7 @@ this and not on a guess about when things happen:
 | **Thu 14:00** | press conferences end | The Team Sheet | `presser` — the round-up **publishes 15:00** |
 | **Thu 18:00** | the evening before the round | The Form Guide | `predictions`, Lawro's calls on every tie — SHIPPED 24 Sep (the evening before an earlier lock) |
 | **Fri 14:00 / 16:00** | pressers end; predicted elevens out | The Form Guide | `presser` **15:00**, `predicted-xi` **16:00** — both SHIPPED |
-| **Fri night / Sat noon** | deadline closes, gameweek begins | The Pink 'Un | `tie-call`, `fixture-preview`, the Classified |
+| **Fri night / Sat noon** | deadline closes, gameweek begins | The Pink 'Un | `sheets` at the lock (every side as locked, SHIPPED 26 Sep), `tie-call`, `fixture-preview`, the Classified |
 | **Sat/Sun** | matches | The Sunday Edition | `tie-report` as the football stops |
 
 **Thursday's column is the press conference, and Craig's own week answers the
@@ -353,6 +353,35 @@ Two things deliberately left, so they are not re-litigated as oversights:
 - **The ties are alphabetical by HOME club** (Craig, 21 Sep 2026), which answers
   §*Order the clubs by something* below for this column, though not for the Team
   Sheet. Each tie still carries its own kickoff.
+
+### The Team Sheets at the lock — 26 Sep 2026
+
+Craig: *"once deadline hits, team sheet reveals for all players, report like a sports journalist
+… comment on changes made, any debuts, how many changes from previous week, any surprise
+benchings using projections … straight talking, pure factual … group by match up, comment on
+any match up narratives like both starting from the same defence, striker vs a keeper"*. The
+model is the BBC's pre-match team news: per side, two or three sentences, then the XI and the
+substitutes.
+
+Kind `sheets`, one article per round, keyed `sheets:gw{n}`, filed from the lock until the round
+finishes (not `!started`: a 12:15 lock and a 12:30 kickoff fall inside one cron's delay).
+Headline, deck and the elevens are the desk's; the model writes only each side's paragraph and
+each head-to-head's meeting line. Every fact is computed in `gazette/sheets/`: changes against the
+previous period's stored rosters, debuts against every earlier period, a benched man projected
+above the weakest starter in his slot (the sister model, stated as an order and never a figure),
+a starter with no fixture, one FPL doubts, one his club's predicted eleven leaves out, and where the
+two sheets meet on a real pitch. `sheets/checks.ts` refuses a wrong change count, a debut or an
+"unchanged" the facts do not give, and a stranger; it sends back opinion, a repeated opening, a
+phrase shared between sides, and a phrase from last round's paragraph. A side whose paragraph
+fails twice prints the desk's plain line.
+
+Left deliberately:
+
+- **An unread earlier period files nothing.** A missing period would turn a change into a debut,
+  so the key stays unspent and the next firing retries.
+- **The real league's first round is period 6 with nothing before it**, so it files as "first
+  sheets" with no changes and no debuts.
+- **No face.** The splash picture is the drawing, as for any lead.
 
 ### The Team Sheet, after its first review — 18 Sep 2026
 
