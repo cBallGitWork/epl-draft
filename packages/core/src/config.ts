@@ -392,6 +392,8 @@ export const SHEETS = {
   injuryDays: 60,
   news: 3,
   newsSentences: 2,
+  /** A side's notes beyond its changes, weightiest first: what a two-or-three sentence paragraph can carry. */
+  notes: 4,
   /** A side's paragraph: sentences and words at most; a phrase this long shared is an echo. */
   sentences: 3,
   words: 70,

@@ -1,5 +1,5 @@
 import { SHEETS } from "../../config";
-import { sitsFor, type Sheet, type SheetMan } from "./sheet";
+import { sitsFor, startsFor, type Sheet, type SheetMan } from "./sheet";
 
 // A benched man the projections say should have started: he is projected above the weakest
 // starter in his own slot. The paper states the order, never the sister model's FPL-scale number.
@@ -17,8 +17,10 @@ export interface Benching {
   over: SheetMan;
   /** Projected highest of everyone this side holds in his slot. */
   best: boolean;
-  /** He sat on this side's last sheet too. */
+  /** He was benched on this side's last sheet too. */
   again: boolean;
+  /** He started on this side's last sheet, so he is dropped. */
+  dropped: boolean;
 }
 
 export function benchings(sheet: Sheet, projected: (code: number) => Projected | null, before: Sheet | undefined): Benching[] {
@@ -43,6 +45,7 @@ export function benchings(sheet: Sheet, projected: (code: number) => Projected |
         over: weakest.starter,
         best: slot.every((other) => (reading(other)?.points ?? -Infinity) < his.points),
         again: before !== undefined && sitsFor(before, man.fantraxId),
+        dropped: before !== undefined && startsFor(before, man.fantraxId),
       },
     }];
   });

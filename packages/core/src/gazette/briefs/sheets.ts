@@ -52,24 +52,36 @@ function side(team: TeamFacts, brief: SheetsBrief): string {
   const man = (each: SheetMan) => `${each.player.name} (${each.slot}, ${brief.clubName(each.player.clubId)})`;
   return [
     `SIDE ${team.sheet.teamName} [${team.sheet.teamId}]${team.formation === null ? "" : `, ${team.formation}`}`,
-    `STARTS: ${team.sheet.starters.map(man).join("; ")}`,
+    `NAMED IN THE ELEVEN: ${team.sheet.starters.map(man).join("; ")}`,
     `BENCH: ${team.sheet.bench.length === 0 ? "nobody" : team.sheet.bench.map(man).join("; ")}`,
     changes(team.changes),
     debuts(team),
-    ...team.benchings.map(benched),
-    ...team.flags.map((flag) => flagged(flag, brief)),
-    ...team.form.map(inForm),
+    ...notes(team, brief),
     team.lastWrote === null ? null : `LAST ROUND YOU WROTE about this side: "${team.lastWrote}" Do not reuse its angle, its opening or its phrases.`,
   ]
     .filter((line) => line !== null)
     .join("\n");
 }
 
+/** The side's news beyond its changes, weightiest first and only the few a paragraph can carry:
+ *  a blank, then form, fitness, a benching, and a man who might not start for his club. */
+function notes(team: TeamFacts, brief: SheetsBrief): string[] {
+  const flags = (kind: StarterFlag["kind"]) => team.flags.filter((flag) => flag.kind === kind).map((flag) => flagged(flag, brief));
+  return [
+    ...flags("no-fixture"),
+    ...team.form.map(inForm),
+    ...flags("news"),
+    ...flags("unavailable"),
+    ...team.benchings.map((benching) => benched(benching, brief)),
+    ...flags("may-not-start"),
+  ].slice(0, SHEETS.notes);
+}
+
 function changes(changes: SheetChanges | null): string {
   if (changes === null) return "FIRST SHEET: there is no earlier sheet to compare with. Do not write about changes or debuts.";
   if (changes.count === 0) return "UNCHANGED from last round. Say unchanged and never count the rounds.";
   const came = changes.in.map((each) => `${each.man.player.name} (${each.man.slot}, ${each.from === "bench" ? "from the bench" : "new to the squad since last round"})`);
-  const went = changes.out.map((each) => `${each.man.player.name} (${each.man.slot}, ${each.to === "bench" ? "to the bench" : "no longer in the squad"})`);
+  const went = changes.out.map((each) => `${each.man.player.name} (${each.man.slot}, ${each.to === "bench" ? "dropped to the bench" : "no longer in the squad"})`);
   return [`CHANGES from last round's sheet: ${changes.count}.`, `  IN: ${came.join(", ")}`, `  OUT: ${went.join(", ")}`].join("\n");
 }
 
@@ -80,28 +92,29 @@ function debuts(team: TeamFacts): string | null {
     : `DEBUTS, a first start for this side: ${team.debuts.map((man) => man.player.name).join(", ")}`;
 }
 
-function benched(benching: Benching): string {
+function benched(benching: Benching, brief: SheetsBrief): string {
   const { man, over } = benching;
   return [
-    `ON THE BENCH, AND HE MIGHT HAVE STARTED: ${man.player.name} (${man.slot}) sits while ${over.player.name} (${over.slot}) starts.`,
+    `${benching.dropped ? "DROPPED" : "BENCHED"}, THOUGH IN LINE TO START FOR ${brief.clubName(man.player.clubId).toUpperCase()}: ${man.player.name} (${man.slot}) is ${benching.dropped ? "dropped to the bench after starting last round" : "benched"}, and ${over.player.name} (${over.slot}) starts. ${man.player.name} is in line to start for ${brief.clubName(man.player.clubId)} this weekend.`,
     benching.best ? ` He had the strongest case of anyone this side holds in the ${man.slot} slot.` : "",
-    benching.again ? " He sat last round too." : "",
-    " You may say he might have started. Never say why, or on what.",
+    benching.again ? " He was benched last round too." : "",
+    " Say so in the present tense, naming his club, and never why.",
   ].join("");
 }
 
 function flagged(flag: StarterFlag, brief: SheetsBrief): string {
   const name = `${flag.man.player.name} (${flag.man.slot})`;
   const club = brief.clubName(flag.man.player.clubId);
-  if (flag.kind === "no-fixture") return `STARTS WITH NO MATCH: ${name}. ${club} do not play this round.`;
-  if (flag.kind === "unavailable") return `STARTS, BUT IS ${(STATUS[flag.man.player.status] ?? "a doubt").toUpperCase()}: ${name}. Say so plainly, and nothing about why.`;
-  if (flag.kind === "may-not-start") return `STARTS, BUT MIGHT NOT START FOR ${club.toUpperCase()}: ${name}. Say he might not start for his club, and no more.`;
+  if (flag.kind === "no-fixture") return `NAMED, WITH NO MATCH: ${name}. ${club} do not play this round.`;
+  if (flag.kind === "unavailable") return `NAMED, BUT IS ${(STATUS[flag.man.player.status] ?? "a doubt").toUpperCase()}: ${name}. Say so plainly, and nothing about why.`;
+  if (flag.kind === "may-not-start") return `NAMED, BUT MIGHT NOT START FOR ${club.toUpperCase()}: ${name}. Say he is named but might not start for ${club}, and no more.`;
   const reported = flag.story.at === null ? "" : ` (reported ${DAY.format(flag.story.at)})`;
-  return `STARTS, IN THE NEWS${reported}: ${name}. ${sentences(decoded(flag.story.content)).slice(0, SHEETS.newsSentences).join(" ")} Say what it means for this weekend in your own plain words, without quoting it.`;
+  const listed = flag.man.player.status === "a" ? "AND IN THE NEWS" : `BUT ${(STATUS[flag.man.player.status] ?? "a doubt").toUpperCase()}, IN THE NEWS`;
+  return `NAMED, ${listed}${reported}: ${name}. ${sentences(decoded(flag.story.content)).slice(0, SHEETS.newsSentences).join(" ")} Say what it means for this weekend in your own plain words, without quoting it.`;
 }
 
 function inForm(form: InForm): string {
-  const where = form.starts ? "starts" : "on the bench";
+  const where = form.starts ? "named" : "on the bench";
   const did = [
     form.goals > 0 ? `${form.goals} ${form.goals === 1 ? "goal" : "goals"}` : null,
     form.assists > 0 ? `${form.assists} ${form.assists === 1 ? "assist" : "assists"}` : null,

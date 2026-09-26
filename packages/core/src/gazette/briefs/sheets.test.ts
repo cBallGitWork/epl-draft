@@ -25,16 +25,17 @@ function brief(history: boolean, projected = false) {
 describe("buildSheetsBrief", () => {
   it("gives each side's sheet, its changes, the benched man above a starter, and its flags", () => {
     const text = brief(true, true);
-    expect(text).toContain("STARTS: Raya (G, Club 1); Saliba (D, Club 1); Rice (M, Club 1); Palmer (M, Club 3); Haaland (F, Club 11)");
+    expect(text).toContain("NAMED IN THE ELEVEN: Raya (G, Club 1); Saliba (D, Club 1); Rice (M, Club 1); Palmer (M, Club 3); Haaland (F, Club 11)");
     expect(text).toContain("CHANGES from last round's sheet: 1.");
     expect(text).toContain("IN: Palmer (M, from the bench)");
-    expect(text).toContain("OUT: Eze (M, to the bench)");
+    expect(text).toContain("OUT: Eze (M, dropped to the bench)");
     expect(text).toContain("DEBUTS: none. Do not use the word debut about this side.");
-    expect(text).toContain("ON THE BENCH, AND HE MIGHT HAVE STARTED: Eze (M) sits while Palmer (M) starts.");
-    expect(text).toContain("STARTS WITH NO MATCH: Palmer (M). Club 3 do not play this round.");
-    expect(text).toContain("STARTS, IN THE NEWS (reported 1 Jan): Rice (M). Rice has a knock and faces a late test.");
-    expect(text).toContain("STARTS, BUT MIGHT NOT START FOR CLUB 1: Saliba (D).");
-    expect(text).toContain("IN FORM: Haaland (F, starts): 4 goals in his last 3 rounds, scoring in each.");
+    expect(text).toContain("DROPPED, THOUGH IN LINE TO START FOR CLUB 8: Eze (M) is dropped to the bench after starting last round, and Palmer (M) starts. Eze is in line to start for Club 8 this weekend.");
+    expect(text).toContain("NAMED, WITH NO MATCH: Palmer (M). Club 3 do not play this round.");
+    expect(text).toContain("NAMED, AND IN THE NEWS (reported 1 Jan): Rice (M). Rice has a knock and faces a late test.");
+    // Five notes for one side: the four weightiest are kept, and the man who might not start is the one cut.
+    expect(text).not.toContain("MIGHT NOT START");
+    expect(text).toContain("IN FORM: Haaland (F, named): 4 goals in his last 3 rounds, scoring in each.");
     expect(text).toContain("Team h's Haaland (F) against Team w's Pickford (G), in Club 11 v Club 12.");
     expect(text).not.toMatch(/\b7\b|points: |%|projected above|predicted eleven/u);
   });

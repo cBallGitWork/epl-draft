@@ -40,6 +40,8 @@ describe("checkSheets", () => {
     expect(check({ ...GOOD, h: "Team h make two changes." })).toContainEqual(["h", "the wrong number of changes", "hard"]);
     expect(check({ ...GOOD, w: "Saka makes his debut for Team w." })).toContainEqual(["w", "a debut the brief does not give", "hard"]);
     expect(check({ ...GOOD, h: "Team h are unchanged." })).toContainEqual(["h", "unchanged when it changed", "hard"]);
+    expect(check({ ...GOOD, w: "Team w are unchanged, and Saka drops to the bench." })).toContainEqual(["w", "a man dropped the brief does not give", "hard"]);
+    expect(check({ ...GOOD, h: "Team h make one change, with Eze dropped to the bench for Haaland." }).map((fault) => fault[1])).not.toContain("a man dropped the brief does not give");
   });
 
   it("refuses any change on a first sheet, and a man the brief never named", () => {
@@ -57,6 +59,13 @@ describe("checkSheets", () => {
     expect(check({ ...GOOD, w: "Team w start Saka, projected to play." })).toContainEqual(["w", "names a source or a percentage", "hard"]);
     expect(check({ ...GOOD, w: "Team w start Saka at 75%." })).toContainEqual(["w", "names a source or a percentage", "hard"]);
     expect(check({ ...GOOD, w: "Team w are unchanged for a sixth week." })).toContainEqual(["w", "counts the rounds", "send-back"]);
+  });
+
+  it("sends back American terms and a team-news phrase used too often", () => {
+    expect(check({ ...GOOD, w: "Team w start Saka while Eze sits." })).toContainEqual(["w", "not British football English", "send-back"]);
+    expect(check({ ...GOOD, w: "Team w start Saka, and Eze is benched when he might have started." })).toContainEqual(["w", "the wrong tense: the match is still to come", "send-back"]);
+    const twice = { ...GOOD, h: "Team h make one change, and Haaland comes into the side.", w: "Team w are unchanged, and Isak comes into the side." };
+    expect(check(twice)).toContainEqual(["article", "a phrase used too often", "send-back"]);
   });
 
   it("refuses a meeting line on a head-to-head where the sheets never meet", () => {

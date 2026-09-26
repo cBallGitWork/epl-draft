@@ -6,6 +6,7 @@ import { DESK_BANNED } from "../predictions/words";
 import { strangers } from "../strangers";
 import { sheetsKey, type SheetsDraft } from "./column";
 import type { TeamFacts, TieFacts } from "./facts";
+import { SHEETS_AMERICAN, SHEETS_LEXICON } from "./words";
 
 // The editor for team news: every paragraph read against the facts it was written from. A hard
 // fault never prints (the side takes the desk's plain line); a send-back goes back once, quoted.
@@ -24,6 +25,8 @@ const QUOTES = /["“”«»]/u;
 /** Where a fact came from stays off the page: a reporter does not cite his workings. */
 const SOURCE = /%|\bper ?cent\b|\b(?:projected|projections?|predicted|predictions?|model|FPL|Fantrax)\b/iu;
 /** Unchanged is the whole of it (Craig, 26 Sep 2026): never how many rounds it has been. */
+/** The game is still to come (Craig, 26 Sep 2026): "might have started" is a match already played. */
+const PAST = /\b(?:might|could|would|should|may) have\b|\b(?:might|could|would|should|may)'ve\b/iu;
 const COUNTED = /\b(?:(?:second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|\d+(?:st|nd|rd|th)) (?:week|round|game|gameweek)|(?:weeks?|rounds?) running|in a row|on the (?:trot|spin))\b/iu;
 const COUNT = /\b([\p{L}\d]+) changes?\b/iu;
 const WORDS: Record<string, number> = { no: 0, one: 1, a: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11 };
@@ -45,10 +48,12 @@ export function checkSheets(draft: SheetsDraft, ctx: SheetsCheck): Fault[] {
   const common = (section: string, text: string) => {
     if (QUOTES.test(text)) fault(section, "quotation marks", "hard", text.match(QUOTES)?.[0] ?? "");
     if (SOURCE.test(text)) fault(section, "names a source or a percentage", "hard", text.match(SOURCE)?.[0] ?? "");
+    if (PAST.test(text)) fault(section, "the wrong tense: the match is still to come", "send-back", text.match(PAST)?.[0] ?? "");
     if (COUNTED.test(text)) fault(section, "counts the rounds", "send-back", text.match(COUNTED)?.[0] ?? "");
     for (const name of strangers(text, ctx.facts)) fault(section, "a name not in the brief", "hard", name);
     for (const figure of numbersIn(text)) if (!known.has(figure)) fault(section, "a figure not in the brief", "hard", String(figure));
     for (const word of banned(masked(text, names), [...BANNED, ...DESK_BANNED, ...SHEETS_OPINION])) fault(section, "opinion or banned phrasing", "send-back", word);
+    for (const word of banned(masked(text, names), SHEETS_AMERICAN)) fault(section, "not British football English", "send-back", word);
   };
 
   for (const team of ctx.ties.flatMap((tie) => [tie.home, tie.away])) {
@@ -74,6 +79,12 @@ export function checkSheets(draft: SheetsDraft, ctx: SheetsCheck): Fault[] {
     if (echoed !== undefined) fault(section, "a phrase from last round's article", "send-back", echoed);
   }
 
+  const all = masked([...draft.values()].join(" "), names);
+  for (const [phrase, most] of SHEETS_LEXICON) {
+    const used = (all.match(new RegExp(`(?<![\\p{L}])${phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\p{L}])`, "giu")) ?? []).length;
+    if (used > most) fault("article", "a phrase used too often", "send-back", `${phrase} ×${used}`);
+  }
+
   for (const tie of ctx.ties) {
     const section = sheetsKey(tie.home.sheet.teamId, tie.away.sheet.teamId);
     const text = draft.get(section) ?? "";
@@ -97,6 +108,9 @@ function facts(section: string, text: string, team: TeamFacts, fault: Report): v
   }
   if (/\bdebut/iu.test(text) && (team.debuts ?? []).length === 0) fault(section, "a debut the brief does not give", "hard", "debut");
   if (/\bunchanged\b|\bsame (?:eleven|side|xi)\b/iu.test(text) && team.changes?.count !== 0) fault(section, "unchanged when it changed", "hard", "unchanged");
+  // Dropped is a man who started last round and is benched now; the facts say who, if anyone.
+  const dropped = (team.changes?.out ?? []).some((each) => each.to === "bench") || team.benchings.some((each) => each.dropped);
+  if (/\bdrop(?:s|ped|ping)?\b/iu.test(text) && !dropped) fault(section, "a man dropped the brief does not give", "hard", "dropped");
 }
 
 /** Every count a paragraph may state that the brief lists rather than numbers: "two Arsenal defenders". */

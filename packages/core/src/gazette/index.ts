@@ -72,6 +72,7 @@ export { sheetOf } from "./sheets/sheet";
 export { sheetsFacts } from "./sheets/facts";
 export { buildSheetsBrief } from "./briefs/sheets";
 export { SHEETS_OPINION, checkSheets } from "./sheets/checks";
+export { SHEETS_AMERICAN, SHEETS_LEXICON } from "./sheets/words";
 export { mergeSheets, readSheetsDraft } from "./sheets/draft";
 export { assembleSheets } from "./sheets/column";
 export type { Sheet } from "./sheets/sheet";
