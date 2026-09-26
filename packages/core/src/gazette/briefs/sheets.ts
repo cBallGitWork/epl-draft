@@ -11,7 +11,7 @@ import { sentences } from "../predictions/prose";
 const STATUS: Record<string, string> = { d: "a doubt", i: "injured", s: "suspended", u: "unavailable", n: "unavailable" };
 
 const DAY = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "Europe/London" });
-import type { SheetMan } from "../sheets/sheet";
+import { isBack, type SheetMan } from "../sheets/sheet";
 
 // The facts behind the team-news article, per head-to-head and per side. Every sentence the writer
 // may print is already a line here; what a block may not be turned into is said beside it.
@@ -98,7 +98,7 @@ function debuts(team: TeamFacts): string | null {
 
 function benched(benching: Benching): string {
   const { man, last } = benching;
-  const lastTime = returns(last.goals, last.assists, BACK.has(man.slot) && last.minutes > 0 ? last.cleanSheets : 0);
+  const lastTime = returns(last.goals, last.assists, isBack(man.slot) && last.minutes > 0 ? last.cleanSheets : 0);
   const over = returns(benching.goals, benching.assists, benching.cleanSheets);
   return [
     `${benching.dropped ? "DROPPED, DESPITE HIS FORM" : "BENCHED, DESPITE HIS FORM"}: ${man.player.name} (${man.slot}) is ${benching.dropped ? "dropped to the bench after starting last gameweek" : "on the bench"}.`,
@@ -115,8 +115,6 @@ function returns(goals: number, assists: number, cleanSheets: number): string {
   return [count(goals, "goal", "goals"), count(assists, "assist", "assists"), count(cleanSheets, "clean sheet", "clean sheets")].filter((each) => each !== null).join(", ");
 }
 
-const BACK = new Set(["G", "D"]);
-
 function flagged(flag: StarterFlag, brief: SheetsBrief): string {
   const name = `${flag.man.player.name} (${flag.man.slot})`;
   const club = brief.clubName(flag.man.player.clubId);
@@ -129,7 +127,7 @@ function flagged(flag: StarterFlag, brief: SheetsBrief): string {
 }
 
 function inForm(form: InForm): string {
-  const did = returns(form.goals, form.assists, BACK.has(form.man.slot) ? form.cleanSheets : 0);
+  const did = returns(form.goals, form.assists, isBack(form.man.slot) ? form.cleanSheets : 0);
   const each = form.scoredEvery ? ", scoring in every game" : form.cleanEvery ? ", a clean sheet in every game" : "";
   return `IN FORM: ${form.man.player.name} (${form.man.slot}, named): ${did} lately${each}.`;
 }

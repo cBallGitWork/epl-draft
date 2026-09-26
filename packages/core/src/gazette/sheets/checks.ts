@@ -1,5 +1,5 @@
 import { SHEETS } from "../../config";
-import { BANNED, banned } from "../banned";
+import { BANNED, banned, escapeRegExp } from "../banned";
 import type { Fault, Severity } from "../predictions/checks";
 import { masked, ngrams, numbersIn, sentences, wordCount } from "../predictions/prose";
 import { DESK_BANNED } from "../predictions/words";
@@ -84,7 +84,7 @@ export function checkSheets(draft: SheetsDraft, ctx: SheetsCheck): Fault[] {
 
   const all = masked([...draft.values()].join(" "), names);
   for (const [phrase, most] of SHEETS_LEXICON) {
-    const used = (all.match(new RegExp(`(?<![\\p{L}])${phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\p{L}])`, "giu")) ?? []).length;
+    const used = (all.match(new RegExp(`(?<![\\p{L}])${escapeRegExp(phrase)}(?![\\p{L}])`, "giu")) ?? []).length;
     if (used > most) fault("article", "a phrase used too often", "send-back", `${phrase} ×${used}`);
   }
 

@@ -80,10 +80,11 @@ export const BANNED: readonly string[] = [
  *  wolf on a surname is a check a human stops reading. */
 export function banned(prose: string, list: readonly string[] = BANNED): string[] {
   return list.filter((phrase) =>
-    new RegExp(`(?<![\\p{L}])${escape(phrase)}(?![\\p{L}])`, "iu").test(prose),
+    new RegExp(`(?<![\\p{L}])${escapeRegExp(phrase)}(?![\\p{L}])`, "iu").test(prose),
   );
 }
 
-function escape(phrase: string): string {
+/** A phrase as a literal inside a RegExp. */
+export function escapeRegExp(phrase: string): string {
   return phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

@@ -1,6 +1,6 @@
 import { SHEETS } from "../../config";
 import type { RecentGame } from "../predictions/sides";
-import { sitsFor, startsFor, type Sheet, type SheetMan } from "./sheet";
+import { isBack, sitsFor, startsFor, type Sheet, type SheetMan } from "./sheet";
 
 // A benched man whose form says he could be playing (Craig, 26 Sep 2026: "benched despite getting
 // a goal/assist last week"): a return last time out, or goals and assists over his last few rounds.
@@ -19,14 +19,12 @@ export interface Benching {
   dropped: boolean;
 }
 
-const BACK = new Set(["G", "D"]);
-
 export function benchings(sheet: Sheet, recent: (man: SheetMan) => readonly RecentGame[], before: Sheet | undefined): Benching[] {
   const found = sheet.bench.flatMap((man): Benching[] => {
     const games = recent(man).slice(-SHEETS.formRounds);
     const last = games.at(-1);
     if (last === undefined) return [];
-    const back = BACK.has(man.slot);
+    const back = isBack(man.slot);
     const sum = (key: "goals" | "assists" | "cleanSheets") => games.reduce((total, game) => total + game[key], 0);
     const returned = last.goals > 0 || last.assists > 0 || (back && last.minutes > 0 && last.cleanSheets > 0);
     if (!returned && sum("goals") + sum("assists") < SHEETS.benchForm) return [];

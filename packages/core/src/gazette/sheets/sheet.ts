@@ -47,6 +47,10 @@ export function fielded(sheet: Sheet): boolean {
   return sheet.starters.length > 0;
 }
 
+/** A keeper or defender's slot, and a midfielder or forward's: the two ends of a side. */
+export const isBack = (slot: string) => slot === "G" || slot === "D";
+export const isFront = (slot: string) => slot === "M" || slot === "F";
+
 export function startsFor(sheet: Sheet, fantraxId: string): boolean {
   return sheet.starters.some((man) => man.fantraxId === fantraxId);
 }

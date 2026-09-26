@@ -1,6 +1,6 @@
 import { SHEETS } from "../../config";
 import type { RecentGame } from "../predictions/sides";
-import type { Sheet, SheetMan } from "./sheet";
+import { isBack, type Sheet, type SheetMan } from "./sheet";
 
 // A man in form over his last few rounds: goals in every one, goals piling up, or a keeper or
 // defender who has not conceded. Football facts off the match reads, never fantasy points.
@@ -18,8 +18,6 @@ export interface InForm {
   cleanEvery: boolean;
 }
 
-const BACK = new Set(["G", "D"]);
-
 /** The side's starters in form, by goals and assists; a few a side. A benched man's form is his
  *  benching's story (`benchings.ts`), not a second line. */
 export function inForm(sheet: Sheet, recent: (man: SheetMan) => readonly RecentGame[]): InForm[] {
@@ -36,7 +34,7 @@ export function inForm(sheet: Sheet, recent: (man: SheetMan) => readonly RecentG
       assists: sum("assists"),
       cleanSheets: sum("cleanSheets"),
       scoredEvery: games.every((game) => game.goals > 0),
-      cleanEvery: BACK.has(man.slot) && games.every((game) => game.minutes > 0 && game.cleanSheets > 0),
+      cleanEvery: isBack(man.slot) && games.every((game) => game.minutes > 0 && game.cleanSheets > 0),
     };
     const hot = form.scoredEvery || form.cleanEvery || form.goals >= SHEETS.formGoals || form.goals + form.assists >= SHEETS.formInvolvements;
     return hot ? [form] : [];

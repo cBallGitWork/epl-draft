@@ -1,5 +1,5 @@
 import { SHEETS } from "../../config";
-import type { Sheet, SheetMan } from "./sheet";
+import { isBack, isFront, type Sheet, type SheetMan } from "./sheet";
 
 // Where two sheets in one head-to-head meet on a real pitch: one side's attackers against the
 // other's defence in the same match, or both sides starting from one club's defence.
@@ -13,8 +13,6 @@ export type Crossover =
   | { kind: "facing"; attackTeamId: string; attackers: SheetMan[]; defendTeamId: string; defenders: SheetMan[]; fixture: ClubPair }
   | { kind: "defence"; clubId: number; home: SheetMan[]; away: SheetMan[] };
 
-const BACK = new Set(["G", "D"]);
-const FRONT = new Set(["M", "F"]);
 /** Listed injured, suspended or gone: named on the sheet, meeting nobody on the pitch. */
 const ABSENT = new Set(["i", "s", "u", "n"]);
 
@@ -28,8 +26,8 @@ export function crossovers(home: Sheet, away: Sheet, fixtures: readonly ClubPair
 function facing(attack: Sheet, defend: Sheet, fixtures: readonly ClubPair[]): Crossover[] {
   return fixtures.flatMap((fixture) =>
     [[fixture.homeClubId, fixture.awayClubId], [fixture.awayClubId, fixture.homeClubId]].flatMap(([from, against]) => {
-      const attackers = playing(attack).filter((man) => FRONT.has(man.slot) && man.player.clubId === from);
-      const defenders = playing(defend).filter((man) => BACK.has(man.slot) && man.player.clubId === against);
+      const attackers = playing(attack).filter((man) => isFront(man.slot) && man.player.clubId === from);
+      const defenders = playing(defend).filter((man) => isBack(man.slot) && man.player.clubId === against);
       return attackers.length === 0 || defenders.length === 0
         ? []
         : [{ kind: "facing" as const, attackTeamId: attack.teamId, attackers, defendTeamId: defend.teamId, defenders, fixture }];
@@ -39,7 +37,7 @@ function facing(attack: Sheet, defend: Sheet, fixtures: readonly ClubPair[]): Cr
 
 function sharedDefence(home: Sheet, away: Sheet): Crossover[] {
   const kind = "defence" as const;
-  const at = (sheet: Sheet) => playing(sheet).filter((man) => BACK.has(man.slot));
+  const at = (sheet: Sheet) => playing(sheet).filter((man) => isBack(man.slot));
   const clubs = new Set(at(home).map((man) => man.player.clubId));
   return [...clubs].flatMap((clubId) => {
     const ours = at(home).filter((man) => man.player.clubId === clubId);
