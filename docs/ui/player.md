@@ -49,9 +49,16 @@ derived the same four from the same object.
    map) and **Condition** (FPL's chance he plays) as its worded rows. Every rating is OURS
    and rated **within his position group** (Craig, 25 Sep 2026: "compare to just attackers,
    defenders to just defenders"): the sister repo's line, gathered into goalkeepers,
-   defenders, midfielders and forwards; a man with no line is rated against everyone. The
-   shot and touch maps add Heading, Long Shots, Creativity (chances set up), Penalty Taking
-   and Teamwork; a keeper gets his own eight.
+   defenders, midfielders and forwards; a man with no line is rated against everyone.
+   **The event counts are the stats league's** (Craig, 26 Sep 2026: *"now that we have the
+   extra stats, could use that?"*): Aggression (fouls), Creativity (key passes), Crossing
+   (accurate crosses), Dribbling (take-ons attempted), Heading (aerials won), Marking
+   (clearances), Passing (passes into the final third), Positioning (interceptions), Tackling
+   (tackles won) and Work Rate (tackles won, interceptions and recoveries), each per 90 of his
+   minutes there. FPL gives Anticipation (its recoveries, which equal the stats league's),
+   Determination, Influence, Finishing, Off The Ball and Stamina; the shot and touch maps give
+   Long Shots and Teamwork. A man the stats league holds nothing on reads `—` on its rows.
+   A keeper gets his own seven.
    **Rankings** sit under it: his season totals and his place among the same group
    ("rankings for data such as xg").
 3. **The real position**, in cyan — the first thing in the app entitled to that
@@ -258,10 +265,11 @@ country is taken off the end of Fantrax's birthplace and the town dropped; the
 adjective is not invented, because a demonym table is not a fact we hold. The
 Birthplace/Height/Weight block went with it.
 
-**Keepers get their own grid.** `KEEPER_ONLY` and `OUTFIELD_ONLY` in
-`football/attributes.ts` name the measures; the app chooses between them off the
-sister repo's real position, because the football layer holds no position by
-rule. An outfielder loses Handling and Reflexes; a keeper loses the seven about
+**Keepers get their own grid.** Each measure in `football/attributes.ts` says
+whose it is (`for: "keeper" | "outfield"`, or both); the app passes the role off
+the sister repo's real position, because the football layer holds no position by
+rule. Positioning is both, measured apart: goals prevented for a keeper,
+interceptions for an outfielder. An outfielder loses Handling and Reflexes; a keeper loses the seven about
 scoring, creating and defending in open play. That reverses an argument this
 file's own header used to make — that a keeper handled himself, because an
 outfielder sits at the bottom of Handling — which was true and produced a grid

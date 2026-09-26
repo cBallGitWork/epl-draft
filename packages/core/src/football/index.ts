@@ -134,10 +134,9 @@ export type { PastSeason } from "./seasons";
 // Championship Manager's attribute grid, rated out of play we already measure.
 // Ours, never Sports Interactive's — `attributes.ts` says why there is no feed.
 export { attributes, preferredFoot, shotLine } from "./attributes";
-export type { Attribute, Scouted, ShotLine } from "./attributes";
+export type { Attribute, Role, Scouted, ShotLine } from "./attributes";
 export { KEEPER_RANKINGS, OUTFIELD_RANKINGS, rankings } from "./rankings";
 export type { Ranked } from "./rankings";
-export { KEEPER_ONLY, OUTFIELD_ONLY } from "./attributes";
 export { countryOf, mapFixtures } from "./fpl/map";
 export {
   adjacentGameweeks,
