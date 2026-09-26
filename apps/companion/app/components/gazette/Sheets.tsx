@@ -80,6 +80,8 @@ function Side({
               club={player === null ? undefined : clubs.get(player.clubId)}
               // His real match as it stood at the deadline, so an old sheet never shows next week's.
               band={man.against === null ? DASH : `v ${man.against}`}
+              // His photograph, as the match pitch draws him; the kit stands in where there is none.
+              face={player ?? undefined}
             />
           );
         }}
