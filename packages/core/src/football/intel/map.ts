@@ -86,12 +86,9 @@ export function predictedEleven(
 
   let at = 0;
   for (const count of shape) {
-    // **Reversed, because the source lists a line RIGHT to left.** FFScout gives
-    // Arsenal's back four as White (RB), Konsa, Gabriel, Calafiori (LB); drawn
-    // in that order across a pitch the right-back stands on the reader's left,
-    // which is the wrong side of the field. A pitch is drawn from the viewer's
-    // seat, so the row is turned round on the way out.
-    rows.push({ line: String(count), players: outfield.slice(at, at + count).reverse() });
+    // The source lists a line right-back first; the keeper stands at the top, so the team faces the
+    // reader and its right is the reader's left. Reversing this mirrored the pitch (Craig, 26 Sep 2026).
+    rows.push({ line: String(count), players: outfield.slice(at, at + count) });
     at += count;
   }
   return rows.filter((row) => row.players.length > 0);

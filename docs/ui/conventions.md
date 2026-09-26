@@ -359,6 +359,10 @@ view uses real players, every other pitch view uses shirts"*). It is one club, s
 man with no photograph falls back to that club's kit and nothing else. The match
 pitch drew faces from 23 Sep and the squad pitches from 24 Sep; both are kits again.
 
+**The keeper stands at the top, so the team faces the reader** (Craig, 10 Sep 2026). On
+the two pitches that know their flanks, a club's predicted XI and its depth chart, the
+right-back stands on the reader's LEFT; both drew it mirrored until 26 Sep 2026.
+
 **`PlayerShirt` is what a pitch draws, and it has no ladder.** A kit is chosen by
 club code, answers **40/40** (`shirtUrl` carries the count), and is right the day
 a man signs. The only absence it can meet is a club we cannot name, which it

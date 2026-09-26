@@ -109,10 +109,9 @@ describe("predictedEleven", () => {
     const rows = predictedEleven(eleven());
     expect(rows.map((row) => row.line)).toEqual(["GK", "4", "2", "3", "1"]);
     expect(rows.map((row) => row.players.length)).toEqual([1, 4, 2, 3, 1]);
-    // Turned round within the line: the source lists a back four right-back
-    // first, and a pitch is drawn from the reader's seat, so the right-back
-    // belongs on the right.
-    expect(rows[1]?.players.map((p) => p.code)).toEqual([5, 4, 3, 2]);
+    // Right-back first, as the source lists him: the keeper stands at the top, so
+    // the team faces the reader and its right is the reader's left.
+    expect(rows[1]?.players.map((p) => p.code)).toEqual([2, 3, 4, 5]);
   });
 
   it("keeps the keeper out of the formation", () => {
