@@ -44,6 +44,26 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## The two cups are ours and the playoff is Fantrax's — decided 27 Sep 2026
+
+Craig, 27 Sep: *"two cups at both halves of the season, and the league will have 5 team playoffs. 2nd cup is
+champs league style, 2 groups, top 3 to qf, top 1 bye. 1st cup tbc but a knockout of some sort."*
+
+- **The cups are declared in `packages/core/src/league/cups/declared.ts`**, because Fantrax runs no cups. Each
+  cup tie is scored by the two teams' Fantrax points for that gameweek, the same numbers as the league match.
+- **The playoff is read from `getLeagueInfo`, never declared.** Fantrax runs it, and `mapPlayoffs` already
+  carries `numPlayoffTeams`. On 27 Sep the real league (`mqsjd23smsgbiqzr`) answered `playoffs: {used: false}`
+  with 7 teams in, so the five places have not been set in Fantrax yet.
+- **Cup 2's byes are not declared.** With two groups of three qualifiers, the knockout has six seeds and
+  `seededBracket(6)` gives the top two the byes. Seeded group winners, then runners-up, then thirds. The
+  quarter-finals are A2 v B3 and B2 v A3, so a group winner can meet its own third in a semi-final.
+- **Group points are 3 for a win and 1 for a draw**, the league's own values. A group is placed on points,
+  then fantasy points for, then draw order. Both rules are assumed, and a question below.
+- **Rule exception (CODE_RULES §2): the engines are committed before anything uses them.** Craig asked for
+  the scaffolding before the rules are settled. `roundRobin`, `groupTable`, `groupQualifiers` and
+  `seededBracket` have tests and no screen, and stay off `league/index.ts` until one imports them. The
+  placeholder cup in `competitions.ts` is still what `/league/schedule` shows.
+
 ## Lawro writes the predictions, under his own name, on Thursday evening — decided 24 Sep 2026
 
 - **The byline is "by Mark Lawrenson", with no impression marking** (Craig, 24 Sep 2026). It reverses,
@@ -4024,6 +4044,10 @@ Premier League publishes no interval length and FPL publishes no clock at all.
   from the other four positions, never seen non-zero. First witnessable during
   any live match.
 - What should `apps/lab` look like for the 27/28 platform prototype?
+- **The cups, open since 27 Sep** (see *The two cups are ours*): cup 1's format (single or two legs, seeded
+  or drawn, byes for ten teams); every cup's gameweeks; how cup 2's groups are drawn; whether groups play
+  once or twice; group points and tie-breaks (3/1 and points for are assumed); what settles a level
+  knockout tie; whether Fantrax's playoff bracket for five is 4 v 5 with 1 to 3 on byes; each cup's name.
 
 **Answered 22 Aug, on the first real matchday** (all in the section above):
 `remainingEventPercent` reaches literal zero. Fantrax's `totalFpts` does fill in
