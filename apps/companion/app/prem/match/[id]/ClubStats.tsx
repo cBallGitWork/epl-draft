@@ -79,7 +79,7 @@ export default function ClubStats({
 
   return (
     <Section>
-      <ScrollBoard className="cm-index-scoped" style={clubIndex(club)}>
+      <ScrollBoard className="cm-index-scoped bg-surface" style={clubIndex(club)}>
         <table className={BOARD}>
           <thead>
             <tr>

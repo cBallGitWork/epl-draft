@@ -96,7 +96,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
         </select>
       </div>
 
-      <ScrollBoard>
+      <ScrollBoard className="bg-surface">
         <table className="w-full border-collapse whitespace-nowrap">
           <caption className="sr-only">Every player, by {view}</caption>
           <thead>

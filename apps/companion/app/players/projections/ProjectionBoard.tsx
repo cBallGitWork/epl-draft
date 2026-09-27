@@ -44,7 +44,7 @@ export default function ProjectionBoard({
   );
 
   return (
-    <ScrollBoard>
+    <ScrollBoard className="bg-surface">
       <table className={BOARD}>
         <thead>
           <tr className="text-2xs">
