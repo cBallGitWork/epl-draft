@@ -470,6 +470,12 @@
   }
 }
 
+:root {
+  /* The grey face's two bevel edges, for what cannot carry a plate's own `--cm-face`: the bar's parts and the gauge. */
+  --face-light: color-mix(in oklch, var(--color-face), white 55%);
+  --face-dark: color-mix(in oklch, var(--color-face), black 55%);
+}
+
 /* CM's scrollbar: a grey channel down the right of a list, with a raised thumb
    and an arrow button at each end.
 
@@ -531,16 +537,16 @@
 
 .cm-scroll::-webkit-scrollbar-track {
   background: var(--color-bg);
-  box-shadow: inset 1px 0 0 color-mix(in oklch, var(--color-face), black 55%);
+  box-shadow: inset 1px 0 0 var(--face-dark);
 }
 
 .cm-scroll::-webkit-scrollbar-thumb {
   background: var(--color-face);
   border: 2px solid;
-  border-color: color-mix(in oklch, var(--color-face), white 55%)
-    color-mix(in oklch, var(--color-face), black 55%)
-    color-mix(in oklch, var(--color-face), black 55%)
-    color-mix(in oklch, var(--color-face), white 55%);
+  border-color: var(--face-light)
+    var(--face-dark)
+    var(--face-dark)
+    var(--face-light);
 }
 
 /* The arrow at each end. `single-button` draws one per end rather than the pair
@@ -548,10 +554,10 @@
 .cm-scroll::-webkit-scrollbar-button:single-button {
   background: var(--color-face);
   border: 2px solid;
-  border-color: color-mix(in oklch, var(--color-face), white 55%)
-    color-mix(in oklch, var(--color-face), black 55%)
-    color-mix(in oklch, var(--color-face), black 55%)
-    color-mix(in oklch, var(--color-face), white 55%);
+  border-color: var(--face-light)
+    var(--face-dark)
+    var(--face-dark)
+    var(--face-light);
   height: 1rem;
   background-repeat: no-repeat;
   background-position: center;
@@ -633,8 +639,8 @@
     left: var(--gauge-left);
     width: var(--gauge-width);
     background: var(--color-face);
-    box-shadow: inset 1px 1px 0 color-mix(in oklch, var(--color-face), white 55%),
-      inset -1px -1px 0 color-mix(in oklch, var(--color-face), black 55%);
+    box-shadow: inset 1px 1px 0 var(--face-light),
+      inset -1px -1px 0 var(--face-dark);
   }
 
   /* A long board's head, copied to the top of the screen once the real one has scrolled away (`stickyHead.ts`).
