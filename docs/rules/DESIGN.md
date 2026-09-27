@@ -731,11 +731,11 @@ apart silently.
 
 | Role | Phone | Desk | Type step | Recipe |
 |---|---|---|---|---|
-| Plated title bar | 64 | 96 | `xl`–`3xl`, `.cm-title` | `PageHeader` |
+| Plated title bar | 44 | 96 | `lg`–`3xl`, `.cm-title` | `PageHeader` |
 | The caption under it | 28 | 40 | `sm`–`2xl`, `.cm-title` | `shell/Caption` |
 | A row that needs two lines | 56 | 28 | `sm` | `.cm-row` + `min-h-14` |
 | **A control** — button, select, input, a dialog's way out | **44** | **36** | `sm` | `BUTTON` `SELECT` `SUBMIT` |
-| **A tab** — one plate of a strip | **44** | **56** | `2xs`–`sm` | `.cm-tab` + `TAB` |
+| **A tab** — one plate of a strip | **44**, painting 36 | **56** | `2xs`–`sm` | `.cm-tab` + `TAB` |
 | A thumb-rail tab | 56 + inset | — | `xs`/600 under a 24px glyph | `.cm-thumbrail` |
 | **A row of a list** | **44** | **28** | `sm`/`lg:base` name in the CHROME face, `sm` figures at both widths | `.cm-row` + `ROW_LINK` + `ROW_NAME` + `FIGURE` |
 | One stated fact in a stack | 44 | 44 | `2xs` label, `sm` value | `FACT` |
@@ -778,6 +778,14 @@ thick"*). The target is unchanged: a transparent 6px band above and below is sti
 is redrawn inset. One rule at the end of `desk.css`, keyed on a bevelled plate carrying `min-h-11`, so every
 control on the floor slims with no call site edited, and a field beside a plate slims with it. It is CM's own
 proportion: its in-panel controls are 21px of a 600px screen, about 30 of an 844px phone.
+
+**And a tab paints 36 of its 44, with the title plate at 44 and the section bar at 28** (Craig, 27 Sep 2026:
+*"text and ui is quite blocky, prob needs to be a bit smaller for mobile viewing"*). The same band, 4px a side,
+on every `.cm-tab` but the rail's and the match screens' compact ones; the current mark is redrawn inset in the
+accent. **Smaller on a phone means the chrome, never the figures**: a figure stays `sm` (the 10 Sep call below),
+and a label on a plate is `2xs` from 375 up. A one-word strip sizes each plate to its word rather than sharing
+the row equally, which is what lets "Team Stats" and Data's five sit at 11px; under 375 they fall back to `3xs`.
+Measured at 390 and 375: `/league`'s first row moved from 206px down the screen to 186.
 
 **A row relaxes and a control never does — and a TAB is the exception to both.**
 A button and a select stay at their floor at every width — they are aimed at rather than read, and a mouse

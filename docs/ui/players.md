@@ -22,7 +22,7 @@ route is the same route — only its frame and its place in the app changed.
   It sat behind `More` until then. DESIGN §2 carries the bar and its ceiling of six.
 - **Its views**: Players · Compare · Teams · Planner · Projections, on `players/PoolNav` (Craig's labels,
   24 Sep 2026; Overview and Analysis until then, and the keys `pool` and `analysis` did not change). Five
-  one-word plates fit 320 because a `word` strip tightens its padding below 360px.
+  one-word plates sit at 11px from 375 up, each sized to its word; under 375 a `word` strip drops to 9px.
 
 ## The board as redesigned, 24 Sep 2026
 
