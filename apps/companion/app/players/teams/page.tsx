@@ -1,8 +1,9 @@
+import BoardKey from "../../components/league/BoardKey";
 import { PLANNER_RUN, clubStats, plannerGameweeks, plannerRows, type PlannerView } from "@epl/core";
 import ScoutShell from "../Shell";
 import FantraxSilent from "../../components/shell/FantraxSilent";
 import TeamBoard from "./TeamBoard";
-import { sortedTeams, teamColumn } from "./columns";
+import { TEAM_COLUMNS, sortedTeams, teamColumn } from "./columns";
 import { teamRows, type PoolMan } from "./teamRows";
 import { getLeaguePool } from "../pool";
 import { getPlayerStats } from "../playerStats";
@@ -64,6 +65,7 @@ export default async function TeamsPage({
         </FantraxSilent>
       ) : null}
       <TeamBoard rows={sortedTeams(rows, sort, descending)} sort={sort} descending={descending} />
+      <BoardKey entries={TEAM_COLUMNS.map((column) => ({ label: column.head, title: column.title }))} />
     </ScoutShell>
   );
 }

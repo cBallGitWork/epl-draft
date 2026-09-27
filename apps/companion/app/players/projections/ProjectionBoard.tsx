@@ -1,4 +1,3 @@
-import BoardKey from "../../components/league/BoardKey";
 import Link from "next/link";
 import { DASH, gameweekSpan } from "@epl/core";
 import PositionTile from "../../components/league/PositionTile";
@@ -32,12 +31,7 @@ export default function ProjectionBoard({
   /** Where a head's sort link points, given its key and the direction it would set. */
   href: (key: ProjectionSort, descending: boolean) => string;
 }) {
-  // Minutes first, then the total, then the weeks (Craig, 24 Sep 2026).
-  const heads: { key: ProjectionSort; label: string; title: string }[] = [
-    { key: "xmins", label: "xMins", title: "The minutes the model expects him to play, a week" },
-    { key: "tot", label: "Tot", title: `${category}, ${gameweekSpan(gameweeks)} added up: FPL scoring, never Fantrax's` },
-    ...gameweeks.map((gw) => ({ key: `gw${gw}`, label: String(gw), title: `Gameweek ${gw}: ${category}, projected` })),
-  ];
+  const heads = projectionHeads(category, gameweeks);
   // Lit as the Players board lights a column: its best in orange, the rest of its top sixth in yellow.
   const cuts = cutsFor(
     heads.filter((head) => head.key !== "xmins"),
@@ -45,52 +39,49 @@ export default function ProjectionBoard({
   );
 
   return (
-    <>
-      <ScrollBoard>
-        <table className={BOARD}>
-          <thead>
-            <tr className="text-2xs">
-              <LeadHeads tile={PIN_TILE} name={PIN_NAME} />
-              {heads.map((head) => (
-                <SortHead
-                  key={head.key}
-                  compact
-                  title={head.title}
-                  href={href(head.key, head.key === sort ? !descending : true)}
-                  label={head.label}
-                  sorted={sortedAs(head.key === sort, descending)}
-                />
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr key={row.code} className={`${ROW_RULE} hover:bg-raised`}>
-                <PositionTile positions={row.positions} cell className={PIN_TILE} />
-                <td className={PIN_NAME}>
-                  <Lead row={row} />
-                </td>
-                {heads.map((head) => {
-                  const figure = projectionFigure(row, head.key, gameweeks);
-                  const ink =
-                    figure === null || figure === 0
-                      ? "text-faint"
-                      : head.key === "xmins"
-                        ? ""
-                        : standoutInk(figure, cuts.get(head.key), "high");
-                  return (
-                    <td key={head.key} className={`${FIGURE} ${head.key === "tot" ? "font-bold" : ""} ${ink}`}>
-                      {figure === null ? DASH : head.key === "xmins" ? figure : figure.toFixed(1)}
-                    </td>
-                  );
-                })}
-              </tr>
+    <ScrollBoard>
+      <table className={BOARD}>
+        <thead>
+          <tr className="text-2xs">
+            <LeadHeads tile={PIN_TILE} name={PIN_NAME} />
+            {heads.map((head) => (
+              <SortHead
+                key={head.key}
+                compact
+                title={head.title}
+                href={href(head.key, head.key === sort ? !descending : true)}
+                label={head.label}
+                sorted={sortedAs(head.key === sort, descending)}
+              />
             ))}
-          </tbody>
-        </table>
-      </ScrollBoard>
-      <BoardKey entries={heads.slice(0, 2).concat(gameweeks.length === 0 ? [] : [{ key: "gw", label: "GW", title: `Each gameweek: ${category}, projected` }])} />
-    </>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={row.code} className={`${ROW_RULE} hover:bg-raised`}>
+              <PositionTile positions={row.positions} cell className={PIN_TILE} />
+              <td className={PIN_NAME}>
+                <Lead row={row} />
+              </td>
+              {heads.map((head) => {
+                const figure = projectionFigure(row, head.key, gameweeks);
+                const ink =
+                  figure === null || figure === 0
+                    ? "text-faint"
+                    : head.key === "xmins"
+                      ? ""
+                      : standoutInk(figure, cuts.get(head.key), "high");
+                return (
+                  <td key={head.key} className={`${FIGURE} ${head.key === "tot" ? "font-bold" : ""} ${ink}`}>
+                    {figure === null ? DASH : head.key === "xmins" ? figure : figure.toFixed(1)}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </ScrollBoard>
   );
 }
 
@@ -104,4 +95,16 @@ function Lead({ row }: { row: ProjectionRow }) {
       {face}
     </Link>
   );
+}
+
+/** The board's heads: minutes first, then the total, then the weeks (Craig, 24 Sep 2026). */
+export function projectionHeads(
+  category: string,
+  gameweeks: readonly number[],
+): { key: ProjectionSort; label: string; title: string }[] {
+  return [
+    { key: "xmins", label: "xMins", title: "The minutes the model expects him to play, a week" },
+    { key: "tot", label: "Tot", title: `${category}, ${gameweekSpan(gameweeks)} added up: FPL scoring, never Fantrax's` },
+    ...gameweeks.map((gw) => ({ key: `gw${gw}`, label: String(gw), title: `Gameweek ${gw}: ${category}, projected` })),
+  ];
 }

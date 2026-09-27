@@ -1,9 +1,10 @@
+import BoardKey from "../../components/league/BoardKey";
 import Link from "next/link";
 import { PLANNER_RUN, gameweekSpan, londonDayAndDate, plannerGameweeks } from "@epl/core";
 import ScoutShell from "../Shell";
 import Nothing from "../../components/shell/Nothing";
 import QuerySelect from "../QuerySelect";
-import ProjectionBoard from "./ProjectionBoard";
+import ProjectionBoard, { projectionHeads } from "./ProjectionBoard";
 import { Carried, Chip, clubOptions } from "../BoardControls";
 import { PAGE_ROWS, boardHref, chosen, filterHref, isChosen, playersQuery, type PlayersSearchParams } from "../query";
 import { getLeaguePool } from "../pool";
@@ -136,6 +137,13 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
           .
         </p>
       ) : null}
+      {shown.length === 0 ? null : (
+        <BoardKey
+          entries={projectionHeads(categoryLabel, gameweeks)
+            .slice(0, 2)
+            .concat(gameweeks.length === 0 ? [] : [{ key: "gw", label: "GW", title: `Each gameweek: ${categoryLabel}, projected` }])}
+        />
+      )}
     </ScoutShell>
   );
 }
