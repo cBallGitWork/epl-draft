@@ -51,11 +51,14 @@
      0.62 under a thumb and 0.95 from `lg`; the long argument for both numbers is
      on `.pitch` below. */
   --pitch-ratio: 0.62;
+  /* The screen a pitch budgets against, floored so a short phone (SE, landscape) scrolls rather than clips. */
+  --pitch-screen: max(100svh, 52rem);
 }
 
 @media (min-width: 64rem) {
   :root {
     --pitch-ratio: 0.95;
+    --pitch-screen: 100svh;
   }
 }
 
@@ -234,7 +237,7 @@
      screen has left once the page has taken its share. Past the cap the pitch
      simply draws squatter: the ground is a viewBox that stretches, which is
      `CmGround`'s own note, so nothing inside it distorts. */
-  max-height: calc(100svh - var(--pitch-page));
+  max-height: calc(var(--pitch-screen) - var(--pitch-page));
   /* A width of its own, or WebKit keeps the ratio under that ceiling by narrowing the pitch (260px of a 390
      iPhone) where Chrome squats it. With one, every engine draws what Chrome does. */
   width: 100%;
@@ -297,7 +300,7 @@
     calc(2 * var(--pitch-band)),
     min(
       calc(
-        (100svh - var(--pitch-page) - (var(--pitch-rows, 1) - 1) * 1rem) /
+        (var(--pitch-screen) - var(--pitch-page) - (var(--pitch-rows, 1) - 1) * 1rem) /
           var(--pitch-rows, 1) - 2 * var(--pitch-band)
       ),
       calc(
