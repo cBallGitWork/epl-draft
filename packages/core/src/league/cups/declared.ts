@@ -1,7 +1,7 @@
 import type { Legs } from "./schedule";
 
-// The league's cups and its playoff, as Craig set them on 27 Sep. Fantrax runs no cups, and whether it
-// can run this playoff (a one-leg play-in, then two-leg semi-finals) is unconfirmed; see PLATFORM_NOTES.
+// The league's two cups, as Craig set them on 27 Sep. Fantrax runs no cups; it runs the playoff, which is
+// read from `getLeagueInfo` and never declared here.
 
 export interface GroupStage {
   groups: number;
@@ -15,11 +15,8 @@ export interface GroupStage {
   firstGameweek: number;
 }
 
-/** Where the knockout's seeds come from. */
-export type Seeding =
-  | { from: "gameweek"; gameweek: number }
-  | { from: "groups"; stage: GroupStage }
-  | { from: "table"; places: number };
+/** Where the knockout's seeds come from. A group stage's groups are drawn at random, off the app. */
+export type Seeding = { from: "gameweek"; gameweek: number } | { from: "groups"; stage: GroupStage };
 
 export interface Knockout {
   elimination: "single" | "double";
@@ -60,12 +57,5 @@ export const CUPS: readonly Cup[] = [
     },
     // Two legs before the final is inferred: it is what fills GW26 to GW30 without a week off.
     knockout: { elimination: "single", legs: { final: 1, semiFinals: 2, earlier: 2 }, finalGameweek: 30 },
-  },
-  {
-    id: "playoffs",
-    name: "Playoffs",
-    seeding: { from: "table", places: 5 },
-    // The last gameweek is inferred; it puts the play-in on GW35 and ends the season on GW34.
-    knockout: { elimination: "single", legs: { final: 1, semiFinals: 2, earlier: 1 }, finalGameweek: 38 },
   },
 ];
