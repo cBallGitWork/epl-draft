@@ -55,7 +55,6 @@ export const CUPS: readonly Cup[] = [
         firstGameweek: 21,
       },
     },
-    // Two legs before the final is inferred: it is what fills GW26 to GW30 without a week off.
-    knockout: { elimination: "single", legs: { final: 1, semiFinals: 2, earlier: 2 }, finalGameweek: 30 },
+    knockout: { elimination: "single", legs: ONE_LEG, finalGameweek: 30 },
   },
 ];

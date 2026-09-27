@@ -1,4 +1,4 @@
-/** One side's totals over every leg of a knockout tie (its starting eleven, assumed). Null is unread. */
+/** One side's totals over every leg of a knockout tie (its starting eleven only). Null is unread. */
 export interface TieTotals {
   points: number | null;
   goals: number | null;

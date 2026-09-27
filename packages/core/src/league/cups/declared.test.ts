@@ -44,14 +44,14 @@ describe("Davy Propper Cup", () => {
   if (propper.seeding.from !== "groups") throw new Error("the Davy Propper Cup has groups");
   const stage = propper.seeding.stage;
 
-  it("plays its groups from GW21 and its knockout straight after, to a GW30 final", () => {
+  it("plays its groups GW21 to GW25 and its one-leg knockout GW28 to a GW30 final", () => {
     const groupRounds = roundRobin(Array.from({ length: TEAMS / stage.groups }, (_, at) => `t${at}`));
     const lastGroupWeek = stage.firstGameweek + groupRounds.length - 1;
     expect(lastGroupWeek).toBe(25);
 
     const bracket = seededBracket(stage.groups * stage.qualify);
     const schedule = scheduleRounds(bracket, propper.knockout.legs, propper.knockout.finalGameweek);
-    expect(weeks(schedule)).toEqual({ W1: [26, 27], W2: [28, 29], W3: [30] });
+    expect(weeks(schedule)).toEqual({ W1: [28], W2: [29], W3: [30] });
   });
 
   it("sends the group winners straight to the semi-finals, where they meet a quarter-final winner", () => {
