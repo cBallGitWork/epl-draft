@@ -3,6 +3,7 @@ import { POOL_GROUPS, type PoolGroupKey } from "./groups";
 import { boardHref, chosen } from "./query";
 import type { QueryOption } from "./QuerySelect";
 import type { PlayersQuery } from "./query";
+import { SMALL_CAPS } from "@/app/desk";
 
 // The pieces `BoardBar` arranges: the stat-group strip, the figure chips, the
 // badge that counts what is on, and the two shapes they are drawn in.
@@ -74,7 +75,7 @@ export function Carried({
  *  screens that were not asked to change. Promoting it is the day a second board
  *  wants the same row. */
 export const PLATE_TYPE =
-  "min-h-11 px-2.5 text-2xs font-bold uppercase lg:min-h-9";
+  `min-h-11 px-2.5 ${SMALL_CAPS} lg:min-h-9`;
 
 /** The same, plus the layout a plate with CONTENT in it needs.
  *

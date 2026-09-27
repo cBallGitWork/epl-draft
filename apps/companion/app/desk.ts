@@ -7,6 +7,9 @@
 /** The small-caps label look, with no ink and no layout: callers keep their own. */
 export const SMALL_CAPS = "text-2xs font-bold uppercase";
 
+/** The same look a step down, for a tag or a key set beside something larger. Ink and layout are the caller's. */
+export const MINOR_CAPS = "text-3xs font-bold uppercase";
+
 /** `SMALL_CAPS` in furniture ink. For another ink compose from `SMALL_CAPS`: an appended
  *  `text-bad` loses to `text-faint` on stylesheet order, whatever the class order says. */
 export const LABEL = `${SMALL_CAPS} text-faint`;

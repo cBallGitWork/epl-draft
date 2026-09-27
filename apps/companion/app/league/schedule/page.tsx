@@ -15,7 +15,7 @@ import { getSchedule, type ScheduleRound } from "./schedule";
 import { liveScores } from "../../scoreboard";
 import { myTeamId } from "../../session";
 import { teamBadges } from "../../standings";
-import { HEAD_PLATE } from "@/app/desk";
+import { HEAD_PLATE, MINOR_CAPS } from "@/app/desk";
 import FantraxSilent from "../../components/shell/FantraxSilent";
 
 // The season ahead: every round the league still has to play, in gameweek order,
@@ -186,7 +186,7 @@ function Round({
               repeated word, and the two lines a cup round adds are exactly the
               rows that need naming. */}
           {group.competition.id === LEAGUE_COMPETITION.id && group.round === null ? null : (
-            <h3 className={`${HEAD_PLATE} text-3xs font-bold uppercase`}>
+            <h3 className={`${HEAD_PLATE} ${MINOR_CAPS}`}>
               {group.round === null
                 ? group.competition.name
                 : `${group.competition.name} · ${group.round}`}

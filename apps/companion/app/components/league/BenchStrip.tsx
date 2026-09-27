@@ -3,6 +3,7 @@ import type { SquadPlayerDetail } from "@epl/core";
 import { BENCH_KIT, FAR_INSET, GAP_CLASS, cardBasis, rowBudget } from "./PitchRows";
 import { positionLabel } from "../../positions";
 import { DASH } from "@epl/core";
+import { SMALL_CAPS } from "@/app/desk";
 
 // The reserves, in a strip under the grass.
 //
@@ -88,7 +89,7 @@ export default function BenchStrip({
                 present on all 622 elements and null on every one of them. */}
             <p className="flex items-center justify-center gap-1 pb-0.5 leading-none">
               <span className="cm-index numeric px-1 text-3xs">{at + 1}</span>
-              <span className="font-display text-2xs font-bold uppercase text-ink">
+              <span className={`font-display ${SMALL_CAPS} text-ink`}>
                 {positionLabel(player.rostered.slot.position) ?? DASH}
               </span>
             </p>

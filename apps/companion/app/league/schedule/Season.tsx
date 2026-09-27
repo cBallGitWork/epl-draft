@@ -2,7 +2,7 @@ import Link from "next/link";
 import { leads, londonDate, DASH } from "@epl/core";
 import TeamBadge from "../../components/league/TeamBadge";
 import type { SeasonRow } from "./teamSeason";
-import { ROW_NAME } from "@/app/desk";
+import { ROW_NAME, MINOR_CAPS } from "@/app/desk";
 import { matchupHref } from "../routes";
 import { teamHref } from "@/app/squad/routes";
 
@@ -80,7 +80,7 @@ export default function Season({
             {/* The competition, in yellow — `First Division` in the shot. A
                 knockout names its round beside it, which is the one thing our
                 calendar has that a league fixture list does not. */}
-            <span className="hidden w-20 shrink-0 truncate text-3xs font-bold uppercase text-accent lg:block">
+            <span className={`hidden w-20 shrink-0 truncate ${MINOR_CAPS} text-accent lg:block`}>
               {row.tie.round === null
                 ? row.tie.competition.name
                 : `${row.tie.competition.name} · ${row.tie.round}`}

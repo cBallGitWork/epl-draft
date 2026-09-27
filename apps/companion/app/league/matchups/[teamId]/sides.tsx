@@ -14,6 +14,7 @@ import Caption from "../../../components/shell/Caption";
 import Nothing from "../../../components/shell/Nothing";
 import SquadRows from "../../../components/league/SquadRows";
 import { teamHref } from "@/app/squad/routes";
+import { SMALL_CAPS } from "@/app/desk";
 
 // What the head-to-head route assembles before it draws anything.
 //
@@ -60,7 +61,7 @@ export function Withheld({
       <p className="max-w-xs text-sm text-muted">{because}</p>
       <Link
         href={teamHref(team.teamId)}
-        className="flex min-h-11 items-center text-2xs font-bold uppercase text-accent"
+        className={`flex min-h-11 items-center ${SMALL_CAPS} text-accent`}
       >
         See the squad
       </Link>
