@@ -5,7 +5,7 @@ import Nothing from "../../components/shell/Nothing";
 import FantraxSilent from "../../components/shell/FantraxSilent";
 import Round, { EMPTY } from "../schedule/Round";
 import { getSchedule } from "../schedule/schedule";
-import { cupHref } from "../routes";
+import { cupHref } from "../SectionNav";
 import Bracket from "./Bracket";
 import Groups from "./Groups";
 import { TAB } from "@/app/desk";
@@ -79,7 +79,7 @@ export default async function CupsPage({
               <Bracket title="Losers' side" stages={stages.filter((stage) => stage.side === "losers")} />
             </div>
           ) : (
-            <div className="cm-scroll cm-scroll-y flex max-h-[42rem] flex-col gap-4 overflow-y-auto">
+            <div className="cm-scroll cm-scroll-y flex flex-col gap-4 lg:max-h-[42rem] lg:overflow-y-auto">
               {read.rounds.map((round) => (
                 <Round
                   key={round.period}
