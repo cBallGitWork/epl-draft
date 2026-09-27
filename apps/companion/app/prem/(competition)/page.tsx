@@ -14,7 +14,7 @@ import ClubRow from "../ClubRow";
 import PremShell from "../Shell";
 import Nothing from "../../components/shell/Nothing";
 import { footballNow, seasonFixtures } from "../../football";
-import { BOARD } from "@/app/desk";
+import { BOARD, MINOR_CAPS } from "@/app/desk";
 
 // The Premier League table.
 //
@@ -128,7 +128,7 @@ function Cut({ label, tone }: { label: string; tone: string }) {
   return (
     <tr aria-hidden>
       <td colSpan={COLUMNS.length} className="p-0">
-        <span className="flex items-center gap-2 py-1.5 text-3xs font-bold uppercase text-faint">
+        <span className={`flex items-center gap-2 py-1.5 ${MINOR_CAPS} text-faint`}>
           <span className={`flex-1 border-t border-dashed ${tone}`} />
           {label}
           <span className={`flex-1 border-t border-dashed ${tone}`} />
