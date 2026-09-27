@@ -1,7 +1,7 @@
 import type { PeriodResult } from "../fantrax/results";
 
-/** Seeds from one gameweek's Fantrax points, most first. `teamIds` breaks a tie by its own order
- *  (pass the league table), and a team with no score seeds below every team with one. */
+/** Seeds from one gameweek's Fantrax points, most first. Pass `teamIds` in league-table order: a tie
+ *  goes to the higher place. A team with no score seeds below every team with one. */
 export function seedByPoints(teamIds: readonly string[], results: readonly PeriodResult[], period: number): string[] {
   const scored = new Map(
     results.filter((result) => result.period === period).map((result) => [result.teamId, result.points]),

@@ -44,25 +44,26 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
-## The cups and the playoff are declared as ours — decided 27 Sep 2026
+## The cups are declared as ours; the playoff is Fantrax's — decided 27 Sep 2026
 
-Craig set the formats on 27 Sep. They are declared in `packages/core/src/league/cups/declared.ts`, and
+Craig set the formats on 27 Sep. The cups are declared in `packages/core/src/league/cups/declared.ts`, and
 `declared.test.ts` lays each one out for ten teams:
 
-- **Timbeibs Cup**: GW9 is a seeding round, seeded by that week's Fantrax points. Then a one-leg double
-  elimination with no reset final, from GW10 to the GW17 final (Boxing Day). The top six byes are not
-  declared: `doubleBracket(10)` gives them, because only seeds 7 to 10 fill a sixteen-slot first round.
-- **Davy Propper Cup**: two groups, each playing once (a draw around GW19). Five rounds, GW21 to GW25. The top
-  three go through and the group winners skip the quarter-finals (`seededBracket(6)`). Quarter-finals are
-  A2 v B3 and B2 v A3, and the final is GW30. **Two-leg quarter- and semi-finals are inferred**, because that
-  is what fills GW26 to GW29 with no week off.
-- **Playoffs**: five teams off the league table. A one-leg 4 v 5 play-in, two-leg semi-finals (1 v the
-  play-in winner, 2 v 3) and a one-leg final. **Ending on GW38 is inferred**, which puts the play-in on
-  GW35. The playoff is declared rather than read because it is not known whether Fantrax can run a one-leg
-  round before two-leg ones. On 27 Sep the real league (`mqsjd23smsgbiqzr`) answered `playoffs:
-  {used: false}`, so the table's cut line, which reads `LeaguePlayoffs`, draws nothing.
+- **Timbeibs Cup**: GW9 is a seeding round, seeded by that week's Fantrax points, with a tie going to
+  the higher league position. Then a one-leg double elimination with no reset final, from GW10 to the
+  GW17 final (Boxing Day). The top six byes are not declared: `doubleBracket(10)` gives them, because only
+  seeds 7 to 10 fill a sixteen-slot first round.
+- **Davy Propper Cup**: two groups drawn at random around GW19, off the app, each playing once over GW21
+  to GW25. The top three go through and the group winners skip the quarter-finals (`seededBracket(6)`).
+  Quarter-finals are A2 v B3 and B2 v A3, and the final is GW30. **Two-leg quarter- and semi-finals are
+  inferred**, because that is what fills GW26 to GW29 with no week off.
+- **The playoff is Fantrax's, read from `getLeagueInfo` and never declared.** Craig sets it in Fantrax:
+  five teams, a one-leg 4 v 5 play-in, two-leg semi-finals, a one-leg final. `mapPlayoffs` carries the
+  places. On 27 Sep the real league (`mqsjd23smsgbiqzr`) still answered `playoffs: {used: false}`, so the
+  table's cut line draws nothing until he has.
 - **A level knockout tie** is settled by points, then goals, assists, clean sheets and minutes played in the
-  tie (`knockoutWinner`). A tie in two legs is settled on its aggregate.
+  tie. Level on all five is a coin toss, which Craig makes: `knockoutWinner` answers `"coin toss"`. A tie in
+  two legs is settled on its aggregate.
 - **Group points are 3 for a win and 1 for a draw**, the league's own values. A group is placed on points,
   then points for, then draw order. Both are assumed.
 - **Rule exception (CODE_RULES §2): the engines are committed before anything uses them.** Craig asked for
@@ -4049,12 +4050,11 @@ Premier League publishes no interval length and FPL publishes no clock at all.
   from the other four positions, never seen non-zero. First witnessable during
   any live match.
 - What should `apps/lab` look like for the 27/28 platform prototype?
-- **The cups, open since 27 Sep** (see *The cups and the playoff are declared as ours*): whose stats break a knockout
+- **The cups, open since 27 Sep** (see *The cups are declared as ours*): whose stats break a knockout
   tie (the starting eleven is assumed), and where goals, assists, clean sheets and minutes per team per
-  gameweek are read from; what settles a tie level on all five; how a seeding-round tie is
-  broken (the table's order is assumed); how the Davy Propper groups are drawn (random, or seeded); whether
-  its knockout is two-legged and the playoff ends on GW38, both inferred; group points (3/1 assumed); and
-  whether Fantrax runs the playoff, which decides whether its cut line comes from Fantrax or from us.
+  gameweek are read from; whether the Davy Propper knockout is two-legged, which is inferred; group points
+  (3/1 assumed); and whether Fantrax can express the playoff's one-leg play-in before two-leg semis, which
+  a capture after Craig sets it will show.
 
 **Answered 22 Aug, on the first real matchday** (all in the section above):
 `remainingEventPercent` reaches literal zero. Fantrax's `totalFpts` does fill in

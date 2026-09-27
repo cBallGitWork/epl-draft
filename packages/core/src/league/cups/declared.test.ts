@@ -76,13 +76,3 @@ describe("Davy Propper Cup", () => {
     ]);
   });
 });
-
-describe("Playoffs", () => {
-  const playoffs = cup("playoffs");
-
-  it("is a one-leg play-in, two-leg semi-finals and a one-leg final, GW35 to GW38", () => {
-    expect(playoffs.seeding).toEqual({ from: "table", places: 5 });
-    const schedule = scheduleRounds(seededBracket(5), playoffs.knockout.legs, playoffs.knockout.finalGameweek);
-    expect(weeks(schedule)).toEqual({ W1: [35], W2: [36, 37], W3: [38] });
-  });
-});
