@@ -17,7 +17,7 @@ sequences it against the dated season work and un-parks two ideas Craig chose:
 
 | Idea | Where recorded | Status |
 |---|---|---|
-| Custom competitions (H2H groups, cups, points leagues over Fantrax points) | docs/rules/PRODUCT.md | **Shape landed 20 Aug** — a declared cup and playoff, labelled a placeholder, on `/league/schedule`. **Engines landed 27 Sep** — Craig's two cups declared in `league/cups/`, with round robin, group table and seeded bracket; no screen yet. PLATFORM_NOTES lists what is still open. |
+| Custom competitions (H2H groups, cups, points leagues over Fantrax points) | docs/rules/PRODUCT.md | **Shape landed 20 Aug** — a declared cup and playoff, labelled a placeholder, on `/league/schedule`. **Engines landed 27 Sep** — the Timbeibs Cup (double elimination, GW9–17), the Davy Propper Cup (groups then knockout, GW21–30) and the five-team playoff declared in `league/cups/`, with brackets, group tables, a schedule and the knockout tie-break; no screen yet. PLATFORM_NOTES lists what is still open. |
 | Per-player intelligence store via `setPlayerNote` | CLAUDE.md fxpa methods | **In scope** (this session) |
 | Commissioner cookie + `adminMode` as the only viable write path | PLATFORM_NOTES "extension plan is dead" | **In scope** — probe it |
 | 27/28 draft/FM hybrid, `apps/lab` | docs/rules/PRODUCT.md | Parked, empty on purpose |
