@@ -229,7 +229,7 @@
 .cm-flyout {
   position: fixed;
   z-index: 50;
-  bottom: calc(3.5rem + env(safe-area-inset-bottom));
+  bottom: var(--thumbrail);
   translate: -50% 0;
   display: flex;
   flex-direction: column-reverse;
@@ -269,9 +269,9 @@
   .cm-sheet {
     position: fixed;
     inset-inline: var(--page-gutter);
-    bottom: calc(3.5rem + env(safe-area-inset-bottom) + 0.5rem);
+    bottom: calc(var(--thumbrail) + 0.5rem);
     z-index: 50;
-    max-height: calc(100dvh - 3.5rem - env(safe-area-inset-bottom) - 1.5rem);
+    max-height: calc(100dvh - var(--thumbrail) - 1.5rem);
     overflow-y: auto;
   }
 }
