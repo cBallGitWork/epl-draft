@@ -1,4 +1,4 @@
-import { evens, odds, pairUp, seedSlots, type BracketRound, type Slot } from "./bracket";
+import { pairUp, playAmong, seedSlots, type BracketRound, type Slot } from "./bracket";
 
 /** A double-elimination knockout: a first defeat drops a team into the losers' bracket, a second
  *  puts it out. The two brackets' winners meet once in the final, with no reset if the winners'
@@ -11,16 +11,16 @@ export function doubleBracket(entrants: number): BracketRound[] {
     return played;
   };
 
-  const opening = keep(pairUp("W1", evens(seedSlots(entrants)), odds(seedSlots(entrants))));
+  const opening = keep(playAmong("W1", seedSlots(entrants)));
   let winners: Slot[] = opening.winners;
-  let losers: Slot[] = keep(pairUp("L1", evens(opening.losers), odds(opening.losers))).winners;
+  let losers: Slot[] = keep(playAmong("L1", opening.losers)).winners;
 
   for (let round = 2; winners.length > 1; round++) {
-    const played = keep(pairUp(`W${round}`, evens(winners), odds(winners)));
+    const played = keep(playAmong(`W${round}`, winners));
     winners = played.winners;
-    // Reversed so a team dropping down does not meet the side it has just knocked down.
+    // Reversed so a team dropping down does not at once meet a side it knocked down earlier.
     losers = keep(pairUp(`L${2 * round - 2}`, losers, [...played.losers].reverse())).winners;
-    if (losers.length > 1) losers = keep(pairUp(`L${2 * round - 1}`, evens(losers), odds(losers))).winners;
+    if (losers.length > 1) losers = keep(playAmong(`L${2 * round - 1}`, losers)).winners;
   }
 
   keep(pairUp("F", winners, losers));

@@ -1,31 +1,11 @@
 import type { BracketRound, BracketSide } from "./bracket";
 
-/** Gameweeks each round is played over; a two-legged tie is decided on the aggregate. */
-export interface Legs {
-  final: number;
-  semiFinals: number;
-  earlier: number;
-}
-
-/** Each round's gameweeks, counted back from the final. A round follows every round it draws a
- *  side from, and rounds that do not wait on each other share their gameweeks. */
-export function scheduleRounds(
-  rounds: readonly BracketRound[],
-  legs: Legs,
-  finalGameweek: number,
-): Map<string, number[]> {
+/** Each round's gameweek, one a round, counted back from the final. A round follows every round it
+ *  draws a side from, and rounds that do not wait on each other share a gameweek. */
+export function scheduleRounds(rounds: readonly BracketRound[], finalGameweek: number): Map<string, number> {
   const levels = roundLevels(rounds);
-  const latestFirst = [...new Set(levels.values())].sort((a, b) => b - a);
-
-  const gameweeksAt = new Map<number, number[]>();
-  let last = finalGameweek;
-  latestFirst.forEach((level, fromEnd) => {
-    const count = fromEnd === 0 ? legs.final : fromEnd === 1 ? legs.semiFinals : legs.earlier;
-    gameweeksAt.set(level, Array.from({ length: count }, (_, at) => last - count + 1 + at));
-    last -= count;
-  });
-
-  return new Map(rounds.map((round) => [round.id, gameweeksAt.get(levels.get(round.id) ?? 0) ?? []]));
+  const deepest = Math.max(0, ...levels.values());
+  return new Map(rounds.map((round) => [round.id, finalGameweek - deepest + (levels.get(round.id) ?? 0)]));
 }
 
 /** How many rounds deep each round sits: one more than the deepest round it draws a side from. */

@@ -15,26 +15,26 @@ const cup = (id: string): Cup => {
   return found;
 };
 
-const weeks = (schedule: Map<string, number[]>) => Object.fromEntries(schedule);
+const weeks = (schedule: Map<string, number>) => Object.fromEntries(schedule);
 
 describe("Timbeibs Cup", () => {
   const timbeibs = cup("timbeibs");
   const rounds = doubleBracket(TEAMS);
-  const schedule = scheduleRounds(rounds, timbeibs.knockout.legs, timbeibs.knockout.finalGameweek);
+  const schedule = scheduleRounds(rounds, timbeibs.knockout.finalGameweek);
 
   it("starts the week after its seeding round and ends on Boxing Day", () => {
     expect(timbeibs.seeding).toEqual({ from: "gameweek", gameweek: 9 });
     expect(weeks(schedule)).toEqual({
-      W1: [10],
-      W2: [11],
-      W3: [12],
-      L2: [12],
-      W4: [13],
-      L3: [13],
-      L4: [14],
-      L5: [15],
-      L6: [16],
-      F: [17],
+      W1: 10,
+      W2: 11,
+      W3: 12,
+      L2: 12,
+      W4: 13,
+      L3: 13,
+      L4: 14,
+      L5: 15,
+      L6: 16,
+      F: 17,
     });
   });
 });
@@ -50,8 +50,8 @@ describe("Davy Propper Cup", () => {
     expect(lastGroupWeek).toBe(25);
 
     const bracket = seededBracket(stage.groups * stage.qualify);
-    const schedule = scheduleRounds(bracket, propper.knockout.legs, propper.knockout.finalGameweek);
-    expect(weeks(schedule)).toEqual({ W1: [28], W2: [29], W3: [30] });
+    const schedule = scheduleRounds(bracket, propper.knockout.finalGameweek);
+    expect(weeks(schedule)).toEqual({ W1: 28, W2: 29, W3: 30 });
   });
 
   it("sends the group winners straight to the semi-finals, where they meet a quarter-final winner", () => {

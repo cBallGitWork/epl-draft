@@ -1,5 +1,3 @@
-import type { Legs } from "./schedule";
-
 // The league's two cups, as Craig set them on 27 Sep. Fantrax runs no cups; it runs the playoff, which is
 // read from `getLeagueInfo` and never declared here.
 
@@ -7,8 +5,6 @@ export interface GroupStage {
   groups: number;
   /** How many from each group reach the knockout; `seededBracket` gives the top of each a bye. */
   qualify: number;
-  /** Times each pair meets. */
-  meetings: number;
   /** A cup rule, so ours: what a group win and draw are worth. */
   points: { won: number; drawn: number };
   drawGameweek: number;
@@ -19,8 +15,8 @@ export interface GroupStage {
 export type Seeding = { from: "gameweek"; gameweek: number } | { from: "groups"; stage: GroupStage };
 
 export interface Knockout {
+  /** Every tie is one leg. */
   elimination: "single" | "double";
-  legs: Legs;
   finalGameweek: number;
 }
 
@@ -31,15 +27,13 @@ export interface Cup {
   knockout: Knockout;
 }
 
-const ONE_LEG: Legs = { final: 1, semiFinals: 1, earlier: 1 };
-
 export const CUPS: readonly Cup[] = [
   {
     id: "timbeibs",
     name: "Timbeibs Cup",
     seeding: { from: "gameweek", gameweek: 9 },
     // Gameweek 17 is Boxing Day.
-    knockout: { elimination: "double", legs: ONE_LEG, finalGameweek: 17 },
+    knockout: { elimination: "double", finalGameweek: 17 },
   },
   {
     id: "davy-propper",
@@ -49,12 +43,11 @@ export const CUPS: readonly Cup[] = [
       stage: {
         groups: 2,
         qualify: 3,
-        meetings: 1,
         points: { won: 3, drawn: 1 },
         drawGameweek: 19,
         firstGameweek: 21,
       },
     },
-    knockout: { elimination: "single", legs: ONE_LEG, finalGameweek: 30 },
+    knockout: { elimination: "single", finalGameweek: 30 },
   },
 ];
