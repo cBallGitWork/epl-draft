@@ -75,7 +75,7 @@ export const TAB =
 
 /** CM's blue title row across a panel, naming the section under it. */
 export const SECTION_BAR =
-  "flex min-h-8 items-center justify-center bg-chrome px-3 font-chrome text-2xs font-bold uppercase text-ink lg:text-xs";
+  "flex min-h-7 items-center justify-center bg-chrome px-3 font-chrome text-2xs font-bold uppercase text-ink lg:min-h-8 lg:text-xs";
 
 /** A stats board's column head: left over a name; `_END` right over a figure. */
 export const HEAD_PLATE = "cm-bevel flex h-6 items-center px-1.5";
