@@ -14,9 +14,8 @@ import {
   ROW_NAME,
   ROW_RULE,
   SCROLL,
-  MINOR_CAPS,
 } from "@/app/desk";
-import { MUTE, PlateHead, HeadRow } from "../../../components/league/TableHeads";
+import { MUTE, PlateHead } from "../../../components/league/TableHeads";
 
 // One squad's season, in Championship Manager's own stat-screen grammar.
 //
@@ -96,7 +95,7 @@ export default function StatBoard({
       {/* CM's grey bevelled control, in the place the game puts it: on its own
           strip above the table, not inside the title bar (`21.jpg`, `25.jpg`). */}
       <div className="flex items-center gap-2 border-b border-line px-2 py-1.5">
-        <label className={`${MINOR_CAPS} text-faint`} htmlFor="stat-view">
+        <label className="text-3xs font-bold uppercase text-faint" htmlFor="stat-view">
           View
         </label>
         <select
@@ -121,7 +120,7 @@ export default function StatBoard({
       <div className={`cm-scroll ${SCROLL}`}>
         <table className="w-full border-collapse whitespace-nowrap">
           <thead>
-            <HeadRow>
+            <tr className="text-3xs uppercase">
               <PlateHead at="end">
                 <span className={MUTE}>Rank</span>
               </PlateHead>
@@ -142,7 +141,7 @@ export default function StatBoard({
                   onSort={() => sortBy(measure.key)}
                 />
               ))}
-            </HeadRow>
+            </tr>
           </thead>
 
           <tbody>

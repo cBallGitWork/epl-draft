@@ -1,6 +1,6 @@
 import type { Deal, DealSide } from "@epl/core";
 import { inkOn, kindOf, movement, teamColours, DASH } from "@epl/core";
-import { PANEL_FLUSH, ROW_NAME, SCROLL, MINOR_CAPS } from "@/app/desk";
+import { PANEL_FLUSH, ROW_NAME, SCROLL } from "@/app/desk";
 
 // One manager's business, drawn as Championship Manager's Transfers screen.
 //
@@ -46,7 +46,7 @@ export default function Ledger({
       {/* The column heads, bevelled as one continuous run — `23.jpg` has no head
           row at all, but its columns are self-evident from the fee and the "to";
           ours are two lists of names facing each other and need saying. */}
-      <div className={`cm-bevel hidden min-h-7 items-center gap-2 px-1.5 ${MINOR_CAPS} lg:flex`}>
+      <div className="cm-bevel hidden min-h-7 items-center gap-2 px-1.5 text-3xs font-bold uppercase lg:flex">
         <span className="w-24 shrink-0">Date</span>
         <span className="w-20 shrink-0">Type</span>
         <span className="min-w-0 flex-1">In</span>
@@ -98,7 +98,7 @@ export default function Ledger({
                     was a second number under a word, and the date above already
                     says when — a period is how the league counts a week, not how a
                     reader dates a transfer. */}
-                <span className={`w-20 shrink-0 ${MINOR_CAPS} text-accent`}>
+                <span className="w-20 shrink-0 text-3xs font-bold uppercase text-accent">
                   {kindOf(deal, arrived.length, left.length)}
                 </span>
                 </span>
@@ -123,7 +123,7 @@ export default function Ledger({
                         thing is that the people using it recognise it, and ten
                         managers who have said "the bin" for years do not
                         recognise "free agent" as the same place. */
-                    <span className={`block truncate border border-line px-1.5 py-0.5 text-center ${MINOR_CAPS} text-faint`}>
+                    <span className="block truncate border border-line px-1.5 py-0.5 text-center text-3xs font-bold uppercase text-faint">
                       The Bin
                     </span>
                   ) : (
@@ -174,7 +174,7 @@ function Side({
 }) {
   return (
     <span className={`flex min-w-0 flex-1 items-baseline gap-1.5 lg:block ${tone}`}>
-      <span className={`w-6 shrink-0 ${MINOR_CAPS} text-faint lg:hidden`}>
+      <span className="w-6 shrink-0 text-3xs font-bold uppercase text-faint lg:hidden">
         {label}
       </span>
       <span className="flex min-w-0 flex-1 flex-col justify-center leading-tight">
@@ -224,7 +224,7 @@ function Partner({ teamId, name }: { teamId: string; name: string | undefined })
   const colours = teamColours(teamId);
   return (
     <span
-      className={`block truncate px-1.5 py-0.5 text-center ${MINOR_CAPS}`}
+      className="block truncate px-1.5 py-0.5 text-center text-3xs font-bold uppercase"
       style={{ background: colours.primary, color: inkOn(colours) }}
     >
       {/* A team the league no longer lists — a manager who left mid-season —
