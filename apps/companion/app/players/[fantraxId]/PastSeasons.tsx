@@ -1,6 +1,7 @@
+import ScrollBoard from "../../components/league/ScrollBoard";
 import type { PastSeason } from "@epl/core";
 import Section from "../../components/shell/Section";
-import { BOARD, FIGURE, ROW_NAME, ROW_RULE, SCROLL, TEXT } from "@/app/desk";
+import { BOARD, FIGURE, ROW_NAME, ROW_RULE, TEXT } from "@/app/desk";
 import { PlateHead } from "../../components/league/TableHeads";
 import { IndexCell } from "../../components/league/TableCells";
 import { seasonKey, thousands } from "@epl/core";
@@ -50,7 +51,7 @@ export default function PastSeasons({
     // current season on top, the completed ones under. "Before this season" was
     // relative to a table that is no longer above it.
     <Section title={rows.length === 1 ? `Season · ${rows[0].season}` : "Seasons"}>
-      <div className={SCROLL}>
+      <ScrollBoard>
         <table className={BOARD}>
           <thead>
             <tr>
@@ -88,7 +89,7 @@ export default function PastSeasons({
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollBoard>
     </Section>
   );
 }

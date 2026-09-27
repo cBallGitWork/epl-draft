@@ -1,5 +1,6 @@
+import ScrollBoard from "../../components/league/ScrollBoard";
 import Section from "../../components/shell/Section";
-import { BOARD, BOARD_FIGURE, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, BOARD_FIGURE, ROW_RULE } from "@/app/desk";
 import { PlateHead } from "../../components/league/TableHeads";
 import type { MatchRow } from "./matchRows";
 import { totalsOf } from "./matchRows";
@@ -52,7 +53,7 @@ export default function SeasonTable({
 
   return (
     <Section title={[season ? `Season · ${season}` : "Season", club].filter(Boolean).join(" · ")}>
-      <div className={SCROLL}>
+      <ScrollBoard>
         <table className={BOARD}>
           <thead>
             <tr>
@@ -77,7 +78,7 @@ export default function SeasonTable({
             </tr>
           </tbody>
         </table>
-      </div>
+      </ScrollBoard>
     </Section>
   );
 }

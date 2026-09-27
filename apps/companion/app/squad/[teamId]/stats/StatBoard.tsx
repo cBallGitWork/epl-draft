@@ -1,5 +1,6 @@
 "use client";
 
+import ScrollBoard from "../../../components/league/ScrollBoard";
 import { SELECT } from "../../../components/shell/ButtonLink";
 import { useMemo, useState } from "react";
 import Link from "next/link";
@@ -13,7 +14,6 @@ import {
   PANEL_FLUSH,
   ROW_NAME,
   ROW_RULE,
-  SCROLL,
 } from "@/app/desk";
 import { MUTE, PlateHead } from "../../../components/league/TableHeads";
 
@@ -112,12 +112,8 @@ export default function StatBoard({
         </select>
       </div>
 
-      {/* `cm-scroll` is CM's own bevelled bar with arrow buttons, and it is
-          here to be SEEN (Craig, 2 Sep: "scroll bar at bottom to make it obvious
-          we need to scroll"). A table wider than its panel that hides its own
-          scrollbar is a table whose remaining columns do not exist as far as a
-          reader knows. The pool board already wears it. */}
-      <div className={`cm-scroll ${SCROLL}`}>
+      {/* A board wider than its panel says so: CM's bar on a desk, the drawn gauge under a thumb (Craig, 2 Sep). */}
+      <ScrollBoard>
         <table className="w-full border-collapse whitespace-nowrap">
           <thead>
             <tr className="text-3xs uppercase">
@@ -217,7 +213,7 @@ export default function StatBoard({
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollBoard>
 
       {/* **The glossary, under the table** (Craig, 2 Sep: "maybe a glossary at
           the bottom for all the abbreviations? or the top?"). Under, because it

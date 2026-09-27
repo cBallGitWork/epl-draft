@@ -83,6 +83,8 @@
   /* The thumb rail's 56px tab plus 1rem of air under the last panel, below `lg`. The rail's inset is inside
      the fixed nav, and `body` pads the page by the same inset, so neither is added here. */
   --page-foot: calc(3.5rem + 1rem);
+  /* What the fixed thumb rail covers at the foot of the screen, inset included: where anything docked above it sits. */
+  --thumbrail: calc(3.5rem + env(safe-area-inset-bottom));
 }
 
 @media (min-width: 64rem) {

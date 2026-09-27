@@ -35,7 +35,7 @@ export default function TeamBoard({
 
   return (
     // Opaque, so the pinned club hides the figures scrolling under it; a fade says there is more to the right.
-    <ScrollBoard>
+    <ScrollBoard className="bg-surface">
       <table className={`${BOARD} min-w-max`}>
         <caption className="sr-only">The clubs, ordered by {sort.title.toLowerCase()}</caption>
         <thead>

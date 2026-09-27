@@ -198,6 +198,16 @@ board, a match's player stats — keeps every column and scrolls sideways with C
 own bevelled bar, because there is no last column that matters more than the
 rest and hiding any of them is choosing for the reader.
 
+**Under a thumb that bar is drawn, because iOS draws none** (27 Sep 2026: Craig, *"scrollbars not obvious"*).
+`::-webkit-scrollbar` never reaches iOS Safari, and on Chrome the bar sat at the board's foot, under row 100 on
+`/players`. So below `lg` a sideways board (`ScrollBoard`, `.cm-board`) draws CM's channel and bevelled thumb as a
+6px gauge docked above the rail while the board is on screen, fades its right edge while there is more, and gives
+the frozen lead a hard 3px drop once figures have slid under it. The drop is ours, not CM's (the game froze no
+columns); it is the one depth mark outside §2's bevels, and it says only "something is under here". Nothing is
+drawn until the board is known to overflow, and the platform bar stays until the gauge is. A long board's head row
+is copied to the top of the screen once the real one scrolls away (`stickyHead.ts`): a head inside a sideways
+scroller can only stick to the scroller, and "which column was G again?" is the question at 15:50.
+
 The columns that stand down are named in each table's own `COLUMNS` list, in the
 same `width` string that sizes them, so the heads, the rows and the loading
 skeleton read one source. **A column the table is ORDERED by is never hidden**:
@@ -942,7 +952,7 @@ therefore stands rather than being rewritten. A sticky first column is the cost.
 
 *Still the answer for `/players`, and 5 Sep 2026 gave it a general rule that says
 why — see §2's table geometry below. Both are built: the name column is frozen
-(`PINNED_NAME` in `desk.ts`) and the sideways scroll carries CM's own bar.*
+(`PINNED_NAME` in `desk.ts`) and the sideways scroll carries CM's own bar, drawn as a gauge under a thumb (§2).*
 
 **The live desk splits.** Mobile `/matchday` rows expand in place from data
 already on the page; the `≥lg` wall at `/matchday/desk` keeps the no-tap rule

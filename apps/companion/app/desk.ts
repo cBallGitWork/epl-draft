@@ -57,16 +57,12 @@ export const ROW_HOVER = `${ROW_RULE} hover:bg-surface`;
 /** The wrapper that lets a phone reach a board's far columns. */
 export const SCROLL = "overflow-x-auto";
 
-
-/** A board that scrolls sideways says so under a thumb: a fade at its right edge, over the figures. */
-export const EDGE_FADE = "pointer-events-none absolute inset-y-0 right-0 z-20 w-8 bg-gradient-to-l from-surface lg:hidden";
-
 /** A board's frozen tile or index block at its left edge, head and cells alike. */
 export const PINNED_TILE = "sticky left-0 z-10";
 
 /** A board's frozen name column; the caller adds where it starts. `bg-surface` is load-bearing: a transparent one
  *  lets the scrolled figures slide under the name. */
-export const PINNED_NAME = "sticky z-10 border-r border-line bg-surface";
+export const PINNED_NAME = "cm-lead sticky z-10 border-r border-line bg-surface";
 
 /** A gameweek view's header row and title. Its loading skeletons use them too, or the page jumps
  *  when it lands. */

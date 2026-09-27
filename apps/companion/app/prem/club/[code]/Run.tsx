@@ -1,8 +1,9 @@
+import ScrollBoard from "../../../components/league/ScrollBoard";
 import Link from "next/link";
 import type { Club, Fixture } from "@epl/core";
 import { COMPETITION_NAME, londonDayAndDate, londonTime, DASH } from "@epl/core";
 import { CLUB } from "../../routes";
-import { BOARD, SCROLL, ROW_HOVER } from "@/app/desk";
+import { BOARD, ROW_HOVER } from "@/app/desk";
 import Absent from "@/app/components/shell/Absent";
 import ClubLabel from "@/app/components/football/ClubLabel";
 import { matchHref } from "../../match/[id]/matchRoutes";
@@ -33,7 +34,7 @@ export default function Run({
   clubs: Map<number, Club>;
 }) {
   return (
-    <div className={SCROLL}>
+    <ScrollBoard>
       <table className={BOARD}>
         <caption className="sr-only">{club.name}&apos;s season, oldest first</caption>
         <tbody>
@@ -112,7 +113,7 @@ export default function Run({
           })}
         </tbody>
       </table>
-    </div>
+    </ScrollBoard>
   );
 }
 

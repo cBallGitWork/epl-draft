@@ -282,7 +282,7 @@ with its row here in the same commit.**
 | `SUBMIT` | The button that submits a form it sits inside. | 3 sites |
 | `ROW_HOVER` | `ROW_RULE` plus the surface under a pointer: a board row nobody owns. | 5 Prem boards (23 Sep 2026) |
 | `PINNED_TILE` · `PINNED_NAME` | A board's frozen tile (or index block) and its frozen name column; the caller adds where the name starts. `bg-surface` is load-bearing: a transparent one lets the scrolled figures slide under the name. Were `STICKY_LEAD` plus four hand-written copies until 24 Sep 2026. | 6 files |
-| `league/ScrollBoard` | A board that scrolls sideways: opaque, with `EDGE_FADE` at its right edge under a thumb. | 5 boards (24 Sep 2026) |
+| `league/ScrollBoard` | A board that scrolls sideways, with drawn cues under a thumb: a fade while there is more, a gauge docked above the rail, a shadow on the pinned lead once scrolled (`.cm-board`, `desk.css`). A pinned board passes `bg-surface`. | 23 boards (27 Sep 2026) |
 | `TableHeads` `LeadHeads` · `sortedAs` · `SortArrow` | A pinned lead's two bare heads; a `SortHead`'s direction from "is this the column" and "descending"; the ▲/▼ beside a head. | 4 · 7 · 3 sites (24 Sep 2026) |
 | `gazette/StoryFace` · `hasPicture` | A story's own picture: its man, else its columnist's photograph. | 3 ranks (splash, shoulder, brief) |
 | `GAMEWEEK_HEAD` · `GAMEWEEK_TITLE` | A gameweek view's header row and title, shared with its loading skeleton so the page does not jump when it lands. | 5 files |

@@ -50,7 +50,7 @@ export default function SideStats({
 
   return (
     <Section>
-      <ScrollBoard className="cm-index-scoped" style={managerIndex(team)}>
+      <ScrollBoard className="cm-index-scoped bg-surface" style={managerIndex(team)}>
         <table className={BOARD}>
           <thead>
             <tr>

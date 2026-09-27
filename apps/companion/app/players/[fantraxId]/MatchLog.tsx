@@ -68,7 +68,7 @@ export default function MatchLog({ rows }: { rows: readonly MatchRow[] }) {
 
   return (
     <Section title="Every match" aside="FPL's own · Fantrax's own">
-      <ScrollBoard>
+      <ScrollBoard className="bg-surface">
         <table className={BOARD}>
           <thead>
             <tr className="text-2xs">
