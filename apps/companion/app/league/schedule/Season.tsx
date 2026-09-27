@@ -38,10 +38,8 @@ export default function Season({
     // beside it in the same grey, which is the same five facts with four of them
     // wearing the same clothes.
     //
-    // The scroll bar is CM's too, and it is deliberately visible: the season is
-    // 38 rounds and the panel holds about a dozen, so a list that hides its own
-    // bar looks like a list that ends.
-    <ul className="cm-rows cm-scroll cm-scroll-y flex max-h-[34rem] flex-col overflow-y-auto">
+    // CM's visible scroll bar on a desk; a phone scrolls the page, or the list's foot sits under the rail.
+    <ul className="cm-rows cm-scroll cm-scroll-y flex flex-col lg:max-h-[34rem] lg:overflow-y-auto">
       {rows.map((row) => (
         <li key={`${row.round.period}-${row.tie.competition.id}-${row.tie.round ?? ""}`}>
           <div
