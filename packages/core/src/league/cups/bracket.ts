@@ -21,7 +21,7 @@ export function seededBracket(entrants: number): BracketRound[] {
   let slots = seedSlots(entrants);
   const rounds: BracketRound[] = [];
   for (let round = 1; slots.length > 1; round++) {
-    const played = pairUp(`W${round}`, evens(slots), odds(slots));
+    const played = playAmong(`W${round}`, slots);
     if (played.round.ties.length > 0) rounds.push(played.round);
     slots = played.winners;
   }
@@ -64,10 +64,11 @@ export function pairUp(
   return { round, winners, losers };
 }
 
-export function evens<T>(slots: readonly T[]): T[] {
-  return slots.filter((_, at) => at % 2 === 0);
-}
-
-export function odds<T>(slots: readonly T[]): T[] {
-  return slots.filter((_, at) => at % 2 === 1);
+/** Plays neighbours in the bracket against each other: first against second, third against fourth. */
+export function playAmong(roundId: string, slots: readonly Slot[]): ReturnType<typeof pairUp> {
+  return pairUp(
+    roundId,
+    slots.filter((_, at) => at % 2 === 0),
+    slots.filter((_, at) => at % 2 === 1),
+  );
 }
