@@ -288,6 +288,7 @@ with its row here in the same commit.**
 | `GAMEWEEK_HEAD` · `GAMEWEEK_TITLE` | A gameweek view's header row and title, shared with its loading skeleton so the page does not jump when it lands. | 5 files |
 | `DESK_ONLY` · `standDown()` | A column shown on the desk only; `standDown` keeps it when the table is sorted by it, or the sort arrow and `aria-sort` would hide with it. | 4 files |
 | `players/BoardRow` | The Data boards' shared row: `LeadFace` (crest, name, `after` slot, position under it on a phone), `PIN_TILE` · `PIN_NAME`, `LEAD_WIDTH`, `FIGURE`. Taken at two because Craig asked for it (24 Sep 2026: *"make sure we are using shared code"*) and the two boards must agree. | 2 boards (Players, Projections) |
+| `league/BoardKey` | What a board's column heads stand for, shut under the board on a phone: a head's `title` is hover-only. | 3 boards: Data, Projections, Teams (27 Sep 2026) |
 | `players/QuerySelect` · `clubOptions` | One URL parameter from a list: a GET form that navigates on change. Every Data select. | 3 selects in 2 files |
 
 **`.cm-index` owns its text outright** — size, weight and shadow, in `desk.css`,

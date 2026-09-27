@@ -31,12 +31,7 @@ export default function ProjectionBoard({
   /** Where a head's sort link points, given its key and the direction it would set. */
   href: (key: ProjectionSort, descending: boolean) => string;
 }) {
-  // Minutes first, then the total, then the weeks (Craig, 24 Sep 2026).
-  const heads: { key: ProjectionSort; label: string; title: string }[] = [
-    { key: "xmins", label: "xMins", title: "The minutes the model expects him to play, a week" },
-    { key: "tot", label: "Tot", title: `${category}, ${gameweekSpan(gameweeks)} added up: FPL scoring, never Fantrax's` },
-    ...gameweeks.map((gw) => ({ key: `gw${gw}`, label: String(gw), title: `Gameweek ${gw}: ${category}, projected` })),
-  ];
+  const heads = projectionHeads(category, gameweeks);
   // Lit as the Players board lights a column: its best in orange, the rest of its top sixth in yellow.
   const cuts = cutsFor(
     heads.filter((head) => head.key !== "xmins"),
@@ -100,4 +95,16 @@ function Lead({ row }: { row: ProjectionRow }) {
       {face}
     </Link>
   );
+}
+
+/** The board's heads: minutes first, then the total, then the weeks (Craig, 24 Sep 2026). */
+export function projectionHeads(
+  category: string,
+  gameweeks: readonly number[],
+): { key: ProjectionSort; label: string; title: string }[] {
+  return [
+    { key: "xmins", label: "xMins", title: "The minutes the model expects him to play, a week" },
+    { key: "tot", label: "Tot", title: `${category}, ${gameweekSpan(gameweeks)} added up: FPL scoring, never Fantrax's` },
+    ...gameweeks.map((gw) => ({ key: `gw${gw}`, label: String(gw), title: `Gameweek ${gw}: ${category}, projected` })),
+  ];
 }
