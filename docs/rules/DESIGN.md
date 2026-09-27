@@ -204,7 +204,9 @@ rest and hiding any of them is choosing for the reader.
 6px gauge docked above the rail while the board is on screen, fades its right edge while there is more, and gives
 the frozen lead a hard 3px drop once figures have slid under it. The drop is ours, not CM's (the game froze no
 columns); it is the one depth mark outside §2's bevels, and it says only "something is under here". Nothing is
-drawn until the board is known to overflow, and the platform bar stays until the gauge is.
+drawn until the board is known to overflow, and the platform bar stays until the gauge is. A long board's head row
+is copied to the top of the screen once the real one scrolls away (`stickyHead.ts`): a head inside a sideways
+scroller can only stick to the scroller, and "which column was G again?" is the question at 15:50.
 
 The columns that stand down are named in each table's own `COLUMNS` list, in the
 same `width` string that sizes them, so the heads, the rows and the loading

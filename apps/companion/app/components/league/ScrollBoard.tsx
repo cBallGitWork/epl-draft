@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { SCROLL } from "@/app/desk";
+import { pinHead } from "./stickyHead";
 
 /** A board that scrolls sideways, and says so under a thumb: a fade at the edge while there is more, a gauge docked
- *  above the rail, a shadow on the pinned lead once scrolled (`desk.css`, `.cm-board`). iOS draws no bar for
- *  `.cm-scroll`, so these are drawn. `className` and `style` go on the scroller (a ground, an index scope). */
+ *  above the rail, a shadow on the pinned lead once scrolled, its head pinned to the top of a long board
+ *  (`desk.css`, `.cm-board`). `className` and `style` go on the scroller (a ground, an index scope). */
 export default function ScrollBoard({
   className = "",
   style,
@@ -17,6 +18,7 @@ export default function ScrollBoard({
 }) {
   const frame = useRef<HTMLDivElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
+  const strip = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const board = frame.current;
@@ -40,15 +42,20 @@ export default function ScrollBoard({
     const sizes = new ResizeObserver(queue);
     sizes.observe(box);
     if (box.firstElementChild !== null) sizes.observe(box.firstElementChild);
+    const unpin = strip.current === null ? () => {} : pinHead(board, box, strip.current);
     return () => {
       box.removeEventListener("scroll", queue);
       sizes.disconnect();
       cancelAnimationFrame(queued);
+      unpin();
     };
   }, []);
 
   return (
     <div ref={frame} className="cm-board relative">
+      <div aria-hidden className="cm-board-head">
+        <div ref={strip} className={className} style={style} />
+      </div>
       <span aria-hidden className="cm-board-fade" />
       <div ref={scroller} className={`${SCROLL} cm-scroll ${className}`} style={style}>
         {children}
