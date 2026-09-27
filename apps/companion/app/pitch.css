@@ -12,7 +12,7 @@
    at any width now, and the reason is below. */
 
 /* How much of the screen a pitch's page spends on everything that is not grass.
-   `.pitch-figure` caps a card's height against what is left of `100svh` after
+   `.pitch-figure` caps a card's height against what is left of `--pitch-screen` after
    it, so the budget and the cap are one number rather than two that drift.
 
    **One value at every width, and the breakpoint went with the tab bar.** It
@@ -126,7 +126,7 @@
    caps a card's height against what is left, so a formation with few men in a
    line cannot draw a card so tall that the pitch stops fitting.
 
-   Where the cap binds this makes the pitch exactly `100svh - --pitch-page + the
+   Where the cap binds this makes the pitch exactly `--pitch-screen - --pitch-page + the
    frame's own chrome`, whatever the formation — which is the property worth
    having, because it means a 1-3-4-3 and a 1-3-7-4 cannot disagree about how
    much screen a pitch is allowed.
