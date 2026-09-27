@@ -1,3 +1,4 @@
+import BoardKey from "../components/league/BoardKey";
 import type { FootballPlayer } from "@epl/core";
 import type { PoolRow } from "./pool";
 import { type PoolColumn } from "./columns";
@@ -45,46 +46,49 @@ export default function PlayerTable({
   const current = activeSort(query);
   const figures = columns.filter((column) => column.key !== "name");
   return (
-    <ScrollBoard>
-      <table className={BOARD}>
-        <thead>
-          <tr className="text-2xs">
-            <LeadHeads tile={PIN_TILE} name={PIN_NAME} />
-            {figures.map((column) => (
-              <SortHead
-                key={column.key}
-                compact
-                title={column.title}
-                href={sortHref(query, column.key)}
-                label={column.label}
-                sorted={sortedAs(current.key === column.key, current.descending)}
-              />
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => {
-            const footballer = row.fplCode === null ? null : (footballers.get(row.fplCode) ?? null);
-            const wash = doubtRow(footballer);
-            return (
-            <tr key={row.entry.player.fantraxId} className={`${ROW_RULE} hover:bg-raised ${wash}`}>
-              <PositionTile positions={row.entry.eligiblePositions} cell className={PIN_TILE} />
-              <Lead row={row} query={query} teamNames={teamNames} reader={reader} footballer={footballer} className={`${PIN_NAME} ${wash}`} />
+    <>
+      <ScrollBoard>
+        <table className={BOARD}>
+          <thead>
+            <tr className="text-2xs">
+              <LeadHeads tile={PIN_TILE} name={PIN_NAME} />
               {figures.map((column) => (
-                <Cell
+                <SortHead
                   key={column.key}
-                  column={column}
-                  row={row}
-                  stats={raw.get(row.entry.player.fantraxId)}
-                  rated={rated}
-                  cut={cuts.get(column.key)}
+                  compact
+                  title={column.title}
+                  href={sortHref(query, column.key)}
+                  label={column.label}
+                  sorted={sortedAs(current.key === column.key, current.descending)}
                 />
               ))}
             </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </ScrollBoard>
+          </thead>
+          <tbody>
+            {rows.map((row) => {
+              const footballer = row.fplCode === null ? null : (footballers.get(row.fplCode) ?? null);
+              const wash = doubtRow(footballer);
+              return (
+              <tr key={row.entry.player.fantraxId} className={`${ROW_RULE} hover:bg-raised ${wash}`}>
+                <PositionTile positions={row.entry.eligiblePositions} cell className={PIN_TILE} />
+                <Lead row={row} query={query} teamNames={teamNames} reader={reader} footballer={footballer} className={`${PIN_NAME} ${wash}`} />
+                {figures.map((column) => (
+                  <Cell
+                    key={column.key}
+                    column={column}
+                    row={row}
+                    stats={raw.get(row.entry.player.fantraxId)}
+                    rated={rated}
+                    cut={cuts.get(column.key)}
+                  />
+                ))}
+              </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </ScrollBoard>
+      <BoardKey entries={figures} />
+    </>
   );
 }

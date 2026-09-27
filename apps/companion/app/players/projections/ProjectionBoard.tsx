@@ -1,3 +1,4 @@
+import BoardKey from "../../components/league/BoardKey";
 import Link from "next/link";
 import { DASH, gameweekSpan } from "@epl/core";
 import PositionTile from "../../components/league/PositionTile";
@@ -44,49 +45,52 @@ export default function ProjectionBoard({
   );
 
   return (
-    <ScrollBoard>
-      <table className={BOARD}>
-        <thead>
-          <tr className="text-2xs">
-            <LeadHeads tile={PIN_TILE} name={PIN_NAME} />
-            {heads.map((head) => (
-              <SortHead
-                key={head.key}
-                compact
-                title={head.title}
-                href={href(head.key, head.key === sort ? !descending : true)}
-                label={head.label}
-                sorted={sortedAs(head.key === sort, descending)}
-              />
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={row.code} className={`${ROW_RULE} hover:bg-raised`}>
-              <PositionTile positions={row.positions} cell className={PIN_TILE} />
-              <td className={PIN_NAME}>
-                <Lead row={row} />
-              </td>
-              {heads.map((head) => {
-                const figure = projectionFigure(row, head.key, gameweeks);
-                const ink =
-                  figure === null || figure === 0
-                    ? "text-faint"
-                    : head.key === "xmins"
-                      ? ""
-                      : standoutInk(figure, cuts.get(head.key), "high");
-                return (
-                  <td key={head.key} className={`${FIGURE} ${head.key === "tot" ? "font-bold" : ""} ${ink}`}>
-                    {figure === null ? DASH : head.key === "xmins" ? figure : figure.toFixed(1)}
-                  </td>
-                );
-              })}
+    <>
+      <ScrollBoard>
+        <table className={BOARD}>
+          <thead>
+            <tr className="text-2xs">
+              <LeadHeads tile={PIN_TILE} name={PIN_NAME} />
+              {heads.map((head) => (
+                <SortHead
+                  key={head.key}
+                  compact
+                  title={head.title}
+                  href={href(head.key, head.key === sort ? !descending : true)}
+                  label={head.label}
+                  sorted={sortedAs(head.key === sort, descending)}
+                />
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </ScrollBoard>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.code} className={`${ROW_RULE} hover:bg-raised`}>
+                <PositionTile positions={row.positions} cell className={PIN_TILE} />
+                <td className={PIN_NAME}>
+                  <Lead row={row} />
+                </td>
+                {heads.map((head) => {
+                  const figure = projectionFigure(row, head.key, gameweeks);
+                  const ink =
+                    figure === null || figure === 0
+                      ? "text-faint"
+                      : head.key === "xmins"
+                        ? ""
+                        : standoutInk(figure, cuts.get(head.key), "high");
+                  return (
+                    <td key={head.key} className={`${FIGURE} ${head.key === "tot" ? "font-bold" : ""} ${ink}`}>
+                      {figure === null ? DASH : head.key === "xmins" ? figure : figure.toFixed(1)}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </ScrollBoard>
+      <BoardKey entries={heads.slice(0, 2).concat(gameweeks.length === 0 ? [] : [{ key: "gw", label: "GW", title: `Each gameweek: ${category}, projected` }])} />
+    </>
   );
 }
 
