@@ -139,12 +139,8 @@ export default async function SchedulePage() {
         </p>
       )}
 
-      {/* **The whole season in one scrolling box, with CM's own bar down the
-          side.** A list is only allowed to be longer than its box if the box
-          says so — `desk.css` makes that argument for `.cm-scroll` and the
-          reference makes it for the Schedule tab, where the bar is what tells a
-          reader the season continues past the twelfth row. */}
-      <div className="cm-scroll cm-scroll-y flex max-h-[42rem] flex-col gap-4 overflow-y-auto">
+      {/* The season in CM's scrolling box on a desk; a phone scrolls the page, or the box's foot sits under the rail. */}
+      <div className="cm-scroll cm-scroll-y flex flex-col gap-4 lg:max-h-[42rem] lg:overflow-y-auto">
         {rounds.map((round) => (
           <Round
             key={round.period}

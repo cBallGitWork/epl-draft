@@ -17,9 +17,10 @@
   color-scheme: dark;
 }
 
+/* Landscape phones report side insets for the notch; the gutter clears them. */
 @media (min-width: 40rem) {
   :root {
-    --page-gutter: 1rem;
+    --page-gutter: max(1rem, env(safe-area-inset-left), env(safe-area-inset-right));
   }
 }
 
