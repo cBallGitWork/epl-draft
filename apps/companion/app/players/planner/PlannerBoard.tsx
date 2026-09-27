@@ -1,9 +1,10 @@
+import ScrollBoard from "../../components/league/ScrollBoard";
 import Link from "next/link";
 import { DASH, toFantraxClubCode, type PlannerCell, type PlannerRow, type PlannerView } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import { easeGround } from "../../components/football/ease";
 import { MUTE, PlateHead, SortArrow } from "../../components/league/TableHeads";
-import { HEAD_CELL, PINNED_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { HEAD_CELL, PINNED_NAME, ROW_RULE } from "@/app/desk";
 
 /** The club column, frozen at the left edge. */
 const PIN_CLUB = `${PINNED_NAME} left-0`;
@@ -28,7 +29,7 @@ export default function PlannerBoard({
   gameweeks: readonly number[];
 }) {
   return (
-    <div className={`cm-scroll bg-surface ${SCROLL}`}>
+    <ScrollBoard className="bg-surface">
       <table className="w-full min-w-[21.5rem] table-fixed border-collapse text-sm">
         <colgroup>
           <col className="w-20" />
@@ -77,7 +78,7 @@ export default function PlannerBoard({
           ))}
         </tbody>
       </table>
-    </div>
+    </ScrollBoard>
   );
 }
 

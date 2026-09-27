@@ -1,6 +1,7 @@
+import ScrollBoard from "../../../components/league/ScrollBoard";
 import type { Deal, DealSide } from "@epl/core";
 import { inkOn, kindOf, movement, teamColours, DASH } from "@epl/core";
-import { PANEL_FLUSH, ROW_NAME, SCROLL } from "@/app/desk";
+import { PANEL_FLUSH, ROW_NAME } from "@/app/desk";
 
 // One manager's business, drawn as Championship Manager's Transfers screen.
 //
@@ -54,7 +55,7 @@ export default function Ledger({
         <span className="w-16 shrink-0">With</span>
       </div>
 
-      <div className={SCROLL}>
+      <ScrollBoard>
         <ul className="cm-rows flex flex-col">
           {deals.map((deal) => {
             const { in: arrived, out: left, partners } = movement(deal, teamId);
@@ -146,7 +147,7 @@ export default function Ledger({
             );
           })}
         </ul>
-      </div>
+      </ScrollBoard>
     </section>
   );
 }

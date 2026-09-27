@@ -1,3 +1,4 @@
+import ScrollBoard from "../../components/league/ScrollBoard";
 import { Fragment } from "react";
 import {
   PREMIERSHIP_CUTS,
@@ -13,7 +14,7 @@ import ClubRow from "../ClubRow";
 import PremShell from "../Shell";
 import Nothing from "../../components/shell/Nothing";
 import { footballNow, seasonFixtures } from "../../football";
-import { BOARD, SCROLL } from "@/app/desk";
+import { BOARD } from "@/app/desk";
 
 // The Premier League table.
 //
@@ -81,7 +82,7 @@ export default async function TablePage({ searchParams }: { searchParams: Search
       {/* Out to the page's edges and back in again, so a table wider than the
           phone scrolls sideways inside its own box instead of scrolling the
           page. */}
-      <div className={SCROLL}>
+      <ScrollBoard>
         <table className={BOARD}>
           <Columns sort={sort} descending={descending} />
           <tbody>
@@ -117,7 +118,7 @@ export default async function TablePage({ searchParams }: { searchParams: Search
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollBoard>
     </PremShell>
   );
 }

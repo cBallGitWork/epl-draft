@@ -1,5 +1,6 @@
 "use client";
 
+import ScrollBoard from "../../../components/league/ScrollBoard";
 import { SELECT } from "../../../components/shell/ButtonLink";
 import { useMemo, useState } from "react";
 import Link from "next/link";
@@ -13,7 +14,6 @@ import {
   PANEL_FLUSH,
   ROW_NAME,
   ROW_RULE,
-  SCROLL,
 } from "@/app/desk";
 import { MUTE, PlateHead } from "../../../components/league/TableHeads";
 
@@ -117,7 +117,7 @@ export default function StatBoard({
           we need to scroll"). A table wider than its panel that hides its own
           scrollbar is a table whose remaining columns do not exist as far as a
           reader knows. The pool board already wears it. */}
-      <div className={`cm-scroll ${SCROLL}`}>
+      <ScrollBoard>
         <table className="w-full border-collapse whitespace-nowrap">
           <thead>
             <tr className="text-3xs uppercase">
@@ -217,7 +217,7 @@ export default function StatBoard({
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollBoard>
 
       {/* **The glossary, under the table** (Craig, 2 Sep: "maybe a glossary at
           the bottom for all the abbreviations? or the top?"). Under, because it

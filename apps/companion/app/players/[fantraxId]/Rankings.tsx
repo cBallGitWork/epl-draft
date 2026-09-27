@@ -1,9 +1,10 @@
+import ScrollBoard from "../../components/league/ScrollBoard";
 import type { Ranked } from "@epl/core";
 import { DASH, ordinal } from "@epl/core";
 import Section from "../../components/shell/Section";
 import { IndexCell } from "../../components/league/TableCells";
 import { MUTE, PlateHead } from "../../components/league/TableHeads";
-import { BOARD, BOARD_FIGURE, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, BOARD_FIGURE, ROW_RULE } from "@/app/desk";
 
 // Where his season totals rank among the men he is rated against (Craig, 25 Sep 2026:
 // "rankings for data such as xg"): the totals on one row, his place on the next.
@@ -14,7 +15,7 @@ export default function Rankings({ ranked, group }: { ranked: readonly Ranked[];
 
   return (
     <Section title="Rankings" aside={`Among ${field} ${group ?? "players"}`}>
-      <div className={SCROLL}>
+      <ScrollBoard>
         <table className={BOARD}>
           <thead>
             <tr>
@@ -51,7 +52,7 @@ export default function Rankings({ ranked, group }: { ranked: readonly Ranked[];
             </tr>
           </tbody>
         </table>
-      </div>
+      </ScrollBoard>
     </Section>
   );
 }

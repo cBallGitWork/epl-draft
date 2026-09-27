@@ -1,3 +1,4 @@
+import ScrollBoard from "../../components/league/ScrollBoard";
 import Link from "next/link";
 import {
   categoryFor,
@@ -24,7 +25,7 @@ import { getSchedule } from "../schedule/schedule";
 import { readerTeamId } from "../../squads";
 import { yoursInk } from "../../mine";
 import { teamBadges } from "../../standings";
-import { BOARD, BOARD_FIGURE, INDEX_WIDTH, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, BOARD_FIGURE, INDEX_WIDTH, ROW_NAME, ROW_RULE } from "@/app/desk";
 import { teamHref } from "@/app/squad/routes";
 import FantraxSilent from "../../components/shell/FantraxSilent";
 
@@ -126,7 +127,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
           {groupLabel} fill in as {info.name} plays.
         </Nothing>
       ) : (
-        <div className={SCROLL}>
+        <ScrollBoard>
           {/* `border-collapse`, exactly as `/league` sets it: with
               `border-separate` the `border-b` on each `<tr>` is not drawn at all
               — CSS tables only render row borders when collapsed — and the index
@@ -214,7 +215,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
               })}
             </tbody>
           </table>
-        </div>
+        </ScrollBoard>
       )}
       {/* A gap between the last row and the buttons — Craig, 1 Sep: "add a small
           gap between bottom of the table and rows". CM leaves air there too; the

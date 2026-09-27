@@ -1,5 +1,5 @@
 import type { SquadDetailLine, SquadPlayerDetail } from "@epl/core";
-import { SCROLL } from "@/app/desk";
+import ScrollBoard from "./ScrollBoard";
 import SquadRow from "./SquadRow";
 
 // The same fifteen as a list. Offered beside the pitch rather than instead of
@@ -104,7 +104,7 @@ export default function SquadRows({
     // dense table in the app breaking it, because it was drawn bare wherever it
     // was placed. `cm9900/12.jpg` has its whole table inside a sunken well and
     // lets the picture show between panels, never through one.
-    <div className={bare ? SCROLL : `cm-panel ${SCROLL}`}>
+    <ScrollBoard className={bare ? "" : "cm-panel"}>
       <div className="flex flex-col lg:min-w-max">
         {/* One bevelled strip over the whole squad, the way a CM table is headed —
           rather than a small-caps label per position group, which made five
@@ -169,6 +169,6 @@ export default function SquadRows({
           )}
         </ul>
       </div>
-    </div>
+    </ScrollBoard>
   );
 }

@@ -1,3 +1,4 @@
+import ScrollBoard from "./ScrollBoard";
 import { columnLabel, DASH } from "@epl/core";
 import type { TeamStats } from "@epl/core";
 import {
@@ -5,7 +6,6 @@ import {
   PANEL_FLUSH,
   ROW_NAME,
   ROW_RULE,
-  SCROLL,
 } from "@/app/desk";
 import { MUTE, PlateHead } from "./TableHeads";
 
@@ -88,7 +88,7 @@ export default function SeasonGrid({
               {stats.season.name || (stats.season.projected ? "Fantrax projects" : "This season")}
             </p>
 
-            <div className={SCROLL}>
+            <ScrollBoard>
               <table className="w-full border-collapse whitespace-nowrap">
                 <thead>
                   <tr className="text-3xs uppercase">
@@ -149,7 +149,7 @@ export default function SeasonGrid({
                   ))}
                 </tbody>
               </table>
-            </div>
+            </ScrollBoard>
           </section>
         ))}
     </div>
