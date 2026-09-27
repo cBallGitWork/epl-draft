@@ -481,8 +481,8 @@
 
    Drawn from the same plate vocabulary as everything else on the desk — the
    thumb is a `cm-bevel` face with the same light/dark edges, the channel is the
-   ground it runs in. WebKit only, which covers Safari and every Chromium
-   browser and therefore every phone this league is read on; Firefox gets
+   ground it runs in. `::-webkit-scrollbar` reaches Chromium and desktop Safari
+   but not iOS, which is why a phone's sideways board draws its own (`.cm-board`); Firefox gets
    `scrollbar-color`, which is narrower but the right colours. Neither is a
    fallback for the other — they are two vocabularies for one object.
 
@@ -601,7 +601,7 @@
 }
 
 @media (width < 64rem) {
-  /* More to the right: the fade over the last figures, with CM's ▶ glyph on a face plate at the head strip. */
+  /* More to the right: a fade over the last figures; taps pass through it to the figure underneath. */
   .cm-board[data-more] .cm-board-fade {
     display: block;
     position: absolute;
@@ -613,23 +613,7 @@
     background: linear-gradient(to left, var(--color-surface), transparent);
   }
 
-  .cm-board[data-more] .cm-board-fade::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 1rem;
-    height: 1.5rem;
-    background: var(--color-face) no-repeat center / 0.5rem
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'><path d='M7 4 L2 7 L2 1 Z' fill='%23091227'/></svg>");
-    border: 1px solid;
-    border-color: color-mix(in oklch, var(--color-face), white 55%)
-      color-mix(in oklch, var(--color-face), black 55%)
-      color-mix(in oklch, var(--color-face), black 55%)
-      color-mix(in oklch, var(--color-face), white 55%);
-  }
-
-  /* The gauge: CM's bar reduced to its channel and thumb, docked above the rail while the board is on screen,
+  /* The gauge: CM's bar cut to its channel and bevelled thumb, docked above the rail while the board is on screen,
      so a 100-row board shows where it sits sideways without scrolling to its foot. Read-only: the board scrolls. */
   .cm-board[data-wide] .cm-board-gauge {
     display: block;
@@ -648,7 +632,8 @@
     left: var(--gauge-left);
     width: var(--gauge-width);
     background: var(--color-face);
-    box-shadow: inset 0 1px 0 color-mix(in oklch, var(--color-face), white 55%);
+    box-shadow: inset 1px 1px 0 color-mix(in oklch, var(--color-face), white 55%),
+      inset -1px -1px 0 color-mix(in oklch, var(--color-face), black 55%);
   }
 
   /* The pinned lead casts CM's hard drop once the figures have slid under it. */
@@ -656,12 +641,12 @@
     box-shadow: 3px 0 0 rgb(0 0 0 / 0.4);
   }
 
-  /* Its own bar would sit at the foot of the board, under the gauge's job. */
-  .cm-board .cm-scroll {
+  /* The gauge replaces the board's own bar at its foot, and only once it is drawn: before that the bar stays. */
+  .cm-board[data-wide] .cm-scroll {
     scrollbar-width: none;
   }
 
-  .cm-board .cm-scroll::-webkit-scrollbar {
+  .cm-board[data-wide] .cm-scroll::-webkit-scrollbar {
     display: none;
   }
 }

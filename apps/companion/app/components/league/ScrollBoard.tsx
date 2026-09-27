@@ -3,8 +3,8 @@
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { SCROLL } from "@/app/desk";
 
-/** A board that scrolls sideways, and says so under a thumb: a fade and ▶ at the edge while there is more, a gauge
- *  pinned above the rail, a shadow on the pinned lead once scrolled (`desk.css`, `.cm-board`). iOS draws no bar for
+/** A board that scrolls sideways, and says so under a thumb: a fade at the edge while there is more, a gauge docked
+ *  above the rail, a shadow on the pinned lead once scrolled (`desk.css`, `.cm-board`). iOS draws no bar for
  *  `.cm-scroll`, so these are drawn. `className` and `style` go on the scroller (a ground, an index scope). */
 export default function ScrollBoard({
   className = "",
