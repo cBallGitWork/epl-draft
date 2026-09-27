@@ -45,12 +45,12 @@ export function groupTable(
 }
 
 /** The knockout's seeds in order: every group winner, then every runner-up, and so on down to the cut. */
-export function groupQualifiers(tables: readonly GroupRow[][], qualify: number): string[] {
-  const seeds: string[] = [];
+export function groupQualifiers<T>(tables: readonly (readonly T[])[], qualify: number): T[] {
+  const seeds: T[] = [];
   for (let place = 0; place < qualify; place++) {
     for (const table of tables) {
       const row = table[place];
-      if (row) seeds.push(row.teamId);
+      if (row !== undefined) seeds.push(row);
     }
   }
   return seeds;

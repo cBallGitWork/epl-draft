@@ -21,11 +21,7 @@ import { PANEL } from "@/app/desk";
 // `seasonRows` and `Season` still live under `league/schedule/` because that is
 // where the shape belongs; nothing else reads them now.
 //
-// **The knockouts are deliberately not here.** The schedule's own view mixes
-// Fantrax's pairings with `seededTies`, the placeholder cup and playoff declared
-// in `league/competitions.ts` — which are ours rather than the league's, and are
-// seeded off a table that has barely any season in it yet. A team's own fixture
-// tab shows the fixtures the league actually publishes.
+// Cup ties are not here: nobody is drawn into one yet, so no cup fixture can name this team.
 
 // Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — `scripts/revalidate.test.ts` holds the two together.

@@ -58,7 +58,8 @@ describe("groupTable", () => {
 describe("groupQualifiers", () => {
   it("seeds every winner, then every runner-up, down to the cut", () => {
     const table = (...teamIds: string[]) => groupTable(teamIds, [], POINTS);
-    expect(groupQualifiers([table("a1", "a2", "a3", "a4"), table("b1", "b2", "b3", "b4")], 3)).toEqual([
+    const seeds = groupQualifiers([table("a1", "a2", "a3", "a4"), table("b1", "b2", "b3", "b4")], 3);
+    expect(seeds.map((row) => row.teamId)).toEqual([
       "a1",
       "b1",
       "a2",

@@ -62,7 +62,7 @@ describe("Davy Propper Cup", () => {
     const seeds = groupQualifiers(
       groups.map((group) => groupTable(group, [], stage.points)),
       stage.qualify,
-    );
+    ).map((row) => row.teamId);
     const [quarters, semis] = seededBracket(seeds.length);
     const named = (side: { seed: number } | { winnerOf: string } | { loserOf: string }) =>
       "seed" in side ? seeds[side.seed - 1] : side;

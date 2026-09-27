@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import {
-  PLACEHOLDER_ROUNDS,
   type CompetitionTie,
   type Fixture,
   type FootballSnapshot,
@@ -13,7 +12,7 @@ import {
   nextRound,
   periodPairings,
   roundState,
-  seededTies,
+  cupTies,
   londonDayOf,
 } from "@epl/core";
 import { leagueTable, teamBadges } from "../standings";
@@ -138,7 +137,7 @@ export default async function MatchdayPage({
   // Every tie being played this week, not only the league's eight — Craig, 5 Sep
   // 2026: *"'The draft' should be which comp it is (we will have duel comps at
   // times)."* The schedule's own shape and the schedule's own two sources:
-  // Fantrax's pairings, and the knockouts `league/competitions.ts` declares.
+  // Fantrax's pairings, and our cups (`league/cups/declared.ts`).
   // Both reads behind this are already warm — the board's badges and the table
   // come off one cached `getStandings`.
   // Fantrax's own rank, by team id. Empty when the scoreboard would not answer,
@@ -151,11 +150,7 @@ export default async function MatchdayPage({
     drafted?.info != null && period !== null
       ? [
           ...leagueTies(periodPairings(drafted.info.matchups, drafted.info.teams, period)),
-          ...seededTies(
-            PLACEHOLDER_ROUNDS,
-            "unavailable" in table ? [] : table,
-            snapshot.gameweek,
-          ),
+          ...cupTies(drafted.info.teams.length, snapshot.gameweek),
         ]
       : [];
 

@@ -1,9 +1,8 @@
 import {
-  PLACEHOLDER_ROUNDS,
   type CompetitionTie,
+  cupTies,
   leagueTies,
   periodPairings,
-  seededTies,
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import LeagueShell from "../Shell";
@@ -16,8 +15,7 @@ import FantraxSilent from "../../components/shell/FantraxSilent";
 
 // The season ahead: every round the league still has to play, in gameweek order,
 // across every competition being played on it. Fantrax's schedule is the league;
-// the cup and the playoff are ours, declared in `league/competitions.ts`, which
-// is also where the note saying they are a placeholder comes from.
+// the cups are ours (`league/cups/declared.ts`), and every cup side is a placeholder until drawn.
 //
 // **No controls, and that is the change** — Craig, 5 Sep 2026: *"Dont show all
 // the grey arrows here, just show all fixtures for the league itself. CM rows
@@ -101,8 +99,7 @@ export default async function SchedulePage() {
 
   const [mine, crests] = await Promise.all([myTeamId(info.teams), teamBadges()]);
 
-  // Fantrax's own rank, for CM's blue block. Off the table this page already
-  // reads to seed the knockout brackets, so it costs nothing.
+  // Fantrax's own rank, for CM's blue block.
   const places = new Map(table.map((row) => [row.teamId, row.rank] as const));
 
   // **Only the rounds that have started, and there is at most one.** Fantrax
@@ -120,10 +117,10 @@ export default async function SchedulePage() {
   );
   const refused = boards.find((board) => board.refused !== null)?.refused ?? null;
 
-  /** Every tie in one gameweek: Fantrax's pairings and our declared knockouts. */
+  /** Every tie in one gameweek: Fantrax's pairings and our cups. */
   const tiesIn = (at: ScheduleRound): CompetitionTie[] => [
     ...leagueTies(periodPairings(info.matchups, info.teams, at.period)),
-    ...seededTies(PLACEHOLDER_ROUNDS, table, at.gameweek),
+    ...cupTies(info.teams.length, at.gameweek),
   ];
 
   return (

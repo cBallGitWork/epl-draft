@@ -66,9 +66,11 @@ Craig set the formats on 27 Sep. The cups are declared in `packages/core/src/lea
   `"coin toss"`. Every cup tie is one leg.
 - **Group points are 3 for a win and 1 for a draw** (Craig, 27 Sep). A group is placed on points, then
   points for, then draw order; the order after points for is assumed.
-- **Rule exception (CODE_RULES §2): the engines are committed before anything uses them.** Craig asked for
-  the scaffolding first. They are tested, have no screen, and stay off `league/index.ts` until something
-  imports them. The placeholder in `competitions.ts` still drives `/league/schedule`.
+- **On screen with a placeholder draw** (Craig, 27 Sep: *"Placeholder brackets are fine for now"*):
+  `/league/cups` shows each cup as the schedule's fixture list or as a bracket, and Schedule and Live
+  carry the cup ties. Every side is "Seed 7", "A1", "2nd B" or "Winner M5" until GW9 is scored and the
+  groups are drawn; nothing yet puts a team into a slot. `knockoutWinner`, `seedByPoints` and
+  `groupTable` are tested but still read by no screen, which is the step that does.
 
 ## Lawro writes the predictions, under his own name, on Thursday evening — decided 24 Sep 2026
 

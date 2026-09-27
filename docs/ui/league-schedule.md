@@ -89,15 +89,14 @@ and they are the same number all season.
 
 ### Competitions
 
-`league/competitions.ts` declares them. The league's own ties are Fantrax's
-pairings. The cup (semi-finals in gameweek 4, final in 5) and the playoff (final
-in 38, top two) are **a placeholder**, say so on screen, and exist to prove one
-gameweek can carry more than one competition.
+`league/competitions.ts` gathers them. The league's own ties are Fantrax's
+pairings. The two cups are ours, declared in `league/cups/declared.ts`: the
+Timbeibs Cup (GW10 to GW17) and the Davy Propper Cup (GW21 to GW30). The playoff
+is Fantrax's, so it arrives in Fantrax's own pairings.
 
-A knockout side is a place in the table or a phrase, never an invented team:
-seeded sides resolve against the standings as they stand, and a side that is won
-rather than seeded prints "Winner, semi-final 1". An undrafted league draws its
-playoff final between "1st" and "2nd".
+Nobody is drawn into a cup yet, so every cup side is a placeholder and the block
+says so: "Seed 7", a group slot "A1", a group place "2nd B", or "Winner M5". The
+block's head links to that cup's page (`/league/cups`), where M5 is numbered.
 
 The number beside a cup tie is that gameweek's Fantrax total — a cup over fantasy
 points is scored by the week's points.
@@ -105,8 +104,7 @@ points is scored by the week's points.
 ## States
 
 - Fantrax silent — `getLeagueInfo` refused, and only that read is fatal here. A
-  table we cannot read costs the placeholder brackets their seeding and they
-  print places; a badge we cannot read costs a picture.
+  table we cannot read costs the blue place blocks; a badge we cannot read costs a picture.
 - A calendar whose periods hold no gameweek at all.
 - A gameweek with nothing on: no league pairings (every day until 10 Oct) and no
   knockout round — or a competition filter that this gameweek does not play.

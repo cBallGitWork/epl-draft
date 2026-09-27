@@ -30,6 +30,7 @@ nothing.**
 | `/league/matchups/[teamId]` | [matchup.md](matchup.md) | One head-to-head: two totals, and the eleven behind each. |
 | `/league/results` | [league-schedule.md](league-schedule.md) | The archive: every finished round, newest first. |
 | `/league/team-stats` | [league-table.md](league-table.md) | The league ranked by one scoring category at a time. |
+| `/league/cups` | [league-cups.md](league-cups.md) | Each cup's whole draw, round by round, before anyone is drawn. |
 | `/prem` | [prem.md](prem.md) | **The real Premier League table, computed from finished fixtures.** |
 | `/prem/results` | [prem.md](prem.md) | Every finished round of football, newest first. |
 | `/prem/fixtures` | [prem.md](prem.md) | Every round still to come, soonest first. |
