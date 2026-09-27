@@ -6,7 +6,7 @@ import { DASH, type Shot } from "@epl/core";
 import { PITCH_BOX, toBoxY } from "@/app/components/football/pitchBox";
 import ShotMarks, { MarksKey } from "../../../components/football/ShotMarks";
 import { KeyPass, KeyPassKey, Pitch } from "../../../components/football/ShotPitch";
-import { BOARD, ROW_RULE, SECTION_BAR } from "@/app/desk";
+import { BOARD, ROW_RULE, SECTION_BAR, SMALL_CAPS } from "@/app/desk";
 import {
   Head,
   HeadRow,
@@ -91,7 +91,7 @@ export default function ShotMap({
       <div className="grid gap-2 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start">
         <div className="flex min-w-0 flex-col gap-1">
           {/* Each club's plate over the end it attacked. */}
-          <div className="grid grid-cols-2 text-2xs font-bold uppercase">
+          <div className={`grid grid-cols-2 ${SMALL_CAPS}`}>
             <span
               className="flex justify-between px-2 py-1"
               style={{ background: home.colour, color: home.ink }}

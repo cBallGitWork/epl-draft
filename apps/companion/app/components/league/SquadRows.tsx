@@ -1,5 +1,5 @@
 import type { SquadDetailLine, SquadPlayerDetail } from "@epl/core";
-import { SCROLL } from "@/app/desk";
+import { SCROLL, SMALL_CAPS } from "@/app/desk";
 import SquadRow from "./SquadRow";
 
 // The same fifteen as a list. Offered beside the pitch rather than instead of
@@ -110,7 +110,7 @@ export default function SquadRows({
           rather than a small-caps label per position group, which made five
           headings and no columns. The group bars below separate; this names. */}
         {head ? (
-        <div className="cm-bevel flex min-h-7 items-center gap-1.5 px-1.5 text-2xs font-bold uppercase">
+        <div className={`cm-bevel flex min-h-7 items-center gap-1.5 px-1.5 ${SMALL_CAPS}`}>
           <span className="w-10 shrink-0">Pos</span>
           <span className="w-7 shrink-0" />
           {/* **`min-w-0 flex-1` and a basis, not a min-width.** The name column

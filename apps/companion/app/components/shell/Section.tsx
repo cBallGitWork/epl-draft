@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { PANEL } from "@/app/desk";
+import { PANEL, SMALL_CAPS } from "@/app/desk";
 
 // A headed block with a rule under it, ON A PLATE: the shape every tab uses to
 // say "this part is about that". It began as a column of the paper and moved
@@ -59,7 +59,7 @@ export default function Section({
         {title === undefined ? (
           <span />
         ) : (
-          <h2 className="font-chrome text-2xs font-bold uppercase text-muted">{title}</h2>
+          <h2 className={`font-chrome ${SMALL_CAPS} text-muted`}>{title}</h2>
         )}
         {aside ? <span className="text-2xs text-faint">{aside}</span> : null}
       </div>

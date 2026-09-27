@@ -8,7 +8,7 @@ import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
 import { readInbox } from "./inbox";
 import { NEWS } from "../titles";
-import { PANEL_FLUSH, ROW_NAME, SMALL_CAPS } from "@/app/desk";
+import { PANEL_FLUSH, ROW_NAME, SMALL_CAPS, MINOR_CAPS } from "@/app/desk";
 
 // The manager's news, the way Championship Manager files it.
 //
@@ -214,7 +214,7 @@ function Row({
           item, so sharing it would mean an options bag with one caller each. */}
       {item.mark === null ? null : (
         <span
-          className={`numeric shrink-0 self-center px-1 text-3xs font-bold uppercase leading-[1.5] ${
+          className={`numeric shrink-0 self-center px-1 ${MINOR_CAPS} leading-[1.5] ${
             item.mark.out ? "cm-state" : "cm-state-doubt"
           }`}
         >

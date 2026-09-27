@@ -6,8 +6,9 @@ import {
   ROW_NAME,
   ROW_RULE,
   SCROLL,
+  SMALL_CAPS,
 } from "@/app/desk";
-import { MUTE, PlateHead } from "./TableHeads";
+import { MUTE, PlateHead, HeadRow } from "./TableHeads";
 
 // Championship Manager's attribute grid, for a squad's season.
 //
@@ -73,7 +74,7 @@ export default function SeasonGrid({
             {/* Its own title bar, which is how a CM panel opens. The bar carries
                 a title and nothing else — the season below it is content. */}
             <div className="cm-titlebar px-2 py-1">
-              <h2 className="truncate text-2xs font-bold uppercase text-ink">
+              <h2 className={`truncate ${SMALL_CAPS} text-ink`}>
                 {group.name}
               </h2>
             </div>
@@ -91,7 +92,7 @@ export default function SeasonGrid({
             <div className={SCROLL}>
               <table className="w-full border-collapse whitespace-nowrap">
                 <thead>
-                  <tr className="text-3xs uppercase">
+                  <HeadRow>
                     {/* The bevel goes on a block inside each cell and never on
                         the cell: these tables collapse their borders, so a strip
                         of bevelled cells loses its inner edges (desk.css). */}
@@ -112,7 +113,7 @@ export default function SeasonGrid({
                     })}
                     <PlateHead at="end" title="Fantasy points, Fantrax's own">FPts</PlateHead>
                     <PlateHead at="end" title="Fantasy points a game">FP/G</PlateHead>
-                  </tr>
+                  </HeadRow>
                 </thead>
 
                 <tbody>

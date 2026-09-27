@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { SMALL_CAPS } from "@/app/desk";
 
 // The strip at the head of one round's block of matches: which gameweek it is,
 // and whatever that screen has to add about it.
@@ -34,7 +35,7 @@ export default function RoundHead({
   children?: ReactNode;
 }) {
   return (
-    <h2 className="cm-bevel flex h-7 items-center justify-between gap-3 px-1.5 text-2xs font-bold uppercase">
+    <h2 className={`cm-bevel flex h-7 items-center justify-between gap-3 px-1.5 ${SMALL_CAPS}`}>
       <span className="shrink-0">Gameweek {gameweek}</span>
       {children}
     </h2>

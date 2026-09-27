@@ -3,7 +3,7 @@ import { PITCH_BOX } from "@/app/components/football/pitchBox";
 import type { Club } from "@epl/core";
 import { placeLabels } from "./labels";
 import type { Placed } from "./labels";
-import { SECTION_BAR } from "@/app/desk";
+import { SECTION_BAR, SMALL_CAPS } from "@/app/desk";
 
 // Where each eleven actually played: every starter at the average of his own touches (SofaScore's own average
 // position, 30/30 fixtures, PLATFORM_NOTES), one pitch per side so the shapes do not interleave. Starters only —
@@ -71,7 +71,7 @@ function Side({
     <div className="flex flex-col">
       {/* The club's plate over its grass, and its formation at the right as `cm9900/19.jpg` sets it. */}
       <div
-        className="flex items-baseline justify-between gap-2 px-2 py-1 text-2xs font-bold uppercase"
+        className={`flex items-baseline justify-between gap-2 px-2 py-1 ${SMALL_CAPS}`}
         style={{ background: colours.primary, color: ink }}
       >
         <span className="min-w-0 truncate">{club?.shortName ?? DASH}</span>

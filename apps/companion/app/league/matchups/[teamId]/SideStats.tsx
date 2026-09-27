@@ -6,7 +6,7 @@ import Section from "../../../components/shell/Section";
 import PositionTile from "../../../components/league/PositionTile";
 import { ROW_LINK } from "../../../components/league/TableCells";
 import { LeadHeads, sortedAs, SortHead } from "../../../components/league/TableHeads";
-import { BOARD, PINNED_NAME, PINNED_TILE, ROW_FIGURE, ROW_NAME, ROW_RULE } from "@/app/desk";
+import { BOARD, PINNED_NAME, PINNED_TILE, ROW_FIGURE, ROW_NAME, ROW_RULE, SMALL_CAPS } from "@/app/desk";
 import SubNote from "../../../prem/match/[id]/SubNote";
 import ScrollBoard from "../../../components/league/ScrollBoard";
 import { MaybeCard } from "../../../prem/match/[id]/PlayerCardButton";
@@ -74,7 +74,7 @@ export default function SideStats({
                   <th
                     scope="rowgroup"
                     colSpan={heads.length + 2}
-                    className="cm-bevel h-6 px-1.5 text-left text-2xs font-bold uppercase"
+                    className={`cm-bevel h-6 px-1.5 text-left ${SMALL_CAPS}`}
                   >
                     Bench · not counted
                   </th>

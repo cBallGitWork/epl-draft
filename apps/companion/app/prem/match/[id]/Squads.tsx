@@ -3,7 +3,7 @@ import { clubColoursOf, inkOn, DASH } from "@epl/core";
 import PositionTile from "../../../components/league/PositionTile";
 import { clubIndex } from "../../../components/football/clubIndex";
 import { intelSquads } from "../../../intel";
-import { BOARD, PANEL_FLUSH, ROW_NAME, ROW_RULE, phoneShows } from "@/app/desk";
+import { BOARD, PANEL_FLUSH, ROW_NAME, ROW_RULE, phoneShows, SMALL_CAPS } from "@/app/desk";
 import { fantraxPositions, type LeagueOpinion } from "../../leagueOpinions";
 import { MaybeCard } from "./PlayerCardButton";
 import OwnedBy from "./OwnedBy";
@@ -71,7 +71,7 @@ function Side({
   return (
     <section className={`${PANEL_FLUSH} cm-index-scoped min-w-0 ${phoneShows(phonePicked)}`} style={clubIndex(club)}>
       <h2
-        className="flex min-h-7 items-center px-1.5 text-2xs font-bold uppercase"
+        className={`flex min-h-7 items-center px-1.5 ${SMALL_CAPS}`}
         style={{ background: colours.primary, color: inkOn(colours) }}
       >
         {club?.name ?? DASH}

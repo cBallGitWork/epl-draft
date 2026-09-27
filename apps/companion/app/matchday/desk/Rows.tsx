@@ -1,5 +1,6 @@
 import { Club, Fixture, FootballPlayer, LiveTeamScore, PeriodPairing, londonWeekday, londonTime, DASH } from "@epl/core";
 import ScoreFigure from "../../components/league/ScoreFigure";
+import { SMALL_CAPS } from "@/app/desk";
 
 // The desk's two kinds of line, at the density the desk is for.
 //
@@ -95,7 +96,7 @@ export function Match({
       {/* The tick where the kickoff time used to be. No HT: FPL publishes a
           minute and a finished flag, and a clock stopped on 45 is not a claim
           they have made — a match genuinely in its 45th minute reads the same. */}
-      <span className="w-9 shrink-0 text-right text-2xs font-bold uppercase">
+      <span className={`w-9 shrink-0 text-right ${SMALL_CAPS}`}>
         {fixture.status === "live" ? (
           <span className="text-live">{fixture.minutes}′</span>
         ) : fixture.status === "finished" ? (
