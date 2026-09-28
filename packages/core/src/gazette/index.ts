@@ -65,7 +65,7 @@ export type {
   TeamOfTheWeek,
 } from "./types";
 
-export { fullClubName } from "./clubNames";
+export { fullClubName, shortClubName } from "./clubNames";
 
 // Team news at the lock: each side's sheet, what changed, the brief, the editor and the column.
 export { sheetOf } from "./sheets/sheet";

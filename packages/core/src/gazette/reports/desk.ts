@@ -63,6 +63,7 @@ function nominees(match: ReportMatchInput, events: readonly MatchEvent[], counts
   };
   for (const m of match.men.filter((x) => scored(x) + made(x) >= 2)) add(m, `${scored(m)} goal(s), ${made(m)} assist(s)`);
   for (const m of match.men.filter((x) => x.injuredOff && x.holder !== null)) add(m, `went off injured; held by ${m.holder!.team}`);
+  for (const m of match.men.filter((x) => x.holder !== null && scored(x) + made(x) > 0)) add(m, `${scored(m) > 0 ? "scored" : "made a goal"}; held by ${m.holder!.team}`);
   for (const m of match.men.filter((x) => x.holder === null && played(x) && (scored(x) + made(x) > 0 || (counts.get(x.code)?.shots ?? 0) >= 3 || (counts.get(x.code)?.chancesMade ?? 0) >= 3))) add(m, "nobody in the league holds him");
   for (const m of match.men.filter((x) => x.holder?.fielded === true && !x.started)) add(m, `${m.holder!.team} fielded him and he did not start`);
   for (const m of match.men.filter((x) => (counts.get(x.code)?.deliveries ?? 0) > 0 && made(x) > 0)) add(m, "made a goal from a set piece");

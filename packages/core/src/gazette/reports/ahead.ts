@@ -1,5 +1,6 @@
 import type { Club, Fixture } from "../../football/types";
 import { londonDayOf } from "../../time";
+import { fullClubName } from "../clubNames";
 import { standing } from "../predictions/squad";
 
 // A club's next three matches after the report's day, the opponent in words only when it sits at an end of the ratings.
@@ -32,6 +33,6 @@ export function nextThree(
       const opponent = byId.get(home ? f.awayClubId : f.homeClubId);
       if (opponent === undefined) return [];
       const words = [standing(opponent.code, "attack", table), standing(opponent.code, "defence", table)].filter((w): w is string => w !== null);
-      return [{ opponent: opponent.name, home, words }];
+      return [{ opponent: fullClubName(opponent.name), home, words }];
     });
 }

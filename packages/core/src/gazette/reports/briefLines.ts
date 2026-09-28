@@ -97,7 +97,7 @@ export function manLine(match: ReportMatchInput, man: ReportMan, counts: ManCoun
   }
   if (man.yellowsBefore >= 3) parts.push(`${numeral(man.yellowsBefore)} bookings this season before today`);
   parts.push(man.holder === null ? "nobody in the league holds him" : `held by ${man.holder.team}, ${man.holder.fielded ? "in their eleven" : "among their reserves"}`);
-  if (man.points !== null && man.holder !== null) parts.push(`${man.points} points for ${man.holder.team}`);
+  if (man.points !== null && man.holder !== null) parts.push(`${man.points} point${man.points === 1 ? "" : "s"} for ${man.holder.team}`);
   if (man.fitness !== null) parts.push(`fitness since: ${man.fitness}`);
   return `- ${man.name} (${clubOf(match, man)}): ${parts.join("; ")}`;
 }

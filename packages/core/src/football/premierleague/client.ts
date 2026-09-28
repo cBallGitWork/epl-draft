@@ -3,6 +3,7 @@ import { politeFetch } from "../../http/fetch";
 import type {
   RawPlFixture,
   RawPlFixturePage,
+  RawPlStaff,
   RawPlTextstream,
 } from "./raw";
 import type { RawPlMatchStats } from "./rawStats";
@@ -86,3 +87,8 @@ export function fetchPlMatchStats(id: number): Promise<RawPlMatchStats> {
   return get<RawPlMatchStats>(`/stats/match/${id}`);
 }
 
+
+/** A club's registered squad and officials this season; the officials include its manager. */
+export function fetchPlStaff(teamId: number): Promise<RawPlStaff> {
+  return get<RawPlStaff>(`/teams/${teamId}/compseasons/${PL_COMP_SEASON}/staff?type=all`);
+}

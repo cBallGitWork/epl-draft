@@ -167,7 +167,7 @@ export async function predictionsDesk(input: {
 }
 
 /** Each club's place by the sister repo's ratings, strongest first, by FPL club code. */
-function places(strengths: ReturnType<typeof strengthIntel>, measure: "attack" | "defence"): Map<number, number> {
+export function places(strengths: ReturnType<typeof strengthIntel>, measure: "attack" | "defence"): Map<number, number> {
   return new Map(strengthTable(strengths, measure).map((row, at) => [row.code, at + 1]));
 }
 
