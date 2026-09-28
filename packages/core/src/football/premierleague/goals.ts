@@ -56,6 +56,15 @@ export function plGoals(fixture: RawPlFixture, optaToCode: Map<string, number>):
   return goals.sort((a, b) => a.minute - b.minute);
 }
 
+/** How many of these goals each man is already placed on as the assister. */
+export function assistsPlaced(goals: readonly PlGoal[]): Map<number, number> {
+  const placed = new Map<number, number>();
+  for (const goal of goals) {
+    if (goal.assister !== null) placed.set(goal.assister, (placed.get(goal.assister) ?? 0) + 1);
+  }
+  return placed;
+}
+
 /** One side's goals with their assisters filled in, reconciled against FPL.
  *
  *  **The fantasy assist is broader than Opta's, and the gap is derivable rather
@@ -89,11 +98,7 @@ export function creditedGoals(
   goals: readonly PlGoal[],
   fplAssists: ReadonlyMap<number, number>,
 ): PlGoal[] {
-  const placed = new Map<number, number>();
-  for (const goal of goals) {
-    if (goal.assister === null) continue;
-    placed.set(goal.assister, (placed.get(goal.assister) ?? 0) + 1);
-  }
+  const placed = assistsPlaced(goals);
 
   const unexplained = goals.filter((goal) => goal.assister === null);
 

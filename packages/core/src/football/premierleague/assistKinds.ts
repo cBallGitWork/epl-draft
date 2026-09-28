@@ -1,5 +1,5 @@
 import { streamCredited, type StreamCredit } from "./assists";
-import { creditedGoals, type PlGoal } from "./goals";
+import { assistsPlaced, creditedGoals, type PlGoal } from "./goals";
 
 // The fantasy assists whose KIND names the goal they made, off the stats league's per-gameweek counts.
 
@@ -41,10 +41,7 @@ export function kindCredited(
   for (const { kind, is } of KINDS) {
     const targets = out.flatMap((goal, at) => (goal.assister === null && is(goal, freeKicker) ? [at] : []));
     if (targets.length === 0) continue;
-    const placed = new Map<number, number>();
-    for (const goal of out) {
-      if (goal.assister !== null) placed.set(goal.assister, (placed.get(goal.assister) ?? 0) + 1);
-    }
+    const placed = assistsPlaced(out);
     const claimants = [...paid].filter(
       ([code, count]) => (kinds.get(code)?.[kind] ?? 0) > 0 && count > (placed.get(code) ?? 0),
     );
