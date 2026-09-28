@@ -1,13 +1,12 @@
+import { REPORTS } from "../../config";
 import { minutesLeft, numeral } from "./minutes";
 import { finalScore, isGoal, type MatchEvent } from "./timeline";
 import type { ReportMatchInput, Side } from "./types";
 
 // Facts worked out from the timeline so the writer never does sums: a lead, a burst, a late winner, a conversion rate.
 
-const BURST = 15;
-const LATE = 80;
-const MOST = 60;
-const MORE = 55;
+const { burstMinutes: BURST, lateMinute: LATE, cleanSheetLostFrom: CLEAN_SHEET_LOST } = REPORTS;
+const { most: MOST, more: MORE } = REPORTS.ball;
 
 const other = (side: Side): Side => (side === "home" ? "away" : "home");
 const higherFirst = (a: number, b: number) => `${Math.max(a, b)}-${Math.min(a, b)}`;
@@ -61,7 +60,7 @@ export function derivedFacts(match: ReportMatchInput, events: readonly MatchEven
   for (const side of ["home", "away"] as const) {
     const first = goals.find((g) => g.side === other(side));
     const late = first?.phrases.find((phrase) => phrase.endsWith("from time")) ?? first?.phrases[0];
-    if (first !== undefined && first.at >= 75 && late !== undefined) facts.push(`${name(side)}'s clean sheet went ${late}`);
+    if (first !== undefined && first.at >= CLEAN_SHEET_LOST && late !== undefined) facts.push(`${name(side)}'s clean sheet went ${late}`);
   }
 
   const figures = match.figures;

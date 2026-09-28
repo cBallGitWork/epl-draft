@@ -395,3 +395,22 @@ export const SHEETS = {
   /** Paragraphs that may open with the same three words, a name blanked. */
   openers: 2,
 } as const;
+
+/** The match-day report's editorial thresholds (docs/plans/GAZETTA.md, "Match reports, woven"). */
+export const REPORTS = {
+  budget: {
+    lead: { words: [300, 380], sections: 3, stats: 6 },
+    ordinary: { words: [200, 260], sections: 2, stats: 4 },
+    dead: { words: [90, 140], sections: 1, stats: 3 },
+  },
+  /** A burst is two goals by one side this close; late is from this minute. */
+  burstMinutes: 15,
+  lateMinute: 80,
+  cleanSheetLostFrom: 75,
+  /** The ball in words: "most of" from, "more of" from. Never printed as a figure. */
+  ball: { most: 60, more: 55 },
+  /** A key-stats line earns its place past these. xA only chooses; it never prints. */
+  stats: { mostShots: 4, chances: 3, expectedAssists: 0.4, saves: 5, freeNames: 4 },
+  /** Candidates offered beyond the sections a match gets. */
+  spareNominees: 3,
+} as const;
