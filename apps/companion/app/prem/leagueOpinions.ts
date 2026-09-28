@@ -1,4 +1,4 @@
-import { isResolved, isUnmapped } from "@epl/core";
+import { fplCodeOf, isResolved } from "@epl/core";
 import { leagueInfo } from "../round";
 import { bridge, getLeagueSquads } from "../squads";
 
@@ -26,12 +26,6 @@ export async function leagueOpinions(): Promise<Map<number, LeagueOpinion>> {
   const [info, squads] = await Promise.all([leagueInfo(), getLeagueSquads()]);
   if (info === null) return new Map();
 
-  // The bridge runs Fantrax id → FPL code, so it is inverted; an unmapped row is a settled answer, not a gap.
-  const fplCodeOf = new Map<string, number>();
-  for (const [fantraxId, entry] of Object.entries(bridge)) {
-    if (!isUnmapped(entry)) fplCodeOf.set(fantraxId, entry.fplCode);
-  }
-
   // Who holds whom, off the already-resolved slots; an undrafted or unreadable league answers nobody.
   const owners = new Map<number, string>();
   if (!("undrafted" in squads) && !("unavailable" in squads)) {
@@ -44,8 +38,8 @@ export async function leagueOpinions(): Promise<Map<number, LeagueOpinion>> {
 
   const opinions = new Map<number, LeagueOpinion>();
   for (const player of info.players) {
-    const code = fplCodeOf.get(player.fantraxId);
-    if (code === undefined) continue;
+    const code = fplCodeOf(bridge, player.fantraxId);
+    if (code === null) continue;
     opinions.set(code, {
       fantraxId: player.fantraxId,
       positions: player.eligiblePositions,

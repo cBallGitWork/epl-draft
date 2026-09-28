@@ -6,7 +6,7 @@ import {
   POOL_PAGE_SIZE,
   fetchLeagueInfo,
   fetchPoolStats,
-  isUnmapped,
+  fplCodeOf,
   mapAssistKinds,
   mapLeagueInfo,
   mapPlayerStats,
@@ -42,8 +42,8 @@ const kindsOf = unstable_cache(
     const raw = await orRefusal(fetchPoolStats(league, POOL_PAGE_SIZE, undefined, OUTFIELD, period));
     if (raw instanceof FantraxError) return [];
     return mapAssistKinds(mapPlayerStats(raw)).flatMap(({ fantraxId, kinds }) => {
-      const entry = bridge[fantraxId];
-      return entry === undefined || isUnmapped(entry) ? [] : [[entry.fplCode, kinds]];
+      const code = fplCodeOf(bridge, fantraxId);
+      return code === null ? [] : [[code, kinds]];
     });
   },
   ["assist-kinds"],

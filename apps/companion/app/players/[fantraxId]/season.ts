@@ -1,4 +1,4 @@
-import { clubById, isUnmapped, playerByCode } from "@epl/core";
+import { clubById, fplCodeOf, playerByCode } from "@epl/core";
 import type { Club, FootballPlayer } from "@epl/core";
 import { footballNow } from "../../football";
 import { bridge } from "../../squads";
@@ -17,9 +17,9 @@ import { bridge } from "../../squads";
 export async function footballSelf(
   fantraxId: string,
 ): Promise<{ player: FootballPlayer; club: Club | undefined } | null> {
-  const entry = bridge[fantraxId];
-  if (!entry || isUnmapped(entry)) return null;
+  const code = fplCodeOf(bridge, fantraxId);
+  if (code === null) return null;
   const snapshot = await footballNow();
-  const player = playerByCode(snapshot).get(entry.fplCode);
+  const player = playerByCode(snapshot).get(code);
   return player === undefined ? null : { player, club: clubById(snapshot).get(player.clubId) };
 }

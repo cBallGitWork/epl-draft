@@ -87,8 +87,8 @@ export default async function MatchdayPage({
     roundGoals(snapshot.gameweek, snapshot.players),
     roundStreams(snapshot.gameweek),
     roundBreaks(snapshot.gameweek),
-    // FPL's own per-man assist counts, which is what audits the commentary's
-    // proposal in `creditAssists`. One cached read for the round.
+    // FPL's own per-man assist counts, which audit every proposal in `creditAssists`.
+    // One cached read for the round.
     gameweekLive(snapshot.gameweek),
     readerTeamId(),
     getLeagueSquads(),

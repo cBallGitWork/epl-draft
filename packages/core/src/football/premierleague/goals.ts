@@ -80,13 +80,14 @@ export function assistsPlaced(goals: readonly PlGoal[]): Map<number, number> {
  *  man laid on which — so neither is credited and the caller shows what it knows.
  *  A mis-paired assist is the confident wrong statement DESIGN §7 refuses.
  *
- *  **This is the SECOND thing a caller tries, since 11 Sep 2026.** Arithmetic on
+ *  **This is the LAST thing a caller tries** (`creditSide`): after the stats
+ *  league's kinds (28 Sep 2026) and the commentary (11 Sep 2026). Arithmetic on
  *  its own cannot reach the case above, and `assists.ts` can: the commentary
  *  carries the penalty won, the shot that forced an own goal and the block that
  *  left a rebound as events, so it proposes a whole assignment and has FPL's own
  *  counts confirm it. Man Utd 5-2 Ipswich is the fixture that needed it — three
  *  men each short by one against three unexplained goals, where this function
- *  correctly credits nobody. It runs when that proposal does not verify, which
+ *  correctly credits nobody. It runs on whatever the two before it left, which
  *  is exactly the ground it always covered.
  *
  *  Returns the goals unchanged apart from the assisters it could resolve, so a

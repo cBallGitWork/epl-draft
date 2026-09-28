@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { type Bridge, isAssumed, isUnmapped, mergeBridge, settledIds } from "./bridge";
+import { type Bridge, fplCodeOf, isAssumed, isUnmapped, mergeBridge, settledIds } from "./bridge";
 
 describe("mergeBridge", () => {
   it("adds players it has never seen", () => {
@@ -128,5 +128,21 @@ describe("isUnmapped", () => {
     expect(isUnmapped({ status: "unmapped", unmappedBy: "no-fpl-match" })).toBe(true);
     expect(isUnmapped({ status: "unmapped", unmappedBy: "manual" })).toBe(true);
     expect(isUnmapped({ fplCode: 1, matchedBy: "exact", confidence: 100 })).toBe(false);
+  });
+});
+
+describe("fplCodeOf", () => {
+  const bridge: Bridge = {
+    a1: { fplCode: 100, matchedBy: "exact", confidence: 100 },
+    b2: { status: "unmapped", unmappedBy: "no-fpl-match" },
+  };
+
+  it("answers a matched man's code", () => {
+    expect(fplCodeOf(bridge, "a1")).toBe(100);
+  });
+
+  it("answers null for a man FPL has no row for, and for one the bridge has not seen", () => {
+    expect(fplCodeOf(bridge, "b2")).toBeNull();
+    expect(fplCodeOf(bridge, "zz")).toBeNull();
   });
 });
