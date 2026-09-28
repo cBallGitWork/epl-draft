@@ -237,9 +237,32 @@
       "news:https://www.bbc.co.uk/sport/football/articles/c6qjk1122e9jo",
       "news:https://www.bbc.co.uk/sport/football/articles/cmwyzjedq51lo",
       "news:https://www.bbc.co.uk/sport/football/articles/c6eq8eygy4e5o",
-      "news:https://www.bbc.co.uk/sport/football/articles/ckeq8vq7rwe7o"
+      "news:https://www.bbc.co.uk/sport/football/articles/ckeq8vq7rwe7o",
+      "news:https://www.bbc.co.uk/sport/football/articles/cm74kp52d3xko",
+      "news:https://www.bbc.co.uk/sport/football/articles/cm0qxknzpn8jo"
     ],
     "threads": [
+      {
+        "subject": "123's scoring ceiling",
+        "beat": "The league's top scorer's cornerstone now sits under a cloud, however faint",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-09-28T08:42:27.494Z"
+      },
+      {
+        "subject": "123's Haaland asset",
+        "beat": "City uncertainty draws Haaland into the transfer gossip, nothing confirmed",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-28T08:42:27.494Z"
+      },
+      {
+        "subject": "test211's Gakpo fitness",
+        "beat": "Gakpo hurt on international duty, involvement curtailed, no timeline given.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-28T08:42:27.494Z"
+      },
       {
         "subject": "test31121's Gabriel asset",
         "beat": "Gabriel named among the academy players in the market the BBC is tracking.",
@@ -278,13 +301,6 @@
       {
         "subject": "test3's misfiring forwards",
         "beat": "Emersonn and Gonzalo blanked in all but two apiece, and it cost him the tie.",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-23T17:18:14.294Z"
-      },
-      {
-        "subject": "123's scoring ceiling",
-        "beat": "77 on the board, the highest in the league, and only three points to show for it.",
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-23T17:18:14.294Z"

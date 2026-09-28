@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-25T14:21:15.715Z",
+  "updatedAt": "2026-09-28T08:42:27.494Z",
   "stories": [
     {
       "slug": "news-cmrr48zqz1jno",
@@ -569,6 +569,46 @@
           }
         }
       ]
+    },
+    {
+      "slug": "news-cm74kp52d3xko",
+      "kind": "news",
+      "leagueId": "zbn1z3ukmsgb36sz",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-28T08:42:27.494Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "123 Left To Sweat On Haaland's Future",
+      "deck": "City uncertainty puts 123's Haaland in the transfer gossip as Barcelona eye Estevao",
+      "body": "The gossip column names 123's most valuable asset, and it names him in the wrong context. Erling Haaland, the forward 123 holds, is drawn into the uncertainty at City in Monday's wire, the sort of paragraph an owner reads twice and then reads again.\n\nNothing is confirmed and nothing is imminent. The copy monitors interest, no more, and no timeline attaches to any of it. For 123 the material fact is unchanged: Haaland remains his player and remains in the line-up until something firmer than a gossip column says otherwise.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/articles/cm74kp52d3xko"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
+      "slug": "news-cm0qxknzpn8jo",
+      "kind": "news",
+      "leagueId": "zbn1z3ukmsgb36sz",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-28T08:42:27.494Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "Gakpo Cut Short, test211 In The Dark",
+      "deck": "Cody Gakpo, owned by test211, hurt on international duty; no timeline given.",
+      "body": "Add Cody Gakpo to the international break's casualty list, and add test211 to the managers left waiting on it. His Nations League involvement was curtailed by injury, alongside Bruno Fernandes and Patrick Dorgu, and that is as far as the wire will take us.\n\nWhat it costs test211, and for how long, nobody has said. No return date has been put on Gakpo. Until one is, test211 plans a Gameweek 6 line-up around a forward whose fitness is another country's business.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/articles/cm0qxknzpn8jo"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
     },
     {
       "slug": "news-ckeq8vq7rwe7o",
