@@ -63,6 +63,12 @@ export function derivedFacts(match: ReportMatchInput, events: readonly MatchEven
     if (first !== undefined && first.at >= CLEAN_SHEET_LOST && late !== undefined) facts.push(`${name(side)}'s clean sheet went ${late}`);
   }
 
+  // A man whose chances added up to a goal and more, with none scored, in words (the paper never prints the figure).
+  for (const man of match.men) {
+    const scored = goals.some((g) => g.kind !== "own-goal" && g.man?.code === man.code);
+    if (!scored && man.expectedGoals >= REPORTS.missed.expectedGoals) facts.push(`${man.name} (${name(man.side)}) had chances good enough to score and did not`);
+  }
+
   const figures = match.figures;
   if (figures !== null) {
     for (const side of ["home", "away"] as const) {

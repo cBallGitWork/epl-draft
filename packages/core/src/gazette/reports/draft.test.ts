@@ -7,6 +7,11 @@ const drafted = (tag: string): ReportsDraft => ({ headline: `${tag} headline`, h
 const f = (section: string, severity: Fault["severity"]): Fault => ({ section, check: "x", severity, evidence: "" });
 
 describe("readReportsDraft", () => {
+  it("keeps an account filed as paragraphs, a paragraph to a line", () => {
+    const draft = readReportsDraft({ matches: [{ fixture: 1, standfirst: "s", account: ["One.", "", "Two."], sections: [] }] });
+    expect(draft.matches.get(1)?.account).toBe("One.\nTwo.");
+  });
+
   it("reads the model's JSON field by field and pencils the slips", () => {
     const draft = readReportsDraft({ headlines: [{ text: "Villa hold on!", playsOn: "hold", twoMeanings: "keep the lead; grip" }, { text: "A plain line", playsOn: "", twoMeanings: "" }], matches: [{ fixture: "5", standfirst: "Villa were up 3-0 at halftime — then not.", account: "a", sections: [{ head: "h", pitch: "p", stake: 3 }] }, "junk"] });
     expect(draft.headline).toBe("Villa hold on.");

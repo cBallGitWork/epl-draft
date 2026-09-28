@@ -9,13 +9,14 @@ import { isGoal } from "./timeline";
 // handed once and marked with the part it belongs to, so the standfirst, the account and the sections cannot repeat each other.
 
 export function matchBlock(desk: MatchDesk): string {
-  const { match, events, counts, standing, facts, opening, described, budget, nominees, lead } = desk;
+  const { match, events, counts, standing, facts, opening, described, misses, budget, nominees, lead } = desk;
   const f = match.fixture;
   const club = (side: "home" | "away") => {
     const c = match[side];
     return `${c.name}${c.shorts.length === 0 ? "" : ` (or ${c.shorts.join(" or ")})`}${c.manager === null ? "" : `, managed by ${c.manager}`}`;
   };
   const goals = events.filter(isGoal);
+  const missed = new Set(misses);
   const decisiveSubs = new Set(match.men.filter((m) => !m.started && goals.some((g) => g.man?.code === m.code || g.other?.code === m.code)).map((m) => m.code));
   const table = (["home", "away"] as const).flatMap((side) => (standing[side] === null ? [] : [`- ${match[side].name}: ${standing[side]!.lines.join("; ")}`]));
   const [least, most] = budget.account;
@@ -29,7 +30,7 @@ export function matchBlock(desk: MatchDesk): string {
     [
       "WHAT HAPPENED, in order. Each line gives the minute phrases you may use in brackets; use one or none, never a figure of your own:",
       ...events.flatMap((event) => {
-        const line = eventLine(match, event, event === described, decisiveSubs);
+        const line = eventLine(match, event, event === described, decisiveSubs, missed);
         return line === null ? [] : [`- ${line}`];
       }),
     ].join("\n"),

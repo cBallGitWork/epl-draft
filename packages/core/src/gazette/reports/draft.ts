@@ -90,7 +90,9 @@ export function readReportsDraft(raw: Record<string, unknown>, surnames: readonl
       const r = s as Record<string, unknown>;
       return [{ head: text(r.head), pitch: text(r.pitch), stake: text(r.stake) }];
     });
-    matches.set(code, { standfirst: text(m.standfirst), account: text(m.account), sections });
+    // An account may come as paragraphs; it is kept as one string, a paragraph to a line.
+    const account = Array.isArray(m.account) ? m.account.map(text).filter((p) => p !== "").join("\n") : text(m.account);
+    matches.set(code, { standfirst: text(m.standfirst), account, sections });
   }
   const { headlines: offered, meanings } = readHeadlines(raw);
   return { headline: offered[0] ?? "", headlines: offered, meanings, headlineStory: text(raw.headlineStory), matches };

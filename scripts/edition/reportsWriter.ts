@@ -16,6 +16,7 @@ import {
   mergeReports,
   plainHead,
   readReportsDraft,
+  weaveBrief,
   REPORT_NEVER,
   banned,
   surname,
@@ -27,15 +28,15 @@ import { FANTRAX_LEAGUE_ID, plainStandfirst, reportsCargo } from "@epl/core";
 import { writeColumn } from "./newsroom";
 import { readArchive } from "./persist";
 import type { ReportsJob } from "./reports";
-import { FAN_VOICE, LINE_EDIT_VOICE, PUN_VOICE, REPORTS_VOICE, reportsSendBack } from "./voice/reports";
+import { FAN_VOICE, LINE_EDIT_VOICE, PUN_VOICE, REPORTS_VOICE, WEAVE_VOICE, reportsSendBack } from "./voice/reports";
 
 // The match desk's newsroom: the reporter writes the day, the editor checks every match against its facts, the fan reads
-// it back, it goes back once for what either found, and each match keeps its best attempt.
+// it back, it goes back once for what either found, each match keeps its best attempt, and the senior writer weaves it.
 
 export interface ReportsLog {
   attempts: { faults: Fault[] }[];
   fan: Fault[];
-  kept: Record<number, "first" | "rewrite" | "plain">;
+  kept: Record<number, "first" | "rewrite" | "woven" | "plain">;
   usage: { input: number; output: number };
 }
 
@@ -98,7 +99,10 @@ export async function writeReports(
     }
   }
 
-  const merged = mergeReports(attempts, codes);
+  const checked = mergeReports(attempts, codes);
+  // The senior writer's pass over what survived; each match keeps the woven copy unless it breaks more rules than before.
+  const woven = await weave(brief, checked, ctx, codes, surnames, count, say);
+  const merged = woven.draft;
   // The one pencil after the merge: a head still breaking the rules prints as its man's name.
   const never = (text: string) => banned(text, REPORT_NEVER).length > 0;
   const headed = {
@@ -118,7 +122,7 @@ export async function writeReports(
   const kept: ReportsLog["kept"] = {};
   for (const code of codes) {
     const piece = draft.matches.get(code);
-    kept[code] = piece === undefined ? "plain" : piece.standfirst === first.matches.get(code)?.standfirst ? "first" : "rewrite";
+    kept[code] = piece === undefined ? "plain" : woven.codes.has(code) ? "woven" : piece.standfirst === first.matches.get(code)?.standfirst ? "first" : "rewrite";
   }
   for (const code of codes.filter((c) => kept[c] === "plain")) {
     const why = attempts.flatMap((a, i) => a.faults.filter((f) => matchOf(f.section) === code && f.severity === "hard").map((f) => `attempt ${i + 1}: ${f.check} [${f.evidence}]`));
@@ -126,6 +130,34 @@ export async function writeReports(
   }
   say(`  reports: headline ${chosen === null ? "none chosen, the lead result prints" : `"${chosen}"`} from ${candidates.length} of ${first.headlines.length} candidates`);
   return { draft, brief, log: { attempts: attempts.map((a) => ({ faults: [...a.faults] })), fan, kept, usage } };
+}
+
+/** One call per `perCall` matches; a match whose woven copy has a hard fault, or more faults than the checked one, keeps
+ *  the checked one. */
+async function weave(
+  brief: string,
+  checked: ReportsDraft,
+  ctx: Parameters<typeof checkReports>[1],
+  codes: readonly number[],
+  surnames: readonly string[],
+  count: (u: { input_tokens?: number; output_tokens?: number }) => void,
+  say: (message: string) => void,
+): Promise<{ draft: ReportsDraft; codes: Set<number> }> {
+  const present = codes.filter((code) => checked.matches.has(code));
+  const woven: ReportsDraft = { headline: "", headlines: [], matches: new Map() };
+  for (let at = 0; at < present.length; at += REPORTS.perCall) {
+    const chunk = present.slice(at, at + REPORTS.perCall);
+    const raw = await writeColumn(WEAVE_VOICE, weaveBrief(brief, checked, chunk), count).catch(() => null);
+    if (raw === null) continue;
+    for (const [code, piece] of readReportsDraft(raw, surnames).matches) if (chunk.includes(code)) woven.matches.set(code, piece);
+  }
+  const before = checkReports(checked, ctx);
+  const after = checkReports(woven, ctx).filter((f) => f.section === "day" || woven.matches.has(matchOf(f.section)));
+  const draft = { ...checked, matches: mergeReports([{ draft: woven, faults: after }, { draft: checked, faults: before }], present).matches };
+  const kept = new Set(present.filter((code) => draft.matches.get(code) === woven.matches.get(code)));
+  say(`  reports: woven ${kept.size} of ${present.length}; faults ${before.filter((f) => f.severity !== "warn").length} before, ${after.filter((f) => f.severity !== "warn").length} woven`);
+  for (const f of after.filter((x) => x.severity !== "warn")) say(`    woven fault ${f.section}: ${f.check} [${f.evidence}]`);
+  return { draft, codes: kept };
 }
 
 /** The prose of the last few report days, newest first, so a new day does not echo them. */

@@ -127,5 +127,6 @@ export { applyFixes, faultySentences } from "./reports/lineEdit";
 export type { LineFix } from "./reports/lineEdit";
 export { punBrief } from "./reports/headline";
 export { readHeadlines } from "./reports/draft";
+export { weaveBrief } from "./reports/weave";
 export { repeatsIn } from "./reports/repeats";
 export type { Repeat } from "./reports/repeats";

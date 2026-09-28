@@ -22,8 +22,9 @@ function describe(event: MatchEvent): string {
   return [s.foot === "header" ? "a header" : s.foot === null ? null : `${s.foot === "right foot" ? "right" : "left"}-footed`, s.from, s.to].filter(Boolean).join(", ");
 }
 
-/** A moment the account may tell, or null for one that belongs to the timeline alone. */
-export function eventLine(match: ReportMatchInput, event: MatchEvent, full: boolean, decisiveSubs: ReadonlySet<number>): string | null {
+/** A moment the account may tell, or null for one that belongs to the timeline alone. `misses` are the chances not taken
+ *  worth a sentence where they happened. */
+export function eventLine(match: ReportMatchInput, event: MatchEvent, full: boolean, decisiveSubs: ReadonlySet<number>, misses: ReadonlySet<MatchEvent>): string | null {
   const man = who(match, event.man);
   const score = event.score === null ? "" : ` ${Math.max(event.score.home, event.score.away)}-${Math.min(event.score.home, event.score.away)} to ${event.score.home > event.score.away ? match.home.name : event.score.home < event.score.away ? match.away.name : "neither"}`;
   const level = event.score !== null && event.score.home === event.score.away ? ` ${event.score.home}-${event.score.away}` : score;
@@ -41,6 +42,10 @@ export function eventLine(match: ReportMatchInput, event: MatchEvent, full: bool
     case "second-yellow":
     case "sent-off":
       return `SENT OFF${event.kind === "second-yellow" ? " for a second booking" : ""}: ${man}.${phrases(event)}`;
+    case "missed":
+    case "saved":
+      if (!misses.has(event)) return null;
+      return `CHANCE NOT TAKEN: ${man}, ${event.shot?.foot === "header" ? "a header" : "a shot"} ${event.shot?.from ?? ""}${made(match, event)}; ${event.kind === "saved" ? "saved" : "off target"}.${phrases(event)}`;
     case "woodwork":
       return `HIT THE WOODWORK: ${man}.${phrases(event)}`;
     case "substitution":

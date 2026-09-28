@@ -15,7 +15,8 @@ const desks = deskDay({
   season: [fixture],
   clubs: [SPURS, VILLA],
   standing: { attack: places, defence: places },
-});
+  // The clean piece below is written to this length; the config's budget moves as the paper's does.
+}).map((d) => ({ ...d, budget: { ...d.budget, account: [90, 130] as const } }));
 const blocks = new Map([[2645244, matchBlock(desks[0])]]);
 const ctx = { desks, blocks, gameweek: 5, past: [] };
 

@@ -53,7 +53,14 @@ describe("buildReportsBrief on Tottenham 2-3 Aston Villa", () => {
     expect(brief).not.toMatch(/Gray[^\n]*(for|replac|in place of)[^\n]*Porro/);
   });
 
-  it("says what VAR decided", () => {
+  it("hands the chances not taken where they came, a team-mate's in the box before any other", () => {
+    const lines = brief.split("\n").filter((l) => l.includes("CHANCE NOT TAKEN"));
+    expect(lines).toHaveLength(3);
+    expect(lines[0]).toMatch(/Sávio \(Tottenham Hotspur\), a shot from inside the box, made by Dominic Solanke [^\n]*; saved/);
+    expect(brief).not.toMatch(/CHANCE NOT TAKEN: [^\n]*from outside the box/);
+  });
+
+    it("says what VAR decided", () => {
     expect(brief).toContain("GOAL RULED OUT after a video review: Mohammed Kudus (Tottenham Hotspur) had scored");
   });
 });

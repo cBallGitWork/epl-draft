@@ -29,6 +29,8 @@ export interface MatchDesk {
   opening: string;
   /** The one goal the account describes in full; the others take a clause. */
   described: MatchEvent | null;
+  /** The chances not taken that the account tells where they happened. */
+  misses: MatchEvent[];
   budget: { account: readonly [number, number]; sections: number };
   nominees: Nominee[];
   keyStats: KeyStat[];
@@ -69,6 +71,18 @@ function described(events: readonly MatchEvent[]): MatchEvent | null {
   );
 }
 
+const CLOSE = new Set(["from close range", "from inside the six-yard box"]);
+
+/** The chances a report names, in the order they came: shots from close range missed or saved first, then shots from inside
+ *  the box that a team-mate made. The feed marks no chance as big, so where it came from and how is the measure. */
+function misses(events: readonly MatchEvent[]): MatchEvent[] {
+  const shots = events.filter((e) => (e.kind === "missed" || e.kind === "saved") && e.man !== null);
+  const close = shots.filter((e) => CLOSE.has(e.shot?.from ?? ""));
+  const made = shots.filter((e) => e.shot?.from === "from inside the box" && e.other !== null);
+  const chosen = new Set([...close, ...made].slice(0, REPORTS.missed.most));
+  return shots.filter((e) => chosen.has(e));
+}
+
 /** "testf's", "Dave's Dons'". */
 const of = (team: string) => (team.endsWith("s") ? `${team}'` : `${team}'s`);
 const pts = (n: number) => `${n} point${n === 1 ? "" : "s"}`;
@@ -95,7 +109,7 @@ function nominees(match: ReportMatchInput, events: readonly MatchEvent[], counts
   for (const m of held.filter((x) => (x.points ?? 0) >= 5 || scored(x) + made(x) > 0)) add(m, `${m.holder!.team} has him, ${pts(m.points ?? 0)}${h2h(m)}`);
   // A high pick who gave his manager little is the other side of the week (Craig: "and who didn't do well").
   for (const m of men.filter((x) => x.started && x.holder?.fielded === true && (x.points ?? 99) <= 1 && (x.holder.round ?? 99) <= 3)) {
-    add(m, `${m.holder!.team} has him, a round-${m.holder!.round} pick, ${pts(m.points ?? 0)}${h2h(m)}`);
+    add(m, `${m.holder!.team} has him, ${pts(m.points ?? 0)}${h2h(m)}`);
   }
   for (const m of men.filter((x) => x.holder === null && scored(x) + made(x) >= 2)) {
     add(m, `a free agent; ${m.goalsSeason} league goal${m.goalsSeason === 1 ? "" : "s"} this season`);
@@ -138,6 +152,7 @@ export function deskDay(input: ReportDayInput): MatchDesk[] {
       next: { home: next(match.home.code), away: next(match.away.code) },
       opening: opening(match, events, facts),
       described: described(events),
+      misses: misses(events),
       budget: { account: size.account, sections: size.sections },
       nominees: nominees(match, events, counts),
       keyStats: keyStats(match, events, counts, size.stats),
