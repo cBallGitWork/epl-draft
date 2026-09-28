@@ -1,6 +1,7 @@
 import type { Fixture, FootballPlayer, MatchEvent, PlayerMatchStats } from "../types";
-import { streamCredited, streamCredits } from "./assists";
-import { creditedGoals, type PlGoal } from "./goals";
+import { creditSide, type AssistKinds } from "./assistKinds";
+import { streamCredits } from "./assists";
+import type { PlGoal } from "./goals";
 import { mapMatchEvents } from "./map";
 import type { RawPlEvent } from "./raw";
 
@@ -26,9 +27,8 @@ export function streamRedCards(
 }
 
 /** The round's goals with the assists FPL pays and Opta never placed — a penalty won, an own
- *  goal forced, a rebound. The commentary proposes and FPL's per-man counts must confirm
- *  (`streamCredited`); when they refuse, `creditedGoals` settles the one case arithmetic can.
- *  Per side, because that arithmetic is a side's. A fixture with no stream gets arithmetic only. */
+ *  goal forced, a rebound. The stats league's kinds first, then the commentary, then arithmetic
+ *  (`creditSide`). Per side, because that arithmetic is a side's. */
 export function creditRoundAssists(
   goals: readonly MatchEvent[],
   players: readonly Pick<FootballPlayer, "id" | "code" | "clubId">[],
@@ -36,6 +36,7 @@ export function creditRoundAssists(
   stats: readonly Pick<PlayerMatchStats, "playerId" | "fixtureId" | "assists">[],
   streams: ReadonlyMap<number, FixtureStream>,
   codes: ReadonlyMap<number, number>,
+  kinds: ReadonlyMap<number, AssistKinds>,
 ): MatchEvent[] {
   const clubOf = new Map(players.map((player) => [player.code, player.clubId]));
   const codeOf = new Map(players.map((player) => [player.id, player.code]));
@@ -83,9 +84,10 @@ export function creditRoundAssists(
       scorer: goal.players[0] ?? null,
       assister: goal.players[1] ?? null,
       own: goal.kind === "own-goal",
+      penalty: goal.kind === "penalty-goal",
     }));
     const events = streams.get(fixtureCode)?.events ?? [];
-    const settled = streamCredited(asGoals, streamCredits(events, codes), paid) ?? creditedGoals(asGoals, paid);
+    const settled = creditSide(asGoals, streamCredits(events, codes), kinds, paid);
 
     return theirs.map((goal, at) =>
       goal.players[1] == null && settled[at].assister !== null

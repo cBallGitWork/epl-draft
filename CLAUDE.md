@@ -83,6 +83,8 @@ npm run intel-check     # is the intel export fresh and whole
   smoke and team-codes refuse to run without it. CI keeps no copy: it asks production
   (`GET /api/league`). **The swap is one change**: set it to `ayyoh3n2mr326v2o` in Vercel and
   redeploy (`/swap-day`).
+- `FANTRAX_STATS_LEAGUE_ID` names a second league read only for its typed assist columns, which
+  the served league must not list. Vercel and `apps/companion/.env.local`; unset, it is skipped.
 - The leagues the archive records are data, in `data/leagues/recorded.json`; only scripts read it.
 - `FANTRAX_DEMO_TEAM_ID` lends a test league's team to a reader with no code, and only when that
   team is in the served league.

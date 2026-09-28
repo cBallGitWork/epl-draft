@@ -1,5 +1,5 @@
-import { creditedGoals, scoresheet, streamCredited } from "@epl/core";
-import type { PlGoal, SheetRow, StreamCredit } from "@epl/core";
+import { creditSide, scoresheet } from "@epl/core";
+import type { AssistKinds, PlGoal, SheetRow, StreamCredit } from "@epl/core";
 
 // One side of the match's scoresheet: its goals, credited, and the other marks it names its men for.
 
@@ -34,6 +34,7 @@ export function side(
   opponents: readonly SheetRow[],
   minutes: Map<number, number[]>,
   credits: readonly StreamCredit[],
+  kinds: ReadonlyMap<number, AssistKinds>,
   injured: ReadonlyMap<number, number>,
 ): { goals: PlGoal[]; rest: SheetRow[] } {
   const mine = new Set(rows.map((row) => row.player.code));
@@ -48,7 +49,9 @@ export function side(
   const paid = new Map(
     rows.filter((row) => row.line.assists > 0).map((row) => [row.player.code, row.line.assists]),
   );
-  // **The commentary first, and only if FPL's arithmetic confirms the lot.**
+  // **The stats league's kinds first** (`creditSide`): a forced own goal, a penalty won, a free
+  // kick won each name their goal, confirmed against what FPL paid in this match.
+  // **Then the commentary, and only if FPL's arithmetic confirms the lot.**
   // `creditedGoals` resolves exactly one case — one man short by exactly the
   // side's unexplained goals — and Man Utd 5-2 Ipswich is the shape it cannot
   // touch: three men each short by one against three unexplained goals, so it
@@ -65,7 +68,7 @@ export function side(
   // match at all", and `goals` is the whole match.
   const credited =
     goals.length > 0
-      ? (streamCredited(ours, credits, paid) ?? creditedGoals(ours, paid))
+      ? creditSide(ours, credits, kinds, paid)
       : fallbackGoals(rows, minutes);
 
   // Everyone the sheet names who is not already on a goal line.

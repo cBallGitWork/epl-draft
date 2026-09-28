@@ -30,6 +30,8 @@ export interface PlGoal {
    *  penalty. */
   assister: number | null;
   own: boolean;
+  /** A penalty scored; absent where the source did not say. */
+  penalty?: boolean;
 }
 
 /** Every goal in the match, oldest first. */
@@ -47,6 +49,7 @@ export function plGoals(fixture: RawPlFixture, optaToCode: Map<string, number>):
       scorer: event.personId === undefined ? null : (codes.get(event.personId) ?? null),
       assister: event.assistId === undefined ? null : (codes.get(event.assistId) ?? null),
       own: event.type === OWN_GOAL,
+      penalty: event.type === PENALTY,
     });
   }
 
