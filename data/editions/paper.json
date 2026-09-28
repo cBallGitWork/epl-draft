@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-28T08:42:27.494Z",
+  "updatedAt": "2026-09-28T17:12:18.444Z",
   "stories": [
     {
       "slug": "news-cmrr48zqz1jno",
@@ -569,6 +569,46 @@
           }
         }
       ]
+    },
+    {
+      "slug": "news-cj62eyx9grzxo",
+      "kind": "news",
+      "leagueId": "zbn1z3ukmsgb36sz",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-28T17:12:18.444Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "O'Reilly Leaves test3331 In Doubt",
+      "deck": "test3331's O'Reilly a doubt for England against the Czech Republic on Tuesday",
+      "body": "Another of test3331's men joins the international worry list. Nico O'Reilly is a doubt for England's Nations League tie with the Czech Republic on Tuesday, and for test3331 that is one more asset whose Tuesday is now a question rather than a certainty.\n\nNo timeline is attached and none is claimed. He is a doubt, not ruled out, and that is where the matter rests until England name a side. For test3331, watching Thomas and McBurnie already framed around the same fixture, the Czech Republic has become the night his squad turns on.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/articles/cj62eyx9grzxo"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
+      "slug": "news-c6vgy934nvq4o",
+      "kind": "news",
+      "leagueId": "zbn1z3ukmsgb36sz",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-28T17:12:18.444Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "Bellamy Braces For The Norse Menace",
+      "deck": "Bellamy says Wales belong in Nations League A but expects Norway and Haaland to threaten for years; Haaland is 123's asset.",
+      "body": "Craig Bellamy has made his peace with Norway as a coming force, Haaland the point of the spear, and that is 123's concern before it is Wales's. The cornerstone of the league's top-scoring side keeps drawing eyes, this time from a manager reckoning with him rather than for him.\n\nNothing here changes an ownership or a fixture. Haaland remains 123's, fit enough to loom over an international week, and the only fresh detail is the respect a rival coach is paying him. For this league, that is confirmation, not news.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/articles/c6vgy934nvq4o"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
     },
     {
       "slug": "news-cm74kp52d3xko",

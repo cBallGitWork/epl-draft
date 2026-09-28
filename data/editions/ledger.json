@@ -239,9 +239,25 @@
       "news:https://www.bbc.co.uk/sport/football/articles/c6eq8eygy4e5o",
       "news:https://www.bbc.co.uk/sport/football/articles/ckeq8vq7rwe7o",
       "news:https://www.bbc.co.uk/sport/football/articles/cm74kp52d3xko",
-      "news:https://www.bbc.co.uk/sport/football/articles/cm0qxknzpn8jo"
+      "news:https://www.bbc.co.uk/sport/football/articles/cm0qxknzpn8jo",
+      "news:https://www.bbc.co.uk/sport/football/articles/cj62eyx9grzxo",
+      "news:https://www.bbc.co.uk/sport/football/articles/c6vgy934nvq4o"
     ],
     "threads": [
+      {
+        "subject": "test3331's Scotland assets",
+        "beat": "Thomas and McBurnie both in the international frame around the same Tuesday fixture",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-09-28T17:12:18.444Z"
+      },
+      {
+        "subject": "test3331's O'Reilly fitness",
+        "beat": "O'Reilly a doubt for England against the Czech Republic on Tuesday, no timeline given",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-28T17:12:18.444Z"
+      },
       {
         "subject": "123's scoring ceiling",
         "beat": "The league's top scorer's cornerstone now sits under a cloud, however faint",
@@ -276,13 +292,6 @@
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-24T20:38:51.610Z"
-      },
-      {
-        "subject": "test3331's Scotland assets",
-        "beat": "McBurnie recalled, joining Thomas in the international picture for test3331's squad.",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-24T07:30:21.865Z"
       },
       {
         "subject": "test1's Wirtz asset",
