@@ -42,7 +42,7 @@ each other.
 
 | | |
 |---|---|
-| Prem match reports retired | the kind stays *readable* — `normalizeStory` refuses an unknown kind, so deleting the member would void nine filed stories with a green build |
+| Prem match reports retired | the kind stays *readable* — `normalizeStory` refuses an unknown kind, so deleting the member would have voided the four filed on 2 Sep (this row said nine; they were cleared 18 Sep). The old brief and voice were deleted 28 Sep |
 | The app's nav returns to the paper | `gazette/Index` deleted; +66px of phone budget |
 | The masthead is sized against the sheet | desk 72px → **120px**, phone fill 75% → **88%** |
 | `Dateline` extracted at three | the furniture class string **declined at fifteen** — see below |

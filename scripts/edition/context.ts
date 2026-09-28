@@ -1,6 +1,6 @@
 import { FANTRAX_LEAGUE_ID, type Assignment, type Club, type Fixture, type FootballSnapshot, type GameweekKickoff, type LeagueInfo } from "@epl/core";
 import type { DeskContext } from "./dispatch";
-import { withFootball, type DeskFacts } from "./facts";
+import type { DeskFacts } from "./facts";
 import { predictionsDesk } from "./predictions";
 import { sheetsDesk } from "./sheets";
 import type { readLedger } from "./persist";
@@ -33,12 +33,7 @@ export async function deskContext(input: {
   return {
     leagueId: FANTRAX_LEAGUE_ID,
     snapshot,
-    // **The Premier League's feed is fetched HERE and not with the other reads**
-    // — after the desk has said there is a column to write. It is 31 requests
-    // against 11 for everything else together, the desk reads none of it, and
-    // about a hundred and ten firings a week end before this is ever built.
-    // See `withFootball`.
-    facts: await withFootball(facts, snapshot, assignments),
+    facts,
     clubs,
     threads: ledger[FANTRAX_LEAGUE_ID]?.threads ?? [],
     info,

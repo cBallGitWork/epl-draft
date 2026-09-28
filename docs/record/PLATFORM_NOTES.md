@@ -1478,6 +1478,9 @@ them are the kind that only shows up when you try to write the line. Recorded
 here rather than in the plan file, because the plan is a dated document and this
 is what the tree says.
 
+*28 Sep 2026: `roundFootball`, `withFootball`, `RoundFacts` and `briefs/matchReport.ts` were deleted
+with the retired match-report path; the lines below that name them are history.*
+
 ### The three that change what a change IS
 
 - **B1's guard cannot go where the plan puts it.** `write-edition.ts` never names

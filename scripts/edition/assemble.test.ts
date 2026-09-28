@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Assignment, Fixture, ResolvedPlayer, RosteredTeam } from "@epl/core";
 import { faceOf, weight } from "./faces";
-import type { RoundFacts } from "./facts";
+import type { DeskFacts } from "./facts";
 
 // **The picture is the desk's choice and not the writer's.** These assert who
 // gets photographed, which is a selection rule with a wrong answer: a face that
@@ -32,7 +32,7 @@ const man = (
 const team = (teamId: string, players: ResolvedPlayer[]): RosteredTeam =>
   ({ teamId, teamName: teamId, players }) as unknown as RosteredTeam;
 
-const facts = (over: Partial<RoundFacts> = {}): RoundFacts =>
+const facts = (over: Partial<DeskFacts> = {}): DeskFacts =>
   ({
     pairings: [],
     scores: new Map(),
@@ -46,7 +46,7 @@ const facts = (over: Partial<RoundFacts> = {}): RoundFacts =>
     table: [],
     news: [],
     ...over,
-  }) as unknown as RoundFacts;
+  }) as unknown as DeskFacts;
 
 const tieReport = (home: string, away: string): Assignment => ({
   kind: "tie-report",

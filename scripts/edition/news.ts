@@ -1,11 +1,11 @@
 import { type Assignment, type StoryThread, buildNewsBrief } from "@epl/core";
-import type { RoundFacts } from "./facts";
+import type { DeskFacts } from "./facts";
 
 // One wire item's brief, joined back to the story the newsdesk chose.
 
 export function newsBrief(
   assignment: Assignment,
-  facts: RoundFacts,
+  facts: DeskFacts,
   threads: readonly StoryThread[],
 ): string | null {
   // The assignment's key is `news:{article url}` — the article itself, so a

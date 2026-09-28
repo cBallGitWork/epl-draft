@@ -23,12 +23,8 @@ import type { TieState } from "./tieState";
 // average positions, which is more than a column can say and all of it true
 // without a model. What the paper is about is the ten managers.
 //
-// **The kind itself is deliberately still alive.** `match-report` remains in
-// `StoryKind`, `KIND_WEIGHT` and `paperPages.ts`, and its brief builder and
-// voice are untouched. Nine of them are published in `paper.json` today, and
-// `normalizeStory` refuses any story whose kind it does not know — so deleting
-// the member would silently void filed history with a green typecheck and a
-// green build. The kind stops being COMMISSIONED; it stays READABLE.
+// **The kind stays in `StoryKind`, `KIND_WEIGHT` and `paperPages.ts`**, for its return as a day's
+// woven report (GAZETTA); its old brief and voice are gone. Four were filed on 2 Sep and cleared 18 Sep.
 //
 // **A finished round files a report per tie, and never one about the league.**
 // It filed a single `round-report` until 3 Sep 2026 whose prompt said "SPREAD

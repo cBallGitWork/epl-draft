@@ -14,7 +14,7 @@ import {
 } from "@epl/core";
 import { presserEdition } from "./presserWeek";
 import { faceOf, type FaceContext } from "./faces";
-import type { RoundFacts } from "./facts";
+import type { DeskFacts } from "./facts";
 import type { PredictionsDesk } from "./predictions";
 import type { SheetsDesk } from "./sheets";
 import { storyOfColumn } from "./newsroom";
@@ -29,7 +29,7 @@ import { presserHeadline } from "./voice/pressers";
 export interface DeskContext {
   leagueId: string;
   snapshot: FootballSnapshot;
-  facts: RoundFacts;
+  facts: DeskFacts;
   clubs: Map<number, Club>;
   /** The league's running storylines, for every scoped brief's memory block. */
   threads: readonly StoryThread[];
