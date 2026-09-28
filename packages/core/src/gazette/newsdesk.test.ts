@@ -28,6 +28,7 @@ const desk = (over: Partial<DeskState> = {}): DeskState => ({
   lineups: null,
   ahead: null,
   next: null,
+  reportDays: [],
   ...over,
 });
 
@@ -118,14 +119,18 @@ describe("newsdesk", () => {
     expect(newsdesk(done, none, NOW).map((a) => a.kind)).not.toContain("tie-call");
   });
 
-  it("never reports a Premier League match, however consequential", () => {
-    // This is a DRAFT paper: `/prem/match/[id]` carries the football's own
-    // coverage, and six finished fixtures full of rostered men earn no column.
-    const stakes = Array.from({ length: 6 }, (_, n) =>
-      stake({ key: `f${n}`, fixtureId: n, finished: n < 5 }),
-    );
-    const filed = newsdesk(desk({ stakes }), none, NOW);
-    expect(filed.map((a) => a.kind)).not.toContain("match-report");
+  it("reports each settled Premier League day, first, and never a single fixture by its stake", () => {
+    // Revived 28 Sep 2026 as one woven report per London match-day (GAZETTA); a stake alone still earns nothing.
+    const stakes = Array.from({ length: 6 }, (_, n) => stake({ key: `f${n}`, fixtureId: n, finished: true }));
+    const sat = { key: "match-report:gw3:2026-08-29", slug: "gw3-prem-report-2026-08-29", day: "2026-08-29" };
+    expect(newsdesk(desk({ stakes }), none, NOW).map((a) => a.kind)).not.toContain("match-report");
+    const filed = newsdesk(desk({ stakes, finished: true, reportDays: [sat] }), none, NOW);
+    expect(filed[0]).toEqual({ kind: "match-report", ...sat });
+  });
+
+  it("never files a day's report twice", () => {
+    const sat = { key: "match-report:gw3:2026-08-29", slug: "gw3-prem-report-2026-08-29", day: "2026-08-29" };
+    expect(newsdesk(desk({ reportDays: [sat] }), (key) => key === sat.key, NOW).some((a) => a.kind === "match-report")).toBe(false);
   });
 
   it("files the team sheet on a day with pressers", () => {

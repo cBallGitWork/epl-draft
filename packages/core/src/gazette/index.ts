@@ -115,3 +115,5 @@ export {
 } from "./reports/words";
 export { normalizeReports, plainStandfirst, reportsCargo } from "./reports/cargo";
 export type { ReportRowKind, StoryReport, StoryReportRow, StoryReportSection } from "./reports/cargo";
+export { reportDays } from "./reports/due";
+export type { ReportDay } from "./reports/due";

@@ -16,7 +16,10 @@ import {
   type MatchDesk,
   type ReportsDraft,
 } from "@epl/core";
+import { FANTRAX_LEAGUE_ID, plainStandfirst, reportsCargo } from "@epl/core";
 import { writeColumn } from "./newsroom";
+import { readArchive } from "./persist";
+import type { ReportsJob } from "./reports";
 import { FAN_VOICE, REPORTS_VOICE, reportsSendBack } from "./voice/reports";
 
 // The match desk's newsroom: the reporter writes the day, the editor checks every match against its facts, the fan reads
@@ -89,4 +92,20 @@ export async function writeReports(
     kept[code] = piece === undefined ? "plain" : piece.standfirst === first.matches.get(code)?.standfirst ? "first" : "rewrite";
   }
   return { draft, brief, log: { attempts: attempts.map((a) => ({ faults: [...a.faults] })), fan, kept, usage } };
+}
+
+/** The prose of the last few report days, newest first, so a new day does not echo them. */
+function pastReports(): string[] {
+  return readArchive(FANTRAX_LEAGUE_ID, "match-report")
+    .sort((a, b) => b.filedAt.localeCompare(a.filedAt))
+    .slice(0, REPORTS.pastDays)
+    .map((story) => (story.extras?.reports ?? []).flatMap((r) => [r.standfirst, r.account, ...r.sections.map((x) => `${x.pitch} ${x.stake}`)]).join("\n"));
+}
+
+/** A match-day report as a column the dispatch files: the day's headline, the lead's result as the deck, and the cargo. */
+export async function reportsColumn(job: ReportsJob, say: (message: string) => void): Promise<Record<string, unknown>> {
+  const { draft, log } = await writeReports(job.day, job.gameweek, job.desks, pastReports(), say);
+  say(`  reports ${job.day}: kept ${JSON.stringify(log.kept)}; ${log.usage.input} tokens in, ${log.usage.output} out`);
+  const lead = plainStandfirst(job.desks[0]).replace(/\.$/u, "");
+  return { headline: draft.headline === "" ? lead : draft.headline, deck: lead, body: "", reports: reportsCargo(job.desks, draft) };
 }

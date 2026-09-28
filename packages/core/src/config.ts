@@ -417,6 +417,8 @@ export const REPORTS = {
   echo: 6,
   /** The fan's quotes kept for any one part of a piece. */
   fanFlags: 3,
+  /** Earlier report days whose phrasing a new one may not echo. */
+  pastDays: 4,
   /** Matches written in one call; a longer day is split, the later call shown what is already on the page. */
   perCall: 5,
 } as const;

@@ -2,6 +2,7 @@ import { FANTRAX_LEAGUE_ID, type Assignment, type Club, type Fixture, type Footb
 import type { DeskContext } from "./dispatch";
 import { withFootball, type DeskFacts } from "./facts";
 import { predictionsDesk } from "./predictions";
+import { reportsDesk } from "./reports";
 import { sheetsDesk } from "./sheets";
 import type { readLedger } from "./persist";
 import type { presserDesk } from "./presserWeek";
@@ -48,6 +49,8 @@ export async function deskContext(input: {
     predictions: await predictionsDesk({ assignments, info, snapshot, season, kickoffs, table: facts.table, business: facts.business, say }),
     // The team sheets' reads are their own too, and every earlier period's rosters are among them.
     sheets: await sheetsDesk({ assignments, info, snapshot, facts, period, gameweeks, season, clubs, now, say }),
+    // A match-day report's reads are its own, made only when one is assigned.
+    reports: await reportsDesk({ assignments, snapshot, facts, gameweeks, say }),
     presserLines: sheet.lines,
     presserQuotes: sheet.quotes,
     presserTies: sheet.ties,
