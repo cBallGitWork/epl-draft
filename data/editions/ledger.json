@@ -241,9 +241,24 @@
       "news:https://www.bbc.co.uk/sport/football/articles/cm74kp52d3xko",
       "news:https://www.bbc.co.uk/sport/football/articles/cm0qxknzpn8jo",
       "news:https://www.bbc.co.uk/sport/football/articles/cj62eyx9grzxo",
-      "news:https://www.bbc.co.uk/sport/football/articles/c6vgy934nvq4o"
+      "news:https://www.bbc.co.uk/sport/football/articles/c6vgy934nvq4o",
+      "news:https://www.bbc.co.uk/sport/football/articles/cked73ppgql3o"
     ],
     "threads": [
+      {
+        "subject": "123's scoring ceiling",
+        "beat": "The top scorer's cornerstone sits under speculation, still nailed on.",
+        "status": "open",
+        "beats": 3,
+        "lastUsedAt": "2026-09-28T21:37:10.943Z"
+      },
+      {
+        "subject": "123's Haaland asset",
+        "beat": "City would not sell cheap on relegation; talk only, no move.",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-09-28T21:37:10.943Z"
+      },
       {
         "subject": "test3331's Scotland assets",
         "beat": "Thomas and McBurnie both in the international frame around the same Tuesday fixture",
@@ -257,20 +272,6 @@
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-28T17:12:18.444Z"
-      },
-      {
-        "subject": "123's scoring ceiling",
-        "beat": "The league's top scorer's cornerstone now sits under a cloud, however faint",
-        "status": "open",
-        "beats": 2,
-        "lastUsedAt": "2026-09-28T08:42:27.494Z"
-      },
-      {
-        "subject": "123's Haaland asset",
-        "beat": "City uncertainty draws Haaland into the transfer gossip, nothing confirmed",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-28T08:42:27.494Z"
       },
       {
         "subject": "test211's Gakpo fitness",
