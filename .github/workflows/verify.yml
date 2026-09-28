@@ -9,8 +9,18 @@ name: Verify
 # which by design does not trigger other workflows. Capture commits will arrive
 # on main without a Verify run beside them. They touch only data/snapshots, so
 # that is acceptable, not accidental.
+#
+# **Pull requests only** (26 Sep 2026, costing the Actions bill): push and
+# pull_request ran every PR commit twice and every merge a third time, 717 of
+# September's 1,066 Verify minutes. A superseded run is cancelled for the same reason.
 
-on: [push, pull_request]
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: verify-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read

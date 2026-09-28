@@ -38,7 +38,11 @@ on:
     # 07:00-23:00 under GMT. Covering both means starting an hour early in
     # winter, which is two runs a day and the safe direction to be wrong in —
     # this is the one workflow whose misses cannot be recreated.
-    - cron: "7,37 6-22 * * *"
+    #
+    # **Hourly, not half-hourly** (26 Sep 2026, costing the Actions bill: 912
+    # minutes in September, the second-largest line). A settle is caught up to
+    # an hour late rather than half an hour; the report files that much later.
+    - cron: "7 6-22 * * *"
   workflow_dispatch:
 
 # Least privilege: this job writes commits and nothing else.
