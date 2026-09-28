@@ -8,8 +8,9 @@ const f = (section: string, severity: Fault["severity"]): Fault => ({ section, c
 
 describe("readReportsDraft", () => {
   it("reads the model's JSON field by field and pencils the slips", () => {
-    const draft = readReportsDraft({ headline: "Villa hold on!", matches: [{ fixture: "5", standfirst: "Villa were up 3-0 at halftime — then not.", account: "a", sections: [{ head: "h", pitch: "p", stake: 3 }] }, "junk"] });
+    const draft = readReportsDraft({ headlines: [{ text: "Villa hold on!", playsOn: "hold", twoMeanings: "keep the lead; grip" }, { text: "A plain line", playsOn: "", twoMeanings: "" }], matches: [{ fixture: "5", standfirst: "Villa were up 3-0 at halftime — then not.", account: "a", sections: [{ head: "h", pitch: "p", stake: 3 }] }, "junk"] });
     expect(draft.headline).toBe("Villa hold on.");
+    expect(draft.headlines).toEqual(["Villa hold on."]);
     expect(draft.matches.get(5)?.standfirst).toBe("Villa were 3-0 up at half-time, then not.");
     expect(draft.matches.get(5)?.sections[0].stake).toBe("");
   });

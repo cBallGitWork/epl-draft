@@ -7,6 +7,7 @@ import {
   faultySentences,
   fanFaults,
   fanHeadline,
+  strike,
   survivors,
   matchBlock,
   matchOf,
@@ -62,7 +63,9 @@ export async function writeReports(
     const part = buildReportsBrief(day, gameweek, chunk) + (written === "" ? "" : `\n\nALREADY ON THE PAGE, not to be echoed:\n${written}`);
     const draft = readReportsDraft(await writeColumn(REPORTS_VOICE, part, count), surnames);
     if (first.headline === "") first.headline = draft.headline;
+    if (first.headlineStory === undefined || first.headlineStory === "") first.headlineStory = draft.headlineStory;
     first.headlines.push(...draft.headlines);
+    first.meanings = { ...first.meanings, ...draft.meanings };
     for (const [code, piece] of draft.matches) first.matches.set(code, piece);
   }
   const faults1 = checkReports(first, ctx);
@@ -70,6 +73,7 @@ export async function writeReports(
   // The desk strikes headlines that break a rule; the fan picks one of the rest, or none and a plain line prints.
   const names = desks.flatMap((d) => [d.match.home.name, d.match.away.name, ...d.match.home.shorts, ...d.match.away.shorts, ...d.match.men.map((m) => m.name)]);
   const candidates = survivors(first.headlines, names);
+  for (const h of first.headlines) say(`    headline candidate: "${h}"${candidates.includes(h) ? "" : ` struck (${strike(h, names)})`}${first.meanings?.[h] === undefined ? "" : ` [${first.meanings[h]}]`}`);
   const fanRaw = await writeColumn(FAN_VOICE, fanBrief(first, desks, candidates), count).catch(() => null);
   const fan = fanRaw === null ? [] : fanFaults(fanRaw, first, REPORTS.fanFlags);
   const chosen = fanRaw === null ? null : fanHeadline(fanRaw, candidates);

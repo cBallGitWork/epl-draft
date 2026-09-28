@@ -22,6 +22,10 @@ export function surname(name: string): string {
 }
 
 const { mostShots: MOST_SHOTS, chances: CHANCES, expectedAssists: EXPECTED_ASSISTS, saves: SAVES } = REPORTS.stats;
+/** How many men a top-xG or top-xA line names, and the least that earns a place in it. */
+const TOP_MEN = 3;
+const TOP_XG = 0.2;
+const TOP_XA = 0.15;
 
 /** The men who lead one count, and the count, or null when nobody reaches `least`. */
 function leaders(men: readonly ReportMan[], value: (m: ReportMan) => number, least: number): { men: ReportMan[]; value: number } | null {
@@ -61,12 +65,20 @@ export function keyStats(
     const made = chances.men.map((m) => `${surname(m.name)}${assists(m) > 0 ? ` (${assists(m)} assist${assists(m) === 1 ? "" : "s"})` : ""}`).join(", ");
     out.push({ label: "Chances created", value: `${made} ${chances.value}` });
   }
-  if (byXa !== undefined && byXa.expectedAssists >= EXPECTED_ASSISTS) out.push({ label: "Top xA", value: `${surname(byXa.name)} ${byXa.expectedAssists.toFixed(2)}` });
-  const byXg = [...men].sort((a, b) => b.expectedGoals - a.expectedGoals)[0];
-  if (byXg !== undefined && byXg.expectedGoals >= 0.5) out.push({ label: "Top xG", value: `${surname(byXg.name)} ${byXg.expectedGoals.toFixed(2)}` });
+  // The men who got into the best positions and made the best chances, whether or not they scored.
+  const top = (value: (m: ReportMan) => number, least: number) =>
+    [...men].filter((m) => value(m) >= least).sort((a, b) => value(b) - value(a)).slice(0, TOP_MEN).map((m) => `${surname(m.name)} ${value(m).toFixed(2)}`).join(", ");
+  const xgMen = top((m) => m.expectedGoals, TOP_XG);
+  if (xgMen !== "") out.push({ label: "Top xG", value: xgMen });
+  const xaMen = top((m) => m.expectedAssists, TOP_XA);
+  if (xaMen !== "") out.push({ label: "Top xA", value: xaMen });
   const keepers = men.filter((m) => m.saves >= SAVES || events.some((e) => e.kind === "penalty-saved" && e.side !== m.side && m.line === "G"));
   if (keepers.length > 0) out.push({ label: "Saves", value: keepers.map((m) => `${surname(m.name)} ${m.saves}`).join(", ") });
   const woodwork = events.filter((e) => e.kind === "woodwork" && e.man !== null).map((e) => e.man!);
-  if (woodwork.length > 0) out.push({ label: "Woodwork", value: names(woodwork) });
+  if (woodwork.length > 0) out.push({ label: "Hit the woodwork", value: names(woodwork) });
+  if (match.figures !== null) {
+    const errors = (["home", "away"] as const).filter((s) => match.figures![s].errorsToGoal > 0).map((s) => `${short(s)} ${match.figures![s].errorsToGoal}`);
+    if (errors.length > 0) out.push({ label: "Errors leading to a goal", value: errors.join(", ") });
+  }
   return out.slice(0, budget);
 }

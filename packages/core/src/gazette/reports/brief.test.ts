@@ -34,7 +34,7 @@ describe("buildReportsBrief on Tottenham 2-3 Aston Villa", () => {
   });
 
   it("gives a picked man who went off injured as a section, with his stake", () => {
-    expect(brief).toMatch(/Pedro Porro \(Tottenham Hotspur\): [^\n]*STAKE: Dave's Dons' player; went off injured/);
+    expect(brief).toMatch(/Pedro Porro \(Tottenham Hotspur\): [^\n]*STAKE: Dave's Dons has him; went off injured/);
   });
 
   it("opens on the collapse, marks one goal to describe, and hands the table to the standfirst alone", () => {

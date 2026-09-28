@@ -54,6 +54,8 @@ export interface SideFigures {
   clearChances: number;
   clearChancesScored: number;
   possession: number;
+  errorsToGoal: number;
+  errorsToShot: number;
 }
 
 export interface ReportMatchInput {

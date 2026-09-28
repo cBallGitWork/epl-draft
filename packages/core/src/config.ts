@@ -399,9 +399,9 @@ export const SHEETS = {
 /** The match-day report's editorial thresholds (docs/plans/GAZETTA.md, "Match reports, woven"). */
 export const REPORTS = {
   budget: {
-    lead: { account: [90, 130], sections: 3, stats: 6 },
-    ordinary: { account: [60, 100], sections: 2, stats: 5 },
-    dead: { account: [40, 70], sections: 1, stats: 4 },
+    lead: { account: [90, 130], sections: 3, stats: 9 },
+    ordinary: { account: [60, 100], sections: 2, stats: 8 },
+    dead: { account: [40, 70], sections: 1, stats: 6 },
   },
   /** Words a standfirst and a section may run to (sports desk, 28 Sep 2026). */
   standfirstWords: 25,

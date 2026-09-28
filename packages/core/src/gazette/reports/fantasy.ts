@@ -53,12 +53,12 @@ export function fantasyPanel(match: ReportMatchInput, events: readonly MatchEven
   const offDay = (m: ReportMan): string | null => {
     if (scored(m) > 0) return null;
     const why: string[] = [];
+    // xG says a chance went begging, so a miss is named only when no xG line does (Craig: "0.78 xG implies that").
     if (m.expectedGoals >= WASTED_XG) why.push(`${m.expectedGoals.toFixed(2)} xG, no goal`);
-    if (close(m) > 0) why.push(`missed ${close(m) === 1 ? "a chance" : `${close(m)} chances`} from close range`);
-    if (m.started && m.holder?.fielded === true && m.points !== null && m.points <= LOW_POINTS) {
-      why.push(`${m.points} point${m.points === 1 ? "" : "s"}${m.holder.round === null ? "" : `, a round-${m.holder.round} pick`}`);
-    }
-    return why.length === 0 ? null : why.join("; ");
+    else if (close(m) > 0) why.push(`missed ${close(m) === 1 ? "a chance" : `${close(m)} chances`} from close range`);
+    if (m.started && m.holder?.fielded === true && m.points !== null && m.points <= LOW_POINTS) why.push(`${m.points} point${m.points === 1 ? "" : "s"}`);
+    const said = why.join("; ");
+    return said === "" ? null : said.charAt(0).toUpperCase() + said.slice(1);
   };
   const offDays = match.men
     .filter(played)

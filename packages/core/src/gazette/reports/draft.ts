@@ -22,6 +22,10 @@ export interface ReportsDraft {
   headline: string;
   /** The writer's headline candidates, before the desk strikes and the fan picks. */
   headlines: string[];
+  /** The story the candidates pun on, in plain words: what the fan judges them against. */
+  headlineStory?: string;
+  /** Each candidate's two meanings, as the writer claimed them, for the fan to check. */
+  meanings?: Record<string, string>;
   /** By fixture code. */
   matches: Map<number, ReportPiece>;
 }
@@ -71,8 +75,21 @@ export function readReportsDraft(raw: Record<string, unknown>, surnames: readonl
     });
     matches.set(code, { standfirst: text(m.standfirst), account: text(m.account), sections });
   }
-  const offered = Array.isArray(raw.headlines) ? raw.headlines.map((h) => text(typeof h === "object" && h !== null ? (h as Record<string, unknown>).text : h)).filter((h) => h !== "") : [];
-  return { headline: text(raw.headline) || (offered[0] ?? ""), headlines: offered, matches };
+  // A pun names the word it turns on and the two meanings that word carries; a candidate that cannot is not a pun.
+  const offered = (Array.isArray(raw.headlines) ? raw.headlines : []).flatMap((h) => {
+    const r = typeof h === "object" && h !== null ? (h as Record<string, unknown>) : {};
+    const line = text(r.text);
+    const on = typeof r.playsOn === "string" ? r.playsOn.trim() : "";
+    const meanings = typeof r.twoMeanings === "string" ? r.twoMeanings.trim() : "";
+    return line !== "" && on !== "" && meanings !== "" && line.toLowerCase().includes(on.toLowerCase()) ? [line] : [];
+  });
+  const meanings = Object.fromEntries(
+    (Array.isArray(raw.headlines) ? raw.headlines : []).flatMap((h) => {
+      const r = typeof h === "object" && h !== null ? (h as Record<string, unknown>) : {};
+      return typeof r.text === "string" && typeof r.twoMeanings === "string" ? [[text(r.text), r.twoMeanings.trim()]] : [];
+    }),
+  );
+  return { headline: offered[0] ?? "", headlines: offered, meanings, headlineStory: text(raw.headlineStory), matches };
 }
 
 /** The part of a fault's section that names its match: `2645244:account` → 2645244. */

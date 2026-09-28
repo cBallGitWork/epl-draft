@@ -88,21 +88,21 @@ function nominees(match: ReportMatchInput, events: readonly MatchEvent[], counts
   };
   const men = match.men.filter(played);
   for (const m of men.filter((x) => x.holder !== null && !x.holder.fielded && (scored(x) + made(x) > 0 || (x.points ?? 0) >= 4))) {
-    add(m, `on ${of(m.holder!.team)} bench, so ${m.points === null ? "his points" : pts(m.points)} did not count`);
+    add(m, `${m.holder!.team} has him on the bench, so ${m.points === null ? "his points" : pts(m.points)} did not count`);
   }
-  for (const m of men.filter((x) => x.injuredOff && x.holder !== null)) add(m, `${of(m.holder!.team)} player; went off injured${m.fitness === null ? "" : `; since: ${m.fitness}`}`);
+  for (const m of men.filter((x) => x.injuredOff && x.holder !== null)) add(m, `${m.holder!.team} has him; went off injured${m.fitness === null ? "" : `; since: ${m.fitness}`}`);
   const held = men.filter((x) => x.holder?.fielded === true && x.points !== null).sort((a, b) => (b.points ?? 0) - (a.points ?? 0));
-  for (const m of held.filter((x) => (x.points ?? 0) >= 5 || scored(x) + made(x) > 0)) add(m, `picked by ${m.holder!.team}, ${pts(m.points ?? 0)}${h2h(m)}`);
+  for (const m of held.filter((x) => (x.points ?? 0) >= 5 || scored(x) + made(x) > 0)) add(m, `${m.holder!.team} has him and picked him, ${pts(m.points ?? 0)}${h2h(m)}`);
   // A high pick who gave his manager little is the other side of the week (Craig: "and who didn't do well").
   for (const m of men.filter((x) => x.started && x.holder?.fielded === true && (x.points ?? 99) <= 1 && (x.holder.round ?? 99) <= 3)) {
-    add(m, `${of(m.holder!.team)} round-${m.holder!.round} pick, picked this week, ${pts(m.points ?? 0)}${h2h(m)}`);
+    add(m, `${m.holder!.team} has him, a round-${m.holder!.round} pick, picked this week, ${pts(m.points ?? 0)}${h2h(m)}`);
   }
   for (const m of men.filter((x) => x.holder === null && scored(x) + made(x) >= 2)) {
     add(m, `a free agent; ${m.goalsSeason} league goal${m.goalsSeason === 1 ? "" : "s"} this season`);
   }
   // When the stakes run short, the men whose figures stand out, so a match never has fewer candidates than sections.
   const stood = (x: ReportMan) => scored(x) + made(x) > 0 || (counts.get(x.code)?.chancesMade ?? 0) >= 3 || (counts.get(x.code)?.shots ?? 0) >= 4 || x.saves >= 5;
-  for (const m of men.filter(stood)) add(m, m.holder === null ? "a free agent" : m.holder.fielded ? `picked by ${m.holder.team}` : `on ${of(m.holder.team)} bench`);
+  for (const m of men.filter(stood)) add(m, m.holder === null ? "a free agent" : m.holder.fielded ? `${m.holder.team} has him and picked him` : `${m.holder.team} has him on the bench`);
   return out;
 }
 

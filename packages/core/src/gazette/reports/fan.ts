@@ -29,8 +29,9 @@ export function fanBrief(draft: ReportsDraft, desks: readonly MatchDesk[], headl
       ];
     })
     .join("\n\n");
-  const offered = headlines.length === 0 ? "none offered" : headlines.map((h, i) => `${i + 1}. ${h}`).join("\n");
-  return `HEADLINE CANDIDATES for the day, on the lead match:\n${offered}\n\n${matches}`;
+  const offered = headlines.length === 0 ? "none offered" : headlines.map((h, i) => `${i + 1}. ${h}${draft.meanings?.[h] === undefined ? "" : ` (the writer's two meanings: ${draft.meanings[h]})`}`).join("\n");
+  const story = draft.headlineStory === undefined || draft.headlineStory === "" ? "" : `THE STORY they pun on: ${draft.headlineStory}\n`;
+  return `${story}HEADLINE CANDIDATES for the day, on the lead match:\n${offered}\n\n${matches}`;
 }
 
 /** His flags as send-backs: an unknown part, a quote that is not word for word in it, or one past the cap, is dropped. */

@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { FantasyMan, StoryLineup, StoryReport } from "@epl/core";
 
 // The sidebar beside a match's report: the league's side of it first (Draft Man of the Match, top scorers, the wire, off days),
-// then the football's (key stats, line-ups as a paper prints them, the timeline). A phone reads it after the report.
+// then the football's (key stats, and line-ups as a paper prints them). A phone reads it after the report.
 
 const HEAD = "font-sans text-3xs font-semibold uppercase tracking-[0.16em] text-muted";
 const RULE = { borderColor: "var(--paper-rule)" };
@@ -58,7 +58,6 @@ export default function ReportSidebar({ report, names, matchHref }: { report: St
   const { fantasy } = report;
   const home = names(report.home.code);
   const away = names(report.away.code);
-  const side = (s: "home" | "away" | null) => (s === "home" ? home : s === "away" ? away : "");
   return (
     <aside className="flex flex-col gap-4">
       {fantasy.motm === null ? null : (
@@ -105,20 +104,6 @@ export default function ReportSidebar({ report, names, matchHref }: { report: St
           {report.referee === null ? null : <p className="text-2xs text-muted">Referee: {report.referee}.</p>}
         </Panel>
       )}
-      <Panel title="Timeline">
-        <ol className="flex flex-col text-2xs leading-snug text-ink">
-          {report.rows.map((row, i) => (
-            <li key={`${row.minute}-${i}`} className="grid grid-cols-[2.5rem_4.5rem_1fr] gap-x-2 border-b py-1" style={RULE}>
-              <span className="numeric text-right text-muted">{row.minute}&apos;</span>
-              <span className="font-sans uppercase tracking-wide text-muted">{row.kind}</span>
-              <span>
-                {row.text}
-                {row.side === null ? null : <span className="text-faint"> · {side(row.side)}</span>}
-              </span>
-            </li>
-          ))}
-        </ol>
-      </Panel>
       {matchHref === null ? null : (
         <Link href={matchHref} className={`${HEAD} flex min-h-11 items-center text-ink underline`}>
           Full stats and line-ups
