@@ -4,6 +4,7 @@ import { fanFaults } from "./fan";
 
 const draft: ReportsDraft = {
   headline: "x",
+  headlines: [],
   matches: new Map([[1, { standfirst: "Villa won 3-2 at Tottenham.", account: "Spurs were never in it until the end.", sections: [{ head: "Kudus", pitch: "Kudus came on.", stake: "Nobody holds him." }] }]]),
 };
 
@@ -33,5 +34,14 @@ describe("fanFaults", () => {
   it("has nothing to say when he has nothing to say", () => {
     expect(fanFaults({ flags: [] }, draft, 3)).toEqual([]);
     expect(fanFaults({}, draft, 3)).toEqual([]);
+  });
+});
+
+describe("fanHeadline", () => {
+  it("takes the candidate he numbered, and none for null or a number not offered", async () => {
+    const { fanHeadline } = await import("./fan");
+    expect(fanHeadline({ headline: 2 }, ["a", "b"])).toBe("b");
+    expect(fanHeadline({ headline: null }, ["a"])).toBeNull();
+    expect(fanHeadline({ headline: 3 }, ["a", "b"])).toBeNull();
   });
 });

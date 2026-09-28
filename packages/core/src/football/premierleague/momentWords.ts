@@ -20,7 +20,7 @@ const FOOT: Table<PlShot["foot"]> = [
 
 // Left and right are Opta's view of the pitch, which a reader cannot picture, so the side is dropped.
 const FROM: Table<string> = [
-  [/from very close range/, "from very close range"],
+  [/from very close range/, "from close range"],
   [/from the (?:left side of the |right side of the |centre of the )?six yard box/, "from inside the six-yard box"],
   [/from the (?:centre|left side|right side) of the box/, "from inside the box"],
   [/from a difficult angle and long range/, "from long range, at an angle"],

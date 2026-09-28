@@ -1,7 +1,8 @@
 import { once } from "./published";
 import { normalizeRecord, normalizeSkit, type StorySkit } from "./predictions/cargo";
 import type { Marked } from "./predictions/record";
-import { normalizeReports, type StoryReport } from "./reports/cargo";
+import type { StoryReport } from "./reports/cargo";
+import { normalizeReports } from "./reports/cargoRead";
 import { normalizeSheets, type StorySheet } from "./sheets/cargo";
 
 // The structured cargo some story kinds carry beside their prose: a power

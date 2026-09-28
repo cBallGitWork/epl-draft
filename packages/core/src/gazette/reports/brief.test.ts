@@ -8,7 +8,7 @@ const places = new Map([[6, 18], [7, 9]]);
 const input = (over: Partial<ReportDayInput> = {}): ReportDayInput => ({
   day: "2026-09-19",
   gameweek: 5,
-  matches: [spursVilla({ holders: new Map([[codeOf("Porro"), { team: "Dave's Dons", fielded: true }]]), points: new Map([[codeOf("Porro"), 2]]) })],
+  matches: [spursVilla({ holders: new Map([[codeOf("Porro"), { team: "Dave's Dons", fielded: true, round: null, h2h: { opponent: "Notemail", us: 49, them: 40 } }]]), points: new Map([[codeOf("Porro"), 2]]) })],
   season: [fixture],
   clubs: [SPURS, VILLA],
   standing: { attack: places, defence: places },
@@ -33,8 +33,19 @@ describe("buildReportsBrief on Tottenham 2-3 Aston Villa", () => {
     expect(brief).toContain("four minutes into first-half added time");
   });
 
-  it("says who holds a man and what he scored them", () => {
-    expect(brief).toMatch(/Pedro Porro \(Tottenham Hotspur\): .*held by Dave's Dons, in their eleven; 2 points for Dave's Dons/);
+  it("gives a picked man who went off injured as a section, with his stake", () => {
+    expect(brief).toMatch(/Pedro Porro \(Tottenham Hotspur\): [^\n]*STAKE: Dave's Dons' player; went off injured/);
+  });
+
+  it("opens on the collapse, marks one goal to describe, and hands the table to the standfirst alone", () => {
+    expect(brief).toContain("OPEN THE ACCOUNT ON: Aston Villa were 3-0 up with 11 minutes left");
+    expect(brief.match(/DESCRIBE THIS ONE/gu)).toHaveLength(1);
+    expect(brief).toContain("THE TABLE, for the standfirst and nowhere else in this match:");
+  });
+
+  it("leaves bookings, routine changes and fixtures to the page, not the writer", () => {
+    expect(brief).not.toMatch(/BOOKED|WHAT COMES NEXT|dangerous attack|tough defence/u);
+    expect(brief).not.toContain("Ross Barkley (Aston Villa) came on");
   });
 
   it("never pairs an injured man with the man who came on", () => {

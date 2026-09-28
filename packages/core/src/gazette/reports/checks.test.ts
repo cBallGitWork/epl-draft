@@ -11,47 +11,42 @@ const places = new Map([[6, 18], [7, 9]]);
 const desks = deskDay({
   day: "2026-09-19",
   gameweek: 5,
-  matches: [spursVilla({ holders: new Map([[codeOf("Buendía"), { team: "Notemail", fielded: true }]]), points: new Map([[codeOf("Buendía"), 7]]) })],
+  matches: [spursVilla({ holders: new Map([[codeOf("Buendía"), { team: "Notemail", fielded: true, round: null, h2h: null }]]), points: new Map([[codeOf("Buendía"), 7]]) })],
   season: [fixture],
   clubs: [SPURS, VILLA],
   standing: { attack: places, defence: places },
 });
-const blocks = new Map([[2645244, matchBlock(desks[0], true)]]);
+const blocks = new Map([[2645244, matchBlock(desks[0])]]);
 const ctx = { desks, blocks, gameweek: 5, past: [] };
 
 const CLEAN: ReportPiece = {
-  standfirst: "Aston Villa won 3-2 at Tottenham Hotspur, who scored twice late on after trailing by three.",
+  standfirst: "Aston Villa won 3-2 at Tottenham Hotspur for their first win of the season, leaving Spurs in the bottom three.",
   account:
-    "Pedro Porro went off injured in the 19th minute. Johan Manzambi put Villa ahead four minutes into first-half added time, finishing from very close range after a pass from Boubacar Kamara. " +
-    "Mohammed Kudus had a goal ruled out after a video review on the hour. Manzambi then set up Nicolas Jackson in the 67th minute and Emiliano Buendía scored from outside the box with 11 minutes left. " +
-    "Conor Gallagher replied four minutes from time and Jan Paul van Hecke headed in a cross from Andy Robertson eight minutes into added time. " +
-    "Tottenham Hotspur had 20 shots to 15, seven of them on target, and won 11 corners to one.",
+    "Aston Villa were 3-0 up with 11 minutes left and still had to hang on. Pedro Porro went off injured after 19 minutes, Archie Gray coming on. " +
+    "Johan Manzambi put Villa ahead just before the interval, made by Boubacar Kamara. Mohammed Kudus had a goal ruled out after a video review on the hour. " +
+    "Nicolas Jackson doubled the lead from a Manzambi pass, and Emiliano Buendía struck the third from outside the box into the top corner, made by John McGinn. " +
+    "Conor Gallagher replied four minutes from time from a Kudus pass, and Jan Paul van Hecke headed in a cross from Andy Robertson deep into added time.",
   sections: [
     {
-      head: "Manzambi scores and makes one",
-      pitch:
-        "Manzambi was involved in both of Villa's first two goals before he was taken off in the 72nd minute. He had four shots, two of them on target, " +
-        "and his opener came from very close range after Kamara found him in the box. He then set up Jackson, who had six shots in all.",
-      stake: "Nobody in the league holds Manzambi, and nobody holds Jackson either.",
+      head: "Manzambi marks first start",
+      pitch: "Manzambi was making his first league start of the season and had a hand in both of Villa's first two goals before he was taken off. He had four shots in all, two of them on target.",
+      stake: "A free agent, so a goal and an assist went unclaimed.",
     },
     {
-      head: "Buendía from outside the box",
-      pitch:
-        "Buendía struck the third into the top corner from outside the box, from a pass by John McGinn. He made three chances in all and had three shots, " +
-        "two of them on target, in a match where Villa scored three from six on target.",
-      stake: "He was in the eleven Notemail picked, and it brought them 7 points.",
+      head: "Buendía finds the corner",
+      pitch: "Buendía played the whole match and had three shots, two of them on target, the last of them the goal that made it three. He also set up three shots for team-mates.",
+      stake: "Notemail picked him, and his seven points were theirs.",
     },
     {
-      head: "Robertson on the set pieces",
-      pitch:
-        "Robertson made four chances for Tottenham Hotspur, and his cross from a set piece brought the second goal, headed in by van Hecke. " +
-        "Sávio also made four chances. Tottenham Hotspur made four clear chances and took two, and Aston Villa's clean sheet went four minutes from time.",
-      stake: "Nobody in the league holds Robertson, van Hecke or Sávio.",
+      head: "Robertson supplies the header",
+      pitch: "Robertson made four chances for Tottenham Hotspur, and it was his delivery from a set piece that brought their second goal in the eighth minute of added time.",
+      stake: "Robertson is a free agent.",
     },
   ],
 };
 const draft = (piece: Partial<ReportPiece> = {}, headline = "Villa hold on at Tottenham"): ReportsDraft => ({
   headline,
+  headlines: [headline],
   matches: new Map([[2645244, { ...CLEAN, ...piece }]]),
 });
 const blocking = (d: ReportsDraft) => checkReports(d, ctx).filter((f) => f.severity !== "warn");
@@ -77,7 +72,7 @@ describe("checkReports", () => {
   });
 
   it("sends back a clock minute and a stock phrase", () => {
-    expect(checksOf(draft({ account: CLEAN.account.replace("in the 19th minute", "on 19'") }))).toEqual(expect.arrayContaining([expect.stringMatching(/a minute as a clock/)]));
+    expect(checksOf(draft({ account: CLEAN.account.replace("after 19 minutes", "on 19'") }))).toEqual(expect.arrayContaining([expect.stringMatching(/a minute as a clock/)]));
     expect(checksOf(draft({ account: `${CLEAN.account} It was a pulsating encounter.` }))).toEqual(expect.arrayContaining([expect.stringMatching(/a phrase this paper does not print \(pulsating\)/)]));
   });
 
@@ -87,7 +82,7 @@ describe("checkReports", () => {
 
   it("keeps draft words out of the football and allows them in the stake", () => {
     expect(checksOf(draft({ sections: [{ ...CLEAN.sections[0], pitch: `${CLEAN.sections[0].pitch} A haul.` }, ...CLEAN.sections.slice(1)] }))).toEqual(expect.arrayContaining([expect.stringMatching(/a draft word in the football \(haul\)/)]));
-    expect(checksOf(draft({ sections: [{ ...CLEAN.sections[0], stake: "Nobody holds him, and it was a haul." }, ...CLEAN.sections.slice(1)] }))).toEqual([]);
+    expect(checksOf(draft({ sections: [{ ...CLEAN.sections[0], stake: "A free agent, and it was a haul." }, ...CLEAN.sections.slice(1)] }))).toEqual([]);
   });
 
   it("sends back advice and a forecast of selection", () => {
@@ -104,7 +99,7 @@ describe("checkReports", () => {
   });
 
   it("sends back a piece that leaves out the injury", () => {
-    expect(checksOf(draft({ account: CLEAN.account.replace("Pedro Porro went off injured in the 19th minute. ", "") }))).toEqual(expect.arrayContaining([expect.stringMatching(/leaves out a goal, a red, a penalty, a VAR call or an injury/)]));
+    expect(checksOf(draft({ account: CLEAN.account.replace("Pedro Porro went off injured after 19 minutes, Archie Gray coming on. ", "") }))).toEqual(expect.arrayContaining([expect.stringMatching(/leaves out a goal, a red, a penalty, a VAR call or an injury/)]));
   });
 
   it("sends back a standfirst without both clubs or the score", () => {
@@ -125,12 +120,12 @@ describe("checkReports", () => {
   });
 
   it("sends back a ground recalled from memory, and a shot the commentary never described", () => {
-    expect(checksOf(draft({}, "Villa End The Wait On The Lane"))).toEqual(expect.arrayContaining([expect.stringMatching(/does not print \(the Lane\)/)]));
+    expect(checksOf(draft({ account: `${CLEAN.account} Villa ended the wait at the Lane.` }))).toEqual(expect.arrayContaining([expect.stringMatching(/does not print \(the Lane\)/)]));
     expect(checksOf(draft({ account: `${CLEAN.account} Buendía curved it in.` }))).toEqual(expect.arrayContaining([expect.stringMatching(/does not print \(curved\)/)]));
   });
 
   it("finds van Hecke at the start of a sentence, where he is Van Hecke", () => {
-    const account = CLEAN.account.replace("and Jan Paul van Hecke headed in", ". Van Hecke headed in");
+    const account = CLEAN.account.replace("and Jan Paul van Hecke headed in a cross", "and then Van Hecke, Jan Paul van Hecke, headed in a cross");
     expect(checksOf(draft({ account }))).toEqual([]);
   });
 
@@ -145,7 +140,7 @@ describe("checkReports", () => {
   });
 
   it("lets an injury sentence name the man who came on after the starter who went off", () => {
-    expect(checksOf(draft({ account: CLEAN.account.replace("Pedro Porro went off injured in the 19th minute.", "Pedro Porro went off injured in the 19th minute, Archie Gray coming on.") }))).toEqual([]);
+    expect(checksOf(draft({ account: CLEAN.account }))).toEqual([]);
   });
 
   it("needs the ruled-out goal told as ruled out, not only its man named", () => {
@@ -153,20 +148,38 @@ describe("checkReports", () => {
     expect(checksOf(draft({ account }))).toEqual(expect.arrayContaining([expect.stringMatching(/leaves out .* \(ruled-out Mohammed Kudus\)/)]));
   });
 
-  it("refuses a later match called the next one", () => {
-    const next = deskDay({
-      day: "2026-09-19", gameweek: 5, matches: [spursVilla()], clubs: [SPURS, VILLA, { id: 3, code: 3, name: "Brentford", shortName: "BRE" }, { id: 4, code: 4, name: "Newcastle", shortName: "NEW" }],
-      season: [fixture, { ...fixture, id: 60, code: 60, homeClubId: 2, awayClubId: 3, kickoff: "2026-10-03T14:00:00Z", status: "upcoming" }, { ...fixture, id: 70, code: 70, homeClubId: 4, awayClubId: 2, kickoff: "2026-10-17T14:00:00Z", status: "upcoming" }],
-      standing: { attack: places, defence: places },
-    });
-    const late = { ...CLEAN, sections: [CLEAN.sections[0], { ...CLEAN.sections[1], stake: "Villa go to Newcastle United next." }, CLEAN.sections[2]] };
-    const faults = checkReports({ headline: "Villa hold on at Tottenham", matches: new Map([[2645244, late]]) }, { ...ctx, desks: next, blocks: new Map([[2645244, matchBlock(next[0], true)]]) });
-    expect(faults.map((f) => f.check)).toContain("a later match called the next one");
+  it("sends back a fixture in a stake, and a stake about another man", () => {
+    const stakes = (stake: string) => [CLEAN.sections[0], { ...CLEAN.sections[1], stake }, CLEAN.sections[2]];
+    expect(checksOf(draft({ sections: stakes("Notemail picked him for seven points, and Villa host Brentford next.") }))).toEqual(expect.arrayContaining([expect.stringMatching(/a fixture in a stake/)]));
+    expect(checksOf(draft({ sections: stakes("Notemail picked him for seven points, as they did Jackson.") }))).toEqual(expect.arrayContaining([expect.stringMatching(/a stake names only its own man/)]));
   });
 
   it("never calls a club a stranger: a stake may name another match's club as the next opponent", () => {
     const other = { ...desks[0], match: { ...desks[0].match, fixture: { ...fixture, code: 99 }, home: { ...desks[0].match.home, name: "Arsenal", shorts: [] }, men: [] } };
     const faults = checkReports(draft({ sections: [CLEAN.sections[0], { ...CLEAN.sections[1], stake: "He was in the eleven Notemail picked, 7 points, and Arsenal lost too." }, CLEAN.sections[2]] }), { ...ctx, desks: [desks[0], other] });
     expect(faults.filter((f) => f.section.startsWith("2645244") && f.check === "a man from another match")).toEqual([]);
+  });
+
+  it("keeps the table in the standfirst, a section off the account's ground, and bookings out of the account", () => {
+    expect(checksOf(draft({ account: `${CLEAN.account} Spurs stay in the bottom three.` }))).toEqual(expect.arrayContaining([expect.stringMatching(/the table belongs to the standfirst/)]));
+    const retold = [{ ...CLEAN.sections[0], pitch: `${CLEAN.sections[0].pitch} Manzambi put Villa ahead just before the interval.` }, ...CLEAN.sections.slice(1)];
+    expect(checksOf(draft({ sections: retold }))).toEqual(expect.arrayContaining([expect.stringMatching(/a section retells the account/)]));
+    expect(checksOf(draft({ account: `${CLEAN.account} Matty Cash was booked in added time.` }))).toEqual(expect.arrayContaining([expect.stringMatching(/a booking in the account/)]));
+  });
+
+  it("allows the goal total, a head-to-head score from the brief, and a one-name man inside a name of this match", () => {
+    const stake = "Notemail picked him, and his seven points were theirs.";
+    expect(checksOf(draft({ account: `${CLEAN.account} It was a five-goal match.` }))).toEqual([]);
+    expect(checksOf(draft({ sections: [CLEAN.sections[0], { ...CLEAN.sections[1], stake }, CLEAN.sections[2]] }))).toEqual([]);
+  });
+
+  it("lets a stake give the holder's head-to-head score, which is the league's and not the match's", () => {
+    const withH2h = deskDay({
+      day: "2026-09-19", gameweek: 5, season: [fixture], clubs: [SPURS, VILLA], standing: { attack: places, defence: places },
+      matches: [spursVilla({ holders: new Map([[codeOf("Buendía"), { team: "Notemail", fielded: true, round: 2, h2h: { opponent: "test2", us: 38, them: 34 } }]]), points: new Map([[codeOf("Buendía"), 7]]) })],
+    });
+    const piece = { ...CLEAN, sections: [CLEAN.sections[0], { ...CLEAN.sections[1], stake: "His seven points have Notemail 38-34 up on test2." }, CLEAN.sections[2]] };
+    const faults = checkReports({ headline: "", headlines: [], matches: new Map([[2645244, piece]]) }, { ...ctx, desks: withH2h, blocks: new Map([[2645244, matchBlock(withH2h[0])]]) });
+    expect(faults.filter((f) => f.check === "a scoreline the match never had")).toEqual([]);
   });
 });

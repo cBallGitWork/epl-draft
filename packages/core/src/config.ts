@@ -399,10 +399,13 @@ export const SHEETS = {
 /** The match-day report's editorial thresholds (docs/plans/GAZETTA.md, "Match reports, woven"). */
 export const REPORTS = {
   budget: {
-    lead: { words: [300, 380], sections: 3, stats: 6 },
-    ordinary: { words: [200, 260], sections: 2, stats: 4 },
-    dead: { words: [90, 140], sections: 1, stats: 3 },
+    lead: { account: [90, 130], sections: 3, stats: 6 },
+    ordinary: { account: [60, 100], sections: 2, stats: 5 },
+    dead: { account: [40, 70], sections: 1, stats: 4 },
   },
+  /** Words a standfirst and a section may run to (sports desk, 28 Sep 2026). */
+  standfirstWords: 25,
+  sectionWords: [20, 45],
   /** A burst is two goals by one side this close; late is from this minute. */
   burstMinutes: 15,
   lateMinute: 80,

@@ -1,13 +1,15 @@
 import { REPORTS } from "../../config";
-import { numeral } from "./minutes";
 import { played } from "./men";
 import { isGoal, type ManCounts, type MatchEvent } from "./timeline";
 import type { ReportMan, ReportMatchInput } from "./types";
 
-// The key-stats box: desk-made lines, never written by the model. xG and xA may choose a line; they never print.
+// The key-stats box: desk-made lines with figures, never written by the model. xG and xA print here (Craig, 28 Sep 2026:
+// "for key stats, can use xg/xa etc, most shots, most chances created"); the prose stays in words. No line says what a man
+// failed to do: a stat box proves, it does not sneer.
 
 export interface KeyStat {
-  text: string;
+  label: string;
+  value: string;
 }
 
 const PARTICLES = new Set(["van", "de", "da", "dos", "der", "den", "di", "le", "la", "ter"]);
@@ -19,61 +21,52 @@ export function surname(name: string): string {
   return at > 0 ? parts.slice(at).join(" ") : (parts.at(-1) ?? name);
 }
 
-const count = (n: number, one: string, many = `${one}s`) => `${numeral(n)} ${n === 1 ? one : many}`;
+const { mostShots: MOST_SHOTS, chances: CHANCES, expectedAssists: EXPECTED_ASSISTS, saves: SAVES } = REPORTS.stats;
 
-const { mostShots: MOST_SHOTS, chances: CHANCES, expectedAssists: EXPECTED_ASSISTS, saves: SAVES, freeNames: FREE_NAMES } = REPORTS.stats;
+/** The men who lead one count, and the count, or null when nobody reaches `least`. */
+function leaders(men: readonly ReportMan[], value: (m: ReportMan) => number, least: number): { men: ReportMan[]; value: number } | null {
+  const best = Math.max(0, ...men.map(value));
+  return best < least ? null : { men: men.filter((m) => value(m) === best), value: best };
+}
 
 export function keyStats(
   match: ReportMatchInput,
   events: readonly MatchEvent[],
   counts: ReadonlyMap<number, ManCounts>,
-  facts: readonly string[],
   budget: number,
 ): KeyStat[] {
-  const lines: string[] = [];
-  const goals = events.filter(isGoal);
-  const scored = (man: ReportMan) => goals.filter((g) => g.kind !== "own-goal" && g.man?.code === man.code).length;
-  const made = (man: ReportMan) => goals.filter((g) => g.other?.code === man.code).length;
-  const c = (man: ReportMan) => counts.get(man.code);
   const men = match.men.filter(played);
-  const tag = (man: ReportMan) => `${match[man.side].shorts[0] ?? match[man.side].name}, ${man.holder === null ? "free" : man.holder.team}`;
+  const c = (m: ReportMan) => counts.get(m.code);
+  const scored = (m: ReportMan) => events.filter((e) => isGoal(e) && e.kind !== "own-goal" && e.man?.code === m.code).length;
+  const assists = (m: ReportMan) => events.filter((e) => isGoal(e) && e.other?.code === m.code).length;
+  const short = (side: "home" | "away") => match[side].shorts[0] ?? match[side].name;
+  const names = (list: readonly ReportMan[]) => list.map((m) => surname(m.name)).join(", ");
+  const out: KeyStat[] = [];
 
-  lines.push(...facts.filter((fact) => fact.includes("clean sheet went")));
-  for (const event of events.filter((e) => e.kind === "woodwork" && e.man !== null)) {
-    lines.push(`${surname(event.man!.name)} (${tag(event.man!)}) hit ${event.shot?.to === "against the bar" ? "the bar" : "the post"}`);
-  }
-  const shooter = [...men].sort((a, b) => (c(b)?.shots ?? 0) - (c(a)?.shots ?? 0))[0];
-  if (shooter !== undefined && (c(shooter)?.shots ?? 0) >= MOST_SHOTS) {
-    const s = c(shooter)!;
-    lines.push(`${surname(shooter.name)} (${tag(shooter)}): ${count(s.shots, "shot")}, ${s.onTarget === 0 ? "none" : numeral(s.onTarget)} on target, ${scored(shooter) === 0 ? "no goal" : count(scored(shooter), "goal")}`);
-  }
-  for (const man of men.filter((m) => m.line === "F" && m.started && m.minutes >= 60 && (c(m)?.shots ?? 0) === 0)) {
-    lines.push(`${surname(man.name)} (${tag(man)}): no shots in ${man.minutes} minutes`);
-  }
-  for (const man of men.filter((m) => made(m) === 0 && ((c(m)?.chancesMade ?? 0) >= CHANCES || m.expectedAssists >= EXPECTED_ASSISTS))) {
-    const chances = c(man)?.chancesMade ?? 0;
-    if (chances > 0) lines.push(`${surname(man.name)} (${tag(man)}): set up ${count(chances, "shot")}, none scored`);
-  }
-  for (const man of men.filter((m) => m.saves >= SAVES)) lines.push(`${surname(man.name)} (${tag(man)}): ${count(man.saves, "save")}`);
-  for (const event of events.filter((e) => (e.kind === "penalty-won" || e.kind === "penalty-missed" || e.kind === "penalty-saved") && e.man !== null)) {
-    const what = event.kind === "penalty-won" ? "won a penalty" : event.kind === "penalty-missed" ? "missed a penalty" : "had a penalty saved";
-    lines.push(`${surname(event.man!.name)} (${tag(event.man!)}) ${what}`);
-  }
+  const xg = (side: "home" | "away") => men.filter((m) => m.side === side).reduce((sum, m) => sum + m.expectedGoals, 0);
+  if (men.some((m) => m.expectedGoals > 0)) out.push({ label: "xG", value: `${short("home")} ${xg("home").toFixed(2)}, ${short("away")} ${xg("away").toFixed(2)}` });
   if (match.figures !== null) {
     const { home, away } = match.figures;
-    lines.push(`Shots ${home.shots}-${away.shots} · on target ${home.onTarget}-${away.onTarget} · corners ${home.corners}-${away.corners} · clear chances ${home.clearChances}-${away.clearChances}`);
+    out.push({ label: "Shots", value: `${home.shots} (${home.onTarget} on target) - ${away.shots} (${away.onTarget}); corners ${home.corners}-${away.corners}` });
   }
-  const free = men.filter((m) => m.holder === null && scored(m) + made(m) > 0).slice(0, FREE_NAMES);
-  if (free.length > 0) {
-    const what = (m: ReportMan) => [scored(m) > 0 ? count(scored(m), "goal") : null, made(m) > 0 ? count(made(m), "assist") : null].filter(Boolean).join(", ");
-    lines.push(`Nobody holds: ${free.map((m) => `${surname(m.name)} (${what(m)})`).join("; ")}`);
+  const shots = leaders(men, (m) => c(m)?.shots ?? 0, MOST_SHOTS);
+  if (shots !== null && shots.men.length === 1) {
+    const [man] = shots.men;
+    const goals = scored(man);
+    out.push({ label: "Most shots", value: `${surname(man.name)} ${shots.value} (${c(man)?.onTarget ?? 0} on target${goals > 0 ? `, ${goals} goal${goals === 1 ? "" : "s"}` : ""})` });
   }
-  const top = [...men].filter((m) => m.points !== null).sort((a, b) => (b.points ?? 0) - (a.points ?? 0))[0];
-  if (top?.points != null && top.holder !== null) lines.push(`Top points: ${surname(top.name)}, ${top.points} for ${top.holder.team}`);
-
-  // The team line always prints; the rest in priority order to the budget.
-  const team = lines.find((line) => line.startsWith("Shots "));
-  const rest = lines.filter((line) => line !== team).slice(0, Math.max(0, budget - (team === undefined ? 0 : 1)));
-  const ordered = team === undefined ? rest : [...rest.slice(0, 3), team, ...rest.slice(3)];
-  return [...new Set(ordered)].map((text) => ({ text }));
+  const chances = leaders(men, (m) => c(m)?.chancesMade ?? 0, 1);
+  const byXa = [...men].sort((a, b) => b.expectedAssists - a.expectedAssists)[0];
+  if (chances !== null && (chances.value >= CHANCES || (byXa?.expectedAssists ?? 0) >= EXPECTED_ASSISTS)) {
+    const made = chances.men.map((m) => `${surname(m.name)}${assists(m) > 0 ? ` (${assists(m)} assist${assists(m) === 1 ? "" : "s"})` : ""}`).join(", ");
+    out.push({ label: "Chances created", value: `${made} ${chances.value}` });
+  }
+  if (byXa !== undefined && byXa.expectedAssists >= EXPECTED_ASSISTS) out.push({ label: "Top xA", value: `${surname(byXa.name)} ${byXa.expectedAssists.toFixed(2)}` });
+  const byXg = [...men].sort((a, b) => b.expectedGoals - a.expectedGoals)[0];
+  if (byXg !== undefined && byXg.expectedGoals >= 0.5) out.push({ label: "Top xG", value: `${surname(byXg.name)} ${byXg.expectedGoals.toFixed(2)}` });
+  const keepers = men.filter((m) => m.saves >= SAVES || events.some((e) => e.kind === "penalty-saved" && e.side !== m.side && m.line === "G"));
+  if (keepers.length > 0) out.push({ label: "Saves", value: keepers.map((m) => `${surname(m.name)} ${m.saves}`).join(", ") });
+  const woodwork = events.filter((e) => e.kind === "woodwork" && e.man !== null).map((e) => e.man!);
+  if (woodwork.length > 0) out.push({ label: "Woodwork", value: names(woodwork) });
+  return out.slice(0, budget);
 }

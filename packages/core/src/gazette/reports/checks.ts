@@ -4,6 +4,7 @@ import { mentionAt as mentionExact, numbersIn, sentences, wordCount } from "../p
 import type { MatchDesk } from "./desk";
 import type { ReportPiece, ReportsDraft } from "./draft";
 import { surname } from "./keyStats";
+import { partFaults } from "./parts";
 import { dayFaults, wordFaults } from "./style";
 import { isGoal } from "./timeline";
 
@@ -29,6 +30,10 @@ function mentionAt(text: string, name: string, from = 0): number {
 const CAME_ON = /\b(?:off the bench|from the bench|as a substitute|came on|coming on|introduced)\b/iu;
 const strip = (text: string) => text.normalize("NFD").replace(/\p{M}/gu, "");
 
+/** A length is a target, not a guillotine: a little under or over is not worth a rewrite. */
+const SLACK_UNDER = 0.85;
+const SLACK_OVER = 1.15;
+
 const RECORD = /\b(?:first (?:win|defeat|clean sheet|home win|away win)|unbeaten|in a row|without a win|straight (?:wins|defeats))\b/giu;
 const COMEBACK = /\bcome ?back\b|\bfight ?back\b|\bfought back\b/iu;
 const SCORE = /\b(\d{1,2})-(\d{1,2})\b/gu;
@@ -42,12 +47,7 @@ export function checkReports(draft: ReportsDraft, ctx: ReportsCheck): Fault[] {
   // Other matches' men, never their clubs: a stake names a next opponent, and a club is no stranger to the page.
   const allMen = ctx.desks.flatMap((d) => d.match.men.map((m) => surname(m.name)));
 
-  if (draft.headline === "") fault("headline", "missing", "hard", "no headline");
-  else {
-    if (wordCount(draft.headline) > 8) fault("headline", "over eight words", "send-back", draft.headline);
-    wordFaults("headline", draft.headline, true, allNames, fault);
-  }
-
+  // The headline is struck and chosen by `headline.ts` and the fan, not sent back.
   const heads = new Map<string, number>();
   const pieces: { code: number; prose: string; account: string; standfirst: string }[] = [];
   for (const desk of ctx.desks) {
@@ -97,10 +97,15 @@ function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx:
   const section = `${code}:match`;
   // A man from another match in this one's prose is the confident wrong statement this paper refuses.
   const mine = new Set(names);
+  // A one-name man elsewhere ("Rayan") is no stranger when he is part of a name in this match ("Rayan Cherki").
+  const inMine = (other: string) => names.some((name) => name.split(/\s+/u).includes(other));
   for (const other of allMen) {
-    if (!mine.has(other) && other.length > 3 && mentionAt(prose, other) >= 0) fault(section, "a man from another match", "hard", other);
+    if (!mine.has(other) && !inMine(other) && other.length > 3 && mentionAt(prose, other) >= 0) fault(section, "a man from another match", "hard", other);
   }
-  const allowed = new Set([...numbersIn(block), 0, 90, 45, ctx.gameweek]);
+  // Besides the block's own figures: the goal total ("an eight-goal match"), and ten or nine men after a red card.
+  const total = (desk.match.fixture.homeScore ?? 0) + (desk.match.fixture.awayScore ?? 0);
+  const reds = desk.events.filter((e) => e.kind === "sent-off" || e.kind === "second-yellow").length;
+  const allowed = new Set([...numbersIn(block), 0, 90, 45, ctx.gameweek, total, ...(reds > 0 ? [10, 11 - reds] : [])]);
   for (const n of numbersIn(prose.replace(SCORE, " "))) if (!allowed.has(n)) fault(section, "a figure the facts do not give", "hard", String(n));
 
   const events = desk.events.filter(isGoal);
@@ -109,6 +114,8 @@ function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx:
     ...(desk.match.halfTime === null ? [] : [`${desk.match.halfTime.home}-${desk.match.halfTime.away}`]),
     ...events.flatMap((e) => (e.score === null ? [] : [`${e.score.home}-${e.score.away}`])),
   ]);
+  // A head-to-head score the brief hands over is the league's, not the match's, and is no invented scoreline.
+  for (const [said] of block.matchAll(SCORE)) scores.add(said);
   for (const [said, a, b] of prose.matchAll(SCORE)) {
     if (!scores.has(said) && !scores.has(`${b}-${a}`)) fault(section, "a scoreline the match never had", "hard", said);
     else if (Number(a) < Number(b)) fault(section, "a score in prose goes higher first", "send-back", said);
@@ -131,15 +138,6 @@ function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx:
   for (const man of desk.match.men) {
     const name = surname(man.name);
     if (strip(name) !== name && mentionAt(prose, strip(name)) >= 0) fault(section, "a name spelt without its accents", "send-back", strip(name));
-  }
-
-  // "Next" is the first match ahead: a later opponent called next is a fixture the club does not have.
-  for (const later of [...desk.ahead.home.slice(1), ...desk.ahead.away.slice(1)]) {
-    for (const sentence of sentences(prose.replace(/\n/gu, ". "))) {
-      if (mentionAt(sentence, later.opponent) >= 0 && /\bnext\b/u.test(sentence) && !/\bafter\b|\bthen\b/u.test(sentence)) {
-        fault(section, "a later match called the next one", "hard", later.opponent);
-      }
-    }
   }
 
   // Everything that decided or changed the match is named somewhere in its piece.
@@ -166,14 +164,14 @@ function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx:
 
 /** The standfirst, the order of the goals in the account, the heads and the length. */
 function shape(code: number, piece: ReportPiece, desk: MatchDesk, fault: (s: string, c: string, v: Severity, e: string) => void): void {
-  const { match, budget, angle } = desk;
+  const { match, budget } = desk;
   const sf = piece.standfirst;
   const clubNamed = (c: typeof match.home) => [c.name, ...c.shorts].some((n) => mentionAt(sf, n) >= 0);
   const [h, a] = [match.fixture.homeScore ?? 0, match.fixture.awayScore ?? 0];
-  if (sentences(sf).length !== 1 || wordCount(sf) > 30) fault(`${code}:standfirst`, "one sentence of 30 words or fewer", "send-back", `${sentences(sf).length} sentences, ${wordCount(sf)} words`);
+  if (sentences(sf).length !== 1 || wordCount(sf) > REPORTS.standfirstWords) fault(`${code}:standfirst`, `one sentence of ${REPORTS.standfirstWords} words or fewer`, "send-back", `${sentences(sf).length} sentences, ${wordCount(sf)} words`);
   if (!clubNamed(match.home) || !clubNamed(match.away)) fault(`${code}:standfirst`, "names both clubs", "send-back", sf);
   if (!sf.includes(`${Math.max(h, a)}-${Math.min(h, a)}`)) fault(`${code}:standfirst`, "gives the score, higher first", "send-back", sf);
-  if (angle.angle !== "late goals" && desk.events.some((e) => e.phrases.some((p) => sf.includes(p)))) fault(`${code}:standfirst`, "a minute in the standfirst", "send-back", sf);
+  if (desk.events.some((e) => e.phrases.some((p) => sf.includes(p)))) fault(`${code}:standfirst`, "a minute in the standfirst", "send-back", sf);
 
   const scorers = desk.events.filter((e) => isGoal(e) && e.kind !== "own-goal" && e.man !== null).map((e) => surname(e.man!.name));
   // Each scorer must be named after the one before him; an earlier mention (a booking) does not count against the order.
@@ -189,11 +187,17 @@ function shape(code: number, piece: ReportPiece, desk: MatchDesk, fault: (s: str
   else if (piece.sections.length !== budget.sections) fault(`${code}:match`, `${budget.sections} sections, not ${piece.sections.length}`, "send-back", String(piece.sections.length));
   const mine = [...match.men.map((m) => surname(m.name)), match.home.name, match.away.name, ...match.home.shorts, ...match.away.shorts];
   piece.sections.forEach((s, i) => {
-    if (wordCount(s.head) > 5 || s.head === "") fault(`${code}:s${i + 1}`, "a head of five words or fewer", "send-back", s.head);
+    if (wordCount(s.head) > 4 || s.head === "") fault(`${code}:s${i + 1}`, "a head of four words or fewer", "send-back", s.head);
     if (!mine.some((n) => mentionAt(s.head, n) >= 0)) fault(`${code}:s${i + 1}`, "a head names a man or club from this match", "send-back", s.head);
     if (s.pitch === "" || s.stake === "") fault(`${code}:s${i + 1}`, "a section needs its football and its stake", "hard", s.head);
   });
-  const words = wordCount(proseOf(piece));
-  const [least, most] = budget.words;
-  if (words < least * 0.9 || words > most * 1.1) fault(`${code}:match`, `length ${least} to ${most} words`, "send-back", `${words} words`);
+  const [least, most] = budget.account;
+  const words = wordCount(piece.account);
+  if (words < least * SLACK_UNDER || words > most * SLACK_OVER) fault(`${code}:account`, `an account of ${least} to ${most} words`, "send-back", `${words} words`);
+  const [sLeast, sMost] = REPORTS.sectionWords;
+  piece.sections.forEach((s, i) => {
+    const n = wordCount(`${s.pitch} ${s.stake}`);
+    if (n < sLeast * SLACK_UNDER || n > sMost * SLACK_OVER) fault(`${code}:s${i + 1}`, `a section of ${sLeast} to ${sMost} words`, "send-back", `${n} words`);
+  });
+  partFaults(code, piece, desk, fault);
 }

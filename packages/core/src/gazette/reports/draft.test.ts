@@ -3,7 +3,7 @@ import type { Fault } from "../predictions/checks";
 import { correct, mergeReports, plainHead, readReportsDraft, type ReportsDraft } from "./draft";
 
 const piece = (tag: string) => ({ standfirst: `${tag} standfirst`, account: `${tag} account`, sections: [] });
-const drafted = (tag: string): ReportsDraft => ({ headline: `${tag} headline`, matches: new Map([[1, piece(tag)], [2, piece(tag)]]) });
+const drafted = (tag: string): ReportsDraft => ({ headline: `${tag} headline`, headlines: [`${tag} headline`], matches: new Map([[1, piece(tag)], [2, piece(tag)]]) });
 const f = (section: string, severity: Fault["severity"]): Fault => ({ section, check: "x", severity, evidence: "" });
 
 describe("readReportsDraft", () => {

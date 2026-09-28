@@ -18,6 +18,16 @@ export const REPORT_CLICHES: readonly string[] = [
   "towering", "lung-busting", "pinpoint", "inch-perfect", "super-sub", "impact sub", "game-changer", "changed the game",
   "opened his account", "off the mark", "at the death", "last kick of the game", "languish", "languishing",
   "find themselves", "controversially", "VAR drama", "Spursy", "rose highest", "bullet header", "powered home",
+  // The sports desk's red pen on the first three filed days (28 Sep 2026).
+  "very close range", "one shot", "tight afternoon", "tight game", "comfortable", "pressed without reward", "nothing separated",
+  "dangerous attack", "tough defence", "weak attack", "soft defence", "kept two saves", "afternoon", "evening", "tonight",
+  "leave it late", "leaves it late", "leaving it late",
+  // Play nobody saw: how a man moved, ran or led is not in the facts (second filing, 28 Sep 2026).
+  "marshalled", "set the tempo", "ran through him", "on the front foot", "stretched", "running in behind", "dropping in",
+  "carved out", "pulled the strings", "drove forward", "offered little", "at the heart of", "tireless", "a menace",
+  "a constant threat", "lifted a", "lifted the", "his introduction", "his work", "his running", "his movement",
+  "finely poised", "a free man", "holds him", "hold him", "held by", "holder", "nobody holds", "nobody in the league holds",
+  "in their eleven", "among their reserves", "profligacy", "chance after chance", "held firm", "still pressing",
 ];
 
 /** Grounds the house list lacks, and their nicknames; the brief carries no ground, so every one is recalled. */
@@ -102,7 +112,7 @@ export const REPORT_DEPTH_CHART: readonly string[] = [
 
 /** Draft words, kept out of the football: allowed only in a section's stake. */
 export const REPORT_FANTASY: readonly string[] = [
-  "haul", "hauled", "blank", "blanked", "owner", "owners", "owned", "held by", "holds him", "holder", "draft", "waiver",
+  "haul", "hauled", "blank", "blanked", "owner", "owners", "owned", "picked by", "free agent", "draft", "waiver",
   "waivers", "fielded",
 ];
 
@@ -111,14 +121,15 @@ export const REPORT_CAPPED_MATCH: readonly (readonly [phrase: string, most: numb
   ["pulled one back", 1], ["consolation", 1], ["on the break", 1], ["late on", 1], ["the hosts", 1], ["the visitors", 1],
   ["the home side", 1], ["bottom three", 1], ["relegation zone", 1], ["from close range", 1], ["from the spot", 1],
   ["equaliser", 2], ["winner", 1], ["doubled the lead", 1], ["restored the lead", 1], ["hit the woodwork", 1], ["only to", 1],
-  ["just", 2], ["added time", 3], ["stoppage time", 3],
+  ["just", 2], ["added time", 3], ["stoppage time", 3], ["low into the corner", 1], ["top corner", 1], ["inside the box", 1],
 ];
 
 /** And across the whole day's page. */
 export const REPORT_CAPPED_DAY: readonly (readonly [phrase: string, most: number])[] = [
   ["from time", 2], ["added time", 5], ["stoppage time", 5], ["on the hour", 1], ["midway through", 2],
   ["just before half-time", 2], ["there was", 1], ["the result leaves", 1], ["the result means", 1], ["moments later", 1],
-  ["minutes later", 1], ["shortly after", 1],
+  ["minutes later", 1], ["shortly after", 1], ["free agent", 3], ["picked by", 2], ["points for", 3],
+  ["while", 1],
 ];
 
 /** Calling a man anything but his name. */

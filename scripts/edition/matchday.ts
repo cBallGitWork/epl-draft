@@ -15,6 +15,8 @@ import {
   parseHighlightFeed,
   plFixtureCode,
   plManager,
+  plMatchFacts,
+  lineupOf,
   plMoments,
   plPlayerCodes,
   plTeamSheets,
@@ -121,6 +123,9 @@ export async function matchdayInput(opts: {
       moments,
       men: reportMen(sheets, moments, { live: liveLines, season: seasons, holders: league.holders, points: league.points, fitness }),
       figures: home === null || away === null ? null : { home, away },
+      venue: plMatchFacts(detail).ground,
+      attendance: plMatchFacts(detail).attendance,
+      lineups: { home: lineupOf(sheets.home, moments), away: lineupOf(sheets.away, moments) },
       videoId: highlightFor(videos, { home: clubs.get(fixture.homeClubId)?.name ?? "", away: clubs.get(fixture.awayClubId)?.name ?? "", homeScore: fixture.homeScore, awayScore: fixture.awayScore })?.id ?? null,
     });
   }

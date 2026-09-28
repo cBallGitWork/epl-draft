@@ -1,20 +1,20 @@
 import { REPORTS } from "../../config";
 import { nextThree, type NextMatch } from "./ahead";
 import { derivedFacts } from "./derived";
-import { keyStats, surname, type KeyStat } from "./keyStats";
+import { fantasyPanel, type FantasyPanel } from "./fantasy";
+import { keyStats, type KeyStat } from "./keyStats";
 import { played } from "./men";
 import { clubStandings, type ClubStanding } from "./standing";
 import { isGoal, manCounts, matchEvents, type ManCounts, type MatchEvent } from "./timeline";
 import type { ReportDayInput, ReportMan, ReportMatchInput } from "./types";
 
-// The editor's calls for a match-day, made in code: which match leads, each one's angle, who gets a section, how long.
-// The model writes prose around these; it never chooses them, so five matches do not converge on one shape.
-
-export type Angle = "the table" | "a decision" | "late goals" | "a man" | "a run" | "a set piece" | "the goals";
+// The editor's calls for a match-day, made in code: which match leads, the moment each account opens on, the one goal worth
+// describing, who gets a section and why it matters in the league, how long. The model writes prose around these.
 
 export interface Nominee {
   man: ReportMan;
-  why: string;
+  /** Why the league cares, as data for the writer to put in its own words. */
+  stake: string;
 }
 
 export interface MatchDesk {
@@ -23,51 +23,86 @@ export interface MatchDesk {
   counts: Map<number, ManCounts>;
   standing: { home: ClubStanding | null; away: ClubStanding | null };
   facts: string[];
-  ahead: { home: NextMatch[]; away: NextMatch[] };
-  angle: { angle: Angle; why: string };
-  budget: { words: readonly [number, number]; sections: number };
+  /** Each club's next match, for the sidebar. */
+  next: { home: NextMatch | null; away: NextMatch | null };
+  /** What the account opens on: the moment that decided the match. Never the table, which is the standfirst's. */
+  opening: string;
+  /** The one goal the account describes in full; the others take a clause. */
+  described: MatchEvent | null;
+  budget: { account: readonly [number, number]; sections: number };
   nominees: Nominee[];
   keyStats: KeyStat[];
+  fantasy: FantasyPanel;
+  lead: boolean;
 }
 
-const BUDGET = REPORTS.budget;
 const LATE = REPORTS.lateMinute;
+const BUDGET = REPORTS.budget;
+const DECISIONS = ["sent-off", "second-yellow", "ruled-out", "penalty-saved", "penalty-missed"];
 
-/** Each candidate angle this match can carry, in the order an editor prefers them. */
-function angles(desk: Omit<MatchDesk, "angle" | "budget" | "nominees" | "keyStats">): { angle: Angle; why: string }[] {
-  const out: { angle: Angle; why: string }[] = [];
-  const { events, standing, match } = desk;
-  const moved = [standing.home, standing.away].filter((s): s is ClubStanding => s?.moved === true);
-  if (moved.length > 0) out.push({ angle: "the table", why: moved.map((s) => `${s.code === match.home.code ? match.home.name : match.away.name}: ${s.lines.join(", ")}`).join("; ") });
-  const decisions = events.filter((e) => ["sent-off", "second-yellow", "penalty-goal", "penalty-missed", "penalty-saved", "ruled-out"].includes(e.kind));
-  if (decisions.length > 0) out.push({ angle: "a decision", why: decisions.map((e) => `${e.kind.replace("-", " ")} ${e.man === null ? "" : surname(e.man.name)}`.trim()).join(", ") });
-  const late = events.filter((e) => isGoal(e) && e.at >= LATE);
-  if (late.length >= 2 || desk.facts.some((f) => f.startsWith("the winner came"))) out.push({ angle: "late goals", why: `${late.length} goal${late.length === 1 ? "" : "s"} from the 80th minute on` });
-  const involved = match.men.filter((m) => events.filter((e) => isGoal(e) && (e.man?.code === m.code || e.other?.code === m.code)).length >= 2);
-  if (involved.length > 0) out.push({ angle: "a man", why: involved.map((m) => surname(m.name)).join(", ") });
-  const runs = [standing.home, standing.away].flatMap((s) => s?.lines.filter((l) => /win|defeat|unbeaten/.test(l)) ?? []);
-  if (runs.length > 0) out.push({ angle: "a run", why: runs.join("; ") });
-  if (events.some((e) => isGoal(e) && ["corner", "set piece", "direct free kick"].includes(e.shot?.situation ?? ""))) out.push({ angle: "a set piece", why: "a goal from a set piece" });
-  out.push({ angle: "the goals", why: "the goals in order" });
-  return out;
+/** The moment that decided the match, from the timeline and the worked-out facts, in order of weight. */
+function opening(match: ReportMatchInput, events: readonly MatchEvent[], facts: readonly string[]): string {
+  const goals = events.filter(isGoal);
+  const late = goals.filter((g) => g.at >= LATE);
+  const collapse = facts.find((f) => / were \d+-\d+ up /u.test(f));
+  if (collapse !== undefined && late.length > 0) return `${collapse}, and the other side scored ${late.length === 1 ? "once" : `${late.length} times`} from the 80th minute on`;
+  const winner = facts.find((f) => f.startsWith("the winner came"));
+  if (winner !== undefined) return winner;
+  const decision = events.find((e) => DECISIONS.includes(e.kind));
+  if (decision?.man) return `${decision.kind.replace("-", " ")}: ${decision.man.name} (${match[decision.man.side].name}), ${decision.phrases[0] ?? decision.minute}`;
+  const hat = match.men.find((m) => goals.filter((g) => g.kind !== "own-goal" && g.man?.code === m.code).length >= 3);
+  if (hat !== undefined) return `${hat.name}'s hat-trick for ${match[hat.side].name}`;
+  const first = goals[0];
+  return first?.man ? `the first goal: ${first.man.name}, ${first.phrases[0] ?? first.minute}` : "a goalless match: what each side made, and what kept it level";
 }
 
-/** Who a section could be about, most newsworthy first. A man is never nominated for whom he replaced. */
+/** The goal worth a full description: from distance, from a keeper's pass, a substitute's, a header, or one in added time. */
+function described(events: readonly MatchEvent[]): MatchEvent | null {
+  const goals = events.filter((e) => isGoal(e) && e.kind !== "own-goal" && e.shot !== null);
+  return (
+    goals.find((g) => ["from outside the box", "from long range", "from more than 35 yards"].includes(g.shot?.from ?? "")) ??
+    goals.find((g) => g.other?.line === "G") ??
+    goals.find((g) => g.man !== null && !g.man.started) ??
+    goals.find((g) => g.shot?.foot === "header") ??
+    goals.find((g) => g.minute.includes("+")) ??
+    null
+  );
+}
+
+/** "testf's", "Dave's Dons'". */
+const of = (team: string) => (team.endsWith("s") ? `${team}'` : `${team}'s`);
+const pts = (n: number) => `${n} point${n === 1 ? "" : "s"}`;
+
+/** The men a section could be about, each with the league stake that earns it, most newsworthy first. */
 function nominees(match: ReportMatchInput, events: readonly MatchEvent[], counts: ReadonlyMap<number, ManCounts>): Nominee[] {
   const goals = events.filter(isGoal);
   const scored = (m: ReportMan) => goals.filter((g) => g.kind !== "own-goal" && g.man?.code === m.code).length;
   const made = (m: ReportMan) => goals.filter((g) => g.other?.code === m.code).length;
-  const out: Nominee[] = [];
-  const add = (man: ReportMan, why: string) => {
-    if (!out.some((n) => n.man.code === man.code)) out.push({ man, why });
+  const h2h = (m: ReportMan) => {
+    const h = m.holder?.h2h;
+    return h == null || h.us === null || h.them === null ? "" : `; ${of(m.holder!.team)} head-to-head this period stands ${h.us}-${h.them} against ${h.opponent}`;
   };
-  for (const m of match.men.filter((x) => scored(x) + made(x) >= 2)) add(m, `${scored(m)} goal(s), ${made(m)} assist(s)`);
-  for (const m of match.men.filter((x) => x.injuredOff && x.holder !== null)) add(m, `went off injured; held by ${m.holder!.team}`);
-  for (const m of match.men.filter((x) => x.holder !== null && scored(x) + made(x) > 0)) add(m, `${scored(m) > 0 ? "scored" : "made a goal"}; held by ${m.holder!.team}`);
-  for (const m of match.men.filter((x) => x.holder === null && played(x) && (scored(x) + made(x) > 0 || (counts.get(x.code)?.shots ?? 0) >= 3 || (counts.get(x.code)?.chancesMade ?? 0) >= 3))) add(m, "nobody in the league holds him");
-  for (const m of match.men.filter((x) => x.holder?.fielded === true && !x.started)) add(m, `${m.holder!.team} fielded him and he did not start`);
-  for (const m of match.men.filter((x) => (counts.get(x.code)?.deliveries ?? 0) > 0 && made(x) > 0)) add(m, "made a goal from a set piece");
-  for (const m of match.men.filter((x) => scored(x) + made(x) === 1)) add(m, scored(m) > 0 ? "scored" : "made a goal");
+  const out: Nominee[] = [];
+  const add = (m: ReportMan, stake: string) => {
+    if (!out.some((n) => n.man.code === m.code)) out.push({ man: m, stake });
+  };
+  const men = match.men.filter(played);
+  for (const m of men.filter((x) => x.holder !== null && !x.holder.fielded && (scored(x) + made(x) > 0 || (x.points ?? 0) >= 4))) {
+    add(m, `on ${of(m.holder!.team)} bench, so ${m.points === null ? "his points" : pts(m.points)} did not count`);
+  }
+  for (const m of men.filter((x) => x.injuredOff && x.holder !== null)) add(m, `${of(m.holder!.team)} player; went off injured${m.fitness === null ? "" : `; since: ${m.fitness}`}`);
+  const held = men.filter((x) => x.holder?.fielded === true && x.points !== null).sort((a, b) => (b.points ?? 0) - (a.points ?? 0));
+  for (const m of held.filter((x) => (x.points ?? 0) >= 5 || scored(x) + made(x) > 0)) add(m, `picked by ${m.holder!.team}, ${pts(m.points ?? 0)}${h2h(m)}`);
+  // A high pick who gave his manager little is the other side of the week (Craig: "and who didn't do well").
+  for (const m of men.filter((x) => x.started && x.holder?.fielded === true && (x.points ?? 99) <= 1 && (x.holder.round ?? 99) <= 3)) {
+    add(m, `${of(m.holder!.team)} round-${m.holder!.round} pick, picked this week, ${pts(m.points ?? 0)}${h2h(m)}`);
+  }
+  for (const m of men.filter((x) => x.holder === null && scored(x) + made(x) >= 2)) {
+    add(m, `a free agent; ${m.goalsSeason} league goal${m.goalsSeason === 1 ? "" : "s"} this season`);
+  }
+  // When the stakes run short, the men whose figures stand out, so a match never has fewer candidates than sections.
+  const stood = (x: ReportMan) => scored(x) + made(x) > 0 || (counts.get(x.code)?.chancesMade ?? 0) >= 3 || (counts.get(x.code)?.shots ?? 0) >= 4 || x.saves >= 5;
+  for (const m of men.filter(stood)) add(m, m.holder === null ? "a free agent" : m.holder.fielded ? `picked by ${m.holder.team}` : `on ${of(m.holder.team)} bench`);
   return out;
 }
 
@@ -77,38 +112,37 @@ export function deskDay(input: ReportDayInput): MatchDesk[] {
   const standings = clubStandings(input.season, input.clubs, input.day, codes);
   const drafts = input.matches.map((match) => {
     const events = matchEvents(match);
+    const standing = { home: standings.get(match.home.code) ?? null, away: standings.get(match.away.code) ?? null };
+    const moved = standing.home?.moved === true || standing.away?.moved === true;
+    const decided = events.some((e) => DECISIONS.includes(e.kind));
+    const late = events.filter((e) => isGoal(e) && e.at >= LATE).length;
+    const held = match.men.reduce((sum, m) => sum + (m.holder !== null ? (m.points ?? 0) : 0), 0);
+    const score = (moved ? 100 : 0) + (decided ? 40 : 0) + late * 15 + events.filter(isGoal).length * 5 + held / 10;
+    return { match, events, facts: derivedFacts(match, events), standing, score };
+  });
+  const leadIndex = drafts.reduce((best, d, i) => (d.score > drafts[best].score ? i : best), 0);
+  const rest = drafts.filter((_, i) => i !== leadIndex).sort((a, b) => (a.match.fixture.kickoff ?? "").localeCompare(b.match.fixture.kickoff ?? ""));
+
+  return [drafts[leadIndex], ...rest].map((d, i) => {
+    const { match, events, facts } = d;
     const counts = manCounts(events, match.men);
-    const base = {
+    const dead = !events.some((e) => isGoal(e) || ["woodwork", ...DECISIONS].includes(e.kind));
+    const size = dead ? BUDGET.dead : i === 0 ? BUDGET.lead : BUDGET.ordinary;
+    const next = (code: number) => nextThree(input.season, input.clubs, code, input.day, input.standing)[0] ?? null;
+    return {
       match,
       events,
       counts,
-      standing: { home: standings.get(match.home.code) ?? null, away: standings.get(match.away.code) ?? null },
-      facts: derivedFacts(match, events),
-      ahead: {
-        home: nextThree(input.season, input.clubs, match.home.code, input.day, input.standing),
-        away: nextThree(input.season, input.clubs, match.away.code, input.day, input.standing),
-      },
-    };
-    const options = angles(base);
-    const held = match.men.reduce((sum, m) => sum + (m.holder !== null ? (m.points ?? 0) : 0), 0);
-    const score = (options[0].angle === "the table" ? 100 : 0) + (options.some((o) => o.angle === "a decision") ? 40 : 0) + (options.some((o) => o.angle === "late goals") ? 30 : 0) + held / 10;
-    return { base, options, score };
-  });
-  const leadIndex = drafts.reduce((best, d, i) => (d.score > drafts[best].score ? i : best), 0);
-  const order = [drafts[leadIndex], ...drafts.filter((_, i) => i !== leadIndex).sort((a, b) => (a.base.match.fixture.kickoff ?? "").localeCompare(b.base.match.fixture.kickoff ?? ""))];
-
-  const taken = new Set<Angle>();
-  return order.map((draft, i) => {
-    const angle = draft.options.find((o) => !taken.has(o.angle) || o.angle === "the goals") ?? draft.options.at(-1)!;
-    taken.add(angle.angle);
-    const dead = !draft.base.events.some((e) => isGoal(e) || ["sent-off", "second-yellow", "woodwork", "penalty-missed", "penalty-saved"].includes(e.kind));
-    const size = dead ? BUDGET.dead : i === 0 ? BUDGET.lead : BUDGET.ordinary;
-    return {
-      ...draft.base,
-      angle,
-      budget: { words: size.words, sections: size.sections },
-      nominees: nominees(draft.base.match, draft.base.events, draft.base.counts),
-      keyStats: keyStats(draft.base.match, draft.base.events, draft.base.counts, draft.base.facts, size.stats),
+      standing: d.standing,
+      facts,
+      next: { home: next(match.home.code), away: next(match.away.code) },
+      opening: opening(match, events, facts),
+      described: described(events),
+      budget: { account: size.account, sections: size.sections },
+      nominees: nominees(match, events, counts),
+      keyStats: keyStats(match, events, counts, size.stats),
+      fantasy: fantasyPanel(match, events),
+      lead: i === 0,
     };
   });
 }

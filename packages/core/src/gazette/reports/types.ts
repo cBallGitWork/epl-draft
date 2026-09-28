@@ -1,4 +1,5 @@
 import type { PlMoment } from "../../football/premierleague/moments";
+import type { StoryLineup } from "./lineups";
 import type { Club, Fixture } from "../../football/types";
 
 // What the match-day desk is handed: plain data, joined by the script, read by the pure builders beside this file.
@@ -38,8 +39,8 @@ export interface ReportMan {
   yellowsBefore: number;
   /** This season including this match. */
   goalsSeason: number;
-  /** The league side that holds him, and whether he was in its eleven. */
-  holder: { team: string; fielded: boolean } | null;
+  /** The league side that holds him, whether he was in its eleven, and where its head-to-head stands this period. */
+  holder: { team: string; fielded: boolean; round: number | null; h2h: { opponent: string; us: number | null; them: number | null } | null } | null;
   /** His league points for this match; null when the period holds two of his matches or none were priced. */
   points: number | null;
   /** The club's own word on his fitness, published after the match. */
@@ -65,6 +66,10 @@ export interface ReportMatchInput {
   men: readonly ReportMan[];
   figures: { home: SideFigures; away: SideFigures } | null;
   videoId: string | null;
+  /** Read from the match record, never recalled. */
+  venue: string | null;
+  attendance: number | null;
+  lineups: { home: StoryLineup; away: StoryLineup } | null;
 }
 
 export interface ReportDayInput {

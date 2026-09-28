@@ -60,7 +60,7 @@ async function main(): Promise<void> {
 
   if (process.env.DRY_RUN === "1") {
     say(`\n${brief}`);
-    for (const desk of desks) say(`\nKEY STATS, ${desk.match.home.name} v ${desk.match.away.name}:\n${desk.keyStats.map((k) => `- ${k.text}`).join("\n")}`);
+    for (const desk of desks) say(`\nKEY STATS, ${desk.match.home.name} v ${desk.match.away.name}:\n${desk.keyStats.map((k) => `- ${k.label}: ${k.value}`).join("\n")}`);
     return;
   }
   const out = process.env.GAZETTA_PROOF_OUT ?? "";

@@ -19,7 +19,7 @@ export function proofText(draft: ReportsDraft, desks: readonly MatchDesk[]): str
       ].join("\n"),
       "",
       "KEY STATS",
-      ...desk.keyStats.map((k) => `  ${k.text}`),
+      ...desk.keyStats.map((k) => `  ${k.label}: ${k.value}`),
     ].join("\n");
   });
   return [draft.headline, "", ...blocks].join("\n\n");

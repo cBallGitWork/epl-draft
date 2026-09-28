@@ -23,7 +23,7 @@ export interface SeasonLine {
 export interface MenExtras {
   live: ReadonlyMap<number, LiveLine>;
   season: ReadonlyMap<number, SeasonLine>;
-  holders: ReadonlyMap<number, { team: string; fielded: boolean }>;
+  holders: ReadonlyMap<number, NonNullable<ReportMan["holder"]>>;
   points: ReadonlyMap<number, number>;
   fitness: ReadonlyMap<number, string>;
 }

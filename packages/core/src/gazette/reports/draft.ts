@@ -1,6 +1,7 @@
 import type { Fault } from "../predictions/checks";
 import { escapeRegExp } from "../banned";
 import { pencil } from "../predictions/checks";
+import { numeral } from "./minutes";
 import { REPORT_PENCIL } from "./words";
 
 // What the writer files for a match-day, read field by field; a match whose pieces fail twice prints the desk's plain line.
@@ -19,6 +20,8 @@ export interface ReportPiece {
 
 export interface ReportsDraft {
   headline: string;
+  /** The writer's headline candidates, before the desk strikes and the fan picks. */
+  headlines: string[];
   /** By fixture code. */
   matches: Map<number, ReportPiece>;
 }
@@ -26,7 +29,9 @@ export interface ReportsDraft {
 
 /** House corrections with one right answer. */
 export function correct(prose: string): string {
-  return REPORT_PENCIL.reduce((out, [wrong, right]) => out.replace(wrong, right), pencil(prose));
+  const fixed = REPORT_PENCIL.reduce((out, [wrong, right]) => out.replace(wrong, right), pencil(prose));
+  // One to nine are words outside a score or a formation: "for 5 points" is "for five points".
+  return fixed.replace(/(?<![\d-])\b([1-9]) (points?|goals?|shots?|saves?|assists?|chances?|minutes?|matches|games|changes)\b/gu, (_, n: string, noun: string) => `${numeral(Number(n))} ${noun}`);
 }
 
 /** A head that breaks the rules twice prints as the man it is about: his surname, named first in the section's football. */
@@ -66,7 +71,8 @@ export function readReportsDraft(raw: Record<string, unknown>, surnames: readonl
     });
     matches.set(code, { standfirst: text(m.standfirst), account: text(m.account), sections });
   }
-  return { headline: text(raw.headline), matches };
+  const offered = Array.isArray(raw.headlines) ? raw.headlines.map((h) => text(typeof h === "object" && h !== null ? (h as Record<string, unknown>).text : h)).filter((h) => h !== "") : [];
+  return { headline: text(raw.headline) || (offered[0] ?? ""), headlines: offered, matches };
 }
 
 /** The part of a fault's section that names its match: `2645244:account` → 2645244. */
@@ -94,5 +100,5 @@ export function mergeReports(attempts: readonly { draft: ReportsDraft; faults: r
     first !== undefined && !faulted(first.faults, false) ? first.draft.headline
     : second !== undefined && second.draft.headline !== "" && !faulted(second.faults, true) ? second.draft.headline
     : (first?.draft.headline ?? "");
-  return { headline, matches };
+  return { headline, headlines: first?.draft.headlines ?? [], matches };
 }

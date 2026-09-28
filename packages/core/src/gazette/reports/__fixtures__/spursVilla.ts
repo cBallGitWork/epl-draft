@@ -7,6 +7,7 @@ import detail from "../../../football/__fixtures__/plFixtureSpursVilla.json";
 import stream from "../../../football/__fixtures__/plTextstreamSpursVilla.json";
 import stats from "../../../football/__fixtures__/plMatchStatsSpursVilla.json";
 import { sideFigures } from "../figures";
+import { lineupOf } from "../lineups";
 import { reportMen, type MenExtras } from "../men";
 import type { ReportMatchInput } from "../types";
 
@@ -46,5 +47,8 @@ export function spursVilla(extras: Partial<MenExtras> = {}): ReportMatchInput {
     men: reportMen(sheets, moments, { ...noExtras, ...extras }),
     figures: { home: sideFigures(matchStats, 21)!, away: sideFigures(matchStats, 2)! },
     videoId: "EJRLVTD7PVQ",
+    venue: "Tottenham Hotspur Stadium",
+    attendance: 60920,
+    lineups: { home: lineupOf(sheets.home, moments), away: lineupOf(sheets.away, moments) },
   };
 }

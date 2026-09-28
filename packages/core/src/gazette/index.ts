@@ -107,13 +107,21 @@ export { checkReports } from "./reports/checks";
 export type { ReportsCheck } from "./reports/checks";
 export { correct, matchOf, mergeReports, plainHead, readReportsDraft } from "./reports/draft";
 export type { ReportPiece, ReportSection, ReportsDraft } from "./reports/draft";
-export { FAN_TAGS, fanBrief, fanFaults } from "./reports/fan";
+export { FAN_TAGS, fanBrief, fanFaults, fanHeadline } from "./reports/fan";
 export { matchBlock } from "./reports/brief";
 export { REPORT_NEVER } from "./reports/style";
 export {
   REPORT_ADVICE, REPORT_AMERICAN, REPORT_CAPPED_DAY, REPORT_CAPPED_MATCH, REPORT_FANTASY, REPORT_FPL,
 } from "./reports/words";
-export { normalizeReports, plainStandfirst, reportsCargo } from "./reports/cargo";
-export type { ReportRowKind, StoryReport, StoryReportRow, StoryReportSection } from "./reports/cargo";
+export { plainStandfirst, reportsCargo } from "./reports/cargo";
+export { normalizeReports } from "./reports/cargoRead";
+export type { ReportRowKind, StoryReport, StoryReportRow, StoryReportSection, StoryReportSide } from "./reports/cargo";
 export { reportDays } from "./reports/due";
 export type { ReportDay } from "./reports/due";
+export { lineupOf } from "./reports/lineups";
+export type { LineupMan, StoryLineup } from "./reports/lineups";
+export { fantasyPanel } from "./reports/fantasy";
+export type { FantasyMan, FantasyPanel } from "./reports/fantasy";
+export { strike, survivors } from "./reports/headline";
+export { applyFixes, faultySentences } from "./reports/lineEdit";
+export type { LineFix } from "./reports/lineEdit";

@@ -1,17 +1,25 @@
 import { describe, expect, it } from "vitest";
 import { SPURS, VILLA, fixture, spursVilla } from "./__fixtures__/spursVilla";
-import { normalizeReports, plainStandfirst, reportsCargo } from "./cargo";
+import { plainStandfirst, reportsCargo } from "./cargo";
+import { normalizeReports } from "./cargoRead";
 import { deskDay } from "./desk";
 
 const places = new Map([[6, 18], [7, 9]]);
 const desks = deskDay({ day: "2026-09-19", gameweek: 5, matches: [spursVilla()], season: [fixture], clubs: [SPURS, VILLA], standing: { attack: places, defence: places } });
-const [report] = reportsCargo(desks, { headline: "h", matches: new Map() });
+const [report] = reportsCargo(desks, { headline: "h", headlines: [], matches: new Map() });
 
 describe("reportsCargo", () => {
-  it("builds the score block with each side's scorers and the minute as printed", () => {
-    expect(report.home).toEqual({ code: 6, score: 2, scorers: ["Gallagher 86", "van Hecke 90+8"] });
-    expect(report.away.scorers).toEqual(["Manzambi 45+4", "Jackson 67", "Buendía 79"]);
-    expect(report.halfTime).toEqual({ home: 0, away: 1 });
+  it("builds the header as BBC Sport sets it: goals and assists by side, half-time, venue and attendance", () => {
+    expect(report.home).toMatchObject({ code: 6, score: 2, goals: ["Gallagher 86", "van Hecke 90+8"], assists: ["Kudus 86", "Robertson 90+8"] });
+    expect(report.away.goals).toEqual(["Manzambi 45+4", "Jackson 67", "Buendía 79"]);
+    expect(report.away.assists).toEqual(["Kamara 45+4", "Manzambi 67", "McGinn 79"]);
+    expect([report.halfTime, report.venue, report.attendance]).toEqual([{ home: 0, away: 1 }, "Tottenham Hotspur Stadium", 60920]);
+  });
+
+  it("carries both line-ups and the key stats with figures", () => {
+    expect(report.home.lineup?.formation).toBe("4-2-3-1");
+    expect(report.keyStats.map((k) => k.label)).toEqual(expect.arrayContaining(["Shots", "Most shots", "Chances created"]));
+    expect(report.keyStats.find((k) => k.label === "Most shots")?.value).toBe("Jackson 6 (2 on target, 1 goal)");
   });
 
   it("prints the timeline in the paper's words, the injury marked on the change", () => {

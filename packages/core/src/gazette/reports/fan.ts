@@ -5,13 +5,13 @@ import type { ReportsDraft } from "./draft";
 // The fan's read-back: a supporter who goes to every match on the page and plays in this league quotes what he would never
 // say or believe. He never rewrites; his words would become next week's tics. His flags go back once and never print.
 
-export const FAN_TAGS = ["not so", "not said", "invented", "same again", "draft"] as const;
+export const FAN_TAGS = ["not so", "not said", "invented", "same again", "said twice", "draft"] as const;
 export type FanTag = (typeof FAN_TAGS)[number];
 
 const squash = (text: string) => text.replace(/\s+/gu, " ").trim().toLowerCase();
 
-/** What the fan reads: the result, the figures, the key stats and each part of each piece, labelled. Never the brief. */
-export function fanBrief(draft: ReportsDraft, desks: readonly MatchDesk[]): string {
+/** What the fan reads: the headline candidates, then each match's result, figures, table and pieces, labelled. */
+export function fanBrief(draft: ReportsDraft, desks: readonly MatchDesk[], headlines: readonly string[]): string {
   const matches = desks
     .flatMap((desk) => {
       const piece = draft.matches.get(desk.match.fixture.code);
@@ -20,8 +20,8 @@ export function fanBrief(draft: ReportsDraft, desks: readonly MatchDesk[]): stri
       return [
         [
           `MATCH ${match.fixture.code}: ${match.home.name} ${match.fixture.homeScore}-${match.fixture.awayScore} ${match.away.name}.`,
-          `Key stats: ${desk.keyStats.map((k) => k.text).join("; ")}.`,
-          `True, and given to the writer: ${[desk.standing.home, desk.standing.away].flatMap((s) => s?.lines ?? []).join("; ")}; ${[...desk.ahead.home, ...desk.ahead.away].map((m) => `${m.opponent}${m.words.length === 0 ? "" : ` (${m.words.join(", ")})`}`).join("; ")}.`,
+          `Key stats: ${desk.keyStats.map((k) => `${k.label} ${k.value}`).join("; ")}.`,
+          `True: ${[desk.standing.home, desk.standing.away].flatMap((s) => s?.lines ?? []).join("; ")}; ${desk.facts.join("; ")}.`,
           `standfirst: ${piece.standfirst}`,
           `account: ${piece.account}`,
           ...piece.sections.map((s, i) => `s${i + 1}: ${s.head}. ${s.pitch} ${s.stake}`),
@@ -29,7 +29,8 @@ export function fanBrief(draft: ReportsDraft, desks: readonly MatchDesk[]): stri
       ];
     })
     .join("\n\n");
-  return `The day's headline: ${draft.headline}\n\n${matches}`;
+  const offered = headlines.length === 0 ? "none offered" : headlines.map((h, i) => `${i + 1}. ${h}`).join("\n");
+  return `HEADLINE CANDIDATES for the day, on the lead match:\n${offered}\n\n${matches}`;
 }
 
 /** His flags as send-backs: an unknown part, a quote that is not word for word in it, or one past the cap, is dropped. */
@@ -60,4 +61,10 @@ export function fanFaults(raw: Record<string, unknown>, draft: ReportsDraft, cap
     faults.push({ section: key, check: `a supporter would not say this: ${tag}`, severity: "send-back", evidence: `"${quote}"${typeof f.why === "string" ? ` (${f.why})` : ""}` });
   }
   return faults;
+}
+
+/** The headline the fan chose, by its number, or null when he chose none or named one that is not there. */
+export function fanHeadline(raw: Record<string, unknown>, headlines: readonly string[]): string | null {
+  const pick = typeof raw.headline === "number" ? raw.headline : null;
+  return pick !== null && Number.isInteger(pick) && pick >= 1 && pick <= headlines.length ? headlines[pick - 1] : null;
 }
