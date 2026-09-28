@@ -115,6 +115,9 @@ export const YOUTUBE_FEED_BASE = "https://www.youtube.com/feeds/videos.xml";
  *  re-hosted. */
 export const YOUTUBE_EMBED_BASE = "https://www.youtube-nocookie.com/embed";
 
+/** A video's still, drawn as the click-to-play thumbnail a match report opens on. */
+export const YOUTUBE_THUMB_BASE = "https://i.ytimg.com/vi";
+
 /** Scout's free team-news page: every club's predicted eleven on one page. No trailing
  *  slash — with one, the site 301s. */
 export const SCOUT_TEAM_NEWS_URL = "https://www.fantasyfootballscout.co.uk/team-news";
@@ -399,9 +402,9 @@ export const SHEETS = {
 /** The match-day report's editorial thresholds (docs/plans/GAZETTA.md, "Match reports, woven"). */
 export const REPORTS = {
   budget: {
-    lead: { account: [90, 130], sections: 3, stats: 9 },
-    ordinary: { account: [60, 100], sections: 2, stats: 8 },
-    dead: { account: [40, 70], sections: 1, stats: 6 },
+    lead: { account: [180, 260], sections: 3, stats: 9 },
+    ordinary: { account: [120, 190], sections: 2, stats: 8 },
+    dead: { account: [60, 110], sections: 1, stats: 6 },
   },
   /** Words a standfirst and a section may run to (sports desk, 28 Sep 2026). */
   standfirstWords: 25,
@@ -414,6 +417,9 @@ export const REPORTS = {
   ball: { most: 60, more: 55 },
   /** A key-stats line earns its place past these. xA only chooses; it never prints. */
   stats: { mostShots: 4, chances: 3, expectedAssists: 0.4, saves: 5, freeNames: 4 },
+  /** Chances not taken the account is handed: close-range misses and saves, at most `most`; and the men whose chances
+   *  added up to at least `expectedGoals` without a goal, told in words. */
+  missed: { most: 3, expectedGoals: 0.5 },
   /** Candidates offered beyond the sections a match gets. */
   spareNominees: 3,
   /** A run of this many words shared with another match, or a recent report, is an echo. */

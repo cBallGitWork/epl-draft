@@ -1,8 +1,8 @@
 import Link from "next/link";
 import type { FantasyMan, StoryLineup, StoryReport } from "@epl/core";
 
-// The sidebar beside a match's report: the league's side of it first (Draft Man of the Match, top scorers, the wire, off days),
-// then the football's (key stats, and line-ups as a paper prints them). A phone reads it after the report.
+// The sidebar beside a match's report: the line-ups first as a paper prints them, then the league's side (Draft Man of the
+// Match, top scorers, free agents who scored) and the key stats. A phone reads it after the report.
 
 const HEAD = "font-sans text-3xs font-semibold uppercase tracking-[0.16em] text-muted";
 const RULE = { borderColor: "var(--paper-rule)" };
@@ -60,6 +60,13 @@ export default function ReportSidebar({ report, names, matchHref }: { report: St
   const away = names(report.away.code);
   return (
     <aside className="flex flex-col gap-4">
+      {report.home.lineup === null && report.away.lineup === null ? null : (
+        <Panel title="Line-ups">
+          {report.home.lineup === null ? null : <Lineup club={home} lineup={report.home.lineup} />}
+          {report.away.lineup === null ? null : <Lineup club={away} lineup={report.away.lineup} />}
+          {report.referee === null ? null : <p className="text-2xs text-muted">Referee: {report.referee}.</p>}
+        </Panel>
+      )}
       {fantasy.motm === null ? null : (
         <Panel title="Draft Man of the Match">
           <p className="paper-display text-lg leading-tight font-semibold text-ink">{fantasy.motm.name}</p>
@@ -80,11 +87,6 @@ export default function ReportSidebar({ report, names, matchHref }: { report: St
           <Men men={fantasy.wire} points={false} />
         </Panel>
       )}
-      {fantasy.offDays.length === 0 ? null : (
-        <Panel title="Off days">
-          <Men men={fantasy.offDays} points={false} />
-        </Panel>
-      )}
       {report.keyStats.length === 0 ? null : (
         <Panel title="Key stats">
           <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs leading-snug text-ink">
@@ -95,13 +97,6 @@ export default function ReportSidebar({ report, names, matchHref }: { report: St
               </div>
             ))}
           </dl>
-        </Panel>
-      )}
-      {report.home.lineup === null && report.away.lineup === null ? null : (
-        <Panel title="Line-ups">
-          {report.home.lineup === null ? null : <Lineup club={home} lineup={report.home.lineup} />}
-          {report.away.lineup === null ? null : <Lineup club={away} lineup={report.away.lineup} />}
-          {report.referee === null ? null : <p className="text-2xs text-muted">Referee: {report.referee}.</p>}
         </Panel>
       )}
       {matchHref === null ? null : (

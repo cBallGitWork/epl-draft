@@ -13,16 +13,14 @@ export default async function Reports({ story, snapshot }: { story: PublishedSto
   if (reports.length === 0) return null;
   const clubs = new Map((snapshot?.clubs ?? []).map((club) => [club.code, club]));
   const names = (code: number) => fullClubName(clubs.get(code)?.name ?? "—");
-  const lead = reports[0];
 
   // Per-season ids are never stored: the desk's links and the video fallback are found by the fixture's code, at render.
   const season = await seasonFixtures().catch(() => []);
   const idOf = (code: number) => season.find((f) => f.code === code)?.id ?? null;
-  // The lead's highlights play here; a video Sky posted after filing is looked up when the page is drawn.
-  const video =
-    lead.video ??
-    (await matchHighlight({ home: clubs.get(lead.home.code)?.name ?? "", away: clubs.get(lead.away.code)?.name ?? "", homeScore: lead.home.score, awayScore: lead.away.score }))?.id ??
-    null;
+  // Every match opens on its highlights; a video Sky posted after filing is looked up when the page is drawn.
+  const videos = await Promise.all(
+    reports.map(async (r) => r.video ?? (await matchHighlight({ home: clubs.get(r.home.code)?.name ?? "", away: clubs.get(r.away.code)?.name ?? "", homeScore: r.home.score, awayScore: r.away.score }))?.id ?? null),
+  );
 
   // The chosen match's row set in reverse ink; the lead's when none is chosen. One rule per match, because CSS cannot
   // carry a code from the target to the link.
@@ -64,15 +62,14 @@ export default async function Reports({ story, snapshot }: { story: PublishedSto
         className="flex flex-col divide-y max-lg:[&:has(>section:target)>section:not(:target)]:hidden max-lg:[&:not(:has(>section:target))>section:not(:first-child)]:hidden"
         style={{ borderColor: "var(--paper-rule)" }}
       >
-        {reports.map((r) => {
+        {reports.map((r, i) => {
           const id = idOf(r.fixtureCode);
           return (
             <ReportMatch
               key={r.fixtureCode}
               report={r}
               names={names}
-              video={r === lead ? video : null}
-              highlightsHref={id === null || r === lead || r.video === null ? null : matchHref(id, "highlights")}
+              video={videos[i]}
               matchHref={id === null ? null : matchHref(id, "overview")}
             />
           );

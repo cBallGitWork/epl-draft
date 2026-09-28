@@ -4,7 +4,8 @@ import { isGoal, type MatchEvent } from "./timeline";
 import type { ReportMan, ReportMatchInput } from "./types";
 
 // The league's side of one match, desk-made for the sidebar: the Draft Man of the Match, the top league scorers, and the men
-// nobody holds who scored or made one (the only unheld men worth a line: somebody could still pick them up).
+// nobody holds who scored or made one (the only unheld men worth a line: somebody could still pick them up). A chance not
+// taken is the report's to tell, not a panel's.
 
 export interface FantasyMan {
   name: string;
@@ -19,18 +20,10 @@ export interface FantasyPanel {
   motm: FantasyMan | null;
   top: FantasyMan[];
   wire: FantasyMan[];
-  /** Who had an off day: chances not taken, or a high pick who gave his holder little. `did` says why. */
-  offDays: FantasyMan[];
 }
 
 const TOP = 3;
-const OFF_DAYS = 4;
 const WIRE = 4;
-/** A held starter who scored this few points had an off day. */
-const LOW_POINTS = 1;
-/** Expected goals worth a line when none went in. */
-const WASTED_XG = 0.5;
-const CLOSE = new Set(["from close range", "from inside the six-yard box"]);
 
 export function fantasyPanel(match: ReportMatchInput, events: readonly MatchEvent[]): FantasyPanel {
   const goals = events.filter(isGoal);
@@ -49,26 +42,6 @@ export function fantasyPanel(match: ReportMatchInput, events: readonly MatchEven
     .filter((m) => played(m) && m.holder !== null && m.points !== null)
     .sort((a, b) => (b.points ?? 0) - (a.points ?? 0) || scored(b) + made(b) - (scored(a) + made(a)) || b.minutes - a.minutes);
   const top = held.filter((m) => (m.points ?? 0) > 0).slice(0, TOP).map(man);
-  const close = (m: ReportMan) => events.filter((e) => (e.kind === "missed" || e.kind === "saved") && e.man?.code === m.code && CLOSE.has(e.shot?.from ?? "")).length;
-  const offDay = (m: ReportMan): string | null => {
-    if (scored(m) > 0) return null;
-    const why: string[] = [];
-    // xG says a chance went begging, so a miss is named only when no xG line does (Craig: "0.78 xG implies that").
-    if (m.expectedGoals >= WASTED_XG) why.push(`${m.expectedGoals.toFixed(2)} xG, no goal`);
-    else if (close(m) > 0) why.push(`missed ${close(m) === 1 ? "a chance" : `${close(m)} chances`} from close range`);
-    if (m.started && m.holder?.fielded === true && m.points !== null && m.points <= LOW_POINTS) why.push(`${m.points} point${m.points === 1 ? "" : "s"}`);
-    const said = why.join("; ");
-    return said === "" ? null : said.charAt(0).toUpperCase() + said.slice(1);
-  };
-  const offDays = match.men
-    .filter(played)
-    .flatMap((m) => {
-      const why = offDay(m);
-      return why === null ? [] : [{ ...man(m), did: why, weight: (m.holder?.round ?? 99) - m.expectedGoals * 10 }];
-    })
-    .sort((a, b) => a.weight - b.weight)
-    .slice(0, OFF_DAYS)
-    .map(({ weight: _, ...rest }) => rest);
   return {
     motm: top[0] ?? null,
     top,
@@ -78,6 +51,5 @@ export function fantasyPanel(match: ReportMatchInput, events: readonly MatchEven
       .sort((a, b) => scored(b) * 2 + made(b) - (scored(a) * 2 + made(a)))
       .slice(0, WIRE)
       .map(man),
-    offDays,
   };
 }

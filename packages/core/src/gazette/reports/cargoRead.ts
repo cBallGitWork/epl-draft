@@ -47,7 +47,7 @@ function fantasyMan(r: Raw): FantasyMan | null {
 
 function fantasy(v: unknown): FantasyPanel {
   const r = obj(v);
-  return { motm: fantasyMan(obj(r.motm)), top: list(r.top, fantasyMan), wire: list(r.wire, fantasyMan), offDays: list(r.offDays, fantasyMan) };
+  return { motm: fantasyMan(obj(r.motm)), top: list(r.top, fantasyMan), wire: list(r.wire, fantasyMan) };
 }
 
 export function normalizeReports(raw: unknown): StoryReport[] | undefined {
