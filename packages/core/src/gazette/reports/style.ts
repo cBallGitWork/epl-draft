@@ -1,0 +1,84 @@
+import { FILLER, GROUNDS, REGISTER, banned, escapeRegExp } from "../banned";
+import type { Severity } from "../predictions/checks";
+import { masked, ngrams, sentences, wordCount } from "../predictions/prose";
+import { DESK_BANNED } from "../predictions/words";
+import { AMERICAN_IZE, SHEETS_AMERICAN } from "../sheets/words";
+import {
+  REPORT_ADVICE, REPORT_AMERICAN, REPORT_CAPPED_DAY, REPORT_CAPPED_MATCH, REPORT_CLICHES, REPORT_CROWD, REPORT_DEPTH_CHART,
+  REPORT_FANTASY, REPORT_FPL, REPORT_GROUNDS, REPORT_NOT_HIS_NAME, REPORT_SHOTS, REPORT_TELLS, REPORT_VERDICTS,
+} from "./words";
+
+// The words a match report may not use, checked after filing; the voice is built from the same arrays.
+
+type Report = (section: string, check: string, severity: Severity, evidence: string) => void;
+
+/** Everything sent back wherever it appears. SEQUENCE is lifted: this desk is handed the order of the match. No ground is. */
+export const REPORT_NEVER: readonly string[] = [
+  ...REGISTER, ...FILLER, ...GROUNDS, ...REPORT_GROUNDS, ...DESK_BANNED, ...REPORT_CLICHES, ...REPORT_SHOTS, ...REPORT_VERDICTS, ...REPORT_CROWD,
+  ...REPORT_TELLS, ...REPORT_DEPTH_CHART,
+];
+
+const QUOTES = /["“”«»]/u;
+const SOURCE = /%|\bper ?cent\b|\b(?:projected|projections?|predicted|predictions?|model|Fantrax|according to)\b/iu;
+const CLOCK = /\b\d{1,3}(?:\+\d{1,2})?['’]|\b\d{2}\+\d{1,2}\b/u;
+const NOT_BUT = /\bnot (?:just |only |merely )?[^.;]{1,40}?,? but\b/iu;
+const FORECAST = /\b(?:will|should|is (?:likely|expected|set) to|could|may|might) (?:start|keep his place|be picked|come (?:back )?in|return to the side|get the nod)\b|\bnext (?:week|time out|gameweek)\b/iu;
+
+/** One piece of prose, marked by the part of the piece it is: football parts carry no draft words. */
+export function wordFaults(section: string, text: string, football: boolean, names: readonly string[], fault: Report): void {
+  const plain = masked(text, names).replace(/\u0000/gu, "X");
+  if (QUOTES.test(text)) fault(section, "quotation marks: no quotes were given", "hard", text.match(QUOTES)?.[0] ?? "");
+  if (SOURCE.test(plain)) fault(section, "names a source or a percentage", "hard", plain.match(SOURCE)?.[0] ?? "");
+  for (const word of banned(plain, REPORT_FPL)) fault(section, "a fantasy game's term", "hard", word);
+  for (const word of banned(plain, REPORT_NEVER)) fault(section, "a phrase this paper does not print", "send-back", word);
+  for (const word of [...banned(plain, [...SHEETS_AMERICAN, ...REPORT_AMERICAN]), ...(plain.match(AMERICAN_IZE) ?? [])]) {
+    fault(section, "American, not British", "send-back", word);
+  }
+  for (const word of banned(plain, REPORT_ADVICE)) fault(section, "advice; set the facts side by side instead", "send-back", word);
+  if (football) for (const word of banned(plain, REPORT_FANTASY)) fault(section, "a draft word in the football", "send-back", word);
+  if (REPORT_NOT_HIS_NAME.test(text)) fault(section, "a man called anything but his name", "send-back", text.match(REPORT_NOT_HIS_NAME)?.[0] ?? "");
+  if (CLOCK.test(text)) fault(section, "a minute as a clock; use the phrases given", "send-back", text.match(CLOCK)?.[0] ?? "");
+  if (text.includes("?")) fault(section, "a question", "send-back", "?");
+  if (text.includes(":")) fault(section, "a colon in prose", "send-back", ":");
+  if (NOT_BUT.test(text)) fault(section, "not this but that", "send-back", text.match(NOT_BUT)?.[0] ?? "");
+  if (FORECAST.test(text)) fault(section, "a forecast of selection", "send-back", text.match(FORECAST)?.[0] ?? "");
+  for (const sentence of sentences(text)) if (wordCount(sentence) > 35) fault(section, "a sentence over 35 words", "warn", sentence.slice(0, 60));
+}
+
+function count(text: string, phrase: string): number {
+  return (text.match(new RegExp(`(?<![\\p{L}])${escapeRegExp(phrase)}(?![\\p{L}])`, "giu")) ?? []).length;
+}
+
+/** Caps per match and per day, openers that repeat, and phrases shared between matches or with past reports. */
+export function dayFaults(pieces: readonly { code: number; prose: string; account: string; standfirst: string }[], names: readonly string[], past: readonly string[], echo: number, fault: Report): void {
+  for (const piece of pieces) {
+    for (const [phrase, most] of REPORT_CAPPED_MATCH) {
+      const used = count(masked(piece.prose, names), phrase);
+      if (used > most) fault(`${piece.code}:match`, "a phrase used too often in one match", "send-back", `${phrase} ×${used}`);
+    }
+  }
+  const all = masked(pieces.map((p) => p.prose).join(" "), names);
+  for (const [phrase, most] of REPORT_CAPPED_DAY) {
+    const used = count(all, phrase);
+    if (used > most) fault("day", "a phrase used too often on the page", "send-back", `${phrase} ×${used}`);
+  }
+  const opener = (text: string, n: number) => masked(text, names).toLowerCase().match(/[\p{L}\p{N}'’\u0000]+/gu)?.slice(0, n).join(" ") ?? "";
+  const seen = new Map<string, number>();
+  for (const piece of pieces) {
+    for (const [key, text, n] of [["account", piece.account, 3], ["standfirst", piece.standfirst, 2]] as const) {
+      const start = `${key}:${opener(text, n)}`;
+      if (seen.has(start)) fault(`${piece.code}:${key}`, "opens like another match's", "send-back", start.split(":")[1]);
+      else seen.set(start, piece.code);
+    }
+  }
+  const said = new Map<string, number>();
+  const before = new Set(past.flatMap((text) => [...ngrams(text, echo, names)]));
+  for (const piece of pieces) {
+    for (const gram of ngrams(piece.prose, echo, names)) {
+      if (said.has(gram) && said.get(gram) !== piece.code) fault(`${piece.code}:match`, "the same phrase as another match", "send-back", gram);
+      if (!said.has(gram)) said.set(gram, piece.code);
+      if (before.has(gram)) fault(`${piece.code}:match`, "a phrase from a recent report", "send-back", gram);
+    }
+  }
+}
+

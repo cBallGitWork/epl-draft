@@ -89,7 +89,7 @@ export function manLine(match: ReportMatchInput, man: ReportMan, counts: ManCoun
     if (made > 0) parts.push(`${numeral(made)} assist${made === 1 ? "" : "s"}`);
     if (counts !== undefined) {
       parts.push(counts.shots === 0 ? "no shots" : `${numeral(counts.shots)} shot${counts.shots === 1 ? "" : "s"}, ${numeral(counts.onTarget)} on target`);
-      if (counts.chancesMade > 0) parts.push(`made ${numeral(counts.chancesMade)} chance${counts.chancesMade === 1 ? "" : "s"}`);
+      if (counts.chancesMade > 0) parts.push(`set up ${numeral(counts.chancesMade)} shot${counts.chancesMade === 1 ? "" : "s"} by others`);
       if (counts.woodwork > 0) parts.push("hit the woodwork");
     }
     if (man.line === "G") parts.push(man.saves === 0 ? "no saves" : `${numeral(man.saves)} save${man.saves === 1 ? "" : "s"}`);

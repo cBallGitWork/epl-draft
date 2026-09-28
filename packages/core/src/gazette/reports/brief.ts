@@ -13,7 +13,7 @@ const nextLine = (club: string, next: readonly NextMatch[]) =>
     ? null
     : `- ${club}: ${next.map((m) => `${m.opponent} ${m.home ? "at home" : "away"}${m.words.length === 0 ? "" : ` (${m.words.join(", ")})`}`).join("; ")}`;
 
-function matchBlock(desk: MatchDesk, lead: boolean): string {
+export function matchBlock(desk: MatchDesk, lead: boolean): string {
   const { match, events, counts, standing, facts, ahead, angle, budget, nominees } = desk;
   const f = match.fixture;
   const club = (side: "home" | "away") => {

@@ -103,3 +103,13 @@ export type { LiveLine, MenExtras, SeasonLine } from "./reports/men";
 export { sideFigures } from "./reports/figures";
 export { surname } from "./reports/keyStats";
 export type { ReportClub, ReportDayInput, ReportMan, ReportMatchInput, SideFigures } from "./reports/types";
+export { checkReports } from "./reports/checks";
+export type { ReportsCheck } from "./reports/checks";
+export { correct, matchOf, mergeReports, readReportsDraft } from "./reports/draft";
+export type { ReportPiece, ReportSection, ReportsDraft } from "./reports/draft";
+export { FAN_TAGS, fanBrief, fanFaults } from "./reports/fan";
+export { matchBlock } from "./reports/brief";
+export { REPORT_NEVER } from "./reports/style";
+export {
+  REPORT_ADVICE, REPORT_AMERICAN, REPORT_CAPPED_DAY, REPORT_CAPPED_MATCH, REPORT_FANTASY, REPORT_FPL,
+} from "./reports/words";

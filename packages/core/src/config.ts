@@ -413,4 +413,10 @@ export const REPORTS = {
   stats: { mostShots: 4, chances: 3, expectedAssists: 0.4, saves: 5, freeNames: 4 },
   /** Candidates offered beyond the sections a match gets. */
   spareNominees: 3,
+  /** A run of this many words shared with another match, or a recent report, is an echo. */
+  echo: 5,
+  /** The fan's quotes kept for any one part of a piece. */
+  fanFlags: 3,
+  /** Matches written in one call; a longer day is split, the later call shown what is already on the page. */
+  perCall: 5,
 } as const;

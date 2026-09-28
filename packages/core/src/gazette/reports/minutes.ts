@@ -30,12 +30,15 @@ export function minutePhrases(label: string, change = false): string[] {
   const { minute, added } = at;
   if (added > 0) {
     const half = minute <= 45 ? "first-half " : "";
-    return [
+    const phrases = [
       `${plural(added, "minute")} into ${half}added time`,
       `${plural(added, "minute")} into ${half}stoppage time`,
       `in ${half}added time`,
       `in ${half}stoppage time`,
     ];
+    if (minute <= 45) phrases.push("just before half-time", "just before the interval");
+    else if (added >= 4) phrases.push("deep into added time", "deep into stoppage time");
+    return phrases;
   }
   if (minute === 46 && change) return ["at half-time", "at the interval"];
   const phrases = [`in the ${ordinal(minute)} minute`];

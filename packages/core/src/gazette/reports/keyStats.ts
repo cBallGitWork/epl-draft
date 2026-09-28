@@ -52,7 +52,7 @@ export function keyStats(
   }
   for (const man of men.filter((m) => made(m) === 0 && ((c(m)?.chancesMade ?? 0) >= CHANCES || m.expectedAssists >= EXPECTED_ASSISTS))) {
     const chances = c(man)?.chancesMade ?? 0;
-    if (chances > 0) lines.push(`${surname(man.name)} (${tag(man)}): made ${count(chances, "chance")}, none taken`);
+    if (chances > 0) lines.push(`${surname(man.name)} (${tag(man)}): set up ${count(chances, "shot")}, none scored`);
   }
   for (const man of men.filter((m) => m.saves >= SAVES)) lines.push(`${surname(man.name)} (${tag(man)}): ${count(man.saves, "save")}`);
   for (const event of events.filter((e) => (e.kind === "penalty-won" || e.kind === "penalty-missed" || e.kind === "penalty-saved") && e.man !== null)) {

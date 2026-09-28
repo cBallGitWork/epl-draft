@@ -12,8 +12,12 @@ import {
   periodGameweeks,
   requireLeague,
 } from "@epl/core";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { gatherRoundFacts } from "./edition/facts";
 import { matchdayInput } from "./edition/matchday";
+import { writeReports } from "./edition/reportsWriter";
+import { proofText } from "./edition/reportsProofText";
 
 // A match-day report for a past gameweek, written to scratch and never to the paper, so Craig can read it before anything files.
 // GAZETTA_GAMEWEEK=5 with GAZETTA_FIXTURES=48 (FPL fixture ids) or GAZETTA_DAY=2026-09-19; DRY_RUN=1 prints the brief only.
@@ -55,7 +59,17 @@ async function main(): Promise<void> {
     for (const desk of desks) say(`\nKEY STATS, ${desk.match.home.name} v ${desk.match.away.name}:\n${desk.keyStats.map((k) => `- ${k.text}`).join("\n")}`);
     return;
   }
-  say("Writing is not wired yet; run with DRY_RUN=1.");
+  const out = process.env.GAZETTA_PROOF_OUT ?? "";
+  if (out === "") throw new Error("GAZETTA_PROOF_OUT names the scratch folder the proof is written to.");
+  const { draft, log } = await writeReports(input.day, gameweek, desks, [], say);
+  mkdirSync(out, { recursive: true });
+  const slug = `proof-gw${gameweek}-${input.day}`;
+  writeFileSync(join(out, `${slug}.brief.txt`), brief);
+  writeFileSync(join(out, `${slug}.txt`), proofText(draft, desks));
+  writeFileSync(join(out, `${slug}.draft.json`), JSON.stringify({ headline: draft.headline, matches: Object.fromEntries(draft.matches) }, null, 2));
+  writeFileSync(join(out, `${slug}.log.json`), JSON.stringify(log, null, 2));
+  say(`Wrote ${slug} to ${out}. Kept: ${JSON.stringify(log.kept)}. Tokens in ${log.usage.input}, out ${log.usage.output}.`);
+  for (const [i, attempt] of log.attempts.entries()) say(`  attempt ${i + 1}: ${attempt.faults.map((f) => `${f.severity} ${f.section} ${f.check} [${f.evidence}]`).join("\n    ") || "clean"}`);
 }
 
 main().catch((error: unknown) => {
