@@ -7,6 +7,8 @@ import {
   faultySentences,
   fanFaults,
   fanHeadline,
+  punBrief,
+  readHeadlines,
   strike,
   survivors,
   matchBlock,
@@ -25,7 +27,7 @@ import { FANTRAX_LEAGUE_ID, plainStandfirst, reportsCargo } from "@epl/core";
 import { writeColumn } from "./newsroom";
 import { readArchive } from "./persist";
 import type { ReportsJob } from "./reports";
-import { FAN_VOICE, LINE_EDIT_VOICE, REPORTS_VOICE, reportsSendBack } from "./voice/reports";
+import { FAN_VOICE, LINE_EDIT_VOICE, PUN_VOICE, REPORTS_VOICE, reportsSendBack } from "./voice/reports";
 
 // The match desk's newsroom: the reporter writes the day, the editor checks every match against its facts, the fan reads
 // it back, it goes back once for what either found, and each match keeps its best attempt.
@@ -72,6 +74,10 @@ export async function writeReports(
 
   // The desk strikes headlines that break a rule; the fan picks one of the rest, or none and a plain line prints.
   const names = desks.flatMap((d) => [d.match.home.name, d.match.away.name, ...d.match.home.shorts, ...d.match.away.shorts, ...d.match.men.map((m) => m.name)]);
+  // The pun writer's go, on the lead match alone; its candidates join the reporter's before the strike and the judge.
+  const puns = await writeColumn(PUN_VOICE, punBrief(desks[0], first.headlineStory ?? ""), count).then(readHeadlines).catch(() => ({ headlines: [], meanings: {} }));
+  first.headlines.push(...puns.headlines.filter((h) => !first.headlines.includes(h)));
+  first.meanings = { ...first.meanings, ...puns.meanings };
   const candidates = survivors(first.headlines, names);
   for (const h of first.headlines) say(`    headline candidate: "${h}"${candidates.includes(h) ? "" : ` struck (${strike(h, names)})`}${first.meanings?.[h] === undefined ? "" : ` [${first.meanings[h]}]`}`);
   const fanRaw = await writeColumn(FAN_VOICE, fanBrief(first, desks, candidates), count).catch(() => null);

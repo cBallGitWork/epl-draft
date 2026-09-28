@@ -59,6 +59,23 @@ export function particles(prose: string, surnames: readonly string[]): string {
     }, prose);
 }
 
+/** Headline candidates from either writer. A pun names the word it turns on and the two meanings that word carries; a
+ *  candidate that cannot is not a pun and is dropped. */
+export function readHeadlines(raw: Record<string, unknown>): { headlines: string[]; meanings: Record<string, string> } {
+  const headlines: string[] = [];
+  const meanings: Record<string, string> = {};
+  for (const h of Array.isArray(raw.headlines) ? raw.headlines : []) {
+    const r = typeof h === "object" && h !== null ? (h as Record<string, unknown>) : {};
+    const line = typeof r.text === "string" ? correct(r.text.trim()) : "";
+    const on = typeof r.playsOn === "string" ? r.playsOn.trim() : "";
+    const two = typeof r.twoMeanings === "string" ? r.twoMeanings.trim() : "";
+    if (line === "" || on === "" || two === "" || !line.toLowerCase().includes(on.toLowerCase())) continue;
+    headlines.push(line);
+    meanings[line] = two;
+  }
+  return { headlines, meanings };
+}
+
 /** The model's JSON as a draft; anything missing or misshapen is an empty string for the checks to find. */
 export function readReportsDraft(raw: Record<string, unknown>, surnames: readonly string[] = []): ReportsDraft {
   const text = (value: unknown) => (typeof value === "string" ? particles(correct(value.trim()), surnames) : "");
@@ -75,20 +92,7 @@ export function readReportsDraft(raw: Record<string, unknown>, surnames: readonl
     });
     matches.set(code, { standfirst: text(m.standfirst), account: text(m.account), sections });
   }
-  // A pun names the word it turns on and the two meanings that word carries; a candidate that cannot is not a pun.
-  const offered = (Array.isArray(raw.headlines) ? raw.headlines : []).flatMap((h) => {
-    const r = typeof h === "object" && h !== null ? (h as Record<string, unknown>) : {};
-    const line = text(r.text);
-    const on = typeof r.playsOn === "string" ? r.playsOn.trim() : "";
-    const meanings = typeof r.twoMeanings === "string" ? r.twoMeanings.trim() : "";
-    return line !== "" && on !== "" && meanings !== "" && line.toLowerCase().includes(on.toLowerCase()) ? [line] : [];
-  });
-  const meanings = Object.fromEntries(
-    (Array.isArray(raw.headlines) ? raw.headlines : []).flatMap((h) => {
-      const r = typeof h === "object" && h !== null ? (h as Record<string, unknown>) : {};
-      return typeof r.text === "string" && typeof r.twoMeanings === "string" ? [[text(r.text), r.twoMeanings.trim()]] : [];
-    }),
-  );
+  const { headlines: offered, meanings } = readHeadlines(raw);
   return { headline: offered[0] ?? "", headlines: offered, meanings, headlineStory: text(raw.headlineStory), matches };
 }
 

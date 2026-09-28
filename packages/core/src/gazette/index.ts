@@ -125,3 +125,5 @@ export type { FantasyMan, FantasyPanel } from "./reports/fantasy";
 export { strike, survivors } from "./reports/headline";
 export { applyFixes, faultySentences } from "./reports/lineEdit";
 export type { LineFix } from "./reports/lineEdit";
+export { punBrief } from "./reports/headline";
+export { readHeadlines } from "./reports/draft";

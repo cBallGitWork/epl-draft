@@ -18,3 +18,17 @@ describe("strike", () => {
     expect(survivors(["Villa hold on, just", "Manzambi makes it Villa's day"], names)).toEqual(["Manzambi makes it Villa's day"]);
   });
 });
+
+describe("punBrief", () => {
+  it("hands the pun writer the lead match's story, names and goals, and nothing that names a source", async () => {
+    const { punBrief } = await import("./headline");
+    const { deskDay } = await import("./desk");
+    const { SPURS, VILLA, fixture, spursVilla } = await import("./__fixtures__/spursVilla");
+    const places = new Map([[6, 18], [7, 9]]);
+    const [desk] = deskDay({ day: "2026-09-19", gameweek: 5, matches: [spursVilla()], season: [fixture], clubs: [SPURS, VILLA], standing: { attack: places, defence: places } });
+    const brief = punBrief(desk, "Villa survive a late Spurs fightback");
+    expect(brief).toContain("THE STORY: Villa survive a late Spurs fightback.");
+    expect(brief).toContain("Emiliano Buendía (Aston Villa)");
+    expect(brief).not.toMatch(/xG|FPL|Fantrax|%/u);
+  });
+});
