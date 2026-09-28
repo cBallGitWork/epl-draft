@@ -44,26 +44,6 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
-## Typed assists come from a stats league, not the served one — decided 28 Sep 2026
-
-The vidiprinter and the match scoresheet dropped assists Opta never placed: across GW1–5, 138
-goals, 7 real assists reached no goal row even after the commentary and FPL's counts. Fantrax
-types every fantasy assist (penalty won, own goal forced, free kick won, rebound, deflection) per
-gameweek for every player, but only in a league whose scoring lists those columns.
-
-- **The real league stays clean** (Craig, 28 Sep: its categories are what members see). The dummy
-  league lists them all and is on Craig's account, so it stays up. It is named by role in data,
-  `"stats": "dummy"` in `recorded.json`, the line `npm run stats` reads too; the app reads that one
-  role and no other league from the file. Unnamed or silent, the kinds are skipped and crediting is
-  as before. The served league stays the environment's, because that is the swap.
-- **Order: kinds, then the commentary, then arithmetic** (`creditSide`). A kind credits only a sole
-  claimant on the side whom FPL paid in that match, owed enough to cover every goal of that kind.
-- **What it bought, counted on GW1–5:** 3 of the 7 (Miley og ← Tanaka, João Pedro og ← Groß, Enzo's
-  free kick ← Ndiaye), and Man Utd 5–2 Ipswich now places all three without the commentary. Two
-  open-play goals with two rebound-type claimants still need the commentary, or stay blank.
-- **One read per gameweek**, outfield only (1.3 MB), cached five minutes (`ASSIST_KINDS_REVALIDATE`).
-  Fantrax's A+AF matched FPL's assist count for every player across the five gameweeks.
-
 ## Lawro writes the predictions, under his own name, on Thursday evening — decided 24 Sep 2026
 
 - **The byline is "by Mark Lawrenson", with no impression marking** (Craig, 24 Sep 2026). It reverses,
@@ -159,6 +139,26 @@ gameweek for every player, but only in a league whose scoring lists those column
 - **A local build without `FANTRAX_LEAGUE_ID` 500s every `/paper/[slug]`** under `next start`
   (`DYNAMIC_SERVER_USAGE`). Production names the league when it builds; build with it set before shooting an
   article locally.
+
+## Typed assists come from a stats league, not the served one — decided 28 Sep 2026
+
+The vidiprinter and the match scoresheet dropped assists Opta never placed: across GW1–5, 138
+goals, 7 real assists reached no goal row even after the commentary and FPL's counts. Fantrax
+types every fantasy assist (penalty won, own goal forced, free kick won, rebound, deflection) per
+gameweek for every player, but only in a league whose scoring lists those columns.
+
+- **The real league stays clean** (Craig, 28 Sep: its categories are what members see). The dummy
+  league lists them all and is on Craig's account, so it stays up. It is named by role in data,
+  `"stats": "dummy"` in `recorded.json`, the line `npm run stats` reads too; the app reads that one
+  role and no other league from the file. Unnamed or silent, the kinds are skipped and crediting is
+  as before. The served league stays the environment's, because that is the swap.
+- **Order: kinds, then the commentary, then arithmetic** (`creditSide`). A kind credits only a sole
+  claimant on the side whom FPL paid in that match, owed enough to cover every goal of that kind.
+- **What it bought, counted on GW1–5:** 3 of the 7 (Miley og ← Tanaka, João Pedro og ← Groß, Enzo's
+  free kick ← Ndiaye), and Man Utd 5–2 Ipswich now places all three without the commentary. Two
+  open-play goals with two rebound-type claimants still need the commentary, or stay blank.
+- **One read per gameweek**, outfield only (1.3 MB), cached five minutes (`ASSIST_KINDS_REVALIDATE`).
+  Fantrax's A+AF matched FPL's assist count for every player across the five gameweeks.
 
 ## A screen's sub-views switch from its foot, not a second top strip — decided 24 Sep 2026
 
