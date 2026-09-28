@@ -107,7 +107,13 @@ returns `WARNING_NOT_LOGGED_IN`.
 Methods that matter:
 
 - `confirmOrExecuteTeamRosterChanges` — **lineup writes**. Takes
-  `rosterLimitPeriod`, `fantasyTeamId`, `applyToFuturePeriods`, and `adminMode`.
+  `rosterLimitPeriod`, `fantasyTeamId`, `applyToFuturePeriods`, `adminMode`,
+  `confirm` (true is a dry run) and `fieldMap` (every man, `{posId, stId}`).
+  **It saves an illegal lineup** after a warning, so the caller must refuse one.
+- `setAutoSubsOrder({teamId, period, adminMode, autoSubOrderMap})` — the bench
+  order, `scorerId → rank`.
+- `getPendingTransactions` answers for the caller's own team whatever `teamId`
+  says, so another team's pending claims are not readable.
 - `getCommissionerHubInfo` + `executeCommissionerHubAction({actionKey, …})` — the
   commissioner console. The returned action list is server-driven; do not hardcode.
 - `getMatchups` — Fantrax computes live H2H points itself. Their live scores are
@@ -136,7 +142,8 @@ and Safari's are a per-user install nobody is doing. Any write surface has to
 work for a person holding a phone who has never heard of a cookie. The one route
 that does is the commissioner's own session plus `adminMode` — one cookie, kept
 by one person, writing on behalf of members our own team codes have already
-authenticated. Unprobed as of 19 Aug 2026; see PLATFORM_NOTES.
+authenticated. **Probed 28 Sep 2026: it writes a team he does not own**, and
+without `adminMode` Fantrax refuses. PLATFORM_NOTES carries the bodies.
 
 ### Fantrax scores the roster slot, not the player
 

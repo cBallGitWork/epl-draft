@@ -19,7 +19,7 @@ sequences it against the dated season work and un-parks two ideas Craig chose:
 |---|---|---|
 | Custom competitions (H2H groups, cups, points leagues over Fantrax points) | docs/rules/PRODUCT.md | **Shape landed 20 Aug** — a declared cup and playoff, labelled a placeholder, on `/league/schedule`. The feature is still parked; what is built is the seam. |
 | Per-player intelligence store via `setPlayerNote` | CLAUDE.md fxpa methods | **In scope** (this session) |
-| Commissioner cookie + `adminMode` as the only viable write path | PLATFORM_NOTES "extension plan is dead" | **In scope** — probe it |
+| Commissioner cookie + `adminMode` as the only viable write path | PLATFORM_NOTES "extension plan is dead" | **Probed 28 Sep: it writes.** The save is next |
 | 27/28 draft/FM hybrid, `apps/lab` | docs/rules/PRODUCT.md | Parked, empty on purpose |
 | FPL as one small tab | memory, 6 Aug | Done — keep it small |
 
@@ -94,16 +94,18 @@ belong to nobody.
   all four, so a successful write there proves only that a man can edit his own
   team. That is a false positive that would green-light the entire write
   surface. Full findings in PLATFORM_NOTES, 20 Aug.
-- **Unblocking step, and it is Craig's:** a second Fantrax account holding one
+- ~~**Unblocking step, and it is Craig's:** a second Fantrax account holding one
   rehearsal team (`replaceOwner.go` / `COMMISH_TEAM_PERMISSIONS` are in the
   commissioner hub). Then the probe has a control and its answer means
-  something.
+  something.~~ **Done by 28 Sep: Notemail.**
 - Established meanwhile: the cookie authenticates, carries `commissioner: true`,
   `adminMode` is accepted and echoed by `getTeamRosterInfo`, and the hub
   publishes a **`COMMISH_TEAM_ADMIN`** link — strong evidence the capability
   exists, but a link key is not a probe.
-- Record the answer in PLATFORM_NOTES either way.
-- **If yes:** design the cookie flow — one cookie, visible staleness state, a
+- ~~Record the answer in PLATFORM_NOTES either way.~~ **Answered 28 Sep 2026:
+  yes.** A dry run and one saved-and-reverted swap on Notemail; without
+  `adminMode` Fantrax refuses. PLATFORM_NOTES, 28 Sep.
+- **Yes, so this is next:** design the cookie flow — one cookie, visible staleness state, a
   path back to "open Fantrax yourself" (one stale cookie downs writes for all
   sixteen at once). Members authenticate with the team codes we already issue.
 - **If no:** option 3 stands (plan in our app, deep-link to Fantrax to submit)
