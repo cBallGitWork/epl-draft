@@ -23,24 +23,24 @@ const CLEAN: ReportPiece = {
   standfirst: "Aston Villa won 3-2 at Tottenham Hotspur for their first win of the season, leaving Spurs in the bottom three.",
   account:
     "Aston Villa were 3-0 up with 11 minutes left and still had to hang on. Pedro Porro went off injured after 19 minutes, Archie Gray coming on. " +
-    "Johan Manzambi put Villa ahead just before the interval, made by Boubacar Kamara. Mohammed Kudus had a goal ruled out after a video review on the hour. " +
-    "Nicolas Jackson doubled the lead from a Manzambi pass, and Emiliano Buendía struck the third from outside the box into the top corner, made by John McGinn. " +
-    "Conor Gallagher replied four minutes from time from a Kudus pass, and Jan Paul van Hecke headed in a cross from Andy Robertson deep into added time.",
+    "Johan Manzambi put Villa ahead just before the interval, set up by Boubacar Kamara. Mohammed Kudus had a goal ruled out after a video review on the hour. " +
+    "Nicolas Jackson doubled the lead from a Manzambi pass, and Emiliano Buendía struck the third from outside the box into the top corner, supplied by John McGinn. " +
+    "Conor Gallagher replied four minutes from time from a Kudus ball, and Jan Paul van Hecke headed in a cross from Andy Robertson deep into added time.",
   sections: [
     {
-      head: "Manzambi marks first start",
-      pitch: "Manzambi was making his first league start of the season and had a hand in both of Villa's first two goals before he was taken off. He had four shots in all, two of them on target.",
+      head: "Manzambi marks his start",
+      pitch: "Manzambi was part of both of Villa's opening goals in his first league start of the season, trying his luck four times, twice on target, before he was taken off.",
       stake: "A free agent, so a goal and an assist went unclaimed.",
     },
     {
       head: "Buendía finds the corner",
-      pitch: "Buendía played the whole match and had three shots, two of them on target, the last of them the goal that made it three. He also set up three shots for team-mates.",
-      stake: "Notemail picked him, and his seven points were theirs.",
+      pitch: "Buendía played the whole match and had three attempts, two of them on target, the last of them the third goal. He also teed up three for team-mates.",
+      stake: "Seven points for Notemail, whose man he is.",
     },
     {
       head: "Robertson supplies the header",
-      pitch: "Robertson made four chances for Tottenham Hotspur, and it was his delivery from a set piece that brought their second goal in the eighth minute of added time.",
-      stake: "Robertson is a free agent.",
+      pitch: "Robertson created four chances for Tottenham Hotspur, and his delivery from a set piece brought their second goal in the eighth minute of added time.",
+      stake: "Nobody has him.",
     },
   ],
 };
@@ -150,8 +150,8 @@ describe("checkReports", () => {
 
   it("sends back a fixture in a stake, and a stake about another man", () => {
     const stakes = (stake: string) => [CLEAN.sections[0], { ...CLEAN.sections[1], stake }, CLEAN.sections[2]];
-    expect(checksOf(draft({ sections: stakes("Notemail picked him for seven points, and Villa host Brentford next.") }))).toEqual(expect.arrayContaining([expect.stringMatching(/a fixture in a stake/)]));
-    expect(checksOf(draft({ sections: stakes("Notemail picked him for seven points, as they did Jackson.") }))).toEqual(expect.arrayContaining([expect.stringMatching(/a stake names only its own man/)]));
+    expect(checksOf(draft({ sections: stakes("Seven points for Notemail, and Villa host Brentford next.") }))).toEqual(expect.arrayContaining([expect.stringMatching(/a fixture in a stake/)]));
+    expect(checksOf(draft({ sections: stakes("Seven points for Notemail, as for Jackson.") }))).toEqual(expect.arrayContaining([expect.stringMatching(/a stake names only its own man/)]));
   });
 
   it("never calls a club a stranger: a stake may name another match's club as the next opponent", () => {
@@ -168,7 +168,7 @@ describe("checkReports", () => {
   });
 
   it("allows the goal total, a head-to-head score from the brief, and a one-name man inside a name of this match", () => {
-    const stake = "Notemail picked him, and his seven points were theirs.";
+    const stake = "Seven points for Notemail, whose man he is.";
     expect(checksOf(draft({ account: `${CLEAN.account} It was a five-goal match.` }))).toEqual([]);
     expect(checksOf(draft({ sections: [CLEAN.sections[0], { ...CLEAN.sections[1], stake }, CLEAN.sections[2]] }))).toEqual([]);
   });

@@ -417,7 +417,7 @@ export const REPORTS = {
   /** Candidates offered beyond the sections a match gets. */
   spareNominees: 3,
   /** A run of this many words shared with another match, or a recent report, is an echo. */
-  echo: 6,
+  echo: 4,
   /** The fan's quotes kept for any one part of a piece. */
   fanFlags: 3,
   /** Earlier report days whose phrasing a new one may not echo. */

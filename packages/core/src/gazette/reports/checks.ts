@@ -5,6 +5,7 @@ import type { MatchDesk } from "./desk";
 import type { ReportPiece, ReportsDraft } from "./draft";
 import { surname } from "./keyStats";
 import { partFaults } from "./parts";
+import { repeatsIn } from "./repeats";
 import { dayFaults, wordFaults } from "./style";
 import { isGoal } from "./timeline";
 
@@ -80,6 +81,10 @@ export function checkReports(draft: ReportsDraft, ctx: ReportsCheck): Fault[] {
     }
   }
   dayFaults(pieces, allNames, [...ctx.blocks.values()].join("\n"), ctx.past, REPORTS.echo, fault);
+  for (const r of repeatsIn(pieces, allNames)) {
+    const what = r.kind === "phrase" ? "a phrase said twice" : r.kind === "opener" ? "sentences that open the same way" : "a word leaned on";
+    fault(r.code === null ? "day" : `${r.code}:match`, what, "send-back", `${r.said} ×${r.count}`);
+  }
   return faults;
 }
 

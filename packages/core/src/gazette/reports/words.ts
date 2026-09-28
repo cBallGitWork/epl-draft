@@ -26,7 +26,8 @@ export const REPORT_CLICHES: readonly string[] = [
   "marshalled", "set the tempo", "ran through him", "on the front foot", "stretched", "running in behind", "dropping in",
   "carved out", "pulled the strings", "drove forward", "offered little", "at the heart of", "tireless", "a menace",
   "a constant threat", "lifted a", "lifted the", "his introduction", "his work", "his running", "his movement",
-  "finely poised", "a free man", "holds him", "hold him", "held by", "holder", "nobody holds", "nobody in the league holds",
+  "finely poised", "a free man", "holds him", "hold him", "held by", "holder", "nobody holds", "nobody in the league holds", "picked him", "held him",
+  "who held", "held and picked", "picked and",
   "in their eleven", "among their reserves", "profligacy", "chance after chance", "held firm", "still pressing",
 ];
 
@@ -128,7 +129,7 @@ export const REPORT_CAPPED_MATCH: readonly (readonly [phrase: string, most: numb
 export const REPORT_CAPPED_DAY: readonly (readonly [phrase: string, most: number])[] = [
   ["from time", 2], ["added time", 5], ["stoppage time", 5], ["on the hour", 1], ["midway through", 2],
   ["just before half-time", 2], ["there was", 1], ["the result leaves", 1], ["the result means", 1], ["moments later", 1],
-  ["minutes later", 1], ["shortly after", 1], ["free agent", 3], ["picked by", 2], ["points for", 3],
+  ["minutes later", 1], ["shortly after", 1], ["free agent", 3], ["points for", 3], ["has him", 2],
   ["while", 1],
 ];
 
