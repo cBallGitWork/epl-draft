@@ -25,7 +25,7 @@ function Men({ men, points }: { men: readonly FantasyMan[]; points: boolean }) {
             <span className="font-semibold">{man.name}</span> <span className="text-muted">({man.club}{man.holder === null ? ", free" : `, ${man.holder}`})</span>
             {man.did === "" ? null : <span className="block text-2xs text-muted">{man.did}</span>}
           </span>
-          {points && man.points !== null ? <span className="numeric shrink-0">{man.points} pts</span> : null}
+          {points && man.points !== null ? <span className="numeric shrink-0">{man.points} pt{man.points === 1 ? "" : "s"}</span> : null}
         </li>
       ))}
     </ul>

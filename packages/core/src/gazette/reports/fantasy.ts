@@ -25,6 +25,7 @@ export interface FantasyPanel {
 
 const TOP = 3;
 const OFF_DAYS = 4;
+const WIRE = 4;
 /** A held starter who scored this few points had an off day. */
 const LOW_POINTS = 1;
 /** Expected goals worth a line when none went in. */
@@ -71,7 +72,12 @@ export function fantasyPanel(match: ReportMatchInput, events: readonly MatchEven
   return {
     motm: top[0] ?? null,
     top,
-    wire: match.men.filter((m) => played(m) && m.holder === null && scored(m) + made(m) > 0).map(man),
+    // Free agents who returned, goals first, so the sidebar names the few worth a look.
+    wire: match.men
+      .filter((m) => played(m) && m.holder === null && scored(m) + made(m) > 0)
+      .sort((a, b) => scored(b) * 2 + made(b) - (scored(a) * 2 + made(a)))
+      .slice(0, WIRE)
+      .map(man),
     offDays,
   };
 }
