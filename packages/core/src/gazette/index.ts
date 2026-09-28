@@ -113,3 +113,5 @@ export { REPORT_NEVER } from "./reports/style";
 export {
   REPORT_ADVICE, REPORT_AMERICAN, REPORT_CAPPED_DAY, REPORT_CAPPED_MATCH, REPORT_FANTASY, REPORT_FPL,
 } from "./reports/words";
+export { normalizeReports, plainStandfirst, reportsCargo } from "./reports/cargo";
+export type { ReportRowKind, StoryReport, StoryReportRow, StoryReportSection } from "./reports/cargo";

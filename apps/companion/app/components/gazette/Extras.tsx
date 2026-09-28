@@ -1,5 +1,6 @@
 import type { FootballSnapshot, PublishedStory } from "@epl/core";
 import Quiz from "./Quiz";
+import Reports from "./Reports";
 import Ranks from "./Ranks";
 import Lineups from "./Lineups";
 import Sheets from "./Sheets";
@@ -29,5 +30,6 @@ export default function Extras({
   if (story.kind === "presser") return <TeamNews story={story} />;
   if (story.kind === "predicted-xi") return <Lineups story={story} named={named} mine={mine} />;
   if (story.kind === "sheets") return <Sheets story={story} named={named} mine={mine} snapshot={snapshot} />;
+  if (story.kind === "match-report") return <Reports story={story} snapshot={snapshot} />;
   return null;
 }

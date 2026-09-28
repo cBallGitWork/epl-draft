@@ -1,5 +1,6 @@
 import {
   fetchFixtures,
+  fetchHighlightsFeed,
   fetchLive,
   fetchPlFixture,
   fetchPlMatchStats,
@@ -7,9 +8,11 @@ import {
   fetchPlStaff,
   fetchPlTextstream,
   fullClubName,
+  highlightFor,
   londonDayOf,
   mapFixtures,
   mapLiveStats,
+  parseHighlightFeed,
   plFixtureCode,
   plManager,
   plMoments,
@@ -88,6 +91,8 @@ export async function matchdayInput(opts: {
   const codeOfId = new Map(snapshot.players.map((p) => [p.id, p.code]));
   const liveLines = new Map(snapshot.stats.map((s) => [codeOfId.get(s.playerId) ?? -1, { minutes: s.minutes, saves: s.saves, expectedGoals: s.expectedGoals, expectedAssists: s.expectedAssists }]));
 
+  // Sky's playlist, joined on both clubs and the score; a video not up yet is null and the page looks again when drawn.
+  const videos = await fetchHighlightsFeed().then(parseHighlightFeed).catch(() => []);
   const matches: ReportMatchInput[] = [];
   for (const fixture of fixtures) {
     const pl = round.content.find((each) => plFixtureCode(each) === fixture.code);
@@ -116,7 +121,7 @@ export async function matchdayInput(opts: {
       moments,
       men: reportMen(sheets, moments, { live: liveLines, season: seasons, holders: league.holders, points: league.points, fitness }),
       figures: home === null || away === null ? null : { home, away },
-      videoId: null,
+      videoId: highlightFor(videos, { home: clubs.get(fixture.homeClubId)?.name ?? "", away: clubs.get(fixture.awayClubId)?.name ?? "", homeScore: fixture.homeScore, awayScore: fixture.awayScore })?.id ?? null,
     });
   }
 
