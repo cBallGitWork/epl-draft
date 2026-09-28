@@ -1,4 +1,4 @@
-import { londonWeekday, type StoryKind } from "@epl/core";
+import { londonWeekday, londonWeekdayLong, type StoryKind } from "@epl/core";
 
 // Who each story runs under, and which named edition it goes out in. COPY,
 // all of it, and Craig's to change: homage names ship as strings precisely so
@@ -29,9 +29,10 @@ export const COLUMNIST: Partial<Record<StoryKind, string>> = {
  *  rhythms, stamped from the kind and the day it filed. The reporting kinds
  *  take the day's paper: Saturday's is the Pink 'Un because the stock has
  *  been rosa since 29 Aug and finally earns it. */
-export function editionName(kind: StoryKind, filedAt: string): string {
-  // Its own name every day, and no real paper's (Craig, 28 Sep 2026: "not the pink un, pink was a paper").
-  if (kind === "match-report") return "Prem Report";
+export function editionName(kind: StoryKind, filedAt: string, playedOn?: string): string {
+  // Named for the day the matches were played, not the day it filed, and no real paper's name (Craig, 28 Sep 2026):
+  // Saturday's matches are the "Saturday Prem Report" even when it files on Sunday morning.
+  if (kind === "match-report") return `${londonWeekdayLong(playedOn ?? filedAt)} Prem Report`;
   if (kind === "predictions" || kind === "predicted-xi") return "The Form Guide";
   if (kind === "fixture-preview" || kind === "news" || kind === "presser") return "The Team Sheet";
   if (kind === "wire" || kind === "dodgers") return "The Mercato Wire";

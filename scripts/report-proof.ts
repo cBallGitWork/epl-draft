@@ -78,7 +78,7 @@ async function main(): Promise<void> {
     { headline: draft.headline || plainStandfirst(desks[0]), deck: plainStandfirst(desks[0]).replace(/\.$/u, ""), body: "", reports: reportsCargo(desks, draft) },
     {
       slug, kind: "match-report", leagueId: FANTRAX_LEAGUE_ID, period: round.period, gameweek, filedAt: new Date().toISOString(),
-      expiresAt: null, edition: editionName("match-report", matchDay), byline: STORY_BYLINE["match-report"] ?? "", subject: `match-report:gw${gameweek}:${input.day}`, face: null,
+      expiresAt: null, edition: editionName("match-report", new Date().toISOString(), matchDay), byline: STORY_BYLINE["match-report"] ?? "", subject: `match-report:gw${gameweek}:${input.day}`, face: null,
     },
   );
   writeFileSync(join(out, `${slug}.story.json`), JSON.stringify(story, null, 2));
