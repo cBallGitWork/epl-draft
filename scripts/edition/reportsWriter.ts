@@ -7,7 +7,10 @@ import {
   matchBlock,
   matchOf,
   mergeReports,
+  plainHead,
   readReportsDraft,
+  REPORT_NEVER,
+  banned,
   surname,
   type Fault,
   type MatchDesk,
@@ -73,11 +76,17 @@ export async function writeReports(
     }
   }
 
-  const draft = mergeReports(attempts, codes);
+  const merged = mergeReports(attempts, codes);
+  // The one pencil after the merge: a head still breaking the rules prints as its man's name.
+  const never = (text: string) => banned(text, REPORT_NEVER).length > 0;
+  const draft = {
+    ...merged,
+    matches: new Map([...merged.matches].map(([code, piece]) => [code, { ...piece, sections: piece.sections.map((s) => ({ ...s, head: plainHead(s.head, s.pitch, surnames, never) })) }])),
+  };
   const kept: ReportsLog["kept"] = {};
   for (const code of codes) {
     const piece = draft.matches.get(code);
-    kept[code] = piece === undefined ? "plain" : piece === first.matches.get(code) ? "first" : "rewrite";
+    kept[code] = piece === undefined ? "plain" : piece.standfirst === first.matches.get(code)?.standfirst ? "first" : "rewrite";
   }
   return { draft, brief, log: { attempts: attempts.map((a) => ({ faults: [...a.faults] })), fan, kept, usage } };
 }

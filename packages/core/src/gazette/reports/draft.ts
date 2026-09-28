@@ -29,6 +29,17 @@ export function correct(prose: string): string {
   return REPORT_PENCIL.reduce((out, [wrong, right]) => out.replace(wrong, right), pencil(prose));
 }
 
+/** A head that breaks the rules twice prints as the man it is about: his surname, named first in the section's football. */
+export function plainHead(head: string, pitch: string, surnames: readonly string[], never: (text: string) => boolean): string {
+  const clean = head !== "" && head.split(/\s+/u).length <= 5 && !never(head) && surnames.some((name) => head.includes(name));
+  if (clean) return head;
+  const named = surnames
+    .map((name) => ({ name, at: pitch.indexOf(name) }))
+    .filter((x) => x.at >= 0)
+    .sort((a, b) => a.at - b.at || b.name.length - a.name.length)[0];
+  return named?.name ?? head;
+}
+
 /** A surname's particle is lower case except where it opens a sentence: "holds Van Hecke" → "holds van Hecke". */
 export function particles(prose: string, surnames: readonly string[]): string {
   return surnames

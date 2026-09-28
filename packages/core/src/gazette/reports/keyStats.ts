@@ -36,7 +36,7 @@ export function keyStats(
   const made = (man: ReportMan) => goals.filter((g) => g.other?.code === man.code).length;
   const c = (man: ReportMan) => counts.get(man.code);
   const men = match.men.filter(played);
-  const tag = (man: ReportMan) => `${match[man.side].short ?? match[man.side].name}, ${man.holder === null ? "free" : man.holder.team}`;
+  const tag = (man: ReportMan) => `${match[man.side].shorts[0] ?? match[man.side].name}, ${man.holder === null ? "free" : man.holder.team}`;
 
   lines.push(...facts.filter((fact) => fact.includes("clean sheet went")));
   for (const event of events.filter((e) => e.kind === "woodwork" && e.man !== null)) {
@@ -45,7 +45,7 @@ export function keyStats(
   const shooter = [...men].sort((a, b) => (c(b)?.shots ?? 0) - (c(a)?.shots ?? 0))[0];
   if (shooter !== undefined && (c(shooter)?.shots ?? 0) >= MOST_SHOTS) {
     const s = c(shooter)!;
-    lines.push(`${surname(shooter.name)} (${tag(shooter)}): ${count(s.shots, "shot")}, ${numeral(s.onTarget)} on target, ${count(scored(shooter), "goal")}`);
+    lines.push(`${surname(shooter.name)} (${tag(shooter)}): ${count(s.shots, "shot")}, ${s.onTarget === 0 ? "none" : numeral(s.onTarget)} on target, ${scored(shooter) === 0 ? "no goal" : count(scored(shooter), "goal")}`);
   }
   for (const man of men.filter((m) => m.line === "F" && m.started && m.minutes >= 60 && (c(m)?.shots ?? 0) === 0)) {
     lines.push(`${surname(man.name)} (${tag(man)}): no shots in ${man.minutes} minutes`);

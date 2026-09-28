@@ -39,6 +39,8 @@ export function checkReports(draft: ReportsDraft, ctx: ReportsCheck): Fault[] {
   const faults: Fault[] = [];
   const fault = (section: string, check: string, severity: Severity, evidence: string) => faults.push({ section, check, severity, evidence });
   const allNames = ctx.desks.flatMap(namesOf);
+  // Other matches' men, never their clubs: a stake names a next opponent, and a club is no stranger to the page.
+  const allMen = ctx.desks.flatMap((d) => d.match.men.map((m) => surname(m.name)));
 
   if (draft.headline === "") fault("headline", "missing", "hard", "no headline");
   else {
@@ -68,7 +70,7 @@ export function checkReports(draft: ReportsDraft, ctx: ReportsCheck): Fault[] {
       wordFaults(`${code}:s${i + 1}`, s.stake, false, names, fault);
     });
 
-    facts(code, prose, desk, block, ctx, allNames, names, fault);
+    facts(code, prose, desk, block, ctx, allMen, names, fault);
     shape(code, piece, desk, fault);
     for (const s of piece.sections) {
       for (const word of s.head.toLowerCase().match(/\p{L}{4,}/gu) ?? []) {
@@ -77,7 +79,7 @@ export function checkReports(draft: ReportsDraft, ctx: ReportsCheck): Fault[] {
       }
     }
   }
-  dayFaults(pieces, allNames, ctx.past, REPORTS.echo, fault);
+  dayFaults(pieces, allNames, [...ctx.blocks.values()].join("\n"), ctx.past, REPORTS.echo, fault);
   return faults;
 }
 
@@ -86,17 +88,17 @@ function namesOf(desk: MatchDesk): string[] {
   const { match } = desk;
   return [
     ...match.men.flatMap((m) => [m.name, surname(m.name)]),
-    ...[match.home, match.away].flatMap((c) => [c.name, c.short, c.manager].filter((n): n is string => n !== null)),
+    ...[match.home, match.away].flatMap((c) => [c.name, ...c.shorts, c.manager].filter((n): n is string => n !== null)),
     ...(match.referee === null ? [] : [match.referee]),
   ];
 }
 
-function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx: ReportsCheck, allNames: readonly string[], names: readonly string[], fault: (s: string, c: string, v: Severity, e: string) => void): void {
+function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx: ReportsCheck, allMen: readonly string[], names: readonly string[], fault: (s: string, c: string, v: Severity, e: string) => void): void {
   const section = `${code}:match`;
   // A man from another match in this one's prose is the confident wrong statement this paper refuses.
   const mine = new Set(names);
-  for (const other of allNames) {
-    if (!mine.has(other) && other.includes(" ") === false && other.length > 3 && mentionAt(prose, other) >= 0) fault(section, "a man from another match", "hard", other);
+  for (const other of allMen) {
+    if (!mine.has(other) && other.length > 3 && mentionAt(prose, other) >= 0) fault(section, "a man from another match", "hard", other);
   }
   const allowed = new Set([...numbersIn(block), 0, 90, 45, ctx.gameweek]);
   for (const n of numbersIn(prose.replace(SCORE, " "))) if (!allowed.has(n)) fault(section, "a figure the facts do not give", "hard", String(n));
@@ -131,6 +133,15 @@ function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx:
     if (strip(name) !== name && mentionAt(prose, strip(name)) >= 0) fault(section, "a name spelt without its accents", "send-back", strip(name));
   }
 
+  // "Next" is the first match ahead: a later opponent called next is a fixture the club does not have.
+  for (const later of [...desk.ahead.home.slice(1), ...desk.ahead.away.slice(1)]) {
+    for (const sentence of sentences(prose.replace(/\n/gu, ". "))) {
+      if (mentionAt(sentence, later.opponent) >= 0 && /\bnext\b/u.test(sentence) && !/\bafter\b|\bthen\b/u.test(sentence)) {
+        fault(section, "a later match called the next one", "hard", later.opponent);
+      }
+    }
+  }
+
   // Everything that decided or changed the match is named somewhere in its piece.
   const musts = desk.events.filter((e) => ["goal", "penalty-goal", "own-goal", "ruled-out", "penalty-missed", "penalty-saved", "sent-off", "second-yellow", "injured-off"].includes(e.kind) || (e.kind === "substitution" && e.injury));
   const said: Record<string, RegExp> = {
@@ -157,7 +168,7 @@ function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx:
 function shape(code: number, piece: ReportPiece, desk: MatchDesk, fault: (s: string, c: string, v: Severity, e: string) => void): void {
   const { match, budget, angle } = desk;
   const sf = piece.standfirst;
-  const clubNamed = (c: typeof match.home) => mentionAt(sf, c.name) >= 0 || (c.short !== null && mentionAt(sf, c.short) >= 0);
+  const clubNamed = (c: typeof match.home) => [c.name, ...c.shorts].some((n) => mentionAt(sf, n) >= 0);
   const [h, a] = [match.fixture.homeScore ?? 0, match.fixture.awayScore ?? 0];
   if (sentences(sf).length !== 1 || wordCount(sf) > 30) fault(`${code}:standfirst`, "one sentence of 30 words or fewer", "send-back", `${sentences(sf).length} sentences, ${wordCount(sf)} words`);
   if (!clubNamed(match.home) || !clubNamed(match.away)) fault(`${code}:standfirst`, "names both clubs", "send-back", sf);
@@ -176,7 +187,7 @@ function shape(code: number, piece: ReportPiece, desk: MatchDesk, fault: (s: str
 
   if (piece.sections.length === 0) fault(`${code}:match`, "no sections", "hard", "0");
   else if (piece.sections.length !== budget.sections) fault(`${code}:match`, `${budget.sections} sections, not ${piece.sections.length}`, "send-back", String(piece.sections.length));
-  const mine = [...match.men.map((m) => surname(m.name)), match.home.name, match.away.name, match.home.short, match.away.short].filter((n): n is string => n !== null);
+  const mine = [...match.men.map((m) => surname(m.name)), match.home.name, match.away.name, ...match.home.shorts, ...match.away.shorts];
   piece.sections.forEach((s, i) => {
     if (wordCount(s.head) > 5 || s.head === "") fault(`${code}:s${i + 1}`, "a head of five words or fewer", "send-back", s.head);
     if (!mine.some((n) => mentionAt(s.head, n) >= 0)) fault(`${code}:s${i + 1}`, "a head names a man or club from this match", "send-back", s.head);

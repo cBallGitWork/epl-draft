@@ -65,7 +65,7 @@ export type {
   TeamOfTheWeek,
 } from "./types";
 
-export { fullClubName, shortClubName } from "./clubNames";
+export { fullClubName, shortClubNames } from "./clubNames";
 
 // Team news at the lock: each side's sheet, what changed, the brief, the editor and the column.
 export { sheetOf } from "./sheets/sheet";
@@ -105,7 +105,7 @@ export { surname } from "./reports/keyStats";
 export type { ReportClub, ReportDayInput, ReportMan, ReportMatchInput, SideFigures } from "./reports/types";
 export { checkReports } from "./reports/checks";
 export type { ReportsCheck } from "./reports/checks";
-export { correct, matchOf, mergeReports, readReportsDraft } from "./reports/draft";
+export { correct, matchOf, mergeReports, plainHead, readReportsDraft } from "./reports/draft";
 export type { ReportPiece, ReportSection, ReportsDraft } from "./reports/draft";
 export { FAN_TAGS, fanBrief, fanFaults } from "./reports/fan";
 export { matchBlock } from "./reports/brief";

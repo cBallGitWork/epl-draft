@@ -30,7 +30,7 @@ export const REPORT_GROUNDS: readonly string[] = [
 
 /** A shot described beyond what the commentary said. */
 export const REPORT_SHOTS: readonly string[] = [
-  "curved", "curves", "curving", "bent", "bends", "bending", "drove", "drives", "driving", "drilled", "drills", "thumped",
+  "steered", "stroked", "prodded", "poked", "curved", "curves", "curving", "bent", "bends", "bending", "drove", "drives", "driving", "drilled", "drills", "thumped",
   "hammered", "crashed", "arrowed in", "curls", "curling", "whips", "blasts", "smashes", "fires", "rifles", "lashes",
   "debut", "debutant", "full debut",
   "curled", "curler", "rocket", "screamer", "thunderbolt", "piledriver", "worldie", "wonder strike", "volley", "volleyed",
@@ -40,12 +40,13 @@ export const REPORT_SHOTS: readonly string[] = [
 
 /** Verdicts on a match the paper did not watch, and minds it cannot read. */
 export const REPORT_VERDICTS: readonly string[] = [
-  "deserved", "deservedly", "merited", "harsh", "lucky", "fortunate", "rode their luck", "on another day", "should have",
+  "spurned", "spurning", "deserved", "deservedly", "merited", "harsh", "lucky", "fortunate", "rode their luck", "on another day", "should have",
   "could have had", "dominated", "controlled", "second best", "outplayed", "wasteful", "profligate", "sloppy", "shambolic",
   "frailties", "howler", "gifted", "hard-fought", "hard-earned", "much-needed", "gritty", "battling", "balance of play",
   "bossed", "dictated", "laid siege", "peppered", "pressure told", "profligacy", "paid for their", "fine return", "good return", "big return", "would have made", "frustration", "frustrated", "desperate", "nerves",
   "jittery", "character", "spirit", "resilience", "resilient", "composure", "hunger", "determined", "galvanised", "rattled",
-  "stunned", "shell-shocked", "mettle", "dug deep", "ground out", "heartbreak",
+  "stunned", "shell-shocked", "thought he had", "thought they had", "believed he had", "believed they had", "chalked off",
+  "defined the afternoon", "defined the match", "mettle", "dug deep", "ground out", "heartbreak",
 ];
 
 /** The crowd, pressure on a manager, and club nicknames: none of it is in the facts. */

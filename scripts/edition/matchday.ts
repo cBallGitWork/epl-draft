@@ -16,7 +16,7 @@ import {
   plPlayerCodes,
   plTeamSheets,
   reportMen,
-  shortClubName,
+  shortClubNames,
   sideFigures,
   strengthIntel,
   type Club,
@@ -59,7 +59,7 @@ async function seasonLines(gameweek: number, snapshot: FootballSnapshot): Promis
 }
 
 function reportClub(club: Club | undefined, manager: string | null) {
-  return { code: club?.code ?? 0, name: fullClubName(club?.name ?? "—"), short: club === undefined ? null : shortClubName(club.name), manager };
+  return { code: club?.code ?? 0, name: fullClubName(club?.name ?? "—"), shorts: club === undefined ? [] : shortClubNames(club.name), manager };
 }
 
 /** The day's input, or null when the Premier League's round cannot be read. `pick` chooses the day's fixtures. */

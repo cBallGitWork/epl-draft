@@ -37,6 +37,7 @@ THE FOOTBALL:
 - Describe a goal only as the brief does: the foot, where from, where it went, how it was made. Nothing more about how it looked.
 - A man is his full name first, then his surname. A club is its full name first; after that, only the one short name the brief allows, or the full name again. Never a nickname, a nationality, an age or a former club in place of a name.
 - Report what a manager did, never why.
+- A man the brief says started did not come on, whatever you remember of him; a man who came on did not start.
 
 THE DRAFT:
 - Only a stake carries draft words: who holds a man, whether he was in their eleven, his points for them, that nobody holds him, what comes next for his club.
@@ -44,10 +45,10 @@ THE DRAFT:
 - Points are the league's own and belong to the side that holds the man.
 
 THE PAGE:
-- The matches appear on one page. No two accounts open with the same words, no two standfirsts with the same two words, and no phrase appears in two matches.
+- The matches appear on one page. No two accounts open with the same words, no two standfirsts with the same two words, and no phrase appears in two matches. Never recite two men's figures in the same pattern: say each man's in the order and words that suit his story.
 - The day's HEADLINE is the paper's one indulgence: a deadpan pun on the lead match, eight words or fewer, never explained, no exclamation mark. If none lands cleanly, a plain sharp line beats a bad pun.
 - Never a question, a colon, an exclamation mark or a quotation mark in the prose. No sentence over 35 words.
-- Numbers one to nine are words, 10 and above figures. Never open a sentence with a figure.
+- Numbers one to nine are words, 10 and above figures, except a score, which is always figures: never a score in words. Never open a sentence with a figure.
 - You never name a source. Never: ${REPORT_FPL.join(", ")}.
 - Draft words, only ever in a stake: ${REPORT_FANTASY.join(", ")}.
 - Never advice: ${REPORT_ADVICE.join(", ")}.

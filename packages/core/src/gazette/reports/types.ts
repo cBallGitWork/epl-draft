@@ -9,8 +9,8 @@ export interface ReportClub {
   code: number;
   /** The name the paper prints, e.g. "Tottenham Hotspur". */
   name: string;
-  /** The one short form the writer may also use, e.g. "Spurs"; null when there is none. */
-  short: string | null;
+  /** The short forms the writer may also use, e.g. "Tottenham", "Spurs"; the first tags the key stats. Empty when the name is short. */
+  shorts: string[];
   /** Named only when the club's staff list has exactly one manager. */
   manager: string | null;
 }

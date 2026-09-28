@@ -38,8 +38,8 @@ export const noExtras: MenExtras = { live: new Map(), season: new Map(), holders
 export function spursVilla(extras: Partial<MenExtras> = {}): ReportMatchInput {
   return {
     fixture,
-    home: { code: 6, name: "Tottenham Hotspur", short: "Spurs", manager: "Roberto De Zerbi" },
-    away: { code: 7, name: "Aston Villa", short: "Villa", manager: "Unai Emery" },
+    home: { code: 6, name: "Tottenham Hotspur", shorts: ["Spurs", "Tottenham"], manager: "Roberto De Zerbi" },
+    away: { code: 7, name: "Aston Villa", shorts: ["Villa"], manager: "Unai Emery" },
     halfTime: { home: 0, away: 1 },
     referee: "Samuel Barrott",
     moments,

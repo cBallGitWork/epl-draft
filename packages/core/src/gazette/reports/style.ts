@@ -10,6 +10,9 @@ import {
 
 // The words a match report may not use, checked after filing; the voice is built from the same arrays.
 
+/** Echoes quoted back per match: past three, a rewrite is told the pattern, not drowned in it. */
+const ECHOES_QUOTED = 3;
+
 type Report = (section: string, check: string, severity: Severity, evidence: string) => void;
 
 /** Everything sent back wherever it appears. SEQUENCE is lifted: this desk is handed the order of the match. No ground is. */
@@ -50,7 +53,8 @@ function count(text: string, phrase: string): number {
 }
 
 /** Caps per match and per day, openers that repeat, and phrases shared between matches or with past reports. */
-export function dayFaults(pieces: readonly { code: number; prose: string; account: string; standfirst: string }[], names: readonly string[], past: readonly string[], echo: number, fault: Report): void {
+/** `brief` is the day's facts: a phrase the writer was handed (a shot's words, a minute) is his to reuse, never an echo. */
+export function dayFaults(pieces: readonly { code: number; prose: string; account: string; standfirst: string }[], names: readonly string[], brief: string, past: readonly string[], echo: number, fault: Report): void {
   for (const piece of pieces) {
     for (const [phrase, most] of REPORT_CAPPED_MATCH) {
       const used = count(masked(piece.prose, names), phrase);
@@ -62,7 +66,7 @@ export function dayFaults(pieces: readonly { code: number; prose: string; accoun
     const used = count(all, phrase);
     if (used > most) fault("day", "a phrase used too often on the page", "send-back", `${phrase} ×${used}`);
   }
-  const opener = (text: string, n: number) => masked(text, names).toLowerCase().match(/[\p{L}\p{N}'’\u0000]+/gu)?.slice(0, n).join(" ") ?? "";
+  const opener = (text: string, n: number) => text.toLowerCase().match(/[\p{L}\p{N}'’]+/gu)?.slice(0, n).join(" ") ?? "";
   const seen = new Map<string, number>();
   for (const piece of pieces) {
     for (const [key, text, n] of [["account", piece.account, 3], ["standfirst", piece.standfirst, 2]] as const) {
@@ -72,10 +76,13 @@ export function dayFaults(pieces: readonly { code: number; prose: string; accoun
     }
   }
   const said = new Map<string, number>();
+  const echoes = new Map<number, number>();
+  const echoed = (code: number) => (echoes.set(code, (echoes.get(code) ?? 0) + 1).get(code) ?? 0) <= ECHOES_QUOTED;
   const before = new Set(past.flatMap((text) => [...ngrams(text, echo, names)]));
+  const handed = ngrams(brief, echo, names);
   for (const piece of pieces) {
-    for (const gram of ngrams(piece.prose, echo, names)) {
-      if (said.has(gram) && said.get(gram) !== piece.code) fault(`${piece.code}:match`, "the same phrase as another match", "send-back", gram);
+    for (const gram of [...ngrams(piece.prose, echo, names)].filter((g) => !handed.has(g))) {
+      if (said.has(gram) && said.get(gram) !== piece.code && echoed(piece.code)) fault(`${piece.code}:match`, "the same phrase as another match", "send-back", gram);
       if (!said.has(gram)) said.set(gram, piece.code);
       if (before.has(gram)) fault(`${piece.code}:match`, "a phrase from a recent report", "send-back", gram);
     }

@@ -80,7 +80,8 @@ export function manLine(match: ReportMatchInput, man: ReportMan, counts: ManCoun
   const parts: string[] = [];
   const line = man.line === null ? null : LINES[man.line];
   if (line !== undefined && line !== null) parts.push(line);
-  if (man.started) parts.push(man.startsBefore === 0 && man.matchesBefore > 0 ? "started, his first league start this season" : "started");
+  const whole = man.offAt === null ? " and played the whole match" : "";
+  if (man.started) parts.push(man.startsBefore === 0 && man.matchesBefore > 0 ? `started${whole}, his first league start this season` : `started${whole}`);
   else if (man.onAt !== null) parts.push(`came on, ${man.minutes} minutes played`);
   else parts.push("did not come on");
   if (man.offAt !== null) parts.push(man.injuredOff ? "went off injured" : "was taken off");
@@ -89,7 +90,7 @@ export function manLine(match: ReportMatchInput, man: ReportMan, counts: ManCoun
     if (made > 0) parts.push(`${numeral(made)} assist${made === 1 ? "" : "s"}`);
     if (counts !== undefined) {
       parts.push(counts.shots === 0 ? "no shots" : `${numeral(counts.shots)} shot${counts.shots === 1 ? "" : "s"}, ${numeral(counts.onTarget)} on target`);
-      if (counts.chancesMade > 0) parts.push(`set up ${numeral(counts.chancesMade)} shot${counts.chancesMade === 1 ? "" : "s"} by others`);
+      if (counts.chancesMade > 0) parts.push(`set up ${numeral(counts.chancesMade)} shot${counts.chancesMade === 1 ? "" : "s"} for team-mates`);
       if (counts.woodwork > 0) parts.push("hit the woodwork");
     }
     if (man.line === "G") parts.push(man.saves === 0 ? "no saves" : `${numeral(man.saves)} save${man.saves === 1 ? "" : "s"}`);

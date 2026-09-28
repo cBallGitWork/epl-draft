@@ -152,4 +152,21 @@ describe("checkReports", () => {
     const account = CLEAN.account.replace("Mohammed Kudus had a goal ruled out after a video review on the hour. ", "");
     expect(checksOf(draft({ account }))).toEqual(expect.arrayContaining([expect.stringMatching(/leaves out .* \(ruled-out Mohammed Kudus\)/)]));
   });
+
+  it("refuses a later match called the next one", () => {
+    const next = deskDay({
+      day: "2026-09-19", gameweek: 5, matches: [spursVilla()], clubs: [SPURS, VILLA, { id: 3, code: 3, name: "Brentford", shortName: "BRE" }, { id: 4, code: 4, name: "Newcastle", shortName: "NEW" }],
+      season: [fixture, { ...fixture, id: 60, code: 60, homeClubId: 2, awayClubId: 3, kickoff: "2026-10-03T14:00:00Z", status: "upcoming" }, { ...fixture, id: 70, code: 70, homeClubId: 4, awayClubId: 2, kickoff: "2026-10-17T14:00:00Z", status: "upcoming" }],
+      standing: { attack: places, defence: places },
+    });
+    const late = { ...CLEAN, sections: [CLEAN.sections[0], { ...CLEAN.sections[1], stake: "Villa go to Newcastle United next." }, CLEAN.sections[2]] };
+    const faults = checkReports({ headline: "Villa hold on at Tottenham", matches: new Map([[2645244, late]]) }, { ...ctx, desks: next, blocks: new Map([[2645244, matchBlock(next[0], true)]]) });
+    expect(faults.map((f) => f.check)).toContain("a later match called the next one");
+  });
+
+  it("never calls a club a stranger: a stake may name another match's club as the next opponent", () => {
+    const other = { ...desks[0], match: { ...desks[0].match, fixture: { ...fixture, code: 99 }, home: { ...desks[0].match.home, name: "Arsenal", shorts: [] }, men: [] } };
+    const faults = checkReports(draft({ sections: [CLEAN.sections[0], { ...CLEAN.sections[1], stake: "He was in the eleven Notemail picked, 7 points, and Arsenal lost too." }, CLEAN.sections[2]] }), { ...ctx, desks: [desks[0], other] });
+    expect(faults.filter((f) => f.section.startsWith("2645244") && f.check === "a man from another match")).toEqual([]);
+  });
 });

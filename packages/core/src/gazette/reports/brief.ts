@@ -18,7 +18,7 @@ export function matchBlock(desk: MatchDesk, lead: boolean): string {
   const f = match.fixture;
   const club = (side: "home" | "away") => {
     const c = match[side];
-    return `${c.name}${c.short === null ? "" : ` (you may also say ${c.short})`}${c.manager === null ? "" : `, managed by ${c.manager}`}`;
+    return `${c.name}${c.shorts.length === 0 ? "" : ` (you may also say ${c.shorts.join(" or ")})`}${c.manager === null ? "" : `, managed by ${c.manager}`}`;
   };
   const figures = match.figures;
   return [

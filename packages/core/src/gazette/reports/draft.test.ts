@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Fault } from "../predictions/checks";
-import { correct, mergeReports, readReportsDraft, type ReportsDraft } from "./draft";
+import { correct, mergeReports, plainHead, readReportsDraft, type ReportsDraft } from "./draft";
 
 const piece = (tag: string) => ({ standfirst: `${tag} standfirst`, account: `${tag} account`, sections: [] });
 const drafted = (tag: string): ReportsDraft => ({ headline: `${tag} headline`, matches: new Map([[1, piece(tag)], [2, piece(tag)]]) });
@@ -52,5 +52,15 @@ describe("mergeReports", () => {
   it("never lets a warning block", () => {
     const merged = mergeReports([{ draft: drafted("a"), faults: [f("1:account", "warn"), f("headline", "warn")] }], [1]);
     expect([merged.headline, merged.matches.get(1)?.account]).toEqual(["a headline", "a account"]);
+  });
+});
+
+describe("plainHead", () => {
+  const never = (text: string) => /off the mark/i.test(text);
+  it("keeps a head that keeps the rules", () => {
+    expect(plainHead("Manzambi marks his start", "Manzambi scored.", ["Manzambi"], never)).toBe("Manzambi marks his start");
+  });
+  it("prints a broken head as the first man its football names", () => {
+    expect(plainHead("Delap off the mark denied", "Liam Delap had four shots while Murillo headed over.", ["Delap", "Murillo"], never)).toBe("Delap");
   });
 });
