@@ -52,8 +52,10 @@ types every fantasy assist (penalty won, own goal forced, free kick won, rebound
 gameweek for every player, but only in a league whose scoring lists those columns.
 
 - **The real league stays clean** (Craig, 28 Sep: its categories are what members see). The dummy
-  league lists them all and is on Craig's account, so it stays up. `FANTRAX_STATS_LEAGUE_ID` names
-  it; unset, the kinds are skipped and crediting is as before.
+  league lists them all and is on Craig's account, so it stays up. It is named by role in data,
+  `"stats": "dummy"` in `recorded.json`, the line `npm run stats` reads too; the app reads that one
+  role and no other league from the file. Unnamed or silent, the kinds are skipped and crediting is
+  as before. The served league stays the environment's, because that is the swap.
 - **Order: kinds, then the commentary, then arithmetic** (`creditSide`). A kind credits only a sole
   claimant on the side whom FPL paid in that match, owed enough to cover every goal of that kind.
 - **What it bought, counted on GW1–5:** 3 of the 7 (Miley og ← Tanaka, João Pedro og ← Groß, Enzo's

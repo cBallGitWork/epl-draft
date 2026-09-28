@@ -123,7 +123,7 @@ Methods that matter:
   **`transactionPeriod`** (off the page's own URL); `period` is silently ignored. Its columns
   are the league's scoring list, so the typed fantasy assists (`APKG AOG AFKG AHW AR ABS ASOP
   APL`, which sum to `AF`) and `FKG` appear only in a league that lists them: the stats league
-  (`FANTRAX_STATS_LEAGUE_ID`). The keepers' table carries none of them. PLATFORM_NOTES, 28 Sep.
+  (`"stats"` in `data/leagues/recorded.json`). The keepers' table carries none of them. PLATFORM_NOTES, 28 Sep.
 - `getScorerDetails`, `getPlayerProfile`, `getPlayerNews`, `setPlayerNews`,
   `setPlayerNote`, `removePlayerNote` — per-player notes are writable and are the
   native home for our player metadata.

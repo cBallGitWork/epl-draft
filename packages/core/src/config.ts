@@ -218,10 +218,6 @@ export const CLEAN_SHEET_MINUTES = 60;
  *  how an edge refuses to run on nothing. The ids are public: they are in the league URLs. */
 export const FANTRAX_LEAGUE_ID = process.env.FANTRAX_LEAGUE_ID ?? "";
 
-/** The test league whose scoring lists every assist kind at no points, read for those alone so the
- *  served league's scoring stays as its members see it. Empty when unset, and the kinds are then skipped. */
-export const FANTRAX_STATS_LEAGUE_ID = process.env.FANTRAX_STATS_LEAGUE_ID ?? "";
-
 /** The league id, or a throw that says where to set it. */
 export function requireLeague(leagueId: string): string {
   if (leagueId.trim() === "") {
