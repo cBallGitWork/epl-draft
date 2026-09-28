@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { highlightFor, parseHighlightFeed, parseHighlightTitle } from "./highlights";
 
@@ -31,9 +32,14 @@ describe("parseHighlightTitle", () => {
   });
 
   it("turns Sky's spelling into FPL's name", () => {
-    // All four aliases are Sky dropping a suffix; the other sixteen match already.
     expect(parseHighlightTitle(TITLES[1])?.home).toBe("Nott'm Forest");
     expect(parseHighlightTitle(TITLES[3])?.home).toBe("Hull City");
+  });
+
+  it("reads Sky's short and long forms FPL spells differently", () => {
+    // Both from gameweek 5's titles; neither video ever joined its fixture.
+    expect(parseHighlightTitle("Isak winner! | B'mouth 0-1 Liverpool | Premier League Highlights")?.home).toBe("Bournemouth");
+    expect(parseHighlightTitle("Coventry end wait! | Nottingham Forest 0-1 Coventry | Premier League Highlights")?.home).toBe("Nott'm Forest");
   });
 
   it("leaves a club the two already agree on alone", () => {
@@ -110,5 +116,20 @@ describe("highlightFor", () => {
     expect(
       highlightFor(videos, { home: "Everton", away: "Man Utd", homeScore: 2, awayScore: 2 }),
     ).toBeNull();
+  });
+});
+
+describe("the playlist as recorded on 28 Sep 2026", () => {
+  // FPL's `name` for the 26/27 clubs, from bootstrap-static the same morning.
+  const FPL_NAMES = new Set([
+    "Arsenal", "Aston Villa", "Bournemouth", "Brentford", "Brighton", "Chelsea", "Coventry City", "Crystal Palace",
+    "Everton", "Fulham", "Hull City", "Ipswich Town", "Leeds", "Liverpool", "Man City", "Man Utd", "Newcastle",
+    "Nott'm Forest", "Spurs", "Sunderland",
+  ]);
+  const videos = parseHighlightFeed(readFileSync(new URL("./__fixtures__/skyHighlights.xml", import.meta.url), "utf8"));
+
+  it("places every entry, and every club in it is a club FPL names", () => {
+    expect(videos).toHaveLength(15);
+    expect(videos.flatMap((v) => [v.home, v.away]).filter((club) => !FPL_NAMES.has(club))).toEqual([]);
   });
 });
