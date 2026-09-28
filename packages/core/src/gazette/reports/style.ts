@@ -23,7 +23,7 @@ export const REPORT_NEVER: readonly string[] = [
 
 const QUOTES = /["“”«»]/u;
 const SOURCE = /%|\bper ?cent\b|\b(?:projected|projections?|predicted|predictions?|model|Fantrax|according to)\b/iu;
-const CLOCK = /\b\d{1,3}(?:\+\d{1,2})?['’]|\b\d{2}\+\d{1,2}\b/u;
+const CLOCK = /\b\d{1,3}(?:\+\d{1,2})?['’](?!s\b)|\b\d{2}\+\d{1,2}\b/u;
 const NOT_BUT = /\bnot (?:just |only |merely )?[^.;]{1,40}?,? but\b/iu;
 const FORECAST = /\b(?:will|should|is (?:likely|expected|set) to|could|may|might) (?:start|keep his place|be picked|come (?:back )?in|return to the side|get the nod)\b|\bnext (?:week|time out|gameweek)\b/iu;
 

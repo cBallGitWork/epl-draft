@@ -29,6 +29,10 @@ export const REPORT_CLICHES: readonly string[] = [
   "finely poised", "a free man", "holds him", "hold him", "held by", "holder", "nobody holds", "nobody in the league holds", "picked him", "held him",
   "who held", "held and picked", "picked and",
   "in their eleven", "among their reserves", "profligacy", "chance after chance", "held firm", "still pressing",
+  // The first woven filing (28 Sep 2026): a flashback, a stake's idiom, and a judgement of a chance nobody saw.
+  "had earlier", "had already", "available to anyone", "there for the taking", "whoever owns him", "scored for nobody",
+  "among the reserves", "second time of asking", "to show for", "good enough sight", "gone begging", "went begging",
+  "cut the arrears", "the pick of them", "announces himself", "fashioned", "mustered", "endeavours", "productive",
 ];
 
 /** Grounds the house list lacks, and their nicknames; the brief carries no ground, so every one is recalled. */

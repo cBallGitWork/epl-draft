@@ -10,7 +10,7 @@ import { isGoal } from "./timeline";
 
 type Report = (section: string, check: string, severity: Severity, evidence: string) => void;
 
-const TABLE = /\b\d{1,2}(?:st|nd|rd|th)\b|\bbottom three\b|\brelegation zone\b|\bwithout a win\b|\bunbeaten\b|\btop of the table\b|\btop place\b|\bfirst (?:win|defeat|victory)\b/iu;
+const TABLE = /\b\d{1,2}(?:st|nd|rd|th)\b(?! minute)|\bbottom three\b|\brelegation zone\b|\bwithout a win\b|\bunbeaten\b|\btop of the table\b|\btop place\b|\bfirst (?:win|defeat|victory)\b/iu;
 const FIXTURE = /\bnext\b|\bhost(?:s|ing)?\b|\btravel(?:s|ling)? to\b|\bgo(?:es)? to\b|\baway to\b|\bat home to\b|\bvisit(?:s)?\b/iu;
 const BOOKED = /\bbooked\b|\bcautioned\b|\byellow card\b/iu;
 const CHANGE = /\bcame on\b|\bsent on\b|\bmaking way\b|\bmade way\b|\breplaced\b|\bintroduced\b/iu;

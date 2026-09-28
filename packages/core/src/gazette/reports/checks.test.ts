@@ -72,6 +72,13 @@ describe("checkReports", () => {
     expect(checksOf(draft({ account: `${CLEAN.account} Villa had 17 shots.` }))).toEqual(expect.arrayContaining([expect.stringMatching(/^hard: a figure the facts do not give \(17\)/)]));
   });
 
+  it("reads a team called 123 as a name, and the 80th minute as a minute, not a clock or a place in the table", () => {
+    const account = `${CLEAN.account.replace("Aston Villa were 3-0 up", "From the 80th minute Aston Villa, 3-0 up,")}`;
+    const stake = "Seven points for 123's side.";
+    const faults = checksOf(draft({ account, sections: [CLEAN.sections[0], { ...CLEAN.sections[1], stake }, CLEAN.sections[2]] }));
+    expect(faults.filter((f) => /clock|table belongs/.test(f))).toEqual([]);
+  });
+
   it("sends back a clock minute and a stock phrase", () => {
     expect(checksOf(draft({ account: CLEAN.account.replace("after 19 minutes", "on 19'") }))).toEqual(expect.arrayContaining([expect.stringMatching(/a minute as a clock/)]));
     expect(checksOf(draft({ account: `${CLEAN.account} It was a pulsating encounter.` }))).toEqual(expect.arrayContaining([expect.stringMatching(/a phrase this paper does not print \(pulsating\)/)]));

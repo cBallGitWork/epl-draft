@@ -60,7 +60,12 @@ describe("buildReportsBrief on Tottenham 2-3 Aston Villa", () => {
     expect(brief).not.toMatch(/CHANCE NOT TAKEN: [^\n]*from outside the box/);
   });
 
-    it("says what VAR decided", () => {
+    it("gives a head-to-head as who leads whom, the higher figure first", () => {
+    const buendia = input({ matches: [spursVilla({ holders: new Map([[codeOf("Buendía"), { team: "Notemail", fielded: true, round: null, h2h: { opponent: "test2", us: 34, them: 38 } }]]), points: new Map([[codeOf("Buendía"), 7]]) })] });
+    expect(buildReportsBrief("2026-09-19", 5, deskDay(buendia))).toContain("in their head-to-head this period, test2 leads Notemail 38-34");
+  });
+
+  it("says what VAR decided", () => {
     expect(brief).toContain("GOAL RULED OUT after a video review: Mohammed Kudus (Tottenham Hotspur) had scored");
   });
 });

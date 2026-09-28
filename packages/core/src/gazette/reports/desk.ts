@@ -50,12 +50,10 @@ function opening(match: ReportMatchInput, events: readonly MatchEvent[], facts: 
   if (collapse !== undefined && late.length > 0) return `${collapse}, and the other side scored ${late.length === 1 ? "once" : `${late.length} times`} from the 80th minute on`;
   const winner = facts.find((f) => f.startsWith("the winner came"));
   if (winner !== undefined) return winner;
-  const decision = events.find((e) => DECISIONS.includes(e.kind));
-  if (decision?.man) return `${decision.kind.replace("-", " ")}: ${decision.man.name} (${match[decision.man.side].name}), ${decision.phrases[0] ?? decision.minute}`;
   const hat = match.men.find((m) => goals.filter((g) => g.kind !== "own-goal" && g.man?.code === m.code).length >= 3);
   if (hat !== undefined) return `${hat.name}'s hat-trick for ${match[hat.side].name}`;
-  const first = goals[0];
-  return first?.man ? `the first goal: ${first.man.name}, ${first.phrases[0] ?? first.minute}` : "a goalless match: what each side made, and what kept it level";
+  // Anything else is told in order from the first line of WHAT HAPPENED: a report that opens late has to go back.
+  return goals.length === 0 ? "a goalless match: the first line of WHAT HAPPENED, then in order" : "the first line of WHAT HAPPENED, then in order";
 }
 
 /** The goal worth a full description: from distance, from a keeper's pass, a substitute's, a header, or one in added time. */
@@ -83,8 +81,6 @@ function misses(events: readonly MatchEvent[]): MatchEvent[] {
   return shots.filter((e) => chosen.has(e));
 }
 
-/** "testf's", "Dave's Dons'". */
-const of = (team: string) => (team.endsWith("s") ? `${team}'` : `${team}'s`);
 const pts = (n: number) => `${n} point${n === 1 ? "" : "s"}`;
 
 /** The men a section could be about, each with the league stake that earns it, most newsworthy first. */
@@ -94,7 +90,10 @@ function nominees(match: ReportMatchInput, events: readonly MatchEvent[], counts
   const made = (m: ReportMan) => goals.filter((g) => g.other?.code === m.code).length;
   const h2h = (m: ReportMan) => {
     const h = m.holder?.h2h;
-    return h == null || h.us === null || h.them === null ? "" : `; ${of(m.holder!.team)} head-to-head this period stands ${h.us}-${h.them} against ${h.opponent}`;
+    if (h == null || h.us === null || h.them === null) return "";
+    const team = m.holder!.team;
+    const said = h.us > h.them ? `${team} leads ${h.opponent} ${h.us}-${h.them}` : h.us < h.them ? `${h.opponent} leads ${team} ${h.them}-${h.us}` : `${team} and ${h.opponent} are level at ${h.us}-${h.them}`;
+    return `; in their head-to-head this period, ${said}`;
   };
   const out: Nominee[] = [];
   const add = (m: ReportMan, stake: string) => {

@@ -149,7 +149,11 @@ async function weave(
     const chunk = present.slice(at, at + REPORTS.perCall);
     const raw = await writeColumn(WEAVE_VOICE, weaveBrief(brief, checked, chunk), count).catch(() => null);
     if (raw === null) continue;
-    for (const [code, piece] of readReportsDraft(raw, surnames).matches) if (chunk.includes(code)) woven.matches.set(code, piece);
+    // The standfirst was checked and stays as filed: the first woven filing rewrote Spurs' into a result that never happened.
+    for (const [code, piece] of readReportsDraft(raw, surnames).matches) {
+      const standfirst = checked.matches.get(code)?.standfirst;
+      if (chunk.includes(code) && standfirst !== undefined) woven.matches.set(code, { ...piece, standfirst });
+    }
   }
   const before = checkReports(checked, ctx);
   const after = checkReports(woven, ctx).filter((f) => f.section === "day" || woven.matches.has(matchOf(f.section)));
