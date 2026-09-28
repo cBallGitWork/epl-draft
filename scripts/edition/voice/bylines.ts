@@ -30,6 +30,8 @@ export const COLUMNIST: Partial<Record<StoryKind, string>> = {
  *  take the day's paper: Saturday's is the Pink 'Un because the stock has
  *  been rosa since 29 Aug and finally earns it. */
 export function editionName(kind: StoryKind, filedAt: string): string {
+  // Its own name every day, and no real paper's (Craig, 28 Sep 2026: "not the pink un, pink was a paper").
+  if (kind === "match-report") return "Prem Report";
   if (kind === "predictions" || kind === "predicted-xi") return "The Form Guide";
   if (kind === "fixture-preview" || kind === "news" || kind === "presser") return "The Team Sheet";
   if (kind === "wire" || kind === "dodgers") return "The Mercato Wire";

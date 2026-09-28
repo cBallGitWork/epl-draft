@@ -51,7 +51,9 @@ const KIND_WEIGHT: Record<StoryKind, number> = {
   // The sides as locked: filed at the deadline, when the pressers and the predictions are spent.
   sheets: 94,
   "tie-report": 90,
-  "match-report": 85,
+  // Above the team sheets (Craig, 28 Sep 2026: "reports lead over team sheets, it's the newer news"): filed after the
+  // whistle, when the sheets filed at the lock can no longer be acted on.
+  "match-report": 96,
   "tie-call": 78,
   news: 70,
   "fixture-preview": 65,
