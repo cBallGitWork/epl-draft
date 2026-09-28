@@ -742,7 +742,7 @@ apart silently.
 | Role | Phone | Desk | Type step | Recipe |
 |---|---|---|---|---|
 | Plated title bar | 44 | 96 | `lg`–`3xl`, `.cm-title` | `PageHeader` |
-| The caption under it | 28 | 40 | `sm`–`2xl`, `.cm-title` | `shell/Caption` |
+| The caption under it | 28, and only where no tab names the view | 40 | `sm`–`2xl`, `.cm-title` | `shell/Caption` |
 | A row that needs two lines | 56 | 28 | `sm` | `.cm-row` + `min-h-14` |
 | **A control** — button, select, input, a dialog's way out | **44** | **36** | `sm` | `BUTTON` `SELECT` `SUBMIT` |
 | **A tab** — one plate of a strip | **44**, painting 36 | **56** | `2xs`–`sm` | `.cm-tab` + `TAB` |

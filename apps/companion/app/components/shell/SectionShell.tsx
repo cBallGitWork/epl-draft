@@ -8,6 +8,7 @@ export default function SectionShell({
   header,
   nav,
   caption,
+  captionOnPhone = false,
   rows,
   children,
 }: {
@@ -15,6 +16,8 @@ export default function SectionShell({
   nav: React.ReactNode;
   /** The view's name on its own box; a section with no caption names its view on the tab strip alone. */
   caption?: React.ReactNode;
+  /** Keep the caption under a thumb: only when no tab on the strip names the view. */
+  captionOnPhone?: boolean;
   rows: number;
   children: React.ReactNode;
 }) {
@@ -22,7 +25,7 @@ export default function SectionShell({
     <div className="flex flex-col gap-2">
       {header}
       {nav}
-      {caption === undefined ? null : <Caption>{caption}</Caption>}
+      {caption === undefined ? null : <Caption deskOnly={!captionOnPhone}>{caption}</Caption>}
       <section
         className={PANEL}
         style={{ minHeight: `calc(${rows} * var(--table-row) + var(--table-chrome))` }}
