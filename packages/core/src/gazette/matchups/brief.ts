@@ -1,11 +1,12 @@
 import { ordinal } from "../../league/ordinal";
+import type { SeasonFact } from "./form";
 import type { MatchupState } from "./state";
 
 // The facts one draft report may use, one block per match-up: where both sides stand, how they last met, the score as a
 // verdict, who is still to play and the stories. No provider is named and no label announces itself, because the writer
 // copies labels.
 
-export type Cutoff = "saturday" | "week";
+export type Cutoff = "saturday" | "gameweek";
 
 export interface TablePlace {
   rank: number;
@@ -22,9 +23,9 @@ export interface MatchupContext {
   /** Their meetings as a record and the last of them, from the home side's view; empty when they have not met. */
   meetings: string[];
   /** Streaks, runs ended, returns to form, records and table moves for either side, each with its kind. */
-  form: { kind: string; text: string }[];
+  form: SeasonFact[];
   /** Stories from outside the round's points: an old boy facing the side that let him go. */
-  extra: string[];
+  oldBoys: string[];
 }
 
 const place = (name: string, p: TablePlace | null) =>
@@ -40,7 +41,7 @@ export function matchupBlock(ctx: MatchupContext, cutoff: Cutoff): string {
     stillToPlay.length === 0 ? null : ["STILL TO PLAY:", ...stillToPlay.map((line) => `- ${line}`)].join("\n"),
     // The bracketed kind tells the writer which frame a fact takes; it is never printed.
     ctx.form.length === 0 ? null : ["FORM AND THE TABLE:", ...ctx.form.map((f) => `- ${f.text} [${f.kind}]`)].join("\n"),
-    stories.length + ctx.extra.length === 0 ? null : ["THE STORIES:", ...[...stories, ...ctx.extra].map((line) => `- ${line}`)].join("\n"),
+    stories.length + ctx.oldBoys.length === 0 ? null : ["THE STORIES:", ...[...stories, ...ctx.oldBoys].map((line) => `- ${line}`)].join("\n"),
   ]
     .filter((block) => block !== null)
     .join("\n\n");

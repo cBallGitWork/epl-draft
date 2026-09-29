@@ -4,7 +4,7 @@ import type { Cutoff } from "./brief";
 import { returnCount, sideStories, whenScored } from "./stories";
 import { chaseLines } from "./swing";
 import type { DraftMan, DraftMatchupInput, DraftSide, PositionLimits, SlotWorth } from "./types";
-import { listed } from "./words";
+import { listed } from "../../format";
 import { priceOf } from "./worth";
 
 // A match-up at the cut-off: the score as a verdict, who is still to play and, near the end, what the side behind needs,
@@ -16,7 +16,7 @@ export interface SideState {
   /** Fantrax's total plus the points of reserves certain to come on. */
   total: number;
   /** Men in the eleven, or certain to come into it, with a match still to play. */
-  left: DraftMan[];
+  toPlay: DraftMan[];
 }
 
 export interface MatchupState {
@@ -37,8 +37,8 @@ function sideState(side: DraftSide, limits: PositionLimits): SideState {
   const coming = subs.filter((s) => !s.provisional).reduce((sum, s) => sum + (s.in.points ?? 0), 0);
   const eleven = side.eleven.filter((m) => !subs.some((s) => s.out === m));
   // The men most likely to matter first: a projection orders them and is never printed.
-  const left = [...eleven, ...subs.map((s) => s.in)].filter((m) => m.left > 0).sort((a, b) => (b.projected ?? 0) - (a.projected ?? 0));
-  return { side, subs, total: (side.total ?? 0) + coming, left };
+  const toPlay = [...eleven, ...subs.map((s) => s.in)].filter((m) => m.left > 0).sort((a, b) => (b.projected ?? 0) - (a.projected ?? 0));
+  return { side, subs, total: (side.total ?? 0) + coming, toPlay };
 }
 
 /** The score as a verdict: Saturday's as it stands, the round's as a result, with the substitutions when they change it. */
@@ -81,9 +81,9 @@ export function matchupState(input: DraftMatchupInput, worth: SlotWorth, limits:
   const away = sideState(input.away, limits);
   const margin = home.total - away.total;
   const [ahead, behind] = margin >= 0 ? [home, away] : [away, home];
-  const leftCount = home.left.length + away.left.length;
+  const leftCount = home.toPlay.length + away.toPlay.length;
   const stillToPlay = [
-    ...[home, away].filter((s) => s.left.length > 0).map((s) => `${s.side.name} have ${s.left.length} still to play: ${s.left.map(tag).join(", ")}`),
+    ...[home, away].filter((s) => s.toPlay.length > 0).map((s) => `${s.side.name} have ${s.toPlay.length} still to play: ${s.toPlay.map(tag).join(", ")}`),
     // With most of the round to play the sums mean nothing: the report tells what happened.
     ...(leftCount > 0 && leftCount <= DRAFT_DESK.chaseWhenLeft && margin !== 0 ? chaseLines(behind, ahead, Math.abs(margin), worth) : []),
     ...opposedMatches(input.home, input.away, false),

@@ -4,7 +4,7 @@ import type { SlotWorth } from "../types";
 export function worthOf(appearance = 0): SlotWorth {
   return {
     appearance,
-    extra: {},
+    bonus: {},
     returns: {
       G: [{ kind: "clean sheet", worth: 4 }],
       D: [{ kind: "goal", worth: 6 }, { kind: "assist", worth: 3 }, { kind: "clean sheet", worth: 4 }],

@@ -3,7 +3,7 @@ import { placeTable } from "../../league/fantrax/standings";
 import { ordinal } from "../../league/ordinal";
 import type { FormGame } from "../../league/form";
 import type { StandingsRow } from "../../league/types";
-import type { RoundSide } from "./form";
+import type { SideResult } from "./form";
 
 // The table after the round: the table before it, with each side's result and points added, placed by the league's
 // own rule (points, then points for). What a win and a draw are worth is read off the table before, never assumed;
@@ -44,7 +44,7 @@ export function tableBefore(rows: readonly StandingsRow[], runs: ReadonlyMap<str
 }
 
 /** The table with the round added, in the league's order; null when what a result is worth cannot be read. */
-export function tableAfter(before: readonly StandingsRow[], round: readonly RoundSide[]): StandingsRow[] | null {
+export function tableAfter(before: readonly StandingsRow[], round: readonly SideResult[]): StandingsRow[] | null {
   const pay = tablePoints(before);
   if (pay === null) return null;
   return placeTable(

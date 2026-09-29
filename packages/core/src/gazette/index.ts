@@ -71,7 +71,8 @@ export { debuts } from "./sheets/changes";
 // The draft desk's surface is what its script reads; its other parts are inferred at the call sites.
 export { matchupState } from "./matchups/state";
 export type { MatchupState } from "./matchups/state";
-export { goingIn, roundForm } from "./matchups/form";
+export { goingIn, gameweekForm } from "./matchups/form";
+export type { SeasonFact } from "./matchups/form";
 export { tableAfter, tableBefore, tableMoves, tablePoints } from "./matchups/table";
 export { meetingLines, oldBoys } from "./matchups/meetings";
 export type { FormerSide } from "./matchups/meetings";

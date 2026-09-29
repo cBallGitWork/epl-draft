@@ -1,3 +1,4 @@
+import { ordinal } from "../../league/ordinal";
 // The words a report may use for a moment's minute, worked out here so the model does no arithmetic on a clock.
 // House numerals: one to nine in words, 10 and up in figures.
 
@@ -8,11 +9,7 @@ export function numeral(n: number): string {
   return n >= 0 && n < 10 ? WORDS[n] : String(n);
 }
 
-export function ordinal(n: number): string {
-  const tens = n % 100;
-  const suffix = tens >= 11 && tens <= 13 ? "th" : (["th", "st", "nd", "rd"][n % 10] ?? "th");
-  return `${n}${suffix}`;
-}
+export { ordinal };
 
 const plural = (n: number, word: string) => `${numeral(n)} ${word}${n === 1 ? "" : "s"}`;
 

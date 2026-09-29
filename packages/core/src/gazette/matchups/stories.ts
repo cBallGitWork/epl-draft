@@ -3,7 +3,7 @@ import { ordinal } from "../../league/ordinal";
 import { blank, type AutoSub } from "./autoSubs";
 import type { Cutoff } from "./brief";
 import type { DraftMan, DraftSide, GoalTime, SlotWorth } from "./types";
-import { listed } from "./words";
+import { listed } from "../../format";
 import { priceOf } from "./worth";
 
 // One side's stories in the game's own words (Craig, 29 Sep 2026): a return is a goal, an assist or a clean sheet, a
@@ -52,10 +52,10 @@ function manLine(m: DraftMan, side: DraftSide, worth: SlotWorth): string | null 
 /** The substitution and what the man coming on did, in one line. */
 function subLine(s: AutoSub, cutoff: Cutoff): string {
   // "Replaced", not "came on": the paper's banned list keeps "came on" for the Premier League's own substitutions.
-  const on = `${named(s.in)} ${cutoff === "week" ? "replaced" : "replaces"} ${named(s.out)}, who did not play`;
+  const on = `${named(s.in)} ${cutoff === "gameweek" ? "replaced" : "replaces"} ${named(s.out)}, who did not play`;
   if (s.provisional) return `${on}, if he plays`;
   const got = gotLine(s.in);
-  if (cutoff === "week") return `${on}, and ${got ?? `brought ${pts(s.in.points ?? 0)}`}`;
+  if (cutoff === "gameweek") return `${on}, and ${got ?? `brought ${pts(s.in.points ?? 0)}`}`;
   return `${on}, with ${got === null ? pts(s.in.points ?? 0) : `${s.in.points ?? 0}: ${what(s.in)}`}`;
 }
 
@@ -64,7 +64,7 @@ export function sideStories(side: DraftSide, subs: readonly AutoSub[], worth: Sl
   const lines = side.eleven.flatMap((m) => manLine(m, side, worth) ?? []);
   lines.push(...subs.map((s) => subLine(s, cutoff)));
   for (const m of side.eleven.filter((x) => blank(x) && !subs.some((s) => s.out === x))) {
-    lines.push(`${named(m)} did not play and ${cutoff === "week" ? "no reserve replaced him" : `${side.name} have no reserve to replace him`}`);
+    lines.push(`${named(m)} did not play and ${cutoff === "gameweek" ? "no reserve replaced him" : `${side.name} have no reserve to replace him`}`);
   }
   for (const m of side.bench.filter((x) => margin < 0 && !subs.some((s) => s.in === x) && (x.points ?? 0) > -margin)) lines.push(`${named(m)} got ${pts(m.points ?? 0)} on the bench`);
   const byClub = new Map<string, DraftMan[]>();

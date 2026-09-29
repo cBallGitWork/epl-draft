@@ -7,7 +7,7 @@ import type { DraftMan } from "./types";
 
 const man = (name: string, slot: string, left = 1): DraftMan => draftMan(name, slot, null, 0, left, { played: 0 });
 const worth = worthOf();
-const state = (name: string, left: DraftMan[]): SideState => ({ side: { teamId: name, name, total: 0, eleven: left, bench: [], subOrder: [] }, subs: [], total: 0, left });
+const state = (name: string, left: DraftMan[]): SideState => ({ side: { teamId: name, name, total: 0, eleven: left, bench: [], subOrder: [] }, subs: [], total: 0, toPlay: left });
 
 describe("chaseLines", () => {
   it("names each man once, with the returns that would win or level it and no figures", () => {
@@ -25,7 +25,7 @@ describe("chaseLines", () => {
   });
 
   it("counts a defensive bonus in the ceiling before calling a lead out of reach", () => {
-    expect(chaseLines(state("Dons", [man("A", "F")]), state("Notemail", []), 8, { ...worth, extra: { F: 2 } })).toEqual(["Dons need every return their men left could make"]);
+    expect(chaseLines(state("Dons", [man("A", "F")]), state("Notemail", []), 8, { ...worth, bonus: { F: 2 } })).toEqual(["Dons need every return their men left could make"]);
   });
 
   it("takes both sides' minutes off the gap, and says nothing when minutes alone close it", () => {

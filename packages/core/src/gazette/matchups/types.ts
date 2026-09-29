@@ -73,7 +73,7 @@ export interface SlotWorth {
   appearance: number;
   /** The most a match pays at a slot beyond its returns and minutes (a defensive bonus, a keeper's saves), as Fantrax
    *  paid it this round: counted only before a lead is called out of reach. */
-  extra: Record<string, number>;
+  bonus: Record<string, number>;
 }
 
 /** Position letter to the fewest and most the eleven may field there. */

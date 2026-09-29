@@ -1,4 +1,5 @@
 import { PREDICTIONS } from "../../config";
+import { ordinal } from "../../league/ordinal";
 import type { PredictionCall } from "../predictions/pick";
 import type { PredictionSide, SquadMan } from "../predictions/sides";
 
@@ -181,8 +182,4 @@ function form(side: PredictionSide): string {
   return `${record}${last}${f.run === "" ? "" : ` Form, oldest first: ${f.run}.`}`;
 }
 
-function ordinal(rank: number): string {
-  const tens = rank % 100;
-  const suffix = tens >= 11 && tens <= 13 ? "th" : ["th", "st", "nd", "rd"][rank % 10] ?? "th";
-  return `${rank}${suffix}`;
-}
+

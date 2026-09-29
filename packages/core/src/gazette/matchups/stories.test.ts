@@ -5,7 +5,7 @@ import { sideStories } from "./stories";
 import type { DraftMan, DraftSide } from "./types";
 
 const side = (eleven: DraftMan[], bench: DraftMan[] = []): DraftSide => ({ teamId: "t", name: "Dons", total: 40, eleven, bench, subOrder: [] });
-const stories = (s: DraftSide, margin = 10, cutoff: "saturday" | "week" = "week") => sideStories(s, [], worthOf(), cutoff, margin);
+const stories = (s: DraftSide, margin = 10, cutoff: "saturday" | "gameweek" = "gameweek") => sideStories(s, [], worthOf(), cutoff, margin);
 
 describe("sideStories", () => {
   it("gives a man who returned one line with everything about him, and a blank nothing", () => {
@@ -44,7 +44,7 @@ describe("sideStories", () => {
 
   it("puts what a substitute did in the line that brings him on", () => {
     const sub = { out: draftMan("Dunk", "D", null, 0, 0, { club: "Brighton" }), in: draftMan("Vuskovic", "D", 6, 90, 0, { club: "Brighton", cleanSheets: 1 }), provisional: false };
-    expect(sideStories(side([sub.out]), [sub], worthOf(), "week", 5)).toEqual(["Dons: Vuskovic (Brighton) replaced Dunk (Brighton), who did not play, and got 6: a clean sheet"]);
+    expect(sideStories(side([sub.out]), [sub], worthOf(), "gameweek", 5)).toEqual(["Dons: Vuskovic (Brighton) replaced Dunk (Brighton), who did not play, and got 6: a clean sheet"]);
     expect(sideStories(side([sub.out]), [sub], worthOf(), "saturday", 5)).toEqual(["Dons: Vuskovic (Brighton) replaces Dunk (Brighton), who did not play, with 6: a clean sheet"]);
   });
 });

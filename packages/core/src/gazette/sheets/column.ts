@@ -1,3 +1,4 @@
+import { listed } from "../../format";
 import type { StorySheet, StorySheetMan, StorySheetSide } from "./cargo";
 import type { TeamFacts, TieFacts } from "./facts";
 import { printName, type SheetMan } from "./sheet";
@@ -68,10 +69,6 @@ export function plainLine(team: TeamFacts): string {
 
 
 
-/** "A", "A and B", "A, B and C". */
-function listed(names: readonly string[]): string {
-  return names.length <= 1 ? (names[0] ?? "") : `${names.slice(0, -1).join(", ")} and ${names.at(-1)}`;
-}
 
 const WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
 

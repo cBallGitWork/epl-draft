@@ -5,7 +5,7 @@ import {
   mapTransactions,
   meetingLines,
   periodPairings,
-  roundForm,
+  gameweekForm,
   seasonForm,
   tableAfter,
   tableBefore,
@@ -18,6 +18,7 @@ import {
   type LeagueInfo,
   type MatchupState,
   type PeriodResult,
+  type SeasonFact,
   type StandingsRow,
   type TablePlace,
 } from "@epl/core";
@@ -75,9 +76,9 @@ export function meetingsOf(season: DraftSeason, home: { teamId: string; name: st
 
 /** Each side's form and table facts at the cut-off: after Saturday, the runs going in; at the end, the round's results
  *  (with the substitutions) against the season, and the table after them. */
-export function roundFacts(season: DraftSeason, states: readonly MatchupState[], cutoff: Cutoff): Map<string, { kind: string; text: string }[]> {
-  const out = new Map<string, { kind: string; text: string }[]>();
-  const add = (teamId: string, fact: { kind: string; text: string }) => out.set(teamId, [...(out.get(teamId) ?? []), fact]);
+export function gameweekFacts(season: DraftSeason, states: readonly MatchupState[], cutoff: Cutoff): Map<string, SeasonFact[]> {
+  const out = new Map<string, SeasonFact[]>();
+  const add = (teamId: string, fact: SeasonFact) => out.set(teamId, [...(out.get(teamId) ?? []), fact]);
   const sides = states.flatMap((s) => [s.home, s.away]);
   if (cutoff === "saturday") {
     for (const s of sides) {
@@ -90,7 +91,7 @@ export function roundFacts(season: DraftSeason, states: readonly MatchupState[],
     { teamId: s.home.side.teamId, name: s.home.side.name, opponent: s.away.side.name, for: s.home.total, against: s.away.total },
     { teamId: s.away.side.teamId, name: s.away.side.name, opponent: s.home.side.name, for: s.away.total, against: s.home.total },
   ]);
-  for (const fact of roundForm(round, season.runs)) add(fact.teamId, fact);
+  for (const fact of gameweekForm(round, season.runs)) add(fact.teamId, fact);
   const after = season.table === null ? null : tableAfter(season.table, round);
   if (season.table !== null && after !== null) for (const fact of tableMoves(season.table, after)) add(fact.teamId, fact);
   return out;

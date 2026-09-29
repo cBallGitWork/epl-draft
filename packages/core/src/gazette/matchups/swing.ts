@@ -1,6 +1,6 @@
 import type { SideState } from "./state";
 import type { DraftMan, SlotWorth, Worth } from "./types";
-import { listed } from "./words";
+import { listed } from "../../format";
 
 // What the side behind needs from the men it has left, once both sides' minutes are paid: the man whose goal, assist or
 // clean sheet would level or win it, how many returns it takes when no one does, and when they cannot catch up (Craig,
@@ -32,10 +32,10 @@ const playing = (men: readonly DraftMan[], worth: SlotWorth) => men.reduce((sum,
 /** The side behind's sums, as facts; `gap` is how far behind they are, above nought. Nothing when minutes alone close it. */
 export function chaseLines(chasing: SideState, ahead: SideState, gap: number, worth: SlotWorth): string[] {
   const name = chasing.side.name;
-  const short = gap - playing(chasing.left, worth) + playing(ahead.left, worth);
+  const short = gap - playing(chasing.toPlay, worth) + playing(ahead.toPlay, worth);
   if (short <= 0) return [];
-  const returns = possibleReturns(chasing.left, worth);
-  const most = returns.reduce((sum, r) => sum + r.worth, 0) + chasing.left.reduce((sum, m) => sum + m.left * (worth.extra[m.slot] ?? 0), 0);
+  const returns = possibleReturns(chasing.toPlay, worth);
+  const most = returns.reduce((sum, r) => sum + r.worth, 0) + chasing.toPlay.reduce((sum, m) => sum + m.left * (worth.bonus[m.slot] ?? 0), 0);
   if (most < short) return [`${name} cannot catch ${ahead.side.name}`];
   if (most === short) return [`${name} can draw at best`];
   const winners = returns.filter((r) => r.worth > short);

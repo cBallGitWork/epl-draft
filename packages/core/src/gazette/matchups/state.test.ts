@@ -27,12 +27,12 @@ describe("matchupState", () => {
     const home = side("Home", 30, eleven("h", { D1: man("Blank", "D", null, 0) }), [man("Vuskovic", "D", 6, 90)]);
     const away = side("Away", 33, eleven("a"));
     expect(matchupState({ home, away }, worth, LIMITS, "saturday").score).toBe("Home 30-33 Away, 36-33 once Vuskovic comes on");
-    expect(matchupState({ home, away }, worth, LIMITS, "week").score).toBe("Home beat Away 36-33; Away led 33-30 before the substitutions");
+    expect(matchupState({ home, away }, worth, LIMITS, "gameweek").score).toBe("Home beat Away 36-33; Away led 33-30 before the substitutions");
   });
 
   it("says a late goal worth more than the margin decided it", () => {
     const home = side("Home", 38, eleven("h", { F9: man("Haaland", "F", 6, 90, 0, { goals: 1, scoredAt: [{ minute: 81 }] }) }));
-    expect(matchupState({ home, away: side("Away", 37, eleven("a")) }, worth, LIMITS, "week").score).toBe("Home beat Away 38-37, decided by Haaland's goal in the 81st minute");
+    expect(matchupState({ home, away: side("Away", 37, eleven("a")) }, worth, LIMITS, "gameweek").score).toBe("Home beat Away 38-37, decided by Haaland's goal in the 81st minute");
   });
 
   it("names a Premier League match with the sides' men on opposing clubs, still to play or with a return in it", () => {

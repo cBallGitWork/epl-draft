@@ -1,5 +1,6 @@
 import { DRAFT_DESK } from "../../config";
 import type { FormGame, FormResult } from "../../league/form";
+import type { TableKind } from "./table";
 import { possessive } from "./words";
 
 // The round in the season's terms, for the draft report's Football Manager register (Craig, 29 Sep 2026): streaks, runs
@@ -14,8 +15,15 @@ export interface FormFact {
   text: string;
 }
 
+/** A form or a table fact, as the brief carries either: its kind tells the writer which frame it takes. */
+export interface SeasonFact {
+  teamId: string;
+  kind: FormKind | TableKind;
+  text: string;
+}
+
 /** One side's round, at the end of it. */
-export interface RoundSide {
+export interface SideResult {
   teamId: string;
   name: string;
   opponent: string;
@@ -23,7 +31,7 @@ export interface RoundSide {
   against: number;
 }
 
-const resultOf = (s: RoundSide): FormResult => (s.for > s.against ? "W" : s.for < s.against ? "L" : "D");
+const resultOf = (s: SideResult): FormResult => (s.for > s.against ? "W" : s.for < s.against ? "L" : "D");
 
 /** How many results at the end of a run pass the test, counting back. */
 function trailing(run: readonly FormResult[], keep: (r: FormResult) => boolean): number {
@@ -54,7 +62,7 @@ export function goingIn(teamId: string, name: string, before: readonly FormGame[
 }
 
 /** Each side's form facts for the round just played. `runs` are the settled rounds before it, oldest first. */
-export function roundForm(sides: readonly RoundSide[], runs: ReadonlyMap<string, readonly FormGame[]>): FormFact[] {
+export function gameweekForm(sides: readonly SideResult[], runs: ReadonlyMap<string, readonly FormGame[]>): FormFact[] {
   const facts: FormFact[] = [];
   const earlier = [...runs.values()].flat();
   const rounds = Math.max(0, ...[...runs.values()].map((run) => run.length));
