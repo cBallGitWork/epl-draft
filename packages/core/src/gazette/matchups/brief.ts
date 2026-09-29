@@ -1,0 +1,52 @@
+import { ordinal } from "../../league/ordinal";
+import type { MatchupState } from "./state";
+
+// The facts one draft report may use, one block per match-up: where both sides stand, how they last met, the score as a
+// verdict, who is still to play and the stories. No provider is named and no label announces itself, because the writer
+// copies labels.
+
+export type Cutoff = "saturday" | "week";
+
+export interface TablePlace {
+  rank: number;
+  won: number;
+  drawn: number;
+  lost: number;
+  /** Their last few results, oldest first, as W, D and L. */
+  run: string;
+}
+
+export interface MatchupContext {
+  state: MatchupState;
+  places: { home: TablePlace | null; away: TablePlace | null };
+  /** Their meetings as a record and the last of them, from the home side's view; empty when they have not met. */
+  meetings: string[];
+  /** Streaks, runs ended, returns to form, records and table moves for either side, each with its kind. */
+  form: { kind: string; text: string }[];
+  /** Stories from outside the round's points: an old boy facing the side that let him go. */
+  extra: string[];
+}
+
+const place = (name: string, p: TablePlace | null) =>
+  p === null ? null : `- ${name}: ${ordinal(p.rank)}, won ${p.won}, drawn ${p.drawn}, lost ${p.lost}${p.run === "" ? "" : `; last results ${p.run.split("").join(" ")}`}`;
+
+export function matchupBlock(ctx: MatchupContext, cutoff: Cutoff): string {
+  const { home, away, score, stillToPlay, stories } = ctx.state;
+  return [
+    `MATCH-UP: ${home.side.name} v ${away.side.name}`,
+    ["WHERE THEY STAND before this round:", place(home.side.name, ctx.places.home), place(away.side.name, ctx.places.away)].filter((l) => l !== null).join("\n"),
+    ctx.meetings.length === 0 ? null : ["THE MEETINGS:", ...ctx.meetings.map((line) => `- ${line}`)].join("\n"),
+    `${cutoff === "saturday" ? "THE SCORE after Saturday's matches" : "THE RESULT"}: ${score}.`,
+    stillToPlay.length === 0 ? null : ["STILL TO PLAY:", ...stillToPlay.map((line) => `- ${line}`)].join("\n"),
+    // The bracketed kind tells the writer which frame a fact takes; it is never printed.
+    ctx.form.length === 0 ? null : ["FORM AND THE TABLE:", ...ctx.form.map((f) => `- ${f.text} [${f.kind}]`)].join("\n"),
+    stories.length + ctx.extra.length === 0 ? null : ["THE STORIES:", ...[...stories, ...ctx.extra].map((line) => `- ${line}`)].join("\n"),
+  ]
+    .filter((block) => block !== null)
+    .join("\n\n");
+}
+
+export function buildDraftBrief(cutoff: Cutoff, gameweek: number, contexts: readonly MatchupContext[]): string {
+  const when = cutoff === "saturday" ? "after Saturday's matches, with the rest of the round to come" : "at the end of the round";
+  return [`DRAFT REPORT, gameweek ${gameweek}, ${when}. ${contexts.length} match-up${contexts.length === 1 ? "" : "s"}.`, ...contexts.map((c) => matchupBlock(c, cutoff))].join("\n\n=====\n\n");
+}

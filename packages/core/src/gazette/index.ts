@@ -67,13 +67,26 @@ export { fullClubName, shortClubNames } from "./clubNames";
 
 // Team news at the lock: each side's sheet, what changed, the brief, the editor and the column.
 export { sheetOf } from "./sheets/sheet";
+export { debuts } from "./sheets/changes";
+// The draft desk's surface is what its script reads; its other parts are inferred at the call sites.
+export { matchupState } from "./matchups/state";
+export type { MatchupState } from "./matchups/state";
+export { goingIn, roundForm } from "./matchups/form";
+export { tableAfter, tableBefore, tableMoves, tablePoints } from "./matchups/table";
+export { meetingLines, oldBoys } from "./matchups/meetings";
+export type { FormerSide } from "./matchups/meetings";
+export type { DraftMan, DraftSide, GoalTime } from "./matchups/types";
+export { buildDraftBrief } from "./matchups/brief";
+export type { Cutoff, MatchupContext, TablePlace } from "./matchups/brief";
+export { draftReportsDue, isSaturday } from "./matchups/due";
+export { priceOf } from "./matchups/worth";
 export { sheetsFacts } from "./sheets/facts";
 export { buildSheetsBrief } from "./briefs/sheets";
 export { SHEETS_OPINION, checkSheets } from "./sheets/checks";
 export { SHEETS_AMERICAN, SHEETS_LEXICON, SHEETS_STOCK } from "./sheets/words";
 export { mergeSheets, readSheetsDraft } from "./sheets/draft";
 export { assembleSheets } from "./sheets/column";
-export type { Sheet } from "./sheets/sheet";
+export type { Sheet, SheetMan } from "./sheets/sheet";
 export type { TieFacts } from "./sheets/facts";
 export type { SheetsDraft } from "./sheets/column";
 export type { StorySheetMan, StorySheetSide } from "./sheets/cargo";

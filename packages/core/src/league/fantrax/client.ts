@@ -6,6 +6,7 @@ import { fxpaRead } from "./fxpa";
 import { demoFxea, isDemo } from "./demo";
 import type { RawStandingsPage } from "./standingsPage";
 import type { RawLiveScoring } from "./livescoring";
+import type { RawTeamRosterInfo } from "./benchOrder";
 import type { RawSchedulePage } from "./results";
 import type { RawSeasonStats } from "./seasonStats";
 import type { PositionGroup } from "./playerStats";
@@ -220,6 +221,24 @@ export function fetchLiveScoring(leagueId: string, period: number): Promise<RawL
     period: String(period),
     playerViewType: "2",
   }) as Promise<RawLiveScoring>;
+}
+
+/** One London day of a period, as the live-scoring page's Timeframe → Date view asks for it (replayed 29 Sep 2026).
+ *  A period's days sum to its total; a date after the period's last match day answers that last day again. */
+export function fetchLiveScoringDay(leagueId: string, period: number, date: string): Promise<RawLiveScoring> {
+  return fxpaRead(leagueId, "getLiveScoringStats", {
+    sppId: "-1",
+    viewType: "1",
+    period: String(period),
+    date,
+    newView: true,
+    playerViewType: "2",
+  }) as Promise<RawLiveScoring>;
+}
+
+/** One team's roster page for a period, which carries its bench order for the end-of-period substitutions. Public. */
+export function fetchTeamRosterInfo(leagueId: string, teamId: string, period: number): Promise<RawTeamRosterInfo> {
+  return fxpaRead(leagueId, "getTeamRosterInfo", { teamId, period: String(period) }) as Promise<RawTeamRosterInfo>;
 }
 
 /** The whole player pool with Fantrax's own points against each name.

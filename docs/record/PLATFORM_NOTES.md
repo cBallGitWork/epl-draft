@@ -44,6 +44,23 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## A period's points by London day, and the bench order for auto-subs — probed 29 Sep 2026
+
+- **`getLiveScoringStats` answers one day** when asked as the live-scoring page's Timeframe → Date view does:
+  `{ sppId: "-1", viewType: "1", period, date: "YYYY-MM-DD", newView: true }` (replayed from the page's own request;
+  it also sends `tz: "Europe/London"` on the envelope, which changed nothing here). No cookie.
+- **The days sum to the period, to the point**: rehearsal period 5 (GW5), all ten teams, 18 + 19 + 20 Sep equals the
+  period read and `getStandings`' result (123: 11 + 15 + 12 = 38). A date after the period's last match day answers
+  that day again (21 and 22 Sep repeat 20 Sep), so a caller sums the gameweek's own days, never a range.
+- Minutes are the `Min` category on every man who played, so "did not play" is Fantrax's own reading.
+- **The bench order is on `getTeamRosterInfo`**: `miscData.autoSubsOrderingType` is `"USER"` and
+  `miscData.autoSubOrderMap` is `{}` on every team (0 of 10 numbered). Craig, 29 Sep: subs are ordered by the manager,
+  and a script run at the deadline orders any bench he left unnumbered "by total fpts". The page's `fpts` column is
+  that total, so `mapBenchOrder` takes the manager's numbers when set and otherwise sorts reserves by it.
+- **Open: the rehearsal league's GW5 results carry no auto-subs.** test2 finished on 34 with Millar blank and Meunier's
+  3 on the bench; test4 beat test3 26-24, where the order by points would make it 28-33 to test3. So the deadline's
+  ordering did not run for GW5 in this league. The proof prints Fantrax's score beside the substituted one.
+
 ## Opta's commentary describes every shot, and says what VAR decided — probed 28 Sep 2026
 
 For the match report's facts: the textstream (`/fixtures/{id}/textstream/EN`) over **all 50 fixtures
