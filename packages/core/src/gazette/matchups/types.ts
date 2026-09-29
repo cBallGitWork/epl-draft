@@ -16,7 +16,7 @@ export interface DraftMan {
   /** His club's matches in the period kicked off by the cut-off, and still to come. */
   played: number;
   left: number;
-  /** His first start for this side this season. */
+  /** His first time in this side's eleven this season. */
   debut: boolean;
   /** Projected points for what he has left; orders who is named first and is never printed. Null when there is none. */
   projected: number | null;
@@ -47,7 +47,7 @@ export interface DraftSide {
   /** Fantrax's total to the cut-off. */
   total: number | null;
   eleven: DraftMan[];
-  /** Every reserve, numbered ones first in their order. */
+  /** Every reserve, those in `subOrder` first and in its order. */
   bench: DraftMan[];
   /** The reserves Fantrax may bring on, by fantraxId in order: the manager's numbers, or the deadline's by points. */
   subOrder: string[];

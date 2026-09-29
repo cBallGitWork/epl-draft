@@ -95,7 +95,6 @@ export {
 } from "./fantrax/livescoring";
 export { mapPoolStats, mapTeamStats } from "./fantrax/stats";
 export { mapBenchOrder } from "./fantrax/benchOrder";
-export type { BenchOrder, RawTeamRosterInfo } from "./fantrax/benchOrder";
 export { isFantraxPlayerId, mapPlayerProfile } from "./fantrax/profile";
 export type { LabelledValue, PlayerIntel, PlayerMatch } from "./fantrax/profile";
 export { mapTransactions, orderKey, transactionDateLabel } from "./fantrax/transactions";

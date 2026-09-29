@@ -70,16 +70,13 @@ export { fullClubName } from "./clubNames";
 // Team news at the lock: each side's sheet, what changed, the brief, the editor and the column.
 export { sheetOf } from "./sheets/sheet";
 export { debuts } from "./sheets/changes";
-export { autoSubs } from "./matchups/autoSubs";
-export type { AutoSub } from "./matchups/autoSubs";
+// The draft desk's surface is what its script reads; its other parts are inferred at the call sites.
 export { matchupState } from "./matchups/state";
-export type { MatchupState, SideState } from "./matchups/state";
-export type { DraftMan, DraftMatchupInput, DraftSide, GoalTime, PositionLimits, SlotWorth } from "./matchups/types";
-export { buildDraftBrief, matchupBlock } from "./matchups/brief";
-export type { Cutoff, MatchupContext, TablePlace } from "./matchups/brief";
-export { draftReportsDue, isSaturday } from "./matchups/due";
+export type { DraftMan, DraftSide, GoalTime } from "./matchups/types";
+export { buildDraftBrief } from "./matchups/brief";
+export type { Cutoff, MatchupContext } from "./matchups/brief";
+export { isSaturday } from "./matchups/due";
 export { priceOf } from "./matchups/worth";
-export type { DraftReportDue } from "./matchups/due";
 export { sheetsFacts } from "./sheets/facts";
 export { buildSheetsBrief } from "./briefs/sheets";
 export { SHEETS_OPINION, checkSheets } from "./sheets/checks";

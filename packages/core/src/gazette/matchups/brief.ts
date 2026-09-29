@@ -19,7 +19,7 @@ export interface TablePlace {
 export interface MatchupContext {
   state: MatchupState;
   places: { home: TablePlace | null; away: TablePlace | null };
-  /** Their last meeting, in words ("test2 won it 40-31 in round two"); null when they have not met. */
+  /** Their last meeting, in words ("test2 won 40-31 in round 2"); null when they have not met. */
   lastMeeting: string | null;
 }
 
