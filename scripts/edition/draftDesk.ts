@@ -21,14 +21,10 @@ import {
   projectionIntel,
   seasonForm,
   sheetOf,
-  standing,
-  strengthIntel,
-  strengthTable,
   type Cutoff,
   type DraftMan,
   type DraftSide,
   type IntelProjections,
-  type IntelStrength,
   type LeagueInfo,
   type MatchupContext,
   type PeriodResult,
@@ -37,13 +33,13 @@ import {
 } from "@epl/core";
 import { INTEL_SEASON, readIntel } from "../intel";
 import { gatherRoundFacts } from "./facts";
-import { appearance, categoryIds, goalsByFixture, tallies, timeOf } from "./draftReads";
+import { appearance, categoryIds, goalsByFixture, mostPaid, tallies, timeOf } from "./draftReads";
 import { minimums } from "./rosterMinimums";
 import { earlierSheets } from "./sheets";
 
 // The draft match-up desk's reads for one gameweek, turned into each match-up's facts at both cut-offs: points, minutes
 // and returns by London day from Fantrax, the bench order, matches played and left and each goal's minute from the
-// football layer, the table and runs, the last meeting, the next opponent in strength words, and a projection that
+// football layer, the table and runs, the last meeting, the next opponent, and a projection that
 // orders and never prints.
 
 export interface DraftDesk {
@@ -77,8 +73,11 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const ids = categoryIds(info);
   const keeper = rules?.goaliePosition ?? null;
   // A return is a goal, an assist or a clean sheet; a keeper's is a clean sheet (Craig, 29 Sep 2026).
+  const slotOf = new Map(facts.teams.flatMap((t) => { const s = sheetOf(t); return [...s.starters, ...s.bench].map((m) => [m.fantraxId, m.slot] as const); }));
   const worth = {
     appearance: appearance(reads.map((r) => r.raw), ids.minutes),
+    // The most a defensive bonus, or a keeper's saves, paid in a match this round: the ceiling before "cannot catch".
+    extra: Object.fromEntries(SLOTS.map((slot) => [slot, mostPaid(reads.map((r) => r.raw), slot === keeper ? ids.saves : ids.defence, slot, slotOf)])),
     returns: Object.fromEntries(
       SLOTS.map((slot) => [
         slot,
@@ -92,9 +91,6 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const min = minimums(FANTRAX_LEAGUE_ID);
   const limits = { min: min ?? {}, max: info.roster.maxActiveByPosition };
   const projections = projectionIntel(readIntel<IntelProjections>("projections", `${INTEL_SEASON}.json`));
-  const strengths = strengthIntel(readIntel<IntelStrength>("strength", `${INTEL_SEASON}.json`));
-  const rankOf = (measure: "attack" | "defence") => new Map(strengthTable(strengths, measure).map((row, at) => [row.code, at + 1]));
-  const table = { attack: rankOf("attack"), defence: rankOf("defence") };
   const clubs = new Map(snapshot.clubs.map((c) => [c.id, c]));
 
   const cutoffs = new Map<Cutoff, MatchupContext[]>();
@@ -111,8 +107,6 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
       const coming = games.find((f) => !done.includes(f));
       const home = coming?.homeClubId === club;
       const opponent = coming === undefined ? undefined : clubs.get(home ? coming.awayClubId : coming.homeClubId);
-      // A defence faces an attack and an attack a defence, as the sheets' desk reads it.
-      const faces = opponent === undefined ? null : standing(opponent.code, m.slot === "G" || m.slot === "D" ? "attack" : "defence", table);
       const got = byMan.get(m.fantraxId);
       const paidClean = (worth.returns[m.slot] ?? []).some((w) => w.kind === "clean sheet");
       const played = (got?.minutes ?? 0) > 0;
@@ -120,7 +114,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
       return {
         fantraxId: m.fantraxId,
         name: m.player.name,
-        club: clubs.get(club)?.shortName ?? "?",
+        club: clubs.get(club)?.name ?? "?",
         slot: m.slot,
         points: got?.points ?? null,
         minutes: got?.minutes ?? 0,
@@ -128,7 +122,8 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
         left: games.length - done.length,
         debut: (debuts(sheet, history.get(sheet.teamId) ?? []) ?? []).some((d) => d.fantraxId === m.fantraxId),
         projected: projections.get(m.player.code)?.gameweeks.find((g) => g.gw === gameweek)?.points ?? null,
-        next: opponent === undefined ? null : `${opponent.name} (${home ? "H" : "A"})${faces === null ? "" : `, ${faces}`}`,
+        next: opponent === undefined ? null : `${home ? "at home to" : "away to"} ${opponent.name}`,
+        matches: games.map((f) => ({ code: f.code, label: `${clubs.get(f.homeClubId)?.name ?? "?"} v ${clubs.get(f.awayClubId)?.name ?? "?"}` })),
         // Fitness from Fantrax's own news arrives with the writer; until then no man carries any.
         fitness: null,
         goals: got?.goals ?? 0,
@@ -165,7 +160,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
       const away = side(pairing.away.teamId);
       if (home === null || away === null) continue;
       contexts.push({
-        state: matchupState({ home, away }, worth, limits),
+        state: matchupState({ home, away }, worth, limits, cutoff),
         places: { home: place(home.teamId), away: place(away.teamId) },
         lastMeeting: lastMeeting(info, results, period, home, away),
       });

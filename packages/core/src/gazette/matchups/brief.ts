@@ -1,7 +1,8 @@
 import type { MatchupState } from "./state";
 
-// The facts one draft report may use, one block per match-up: where both sides stand, how they last met, the score in
-// fantasy terms and the men worth a line. No provider is named, because the writer copies labels.
+// The facts one draft report may use, one block per match-up: where both sides stand, how they last met, the score as a
+// verdict, who is still to play and the stories. No provider is named and no label announces itself, because the writer
+// copies labels.
 
 export type Cutoff = "saturday" | "week";
 
@@ -26,23 +27,17 @@ const place = (name: string, p: TablePlace | null) =>
   p === null ? null : `- ${name}: ${ordinal(p.rank)}, won ${p.won}, drawn ${p.drawn}, lost ${p.lost}${p.run === "" ? "" : `; last results ${p.run.split("").join(" ")}`}`;
 
 export function matchupBlock(ctx: MatchupContext, cutoff: Cutoff): string {
-  const { home, away } = ctx.state;
-  const [score, ...rest] = ctx.state.lines;
+  const { home, away, score, stillToPlay, stories } = ctx.state;
   return [
     `MATCH-UP: ${home.side.name} v ${away.side.name}`,
     ["WHERE THEY STAND before this round:", place(home.side.name, ctx.places.home), place(away.side.name, ctx.places.away)].filter((l) => l !== null).join("\n"),
     ctx.lastMeeting === null ? null : `LAST TIME: ${ctx.lastMeeting}.`,
-    `${cutoff === "saturday" ? "THE SCORE after Saturday's matches" : "THE FINAL SCORE"}: ${score}.`,
-    rest.length === 0 ? null : ["WORKED OUT FOR YOU, true as written:", ...rest.map((line) => `- ${line}`)].join("\n"),
-    ["THE MEN WHO SCORED MOST:", ...(["home", "away"] as const).map((s) => `- ${ctx.state[s].side.name}: ${topScorers(ctx.state[s].side.eleven)}`)].join("\n"),
+    `${cutoff === "saturday" ? "THE SCORE after Saturday's matches" : "THE RESULT"}: ${score}.`,
+    stillToPlay.length === 0 ? null : ["STILL TO PLAY:", ...stillToPlay.map((line) => `- ${line}`)].join("\n"),
+    stories.length === 0 ? null : ["THE STORIES:", ...stories.map((line) => `- ${line}`)].join("\n"),
   ]
     .filter((block) => block !== null)
     .join("\n\n");
-}
-
-function topScorers(men: MatchupState["home"]["side"]["eleven"]): string {
-  const top = [...men].filter((m) => m.points !== null && m.points > 0).sort((a, b) => (b.points ?? 0) - (a.points ?? 0)).slice(0, 3);
-  return top.length === 0 ? "nobody has scored yet" : top.map((m) => `${m.name} (${m.club}) ${m.points}`).join(", ");
 }
 
 export function buildDraftBrief(cutoff: Cutoff, gameweek: number, contexts: readonly MatchupContext[]): string {

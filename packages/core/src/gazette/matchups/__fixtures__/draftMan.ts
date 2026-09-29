@@ -4,6 +4,6 @@ import type { DraftMan } from "../types";
 export function draftMan(name: string, slot: string, points: number | null, minutes: number, left = 0, over: Partial<DraftMan> = {}): DraftMan {
   return {
     fantraxId: name, name, club: "Club", slot, points, minutes, played: left === 0 ? 1 : 0, left, debut: false,
-    projected: null, next: null, fitness: null, goals: 0, assists: 0, cleanSheets: 0, scoredAt: [], concededFirstAt: [], ...over,
+    projected: null, next: null, matches: [], fitness: null, goals: 0, assists: 0, cleanSheets: 0, scoredAt: [], concededFirstAt: [], ...over,
   };
 }

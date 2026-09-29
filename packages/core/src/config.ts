@@ -373,15 +373,10 @@ export const PREDICTIONS = {
 /** The team sheets at the lock: when a benched man is news, and how much the article carries. */
 /** The draft match-up desk's talking points (Craig, 29 Sep 2026). */
 export const DRAFT_DESK = {
-  /** A reserve's score worth a line, though it counts for nobody. */
-  benchScore: 6,
-  /** A score in the eleven worth a line at either end. */
-  bigScore: 15,
-  lowScore: 1,
-  /** A man off before this many minutes, with his match done. */
+  /** A man off before this many minutes, with his match done; and the hour a clean sheet needs. */
   earlyOff: 60,
-  /** Returns needed beyond this many and a lead is called beyond reach, though not yet out of it. */
-  reach: 3,
+  /** A clean sheet lost late is a story only where the slot pays at least this for one. */
+  cleanSheetStory: 4,
   /** The sums of what the side behind needs are worked only when this few men are left across both sides; with more,
    *  half the round is unplayed and the report tells what happened (Craig, 29 Sep 2026). */
   chaseWhenLeft: 3,

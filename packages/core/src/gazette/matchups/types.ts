@@ -5,7 +5,7 @@
 export interface DraftMan {
   fantraxId: string;
   name: string;
-  /** His club's short name. */
+  /** His club's name as the paper prints it. */
   club: string;
   /** The slot Fantrax scores him at: his roster slot in the eleven, his own position on the bench. */
   slot: string;
@@ -20,8 +20,10 @@ export interface DraftMan {
   debut: boolean;
   /** Projected points for what he has left; orders who is named first and is never printed. Null when there is none. */
   projected: number | null;
-  /** Who his club plays next in the period, in words ("Everton (A), a soft defence"); null when nothing is left. */
+  /** Who his club plays next in the round, in words ("away to Everton"); null when nothing is left. */
   next: string | null;
+  /** His club's Premier League matches this round, by FPL code, with "Sunderland v Man City" to name each. */
+  matches: { code: number; label: string }[];
   /** Fitness news dated after his last match, in the league's words; null when there is none. */
   fitness: string | null;
   /** His returns to the cut-off, from Fantrax's own counts: a clean sheet counts only where his slot is paid for one. */
@@ -69,6 +71,9 @@ export interface SlotWorth {
   returns: Record<string, Worth[]>;
   /** What a full match pays for the minutes alone; 0 when nobody has played one. */
   appearance: number;
+  /** The most a match pays at a slot beyond its returns and minutes (a defensive bonus, a keeper's saves), as Fantrax
+   *  paid it this round: counted only before a lead is called out of reach. */
+  extra: Record<string, number>;
 }
 
 /** Position letter to the fewest and most the eleven may field there. */

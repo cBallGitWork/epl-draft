@@ -1,11 +1,12 @@
 import { DRAFT_DESK } from "../../config";
-import { autoSubs, blank, type AutoSub } from "./autoSubs";
-import { sideStories } from "./stories";
+import { autoSubs, type AutoSub } from "./autoSubs";
+import type { Cutoff } from "./brief";
+import { sideStories, whenScored } from "./stories";
 import { chaseLines } from "./swing";
 import type { DraftMan, DraftMatchupInput, DraftSide, PositionLimits, SlotWorth } from "./types";
 
-// A match-up at the cut-off in fantasy terms: the score with Fantrax's coming substitutions counted, who is left to play,
-// what one goal from each of them is worth against the margin, and the men worth a line. Facts only; the writer judges.
+// A match-up at the cut-off: the score as a verdict, who is still to play and, near the end, what the side behind needs,
+// and each side's stories. Facts only; the writer judges.
 
 export interface SideState {
   side: DraftSide;
@@ -19,13 +20,15 @@ export interface SideState {
 export interface MatchupState {
   home: SideState;
   away: SideState;
-  /** Home minus away. */
+  /** Home minus away, with the substitutions. */
   margin: number;
-  lines: string[];
+  score: string;
+  stillToPlay: string[];
+  stories: string[];
 }
 
-const pts = (n: number) => `${n} point${n === 1 ? "" : "s"}`;
-const tag = (man: DraftMan) => `${man.name} (${man.club}, ${man.slot}${man.next === null ? "" : `, against ${man.next}`})`;
+const tag = (man: DraftMan) => `${man.name} (${man.club}${man.next === null ? "" : `, ${man.next}`})`;
+const and = (list: readonly string[]) => (list.length <= 1 ? (list[0] ?? "") : `${list.slice(0, -1).join(", ")} and ${list.at(-1)}`);
 
 function sideState(side: DraftSide, limits: PositionLimits): SideState {
   const numbered = side.subOrder.flatMap((id) => side.bench.filter((m) => m.fantraxId === id));
@@ -37,52 +40,60 @@ function sideState(side: DraftSide, limits: PositionLimits): SideState {
   return { side, subs, total: (side.total ?? 0) + coming, left };
 }
 
-/** Who each side has left to play, and the side behind's sums; when level, the first return for either side leads. */
-function swing(behind: SideState, ahead: SideState, gap: number, worth: SlotWorth): string[] {
-  const left = [behind, ahead].filter((s) => s.left.length > 0).map((s) => `${s.side.name} have ${s.left.length} to play: ${s.left.map(tag).join(", ")}`);
-  if (behind.left.length + ahead.left.length === 0) return [];
-  // With most of the round to play the sums mean nothing: the report tells what happened.
-  if (behind.left.length + ahead.left.length > DRAFT_DESK.chaseWhenLeft) return left;
-  if (gap === 0) return [...left, "level, so the first return for either side puts it ahead"];
-  return [...left, ...chaseLines(behind, ahead, gap, worth)];
-}
-
-/** The men worth a line on one side: reserves who scored, big and small scores, early exits, debuts, doubles, blanks. */
-function talkingPoints(state: SideState): string[] {
-  const { side, subs } = state;
-  const lines: string[] = [];
-  const cameOn = new Set(subs.map((s) => s.in.fantraxId));
-  for (const s of subs) lines.push(`${s.out.name} (${s.out.club}) did not play; ${s.in.name} (${s.in.club}) comes on from the bench${s.provisional ? " if he plays" : `, bringing ${pts(s.in.points ?? 0)}`}`);
-  for (const m of side.eleven.filter((x) => blank(x) && !subs.some((s) => s.out === x))) lines.push(`${m.name} (${m.club}) did not play, and nobody on the bench can come on for him`);
-  for (const m of side.bench.filter((x) => !cameOn.has(x.fantraxId) && (x.points ?? 0) >= DRAFT_DESK.benchScore)) lines.push(`${m.name} (${m.club}) scored ${pts(m.points ?? 0)} on the bench, which do not count`);
-  for (const m of side.eleven) {
-    // One line a man: a big score, or a small one with how long he played when he was off early.
-    const early = m.minutes > 0 && m.minutes < DRAFT_DESK.earlyOff && m.left === 0;
-    const low = m.minutes > 0 && m.left === 0 && (m.points ?? 0) <= DRAFT_DESK.lowScore;
-    if ((m.points ?? 0) >= DRAFT_DESK.bigScore) lines.push(`${m.name} (${m.club}) scored ${pts(m.points ?? 0)}`);
-    else if (early || low) lines.push(`${m.name} (${m.club}) played ${m.minutes} minutes${low ? ` and scored ${pts(m.points ?? 0)}` : ""}`);
-    if (m.debut && m.minutes > 0) lines.push(`${m.name} (${m.club}) started for ${side.name} for the first time`);
-    if (m.played + m.left > 1) lines.push(`${m.name} (${m.club}) has ${m.played + m.left} matches this period`);
+/** The score as a verdict: Saturday's as it stands, the round's as a result, with the substitutions when they change it. */
+function scoreLine(home: SideState, away: SideState, cutoff: Cutoff, worth: SlotWorth): string {
+  const [h, a] = [home.side.total ?? 0, away.side.total ?? 0];
+  const coming = (s: SideState) => s.subs.filter((x) => !x.provisional).map((x) => x.in.name);
+  if (cutoff === "saturday") {
+    const on = [...coming(home), ...coming(away)];
+    const changed = home.total !== h || away.total !== a;
+    return `${home.side.name} ${h}-${a} ${away.side.name}${changed ? `, ${home.total}-${away.total} once ${and(on)} come${on.length === 1 ? "s" : ""} on` : ""}`;
   }
-  for (const m of [...side.eleven, ...side.bench].filter((x) => x.fitness !== null)) lines.push(`${m.name} (${m.club}): ${m.fitness}`);
-  lines.push(...sideStories(side));
-  return lines.map((l) => `${side.name}: ${l}`);
+  if (home.total === away.total) return `${home.side.name} and ${away.side.name} drew ${home.total}-${away.total}`;
+  const [winner, loser] = home.total > away.total ? [home, away] : [away, home];
+  const margin = winner.total - loser.total;
+  const beat = `${winner.side.name} beat ${loser.side.name} ${winner.total}-${loser.total}`;
+  // Flipped by the bench: the side that loses had led on the eleven's points alone.
+  const before = (loser.side.total ?? 0) > (winner.side.total ?? 0) ? `; ${loser.side.name} led ${loser.side.total}-${winner.side.total} before the substitutions` : "";
+  // Decided by one late goal: the winner's last goal worth more than the margin.
+  const goals = winner.side.eleven.flatMap((m) => m.scoredAt.map((t) => ({ m, t }))).filter(({ m }) => (worth.returns[m.slot]?.find((w) => w.kind === "goal")?.worth ?? 0) > margin);
+  const last = goals.sort((x, y) => x.t.minute + (x.t.added ?? 0) - (y.t.minute + (y.t.added ?? 0))).at(-1);
+  const decided = last === undefined || last.t.minute < DRAFT_DESK.lateGoal ? "" : `, decided by ${last.m.name}'s goal ${whenScored(last.t)}`;
+  return `${beat}${decided}${before}`;
 }
 
-export function matchupState(input: DraftMatchupInput, worth: SlotWorth, limits: PositionLimits): MatchupState {
+/** A Premier League match with the two sides' men on opposing clubs: "Man City v Sunderland: Haaland for 123, Meunier
+ *  for test2". Unplayed ones (`played` false) for who is still to play; played ones only when one of them returned. */
+function opposedMatches(home: DraftSide, away: DraftSide, played: boolean): string[] {
+  const returned = (m: DraftMan) => m.goals + m.assists + m.cleanSheets > 0;
+  const inMatch = (side: DraftSide, code: number) => side.eleven.filter((m) => m.matches.some((x) => x.code === code) && (played ? m.minutes > 0 : m.left > 0));
+  const labels = new Map([...home.eleven, ...away.eleven].flatMap((m) => m.matches.map((x) => [x.code, x.label] as const)));
+  return [...labels].flatMap(([code, label]) => {
+    const [h, a] = [inMatch(home, code), inMatch(away, code)];
+    const opposed = h.some((x) => a.some((y) => x.club !== y.club));
+    if (!opposed || (played && ![...h, ...a].some(returned))) return [];
+    return [`${label}: ${and(h.map((m) => m.name))} for ${home.name}, ${and(a.map((m) => m.name))} for ${away.name}`];
+  });
+}
+
+export function matchupState(input: DraftMatchupInput, worth: SlotWorth, limits: PositionLimits, cutoff: Cutoff): MatchupState {
   const home = sideState(input.home, limits);
   const away = sideState(input.away, limits);
   const margin = home.total - away.total;
   const [ahead, behind] = margin >= 0 ? [home, away] : [away, home];
-  const gap = Math.abs(margin);
-  // Fantrax's score as it stands; the lead is judged with the substitutions it will make, when they change the score.
-  const now = `${home.side.name} ${home.side.total ?? 0}-${away.side.total ?? 0} ${away.side.name}`;
-  const subbed = home.total !== (home.side.total ?? 0) || away.total !== (away.side.total ?? 0);
-  const lines = [
-    `${now}${subbed ? `; ${home.total}-${away.total} with the automatic substitutions` : ""}: ${gap === 0 ? "level" : `${ahead.side.name} lead by ${pts(gap)}`}`,
-    ...swing(behind, ahead, gap, worth),
-    ...talkingPoints(home),
-    ...talkingPoints(away),
+  const leftCount = home.left.length + away.left.length;
+  const stillToPlay = [
+    ...[home, away].filter((s) => s.left.length > 0).map((s) => `${s.side.name} have ${s.left.length} still to play: ${s.left.map(tag).join(", ")}`),
+    // With most of the round to play the sums mean nothing: the report tells what happened.
+    ...(leftCount > 0 && leftCount <= DRAFT_DESK.chaseWhenLeft && margin !== 0 ? chaseLines(behind, ahead, Math.abs(margin), worth) : []),
+    ...opposedMatches(input.home, input.away, false),
   ];
-  return { home, away, margin, lines };
+  return {
+    home,
+    away,
+    margin,
+    score: scoreLine(home, away, cutoff, worth),
+    stillToPlay,
+    stories: [...sideStories(home.side, home.subs, worth, cutoff, margin), ...sideStories(away.side, away.subs, worth, cutoff, -margin), ...opposedMatches(input.home, input.away, true)],
+  };
 }

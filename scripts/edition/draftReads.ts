@@ -49,9 +49,10 @@ export async function goalsByFixture(gameweek: number, fixtures: readonly Fixtur
 export const timeOf = (g: PlGoal): GoalTime => (g.added === undefined ? { minute: g.minute } : { minute: g.minute, added: g.added });
 
 /** Fantrax's category ids for minutes, goals, assists and clean sheets, by their short codes. */
-export function categoryIds(info: LeagueInfo): Record<"minutes" | "goals" | "assists" | "cleanSheets", ReadonlySet<string>> {
-  const by = (code: string) => new Set(Object.entries(info.scoringCategories).filter(([, c]) => c.code === code).map(([id]) => id));
-  return { minutes: by("Min"), goals: by("G"), assists: by("A"), cleanSheets: by("CS") };
+export function categoryIds(info: LeagueInfo): Record<"minutes" | "goals" | "assists" | "cleanSheets" | "saves" | "defence", ReadonlySet<string>> {
+  const by = (match: (code: string, name: string) => boolean) => new Set(Object.entries(info.scoringCategories).filter(([, c]) => match(c.code, c.name)).map(([id]) => id));
+  const code = (wanted: string) => by((c) => c === wanted);
+  return { minutes: code("Min"), goals: code("G"), assists: code("A"), cleanSheets: code("CS"), saves: code("Sv"), defence: by((_, name) => /^Defensive Points/u.test(name)) };
 }
 
 /** Each man's points and counts over the days read, eleven and bench alike. */
@@ -80,6 +81,16 @@ export function appearance(raws: readonly Raw[], minutes: ReadonlySet<string>): 
     if (row !== undefined) paid.set(row.points, (paid.get(row.points) ?? 0) + 1);
   }
   return [...paid].sort((a, b) => b[1] - a[1])[0]?.[0] ?? 0;
+}
+
+/** The most Fantrax paid in some categories to one man at a slot in a match this round; 0 when it paid nothing. */
+export function mostPaid(raws: readonly Raw[], categories: ReadonlySet<string>, slot: string, slotOf: ReadonlyMap<string, string>): number {
+  const paid = raws
+    .flatMap((raw) => mapLivePlayerPoints(raw))
+    .flatMap((squad) => squad.players)
+    .filter((p) => slotOf.get(p.fantraxId) === slot)
+    .map((p) => p.categories.filter((c) => categories.has(c.category)).reduce((sum, c) => sum + c.points, 0));
+  return Math.max(0, ...paid);
 }
 
 /** His count in one of Fantrax's categories, as it states it; nought when it states none. */

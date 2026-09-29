@@ -57,7 +57,7 @@ export function squadMen(team: RosteredTeam, join: SquadJoin): SquadMan[] {
 }
 
 /** An opponent's standing at what this man faces, in an old man's words, and only at the extremes. */
-export function standing(code: number, measure: "attack" | "defence", table: SquadJoin["standing"]): string | null {
+function standing(code: number, measure: "attack" | "defence", table: SquadJoin["standing"]): string | null {
   const place = table[measure].get(code);
   const size = table[measure].size;
   if (place === undefined) return null;
