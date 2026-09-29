@@ -23,6 +23,8 @@ import type { RawPlFixture } from "./raw";
  *  man himself under `ownGoals` for exactly that reason. */
 export interface PlGoal {
   minute: number;
+  /** The added time on the clock ("90+4'00" → 4); absent for a goal inside the ninety. */
+  added?: number;
   teamId: number;
   /** FPL codes, or null where the bridge could not place him. */
   scorer: number | null;
@@ -41,8 +43,10 @@ export function plGoals(fixture: RawPlFixture, optaToCode: Map<string, number>):
     if (event.type !== GOAL && event.type !== PENALTY && event.type !== OWN_GOAL) continue;
     const minute = minuteOf(event);
     if (minute === null || event.teamId === undefined) continue;
+    const added = Number(/^\d+\+(\d+)/u.exec(event.clock?.label ?? "")?.[1] ?? 0);
     goals.push({
       minute,
+      ...(added > 0 ? { added } : {}),
       teamId: event.teamId,
       scorer: event.personId === undefined ? null : (codes.get(event.personId) ?? null),
       assister: event.assistId === undefined ? null : (codes.get(event.assistId) ?? null),

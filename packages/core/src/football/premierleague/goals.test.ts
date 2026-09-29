@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { creditedGoals, goalGroups } from "./goals";
+import recordedFixture from "../__fixtures__/plFixture.json";
+import { creditedGoals, goalGroups, plGoals } from "./goals";
+import type { RawPlFixture } from "./raw";
 import type { PlGoal } from "./goals";
 
 // The two readings a scoresheet makes of a side's goals: who FPL thinks laid
@@ -22,6 +24,17 @@ const goal = (over: Partial<PlGoal>): PlGoal => ({
   assister: null,
   own: false,
   ...over,
+});
+
+describe("plGoals", () => {
+  it("keeps a goal's added time beside its minute, and none for a goal inside the ninety", () => {
+    const fixture = structuredClone(recordedFixture) as unknown as RawPlFixture;
+    const late = (fixture.events ?? []).find((e) => e.clock?.label === "82'00")!;
+    late.clock = { ...late.clock!, label: "90+4'00" };
+    const goals = plGoals(fixture, new Map());
+    expect(goals.at(-1)).toMatchObject({ minute: 90, added: 4 });
+    expect(goals[0]).not.toHaveProperty("added");
+  });
 });
 
 describe("creditedGoals", () => {
