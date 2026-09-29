@@ -54,11 +54,12 @@ capture season-specific tradeoffs.
   that day again (21 and 22 Sep repeat 20 Sep), so a caller sums the gameweek's own days, never a range.
 - Minutes are the `Min` category on every man who played, so "did not play" is Fantrax's own reading.
 - **The bench order is on `getTeamRosterInfo`**: `miscData.autoSubsOrderingType` is `"USER"` and
-  `miscData.autoSubOrderMap` is `{}` on the team probed (no manager has numbered a bench, or it shows only to the
-  owner). Reserves are otherwise listed keeper table first; `mapBenchOrder` reads the map and falls back to that listing.
-- **Open: the rehearsal league's GW5 results carry no auto-subs.** test2's Millar played no minutes, Meunier scored 3
-  on the bench, and test2's result is 34, the eleven's total, not 37. Either substitutions are off in this league or
-  Fantrax applies a rule we have not read. `scripts/draft-report-proof.ts` prints both scores until that is settled.
+  `miscData.autoSubOrderMap` is `{}` on every team (0 of 10 numbered). Craig, 29 Sep: subs are ordered by the manager,
+  and a script run at the deadline orders any bench he left unnumbered "by total fpts". The page's `fpts` column is
+  that total, so `mapBenchOrder` takes the manager's numbers when set and otherwise sorts reserves by it.
+- **Open: the rehearsal league's GW5 results carry no auto-subs.** test2 finished on 34 with Millar blank and Meunier's
+  3 on the bench; test4 beat test3 26-24, where the order by points would make it 28-33 to test3. So the deadline's
+  ordering did not run for GW5 in this league. The proof prints Fantrax's score beside the substituted one.
 
 ## Lawro writes the predictions, under his own name, on Thursday evening — decided 24 Sep 2026
 

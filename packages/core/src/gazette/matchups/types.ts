@@ -18,6 +18,12 @@ export interface DraftMan {
   left: number;
   /** His first start for this side this season. */
   debut: boolean;
+  /** Projected points for what he has left; orders who is named first and is never printed. Null when there is none. */
+  projected: number | null;
+  /** Who his club plays next in the period, in words ("Everton (A), a soft defence"); null when nothing is left. */
+  next: string | null;
+  /** Fitness news dated after his last match, in the league's words; null when there is none. */
+  fitness: string | null;
 }
 
 export interface DraftSide {
@@ -26,10 +32,10 @@ export interface DraftSide {
   /** Fantrax's total to the cut-off. */
   total: number | null;
   eleven: DraftMan[];
-  /** In the order Fantrax brings them on. */
+  /** Every reserve, numbered ones first in their order. */
   bench: DraftMan[];
-  /** Whether the manager numbered his bench, or the order is the page's listing. */
-  benchNumbered: boolean;
+  /** The reserves Fantrax may bring on, by fantraxId in order: the manager's numbers, or the deadline's by points. */
+  subOrder: string[];
 }
 
 export interface DraftMatchupInput {

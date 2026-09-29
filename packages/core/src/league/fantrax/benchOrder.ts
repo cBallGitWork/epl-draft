@@ -1,5 +1,6 @@
-// The order Fantrax brings a team's reserves on at the end of a period, from its roster page (probed 29 Sep 2026):
-// `autoSubOrderMap` when the manager has numbered his bench, else the order the page lists the reserves in.
+// The reserves Fantrax may bring on at the end of a period, in order, from the roster page (probed 29 Sep 2026). The
+// manager's own numbers in `autoSubOrderMap` when he set them; otherwise the order the deadline sets for him, by total
+// fantasy points, highest first (Craig, 29 Sep: "The auto sub order is by total fpts").
 
 export interface RawTeamRosterInfo {
   miscData?: {
@@ -8,28 +9,33 @@ export interface RawTeamRosterInfo {
     /** Reserve to his number. Empty on every team probed, so its shape is read defensively. */
     autoSubOrderMap?: Record<string, number | string | undefined>;
   };
-  tables?: { rows?: RawRosterRow[] }[];
+  tables?: { header?: { cells?: { key?: string }[] }; rows?: RawRosterRow[] }[];
 }
 
 export interface RawRosterRow {
   /** "1" in the eleven, "2" on the bench. A row with no scorer is an empty slot. */
   statusId?: string;
   scorer?: { scorerId?: string; posShortNames?: string };
+  cells?: { content?: string }[];
 }
 
 export interface BenchOrder {
   /** Reserves by fantraxId, first to come on first. */
   order: string[];
-  /** Whether the manager set the order, or it is the page's listing. */
-  numbered: boolean;
+  /** The manager's own numbers, or the deadline's order by total fantasy points. */
+  by: "manager" | "points";
 }
 
 export function mapBenchOrder(raw: RawTeamRosterInfo): BenchOrder {
-  const listed = (raw.tables ?? []).flatMap((t) => t.rows ?? []).filter((r) => r.statusId === "2" && typeof r.scorer?.scorerId === "string").map((r) => r.scorer!.scorerId!);
+  const reserves = (raw.tables ?? []).flatMap((table) => {
+    const at = (table.header?.cells ?? []).findIndex((c) => c.key === "fpts");
+    return (table.rows ?? [])
+      .filter((r) => r.statusId === "2" && typeof r.scorer?.scorerId === "string")
+      .map((r) => ({ id: r.scorer!.scorerId!, fpts: at < 0 ? 0 : Number(r.cells?.[at]?.content) || 0 }));
+  });
   const numbers = Object.entries(raw.miscData?.autoSubOrderMap ?? {})
     .map(([id, n]) => ({ id, n: Number(n) }))
-    .filter((x) => Number.isFinite(x.n) && listed.includes(x.id));
-  if (numbers.length === 0) return { order: listed, numbered: false };
-  const numbered = numbers.sort((a, b) => a.n - b.n).map((x) => x.id);
-  return { order: [...numbered, ...listed.filter((id) => !numbered.includes(id))], numbered: true };
+    .filter((x) => Number.isFinite(x.n) && reserves.some((r) => r.id === x.id));
+  if (numbers.length > 0) return { order: numbers.sort((a, b) => a.n - b.n).map((x) => x.id), by: "manager" };
+  return { order: [...reserves].sort((a, b) => b.fpts - a.fpts).map((r) => r.id), by: "points" };
 }

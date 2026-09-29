@@ -1,9 +1,9 @@
 import type { DraftMan, PositionLimits } from "./types";
 
 // Fantrax's end-of-period substitutions, worked out in advance (Craig, 29 Sep 2026: "Auto subs are processed at the end of
-// the gameweek automatically... Subs are ordered by number"). A man in the eleven whose matches are all done without a
-// minute is replaced by the first reserve in bench order who has played, or may yet, and whose arrival keeps every
-// position within the league's limits. A reserve whose match is still to come makes the sub provisional.
+// the gameweek automatically... Subs are ordered by number"; unnumbered, the deadline orders them by total points). A man
+// in the eleven whose matches are all done without a minute is replaced by the first reserve in that order who has
+// played, or may yet, and whose arrival keeps every position within the limits. One yet to play makes it provisional.
 
 export interface AutoSub {
   out: DraftMan;
@@ -23,7 +23,7 @@ function fits(eleven: readonly DraftMan[], out: DraftMan, candidate: DraftMan, l
   return [...slots].every((slot) => count(slot) >= (limits.min[slot] ?? 0) && count(slot) <= (limits.max[slot] ?? Infinity));
 }
 
-/** The substitutions Fantrax will make, in the eleven's order; each reserve comes on once. */
+/** The substitutions Fantrax will make, in the eleven's order, from `bench` as numbered; each reserve comes on once. */
 export function autoSubs(eleven: readonly DraftMan[], bench: readonly DraftMan[], limits: PositionLimits): AutoSub[] {
   const lineup = [...eleven];
   const used = new Set<string>();

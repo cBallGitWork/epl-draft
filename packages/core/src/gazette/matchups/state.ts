@@ -23,13 +23,15 @@ export interface MatchupState {
 }
 
 const pts = (n: number) => `${n} point${n === 1 ? "" : "s"}`;
-const tag = (man: DraftMan) => `${man.name} (${man.club}, ${man.slot})`;
+const tag = (man: DraftMan) => `${man.name} (${man.club}, ${man.slot}${man.next === null ? "" : `, against ${man.next}`})`;
 
 function sideState(side: DraftSide, limits: PositionLimits): SideState {
-  const subs = autoSubs(side.eleven, side.bench, limits);
+  const numbered = side.subOrder.flatMap((id) => side.bench.filter((m) => m.fantraxId === id));
+  const subs = autoSubs(side.eleven, numbered, limits);
   const coming = subs.filter((s) => !s.provisional).reduce((sum, s) => sum + (s.in.points ?? 0), 0);
   const eleven = side.eleven.filter((m) => !subs.some((s) => s.out === m));
-  const left = [...eleven, ...subs.map((s) => s.in)].filter((m) => m.left > 0);
+  // The men most likely to matter first: a projection orders them and is never printed.
+  const left = [...eleven, ...subs.map((s) => s.in)].filter((m) => m.left > 0).sort((a, b) => (b.projected ?? 0) - (a.projected ?? 0));
   return { side, subs, total: (side.total ?? 0) + coming, left };
 }
 
@@ -66,6 +68,7 @@ function talkingPoints(state: SideState): string[] {
     if (m.debut && m.minutes > 0) lines.push(`${m.name} (${m.club}) started for ${side.name} for the first time`);
     if (m.played + m.left > 1) lines.push(`${m.name} (${m.club}) has ${m.played + m.left} matches this period`);
   }
+  for (const m of [...side.eleven, ...side.bench].filter((x) => x.fitness !== null)) lines.push(`${m.name} (${m.club}): ${m.fitness}`);
   return lines.map((l) => `${side.name}: ${l}`);
 }
 
@@ -79,7 +82,7 @@ export function matchupState(input: DraftMatchupInput, worth: SlotWorth, limits:
   const now = `${home.side.name} ${home.side.total ?? 0}-${away.side.total ?? 0} ${away.side.name}`;
   const subbed = home.total !== (home.side.total ?? 0) || away.total !== (away.side.total ?? 0);
   const lines = [
-    `${now}${subbed ? `; ${home.total}-${away.total} with the substitutions Fantrax will make` : ""}: ${gap === 0 ? "level" : `${ahead.side.name} lead by ${pts(gap)}`}`,
+    `${now}${subbed ? `; ${home.total}-${away.total} with the automatic substitutions` : ""}: ${gap === 0 ? "level" : `${ahead.side.name} lead by ${pts(gap)}`}`,
     ...swing(behind, ahead, gap, worth),
     ...(gap === 0 ? swing(ahead, behind, gap, worth).slice(1) : []),
     ...talkingPoints(home),
