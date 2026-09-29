@@ -2,7 +2,7 @@ import { londonDayOf } from "../../time";
 import type { Fixture } from "../../football/types";
 import type { Cutoff } from "./brief";
 
-// When each draft report is due: Saturday's once every match on the gameweek's Saturday is settled, the round's once
+// When each draft report is due: Saturday's once every match on the gameweek's Saturday is settled, the gameweek's once
 // every match of the gameweek is. Keyed so the ledger files each once.
 
 export interface DraftReportDue {

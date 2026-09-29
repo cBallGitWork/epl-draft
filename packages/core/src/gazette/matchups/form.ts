@@ -3,7 +3,7 @@ import type { FormGame, FormResult } from "../../league/form";
 import type { TableKind } from "./table";
 import { possessive } from "./words";
 
-// The round in the season's terms, for the draft report's Football Manager register (Craig, 29 Sep 2026): streaks, runs
+// The gameweek in the season's terms, for the draft report's Football Manager register (Craig, 29 Sep 2026): streaks, runs
 // ended, a return to form, the season's records, and a side's own high and low. Each fact carries its kind, so the
 // writer can frame it in FM's words, and states only what the results show. Pure.
 
@@ -22,7 +22,7 @@ export interface SeasonFact {
   text: string;
 }
 
-/** One side's round, at the end of it. */
+/** One side's gameweek, at the end of it. */
 export interface SideResult {
   teamId: string;
   name: string;
@@ -53,7 +53,7 @@ function streakOf(run: readonly FormResult[]): { what: string; n: number } | nul
   return null;
 }
 
-/** A side's run going into the round, for Saturday's report: a streak the round is still to decide. */
+/** A side's run going into the gameweek, for Saturday's report: a streak the gameweek is still to decide. */
 export function goingIn(teamId: string, name: string, before: readonly FormGame[]): FormFact | null {
   const run = streakOf(before.map((g) => g.result));
   if (run === null) return null;
@@ -61,11 +61,11 @@ export function goingIn(teamId: string, name: string, before: readonly FormGame[
   return { teamId, kind: "streak", text };
 }
 
-/** Each side's form facts for the round just played. `runs` are the settled rounds before it, oldest first. */
+/** Each side's form facts for the gameweek just played. `runs` are the settled gameweeks before it, oldest first. */
 export function gameweekForm(sides: readonly SideResult[], runs: ReadonlyMap<string, readonly FormGame[]>): FormFact[] {
   const facts: FormFact[] = [];
   const earlier = [...runs.values()].flat();
-  const rounds = Math.max(0, ...[...runs.values()].map((run) => run.length));
+  const played = Math.max(0, ...[...runs.values()].map((run) => run.length));
   for (const side of sides) {
     const before = (runs.get(side.teamId) ?? []).map((g) => g.result);
     const after = [...before, resultOf(side)];
@@ -74,14 +74,14 @@ export function gameweekForm(sides: readonly SideResult[], runs: ReadonlyMap<str
     const now = streakOf(after);
     if (now !== null) push("streak", now.what === "wins" || now.what === "defeats" ? `${side.name} have ${now.what === "wins" ? "won" : "lost"} ${now.n} in a row` : `${side.name} are ${now.n} ${now.what}`);
     const was = streakOf(before);
-    // A run ends when this round's result is not the one the run was made of.
+    // A run ends when this gameweek's result is not the one the run was made of.
     const broken = was !== null && (was.what === "wins" ? resultOf(side) !== "W" : was.what === "defeats" ? resultOf(side) !== "L" : was.what === "without defeat" ? resultOf(side) === "L" : resultOf(side) === "W");
     if (was !== null && broken) push("streak-ended", `${possessive(side.name)} run of ${was.n} ${was.what} ended against ${side.opponent}`);
     const winless = trailing(before, (r) => r !== "W");
     if (resultOf(side) === "W" && winless >= DRAFT_DESK.formReturn) push("return-to-form", `${side.name} won for the first time in ${winless + 1} gameweeks`);
 
-    // Records need a season behind them: from the league's fourth round on.
-    if (rounds + 1 < DRAFT_DESK.recordsFrom) continue;
+    // Records need a season behind them: from the league's fourth gameweek on.
+    if (played + 1 < DRAFT_DESK.recordsFrom) continue;
     const high = earlier.reduce<FormGame | null>((best, g) => (best === null || g.pointsFor > best.pointsFor ? g : best), null);
     if (high !== null && side.for > high.pointsFor) push("record", `${side.for} is the season's highest score`);
     const margin = side.for - side.against;

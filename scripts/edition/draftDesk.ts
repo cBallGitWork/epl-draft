@@ -77,7 +77,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const slotOf = new Map(facts.teams.flatMap((t) => { const s = sheetOf(t); return [...s.starters, ...s.bench].map((m) => [m.fantraxId, m.slot] as const); }));
   const worth = {
     appearance: appearance(reads.map((r) => r.raw), ids.minutes),
-    // The most a defensive bonus, or a keeper's saves, paid in a match this round: the ceiling before "cannot catch".
+    // The most a defensive bonus, or a keeper's saves, paid in a match this gameweek: the ceiling before "cannot catch".
     bonus: Object.fromEntries(SLOTS.map((slot) => [slot, mostPaid(reads.map((r) => r.raw), slot === keeper ? ids.saves : ids.defence, slot, slotOf)])),
     returns: Object.fromEntries(
       SLOTS.map((slot) => [
@@ -95,7 +95,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const clubs = new Map(snapshot.clubs.map((c) => [c.id, c]));
 
   const cutoffs = new Map<Cutoff, MatchupContext[]>();
-  // Only a report that is due: a cut-off whose matches are all settled. An unplayed round would read as nought-nought.
+  // Only a report that is due: a cut-off whose matches are all settled. An unplayed gameweek would read as nought-nought.
   const due = new Set(draftReportsDue(schedule, gameweek).map((d) => d.cutoff));
   for (const [cutoff, last] of ([["saturday", saturday], ["gameweek", days.at(-1)!]] as const).filter(([c]) => due.has(c))) {
     const upTo = reads.filter((r) => r.date <= last).map((r) => r.raw);
@@ -152,7 +152,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
         subOrder: order,
       };
     };
-    // Every match-up first: the round's form and table facts need all of their results at once.
+    // Every match-up first: the gameweek's form and table facts need all of their results at once.
     const states = facts.pairings.flatMap((pairing) => {
       const [home, away] = [side(pairing.home.teamId), side(pairing.away.teamId)];
       return home === null || away === null ? [] : [matchupState({ home, away }, worth, limits, cutoff)];

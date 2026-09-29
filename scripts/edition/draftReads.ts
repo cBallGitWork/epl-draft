@@ -12,7 +12,7 @@ import {
   type PlGoal,
 } from "@epl/core";
 
-// The draft desk's readings of one round's payloads: each goal's minute and club from the PL feed, and each man's
+// The draft desk's readings of one gameweek's payloads: each goal's minute and club from the PL feed, and each man's
 // points and counts, and a full match's pay, from Fantrax's day reads.
 
 type Raw = Parameters<typeof mapLivePlayerPoints>[0];
@@ -30,10 +30,10 @@ export type ClubGoal = PlGoal & { clubId: number };
 /** Each goal of the gameweek with its minute and the FPL club it counts for, by FPL fixture code. */
 export async function goalsByFixture(gameweek: number, fixtures: readonly Fixture[], players: readonly { code: number; optaCode: string | null }[]): Promise<Map<number, ClubGoal[]>> {
   const out = new Map<number, ClubGoal[]>();
-  const round = await fetchPlRound(gameweek).catch(() => null);
-  if (round === null) return out;
+  const page = await fetchPlRound(gameweek).catch(() => null);
+  if (page === null) return out;
   const optaToCode = new Map(players.flatMap((p) => (p.optaCode === null ? [] : [[p.optaCode, p.code] as const])));
-  for (const summary of round.content) {
+  for (const summary of page.content) {
     const code = plFixtureCode(summary);
     const ours = fixtures.find((f) => f.code === code);
     if (ours === undefined || summary.status === "U") continue;
@@ -71,8 +71,8 @@ export function tallies(raws: readonly Raw[], ids: ReturnType<typeof categoryIds
   return out;
 }
 
-/** What Fantrax paid for a full match's minutes this round, the most common payment to a man who played 90: the
- *  league prices minutes in bands the scoring rules do not spell out, so the round's own payments are the reading. */
+/** What Fantrax paid for a full match's minutes this gameweek, the most common payment to a man who played 90: the
+ *  league prices minutes in bands the scoring rules do not spell out, so the gameweek's own payments are the reading. */
 export function appearance(raws: readonly Raw[], minutes: ReadonlySet<string>): number {
   const paid = new Map<number, number>();
   for (const p of raws.flatMap((raw) => mapLivePlayerPoints(raw)).flatMap((squad) => squad.players)) {
@@ -83,7 +83,7 @@ export function appearance(raws: readonly Raw[], minutes: ReadonlySet<string>): 
   return [...paid].sort((a, b) => b[1] - a[1])[0]?.[0] ?? 0;
 }
 
-/** The most Fantrax paid in some categories to one man at a slot in a match this round; 0 when it paid nothing. */
+/** The most Fantrax paid in some categories to one man at a slot in a match this gameweek; 0 when it paid nothing. */
 export function mostPaid(raws: readonly Raw[], categories: ReadonlySet<string>, slot: string, slotOf: ReadonlyMap<string, string>): number {
   const paid = raws
     .flatMap((raw) => mapLivePlayerPoints(raw))

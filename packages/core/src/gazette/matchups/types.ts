@@ -20,9 +20,9 @@ export interface DraftMan {
   debut: boolean;
   /** Projected points for what he has left; orders who is named first and is never printed. Null when there is none. */
   projected: number | null;
-  /** Who his club plays next in the round, in words ("away to Everton"); null when nothing is left. */
+  /** Who his club plays next in the gameweek, in words ("away to Everton"); null when nothing is left. */
   next: string | null;
-  /** His club's Premier League matches this round, by FPL code, with "Sunderland v Man City" to name each. */
+  /** His club's Premier League matches this gameweek, by FPL code, with "Sunderland v Man City" to name each. */
   matches: { code: number; label: string }[];
   /** Fitness news dated after his last match, in the league's words; null when there is none. */
   fitness: string | null;
@@ -66,13 +66,13 @@ export interface Worth {
 }
 
 /** What the league pays at each slot for a return, read from `getLeagueInfo`, and for a full match's minutes, from what
- *  Fantrax paid this round. Only the returns a man in that slot makes: a keeper's is a clean sheet. */
+ *  Fantrax paid this gameweek. Only the returns a man in that slot makes: a keeper's is a clean sheet. */
 export interface SlotWorth {
   returns: Record<string, Worth[]>;
   /** What a full match pays for the minutes alone; 0 when nobody has played one. */
   appearance: number;
   /** The most a match pays at a slot beyond its returns and minutes (a defensive bonus, a keeper's saves), as Fantrax
-   *  paid it this round: counted only before a lead is called out of reach. */
+   *  paid it this gameweek: counted only before a lead is called out of reach. */
   bonus: Record<string, number>;
 }
 

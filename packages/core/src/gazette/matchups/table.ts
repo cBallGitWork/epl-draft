@@ -5,7 +5,7 @@ import type { FormGame } from "../../league/form";
 import type { StandingsRow } from "../../league/types";
 import type { SideResult } from "./form";
 
-// The table after the round: the table before it, with each side's result and points added, placed by the league's
+// The table after the gameweek: the table before it, with each side's result and points added, placed by the league's
 // own rule (points, then points for). What a win and a draw are worth is read off the table before, never assumed;
 // a table that cannot say is left unmoved. Pure.
 
@@ -30,7 +30,7 @@ export function tablePoints(rows: readonly StandingsRow[]): { win: number; draw:
 }
 
 /** The table as it stood before `period`, rebuilt from each side's settled results: Fantrax's own table may already
- *  hold the round, or not yet, depending on when it is read. */
+ *  hold the gameweek, or not yet, depending on when it is read. */
 export function tableBefore(rows: readonly StandingsRow[], runs: ReadonlyMap<string, readonly FormGame[]>, period: number, pay: { win: number; draw: number }): StandingsRow[] {
   return placeTable(
     rows.map((row) => {
@@ -43,13 +43,13 @@ export function tableBefore(rows: readonly StandingsRow[], runs: ReadonlyMap<str
   );
 }
 
-/** The table with the round added, in the league's order; null when what a result is worth cannot be read. */
-export function tableAfter(before: readonly StandingsRow[], round: readonly SideResult[]): StandingsRow[] | null {
+/** The table with the gameweek added, in the league's order; null when what a result is worth cannot be read. */
+export function tableAfter(before: readonly StandingsRow[], results: readonly SideResult[]): StandingsRow[] | null {
   const pay = tablePoints(before);
   if (pay === null) return null;
   return placeTable(
     before.map((row) => {
-      const side = round.find((s) => s.teamId === row.teamId);
+      const side = results.find((s) => s.teamId === row.teamId);
       if (side === undefined) return row;
       const [won, drawn, lost] = side.for > side.against ? [1, 0, 0] : side.for < side.against ? [0, 0, 1] : [0, 1, 0];
       return {

@@ -380,16 +380,16 @@ export const DRAFT_DESK = {
   /** A clean sheet lost late is a story only where the slot pays at least this for one. */
   cleanSheetStory: 4,
   /** The sums of what the side behind needs are worked only when this few men are left across both sides; with more,
-   *  half the round is unplayed and the report tells what happened (Craig, 29 Sep 2026). */
+   *  half the gameweek is unplayed and the report tells what happened (Craig, 29 Sep 2026). */
   chaseWhenLeft: 3,
   /** A goal from this minute is late: a scorer's late goal, or the one that took a clean sheet. */
   lateGoal: 80,
   /** Wins or defeats in a row that make a streak; results unbeaten or without a win, a draw among them, that make a run. */
   streak: 3,
   unbeaten: 4,
-  /** Rounds without a win before a win is a return to form, and rounds of a side's own before its high or low counts. */
+  /** Gameweeks without a win before a win is a return to form, and gameweeks of a side's own before its high or low counts. */
   formReturn: 3,
-  /** The league's round from which a score or a margin can be a season record. */
+  /** The league's gameweek from which a score or a margin can be a season record. */
   recordsFrom: 4,
   /** Places a side must climb or fall in the table to be news, away from the top and the bottom. */
   tableMove: 2,

@@ -23,15 +23,15 @@ import {
   type TablePlace,
 } from "@epl/core";
 
-// The season around one round, for the draft report's form and table (Craig, 29 Sep 2026, and the FM panel): each
-// side's settled results before the round, the table rebuilt from them, the meetings of any two sides, and where a man
-// used to be. Read once; the round's facts are then worked from it at each cut-off.
+// The season around one gameweek, for the draft report's form and table (Craig, 29 Sep 2026, and the FM panel): each
+// side's settled results before the gameweek, the table rebuilt from them, the meetings of any two sides, and where a man
+// used to be. Read once; the gameweek's facts are then worked from it at each cut-off.
 
 export interface DraftSeason {
   period: number;
-  /** Each side's settled results before this round, oldest first. */
+  /** Each side's settled results before this gameweek, oldest first. */
   runs: Map<string, FormGame[]>;
-  /** The table before this round, or null when what a result is worth cannot be read. */
+  /** The table before this gameweek, or null when what a result is worth cannot be read. */
   table: StandingsRow[] | null;
   results: readonly PeriodResult[];
   info: LeagueInfo;
@@ -55,7 +55,7 @@ export async function draftSeason(info: LeagueInfo, table: readonly StandingsRow
   return { period, runs, table: pay === null ? null : tableBefore(table, runs, period, pay), results, info, formerly };
 }
 
-/** A side's place and record before the round, with its last five results. */
+/** A side's place and record before the gameweek, with its last five results. */
 export function placeOf(season: DraftSeason, teamId: string): TablePlace | null {
   const row = season.table?.find((r) => r.teamId === teamId);
   const run = (season.runs.get(teamId) ?? []).slice(-5);
@@ -74,7 +74,7 @@ export function meetingsOf(season: DraftSeason, home: { teamId: string; name: st
   return meetingLines(home.name, away.name, met);
 }
 
-/** Each side's form and table facts at the cut-off: after Saturday, the runs going in; at the end, the round's results
+/** Each side's form and table facts at the cut-off: after Saturday, the runs going in; at the end, the gameweek's results
  *  (with the substitutions) against the season, and the table after them. */
 export function gameweekFacts(season: DraftSeason, states: readonly MatchupState[], cutoff: Cutoff): Map<string, SeasonFact[]> {
   const out = new Map<string, SeasonFact[]>();
@@ -87,12 +87,12 @@ export function gameweekFacts(season: DraftSeason, states: readonly MatchupState
     }
     return out;
   }
-  const round = states.flatMap((s) => [
+  const results = states.flatMap((s) => [
     { teamId: s.home.side.teamId, name: s.home.side.name, opponent: s.away.side.name, for: s.home.total, against: s.away.total },
     { teamId: s.away.side.teamId, name: s.away.side.name, opponent: s.home.side.name, for: s.away.total, against: s.home.total },
   ]);
-  for (const fact of gameweekForm(round, season.runs)) add(fact.teamId, fact);
-  const after = season.table === null ? null : tableAfter(season.table, round);
+  for (const fact of gameweekForm(results, season.runs)) add(fact.teamId, fact);
+  const after = season.table === null ? null : tableAfter(season.table, results);
   if (season.table !== null && after !== null) for (const fact of tableMoves(season.table, after)) add(fact.teamId, fact);
   return out;
 }

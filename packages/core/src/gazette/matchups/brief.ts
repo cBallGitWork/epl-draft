@@ -24,7 +24,7 @@ export interface MatchupContext {
   meetings: string[];
   /** Streaks, runs ended, returns to form, records and table moves for either side, each with its kind. */
   form: SeasonFact[];
-  /** Stories from outside the round's points: an old boy facing the side that let him go. */
+  /** Stories from outside the gameweek's points: an old boy facing the side that let him go. */
   oldBoys: string[];
 }
 

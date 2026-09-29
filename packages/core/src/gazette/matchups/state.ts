@@ -41,7 +41,7 @@ function sideState(side: DraftSide, limits: PositionLimits): SideState {
   return { side, subs, total: (side.total ?? 0) + coming, toPlay };
 }
 
-/** The score as a verdict: Saturday's as it stands, the round's as a result, with the substitutions when they change it. */
+/** The score as a verdict: Saturday's as it stands, the gameweek's as a result, with the substitutions when they change it. */
 function scoreLine(home: SideState, away: SideState, cutoff: Cutoff, worth: SlotWorth): string {
   const [h, a] = [home.side.total ?? 0, away.side.total ?? 0];
   const coming = (s: SideState) => s.subs.filter((x) => !x.provisional).map((x) => x.in.name);
@@ -84,7 +84,7 @@ export function matchupState(input: DraftMatchupInput, worth: SlotWorth, limits:
   const leftCount = home.toPlay.length + away.toPlay.length;
   const stillToPlay = [
     ...[home, away].filter((s) => s.toPlay.length > 0).map((s) => `${s.side.name} have ${s.toPlay.length} still to play: ${s.toPlay.map(tag).join(", ")}`),
-    // With most of the round to play the sums mean nothing: the report tells what happened.
+    // With most of the gameweek to play the sums mean nothing: the report tells what happened.
     ...(leftCount > 0 && leftCount <= DRAFT_DESK.chaseWhenLeft && margin !== 0 ? chaseLines(behind, ahead, Math.abs(margin), worth) : []),
     ...opposedMatches(input.home, input.away, false),
   ];
