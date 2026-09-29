@@ -74,7 +74,7 @@ export { autoSubs } from "./matchups/autoSubs";
 export type { AutoSub } from "./matchups/autoSubs";
 export { matchupState } from "./matchups/state";
 export type { MatchupState, SideState } from "./matchups/state";
-export type { DraftMan, DraftMatchupInput, DraftSide, PositionLimits, SlotWorth } from "./matchups/types";
+export type { DraftMan, DraftMatchupInput, DraftSide, GoalTime, PositionLimits, SlotWorth } from "./matchups/types";
 export { buildDraftBrief, matchupBlock } from "./matchups/brief";
 export type { Cutoff, MatchupContext, TablePlace } from "./matchups/brief";
 export { draftReportsDue } from "./matchups/due";

@@ -1,11 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { buildDraftBrief } from "./brief";
 import { matchupState } from "./state";
+import { draftMan } from "./__fixtures__/draftMan";
 import type { DraftMan, DraftSide } from "./types";
 
-const man = (name: string, slot: string, points: number | null, minutes: number, left = 0, more: Partial<DraftMan> = {}): DraftMan => ({
-  fantraxId: name, name, club: "EVE", slot, points, minutes, played: left === 0 ? 1 : 0, left, debut: false, projected: 4.2, next: null, fitness: null, ...more,
-});
+const man = (name: string, slot: string, points: number | null, minutes: number, left = 0, more: Partial<DraftMan> = {}): DraftMan => draftMan(name, slot, points, minutes, left, { club: "EVE", projected: 4.2, ...more });
 const xi = (tag: string, over: Record<number, DraftMan> = {}) => ["G", "D", "D", "D", "D", "M", "M", "M", "M", "F", "F"].map((s, i) => over[i] ?? man(`${tag}${i}`, s, 2, 90));
 const side = (name: string, total: number, eleven: DraftMan[], bench: DraftMan[] = []): DraftSide => ({ teamId: name, name, total, eleven, bench, subOrder: bench.map((m) => m.fantraxId) });
 const limits = { min: { G: 1, D: 3, M: 2, F: 1 }, max: { G: 1, D: 5, M: 5, F: 3 } };

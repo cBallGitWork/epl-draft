@@ -1,5 +1,6 @@
 import { DRAFT_DESK } from "../../config";
 import { autoSubs, blank, type AutoSub } from "./autoSubs";
+import { sideStories } from "./stories";
 import { chaseLines } from "./swing";
 import type { DraftMan, DraftMatchupInput, DraftSide, PositionLimits, SlotWorth } from "./types";
 
@@ -64,6 +65,7 @@ function talkingPoints(state: SideState): string[] {
     if (m.played + m.left > 1) lines.push(`${m.name} (${m.club}) has ${m.played + m.left} matches this period`);
   }
   for (const m of [...side.eleven, ...side.bench].filter((x) => x.fitness !== null)) lines.push(`${m.name} (${m.club}): ${m.fitness}`);
+  lines.push(...sideStories(side));
   return lines.map((l) => `${side.name}: ${l}`);
 }
 

@@ -3,16 +3,16 @@ import type { SideState } from "./state";
 import type { DraftMan, SlotWorth, Worth } from "./types";
 
 // What the side behind needs from the men it has left, after the minutes both sides' men will be paid for playing: which
-// single return (a goal, an assist, a clean sheet, a defensive bonus or a keeper's saves, at the slot's price) draws or
-// wins it, the fewest that would, and when every return they could make falls short (Craig, 29 Sep 2026: "work out how
-// many points are needed, or when a lead has got too far").
+// single return (a goal, an assist or a clean sheet, at the slot's price) draws or wins it, the fewest that would, and
+// when every return they could make falls short (Craig, 29 Sep 2026: "work out how many points are needed, or when a
+// lead has got too far").
 
 export interface Return extends Worth {
   man: DraftMan;
 }
 
 const pts = (n: number) => `${n} point${n === 1 ? "" : "s"}`;
-const ARTICLE: Record<Worth["kind"], string> = { goal: "a goal from", assist: "an assist from", "clean sheet": "a clean sheet for", "defensive bonus": "a defensive bonus for", saves: "saves for" };
+const ARTICLE: Record<Worth["kind"], string> = { goal: "a goal from", assist: "an assist from", "clean sheet": "a clean sheet for" };
 const said = (r: Return) => `${ARTICLE[r.kind]} ${r.man.name} (${r.worth})`;
 const either = (list: readonly string[]) => (list.length <= 1 ? (list[0] ?? "") : `${list.slice(0, -1).join(", ")} or ${list.at(-1)}`);
 
@@ -41,7 +41,7 @@ export function chaseLines(chasing: SideState, ahead: SideState, gap: number, wo
   if (total === short) return [...lines, `the most ${name} can do is draw: it would take every return their men left could make`];
   const winners = returns.filter((r) => r.worth > short);
   const levellers = returns.filter((r) => r.worth === short);
-  if (winners.length > 0) lines.push(`${either(winners.map(said))} would win it on its own`);
+  if (winners.length > 0) lines.push(`${either(winners.map(said))} would win it`);
   if (levellers.length > 0) lines.push(`${either(levellers.map(said))} would level it`);
   if (winners.length === 0) {
     // The fewest returns that would win it, taking the richest first.

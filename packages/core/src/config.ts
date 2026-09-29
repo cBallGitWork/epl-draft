@@ -385,6 +385,8 @@ export const DRAFT_DESK = {
   /** The sums of what the side behind needs are worked only when this few men are left across both sides; with more,
    *  half the round is unplayed and the report tells what happened (Craig, 29 Sep 2026). */
   chaseWhenLeft: 3,
+  /** A goal from this minute is late: a scorer's late goal, or the one that took a clean sheet. */
+  lateGoal: 80,
 } as const;
 
 export const SHEETS = {

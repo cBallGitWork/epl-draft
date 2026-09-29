@@ -24,6 +24,19 @@ export interface DraftMan {
   next: string | null;
   /** Fitness news dated after his last match, in the league's words; null when there is none. */
   fitness: string | null;
+  /** His returns to the cut-off, from Fantrax's own counts: a clean sheet counts only where his slot is paid for one. */
+  goals: number;
+  assists: number;
+  cleanSheets: number;
+  /** When he scored, and when his club first conceded in a match he played; empty when he did neither. */
+  scoredAt: GoalTime[];
+  concededFirstAt: GoalTime[];
+}
+
+/** A goal's minute, and the added time on the clock when there was some. */
+export interface GoalTime {
+  minute: number;
+  added?: number;
 }
 
 export interface DraftSide {
@@ -45,12 +58,13 @@ export interface DraftMatchupInput {
 
 /** A return a man can still make in a match, and what the league pays for it at his slot. */
 export interface Worth {
-  kind: "goal" | "assist" | "clean sheet" | "defensive bonus" | "saves";
+  /** A return in the game's own sense (Craig, 29 Sep 2026): a DefCon bonus or saves are points, never a return. */
+  kind: "goal" | "assist" | "clean sheet";
   worth: number;
 }
 
-/** What the league pays at each slot, read from `getLeagueInfo`, or for a tiered rule it does not spell out, from what
- *  Fantrax paid this round. Only the returns a man in that slot realistically makes: a keeper's goal is left out. */
+/** What the league pays at each slot for a return, read from `getLeagueInfo`, and for a full match's minutes, from what
+ *  Fantrax paid this round. Only the returns a man in that slot makes: a keeper's is a clean sheet. */
 export interface SlotWorth {
   returns: Record<string, Worth[]>;
   /** What a full match pays for the minutes alone; 0 when nobody has played one. */

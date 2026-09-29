@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { autoSubs } from "./autoSubs";
+import { draftMan } from "./__fixtures__/draftMan";
 import type { DraftMan } from "./types";
 
-const man = (name: string, slot: string, minutes: number, left = 0): DraftMan => ({ fantraxId: name, name, club: "X", slot, points: null, minutes, played: 1 - left, left, debut: false, projected: null, next: null, fitness: null });
+const man = (name: string, slot: string, minutes: number, left = 0): DraftMan => draftMan(name, slot, null, minutes, left, { club: "X" });
 const limits = { min: { G: 1, D: 3, M: 2, F: 1 }, max: { G: 1, D: 5, M: 5, F: 3 } };
 const eleven = [man("Gk", "G", 90), man("D1", "D", 90), man("D2", "D", 90), man("D3", "D", 0), man("D4", "D", 90), man("M1", "M", 90), man("M2", "M", 90), man("M3", "M", 90), man("M4", "M", 90), man("F1", "F", 90), man("F2", "F", 90)];
 

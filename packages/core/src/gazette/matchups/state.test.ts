@@ -1,10 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { matchupState } from "./state";
+import { draftMan } from "./__fixtures__/draftMan";
 import type { DraftMan, DraftSide } from "./types";
 
-const man = (name: string, slot: string, points: number | null, minutes: number, left = 0, more: Partial<DraftMan> = {}): DraftMan => ({
-  fantraxId: name, name, club: "Club", slot, points, minutes, played: left === 0 ? 1 : 0, left, debut: false, projected: null, next: null, fitness: null, ...more,
-});
+const man = draftMan;
 const limits = { min: { G: 1, D: 3, M: 2, F: 1 }, max: { G: 1, D: 5, M: 5, F: 3 } };
 const worth = {
   appearance: 0,
@@ -32,7 +31,7 @@ describe("matchupState", () => {
     const away = side("Away", 36, eleven("a", { M5: man("Salah", "M", null, 0, 1) }));
     const lines = matchupState({ home, away }, worth, limits).lines;
     expect(lines[0]).toBe("Home 40-36 Away: Home lead by 4 points");
-    expect(lines).toEqual(expect.arrayContaining(["a goal from Salah (5) would win it on its own"]));
+    expect(lines).toEqual(expect.arrayContaining(["a goal from Salah (5) would win it"]));
     expect(lines[1]).toBe("Away have 1 to play: Salah (Club, M)");
   });
 

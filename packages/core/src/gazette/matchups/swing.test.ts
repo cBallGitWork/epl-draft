@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { SideState } from "./state";
 import { chaseLines, returnsOf } from "./swing";
+import { draftMan } from "./__fixtures__/draftMan";
 import type { DraftMan } from "./types";
 
-const man = (name: string, slot: string, left = 1): DraftMan => ({ fantraxId: name, name, club: "EVE", slot, points: null, minutes: 0, played: 0, left, debut: false, projected: null, next: null, fitness: null });
+const man = (name: string, slot: string, left = 1): DraftMan => draftMan(name, slot, null, 0, left, { club: "EVE", played: 0 });
 const worth = {
   appearance: 0,
   returns: {
@@ -19,7 +20,7 @@ describe("chaseLines", () => {
   it("names every single return that levels or wins it: a goal, an assist or a clean sheet", () => {
     const lines = chaseLines(state("Dons", [man("Tarkowski", "D"), man("Isak", "F")]), state("Notemail", []), 3, worth);
     expect(lines).toEqual([
-      "a goal from Tarkowski (6), a clean sheet for Tarkowski (4) or a goal from Isak (4) would win it on its own",
+      "a goal from Tarkowski (6), a clean sheet for Tarkowski (4) or a goal from Isak (4) would win it",
       "an assist from Tarkowski (3) or an assist from Isak (3) would level it",
     ]);
   });
@@ -46,7 +47,7 @@ describe("chaseLines", () => {
     const paid = { ...worth, appearance: 2 };
     const lines = chaseLines(state("Dons", [man("A", "F"), man("B", "F")]), state("Notemail", [man("Z", "M")]), 5, paid);
     expect(lines).toEqual([
-      "a goal from A (4) or a goal from B (4) would win it on its own",
+      "a goal from A (4) or a goal from B (4) would win it",
       "an assist from A (3) or an assist from B (3) would level it",
     ]);
     expect(lines.join(" ")).not.toMatch(/playing time|minutes/u);
