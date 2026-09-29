@@ -69,13 +69,19 @@ export { fullClubName } from "./clubNames";
 
 // Team news at the lock: each side's sheet, what changed, the brief, the editor and the column.
 export { sheetOf } from "./sheets/sheet";
+export { debuts } from "./sheets/changes";
+export { autoSubs } from "./matchups/autoSubs";
+export type { AutoSub } from "./matchups/autoSubs";
+export { matchupState } from "./matchups/state";
+export type { MatchupState, SideState } from "./matchups/state";
+export type { DraftMan, DraftMatchupInput, DraftSide, PositionLimits, SlotWorth } from "./matchups/types";
 export { sheetsFacts } from "./sheets/facts";
 export { buildSheetsBrief } from "./briefs/sheets";
 export { SHEETS_OPINION, checkSheets } from "./sheets/checks";
 export { SHEETS_AMERICAN, SHEETS_LEXICON, SHEETS_STOCK } from "./sheets/words";
 export { mergeSheets, readSheetsDraft } from "./sheets/draft";
 export { assembleSheets } from "./sheets/column";
-export type { Sheet } from "./sheets/sheet";
+export type { Sheet, SheetMan } from "./sheets/sheet";
 export type { TieFacts } from "./sheets/facts";
 export type { SheetsDraft } from "./sheets/column";
 export type { StorySheetMan, StorySheetSide } from "./sheets/cargo";

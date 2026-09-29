@@ -28,7 +28,8 @@
     "edition": "tsx --env-file-if-exists=.env.local scripts/write-edition.ts",
     "intel-check": "tsx scripts/intel-check.ts",
     "scout-xi": "tsx scripts/scout-xi.ts",
-    "pl-bridge": "tsx scripts/pl-bridge.ts"
+    "pl-bridge": "tsx scripts/pl-bridge.ts",
+    "draft:proof": "tsx scripts/draft-report-proof.ts"
   },
   "devDependencies": {
     "tsx": "^4.20.6",

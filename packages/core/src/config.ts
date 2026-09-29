@@ -371,6 +371,17 @@ export const PREDICTIONS = {
 } as const;
 
 /** The team sheets at the lock: when a benched man is news, and how much the article carries. */
+/** The draft match-up desk's talking points (Craig, 29 Sep 2026). */
+export const DRAFT_DESK = {
+  /** A reserve's score worth a line, though it counts for nobody. */
+  benchScore: 6,
+  /** A score in the eleven worth a line at either end. */
+  bigScore: 15,
+  lowScore: 1,
+  /** A man off before this many minutes, with his match done. */
+  earlyOff: 60,
+} as const;
+
 export const SHEETS = {
   /** A benched man is news with a goal or assist last time out, or this many goals and assists
    *  over his last few rounds. At most this many benchings a side, and meeting points a fixture. */
