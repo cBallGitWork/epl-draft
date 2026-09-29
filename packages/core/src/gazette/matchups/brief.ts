@@ -1,3 +1,4 @@
+import { ordinal } from "../../league/ordinal";
 import type { MatchupState } from "./state";
 
 // The facts one draft report may use, one block per match-up: where both sides stand, how they last met, the score as a
@@ -22,7 +23,6 @@ export interface MatchupContext {
   lastMeeting: string | null;
 }
 
-const ordinal = (n: number) => `${n}${n % 100 >= 11 && n % 100 <= 13 ? "th" : (["th", "st", "nd", "rd"][n % 10] ?? "th")}`;
 const place = (name: string, p: TablePlace | null) =>
   p === null ? null : `- ${name}: ${ordinal(p.rank)}, won ${p.won}, drawn ${p.drawn}, lost ${p.lost}${p.run === "" ? "" : `; last results ${p.run.split("").join(" ")}`}`;
 

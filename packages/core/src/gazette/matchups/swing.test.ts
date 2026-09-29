@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { draftMan } from "./__fixtures__/draftMan";
 import { worthOf } from "./__fixtures__/worth";
 import type { SideState } from "./state";
-import { chaseLines, returnsOf } from "./swing";
+import { chaseLines, possibleReturns } from "./swing";
 import type { DraftMan } from "./types";
 
 const man = (name: string, slot: string, left = 1): DraftMan => draftMan(name, slot, null, 0, left, { played: 0 });
@@ -35,7 +35,7 @@ describe("chaseLines", () => {
   });
 
   it("offers a man with two matches two of each return, and a keeper only a clean sheet", () => {
-    expect(returnsOf([man("Double", "M", 2)], worth).map((r) => r.worth)).toEqual([5, 5, 3, 3, 1, 1]);
-    expect(returnsOf([man("Pickford", "G")], worth).map((r) => r.kind)).toEqual(["clean sheet"]);
+    expect(possibleReturns([man("Double", "M", 2)], worth).map((r) => r.worth)).toEqual([5, 5, 3, 3, 1, 1]);
+    expect(possibleReturns([man("Pickford", "G")], worth).map((r) => r.kind)).toEqual(["clean sheet"]);
   });
 });

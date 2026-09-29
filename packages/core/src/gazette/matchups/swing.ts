@@ -1,5 +1,6 @@
 import type { SideState } from "./state";
 import type { DraftMan, SlotWorth, Worth } from "./types";
+import { listed } from "./words";
 
 // What the side behind needs from the men it has left, once both sides' minutes are paid: the man whose goal, assist or
 // clean sheet would level or win it, how many returns it takes when no one does, and when they cannot catch up (Craig,
@@ -9,17 +10,16 @@ export interface Return extends Worth {
   man: DraftMan;
 }
 
-const either = (list: readonly string[]) => (list.length <= 1 ? (list[0] ?? "") : `${list.slice(0, -1).join(", ")} or ${list.at(-1)}`);
 const ARTICLE: Record<Worth["kind"], string> = { goal: "a goal", assist: "an assist", "clean sheet": "a clean sheet" };
 
 /** "a goal or an assist from Haaland, or a clean sheet from Pickford": each man once, no figures. */
 function said(returns: readonly Return[]): string {
   const men = [...new Set(returns.map((r) => r.man))];
-  return either(men.map((man) => `${either([...new Set(returns.filter((r) => r.man === man).map((r) => ARTICLE[r.kind]))])} from ${man.name}`));
+  return listed(men.map((man) => `${listed([...new Set(returns.filter((r) => r.man === man).map((r) => ARTICLE[r.kind]))], "or")} from ${man.name}`), "or");
 }
 
 /** Every return the men left could make, one of each per match left, richest first. */
-export function returnsOf(men: readonly DraftMan[], worth: SlotWorth): Return[] {
+export function possibleReturns(men: readonly DraftMan[], worth: SlotWorth): Return[] {
   return men
     .flatMap((man) => Array.from({ length: man.left }, () => (worth.returns[man.slot] ?? []).map((w) => ({ ...w, man }))).flat())
     .filter((r) => r.worth > 0)
@@ -34,7 +34,7 @@ export function chaseLines(chasing: SideState, ahead: SideState, gap: number, wo
   const name = chasing.side.name;
   const short = gap - playing(chasing.left, worth) + playing(ahead.left, worth);
   if (short <= 0) return [];
-  const returns = returnsOf(chasing.left, worth);
+  const returns = possibleReturns(chasing.left, worth);
   const most = returns.reduce((sum, r) => sum + r.worth, 0) + chasing.left.reduce((sum, m) => sum + m.left * (worth.extra[m.slot] ?? 0), 0);
   if (most < short) return [`${name} cannot catch ${ahead.side.name}`];
   if (most === short) return [`${name} can draw at best`];

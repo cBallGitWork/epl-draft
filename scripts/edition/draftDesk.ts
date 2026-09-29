@@ -8,6 +8,7 @@ import {
   fetchLiveScoringDay,
   fetchSeasonResults,
   fetchTeamRosterInfo,
+  isSaturday,
   getFootballSnapshot,
   londonDayOf,
   mapBenchOrder,
@@ -18,6 +19,7 @@ import {
   matchupState,
   periodGameweeks,
   periodPairings,
+  priceOf,
   projectionIntel,
   seasonForm,
   sheetOf,
@@ -63,7 +65,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
 
   const fixtures = season.filter((f) => f.gameweek === gameweek && f.kickoff !== null);
   const days = [...new Set(fixtures.map((f) => londonDayOf(f.kickoff!)!))].sort();
-  const saturday = days.find((d) => new Date(`${d}T12:00:00Z`).getUTCDay() === 6) ?? days[0];
+  const saturday = days.find(isSaturday) ?? days[0];
   const reads = await Promise.all(days.map(async (date) => ({ date, raw: await fetchLiveScoringDay(FANTRAX_LEAGUE_ID, period, date) })));
   const orders = new Map(await Promise.all(facts.teams.map(async (t) => [t.teamId, mapBenchOrder(await fetchTeamRosterInfo(FANTRAX_LEAGUE_ID, t.teamId, period))] as const)));
   const goals = await goalsByFixture(gameweek, fixtures, snapshot.players);
@@ -108,7 +110,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
       const home = coming?.homeClubId === club;
       const opponent = coming === undefined ? undefined : clubs.get(home ? coming.awayClubId : coming.homeClubId);
       const got = byMan.get(m.fantraxId);
-      const paidClean = (worth.returns[m.slot] ?? []).some((w) => w.kind === "clean sheet");
+      const paidClean = priceOf(worth, m.slot, "clean sheet") > 0;
       const played = (got?.minutes ?? 0) > 0;
       const theirGoals = done.flatMap((f) => goals.get(f.code) ?? []);
       return {

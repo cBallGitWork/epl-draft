@@ -11,7 +11,8 @@ export interface DraftReportDue {
   slug: string;
 }
 
-const isSaturday = (day: string) => new Date(`${day}T12:00:00Z`).getUTCDay() === 6;
+/** A London date that falls on a Saturday. */
+export const isSaturday = (day: string) => new Date(`${day}T12:00:00Z`).getUTCDay() === 6;
 
 export function draftReportsDue(fixtures: readonly Fixture[], gameweek: number): DraftReportDue[] {
   const round = fixtures.filter((f) => f.gameweek === gameweek && f.kickoff !== null);

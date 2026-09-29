@@ -1,9 +1,11 @@
 import { DRAFT_DESK } from "../../config";
 import { autoSubs, type AutoSub } from "./autoSubs";
 import type { Cutoff } from "./brief";
-import { sideStories, whenScored } from "./stories";
+import { returnCount, sideStories, whenScored } from "./stories";
 import { chaseLines } from "./swing";
 import type { DraftMan, DraftMatchupInput, DraftSide, PositionLimits, SlotWorth } from "./types";
+import { listed } from "./words";
+import { priceOf } from "./worth";
 
 // A match-up at the cut-off: the score as a verdict, who is still to play and, near the end, what the side behind needs,
 // and each side's stories. Facts only; the writer judges.
@@ -28,7 +30,6 @@ export interface MatchupState {
 }
 
 const tag = (man: DraftMan) => `${man.name} (${man.club}${man.next === null ? "" : `, ${man.next}`})`;
-const and = (list: readonly string[]) => (list.length <= 1 ? (list[0] ?? "") : `${list.slice(0, -1).join(", ")} and ${list.at(-1)}`);
 
 function sideState(side: DraftSide, limits: PositionLimits): SideState {
   const numbered = side.subOrder.flatMap((id) => side.bench.filter((m) => m.fantraxId === id));
@@ -47,7 +48,7 @@ function scoreLine(home: SideState, away: SideState, cutoff: Cutoff, worth: Slot
   if (cutoff === "saturday") {
     const on = [...coming(home), ...coming(away)];
     const changed = home.total !== h || away.total !== a;
-    return `${home.side.name} ${h}-${a} ${away.side.name}${changed ? `, ${home.total}-${away.total} once ${and(on)} come${on.length === 1 ? "s" : ""} on` : ""}`;
+    return `${home.side.name} ${h}-${a} ${away.side.name}${changed ? `, ${home.total}-${away.total} once ${listed(on, "and")} come${on.length === 1 ? "s" : ""} on` : ""}`;
   }
   if (home.total === away.total) return `${home.side.name} and ${away.side.name} drew ${home.total}-${away.total}`;
   const [winner, loser] = home.total > away.total ? [home, away] : [away, home];
@@ -56,7 +57,7 @@ function scoreLine(home: SideState, away: SideState, cutoff: Cutoff, worth: Slot
   // Flipped by the bench: the side that loses had led on the eleven's points alone.
   const before = (loser.side.total ?? 0) > (winner.side.total ?? 0) ? `; ${loser.side.name} led ${loser.side.total}-${winner.side.total} before the substitutions` : "";
   // Decided by one late goal: the winner's last goal worth more than the margin.
-  const goals = winner.side.eleven.flatMap((m) => m.scoredAt.map((t) => ({ m, t }))).filter(({ m }) => (worth.returns[m.slot]?.find((w) => w.kind === "goal")?.worth ?? 0) > margin);
+  const goals = winner.side.eleven.flatMap((m) => m.scoredAt.map((t) => ({ m, t }))).filter(({ m }) => priceOf(worth, m.slot, "goal") > margin);
   const last = goals.sort((x, y) => x.t.minute + (x.t.added ?? 0) - (y.t.minute + (y.t.added ?? 0))).at(-1);
   const decided = last === undefined || last.t.minute < DRAFT_DESK.lateGoal ? "" : `, decided by ${last.m.name}'s goal ${whenScored(last.t)}`;
   return `${beat}${decided}${before}`;
@@ -65,14 +66,13 @@ function scoreLine(home: SideState, away: SideState, cutoff: Cutoff, worth: Slot
 /** A Premier League match with the two sides' men on opposing clubs: "Man City v Sunderland: Haaland for 123, Meunier
  *  for test2". Unplayed ones (`played` false) for who is still to play; played ones only when one of them returned. */
 function opposedMatches(home: DraftSide, away: DraftSide, played: boolean): string[] {
-  const returned = (m: DraftMan) => m.goals + m.assists + m.cleanSheets > 0;
   const inMatch = (side: DraftSide, code: number) => side.eleven.filter((m) => m.matches.some((x) => x.code === code) && (played ? m.minutes > 0 : m.left > 0));
   const labels = new Map([...home.eleven, ...away.eleven].flatMap((m) => m.matches.map((x) => [x.code, x.label] as const)));
   return [...labels].flatMap(([code, label]) => {
     const [h, a] = [inMatch(home, code), inMatch(away, code)];
     const opposed = h.some((x) => a.some((y) => x.club !== y.club));
-    if (!opposed || (played && ![...h, ...a].some(returned))) return [];
-    return [`${label}: ${and(h.map((m) => m.name))} for ${home.name}, ${and(a.map((m) => m.name))} for ${away.name}`];
+    if (!opposed || (played && ![...h, ...a].some((m) => returnCount(m) > 0))) return [];
+    return [`${label}: ${listed(h.map((m) => m.name), "and")} for ${home.name}, ${listed(a.map((m) => m.name), "and")} for ${away.name}`];
   });
 }
 
