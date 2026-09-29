@@ -83,6 +83,7 @@ export {
 export type { CompetitionTie, TieSide } from "./competitions";
 
 export { FantraxError } from "./fantrax/errors";
+export { categoryPoints } from "./scoring";
 export type { ScoringCategory, ScoringRules } from "./scoring";
 export { orphaned, unacknowledged } from "./fantrax/baseline";
 export type { AcknowledgedDifference } from "./fantrax/baseline";
@@ -93,6 +94,8 @@ export {
   mapProjectedTotals,
 } from "./fantrax/livescoring";
 export { mapPoolStats, mapTeamStats } from "./fantrax/stats";
+export { mapBenchOrder } from "./fantrax/benchOrder";
+export type { BenchOrder, RawTeamRosterInfo } from "./fantrax/benchOrder";
 export { isFantraxPlayerId, mapPlayerProfile } from "./fantrax/profile";
 export type { LabelledValue, PlayerIntel, PlayerMatch } from "./fantrax/profile";
 export { mapTransactions, orderKey, transactionDateLabel } from "./fantrax/transactions";
@@ -106,6 +109,8 @@ export type { PlayerStory } from "./fantrax/playerNews";
 export type { RawTeamRosters } from "./fantrax/raw";
 export {
   fetchLiveScoring,
+  fetchLiveScoringDay,
+  fetchTeamRosterInfo,
   fetchPlayerProfile,
   fetchPoolStats,
   fetchTeamStats,

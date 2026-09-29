@@ -44,6 +44,22 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## A period's points by London day, and the bench order for auto-subs — probed 29 Sep 2026
+
+- **`getLiveScoringStats` answers one day** when asked as the live-scoring page's Timeframe → Date view does:
+  `{ sppId: "-1", viewType: "1", period, date: "YYYY-MM-DD", newView: true }` (replayed from the page's own request;
+  it also sends `tz: "Europe/London"` on the envelope, which changed nothing here). No cookie.
+- **The days sum to the period, to the point**: rehearsal period 5 (GW5), all ten teams, 18 + 19 + 20 Sep equals the
+  period read and `getStandings`' result (123: 11 + 15 + 12 = 38). A date after the period's last match day answers
+  that day again (21 and 22 Sep repeat 20 Sep), so a caller sums the gameweek's own days, never a range.
+- Minutes are the `Min` category on every man who played, so "did not play" is Fantrax's own reading.
+- **The bench order is on `getTeamRosterInfo`**: `miscData.autoSubsOrderingType` is `"USER"` and
+  `miscData.autoSubOrderMap` is `{}` on the team probed (no manager has numbered a bench, or it shows only to the
+  owner). Reserves are otherwise listed keeper table first; `mapBenchOrder` reads the map and falls back to that listing.
+- **Open: the rehearsal league's GW5 results carry no auto-subs.** test2's Millar played no minutes, Meunier scored 3
+  on the bench, and test2's result is 34, the eleven's total, not 37. Either substitutions are off in this league or
+  Fantrax applies a rule we have not read. `scripts/draft-report-proof.ts` prints both scores until that is settled.
+
 ## Lawro writes the predictions, under his own name, on Thursday evening — decided 24 Sep 2026
 
 - **The byline is "by Mark Lawrenson", with no impression marking** (Craig, 24 Sep 2026). It reverses,
