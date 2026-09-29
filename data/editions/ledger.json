@@ -242,9 +242,17 @@
       "news:https://www.bbc.co.uk/sport/football/articles/cm0qxknzpn8jo",
       "news:https://www.bbc.co.uk/sport/football/articles/cj62eyx9grzxo",
       "news:https://www.bbc.co.uk/sport/football/articles/c6vgy934nvq4o",
-      "news:https://www.bbc.co.uk/sport/football/articles/cked73ppgql3o"
+      "news:https://www.bbc.co.uk/sport/football/articles/cked73ppgql3o",
+      "news:https://www.bbc.co.uk/sport/football/articles/c68048pynj94o"
     ],
     "threads": [
+      {
+        "subject": "test1's Palmer under scrutiny",
+        "beat": "PFA chief brands Palmer a victim of a sick schedule; no absence yet.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-29T17:11:29.492Z"
+      },
       {
         "subject": "123's scoring ceiling",
         "beat": "The top scorer's cornerstone sits under speculation, still nailed on.",
