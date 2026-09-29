@@ -101,7 +101,7 @@ export async function writeReports(
 
   const checked = mergeReports(attempts, codes);
   // The senior writer's pass over what survived; each match keeps the woven copy unless it breaks more rules than before.
-  const woven = await weave(brief, checked, ctx, codes, surnames, count, say);
+  const woven = await weave(day, gameweek, checked, ctx, codes, surnames, count, say);
   const merged = woven.draft;
   // The one pencil after the merge: a head still breaking the rules prints as its man's name.
   const never = (text: string) => banned(text, REPORT_NEVER).length > 0;
@@ -132,10 +132,11 @@ export async function writeReports(
   return { draft, brief, log: { attempts: attempts.map((a) => ({ faults: [...a.faults] })), fan, kept, usage } };
 }
 
-/** One call per `perCall` matches; a match whose woven copy has a hard fault, or more faults than the checked one, keeps
- *  the checked one. */
+/** One call per match, all at once, each with its own facts; a match whose woven copy has a hard fault, or more faults
+ *  than the checked one, keeps the checked one. */
 async function weave(
-  brief: string,
+  day: string,
+  gameweek: number,
   checked: ReportsDraft,
   ctx: Parameters<typeof checkReports>[1],
   codes: readonly number[],
@@ -145,16 +146,18 @@ async function weave(
 ): Promise<{ draft: ReportsDraft; codes: Set<number> }> {
   const present = codes.filter((code) => checked.matches.has(code));
   const woven: ReportsDraft = { headline: "", headlines: [], matches: new Map() };
-  for (let at = 0; at < present.length; at += REPORTS.perCall) {
-    const chunk = present.slice(at, at + REPORTS.perCall);
-    const raw = await writeColumn(WEAVE_VOICE, weaveBrief(brief, checked, chunk), count).catch(() => null);
-    if (raw === null) continue;
-    // The standfirst was checked and stays as filed: the first woven filing rewrote Spurs' into a result that never happened.
-    for (const [code, piece] of readReportsDraft(raw, surnames).matches) {
-      const standfirst = checked.matches.get(code)?.standfirst;
-      if (chunk.includes(code) && standfirst !== undefined) woven.matches.set(code, { ...piece, standfirst });
-    }
-  }
+  await Promise.all(
+    present.map(async (code) => {
+      const desk = ctx.desks.find((d) => d.match.fixture.code === code)!;
+      const raw = await writeColumn(WEAVE_VOICE, weaveBrief(buildReportsBrief(day, gameweek, [desk]), checked, [code]), count).catch((error: unknown) => {
+        say(`  ⚠ reports: the senior writer failed on match ${code}: ${error instanceof Error ? error.message.slice(0, 160) : String(error)}`);
+        return null;
+      });
+      const piece = raw === null ? undefined : readReportsDraft(raw, surnames).matches.get(code);
+      // The standfirst was checked and stays as filed: the first woven filing rewrote Spurs' into a result that never happened.
+      if (piece !== undefined) woven.matches.set(code, { ...piece, standfirst: checked.matches.get(code)!.standfirst });
+    }),
+  );
   const before = checkReports(checked, ctx);
   const after = checkReports(woven, ctx).filter((f) => f.section === "day" || woven.matches.has(matchOf(f.section)));
   const draft = { ...checked, matches: mergeReports([{ draft: woven, faults: after }, { draft: checked, faults: before }], present).matches };

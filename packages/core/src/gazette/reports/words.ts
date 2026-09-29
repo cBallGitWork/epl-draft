@@ -33,6 +33,7 @@ export const REPORT_CLICHES: readonly string[] = [
   "had earlier", "had already", "available to anyone", "there for the taking", "whoever owns him", "scored for nobody",
   "among the reserves", "second time of asking", "to show for", "good enough sight", "gone begging", "went begging",
   "cut the arrears", "the pick of them", "announces himself", "fashioned", "mustered", "endeavours", "productive",
+  "for no side", "no manager", "for nobody", "without a club", "a tally", "day's work", "adding nothing", "goes unrewarded",
 ];
 
 /** Grounds the house list lacks, and their nicknames; the brief carries no ground, so every one is recalled. */
