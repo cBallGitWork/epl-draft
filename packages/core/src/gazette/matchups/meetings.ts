@@ -14,7 +14,7 @@ export interface Meeting {
 export interface FormerSide {
   teamId: string;
   how: "drafted" | "traded" | "released";
-  /** The draft round, or the period of the move. */
+  /** The gameweek of a trade or a release; the draft's round for a man drafted, never printed. */
   when: number;
 }
 
@@ -23,7 +23,7 @@ export function meetingLines(side: string, opponent: string, meetings: readonly 
   if (meetings.length === 0) return [];
   const last = [...meetings].sort((a, b) => b.period - a.period)[0];
   const lastLine =
-    last.for === last.against ? `they drew ${last.for}-${last.against} in round ${last.period}` : `${last.for > last.against ? side : opponent} won ${Math.max(last.for, last.against)}-${Math.min(last.for, last.against)} in round ${last.period}`;
+    last.for === last.against ? `they drew ${last.for}-${last.against} in gameweek ${last.period}` : `${last.for > last.against ? side : opponent} won ${Math.max(last.for, last.against)}-${Math.min(last.for, last.against)} in gameweek ${last.period}`;
   if (meetings.length === 1) return [`the last meeting: ${lastLine}`];
   const [w, d, l] = [meetings.filter((m) => m.for > m.against).length, meetings.filter((m) => m.for === m.against).length, meetings.filter((m) => m.for < m.against).length];
   const record = w === meetings.length ? `${side} have won all ${w} meetings with ${opponent}` : l === meetings.length ? `${opponent} have won all ${l} meetings with ${side}` : `${possessive(side)} record against ${opponent} is won ${w}, drawn ${d}, lost ${l}`;
@@ -35,6 +35,6 @@ export function oldBoys(men: readonly { fantraxId: string; name: string }[], opp
   return men.flatMap((m) => {
     const was = (formerly.get(m.fantraxId) ?? []).find((f) => f.teamId === opponent.teamId);
     if (was === undefined) return [];
-    return [`${m.name} faced ${opponent.name}, who ${was.how === "drafted" ? `drafted him in round ${was.when}` : `${was.how} him in round ${was.when}`}`];
+    return [`${m.name} faced ${opponent.name}, who ${was.how === "drafted" ? "drafted him" : `${was.how} him in gameweek ${was.when}`}`];
   });
 }

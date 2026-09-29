@@ -34,7 +34,7 @@ export function matchupBlock(ctx: MatchupContext, cutoff: Cutoff): string {
   const { home, away, score, stillToPlay, stories } = ctx.state;
   return [
     `MATCH-UP: ${home.side.name} v ${away.side.name}`,
-    ["WHERE THEY STAND before this round:", place(home.side.name, ctx.places.home), place(away.side.name, ctx.places.away)].filter((l) => l !== null).join("\n"),
+    ["WHERE THEY STAND before this gameweek:", place(home.side.name, ctx.places.home), place(away.side.name, ctx.places.away)].filter((l) => l !== null).join("\n"),
     ctx.meetings.length === 0 ? null : ["THE MEETINGS:", ...ctx.meetings.map((line) => `- ${line}`)].join("\n"),
     `${cutoff === "saturday" ? "THE SCORE after Saturday's matches" : "THE RESULT"}: ${score}.`,
     stillToPlay.length === 0 ? null : ["STILL TO PLAY:", ...stillToPlay.map((line) => `- ${line}`)].join("\n"),
@@ -47,6 +47,6 @@ export function matchupBlock(ctx: MatchupContext, cutoff: Cutoff): string {
 }
 
 export function buildDraftBrief(cutoff: Cutoff, gameweek: number, contexts: readonly MatchupContext[]): string {
-  const when = cutoff === "saturday" ? "after Saturday's matches, with the rest of the round to come" : "at the end of the round";
+  const when = cutoff === "saturday" ? "after Saturday's matches, with the rest of the gameweek to come" : "at the end of the gameweek";
   return [`DRAFT REPORT, gameweek ${gameweek}, ${when}. ${contexts.length} match-up${contexts.length === 1 ? "" : "s"}.`, ...contexts.map((c) => matchupBlock(c, cutoff))].join("\n\n=====\n\n");
 }

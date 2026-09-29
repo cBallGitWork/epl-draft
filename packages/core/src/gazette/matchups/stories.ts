@@ -80,7 +80,7 @@ export function sideStories(side: DraftSide, subs: readonly AutoSub[], worth: Sl
   if (cutoff === "saturday") {
     const doubles = new Map<string, DraftMan[]>();
     for (const m of side.eleven.filter((x) => x.played + x.left > 1)) doubles.set(m.club, [...(doubles.get(m.club) ?? []), m]);
-    for (const men of doubles.values()) lines.push(`${side.name} have ${listed(men.map((m) => m.name), "and")} with two matches this round`);
+    for (const men of doubles.values()) lines.push(`${side.name} have ${listed(men.map((m) => m.name), "and")} with two matches this gameweek`);
   }
   return lines.map((line) => `${side.name}: ${line}`);
 }

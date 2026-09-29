@@ -175,7 +175,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
     `Eleven limits: most ${JSON.stringify(limits.max)}; fewest ${min === null ? "not recorded for this league" : JSON.stringify(min)}.`,
     `Bench orders: ${[...orders.values()].filter((o) => o.by === "manager").length} of ${orders.size} set by the manager, the rest by total points.`,
     `Goal times read for ${goals.size} of ${fixtures.length} matches.`,
-    `Due: ${due.size === 0 ? "nothing yet; the round's matches are not settled" : [...due].join(" and ")}.`,
+    `Due: ${due.size === 0 ? "nothing yet; the gameweek's matches are not settled" : [...due].join(" and ")}.`,
   ];
   return { gameweek, period, days, cutoffs, notes };
 }

@@ -49,7 +49,7 @@ function streakOf(run: readonly FormResult[]): { what: string; n: number } | nul
 export function goingIn(teamId: string, name: string, before: readonly FormGame[]): FormFact | null {
   const run = streakOf(before.map((g) => g.result));
   if (run === null) return null;
-  const text = run.what === "wins" || run.what === "defeats" ? `${name} had ${run.what === "wins" ? "won" : "lost"} ${run.n} in a row going into the round` : `${name} were ${run.n} ${run.what} going into the round`;
+  const text = run.what === "wins" || run.what === "defeats" ? `${name} had ${run.what === "wins" ? "won" : "lost"} ${run.n} in a row going into the gameweek` : `${name} were ${run.n} ${run.what} going into the gameweek`;
   return { teamId, kind: "streak", text };
 }
 
@@ -70,7 +70,7 @@ export function roundForm(sides: readonly RoundSide[], runs: ReadonlyMap<string,
     const broken = was !== null && (was.what === "wins" ? resultOf(side) !== "W" : was.what === "defeats" ? resultOf(side) !== "L" : was.what === "without defeat" ? resultOf(side) === "L" : resultOf(side) === "W");
     if (was !== null && broken) push("streak-ended", `${possessive(side.name)} run of ${was.n} ${was.what} ended against ${side.opponent}`);
     const winless = trailing(before, (r) => r !== "W");
-    if (resultOf(side) === "W" && winless >= DRAFT_DESK.formReturn) push("return-to-form", `${side.name} won for the first time in ${winless + 1} rounds`);
+    if (resultOf(side) === "W" && winless >= DRAFT_DESK.formReturn) push("return-to-form", `${side.name} won for the first time in ${winless + 1} gameweeks`);
 
     // Records need a season behind them: from the league's fourth round on.
     if (rounds + 1 < DRAFT_DESK.recordsFrom) continue;

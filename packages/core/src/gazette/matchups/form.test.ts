@@ -17,7 +17,7 @@ describe("roundForm", () => {
 
   it("says when a run ends, and when a win ends three rounds without one", () => {
     expect(runs(roundForm([side("Dons", 30, 40)], new Map([["Dons", games("WWW", 60)]])))).toEqual(["streak-ended: Dons' run of 3 wins ended against Rivals"]);
-    expect(runs(roundForm([side("Dons", 40, 30)], new Map([["Dons", games("LLD", 60)]])))).toEqual(["return-to-form: Dons won for the first time in 4 rounds"]);
+    expect(runs(roundForm([side("Dons", 40, 30)], new Map([["Dons", games("LLD", 60)]])))).toEqual(["return-to-form: Dons won for the first time in 4 gameweeks"]);
   });
 
   it("claims a season record only from the fourth round, and a side's own high after three of its own", () => {
