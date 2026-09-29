@@ -20,6 +20,7 @@ import type { SheetsDesk } from "./sheets";
 import { storyOfColumn } from "./newsroom";
 import { COLUMNIST, STORY_BYLINE, editionName } from "./voice/bylines";
 import { presserHeadline } from "./voice/pressers";
+import type { ReportsJob } from "./reports";
 
 // One assignment in, one prepared desk out: which voice writes it, from which
 // brief, and how the words come back as a story. A kind with no desk yet
@@ -41,6 +42,8 @@ export interface DeskContext {
   predictions: PredictionsDesk | null;
   /** The locked sheets, their history and their brief; null unless team news is due this firing. */
   sheets: SheetsDesk | null;
+  /** Each match-day report this firing commissioned, by its London day. */
+  reports: ReadonlyMap<string, ReportsJob>;
   /** This week's press-conference signals, for men the league holds. Empty until
    *  the intel export lands, which files no Team Sheet and spends nothing. */
   presserLines: PresserLine[];
@@ -126,7 +129,7 @@ export function file(
         : assignment.kind === "predicted-xi"
           ? firstKickoff(copy.lineups)
           : null,
-    edition: editionName(assignment.kind, filedAt),
+    edition: editionName(assignment.kind, filedAt, assignment.day),
     byline: STORY_BYLINE[assignment.kind] ?? "",
     reporter: COLUMNIST[assignment.kind],
     subject: assignment.key,

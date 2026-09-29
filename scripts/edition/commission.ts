@@ -11,7 +11,9 @@ import { FIXTURE_PREVIEW, TIE_CALL, TIE_REPORT } from "./voice/matches";
 import { DODGERS, ELEVEN, POWER_RANKING, WIRE } from "./voice/columns";
 import { LAWRO } from "./voice/lawro";
 import type { PredictionsDesk } from "./predictions";
+import type { ReportsJob } from "./reports";
 import type { SheetsDesk } from "./sheets";
+import { REPORTS_VOICE } from "./voice/reports";
 import { SHEETS_VOICE } from "./voice/sheets";
 import { NEWS } from "./voice/news";
 import { PRESSER } from "./voice/pressers";
@@ -22,7 +24,7 @@ import { edition, faceCtx, type DeskContext } from "./dispatch";
 /** How a column comes to exist: a voice and a brief for a writer, or a set of
  *  facts the desk prints itself. */
 type Commission =
-  | { system: string; brief: string; lawro?: PredictionsDesk; sheets?: SheetsDesk }
+  | { system: string; brief: string; lawro?: PredictionsDesk; sheets?: SheetsDesk; reports?: ReportsJob }
   | { printed: Record<string, unknown> };
 
 export function prepare(assignment: Assignment, ctx: DeskContext): Commission | null {
@@ -38,6 +40,12 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
     if (desk === null) return null;
     const brief = buildLawroBrief({ ...desk, teams: ctx.info.teams.map(({ teamId, name }) => ({ teamId, name })) });
     return brief === null ? null : { system: LAWRO, brief, lawro: desk };
+  }
+
+  // A match-day report is written, checked and read back through its own newsroom, from the day's joined facts.
+  if (assignment.kind === "match-report") {
+    const job = assignment.day === undefined ? undefined : ctx.reports.get(assignment.day);
+    return job === undefined ? null : { system: REPORTS_VOICE, brief: job.brief, reports: job };
   }
 
   // Team news is written a paragraph a side through its own editor, from facts the desk already joined.

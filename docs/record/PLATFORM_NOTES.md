@@ -44,6 +44,36 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## Opta's commentary describes every shot, and says what VAR decided — probed 28 Sep 2026
+
+For the match report's facts: the textstream (`/fixtures/{id}/textstream/EN`) over **all 50 fixtures
+of gameweeks 1-5**, and the staff endpoint for all 20 clubs.
+
+| | |
+|---|---|
+| goals reconcile with the detail's `G`+`P`+`O` | **50/50** fixtures |
+| shot lines (`goal`, `penalty goal`, `miss`, `attempt saved`, `attempt blocked`, `post`) | 1,389 |
+| …foot (`right footed`, `left footed`, `header`) | **1,383/1,389** |
+| …where from (`very close range`, `centre of the box`, `outside the box`…) | 1,385/1,389 |
+| …made by (`Assisted by`) | 1,025/1,389, an unassisted shot rather than a gap |
+| …situation (`following a corner`/`fast break`/`set piece situation`, `direct free kick`) | 227/1,389 |
+| `added time` giving its minutes | **100/100** |
+| substitutions Opta marks as injury | 29/438, plus one `player retired` ("went off injured after … used all subs") |
+| `contentious referee decisions` | 15, each `VAR Decision: No Goal <score>` · `No Penalty <club>` · `Goal <score> (<scorer>)` · `Card upgraded <man>`; with 11 `VAR cancelled goal` naming the scorer |
+
+**Four traps.** A missed penalty is a `post` or `miss` whose text starts `Penalty missed!`, not a
+type of its own. `penalty saved` names the keeper only in prose, so the keeper comes from the team
+sheet, never the text. A second booking is `secondyellow card` (2), a straight red `red card` (4).
+The own-goal line has no space after the score (`…Town 1.Goal confirmed following VAR Review.`).
+
+**Managers are named only where the staff list is unambiguous: 16/20.** `/teams/{id}/compseasons/841/staff`
+lists `role: "Manager"` with `active: true` and no dates, and Forest, Chelsea, Palace and Ipswich each
+carry two active managers. A club with two is given none, because nothing says which one picked the side.
+
+**Opta's type strings are now read in five places, and the shared table waits.** `moments.ts` joins
+`map.ts` `KINDS`, `assists.ts`, `injuries.ts` and `wire.ts`. It is past the rule of three, but #149
+rewrites three of those four, so the extraction lands after #149 merges rather than colliding with it.
+
 ## Lawro writes the predictions, under his own name, on Thursday evening — decided 24 Sep 2026
 
 - **The byline is "by Mark Lawrenson", with no impression marking** (Craig, 24 Sep 2026). It reverses,

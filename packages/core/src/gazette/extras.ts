@@ -1,6 +1,8 @@
 import { once } from "./published";
 import { normalizeRecord, normalizeSkit, type StorySkit } from "./predictions/cargo";
 import type { Marked } from "./predictions/record";
+import type { StoryReport } from "./reports/cargo";
+import { normalizeReports } from "./reports/cargoRead";
 import { normalizeSheets, type StorySheet } from "./sheets/cargo";
 
 // The structured cargo some story kinds carry beside their prose: a power
@@ -128,6 +130,8 @@ export interface StoryExtras {
   /** Lawro's season record, and the groaners the skit writer landed. */
   record?: Marked;
   skit?: StorySkit[];
+  /** A match-day report: each match's score block, pieces, key stats, timeline and video. */
+  reports?: StoryReport[];
 }
 
 /** A closed set, so the column cannot invent a fifth state. Anything else is a
@@ -267,6 +271,8 @@ export function normalizeExtras(raw: unknown): StoryExtras | undefined {
   if (record !== undefined) out.record = record;
   const skit = normalizeSkit(extras.skit);
   if (skit !== undefined) out.skit = skit;
+  const reports = normalizeReports(extras.reports);
+  if (reports !== undefined) out.reports = reports;
 
   return Object.keys(out).length > 0 ? out : undefined;
 }

@@ -57,6 +57,8 @@ const WEEKDAY = new Intl.DateTimeFormat("en-GB", {
   timeZone: LEAGUE_TIMEZONE,
 });
 
+const WEEKDAY_LONG = new Intl.DateTimeFormat("en-GB", { weekday: "long", timeZone: LEAGUE_TIMEZONE });
+
 const DAY_AND_DATE = new Intl.DateTimeFormat("en-GB", {
   weekday: "short",
   day: "numeric",
@@ -101,4 +103,9 @@ export function londonDayAndTime(iso: string): string {
 /** `Sat`. */
 export function londonWeekday(iso: string): string {
   return readable(iso, WEEKDAY);
+}
+
+/** `Saturday`. */
+export function londonWeekdayLong(iso: string): string {
+  return readable(iso, WEEKDAY_LONG);
 }

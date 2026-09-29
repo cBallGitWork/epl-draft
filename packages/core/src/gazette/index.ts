@@ -63,7 +63,7 @@ export type {
   TeamOfTheWeek,
 } from "./types";
 
-export { fullClubName } from "./clubNames";
+export { fullClubName, shortClubNames } from "./clubNames";
 
 // Team news at the lock: each side's sheet, what changed, the brief, the editor and the column.
 export { sheetOf } from "./sheets/sheet";
@@ -93,3 +93,38 @@ export type { PredictionsTie } from "./briefs/predictions";
 export type { RecentGame, SideForm } from "./predictions/sides";
 export type { Marked } from "./predictions/record";
 export type { CheckContext, Fault, LawroDraft } from "./predictions/checks";
+export { buildReportsBrief } from "./reports/brief";
+export { deskDay } from "./reports/desk";
+export type { MatchDesk } from "./reports/desk";
+export { reportMen } from "./reports/men";
+export type { LiveLine, MenExtras, SeasonLine } from "./reports/men";
+export { sideFigures } from "./reports/figures";
+export { surname } from "./reports/keyStats";
+export type { ReportClub, ReportDayInput, ReportMan, ReportMatchInput, SideFigures } from "./reports/types";
+export { checkReports } from "./reports/checks";
+export type { ReportsCheck } from "./reports/checks";
+export { correct, matchOf, mergeReports, plainHead, readReportsDraft } from "./reports/draft";
+export type { ReportPiece, ReportSection, ReportsDraft } from "./reports/draft";
+export { FAN_TAGS, fanBrief, fanFaults, fanHeadline } from "./reports/fan";
+export { matchBlock } from "./reports/brief";
+export { REPORT_NEVER } from "./reports/style";
+export {
+  REPORT_ADVICE, REPORT_AMERICAN, REPORT_CAPPED_DAY, REPORT_CAPPED_MATCH, REPORT_FANTASY, REPORT_FPL,
+} from "./reports/words";
+export { plainStandfirst, reportsCargo } from "./reports/cargo";
+export { normalizeReports } from "./reports/cargoRead";
+export type { ReportRowKind, StoryReport, StoryReportRow, StoryReportSection, StoryReportSide } from "./reports/cargo";
+export { reportDays } from "./reports/due";
+export type { ReportDay } from "./reports/due";
+export { lineupOf } from "./reports/lineups";
+export type { LineupMan, StoryLineup } from "./reports/lineups";
+export { fantasyPanel } from "./reports/fantasy";
+export type { FantasyMan, FantasyPanel } from "./reports/fantasy";
+export { strike, survivors } from "./reports/headline";
+export { applyFixes, faultySentences } from "./reports/lineEdit";
+export type { LineFix } from "./reports/lineEdit";
+export { punBrief } from "./reports/headline";
+export { readHeadlines } from "./reports/draft";
+export { weaveBrief } from "./reports/weave";
+export { repeatsIn } from "./reports/repeats";
+export type { Repeat } from "./reports/repeats";

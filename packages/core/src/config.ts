@@ -115,6 +115,9 @@ export const YOUTUBE_FEED_BASE = "https://www.youtube.com/feeds/videos.xml";
  *  re-hosted. */
 export const YOUTUBE_EMBED_BASE = "https://www.youtube-nocookie.com/embed";
 
+/** A video's still, drawn as the click-to-play thumbnail a match report opens on. */
+export const YOUTUBE_THUMB_BASE = "https://i.ytimg.com/vi";
+
 /** Scout's free team-news page: every club's predicted eleven on one page. No trailing
  *  slash — with one, the site 301s. */
 export const SCOUT_TEAM_NEWS_URL = "https://www.fantasyfootballscout.co.uk/team-news";
@@ -394,4 +397,37 @@ export const SHEETS = {
   echo: 5,
   /** Paragraphs that may open with the same three words, a name blanked. */
   openers: 2,
+} as const;
+
+/** The match-day report's editorial thresholds (docs/plans/GAZETTA.md, "Match reports, woven"). */
+export const REPORTS = {
+  budget: {
+    lead: { account: [180, 260], sections: 3, stats: 9 },
+    ordinary: { account: [120, 190], sections: 2, stats: 8 },
+    dead: { account: [60, 110], sections: 1, stats: 6 },
+  },
+  /** Words a standfirst and a section may run to (sports desk, 28 Sep 2026). */
+  standfirstWords: 25,
+  sectionWords: [20, 45],
+  /** A burst is two goals by one side this close; late is from this minute. */
+  burstMinutes: 15,
+  lateMinute: 80,
+  cleanSheetLostFrom: 75,
+  /** The ball in words: "most of" from, "more of" from. Never printed as a figure. */
+  ball: { most: 60, more: 55 },
+  /** A key-stats line earns its place past these. xA only chooses; it never prints. */
+  stats: { mostShots: 4, chances: 3, expectedAssists: 0.4, saves: 5, freeNames: 4 },
+  /** Chances not taken the account is handed: close-range misses and saves, at most `most`; and the men whose chances
+   *  added up to at least `expectedGoals` without a goal, told in words. */
+  missed: { most: 3, expectedGoals: 0.5 },
+  /** Candidates offered beyond the sections a match gets. */
+  spareNominees: 3,
+  /** A run of this many words shared with another match, or a recent report, is an echo. */
+  echo: 4,
+  /** The fan's quotes kept for any one part of a piece. */
+  fanFlags: 3,
+  /** Earlier report days whose phrasing a new one may not echo. */
+  pastDays: 4,
+  /** Matches written in one call; a longer day is split, the later call shown what is already on the page. */
+  perCall: 5,
 } as const;
