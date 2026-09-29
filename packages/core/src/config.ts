@@ -380,6 +380,8 @@ export const DRAFT_DESK = {
   lowScore: 1,
   /** A man off before this many minutes, with his match done. */
   earlyOff: 60,
+  /** Returns needed beyond this many and a lead is called beyond reach, though not yet out of it. */
+  reach: 3,
 } as const;
 
 export const SHEETS = {

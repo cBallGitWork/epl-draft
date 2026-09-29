@@ -1,5 +1,6 @@
 import { DRAFT_DESK } from "../../config";
 import { autoSubs, blank, type AutoSub } from "./autoSubs";
+import { chaseLines } from "./swing";
 import type { DraftMan, DraftMatchupInput, DraftSide, PositionLimits, SlotWorth } from "./types";
 
 // A match-up at the cut-off in fantasy terms: the score with Fantrax's coming substitutions counted, who is left to play,
@@ -35,22 +36,12 @@ function sideState(side: DraftSide, limits: PositionLimits): SideState {
   return { side, subs, total: (side.total ?? 0) + coming, left };
 }
 
-/** What one goal from each man still to play does to the margin, for the side behind or level. */
-function swing(chasing: SideState, ahead: SideState, gap: number, worth: SlotWorth): string[] {
-  const name = chasing.side.name;
-  if (chasing.left.length === 0) return ahead.left.length === 0 ? [] : [`${name} have nobody left to play; ${ahead.side.name} have ${ahead.left.length}`];
-  const goals = chasing.left.map((m) => ({ m, worth: worth.goal[m.slot] ?? 0 }));
-  const winners = goals.filter((g) => g.worth > gap);
-  const levellers = goals.filter((g) => g.worth === gap);
-  const lines = [`${name} have ${chasing.left.length} to play: ${chasing.left.map(tag).join(", ")}`];
-  if (ahead.left.length === 0) {
-    if (winners.length > 0) lines.push(`one goal from ${winners.map((g) => `${g.m.name} (worth ${g.worth})`).join(", ")} would win it for ${name}`);
-    if (levellers.length > 0) lines.push(`one goal from ${levellers.map((g) => g.m.name).join(", ")} would level it`);
-    if (winners.length + levellers.length === 0) lines.push(`${name} need more than one goal from any of them`);
-  } else {
-    lines.push(`${ahead.side.name} still have ${ahead.left.length} to play too: ${ahead.left.map(tag).join(", ")}`);
-  }
-  return lines;
+/** Who each side has left to play, and the side behind's sums; when level, the first return for either side leads. */
+function swing(behind: SideState, ahead: SideState, gap: number, worth: SlotWorth): string[] {
+  const left = [behind, ahead].filter((s) => s.left.length > 0).map((s) => `${s.side.name} have ${s.left.length} to play: ${s.left.map(tag).join(", ")}`);
+  if (behind.left.length + ahead.left.length === 0) return [];
+  if (gap === 0) return [...left, "level, so the first return for either side puts it ahead"];
+  return [...left, ...chaseLines(behind, ahead, gap, worth)];
 }
 
 /** The men worth a line on one side: reserves who scored, big and small scores, early exits, debuts, doubles, blanks. */
@@ -84,7 +75,6 @@ export function matchupState(input: DraftMatchupInput, worth: SlotWorth, limits:
   const lines = [
     `${now}${subbed ? `; ${home.total}-${away.total} with the automatic substitutions` : ""}: ${gap === 0 ? "level" : `${ahead.side.name} lead by ${pts(gap)}`}`,
     ...swing(behind, ahead, gap, worth),
-    ...(gap === 0 ? swing(ahead, behind, gap, worth).slice(1) : []),
     ...talkingPoints(home),
     ...talkingPoints(away),
   ];

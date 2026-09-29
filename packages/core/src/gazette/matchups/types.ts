@@ -43,10 +43,18 @@ export interface DraftMatchupInput {
   away: DraftSide;
 }
 
-/** What the league's scoring pays for a goal and a clean sheet at each slot, read from `getLeagueInfo`. */
+/** A return a man can still make in a match, and what the league pays for it at his slot. */
+export interface Worth {
+  kind: "goal" | "assist" | "clean sheet" | "defensive bonus" | "saves";
+  worth: number;
+}
+
+/** What the league pays at each slot, read from `getLeagueInfo`, or for a tiered rule it does not spell out, from what
+ *  Fantrax paid this round. Only the returns a man in that slot realistically makes: a keeper's goal is left out. */
 export interface SlotWorth {
-  goal: Record<string, number>;
-  cleanSheet: Record<string, number>;
+  returns: Record<string, Worth[]>;
+  /** What a full match pays for the minutes alone; 0 when nobody has played one. */
+  appearance: number;
 }
 
 /** Position letter to the fewest and most the eleven may field there. */

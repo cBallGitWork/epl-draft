@@ -9,7 +9,15 @@ const man = (name: string, slot: string, points: number | null, minutes: number,
 const xi = (tag: string, over: Record<number, DraftMan> = {}) => ["G", "D", "D", "D", "D", "M", "M", "M", "M", "F", "F"].map((s, i) => over[i] ?? man(`${tag}${i}`, s, 2, 90));
 const side = (name: string, total: number, eleven: DraftMan[], bench: DraftMan[] = []): DraftSide => ({ teamId: name, name, total, eleven, bench, subOrder: bench.map((m) => m.fantraxId) });
 const limits = { min: { G: 1, D: 3, M: 2, F: 1 }, max: { G: 1, D: 5, M: 5, F: 3 } };
-const worth = { goal: { G: 6, D: 6, M: 5, F: 4 }, cleanSheet: { G: 4, D: 4, M: 1, F: 0 } };
+const worth = {
+  appearance: 0,
+  returns: {
+    G: [{ kind: "clean sheet" as const, worth: 4 }],
+    D: [{ kind: "goal" as const, worth: 6 }, { kind: "assist" as const, worth: 3 }, { kind: "clean sheet" as const, worth: 4 }],
+    M: [{ kind: "goal" as const, worth: 5 }, { kind: "assist" as const, worth: 3 }, { kind: "clean sheet" as const, worth: 1 }],
+    F: [{ kind: "goal" as const, worth: 4 }, { kind: "assist" as const, worth: 3 }],
+  },
+};
 const state = matchupState(
   { home: side("Dons", 40, xi("h", { 1: man("Blank", "D", null, 0) }), [man("Sub", "D", 3, 90)]), away: side("Notemail", 38, xi("a", { 9: man("Isak", "F", null, 0, 1, { next: "Bournemouth (A)" }) })) },
   worth,
@@ -27,6 +35,6 @@ describe("buildDraftBrief", () => {
     expect(brief).toContain("LAST TIME: Dons won 40-31 in round two.");
     expect(brief).toContain("THE SCORE after Saturday's matches: Dons 40-38 Notemail; 43-38 with the automatic substitutions: Dons lead by 5 points.");
     expect(brief).toContain("Notemail have 1 to play: Isak (EVE, F, against Bournemouth (A))");
-    expect(brief).toContain("Notemail need more than one goal from any of them");
+    expect(brief).toContain("Notemail need at least 2 returns between them");
   });
 });

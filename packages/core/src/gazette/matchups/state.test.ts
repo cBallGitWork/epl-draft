@@ -6,18 +6,27 @@ const man = (name: string, slot: string, points: number | null, minutes: number,
   fantraxId: name, name, club: "Club", slot, points, minutes, played: left === 0 ? 1 : 0, left, debut: false, projected: null, next: null, fitness: null, ...more,
 });
 const limits = { min: { G: 1, D: 3, M: 2, F: 1 }, max: { G: 1, D: 5, M: 5, F: 3 } };
-const worth = { goal: { G: 10, D: 6, M: 5, F: 4 }, cleanSheet: { G: 4, D: 4, M: 1, F: 0 } };
+const worth = {
+  appearance: 0,
+  returns: {
+    G: [{ kind: "clean sheet" as const, worth: 4 }],
+    D: [{ kind: "goal" as const, worth: 6 }, { kind: "assist" as const, worth: 3 }, { kind: "clean sheet" as const, worth: 4 }],
+    M: [{ kind: "goal" as const, worth: 5 }, { kind: "assist" as const, worth: 3 }, { kind: "clean sheet" as const, worth: 1 }],
+    F: [{ kind: "goal" as const, worth: 4 }, { kind: "assist" as const, worth: 3 }],
+  },
+};
 const eleven = (tagged: string, over: Record<string, DraftMan> = {}) =>
   ["G", "D", "D", "D", "D", "M", "M", "M", "M", "F", "F"].map((slot, i) => over[`${slot}${i}`] ?? man(`${tagged}${slot}${i}`, slot, 2, 90));
 const side = (name: string, total: number, xi: DraftMan[], bench: DraftMan[] = []): DraftSide => ({ teamId: name, name, total, eleven: xi, bench, subOrder: bench.map((m) => m.fantraxId) });
 
 describe("matchupState", () => {
-  it("says a goal from the one man left wins it when he is worth more than the margin", () => {
+  it("works out the points needed and names the single return that wins it", () => {
     const home = side("Home", 40, eleven("h"));
     const away = side("Away", 36, eleven("a", { M5: man("Salah", "M", null, 0, 1) }));
     const lines = matchupState({ home, away }, worth, limits).lines;
     expect(lines[0]).toBe("Home 40-36 Away: Home lead by 4 points");
-    expect(lines).toContain("one goal from Salah (worth 5) would win it for Away");
+    expect(lines).toEqual(expect.arrayContaining(["Away need 4 points to draw and 5 points to win", "a goal from Salah (5) would win it on its own"]));
+    expect(lines[1]).toBe("Away have 1 to play: Salah (Club, M)");
   });
 
   it("counts a reserve certain to come on, and names a reserve's big score that does not count", () => {
