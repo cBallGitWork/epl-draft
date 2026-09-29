@@ -28,12 +28,10 @@ export { powerRows } from "./powerRanking";
 export { wireFacts } from "./wire";
 export type { PowerRow } from "./powerRanking";
 export type { WireFacts } from "./wire";
-export { buildMatchReportBrief } from "./briefs/matchReport";
 // The two halves the report was missing: what happened and when, and the two or
 // three figures a report can carry. Exported because the edition script builds
 // them from the Premier League's own feed — the join is the script's, the shape
 // is the brief's.
-export type { MatchReportEvent, MatchReportSide } from "./briefs/matchReport";
 export { buildTieCallBrief } from "./briefs/tieCall";
 export { buildTieReportBrief } from "./briefs/tieReport";
 export { standingHeadlines } from "./briefs/standing";

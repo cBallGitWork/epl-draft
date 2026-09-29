@@ -2,13 +2,12 @@ import { type Assignment, buildLawroBrief, buildPresserBrief } from "@epl/core";
 import { faceOf } from "./faces";
 import {
   fixturePreviewBrief,
-  matchReportBrief,
   tieCallBrief,
   tieReportBrief,
 } from "./assemble";
 import { columnBrief } from "./columns";
 import { newsBrief } from "./news";
-import { FIXTURE_PREVIEW, MATCH_REPORT, TIE_CALL, TIE_REPORT } from "./voice/matches";
+import { FIXTURE_PREVIEW, TIE_CALL, TIE_REPORT } from "./voice/matches";
 import { DODGERS, ELEVEN, POWER_RANKING, WIRE } from "./voice/columns";
 import { LAWRO } from "./voice/lawro";
 import type { PredictionsDesk } from "./predictions";
@@ -47,9 +46,7 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
   }
 
   const scoped =
-    assignment.kind === "match-report"
-      ? matchReportBrief(assignment, ctx.snapshot, ctx.facts, ctx.clubs, ctx.threads)
-      : assignment.kind === "fixture-preview"
+    assignment.kind === "fixture-preview"
         ? fixturePreviewBrief(assignment, ctx.snapshot, ctx.facts, ctx.clubs, ctx.threads)
         : assignment.kind === "tie-call"
           ? tieCallBrief(assignment, ctx.snapshot.gameweek, ctx.facts, ctx.threads)
@@ -83,7 +80,6 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
  *  files nothing — the newsdesk may learn about a column before the paper can
  *  write it. */
 const VOICE: Partial<Record<Assignment["kind"], string>> = {
-  "match-report": MATCH_REPORT,
   "fixture-preview": FIXTURE_PREVIEW,
   "tie-call": TIE_CALL,
   "tie-report": TIE_REPORT,

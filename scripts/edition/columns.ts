@@ -11,7 +11,7 @@ import {
   powerRows,
   wireFacts,
 } from "@epl/core";
-import type { RoundFacts } from "./facts";
+import type { DeskFacts } from "./facts";
 
 // The opinion columns' wiring: what each one is told, out of the facts the
 // firing already gathered. The joins live here rather than in core for the
@@ -19,7 +19,7 @@ import type { RoundFacts } from "./facts";
 
 export interface ColumnContext {
   gameweek: number;
-  facts: RoundFacts;
+  facts: DeskFacts;
   /** Fantrax's table, for the rankings to argue with. Empty when the standings
    *  read refused, which costs that column and no other. */
   table: readonly StandingsRow[];
