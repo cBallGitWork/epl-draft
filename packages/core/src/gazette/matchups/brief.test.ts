@@ -35,6 +35,7 @@ describe("buildDraftBrief", () => {
     expect(brief).toContain("LAST TIME: Dons won 40-31 in round two.");
     expect(brief).toContain("THE SCORE after Saturday's matches: Dons 40-38 Notemail; 43-38 with the automatic substitutions: Dons lead by 5 points.");
     expect(brief).toContain("Notemail have 1 to play: Isak (EVE, F, against Bournemouth (A))");
+    expect(brief).not.toMatch(/to draw and|behind, and need/u);
     expect(brief).toContain("Notemail need at least 2 returns between them");
   });
 });

@@ -20,12 +20,19 @@ const eleven = (tagged: string, over: Record<string, DraftMan> = {}) =>
 const side = (name: string, total: number, xi: DraftMan[], bench: DraftMan[] = []): DraftSide => ({ teamId: name, name, total, eleven: xi, bench, subOrder: bench.map((m) => m.fantraxId) });
 
 describe("matchupState", () => {
+  it("works no sums while more than a few men are left, and tells who is left instead", () => {
+    const five = (tag: string) => eleven(tag, { M5: man(`${tag}5`, "M", null, 0, 1), M6: man(`${tag}6`, "M", null, 0, 1) });
+    const lines = matchupState({ home: side("Home", 20, five("h")), away: side("Away", 10, eleven("a", { F9: man("a9", "F", null, 0, 1), F10: man("a10", "F", null, 0, 1) })) }, worth, limits).lines;
+    expect(lines.filter((l) => /behind|would win|returns/u.test(l))).toEqual([]);
+    expect(lines).toContain("Away have 2 to play: a9 (Club, F), a10 (Club, F)");
+  });
+
   it("works out the points needed and names the single return that wins it", () => {
     const home = side("Home", 40, eleven("h"));
     const away = side("Away", 36, eleven("a", { M5: man("Salah", "M", null, 0, 1) }));
     const lines = matchupState({ home, away }, worth, limits).lines;
     expect(lines[0]).toBe("Home 40-36 Away: Home lead by 4 points");
-    expect(lines).toEqual(expect.arrayContaining(["Away need 4 points to draw and 5 points to win", "a goal from Salah (5) would win it on its own"]));
+    expect(lines).toEqual(expect.arrayContaining(["a goal from Salah (5) would win it on its own"]));
     expect(lines[1]).toBe("Away have 1 to play: Salah (Club, M)");
   });
 
@@ -42,7 +49,7 @@ describe("matchupState", () => {
   it("names an early exit, a first start for the side and a man with two matches", () => {
     const home = side("Home", 20, eleven("h", { M5: man("Early", "M", 1, 40), F9: man("New", "F", 2, 90, 1, { debut: true, played: 1 }) }));
     const lines = matchupState({ home, away: side("Away", 20, eleven("a")) }, worth, limits).lines;
-    expect(lines).toEqual(expect.arrayContaining(["Home: Early (Club) played 40 minutes", "Home: New (Club) started for Home for the first time", "Home: New (Club) has 2 matches this period"]));
+    expect(lines).toEqual(expect.arrayContaining(["Home: Early (Club) played 40 minutes and scored 1 point", "Home: New (Club) started for Home for the first time", "Home: New (Club) has 2 matches this period"]));
   });
 
   it("brings on only reserves in the order, whatever else sits on the bench", () => {

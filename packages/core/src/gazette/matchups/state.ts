@@ -40,6 +40,8 @@ function sideState(side: DraftSide, limits: PositionLimits): SideState {
 function swing(behind: SideState, ahead: SideState, gap: number, worth: SlotWorth): string[] {
   const left = [behind, ahead].filter((s) => s.left.length > 0).map((s) => `${s.side.name} have ${s.left.length} to play: ${s.left.map(tag).join(", ")}`);
   if (behind.left.length + ahead.left.length === 0) return [];
+  // With most of the round to play the sums mean nothing: the report tells what happened.
+  if (behind.left.length + ahead.left.length > DRAFT_DESK.chaseWhenLeft) return left;
   if (gap === 0) return [...left, "level, so the first return for either side puts it ahead"];
   return [...left, ...chaseLines(behind, ahead, gap, worth)];
 }
@@ -53,9 +55,11 @@ function talkingPoints(state: SideState): string[] {
   for (const m of side.eleven.filter((x) => blank(x) && !subs.some((s) => s.out === x))) lines.push(`${m.name} (${m.club}) did not play, and nobody on the bench can come on for him`);
   for (const m of side.bench.filter((x) => !cameOn.has(x.fantraxId) && (x.points ?? 0) >= DRAFT_DESK.benchScore)) lines.push(`${m.name} (${m.club}) scored ${pts(m.points ?? 0)} on the bench, which do not count`);
   for (const m of side.eleven) {
+    // One line a man: a big score, or a small one with how long he played when he was off early.
+    const early = m.minutes > 0 && m.minutes < DRAFT_DESK.earlyOff && m.left === 0;
+    const low = m.minutes > 0 && m.left === 0 && (m.points ?? 0) <= DRAFT_DESK.lowScore;
     if ((m.points ?? 0) >= DRAFT_DESK.bigScore) lines.push(`${m.name} (${m.club}) scored ${pts(m.points ?? 0)}`);
-    else if (m.minutes > 0 && m.left === 0 && (m.points ?? 0) <= DRAFT_DESK.lowScore) lines.push(`${m.name} (${m.club}) played and scored ${pts(m.points ?? 0)}`);
-    if (m.minutes > 0 && m.minutes < DRAFT_DESK.earlyOff && m.left === 0) lines.push(`${m.name} (${m.club}) played ${m.minutes} minutes`);
+    else if (early || low) lines.push(`${m.name} (${m.club}) played ${m.minutes} minutes${low ? ` and scored ${pts(m.points ?? 0)}` : ""}`);
     if (m.debut && m.minutes > 0) lines.push(`${m.name} (${m.club}) started for ${side.name} for the first time`);
     if (m.played + m.left > 1) lines.push(`${m.name} (${m.club}) has ${m.played + m.left} matches this period`);
   }

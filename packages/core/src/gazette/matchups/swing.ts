@@ -30,17 +30,14 @@ const playing = (men: readonly DraftMan[], worth: SlotWorth) => men.reduce((sum,
 /** The side behind's sums, as facts. `gap` is how far behind they are, above nought. */
 export function chaseLines(chasing: SideState, ahead: SideState, gap: number, worth: SlotWorth): string[] {
   const name = chasing.side.name;
-  const lines = [`${name} need ${pts(gap)} to draw and ${pts(gap + 1)} to win`];
-  const mine = playing(chasing.left, worth);
-  const theirs = playing(ahead.left, worth);
-  if (mine + theirs > 0) lines.push(`playing time alone would bring ${name} about ${pts(mine)}${theirs > 0 ? ` and ${ahead.side.name} about ${pts(theirs)}` : ""}`);
-  if (ahead.left.length > 0) lines.push(`every return for ${ahead.side.name}'s ${ahead.left.length} still to play would widen it`);
-  const short = gap - mine + theirs;
-  if (short < 0) return [...lines, `playing time alone would put ${name} ahead`];
-  if (short === 0) return [...lines, `playing time alone would bring it level`];
+  // Both sides' minutes still to be paid come off the gap first; the brief states only what returns must make up.
+  const short = gap - playing(chasing.left, worth) + playing(ahead.left, worth);
+  // The sums a reader cannot do at a glance, never the gap restated: which return does it, how many, or none can.
+  if (short <= 0) return [`the men ${name} have left need only to play to overtake it`];
+  const lines: string[] = [];
   const returns = returnsOf(chasing.left, worth);
   const total = returns.reduce((sum, r) => sum + r.worth, 0);
-  if (total < short) return [...lines, `the lead is out of reach: every return the men ${name} have left could make would come to ${pts(total)}, and they need ${pts(short + 1)} beyond their minutes`];
+  if (total < short) return [...lines, `the lead is out of reach: every return the men ${name} have left could make would come to ${pts(total)}, and they need ${pts(short + 1)}`];
   if (total === short) return [...lines, `the most ${name} can do is draw: it would take every return their men left could make`];
   const winners = returns.filter((r) => r.worth > short);
   const levellers = returns.filter((r) => r.worth === short);

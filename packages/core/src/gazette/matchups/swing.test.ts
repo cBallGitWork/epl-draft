@@ -19,7 +19,6 @@ describe("chaseLines", () => {
   it("names every single return that levels or wins it: a goal, an assist or a clean sheet", () => {
     const lines = chaseLines(state("Dons", [man("Tarkowski", "D"), man("Isak", "F")]), state("Notemail", []), 3, worth);
     expect(lines).toEqual([
-      "Dons need 3 points to draw and 4 points to win",
       "a goal from Tarkowski (6), a clean sheet for Tarkowski (4) or a goal from Isak (4) would win it on its own",
       "an assist from Tarkowski (3) or an assist from Isak (3) would level it",
     ]);
@@ -33,9 +32,7 @@ describe("chaseLines", () => {
 
   it("says when the lead is out of reach, or a draw is the most they can do", () => {
     expect(chaseLines(state("Dons", [man("A", "F")]), state("Notemail", [man("Z", "M")]), 9, worth)).toEqual([
-      "Dons need 9 points to draw and 10 points to win",
-      "every return for Notemail's 1 still to play would widen it",
-      "the lead is out of reach: every return the men Dons have left could make would come to 7 points, and they need 10 points beyond their minutes",
+      "the lead is out of reach: every return the men Dons have left could make would come to 7 points, and they need 10 points",
     ]);
     expect(chaseLines(state("Dons", [man("A", "F")]), state("Notemail", []), 7, worth).at(-1)).toMatch(/^the most Dons can do is draw/);
   });
@@ -48,7 +45,11 @@ describe("chaseLines", () => {
   it("takes both sides' playing time off the gap before it counts returns", () => {
     const paid = { ...worth, appearance: 2 };
     const lines = chaseLines(state("Dons", [man("A", "F"), man("B", "F")]), state("Notemail", [man("Z", "M")]), 5, paid);
-    expect(lines).toEqual(expect.arrayContaining(["playing time alone would bring Dons about 4 points and Notemail about 2 points", "a goal from A (4) or a goal from B (4) would win it on its own"]));
-    expect(chaseLines(state("Dons", [man("A", "F"), man("B", "F")]), state("Notemail", []), 3, paid).at(-1)).toBe("playing time alone would put Dons ahead");
+    expect(lines).toEqual([
+      "a goal from A (4) or a goal from B (4) would win it on its own",
+      "an assist from A (3) or an assist from B (3) would level it",
+    ]);
+    expect(lines.join(" ")).not.toMatch(/playing time|minutes/u);
+    expect(chaseLines(state("Dons", [man("A", "F"), man("B", "F")]), state("Notemail", []), 3, paid)).toEqual(["the men Dons have left need only to play to overtake it"]);
   });
 });

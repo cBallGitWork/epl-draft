@@ -382,6 +382,9 @@ export const DRAFT_DESK = {
   earlyOff: 60,
   /** Returns needed beyond this many and a lead is called beyond reach, though not yet out of it. */
   reach: 3,
+  /** The sums of what the side behind needs are worked only when this few men are left across both sides; with more,
+   *  half the round is unplayed and the report tells what happened (Craig, 29 Sep 2026). */
+  chaseWhenLeft: 3,
 } as const;
 
 export const SHEETS = {
