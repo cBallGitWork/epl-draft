@@ -44,7 +44,7 @@ describe("sideStories", () => {
 
   it("puts what a substitute did in the line that brings him on", () => {
     const sub = { out: draftMan("Dunk", "D", null, 0, 0, { club: "Brighton" }), in: draftMan("Vuskovic", "D", 6, 90, 0, { club: "Brighton", cleanSheets: 1 }), provisional: false };
-    expect(sideStories(side([sub.out]), [sub], worthOf(), "week", 5)).toEqual(["Dons: Vuskovic (Brighton) came on for Dunk (Brighton), who did not play, and got 6: a clean sheet"]);
-    expect(sideStories(side([sub.out]), [sub], worthOf(), "saturday", 5)).toEqual(["Dons: Vuskovic (Brighton) comes on for Dunk (Brighton), who did not play, with 6: a clean sheet"]);
+    expect(sideStories(side([sub.out]), [sub], worthOf(), "week", 5)).toEqual(["Dons: Vuskovic (Brighton) replaced Dunk (Brighton), who did not play, and got 6: a clean sheet"]);
+    expect(sideStories(side([sub.out]), [sub], worthOf(), "saturday", 5)).toEqual(["Dons: Vuskovic (Brighton) replaces Dunk (Brighton), who did not play, with 6: a clean sheet"]);
   });
 });

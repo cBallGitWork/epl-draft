@@ -19,8 +19,12 @@ export interface TablePlace {
 export interface MatchupContext {
   state: MatchupState;
   places: { home: TablePlace | null; away: TablePlace | null };
-  /** Their last meeting, in words ("test2 won 40-31 in round 2"); null when they have not met. */
-  lastMeeting: string | null;
+  /** Their meetings as a record and the last of them, from the home side's view; empty when they have not met. */
+  meetings: string[];
+  /** Streaks, runs ended, returns to form, records and table moves for either side, each with its kind. */
+  form: { kind: string; text: string }[];
+  /** Stories from outside the round's points: an old boy facing the side that let him go. */
+  extra: string[];
 }
 
 const place = (name: string, p: TablePlace | null) =>
@@ -31,10 +35,12 @@ export function matchupBlock(ctx: MatchupContext, cutoff: Cutoff): string {
   return [
     `MATCH-UP: ${home.side.name} v ${away.side.name}`,
     ["WHERE THEY STAND before this round:", place(home.side.name, ctx.places.home), place(away.side.name, ctx.places.away)].filter((l) => l !== null).join("\n"),
-    ctx.lastMeeting === null ? null : `LAST TIME: ${ctx.lastMeeting}.`,
+    ctx.meetings.length === 0 ? null : ["THE MEETINGS:", ...ctx.meetings.map((line) => `- ${line}`)].join("\n"),
     `${cutoff === "saturday" ? "THE SCORE after Saturday's matches" : "THE RESULT"}: ${score}.`,
     stillToPlay.length === 0 ? null : ["STILL TO PLAY:", ...stillToPlay.map((line) => `- ${line}`)].join("\n"),
-    stories.length === 0 ? null : ["THE STORIES:", ...stories.map((line) => `- ${line}`)].join("\n"),
+    // The bracketed kind tells the writer which frame a fact takes; it is never printed.
+    ctx.form.length === 0 ? null : ["FORM AND THE TABLE:", ...ctx.form.map((f) => `- ${f.text} [${f.kind}]`)].join("\n"),
+    stories.length + ctx.extra.length === 0 ? null : ["THE STORIES:", ...[...stories, ...ctx.extra].map((line) => `- ${line}`)].join("\n"),
   ]
     .filter((block) => block !== null)
     .join("\n\n");

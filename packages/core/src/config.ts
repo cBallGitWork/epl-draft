@@ -370,7 +370,6 @@ export const PREDICTIONS = {
   factsPerTie: 11,
 } as const;
 
-/** The team sheets at the lock: when a benched man is news, and how much the article carries. */
 /** The draft match-up desk's talking points (Craig, 29 Sep 2026). */
 export const DRAFT_DESK = {
   /** A man off before this many minutes, with his match done; and the hour a clean sheet needs. */
@@ -382,8 +381,18 @@ export const DRAFT_DESK = {
   chaseWhenLeft: 3,
   /** A goal from this minute is late: a scorer's late goal, or the one that took a clean sheet. */
   lateGoal: 80,
+  /** Wins or defeats in a row that make a streak; results unbeaten or without a win, a draw among them, that make a run. */
+  streak: 3,
+  unbeaten: 4,
+  /** Rounds without a win before a win is a return to form, and rounds of a side's own before its high or low counts. */
+  formReturn: 3,
+  /** The league's round from which a score or a margin can be a season record. */
+  recordsFrom: 4,
+  /** Places a side must climb or fall in the table to be news, away from the top and the bottom. */
+  tableMove: 2,
 } as const;
 
+/** The team sheets at the lock: when a benched man is news, and how much the article carries. */
 export const SHEETS = {
   /** A benched man is news with a goal or assist last time out, or this many goals and assists
    *  over his last few rounds. At most this many benchings a side, and meeting points a fixture. */

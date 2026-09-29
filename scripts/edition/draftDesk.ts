@@ -8,6 +8,7 @@ import {
   fetchLiveScoringDay,
   fetchSeasonResults,
   fetchTeamRosterInfo,
+  draftReportsDue,
   isSaturday,
   getFootballSnapshot,
   londonDayOf,
@@ -17,25 +18,23 @@ import {
   mapLiveScores,
   mapSeasonResults,
   matchupState,
+  oldBoys,
   periodGameweeks,
-  periodPairings,
   priceOf,
   projectionIntel,
-  seasonForm,
   sheetOf,
   type Cutoff,
   type DraftMan,
   type DraftSide,
   type IntelProjections,
-  type LeagueInfo,
   type MatchupContext,
-  type PeriodResult,
   type Sheet,
   type SheetMan,
 } from "@epl/core";
 import { INTEL_SEASON, readIntel } from "../intel";
 import { gatherRoundFacts } from "./facts";
 import { appearance, categoryIds, goalsByFixture, mostPaid, tallies, timeOf } from "./draftReads";
+import { draftSeason, meetingsOf, placeOf, roundFacts } from "./draftSeason";
 import { minimums } from "./rosterMinimums";
 import { earlierSheets } from "./sheets";
 
@@ -61,7 +60,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const period = round.period;
   const [facts, history, rawResults] = await Promise.all([gatherRoundFacts(info, snapshot, period), earlierSheets(info, snapshot, period), fetchSeasonResults(FANTRAX_LEAGUE_ID).catch(() => null)]);
   const results = rawResults === null ? [] : mapSeasonResults(rawResults);
-  const form = seasonForm(facts.table, info.matchups, results);
+  const past = await draftSeason(info, facts.table, results, facts.pedigree, period);
 
   const fixtures = season.filter((f) => f.gameweek === gameweek && f.kickoff !== null);
   const days = [...new Set(fixtures.map((f) => londonDayOf(f.kickoff!)!))].sort();
@@ -96,7 +95,9 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const clubs = new Map(snapshot.clubs.map((c) => [c.id, c]));
 
   const cutoffs = new Map<Cutoff, MatchupContext[]>();
-  for (const [cutoff, last] of [["saturday", saturday], ["week", days.at(-1)!]] as const) {
+  // Only a report that is due: a cut-off whose matches are all settled. An unplayed round would read as nought-nought.
+  const due = new Set(draftReportsDue(season, gameweek).map((d) => d.cutoff));
+  for (const [cutoff, last] of ([["saturday", saturday], ["week", days.at(-1)!]] as const).filter(([c]) => due.has(c))) {
     const upTo = reads.filter((r) => r.date <= last).map((r) => r.raw);
     const byMan = tallies(upTo, ids);
     const totals = new Map<string, number>();
@@ -151,42 +152,30 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
         subOrder: order,
       };
     };
-    const place = (teamId: string) => {
-      const row = facts.table.find((r) => r.teamId === teamId);
-      const run = form.find((f) => f.teamId === teamId)?.run ?? [];
-      return row === undefined ? null : { rank: row.rank, won: row.won, drawn: row.drawn, lost: row.lost, run: run.map((g) => g.result).join("") };
-    };
-    const contexts: MatchupContext[] = [];
-    for (const pairing of facts.pairings) {
-      const home = side(pairing.home.teamId);
-      const away = side(pairing.away.teamId);
-      if (home === null || away === null) continue;
-      contexts.push({
-        state: matchupState({ home, away }, worth, limits, cutoff),
-        places: { home: place(home.teamId), away: place(away.teamId) },
-        lastMeeting: lastMeeting(info, results, period, home, away),
-      });
-    }
-    cutoffs.set(cutoff, contexts);
+    // Every match-up first: the round's form and table facts need all of their results at once.
+    const states = facts.pairings.flatMap((pairing) => {
+      const [home, away] = [side(pairing.home.teamId), side(pairing.away.teamId)];
+      return home === null || away === null ? [] : [matchupState({ home, away }, worth, limits, cutoff)];
+    });
+    const formFacts = roundFacts(past, states, cutoff);
+    const boys = (men: DraftSide, them: DraftSide) => oldBoys(men.eleven, { teamId: them.teamId, name: them.name }, past.formerly);
+    cutoffs.set(
+      cutoff,
+      states.map((state) => ({
+        state,
+        places: { home: placeOf(past, state.home.side.teamId), away: placeOf(past, state.away.side.teamId) },
+        meetings: meetingsOf(past, state.home.side, state.away.side),
+        form: [...(formFacts.get(state.home.side.teamId) ?? []), ...(formFacts.get(state.away.side.teamId) ?? [])],
+        extra: [...boys(state.home.side, state.away.side), ...boys(state.away.side, state.home.side)],
+      })),
+    );
   }
   const notes = [
     `Returns by slot: ${SLOTS.map((s) => `${s} ${worth.returns[s].map((w) => `${w.kind} ${w.worth}`).join(", ")}`).join("; ")}; a full match's minutes ${worth.appearance}.`,
     `Eleven limits: most ${JSON.stringify(limits.max)}; fewest ${min === null ? "not recorded for this league" : JSON.stringify(min)}.`,
     `Bench orders: ${[...orders.values()].filter((o) => o.by === "manager").length} of ${orders.size} set by the manager, the rest by total points.`,
     `Goal times read for ${goals.size} of ${fixtures.length} matches.`,
+    `Due: ${due.size === 0 ? "nothing yet; the round's matches are not settled" : [...due].join(" and ")}.`,
   ];
   return { gameweek, period, days, cutoffs, notes };
-}
-
-/** The two sides' most recent earlier meeting, in words. */
-function lastMeeting(info: LeagueInfo, results: readonly PeriodResult[], period: number, home: DraftSide, away: DraftSide): string | null {
-  const scored = (p: number, teamId: string) => results.find((r) => r.period === p && r.teamId === teamId)?.points ?? null;
-  const pair = [home.teamId, away.teamId].sort().join();
-  for (let p = period - 1; p >= 1; p--) {
-    if (!periodPairings(info.matchups, info.teams, p).some((x) => [x.home.teamId, x.away.teamId].sort().join() === pair)) continue;
-    const [h, a] = [scored(p, home.teamId), scored(p, away.teamId)];
-    if (h === null || a === null) return null;
-    return h === a ? `they drew ${h}-${a} in round ${p}` : `${h > a ? home.name : away.name} won ${Math.max(h, a)}-${Math.min(h, a)} in round ${p}`;
-  }
-  return null;
 }

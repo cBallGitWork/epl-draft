@@ -16,7 +16,7 @@ const state = matchupState(
   LIMITS,
   "saturday",
 );
-const brief = buildDraftBrief("saturday", 5, [{ state, places: { home: { rank: 1, won: 3, drawn: 0, lost: 1, run: "WLWW" }, away: null }, lastMeeting: "Dons won 40-31 in round two" }]);
+const brief = buildDraftBrief("saturday", 5, [{ state, places: { home: { rank: 1, won: 3, drawn: 0, lost: 1, run: "WLWW" }, away: null }, meetings: ["the last meeting: Dons won 40-31 in round 2"], form: [{ kind: "streak", text: "Dons had won 3 in a row going into the round" }], extra: ["Isak faced Dons, who drafted him in round 2"] }]);
 
 describe("buildDraftBrief", () => {
   it("never names a provider, a projection or an analyst's term", () => {
@@ -25,10 +25,12 @@ describe("buildDraftBrief", () => {
 
   it("gives the table, the last meeting, the score with the substitute named, and who is still to play", () => {
     expect(brief).toContain("- Dons: 1st, won 3, drawn 0, lost 1; last results W L W W");
-    expect(brief).toContain("LAST TIME: Dons won 40-31 in round two.");
+    expect(brief).toContain("THE MEETINGS:\n- the last meeting: Dons won 40-31 in round 2");
+    expect(brief).toContain("FORM AND THE TABLE:\n- Dons had won 3 in a row going into the round [streak]");
+    expect(brief).toContain("- Isak faced Dons, who drafted him in round 2");
     expect(brief).toContain("THE SCORE after Saturday's matches: Dons 40-38 Notemail, 43-38 once Sub comes on.");
     expect(brief).toContain("STILL TO PLAY:\n- Notemail have 1 still to play: Isak (EVE, away to Bournemouth)\n- Notemail need 2 returns to win it");
-    expect(brief).toContain("THE STORIES:\n- Dons: Sub (EVE) comes on for Blank (EVE), who did not play, with 3 points");
+    expect(brief).toContain("THE STORIES:\n- Dons: Sub (EVE) replaces Blank (EVE), who did not play, with 3 points");
     expect(brief).not.toMatch(/WORKED OUT|true as written|to draw and/u);
   });
 });

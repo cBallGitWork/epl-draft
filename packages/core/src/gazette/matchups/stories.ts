@@ -51,7 +51,8 @@ function manLine(m: DraftMan, side: DraftSide, worth: SlotWorth): string | null 
 
 /** The substitution and what the man coming on did, in one line. */
 function subLine(s: AutoSub, cutoff: Cutoff): string {
-  const on = `${named(s.in)} ${cutoff === "week" ? "came" : "comes"} on for ${named(s.out)}, who did not play`;
+  // "Replaced", not "came on": the paper's banned list keeps "came on" for the Premier League's own substitutions.
+  const on = `${named(s.in)} ${cutoff === "week" ? "replaced" : "replaces"} ${named(s.out)}, who did not play`;
   if (s.provisional) return `${on}, if he plays`;
   const got = gotLine(s.in);
   if (cutoff === "week") return `${on}, and ${got ?? `brought ${pts(s.in.points ?? 0)}`}`;

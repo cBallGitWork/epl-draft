@@ -72,10 +72,15 @@ export { sheetOf } from "./sheets/sheet";
 export { debuts } from "./sheets/changes";
 // The draft desk's surface is what its script reads; its other parts are inferred at the call sites.
 export { matchupState } from "./matchups/state";
+export type { MatchupState } from "./matchups/state";
+export { goingIn, roundForm } from "./matchups/form";
+export { tableAfter, tableBefore, tableMoves, tablePoints } from "./matchups/table";
+export { meetingLines, oldBoys } from "./matchups/meetings";
+export type { FormerSide } from "./matchups/meetings";
 export type { DraftMan, DraftSide, GoalTime } from "./matchups/types";
 export { buildDraftBrief } from "./matchups/brief";
-export type { Cutoff, MatchupContext } from "./matchups/brief";
-export { isSaturday } from "./matchups/due";
+export type { Cutoff, MatchupContext, TablePlace } from "./matchups/brief";
+export { draftReportsDue, isSaturday } from "./matchups/due";
 export { priceOf } from "./matchups/worth";
 export { sheetsFacts } from "./sheets/facts";
 export { buildSheetsBrief } from "./briefs/sheets";
