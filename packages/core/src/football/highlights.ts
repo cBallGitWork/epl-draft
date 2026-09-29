@@ -17,7 +17,7 @@
 // the right side of the rule the portraits decision set: a wrong one is worse
 // than none, because only one of the two looks like an answer.
 //
-// Counted 11 Sep 2026 against the live feed: **15 of 15** titles parse.
+// Counted 28 Sep 2026 against the live feed: 15 of 15 titles parse and join (13 before B'mouth and Nottingham Forest).
 
 /** One video, and the fixture its title claims. */
 export interface HighlightVideo {
@@ -29,16 +29,13 @@ export interface HighlightVideo {
   awayScore: number;
 }
 
-/** Sky's spelling → FPL's `name`, for the four clubs the two disagree about.
- *
- *  **All four are Sky dropping a suffix**, counted rather than collected: the
- *  other sixteen clubs are FPL's own `name` verbatim. A fifth belongs here the
- *  day a promoted club's short form differs, and the join simply fails until it
- *  is added — which is the failure we want, because the alternative is a video
- *  attached to the wrong match. */
+/** Sky's spelling → FPL's `name`. Sky disagrees with itself ("N Forest", "Nottingham Forest"), so a
+ *  spelling not listed fails the join rather than guessing: no video beats one on the wrong match. */
 const SKY_SPELLS: Record<string, string> = {
   Hull: "Hull City",
   "N Forest": "Nott'm Forest",
+  "Nottingham Forest": "Nott'm Forest",
+  "B'mouth": "Bournemouth",
   Coventry: "Coventry City",
   Ipswich: "Ipswich Town",
 };
