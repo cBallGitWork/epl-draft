@@ -171,6 +171,15 @@ draft, and 15/11/5.
   still differ in a number a hardcoded limit would get wrong, and the demo league's 14/11/3
   differs in the starting size as well.
 
+## The ingestion refactor's sweep exception — decided 25 Sep 2026
+
+- CODE_RULES §4 says a file over the ceiling is split when it is next touched, not in a sweep.
+- Craig asked on 25 Sep for all of ingestion to be swept at once: grouped so fresh eyes can follow
+  it, lean, consistently named, and not flaky.
+- The exception covers only the files `docs/providers/README.md` lists, and it ends on Wed 7 Oct
+  2026. The swap weekend (8–11 Oct) is frozen, and §4 applies as written from then.
+- Moves and refactors still land as their own commits, apart from any behaviour change.
+
 ## Lawro writes the predictions, under his own name, on Thursday evening — decided 24 Sep 2026
 
 - **The byline is "by Mark Lawrenson", with no impression marking** (Craig, 24 Sep 2026). It reverses,
