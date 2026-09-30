@@ -79,7 +79,7 @@ export default async function CupsPage({
               <Bracket title="Losers' side" stages={stages.filter((stage) => stage.side === "losers")} />
             </div>
           ) : (
-            <div className="cm-scroll cm-scroll-y flex flex-col gap-4 lg:max-h-[42rem] lg:overflow-y-auto">
+            <div className="cm-scroll cm-scroll-y flex flex-col gap-8 lg:max-h-[42rem] lg:overflow-y-auto">
               {read.rounds.map((round) => (
                 <Round
                   key={round.period}

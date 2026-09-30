@@ -133,7 +133,7 @@ export default async function SchedulePage() {
       )}
 
       {/* The season in CM's scrolling box on a desk; a phone scrolls the page, or the box's foot sits under the rail. */}
-      <div className="cm-scroll cm-scroll-y flex flex-col gap-4 lg:max-h-[42rem] lg:overflow-y-auto">
+      <div className="cm-scroll cm-scroll-y flex flex-col gap-8 lg:max-h-[42rem] lg:overflow-y-auto">
         {rounds.map((round) => (
           <Round
             key={round.period}
