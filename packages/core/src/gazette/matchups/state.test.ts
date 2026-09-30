@@ -32,6 +32,14 @@ describe("matchupState", () => {
     expect(matchupState({ home, away: draftSide("Away", 37, eleven("a")) }, worth, LIMITS, "gameweek").score).toBe("Home beat Away 38-37, decided by Haaland's goal in the 81st minute");
   });
 
+  it("takes the last goal in time as the decider, not the latest minute on an earlier day", () => {
+    const home = draftSide("Home", 38, eleven("h", {
+      8: man("Groß", "M", 7, 90, 0, { goals: 1, scoredAt: [goalAt(88)] }),
+      9: man("Haaland", "F", 6, 90, 0, { goals: 1, scoredAt: [goalAt(81, undefined, "2026-09-27T15:30:00Z")] }),
+    }));
+    expect(matchupState({ home, away: draftSide("Away", 37, eleven("a")) }, worth, LIMITS, "gameweek").score).toBe("Home beat Away 38-37, decided by Haaland's goal in the 81st minute");
+  });
+
   it("names a Premier League match with the sides' men on opposing clubs, still to play or with a return in it", () => {
     const tie = { matches: [{ code: 7, label: "Man City v Sunderland" }] };
     const home = draftSide("Home", 20, eleven("h", { 1: man("Meunier", "D", null, 0, 1, { ...tie, club: "Sunderland" }), 2: man("Hume", "D", null, 0, 1, { ...tie, club: "Sunderland" }) }));

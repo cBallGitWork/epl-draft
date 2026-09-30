@@ -2,7 +2,7 @@ import { DRAFT_DESK } from "../../config";
 import { londonWeekdayLong } from "../../time";
 import { autoSubs, type AutoSub } from "./autoSubs";
 import type { Cutoff } from "./brief";
-import { returnCount, sideStories, whenScored } from "./stories";
+import { byClock, returnCount, sideStories, whenScored } from "./stories";
 import { chaseLines } from "./swing";
 import type { DraftMan, DraftMatchupInput, DraftSide, PositionLimits, SlotWorth } from "./types";
 import { listed } from "../../format";
@@ -70,7 +70,7 @@ function scoreLine(home: SideState, away: SideState, cutoff: Cutoff, worth: Slot
   const before = (loser.side.total ?? 0) > (winner.side.total ?? 0) ? `; ${loser.side.name} led ${loser.side.total}-${winner.side.total} before the substitutions` : "";
   // Decided by one late goal: the winner's last goal worth more than the margin.
   const goals = winner.side.eleven.flatMap((m) => m.scoredAt.map((t) => ({ m, t }))).filter(({ m }) => priceOf(worth, m.slot, "goal") > margin);
-  const last = goals.sort((x, y) => x.t.minute + (x.t.added ?? 0) - (y.t.minute + (y.t.added ?? 0))).at(-1);
+  const last = goals.sort((x, y) => byClock(x.t, y.t)).at(-1);
   const decided = last === undefined || last.t.minute < DRAFT_DESK.lateGoal ? "" : `, decided by ${last.m.name}'s goal ${whenScored(last.t)}`;
   return `${beat}${decided}${before}`;
 }
