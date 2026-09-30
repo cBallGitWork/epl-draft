@@ -17,6 +17,7 @@ import {
   type Cutoff,
   type Fault,
   type MatchupContext,
+  type PastProse,
 } from "@epl/core";
 import { writeColumn, type Usage } from "./newsroom";
 import { DRAFT_JUDGE_VOICE, DRAFT_VOICE, draftSendBack } from "./voice/draft";
@@ -34,6 +35,8 @@ export interface DraftJob {
   rankAfter: Map<string, number>;
   /** The headlines of the reports filed before this one, newest first: a pun on one of their words is struck. */
   pastHeadlines: string[];
+  /** Those reports' words by match-up, which this one may not echo. */
+  pastProse: PastProse[];
 }
 
 
@@ -67,7 +70,7 @@ export async function draftColumn(job: DraftJob, say: (message: string) => void,
   const names = [...job.contexts.flatMap((c) => [c.state.home.side.name, c.state.away.side.name]), ...men.map((m) => m.name)];
 
   const first = readDraftWriting(await writeColumn(DRAFT_VOICE, brief, count), surnames);
-  const faults1 = checkDraft(first, job.contexts, blocks);
+  const faults1 = checkDraft(first, job.contexts, blocks, job.cutoff, job.pastProse);
 
   // The pun writer's go on the lead match-up's story as the desk chose it, and the surnames of the men it is told through.
   const angle = job.contexts[0]?.angle ?? null;
@@ -94,7 +97,7 @@ export async function draftColumn(job: DraftJob, say: (message: string) => void,
     const again = await writeColumn(DRAFT_VOICE, `${brief}\n\n${draftSendBack(sendable)}`, count).catch(() => null);
     if (again !== null) {
       const second = readDraftWriting(again, surnames);
-      attempts.push({ writing: second, faults: checkDraft(second, job.contexts, blocks).filter((f) => second.matchups.has(matchupOf(f.section)) || f.section === "page") });
+      attempts.push({ writing: second, faults: checkDraft(second, job.contexts, blocks, job.cutoff, job.pastProse).filter((f) => second.matchups.has(matchupOf(f.section)) || f.section === "page") });
     }
   }
   const merged = mergeDraft(attempts, job.contexts.length);

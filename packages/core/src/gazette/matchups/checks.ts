@@ -5,7 +5,8 @@ import { mentionAt, numbersIn, sentences, wordCount } from "../predictions/prose
 import { repeatsIn } from "../reports/repeats";
 import { REPORT_AMERICAN, REPORT_FPL } from "../reports/words";
 import { SHEETS_AMERICAN } from "../sheets/words";
-import type { MatchupContext } from "./brief";
+import type { Cutoff, MatchupContext } from "./brief";
+import { listFaults, type PastProse } from "./listChecks";
 import type { DraftPiece, DraftWriting } from "./writing";
 import { DRAFT_NEVER } from "./words";
 
@@ -24,7 +25,8 @@ function menOf(ctx: MatchupContext): string[] {
   return [ctx.state.home.side, ctx.state.away.side].flatMap((s) => [...s.eleven, ...s.bench]).flatMap((m) => [m.name, m.name.split(/\s+/u).at(-1) ?? m.name]);
 }
 
-export function checkDraft(writing: DraftWriting, contexts: readonly MatchupContext[], blocks: readonly string[]): Fault[] {
+/** `past` is the words of recent reports, for the echo; `cutoff` decides whether a forecast is a fault. */
+export function checkDraft(writing: DraftWriting, contexts: readonly MatchupContext[], blocks: readonly string[], cutoff: Cutoff = "gameweek", past: readonly PastProse[] = []): Fault[] {
   const faults: Fault[] = [];
   const fault = (section: string, check: string, severity: Severity, evidence: string) => faults.push({ section, check, severity, evidence });
   const everyone = contexts.map(menOf);
@@ -53,6 +55,7 @@ export function checkDraft(writing: DraftWriting, contexts: readonly MatchupCont
     if (FEELING.test(prose)) fault(`${n}:matchup`, "a named person's feeling", "send-back", prose.match(FEELING)?.[0] ?? "");
     // The score prints above the lede, so the lede never gives it again.
     if (sentences(prose)[0]?.includes(ctx.state.score) === true) fault(`${n}:matchup`, "opens on the result the page already prints", "send-back", sentences(prose)[0] ?? "");
+    faults.push(...listFaults(piece, ctx, at, cutoff, block, past));
     const [least, rest] = DRAFT_WRITING.matchupWords;
     const most = at === 0 ? DRAFT_WRITING.leadWords : rest;
     const words = wordCount(prose);

@@ -30,6 +30,7 @@ import {
   type IntelProjections,
   type MatchupContext,
   type NextOpponent,
+  type PastProse,
   type Sheet,
   type SheetMan,
 } from "@epl/core";
@@ -38,7 +39,7 @@ import { gatherRoundFacts } from "./facts";
 import { categoryIds, matchReads, slotWorth, tallies } from "./draftReads";
 import { withFitness, type StoryCache } from "./draftFitness";
 import { draftManOf, type ManReads } from "./draftMen";
-import { draftPast, pastAngles } from "./draftPast";
+import { draftPast, pastAngles, pastProse } from "./draftPast";
 import { draftSeason, gameweekFacts, meetingsOf, placeOf, ranksAfter } from "./draftSeason";
 import { minimums } from "./rosterMinimums";
 import { earlierSheets } from "./sheets";
@@ -56,8 +57,9 @@ export interface DraftDesk {
   cutoffs: Map<Cutoff, MatchupContext[]>;
   /** Each side's place once the gameweek is added, for the form strip; empty until the gameweek is done. */
   rankAfter: Map<string, number>;
-  /** The headlines filed before each cut-off's report, newest first. */
+  /** The headlines filed before each cut-off's report, newest first, and their words by match-up. */
   pastHeadlines: Map<Cutoff, string[]>;
+  pastProse: Map<Cutoff, PastProse[]>;
   notes: string[];
 }
 
@@ -91,6 +93,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   let rankAfter = new Map<string, number>();
   const stories: StoryCache = new Map();
   const pastHeadlines = new Map<Cutoff, string[]>();
+  const proseBefore = new Map<Cutoff, PastProse[]>();
   // Only a report that is due: a cut-off whose matches are all settled. An unplayed gameweek would read as nought-nought.
   const due = new Set(draftReportsDue(schedule, gameweek).map((d) => d.cutoff));
   for (const [cutoff, last] of ([["saturday", saturday], ["gameweek", days.at(-1)!]] as const).filter(([c]) => due.has(c))) {
@@ -145,6 +148,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
     // The desk decides each match-up's story and the page's order; the writer tells them.
     const past = draftPast(gameweek, cutoff);
     pastHeadlines.set(cutoff, past.map((p) => p.headline));
+    proseBefore.set(cutoff, pastProse(past));
     cutoffs.set(cutoff, judgePage(contexts.map((ctx) => ({ ctx, threads: threadsOf(ctx, cutoff, worth, gameweek) })), pastAngles(past)));
   }
   const notes = [
@@ -154,5 +158,5 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
     `Goal times read for ${goals.size} of ${fixtures.length} matches.`,
     `Due: ${due.size === 0 ? "nothing yet; the gameweek's matches are not settled" : [...due].join(" and ")}.`,
   ];
-  return { gameweek, period, days, cutoffs, rankAfter, pastHeadlines, notes };
+  return { gameweek, period, days, cutoffs, rankAfter, pastHeadlines, pastProse: proseBefore, notes };
 }

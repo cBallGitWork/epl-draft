@@ -475,6 +475,23 @@ export const DRAFT_WRITING = {
   puns: 10,
   /** Filed draft reports read back, so a story, a phrase or a headline is not told the same way twice. */
   pastReports: 4,
+  /** A list, not a report (listChecks.ts). A sentence naming this many men with two figures, or carrying this many
+   *  figures, is a roll-call, and so is a paragraph of this many sentences each opening on a man. */
+  rollCallMen: 3,
+  rollCallFigures: 3,
+  rollCallParagraph: 3,
+  /** A sentence with a man and a figure in its first this-many words, this many times in a match-up; and two sentences
+   *  in a row whose first this-many words take the same shape. */
+  openerWords: 4,
+  openers: 2,
+  /** The most men a match-up names, the lead and the rest; and the most times it says "got". */
+  leadMen: 7,
+  men: 5,
+  got: 2,
+  /** A run of this many words from THE STORY in the lede is the brief copied; this many from a side's last report is
+   *  an echo. */
+  copied: 6,
+  echo: 4,
 } as const;
 
 /** The team sheets at the lock: when a benched man is news, and how much the article carries. */
