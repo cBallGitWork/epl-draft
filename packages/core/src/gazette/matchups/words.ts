@@ -22,10 +22,11 @@ export const DRAFT_SPEECH: readonly string[] = [
 export const DRAFT_CHOICE: readonly string[] = ["keep back", "keeps back", "kept back", "held back", "holding back", "saving", "saved for", "in reserve", "waiting for", "waiting in"];
 
 /** Why a man did not play is not in the facts: the brief says he did not, and nothing more. */
-export const DRAFT_REASONS: readonly string[] = ["left out", "absent", "missing", "dropped", "rested", "benched", "omitted", "sidelined"];
+export const DRAFT_REASONS: readonly string[] = ["left out", "absent", "missing", "dropped", "rested", "benched", "omitted", "sidelined", "unavailable", "missed out"];
 
-/** The brief's own labels, which a writer copies into print (GW5: "the twist is the fixture list"). */
-export const DRAFT_LABELS: readonly string[] = ["the twist", "the cast", "may be left out"];
+/** The brief's own labels, which a writer copies into print (GW5: "the twist is the fixture list"), and titles the league
+ *  has not given (GW5 called test3, top after five gameweeks, "the champions"). */
+export const DRAFT_LABELS: readonly string[] = ["the twist", "the cast", "may be left out", "champion", "champions", "title holders", "the holders"];
 
 /** A minute belongs to its own match: GW5 set Haaland's 81st "eight minutes before" Cunha's 89th in another. */
 export const DRAFT_CLOCK: readonly string[] = ["minutes earlier", "minutes later", "minutes before", "minutes after", "minute earlier", "minute later"];

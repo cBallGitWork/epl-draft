@@ -44,7 +44,10 @@ function castLine(ctx: MatchupContext, m: DraftMan): string {
     fitnessLine(m),
     next,
   ];
-  return `- ${withClub(m)} for ${s?.side.name ?? "neither side"}: ${parts.filter((p) => p !== null).join("; ")}${when(beatOf(ctx.state, m))}`;
+  // The day comes with the man, not after his figures: GW5's writer gave Groß's Saturday 11 to Friday's 11.
+  const beat = beatOf(ctx.state, m);
+  const day = beat === undefined ? "" : beat === null ? ", in the substitutions" : `, on ${beatLabel(beat)}`;
+  return `- ${withClub(m)} for ${s?.side.name ?? "neither side"}${day}: ${parts.filter((p) => p !== null).join("; ")}`;
 }
 
 /** Goals, assists and clean sheets between some men, as a count: "2 goals and a clean sheet". */
@@ -54,23 +57,27 @@ function tally(returns: readonly BeatReturn[]): string {
   return listed([...count(sum((r) => r.goals), "a goal", "goals"), ...count(sum((r) => r.assists), "an assist", "assists"), ...count(sum((r) => r.cleanSheets), "a clean sheet", "clean sheets")], "and");
 }
 
-/** A beat in a line: each side's points, the running score after it, and what was scored in it: the cast by name, and
- *  every other man's returns as a side's count, so the writer names only the story's men (GW5 named sixteen). */
+/** A beat in a line: each side's points, the running score after it, and what was scored in it: the cast by name, a
+ *  reserve by name in the substitutions, every other man's returns as a side's count, so the writer names only the
+ *  story's men (GW5 named sixteen); and which of the cast played that day, so none is given another day's points. */
 function beatLine(ctx: MatchupContext, b: Beat, cast: ReadonlySet<DraftMan>): string {
   const { home, away } = ctx.state;
   const [h, a] = [b.score.home, b.score.away];
   const score = h === a ? `level at ${h}-${a}` : `${Math.max(h, a)}-${Math.min(h, a)} to ${h > a ? home.side.name : away.side.name}`;
-  const named = b.returns.filter((r) => cast.has(r.man)).map((r) => {
+  const told = (m: DraftMan) => cast.has(m) || b.day === null;
+  const named = b.returns.filter((r) => told(r.man)).map((r) => {
     const goals = r.man.scoredAt.filter((t) => b.day === null || londonDayOf(t.kickoff) === b.day);
     return `${withClub(r.man)} for ${ctx.state[r.side].side.name} (${returnWords({ goals: r.goals, assists: r.assists, cleanSheets: r.cleanSheets, scoredAt: goals })})`;
   });
   const others = SIDES.flatMap((w) => {
-    const rest = b.returns.filter((r) => r.side === w && !cast.has(r.man));
+    const rest = b.returns.filter((r) => r.side === w && !told(r.man));
     return rest.length === 0 ? [] : [`${tally(rest)} from the rest of ${possessive(ctx.state[w].side.name)} men`];
   });
   const scored = [...named, ...others];
+  const played = b.day === null ? [] : [...cast].filter((m) => m.byDay.some((d) => d.day === b.day)).map((m) => m.name);
+  const whoPlayed = b.day === null ? "" : `; ${played.length === 0 ? "none of the cast played" : `of the cast, ${listed(played, "and")} played`}`;
   const label = beatLabel(b.day);
-  return `- ${label[0].toUpperCase()}${label.slice(1)}: ${home.side.name} ${b.points.home}, ${away.side.name} ${b.points.away}, making it ${score}; ${scored.length === 0 ? "no returns" : `returns: ${listed(scored, "and")}`}`;
+  return `- ${label[0].toUpperCase()}${label.slice(1)}: ${home.side.name} ${b.points.home}, ${away.side.name} ${b.points.away}, making it ${score}; ${scored.length === 0 ? "no returns" : `returns: ${listed(scored, "and")}`}${whoPlayed}`;
 }
 
 /** After Saturday, what is still to come by match and day, fixtures only: a match with both sides' men in it named whole
@@ -90,15 +97,22 @@ function toCome(ctx: MatchupContext, cast: ReadonlySet<DraftMan>): string[] {
   const waiting = new Set([ctx.state.home, ctx.state.away].flatMap((s) => s.subs.filter((x) => x.provisional).map((x) => x.in)));
   const who = (m: DraftMan) => `${m.name} (${m.club}${waiting.has(m) ? ", if he plays" : ""})`;
   const lines: string[] = [];
-  const unnamed = new Map<string, number>();
+  // Men not named, by day and side: "On Sunday, 2 more of test2's men play, and 1 of 123's".
+  const unnamed = new Map<string, Map<string, number>>();
   for (const [label, match] of [...matches].sort(([, a], [, b]) => b.men.size - a.men.size || a.kickoff.localeCompare(b.kickoff))) {
+    const day = londonWeekdayLong(match.kickoff);
     const shown = [...match.men].map(([side, men]) => [side, match.men.size > 1 ? men : men.filter((m) => cast.has(m))] as const);
     const told = shown.filter(([, men]) => men.length > 0);
-    if (told.length > 0) lines.push(`- ${label}, ${londonWeekdayLong(match.kickoff)}: ${told.map(([side, men]) => `${listed(men.map(who), "and")} for ${side}`).join("; ")}`);
-    for (const [side, men] of match.men) unnamed.set(side, (unnamed.get(side) ?? 0) + men.length - (shown.find(([s]) => s === side)?.[1].length ?? 0));
+    if (told.length > 0) lines.push(`- ${label}, ${day}: ${told.map(([side, men]) => `${listed(men.map(who), "and")} for ${side}`).join("; ")}`);
+    const counts = unnamed.get(day) ?? new Map<string, number>();
+    for (const [side, men] of match.men) counts.set(side, (counts.get(side) ?? 0) + men.length - (shown.find(([s]) => s === side)?.[1].length ?? 0));
+    unnamed.set(day, counts);
   }
-  const rest = [...unnamed].filter(([, n]) => n > 0).map(([side, n]) => `${n} more for ${side}`);
-  return rest.length === 0 ? lines : [...lines, `- In their other matches: ${listed(rest, "and")}`];
+  for (const [day, counts] of unnamed) {
+    const rest = [...counts].filter(([, n]) => n > 0).map(([side, n]) => `${n} more of ${possessive(side)} men`);
+    if (rest.length > 0) lines.push(`- On ${day}, in other matches, ${listed(rest, "and")} play`);
+  }
+  return lines;
 }
 
 /** Where each side goes next, for a last line that looks out; nothing after Saturday, with the gameweek unfinished. */

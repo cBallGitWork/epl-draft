@@ -22,13 +22,13 @@ describe("buildDraftBrief", () => {
     expect(end).toContain("THE RESULT, printed above your words, never in them: 123 beat test2 38-37.");
     expect(end).toContain("THE STORY, which your first sentence tells: 123: Haaland (Man City) scored in the 81st minute; without that goal test2 would have won (Sunday)");
     expect(end).toContain("THE TWIST, told in its beat: test2 were 11 behind after Friday and lost by 1 (Friday)");
-    expect(end).toContain("THE CAST, each man's points given once:\n- Haaland (Man City) for 123: 6 points: a goal in the 81st minute (Sunday)");
+    expect(end).toContain("THE CAST, each man's points given once:\n- Haaland (Man City) for 123, on Sunday: 6 points: a goal in the 81st minute");
   });
 
   it("tells how it unfolded a day at a time, returns without their points, and marks no day as optional", () => {
     expect(end).toContain("HOW IT UNFOLDED, in order:\n- Friday: test2 0, 123 11, making it 11-0 to 123");
     expect(end).toContain("- Sunday: test2 18, 123 12, making it 38-34 to 123; returns: Haaland (Man City) for 123 (a goal in the 81st minute)");
-    expect(end).toContain("- Friday: test2 0, 123 11, making it 11-0 to 123; no returns");
+    expect(end).toContain("- Friday: test2 0, 123 11, making it 11-0 to 123; no returns; none of the cast played");
     expect(end).toContain("- The substitutions: test2 3, 123 0, making it 38-37 to 123");
     expect(end).not.toMatch(/left out/u);
     expect(end).toContain("- The substitutions: test4 2, test3 9, making it 33-28 to test3; returns: Vuskovic (Tottenham) for test3 (a clean sheet)");
@@ -45,7 +45,7 @@ describe("buildDraftBrief", () => {
   it("after Saturday, says how it stands and what is still to come, the shared match first, as fixtures only", () => {
     expect(saturday).toContain("THE SCORE after Saturday's matches, printed above your words, never in them: 123 lead test2 26-16.");
     expect(saturday).toContain("STILL TO COME, the fixtures only:\n- Man City v Sunderland, Sunday: Hume (Sunderland) and Haaland (Man City) for 123; Meunier (Sunderland, if he plays) for test2");
-    expect(saturday).toContain("- In their other matches: 1 more for 123 and 2 more for test2");
+    expect(saturday).toContain("- On Sunday, in other matches, 1 more of 123's men and 2 more of test2's men play");
     expect(saturday).not.toContain("NEXT GAMEWEEK");
   });
 
