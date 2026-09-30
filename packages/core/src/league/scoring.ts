@@ -37,6 +37,9 @@ export interface ScoringRules {
  *  to it is a question about a player, not about the rules. */
 export type CategoryTable = Record<string, Record<string, number | null>>;
 
+/** The clean-sheet category's short name in Fantrax's own scoring table. */
+export const CLEAN_SHEET = "CS";
+
 /** The wire's fallback column, in its own spelling. */
 const DEFAULT_POSITION = "Default";
 

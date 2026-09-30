@@ -1,6 +1,6 @@
 import { CLEAN_SHEET_MINUTES } from "../config";
 import { isActive } from "../league/rosterStatus";
-import { categoryPoints } from "../league/scoring";
+import { CLEAN_SHEET, categoryPoints } from "../league/scoring";
 import type { ScoringRules } from "../league/scoring";
 import { isResolved } from "./roster";
 import type { RosteredTeam } from "./roster";
@@ -17,9 +17,6 @@ import type { RosteredTeam } from "./roster";
 // at full time, and the moment they do, the points appear in their total and
 // disappear from here — which is why only fixtures actually in play are counted.
 // Counting a finished one would show it twice.
-
-/** The clean-sheet category's short name in Fantrax's own scoring table. */
-const CLEAN_SHEET = "CS";
 
 /** What a squad stands to gain when the whistles go, and from how many players. */
 export interface PendingCleanSheets {
