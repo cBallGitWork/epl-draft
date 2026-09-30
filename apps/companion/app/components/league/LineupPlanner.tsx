@@ -33,7 +33,6 @@ export default function LineupPlanner({
   players,
   limits,
   fantraxUrl,
-  figure,
   pending,
 }: {
   team: RosteredTeam;
@@ -45,9 +44,6 @@ export default function LineupPlanner({
   players: LeaguePlayerState[];
   limits: RosterLimits;
   fantraxUrl: string;
-  /** What the list's figure column is a figure OF, when it is not this round's
-   *  points — see `SquadRows`. Null on a round that has scored. */
-  figure: string | null;
   /** Points Fantrax has not credited yet — a clean sheet is settled at the final
    *  whistle and FPL has been paying it since the hour mark. Null when there are
    *  none to preview, and never a nought. */
@@ -141,7 +137,6 @@ export default function LineupPlanner({
             lines={rows.map((line) => ({ position: line.label, players: line.players }))}
             projected={false}
             eligibility={eligibleBy}
-            figure={figure ?? undefined}
             onOpen={setCard}
           />
           {bench.length === 0 ? null : (
@@ -190,6 +185,10 @@ export default function LineupPlanner({
           options={optionsFor(opened)}
           nameOf={nameOf}
           onPlay={play}
+          onCard={() => {
+            setOpened(null);
+            setCard([...rows.flatMap((line) => line.players), ...bench].find((p) => p.rostered.slot.fantraxId === opened) ?? null);
+          }}
           onClose={() => setOpened(null)}
         />
       ) : null}

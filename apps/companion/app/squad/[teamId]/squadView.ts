@@ -130,9 +130,9 @@ export async function squadView(slug: string, gw: string | undefined) {
   // Whether the sheet below is the branch that renders, asked before the fetch
   // because the answer decides whether the news read is worth making.
   const sheet = planning === null && display.show === "lineup";
-  // Concurrent, not serial: this screen is read on a matchday.
+  // Concurrent, not serial: this screen is read on a matchday. Only the sheet reads the round.
   const [live, stories] = await Promise.all([
-    priced === null ? null : squadLivePoints(priced.period, teamId, priced.categories),
+    priced === null || !sheet ? null : squadLivePoints(priced.period, teamId, priced.categories),
     sheet ? readPoolNews() : null,
   ]);
   // Fifteen men's news, not the pool's 74 — this crosses to the browser.
@@ -143,11 +143,7 @@ export async function squadView(slug: string, gw: string | undefined) {
   // the season table and `Sheet` rendered it under a card headed "This period",
   // at a man's default position rather than his roster slot. This is the same
   // condition `board` is built on, so the two cannot disagree.
-  // **The planner needs it too, and for the opposite reason.** The gated branch
-  // reads the season because it may not read the round; this one reads the round
-  // and the round has not been played — the planner opens on the week a manager
-  // can still CHANGE, so before Saturday every live figure is a dash and a column
-  // headed `FPts` reads as broken data rather than as an empty week.
+  // The planner's FPts is the season too, before and after the round scores (Craig, 30 Sep 2026).
   const season = display.show === "squad" || planning !== null ? await squadSeason(teamId) : null;
   // Whether this period has actually scored anything yet, which is not the same
   // as whether Fantrax answered: it returns a row per player with a null against
@@ -191,5 +187,5 @@ export async function squadView(slug: string, gw: string | undefined) {
   )?.points;
   const pending = owed ? owed : null;
 
-  return { team, planning, eligibility, clubs, opposition, live, news, season, scored, points, board, names, pending, squadIds };
+  return { team, planning, eligibility, clubs, opposition, live, news, season, points, board, names, pending, squadIds };
 }

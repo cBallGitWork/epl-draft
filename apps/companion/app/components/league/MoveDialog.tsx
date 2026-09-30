@@ -20,6 +20,7 @@ export default function MoveDialog({
   options,
   nameOf,
   onPlay,
+  onCard,
   onClose,
 }: {
   name: string;
@@ -27,6 +28,8 @@ export default function MoveDialog({
   options: SlotOption[];
   nameOf: (id: string) => string;
   onPlay: (move: Move) => void;
+  /** Swap this dialog for his player card, the pitch's one way to his news. */
+  onCard: () => void;
   onClose: () => void;
 }) {
   return (
@@ -42,13 +45,14 @@ export default function MoveDialog({
             onClose();
           }}
         />
-        <button
-          type="button"
-          onClick={onClose}
-          className={BUTTON}
-        >
-          Close
-        </button>
+        <div className="flex gap-2">
+          <button type="button" onClick={onCard} className={`${BUTTON} flex-1`}>
+            Player card
+          </button>
+          <button type="button" onClick={onClose} className={`${BUTTON} flex-1`}>
+            Close
+          </button>
+        </div>
       </div>
     </Modal>
   );

@@ -3,4 +3,5 @@ export type { InboxWhen } from "./when";
 export { availabilityNews } from "./doubts";
 export { inboxItems, roundNews } from "./items";
 export { dealNews } from "./messages";
+export { noteBesideChance } from "./notes";
 export { fantraxMoment, fantraxTime, whenKey } from "./when";

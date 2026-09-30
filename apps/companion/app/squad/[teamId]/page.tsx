@@ -38,7 +38,7 @@ export default async function TeamPage({
   // `teamId` is what the folder is called; `slug` is what the reader typed, and
   // on the front door those are not the same thing. See `squad/routes.ts`.
   const [{ teamId: slug }, { gw }] = await Promise.all([params, searchParams]);
-  const { team, planning, eligibility, clubs, opposition, live, news, season, scored, points, board, names, pending, squadIds } = await squadView(slug, gw);
+  const { team, planning, eligibility, clubs, opposition, live, news, season, points, board, names, pending, squadIds } = await squadView(slug, gw);
 
   return (
     /* The only live-points surface that did not move on a Saturday. Both
@@ -74,15 +74,6 @@ export default async function TeamPage({
           // halves meet on the way into it rather than being threaded through
           // every caller of the mapper.
           limits={{ ...planning.roster, minActiveByPosition: rosterMinimums() }}
-          // What the figure column is a figure OF. `null` on a round that has
-          // scored, where `SquadRows`' own default says `FPts` and is right.
-          //
-          // **Fantrax's own word**, which is also the only one that fits: the
-          // column is 36px and `Season` overran it. Their table labels itself
-          // "2026-27 - YTD" (`league/stats.ts`) and the pool board already says
-          // YTD in a caption, so this is the app's second use rather than a
-          // coinage.
-          figure={scored ? null : "YTD"}
           fantraxUrl={`${FANTRAX_APP_BASE}/${FANTRAX_LEAGUE_ID}`}
           pending={pending}
         />
