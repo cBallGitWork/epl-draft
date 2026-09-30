@@ -44,6 +44,18 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## The Points Dodgers are the real football's near misses, not a manager's bench — decided 30 Sep 2026
+
+- Craig: *"points dodgers are players IRL who came close to points but didnt get any, not players on the bench"*.
+  The column had named five men who returned while benched; that is now nobody's column.
+- **A dodger** is a league-owned man with no goal, no assist and no clean sheet his slot pays for, who came near
+  one: a goal ruled out, a penalty missed or saved, the woodwork (his shot or one he set up), his side's only goal
+  against from `DODGERS.lateGoal`, or chances worth `DODGERS.from` together. Benched or not is never said.
+- **Expected goals and assists order the column and never print**; the brief carries Opta's countable facts, the
+  moments' minutes (the one column given them), and shots from inside the box and close range.
+- GW5 (rehearsal league) named Wissa's saved penalty, Castagne and Leno's 89th-minute goal against, Gonzalo's
+  three shots in the box and Fernandes off the post; GW4, Le Fée's saved penalty and two 90th-minute goals against.
+
 ## A player's fixture run carries the sister model's projection, not Fantrax's — decided 30 Sep 2026
 
 - **Counted**: the sister export projects **666 of 666** players for **each of GW6–17** (12 weeks); Fantrax's
@@ -783,7 +795,8 @@ public endpoint is the string `status: "ACTIVE" | "RESERVE"` — not the SPA's
 Why it mattered: `gatherRoundFacts` asked without a period while every other
 read in it asked for the round's. `wasFielded` compares the two, so it was
 false for every column that fires after a round finishes — which is all of
-them — and `eleven` and `dodgers` refuse outright when it is false, because
+them — and `eleven` and `dodgers` refused outright when it was false (the dodgers stopped
+reading benches on 30 Sep 2026), because
 "benched" is a claim about a side somebody actually picked. Those two columns
 could never file, and because a refusal spends no covered-key they sat at the
 top of every firing's running order and wedged the paper behind them.

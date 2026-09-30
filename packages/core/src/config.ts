@@ -399,6 +399,17 @@ export const SHEETS = {
   openers: 2,
 } as const;
 
+/** The Points Dodgers: men who came close to points and got none (Craig, 30 Sep 2026). */
+export const DODGERS = {
+  /** Men the column names, and how near a man must come (expected goals and assists plus the weights below). */
+  shown: 5,
+  from: 0.6,
+  /** A goal against from this minute is the one that took a clean sheet late. */
+  lateGoal: 80,
+  /** What each moment adds to his nearness; a shot's own expected goals already counts once. */
+  weight: { "ruled-out": 1, "penalty-missed": 0.5, "penalty-saved": 0.5, woodwork: 0.5, "set-up-woodwork": 0.3, "clean-sheet-lost": 1 },
+} as const;
+
 /** The match-day report's editorial thresholds (docs/plans/GAZETTA.md, "Match reports, woven"). */
 export const REPORTS = {
   budget: {

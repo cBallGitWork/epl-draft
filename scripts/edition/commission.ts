@@ -73,6 +73,7 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
               gameweek: ctx.snapshot.gameweek,
               facts: ctx.facts,
               table: ctx.table,
+              dodgers: ctx.dodgers,
               threads: ctx.threads,
               named: (teamId) =>
                 ctx.info.teams.find((team) => team.teamId === teamId)?.name ?? teamId,

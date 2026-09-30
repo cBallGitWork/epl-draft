@@ -2,6 +2,7 @@ import {
   fullClubName,
   type Assignment,
   type Club,
+  type Dodger,
   type FootballSnapshot,
   type LeagueInfo,
   type PublishedStory,
@@ -44,6 +45,8 @@ export interface DeskContext {
   sheets: SheetsDesk | null;
   /** Each match-day report this firing commissioned, by its London day. */
   reports: ReadonlyMap<string, ReportsJob>;
+  /** The gameweek's near misses by the league's men; null unless the Points Dodgers are due this firing. */
+  dodgers: readonly Dodger[] | null;
   /** This week's press-conference signals, for men the league holds. Empty until
    *  the intel export lands, which files no Team Sheet and spends nothing. */
   presserLines: PresserLine[];
