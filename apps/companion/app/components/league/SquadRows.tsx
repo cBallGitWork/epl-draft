@@ -33,7 +33,6 @@ export default function SquadRows({
   bare = false,
   head = true,
   reserve = false,
-  figure,
 }: {
   lines: SquadDetailLine[];
   /** Skip the panel, because a caller has already drawn one round this AND
@@ -48,15 +47,6 @@ export default function SquadRows({
   /** Whether the points are Fantrax's projection rather than a season played.
    *  The heading says which, because the numbers cannot. */
   projected: boolean;
-  /** What the figure column is a figure OF, when it is neither of the two above.
-   *
-   *  **Provenance at the point of use** (DESIGN §7). The planner opens on the
-   *  round a manager can still change, which by definition has no football in
-   *  it — so a column headed `FPts` was fifteen dashes, and a reader takes that
-   *  for broken data rather than for an empty week. It shows his season instead
-   *  and says so; the moment the round starts scoring the caller hands back the
-   *  live numbers and the heading with them. */
-  figure?: string;
   /** Absent on the head-to-head board, which has no player card to open. A row
    *  that looked like a button and did nothing is worse than a row. */
   onOpen?: (player: SquadPlayerDetail) => void;
@@ -141,7 +131,7 @@ export default function SquadRows({
               edge with the readings before it. */}
           {scored ? (
             <span className="w-9 shrink-0 text-right">
-              {figure ?? (projected ? "Proj" : "FPts")}
+              {projected ? "Proj" : "FPts"}
             </span>
           ) : null}
         </div>

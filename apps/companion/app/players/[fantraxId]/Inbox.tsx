@@ -5,7 +5,7 @@ import DateChip from "../../components/shell/DateChip";
 import Section from "../../components/shell/Section";
 import Letter from "../../news/Letter";
 import { PANEL_FLUSH, ROW_NAME } from "@/app/desk";
-import type { NewsItem } from "./newsItems";
+import { noteBody, type NewsItem } from "./newsItems";
 
 // His news in Mail's shape (Craig, 25 Sep 2026: "should match the Email/news section"): the dated
 // list beside the letter on a desk and above it on a phone, the open row on CM's red ground, and
@@ -62,10 +62,7 @@ export default function Inbox({
 /** A story as Mail's letter: Fantrax's desk sends it, the headline is the subject, and the body is
  *  whatever of the story the subject has not said, then the provider's analysis. */
 function letter(item: NewsItem): InboxItem {
-  const rest = item.body.startsWith(item.headline) ? item.body.slice(item.headline.length).trim() : item.body;
-  const body = [rest, item.analysis]
-    .filter((part): part is string => part !== null && part.trim() !== "")
-    .join(" ");
+  const body = noteBody(item).join(" ");
   return {
     id: item.id,
     category: "message",
