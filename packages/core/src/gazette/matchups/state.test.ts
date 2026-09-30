@@ -13,7 +13,7 @@ const side = (name: string, total: number, xi: DraftMan[], bench: DraftMan[] = [
 describe("matchupState", () => {
   it("names the man whose goal would win it once three or fewer are left, with no figure and no sums restated", () => {
     const state = matchupState({ home: side("Home", 40, eleven("h")), away: side("Away", 36, eleven("a", { M5: man("Salah", "M", null, 0, 1, { next: "away to Everton" }) })) }, worth, LIMITS, "saturday");
-    expect(state.score).toBe("Home 40-36 Away");
+    expect(state.score).toBe("Home lead Away 40-36");
     expect(state.stillToPlay).toEqual(["Away have 1 still to play: Salah (Club, away to Everton)", "a goal from Salah would win it"]);
   });
 
@@ -26,7 +26,7 @@ describe("matchupState", () => {
   it("gives Saturday's score with the substitutes named, and the round's as a result flipped by them", () => {
     const home = side("Home", 30, eleven("h", { D1: man("Blank", "D", null, 0) }), [man("Vuskovic", "D", 6, 90)]);
     const away = side("Away", 33, eleven("a"));
-    expect(matchupState({ home, away }, worth, LIMITS, "saturday").score).toBe("Home 30-33 Away, 36-33 once Vuskovic comes on");
+    expect(matchupState({ home, away }, worth, LIMITS, "saturday").score).toBe("Away lead Home 33-30, and Home go ahead 36-33 once Vuskovic comes on");
     expect(matchupState({ home, away }, worth, LIMITS, "gameweek").score).toBe("Home beat Away 36-33; Away led 33-30 before the substitutions");
   });
 

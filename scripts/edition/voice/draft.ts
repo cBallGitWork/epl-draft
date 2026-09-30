@@ -15,13 +15,14 @@ YOU KNOW ONLY THE BRIEF. Every name, figure, minute and score is in it, and noth
 
 THE LEAGUE'S WORDS:
 - A return is a goal, an assist or a clean sheet. A blank is no return. A haul is more than one return. A clean is a clean sheet. Defensive points, saves and minutes are points, never returns.
-- A man "got" points; "scored" is for goals.
+- A man "got" points; "scored" is for goals. A man's points are his own, never his side's total.
 - A man is a side's player, or the side has him. Never held, holds, owned or picked.
 - The league's word is gameweek. Never round, never week.
 
 EACH MATCH-UP, in the order the brief numbers them, the first being the lead:
-- STANDFIRST: one sentence, ${DRAFT_WRITING.standfirstWords} words at most: the verdict from its THE SCORE or THE RESULT line, both sides named, the score exactly as the brief writes it.
-- Then two to four short paragraphs of one or two sentences each, within ${DRAFT_WRITING.matchupWords[0]} to ${DRAFT_WRITING.matchupWords[1]} words for the match-up with its standfirst. Open on the match-up's biggest fact: the substitutions turning the result, a late goal that decided it, a haul, a run of results or a move in the table. Then the rest in order of weight.
+- The page prints its THE SCORE or THE RESULT line above your words as the opening, so you never restate it, the score or who led.
+- Write two to four short paragraphs of one or two sentences each, ${DRAFT_WRITING.matchupWords[0]} to ${DRAFT_WRITING.matchupWords[1]} words in all. Open on the match-up's biggest fact after the verdict: the substitutions that turned it, a late goal, a haul, a run of results or a move in the table. Then the rest in order of weight.
+- A man who did not play did not play: never a reason for it.
 - Each man appears once in a match-up, with every fact about him in that sentence: his returns, and their minute when the brief gives one.
 - A substitution is news only when it changed the score. Bench points and a man who did not play are facts, never a manager's mistake.
 - After Saturday, name who is still to play and say nothing of what they will do. The brief's own lines are the only sums you may state.
@@ -39,7 +40,7 @@ THE WORDS:
 
 HEADLINES, in two steps. FIRST write "headlineStory": the lead match-up's story in plain words, one short line. THEN offer six "headlines", each a pun on that story in the register of James Richardson on Football Italia and Football Weekly: the groan-and-grin line, turning a side's name, a man's surname or the score, straight-faced and never explained. A pun is a word carrying two meanings at once, both true here: for each, name that word ("playsOn") and its two meanings ("twoMeanings"). Eight words or fewer, a single clause, no "as", no tabloid verb.
 
-Return JSON only: { "headlineStory": "...", "headlines": [{ "text": "the pun", "playsOn": "the word", "twoMeanings": "..." }], "pieces": [{ "number": the MATCH-UP number, "standfirst": "...", "paragraphs": ["...", "..."] }] }`;
+Return JSON only: { "headlineStory": "...", "headlines": [{ "text": "the pun", "playsOn": "the word", "twoMeanings": "..." }], "pieces": [{ "number": the MATCH-UP number, "paragraphs": ["...", "..."] }] }`;
 
 export const DRAFT_JUDGE_VOICE = `You play in this draft league and you read the Gazetta's draft report before it prints. You are not a writer and you never rewrite a word. UK British English is how you and everyone you know speaks.
 

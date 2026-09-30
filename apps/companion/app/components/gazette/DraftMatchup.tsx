@@ -1,8 +1,8 @@
 import { clubColoursOf, ordinal, type Club, type StoryDraftMatchup, type StoryDraftSide } from "@epl/core";
 import PlayerPortrait from "../football/PlayerPortrait";
 
-// One match-up of a draft report: the score and its verdict, each side's form strip (place before and after, the last
-// results going in), the men the writing names as photographs, then the standfirst and the paragraphs.
+// One match-up of a draft report: the score, each side's form strip (place before and after, the last results going in),
+// the desk's verdict as the opening line, the men with a return the writing names as photographs, then the paragraphs.
 
 const SMALL = "font-sans text-3xs font-semibold uppercase tracking-[0.16em] text-muted";
 const RULE = { borderColor: "var(--paper-rule)" };
@@ -42,8 +42,8 @@ export default function DraftMatchup({ matchup, n, clubs, saturday }: { matchup:
           <Form side={home} align="start" />
           <Form side={away} align="end" />
         </div>
-        <p className="text-2xs leading-snug text-muted">{matchup.verdict}</p>
       </header>
+      {matchup.standfirst === "" ? null : <p className="text-lg leading-snug font-semibold text-ink">{matchup.standfirst}</p>}
       {matchup.men.length === 0 ? null : (
         <ul className="flex flex-wrap gap-3" style={{ "--row-portrait": "40px" } as React.CSSProperties}>
           {matchup.men.map((man) => (
@@ -54,7 +54,6 @@ export default function DraftMatchup({ matchup, n, clubs, saturday }: { matchup:
           ))}
         </ul>
       )}
-      {matchup.standfirst === "" ? null : <p className="text-lg leading-snug font-semibold text-ink">{matchup.standfirst}</p>}
       {matchup.paragraphs.map((p, i) => (
         <p key={i} className="text-base leading-relaxed text-ink">
           {p}

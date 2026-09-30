@@ -1,3 +1,4 @@
+import { DRAFT_WRITING } from "../../config";
 import { mentionAt } from "../predictions/prose";
 import type { Cutoff, MatchupContext } from "./brief";
 import type { DraftPiece } from "./writing";
@@ -45,8 +46,8 @@ export function draftCargo(cutoff: Cutoff, gameweek: number, contexts: readonly 
     cutoff,
     gameweek,
     matchups: contexts.map((ctx, at) => {
-      const piece = pieces.get(at + 1) ?? { standfirst: "", paragraphs: [] };
-      const prose = [piece.standfirst, ...piece.paragraphs].join(" ");
+      const piece = pieces.get(at + 1) ?? { paragraphs: [] };
+      const prose = piece.paragraphs.join(" ");
       const side = (which: "home" | "away"): StoryDraftSide => ({
         teamId: ctx.state[which].side.teamId,
         name: ctx.state[which].side.name,
@@ -56,12 +57,16 @@ export function draftCargo(cutoff: Cutoff, gameweek: number, contexts: readonly 
         run: ctx.places[which]?.run ?? "",
       });
       const everyone = [ctx.state.home.side, ctx.state.away.side].flatMap((s) => [...s.eleven, ...s.bench]);
+      // The faces: the men the writing names who returned, the biggest scores first, a handful at most.
       const men = everyone
-        .map((m) => ({ m, at: mentionAt(prose, m.name.split(/\s+/u).at(-1) ?? m.name) }))
-        .filter((x) => x.at >= 0)
-        .sort((a, b) => a.at - b.at)
-        .map(({ m }) => ({ code: m.code, clubCode: m.clubCode, name: m.name }));
-      return { home: side("home"), away: side("away"), verdict: ctx.state.score, standfirst: piece.standfirst, paragraphs: piece.paragraphs, men };
+        .filter((m) => m.goals + m.assists + m.cleanSheets > 0 && mentionAt(prose, m.name.split(/\s+/u).at(-1) ?? m.name) >= 0)
+        .sort((a, b) => (b.points ?? 0) - (a.points ?? 0))
+        .slice(0, DRAFT_WRITING.faces)
+        .map((m) => ({ code: m.code, clubCode: m.clubCode, name: m.name }));
+      // The opening line is the desk's verdict, set as a sentence: the one line a reader must never find wrong. A side's
+      // name prints as its manager wrote it, even at the head of a sentence.
+      const standfirst = `${ctx.state.score}.`;
+      return { home: side("home"), away: side("away"), verdict: ctx.state.score, standfirst, paragraphs: piece.paragraphs, men };
     }),
   };
 }

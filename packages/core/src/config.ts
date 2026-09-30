@@ -395,10 +395,11 @@ export const DRAFT_DESK = {
   tableMove: 2,
 } as const;
 
-/** How long a draft report runs: a standfirst, then a match-up's paragraphs (the UK desk's review, 29 Sep 2026). */
+/** How long a draft report's paragraphs run after each match-up's verdict (the UK desk's review, 29 Sep 2026). */
 export const DRAFT_WRITING = {
-  standfirstWords: 30,
-  matchupWords: [60, 160],
+  matchupWords: [50, 150],
+  /** The photographs a match-up shows: the men with a return it names, the biggest scores first. */
+  faces: 6,
   /** Headline candidates the pun writer offers, and match-ups written in one call. */
   puns: 10,
 } as const;

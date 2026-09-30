@@ -17,8 +17,12 @@ export const DRAFT_SPEECH: readonly string[] = [
   "held him", "holds him", "held and", "came on", "came off",
 ];
 
-/** The Prem report's never-list with the FM framing words let back in, and the speech ban added. */
+/** Why a man did not play is not in the facts: the brief says he did not, and nothing more. */
+export const DRAFT_REASONS: readonly string[] = ["left out", "absent", "missing", "dropped", "rested", "benched", "omitted", "sidelined"];
+
+/** The Prem report's never-list with the FM framing words let back in, and the speech and invented reasons added. */
 export const DRAFT_NEVER: readonly string[] = [
   ...REPORT_NEVER.filter((phrase) => !REPORT_CROWD.includes(phrase) || !DRAFT_FRAMES.some((frame) => phrase.includes(frame))),
   ...DRAFT_SPEECH,
+  ...DRAFT_REASONS,
 ];

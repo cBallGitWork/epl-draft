@@ -29,7 +29,7 @@ describe("buildDraftBrief", () => {
     expect(brief).toContain("THE MEETINGS:\n- the last meeting: Dons won 40-31 in gameweek 2");
     expect(brief).toContain("FORM AND THE TABLE:\n- Dons had won 3 in a row going into the gameweek [streak]");
     expect(brief).toContain("- Isak faced Dons, who drafted him");
-    expect(brief).toContain("THE SCORE after Saturday's matches: Dons 40-38 Notemail, 43-38 once Sub comes on.");
+    expect(brief).toContain("THE SCORE after Saturday's matches: Dons lead Notemail 40-38, 43-38 once Sub comes on.");
     expect(brief).toContain("STILL TO PLAY:\n- Notemail have 1 still to play: Isak (EVE, away to Bournemouth)\n- Notemail need 2 returns to win it");
     expect(brief).toContain("THE STORIES:\n- Dons: Sub (EVE) replaces Blank (EVE), who did not play, with 3 points");
     expect(brief).not.toMatch(/WORKED OUT|true as written|to draw and/u);

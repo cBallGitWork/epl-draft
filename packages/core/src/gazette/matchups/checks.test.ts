@@ -20,7 +20,7 @@ const blocks = draftBlocks("gameweek", contexts);
 const clean = "Haaland got 6 with a goal, and 123 beat test2 by the one point that separated the sides at the end of the gameweek. The rest of the eleven blanked. It left 123 above test2 and two points clear of their nearest rival in the table. Nobody on either bench came into it, and neither side lost a man before the hour.";
 const writing = (one: string, two = clean.replace(/Haaland/gu, "Vuskovic").replace(/123/gu, "test3").replace(/test2/gu, "test4")) => ({
   headlines: [], meanings: {}, headlineStory: "",
-  matchups: new Map([[1, { standfirst: "123 beat test2 38-37.", paragraphs: [one] }], [2, { standfirst: "test3 beat test4 33-28.", paragraphs: [two] }]]),
+  matchups: new Map([[1, { paragraphs: [one] }], [2, { paragraphs: [two] }]]),
 });
 const checks = (one: string) => checkDraft(writing(one), contexts, blocks).filter((f) => f.section.startsWith("1:")).map((f) => `${f.severity}: ${f.check} (${f.evidence})`);
 
@@ -35,6 +35,10 @@ describe("checkDraft", () => {
     expect(checks(`${clean} "We won," said nobody.`)).toEqual(expect.arrayContaining([expect.stringMatching(/^hard: a quotation mark/), expect.stringMatching(/send-back: a phrase this paper does not print \(said\)/)]));
   });
 
+  it("sends back a reason a man did not play, which the brief never gives", () => {
+    expect(checks(`${clean} The absent Millar cost test2.`)).toEqual(expect.arrayContaining([expect.stringMatching(/absent/)]));
+  });
+
   it("sends back a manager's feeling, a held man and American spelling, but lets an FM frame through", () => {
     expect(checks(`${clean} The manager felt furious.`)).toEqual(expect.arrayContaining([expect.stringMatching(/a named person's feeling/)]));
     expect(checks(`${clean} test2 held him.`)).toEqual(expect.arrayContaining([expect.stringMatching(/held him/)]));
@@ -43,9 +47,9 @@ describe("checkDraft", () => {
 });
 
 describe("the draft cargo", () => {
-  it("carries each match-up's verdict, writing, form strip and the men it names, and reads back whole", () => {
+  it("opens each match-up on the desk's verdict, shows the named men who returned, and reads back whole", () => {
     const cargo = draftCargo("gameweek", 5, contexts, writing(clean).matchups, new Map([["123", 1]]));
-    expect(cargo.matchups[0]).toMatchObject({ verdict: contexts[0].state.score, home: { name: "123", rankBefore: 2, rankAfter: 1, run: "W" }, men: [{ name: "Haaland", code: 223094, clubCode: 43 }] });
+    expect(cargo.matchups[0]).toMatchObject({ verdict: contexts[0].state.score, standfirst: `${contexts[0].state.score}.`, home: { name: "123", rankBefore: 2, rankAfter: 1, run: "W" }, men: [{ name: "Haaland", code: 223094, clubCode: 43 }] });
     expect(normalizeDraftReport(JSON.parse(JSON.stringify(cargo)))).toEqual(cargo);
     expect(normalizeDraftReport({ cutoff: "week", gameweek: 5, matchups: [] })).toBeUndefined();
   });

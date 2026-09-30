@@ -48,7 +48,13 @@ function scoreLine(home: SideState, away: SideState, cutoff: Cutoff, worth: Slot
   if (cutoff === "saturday") {
     const on = [...coming(home), ...coming(away)];
     const changed = home.total !== h || away.total !== a;
-    return `${home.side.name} ${h}-${a} ${away.side.name}${changed ? `, ${home.total}-${away.total} once ${listed(on, "and")} come${on.length === 1 ? "s" : ""} on` : ""}`;
+    // The side ahead first and its score first, as a paper prints a half-time score.
+    const [lead, trail] = h >= a ? [home, away] : [away, home];
+    const [l, t] = [lead.side.total ?? 0, trail.side.total ?? 0];
+    const now = l === t ? `${home.side.name} and ${away.side.name} are level at ${l}-${t}` : `${lead.side.name} lead ${trail.side.name} ${l}-${t}`;
+    if (!changed) return now;
+    const once = `once ${listed(on, "and")} come${on.length === 1 ? "s" : ""} on`;
+    return trail.total > lead.total ? `${now}, and ${trail.side.name} go ahead ${trail.total}-${lead.total} ${once}` : `${now}, ${lead.total}-${trail.total} ${once}`;
   }
   if (home.total === away.total) return `${home.side.name} and ${away.side.name} drew ${home.total}-${away.total}`;
   const [winner, loser] = home.total > away.total ? [home, away] : [away, home];

@@ -30,11 +30,11 @@ export function checkDraft(writing: DraftWriting, contexts: readonly MatchupCont
   contexts.forEach((ctx, at) => {
     const n = at + 1;
     const piece: DraftPiece | undefined = writing.matchups.get(n);
-    if (piece === undefined || piece.standfirst === "" || piece.paragraphs.length === 0) {
-      fault(`${n}:matchup`, "missing", "hard", "no standfirst or paragraphs");
+    if (piece === undefined || piece.paragraphs.length === 0) {
+      fault(`${n}:matchup`, "missing", "hard", "no paragraphs");
       return;
     }
-    const prose = [piece.standfirst, ...piece.paragraphs].join("\n");
+    const prose = piece.paragraphs.join("\n");
     pieces.push({ code: n, prose });
     const block = blocks[at] ?? "";
     const mine = new Set(everyone[at]);
@@ -49,10 +49,8 @@ export function checkDraft(writing: DraftWriting, contexts: readonly MatchupCont
     for (const phrase of banned(prose, DRAFT_NEVER)) fault(`${n}:matchup`, "a phrase this paper does not print", "send-back", phrase);
     for (const phrase of banned(prose, [...REPORT_AMERICAN, ...SHEETS_AMERICAN])) fault(`${n}:matchup`, "American, not British", "send-back", phrase);
     if (FEELING.test(prose)) fault(`${n}:matchup`, "a named person's feeling", "send-back", prose.match(FEELING)?.[0] ?? "");
-    const sides = [ctx.state.home.side.name, ctx.state.away.side.name];
-    if (sentences(piece.standfirst).length !== 1 || wordCount(piece.standfirst) > DRAFT_WRITING.standfirstWords || !sides.every((s) => piece.standfirst.includes(s))) {
-      fault(`${n}:standfirst`, `one sentence of ${DRAFT_WRITING.standfirstWords} words or fewer naming both sides`, "send-back", piece.standfirst);
-    }
+    // The verdict opens the match-up in print, so the paragraphs never open on it again.
+    if (sentences(prose)[0]?.includes(ctx.state.score.split(/[;,]/u)[0]) === true) fault(`${n}:matchup`, "opens on the verdict the page already prints", "send-back", sentences(prose)[0] ?? "");
     const [least, most] = DRAFT_WRITING.matchupWords;
     const words = wordCount(prose);
     if (words < least || words > most) fault(`${n}:matchup`, `a match-up of ${least} to ${most} words`, "send-back", `${words} words`);

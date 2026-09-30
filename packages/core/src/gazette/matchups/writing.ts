@@ -2,10 +2,10 @@ import type { Fault } from "../predictions/checks";
 import { correct, particles, readHeadlines } from "../reports/draft";
 
 // What the writer files for a draft report, read field by field: the headline candidates, and each match-up's
-// standfirst and paragraphs, keyed by its number in the brief. A match-up that fails twice prints its verdict alone.
+// paragraphs, keyed by its number in the brief. A match-up that fails twice prints its verdict alone.
 
+/** The writer's paragraphs for one match-up. Its opening line is the desk's verdict, never the model's. */
 export interface DraftPiece {
-  standfirst: string;
   paragraphs: string[];
 }
 
@@ -28,7 +28,7 @@ export function readDraftWriting(raw: Record<string, unknown>, surnames: readonl
     const m = entry as Record<string, unknown>;
     const n = Number(m.number);
     if (!Number.isInteger(n)) continue;
-    matchups.set(n, { standfirst: text(m.standfirst), paragraphs: (Array.isArray(m.paragraphs) ? m.paragraphs : []).map(text).filter((p) => p !== "") });
+    matchups.set(n, { paragraphs: (Array.isArray(m.paragraphs) ? m.paragraphs : []).map(text).filter((p) => p !== "") });
   }
   const { headlines, meanings } = readHeadlines(raw);
   return { headlines, meanings, headlineStory: text(raw.headlineStory), matchups };

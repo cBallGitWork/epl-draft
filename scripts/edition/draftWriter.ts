@@ -1,5 +1,8 @@
 import {
+  DRAFT_NEVER,
   DRAFT_WRITING,
+  applyDraftFixes,
+  faultyDraftSentences,
   buildDraftBrief,
   checkDraft,
   draftBlocks,
@@ -15,9 +18,9 @@ import {
   type Fault,
   type MatchupContext,
 } from "@epl/core";
-import { writeColumn } from "./newsroom";
+import { writeColumn, type Usage } from "./newsroom";
 import { DRAFT_JUDGE_VOICE, DRAFT_VOICE, draftSendBack } from "./voice/draft";
-import { PUN_VOICE } from "./voice/reports";
+import { LINE_EDIT_VOICE, PUN_VOICE } from "./voice/reports";
 
 // The draft report's newsroom, the Prem report's in miniature: the reporter writes the gameweek's match-ups, the editor
 // checks each against its block, the pun writer offers headlines, a manager in the league picks one and flags what no
@@ -31,7 +34,7 @@ export interface DraftJob {
   rankAfter: Map<string, number>;
 }
 
-type Usage = { input_tokens?: number; output_tokens?: number };
+
 
 /** The judge's quotes, capped per match-up; a quote not in the writing is dropped. */
 function judgeFlags(raw: Record<string, unknown>, prose: ReadonlyMap<number, string>): Fault[] {
@@ -47,9 +50,14 @@ function judgeFlags(raw: Record<string, unknown>, prose: ReadonlyMap<number, str
   });
 }
 
-export async function draftColumn(job: DraftJob, say: (message: string) => void): Promise<Record<string, unknown>> {
-  const usage = { input: 0, output: 0 };
-  const count = (u: Usage) => ((usage.input += u.input_tokens ?? 0), (usage.output += u.output_tokens ?? 0));
+/** `sendBack: false` is test mode's: the first attempt files with its faults logged, and one call is saved. */
+export async function draftColumn(job: DraftJob, say: (message: string) => void, options: { sendBack?: boolean } = {}): Promise<Record<string, unknown>> {
+  const usage = { input: 0, cached: 0, output: 0 };
+  const count = (u: Usage) => {
+    usage.input += (u.input_tokens ?? 0) + (u.cache_creation_input_tokens ?? 0);
+    usage.cached += u.cache_read_input_tokens ?? 0;
+    usage.output += u.output_tokens ?? 0;
+  };
   const brief = buildDraftBrief(job.cutoff, job.gameweek, job.contexts);
   const blocks = draftBlocks(job.cutoff, job.contexts);
   const men = job.contexts.flatMap((c) => [c.state.home.side, c.state.away.side]).flatMap((s) => [...s.eleven, ...s.bench]);
@@ -66,15 +74,15 @@ export async function draftColumn(job: DraftJob, say: (message: string) => void)
   const candidates = survivors(offered, names);
   for (const h of offered) say(`    headline candidate: "${h}"${candidates.includes(h) ? "" : ` struck (${strike(h, names)})`} [${meanings[h] ?? ""}]`);
 
-  const prose = new Map([...first.matchups].map(([n, p]) => [n, [p.standfirst, ...p.paragraphs].join("\n")]));
+  const prose = new Map([...first.matchups].map(([n, p]) => [n, p.paragraphs.join("\n")]));
   const judged = [`HEADLINE CANDIDATES for the lead match-up (${first.headlineStory}):`, ...candidates.map((h, i) => `${i + 1}. ${h} [${meanings[h] ?? ""}]`), "", ...[...prose].map(([n, text]) => `MATCH-UP ${n}:\n${text}`)].join("\n");
-  const judgeRaw = await writeColumn(DRAFT_JUDGE_VOICE, judged, count).catch(() => null);
+  const judgeRaw = await writeColumn(DRAFT_JUDGE_VOICE, judged, count, "helper").catch(() => null);
   const chosen = judgeRaw === null ? null : fanHeadline(judgeRaw, candidates);
   const flags = judgeRaw === null ? [] : judgeFlags(judgeRaw, prose);
 
   const sendable = [...faults1, ...flags].filter((f) => f.severity !== "warn");
   const attempts = [{ writing: first, faults: [...faults1, ...flags] }];
-  if (sendable.length > 0) {
+  if (sendable.length > 0 && options.sendBack !== false) {
     say(`  ↩ draft report: ${sendable.length} faults, sent back once`);
     const again = await writeColumn(DRAFT_VOICE, `${brief}\n\n${draftSendBack(sendable)}`, count).catch(() => null);
     if (again !== null) {
@@ -82,9 +90,14 @@ export async function draftColumn(job: DraftJob, say: (message: string) => void)
       attempts.push({ writing: second, faults: checkDraft(second, job.contexts, blocks).filter((f) => second.matchups.has(matchupOf(f.section)) || f.section === "page") });
     }
   }
-  const pieces = mergeDraft(attempts, job.contexts.length);
+  const merged = mergeDraft(attempts, job.contexts.length);
+  // The sub-editor's last pass, on the cheap model: a sentence still carrying a banned phrase goes back alone.
+  const fixes = faultyDraftSentences(merged, DRAFT_NEVER);
+  const edited = fixes.length === 0 ? null : await writeColumn(LINE_EDIT_VOICE, fixes.map((f, i) => `${i + 1}. ${f.sentence} [${f.words.join(", ")}]`).join("\n"), count, "helper").catch(() => null);
+  const pieces = edited === null ? merged : applyDraftFixes(merged, fixes, Array.isArray(edited.lines) ? edited.lines.map(String) : [], DRAFT_NEVER);
+  if (fixes.length > 0) say(`  draft report: line edit fixed ${fixes.length - faultyDraftSentences(pieces, DRAFT_NEVER).length} of ${fixes.length} sentences`);
   for (const f of attempts.at(-1)!.faults.filter((x) => x.severity !== "warn")) say(`    fault ${f.section}: ${f.check} [${f.evidence}]`);
   const lead = job.contexts[0]?.state.score ?? "";
-  say(`  draft report: ${pieces.size} of ${job.contexts.length} match-ups written; headline ${chosen === null ? "none chosen, the lead verdict prints" : `"${chosen}"`}; ${usage.input} tokens in, ${usage.output} out`);
+  say(`  draft report: ${pieces.size} of ${job.contexts.length} match-ups written; headline ${chosen === null ? "none chosen, the lead verdict prints" : `"${chosen}"`}; ${usage.input} tokens in, ${usage.cached} from cache, ${usage.output} out`);
   return { headline: chosen ?? lead, deck: lead, body: "", draft: draftCargo(job.cutoff, job.gameweek, job.contexts, pieces, job.rankAfter) };
 }

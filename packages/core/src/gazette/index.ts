@@ -84,6 +84,7 @@ export type { StoryDraftMan, StoryDraftMatchup, StoryDraftReport, StoryDraftSide
 export { mergeDraft, matchupOf, readDraftWriting } from "./matchups/writing";
 export type { DraftPiece, DraftWriting } from "./matchups/writing";
 export { DRAFT_FRAMES, DRAFT_NEVER } from "./matchups/words";
+export { applyFixes as applyDraftFixes, faultySentences as faultyDraftSentences } from "./matchups/lineEdit";
 export type { Cutoff, MatchupContext, TablePlace } from "./matchups/brief";
 export { draftReportsDue, isSaturday } from "./matchups/due";
 export { priceOf } from "./matchups/worth";
