@@ -1,5 +1,6 @@
 import type { Blocker, Move, SlotOption } from "@epl/core";
 import { LABEL } from "@/app/desk";
+import { swapGroups } from "./moveGroups";
 
 // The sheet under a tapped player: everywhere he can go, and why he cannot go
 // anywhere else.
@@ -29,34 +30,24 @@ function Action({ label, onPlay }: { label: string; onPlay: () => void }) {
 }
 
 export default function MoveSheet({
+  subject,
   moves,
   options,
   nameOf,
   onPlay,
 }: {
+  /** The tapped man, whose side of each swap the sheet speaks from. */
+  subject: string;
   moves: Move[];
   options: SlotOption[];
   nameOf: (id: string) => string;
   onPlay: (move: Move) => void;
 }) {
-  // Swaps are grouped by where he is going, and the rest are listed as they are.
-  //
-  // A full XI is the ordinary state of a team, and every position is then
-  // reachable only by a swap — which is fourteen buttons on this squad, each
-  // repeating "Start at M for" in front of a name. Grouped, the manager picks
-  // the position once and then reads eleven names.
-  const swaps = new Map<string, Extract<Move, { kind: "swap" }>[]>();
-  const direct: Move[] = [];
-
-  for (const move of moves) {
-    if (move.kind !== "swap") {
-      direct.push(move);
-      continue;
-    }
-    const to = swaps.get(move.to);
-    if (to) to.push(move);
-    else swaps.set(move.to, [move]);
-  }
+  // One heading per position for a reserve, one list of who could come on for a man in the side.
+  const groups = swapGroups(moves, subject, nameOf);
+  // Positions he himself reaches by a swap, whose closed note would contradict the offer.
+  const swapped = new Set(moves.flatMap((move) => (move.kind === "swap" && move.fantraxId === subject ? [move.to] : [])));
+  const direct = moves.filter((move) => move.kind !== "swap");
 
   return (
     <div className="mt-1 flex flex-col gap-2 border border-line bg-raised p-2">
@@ -76,17 +67,11 @@ export default function MoveSheet({
         </div>
       ) : null}
 
-      {[...swaps.entries()].map(([position, group]) => (
-        <div key={position} className="flex flex-col gap-1">
-          <h4 className={`px-1 font-display ${LABEL}`}>
-            Start at {position} — who comes off?
-          </h4>
-          {group.map((move) => (
-            <Action
-              key={move.withId}
-              label={nameOf(move.withId)}
-              onPlay={() => onPlay(move)}
-            />
+      {groups.map((group) => (
+        <div key={group.heading} className="flex flex-col gap-1">
+          <h4 className={`px-1 font-display ${LABEL}`}>{group.heading}</h4>
+          {group.options.map((option) => (
+            <Action key={option.key} label={option.label} onPlay={() => onPlay(option.move)} />
           ))}
         </div>
       ))}
@@ -100,7 +85,7 @@ export default function MoveSheet({
           any of them, so the sheet was offering eight ways into midfield and
           then saying midfield was closed. */}
       {options
-        .filter((option) => !option.open && option.blockedBy && !swaps.has(option.position))
+        .filter((option) => !option.open && option.blockedBy && !swapped.has(option.position))
         .map((option) => (
           <p key={option.position} className="px-3 text-2xs text-faint">
             {option.position} — {option.blockedBy ? BLOCKED[option.blockedBy] : null}

@@ -180,6 +180,7 @@ export default function LineupPlanner({
       {opened !== null ? (
         <MoveDialog
           key={opened}
+          subject={opened}
           name={nameOf(opened)}
           moves={movesFor(opened)}
           options={optionsFor(opened)}
