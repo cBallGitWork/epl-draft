@@ -708,7 +708,7 @@ real settings, which is the measure of how far "the API does not say" is from
 ## The commissioner's cookie opens all of it — probed 21 Sep 2026
 
 Craig supplied his own session and the probe was **read methods only**; nothing
-below changed a league. `adminMode` and every write are still unprobed.
+below changed a league. `adminMode` and the writes were answered on 28 Sep 2026 (below).
 
 **The cookie is live but `roles` is `"none"`** — and `myTeamIds` comes back as
 **all ten** dummy teams, with a `commissioner` key on every response. So role is
@@ -1121,10 +1121,10 @@ a correct and permanent state for some players rather than a matching failure.
 - **No scoring engine this season.** Fantrax computes the points and its numbers
   are authoritative; we read them. The full `scoringSystem` is captured but not
   modelled. Minor exceptions may come later, deliberately.
-- **No write surface yet.** The fxpa methods (`confirmOrExecuteTeamRosterChanges`
-  for lineups, `confirmOrExecutePlayerPickerChanges` for waivers) need a member's
-  browser session cookie. Deferred to September. Note that before the draft there
-  are no rosters to change, so there is nothing to test against either.
+- **The write surface is the commissioner's cookie plus `adminMode`**, which
+  writes a team the commissioner does not own (probed 28 Sep 2026, below).
+  `confirmOrExecuteTeamRosterChanges` sets lineups; `confirmOrExecutePlayerPickerChanges`
+  (waivers) is unprobed.
 - **`data/` is checked into git.** The snapshots and the identity bridge are the
   season's permanent record; git is both audit trail and backup.
 - **Capture starts now, not at the draft.** Roster transitions cannot be
@@ -3579,6 +3579,88 @@ on 9 Oct.
 The real league cannot substitute: it has no teams until 10 Oct, and by the time
 it has fifteen belonging to real people, writing to one to see what happens is
 not a probe, it is an incident.
+
+**Answered 28 Sep 2026: it writes.** See the next section.
+
+## `adminMode` answered: the commissioner writes any team's lineup — probed 28 Sep 2026
+
+Craig moved one rehearsal team, **Notemail** (`v6bxgqm5mtj31znh`), to a second
+Fantrax account: the control the 20 Aug probe lacked. `myTeamIds` now holds 9 of
+the league's 10 and Notemail is not among them. The request bodies below were
+read from Fantrax's own client (`createTeamRosterApiCall`, `onSetAutoOrderSub`
+and the commissioner hub's `execute`), not guessed.
+
+### The lineup write, and its dry run
+
+`confirmOrExecuteTeamRosterChanges` takes `{rosterLimitPeriod, fantasyTeamId,
+daily: false, adminMode, confirm, applyToFuturePeriods, fieldMap}`. `fieldMap`
+is **every rostered man**, `scorerId → {posId, stId}`: the slot's position id
+(`704` G · `703` D · `702` M · `701` F) and status (`1` active, `2` reserve). A
+move is a changed entry, and a change of position is the same man with a
+different `posId`.
+
+`confirm: true` is a dry run: it names what would change and whether the result
+is legal, and saves nothing. Without `confirm` it saves. Every row below was
+followed by a re-read of Notemail.
+
+| Case | `adminMode` | Answer | Saved |
+|---|---|---|---|
+| D for D, XI ↔ bench | true | `CONFIRM`, two changes listed | no, dry run |
+| the same | **false** | *"You cannot perform that transaction because you do not own the team **Notemail**, however you can turn on **Commissioner Mode**"* | no |
+| Belloumi F → M | true | `WARNING`: *"The maximum number of **5** **M** position(s) on your roster will be exceeded."* | no, dry run |
+| a D benched for an M (D 2) | true | `WARNING`: *"The minimum number of **3** active **D** position(s) will not be met."* | no, dry run |
+| D for D, executed | true | `CONFIRM`, `textArray.model.changeAllowed: true` | **yes**; read back, reverted, read back identical |
+
+So the commissioner's session **writes a team it does not own**, and `adminMode`
+is what lets it.
+
+### Fantrax will save an illegal lineup
+
+An illegal dry run is a `WARNING` carrying `illegalRosterMsgs[]` under *"Your
+roster will be illegal … Click **OK** to execute the changes anyway."* So a save
+that sends it anyway gets it. Refusing is ours to do: a save refuses any
+`fieldMap` whose dry run carries an illegal message.
+
+**The Belloumi case broke a rule the planner did not know**: the most a SQUAD may
+hold at a position, bench included and counted by slot (rehearsal D5 · M5 · F3 ·
+G2). `getLeagueInfo` does not publish it; `roster-limits.json` has held it as
+`maxTotal` since 21 Sep with nothing reading it.
+
+### The bench order is a second write
+
+`getTeamRosterInfo.miscData.autoSubOrderMap` is `scorerId → rank`, with
+`autoSubsOrderingType: "USER"` and `autoSubOrderMax: 6`. Their client writes it
+with `setAutoSubsOrder({teamId, period, adminMode, autoSubOrderMap})`, answered
+`{success}`. Notemail's map is `{}`: no order set. Not yet written by a probe.
+
+### The three commissioner actions the scripts need
+
+`executeCommissionerHubAction({actionKey, …form})`, answered `{ok, message,
+redirectUrl}`. None was called.
+
+- `waiveAllPlayers`: no form, `destructive: true`. *"All free agents will be sent
+  to the waiver wire as of now, and players already on waivers will be
+  re-waived."*
+- `executeAutoSubs`: form `{period, undo}`. *"Run automatic substitutions for a
+  specific period. Useful when rules have changed or something needs to be
+  re-run."*
+- `processWaivers`: form `{}`; its `processDate` is offered to Fantrax staff only.
+
+The same method carries `deleteLeague` and `resetLeagueAndRosters`, so a caller
+picks its action from a fixed list and never passes one through.
+
+### Another team's pending claims cannot be read
+
+`getPendingTransactions({txType: "CLAIM", teamId})` answers for **one of the
+caller's own teams whatever `teamId` says**: Notemail's id, `"ALL"`, with and
+without `adminMode`, in rehearsal and in the real league. Craig changed a league
+setting on 28 Sep; the real league's `allowGroupChanges` went `true` and its
+"Premium League Required" message went, but `showAllTeamsChoice` stayed `false`
+and the answer stayed The Raccoons. **Blocked** until something turns
+`showAllTeamsChoice` on.
+
+The real league, `mqsjd23smsgbiqzr`, has seven teams on 28 Sep, six of them other
+people's. Nothing above was sent to it but reads.
 
 ## A Fantrax points figure per man per MATCH is a capture, not a read (4 Sep 2026)
 
