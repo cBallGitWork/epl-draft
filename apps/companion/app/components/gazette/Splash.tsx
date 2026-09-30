@@ -46,8 +46,7 @@ export default function Splash({ story }: { story: PublishedStory }) {
 
         <span className="mt-3 block h-px w-6 bg-ink" />
 
-        {/* No byline on the front page, on Craig's ruling (#30): it sits between the headline and the story. The article keeps it. */}
-        <Dateline story={story} byline={false} className="pt-2.5" />
+        <Dateline story={story} byline className="pt-2.5" />
       </TurnLink>
     </section>
   );

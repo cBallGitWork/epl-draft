@@ -50,7 +50,8 @@ business, who is hurt, and when lineups lock.
 4. **The column**, when one has been filed about this round — and then it
    *leads*, taking the picture the desk chose and dropping the desk's own
    headline. It runs as a **splash** (`gazette/Splash`): the byline chip, the
-   headline, the deck, the ornament rule, and the dateline ending "read on".
+   headline, the deck, the ornament rule, and the dateline with its writer's name,
+   ending "read on".
    See *The written column* below.
 
    **The front page prints headlines and no articles at all**, and this is the
@@ -477,9 +478,9 @@ repairs: a side `xiFault` rejects, or one naming a man the snapshot cannot, is
 dropped and takes its fixture with it. The body says how many of the round's
 matches survived, so an absence is stated and never silent.
 
-**No byline.** `Dateline` credits the story's writer on every article, and a
-listing the desk printed from an export went out "by Franco Bell" until it was
-shot and read back.
+**Under the team-news writer's byline**, like the rest of team news (Craig, 30 Sep
+2026: "yes bylines"). It had none from 21 Sep, when the house name over a listing
+the desk printed from an export read as a claim somebody wrote it.
 
 ## The sheets at the lock are written a side at a time
 

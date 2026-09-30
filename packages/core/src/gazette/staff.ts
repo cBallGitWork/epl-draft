@@ -14,7 +14,7 @@ const STAFF: readonly (readonly [writer: string, beat: readonly StoryKind[]])[] 
   ["Martyn Masuel", ["power-ranking"]],
   ["Donny Kaber", ["dodgers"]],
   ["Fabrizzio Morano", ["wire"]],
-  ["Davide Onrstein", ["news", "presser", "sheets"]],
+  ["Davide Onrstein", ["news", "presser", "sheets", "predicted-xi"]],
 ];
 
 /** The staff writer each kind runs under. */

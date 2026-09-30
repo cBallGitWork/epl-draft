@@ -26,6 +26,7 @@ describe("writerOf", () => {
     expect(writerOfFiled("dodgers")).toBe("Donny Kaber");
     expect(writerOfFiled("wire")).toBe("Fabrizzio Morano");
     expect(writerOfFiled("news")).toBe("Davide Onrstein");
+    expect(writerOfFiled("predicted-xi")).toBe("Davide Onrstein");
   });
 
   it("lets a reporter stamped at filing win, as Lawro's archive carries his", () => {

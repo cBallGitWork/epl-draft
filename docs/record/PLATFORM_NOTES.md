@@ -53,7 +53,9 @@ Pro Evolution printed "Roberto Larcos": letters swapped or changed in **both** n
 **never the real name**. Phill McLunty, Danial Talyor, Garf Crookes, Martyn Masuel, Donny Kaber, Fabrizzio Morano,
 Davide Onrstein, and Hendry Wimter for a kind with none. One table, `gazette/staff.ts`, feeds both the byline and the
 writer's "You are" line; the byline is resolved from the kind at render, so the archive reads the new names, and a
-`reporter` stamped at filing wins. Lawro is not staff: his column keeps his real name. The line-ups keep no byline.
+`reporter` stamped at filing wins. Lawro is not staff: his column keeps his real name. Craig's *"yes bylines"* put
+the line-ups under the team-news writer, the front page's lead under its writer, and the writer's name at the head of
+the match-report and team-sheet prompts.
 
 ## A player's fixture run carries the sister model's projection, not Fantrax's — decided 30 Sep 2026
 

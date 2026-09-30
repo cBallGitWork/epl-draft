@@ -27,8 +27,7 @@ export default function Dateline({
 
   return (
     <Tag className={`font-sans text-3xs uppercase tracking-[0.16em] text-faint${className === "" ? "" : ` ${className}`}`}>
-      {/* A column the desk printed from facts has no writer to credit. */}
-      {byline && story.kind !== "predicted-xi" ? `by ${writerOf(story)} · ` : ""}
+      {byline ? `by ${writerOf(story)} · ` : ""}
       {story.edition !== "" ? `${story.edition} · ` : ""}
       Filed {londonDayAndTime(story.filedAt)}
       {/* The affordance, in words rather than a chevron. */}
