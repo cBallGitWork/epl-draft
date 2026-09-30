@@ -41,6 +41,7 @@ describe("checkDraft", () => {
     const text = "Gray kept going for 123 to the end, and they won by five, the gap the page prints above.";
     expect(said(text)).not.toContain("American, not British");
     expect(said(text).filter((c) => c.includes("figure"))).toEqual([]);
+    expect(said(`${text} Was it enough?`)).toContain("a colon, a question or an exclamation mark");
   });
 
   it("sends back a still-to-play man told as a manager's choice", () => {

@@ -18,6 +18,8 @@ const QUOTES = /["“”«»]/u;
 const SCORE = /\b(\d{1,3})-(\d{1,3})\b/gu;
 /** "The eleven", "test2's eleven": a side, never the figure 11. */
 const SIDE_ELEVEN = /(?:\b(?:the|their|its|his|an|a|whose|that|this|every|each)\s+|'s\s+)eleven(?:'s)?\b/giu;
+/** The punctuation the voice never uses: a colon, a question, an exclamation. */
+const MARKS = /[:?!]/u;
 /** An FM frame is a register, never a person's feeling: a named manager given one is invented. */
 const FEELING = /\b(?:manager|boss|owner)\b[^.]{0,40}\b(?:feel|feels|felt|furious|delighted|angry|pleased|worried|fuming|livid)\b/iu;
 
@@ -52,6 +54,7 @@ export function checkDraft(writing: DraftWriting, contexts: readonly MatchupCont
     for (const phrase of banned(plain, REPORT_FPL)) fault(`${n}:matchup`, "names a source", "hard", phrase);
     for (const phrase of banned(plain, DRAFT_NEVER)) fault(`${n}:matchup`, "a phrase this paper does not print", "send-back", phrase);
     for (const phrase of banned(plain, [...REPORT_AMERICAN, ...SHEETS_AMERICAN])) fault(`${n}:matchup`, "American, not British", "send-back", phrase);
+    if (MARKS.test(prose)) fault(`${n}:matchup`, "a colon, a question or an exclamation mark", "send-back", prose.match(MARKS)?.[0] ?? "");
     if (FEELING.test(prose)) fault(`${n}:matchup`, "a named person's feeling", "send-back", prose.match(FEELING)?.[0] ?? "");
     // The score prints above the lede, so the lede never gives it again.
     if (sentences(prose)[0]?.includes(ctx.state.score) === true) fault(`${n}:matchup`, "opens on the result the page already prints", "send-back", sentences(prose)[0] ?? "");

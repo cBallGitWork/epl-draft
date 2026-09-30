@@ -28,6 +28,7 @@ FIGURES:
 - A man "got" points, twice at most in a match-up; "scored" is for goals; never "on" a number. A man's points are his own, never his side's total.
 - Numbers one to nine are words and 10 up figures, except a score, which is always figures.
 - No two sentences in a row open the same way.
+- A minute belongs to its own match: never set one match's minute against another's.
 
 THE LEAGUE'S WORDS:
 - A return is a goal, an assist or a clean sheet. A blank is no return. A haul is more than one return. Defensive points, saves and minutes are points, never returns.
