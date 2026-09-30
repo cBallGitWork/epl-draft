@@ -3,9 +3,9 @@
 // **Why they are not in `PremNav`.** That file declares the section's tab strip,
 // and `club/[code]/match.ts` had already broken `MATCH` out of it on the stated
 // rule that "a route that is not on it does not belong in that file's list".
-// `CLUB` and `PLAYER` are not tabs either — they are the section's subjects — so
-// they were living in the strip's file against the same rule, and the split left
-// two homes for three constants of one kind.
+// `CLUB` is not a tab either — it is the section's subject — so it was living in
+// the strip's file against the same rule, and the split left two homes for
+// constants of one kind.
 //
 // **And the split had a cost beyond tidiness.** `PremNav` is a component module:
 // anything importing a route off it pulls the strip and `TabStrip` into its
@@ -24,9 +24,6 @@ export const PREM = "/prem";
 
 /** The route the club pages hang off. */
 export const CLUB = "/prem/club";
-
-/** The footballer's own page, keyed on FPL's season-stable code. */
-export const PLAYER = "/prem/player";
 
 /** One match, keyed on the fixture id. */
 export const MATCH = "/prem/match";
