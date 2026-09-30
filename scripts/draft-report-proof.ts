@@ -1,6 +1,20 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { FANTRAX_LEAGUE_ID, buildDraftBrief, draftFace, isSaturday, requireLeague, type Cutoff, type StoryDraftReport } from "@epl/core";
+import {
+  FANTRAX_LEAGUE_ID,
+  buildDraftBrief,
+  draftCargo,
+  draftFace,
+  isSaturday,
+  londonWeekday,
+  requireLeague,
+  weekdayOfDay,
+  type Cutoff,
+  type StoryDraftMatchup,
+  type StoryDraftReport,
+  type StoryDraftReturn,
+  type StoryDraftRow,
+} from "@epl/core";
 import { draftDesk } from "./edition/draftDesk";
 import { draftColumn } from "./edition/draftWriter";
 import { storyOfColumn } from "./edition/newsroom";
@@ -13,9 +27,21 @@ import { STORY_BYLINE, editionName } from "./edition/voice/bylines";
 
 const say = (line: string) => process.stdout.write(`${line}\n`);
 
+const scorer = (r: StoryDraftReturn) => (r.minutes.length > 0 ? `${r.name} (${r.minutes.map((m) => `${m}'`).join(", ")})` : r.count > 1 ? `${r.name} ${r.count}` : r.name);
+const row = (r: StoryDraftRow) =>
+  `  ${r.slot} ${r.mark === "sub" ? "SUB " : ""}${r.name} ${r.points ?? "—"}${r.mark === "dnp" ? ", did not play" : r.next === null ? "" : `, ${londonWeekday(r.next.kickoff)} v ${r.next.opponent} (${r.next.home ? "h" : "a"})${r.mark === "sub" && r.points === null ? " if he plays" : ""}`}`;
+
+/** What the page sets out around the writing: the running score, each side's returns, and after the story both elevens. */
+function page(m: StoryDraftMatchup): { head: string[]; foot: string[] } {
+  const sides = [m.home, m.away];
+  const returns = sides.map((s) => `${s.name}: goals ${s.returns.goals.map(scorer).join(", ") || "—"}; assists ${s.returns.assists.map(scorer).join(", ") || "—"}; clean sheets ${s.returns.cleanSheets.map(scorer).join(", ") || "—"}`);
+  const steps = m.byDay.map((s) => `${s.day === null ? "Subs" : weekdayOfDay(s.day)} ${s.home}-${s.away}`).join(" · ");
+  return { head: [`By day: ${steps || "—"}`, ...returns], foot: sides.flatMap((s) => [`${s.name}:`, ...s.eleven.map(row)]) };
+}
+
 /** The report as plain text, for reading before looking at the page. */
 function plain(headline: string, draft: StoryDraftReport): string {
-  return [headline, "", ...draft.matchups.flatMap((m) => [`## ${m.verdict}`, m.standfirst, ...m.paragraphs, ""])].join("\n");
+  return [...(headline === "" ? [] : [headline, ""]), ...draft.matchups.flatMap((m) => [`## ${m.verdict}`, ...page(m).head, "", m.standfirst, ...m.paragraphs, "", ...page(m).foot, ""])].join("\n");
 }
 
 async function main(): Promise<void> {
@@ -33,6 +59,7 @@ async function main(): Promise<void> {
     const contexts = test ? all.slice(0, Number(process.env.GAZETTA_TEST_MATCHUPS ?? 1)) : all;
     if (out === "") {
       say(`\n########## ${cutoff === "saturday" ? "AFTER SATURDAY" : "END OF THE GAMEWEEK"} ##########\n\n${buildDraftBrief(cutoff, gameweek, contexts)}`);
+      say(`\n---------- THE PAGE, unwritten ----------\n\n${plain("", draftCargo(cutoff, gameweek, contexts, new Map(), desk.rankAfter))}`);
       continue;
     }
     const column = await draftColumn({ cutoff, gameweek, contexts, rankAfter: desk.rankAfter }, say, { sendBack: !test });

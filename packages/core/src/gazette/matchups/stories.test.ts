@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { draftMan } from "./__fixtures__/draftMan";
+import { draftMan, goalAt } from "./__fixtures__/draftMan";
 import { draftSide } from "./__fixtures__/draftSide";
 import { worthOf } from "./__fixtures__/worth";
 import { sideStories } from "./stories";
@@ -12,8 +12,8 @@ describe("sideStories", () => {
   it("gives a man who returned one line with everything about him, and a blank nothing", () => {
     const lines = stories(
       side([
-        draftMan("Isak", "F", 11, 90, 0, { club: "Liverpool", goals: 1, assists: 1, scoredAt: [{ minute: 90, added: 4 }] }),
-        draftMan("Hall", "D", 8, 90, 0, { club: "Newcastle", goals: 1, scoredAt: [{ minute: 30 }] }),
+        draftMan("Isak", "F", 11, 90, 0, { club: "Liverpool", goals: 1, assists: 1, scoredAt: [goalAt(90, 4)] }),
+        draftMan("Hall", "D", 8, 90, 0, { club: "Newcastle", goals: 1, scoredAt: [goalAt(30)] }),
         draftMan("Giles", "D", 1, 90, 0, { club: "Hull" }),
       ]),
     );
@@ -23,8 +23,8 @@ describe("sideStories", () => {
   it("tells a clean sheet lost late only where it was worth four and he had an hour, and an early exit by its minutes", () => {
     const lines = stories(
       side([
-        draftMan("Tarkowski", "D", 2, 90, 0, { club: "Everton", concededFirstAt: [{ minute: 88 }] }),
-        draftMan("Gray", "M", 2, 90, 0, { club: "Spurs", concededFirstAt: [{ minute: 88 }] }),
+        draftMan("Tarkowski", "D", 2, 90, 0, { club: "Everton", concededFirstAt: [goalAt(88)] }),
+        draftMan("Gray", "M", 2, 90, 0, { club: "Spurs", concededFirstAt: [goalAt(88)] }),
         draftMan("Hume", "D", 1, 11, 0, { club: "Sunderland" }),
       ]),
     );

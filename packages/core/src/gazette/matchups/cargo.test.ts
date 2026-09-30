@@ -1,0 +1,49 @@
+import { describe, expect, it } from "vitest";
+import { draftMan, goalAt } from "./__fixtures__/draftMan";
+import { draftSide, eleven } from "./__fixtures__/draftSide";
+import { LIMITS } from "./__fixtures__/limits";
+import { worthOf } from "./__fixtures__/worth";
+import type { MatchupContext } from "./brief";
+import { draftCargo } from "./cargo";
+import { normalizeDraftReport } from "./cargoRead";
+import { matchupState } from "./state";
+
+const home = draftSide("123", 38, eleven("h", { 9: draftMan("Haaland", "F", 6, 90, 0, { goals: 1, scoredAt: [goalAt(81)] }) }));
+const context: MatchupContext = {
+  state: matchupState({ home, away: draftSide("test2", 37, eleven("a")) }, worthOf(), LIMITS, "gameweek"),
+  places: { home: { rank: 2, won: 1, drawn: 0, lost: 0, run: "W" }, away: null },
+  meetings: [],
+  form: [],
+  oldBoys: [],
+};
+const cargo = draftCargo("gameweek", 5, [context], new Map([[1, { paragraphs: ["Haaland's goal settled it."] }]]), new Map([["123", 1]]));
+
+describe("the draft cargo", () => {
+  it("opens each match-up on the desk's verdict, with each side's returns and eleven and the running score", () => {
+    expect(cargo.matchups[0]).toMatchObject({
+      verdict: context.state.score,
+      standfirst: `${context.state.score}.`,
+      home: { name: "123", rankBefore: 2, rankAfter: 1, run: "W", returns: { goals: [{ name: "Haaland", count: 1, minutes: ["81"] }] } },
+      byDay: [{ day: "2026-09-27", home: 38, away: 37 }],
+    });
+    expect(cargo.matchups[0].home.eleven).toHaveLength(11);
+  });
+
+  it("reads back whole, and refuses a cut-off it does not know", () => {
+    expect(normalizeDraftReport(JSON.parse(JSON.stringify(cargo)))).toEqual(cargo);
+    expect(normalizeDraftReport({ cutoff: "week", gameweek: 5, matchups: [] })).toBeUndefined();
+  });
+
+  it("reads a report filed before the page's data with none of it, and drops a part-timed scorer's minutes", () => {
+    const filed = JSON.parse(JSON.stringify(cargo));
+    for (const side of [filed.matchups[0].home, filed.matchups[0].away]) {
+      delete side.returns;
+      delete side.eleven;
+    }
+    delete filed.matchups[0].byDay;
+    const read = normalizeDraftReport(filed)!.matchups[0];
+    expect([read.home.returns, read.home.eleven, read.byDay]).toEqual([{ goals: [], assists: [], cleanSheets: [] }, [], []]);
+    filed.matchups[0].home.returns = { goals: [{ name: "Haaland", count: 2, minutes: ["81"] }] };
+    expect(normalizeDraftReport(filed)!.matchups[0].home.returns.goals).toEqual([{ name: "Haaland", count: 2, minutes: [] }]);
+  });
+});

@@ -17,6 +17,9 @@ const done = (m: DraftMan) => m.left === 0 && m.minutes > 0;
 const late = (t: GoalTime) => t.minute >= DRAFT_DESK.lateGoal;
 const named = (m: DraftMan) => `${m.name} (${m.club})`;
 
+/** Goals in the order they went in: by their match's kickoff, then the clock. */
+export const byClock = (a: GoalTime, b: GoalTime) => a.kickoff.localeCompare(b.kickoff) || a.minute - b.minute || (a.added ?? 0) - (b.added ?? 0);
+
 /** "in added time (90+4)", "in the 88th minute". */
 export const whenScored = (t: GoalTime) => (t.added !== undefined ? `in added time (${t.minute}+${t.added})` : `in the ${ordinal(t.minute)} minute`);
 

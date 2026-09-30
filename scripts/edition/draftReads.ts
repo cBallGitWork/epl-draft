@@ -30,7 +30,7 @@ export interface Tally {
   cleanSheets: number;
 }
 
-export type ClubGoal = PlGoal & { clubId: number };
+export type ClubGoal = PlGoal & { clubId: number; kickoff: string };
 
 /** Each goal of the gameweek with its minute and the FPL club it counts for, and each match's starters, both by FPL
  *  fixture code, off the same team sheets. A match with no sheet has no starters entry. */
@@ -48,7 +48,7 @@ export async function matchReads(gameweek: number, fixtures: readonly Fixture[],
     if (detail === null) continue;
     // The detail lists the home side first; a goal counts for the side whose team id it carries, an own goal included.
     const homeTeam = detail.teams[0]?.team.id;
-    out.set(ours.code, plGoals(detail, optaToCode).map((g) => ({ ...g, clubId: String(g.teamId) === String(homeTeam) ? ours.homeClubId : ours.awayClubId })));
+    out.set(ours.code, plGoals(detail, optaToCode).map((g) => ({ ...g, clubId: String(g.teamId) === String(homeTeam) ? ours.homeClubId : ours.awayClubId, kickoff: ours.kickoff! })));
     const sheets = plTeamSheets(detail, optaToCode);
     if (sheets !== null) starters.set(ours.code, new Set([...sheets.home.lineup, ...sheets.away.lineup].flatMap((man) => (man.code === null ? [] : [man.code]))));
   }
@@ -62,7 +62,7 @@ export function startedOf(code: number, played: readonly number[], starters: Rea
   return played.some((fixture) => starters.get(fixture)!.has(code));
 }
 
-export const timeOf = (g: PlGoal): GoalTime => (g.added === undefined ? { minute: g.minute } : { minute: g.minute, added: g.added });
+export const timeOf = (g: ClubGoal): GoalTime => (g.added === undefined ? { minute: g.minute, kickoff: g.kickoff } : { minute: g.minute, added: g.added, kickoff: g.kickoff });
 
 /** Fantrax's category ids for minutes, goals, assists and clean sheets, by their short codes. */
 export function categoryIds(info: LeagueInfo): Record<"minutes" | "goals" | "assists" | "cleanSheets" | "saves" | "defence", ReadonlySet<string>> {

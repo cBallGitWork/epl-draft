@@ -22,6 +22,7 @@ import {
   projectionIntel,
   sheetOf,
   type Cutoff,
+  type DayPoints,
   type DraftMan,
   type DraftSide,
   type IntelProjections,
@@ -83,10 +84,11 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   // Only a report that is due: a cut-off whose matches are all settled. An unplayed gameweek would read as nought-nought.
   const due = new Set(draftReportsDue(schedule, gameweek).map((d) => d.cutoff));
   for (const [cutoff, last] of ([["saturday", saturday], ["gameweek", days.at(-1)!]] as const).filter(([c]) => due.has(c))) {
-    const upTo = reads.filter((r) => r.date <= last).map((r) => r.raw);
-    const byMan = tallies(upTo, ids);
-    const totals = new Map<string, number>();
-    for (const raw of upTo) for (const s of mapLiveScores(raw)) totals.set(s.teamId, (totals.get(s.teamId) ?? 0) + (s.points ?? 0));
+    const upTo = reads.filter((r) => r.date <= last);
+    const byMan = tallies(upTo.map((r) => r.raw), ids);
+    // Each day's read is that day's points alone: the running score is their sum, day by day.
+    const byDay = new Map<string, DayPoints[]>();
+    for (const { date, raw } of upTo) for (const s of mapLiveScores(raw)) byDay.set(s.teamId, [...(byDay.get(s.teamId) ?? []), { day: date, points: s.points ?? 0 }]);
 
     const reads_: ManReads = { gameweek, last, fixtures, clubs, byMan, worth, goals, starters, history, projections };
     const draftMan = (m: SheetMan, sheet: Sheet): DraftMan => draftManOf(m, sheet, reads_);
@@ -96,10 +98,12 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
       const sheet = sheetOf(team);
       const order = orders.get(teamId)?.order ?? [];
       const rank = (m: SheetMan) => (order.includes(m.fantraxId) ? order.indexOf(m.fantraxId) : order.length);
+      const days = byDay.get(teamId);
       return {
         teamId,
         name: team.teamName,
-        total: totals.get(teamId) ?? null,
+        total: days === undefined ? null : days.reduce((sum, d) => sum + d.points, 0),
+        byDay: days ?? [],
         eleven: sheet.starters.map((m) => draftMan(m, sheet)),
         bench: [...sheet.bench].sort((a, b) => rank(a) - rank(b)).map((m) => draftMan(m, sheet)),
         subOrder: order,

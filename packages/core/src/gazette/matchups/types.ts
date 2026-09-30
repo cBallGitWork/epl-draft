@@ -49,10 +49,18 @@ export interface NextMatch {
   kickoff: string;
 }
 
-/** A goal's minute, and the added time on the clock when there was some. */
+/** A goal's minute, the added time on the clock when there was some, and its match's kickoff, which orders goals from
+ *  different matches. */
 export interface GoalTime {
   minute: number;
   added?: number;
+  kickoff: string;
+}
+
+/** A side's Fantrax points on one London day of the gameweek, `2026-09-26`. */
+export interface DayPoints {
+  day: string;
+  points: number;
 }
 
 export interface DraftSide {
@@ -60,6 +68,8 @@ export interface DraftSide {
   name: string;
   /** Fantrax's total to the cut-off. */
   total: number | null;
+  /** The same points by London day, in order: the running score. */
+  byDay: DayPoints[];
   eleven: DraftMan[];
   /** Every reserve, those in `subOrder` first and in its order. */
   bench: DraftMan[];

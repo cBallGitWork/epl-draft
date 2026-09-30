@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { draftMan } from "./__fixtures__/draftMan";
+import { draftSide } from "./__fixtures__/draftSide";
 import { worthOf } from "./__fixtures__/worth";
 import type { SideState } from "./state";
 import { chaseLines, possibleReturns } from "./swing";
@@ -7,7 +8,7 @@ import type { DraftMan } from "./types";
 
 const man = (name: string, slot: string, left = 1): DraftMan => draftMan(name, slot, null, 0, left, { played: 0 });
 const worth = worthOf();
-const state = (name: string, left: DraftMan[]): SideState => ({ side: { teamId: name, name, total: 0, eleven: left, bench: [], subOrder: [] }, subs: [], total: 0, toPlay: left });
+const state = (name: string, left: DraftMan[]): SideState => ({ side: draftSide(name, 0, left), subs: [], total: 0, toPlay: left });
 
 describe("chaseLines", () => {
   it("names each man once, with the returns that would win or level it and no figures", () => {

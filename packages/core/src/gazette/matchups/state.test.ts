@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { LIMITS } from "./__fixtures__/limits";
-import { draftMan as man } from "./__fixtures__/draftMan";
+import { draftMan as man, goalAt } from "./__fixtures__/draftMan";
 import { draftSide, eleven } from "./__fixtures__/draftSide";
 import { worthOf } from "./__fixtures__/worth";
 import { matchupState } from "./state";
@@ -28,7 +28,7 @@ describe("matchupState", () => {
   });
 
   it("says a late goal worth more than the margin decided it", () => {
-    const home = draftSide("Home", 38, eleven("h", { 9: man("Haaland", "F", 6, 90, 0, { goals: 1, scoredAt: [{ minute: 81 }] }) }));
+    const home = draftSide("Home", 38, eleven("h", { 9: man("Haaland", "F", 6, 90, 0, { goals: 1, scoredAt: [goalAt(81)] }) }));
     expect(matchupState({ home, away: draftSide("Away", 37, eleven("a")) }, worth, LIMITS, "gameweek").score).toBe("Home beat Away 38-37, decided by Haaland's goal in the 81st minute");
   });
 

@@ -4,8 +4,6 @@ import { draftMan } from "./__fixtures__/draftMan";
 import { LIMITS } from "./__fixtures__/limits";
 import { worthOf } from "./__fixtures__/worth";
 import { draftBlocks, type MatchupContext } from "./brief";
-import { draftCargo } from "./cargo";
-import { normalizeDraftReport } from "./cargoRead";
 import { checkDraft } from "./checks";
 import { matchupState } from "./state";
 import type { DraftSide } from "./types";
@@ -46,14 +44,5 @@ describe("checkDraft", () => {
     expect(checks(`${clean} The manager felt furious.`)).toEqual(expect.arrayContaining([expect.stringMatching(/a named person's feeling/)]));
     expect(checks(`${clean} test2 held him.`)).toEqual(expect.arrayContaining([expect.stringMatching(/held him/)]));
     expect(checks(`${clean} The pressure is on test2 in the boardroom.`)).toEqual([]);
-  });
-});
-
-describe("the draft cargo", () => {
-  it("opens each match-up on the desk's verdict, and reads back whole", () => {
-    const cargo = draftCargo("gameweek", 5, contexts, writing(clean).matchups, new Map([["123", 1]]));
-    expect(cargo.matchups[0]).toMatchObject({ verdict: contexts[0].state.score, standfirst: `${contexts[0].state.score}.`, home: { name: "123", rankBefore: 2, rankAfter: 1, run: "W" } });
-    expect(normalizeDraftReport(JSON.parse(JSON.stringify(cargo)))).toEqual(cargo);
-    expect(normalizeDraftReport({ cutoff: "week", gameweek: 5, matchups: [] })).toBeUndefined();
   });
 });
