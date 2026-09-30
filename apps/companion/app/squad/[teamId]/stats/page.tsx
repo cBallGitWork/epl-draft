@@ -1,5 +1,5 @@
 import TabEmpty from "../../../components/league/TabEmpty";
-import { isResolved, playerName, type SeasonTotals } from "@epl/core";
+import { isResolved, playerName, type FootballPlayer } from "@epl/core";
 import TeamShell from "../Shell";
 import { leagueTeams } from "../team";
 import { getPlayerStats } from "../../../players/playerStats";
@@ -40,23 +40,10 @@ export default async function StatsPage({
   // `team.teamId` and not the slug, which on the front door is the word `me`.
   const his = all.filter((line) => line.ownerTeamId === team.teamId);
 
-  // **What FPL knows and Fantrax does not** (Craig, 2 Sep: "we just use stats
-  // not covered by fantasy points, so goals/assists we don't need, but xg/xa
-  // etc, tackles, interceptions").
-  //
-  // That instruction is also what keeps DESIGN §7 satisfied: the provenance rule
-  // bites when two sources answer the SAME question and a reader cannot tell
-  // whose number he is reading. Goals and assists are Fantrax's because Fantrax
-  // pays for them; expected goals, tackles, recoveries and the minutes under
-  // them are facts our league does not score at all, so there is no second
-  // answer for them to disagree with.
-  //
-  // Costs no request: the squad is already resolved through the bridge for this
-  // page's own name, and every resolved slot carries the footballer whose season
-  // totals `mapPlayers` now fills from bootstrap.
-  const underlying: Record<string, SeasonTotals> = {};
+  // The footballer behind each resolved slot: FPL's season for the underlying view, and his availability.
+  const footballers: Record<string, FootballPlayer> = {};
   for (const rostered of squad.players) {
-    if (isResolved(rostered)) underlying[rostered.slot.fantraxId] = rostered.player.season;
+    if (isResolved(rostered)) footballers[rostered.slot.fantraxId] = rostered.player;
   }
 
   // Fantrax's stat rows and the roster disagree about a man's name — "Schade,
@@ -74,7 +61,7 @@ export default async function StatsPage({
       {his.length === 0 ? (
         <TabEmpty>Fantrax has no statistical line for anybody on this squad yet.</TabEmpty>
       ) : (
-        <StatBoard lines={his} underlying={underlying} names={names} />
+        <StatBoard lines={his} footballers={footballers} names={names} />
       )}
     </TeamShell>
   );

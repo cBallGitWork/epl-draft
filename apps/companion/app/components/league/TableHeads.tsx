@@ -109,10 +109,8 @@ const JUSTIFY = { left: "justify-start", center: "justify-center", right: "justi
 /** A head cell the reader can order by: the bevelled plate as a LINK, drawn
  *  pressed when the table is ordered by it.
  *
- *  A link and not a click handler, for the reason both `sort.ts` files record —
- *  the server does the ordering, the phone gets HTML, and the ordering survives
- *  being shared. Which is why the href is a prop: each table spells its own
- *  query, and the two that do it identically are two, which §1 leaves alone.
+ *  A link when the server orders the table (`href`), so the order survives being shared; a button when a client
+ *  board orders rows it already holds (`onSort`). Each table spells its own query, so the href is a prop.
  *
  *  `gap-0.5` is unconditional and costs a head with no arrow nothing — a gap
  *  needs two children to appear. */
@@ -120,6 +118,7 @@ export function SortHead({
   width = "",
   title,
   href,
+  onSort,
   label,
   align = "center",
   sorted,
@@ -129,7 +128,6 @@ export function SortHead({
 }: {
   width?: string;
   title?: string | undefined;
-  href: string;
   label: string;
   align?: "left" | "center" | "right";
   /** Which way the table is ordered by THIS column, or undefined when it is not
@@ -147,18 +145,27 @@ export function SortHead({
   mute?: boolean;
   /** 24px and nearly unpadded under a thumb, so a narrow column is set by its figures, not its head. */
   compact?: boolean;
-}) {
+} & ({ href: string; onSort?: never } | { onSort: () => void; href?: never })) {
+  const plate = `flex items-center gap-0.5 whitespace-nowrap ${compact ? COMPACT : "h-7 px-1.5"} ${JUSTIFY[align]} ${
+    sorted === undefined ? "cm-bevel hover:brightness-110" : "cm-bevel-pressed"
+  }`;
+  const face = (
+    <>
+      {mute ? <span className={MUTE}>{label}</span> : label}
+      {arrow && sorted !== undefined ? <SortArrow down={sorted === "descending"} /> : null}
+    </>
+  );
   return (
     <Head width={width} title={title} sorted={sorted}>
-      <Link
-        href={href}
-        className={`flex items-center gap-0.5 whitespace-nowrap ${compact ? COMPACT : "h-7 px-1.5"} ${JUSTIFY[align]} ${
-          sorted === undefined ? "cm-bevel hover:brightness-110" : "cm-bevel-pressed"
-        }`}
-      >
-        {mute ? <span className={MUTE}>{label}</span> : label}
-        {arrow && sorted !== undefined ? <SortArrow down={sorted === "descending"} /> : null}
-      </Link>
+      {href !== undefined ? (
+        <Link href={href} className={plate}>
+          {face}
+        </Link>
+      ) : (
+        <button type="button" onClick={onSort} className={`w-full ${plate}`}>
+          {face}
+        </button>
+      )}
     </Head>
   );
 }

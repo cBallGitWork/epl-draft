@@ -39,7 +39,7 @@ const UNDERLYING = [
   { key: "starts", head: "St", label: "Starts — not the same as appearances" },
   { key: "expectedGoals", head: "xG", label: "Expected goals", decimals: true },
   { key: "expectedAssists", head: "xA", label: "Expected assists", decimals: true },
-  { key: "expectedGoalsConceded", head: "xGC", label: "Expected goals conceded", decimals: true },
+  { key: "expectedGoalsConceded", head: "xGC", label: "Expected goals conceded", decimals: true, worse: true },
   { key: "tackles", head: "Tck", label: "Tackles" },
   { key: "clearancesBlocksInterceptions", head: "CBI", label: "Clearances, blocks and interceptions — FPL publishes the three as one figure" },
   { key: "recoveries", head: "Rec", label: "Ball recoveries" },
@@ -92,9 +92,10 @@ export type Measure = {
   read: (line: PlayerStatLine, totals: SeasonTotals | undefined) => number | null;
   /** FPL publishes the expected family to two places and a count to none. */
   decimals?: boolean;
-  /** The column the view is FOR, drawn in the accent rather than in the tone
-   *  ladder. Only the total claims it: it is what the board adds up to. */
+  /** The column the view is FOR, drawn bold. Only the total claims it. */
   loud?: boolean;
+  /** A column whose top is the bad end, lit red rather than yellow and orange. */
+  worse?: boolean;
 };
 
 /** Our own total, which is a column and not an epilogue.
@@ -122,6 +123,7 @@ export function measuresFor(view: ViewKey): readonly Measure[] {
       head: column.head,
       label: column.label,
       decimals: "decimals" in column && column.decimals,
+      worse: "worse" in column && column.worse,
       read: (_line: PlayerStatLine, totals: SeasonTotals | undefined) =>
         totals?.[column.key] ?? null,
     }));
@@ -134,6 +136,7 @@ export function measuresFor(view: ViewKey): readonly Measure[] {
     key: category.key,
     head: category.key,
     label: category.label,
+    worse: category.lowIsGood === true,
     read: (line: PlayerStatLine) => figure(line, category.key, category.also),
   }));
   return view === "fantasy" ? [...measures, TOTAL] : measures;
