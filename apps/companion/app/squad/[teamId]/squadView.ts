@@ -13,6 +13,7 @@ import { pendingByTeam, squadLivePoints } from "../../scoreboard";
 import { squadSeason } from "../../teamStats";
 import { myTeamId } from "../../session";
 import { OWN, SQUAD } from "../routes";
+import { plannable } from "./plannable";
 import { whoseTeam } from "./team";
 
 // One manager's squad, laid out on a pitch. The screen the league opens on a
@@ -58,11 +59,8 @@ export async function squadView(slug: string, gw: string | undefined) {
   const asksOwn =
     slug === OWN || (info !== null && (await myTeamId(info.teams)) === slug);
 
-  const round = Number.isInteger(asked)
-    ? await roundOf(asked)
-    : asksOwn
-      ? await planningRound()
-      : await lastLockedRound();
+  const open = await planningRound();
+  const round = Number.isInteger(asked) ? await roundOf(asked) : asksOwn ? open : await lastLockedRound();
   const squads = readableOr404(await getLeagueSquads(round), SQUAD);
 
   // Whose squad this is. Most visits to this route are to somebody else's — the
@@ -88,7 +86,9 @@ export async function squadView(slug: string, gw: string | undefined) {
   // than none. One value rather than a flag beside a nullable, so there is no
   // arrangement of the two that type-checks and still opens the planner with
   // nothing to enforce.
-  const planning = mine && display.show === "lineup" && squads.info !== null ? squads.info : null;
+  // Only the open week is editable; a locked or unnamed week of your own is read-only, never overridden.
+  const planning =
+    mine && plannable(round, open) && display.show === "lineup" && squads.info !== null ? squads.info : null;
   const squadIds = new Set(team.players.map((p) => p.slot.fantraxId));
 
   // What each of them is ELIGIBLE at, which is not the slot his manager filed
