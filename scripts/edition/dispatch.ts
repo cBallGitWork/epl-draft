@@ -20,6 +20,7 @@ import type { SheetsDesk } from "./sheets";
 import { storyOfColumn } from "./newsroom";
 import { COLUMNIST, STORY_BYLINE, editionName } from "./voice/bylines";
 import { presserHeadline } from "./voice/pressers";
+import type { DraftJob } from "./draftWriter";
 import type { ReportsJob } from "./reports";
 
 // One assignment in, one prepared desk out: which voice writes it, from which
@@ -44,6 +45,7 @@ export interface DeskContext {
   sheets: SheetsDesk | null;
   /** Each match-day report this firing commissioned, by its London day. */
   reports: ReadonlyMap<string, ReportsJob>;
+  drafts: ReadonlyMap<"saturday" | "gameweek", DraftJob>;
   /** This week's press-conference signals, for men the league holds. Empty until
    *  the intel export lands, which files no Team Sheet and spends nothing. */
   presserLines: PresserLine[];

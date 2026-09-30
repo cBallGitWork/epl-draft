@@ -77,7 +77,13 @@ export { tableAfter, tableBefore, tableMoves, tablePoints } from "./matchups/tab
 export { meetingLines, oldBoys } from "./matchups/meetings";
 export type { FormerSide } from "./matchups/meetings";
 export type { DraftMan, DraftSide, GoalTime } from "./matchups/types";
-export { buildDraftBrief } from "./matchups/brief";
+export { buildDraftBrief, draftBlocks, leadFirst } from "./matchups/brief";
+export { checkDraft } from "./matchups/checks";
+export { draftCargo } from "./matchups/cargo";
+export type { StoryDraftMan, StoryDraftMatchup, StoryDraftReport, StoryDraftSide } from "./matchups/cargo";
+export { mergeDraft, matchupOf, readDraftWriting } from "./matchups/writing";
+export type { DraftPiece, DraftWriting } from "./matchups/writing";
+export { DRAFT_FRAMES, DRAFT_NEVER } from "./matchups/words";
 export type { Cutoff, MatchupContext, TablePlace } from "./matchups/brief";
 export { draftReportsDue, isSaturday } from "./matchups/due";
 export { priceOf } from "./matchups/worth";

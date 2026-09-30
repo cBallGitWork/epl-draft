@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { LIMITS } from "./__fixtures__/limits";
-import { buildDraftBrief } from "./brief";
+import { buildDraftBrief, leadFirst, type MatchupContext } from "./brief";
 import { matchupState } from "./state";
 import { draftMan } from "./__fixtures__/draftMan";
 import { worthOf } from "./__fixtures__/worth";
@@ -16,7 +16,8 @@ const state = matchupState(
   LIMITS,
   "saturday",
 );
-const brief = buildDraftBrief("saturday", 5, [{ state, places: { home: { rank: 1, won: 3, drawn: 0, lost: 1, run: "WLWW" }, away: null }, meetings: ["the last meeting: Dons won 40-31 in gameweek 2"], form: [{ teamId: "Dons", kind: "streak", text: "Dons had won 3 in a row going into the gameweek" }], oldBoys: ["Isak faced Dons, who drafted him"] }]);
+const context: MatchupContext = { state, places: { home: { rank: 1, won: 3, drawn: 0, lost: 1, run: "WLWW" }, away: null }, meetings: ["the last meeting: Dons won 40-31 in gameweek 2"], form: [{ teamId: "Dons", kind: "streak", text: "Dons had won 3 in a row going into the gameweek" }], oldBoys: ["Isak faced Dons, who drafted him"] };
+const brief = buildDraftBrief("saturday", 5, [context]);
 
 describe("buildDraftBrief", () => {
   it("never names a provider, a projection or an analyst's term", () => {
@@ -32,5 +33,18 @@ describe("buildDraftBrief", () => {
     expect(brief).toContain("STILL TO PLAY:\n- Notemail have 1 still to play: Isak (EVE, away to Bournemouth)\n- Notemail need 2 returns to win it");
     expect(brief).toContain("THE STORIES:\n- Dons: Sub (EVE) replaces Blank (EVE), who did not play, with 3 points");
     expect(brief).not.toMatch(/WORKED OUT|true as written|to draw and/u);
+  });
+
+  it("numbers the match-ups, the lead first", () => {
+    expect(brief).toContain("MATCH-UP 1: Dons v Notemail");
+  });
+
+  it("leads with a result the substitutions flipped, then the closest", () => {
+    const at = (score: string, margin: number): MatchupContext => ({ ...context, state: { ...context.state, score, margin } });
+    const flipped = at("A beat B 33-28; B led 26-24 before the substitutions", 5);
+    const close = at("C beat D 30-29", 1);
+    const wide = at("E beat F 50-20", 30);
+    expect(leadFirst([wide, close, flipped], "gameweek").map((c) => c.state.score)).toEqual([flipped.state.score, close.state.score, wide.state.score]);
+    expect(leadFirst([wide, close, flipped], "saturday")[0].state.score).toBe(close.state.score);
   });
 });

@@ -7,6 +7,7 @@ import { londonWeekday, londonWeekdayLong, type StoryKind } from "@epl/core";
 
 export const STORY_BYLINE: Partial<Record<StoryKind, string>> = {
   "match-report": "The Back Page",
+  "draft-report": "The Dugout",
   "fixture-preview": "The Form Guide",
   "tie-call": "The Back Page",
   eleven: "The Selector",
@@ -33,6 +34,7 @@ export function editionName(kind: StoryKind, filedAt: string, playedOn?: string)
   // Named for the day the matches were played, not the day it filed, and no real paper's name (Craig, 28 Sep 2026):
   // Saturday's matches are the "Saturday Prem Report" even when it files on Sunday morning.
   if (kind === "match-report") return `${londonWeekdayLong(playedOn ?? filedAt)} Prem Report`;
+  if (kind === "draft-report") return `${londonWeekdayLong(playedOn ?? filedAt)} Draft Report`;
   if (kind === "predictions" || kind === "predicted-xi") return "The Form Guide";
   if (kind === "fixture-preview" || kind === "news" || kind === "presser") return "The Team Sheet";
   if (kind === "wire" || kind === "dodgers") return "The Mercato Wire";

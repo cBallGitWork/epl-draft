@@ -4,6 +4,9 @@
 
 export interface DraftMan {
   fantraxId: string;
+  /** FPL's season-stable codes for him and his club, for his photograph and his club's colours; never persisted ids. */
+  code: number;
+  clubCode: number;
   name: string;
   /** His club's name as the paper prints it. */
   club: string;

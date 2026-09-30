@@ -9,6 +9,7 @@ import type { StoryKind } from "@epl/core";
 
 export const KICKER: Partial<Record<StoryKind, string>> = {
   "match-report": "Match report",
+  "draft-report": "Draft report",
   "fixture-preview": "Tonight",
   "tie-call": "The call",
   "tie-report": "The tie",

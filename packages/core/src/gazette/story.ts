@@ -23,6 +23,7 @@ import { type EditionTie, normalizeTie, once } from "./published";
  *  is kept in the plan, not in the type. */
 export type StoryKind =
   | "match-report"
+  | "draft-report"
   | "fixture-preview"
   | "tie-call"
   | "tie-report"
@@ -40,7 +41,7 @@ export type StoryKind =
  *  and the paper's page table is checked against it — a kind missing from either
  *  fails silently, with a green typecheck and a green build. */
 export const STORY_KINDS: readonly StoryKind[] = [
-  "match-report", "fixture-preview",
+  "match-report", "draft-report", "fixture-preview",
   "tie-call", "tie-report", "predictions", "eleven", "power-ranking",
   "wire", "dodgers", "presser", "predicted-xi", "sheets", "news",
 ];

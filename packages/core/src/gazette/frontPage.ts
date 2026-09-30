@@ -54,6 +54,7 @@ const KIND_WEIGHT: Record<StoryKind, number> = {
   // Above the team sheets (Craig, 28 Sep 2026: "reports lead over team sheets, it's the newer news"): filed after the
   // whistle, when the sheets filed at the lock can no longer be acted on.
   "match-report": 96,
+  "draft-report": 95,
   "tie-call": 78,
   news: 70,
   "fixture-preview": 65,

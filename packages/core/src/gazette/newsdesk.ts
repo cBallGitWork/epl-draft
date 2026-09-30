@@ -48,6 +48,8 @@ export interface Assignment {
    *  are one kind with two editions, so the day is the scope handle the way
    *  `fixtureId` is for a preview. */
   day?: string;
+  /** A draft report's cut-off: after Saturday's matches, or the end of the gameweek. */
+  cutoff?: "saturday" | "gameweek";
   /** The round a look-ahead story is ABOUT, which between rounds is not FPL's
    *  current one: that is the round just played. */
   round?: { period: number; gameweek: number };
@@ -92,6 +94,8 @@ export interface DeskState {
   next: { period: number; gameweek: number; locksAt: string } | null;
   /** The London days whose every match has settled, each a match-day report (`reports/due.ts`). */
   reportDays: readonly { key: string; slug: string; day: string }[];
+  /** The draft reports due: after Saturday, and at the end of the gameweek (`matchups/due.ts`). */
+  draftReports: readonly { key: string; slug: string; cutoff: "saturday" | "gameweek"; day: string }[];
 }
 
 /** The columns a finished round earns, in the order they are worth reading.
@@ -128,6 +132,8 @@ export function newsdesk(
 
   // A match-day report as each day's football settles, first because it is the newest news on the page.
   for (const day of desk.reportDays) want({ kind: "match-report", ...day });
+  // The draft report after them: the league's own match-ups, once the day's football is in.
+  for (const due of desk.draftReports) want({ kind: "draft-report", key: due.key, slug: due.slug, cutoff: due.cutoff, day: due.day });
 
   if (desk.finished) {
     // One report per tie, in the order the ties are given — `desk.ties` arrives

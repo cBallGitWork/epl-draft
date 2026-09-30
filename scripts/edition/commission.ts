@@ -11,8 +11,10 @@ import { FIXTURE_PREVIEW, TIE_CALL, TIE_REPORT } from "./voice/matches";
 import { DODGERS, ELEVEN, POWER_RANKING, WIRE } from "./voice/columns";
 import { LAWRO } from "./voice/lawro";
 import type { PredictionsDesk } from "./predictions";
+import type { DraftJob } from "./draftWriter";
 import type { ReportsJob } from "./reports";
 import type { SheetsDesk } from "./sheets";
+import { DRAFT_VOICE } from "./voice/draft";
 import { REPORTS_VOICE } from "./voice/reports";
 import { SHEETS_VOICE } from "./voice/sheets";
 import { NEWS } from "./voice/news";
@@ -24,7 +26,7 @@ import { edition, faceCtx, type DeskContext } from "./dispatch";
 /** How a column comes to exist: a voice and a brief for a writer, or a set of
  *  facts the desk prints itself. */
 type Commission =
-  | { system: string; brief: string; lawro?: PredictionsDesk; sheets?: SheetsDesk; reports?: ReportsJob }
+  | { system: string; brief: string; lawro?: PredictionsDesk; sheets?: SheetsDesk; reports?: ReportsJob; draft?: DraftJob }
   | { printed: Record<string, unknown> };
 
 export function prepare(assignment: Assignment, ctx: DeskContext): Commission | null {
@@ -43,6 +45,10 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
   }
 
   // A match-day report is written, checked and read back through its own newsroom, from the day's joined facts.
+  if (assignment.kind === "draft-report") {
+    const job = assignment.cutoff === undefined ? undefined : ctx.drafts.get(assignment.cutoff);
+    return job === undefined ? null : { system: DRAFT_VOICE, brief: "", draft: job };
+  }
   if (assignment.kind === "match-report") {
     const job = assignment.day === undefined ? undefined : ctx.reports.get(assignment.day);
     return job === undefined ? null : { system: REPORTS_VOICE, brief: job.brief, reports: job };

@@ -10,6 +10,7 @@ import {
   fetchTeamRosterInfo,
   draftReportsDue,
   isSaturday,
+  leadFirst,
   getFootballSnapshot,
   londonDayOf,
   mapBenchOrder,
@@ -34,7 +35,7 @@ import {
 import { INTEL_SEASON, readIntel } from "../intel";
 import { gatherRoundFacts } from "./facts";
 import { appearance, categoryIds, goalsByFixture, mostPaid, tallies, timeOf } from "./draftReads";
-import { draftSeason, meetingsOf, placeOf, gameweekFacts } from "./draftSeason";
+import { draftSeason, gameweekFacts, meetingsOf, placeOf, ranksAfter } from "./draftSeason";
 import { minimums } from "./rosterMinimums";
 import { earlierSheets } from "./sheets";
 
@@ -47,7 +48,10 @@ export interface DraftDesk {
   gameweek: number;
   period: number;
   days: string[];
+  /** Each due cut-off's match-ups, the lead first. */
   cutoffs: Map<Cutoff, MatchupContext[]>;
+  /** Each side's place once the gameweek is added, for the form strip; empty until the gameweek is done. */
+  rankAfter: Map<string, number>;
   notes: string[];
 }
 
@@ -95,6 +99,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const clubs = new Map(snapshot.clubs.map((c) => [c.id, c]));
 
   const cutoffs = new Map<Cutoff, MatchupContext[]>();
+  let rankAfter = new Map<string, number>();
   // Only a report that is due: a cut-off whose matches are all settled. An unplayed gameweek would read as nought-nought.
   const due = new Set(draftReportsDue(schedule, gameweek).map((d) => d.cutoff));
   for (const [cutoff, last] of ([["saturday", saturday], ["gameweek", days.at(-1)!]] as const).filter(([c]) => due.has(c))) {
@@ -116,6 +121,8 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
       const theirGoals = done.flatMap((f) => goals.get(f.code) ?? []);
       return {
         fantraxId: m.fantraxId,
+        code: m.player.code,
+        clubCode: clubs.get(club)?.code ?? 0,
         name: m.player.name,
         club: clubs.get(club)?.name ?? "?",
         slot: m.slot,
@@ -158,16 +165,17 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
       return home === null || away === null ? [] : [matchupState({ home, away }, worth, limits, cutoff)];
     });
     const formFacts = gameweekFacts(season, states, cutoff);
+    if (cutoff === "gameweek") rankAfter = ranksAfter(season, states);
     const boys = (men: DraftSide, them: DraftSide) => oldBoys(men.eleven, { teamId: them.teamId, name: them.name }, season.formerly);
     cutoffs.set(
       cutoff,
-      states.map((state) => ({
+      leadFirst(states.map((state) => ({
         state,
         places: { home: placeOf(season, state.home.side.teamId), away: placeOf(season, state.away.side.teamId) },
         meetings: meetingsOf(season, state.home.side, state.away.side),
         form: [...(formFacts.get(state.home.side.teamId) ?? []), ...(formFacts.get(state.away.side.teamId) ?? [])],
         oldBoys: [...boys(state.home.side, state.away.side), ...boys(state.away.side, state.home.side)],
-      })),
+      })), cutoff),
     );
   }
   const notes = [
@@ -177,5 +185,5 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
     `Goal times read for ${goals.size} of ${fixtures.length} matches.`,
     `Due: ${due.size === 0 ? "nothing yet; the gameweek's matches are not settled" : [...due].join(" and ")}.`,
   ];
-  return { gameweek, period, days, cutoffs, notes };
+  return { gameweek, period, days, cutoffs, rankAfter, notes };
 }

@@ -395,6 +395,14 @@ export const DRAFT_DESK = {
   tableMove: 2,
 } as const;
 
+/** How long a draft report runs: a standfirst, then a match-up's paragraphs (the UK desk's review, 29 Sep 2026). */
+export const DRAFT_WRITING = {
+  standfirstWords: 30,
+  matchupWords: [60, 160],
+  /** Headline candidates the pun writer offers, and match-ups written in one call. */
+  puns: 10,
+} as const;
+
 /** The team sheets at the lock: when a benched man is news, and how much the article carries. */
 export const SHEETS = {
   /** A benched man is news with a goal or assist last time out, or this many goals and assists

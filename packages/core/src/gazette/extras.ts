@@ -1,6 +1,8 @@
 import { once } from "./published";
 import { normalizeRecord, normalizeSkit, type StorySkit } from "./predictions/cargo";
 import type { Marked } from "./predictions/record";
+import type { StoryDraftReport } from "./matchups/cargo";
+import { normalizeDraftReport } from "./matchups/cargoRead";
 import type { StoryReport } from "./reports/cargo";
 import { normalizeReports } from "./reports/cargoRead";
 import { normalizeSheets, type StorySheet } from "./sheets/cargo";
@@ -132,6 +134,8 @@ export interface StoryExtras {
   skit?: StorySkit[];
   /** A match-day report: each match's score block, pieces, key stats, timeline and video. */
   reports?: StoryReport[];
+  /** A draft report: the gameweek's match-ups at a cut-off, each with its verdict, writing and form strip. */
+  draft?: StoryDraftReport;
 }
 
 /** A closed set, so the column cannot invent a fifth state. Anything else is a
@@ -273,6 +277,8 @@ export function normalizeExtras(raw: unknown): StoryExtras | undefined {
   if (skit !== undefined) out.skit = skit;
   const reports = normalizeReports(extras.reports);
   if (reports !== undefined) out.reports = reports;
+  const draft = normalizeDraftReport(extras.draft);
+  if (draft !== undefined) out.draft = draft;
 
   return Object.keys(out).length > 0 ? out : undefined;
 }

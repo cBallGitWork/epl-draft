@@ -74,6 +74,20 @@ export function meetingsOf(season: DraftSeason, home: { teamId: string; name: st
   return meetingLines(home.name, away.name, met);
 }
 
+/** The sides' results in the gameweek, with the substitutions, from each side's point of view. */
+function resultsOf(states: readonly MatchupState[]) {
+  return states.flatMap((s) => [
+    { teamId: s.home.side.teamId, name: s.home.side.name, opponent: s.away.side.name, for: s.home.total, against: s.away.total },
+    { teamId: s.away.side.teamId, name: s.away.side.name, opponent: s.home.side.name, for: s.away.total, against: s.home.total },
+  ]);
+}
+
+/** Each side's place once the gameweek is added; empty when the table cannot be rebuilt. */
+export function ranksAfter(season: DraftSeason, states: readonly MatchupState[]): Map<string, number> {
+  const after = season.table === null ? null : tableAfter(season.table, resultsOf(states));
+  return new Map((after ?? []).map((row) => [row.teamId, row.rank]));
+}
+
 /** Each side's form and table facts at the cut-off: after Saturday, the runs going in; at the end, the gameweek's results
  *  (with the substitutions) against the season, and the table after them. */
 export function gameweekFacts(season: DraftSeason, states: readonly MatchupState[], cutoff: Cutoff): Map<string, SeasonFact[]> {
@@ -87,10 +101,7 @@ export function gameweekFacts(season: DraftSeason, states: readonly MatchupState
     }
     return out;
   }
-  const results = states.flatMap((s) => [
-    { teamId: s.home.side.teamId, name: s.home.side.name, opponent: s.away.side.name, for: s.home.total, against: s.away.total },
-    { teamId: s.away.side.teamId, name: s.away.side.name, opponent: s.home.side.name, for: s.away.total, against: s.home.total },
-  ]);
+  const results = resultsOf(states);
   for (const fact of gameweekForm(results, season.runs)) add(fact.teamId, fact);
   const after = season.table === null ? null : tableAfter(season.table, results);
   if (season.table !== null && after !== null) for (const fact of tableMoves(season.table, after)) add(fact.teamId, fact);

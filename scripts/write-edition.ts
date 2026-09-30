@@ -21,6 +21,7 @@ import {
   periodGameweeks,
   banned,
   REPORT_NEVER,
+  DRAFT_NEVER,
   roundState,
   standingHeadlines,
   strangers,
@@ -33,6 +34,7 @@ import { CARGO, headlineAndProse, prose } from "./edition/checks";
 import { writeSubedited } from "./edition/subedit";
 import { writeLawro } from "./edition/lawroWriter";
 import { writeSheets } from "./edition/sheetsWriter";
+import { draftColumn } from "./edition/draftWriter";
 import { reportsColumn } from "./edition/reportsWriter";
 import { presserDesk } from "./edition/presserWeek";
 import { readXi } from "./edition/xi";
@@ -198,7 +200,9 @@ async function main(): Promise<void> {
       // column back against the register and sends it back once if it reached
       // for a banned phrase.
       const column =
-        desk.reports !== undefined
+        desk.draft !== undefined
+          ? await draftColumn(desk.draft, say)
+          : desk.reports !== undefined
           ? await reportsColumn(desk.reports, say)
           : desk.sheets !== undefined
           ? await writeSheets(desk.sheets, brief, say)
@@ -214,14 +218,15 @@ async function main(): Promise<void> {
       }
       // The backstop, and it reads more than the sub-editor did: the FILED
       // story, cargo included. It files anyway and says so loudly.
-      const printed = banned(headlineAndProse(filed.story), assignment.kind === "match-report" ? REPORT_NEVER : undefined);
+      const printed = banned(headlineAndProse(filed.story), assignment.kind === "match-report" ? REPORT_NEVER : assignment.kind === "draft-report" ? DRAFT_NEVER : undefined);
       if (printed.length > 0) {
         say(`  ⚠ ${assignment.kind} STILL prints banned phrasing after a rewrite: ${printed.join(", ")}`);
       }
       // Every reader of `extras` treats absence as ordinary, so nothing
       // downstream can tell a column that lost its cargo from one that has none.
       const missing = CARGO[assignment.kind];
-      if (missing !== undefined && (filed.story.extras?.[missing] ?? []).length === 0) {
+      const cargo = missing === undefined ? undefined : filed.story.extras?.[missing];
+      if (missing !== undefined && (cargo === undefined || (Array.isArray(cargo) && cargo.length === 0))) {
         say(`  ⚠ ${assignment.kind} filed with no "${missing}" — the column's substance is missing.`);
       }
       filings.push({ story: filed.story, spentKeys: [assignment.key], threads: filed.threads });

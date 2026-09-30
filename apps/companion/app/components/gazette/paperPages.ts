@@ -30,7 +30,7 @@ export const PAPER_PAGES: readonly PaperPage[] = [
     // What happened, and what is about to. `news` is here because it reports
     // football that happened elsewhere — it is a wire service item, not opinion.
     kinds: [
-      "tie-report", "match-report", "tie-call", "fixture-preview",
+      "tie-report", "match-report", "draft-report", "tie-call", "fixture-preview",
       "news", "presser", "predicted-xi", "sheets",
     ],
   },

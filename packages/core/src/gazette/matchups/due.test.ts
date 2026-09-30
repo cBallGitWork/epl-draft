@@ -12,7 +12,7 @@ describe("draftReportsDue", () => {
     const sat = [fixture("2026-09-19T11:30:00Z", true), fixture("2026-09-19T16:30:00Z", true)];
     const sun = fixture("2026-09-20T15:30:00Z", false);
     expect(draftReportsDue([fri, ...sat, sun], 5).map((d) => d.key)).toEqual(["draft-report:gw5:saturday"]);
-    expect(draftReportsDue([fri, ...sat, { ...sun, settled: true }], 5).map((d) => d.slug)).toEqual(["gw5-draft-report-saturday", "gw5-draft-report"]);
+    expect(draftReportsDue([fri, ...sat, { ...sun, settled: true }], 5).map((d) => `${d.slug} ${d.day}`)).toEqual(["gw5-draft-report-saturday 2026-09-19", "gw5-draft-report 2026-09-20"]);
   });
 
   it("waits while a Saturday match is unsettled, and files no Saturday report when Saturday ends the round", () => {
