@@ -1,21 +1,22 @@
 import { describe, expect, it } from "vitest";
-import { LIMITS } from "./__fixtures__/limits";
 import { buildDraftBrief, leadFirst, type MatchupContext } from "./brief";
-import { matchupState } from "./state";
+import { contextOf } from "./__fixtures__/context";
 import { draftSide, eleven } from "./__fixtures__/draftSide";
 import { draftMan } from "./__fixtures__/draftMan";
-import { worthOf } from "./__fixtures__/worth";
 import type { DraftMan } from "./types";
 
 const man = (name: string, slot: string, points: number | null, minutes: number, left = 0, more: Partial<DraftMan> = {}): DraftMan => draftMan(name, slot, points, minutes, left, { club: "EVE", projected: 4.2, ...more });
-const worth = worthOf();
-const state = matchupState(
-  { home: draftSide("Dons", 40, eleven("h", { 1: man("Blank", "D", null, 0) }), [man("Sub", "D", 3, 90)]), away: draftSide("Notemail", 38, eleven("a", { 9: man("Isak", "F", null, 0, 1, { next: { opponent: "Bournemouth", home: false, kickoff: "2026-09-20T15:30:00Z" } }) })) },
-  worth,
-  LIMITS,
+const context = contextOf(
+  draftSide("Dons", 40, eleven("h", { 1: man("Blank", "D", null, 0) }), [man("Sub", "D", 3, 90)]),
+  draftSide("Notemail", 38, eleven("a", { 9: man("Isak", "F", null, 0, 1, { next: { opponent: "Bournemouth", home: false, kickoff: "2026-09-20T15:30:00Z" } }) })),
+  {
+    places: { home: { rank: 1, won: 3, drawn: 0, lost: 1, run: "WLWW" }, away: null },
+    meetings: ["the last meeting: Dons won 40-31 in gameweek 2"],
+    form: [{ teamId: "Dons", kind: "streak", text: "Dons had won 3 in a row going into the gameweek" }],
+    oldBoys: ["Isak faced Dons, who drafted him"],
+  },
   "saturday",
 );
-const context: MatchupContext = { state, places: { home: { rank: 1, won: 3, drawn: 0, lost: 1, run: "WLWW" }, away: null }, meetings: ["the last meeting: Dons won 40-31 in gameweek 2"], form: [{ teamId: "Dons", kind: "streak", text: "Dons had won 3 in a row going into the gameweek" }], oldBoys: ["Isak faced Dons, who drafted him"] };
 const brief = buildDraftBrief("saturday", 5, [context]);
 
 describe("buildDraftBrief", () => {

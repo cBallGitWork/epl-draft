@@ -1,21 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { draftMan, goalAt } from "./__fixtures__/draftMan";
+import { contextOf } from "./__fixtures__/context";
 import { draftSide, eleven } from "./__fixtures__/draftSide";
-import { LIMITS } from "./__fixtures__/limits";
-import { worthOf } from "./__fixtures__/worth";
-import type { MatchupContext } from "./brief";
 import { draftCargo } from "./cargo";
 import { normalizeDraftReport } from "./cargoRead";
-import { matchupState } from "./state";
 
 const home = draftSide("123", 38, eleven("h", { 9: draftMan("Haaland", "F", 6, 90, 0, { goals: 1, scoredAt: [goalAt(81)] }) }));
-const context: MatchupContext = {
-  state: matchupState({ home, away: draftSide("test2", 37, eleven("a")) }, worthOf(), LIMITS, "gameweek"),
-  places: { home: { rank: 2, won: 1, drawn: 0, lost: 0, run: "W" }, away: null },
-  meetings: [],
-  form: [],
-  oldBoys: [],
-};
+const context = contextOf(home, draftSide("test2", 37, eleven("a")), { places: { home: { rank: 2, won: 1, drawn: 0, lost: 0, run: "W" }, away: null } });
 const cargo = draftCargo("gameweek", 5, [context], new Map([[1, { paragraphs: ["Haaland's goal settled it."] }]]), new Map([["123", 1]]));
 
 describe("the draft cargo", () => {

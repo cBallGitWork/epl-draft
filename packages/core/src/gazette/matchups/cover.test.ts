@@ -1,14 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { draftMan } from "./__fixtures__/draftMan";
+import { contextOf as context } from "./__fixtures__/context";
 import { draftSide, eleven } from "./__fixtures__/draftSide";
-import { LIMITS } from "./__fixtures__/limits";
-import { worthOf } from "./__fixtures__/worth";
-import type { MatchupContext } from "./brief";
 import { draftFace } from "./cover";
-import { matchupState } from "./state";
-import type { DraftSide } from "./types";
-
-const context = (home: DraftSide, away: DraftSide): MatchupContext => ({ state: matchupState({ home, away }, worthOf(), LIMITS, "gameweek"), places: { home: null, away: null }, meetings: [], form: [], oldBoys: [] });
 
 describe("draftFace", () => {
   it("is the winner's top scorer, even when the loser had a bigger haul", () => {

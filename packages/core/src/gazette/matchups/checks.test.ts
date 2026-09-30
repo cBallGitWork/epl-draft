@@ -1,14 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { draftSide, eleven } from "./__fixtures__/draftSide";
 import { draftMan } from "./__fixtures__/draftMan";
-import { LIMITS } from "./__fixtures__/limits";
-import { worthOf } from "./__fixtures__/worth";
-import { draftBlocks, type MatchupContext } from "./brief";
+import { contextOf } from "./__fixtures__/context";
+import { draftBlocks } from "./brief";
 import { checkDraft } from "./checks";
-import { matchupState } from "./state";
 import type { DraftSide } from "./types";
 
-const context = (home: DraftSide, away: DraftSide): MatchupContext => ({ state: matchupState({ home, away }, worthOf(), LIMITS, "gameweek"), places: { home: { rank: 2, won: 1, drawn: 0, lost: 0, run: "W" }, away: null }, meetings: [], form: [], oldBoys: [] });
+const context = (home: DraftSide, away: DraftSide) => contextOf(home, away, { places: { home: { rank: 2, won: 1, drawn: 0, lost: 0, run: "W" }, away: null } });
 const contexts = [
   context(draftSide("123", 38, eleven("h", { 9: draftMan("Haaland", "F", 6, 90, 0, { code: 223094, clubCode: 43, goals: 1 }) })), draftSide("test2", 37, eleven("a"))),
   context(draftSide("test3", 33, eleven("c", { 1: draftMan("Vuskovic", "D", 6, 90) })), draftSide("test4", 28, eleven("d"))),
