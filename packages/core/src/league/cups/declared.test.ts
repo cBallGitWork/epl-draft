@@ -38,6 +38,28 @@ describe("Timbeibs Cup", () => {
     });
   });
 
+  it("follows strict bracket order once seeded: no seed is placed after its first tie", () => {
+    // Craig, 30 Sep: "cup 1, once seeded, follows a strict bracket order".
+    const sides = rounds.flatMap((round) => round.ties.flatMap((tie) => [tie.home, tie.away]));
+    const seeds = sides.flatMap((side) => ("seed" in side ? [side.seed] : [])).sort((a, b) => a - b);
+    expect(seeds).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    const [first, second, third] = rounds.filter((round) => round.id.startsWith("W"));
+    expect(first?.ties.map((tie) => [tie.home, tie.away])).toEqual([
+      [{ seed: 8 }, { seed: 9 }],
+      [{ seed: 7 }, { seed: 10 }],
+    ]);
+    expect(second?.ties.map((tie) => [tie.home, tie.away])).toEqual([
+      [{ seed: 1 }, { winnerOf: "W1-1" }],
+      [{ seed: 4 }, { seed: 5 }],
+      [{ seed: 2 }, { winnerOf: "W1-2" }],
+      [{ seed: 3 }, { seed: 6 }],
+    ]);
+    expect(third?.ties.map((tie) => [tie.home, tie.away])).toEqual([
+      [{ winnerOf: "W2-1" }, { winnerOf: "W2-2" }],
+      [{ winnerOf: "W2-3" }, { winnerOf: "W2-4" }],
+    ]);
+  });
+
   it("plays the winners' side late, so its champion waits one gameweek for the final", () => {
     // Craig, 30 Sep: "dont have wb so early, too much of a gap to final for winners".
     expect(timbeibs.knockout.finalGameweek - (schedule.get("W4") ?? 0)).toBe(2);

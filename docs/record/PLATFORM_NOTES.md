@@ -95,7 +95,8 @@ Craig set the formats on 27 Sep. The cups are declared in `packages/core/src/lea
   GW17 final (Boxing Day). The top six byes are not declared: `doubleBracket(10)` gives them, because only
   seeds 7 to 10 fill a sixteen-slot first round. **Every round is played as late as the final allows**
   (`scheduleRounds`; Craig, 30 Sep: *"dont have wb so early"*): the winners' final is GW15, so its winner
-  waits one gameweek for the final, not three.
+  waits one gameweek for the final, not three. **Once seeded it follows strict bracket order** (Craig, 30 Sep):
+  seeds sit in bracket order (1 8/9 4 5 · 2 7/10 3 6), and every later side is a fixed winner or loser, never reseeded.
 - **Davy Propper Cup**: two groups drawn at random around GW19, off the app, each playing once over GW22
   to GW26 (Craig, 30 Sep: *"starts gw22"*). The top three go through and the group winners skip the
   quarter-finals (`seededBracket(6)`). Quarter-finals are A2 v B3 and B2 v A3, all one leg: GW28, GW29
