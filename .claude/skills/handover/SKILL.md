@@ -30,7 +30,7 @@ git log --oneline -1                                  # where the last one was w
 git log --oneline <prev-head>..HEAD | wc -l           # commit count for the header
 git rev-list --left-right --count @{u}...HEAD         # ahead/behind — say it in the header
 git status --short                                    # what is uncommitted, and whose
-.claude/hooks/repo_clock.sh --print                   # days to the swap, capture health, one-offs
+.claude/hooks/repo_clock.sh --print                   # days to the swap, the merge queue, stranded work, capture health, one-offs
 ```
 
 **Run the gates rather than repeating yesterday's result.** "669 green" is a
