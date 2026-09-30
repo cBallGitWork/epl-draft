@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { draftSide, eleven } from "./__fixtures__/draftSide";
 import { draftMan } from "./__fixtures__/draftMan";
 import { contextOf } from "./__fixtures__/context";
+import { lateDecider } from "./__fixtures__/gw5";
 import { draftBlocks } from "./brief";
 import { checkDraft } from "./checks";
 import type { DraftSide } from "./types";
@@ -42,6 +43,13 @@ describe("checkDraft", () => {
     expect(said(text)).not.toContain("American, not British");
     expect(said(text).filter((c) => c.includes("figure"))).toEqual([]);
     expect(said(`${text} Was it enough?`)).toContain("a colon, a question or an exclamation mark");
+  });
+
+  it("lets a stage's own score stand, read off its points in the brief", () => {
+    const late = lateDecider();
+    const said = (text: string) => checkDraft({ ...writing(text), matchups: new Map([[1, { paragraphs: [text] }]]) }, [late], draftBlocks("gameweek", [late])).map((f) => f.check);
+    expect(said("Haaland scored late on Sunday for 123. test2 took Saturday 16-15 and Sunday 18-12, and still lost by a point.")).not.toContain("a score the brief does not give");
+    expect(said("Haaland scored late on Sunday for 123. test2 took Saturday 17-15, and still lost by a point.")).toContain("a score the brief does not give");
   });
 
   it("sends back a still-to-play man told as a manager's choice", () => {
