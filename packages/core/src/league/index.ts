@@ -72,11 +72,12 @@ export type { HeadToHead, PeriodPairing, PoolPlayer } from "./selectors";
 export {
   COMPETITIONS,
   LEAGUE_COMPETITION,
-  PLACEHOLDER_ROUNDS,
+  KNOCKOUT_ROUNDS,
   groupTies,
   leagueTies,
   seededTies,
 } from "./competitions";
+export { drawFrom } from "./draw";
 // `Competition`, `CompetitionGroup` and `SeededRound` stay off the surface
 // deliberately: all three are inferred at every call site, and §2 does not keep
 // an export nothing imports.

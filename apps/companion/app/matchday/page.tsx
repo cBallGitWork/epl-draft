@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import {
-  PLACEHOLDER_ROUNDS,
+  KNOCKOUT_ROUNDS,
   type CompetitionTie,
   type Fixture,
   type FootballSnapshot,
@@ -13,7 +13,6 @@ import {
   nextRound,
   periodPairings,
   roundState,
-  seededTies,
   londonDayOf,
 } from "@epl/core";
 import { leagueTable, teamBadges } from "../standings";
@@ -23,6 +22,7 @@ import RoundWord from "../components/league/RoundWord";
 import Link from "next/link";
 import PageHeader from "../components/shell/PageHeader";
 import { getLeagueSquads } from "../squads";
+import { getSchedule, getSeasonResults, knockoutsFrom } from "../league/schedule/schedule";
 import { liveScores } from "../scoreboard";
 import YourMatchup from "./YourMatchup";
 import { marks } from "../involvement";
@@ -129,10 +129,14 @@ export default async function MatchdayPage({
   // table and nothing else — the football half needs none of them.
   const drafted = "period" in squads ? squads : null;
   const period = drafted?.roundPeriod ?? null;
-  const [{ scores }, badges, table] = await Promise.all([
+  // The schedule and the season's results are read only in a week a knockout falls in.
+  const cupWeek = KNOCKOUT_ROUNDS.some((round) => round.gameweek === snapshot.gameweek);
+  const [{ scores }, badges, table, schedule, results] = await Promise.all([
     period === null ? { scores: new Map<string, LiveTeamScore>() } : liveScores(period),
     teamBadges(),
     leagueTable(),
+    cupWeek ? getSchedule() : null,
+    cupWeek ? getSeasonResults() : [],
   ]);
 
   // Every tie being played this week, not only the league's eight — Craig, 5 Sep
@@ -151,11 +155,9 @@ export default async function MatchdayPage({
     drafted?.info != null && period !== null
       ? [
           ...leagueTies(periodPairings(drafted.info.matchups, drafted.info.teams, period)),
-          ...seededTies(
-            PLACEHOLDER_ROUNDS,
-            "unavailable" in table ? [] : table,
-            snapshot.gameweek,
-          ),
+          ...(schedule === null || "unavailable" in schedule
+            ? []
+            : knockoutsFrom(schedule, results)(snapshot.gameweek)),
         ]
       : [];
 

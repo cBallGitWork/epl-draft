@@ -44,6 +44,16 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## The first cup is double elimination, seeded on gameweek 9 — decided 30 Sep 2026
+
+- **Shape** (Craig): every team, double elimination, no bracket reset, final GW17. GW9's points seed 1–10;
+  seeds 7–10 open in GW10, and 18 ties run GW10–17 with the winners' bracket played late (GW11, 13, 15) so
+  its champion waits one gameweek for the final, the minimum. Declared in `league/cup.ts`.
+- **Two rules are ours, not Craig's, and are the first thing to change if he says otherwise**: a level seeding
+  week splits on points to date, and a level tie sends the higher seed through (`draw.ts`, `competitions.ts`).
+- The bracket resolves itself off Fantrax's season results once a gameweek's football is finished; a side
+  not yet decided prints a tie code, "Winner QF1", which fits a phone where the words clipped. The GW38 playoff final is still a labelled placeholder.
+
 ## A player's fixture run carries the sister model's projection, not Fantrax's — decided 30 Sep 2026
 
 - **Counted**: the sister export projects **666 of 666** players for **each of GW6–17** (12 weeks); Fantrax's

@@ -1,11 +1,13 @@
 import {
   FANTRAX_LEAGUE_ID,
+  KNOCKOUT_ROUNDS,
   FantraxError,
   type FixtureStatus,
   type LeagueInfo,
   type StandingsRow,
   type PeriodResult,
   datedKickoffs,
+  drawFrom,
   fetchLeagueInfo,
   fetchSeasonResults,
   firstKickoff,
@@ -15,6 +17,7 @@ import {
   mapLeagueInfo,
   mapSeasonResults,
   periodGameweeks,
+  seededTies,
 } from "@epl/core";
 import { leagueCache } from "../../leagueCache";
 import { leagueTable } from "../../standings";
@@ -67,7 +70,7 @@ export interface Schedule {
   /** Ascending, and the whole of the dropdown. A gameweek no period covers is
    *  not on it: the league cannot score a week it does not have. */
   rounds: ScheduleRound[];
-  /** Fantrax's table, which is what the placeholder brackets are seeded from.
+  /** Fantrax's table, which seeds the playoff placeholder.
    *  Empty is ordinary — nobody has played, or nobody has joined. */
   table: StandingsRow[];
 }
@@ -78,7 +81,7 @@ export interface Schedule {
  *  `liveScores`, which has its own cache keyed on the period.
  *
  *  Only the league's own description of itself is fatal. A table we cannot read
- *  costs the placeholder brackets their seeding and they print places instead,
+ *  costs the playoff placeholder its seeding and it prints places instead,
  *  which is not worth losing the fixtures over and states nothing false. */
 export const getSchedule = leagueCache("schedule-season",
   async (): Promise<Schedule | Unavailable> => {
@@ -153,3 +156,12 @@ export const getSeasonResults = leagueCache("schedule-results",
   },
 );
 
+
+/** The declared knockouts falling in one gameweek, resolved off every finished gameweek's results. */
+export function knockoutsFrom(schedule: Schedule, results: readonly PeriodResult[]) {
+  const draw = drawFrom(schedule.table, schedule.info.teams, results, (gameweek) => {
+    const played = schedule.rounds.find((round) => round.gameweek === gameweek);
+    return played?.status === "finished" ? played.period : undefined;
+  });
+  return (gameweek: number) => seededTies(KNOCKOUT_ROUNDS, gameweek, draw);
+}

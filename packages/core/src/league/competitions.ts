@@ -1,74 +1,71 @@
+import { CUP, CUP_ROUNDS } from "./cup";
 import { ordinal } from "./ordinal";
 import type { PeriodPairing } from "./selectors";
-import type { LeagueTeam, StandingsRow } from "./types";
+import type { LeagueTeam } from "./types";
 
 // What is on in a gameweek, across every competition the league runs.
 //
 // Fantrax describes exactly one — the head-to-head league whose pairings arrive
 // on `getLeagueInfo` — and has no vocabulary for a second. A cup and a playoff
-// are ours, so they are declared here as data and resolved purely, the same way
-// every other league rule is data rather than an assumption.
-//
-// **The knockouts below are a placeholder and say so on screen.** The rounds and
-// the gameweeks they fall in are invented; what is real is the shape — one
-// gameweek can hold ties from more than one competition, which the schedule had
-// no way to express while the league's own fixtures were the only thing on it.
-// When the commissioner settles a real cup, this declaration is what changes.
+// are ours, so they are declared as data and resolved purely, the same way
+// every other league rule is data rather than an assumption. The cup is
+// settled (`cup.ts`); the playoff final is still a placeholder and says so.
 
 export interface Competition {
   id: string;
   name: string;
+  /** Where a numbered seed comes from: the table, or one gameweek's points. Absent for the league. */
+  seededBy?: "table" | { gameweek: number };
+  /** Invented, and labelled so on screen. */
+  placeholder?: boolean;
 }
 
 /** Fantrax's own competition: the one it actually scores. */
 export const LEAGUE_COMPETITION: Competition = { id: "league", name: "League" };
 
-const CUP: Competition = { id: "cup", name: "Cup" };
-const PLAYOFFS: Competition = { id: "playoffs", name: "Playoffs" };
+const PLAYOFFS: Competition = { id: "playoffs", name: "Playoffs", seededBy: "table", placeholder: true };
 
-/** One side of a declared tie, before anyone is drawn into it.
- *
- *  A number is a place in the table — 1 is whoever is top when the round comes
- *  round. A string is a side the table cannot name, printed verbatim: a
- *  semi-final winner is not a table position, and seeding one would put a team
- *  in a final it has not reached. */
-export type Seed = number | string;
+/** One side of a declared tie: a seed, or the winner or loser of an earlier tie, named by its id. */
+export type Seed = number | { winner: string } | { loser: string };
+
+export interface DeclaredTie {
+  /** Unique within its competition, and printed for a side not yet decided. */
+  id: string;
+  home: Seed;
+  away: Seed;
+}
 
 export interface SeededRound {
   competition: Competition;
   gameweek: number;
   /** "Semi-finals", "Final". */
   name: string;
-  ties: readonly (readonly [Seed, Seed])[];
+  ties: readonly DeclaredTie[];
 }
 
 /** Every competition, in reading order. The league's own leads because it is the
  *  one being played. */
 export const COMPETITIONS: readonly Competition[] = [LEAGUE_COMPETITION, CUP, PLAYOFFS];
 
-/** The invented calendar. Two cup rounds in consecutive gameweeks, and a playoff
- *  final on the last day between the top two — a dummy bracket whose only job is
- *  to prove a gameweek can carry more than one competition.
- *
- *  It does NOT decide the table's cut any more, and that is the correction worth
- *  keeping. This file used to derive the season's qualifying places from the
- *  bracket below, on the reasoning that one declaration is better than two — but
- *  the declaration was invented, and Fantrax publishes the real one on
- *  `getLeagueInfo`. Ours is a top four from period 35; the bracket says a final
- *  between first and second, so the table drew a top two. A placeholder may
- *  stand in for a fixture nobody has settled. It may not stand in for a setting
- *  the provider already answered. */
-export const PLACEHOLDER_ROUNDS: readonly SeededRound[] = [
-  { competition: CUP, gameweek: 4, name: "Semi-finals", ties: [[1, 4], [2, 3]] },
+/** Every declared knockout round. The playoff final is invented and does NOT
+ *  decide the table's cut: Fantrax publishes the real one on `getLeagueInfo`. */
+export const KNOCKOUT_ROUNDS: readonly SeededRound[] = [
+  ...CUP_ROUNDS,
   {
-    competition: CUP,
-    gameweek: 5,
+    competition: PLAYOFFS,
+    gameweek: 38,
     name: "Final",
-    ties: [["Winner, semi-final 1", "Winner, semi-final 2"]],
+    ties: [{ id: "playoff final", home: 1, away: 2 }],
   },
-  { competition: PLAYOFFS, gameweek: 38, name: "Final", ties: [[1, 2]] },
 ];
 
+/** What a draw is resolved against. */
+export interface Draw {
+  /** Seed → team for one competition; a seed nobody holds yet is absent. */
+  seeds: (competition: Competition) => ReadonlyMap<number, LeagueTeam>;
+  /** A finished gameweek's totals by team id; undefined until it is finished. */
+  totals: (gameweek: number) => ReadonlyMap<string, number | null> | undefined;
+}
 
 export interface TieSide {
   /** Null while the draw cannot name a team — an empty table, or a side that is
@@ -100,17 +97,13 @@ export function leagueTies(pairings: readonly PeriodPairing[]): CompetitionTie[]
   }));
 }
 
-/** The declared knockouts falling in one gameweek, drawn against the table as it
- *  stands.
- *
- *  Provisional by construction, and that is the honest reading of a bracket: the
- *  playoff final is between whoever finishes first and second, and until the
- *  season is over nobody knows who that is. A league with no table draws nobody
- *  and prints the places instead. */
+/** The declared knockouts falling in one gameweek, drawn as far as the season
+ *  has decided them. A side nobody can name yet prints the draw's own words:
+ *  "Seed 7", "1st", "Winner QF1". */
 export function seededTies(
   rounds: readonly SeededRound[],
-  table: readonly StandingsRow[],
   gameweek: number,
+  draw: Draw,
 ): CompetitionTie[] {
   return rounds
     .filter((round) => round.gameweek === gameweek)
@@ -118,20 +111,52 @@ export function seededTies(
       round.ties.map((tie) => ({
         competition: round.competition,
         round: round.name,
-        home: drawn(tie[0], table),
-        away: drawn(tie[1], table),
+        home: drawn(tie.home, round.competition, rounds, draw),
+        away: drawn(tie.away, round.competition, rounds, draw),
       })),
     );
 }
 
-function drawn(seed: Seed, table: readonly StandingsRow[]): TieSide {
-  if (typeof seed === "string") return { team: null, label: seed };
+function drawn(
+  seed: Seed,
+  competition: Competition,
+  rounds: readonly SeededRound[],
+  draw: Draw,
+): TieSide {
+  if (typeof seed === "number") {
+    const team = draw.seeds(competition).get(seed);
+    if (team) return { team, label: team.name };
+    return { team: null, label: typeof competition.seededBy === "object" ? `Seed ${seed}` : ordinal(seed) };
+  }
+  const [word, id, at] = "winner" in seed ? ["Winner", seed.winner, 0] : ["Loser", seed.loser, 1];
+  const team = decided(id, competition, rounds, draw)?.[at];
+  return team ? { team, label: team.name } : { team: null, label: `${word} ${id}` };
+}
 
-  const row = table.find((entry) => entry.rank === seed);
-  // A row with no name is no better than no row: printing an empty side would
-  // read as a bye rather than as a place nobody holds yet.
-  if (!row || row.teamName === "") return { team: null, label: ordinal(seed) };
-  return { team: { teamId: row.teamId, name: row.teamName }, label: row.teamName };
+/** A played tie's [winner, loser], or undefined while a side or a total is unknown. */
+function decided(
+  id: string,
+  competition: Competition,
+  rounds: readonly SeededRound[],
+  draw: Draw,
+): [LeagueTeam, LeagueTeam] | undefined {
+  const round = rounds.find(
+    (entry) => entry.competition.id === competition.id && entry.ties.some((tie) => tie.id === id),
+  );
+  const tie = round?.ties.find((entry) => entry.id === id);
+  const totals = round && draw.totals(round.gameweek);
+  if (!tie || !totals) return undefined;
+
+  const home = drawn(tie.home, competition, rounds, draw).team;
+  const away = drawn(tie.away, competition, rounds, draw).team;
+  const [a, b] = [home && totals.get(home.teamId), away && totals.get(away.teamId)];
+  if (!home || !away || a == null || b == null) return undefined;
+  if (a !== b) return a > b ? [home, away] : [away, home];
+
+  // Level on points: the higher seed goes through.
+  const seedOf = (team: LeagueTeam) =>
+    [...draw.seeds(competition)].find(([, entry]) => entry.teamId === team.teamId)?.[0] ?? Infinity;
+  return seedOf(home) <= seedOf(away) ? [home, away] : [away, home];
 }
 
 /** One competition's ties in one gameweek, or one round of one competition's.

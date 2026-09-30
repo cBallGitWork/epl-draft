@@ -1,17 +1,16 @@
 import {
+  COMPETITIONS,
   LEAGUE_COMPETITION,
-  PLACEHOLDER_ROUNDS,
   type CompetitionTie,
   groupTies,
   leagueTies,
   periodPairings,
-  seededTies,
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import LeagueShell from "../Shell";
 import RoundHeader from "./RoundHeader";
 import Tie from "./Tie";
-import { getSchedule, type ScheduleRound } from "./schedule";
+import { getSchedule, getSeasonResults, knockoutsFrom, type ScheduleRound } from "./schedule";
 import { liveScores } from "../../scoreboard";
 import { myTeamId } from "../../session";
 import { teamBadges } from "../../standings";
@@ -21,7 +20,7 @@ import FantraxSilent from "../../components/shell/FantraxSilent";
 // The season ahead: every round the league still has to play, in gameweek order,
 // across every competition being played on it. Fantrax's schedule is the league;
 // the cup and the playoff are ours, declared in `league/competitions.ts`, which
-// is also where the note saying they are a placeholder comes from.
+// is also where the note saying the playoff is a placeholder comes from.
 //
 // **No controls, and that is the change** — Craig, 5 Sep 2026: *"Dont show all
 // the grey arrows here, just show all fixtures for the league itself. CM rows
@@ -103,7 +102,11 @@ export default async function SchedulePage() {
     );
   }
 
-  const [mine, crests] = await Promise.all([myTeamId(info.teams), teamBadges()]);
+  const [mine, crests, results] = await Promise.all([
+    myTeamId(info.teams),
+    teamBadges(),
+    getSeasonResults(),
+  ]);
 
   // Fantrax's own rank, for CM's blue block. Off the table this page already
   // reads to seed the knockout brackets, so it costs nothing.
@@ -124,10 +127,12 @@ export default async function SchedulePage() {
   );
   const refused = boards.find((board) => board.refused !== null)?.refused ?? null;
 
+  const knockouts = knockoutsFrom(read, results);
+
   /** Every tie in one gameweek: Fantrax's pairings and our declared knockouts. */
   const tiesIn = (at: ScheduleRound): CompetitionTie[] => [
     ...leagueTies(periodPairings(info.matchups, info.teams, at.period)),
-    ...seededTies(PLACEHOLDER_ROUNDS, table, at.gameweek),
+    ...knockouts(at.gameweek),
   ];
 
   return (
@@ -146,6 +151,11 @@ export default async function SchedulePage() {
             key={round.period}
             round={round}
             ties={tiesIn(round)}
+            seeding={COMPETITIONS.filter(
+              (competition) =>
+                typeof competition.seededBy === "object" &&
+                competition.seededBy.gameweek === round.gameweek,
+            ).map((competition) => competition.name)}
             points={points.get(round.period) ?? EMPTY}
             badges={crests}
             places={places}
@@ -161,6 +171,7 @@ export default async function SchedulePage() {
 function Round({
   round,
   ties,
+  seeding,
   points,
   badges,
   places,
@@ -168,16 +179,24 @@ function Round({
 }: {
   round: ScheduleRound;
   ties: CompetitionTie[];
+  /** The competitions this gameweek's points seed. */
+  seeding: string[];
   points: Map<string, number | null>;
   badges: Map<string, string>;
   places: Map<string, number>;
   mine: string | null;
 }) {
-  if (ties.length === 0) return null;
+  if (ties.length === 0 && seeding.length === 0) return null;
 
   return (
     <section className="flex flex-col gap-1">
       <RoundHeader round={round} />
+      {seeding.map((name) => (
+        <div key={name} className="flex flex-col">
+          <h3 className={`${HEAD_PLATE} ${MINOR_CAPS}`}>{name} · Seeding</h3>
+          <p className="px-3 py-2 text-sm text-muted">Every team&apos;s points this gameweek set the seeds.</p>
+        </div>
+      ))}
       {groupTies(ties).map((group) => (
         <div key={`${group.competition.id}-${group.round ?? ""}`} className="flex flex-col">
           {/* The competition's own head, in the chrome face, the way CM captions
@@ -190,7 +209,9 @@ function Round({
               {group.round === null
                 ? group.competition.name
                 : `${group.competition.name} · ${group.round}`}
-              <span className="pl-2 font-normal opacity-70">Placeholder draw</span>
+              {group.competition.placeholder ? (
+                <span className="pl-2 font-normal opacity-70">Placeholder draw</span>
+              ) : null}
             </h3>
           )}
           <ul className="cm-rows flex flex-col">
