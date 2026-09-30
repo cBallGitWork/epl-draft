@@ -33,6 +33,8 @@ FIGURES:
 THE LEAGUE'S WORDS:
 - A return is a goal, an assist or a clean sheet. A blank is no return. A haul is more than one return. Defensive points, saves and minutes are points, never returns.
 - A man is a side's player, or the side has him. Never held, holds, owned or picked.
+- A man is named as the brief names him, never with a first name it does not give.
+- A reserve comes into a draft side automatically for a man in its eleven who did not play. He is no Premier League substitute: what he did in his own match is in THE CAST.
 - The league's word is gameweek.
 - A man who did not play did not play. Give a reason only where THE CAST gives the league's own word on him.
 - Who is still to play is the fixture list, never a manager's choice.

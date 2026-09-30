@@ -15,8 +15,9 @@ export const pts = (n: number) => `${n} point${n === 1 ? "" : "s"}`;
 export const returnCount = (m: DraftMan) => m.goals + m.assists + m.cleanSheets;
 const done = (m: DraftMan) => m.left === 0 && m.minutes > 0;
 const late = (t: GoalTime) => t.minute >= DRAFT_DESK.lateGoal;
-/** "Haaland (Man City)": a man as the brief names him. */
-export const withClub = (m: DraftMan) => `${m.name} (${m.club})`;
+/** "Pickford of Everton": a man as the brief names him. In brackets the club read as his opponent: GW5's writer twice had
+ *  Pickford keeping Everton out. */
+export const withClub = (m: DraftMan) => `${m.name} of ${m.club}`;
 
 /** Goals in the order they went in: by their match's kickoff, then the clock. */
 export const byClock = (a: GoalTime, b: GoalTime) => a.kickoff.localeCompare(b.kickoff) || a.minute - b.minute || (a.added ?? 0) - (b.added ?? 0);

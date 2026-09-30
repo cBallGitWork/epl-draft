@@ -55,6 +55,20 @@ const orderOf = (ctx: MatchupContext, man: DraftMan) => {
   return beat === undefined ? null : (beat ?? "~");
 };
 
+/** The first names put before a man's name that the brief never gave: "Pascal" in "Pascal Groß". */
+export function unbriefedNames(prose: string, ctx: MatchupContext, block: string): string[] {
+  const found = new Set<string>();
+  for (const m of menOf(ctx)) {
+    for (const name of m.names) {
+      for (let i = prose.indexOf(name); i >= 0; i = prose.indexOf(name, i + 1)) {
+        const before = prose.slice(0, i).match(/(\p{Lu}\p{Ll}+)\s+$/u)?.[1];
+        if (before !== undefined && !CAPS.has(before) && !block.includes(before) && !m.man.name.includes(before)) found.add(before);
+      }
+    }
+  }
+  return [...found];
+}
+
 /** Each match-up's list faults, `at` its place on the page (0 is the lead), `block` the brief it was written from and
  *  `sides` every side's name on the page, none of them a figure. */
 export function listFaults(piece: DraftPiece, ctx: MatchupContext, at: number, cutoff: Cutoff, block: string, past: readonly PastProse[], sides: readonly string[] = []): Fault[] {
@@ -90,15 +104,8 @@ export function listFaults(piece: DraftPiece, ctx: MatchupContext, at: number, c
       if (n !== undefined && n !== who[0].man.points && !GAP.test(s.slice(0, hit.index))) flag("a man's points misstated", `${who[0].man.name}: ${hit[0]}, not ${who[0].man.points}`);
     }
   }
-  // A first name the brief never gave is memory, not the facts: GW5's "Jordan Pickford".
-  for (const m of men) {
-    for (const name of m.names) {
-      for (let i = prose.indexOf(name); i >= 0; i = prose.indexOf(name, i + 1)) {
-        const before = prose.slice(0, i).match(/(\p{Lu}\p{Ll}+)\s+$/u)?.[1];
-        if (before !== undefined && !CAPS.has(before) && !block.includes(before) && !m.man.name.includes(before)) flag("a name the brief does not give", `${before} ${name}`);
-      }
-    }
-  }
+  // A first name the brief never gave is memory, and memory was wrong: GW5's "Anthony Hall" is Lewis.
+  for (const name of unbriefedNames(prose, ctx, block)) flag("a name the brief does not give", name, "hard");
   const most = at === 0 ? DRAFT_WRITING.leadMen : DRAFT_WRITING.men;
   const everyone = named(prose, men);
   if (everyone.length > most) flag(`more than ${most} men in one match-up`, everyone.map((m) => m.man.name).join(", "));

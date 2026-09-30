@@ -30,7 +30,7 @@ describe("listFaults", () => {
   it("sends back a lede that tells no one's story, copies the brief, or gives the score printed above it", () => {
     const lede = (text: string) => listFaults({ paragraphs: [text, CLOSE] }, ctx, 0, "gameweek", matchupBlock(ctx, "gameweek", 1), []).map((f) => f.check);
     expect(lede("It was a gameweek of fine margins.")).toContain("a lede that tells no one's story");
-    expect(lede("Haaland (Man City) scored in the 81st minute; without that goal test2 would have won.")).toContain("a lede copied from the brief");
+    expect(lede("Haaland of Man City scored in the 81st minute; without that goal test2 would have won.")).toContain("a lede copied from the brief");
     expect(lede("Haaland made it 38-37 for 123.")).toContain("a lede that gives the score printed above it");
   });
 
@@ -61,9 +61,9 @@ describe("listFaults", () => {
 
   it("sends back a first name the brief never gave", () => {
     const pickford = contextOf(draftSide("test3", 40, eleven("c", { 0: draftMan("Pickford", "G", 7, 90, 0, { club: "Everton", cleanSheets: 1 }) })), draftSide("test4", 30, eleven("f")));
-    const said = (line: string) => listFaults({ paragraphs: [line, "test3 go to test2 next on Sunday."] }, pickford, 1, "gameweek", matchupBlock(pickford, "gameweek", 2), []).map((f) => f.check);
-    expect(said("Jordan Pickford kept test3 clear on Saturday.")).toContain("a name the brief does not give");
-    expect(said("Then Pickford kept test3 clear on Saturday.")).not.toContain("a name the brief does not give");
+    const said = (line: string) => listFaults({ paragraphs: [line, "test3 go to test2 next on Sunday."] }, pickford, 1, "gameweek", matchupBlock(pickford, "gameweek", 2), []).map((f) => `${f.severity}: ${f.check}`);
+    expect(said("Jordan Pickford kept test3 clear on Saturday.")).toContain("hard: a name the brief does not give");
+    expect(said("Then Pickford kept test3 clear on Saturday.")).not.toContain("hard: a name the brief does not give");
   });
 
   it("reads next gameweek's opponents as sides, not figures", () => {

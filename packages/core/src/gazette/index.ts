@@ -81,7 +81,7 @@ export { buildDraftBrief, draftBlocks } from "./matchups/brief";
 export { judgePage, type AngleRecord } from "./matchups/angle";
 export { threadsOf } from "./matchups/threads";
 export { headlineEcho } from "./matchups/echo";
-export type { PastProse } from "./matchups/listChecks";
+export { unbriefedNames, type PastProse } from "./matchups/listChecks";
 export type { Thread } from "./matchups/thread";
 export { checkDraft } from "./matchups/checks";
 export { draftCargo } from "./matchups/cargo";

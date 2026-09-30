@@ -38,6 +38,8 @@ function castLine(ctx: MatchupContext, m: DraftMan): string {
   const parts = [
     points,
     sub === undefined ? null : `${sub.provisional ? "replaces" : "replaced"} ${sub.out.name}, who did not play${sub.provisional ? ", if he plays" : ""}`,
+    // A reserve who played a whole match is no Premier League substitute: GW5 had two "neither on the pitch at kick-off".
+    sub !== undefined && m.minutes >= 90 ? `played the whole match for ${m.club}` : null,
     bench ? "on the bench, where his points count for nobody" : null,
     minutesLine(m),
     s === undefined ? null : newLine(m, s.side),
@@ -46,7 +48,7 @@ function castLine(ctx: MatchupContext, m: DraftMan): string {
   ];
   // The day comes with the man, not after his figures: GW5's writer gave Groß's Saturday 11 to Friday's 11.
   const beat = beatOf(ctx.state, m);
-  const day = beat === undefined ? "" : beat === null ? ", in the substitutions" : `, on ${beatLabel(beat)}`;
+  const day = beat === undefined ? "" : beat === null ? ", in the automatic substitutions" : `, on ${beatLabel(beat)}`;
   return `- ${withClub(m)} for ${s?.side.name ?? "neither side"}${day}: ${parts.filter((p) => p !== null).join("; ")}`;
 }
 
@@ -95,7 +97,7 @@ function toCome(ctx: MatchupContext, cast: ReadonlySet<DraftMan>): string[] {
     }
   }
   const waiting = new Set([ctx.state.home, ctx.state.away].flatMap((s) => s.subs.filter((x) => x.provisional).map((x) => x.in)));
-  const who = (m: DraftMan) => `${m.name} (${m.club}${waiting.has(m) ? ", if he plays" : ""})`;
+  const who = (m: DraftMan) => `${m.name} of ${m.club}${waiting.has(m) ? " (if he plays)" : ""}`;
   const lines: string[] = [];
   // Men not named, by day and side: "On Sunday, 2 more of test2's men play, and 1 of 123's".
   const unnamed = new Map<string, Map<string, number>>();

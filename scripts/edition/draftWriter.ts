@@ -19,6 +19,7 @@ import {
   readHeadlines,
   strike,
   surname,
+  unbriefedNames,
   type Cutoff,
   type Fault,
   type MatchupContext,
@@ -110,8 +111,9 @@ export async function draftColumn(job: DraftJob, say: (message: string) => void,
   }
   const merged = mergeDraft(attempts, job.contexts.length);
   // The sub-editor's last pass, on the cheap model: a sentence still carrying a banned phrase goes back alone.
-  // American words go back too, and after Saturday a forecast: the future tense is for fixtures only.
-  const never = [...DRAFT_NEVER, ...REPORT_AMERICAN, ...SHEETS_AMERICAN, ...(job.cutoff === "saturday" ? DRAFT_FORECAST : [])];
+  // American words go back too, a first name the brief never gave, and after Saturday a forecast.
+  const invented = job.contexts.flatMap((ctx, at) => unbriefedNames((merged.get(at + 1)?.paragraphs ?? []).join("\n"), ctx, blocks[at] ?? ""));
+  const never = [...DRAFT_NEVER, ...REPORT_AMERICAN, ...SHEETS_AMERICAN, ...invented, ...(job.cutoff === "saturday" ? DRAFT_FORECAST : [])];
   const fixes = faultyDraftSentences(merged, never, names);
   const edited = fixes.length === 0 ? null : await writeColumn(LINE_EDIT_VOICE, fixes.map((f, i) => `${i + 1}. ${f.sentence} [${f.words.join(", ")}]`).join("\n"), count, "helper").catch(() => null);
   const pieces = edited === null ? merged : applyDraftFixes(merged, fixes, Array.isArray(edited.lines) ? edited.lines.map(String) : [], never, names);

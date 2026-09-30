@@ -68,8 +68,8 @@ export function ledForGood(beats: readonly Beat[], side: Which): number {
   return from;
 }
 
-/** "Saturday", or "the substitutions". */
-export const beatLabel = (day: string | null) => (day === null ? "the substitutions" : weekdayLongOfDay(day));
+/** "Saturday", or "the automatic substitutions": the league's, never a Premier League substitute. */
+export const beatLabel = (day: string | null) => (day === null ? "the automatic substitutions" : weekdayLongOfDay(day));
 
 /** The beat a man belongs in: the substitutions for a reserve certain to come on, otherwise his best day by points;
  *  undefined when he has none, a man who did not play. */

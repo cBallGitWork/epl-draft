@@ -43,16 +43,16 @@ describe("a draft man's facts, each in its own line", () => {
 
   it("puts what a substitute did in the line that brings him on", () => {
     const sub = { out: draftMan("Dunk", "D", null, 0, 0, { club: "Brighton" }), in: draftMan("Vuskovic", "D", 6, 90, 0, { club: "Brighton", cleanSheets: 1 }), provisional: false };
-    expect(subLine(sub, "gameweek")).toBe("Vuskovic (Brighton) replaced Dunk (Brighton), who did not play, and got 6: a clean sheet");
-    expect(subLine(sub, "saturday")).toBe("Vuskovic (Brighton) replaces Dunk (Brighton), who did not play, with 6: a clean sheet");
-    expect(subLine({ ...sub, provisional: true }, "saturday")).toBe("Vuskovic (Brighton) replaces Dunk (Brighton), who did not play, if he plays");
+    expect(subLine(sub, "gameweek")).toBe("Vuskovic of Brighton replaced Dunk of Brighton, who did not play, and got 6: a clean sheet");
+    expect(subLine(sub, "saturday")).toBe("Vuskovic of Brighton replaces Dunk of Brighton, who did not play, with 6: a clean sheet");
+    expect(subLine({ ...sub, provisional: true }, "saturday")).toBe("Vuskovic of Brighton replaces Dunk of Brighton, who did not play, if he plays");
   });
 
   it("names a bench score of six or more whatever the margin, more so past the deficit, and a blank no reserve covered", () => {
     const bench = [draftMan("Star", "F", 9, 90, 0, { club: "Fulham" }), draftMan("Also", "F", 3, 90)];
-    expect(benchLines(side([], bench), [], 5).map((b) => b.line)).toEqual(["Star (Fulham) got 9 points on the bench"]);
-    expect(benchLines(side([], bench), [], -5).map((b) => b.line)).toEqual(["Star (Fulham) got 9 points on the bench, more than the margin"]);
-    expect(uncoveredLine(draftMan("Foden", "M", null, 0, 0, { club: "Man City" }), side([]), "saturday")).toBe("Foden (Man City) did not play and Dons have no reserve to replace him");
+    expect(benchLines(side([], bench), [], 5).map((b) => b.line)).toEqual(["Star of Fulham got 9 points on the bench"]);
+    expect(benchLines(side([], bench), [], -5).map((b) => b.line)).toEqual(["Star of Fulham got 9 points on the bench, more than the margin"]);
+    expect(uncoveredLine(draftMan("Foden", "M", null, 0, 0, { club: "Man City" }), side([]), "saturday")).toBe("Foden of Man City did not play and Dons have no reserve to replace him");
   });
 
   it("says one club's men all blanked or all kept clean sheets, and keeps no split line", () => {

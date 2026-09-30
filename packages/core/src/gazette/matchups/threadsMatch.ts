@@ -49,8 +49,8 @@ export function matchThreads(ctx: MatchupContext, beats: readonly Beat[], worth:
   if ((L.side.total ?? 0) > (W.side.total ?? 0)) {
     const on = W.subs.filter((s) => !s.provisional);
     // The reserves' own points are the cast's, given once there.
-    const who = listed(on.map((s) => `${withClub(s.in)} for ${s.out.name}`), "and");
-    out.push(thread("bench-turned", { teamId: W.side.teamId, men: on.map((s) => s.in), beat: null, facts: [`${L.side.name} led ${L.side.total}-${W.side.total} before the substitutions, which brought on ${who} for ${W.side.name}`] }));
+    const who = listed(on.map((s) => `${withClub(s.in)} in for ${s.out.name}`), "and");
+    out.push(thread("bench-turned", { teamId: W.side.teamId, men: on.map((s) => s.in), beat: null, facts: [`${L.side.name} led ${L.side.total}-${W.side.total} before the automatic substitutions, which put ${who} for ${W.side.name}`] }));
   }
   const late = lateDecider(W, m, worth);
   if (late !== null) {
