@@ -51,9 +51,10 @@ export function checkDraft(writing: DraftWriting, contexts: readonly MatchupCont
     for (const phrase of banned(prose, DRAFT_NEVER)) fault(`${n}:matchup`, "a phrase this paper does not print", "send-back", phrase);
     for (const phrase of banned(prose, [...REPORT_AMERICAN, ...SHEETS_AMERICAN])) fault(`${n}:matchup`, "American, not British", "send-back", phrase);
     if (FEELING.test(prose)) fault(`${n}:matchup`, "a named person's feeling", "send-back", prose.match(FEELING)?.[0] ?? "");
-    // The verdict opens the match-up in print, so the paragraphs never open on it again.
-    if (sentences(prose)[0]?.includes(ctx.state.score.split(/[;,]/u)[0]) === true) fault(`${n}:matchup`, "opens on the verdict the page already prints", "send-back", sentences(prose)[0] ?? "");
-    const [least, most] = DRAFT_WRITING.matchupWords;
+    // The score prints above the lede, so the lede never gives it again.
+    if (sentences(prose)[0]?.includes(ctx.state.score) === true) fault(`${n}:matchup`, "opens on the result the page already prints", "send-back", sentences(prose)[0] ?? "");
+    const [least, rest] = DRAFT_WRITING.matchupWords;
+    const most = at === 0 ? DRAFT_WRITING.leadWords : rest;
     const words = wordCount(prose);
     if (words < least || words > most) fault(`${n}:matchup`, `a match-up of ${least} to ${most} words`, "send-back", `${words} words`);
   });

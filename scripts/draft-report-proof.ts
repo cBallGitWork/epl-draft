@@ -72,7 +72,7 @@ async function main(): Promise<void> {
       say(`\n---------- THE PAGE, unwritten ----------\n\n${plain("", draftCargo(cutoff, gameweek, contexts, new Map(), desk.rankAfter))}`);
       continue;
     }
-    const column = await draftColumn({ cutoff, gameweek, contexts, rankAfter: desk.rankAfter }, say, { sendBack: !test });
+    const column = await draftColumn({ cutoff, gameweek, contexts, rankAfter: desk.rankAfter, pastHeadlines: desk.pastHeadlines.get(cutoff) ?? [] }, say, { sendBack: !test });
     const slug = cutoff === "saturday" ? `proof-gw${gameweek}-draft-report-saturday` : `proof-gw${gameweek}-draft-report`;
     const day = cutoff === "saturday" ? (desk.days.find(isSaturday) ?? desk.days[0]) : desk.days.at(-1)!;
     const filedAt = new Date().toISOString();

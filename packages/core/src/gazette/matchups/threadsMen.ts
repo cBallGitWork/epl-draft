@@ -39,8 +39,10 @@ export function manThreads(ctx: MatchupContext, cutoff: Cutoff, worth: SlotWorth
     const s = ctx.state[w];
     const them = ctx.state[w === "home" ? "away" : "home"];
     const add = (kind: ThreadKind, men: DraftMan[], facts: string[], bigger = false, weight?: number) => out.push(thread(kind, { teamId: s.side.teamId, men, beat: place(men[0]), facts, bigger, weight }));
-    for (const m of counted(s)) {
+    // The men whose points count, and the men they replaced, whose word from the club is still news.
+    for (const m of [...new Set([...counted(s), ...s.side.eleven])]) {
       const returned = returnCount(m) > 0;
+      const involved = m.minutes > 0 || m.left > 0;
       if (keeperHauled(m, worth)) {
         const [base, cap] = DRAFT_NEWS.weight["keeper-haul"];
         add("keeper-haul", [m], [named(m, scoredLine(m, worth)!)], false, Math.min(cap, base + DRAFT_NEWS.keeperHaulPerPoint * ((m.points ?? 0) - DRAFT_DESK.keeperHaul)));
@@ -55,9 +57,9 @@ export function manThreads(ctx: MatchupContext, cutoff: Cutoff, worth: SlotWorth
       else if (m.started === true && minutes !== null) add("early-off", [m], [named(m, minutes)]);
       if (m.started === false && minutes !== null) add("non-starter", [m], [named(m, minutes)], returned);
       const fresh = newLine(m, s.side);
-      if (fresh !== null) add(m.arrived !== null ? "new-arrival" : "debut", [m], [named(m, fresh)], returned);
-      for (const o of ctx.oldBoys.filter((x) => x.fantraxId === m.fantraxId)) add("old-boy", [m], [o.line], returned);
-      if (cutoff === "gameweek" && m.played > 1) add("double", [m], [named(m, `played twice this gameweek for ${m.points ?? 0}`)]);
+      if (fresh !== null && involved) add(m.arrived !== null ? "new-arrival" : "debut", [m], [named(m, fresh)], returned);
+      for (const o of ctx.oldBoys.filter((x) => x.fantraxId === m.fantraxId && involved)) add("old-boy", [m], [o.line], returned);
+      if (cutoff === "gameweek" && m.played > 1 && m.minutes > 0) add("double", [m], [named(m, `had two matches this gameweek, for ${m.points ?? 0} points`)]);
       if (stars.includes(m)) add("star-blank", [m], [named(m, "blanked")]);
     }
     const uncovered = s.side.eleven.filter((x) => blank(x) && !s.subs.some((sub) => sub.out === x));

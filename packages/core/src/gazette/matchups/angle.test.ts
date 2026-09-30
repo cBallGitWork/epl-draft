@@ -23,6 +23,17 @@ describe("pickAngle", () => {
     expect([angle?.story.kind, angle?.story.men[0]?.name, angle?.twist?.kind]).toEqual(["haul", "Groß", "subs-waiting"]);
   });
 
+  it("never spends a supporting thread on the margin, which the printed score already gives", () => {
+    expect(angleOf()?.supporting.map((t) => t.family)).not.toContain("margin");
+    expect(angleOf()?.rest.map((t) => t.family)).not.toContain("margin");
+  });
+
+  it("takes a twist with no day of its own when the story has none either", () => {
+    const ctx = contextOf(draftSide("A", 40, eleven("h")), draftSide("B", 30, eleven("a")), { angle: null });
+    const threads = [thread("saturday-lead", { teamId: "A", facts: [], weight: 60 }), thread("to-play-gap", { teamId: "B", facts: [], weight: 55 })];
+    expect(pickAngle(ctx, threads, [])?.twist?.kind).toBe("to-play-gap");
+  });
+
   it("does not tell a side's story the same way twice running", () => {
     const past: AngleRecord[] = [{ kind: "late-decider", family: "decider", teamIds: ["test2", "123"], cast: ["Haaland"] }];
     expect(angleOf(lateDecider(), past)?.story.kind).toBe("close");

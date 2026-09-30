@@ -24,8 +24,8 @@ export const byClock = (a: GoalTime, b: GoalTime) => a.kickoff.localeCompare(b.k
 /** "in added time (90+4)", "in the 88th minute". */
 export const whenScored = (t: GoalTime) => (t.added !== undefined ? `in added time (${t.minute}+${t.added})` : `in the ${ordinal(t.minute)} minute`);
 
-/** "a goal in the 89th minute and an assist": a late goal carries its time. */
-export function returnWords(m: DraftMan): string {
+/** "a goal in the 89th minute and an assist": a late goal carries its time. A man's gameweek, or one day of it. */
+export function returnWords(m: Pick<DraftMan, "goals" | "assists" | "cleanSheets" | "scoredAt">): string {
   const lateGoal = m.goals === 1 ? m.scoredAt.find(late) : undefined;
   const goals = m.goals === 0 ? null : m.goals === 1 ? `a goal${lateGoal === undefined ? "" : ` ${whenScored(lateGoal)}`}` : `${m.goals} goals`;
   const assists = m.assists === 0 ? null : m.assists === 1 ? "an assist" : `${m.assists} assists`;

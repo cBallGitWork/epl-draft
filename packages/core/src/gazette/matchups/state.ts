@@ -2,7 +2,7 @@ import { DRAFT_DESK } from "../../config";
 import { londonWeekdayLong } from "../../time";
 import { autoSubs, type AutoSub } from "./autoSubs";
 import type { Cutoff } from "./brief";
-import { byClock, returnCount, sideStories, whenScored } from "./stories";
+import { byClock, returnCount, sideStories } from "./stories";
 import { chaseLines } from "./swing";
 import type { DraftMan, DraftMatchupInput, DraftSide, GoalTime, PositionLimits, SlotWorth } from "./types";
 import { listed } from "../../format";
@@ -54,30 +54,12 @@ export function lateDecider(winner: SideState, margin: number, worth: SlotWorth)
   return last === undefined || last.t.minute < DRAFT_DESK.lateGoal ? null : last;
 }
 
-/** The score as a verdict: Saturday's as it stands, the gameweek's as a result, with the substitutions when they change it. */
-function scoreLine(home: SideState, away: SideState, cutoff: Cutoff, worth: SlotWorth): string {
-  const [h, a] = [home.side.total ?? 0, away.side.total ?? 0];
-  const coming = (s: SideState) => s.subs.filter((x) => !x.provisional).map((x) => x.in.name);
-  if (cutoff === "saturday") {
-    const on = [...coming(home), ...coming(away)];
-    const changed = home.total !== h || away.total !== a;
-    // The side ahead first and its score first, as a paper prints a half-time score.
-    const [lead, trail] = h >= a ? [home, away] : [away, home];
-    const [l, t] = [lead.side.total ?? 0, trail.side.total ?? 0];
-    const now = l === t ? `${home.side.name} and ${away.side.name} are level at ${l}-${t}` : `${lead.side.name} lead ${trail.side.name} ${l}-${t}`;
-    if (!changed) return now;
-    const once = `once ${listed(on, "and")} come${on.length === 1 ? "s" : ""} on`;
-    return trail.total > lead.total ? `${now}, and ${trail.side.name} go ahead ${trail.total}-${lead.total} ${once}` : `${now}, ${lead.total}-${trail.total} ${once}`;
-  }
-  if (home.total === away.total) return `${home.side.name} and ${away.side.name} drew ${home.total}-${away.total}`;
-  const [winner, loser] = home.total > away.total ? [home, away] : [away, home];
-  const margin = winner.total - loser.total;
-  const beat = `${winner.side.name} beat ${loser.side.name} ${winner.total}-${loser.total}`;
-  // Flipped by the bench: the side that loses had led on the eleven's points alone.
-  const before = (loser.side.total ?? 0) > (winner.side.total ?? 0) ? `; ${loser.side.name} led ${loser.side.total}-${winner.side.total} before the substitutions` : "";
-  const last = lateDecider(winner, margin, worth);
-  const decided = last === null ? "" : `, decided by ${last.m.name}'s goal ${whenScored(last.t)}`;
-  return `${beat}${decided}${before}`;
+/** The score as the page prints it, the side ahead first, the substitutions counted: Saturday's as it stands, the
+ *  gameweek's as a result. What turned it and what decided it are the story's (`threads.ts`), never the verdict's. */
+function scoreLine(home: SideState, away: SideState, cutoff: Cutoff): string {
+  const [lead, trail] = home.total >= away.total ? [home, away] : [away, home];
+  if (lead.total === trail.total) return `${home.side.name} and ${away.side.name} ${cutoff === "saturday" ? "are level at" : "drew"} ${home.total}-${away.total}`;
+  return `${lead.side.name} ${cutoff === "saturday" ? "lead" : "beat"} ${trail.side.name} ${lead.total}-${trail.total}`;
 }
 
 /** A Premier League match with the two sides' men on opposing clubs: "Man City v Sunderland: Haaland for 123, Meunier
@@ -109,7 +91,7 @@ export function matchupState(input: DraftMatchupInput, worth: SlotWorth, limits:
     home,
     away,
     margin,
-    score: scoreLine(home, away, cutoff, worth),
+    score: scoreLine(home, away, cutoff),
     stillToPlay,
     stories: [...sideStories(home.side, home.subs, worth, cutoff, margin), ...sideStories(away.side, away.subs, worth, cutoff, -margin), ...opposedMatches(input.home, input.away, true)],
   };

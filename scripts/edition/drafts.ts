@@ -16,7 +16,7 @@ export async function draftsDesk(input: { assignments: readonly Assignment[]; ga
       input.say(`  draft report: nothing due for ${a.cutoff} in gameweek ${input.gameweek}`);
       continue;
     }
-    jobs.set(a.cutoff!, { cutoff: a.cutoff!, gameweek: input.gameweek, contexts, rankAfter: desk.rankAfter });
+    jobs.set(a.cutoff!, { cutoff: a.cutoff!, gameweek: input.gameweek, contexts, rankAfter: desk.rankAfter, pastHeadlines: desk.pastHeadlines.get(a.cutoff!) ?? [] });
   }
   return jobs;
 }

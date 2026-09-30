@@ -8,12 +8,12 @@ import {
   draftBlocks,
   draftCargo,
   fanHeadline,
+  headlineEcho,
   matchupOf,
   mergeDraft,
   readDraftWriting,
   readHeadlines,
   strike,
-  survivors,
   type Cutoff,
   type Fault,
   type MatchupContext,
@@ -32,6 +32,8 @@ export interface DraftJob {
   /** The lead first. */
   contexts: MatchupContext[];
   rankAfter: Map<string, number>;
+  /** The headlines of the reports filed before this one, newest first: a pun on one of their words is struck. */
+  pastHeadlines: string[];
 }
 
 
@@ -67,12 +69,17 @@ export async function draftColumn(job: DraftJob, say: (message: string) => void,
   const first = readDraftWriting(await writeColumn(DRAFT_VOICE, brief, count), surnames);
   const faults1 = checkDraft(first, job.contexts, blocks);
 
-  // The pun writer's go on the lead match-up alone; its candidates join the reporter's before the strike and the judge.
-  const puns = await writeColumn(PUN_VOICE, `THE STORY: ${first.headlineStory}\n\n${blocks[0] ?? ""}`, count).then(readHeadlines).catch(() => ({ headlines: [], meanings: {} }));
+  // The pun writer's go on the lead match-up's story as the desk chose it, and the surnames of the men it is told through.
+  const angle = job.contexts[0]?.angle ?? null;
+  const story = angle === null ? first.headlineStory : angle.story.facts.join("; ");
+  const cast = angle === null ? "" : `\nTHE CAST: ${angle.cast.map((m) => m.name.split(/\s+/u).at(-1) ?? m.name).join(", ")}`;
+  const puns = await writeColumn(PUN_VOICE, `THE STORY: ${story}${cast}\n\n${blocks[0] ?? ""}`, count).then(readHeadlines).catch(() => ({ headlines: [], meanings: {} }));
   const offered = [...first.headlines, ...puns.headlines.filter((h) => !first.headlines.includes(h))].slice(0, DRAFT_WRITING.puns + 6);
   const meanings = { ...first.meanings, ...puns.meanings };
-  const candidates = survivors(offered, names);
-  for (const h of offered) say(`    headline candidate: "${h}"${candidates.includes(h) ? "" : ` struck (${strike(h, names)})`} [${meanings[h] ?? ""}]`);
+  // A pun on a word a recent headline used is the same joke twice.
+  const why = (h: string) => strike(h, names) ?? (headlineEcho(h, job.pastHeadlines) === null ? null : `"${headlineEcho(h, job.pastHeadlines)}" again`);
+  const candidates = offered.filter((h) => why(h) === null);
+  for (const h of offered) say(`    headline candidate: "${h}"${candidates.includes(h) ? "" : ` struck (${why(h)})`} [${meanings[h] ?? ""}]`);
 
   const prose = new Map([...first.matchups].map(([n, p]) => [n, p.paragraphs.join("\n")]));
   const judged = [`HEADLINE CANDIDATES for the lead match-up (${first.headlineStory}):`, ...candidates.map((h, i) => `${i + 1}. ${h} [${meanings[h] ?? ""}]`), "", ...[...prose].map(([n, text]) => `MATCH-UP ${n}:\n${text}`)].join("\n");

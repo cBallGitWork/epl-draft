@@ -24,7 +24,9 @@ export interface StoryDraftSide {
 export interface StoryDraftMatchup {
   home: StoryDraftSide;
   away: StoryDraftSide;
+  /** The desk's result in words, for the deck and a match-up the writer did not reach. */
   verdict: string;
+  /** The writer's lede, or the verdict as a sentence when there is none. */
   standfirst: string;
   paragraphs: string[];
   /** The running score by day, then the substitutions'; empty when it never moved. */
@@ -56,10 +58,10 @@ export function draftCargo(cutoff: Cutoff, gameweek: number, contexts: readonly 
         returns: draftReturns(ctx.state[which]),
         eleven: draftRows(ctx.state[which]),
       });
-      // The opening line is the desk's verdict, set as a sentence: the one line a reader must never find wrong. A side's
-      // name prints as its manager wrote it, even at the head of a sentence.
-      const standfirst = `${ctx.state.score}.`;
-      return { home: side("home"), away: side("away"), verdict: ctx.state.score, standfirst, paragraphs: piece.paragraphs, byDay: runningScore(ctx.state), story: ctx.angle === null ? null : angleRecord(ctx, ctx.angle) };
+      // The writer's lede prints as the standfirst under the score; a match-up with no writing keeps the desk's result.
+      const [lede, ...body] = piece.paragraphs;
+      const standfirst = lede ?? `${ctx.state.score}.`;
+      return { home: side("home"), away: side("away"), verdict: ctx.state.score, standfirst, paragraphs: body, byDay: runningScore(ctx.state), story: ctx.angle === null ? null : angleRecord(ctx, ctx.angle) };
     }),
   };
 }

@@ -3,7 +3,7 @@ import { LIMITS } from "./__fixtures__/limits";
 import { draftMan as man, goalAt } from "./__fixtures__/draftMan";
 import { draftSide, eleven } from "./__fixtures__/draftSide";
 import { worthOf } from "./__fixtures__/worth";
-import { matchupState } from "./state";
+import { lateDecider, matchupState } from "./state";
 
 const worth = worthOf();
 
@@ -20,24 +20,20 @@ describe("matchupState", () => {
     expect(state.stillToPlay).toHaveLength(1);
   });
 
-  it("gives Saturday's score with the substitutes named, and the round's as a result flipped by them", () => {
+  it("gives the score as the page prints it: the side ahead first, the certain substitutions counted", () => {
     const home = draftSide("Home", 30, eleven("h", { 1: man("Blank", "D", null, 0) }), [man("Vuskovic", "D", 6, 90)]);
     const away = draftSide("Away", 33, eleven("a"));
-    expect(matchupState({ home, away }, worth, LIMITS, "saturday").score).toBe("Away lead Home 33-30, and Home go ahead 36-33 once Vuskovic comes on");
-    expect(matchupState({ home, away }, worth, LIMITS, "gameweek").score).toBe("Home beat Away 36-33; Away led 33-30 before the substitutions");
+    expect(matchupState({ home, away }, worth, LIMITS, "saturday").score).toBe("Home lead Away 36-33");
+    expect(matchupState({ home, away }, worth, LIMITS, "gameweek").score).toBe("Home beat Away 36-33");
+    expect(matchupState({ home: draftSide("Home", 33, eleven("h")), away }, worth, LIMITS, "gameweek").score).toBe("Home and Away drew 33-33");
   });
 
-  it("says a late goal worth more than the margin decided it", () => {
-    const home = draftSide("Home", 38, eleven("h", { 9: man("Haaland", "F", 6, 90, 0, { goals: 1, scoredAt: [goalAt(81)] }) }));
-    expect(matchupState({ home, away: draftSide("Away", 37, eleven("a")) }, worth, LIMITS, "gameweek").score).toBe("Home beat Away 38-37, decided by Haaland's goal in the 81st minute");
-  });
-
-  it("takes the last goal in time as the decider, not the latest minute on an earlier day", () => {
-    const home = draftSide("Home", 38, eleven("h", {
-      8: man("Groß", "M", 7, 90, 0, { goals: 1, scoredAt: [goalAt(88)] }),
-      9: man("Haaland", "F", 6, 90, 0, { goals: 1, scoredAt: [goalAt(81, undefined, "2026-09-27T15:30:00Z")] }),
-    }));
-    expect(matchupState({ home, away: draftSide("Away", 37, eleven("a")) }, worth, LIMITS, "gameweek").score).toBe("Home beat Away 38-37, decided by Haaland's goal in the 81st minute");
+  it("finds the late goal worth more than the margin that decided it, the last in time, not the latest minute", () => {
+    const decider = (men: Record<number, ReturnType<typeof man>>) => lateDecider(matchupState({ home: draftSide("Home", 38, eleven("h", men)), away: draftSide("Away", 37, eleven("a")) }, worth, LIMITS, "gameweek").home, 1, worth);
+    expect(decider({ 9: man("Haaland", "F", 6, 90, 0, { goals: 1, scoredAt: [goalAt(81)] }) })?.m.name).toBe("Haaland");
+    expect(decider({ 9: man("Haaland", "F", 6, 90, 0, { goals: 1, scoredAt: [goalAt(79)] }) })).toBeNull();
+    const twoDays = { 8: man("Groß", "M", 7, 90, 0, { goals: 1, scoredAt: [goalAt(88)] }), 9: man("Haaland", "F", 6, 90, 0, { goals: 1, scoredAt: [goalAt(81, undefined, "2026-09-27T15:30:00Z")] }) };
+    expect(decider(twoDays)?.m.name).toBe("Haaland");
   });
 
   it("names a Premier League match with the sides' men on opposing clubs, still to play or with a return in it", () => {

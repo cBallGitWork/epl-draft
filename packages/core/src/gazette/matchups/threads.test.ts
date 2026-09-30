@@ -19,6 +19,7 @@ describe("threadsOf", () => {
   it("finds the bench that turned test4 v test3, and the lead test4 lost with it", () => {
     const threads = kinds(benchTurned());
     expect(threads.find((t) => t.kind === "bench-turned")).toMatchObject({ weight: 120, beat: null, men: [{ name: "Vuskovic" }, { name: "Janelt" }] });
+    expect(threads.find((t) => t.kind === "bench-turned")?.facts).toEqual(["test4 led 26-24 before the substitutions, which brought on Vuskovic (Tottenham) for Dunk and Janelt (Brentford) for Jensen for test3"]);
     expect(threads.find((t) => t.kind === "lead-lost")?.facts).toEqual(["test4 led by 2 after Sunday"]);
   });
 
@@ -44,6 +45,14 @@ describe("threadsOf", () => {
     expect(kinds(ctx).find((t) => t.kind === "crossfire")?.facts).toEqual(["Haaland (Man City) scored in the 30th minute, the goal that cost Tarkowski (Everton) his clean sheet for B"]);
     expect(kinds(ctx, "gameweek", 5).map((t) => t.kind)).not.toContain("star-blank");
     expect(kinds(ctx, "gameweek", 6).find((t) => t.kind === "star-blank")?.men[0]?.name).toBe("Salah");
+  });
+
+  it("keeps the club's word on a man a reserve replaced, and no old boy who never played", () => {
+    const out = draftMan("Reinildo", "D", null, 0, 0, { club: "Sunderland", fitness: "Reinildo is available again after his suspension" });
+    const ctx = contextOf(draftSide("A", 40, eleven("h", { 1: out }), [draftMan("Mukiele", "D", 0, 90, 0, { club: "Sunderland" })]), draftSide("B", 30, eleven("a")), { oldBoys: [{ fantraxId: "Reinildo", line: "Reinildo faced B, who drafted him" }] });
+    const threads = kinds(ctx);
+    expect(threads.find((t) => t.kind === "injury")?.facts).toEqual(["Reinildo (Sunderland) did not play; since: Reinildo is available again after his suspension"]);
+    expect(threads.map((t) => t.kind)).not.toContain("old-boy");
   });
 
   it("weighs a keeper's haul by its size, and a man off the bench more when he returned", () => {

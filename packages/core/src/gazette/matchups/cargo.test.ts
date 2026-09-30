@@ -8,13 +8,15 @@ import { lateDecider } from "./__fixtures__/gw5";
 
 const home = draftSide("123", 38, eleven("h", { 9: draftMan("Haaland", "F", 6, 90, 0, { goals: 1, scoredAt: [goalAt(81)] }) }));
 const context = contextOf(home, draftSide("test2", 37, eleven("a")), { places: { home: { rank: 2, won: 1, drawn: 0, lost: 0, run: "W" }, away: null } });
-const cargo = draftCargo("gameweek", 5, [context], new Map([[1, { paragraphs: ["Haaland's goal settled it."] }]]), new Map([["123", 1]]));
+const cargo = draftCargo("gameweek", 5, [context], new Map([[1, { paragraphs: ["Haaland's goal settled it.", "The rest came later."] }]]), new Map([["123", 1]]));
 
 describe("the draft cargo", () => {
-  it("opens each match-up on the desk's verdict, with each side's returns and eleven and the running score", () => {
+  it("opens each match-up on the writer's lede, with each side's returns and eleven and the running score", () => {
+    expect(draftCargo("gameweek", 5, [context], new Map(), new Map()).matchups[0].standfirst).toBe(`${context.state.score}.`);
     expect(cargo.matchups[0]).toMatchObject({
       verdict: context.state.score,
-      standfirst: `${context.state.score}.`,
+      standfirst: "Haaland's goal settled it.",
+      paragraphs: ["The rest came later."],
       home: { name: "123", rankBefore: 2, rankAfter: 1, run: "W", returns: { goals: [{ name: "Haaland", count: 1, minutes: ["81"] }] } },
       byDay: [{ day: "2026-09-26", home: 38, away: 37 }],
     });

@@ -457,6 +457,8 @@ export const DRAFT_NEWS = {
   otherSideFrom: 30,
   supporting: 3,
   cast: 4,
+  /** Threads a side keeps for THE REST, told as a group if at all. */
+  restPerSide: 2,
   /** A thread of the family this side's story had last time is worth this share of itself, one about a man in last
    *  time's cast this share; two match-ups on a page share a story's family only when the next-best is this far behind. */
   repeatFamily: 0.6,
@@ -466,7 +468,9 @@ export const DRAFT_NEWS = {
 
 /** How long a draft report's paragraphs run after each match-up's verdict (the UK desk's review, 29 Sep 2026). */
 export const DRAFT_WRITING = {
-  matchupWords: [50, 150],
+  /** Words a match-up runs to, lede included; the lead match-up may run to `leadWords`. */
+  matchupWords: [50, 120],
+  leadWords: 170,
   /** Headline candidates the pun writer offers, and match-ups written in one call. */
   puns: 10,
   /** Filed draft reports read back, so a story, a phrase or a headline is not told the same way twice. */

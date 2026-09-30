@@ -56,6 +56,8 @@ export interface DraftDesk {
   cutoffs: Map<Cutoff, MatchupContext[]>;
   /** Each side's place once the gameweek is added, for the form strip; empty until the gameweek is done. */
   rankAfter: Map<string, number>;
+  /** The headlines filed before each cut-off's report, newest first. */
+  pastHeadlines: Map<Cutoff, string[]>;
   notes: string[];
 }
 
@@ -88,6 +90,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const cutoffs = new Map<Cutoff, MatchupContext[]>();
   let rankAfter = new Map<string, number>();
   const stories: StoryCache = new Map();
+  const pastHeadlines = new Map<Cutoff, string[]>();
   // Only a report that is due: a cut-off whose matches are all settled. An unplayed gameweek would read as nought-nought.
   const due = new Set(draftReportsDue(schedule, gameweek).map((d) => d.cutoff));
   for (const [cutoff, last] of ([["saturday", saturday], ["gameweek", days.at(-1)!]] as const).filter(([c]) => due.has(c))) {
@@ -140,7 +143,9 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
       angle: null,
     }));
     // The desk decides each match-up's story and the page's order; the writer tells them.
-    cutoffs.set(cutoff, judgePage(contexts.map((ctx) => ({ ctx, threads: threadsOf(ctx, cutoff, worth, gameweek) })), pastAngles(draftPast(gameweek, cutoff))));
+    const past = draftPast(gameweek, cutoff);
+    pastHeadlines.set(cutoff, past.map((p) => p.headline));
+    cutoffs.set(cutoff, judgePage(contexts.map((ctx) => ({ ctx, threads: threadsOf(ctx, cutoff, worth, gameweek) })), pastAngles(past)));
   }
   const notes = [
     `Returns by slot: ${SLOTS.map((s) => `${s} ${worth.returns[s].map((w) => `${w.kind} ${w.worth}`).join(", ")}`).join("; ")}; a full match's minutes ${worth.appearance}.`,
@@ -149,5 +154,5 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
     `Goal times read for ${goals.size} of ${fixtures.length} matches.`,
     `Due: ${due.size === 0 ? "nothing yet; the gameweek's matches are not settled" : [...due].join(" and ")}.`,
   ];
-  return { gameweek, period, days, cutoffs, rankAfter, notes };
+  return { gameweek, period, days, cutoffs, rankAfter, pastHeadlines, notes };
 }

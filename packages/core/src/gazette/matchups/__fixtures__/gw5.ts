@@ -35,19 +35,25 @@ export function benchTurned(): MatchupContext {
 /** 123 v test2 after Saturday: Groß's goal and assist built a ten-point lead with most of both sides still to play;
  *  test2's reserve comes on only if he plays. */
 export function saturdayLead(): MatchupContext {
-  const toCome = (name: string, slot: string, club: string) => draftMan(name, slot, null, 0, 1, { club });
+  const kickoff = `${SUNDAY}T15:30:00Z`;
+  const toCome = (name: string, slot: string, club: string, opponent: string, home: boolean) => draftMan(name, slot, null, 0, 1, { club, next: { opponent, home, kickoff } });
   const one23 = draftSide(
     "123",
     26,
-    eleven("o", { 2: toCome("Hume", "D", "Sunderland"), 7: toCome("Stach", "M", "Leeds"), 8: draftMan("Groß", "M", 11, 90, 0, { club: "Brighton", goals: 1, assists: 1 }), 9: toCome("Haaland", "F", "Man City") }),
+    eleven("o", {
+      2: toCome("Hume", "D", "Sunderland", "Man City", false),
+      7: toCome("Stach", "M", "Leeds", "Crystal Palace", true),
+      8: draftMan("Groß", "M", 11, 90, 0, { club: "Brighton", goals: 1, assists: 1 }),
+      9: toCome("Haaland", "F", "Man City", "Sunderland", true),
+    }),
     [],
     [on(FRIDAY, 11), on(SATURDAY, 15)],
   );
   const test2 = draftSide(
     "test2",
     16,
-    eleven("t", { 5: draftMan("Millar", "M", null, 0, 0, { club: "Hull City" }), 9: toCome("Isak", "F", "Liverpool"), 10: toCome("Cunha", "F", "Man Utd") }),
-    [toCome("Meunier", "D", "Sunderland")],
+    eleven("t", { 5: draftMan("Millar", "M", null, 0, 0, { club: "Hull City" }), 9: toCome("Isak", "F", "Liverpool", "Bournemouth", false), 10: toCome("Cunha", "F", "Man Utd", "Fulham", false) }),
+    [toCome("Meunier", "D", "Sunderland", "Man City", false)],
     [on(FRIDAY, 0), on(SATURDAY, 16)],
   );
   return contextOf(one23, test2, {}, "saturday");

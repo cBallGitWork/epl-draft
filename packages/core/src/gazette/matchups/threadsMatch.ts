@@ -1,9 +1,10 @@
 import { DRAFT_NEWS } from "../../config";
+import { listed } from "../../format";
 import { ordinal } from "../../league/ordinal";
 import { londonDayOf } from "../../time";
 import type { MatchupContext } from "./brief";
 import { counted, lateDecider } from "./state";
-import { returnCount, returnWords, subLine, whenScored } from "./stories";
+import { returnCount, returnWords, whenScored } from "./stories";
 import { thread, type Thread } from "./thread";
 import { SIDES, beatLabel, beatOf, ledForGood, type Beat, type Which } from "./timeline";
 import type { SlotWorth } from "./types";
@@ -47,7 +48,9 @@ export function matchThreads(ctx: MatchupContext, beats: readonly Beat[], worth:
   // Turned by the bench: the side that lost led on the eleven's points alone.
   if ((L.side.total ?? 0) > (W.side.total ?? 0)) {
     const on = W.subs.filter((s) => !s.provisional);
-    out.push(thread("bench-turned", { teamId: W.side.teamId, men: on.map((s) => s.in), beat: null, facts: [`${L.side.name} led ${L.side.total}-${W.side.total} before the substitutions`, ...on.map((s) => subLine(s, "gameweek"))] }));
+    // The reserves' own points are the cast's, given once there.
+    const who = listed(on.map((s) => `${s.in.name} (${s.in.club}) for ${s.out.name}`), "and");
+    out.push(thread("bench-turned", { teamId: W.side.teamId, men: on.map((s) => s.in), beat: null, facts: [`${L.side.name} led ${L.side.total}-${W.side.total} before the substitutions, which brought on ${who} for ${W.side.name}`] }));
   }
   const late = lateDecider(W, m, worth);
   if (late !== null) {

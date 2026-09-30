@@ -16,6 +16,10 @@ export interface Angle {
   cast: DraftMan[];
   /** THE STORY's score, repeats discounted: the page's running order. */
   score: number;
+  /** The threads left over, two a side at most and none about a cast man: told as a group, or not at all. */
+  rest: Thread[];
+  /** Each side's last story, which this one must not tell the same way. */
+  past: AngleRecord[];
 }
 
 /** A filed match-up's angle, kept so the next report does not tell it the same way. */
@@ -52,11 +56,14 @@ export function pickAngle(ctx: MatchupContext, threads: readonly Thread[], past:
   const other = ranked.find((r) => !taken.has(r.t.family));
   if (taken.has(top.t.family) && other !== undefined && top.s - other.s <= DRAFT_NEWS.varietyWithin) top = other;
   const story = top.t;
-  const twist = ranked.find((r) => r.t !== story && r.t.family === "turn" && r.s >= DRAFT_NEWS.twistFrom && r.t.beat !== story.beat)?.t ?? null;
+  // A twist happens at another moment than the story: two threads with no day are different facts, not one moment.
+  const elsewhere = (t: Thread) => t.beat === undefined || story.beat === undefined || t.beat !== story.beat;
+  const twist = ranked.find((r) => r.t !== story && r.t.family === "turn" && r.s >= DRAFT_NEWS.twistFrom && elsewhere(r.t))?.t ?? null;
   const used = new Set([...story.men, ...(twist?.men ?? [])]);
   const kinds = new Set([story.kind, twist?.kind]);
   const supporting: Thread[] = [];
-  const fits = (t: Thread) => t !== story && t !== twist && !kinds.has(t.kind) && !t.men.some((m) => used.has(m));
+  // The margin is already the printed score's: it can be the story, never a supporting thread.
+  const fits = (t: Thread) => t !== story && t !== twist && t.family !== "margin" && !kinds.has(t.kind) && !t.men.some((m) => used.has(m));
   const take = (t: Thread) => {
     supporting.push(t);
     kinds.add(t.kind);
@@ -75,7 +82,15 @@ export function pickAngle(ctx: MatchupContext, threads: readonly Thread[], past:
   const leads = story.men.length > 0 ? story.men : (story.teamId === null ? sides : [story.teamId]).flatMap((id) => topScorer(ctx, id) ?? []);
   const rival = theirs === undefined ? undefined : topScorer(ctx, theirs);
   const cast = [...new Set([...leads, ...(twist?.men ?? []), ...(rival === undefined ? [] : [rival])])].slice(0, DRAFT_NEWS.cast);
-  return { story, twist, supporting, cast, score: top.s };
+  const last = [...new Set(sides.flatMap((id) => past.find((p) => p.teamIds.includes(id)) ?? []))];
+  const told = new Set([story, twist, ...supporting]);
+  const rest = sides.flatMap((id) =>
+    ranked
+      .filter((r) => r.t.teamId === id && r.t.scope !== "season" && r.t.family !== "margin" && !told.has(r.t) && !r.t.men.some((m) => cast.includes(m)))
+      .slice(0, DRAFT_NEWS.restPerSide)
+      .map((r) => r.t),
+  );
+  return { story, twist, supporting, cast, score: top.s, rest, past: last };
 }
 
 /** Every match-up with its angle, in the page's running order: the strongest story leads, and two match-ups share a
