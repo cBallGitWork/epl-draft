@@ -47,10 +47,11 @@ capture season-specific tradeoffs.
 ## The paper's staff write under ISS names, one per kind of story — decided 30 Sep 2026
 
 Craig: *"need better sports journalists, ISS/pro evo used fake names based on player names, we do the same for
-journalists, find the most famous journalist names"*. Each kind runs under a writer named a letter or two off the
-famous journalist known for that kind of piece, recognisable at a glance and **never the real name**, as ISS printed
-"Roberto Larcos": Phil McNutly, Daniel Tayler, Garth Crookes, Martin Samual, Danny Bakor, Fabrizio Ramono, David
-Ornstien, and Henry Wintor for a kind with none. One table, `gazette/staff.ts`, feeds both the byline and the
+journalists, find the most famous journalist names"*, and on the first draft, *"can go more iss/pro evo, thats one
+letter difference"*. So each kind runs under the famous journalist known for that kind of piece, mangled the way ISS
+Pro Evolution printed "Roberto Larcos": letters swapped or changed in **both** names, recognisable at a glance, and
+**never the real name**. Phill McLunty, Danial Talyor, Garf Crookes, Martyn Masuel, Donny Kaber, Fabrizzio Morano,
+Davide Onrstein, and Hendry Wimter for a kind with none. One table, `gazette/staff.ts`, feeds both the byline and the
 writer's "You are" line; the byline is resolved from the kind at render, so the archive reads the new names, and a
 `reporter` stamped at filing wins. Lawro is not staff: his column keeps his real name. The line-ups keep no byline.
 
