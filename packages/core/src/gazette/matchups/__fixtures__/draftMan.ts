@@ -13,7 +13,7 @@ export const SATURDAY = "2026-09-26";
  *  plain. */
 export function draftMan(name: string, slot: string, points: number | null, minutes: number, left = 0, over: Partial<DraftMan> = {}): DraftMan {
   const man: DraftMan = {
-    fantraxId: name, code: codeOf(name), clubCode: 0, clubId: 0, name, club: "Club", slot, points, minutes, played: left === 0 ? 1 : 0, left, debut: false, arrived: null,
+    fantraxId: name, code: codeOf(name), clubCode: 0, clubId: 0, name, fullName: name, club: "Club", slot, points, minutes, played: left === 0 ? 1 : 0, left, debut: false, arrived: null,
     projected: null, next: null, started: null, matches: [], fitness: null, goals: 0, assists: 0, cleanSheets: 0, scoredAt: [], concededFirstAt: [], byDay: [], ...over,
   };
   const { goals, assists, cleanSheets } = man;

@@ -14,7 +14,7 @@ export const DRAFT_FRAMES: readonly string[] = [
 /** What a draft report never prints: invented speech, a press conference, and the league's own banned words. */
 export const DRAFT_SPEECH: readonly string[] = [
   "said", "says", "told", "admitted", "insisted", "claimed", "revealed", "press conference", "presser", "asked about",
-  "held him", "holds him", "held and", "came on", "came off",
+  "held him", "holds him", "held and",
 ];
 
 /** Who is still to play is the fixture list, never a manager's choice (Craig, 30 Sep 2026: "makes it sound like the

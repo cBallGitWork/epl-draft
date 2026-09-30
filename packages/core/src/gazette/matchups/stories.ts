@@ -15,9 +15,6 @@ export const pts = (n: number) => `${n} point${n === 1 ? "" : "s"}`;
 export const returnCount = (m: DraftMan) => m.goals + m.assists + m.cleanSheets;
 const done = (m: DraftMan) => m.left === 0 && m.minutes > 0;
 const late = (t: GoalTime) => t.minute >= DRAFT_DESK.lateGoal;
-/** "Pickford of Everton": a man as the brief names him. In brackets the club read as his opponent: GW5's writer twice had
- *  Pickford keeping Everton out. */
-export const withClub = (m: DraftMan) => `${m.name} of ${m.club}`;
 
 /** Goals in the order they went in: by their match's kickoff, then the clock. */
 export const byClock = (a: GoalTime, b: GoalTime) => a.kickoff.localeCompare(b.kickoff) || a.minute - b.minute || (a.added ?? 0) - (b.added ?? 0);
@@ -70,21 +67,20 @@ export function newLine(m: DraftMan, side: DraftSide): string | null {
 /** Fantrax's word after his match. */
 export const fitnessLine = (m: DraftMan) => (m.fitness === null ? null : `${m.minutes === 0 ? "did not play; " : ""}since: ${m.fitness}`);
 
-/** The substitution and what the man coming on did, in one line. */
+/** The automatic substitution as a league member says it (Craig, 30 Sep 2026: "just say millar did not play, so
+ *  meunier will sub on"), with what the man coming on did. */
 export function subLine(s: AutoSub, cutoff: Cutoff): string {
-  // "Replaced", not "came on": the paper's banned list keeps "came on" for the Premier League's own substitutions.
-  const on = `${withClub(s.in)} ${cutoff === "gameweek" ? "replaced" : "replaces"} ${withClub(s.out)}, who did not play`;
-  if (s.provisional) return `${on}, if he plays`;
+  if (s.provisional) return `${s.out.name} did not play, so ${s.in.name} comes on if he plays`;
   // Whom he replaces is not settled until the man ahead has played, so it is never named: GW5's Saturday said Elanga, the
   // gameweek Rodon.
-  if (s.ahead !== null) return `${withClub(s.in)} comes into the eleven at the end of the gameweek for a man who did not play; his points count whichever it is`;
+  if (s.ahead !== null) return `${s.in.name} comes on at the end of the gameweek for a man who did not play, and his ${pts(s.in.points ?? 0)} count either way`;
   const got = gotLine(s.in);
-  if (cutoff === "gameweek") return `${on}, and ${got ?? `brought ${pts(s.in.points ?? 0)}`}`;
-  return `${on}, with ${got === null ? pts(s.in.points ?? 0) : `${s.in.points ?? 0}: ${returnWords(s.in)}`}`;
+  if (cutoff === "gameweek") return `${s.out.name} did not play, so ${s.in.name} came on and ${got ?? `got ${pts(s.in.points ?? 0)}`}`;
+  return `${s.out.name} did not play, so ${s.in.name} comes on with ${got === null ? pts(s.in.points ?? 0) : `${pts(s.in.points ?? 0)}: ${returnWords(s.in)}`}`;
 }
 
 /** A man in the eleven who did not play and no reserve can replace. */
-export const uncoveredLine = (m: DraftMan, side: DraftSide, cutoff: Cutoff) => `${withClub(m)} did not play and ${cutoff === "gameweek" ? "no reserve replaced him" : `${side.name} have no reserve to replace him`}`;
+export const uncoveredLine = (m: DraftMan, side: DraftSide, cutoff: Cutoff) => `${m.name} did not play and ${cutoff === "gameweek" ? "no reserve came on for him" : `${side.name} have no reserve to come on for him`}`;
 
 /** The reserves not coming on who scored benchScore or more, told whatever the margin and more so past the deficit of
  *  the side behind; `margin` is this side's points less the other's. */
@@ -93,7 +89,7 @@ export function benchLines(side: DraftSide, subs: readonly AutoSub[], margin: nu
     .filter((x) => !subs.some((s) => s.in === x) && (x.points ?? 0) >= DRAFT_DESK.benchScore)
     .map((m) => {
       const pastMargin = margin < 0 && (m.points ?? 0) > -margin;
-      return { man: m, pastMargin, line: `${withClub(m)} got ${pts(m.points ?? 0)} on the bench${pastMargin ? ", more than the margin" : ""}` };
+      return { man: m, pastMargin, line: `${m.name} got ${pts(m.points ?? 0)} on the bench${pastMargin ? ", more than the margin" : ""}` };
     });
 }
 

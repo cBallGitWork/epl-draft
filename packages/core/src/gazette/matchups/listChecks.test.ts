@@ -19,18 +19,19 @@ describe("listFaults", () => {
 
   it("sends back a roll-call: men and points in one sentence, sentences opening on a man and his points, one shape twice", () => {
     expect(faults(["tG0 got 2, tD1 got 2 and tD2 got 2."])).toContain("send-back: a roll-call of men and points in one sentence");
-    expect(faults(["tD1 got 2 on Saturday.", "tD2 got 2 on Saturday as well."])).toEqual(expect.arrayContaining(["send-back: sentences that open on a man and his points", "send-back: two sentences in a row of the same shape"]));
+    expect(faults(["tD1 got 2 on Saturday.", "tD2 got 2 on Saturday as well."])).toContain("send-back: two sentences in a row of the same shape");
+    expect(faults(["Gross scored 11 points thanks to a goal and an assist on Saturday."])).not.toContain("send-back: two sentences in a row of the same shape");
   });
 
-  it("counts the men named and the times a man 'got' points", () => {
+  it("counts the men named, and sends back a score told twice", () => {
     expect(faults(["tG0, tD1, tD2, tD3, tD4 and tM5 all blanked."])).toContain("send-back: more than 5 men in one match-up");
-    expect(faults(["Haaland got a goal.", "test2 got close.", "123 got there."])).toContain('send-back: "got" more than 2 times');
+    expect(faults(["123 led 26-16 after Saturday.", "It was still 26-16 when Sunday began."])).toContain("send-back: the same score told twice");
   });
 
   it("sends back a lede that tells no one's story, copies the brief, or gives the score printed above it", () => {
     const lede = (text: string) => listFaults({ paragraphs: [text, CLOSE] }, ctx, 0, "gameweek", matchupBlock(ctx, "gameweek", 1), []).map((f) => f.check);
     expect(lede("It was a gameweek of fine margins.")).toContain("a lede that tells no one's story");
-    expect(lede("Haaland of Man City scored in the 81st minute; without that goal test2 would have won.")).toContain("a lede copied from the brief");
+    expect(lede("Haaland scored in the 81st minute; without that goal test2 would have won.")).toContain("a lede copied from the brief");
     expect(lede("Haaland made it 38-37 for 123.")).toContain("a lede that gives the score printed above it");
   });
 
@@ -62,7 +63,7 @@ describe("listFaults", () => {
   it("fails a man keeping his own club out", () => {
     const justin = contextOf(draftSide("test4", 30, eleven("f", { 1: draftMan("Justin", "D", 6, 90, 0, { club: "Leeds", cleanSheets: 1 }) })), draftSide("test3", 40, eleven("c")));
     const said = (line: string) => listFaults({ paragraphs: [line, "test3 go to test2 next on Sunday."] }, justin, 1, "gameweek", matchupBlock(justin, "gameweek", 2), []).map((f) => `${f.severity}: ${f.check}`);
-    expect(said("Justin of Leeds keeping Leeds out gave test4 Sunday.")).toContain("hard: a man keeping his own club out");
+    expect(said("Justin keeping Leeds out gave test4 Sunday.")).toContain("hard: a man keeping his own club out");
     expect(said("Justin kept a clean sheet for Leeds on Sunday.")).not.toContain("hard: a man keeping his own club out");
   });
 

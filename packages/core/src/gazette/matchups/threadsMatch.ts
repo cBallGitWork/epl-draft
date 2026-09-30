@@ -4,7 +4,7 @@ import { ordinal } from "../../league/ordinal";
 import { londonDayOf } from "../../time";
 import type { MatchupContext } from "./brief";
 import { counted, lateDecider } from "./state";
-import { returnCount, returnWords, whenScored, withClub } from "./stories";
+import { returnCount, returnWords, whenScored } from "./stories";
 import { thread, type Thread } from "./thread";
 import { SIDES, beatLabel, beatOf, ledForGood, type Beat, type Which } from "./timeline";
 import type { DraftMan, SlotWorth } from "./types";
@@ -25,7 +25,7 @@ function oneManShows(ctx: MatchupContext): Thread[] {
     const s = ctx.state[w];
     return counted(s)
       .filter((m) => (m.points ?? 0) >= DRAFT_NEWS.oneManPoints && (m.points ?? 0) >= DRAFT_NEWS.oneManShare * s.total)
-      .map((m) => thread("one-man-show", { teamId: s.side.teamId, men: [m], beat: beatOf(ctx.state, m), facts: [`${withClub(m)} got ${m.points} of ${possessive(s.side.name)} ${s.total}${returnCount(m) === 0 ? "" : `: ${returnWords(m)}`}`] }));
+      .map((m) => thread("one-man-show", { teamId: s.side.teamId, men: [m], beat: beatOf(ctx.state, m), facts: [`${m.name} got ${m.points} of ${possessive(s.side.name)} ${s.total}${returnCount(m) === 0 ? "" : `: ${returnWords(m)}`}`] }));
   });
 }
 
@@ -47,7 +47,7 @@ function sameMatch(ctx: MatchupContext): Thread[] {
     const inIt = (men: readonly DraftMan[]) => men.filter((m) => returnCount(m) > 0 && m.minutes > 0 && m.matches.some((x) => x.code === code));
     const [h, a] = [inIt(home), inIt(away)];
     if (!h.some((x) => a.some((y) => x.club !== y.club))) return [];
-    const told = (men: readonly DraftMan[], name: string) => `${listed(men.map((m) => `${withClub(m)} (${returnWords(m)})`), "and")} for ${name}`;
+    const told = (men: readonly DraftMan[], name: string) => `${listed(men.map((m) => `${m.name} (${returnWords(m)})`), "and")} for ${name}`;
     return [thread("same-match", { teamId: null, men: [...h, ...a], facts: [`${label}, one match: ${told(h, ctx.state.home.side.name)}; ${told(a, ctx.state.away.side.name)}`] })];
   });
 }
@@ -62,12 +62,12 @@ export function matchThreads(ctx: MatchupContext, beats: readonly Beat[], worth:
   if ((L.side.total ?? 0) > (W.side.total ?? 0)) {
     const on = W.subs.filter((s) => !s.provisional);
     // The reserves' own points are the cast's, given once there.
-    const who = listed(on.map((s) => `${withClub(s.in)} in for ${s.out.name}`), "and");
+    const who = listed(on.map((s) => `${s.in.name} in for ${s.out.name}`), "and");
     out.push(thread("bench-turned", { teamId: W.side.teamId, men: on.map((s) => s.in), beat: null, facts: [`${L.side.name} led ${L.side.total}-${W.side.total} before the automatic substitutions, which put ${who} for ${W.side.name}`] }));
   }
   const late = lateDecider(W, m, worth);
   if (late !== null) {
-    out.push(thread("late-decider", { teamId: W.side.teamId, men: [late.m], beat: londonDayOf(late.t.kickoff) ?? undefined, bigger: late.t.added !== undefined, facts: [`${withClub(late.m)} scored ${whenScored(late.t)}; without that goal ${L.side.name} would have won`] }));
+    out.push(thread("late-decider", { teamId: W.side.teamId, men: [late.m], beat: londonDayOf(late.t.kickoff) ?? undefined, bigger: late.t.added !== undefined, facts: [`${late.m.name} scored ${whenScored(late.t)}; without that goal ${L.side.name} would have won`] }));
   }
   const low = extreme(beats, w, -1);
   if (low !== null && -lead(low, w) >= DRAFT_NEWS.comebackFrom) {

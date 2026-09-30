@@ -5,7 +5,6 @@ import { matchThreads } from "./threadsMatch";
 import { manThreads } from "./threadsMen";
 import { saturdayThreads } from "./threadsSaturday";
 import { counted } from "./state";
-import { withClub } from "./stories";
 import { beatLabel, beatOf, ledForGood, timeline, type Beat } from "./timeline";
 import type { DraftMan, SlotWorth } from "./types";
 
@@ -32,7 +31,7 @@ function decisiveAtEnd(ctx: MatchupContext, threads: Thread[], beats: readonly B
       at = out.findIndex((t) => t.teamId === winner.side.teamId && t.men[0] === key.man);
       if (at < 0) {
         const day = beats[from].day;
-        out.push(thread("turning-point", { teamId: winner.side.teamId, men: [key.man], beat: day, facts: [`${winner.side.name} led for good from ${beatLabel(day)}, when ${withClub(key.man)} got ${key.points}`] }));
+        out.push(thread("turning-point", { teamId: winner.side.teamId, men: [key.man], beat: day, facts: [`${winner.side.name} led for good from ${beatLabel(day)}, when ${key.man.name} got ${key.points}`] }));
         at = out.length - 1;
       }
     }

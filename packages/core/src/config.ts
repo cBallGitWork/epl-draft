@@ -481,14 +481,11 @@ export const DRAFT_WRITING = {
   rollCallMen: 3,
   rollCallFigures: 3,
   rollCallParagraph: 3,
-  /** A sentence with a man and a figure in its first this-many words, this many times in a match-up; and two sentences
-   *  in a row whose first this-many words take the same shape. */
+  /** Two sentences in a row whose first this-many words take the same shape. */
   openerWords: 4,
-  openers: 2,
-  /** The most men a match-up names, the lead and the rest; and the most times it says "got". */
+  /** The most men a match-up names, the lead and the rest. */
   leadMen: 7,
   men: 5,
-  got: 2,
   /** A run of this many words from THE STORY in the lede is the brief copied; this many from a side's last report is
    *  an echo. */
   copied: 6,

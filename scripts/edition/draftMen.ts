@@ -1,4 +1,4 @@
-import { DRAFT_DESK, debuts, londonDayOf, priceOf, type Club, type DraftMan, type Fixture, type ProjectedPlayer, type Sheet, type SheetMan, type SlotWorth } from "@epl/core";
+import { DRAFT_DESK, debuts, fullPrintName, ukSpelling, londonDayOf, priceOf, type Club, type DraftMan, type Fixture, type ProjectedPlayer, type Sheet, type SheetMan, type SlotWorth } from "@epl/core";
 import { startedOf, timeOf, type ClubGoal, type Tally } from "./draftReads";
 
 // One man as the draft desk sees him at a cut-off: his points, minutes and returns from Fantrax's day reads, his matches
@@ -39,7 +39,8 @@ export function draftManOf(m: SheetMan, sheet: Sheet, r: ManReads): DraftMan {
     code: m.player.code,
     clubCode: r.clubs.get(club)?.code ?? 0,
     clubId: club,
-    name: m.player.name,
+    name: ukSpelling(m.player.name),
+    fullName: ukSpelling(fullPrintName(m.player)),
     club: r.clubs.get(club)?.name ?? "?",
     slot: m.slot,
     points: got?.points ?? null,

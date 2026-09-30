@@ -66,7 +66,7 @@ export type {
 export { fullClubName, shortClubNames } from "./clubNames";
 
 // Team news at the lock: each side's sheet, what changed, the brief, the editor and the column.
-export { sheetOf } from "./sheets/sheet";
+export { fullPrintName, sheetOf, ukSpelling } from "./sheets/sheet";
 export { debuts } from "./sheets/changes";
 // The draft desk's surface is what its script reads; its other parts are inferred at the call sites.
 export { everyMan, matchupState } from "./matchups/state";

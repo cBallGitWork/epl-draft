@@ -10,6 +10,8 @@ export interface DraftMan {
   /** FPL's club id this season, for the article's cover picture; never persisted beyond the story's face. */
   clubId: number;
   name: string;
+  /** The name a paper prints first, "Pascal Groß"; `name` after. */
+  fullName: string;
   /** His club's name as the paper prints it. */
   club: string;
   /** The slot Fantrax scores him at: his roster slot in the eleven, his own position on the bench. */

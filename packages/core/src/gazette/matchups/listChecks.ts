@@ -87,8 +87,6 @@ export function listFaults(piece: DraftPiece, ctx: MatchupContext, at: number, c
     const count = figures(s).length;
     if ((who >= DRAFT_WRITING.rollCallMen && count >= 2) || count >= DRAFT_WRITING.rollCallFigures) flag("a roll-call of men and points in one sentence", s);
   }
-  const openers = all.filter((s) => named(opening(s), men).length > 0 && figures(opening(s)).length > 0);
-  if (openers.length >= DRAFT_WRITING.openers) flag("sentences that open on a man and his points", openers.map(opening).join(" / "));
   for (let i = 1; i < all.length; i++) if (shape(all[i], names) === shape(all[i - 1], names)) flag("two sentences in a row of the same shape", shape(all[i], names));
   for (const p of piece.paragraphs) {
     const lines = sentences(p);
@@ -115,8 +113,10 @@ export function listFaults(piece: DraftPiece, ctx: MatchupContext, at: number, c
   const most = at === 0 ? DRAFT_WRITING.leadMen : DRAFT_WRITING.men;
   const everyone = named(prose, men);
   if (everyone.length > most) flag(`more than ${most} men in one match-up`, everyone.map((m) => m.man.name).join(", "));
-  const got = prose.match(/\bgot\b/giu)?.length ?? 0;
-  if (got > DRAFT_WRITING.got) flag(`"got" more than ${DRAFT_WRITING.got} times`, `got ×${got}`);
+  // Each fact once (Craig, 30 Sep 2026: "youre just saying the same thing over and over"): a score told twice is the tell.
+  const scores = [...prose.matchAll(SCORE)].map((m) => m[0]);
+  const twice = scores.find((x, i) => scores.indexOf(x) !== i);
+  if (twice !== undefined) flag("the same score told twice", twice);
 
   // The lede tells THE STORY through its cast or its side, in its own words, and never the score above it.
   const lede = all[0] ?? "";

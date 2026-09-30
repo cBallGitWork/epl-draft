@@ -2,7 +2,7 @@ import { DRAFT_DESK, DRAFT_NEWS } from "../../config";
 import type { MatchupContext } from "./brief";
 import { listed } from "../../format";
 import { opposedMatches } from "./state";
-import { subLine, withClub } from "./stories";
+import { subLine } from "./stories";
 import { chaseLines } from "./swing";
 import { thread, type Thread } from "./thread";
 import { beatLabel, timeline } from "./timeline";
@@ -23,7 +23,7 @@ export function saturdayThreads(ctx: MatchupContext, worth: SlotWorth): Thread[]
     const waiting = s.subs.filter((x) => x.provisional);
     if (waiting.length > 0) out.push(thread("subs-waiting", { teamId: s.side.teamId, men: waiting.map((x) => x.in), facts: waiting.map((x) => subLine(x, "saturday")) }));
     const doubles = s.toPlay.filter((x) => x.played + x.left > 1);
-    if (doubles.length > 0) out.push(thread("double-to-come", { teamId: s.side.teamId, men: doubles, facts: doubles.map((x) => `${withClub(x)} has two matches this gameweek, ${x.left === 1 ? "one" : "both"} still to come`) }));
+    if (doubles.length > 0) out.push(thread("double-to-come", { teamId: s.side.teamId, men: doubles, facts: doubles.map((x) => `${x.name} has two matches this gameweek, ${x.left === 1 ? "one" : "both"} still to come`) }));
   }
   // How the lead was built, stage by stage, so the writer need not invent a cause (GW5: "most of it through their keeper").
   const leader: "home" | "away" = margin >= 0 ? "home" : "away";
