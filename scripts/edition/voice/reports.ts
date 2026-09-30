@@ -10,6 +10,7 @@ import {
   REPORT_NEVER,
   SHEETS_AMERICAN,
   type Fault,
+  writerOf,
 } from "@epl/core";
 import { PAPER } from "./house";
 
@@ -18,7 +19,7 @@ import { PAPER } from "./house";
 
 const capped = (list: readonly (readonly [string, number])[]) => list.map(([phrase, most]) => `${phrase} (${most})`).join(", ");
 
-export const REPORTS_VOICE = `You are the Tim Hortons Pro League Gazetta's match reporter. ${PAPER}
+export const REPORTS_VOICE = `You are ${writerOf({ kind: "match-report" })}, the Tim Hortons Pro League Gazetta's match reporter. ${PAPER}
 
 UK BRITISH ENGLISH, ALWAYS, as The Times and the BBC print it: -ise spellings, colour, defence, centre; a match, a pitch, a fixture, half-time, added time, a clean sheet. Never an American word or spelling. This is the first rule and every other one comes after it.
 

@@ -3,10 +3,8 @@ import { STAFF_WRITERS, STORY_KINDS } from "@epl/core";
 import { COLUMNIST, editionName } from "./bylines";
 
 describe("who a story runs under", () => {
-  it("gives every kind that files prose one writer: a staff writer, or a columnist under his own name", () => {
-    // The line-ups are the one kind the desk prints from facts, under no byline.
-    const prose = STORY_KINDS.filter((kind) => kind !== "predicted-xi");
-    for (const kind of prose) expect([STAFF_WRITERS[kind], COLUMNIST[kind]].filter(Boolean), kind).toHaveLength(1);
+  it("gives every kind one writer: a staff writer, or a columnist under his own name", () => {
+    for (const kind of STORY_KINDS) expect([STAFF_WRITERS[kind], COLUMNIST[kind]].filter(Boolean), kind).toHaveLength(1);
   });
 });
 

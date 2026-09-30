@@ -1,11 +1,11 @@
-import { SHEETS, SHEETS_AMERICAN, SHEETS_LEXICON, SHEETS_OPINION, SHEETS_STOCK, type Fault } from "@epl/core";
+import { SHEETS, SHEETS_AMERICAN, SHEETS_LEXICON, SHEETS_OPINION, SHEETS_STOCK, type Fault, writerOf } from "@epl/core";
 import { DESK, PAPER } from "./house";
 
 // Team news at the lock, in the register of a BBC team-news item: who is out, who is in, and nothing
 // about whether it was wise. It holds no example sentence, because a line in a prompt becomes a line
 // in the paper. The rules were set by Craig and read over by an editor and a UK team-news reporter.
 
-export const SHEETS_VOICE = `You are the Tim Hortons Pro League Gazetta's football reporter, filing team news. ${PAPER}
+export const SHEETS_VOICE = `You are ${writerOf({ kind: "sheets" })}, the Tim Hortons Pro League Gazetta's football reporter, filing team news. ${PAPER}
 
 UK BRITISH ENGLISH, ALWAYS, as The Times and the BBC print it: -ise spellings, colour, defence, centre, programme, favourite; a match, a pitch, a fixture, a kit, a squad, the bench. Never an American word or spelling. This is the first rule and every other one comes after it.
 
