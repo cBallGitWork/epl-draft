@@ -1,30 +1,12 @@
-import { ordinal, returnText, stepLabel, type StoryDraftMatchup, type StoryDraftReturn, type StoryDraftSide, type StoryDraftStep } from "@epl/core";
-import DraftEleven from "./DraftEleven";
+import { benchText, lineupText, returnText, stepLabel, type Club, type StoryDraftMatchup, type StoryDraftReturn, type StoryDraftSide, type StoryDraftStep } from "@epl/core";
+import Face from "./Face";
 import { STANDING_HEAD as SMALL } from "./heads";
 
-// One match-up of a draft report, set as a BBC match report is: the score with each side's goals under it, the assists and
-// clean sheets, how the score ran by day and each side's form strip; then the writer's lede and the story, with both
-// elevens after it on a phone and beside it on a desk. The article's one photograph is its cover.
+// One match-up of a draft report, set as a newspaper match report is: the score with each side's goals under it, the
+// assists and clean sheets, and how the score ran by day; then the story, its own photograph set into the text, and the
+// line-ups with the bench under each side, after the story on a phone and beside it on a desk.
 
 const RULE = { borderColor: "var(--paper-rule)" };
-
-function Form({ side, align }: { side: StoryDraftSide; align: "start" | "end" }) {
-  const place = side.rankBefore === null ? null : side.rankAfter === null || side.rankAfter === side.rankBefore ? ordinal(side.rankBefore) : `${ordinal(side.rankBefore)} → ${ordinal(side.rankAfter)}`;
-  return (
-    <div className={`flex flex-col gap-1 ${align === "end" ? "items-end" : "items-start"}`}>
-      {place === null ? null : <span className="numeric text-xs text-ink">{place}</span>}
-      {side.run === "" ? null : (
-        <span className="flex gap-0.5" aria-label={`Last results ${side.run.split("").join(" ")}`}>
-          {side.run.split("").map((r, i) => (
-            <span key={i} className={`numeric grid h-4 w-4 place-items-center border text-3xs ${r === "W" ? "font-bold text-ink" : "text-muted"}`} style={RULE}>
-              {r}
-            </span>
-          ))}
-        </span>
-      )}
-    </div>
-  );
-}
 
 /** A side's scorers under its name, one a line. */
 function Goals({ goals, align }: { goals: StoryDraftReturn[]; align: "start" | "end" }) {
@@ -66,7 +48,7 @@ function ByDay({ steps }: { steps: StoryDraftStep[] }) {
   );
 }
 
-export default function DraftMatchup({ matchup, n, saturday }: { matchup: StoryDraftMatchup; n: number; saturday: boolean }) {
+export default function DraftMatchup({ matchup, n, saturday, clubs }: { matchup: StoryDraftMatchup; n: number; saturday: boolean; clubs?: Map<number, Club> }) {
   const { home, away } = matchup;
   return (
     <section id={`d-${n}`} className="flex scroll-mt-4 flex-col gap-3 py-5">
@@ -88,22 +70,41 @@ export default function DraftMatchup({ matchup, n, saturday }: { matchup: StoryD
         )}
         <Tally label="Assists" sides={[home, away]} of={(side) => side.returns.assists} />
         <Tally label="Clean sheets" sides={[home, away]} of={(side) => side.returns.cleanSheets} />
-        <div className="grid grid-cols-2 gap-4">
-          <Form side={home} align="start" />
-          <Form side={away} align="end" />
-        </div>
       </header>
-      <div className="grid gap-x-8 gap-y-5 @3xl:grid-cols-[1fr_24rem]">
-        <div className="flex min-w-0 flex-col gap-3">
+      <div className="grid gap-x-8 gap-y-5 @3xl:grid-cols-[1fr_18rem]">
+        {/* flow-root keeps the floated photograph inside the story. */}
+        <div className="flow-root min-w-0">
+          {matchup.face === null || clubs === undefined ? null : (
+            <figure className="float-left mt-1 mr-3 mb-2">
+              <Face face={matchup.face} clubs={clubs} rank="tie" />
+              <figcaption className={`${SMALL} pt-1`}>{matchup.face.name}</figcaption>
+            </figure>
+          )}
           {matchup.standfirst === "" ? null : <p className="text-lg leading-snug font-semibold text-ink">{matchup.standfirst}</p>}
           {matchup.paragraphs.map((p, i) => (
-            <p key={i} className="text-base leading-relaxed text-ink">
+            <p key={i} className="pt-3 text-base leading-relaxed text-ink">
               {p}
             </p>
           ))}
         </div>
-        <DraftEleven home={home} away={away} />
+        <Lineups sides={[home, away]} />
       </div>
     </section>
+  );
+}
+
+/** Both line-ups as a report prints them, each side's bench under its eleven. */
+function Lineups({ sides }: { sides: StoryDraftSide[] }) {
+  if (sides.every((s) => s.eleven.length === 0)) return null;
+  return (
+    <aside className="flex flex-col gap-2 border-t pt-2" style={RULE}>
+      <h4 className={SMALL}>Line-ups</h4>
+      {sides.map((side) => (
+        <p key={side.teamId} className="text-2xs leading-snug text-ink">
+          <span className="font-semibold">{side.name}:</span> {lineupText(side.eleven)}.
+          {side.bench.length === 0 ? null : <span className="block text-muted">Bench: {benchText(side.bench)}.</span>}
+        </p>
+      ))}
+    </aside>
   );
 }

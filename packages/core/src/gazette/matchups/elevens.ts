@@ -71,3 +71,32 @@ export function draftRows(s: SideState): StoryDraftRow[] {
     return [row(m, blank(m) ? "dnp" : null), ...(sub === undefined ? [] : [row(sub.in, "sub")])];
   });
 }
+
+/** The reserves who stay on the bench, in its order. */
+export const draftBench = (s: SideState): StoryDraftRow[] => s.side.bench.filter((m) => !s.subs.some((x) => x.in === m)).map((m) => row(m, null));
+
+/** "Hall 8", "Isak (Bournemouth, Sun)" still to play, "Foden (did not play)". */
+function man(r: StoryDraftRow): string {
+  if (r.mark === "dnp") return r.name;
+  if (r.points === null) return r.next === null ? r.name : `${r.name} (${r.next.opponent}, ${londonWeekday(r.next.kickoff)})`;
+  return `${r.name} ${r.points}`;
+}
+
+/** A side's line-up as a match report prints one (Craig, 30 Sep 2026: "put the bench under the line up like a real match
+ *  report"): the lines of the eleven split by semicolons, a reserve in brackets after the man he replaces. */
+export function lineupText(rows: readonly StoryDraftRow[]): string {
+  const lines: { slot: string; men: string[] }[] = [];
+  rows.forEach((r, i) => {
+    if (r.mark === "sub") return;
+    const sub = rows[i + 1]?.mark === "sub" ? rows[i + 1] : undefined;
+    const bracket = sub !== undefined ? ` (${sub.points === null ? `${sub.name}, if he plays` : `${sub.name} ${sub.points}`})` : r.mark === "dnp" ? " (did not play)" : "";
+    const text = `${man(r)}${bracket}`;
+    const last = lines.at(-1);
+    if (last !== undefined && last.slot === r.slot) last.men.push(text);
+    else lines.push({ slot: r.slot, men: [text] });
+  });
+  return lines.map((l) => l.men.join(", ")).join("; ");
+}
+
+/** The bench as a line: every reserve who stayed there, with his points. */
+export const benchText = (rows: readonly StoryDraftRow[]) => rows.map(man).join(", ");

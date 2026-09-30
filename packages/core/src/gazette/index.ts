@@ -89,7 +89,7 @@ export { draftCargo } from "./matchups/cargo";
 export { draftFace } from "./matchups/cover";
 export type { StoryDraftMatchup, StoryDraftReport, StoryDraftSide } from "./matchups/cargo";
 export { stepLabel, type StoryDraftStep } from "./matchups/days";
-export { returnText, rowNote, type StoryDraftReturn, type StoryDraftRow } from "./matchups/elevens";
+export { benchText, lineupText, returnText, rowNote, type StoryDraftReturn, type StoryDraftRow } from "./matchups/elevens";
 export { mergeDraft, matchupOf, readDraftWriting } from "./matchups/writing";
 export type { DraftPiece, DraftWriting } from "./matchups/writing";
 export { DRAFT_FORECAST, DRAFT_FRAMES, DRAFT_LABELS, DRAFT_NEVER } from "./matchups/words";

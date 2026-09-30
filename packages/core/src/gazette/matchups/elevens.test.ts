@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { draftMan, goalAt } from "./__fixtures__/draftMan";
 import { draftSide, eleven } from "./__fixtures__/draftSide";
 import { LIMITS } from "./__fixtures__/limits";
-import { draftReturns, draftRows, returnText, rowNote } from "./elevens";
+import { benchText, draftBench, draftReturns, draftRows, lineupText, returnText, rowNote } from "./elevens";
 import { matchupState } from "./state";
 import type { DraftMan } from "./types";
 
@@ -53,6 +53,17 @@ describe("draftRows", () => {
   it("lists a reserve still to play under his man, with his match", () => {
     const rows = draftRows(side([draftMan("Munoz", "D", null, 0, 1, { next: everton })]));
     expect(rows[2]).toEqual({ name: "Munoz", slot: "D", points: null, next: everton, mark: "sub" });
+  });
+});
+
+describe("the line-up as a match report prints it", () => {
+  it("sets the eleven out line by line, a reserve in brackets after his man, a man to come with his match", () => {
+    expect(lineupText(draftRows(side([vuskovic])))).toBe("Raya 6; Dunk (Vuskovic 6), hD2 2, hD3 2, hD4 2; Saka 8, Rice (Everton, Mon), Odegaard 0, hM8 2; Haaland 13, Isak 4");
+    expect(lineupText(draftRows(side([draftMan("Munoz", "D", null, 0, 1, { next: everton })])))).toContain("Dunk (Munoz, if he plays)");
+  });
+
+  it("puts the reserves who stayed on the bench underneath, with their points", () => {
+    expect(benchText(draftBench(side([vuskovic, scorer])))).toBe("Wissa 5");
   });
 });
 

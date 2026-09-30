@@ -1,13 +1,15 @@
-import type { PublishedStory } from "@epl/core";
+import { clubById, type FootballSnapshot, type PublishedStory } from "@epl/core";
 import DraftMatchup from "./DraftMatchup";
 import { STANDING_HEAD } from "./heads";
 
 // A draft report: the gameweek's match-ups as a list, lead first, then each match-up. A phone shows one at a time, chosen
 // from the list by its anchor in CSS alone, as the Prem report does; a desk shows them all, the list as contents.
 
-export default function DraftReport({ story }: { story: PublishedStory }) {
+export default function DraftReport({ story, snapshot }: { story: PublishedStory; snapshot: FootballSnapshot | null }) {
   const draft = story.extras?.draft;
   if (draft === undefined) return null;
+  // The clubs dress each match-up's photograph in its kit; without them it prints the man alone.
+  const clubs = snapshot === null ? undefined : clubById(snapshot);
   const marked = [
     `.dft:not(:has(section:target)) .dft-list a:first-child{background:var(--color-ink);color:var(--color-bg)}`,
     ...draft.matchups.map((_, i) => `.dft:has(#d-${i + 1}:target) .dft-list a[href="#d-${i + 1}"]{background:var(--color-ink);color:var(--color-bg)}`),
@@ -36,7 +38,7 @@ export default function DraftReport({ story }: { story: PublishedStory }) {
         style={{ borderColor: "var(--paper-rule)" }}
       >
         {draft.matchups.map((m, i) => (
-          <DraftMatchup key={i} matchup={m} n={i + 1} saturday={draft.cutoff === "saturday"} />
+          <DraftMatchup key={i} matchup={m} n={i + 1} saturday={draft.cutoff === "saturday"} clubs={clubs} />
         ))}
       </div>
     </div>

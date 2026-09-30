@@ -1,7 +1,9 @@
 import { angleRecord, type AngleRecord } from "./angle";
 import type { Cutoff, MatchupContext } from "./brief";
 import { runningScore, type StoryDraftStep } from "./days";
-import { draftReturns, draftRows, type StoryDraftReturns, type StoryDraftRow } from "./elevens";
+import type { StoryFace } from "../face";
+import { draftFace } from "./cover";
+import { draftBench, draftReturns, draftRows, type StoryDraftReturns, type StoryDraftRow } from "./elevens";
 import type { DraftPiece } from "./writing";
 
 // A draft report as the page draws it: per match-up, the score and how it ran by day, each side's returns, place and run
@@ -19,6 +21,8 @@ export interface StoryDraftSide {
   run: string;
   returns: StoryDraftReturns;
   eleven: StoryDraftRow[];
+  /** The reserves who stayed on the bench, printed under the line-up. */
+  bench: StoryDraftRow[];
 }
 
 export interface StoryDraftMatchup {
@@ -33,6 +37,9 @@ export interface StoryDraftMatchup {
   byDay: StoryDraftStep[];
   /** The story the desk chose, for the next report's repeat discount; null when there was none. */
   story: AngleRecord | null;
+  /** The match-up's own photograph, the man its story is told through (Craig, 30 Sep 2026: "each individual match
+   *  should have its own player thumbnail to break up the text"); never the article's cover again. */
+  face: StoryFace | null;
 }
 
 export interface StoryDraftReport {
@@ -43,6 +50,7 @@ export interface StoryDraftReport {
 
 /** The report's cargo, from the desk's contexts and the writing that survived; a match-up with no writing keeps its result. */
 export function draftCargo(cutoff: Cutoff, gameweek: number, contexts: readonly MatchupContext[], pieces: ReadonlyMap<number, DraftPiece>, rankAfter: ReadonlyMap<string, number>): StoryDraftReport {
+  const cover = draftFace(contexts)?.code;
   return {
     cutoff,
     gameweek,
@@ -57,11 +65,14 @@ export function draftCargo(cutoff: Cutoff, gameweek: number, contexts: readonly 
         run: ctx.places[which]?.run ?? "",
         returns: draftReturns(ctx.state[which]),
         eleven: draftRows(ctx.state[which]),
+        bench: draftBench(ctx.state[which]),
       });
+      const pictured = ctx.angle?.cast.find((m) => m.code !== cover);
+      const face = pictured === undefined ? null : { code: pictured.code, name: pictured.name, clubId: pictured.clubId, position: pictured.slot };
       // The writer's lede prints as the standfirst under the score; a match-up with no writing keeps the desk's result.
       const [lede, ...body] = piece.paragraphs;
       const standfirst = lede ?? `${ctx.state.score}.`;
-      return { home: side("home"), away: side("away"), verdict: ctx.state.score, standfirst, paragraphs: body, byDay: runningScore(ctx.state), story: ctx.angle === null ? null : angleRecord(ctx, ctx.angle) };
+      return { home: side("home"), away: side("away"), verdict: ctx.state.score, standfirst, paragraphs: body, byDay: runningScore(ctx.state), story: ctx.angle === null ? null : angleRecord(ctx, ctx.angle), face };
     }),
   };
 }

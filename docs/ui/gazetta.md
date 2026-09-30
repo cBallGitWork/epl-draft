@@ -373,16 +373,14 @@ are what sort them; the eleven, the rankings and the dodgers still carry the
 league-wide read, which is where a league-wide read belongs.
 
 **The draft report** (`draft-report`, a Saturday one and one at the end of the
-gameweek) sets each match-up as a BBC match report is set (Craig, 30 Sep 2026:
-*"goals/assists at the top... and clean sheets too"*): the score with each side's
-goals and their minutes under it, the assists, the clean sheets (a keeper's or a
-defender's only), the score by day ending on the substitutions' step when they
-changed it, and each side's form strip; then the lede and the story, which the
-writer tells from the story the desk chose (`matchups/angle.ts`), with both
-elevens after it on a phone and beside it on a desk
-(`DraftEleven.tsx`). A reserve is listed under the man he replaces, and a man
-still to play shows his match and day. The article has one photograph, its
-cover, printed through the ink.
+gameweek) sets each match-up as a newspaper match report is set (Craig, 30 Sep
+2026): the score with each side's goals and their minutes under it, the assists,
+the clean sheets (a keeper's or a defender's only) and the score by day ending on
+the substitutions' step when they changed it; then the story, with its own sepia
+photograph set into the text (never the article's cover again), and the line-ups
+as a report prints them, each side's bench under its eleven (`lineupText`,
+`benchText`), after the story on a phone and beside it on a desk. No form strip:
+Craig had it removed.
 
 **The two sketches were deleted on 3 Sep 2026** — the press room and the studio,
 Craig: *"this is rubbish, ditch."* They were the paper's only invented-quote
