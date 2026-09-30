@@ -93,11 +93,15 @@ Craig set the formats on 27 Sep. The cups are declared in `packages/core/src/lea
 - **Timbeibs Cup**: GW9 is a seeding round, seeded by that week's Fantrax points, with a tie going to
   the higher league position. Then a one-leg double elimination with no reset final, from GW10 to the
   GW17 final (Boxing Day). The top six byes are not declared: `doubleBracket(10)` gives them, because only
-  seeds 7 to 10 fill a sixteen-slot first round.
-- **Davy Propper Cup**: two groups drawn at random around GW19, off the app, each playing once over GW21
-  to GW25. The top three go through and the group winners skip the quarter-finals (`seededBracket(6)`).
-  Quarter-finals are A2 v B3 and B2 v A3, all one leg: GW28, GW29 and a GW30 final. GW26 and GW27 have no
-  cup games.
+  seeds 7 to 10 fill a sixteen-slot first round. **Every round is played as late as the final allows**
+  (`scheduleRounds`; Craig, 30 Sep: *"dont have wb so early"*): the winners' final is GW15, so its winner
+  waits one gameweek for the final, not three.
+- **Davy Propper Cup**: two groups drawn at random around GW19, off the app, each playing once over GW22
+  to GW26 (Craig, 30 Sep: *"starts gw22"*). The top three go through and the group winners skip the
+  quarter-finals (`seededBracket(6)`). Quarter-finals are A2 v B3 and B2 v A3, all one leg: GW28, GW29
+  and a GW30 final. GW27 is the break.
+- **GW20 is a mid-season break for every competition** (Craig, 30 Sep). No cup is declared in it; the
+  league's own GW20 fixtures are Fantrax's schedule, which Craig sets, and the app draws what it answers.
 - **The playoff is Fantrax's, read from `getLeagueInfo` and never declared.** Craig sets it in Fantrax:
   five teams, a one-leg 4 v 5 play-in, two-leg semi-finals, a one-leg final. `mapPlayoffs` carries the
   places. On 27 Sep the real league (`mqsjd23smsgbiqzr`) still answered `playoffs: {used: false}`, so the

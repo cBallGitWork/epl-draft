@@ -27,15 +27,20 @@ describe("Timbeibs Cup", () => {
     expect(weeks(schedule)).toEqual({
       W1: 10,
       W2: 11,
-      W3: 12,
       L2: 12,
-      W4: 13,
+      W3: 13,
       L3: 13,
       L4: 14,
+      W4: 15,
       L5: 15,
       L6: 16,
       F: 17,
     });
+  });
+
+  it("plays the winners' side late, so its champion waits one gameweek for the final", () => {
+    // Craig, 30 Sep: "dont have wb so early, too much of a gap to final for winners".
+    expect(timbeibs.knockout.finalGameweek - (schedule.get("W4") ?? 0)).toBe(2);
   });
 });
 
@@ -44,10 +49,11 @@ describe("Davy Propper Cup", () => {
   if (propper.seeding.from !== "groups") throw new Error("the Davy Propper Cup has groups");
   const stage = propper.seeding.stage;
 
-  it("plays its groups GW21 to GW25 and its one-leg knockout GW28 to a GW30 final", () => {
+  it("plays its groups GW22 to GW26, rests GW27, and its one-leg knockout GW28 to a GW30 final", () => {
     const groupRounds = roundRobin(Array.from({ length: TEAMS / stage.groups }, (_, at) => `t${at}`));
+    expect(stage.firstGameweek).toBe(22);
     const lastGroupWeek = stage.firstGameweek + groupRounds.length - 1;
-    expect(lastGroupWeek).toBe(25);
+    expect(lastGroupWeek).toBe(26);
 
     const bracket = seededBracket(stage.groups * stage.qualify);
     const schedule = scheduleRounds(bracket, propper.knockout.finalGameweek);

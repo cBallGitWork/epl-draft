@@ -43,13 +43,13 @@ describe("COMPETITIONS", () => {
 });
 
 describe("groupTies", () => {
-  const ties = [...cupTies(10, 12), ...leagueTies([{ home: team("t1", "Alpha"), away: team("t2", "Bravo") }])];
+  const ties = [...cupTies(10, 13), ...leagueTies([{ home: team("t1", "Alpha"), away: team("t2", "Bravo") }])];
 
   it("boxes each competition's ties under it, league first", () => {
     expect(groupTies(ties).map((group) => group.competition.id)).toEqual(["league", "timbeibs", "timbeibs"]);
   });
 
   it("keeps the league's own fixtures out of any round, and splits a cup's two rounds in one week", () => {
-    expect(groupTies(ties).map((group) => group.round)).toEqual([null, "Round 3", "Losers' round 1"]);
+    expect(groupTies(ties).map((group) => group.round)).toEqual([null, "Round 3", "Losers' round 2"]);
   });
 });

@@ -15,11 +15,11 @@ describe("cupPlan", () => {
     expect(outline(cupPlan(cup("timbeibs"), 10))).toEqual([
       "GW10 Round 1",
       "GW11 Round 2",
-      "GW12 Round 3",
       "GW12 Losers' round 1",
-      "GW13 Winners' final",
+      "GW13 Round 3",
       "GW13 Losers' round 2",
       "GW14 Losers' round 3",
+      "GW15 Winners' final",
       "GW15 Losers' round 4",
       "GW16 Losers' final",
       "GW17 Final",
@@ -33,19 +33,19 @@ describe("cupPlan", () => {
       { code: "M2", home: "Seed 7", away: "Seed 10" },
     ]);
     expect(stages[1]?.fixtures[0]).toEqual({ code: "M3", home: "Seed 1", away: "Winner M1" });
-    // Numbered in the order they are played: the winners' final (GW13) is M11, the losers' (GW16) M17.
-    expect(stages.at(-1)?.fixtures).toEqual([{ code: "M18", home: "Winner M11", away: "Winner M17" }]);
+    // Numbered in the order they are played: the winners' final (GW15) is M15, the losers' (GW16) M17.
+    expect(stages.at(-1)?.fixtures).toEqual([{ code: "M18", home: "Winner M15", away: "Winner M17" }]);
     expect(stages.flatMap((stage) => stage.fixtures)).toHaveLength(18);
   });
 
   it("lays the Davy Propper Cup out as five group matchdays, then a knockout to GW30", () => {
     const stages = cupPlan(cup("davy-propper"), 10);
     expect(outline(stages)).toEqual([
-      "GW21 Groups · matchday 1",
-      "GW22 Groups · matchday 2",
-      "GW23 Groups · matchday 3",
-      "GW24 Groups · matchday 4",
-      "GW25 Groups · matchday 5",
+      "GW22 Groups · matchday 1",
+      "GW23 Groups · matchday 2",
+      "GW24 Groups · matchday 3",
+      "GW25 Groups · matchday 4",
+      "GW26 Groups · matchday 5",
       "GW28 Quarter-finals",
       "GW29 Semi-finals",
       "GW30 Final",
@@ -74,7 +74,7 @@ describe("cupPlan", () => {
 
   it("puts each stage on its side of the draw, the double final closing the winners' side", () => {
     const sides = (id: string) => cupPlan(cup(id), 10).map((stage) => stage.side);
-    expect(sides("timbeibs")).toEqual(["winners", "winners", "winners", "losers", "winners", "losers", "losers", "losers", "losers", "winners"]);
+    expect(sides("timbeibs")).toEqual(["winners", "winners", "losers", "winners", "losers", "losers", "winners", "losers", "losers", "winners"]);
     expect(sides("davy-propper")).toEqual(["groups", "groups", "groups", "groups", "groups", "winners", "winners", "winners"]);
   });
 });

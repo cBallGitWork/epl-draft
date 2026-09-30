@@ -45,7 +45,7 @@ export const CUPS: readonly Cup[] = [
         qualify: 3,
         points: { won: 3, drawn: 1 },
         drawGameweek: 19,
-        firstGameweek: 21,
+        firstGameweek: 22,
       },
     },
     knockout: { elimination: "single", finalGameweek: 30 },

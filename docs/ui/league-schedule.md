@@ -91,7 +91,7 @@ and they are the same number all season.
 
 `league/competitions.ts` gathers them. The league's own ties are Fantrax's
 pairings. The two cups are ours, declared in `league/cups/declared.ts`: the
-Timbeibs Cup (GW10 to GW17) and the Davy Propper Cup (GW21 to GW30). The playoff
+Timbeibs Cup (GW10 to GW17) and the Davy Propper Cup (GW22 to GW30). The playoff
 is Fantrax's, so it arrives in Fantrax's own pairings.
 
 Nobody is drawn into a cup yet, so every cup side is a placeholder and the block
