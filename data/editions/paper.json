@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-29T19:38:31.296Z",
+  "updatedAt": "2026-09-30T17:19:08.694Z",
   "stories": [
     {
       "slug": "news-cmrr48zqz1jno",
@@ -569,6 +569,46 @@
           }
         }
       ]
+    },
+    {
+      "slug": "news-p0pd5x19",
+      "kind": "news",
+      "leagueId": "zbn1z3ukmsgb36sz",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-30T17:19:08.694Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "Maguire In The Dock For test3",
+      "deck": "test3's Maguire caught up in the Man City verdict fallout; no draft consequence stated.",
+      "body": "The wire has Kieran Maguire, owned by test3, fielding listener questions on the Man City verdict alongside Dale Johnson. That is the sum of it: a name test3 holds, attached to the story the whole league already knows.\n\nNothing in the copy touches minutes, fitness or return. test3 reads it as we do and takes nothing from it beyond the reminder that the asset is his.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sounds/play/p0pd5x19"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
+      "slug": "news-ckq5xp9p1v31o",
+      "kind": "news",
+      "leagueId": "zbn1z3ukmsgb36sz",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-30T17:19:08.694Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "Hall And Dewsbury-Hall Hit The Books",
+      "deck": "Hall (test2) and Dewsbury-Hall (Notemail) are studying to be sporting directors alongside playing.",
+      "body": "test2 and Notemail own two men filing coursework from the team bus. Hall, on test2's books, and Dewsbury-Hall, on Notemail's, feature among the Premier League players reading for the sporting director trade while they play.\n\nNothing in the wire touches availability, and neither should this. No absence, no timeline, no minutes lost. Both remain what they were to their managers, only now they carry a textbook on the away trips.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/articles/ckq5xp9p1v31o"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
     },
     {
       "slug": "gw5-prem-report-2026-09-20",
@@ -6475,66 +6515,6 @@
             "teamId": "mxet9tt7mtj31zni",
             "move": 0,
             "line": "Bottom by the table and bottom by me until a match tells me otherwise."
-          }
-        ]
-      }
-    },
-    {
-      "slug": "gw5-dodgers",
-      "kind": "dodgers",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-23T17:18:14.294Z",
-      "expiresAt": null,
-      "edition": "The Mercato Wire",
-      "byline": "Own Goals & Gaffs",
-      "headline": "Rushworth Left Waiting In The Wings",
-      "deck": "test211 benched Rushworth, who kept a clean sheet with an assist and two saves; test31121 sat both Becker and Gvardiol.",
-      "body": "Rushworth did everything a goalkeeper can ask of himself and none of it counted where it mattered. A clean sheet, two saves, an assist, ninety minutes of it, and test211 watching from the safe distance of a manager who left him out.\n\nSpare a thought too for test31121, who managed the rare double of missing a clean sheet at both ends of the pitch. A.Becker kept his with two saves; Gvardiol supplied an assist in front of him. Neither made the side.\n\ntest31 sat Gomez through a clean sheet and an assist across eighty-five minutes, and test3 left Vuskovic out for a shutout of his own. Five men who turned up. Five managers who did not pick them.",
-      "subjects": [
-        "dodgers:gw5"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "gw5-wire",
-      "kind": "wire",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-23T17:18:14.294Z",
-      "expiresAt": null,
-      "edition": "The Mercato Wire",
-      "byline": "The Bin",
-      "headline": "One In, One Out, Nobody Home",
-      "deck": "A dead-quiet window: only test1 moved, one in and one out, with Kjell Scherpen dropped and unclaimed.",
-      "body": "One deal. That is the whole of gameweek 5's business, and it belonged to test1 alone: one in, one out, a straight swap and back to the sofa. The rest of the league sat on its hands and watched.\n\nNo churn to report because there was nothing to churn. When a single manager makes the only move on the page, the trend writes itself, and the trend is silence.\n\nKjell Scherpen departs the wire without a farewell. Signed in hope, dropped without ceremony, survived by a bench spot that will not be kept warm. He waits now among the unclaimed, a goalkeeper nobody is in a hurry to trust.",
-      "subjects": [
-        "wire:through-gw5"
-      ],
-      "image": null,
-      "face": null,
-      "ties": [],
-      "extras": {
-        "quiz": [
-          {
-            "q": "How many deals went through in gameweek 5?",
-            "a": "One"
-          },
-          {
-            "q": "Which manager made the only move?",
-            "a": "test1"
-          },
-          {
-            "q": "What was the shape of test1's business?",
-            "a": "One in, one out"
-          },
-          {
-            "q": "Which goalkeeper was dropped and left unclaimed?",
-            "a": "Kjell Scherpen"
           }
         ]
       }
