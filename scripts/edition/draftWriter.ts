@@ -2,6 +2,8 @@ import {
   DRAFT_FORECAST,
   DRAFT_NEVER,
   DRAFT_WRITING,
+  REPORT_AMERICAN,
+  SHEETS_AMERICAN,
   applyDraftFixes,
   faultyDraftSentences,
   buildDraftBrief,
@@ -108,12 +110,12 @@ export async function draftColumn(job: DraftJob, say: (message: string) => void,
   }
   const merged = mergeDraft(attempts, job.contexts.length);
   // The sub-editor's last pass, on the cheap model: a sentence still carrying a banned phrase goes back alone.
-  // After Saturday a forecast goes back too: the future tense is for fixtures only.
-  const never = job.cutoff === "saturday" ? [...DRAFT_NEVER, ...DRAFT_FORECAST] : DRAFT_NEVER;
-  const fixes = faultyDraftSentences(merged, never);
+  // American words go back too, and after Saturday a forecast: the future tense is for fixtures only.
+  const never = [...DRAFT_NEVER, ...REPORT_AMERICAN, ...SHEETS_AMERICAN, ...(job.cutoff === "saturday" ? DRAFT_FORECAST : [])];
+  const fixes = faultyDraftSentences(merged, never, names);
   const edited = fixes.length === 0 ? null : await writeColumn(LINE_EDIT_VOICE, fixes.map((f, i) => `${i + 1}. ${f.sentence} [${f.words.join(", ")}]`).join("\n"), count, "helper").catch(() => null);
-  const pieces = edited === null ? merged : applyDraftFixes(merged, fixes, Array.isArray(edited.lines) ? edited.lines.map(String) : [], never);
-  if (fixes.length > 0) say(`  draft report: line edit fixed ${fixes.length - faultyDraftSentences(pieces, never).length} of ${fixes.length} sentences`);
+  const pieces = edited === null ? merged : applyDraftFixes(merged, fixes, Array.isArray(edited.lines) ? edited.lines.map(String) : [], never, names);
+  if (fixes.length > 0) say(`  draft report: line edit fixed ${fixes.length - faultyDraftSentences(pieces, never, names).length} of ${fixes.length} sentences`);
   for (const f of attempts.at(-1)!.faults.filter((x) => x.severity !== "warn")) say(`    fault ${f.section}: ${f.check} [${f.evidence}]`);
   const lead = job.contexts[0]?.state.score ?? "";
   say(`  draft report: ${pieces.size} of ${job.contexts.length} match-ups written; headline ${chosen === null ? "none chosen, the lead result prints" : `"${chosen}"`}; ${usage.input} tokens in, ${usage.cached} from cache, ${usage.output} out`);

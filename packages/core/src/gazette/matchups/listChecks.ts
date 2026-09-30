@@ -23,6 +23,12 @@ export interface PastProse {
 type Named = { man: DraftMan; names: string[] };
 
 const SCORE = /\b(\d{1,3})-(\d{1,3})\b/gu;
+/** "a single point", "seven points", "11 points": a figure given as a man's points. */
+const POINTS = /\b(a single|one|[\p{L}\d]+)\s+points?\b/giu;
+/** Words before a figure that make it a gap, not a man's points. */
+const GAP = /\b(?:to|by|deficit|gap|lead|margin|behind|ahead|clear|of)\s+(?:\S+\s+){0,2}$/iu;
+/** Capitalised words that open a sentence or a clause, never a first name. */
+const CAPS = new Set(["The", "A", "An", "And", "But", "Then", "When", "While", "After", "Before", "As", "With", "For", "So", "Yet", "Only", "Even", "Both", "Neither", "Nor", "Or", "If", "Though", "Although", "That", "This", "It", "His", "Their", "Its", "Once", "Until", "Since", "Where", "Not", "No", "All", "Each", "Every", "By", "In", "On", "At", "From", "To", "Of", "Still", "Now", "There", "Here"]);
 const WEEKDAY = /\b(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/u;
 const opening = (text: string) => text.split(/\s+/u).slice(0, DRAFT_WRITING.openerWords).join(" ");
 
@@ -49,14 +55,15 @@ const orderOf = (ctx: MatchupContext, man: DraftMan) => {
   return beat === undefined ? null : (beat ?? "~");
 };
 
-/** Each match-up's list faults, `at` its place on the page (0 is the lead), `block` the brief it was written from. */
-export function listFaults(piece: DraftPiece, ctx: MatchupContext, at: number, cutoff: Cutoff, block: string, past: readonly PastProse[]): Fault[] {
+/** Each match-up's list faults, `at` its place on the page (0 is the lead), `block` the brief it was written from and
+ *  `sides` every side's name on the page, none of them a figure. */
+export function listFaults(piece: DraftPiece, ctx: MatchupContext, at: number, cutoff: Cutoff, block: string, past: readonly PastProse[], sides: readonly string[] = []): Fault[] {
   const faults: Fault[] = [];
   const n = `${at + 1}:matchup`;
   const flag = (check: string, evidence: string, severity: Fault["severity"] = "send-back") => faults.push({ section: n, check, severity, evidence });
   const men = menOf(ctx);
   // A side's name is no figure, even one spelt in digits.
-  const names = [...men.flatMap((m) => m.names), ctx.state.home.side.name, ctx.state.away.side.name];
+  const names = [...men.flatMap((m) => m.names), ctx.state.home.side.name, ctx.state.away.side.name, ...sides];
   const figures = (text: string) => numbersIn(masked(text.replace(SCORE, " "), names).replace(/\u0000/gu, " "));
   const prose = piece.paragraphs.join("\n");
   const all = sentences(prose);
@@ -72,6 +79,25 @@ export function listFaults(piece: DraftPiece, ctx: MatchupContext, at: number, c
   for (const p of piece.paragraphs) {
     const lines = sentences(p);
     if (lines.length >= DRAFT_WRITING.rollCallParagraph && lines.every((s) => named(s.split(/\s+/u).slice(0, 2).join(" "), men).length > 0)) flag("a paragraph of men, one a sentence", p.slice(0, 80));
+  }
+  // A man's own points, where a sentence gives them: GW5's writer gave Gray "a single point" for his two.
+  for (const s of all) {
+    const who = named(s, men);
+    if (who.length !== 1 || who[0].man.points === null) continue;
+    for (const hit of s.matchAll(POINTS)) {
+      const word = hit[1].toLowerCase();
+      const n = word === "a single" || word === "one" ? 1 : figures(word)[0];
+      if (n !== undefined && n !== who[0].man.points && !GAP.test(s.slice(0, hit.index))) flag("a man's points misstated", `${who[0].man.name}: ${hit[0]}, not ${who[0].man.points}`);
+    }
+  }
+  // A first name the brief never gave is memory, not the facts: GW5's "Jordan Pickford".
+  for (const m of men) {
+    for (const name of m.names) {
+      for (let i = prose.indexOf(name); i >= 0; i = prose.indexOf(name, i + 1)) {
+        const before = prose.slice(0, i).match(/(\p{Lu}\p{Ll}+)\s+$/u)?.[1];
+        if (before !== undefined && !CAPS.has(before) && !block.includes(before) && !m.man.name.includes(before)) flag("a name the brief does not give", `${before} ${name}`);
+      }
+    }
   }
   const most = at === 0 ? DRAFT_WRITING.leadMen : DRAFT_WRITING.men;
   const everyone = named(prose, men);

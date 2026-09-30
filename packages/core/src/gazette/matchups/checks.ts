@@ -28,6 +28,8 @@ export function checkDraft(writing: DraftWriting, contexts: readonly MatchupCont
   const faults: Fault[] = [];
   const fault = (section: string, check: string, severity: Severity, evidence: string) => faults.push({ section, check, severity, evidence });
   const everyone = contexts.map((ctx) => menOf(ctx).flatMap((m) => m.names));
+  // Every side named on the page, next gameweek's opponents too: "test3" is a side, not a 3.
+  const sides = [...new Set(contexts.flatMap((c) => [c.state.home.side.name, c.state.away.side.name, ...[c.next.home, c.next.away].flatMap((x) => x?.name ?? [])]))];
   const pieces: { code: number; prose: string }[] = [];
   contexts.forEach((ctx, at) => {
     const n = at + 1;
@@ -58,14 +60,13 @@ export function checkDraft(writing: DraftWriting, contexts: readonly MatchupCont
     if (FEELING.test(prose)) fault(`${n}:matchup`, "a named person's feeling", "send-back", prose.match(FEELING)?.[0] ?? "");
     // The score prints above the lede, so the lede never gives it again.
     if (sentences(prose)[0]?.includes(ctx.state.score) === true) fault(`${n}:matchup`, "opens on the result the page already prints", "send-back", sentences(prose)[0] ?? "");
-    faults.push(...listFaults(piece, ctx, at, cutoff, block, past));
+    faults.push(...listFaults(piece, ctx, at, cutoff, block, past, sides));
     const [least, rest] = DRAFT_WRITING.matchupWords;
     const most = at === 0 ? DRAFT_WRITING.leadWords : rest;
     const words = wordCount(prose);
     if (words < least || words > most) fault(`${n}:matchup`, `a match-up of ${least} to ${most} words`, "send-back", `${words} words`);
   });
   // A side's name is no more a leaned-on word than a man's is.
-  const sides = contexts.flatMap((c) => [c.state.home.side.name, c.state.away.side.name]);
   for (const r of repeatsIn(pieces, [...everyone.flat(), ...sides])) {
     const what = r.kind === "phrase" ? "a phrase said twice" : r.kind === "opener" ? "sentences that open the same way" : "a word leaned on";
     fault(r.code === null ? "page" : `${r.code}:matchup`, what, "send-back", `${r.said} ×${r.count}`);

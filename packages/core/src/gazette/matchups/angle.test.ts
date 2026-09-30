@@ -25,7 +25,6 @@ describe("pickAngle", () => {
 
   it("never spends a supporting thread on the margin, which the printed score already gives", () => {
     expect(angleOf()?.supporting.map((t) => t.family)).not.toContain("margin");
-    expect(angleOf()?.rest.map((t) => t.family)).not.toContain("margin");
   });
 
   it("takes a twist with no day of its own when the story has none either", () => {

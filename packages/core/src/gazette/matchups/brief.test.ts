@@ -5,6 +5,7 @@ import { contextOf } from "./__fixtures__/context";
 import { draftMan } from "./__fixtures__/draftMan";
 import { draftSide, eleven } from "./__fixtures__/draftSide";
 import { pickAngle } from "./angle";
+import { thread } from "./thread";
 import { buildDraftBrief } from "./brief";
 import { threadsOf } from "./threads";
 
@@ -26,15 +27,25 @@ describe("buildDraftBrief", () => {
 
   it("tells how it unfolded a day at a time, returns without their points, and marks no day as optional", () => {
     expect(end).toContain("HOW IT UNFOLDED, in order:\n- Friday: test2 0, 123 11, making it 11-0 to 123");
-    expect(end).toContain("- Sunday: test2 18, 123 12, making it 38-34 to 123; returns: Haaland (a goal in the 81st minute) for 123");
+    expect(end).toContain("- Sunday: test2 18, 123 12, making it 38-34 to 123; returns: Haaland (Man City) for 123 (a goal in the 81st minute)");
+    expect(end).toContain("- Friday: test2 0, 123 11, making it 11-0 to 123; no returns");
     expect(end).toContain("- The substitutions: test2 3, 123 0, making it 38-37 to 123");
     expect(end).not.toMatch(/left out/u);
-    expect(end).toContain("- The substitutions: test4 2, test3 9, making it 33-28 to test3; returns: Vuskovic (a clean sheet) for test3");
+    expect(end).toContain("- The substitutions: test4 2, test3 9, making it 33-28 to test3; returns: Vuskovic (Tottenham) for test3 (a clean sheet)");
+  });
+
+  it("names only the story's men in a day, and counts every other man's returns by side", () => {
+    const saka = draftMan("Saka", "M", 8, 90, 0, { club: "Arsenal", goals: 1 });
+    const rice = draftMan("Rice", "M", 5, 90, 0, { club: "Arsenal", assists: 1 });
+    const ctx = contextOf(draftSide("A", 40, eleven("h", { 5: saka })), draftSide("B", 30, eleven("a", { 6: rice })));
+    const angle = { story: thread("haul", { teamId: "A", men: [saka], facts: ["Saka scored"] }), twist: null, supporting: [], cast: [saka], score: 45, past: [] };
+    expect(buildDraftBrief("gameweek", 5, [{ ...ctx, angle }])).toContain("returns: Saka (Arsenal) for A (a goal) and an assist from the rest of B's men");
   });
 
   it("after Saturday, says how it stands and what is still to come, the shared match first, as fixtures only", () => {
     expect(saturday).toContain("THE SCORE after Saturday's matches, printed above your words, never in them: 123 lead test2 26-16.");
-    expect(saturday).toContain("STILL TO COME, the fixtures only:\n- Man City v Sunderland, Sunday: Hume and Haaland for 123; Meunier (if he plays) for test2");
+    expect(saturday).toContain("STILL TO COME, the fixtures only:\n- Man City v Sunderland, Sunday: Hume (Sunderland) and Haaland (Man City) for 123; Meunier (Sunderland, if he plays) for test2");
+    expect(saturday).toContain("- In their other matches: 1 more for 123 and 2 more for test2");
     expect(saturday).not.toContain("NEXT GAMEWEEK");
   });
 

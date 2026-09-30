@@ -459,8 +459,6 @@ export const DRAFT_NEWS = {
   otherSideFrom: 30,
   supporting: 3,
   cast: 4,
-  /** Threads a side keeps for THE REST, told as a group if at all. */
-  restPerSide: 2,
   /** A thread of the family this side's story had last time is worth this share of itself, one about a man in last
    *  time's cast this share; two match-ups on a page share a story's family only when the next-best is this far behind. */
   repeatFamily: 0.6,

@@ -16,8 +16,6 @@ export interface Angle {
   cast: DraftMan[];
   /** THE STORY's score, repeats discounted: the page's running order. */
   score: number;
-  /** The threads left over, two a side at most and none about a cast man: told as a group, or not at all. */
-  rest: Thread[];
   /** Each side's last story, which this one must not tell the same way. */
   past: AngleRecord[];
 }
@@ -83,14 +81,7 @@ export function pickAngle(ctx: MatchupContext, threads: readonly Thread[], past:
   const rival = theirs === undefined ? undefined : topScorer(ctx, theirs);
   const cast = [...new Set([...leads, ...(twist?.men ?? []), ...(rival === undefined ? [] : [rival])])].slice(0, DRAFT_NEWS.cast);
   const last = [...new Set(sides.flatMap((id) => past.find((p) => p.teamIds.includes(id)) ?? []))];
-  const told = new Set([story, twist, ...supporting]);
-  const rest = sides.flatMap((id) =>
-    ranked
-      .filter((r) => r.t.teamId === id && r.t.scope !== "season" && r.t.family !== "margin" && !told.has(r.t) && !r.t.men.some((m) => cast.includes(m)))
-      .slice(0, DRAFT_NEWS.restPerSide)
-      .map((r) => r.t),
-  );
-  return { story, twist, supporting, cast, score: top.s, rest, past: last };
+  return { story, twist, supporting, cast, score: top.s, past: last };
 }
 
 /** Every match-up with its angle, in the page's running order: the strongest story leads, and two match-ups share a

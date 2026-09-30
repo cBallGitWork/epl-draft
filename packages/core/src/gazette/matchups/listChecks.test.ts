@@ -1,4 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { contextOf } from "./__fixtures__/context";
+import { draftMan } from "./__fixtures__/draftMan";
+import { draftSide, eleven } from "./__fixtures__/draftSide";
 import { lateDecider, saturdayLead } from "./__fixtures__/gw5";
 import { matchupBlock } from "./block";
 import { listFaults, type PastProse } from "./listChecks";
@@ -46,6 +49,26 @@ describe("listFaults", () => {
     const past = [{ teamIds: ["123"], prose: "The bench carried them over the line in the end." }];
     expect(faults(["The bench carried them over the line again."], 1, past)).toContain("send-back: a phrase from these sides' last report");
     expect(faults(["The bench carried them over the line again."], 1, [{ teamIds: ["test9"], prose: past[0].prose }])).not.toContain("send-back: a phrase from these sides' last report");
+  });
+
+  it("sends back a man's points misstated, but not a gap given in points", () => {
+    const gray = contextOf(draftSide("test4", 30, eleven("f", { 6: draftMan("Gray", "M", 2, 71, 0, { club: "Spurs", started: false }) })), draftSide("test3", 40, eleven("c")));
+    const said = (line: string) => listFaults({ paragraphs: ["test3 kept test4 at arm's length on Sunday.", line, "test3 go to test2 next."] }, gray, 1, "gameweek", matchupBlock(gray, "gameweek", 2), []).map((f) => f.check);
+    expect(said("Gray played 71 minutes for a single point.")).toContain("a man's points misstated");
+    expect(said("Gray played 71 minutes for two points.")).not.toContain("a man's points misstated");
+    expect(said("Gray played on as test4 fell behind by ten points.")).not.toContain("a man's points misstated");
+  });
+
+  it("sends back a first name the brief never gave", () => {
+    const pickford = contextOf(draftSide("test3", 40, eleven("c", { 0: draftMan("Pickford", "G", 7, 90, 0, { club: "Everton", cleanSheets: 1 }) })), draftSide("test4", 30, eleven("f")));
+    const said = (line: string) => listFaults({ paragraphs: [line, "test3 go to test2 next on Sunday."] }, pickford, 1, "gameweek", matchupBlock(pickford, "gameweek", 2), []).map((f) => f.check);
+    expect(said("Jordan Pickford kept test3 clear on Saturday.")).toContain("a name the brief does not give");
+    expect(said("Then Pickford kept test3 clear on Saturday.")).not.toContain("a name the brief does not give");
+  });
+
+  it("reads next gameweek's opponents as sides, not figures", () => {
+    const page = listFaults({ paragraphs: [LEDE, "test2 fall to third and face test3 on Sunday; 123 go to test4."] }, ctx, 1, "gameweek", matchupBlock(ctx, "gameweek", 2), [], ["test3", "test4"]).map((f) => f.check);
+    expect(page).not.toContain("a roll-call of men and points in one sentence");
   });
 
   it("only warns when a report never says when, or ends on a man's points", () => {

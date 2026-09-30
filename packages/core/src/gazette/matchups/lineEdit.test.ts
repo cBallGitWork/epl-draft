@@ -15,4 +15,10 @@ describe("the draft's line edit", () => {
     expect(applyFixes(pieces, fixes, ["Mukiele replaced Reinildo and brought 2 points."], never).get(1)?.paragraphs[0]).toContain("came on");
     expect(applyFixes(pieces, fixes, ["Mukiele came on for the absent Reinildo, 0 points."], never).get(1)?.paragraphs[0]).toContain("came on for Reinildo");
   });
+
+  it("reads a man's name as a name, never as a banned word", () => {
+    const gray = new Map([[1, { paragraphs: ["Gray played 71 minutes."] }]]);
+    expect(faultySentences(gray, ["gray"], ["Gray"])).toEqual([]);
+    expect(faultySentences(gray, ["gray"])).toHaveLength(1);
+  });
 });

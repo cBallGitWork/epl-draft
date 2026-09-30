@@ -5,12 +5,13 @@ import type { Cutoff, MatchupContext, NextOpponent } from "./brief";
 import { counted, everyMan, type SideState } from "./state";
 import { fitnessLine, minutesLine, newLine, pts, returnWords, withClub } from "./stories";
 import type { Thread } from "./thread";
-import { SIDES, beatLabel, beatOf, timeline, type Beat } from "./timeline";
+import { SIDES, beatLabel, beatOf, timeline, type Beat, type BeatReturn } from "./timeline";
+import { possessive } from "./words";
 import type { DraftMan } from "./types";
 
 // One match-up's block of the brief, built on the story the desk chose (`angle.ts`): the result, THE STORY and its twist,
-// the cast, how it unfolded a day at a time, the threads in their beats, the rest, the season for the close, what comes
-// next and last time's story. A cast man's points appear once, in THE CAST. The labels are the writer's and never print.
+// the cast, how it unfolded a day at a time, the threads in their beats, the season for the close, what comes next and
+// last time's story. Only the cast are named, each with his points once; the labels are the writer's and never print.
 
 const when = (beat: string | null | undefined) => (beat === undefined ? "" : ` (${beatLabel(beat)})`);
 
@@ -46,36 +47,58 @@ function castLine(ctx: MatchupContext, m: DraftMan): string {
   return `- ${withClub(m)} for ${s?.side.name ?? "neither side"}: ${parts.filter((p) => p !== null).join("; ")}${when(beatOf(ctx.state, m))}`;
 }
 
-/** A beat in a line: each side's points, the running score after it, and who returned in it, without their points. */
-function beatLine(ctx: MatchupContext, b: Beat): string {
+/** Goals, assists and clean sheets between some men, as a count: "2 goals and a clean sheet". */
+function tally(returns: readonly BeatReturn[]): string {
+  const sum = (pick: (r: BeatReturn) => number) => returns.reduce((n, r) => n + pick(r), 0);
+  const count = (n: number, one: string, many: string) => (n === 0 ? [] : [n === 1 ? one : `${n} ${many}`]);
+  return listed([...count(sum((r) => r.goals), "a goal", "goals"), ...count(sum((r) => r.assists), "an assist", "assists"), ...count(sum((r) => r.cleanSheets), "a clean sheet", "clean sheets")], "and");
+}
+
+/** A beat in a line: each side's points, the running score after it, and what was scored in it: the cast by name, and
+ *  every other man's returns as a side's count, so the writer names only the story's men (GW5 named sixteen). */
+function beatLine(ctx: MatchupContext, b: Beat, cast: ReadonlySet<DraftMan>): string {
   const { home, away } = ctx.state;
   const [h, a] = [b.score.home, b.score.away];
   const score = h === a ? `level at ${h}-${a}` : `${Math.max(h, a)}-${Math.min(h, a)} to ${h > a ? home.side.name : away.side.name}`;
-  const returns = b.returns.map((r) => {
+  const named = b.returns.filter((r) => cast.has(r.man)).map((r) => {
     const goals = r.man.scoredAt.filter((t) => b.day === null || londonDayOf(t.kickoff) === b.day);
-    return `${r.man.name} (${returnWords({ goals: r.goals, assists: r.assists, cleanSheets: r.cleanSheets, scoredAt: goals })}) for ${ctx.state[r.side].side.name}`;
+    return `${withClub(r.man)} for ${ctx.state[r.side].side.name} (${returnWords({ goals: r.goals, assists: r.assists, cleanSheets: r.cleanSheets, scoredAt: goals })})`;
   });
-  const who = returns.length === 0 ? "" : `; returns: ${listed(returns, "and")}`;
+  const others = SIDES.flatMap((w) => {
+    const rest = b.returns.filter((r) => r.side === w && !cast.has(r.man));
+    return rest.length === 0 ? [] : [`${tally(rest)} from the rest of ${possessive(ctx.state[w].side.name)} men`];
+  });
+  const scored = [...named, ...others];
   const label = beatLabel(b.day);
-  return `- ${label[0].toUpperCase()}${label.slice(1)}: ${home.side.name} ${b.points.home}, ${away.side.name} ${b.points.away}, making it ${score}${who}`;
+  return `- ${label[0].toUpperCase()}${label.slice(1)}: ${home.side.name} ${b.points.home}, ${away.side.name} ${b.points.away}, making it ${score}; ${scored.length === 0 ? "no returns" : `returns: ${listed(scored, "and")}`}`;
 }
 
-/** After Saturday, each match still to come by its day, a match with both sides' men in it first. Fixtures only. */
-function toCome(ctx: MatchupContext): string[] {
-  const matches = new Map<string, { kickoff: string; men: Map<string, string[]> }>();
+/** After Saturday, what is still to come by match and day, fixtures only: a match with both sides' men in it named whole
+ *  and first, the cast's matches named, and every other man counted. Each man carries his club, so none is sent to the
+ *  wrong ground (GW5: "Isak away to Liverpool"). */
+function toCome(ctx: MatchupContext, cast: ReadonlySet<DraftMan>): string[] {
+  const matches = new Map<string, { kickoff: string; men: Map<string, DraftMan[]> }>();
   for (const s of [ctx.state.home, ctx.state.away]) {
     for (const m of s.toPlay) {
       if (m.next === null) continue;
       const label = m.next.home ? `${m.club} v ${m.next.opponent}` : `${m.next.opponent} v ${m.club}`;
-      const match = matches.get(label) ?? { kickoff: m.next.kickoff, men: new Map<string, string[]>() };
-      const provisional = s.subs.some((x) => x.in === m && x.provisional);
-      match.men.set(s.side.name, [...(match.men.get(s.side.name) ?? []), `${m.name}${provisional ? " (if he plays)" : ""}`]);
+      const match = matches.get(label) ?? { kickoff: m.next.kickoff, men: new Map<string, DraftMan[]>() };
+      match.men.set(s.side.name, [...(match.men.get(s.side.name) ?? []), m]);
       matches.set(label, match);
     }
   }
-  return [...matches]
-    .sort(([, a], [, b]) => b.men.size - a.men.size || a.kickoff.localeCompare(b.kickoff))
-    .map(([label, m]) => `- ${label}, ${londonWeekdayLong(m.kickoff)}: ${[...m.men].map(([side, men]) => `${listed(men, "and")} for ${side}`).join("; ")}`);
+  const waiting = new Set([ctx.state.home, ctx.state.away].flatMap((s) => s.subs.filter((x) => x.provisional).map((x) => x.in)));
+  const who = (m: DraftMan) => `${m.name} (${m.club}${waiting.has(m) ? ", if he plays" : ""})`;
+  const lines: string[] = [];
+  const unnamed = new Map<string, number>();
+  for (const [label, match] of [...matches].sort(([, a], [, b]) => b.men.size - a.men.size || a.kickoff.localeCompare(b.kickoff))) {
+    const shown = [...match.men].map(([side, men]) => [side, match.men.size > 1 ? men : men.filter((m) => cast.has(m))] as const);
+    const told = shown.filter(([, men]) => men.length > 0);
+    if (told.length > 0) lines.push(`- ${label}, ${londonWeekdayLong(match.kickoff)}: ${told.map(([side, men]) => `${listed(men.map(who), "and")} for ${side}`).join("; ")}`);
+    for (const [side, men] of match.men) unnamed.set(side, (unnamed.get(side) ?? 0) + men.length - (shown.find(([s]) => s === side)?.[1].length ?? 0));
+  }
+  const rest = [...unnamed].filter(([, n]) => n > 0).map(([side, n]) => `${n} more for ${side}`);
+  return rest.length === 0 ? lines : [...lines, `- In their other matches: ${listed(rest, "and")}`];
 }
 
 /** Where each side goes next, for a last line that looks out; nothing after Saturday, with the gameweek unfinished. */
@@ -105,10 +128,9 @@ export function matchupBlock(ctx: MatchupContext, cutoff: Cutoff, n: number): st
     angle === null ? "THE STORY: the result alone." : `THE STORY, which your first sentence tells: ${told(ctx, angle.story)}`,
     angle?.twist == null ? null : `THE TWIST, told in its beat: ${told(ctx, angle.twist)}`,
     block("THE CAST, each man's points given once:", [...cast].map((m) => castLine(ctx, m))),
-    block(saturday ? "HOW IT STANDS, in order:" : "HOW IT UNFOLDED, in order:", timeline(ctx.state).map((b) => beatLine(ctx, b))),
-    saturday ? block("STILL TO COME, the fixtures only:", toCome(ctx)) : null,
+    block(saturday ? "HOW IT STANDS, in order:" : "HOW IT UNFOLDED, in order:", timeline(ctx.state).map((b) => beatLine(ctx, b, cast))),
+    saturday ? block("STILL TO COME, the fixtures only:", toCome(ctx, cast)) : null,
     block("THREADS, each told in its beat:", (angle?.supporting ?? []).filter((t) => t.scope !== "season").map(line)),
-    block("THE REST, told as a group if at all, without points:", (angle?.rest ?? []).map(line)),
     // The bracketed kind tells the writer which frame a fact takes; it is never printed.
     block("FORM AND THE TABLE, for the close:", ctx.form.filter((f) => !angle?.story.facts.includes(f.text)).map((f) => `- ${f.text} [${f.kind}]`)),
     saturday ? null : block("NEXT GAMEWEEK, for a last line that looks out:", nextLines(ctx)),
