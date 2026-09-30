@@ -1,4 +1,5 @@
 import {
+  MS_PER_DAY,
   FANTRAX_LEAGUE_ID,
   SHEETS,
   buildSheetsBrief,
@@ -156,7 +157,7 @@ async function formRounds(first: number): Promise<(playerId: number) => RecentGa
 /** Fantrax's latest report on each named man listed doubtful or out, for the complaint it names;
  *  an injury story can be weeks old and still true. A man listed available carries no news. */
 async function newsFor(facts: DeskFacts, now: string): Promise<Map<string, PlayerStory>> {
-  const since = Date.parse(now) - SHEETS.injuryDays * 24 * 60 * 60 * 1000;
+  const since = Date.parse(now) - SHEETS.injuryDays * MS_PER_DAY;
   const out = new Map<string, PlayerStory>();
   const doubts = facts.teams
     .flatMap((team) => sheetOf(team).starters)

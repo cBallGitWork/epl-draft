@@ -1,4 +1,4 @@
-import { plPlayerCodes } from "./teamSheet";
+import { codeOf, plPlayerCodes } from "./teamSheet";
 import { GOAL, OWN_GOAL, PENALTY, minuteOf } from "./fixtureEvents";
 import type { RawPlFixture } from "./raw";
 
@@ -46,8 +46,8 @@ export function plGoals(fixture: RawPlFixture, optaToCode: Map<string, number>):
     goals.push({
       minute,
       teamId: event.teamId,
-      scorer: event.personId === undefined ? null : (codes.get(event.personId) ?? null),
-      assister: event.assistId === undefined ? null : (codes.get(event.assistId) ?? null),
+      scorer: codeOf(codes, event.personId),
+      assister: codeOf(codes, event.assistId),
       own: event.type === OWN_GOAL,
       penalty: event.type === PENALTY,
     });

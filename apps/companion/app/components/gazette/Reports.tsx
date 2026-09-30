@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { crestUrl, fullClubName, type FootballSnapshot, type PublishedStory } from "@epl/core";
+import { DASH, crestUrl, fullClubName, type FootballSnapshot, type PublishedStory } from "@epl/core";
 import { seasonFixtures } from "../../football";
 import { matchHighlight } from "../../matchFeed";
 import { matchHref } from "../../prem/match/[id]/matchRoutes";
@@ -12,7 +12,7 @@ export default async function Reports({ story, snapshot }: { story: PublishedSto
   const reports = story.extras?.reports ?? [];
   if (reports.length === 0) return null;
   const clubs = new Map((snapshot?.clubs ?? []).map((club) => [club.code, club]));
-  const names = (code: number) => fullClubName(clubs.get(code)?.name ?? "—");
+  const names = (code: number) => fullClubName(clubs.get(code)?.name ?? DASH);
 
   // Per-season ids are never stored: the desk's links and the video fallback are found by the fixture's code, at render.
   const season = await seasonFixtures().catch(() => []);

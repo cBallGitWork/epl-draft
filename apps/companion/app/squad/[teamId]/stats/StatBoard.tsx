@@ -15,17 +15,17 @@ import StateBox from "../../../components/football/StateBox";
 import { doubtRow } from "../../../components/football/doubtRow";
 import { HeadRow, LeadHeads, SortHead, sortedAs } from "../../../components/league/TableHeads";
 import { ROW_LINK } from "../../../components/league/TableCells";
-import { standoutCuts, standoutInk } from "../../../components/league/standout";
-import { BOARD, BOARD_FIGURE, MINOR_CAPS, PANEL_FLUSH, PINNED_NAME, PINNED_TILE, ROW_HOVER, ROW_NAME } from "@/app/desk";
+import { byFigure } from "../../../components/league/order";
+import { SIDE_SHARES, standoutCuts, standoutInk } from "../../../components/league/standout";
+import { BOARD, BOARD_FIGURE, MINOR_LABEL, PANEL_FLUSH, PINNED_BESIDE_TILE, PINNED_TILE, ROW_HOVER, ROW_NAME } from "@/app/desk";
 
 // One squad's season on the house board, as a club's stat board draws it: our position in the index tile, the crest
 // before the pinned name, a view picked above, a tap on a head to sort, and each column's standouts lit in ink.
 
 /** A column's orange for its best tenth and yellow for its top fifth, of the squad. */
-const SHARES = { good: 0.2, best: 0.1 };
 
 /** The name column starts where the tile ends. */
-const LEAD = `${PINNED_NAME} left-10 lg:left-14`;
+const LEAD = `${PINNED_BESIDE_TILE}`;
 
 export default function StatBoard({
   lines,
@@ -46,20 +46,14 @@ export default function StatBoard({
   const cuts = new Map(
     measures.map((measure) => [
       measure.key,
-      standoutCuts(lines.map((line) => measure.read(line, footballers[line.fantraxId]?.season)), SHARES, { of: lines.length }),
+      standoutCuts(lines.map((line) => measure.read(line, footballers[line.fantraxId]?.season)), SIDE_SHARES, { of: lines.length }),
     ]),
   );
 
   const rows = useMemo(() => {
     if (sort === null) return [...lines];
-    return [...lines].sort((a, b) => {
-      // Absence sorts last whichever way the column runs: no reading is not nought.
-      const x = readingOf(a, footballers[a.fantraxId]?.season, sort.key);
-      const y = readingOf(b, footballers[b.fantraxId]?.season, sort.key);
-      if (x === null) return y === null ? 0 : 1;
-      if (y === null) return -1;
-      return sort.descending ? y - x : x - y;
-    });
+    const read = (line: PlayerStatLine) => readingOf(line, footballers[line.fantraxId]?.season, sort.key);
+    return [...lines].sort((a, b) => byFigure(read(a), read(b), sort.descending));
   }, [lines, sort, footballers]);
 
   /** Opens descending, since "most" is the first question even of cards; a second tap turns it round. */
@@ -71,7 +65,7 @@ export default function StatBoard({
   return (
     <section className={PANEL_FLUSH}>
       <div className="flex items-center gap-2 border-b border-line px-2 py-1.5">
-        <label className={`${MINOR_CAPS} text-faint`} htmlFor="stat-view">
+        <label className={`${MINOR_LABEL}`} htmlFor="stat-view">
           View
         </label>
         <select

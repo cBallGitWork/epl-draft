@@ -1,5 +1,5 @@
 import { FILLER, GROUNDS, REGISTER, banned, escapeRegExp } from "../banned";
-import type { Severity } from "../predictions/checks";
+import type { Report } from "../predictions/checks";
 import { masked, ngrams, sentences, wordCount } from "../predictions/prose";
 import { DESK_BANNED } from "../predictions/words";
 import { AMERICAN_IZE, SHEETS_AMERICAN } from "../sheets/words";
@@ -13,7 +13,6 @@ import {
 /** Echoes quoted back per match: past three, a rewrite is told the pattern, not drowned in it. */
 const ECHOES_QUOTED = 3;
 
-type Report = (section: string, check: string, severity: Severity, evidence: string) => void;
 
 /** Everything sent back wherever it appears. SEQUENCE is lifted: this desk is handed the order of the match. No ground is. */
 export const REPORT_NEVER: readonly string[] = [

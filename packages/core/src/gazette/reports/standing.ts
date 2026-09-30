@@ -1,7 +1,10 @@
+import { byKickoff } from "../../football/selectors";
 import { leagueTable } from "../../football/table";
 import type { Club, Fixture } from "../../football/types";
 import { londonDayOf } from "../../time";
-import { numeral, ordinal } from "./minutes";
+import { ordinal } from "../../league/ordinal";
+import { numeral } from "./minutes";
+import { plural } from "../../format";
 
 // Where a day's football leaves each club: its place before and after, the run it is on, and a season first.
 // Reads only fixtures played on or before the report's day, so a report filed later still says what was true then.
@@ -27,7 +30,7 @@ const playedBy = (season: readonly Fixture[], day: string, inclusive: boolean) =
 function results(fixtures: readonly Fixture[], clubId: number): { result: Result; home: boolean; conceded: number }[] {
   return fixtures
     .filter((f) => f.homeClubId === clubId || f.awayClubId === clubId)
-    .sort((a, b) => (a.kickoff ?? "").localeCompare(b.kickoff ?? ""))
+    .sort(byKickoff)
     .map((f) => {
       const home = f.homeClubId === clubId;
       const [us, them] = home ? [f.homeScore ?? 0, f.awayScore ?? 0] : [f.awayScore ?? 0, f.homeScore ?? 0];
@@ -85,7 +88,7 @@ export function clubStandings(season: readonly Fixture[], clubs: readonly Club[]
     const place = now + 1;
     const wasZone = was < 0 ? null : zone(was + 1, before.length);
     const nowZone = zone(place, after.length);
-    const lines = [`${ordinal(place)} with ${row.points} point${row.points === 1 ? "" : "s"} from ${row.played}`];
+    const lines = [`${ordinal(place)} with ${row.points} ${plural(row.points, "point")} from ${row.played}`];
     if (nowZone !== null) lines.push(wasZone === nowZone ? `still ${nowZone === "top" ? "top" : "in the bottom three"}` : `now ${nowZone === "top" ? "top" : "in the bottom three"}`);
     if (wasZone !== null && nowZone !== wasZone) lines.push(`out of ${wasZone === "top" ? "top place" : "the bottom three"}`);
     const f = firsts(record);

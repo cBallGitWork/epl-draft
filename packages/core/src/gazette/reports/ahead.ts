@@ -1,3 +1,4 @@
+import { byKickoff } from "../../football/selectors";
 import type { Club, Fixture } from "../../football/types";
 import { londonDayOf } from "../../time";
 import { fullClubName } from "../clubNames";
@@ -26,7 +27,7 @@ export function nextThree(
   const byId = new Map(clubs.map((c) => [c.id, c]));
   return season
     .filter((f) => (f.homeClubId === club.id || f.awayClubId === club.id) && f.kickoff !== null && (londonDayOf(f.kickoff) ?? "") > day)
-    .sort((a, b) => (a.kickoff ?? "").localeCompare(b.kickoff ?? ""))
+    .sort(byKickoff)
     .slice(0, COUNT)
     .flatMap((f) => {
       const home = f.homeClubId === club.id;

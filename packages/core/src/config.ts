@@ -218,6 +218,9 @@ export const FANTRAX_SPORT = "EPL";
  *  replaces ours (see join/cleanSheets.ts). */
 export const CLEAN_SHEET_MINUTES = 60;
 
+/** Minutes in a half: the clock's first half reads this or less, added time aside. */
+export const HALF_MINUTES = 45;
+
 /** The league this process serves: the environment's `FANTRAX_LEAGUE_ID`, set in Vercel for the
  *  app, and nothing in the code names one. The 10 Oct swap is that one value; CI asks production
  *  for it (`/api/league`) rather than keeping a copy. Empty when unset, and `requireLeague` is
@@ -435,7 +438,7 @@ export const REPORTS = {
   /** The ball in words: "most of" from, "more of" from. Never printed as a figure. */
   ball: { most: 60, more: 55 },
   /** A key-stats line earns its place past these. xA only chooses; it never prints. */
-  stats: { mostShots: 4, chances: 3, expectedAssists: 0.4, saves: 5, freeNames: 4 },
+  stats: { mostShots: 4, chances: 3, expectedAssists: 0.4, saves: 5 },
   /** Chances not taken the account is handed: close-range misses and saves, at most `most`; and the men whose chances
    *  added up to at least `expectedGoals` without a goal, told in words. */
   missed: { most: 3, expectedGoals: 0.5 },

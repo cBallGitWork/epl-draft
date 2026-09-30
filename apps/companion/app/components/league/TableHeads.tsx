@@ -5,7 +5,7 @@ import { TILE_WIDTH } from "./PositionTile";
 
 // The bevelled head strip both league tables print.
 //
-// `Columns.tsx:5-8` records the bug this file exists to end: the league table's
+// `league/Columns.tsx` records the bug this file exists to end: the league table's
 // heads were written out twice, and on 29 Aug only one of the two copies stopped
 // saying `W-L-T`, so a reader saw the old heading over the new numbers for as
 // long as Fantrax took to answer. Team Stats then hand-rolled the whole strip a
@@ -25,13 +25,7 @@ import { TILE_WIDTH } from "./PositionTile";
 // decoration on a CM table, it is what the table is remembered for, and the
 // sorted column is drawn pressed so the affordance and the state are one object.
 //
-// *This file used to keep the pressed variant and the link branch out, "because
-// only one of the two tables sorts". Three of them sort now — `/league`, `/prem`
-// and the Team Stats board, the third having hand-rolled the plate with two
-// class strings character-identical to the other two. So `SortHead` is here,
-// which is CODE_RULES §1's third occurrence arriving exactly as it says it
-// will: the third use is what tells you what actually varies, and it was the
-// alignment and the arrow.*
+// `SortHead` is here because every sorting board draws the same plate; what varies is the alignment and the arrow.
 
 /** The head row itself. `text-3xs uppercase` is the strip's own type and the
  *  cells inherit it, which is why it sits here rather than on each `<th>`. */
@@ -106,7 +100,7 @@ export const MUTE = "sr-only";
  *  rather than compared, so it stays left. */
 const JUSTIFY = { left: "justify-start", center: "justify-center", right: "justify-end" } as const;
 
-/** A head cell the reader can order by: the bevelled plate as a LINK, drawn
+/** A head cell the reader can order by: the bevelled plate as a link or a button, drawn
  *  pressed when the table is ordered by it.
  *
  *  A link when the server orders the table (`href`), so the order survives being shared; a button when a client

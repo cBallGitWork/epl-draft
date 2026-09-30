@@ -1,3 +1,4 @@
+import { DASH } from "../../format";
 import type { MatchDesk } from "./desk";
 import type { ReportsDraft } from "./draft";
 import type { FantasyPanel } from "./fantasy";
@@ -5,6 +6,7 @@ import type { KeyStat } from "./keyStats";
 import { surname } from "./keyStats";
 import type { StoryLineup } from "./lineups";
 import { isGoal, type MatchEvent } from "./timeline";
+import type { Side } from "./types";
 
 // What a match-day report carries beside its prose, per match, laid out as BBC Sport sets a match (Craig, 28 Sep 2026): the
 // header (crests, score, FT and HT, goals and assists by side, venue and attendance), the pieces, and a sidebar of the Draft
@@ -15,7 +17,7 @@ export type ReportRowKind = "Goal" | "Pen" | "OG" | "VAR" | "Pen missed" | "Pen 
 export interface StoryReportRow {
   minute: string;
   kind: ReportRowKind;
-  side: "home" | "away" | null;
+  side: Side | null;
   text: string;
 }
 
@@ -71,7 +73,7 @@ function row(e: MatchEvent): StoryReportRow | null {
     case "booked": return { ...base, kind: "Booked", text: who(e) };
     case "second-yellow": return { ...base, kind: "Sent off", text: `${who(e)}, second booking` };
     case "sent-off": return { ...base, kind: "Sent off", text: who(e) };
-    case "substitution": return { ...base, kind: "Sub", text: `${who(e)} for ${e.other === null ? "—" : surname(e.other.name)}${e.injury ? ", injured" : ""}` };
+    case "substitution": return { ...base, kind: "Sub", text: `${who(e)} for ${e.other === null ? DASH : surname(e.other.name)}${e.injury ? ", injured" : ""}` };
     case "injured-off": return { ...base, kind: "Sub", text: `${who(e)} off injured` };
     default: return null;
   }
@@ -90,7 +92,7 @@ export function reportsCargo(desks: readonly MatchDesk[], draft: ReportsDraft): 
     const { match, events } = desk;
     const piece = draft.matches.get(match.fixture.code);
     const goals = events.filter(isGoal);
-    const side = (s: "home" | "away"): StoryReportSide => ({
+    const side = (s: Side): StoryReportSide => ({
       code: match[s].code,
       score: (s === "home" ? match.fixture.homeScore : match.fixture.awayScore) ?? 0,
       goals: goals.filter((g) => g.side === s).map((g) => `${who(g)} ${g.minute}${g.kind === "own-goal" ? " og" : g.kind === "penalty-goal" ? " pen" : ""}`),

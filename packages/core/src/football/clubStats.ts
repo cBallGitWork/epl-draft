@@ -1,4 +1,5 @@
 import { NO_SEASON } from "./noSeason";
+import { byKickoff } from "./selectors";
 import type { Club, Fixture, FootballPlayer, SeasonTotals } from "./types";
 
 // What a club has done this season, beyond its place in the table.
@@ -88,7 +89,7 @@ export function clubStats(
   const played = [...fixtures]
     .filter((fixture) => fixture.status === "finished")
     .filter((fixture) => fixture.homeScore !== null && fixture.awayScore !== null)
-    .sort((a, b) => (a.kickoff ?? "").localeCompare(b.kickoff ?? ""));
+    .sort(byKickoff);
 
   for (const fixture of played) {
     const home = rows.get(fixture.homeClubId);

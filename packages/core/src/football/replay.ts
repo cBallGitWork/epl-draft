@@ -1,3 +1,4 @@
+import { HALF_MINUTES } from "../config";
 import { instantOf } from "../time";
 import type { Fixture, FootballPlayer, FootballSnapshot, MatchEvent } from "./types";
 
@@ -15,8 +16,6 @@ const MATCH_MINUTES = 115;
 /** Minutes of the interval, which the match clock does not count. */
 const INTERVAL_MINUTES = 15;
 
-/** Minutes in a half, and the point the interval starts. */
-const HALF_MINUTES = 45;
 
 /** The gameweek an instant falls in: the round of the latest dated fixture
  *  kicked off by then. Null when the season had not started. */

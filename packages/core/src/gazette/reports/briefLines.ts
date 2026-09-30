@@ -1,6 +1,8 @@
 import { numeral } from "./minutes";
-import { isGoal, type ManCounts, type MatchEvent } from "./timeline";
+import { assistsBy, goalsBy, isGoal, type ManCounts, type MatchEvent } from "./timeline";
+import { higherFirst } from "./derived";
 import type { ReportMan, ReportMatchInput } from "./types";
+import { plural } from "../../format";
 
 // The account's moments and the section candidates' football, in a reporter's words; the labels name no provider, because
 // the writer copies labels. Bookings and routine changes are the timeline's, so they never reach the brief.
@@ -26,7 +28,7 @@ function describe(event: MatchEvent): string {
  *  worth a sentence where they happened. */
 export function eventLine(match: ReportMatchInput, event: MatchEvent, full: boolean, decisiveSubs: ReadonlySet<number>, misses: ReadonlySet<MatchEvent>): string | null {
   const man = who(match, event.man);
-  const score = event.score === null ? "" : ` ${Math.max(event.score.home, event.score.away)}-${Math.min(event.score.home, event.score.away)} to ${event.score.home > event.score.away ? match.home.name : event.score.home < event.score.away ? match.away.name : "neither"}`;
+  const score = event.score === null ? "" : ` ${higherFirst(event.score.home, event.score.away)} to ${event.score.home > event.score.away ? match.home.name : event.score.home < event.score.away ? match.away.name : "neither"}`;
   const level = event.score !== null && event.score.home === event.score.away ? ` ${event.score.home}-${event.score.away}` : score;
   switch (event.kind) {
     case "goal":
@@ -62,13 +64,13 @@ export function eventLine(match: ReportMatchInput, event: MatchEvent, full: bool
 /** A section candidate's football, figures only where they tell. */
 export function manLine(man: ReportMan, counts: ManCounts | undefined, events: readonly MatchEvent[]): string {
   const goals = events.filter(isGoal);
-  const scored = goals.filter((g) => g.kind !== "own-goal" && g.man?.code === man.code).length;
-  const madeOnes = goals.filter((g) => g.other?.code === man.code).length;
+  const scored = goalsBy(goals, man.code);
+  const madeOnes = assistsBy(goals, man.code);
   const parts: string[] = [];
   if (man.started) parts.push(man.startsBefore === 0 && man.matchesBefore > 0 ? "his first league start this season" : "started");
   else if (man.onAt !== null) parts.push("came on");
   if (man.offAt !== null) parts.push(man.injuredOff ? "went off injured" : "was taken off");
-  if (scored > 0) parts.push(`${numeral(scored)} goal${scored === 1 ? "" : "s"}${man.goalsSeason > scored ? `, ${numeral(man.goalsSeason)} in the league this season` : ""}`);
+  if (scored > 0) parts.push(`${numeral(scored)} ${plural(scored, "goal")}${man.goalsSeason > scored ? `, ${numeral(man.goalsSeason)} in the league this season` : ""}`);
   if (madeOnes > 0) parts.push(`made ${numeral(madeOnes)}`);
   if (counts !== undefined && counts.shots >= 3) parts.push(`${numeral(counts.shots)} shots`);
   if (counts !== undefined && counts.chancesMade >= 3) parts.push(`made ${numeral(counts.chancesMade)} chances`);

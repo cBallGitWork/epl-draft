@@ -1,7 +1,8 @@
 import { REPORTS } from "../../config";
 import { played } from "./men";
-import { isGoal, type ManCounts, type MatchEvent } from "./timeline";
-import type { ReportMan, ReportMatchInput } from "./types";
+import { assistsBy, goalsBy, type ManCounts, type MatchEvent } from "./timeline";
+import type { ReportMan, ReportMatchInput, Side } from "./types";
+import { plural } from "../../format";
 
 // The key-stats box: desk-made lines with figures, never written by the model. xG and xA print here (Craig, 28 Sep 2026:
 // "for key stats, can use xg/xa etc, most shots, most chances created"); the prose stays in words. No line says what a man
@@ -41,13 +42,13 @@ export function keyStats(
 ): KeyStat[] {
   const men = match.men.filter(played);
   const c = (m: ReportMan) => counts.get(m.code);
-  const scored = (m: ReportMan) => events.filter((e) => isGoal(e) && e.kind !== "own-goal" && e.man?.code === m.code).length;
-  const assists = (m: ReportMan) => events.filter((e) => isGoal(e) && e.other?.code === m.code).length;
-  const short = (side: "home" | "away") => match[side].shorts[0] ?? match[side].name;
+  const scored = (m: ReportMan) => goalsBy(events, m.code);
+  const assists = (m: ReportMan) => assistsBy(events, m.code);
+  const short = (side: Side) => match[side].shorts[0] ?? match[side].name;
   const names = (list: readonly ReportMan[]) => list.map((m) => surname(m.name)).join(", ");
   const out: KeyStat[] = [];
 
-  const xg = (side: "home" | "away") => men.filter((m) => m.side === side).reduce((sum, m) => sum + m.expectedGoals, 0);
+  const xg = (side: Side) => men.filter((m) => m.side === side).reduce((sum, m) => sum + m.expectedGoals, 0);
   if (men.some((m) => m.expectedGoals > 0)) out.push({ label: "xG", value: `${short("home")} ${xg("home").toFixed(2)}, ${short("away")} ${xg("away").toFixed(2)}` });
   if (match.figures !== null) {
     const { home, away } = match.figures;
@@ -57,12 +58,12 @@ export function keyStats(
   if (shots !== null && shots.men.length === 1) {
     const [man] = shots.men;
     const goals = scored(man);
-    out.push({ label: "Most shots", value: `${surname(man.name)} ${shots.value} (${c(man)?.onTarget ?? 0} on target${goals > 0 ? `, ${goals} goal${goals === 1 ? "" : "s"}` : ""})` });
+    out.push({ label: "Most shots", value: `${surname(man.name)} ${shots.value} (${c(man)?.onTarget ?? 0} on target${goals > 0 ? `, ${goals} ${plural(goals, "goal")}` : ""})` });
   }
   const chances = leaders(men, (m) => c(m)?.chancesMade ?? 0, 1);
   const byXa = [...men].sort((a, b) => b.expectedAssists - a.expectedAssists)[0];
   if (chances !== null && (chances.value >= CHANCES || (byXa?.expectedAssists ?? 0) >= EXPECTED_ASSISTS)) {
-    const made = chances.men.map((m) => `${surname(m.name)}${assists(m) > 0 ? ` (${assists(m)} assist${assists(m) === 1 ? "" : "s"})` : ""}`).join(", ");
+    const made = chances.men.map((m) => `${surname(m.name)}${assists(m) > 0 ? ` (${assists(m)} ${plural(assists(m), "assist")})` : ""}`).join(", ");
     out.push({ label: "Chances created", value: `${made} ${chances.value}` });
   }
   // The men who got into the best positions and made the best chances, whether or not they scored.
