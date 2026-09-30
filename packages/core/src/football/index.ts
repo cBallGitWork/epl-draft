@@ -41,6 +41,8 @@ export {
   fetchPlFixture,
   fetchPlMatchStats,
   fetchPlStaff,
+  fetchPlTeamStats,
+  fetchPlTeams,
   fetchPlRound,
   fetchPlTextstream,
 } from "./premierleague/client";
@@ -88,7 +90,9 @@ export type {
   RawPlTeamList,
   RawPlTextstream,
 } from "./premierleague/raw";
-export type { RawPlMatchStats, RawPlMetric } from "./premierleague/rawStats";
+export type { RawPlMatchStats, RawPlMetric, RawPlTeamPage, RawPlTeamStats } from "./premierleague/rawStats";
+export { plClubSeason } from "./premierleague/clubSeason";
+export type { PlClubSeason } from "./premierleague/clubSeason";
 // One player's own season, match by match — the only read here keyed by FPL's
 // per-season element id, and the only one with the four measurements a live
 // snapshot cannot give per fixture. `gameLog.ts` says why.
