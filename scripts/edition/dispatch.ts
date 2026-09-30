@@ -84,6 +84,7 @@ export function faceCtx(ctx: DeskContext, assignment: Assignment): FaceContext {
     fixtures: ctx.snapshot.fixtures,
     presserLines: assignment.kind === "presser" ? edition(ctx, assignment).lines : ctx.presserLines,
     players: ctx.snapshot.players,
+    drafts: ctx.drafts,
   };
 }
 

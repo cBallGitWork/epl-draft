@@ -80,7 +80,8 @@ export type { DraftMan, DraftSide, GoalTime, NextMatch, SlotWorth } from "./matc
 export { buildDraftBrief, draftBlocks, leadFirst } from "./matchups/brief";
 export { checkDraft } from "./matchups/checks";
 export { draftCargo } from "./matchups/cargo";
-export type { StoryDraftMan, StoryDraftMatchup, StoryDraftReport, StoryDraftSide } from "./matchups/cargo";
+export { draftFace } from "./matchups/cover";
+export type { StoryDraftMatchup, StoryDraftReport, StoryDraftSide } from "./matchups/cargo";
 export { mergeDraft, matchupOf, readDraftWriting } from "./matchups/writing";
 export type { DraftPiece, DraftWriting } from "./matchups/writing";
 export { DRAFT_FRAMES, DRAFT_NEVER } from "./matchups/words";

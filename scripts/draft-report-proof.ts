@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { FANTRAX_LEAGUE_ID, buildDraftBrief, isSaturday, requireLeague, type Cutoff, type StoryDraftReport } from "@epl/core";
+import { FANTRAX_LEAGUE_ID, buildDraftBrief, draftFace, isSaturday, requireLeague, type Cutoff, type StoryDraftReport } from "@epl/core";
 import { draftDesk } from "./edition/draftDesk";
 import { draftColumn } from "./edition/draftWriter";
 import { storyOfColumn } from "./edition/newsroom";
@@ -15,7 +15,7 @@ const say = (line: string) => process.stdout.write(`${line}\n`);
 
 /** The report as plain text, for reading before looking at the page. */
 function plain(headline: string, draft: StoryDraftReport): string {
-  return [headline, "", ...draft.matchups.flatMap((m) => [`## ${m.verdict}`, `men: ${m.men.map((x) => x.name).join(", ") || "none"}`, m.standfirst, ...m.paragraphs, ""])].join("\n");
+  return [headline, "", ...draft.matchups.flatMap((m) => [`## ${m.verdict}`, m.standfirst, ...m.paragraphs, ""])].join("\n");
 }
 
 async function main(): Promise<void> {
@@ -41,7 +41,7 @@ async function main(): Promise<void> {
     const filedAt = new Date().toISOString();
     const { story } = storyOfColumn(column, {
       slug, kind: "draft-report", leagueId: FANTRAX_LEAGUE_ID, period: desk.period, gameweek, filedAt, expiresAt: null,
-      edition: editionName("draft-report", filedAt, day), byline: STORY_BYLINE["draft-report"] ?? "", subject: `draft-report:gw${gameweek}:${cutoff}`, face: null,
+      edition: editionName("draft-report", filedAt, day), byline: STORY_BYLINE["draft-report"] ?? "", subject: `draft-report:gw${gameweek}:${cutoff}`, face: draftFace(contexts),
     });
     mkdirSync(out, { recursive: true });
     writeFileSync(join(out, `${slug}.brief.txt`), buildDraftBrief(cutoff, gameweek, contexts));

@@ -404,8 +404,6 @@ export const DRAFT_DESK = {
 /** How long a draft report's paragraphs run after each match-up's verdict (the UK desk's review, 29 Sep 2026). */
 export const DRAFT_WRITING = {
   matchupWords: [50, 150],
-  /** The photographs a match-up shows: the men with a return it names, the biggest scores first. */
-  faces: 6,
   /** Headline candidates the pun writer offers, and match-ups written in one call. */
   puns: 10,
 } as const;

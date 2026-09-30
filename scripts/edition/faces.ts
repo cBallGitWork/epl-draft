@@ -1,3 +1,4 @@
+import { draftFace, type Cutoff, type MatchupContext } from "@epl/core";
 import type {
   Assignment,
   Fixture,
@@ -42,6 +43,12 @@ function bestOf(men: readonly ResolvedPlayer[], facts: DeskFacts): StoryFace | n
  *  ranking is about ten managers and a wire column about a market. */
 export function faceOf(assignment: Assignment, ctx: FaceContext): StoryFace | null {
   const { facts } = ctx;
+
+  // The draft report's cover is the lead match-up's key man.
+  if (assignment.kind === "draft-report") {
+    const job = assignment.cutoff === undefined ? undefined : ctx.drafts?.get(assignment.cutoff);
+    return job === undefined ? null : draftFace(job.contexts);
+  }
 
   // The tie-shaped kinds: both squads, and the best man across the two.
   if (assignment.kind === "tie-report" || assignment.kind === "tie-call") {
@@ -137,4 +144,6 @@ export interface FaceContext {
   presserLines?: readonly PresserLine[];
   /** The season's numbers, for deciding which of them is the story. */
   players?: readonly FootballSnapshot["players"][number][];
+  /** A draft report's match-ups by cut-off, the lead first, for its cover. */
+  drafts?: ReadonlyMap<Cutoff, { contexts: readonly MatchupContext[] }>;
 }

@@ -1,8 +1,7 @@
-import { clubColoursOf, ordinal, type Club, type StoryDraftMatchup, type StoryDraftSide } from "@epl/core";
-import PlayerPortrait from "../football/PlayerPortrait";
+import { ordinal, type StoryDraftMatchup, type StoryDraftSide } from "@epl/core";
 
 // One match-up of a draft report: the score, each side's form strip (place before and after, the last results going in),
-// the desk's verdict as the opening line, the men with a return the writing names as photographs, then the paragraphs.
+// the desk's verdict as the opening line, then the paragraphs. The article's one photograph is its cover.
 
 const SMALL = "font-sans text-3xs font-semibold uppercase tracking-[0.16em] text-muted";
 const RULE = { borderColor: "var(--paper-rule)" };
@@ -25,7 +24,7 @@ function Form({ side, align }: { side: StoryDraftSide; align: "start" | "end" })
   );
 }
 
-export default function DraftMatchup({ matchup, n, clubs, saturday }: { matchup: StoryDraftMatchup; n: number; clubs: ReadonlyMap<number, Club>; saturday: boolean }) {
+export default function DraftMatchup({ matchup, n, saturday }: { matchup: StoryDraftMatchup; n: number; saturday: boolean }) {
   const { home, away } = matchup;
   return (
     <section id={`d-${n}`} className="flex scroll-mt-4 flex-col gap-3 py-5">
@@ -44,16 +43,6 @@ export default function DraftMatchup({ matchup, n, clubs, saturday }: { matchup:
         </div>
       </header>
       {matchup.standfirst === "" ? null : <p className="text-lg leading-snug font-semibold text-ink">{matchup.standfirst}</p>}
-      {matchup.men.length === 0 ? null : (
-        <ul className="flex flex-wrap gap-3" style={{ "--row-portrait": "40px" } as React.CSSProperties}>
-          {matchup.men.map((man) => (
-            <li key={man.code} className="flex w-14 flex-col items-center gap-1">
-              <PlayerPortrait player={{ code: man.code, name: man.name }} colours={clubColoursOf(clubs.get(man.clubCode))} />
-              <span className="w-full truncate text-center text-3xs text-muted">{man.name}</span>
-            </li>
-          ))}
-        </ul>
-      )}
       {matchup.paragraphs.map((p, i) => (
         <p key={i} className="text-base leading-relaxed text-ink">
           {p}

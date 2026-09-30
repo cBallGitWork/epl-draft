@@ -50,9 +50,9 @@ describe("checkDraft", () => {
 });
 
 describe("the draft cargo", () => {
-  it("opens each match-up on the desk's verdict, shows the named men who returned, and reads back whole", () => {
+  it("opens each match-up on the desk's verdict, and reads back whole", () => {
     const cargo = draftCargo("gameweek", 5, contexts, writing(clean).matchups, new Map([["123", 1]]));
-    expect(cargo.matchups[0]).toMatchObject({ verdict: contexts[0].state.score, standfirst: `${contexts[0].state.score}.`, home: { name: "123", rankBefore: 2, rankAfter: 1, run: "W" }, men: [{ name: "Haaland", code: 223094, clubCode: 43 }] });
+    expect(cargo.matchups[0]).toMatchObject({ verdict: contexts[0].state.score, standfirst: `${contexts[0].state.score}.`, home: { name: "123", rankBefore: 2, rankAfter: 1, run: "W" } });
     expect(normalizeDraftReport(JSON.parse(JSON.stringify(cargo)))).toEqual(cargo);
     expect(normalizeDraftReport({ cutoff: "week", gameweek: 5, matchups: [] })).toBeUndefined();
   });
