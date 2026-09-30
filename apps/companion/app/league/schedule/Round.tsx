@@ -2,7 +2,7 @@ import { LEAGUE_COMPETITION, type CompetitionTie, groupTies } from "@epl/core";
 import RoundHeader from "./RoundHeader";
 import Tie from "./Tie";
 import type { ScheduleRound } from "./schedule";
-import { HEAD_PLATE, MINOR_CAPS } from "@/app/desk";
+import { BLOCK_PLATE } from "@/app/desk";
 
 /** One gameweek: its deadline, and every tie being played on it. */
 export default function Round({
@@ -44,7 +44,7 @@ export default function Round({
               rows that need naming. */}
           {(group.competition.id === LEAGUE_COMPETITION.id && group.round === null) ||
           lone !== undefined ? null : (
-            <h3 className={`${HEAD_PLATE} ${MINOR_CAPS}`}>
+            <h3 className={BLOCK_PLATE}>
               {cup !== undefined
                 ? group.round
                 : group.round === null

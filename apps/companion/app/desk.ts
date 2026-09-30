@@ -90,6 +90,9 @@ export const HEAD_PLATE_CENTRE = `${HEAD_PLATE} justify-center`;
 /** A plate naming a group of columns or a section of a match board. */
 export const GROUP_PLATE = `${HEAD_PLATE_CENTRE} text-2xs font-bold uppercase`;
 
+/** A plate captioning a block inside a panel: a cup round, a group, a side of a bracket. */
+export const BLOCK_PLATE = `${HEAD_PLATE} ${MINOR_CAPS}`;
+
 /* ---- Panels and controls -------------------------------------------------- */
 
 /** The default panel spacing. A caller with a reason keeps its own and says why. */

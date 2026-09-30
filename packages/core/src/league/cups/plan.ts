@@ -22,7 +22,7 @@ export interface CupStage {
 }
 
 /** A cup's whole calendar for a league of `teams`, every side a placeholder: "Seed 7", "A1",
- *  "2nd B", "Winner M5". */
+ *  "2nd B", "Winner M5", or "To be drawn" in a round Craig draws. */
 export function cupPlan(cup: Cup, teams: number): CupStage[] {
   if (cup.seeding.from === "groups") {
     const groups = cupGroups(cup, teams);

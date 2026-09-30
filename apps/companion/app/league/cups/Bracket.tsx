@@ -1,12 +1,12 @@
 import type { CupStage } from "@epl/core";
-import { HEAD_PLATE, MINOR_CAPS, LABEL, QUIET_FIGURE, ROW_NAME } from "@/app/desk";
+import { BLOCK_PLATE, LABEL, QUIET_FIGURE, ROW_NAME } from "@/app/desk";
 
 /** One side of a draw as columns of ties, first round on the left; a phone scrolls it sideways. */
 export default function Bracket({ title, stages }: { title: string; stages: readonly CupStage[] }) {
   if (stages.length === 0) return null;
   return (
     <section className="flex flex-col gap-1">
-      <h3 className={`${HEAD_PLATE} ${MINOR_CAPS}`}>{title}</h3>
+      <h3 className={BLOCK_PLATE}>{title}</h3>
       <div className="cm-scroll overflow-x-auto">
         <ol className="flex min-w-max gap-3 p-1">
           {stages.map((stage) => (
