@@ -51,6 +51,7 @@ export { decided, stories } from "./stories";
 export { teamOfTheWeek } from "./teamOfTheWeek";
 export type { Ledger, StoryThread, ThreadUpdate } from "./ledger";
 export { STORY_KINDS } from "./story";
+export { STAFF_WRITERS, writerOf } from "./staff";
 export type { PublishedPaper, PublishedStory, StoryFace, StoryKind } from "./story";
 export type {
   AvailabilityNote,

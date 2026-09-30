@@ -74,7 +74,7 @@ export interface PublishedStory {
   /** Which named edition it went out under — "The Pink 'Un" — display copy. */
   edition: string;
   byline: string;
-  /** The columnist's own name, where it is not the house correspondent's. */
+  /** The columnist's own name, stamped at filing; it wins over the kind's staff writer (`writerOf`). */
   reporter?: string;
   /** The wordplay headline. */
   headline: string;

@@ -1,5 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { editionName } from "./bylines";
+import { STAFF_WRITERS, STORY_KINDS } from "@epl/core";
+import { COLUMNIST, editionName } from "./bylines";
+
+describe("who a story runs under", () => {
+  it("gives every kind that files prose one writer: a staff writer, or a columnist under his own name", () => {
+    // The line-ups are the one kind the desk prints from facts, under no byline.
+    const prose = STORY_KINDS.filter((kind) => kind !== "predicted-xi");
+    for (const kind of prose) expect([STAFF_WRITERS[kind], COLUMNIST[kind]].filter(Boolean), kind).toHaveLength(1);
+  });
+});
 
 describe("editionName for a match-day report", () => {
   it("is named for the day the matches were played, not the day it filed", () => {

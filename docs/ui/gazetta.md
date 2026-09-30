@@ -487,7 +487,7 @@ repairs: a side `xiFault` rejects, or one naming a man the snapshot cannot, is
 dropped and takes its fixture with it. The body says how many of the round's
 matches survived, so an absence is stated and never silent.
 
-**No byline.** `Dateline` credits the correspondent on every article, and a
+**No byline.** `Dateline` credits the story's writer on every article, and a
 listing the desk printed from an export went out "by Franco Bell" until it was
 shot and read back.
 

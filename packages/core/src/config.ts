@@ -18,11 +18,6 @@ declare const process: { env: Record<string, string | undefined> };
 /** The competition, as our members know it. */
 export const LEAGUE_NAME = "Tim Hortons Pro League";
 
-/** The paper's house correspondent, whose name goes on every story without a `reporter` of its own.
- *  Invented, and deliberately not a real broadcaster; the one column under a real name is Lawro's,
- *  by Craig's decision of 24 Sep 2026 (PLATFORM_NOTES). COPY, and Craig's to change. */
-export const PAPER_CORRESPONDENT = "Franco Bell";
-
 /** The competition the football layer describes, as it is headed on the desk.
  *
  *  Ours to state rather than FPL's to publish: the bootstrap names 20 clubs and
