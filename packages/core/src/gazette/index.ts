@@ -82,7 +82,7 @@ export { judgePage, type AngleRecord } from "./matchups/angle";
 export { threadsOf } from "./matchups/threads";
 export { headlineEcho } from "./matchups/echo";
 export { unbriefedNames, type PastProse } from "./matchups/listChecks";
-export { applyFactFixes, readFactFixes } from "./matchups/factCheck";
+export { applyFactFixes, knownFixes, readFactFixes } from "./matchups/factCheck";
 export type { Thread } from "./matchups/thread";
 export { checkDraft } from "./matchups/checks";
 export { draftCargo } from "./matchups/cargo";

@@ -1,9 +1,10 @@
 import { DRAFT_WRITING } from "../../config";
-import { banned } from "../banned";
-import { masked, numbersIn } from "../predictions/prose";
+import { banned, escapeRegExp } from "../banned";
+import { masked, numbersIn, sentences } from "../predictions/prose";
+import { londonWeekdayLong, weekdayLongOfDay } from "../../time";
 import type { MatchupContext } from "./brief";
 import { allowedFigures } from "./checks";
-import { menOf, unbriefedNames } from "./listChecks";
+import { menOf, named, unbriefedNames } from "./listChecks";
 import { DRAFT_NEVER } from "./words";
 import type { DraftPiece } from "./writing";
 
@@ -16,6 +17,47 @@ export interface FactFix {
   quote: string;
   /** The quote put right from the block; empty when it cannot be, and it is cut. */
   correction: string;
+}
+
+/** The words a paper may put before a man for his position, by slot. */
+const POSITIONS: Record<string, readonly string[]> = {
+  G: ["goalkeeper", "keeper"],
+  D: ["defender", "centre-back", "full-back", "left-back", "right-back", "wing-back"],
+  M: ["midfielder", "winger"],
+  F: ["forward", "striker", "winger"],
+};
+const PLAIN: Record<string, string> = { G: "goalkeeper", D: "defender", M: "midfielder", F: "forward" };
+const WEEKDAYS = /\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/gu;
+
+/** The fixes the desk can make without a model: a position word that is not a man's is put right ("Everton defender
+ *  Jordan Pickford"), and a sentence that puts a man on a day he did not play is cut (GW5: "Friday settled nothing beyond
+ *  Gross, whose haul made it 11-0", his haul a Saturday's). */
+export function knownFixes(pieces: ReadonlyMap<number, DraftPiece>, contexts: readonly MatchupContext[]): FactFix[] {
+  const words = Object.values(POSITIONS).flat().join("|");
+  return [...pieces].flatMap(([matchup, piece]) => {
+    const ctx = contexts[matchup - 1];
+    if (ctx === undefined) return [];
+    const men = menOf(ctx);
+    const out: FactFix[] = [];
+    const prose = piece.paragraphs.join("\n");
+    for (const { man, names } of men) {
+      const surname = names.at(-1) ?? man.name;
+      for (const hit of prose.matchAll(new RegExp(`\\b(${words})\\s+((?:\\p{Lu}[\\p{L}'.-]*\\s+)?${escapeRegExp(surname)})\\b`, "gu"))) {
+        const allowed = POSITIONS[man.slot];
+        if (allowed !== undefined && !allowed.includes(hit[1].toLowerCase())) out.push({ matchup, quote: hit[0], correction: `${PLAIN[man.slot]} ${hit[2]}` });
+      }
+    }
+    for (const sentence of sentences(prose)) {
+      const days = [...new Set([...sentence.matchAll(WEEKDAYS)].map((d) => d[1]))];
+      if (days.length !== 1) continue;
+      const wrong = named(sentence, men).some(({ man }) => {
+        const his = [...man.byDay.map((d) => weekdayLongOfDay(d.day)), ...(man.next === null ? [] : [londonWeekdayLong(man.next.kickoff)])];
+        return his.length > 0 && !his.includes(days[0]) && !ctx.state.home.subs.concat(ctx.state.away.subs).some((s) => s.in === man);
+      });
+      if (wrong) out.push({ matchup, quote: sentence, correction: "" });
+    }
+    return out;
+  });
 }
 
 /** The fact checker's JSON as fixes; anything misshapen is dropped. */

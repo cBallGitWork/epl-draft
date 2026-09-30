@@ -34,10 +34,11 @@ const opening = (text: string) => text.split(/\s+/u).slice(0, DRAFT_WRITING.open
 
 /** Every man a match-up may name, with the names the prose may use for him: full and surname. */
 export function menOf(ctx: MatchupContext): Named[] {
-  return everyMan(ctx.state).map((man) => ({ man, names: [...new Set([man.name, surname(man.name)])].filter((n) => n.length > 2) }));
+  return everyMan(ctx.state).map((man) => ({ man, names: [...new Set([man.fullName, man.name, surname(man.name)])].filter((n) => n.length > 2) }));
 }
 
-const named = (text: string, men: readonly Named[]) => men.filter((m) => m.names.some((n) => mentionAt(text, n) >= 0));
+/** The men a text names, by any name the prose may use for them. */
+export const named = (text: string, men: readonly Named[]) => men.filter((m) => m.names.some((n) => mentionAt(text, n) >= 0));
 
 /** A sentence's opening, its men and sides read as N and its figures as #, lower-cased. */
 function shape(sentence: string, names: readonly string[]): string {

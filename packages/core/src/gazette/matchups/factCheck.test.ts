@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { benchTurned } from "./__fixtures__/gw5";
 import { matchupBlock } from "./block";
-import { applyFactFixes, readFactFixes } from "./factCheck";
+import { contextOf } from "./__fixtures__/context";
+import { draftMan } from "./__fixtures__/draftMan";
+import { draftSide, eleven } from "./__fixtures__/draftSide";
+import { applyFactFixes, knownFixes, readFactFixes } from "./factCheck";
 
 const ctx = benchTurned();
 const blocks = [matchupBlock(ctx, "gameweek", 1)];
@@ -24,5 +27,14 @@ describe("the draft report's fact check", () => {
 
   it("leaves the writing alone for a quote it cannot find", () => {
     expect(fix("nothing like this", "anything").made).toBe(0);
+  });
+
+  it("puts a keeper's position right and cuts a man put on a day he did not play, without a model", () => {
+    const wrong = new Map([[1, { paragraphs: ["Everton defender Jordan Pickford kept a clean sheet. Friday belonged to Pickford."] }]]);
+    const keeper = contextOf(draftSide("A", 10, eleven("h", { 0: draftMan("Pickford", "G", 7, 90, 0, { club: "Everton", cleanSheets: 1 }) })), draftSide("B", 5, eleven("a")));
+    expect(knownFixes(wrong, [keeper])).toEqual([
+      { matchup: 1, quote: "defender Jordan Pickford", correction: "goalkeeper Jordan Pickford" },
+      { matchup: 1, quote: "Friday belonged to Pickford.", correction: "" },
+    ]);
   });
 });
