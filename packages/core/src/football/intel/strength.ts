@@ -75,9 +75,9 @@ export interface StrengthRank {
   away: number;
 }
 
-/** Every rated club by its own attack or defence at both venues, the strongest first; ties share a rank. */
+/** Every rated club by its own attack or defence at both venues, the weakest (easiest to face) first; ties share a rank. */
 export function strengthTable(strengths: Map<number, ClubStrength>, measure: "attack" | "defence"): StrengthRank[] {
-  const rank = (venue: Venue) => competitionRanks(strengths, (club) => club[measure][venue], "descending");
+  const rank = (venue: Venue) => competitionRanks(strengths, (club) => club[measure][venue], "ascending");
   const home = rank("home");
   const away = rank("away");
   return [...strengths.values()]
