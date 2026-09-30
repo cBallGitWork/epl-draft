@@ -1,5 +1,5 @@
 import { DRAFT_WRITING } from "../../config";
-import { banned } from "../banned";
+import { banned, escapeRegExp } from "../banned";
 import type { Fault } from "../predictions/checks";
 import { masked, mentionAt, ngrams, numbersIn, sentences } from "../predictions/prose";
 import { surname } from "../reports/keyStats";
@@ -103,6 +103,12 @@ export function listFaults(piece: DraftPiece, ctx: MatchupContext, at: number, c
       const n = word === "a single" || word === "one" ? 1 : figures(word)[0];
       if (n !== undefined && n !== who[0].man.points && !GAP.test(s.slice(0, hit.index))) flag("a man's points misstated", `${who[0].man.name}: ${hit[0]}, not ${who[0].man.points}`);
     }
+  }
+  // A man keeps other clubs out, never his own: GW5 had "Pickford kept Everton out" twice and "Justin of Leeds keeping
+  // Leeds out".
+  for (const m of men) {
+    const own = new RegExp(`(?:kept|keeping|keeps|keep|shut|shutting|shuts)\\s+(?:the\\s+)?${escapeRegExp(m.man.club)}\\s+out|shut(?:ting|s)?\\s+out\\s+(?:the\\s+)?${escapeRegExp(m.man.club)}\\b`, "iu");
+    if (m.names.some((n) => mentionAt(prose, n) >= 0) && own.test(prose)) flag("a man keeping his own club out", `${m.man.name} of ${m.man.club}`, "hard");
   }
   // A first name the brief never gave is memory, and memory was wrong: GW5's "Anthony Hall" is Lewis.
   for (const name of unbriefedNames(prose, ctx, block)) flag("a name the brief does not give", name, "hard");

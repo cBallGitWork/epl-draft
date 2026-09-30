@@ -19,7 +19,10 @@ export const DRAFT_SPEECH: readonly string[] = [
 
 /** Who is still to play is the fixture list, never a manager's choice (Craig, 30 Sep 2026: "makes it sound like the
  *  manager made a choice"). */
-export const DRAFT_CHOICE: readonly string[] = ["keep back", "keeps back", "kept back", "held back", "holding back", "saving", "saved for", "in reserve", "waiting for", "waiting in"];
+export const DRAFT_CHOICE: readonly string[] = [
+  "keep back", "keeps back", "kept back", "held back", "holding back", "saving", "saved for", "in reserve", "waiting for", "waiting in",
+  "chose", "chosen", "choose", "picked", "selected", "opted",
+];
 
 /** Why a man did not play is not in the facts: the brief says he did not, and nothing more. */
 export const DRAFT_REASONS: readonly string[] = ["left out", "absent", "missing", "dropped", "rested", "benched", "omitted", "sidelined", "unavailable", "missed out"];

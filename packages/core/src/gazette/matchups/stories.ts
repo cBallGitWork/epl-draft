@@ -75,7 +75,9 @@ export function subLine(s: AutoSub, cutoff: Cutoff): string {
   // "Replaced", not "came on": the paper's banned list keeps "came on" for the Premier League's own substitutions.
   const on = `${withClub(s.in)} ${cutoff === "gameweek" ? "replaced" : "replaces"} ${withClub(s.out)}, who did not play`;
   if (s.provisional) return `${on}, if he plays`;
-  if (s.ahead !== null) return `${on}, or ${s.ahead.name} if he does not play; his points count either way`;
+  // Whom he replaces is not settled until the man ahead has played, so it is never named: GW5's Saturday said Elanga, the
+  // gameweek Rodon.
+  if (s.ahead !== null) return `${withClub(s.in)} comes into the eleven at the end of the gameweek for a man who did not play; his points count whichever it is`;
   const got = gotLine(s.in);
   if (cutoff === "gameweek") return `${on}, and ${got ?? `brought ${pts(s.in.points ?? 0)}`}`;
   return `${on}, with ${got === null ? pts(s.in.points ?? 0) : `${s.in.points ?? 0}: ${returnWords(s.in)}`}`;

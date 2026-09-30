@@ -59,6 +59,13 @@ describe("listFaults", () => {
     expect(said("Gray played on as test4 fell behind by ten points.")).not.toContain("a man's points misstated");
   });
 
+  it("fails a man keeping his own club out", () => {
+    const justin = contextOf(draftSide("test4", 30, eleven("f", { 1: draftMan("Justin", "D", 6, 90, 0, { club: "Leeds", cleanSheets: 1 }) })), draftSide("test3", 40, eleven("c")));
+    const said = (line: string) => listFaults({ paragraphs: [line, "test3 go to test2 next on Sunday."] }, justin, 1, "gameweek", matchupBlock(justin, "gameweek", 2), []).map((f) => `${f.severity}: ${f.check}`);
+    expect(said("Justin of Leeds keeping Leeds out gave test4 Sunday.")).toContain("hard: a man keeping his own club out");
+    expect(said("Justin kept a clean sheet for Leeds on Sunday.")).not.toContain("hard: a man keeping his own club out");
+  });
+
   it("sends back a first name the brief never gave", () => {
     const pickford = contextOf(draftSide("test3", 40, eleven("c", { 0: draftMan("Pickford", "G", 7, 90, 0, { club: "Everton", cleanSheets: 1 }) })), draftSide("test4", 30, eleven("f")));
     const said = (line: string) => listFaults({ paragraphs: [line, "test3 go to test2 next on Sunday."] }, pickford, 1, "gameweek", matchupBlock(pickford, "gameweek", 2), []).map((f) => `${f.severity}: ${f.check}`);
