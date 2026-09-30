@@ -58,6 +58,24 @@ describe("sideStories", () => {
     expect(lines).toEqual(["Dons: Hemmings (Aston Villa) did not start and played 18 minutes off the bench, 1 point for the appearance", "Dons: Isidor (Sunderland) went off after 22 minutes"]);
   });
 
+  it("tells a signing for the gameweek in place of his first time in the eleven, and Fantrax's word after his match", () => {
+    const lines = stories(
+      side([
+        draftMan("Wissa", "F", 2, 90, 0, { club: "Newcastle", arrived: "claim", debut: true }),
+        draftMan("Cunha", "F", 2, 90, 0, { club: "Man Utd", arrived: "trade" }),
+        draftMan("Millar", "M", null, 0, 0, { club: "Hull", fitness: "Liam Millar (knee) out for Saturday" }),
+        draftMan("Isak", "F", 1, 34, 0, { club: "Liverpool", started: true, fitness: "Isak (groin) forced off" }),
+      ]),
+    );
+    expect(lines).toEqual([
+      "Dons: Wissa (Newcastle) was signed by Dons this gameweek",
+      "Dons: Cunha (Man Utd) joined Dons in a trade this gameweek",
+      "Dons: Millar (Hull) did not play; since: Liam Millar (knee) out for Saturday",
+      "Dons: Isak (Liverpool) went off after 34 minutes; since: Isak (groin) forced off",
+      "Dons: Millar (Hull) did not play and no reserve replaced him",
+    ]);
+  });
+
   it("knows a keeper by the league's goalie slot, not by a missing goal price", () => {
     const unpriced = { ...worthOf(), returns: {}, keeper: "G" };
     expect(sideStories(side([draftMan("Hall", "D", 9, 90, 0, { club: "Newcastle", goals: 1 })]), [], unpriced, "gameweek", 10)).toEqual(["Dons: Hall (Newcastle) got 9: a goal"]);

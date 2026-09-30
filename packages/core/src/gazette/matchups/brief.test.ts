@@ -39,6 +39,12 @@ describe("buildDraftBrief", () => {
     expect(brief).toContain("MATCH-UP 1: Dons v Notemail");
   });
 
+  it("says where each side goes next only once the gameweek is done", () => {
+    const next = { home: { name: "Villans", rank: 1 }, away: { name: "Toffees", rank: null } };
+    expect(buildDraftBrief("gameweek", 5, [{ ...context, next }])).toContain("NEXT GAMEWEEK, may be left out:\n- Dons play Villans, 1st after this gameweek\n- Notemail play Toffees");
+    expect(buildDraftBrief("saturday", 5, [{ ...context, next }])).not.toContain("NEXT GAMEWEEK");
+  });
+
   it("leads with a result the substitutions flipped, then the closest", () => {
     const at = (score: string, margin: number): MatchupContext => ({ ...context, state: { ...context.state, score, margin } });
     const flipped = at("A beat B 33-28; B led 26-24 before the substitutions", 5);

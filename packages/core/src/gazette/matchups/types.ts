@@ -23,6 +23,8 @@ export interface DraftMan {
   left: number;
   /** His first time in this side's eleven this season. */
   debut: boolean;
+  /** He came to this side for this gameweek: signed in a claim, or in a trade; null when he was already there. */
+  arrived: "claim" | "trade" | null;
   /** Projected points for what he has left; orders who is named first and is never printed. Null when there is none. */
   projected: number | null;
   /** His club's next match in the gameweek; null when nothing is left. */
@@ -31,7 +33,8 @@ export interface DraftMan {
   started: boolean | null;
   /** His club's Premier League matches this gameweek, by FPL code, with "Sunderland v Man City" to name each. */
   matches: { code: number; label: string }[];
-  /** Fitness news dated after his last match, in the league's words; null when there is none. */
+  /** Fantrax's first story on him after his last match, read only for a man who did not play it or went off before the
+   *  hour; null when there is none. */
   fitness: string | null;
   /** His returns to the cut-off, from Fantrax's own counts: a clean sheet counts only where his slot is paid for one. */
   goals: number;

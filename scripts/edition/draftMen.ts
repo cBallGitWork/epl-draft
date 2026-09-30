@@ -16,6 +16,7 @@ export interface ManReads {
   starters: ReadonlyMap<number, ReadonlySet<number>>;
   history: ReadonlyMap<string, Sheet[]>;
   projections: ReadonlyMap<number, ProjectedPlayer>;
+  arrivals: ReadonlyMap<string, { teamId: string; how: "claim" | "trade" }>;
 }
 
 export function draftManOf(m: SheetMan, sheet: Sheet, r: ManReads): DraftMan {
@@ -30,6 +31,7 @@ export function draftManOf(m: SheetMan, sheet: Sheet, r: ManReads): DraftMan {
   const paidClean = priceOf(r.worth, m.slot, "clean sheet") >= DRAFT_DESK.cleanSheetStory;
   const appeared = (got?.minutes ?? 0) > 0;
   const theirGoals = done.flatMap((f) => r.goals.get(f.code) ?? []);
+  const arrival = r.arrivals.get(m.fantraxId);
   return {
     fantraxId: m.fantraxId,
     code: m.player.code,
@@ -43,11 +45,12 @@ export function draftManOf(m: SheetMan, sheet: Sheet, r: ManReads): DraftMan {
     played: done.length,
     left: games.length - done.length,
     debut: (debuts(sheet, r.history.get(sheet.teamId) ?? []) ?? []).some((d) => d.fantraxId === m.fantraxId),
+    arrived: arrival?.teamId === sheet.teamId ? arrival.how : null,
     projected: r.projections.get(m.player.code)?.gameweeks.find((g) => g.gw === r.gameweek)?.points ?? null,
     next: opponent === undefined || coming === undefined ? null : { opponent: opponent.name, home, kickoff: coming.kickoff! },
     started: appeared ? startedOf(m.player.code, done.map((f) => f.code), r.starters) : null,
     matches: games.map((f) => ({ code: f.code, label: `${r.clubs.get(f.homeClubId)?.name ?? "?"} v ${r.clubs.get(f.awayClubId)?.name ?? "?"}` })),
-    // Fitness from Fantrax's own news arrives with its own read; until then no man carries any.
+    // Read after the men are built, for the few who need it (draftFitness.ts).
     fitness: null,
     goals: got?.goals ?? 0,
     assists: got?.assists ?? 0,

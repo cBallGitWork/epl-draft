@@ -17,6 +17,12 @@ export interface TablePlace {
   run: string;
 }
 
+/** A side's opponent next gameweek, and his place once this one is added when that is known. */
+export interface NextOpponent {
+  name: string;
+  rank: number | null;
+}
+
 export interface MatchupContext {
   state: MatchupState;
   places: { home: TablePlace | null; away: TablePlace | null };
@@ -26,10 +32,19 @@ export interface MatchupContext {
   form: SeasonFact[];
   /** Stories from outside the gameweek's points: an old boy facing the side that let him go. */
   oldBoys: string[];
+  /** Each side's opponent next gameweek; null when it has none. */
+  next: { home: NextOpponent | null; away: NextOpponent | null };
 }
 
 const place = (name: string, p: TablePlace | null) =>
   p === null ? null : `- ${name}: ${ordinal(p.rank)}, won ${p.won}, drawn ${p.drawn}, lost ${p.lost}${p.run === "" ? "" : `; last results ${p.run.split("").join(" ")}`}`;
+
+/** Where each side goes next, for a closing line; nothing after Saturday, with the gameweek still to finish. */
+function nextBlock(ctx: MatchupContext): string | null {
+  const line = (name: string, next: NextOpponent | null) => (next === null ? null : `- ${name} play ${next.name}${next.rank === null ? "" : `, ${ordinal(next.rank)} after this gameweek`}`);
+  const lines = [line(ctx.state.home.side.name, ctx.next.home), line(ctx.state.away.side.name, ctx.next.away)].filter((l) => l !== null);
+  return lines.length === 0 ? null : ["NEXT GAMEWEEK, may be left out:", ...lines].join("\n");
+}
 
 export function matchupBlock(ctx: MatchupContext, cutoff: Cutoff, n: number): string {
   const { home, away, score, stillToPlay, stories } = ctx.state;
@@ -42,6 +57,7 @@ export function matchupBlock(ctx: MatchupContext, cutoff: Cutoff, n: number): st
     // The bracketed kind tells the writer which frame a fact takes; it is never printed.
     ctx.form.length === 0 ? null : ["FORM AND THE TABLE:", ...ctx.form.map((f) => `- ${f.text} [${f.kind}]`)].join("\n"),
     stories.length + ctx.oldBoys.length === 0 ? null : ["THE STORIES:", ...[...stories, ...ctx.oldBoys].map((line) => `- ${line}`)].join("\n"),
+    cutoff === "saturday" ? null : nextBlock(ctx),
   ]
     .filter((block) => block !== null)
     .join("\n\n");

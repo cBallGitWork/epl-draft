@@ -7,6 +7,7 @@ import {
   fetchSeasonResults,
   fetchTeamRosterInfo,
   draftReportsDue,
+  headToHead,
   isSaturday,
   leadFirst,
   getFootballSnapshot,
@@ -27,12 +28,14 @@ import {
   type DraftSide,
   type IntelProjections,
   type MatchupContext,
+  type NextOpponent,
   type Sheet,
   type SheetMan,
 } from "@epl/core";
 import { INTEL_SEASON, readIntel } from "../intel";
 import { gatherRoundFacts } from "./facts";
 import { categoryIds, matchReads, slotWorth, tallies } from "./draftReads";
+import { withFitness, type StoryCache } from "./draftFitness";
 import { draftManOf, type ManReads } from "./draftMen";
 import { draftSeason, gameweekFacts, meetingsOf, placeOf, ranksAfter } from "./draftSeason";
 import { minimums } from "./rosterMinimums";
@@ -81,6 +84,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
 
   const cutoffs = new Map<Cutoff, MatchupContext[]>();
   let rankAfter = new Map<string, number>();
+  const stories: StoryCache = new Map();
   // Only a report that is due: a cut-off whose matches are all settled. An unplayed gameweek would read as nought-nought.
   const due = new Set(draftReportsDue(schedule, gameweek).map((d) => d.cutoff));
   for (const [cutoff, last] of ([["saturday", saturday], ["gameweek", days.at(-1)!]] as const).filter(([c]) => due.has(c))) {
@@ -90,7 +94,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
     const byDay = new Map<string, DayPoints[]>();
     for (const { date, raw } of upTo) for (const s of mapLiveScores(raw)) byDay.set(s.teamId, [...(byDay.get(s.teamId) ?? []), { day: date, points: s.points ?? 0 }]);
 
-    const reads_: ManReads = { gameweek, last, fixtures, clubs, byMan, worth, goals, starters, history, projections };
+    const reads_: ManReads = { gameweek, last, fixtures, clubs, byMan, worth, goals, starters, history, projections, arrivals: season.arrivals };
     const draftMan = (m: SheetMan, sheet: Sheet): DraftMan => draftManOf(m, sheet, reads_);
     const side = (teamId: string): DraftSide | null => {
       const team = facts.teams.find((t) => t.teamId === teamId);
@@ -109,14 +113,20 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
         subOrder: order,
       };
     };
+    // Fitness news up to the next day's first kickoff after Saturday; within its few days at the end of the gameweek.
+    const after = fixtures.map((f) => f.kickoff!).filter((k) => londonDayOf(k)! > last).sort()[0];
+    const until = after === undefined ? Infinity : Date.parse(after);
+    const fit = (s: DraftSide | null) => (s === null ? null : withFitness(s, fixtures, stories, until));
     // Every match-up first: the gameweek's form and table facts need all of their results at once.
-    const states = facts.pairings.flatMap((pairing) => {
-      const [home, away] = [side(pairing.home.teamId), side(pairing.away.teamId)];
-      return home === null || away === null ? [] : [matchupState({ home, away }, worth, limits, cutoff)];
-    });
+    const pairs = await Promise.all(facts.pairings.map(async (p) => ({ home: await fit(side(p.home.teamId)), away: await fit(side(p.away.teamId)) })));
+    const states = pairs.flatMap(({ home, away }) => (home === null || away === null ? [] : [matchupState({ home, away }, worth, limits, cutoff)]));
     const formFacts = gameweekFacts(season, states, cutoff);
     if (cutoff === "gameweek") rankAfter = ranksAfter(season, states);
     const boys = (men: DraftSide, them: DraftSide) => oldBoys(men.eleven, { teamId: them.teamId, name: them.name }, season.formerly);
+    const nextOf = (teamId: string): NextOpponent | null => {
+      const h2h = headToHead(info.matchups, info.teams, period + 1, teamId);
+      return h2h === undefined ? null : { name: h2h.opponent.name, rank: rankAfter.get(h2h.opponent.teamId) ?? null };
+    };
     cutoffs.set(
       cutoff,
       leadFirst(states.map((state) => ({
@@ -125,6 +135,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
         meetings: meetingsOf(season, state.home.side, state.away.side),
         form: [...(formFacts.get(state.home.side.teamId) ?? []), ...(formFacts.get(state.away.side.teamId) ?? [])],
         oldBoys: [...boys(state.home.side, state.away.side), ...boys(state.away.side, state.home.side)],
+        next: { home: nextOf(state.home.side.teamId), away: nextOf(state.away.side.teamId) },
       })), cutoff),
     );
   }

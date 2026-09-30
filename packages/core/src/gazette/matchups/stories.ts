@@ -52,8 +52,10 @@ function manLine(m: DraftMan, side: DraftSide, worth: SlotWorth): string | null 
   // A man off the bench got the lesser appearance point: that is the story, not the minutes (Craig, 30 Sep 2026).
   if (m.started === false && m.minutes > 0) parts.push(`did not start and played ${m.minutes} minutes off the bench${returns === 0 ? `, ${pts(m.points ?? 0)} for the appearance` : ""}`);
   else if (m.minutes > 0 && m.minutes < DRAFT_DESK.earlyOff && m.left === 0) parts.push(m.started === true ? `went off after ${m.minutes} minutes` : `played ${m.minutes} minutes`);
-  if (m.debut) parts.push(`was in ${side.name}'s eleven for the first time`);
-  if (m.fitness !== null) parts.push(m.fitness);
+  // A man new to the side is in its eleven for the first time too: the signing is the story.
+  if (m.arrived !== null) parts.push(m.arrived === "trade" ? `joined ${side.name} in a trade this gameweek` : `was signed by ${side.name} this gameweek`);
+  else if (m.debut) parts.push(`was in ${side.name}'s eleven for the first time`);
+  if (m.fitness !== null) parts.push(`${m.minutes === 0 ? "did not play; " : ""}since: ${m.fitness}`);
   return parts.length === 0 ? null : `${named(m)} ${parts.join("; ")}`;
 }
 

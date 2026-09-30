@@ -37,6 +37,8 @@ export interface DraftSeason {
   info: LeagueInfo;
   /** Where each man has been: the side that drafted him, traded him or released him. */
   formerly: Map<string, FormerSide[]>;
+  /** The men who came to a side for this gameweek, by fantraxId: a claim or a trade taking effect in its period. */
+  arrivals: Map<string, { teamId: string; how: "claim" | "trade" }>;
 }
 
 export async function draftSeason(info: LeagueInfo, table: readonly StandingsRow[], results: readonly PeriodResult[], pedigree: ReadonlyMap<string, DraftPick>, period: number): Promise<DraftSeason> {
@@ -47,12 +49,14 @@ export async function draftSeason(info: LeagueInfo, table: readonly StandingsRow
   for (const [id, pick] of pedigree) add(id, { teamId: pick.teamId, how: "drafted", when: pick.round });
   const [claims, trades] = await Promise.all([fetchTransactions(FANTRAX_LEAGUE_ID, "CLAIM_DROP").catch(() => null), fetchTransactions(FANTRAX_LEAGUE_ID, "TRADE").catch(() => null)]);
   const moves = [...(claims === null ? [] : mapTransactions(claims, "CLAIM_DROP")), ...(trades === null ? [] : mapTransactions(trades, "TRADE"))];
+  const arrivals = new Map<string, { teamId: string; how: "claim" | "trade" }>();
   for (const t of moves) {
+    if ((t.kind === "claim" || t.kind === "trade") && t.executed && t.period === period && t.toTeamId !== null) arrivals.set(t.fantraxId, { teamId: t.toTeamId, how: t.kind });
     if (t.fromTeamId === null || t.period === null || t.period >= period || !t.executed) continue;
     if (t.kind === "trade") add(t.fantraxId, { teamId: t.fromTeamId, how: "traded", when: t.period });
     if (t.kind === "drop") add(t.fantraxId, { teamId: t.fromTeamId, how: "released", when: t.period });
   }
-  return { period, runs, table: pay === null ? null : tableBefore(table, runs, period, pay), results, info, formerly };
+  return { period, runs, table: pay === null ? null : tableBefore(table, runs, period, pay), results, info, formerly, arrivals };
 }
 
 /** A side's place and record before the gameweek, with its last five results. */
