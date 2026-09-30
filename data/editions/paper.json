@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-30T18:25:07.967Z",
+  "updatedAt": "2026-09-30T19:39:51.636Z",
   "stories": [
     {
       "slug": "news-cmrr48zqz1jno",
@@ -569,6 +569,26 @@
           }
         }
       ]
+    },
+    {
+      "slug": "news-cr1e5ep101wdo",
+      "kind": "news",
+      "leagueId": "zbn1z3ukmsgb36sz",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-30T19:39:51.636Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "Tuchel Rates Thomas Priceless, test3331 Nods Along",
+      "deck": "Tuchel calls Kane irreplaceable; test3331 owns the England captain in this league.",
+      "body": "Thomas Tuchel has called Harry Kane irreplaceable, the England manager conceding another captain of his kind cannot be found. For test3331, none of that is abstract. The name over the byline is the name on his sheet.\n\nNothing here moves a line-up or a return. It is a manager rating the asset test3331 already holds, and the verdict is the one every owner wants read aloud. What it is worth on a Saturday is a separate matter, and the wire does not touch it.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/articles/cr1e5ep101wdo"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
     },
     {
       "slug": "news-ckge43e8nqdwo",
@@ -6438,31 +6458,6 @@
       ],
       "image": null,
       "face": null,
-      "ties": []
-    },
-    {
-      "slug": "gw5-eleven",
-      "kind": "eleven",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-23T17:18:14.294Z",
-      "expiresAt": null,
-      "edition": "The Monday Club",
-      "byline": "The Selector",
-      "headline": "Semenyo Says So",
-      "deck": "Semenyo's two goals and an assist top the gameweek 5 team of the week, picked 1-2-5-3.",
-      "body": "Semenyo is the man of the week and there is no argument to be had. Two goals and an assist across a full ninety, a forward doing the forward's job and then some, and nobody else in the side matched the sheer weight of it. test1 have the top score and they have earned the top billing.\n\nThe back is thin by design and richer for it. Hall took a goal from defence for test2, and Tarkowski paired an assist with a clean sheet for testf, the sort of line a manager builds a season on. Between them and behind them sits the week's real story: Rushworth kept his clean sheet, found an assist and made two saves, and test211 left him on the bench. A goalkeeper does everything asked and his own manager looks the other way. He is not alone in that indignity, because Gomez did the same in midfield for test31, an assist and a clean sheet watched from the sidelines by the man who owns him.\n\nThe middle is where the depth lives. Groß gave 123 a goal, an assist and a clean sheet, the complete midfielder's return, and Barnes matched him for creation with two assists for testf. Willock took his goal, Wirtz found his assist and his clean sheet inside seventy minutes, and the five hang together as a unit rather than a collection.\n\nThe front carries the rest. Kostoulas gave test31121 a goal, an assist and a clean sheet in seventy-five minutes, and Schade turned two assists into a forward's afternoon for 123 without troubling the scorers himself. It is a line that created as much as it finished.\n\nUnlucky to miss out, and it is close, is anyone who wanted a fifth forward, but the shape does not allow it. Nobody outscored Semenyo, so nobody displaces him, and the two benched men keep their places on merit whatever their managers thought.\n\nAnd finally, a word about the two managers who sat their own best men. Rushworth and Gomez did everything a manager could ask and were trusted with none of it. The team of the week found room for both. Their owners did not.",
-      "subjects": [
-        "eleven:gw5"
-      ],
-      "image": null,
-      "face": {
-        "code": 437730,
-        "name": "Semenyo",
-        "clubId": 15,
-        "position": "F"
-      },
       "ties": []
     }
   ]

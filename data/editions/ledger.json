@@ -249,9 +249,17 @@
       "match-report:gw5:2026-09-20",
       "news:https://www.bbc.co.uk/sounds/play/p0pd5x19",
       "news:https://www.bbc.co.uk/sport/football/articles/ckq5xp9p1v31o",
-      "news:https://www.bbc.co.uk/sport/football/articles/ckge43e8nqdwo"
+      "news:https://www.bbc.co.uk/sport/football/articles/ckge43e8nqdwo",
+      "news:https://www.bbc.co.uk/sport/football/articles/cr1e5ep101wdo"
     ],
     "threads": [
+      {
+        "subject": "test3331's Thomas asset",
+        "beat": "Tuchel calls the England captain irreplaceable; no fixture bearing.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-30T19:39:51.636Z"
+      },
       {
         "subject": "123's Haaland asset",
         "beat": "City verdict lands, Norway report the striker unaffected and fit for Wales",
