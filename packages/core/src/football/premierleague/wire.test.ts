@@ -60,7 +60,21 @@ const assisters = (credited: MatchEvent[]) => credited.map((g) => [g.minute, g.p
 describe("creditRoundAssists", () => {
   it("credits the three Opta never placed, from this match's own commentary", () => {
     const streams = new Map<number, FixtureStream>([[CODE, { events: EVENTS, kickoffMillis: null }]]);
-    expect(assisters(creditRoundAssists(goals, players, [FIXTURE], stats, streams, codes))).toEqual([
+    expect(assisters(creditRoundAssists(goals, players, [FIXTURE], stats, streams, codes, new Map()))).toEqual([
+      ["40", CUNHA],
+      ["56", MAGUIRE],
+      ["61", CUNHA],
+      ["68", MBEUMO],
+      ["82", FERNANDES],
+    ]);
+  });
+
+  it("credits the three with no commentary at all, off the stats league's kinds", () => {
+    const kinds = new Map([
+      [MAGUIRE, { penaltyWon: 0, ownGoalForced: 1, freeKickWon: 0, freeKickGoals: 0 }],
+      [CUNHA, { penaltyWon: 1, ownGoalForced: 0, freeKickWon: 0, freeKickGoals: 0 }],
+    ]);
+    expect(assisters(creditRoundAssists(goals, players, [FIXTURE], stats, new Map(), codes, kinds))).toEqual([
       ["40", CUNHA],
       ["56", MAGUIRE],
       ["61", CUNHA],
@@ -72,7 +86,7 @@ describe("creditRoundAssists", () => {
   it("never reads another match's commentary", () => {
     // The wire looked streams up by FPL's fixture id and got 1992's matches for all fifty of GW1-5.
     const streams = new Map<number, FixtureStream>([[FIXTURE.id, { events: EVENTS, kickoffMillis: null }]]);
-    expect(assisters(creditRoundAssists(goals, players, [FIXTURE], stats, streams, codes))).toEqual([
+    expect(assisters(creditRoundAssists(goals, players, [FIXTURE], stats, streams, codes, new Map()))).toEqual([
       ["40", CUNHA],
       ["56", null],
       ["61", null],

@@ -1,4 +1,4 @@
-import type { PlGoal } from "./goals";
+import { assistsPlaced, type PlGoal } from "./goals";
 import type { RawPlEvent } from "./raw";
 
 // The three assists FPL pays and Opta does not place.
@@ -182,11 +182,7 @@ export function streamCredited(
     return said?.assister == null ? goal : { ...goal, assister: said.assister };
   });
 
-  const placed = new Map<number, number>();
-  for (const goal of proposed) {
-    if (goal.assister === null) continue;
-    placed.set(goal.assister, (placed.get(goal.assister) ?? 0) + 1);
-  }
+  const placed = assistsPlaced(proposed);
 
   const names = new Set([...placed.keys(), ...fplAssists.keys()]);
   for (const name of names) {

@@ -68,6 +68,12 @@ export function isUnmapped(entry: BridgeEntry): entry is UnmappedEntry {
   return "status" in entry && entry.status === "unmapped";
 }
 
+/** A Fantrax player's FPL code, or null for a man FPL has no row for or the bridge has not seen. */
+export function fplCodeOf(bridge: Bridge, fantraxId: string): number | null {
+  const entry: BridgeEntry | undefined = bridge[fantraxId];
+  return entry === undefined || isUnmapped(entry) ? null : entry.fplCode;
+}
+
 /** A row the script wrote from its own evidence and may therefore revise.
  *
  *  The only revisable state in the file. Everything else — every match, and every

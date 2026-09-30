@@ -28,6 +28,7 @@ import { marks } from "../involvement";
 
 import { readerTeamId } from "../squads";
 import { creditAssists, roundBreaks, roundGoals, roundRedCards, roundStreams } from "../commentary";
+import { roundAssistKinds } from "../assistKinds";
 import { TAB } from "@/app/desk";
 import Vidiprinter from "./Vidiprinter";
 import { wireLines } from "./wireLines";
@@ -81,18 +82,19 @@ export default async function MatchdayPage({
   // The round's goals, joined to the men who own them: one upstream request for
   // ten matches, and the question neither Fantrax nor FPL can answer — not who
   // scored, but whose he is. The breaks come off the same cached read.
-  const [goals, streams, breaks, stats, mine, squads] = await Promise.all([
+  const [goals, streams, breaks, stats, mine, squads, kinds] = await Promise.all([
     roundGoals(snapshot.gameweek, snapshot.players),
     roundStreams(snapshot.gameweek),
     roundBreaks(snapshot.gameweek),
-    // FPL's own per-man assist counts, which is what audits the commentary's
-    // proposal in `creditAssists`. One cached read for the round.
+    // FPL's own per-man assist counts, which audit every proposal in `creditAssists`.
+    // One cached read for the round.
     gameweekLive(snapshot.gameweek),
     readerTeamId(),
     getLeagueSquads(),
+    roundAssistKinds(snapshot.gameweek),
   ]);
   const reds = roundRedCards(streams, snapshot.players);
-  const scored = creditAssists(goals, snapshot, stats, streams);
+  const scored = creditAssists(goals, snapshot, stats, streams, kinds);
 
   // **The day being played, not the whole round** — Craig, 5 Sep 2026: *"Maybe
   // the live tab only shows matches from TODAY, to keep the space?"* A gameweek

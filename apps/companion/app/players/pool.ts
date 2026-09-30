@@ -11,7 +11,7 @@ import {
   mapPlayerPool,
   mapPoolStats,
   mapTeamRosters,
-  isUnmapped,
+  fplCodeOf,
   onTheBooks,
   playerByCode,
   positionDepth,
@@ -151,14 +151,10 @@ async function readLeaguePool(): Promise<CachedPool> {
 
   return {
     rows: leaguePool(mapPlayerPool(pool), league.players, held).map((entry) => {
-      const mapped = bridge[entry.player.fantraxId];
       return {
         entry,
         stats: byId.get(entry.player.fantraxId) ?? null,
-        // Asked through the bridge's own guard rather than by sniffing for the
-        // field: an unmapped row records that FPL has no such player, which is a
-        // settled answer and not a gap, and the check belongs with the type.
-        fplCode: mapped && !isUnmapped(mapped) ? mapped.fplCode : null,
+        fplCode: fplCodeOf(bridge, entry.player.fantraxId),
       };
     }),
     positions: Object.keys(league.roster.maxActiveByPosition).sort(

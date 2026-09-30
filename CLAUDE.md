@@ -85,7 +85,11 @@ npm run intel-check     # is the intel export fresh and whole
   smoke and team-codes refuse to run without it. CI keeps no copy: it asks production
   (`GET /api/league`). **The swap is one change**: set it to `mqsjd23smsgbiqzr` in Vercel and
   redeploy (`/swap-day`).
-- The leagues the archive records are data, in `data/leagues/recorded.json`; only scripts read it.
+- The leagues the archive records are data, in `data/leagues/recorded.json`, each named by a
+  word (`real`, `dummy`, `rehearsal`). Scripts read it; the app reads one role from it, `stats`:
+  the league whose scoring lists every column at no points, read only for columns the served
+  league must not list. **Two leagues, never interchangeable**: the served one is the environment's
+  and swaps on 10 Oct; the stats one is data and does not.
 - `FANTRAX_DEMO_TEAM_ID` lends a test league's team to a reader with no code, and only when that
   team is in the served league.
 - **Two `.env.local` files.** `next dev` roots at `apps/companion`, so the app reads
