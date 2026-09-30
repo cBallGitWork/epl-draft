@@ -21,6 +21,11 @@ describe("the table after the round", () => {
     const climb = tableAfter(before, [side("test4", 100, 10), side("Notemail", 10, 50), side("Dons", 10, 50), side("123", 10, 50), side("test2", 10, 50)])!;
     expect(tableMoves(before, climb).map((f) => f.text)).toContain("test4 rose from 5th to 3rd");
   });
+
+  it("says a leader stayed top", () => {
+    const held = tableAfter(before, [side("Dons", 40, 20), side("123", 20, 40), side("Notemail", 30, 31), side("test4", 10, 50), side("test2", 50, 10)])!;
+    expect(tableMoves(before, held)).toContainEqual({ teamId: "Dons", kind: "stayed-top", text: "Dons stayed top" });
+  });
 });
 
 describe("tableBefore", () => {

@@ -3,7 +3,7 @@ import {
   fetchTransactions,
   goingIn,
   mapTransactions,
-  meetingLines,
+  meetingsWon,
   periodPairings,
   gameweekForm,
   seasonForm,
@@ -66,8 +66,9 @@ export function placeOf(season: DraftSeason, teamId: string): TablePlace | null 
   return row === undefined ? null : { rank: row.rank, won: row.won, drawn: row.drawn, lost: row.lost, run: run.map((g) => g.result).join("") };
 }
 
-/** Two sides' earlier meetings, from the home side's view. */
-export function meetingsOf(season: DraftSeason, home: { teamId: string; name: string }, away: { teamId: string; name: string }): string[] {
+/** Two sides' meetings, from the home side's view, as a clean sweep's season fact when one side won them all; `now` is
+ *  this gameweek's result once it is settled. */
+export function sweepOf(season: DraftSeason, home: { teamId: string; name: string }, away: { teamId: string; name: string }, now: { for: number; against: number } | null): SeasonFact | null {
   const scored = (p: number, teamId: string) => season.results.find((r) => r.period === p && r.teamId === teamId)?.points;
   const met = [];
   for (let p = 1; p < season.period; p++) {
@@ -75,7 +76,7 @@ export function meetingsOf(season: DraftSeason, home: { teamId: string; name: st
     const [h, a] = [scored(p, home.teamId), scored(p, away.teamId)];
     if (pairing !== undefined && typeof h === "number" && typeof a === "number") met.push({ period: p, for: h, against: a });
   }
-  return meetingLines(home.name, away.name, met);
+  return meetingsWon(home, away, now === null ? met : [...met, { period: season.period, ...now }]);
 }
 
 /** The sides' results in the gameweek, with the substitutions, from each side's point of view. */

@@ -15,10 +15,10 @@ export interface FormFact {
   text: string;
 }
 
-/** A form or a table fact, as the brief carries either: its kind tells the writer which frame it takes. */
+/** A form, a table or a meetings fact, as the brief carries any of them: its kind tells the writer which frame it takes. */
 export interface SeasonFact {
   teamId: string;
-  kind: FormKind | TableKind;
+  kind: FormKind | TableKind | "meetings-won";
   text: string;
 }
 

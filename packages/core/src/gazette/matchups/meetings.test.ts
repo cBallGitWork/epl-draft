@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { meetingLines, oldBoys } from "./meetings";
+import { meetingsWon, oldBoys } from "./meetings";
 
-describe("meetingLines", () => {
-  it("gives the last meeting alone after one, and a clean sweep or a record after more", () => {
-    expect(meetingLines("Dons", "Notemail", [{ period: 2, for: 40, against: 31 }])).toEqual(["the last meeting: Dons won 40-31 in gameweek 2"]);
-    expect(meetingLines("Dons", "Notemail", [{ period: 2, for: 40, against: 31 }, { period: 9, for: 38, against: 30 }])).toEqual(["Dons have won all 2 meetings with Notemail", "the last meeting: Dons won 38-30 in gameweek 9"]);
-    expect(meetingLines("Dons", "Notemail", [{ period: 2, for: 40, against: 31 }, { period: 9, for: 30, against: 30 }])).toEqual(["Dons' record against Notemail is won 1, drawn 1, lost 0", "the last meeting: they drew 30-30 in gameweek 9"]);
-    expect(meetingLines("Dons", "Notemail", [])).toEqual([]);
+describe("meetingsWon", () => {
+  it("is a fact for the side that won every meeting, from two on, and nothing for a mixed record", () => {
+    const [dons, notemail] = [{ teamId: "d", name: "Dons" }, { teamId: "n", name: "Notemail" }];
+    expect(meetingsWon(dons, notemail, [{ period: 2, for: 31, against: 40 }, { period: 9, for: 30, against: 38 }])).toEqual({ teamId: "n", kind: "meetings-won", text: "Notemail have won all 2 meetings with Dons" });
+    expect(meetingsWon(dons, notemail, [{ period: 2, for: 40, against: 31 }])).toBeNull();
+    expect(meetingsWon(dons, notemail, [{ period: 2, for: 40, against: 31 }, { period: 9, for: 30, against: 30 }])).toBeNull();
   });
 });
 

@@ -74,7 +74,7 @@ export type { MatchupState } from "./matchups/state";
 export { goingIn, gameweekForm } from "./matchups/form";
 export type { SeasonFact } from "./matchups/form";
 export { tableAfter, tableBefore, tableMoves, tablePoints } from "./matchups/table";
-export { meetingLines, oldBoys, type OldBoy } from "./matchups/meetings";
+export { meetingsWon, oldBoys, type OldBoy } from "./matchups/meetings";
 export type { FormerSide } from "./matchups/meetings";
 export type { DayPoints, DraftMan, DraftSide, GoalTime, NextMatch, SlotWorth } from "./matchups/types";
 export { buildDraftBrief, draftBlocks } from "./matchups/brief";

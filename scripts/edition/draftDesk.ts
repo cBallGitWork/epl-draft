@@ -40,7 +40,7 @@ import { categoryIds, matchReads, slotWorth, tallies } from "./draftReads";
 import { withFitness, type StoryCache } from "./draftFitness";
 import { draftManOf, type ManReads } from "./draftMen";
 import { draftPast, pastAngles, pastProse } from "./draftPast";
-import { draftSeason, gameweekFacts, meetingsOf, placeOf, ranksAfter } from "./draftSeason";
+import { draftSeason, gameweekFacts, placeOf, ranksAfter, sweepOf } from "./draftSeason";
 import { minimums } from "./rosterMinimums";
 import { earlierSheets } from "./sheets";
 
@@ -139,8 +139,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
     const contexts = states.map((state): MatchupContext => ({
       state,
       places: { home: placeOf(season, state.home.side.teamId), away: placeOf(season, state.away.side.teamId) },
-      meetings: meetingsOf(season, state.home.side, state.away.side),
-      form: [...(formFacts.get(state.home.side.teamId) ?? []), ...(formFacts.get(state.away.side.teamId) ?? [])],
+      form: [...(formFacts.get(state.home.side.teamId) ?? []), ...(formFacts.get(state.away.side.teamId) ?? []), ...[sweepOf(season, state.home.side, state.away.side, cutoff === "gameweek" ? { for: state.home.total, against: state.away.total } : null)].flatMap((f) => f ?? [])],
       oldBoys: [...boys(state.home.side, state.away.side), ...boys(state.away.side, state.home.side)],
       next: { home: nextOf(state.home.side.teamId), away: nextOf(state.away.side.teamId) },
       angle: null,

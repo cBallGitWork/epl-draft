@@ -16,7 +16,7 @@ const FAMILY: Record<ThreadKind, Family> = {
   "one-man-show": "star", haul: "star", "keeper-haul": "star", "star-blank": "star",
   injury: "setback", "clean-lost-late": "setback", "uncovered-blank": "setback", "early-off": "setback", "non-starter": "setback", "bench-six": "setback",
   "old-boy": "people", "new-arrival": "people", debut: "people", "club-mates": "people", double: "people", "double-to-come": "people",
-  top: "season", record: "season", "streak-ended": "season", "return-to-form": "season", bottom: "season", streak: "season", "season-high": "season",
+  top: "season", "stayed-top": "season", "meetings-won": "season", record: "season", "streak-ended": "season", "return-to-form": "season", bottom: "season", streak: "season", "season-high": "season",
   "season-low": "season", climb: "season", fall: "season", "going-in": "season",
   upset: "upset",
   chase: "chase", "both-to-come": "chase",

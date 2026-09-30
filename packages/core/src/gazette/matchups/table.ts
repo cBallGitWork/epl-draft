@@ -9,7 +9,7 @@ import type { SideResult } from "./form";
 // own rule (points, then points for). What a win and a draw are worth is read off the table before, never assumed;
 // a table that cannot say is left unmoved. Pure.
 
-export type TableKind = "top" | "bottom" | "climb" | "fall";
+export type TableKind = "top" | "stayed-top" | "bottom" | "climb" | "fall";
 
 export interface TableFact {
   teamId: string;
@@ -72,6 +72,7 @@ export function tableMoves(before: readonly StandingsRow[], after: readonly Stan
   const rankIn = (rows: readonly StandingsRow[], teamId: string) => rows.find((r) => r.teamId === teamId)?.rank ?? null;
   const [oldTop, newTop] = [before.find((r) => r.rank === 1), after.find((r) => r.rank === 1)];
   if (oldTop !== undefined && newTop !== undefined && oldTop.teamId !== newTop.teamId) facts.push({ teamId: newTop.teamId, kind: "top", text: `${newTop.teamName} went top, above ${oldTop.teamName}` });
+  if (oldTop !== undefined && newTop !== undefined && oldTop.teamId === newTop.teamId) facts.push({ teamId: newTop.teamId, kind: "stayed-top", text: `${newTop.teamName} stayed top` });
   const [oldBottom, newBottom] = [before.find((r) => r.rank === before.length), after.find((r) => r.rank === after.length)];
   if (oldBottom !== undefined && newBottom !== undefined && oldBottom.teamId !== newBottom.teamId) facts.push({ teamId: newBottom.teamId, kind: "bottom", text: `${newBottom.teamName} went bottom` });
   for (const row of after) {

@@ -1,7 +1,8 @@
-import { possessive } from "./words";
+import { DRAFT_DESK } from "../../config";
+import type { SeasonFact } from "./form";
 
-// Two sides' history, and the men who once belonged to the other: the meetings as a record, the last one, and the old
-// boy (FM's one true transfer story, 29 Sep 2026 panel). Pure.
+// Two sides' history, and the men who once belonged to the other: a clean sweep of their meetings, and the old boy
+// (FM's one true transfer story, 29 Sep 2026 panel). Pure.
 
 /** One earlier meeting, from the first side's point of view. */
 export interface Meeting {
@@ -18,16 +19,14 @@ export interface FormerSide {
   when: number;
 }
 
-/** The meetings as a record, from `side`'s point of view, with the last; nothing when they have not met. */
-export function meetingLines(side: string, opponent: string, meetings: readonly Meeting[]): string[] {
-  if (meetings.length === 0) return [];
-  const last = [...meetings].sort((a, b) => b.period - a.period)[0];
-  const lastLine =
-    last.for === last.against ? `they drew ${last.for}-${last.against} in gameweek ${last.period}` : `${last.for > last.against ? side : opponent} won ${Math.max(last.for, last.against)}-${Math.min(last.for, last.against)} in gameweek ${last.period}`;
-  if (meetings.length === 1) return [`the last meeting: ${lastLine}`];
-  const [w, d, l] = [meetings.filter((m) => m.for > m.against).length, meetings.filter((m) => m.for === m.against).length, meetings.filter((m) => m.for < m.against).length];
-  const record = w === meetings.length ? `${side} have won all ${w} meetings with ${opponent}` : l === meetings.length ? `${opponent} have won all ${l} meetings with ${side}` : `${possessive(side)} record against ${opponent} is won ${w}, drawn ${d}, lost ${l}`;
-  return [record, `the last meeting: ${lastLine}`];
+type Named = { teamId: string; name: string };
+
+/** Every meeting won by one side, from `sweepFrom` meetings on, as a season fact for it; null otherwise. `meetings` are
+ *  from `home`'s point of view. */
+export function meetingsWon(home: Named, away: Named, meetings: readonly Meeting[]): SeasonFact | null {
+  if (meetings.length < DRAFT_DESK.sweepFrom) return null;
+  const swept = meetings.every((m) => m.for > m.against) ? [home, away] : meetings.every((m) => m.for < m.against) ? [away, home] : null;
+  return swept === null ? null : { teamId: swept[0].teamId, kind: "meetings-won", text: `${swept[0].name} have won all ${meetings.length} meetings with ${swept[1].name}` };
 }
 
 /** A man facing a side he once belonged to, and the line that says so. */

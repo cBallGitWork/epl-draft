@@ -399,6 +399,8 @@ export const DRAFT_DESK = {
   recordsFrom: 4,
   /** Places a side must climb or fall in the table to be news: any move of a match-up's own sides. */
   tableMove: 1,
+  /** Meetings, every one won by one side, before a clean sweep is news. */
+  sweepFrom: 2,
 } as const;
 
 /** The draft desk's news judgement (Craig, 30 Sep 2026: "i told you to create a narrative"): what each thread of a
@@ -414,7 +416,7 @@ export const DRAFT_NEWS = {
     "old-boy": [25, 45], "new-arrival": [25, 45], debut: [20, 40], "early-off": [25], double: [20],
     // The season's, each tagged for a Football Manager frame.
     top: [55], record: [50], "streak-ended": [45], "return-to-form": [45], bottom: [45], streak: [40], "season-high": [35],
-    "season-low": [35], climb: [30], fall: [30],
+    "season-low": [35], "stayed-top": [35], climb: [30], fall: [30], "meetings-won": [30],
     // After Saturday, with the gameweek to finish.
     // A reserve waiting on his match is a twist, never the lede with half the gameweek to play (GW5's proof).
     chase: [80], "subs-waiting": [50], "to-play-gap": [55], "saturday-lead": [45, 60], "both-to-come": [45],

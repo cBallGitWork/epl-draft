@@ -27,8 +27,6 @@ export interface NextOpponent {
 export interface MatchupContext {
   state: MatchupState;
   places: { home: TablePlace | null; away: TablePlace | null };
-  /** Their meetings as a record and the last of them, from the home side's view; empty when they have not met. */
-  meetings: string[];
   /** Streaks, runs ended, returns to form, records and table moves for either side, each with its kind. */
   form: SeasonFact[];
   /** Stories from outside the gameweek's points: an old boy facing the side that let him go. */
