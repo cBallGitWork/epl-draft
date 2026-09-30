@@ -185,6 +185,10 @@ export default function LineupPlanner({
           options={optionsFor(opened)}
           nameOf={nameOf}
           onPlay={play}
+          onCard={() => {
+            setOpened(null);
+            setCard([...rows.flatMap((line) => line.players), ...bench].find((p) => p.rostered.slot.fantraxId === opened) ?? null);
+          }}
           onClose={() => setOpened(null)}
         />
       ) : null}

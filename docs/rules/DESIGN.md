@@ -409,7 +409,9 @@ alike — so no new colour family enters the app. The lightnesses run 0.66 · 0.
 box says why. The pitch carries both too since 30 Sep 2026 (Craig: *"put an INJ OR
 DBT chip right after the player name"*): the plate takes the colour and the box
 rides after the surname, tightened so SEMENYO and his box share a 73px plate at
-390; on the plate the box keeps its own ground (`desk.css`). The list carries both
+390; on the plate the box keeps its own ground (`desk.css`). Desk pitches only: the
+paper's team sheets print a side as it stood at the lock, and §5 admits the pitch as
+a colour plate, not the desk's words on it, so `Sheets` leaves the box off. The list carries both
 as a wash rather than a fill — 16% of the
 colour into the row's own ground — because the row's own ink runs down to
 `--color-faint`, which is already 4.6:1 on `--raised`.

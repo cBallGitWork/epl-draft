@@ -8,6 +8,7 @@ import {
   fullPlayerName,
   londonDayAndDate,
   londonTime,
+  noteBesideChance,
 } from "@epl/core";
 import DialogFoot from "../shell/DialogFoot";
 import DialogHead from "../shell/DialogHead";
@@ -81,7 +82,9 @@ export default function PlayerCard({
                 ? "Doubt"
                 : `${footballer.chanceOfPlaying}% chance of playing`}
             </span>
-            {footballer.news ? <p className="text-sm">{footballer.news}</p> : null}
+            {footballer.news ? (
+              <p className="text-sm">{noteBesideChance(footballer.news, footballer.chanceOfPlaying)}</p>
+            ) : null}
           </div>
         ) : null}
 

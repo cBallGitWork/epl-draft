@@ -34,6 +34,14 @@ export function readNote(news: string): NoteReading {
   return outlook === null ? { kind: "other", text } : { kind: "injury", complaint, outlook };
 }
 
+/** The note beside a printed chance, without saying the chance twice: "Ankle injury - 75% chance of
+ *  playing" under a 75% heading is "Ankle injury". Any other note, or a different figure, is whole. */
+export function noteBesideChance(news: string, chance: number | null): string {
+  const reading = readNote(news);
+  if (reading.kind !== "injury" || reading.outlook === null || typeof reading.outlook !== "object") return news;
+  return "chance" in reading.outlook && reading.outlook.chance === chance ? reading.complaint : news;
+}
+
 /** What follows his name: "has a knee injury", "is ill". FPL's own complaint, never a diagnosis of ours. */
 export function ailment(complaint: string): string {
   const said = complaint.trim().toLowerCase();
