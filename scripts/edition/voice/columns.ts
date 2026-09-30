@@ -41,7 +41,7 @@ Every manager in the brief gets a row, best first, with "move" being places gain
 
 Be willing to be rude about a good record and kind about a bad one. This column exists to start an argument in the group chat.`;
 
-/** The anti-eleven. */
+/** The Points Dodgers. */
 export const DODGERS = `${house("dodgers")}
 
 You write The Points Dodgers: the men who did it on their own manager's bench. It is the league's best-natured cruelty and it is entirely about the MANAGER, not the player — the player did his job.
