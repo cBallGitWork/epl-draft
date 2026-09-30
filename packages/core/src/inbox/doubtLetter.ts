@@ -20,23 +20,25 @@ export function doubtLetter(note: AvailabilityNote, gameweek: number | null, sid
   const reading = readNote(note.news);
   const name = note.fullName;
   const pick = <T>(options: readonly T[]) => choose(`${note.teamId}:${note.playerName}`, options);
-  const round = gameweek === null ? "the next round" : `gameweek ${gameweek}`;
-  const forRound = gameweek === null ? "" : ` for gameweek ${gameweek}`;
-  const inRound = gameweek === null ? "" : ` in gameweek ${gameweek}`;
+  const gw = gameweek === null ? "the next gameweek" : `gameweek ${gameweek}`;
   const theirs = side !== "mine";
+  const without = `${who} will be without ${name} for ${gw}.`;
+  const doubtOver = `${who} have a doubt over ${name} for ${gw}.`;
 
   if (reading.kind === "ban") {
     const until = reading.until === null ? "" : ` until ${reading.until}`;
     return theirs
-      ? `${who} will be without ${name}${forRound}. He's suspended${until}.`
-      : `This is to confirm that ${name} is suspended and misses ${round}.${until === "" ? "" : ` The ban runs${until}.`}`;
+      ? `${without} He is suspended${until}.`
+      : `${name} is suspended for ${gw}.${until === "" ? "" : ` His ban runs${until}.`}`;
   }
   if (reading.kind === "move") {
     return theirs ? `${name} ${reading.clause}, so ${who} have lost him.` : `${name} ${reading.clause}, so he's no longer available to you.`;
   }
   if (reading.kind === "other") {
-    const state = note.out ? "is out" : "is a doubt";
-    return theirs ? `${who} have news on ${name}${forRound}: ${reading.text}.` : `${name} ${state}${forRound}: ${reading.text}.`;
+    // A shape we cannot read is quoted whole rather than reworded.
+    const latest = `The latest update says "${reading.text}".`;
+    if (theirs) return `${note.out ? without : doubtOver} ${latest}`;
+    return `${name} ${note.out ? "is out" : "is a doubt"} for ${gw}. ${latest}`;
   }
 
   const has = ailment(reading.complaint);
@@ -48,35 +50,35 @@ export function doubtLetter(note: AvailabilityNote, gameweek: number | null, sid
     if (back !== null) {
       return theirs
         ? pick([
-            `${who} will be without ${name}${forRound}. He ${has} and is expected back around ${back}.`,
-            `${name} misses ${round} for ${who}. He ${has} and should be back around ${back}.`,
+            `${without} He ${has} and should be back on ${back}.`,
+            `${name} misses ${gw} for ${who}. He ${has} and is expected back on ${back}.`,
           ])
         : pick([
-            `${name} ${has} and misses ${round}. We expect him back around ${back}.`,
-            `${name} ${has}, so he's out${forRound}. He should be back around ${back}.`,
+            `${name} ${has} and misses ${gw}. He should be back on ${back}.`,
+            `${name} ${has} and won't play in ${gw}. He's expected back on ${back}.`,
           ]);
     }
     return theirs
       ? pick([
-          `${who} will be without ${name}${forRound}. He ${has} and there's no date yet for his return.`,
-          `${name} won't play for ${who}${inRound}. He ${has} and there's no return date yet.`,
+          `${without} He ${has} and there's no date yet for his return.`,
+          `${name} won't play for ${who} in ${gw}. He ${has} and there's no word yet on when he'll be back.`,
         ])
       : pick([
-          `${name} ${has} and won't be fit${forRound}. We can't put a date on his return yet.`,
-          `${name} ${has} and misses ${round}. There's no date for his return yet.`,
+          `${name} ${has} and misses ${gw}. There's no date yet for his return.`,
+          `${name} ${has} and won't play in ${gw}. There's no word yet on when he'll be back.`,
         ]);
   }
   if (chance === null) {
-    return theirs ? `${who} have a doubt over ${name}${forRound}: he ${has}.` : `${name} ${has} and is a doubt${forRound}.`;
+    return theirs ? `${doubtOver} He ${has}.` : `${name} ${has} and is a doubt for ${gw}.`;
   }
   return theirs
     ? pick([
-        `${who} have a doubt over ${name}${forRound}. He ${has} and is ${chance}% to play.`,
-        `${name} is ${chance}% to play for ${who}${inRound}. He ${has}.`,
+        `${doubtOver} He ${has} and is given a ${chance}% chance of playing.`,
+        `${name} ${has} and is a doubt for ${who} in ${gw}. He has a ${chance}% chance of playing.`,
       ])
     : pick([
-        `${name} ${has}. He's ${chance}% to play${inRound}, and we'll know more nearer the deadline.`,
-        `${name} ${has} and is ${chance}% to play${inRound}. We'll have a clearer picture nearer the deadline.`,
+        `${name} ${has} and is a doubt for ${gw}. He has a ${chance}% chance of playing.`,
+        `${name} ${has}, which makes him a doubt for ${gw}. He's given a ${chance}% chance of playing.`,
       ]);
 }
 

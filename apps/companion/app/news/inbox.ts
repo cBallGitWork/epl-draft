@@ -136,12 +136,8 @@ export async function readInbox(): Promise<Inbox> {
       // The round he can still act on, not the one in view. `nextOpponent` reads
       // the tie from the same period, so the two halves of "whose doubts matter"
       // cannot disagree.
-      // **`?? null` and never `?? gameweek`.** Falling back to `snapshot.gameweek`
-      // here is the exact bug the comment above says this removes: that is the
-      // round whose football has been PLAYED, so a league with no next lock would
-      // go straight back to heading the list "is out for GW4" about a round
-      // nobody can pick for. `headlineState` and `doubtLetter` both drop the round
-      // cleanly on null, which is the one answer that says nothing false.
+      // `?? null`, never `?? gameweek`: that is the played gameweek, which nobody can pick for.
+      // The subject and the letter both drop the gameweek cleanly on null.
       availabilityNews(doubts, next?.gameweek ?? null, { mine, opponent, name: nameOf }),
     ),
     names,

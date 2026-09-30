@@ -1,3 +1,4 @@
+import { londonDate, londonTime } from "../time";
 import type { InboxItem } from "./types";
 import { whenKey } from "./when";
 
@@ -49,14 +50,8 @@ export function roundNews({
       at: { iso: deadline.locksAt },
       gameweek: deadline.gameweek,
       headline: `Gameweek ${deadline.gameweek} lineups lock`,
-      // The commissioner's, never FPL's — `locksAt` derives it in one place so
-      // this and the paper's masthead cannot print different times.
-      // **Said once, the way the commissioner would say it** (Craig, 17 Sep 2026,
-      // on the version before this one: *"reads like a bot"*). It was two
-      // sentences spelling out the same rule twice — what happens to a man on
-      // the bench, and then what happens to a man not named — which is a terms
-      // and conditions page, not a note from the bloke who runs the league.
-      body: "Get your eleven in before then. Whatever is not in it does not score.",
+      // The commissioner texting the group; the time is `locksAt`'s, in London, as the masthead prints it.
+      body: `Lineups lock at ${londonTime(deadline.locksAt)} on ${londonDate(deadline.locksAt)}. Anyone left on your bench won't score, so get your team sorted before then.`,
       // The one item on the screen that genuinely comes from a person, and the
       // league's rules are his — see `nextDeadline` on why the lead is ours to
       // derive rather than FPL's to publish.
