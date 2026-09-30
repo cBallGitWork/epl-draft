@@ -248,9 +248,17 @@
       "match-report:gw5:2026-09-19",
       "match-report:gw5:2026-09-20",
       "news:https://www.bbc.co.uk/sounds/play/p0pd5x19",
-      "news:https://www.bbc.co.uk/sport/football/articles/ckq5xp9p1v31o"
+      "news:https://www.bbc.co.uk/sport/football/articles/ckq5xp9p1v31o",
+      "news:https://www.bbc.co.uk/sport/football/articles/ckge43e8nqdwo"
     ],
     "threads": [
+      {
+        "subject": "123's Haaland asset",
+        "beat": "City verdict lands, Norway report the striker unaffected and fit for Wales",
+        "status": "open",
+        "beats": 3,
+        "lastUsedAt": "2026-09-30T18:25:07.967Z"
+      },
       {
         "subject": "test1's Palmer under scrutiny",
         "beat": "PFA chief brands Palmer a victim of a sick schedule; no absence yet.",
@@ -263,13 +271,6 @@
         "beat": "The top scorer's cornerstone sits under speculation, still nailed on.",
         "status": "open",
         "beats": 3,
-        "lastUsedAt": "2026-09-28T21:37:10.943Z"
-      },
-      {
-        "subject": "123's Haaland asset",
-        "beat": "City would not sell cheap on relegation; talk only, no move.",
-        "status": "open",
-        "beats": 2,
         "lastUsedAt": "2026-09-28T21:37:10.943Z"
       },
       {
