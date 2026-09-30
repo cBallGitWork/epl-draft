@@ -8,7 +8,7 @@ disable-model-invocation: true
 # Swap day — 10 Oct 2026, GW6
 
 The app stops serving the rehearsal league and starts serving the real one.
-`FANTRAX_LEAGUE_ID` = `ayyoh3n2mr326v2o`.
+`FANTRAX_LEAGUE_ID` = `mqsjd23smsgbiqzr`.
 
 **With `--dry-run`, change nothing.** Read every value, print what each step
 would set and what it is now, and report. That is the whole of swap eve.
@@ -23,7 +23,7 @@ so it follows the redeploy by itself.
 After the redeploy in step 3, confirm what production says:
 
 ```bash
-curl -s https://epl-draft-companion.vercel.app/api/league   # {"leagueId":"ayyoh3n2mr326v2o"}
+curl -s https://epl-draft-companion.vercel.app/api/league   # {"leagueId":"mqsjd23smsgbiqzr"}
 ```
 
 `FANTRAX_DEMO_TEAM_ID` may stay set: it lends a team only when that team is in
@@ -72,7 +72,7 @@ it to finish before checking anything.
 ## 4. Smoke the DEPLOYED url, not localhost
 
 ```bash
-SMOKE_BASE=https://<the-deployment> FANTRAX_LEAGUE_ID=ayyoh3n2mr326v2o npm run smoke
+SMOKE_BASE=https://<the-deployment> FANTRAX_LEAGUE_ID=mqsjd23smsgbiqzr npm run smoke
 ```
 
 Localhost has its own `.env.local` and will pass while production serves the

@@ -81,7 +81,7 @@ npm run intel-check     # is the intel export fresh and whole
   default: Vercel for the app (the rehearsal league, `zbn1z3ukmsgb36sz`, until 10 Oct),
   `apps/companion/.env.local` for `next dev`, the shell for a script. The server, the writer,
   smoke and team-codes refuse to run without it. CI keeps no copy: it asks production
-  (`GET /api/league`). **The swap is one change**: set it to `ayyoh3n2mr326v2o` in Vercel and
+  (`GET /api/league`). **The swap is one change**: set it to `mqsjd23smsgbiqzr` in Vercel and
   redeploy (`/swap-day`).
 - The leagues the archive records are data, in `data/leagues/recorded.json`; only scripts read it.
 - `FANTRAX_DEMO_TEAM_ID` lends a test league's team to a reader with no code, and only when that

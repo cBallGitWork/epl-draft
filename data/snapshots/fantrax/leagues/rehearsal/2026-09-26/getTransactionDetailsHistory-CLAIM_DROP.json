@@ -1,13 +1,13 @@
 {
   "paginatedResultSet": {
-    "totalNumPages": 0,
+    "totalNumPages": 1,
     "pageNumber": 1,
     "maxResultsPerPage": 100,
-    "totalNumResults": 0
+    "totalNumResults": 1
   },
   "filterSettings": {
     "positionOrGroup": "ALL",
-    "view": "TRADE",
+    "view": "CLAIM_DROP",
     "adminMode": false,
     "includeDeleted": false,
     "team": "ALL",
@@ -15,7 +15,7 @@
   },
   "displayedSelections": {
     "positionOrGroup": "ALL",
-    "view": "TRADE",
+    "view": "CLAIM_DROP",
     "adminMode": false,
     "includeDeleted": false,
     "team": "ALL",
@@ -208,7 +208,164 @@
     ]
   },
   "table": {
-    "rows": [],
-    "emptyTableMsg": "No trades."
+    "caption": "Claims / Drops",
+    "header": {
+      "cells": [
+        {
+          "align": "LEFT",
+          "sortDirection": 1,
+          "name": "Team",
+          "shortName": "Team",
+          "key": "team"
+        },
+        {
+          "sortDirection": 1,
+          "name": "Claim Priority",
+          "shortName": "Pr",
+          "key": "priority"
+        },
+        {
+          "align": "LEFT",
+          "sortDirection": 1,
+          "name": "Date Processed (EDT)",
+          "shortName": "Date (EDT)",
+          "key": "date"
+        },
+        {
+          "sortDirection": 1,
+          "name": "Gameweek",
+          "shortName": "Gameweek",
+          "key": "week"
+        }
+      ]
+    },
+    "rows": [
+      {
+        "scorer": {
+          "teamName": "Sunderland",
+          "urlName": "brian-brobbey",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Sunderland.png",
+          "scorerId": "070hc",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "701"
+          ],
+          "defaultPosId": "701",
+          "posShortNames": "F",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Expected to play in upcoming/current game",
+              "typeId": "32"
+            },
+            {
+              "tooltip": "Hamstring - Late fitness test (Game-time decision)",
+              "typeId": "1"
+            },
+            {
+              "tooltip": "Sep 24, 6:51 PM: Brobbey (hamstring) is believed to be...",
+              "typeId": "9"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "701"
+          ],
+          "teamId": "110141",
+          "name": "Brian Brobbey",
+          "teamShortName": "SUN",
+          "shortName": "B. Brobbey"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "WW",
+        "numInGroup": 2,
+        "txSetId": "gzddvzlpmubjfa5q",
+        "feesUsed": false,
+        "transactionCode": "CLAIM",
+        "transactionType": "Claim",
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "test1",
+            "leagueId": "zbn1z3ukmsgb36sz",
+            "rowspan": 2,
+            "key": "team",
+            "teamId": "jtsmt5jxmtj31znh"
+          },
+          {
+            "content": "1",
+            "key": "priority"
+          },
+          {
+            "align": "LEFT",
+            "content": "Tue Sep 22, 2026, 5:00AM",
+            "rowspan": 2,
+            "key": "date"
+          },
+          {
+            "content": "6",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Ipswich",
+          "urlName": "kjell-scherpen",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Ipswich_Town.png",
+          "scorerId": "05uds",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "704"
+          ],
+          "defaultPosId": "704",
+          "posShortNames": "G",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Sep 13, 2:17 AM: Scherpen made two saves and allowed two...",
+              "typeId": "8"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "704"
+          ],
+          "teamId": "110271",
+          "name": "Kjell Scherpen",
+          "teamShortName": "IPS",
+          "shortName": "K. Scherpen"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "",
+        "txSetId": "gzddvzlpmubjfa5q",
+        "feesUsed": false,
+        "transactionCode": "DROP",
+        "transactionType": "Drop",
+        "deleted": false,
+        "cells": [
+          {
+            "content": "1",
+            "key": "priority"
+          },
+          {
+            "content": "6",
+            "key": "week"
+          }
+        ]
+      }
+    ]
   }
 }
