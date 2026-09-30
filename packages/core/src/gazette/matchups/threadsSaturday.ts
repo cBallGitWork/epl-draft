@@ -29,7 +29,7 @@ export function saturdayThreads(ctx: MatchupContext, worth: SlotWorth): Thread[]
   if (more.toPlay.length - fewer.toPlay.length >= DRAFT_NEWS.toPlayGap) {
     out.push(thread("to-play-gap", { teamId: more.side.teamId, facts: [`${more.side.name} have ${more.toPlay.length} still to play, ${fewer.side.name} ${fewer.toPlay.length}`] }));
   }
-  const opposed = opposedMatches(home.side, away.side, false);
+  const opposed = opposedMatches(home.side, away.side);
   if (opposed.length > 0) out.push(thread("both-to-come", { teamId: null, facts: opposed }));
   return out;
 }

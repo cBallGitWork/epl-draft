@@ -30,6 +30,14 @@ describe("threadsOf", () => {
     expect(threads.map((t) => t.kind)).not.toContain("late-decider");
   });
 
+  it("works the side behind's sums once three or fewer are left, and none before", () => {
+    const salah = draftMan("Salah", "M", null, 0, 1, { club: "Liverpool", next: { opponent: "Everton", home: false, kickoff: "2026-09-27T15:30:00Z" } });
+    const chase = (away: ReturnType<typeof eleven>) => kinds(contextOf(draftSide("Home", 40, eleven("h")), draftSide("Away", 36, away), {}, "saturday"), "saturday").find((t) => t.kind === "chase");
+    expect(chase(eleven("a", { 5: salah }))?.facts).toEqual(["a goal from Salah would win it"]);
+    const toCome = (tag: string, slot: string) => draftMan(tag, slot, null, 0, 1, { club: `${tag} FC` });
+    expect(chase(eleven("a", { 5: salah, 6: toCome("a6", "M"), 7: toCome("a7", "M"), 9: toCome("a9", "F") }))).toBeUndefined();
+  });
+
   it("credits the return after which the winner led for good when nothing later decided it", () => {
     const gross = draftMan("Groß", "M", 11, 90, 0, { club: "Brighton", goals: 1, assists: 1 });
     const ctx = contextOf(draftSide("123", 40, eleven("o", { 8: gross })), draftSide("test2", 30, eleven("t")));

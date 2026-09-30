@@ -2,9 +2,9 @@ import type { Fault } from "../predictions/checks";
 import { correct, particles, readHeadlines } from "../reports/draft";
 
 // What the writer files for a draft report, read field by field: the headline candidates, and each match-up's
-// paragraphs, keyed by its number in the brief. A match-up that fails twice prints its verdict alone.
+// paragraphs, keyed by its number in the brief. A match-up that fails twice prints the desk's result alone.
 
-/** The writer's paragraphs for one match-up. Its opening line is the desk's verdict, never the model's. */
+/** The writer's paragraphs for one match-up, the first its lede. */
 export interface DraftPiece {
   paragraphs: string[];
 }
@@ -41,7 +41,7 @@ const blocking = (faults: readonly Fault[], n: number) => faults.filter((f) => m
 const hard = (faults: readonly Fault[], n: number) => faults.some((f) => matchupOf(f.section) === n && f.severity === "hard");
 
 /** Per match-up: the first attempt if it passed; else the rewrite if it has no hard fault and fewer faults; else the first
- *  if it has no hard fault; else neither, and the verdict prints alone. */
+ *  if it has no hard fault; else neither, and the desk's result prints alone. */
 export function mergeDraft(attempts: readonly { writing: DraftWriting; faults: readonly Fault[] }[], count: number): Map<number, DraftPiece> {
   const [first, second] = attempts;
   const out = new Map<number, DraftPiece>();

@@ -5,7 +5,7 @@ import { draftReturns, draftRows, type StoryDraftReturns, type StoryDraftRow } f
 import type { DraftPiece } from "./writing";
 
 // A draft report as the page draws it: per match-up, the score and how it ran by day, each side's returns, place and run
-// (the FM form strip), the verdict and the writing, and both elevens. Its one photograph is the story's cover (`cover.ts`).
+// (the FM form strip), the writer's lede and paragraphs, and both elevens. Its one photograph is the story's cover (`cover.ts`).
 
 export interface StoryDraftSide {
   teamId: string;
@@ -26,7 +26,7 @@ export interface StoryDraftMatchup {
   away: StoryDraftSide;
   /** The desk's result in words, for the deck and a match-up the writer did not reach. */
   verdict: string;
-  /** The writer's lede, or the verdict as a sentence when there is none. */
+  /** The writer's lede, or the desk's result as a sentence when there is none. */
   standfirst: string;
   paragraphs: string[];
   /** The running score by day, then the substitutions'; empty when it never moved. */
@@ -41,7 +41,7 @@ export interface StoryDraftReport {
   matchups: StoryDraftMatchup[];
 }
 
-/** The report's cargo, from the desk's contexts and the writing that survived; a match-up with no writing keeps its verdict. */
+/** The report's cargo, from the desk's contexts and the writing that survived; a match-up with no writing keeps its result. */
 export function draftCargo(cutoff: Cutoff, gameweek: number, contexts: readonly MatchupContext[], pieces: ReadonlyMap<number, DraftPiece>, rankAfter: ReadonlyMap<string, number>): StoryDraftReport {
   return {
     cutoff,

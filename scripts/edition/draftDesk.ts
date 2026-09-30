@@ -44,10 +44,10 @@ import { draftSeason, gameweekFacts, placeOf, ranksAfter, sweepOf } from "./draf
 import { minimums } from "./rosterMinimums";
 import { earlierSheets } from "./sheets";
 
-// The draft match-up desk's reads for one gameweek, turned into each match-up's facts at both cut-offs: points, minutes
-// and returns by London day from Fantrax, the bench order, matches played and left and each goal's minute from the
-// football layer, the table and runs, the last meeting, the next opponent, and a projection that
-// orders and never prints.
+// The draft match-up desk's reads for one gameweek, turned into each match-up's facts and story at both cut-offs:
+// points, minutes and returns by London day from Fantrax, the bench order, signings and fitness news, matches played and
+// left and each goal's minute and kickoff from the football layer, the table, runs and meetings, the next opponent, the
+// stories told before, and a projection that weighs a star's blank and never prints.
 
 export interface DraftDesk {
   gameweek: number;
@@ -128,7 +128,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
     const fit = (s: DraftSide | null) => (s === null ? null : withFitness(s, fixtures, stories, until));
     // Every match-up first: the gameweek's form and table facts need all of their results at once.
     const pairs = await Promise.all(facts.pairings.map(async (p) => ({ home: await fit(side(p.home.teamId)), away: await fit(side(p.away.teamId)) })));
-    const states = pairs.flatMap(({ home, away }) => (home === null || away === null ? [] : [matchupState({ home, away }, worth, limits, cutoff)]));
+    const states = pairs.flatMap(({ home, away }) => (home === null || away === null ? [] : [matchupState({ home, away }, limits, cutoff)]));
     const formFacts = gameweekFacts(season, states, cutoff);
     if (cutoff === "gameweek") rankAfter = ranksAfter(season, states);
     const boys = (men: DraftSide, them: DraftSide) => oldBoys(men.eleven, { teamId: them.teamId, name: them.name }, season.formerly);

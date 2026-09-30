@@ -1,15 +1,13 @@
 import { DRAFT_DESK } from "../../config";
-import { londonWeekdayLong } from "../../time";
+import { listed } from "../../format";
 import { autoSubs, type AutoSub } from "./autoSubs";
 import type { Cutoff } from "./brief";
-import { byClock, returnCount, sideStories } from "./stories";
-import { chaseLines } from "./swing";
+import { byClock } from "./stories";
 import type { DraftMan, DraftMatchupInput, DraftSide, GoalTime, PositionLimits, SlotWorth } from "./types";
-import { listed } from "../../format";
 import { priceOf } from "./worth";
 
-// A match-up at the cut-off: the score as a verdict, who is still to play and, near the end, what the side behind needs,
-// and each side's stories. Facts only; the writer judges.
+// A match-up at the cut-off: each side with the substitutions Fantrax will make, its total with the certain ones, the men
+// still to play, and the score as the page prints it. What the story is, the threads decide (`threads.ts`). Pure.
 
 export interface SideState {
   side: DraftSide;
@@ -25,12 +23,9 @@ export interface MatchupState {
   away: SideState;
   /** Home minus away, with the substitutions. */
   margin: number;
+  /** "123 beat test2 38-37", the side ahead first. */
   score: string;
-  stillToPlay: string[];
-  stories: string[];
 }
-
-const tag = (man: DraftMan) => `${man.name} (${man.club}${man.next === null ? "" : `, ${man.next.home ? "at home to" : "away to"} ${man.next.opponent} on ${londonWeekdayLong(man.next.kickoff)}`})`;
 
 /** Every man in a match-up: both elevens and both benches. */
 export const everyMan = (state: MatchupState): DraftMan[] => [state.home, state.away].flatMap((s) => [...s.side.eleven, ...s.side.bench]);
@@ -58,44 +53,27 @@ export function lateDecider(winner: SideState, margin: number, worth: SlotWorth)
 }
 
 /** The score as the page prints it, the side ahead first, the substitutions counted: Saturday's as it stands, the
- *  gameweek's as a result. What turned it and what decided it are the story's (`threads.ts`), never the verdict's. */
+ *  gameweek's as a result. What turned it and what decided it are the story's (`threads.ts`), never the score's. */
 function scoreLine(home: SideState, away: SideState, cutoff: Cutoff): string {
   const [lead, trail] = home.total >= away.total ? [home, away] : [away, home];
   if (lead.total === trail.total) return `${home.side.name} and ${away.side.name} ${cutoff === "saturday" ? "are level at" : "drew"} ${home.total}-${away.total}`;
   return `${lead.side.name} ${cutoff === "saturday" ? "lead" : "beat"} ${trail.side.name} ${lead.total}-${trail.total}`;
 }
 
-/** A Premier League match with the two sides' men on opposing clubs: "Man City v Sunderland: Haaland for 123, Meunier
- *  for test2". Unplayed ones (`played` false) for who is still to play; played ones only when one of them returned. */
-export function opposedMatches(home: DraftSide, away: DraftSide, played: boolean): string[] {
-  const inMatch = (side: DraftSide, code: number) => side.eleven.filter((m) => m.matches.some((x) => x.code === code) && (played ? m.minutes > 0 : m.left > 0));
+/** A Premier League match still to play with the two sides' men on opposing clubs: "Man City v Sunderland: Haaland
+ *  for 123, Meunier for test2". */
+export function opposedMatches(home: DraftSide, away: DraftSide): string[] {
+  const inMatch = (side: DraftSide, code: number) => side.eleven.filter((m) => m.matches.some((x) => x.code === code) && m.left > 0);
   const labels = new Map([...home.eleven, ...away.eleven].flatMap((m) => m.matches.map((x) => [x.code, x.label] as const)));
   return [...labels].flatMap(([code, label]) => {
     const [h, a] = [inMatch(home, code), inMatch(away, code)];
-    const opposed = h.some((x) => a.some((y) => x.club !== y.club));
-    if (!opposed || (played && ![...h, ...a].some((m) => returnCount(m) > 0))) return [];
+    if (!h.some((x) => a.some((y) => x.club !== y.club))) return [];
     return [`${label}: ${listed(h.map((m) => m.name), "and")} for ${home.name}, ${listed(a.map((m) => m.name), "and")} for ${away.name}`];
   });
 }
 
-export function matchupState(input: DraftMatchupInput, worth: SlotWorth, limits: PositionLimits, cutoff: Cutoff): MatchupState {
+export function matchupState(input: DraftMatchupInput, limits: PositionLimits, cutoff: Cutoff): MatchupState {
   const home = sideState(input.home, limits);
   const away = sideState(input.away, limits);
-  const margin = home.total - away.total;
-  const [ahead, behind] = margin >= 0 ? [home, away] : [away, home];
-  const leftCount = home.toPlay.length + away.toPlay.length;
-  const stillToPlay = [
-    ...[home, away].filter((s) => s.toPlay.length > 0).map((s) => `${s.side.name} have ${s.toPlay.length} still to play: ${s.toPlay.map(tag).join(", ")}`),
-    // With most of the gameweek to play the sums mean nothing: the report tells what happened.
-    ...(leftCount > 0 && leftCount <= DRAFT_DESK.chaseWhenLeft && margin !== 0 ? chaseLines(behind, ahead, Math.abs(margin), worth) : []),
-    ...opposedMatches(input.home, input.away, false),
-  ];
-  return {
-    home,
-    away,
-    margin,
-    score: scoreLine(home, away, cutoff),
-    stillToPlay,
-    stories: [...sideStories(home.side, home.subs, worth, cutoff, margin), ...sideStories(away.side, away.subs, worth, cutoff, -margin), ...opposedMatches(input.home, input.away, true)],
-  };
+  return { home, away, margin: home.total - away.total, score: scoreLine(home, away, cutoff) };
 }

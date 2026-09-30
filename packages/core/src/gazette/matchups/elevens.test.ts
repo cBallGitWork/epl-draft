@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import { draftMan, goalAt } from "./__fixtures__/draftMan";
 import { draftSide, eleven } from "./__fixtures__/draftSide";
 import { LIMITS } from "./__fixtures__/limits";
-import { worthOf } from "./__fixtures__/worth";
 import { draftReturns, draftRows, returnText, rowNote } from "./elevens";
 import { matchupState } from "./state";
 import type { DraftMan } from "./types";
@@ -18,7 +17,7 @@ const men = eleven("h", {
   9: draftMan("Haaland", "F", 13, 90, 0, { goals: 2, scoredAt: [goalAt(81, undefined, SUNDAY), goalAt(12, undefined, SUNDAY)] }),
   10: draftMan("Isak", "F", 4, 90, 0, { goals: 1 }),
 });
-const side = (bench: DraftMan[]) => matchupState({ home: draftSide("123", 40, men, bench), away: draftSide("test2", 30, eleven("a")) }, worthOf(), LIMITS, "gameweek").home;
+const side = (bench: DraftMan[]) => matchupState({ home: draftSide("123", 40, men, bench), away: draftSide("test2", 30, eleven("a")) }, LIMITS, "gameweek").home;
 const vuskovic = draftMan("Vuskovic", "D", 6, 90, 0, { cleanSheets: 1 });
 const scorer = draftMan("Wissa", "F", 5, 90, 0, { goals: 1, scoredAt: [goalAt(30)] });
 

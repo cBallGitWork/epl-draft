@@ -3,8 +3,8 @@ import DraftEleven from "./DraftEleven";
 import { STANDING_HEAD as SMALL } from "./heads";
 
 // One match-up of a draft report, set as a BBC match report is: the score with each side's goals under it, the assists and
-// clean sheets, how the score ran by day and each side's form strip; then the verdict and the story, with both elevens
-// after it on a phone and beside it on a desk. The article's one photograph is its cover.
+// clean sheets, how the score ran by day and each side's form strip; then the writer's lede and the story, with both
+// elevens after it on a phone and beside it on a desk. The article's one photograph is its cover.
 
 const RULE = { borderColor: "var(--paper-rule)" };
 

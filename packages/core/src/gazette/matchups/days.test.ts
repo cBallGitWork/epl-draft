@@ -2,13 +2,12 @@ import { describe, expect, it } from "vitest";
 import { draftMan } from "./__fixtures__/draftMan";
 import { draftSide, eleven } from "./__fixtures__/draftSide";
 import { LIMITS } from "./__fixtures__/limits";
-import { worthOf } from "./__fixtures__/worth";
 import { runningScore, stepLabel } from "./days";
 import { matchupState } from "./state";
 import type { DraftSide } from "./types";
 
 const days = (...points: number[]) => points.map((p, i) => ({ day: `2026-09-2${5 + i}`, points: p }));
-const run = (home: DraftSide, away: DraftSide) => runningScore(matchupState({ home, away }, worthOf(), LIMITS, "gameweek"));
+const run = (home: DraftSide, away: DraftSide) => runningScore(matchupState({ home, away }, LIMITS, "gameweek"));
 
 describe("runningScore", () => {
   it("adds the days up, leaving out a day on which neither side scored", () => {

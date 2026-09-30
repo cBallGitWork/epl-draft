@@ -1,15 +1,13 @@
 import { DRAFT_DESK } from "../../config";
 import { ordinal } from "../../league/ordinal";
-import { blank, type AutoSub } from "./autoSubs";
+import type { AutoSub } from "./autoSubs";
 import type { Cutoff } from "./brief";
 import type { DraftMan, DraftSide, GoalTime, SlotWorth } from "./types";
 import { listed } from "../../format";
 import { priceOf } from "./worth";
 
-// One side's stories in the game's own words (Craig, 29 Sep 2026): a return is a goal, an assist or a clean sheet, a
-// blank is none, a haul is more than one. Each fact about a man has its own line builder, for the brief and the news
-// judgement alike; `sideStories` sets them out a man at a time, then the substitutions, a bench score of six or more,
-// men from one club who shared a fate, and a club's men with two matches.
+// Each fact about a draft man in the game's own words (Craig, 29 Sep 2026), for the threads and the brief: a return is a
+// goal, an assist or a clean sheet, a blank is none, a haul is more than one. Pure.
 
 /** "1 point", "6 points". */
 export const pts = (n: number) => `${n} point${n === 1 ? "" : "s"}`;
@@ -71,12 +69,6 @@ export function newLine(m: DraftMan, side: DraftSide): string | null {
 /** Fantrax's word after his match. */
 export const fitnessLine = (m: DraftMan) => (m.fitness === null ? null : `${m.minutes === 0 ? "did not play; " : ""}since: ${m.fitness}`);
 
-/** One man's line, every fact about him in it, or null when there is nothing to say about him. */
-function manLine(m: DraftMan, side: DraftSide, worth: SlotWorth): string | null {
-  const parts = [scoredLine(m, worth), lostCleanLine(m, worth), minutesLine(m), newLine(m, side), fitnessLine(m)].filter((p) => p !== null);
-  return parts.length === 0 ? null : `${withClub(m)} ${parts.join("; ")}`;
-}
-
 /** The substitution and what the man coming on did, in one line. */
 export function subLine(s: AutoSub, cutoff: Cutoff): string {
   // "Replaced", not "came on": the paper's banned list keeps "came on" for the Premier League's own substitutions.
@@ -114,19 +106,4 @@ export function clubLines(side: DraftSide): { men: DraftMan[]; line: string }[] 
     if (men.every((m) => returnCount(m) > 0)) return [{ men, line: `${who} ${every} returned` }];
     return [];
   });
-}
-
-/** `margin` is this side's points less the other's. */
-export function sideStories(side: DraftSide, subs: readonly AutoSub[], worth: SlotWorth, cutoff: Cutoff, margin: number): string[] {
-  const lines = side.eleven.flatMap((m) => manLine(m, side, worth) ?? []);
-  lines.push(...subs.map((s) => subLine(s, cutoff)));
-  lines.push(...side.eleven.filter((x) => blank(x) && !subs.some((s) => s.out === x)).map((m) => uncoveredLine(m, side, cutoff)));
-  lines.push(...benchLines(side, subs, margin).map((b) => b.line));
-  lines.push(...clubLines(side).map((c) => c.line));
-  if (cutoff === "saturday") {
-    const doubles = new Map<string, DraftMan[]>();
-    for (const m of side.eleven.filter((x) => x.played + x.left > 1)) doubles.set(m.club, [...(doubles.get(m.club) ?? []), m]);
-    for (const men of doubles.values()) lines.push(`${side.name} have ${listed(men.map((m) => m.name), "and")} with two matches this gameweek`);
-  }
-  return lines.map((line) => `${side.name}: ${line}`);
 }

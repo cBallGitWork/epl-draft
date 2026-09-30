@@ -6,7 +6,7 @@ import type { StoryDraftStep } from "./days";
 import type { StoryDraftReturn, StoryDraftReturns, StoryDraftRow } from "./elevens";
 import type { NextMatch } from "./types";
 
-// A filed draft report read back field by field: a match-up prints with both sides and its verdict, or not at all; a
+// A filed draft report read back field by field: a match-up prints with both sides and its result, or not at all; a
 // return, a row or a step that does not read is dropped, and a report filed before them reads with none.
 
 type Raw = Record<string, unknown>;
