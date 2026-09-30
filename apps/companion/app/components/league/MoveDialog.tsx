@@ -15,6 +15,7 @@ import { BUTTON } from "../shell/ButtonLink";
 // browser's job rather than four effects of ours.
 
 export default function MoveDialog({
+  subject,
   name,
   moves,
   options,
@@ -23,6 +24,8 @@ export default function MoveDialog({
   onCard,
   onClose,
 }: {
+  /** The tapped man's id. */
+  subject: string;
   name: string;
   moves: Move[];
   options: SlotOption[];
@@ -37,6 +40,7 @@ export default function MoveDialog({
       <div className="flex flex-col gap-2 p-3">
         <h2 className="px-1 text-sm font-bold tracking-tight">{name}</h2>
         <MoveSheet
+          subject={subject}
           moves={moves}
           options={options}
           nameOf={nameOf}
