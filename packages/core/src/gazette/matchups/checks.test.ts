@@ -30,6 +30,11 @@ describe("checkDraft", () => {
     expect(checks(`${clean} "We won," said nobody.`)).toEqual(expect.arrayContaining([expect.stringMatching(/^hard: a quotation mark/), expect.stringMatching(/send-back: a phrase this paper does not print \(said\)/)]));
   });
 
+  it("reads a side's eleven as a side, not as the figure 11", () => {
+    expect(checks(`${clean} Every man in test2's eleven started, and the eleven's form held.`).filter((f) => f.includes("figure"))).toEqual([]);
+    expect(checks(`${clean} It finished with eleven points between them.`)).toEqual(expect.arrayContaining([expect.stringMatching(/figure the brief does not give \(11\)/)]));
+  });
+
   it("sends back a still-to-play man told as a manager's choice", () => {
     expect(checks(`${clean} test2 keep back Trafford for Sunday.`)).toEqual(expect.arrayContaining([expect.stringMatching(/keep back/)]));
   });

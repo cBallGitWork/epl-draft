@@ -14,6 +14,8 @@ import { DRAFT_NEVER } from "./words";
 
 const QUOTES = /["“”«»]/u;
 const SCORE = /\b(\d{1,3})-(\d{1,3})\b/gu;
+/** "The eleven", "test2's eleven": a side, never the figure 11. */
+const SIDE_ELEVEN = /(?:\b(?:the|their|its|his|an|a|whose|that|this|every|each)\s+|'s\s+)eleven(?:'s)?\b/giu;
 /** An FM frame is a register, never a person's feeling: a named manager given one is invented. */
 const FEELING = /\b(?:manager|boss|owner)\b[^.]{0,40}\b(?:feel|feels|felt|furious|delighted|angry|pleased|worried|fuming|livid)\b/iu;
 
@@ -42,7 +44,7 @@ export function checkDraft(writing: DraftWriting, contexts: readonly MatchupCont
       if (!mine.has(other) && other.length > 3 && mentionAt(prose, other) >= 0) fault(`${n}:matchup`, "a man from another match-up", "hard", other);
     }
     const allowed = new Set([0, ...numbersIn(block)]);
-    for (const x of numbersIn(prose.replace(SCORE, " "))) if (!allowed.has(x)) fault(`${n}:matchup`, "a figure the brief does not give", "hard", String(x));
+    for (const x of numbersIn(prose.replace(SCORE, " ").replace(SIDE_ELEVEN, " "))) if (!allowed.has(x)) fault(`${n}:matchup`, "a figure the brief does not give", "hard", String(x));
     for (const [said, a, b] of prose.matchAll(SCORE)) if (!block.includes(said) && !block.includes(`${b}-${a}`)) fault(`${n}:matchup`, "a score the brief does not give", "hard", said);
     if (QUOTES.test(prose)) fault(`${n}:matchup`, "a quotation mark: the paper prints nobody's words", "hard", prose.match(QUOTES)?.[0] ?? "");
     for (const phrase of banned(prose, REPORT_FPL)) fault(`${n}:matchup`, "names a source", "hard", phrase);
