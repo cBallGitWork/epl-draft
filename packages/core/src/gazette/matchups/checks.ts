@@ -1,12 +1,13 @@
 import { DRAFT_WRITING } from "../../config";
 import { banned } from "../banned";
 import type { Fault, Severity } from "../predictions/checks";
-import { mentionAt, numbersIn, sentences, wordCount } from "../predictions/prose";
+import { masked, mentionAt, numbersIn, sentences, wordCount } from "../predictions/prose";
 import { repeatsIn } from "../reports/repeats";
 import { REPORT_AMERICAN, REPORT_FPL } from "../reports/words";
 import { SHEETS_AMERICAN } from "../sheets/words";
 import type { Cutoff, MatchupContext } from "./brief";
 import { listFaults, menOf, type PastProse } from "./listChecks";
+import { timeline } from "./timeline";
 import type { DraftPiece, DraftWriting } from "./writing";
 import { DRAFT_NEVER } from "./words";
 
@@ -40,13 +41,17 @@ export function checkDraft(writing: DraftWriting, contexts: readonly MatchupCont
     for (const other of everyone.flatMap((names, i) => (i === at ? [] : names))) {
       if (!mine.has(other) && other.length > 3 && mentionAt(prose, other) >= 0) fault(`${n}:matchup`, "a man from another match-up", "hard", other);
     }
-    const allowed = new Set([0, ...numbersIn(block)]);
+    // A gap read off a printed score is a fact too: the margin, and the gap at each day's end.
+    const gaps = timeline(ctx.state).map((b) => Math.abs(b.score.home - b.score.away));
+    const allowed = new Set([0, ...numbersIn(block), Math.abs(ctx.state.margin), ...gaps]);
     for (const x of numbersIn(prose.replace(SCORE, " ").replace(SIDE_ELEVEN, " "))) if (!allowed.has(x)) fault(`${n}:matchup`, "a figure the brief does not give", "hard", String(x));
     for (const [said, a, b] of prose.matchAll(SCORE)) if (!block.includes(said) && !block.includes(`${b}-${a}`)) fault(`${n}:matchup`, "a score the brief does not give", "hard", said);
     if (QUOTES.test(prose)) fault(`${n}:matchup`, "a quotation mark: the paper prints nobody's words", "hard", prose.match(QUOTES)?.[0] ?? "");
-    for (const phrase of banned(prose, REPORT_FPL)) fault(`${n}:matchup`, "names a source", "hard", phrase);
-    for (const phrase of banned(prose, DRAFT_NEVER)) fault(`${n}:matchup`, "a phrase this paper does not print", "send-back", phrase);
-    for (const phrase of banned(prose, [...REPORT_AMERICAN, ...SHEETS_AMERICAN])) fault(`${n}:matchup`, "American, not British", "send-back", phrase);
+    // A man's name is never a banned word: Archie Gray is not American spelling.
+    const plain = masked(prose, [...everyone.flat(), ctx.state.home.side.name, ctx.state.away.side.name]).replace(/\u0000/gu, " ");
+    for (const phrase of banned(plain, REPORT_FPL)) fault(`${n}:matchup`, "names a source", "hard", phrase);
+    for (const phrase of banned(plain, DRAFT_NEVER)) fault(`${n}:matchup`, "a phrase this paper does not print", "send-back", phrase);
+    for (const phrase of banned(plain, [...REPORT_AMERICAN, ...SHEETS_AMERICAN])) fault(`${n}:matchup`, "American, not British", "send-back", phrase);
     if (FEELING.test(prose)) fault(`${n}:matchup`, "a named person's feeling", "send-back", prose.match(FEELING)?.[0] ?? "");
     // The score prints above the lede, so the lede never gives it again.
     if (sentences(prose)[0]?.includes(ctx.state.score) === true) fault(`${n}:matchup`, "opens on the result the page already prints", "send-back", sentences(prose)[0] ?? "");

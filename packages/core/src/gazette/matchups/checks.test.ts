@@ -35,6 +35,14 @@ describe("checkDraft", () => {
     expect(checks(`${clean} It finished with eleven points between them.`)).toEqual(expect.arrayContaining([expect.stringMatching(/figure the brief does not give \(11\)/)]));
   });
 
+  it("reads a man's name as a name, not a banned word, and lets a gap read off a printed score stand", () => {
+    const gray = contextOf(draftSide("123", 38, eleven("h", { 5: draftMan("Gray", "M", 2, 90, 0, { club: "Spurs" }) })), draftSide("test2", 33, eleven("a")));
+    const said = (text: string) => checkDraft({ ...writing(text), matchups: new Map([[1, { paragraphs: [text] }]]) }, [gray], draftBlocks("gameweek", [gray])).map((f) => f.check);
+    const text = "Gray kept going for 123 to the end, and they won by five, the gap the page prints above.";
+    expect(said(text)).not.toContain("American, not British");
+    expect(said(text).filter((c) => c.includes("figure"))).toEqual([]);
+  });
+
   it("sends back a still-to-play man told as a manager's choice", () => {
     expect(checks(`${clean} test2 keep back Trafford for Sunday.`)).toEqual(expect.arrayContaining([expect.stringMatching(/keep back/)]));
   });
