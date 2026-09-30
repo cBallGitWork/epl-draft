@@ -3,7 +3,7 @@ import { draftMan, goalAt } from "./__fixtures__/draftMan";
 import { draftSide, eleven } from "./__fixtures__/draftSide";
 import { LIMITS } from "./__fixtures__/limits";
 import { worthOf } from "./__fixtures__/worth";
-import { draftReturns, draftRows } from "./elevens";
+import { draftReturns, draftRows, returnText, rowNote } from "./elevens";
 import { matchupState } from "./state";
 import type { DraftMan } from "./types";
 
@@ -54,5 +54,19 @@ describe("draftRows", () => {
   it("lists a reserve still to play under his man, with his match", () => {
     const rows = draftRows(side([draftMan("Munoz", "D", null, 0, 1, { next: everton })]));
     expect(rows[2]).toEqual({ name: "Munoz", slot: "D", points: null, next: everton, mark: "sub" });
+  });
+});
+
+describe("the page's words for a return and a row", () => {
+  it("prints a scorer with his minutes, or his count when the feed did not time them", () => {
+    expect([{ name: "Haaland", count: 2, minutes: ["12", "90+4"] }, { name: "Isak", count: 2, minutes: [] }, { name: "Raya", count: 1, minutes: [] }].map(returnText)).toEqual(["Haaland (12', 90+4')", "Isak 2", "Raya"]);
+  });
+
+  it("says a man did not play, or names his match to come, and a waiting reserve's only if he plays", () => {
+    const row = { name: "Rice", slot: "M", points: null, next: everton, mark: null };
+    expect(rowNote(row)).toBe("Mon v Everton (h)");
+    expect(rowNote({ ...row, mark: "sub" })).toBe("Mon v Everton (h), if he plays");
+    expect(rowNote({ ...row, next: null, mark: "dnp" })).toBe("did not play");
+    expect(rowNote({ ...row, points: 6, next: null })).toBeNull();
   });
 });

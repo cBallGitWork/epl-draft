@@ -6,13 +6,13 @@ import {
   draftCargo,
   draftFace,
   isSaturday,
-  londonWeekday,
   requireLeague,
-  weekdayOfDay,
+  returnText,
+  rowNote,
+  stepLabel,
   type Cutoff,
   type StoryDraftMatchup,
   type StoryDraftReport,
-  type StoryDraftReturn,
   type StoryDraftRow,
 } from "@epl/core";
 import { draftDesk } from "./edition/draftDesk";
@@ -27,15 +27,13 @@ import { STORY_BYLINE, editionName } from "./edition/voice/bylines";
 
 const say = (line: string) => process.stdout.write(`${line}\n`);
 
-const scorer = (r: StoryDraftReturn) => (r.minutes.length > 0 ? `${r.name} (${r.minutes.map((m) => `${m}'`).join(", ")})` : r.count > 1 ? `${r.name} ${r.count}` : r.name);
-const row = (r: StoryDraftRow) =>
-  `  ${r.slot} ${r.mark === "sub" ? "SUB " : ""}${r.name} ${r.points ?? "—"}${r.mark === "dnp" ? ", did not play" : r.next === null ? "" : `, ${londonWeekday(r.next.kickoff)} v ${r.next.opponent} (${r.next.home ? "h" : "a"})${r.mark === "sub" && r.points === null ? " if he plays" : ""}`}`;
+const row = (r: StoryDraftRow) => `  ${r.slot} ${r.mark === "sub" ? "SUB " : ""}${r.name} ${r.points ?? "—"}${rowNote(r) === null ? "" : `, ${rowNote(r)}`}`;
 
 /** What the page sets out around the writing: the running score, each side's returns, and after the story both elevens. */
 function page(m: StoryDraftMatchup): { head: string[]; foot: string[] } {
   const sides = [m.home, m.away];
-  const returns = sides.map((s) => `${s.name}: goals ${s.returns.goals.map(scorer).join(", ") || "—"}; assists ${s.returns.assists.map(scorer).join(", ") || "—"}; clean sheets ${s.returns.cleanSheets.map(scorer).join(", ") || "—"}`);
-  const steps = m.byDay.map((s) => `${s.day === null ? "Subs" : weekdayOfDay(s.day)} ${s.home}-${s.away}`).join(" · ");
+  const returns = sides.map((s) => `${s.name}: goals ${s.returns.goals.map(returnText).join(", ") || "—"}; assists ${s.returns.assists.map(returnText).join(", ") || "—"}; clean sheets ${s.returns.cleanSheets.map(returnText).join(", ") || "—"}`);
+  const steps = m.byDay.map((s) => `${stepLabel(s)} ${s.home}-${s.away}`).join(" · ");
   return { head: [`By day: ${steps || "—"}`, ...returns], foot: sides.flatMap((s) => [`${s.name}:`, ...s.eleven.map(row)]) };
 }
 

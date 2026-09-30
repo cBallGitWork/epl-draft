@@ -3,7 +3,7 @@ import { draftMan } from "./__fixtures__/draftMan";
 import { draftSide, eleven } from "./__fixtures__/draftSide";
 import { LIMITS } from "./__fixtures__/limits";
 import { worthOf } from "./__fixtures__/worth";
-import { runningScore } from "./days";
+import { runningScore, stepLabel } from "./days";
 import { matchupState } from "./state";
 import type { DraftSide } from "./types";
 
@@ -25,5 +25,9 @@ describe("runningScore", () => {
     expect(run(on, draftSide("test4", 28, eleven("a"), [], days(28))).at(-1)).toEqual({ day: null, home: 33, away: 28 });
     const waiting = draftSide("test3", 27, blank, [draftMan("Munoz", "D", null, 0, 1)], days(27));
     expect(run(waiting, draftSide("test4", 28, eleven("a"), [], days(28))).at(-1)).toEqual({ day: "2026-09-25", home: 27, away: 28 });
+  });
+
+  it("labels a step by its London weekday, or as the substitutions", () => {
+    expect([{ day: "2026-09-26", home: 0, away: 0 }, { day: null, home: 0, away: 0 }].map(stepLabel)).toEqual(["Sat", "Subs"]);
   });
 });

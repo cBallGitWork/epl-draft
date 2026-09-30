@@ -1,3 +1,4 @@
+import { londonWeekday } from "../../time";
 import { blank } from "./autoSubs";
 import { counted, type SideState } from "./state";
 import { byClock } from "./stories";
@@ -30,6 +31,18 @@ export interface StoryDraftRow {
   /** "sub": a reserve coming on for the man above him, if he plays while he has not; "dnp": his matches are done and he
    *  did not play. */
   mark: "sub" | "dnp" | null;
+}
+
+/** "Haaland (12', 81')" when every goal is timed, "Isak 2" when not, and "Raya" for one clean sheet. */
+export const returnText = (r: StoryDraftReturn) => (r.minutes.length > 0 ? `${r.name} (${r.minutes.map((m) => `${m}'`).join(", ")})` : r.count > 1 ? `${r.name} ${r.count}` : r.name);
+
+/** A row's second line: "did not play", or his match to come, "Sun v Crystal Palace (h)", with "if he plays" for a
+ *  reserve waiting on it; null when there is nothing to add to his points. */
+export function rowNote(row: StoryDraftRow): string | null {
+  if (row.mark === "dnp") return "did not play";
+  if (row.next === null) return null;
+  const match = `${londonWeekday(row.next.kickoff)} v ${row.next.opponent} (${row.next.home ? "h" : "a"})`;
+  return row.mark === "sub" && row.points === null ? `${match}, if he plays` : match;
 }
 
 const minuteOf = (t: GoalTime) => (t.added === undefined ? `${t.minute}` : `${t.minute}+${t.added}`);

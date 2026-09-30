@@ -1,3 +1,4 @@
+import { weekdayOfDay } from "../../time";
 import type { MatchupState } from "./state";
 import type { DraftSide } from "./types";
 
@@ -10,6 +11,9 @@ export interface StoryDraftStep {
   home: number;
   away: number;
 }
+
+/** "Sat", or "Subs" for the substitutions' step. */
+export const stepLabel = (step: StoryDraftStep) => (step.day === null ? "Subs" : weekdayOfDay(step.day));
 
 const upTo = (side: DraftSide, day: string) => side.byDay.filter((d) => d.day <= day).reduce((sum, d) => sum + d.points, 0);
 
