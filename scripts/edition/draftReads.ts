@@ -28,11 +28,11 @@ export interface Tally {
 
 export type ClubGoal = PlGoal & { clubId: number };
 
-/** Each goal of the gameweek with its minute and the FPL club it counts for, by FPL fixture code, and every man who
- *  started a match, by FPL code, off the same team sheets. */
-export async function matchReads(gameweek: number, fixtures: readonly Fixture[], players: readonly { code: number; optaCode: string | null }[]): Promise<{ goals: Map<number, ClubGoal[]>; starters: Set<number> }> {
+/** Each goal of the gameweek with its minute and the FPL club it counts for, and each match's starters, both by FPL
+ *  fixture code, off the same team sheets. A match with no sheet has no starters entry. */
+export async function matchReads(gameweek: number, fixtures: readonly Fixture[], players: readonly { code: number; optaCode: string | null }[]): Promise<{ goals: Map<number, ClubGoal[]>; starters: Map<number, Set<number>> }> {
   const out = new Map<number, ClubGoal[]>();
-  const starters = new Set<number>();
+  const starters = new Map<number, Set<number>>();
   const page = await fetchPlRound(gameweek).catch(() => null);
   if (page === null) return { goals: out, starters };
   const optaToCode = new Map(players.flatMap((p) => (p.optaCode === null ? [] : [[p.optaCode, p.code] as const])));
@@ -46,9 +46,16 @@ export async function matchReads(gameweek: number, fixtures: readonly Fixture[],
     const homeTeam = detail.teams[0]?.team.id;
     out.set(ours.code, plGoals(detail, optaToCode).map((g) => ({ ...g, clubId: String(g.teamId) === String(homeTeam) ? ours.homeClubId : ours.awayClubId })));
     const sheets = plTeamSheets(detail, optaToCode);
-    for (const man of [...(sheets?.home.lineup ?? []), ...(sheets?.away.lineup ?? [])]) if (man.code !== null) starters.add(man.code);
+    if (sheets !== null) starters.set(ours.code, new Set([...sheets.home.lineup, ...sheets.away.lineup].flatMap((man) => (man.code === null ? [] : [man.code]))));
   }
   return { goals: out, starters };
+}
+
+/** Whether a man started, from the sheets of the matches he played; null when one of them has no sheet, so a sheet
+ *  that failed to load never benches a man. */
+export function startedOf(code: number, played: readonly number[], starters: ReadonlyMap<number, ReadonlySet<number>>): boolean | null {
+  if (played.length === 0 || played.some((fixture) => !starters.has(fixture))) return null;
+  return played.some((fixture) => starters.get(fixture)!.has(code));
 }
 
 export const timeOf = (g: PlGoal): GoalTime => (g.added === undefined ? { minute: g.minute } : { minute: g.minute, added: g.added });

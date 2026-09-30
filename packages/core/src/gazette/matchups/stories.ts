@@ -38,7 +38,7 @@ function gotLine(m: DraftMan): string | null {
 function manLine(m: DraftMan, side: DraftSide, worth: SlotWorth): string | null {
   const parts: string[] = [];
   // A keeper's big score is a haul whatever it is made of.
-  const keeper = !(worth.returns[m.slot] ?? []).some((w) => w.kind === "goal");
+  const keeper = worth.keeper !== null && m.slot === worth.keeper;
   const got = keeper && (m.points ?? 0) >= DRAFT_DESK.keeperHaul ? `hauled ${m.points} in goal${m.cleanSheets > 0 ? ", a clean sheet among it" : ""}` : gotLine(m);
   const returns = returnCount(m);
   if (got !== null) parts.push(got);

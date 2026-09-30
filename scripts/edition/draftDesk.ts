@@ -36,7 +36,7 @@ import {
 } from "@epl/core";
 import { INTEL_SEASON, readIntel } from "../intel";
 import { gatherRoundFacts } from "./facts";
-import { appearance, categoryIds, matchReads, mostPaid, tallies, timeOf } from "./draftReads";
+import { appearance, categoryIds, matchReads, mostPaid, startedOf, tallies, timeOf } from "./draftReads";
 import { draftSeason, gameweekFacts, meetingsOf, placeOf, ranksAfter } from "./draftSeason";
 import { minimums } from "./rosterMinimums";
 import { earlierSheets } from "./sheets";
@@ -82,6 +82,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   // A return is a goal, an assist or a clean sheet; a keeper's is a clean sheet (Craig, 29 Sep 2026).
   const slotOf = new Map(facts.teams.flatMap((t) => { const s = sheetOf(t); return [...s.starters, ...s.bench].map((m) => [m.fantraxId, m.slot] as const); }));
   const worth = {
+    keeper,
     appearance: appearance(reads.map((r) => r.raw), ids.minutes),
     // The most a defensive bonus, or a keeper's saves, paid in a match this gameweek: the ceiling before "cannot catch".
     bonus: Object.fromEntries(SLOTS.map((slot) => [slot, mostPaid(reads.map((r) => r.raw), slot === keeper ? ids.saves : ids.defence, slot, slotOf)])),
@@ -137,7 +138,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
         debut: (debuts(sheet, history.get(sheet.teamId) ?? []) ?? []).some((d) => d.fantraxId === m.fantraxId),
         projected: projections.get(m.player.code)?.gameweeks.find((g) => g.gw === gameweek)?.points ?? null,
         next: opponent === undefined || coming === undefined ? null : { opponent: opponent.name, home, day: londonWeekdayLong(coming.kickoff!) },
-        started: appeared && done.length > 0 ? starters.has(m.player.code) : null,
+        started: appeared ? startedOf(m.player.code, done.map((f) => f.code), starters) : null,
         matches: games.map((f) => ({ code: f.code, label: `${clubs.get(f.homeClubId)?.name ?? "?"} v ${clubs.get(f.awayClubId)?.name ?? "?"}` })),
         // Fitness from Fantrax's own news arrives with the writer; until then no man carries any.
         fitness: null,

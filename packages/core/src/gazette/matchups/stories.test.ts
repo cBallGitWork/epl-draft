@@ -56,4 +56,9 @@ describe("sideStories", () => {
     const lines = stories(side([draftMan("Hemmings", "M", 1, 18, 0, { club: "Aston Villa", started: false }), draftMan("Isidor", "F", 1, 22, 0, { club: "Sunderland", started: true })]));
     expect(lines).toEqual(["Dons: Hemmings (Aston Villa) did not start and played 18 minutes off the bench, 1 point for the appearance", "Dons: Isidor (Sunderland) went off after 22 minutes"]);
   });
+
+  it("knows a keeper by the league's goalie slot, not by a missing goal price", () => {
+    const unpriced = { ...worthOf(), returns: {}, keeper: "G" };
+    expect(sideStories(side([draftMan("Hall", "D", 9, 90, 0, { club: "Newcastle", goals: 1 })]), [], unpriced, "gameweek", 10)).toEqual(["Dons: Hall (Newcastle) got 9: a goal"]);
+  });
 });
