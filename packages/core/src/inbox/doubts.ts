@@ -9,40 +9,13 @@ import type { InboxItem } from "./types";
 // clear its their team too)"). Whose man he is is said by the sender, the `about` line and the
 // letter itself (`doubtLetter.ts`).
 
-/** What the headline says about him, after his name.
- *
- *  **`out` first, because it is the one a manager cannot read around.** It asked
- *  the chance first and so had three answers where FPL has two shapes: a stated
- *  nought, and a status with no number against it. A suspended man carries no
- *  chance at all, so "carries a note" was what the screen said about a ban.
- *
- *  Which KIND of absence is the box's job, not the sentence's — `Sus` beside
- *  "is out" says banned in four characters.
- *
- *  **The round rides in the clause rather than after it**, because the two
- *  branches want different prepositions: a man is out FOR a gameweek and he is a
- *  percentage to play IN one. Craig, 17 Sep 2026, on a blue block reading `GW4`:
- *  *"use the date/time still, and say 'player name is out gw4'"* — so the block
- *  went back to carrying a date like every other row on the screen (it has one
- *  now; see `AvailabilityNote.newsAt`) and the round moved into the sentence,
- *  where it reads as English rather than as a chip.
- *
- *  A man FPL has flagged with no number against him gets no round: "carries a
- *  note for GW5" claims the note is about that round, and it is not — it is a
- *  note about him.
- *
- *  **`GW5` here and "gameweek 5" in the body**, which is not an inconsistency —
- *  it is the difference between a subject line and a letter. A subject is read
- *  in a list one row deep: "Dean Henderson is out for gameweek 5" is 36
- *  characters and a 390 phone gives the headline column about 200px, so it
- *  truncated mid-word at `…is out for gam`. The short form fits and is the one
- *  Craig actually wrote (*"say 'player name is out gw4'"*). The body has the
- *  whole width of the letter and says it in words. */
-function headlineState(note: AvailabilityNote, gameweek: number | null): string {
-  const round = gameweek === null ? "" : ` GW${gameweek}`;
-  if (note.out) return gameweek === null ? "is out" : `is out for${round}`;
-  if (note.chance === null) return "carries a note";
-  return gameweek === null ? `is ${note.chance}% to play` : `is ${note.chance}% to play,${round}`;
+/** The subject, as a back-page headline: "Palmer a doubt for GW6". Surname and `GW` keep it on one row at 390.
+ *  No gameweek for a man who has left, or a doubt with no chance against it: neither is about one gameweek. */
+function headline(note: AvailabilityNote, gameweek: number | null): string {
+  if (note.state === "unavailable") return `${note.playerName} unavailable`;
+  const state = !note.out ? "a doubt" : note.state === "suspended" ? "banned" : "out";
+  const dated = gameweek !== null && (note.out || note.chance !== null);
+  return dated ? `${note.playerName} ${state} for GW${gameweek}` : `${note.playerName} ${state}`;
 }
 
 /** The squad the letter is about, when that is not already obvious.
@@ -121,9 +94,7 @@ export function availabilityNews(
         // FPL's stamp for the line. Null falls back to the round, as before.
         at: note.newsAt === null ? null : { iso: note.newsAt },
         gameweek,
-        // His full name, because this is the subject line of a letter about him
-        // and not a row on a squad list.
-        headline: `${note.fullName} ${headlineState(note, gameweek)}`,
+        headline: headline(note, gameweek),
         body: doubtLetter(note, gameweek, side, who),
         from: doubtFrom(note, side, who),
         about: doubtAbout(side, who, gameweek),
