@@ -146,8 +146,8 @@ if (player) ROUTES.push(player);
 // as a page that passes.
 await cdp.open("/", 2200);
 const article = await cdp.js(
-  `(document.querySelector('a[href^="/paper/"]:not([href="/paper/reports"]):not([href="/paper/columns"])')||{}).getAttribute
-     ? document.querySelector('a[href^="/paper/"]:not([href="/paper/reports"]):not([href="/paper/columns"])').getAttribute("href") : ""`,
+  `(document.querySelector('a[href^="/paper/"]')||{}).getAttribute
+     ? document.querySelector('a[href^="/paper/"]').getAttribute("href") : ""`,
 );
 if (article) ROUTES.push(article);
 

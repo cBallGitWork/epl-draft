@@ -59,13 +59,10 @@ export default function TurnLink({
   href,
   className,
   children,
-  ...rest
 }: {
   href: string;
   className?: string;
   children: ReactNode;
-  "aria-current"?: "page";
-  id?: string;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -85,7 +82,6 @@ export default function TurnLink({
     <Link
       href={href}
       className={className}
-      {...rest}
       onClick={(event) => {
         // Never swallow the gestures that mean "not here": a modified click is
         // a new tab, and a middle click is too.

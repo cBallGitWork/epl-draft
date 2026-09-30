@@ -44,11 +44,118 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## The paper's staff write under ISS names, one per kind of story — decided 30 Sep 2026
+
+Craig: *"need better sports journalists, ISS/pro evo used fake names based on player names, we do the same for
+journalists, find the most famous journalist names"*, and on the first draft, *"can go more iss/pro evo, thats one
+letter difference"*. So each kind runs under the famous journalist known for that kind of piece, mangled the way ISS
+Pro Evolution printed "Roberto Larcos": letters swapped or changed in **both** names, recognisable at a glance, and
+**never the real name**. Phill McLunty, Danial Talyor, Garf Crookes, Martyn Masuel, Donny Kaber, Fabrizzio Morano,
+Davide Onrstein, and Hendry Wimter for a kind with none. One table, `gazette/staff.ts`, feeds both the byline and the
+writer's "You are" line; the byline is resolved from the kind at render, so the archive reads the new names, and a
+`reporter` stamped at filing wins. Lawro is not staff: his column keeps his real name. Craig's *"yes bylines"* put
+the line-ups under the team-news writer, the front page's lead under its writer, and the writer's name at the head of
+the match-report and team-sheet prompts.
+
+## A player's fixture run carries the sister model's projection, not Fantrax's — decided 30 Sep 2026
+
+- **Counted**: the sister export projects **666 of 666** players for **each of GW6–17** (12 weeks); Fantrax's
+  own per-player projection covers one period and only the men fielded (`ACTIVE`), behind the lineup gate, and
+  its reader was deleted on 25 Sep. So the run reads the export, in FPL scoring; the panel carries no source caption, and each figure's title
+  says whose it is.
+- **The rank is among his grid's group** (the sister's line: 108 midfielders, 23 goalkeepers), the men with a
+  reading that week, ties sharing a place (`projectedPlace` in core); lit on the pool board's shares (`poolCut`).
+- **Mail's frame and row are shared at two, by Craig's asking** ("use the mail template more"), a recorded
+  exception to CODE_RULES §1 like `DateChip`'s: `news/Mailbox` and `news/MailRow` serve Mail and a player's
+  News, and the row's headline now wraps to two lines on both rather than clipping on a phone.
+
+## The Points Dodgers are the real football's near misses, not a manager's bench — decided 30 Sep 2026
+
+- Craig: *"points dodgers are players IRL who came close to points but didnt get any, not players on the bench"*.
+  The column had named five men who returned while benched; that is now nobody's column.
+- **Each kind of points is dodged on its own** (Craig: *"players with high xa and no assist points"*): a man
+  with no goal who came near one (a goal ruled out, a penalty missed or saved, the woodwork, expected goals), with
+  no assist who came near one (expected assists, a shot he set up hitting the woodwork), or with no clean sheet his
+  slot pays for whose side's only goal against came from `DODGERS.lateGoal`. A scorer can dodge an assist, and the
+  brief says what he did get so the column never denies it. An assist side is scaled to the goal bar
+  (`DODGERS.from`: 0.6 goals, 0.4 assists). Benched or not is never said.
+- **Expected goals and assists order the column and never print**; the brief carries Opta's countable facts, the
+  moments' minutes (the one column given them), and shots taken and set up from inside the box and close range.
+- Star test, rehearsal league: GW3 Calafiori, Ødegaard (scored, 4 shots set up, no assist), Bobb, Ballard, Cherki;
+  GW4 Le Fée's saved penalty, Justin, Ndoye, Ampadu, Trafford; GW5 Wissa's saved penalty, Gonzalo, Saka,
+  Fernandes off the post, Cunha (scored, set up a shot against the woodwork).
+
+## Opta's commentary describes every shot, and says what VAR decided — probed 28 Sep 2026
+
+For the match report's facts: the textstream (`/fixtures/{id}/textstream/EN`) over **all 50 fixtures
+of gameweeks 1-5**, and the staff endpoint for all 20 clubs.
+
+| | |
+|---|---|
+| goals reconcile with the detail's `G`+`P`+`O` | **50/50** fixtures |
+| shot lines (`goal`, `penalty goal`, `miss`, `attempt saved`, `attempt blocked`, `post`) | 1,389 |
+| …foot (`right footed`, `left footed`, `header`) | **1,383/1,389** |
+| …where from (`very close range`, `centre of the box`, `outside the box`…) | 1,385/1,389 |
+| …made by (`Assisted by`) | 1,025/1,389, an unassisted shot rather than a gap |
+| …situation (`following a corner`/`fast break`/`set piece situation`, `direct free kick`) | 227/1,389 |
+| `added time` giving its minutes | **100/100** |
+| substitutions Opta marks as injury | 29/438, plus one `player retired` ("went off injured after … used all subs") |
+| `contentious referee decisions` | 15, each `VAR Decision: No Goal <score>` · `No Penalty <club>` · `Goal <score> (<scorer>)` · `Card upgraded <man>`; with 11 `VAR cancelled goal` naming the scorer |
+
+**Four traps.** A missed penalty is a `post` or `miss` whose text starts `Penalty missed!`, not a
+type of its own. `penalty saved` names the keeper only in prose, so the keeper comes from the team
+sheet, never the text. A second booking is `secondyellow card` (2), a straight red `red card` (4).
+The own-goal line has no space after the score (`…Town 1.Goal confirmed following VAR Review.`).
+
+**Managers are named only where the staff list is unambiguous: 16/20.** `/teams/{id}/compseasons/841/staff`
+lists `role: "Manager"` with `active: true` and no dates, and Forest, Chelsea, Palace and Ipswich each
+carry two active managers. A club with two is given none, because nothing says which one picked the side.
+
+**Opta's type strings are now read in five places, and the shared table waits.** `moments.ts` joins
+`map.ts` `KINDS`, `assists.ts`, `injuries.ts` and `wire.ts`. It is past the rule of three, but #149
+rewrites three of those four, so the extraction lands after #149 merges rather than colliding with it.
+## The cups are declared as ours; the playoff is Fantrax's — decided 27 Sep 2026
+
+Craig set the formats on 27 Sep. The cups are declared in `packages/core/src/league/cups/declared.ts`, and
+`declared.test.ts` lays each one out for ten teams:
+
+- **Timbeibs Cup**: GW9 is a seeding round, seeded by that week's Fantrax points, with a tie going to
+  the higher league position. Then a one-leg double elimination with no reset final, from GW10 to the
+  GW17 final (Boxing Day). The top six byes are not declared: `doubleBracket(10)` gives them, because only
+  seeds 7 to 10 fill a sixteen-slot first round. **Every round is played as late as the final allows**
+  (`scheduleRounds`; Craig, 30 Sep: *"dont have wb so early"*): the winners' final is GW15, so its winner
+  waits one gameweek for the final, not three. **Once seeded it follows strict bracket order** (Craig, 30 Sep):
+  every side from round 3 on is a fixed winner or loser, never reseeded. **Rounds 1 and 2 are drawn at random**
+  (Craig, 30 Sep: *"round 1 can be drawn, and round 2"*), off the app like the Davy Propper groups: seeds 7–10
+  into round 1, then the six byes and the two round 1 winners into round 2 (`drawnRounds: 2`). The GW9 seeding
+  decides only the byes; losers drop into the losers' side by the tie position the draw gave them.
+- **Davy Propper Cup**: two groups drawn at random around GW19, off the app, each playing once over GW22
+  to GW26 (Craig, 30 Sep: *"starts gw22"*). The top three go through and the group winners skip the
+  quarter-finals (`seededBracket(6)`). Quarter-finals are A2 v B3 and B2 v A3, all one leg: GW28, GW29
+  and a GW30 final. GW27 is the break.
+- **GW20 is a mid-season break for every competition** (Craig, 30 Sep). No cup is declared in it; the
+  league's own GW20 fixtures are Fantrax's schedule, which Craig sets, and the app draws what it answers.
+- **The playoff is Fantrax's, read from `getLeagueInfo` and never declared.** Craig sets it in Fantrax:
+  five teams, a one-leg 4 v 5 play-in, two-leg semi-finals, a one-leg final. `mapPlayoffs` carries the
+  places. On 27 Sep the real league (`mqsjd23smsgbiqzr`) still answered `playoffs: {used: false}`, so the
+  table's cut line draws nothing until he has.
+- **A level knockout tie** is settled by points, then the starting eleven's goals, assists, clean sheets and
+  minutes played in the tie. Level on all five is a coin toss, which Craig makes: `knockoutWinner` answers
+  `"coin toss"`. Every cup tie is one leg.
+- **Group points are 3 for a win and 1 for a draw** (Craig, 27 Sep). A group is placed on points, then
+  points for, then draw order; the order after points for is assumed.
+- **On screen with a placeholder draw** (Craig, 27 Sep: *"Placeholder brackets are fine for now"*):
+  `/league/cups` shows each cup as the schedule's fixture list or as a bracket, and Schedule and Live
+  carry the cup ties. Every side is "To be drawn", "A1", "2nd B" or "Winner M5" until the draws are
+  made; nothing yet puts a team into a slot. The screen no longer says "Placeholder draw" (Craig, 30 Sep:
+  *"remove placeholder draw sentence"*); a cup's own list heads a lone round on the gameweek's plate. `knockoutWinner`, `seedByPoints` and
+  `groupTable` are tested but still read by no screen, which is the step that does.
+
 ## Lawro writes the predictions, under his own name, on Thursday evening — decided 24 Sep 2026
 
 - **The byline is "by Mark Lawrenson", with no impression marking** (Craig, 24 Sep 2026). It reverses,
-  for this one column, the rule that a byline over machine-written copy is an invented name (`config.ts`,
-  SEASON_LOG 28 Aug). It travels as `reporter` on the story; Franco Bell keeps every other kind.
+  for this one column, the rule that a byline over machine-written copy is an invented name (`gazette/staff.ts`,
+  SEASON_LOG 28 Aug). It travels as `reporter` on the story; every other kind runs under its staff writer.
 - **His career is his to use, in verified lines only**: the thirty BBC years (pundit, co-commentator,
   twenty-two years of predictions) and the playing and managing, as a core identity and 20 lines in turn in
   `gazette/predictions/past.ts`, each read back from the archive by its mark. A first-person career claim
@@ -184,17 +291,24 @@ capture season-specific tradeoffs.
 - **`query.ts`'s `boardHref` and `filterHref` take a route**, so a second Data board filters with the Players
   board's own parsers; the Players board passes none and is unchanged.
 
-## Data's Team Stats keeps FPL's counts off a Fantrax board — decided 24 Sep 2026
+## Data's Team Stats is the clubs' football, off Opta's season totals — decided 30 Sep 2026
 
-- **Fantrax's figures only, where Fantrax has one**: points by club and by the position Fantrax lists, the
-  points nobody owns, and clean sheets and goals against off Fantrax's keeper lines (they match FPL's club
-  figures for 19 of 20 clubs; Chelsea's second keeper is missing from the pool read, so its GA reads 10
-  against FPL's 12). FPL contributes only what Fantrax does not publish: xG, xA and xGC.
-- **FPL's squad xGC is divided by eleven.** `clubStats` adds every man's expected goals conceded, so each
-  chance against is counted once per man on the pitch; eleven share one (exact except after a red card).
-  Prem's own "Expected conceded" category still prints the undivided sum (Arsenal 44.4, having conceded 4).
-- **Grouped by Fantrax's club code**, respelled with `toFplClubCode`, never through the bridge, which would
-  drop the 115 men it has not settled.
+Craig: *"what is run? less fpl points, this page should be more pure stats, chances created, shots etc,
+errors"*. It replaced the 24 Sep board of Fantrax points by club and position, Fantrax's keeper lines and the
+planner's run, all of which went; the Planner owns fixture difficulty.
+
+- **Opta's figures come off `/stats/team/{id}`, one read per club** (list: `/teams?…&altIds=true`), cached
+  as one for five minutes. Joined to FPL by `altIds.opta` `t{code}` = FPL's club `code`, 20 of 20. Counted
+  30 Sep 2026 after five matches: goals, shots, on target, big chances scored and missed, key passes, big
+  chances created, assists, goals conceded, shots conceded (ibox + obox), tackles, interceptions, blocks,
+  fouls and yellows **20/20**; errors leading to a shot **19/20**, to a goal **13/20**, clean sheets
+  **16/20**, reds **6/20**, every absence a nought (the `/stats/match` rule below). No xG anywhere on it
+  (`expected_goals` **0/20**).
+- **FPL contributes the expected three**: xG and xA summed over the squad, xGC divided by eleven, because
+  `clubStats` counts each chance against once per man on the pitch (exact except after a red card).
+- **Considered and not used**: Fantrax's pool columns (`G A AF YC RC PKM OG GAO CS`, plus keepers' `Sv GA`)
+  say nothing Opta does not, under league-specific headings; the sister repo's `matches` export stops at
+  4 Sep (20 fixtures) and `shots` at 23 Sep. Opta's `ppda` sums per match and is not a season figure.
 
 ## The fixture planner ranks opponents by our strength model — decided 24 Sep 2026
 
@@ -345,8 +459,11 @@ anyway.
 - **Every writer pushes through `scripts/ci/push.sh`** (capture, editions,
   round-state, scout-xi): commit what the caller staged, then `pull --rebase` and
   push, five tries with jitter. Four jobs push to one branch, and each one used
-  to lose its commit on a single rejected push. Tested against a local bare repo
-  with a second clone pushing first: it rebased and landed, with no merge commit.
+  to lose its commit on a single rejected push. A rebase that conflicts is
+  aborted and fails the job at once with an `::error::` naming the files, because
+  an open rebase failed all five retries. `scripts/ci/push.test.ts` holds all
+  three paths against a bare repo on disk: a clean rebase lands with no merge
+  commit, a conflict aborts, and a failure without one still retries.
 - **Checkout keeps no token** (`persist-credentials: false`), so `npm ci` and
   our own scripts run without a credential that can push. Only the push step
   gets `GITHUB_TOKEN`.
@@ -623,7 +740,7 @@ real settings, which is the measure of how far "the API does not say" is from
 ## The commissioner's cookie opens all of it — probed 21 Sep 2026
 
 Craig supplied his own session and the probe was **read methods only**; nothing
-below changed a league. `adminMode` and every write are still unprobed.
+below changed a league. `adminMode` and the writes were answered on 28 Sep 2026 (below).
 
 **The cookie is live but `roles` is `"none"`** — and `myTeamIds` comes back as
 **all ten** dummy teams, with a `commissioner` key on every response. So role is
@@ -737,7 +854,8 @@ public endpoint is the string `status: "ACTIVE" | "RESERVE"` — not the SPA's
 Why it mattered: `gatherRoundFacts` asked without a period while every other
 read in it asked for the round's. `wasFielded` compares the two, so it was
 false for every column that fires after a round finishes — which is all of
-them — and `eleven` and `dodgers` refuse outright when it is false, because
+them — and `eleven` and `dodgers` refused outright when it was false (the dodgers stopped
+reading benches on 30 Sep 2026), because
 "benched" is a claim about a side somebody actually picked. Those two columns
 could never file, and because a refusal spends no covered-key they sat at the
 top of every firing's running order and wedged the paper behind them.
@@ -1036,10 +1154,10 @@ a correct and permanent state for some players rather than a matching failure.
 - **No scoring engine this season.** Fantrax computes the points and its numbers
   are authoritative; we read them. The full `scoringSystem` is captured but not
   modelled. Minor exceptions may come later, deliberately.
-- **No write surface yet.** The fxpa methods (`confirmOrExecuteTeamRosterChanges`
-  for lineups, `confirmOrExecutePlayerPickerChanges` for waivers) need a member's
-  browser session cookie. Deferred to September. Note that before the draft there
-  are no rosters to change, so there is nothing to test against either.
+- **The write surface is the commissioner's cookie plus `adminMode`**, which
+  writes a team the commissioner does not own (probed 28 Sep 2026, below).
+  `confirmOrExecuteTeamRosterChanges` sets lineups; `confirmOrExecutePlayerPickerChanges`
+  (waivers) is unprobed.
 - **`data/` is checked into git.** The snapshots and the identity bridge are the
   season's permanent record; git is both audit trail and backup.
 - **Capture starts now, not at the draft.** Roster transitions cannot be
@@ -1389,6 +1507,8 @@ error. The same parameter is required on `/football/players`.
   200, an unstarted one with an empty `content`.
 - `/stats/match/{id}` — **~170 Opta metrics per side**, 34 KB, present on **21 of 21**
   played fixtures.
+- `/stats/team/{id}?comps=1&compSeasons=…&altIds=true` — one club's season, ~215 metrics summed over its
+  league matches, with the same nought-omitted rule; Data › Teams reads it (30 Sep 2026).
 
 ### `time.secs` is per-fixture and not monotonic
 
@@ -1481,6 +1601,9 @@ them are the kind that only shows up when you try to write the line. Recorded
 here rather than in the plan file, because the plan is a dated document and this
 is what the tree says.
 
+*28 Sep 2026: `roundFootball`, `withFootball`, `RoundFacts` and `briefs/matchReport.ts` were deleted
+with the retired match-report path; the lines below that name them are history.*
+
 ### The three that change what a change IS
 
 - **B1's guard cannot go where the plan puts it.** `write-edition.ts` never names
@@ -1495,14 +1618,13 @@ is what the tree says.
   id — and not the club-code `stake.key` the `fixture:gw{gw}:{key}` subject needs;
   that key exists only as a suffix of `assignment.key` and is computed at
   `relevance.ts:81`. B5's supersession is a three-file change, not a table.
-- **A new story kind has six tables to join and only one of them fails loudly.**
+- **A new story kind has five tables to join and only one of them fails loudly.**
   `KIND_WEIGHT` (`frontPage.ts:35`) is the only total `Record<StoryKind, …>` in
   the tree and will not compile without a row. `STORY_KINDS` (`story.ts:36-40`) is
   a plain array, so omitting the kind there makes `normalizeStory` refuse every
   story of it **with a green typecheck and a green build** — which is exactly the
-  failure B7 has just swept up. `PAPER_PAGES` is not in core at all
-  (`components/gazette/paperPages.ts`, `readonly string[]`), and `KICKER`,
-  `STORY_BYLINE` and `faceOf` all take an unhandled kind silently.
+  failure B7 has just swept up. `KICKER`, `STORY_BYLINE` and `faceOf` all take
+  an unhandled kind silently.
 
 ### Counts the plan quotes that have moved or were never right
 
@@ -1591,15 +1713,13 @@ whether the slot should reach them is a separate question and Craig's:
 |---|---|
 | `prem/club/[code]/SquadTable.tsx:169,172` | goals and assists, with minutes and starts ink on the same line |
 | `prem/club/[code]/stats/PlayerBoard.tsx:176` | every measure column |
-| `squad/[teamId]/stats/StatBoard.tsx:214,245` | every category and underlying column |
 | `players/[fantraxId]/MatchLog.tsx:124,184` | the FPts column, on a row of sixteen figures |
 | `players/[fantraxId]/AttributeGrid.tsx:98` | thirty ratings; its docblock quotes the RETIRED wording |
 | `components/league/SeasonGrid.tsx:47` | the same, and quotes it too |
 
 Three more put amber on something that is not a figure under either wording —
-position letters at `components/league/SquadRows.tsx:228`,
-`squad/[teamId]/transfers/Ledger.tsx:188` and `squad/[teamId]/stats/StatBoard.tsx:202`,
-and glossary abbreviations at `StatBoard.tsx:279` — and three put it on a
+position letters at `components/league/SquadRows.tsx:228` and
+`squad/[teamId]/transfers/Ledger.tsx:188` — and three put it on a
 PARAGRAPH of prose (`components/league/PlayerCard.tsx:92`,
 `components/league/LivePlayerCard.tsx:109,193`), where the unresolved-slot reason
 reads as a doubt and `--color-bad` is the slot for that.
@@ -3492,6 +3612,88 @@ The real league cannot substitute: it has no teams until 10 Oct, and by the time
 it has fifteen belonging to real people, writing to one to see what happens is
 not a probe, it is an incident.
 
+**Answered 28 Sep 2026: it writes.** See the next section.
+
+## `adminMode` answered: the commissioner writes any team's lineup — probed 28 Sep 2026
+
+Craig moved one rehearsal team, **Notemail** (`v6bxgqm5mtj31znh`), to a second
+Fantrax account: the control the 20 Aug probe lacked. `myTeamIds` now holds 9 of
+the league's 10 and Notemail is not among them. The request bodies below were
+read from Fantrax's own client (`createTeamRosterApiCall`, `onSetAutoOrderSub`
+and the commissioner hub's `execute`), not guessed.
+
+### The lineup write, and its dry run
+
+`confirmOrExecuteTeamRosterChanges` takes `{rosterLimitPeriod, fantasyTeamId,
+daily: false, adminMode, confirm, applyToFuturePeriods, fieldMap}`. `fieldMap`
+is **every rostered man**, `scorerId → {posId, stId}`: the slot's position id
+(`704` G · `703` D · `702` M · `701` F) and status (`1` active, `2` reserve). A
+move is a changed entry, and a change of position is the same man with a
+different `posId`.
+
+`confirm: true` is a dry run: it names what would change and whether the result
+is legal, and saves nothing. Without `confirm` it saves. Every row below was
+followed by a re-read of Notemail.
+
+| Case | `adminMode` | Answer | Saved |
+|---|---|---|---|
+| D for D, XI ↔ bench | true | `CONFIRM`, two changes listed | no, dry run |
+| the same | **false** | *"You cannot perform that transaction because you do not own the team **Notemail**, however you can turn on **Commissioner Mode**"* | no |
+| Belloumi F → M | true | `WARNING`: *"The maximum number of **5** **M** position(s) on your roster will be exceeded."* | no, dry run |
+| a D benched for an M (D 2) | true | `WARNING`: *"The minimum number of **3** active **D** position(s) will not be met."* | no, dry run |
+| D for D, executed | true | `CONFIRM`, `textArray.model.changeAllowed: true` | **yes**; read back, reverted, read back identical |
+
+So the commissioner's session **writes a team it does not own**, and `adminMode`
+is what lets it.
+
+### Fantrax will save an illegal lineup
+
+An illegal dry run is a `WARNING` carrying `illegalRosterMsgs[]` under *"Your
+roster will be illegal … Click **OK** to execute the changes anyway."* So a save
+that sends it anyway gets it. Refusing is ours to do: a save refuses any
+`fieldMap` whose dry run carries an illegal message.
+
+**The Belloumi case broke a rule the planner did not know**: the most a SQUAD may
+hold at a position, bench included and counted by slot (rehearsal D5 · M5 · F3 ·
+G2). `getLeagueInfo` does not publish it; `roster-limits.json` has held it as
+`maxTotal` since 21 Sep with nothing reading it.
+
+### The bench order is a second write
+
+`getTeamRosterInfo.miscData.autoSubOrderMap` is `scorerId → rank`, with
+`autoSubsOrderingType: "USER"` and `autoSubOrderMax: 6`. Their client writes it
+with `setAutoSubsOrder({teamId, period, adminMode, autoSubOrderMap})`, answered
+`{success}`. Notemail's map is `{}`: no order set. Not yet written by a probe.
+
+### The three commissioner actions the scripts need
+
+`executeCommissionerHubAction({actionKey, …form})`, answered `{ok, message,
+redirectUrl}`. None was called.
+
+- `waiveAllPlayers`: no form, `destructive: true`. *"All free agents will be sent
+  to the waiver wire as of now, and players already on waivers will be
+  re-waived."*
+- `executeAutoSubs`: form `{period, undo}`. *"Run automatic substitutions for a
+  specific period. Useful when rules have changed or something needs to be
+  re-run."*
+- `processWaivers`: form `{}`; its `processDate` is offered to Fantrax staff only.
+
+The same method carries `deleteLeague` and `resetLeagueAndRosters`, so a caller
+picks its action from a fixed list and never passes one through.
+
+### Another team's pending claims cannot be read
+
+`getPendingTransactions({txType: "CLAIM", teamId})` answers for **one of the
+caller's own teams whatever `teamId` says**: Notemail's id, `"ALL"`, with and
+without `adminMode`, in rehearsal and in the real league. Craig changed a league
+setting on 28 Sep; the real league's `allowGroupChanges` went `true` and its
+"Premium League Required" message went, but `showAllTeamsChoice` stayed `false`
+and the answer stayed The Raccoons. **Blocked** until something turns
+`showAllTeamsChoice` on.
+
+The real league, `mqsjd23smsgbiqzr`, has seven teams on 28 Sep, six of them other
+people's. Nothing above was sent to it but reads.
+
 ## A Fantrax points figure per man per MATCH is a capture, not a read (4 Sep 2026)
 
 Asked because a match screen wanted one. Counted against FPL fixture 11's **32**
@@ -4027,6 +4229,10 @@ Premier League publishes no interval length and FPL publishes no clock at all.
   from the other four positions, never seen non-zero. First witnessable during
   any live match.
 - What should `apps/lab` look like for the 27/28 platform prototype?
+- **The cups, open since 27 Sep** (see *The cups are declared as ours*): where the starting eleven's
+  goals, assists, clean sheets and minutes per team per gameweek are read from; how a group tie on points
+  and points for is placed (draw order assumed); and whether Fantrax can express the playoff's one-leg play-in before two-leg semis, which
+  a capture after Craig sets it will show.
 
 **Answered 22 Aug, on the first real matchday** (all in the section above):
 `remainingEventPercent` reaches literal zero. Fantrax's `totalFpts` does fill in
@@ -4121,4 +4327,23 @@ email, not billing — see the hosting section.
 **Done since:** rosters, standings, teams and matchups modelled against real
 payloads; captures filed per league; period alignment settled and scripted; the
 `CLAUDE.md` pool-count and `sportRadarId` corrections landed.
+
+## Lineups save to Fantrax through the commissioner's session — decided 30 Sep 2026
+
+Craig asked for a Save button on the planner and chose a real write over a save on the phone. It rests on the
+28 Sep probe: the commissioner's cookie with `adminMode` writes a team he does not own.
+
+- **The server names the team and the week.** The team is the signed code's (`signedTeamId`, never the demo
+  team); the period is `planningRound()`'s. A page planned for another period is refused, and so is anything
+  within `SAVE_MARGIN_MINUTES` (10) of our computed lock, because `adminMode` overrides a locked team and
+  Fantrax will not stop it (Craig: *"or you'll be overriding a team during a gameweek"*).
+- **Fantrax's own deadline is not read.** `leagueNotices` gives it as prose with no year, for whichever period
+  Fantrax has open, so after a lock it names the week just gone and would refuse every save until the period
+  rolls. Our lock (first kickoff less `LINEUP_LOCK_LEAD_MINUTES`) matched its 7:15 AM EDT on 10 Oct.
+- **Every write is a dry run first**; only a `CONFIRM` with no illegal message is executed. The bench order is
+  a second write, `setAutoSubsOrder`, sent only when it changed.
+- **A session may carry three methods and no others** (`fxpa.ts`), because the same cookie reaches
+  `deleteLeague`.
+- **Switched on per deployment**: `LINEUP_SAVE=on` plus `FANTRAX_COOKIE`. A stale cookie fails the save with a
+  hand-off to Fantrax and a `lineup-save` error line in the logs, which is the staleness signal.
 

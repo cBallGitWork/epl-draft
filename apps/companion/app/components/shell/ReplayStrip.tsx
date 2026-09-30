@@ -1,5 +1,6 @@
 import { replayAt } from "../../clock";
 import { londonDayAndDate, londonTime } from "@epl/core";
+import { SMALL_CAPS } from "@/app/desk";
 
 /** What the app is pretending it is, whenever `REPLAY_AT` is set.
  *
@@ -18,7 +19,7 @@ export default function ReplayStrip() {
   return (
     <div
       role="status"
-      className="flex min-h-9 items-center justify-center gap-2 bg-raised px-[var(--page-gutter)] text-2xs font-bold uppercase text-bad"
+      className={`flex min-h-9 items-center justify-center gap-2 bg-raised px-[var(--page-gutter)] ${SMALL_CAPS} text-bad`}
     >
       <span>Replay</span>
       <span className="numeric opacity-80">

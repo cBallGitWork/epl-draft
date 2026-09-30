@@ -7,7 +7,7 @@ import type {
   StoryFace,
 } from "@epl/core";
 import { fielded, menIn } from "./lineups";
-import type { RoundFacts } from "./facts";
+import type { DeskFacts } from "./facts";
 
 // Who the story prints a picture of.
 //
@@ -26,7 +26,7 @@ import type { RoundFacts } from "./facts";
  *  code is season-stable.
  *
  *  Ties on points break on name, so the same round picks the same man twice. */
-function bestOf(men: readonly ResolvedPlayer[], facts: RoundFacts): StoryFace | null {
+function bestOf(men: readonly ResolvedPlayer[], facts: DeskFacts): StoryFace | null {
   const priced = men.flatMap((man) => {
     const points = facts.playerPoints.get(man.slot.fantraxId);
     return points === undefined ? [] : [{ man, points }];
@@ -52,7 +52,7 @@ export function faceOf(assignment: Assignment, ctx: FaceContext): StoryFace | nu
   }
 
   // The fixture-shaped kinds: everyone in the league with a man in that match.
-  if (assignment.kind === "match-report" || assignment.kind === "fixture-preview") {
+  if (assignment.kind === "fixture-preview") {
     const fixture = ctx.fixtures.find((each) => each.id === assignment.fixtureId);
     if (fixture === undefined) return null;
     return bestOf(
@@ -131,7 +131,7 @@ export function weight(each: { fresh?: boolean; player?: { season: { influence: 
 /** What `faceOf` needs, which is less than a whole `DeskContext`: the round's
  *  facts and the fixtures a fixture-scoped assignment joins on. */
 export interface FaceContext {
-  facts: RoundFacts;
+  facts: DeskFacts;
   fixtures: readonly Fixture[];
   /** The Team Sheet's men — empty for every other kind. */
   presserLines?: readonly PresserLine[];

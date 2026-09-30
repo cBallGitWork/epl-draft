@@ -1,14 +1,14 @@
-import Link from "next/link";
 import type { InboxItem } from "@epl/core";
 import { fantraxTime, londonDayAndDate, londonTime } from "@epl/core";
-import DateChip from "../components/shell/DateChip";
 import Letter from "./Letter";
+import MailRow from "./MailRow";
+import Mailbox from "./Mailbox";
 import { doubtWash } from "../components/football/doubtRow";
 import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
 import { readInbox } from "./inbox";
 import { NEWS } from "../titles";
-import { PANEL_FLUSH, ROW_NAME, SMALL_CAPS } from "@/app/desk";
+import { SMALL_CAPS, MINOR_CAPS } from "@/app/desk";
 
 // The manager's news, the way Championship Manager files it.
 //
@@ -92,53 +92,14 @@ export default async function NewsPage({
           </Nothing>
         </section>
       ) : (
-        /* **The list beside the letter on a desk, and stacked under a thumb**
-            (Craig, 17 Sep 2026: *"on desktop we barely use the space"*, and he is
-            right — the whole screen was one column of 390px ideas at 1440, eight
-            rows and a three-line letter, with five hundred pixels of the
-            photograph under it).
-
-            The reference stacks them, and that is a reading of `02-news.jpg`
-            rather than of CM: the game ran at 800x600, where a list and a letter
-            side by side would be two narrow columns. Ours has the width the
-            reference never had, and an inbox is the one shape every mail client
-            ever written puts in two columns for the same reason — you pick from
-            the list and read without losing your place in it.
-
-            `items-start` so the letter sits at the top of its column rather than
-            stretching to the list's height, and the list keeps its own scroll. */
-        <div className="flex flex-col gap-2 lg:grid lg:grid-cols-[minmax(0,7fr)_minmax(0,6fr)] lg:items-start lg:gap-3">
-          {/* **Inside a panel, and it was not for an hour.** The list wore
-              `LeagueShell`'s panel while this was a League tab; a section of its
-              own has none, and the rows went straight onto the photograph — the
-              one thing DESIGN §2 forbids and the only thing `groundfit`
-              measures. `PANEL_FLUSH`, because the list manages its own spacing.
-
-              The list itself: CM's is about eight rows deep with the reader's
-              own scrollbar, and ours takes the same shape and the same bar,
-              because a list cut at eight with no bar looks like a list with
-              eight things in it (`desk.css` on `.cm-scroll`). It is DEEPER on a
-              desk than on a phone now rather than shallower — `lg:max-h-64` was
-              a phone's ceiling applied to a screen with three times the room,
-              and Craig asked for more of it twice (17 Sep 2026: *"left list, use
-              more space, and make that column just a little bigger"*). Hence the
-              7:6 split as well: the list is the screen's subject and the letter
-              is what one row of it says, so the list takes the larger half. */}
-          <ul className={`${PANEL_FLUSH} cm-rows cm-scroll cm-scroll-y max-h-72 overflow-y-auto lg:max-h-[40rem]`}>
-            {inbox.items.map((entry) => (
-              <li key={entry.id}>
-                <Row
-                  item={entry}
-                  open={entry.id === open?.id}
-                  names={inbox.names}
-                  mine={inbox.mine}
-                />
-              </li>
-            ))}
-          </ul>
-
-          {open === null ? null : <Letter item={open} />}
-        </div>
+        /* The list beside the letter on a desk and stacked under a thumb (Craig, 17 Sep 2026). */
+        <Mailbox letter={open === null ? null : <Letter item={open} />}>
+          {inbox.items.map((entry) => (
+            <li key={entry.id}>
+              <Row item={entry} open={entry.id === open?.id} names={inbox.names} mine={inbox.mine} />
+            </li>
+          ))}
+        </Mailbox>
       )}
     </div>
   );
@@ -179,65 +140,32 @@ function Row({
     item.teamId === null ? null : item.teamId === mine ? "You" : names.get(item.teamId);
   const when = itemDay(item);
   return (
-    <Link
+    <MailRow
       href={`${HERE}?item=${encodeURIComponent(item.id)}`}
-      aria-current={open ? "true" : undefined}
-      className={`cm-row flex min-h-11 items-stretch gap-1.5 ${
-        open ? "bg-league-deep" : `hover:bg-surface ${doubtWash(item.mark?.band ?? null)}`
-      }`}
+      open={open}
+      day={when.day}
+      time={when.time}
+      headline={item.headline}
+      wash={doubtWash(item.mark?.band ?? null)}
+      ink={open || item.mark?.band ? "text-ink" : item.urgent ? "text-bad" : "text-ink"}
     >
-      {/* **`DateChip` at its own size, and no size override at all now** — which
-          is the whole of Craig's *"side boxes (blue bar) harder to read"* and
-          *"share the code"* (17 Sep 2026). This chip carried a `text-3xs`
-          exception, documented at length as the mechanism working as designed;
-          what it actually was is this list reading a date three steps smaller
-          than the player inbox reads the same date, because this one had to
-          swallow the day and the clock as one wrapping string in a 64px box.
-          Handing the two lines over separately is what buys the size back. */}
-      <DateChip day={when.day} time={when.time} className="w-[5.5rem] lg:w-28" />
-      <span
-        className={`flex min-w-0 flex-1 items-center truncate py-1 ${ROW_NAME} ${
-          open || item.mark?.band ? "text-ink" : item.urgent ? "text-bad" : "text-ink"
-        }`}
-      >
-        {item.headline}
-      </span>
-      {/* **The box that says OUT**, and it is `StateBox`'s object rather than a
-          new one — filled for a man who is definitely not playing, outlined for
-          one who might yet, which is DESIGN §2's rule that certain and uncertain
-          are said in FILL rather than in a second hue. The word is the football
-          layer's, so the row says WHY in four characters.
-
-          The class string is duplicated from `StateBox` on CODE_RULES §1: two
-          occurrences are a coincidence, and it is named in `desk.ts` at the
-          third. `StateBox` itself takes a `FootballPlayer` and this row holds an
-          item, so sharing it would mean an options bag with one caller each. */}
+      {/* The box that says OUT: filled when he will not play, outlined when he might (DESIGN §2). */}
       {item.mark === null ? null : (
         <span
-          className={`numeric shrink-0 self-center px-1 text-3xs font-bold uppercase leading-[1.5] ${
+          className={`numeric shrink-0 self-center px-1 ${MINOR_CAPS} leading-[1.5] ${
             item.mark.out ? "cm-state" : "cm-state-doubt"
           }`}
         >
           {item.mark.label}
         </span>
       )}
-      {/* **The open row's ground decides this ink**, which the first build let
-          the quiet slot decide instead: `--color-muted` is 3.79:1 on
-          `--color-league-deep` and `sweep` caught it at both widths. The red
-          ground is a plate in every sense DESIGN §2 means, so the row owns its
-          ink and the manager's name goes to full strength on it — the quiet is
-          for telling a name apart from a headline, and on the one row you are
-          reading there is nothing to tell it apart from. */}
+      {/* The open row's red ground decides this ink: `muted` is 3.79:1 on it. */}
       {who === null ? null : (
-        <span
-          className={`flex shrink-0 items-center pr-1.5 ${SMALL_CAPS} ${
-            open ? "text-ink" : "text-muted"
-          }`}
-        >
+        <span className={`flex shrink-0 items-center pr-1.5 ${SMALL_CAPS} ${open ? "text-ink" : "text-muted"}`}>
           {who}
         </span>
       )}
-    </Link>
+    </MailRow>
   );
 }
 

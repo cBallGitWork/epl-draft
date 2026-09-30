@@ -27,7 +27,7 @@ import { londonDayAndDate, londonTime } from "@epl/core";
 // a 390px plate on its own. "Sat 12 Sep" is the same fact at half the width, and
 // it is the shape a fixture list already uses everywhere else.
 
-export default function RoundHeader({ round }: { round: ScheduleRound }) {
+export default function RoundHeader({ round, title }: { round: ScheduleRound; title?: string }) {
   const at = round.deadline ?? round.kickoff;
 
   return (
@@ -37,7 +37,7 @@ export default function RoundHeader({ round }: { round: ScheduleRound }) {
     // block of scorelines sits under — was a `cm-bevel` run at `h-7`. One list
     // of ties, two ways of heading a block of them; `groundfit` could not see it
     // because the panel around them is translucent and technically a ground.
-    <RoundHead gameweek={round.gameweek}>
+    <RoundHead gameweek={round.gameweek} title={title}>
       <span className="flex min-w-0 items-center gap-3">
         <span className="truncate">
           <span>{round.deadline === null ? "First kickoff" : "Deadline"}</span>

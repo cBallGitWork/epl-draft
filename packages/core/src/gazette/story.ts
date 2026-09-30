@@ -33,6 +33,7 @@ export type StoryKind =
   | "dodgers"
   | "presser"
   | "predicted-xi"
+  | "sheets"
   | "news";
 
 /** Every kind, as data. `normalizeStory` refuses a story whose kind is not here,
@@ -41,7 +42,7 @@ export type StoryKind =
 export const STORY_KINDS: readonly StoryKind[] = [
   "match-report", "fixture-preview",
   "tie-call", "tie-report", "predictions", "eleven", "power-ranking",
-  "wire", "dodgers", "presser", "predicted-xi", "news",
+  "wire", "dodgers", "presser", "predicted-xi", "sheets", "news",
 ];
 
 export type { StoryExtras } from "./extras";
@@ -73,7 +74,7 @@ export interface PublishedStory {
   /** Which named edition it went out under — "The Pink 'Un" — display copy. */
   edition: string;
   byline: string;
-  /** The columnist's own name, where it is not the house correspondent's. */
+  /** The columnist's own name, stamped at filing; it wins over the kind's staff writer (`writerOf`). */
   reporter?: string;
   /** The wordplay headline. */
   headline: string;

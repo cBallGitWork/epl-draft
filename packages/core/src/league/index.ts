@@ -45,7 +45,7 @@ export type { SortKey } from "./standingsOrder";
 export { pedigreeOf } from "./pedigree";
 export type { Pedigree } from "./pedigree";
 
-export { firstKickoff, locksAt, openingGameweek, periodGameweeks } from "./calendar";
+export { firstKickoff, locksAt, openingGameweek, periodGameweeks, saveOpen } from "./calendar";
 export type { GameweekKickoff } from "./calendar";
 
 export { lastLockedPeriod, periodToRead, planningPeriod, rosterDisplay } from "./visibility";
@@ -69,18 +69,12 @@ export { headToHead, leaguePool, pairingInvolves, periodPairings } from "./selec
 export { leads, trails } from "./scoreline";
 export type { HeadToHead, PeriodPairing, PoolPlayer } from "./selectors";
 
-export {
-  COMPETITIONS,
-  LEAGUE_COMPETITION,
-  PLACEHOLDER_ROUNDS,
-  groupTies,
-  leagueTies,
-  seededTies,
-} from "./competitions";
-// `Competition`, `CompetitionGroup` and `SeededRound` stay off the surface
-// deliberately: all three are inferred at every call site, and §2 does not keep
-// an export nothing imports.
+export { COMPETITIONS, LEAGUE_COMPETITION, cupTies, groupTies, leagueTies } from "./competitions";
 export type { CompetitionTie, TieSide } from "./competitions";
+export { CUPS } from "./cups/declared";
+export type { Cup } from "./cups/declared";
+export { cupGroups, cupPlan } from "./cups/plan";
+export type { CupFixture, CupStage } from "./cups/plan";
 
 export { FantraxError } from "./fantrax/errors";
 export type { ScoringCategory, ScoringRules } from "./scoring";
@@ -112,6 +106,17 @@ export {
   fetchTransactions,
 } from "./fantrax/client";
 export { listName, mapLeagueInfo, mapPlayerPool } from "./fantrax/map";
+export { fetchLineupState, sendBenchOrder, sendLineup } from "./fantrax/lineupClient";
+export {
+  benchOrderMap,
+  changesBenchOrder,
+  changesLineup,
+  fieldMapFor,
+  mapLineupState,
+  readBenchAnswer,
+  readLineupAnswer,
+} from "./fantrax/lineupWrite";
+export type { FieldMap, LineupState, PlanRefusal, WriteAnswer } from "./fantrax/lineupWrite";
 export { mapTeamRosters } from "./fantrax/rosters";
 export { mapDraftPicks } from "./fantrax/draft";
 export type { DraftPick } from "./fantrax/draft";

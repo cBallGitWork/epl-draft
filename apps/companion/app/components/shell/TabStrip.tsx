@@ -55,28 +55,8 @@ export default function TabStrip<K extends string>({
    *  plate has moved every plate after it, and a reader who tapped Transfers
    *  yesterday would find Fixtures where it was. */
   dim?: readonly K[];
-  /** How much room the labels need.
-   *
-   *  `phrase` is the section strip's 11px with room round it, for entries like
-   *  "Player Stats". `word` is the team strip's 9px, chosen when every entry is
-   *  one word so the plates all sit on one line.
-   *
-   *  **Measured at 390 on 3 Sep 2026, and neither is drift.** This used to say
-   *  one of them probably was, and asked for the measurement; here it is.
-   *
-   *  A `word` strip is four or five plates sharing the width, so each is about
-   *  76px with 8px of padding a side — 56px of room for a label. Every label in
-   *  every strip is one word and fits at 11px except one: `PremNav`'s "Team
-   *  Stats" needs 70px unwrapped at `2xs` and 58px at `3xs`, so at 11px it wraps
-   *  to two lines inside a 44px plate. Dropping the padding to `px-1` buys 8px
-   *  and still leaves it 2px short.
-   *
-   *  So the 9px is load-bearing, and it is bought by ONE label. DESIGN §6's
-   *  density table says a tab is set at `2xs`, which makes `word` the table's
-   *  documented exception rather than a second opinion — and the cheapest way to
-   *  delete it is to shorten that label, which is Craig's call and not a
-   *  refactor's. `phrase` keeps 11px because a section strip's entries are
-   *  phrases and it has fewer of them. */
+  /** `phrase` pads for multi-word entries; `word` sizes each plate to its one word under a thumb, so every strip
+   *  sets 11px from 375 up (9px below, where Data's five overflow). */
   labels?: "phrase" | "word";
   /** 36px under a thumb rather than 44 — a view switch on the match screens, under PRODUCT's
    *  recorded 36px exception (Craig, 23 Sep 2026). */
@@ -114,6 +94,5 @@ export default function TabStrip<K extends string>({
 
 const LABELS = {
   phrase: "px-3 text-2xs",
-  // Tighter on the smallest phones, where Data's five one-word tabs would otherwise overflow 320 by 18px.
-  word: "px-2 text-3xs max-[359px]:px-1",
+  word: "whitespace-nowrap px-1.5 text-2xs max-lg:flex-auto max-[374px]:px-1 max-[374px]:text-3xs lg:px-2",
 } as const;

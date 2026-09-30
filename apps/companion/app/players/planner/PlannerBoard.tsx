@@ -1,16 +1,17 @@
+import ScrollBoard from "../../components/league/ScrollBoard";
 import Link from "next/link";
 import { DASH, toFantraxClubCode, type PlannerCell, type PlannerRow, type PlannerView } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import { easeGround } from "../../components/football/ease";
 import { MUTE, PlateHead, SortArrow } from "../../components/league/TableHeads";
-import { HEAD_CELL, PINNED_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { HEAD_CELL, PINNED_NAME, ROW_RULE } from "@/app/desk";
 
 /** The club column, frozen at the left edge. */
 const PIN_CLUB = `${PINNED_NAME} left-0`;
 import { POOL } from "../routes";
 
-// Every club's next six opponents, a cell each on the ease ramp, easiest run first. One line to a fixture
-// (Craig, 24 Sep 2026): a phone sets a home side in capitals and an away side in lower case, as FPL's tickers do.
+// Every club's next six opponents, a cell each on the ease ramp, easiest run first. Each names the venue, (H) or (A):
+// under the code on a phone, beside it on a desk (Craig, 30 Sep 2026).
 
 /** Where a club's name leads: its men on the Players board, the positions this view is about. */
 const POSITIONS: Record<PlannerView, string> = { attack: "F,M", defence: "D,G" };
@@ -28,7 +29,7 @@ export default function PlannerBoard({
   gameweeks: readonly number[];
 }) {
   return (
-    <div className={`cm-scroll bg-surface ${SCROLL}`}>
+    <ScrollBoard className="bg-surface">
       <table className="w-full min-w-[21.5rem] table-fixed border-collapse text-sm">
         <colgroup>
           <col className="w-20" />
@@ -77,7 +78,7 @@ export default function PlannerBoard({
           ))}
         </tbody>
       </table>
-    </div>
+    </ScrollBoard>
   );
 }
 
@@ -96,11 +97,11 @@ function Fixture({ view, cell }: { view: PlannerView; cell: PlannerCell | null }
     <div
       className={`numeric flex min-h-11 items-center justify-center gap-1 whitespace-nowrap px-0.5 text-2xs leading-none lg:min-h-7 lg:justify-between lg:px-1.5 lg:text-xs ${ink}`}
       style={{ background: ground }}
-      title={`${cell.opponent.name} ${cell.home ? "at home" : "away"}: their ${THEIR[view]} ranks ${cell.rank ?? DASH}, 1 the weakest (ours: Dixon-Coles strength)`}
+      title={`${cell.opponent.name} ${cell.home ? "at home" : "away"}: their ${THEIR[view]} ranks ${cell.rank ?? DASH}, 1 the easiest`}
     >
-      <span className="lg:hidden">{cell.home ? code : code.toLowerCase()}</span>
-      <span className="hidden lg:inline">
-        {code} ({cell.home ? "H" : "A"})
+      <span className="flex flex-col items-center gap-0.5 lg:flex-row lg:gap-1">
+        <span>{code}</span>
+        <span className="text-3xs lg:text-xs">({cell.home ? "H" : "A"})</span>
       </span>
       <span className="font-bold">{cell.rank ?? DASH}</span>
     </div>

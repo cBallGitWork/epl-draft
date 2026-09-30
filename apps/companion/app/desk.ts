@@ -7,6 +7,9 @@
 /** The small-caps label look, with no ink and no layout: callers keep their own. */
 export const SMALL_CAPS = "text-2xs font-bold uppercase";
 
+/** The same look a step down, for a tag or a key set beside something larger. Ink and layout are the caller's. */
+export const MINOR_CAPS = "text-3xs font-bold uppercase";
+
 /** `SMALL_CAPS` in furniture ink. For another ink compose from `SMALL_CAPS`: an appended
  *  `text-bad` loses to `text-faint` on stylesheet order, whatever the class order says. */
 export const LABEL = `${SMALL_CAPS} text-faint`;
@@ -57,16 +60,12 @@ export const ROW_HOVER = `${ROW_RULE} hover:bg-surface`;
 /** The wrapper that lets a phone reach a board's far columns. */
 export const SCROLL = "overflow-x-auto";
 
-
-/** A board that scrolls sideways says so under a thumb: a fade at its right edge, over the figures. */
-export const EDGE_FADE = "pointer-events-none absolute inset-y-0 right-0 z-20 w-8 bg-gradient-to-l from-surface lg:hidden";
-
 /** A board's frozen tile or index block at its left edge, head and cells alike. */
 export const PINNED_TILE = "sticky left-0 z-10";
 
 /** A board's frozen name column; the caller adds where it starts. `bg-surface` is load-bearing: a transparent one
  *  lets the scrolled figures slide under the name. */
-export const PINNED_NAME = "sticky z-10 border-r border-line bg-surface";
+export const PINNED_NAME = "cm-lead sticky z-10 border-r border-line bg-surface";
 
 /** A gameweek view's header row and title. Its loading skeletons use them too, or the page jumps
  *  when it lands. */
@@ -79,7 +78,7 @@ export const TAB =
 
 /** CM's blue title row across a panel, naming the section under it. */
 export const SECTION_BAR =
-  "flex min-h-8 items-center justify-center bg-chrome px-3 font-chrome text-2xs font-bold uppercase text-ink lg:text-xs";
+  "flex min-h-7 items-center justify-center bg-chrome px-3 font-chrome text-2xs font-bold uppercase text-ink lg:min-h-8 lg:text-xs";
 
 /** A stats board's column head: left over a name; `_END` right over a figure. */
 export const HEAD_PLATE = "cm-bevel flex h-6 items-center px-1.5";
@@ -90,6 +89,9 @@ export const HEAD_PLATE_CENTRE = `${HEAD_PLATE} justify-center`;
 
 /** A plate naming a group of columns or a section of a match board. */
 export const GROUP_PLATE = `${HEAD_PLATE_CENTRE} text-2xs font-bold uppercase`;
+
+/** A plate captioning a block inside a panel: a cup round, a group, a side of a bracket. */
+export const BLOCK_PLATE = `${HEAD_PLATE} ${MINOR_CAPS}`;
 
 /* ---- Panels and controls -------------------------------------------------- */
 

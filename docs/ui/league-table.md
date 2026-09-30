@@ -2,8 +2,9 @@
 
 Fantrax computes the standings. **This page never adds anything up.**
 
-Wrapped in `LeagueShell`: page header, then the section nav — `Table · Schedule
-· Results · Player Stats · Team Stats` — that the League tab is divided into.
+Wrapped in `LeagueShell`: page header, then the section nav — `League · Cups
+· Schedule · Results · Team Stats` (Craig, 27 Sep 2026: *"Change table to league. Move cups to
+2nd"*) — that the League tab is divided into.
 The nav stays on screen even in the empty states: without it a reader landing
 here during an outage has no way to reach the others and the section becomes a
 dead end. **Matchups is not on the strip**; it is in `SectionNav`'s `FOOT`,

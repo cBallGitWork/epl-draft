@@ -79,7 +79,7 @@ export default function PageHeader({
         {/* The same bevel mechanism with the plate turned over — the light and
             dark edges mixed off `--color-ink` instead of off the chrome. */}
         <div
-          className="flex min-h-16 items-center gap-2 border-2 px-2 py-1 lg:min-h-24"
+          className="flex min-h-11 items-center gap-2 border-2 px-2 py-1 lg:min-h-24"
           style={{
             background: "var(--color-ink)",
             borderColor:
@@ -87,7 +87,7 @@ export default function PageHeader({
           }}
         >
           <h1
-            className="cm-title min-w-0 flex-1 truncate text-center font-chrome text-xl font-bold lg:text-3xl"
+            className="cm-title min-w-0 flex-1 truncate text-center font-chrome text-lg font-bold lg:text-3xl"
             style={{ color: "var(--color-chrome)" }}
           >
             {title}
@@ -115,11 +115,11 @@ export default function PageHeader({
           LEAGUE's mark: on a team's own screen it says the wrong thing, and CM
           puts nothing but the name in that bar. */}
       <div
-        className="cm-titlebar flex min-h-16 items-center gap-2 px-2 py-1 lg:min-h-24"
+        className="cm-titlebar flex min-h-11 items-center gap-2 px-2 py-1 lg:min-h-24"
         style={plate ? { background: plate.background } : undefined}
       >
         <h1
-          className="cm-title min-w-0 flex-1 truncate text-center font-chrome text-xl font-bold uppercase lg:text-3xl"
+          className="cm-title min-w-0 flex-1 truncate text-center font-chrome text-lg font-bold uppercase lg:text-3xl"
           style={plate ? { color: plate.ink } : undefined}
         >
           {title}

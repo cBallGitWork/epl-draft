@@ -17,6 +17,14 @@ describe("roundNews", () => {
     ]);
   });
 
+  it("says when lineups lock the way the commissioner would, in London time", () => {
+    // Craig, 30 Sep 2026: "please write like a human". The time and day are the lock's own.
+    const [lock] = roundNews({ gameweek: 6, deadline: { gameweek: 6, locksAt: "2026-10-10T11:15:00Z" }, yours: null });
+    expect(lock.body).toBe(
+      "Lineups lock at 12:15 on Saturday 10 October. Anyone left on your bench won't score, so get your team sorted before then.",
+    );
+  });
+
   it("goes red for a defeat and not for a win or a draw", () => {
     const result = (points: number, against: number) =>
       roundNews({ gameweek: 3, deadline: null, yours: { opponent: "D", points, against } })[0];

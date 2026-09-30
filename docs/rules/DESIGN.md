@@ -198,6 +198,16 @@ board, a match's player stats — keeps every column and scrolls sideways with C
 own bevelled bar, because there is no last column that matters more than the
 rest and hiding any of them is choosing for the reader.
 
+**Under a thumb that bar is drawn, because iOS draws none** (27 Sep 2026: Craig, *"scrollbars not obvious"*).
+`::-webkit-scrollbar` never reaches iOS Safari, and on Chrome the bar sat at the board's foot, under row 100 on
+`/players`. So below `lg` a sideways board (`ScrollBoard`, `.cm-board`) draws CM's channel and bevelled thumb as a
+6px gauge docked above the rail while the board is on screen, fades its right edge while there is more, and gives
+the frozen lead a hard 3px drop once figures have slid under it. The drop is ours, not CM's (the game froze no
+columns); it is the one depth mark outside §2's bevels, and it says only "something is under here". Nothing is
+drawn until the board is known to overflow, and the platform bar stays until the gauge is. A long board's head row
+is copied to the top of the screen once the real one scrolls away (`stickyHead.ts`): a head inside a sideways
+scroller can only stick to the scroller, and "which column was G again?" is the question at 15:50.
+
 The columns that stand down are named in each table's own `COLUMNS` list, in the
 same `width` string that sizes them, so the heads, the rows and the loading
 skeleton read one source. **A column the table is ORDERED by is never hidden**:
@@ -396,8 +406,13 @@ alike — so no new colour family enters the app. The lightnesses run 0.66 · 0.
 
 **It never replaces the word.** `StateBox` still prints `Inj` · `Sus` · `Unav` ·
 `Dbt` beside the name in a list, because the colour says how likely and only the
-box says why. On the pitch there is no room for a box and the plate takes the
-colour instead; the list carries both, and a wash rather than a fill — 16% of the
+box says why. The pitch carries both too since 30 Sep 2026 (Craig: *"put an INJ OR
+DBT chip right after the player name"*): the plate takes the colour and the box
+rides after the surname, tightened so SEMENYO and his box share a 73px plate at
+390; on the plate the box keeps its own ground (`desk.css`). Desk pitches only: the
+paper's team sheets print a side as it stood at the lock, and §5 admits the pitch as
+a colour plate, not the desk's words on it, so `Sheets` leaves the box off. The list carries both
+as a wash rather than a fill — 16% of the
 colour into the row's own ground — because the row's own ink runs down to
 `--color-faint`, which is already 4.6:1 on `--raised`.
 
@@ -557,7 +572,7 @@ the one exception and `.crest` restores it (§5).
 **Rank set in scale means the sheet needs ranks to set.** The front page runs
 three under the masthead, and all three are headlines: the **splash**, two
 **shoulders** side by side beneath it with their decks, and the rest as
-**briefs** — a thumbnail, standing head, headline, folio number, nothing else.
+**briefs** — a thumbnail, standing head, headline, nothing else.
 
 **Every rank carries a picture, and the size is the hierarchy.** A band over the
 splash, a card on each shoulder, a 56px thumbnail on a brief. *This reverses "a
@@ -574,8 +589,8 @@ prints on the front page at all.** The splash ran whole there until 3 Sep 2026,
 which is what a broadsheet does and the wrong answer on a phone: a full column
 put the second story on the sheet some nineteen hundred pixels down, so the two
 ranks below it were furniture nobody reached, and a front page that reads you
-the first story has stopped asking you to choose. The articles are on pages 2
-and 3 and at `/paper/{slug}`, a tap away. Two columns for the shoulders at every width including a
+the first story has stopped asking you to choose. The articles are at
+`/paper/{slug}`, a tap away. Two columns for the shoulders at every width including a
 phone's, because splash / two seconds / briefs is what a broadsheet does above
 the fold and what a news site does on a 390px screen, and a reader has to be able
 to rank the top three before reading a word of any of them. The tail was one flat
@@ -731,11 +746,11 @@ apart silently.
 
 | Role | Phone | Desk | Type step | Recipe |
 |---|---|---|---|---|
-| Plated title bar | 64 | 96 | `xl`–`3xl`, `.cm-title` | `PageHeader` |
-| The caption under it | 28 | 40 | `sm`–`2xl`, `.cm-title` | `shell/Caption` |
+| Plated title bar | 44 | 96 | `lg`–`3xl`, `.cm-title` | `PageHeader` |
+| The caption under it | 28, and only where no tab names the view | 40 | `sm`–`2xl`, `.cm-title` | `shell/Caption` |
 | A row that needs two lines | 56 | 28 | `sm` | `.cm-row` + `min-h-14` |
 | **A control** — button, select, input, a dialog's way out | **44** | **36** | `sm` | `BUTTON` `SELECT` `SUBMIT` |
-| **A tab** — one plate of a strip | **44** | **56** | `2xs`–`sm` | `.cm-tab` + `TAB` |
+| **A tab** — one plate of a strip | **44**, painting 36 | **56** | `2xs`–`sm` | `.cm-tab` + `TAB` |
 | A thumb-rail tab | 56 + inset | — | `xs`/600 under a 24px glyph | `.cm-thumbrail` |
 | **A row of a list** | **44** | **28** | `sm`/`lg:base` name in the CHROME face, `sm` figures at both widths | `.cm-row` + `ROW_LINK` + `ROW_NAME` + `FIGURE` |
 | One stated fact in a stack | 44 | 44 | `2xs` label, `sm` value | `FACT` |
@@ -778,6 +793,14 @@ thick"*). The target is unchanged: a transparent 6px band above and below is sti
 is redrawn inset. One rule at the end of `desk.css`, keyed on a bevelled plate carrying `min-h-11`, so every
 control on the floor slims with no call site edited, and a field beside a plate slims with it. It is CM's own
 proportion: its in-panel controls are 21px of a 600px screen, about 30 of an 844px phone.
+
+**And a tab paints 36 of its 44, with the title plate at 44 and the section bar at 28** (Craig, 27 Sep 2026:
+*"text and ui is quite blocky, prob needs to be a bit smaller for mobile viewing"*). The same band, 4px a side,
+on every `.cm-tab` but the rail's and the match screens' compact ones; the current mark is redrawn inset in the
+accent. **Smaller on a phone means the chrome, never the figures**: a figure stays `sm` (the 10 Sep call below),
+and a label on a plate is `2xs` from 375 up. A one-word strip sizes each plate to its word rather than sharing
+the row equally, which is what lets "Team Stats" and Data's five sit at 11px; under 375 they fall back to `3xs`.
+Measured at 390 and 375: `/league`'s first row moved from 206px down the screen to 186.
 
 **A row relaxes and a control never does — and a TAB is the exception to both.**
 A button and a select stay at their floor at every width — they are aimed at rather than read, and a mouse
@@ -879,8 +902,9 @@ Recorded so the next agent does not read the absence as an oversight.
   the one live exception under the scale: `PitchRows.NAME_SIZE` was a container
   clamp bottoming at 7px inside the plate, and the points, chips and fixture
   under it were three more. All five are now declared steps — `--text-2xs` for
-  the name, `--text-xs` for the figure, `--text-3xs` for the fixture and the
-  chips — so **`--text-3xs` is a floor on the pitch and not merely the last step
+  the name, `--text-xs` for the figure and (since 30 Sep 2026, *"fixture in pitch
+  view still hard to read"*) the fixture, `--text-3xs` for a caller's own band
+  word and the chips — so **`--text-3xs` is a floor on the pitch and not merely the last step
   down**. The rule that got there is *the card shrinks, the type never does*: a
   crowded line gives up card width and truncates the name rather than shrinking
   it, because there is nothing smaller worth saying — FPL publishes
@@ -942,7 +966,7 @@ therefore stands rather than being rewritten. A sticky first column is the cost.
 
 *Still the answer for `/players`, and 5 Sep 2026 gave it a general rule that says
 why — see §2's table geometry below. Both are built: the name column is frozen
-(`PINNED_NAME` in `desk.ts`) and the sideways scroll carries CM's own bar.*
+(`PINNED_NAME` in `desk.ts`) and the sideways scroll carries CM's own bar, drawn as a gauge under a thumb (§2).*
 
 **The live desk splits.** Mobile `/matchday` rows expand in place from data
 already on the page; the `≥lg` wall at `/matchday/desk` keeps the no-tap rule

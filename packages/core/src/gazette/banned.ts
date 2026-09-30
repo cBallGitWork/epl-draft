@@ -3,7 +3,7 @@
 // **A rule in a prompt is a hope, and this file is the second half of it.**
 // `strangers.ts` says it for names: a rule the model can obey to the letter
 // while still breaking it is not a guardrail. The same is true of register.
-// HOUSE has banned American sports-desk phrasing since Craig's ruling — *"its
+// `house` has banned American sports-desk phrasing since Craig's ruling — *"its
 // pure american yank shite talk, its uk sport"* — and on 3 Sep 2026 a front page
 // still went out with five headlines built on "bank"; told in the same breath
 // never to write "off the bench", the next match report filed was headlined
@@ -38,40 +38,42 @@
  *
  *  It is a floor rather than a fence: a phrase not listed here is not thereby
  *  approved, and the check misses everything nobody has thought of yet. */
-export const BANNED: readonly string[] = [
-  // Register
+/** Register: Craig's own list of American sports-desk voice, and "bank". */
+export const REGISTER: readonly string[] = [
   "banked", "banks", "bank", "banking",
   "cashed in", "chipped in", "chips in",
   "ran the board", "moved the needle", "move the needle",
   "came up big", "difference maker", "difference-maker",
   "on the day", "at the end of the day", "when all was said and done",
-  // Sequence
+];
+
+/** Sequence: claims about a match the desk cannot see. Lifted for the match report, which is handed the sequence. */
+export const SEQUENCE: readonly string[] = [
   "off the bench", "came on", "brought on", "withdrawn", "substituted",
   "opened the scoring", "levelled it", "put them ahead",
-  // Grounds
+];
+
+/** Grounds: recalled, never read. */
+export const GROUNDS: readonly string[] = [
   "Anfield", "Elland Road", "Stamford Bridge", "the Bridge", "Stadium of Light",
   "Old Trafford", "the Emirates", "the Etihad", "Villa Park", "Goodison",
   "St James", "Selhurst Park", "Craven Cottage", "Molineux", "the Amex",
   "Bramall Lane", "Kenilworth Road", "Portman Road", "the London Stadium",
   "King Power", "Turf Moor", "the Gtech", "Hill Dickinson",
-  // Filler — the category this list has named since it was written and never
-  // carried an entry for. These are the ones the Team Sheet actually reached
-  // for on 18 Sep, and a newspaper production editor marked every one.
-  //
-  // **"knock" is Craig's, and it is absolute** — "knock konck koncks", after it
-  // appeared eight times in one column. It is what a writer says when he has
-  // not been told what the injury is, and the brief always tells him.
+];
+
+/** Filler. **"knock" is Craig's, and it is absolute**; the rest are weather reports on a column and sentences that
+ *  survive their own deletion, each marked by a production editor on 18 Sep. */
+export const FILLER: readonly string[] = [
   "knock", "knocks",
-  // Weather reports on the column's own shape, addressed to a reader looking
-  // at it: "Newcastle carry the heaviest load", "Elsewhere the picture is
-  // harder", "Forest bring the day's better news".
   "heaviest load", "reads heaviest", "the picture is harder", "a mixed bag",
   "the better news", "the day's better news", "elsewhere the picture",
   "the shape of the day", "long absence lists",
-  // Sentences that survive their own deletion.
   "all told", "make no mistake", "it remains to be seen", "needless to say",
   "the fact remains", "one thing is certain",
 ];
+
+export const BANNED: readonly string[] = [...REGISTER, ...SEQUENCE, ...GROUNDS, ...FILLER];
 
 /** Every banned phrase the prose actually uses, in the order they are listed
  *  and each named once however often it appears.
@@ -80,10 +82,11 @@ export const BANNED: readonly string[] = [
  *  wolf on a surname is a check a human stops reading. */
 export function banned(prose: string, list: readonly string[] = BANNED): string[] {
   return list.filter((phrase) =>
-    new RegExp(`(?<![\\p{L}])${escape(phrase)}(?![\\p{L}])`, "iu").test(prose),
+    new RegExp(`(?<![\\p{L}])${escapeRegExp(phrase)}(?![\\p{L}])`, "iu").test(prose),
   );
 }
 
-function escape(phrase: string): string {
+/** A phrase as a literal inside a RegExp. */
+export function escapeRegExp(phrase: string): string {
   return phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

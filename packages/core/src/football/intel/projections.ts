@@ -68,6 +68,33 @@ export function projectedTotal(player: ProjectedPlayer, gameweeks: readonly numb
   return points.length === 0 ? null : points.reduce((sum, value) => sum + value, 0);
 }
 
+/** One man's projected points in one gameweek, or null where the model has none. */
+export function projectedPoints(players: ReadonlyMap<number, ProjectedPlayer>, code: number, gw: number): number | null {
+  return players.get(code)?.gameweeks.find((week) => week.gw === gw)?.points ?? null;
+}
+
+/** His projected points one gameweek and their place among the cohort's readings for it. */
+export interface ProjectedPlace {
+  points: number;
+  /** Ties share a place. */
+  rank: number;
+  /** How many in the cohort the model has a reading for that week. */
+  of: number;
+}
+
+/** Where his week ranks among the cohort (codes, his included); null when the model has no reading for him. Pure. */
+export function projectedPlace(
+  code: number,
+  cohort: readonly number[],
+  players: ReadonlyMap<number, ProjectedPlayer>,
+  gw: number,
+): ProjectedPlace | null {
+  const points = projectedPoints(players, code, gw);
+  if (points === null) return null;
+  const theirs = cohort.map((other) => projectedPoints(players, other, gw)).filter((figure): figure is number => figure !== null);
+  return { points, rank: 1 + theirs.filter((figure) => figure > points).length, of: theirs.length };
+}
+
 function parts(raw: Record<string, unknown>): Record<ProjectionPart, number | null> {
   return Object.fromEntries(PROJECTION_PARTS.map((part) => [part, reading(raw[part])])) as Record<ProjectionPart, number | null>;
 }

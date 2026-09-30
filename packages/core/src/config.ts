@@ -18,11 +18,6 @@ declare const process: { env: Record<string, string | undefined> };
 /** The competition, as our members know it. */
 export const LEAGUE_NAME = "Tim Hortons Pro League";
 
-/** The paper's house correspondent, whose name goes on every story without a `reporter` of its own.
- *  Invented, and deliberately not a real broadcaster; the one column under a real name is Lawro's,
- *  by Craig's decision of 24 Sep 2026 (PLATFORM_NOTES). COPY, and Craig's to change. */
-export const PAPER_CORRESPONDENT = "Franco Bell";
-
 /** The competition the football layer describes, as it is headed on the desk.
  *
  *  Ours to state rather than FPL's to publish: the bootstrap names 20 clubs and
@@ -115,6 +110,9 @@ export const YOUTUBE_FEED_BASE = "https://www.youtube.com/feeds/videos.xml";
  *  re-hosted. */
 export const YOUTUBE_EMBED_BASE = "https://www.youtube-nocookie.com/embed";
 
+/** A video's still, drawn as the click-to-play thumbnail a match report opens on. */
+export const YOUTUBE_THUMB_BASE = "https://i.ytimg.com/vi";
+
 /** Scout's free team-news page: every club's predicted eleven on one page. No trailing
  *  slash — with one, the site 301s. */
 export const SCOUT_TEAM_NEWS_URL = "https://www.fantasyfootballscout.co.uk/team-news";
@@ -169,13 +167,12 @@ export const FANTRAX_SETUP_PAGE = "https://www.fantrax.com/newui/fantasy/createL
  *  Anything needing a session cookie takes it as an argument. */
 export const FANTRAX_FXPA_BASE = "https://www.fantrax.com/fxpa/req";
 
-/** Fantrax's website, for handing a manager back to it.
- *
- *  We plan lineups and do not submit them, so every plan ends in an outbound
- *  link. Only the league path is used, which is the one shape confirmed from a
- *  real browser session — a deeper guess at their roster URL would break
- *  silently the day they reorganise their routes. */
+/** Fantrax's website, for handing a manager back to it. Deeper paths are only ones seen in a real browser. */
 export const FANTRAX_APP_BASE = "https://www.fantrax.com/fantasy/league";
+
+/** The signed-in manager's own roster for one period, off Craig's browser URL (30 Sep 2026); appends to
+ *  `FANTRAX_APP_BASE/{leagueId}/` and takes `;period={n}`. */
+export const FANTRAX_ROSTER_PATH = "team/roster";
 
 /** One player on Fantrax, which is where a claim is actually made.
  *
@@ -260,6 +257,10 @@ export const POOL_PAGE_SIZE = 2000;
  *  knows.** Nothing will fail; the app will simply print the wrong time to
  *  sixteen people, which is the failure mode a deadline can least afford. */
 export const LINEUP_LOCK_LEAD_MINUTES = 15;
+
+/** How long before the lock a save to Fantrax stops being taken: the commissioner's write can override a
+ *  locked team, so a clock or a lock a few minutes out must fail short of it (Craig, 30 Sep 2026). */
+export const SAVE_MARGIN_MINUTES = 10;
 
 /** Where the Premier League serves its crests.
  *
@@ -371,4 +372,75 @@ export const PREDICTIONS = {
   kindFixtures: 5,
   recentGames: 2,
   factsPerTie: 11,
+} as const;
+
+/** The team sheets at the lock: when a benched man is news, and how much the article carries. */
+export const SHEETS = {
+  /** A benched man is news with a goal or assist last time out, or this many goals and assists
+   *  over his last few rounds. At most this many benchings a side, and meeting points a fixture. */
+  benchForm: 2,
+  benchings: 2,
+  crossovers: 2,
+  /** Form over this many rounds: scoring in every one, this many goals, or this many goals and
+   *  assists together; at most this many men a side. */
+  formRounds: 3,
+  formGoals: 3,
+  formInvolvements: 4,
+  form: 2,
+  /** How far back a Fantrax report may name a doubtful or injured man's complaint: two months,
+   *  because an injury story can be old and still true. */
+  injuryDays: 60,
+  /** A side's notes beyond its changes, weightiest first: what a three-sentence paragraph can carry. */
+  notes: 3,
+  /** A side's paragraph: sentences and words at most; a phrase this long shared is an echo. */
+  sentences: 3,
+  words: 80,
+  echo: 5,
+  /** Paragraphs that may open with the same three words, a name blanked. */
+  openers: 2,
+} as const;
+
+/** The Points Dodgers: men who came close to points and got none (Craig, 30 Sep 2026). */
+export const DODGERS = {
+  /** Men the column names, and how near a man must come: expected goals, or expected assists (Craig: "players with
+   *  high xa and no assist points"), plus the weights below. An assist side is scaled to the goal bar. */
+  shown: 5,
+  from: { goal: 0.6, assist: 0.4 },
+  /** A goal against from this minute is the one that took a clean sheet late. */
+  lateGoal: 80,
+  /** What each moment adds to his nearness; a shot's own expected goals already counts once. */
+  weight: { "ruled-out": 1, "penalty-missed": 0.5, "penalty-saved": 0.5, woodwork: 0.5, "set-up-woodwork": 0.3, "clean-sheet-lost": 1 },
+} as const;
+
+/** The match-day report's editorial thresholds (docs/plans/GAZETTA.md, "Match reports, woven"). */
+export const REPORTS = {
+  budget: {
+    lead: { account: [180, 260], sections: 3, stats: 9 },
+    ordinary: { account: [120, 190], sections: 2, stats: 8 },
+    dead: { account: [60, 110], sections: 1, stats: 6 },
+  },
+  /** Words a standfirst and a section may run to (sports desk, 28 Sep 2026). */
+  standfirstWords: 25,
+  sectionWords: [20, 45],
+  /** A burst is two goals by one side this close; late is from this minute. */
+  burstMinutes: 15,
+  lateMinute: 80,
+  cleanSheetLostFrom: 75,
+  /** The ball in words: "most of" from, "more of" from. Never printed as a figure. */
+  ball: { most: 60, more: 55 },
+  /** A key-stats line earns its place past these. xA only chooses; it never prints. */
+  stats: { mostShots: 4, chances: 3, expectedAssists: 0.4, saves: 5, freeNames: 4 },
+  /** Chances not taken the account is handed: close-range misses and saves, at most `most`; and the men whose chances
+   *  added up to at least `expectedGoals` without a goal, told in words. */
+  missed: { most: 3, expectedGoals: 0.5 },
+  /** Candidates offered beyond the sections a match gets. */
+  spareNominees: 3,
+  /** A run of this many words shared with another match, or a recent report, is an echo. */
+  echo: 4,
+  /** The fan's quotes kept for any one part of a piece. */
+  fanFlags: 3,
+  /** Earlier report days whose phrasing a new one may not echo. */
+  pastDays: 4,
+  /** Matches written in one call; a longer day is split, the later call shown what is already on the page. */
+  perCall: 5,
 } as const;

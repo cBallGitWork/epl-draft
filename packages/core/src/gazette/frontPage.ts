@@ -48,8 +48,12 @@ const KIND_WEIGHT: Record<StoryKind, number> = {
   // An hour behind the presser and derived from it: the news is what a manager
   // said, this is what somebody predicts he will do about it.
   "predicted-xi": 92,
+  // The sides as locked: filed at the deadline, when the pressers and the predictions are spent.
+  sheets: 94,
   "tie-report": 90,
-  "match-report": 85,
+  // Above the team sheets (Craig, 28 Sep 2026: "reports lead over team sheets, it's the newer news"): filed after the
+  // whistle, when the sheets filed at the lock can no longer be acted on.
+  "match-report": 96,
   "tie-call": 78,
   news: 70,
   "fixture-preview": 65,
@@ -119,8 +123,8 @@ function expired(story: PublishedStory, now: string): boolean {
  *
  *  **Not every kind.** A tie-report and a news item are about a SUBJECT — five
  *  ties and two stories from the wire, each its own piece — and `subjectRetires`
- *  already keeps those honest within a round. These five are editions of one
- *  standing column, and page 3 printed two Power Rankings, two Points Dodgers
+ *  already keeps those honest within a round. These are editions of one
+ *  standing column, and the paper printed two Power Rankings, two Points Dodgers
  *  and two Teams of the Week side by side because nothing said so.
  *
  *  **The presser is NOT here**, and was until it ate Thursday's column. A week
@@ -128,7 +132,7 @@ function expired(story: PublishedStory, now: string): boolean {
  *  DAY. Worse, the two need not share a period: Thursday's is filed before the
  *  round rolls over and Friday's after, so this retired one by the other. Team
  *  news expires at the kickoff it previewed instead. */
-const EDITIONS: readonly StoryKind[] = ["eleven", "power-ranking", "dodgers", "wire", "predictions"];
+const EDITIONS: readonly StoryKind[] = ["eleven", "power-ranking", "dodgers", "wire", "predictions", "sheets"];
 
 function editionRetires(newer: PublishedStory, older: PublishedStory): boolean {
   return newer.kind === older.kind && EDITIONS.includes(newer.kind) && newer.period > older.period;

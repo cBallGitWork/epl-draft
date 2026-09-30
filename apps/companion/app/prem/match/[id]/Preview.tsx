@@ -1,6 +1,6 @@
 import { clubStats, leagueTable, ordinal, DASH } from "@epl/core";
 import type { Club, ClubRecord, ClubStats, TableRow } from "@epl/core";
-import { QUIET_FIGURE, TONE } from "@/app/desk";
+import { LABEL, QUIET_FIGURE, TONE } from "@/app/desk";
 import type { Match } from "./match";
 
 // A match nobody has played yet.
@@ -73,7 +73,7 @@ function SideBlock({
 }) {
   return (
     <div className={`flex flex-col gap-1 ${align === "end" ? "items-end text-right" : ""}`}>
-      <span className="text-2xs font-bold uppercase text-faint">
+      <span className={LABEL}>
         {where}
         {place === null ? "" : ` · ${ordinal(place)}`}
       </span>

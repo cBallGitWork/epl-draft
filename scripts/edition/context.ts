@@ -1,7 +1,10 @@
 import { FANTRAX_LEAGUE_ID, type Assignment, type Club, type Fixture, type FootballSnapshot, type GameweekKickoff, type LeagueInfo } from "@epl/core";
 import type { DeskContext } from "./dispatch";
-import { withFootball, type DeskFacts } from "./facts";
+import { dodgersDesk } from "./dodgers";
+import type { DeskFacts } from "./facts";
 import { predictionsDesk } from "./predictions";
+import { reportsDesk } from "./reports";
+import { sheetsDesk } from "./sheets";
 import type { readLedger } from "./persist";
 import type { presserDesk } from "./presserWeek";
 import { xiColumn, type readXi } from "./xi";
@@ -16,24 +19,23 @@ export async function deskContext(input: {
   byCode: Map<number, Club>;
   info: LeagueInfo;
   period: number;
+  /** The gameweeks the round's period scores. */
+  gameweeks: readonly number[];
   ledger: ReturnType<typeof readLedger>;
   sheet: ReturnType<typeof presserDesk>;
   xi: ReturnType<typeof readXi>;
   season: readonly Fixture[];
   kickoffs: readonly GameweekKickoff[];
   assignments: readonly Assignment[];
+  /** The firing's one instant. */
+  now: string;
   say: (message: string) => void;
 }): Promise<DeskContext> {
-  const { snapshot, facts, clubs, byCode, info, period, ledger, sheet, xi, season, kickoffs, assignments, say } = input;
+  const { snapshot, facts, clubs, byCode, info, period, gameweeks, ledger, sheet, xi, season, kickoffs, assignments, now, say } = input;
   return {
     leagueId: FANTRAX_LEAGUE_ID,
     snapshot,
-    // **The Premier League's feed is fetched HERE and not with the other reads**
-    // — after the desk has said there is a column to write. It is 31 requests
-    // against 11 for everything else together, the desk reads none of it, and
-    // about a hundred and ten firings a week end before this is ever built.
-    // See `withFootball`.
-    facts: await withFootball(facts, snapshot, assignments),
+    facts,
     clubs,
     threads: ledger[FANTRAX_LEAGUE_ID]?.threads ?? [],
     info,
@@ -41,6 +43,10 @@ export async function deskContext(input: {
     period,
     // Lawro's reads are his own and made only when his column is due.
     predictions: await predictionsDesk({ assignments, info, snapshot, season, kickoffs, table: facts.table, business: facts.business, say }),
+    // The team sheets' reads are their own too, and every earlier period's rosters are among them.
+    sheets: await sheetsDesk({ assignments, info, snapshot, facts, period, gameweeks, season, clubs, now, say }),
+    // A match-day report's reads are its own, made only when one is assigned.
+    reports: await reportsDesk({ assignments, snapshot, facts, gameweeks, say }),
     presserLines: sheet.lines,
     presserQuotes: sheet.quotes,
     presserTies: sheet.ties,
@@ -59,5 +65,7 @@ export async function deskContext(input: {
             players: snapshot.players,
             season,
           }),
+    // The Points Dodgers read every finished match's commentary, only when the column is due.
+    dodgers: await dodgersDesk({ assignments, snapshot, facts, info, say }),
   };
 }

@@ -18,7 +18,7 @@
 
 /** How many standing headlines the block names. Twelve: a front page's worth,
  *  which is what a reader sees at once and therefore what may not rhyme. Beyond
- *  that they are inside pages and last week's, where a repeated construction is
+ *  that they are further down and last week's, where a repeated construction is
  *  nobody's problem. */
 const STANDING_SHOWN = 12;
 

@@ -88,7 +88,7 @@ No fluid clamps except inside the masthead.
 | `shell/LiveFigure` | The same tie as the Live tab's figure, in the glyph's slot below `lg`, stepping down the type scale by length (`scoreSize`); the match clock when there is no tie of yours. |
 | `shell/Skeleton` | The loading block. Paints `currentColor` at low alpha, so it self-skins in whichever register it lands in — one primitive, no variants. |
 | `shell/SkeletonRows` | The app's standard card stack at a given height, for a `loading.tsx` that has to draw its route's real frame rather than a spinner. |
-| `league/TableHeads` | Championship Manager's bevelled head strip, and the only place its mechanics live: the row, the cell, the plate, the bare name cell that starts it, `SortHead` — the plate as a LINK, drawn pressed when the table is ordered by it — `MUTE`, the class a head takes when its column names itself, and `PlateHead`, a stats board's head that does not sort (the cell and its 24px plate, at the start, the end or centred; 19 sites in 9 files on 25 Sep 2026). Three tables sort through it (`/league`, `/prem`, Team Stats); the column LISTS stay with their tables, because different columns mean genuinely different widths. |
+| `league/TableHeads` | Championship Manager's bevelled head strip, and the only place its mechanics live: the row, the cell, the plate, the bare name cell that starts it, `SortHead` — the plate as a LINK (`href`, server-ordered) or a button (`onSort`, a client board), drawn pressed when the table is ordered by it — `MUTE`, the class a head takes when its column names itself, and `PlateHead`, a stats board's head that does not sort (the cell and its 24px plate, at the start, the end or centred; 19 sites in 9 files on 25 Sep 2026). Ten boards sort through it (30 Sep 2026), the squad's stat board the one by `onSort`; the column LISTS stay with their tables, because different columns mean genuinely different widths. |
 | `league/PitchRows` | Players in their lines, on `CmGround`'s diagram, the only ground since 21 Sep 2026. **Owns card width, the name's size, and the shrink-not-wrap policy** — all FIVE go through it — both squad views, the head-to-head, `/fpl` and `/prem/club/[code]`'s predicted eleven, which is the only one about a real club. What it does NOT own is the pitch's width against the fold: `.pitch`'s ratio turns any width into a height, so a pitch with no second column beside it caps its own — `fpl/FplPitch` and `league/LineupPitch`, two occurrences, copied rather than named. |
 | `league/LineupPitch` | Your own XI plus the bench, one target per player: tap to pick, tap again for the rest. Draws `SquadMarker`, same as the head-to-head — it had a sticker of its own until 21 Sep 2026. |
 | `league/SquadMarker` | A fantasy roster slot as a `PitchMarker`: the league layer's vocabulary translated into football's, in one place. **Three sites** — the planner's pitch, and the head-to-head's grass and bench. The BUTTON round it stays with each caller, because they disagree about what a tap does. |
@@ -97,8 +97,8 @@ No fluid clamps except inside the masthead.
 | `league/TeamSheet` | A live XI plus bench, or the same squad as rows, every player opening `LivePlayerCard`. Both boards that show a lineup that counts draw it. |
 | `league/Pending` | Points Fantrax has not credited yet — a clean sheet is settled at the final whistle and FPL has been paying it since the hour mark. Four screens print it; before this they were four spellings of one rule, two of which could reach a `+0`. |
 | `league/SeasonGrid` | Championship Manager's attribute grid — the squad's season as one bevelled panel per scoring group, thirteen keeper columns and eleven outfield, every figure Fantrax's own. The **second panel** on `/squad/[teamId]`, and it costs one cache hit: `squadSeason` already reads this table to price the board. |
-| `league/PlayerImage` | The cut-out photograph, with its fallback ladder. Client-only, and has to be — see below. **Four callers, none of them a pitch**: the player profile, the paper's face and picture, and the live card. |
-| `league/PlayerShirt` | The club's kit, and the only place it is drawn. What every pitch draws now. Server component — it has no ladder to walk. |
+| `league/PlayerImage` | The cut-out photograph, with its fallback ladder. Client-only, and has to be — see below. The player profile, the paper's face and picture, the live card, and **one pitch**: a club's predicted XI, through `PitchMarker`'s `face`. |
+| `league/PlayerShirt` | The club's kit, and the only place it is drawn. What every pitch but a club's predicted XI draws. Server component — it has no ladder to walk. |
 | `league/PitchMarker` · `league/CmGround` | A marker on the grass, and the ground it stands on. The marker is a kit on a translucent wash, the name on Championship Manager's bevelled plate, and under it the fixture or the score on the desk's navy. Was `PitchDisc`, a cut-out head in a coloured circle, until 10 Sep 2026; the band carried the opponent's club colour from 10 to 21 Sep, and gave it up when the card gained two other things to say in colour — how likely he is to MISS on the plate, and the whole card red when he is out. |
 | `football/fdr` | FPL's five difficulty steps, each with the ink that survives it. **Not a component** — `FixtureChip` drew one and lost its last caller on 21 Sep 2026 when the planner's band went to `PitchMarker`'s opponent colour, so the file is named for the scale that outlived it. Two consumers: the profile's fixture run and the player dialog's fixture line. |
 | `football/PlayerPortrait` | 32px headshot on club colour, for list rows. |
@@ -255,7 +255,8 @@ with its row here in the same commit.**
 
 | Recipe | What it is | Was |
 |---|---|---|
-| `SMALL_CAPS` | The small-caps geometry with no ink, for the caller that needs a different one. | `LABEL`'s other half |
+| `SMALL_CAPS` | The small-caps geometry with no ink, for the caller that needs a different one. | `LABEL`'s other half, and 21 more sites that had typed it out (27 Sep 2026) |
+| `MINOR_CAPS` | `SMALL_CAPS` a step down (`3xs`): a tag or a key beside something larger. | 14 sites across 10 files (27 Sep 2026); the paper's own letterspaced caps are a different recipe and stay |
 | `LABEL` | `SMALL_CAPS` in the ink furniture is set in. Callers keep their own layout and font. **Appending a colour does not work** — two colour utilities are resolved by stylesheet order, so `${LABEL} text-bad` renders faint; compose from `SMALL_CAPS`. | 26 sites, 22 files |
 | `ROW_FIGURE` | **How big a figure in a row is** — `sm`, at both widths (Craig, 10 Sep 2026: *"The numbers in the rows for each column are still too small on desktop"*, then *"numbers in rows are good on desktop, still small/hard to read to mobile"* an hour later, which took the `lg:` half off the pair). **Still**: `tokens.css` had already taken the three smallest STEPS up a pixel on 5 Sep, which left the RATIO where it was — `.cm-index` and `ROW_NAME` both set a desk row's placing and name at `base`, so a row read 16 · 16 · **12**, and the twelve was the part a standings table is for. A step of its own rather than another pixel on `--text-2xs`, which is 141 sites and mostly labels. | the size half of `FIGURE`, `BOARD_FIGURE` and both form guides |
 | `FIGURE` | A figure in a repeating row: tabular, **centred**, bold, at `ROW_FIGURE`. **One size, and the decision was Craig's** (7 Sep 2026: *"make sure its not declared in different places"*) — the two boards that carried their own are folded in. A board that wants a bigger figure now asks for it as an addition anybody can grep for. | 3 identical private `const FIGURE`, plus `SquadTable`'s `WIDE_FIGURE = ${FIGURE} lg:text-sm`, `league/team-stats`' private `const FIGURE` at `text-base lg:text-lg` — the same NAME in another file at three times the size — and `prem/team-stats` inline at `text-sm` |
@@ -282,12 +283,13 @@ with its row here in the same commit.**
 | `SUBMIT` | The button that submits a form it sits inside. | 3 sites |
 | `ROW_HOVER` | `ROW_RULE` plus the surface under a pointer: a board row nobody owns. | 5 Prem boards (23 Sep 2026) |
 | `PINNED_TILE` · `PINNED_NAME` | A board's frozen tile (or index block) and its frozen name column; the caller adds where the name starts. `bg-surface` is load-bearing: a transparent one lets the scrolled figures slide under the name. Were `STICKY_LEAD` plus four hand-written copies until 24 Sep 2026. | 6 files |
-| `league/ScrollBoard` | A board that scrolls sideways: opaque, with `EDGE_FADE` at its right edge under a thumb. | 5 boards (24 Sep 2026) |
+| `league/ScrollBoard` | A board that scrolls sideways, with drawn cues under a thumb: a fade while there is more, a gauge docked above the rail, a shadow on the pinned lead once scrolled (`.cm-board`, `desk.css`). A pinned board passes `bg-surface`. | 23 boards (27 Sep 2026) |
 | `TableHeads` `LeadHeads` · `sortedAs` · `SortArrow` | A pinned lead's two bare heads; a `SortHead`'s direction from "is this the column" and "descending"; the ▲/▼ beside a head. | 4 · 7 · 3 sites (24 Sep 2026) |
 | `gazette/StoryFace` · `hasPicture` | A story's own picture: its man, else its columnist's photograph. | 3 ranks (splash, shoulder, brief) |
 | `GAMEWEEK_HEAD` · `GAMEWEEK_TITLE` | A gameweek view's header row and title, shared with its loading skeleton so the page does not jump when it lands. | 5 files |
 | `DESK_ONLY` · `standDown()` | A column shown on the desk only; `standDown` keeps it when the table is sorted by it, or the sort arrow and `aria-sort` would hide with it. | 4 files |
 | `players/BoardRow` | The Data boards' shared row: `LeadFace` (crest, name, `after` slot, position under it on a phone), `PIN_TILE` · `PIN_NAME`, `LEAD_WIDTH`, `FIGURE`. Taken at two because Craig asked for it (24 Sep 2026: *"make sure we are using shared code"*) and the two boards must agree. | 2 boards (Players, Projections) |
+| `league/BoardKey` | What a board's column heads stand for, shut under the board on a phone: a head's `title` is hover-only. | 3 boards: Data, Projections, Teams (27 Sep 2026) |
 | `players/QuerySelect` · `clubOptions` | One URL parameter from a list: a GET form that navigates on change. Every Data select. | 3 selects in 2 files |
 
 **`.cm-index` owns its text outright** — size, weight and shadow, in `desk.css`,
@@ -353,6 +355,15 @@ AGREE. It falls photograph → ours → kit → initials, so a line of eleven re
 holds nine faces, a shirt and a set of letters — three kinds of object standing in
 one row, which is what reads as broken. One man in seven is enough to spoil every
 pitch in the app and not nearly enough to notice on a profile page.
+
+**One exception: a club's predicted XI draws faces** (Craig, 26 Sep 2026: *"pitch
+view uses real players, every other pitch view uses shirts"*). It is one club, so a
+man with no photograph falls back to that club's kit and nothing else. The match
+pitch drew faces from 23 Sep and the squad pitches from 24 Sep; both are kits again.
+
+**The keeper stands at the top, so the team faces the reader** (Craig, 10 Sep 2026). On
+the two pitches that know their flanks, a club's predicted XI and its depth chart, the
+right-back stands on the reader's LEFT; both drew it mirrored until 26 Sep 2026.
 
 **`PlayerShirt` is what a pitch draws, and it has no ladder.** A kit is chosen by
 club code, answers **40/40** (`shirtUrl` carries the count), and is right the day

@@ -9,14 +9,20 @@ import {
   fetchElementSummary,
   onTheBooks,
   preferredFoot,
+  projectedPlace,
+  projectedPoints,
   rankings,
+  setPieceRanks,
   shotLine,
+  squadOf,
 } from "@epl/core";
-import type { Attribute, FootballPlayer, IntelPlayer, PastSeason, Ranked, Scouted } from "@epl/core";
+import type { Attribute, FootballPlayer, IntelPlayer, PastSeason, ProjectedPlace, Ranked, Scouted } from "@epl/core";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import { footballNow } from "../../football";
-import { intelSetPieces, intelShots, intelSquads, intelTouches } from "../../intel";
+import { SET_PIECES, intelProjections, intelSetPieces, intelShots, intelSquads, intelTouches } from "../../intel";
+import type { StandoutCut } from "../../components/league/standout";
+import { poolCut } from "../standout";
 import { PAGE_REVALIDATE } from "../../config";
 
 // The Championship Manager half of the player screen: the attribute grid, his rankings, the real
@@ -104,6 +110,35 @@ export async function playerStanding(player: FootballPlayer): Promise<{
     keeper,
     foot: preferredFoot(man.shots),
   };
+}
+
+/** One gameweek of the model's projection: his points and place in his group, and the group's standout cuts. */
+export interface ProjectedWeek {
+  place: ProjectedPlace | null;
+  cut: StandoutCut;
+}
+
+/** His projected gameweeks, each ranked within the group his grid is rated in. */
+export async function projectedWeeks(player: FootballPlayer, gameweeks: readonly number[]): Promise<Map<number, ProjectedWeek>> {
+  const { cohort } = await measured(player);
+  const codes = cohort.map((other) => other.player.code);
+  return new Map(
+    gameweeks.map((gw) => [
+      gw,
+      {
+        place: projectedPlace(player.code, codes, intelProjections, gw),
+        cut: poolCut(codes.map((code) => projectedPoints(intelProjections, code, gw))),
+      },
+    ]),
+  );
+}
+
+/** His place in each of his club's set-piece orders, among the men still on its books. */
+export async function playerPieces(player: FootballPlayer) {
+  const snapshot = await footballNow();
+  const club = clubById(snapshot).get(player.clubId);
+  const present = new Set(squadOf(snapshot, player.clubId).map((man) => man.code));
+  return setPieceRanks(intelSetPieces.clubs[club?.shortName ?? ""], SET_PIECES, player.code, present);
 }
 
 /** What he actually plays, as the sister repo settled it.

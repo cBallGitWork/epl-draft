@@ -8,7 +8,7 @@ import { planningRound } from "../../../round";
 import { leagueTable } from "../../../standings";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { LABEL, PANEL_FLUSH } from "@/app/desk";
+import { LABEL, PANEL_FLUSH, SMALL_CAPS } from "@/app/desk";
 import { teamHref } from "@/app/squad/routes";
 
 // Who he plays, and the one screen in this app that is about a confrontation.
@@ -123,7 +123,7 @@ function Fixture({
           fighting a plate's own height means the wrong plate was chosen. A tab
           plate is the same chrome at a strip's height. */}
       <div className="cm-tab flex items-center justify-center px-2 py-1">
-        <span className="numeric text-2xs font-bold uppercase text-ink">Gameweek {gameweek}</span>
+        <span className={`numeric ${SMALL_CAPS} text-ink`}>Gameweek {gameweek}</span>
       </div>
 
       <div className="flex items-stretch gap-2 p-2">

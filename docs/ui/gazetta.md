@@ -50,7 +50,8 @@ business, who is hurt, and when lineups lock.
 4. **The column**, when one has been filed about this round — and then it
    *leads*, taking the picture the desk chose and dropping the desk's own
    headline. It runs as a **splash** (`gazette/Splash`): the byline chip, the
-   headline, the deck, the ornament rule, the dateline, and "turn to page 2".
+   headline, the deck, the ornament rule, and the dateline with its writer's name,
+   ending "read on".
    See *The written column* below.
 
    **The front page prints headlines and no articles at all**, and this is the
@@ -63,9 +64,8 @@ business, who is hurt, and when lineups lock.
    is to make a reader choose what to read, and it cannot do that while the
    first choice is already being read to him.
 
-   `Written` still prints the article whole, at `/paper/{slug}` and at the head
-   of pages 2 and 3 — an inside page is where an article goes, and a reader who
-   turned to one has already chosen. `Splash` is `Written`'s opening block minus
+   `Written` still prints the article whole, at `/paper/{slug}` — a reader who
+   tapped through has already chosen. `Splash` is `Written`'s opening block minus
    the prose plus the link; two components rather than one variant, because what
    they share is five lines of markup and what differs is whether the reader has
    chosen yet.
@@ -89,8 +89,8 @@ business, who is hurt, and when lineups lock.
    and a lone half-width column with dead paper beside it is worse than a wide
    one.
 
-   **The briefs** (`gazette/Brief`) take the rest: a thumbnail, standing head,
-   headline, and the folio number ranged right. No deck and no dateline —
+   **The briefs** (`gazette/Brief`) take the rest: a thumbnail, standing head
+   and headline. No deck and no dateline —
    dropping them is what keeps the third rank visibly third.
 
    **Every rank carries a picture, and the SIZE is the hierarchy** — a band over
@@ -121,25 +121,16 @@ business, who is hurt, and when lineups lock.
    rank on it under the lead. With the splash now a headline too, the three are
    three sizes of the same object, which is what makes the ranking legible.
 
-   **They turn to a page**, on a `<Link>`: each headline says "turn to page 2"
-   and does it, and the article prints whole at `/paper/{slug}`.
+   **Each opens its article**, on a `<Link>`: the article prints whole at
+   `/paper/{slug}`, under `Folio` — THE GAZETTA and the date, then the story's
+   standing head, so a masthead is never displaced by a section name.
 
-   *This reverses what this list said until 2 Sep 2026.* Inside pages were
-   built on 31 Aug and reverted the same day, and headlines opened where they
-   stood on `<details>` instead — the argument being that a second paper route
-   needs a folio and a contents strip, which means printing the app's own
-   six-section navigation in newsprint, and the Gazetta is one section of six
-   rather than a site inside the site.
-
-   What changed is that the paper now files columns. On 31 Aug nothing ever
-   had, so an inside page was furniture with nothing behind it. The revert's
-   two complaints are answered rather than dropped: the desk's six names print
-   exactly once — on the rail, down the side or along the foot, since 16 Sep 2026, the app's own
-   navigation rather than a newsprint copy of it — and the paper's own strip
-   (`Pages`) lists only the paper's pages, as numbered ink chips; and an inside
-   page opens on `Folio`, which leads with THE GAZETTA and puts the section and
-   its number under it, so a masthead is never displaced by a word like
-   "Reports".
+   *The paper had numbered pages from 2 Sep to 30 Sep 2026*: a strip of ink
+   chips (`Pages`), "turn to page 2" on every dateline, a page number on every
+   brief and folio, and two section pages, `/paper/reports` and
+   `/paper/columns`. Craig cut them on 30 Sep (*"the pages thing doesnt
+   work"*). Nothing became unreachable: the section pages printed only stories
+   the front page already headlines, since `HEADLINES_SHOWN` is the whole paper.
 6. **Also this week** — the next two DESK stories as headlines: a kicker and a line,
    no picture, no standfirst. The hierarchy *is* the design — a newspaper's
    second story is recognisable as the second story before you have read a word
@@ -158,7 +149,7 @@ business, who is hurt, and when lineups lock.
    pure ai shite."* He is right and it was structural rather than a bad run —
    one sentence per man, eleven at a time, written from a name, a slot and a stat
    line, has nowhere to go but the stat and a flourish. The eleven column
-   survives as a column: the case for the side, on page 3, where a pundit's
+   survives as a column: the case for the side, where a pundit's
    argument is something a pundit can actually write.
 8. **The three tables**, in the sidebar as a back page carries them: the
    season's scorers (Fantrax's published season FPts — the player's own
@@ -487,9 +478,32 @@ repairs: a side `xiFault` rejects, or one naming a man the snapshot cannot, is
 dropped and takes its fixture with it. The body says how many of the round's
 matches survived, so an absence is stated and never silent.
 
-**No byline.** `Dateline` credits the correspondent on every article, and a
-listing the desk printed from an export went out "by Franco Bell" until it was
-shot and read back.
+**Under the team-news writer's byline**, like the rest of team news (Craig, 30 Sep
+2026: "yes bylines"). It had none from 21 Sep, when the house name over a listing
+the desk printed from an export read as a claim somebody wrote it.
+
+## The sheets at the lock are written a side at a time
+
+Added 26 Sep 2026. `sheets` files once the round's lineups lock: every manager's side as Fantrax
+holds it, grouped by the week's head-to-heads, in the BBC's team-news shape. `Sheets` prints a
+head-to-head under `Home v Away`, then for each side its paragraph, `{TEAM} XI · 3-4-3`, the eleven
+on the pitch, and **`Substitutes:`**. Where the two sides meet on the pitch is woven into a paragraph
+(Craig, 26 Sep 2026), never a line of its own.
+
+**The pitch is the app's own** (`PitchRows` + `PitchMarker`, as the Prem club eleven draws it), a
+colour plate under DESIGN §5, keeper at the top, lines by Fantrax slot. Under each name, his real
+match as it stood when the article filed ("v EVE (H)"), stamped into the cargo so an old sheet
+never shows next week's fixture. It replaces the text XI line: one eleven, drawn once.
+
+**The names are printed and the paragraph is written.** The eleven and the bench come off the
+roster in slot order, by the shirt name FPL gives; the model never sees them as something to copy.
+
+**Stacked on a phone, side by side from `@3xl`.** The reverse of `Lineups`' rule, for a reason it
+does not have: each side here is a paragraph, and two paragraphs at 390px are two 170px columns of
+prose. The `v` heading keeps it one match. At a desk one paragraph across the sheet was a
+1,100px line, so the sides split there.
+
+**The reader's own side is in `yoursInk`**, in the heading and on its XI label, and nowhere else.
 
 ## The columns
 
@@ -537,33 +551,26 @@ rather than smuggled into a restyle precisely because deciding what the lead *is
 was a behaviour change; it then got one.
 
 
-## The paper's pages
+## The paper's routes
 
-Added 2 Sep 2026, when the writer filed its first columns.
+Added 2 Sep 2026, when the writer filed its first columns; the numbered section
+pages went on 30 Sep 2026 (see the reading order, item 5).
 
 | Route | What |
 |---|---|
-| `/` | The front page. Page 1. |
-| `/paper/reports` | Page 2: `tie-report`, `match-report`, `tie-call`, `fixture-preview`, `news`, `presser`, `predicted-xi`. |
-| `/paper/{slug}` | Any one story, printed whole. |
+| `/` | The front page. |
+| `/paper/{slug}` | Any one story, printed whole. `storyHref` in `components/gazette/paperPages.ts` builds the link. |
 | `/paper` | Redirects to `/` — a prefix is not a page. |
+| `/paper/reports`, `/paper/columns` | Redirect to `/`: the section pages, cut on 30 Sep 2026. |
 
-`components/gazette/paperPages.ts` is the running order and the single source
-of both the folio's number and the teaser's "turn to page 2". **The numbers are
-declared, not derived**: a folio is a promise that page 2 is where page 2 was
-yesterday, so a section that files nothing keeps its number and prints its own
-empty line rather than renumbering the paper.
-
-**One strip on the sheet, and the app's navigation beside it.** `Pages` carries
-the paper's own pages as numbered ink chips, and nothing else. The app's six
-sections were printed here too — `gazette/Index`, in the paper's register —
+**No strip on the sheet; the app's navigation beside it.** The app's six
+sections were printed here once — `gazette/Index`, in the paper's register —
 because the rail stood down on `/` and a front page with no way out is a dead
 end. Craig reversed that on 16 Sep 2026 (*"blue bar on side, should show the
 regular menu options like the other pages, dont have it on paper"*): the rail,
 down the side or along the foot, is on the paper like every other route, so `Index` was the
-same list twice in two registers and is deleted. Printing the desk's names twice
-over in newsprint is what got inside pages reverted on 31 Aug, and it is the
-thing that stopped.
+same list twice in two registers and is deleted. The paper's own numbered strip
+(`Pages`) followed on 30 Sep.
 
 **The dateline is one component across three ranks.** `Splash`, `Teaser` and
 `Written` each set the same letterspaced small capitals, opened with the same
@@ -573,7 +580,7 @@ thing that stopped.
 splash's dateline is a block and a teaser's is the last line inside a
 `TurnLink`, and a `<p>` inside a `<span>` is markup a browser fixes by
 unnesting; and the turn-line, which `Written` declines because it IS the
-article, so "turn to page 2" there would point at the page you are on.
+article, so "read on" there would point at the page you are on.
 
 The class string itself is deliberately NOT extracted with it. It reads
 `font-sans text-3xs uppercase tracking-[0.16em]` at fifteen sites in three

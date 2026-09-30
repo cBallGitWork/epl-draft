@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import ThumbRail from "./ThumbRail";
 import { CREDITS, owns, sectionsFor } from "./sections";
+import { SMALL_CAPS } from "@/app/desk";
 
 // Championship Manager's rail: down the side of a desk, and laid along the foot of a phone (`ThumbRail`).
 // It decides the section list once, from the round; client only because `usePathname` says where you are.
@@ -111,7 +112,7 @@ export default function Rail({
                   aria-current={here ? "page" : undefined}
                   // No tracking. CM does not letterspace, and the rail is the
                   // one place the label has no room to spare for it.
-                  className={`flex min-h-14 items-center justify-center border px-1 text-center font-chrome text-2xs font-bold uppercase hover:bg-surface ${
+                  className={`flex min-h-14 items-center justify-center border px-1 text-center font-chrome ${SMALL_CAPS} hover:bg-surface ${
                     here ? "border-accent border-l-2 text-accent" : "border-chrome text-ink"
                   }`}
                 >

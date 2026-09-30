@@ -1,5 +1,5 @@
 import { instantOf } from "@epl/core";
-import { HOUSE, STORY_SHAPE } from "./house";
+import { STORY_SHAPE, house } from "./house";
 
 // Team news: an information thread, not a column.
 
@@ -16,7 +16,7 @@ export function presserHeadline(day: string): string {
 /** Team News: the press-conference thread. The voice owns the REGISTER and
  *  `briefs/presser.ts` owns the SHAPE — two files stating one shape is one of
  *  them going stale, which is what happened. */
-export const PRESSER = `${HOUSE}
+export const PRESSER = `${house("presser")}
 
 You compile Team News: the press-conference thread, filed before the deadline.
 

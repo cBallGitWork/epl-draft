@@ -19,11 +19,8 @@ import { DASH } from "@epl/core";
 // them in the order it is given, so they are passed straight through — reversing
 // them here would put the forward on the goal line, which is what it did once.
 //
-// **Eleven of the same kit, told apart by the NAME** (Craig, 10 Sep 2026: "ditch
-// the number actually"). A number rode on the chest here for one afternoon, on
-// the reading that eleven identical shirts need one; the plate under each shirt
-// carries the name at full width instead, which is the thing a reader was going
-// to read anyway.
+// **The one pitch that draws faces** (Craig, 26 Sep 2026); every other pitch draws kits, and a man
+// with no photograph falls back to his club's kit.
 
 export interface ElevenLine {
   line: string;
@@ -114,6 +111,7 @@ export default function Eleven({
                 // he wants to know about a man about to start is what our
                 // league would field him as.
                 band={positionOf(starter.code) ?? DASH}
+                face={player ?? undefined}
               />
             );
           }}

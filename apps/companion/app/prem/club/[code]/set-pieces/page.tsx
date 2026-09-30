@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { availabilityOf, clubColours, setPieceOrder, squadOf } from "@epl/core";
-import type { IntelClubPieces } from "@epl/core";
 import TabEmpty from "../../../../components/league/TabEmpty";
 import Section from "../../../../components/shell/Section";
 import PlayerPortrait from "../../../../components/football/PlayerPortrait";
 import StateBox from "../../../../components/football/StateBox";
 import { doubtRow } from "../../../../components/football/doubtRow";
-import { intelSetPieces } from "../../../../intel";
+import { SET_PIECES, intelSetPieces } from "../../../../intel";
 import { PLAYER } from "../../../routes";
 import ClubShell from "../Shell";
 import { clubOr404 } from "../club";
@@ -30,15 +29,6 @@ import { PANEL, ROW_NAME } from "@/app/desk";
 // it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
-/** The three the source ranks, in the order they are worth to a manager: a
- *  penalty is a goal most of the time, a corner is a chance a dozen times a
- *  game. The key is the sister repo's own spelling. */
-const PIECES = [
-  { key: "penalties", label: "Penalties" },
-  { key: "freeKicks", label: "Direct free kicks" },
-  { key: "corners", label: "Corners" },
-] as const satisfies readonly { key: keyof IntelClubPieces; label: string }[];
-
 export default async function SetPiecesPage({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
   const { club, snapshot } = await clubOr404(code);
@@ -52,7 +42,7 @@ export default async function SetPiecesPage({ params }: { params: Promise<{ code
   // so the order still counts 1, 2, 3: a first-choice taker who has gone makes
   // the man behind him first choice, and a list that opened on "2" reads as a
   // bug.
-  const orders = setPieceOrder(intelSetPieces.clubs[club.shortName], PIECES)
+  const orders = setPieceOrder(intelSetPieces.clubs[club.shortName], SET_PIECES)
     .map((order) => ({ ...order, takers: order.takers.filter((taker) => byCode.has(taker.code)) }))
     .filter((order) => order.takers.length > 0);
 

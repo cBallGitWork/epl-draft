@@ -40,6 +40,9 @@ export { mapLiveStats, roundPlayed } from "./fpl/map";
 export {
   fetchPlFixture,
   fetchPlMatchStats,
+  fetchPlStaff,
+  fetchPlTeamStats,
+  fetchPlTeams,
   fetchPlRound,
   fetchPlTextstream,
 } from "./premierleague/client";
@@ -70,6 +73,10 @@ export { plMatchBoard } from "./premierleague/matchStats";
 export type { MatchStatRow } from "./premierleague/matchStats";
 export { mapRoundBreaks } from "./premierleague/breaks";
 export { plMatchFacts } from "./premierleague/matchFacts";
+export { plMoments } from "./premierleague/moments";
+export { plManager } from "./premierleague/staff";
+export type { MomentKind, PlMoment } from "./premierleague/moments";
+export type { PlShot } from "./premierleague/momentWords";
 export { proseSpans, shortProse } from "./premierleague/prose";
 export type { ProseSpan } from "./premierleague/prose";
 export type { PlMatchFacts } from "./premierleague/matchFacts";
@@ -83,7 +90,9 @@ export type {
   RawPlTeamList,
   RawPlTextstream,
 } from "./premierleague/raw";
-export type { RawPlMatchStats, RawPlMetric } from "./premierleague/rawStats";
+export type { RawPlMatchStats, RawPlMetric, RawPlTeamPage, RawPlTeamStats } from "./premierleague/rawStats";
+export { plClubSeason } from "./premierleague/clubSeason";
+export type { PlClubSeason } from "./premierleague/clubSeason";
 // One player's own season, match by match — the only read here keyed by FPL's
 // per-season element id, and the only one with the four measurements a live
 // snapshot cannot give per fixture. `gameLog.ts` says why.
@@ -119,8 +128,8 @@ export type { IntelShots, Shot } from "./intel/shots";
 export { easeRanks, easeStep, plannerGameweeks, plannerRows, strengthIntel, strengthTable } from "./intel/strength";
 export type { ClubStrength, IntelStrength, PlannerCell, PlannerRow, PlannerView, StrengthRank } from "./intel/strength";
 // The sister model's projected FPL points per player per gameweek, for the Projections tab.
-export { PROJECTION_PARTS, nextGameweeks, projectedTotal, projectionIntel } from "./intel/projections";
-export type { IntelProjections, ProjectedPlayer, ProjectedGameweek, ProjectionPart } from "./intel/projections";
+export { PROJECTION_PARTS, nextGameweeks, projectedPlace, projectedPoints, projectedTotal, projectionIntel } from "./intel/projections";
+export type { IntelProjections, ProjectedPlace, ProjectedPlayer, ProjectedGameweek, ProjectionPart } from "./intel/projections";
 export type { MatchSheet, MatchSheetLine, SheetRow } from "./matchSheet";
 // The same read at season scale — his career before this one. `seasons.ts` says
 // why it is a separate file and why its column set is as short as it is.
@@ -181,9 +190,11 @@ export {
   predictedEleven,
   predictionAge,
   setPieceOrder,
+  setPieceRanks,
   squadIntel,
   xiFault,
 } from "./intel/map";
+export type { SetPieceRank } from "./intel/map";
 export { parseScoutXi, sameElevens } from "./intel/scout";
 export {
   defaultDescendingTable,

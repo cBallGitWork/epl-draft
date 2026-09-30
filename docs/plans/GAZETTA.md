@@ -42,12 +42,12 @@ each other.
 
 | | |
 |---|---|
-| Prem match reports retired | the kind stays *readable* — `normalizeStory` refuses an unknown kind, so deleting the member would void nine filed stories with a green build |
+| Prem match reports retired | the kind stays *readable* — `normalizeStory` refuses an unknown kind, so deleting the member would have voided the four filed on 2 Sep (this row said nine; they were cleared 18 Sep). The old brief and voice were deleted 28 Sep |
 | The app's nav returns to the paper | `gazette/Index` deleted; +66px of phone budget |
 | The masthead is sized against the sheet | desk 72px → **120px**, phone fill 75% → **88%** |
 | `Dateline` extracted at three | the furniture class string **declined at fifteen** — see below |
 | `(paper)/page.tsx` split | 301 → 272 lines, under the §4 ceiling |
-| A correspondent | **Franco Bell**, with the Richardson register named in the prompt |
+| A correspondent | **Franco Bell**, with the Richardson register named in the prompt; since 30 Sep a staff writer per kind (PLATFORM_NOTES) |
 | Articles revalidate at 300s | a story is published by a **deploy**, not a revalidation |
 | The Actions bill | **$15.88 → ~$2.51/month** |
 
@@ -151,7 +151,7 @@ this and not on a guess about when things happen:
 | **Thu 14:00** | press conferences end | The Team Sheet | `presser` — the round-up **publishes 15:00** |
 | **Thu 18:00** | the evening before the round | The Form Guide | `predictions`, Lawro's calls on every tie — SHIPPED 24 Sep (the evening before an earlier lock) |
 | **Fri 14:00 / 16:00** | pressers end; predicted elevens out | The Form Guide | `presser` **15:00**, `predicted-xi` **16:00** — both SHIPPED |
-| **Fri night / Sat noon** | deadline closes, gameweek begins | The Pink 'Un | `tie-call`, `fixture-preview`, the Classified |
+| **Fri night / Sat noon** | deadline closes, gameweek begins | The Pink 'Un | `sheets` at the lock (every side as locked, SHIPPED 26 Sep), `tie-call`, `fixture-preview`, the Classified |
 | **Sat/Sun** | matches | The Sunday Edition | `tie-report` as the football stops |
 
 **Thursday's column is the press conference, and Craig's own week answers the
@@ -284,7 +284,7 @@ product here, so a foreign one is not a starting point.**
 |---|---|---|
 | **1c** | Tie reports that update through the day — the covered-key carries `tieState` | — |
 | **1d** | Draft pedigree as a decaying `ledger` thread, re-opened if the drafting manager bins him | — |
-| **2a** | The Premier League classified, in agate, on page 2, our men marked | — |
+| **2a** | The Premier League classified, in agate, our men marked | — |
 | **2b** | Cups and Europe in the classified | export |
 | **3a** | Player articles, triggered on an availability **transition** | — |
 | **3b** | Projections ranking, labelled `xPts (FPL)` and never beside `FPts` | export |
@@ -296,7 +296,9 @@ product here, so a foreign one is not a starting point.**
 **Deliberately not planned**: ~~`round-preview`'s legacy `EditionKind` shape~~
 (done 24 Sep 2026: the kind went whole, having never filed); and a captured football calendar, because `periodAlignment.json` is a
 frozen test fixture with placeholder kickoffs on 33 of 38 rounds, and the
-schedule keys on the **day**, which needs no calendar at all.
+schedule keys on the **day**, which needs no calendar at all. **A foot folio**,
+dropped on Craig's word of 30 Sep 2026: a page number is the numbered pages
+he cut that day (*"the pages thing doesnt work"*), and the paper has none.
 
 ---
 
@@ -324,7 +326,7 @@ two-pass and one-line-comment rules (#8, #9).
    firing today, so a 2pm presser column could not publish on a Thursday.
    Blocked instead on `intel/pressers/26-27.json` (§5 of the export contract).
 2. **`feat/paper-furniture`** — running head, three rule weights, ruled standing
-   heads, foot folio, and the lead's opening paragraph.
+   heads, and the lead's opening paragraph.
 3. **`feat/paper-classified`** → **`feat/player-stories`** → **`feat/rolling-tie-reports`**.
 4. **Break weeks** — **must land before 9 Nov**, when the league hits its first
    empty week.
@@ -353,6 +355,57 @@ Two things deliberately left, so they are not re-litigated as oversights:
 - **The ties are alphabetical by HOME club** (Craig, 21 Sep 2026), which answers
   §*Order the clubs by something* below for this column, though not for the Team
   Sheet. Each tie still carries its own kickoff.
+
+### The Team Sheets at the lock — 26 Sep 2026
+
+Craig: *"once deadline hits, team sheet reveals for all players, report like a sports journalist
+… comment on changes made, any debuts, how many changes from previous week, any surprise
+benchings using projections … straight talking, pure factual … group by match up, comment on
+any match up narratives like both starting from the same defence, striker vs a keeper"*. The
+model is the BBC's pre-match team news: per side, two or three sentences, then the XI and the
+substitutes.
+
+Kind `sheets`, one article per round, keyed `sheets:gw{n}`, filed from the lock until the round
+finishes (not `!started`: a 12:15 lock and a 12:30 kickoff fall inside one cron's delay).
+Headline, deck and the elevens are the desk's; the model writes only each side's paragraph and
+each head-to-head's meeting line. Every fact is computed in `gazette/sheets/`: changes against the
+previous period's stored rosters, debuts against every earlier period, a man benched or dropped
+despite his form (a return last time out, or goals and assists over his last three: Craig, "benched
+despite getting a goal/assist last week"; the projections are not read at all), a starter in form
+over his last three rounds, a starter with no fixture, Fantrax's own latest story on a
+starter, one who might not start for his club, and where the two sheets meet on a real pitch (a forward against a keeper or defence in the
+same match, or one club's defence on both sheets), woven into a paragraph with the real fixture and
+never a separate line.
+Each side's eleven stands on the app's own pitch, with his real fixture stamped in at filing, as
+the BBC's graphic does.
+
+Craig, the same day, on the first write: *"Don't quote FPL or %'s, Fantrax has its own player
+summary which uses real sentences"*, *"Don't literally say projected or mention predicted elevens"*,
+*"Just say unchanged, don't count weeks"*, and *"you're a real sports reporter and your audience is
+a real reader"*. So no source is ever named, an unchanged side is only unchanged, and a man FPL
+lists unavailable whose Fantrax story predates the listing (Millar's goal for Hull, after his loan)
+gets the status in one word rather than the stale story.
+
+Read over the same day by an editor and a UK team-news reporter (subagents). Their chief
+finding: the brief carried Fantrax's own sentences, and the writer copied them, credits, tense and
+international news included ("not certain to be risked for Portugal", "Rodon faces eight-to-10
+weeks"). The brief now carries no provider sentence: a man out or a doubt is a status and one
+injury word read off his latest Fantrax report (`flags.injuryIn`), the men out are one fact that
+leads the side, and each man carries his club and fixture in words. A pencil corrects a banned
+phrase that has one right answer ("sits on" → "is on") before the editor reads.
+
+`sheets/checks.ts` refuses a wrong change count, a debut or an "unchanged" the facts do not give,
+a named source or a percentage, and a stranger; it sends back opinion, a count of unchanged rounds,
+a repeated opening, a phrase shared between sides, and a phrase from last round's paragraph. A side
+whose paragraph fails twice prints the desk's plain line.
+
+Left deliberately:
+
+- **An unread earlier period files nothing.** A missing period would turn a change into a debut,
+  so the key stays unspent and the next firing retries.
+- **The real league's first round is period 6 with nothing before it**, so it files as "first
+  sheets" with no changes and no debuts.
+- **No face.** The splash picture is the drawing, as for any lead.
 
 ### The Team Sheet, after its first review — 18 Sep 2026
 

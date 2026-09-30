@@ -23,12 +23,8 @@ import type { TieState } from "./tieState";
 // average positions, which is more than a column can say and all of it true
 // without a model. What the paper is about is the ten managers.
 //
-// **The kind itself is deliberately still alive.** `match-report` remains in
-// `StoryKind`, `KIND_WEIGHT` and `paperPages.ts`, and its brief builder and
-// voice are untouched. Nine of them are published in `paper.json` today, and
-// `normalizeStory` refuses any story whose kind it does not know — so deleting
-// the member would silently void filed history with a green typecheck and a
-// green build. The kind stops being COMMISSIONED; it stays READABLE.
+// **The kind stays in `StoryKind` and `KIND_WEIGHT`**, for its return as a day's
+// woven report (GAZETTA); its old brief and voice are gone. Four were filed on 2 Sep and cleared 18 Sep.
 //
 // **A finished round files a report per tie, and never one about the league.**
 // It filed a single `round-report` until 3 Sep 2026 whose prompt said "SPREAD
@@ -70,6 +66,8 @@ export interface DeskState {
    *  answers them: finished is the last whistle gone, started is a first ball kicked. */
   finished: boolean;
   started: boolean;
+  /** The round's lineup deadline has passed, so every sheet in it is fixed and may be printed. */
+  locked: boolean;
   /** Every fixture of the round, most-consequential first (`fixtureStakes`). */
   stakes: readonly FixtureStake[];
   ties: readonly DeskTie[];
@@ -92,6 +90,8 @@ export interface DeskState {
   ahead: { period: number; gameweek: number } | null;
   /** The next round to lock, and when, which is when Lawro's column is due. */
   next: { period: number; gameweek: number; locksAt: string } | null;
+  /** The London days whose every match has settled, each a match-day report (`reports/due.ts`). */
+  reportDays: readonly { key: string; slug: string; day: string }[];
 }
 
 /** The columns a finished round earns, in the order they are worth reading.
@@ -126,6 +126,9 @@ export function newsdesk(
     if (!covered(assignment.key)) out.push(assignment);
   };
 
+  // A match-day report as each day's football settles, first because it is the newest news on the page.
+  for (const day of desk.reportDays) want({ kind: "match-report", ...day });
+
   if (desk.finished) {
     // One report per tie, in the order the ties are given — `desk.ties` arrives
     // from the period's pairings and the orchestrator's cap takes from the top,
@@ -146,6 +149,12 @@ export function newsdesk(
     for (const kind of MONDAY_SET) {
       want({ kind, ...roundSlot(kind, desk.gameweek) });
     }
+  }
+
+  // The sheets as locked, from the deadline until the last whistle: not "before a ball is kicked",
+  // because a lock at 12:15 and a kickoff at 12:30 fall inside one cron's delay.
+  if (desk.locked && !desk.finished) {
+    want({ kind: "sheets", ...roundSlot("sheets", desk.gameweek) });
   }
 
   // Calls only while the round is being played: after the last whistle the

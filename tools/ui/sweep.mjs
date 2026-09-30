@@ -108,8 +108,8 @@ if (team) ROUTES.push(team, ...["transfers", "next", "fixtures", "stats"].map((t
 // already derived for exactly that reason.
 await cdp.open("/", 2200);
 const article = await cdp.js(
-  `(document.querySelector('a[href^="/paper/"]:not([href="/paper/reports"]):not([href="/paper/columns"])')||{}).getAttribute
-     ? document.querySelector('a[href^="/paper/"]:not([href="/paper/reports"]):not([href="/paper/columns"])').getAttribute("href") : ""`,
+  `(document.querySelector('a[href^="/paper/"]')||{}).getAttribute
+     ? document.querySelector('a[href^="/paper/"]').getAttribute("href") : ""`,
 );
 if (article) ROUTES.push(article);
 

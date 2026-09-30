@@ -188,3 +188,17 @@ describe("composePaper — the most recent leads", () => {
     expect(out.map((s) => s.slug)).toEqual(["gw5-presser-2026-09-18", "gw5-presser-2026-09-17"]);
   });
 });
+
+describe("the match report on the day it files", () => {
+  it("leads over that morning's team sheets and pressers: it is the newer news", () => {
+    const paper = composePaper(
+      [
+        story({ slug: "sheets", kind: "sheets", subjects: ["sheets:gw5"], filedAt: "2026-09-19T09:00:00.000Z" }),
+        story({ slug: "presser", kind: "presser", subjects: ["presser:gw5:2026-09-19"], filedAt: "2026-09-19T08:00:00.000Z" }),
+        story({ slug: "report", kind: "match-report", subjects: ["match-report:gw5:2026-09-19"], filedAt: "2026-09-19T20:00:00.000Z" }),
+      ],
+      "2026-09-19T21:00:00.000Z",
+    );
+    expect(paper[0].slug).toBe("report");
+  });
+});

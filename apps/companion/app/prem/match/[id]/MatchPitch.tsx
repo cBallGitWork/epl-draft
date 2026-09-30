@@ -22,7 +22,7 @@ import type { Match } from "./match";
 import { joinOf, type Join } from "./sheetJoin";
 import SubMarker from "../../../components/football/SubMarker";
 
-// Both elevens in the shape their managers drew (`sheet.shape`), each man's face and score (Craig, 23 Sep 2026).
+// Both elevens in the shape their managers drew (`sheet.shape`), each man's kit and score (Craig, 26 Sep 2026).
 
 export default function MatchPitch({
   match,
@@ -123,9 +123,6 @@ function Side({
         club={club}
         opposition={against}
         points={join.points(man.code)}
-        face={
-          man.code === null ? undefined : { code: man.code, name: man.name }
-        }
       />
     </MaybeCard>
   );

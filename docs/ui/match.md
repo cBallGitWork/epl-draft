@@ -122,9 +122,12 @@ tile, shooter, outcome, xG — ranked by minute or by xG. Tapping a row or a mar
 picks the shot and rings it in the accent. **Each shot names who made it** — Understat's
 `player_assisted`, joined onto SofaScore's shot by the sister repo's exporter (938 of 1,363,
 23 Sep 2026) — under the shooter on a phone, beside him on a desk; and every **key pass** is drawn as a
-dashed line from a square where it started (SofaScore's key-pass actions, 695 of the 938), under the
-marks so each shot sits on the end of its line, with the square in the key. On a desk
-the list sits beside the pitch. **Every mark and pass line wears a cream halo**: 14 of the 20
+dashed line from a square where it started (SofaScore's key-pass actions, 695 of the 938), its line
+under the marks and stopping at its shot's edge, its square over them so no mark hides where a pass began,
+and the square in the key. **Where the action is thick** every mark sits on a disc of turf inside its
+halo, so a line or a mark under it stops at the edge, and bigger marks draw first so a smaller one is
+never buried (30 Sep 2026: goals on top would have buried 2 shots and mostly hidden 29). On a desk
+the list sits beside the pitch. **Every mark wears a cream halo and every pass line a cream underlay**: 14 of the 20
 club colours fall under 3:1 on the darker mow band (Chelsea 1.38, Everton 1.15), cream is 10.5:1
 (measured 23 Sep 2026), so the club colour stays and the edge carries the contrast. `Min` and `xG` are the list's two heads,
 links like every other board's sort (`?order=xg`), and the shooter is named in full. Then the average positions, under a
@@ -271,12 +274,10 @@ each team, THEN for list/pitch, rather than a big scroll"*): a row of `BRE · CH
 and `Team Sheet · Pitch` above the board (`?side=away`), and a desk shows both.
 
 **The Pitch** is the foot row's other plate (`?view=pitch`): each eleven in
-`sheet.shape`, the shape its manager drew, with **faces rather than kits**
-(Craig, 23 Sep 2026: *"player portraits instead of shirts"*), the score under
-each name, and an amber `▼ 69′` on a man taken off. The men who came on stand in
-a strip under the grass with `▲ 69′`. A man with no photograph falls back to his
-kit through `PlayerImage`'s ladder, so a line can mix the two — the trade the
-kit-only rule of 10 Sep existed to avoid, taken on purpose here. `pitch-match`
+`sheet.shape`, the shape its manager drew, in **kits** (Craig, 26 Sep 2026:
+faces are a club's predicted XI's alone; they stood here from 23 Sep), the score
+under each name, and an amber `▼ 69′` on a man taken off. The men who came on
+stand in a strip under the grass with `▲ 69′`. `pitch-match`
 budgets the grass so the strip clears the nav at 390×844 (767 against 798 with the
 phone's control row, measured 23 Sep). One `widest` across both pitches, so the halves are drawn to
 one scale. No doubt colour on the plates: today's injury flag has no business on

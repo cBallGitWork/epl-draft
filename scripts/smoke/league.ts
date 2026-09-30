@@ -1,0 +1,27 @@
+import type { PeriodRosters } from "@epl/core";
+
+type TeamRoster = PeriodRosters["teams"][number];
+
+/** Before anyone joins, after they join but before the draft, and after it. */
+export type LeagueState = "no teams" | "no squads" | "drafted";
+
+export interface WalkLeague {
+  state: LeagueState;
+  /** The first team, for the id-scoped screens and the served-league check. */
+  teamId: string | null;
+  teamName: string | null;
+  /** A player somebody holds: an invented id would test a 404. */
+  playerId: string | null;
+}
+
+/** What a walk may expect of a league, from ONE roster read so the answers cannot disagree. */
+export function walkLeague(teams: readonly TeamRoster[]): WalkLeague {
+  const [first] = teams;
+  const holder = teams.find((team) => team.slots.length > 0);
+  return {
+    state: first === undefined ? "no teams" : holder === undefined ? "no squads" : "drafted",
+    teamId: first?.teamId ?? null,
+    teamName: first?.teamName || null,
+    playerId: holder?.slots[0]?.fantraxId ?? null,
+  };
+}

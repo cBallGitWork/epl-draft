@@ -23,12 +23,24 @@ if [ -n "${GITHUB_TOKEN:-}" ]; then
 fi
 git commit -m "$message"
 
+rebase_open() {
+  [ -d "$(git rev-parse --git-path rebase-merge)" ] || [ -d "$(git rev-parse --git-path rebase-apply)" ]
+}
+
 for attempt in 1 2 3 4 5; do
   if git pull --rebase --autostash && git push; then
     exit 0
   fi
+  # A conflict left open fails every retry, and retrying cannot heal it.
+  if rebase_open; then
+    conflicts=$(git diff --name-only --diff-filter=U | paste -sd ' ' -)
+    git rebase --abort
+    echo "::error::the rebase onto origin conflicted in ${conflicts:-an unlisted path}; aborted, nothing pushed"
+    exit 1
+  fi
   echo "push attempt ${attempt} lost a race; retrying"
-  sleep $(( attempt * 5 + RANDOM % 10 ))
+  # PUSH_BACKOFF_SCALE=0 skips the wait, for the tests.
+  sleep $(( (attempt * 5 + RANDOM % 10) * ${PUSH_BACKOFF_SCALE:-1} ))
 done
 echo "::error::could not push after 5 attempts"
 exit 1

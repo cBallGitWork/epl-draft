@@ -4,9 +4,8 @@ import { DASH } from "@epl/core";
 import Section from "../../components/shell/Section";
 
 // Championship Manager 01/02's attribute grid (Craig, 25 Sep 2026: "more cm like"): alphabetical
-// down three columns on a desk and two on a phone, CM's orange on the best, and its worded rows
-// (Preferred Foot, Condition) at the foot of the last column. Each rating says what it is made of
-// in its title.
+// down three columns on a desk and two on a phone, CM's orange on the best, and its worded row
+// (Preferred Foot) at the foot of the last column. Each rating says what it is made of in its title.
 
 /** A worded row under the ratings, as CM ends its grid. */
 export interface GridWord {

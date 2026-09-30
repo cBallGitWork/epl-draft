@@ -169,13 +169,13 @@ only question is *why* he is on the number he is on.
 ## The points band
 
 The bottom band of a player on the grass, and the loudest thing on the card
-after his face.
+after his kit.
 
 - **Once he has played it flips dark** — near-black ground, cream numerals, his
   chips beside them. It used to be a small number on the same cream as his name,
   which made the one figure a manager came for the smallest thing on the screen.
 - **Until he plays it is his fixture**, at full FDR colour and full strength.
-- **Not-played is said by the photograph alone** — dimmed and lightly
+- **Not-played is said by the kit alone** — dimmed and lightly
   desaturated. The whole card used to dim, which took the fixture colour and the
   name with it: the two things a waiting player still needs.
 - Both states are the same fixed height, because a line whose cards stand at

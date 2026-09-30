@@ -1,5 +1,6 @@
 import type {
   IntelCareers,
+  IntelClubPieces,
   IntelDepth,
   IntelMatch,
   IntelMatches,
@@ -66,6 +67,13 @@ export const intelXi = xiFile as unknown as IntelXi;
 /** Who takes each club's set pieces, by FPL club code. */
 export const intelSetPieces = piecesFile as unknown as IntelSetPieces;
 
+/** The three pieces the source ranks, penalties first; the key is the sister repo's spelling. */
+export const SET_PIECES = [
+  { key: "penalties", label: "Penalties" },
+  { key: "freeKicks", label: "Direct free kicks" },
+  { key: "corners", label: "Corners" },
+] as const satisfies readonly { key: keyof IntelClubPieces; label: string }[];
+
 /** Every match the sister repo has logged, by FPL's fixture id.
  *
  *  **Not per round, unlike the eleven.** An XI is for one gameweek and names it
@@ -103,11 +111,10 @@ export const intelShots: Map<number, Shot[]> = shotIntel(shotsFile as unknown as
 export const intelStrength: Map<number, ClubStrength> = strengthIntel(strengthFile as unknown as IntelStrength);
 export const intelStrengthManifest = (strengthFile as unknown as IntelStrength).manifest;
 
-/** The sister model's projected FPL points by player code, and the export's manifest for its provenance line. */
+/** The sister model's projected FPL points by player code. */
 export const intelProjections: Map<number, ProjectedPlayer> = projectionIntel(
   projectionsFile as unknown as IntelProjections,
 );
-export const intelProjectionsManifest = (projectionsFile as unknown as IntelProjections).manifest;
 
 /** The club each man was at in each season the sister's identity store holds, by FPL code. */
 export const intelCareers: Map<number, Map<string, string>> = careerIntel(careersFile as unknown as IntelCareers);

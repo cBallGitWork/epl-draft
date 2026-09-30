@@ -1,0 +1,231 @@
+{
+ "displayedSelections": {
+  "displayedPeriod": 6
+ },
+ "miscData": {
+  "autoSubOrderMap": {},
+  "statusTotals": [
+   {
+    "total": 11,
+    "max": 11,
+    "name": "Active",
+    "id": "1"
+   },
+   {
+    "total": 4,
+    "max": 5,
+    "name": "Reserve",
+    "id": "2"
+   }
+  ],
+  "applyToFuturePeriods": true
+ },
+ "tables": [
+  {
+   "rows": [
+    {
+     "posId": "704",
+     "statusId": "1",
+     "scorer": {
+      "scorerId": "045ob",
+      "shortName": "C. Kelleher",
+      "posIds": [
+       "704"
+      ],
+      "posShortNames": "G"
+     }
+    },
+    {
+     "posId": "704",
+     "statusId": "2",
+     "scorer": {
+      "scorerId": "05uds",
+      "shortName": "K. Scherpen",
+      "posIds": [
+       "704"
+      ],
+      "posShortNames": "G"
+     }
+    },
+    {
+     "secondary": true
+    }
+   ]
+  },
+  {
+   "rows": [
+    {
+     "posId": "703",
+     "statusId": "1",
+     "scorer": {
+      "scorerId": "04qfz",
+      "shortName": "Diogo Dalot",
+      "posIds": [
+       "703"
+      ],
+      "posShortNames": "D"
+     }
+    },
+    {
+     "posId": "703",
+     "statusId": "1",
+     "scorer": {
+      "scorerId": "02m5l",
+      "shortName": "J. Egan",
+      "posIds": [
+       "703"
+      ],
+      "posShortNames": "D"
+     }
+    },
+    {
+     "posId": "703",
+     "statusId": "1",
+     "scorer": {
+      "scorerId": "050jq",
+      "shortName": "M. Guehi",
+      "posIds": [
+       "703"
+      ],
+      "posShortNames": "D"
+     }
+    },
+    {
+     "secondary": true
+    },
+    {
+     "secondary": true
+    },
+    {
+     "posId": "702",
+     "statusId": "1",
+     "scorer": {
+      "scorerId": "06fxe",
+      "shortName": "R. Gravenberch",
+      "posIds": [
+       "702"
+      ],
+      "posShortNames": "M"
+     }
+    },
+    {
+     "posId": "702",
+     "statusId": "1",
+     "scorer": {
+      "scorerId": "05unu",
+      "shortName": "R. Lavia",
+      "posIds": [
+       "702"
+      ],
+      "posShortNames": "M"
+     }
+    },
+    {
+     "posId": "702",
+     "statusId": "1",
+     "scorer": {
+      "scorerId": "05l8q",
+      "shortName": "C. Palmer",
+      "posIds": [
+       "702"
+      ],
+      "posShortNames": "M"
+     }
+    },
+    {
+     "posId": "702",
+     "statusId": "1",
+     "scorer": {
+      "scorerId": "06v21",
+      "shortName": "F. Wirtz",
+      "posIds": [
+       "702"
+      ],
+      "posShortNames": "M"
+     }
+    },
+    {
+     "secondary": true
+    },
+    {
+     "posId": "701",
+     "statusId": "1",
+     "scorer": {
+      "scorerId": "049tq",
+      "shortName": "D. Calvert-Lewin",
+      "posIds": [
+       "701"
+      ],
+      "posShortNames": "F"
+     }
+    },
+    {
+     "posId": "701",
+     "statusId": "1",
+     "scorer": {
+      "scorerId": "04y92",
+      "shortName": "B. Saka",
+      "posIds": [
+       "702",
+       "701"
+      ],
+      "posShortNames": "M,F"
+     }
+    },
+    {
+     "posId": "701",
+     "statusId": "1",
+     "scorer": {
+      "scorerId": "068y0",
+      "shortName": "A. Semenyo",
+      "posIds": [
+       "702",
+       "701"
+      ],
+      "posShortNames": "M,F"
+     }
+    },
+    {
+     "posId": "703",
+     "statusId": "2",
+     "scorer": {
+      "scorerId": "05l27",
+      "shortName": "J. Branthwaite",
+      "posIds": [
+       "703"
+      ],
+      "posShortNames": "D"
+     }
+    },
+    {
+     "posId": "703",
+     "statusId": "2",
+     "scorer": {
+      "scorerId": "06mpp",
+      "shortName": "M. Wieffer",
+      "posIds": [
+       "703",
+       "702"
+      ],
+      "posShortNames": "D,M"
+     }
+    },
+    {
+     "posId": "702",
+     "statusId": "2",
+     "scorer": {
+      "scorerId": "06y29",
+      "shortName": "H. Diarra",
+      "posIds": [
+       "702"
+      ],
+      "posShortNames": "M"
+     }
+    },
+    {
+     "secondary": true
+    }
+   ]
+  }
+ ]
+}

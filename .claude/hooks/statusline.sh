@@ -1,5 +1,5 @@
 #!/bin/bash
-# Statusline: the four things that change under you while you work.
+# Statusline: the things that change under you while you work.
 # Reads the cache repo_clock.sh maintains and refreshes it only when stale, so
 # the per-turn cost is a file read and one curl with a tenth-of-a-second budget.
 set -uo pipefail
@@ -36,10 +36,15 @@ else
   cap="capture fresh"
 fi
 
+# What waits on Craig: open PRs, and trees left with work nobody committed or pushed.
+queue="$(grep -o 'PRs waiting to merge: [0-9]*' "$cache" 2>/dev/null | grep -o '[0-9]*$' || echo 0) PRs to merge"
+stranded=$(sed -n '/^STRANDED/,/^[^ ]/p' "$cache" 2>/dev/null | grep -c '^  ')
+[ "${stranded:-0}" -gt 0 ] && queue="$queue, ${stranded} STRANDED"
+
 if curl -sf -o /dev/null --max-time 1 http://localhost:3000/ 2>/dev/null; then
   app=":3000 up"
 else
   app=":3000 down"
 fi
 
-printf '%s | %s | %s | %s\n' "$swap" "$pos" "$cap" "$app"
+printf '%s | %s | %s | %s | %s\n' "$swap" "$pos" "$queue" "$cap" "$app"

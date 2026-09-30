@@ -16,30 +16,8 @@ import { CLUB, MATCH } from "../../prem/routes";
 import { MY_TEAM, SQUAD } from "../../squad/routes";
 import type { GlyphName } from "./glyphs";
 
-/** The paper's territory: the front page, and the pages behind it.
- *
- *  **This reverses the 31 Aug reversal, on Craig's word (2 Sep).** Inside pages
- *  were built here on 31 Aug and reverted the same day, and the argument then
- *  was sound: a second paper route grew a folio and a contents strip, which
- *  meant printing the desk's own six section names in newsprint, twice over,
- *  under a page whose top line read "Matches" where a masthead belongs.
- *
- *  What changed is that the paper now has something to put on them. On 31 Aug
- *  nothing had ever been filed, so an inside page was furniture with no
- *  articles behind it; a folio numbering empty sections is numbering the app.
- *  The paper files real columns now, a front page cannot hold them all, and a
- *  headline that opens in place is a headline that can never be linked to.
- *
- *  The revert's two complaints are answered rather than ignored. The desk's
- *  six names print once, in `Index`, exactly as before — the paper's own strip
- *  (`Pages`) lists the paper's pages and nothing else, in different dress. And
- *  an inside page opens on `Folio`, which leads with THE GAZETTA and puts the
- *  section and its number beneath, so a masthead is never displaced by a word
- *  like "Matches".
- *
- *  Still true, and still the rule: extra MATERIAL — the draft table, the
- *  Premier League table, the charts — belongs in sections on the front page.
- *  What lives behind a page is an ARTICLE. */
+/** The paper's territory: the front page, and each story's own page behind it. Tables and charts
+ *  belong on the front page; what lives behind it is an article. */
 const PAPER_ROUTES = ["/", "/paper"];
 
 /** Each section owns a set of routes, not just the one it links to: a manager

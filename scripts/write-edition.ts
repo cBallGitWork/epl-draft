@@ -20,6 +20,7 @@ import {
   openingGameweek,
   periodGameweeks,
   banned,
+  REPORT_NEVER,
   roundState,
   standingHeadlines,
   strangers,
@@ -32,6 +33,8 @@ import { drawSplash } from "./edition/image";
 import { CARGO, headlineAndProse, prose } from "./edition/checks";
 import { writeSubedited } from "./edition/subedit";
 import { writeLawro } from "./edition/lawroWriter";
+import { writeSheets } from "./edition/sheetsWriter";
+import { reportsColumn } from "./edition/reportsWriter";
 import { presserDesk } from "./edition/presserWeek";
 import { readXi } from "./edition/xi";
 import { deskState } from "./edition/desk";
@@ -79,7 +82,10 @@ async function main(): Promise<void> {
   const wanted = process.env.GAZETTA_NOW ?? "";
   const now = Number.isNaN(Date.parse(wanted)) ? new Date().toISOString() : new Date(wanted).toISOString();
 
-  const snapshot = await getFootballSnapshot();
+  // A past gameweek, for a local rehearsal of a firing (never CI); GAZETTA_ONLY keeps one kind.
+  const pinned = Number(process.env.GAZETTA_GAMEWEEK ?? "");
+  if (Number.isInteger(pinned) && pinned > 0 && process.env.CI) throw new Error("GAZETTA_GAMEWEEK is a local rehearsal and never runs in CI.");
+  const snapshot = await getFootballSnapshot(Number.isInteger(pinned) && pinned > 0 ? pinned : undefined);
   // `roundState` and not `roundFinished`, which core deliberately does not
   // export: it cannot say "live", and half an answer is exactly the wrong shape
   // for a guard whose job is to keep a report off a round still being played.
@@ -120,6 +126,7 @@ async function main(): Promise<void> {
   const xi = readXi(sheet.gameweek);
   const ahead = calendar.find((each) => each.gameweeks.includes(sheet.gameweek));
 
+  const only = process.env.GAZETTA_ONLY ?? "";
   const assignments = newsdesk(
     deskState({
       snapshot,
@@ -128,6 +135,7 @@ async function main(): Promise<void> {
       period: round.period,
       finished,
       started,
+      locked,
       lines: sheet.lines,
       xiGameweek: xi === null ? null : sheet.gameweek,
       ahead: ahead === undefined ? null : { period: ahead.period, gameweek: sheet.gameweek },
@@ -135,11 +143,11 @@ async function main(): Promise<void> {
     }),
     (key) => isCovered(ledger, FANTRAX_LEAGUE_ID, key),
     now,
-  );
+  ).filter((assignment) => only === "" || assignment.kind === only);
   if (process.env.GAZETTA_QUEUE) return say(assignments.map((a) => a.key).join("\n"));
   if (assignments.length === 0) return say("Nothing new to report.");
 
-  const ctx = await deskContext({ snapshot, facts, clubs, byCode, info, period: round.period, ledger, sheet, xi, season, kickoffs, assignments, say });
+  const ctx = await deskContext({ snapshot, facts, clubs, byCode, info, period: round.period, gameweeks: round.gameweeks, ledger, sheet, xi, season, kickoffs, assignments, now, say });
 
   const { filings, failed } = await fire(assignments, ledger, {
     cap: STORY_CAP,
@@ -212,9 +220,13 @@ function commissioner(ctx: DeskContext, paper: readonly PublishedStory[], now: s
     try {
       // Sub-edited before it is filed: a banned phrase sends the column back once (`subedit.ts`).
       const column =
-        desk.lawro === undefined
-          ? await writeSubedited(desk.system, brief, say, assignment.kind)
-          : await writeLawro(desk.lawro, brief, desk.brief, say);
+        desk.reports !== undefined
+          ? await reportsColumn(desk.reports, say)
+          : desk.sheets !== undefined
+          ? await writeSheets(desk.sheets, brief, say)
+          : desk.lawro === undefined
+            ? await writeSubedited(desk.system, brief, say, assignment.kind)
+            : await writeLawro(desk.lawro, brief, desk.brief, say);
       const filed = file(assignment, column, ctx, now);
       // Every name in the prose against every name in the brief; it warns rather than refuses.
       const unknown = strangers(prose(filed.story), brief);

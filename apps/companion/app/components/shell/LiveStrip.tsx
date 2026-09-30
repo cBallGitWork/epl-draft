@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { LiveTie } from "./liveTie";
 import { usePathname } from "next/navigation";
 import { DASH } from "@epl/core";
+import { SMALL_CAPS } from "@/app/desk";
 
 // Your tie, in the chrome, while a ball is in the air.
 //
@@ -54,7 +55,7 @@ export default function LiveStrip({ yours, theirs, opponent, href }: LiveTie) {
       // speaking, not the page.
       className="sticky top-0 z-40 hidden min-h-11 items-center justify-center gap-2.5 bg-league-deep px-[var(--page-gutter)] text-cream lg:flex"
     >
-      <span className="flex items-center gap-1.5 text-2xs font-bold uppercase">
+      <span className={`flex items-center gap-1.5 ${SMALL_CAPS}`}>
         <span className="live-dot" />
         Live
       </span>

@@ -13,7 +13,8 @@ import type { MatchRow } from "./matchRows";
 // Every match of his season on the house board (Craig, 25 Sep 2026: "this table is not like our
 // normal CM standards, use the shared code"): bevelled plates over the figures, the round in CM's
 // blue index block, the opponent pinned beside it, and each column's standouts lit as a board lights
-// them. Left of the rule is FPL's account of the match; right of it Fantrax's, including `FPts`.
+// them. Left of the rule is FPL's account of the match; right of it Fantrax's, including `FPts`, and
+// FPL's own points are left off so neither side's points sit beside the other's.
 
 interface Column {
   head: string;
@@ -38,7 +39,6 @@ const COLUMNS: readonly Column[] = [
   { head: "Def", title: "Defensive contribution", of: (r) => r.fpl.match.defensiveContribution },
   { head: "BPS", title: "FPL's bonus-points score", of: (r) => r.fpl.match.bps },
   { head: "B", title: "Bonus points", of: (r) => r.fpl.match.bonus },
-  { head: "FPL", title: "FPL's points, under FPL's rules — not this league's", of: (r) => r.fpl.match.fplPoints },
   { head: "FPts", title: "This league's points for the match — Fantrax's own", of: (r) => r.paid?.points ?? null, rule: true },
   { head: "S", title: "Shots — Fantrax's own", of: (r) => r.paid?.shots ?? null },
   { head: "SOT", title: "Shots on target — Fantrax's own", of: (r) => r.paid?.shotsOnTarget ?? null },
@@ -55,7 +55,7 @@ const RULE = "border-l border-line";
 export default function MatchLog({ rows }: { rows: readonly MatchRow[] }) {
   if (rows.length === 0) {
     return (
-      <Section title="Every match" aside="FPL's own · Fantrax's own">
+      <Section title="Every match">
         <p className="text-sm text-muted">No match he has played yet this season.</p>
       </Section>
     );
@@ -67,8 +67,8 @@ export default function MatchLog({ rows }: { rows: readonly MatchRow[] }) {
   const covered = rows.filter((row) => row.paid !== null).length;
 
   return (
-    <Section title="Every match" aside="FPL's own · Fantrax's own">
-      <ScrollBoard>
+    <Section title="Every match">
+      <ScrollBoard className="bg-surface">
         <table className={BOARD}>
           <thead>
             <tr className="text-2xs">

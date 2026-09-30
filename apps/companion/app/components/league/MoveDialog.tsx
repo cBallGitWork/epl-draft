@@ -15,18 +15,24 @@ import { BUTTON } from "../shell/ButtonLink";
 // browser's job rather than four effects of ours.
 
 export default function MoveDialog({
+  subject,
   name,
   moves,
   options,
   nameOf,
   onPlay,
+  onCard,
   onClose,
 }: {
+  /** The tapped man's id. */
+  subject: string;
   name: string;
   moves: Move[];
   options: SlotOption[];
   nameOf: (id: string) => string;
   onPlay: (move: Move) => void;
+  /** Swap this dialog for his player card, the pitch's one way to his news. */
+  onCard: () => void;
   onClose: () => void;
 }) {
   return (
@@ -34,6 +40,7 @@ export default function MoveDialog({
       <div className="flex flex-col gap-2 p-3">
         <h2 className="px-1 text-sm font-bold tracking-tight">{name}</h2>
         <MoveSheet
+          subject={subject}
           moves={moves}
           options={options}
           nameOf={nameOf}
@@ -42,13 +49,14 @@ export default function MoveDialog({
             onClose();
           }}
         />
-        <button
-          type="button"
-          onClick={onClose}
-          className={BUTTON}
-        >
-          Close
-        </button>
+        <div className="flex gap-2">
+          <button type="button" onClick={onCard} className={`${BUTTON} flex-1`}>
+            Player card
+          </button>
+          <button type="button" onClick={onClose} className={`${BUTTON} flex-1`}>
+            Close
+          </button>
+        </div>
       </div>
     </Modal>
   );

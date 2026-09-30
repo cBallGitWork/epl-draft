@@ -19,11 +19,13 @@ import type { Assignment, PublishedStory } from "@epl/core";
 /** The kinds whose substance lives in `extras` rather than in the body, and
  *  which member carries it. A kind absent from this table legitimately files
  *  without extras. */
-export const CARGO: Partial<Record<Assignment["kind"], "ranks" | "quiz" | "teamNews">> = {
+export const CARGO: Partial<Record<Assignment["kind"], "ranks" | "quiz" | "teamNews" | "sheets" | "reports">> = {
+  "match-report": "reports",
   "power-ranking": "ranks",
   // The Team Sheet IS its rows — the body is an introduction to them. One that
   // files without them is two sentences about a thread that is not there.
   presser: "teamNews",
+  sheets: "sheets",
 };
 
 /** Every written surface of a filed story, as one string to check names in.
@@ -62,6 +64,9 @@ export function prose(story: PublishedStory): string {
     ...sentences(extras.teamNews, "line"),
     ...(extras.teamNews ?? []).flatMap((row) => (row.men ?? []).map((man) => man.note)),
     ...(extras.teamNews ?? []).map((row) => row.quote?.text),
+    // Team news is its paragraphs; the elevens under them are printed from Fantrax.
+    ...(extras.sheets ?? []).flatMap((tie) => [tie.home.line, tie.away.line]),
+    ...(extras.reports ?? []).flatMap((r) => [r.standfirst, r.account, ...r.sections.flatMap((s) => [s.head, s.pitch, s.stake])]),
   ];
   // Each part on its own line, and every line is a sentence for the check's
   // purposes — a rank line opens with a capital the way a sentence does.

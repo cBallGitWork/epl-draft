@@ -72,17 +72,18 @@ export const SHOULDER_STORIES = 2;
  *  filed story in full until 2 Sep, which is a magazine; then just the lead in
  *  full until 3 Sep, which put the second story on the sheet some nineteen
  *  hundred pixels down a phone and made the ranks under it furniture nobody
- *  reached. The articles are on the pages behind — a headline turns to one.
+ *  reached. The articles are at `/paper/{slug}` — a headline turns to one.
  *
  *  Eight, against a paper that holds up to `MAX_PAPER_STORIES`: a busy round
  *  fills the sheet without the front page becoming an index of itself.
  *
  *  **Every story, while the paper is being verified** (Craig, 18 Sep 2026:
  *  *"show all articles we create so we can verify"*). Eight of sixteen meant
- *  four filed stories were off the sheet and, until `paperPages` claimed their
- *  kinds, off every page — so a story could be written, committed, and seen by
- *  nobody. Set back to 8 once each kind has been read once; the constant is the
- *  only thing to change and this paragraph is the reminder. */
+ *  four filed stories were off the sheet, so a story could be written,
+ *  committed, and seen by nobody. Set back to 8 once each kind has been read
+ *  once; the constant is the only thing to change and this paragraph is the
+ *  reminder. There are no section pages since 30 Sep, so a story past the cap
+ *  is linked from nowhere. */
 export const HEADLINES_SHOWN = MAX_PAPER_STORIES;
 
 /** A team to treat as the reader's own when nobody has signed in, for the test leagues, from the
@@ -105,13 +106,16 @@ export const FANTRAX_SILENT = "Fantrax is not answering";
 export const PAGE_REVALIDATE = 30;
 
 /** How stale a printed article may be, in seconds. A story ships with the deploy that files it,
- *  so the inside pages need not re-render compiled-in prose every thirty. The front page keeps
+ *  so an article page need not re-render compiled-in prose every thirty. The front page keeps
  *  `PAGE_REVALIDATE` for its live scoreboard. */
 export const ARTICLE_REVALIDATE = 300;
 
 /** How stale Opta's commentary may be, in seconds: the round's one expensive read (one request
  *  per fixture), and nothing a reader watches for comes from it. Counted 21 Sep 2026. */
 export const COMMENTARY_REVALIDATE = 300;
+
+/** How stale the clubs' season stats may be, in seconds: twenty-one reads, and they move only when a match does. */
+export const CLUB_SEASON_REVALIDATE = 300;
 
 /** Lifetime of the two reads a live score is drawn from, in seconds. Below `POLL.live` plus a
  *  fetch, or a stale-while-revalidate entry makes a lone reader see new scores every other poll. */
@@ -178,7 +182,7 @@ export const COLUMNISTS: Readonly<Record<string, Columnist>> = {
   },
 };
 
-/** The columnist a story is by, or null for the house correspondent. */
+/** The columnist a story is by, or null for a staff writer. */
 export function columnistOf(story: { reporter?: string }): Columnist | null {
   return story.reporter === undefined ? null : (COLUMNISTS[story.reporter] ?? null);
 }

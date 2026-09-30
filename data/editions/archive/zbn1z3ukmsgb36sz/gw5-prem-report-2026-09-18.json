@@ -1,0 +1,462 @@
+{
+  "slug": "gw5-prem-report-2026-09-18",
+  "kind": "match-report",
+  "leagueId": "zbn1z3ukmsgb36sz",
+  "period": 5,
+  "gameweek": 5,
+  "filedAt": "2026-09-29T19:38:31.296Z",
+  "expiresAt": null,
+  "edition": "Friday Prem Report",
+  "byline": "The Back Page",
+  "headline": "Chelsea left holding the ball",
+  "deck": "Brentford beat Chelsea 3-0",
+  "body": "",
+  "subjects": [
+    "match-report:gw5:2026-09-18"
+  ],
+  "image": null,
+  "face": null,
+  "ties": [],
+  "extras": {
+    "reports": [
+      {
+        "fixtureCode": 2645236,
+        "kickoff": "2026-09-18T19:00:00Z",
+        "home": {
+          "code": 94,
+          "score": 3,
+          "goals": [
+            "Anthony 61",
+            "Thiago 83",
+            "Carvalho 90+4"
+          ],
+          "assists": [
+            "Schuster 61"
+          ],
+          "manager": "Keith Andrews",
+          "lineup": {
+            "formation": "4-2-3-1",
+            "lines": [
+              [
+                {
+                  "name": "Kelleher",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Kayode",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Hickey",
+                    "minute": "69",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Schuster",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Ajer",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Lewis-Potter",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Diouf",
+                    "minute": "81",
+                    "booked": false
+                  }
+                }
+              ],
+              [
+                {
+                  "name": "Yarmoliuk",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Sangaré",
+                    "minute": "69",
+                    "booked": true
+                  }
+                },
+                {
+                  "name": "Janelt",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Anthony",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Ouattara",
+                    "minute": "81",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Damsgaard",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Carvalho",
+                    "minute": "87",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Schade",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Thiago",
+                  "booked": true,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ]
+            ],
+            "unused": [
+              "Wilson",
+              "Henry",
+              "Fredrick",
+              "Balcombe"
+            ]
+          },
+          "next": "Aston Villa (a)"
+        },
+        "away": {
+          "code": 8,
+          "score": 0,
+          "goals": [],
+          "assists": [],
+          "manager": null,
+          "lineup": {
+            "formation": "3-4-2-1",
+            "lines": [
+              [
+                {
+                  "name": "Martínez",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Fofana",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Acheampong",
+                    "minute": "71",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Lacroix",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Colwill",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Neto",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Estêvão",
+                    "minute": "87",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Henderson",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Barco",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Nicoll-Jazuli",
+                    "minute": "87",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Chavarría",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Palmer",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Rogers",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Welbeck",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Quenda",
+                    "minute": "71",
+                    "booked": false
+                  }
+                }
+              ]
+            ],
+            "unused": [
+              "Penders",
+              "Gusto",
+              "Lavia",
+              "Hato",
+              "Gittens"
+            ]
+          },
+          "next": "AFC Bournemouth (h)"
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 0
+        },
+        "venue": "Gtech Community Stadium",
+        "attendance": 17193,
+        "referee": "Andy Madley",
+        "standfirst": "Brentford beat Chelsea 3-0, three second-half goals lifting Keith Andrews's unbeaten side above the visitors and into third.",
+        "account": "Igor Thiago had the first sight of goal after five minutes, meeting a Yehor Yarmoliuk cross with a shot that flew off target.\nPedro Neto replied for Chelsea after 10 minutes, working a chance from a Danny Welbeck pass, but Caoimhín Kelleher saved.\nJust before half-time Keane Lewis-Potter was set up by Jaidon Anthony, only for his shot to be turned away.\nThe opening goal came after 61 minutes. Jannik Schuster headed a corner across goal and Jaidon Anthony finished for 1-0.\nWith seven minutes left Thiago made it 2-0 on the break, Brentford's second in the space of 11 minutes.\nFábio Carvalho came on three minutes from time.\nFour minutes into added time Carvalho added the third. From within the six-yard box he swept a right-footed finish into the top corner for 3-0.",
+        "sections": [
+          {
+            "head": "Schade threatens",
+            "pitch": "Kevin Schade had three shots without a goal.",
+            "stake": "123 has him for eight points, and 123 lead their head-to-head 38-34 this period."
+          },
+          {
+            "head": "Schuster provides",
+            "pitch": "Jannik Schuster made the opening goal with his header from the corner.",
+            "stake": "He is a free agent."
+          },
+          {
+            "head": "Thiago among the goals",
+            "pitch": "Igor Thiago had three shots across the match, one of them a goal.",
+            "stake": "He too is a free agent."
+          }
+        ],
+        "keyStats": [
+          {
+            "label": "xG",
+            "value": "Brentford 2.90, Chelsea 0.85"
+          },
+          {
+            "label": "Shots",
+            "value": "13 (6 on target) - 12 (2); corners 4-12"
+          },
+          {
+            "label": "Most shots",
+            "value": "Rogers 4 (1 on target)"
+          },
+          {
+            "label": "Chances created",
+            "value": "Chavarría, Welbeck, Palmer 2"
+          },
+          {
+            "label": "Top xG",
+            "value": "Anthony 0.96, Thiago 0.72, Schade 0.54"
+          },
+          {
+            "label": "Top xA",
+            "value": "Schuster 0.52, Damsgaard 0.28, Palmer 0.18"
+          }
+        ],
+        "fantasy": {
+          "motm": {
+            "name": "Schade",
+            "club": "Brentford",
+            "holder": "123",
+            "points": 8,
+            "did": ""
+          },
+          "top": [
+            {
+              "name": "Schade",
+              "club": "Brentford",
+              "holder": "123",
+              "points": 8,
+              "did": ""
+            },
+            {
+              "name": "Kelleher",
+              "club": "Brentford",
+              "holder": "test1",
+              "points": 6,
+              "did": ""
+            },
+            {
+              "name": "Ajer",
+              "club": "Brentford",
+              "holder": "test3331",
+              "points": 6,
+              "did": ""
+            }
+          ],
+          "wire": [
+            {
+              "name": "Thiago",
+              "club": "Brentford",
+              "holder": null,
+              "points": null,
+              "did": "1 goal"
+            },
+            {
+              "name": "Anthony",
+              "club": "Brentford",
+              "holder": null,
+              "points": null,
+              "did": "1 goal"
+            },
+            {
+              "name": "Carvalho",
+              "club": "Brentford",
+              "holder": null,
+              "points": null,
+              "did": "1 goal"
+            },
+            {
+              "name": "Schuster",
+              "club": "Brentford",
+              "holder": null,
+              "points": null,
+              "did": "1 assist"
+            }
+          ]
+        },
+        "rows": [
+          {
+            "minute": "61",
+            "kind": "Goal",
+            "side": "home",
+            "text": "Anthony (Schuster)"
+          },
+          {
+            "minute": "69",
+            "kind": "Sub",
+            "side": "home",
+            "text": "Hickey for Kayode"
+          },
+          {
+            "minute": "69",
+            "kind": "Sub",
+            "side": "home",
+            "text": "Sangaré for Yarmoliuk"
+          },
+          {
+            "minute": "71",
+            "kind": "Sub",
+            "side": "away",
+            "text": "Quenda for Welbeck"
+          },
+          {
+            "minute": "71",
+            "kind": "Sub",
+            "side": "away",
+            "text": "Acheampong for Fofana"
+          },
+          {
+            "minute": "81",
+            "kind": "Sub",
+            "side": "home",
+            "text": "Ouattara for Anthony"
+          },
+          {
+            "minute": "81",
+            "kind": "Sub",
+            "side": "home",
+            "text": "Diouf for Lewis-Potter"
+          },
+          {
+            "minute": "83",
+            "kind": "Goal",
+            "side": "home",
+            "text": "Thiago"
+          },
+          {
+            "minute": "84",
+            "kind": "Booked",
+            "side": "home",
+            "text": "Thiago"
+          },
+          {
+            "minute": "85",
+            "kind": "Booked",
+            "side": "home",
+            "text": "Sangaré"
+          },
+          {
+            "minute": "87",
+            "kind": "Sub",
+            "side": "away",
+            "text": "Nicoll-Jazuli for Barco"
+          },
+          {
+            "minute": "87",
+            "kind": "Sub",
+            "side": "away",
+            "text": "Estêvão for Neto"
+          },
+          {
+            "minute": "87",
+            "kind": "Sub",
+            "side": "home",
+            "text": "Carvalho for Damsgaard"
+          },
+          {
+            "minute": "90+4",
+            "kind": "Goal",
+            "side": "home",
+            "text": "Carvalho"
+          }
+        ],
+        "video": "OLYDJetQioU"
+      }
+    ]
+  }
+}

@@ -181,8 +181,9 @@ no longer describes this one.
   whose names had shrunk were the ones you could no longer scan. Craig's call,
   22 Aug, reversing the earlier one.
 - **And the card shrinks, not the type.** That one size is `--text-2xs`, 11px, a
-  declared step — the figure under it is `--text-xs` and the fixture and the
-  chips are `--text-3xs`. It used to be `clamp(7px, 13cqw, 11px)`, a share of the
+  declared step — the figure and the fixture under it are `--text-xs` (the fixture
+  was `--text-3xs` until 30 Sep 2026, cream on the page ground at 15.5:1 and still
+  unreadable at arm's length at 9px), and the chips are `--text-3xs`. It used to be `clamp(7px, 13cqw, 11px)`, a share of the
   card, which is the inversion that made this screen Craig's least favourite in
   the app: a line of seven took its width out of the name and printed it at seven
   pixels. Nothing in the clamp was reachable — an 11px name needed an 84.6px card
@@ -311,11 +312,22 @@ unresolved when it is, and a way out to the full profile.
 - **A position is never listed as blocked when a move above reaches it.** A full
   XI reports every position as `squad-full` while simultaneously offering swaps
   into it; the sheet used to say both.
-- **It writes nothing.** The edited shape lives in browser state, the real roster
-  is untouched, and the button at the bottom hands you to Fantrax. `violations()`
-  reports what is already wrong — nothing the planner offers can create any of
-  it, so anything listed arrived from Fantrax, usually a commissioner narrowing
-  an eligibility under a lineup that was legal when it was set.
+- **Save lineup writes it to Fantrax** (Craig, 30 Sep 2026: "needs a save button ... make the save button
+  obvious, and a 'do you want to save' if you leave the screen"). The royal-blue primary plate under the pitch,
+  with Reset beside it, appears once anything has moved and is disabled while a rule is broken. `saveLineup`
+  (`squad/[teamId]/save.ts`) names the team from the signed code (never the lent demo team) and the week from
+  `planningRound()`, refuses a page planned for another week and anything inside `SAVE_MARGIN_MINUTES` of the
+  lock, re-checks the league's rules, then sends Fantrax's dry run and saves only on a clean `CONFIRM`. It runs
+  only where `LINEUP_SAVE=on` and `FANTRAX_COOKIE` (the commissioner's session) are set; elsewhere the bar reads
+  "Planned, not saved" and the Fantrax link is the way to submit. Each write logs one `lineup-save` line.
+- **The bench order is yours to set on the pitch.** Tap one sub, then another, and they swap places; the
+  numbers 1–4 are the order they come on. It starts from Fantrax's `autoSubOrderMap` and saves with
+  `setAutoSubsOrder`.
+- **Leaving with unsaved changes asks first**: "Save and leave", "Leave without saving" or "Stay" on a tap to
+  another screen, and the browser's own prompt on a reload or close. The back button is not caught.
+- `violations()` reports what is already wrong — nothing the planner offers can create any of it, so anything
+  listed arrived from Fantrax, usually a commissioner narrowing an eligibility under a lineup that was legal
+  when it was set.
 
 ## Constraints
 

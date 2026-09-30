@@ -1,6 +1,7 @@
 import type { SquadDetailLine, SquadPlayerDetail } from "@epl/core";
-import { SCROLL } from "@/app/desk";
+import ScrollBoard from "./ScrollBoard";
 import SquadRow from "./SquadRow";
+import { SMALL_CAPS } from "@/app/desk";
 
 // The same fifteen as a list. Offered beside the pitch rather than instead of
 // it: the pitch answers "what does this squad look like" and a list answers "who
@@ -32,7 +33,6 @@ export default function SquadRows({
   bare = false,
   head = true,
   reserve = false,
-  figure,
 }: {
   lines: SquadDetailLine[];
   /** Skip the panel, because a caller has already drawn one round this AND
@@ -47,15 +47,6 @@ export default function SquadRows({
   /** Whether the points are Fantrax's projection rather than a season played.
    *  The heading says which, because the numbers cannot. */
   projected: boolean;
-  /** What the figure column is a figure OF, when it is neither of the two above.
-   *
-   *  **Provenance at the point of use** (DESIGN §7). The planner opens on the
-   *  round a manager can still change, which by definition has no football in
-   *  it — so a column headed `FPts` was fifteen dashes, and a reader takes that
-   *  for broken data rather than for an empty week. It shows his season instead
-   *  and says so; the moment the round starts scoring the caller hands back the
-   *  live numbers and the heading with them. */
-  figure?: string;
   /** Absent on the head-to-head board, which has no player card to open. A row
    *  that looked like a button and did nothing is worse than a row. */
   onOpen?: (player: SquadPlayerDetail) => void;
@@ -104,13 +95,13 @@ export default function SquadRows({
     // dense table in the app breaking it, because it was drawn bare wherever it
     // was placed. `cm9900/12.jpg` has its whole table inside a sunken well and
     // lets the picture show between panels, never through one.
-    <div className={bare ? SCROLL : `cm-panel ${SCROLL}`}>
+    <ScrollBoard className={bare ? "" : "cm-panel"}>
       <div className="flex flex-col lg:min-w-max">
         {/* One bevelled strip over the whole squad, the way a CM table is headed —
           rather than a small-caps label per position group, which made five
           headings and no columns. The group bars below separate; this names. */}
         {head ? (
-        <div className="cm-bevel flex min-h-7 items-center gap-1.5 px-1.5 text-2xs font-bold uppercase">
+        <div className={`cm-bevel flex min-h-7 items-center gap-1.5 px-1.5 ${SMALL_CAPS}`}>
           <span className="w-10 shrink-0">Pos</span>
           <span className="w-7 shrink-0" />
           {/* **`min-w-0 flex-1` and a basis, not a min-width.** The name column
@@ -140,7 +131,7 @@ export default function SquadRows({
               edge with the readings before it. */}
           {scored ? (
             <span className="w-9 shrink-0 text-right">
-              {figure ?? (projected ? "Proj" : "FPts")}
+              {projected ? "Proj" : "FPts"}
             </span>
           ) : null}
         </div>
@@ -169,6 +160,6 @@ export default function SquadRows({
           )}
         </ul>
       </div>
-    </div>
+    </ScrollBoard>
   );
 }

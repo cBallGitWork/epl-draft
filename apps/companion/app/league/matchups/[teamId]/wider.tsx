@@ -1,3 +1,4 @@
+import ScrollBoard from "../../../components/league/ScrollBoard";
 import type { ReactNode } from "react";
 import { seasonForm, sortRows, londonDayAndTime, playerName, DASH } from "@epl/core";
 import type { Club, Fixture, LineupDetail, RosteredTeam } from "@epl/core";
@@ -12,7 +13,7 @@ import { getSeasonResults } from "../../schedule/schedule";
 import { leagueTable, teamBadges } from "../../../standings";
 import { leagueInfo } from "../../../round";
 import Nothing from "../../../components/shell/Nothing";
-import { BOARD, PANEL, SCROLL } from "@/app/desk";
+import { BOARD, PANEL } from "@/app/desk";
 import { matchHref } from "../../../prem/match/[id]/matchRoutes";
 
 // The two boards that place this tie rather than explain it: the league it sits in, and the football it is
@@ -55,7 +56,7 @@ export async function TableTab({ tie, mine }: { tie: readonly string[]; mine: st
 
   return (
     <section className={PANEL}>
-      <div className={SCROLL}>
+      <ScrollBoard>
         <table className={BOARD}>
           <Columns sort="rank" descending={false} />
           <tbody>
@@ -72,7 +73,7 @@ export async function TableTab({ tie, mine }: { tie: readonly string[]; mine: st
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollBoard>
     </section>
   );
 }

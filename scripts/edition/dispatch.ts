@@ -2,6 +2,7 @@ import {
   fullClubName,
   type Assignment,
   type Club,
+  type Dodger,
   type FootballSnapshot,
   type LeagueInfo,
   type PublishedStory,
@@ -14,11 +15,13 @@ import {
 } from "@epl/core";
 import { presserEdition } from "./presserWeek";
 import { faceOf, type FaceContext } from "./faces";
-import type { RoundFacts } from "./facts";
+import type { DeskFacts } from "./facts";
 import type { PredictionsDesk } from "./predictions";
+import type { SheetsDesk } from "./sheets";
 import { storyOfColumn } from "./newsroom";
 import { COLUMNIST, STORY_BYLINE, editionName } from "./voice/bylines";
 import { presserHeadline } from "./voice/pressers";
+import type { ReportsJob } from "./reports";
 
 // One assignment in, one prepared desk out: which voice writes it, from which
 // brief, and how the words come back as a story. A kind with no desk yet
@@ -28,7 +31,7 @@ import { presserHeadline } from "./voice/pressers";
 export interface DeskContext {
   leagueId: string;
   snapshot: FootballSnapshot;
-  facts: RoundFacts;
+  facts: DeskFacts;
   clubs: Map<number, Club>;
   /** The league's running storylines, for every scoped brief's memory block. */
   threads: readonly StoryThread[];
@@ -38,6 +41,10 @@ export interface DeskContext {
   period: number;
   /** The round ahead as Lawro may know it; null unless his column is due this firing. */
   predictions: PredictionsDesk | null;
+  /** The locked sheets, their history and their brief; null unless team news is due this firing. */
+  sheets: SheetsDesk | null;
+  /** Each match-day report this firing commissioned, by its London day. */
+  reports: ReadonlyMap<string, ReportsJob>;
   /** This week's press-conference signals, for men the league holds. Empty until
    *  the intel export lands, which files no Team Sheet and spends nothing. */
   presserLines: PresserLine[];
@@ -56,6 +63,8 @@ export interface DeskContext {
   /** The predicted elevens, composed from facts rather than written — the one
    *  column with no voice and no brief. Null when it is not this firing's. */
   elevens: Record<string, unknown> | null;
+  /** The gameweek's near misses by the league's men; null unless the Points Dodgers are due this firing. */
+  dodgers: readonly Dodger[] | null;
 }
 
 /** One edition of the Team Sheet — the day's conferences, and nothing else.
@@ -123,7 +132,7 @@ export function file(
         : assignment.kind === "predicted-xi"
           ? firstKickoff(copy.lineups)
           : null,
-    edition: editionName(assignment.kind, filedAt),
+    edition: editionName(assignment.kind, filedAt, assignment.day),
     byline: STORY_BYLINE[assignment.kind] ?? "",
     reporter: COLUMNIST[assignment.kind],
     subject: assignment.key,

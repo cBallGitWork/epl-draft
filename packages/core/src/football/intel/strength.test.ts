@@ -108,15 +108,21 @@ describe("easeStep", () => {
 });
 
 describe("strengthTable", () => {
-  it("ranks every club's own attack at both venues, the strongest first (Craig, 24 Sep 2026: best at top)", () => {
+  it("ranks every club's own attack at both venues, the weakest first: 1 is the easiest to face (Craig, 30 Sep 2026)", () => {
     const table = strengthTable(STRENGTHS, "attack");
-    expect(table.map((row) => row.club)).toEqual(["ARS", "CHE", "BUR", "HUL"]);
-    expect(table[0]).toMatchObject({ club: "ARS", code: ARS.code, home: 1, away: 1 });
+    expect(table.map((row) => row.club)).toEqual(["HUL", "BUR", "CHE", "ARS"]);
+    expect(table[0]).toMatchObject({ club: "HUL", code: HUL.code, home: 1, away: 1 });
   });
 
   it("ranks defences the same way, a tie sharing its rank and falling to the name", () => {
     const table = strengthTable(STRENGTHS, "defence");
-    expect(table.map((row) => [row.club, row.home])).toEqual([["ARS", 1], ["BUR", 2], ["CHE", 2], ["HUL", 4]]);
+    expect(table.map((row) => [row.club, row.home])).toEqual([["HUL", 1], ["BUR", 2], ["CHE", 2], ["ARS", 4]]);
+  });
+
+  it("agrees with the planner's cells: a club's rank here is the rank its opponents see", () => {
+    const table = strengthTable(STRENGTHS, "defence");
+    const cells = easeRanks(STRENGTHS, "attack", "home");
+    for (const row of table) expect(cells.get(row.code)).toBe(row.home);
   });
 });
 
