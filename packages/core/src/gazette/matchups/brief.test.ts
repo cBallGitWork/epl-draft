@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildDraftBrief, leadFirst, type MatchupContext } from "./brief";
+import { buildDraftBrief } from "./brief";
 import { contextOf } from "./__fixtures__/context";
 import { draftSide, eleven } from "./__fixtures__/draftSide";
 import { draftMan } from "./__fixtures__/draftMan";
@@ -13,7 +13,7 @@ const context = contextOf(
     places: { home: { rank: 1, won: 3, drawn: 0, lost: 1, run: "WLWW" }, away: null },
     meetings: ["the last meeting: Dons won 40-31 in gameweek 2"],
     form: [{ teamId: "Dons", kind: "streak", text: "Dons had won 3 in a row going into the gameweek" }],
-    oldBoys: ["Isak faced Dons, who drafted him"],
+    oldBoys: [{ fantraxId: "Isak", line: "Isak faced Dons, who drafted him" }],
   },
   "saturday",
 );
@@ -43,14 +43,5 @@ describe("buildDraftBrief", () => {
     const next = { home: { name: "Villans", rank: 1 }, away: { name: "Toffees", rank: null } };
     expect(buildDraftBrief("gameweek", 5, [{ ...context, next }])).toContain("NEXT GAMEWEEK, may be left out:\n- Dons play Villans, 1st after this gameweek\n- Notemail play Toffees");
     expect(buildDraftBrief("saturday", 5, [{ ...context, next }])).not.toContain("NEXT GAMEWEEK");
-  });
-
-  it("leads with a result the substitutions flipped, then the closest", () => {
-    const at = (score: string, margin: number): MatchupContext => ({ ...context, state: { ...context.state, score, margin } });
-    const flipped = at("A beat B 33-28; B led 26-24 before the substitutions", 5);
-    const close = at("C beat D 30-29", 1);
-    const wide = at("E beat F 50-20", 30);
-    expect(leadFirst([wide, close, flipped], "gameweek").map((c) => c.state.score)).toEqual([flipped.state.score, close.state.score, wide.state.score]);
-    expect(leadFirst([wide, close, flipped], "saturday")[0].state.score).toBe(close.state.score);
   });
 });

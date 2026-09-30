@@ -1,5 +1,7 @@
 import { ordinal } from "../../league/ordinal";
+import type { Angle } from "./angle";
 import type { SeasonFact } from "./form";
+import type { OldBoy } from "./meetings";
 import type { MatchupState } from "./state";
 
 // The facts one draft report may use, one block per match-up: where both sides stand, how they last met, the score as a
@@ -31,9 +33,11 @@ export interface MatchupContext {
   /** Streaks, runs ended, returns to form, records and table moves for either side, each with its kind. */
   form: SeasonFact[];
   /** Stories from outside the gameweek's points: an old boy facing the side that let him go. */
-  oldBoys: string[];
+  oldBoys: OldBoy[];
   /** Each side's opponent next gameweek; null when it has none. */
   next: { home: NextOpponent | null; away: NextOpponent | null };
+  /** The story the desk chose (`angle.ts`); null for a match-up with nothing to tell but its result. */
+  angle: Angle | null;
 }
 
 const place = (name: string, p: TablePlace | null) =>
@@ -56,7 +60,7 @@ export function matchupBlock(ctx: MatchupContext, cutoff: Cutoff, n: number): st
     stillToPlay.length === 0 ? null : ["STILL TO PLAY:", ...stillToPlay.map((line) => `- ${line}`)].join("\n"),
     // The bracketed kind tells the writer which frame a fact takes; it is never printed.
     ctx.form.length === 0 ? null : ["FORM AND THE TABLE:", ...ctx.form.map((f) => `- ${f.text} [${f.kind}]`)].join("\n"),
-    stories.length + ctx.oldBoys.length === 0 ? null : ["THE STORIES:", ...[...stories, ...ctx.oldBoys].map((line) => `- ${line}`)].join("\n"),
+    stories.length + ctx.oldBoys.length === 0 ? null : ["THE STORIES:", ...[...stories, ...ctx.oldBoys.map((o) => o.line)].map((line) => `- ${line}`)].join("\n"),
     cutoff === "saturday" ? null : nextBlock(ctx),
   ]
     .filter((block) => block !== null)
@@ -71,12 +75,4 @@ export function draftBlocks(cutoff: Cutoff, contexts: readonly MatchupContext[])
 export function buildDraftBrief(cutoff: Cutoff, gameweek: number, contexts: readonly MatchupContext[]): string {
   const when = cutoff === "saturday" ? "after Saturday's matches, with the rest of the gameweek to come" : "at the end of the gameweek";
   return [`DRAFT REPORT, gameweek ${gameweek}, ${when}. ${contexts.length} match-up${contexts.length === 1 ? "" : "s"}, the lead first.`, ...draftBlocks(cutoff, contexts)].join("\n\n=====\n\n");
-}
-
-/** The lead first, then the rest by margin, closest first. At the end of the gameweek a result the substitutions
- *  flipped, or one a late goal decided, leads; after Saturday the closest match-up does. Chosen here, never by the model. */
-export function leadFirst(contexts: readonly MatchupContext[], cutoff: Cutoff): MatchupContext[] {
-  const gap = (c: MatchupContext) => Math.abs(c.state.margin);
-  const weight = (c: MatchupContext) => (cutoff === "gameweek" && /before the substitutions|decided by/u.test(c.state.score) ? 0 : 1);
-  return [...contexts].sort((a, b) => weight(a) - weight(b) || gap(a) - gap(b));
 }

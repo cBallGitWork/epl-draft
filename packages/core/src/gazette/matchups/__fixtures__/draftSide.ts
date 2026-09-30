@@ -1,5 +1,5 @@
 import type { DayPoints, DraftMan, DraftSide } from "../types";
-import { draftMan } from "./draftMan";
+import { SATURDAY, draftMan } from "./draftMan";
 
 /** The shape every test eleven takes: a keeper, four at the back, four in midfield, two up front. */
 const SHAPE = ["G", "D", "D", "D", "D", "M", "M", "M", "M", "F", "F"];
@@ -11,6 +11,6 @@ export function eleven(tag: string, over: Record<number, DraftMan> = {}): DraftM
 }
 
 /** A side with its eleven and bench, the bench numbered to come on in the order given, its total scored on one day. */
-export function draftSide(name: string, total: number, men: DraftMan[], bench: DraftMan[] = [], byDay: DayPoints[] = [{ day: "2026-09-27", points: total }]): DraftSide {
+export function draftSide(name: string, total: number, men: DraftMan[], bench: DraftMan[] = [], byDay: DayPoints[] = [{ day: SATURDAY, points: total }]): DraftSide {
   return { teamId: name, name, total, byDay, eleven: men, bench, subOrder: bench.map((m) => m.fantraxId) };
 }

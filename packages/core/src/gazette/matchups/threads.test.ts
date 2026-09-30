@@ -1,0 +1,57 @@
+import { describe, expect, it } from "vitest";
+import { contextOf } from "./__fixtures__/context";
+import { draftMan, goalAt } from "./__fixtures__/draftMan";
+import { draftSide, eleven } from "./__fixtures__/draftSide";
+import { benchTurned, lateDecider, saturdayLead } from "./__fixtures__/gw5";
+import { worthOf } from "./__fixtures__/worth";
+import { threadsOf } from "./threads";
+
+const kinds = (ctx = lateDecider(), cutoff: "saturday" | "gameweek" = "gameweek", gameweek = 5) => threadsOf(ctx, cutoff, worthOf(), gameweek);
+
+describe("threadsOf", () => {
+  it("finds GW5's late decider, decisive, and test2's fightback that fell one short", () => {
+    const threads = kinds();
+    expect(threads.find((t) => t.kind === "late-decider")).toMatchObject({ weight: 110, decisive: true, men: [{ name: "Haaland" }] });
+    expect(threads.find((t) => t.kind === "fightback-short")?.facts).toEqual(["test2 were 11 behind after Friday and lost by 1"]);
+    expect(threads.map((t) => t.kind)).not.toContain("late-goal");
+  });
+
+  it("finds the bench that turned test4 v test3, and the lead test4 lost with it", () => {
+    const threads = kinds(benchTurned());
+    expect(threads.find((t) => t.kind === "bench-turned")).toMatchObject({ weight: 120, beat: null, men: [{ name: "Vuskovic" }, { name: "Janelt" }] });
+    expect(threads.find((t) => t.kind === "lead-lost")?.facts).toEqual(["test4 led by 2 after Sunday"]);
+  });
+
+  it("after Saturday, tells what is still to come and credits the man who built the lead", () => {
+    const threads = kinds(saturdayLead(), "saturday");
+    expect(threads.find((t) => t.kind === "haul")).toMatchObject({ weight: 65, decisive: true });
+    expect(threads.find((t) => t.kind === "subs-waiting")?.facts).toEqual(["Meunier (Sunderland) replaces Millar (Hull City), who did not play, if he plays"]);
+    expect(threads.map((t) => t.kind)).not.toContain("late-decider");
+  });
+
+  it("credits the return after which the winner led for good when nothing later decided it", () => {
+    const gross = draftMan("Groß", "M", 11, 90, 0, { club: "Brighton", goals: 1, assists: 1 });
+    const ctx = contextOf(draftSide("123", 40, eleven("o", { 8: gross })), draftSide("test2", 30, eleven("t")));
+    expect(kinds(ctx).find((t) => t.decisive && t.men[0] === gross)).toMatchObject({ kind: "haul", weight: 45 + 30 });
+  });
+
+  it("tells a goal that cost the other side's man his clean sheet, and a star's blank only from gameweek 6", () => {
+    const match = { matches: [{ code: 9, label: "Man City v Everton" }] };
+    const scorer = draftMan("Haaland", "F", 6, 90, 0, { ...match, club: "Man City", goals: 1, scoredAt: [goalAt(30)], projected: 9 });
+    const victim = draftMan("Tarkowski", "D", 2, 90, 0, { ...match, club: "Everton", concededFirstAt: [goalAt(30)] });
+    const salah = draftMan("Salah", "M", 2, 90, 0, { club: "Liverpool", projected: 8 });
+    const ctx = contextOf(draftSide("A", 40, eleven("h", { 9: scorer, 5: salah })), draftSide("B", 30, eleven("a", { 1: victim })));
+    expect(kinds(ctx).find((t) => t.kind === "crossfire")?.facts).toEqual(["Haaland (Man City) scored in the 30th minute, the goal that cost Tarkowski (Everton) his clean sheet for B"]);
+    expect(kinds(ctx, "gameweek", 5).map((t) => t.kind)).not.toContain("star-blank");
+    expect(kinds(ctx, "gameweek", 6).find((t) => t.kind === "star-blank")?.men[0]?.name).toBe("Salah");
+  });
+
+  it("weighs a keeper's haul by its size, and a man off the bench more when he returned", () => {
+    // Both on the losing side, so neither is the man the winner's lead was built on.
+    const keeper = draftMan("Raya", "G", 10, 90, 0, { club: "Arsenal", cleanSheets: 1 });
+    const cameo = draftMan("Hemmings", "M", 6, 20, 0, { club: "Aston Villa", started: false, goals: 1 });
+    const ctx = contextOf(draftSide("A", 40, eleven("h")), draftSide("B", 30, eleven("a", { 0: keeper, 5: cameo })));
+    expect(kinds(ctx).find((t) => t.kind === "keeper-haul")?.weight).toBe(55);
+    expect(kinds(ctx).find((t) => t.kind === "non-starter")?.weight).toBe(45);
+  });
+});

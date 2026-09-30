@@ -30,11 +30,17 @@ export function meetingLines(side: string, opponent: string, meetings: readonly 
   return [record, `the last meeting: ${lastLine}`];
 }
 
+/** A man facing a side he once belonged to, and the line that says so. */
+export interface OldBoy {
+  fantraxId: string;
+  line: string;
+}
+
 /** The men in an eleven who once belonged to the side they faced. */
-export function oldBoys(men: readonly { fantraxId: string; name: string }[], opponent: { teamId: string; name: string }, formerly: ReadonlyMap<string, readonly FormerSide[]>): string[] {
+export function oldBoys(men: readonly { fantraxId: string; name: string }[], opponent: { teamId: string; name: string }, formerly: ReadonlyMap<string, readonly FormerSide[]>): OldBoy[] {
   return men.flatMap((m) => {
     const was = (formerly.get(m.fantraxId) ?? []).find((f) => f.teamId === opponent.teamId);
     if (was === undefined) return [];
-    return [`${m.name} faced ${opponent.name}, who ${was.how === "drafted" ? "drafted him" : `${was.how} him in gameweek ${was.when}`}`];
+    return [{ fantraxId: m.fantraxId, line: `${m.name} faced ${opponent.name}, who ${was.how === "drafted" ? "drafted him" : `${was.how} him in gameweek ${was.when}`}` }];
   });
 }

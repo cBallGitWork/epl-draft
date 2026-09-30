@@ -401,11 +401,76 @@ export const DRAFT_DESK = {
   tableMove: 1,
 } as const;
 
+/** The draft desk's news judgement (Craig, 30 Sep 2026: "i told you to create a narrative"): what each thread of a
+ *  match-up is worth to its story, the bigger version second where there is one, and the thresholds that make one. */
+export const DRAFT_NEWS = {
+  weight: {
+    // The match's shape, at the end of the gameweek.
+    "bench-turned": [90], "late-decider": [80, 90], comeback: [75, 85], "one-man-show": [70], level: [65], close: [55, 65],
+    "lead-lost": [60], "fightback-short": [60], upset: [60, 75], rout: [50, 60], "turning-point": [40],
+    // A man's.
+    injury: [50], crossfire: [50], haul: [45], "keeper-haul": [45, 60], "clean-lost-late": [45], "bench-six": [40, 55],
+    "uncovered-blank": [35, 55], "late-goal": [35, 45], "star-blank": [35], "non-starter": [30, 45], "club-mates": [30, 40],
+    "old-boy": [25, 45], "new-arrival": [25, 45], debut: [20, 40], "early-off": [25], double: [20],
+    // The season's, each tagged for a Football Manager frame.
+    top: [55], record: [50], "streak-ended": [45], "return-to-form": [45], bottom: [45], streak: [40], "season-high": [35],
+    "season-low": [35], climb: [30], fall: [30],
+    // After Saturday, with the gameweek to finish.
+    // A reserve waiting on his match is a twist, never the lede with half the gameweek to play (GW5's proof).
+    chase: [80], "subs-waiting": [50], "to-play-gap": [55], "saturday-lead": [45, 60], "both-to-come": [45],
+    "double-to-come": [40], "going-in": [35],
+  },
+  /** Added to the one thread that decided a result, to one other whose points reach the margin, and after Saturday to
+   *  the man who built the lead. */
+  decider: 30,
+  reachesMargin: 15,
+  builder: 20,
+  /** A keeper's haul is worth this much more a point past its threshold, up to its bigger weight. */
+  keeperHaulPerPoint: 5,
+  /** Down by this many at a day's end and won: a comeback, a big one from the second. Ahead by the third and lost: a lead
+   *  lost. Down by the fourth and lost by the fifth or fewer: a fightback that fell short. */
+  comebackFrom: 6,
+  bigComebackFrom: 10,
+  leadLostFrom: 1,
+  fightbackFrom: 8,
+  fightbackWithin: 3,
+  /** A margin this small is close; this big a rout, and the second a big one; after Saturday the third is a big lead. */
+  closeWithin: 3,
+  routFrom: 15,
+  bigRoutFrom: 25,
+  bigLead: 15,
+  /** A man with this many points and this share of his side's total carried it. */
+  oneManPoints: 10,
+  oneManShare: 0.35,
+  /** The winner this many places lower is an upset, from this gameweek of the league's on. */
+  upsetPlaces: 4,
+  upsetFrom: 4,
+  /** A blank by one of the match-up's top few projected men is news, from this gameweek on; the projection never prints. */
+  starBlankTop: 3,
+  starBlankFrom: 6,
+  /** After Saturday, one side with this many more men to play than the other. */
+  toPlayGap: 3,
+  /** The angle: a twist and a supporting thread must score this much, a supporting thread for the other side this much;
+   *  at most this many supporting threads and this many men in the cast. */
+  twistFrom: 50,
+  supportingFrom: 35,
+  otherSideFrom: 30,
+  supporting: 3,
+  cast: 4,
+  /** A thread of the family this side's story had last time is worth this share of itself, one about a man in last
+   *  time's cast this share; two match-ups on a page share a story's family only when the next-best is this far behind. */
+  repeatFamily: 0.6,
+  repeatMan: 0.7,
+  varietyWithin: 15,
+} as const;
+
 /** How long a draft report's paragraphs run after each match-up's verdict (the UK desk's review, 29 Sep 2026). */
 export const DRAFT_WRITING = {
   matchupWords: [50, 150],
   /** Headline candidates the pun writer offers, and match-ups written in one call. */
   puns: 10,
+  /** Filed draft reports read back, so a story, a phrase or a headline is not told the same way twice. */
+  pastReports: 4,
 } as const;
 
 /** The team sheets at the lock: when a benched man is news, and how much the article carries. */

@@ -4,7 +4,7 @@ import { autoSubs, type AutoSub } from "./autoSubs";
 import type { Cutoff } from "./brief";
 import { byClock, returnCount, sideStories, whenScored } from "./stories";
 import { chaseLines } from "./swing";
-import type { DraftMan, DraftMatchupInput, DraftSide, PositionLimits, SlotWorth } from "./types";
+import type { DraftMan, DraftMatchupInput, DraftSide, GoalTime, PositionLimits, SlotWorth } from "./types";
 import { listed } from "../../format";
 import { priceOf } from "./worth";
 
@@ -47,6 +47,13 @@ function sideState(side: DraftSide, limits: PositionLimits): SideState {
   return { side, subs, total: (side.total ?? 0) + coming, toPlay };
 }
 
+/** The winner's last goal, from the late minute on, worth more than the margin: without it the other side would have won. */
+export function lateDecider(winner: SideState, margin: number, worth: SlotWorth): { m: DraftMan; t: GoalTime } | null {
+  const goals = winner.side.eleven.flatMap((m) => m.scoredAt.map((t) => ({ m, t }))).filter(({ m }) => priceOf(worth, m.slot, "goal") > margin);
+  const last = goals.sort((x, y) => byClock(x.t, y.t)).at(-1);
+  return last === undefined || last.t.minute < DRAFT_DESK.lateGoal ? null : last;
+}
+
 /** The score as a verdict: Saturday's as it stands, the gameweek's as a result, with the substitutions when they change it. */
 function scoreLine(home: SideState, away: SideState, cutoff: Cutoff, worth: SlotWorth): string {
   const [h, a] = [home.side.total ?? 0, away.side.total ?? 0];
@@ -68,16 +75,14 @@ function scoreLine(home: SideState, away: SideState, cutoff: Cutoff, worth: Slot
   const beat = `${winner.side.name} beat ${loser.side.name} ${winner.total}-${loser.total}`;
   // Flipped by the bench: the side that loses had led on the eleven's points alone.
   const before = (loser.side.total ?? 0) > (winner.side.total ?? 0) ? `; ${loser.side.name} led ${loser.side.total}-${winner.side.total} before the substitutions` : "";
-  // Decided by one late goal: the winner's last goal worth more than the margin.
-  const goals = winner.side.eleven.flatMap((m) => m.scoredAt.map((t) => ({ m, t }))).filter(({ m }) => priceOf(worth, m.slot, "goal") > margin);
-  const last = goals.sort((x, y) => byClock(x.t, y.t)).at(-1);
-  const decided = last === undefined || last.t.minute < DRAFT_DESK.lateGoal ? "" : `, decided by ${last.m.name}'s goal ${whenScored(last.t)}`;
+  const last = lateDecider(winner, margin, worth);
+  const decided = last === null ? "" : `, decided by ${last.m.name}'s goal ${whenScored(last.t)}`;
   return `${beat}${decided}${before}`;
 }
 
 /** A Premier League match with the two sides' men on opposing clubs: "Man City v Sunderland: Haaland for 123, Meunier
  *  for test2". Unplayed ones (`played` false) for who is still to play; played ones only when one of them returned. */
-function opposedMatches(home: DraftSide, away: DraftSide, played: boolean): string[] {
+export function opposedMatches(home: DraftSide, away: DraftSide, played: boolean): string[] {
   const inMatch = (side: DraftSide, code: number) => side.eleven.filter((m) => m.matches.some((x) => x.code === code) && (played ? m.minutes > 0 : m.left > 0));
   const labels = new Map([...home.eleven, ...away.eleven].flatMap((m) => m.matches.map((x) => [x.code, x.label] as const)));
   return [...labels].flatMap(([code, label]) => {

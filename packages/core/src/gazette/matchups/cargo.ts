@@ -1,3 +1,4 @@
+import { angleRecord, type AngleRecord } from "./angle";
 import type { Cutoff, MatchupContext } from "./brief";
 import { runningScore, type StoryDraftStep } from "./days";
 import { draftReturns, draftRows, type StoryDraftReturns, type StoryDraftRow } from "./elevens";
@@ -28,6 +29,8 @@ export interface StoryDraftMatchup {
   paragraphs: string[];
   /** The running score by day, then the substitutions'; empty when it never moved. */
   byDay: StoryDraftStep[];
+  /** The story the desk chose, for the next report's repeat discount; null when there was none. */
+  story: AngleRecord | null;
 }
 
 export interface StoryDraftReport {
@@ -56,7 +59,7 @@ export function draftCargo(cutoff: Cutoff, gameweek: number, contexts: readonly 
       // The opening line is the desk's verdict, set as a sentence: the one line a reader must never find wrong. A side's
       // name prints as its manager wrote it, even at the head of a sentence.
       const standfirst = `${ctx.state.score}.`;
-      return { home: side("home"), away: side("away"), verdict: ctx.state.score, standfirst, paragraphs: piece.paragraphs, byDay: runningScore(ctx.state) };
+      return { home: side("home"), away: side("away"), verdict: ctx.state.score, standfirst, paragraphs: piece.paragraphs, byDay: runningScore(ctx.state), story: ctx.angle === null ? null : angleRecord(ctx, ctx.angle) };
     }),
   };
 }

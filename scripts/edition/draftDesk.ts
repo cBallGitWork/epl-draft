@@ -9,7 +9,7 @@ import {
   draftReportsDue,
   headToHead,
   isSaturday,
-  leadFirst,
+  judgePage,
   getFootballSnapshot,
   londonDayOf,
   mapBenchOrder,
@@ -22,6 +22,7 @@ import {
   periodGameweeks,
   projectionIntel,
   sheetOf,
+  threadsOf,
   type Cutoff,
   type DayPoints,
   type DraftMan,
@@ -37,6 +38,7 @@ import { gatherRoundFacts } from "./facts";
 import { categoryIds, matchReads, slotWorth, tallies } from "./draftReads";
 import { withFitness, type StoryCache } from "./draftFitness";
 import { draftManOf, type ManReads } from "./draftMen";
+import { draftPast, pastAngles } from "./draftPast";
 import { draftSeason, gameweekFacts, meetingsOf, placeOf, ranksAfter } from "./draftSeason";
 import { minimums } from "./rosterMinimums";
 import { earlierSheets } from "./sheets";
@@ -82,6 +84,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const projections = projectionIntel(readIntel<IntelProjections>("projections", `${INTEL_SEASON}.json`));
   const clubs = new Map(snapshot.clubs.map((c) => [c.id, c]));
 
+  const dayTallies = reads.map((r) => ({ day: r.date, byMan: tallies([r.raw], ids) }));
   const cutoffs = new Map<Cutoff, MatchupContext[]>();
   let rankAfter = new Map<string, number>();
   const stories: StoryCache = new Map();
@@ -94,7 +97,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
     const byDay = new Map<string, DayPoints[]>();
     for (const { date, raw } of upTo) for (const s of mapLiveScores(raw)) byDay.set(s.teamId, [...(byDay.get(s.teamId) ?? []), { day: date, points: s.points ?? 0 }]);
 
-    const reads_: ManReads = { gameweek, last, fixtures, clubs, byMan, worth, goals, starters, history, projections, arrivals: season.arrivals };
+    const reads_: ManReads = { gameweek, last, fixtures, clubs, byMan, days: dayTallies.filter((d) => d.day <= last), worth, goals, starters, history, projections, arrivals: season.arrivals };
     const draftMan = (m: SheetMan, sheet: Sheet): DraftMan => draftManOf(m, sheet, reads_);
     const side = (teamId: string): DraftSide | null => {
       const team = facts.teams.find((t) => t.teamId === teamId);
@@ -127,17 +130,17 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
       const h2h = headToHead(info.matchups, info.teams, period + 1, teamId);
       return h2h === undefined ? null : { name: h2h.opponent.name, rank: rankAfter.get(h2h.opponent.teamId) ?? null };
     };
-    cutoffs.set(
-      cutoff,
-      leadFirst(states.map((state) => ({
-        state,
-        places: { home: placeOf(season, state.home.side.teamId), away: placeOf(season, state.away.side.teamId) },
-        meetings: meetingsOf(season, state.home.side, state.away.side),
-        form: [...(formFacts.get(state.home.side.teamId) ?? []), ...(formFacts.get(state.away.side.teamId) ?? [])],
-        oldBoys: [...boys(state.home.side, state.away.side), ...boys(state.away.side, state.home.side)],
-        next: { home: nextOf(state.home.side.teamId), away: nextOf(state.away.side.teamId) },
-      })), cutoff),
-    );
+    const contexts = states.map((state): MatchupContext => ({
+      state,
+      places: { home: placeOf(season, state.home.side.teamId), away: placeOf(season, state.away.side.teamId) },
+      meetings: meetingsOf(season, state.home.side, state.away.side),
+      form: [...(formFacts.get(state.home.side.teamId) ?? []), ...(formFacts.get(state.away.side.teamId) ?? [])],
+      oldBoys: [...boys(state.home.side, state.away.side), ...boys(state.away.side, state.home.side)],
+      next: { home: nextOf(state.home.side.teamId), away: nextOf(state.away.side.teamId) },
+      angle: null,
+    }));
+    // The desk decides each match-up's story and the page's order; the writer tells them.
+    cutoffs.set(cutoff, judgePage(contexts.map((ctx) => ({ ctx, threads: threadsOf(ctx, cutoff, worth, gameweek) })), pastAngles(draftPast(gameweek, cutoff))));
   }
   const notes = [
     `Returns by slot: ${SLOTS.map((s) => `${s} ${worth.returns[s].map((w) => `${w.kind} ${w.worth}`).join(", ")}`).join("; ")}; a full match's minutes ${worth.appearance}.`,

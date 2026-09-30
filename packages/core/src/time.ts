@@ -114,3 +114,8 @@ export function londonWeekdayLong(iso: string): string {
 export function weekdayOfDay(day: string): string {
   return londonWeekday(`${day}T12:00:00Z`);
 }
+
+/** `Saturday` for a London day, `2026-10-10`. */
+export function weekdayLongOfDay(day: string): string {
+  return londonWeekdayLong(`${day}T12:00:00Z`);
+}

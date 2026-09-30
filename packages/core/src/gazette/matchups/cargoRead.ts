@@ -1,4 +1,7 @@
+import { DRAFT_NEWS } from "../../config";
+import type { AngleRecord } from "./angle";
 import type { StoryDraftMatchup, StoryDraftReport, StoryDraftSide } from "./cargo";
+import type { Family, ThreadKind } from "./thread";
 import type { StoryDraftStep } from "./days";
 import type { StoryDraftReturn, StoryDraftReturns, StoryDraftRow } from "./elevens";
 import type { NextMatch } from "./types";
@@ -42,6 +45,16 @@ function step(r: Raw): StoryDraftStep | null {
   return home === null || away === null || day === "" ? null : { day, home, away };
 }
 
+const FAMILIES: readonly Family[] = ["turn", "decider", "margin", "star", "setback", "people", "season", "upset", "chase"];
+const strings = (v: unknown) => (Array.isArray(v) ? v.filter((x): x is string => typeof x === "string" && x !== "") : []);
+
+function angle(v: unknown): AngleRecord | null {
+  const r = obj(v);
+  const [kind, family] = [str(r.kind), str(r.family)];
+  if (!(kind in DRAFT_NEWS.weight) || !FAMILIES.includes(family as Family)) return null;
+  return { kind: kind as ThreadKind, family: family as Family, teamIds: strings(r.teamIds), cast: strings(r.cast) };
+}
+
 function side(v: unknown): StoryDraftSide | null {
   const r = obj(v);
   const score = num(r.score);
@@ -66,7 +79,7 @@ export function normalizeDraftReport(raw: unknown): StoryDraftReport | undefined
     const [home, away] = [side(m.home), side(m.away)];
     if (home === null || away === null || str(m.verdict) === "") return null;
     const paragraphs = Array.isArray(m.paragraphs) ? m.paragraphs.filter((p): p is string => typeof p === "string" && p !== "") : [];
-    return { home, away, verdict: str(m.verdict), standfirst: str(m.standfirst), paragraphs, byDay: list(m.byDay, step) };
+    return { home, away, verdict: str(m.verdict), standfirst: str(m.standfirst), paragraphs, byDay: list(m.byDay, step), story: angle(m.story) };
   });
   return matchups.length === 0 ? undefined : { cutoff: r.cutoff, gameweek, matchups };
 }

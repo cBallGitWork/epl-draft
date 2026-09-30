@@ -13,6 +13,6 @@ describe("meetingLines", () => {
 describe("oldBoys", () => {
   it("names a man facing the side that drafted or moved him on, and nobody else", () => {
     const formerly = new Map([["isak", [{ teamId: "x", how: "traded" as const, when: 4 }, { teamId: "n", how: "drafted" as const, when: 2 }]], ["hall", [{ teamId: "x", how: "traded" as const, when: 4 }]]]);
-    expect(oldBoys([{ fantraxId: "isak", name: "Isak" }, { fantraxId: "hall", name: "Hall" }], { teamId: "n", name: "Notemail" }, formerly)).toEqual(["Isak faced Notemail, who drafted him"]);
+    expect(oldBoys([{ fantraxId: "isak", name: "Isak" }, { fantraxId: "hall", name: "Hall" }], { teamId: "n", name: "Notemail" }, formerly)).toEqual([{ fantraxId: "isak", line: "Isak faced Notemail, who drafted him" }]);
   });
 });

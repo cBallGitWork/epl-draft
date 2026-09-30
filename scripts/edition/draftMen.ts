@@ -11,6 +11,8 @@ export interface ManReads {
   fixtures: readonly Fixture[];
   clubs: ReadonlyMap<number, Club>;
   byMan: ReadonlyMap<string, Tally>;
+  /** Each London day's tallies to the cut-off, in order. */
+  days: readonly { day: string; byMan: ReadonlyMap<string, Tally> }[];
   worth: SlotWorth;
   goals: ReadonlyMap<number, ClubGoal[]>;
   starters: ReadonlyMap<number, ReadonlySet<number>>;
@@ -58,5 +60,9 @@ export function draftManOf(m: SheetMan, sheet: Sheet, r: ManReads): DraftMan {
     scoredAt: theirGoals.filter((g) => !g.own && g.scorer === m.player.code).map(timeOf),
     // The first goal his club let in, in each match he played: the one that took a clean sheet.
     concededFirstAt: appeared && paidClean ? done.flatMap((f) => (r.goals.get(f.code) ?? []).filter((g) => g.clubId !== club).slice(0, 1).map(timeOf)) : [],
+    byDay: r.days.flatMap(({ day, byMan }) => {
+      const t = byMan.get(m.fantraxId);
+      return t === undefined || (t.minutes === 0 && t.points === 0) ? [] : [{ day, points: t.points, minutes: t.minutes, goals: t.goals, assists: t.assists, cleanSheets: paidClean ? t.cleanSheets : 0 }];
+    }),
   };
 }

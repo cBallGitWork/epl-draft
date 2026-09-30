@@ -11,7 +11,9 @@ import {
   rowNote,
   stepLabel,
   type Cutoff,
+  type MatchupContext,
   type StoryDraftMatchup,
+  type Thread,
   type StoryDraftReport,
   type StoryDraftRow,
 } from "@epl/core";
@@ -37,6 +39,15 @@ function page(m: StoryDraftMatchup): { head: string[]; foot: string[] } {
   return { head: [`By day: ${steps || "—"}`, ...returns], foot: sides.flatMap((s) => [`${s.name}:`, ...s.eleven.map(row)]) };
 }
 
+/** What the desk decided each match-up's story is, for reading before any model is called. */
+function angleText(ctx: MatchupContext, at: number): string {
+  const a = ctx.angle;
+  if (a === null) return `${at + 1}. ${ctx.state.score}: no story chosen`;
+  const line = (label: string, t: Thread) => `  ${label}: ${t.kind} ${t.weight}${t.decisive ? ", decisive" : ""}, ${t.beat === undefined ? "no beat" : (t.beat ?? "the substitutions")}: ${t.facts.join("; ")}`;
+  const told = [line("THE STORY", a.story), ...(a.twist === null ? [] : [line("TWIST", a.twist)]), ...a.supporting.map((t) => line("supporting", t))];
+  return [`${at + 1}. ${ctx.state.score} (score ${a.score})`, ...told, `  cast: ${a.cast.map((m) => m.name).join(", ")}`].join("\n");
+}
+
 /** The report as plain text, for reading before looking at the page. */
 function plain(headline: string, draft: StoryDraftReport): string {
   return [...(headline === "" ? [] : [headline, ""]), ...draft.matchups.flatMap((m) => [`## ${m.verdict}`, ...page(m).head, "", m.standfirst, ...m.paragraphs, "", ...page(m).foot, ""])].join("\n");
@@ -57,6 +68,7 @@ async function main(): Promise<void> {
     const contexts = test ? all.slice(0, Number(process.env.GAZETTA_TEST_MATCHUPS ?? 1)) : all;
     if (out === "") {
       say(`\n########## ${cutoff === "saturday" ? "AFTER SATURDAY" : "END OF THE GAMEWEEK"} ##########\n\n${buildDraftBrief(cutoff, gameweek, contexts)}`);
+      say(`\n---------- THE DESK'S STORIES ----------\n\n${contexts.map(angleText).join("\n\n")}`);
       say(`\n---------- THE PAGE, unwritten ----------\n\n${plain("", draftCargo(cutoff, gameweek, contexts, new Map(), desk.rankAfter))}`);
       continue;
     }

@@ -43,6 +43,18 @@ export interface DraftMan {
   /** When he scored, and when his club first conceded in a match he played; empty when he did neither. */
   scoredAt: GoalTime[];
   concededFirstAt: GoalTime[];
+  /** The same points, minutes and returns by London day, each day he played or scored on, in order. */
+  byDay: ManDay[];
+}
+
+/** A man's Fantrax points, minutes and returns on one London day: a clean sheet only where it is worth telling. */
+export interface ManDay {
+  day: string;
+  points: number;
+  minutes: number;
+  goals: number;
+  assists: number;
+  cleanSheets: number;
 }
 
 /** A man's next match: whom, where, and its kickoff, from which the brief and the page say the day. */
