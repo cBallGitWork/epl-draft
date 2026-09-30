@@ -17,7 +17,7 @@ export const STORY_BYLINE: Partial<Record<StoryKind, string>> = {
   presser: "The Team Sheet",
   "predicted-xi": "The Line-Ups",
   sheets: "The Team Sheets",
-  "bin-xi": "The Bin",
+  "bin-xi": "Top Bins",
 };
 
 /** The columnists who write under their own name rather than the house correspondent's. Lawro's

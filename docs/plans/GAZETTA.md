@@ -146,7 +146,7 @@ this and not on a guess about when things happen:
 | Day | What the LEAGUE does | Edition | Files |
 |---|---|---|---|
 | **Sun/Mon** | the round ends, either night | The Monday Club | `eleven` (Crooks), `power-ranking`, `dodgers` |
-| **Tue** | **nothing at all** | Bins Out | `bin-xi`, the Bin XI: the best eleven nobody has — SHIPPED 30 Sep, see below |
+| **Tue** | **nothing at all** | Bins Out | `bin-xi`, "Top Bins": the best eleven nobody has — SHIPPED 30 Sep, see below |
 | **Wed 17:00** | waivers process, free agency opens | The Mercato Wire | `wire`, on **detection** of a claim batch |
 | **Thu 14:00** | press conferences end | The Team Sheet | `presser` — the round-up **publishes 15:00** |
 | **Thu 18:00** | the evening before the round | The Form Guide | `predictions`, Lawro's calls on every tie — SHIPPED 24 Sep (the evening before an earlier lock) |

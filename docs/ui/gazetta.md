@@ -517,7 +517,7 @@ prose. The `v` heading keeps it one match. At a desk one paragraph across the sh
 ## The Bin XI is picked by the desk and argued by the column
 
 Added 30 Sep 2026. `bin-xi` files on Tuesday morning: the best eleven nobody in the league has, from
-the gameweek just played, under the wire's byline ("The Bin") and the edition "Bins Out". `BinXi`
+the gameweek just played, titled "Top Bins" (Craig, 30 Sep 2026) in the edition "Bins Out". `BinXi`
 prints `THE BIN XI · 5-4-1 · 81 PTS`, the eleven on the app's pitch with each man's Fantrax points
 under his name, then **`Bench:`** and a `Key stats` list. Stacked on a phone; from `@3xl` the pitch
 sits beside the bench and the stats, where alone it filled the 1,120px sheet.

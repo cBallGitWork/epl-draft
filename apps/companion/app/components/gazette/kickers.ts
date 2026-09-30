@@ -19,5 +19,5 @@ export const KICKER: Partial<Record<StoryKind, string>> = {
   news: "News",
   presser: "Team news",
   sheets: "Line-ups",
-  "bin-xi": "The Bin XI",
+  "bin-xi": "Top Bins",
 };
