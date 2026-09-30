@@ -66,7 +66,7 @@ const STAT_TYPES: readonly { file: string; types: readonly string[] }[] = [
   { file: "packages/core/src/gazette/types.ts", types: ["Pick", "StorySide", "StoryResult"] },
   { file: "packages/core/src/gazette/extras.ts", types: ["StoryRank"] },
   { file: "packages/core/src/gazette/wire.ts", types: ["WireTeam", "WirePlayer", "WireFacts"] },
-  { file: "apps/companion/app/players/teams/teamRows.ts", types: ["PoolMan", "TeamRow"] },
+  { file: "packages/core/src/football/premierleague/clubSeason.ts", types: ["PlClubSeason"] },
 ];
 
 /** Rows no written-type rule can pick out: text, lists, keys and objects, and the functions a row cites. */
@@ -142,6 +142,7 @@ const NOT_MEASURES = new Set([
   "playerId",
   "fixtureId",
   "clubId",
+  "clubCode",
   "opponentClubId",
   "homeClubId",
   "awayClubId",
