@@ -53,6 +53,11 @@ export function noteBody(item: NewsItem): string[] {
   return [rest, item.analysis].filter((part): part is string => part !== null && part.trim() !== "");
 }
 
+/** When it was filed, as an ISO string for the London formatters, or null for a dateless note. */
+export function filedAt(item: NewsItem): string | null {
+  return item.at === null ? null : new Date(item.at).toISOString();
+}
+
 /** Fantrax's headline, or the story's whole first sentence where they cut it at "...". */
 function whole(headline: string, content: string): string {
   const cut = headline.trim().replace(/(\.\.\.|…)$/, "").trim();

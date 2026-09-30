@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { availabilityOf, clubById } from "@epl/core";
+import { clubById } from "@epl/core";
 import type { FootballPlayer, PlayerMatch } from "@epl/core";
 import { footballNow } from "../../football";
 import Nothing from "../../components/shell/Nothing";
@@ -9,6 +9,7 @@ import { POOL } from "../routes";
 import AttributeGrid from "./AttributeGrid";
 import type { GridWord } from "./AttributeGrid";
 import FixtureRun from "./FixtureRun";
+import Fitness from "./Fitness";
 import NoProfile from "./NoProfile";
 import PlayerShell from "./PlayerShell";
 import Portrait from "./Portrait";
@@ -99,12 +100,17 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
           ) : (
             <AttributeGrid
               attributes={grid}
-              words={words(football?.player ?? null, standing)}
+              words={words(standing)}
               group={standing?.group ?? null}
             />
           )}
         </div>
       </div>
+
+      {/* Whether he can play and what is being said about him, under who he is (Craig, 26 Sep 2026). */}
+      <Suspense fallback={null}>
+        <Fitness fantraxId={fantraxId} player={football?.player ?? null} />
+      </Suspense>
 
       {standing === null ? null : <Rankings ranked={standing.ranked} group={standing.group} />}
 
@@ -169,20 +175,8 @@ async function Season({
   return <SeasonTable rows={joinMatches(rows, paid, clubById(snapshot))} season={season} />;
 }
 
-/** CM's worded rows under the ratings: the foot he shoots with (never a keeper's), and FPL's chance he plays. */
-function words(player: FootballPlayer | null, standing: { keeper: boolean; foot: string | null } | null): GridWord[] {
-  const availability = availabilityOf(player);
-  const condition =
-    player === null
-      ? null
-      : availability.state === "fit"
-        ? "100%"
-        : availability.chance !== null
-          ? `${availability.chance}%`
-          : availability.label;
-  const foot = { name: "Preferred Foot", value: standing?.foot ?? null, title: "the foot he shoots with, off the shot map" };
-  return [
-    ...(standing?.keeper ? [] : [foot]),
-    { name: "Condition", value: condition, title: "FPL's chance of him playing the next round" },
-  ];
+/** CM's worded row under the ratings: the foot he shoots with, never a keeper's. Condition is Fitness's. */
+function words(standing: { keeper: boolean; foot: string | null } | null): GridWord[] {
+  if (standing?.keeper) return [];
+  return [{ name: "Preferred Foot", value: standing?.foot ?? null, title: "the foot he shoots with, off the shot map" }];
 }

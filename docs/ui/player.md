@@ -46,12 +46,19 @@ derived the same four from the same object.
    to its foot (Craig, 25 Sep 2026: "cut off mid box").
 2. **The attribute grid** — CM 01/02's: alphabetical down three columns on the desk and two
    on a phone, 16–20 in CM's orange and 11–15 in amber, with **Preferred Foot** (off the shot
-   map) and **Condition** (FPL's chance he plays) as its worded rows. Every rating is OURS
+   map) as its worded row. Every rating is OURS
    and rated **within his position group** (Craig, 25 Sep 2026: "compare to just attackers,
    defenders to just defenders"): the sister repo's line, gathered into goalkeepers,
    defenders, midfielders and forwards; a man with no line is rated against everyone. The
    shot and touch maps add Heading, Long Shots, Creativity (chances set up), Penalty Taking
    and Teamwork; a keeper gets his own eight.
+   **Fitness and News** sits under it (Craig, 26 Sep 2026: *"this page should contain the
+   latest player news, and their fitness conditions"*): one row with FPL's note, his state box
+   and his chance of playing, washed in the doubt ramp (Condition left the grid so the chance
+   prints once, and `noteBesideChance` keeps the note from saying it again); then Fantrax's
+   newest note as Mail's row, opening it on the News tab, with the rest of it under the row.
+   Only the newest: the list is News's. No source caption. A fit man with nothing filed gets
+   the one row; a man FPL has never listed gets the note alone, and with neither, no panel.
    **Rankings** sit under it: his season totals and his place among the same group
    ("rankings for data such as xg").
 3. **The real position**, in cyan — the first thing in the app entitled to that

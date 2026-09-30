@@ -18,7 +18,7 @@ import PlayerIdentity from "./PlayerIdentity";
 import { unresolvedReason } from "../../unresolved";
 import { playerHref } from "../../players/routes";
 import { latestNews } from "../../players/[fantraxId]/latestNews";
-import { noteBody, type NewsItem } from "../../players/[fantraxId]/newsItems";
+import { filedAt, noteBody, type NewsItem } from "../../players/[fantraxId]/newsItems";
 import { LABEL, QUIET_FIGURE, SMALL_CAPS } from "@/app/desk";
 
 // One player, over the squad rather than instead of it.
@@ -103,7 +103,7 @@ export default function PlayerCard({
 
 /** Fantrax's newest note on him, whole and dated: the headline, the rest of the story, the analysis. */
 function Story({ story }: { story: NewsItem }) {
-  const at = story.at === null ? null : new Date(story.at).toISOString();
+  const at = filedAt(story);
   return (
     <section className="cm-panel flex flex-col gap-1.5 px-3 py-2">
       <p className="flex items-baseline justify-between gap-2">
