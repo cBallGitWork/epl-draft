@@ -10,8 +10,8 @@ import { POOL, TEAMS } from "../routes";
 import { TEAM_COLUMNS, columnGroups, type TeamColumn } from "./columns";
 import type { TeamRow } from "./teamRows";
 
-// The clubs as one board, 13 measures in five labelled groups: CM's densest board (`cm9900/21.jpg`) sets its heads
-// in groups the same way. Standouts are lit in ink; the run is ours, in cyan, and never lit.
+// The clubs as one board of football figures in labelled groups: CM's densest board (`cm9900/21.jpg`) sets its
+// heads in groups the same way. Standouts are lit in ink.
 
 /** A fifth in yellow and a tenth in orange, of the twenty: the match board's shares. */
 const SHARES = { good: 1 / 5, best: 1 / 10 } as const;
@@ -26,7 +26,7 @@ export default function TeamBoard({
   descending: boolean;
 }) {
   const cuts = new Map<string, StandoutCut>(
-    TEAM_COLUMNS.filter((column) => column.rank !== undefined).map((column) => [
+    TEAM_COLUMNS.map((column) => [
       column.key,
       standoutCuts(rows.map(column.of), SHARES, { of: rows.length }),
     ]),
@@ -93,18 +93,11 @@ function Figure({ column, row, cut, first }: { column: TeamColumn; row: TeamRow;
   const value = column.of(row);
   const edge = first ? "border-l border-line/60" : "";
   if (value === null) return <td className={`${FIGURE} ${edge} text-faint`}>{DASH}</td>;
-  const ink = column.derived
-    ? "font-bold text-info"
-    : column.rank && value !== 0
-      ? standoutInk(value, cut, column.rank)
-      : value === 0
-        ? "text-faint"
-        : "";
-  return <td className={`${FIGURE} ${edge} ${ink}`}>{value.toFixed(column.dp ?? 0)}</td>;
+  return <td className={`${FIGURE} ${edge} ${standoutInk(value, cut, column.rank)}`}>{value.toFixed(column.dp ?? 0)}</td>;
 }
 
 /** Centred under its head, the way CM sets a column. */
-const FIGURE = `numeric w-12 px-1.5 text-center lg:w-16 ${ROW_FIGURE}`;
+const FIGURE = `numeric w-12 px-1.5 text-center lg:w-10 ${ROW_FIGURE}`;
 
 /** The place and the club stay put while the measures scroll under them. */
 const PIN_INDEX = `${PINNED_TILE} ${INDEX_WIDTH}`;
@@ -112,7 +105,7 @@ const PIN_NAME = `${PINNED_NAME} left-8 lg:left-9`;
 
 /** A head's link: a column not sorted starts in its own direction; the sorted one reverses. */
 function teamsHref(column: TeamColumn, sort: TeamColumn, descending: boolean): string {
-  const next = column.key === sort.key ? !descending : !column.ascending;
-  if (column.key === "fpts" && next) return TEAMS;
+  const next = column.key === sort.key ? !descending : column.rank === "high";
+  if (column.key === TEAM_COLUMNS[0].key && next) return TEAMS;
   return `${TEAMS}?sort=${column.key}${next ? "&dir=desc" : "&dir=asc"}`;
 }

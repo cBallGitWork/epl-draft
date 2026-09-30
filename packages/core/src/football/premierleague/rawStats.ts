@@ -7,7 +7,7 @@
 // splitting a provider mirror by ENDPOINT keeps each file answering "what does
 // this read give us".
 
-import type { RawPlFixture } from "./raw";
+import type { RawPlFixture, RawPlTeam } from "./raw";
 
 /** One Opta metric, as `/stats/match`, `/stats/team` and `/stats/player` all give
  *  it.
@@ -36,4 +36,15 @@ export interface RawPlMetric {
 export interface RawPlMatchStats {
   entity?: RawPlFixture;
   data: Record<string, { M: RawPlMetric[] }>;
+}
+
+/** `/stats/team/{id}` — one club's season, every Opta metric summed; `entity.altIds` only with `altIds=true`. */
+export interface RawPlTeamStats {
+  entity?: RawPlTeam;
+  stats: RawPlMetric[];
+}
+
+/** `/teams?comps=&compSeasons=` — the season's twenty clubs. */
+export interface RawPlTeamPage {
+  content: RawPlTeam[];
 }

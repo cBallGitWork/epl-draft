@@ -113,6 +113,9 @@ export const ARTICLE_REVALIDATE = 300;
  *  per fixture), and nothing a reader watches for comes from it. Counted 21 Sep 2026. */
 export const COMMENTARY_REVALIDATE = 300;
 
+/** How stale the clubs' season stats may be, in seconds: twenty-one reads, and they move only when a match does. */
+export const CLUB_SEASON_REVALIDATE = 300;
+
 /** Lifetime of the two reads a live score is drawn from, in seconds. Below `POLL.live` plus a
  *  fetch, or a stale-while-revalidate entry makes a lone reader see new scores every other poll. */
 export const LIVE_REVALIDATE = 20;

@@ -226,17 +226,24 @@ rewrites three of those four, so the extraction lands after #149 merges rather t
 - **`query.ts`'s `boardHref` and `filterHref` take a route**, so a second Data board filters with the Players
   board's own parsers; the Players board passes none and is unchanged.
 
-## Data's Team Stats keeps FPL's counts off a Fantrax board — decided 24 Sep 2026
+## Data's Team Stats is the clubs' football, off Opta's season totals — decided 30 Sep 2026
 
-- **Fantrax's figures only, where Fantrax has one**: points by club and by the position Fantrax lists, the
-  points nobody owns, and clean sheets and goals against off Fantrax's keeper lines (they match FPL's club
-  figures for 19 of 20 clubs; Chelsea's second keeper is missing from the pool read, so its GA reads 10
-  against FPL's 12). FPL contributes only what Fantrax does not publish: xG, xA and xGC.
-- **FPL's squad xGC is divided by eleven.** `clubStats` adds every man's expected goals conceded, so each
-  chance against is counted once per man on the pitch; eleven share one (exact except after a red card).
-  Prem's own "Expected conceded" category still prints the undivided sum (Arsenal 44.4, having conceded 4).
-- **Grouped by Fantrax's club code**, respelled with `toFplClubCode`, never through the bridge, which would
-  drop the 115 men it has not settled.
+Craig: *"what is run? less fpl points, this page should be more pure stats, chances created, shots etc,
+errors"*. It replaced the 24 Sep board of Fantrax points by club and position, Fantrax's keeper lines and the
+planner's run, all of which went; the Planner owns fixture difficulty.
+
+- **Opta's figures come off `/stats/team/{id}`, one read per club** (list: `/teams?…&altIds=true`), cached
+  as one for five minutes. Joined to FPL by `altIds.opta` `t{code}` = FPL's club `code`, 20 of 20. Counted
+  30 Sep 2026 after five matches: goals, shots, on target, big chances scored and missed, key passes, big
+  chances created, assists, goals conceded, shots conceded (ibox + obox), tackles, interceptions, blocks,
+  fouls and yellows **20/20**; errors leading to a shot **19/20**, to a goal **13/20**, clean sheets
+  **16/20**, reds **6/20**, every absence a nought (the `/stats/match` rule below). No xG anywhere on it
+  (`expected_goals` **0/20**).
+- **FPL contributes the expected three**: xG and xA summed over the squad, xGC divided by eleven, because
+  `clubStats` counts each chance against once per man on the pitch (exact except after a red card).
+- **Considered and not used**: Fantrax's pool columns (`G A AF YC RC PKM OG GAO CS`, plus keepers' `Sv GA`)
+  say nothing Opta does not, under league-specific headings; the sister repo's `matches` export stops at
+  4 Sep (20 fixtures) and `shots` at 23 Sep. Opta's `ppda` sums per match and is not a season figure.
 
 ## The fixture planner ranks opponents by our strength model — decided 24 Sep 2026
 
@@ -1428,6 +1435,8 @@ error. The same parameter is required on `/football/players`.
   200, an unstarted one with an empty `content`.
 - `/stats/match/{id}` — **~170 Opta metrics per side**, 34 KB, present on **21 of 21**
   played fixtures.
+- `/stats/team/{id}?comps=1&compSeasons=…&altIds=true` — one club's season, ~215 metrics summed over its
+  league matches, with the same nought-omitted rule; Data › Teams reads it (30 Sep 2026).
 
 ### `time.secs` is per-fixture and not monotonic
 

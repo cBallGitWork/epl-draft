@@ -1,51 +1,57 @@
 import { describe, expect, it } from "vitest";
-import type { Club } from "@epl/core";
+import type { Club, PlClubSeason, SeasonTotals } from "@epl/core";
 import { TEAM_COLUMNS, columnGroups, sortedTeams, teamColumn } from "./columns";
 import type { TeamRow } from "./teamRows";
 
 const club = (shortName: string): Club => ({ id: shortName.length, code: 1, name: shortName, shortName });
 
-function row(shortName: string, over: Partial<TeamRow>): TeamRow {
+function row(shortName: string, season: Partial<PlClubSeason> | null, squad: Partial<SeasonTotals> | null = null): TeamRow {
   return {
-    club: club(shortName), fpts: 100, fa: 10, attack: 10, defence: 10, gk: 1, def: 1, mid: 1, fwd: 1,
-    cs: 1, ga: 1, xg: 1, xa: 1, xgc: 1, ...over,
+    club: club(shortName),
+    season: season === null ? null : ({ clubCode: 1, ...season } as PlClubSeason),
+    squad: squad === null ? null : (squad as SeasonTotals),
   };
 }
 
 describe("sortedTeams", () => {
-  const rows = [row("ARS", { fpts: 250, attack: 10 }), row("BHA", { fpts: 307, attack: 10.7 }), row("HUL", { fpts: null, attack: 11 })];
-
   it("orders by the column and sinks an absent figure", () => {
-    expect(sortedTeams(rows, teamColumn("fpts"), true).map((r) => r.club.shortName)).toEqual(["BHA", "ARS", "HUL"]);
+    const rows = [row("ARS", { goals: 8 }), row("HUL", null), row("BHA", { goals: 16 })];
+    expect(sortedTeams(rows, teamColumn("g"), true).map((r) => r.club.shortName)).toEqual(["BHA", "ARS", "HUL"]);
+    expect(sortedTeams(rows, teamColumn("g"), false).map((r) => r.club.shortName)).toEqual(["ARS", "BHA", "HUL"]);
   });
 
-  it("breaks a tie on points, then the name", () => {
-    const tied = [row("CHE", { xg: 5, fpts: 100 }), row("ARS", { xg: 5, fpts: 100 }), row("BHA", { xg: 5, fpts: 200 })];
-    expect(sortedTeams(tied, teamColumn("xg"), true).map((r) => r.club.shortName)).toEqual(["BHA", "ARS", "CHE"]);
+  it("breaks a tie on the name", () => {
+    const tied = [row("CHE", { shots: 60 }), row("ARS", { shots: 60 })];
+    expect(sortedTeams(tied, teamColumn("sh"), true).map((r) => r.club.shortName)).toEqual(["ARS", "CHE"]);
   });
 });
 
 describe("the columns", () => {
-  it("keep FPL's goals, assists and clean sheets off the board", () => {
-    expect(TEAM_COLUMNS.map((column) => column.head)).not.toContain("G");
-    expect(TEAM_COLUMNS.find((column) => column.key === "cs")?.title).toContain("Fantrax");
+  it("carry no fantasy figure and no fixture run", () => {
+    const heads = TEAM_COLUMNS.map((column) => column.head);
+    for (const gone of ["FPts", "FA", "Attack", "Defence", "GK", "Bonus", "BPS"]) expect(heads).not.toContain(gone);
   });
 
-  it("never light our own reading", () => {
-    for (const column of TEAM_COLUMNS.filter((c) => c.derived)) expect(column.rank).toBeUndefined();
+  it("print a played nought as nought and a missing season as a dash", () => {
+    const goals = teamColumn("g");
+    expect(goals.of(row("ARS", { goals: 0 }))).toBe(0);
+    expect(goals.of(row("ARS", null))).toBeNull();
   });
 
-  it("group into the five plates in order", () => {
-    expect(columnGroups(TEAM_COLUMNS)).toEqual([
-      { group: "Points", span: 2 },
-      { group: "Run", span: 2 },
-      { group: "Points by position", span: 4 },
-      { group: "Keepers", span: 2 },
-      { group: "FPL expected", span: 3 },
-    ]);
+  it("share FPL's squad xGC between the eleven who conceded it", () => {
+    expect(teamColumn("xgc").of(row("ARS", null, { expectedGoalsConceded: 44 }))).toBeCloseTo(4);
+    expect(teamColumn("xg").of(row("ARS", null, null))).toBeNull();
   });
 
-  it("fall back to points for a key nobody knows", () => {
-    expect(teamColumn("nope").key).toBe("fpts");
+  it("group into five plates in order", () => {
+    expect(columnGroups(TEAM_COLUMNS).map((entry) => entry.group)).toEqual(["Attack", "Chances", "Defence", "Errors", "Discipline"]);
+  });
+
+  it("light the bad end red where more is worse", () => {
+    for (const key of ["gc", "xgc", "sha", "ers", "erg", "fls", "yc", "rc"]) expect(teamColumn(key).rank).toBe("low");
+  });
+
+  it("fall back to goals for a key nobody knows", () => {
+    expect(teamColumn("fpts").key).toBe("g");
   });
 });
