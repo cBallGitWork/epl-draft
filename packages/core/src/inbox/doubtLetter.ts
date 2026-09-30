@@ -22,11 +22,13 @@ export function doubtLetter(note: AvailabilityNote, gameweek: number | null, sid
   const pick = <T>(options: readonly T[]) => choose(`${note.teamId}:${note.playerName}`, options);
   const gw = gameweek === null ? "the next gameweek" : `gameweek ${gameweek}`;
   const theirs = side !== "mine";
+  const without = `${who} will be without ${name} for ${gw}.`;
+  const doubtOver = `${who} have a doubt over ${name} for ${gw}.`;
 
   if (reading.kind === "ban") {
     const until = reading.until === null ? "" : ` until ${reading.until}`;
     return theirs
-      ? `${who} will be without ${name} for ${gw}. He is suspended${until}.`
+      ? `${without} He is suspended${until}.`
       : `${name} is suspended for ${gw}.${until === "" ? "" : ` His ban runs${until}.`}`;
   }
   if (reading.kind === "move") {
@@ -35,7 +37,7 @@ export function doubtLetter(note: AvailabilityNote, gameweek: number | null, sid
   if (reading.kind === "other") {
     // A shape we cannot read is quoted whole rather than reworded.
     const latest = `The latest update says "${reading.text}".`;
-    if (theirs) return `${who} ${note.out ? "will be without" : "have a doubt over"} ${name} for ${gw}. ${latest}`;
+    if (theirs) return `${note.out ? without : doubtOver} ${latest}`;
     return `${name} ${note.out ? "is out" : "is a doubt"} for ${gw}. ${latest}`;
   }
 
@@ -48,7 +50,7 @@ export function doubtLetter(note: AvailabilityNote, gameweek: number | null, sid
     if (back !== null) {
       return theirs
         ? pick([
-            `${who} will be without ${name} for ${gw}. He ${has} and should be back on ${back}.`,
+            `${without} He ${has} and should be back on ${back}.`,
             `${name} misses ${gw} for ${who}. He ${has} and is expected back on ${back}.`,
           ])
         : pick([
@@ -58,7 +60,7 @@ export function doubtLetter(note: AvailabilityNote, gameweek: number | null, sid
     }
     return theirs
       ? pick([
-          `${who} will be without ${name} for ${gw}. He ${has} and there's no date yet for his return.`,
+          `${without} He ${has} and there's no date yet for his return.`,
           `${name} won't play for ${who} in ${gw}. He ${has} and there's no word yet on when he'll be back.`,
         ])
       : pick([
@@ -67,11 +69,11 @@ export function doubtLetter(note: AvailabilityNote, gameweek: number | null, sid
         ]);
   }
   if (chance === null) {
-    return theirs ? `${who} have a doubt over ${name} for ${gw}. He ${has}.` : `${name} ${has} and is a doubt for ${gw}.`;
+    return theirs ? `${doubtOver} He ${has}.` : `${name} ${has} and is a doubt for ${gw}.`;
   }
   return theirs
     ? pick([
-        `${who} have a doubt over ${name} for ${gw}. He ${has} and is given a ${chance}% chance of playing.`,
+        `${doubtOver} He ${has} and is given a ${chance}% chance of playing.`,
         `${name} ${has} and is a doubt for ${who} in ${gw}. He has a ${chance}% chance of playing.`,
       ])
     : pick([

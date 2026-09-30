@@ -22,6 +22,9 @@ describe("availabilityNews", () => {
   const banned = (over: Partial<AvailabilityNote> = {}) =>
     note({ state: "suspended", label: "Sus", out: true, chance: null, news: "Suspended.", ...over });
 
+  /** FPL's `i`, spread under a note's own news. */
+  const injured = { state: "injured", label: "Inj", out: true, chance: 0 } as const;
+
   /** The reader is `t1` and he plays `t2` next. */
   const squads = { mine: "t1", opponent: "t2", name: (id: string) => ({ t1: "Mine", t2: "Theirs" })[id] ?? null };
 
@@ -76,13 +79,12 @@ describe("availabilityNews", () => {
     // Craig, 30 Sep 2026: "reword these to look like a real sentence". A surname keeps it on one row at 390.
     const subject = (over: Partial<AvailabilityNote>, gameweek: number | null = 5) =>
       availabilityNews([note(over)], gameweek, squads)[0].headline;
-    const out = { state: "injured", label: "Inj", out: true, chance: 0 } as const;
     expect(subject({})).toBe("Isak a doubt for GW5");
-    expect(subject(out)).toBe("Isak out for GW5");
+    expect(subject(injured)).toBe("Isak out for GW5");
     expect(subject({ state: "suspended", label: "Sus", out: true, chance: null })).toBe("Isak banned for GW5");
     // A man who has left is gone for every gameweek, not one.
     expect(subject({ state: "unavailable", label: "Unav", out: true, chance: null })).toBe("Isak unavailable");
-    expect(subject(out, null)).toBe("Isak out");
+    expect(subject(injured, null)).toBe("Isak out");
     expect(subject({}, null)).toBe("Isak a doubt");
   });
 
@@ -94,15 +96,14 @@ describe("availabilityNews", () => {
   it("reads like a reporter's sentence, built only from FPL's facts", () => {
     const body = (over: Partial<AvailabilityNote>, gameweek: number | null = 6) =>
       availabilityNews([note(over)], gameweek, squads)[0].body;
-    const out = { state: "injured", label: "Inj", out: true, chance: 0 } as const;
 
     expect(body({ news: "Muscular injury - 75% chance of playing" })).toMatch(
       /^Alexander Isak has a muscular injury(,| and) .*a doubt for gameweek 6\. He('s given| has) a 75% chance of playing\.$/,
     );
-    const knee = body({ ...out, news: "Knee injury - Unknown return date", chance: null });
+    const knee = body({ ...injured, news: "Knee injury - Unknown return date", chance: null });
     expect(knee).toMatch(/^Alexander Isak has a knee injury and (misses|won't play in) gameweek 6\./);
     expect(knee).toMatch(/no (date|word) yet/);
-    expect(body({ ...out, news: "Hamstring injury - Expected back 11 Oct" })).toMatch(/back (by|on) 11 Oct\.$/);
+    expect(body({ ...injured, news: "Hamstring injury - Expected back 11 Oct" })).toMatch(/back (by|on) 11 Oct\.$/);
     expect(body({ news: "Unspecified injury - 75% chance of playing" })).toContain("has an injury");
     expect(body({ news: "Knock", chance: null })).toBe("Alexander Isak has a knock and is a doubt for gameweek 6.");
     // The league's word, never "round", when no gameweek is known.
@@ -112,13 +113,12 @@ describe("availabilityNews", () => {
   });
 
   it("never joins fragments with a dash or a colon, and never says round", () => {
-    const out = { state: "injured", label: "Inj", out: true, chance: 0 } as const;
     const cases: Partial<AvailabilityNote>[] = [
       {},
       { news: "Knock - Game-time decision" },
       { news: "Knock", chance: null },
-      { ...out, news: "Knee injury - Unknown return date" },
-      { ...out, news: "Hamstring injury - Expected back 11 Oct" },
+      { ...injured, news: "Knee injury - Unknown return date" },
+      { ...injured, news: "Hamstring injury - Expected back 11 Oct" },
       { state: "suspended", label: "Sus", out: true, chance: null, news: "Suspended until 10 Oct" },
     ];
     for (const teamId of ["t1", "t2"]) {
