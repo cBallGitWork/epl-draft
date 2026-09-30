@@ -35,11 +35,11 @@ describe("sideStories", () => {
     expect(stories(side([draftMan("Pickford", "G", 6, 90, 0, { club: "Everton", cleanSheets: 1 }), draftMan("Keane", "D", 1, 90, 0, { club: "Everton" })]))).toEqual(["Dons: Pickford (Everton) got 6: a clean sheet"]);
   });
 
-  it("names a bench score only for a side behind by less than it, and a blank no reserve could cover", () => {
+  it("names a bench score of six or more whatever the margin, more so past the deficit, and a blank no reserve covered", () => {
     const bench = [draftMan("Star", "F", 9, 90, 0, { club: "Fulham" }), draftMan("Also", "F", 3, 90)];
-    expect(stories(side([], bench), 5).filter((l) => l.includes("bench"))).toEqual([]);
+    expect(stories(side([], bench), 5).filter((l) => l.includes("bench"))).toEqual(["Dons: Star (Fulham) got 9 points on the bench"]);
     const lines = stories(side([draftMan("Foden", "M", null, 0, 0, { club: "Man City" })], bench), -5, "saturday");
-    expect(lines).toEqual(["Dons: Foden (Man City) did not play and Dons have no reserve to replace him", "Dons: Star (Fulham) got 9 points on the bench"]);
+    expect(lines).toEqual(["Dons: Foden (Man City) did not play and Dons have no reserve to replace him", "Dons: Star (Fulham) got 9 points on the bench, more than the margin"]);
   });
 
   it("puts what a substitute did in the line that brings him on", () => {

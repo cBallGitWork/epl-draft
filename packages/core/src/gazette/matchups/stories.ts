@@ -8,7 +8,7 @@ import { priceOf } from "./worth";
 
 // One side's stories in the game's own words (Craig, 29 Sep 2026): a return is a goal, an assist or a clean sheet, a
 // blank is none, a haul is more than one. One line a man, every fact about him in it; then the substitutions, a bench
-// score bigger than the margin, men from one club who shared a fate, and a club's men with two matches.
+// score of six or more, men from one club who shared a fate, and a club's men with two matches.
 
 const pts = (n: number) => `${n} point${n === 1 ? "" : "s"}`;
 /** His returns: goals, assists and clean sheets. */
@@ -64,14 +64,17 @@ function subLine(s: AutoSub, cutoff: Cutoff): string {
   return `${on}, with ${got === null ? pts(s.in.points ?? 0) : `${s.in.points ?? 0}: ${what(s.in)}`}`;
 }
 
-/** `margin` is this side's points less the other's: a bench score is news only for a side behind by less than it. */
+/** `margin` is this side's points less the other's: a bench score of benchScore or more is news, and more so when it is
+ *  bigger than the deficit of the side behind. */
 export function sideStories(side: DraftSide, subs: readonly AutoSub[], worth: SlotWorth, cutoff: Cutoff, margin: number): string[] {
   const lines = side.eleven.flatMap((m) => manLine(m, side, worth) ?? []);
   lines.push(...subs.map((s) => subLine(s, cutoff)));
   for (const m of side.eleven.filter((x) => blank(x) && !subs.some((s) => s.out === x))) {
     lines.push(`${named(m)} did not play and ${cutoff === "gameweek" ? "no reserve replaced him" : `${side.name} have no reserve to replace him`}`);
   }
-  for (const m of side.bench.filter((x) => margin < 0 && !subs.some((s) => s.in === x) && (x.points ?? 0) > -margin)) lines.push(`${named(m)} got ${pts(m.points ?? 0)} on the bench`);
+  for (const m of side.bench.filter((x) => !subs.some((s) => s.in === x) && (x.points ?? 0) >= DRAFT_DESK.benchScore)) {
+    lines.push(`${named(m)} got ${pts(m.points ?? 0)} on the bench${margin < 0 && (m.points ?? 0) > -margin ? ", more than the margin" : ""}`);
+  }
   const byClub = new Map<string, DraftMan[]>();
   for (const m of side.eleven.filter(done)) byClub.set(m.club, [...(byClub.get(m.club) ?? []), m]);
   for (const [club, men] of byClub) {

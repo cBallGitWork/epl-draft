@@ -16,7 +16,8 @@ describe("the table after the round", () => {
 
   it("names a new leader, the new bottom side and a climb of two places", () => {
     const after = tableAfter(before, [side("Dons", 20, 40), side("123", 40, 20), side("Notemail", 30, 31), side("test4", 50, 10), side("test2", 10, 50)])!;
-    expect(tableMoves(before, after).map((f) => `${f.kind}: ${f.text}`)).toEqual(["top: 123 went top, above Dons", "bottom: test2 went bottom"]);
+    expect(tableMoves(before, after).map((f) => `${f.kind}: ${f.text}`)).toEqual(expect.arrayContaining(["top: 123 went top, above Dons", "bottom: test2 went bottom"]));
+    expect(tableMoves(before, after).map((f) => f.text)).toEqual(expect.arrayContaining(["Dons fell from 1st to 2nd", "test4 rose from 5th to 4th"]));
     const climb = tableAfter(before, [side("test4", 100, 10), side("Notemail", 10, 50), side("Dons", 10, 50), side("123", 10, 50), side("test2", 10, 50)])!;
     expect(tableMoves(before, climb).map((f) => f.text)).toContain("test4 rose from 5th to 3rd");
   });

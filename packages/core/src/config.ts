@@ -382,6 +382,9 @@ export const DRAFT_DESK = {
   cleanSheetStory: 4,
   /** A keeper's score that is a haul, clean sheet and saves together. */
   keeperHaul: 8,
+  /** A reserve's score that is a talking point though it counts for nobody (Craig, 29 Sep 2026: "a bench player getting
+   *  a good score (6+)"). */
+  benchScore: 6,
   /** The sums of what the side behind needs are worked only when this few men are left across both sides; with more,
    *  half the gameweek is unplayed and the report tells what happened (Craig, 29 Sep 2026). */
   chaseWhenLeft: 3,
@@ -394,8 +397,8 @@ export const DRAFT_DESK = {
   formReturn: 3,
   /** The league's gameweek from which a score or a margin can be a season record. */
   recordsFrom: 4,
-  /** Places a side must climb or fall in the table to be news, away from the top and the bottom. */
-  tableMove: 2,
+  /** Places a side must climb or fall in the table to be news: any move of a match-up's own sides. */
+  tableMove: 1,
 } as const;
 
 /** How long a draft report's paragraphs run after each match-up's verdict (the UK desk's review, 29 Sep 2026). */
