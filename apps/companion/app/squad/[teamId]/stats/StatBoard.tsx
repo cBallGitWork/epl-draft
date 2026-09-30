@@ -124,12 +124,11 @@ export default function StatBoard({
                   </td>
                   {measures.map((measure) => {
                     const value = measure.read(line, footballer?.season);
-                    // A dash where he has no reading; a played nought is a stat, and quiet.
+                    // A dash where he has no reading; a played nought is a figure like any other, in ink.
                     const ink =
                       value === null
                         ? "text-faint"
-                        : standoutInk(value, cuts.get(measure.key), measure.worse ? "low" : "high") ||
-                          (value === 0 ? "text-muted" : "text-ink");
+                        : standoutInk(value, cuts.get(measure.key), measure.worse ? "low" : "high") || "text-ink";
                     return (
                       <td key={measure.key} className={`${BOARD_FIGURE} ${measure.loud ? "font-bold" : ""} ${ink}`}>
                         {value === null ? DASH : measure.decimals ? value.toFixed(2) : value}
