@@ -1,12 +1,12 @@
 import ScrollBoard from "../../../components/league/ScrollBoard";
-import Link from "next/link";
 import type { FootballPlayer } from "@epl/core";
 import { availabilityOf, positionDepth, DASH } from "@epl/core";
 import { Head, HeadRow, NameHead, PLATE } from "../../../components/league/TableHeads";
 import PositionTile, { TILE_WIDTH } from "../../../components/league/PositionTile";
 import StateBox from "../../../components/football/StateBox";
 import { doubtRow } from "../../../components/football/doubtRow";
-import { PLAYER } from "../../routes";
+import { poolHref } from "../../poolHref";
+import NameLink from "./NameLink";
 import type { LeagueOpinion } from "../../leagueOpinions";
 import { BOARD, DESK_ONLY, FIGURE, ROW_NAME, ROW_HOVER } from "@/app/desk";
 
@@ -78,9 +78,9 @@ export default function SquadTable({
                 {/* A plate owns its ink, so an unavailable man's tile keeps it; the rest of the row greys. */}
                 <PositionTile positions={opinion?.positions ?? []} cell />
                 <td className="w-full max-w-0 pl-2">
-                  <Link
-                    href={`${PLAYER}/${player.code}`}
-                    className="cm-row flex min-h-11 items-center gap-2 font-bold hover:underline"
+                  <NameLink
+                    href={poolHref(league, player.code)}
+                    className="cm-row flex min-h-11 items-center gap-2 font-bold"
                   >
                     {/* First name and surname (Craig, 3 Sep 2026). FPL's `name` is
                         its own web short form — "Raya", "J.Timber" — which is
@@ -89,7 +89,7 @@ export default function SquadTable({
                         second_name` from the bootstrap. */}
                     <span className={`min-w-0 truncate ${ROW_NAME}`}>{player.fullName}</span>
                     <StateBox player={player} />
-                  </Link>
+                  </NameLink>
                 </td>
                 {/* The owner's name, or what our league says instead: "WW" on
                     waivers, "FA" a free agent. Fantrax's own letters, carried

@@ -109,16 +109,12 @@ async function clubCode(): Promise<number | null> {
   }
 }
 
-/** A footballer's code and a real fixture id, read from FPL for `clubCode`'s reason. */
-async function footballerAndMatch(): Promise<{ footballer: number | null; match: number | null }> {
+/** A real fixture id, read from FPL for `clubCode`'s reason. */
+async function matchId(): Promise<number | null> {
   try {
-    const [bootstrap, fixtures] = await Promise.all([fetchBootstrap(), fetchFixtures()]);
-    return {
-      footballer: bootstrap.elements[0]?.code ?? null,
-      match: mapFixtures(fixtures)[0]?.id ?? null,
-    };
+    return mapFixtures(await fetchFixtures())[0]?.id ?? null;
   } catch {
-    return { footballer: null, match: null };
+    return null;
   }
 }
 
@@ -126,7 +122,7 @@ async function main() {
   requireLeague(FANTRAX_LEAGUE_ID);
   const { state, teamId: id, teamName, playerId } = await league();
   const club = await clubCode();
-  const { footballer, match } = await footballerAndMatch();
+  const match = await matchId();
   const paths: string[] = [...ROUTES];
   // The id-scoped screens: the squad board and its tabs, and the head-to-head.
   if (id !== null) {
@@ -149,7 +145,6 @@ async function main() {
       `/prem/club/${club}/stats`,
     );
   }
-  if (footballer !== null) paths.push(`/prem/player/${footballer}`);
   // Line Ups is where an empty sheet lands before kickoff; Stats proves the Premier League's `/stats/match`
   // still answers, and its Fantasy view that our league's read does.
   if (match !== null) {

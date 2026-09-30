@@ -3,6 +3,7 @@ import TabEmpty from "../../../../components/league/TabEmpty";
 import ClubShell from "../Shell";
 import { clubOr404 } from "../club";
 import { leagueOpinions } from "../../../leagueOpinions";
+import { poolHref } from "../../../poolHref";
 import { fantasyDepth } from "../SquadTable";
 import PlayerBoard from "./PlayerBoard";
 import type { Row } from "./PlayerBoard";
@@ -39,6 +40,7 @@ export default async function ClubStatsPage({ params }: { params: Promise<{ code
     .map((player) => ({
       player,
       positions: league.get(player.code)?.positions ?? [],
+      href: poolHref(league, player.code),
     }));
 
   return (

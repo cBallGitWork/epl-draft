@@ -107,12 +107,7 @@ export const HEADING_PLATE = `cm-panel px-2 py-1 text-center ${LABEL}`;
 /** The `<th>` a stats board's head plate sits in; the plate carries padding and alignment. */
 export const HEAD_CELL = "p-0 text-left font-bold";
 
-/** One stated fact in a stack. `min-h-11`, not `.cm-row`: a fact is often a link, and a control
- *  keeps its tap floor at every width. */
-export const FACT =
-  "flex min-h-11 items-center gap-2.5 border border-line bg-surface px-3 py-2";
-
-/** A `FACT`'s label: takes the spare room and truncates, because a Fantrax label can be a sentence. */
+/** A fact row's label: takes the spare room and truncates, because a Fantrax label can be a sentence. */
 export const FACT_LABEL = "min-w-0 flex-1 truncate text-sm text-muted";
 
 /** A form's submit button: `BUTTON`'s height without its flex centring. */

@@ -3271,7 +3271,7 @@ LISTS — who is at a club, and who can be picked up:
 |---|---|
 | `/prem/club/[code]` Squad, Stats | `/prem/match/[id]/*` — **seven of the 104 played before they left** (Sánchez a full 90, Richarlison 67, Drameh 65, Millar 50, Beto 31, Woltemade 19). A scoresheet that dropped them would say a match was played by ten men |
 | `/prem/club/[code]/set-pieces` — **6 of the 135 ranked takers had gone**, Woltemade first on Newcastle's penalties at a 0.57 share. Filtered before the rank is drawn, so the order still counts 1, 2, 3 | `/squad/[teamId]` and every Fantrax roster — 2 of the dummy league's 150 slots hold one. Hiding a slot a manager is still paying for hides the problem, not the man; he is greyed and boxed `Unav` instead |
-| `/players` and `/players/analysis` — `stillHere` in `players/pool.ts`, outside the league cache so a Fantrax entry cannot keep offering a man who left | `/players/[fantraxId]` and `/prem/player/[code]` — a page ABOUT one man, reachable only by a link nothing now draws or by a typed URL. It says what happened to him |
+| `/players` and `/players/analysis` — `stillHere` in `players/pool.ts`, outside the league cache so a Fantrax entry cannot keep offering a man who left | `/players/[fantraxId]` — a page ABOUT one man, reachable only by a link nothing now draws or by a typed URL. It says what happened to him |
 | the attribute percentile cohort (`players/[fantraxId]/grid.ts`) — 104 frozen, mostly-nought seasons in the denominator is what makes an ordinary player look good | `clubStats` and `/prem/team-stats` — a SUM, not a list. The goals a departed man scored for that club are still that club's season |
 
 `players/pool.ts` is now the one place a page that is otherwise entirely Fantrax's
@@ -3863,7 +3863,7 @@ looked per-route and arbitrary. It is neither, and the rule is exact:
 
 | 200 | 404 |
 |---|---|
-| `/prem/club/[code]` · `/gw/[gameweek]` · `/players/[fantraxId]` · `/squad/[teamId]` · `/league/matchups/[teamId]` · `/paper/[slug]` | `/prem/player/[code]` · `/prem/match/[id]` · an unmatched URL |
+| `/prem/club/[code]` · `/gw/[gameweek]` · `/players/[fantraxId]` · `/squad/[teamId]` · `/league/matchups/[teamId]` · `/paper/[slug]` | `/prem/match/[id]` · an unmatched URL (`/prem/player/[code]` was the eighth, removed 26 Sep 2026) |
 
 **`/prem/match/[id]` grew two tabs on 4 Sep 2026 and deliberately did not grow a
 `loading.tsx`**, which is the first time this rule has been applied rather than

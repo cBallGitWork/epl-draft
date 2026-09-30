@@ -1,8 +1,7 @@
-import Link from "next/link";
 import type { DepthSpot, FootballPlayer } from "@epl/core";
 import CmGround from "../../../../components/league/CmGround";
 import { doubtRow } from "../../../../components/football/doubtRow";
-import { PLAYER } from "../../../routes";
+import NameLink from "../NameLink";
 
 // The depth chart on CM's pitch (Craig, 25 Sep 2026: "pitch view, CM graphics, no thumbnails or
 // shirts"): each place a plate with its shirt on top and the men in line under it, first choice
@@ -11,16 +10,18 @@ import { PLAYER } from "../../../routes";
 export default function DepthPitch({
   lines,
   playerOf,
+  hrefOf,
 }: {
   lines: readonly (readonly DepthSpot[])[];
   playerOf: (code: number) => FootballPlayer | null;
+  hrefOf: (code: number) => string | null;
 }) {
   return (
     <CmGround inColumn>
       {lines.map((line, row) => (
         <div key={row} className="flex justify-center gap-1 lg:gap-2">
           {line.map((spot, at) => (
-            <Plate key={`${spot.slot}-${at}`} spot={spot} playerOf={playerOf} />
+            <Plate key={`${spot.slot}-${at}`} spot={spot} playerOf={playerOf} hrefOf={hrefOf} />
           ))}
         </div>
       ))}
@@ -29,7 +30,15 @@ export default function DepthPitch({
 }
 
 /** One place on the pitch: the shirt in the club's index block, then the men in line for it. */
-function Plate({ spot, playerOf }: { spot: DepthSpot; playerOf: (code: number) => FootballPlayer | null }) {
+function Plate({
+  spot,
+  playerOf,
+  hrefOf,
+}: {
+  spot: DepthSpot;
+  playerOf: (code: number) => FootballPlayer | null;
+  hrefOf: (code: number) => string | null;
+}) {
   const men = spot.holders.flatMap((holder) => {
     const player = playerOf(holder.code);
     return player === null ? [] : [player];
@@ -43,15 +52,15 @@ function Plate({ spot, playerOf }: { spot: DepthSpot; playerOf: (code: number) =
         <span className="px-1 py-0.5 text-center text-2xs text-faint">—</span>
       ) : (
         men.map((player, rank) => (
-          <Link
+          <NameLink
             key={player.code}
-            href={`${PLAYER}/${player.code}`}
-            className={`truncate border-t border-bg px-1 py-0.5 text-center font-chrome hover:underline lg:text-xs ${
+            href={hrefOf(player.code)}
+            className={`truncate border-t border-bg px-1 py-0.5 text-center font-chrome lg:text-xs ${
               rank === 0 ? "text-2xs font-bold text-ink" : "text-2xs text-muted"
             } ${doubtRow(player)}`}
           >
             {player.name}
-          </Link>
+          </NameLink>
         ))
       )}
     </div>

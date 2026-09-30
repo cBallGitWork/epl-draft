@@ -2,6 +2,8 @@ import { depthLines, londonDayAndDate, squadOf } from "@epl/core";
 import TabEmpty from "../../../../components/league/TabEmpty";
 import { intelDepth, intelDepthManifest } from "../../../../intel";
 import ClubShell from "../Shell";
+import { leagueOpinions } from "../../../leagueOpinions";
+import { poolHref } from "../../../poolHref";
 import { clubOr404 } from "../club";
 import DepthList from "./DepthList";
 import DepthPitch from "./DepthPitch";
@@ -18,6 +20,8 @@ export default async function DepthPage({ params }: { params: Promise<{ code: st
   const chart = intelDepth.get(club.shortName);
   const players = new Map(squadOf(snapshot, club.id).map((player) => [player.code, player]));
   const playerOf = (code: number) => players.get(code) ?? null;
+  const league = await leagueOpinions();
+  const hrefOf = (code: number) => poolHref(league, code);
   const lines = chart === undefined ? [] : depthLines(chart);
 
   return (
@@ -30,7 +34,10 @@ export default async function DepthPage({ params }: { params: Promise<{ code: st
             Depth chart{intelDepthManifest.gameweek === null ? "" : ` for GW${intelDepthManifest.gameweek}`} · {chart.formation}{" "}
             (last updated {londonDayAndDate(intelDepthManifest.exportedAt)})
           </p>
-          <DepthViews list={<DepthList lines={lines} playerOf={playerOf} />} pitch={<DepthPitch lines={lines} playerOf={playerOf} />} />
+          <DepthViews
+            list={<DepthList lines={lines} playerOf={playerOf} hrefOf={hrefOf} />}
+            pitch={<DepthPitch lines={lines} playerOf={playerOf} hrefOf={hrefOf} />}
+          />
         </section>
       )}
     </ClubShell>

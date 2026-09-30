@@ -199,27 +199,22 @@ optional for exactly that reason, and `cm9900/22.jpg` is the shape.
 the panel. It arrives there when there is a real XI to draw, and it is the
 second entry the foot row has been waiting for since this section shipped.
 
-### Two more routes, one of them still a stub
+### A name opens the player page
 
-`/prem/player/[code]` (Craig, 3 Sep 2026: "clicking a player takes them to a
-player page (just scaffold, will do later)"). Every name on a squad list is a
-link, and a link to a 404 is worse than no link.
+Every name on a club's tabs links to `/players/[fantraxId]` (Craig, 26 Sep 2026:
+*"clicking on a player takes them to their proper player page"*). The club tabs
+hold FPL codes, so `poolHref` reads the Fantrax id off `leagueOpinions`, which is
+the bridge inverted. A man our league does not list prints unlinked: 51 of the 562
+on the books on 26 Sep. `/prem/player/[code]`, the stub footballer page these
+names used to open, is gone.
 
-`/prem/match/[id]` was the other, and stopped being one on 4 Sep 2026 — it has
-its own file, [match.md](match.md).
+`/prem/match/[id]` has its own file, [match.md](match.md).
 
-**And the sentence above used to cover both by saying "every score in the section
-is a link", which was never true.** `prem/Match` — the row on Results and on
+**"Every score in the section is a link" was never true.** `prem/Match` — the row on Results and on
 Fixtures, which is where a reader lands from the rail — rendered its scoreline as
 a bare `<span>` and had done since the section shipped. The only two links that
 ever reached the match page were a club's fixture run and a player's match log,
 and neither of them is in this section's four tabs. Both round lists link now.
-
-**The player page is not `/players/[fantraxId]`.** That one is the fantasy pool:
-Fantrax's points, his eligibility, who holds him, what he cost at the draft.
-This is the footballer — FPL's own counts and nothing our league has an opinion
-about. Two screens about one person, keyed differently on purpose: this takes
-FPL's season-stable `code`.
 
 **The match page takes the fixture `id`**, which is not season-stable — and
 neither is a fixture. This match exists in this season and nowhere else, so
@@ -317,7 +312,6 @@ the same export that will fill the Pos column — one crossing, not two.
 | Pieces | nobody named for any piece | `TabEmpty`, and the tab greys |
 | Fixtures | no match with this club | `TabEmpty`, and the tab greys |
 | Stats | FPL lists nobody | `TabEmpty`, and the tab greys |
-| `/prem/player/[code]` | code is not an integer, or names no player | `notFound()` |
 | `/prem/match/[id]` | id is not an integer, or names no fixture | `notFound()` — its own states are in [match.md](match.md) |
 | Any club tab | still loading | its own skeleton — **not** `/prem`'s league table |
 

@@ -753,7 +753,6 @@ apart silently.
 | **A tab** — one plate of a strip | **44**, painting 36 | **56** | `2xs`–`sm` | `.cm-tab` + `TAB` |
 | A thumb-rail tab | 56 + inset | — | `xs`/600 under a 24px glyph | `.cm-thumbrail` |
 | **A row of a list** | **44** | **28** | `sm`/`lg:base` name in the CHROME face, `sm` figures at both widths | `.cm-row` + `ROW_LINK` + `ROW_NAME` + `FIGURE` |
-| One stated fact in a stack | 44 | 44 | `2xs` label, `sm` value | `FACT` |
 | A column head over a table | 28 | 28 | `2xs` | `PLATE` (`h-7`) |
 | A column head over a stats board | 24 | 24 | `2xs` | `HEAD_PLATE` (`h-6`) |
 | A figure in a row | — | — | `sm`, `.numeric` | `ROW_FIGURE`, worn by `FIGURE` (centred) and `BOARD_FIGURE` (right) |
