@@ -1,15 +1,12 @@
-import Link from "next/link";
 import type { InboxItem } from "@epl/core";
 import { DASH, londonDayAndDate, londonTime } from "@epl/core";
-import DateChip from "../../components/shell/DateChip";
-import Section from "../../components/shell/Section";
+import Nothing from "../../components/shell/Nothing";
 import Letter from "../../news/Letter";
-import { PANEL_FLUSH, ROW_NAME } from "@/app/desk";
+import MailRow from "../../news/MailRow";
+import Mailbox from "../../news/Mailbox";
 import type { NewsItem } from "./newsItems";
 
-// His news in Mail's shape (Craig, 25 Sep 2026: "should match the Email/news section"): the dated
-// list beside the letter on a desk and above it on a phone, the open row on CM's red ground, and
-// the story opened in Mail's own `Letter`.
+// His news in Mail's own frame, rows and letter (Craig, 25 Sep 2026: "should match the Email/news section").
 
 export default function Inbox({
   items,
@@ -24,38 +21,31 @@ export default function Inbox({
 }) {
   if (items.length === 0) {
     return (
-      <Section title="News" aside="Fantrax's own">
-        <p className="text-sm text-muted">Nothing has been written about him since 1 July.</p>
-      </Section>
+      <section className="cm-panel p-3">
+        <Nothing title="Nothing filed">Nothing has been written about him since 1 July.</Nothing>
+      </section>
     );
   }
 
   const open = items.find((item) => item.id === openId) ?? items[0];
 
   return (
-    <div className="flex flex-col gap-2 lg:grid lg:grid-cols-[minmax(0,7fr)_minmax(0,6fr)] lg:items-start lg:gap-3">
-      <ul className={`${PANEL_FLUSH} cm-rows cm-scroll cm-scroll-y max-h-72 overflow-y-auto lg:max-h-[40rem]`}>
-        {items.map((item) => (
+    <Mailbox letter={<Letter item={letter(open)} />}>
+      {items.map((item) => {
+        const iso = item.at === null ? null : new Date(item.at).toISOString();
+        return (
           <li key={item.id}>
-            <Link
+            <MailRow
               href={href(item.id)}
-              aria-current={item === open ? "true" : undefined}
-              className={`cm-row flex min-h-11 items-stretch gap-1.5 ${item === open ? "bg-league-deep" : "hover:bg-surface"}`}
-            >
-              <DateChip
-                day={item.at === null ? DASH : londonDayAndDate(new Date(item.at).toISOString())}
-                time={item.at === null ? null : londonTime(new Date(item.at).toISOString())}
-                className="w-[5.5rem] lg:w-28"
-              />
-              <span className={`flex min-w-0 flex-1 items-center py-1 pr-1.5 ${ROW_NAME} text-ink`}>
-                <span className="line-clamp-2">{item.headline}</span>
-              </span>
-            </Link>
+              open={item === open}
+              day={iso === null ? DASH : londonDayAndDate(iso)}
+              time={iso === null ? null : londonTime(iso)}
+              headline={item.headline}
+            />
           </li>
-        ))}
-      </ul>
-      <Letter item={letter(open)} />
-    </div>
+        );
+      })}
+    </Mailbox>
   );
 }
 
