@@ -1,5 +1,6 @@
 import type {
   IntelCareers,
+  IntelClubPieces,
   IntelDepth,
   IntelMatch,
   IntelMatches,
@@ -65,6 +66,13 @@ export const intelXi = xiFile as unknown as IntelXi;
 
 /** Who takes each club's set pieces, by FPL club code. */
 export const intelSetPieces = piecesFile as unknown as IntelSetPieces;
+
+/** The three pieces the source ranks, penalties first; the key is the sister repo's spelling. */
+export const SET_PIECES = [
+  { key: "penalties", label: "Penalties" },
+  { key: "freeKicks", label: "Direct free kicks" },
+  { key: "corners", label: "Corners" },
+] as const satisfies readonly { key: keyof IntelClubPieces; label: string }[];
 
 /** Every match the sister repo has logged, by FPL's fixture id.
  *

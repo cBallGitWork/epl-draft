@@ -126,6 +126,28 @@ export function setPieceOrder(
   }));
 }
 
+/** One man's place in one set-piece order. A null rank is a piece he does not take; `of` is how many do. */
+export interface SetPieceRank {
+  piece: string;
+  label: string;
+  rank: number | null;
+  of: number;
+}
+
+/** One man's place in each of his club's set-piece orders, counting only the men still there. */
+export function setPieceRanks(
+  club: IntelClubPieces | undefined,
+  pieces: readonly { key: keyof IntelClubPieces; label: string }[],
+  code: number,
+  present: ReadonlySet<number>,
+): SetPieceRank[] {
+  return setPieceOrder(club, pieces).map(({ piece, label, takers }) => {
+    const here = takers.filter((taker) => present.has(taker.code));
+    const at = here.findIndex((taker) => taker.code === code);
+    return { piece, label, rank: at === -1 ? null : at + 1, of: here.length };
+  });
+}
+
 /** How old the prediction is, in whole hours, or null when it will not say.
  *
  *  Off `fetchedAt` and never the manifest's `exportedAt`: a prediction is stale

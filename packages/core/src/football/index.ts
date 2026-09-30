@@ -190,9 +190,11 @@ export {
   predictedEleven,
   predictionAge,
   setPieceOrder,
+  setPieceRanks,
   squadIntel,
   xiFault,
 } from "./intel/map";
+export type { SetPieceRank } from "./intel/map";
 export { parseScoutXi, sameElevens } from "./intel/scout";
 export {
   defaultDescendingTable,

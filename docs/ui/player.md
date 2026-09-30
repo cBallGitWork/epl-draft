@@ -61,6 +61,9 @@ derived the same four from the same object.
    the one row; a man FPL has never listed gets the note alone, and with neither, no panel.
    **Rankings** sit under it: his season totals and his place among the same group
    ("rankings for data such as xg").
+   **Set pieces** under that: his place in his club's penalty, direct free-kick and corner
+   orders (Craig, 30 Sep 2026: "their fk/pk/corner rank for the club"), the same order the
+   club's Set Pieces tab draws, counted among the men still there; a dash where he takes none.
 3. **The real position**, in cyan — the first thing in the app entitled to that
    slot (see below).
 4. **The run to come**, the next eight across the row, in FPL's difficulty, and under each

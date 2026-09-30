@@ -12,13 +12,15 @@ import {
   projectedPlace,
   projectedPoints,
   rankings,
+  setPieceRanks,
   shotLine,
+  squadOf,
 } from "@epl/core";
 import type { Attribute, FootballPlayer, IntelPlayer, PastSeason, ProjectedPlace, Ranked, Scouted } from "@epl/core";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import { footballNow } from "../../football";
-import { intelProjections, intelSetPieces, intelShots, intelSquads, intelTouches } from "../../intel";
+import { SET_PIECES, intelProjections, intelSetPieces, intelShots, intelSquads, intelTouches } from "../../intel";
 import type { StandoutCut } from "../../components/league/standout";
 import { poolCut } from "../standout";
 import { PAGE_REVALIDATE } from "../../config";
@@ -129,6 +131,14 @@ export async function projectedWeeks(player: FootballPlayer, gameweeks: readonly
       },
     ]),
   );
+}
+
+/** His place in each of his club's set-piece orders, among the men still on its books. */
+export async function playerPieces(player: FootballPlayer) {
+  const snapshot = await footballNow();
+  const club = clubById(snapshot).get(player.clubId);
+  const present = new Set(squadOf(snapshot, player.clubId).map((man) => man.code));
+  return setPieceRanks(intelSetPieces.clubs[club?.shortName ?? ""], SET_PIECES, player.code, present);
 }
 
 /** What he actually plays, as the sister repo settled it.
