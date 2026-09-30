@@ -26,6 +26,8 @@ import { writeColumn, type Usage } from "./newsroom";
 import { DRAFT_JUDGE_VOICE, DRAFT_VOICE, draftSendBack } from "./voice/draft";
 import { LINE_EDIT_VOICE, PUN_VOICE } from "./voice/reports";
 
+const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
 // The draft report's newsroom, the Prem report's in miniature: the reporter writes the gameweek's match-ups, the editor
 // checks each against its block, the pun writer offers headlines, a manager in the league picks one and flags what no
 // manager would say, it goes back once, and each match-up keeps its better attempt.
@@ -70,7 +72,8 @@ export async function draftColumn(job: DraftJob, say: (message: string) => void,
   const blocks = draftBlocks(job.cutoff, job.contexts);
   const men = job.contexts.flatMap((c) => everyMan(c.state));
   const surnames = men.map((m) => surname(m.name));
-  const names = [...job.contexts.flatMap((c) => [c.state.home.side.name, c.state.away.side.name]), ...men.map((m) => m.name)];
+  // A headline may name a side, a man, his club or a day; anything else capitalised is a name the facts do not carry.
+  const names = [...job.contexts.flatMap((c) => [c.state.home.side.name, c.state.away.side.name]), ...men.flatMap((m) => [m.name, m.club]), ...WEEKDAYS];
 
   const first = readDraftWriting(await writeColumn(DRAFT_VOICE, brief, count), surnames);
   const faults1 = checkDraft(first, job.contexts, blocks, job.cutoff, job.pastProse);
