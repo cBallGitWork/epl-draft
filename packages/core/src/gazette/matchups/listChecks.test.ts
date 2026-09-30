@@ -23,6 +23,13 @@ describe("listFaults", () => {
     expect(faults(["Gross scored 11 points thanks to a goal and an assist on Saturday."])).not.toContain("send-back: two sentences in a row of the same shape");
   });
 
+  it("sends back a haul of one return", () => {
+    const hall = contextOf(draftSide("test2", 30, eleven("t", { 1: draftMan("Hall", "D", 8, 90, 0, { club: "Newcastle", goals: 1 }) })), draftSide("123", 40, eleven("o")));
+    const said = (line: string) => listFaults({ paragraphs: [line, "test2 go to test3 next on Sunday."] }, hall, 1, "gameweek", matchupBlock(hall, "gameweek", 2), []).map((f) => f.check);
+    expect(said("Hall's goal was an eight-point haul on Saturday.")).toContain("a haul is more than one return");
+    expect(said("Hall scored for eight points on Saturday.")).not.toContain("a haul is more than one return");
+  });
+
   it("counts the men named, and sends back a score told twice", () => {
     expect(faults(["tG0, tD1, tD2, tD3, tD4 and tM5 all blanked."])).toContain("send-back: more than 5 men in one match-up");
     expect(faults(["123 led 26-16 after Saturday.", "It was still 26-16 when Sunday began."])).toContain("send-back: the same score told twice");

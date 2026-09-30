@@ -29,7 +29,7 @@ export const DRAFT_REASONS: readonly string[] = ["left out", "absent", "missing"
 
 /** The brief's own labels, which a writer copies into print (GW5: "the twist is the fixture list"), and titles the league
  *  has not given (GW5 called test3, top after five gameweeks, "the champions"). */
-export const DRAFT_LABELS: readonly string[] = ["the twist", "the cast", "may be left out", "champion", "champions", "title holders", "the holders"];
+export const DRAFT_LABELS: readonly string[] = ["the twist", "the cast", "may be left out", "beats", "champion", "champions", "title holders", "the holders"];
 
 /** A minute belongs to its own match: GW5 set Haaland's 81st "eight minutes before" Cunha's 89th in another. */
 export const DRAFT_CLOCK: readonly string[] = [

@@ -113,6 +113,11 @@ export function listFaults(piece: DraftPiece, ctx: MatchupContext, at: number, c
   const most = at === 0 ? DRAFT_WRITING.leadMen : DRAFT_WRITING.men;
   const everyone = named(prose, men);
   if (everyone.length > most) flag(`more than ${most} men in one match-up`, everyone.map((m) => m.man.name).join(", "));
+  // A haul is more than one return (Craig, 29 Sep 2026): GW5's writer called Lewis Hall's one goal "an eight-point haul".
+  for (const s of all.filter((x) => /\bhaul/iu.test(x))) {
+    const who = named(s, men);
+    if (who.length === 1 && who[0].man.goals + who[0].man.assists + who[0].man.cleanSheets < 2) flag("a haul is more than one return", s);
+  }
   // Each fact once (Craig, 30 Sep 2026: "youre just saying the same thing over and over"): a score told twice is the tell.
   const scores = [...prose.matchAll(SCORE)].map((m) => m[0]);
   const twice = scores.find((x, i) => scores.indexOf(x) !== i);

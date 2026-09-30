@@ -53,9 +53,9 @@ function castLine(ctx: MatchupContext, m: DraftMan): string {
   // The day comes with the man, not after his figures: GW5's writer gave Groß's Saturday 11 to Friday's 11.
   const beat = beatOf(ctx.state, m);
   const day = beat === undefined ? "" : beat === null ? ", in the automatic substitutions" : `, on ${beatLabel(beat)}`;
-  // His side is named, and a reserve is called one: GW5's writer gave test3's reserves to test4.
+  // Introduced as the BBC introduces him, "Everton goalkeeper Jordan Pickford"; his side named, a reserve called one.
   const whose = s === undefined ? "" : `, ${sub !== undefined || bench ? "a reserve " : ""}for ${s.side.name}`;
-  return `- ${m.fullName}, ${m.club} ${POSITION[m.slot] ?? "player"}${whose}${day}: ${parts.filter((p) => p !== null).join("; ")}`;
+  return `- ${m.club} ${POSITION[m.slot] ?? "player"} ${m.fullName}${whose}${day}: ${parts.filter((p) => p !== null).join("; ")}`;
 }
 
 /** What a beat did to the gap, said outright: GW5's writers had a gap that fell from 11 to 10 "widened", and "nearly
@@ -83,7 +83,7 @@ function beatLine(ctx: MatchupContext, b: Beat, before: { home: number; away: nu
     return `${possessive(ctx.state[r.side].side.name)} ${r.man.fullName} (${returnWords({ goals: r.goals, assists: r.assists, cleanSheets: r.cleanSheets, scoredAt: goals })})`;
   });
   // Points with no return are minutes and defensive work: GW5's writer twice had a Friday won "before a ball was kicked".
-  const none = b.points.home + b.points.away === 0 ? "no returns" : "no returns, the points all for minutes and defensive work";
+  const none = b.points.home + b.points.away === 0 ? "no returns" : "no returns (appearance and defensive points only)";
   const label = beatLabel(b.day);
   return `- ${label[0].toUpperCase()}${label.slice(1)}: ${home.side.name} ${b.points.home}, ${away.side.name} ${b.points.away}, making it ${score}; ${scored.length === 0 ? none : `returns: ${listed(scored, "and")}`}`;
 }

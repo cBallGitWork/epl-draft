@@ -67,7 +67,8 @@ export function draftCargo(cutoff: Cutoff, gameweek: number, contexts: readonly 
         eleven: draftRows(ctx.state[which]),
         bench: draftBench(ctx.state[which]),
       });
-      const pictured = ctx.angle?.cast.find((m) => m.code !== cover);
+      // A man with points to show, never a reserve yet to play (GW5's Saturday pictured Meunier before his match).
+      const pictured = ctx.angle?.cast.find((m) => m.code !== cover && (m.points ?? 0) > 0);
       const face = pictured === undefined ? null : { code: pictured.code, name: pictured.name, clubId: pictured.clubId, position: pictured.slot };
       // The writer's lede prints as the standfirst under the score; a match-up with no writing keeps the desk's result.
       const [lede, ...body] = piece.paragraphs;
