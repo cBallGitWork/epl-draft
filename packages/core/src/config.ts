@@ -492,6 +492,8 @@ export const DRAFT_WRITING = {
    *  an echo. */
   copied: 6,
   echo: 4,
+  /** The fact checker's fixes made in one match-up at most: past that, the writing is the problem, not a sentence. */
+  factFixes: 4,
 } as const;
 
 /** The team sheets at the lock: when a benched man is news, and how much the article carries. */

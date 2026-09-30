@@ -5,6 +5,8 @@ import {
   REPORT_AMERICAN,
   SHEETS_AMERICAN,
   applyDraftFixes,
+  applyFactFixes,
+  readFactFixes,
   faultyDraftSentences,
   buildDraftBrief,
   checkDraft,
@@ -26,7 +28,7 @@ import {
   type PastProse,
 } from "@epl/core";
 import { writeColumn, type Usage } from "./newsroom";
-import { DRAFT_JUDGE_VOICE, DRAFT_VOICE, draftSendBack } from "./voice/draft";
+import { DRAFT_FACTS_VOICE, DRAFT_JUDGE_VOICE, DRAFT_VOICE, draftSendBack } from "./voice/draft";
 import { LINE_EDIT_VOICE, PUN_VOICE } from "./voice/reports";
 
 const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -118,10 +120,15 @@ export async function draftColumn(job: DraftJob, say: (message: string) => void,
   const edited = fixes.length === 0 ? null : await writeColumn(LINE_EDIT_VOICE, fixes.map((f, i) => `${i + 1}. ${f.sentence} [${f.words.join(", ")}]`).join("\n"), count, "helper").catch(() => null);
   const pieces = edited === null ? merged : applyDraftFixes(merged, fixes, Array.isArray(edited.lines) ? edited.lines.map(String) : [], never, names);
   if (fixes.length > 0) say(`  draft report: line edit fixed ${fixes.length - faultyDraftSentences(pieces, never, names).length} of ${fixes.length} sentences`);
+  // The fact checker's read of the printed words against each block, on the cheap model: a claim it cannot put right goes.
+  const printed = [...pieces].map(([n, p]) => `MATCH-UP ${n}:\nBRIEF:\n${blocks[n - 1] ?? ""}\n\nPRINTED:\n${p.paragraphs.join("\n")}`).join("\n\n=====\n\n");
+  const checked = await writeColumn(DRAFT_FACTS_VOICE, printed, count, "helper").catch(() => null);
+  const factual = checked === null ? { pieces, made: 0 } : applyFactFixes(pieces, readFactFixes(checked), job.contexts, blocks);
+  say(`  draft report: fact check ${checked === null ? "unavailable" : `made ${factual.made} fixes`}`);
   for (const f of attempts.at(-1)!.faults.filter((x) => x.severity !== "warn")) say(`    fault ${f.section}: ${f.check} [${f.evidence}]`);
   const lead = job.contexts[0]?.state.score ?? "";
   say(`  draft report: ${pieces.size} of ${job.contexts.length} match-ups written; headline ${chosen === null ? "none chosen, the lead result prints" : `"${chosen}"`}; ${usage.input} tokens in, ${usage.cached} from cache, ${usage.output} out`);
   // A pun's deck is the lead result; a plain headline already is it, so its deck carries the gameweek's other results.
   const others = job.contexts.slice(1).map((c) => c.state.score).join("; ");
-  return { headline: chosen ?? lead, deck: chosen === null ? others : lead, body: "", draft: draftCargo(job.cutoff, job.gameweek, job.contexts, pieces, job.rankAfter) };
+  return { headline: chosen ?? lead, deck: chosen === null ? others : lead, body: "", draft: draftCargo(job.cutoff, job.gameweek, job.contexts, factual.pieces, job.rankAfter) };
 }

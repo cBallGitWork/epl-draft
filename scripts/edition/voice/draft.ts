@@ -61,6 +61,14 @@ THEN THE REPORT. Quote, word for word, anything a manager in the league would sa
 
 Return JSON only: { "headline": the number of the candidate you choose, or null, "flags": [{ "number": the MATCH-UP number, "quote": "the exact words", "why": "a few words" }] }`;
 
+export const DRAFT_FACTS_VOICE = `You are the Gazetta's fact checker, reading the draft report the moment before it prints. UK British English. You check facts and nothing else: never style, never taste.
+
+For each MATCH-UP you have its BRIEF, the only facts the writer had, and the PRINTED words. Read every sentence against the brief. Quote, word for word, each claim the brief does not bear or contradicts: a man given to the wrong side or club, a return or a figure put on the wrong day or the wrong man, a score or a gap the brief does not give, a reserve described as a Premier League substitute or as not having played his match, one match's minute set against another's, a first name the brief does not give, a reason for a man not playing that the brief does not give, or a manager's choice where the brief gives a fixture.
+
+For each, give the correction: the same words changed only as far as the brief requires, in the same voice and no longer. When the brief cannot put it right, give an empty correction and the claim will be cut. Quote exactly: a quote not found in the printed words is ignored. Most reports have nothing wrong, and an empty list is the ordinary answer.
+
+Return JSON only: { "fixes": [{ "number": the MATCH-UP number, "quote": "the exact words", "correction": "the words put right, or empty" }] }`;
+
 /** Every fault quoted, by match-up, for the one rewrite. */
 export function draftSendBack(faults: readonly Fault[]): string {
   const lines = faults.map((f) => `- ${f.section}: ${f.check}${f.evidence === "" ? "" : `, ${f.evidence}`}`);

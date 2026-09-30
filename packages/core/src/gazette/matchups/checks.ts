@@ -24,6 +24,12 @@ const MARKS = /[:?!]/u;
 const FEELING = /\b(?:manager|boss|owner)\b[^.]{0,40}\b(?:feel|feels|felt|furious|delighted|angry|pleased|worried|fuming|livid)\b/iu;
 
 /** `past` is the words of recent reports, for the echo; `cutoff` decides whether a forecast is a fault. */
+/** The figures a match-up may print: its block's, and a gap read off a printed score, the margin and each day's. */
+export function allowedFigures(ctx: MatchupContext, block: string): Set<number> {
+  const gaps = timeline(ctx.state).map((b) => Math.abs(b.score.home - b.score.away));
+  return new Set([0, ...numbersIn(block), Math.abs(ctx.state.margin), ...gaps]);
+}
+
 export function checkDraft(writing: DraftWriting, contexts: readonly MatchupContext[], blocks: readonly string[], cutoff: Cutoff = "gameweek", past: readonly PastProse[] = []): Fault[] {
   const faults: Fault[] = [];
   const fault = (section: string, check: string, severity: Severity, evidence: string) => faults.push({ section, check, severity, evidence });
@@ -45,9 +51,7 @@ export function checkDraft(writing: DraftWriting, contexts: readonly MatchupCont
     for (const other of everyone.flatMap((names, i) => (i === at ? [] : names))) {
       if (!mine.has(other) && other.length > 3 && mentionAt(prose, other) >= 0) fault(`${n}:matchup`, "a man from another match-up", "hard", other);
     }
-    // A gap read off a printed score is a fact too: the margin, and the gap at each day's end.
-    const gaps = timeline(ctx.state).map((b) => Math.abs(b.score.home - b.score.away));
-    const allowed = new Set([0, ...numbersIn(block), Math.abs(ctx.state.margin), ...gaps]);
+    const allowed = allowedFigures(ctx, block);
     for (const x of numbersIn(prose.replace(SCORE, " ").replace(SIDE_ELEVEN, " "))) if (!allowed.has(x)) fault(`${n}:matchup`, "a figure the brief does not give", "hard", String(x));
     for (const [said, a, b] of prose.matchAll(SCORE)) if (!block.includes(said) && !block.includes(`${b}-${a}`)) fault(`${n}:matchup`, "a score the brief does not give", "hard", said);
     if (QUOTES.test(prose)) fault(`${n}:matchup`, "a quotation mark: the paper prints nobody's words", "hard", prose.match(QUOTES)?.[0] ?? "");

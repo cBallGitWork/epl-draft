@@ -1,0 +1,59 @@
+import { DRAFT_WRITING } from "../../config";
+import { banned } from "../banned";
+import { masked, numbersIn } from "../predictions/prose";
+import type { MatchupContext } from "./brief";
+import { allowedFigures } from "./checks";
+import { menOf, unbriefedNames } from "./listChecks";
+import { DRAFT_NEVER } from "./words";
+import type { DraftPiece } from "./writing";
+
+// The last read before print: the fact checker quotes each claim its block does not bear and offers the sentence put
+// right. A correction is kept only if it passes the writer's own checks; otherwise the claim is cut, since a wrong fact
+// is worse than a shorter report (GW5's fires gave one side's reserves to the other and moved a haul to another day). Pure.
+
+export interface FactFix {
+  matchup: number;
+  quote: string;
+  /** The quote put right from the block; empty when it cannot be, and it is cut. */
+  correction: string;
+}
+
+/** The fact checker's JSON as fixes; anything misshapen is dropped. */
+export function readFactFixes(raw: Record<string, unknown>): FactFix[] {
+  return (Array.isArray(raw.fixes) ? raw.fixes : []).flatMap((f): FactFix[] => {
+    const r = typeof f === "object" && f !== null ? (f as Record<string, unknown>) : {};
+    const quote = typeof r.quote === "string" ? r.quote.trim() : "";
+    const matchup = Number(r.number);
+    return quote === "" || !Number.isInteger(matchup) ? [] : [{ matchup, quote, correction: typeof r.correction === "string" ? r.correction.trim() : "" }];
+  });
+}
+
+/** Whether a correction may print: no banned phrase, no figure its block does not give, no first name from memory. */
+function sound(text: string, ctx: MatchupContext, block: string): boolean {
+  // Men and sides are names, never words or figures: "test2" is no 2.
+  const sides = [ctx.state.home.side.name, ctx.state.away.side.name, ...[ctx.next.home, ctx.next.away].flatMap((x) => x?.name ?? [])];
+  const plain = masked(text, [...menOf(ctx).flatMap((m) => m.names), ...sides]).replace(/\u0000/gu, " ");
+  const allowed = allowedFigures(ctx, block);
+  return banned(plain, DRAFT_NEVER).length === 0 && numbersIn(plain).every((n) => allowed.has(n)) && unbriefedNames(text, ctx, block).length === 0;
+}
+
+/** The writing with each fix made, `factFixes` at most a match-up: a sound correction in place of its quote, or the quote
+ *  cut; a paragraph left empty goes. */
+export function applyFactFixes(pieces: ReadonlyMap<number, DraftPiece>, fixes: readonly FactFix[], contexts: readonly MatchupContext[], blocks: readonly string[]): { pieces: Map<number, DraftPiece>; made: number } {
+  const out = new Map([...pieces].map(([n, p]) => [n, { paragraphs: [...p.paragraphs] }]));
+  const done = new Map<number, number>();
+  let made = 0;
+  for (const fix of fixes) {
+    const piece = out.get(fix.matchup);
+    const ctx = contexts[fix.matchup - 1];
+    const at = piece?.paragraphs.findIndex((p) => p.includes(fix.quote)) ?? -1;
+    if (piece === undefined || ctx === undefined || at < 0 || (done.get(fix.matchup) ?? 0) >= DRAFT_WRITING.factFixes) continue;
+    const block = blocks[fix.matchup - 1] ?? "";
+    const line = fix.correction !== "" && sound(fix.correction, ctx, block) ? fix.correction : "";
+    piece.paragraphs[at] = piece.paragraphs[at].replace(fix.quote, line).replace(/\s{2,}/gu, " ").trim();
+    piece.paragraphs = piece.paragraphs.filter((p) => p !== "");
+    done.set(fix.matchup, (done.get(fix.matchup) ?? 0) + 1);
+    made++;
+  }
+  return { pieces: out, made };
+}
