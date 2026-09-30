@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { type FootballPlayer, type PlayerStatLine, DASH, crestForShortName, toFplClubCode } from "@epl/core";
 import { VIEWS, type ViewKey, measuresFor, readingOf } from "./statViews";
 import { playerHref } from "../../../players/routes";
+import { positionsFromList } from "../../../positions";
 import { SELECT } from "../../../components/shell/ButtonLink";
 import BoardKey from "../../../components/league/BoardKey";
 import PositionTile from "../../../components/league/PositionTile";
@@ -111,11 +112,7 @@ export default function StatBoard({
               const crest = line.clubShort ? crestForShortName(toFplClubCode(line.clubShort)) : null;
               return (
                 <tr key={line.fantraxId} className={`cm-row ${ROW_HOVER} ${doubtRow(footballer)}`}>
-                  <PositionTile
-                    positions={line.position ? line.position.split(",").map((p) => p.trim()) : []}
-                    cell
-                    className={PINNED_TILE}
-                  />
+                  <PositionTile positions={positionsFromList(line.position)} cell className={PINNED_TILE} />
                   <td className={`px-1.5 ${ROW_NAME} ${LEAD} text-ink ${doubtRow(footballer)}`}>
                     <Link href={playerHref(line.fantraxId)} className={`${ROW_LINK} w-36 lg:w-auto`}>
                       <span className="grid size-6 shrink-0 place-items-center">

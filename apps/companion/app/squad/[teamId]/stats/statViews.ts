@@ -72,19 +72,8 @@ function totalOf(line: PlayerStatLine): number | null {
   return figures.length === 0 ? null : figures.reduce((sum, value) => sum + value, 0);
 }
 
-/** One column on the board: its head, what it means, and how to read it off a
- *  row.
- *
- *  **The read belongs to the COLUMN, and that is the whole point.** `StatBoard`
- *  branched on `view === "underlying"` in three places — the head strip, the
- *  cell row and the glossary — and appended the fantasy total as a fourth
- *  special case in each of them, so one column's existence was stated six times
- *  and its arithmetic a seventh in the sort comparator. Six of the seven were
- *  free to disagree with the other one.
- *
- *  `totals` is the FPL season for this row's man, `undefined` for a slot the
- *  bridge has not settled. A category ignores it; an underlying column is
- *  nothing else. */
+/** One column on the board: its head, what it means, and how to read it off a row, so the heads, cells, key, cuts
+ *  and sort read one list. `totals` is his FPL season, `undefined` where the bridge has not settled him. */
 export type Measure = {
   key: string;
   head: string;
@@ -98,10 +87,7 @@ export type Measure = {
   worse?: boolean;
 };
 
-/** Our own total, which is a column and not an epilogue.
- *
- *  It rides in the measures list precisely so it stops being a special case at
- *  every site that draws one. The label is the one the glossary printed. */
+/** Our own total, a column like the rest so no site draws it as a special case. */
 const TOTAL: Measure = {
   key: "pts",
   head: "Pts",
