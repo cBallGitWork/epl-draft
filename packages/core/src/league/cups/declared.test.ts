@@ -38,22 +38,14 @@ describe("Timbeibs Cup", () => {
     });
   });
 
-  it("follows strict bracket order once seeded: no seed is placed after its first tie", () => {
-    // Craig, 30 Sep: "cup 1, once seeded, follows a strict bracket order".
-    const sides = rounds.flatMap((round) => round.ties.flatMap((tie) => [tie.home, tie.away]));
-    const seeds = sides.flatMap((side) => ("seed" in side ? [side.seed] : [])).sort((a, b) => a - b);
-    expect(seeds).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  it("draws rounds 1 and 2 at random, seeds 7–10 into round 1, then follows strict bracket order", () => {
+    // Craig, 30 Sep: "cup 1, once seeded, follows a strict bracket order"; "round 1 can be drawn, and round 2".
+    expect(timbeibs.knockout.drawnRounds).toBe(2);
+    const seedsIn = (round: (typeof rounds)[number] | undefined) =>
+      (round?.ties ?? []).flatMap((tie) => [tie.home, tie.away]).flatMap((side) => ("seed" in side ? [side.seed] : []));
     const [first, second, third] = rounds.filter((round) => round.id.startsWith("W"));
-    expect(first?.ties.map((tie) => [tie.home, tie.away])).toEqual([
-      [{ seed: 8 }, { seed: 9 }],
-      [{ seed: 7 }, { seed: 10 }],
-    ]);
-    expect(second?.ties.map((tie) => [tie.home, tie.away])).toEqual([
-      [{ seed: 1 }, { winnerOf: "W1-1" }],
-      [{ seed: 4 }, { seed: 5 }],
-      [{ seed: 2 }, { winnerOf: "W1-2" }],
-      [{ seed: 3 }, { seed: 6 }],
-    ]);
+    expect(seedsIn(first).sort((a, b) => a - b)).toEqual([7, 8, 9, 10]);
+    expect(seedsIn(second).sort((a, b) => a - b)).toEqual([1, 2, 3, 4, 5, 6]);
     expect(third?.ties.map((tie) => [tie.home, tie.away])).toEqual([
       [{ winnerOf: "W2-1" }, { winnerOf: "W2-2" }],
       [{ winnerOf: "W2-3" }, { winnerOf: "W2-4" }],

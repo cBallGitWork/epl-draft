@@ -68,6 +68,9 @@ function knockoutStages(cup: Cup, seeds: readonly string[]): CupStage[] {
   const codes = new Map(played.flatMap((round) => round.ties).map((tie, at) => [tie.id, `M${at + 1}`]));
   const names = double ? doubleNames(rounds) : singleNames(rounds);
 
+  // A drawn round's sides are whoever the draw puts there, so neither a seed nor a winner is printed.
+  const drawn = (round: BracketRound) =>
+    round.id.startsWith("W") && Number(round.id.slice(1)) <= (cup.knockout.drawnRounds ?? 0);
   const label = (side: BracketSide) => {
     if ("seed" in side) return seeds[side.seed - 1] ?? `Seed ${side.seed}`;
     if ("winnerOf" in side) return `Winner ${codes.get(side.winnerOf) ?? ""}`;
@@ -78,9 +81,15 @@ function knockoutStages(cup: Cup, seeds: readonly string[]): CupStage[] {
     name: names.get(round.id) ?? round.id,
     side: round.id.startsWith("L") ? ("losers" as const) : ("winners" as const),
     gameweek: gameweekOf(round),
-    fixtures: round.ties.map((tie) => ({ code: codes.get(tie.id) ?? null, home: label(tie.home), away: label(tie.away) })),
+    fixtures: round.ties.map((tie) => ({
+      code: codes.get(tie.id) ?? null,
+      home: drawn(round) ? TO_BE_DRAWN : label(tie.home),
+      away: drawn(round) ? TO_BE_DRAWN : label(tie.away),
+    })),
   }));
 }
+
+const TO_BE_DRAWN = "To be drawn";
 
 /** Within a gameweek the winners' round reads before the losers'. */
 const BRACKET_ORDER = "WLF";

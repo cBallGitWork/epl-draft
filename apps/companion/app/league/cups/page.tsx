@@ -132,5 +132,8 @@ function format(cup: Cup): string {
     const { groups, qualify, drawGameweek } = cup.seeding.stage;
     return `Placeholder draw. ${groups} groups drawn around GW${drawGameweek}, top ${qualify} through, group winners skip the first knockout round. ${knockout}, one leg.`;
   }
-  return `Placeholder draw. Seeded on GW${cup.seeding.gameweek} points, a tie going to the higher league place. ${knockout}, one leg.`;
+  const drawn = cup.knockout.drawnRounds ?? 0;
+  const rounds = drawn === 1 ? "Round 1" : drawn === 2 ? "Rounds 1 and 2" : `Rounds 1 to ${drawn}`;
+  const draw = drawn > 0 ? ` ${rounds} drawn at random, then a fixed bracket.` : "";
+  return `Placeholder draw. Seeded on GW${cup.seeding.gameweek} points, a tie going to the higher league place.${draw} ${knockout}, one leg.`;
 }

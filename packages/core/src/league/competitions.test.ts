@@ -14,11 +14,11 @@ describe("leagueTies", () => {
 });
 
 describe("cupTies", () => {
-  it("opens the Timbeibs Cup on GW10 with seeds 7 to 10, nobody drawn", () => {
+  it("opens the Timbeibs Cup on GW10 with two ties still to be drawn", () => {
     const ties = cupTies(10, 10);
     expect(ties.map((tie) => [tie.competition.id, tie.round, tie.home.label, tie.away.label])).toEqual([
-      ["timbeibs", "Round 1", "Seed 8", "Seed 9"],
-      ["timbeibs", "Round 1", "Seed 7", "Seed 10"],
+      ["timbeibs", "Round 1", "To be drawn", "To be drawn"],
+      ["timbeibs", "Round 1", "To be drawn", "To be drawn"],
     ]);
     expect(ties.every((tie) => tie.home.team === null && tie.away.team === null)).toBe(true);
   });

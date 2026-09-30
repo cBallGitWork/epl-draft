@@ -28,11 +28,13 @@ describe("cupPlan", () => {
 
   it("numbers every knockout tie in playing order and names later sides by those numbers", () => {
     const stages = cupPlan(cup("timbeibs"), 10);
+    // Craig, 30 Sep: rounds 1 and 2 are drawn at random, so no seed is printed in them.
     expect(stages[0]?.fixtures).toEqual([
-      { code: "M1", home: "Seed 8", away: "Seed 9" },
-      { code: "M2", home: "Seed 7", away: "Seed 10" },
+      { code: "M1", home: "To be drawn", away: "To be drawn" },
+      { code: "M2", home: "To be drawn", away: "To be drawn" },
     ]);
-    expect(stages[1]?.fixtures[0]).toEqual({ code: "M3", home: "Seed 1", away: "Winner M1" });
+    expect(stages[1]?.fixtures[0]).toEqual({ code: "M3", home: "To be drawn", away: "To be drawn" });
+    expect(stages[2]?.fixtures[0]).toEqual({ code: "M7", home: "Loser M1", away: "Loser M6" });
     // Numbered in the order they are played: the winners' final (GW15) is M15, the losers' (GW16) M17.
     expect(stages.at(-1)?.fixtures).toEqual([{ code: "M18", home: "Winner M15", away: "Winner M17" }]);
     expect(stages.flatMap((stage) => stage.fixtures)).toHaveLength(18);

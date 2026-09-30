@@ -24,7 +24,8 @@ ours* carries Craig's rules (27 Sep 2026).
 Craig, 27 Sep 2026: *"Placeholder brackets are fine for now."* Nobody is seeded until GW9 is
 scored, and nobody is in a group until the draw around GW19, so every side is a placeholder:
 "Seed 7", a group slot "A1", a group place "2nd B", or "Winner M5" / "Loser M5", M5 being the tie
-numbered 5 on this page. Ties are numbered in the order they are played. The draw is laid out for
+numbered 5 on this page. A round drawn at random (the Timbeibs Cup's first two) prints "To be drawn"
+on both sides until Craig's draw fills it. Ties are numbered in the order they are played. The draw is laid out for
 however many teams `getLeagueInfo` has, so a league still filling up gets a smaller bracket.
 
 ## States
