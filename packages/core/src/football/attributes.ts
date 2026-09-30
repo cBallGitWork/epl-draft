@@ -1,4 +1,6 @@
 import type { Shot } from "./intel/shots";
+import type { StatKey } from "./intel/statKeys";
+import { per90 as countPer90, type StatsRow } from "./intel/stats";
 import type { FootballPlayer } from "./types";
 
 // Championship Manager's attribute grid, for a real footballer.
@@ -10,6 +12,7 @@ import type { FootballPlayer } from "./types";
 //
 // What nothing we hold measures gets NO ROW: Pace, Acceleration, Agility, Balance, Bravery.
 // A rating is a ranking in THIS season, so it is thin early and settles as the season fills.
+// Since 26 Sep 2026 the event counts (tackles won, aerials, crosses) are the stats league's.
 
 /** One attribute, as the grid draws it. */
 export interface Attribute {
@@ -41,7 +44,12 @@ export interface Scouted {
   setPieceShare: number | null;
   shots: ShotLine | null;
   touches: number | null;
+  /** His counts off the stats league, or null where it holds none. */
+  stats: StatsRow | null;
 }
+
+/** Whose grid a row belongs to; a row with none is on both. */
+export type Role = "keeper" | "outfield";
 
 /** Ninety minutes, below which a per-ninety rate is arithmetic rather than evidence. */
 const MINUTES_FLOOR = 90;
@@ -53,6 +61,7 @@ const WORST = 1;
 interface Measure {
   name: string;
   from: string;
+  for?: Role;
   /** His figure, or null when the statistic does not apply to him. */
   of: (man: Scouted) => number | null;
 }
@@ -65,34 +74,44 @@ const per90 = (total: (man: Scouted) => number | null) => (man: Scouted) => {
 
 const season = (man: Scouted) => man.player.season;
 
+/** Stats-league counts added up, per ninety of his minutes there; null where it holds none. */
+const counted = (...keys: StatKey[]) => (man: Scouted) => {
+  const rates = keys.map((key) => countPer90(man.stats ?? undefined, key));
+  return rates.some((rate) => rate === null) ? null : rates.reduce((sum: number, rate) => sum + (rate ?? 0), 0);
+};
+
 /** The grid, alphabetical down the columns as CM 01/02 sets it. */
 const MEASURES: readonly Measure[] = [
+  { name: "Aggression", from: "fouls committed per 90", for: "outfield", of: counted("foulsCommitted") },
   { name: "Anticipation", from: "recoveries per 90", of: per90((m) => season(m).recoveries) },
-  { name: "Creativity", from: "shots he set up per 90, off the shot map", of: per90((m) => m.shots?.created ?? null) },
+  { name: "Creativity", from: "key passes per 90", for: "outfield", of: counted("keyPasses") },
+  { name: "Crossing", from: "accurate crosses per 90", for: "outfield", of: counted("accurateCrosses") },
   { name: "Determination", from: "FPL's bonus-points score per 90", of: per90((m) => season(m).bps) },
-  { name: "Finishing", from: "goals against expected goals per 90", of: per90((m) => season(m).goals - season(m).expectedGoals) },
-  { name: "Handling", from: "saves per 90", of: per90((m) => season(m).saves) },
-  { name: "Heading", from: "headed shots per 90, off the shot map", of: per90((m) => m.shots?.headers ?? null) },
+  { name: "Dribbling", from: "take-ons attempted per 90", for: "outfield", of: counted("contestsAttempted") },
+  { name: "Finishing", from: "goals against expected goals per 90", for: "outfield", of: per90((m) => season(m).goals - season(m).expectedGoals) },
+  { name: "Handling", from: "saves per 90", for: "keeper", of: per90((m) => season(m).saves) },
+  { name: "Heading", from: "aerial duels won per 90", for: "outfield", of: counted("aerialsWon") },
   { name: "Influence", from: "FPL's Influence per 90", of: per90((m) => season(m).influence) },
-  { name: "Long Shots", from: "shots from outside the box per 90, off the shot map", of: per90((m) => m.shots?.outsideBox ?? null) },
-  { name: "Marking", from: "clearances, blocks and interceptions per 90", of: per90((m) => season(m).clearancesBlocksInterceptions) },
-  { name: "Off The Ball", from: "expected goals per 90", of: per90((m) => season(m).expectedGoals) },
-  { name: "Passing", from: "expected assists per 90", of: per90((m) => season(m).expectedAssists) },
-  { name: "Penalty Taking", from: "share of his club's penalties", of: (m) => m.penaltyShare },
-  { name: "Positioning", from: "expected goals conceded less goals conceded, per 90", of: per90((m) => season(m).expectedGoalsConceded - season(m).goalsConceded) },
-  { name: "Reflexes", from: "saves against expected goals conceded", of: reflexes },
-  { name: "Set Pieces", from: "share of his club's free kicks and corners", of: (m) => m.setPieceShare },
-  { name: "Stamina", from: "minutes per start", of: stamina },
-  { name: "Tackling", from: "tackles per 90", of: per90((m) => season(m).tackles) },
+  { name: "Long Shots", from: "shots from outside the box per 90, off the shot map", for: "outfield", of: per90((m) => m.shots?.outsideBox ?? null) },
+  { name: "Marking", from: "clearances per 90", for: "outfield", of: counted("clearances") },
+  { name: "Off The Ball", from: "expected goals per 90", for: "outfield", of: per90((m) => season(m).expectedGoals) },
+  { name: "Passing", from: "passes into the final third per 90", for: "outfield", of: counted("finalThirdPasses") },
+  { name: "Penalty Taking", from: "share of his club's penalties", for: "outfield", of: (m) => m.penaltyShare },
+  { name: "Positioning", from: "expected goals conceded less goals conceded, per 90", for: "keeper", of: per90((m) => season(m).expectedGoalsConceded - season(m).goalsConceded) },
+  { name: "Positioning", from: "interceptions per 90", for: "outfield", of: counted("interceptions") },
+  { name: "Reflexes", from: "saves against expected goals conceded", for: "keeper", of: reflexes },
+  { name: "Set Pieces", from: "share of his club's free kicks and corners", for: "outfield", of: (m) => m.setPieceShare },
+  { name: "Stamina", from: "minutes per start", for: "outfield", of: stamina },
+  { name: "Tackling", from: "tackles won per 90", for: "outfield", of: counted("tacklesWon") },
   { name: "Teamwork", from: "touches per 90, off the touch map", of: per90((m) => m.touches) },
-  { name: "Work Rate", from: "tackles, blocks and recoveries per 90", of: per90(defensiveWork) },
+  { name: "Work Rate", from: "tackles won, interceptions and recoveries per 90", for: "outfield", of: counted("tacklesWon", "interceptions", "recoveries") },
 ];
 
-/** His grid, rated against `cohort`. Pure; the cohort is filtered to men past the minutes floor. */
-export function attributes(man: Scouted, cohort: readonly Scouted[]): Attribute[] {
+/** His grid for his role, rated against `cohort`. Pure; the cohort is filtered to men past the minutes floor. */
+export function attributes(man: Scouted, cohort: readonly Scouted[], role: Role): Attribute[] {
   const played = cohort.filter((other) => other.player.season.minutes >= MINUTES_FLOOR);
   const measured = man.player.season.minutes >= MINUTES_FLOOR;
-  return MEASURES.map((measure) => ({
+  return MEASURES.filter((measure) => measure.for === undefined || measure.for === role).map((measure) => ({
     name: measure.name,
     from: measure.from,
     rating: measured ? rate(measure, man, played) : null,
@@ -116,33 +135,11 @@ function reflexes(man: Scouted): number | null {
   return expectedGoalsConceded > 0 ? saves / expectedGoalsConceded : null;
 }
 
-function defensiveWork(man: Scouted): number {
-  const { tackles, clearancesBlocksInterceptions, recoveries } = man.player.season;
-  return tackles + clearancesBlocksInterceptions + recoveries;
-}
-
 /** Minutes per start; a man who has only come off the bench is not measured. */
 function stamina(man: Scouted): number | null {
   const { minutes, starts } = man.player.season;
   return starts > 0 ? minutes / starts : null;
 }
-
-/** Only a goalkeeper's rows, and only an outfielder's. The app, which knows positions, chooses. */
-export const KEEPER_ONLY: readonly string[] = ["Handling", "Positioning", "Reflexes"];
-export const OUTFIELD_ONLY: readonly string[] = [
-  "Creativity",
-  "Finishing",
-  "Heading",
-  "Long Shots",
-  "Marking",
-  "Off The Ball",
-  "Passing",
-  "Penalty Taking",
-  "Set Pieces",
-  "Stamina",
-  "Tackling",
-  "Work Rate",
-];
 
 /** The penalty area on the shot map's 0–100 axes: 16.5m deep of a 105m pitch, 40.3m wide of 68m. */
 const BOX_FROM = 100 - (16.5 / 105) * 100;

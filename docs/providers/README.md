@@ -76,7 +76,8 @@ Every workflow in `.github/workflows/`, crons in UTC as written. Writers commit 
 | Workflow | Cron (UTC) | Runs | Commits, with prefix | Concurrency | Target |
 |---|---|---|---|---|---|
 | `.github/workflows/capture.yml` | `10 5 * * *` | `npm run capture` | `data/snapshots`, "chore: capture Fantrax {date}" | `capture` | `ingest-snapshots.yml` |
-| `.github/workflows/intel-check.yml` | `25 5 * * *` | `npm run intel-check` | nothing | none | `check-intel.yml` at 05:55 |
+| `.github/workflows/ingest-stats.yml` | `40 5 * * *` | `npm run stats` | `data/intel/stats`, "data: the stats league's counts, {time}" | `ingest-stats` | stays |
+| `.github/workflows/intel-check.yml` | `55 5 * * *` | `npm run intel-check` | nothing | none | `check-intel.yml` |
 | `.github/workflows/capture-status.yml` | `25 14 * * *` | `npm run capture:status` | nothing | none | `check-captures.yml` |
 | `.github/workflows/scout-xi.yml` | `40 */2 * * *` | `npm run scout-xi` | `data/intel/xi`, "data: Scout's predicted elevens, {time}" | `scout-xi` | `ingest-xi.yml` |
 | `.github/workflows/round-state.yml` | `7 6-22 * * *` | `npm run round-state` | `data/probes/round-state`, "data: round state {time}" | `round-state` | `probe-round-state.yml` |
@@ -87,7 +88,7 @@ Every workflow in `.github/workflows/`, crons in UTC as written. Writers commit 
 
 Slots shared today: editions' first and fourth lines both fire Fri 17:00–22:30, and its second and
 third both fire Sat 11:00–16:30, so 24 firings a week run twice; warm shares every :00 and :30
-with editions in the match windows. Planned: `ingest-stats.yml` at 05:40.
+with editions in the match windows.
 
 ## Cached reads
 

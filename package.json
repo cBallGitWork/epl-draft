@@ -30,6 +30,7 @@
     "report:proof": "tsx --env-file-if-exists=.env.local scripts/report-proof.ts",
     "intel-check": "tsx scripts/intel-check.ts",
     "scout-xi": "tsx scripts/scout-xi.ts",
+    "stats": "tsx scripts/stats.ts",
     "pl-bridge": "tsx scripts/pl-bridge.ts"
   },
   "devDependencies": {

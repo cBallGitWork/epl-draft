@@ -73,6 +73,7 @@ npm run roster-limits   # position MIN/MAX off the commissioner's setup page; ne
                         # FANTRAX_COOKIE; re-run after the draft
 npm run team-codes      # one sign-in code per team, printed once
 npm run scout-xi        # Scout's predicted elevens; CI runs it every two hours
+npm run stats           # the stats league's counts into data/intel/stats/; CI runs it daily
 npm run edition         # file the paper's due stories; needs ANTHROPIC_API_KEY
 npm run intel-check     # is the intel export fresh and whole
 ```

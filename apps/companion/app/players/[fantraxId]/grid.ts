@@ -1,7 +1,5 @@
 import {
-  KEEPER_ONLY,
   KEEPER_RANKINGS,
-  OUTFIELD_ONLY,
   OUTFIELD_RANKINGS,
   attributes,
   clubById,
@@ -20,7 +18,7 @@ import type { Attribute, FootballPlayer, IntelPlayer, PastSeason, ProjectedPlace
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import { footballNow } from "../../football";
-import { SET_PIECES, intelProjections, intelSetPieces, intelShots, intelSquads, intelTouches } from "../../intel";
+import { SET_PIECES, intelProjections, intelSetPieces, intelShots, intelSquads, intelStats, intelTouches } from "../../intel";
 import type { StandoutCut } from "../../components/league/standout";
 import { poolCut } from "../standout";
 import { PAGE_REVALIDATE } from "../../config";
@@ -70,6 +68,7 @@ const division = cache(async (): Promise<Scouted[]> => {
       setPieceShare: share([pieces?.freeKicks, pieces?.corners]),
       shots: intelShots.size === 0 ? null : shotLine(intelShots.get(player.code) ?? [], created.get(player.code) ?? 0),
       touches: touches === undefined ? null : touches.fixtures.reduce((sum, fixture) => sum + fixture.p.length / 2, 0),
+      stats: intelStats.get(player.code) ?? null,
     };
   });
 });
@@ -84,6 +83,7 @@ async function measured(player: FootballPlayer) {
     setPieceShare: null,
     shots: null,
     touches: null,
+    stats: null,
   };
   const cohort = group === null ? everyone : everyone.filter((other) => groupOf(other.player.code) === group);
   return { man, cohort, group, keeper: intelSquads.get(player.code)?.line === "GK" };
@@ -92,8 +92,7 @@ async function measured(player: FootballPlayer) {
 /** His grid, rated within his group; a keeper's rows for a keeper and an outfielder's for the rest. */
 export async function playerGrid(player: FootballPlayer): Promise<Attribute[]> {
   const { man, cohort, keeper } = await measured(player);
-  const skip = keeper ? OUTFIELD_ONLY : KEEPER_ONLY;
-  return attributes(man, cohort).filter((row) => !skip.includes(row.name));
+  return attributes(man, cohort, keeper ? "keeper" : "outfield");
 }
 
 /** His season totals ranked within his group, the group's name, and whether he is a keeper. */
