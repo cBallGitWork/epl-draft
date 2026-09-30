@@ -4,8 +4,9 @@ import { useState } from "react";
 import type { CSSProperties } from "react";
 import { DASH, type Shot } from "@epl/core";
 import { PITCH_BOX, toBoxY } from "@/app/components/football/pitchBox";
+import { drawOrder } from "@/app/components/football/shotGeometry";
 import ShotMarks, { MarksKey } from "../../../components/football/ShotMarks";
-import { KeyPass, KeyPassKey, Pitch } from "../../../components/football/ShotPitch";
+import { KeyPassKey, KeyPassLines, KeyPassOrigins, Pitch } from "../../../components/football/ShotPitch";
 import { BOARD, ROW_RULE, SECTION_BAR, SMALL_CAPS } from "@/app/desk";
 import {
   Head,
@@ -70,8 +71,12 @@ export default function ShotMap({
   if (shots.length === 0) return null;
 
   const pick = (at: number) => setPicked((now) => (now === at ? null : at));
-  const count = (side: PlottedShot["side"]) =>
-    shots.filter((shot) => shot.side === side).length;
+  const drawn = (["home", "away"] as const).map((key) => ({
+    key,
+    shots: shots.filter((shot) => shot.side === key),
+    colour: (key === "home" ? home : away).colour,
+  }));
+  const count = (side: PlottedShot["side"]) => (side === "home" ? drawn[0] : drawn[1]).shots.length;
   const listed = shots
     .map((shot, at) => ({ shot, at }))
     .sort((a, b) =>
@@ -115,20 +120,16 @@ export default function ShotMap({
             aria-label="Where both sides shot from"
           >
             <Pitch />
-            {/* Passes first, so each shot's mark sits on the end of its line. */}
-            {shots.map((shot, at) =>
-              shot.pass === null ? null : (
-                <KeyPass key={at} shot={shot} from={shot.pass} colour={sideOf(shot).colour} />
-              ),
-            )}
-            <ShotMarks
-              shots={shots.filter((shot) => shot.side === "home")}
-              ink={home.colour}
-            />
-            <ShotMarks
-              shots={shots.filter((shot) => shot.side === "away")}
-              ink={away.colour}
-            />
+            {/* Pass lines under the marks, their origins over them. */}
+            {drawn.map((side) => (
+              <KeyPassLines key={side.key} shots={side.shots} colour={side.colour} />
+            ))}
+            {drawn.map((side) => (
+              <ShotMarks key={side.key} shots={side.shots} ink={side.colour} />
+            ))}
+            {drawn.map((side) => (
+              <KeyPassOrigins key={side.key} shots={side.shots} colour={side.colour} />
+            ))}
             {pickedShot === undefined ? null : (
               <circle
                 cx={pickedShot.x}
@@ -139,20 +140,23 @@ export default function ShotMap({
                 strokeWidth={RING_WIDTH}
               />
             )}
-            {/* A tap target on every mark, laid over the drawing so the drawing stays `ShotMarks`' own. */}
-            {shots.map((shot, at) => (
-              <circle
-                key={at}
-                cx={shot.x}
-                cy={toBoxY(shot.y)}
-                r={TAP_RADIUS}
-                fill="transparent"
-                className="cursor-pointer"
-                onClick={() => pick(at)}
-              >
-                <title>{`${shot.minute ?? DASH}′ ${shot.name}${shot.assister === null ? "" : ` (A ${shot.assister})`} · ${OUTCOME[shot.outcome]}`}</title>
-              </circle>
-            ))}
+            {/* A tap target on every mark, stacked as the marks are so a tap takes the one on top. */}
+            {drawOrder(shots).map((at) => {
+              const shot = shots[at];
+              return (
+                <circle
+                  key={at}
+                  cx={shot.x}
+                  cy={toBoxY(shot.y)}
+                  r={TAP_RADIUS}
+                  fill="transparent"
+                  className="cursor-pointer"
+                  onClick={() => pick(at)}
+                >
+                  <title>{`${shot.minute ?? DASH}′ ${shot.name}${shot.assister === null ? "" : ` (A ${shot.assister})`} · ${OUTCOME[shot.outcome]}`}</title>
+                </circle>
+              );
+            })}
           </svg>
           <MarksKey>
             <KeyPassKey />

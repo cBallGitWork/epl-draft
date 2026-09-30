@@ -2,7 +2,7 @@ import type { Club, Shot } from "@epl/core";
 import { clubColoursOf, plateOn } from "@epl/core";
 import { PITCH_BOX } from "../../components/football/pitchBox";
 import Marks, { MarksKey } from "../../components/football/ShotMarks";
-import { KeyPass, KeyPassKey, Pitch } from "../../components/football/ShotPitch";
+import { KeyPassKey, KeyPassLines, KeyPassOrigins, Pitch } from "../../components/football/ShotPitch";
 import { SMALL_CAPS } from "@/app/desk";
 
 // Both men on one pitch, each at his own end as the bar reads them: the left man is turned round, as the match
@@ -57,19 +57,12 @@ export default function CompareMap({
         aria-label={sides.map((side, index) => `${side.name}: ${side.shots.length} ${noun}, attacking ${sides.length === 2 && index === 0 ? "left" : "right"}`).join("; ") + `, ${window}.`}
       >
         <Pitch />
-        {/* Passes first, so each shot's mark sits on the end of its line. */}
-        {passes
-          ? sides.flatMap((side) =>
-              side.shots.map((shot, at) =>
-                shot.pass === null ? null : (
-                  <KeyPass key={`${side.name}-${at}`} shot={shot} from={shot.pass} colour={side.colour} />
-                ),
-              ),
-            )
-          : null}
+        {/* Pass lines under the marks, their origins over them. */}
+        {passes ? sides.map((side) => <KeyPassLines key={side.name} shots={side.shots} colour={side.colour} />) : null}
         {sides.map((side) => (
           <Marks key={side.name} shots={side.shots} ink={side.colour} />
         ))}
+        {passes ? sides.map((side) => <KeyPassOrigins key={side.name} shots={side.shots} colour={side.colour} />) : null}
       </svg>
       <MarksKey>{passes ? <KeyPassKey /> : null}</MarksKey>
     </figure>
