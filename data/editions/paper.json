@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-30T19:39:51.636Z",
+  "updatedAt": "2026-09-30T20:22:17.275Z",
   "stories": [
     {
       "slug": "news-cmrr48zqz1jno",
@@ -569,6 +569,26 @@
           }
         }
       ]
+    },
+    {
+      "slug": "news-c3ew9vv7444xo",
+      "kind": "news",
+      "leagueId": "zbn1z3ukmsgb36sz",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-30T20:22:17.275Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "123's Continental Drift",
+      "deck": "Europe circles 123's Haaland and Schade; Foden draws interest, hitting test4",
+      "body": "The gossip pages do 123 no favours this morning. Haaland and Schade both sit on his roster, and both feature in the same wave of interest from Europe's top clubs. Liverpool are named as suitors for Schade; Haaland is folded into the wider run on City's forwards. Nothing is signed, nothing is dated, and neither man is going anywhere this window on the strength of a Thursday column.\n\ntest4 has his own reason to read on. Foden is named among the City players drawing looks from the continent. As with the rest, it is interest and nothing firmer, no fee, no timeline, no departure. The assets stay where they are for now, but two of the league's cornerstones have Europe's eyes on them.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/articles/c3ew9vv7444xo"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
     },
     {
       "slug": "news-cr1e5ep101wdo",
@@ -6435,26 +6455,6 @@
       "body": "Bukayo Saka carries the paper's interest wherever he goes, and he belongs to test1. This week the winger spoke of a \"scar\" left by England's World Cup semi-final exit to Argentina, a wound the squad still carry.\n\nNothing here touches the team sheet. Saka is fit, Saka is talking, and test1 has an asset unbruised by anything but memory. The words are national; the ownership is local.",
       "subjects": [
         "news:https://www.bbc.co.uk/sport/football/articles/cvde0jw2l6g4o"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "news-c63d7ypd11ydo",
-      "kind": "news",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-23T17:18:14.294Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "Thomas Called Up, test3331 Left Waiting",
-      "deck": "Martha Thomas, owned by test3331, recalled to Scotland squad for World Cup play-offs against the Czech Republic.",
-      "body": "Martha Thomas is back in a Scotland squad for the first time in nearly a year, named for next month's World Cup round one play-offs against the Czech Republic. For test3331, that is a squad player pulled into international duty at the worst end of the calendar.\n\nThe tie is the round-one play-off, so test3331 knows the fixture but not the toll. Whether Thomas features, and for how long, is not for us to say here. What is settled is that test3331's asset now answers to a Scotland shirt.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/c63d7ypd11ydo"
       ],
       "image": null,
       "face": null,

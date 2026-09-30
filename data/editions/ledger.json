@@ -250,9 +250,24 @@
       "news:https://www.bbc.co.uk/sounds/play/p0pd5x19",
       "news:https://www.bbc.co.uk/sport/football/articles/ckq5xp9p1v31o",
       "news:https://www.bbc.co.uk/sport/football/articles/ckge43e8nqdwo",
-      "news:https://www.bbc.co.uk/sport/football/articles/cr1e5ep101wdo"
+      "news:https://www.bbc.co.uk/sport/football/articles/cr1e5ep101wdo",
+      "news:https://www.bbc.co.uk/sport/football/articles/c3ew9vv7444xo"
     ],
     "threads": [
+      {
+        "subject": "123's scoring ceiling",
+        "beat": "Haaland and Schade both named in Europe's summer interest, no move flagged",
+        "status": "open",
+        "beats": 4,
+        "lastUsedAt": "2026-09-30T20:22:17.275Z"
+      },
+      {
+        "subject": "test4's Foden asset",
+        "beat": "Foden drawing continental interest among City's departures-in-waiting",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-30T20:22:17.275Z"
+      },
       {
         "subject": "test3331's Thomas asset",
         "beat": "Tuchel calls the England captain irreplaceable; no fixture bearing.",
@@ -273,13 +288,6 @@
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-29T17:11:29.492Z"
-      },
-      {
-        "subject": "123's scoring ceiling",
-        "beat": "The top scorer's cornerstone sits under speculation, still nailed on.",
-        "status": "open",
-        "beats": 3,
-        "lastUsedAt": "2026-09-28T21:37:10.943Z"
       },
       {
         "subject": "test3331's Scotland assets",
