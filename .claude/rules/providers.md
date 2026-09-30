@@ -11,6 +11,8 @@ Probed live from 3 Aug 2026 on, and counted rather than quoted: do not re-derive
 a population before building on it. Moved out of CLAUDE.md on 23 Sep 2026 so it loads where
 it is used.
 
+Who calls each source, when, and where it lands: `docs/providers/README.md`. This file holds fields.
+
 ### FPL — public, no auth
 
 - `GET /api/bootstrap-static/` — 1.3 MB: 20 clubs, 38 events, and an element
