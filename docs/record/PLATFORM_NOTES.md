@@ -44,6 +44,18 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## A player's fixture run carries the sister model's projection, not Fantrax's — decided 30 Sep 2026
+
+- **Counted**: the sister export projects **666 of 666** players for **each of GW6–17** (12 weeks); Fantrax's
+  own per-player projection covers one period and only the men fielded (`ACTIVE`), behind the lineup gate, and
+  its reader was deleted on 25 Sep. So the run reads the export, in FPL scoring; the panel carries no source caption, and each figure's title
+  says whose it is.
+- **The rank is among his grid's group** (the sister's line: 108 midfielders, 23 goalkeepers), the men with a
+  reading that week, ties sharing a place (`projectedPlace` in core); lit on the pool board's shares (`poolCut`).
+- **Mail's frame and row are shared at two, by Craig's asking** ("use the mail template more"), a recorded
+  exception to CODE_RULES §1 like `DateChip`'s: `news/Mailbox` and `news/MailRow` serve Mail and a player's
+  News, and the row's headline now wraps to two lines on both rather than clipping on a phone.
+
 ## Opta's commentary describes every shot, and says what VAR decided — probed 28 Sep 2026
 
 For the match report's facts: the textstream (`/fixtures/{id}/textstream/EN`) over **all 50 fixtures

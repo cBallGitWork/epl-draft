@@ -15,7 +15,7 @@ import Portrait from "./Portrait";
 import Rankings from "./Rankings";
 import RealPosition from "./RealPosition";
 import SeasonTable from "./SeasonTable";
-import { playerGrid, playerStanding, realPosition } from "./grid";
+import { playerGrid, playerStanding, projectedWeeks, realPosition } from "./grid";
 import { joinMatches } from "./matchRows";
 import { gameLog } from "./scouting";
 import { scouting } from "./scouting";
@@ -54,6 +54,10 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
   // nothing and do not go behind a boundary. This is the half of the screen that
   // answers docs/rules/PRODUCT.md's third-most-frequent job — "should I start this player".
   const run = football === null ? null : await scouting(football.player);
+  const weeks =
+    football === null || run === null
+      ? null
+      : await projectedWeeks(football.player, run.flatMap((against) => against.fixture.gameweek ?? []));
 
   return (
     <PlayerShell
@@ -122,7 +126,7 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
           The card that drew the round is deleted rather than moved — no consumer
           means delete (CODE_RULES §2), and `contribution()` in core is still
           there if Data ever wants a round view. */}
-      {run === null ? null : <FixtureRun run={run} />}
+      {run === null || weeks === null ? null : <FixtureRun run={run} weeks={weeks} group={standing?.group ?? null} />}
 
       {/* **What he actually is, last and loudest** (Craig, 4 Sep 2026), which is
           where `cm9900/11.jpg` puts it: `Defender/Defensive Midfielder
