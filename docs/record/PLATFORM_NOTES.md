@@ -85,6 +85,33 @@ carry two active managers. A club with two is given none, because nothing says w
 **Opta's type strings are now read in five places, and the shared table waits.** `moments.ts` joins
 `map.ts` `KINDS`, `assists.ts`, `injuries.ts` and `wire.ts`. It is past the rule of three, but #149
 rewrites three of those four, so the extraction lands after #149 merges rather than colliding with it.
+## The cups are declared as ours; the playoff is Fantrax's — decided 27 Sep 2026
+
+Craig set the formats on 27 Sep. The cups are declared in `packages/core/src/league/cups/declared.ts`, and
+`declared.test.ts` lays each one out for ten teams:
+
+- **Timbeibs Cup**: GW9 is a seeding round, seeded by that week's Fantrax points, with a tie going to
+  the higher league position. Then a one-leg double elimination with no reset final, from GW10 to the
+  GW17 final (Boxing Day). The top six byes are not declared: `doubleBracket(10)` gives them, because only
+  seeds 7 to 10 fill a sixteen-slot first round.
+- **Davy Propper Cup**: two groups drawn at random around GW19, off the app, each playing once over GW21
+  to GW25. The top three go through and the group winners skip the quarter-finals (`seededBracket(6)`).
+  Quarter-finals are A2 v B3 and B2 v A3, all one leg: GW28, GW29 and a GW30 final. GW26 and GW27 have no
+  cup games.
+- **The playoff is Fantrax's, read from `getLeagueInfo` and never declared.** Craig sets it in Fantrax:
+  five teams, a one-leg 4 v 5 play-in, two-leg semi-finals, a one-leg final. `mapPlayoffs` carries the
+  places. On 27 Sep the real league (`mqsjd23smsgbiqzr`) still answered `playoffs: {used: false}`, so the
+  table's cut line draws nothing until he has.
+- **A level knockout tie** is settled by points, then the starting eleven's goals, assists, clean sheets and
+  minutes played in the tie. Level on all five is a coin toss, which Craig makes: `knockoutWinner` answers
+  `"coin toss"`. Every cup tie is one leg.
+- **Group points are 3 for a win and 1 for a draw** (Craig, 27 Sep). A group is placed on points, then
+  points for, then draw order; the order after points for is assumed.
+- **On screen with a placeholder draw** (Craig, 27 Sep: *"Placeholder brackets are fine for now"*):
+  `/league/cups` shows each cup as the schedule's fixture list or as a bracket, and Schedule and Live
+  carry the cup ties. Every side is "Seed 7", "A1", "2nd B" or "Winner M5" until GW9 is scored and the
+  groups are drawn; nothing yet puts a team into a slot. `knockoutWinner`, `seedByPoints` and
+  `groupTable` are tested but still read by no screen, which is the step that does.
 
 ## Lawro writes the predictions, under his own name, on Thursday evening — decided 24 Sep 2026
 
@@ -4076,6 +4103,10 @@ Premier League publishes no interval length and FPL publishes no clock at all.
   from the other four positions, never seen non-zero. First witnessable during
   any live match.
 - What should `apps/lab` look like for the 27/28 platform prototype?
+- **The cups, open since 27 Sep** (see *The cups are declared as ours*): where the starting eleven's
+  goals, assists, clean sheets and minutes per team per gameweek are read from; how a group tie on points
+  and points for is placed (draw order assumed); and whether Fantrax can express the playoff's one-leg play-in before two-leg semis, which
+  a capture after Craig sets it will show.
 
 **Answered 22 Aug, on the first real matchday** (all in the section above):
 `remainingEventPercent` reaches literal zero. Fantrax's `totalFpts` does fill in

@@ -67,8 +67,7 @@ export interface Schedule {
   /** Ascending, and the whole of the dropdown. A gameweek no period covers is
    *  not on it: the league cannot score a week it does not have. */
   rounds: ScheduleRound[];
-  /** Fantrax's table, which is what the placeholder brackets are seeded from.
-   *  Empty is ordinary — nobody has played, or nobody has joined. */
+  /** Fantrax's table, for each side's place. Empty is ordinary: nobody has played, or nobody has joined. */
   table: StandingsRow[];
 }
 

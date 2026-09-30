@@ -1,30 +1,7 @@
 import { describe, expect, it } from "vitest";
-import {
-  COMPETITIONS,
-  LEAGUE_COMPETITION,
-  PLACEHOLDER_ROUNDS,
-  groupTies,
-  leagueTies,
-  seededTies,
-} from "./competitions";
-import type { StandingsRow } from "./types";
+import { COMPETITIONS, LEAGUE_COMPETITION, cupTies, groupTies, leagueTies } from "./competitions";
 
 const team = (teamId: string, name: string) => ({ teamId, name });
-
-const row = (rank: number, teamId: string, teamName: string): StandingsRow => ({
-  teamId,
-  teamName,
-  rank,
-  won: 0,
-  drawn: 0,
-  lost: 0,
-  played: 0,
-  points: 0,
-  pointsFor: 0,
-  pointsAgainst: 0,
-});
-
-const table = [row(1, "t1", "Alpha"), row(2, "t2", "Bravo"), row(3, "t3", "Charlie"), row(4, "t4", "Delta")];
 
 describe("leagueTies", () => {
   it("carries Fantrax's pairings through as the league's own competition", () => {
@@ -36,38 +13,26 @@ describe("leagueTies", () => {
   });
 });
 
-describe("seededTies", () => {
-  it("draws a seeded round against the table as it stands", () => {
-    const ties = seededTies(PLACEHOLDER_ROUNDS, table, 4);
-    expect(ties).toHaveLength(2);
-    expect(ties.map((tie) => [tie.home.label, tie.away.label])).toEqual([
-      ["Alpha", "Delta"],
-      ["Bravo", "Charlie"],
+describe("cupTies", () => {
+  it("opens the Timbeibs Cup on GW10 with seeds 7 to 10, nobody drawn", () => {
+    const ties = cupTies(10, 10);
+    expect(ties.map((tie) => [tie.competition.id, tie.round, tie.home.label, tie.away.label])).toEqual([
+      ["timbeibs", "Round 1", "Seed 8", "Seed 9"],
+      ["timbeibs", "Round 1", "Seed 7", "Seed 10"],
     ]);
-    expect(ties[0]?.round).toBe("Semi-finals");
+    expect(ties.every((tie) => tie.home.team === null && tie.away.team === null)).toBe(true);
   });
 
-  it("prints the place, not a team, when the table cannot name one", () => {
-    // Every day until the draft. A final between "1st" and "2nd" is a true
-    // statement about an undrafted league; one between two invented names is not.
-    const ties = seededTies(PLACEHOLDER_ROUNDS, [], 38);
-    expect(ties[0]?.home).toEqual({ team: null, label: "1st" });
-    expect(ties[0]?.away).toEqual({ team: null, label: "2nd" });
+  it("answers nothing for a gameweek no cup plays in", () => {
+    expect(cupTies(10, 9)).toEqual([]);
+    expect(cupTies(10, 6)).toEqual([]);
   });
 
-  it("leaves a side that is won rather than seeded unnamed", () => {
-    // The cup final's sides come out of the semi-finals, and seeding them from
-    // the table would put a team in a final it has not reached.
-    const ties = seededTies(PLACEHOLDER_ROUNDS, table, 5);
-    expect(ties[0]?.home).toEqual({ team: null, label: "Winner, semi-final 1" });
-  });
-
-  it("answers nothing for a gameweek no round falls in", () => {
-    expect(seededTies(PLACEHOLDER_ROUNDS, table, 6)).toEqual([]);
-  });
-
-  it("declines to name a team the table left blank", () => {
-    expect(seededTies(PLACEHOLDER_ROUNDS, [row(1, "t1", "")], 38)[0]?.home.label).toBe("1st");
+  it("belongs every tie to a competition the schedule knows", () => {
+    const known = new Set(COMPETITIONS.map((competition) => competition.id));
+    for (let gameweek = 1; gameweek <= 38; gameweek++) {
+      for (const tie of cupTies(10, gameweek)) expect(known.has(tie.competition.id)).toBe(true);
+    }
   });
 });
 
@@ -75,42 +40,16 @@ describe("COMPETITIONS", () => {
   it("leads with the one Fantrax actually scores", () => {
     expect(COMPETITIONS[0]).toEqual(LEAGUE_COMPETITION);
   });
-
-  it("names every competition the placeholder rounds belong to", () => {
-    const known = new Set(COMPETITIONS.map((competition) => competition.id));
-    for (const round of PLACEHOLDER_ROUNDS) expect(known.has(round.competition.id)).toBe(true);
-  });
 });
 
 describe("groupTies", () => {
-  const ties = [
-    ...seededTies(PLACEHOLDER_ROUNDS, table, 4),
-    ...leagueTies([{ home: team("t1", "Alpha"), away: team("t2", "Bravo") }]),
-  ];
+  const ties = [...cupTies(10, 12), ...leagueTies([{ home: team("t1", "Alpha"), away: team("t2", "Bravo") }])];
 
   it("boxes each competition's ties under it, league first", () => {
-    const groups = groupTies(ties);
-    expect(groups.map((group) => group.competition.id)).toEqual(["league", "cup"]);
-    expect(groups[1]?.ties).toHaveLength(2);
+    expect(groupTies(ties).map((group) => group.competition.id)).toEqual(["league", "timbeibs", "timbeibs"]);
   });
 
-  it("keeps the league's own fixtures out of any round", () => {
-    expect(groupTies(ties)[0]?.round).toBeNull();
-  });
-
-  it("splits one competition's rounds apart when a gameweek holds two", () => {
-    const twoRounds = seededTies(
-      [
-        { competition: { id: "cup", name: "Cup" }, gameweek: 9, name: "Quarter-finals", ties: [[1, 2]] },
-        { competition: { id: "cup", name: "Cup" }, gameweek: 9, name: "Semi-finals", ties: [[3, 4]] },
-      ],
-      table,
-      9,
-    );
-    expect(groupTies(twoRounds).map((group) => group.round)).toEqual([
-      "Quarter-finals",
-      "Semi-finals",
-    ]);
+  it("keeps the league's own fixtures out of any round, and splits a cup's two rounds in one week", () => {
+    expect(groupTies(ties).map((group) => group.round)).toEqual([null, "Round 3", "Losers' round 1"]);
   });
 });
-

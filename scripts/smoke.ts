@@ -28,6 +28,10 @@ const ROUTES = [
   "/league/matchups",
   "/league/results",
   "/league/team-stats",
+  "/league/cups",
+  "/league/cups?cup=davy-propper",
+  "/league/cups?view=bracket",
+  "/league/cups?cup=davy-propper&view=bracket",
   "/squad",
   "/players",
   // Data's Compare: its ids are in the query, so no link off the board reaches it.

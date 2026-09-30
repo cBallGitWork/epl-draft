@@ -17,7 +17,7 @@ sequences it against the dated season work and un-parks two ideas Craig chose:
 
 | Idea | Where recorded | Status |
 |---|---|---|
-| Custom competitions (H2H groups, cups, points leagues over Fantrax points) | docs/rules/PRODUCT.md | **Shape landed 20 Aug** — a declared cup and playoff, labelled a placeholder, on `/league/schedule`. The feature is still parked; what is built is the seam. |
+| Custom competitions (H2H groups, cups, points leagues over Fantrax points) | docs/rules/PRODUCT.md | **Shape landed 20 Aug** — a declared cup and playoff, labelled a placeholder, on `/league/schedule`. **On screen 27 Sep** — the Timbeibs Cup (double elimination, GW9–17) and the Davy Propper Cup (groups then knockout, GW21–30) in `league/cups/`, shown on `/league/cups` (fixtures and bracket), Schedule and Live with a placeholder draw; the playoff stays Fantrax's. Next: put teams into the slots once GW9 is scored and the groups drawn. |
 | Per-player intelligence store via `setPlayerNote` | CLAUDE.md fxpa methods | **In scope** (this session) |
 | Commissioner cookie + `adminMode` as the only viable write path | PLATFORM_NOTES "extension plan is dead" | **In scope** — probe it |
 | 27/28 draft/FM hybrid, `apps/lab` | docs/rules/PRODUCT.md | Parked, empty on purpose |
@@ -345,8 +345,7 @@ items still parked — unequal column widths and the tables side by side.
 
 `apps/lab` · FPL authenticated endpoints · member-held cookies in any form ·
 scoring engine (dead — Fantrax's numbers are public and authoritative). Custom
-competitions keep their placeholder and go no further until Craig settles a real
-cup — `PLACEHOLDER_ROUNDS` is the one thing that then changes.
+competitions beyond the two cups, which are on screen with a placeholder draw (27 Sep).
 
 ## Verification
 

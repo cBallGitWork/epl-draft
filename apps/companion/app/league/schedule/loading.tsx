@@ -25,8 +25,7 @@ export default function Loading() {
           <Skeleton width="4rem" height="0.75rem" />
         </div>
 
-        {/* The one competition every gameweek has: the cup and the playoff are
-            drawn rounds and most weeks have neither. */}
+        {/* The one competition every gameweek has; most weeks have no cup. */}
         <Section title={LEAGUE_COMPETITION.name}>
           <SkeletonRows count={4} height="3.5rem" />
         </Section>
