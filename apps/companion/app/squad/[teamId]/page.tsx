@@ -1,6 +1,7 @@
 import {
   FANTRAX_APP_BASE,
   FANTRAX_LEAGUE_ID,
+  FANTRAX_ROSTER_PATH,
   lineupDetail,
   playerDetail,
 } from "@epl/core";
@@ -38,7 +39,7 @@ export default async function TeamPage({
   // `teamId` is what the folder is called; `slug` is what the reader typed, and
   // on the front door those are not the same thing. See `squad/routes.ts`.
   const [{ teamId: slug }, { gw }] = await Promise.all([params, searchParams]);
-  const { team, planning, eligibility, clubs, opposition, live, news, season, points, board, names, pending, squadIds } = await squadView(slug, gw);
+  const { team, planning, open, eligibility, clubs, opposition, live, news, season, points, board, names, pending, squadIds } = await squadView(slug, gw);
 
   return (
     /* The only live-points surface that did not move on a Saturday. Both
@@ -74,7 +75,8 @@ export default async function TeamPage({
           // halves meet on the way into it rather than being threaded through
           // every caller of the mapper.
           limits={{ ...planning.roster, minActiveByPosition: rosterMinimums() }}
-          fantraxUrl={`${FANTRAX_APP_BASE}/${FANTRAX_LEAGUE_ID}`}
+          // The same week the planner shows, never Fantrax's open one.
+          fantraxUrl={`${FANTRAX_APP_BASE}/${FANTRAX_LEAGUE_ID}${open === null ? "" : `/${FANTRAX_ROSTER_PATH};period=${open.period}`}`}
           pending={pending}
         />
       ) : board !== null ? (
