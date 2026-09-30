@@ -1,5 +1,7 @@
 import { FPL_API_BASE } from "../../config";
+import { notJson, statusError } from "../../http/errors";
 import { politeFetch } from "../../http/fetch";
+import { readJson } from "../../http/json";
 import type { RawBootstrap, RawElementSummary, RawFixture, RawLive, RawRegion } from "./raw";
 
 // All FPL network I/O lives here and nowhere else, so the mapping stays pure and
@@ -19,8 +21,8 @@ async function get<T>(path: string): Promise<T> {
   const res = await politeFetch(`${FPL_API_BASE}${path}`);
   // Give up loudly rather than degrade quietly: a caller that gets an error can
   // say so on screen, and §2 forbids swallowing this into a default.
-  if (!res.ok) throw new Error(`FPL ${path} → ${res.status}`);
-  return (await res.json()) as T;
+  if (!res.ok) throw statusError("FPL", path, res.status);
+  return (await readJson(res, notJson("FPL", path))) as T;
 }
 
 /** Players, clubs and gameweeks. Large (~1.3 MB) and changes slowly outside of

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { ProviderError } from "../../http/errors";
 import { FantraxError, errorEnvelope } from "./errors";
 import draftResults from "./__fixtures__/draftResults.json";
 import errorNoLeague from "./__fixtures__/errorEnvelopeNoLeague.json";
@@ -46,5 +47,11 @@ describe("FantraxError", () => {
     expect(error.message).toContain("getTeamRosters");
     expect(error.message).toContain("NO_TEAMS");
     expect(error).toBeInstanceOf(Error);
+  });
+
+  it("is a provider error, with the message it has always had", () => {
+    const error = new FantraxError("getTeamRosters", "NO_TEAMS", "There are currently no teams");
+    expect(error).toBeInstanceOf(ProviderError);
+    expect(error.message).toBe("Fantrax getTeamRosters: NO_TEAMS — There are currently no teams");
   });
 });

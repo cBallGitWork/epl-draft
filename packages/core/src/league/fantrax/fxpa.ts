@@ -1,6 +1,7 @@
 import { FANTRAX_FXPA_BASE } from "../../config";
 import { demoFxpa, isDemo } from "./demo";
 import { politeFetch } from "../../http/fetch";
+import { readJson } from "../../http/json";
 import { FantraxError, pageErrorEnvelope, responseErrorEnvelope } from "./errors";
 
 // Fantrax's SPA API. A separate file from `client.ts` on purpose: different
@@ -15,17 +16,9 @@ import { FantraxError, pageErrorEnvelope, responseErrorEnvelope } from "./errors
 // anything needs. Batching arrives when a second caller wants it, not before.
 // Most reads need no auth; the lineup save passes the commissioner's session.
 
-/** The one message's payload, or a `FantraxError` describing the refusal.
- *
- *  Pure, and split from the request for exactly that reason: every interesting
- *  failure here is a shape rather than a network condition, so this is the part
- *  worth testing and it should not need a server to do it.
- *
- *  Both fxpa failure shapes are checked, because they mean different things. A
- *  `pageError` fails the whole request — not logged in, not a member — while
- *  `responses[0].errors[]` fails the individual message. Checking only the
- *  first would let a refusal look like a successful read that happened to
- *  return nothing. */
+/** The one message's payload, or a `FantraxError`: for a `pageError` (the whole request), for
+ *  `responses[0].errors[]` (the message), or for an answer with no payload in it. Pure, so every
+ *  shape is testable without a server. */
 export function unwrapFxpa(method: string, body: unknown): unknown {
   const page = pageErrorEnvelope(body);
   if (page) {
@@ -43,7 +36,11 @@ export function unwrapFxpa(method: string, body: unknown): unknown {
     throw new FantraxError(method, error.code ?? "UNKNOWN", error.message ?? "no message");
   }
 
-  return (response as { data?: unknown } | null)?.data ?? null;
+  const data = (response as { data?: unknown } | null)?.data;
+  if (data === undefined || data === null) {
+    throw new FantraxError(method, "NO_DATA", "fxpa answered with neither data nor errors");
+  }
+  return data;
 }
 
 /** The only methods a session may carry: the same cookie reaches `deleteLeague`. */
@@ -77,5 +74,6 @@ export async function fxpaRead(
   // As on fxea, a backstop only: fxpa reports its own refusals with a 200.
   if (!res.ok) throw new FantraxError(method, String(res.status), res.statusText);
 
-  return unwrapFxpa(method, (await res.json()) as unknown);
+  const body = await readJson(res, (arrived) => new FantraxError(method, "NOT_JSON", arrived));
+  return unwrapFxpa(method, body);
 }

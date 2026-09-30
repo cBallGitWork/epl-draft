@@ -1,7 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { htmlPage, serve, statusOnly } from "../../http/fakeFetch";
 import { FantraxError, errorEnvelope, pageErrorEnvelope, responseErrorEnvelope } from "./errors";
 import { fxpaRead, unwrapFxpa } from "./fxpa";
 import pageError from "./__fixtures__/fxpaPageError.json";
+
+afterEach(() => vi.useRealTimers());
 
 // The fxpa envelope, recorded 12 Aug 2026 by asking the real league for its
 // commissioner hub without a session.
@@ -83,8 +86,48 @@ describe("unwrapFxpa", () => {
     expect(() => unwrapFxpa("x", { responses: [] })).toThrow(/NO_RESPONSES/);
   });
 
-  it("maps a response with neither data nor errors to null", () => {
-    expect(unwrapFxpa("x", { responses: [{}] })).toBeNull();
+  // Handing back null here let a mapper find out, as a TypeError on its first field.
+  it("refuses a response with neither data nor errors", () => {
+    for (const response of [{}, { data: null }, null]) {
+      const read = () => unwrapFxpa("getStandings", { responses: [response] });
+      expect(read).toThrow(FantraxError);
+      expect(read).toThrow(expect.objectContaining({ code: "NO_DATA" }));
+    }
+  });
+
+  it("returns a payload that is present but empty", () => {
+    expect(unwrapFxpa("x", { responses: [{ data: {} }] })).toEqual({});
+  });
+});
+
+describe("fxpaRead", () => {
+  const LEAGUE = "league-under-test";
+
+  it("reads a web page in place of JSON as a FantraxError, not as a SyntaxError", async () => {
+    serve(htmlPage);
+    const error = await fxpaRead(LEAGUE, "getStandings").catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(FantraxError);
+    expect(error).toMatchObject({
+      method: "getStandings",
+      code: "NOT_JSON",
+      message: expect.stringContaining("Fantrax getStandings: NOT_JSON — 200 text/html"),
+    });
+  });
+
+  it("asks again when Fantrax is busy, since a read is safe to repeat", async () => {
+    vi.useFakeTimers();
+    const count = serve(statusOnly(503), () => Response.json({ responses: [{ data: { a: 1 } }] }));
+    const pending = fxpaRead(LEAGUE, "getStandings");
+    await vi.runAllTimersAsync();
+    expect(await pending).toEqual({ a: 1 });
+    expect(count.calls).toBe(2);
+  });
+
+  it("reads a 404 as a Fantrax refusal", async () => {
+    serve(statusOnly(404));
+    const error = await fxpaRead(LEAGUE, "getStandings").catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(FantraxError);
+    expect(error).toMatchObject({ code: "404" });
   });
 });
 

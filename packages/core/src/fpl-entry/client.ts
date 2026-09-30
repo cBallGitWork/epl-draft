@@ -1,5 +1,7 @@
 import { FPL_API_BASE } from "../config";
+import { notJson, statusError } from "../http/errors";
 import { politeFetch } from "../http/fetch";
+import { readJson } from "../http/json";
 import type { RawEntry, RawPicks } from "./raw";
 
 // The two entry reads, and nothing else. Public: an FPL entry id is the number in
@@ -13,10 +15,11 @@ import type { RawEntry, RawPicks } from "./raw";
  *  another website — so a 404 is an answer, not a fault. Anything else still
  *  throws. */
 export async function fetchEntry(entryId: number): Promise<RawEntry | null> {
+  const what = `entry ${entryId}`;
   const res = await politeFetch(`${FPL_API_BASE}/entry/${entryId}/`);
   if (res.status === 404) return null;
-  if (!res.ok) throw new Error(`FPL entry ${entryId} → ${res.status}`);
-  return (await res.json()) as RawEntry;
+  if (!res.ok) throw statusError("FPL", what, res.status);
+  return (await readJson(res, notJson("FPL", what))) as RawEntry;
 }
 
 /** One round's picks, or null before that round has been played.
@@ -24,8 +27,9 @@ export async function fetchEntry(entryId: number): Promise<RawEntry | null> {
  *  FPL answers 404 for a gameweek an entry has no picks for, which is every
  *  gameweek until the season starts. Expected, and modelled rather than thrown. */
 export async function fetchPicks(entryId: number, gameweek: number): Promise<RawPicks | null> {
+  const what = `picks ${entryId}/${gameweek}`;
   const res = await politeFetch(`${FPL_API_BASE}/entry/${entryId}/event/${gameweek}/picks/`);
   if (res.status === 404) return null;
-  if (!res.ok) throw new Error(`FPL picks ${entryId}/${gameweek} → ${res.status}`);
-  return (await res.json()) as RawPicks;
+  if (!res.ok) throw statusError("FPL", what, res.status);
+  return (await readJson(res, notJson("FPL", what))) as RawPicks;
 }
