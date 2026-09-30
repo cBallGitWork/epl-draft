@@ -85,7 +85,7 @@ export default function Tie({
       home={side(tie.home, badges, places, mine, settled && leads(away, home))}
       away={side(tie.away, badges, places, mine, settled && leads(home, away))}
       score={round.started ? { home: figure(home), away: figure(away) } : null}
-      pending={<span className={LABEL}>v</span>}
+      pending={<span className={LABEL}>{tie.code ?? "v"}</span>}
       href={opens && opensOn !== undefined ? matchupHref(opensOn, round.gameweek) : undefined}
     />
   );

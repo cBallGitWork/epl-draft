@@ -86,12 +86,9 @@ export function predictedEleven(
 
   let at = 0;
   for (const count of shape) {
-    // **Reversed, because the source lists a line RIGHT to left.** FFScout gives
-    // Arsenal's back four as White (RB), Konsa, Gabriel, Calafiori (LB); drawn
-    // in that order across a pitch the right-back stands on the reader's left,
-    // which is the wrong side of the field. A pitch is drawn from the viewer's
-    // seat, so the row is turned round on the way out.
-    rows.push({ line: String(count), players: outfield.slice(at, at + count).reverse() });
+    // The source lists a line right-back first; the keeper stands at the top, so the team faces the
+    // reader and its right is the reader's left. Reversing this mirrored the pitch (Craig, 26 Sep 2026).
+    rows.push({ line: String(count), players: outfield.slice(at, at + count) });
     at += count;
   }
   return rows.filter((row) => row.players.length > 0);
@@ -124,6 +121,28 @@ export function setPieceOrder(
     label,
     takers: [...(club?.[key] ?? [])].sort((a, b) => b.share - a.share),
   }));
+}
+
+/** One man's place in one set-piece order. A null rank is a piece he does not take; `of` is how many do. */
+export interface SetPieceRank {
+  piece: string;
+  label: string;
+  rank: number | null;
+  of: number;
+}
+
+/** One man's place in each of his club's set-piece orders, counting only the men still there. */
+export function setPieceRanks(
+  club: IntelClubPieces | undefined,
+  pieces: readonly { key: keyof IntelClubPieces; label: string }[],
+  code: number,
+  present: ReadonlySet<number>,
+): SetPieceRank[] {
+  return setPieceOrder(club, pieces).map(({ piece, label, takers }) => {
+    const here = takers.filter((taker) => present.has(taker.code));
+    const at = here.findIndex((taker) => taker.code === code);
+    return { piece, label, rank: at === -1 ? null : at + 1, of: here.length };
+  });
 }
 
 /** How old the prediction is, in whole hours, or null when it will not say.

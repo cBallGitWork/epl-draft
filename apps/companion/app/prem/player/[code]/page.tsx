@@ -46,7 +46,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ code: s
   return (
     <div className="flex flex-col gap-2">
       <PageHeader title={player.fullName} plate={plate} />
-      <Caption>Player</Caption>
+      <Caption deskOnly>Player</Caption>
 
       <section className={PANEL}>
         <div className="flex items-center gap-3">

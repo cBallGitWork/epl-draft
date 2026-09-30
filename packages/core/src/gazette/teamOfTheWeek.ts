@@ -61,12 +61,8 @@ export function teamOfTheWeek(
   return { picks: taken, lines, shape: lines.map((line) => line.picks.length).join("-") };
 }
 
-/** Every rostered man who actually played this round, strongest first.
- *
- *  The eleven is a selection FROM this; the points dodgers are the men in it
- *  their own managers left OUT. Two columns off one list, so they can never
- *  disagree about what a player did. */
-export function rosteredPicks(teams: readonly RosteredTeam[]): Pick[] {
+/** Every rostered man who actually played this round, strongest first; the eleven is a selection from this. */
+function rosteredPicks(teams: readonly RosteredTeam[]): Pick[] {
   const candidates: Pick[] = [];
   for (const team of teams) {
     for (const rostered of team.players) {

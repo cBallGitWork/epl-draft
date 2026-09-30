@@ -13,8 +13,9 @@ import {
   PINNED_TILE,
   ROW_NAME,
   ROW_HOVER,
+  MINOR_CAPS,
 } from "@/app/desk";
-import { MUTE, SortArrow } from "../../../../components/league/TableHeads";
+import { MUTE, SortArrow, HeadRow } from "../../../../components/league/TableHeads";
 import PositionTile, { TILE_WIDTH } from "../../../../components/league/PositionTile";
 import ScrollBoard from "../../../../components/league/ScrollBoard";
 import { standoutCuts, standoutInk } from "../../../../components/league/standout";
@@ -79,7 +80,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
       {/* CM's grey bevelled control, on its own strip above the table, which is
           where the game puts it (`21.jpg`, `25.jpg`). */}
       <div className="flex items-center gap-2 border-b border-line px-2 py-1.5">
-        <label className="text-3xs font-bold uppercase text-faint" htmlFor="club-stat-view">
+        <label className={`${MINOR_CAPS} text-faint`} htmlFor="club-stat-view">
           View
         </label>
         <select
@@ -96,11 +97,11 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
         </select>
       </div>
 
-      <ScrollBoard>
+      <ScrollBoard className="bg-surface">
         <table className="w-full border-collapse whitespace-nowrap">
           <caption className="sr-only">Every player, by {view}</caption>
           <thead>
-            <tr className="text-3xs uppercase">
+            <HeadRow>
               <th scope="col" className={`${HEAD_CELL} ${PINNED_TILE} ${TILE_WIDTH} bg-surface`}>
                 <span className={MUTE}>Fantrax position</span>
               </th>
@@ -116,9 +117,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
                   // On the CELL and not on the button inside it: the role that
                   // carries `aria-sort` is `columnheader`, which is the `<th>`.
                   // Without it the pressed bevel says which column orders this
-                  // board and nothing says it to a screen reader — the sibling
-                  // implementation in `squad/[teamId]/stats/SortHead` has always
-                  // had this, and the two boards look identical.
+                  // board and nothing says it to a screen reader.
                   aria-sort={
                     sort?.key === measure.key
                       ? sort.descending
@@ -144,7 +143,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
                   </button>
                 </th>
               ))}
-            </tr>
+            </HeadRow>
           </thead>
           <tbody>
             {ordered.map(({ player, positions }) => (

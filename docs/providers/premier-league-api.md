@@ -231,9 +231,11 @@ it:
   score to match one of our fixtures is a constraint no re-upload or compilation
   passes by accident, which is what keeps us clear of the rule the portraits
   decision set: a wrong one is worse than none.
-- **Four aliases, and all four are Sky dropping a suffix**: `Hull`→`Hull City`,
-  `N Forest`→`Nott'm Forest`, `Coventry`→`Coventry City`, `Ipswich`→`Ipswich
-  Town`. The other sixteen are FPL's own `name` verbatim.
+- **Six aliases, and Sky is not consistent with itself**: `Hull`→`Hull City`,
+  `N Forest` and `Nottingham Forest`→`Nott'm Forest`, `B'mouth`→`Bournemouth`,
+  `Coventry`→`Coventry City`, `Ipswich`→`Ipswich Town`. Counted 28 Sep 2026: the
+  feed held **13 of 15** joinable titles before the last two were added (gameweek
+  5's Bournemouth and Forest videos never showed), and 15 of 15 after.
 - **Do not order on the feed's dates.** The playlist feed's `published` is the
   video's own publication and does not sort with the playlist — Arsenal 2-1
   Chelsea is dated 9 Aug and arrives first. Match on the title.

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Measure } from "@epl/core";
+import { SMALL_CAPS } from "@/app/desk";
 
 // Which of the two numbers every cell on the board is holding.
 //
@@ -33,7 +34,7 @@ const MEASURES: readonly { by: Measure; label: string; title: string }[] = [
 
 /** The control floor at both widths — a plate is aimed at rather than read, and
  *  DESIGN §6 does not let one relax below its floor under a thumb. */
-const PLATE = "flex min-h-11 items-center px-3 text-2xs font-bold uppercase lg:min-h-9";
+const PLATE = `flex min-h-11 items-center px-3 ${SMALL_CAPS} lg:min-h-9`;
 
 export default function Measures({
   measure,

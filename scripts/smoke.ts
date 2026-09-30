@@ -8,10 +8,11 @@ import {
   fetchTeamRosters,
   mapTeamRosters,
 } from "@epl/core";
+import { walkLeague, type WalkLeague } from "./smoke/league";
 
 // Walks every route against the league the server is serving, asserting the empty states for a
-// league with no teams and their absence for one with teams (a drafted league once rendered "has not
-// drafted"). The same command works before and after draft night.
+// league with no teams and their absence once somebody holds a player (a drafted league once rendered
+// "has not drafted"). Teams with empty squads assert neither. Works before and after draft night.
 //
 //   npm run build && npm run start &
 //   npm run smoke
@@ -28,6 +29,10 @@ const ROUTES = [
   "/league/matchups",
   "/league/results",
   "/league/team-stats",
+  "/league/cups",
+  "/league/cups?cup=davy-propper",
+  "/league/cups?view=bracket",
+  "/league/cups?cup=davy-propper&view=bracket",
   "/squad",
   "/players",
   // Data's Compare: its ids are in the query, so no link off the board reaches it.
@@ -38,8 +43,6 @@ const ROUTES = [
   "/players/projections",
   "/matchday",
   "/matchday/desk",
-  "/paper/columns",
-  "/paper/reports",
   "/prem",
   "/prem/results",
   "/prem/fixtures",
@@ -76,7 +79,7 @@ function seen(body: string): string {
   return text.slice(after < 0 ? 0 : after + 3, (after < 0 ? 0 : after + 3) + 200).trim();
 }
 
-/** What a league WITH teams must never print. */
+/** What a DRAFTED league must never print. */
 const DRAFTED_MUST_NOT = Object.values(UNDRAFTED);
 
 /** What a route must never say, whatever the league. An absence, because React splits positive copy
@@ -85,27 +88,12 @@ const NEVER: Record<string, string> = {
   "/gw/1": "No fixtures scheduled for this gameweek yet.",
 };
 
-/** Whether the league has teams, and the first of them, from ONE read so the answers cannot disagree. */
-async function league(): Promise<{
-  drafted: boolean;
-  teamId: string | null;
-  teamName: string | null;
-  playerId: string | null;
-}> {
+/** The served league's state, or no teams when Fantrax refuses the roster read. */
+async function league(): Promise<WalkLeague> {
   try {
-    const [team] = mapTeamRosters(await fetchTeamRosters(FANTRAX_LEAGUE_ID)).teams;
-    return {
-      drafted: team !== undefined,
-      teamId: team?.teamId ?? null,
-      // What the served-league check looks for.
-      teamName: team?.teamName || null,
-      // A player somebody holds: an invented id would test a 404.
-      playerId: team?.slots[0]?.fantraxId ?? null,
-    };
+    return walkLeague(mapTeamRosters(await fetchTeamRosters(FANTRAX_LEAGUE_ID)).teams);
   } catch (error) {
-    if (error instanceof FantraxError) {
-      return { drafted: false, teamId: null, teamName: null, playerId: null };
-    }
+    if (error instanceof FantraxError) return walkLeague([]);
     throw error;
   }
 }
@@ -136,7 +124,7 @@ async function footballerAndMatch(): Promise<{ footballer: number | null; match:
 
 async function main() {
   requireLeague(FANTRAX_LEAGUE_ID);
-  const { drafted: hasTeams, teamId: id, teamName, playerId } = await league();
+  const { state, teamId: id, teamName, playerId } = await league();
   const club = await clubCode();
   const { footballer, match } = await footballerAndMatch();
   const paths: string[] = [...ROUTES];
@@ -174,7 +162,7 @@ async function main() {
   }
 
   console.log(
-    `smoke — ${BASE}, league ${FANTRAX_LEAGUE_ID} (${hasTeams ? "drafted" : "no teams"})\n`,
+    `smoke — ${BASE}, league ${FANTRAX_LEAGUE_ID} (${state})\n`,
   );
 
   // Skipped, and SAID so: a walk that quietly drops a route still prints a full count.
@@ -231,7 +219,7 @@ async function main() {
     const problems: string[] = [];
 
     const named = UNDRAFTED[path];
-    if (!hasTeams && named !== undefined && !body.includes(named)) {
+    if (state === "no teams" && named !== undefined && !body.includes(named)) {
       problems.push(
         body.includes(SILENT)
           ? `rendered "${SILENT}" — this server could not read Fantrax, so the empty state ` +
@@ -240,7 +228,7 @@ async function main() {
       );
     }
 
-    if (hasTeams) {
+    if (state === "drafted") {
       for (const sentence of DRAFTED_MUST_NOT) {
         if (body.includes(sentence)) problems.push(`prints "${sentence}" for a drafted league`);
       }

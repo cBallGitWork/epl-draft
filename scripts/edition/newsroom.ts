@@ -13,7 +13,11 @@ const MAX_TOKENS = 8000;
 
 /** One call, by fetch. No SDK: CODE_RULES §2 says no dependency a small local
  *  function would cover, and this is twenty lines. */
-export async function writeColumn(system: string, brief: string): Promise<Record<string, unknown>> {
+export async function writeColumn(
+  system: string,
+  brief: string,
+  onUsage?: (usage: { input_tokens?: number; output_tokens?: number }) => void,
+): Promise<Record<string, unknown>> {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) throw new Error("ANTHROPIC_API_KEY is not set. The column is written in CI, never on Vercel.");
 
@@ -37,7 +41,9 @@ export async function writeColumn(system: string, brief: string): Promise<Record
   const body = (await response.json()) as {
     stop_reason?: string;
     content?: { type?: string; text?: string }[];
+    usage?: { input_tokens?: number; output_tokens?: number };
   };
+  if (body.usage !== undefined) onUsage?.(body.usage);
   // A truncated column is a JSON parse away from garbage, and the parse would
   // fail with a message about a bracket rather than about a limit.
   if (body.stop_reason !== "end_turn") throw new Error(`Stopped on ${body.stop_reason}, not a finished column.`);
@@ -105,7 +111,7 @@ export interface ColumnMeta {
   expiresAt: string | null;
   edition: string;
   byline: string;
-  /** The columnist's own name, where it is not the house correspondent's. */
+  /** The columnist's own name, where it is not the kind's staff writer's. */
   reporter?: string;
   /** The covered-key this filing spends — also its one subject. */
   subject: string;
@@ -154,8 +160,10 @@ export function storyOfColumn(
       quiz: column.quiz,
       teamNews: column.teamNews,
       lineups: column.lineups,
+      sheets: column.sheets,
       record: column.record,
       skit: column.skit,
+      reports: column.reports,
     },
   });
   if (story === null) throw new Error(`The ${meta.kind} did not come back in a printable shape.`);

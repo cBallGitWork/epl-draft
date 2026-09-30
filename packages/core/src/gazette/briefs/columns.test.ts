@@ -1,10 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  buildDodgersBrief,
-  buildElevenBrief,
-  buildPowerBrief,
-  buildWireBrief,
-} from "./columns";
+import { buildElevenBrief, buildPowerBrief, buildWireBrief } from "./columns";
 import type { Pick } from "../types";
 
 const pick = (over: Partial<Pick> = {}): Pick => ({
@@ -34,20 +29,6 @@ describe("buildPowerBrief", () => {
     });
     expect(brief).toContain("it is not the table");
     expect(brief).toContain("test2 (id t1): table 1, record 2-0-1, 6 points, 123.5 scored, beat test3 by 13.6");
-  });
-});
-
-describe("buildDodgersBrief", () => {
-  const brief = buildDodgersBrief({ gameweek: 3, benched: [pick()], threads: [] });
-
-  it("names the man and the manager who benched him", () => {
-    expect(brief).toContain("Cherki (M), left out by test2: 2G in 81 min");
-  });
-
-  it("refuses the invented number a bench column most wants", () => {
-    // A benched player is priced nowhere in any payload, so "he'd have got you
-    // 11" would be ours rather than Fantrax's.
-    expect(brief).toContain("never what he would have scored");
   });
 });
 

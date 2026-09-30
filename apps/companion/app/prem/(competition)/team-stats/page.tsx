@@ -1,3 +1,4 @@
+import ScrollBoard from "../../../components/league/ScrollBoard";
 import Link from "next/link";
 import { clubStats, leagueTable, ordinal, thousands } from "@epl/core";
 import Nothing from "../../../components/shell/Nothing";
@@ -8,7 +9,7 @@ import { CLUB } from "../../routes";
 import Filters from "./Filters";
 import { categoryFor, type Club } from "./categories";
 import { footballNow, seasonFixtures } from "../../../football";
-import { BOARD, FIGURE, SCROLL, ROW_HOVER } from "@/app/desk";
+import { BOARD, FIGURE, ROW_HOVER } from "@/app/desk";
 import ClubLabel from "@/app/components/football/ClubLabel";
 
 // Every club ranked by one measure — CM's stat board, on the real competition.
@@ -78,7 +79,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
         <p className="text-3xs uppercase text-faint">FPL&apos;s own figures</p>
       </div>
 
-      <div className={SCROLL}>
+      <ScrollBoard>
         <table className={BOARD}>
           <thead>
             <HeadRow>
@@ -124,7 +125,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollBoard>
     </PremShell>
   );
 }

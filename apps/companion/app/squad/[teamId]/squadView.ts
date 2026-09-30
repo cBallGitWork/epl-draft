@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import {
+  FANTRAX_LEAGUE_ID,
   clubById,
+  fetchLineupState,
+  mapLineupState,
   oppositionByClub,
   playerName,
   squadDetail,
@@ -13,6 +16,7 @@ import { pendingByTeam, squadLivePoints } from "../../scoreboard";
 import { squadSeason } from "../../teamStats";
 import { myTeamId } from "../../session";
 import { OWN, SQUAD } from "../routes";
+import { plannable } from "./plannable";
 import { whoseTeam } from "./team";
 
 // One manager's squad, laid out on a pitch. The screen the league opens on a
@@ -58,11 +62,8 @@ export async function squadView(slug: string, gw: string | undefined) {
   const asksOwn =
     slug === OWN || (info !== null && (await myTeamId(info.teams)) === slug);
 
-  const round = Number.isInteger(asked)
-    ? await roundOf(asked)
-    : asksOwn
-      ? await planningRound()
-      : await lastLockedRound();
+  const open = await planningRound();
+  const round = Number.isInteger(asked) ? await roundOf(asked) : asksOwn ? open : await lastLockedRound();
   const squads = readableOr404(await getLeagueSquads(round), SQUAD);
 
   // Whose squad this is. Most visits to this route are to somebody else's — the
@@ -88,8 +89,11 @@ export async function squadView(slug: string, gw: string | undefined) {
   // than none. One value rather than a flag beside a nullable, so there is no
   // arrangement of the two that type-checks and still opens the planner with
   // nothing to enforce.
-  const planning = mine && display.show === "lineup" && squads.info !== null ? squads.info : null;
+  // Only the open week is editable; a locked or unnamed week of your own is read-only, never overridden.
+  const planning =
+    mine && plannable(round, open) && display.show === "lineup" && squads.info !== null ? squads.info : null;
   const squadIds = new Set(team.players.map((p) => p.slot.fantraxId));
+  const benchRanks = planning === null || open === null ? {} : await benchOrderOf(teamId, open.period);
 
   // What each of them is ELIGIBLE at, which is not the slot his manager filed
   // him in. Fantrax publishes both and they disagree for 48 of 607 — Saka is
@@ -130,9 +134,9 @@ export async function squadView(slug: string, gw: string | undefined) {
   // Whether the sheet below is the branch that renders, asked before the fetch
   // because the answer decides whether the news read is worth making.
   const sheet = planning === null && display.show === "lineup";
-  // Concurrent, not serial: this screen is read on a matchday.
+  // Concurrent, not serial: this screen is read on a matchday. Only the sheet reads the round.
   const [live, stories] = await Promise.all([
-    priced === null ? null : squadLivePoints(priced.period, teamId, priced.categories),
+    priced === null || !sheet ? null : squadLivePoints(priced.period, teamId, priced.categories),
     sheet ? readPoolNews() : null,
   ]);
   // Fifteen men's news, not the pool's 74 — this crosses to the browser.
@@ -143,11 +147,7 @@ export async function squadView(slug: string, gw: string | undefined) {
   // the season table and `Sheet` rendered it under a card headed "This period",
   // at a man's default position rather than his roster slot. This is the same
   // condition `board` is built on, so the two cannot disagree.
-  // **The planner needs it too, and for the opposite reason.** The gated branch
-  // reads the season because it may not read the round; this one reads the round
-  // and the round has not been played — the planner opens on the week a manager
-  // can still CHANGE, so before Saturday every live figure is a dash and a column
-  // headed `FPts` reads as broken data rather than as an empty week.
+  // The planner's FPts is the season too, before and after the round scores (Craig, 30 Sep 2026).
   const season = display.show === "squad" || planning !== null ? await squadSeason(teamId) : null;
   // Whether this period has actually scored anything yet, which is not the same
   // as whether Fantrax answered: it returns a row per player with a null against
@@ -191,5 +191,15 @@ export async function squadView(slug: string, gw: string | undefined) {
   )?.points;
   const pending = owed ? owed : null;
 
-  return { team, planning, eligibility, clubs, opposition, live, news, season, scored, points, board, names, pending, squadIds };
+  return { team, planning, open, benchRanks, eligibility, clubs, opposition, live, news, season, points, board, names, pending, squadIds };
+}
+
+/** Fantrax's bench order for the planned week, `scorerId → rank`; none when the read fails or names another week. */
+async function benchOrderOf(teamId: string, period: number): Promise<Record<string, number>> {
+  try {
+    const state = mapLineupState(await fetchLineupState(FANTRAX_LEAGUE_ID, teamId, period));
+    return state?.period === period ? { ...state.autoSubOrder } : {};
+  } catch {
+    return {};
+  }
 }

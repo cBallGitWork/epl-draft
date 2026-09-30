@@ -1,7 +1,5 @@
-import type { StoryKind } from "@epl/core";
 import {
   FANTRAX_LEAGUE_ID,
-  clubById,
   type AvailabilityNote,
   type Bridge,
   type Deal,
@@ -33,21 +31,12 @@ import {
 } from "@epl/core";
 import { BBC_FOOTBALL, affectedBy, fetchFeed, mapNews, type Affected, type NewsItem } from "@epl/core";
 import mapping from "../../data/mappings/fantrax.json";
-import { type MatchFootball, roundFootball } from "./football";
 
 // Everything the writer is allowed to know, read here at the edge so the brief
 // builders stay pure. One read per surface, each caught on its own: a feed we
 // cannot read costs the brief a block, never the filing.
 
-/** Everything the desk decides from — every read this edition makes EXCEPT the
- *  Premier League's.
- *
- *  **Split from `RoundFacts` because the desk never looks at the football and it
- *  is three quarters of a quiet firing's network.** `newsdesk` reads `teams`,
- *  `pairings`, `business`, `news` and `scores` and nothing else
- *  (`write-edition.ts`'s `DeskState`), and about a hundred and ten firings a week
- *  end at "Nothing new to report." — each of which was paying `1 + 3 × played
- *  fixtures` requests to the Premier League and discarding every one. */
+/** Everything the desk and the briefs decide from, read once per firing. */
 export interface DeskFacts {
   pairings: PeriodPairing[];
   scores: Map<string, LiveTeamScore>;
@@ -70,67 +59,6 @@ export interface DeskFacts {
   /** Wire items that name a man somebody in this league holds, freshest
    *  first. Triaged here so the newsdesk sees only what has a stake in it. */
   news: { item: NewsItem; affected: Affected[] }[];
-}
-
-/** The desk's facts with the football added, which is what a BRIEF sees.
- *
- *  A brief is only ever built after the desk has said there is something to
- *  write, so this type is the one every builder takes and `DeskFacts` never
- *  reaches them. */
-export interface RoundFacts extends DeskFacts {
-  /** What happened in each played fixture, by FPL fixture id — the minute of
-   *  every goal, who assisted it, the cards and the substitutions, and a handful
-   *  of each side's figures.
-   *
-   *  **The half the match report never had.** Its brief used to say outright
-   *  that the writer did not know the order anything happened, so the column
-   *  could only enumerate — and it read like a ledger because it was one.
-   *  Empty when the Premier League's feed could not be read, which costs the
-   *  report its spine and makes it say so. */
-  football: Map<number, MatchFootball>;
-}
-
-/** The Premier League's own feed, added to the desk's facts once there is a
- *  column to write.
- *
- *  **Its own step because of what it costs and when it is worth it.** One
- *  `fetchPlRound` plus three per fixture that has kicked off — `fetchPlFixture`,
- *  `fetchPlMatchStats` and `fetchPlTextstream` — so 31 requests for a complete
- *  round, against 11 for every other read this edition makes put together. It
- *  was awaited inside `gatherRoundFacts`, three lines before a `newsdesk` that
- *  never reads it and thirty before the quiet exit, so the common firing paid all
- *  31 and threw them away.
- *
- *  And the steady state is the expensive one rather than the cheap one: FPL keeps
- *  `is_current` on a played round until the next deadline and `focusGameweek`
- *  takes `is_current` first, so every firing from Sunday night to the following
- *  Saturday re-fetched the same finished round in full.
- *
- *  Called once, at the one place a brief is about to be built. */
-export async function withFootball(
-  facts: DeskFacts,
-  snapshot: FootballSnapshot,
-  assignments: readonly { kind: StoryKind }[],
-): Promise<RoundFacts> {
-  // **And only when a MATCH REPORT is being written**, which is the other half of
-  // the same saving. `match-report` is the one brief that reads
-  // `RoundFacts.football` — every other kind is built from Fantrax and the BBC —
-  // so a firing whose only assignment is a `news` or a `wire` column was still
-  // paying the whole Premier League round for a column that cannot mention it.
-  // On the schedule in `editions.yml` that is most of the midweek firings that
-  // file anything at all.
-  //
-  // An empty map rather than an absent field: the brief already inverts on it and
-  // says the report has no timeline (`briefs/matchReport.ts`), which is the
-  // truthful thing for it to say when nobody asked for the football.
-  if (!assignments.some((assignment) => assignment.kind === "match-report")) {
-    return { ...facts, football: new Map() };
-  }
-
-  return {
-    ...facts,
-    football: await roundFootball(snapshot.gameweek, snapshot, clubById(snapshot)),
-  };
 }
 
 export async function gatherRoundFacts(

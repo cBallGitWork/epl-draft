@@ -3,6 +3,7 @@ import {
   predictedEleven,
   predictionAge,
   setPieceOrder,
+  setPieceRanks,
   squadIntel,
   xiFault,
 } from "./map";
@@ -109,10 +110,9 @@ describe("predictedEleven", () => {
     const rows = predictedEleven(eleven());
     expect(rows.map((row) => row.line)).toEqual(["GK", "4", "2", "3", "1"]);
     expect(rows.map((row) => row.players.length)).toEqual([1, 4, 2, 3, 1]);
-    // Turned round within the line: the source lists a back four right-back
-    // first, and a pitch is drawn from the reader's seat, so the right-back
-    // belongs on the right.
-    expect(rows[1]?.players.map((p) => p.code)).toEqual([5, 4, 3, 2]);
+    // Right-back first, as the source lists him: the keeper stands at the top, so
+    // the team faces the reader and its right is the reader's left.
+    expect(rows[1]?.players.map((p) => p.code)).toEqual([2, 3, 4, 5]);
   });
 
   it("keeps the keeper out of the formation", () => {
@@ -166,6 +166,37 @@ describe("setPieceOrder", () => {
 
   it("answers for a club the source has never listed", () => {
     expect(setPieceOrder(undefined, PIECES).every((p) => p.takers.length === 0)).toBe(true);
+  });
+});
+
+describe("setPieceRanks", () => {
+  const PIECES = [
+    { key: "penalties", label: "Penalties" },
+    { key: "corners", label: "Corners" },
+  ] as const;
+  const city = {
+    penalties: [
+      { code: 3, share: 0.2 },
+      { code: 1, share: 0.5 },
+      { code: 2, share: 0.3 },
+    ],
+  };
+  const everyone = new Set([1, 2, 3]);
+
+  it("ranks him by share among his club's takers", () => {
+    const [pens] = setPieceRanks(city, PIECES, 2, everyone);
+    expect(pens).toEqual({ piece: "penalties", label: "Penalties", rank: 2, of: 3 });
+  });
+
+  it("counts only the men still at the club, so a departed first choice promotes the next", () => {
+    const [pens] = setPieceRanks(city, PIECES, 2, new Set([2, 3]));
+    expect(pens).toMatchObject({ rank: 1, of: 2 });
+  });
+
+  it("gives no rank for a piece he does not take", () => {
+    const [pens, corners] = setPieceRanks(city, PIECES, 9, everyone);
+    expect(pens).toMatchObject({ rank: null, of: 3 });
+    expect(corners).toMatchObject({ rank: null, of: 0 });
   });
 });
 

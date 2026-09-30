@@ -1,5 +1,6 @@
 import type { Pedigree } from "@epl/core";
 import { signed } from "@epl/core";
+import { MINOR_CAPS } from "@/app/desk";
 
 // What the draft paid for him: the cyan line across the foot of Transfer, and the figure beside
 // his pick in the status panel. Nothing for a league whose draft has not run.
@@ -61,7 +62,7 @@ export function Value({ against }: { against: number | null }) {
               Math.abs(against) === 1 ? "pick" : "picks"
             } ${against < 0 ? "below" : "above"} where he was taken, among the men this draft took.`
       }
-      className="flex items-baseline gap-1 text-3xs font-bold uppercase text-faint"
+      className={`flex items-baseline gap-1 ${MINOR_CAPS} text-faint`}
     >
       <span
         className={`numeric text-sm ${

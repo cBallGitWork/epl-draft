@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { firstKickoff, periodGameweeks } from "./calendar";
+import { firstKickoff, periodGameweeks, saveOpen } from "./calendar";
 import type { GameweekKickoff } from "./calendar";
 import type { LeaguePeriod } from "./types";
 import alignment from "./__fixtures__/periodAlignment.json";
@@ -108,5 +108,22 @@ describe("firstKickoff", () => {
 
   it("says nothing for a period with no football in it", () => {
     expect(firstKickoff(P3, [])).toBeNull();
+  });
+});
+
+describe("saveOpen", () => {
+  const locks = "2026-10-10T11:15:00.000Z";
+
+  it("takes a save until the margin before the lock", () => {
+    expect(saveOpen(locks, "2026-10-10T11:04:59.000Z")).toBe(true);
+  });
+
+  it("refuses inside the margin and after the lock, so a live week is never written", () => {
+    expect(saveOpen(locks, "2026-10-10T11:05:00.000Z")).toBe(false);
+    expect(saveOpen(locks, "2026-10-10T12:00:00.000Z")).toBe(false);
+  });
+
+  it("refuses a week with no lock to measure", () => {
+    expect(saveOpen(null, "2026-10-01T00:00:00.000Z")).toBe(false);
   });
 });

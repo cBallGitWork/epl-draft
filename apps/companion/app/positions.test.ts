@@ -11,12 +11,12 @@ describe("position labels", () => {
     expect(positionLabel(null)).toBeNull();
     expect(positionLabel("")).toBeNull();
     expect(positionsLabel([])).toBeNull();
-    expect(positionsFromList(undefined)).toBeNull();
+    expect(positionsLabel(positionsFromList(undefined))).toBeNull();
   });
 
   it("abbreviates two, back to front, whatever order Fantrax sends them in", () => {
     // Saka arrives as "F,M" and is a midfielder who can play up front (Craig, 2 Sep).
-    expect(positionsFromList("F,M")).toBe("M/F");
+    expect(positionsLabel(positionsFromList("F, M"))).toBe("M/F");
     expect(positionsLabel(["F", "D"])).toBe("D/F");
   });
 

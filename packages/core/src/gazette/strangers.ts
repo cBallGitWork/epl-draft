@@ -5,7 +5,7 @@
 // it substitutes the famous player with that surname. None of it is fixable
 // downstream, because every one of them reads perfectly.
 //
-// HOUSE states the rule — NAMES ARE EXACT, never substitute a more famous
+// `house` states the rule — NAMES ARE EXACT, never substitute a more famous
 // player with the same surname — and a rule the model can obey to the letter
 // while still naming a man it was not given is not a guardrail; it is a hope.
 // So the check is mechanical and runs after the words come back.

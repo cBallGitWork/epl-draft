@@ -16,6 +16,9 @@ export const revalidate = 30;
 
 type View = PlannerView | "rankings";
 
+/** Each rankings table by what it is for: 1 the easiest, as on the Attack and Defence boards. */
+const RANKING_TITLE = { defence: "Defences, easiest to attack first", attack: "Attacks, easiest to defend first" } as const;
+
 const VIEWS: readonly { key: View; label: string }[] = [
   { key: "attack", label: "Attack" },
   { key: "defence", label: "Defence" },
@@ -56,9 +59,9 @@ export default async function PlannerPage({
       />
       {view === "rankings" ? (
         <div className="grid gap-2 lg:grid-cols-2">
-          {(["attack", "defence"] as const).map((measure) => (
+          {(["defence", "attack"] as const).map((measure) => (
             <section key={measure} className="flex min-w-0 flex-col gap-2">
-              <p className={SECTION_BAR}>{measure === "attack" ? "Attack" : "Defence"}, best first</p>
+              <p className={SECTION_BAR}>{RANKING_TITLE[measure]}</p>
               <StrengthRanks table={strengthTable(intelStrength, measure)} clubs={clubs} />
             </section>
           ))}

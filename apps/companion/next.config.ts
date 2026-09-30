@@ -5,10 +5,11 @@ import {
   PL_ASSET_BASE,
   PL_PHOTO_BASE,
   YOUTUBE_EMBED_BASE,
+  YOUTUBE_THUMB_BASE,
 } from "../../packages/core/src/config";
 
 /** Every image host the app draws from, as core's config names them. */
-const IMAGE_BASES = [PL_ASSET_BASE, PL_PHOTO_BASE, FPL_SHIRT_BASE, FANTRAX_BADGE_BASE];
+const IMAGE_BASES = [PL_ASSET_BASE, PL_PHOTO_BASE, FPL_SHIRT_BASE, FANTRAX_BADGE_BASE, YOUTUBE_THUMB_BASE];
 
 function under(base: string) {
   const url = new URL(base);
@@ -87,9 +88,12 @@ const nextConfig: NextConfig = {
       { source: "/matchup", destination: "/league/matchups", permanent: true },
       { source: "/team", destination: "/squad", permanent: true },
       { source: "/team/:teamId", destination: "/squad/:teamId", permanent: true },
-      // A prefix is not a page: `/paper` is where the paper's inside pages
-      // live, and the paper's own front is `/`.
+      // A prefix is not a page: `/paper` is where the paper's articles live,
+      // and the paper's own front is `/`.
       { source: "/paper", destination: "/", permanent: true },
+      // The section pages cut on 30 Sep 2026; not permanent, since the paper has reversed on pages before.
+      { source: "/paper/reports", destination: "/", permanent: false },
+      { source: "/paper/columns", destination: "/", permanent: false },
     ];
   },
 

@@ -1,5 +1,6 @@
 import {
   type Assignment,
+  type Dodger,
   type StandingsRow,
   type StoryThread,
   buildDodgersBrief,
@@ -7,11 +8,10 @@ import {
   buildPowerBrief,
   buildWireBrief,
   decided,
-  dodgers,
   powerRows,
   wireFacts,
 } from "@epl/core";
-import type { RoundFacts } from "./facts";
+import type { DeskFacts } from "./facts";
 
 // The opinion columns' wiring: what each one is told, out of the facts the
 // firing already gathered. The joins live here rather than in core for the
@@ -19,10 +19,12 @@ import type { RoundFacts } from "./facts";
 
 export interface ColumnContext {
   gameweek: number;
-  facts: RoundFacts;
+  facts: DeskFacts;
   /** Fantrax's table, for the rankings to argue with. Empty when the standings
    *  read refused, which costs that column and no other. */
   table: readonly StandingsRow[];
+  /** The gameweek's near misses, null when the commentary was not read. */
+  dodgers: readonly Dodger[] | null;
   threads: readonly StoryThread[];
   named: (teamId: string) => string;
 }
@@ -43,19 +45,9 @@ export function columnBrief(assignment: Assignment, ctx: ColumnContext): string 
   }
 
   if (assignment.kind === "dodgers") {
-    // The same gate the eleven keeps, and for a stronger reason: this column
-    // is ENTIRELY the claim that somebody was benched. `getTeamRosters` is
-    // asked for no period and Fantrax rolls the label forward hours before the
-    // boundary, so between rounds the arrangement on hand is next week's plan
-    // — and this fires in the finished-round window, which is exactly when
-    // that is most likely. Ungated, the paper names five managers for benching
-    // men they started, in a side nobody fielded.
-    if (!ctx.facts.fielded) return null;
-    const benched = dodgers(ctx.facts.teams);
-    // Nobody left anybody out worth writing about. A column saying so would be
-    // the paper apologising for a week in which every manager picked well.
-    if (benched.length === 0) return null;
-    return buildDodgersBrief({ gameweek: ctx.gameweek, benched, threads: ctx.threads });
+    // A week in which nobody came close files nothing rather than a column apologising for it.
+    if (ctx.dodgers === null || ctx.dodgers.length === 0) return null;
+    return buildDodgersBrief({ gameweek: ctx.gameweek, dodgers: ctx.dodgers, threads: ctx.threads });
   }
 
   if (assignment.kind === "eleven") {

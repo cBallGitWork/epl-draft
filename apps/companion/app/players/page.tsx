@@ -1,3 +1,4 @@
+import BoardKey from "../components/league/BoardKey";
 import Link from "next/link";
 import ScoutShell, { POOL_ROWS } from "./Shell";
 import PlayerTable from "./PlayerTable";
@@ -157,6 +158,7 @@ export default async function PlayersPage({
           .
         </p>
       ) : null}
+      {shown.length === 0 ? null : <BoardKey entries={columns.filter((column) => column.key !== "name")} />}
 
       {/* Both say why a number is missing rather than leaving a dash to be read
           as a nought. The first is a read that did not answer at all; the second

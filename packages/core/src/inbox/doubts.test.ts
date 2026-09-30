@@ -22,6 +22,9 @@ describe("availabilityNews", () => {
   const banned = (over: Partial<AvailabilityNote> = {}) =>
     note({ state: "suspended", label: "Sus", out: true, chance: null, news: "Suspended.", ...over });
 
+  /** FPL's `i`, spread under a note's own news. */
+  const injured = { state: "injured", label: "Inj", out: true, chance: 0 } as const;
+
   /** The reader is `t1` and he plays `t2` next. */
   const squads = { mine: "t1", opponent: "t2", name: (id: string) => ({ t1: "Mine", t2: "Theirs" })[id] ?? null };
 
@@ -72,52 +75,68 @@ describe("availabilityNews", () => {
     expect(league.from).toBe("Theirs' physio");
   });
 
-  it("names him in full and says which round, in the subject line", () => {
-    // Craig, 17 Sep 2026: "use players first name and surname in email fields"
-    // and "say 'player name is out gw4'". A man is out FOR a round and a
-    // percentage to play IN one, which is why the clause carries its own
-    // preposition.
-    expect(availabilityNews([banned()], 5, squads)[0].headline).toBe(
-      "Alexander Isak is out for GW5",
-    );
-    expect(availabilityNews([note()], 5, squads)[0].headline).toBe(
-      "Alexander Isak is 75% to play, GW5",
-    );
+  it("writes the subject as a short headline on his surname", () => {
+    // Craig, 30 Sep 2026: "reword these to look like a real sentence". A surname keeps it on one row at 390.
+    const subject = (over: Partial<AvailabilityNote>, gameweek: number | null = 5) =>
+      availabilityNews([note(over)], gameweek, squads)[0].headline;
+    expect(subject({})).toBe("Isak a doubt for GW5");
+    expect(subject(injured)).toBe("Isak out for GW5");
+    expect(subject({ state: "suspended", label: "Sus", out: true, chance: null })).toBe("Isak banned for GW5");
+    // A man who has left is gone for every gameweek, not one.
+    expect(subject({ state: "unavailable", label: "Unav", out: true, chance: null })).toBe("Isak unavailable");
+    expect(subject(injured, null)).toBe("Isak out");
+    expect(subject({}, null)).toBe("Isak a doubt");
   });
 
-  it("says he is OUT before it says anything about a chance", () => {
-    // A ban carries no chance at all, so asking the chance first said "carries a
-    // note" about a suspension.
-    expect(availabilityNews([note({ chance: null })], 5, squads)[0].headline).toBe(
-      "Alexander Isak carries a note",
-    );
-    // And no round on that one: "carries a note for gameweek 5" claims the note
-    // is about the round, and it is about the man.
-    expect(availabilityNews([note({ chance: null })], null, squads)[0].headline).toBe(
-      "Alexander Isak carries a note",
-    );
+  it("gives no gameweek to a doubt with no chance against it", () => {
+    // The note is about the man, not the gameweek.
+    expect(availabilityNews([note({ chance: null })], 5, squads)[0].headline).toBe("Isak a doubt");
   });
 
-  it("reads like a letter from a person, built only from FPL's facts", () => {
-    // Craig, 25 Sep 2026: "write like a person". FPL's "Knee injury - Unknown return date"
-    // becomes a sentence, and nothing in it is ours but the grammar.
-    const body = (over: Partial<AvailabilityNote>, teamId = "t1") =>
-      availabilityNews([note({ teamId, ...over })], 6, squads)[0].body;
-    const out = { state: "injured", label: "Inj", out: true, chance: 0 } as const;
+  it("reads like a reporter's sentence, built only from FPL's facts", () => {
+    const body = (over: Partial<AvailabilityNote>, gameweek: number | null = 6) =>
+      availabilityNews([note(over)], gameweek, squads)[0].body;
 
-    const knee = body({ ...out, news: "Knee injury - Unknown return date", chance: null });
-    expect(knee).toContain("Alexander Isak has a knee injury");
-    expect(knee).toMatch(/won't be fit for gameweek 6|misses gameweek 6/);
-    expect(knee).not.toContain(" - ");
-
-    expect(body({ ...out, news: "Hamstring injury - Expected back 11 Oct" })).toMatch(/back around 11 Oct\.$/);
-    expect(body({})).toMatch(/has a knock.*75% to play in gameweek 6/);
+    expect(body({ news: "Muscular injury - 75% chance of playing" })).toMatch(
+      /^Alexander Isak has a muscular injury(,| and) .*a doubt for gameweek 6\. He('s given| has) a 75% chance of playing\.$/,
+    );
+    const knee = body({ ...injured, news: "Knee injury - Unknown return date", chance: null });
+    expect(knee).toMatch(/^Alexander Isak has a knee injury and (misses|won't play in) gameweek 6\./);
+    expect(knee).toMatch(/no (date|word) yet/);
+    expect(body({ ...injured, news: "Hamstring injury - Expected back 11 Oct" })).toMatch(/back (by|on) 11 Oct\.$/);
     expect(body({ news: "Unspecified injury - 75% chance of playing" })).toContain("has an injury");
+    expect(body({ news: "Knock", chance: null })).toBe("Alexander Isak has a knock and is a doubt for gameweek 6.");
+    // The league's word, never "round", when no gameweek is known.
+    expect(body({ news: "Knock", chance: null }, null)).toBe(
+      "Alexander Isak has a knock and is a doubt for the next gameweek.",
+    );
   });
 
-  it("writes a ban as the FA would, and a move as the transfer desk would", () => {
+  it("never joins fragments with a dash or a colon, and never says round", () => {
+    const cases: Partial<AvailabilityNote>[] = [
+      {},
+      { news: "Knock - Game-time decision" },
+      { news: "Knock", chance: null },
+      { ...injured, news: "Knee injury - Unknown return date" },
+      { ...injured, news: "Hamstring injury - Expected back 11 Oct" },
+      { state: "suspended", label: "Sus", out: true, chance: null, news: "Suspended until 10 Oct" },
+    ];
+    for (const teamId of ["t1", "t2"]) {
+      for (const gameweek of [6, null]) {
+        for (const over of cases) {
+          const [item] = availabilityNews([note({ teamId, ...over })], gameweek, squads);
+          // FPL's own words may arrive in quotes; everything outside them is ours.
+          expect(item.body.replace(/"[^"]*"/g, "")).not.toMatch(/ - |:|;|—/);
+          expect(`${item.headline} ${item.body}`).not.toMatch(/\bround\b/);
+        }
+      }
+    }
+  });
+
+  it("writes a ban and a move plainly", () => {
     const [ban] = availabilityNews([banned({ news: "Suspended until 10 Oct" })], 5, squads);
-    expect(ban.body).toBe("This is to confirm that Alexander Isak is suspended and misses gameweek 5. The ban runs until 10 Oct.");
+    expect(ban.body).toBe("Alexander Isak is suspended for gameweek 5. His ban runs until 10 Oct.");
+    expect(availabilityNews([banned()], 5, squads)[0].body).toBe("Alexander Isak is suspended for gameweek 5.");
     const [moved] = availabilityNews(
       [banned({ state: "unavailable", label: "Unav", news: "Has joined Birmingham on loan for the rest of the season" })],
       5,
@@ -130,13 +149,13 @@ describe("availabilityNews", () => {
 
   it("puts the opponent's loss in his name, not in yours", () => {
     const [item] = availabilityNews([banned({ teamId: "t2", news: "Suspended until 10 Oct" })], 5, squads);
-    expect(item.body).toBe("Theirs will be without Alexander Isak for gameweek 5. He's suspended until 10 Oct.");
+    expect(item.body).toBe("Theirs will be without Alexander Isak for gameweek 5. He is suspended until 10 Oct.");
     expect(availabilityNews([note({ teamId: "t2" })], 5, squads)[0].body).toMatch(/Theirs/);
   });
 
-  it("keeps FPL's words whole when it cannot read them", () => {
+  it("quotes FPL's words whole when it cannot read them", () => {
     expect(availabilityNews([note({ news: "Knock - Game-time decision" })], 5, squads)[0].body).toBe(
-      "Alexander Isak is a doubt for gameweek 5: Knock - Game-time decision.",
+      'Alexander Isak is a doubt for gameweek 5. The latest update says "Knock - Game-time decision".',
     );
   });
 

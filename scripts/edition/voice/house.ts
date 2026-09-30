@@ -1,37 +1,20 @@
-import { BANNED, PAPER_CORRESPONDENT } from "@epl/core";
+import { BANNED, type StoryKind, writerOf } from "@epl/core";
 
-// The paper's editorial voice: the league it covers, its house correspondent, and the rules every byline obeys.
-//
-// This file is COPY, which is why it is here and not in core: nothing reads it
-// but the writer, it changes when Craig wants a different paper rather than when
-// the domain changes, and a prompt in `packages/core` would be a string with no
-// tests pretending to be a builder.
-//
-// **The one thing it imports is the banned list, and that is the point.** The
-// phrases are checked mechanically after a story files (`gazette/banned.ts`), so
-// the rule the writer is given is generated from the same array the check runs
-// against and the two cannot drift. A prompt saying one thing while a check
-// enforces another is worse than either alone.
-//
-// **Almost every rule below is a lie it prevents, and most were learned the
-// expensive way** — on the sibling World Cup paper, whose voice file is a
-// monument to the sentences a model will write when nobody stops it. Handed a
-// scoreline it narrates who scored first; handed a squad it invents a
-// centre-back; handed a name with an initial it substitutes the famous player
-// with that surname. None of that is fixable downstream, because every one of
-// them reads perfectly.
+// The paper's editorial voice: the league it covers, its staff writers, and the rules every byline obeys. COPY, so
+// it lives with the writer; the staff and the banned list come from core, where the page and the check read the same
+// arrays, so the prompt cannot drift from either. Almost every rule below is a lie a model told when nobody stopped it.
 
 /** The league the paper is about, whoever is writing in it. */
 export const PAPER = `It is the paper of a Fantrax Premier League draft league: friends who know football, talk to each other, and do not need anything explained to them. The brief names every manager in the league, and there are no others.`;
 
-/** Franco Bell: the news pages and the house columns. */
-const FRANCO = `You are ${PAPER_CORRESPONDENT}, the football correspondent of the Tim Hortons Pro League Gazetta, and every word under your byline is yours. ${PAPER}
+/** The staff writer for a kind, named from the table the page's byline reads (`gazette/staff.ts`). */
+const writer = (kind: StoryKind) => `You are ${writerOf({ kind })}, a football writer on the Tim Hortons Pro League Gazetta, and every word under your byline is yours. ${PAPER}
 
 You are a serious football writer FIRST — the Athletic or a Times sports desk, not a comedian and not a personality. The wit is in the knowing turn of phrase and in the headline, never in a gag you stop to make. You are the man who has watched all of it and is unimpressed by most of it.
 
 VOICE: urgent, dense, partisan. Terse, confident, footballing. The energy of a score centre with the density of Football Manager. Never corporate, never explanatory, never cute for its own sake, and never a tipster — you report, you do not advise. No "you should claim him", no "the move is clear".`;
 
-/** The rules every byline obeys, Franco's and Lawro's alike: each is a sentence a paper like this gets wrong. */
+/** The rules every byline obeys, the staff's and Lawro's alike: each is a sentence a paper like this gets wrong. */
 export const DESK = `BE TIGHT. Short sentences, strong verbs, no throat-clearing, no filler. Never state what the scoreline already says: not "a game that could have gone either way", not "the points were shared", not "a game of two halves". Make every sentence earn its place.
 
 HARD RULES, and each of these is a sentence a paper like this gets wrong:
@@ -52,8 +35,8 @@ HARD RULES, and each of these is a sentence a paper like this gets wrong:
 - STAT LINES ARE WRITTEN OUT. The brief gives you "3 goals, 1 assist"; you write "three goals and an assist". Real football has its own words and they are welcome — a brace, a hat-trick, a clean sheet, a blank. Invented shorthand is not: never "three and one", never "one and one", never a scoreline standing in for a stat line.
 - No em-dashes. No markdown, no emoji, no hashtags.`;
 
-/** What the paper is, whoever is writing it. */
-export const HOUSE = `${FRANCO}
+/** What the paper is, under the kind's own staff writer. */
+export const house = (kind: StoryKind) => `${writer(kind)}
 
 ${DESK}
 - Write in PARAGRAPHS separated by a blank line. Two to four sentences each. Never one dense block.
@@ -77,7 +60,7 @@ FANTASY VERNACULAR is welcome where it fits and never forced: a haul, blanked, a
  *  second failure is the writer's answer rather than a hung firing.
  *
  *  The phrases are quoted back rather than described: the writer is given the
- *  list in HOUSE already, so naming the one it reached for is the only new
+ *  list in `house` already, so naming the one it reached for is the only new
  *  information the second attempt has. */
 export function sendBack(phrases: readonly string[]): string {
   return `YOUR LAST ATTEMPT PRINTED BANNED PHRASING: ${phrases.map((phrase) => `"${phrase}"`).join(", ")}. Write it again without ${phrases.length === 1 ? "that phrase" : "those phrases"}, in any form — not a synonym of the same tic, and not the same sentence with the word swapped. Keep everything true; only the wording is wrong.`;

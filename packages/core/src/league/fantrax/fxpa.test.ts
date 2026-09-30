@@ -130,3 +130,9 @@ describe("fxpaRead", () => {
     expect(error).toMatchObject({ code: "404" });
   });
 });
+
+describe("fxpaRead with a session", () => {
+  it("refuses any method off the allow-list before a request is made", async () => {
+    await expect(fxpaRead("league", "deleteLeague", {}, "cookie")).rejects.toMatchObject({ code: "NOT_ALLOWED" });
+  });
+});

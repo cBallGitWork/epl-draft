@@ -1,3 +1,4 @@
+import ScrollBoard from "../../../components/league/ScrollBoard";
 import Link from "next/link";
 import type { FootballPlayer } from "@epl/core";
 import { availabilityOf, positionDepth, DASH } from "@epl/core";
@@ -7,7 +8,7 @@ import StateBox from "../../../components/football/StateBox";
 import { doubtRow } from "../../../components/football/doubtRow";
 import { PLAYER } from "../../routes";
 import type { LeagueOpinion } from "../../leagueOpinions";
-import { BOARD, DESK_ONLY, FIGURE, ROW_NAME, SCROLL, ROW_HOVER } from "@/app/desk";
+import { BOARD, DESK_ONLY, FIGURE, ROW_NAME, ROW_HOVER } from "@/app/desk";
 
 // Every man on the club's books, as Championship Manager files a squad.
 //
@@ -35,7 +36,7 @@ export default function SquadTable({
   /** The sister repo's, by the same key. Empty when it has never exported. */
 }) {
   return (
-    <div className={SCROLL}>
+    <ScrollBoard>
       <table className={BOARD}>
         <caption className="sr-only">
           The club&apos;s squad, ordered by the position our league files each man at
@@ -112,7 +113,7 @@ export default function SquadTable({
           })}
         </tbody>
       </table>
-    </div>
+    </ScrollBoard>
   );
 }
 

@@ -20,8 +20,8 @@ caption and no position tile down the left on a phone. His second look, the same
   (`QuerySelect`). The URL is the state, through the Players board's own parsers (`playersQuery`, `filterHref`
   with this route).
 - **Sort** by any gameweek, the total or the minutes; a week the window has lost falls back to the total.
-- **Provenance** under the switch: FPL-scoring projections by the sister model, the window, and the export's
-  date. These are never Fantrax points.
+- **No provenance line** (Craig, 30 Sep 2026: "remove row"). The figures are the sister model's FPL points, never
+  Fantrax's; the Tot head's title says so.
 - The first hundred, then "Show all".
 
 ## States

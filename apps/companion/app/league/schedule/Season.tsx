@@ -2,7 +2,7 @@ import Link from "next/link";
 import { leads, londonDate, DASH } from "@epl/core";
 import TeamBadge from "../../components/league/TeamBadge";
 import type { SeasonRow } from "./teamSeason";
-import { ROW_NAME } from "@/app/desk";
+import { ROW_NAME, MINOR_CAPS } from "@/app/desk";
 import { matchupHref } from "../routes";
 import { teamHref } from "@/app/squad/routes";
 
@@ -38,10 +38,8 @@ export default function Season({
     // beside it in the same grey, which is the same five facts with four of them
     // wearing the same clothes.
     //
-    // The scroll bar is CM's too, and it is deliberately visible: the season is
-    // 38 rounds and the panel holds about a dozen, so a list that hides its own
-    // bar looks like a list that ends.
-    <ul className="cm-rows cm-scroll cm-scroll-y flex max-h-[34rem] flex-col overflow-y-auto">
+    // CM's visible scroll bar on a desk; a phone scrolls the page, or the list's foot sits under the rail.
+    <ul className="cm-rows cm-scroll cm-scroll-y flex flex-col lg:max-h-[34rem] lg:overflow-y-auto">
       {rows.map((row) => (
         <li key={`${row.round.period}-${row.tie.competition.id}-${row.tie.round ?? ""}`}>
           <div
@@ -79,13 +77,13 @@ export default function Season({
                 column is furniture. Four columns, then, and the fifth is the
                 one fact this list has that CM's does not — the score. */}
 
-            {/* The competition, in yellow — `First Division` in the shot. A
-                knockout names its round beside it, which is the one thing our
-                calendar has that a league fixture list does not. */}
-            <span className="hidden w-20 shrink-0 truncate text-3xs font-bold uppercase text-accent lg:block">
-              {row.tie.round === null
-                ? row.tie.competition.name
-                : `${row.tie.competition.name} · ${row.tie.round}`}
+            {/* The competition, in yellow, at every width (Craig, 30 Sep): a cup tie must
+                stand apart from a league one. A knockout's round sits under its name. */}
+            <span className={`flex w-24 shrink-0 flex-col ${MINOR_CAPS} text-accent lg:w-40`}>
+              <span className="truncate">{row.tie.competition.name}</span>
+              {row.tie.round === null ? null : (
+                <span className="truncate font-normal">{row.tie.round}</span>
+              )}
             </span>
 
             {/* **The score is the link, not the row** (Craig, 2 Sep: "tap a

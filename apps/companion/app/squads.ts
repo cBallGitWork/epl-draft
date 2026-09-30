@@ -92,6 +92,9 @@ export type LeagueSquads = ReadableSquads | { undrafted: string } | Unavailable;
  *
  *  Both `notFound()` and `redirect()` return `never`, so this narrows the union
  *  for the caller and no site needs its own guard afterwards. */
+/** The squads read's cache key, which a lineup save expires. */
+export const SQUADS_KEY = "league-squads";
+
 export function readableOr404(squads: LeagueSquads, home: string): ReadableSquads {
   if ("undrafted" in squads) notFound();
   if ("unavailable" in squads) redirect(home);
@@ -125,7 +128,7 @@ interface CachedLeague {
  *
  *  Nothing about *who is asking* may cross into here — no team id, no cookie —
  *  or one manager's view would be served to another. */
-const readLeague = leagueCache("league-squads",
+const readLeague = leagueCache(SQUADS_KEY,
   async (round: Round | null, currentGameweek: number): Promise<CachedLeague> => {
 
     // The period the ROUND IN VIEW is scored in. It is what every genuinely

@@ -1,0 +1,1649 @@
+{
+  "slug": "gw5-prem-report-2026-09-20",
+  "kind": "match-report",
+  "leagueId": "zbn1z3ukmsgb36sz",
+  "period": 5,
+  "gameweek": 5,
+  "filedAt": "2026-09-29T19:38:31.296Z",
+  "expiresAt": null,
+  "edition": "Sunday Prem Report",
+  "byline": "The Back Page",
+  "headline": "Brobbey's treble no robbery",
+  "deck": "Manchester City beat Sunderland 5-3",
+  "body": "",
+  "subjects": [
+    "match-report:gw5:2026-09-20"
+  ],
+  "image": null,
+  "face": null,
+  "ties": [],
+  "extras": {
+    "reports": [
+      {
+        "fixtureCode": 2645241,
+        "kickoff": "2026-09-20T13:00:00Z",
+        "home": {
+          "code": 43,
+          "score": 5,
+          "goals": [
+            "Fernández 09",
+            "Cherki 29",
+            "Semenyo 43",
+            "Semenyo 57",
+            "Haaland 81"
+          ],
+          "assists": [
+            "Semenyo 29",
+            "Guéhi 43",
+            "Gvardiol 81"
+          ],
+          "manager": "Enzo Maresca",
+          "lineup": {
+            "formation": "4-2-3-1",
+            "lines": [
+              [
+                {
+                  "name": "Donnarumma",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Nunes",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Dias",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Guéhi",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Gvardiol",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Fernández",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Anderson",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Ndiaye",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Doku",
+                    "minute": "75",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Cherki",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "O'Reilly",
+                    "minute": "85",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Semenyo",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Haaland",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ]
+            ],
+            "unused": [
+              "Khusanov",
+              "Bouaddi",
+              "Kovacic",
+              "Aït-Nouri",
+              "Allan",
+              "Rulli",
+              "Lewis"
+            ]
+          },
+          "next": "Liverpool (a)"
+        },
+        "away": {
+          "code": 56,
+          "score": 3,
+          "goals": [
+            "Brobbey 12",
+            "Brobbey 33",
+            "Brobbey 59"
+          ],
+          "assists": [
+            "Fée 12",
+            "Meunier 33",
+            "Angulo 59"
+          ],
+          "manager": "Régis Le Bris",
+          "lineup": {
+            "formation": "4-2-3-1",
+            "lines": [
+              [
+                {
+                  "name": "Roefs",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Mukiele",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Danso",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Ballard",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Méthalie",
+                  "booked": true,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Xhaka",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Sadiki",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Isidor",
+                    "minute": "68",
+                    "booked": false
+                  }
+                }
+              ],
+              [
+                {
+                  "name": "Meunier",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Hume",
+                    "minute": "79",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Fée",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Angulo",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Fofana",
+                    "minute": "60",
+                    "booked": false
+                  }
+                }
+              ],
+              [
+                {
+                  "name": "Brobbey",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ]
+            ],
+            "unused": [
+              "Ellborg",
+              "Rigg",
+              "Ahoka",
+              "Talbi",
+              "Alderete",
+              "O'Nien"
+            ]
+          },
+          "next": "Brighton & Hove Albion (h)"
+        },
+        "halfTime": {
+          "home": 3,
+          "away": 2
+        },
+        "venue": "Etihad Stadium",
+        "attendance": 60312,
+        "referee": "Robert Jones",
+        "standfirst": "Manchester City beat Sunderland 5-3 to stay top with a fifth win running, Brian Brobbey's hat-trick counting for nothing.",
+        "account": "Brian Brobbey scored three times for Sunderland and finished on the losing side.\nNilson Angulo shot wide from inside the box after Enzo Le Fée crossed, in the 6th minute.\nEnzo Fernández put Manchester City ahead after nine minutes, and Brobbey answered three minutes later, taking a through ball from Le Fée.\nErling Haaland shot off target from inside the six-yard box after Iliman Ndiaye's cross.\nRayan Cherki restored the City lead in the 29th minute from an Antoine Semenyo pass, before Brobbey levelled again, Thomas Meunier supplying him after 33 minutes.\nSemenyo made it 3-2 just before half-time, finishing a Marc Guéhi pass from a corner.\nSemenyo struck again after 57 minutes, and Brobbey completed his hat-trick two minutes later, set up by Angulo from a set piece.\nRúben Dias headed a Fernández corner off target midway through the second half.\nHaaland settled it with nine minutes left, taking a pass from Josko Gvardiol for 5-3.",
+        "sections": [
+          {
+            "head": "Semenyo among the goals",
+            "pitch": "Semenyo made three chances across the match and set up the third City goal.",
+            "stake": "He is test1's man and returned 13 points."
+          },
+          {
+            "head": "Haaland strikes late",
+            "pitch": "Haaland had four shots in all, one of them the goal that ended the scoring.",
+            "stake": "He belongs to 123 for six points, and 123 lead test2 38-34 in their head-to-head this period."
+          },
+          {
+            "head": "Gvardiol makes fifth",
+            "pitch": "Gvardiol laid on the fifth for Haaland.",
+            "stake": "He was on test31121's bench, so those points did not count."
+          }
+        ],
+        "keyStats": [
+          {
+            "label": "xG",
+            "value": "City 2.81, Sunderland 3.62"
+          },
+          {
+            "label": "Shots",
+            "value": "16 (6 on target) - 17 (9); corners 6-5"
+          },
+          {
+            "label": "Most shots",
+            "value": "Brobbey 5 (4 on target, 3 goals)"
+          },
+          {
+            "label": "Chances created",
+            "value": "Fée (1 assist) 5"
+          },
+          {
+            "label": "Top xG",
+            "value": "Brobbey 2.35, Haaland 1.09, O'Reilly 0.78"
+          },
+          {
+            "label": "Top xA",
+            "value": "Gvardiol 0.63, Fée 0.52, Meunier 0.45"
+          },
+          {
+            "label": "Errors leading to a goal",
+            "value": "Sunderland 1"
+          }
+        ],
+        "fantasy": {
+          "motm": {
+            "name": "Semenyo",
+            "club": "City",
+            "holder": "test1",
+            "points": 13,
+            "did": "2 goals, 1 assist"
+          },
+          "top": [
+            {
+              "name": "Semenyo",
+              "club": "City",
+              "holder": "test1",
+              "points": 13,
+              "did": "2 goals, 1 assist"
+            },
+            {
+              "name": "Cherki",
+              "club": "City",
+              "holder": "test4",
+              "points": 7,
+              "did": "1 goal"
+            },
+            {
+              "name": "Haaland",
+              "club": "City",
+              "holder": "123",
+              "points": 6,
+              "did": "1 goal"
+            }
+          ],
+          "wire": [
+            {
+              "name": "Brobbey",
+              "club": "Sunderland",
+              "holder": null,
+              "points": null,
+              "did": "3 goals"
+            },
+            {
+              "name": "Fernández",
+              "club": "City",
+              "holder": null,
+              "points": null,
+              "did": "1 goal"
+            }
+          ]
+        },
+        "rows": [
+          {
+            "minute": "08",
+            "kind": "Booked",
+            "side": "away",
+            "text": "Méthalie"
+          },
+          {
+            "minute": "09",
+            "kind": "Goal",
+            "side": "home",
+            "text": "Fernández"
+          },
+          {
+            "minute": "12",
+            "kind": "Goal",
+            "side": "away",
+            "text": "Brobbey (Fée)"
+          },
+          {
+            "minute": "29",
+            "kind": "Goal",
+            "side": "home",
+            "text": "Cherki (Semenyo)"
+          },
+          {
+            "minute": "33",
+            "kind": "Goal",
+            "side": "away",
+            "text": "Brobbey (Meunier)"
+          },
+          {
+            "minute": "43",
+            "kind": "Goal",
+            "side": "home",
+            "text": "Semenyo (Guéhi)"
+          },
+          {
+            "minute": "57",
+            "kind": "Goal",
+            "side": "home",
+            "text": "Semenyo"
+          },
+          {
+            "minute": "59",
+            "kind": "Goal",
+            "side": "away",
+            "text": "Brobbey (Angulo)"
+          },
+          {
+            "minute": "60",
+            "kind": "Sub",
+            "side": "away",
+            "text": "Fofana for Angulo"
+          },
+          {
+            "minute": "68",
+            "kind": "Sub",
+            "side": "away",
+            "text": "Isidor for Sadiki"
+          },
+          {
+            "minute": "75",
+            "kind": "Sub",
+            "side": "home",
+            "text": "Doku for Ndiaye"
+          },
+          {
+            "minute": "79",
+            "kind": "Sub",
+            "side": "away",
+            "text": "Hume for Meunier"
+          },
+          {
+            "minute": "81",
+            "kind": "Goal",
+            "side": "home",
+            "text": "Haaland (Gvardiol)"
+          },
+          {
+            "minute": "85",
+            "kind": "Sub",
+            "side": "home",
+            "text": "O'Reilly for Cherki"
+          }
+        ],
+        "video": "8e_A8MpoCKU"
+      },
+      {
+        "fixtureCode": 2645235,
+        "kickoff": "2026-09-20T13:00:00Z",
+        "home": {
+          "code": 91,
+          "score": 0,
+          "goals": [],
+          "assists": [],
+          "manager": "Marco Rose",
+          "lineup": {
+            "formation": "4-2-3-1",
+            "lines": [
+              [
+                {
+                  "name": "Petrovic",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Smith",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Cook",
+                    "minute": "75",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Hill",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Silva",
+                  "booked": true,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Truffert",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Adams",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Gannon-Doak",
+                    "minute": "88",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Scott",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Rayan",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Tóth",
+                    "minute": "88",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Christie",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Jebbison",
+                    "minute": "75",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Tavernier",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Brooks",
+                    "minute": "75",
+                    "booked": false
+                  }
+                }
+              ],
+              [
+                {
+                  "name": "Evanilson",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ]
+            ],
+            "unused": [
+              "Sánchez",
+              "Soler",
+              "Gregorio",
+              "Diakité"
+            ]
+          },
+          "next": "Chelsea (a)"
+        },
+        "away": {
+          "code": 14,
+          "score": 1,
+          "goals": [
+            "Isak 57"
+          ],
+          "assists": [],
+          "manager": "Andoni Iraola",
+          "lineup": {
+            "formation": "4-2-3-1",
+            "lines": [
+              [
+                {
+                  "name": "Becker",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Araujo",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Jacquet",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "van Dijk",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Kerkez",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Szoboszlai",
+                  "booked": true,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Gravenberch",
+                    "minute": "81",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Allister",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Gakpo",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Wirtz",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Nyoni",
+                    "minute": "71",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Barcola",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Muñoz",
+                    "minute": "72",
+                    "booked": false
+                  }
+                }
+              ],
+              [
+                {
+                  "name": "Isak",
+                  "booked": true,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Koumas",
+                    "minute": "81",
+                    "booked": false
+                  }
+                }
+              ]
+            ],
+            "unused": [
+              "Frimpong",
+              "Ngumoha",
+              "Gomez",
+              "Tsimikas",
+              "Mamardashvili"
+            ]
+          },
+          "next": "Manchester City (h)"
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 0
+        },
+        "venue": "Vitality Stadium",
+        "attendance": 11316,
+        "referee": "Michael Oliver",
+        "standfirst": "Liverpool won 1-0 at AFC Bournemouth through Alexander Isak, extending their unbeaten start to five and leaving the hosts still chasing a first win.",
+        "account": "Evanilson was denied from six yards after 18 minutes, Marcus Tavernier the maker with a cross.\nBradley Barcola forced a save after 33 minutes, Alexander Isak the supplier.\nRyan Christie dragged wide from close range after 53 minutes, Rayan crossing.\nIsak settled it after 57 minutes, Liverpool's only goal from three efforts on target.\nAFC Bournemouth carved out one clear opening and did not take it.",
+        "sections": [
+          {
+            "head": "Wirtz withdrawn",
+            "pitch": "Wirtz made three chances before he was taken off.",
+            "stake": "He belongs to test1, for whom he scored six points."
+          },
+          {
+            "head": "Christie starts",
+            "pitch": "Christie made his first league start of the season, had four shots and was then taken off.",
+            "stake": "He is a free agent."
+          }
+        ],
+        "keyStats": [
+          {
+            "label": "xG",
+            "value": "AFC Bournemouth 0.80, Liverpool 1.65"
+          },
+          {
+            "label": "Shots",
+            "value": "9 (2 on target) - 12 (3); corners 3-3"
+          },
+          {
+            "label": "Most shots",
+            "value": "Christie 4 (0 on target)"
+          },
+          {
+            "label": "Chances created",
+            "value": "Scott, Gakpo, Wirtz 3"
+          },
+          {
+            "label": "Top xG",
+            "value": "Isak 0.75, Christie 0.50, Koumas 0.25"
+          },
+          {
+            "label": "Top xA",
+            "value": "Gakpo 0.49, Rayan 0.35"
+          }
+        ],
+        "fantasy": {
+          "motm": {
+            "name": "Wirtz",
+            "club": "Liverpool",
+            "holder": "test1",
+            "points": 6,
+            "did": ""
+          },
+          "top": [
+            {
+              "name": "Wirtz",
+              "club": "Liverpool",
+              "holder": "test1",
+              "points": 6,
+              "did": ""
+            },
+            {
+              "name": "Isak",
+              "club": "Liverpool",
+              "holder": "test2",
+              "points": 5,
+              "did": "1 goal"
+            },
+            {
+              "name": "Evanilson",
+              "club": "AFC Bournemouth",
+              "holder": "testf",
+              "points": 2,
+              "did": ""
+            }
+          ],
+          "wire": []
+        },
+        "rows": [
+          {
+            "minute": "46",
+            "kind": "Booked",
+            "side": "away",
+            "text": "Szoboszlai"
+          },
+          {
+            "minute": "57",
+            "kind": "Goal",
+            "side": "away",
+            "text": "Isak"
+          },
+          {
+            "minute": "58",
+            "kind": "Booked",
+            "side": "away",
+            "text": "Isak"
+          },
+          {
+            "minute": "71",
+            "kind": "Sub",
+            "side": "away",
+            "text": "Nyoni for Wirtz"
+          },
+          {
+            "minute": "72",
+            "kind": "Sub",
+            "side": "away",
+            "text": "Muñoz for Barcola"
+          },
+          {
+            "minute": "75",
+            "kind": "Sub",
+            "side": "home",
+            "text": "Cook for Smith"
+          },
+          {
+            "minute": "75",
+            "kind": "Sub",
+            "side": "home",
+            "text": "Jebbison for Christie"
+          },
+          {
+            "minute": "75",
+            "kind": "Sub",
+            "side": "home",
+            "text": "Brooks for Tavernier"
+          },
+          {
+            "minute": "81",
+            "kind": "Sub",
+            "side": "away",
+            "text": "Koumas for Isak"
+          },
+          {
+            "minute": "81",
+            "kind": "Sub",
+            "side": "away",
+            "text": "Gravenberch for Szoboszlai"
+          },
+          {
+            "minute": "81",
+            "kind": "Booked",
+            "side": "home",
+            "text": "Silva"
+          },
+          {
+            "minute": "88",
+            "kind": "Sub",
+            "side": "home",
+            "text": "Gannon-Doak for Adams"
+          },
+          {
+            "minute": "88",
+            "kind": "Sub",
+            "side": "home",
+            "text": "Tóth for Rayan"
+          }
+        ],
+        "video": "YLJI1bLgPnI"
+      },
+      {
+        "fixtureCode": 2645240,
+        "kickoff": "2026-09-20T13:00:00Z",
+        "home": {
+          "code": 2,
+          "score": 0,
+          "goals": [],
+          "assists": [],
+          "manager": "Daniel Farke",
+          "lineup": {
+            "formation": "3-4-2-1",
+            "lines": [
+              [
+                {
+                  "name": "Trafford",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Justin",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Elvedi",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Muharemovic",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Bogle",
+                  "booked": true,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "James",
+                    "minute": "67",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Ampadu",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Tanaka",
+                  "booked": true,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Aaronson",
+                    "minute": "68",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Gudmundsson",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Bahoya",
+                    "minute": "90+2",
+                    "booked": false
+                  }
+                }
+              ],
+              [
+                {
+                  "name": "Stach",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Okafor",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Nmecha",
+                    "minute": "76",
+                    "booked": false
+                  }
+                }
+              ],
+              [
+                {
+                  "name": "Calvert-Lewin",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ]
+            ],
+            "unused": [
+              "Gruev",
+              "Bijol",
+              "Zetterer",
+              "Longstaff",
+              "Bard"
+            ]
+          },
+          "next": "Arsenal (a)"
+        },
+        "away": {
+          "code": 31,
+          "score": 0,
+          "goals": [],
+          "assists": [],
+          "manager": null,
+          "lineup": {
+            "formation": "3-4-2-1",
+            "lines": [
+              [
+                {
+                  "name": "Benítez",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Richards",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Tomiyasu",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Lerma",
+                    "minute": "46",
+                    "booked": true
+                  }
+                },
+                {
+                  "name": "Canvot",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Khalaili",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Timber",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Wharton",
+                  "booked": true,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Mitchell",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Kamada",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Pino",
+                  "booked": true,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Sarr",
+                    "minute": "82",
+                    "booked": false
+                  }
+                }
+              ],
+              [
+                {
+                  "name": "Larsen",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Nketiah",
+                    "minute": "82",
+                    "booked": false
+                  }
+                }
+              ]
+            ],
+            "unused": [
+              "Chilwell",
+              "McNeil",
+              "Osorio",
+              "Mingueza",
+              "Matthews",
+              "Doucouré"
+            ]
+          },
+          "next": "Nottingham Forest (h)"
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 0
+        },
+        "venue": "Elland Road",
+        "attendance": 36462,
+        "referee": "Adam Herczeg",
+        "standfirst": "Leeds United and Crystal Palace drew 0-0, Palace keeping their first clean sheet of the season.",
+        "account": "Tarik Muharemovic headed a corner off target after eight minutes, Anton Stach crossing.\nJefferson Lerma shot off target from close range from a corner early in the second half.\nTyrick Mitchell had the ball in the net after 52 minutes, only for a video review to rule it out.\nDominic Calvert-Lewin had openings for Leeds and did not take them.\nDaichi Kamada headed wide from inside the six-yard box with five minutes left.",
+        "sections": [
+          {
+            "head": "Trafford keeps it clean",
+            "pitch": "Trafford made five saves for his clean sheet.",
+            "stake": "He is test2's keeper for seven points, though 123 lead test2 38-34 in their head-to-head this period."
+          },
+          {
+            "head": "Muharemovic shoots often",
+            "pitch": "Muharemovic had four shots across the match.",
+            "stake": "He was on test211's bench."
+          }
+        ],
+        "keyStats": [
+          {
+            "label": "xG",
+            "value": "Leeds 1.32, Palace 1.07"
+          },
+          {
+            "label": "Shots",
+            "value": "13 (2 on target) - 12 (4); corners 4-3"
+          },
+          {
+            "label": "Most shots",
+            "value": "Muharemovic 4 (0 on target)"
+          },
+          {
+            "label": "Top xG",
+            "value": "Calvert-Lewin 0.52, Kamada 0.42, Muharemovic 0.40"
+          },
+          {
+            "label": "Top xA",
+            "value": "Wharton 0.22, Larsen 0.17, Pino 0.15"
+          },
+          {
+            "label": "Saves",
+            "value": "Trafford 5"
+          }
+        ],
+        "fantasy": {
+          "motm": {
+            "name": "Trafford",
+            "club": "Leeds",
+            "holder": "test2",
+            "points": 7,
+            "did": ""
+          },
+          "top": [
+            {
+              "name": "Trafford",
+              "club": "Leeds",
+              "holder": "test2",
+              "points": 7,
+              "did": ""
+            },
+            {
+              "name": "Ampadu",
+              "club": "Leeds",
+              "holder": "test31121",
+              "points": 6,
+              "did": ""
+            },
+            {
+              "name": "Justin",
+              "club": "Leeds",
+              "holder": "test4",
+              "points": 6,
+              "did": ""
+            }
+          ],
+          "wire": []
+        },
+        "rows": [
+          {
+            "minute": "38",
+            "kind": "Booked",
+            "side": "home",
+            "text": "Bogle"
+          },
+          {
+            "minute": "46",
+            "kind": "Sub",
+            "side": "away",
+            "text": "Lerma for Tomiyasu"
+          },
+          {
+            "minute": "52",
+            "kind": "VAR",
+            "side": "away",
+            "text": "Mitchell goal ruled out"
+          },
+          {
+            "minute": "62",
+            "kind": "Booked",
+            "side": "home",
+            "text": "Tanaka"
+          },
+          {
+            "minute": "64",
+            "kind": "Booked",
+            "side": "away",
+            "text": "Wharton"
+          },
+          {
+            "minute": "67",
+            "kind": "Sub",
+            "side": "home",
+            "text": "James for Bogle"
+          },
+          {
+            "minute": "68",
+            "kind": "Sub",
+            "side": "home",
+            "text": "Aaronson for Tanaka"
+          },
+          {
+            "minute": "76",
+            "kind": "Sub",
+            "side": "home",
+            "text": "Nmecha for Okafor"
+          },
+          {
+            "minute": "81",
+            "kind": "Booked",
+            "side": "away",
+            "text": "Pino"
+          },
+          {
+            "minute": "82",
+            "kind": "Sub",
+            "side": "away",
+            "text": "Sarr for Pino"
+          },
+          {
+            "minute": "82",
+            "kind": "Sub",
+            "side": "away",
+            "text": "Nketiah for Larsen"
+          },
+          {
+            "minute": "90+2",
+            "kind": "Sub",
+            "side": "home",
+            "text": "Bahoya for Gudmundsson"
+          },
+          {
+            "minute": "90+3",
+            "kind": "Booked",
+            "side": "away",
+            "text": "Lerma"
+          }
+        ],
+        "video": "QuCVcCmgOmw"
+      },
+      {
+        "fixtureCode": 2645239,
+        "kickoff": "2026-09-20T15:30:00Z",
+        "home": {
+          "code": 54,
+          "score": 1,
+          "goals": [
+            "Martínez 63 og"
+          ],
+          "assists": [],
+          "manager": "Álvaro Arbeloa",
+          "lineup": {
+            "formation": "4-2-3-1",
+            "lines": [
+              [
+                {
+                  "name": "Leno",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Castagne",
+                  "booked": true,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Affengruber",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Bassey",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Robinson",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Berge",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Larsson",
+                    "minute": "77",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Charles",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Bobb",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Kevin",
+                    "minute": "71",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "King",
+                  "booked": true,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Andersen",
+                    "minute": "80",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Iwobi",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Palacios",
+                    "minute": "71",
+                    "booked": false
+                  }
+                }
+              ],
+              [
+                {
+                  "name": "García",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Muniz",
+                    "minute": "80",
+                    "booked": true
+                  }
+                }
+              ]
+            ],
+            "unused": [
+              "Sessegnon",
+              "Lecomte",
+              "Rowe",
+              "Ángel"
+            ]
+          },
+          "next": "Ipswich Town (a)"
+        },
+        "away": {
+          "code": 1,
+          "score": 1,
+          "goals": [
+            "Cunha 89"
+          ],
+          "assists": [
+            "Dorgu 89"
+          ],
+          "manager": "Michael Carrick",
+          "lineup": {
+            "formation": "4-2-3-1",
+            "lines": [
+              [
+                {
+                  "name": "Lammens",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Dalot",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Maguire",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Martínez",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Shaw",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Dorgu",
+                    "minute": "84",
+                    "booked": false
+                  }
+                }
+              ],
+              [
+                {
+                  "name": "Mainoo",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Mount",
+                    "minute": "80",
+                    "booked": false
+                  }
+                },
+                {
+                  "name": "Tielemans",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ],
+              [
+                {
+                  "name": "Mbeumo",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Fernandes",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                },
+                {
+                  "name": "Rashford",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": {
+                    "name": "Zirkzee",
+                    "minute": "77",
+                    "booked": false
+                  }
+                }
+              ],
+              [
+                {
+                  "name": "Cunha",
+                  "booked": false,
+                  "sentOff": false,
+                  "replacedBy": null
+                }
+              ]
+            ],
+            "unused": [
+              "Yoro",
+              "Baleba",
+              "Santos",
+              "Lacey",
+              "Darlow",
+              "Mazraoui"
+            ]
+          },
+          "next": "Tottenham Hotspur (h)"
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 0
+        },
+        "venue": "Craven Cottage",
+        "attendance": null,
+        "referee": "Peter Bankes",
+        "standfirst": "Fulham drew 1-1 with Manchester United, conceding one minute from time to stay in the bottom three and without a win this season.",
+        "account": "Gonzalo García shot off target after four minutes, Antonee Robinson the maker.\nBryan Mbeumo headed wide after 11 minutes, Marcus Rashford crossing from a corner.\nBruno Fernandes struck the woodwork after 25 minutes.\nLisandro Martínez turned into his own net after 63 minutes to put Fulham ahead.\nPatrick Dorgu came on with six minutes left and had a hand in the leveller.\nOne minute from time Matheus Cunha drew United level, taking Dorgu's pass and striking it right-footed from outside the box, low into the corner.\nDorgu then headed over from six yards in stoppage time, Mbeumo delivering the cross.\nFulham managed a single goal from six efforts on target and made three clear chances without a return.",
+        "sections": [
+          {
+            "head": "Cunha finds the corner",
+            "pitch": "Cunha had three shots and created three chances besides his goal.",
+            "stake": "He is test2's, and six points spares them a blank."
+          },
+          {
+            "head": "Iwobi creates plenty",
+            "pitch": "Iwobi made five chances for Fulham before he was taken off.",
+            "stake": "A free agent."
+          }
+        ],
+        "keyStats": [
+          {
+            "label": "xG",
+            "value": "Fulham 1.63, United 1.60"
+          },
+          {
+            "label": "Shots",
+            "value": "12 (6 on target) - 29 (6); corners 3-13"
+          },
+          {
+            "label": "Most shots",
+            "value": "Rashford 6 (2 on target)"
+          },
+          {
+            "label": "Chances created",
+            "value": "Iwobi 5"
+          },
+          {
+            "label": "Top xG",
+            "value": "García 0.69, Rashford 0.40, King 0.38"
+          },
+          {
+            "label": "Top xA",
+            "value": "Iwobi 0.41, Cunha 0.39, García 0.33"
+          },
+          {
+            "label": "Saves",
+            "value": "Leno 5, Lammens 6"
+          },
+          {
+            "label": "Hit the woodwork",
+            "value": "Fernandes"
+          }
+        ],
+        "fantasy": {
+          "motm": {
+            "name": "Cunha",
+            "club": "United",
+            "holder": "test2",
+            "points": 6,
+            "did": "1 goal"
+          },
+          "top": [
+            {
+              "name": "Cunha",
+              "club": "United",
+              "holder": "test2",
+              "points": 6,
+              "did": "1 goal"
+            },
+            {
+              "name": "Leno",
+              "club": "Fulham",
+              "holder": "test3331",
+              "points": 3,
+              "did": ""
+            },
+            {
+              "name": "Berge",
+              "club": "Fulham",
+              "holder": "test31121",
+              "points": 3,
+              "did": ""
+            }
+          ],
+          "wire": [
+            {
+              "name": "Dorgu",
+              "club": "United",
+              "holder": null,
+              "points": null,
+              "did": "1 assist"
+            }
+          ]
+        },
+        "rows": [
+          {
+            "minute": "25",
+            "kind": "Post",
+            "side": "away",
+            "text": "Fernandes"
+          },
+          {
+            "minute": "45",
+            "kind": "Booked",
+            "side": "home",
+            "text": "King"
+          },
+          {
+            "minute": "50",
+            "kind": "Booked",
+            "side": "home",
+            "text": "Castagne"
+          },
+          {
+            "minute": "63",
+            "kind": "OG",
+            "side": "home",
+            "text": "Martínez"
+          },
+          {
+            "minute": "71",
+            "kind": "Sub",
+            "side": "home",
+            "text": "Kevin for Bobb"
+          },
+          {
+            "minute": "71",
+            "kind": "Sub",
+            "side": "home",
+            "text": "Palacios for Iwobi"
+          },
+          {
+            "minute": "77",
+            "kind": "Sub",
+            "side": "home",
+            "text": "Larsson for Berge"
+          },
+          {
+            "minute": "77",
+            "kind": "Sub",
+            "side": "away",
+            "text": "Zirkzee for Rashford"
+          },
+          {
+            "minute": "80",
+            "kind": "Sub",
+            "side": "home",
+            "text": "Muniz for García"
+          },
+          {
+            "minute": "80",
+            "kind": "Sub",
+            "side": "home",
+            "text": "Andersen for King"
+          },
+          {
+            "minute": "80",
+            "kind": "Sub",
+            "side": "away",
+            "text": "Mount for Mainoo"
+          },
+          {
+            "minute": "84",
+            "kind": "Sub",
+            "side": "away",
+            "text": "Dorgu for Shaw"
+          },
+          {
+            "minute": "85",
+            "kind": "Booked",
+            "side": "home",
+            "text": "Muniz"
+          },
+          {
+            "minute": "89",
+            "kind": "Goal",
+            "side": "away",
+            "text": "Cunha (Dorgu)"
+          }
+        ],
+        "video": "G-blE6WXkmo"
+      }
+    ]
+  }
+}

@@ -291,3 +291,8 @@ export interface RawPlFixturePage {
   pageInfo: RawPlPage;
   content: RawPlFixture[];
 }
+
+/** `/teams/{id}/compseasons/{cs}/staff`: the officials carry `role: "Manager"` with no dates (PLATFORM_NOTES, 28 Sep 2026). */
+export interface RawPlStaff {
+  officials?: { role?: string; active?: boolean; name?: { display?: string } }[];
+}

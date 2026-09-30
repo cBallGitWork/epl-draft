@@ -17,9 +17,9 @@ sequences it against the dated season work and un-parks two ideas Craig chose:
 
 | Idea | Where recorded | Status |
 |---|---|---|
-| Custom competitions (H2H groups, cups, points leagues over Fantrax points) | docs/rules/PRODUCT.md | **Shape landed 20 Aug** — a declared cup and playoff, labelled a placeholder, on `/league/schedule`. The feature is still parked; what is built is the seam. |
+| Custom competitions (H2H groups, cups, points leagues over Fantrax points) | docs/rules/PRODUCT.md | **Shape landed 20 Aug** — a declared cup and playoff, labelled a placeholder, on `/league/schedule`. **On screen 27 Sep** — the Timbeibs Cup (double elimination, GW9–17) and the Davy Propper Cup (groups then knockout, GW22–30) in `league/cups/`, shown on `/league/cups` (fixtures and bracket), Schedule and Live with a placeholder draw; the playoff stays Fantrax's. Next: put teams into the slots once GW9 is scored and the groups drawn. |
 | Per-player intelligence store via `setPlayerNote` | CLAUDE.md fxpa methods | **In scope** (this session) |
-| Commissioner cookie + `adminMode` as the only viable write path | PLATFORM_NOTES "extension plan is dead" | **In scope** — probe it |
+| Commissioner cookie + `adminMode` as the only viable write path | PLATFORM_NOTES "extension plan is dead" | **Probed 28 Sep: it writes.** The save is next |
 | 27/28 draft/FM hybrid, `apps/lab` | docs/rules/PRODUCT.md | Parked, empty on purpose |
 | FPL as one small tab | memory, 6 Aug | Done — keep it small |
 
@@ -94,16 +94,18 @@ belong to nobody.
   all four, so a successful write there proves only that a man can edit his own
   team. That is a false positive that would green-light the entire write
   surface. Full findings in PLATFORM_NOTES, 20 Aug.
-- **Unblocking step, and it is Craig's:** a second Fantrax account holding one
+- ~~**Unblocking step, and it is Craig's:** a second Fantrax account holding one
   rehearsal team (`replaceOwner.go` / `COMMISH_TEAM_PERMISSIONS` are in the
   commissioner hub). Then the probe has a control and its answer means
-  something.
+  something.~~ **Done by 28 Sep: Notemail.**
 - Established meanwhile: the cookie authenticates, carries `commissioner: true`,
   `adminMode` is accepted and echoed by `getTeamRosterInfo`, and the hub
   publishes a **`COMMISH_TEAM_ADMIN`** link — strong evidence the capability
   exists, but a link key is not a probe.
-- Record the answer in PLATFORM_NOTES either way.
-- **If yes:** design the cookie flow — one cookie, visible staleness state, a
+- ~~Record the answer in PLATFORM_NOTES either way.~~ **Answered 28 Sep 2026:
+  yes.** A dry run and one saved-and-reverted swap on Notemail; without
+  `adminMode` Fantrax refuses. PLATFORM_NOTES, 28 Sep.
+- **Yes, so this is next:** design the cookie flow — one cookie, visible staleness state, a
   path back to "open Fantrax yourself" (one stale cookie downs writes for all
   sixteen at once). Members authenticate with the team codes we already issue.
 - **If no:** option 3 stands (plan in our app, deep-link to Fantrax to submit)
@@ -334,6 +336,10 @@ dropped — the desk's six names still print once, in `Index`; the paper's own
 strip carries only the paper's pages; and an inside page leads with THE
 GAZETTA, never with a section name.
 
+**And cut on 30 Sep 2026** (Craig: *"the pages thing doesnt work"*): the page
+strip, every page number and "turn to page", and `/paper/reports` and
+`/paper/columns`. An article is `/paper/{slug}`, one tap from its headline.
+
 **Craig's items:** `OPENAI_API_KEY` as a repository secret (optional — without
 it every edition files exactly as it does now, with a typographic band instead
 of a drawing); sign off the persona copy in `scripts/edition/voice/bylines.ts`
@@ -345,8 +351,7 @@ items still parked — unequal column widths and the tables side by side.
 
 `apps/lab` · FPL authenticated endpoints · member-held cookies in any form ·
 scoring engine (dead — Fantrax's numbers are public and authoritative). Custom
-competitions keep their placeholder and go no further until Craig settles a real
-cup — `PLACEHOLDER_ROUNDS` is the one thing that then changes.
+competitions beyond the two cups, which are on screen with a placeholder draw (27 Sep).
 
 ## Verification
 

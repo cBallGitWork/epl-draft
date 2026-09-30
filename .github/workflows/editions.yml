@@ -86,6 +86,7 @@ permissions:
 jobs:
   write:
     runs-on: ubuntu-latest
+    # EDITION_BUDGET_MS (core config.ts) is half of this; move the two together.
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -125,6 +126,8 @@ jobs:
         run: npm run edition
 
       - name: Commit the edition, if one was written
+        # Even after a failed or timed-out firing: the writer saves story by story, ledger last.
+        if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

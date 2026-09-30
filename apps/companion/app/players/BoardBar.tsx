@@ -6,7 +6,7 @@ import Search from "./Search";
 import type { PlayersQuery } from "./query";
 import { STATUS } from "./status";
 import { positionLabel } from "../positions";
-import { LABEL, PANEL, SECTION_BAR } from "@/app/desk";
+import { LABEL, PANEL, SECTION_BAR, SMALL_CAPS } from "@/app/desk";
 import { Carried, clubOptions, Chip, Count, Figures, PRESSABLE, Plates } from "./BoardControls";
 import QuerySelect from "./QuerySelect";
 import { COLUMNS } from "./columns";
@@ -205,7 +205,7 @@ function PositionChoice({ query, position }: { query: PlayersQuery; position: st
       href={filterHref(query, "pos", position)}
       scroll={false}
       aria-pressed={on}
-      className="cm-index grid min-h-11 place-items-center px-1 text-2xs font-bold uppercase lg:min-h-9"
+      className={`cm-index grid min-h-11 place-items-center px-1 ${SMALL_CAPS} lg:min-h-9`}
     >
       <span>
         {on ? <span aria-hidden>✓ </span> : null}

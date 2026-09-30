@@ -3,6 +3,7 @@ import { clubColoursOf, plateOn } from "@epl/core";
 import { Pitch } from "../../components/football/ShotPitch";
 import { CELL, heatCells, shade } from "./heat";
 import { PITCH_BOX } from "@/app/components/football/pitchBox";
+import { SMALL_CAPS } from "@/app/desk";
 
 // One man's pitch, shaded where he played.
 //
@@ -100,7 +101,7 @@ export default function PlayerMap({
   return (
     <figure className="flex min-w-0 flex-col gap-1">
       <figcaption
-        className="flex items-baseline justify-between gap-2 px-2 py-1 text-2xs font-bold uppercase"
+        className={`flex items-baseline justify-between gap-2 px-2 py-1 ${SMALL_CAPS}`}
         style={{ background: plate.background, color: plate.ink }}
       >
         <span className="min-w-0 truncate">{name}</span>

@@ -9,17 +9,16 @@ import Pending from "./Pending";
 import SquadRows from "./SquadRows";
 import ViewToggle, { type View } from "./ViewToggle";
 import PlanStatus from "./PlanStatus";
+import SaveBar from "./SaveBar";
+import LeaveGuard from "./LeaveGuard";
+import { useSave } from "./useSave";
 import { usePlanner } from "./usePlanner";
 import { PANEL, HEADING_PLATE } from "@/app/desk";
 import OutLink from "../shell/OutLink";
 import ListAndPitch from "./ListAndPitch";
 
-// Planning a lineup, not submitting one.
-//
-// The whole point is an XI you can rearrange and look at before committing to
-// it, so the edited shape lives in browser state; the real roster is untouched
-// and Fantrax remains the only thing that can change it. The button at the
-// bottom hands the manager over rather than pretending we can write.
+// Planning a lineup and saving it: the shape lives in browser state until Save sends it to Fantrax
+// (`squad/[teamId]/save.ts`); where saving is off, the link at the bottom hands the manager over.
 //
 // Every rule it enforces is the commissioner's, read from `getLeagueInfo` and
 // applied by `moves.ts`: how many may start, how many may sit, how many at each
@@ -33,8 +32,10 @@ export default function LineupPlanner({
   players,
   limits,
   fantraxUrl,
-  figure,
   pending,
+  period,
+  benchRanks,
+  canSave,
 }: {
   team: RosteredTeam;
   /** The squad's football detail, flat and unarranged. Arranging it is this
@@ -45,13 +46,16 @@ export default function LineupPlanner({
   players: LeaguePlayerState[];
   limits: RosterLimits;
   fantraxUrl: string;
-  /** What the list's figure column is a figure OF, when it is not this round's
-   *  points — see `SquadRows`. Null on a round that has scored. */
-  figure: string | null;
   /** Points Fantrax has not credited yet — a clean sheet is settled at the final
    *  whistle and FPL has been paying it since the hour mark. Null when there are
    *  none to preview, and never a nought. */
   pending: number | null;
+  /** The period being planned, which a save must still find open. */
+  period: number;
+  /** Fantrax's bench order, `scorerId → rank`. */
+  benchRanks: Record<string, number>;
+  /** Whether this deployment saves to Fantrax. */
+  canSave: boolean;
 }) {
   const {
     rows,
@@ -69,9 +73,12 @@ export default function LineupPlanner({
     pickStateOf,
     pick,
     reset,
+    markSaved,
+    plan,
     movesFor,
     optionsFor,
-  } = usePlanner(team, details, players, limits);
+  } = usePlanner(team, details, players, limits, benchRanks);
+  const { saving, answer, save, clear } = useSave(period, plan, markSaved);
   const [view, setView] = useState<View>("pitch");
 
 
@@ -141,7 +148,6 @@ export default function LineupPlanner({
             lines={rows.map((line) => ({ position: line.label, players: line.players }))}
             projected={false}
             eligibility={eligibleBy}
-            figure={figure ?? undefined}
             onOpen={setCard}
           />
           {bench.length === 0 ? null : (
@@ -185,16 +191,34 @@ export default function LineupPlanner({
       {opened !== null ? (
         <MoveDialog
           key={opened}
+          subject={opened}
           name={nameOf(opened)}
           moves={movesFor(opened)}
           options={optionsFor(opened)}
           nameOf={nameOf}
           onPlay={play}
+          onCard={() => {
+            setOpened(null);
+            setCard([...rows.flatMap((line) => line.players), ...bench].find((p) => p.rostered.slot.fantraxId === opened) ?? null);
+          }}
           onClose={() => setOpened(null)}
         />
       ) : null}
 
-      <PlanStatus dirty={dirty} onReset={reset} broken={broken} empty={empty} nameOf={nameOf} />
+      <SaveBar
+        dirty={dirty}
+        canSave={canSave}
+        legal={broken.length === 0}
+        saving={saving}
+        answer={answer}
+        onSave={save}
+        onReset={() => {
+          reset();
+          clear();
+        }}
+      />
+      <PlanStatus broken={broken} empty={empty} nameOf={nameOf} />
+      <LeaveGuard dirty={dirty} canSave={canSave && broken.length === 0} onSave={save} />
 
       <OutLink href={fantraxUrl}>Set this lineup in Fantrax</OutLink>
     </div>

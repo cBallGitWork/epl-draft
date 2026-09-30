@@ -46,19 +46,33 @@ derived the same four from the same object.
    to its foot (Craig, 25 Sep 2026: "cut off mid box").
 2. **The attribute grid** — CM 01/02's: alphabetical down three columns on the desk and two
    on a phone, 16–20 in CM's orange and 11–15 in amber, with **Preferred Foot** (off the shot
-   map) and **Condition** (FPL's chance he plays) as its worded rows. Every rating is OURS
+   map) as its worded row. Every rating is OURS
    and rated **within his position group** (Craig, 25 Sep 2026: "compare to just attackers,
    defenders to just defenders"): the sister repo's line, gathered into goalkeepers,
    defenders, midfielders and forwards; a man with no line is rated against everyone. The
    shot and touch maps add Heading, Long Shots, Creativity (chances set up), Penalty Taking
    and Teamwork; a keeper gets his own eight.
+   **Fitness and News** sits under it (Craig, 26 Sep 2026: *"this page should contain the
+   latest player news, and their fitness conditions"*): one row with FPL's note, his state box
+   and his chance of playing, washed in the doubt ramp (Condition left the grid so the chance
+   prints once, and `noteBesideChance` keeps the note from saying it again); then Fantrax's
+   newest note as Mail's row, opening it on the News tab, with the rest of it under the row.
+   Only the newest: the list is News's. No source caption. A fit man with nothing filed gets
+   the one row; a man FPL has never listed gets the note alone, and with neither, no panel.
    **Rankings** sit under it: his season totals and his place among the same group
    ("rankings for data such as xg").
+   **Set pieces** under that: his place in his club's penalty, direct free-kick and corner
+   orders (Craig, 30 Sep 2026: "their fk/pk/corner rank for the club"), the same order the
+   club's Set Pieces tab draws, counted among the men still there; a dash where he takes none.
 3. **The real position**, in cyan — the first thing in the app entitled to that
    slot (see below).
-4. **The run to come**, the next eight across the row, in FPL's difficulty. *Fantrax's projection for the round was
-   here and is gone* (Craig, 25 Sep 2026: "remove row"), with the mapper that read
-   it; the round just gone went on 4 Sep ("Remove gameweek so far").
+4. **The run to come**, the next eight across the row, in FPL's difficulty, and under each
+   gameweek the sister model's projected FPL points and his place among his group's (Craig,
+   30 Sep 2026: "maybe add projections here (and a ranking?)"), lit on the pool board's
+   standout rule; a week the model has not read is a dash. No source caption on the panel
+   ("FPL's own · Fantrax's own remove"); each figure's title names the model and the group. *Fantrax's projection for the
+   round was here and is gone* (25 Sep: "remove row"): it covered one period and only the men
+   fielded, so it could not fill a run; the round just gone went on 4 Sep.
 5. **Season** — the same Total and Per 90 rows Data opens with. CM puts the
    appearances table on the profile and so does this; a summary belongs on the
    overview as well as above the detail, which is not the duplication that moved
@@ -88,8 +102,9 @@ is gone as a tab** and `/history` redirects to `?season=all`; the strip is four 
   the league.
 
 **Two provenances on one row, with a rule between them.** Left of it is FPL's
-measurement of the play — minutes, goals, xG, xA, defensive contribution, BPS,
-and FPL's own points. Right of it is Fantrax's scoring of the same match,
+measurement of the play — minutes, goals, xG, xA, defensive contribution, BPS and
+bonus; FPL's own points came off on 30 Sep 2026 so they never sit beside `FPts`, and the
+board carries no source caption ("FPL's own · Fantrax's own remove"). Right of it is Fantrax's scoring of the same match,
 including **`FPts`, the only per-match source of this league's points anywhere**,
 and the five things FPL does not publish at all: shots, shots on target, fouls
 committed, fouls suffered, offsides.
@@ -114,7 +129,8 @@ manager actually arrives with.
 
 **Mail's own shape** (Craig, 25 Sep 2026: "should match the Email/news section"): the
 dated list beside the letter on a desk and above it on a phone, the open row on CM's red
-ground, and the story opened in Mail's `Letter`, from "Fantrax's news desk". **The preview
+ground, and the story opened in Mail's `Letter`, from "Fantrax's news desk". Since 30 Sep 2026
+it is Mail's own code, not a copy: `news/Mailbox` and `news/MailRow`, and Mail's empty panel. **The preview
 is the whole first sentence** ("text on preview line cuts off too early"): Fantrax cuts its
 headline at about a hundred characters with "...", so where the story begins with the cut
 headline its first sentence stands in, over two lines.

@@ -45,7 +45,7 @@ export default function PlayerTable({
   const current = activeSort(query);
   const figures = columns.filter((column) => column.key !== "name");
   return (
-    <ScrollBoard>
+    <ScrollBoard className="bg-surface">
       <table className={BOARD}>
         <thead>
           <tr className="text-2xs">

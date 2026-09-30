@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { SMALL_CAPS } from "@/app/desk";
 
 // The strip at the head of one round's block of matches: which gameweek it is,
 // and whatever that screen has to add about it.
@@ -25,17 +26,23 @@ import type { ReactNode } from "react";
 
 export default function RoundHead({
   gameweek,
+  title,
   children,
 }: {
   gameweek: number;
+  /** What is played in it, when the list holds one competition: "Round 1". */
+  title?: string;
   /** What this screen adds about the round — the schedule's deadline and its
    *  live mark. Absent on the two archives, where the round is finished and the
    *  scorelines under it have already said so. */
   children?: ReactNode;
 }) {
   return (
-    <h2 className="cm-bevel flex h-7 items-center justify-between gap-3 px-1.5 text-2xs font-bold uppercase">
-      <span className="shrink-0">Gameweek {gameweek}</span>
+    <h2 className={`cm-bevel flex h-7 items-center justify-between gap-3 px-1.5 ${SMALL_CAPS}`}>
+      <span className="shrink-0">
+        Gameweek {gameweek}
+        {title === undefined ? null : ` · ${title}`}
+      </span>
       {children}
     </h2>
   );

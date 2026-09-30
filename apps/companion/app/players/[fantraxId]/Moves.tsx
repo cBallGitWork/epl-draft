@@ -1,8 +1,9 @@
+import ScrollBoard from "../../components/league/ScrollBoard";
 import { DASH, fantraxTime } from "@epl/core";
 import Section from "../../components/shell/Section";
 import { IndexCell } from "../../components/league/TableCells";
 import { MUTE, PlateHead } from "../../components/league/TableHeads";
-import { BOARD, HEAD_CELL, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, HEAD_CELL, ROW_NAME, ROW_RULE } from "@/app/desk";
 import type { PlayerMove } from "./dossier";
 
 // Every claim, drop and trade this league has made with him, newest first, on the house table:
@@ -17,7 +18,7 @@ export default function Moves({ moves }: { moves: readonly PlayerMove[] }) {
       {moves.length === 0 ? (
         <p className="text-sm text-muted">No claim, drop or trade involving him.</p>
       ) : (
-        <div className={SCROLL}>
+        <ScrollBoard>
           <table className={BOARD}>
             <thead>
               <tr className="text-2xs">
@@ -48,7 +49,7 @@ export default function Moves({ moves }: { moves: readonly PlayerMove[] }) {
               ))}
             </tbody>
           </table>
-        </div>
+        </ScrollBoard>
       )}
     </Section>
   );

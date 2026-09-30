@@ -14,7 +14,12 @@ export function cutsFor<Column extends { key: string }>(
   columns: readonly Column[],
   values: (column: Column) => Iterable<number | null>,
 ): Map<string, StandoutCut> {
-  return new Map(columns.map((column) => [column.key, standoutCuts([...values(column)], SHARES, { floor: FLOOR })]));
+  return new Map(columns.map((column) => [column.key, poolCut(values(column))]));
+}
+
+/** One column's cuts on the pool's shares. */
+export function poolCut(values: Iterable<number | null>): StandoutCut {
+  return standoutCuts([...values], SHARES, { floor: FLOOR });
 }
 
 /** The least football a man must have played before a rate is drawn for him: one match, in August as in May. */

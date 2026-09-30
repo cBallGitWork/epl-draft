@@ -70,10 +70,9 @@ own"*). A foot row of **one** is the stray button under a panel that
 `league/SectionNav` already records Craig rejecting. The row comes back with the
 second entry in it.
 
-The strip is set at 9px (`TabStrip … labels="word"`), measured: at 11px "Team
-Stats" takes two lines in a 76px plate at 390 while its three neighbours take
-one. The plates stay level either way — flex stretches them — but a strip with
-one label wrapped is not a strip.
+The strip is a `word` strip: under a thumb each plate is sized to its label, so
+"Team Stats" sits on one line at 11px from 375 up (27 Sep 2026; it wrapped in an
+equal 76px share, which is why the strip was 9px until then). Under 375 it drops to 9px.
 
 ## The two cut lines
 

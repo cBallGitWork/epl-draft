@@ -51,7 +51,7 @@ export default function Written({
   // apart is whether the ARTICLE is below: a story carrying team news or a
   // ranking has its substance in that block, and the prose above it is an
   // introduction.
-  const intro = story.extras?.teamNews !== undefined || story.extras?.ranks !== undefined;
+  const intro = hasBlockBelow(story);
 
   // The men named below, so the standfirst sets them in bold too — Craig, 18 Sep
   // 2026: "bold players in the whole article". They come off the rows rather
@@ -132,4 +132,10 @@ export default function Written({
       ) : null}
     </section>
   );
+}
+
+/** Whether the article's substance is the block below its prose, so the prose above is an introduction. */
+function hasBlockBelow(story: PublishedStory): boolean {
+  const extras = story.extras;
+  return extras?.teamNews !== undefined || extras?.ranks !== undefined || extras?.reports !== undefined;
 }

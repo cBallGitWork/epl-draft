@@ -5,9 +5,10 @@ import { readJson } from "../../http/json";
 import type {
   RawPlFixture,
   RawPlFixturePage,
+  RawPlStaff,
   RawPlTextstream,
 } from "./raw";
-import type { RawPlMatchStats } from "./rawStats";
+import type { RawPlMatchStats, RawPlTeamPage, RawPlTeamStats } from "./rawStats";
 
 // All Premier League API I/O, and nowhere else. The mapping next door stays pure.
 //
@@ -88,3 +89,18 @@ export function fetchPlMatchStats(id: number): Promise<RawPlMatchStats> {
   return get<RawPlMatchStats>(`/stats/match/${id}`);
 }
 
+/** The season's twenty clubs, with the Opta id that joins each to FPL's club `code`. */
+export function fetchPlTeams(): Promise<RawPlTeamPage> {
+  return get<RawPlTeamPage>(`/teams?comps=${PL_COMPETITION}&compSeasons=${PL_COMP_SEASON}&pageSize=30&altIds=true`);
+}
+
+/** One club's season to date: about 215 Opta metrics, summed over its league matches. */
+export function fetchPlTeamStats(teamId: number): Promise<RawPlTeamStats> {
+  return get<RawPlTeamStats>(`/stats/team/${teamId}?comps=${PL_COMPETITION}&compSeasons=${PL_COMP_SEASON}&altIds=true`);
+}
+
+
+/** A club's registered squad and officials this season; the officials include its manager. */
+export function fetchPlStaff(teamId: number): Promise<RawPlStaff> {
+  return get<RawPlStaff>(`/teams/${teamId}/compseasons/${PL_COMP_SEASON}/staff?type=all`);
+}

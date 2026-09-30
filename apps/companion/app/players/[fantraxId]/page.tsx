@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { availabilityOf, clubById } from "@epl/core";
+import { clubById } from "@epl/core";
 import type { FootballPlayer, PlayerMatch } from "@epl/core";
 import { footballNow } from "../../football";
 import Nothing from "../../components/shell/Nothing";
@@ -9,13 +9,15 @@ import { POOL } from "../routes";
 import AttributeGrid from "./AttributeGrid";
 import type { GridWord } from "./AttributeGrid";
 import FixtureRun from "./FixtureRun";
+import Fitness from "./Fitness";
 import NoProfile from "./NoProfile";
 import PlayerShell from "./PlayerShell";
 import Portrait from "./Portrait";
 import Rankings from "./Rankings";
 import RealPosition from "./RealPosition";
 import SeasonTable from "./SeasonTable";
-import { playerGrid, playerStanding, realPosition } from "./grid";
+import SetPieces from "./SetPieces";
+import { playerGrid, playerPieces, playerStanding, projectedWeeks, realPosition } from "./grid";
 import { joinMatches } from "./matchRows";
 import { gameLog } from "./scouting";
 import { scouting } from "./scouting";
@@ -46,14 +48,20 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
   if ("unavailable" in found) return <NoProfile code={found.unavailable} />;
 
   const { intel, football } = found;
-  const [grid, standing] =
-    football === null ? [null, null] : await Promise.all([playerGrid(football.player), playerStanding(football.player)]);
+  const [grid, standing, pieces] =
+    football === null
+      ? [null, null, null]
+      : await Promise.all([playerGrid(football.player), playerStanding(football.player), playerPieces(football.player)]);
   const position = football === null ? null : realPosition(football.player.code);
   // What he has done in the round on screen and what is coming. Both read the
   // snapshot and the calendar every other screen already holds, so they cost FPL
   // nothing and do not go behind a boundary. This is the half of the screen that
   // answers docs/rules/PRODUCT.md's third-most-frequent job — "should I start this player".
   const run = football === null ? null : await scouting(football.player);
+  const weeks =
+    football === null || run === null
+      ? null
+      : await projectedWeeks(football.player, run.flatMap((against) => against.fixture.gameweek ?? []));
 
   return (
     <PlayerShell
@@ -95,14 +103,21 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
           ) : (
             <AttributeGrid
               attributes={grid}
-              words={words(football?.player ?? null, standing)}
+              words={words(standing)}
               group={standing?.group ?? null}
             />
           )}
         </div>
       </div>
 
+      {/* Whether he can play and what is being said about him, under who he is (Craig, 26 Sep 2026). */}
+      <Suspense fallback={null}>
+        <Fitness fantraxId={fantraxId} player={football?.player ?? null} />
+      </Suspense>
+
       {standing === null ? null : <Rankings ranked={standing.ranked} group={standing.group} />}
+
+      {pieces === null ? null : <SetPieces pieces={pieces} club={football?.club?.name ?? null} />}
 
       {/* **CM puts the appearances table on the profile** (`cm9900/11.jpg`), and
           so does this (Craig, 4 Sep 2026: "the season totals are on the main
@@ -122,7 +137,7 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
           The card that drew the round is deleted rather than moved — no consumer
           means delete (CODE_RULES §2), and `contribution()` in core is still
           there if Data ever wants a round view. */}
-      {run === null ? null : <FixtureRun run={run} />}
+      {run === null || weeks === null ? null : <FixtureRun run={run} weeks={weeks} group={standing?.group ?? null} />}
 
       {/* **What he actually is, last and loudest** (Craig, 4 Sep 2026), which is
           where `cm9900/11.jpg` puts it: `Defender/Defensive Midfielder
@@ -165,20 +180,8 @@ async function Season({
   return <SeasonTable rows={joinMatches(rows, paid, clubById(snapshot))} season={season} />;
 }
 
-/** CM's worded rows under the ratings: the foot he shoots with (never a keeper's), and FPL's chance he plays. */
-function words(player: FootballPlayer | null, standing: { keeper: boolean; foot: string | null } | null): GridWord[] {
-  const availability = availabilityOf(player);
-  const condition =
-    player === null
-      ? null
-      : availability.state === "fit"
-        ? "100%"
-        : availability.chance !== null
-          ? `${availability.chance}%`
-          : availability.label;
-  const foot = { name: "Preferred Foot", value: standing?.foot ?? null, title: "the foot he shoots with, off the shot map" };
-  return [
-    ...(standing?.keeper ? [] : [foot]),
-    { name: "Condition", value: condition, title: "FPL's chance of him playing the next round" },
-  ];
+/** CM's worded row under the ratings: the foot he shoots with, never a keeper's. Condition is Fitness's. */
+function words(standing: { keeper: boolean; foot: string | null } | null): GridWord[] {
+  if (standing?.keeper) return [];
+  return [{ name: "Preferred Foot", value: standing?.foot ?? null, title: "the foot he shoots with, off the shot map" }];
 }

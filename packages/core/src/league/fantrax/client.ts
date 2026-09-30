@@ -24,9 +24,8 @@ import type {
 
 // All Fantrax network I/O, and nothing else. The fxea surface is public and
 // unauthenticated — the league id is the one in the league URL, not a credential
-// — which is why this whole layer works before anyone has logged in. The
-// cookie-authenticated fxpa surface (lineup writes, waivers) is deliberately not
-// here yet.
+// — which is why this whole layer works before anyone has logged in. The lineup
+// writes, which carry the commissioner's cookie, are `lineupClient.ts`.
 //
 // Manners — the browser User-Agent, and backing off when told to — live in
 // `http/fetch.ts`, shared with FPL because neither provider layer may import the

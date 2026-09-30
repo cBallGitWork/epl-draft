@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ailment, readNote } from "./notes";
+import { ailment, noteBesideChance, readNote } from "./notes";
 
 describe("readNote", () => {
   it("reads an injury with no return date", () => {
@@ -44,5 +44,23 @@ describe("ailment", () => {
     expect(ailment("Unspecified injury")).toBe("has an injury");
     expect(ailment("Illness")).toBe("is ill");
     expect(ailment("Lack of match fitness")).toBe("is short of match fitness");
+  });
+});
+
+describe("noteBesideChance", () => {
+  it("drops the chance when the heading already says it", () => {
+    // Craig's card, 30 Sep 2026: "75% CHANCE OF PLAYING / Ankle injury - 75% chance of playing".
+    expect(noteBesideChance("Ankle injury - 75% chance of playing", 75)).toBe("Ankle injury");
+  });
+
+  it("keeps the note whole when it says something the heading does not", () => {
+    expect(noteBesideChance("Hamstring injury - Unknown return date", 0)).toBe("Hamstring injury - Unknown return date");
+    expect(noteBesideChance("Calf injury - Expected back 11 Oct", 25)).toBe("Calf injury - Expected back 11 Oct");
+    expect(noteBesideChance("Suspended until 10 Oct", 0)).toBe("Suspended until 10 Oct");
+  });
+
+  it("keeps a figure that disagrees with the heading, or one with no heading beside it", () => {
+    expect(noteBesideChance("Knock - 50% chance of playing", 75)).toBe("Knock - 50% chance of playing");
+    expect(noteBesideChance("Knock - 50% chance of playing", null)).toBe("Knock - 50% chance of playing");
   });
 });
