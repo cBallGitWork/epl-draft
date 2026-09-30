@@ -9,17 +9,16 @@ import Pending from "./Pending";
 import SquadRows from "./SquadRows";
 import ViewToggle, { type View } from "./ViewToggle";
 import PlanStatus from "./PlanStatus";
+import SaveBar from "./SaveBar";
+import LeaveGuard from "./LeaveGuard";
+import { useSave } from "./useSave";
 import { usePlanner } from "./usePlanner";
 import { PANEL, HEADING_PLATE } from "@/app/desk";
 import OutLink from "../shell/OutLink";
 import ListAndPitch from "./ListAndPitch";
 
-// Planning a lineup, not submitting one.
-//
-// The whole point is an XI you can rearrange and look at before committing to
-// it, so the edited shape lives in browser state; the real roster is untouched
-// and Fantrax remains the only thing that can change it. The button at the
-// bottom hands the manager over rather than pretending we can write.
+// Planning a lineup and saving it: the shape lives in browser state until Save sends it to Fantrax
+// (`squad/[teamId]/save.ts`); where saving is off, the link at the bottom hands the manager over.
 //
 // Every rule it enforces is the commissioner's, read from `getLeagueInfo` and
 // applied by `moves.ts`: how many may start, how many may sit, how many at each
@@ -34,6 +33,9 @@ export default function LineupPlanner({
   limits,
   fantraxUrl,
   pending,
+  period,
+  benchRanks,
+  canSave,
 }: {
   team: RosteredTeam;
   /** The squad's football detail, flat and unarranged. Arranging it is this
@@ -48,6 +50,12 @@ export default function LineupPlanner({
    *  whistle and FPL has been paying it since the hour mark. Null when there are
    *  none to preview, and never a nought. */
   pending: number | null;
+  /** The period being planned, which a save must still find open. */
+  period: number;
+  /** Fantrax's bench order, `scorerId → rank`. */
+  benchRanks: Record<string, number>;
+  /** Whether this deployment saves to Fantrax. */
+  canSave: boolean;
 }) {
   const {
     rows,
@@ -65,9 +73,12 @@ export default function LineupPlanner({
     pickStateOf,
     pick,
     reset,
+    markSaved,
+    plan,
     movesFor,
     optionsFor,
-  } = usePlanner(team, details, players, limits);
+  } = usePlanner(team, details, players, limits, benchRanks);
+  const { saving, answer, save, clear } = useSave(period, plan, markSaved);
   const [view, setView] = useState<View>("pitch");
 
 
@@ -194,7 +205,20 @@ export default function LineupPlanner({
         />
       ) : null}
 
-      <PlanStatus dirty={dirty} onReset={reset} broken={broken} empty={empty} nameOf={nameOf} />
+      <SaveBar
+        dirty={dirty}
+        canSave={canSave}
+        legal={broken.length === 0}
+        saving={saving}
+        answer={answer}
+        onSave={save}
+        onReset={() => {
+          reset();
+          clear();
+        }}
+      />
+      <PlanStatus broken={broken} empty={empty} nameOf={nameOf} />
+      <LeaveGuard dirty={dirty} canSave={canSave && broken.length === 0} onSave={save} />
 
       <OutLink href={fantraxUrl}>Set this lineup in Fantrax</OutLink>
     </div>

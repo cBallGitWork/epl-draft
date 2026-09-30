@@ -46,6 +46,11 @@ export function leagueCache<A extends unknown[], R>(
 ): (...args: A) => Promise<R> {
   return unstable_cache(read, [key, FANTRAX_LEAGUE_ID], {
     revalidate,
-    tags: [`${key}:${FANTRAX_LEAGUE_ID}`],
+    tags: [leagueTag(key)],
   });
+}
+
+/** The tag a `leagueCache` read is filed under, for a write to expire it. */
+export function leagueTag(key: string): string {
+  return `${key}:${FANTRAX_LEAGUE_ID}`;
 }

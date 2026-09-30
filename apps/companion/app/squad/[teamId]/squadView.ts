@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import {
+  FANTRAX_LEAGUE_ID,
   clubById,
+  fetchLineupState,
+  mapLineupState,
   oppositionByClub,
   playerName,
   squadDetail,
@@ -90,6 +93,7 @@ export async function squadView(slug: string, gw: string | undefined) {
   const planning =
     mine && plannable(round, open) && display.show === "lineup" && squads.info !== null ? squads.info : null;
   const squadIds = new Set(team.players.map((p) => p.slot.fantraxId));
+  const benchRanks = planning === null || open === null ? {} : await benchOrderOf(teamId, open.period);
 
   // What each of them is ELIGIBLE at, which is not the slot his manager filed
   // him in. Fantrax publishes both and they disagree for 48 of 607 — Saka is
@@ -187,5 +191,15 @@ export async function squadView(slug: string, gw: string | undefined) {
   )?.points;
   const pending = owed ? owed : null;
 
-  return { team, planning, open, eligibility, clubs, opposition, live, news, season, points, board, names, pending, squadIds };
+  return { team, planning, open, benchRanks, eligibility, clubs, opposition, live, news, season, points, board, names, pending, squadIds };
+}
+
+/** Fantrax's bench order for the planned week, `scorerId → rank`; none when the read fails or names another week. */
+async function benchOrderOf(teamId: string, period: number): Promise<Record<string, number>> {
+  try {
+    const state = mapLineupState(await fetchLineupState(FANTRAX_LEAGUE_ID, teamId, period));
+    return state?.period === period ? { ...state.autoSubOrder } : {};
+  } catch {
+    return {};
+  }
 }

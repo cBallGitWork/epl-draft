@@ -1,4 +1,4 @@
-import { LINEUP_LOCK_LEAD_MINUTES } from "../config";
+import { LINEUP_LOCK_LEAD_MINUTES, SAVE_MARGIN_MINUTES } from "../config";
 import type { LeaguePeriod } from "./types";
 
 // Which FPL gameweek falls inside which Fantrax scoring period.
@@ -103,6 +103,13 @@ export function locksAt(firstKickoffIso: string): string | null {
   return Number.isNaN(kickoff)
     ? null
     : new Date(kickoff - LINEUP_LOCK_LEAD_MINUTES * 60_000).toISOString();
+}
+
+/** Whether a lineup save may still be sent: until `SAVE_MARGIN_MINUTES` before the lock, never without one. */
+export function saveOpen(locksAtIso: string | null, nowIso: string): boolean {
+  const locks = locksAtIso === null ? NaN : Date.parse(locksAtIso);
+  const now = Date.parse(nowIso);
+  return !Number.isNaN(locks) && !Number.isNaN(now) && now < locks - SAVE_MARGIN_MINUTES * 60_000;
 }
 
 /** The first ball kicked inside a period, or null for one with no football in

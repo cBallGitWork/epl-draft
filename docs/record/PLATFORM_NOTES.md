@@ -4171,3 +4171,22 @@ email, not billing — see the hosting section.
 payloads; captures filed per league; period alignment settled and scripted; the
 `CLAUDE.md` pool-count and `sportRadarId` corrections landed.
 
+## Lineups save to Fantrax through the commissioner's session — decided 30 Sep 2026
+
+Craig asked for a Save button on the planner and chose a real write over a save on the phone. It rests on the
+28 Sep probe: the commissioner's cookie with `adminMode` writes a team he does not own.
+
+- **The server names the team and the week.** The team is the signed code's (`signedTeamId`, never the demo
+  team); the period is `planningRound()`'s. A page planned for another period is refused, and so is anything
+  within `SAVE_MARGIN_MINUTES` (10) of our computed lock, because `adminMode` overrides a locked team and
+  Fantrax will not stop it (Craig: *"or you'll be overriding a team during a gameweek"*).
+- **Fantrax's own deadline is not read.** `leagueNotices` gives it as prose with no year, for whichever period
+  Fantrax has open, so after a lock it names the week just gone and would refuse every save until the period
+  rolls. Our lock (first kickoff less `LINEUP_LOCK_LEAD_MINUTES`) matched its 7:15 AM EDT on 10 Oct.
+- **Every write is a dry run first**; only a `CONFIRM` with no illegal message is executed. The bench order is
+  a second write, `setAutoSubsOrder`, sent only when it changed.
+- **A session may carry three methods and no others** (`fxpa.ts`), because the same cookie reaches
+  `deleteLeague`.
+- **Switched on per deployment**: `LINEUP_SAVE=on` plus `FANTRAX_COOKIE`. A stale cookie fails the save with a
+  hand-off to Fantrax and a `lineup-save` error line in the logs, which is the staleness signal.
+
