@@ -1,5 +1,6 @@
 import type { PoolRow } from "./pool";
 import type { PoolGroup } from "./groups";
+import { ATTRIBUTE_COLUMNS } from "./attributeColumns";
 
 // Every column the directory draws, phone-first: the figures a thumb sees beside a name come first.
 //
@@ -192,6 +193,7 @@ export const COLUMNS: PoolColumn[] = [
     ascending: false,
     value: (row) => row.stats?.trend ?? null,
   },
+  ...ATTRIBUTE_COLUMNS,
 ];
 
 /** What the board is ordered by when the URL says nothing.

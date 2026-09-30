@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
+import { ATTRIBUTE_ROWS } from "@epl/core";
 import { COLUMNS, DEFAULT_SORT, columnFor } from "./columns";
+import { attributeStats } from "./attributeColumns";
+import { columnsIn } from "./groups";
 
 describe("COLUMNS", () => {
   it("gives every column a unique key", () => {
@@ -19,7 +22,7 @@ describe("COLUMNS", () => {
 
   it("runs phone-first, so the figures a thumb sees first are the ones worth seeing", () => {
     // Craig, 24 Sep 2026: seven figures fit beside a name at 390, and these are the seven.
-    expect(COLUMNS.map((column) => column.label)).toEqual([
+    expect(COLUMNS.filter((column) => column.group !== "attributes").map((column) => column.label)).toEqual([
       "Player", "FPts", "FP/G", "Min", "GP", "G", "A", "AF", "CS", "GAO", "GA", "Sv", "PKS", "YC", "RC", "PKM", "OG", "Ros", "+/-",
     ]);
   });
@@ -51,5 +54,27 @@ describe("COLUMNS", () => {
     // than nought, and the cell must get null rather than 0.
     expect(goals!.value({} as never, {})).toBeNull();
     expect(goals!.value({} as never, undefined)).toBeNull();
+  });
+});
+
+describe("the attribute columns", () => {
+  const attributeColumns = COLUMNS.filter((column) => column.group === "attributes");
+
+  it("gives every row of the grid a column under CM's own three-letter heading", () => {
+    expect(attributeColumns).toHaveLength(ATTRIBUTE_ROWS.length);
+    expect(attributeColumns.every((column) => column.label.length <= 3)).toBe(true);
+  });
+
+  it("reads his rating out of the bag, and dashes a man with none", () => {
+    const finishing = columnFor("fin");
+    expect(finishing?.value({} as never, attributeStats([{ name: "Finishing", rating: 20, from: "" }]))).toBe(20);
+    expect(finishing?.value({} as never, {})).toBeNull();
+  });
+
+  it("stays off All and fills its own plate, the spine and the sort beside it", () => {
+    expect(columnsIn("all", "fpts").some((column) => column.group === "attributes")).toBe(false);
+    const plate = columnsIn("attributes", "fpts").map((column) => column.key);
+    expect(plate).toEqual(["name", "fpts", ...attributeColumns.map((column) => column.key)]);
+    expect(columnsIn("all", "fin").some((column) => column.key === "fin")).toBe(true);
   });
 });

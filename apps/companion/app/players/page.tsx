@@ -18,6 +18,8 @@ import {
 import { POOL } from "./routes";
 import { columnsIn, groupFor } from "./groups";
 import { figureOf } from "./figure";
+import { attributeStats } from "./attributeColumns";
+import { divisionGrids } from "./[fantraxId]/grid";
 import { cutsFor } from "./standout";
 import { FANTRAX_APP_BASE, FANTRAX_LEAGUE_ID, FANTRAX_PLAYERS_PATH, playerByCode } from "@epl/core";
 import { footballNow } from "../football";
@@ -50,6 +52,14 @@ export default async function PlayersPage({
   // raw ones. `mapPlayerStats` drops the fantasy seven from its bag, so the two
   // do not overlap and each column reads from exactly one of them.
   const raw = new Map(lines.map((line) => [line.fantraxId, line.stats]));
+  // Our attribute ratings ride in the same bag, so the Attributes plate sorts and marks like any count.
+  const grids = await divisionGrids();
+  if (!("unavailable" in pool)) {
+    for (const row of pool.rows) {
+      const grid = row.fplCode === null ? undefined : grids.get(row.fplCode);
+      if (grid !== undefined) raw.set(row.entry.player.fantraxId, { ...raw.get(row.entry.player.fantraxId), ...attributeStats(grid) });
+    }
+  }
 
   if ("unavailable" in pool) {
     return (

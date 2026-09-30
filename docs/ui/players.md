@@ -136,6 +136,13 @@ Discipline · Market` under the search box. `All` is first and remains the
 default, so nothing Craig asked for on 6 Sep has left the board — the plates are
 a way to put twenty-four columns down to eight, not a way to hide them.
 
+**`Attributes`** (30 Sep 2026, Craig: *"a section where we can rank the players by their
+attributes"*) is the last plate: one column per row of the player screen's grid under CM's
+three-letter heading (`Fin`, `Pac`, `Wor`), sorted and marked like any count, filtered by
+position in the drawer. It is the one plate `All` leaves out, because `All` already carries
+twenty. The ratings ride in the board's stats bag (`attributeColumns.ts`), and a man the grid
+does not rate dashes. A keeper's three rows dash for every outfielder.
+
 - The **spine** — name, position, club — is drawn under every plate. A column set
   that could hide the man's name would be a table you cannot read.
 - **So is the column the board is ordered by**, which is `desk.ts`'s `standDown`
