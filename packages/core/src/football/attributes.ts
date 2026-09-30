@@ -6,7 +6,8 @@ import type { LineCount, Running, PlayerLine } from "./intel/lines";
 // OURS: a 1–20 percentile of something we measure, per 90. A keeper is rated against keepers and
 // an outfielder against every outfielder who plays (Craig, 30 Sep 2026), so a centre-half's
 // Finishing is low, as CM's is. The sample is last season's when he played enough of it, else
-// this season's; running exists only this season. Agility, Balance and Bravery get no row.
+// this season's; running exists only this season. Agility, Balance, Bravery, Flair and Technique
+// get no row.
 
 /** One attribute, as the grid draws it. */
 export interface Attribute {
@@ -117,28 +118,55 @@ const MEASURES: readonly Measure[] = [
 
 const forRole = (keeper: boolean) => (measure: Measure) => measure.for === "both" || (measure.for === "keeper") === keeper;
 
+/** Each of a role's measures with the cohort's figures on it, sorted, so a man is placed by search. */
+type Scale = readonly { measure: Measure; figures: readonly number[] }[];
+
+function scaleOf(keeper: boolean, cohort: readonly Scouted[]): Scale {
+  const peers = cohort.filter((other) => other.keeper === keeper);
+  return MEASURES.filter(forRole(keeper)).map((measure) => ({
+    measure,
+    figures: peers
+      .map(measure.of)
+      .filter((value): value is number => value !== null)
+      .sort((a, b) => a - b),
+  }));
+}
+
+function gridOn(man: Scouted, scale: Scale): Attribute[] {
+  return scale.map(({ measure, figures }) => ({ name: measure.name, from: measure.from, rating: rate(measure.of(man), figures) }));
+}
+
 /** His grid, rated against the men of his role in `cohort`. Pure. */
 export function attributes(man: Scouted, cohort: readonly Scouted[]): Attribute[] {
-  const peers = cohort.filter((other) => other.keeper === man.keeper);
-  return MEASURES.filter(forRole(man.keeper)).map((measure) => ({
-    name: measure.name,
-    from: measure.from,
-    rating: rate(measure, man, peers),
-  }));
+  return gridOn(man, scaleOf(man.keeper, cohort));
+}
+
+/** Every man's grid by code, each role's scale built once rather than once per man. Pure. */
+export function divisionAttributes(cohort: readonly Scouted[]): Map<number, Attribute[]> {
+  const scales = { keeper: scaleOf(true, cohort), outfield: scaleOf(false, cohort) };
+  return new Map(cohort.map((man) => [man.code, gridOn(man, man.keeper ? scales.keeper : scales.outfield)]));
 }
 
 /** Every row of the grid: its name, what it is made of, and whose it is. */
 export const ATTRIBUTE_ROWS: readonly Omit<Measure, "of">[] = MEASURES.map(({ name, from, for: role }) => ({ name, from, for: role }));
 
-/** Where he sits on one measure as a 1–20: the share of the cohort he is STRICTLY better than, so a
+/** Where a figure sits on a sorted scale as a 1–20: the share of it he is STRICTLY better than, so a
  *  block of noughts sits at 1 rather than at the midpoint of its tie. */
-function rate(measure: Measure, man: Scouted, cohort: readonly Scouted[]): number | null {
-  const figure = measure.of(man);
-  if (figure === null) return null;
-  const theirs = cohort.map(measure.of).filter((value): value is number => value !== null);
-  if (theirs.length === 0) return null;
-  const below = theirs.filter((value) => value < figure).length;
-  return WORST + Math.round((below / theirs.length) * (BEST - WORST));
+function rate(figure: number | null, figures: readonly number[]): number | null {
+  if (figure === null || figures.length === 0) return null;
+  return WORST + Math.round((below(figures, figure) / figures.length) * (BEST - WORST));
+}
+
+/** How many of the sorted figures are strictly less than `figure`. */
+function below(figures: readonly number[], figure: number): number {
+  let low = 0;
+  let high = figures.length;
+  while (low < high) {
+    const mid = (low + high) >> 1;
+    if (figures[mid] < figure) low = mid + 1;
+    else high = mid;
+  }
+  return low;
 }
 
 /** His worst quarter of starts; under four starts it holds nobody. */

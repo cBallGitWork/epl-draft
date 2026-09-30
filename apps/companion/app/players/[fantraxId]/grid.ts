@@ -3,6 +3,7 @@ import {
   OUTFIELD_RANKINGS,
   attributes,
   clubById,
+  divisionAttributes,
   mapPastSeasons,
   fetchElementSummary,
   onTheBooks,
@@ -99,7 +100,7 @@ async function measured(player: FootballPlayer) {
   return { man, cohort, group, keeper: isKeeper(player.code) };
 }
 
-/** His grid, and which season it is rated on; null when he has played enough of neither. */
+/** His grid, and which season it is rated on: `season` is null when he has played enough of neither. */
 interface RatedGrid {
   attributes: Attribute[];
   season: string | null;
@@ -125,7 +126,8 @@ export async function playerGrid(player: FootballPlayer): Promise<RatedGrid> {
 /** Every rated man's grid by FPL code, for ranking the pool by an attribute. */
 export async function divisionGrids(): Promise<Map<number, Attribute[]>> {
   const { rated } = await division();
-  return new Map(rated.filter((man) => man.line !== null || man.running !== null).map((man) => [man.code, attributes(man, rated)]));
+  const grids = divisionAttributes(rated);
+  return new Map(rated.filter((man) => man.line !== null || man.running !== null).map((man) => [man.code, grids.get(man.code) ?? []]));
 }
 
 /** His season totals ranked within his group, the group's name, and whether he is a keeper. */

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ATTRIBUTE_ROWS, attributes, ratedLine, ratedRunning } from "./attributes";
+import { ATTRIBUTE_ROWS, attributes, divisionAttributes, ratedLine, ratedRunning } from "./attributes";
 import type { Scouted } from "./attributes";
 import { LINE_COUNTS } from "./intel/lines";
 import type { Running, PlayerLine } from "./intel/lines";
@@ -119,6 +119,13 @@ describe("attributes", () => {
   it("leaves set pieces blank when the sister repo has no file for his club", () => {
     const untold = man({}, { setPieceShare: null });
     expect(ratingOf(attributes(untold, [untold, ...league]), "Set Pieces")).toBeNull();
+  });
+
+  it("rates the whole division exactly as it rates one man at a time", () => {
+    const keeper = man({ saves: 40, conceded: 10 }, { code: 99, keeper: true });
+    const cohort = [...league.map((m, i) => ({ ...m, code: i })), keeper];
+    const grids = divisionAttributes(cohort);
+    for (const subject of cohort) expect(grids.get(subject.code)).toEqual(attributes(subject, cohort));
   });
 
   it("gives every attribute a provenance, and is pure", () => {

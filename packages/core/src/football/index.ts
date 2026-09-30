@@ -133,7 +133,7 @@ export { mapPastSeasons } from "./seasons";
 export type { PastSeason } from "./seasons";
 // Championship Manager's attribute grid, rated out of play we already measure.
 // Ours, never Sports Interactive's — `attributes.ts` says why there is no feed.
-export { ATTRIBUTE_ROWS, attributes, ratedLine, ratedRunning } from "./attributes";
+export { ATTRIBUTE_ROWS, attributes, divisionAttributes, ratedLine, ratedRunning } from "./attributes";
 export type { Attribute, Floors, Scouted } from "./attributes";
 export { preferredFoot, shotLine } from "./shotLine";
 export type { ShotLine } from "./shotLine";
