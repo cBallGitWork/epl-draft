@@ -4,6 +4,7 @@ import {
   type IntelProjections,
   type ProjectedPlayer,
   nextGameweeks,
+  projectedPlace,
   projectedTotal,
   projectionIntel,
 } from "./projections";
@@ -73,5 +74,25 @@ describe("a week's parts", () => {
 
   it("is absent on an export that carries none", () => {
     expect(projectionIntel(file([HAALAND])).get(223094)?.gameweeks[0].parts).toBeNull();
+  });
+});
+
+describe("projectedPlace", () => {
+  const man = (code: number, points: number | null): ProjectedPlayer => ({ ...HAALAND, code, gameweeks: [week(6, points)] });
+  const players = new Map([man(1, 6.2), man(2, 4.1), man(3, 6.2), man(4, null), man(5, 9)].map((p) => [p.code, p]));
+
+  it("ranks his week among the cohort's readings, ties sharing a place", () => {
+    expect(projectedPlace(3, [1, 2, 3, 4, 5], players, 6)).toEqual({ points: 6.2, rank: 2, of: 4 });
+    expect(projectedPlace(2, [1, 2, 3, 4, 5], players, 6)).toEqual({ points: 4.1, rank: 4, of: 4 });
+  });
+
+  it("counts only the cohort, and a man outside it is not ranked against", () => {
+    expect(projectedPlace(1, [1, 2], players, 6)).toEqual({ points: 6.2, rank: 1, of: 2 });
+  });
+
+  it("is absent when the model has no reading for him that week", () => {
+    expect(projectedPlace(4, [1, 2, 3, 4, 5], players, 6)).toBeNull();
+    expect(projectedPlace(1, [1, 2, 3, 4, 5], players, 7)).toBeNull();
+    expect(projectedPlace(99, [1, 99], players, 6)).toBeNull();
   });
 });

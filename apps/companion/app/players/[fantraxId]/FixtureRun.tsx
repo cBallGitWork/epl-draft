@@ -1,51 +1,77 @@
 import type { Opposition } from "@epl/core";
 import Section from "../../components/shell/Section";
 import { fdrStep } from "../../components/football/fdr";
-import { DASH } from "@epl/core";
+import { standoutInk } from "../../components/league/standout";
+import { DASH, ordinal } from "@epl/core";
+import type { ProjectedWeek } from "./grid";
 
-// What is coming, as a run rather than as a single match.
-//
-// The chip on a player sticker answers "who has he got this week", which is the
-// wrong question for anyone deciding whether to hold him through a bad one. Five
-// blocks in a row turn FPL's difficulty rating from a colour into an argument:
-// two reds at the end of the run is the whole reason to sell, and it is
-// invisible one fixture at a time.
-//
-// The colours are FPL's scale, shared with the sticker's chip rather than
-// written out again, and the rating is theirs — difficulty is an opinion, and
-// the only defensible one to print is the one the whole fantasy world reads.
+// What is coming, as a run: FPL's difficulty on each block, and under it the sister model's projected FPL points
+// for that gameweek and his place in his group, lit on the pool board's standout rule.
 
-export default function FixtureRun({ run }: { run: Opposition[] }) {
-  // A club with nothing left has an empty run, and a heading over no blocks is a
-  // claim that something is missing.
+export default function FixtureRun({
+  run,
+  weeks,
+  group,
+}: {
+  run: Opposition[];
+  /** The model's projection by gameweek. */
+  weeks: ReadonlyMap<number, ProjectedWeek>;
+  /** Who he is ranked among, for the rank's title. */
+  group: string | null;
+}) {
+  // A club with nothing left has an empty run, and a heading over no blocks is a claim that something is missing.
   if (run.length === 0) return null;
 
   return (
-    <Section title="Next up" aside="FPL's difficulty">
+    <Section title="Next up" aside="FPL's difficulty · our projected FPL points">
       <ol className="flex items-stretch gap-1">
-        {run.map((against) => (
-          <li key={against.fixture.id} className="flex min-w-0 flex-1 flex-col gap-1">
-            <span className="numeric text-center text-2xs text-faint">
-              {/* A rearranged match can lose its round. It keeps its place in
-                  the run — it is still his next game — and says so. */}
-              {against.fixture.gameweek === null ? DASH : `GW${against.fixture.gameweek}`}
-            </span>
-            <span
-              className={`numeric flex min-h-11 flex-col items-center justify-center px-1 text-xs font-bold leading-tight ${
- fdrStep(against.difficulty).ink
-}`}
-              style={{ backgroundColor: fdrStep(against.difficulty).ground }}
-            >
-              <span className="truncate">{against.club.shortName}</span>
-              {/* Home or away, said in a letter as well as by nothing else —
-                  there is no second visual channel carrying it here. */}
-              <span className="text-2xs font-normal opacity-80">
-                {against.home ? "H" : "A"}
+        {run.map((against, at) => {
+          const gw = against.fixture.gameweek;
+          // A double gameweek's figure is the week's, so it sits under the week's first match only.
+          const repeat = gw !== null && run.slice(0, at).some((earlier) => earlier.fixture.gameweek === gw);
+          return (
+            <li key={against.fixture.id} className="flex min-w-0 flex-1 flex-col gap-1">
+              <span className="numeric text-center text-2xs text-faint">
+                {/* A rearranged match can lose its round; it keeps its place in the run and says so. */}
+                {gw === null ? DASH : `GW${gw}`}
               </span>
-            </span>
-          </li>
-        ))}
+              <span
+                className={`numeric flex min-h-11 flex-col items-center justify-center px-1 text-xs font-bold leading-tight ${
+                  fdrStep(against.difficulty).ink
+                }`}
+                style={{ backgroundColor: fdrStep(against.difficulty).ground }}
+              >
+                <span className="truncate">{against.club.shortName}</span>
+                <span className="text-2xs font-normal opacity-80">{against.home ? "H" : "A"}</span>
+              </span>
+              {repeat ? null : <Projected week={gw === null ? undefined : weeks.get(gw)} group={group} />}
+            </li>
+          );
+        })}
       </ol>
     </Section>
+  );
+}
+
+/** His projected points and his place, in one ink; a dash each where the model has no reading. */
+function Projected({ week, group }: { week: ProjectedWeek | undefined; group: string | null }) {
+  const place = week?.place ?? null;
+  if (place === null) {
+    return (
+      <span className="numeric flex flex-col items-center text-xs leading-tight text-faint">
+        <span>{DASH}</span>
+        <span>{DASH}</span>
+      </span>
+    );
+  }
+  const ink = standoutInk(place.points, week?.cut, "high");
+  return (
+    <span
+      className={`numeric flex flex-col items-center text-xs leading-tight ${ink === "" ? "text-ink" : ink}`}
+      title={`${place.points.toFixed(1)} projected FPL points, ${ordinal(place.rank)} of ${place.of} ${group ?? "players"}`}
+    >
+      <span className="font-bold">{place.points.toFixed(1)}</span>
+      <span>{ordinal(place.rank)}</span>
+    </span>
   );
 }
