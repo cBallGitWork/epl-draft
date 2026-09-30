@@ -477,6 +477,9 @@ anyway.
   let one through.
 - `editions.yml` refuses to commit a `paper.json` or `ledger.json` that will not
   parse, because the app imports both at build time.
+- **The writer saves story by story, the ledger last**, and `editions.yml` commits
+  after a failed or timed-out firing too (`if: always()`), so a killed firing keeps
+  every story it filed. A story on the paper whose key missed the ledger is filed again.
 
 ## The table's tie-break is ours to apply — decided 23 Sep 2026
 
