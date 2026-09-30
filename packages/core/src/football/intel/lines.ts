@@ -1,3 +1,4 @@
+import { finiteOrNull as count } from "../../untrusted";
 import type { IntelManifest } from "./types";
 
 // Each man's league season in totals, off the sister repo's player log: the sample the attribute
@@ -60,8 +61,6 @@ export interface IntelLines {
 
 /** A man counts as playing a season once he has a third of the most minutes anyone played in it. */
 const PLAYED_SHARE = 1 / 3;
-
-const count = (value: unknown): number | null => (typeof value === "number" && Number.isFinite(value) ? value : null);
 
 /** Each man's line by FPL's season-stable code. */
 export function lineIntel(file: IntelLines | null): Map<number, PlayerLine> {

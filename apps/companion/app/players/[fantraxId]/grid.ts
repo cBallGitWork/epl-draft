@@ -100,7 +100,7 @@ async function measured(player: FootballPlayer) {
 }
 
 /** His grid, and which season it is rated on; null when he has played enough of neither. */
-export interface RatedGrid {
+interface RatedGrid {
   attributes: Attribute[];
   season: string | null;
   keeper: boolean;

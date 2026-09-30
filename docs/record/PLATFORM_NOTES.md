@@ -4040,7 +4040,7 @@ Finishing 16), and the cohort alone moved neither: the measures were the fault.
   seasons. PR #127's Fantrax stats league holds only this one, so it is not the grid's
   source; whether it still earns its capture is Craig's call on #127.
 - **What reads wrong gets changed, not kept:** Consistency, Teamwork, Handling and Technique
-  each put a star at 1 on its first measure; three were re-sourced and Technique dropped.
+  each put a star at or near the bottom on its first measure; three were re-sourced and Technique dropped.
   `docs/ui/player.md` names each row's source.
 
 ## Questions

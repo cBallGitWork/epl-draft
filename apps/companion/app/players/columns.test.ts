@@ -77,4 +77,11 @@ describe("the attribute columns", () => {
     expect(plate).toEqual(["name", "fpts", ...attributeColumns.map((column) => column.key)]);
     expect(columnsIn("all", "fin").some((column) => column.key === "fin")).toBe(true);
   });
+
+  it("leads with the attribute it is sorted by, so a phone sees the order it is in", () => {
+    // Sorted by Work Rate, the 25th column: a 390 phone shows seven, and they were Acc to Dri.
+    const plate = columnsIn("attributes", "wor").map((column) => column.key);
+    expect(plate.slice(0, 2)).toEqual(["name", "wor"]);
+    expect(plate.filter((key) => key === "wor")).toHaveLength(1);
+  });
 });

@@ -79,10 +79,19 @@ export function groupFor(key: string | undefined): PoolGroupKey {
  *  `aria-sort` anywhere in it. The sort is honoured over the plate because the
  *  reader chose it more recently and more deliberately. */
 export function columnsIn(group: PoolGroupKey, sorted: string): readonly PoolColumn[] {
-  return COLUMNS.filter(
+  const shown = COLUMNS.filter(
     (column) =>
       column.group === undefined ||
       column.key === sorted ||
       (group === "all" ? column.group !== "attributes" : column.group === group),
   );
+  return group === "attributes" ? leadWith(shown, sorted) : shown;
+}
+
+/** The sorted column straight after the spine: twenty-five attributes run far past a phone's seven. */
+function leadWith(columns: readonly PoolColumn[], sorted: string): readonly PoolColumn[] {
+  const lead = columns.find((column) => column.key === sorted && column.group !== undefined);
+  if (lead === undefined) return columns;
+  const spine = columns.filter((column) => column.group === undefined);
+  return [...spine, lead, ...columns.filter((column) => column.group !== undefined && column !== lead)];
 }

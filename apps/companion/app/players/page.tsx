@@ -38,11 +38,12 @@ export default async function PlayersPage({
 }: {
   searchParams: Promise<PlayersSearchParams>;
 }) {
-  const [pool, asked, lines, reader] = await Promise.all([
+  const [pool, asked, lines, reader, grids] = await Promise.all([
     getLeaguePool(),
     searchParams,
     getPlayerStats(),
     readerTeamId(),
+    divisionGrids(),
   ]);
   const query = playersQuery(asked);
 
@@ -52,14 +53,6 @@ export default async function PlayersPage({
   // raw ones. `mapPlayerStats` drops the fantasy seven from its bag, so the two
   // do not overlap and each column reads from exactly one of them.
   const raw = new Map(lines.map((line) => [line.fantraxId, line.stats]));
-  // Our attribute ratings ride in the same bag, so the Attributes plate sorts and marks like any count.
-  const grids = await divisionGrids();
-  if (!("unavailable" in pool)) {
-    for (const row of pool.rows) {
-      const grid = row.fplCode === null ? undefined : grids.get(row.fplCode);
-      if (grid !== undefined) raw.set(row.entry.player.fantraxId, { ...raw.get(row.entry.player.fantraxId), ...attributeStats(grid) });
-    }
-  }
 
   if ("unavailable" in pool) {
     return (
@@ -70,6 +63,12 @@ export default async function PlayersPage({
         </FantraxSilent>
       </ScoutShell>
     );
+  }
+
+  // Our attribute ratings ride in the same bag, so the Attributes plate sorts and marks like any count.
+  for (const row of pool.rows) {
+    const grid = row.fplCode === null ? undefined : grids.get(row.fplCode);
+    if (grid !== undefined) raw.set(row.entry.player.fantraxId, { ...raw.get(row.entry.player.fantraxId), ...attributeStats(grid) });
   }
 
   const shown = shownRows(pool.rows, query, raw);

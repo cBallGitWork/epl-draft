@@ -450,9 +450,9 @@ lands on today's codes without a recycled element id:
 
 ```jsonc
 { "manifest": { /* … season: "25-26" */ }, "players": [
-  { "code": 223094, "minutes": 2953, "starts": 34, "fplMinutes": 2863, "xgot": 23.42, "fouls": 24,
+  { "code": 223094, "minutes": 2953, "starts": 34, "fplMinutes": 2683, "xgot": 23.418, "fouls": 24,
     "recoveries": 41, /* … the counts `LINE_COUNTS` names … */ "outsideBox": 13,
-    "ratings": [8.1, 7.2], "running": null }
+    "ratings": [8.88, 6.3 /* … */], "running": null }
 ] }
 ```
 

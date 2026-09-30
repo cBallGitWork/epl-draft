@@ -73,7 +73,7 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
           (Craig, 4 Sep 2026: *"portarit has awkward sapce under it"*). It was
           `items-start`, which sized the portrait to its own image and left a
           band of club colour under it wherever the attribute grid ran longer —
-          a keeper's grid is eight rows and an outfielder's thirteen, so the gap
+          a keeper's grid is eight rows and an outfielder's twenty-two, so the gap
           changed size per man. `cm9900/11.jpg` has no such gap: its picture is
           the ground the whole panel is drawn on. */}
       <div className="flex flex-col gap-2 lg:flex-row lg:items-stretch">

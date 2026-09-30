@@ -44,7 +44,7 @@ export default function Measures({
   if (rows.length === 0) return null;
 
   return (
-    <Section title="Attributes" aside="Season · ours, 1–20">
+    <Section title="Attributes" aside="Ours, 1–20, per 90">
       {/* The ledger's shape: centred and narrow, each pair either side of its label (Craig, 24 Sep 2026). */}
       <table className="mx-auto w-full max-w-sm border-collapse">
         <caption className="sr-only">

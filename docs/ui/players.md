@@ -140,7 +140,8 @@ a way to put twenty-four columns down to eight, not a way to hide them.
 attributes"*) is the last plate: one column per row of the player screen's grid under CM's
 three-letter heading (`Fin`, `Pac`, `Wor`), sorted and marked like any count, filtered by
 position in the drawer. It is the one plate `All` leaves out, because `All` already carries
-twenty. The ratings ride in the board's stats bag (`attributeColumns.ts`), and a man the grid
+twenty. The column it is sorted by leads, straight after the name: twenty-five run far past
+the seven a phone shows. The ratings ride in the board's stats bag (`attributeColumns.ts`), and a man the grid
 does not rate dashes. A keeper's three rows dash for every outfielder.
 
 - The **spine** — name, position, club — is drawn under every plate. A column set

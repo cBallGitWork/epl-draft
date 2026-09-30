@@ -138,7 +138,7 @@ export type { Attribute, Floors, Scouted } from "./attributes";
 export { preferredFoot, shotLine } from "./shotLine";
 export type { ShotLine } from "./shotLine";
 export { lineIntel, playedFloor } from "./intel/lines";
-export type { IntelLines, Running, PlayerLine } from "./intel/lines";
+export type { IntelLines, PlayerLine } from "./intel/lines";
 export { KEEPER_RANKINGS, OUTFIELD_RANKINGS, rankings } from "./rankings";
 export type { Ranked, Tallied } from "./rankings";
 export { countryOf, mapFixtures } from "./fpl/map";

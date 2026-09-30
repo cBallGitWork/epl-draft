@@ -52,7 +52,7 @@ derived the same four from the same object.
    outfielders, so a centre-half's Finishing is low as CM's is. The sample is **last
    season's** when he played a third of the most minutes anyone did (1,140 in 25/26), else
    this season's against the same third ("new players get this season"); the heading says
-   which, `25/26 · against outfielders`. A keeper gets nine rows, an outfielder twenty-two.
+   which, `25/26 · against outfielders`. A keeper gets eight rows, an outfielder twenty-two.
    **Rankings** sit under it: his season totals and his place among his position group
    ("rankings for data such as xg").
 3. **The real position**, in cyan — the first thing in the app entitled to that

@@ -141,14 +141,14 @@ function rate(measure: Measure, man: Scouted, cohort: readonly Scouted[]): numbe
   return WORST + Math.round((below / theirs.length) * (BEST - WORST));
 }
 
-/** Fewer rated starts than this have no worst quarter to speak of. */
-const RATED_FLOOR = 4;
+/** His worst quarter of starts; under four starts it holds nobody. */
+const QUARTER = 4;
 
 /** How good his bad days are: his mean rating over the worst quarter of his starts. */
 function consistency(man: Scouted): number | null {
   const ratings = [...(man.line?.ratings ?? [])].sort((a, b) => a - b);
-  if (ratings.length < RATED_FLOOR) return null;
-  const worst = ratings.slice(0, Math.floor(ratings.length / 4));
+  if (ratings.length < QUARTER) return null;
+  const worst = ratings.slice(0, Math.floor(ratings.length / QUARTER));
   return worst.reduce((a, b) => a + b, 0) / worst.length;
 }
 
