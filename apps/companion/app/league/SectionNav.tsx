@@ -10,34 +10,11 @@ import TabStrip from "../components/shell/TabStrip";
 // The plates themselves are `shell/TabStrip` now — this file is the list and the
 // argument for it, which is the half worth keeping in the section.
 
-/** **Five blue buttons** (Craig, 31 Aug): Table, Schedule, Results, Player
- *  Stats, Team Stats. `cm9900/24.jpg` runs four and a foot row of five; ours was
- *  five and a foot row of one, and the split between the two rows is Craig's
- *  rather than the game's — CM files Team Stats and Player Stats DOWNSTAIRS and
- *  he wanted them up here. **It is four now**, Player Stats having become a
- *  section of its own; see below.
- *
- *  **Matchups left the strip and did not leave the app.** It is the one entry he
- *  did not name and it is a live route with a board and a page per pairing, so
- *  it moved to the foot row rather than out of the navigation — which is CM's
- *  own second row, the one this repo has been noting the absence of since the
- *  reference library was catalogued. Said plainly because it is the one part of
- *  this that was not asked for.
- *
- *  **Player Stats left on 6 Sep 2026, and it left the section rather than the
- *  strip** (Craig: *"I think this function will be its own section away from the
- *  league etc"*). It is `Scout` now, with its own bar and its own `players/Shell`,
- *  reached from the section nav like any other section.
- *
- *  So the strip is FOUR. That is the second time this list has been renumbered by
- *  a screen growing up rather than by a preference, and both times the entry was
- *  a route that had never been under `/league` at all — the pool was outside the
- *  prefix from the day it was built, because the same table is also reached from
- *  the Prem's own strip and a second copy under `/league` would be one screen
- *  read twice. A view that lives outside your prefix and answers to another
- *  section's bar was always a section wearing a tab. */
+/** Five blue buttons, in Craig's order (27 Sep 2026: *"Change table to league. Move cups to 2nd"*).
+ *  Matchups is a route here but not a tab; Player Stats left for its own section on 6 Sep. */
 const SECTIONS = [
-  { href: "/league", label: "Table", key: "table" },
+  { href: "/league", label: "League", key: "table" },
+  { href: "/league/cups", label: "Cups", key: "cups" },
   { href: "/league/schedule", label: "Schedule", key: "schedule" },
   { href: "/league/results", label: "Results", key: "results" },
   { href: "/league/team-stats", label: "Team Stats", key: "teamStats" },
@@ -65,6 +42,14 @@ function at(key: (typeof SECTIONS)[number]["key"]): string {
 }
 
 export const TEAM_STATS = at("teamStats");
+const CUPS_PAGE = at("cups");
+
+/** One cup's page, on its fixtures unless a view is named. */
+export function cupHref(cupId: string, view?: string): string {
+  const query = new URLSearchParams({ cup: cupId });
+  if (view !== undefined) query.set("view", view);
+  return `${CUPS_PAGE}?${query}`;
+}
 
 /** The four tabs, plus the one section a route can BE on without being in the
  *  strip.

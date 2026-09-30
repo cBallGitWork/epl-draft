@@ -77,13 +77,13 @@ export default function Season({
                 column is furniture. Four columns, then, and the fifth is the
                 one fact this list has that CM's does not — the score. */}
 
-            {/* The competition, in yellow — `First Division` in the shot. A
-                knockout names its round beside it, which is the one thing our
-                calendar has that a league fixture list does not. */}
-            <span className={`hidden w-20 shrink-0 truncate ${MINOR_CAPS} text-accent lg:block`}>
-              {row.tie.round === null
-                ? row.tie.competition.name
-                : `${row.tie.competition.name} · ${row.tie.round}`}
+            {/* The competition, in yellow, at every width (Craig, 30 Sep): a cup tie must
+                stand apart from a league one. A knockout's round sits under its name. */}
+            <span className={`flex w-24 shrink-0 flex-col ${MINOR_CAPS} text-accent lg:w-40`}>
+              <span className="truncate">{row.tie.competition.name}</span>
+              {row.tie.round === null ? null : (
+                <span className="truncate font-normal">{row.tie.round}</span>
+              )}
             </span>
 
             {/* **The score is the link, not the row** (Craig, 2 Sep: "tap a
