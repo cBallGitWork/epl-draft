@@ -1,4 +1,5 @@
 import type { Story } from "@epl/core";
+import { plural } from "@epl/core";
 
 // The paper's words for one story.
 //
@@ -58,9 +59,9 @@ export function written(lead: Story, who: (teamId: string | null) => string) {
 }
 
 function players(count: number): string {
-  return `${count} player${count === 1 ? "" : "s"}`;
+  return `${count} ${plural(count, "player")}`;
 }
 
 function points(margin: number): string {
-  return `${margin} point${margin === 1 ? "" : "s"}`;
+  return `${margin} ${plural(margin, "point")}`;
 }

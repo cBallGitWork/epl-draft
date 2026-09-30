@@ -117,7 +117,8 @@ export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
   return faults;
 }
 
-type Report = (section: string, check: string, severity: Severity, evidence: string) => void;
+/** Where a check files a fault: the section it is in, the rule, how hard, and the words that broke it. */
+export type Report = (section: string, check: string, severity: Severity, evidence: string) => void;
 
 function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckContext, sides: ReadonlySet<string>, fault: Report): void {
   const [least, most, words] = call.instinct === null ? LIMITS.tie : LIMITS.gut;

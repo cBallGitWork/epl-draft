@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { clock, minutePhrases, minutesLeft, numeral, ordinal } from "./minutes";
+import { ordinal } from "../../league/ordinal";
+import { clock, minutePhrases, minutesLeft, numeral } from "./minutes";
 
 describe("numeral and ordinal", () => {
   it("writes one to nine in words and 10 up in figures", () => {

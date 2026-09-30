@@ -5,13 +5,14 @@ import { fantasyPanel, type FantasyPanel } from "./fantasy";
 import { keyStats, type KeyStat } from "./keyStats";
 import { played } from "./men";
 import { clubStandings, type ClubStanding } from "./standing";
-import { isGoal, manCounts, matchEvents, type ManCounts, type MatchEvent } from "./timeline";
+import { assistsBy, goalsBy, isGoal, manCounts, matchEvents, type ManCounts, type MatchEvent } from "./timeline";
 import type { ReportDayInput, ReportMan, ReportMatchInput } from "./types";
+import { plural } from "../../format";
 
 // The editor's calls for a match-day, made in code: which match leads, the moment each account opens on, the one goal worth
 // describing, who gets a section and why it matters in the league, how long. The model writes prose around these.
 
-export interface Nominee {
+interface Nominee {
   man: ReportMan;
   /** Why the league cares, as data for the writer to put in its own words. */
   stake: string;
@@ -50,7 +51,7 @@ function opening(match: ReportMatchInput, events: readonly MatchEvent[], facts: 
   if (collapse !== undefined && late.length > 0) return `${collapse}, and the other side scored ${late.length === 1 ? "once" : `${late.length} times`} from the 80th minute on`;
   const winner = facts.find((f) => f.startsWith("the winner came"));
   if (winner !== undefined) return winner;
-  const hat = match.men.find((m) => goals.filter((g) => g.kind !== "own-goal" && g.man?.code === m.code).length >= 3);
+  const hat = match.men.find((m) => goalsBy(goals, m.code) >= 3);
   if (hat !== undefined) return `${hat.name}'s hat-trick for ${match[hat.side].name}`;
   // Anything else is told in order from the first line of WHAT HAPPENED: a report that opens late has to go back.
   return goals.length === 0 ? "a goalless match: the first line of WHAT HAPPENED, then in order" : "the first line of WHAT HAPPENED, then in order";
@@ -81,13 +82,13 @@ function misses(events: readonly MatchEvent[]): MatchEvent[] {
   return shots.filter((e) => chosen.has(e));
 }
 
-const pts = (n: number) => `${n} point${n === 1 ? "" : "s"}`;
+const pts = (n: number) => `${n} ${plural(n, "point")}`;
 
 /** The men a section could be about, each with the league stake that earns it, most newsworthy first. */
 function nominees(match: ReportMatchInput, events: readonly MatchEvent[], counts: ReadonlyMap<number, ManCounts>): Nominee[] {
   const goals = events.filter(isGoal);
-  const scored = (m: ReportMan) => goals.filter((g) => g.kind !== "own-goal" && g.man?.code === m.code).length;
-  const made = (m: ReportMan) => goals.filter((g) => g.other?.code === m.code).length;
+  const scored = (m: ReportMan) => goalsBy(goals, m.code);
+  const made = (m: ReportMan) => assistsBy(goals, m.code);
   const h2h = (m: ReportMan) => {
     const h = m.holder?.h2h;
     if (h == null || h.us === null || h.them === null) return "";
@@ -111,7 +112,7 @@ function nominees(match: ReportMatchInput, events: readonly MatchEvent[], counts
     add(m, `${m.holder!.team} has him, ${pts(m.points ?? 0)}${h2h(m)}`);
   }
   for (const m of men.filter((x) => x.holder === null && scored(x) + made(x) >= 2)) {
-    add(m, `a free agent; ${m.goalsSeason} league goal${m.goalsSeason === 1 ? "" : "s"} this season`);
+    add(m, `a free agent; ${m.goalsSeason} league ${plural(m.goalsSeason, "goal")} this season`);
   }
   // When the stakes run short, the men whose figures stand out, so a match never has fewer candidates than sections.
   const stood = (x: ReportMan) => scored(x) + made(x) > 0 || (counts.get(x.code)?.chancesMade ?? 0) >= 3 || (counts.get(x.code)?.shots ?? 0) >= 4 || x.saves >= 5;

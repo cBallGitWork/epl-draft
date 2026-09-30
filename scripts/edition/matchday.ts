@@ -1,4 +1,5 @@
 import {
+  DASH,
   fetchFixtures,
   fetchHighlightsFeed,
   fetchLive,
@@ -64,7 +65,7 @@ async function seasonLines(gameweek: number, snapshot: FootballSnapshot): Promis
 }
 
 function reportClub(club: Club | undefined, manager: string | null) {
-  return { code: club?.code ?? 0, name: fullClubName(club?.name ?? "—"), shorts: club === undefined ? [] : shortClubNames(club.name), manager };
+  return { code: club?.code ?? 0, name: fullClubName(club?.name ?? DASH), shorts: club === undefined ? [] : shortClubNames(club.name), manager };
 }
 
 /** The day's input, or null when the Premier League's round cannot be read. `pick` chooses the day's fixtures. */

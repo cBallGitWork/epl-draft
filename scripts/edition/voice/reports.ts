@@ -40,7 +40,7 @@ THE WORDS:
 - Report what a manager did, never why.
 
 THE PAGE:
-- The matches appear on one page. No two accounts open with the same words, no two standfirsts with the same two words, and no run of six words appears twice on the page.
+- The matches appear on one page. No two accounts open with the same words, no two standfirsts with the same two words, and no run of ${REPORTS.echo} words appears twice on the page.
 - Never a question, a colon, an exclamation mark or a quotation mark in the prose. No sentence over 35 words.
 - HEADLINES, in two steps, as the Gazzetta's World Cup desk does it. FIRST write "headlineStory": the lead match's story in plain words, one short line. THEN offer six "headlines", each a pun or piece of wordplay ON THAT STORY, in the register of James Richardson on Football Italia and Football Weekly: the groan-and-grin line, riffing on a player's surname, a club's name or the scoreline, straight-faced, never explained. A pun is a word or name carrying two meanings at once, both true here: for each candidate name that word ("playsOn") and its two meanings ("twoMeanings"). A line with no such word is a plain account, not a headline, and is struck. Each true of the match, eight words or fewer, a single clause, no "as", no tabloid verb, no nickname, no word the standfirst uses. A second reader chooses one or none.
 - You never name a source. Never: ${REPORT_FPL.join(", ")}.

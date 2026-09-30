@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { crestUrl, londonDayAndDate, type StoryReport, type StoryReportSide } from "@epl/core";
+import { crestUrl, londonDayAndDate, thousands, type StoryReport, type StoryReportSide } from "@epl/core";
 
 // A match's header as BBC Sport sets one (Craig, 28 Sep 2026): date and competition, each club with its crest either side of
 // the score, full time and half-time, the goals and the men who made them under their own side, then the ground and the crowd.
@@ -60,7 +60,7 @@ export default function ReportHeader({ report, names }: { report: StoryReport; n
       )}
       {report.venue === null && report.attendance === null ? null : (
         <p className="text-2xs text-muted">
-          {[report.venue, report.attendance === null ? null : `attendance ${report.attendance.toLocaleString("en-GB")}`].filter(Boolean).join(" · ")}
+          {[report.venue, report.attendance === null ? null : `attendance ${thousands(report.attendance)}`].filter(Boolean).join(" · ")}
         </p>
       )}
     </header>

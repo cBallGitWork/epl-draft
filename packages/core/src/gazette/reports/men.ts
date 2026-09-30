@@ -1,6 +1,7 @@
 import type { PlMoment } from "../../football/premierleague/moments";
 import type { PlSquadMan, PlTeamSheet } from "../../football/premierleague/teamSheet";
 import type { ReportMan, Side } from "./types";
+import { isDismissal } from "./timeline";
 
 // Every man in the match sheet as the desk reads him: started or came on, when he left and why, and what the script joined.
 
@@ -45,7 +46,7 @@ export function reportMen(
       if (second !== null) off.set(second, { at: moment.minute, injured: moment.injury });
     }
     if (moment.kind === "injured-off" && first !== null) off.set(first, { at: moment.minute, injured: true });
-    if ((moment.kind === "sent-off" || moment.kind === "second-yellow") && first !== null) off.set(first, { at: moment.minute, injured: false });
+    if (isDismissal(moment.kind) && first !== null) off.set(first, { at: moment.minute, injured: false });
   }
 
   const man = (squad: PlSquadMan, side: Side, started: boolean): ReportMan[] => {

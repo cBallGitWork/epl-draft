@@ -1,4 +1,4 @@
-import { fullClubName, instantOf, normalizeName, pressers, type Club, type Fixture, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
+import { MS_PER_DAY, fullClubName, instantOf, normalizeName, pressers, type Club, type Fixture, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
 import type { ResolvedPlayer, RosteredPlayer, RosteredTeam, StoryFixture } from "@epl/core";
 import { roundTies } from "./round";
 import { INTEL_SEASON, readIntel } from "../intel";
@@ -184,7 +184,6 @@ export function presserQuotes(clubs: ReadonlyMap<number, Club>): (PresserQuote &
  *  days: a note from the day before is the same story, one from last week is the
  *  standing condition a reader already knows. */
 const FRESH_DAYS = 2;
-const MS_PER_DAY = 86_400_000;
 
 /** Whether his availability CHANGED around this conference. A man with no note
  *  at all counts as fresh — he is being discussed and FPL has not caught up. */

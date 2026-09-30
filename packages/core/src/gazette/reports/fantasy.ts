@@ -1,7 +1,8 @@
 import { surname } from "./keyStats";
 import { played } from "./men";
-import { isGoal, type MatchEvent } from "./timeline";
+import { assistsBy, goalsBy, isGoal, type MatchEvent } from "./timeline";
 import type { ReportMan, ReportMatchInput } from "./types";
+import { plural } from "../../format";
 
 // The league's side of one match, desk-made for the sidebar: the Draft Man of the Match, the top league scorers, and the men
 // nobody holds who scored or made one (the only unheld men worth a line: somebody could still pick them up). A chance not
@@ -27,10 +28,10 @@ const WIRE = 4;
 
 export function fantasyPanel(match: ReportMatchInput, events: readonly MatchEvent[]): FantasyPanel {
   const goals = events.filter(isGoal);
-  const scored = (m: ReportMan) => goals.filter((g) => g.kind !== "own-goal" && g.man?.code === m.code).length;
-  const made = (m: ReportMan) => goals.filter((g) => g.other?.code === m.code).length;
+  const scored = (m: ReportMan) => goalsBy(goals, m.code);
+  const made = (m: ReportMan) => assistsBy(goals, m.code);
   const did = (m: ReportMan) =>
-    [scored(m) > 0 ? `${scored(m)} goal${scored(m) === 1 ? "" : "s"}` : null, made(m) > 0 ? `${made(m)} assist${made(m) === 1 ? "" : "s"}` : null].filter(Boolean).join(", ");
+    [scored(m) > 0 ? `${scored(m)} ${plural(scored(m), "goal")}` : null, made(m) > 0 ? `${made(m)} ${plural(made(m), "assist")}` : null].filter(Boolean).join(", ");
   const man = (m: ReportMan): FantasyMan => ({
     name: surname(m.name),
     club: match[m.side].shorts[0] ?? match[m.side].name,

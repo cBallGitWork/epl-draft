@@ -1,4 +1,4 @@
-import { londonDayOf, type Club, type Fixture, type PresserLine, type RosteredTeam } from "@epl/core";
+import { MS_PER_DAY, londonDayOf, type Club, type Fixture, type PresserLine, type RosteredTeam } from "@epl/core";
 import {
   presserFixtures,
   presserGameweek,
@@ -16,7 +16,7 @@ import {
 
 /** No round is longer than one, so a presser older than this is about a round
  *  already played. */
-const WEEK = 7 * 24 * 60 * 60 * 1000;
+const WEEK = 7 * MS_PER_DAY;
 
 /** Everything the Team Sheet needs, assembled in one place.
  *

@@ -1,5 +1,7 @@
 import type { PlGoal } from "./goals";
 import type { RawPlEvent } from "./raw";
+import { clockMinute } from "./fixtureEvents";
+import { codeOf } from "./teamSheet";
 
 // The three assists FPL pays and Opta does not place.
 //
@@ -62,10 +64,7 @@ export interface StreamCredit {
  *  `plGoals` states, so the two agree on which minute a goal happened in.
  *  A label is `"56"` or `"90+1"` here, where the fixture feed writes `"56'00"`. */
 function minuteOf(event: RawPlEvent): number | null {
-  const label = event.time?.label;
-  if (label === undefined) return null;
-  const at = Number.parseInt(label, 10);
-  return Number.isNaN(at) ? null : at;
+  return clockMinute(event.time?.label);
 }
 
 /** Every goal in the commentary with the assister FPL's rules imply.
@@ -84,8 +83,7 @@ export function streamCredits(
   codes: ReadonlyMap<number, number>,
 ): StreamCredit[] {
   const credits: StreamCredit[] = [];
-  const code = (id: number | undefined): number | null =>
-    id === undefined ? null : (codes.get(id) ?? null);
+  const code = (id: number | undefined): number | null => codeOf(codes, id);
 
   // The attempt immediately before the event being read, and the last penalty
   // won at any point before it.

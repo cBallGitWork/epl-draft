@@ -3,7 +3,7 @@ import { type Result, type TableRow, type TableSortKey, ordinal } from "@epl/cor
 import { cellAlign, deskOnly } from "./Columns";
 import { CLUB } from "./routes";
 import { ROW_LINK } from "../components/league/TableCells";
-import { FIGURE, ROW_FIGURE, TONE, ROW_HOVER } from "@/app/desk";
+import { FIGURE, FIGURE_CELL, ROW_HOVER, TONE } from "@/app/desk";
 import Absent from "@/app/components/shell/Absent";
 import ClubLabel from "@/app/components/football/ClubLabel";
 
@@ -99,7 +99,7 @@ export default function ClubRow({
         </span>
       </td>
 
-      <td className={`numeric px-1.5 text-center ${ROW_FIGURE} ${deskOnly("form", sort)}`}>
+      <td className={`${FIGURE_CELL} ${deskOnly("form", sort)}`}>
         <Form run={form} />
       </td>
     </tr>

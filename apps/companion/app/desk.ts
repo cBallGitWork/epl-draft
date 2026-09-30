@@ -14,6 +14,9 @@ export const MINOR_CAPS = "text-3xs font-bold uppercase";
  *  `text-bad` loses to `text-faint` on stylesheet order, whatever the class order says. */
 export const LABEL = `${SMALL_CAPS} text-faint`;
 
+/** `MINOR_CAPS` in furniture ink: `LABEL` a step down. */
+export const MINOR_LABEL = `${MINOR_CAPS} text-faint`;
+
 /** A name you scan a row for: chrome face, `sm` under a thumb, `base` on the desk. Truncation is
  *  the caller's. */
 export const ROW_NAME = "font-chrome text-sm font-bold lg:text-base";
@@ -22,8 +25,11 @@ export const ROW_NAME = "font-chrome text-sm font-bold lg:text-base";
  *  proportion. */
 export const ROW_FIGURE = "text-sm";
 
-/** A standings figure: tabular, centred, bold. `.numeric` already tracks, so never add `tracking-*`. */
-export const FIGURE = `numeric px-1.5 text-center font-bold ${ROW_FIGURE}`;
+/** A row's figure cell: tabular and centred. `.numeric` already tracks, so never add `tracking-*`. */
+export const FIGURE_CELL = `numeric px-1.5 text-center ${ROW_FIGURE}`;
+
+/** A standings figure: `FIGURE_CELL`, bold. */
+export const FIGURE = `${FIGURE_CELL} font-bold`;
 
 /** CM's index block width, fixed so a column of blocks is one shape whatever each holds. Here and
  *  not in `league/`, so `shell/` can use it without importing upward. */
@@ -66,6 +72,9 @@ export const PINNED_TILE = "sticky left-0 z-10";
 /** A board's frozen name column; the caller adds where it starts. `bg-surface` is load-bearing: a transparent one
  *  lets the scrolled figures slide under the name. */
 export const PINNED_NAME = "cm-lead sticky z-10 border-r border-line bg-surface";
+
+/** `PINNED_NAME` starting where a pinned position tile ends; the offsets are `TILE_WIDTH`'s widths. */
+export const PINNED_BESIDE_TILE = `${PINNED_NAME} left-10 lg:left-14`;
 
 /** A gameweek view's header row and title. Its loading skeletons use them too, or the page jumps
  *  when it lands. */

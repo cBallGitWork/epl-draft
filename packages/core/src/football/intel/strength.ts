@@ -67,7 +67,7 @@ export function easeStep(rank: number): number {
   return Math.min(10, Math.max(1, Math.ceil(rank / 2)));
 }
 
-/** One club's own strength: its rank at each venue, 1 the best. */
+/** One club's own strength: its rank at each venue, 1 the weakest (easiest to face). */
 export interface StrengthRank {
   code: number;
   club: string;

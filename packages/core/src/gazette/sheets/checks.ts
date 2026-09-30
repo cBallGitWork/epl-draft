@@ -1,6 +1,6 @@
 import { SHEETS } from "../../config";
 import { BANNED, banned, escapeRegExp } from "../banned";
-import type { Fault, Severity } from "../predictions/checks";
+import type { Fault, Report } from "../predictions/checks";
 import { masked, ngrams, numbersIn, sentences, wordCount } from "../predictions/prose";
 import { DESK_BANNED } from "../predictions/words";
 import { strangers } from "../strangers";
@@ -51,7 +51,6 @@ export interface SheetsCheck {
   clubs: readonly string[];
 }
 
-type Report = (section: string, check: string, severity: Severity, evidence: string) => void;
 
 export function checkSheets(draft: SheetsDraft, ctx: SheetsCheck): Fault[] {
   const faults: Fault[] = [];

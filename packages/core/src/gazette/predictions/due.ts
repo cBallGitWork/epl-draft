@@ -1,11 +1,10 @@
 import { PREDICTIONS } from "../../config";
-import { instantOf, londonDayOf, londonTime, londonWeekday } from "../../time";
+import { MS_PER_DAY, instantOf, londonDayOf, londonTime, londonWeekday } from "../../time";
 
 // When Lawro's column is due: the Thursday evening before the round, or the evening before a lock
 // that falls earlier in the week. It stays open until the lock, so a skipped evening catches up.
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const MS_PER_DAY = 86_400_000;
 
 /** The London day the column files for a round locking at `locksAt`, as `YYYY-MM-DD`. */
 export function filingDay(locksAt: string): string | null {

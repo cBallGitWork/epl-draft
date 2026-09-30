@@ -6,7 +6,7 @@ import Section from "../../../components/shell/Section";
 import PositionTile from "../../../components/league/PositionTile";
 import { ROW_LINK } from "../../../components/league/TableCells";
 import { LeadHeads, sortedAs, SortHead } from "../../../components/league/TableHeads";
-import { BOARD, PINNED_NAME, PINNED_TILE, ROW_FIGURE, ROW_NAME, ROW_RULE, SMALL_CAPS } from "@/app/desk";
+import { BOARD, FIGURE_CELL, PINNED_BESIDE_TILE, PINNED_TILE, ROW_NAME, ROW_RULE, SMALL_CAPS } from "@/app/desk";
 import SubNote from "../../../prem/match/[id]/SubNote";
 import ScrollBoard from "../../../components/league/ScrollBoard";
 import { MaybeCard } from "../../../prem/match/[id]/PlayerCardButton";
@@ -137,7 +137,6 @@ function managerIndex(team: LeagueTeam): CSSProperties {
 }
 
 // The match page's club board's cells, copied rather than shared: two boards so far (`ClubStats` is the other).
-const FIGURE_CELL = `numeric px-1.5 text-center ${ROW_FIGURE}`;
 const PHONE_ROW = "max-lg:min-h-9";
-const PIN_NAME = `${PINNED_NAME} left-10 lg:left-14`;
+const PIN_NAME = `${PINNED_BESIDE_TILE}`;
 const NAME_WIDTH = "w-32 lg:w-72";

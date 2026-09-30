@@ -6,12 +6,12 @@ import Section from "../../../components/shell/Section";
 import PositionTile from "../../../components/league/PositionTile";
 import { ROW_LINK } from "../../../components/league/TableCells";
 import { LeadHeads, sortedAs, SortHead } from "../../../components/league/TableHeads";
-import { BOARD, PINNED_NAME, PINNED_TILE, ROW_FIGURE, ROW_NAME, ROW_RULE } from "@/app/desk";
+import { BOARD, FIGURE_CELL, PINNED_BESIDE_TILE, PINNED_TILE, ROW_NAME, ROW_RULE } from "@/app/desk";
 import ScrollBoard from "../../../components/league/ScrollBoard";
 import { MaybeCard } from "./PlayerCardButton";
 import SubNote from "./SubNote";
-import { COLUMNS, STANDOUT, sorted, type StatLine, type StatSort } from "./statColumns";
-import { standoutCuts, standoutInk, type StandoutCut } from "../../../components/league/standout";
+import { COLUMNS, sorted, type StatLine, type StatSort } from "./statColumns";
+import { SIDE_SHARES, standoutCuts, standoutInk, type StandoutCut } from "../../../components/league/standout";
 import { statsHref } from "./statsSort";
 import { appeared, cameOn, ordered, type Named } from "./sheetJoin";
 import { sheetName, type Match } from "./match";
@@ -73,7 +73,7 @@ export default function ClubStats({
   const cuts: StandoutCuts = new Map(
     COLUMNS.filter((column) => "rank" in column).map((column) => {
       const values = appearances.map((row) => column.of(row));
-      return [column.head, standoutCuts(values, STANDOUT, { of: appearances.length })];
+      return [column.head, standoutCuts(values, SIDE_SHARES, { of: appearances.length })];
     }),
   );
 
@@ -175,13 +175,12 @@ function StatRow({
 }
 
 /** Centred under its head, the way CM sets a column. */
-const FIGURE_CELL = `numeric px-1.5 text-center ${ROW_FIGURE}`;
 
 /** 36px under a thumb, not 44 — PRODUCT's recorded exception for the match screens. */
 const PHONE_ROW = "max-lg:min-h-9";
 
 /** The tile and the name stay put while the measures scroll under them; the name starts where `TILE_WIDTH` ends. */
-const PIN_NAME = `${PINNED_NAME} left-10 lg:left-14`;
+const PIN_NAME = `${PINNED_BESIDE_TILE}`;
 
 /** About four measures in view beside the name at 390; the sub note joins it on a desk. */
 const NAME_WIDTH = "w-32 lg:w-72";

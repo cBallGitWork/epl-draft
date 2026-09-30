@@ -153,6 +153,7 @@ export {
   hasGameweek,
   playerByCode,
   squadOf,
+  byKickoff,
 } from "./selectors";
 export type { MatchContribution } from "./selectors";
 export { availabilityOf, doubtBand, isDoubtful, onTheBooks } from "./playerState";

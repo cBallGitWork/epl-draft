@@ -5,20 +5,12 @@ import Link from "next/link";
 import type { FootballPlayer } from "@epl/core";
 import { SELECT } from "../../../../components/shell/ButtonLink";
 import { VIEWS, reading } from "./measures";
-import {
-  BOARD_FIGURE,
-  HEAD_CELL,
-  PANEL_FLUSH,
-  PINNED_NAME,
-  PINNED_TILE,
-  ROW_NAME,
-  ROW_HOVER,
-  MINOR_CAPS,
-} from "@/app/desk";
+import { PLAYER } from "../../../routes";
+import { BOARD_FIGURE, HEAD_CELL, MINOR_LABEL, PANEL_FLUSH, PINNED_BESIDE_TILE, PINNED_TILE, ROW_HOVER, ROW_NAME } from "@/app/desk";
 import { MUTE, SortArrow, HeadRow } from "../../../../components/league/TableHeads";
 import PositionTile, { TILE_WIDTH } from "../../../../components/league/PositionTile";
 import ScrollBoard from "../../../../components/league/ScrollBoard";
-import { standoutCuts, standoutInk } from "../../../../components/league/standout";
+import { SIDE_SHARES, standoutCuts, standoutInk } from "../../../../components/league/standout";
 import StateBox from "../../../../components/football/StateBox";
 import { doubtRow } from "../../../../components/football/doubtRow";
 
@@ -52,7 +44,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
   const cuts = new Map(
     measures.map((measure) => [
       measure.key,
-      standoutCuts(rows.map((row) => row.player.season[measure.key]), SHARES, { of: played }),
+      standoutCuts(rows.map((row) => row.player.season[measure.key]), SIDE_SHARES, { of: played }),
     ]),
   );
 
@@ -80,7 +72,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
       {/* CM's grey bevelled control, on its own strip above the table, which is
           where the game puts it (`21.jpg`, `25.jpg`). */}
       <div className="flex items-center gap-2 border-b border-line px-2 py-1.5">
-        <label className={`${MINOR_CAPS} text-faint`} htmlFor="club-stat-view">
+        <label className={`${MINOR_LABEL}`} htmlFor="club-stat-view">
           View
         </label>
         <select
@@ -105,7 +97,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
               <th scope="col" className={`${HEAD_CELL} ${PINNED_TILE} ${TILE_WIDTH} bg-surface`}>
                 <span className={MUTE}>Fantrax position</span>
               </th>
-              <th scope="col" className={`${HEAD_CELL} ${PINNED_NAME} left-10 lg:left-14`}>
+              <th scope="col" className={`${HEAD_CELL} ${PINNED_BESIDE_TILE}`}>
                 <span className={MUTE}>Player</span>
               </th>
               {measures.map((measure) => (
@@ -149,8 +141,8 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
             {ordered.map(({ player, positions }) => (
               <tr key={player.id} className={`cm-row ${ROW_HOVER} ${doubtRow(player)}`}>
                 <PositionTile positions={positions} cell className={PINNED_TILE} />
-                <td className={`px-1.5 ${ROW_NAME} ${PINNED_NAME} left-10 text-ink lg:left-14 ${doubtRow(player)}`}>
-                  <Link href={`/prem/player/${player.code}`} className="cm-row flex min-h-11 w-36 items-center gap-2 hover:underline lg:w-auto">
+                <td className={`px-1.5 ${ROW_NAME} ${PINNED_BESIDE_TILE} text-ink ${doubtRow(player)}`}>
+                  <Link href={`${PLAYER}/${player.code}`} className="cm-row flex min-h-11 w-36 items-center gap-2 hover:underline lg:w-auto">
                     <span className="truncate">{player.fullName}</span>
                     <StateBox player={player} />
                   </Link>
@@ -173,5 +165,3 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
   );
 }
 
-/** A column's orange for its best tenth and yellow for its top fifth, as a match board lights them. */
-const SHARES = { good: 0.2, best: 0.1 };

@@ -33,7 +33,7 @@ import { FAN_VOICE, LINE_EDIT_VOICE, PUN_VOICE, REPORTS_VOICE, WEAVE_VOICE, repo
 // The match desk's newsroom: the reporter writes the day, the editor checks every match against its facts, the fan reads
 // it back, it goes back once for what either found, each match keeps its best attempt, and the senior writer weaves it.
 
-export interface ReportsLog {
+interface ReportsLog {
   attempts: { faults: Fault[] }[];
   fan: Fault[];
   kept: Record<number, "first" | "rewrite" | "woven" | "plain">;

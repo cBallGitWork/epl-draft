@@ -39,6 +39,11 @@ export function plPlayerCodes(
   return codes;
 }
 
+/** A man's FPL code from his Premier League id, or null when the feed names nobody or the bridge cannot place him. */
+export function codeOf(codes: ReadonlyMap<number, number>, id: number | undefined): number | null {
+  return id === undefined ? null : (codes.get(id) ?? null);
+}
+
 /** One man as a team sheet names him, joined to FPL where the bridge can. */
 export interface PlSquadMan {
   /** FPL's season-stable player `code`, or null when the bridge could not place

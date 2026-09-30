@@ -4,7 +4,7 @@ import TeamBadge from "../components/league/TeamBadge";
 import { ROW_LINK } from "../components/league/TableCells";
 import { cellAlign, deskOnly } from "./Columns";
 import { yoursEdge, yoursInk } from "../mine";
-import { FIGURE, ROW_FIGURE, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
+import { FIGURE, FIGURE_CELL, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
 import Absent from "@/app/components/shell/Absent";
 import { teamHref } from "@/app/squad/routes";
 
@@ -174,7 +174,7 @@ export default function TableRow({
 
       {/* After the points, where a modern table prints it — CM's own row ends at
           Pts and has no form guide at all. */}
-      <td className={`numeric px-1.5 text-center ${ROW_FIGURE} ${deskOnly("form", sort)}`}>
+      <td className={`${FIGURE_CELL} ${deskOnly("form", sort)}`}>
         <Form run={form} />
       </td>
     </tr>

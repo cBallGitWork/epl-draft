@@ -1,4 +1,5 @@
 import type { RawPlEvent } from "./raw";
+import { clockMinute } from "./fixtureEvents";
 
 // Who went off hurt, and whether a given line says so.
 //
@@ -77,11 +78,10 @@ export function injuryMinutes(
   for (const event of events) {
     if (!saysInjury(event)) continue;
     const off = event.playerIds?.[1];
-    const label = event.time?.label;
-    if (off === undefined || label === undefined) continue;
+    const minute = clockMinute(event.time?.label);
+    if (off === undefined || minute === null) continue;
     const code = codes.get(off);
-    const minute = Number.parseInt(label, 10);
-    if (code !== undefined && !Number.isNaN(minute)) when.set(code, minute);
+    if (code !== undefined) when.set(code, minute);
   }
   return when;
 }
