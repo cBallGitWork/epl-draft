@@ -187,5 +187,5 @@ export async function squadView(slug: string, gw: string | undefined) {
   )?.points;
   const pending = owed ? owed : null;
 
-  return { team, planning, eligibility, clubs, opposition, live, news, season, points, board, names, pending, squadIds };
+  return { team, planning, open, eligibility, clubs, opposition, live, news, season, points, board, names, pending, squadIds };
 }
