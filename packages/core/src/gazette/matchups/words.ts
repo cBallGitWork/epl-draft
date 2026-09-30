@@ -17,6 +17,10 @@ export const DRAFT_SPEECH: readonly string[] = [
   "held him", "holds him", "held and", "came on", "came off",
 ];
 
+/** Who is still to play is the fixture list, never a manager's choice (Craig, 30 Sep 2026: "makes it sound like the
+ *  manager made a choice"). */
+export const DRAFT_CHOICE: readonly string[] = ["keep back", "keeps back", "kept back", "held back", "holding back", "saving", "saved for", "in reserve", "waiting for", "waiting in"];
+
 /** Why a man did not play is not in the facts: the brief says he did not, and nothing more. */
 export const DRAFT_REASONS: readonly string[] = ["left out", "absent", "missing", "dropped", "rested", "benched", "omitted", "sidelined"];
 
@@ -25,4 +29,5 @@ export const DRAFT_NEVER: readonly string[] = [
   ...REPORT_NEVER.filter((phrase) => !REPORT_CROWD.includes(phrase) || !DRAFT_FRAMES.some((frame) => phrase.includes(frame))),
   ...DRAFT_SPEECH,
   ...DRAFT_REASONS,
+  ...DRAFT_CHOICE,
 ];

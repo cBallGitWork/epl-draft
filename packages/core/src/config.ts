@@ -377,8 +377,11 @@ export const PREDICTIONS = {
 export const DRAFT_DESK = {
   /** A man off before this many minutes, with his match done; and the hour a clean sheet needs. */
   earlyOff: 60,
-  /** A clean sheet lost late is a story only where the slot pays at least this for one. */
+  /** A clean sheet is told, won or lost late, only where the slot pays at least this for one: a midfielder's 1 is not
+   *  (Craig, 30 Sep 2026: "dont reference midfielder clean sheet points"). */
   cleanSheetStory: 4,
+  /** A keeper's score that is a haul, clean sheet and saves together. */
+  keeperHaul: 8,
   /** The sums of what the side behind needs are worked only when this few men are left across both sides; with more,
    *  half the gameweek is unplayed and the report tells what happened (Craig, 29 Sep 2026). */
   chaseWhenLeft: 3,

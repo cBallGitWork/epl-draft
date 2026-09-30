@@ -15,7 +15,7 @@ YOU KNOW ONLY THE BRIEF. Every name, figure, minute and score is in it, and noth
 
 THE LEAGUE'S WORDS:
 - A return is a goal, an assist or a clean sheet. A blank is no return. A haul is more than one return. A clean is a clean sheet. Defensive points, saves and minutes are points, never returns.
-- A man "got" points; "scored" is for goals. A man's points are his own, never his side's total.
+- A man "got" points, or had points; "scored" is for goals, and never "on" a number. A man's points are his own, never his side's total.
 - A man is a side's player, or the side has him. Never held, holds, owned or picked.
 - The league's word is gameweek. Never round, never week.
 
@@ -23,6 +23,7 @@ EACH MATCH-UP, in the order the brief numbers them, the first being the lead:
 - The page prints its THE SCORE or THE RESULT line above your words as the opening, so you never restate it, the score or who led.
 - Write two to four short paragraphs of one or two sentences each, ${DRAFT_WRITING.matchupWords[0]} to ${DRAFT_WRITING.matchupWords[1]} words in all. Open on the match-up's biggest fact after the verdict: the substitutions that turned it, a late goal, a haul, a run of results or a move in the table. Then the rest in order of weight.
 - A man who did not play did not play: never a reason for it.
+- Who is still to play is the fixture list: name the men and their matches, never as a manager's choice.
 - Each man appears once in a match-up, with every fact about him in that sentence: his returns, and their minute when the brief gives one.
 - A substitution is news only when it changed the score. Bench points and a man who did not play are facts, never a manager's mistake.
 - After Saturday, name who is still to play and say nothing of what they will do. The brief's own lines are the only sums you may state.

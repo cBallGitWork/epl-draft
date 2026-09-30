@@ -47,4 +47,13 @@ describe("sideStories", () => {
     expect(sideStories(side([sub.out]), [sub], worthOf(), "gameweek", 5)).toEqual(["Dons: Vuskovic (Brighton) replaced Dunk (Brighton), who did not play, and got 6: a clean sheet"]);
     expect(sideStories(side([sub.out]), [sub], worthOf(), "saturday", 5)).toEqual(["Dons: Vuskovic (Brighton) replaces Dunk (Brighton), who did not play, with 6: a clean sheet"]);
   });
+
+  it("calls a keeper's 8 or more a haul, and leaves a midfielder's clean sheet untold", () => {
+    expect(stories(side([draftMan("Pickford", "G", 9, 90, 0, { club: "Everton", cleanSheets: 1 })]))).toEqual(["Dons: Pickford (Everton) hauled 9 in goal, a clean sheet among it"]);
+  });
+
+  it("tells a man off the bench by his appearance point, and a starter off early by his minutes", () => {
+    const lines = stories(side([draftMan("Hemmings", "M", 1, 18, 0, { club: "Aston Villa", started: false }), draftMan("Isidor", "F", 1, 22, 0, { club: "Sunderland", started: true })]));
+    expect(lines).toEqual(["Dons: Hemmings (Aston Villa) did not start and played 18 minutes off the bench, 1 point for the appearance", "Dons: Isidor (Sunderland) went off after 22 minutes"]);
+  });
 });

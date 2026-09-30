@@ -1,4 +1,5 @@
 import {
+  DRAFT_DESK,
   FANTRAX_LEAGUE_ID,
   categoryPoints,
   datedKickoffs,
@@ -13,6 +14,7 @@ import {
   leadFirst,
   getFootballSnapshot,
   londonDayOf,
+  londonWeekdayLong,
   mapBenchOrder,
   mapFixtures,
   mapLeagueInfo,
@@ -34,7 +36,7 @@ import {
 } from "@epl/core";
 import { INTEL_SEASON, readIntel } from "../intel";
 import { gatherRoundFacts } from "./facts";
-import { appearance, categoryIds, goalsByFixture, mostPaid, tallies, timeOf } from "./draftReads";
+import { appearance, categoryIds, matchReads, mostPaid, tallies, timeOf } from "./draftReads";
 import { draftSeason, gameweekFacts, meetingsOf, placeOf, ranksAfter } from "./draftSeason";
 import { minimums } from "./rosterMinimums";
 import { earlierSheets } from "./sheets";
@@ -71,7 +73,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const saturday = days.find(isSaturday) ?? days[0];
   const reads = await Promise.all(days.map(async (date) => ({ date, raw: await fetchLiveScoringDay(FANTRAX_LEAGUE_ID, period, date) })));
   const orders = new Map(await Promise.all(facts.teams.map(async (t) => [t.teamId, mapBenchOrder(await fetchTeamRosterInfo(FANTRAX_LEAGUE_ID, t.teamId, period))] as const)));
-  const goals = await goalsByFixture(gameweek, fixtures, snapshot.players);
+  const { goals, starters } = await matchReads(gameweek, fixtures, snapshot.players);
 
   const rules = info.scoring;
   const flat = (category: string, slot: string) => (rules === null ? 0 : (categoryPoints(rules, category, slot) ?? 0));
@@ -116,13 +118,15 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
       const home = coming?.homeClubId === club;
       const opponent = coming === undefined ? undefined : clubs.get(home ? coming.awayClubId : coming.homeClubId);
       const got = byMan.get(m.fantraxId);
-      const paidClean = priceOf(worth, m.slot, "clean sheet") > 0;
+      // A clean sheet counts where it is worth telling; a midfielder's single point is not.
+      const paidClean = priceOf(worth, m.slot, "clean sheet") >= DRAFT_DESK.cleanSheetStory;
       const appeared = (got?.minutes ?? 0) > 0;
       const theirGoals = done.flatMap((f) => goals.get(f.code) ?? []);
       return {
         fantraxId: m.fantraxId,
         code: m.player.code,
         clubCode: clubs.get(club)?.code ?? 0,
+        clubId: club,
         name: m.player.name,
         club: clubs.get(club)?.name ?? "?",
         slot: m.slot,
@@ -132,7 +136,8 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
         left: games.length - done.length,
         debut: (debuts(sheet, history.get(sheet.teamId) ?? []) ?? []).some((d) => d.fantraxId === m.fantraxId),
         projected: projections.get(m.player.code)?.gameweeks.find((g) => g.gw === gameweek)?.points ?? null,
-        next: opponent === undefined ? null : `${home ? "at home to" : "away to"} ${opponent.name}`,
+        next: opponent === undefined || coming === undefined ? null : { opponent: opponent.name, home, day: londonWeekdayLong(coming.kickoff!) },
+        started: appeared && done.length > 0 ? starters.has(m.player.code) : null,
         matches: games.map((f) => ({ code: f.code, label: `${clubs.get(f.homeClubId)?.name ?? "?"} v ${clubs.get(f.awayClubId)?.name ?? "?"}` })),
         // Fitness from Fantrax's own news arrives with the writer; until then no man carries any.
         fitness: null,

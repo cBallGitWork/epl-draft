@@ -11,7 +11,7 @@ const xi = (tag: string, over: Record<number, DraftMan> = {}) => ["G", "D", "D",
 const side = (name: string, total: number, eleven: DraftMan[], bench: DraftMan[] = []): DraftSide => ({ teamId: name, name, total, eleven, bench, subOrder: bench.map((m) => m.fantraxId) });
 const worth = worthOf();
 const state = matchupState(
-  { home: side("Dons", 40, xi("h", { 1: man("Blank", "D", null, 0) }), [man("Sub", "D", 3, 90)]), away: side("Notemail", 38, xi("a", { 9: man("Isak", "F", null, 0, 1, { next: "away to Bournemouth" }) })) },
+  { home: side("Dons", 40, xi("h", { 1: man("Blank", "D", null, 0) }), [man("Sub", "D", 3, 90)]), away: side("Notemail", 38, xi("a", { 9: man("Isak", "F", null, 0, 1, { next: { opponent: "Bournemouth", home: false, day: "Sunday" } }) })) },
   worth,
   LIMITS,
   "saturday",
@@ -30,7 +30,7 @@ describe("buildDraftBrief", () => {
     expect(brief).toContain("FORM AND THE TABLE:\n- Dons had won 3 in a row going into the gameweek [streak]");
     expect(brief).toContain("- Isak faced Dons, who drafted him");
     expect(brief).toContain("THE SCORE after Saturday's matches: Dons lead Notemail 40-38, 43-38 once Sub comes on.");
-    expect(brief).toContain("STILL TO PLAY:\n- Notemail have 1 still to play: Isak (EVE, away to Bournemouth)\n- Notemail need 2 returns to win it");
+    expect(brief).toContain("STILL TO PLAY:\n- Notemail have 1 still to play: Isak (EVE, away to Bournemouth on Sunday)\n- Notemail need 2 returns to win it");
     expect(brief).toContain("THE STORIES:\n- Dons: Sub (EVE) replaces Blank (EVE), who did not play, with 3 points");
     expect(brief).not.toMatch(/WORKED OUT|true as written|to draw and/u);
   });

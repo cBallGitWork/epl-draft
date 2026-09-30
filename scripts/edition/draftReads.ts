@@ -5,6 +5,7 @@ import {
   mapLivePlayerPoints,
   plFixtureCode,
   plGoals,
+  plTeamSheets,
   type Fixture,
   type GoalTime,
   type LeagueInfo,
@@ -27,11 +28,13 @@ export interface Tally {
 
 export type ClubGoal = PlGoal & { clubId: number };
 
-/** Each goal of the gameweek with its minute and the FPL club it counts for, by FPL fixture code. */
-export async function goalsByFixture(gameweek: number, fixtures: readonly Fixture[], players: readonly { code: number; optaCode: string | null }[]): Promise<Map<number, ClubGoal[]>> {
+/** Each goal of the gameweek with its minute and the FPL club it counts for, by FPL fixture code, and every man who
+ *  started a match, by FPL code, off the same team sheets. */
+export async function matchReads(gameweek: number, fixtures: readonly Fixture[], players: readonly { code: number; optaCode: string | null }[]): Promise<{ goals: Map<number, ClubGoal[]>; starters: Set<number> }> {
   const out = new Map<number, ClubGoal[]>();
+  const starters = new Set<number>();
   const page = await fetchPlRound(gameweek).catch(() => null);
-  if (page === null) return out;
+  if (page === null) return { goals: out, starters };
   const optaToCode = new Map(players.flatMap((p) => (p.optaCode === null ? [] : [[p.optaCode, p.code] as const])));
   for (const summary of page.content) {
     const code = plFixtureCode(summary);
@@ -42,8 +45,10 @@ export async function goalsByFixture(gameweek: number, fixtures: readonly Fixtur
     // The detail lists the home side first; a goal counts for the side whose team id it carries, an own goal included.
     const homeTeam = detail.teams[0]?.team.id;
     out.set(ours.code, plGoals(detail, optaToCode).map((g) => ({ ...g, clubId: String(g.teamId) === String(homeTeam) ? ours.homeClubId : ours.awayClubId })));
+    const sheets = plTeamSheets(detail, optaToCode);
+    for (const man of [...(sheets?.home.lineup ?? []), ...(sheets?.away.lineup ?? [])]) if (man.code !== null) starters.add(man.code);
   }
-  return out;
+  return { goals: out, starters };
 }
 
 export const timeOf = (g: PlGoal): GoalTime => (g.added === undefined ? { minute: g.minute } : { minute: g.minute, added: g.added });

@@ -12,9 +12,9 @@ const side = (name: string, total: number, xi: DraftMan[], bench: DraftMan[] = [
 
 describe("matchupState", () => {
   it("names the man whose goal would win it once three or fewer are left, with no figure and no sums restated", () => {
-    const state = matchupState({ home: side("Home", 40, eleven("h")), away: side("Away", 36, eleven("a", { M5: man("Salah", "M", null, 0, 1, { next: "away to Everton" }) })) }, worth, LIMITS, "saturday");
+    const state = matchupState({ home: side("Home", 40, eleven("h")), away: side("Away", 36, eleven("a", { M5: man("Salah", "M", null, 0, 1, { next: { opponent: "Everton", home: false, day: "Sunday" } }) })) }, worth, LIMITS, "saturday");
     expect(state.score).toBe("Home lead Away 40-36");
-    expect(state.stillToPlay).toEqual(["Away have 1 still to play: Salah (Club, away to Everton)", "a goal from Salah would win it"]);
+    expect(state.stillToPlay).toEqual(["Away have 1 still to play: Salah (Club, away to Everton on Sunday)", "a goal from Salah would win it"]);
   });
 
   it("works no sums while more than three are left", () => {

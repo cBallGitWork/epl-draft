@@ -29,7 +29,7 @@ export interface MatchupState {
   stories: string[];
 }
 
-const tag = (man: DraftMan) => `${man.name} (${man.club}${man.next === null ? "" : `, ${man.next}`})`;
+const tag = (man: DraftMan) => `${man.name} (${man.club}${man.next === null ? "" : `, ${man.next.home ? "at home to" : "away to"} ${man.next.opponent} on ${man.next.day}`})`;
 
 function sideState(side: DraftSide, limits: PositionLimits): SideState {
   const numbered = side.subOrder.flatMap((id) => side.bench.filter((m) => m.fantraxId === id));

@@ -37,13 +37,18 @@ function gotLine(m: DraftMan): string | null {
 /** One man's line, or null when there is nothing to say about him. */
 function manLine(m: DraftMan, side: DraftSide, worth: SlotWorth): string | null {
   const parts: string[] = [];
-  const got = gotLine(m);
+  // A keeper's big score is a haul whatever it is made of.
+  const keeper = !(worth.returns[m.slot] ?? []).some((w) => w.kind === "goal");
+  const got = keeper && (m.points ?? 0) >= DRAFT_DESK.keeperHaul ? `hauled ${m.points} in goal${m.cleanSheets > 0 ? ", a clean sheet among it" : ""}` : gotLine(m);
+  const returns = returnCount(m);
   if (got !== null) parts.push(got);
   const clean = priceOf(worth, m.slot, "clean sheet");
   const lost = m.concededFirstAt[0];
   // A clean sheet is a full hour's; a man on for less never had one to lose.
   if (lost !== undefined && late(lost) && m.cleanSheets === 0 && m.minutes >= DRAFT_DESK.earlyOff && clean >= DRAFT_DESK.cleanSheetStory) parts.push(`lost a clean sheet worth ${pts(clean)} to a goal ${whenScored(lost)}`);
-  if (m.minutes > 0 && m.minutes < DRAFT_DESK.earlyOff && m.left === 0) parts.push(`played ${m.minutes} minutes`);
+  // A man off the bench got the lesser appearance point: that is the story, not the minutes (Craig, 30 Sep 2026).
+  if (m.started === false && m.minutes > 0) parts.push(`did not start and played ${m.minutes} minutes off the bench${returns === 0 ? `, ${pts(m.points ?? 0)} for the appearance` : ""}`);
+  else if (m.minutes > 0 && m.minutes < DRAFT_DESK.earlyOff && m.left === 0) parts.push(m.started === true ? `went off after ${m.minutes} minutes` : `played ${m.minutes} minutes`);
   if (m.debut) parts.push(`was in ${side.name}'s eleven for the first time`);
   if (m.fitness !== null) parts.push(m.fitness);
   return parts.length === 0 ? null : `${named(m)} ${parts.join("; ")}`;

@@ -35,6 +35,10 @@ describe("checkDraft", () => {
     expect(checks(`${clean} "We won," said nobody.`)).toEqual(expect.arrayContaining([expect.stringMatching(/^hard: a quotation mark/), expect.stringMatching(/send-back: a phrase this paper does not print \(said\)/)]));
   });
 
+  it("sends back a still-to-play man told as a manager's choice", () => {
+    expect(checks(`${clean} test2 keep back Trafford for Sunday.`)).toEqual(expect.arrayContaining([expect.stringMatching(/keep back/)]));
+  });
+
   it("sends back a reason a man did not play, which the brief never gives", () => {
     expect(checks(`${clean} The absent Millar cost test2.`)).toEqual(expect.arrayContaining([expect.stringMatching(/absent/)]));
   });
