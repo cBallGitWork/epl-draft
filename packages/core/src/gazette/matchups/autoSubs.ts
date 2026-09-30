@@ -8,10 +8,11 @@ import type { DraftMan, PositionLimits } from "./types";
 export interface AutoSub {
   out: DraftMan;
   in: DraftMan;
-  /** True while it may not happen: the reserve has not played yet, or `ahead` may take him first. */
+  /** True when the reserve has not played yet: he comes in only if he does. */
   provisional: boolean;
-  /** A man ahead of `out` in the eleven, still to play, who takes this reserve if he does not play: the pairing holds
-   *  only if he plays (GW5: Davis for Elanga after Saturday, for Rodon at the end). Null when nobody can. */
+  /** A man ahead of `out` in the eleven, still to play, whom this reserve replaces instead if he does not play: the
+   *  reserve's points count either way, only his man may change (GW5: Davis for Elanga after Saturday, for Rodon at the
+   *  end). Null when nobody can. */
   ahead: DraftMan | null;
 }
 
@@ -37,7 +38,7 @@ export function autoSubs(eleven: readonly DraftMan[], bench: readonly DraftMan[]
     const ahead = eleven.slice(0, eleven.indexOf(out)).find((m) => m.left > 0 && m.minutes === 0 && fits(lineup, m, candidate, limits)) ?? null;
     used.add(candidate.fantraxId);
     lineup[lineup.indexOf(out)] = candidate;
-    subs.push({ out, in: candidate, provisional: candidate.minutes === 0 || ahead !== null, ahead });
+    subs.push({ out, in: candidate, provisional: candidate.minutes === 0, ahead });
   }
   return subs;
 }

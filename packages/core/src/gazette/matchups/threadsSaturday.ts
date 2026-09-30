@@ -1,9 +1,11 @@
 import { DRAFT_DESK, DRAFT_NEWS } from "../../config";
 import type { MatchupContext } from "./brief";
+import { listed } from "../../format";
 import { opposedMatches } from "./state";
 import { subLine, withClub } from "./stories";
 import { chaseLines } from "./swing";
 import { thread, type Thread } from "./thread";
+import { beatLabel, timeline } from "./timeline";
 import type { SlotWorth } from "./types";
 
 // After Saturday, with the gameweek to finish: how it stands and what keeps it open. Men still to come are the fixture
@@ -23,8 +25,13 @@ export function saturdayThreads(ctx: MatchupContext, worth: SlotWorth): Thread[]
     const doubles = s.toPlay.filter((x) => x.played + x.left > 1);
     if (doubles.length > 0) out.push(thread("double-to-come", { teamId: s.side.teamId, men: doubles, facts: doubles.map((x) => `${withClub(x)} has two matches this gameweek, ${x.left === 1 ? "one" : "both"} still to come`) }));
   }
-  if (m <= DRAFT_NEWS.closeWithin) out.push(thread("close", { teamId: margin === 0 ? null : ahead.side.teamId, bigger: m <= 1, facts: [margin === 0 ? `${home.side.name} and ${away.side.name} are level` : `${ahead.side.name} lead by ${m}`] }));
-  else out.push(thread("saturday-lead", { teamId: ahead.side.teamId, bigger: m >= DRAFT_NEWS.bigLead, facts: [`${ahead.side.name} lead by ${m}`] }));
+  // How the lead was built, stage by stage, so the writer need not invent a cause (GW5: "most of it through their keeper").
+  const leader: "home" | "away" = margin >= 0 ? "home" : "away";
+  const trailer: "home" | "away" = leader === "home" ? "away" : "home";
+  const built = timeline(ctx.state).map((b) => `${b.points[leader]}-${b.points[trailer]} ${b.day === null ? "in" : "on"} ${beatLabel(b.day)}`);
+  const how = built.length === 0 ? "" : `, ${listed(built, "and")}`;
+  if (m <= DRAFT_NEWS.closeWithin) out.push(thread("close", { teamId: margin === 0 ? null : ahead.side.teamId, bigger: m <= 1, facts: [margin === 0 ? `${home.side.name} and ${away.side.name} are level` : `${ahead.side.name} lead by ${m}${how}`] }));
+  else out.push(thread("saturday-lead", { teamId: ahead.side.teamId, bigger: m >= DRAFT_NEWS.bigLead, facts: [`${ahead.side.name} lead by ${m}${how}`] }));
   const [more, fewer] = home.toPlay.length >= away.toPlay.length ? [home, away] : [away, home];
   if (more.toPlay.length - fewer.toPlay.length >= DRAFT_NEWS.toPlayGap) {
     out.push(thread("to-play-gap", { teamId: more.side.teamId, facts: [`${more.side.name} have ${more.toPlay.length} still to play, ${fewer.side.name} ${fewer.toPlay.length}`] }));

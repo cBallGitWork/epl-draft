@@ -37,7 +37,7 @@ function castLine(ctx: MatchupContext, m: DraftMan): string {
   const next = m.left > 0 && m.next !== null ? `plays ${m.next.home ? "at home to" : "away to"} ${m.next.opponent} on ${londonWeekdayLong(m.next.kickoff)}` : null;
   const parts = [
     points,
-    sub === undefined ? null : `${sub.provisional ? "replaces" : "replaced"} ${sub.out.name}, who did not play${sub.ahead !== null ? `, if ${sub.ahead.name} plays` : sub.provisional ? ", if he plays" : ""}`,
+    sub === undefined ? null : `${sub.provisional || sub.ahead !== null ? "replaces" : "replaced"} ${sub.out.name}, who did not play${sub.provisional ? ", if he plays" : sub.ahead !== null ? `, or ${sub.ahead.name} if he does not play` : ""}`,
     // A reserve played his own match, on its own day, before the substitutions counted it: GW5 had him "yet to kick a ball".
     sub !== undefined && m.minutes > 0 ? `played ${m.minutes >= 90 ? "the whole match" : `${m.minutes} minutes`} for ${m.club}${m.byDay[0] === undefined ? "" : ` on ${beatLabel(m.byDay[0].day)}`}` : null,
     bench ? "on the bench, where his points count for nobody" : null,

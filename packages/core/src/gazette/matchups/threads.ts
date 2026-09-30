@@ -4,6 +4,7 @@ import { thread, type Thread } from "./thread";
 import { matchThreads } from "./threadsMatch";
 import { manThreads } from "./threadsMen";
 import { saturdayThreads } from "./threadsSaturday";
+import { counted } from "./state";
 import { withClub } from "./stories";
 import { beatLabel, beatOf, ledForGood, timeline, type Beat } from "./timeline";
 import type { DraftMan, SlotWorth } from "./types";
@@ -45,15 +46,17 @@ function decisiveAtEnd(ctx: MatchupContext, threads: Thread[], beats: readonly B
   return out;
 }
 
-/** After Saturday, the leader's thread about the man who did most to build the lead (+20). */
+/** After Saturday, the leader's thread about the man who did most to build the lead (+20): a man whose points are in
+ *  it, never a reserve still to play. */
 function builderAfterSaturday(ctx: MatchupContext, threads: Thread[]): Thread[] {
   const { home, away, margin } = ctx.state;
   if (margin === 0) return threads;
   const leader = margin > 0 ? home : away;
   const out = [...threads];
+  const counts = counted(leader);
   const at = out
     .map((t, i) => ({ t, i }))
-    .filter(({ t }) => t.teamId === leader.side.teamId && t.men.length > 0)
+    .filter(({ t }) => t.teamId === leader.side.teamId && t.men.length > 0 && counts.includes(t.men[0]) && t.men[0].minutes > 0)
     .sort((a, b) => (b.t.men[0].points ?? 0) - (a.t.men[0].points ?? 0) || b.t.weight - a.t.weight)[0];
   if (at !== undefined) out[at.i] = bump(at.t, DRAFT_NEWS.builder);
   return out;

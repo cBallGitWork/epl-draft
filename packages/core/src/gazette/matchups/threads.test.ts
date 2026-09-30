@@ -27,6 +27,7 @@ describe("threadsOf", () => {
     const threads = kinds(saturdayLead(), "saturday");
     expect(threads.find((t) => t.kind === "haul")).toMatchObject({ weight: 65, decisive: true });
     expect(threads.find((t) => t.kind === "subs-waiting")?.facts).toEqual(["Meunier of Sunderland replaces Millar of Hull City, who did not play, if he plays"]);
+    expect(threads.find((t) => t.kind === "saturday-lead")?.facts).toEqual(["123 lead by 10, 11-0 on Friday and 15-16 on Saturday"]);
     expect(threads.map((t) => t.kind)).not.toContain("late-decider");
   });
 
