@@ -23,7 +23,7 @@ import type { TieState } from "./tieState";
 // average positions, which is more than a column can say and all of it true
 // without a model. What the paper is about is the ten managers.
 //
-// **The kind stays in `StoryKind`, `KIND_WEIGHT` and `paperPages.ts`**, for its return as a day's
+// **The kind stays in `StoryKind` and `KIND_WEIGHT`**, for its return as a day's
 // woven report (GAZETTA); its old brief and voice are gone. Four were filed on 2 Sep and cleared 18 Sep.
 //
 // **A finished round files a report per tie, and never one about the league.**

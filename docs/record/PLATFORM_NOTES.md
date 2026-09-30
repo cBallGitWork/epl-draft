@@ -1546,14 +1546,13 @@ with the retired match-report path; the lines below that name them are history.*
   id — and not the club-code `stake.key` the `fixture:gw{gw}:{key}` subject needs;
   that key exists only as a suffix of `assignment.key` and is computed at
   `relevance.ts:81`. B5's supersession is a three-file change, not a table.
-- **A new story kind has six tables to join and only one of them fails loudly.**
+- **A new story kind has five tables to join and only one of them fails loudly.**
   `KIND_WEIGHT` (`frontPage.ts:35`) is the only total `Record<StoryKind, …>` in
   the tree and will not compile without a row. `STORY_KINDS` (`story.ts:36-40`) is
   a plain array, so omitting the kind there makes `normalizeStory` refuse every
   story of it **with a green typecheck and a green build** — which is exactly the
-  failure B7 has just swept up. `PAPER_PAGES` is not in core at all
-  (`components/gazette/paperPages.ts`, `readonly string[]`), and `KICKER`,
-  `STORY_BYLINE` and `faceOf` all take an unhandled kind silently.
+  failure B7 has just swept up. `KICKER`, `STORY_BYLINE` and `faceOf` all take
+  an unhandled kind silently.
 
 ### Counts the plan quotes that have moved or were never right
 

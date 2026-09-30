@@ -5,56 +5,21 @@ import type { Club, PublishedStory } from "@epl/core";
 import { KICKER } from "./kickers";
 import { storyHref } from "./paperPages";
 
-// A shoulder: the headline of a story at the second rank, and where to turn for
-// the article.
-//
-// **A front page prints headlines and no articles at all**, so the three ranks
-// on it are three sizes of headline: the `Splash` above, two of these, and a
-// column of `Brief`s below. A shoulder is a headline, a deck and a line saying
-// where it continues; a brief drops the deck and the dateline and keeps the
-// folio number. The page runs two of these side by side, which is why the
-// headline is set a step down from the measure it had when eight of them ran
-// stacked at full width.
-//
-// The inside pages (`/paper/reports`, `/paper/columns`) use it too, under the
-// one article each of those prints whole — which is the grammar the front page
-// had until 3 Sep and an INSIDE page keeps, because an inside page is where an
-// article goes.
-//
-// It was `Article`, and it opened in place: a `<details>` that unfolded the
-// whole column where it stood, because the Gazetta was one route and there was
-// nowhere to send a reader. That changed on 2 Sep — the paper has pages now
-// (`pages.ts`), so "read on" stops being a disclosure and becomes what a paper
-// actually prints. The name went with the behaviour: this teases, it does not
-// contain.
-//
-// Still no client component and still one tap. A `<TurnLink>` is keyboard-operable
-// and announced for free, exactly as `<details>` was.
+// A shoulder: a story at the second rank, two abreast under the `Splash` and above the `Brief`s.
+// A headline, a deck and a dateline that says "read on"; one tap to the article at `/paper/{slug}`.
 
 export default function Teaser({
   story,
   clubs,
-  pictured = false,
-  here,
+  pictured,
 }: {
   story: PublishedStory;
   /** The round's clubs, for the picture. Empty is ordinary and costs the card
    *  its kit, not its headline. */
   clubs: Map<number, Club>;
-  /** Whether this row of shoulders is running pictures.
-   *
-   *  **Twin shoulders carry pictures together or not at all**, which is why the
-   *  caller decides and not the story. One card with a band and one without
-   *  starts their two headlines at different heights, and a pair of seconds
-   *  that do not line up reads as a fault rather than as a rank — the whole
-   *  point of running them abreast is that they are equals. A kind with no man
-   *  in it (a power ranking is about ten managers) therefore stands the other
-   *  one's picture down too. The inside pages run a single column and pass
-   *  nothing, so a teaser there is text, as it was. */
-  pictured?: boolean;
-  /** The section page this teaser is standing on, so its dateline does not tell
-   *  a reader to turn to the page he is reading. */
-  here?: string;
+  /** Whether this row of shoulders runs pictures: twin shoulders carry them together or not at all,
+   *  so the caller decides and not the story. */
+  pictured: boolean;
 }) {
   const kicker = KICKER[story.kind];
 
@@ -82,7 +47,7 @@ export default function Teaser({
         {story.deck !== "" ? (
           <p className="text-sm italic leading-snug text-muted">{story.deck}</p>
         ) : null}
-        <Dateline story={story} as="span" byline={false} here={here} />
+        <Dateline story={story} as="span" byline={false} />
       </TurnLink>
     </article>
   );

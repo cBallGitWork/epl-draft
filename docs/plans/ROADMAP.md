@@ -334,6 +334,10 @@ dropped — the desk's six names still print once, in `Index`; the paper's own
 strip carries only the paper's pages; and an inside page leads with THE
 GAZETTA, never with a section name.
 
+**And cut on 30 Sep 2026** (Craig: *"the pages thing doesnt work"*): the page
+strip, every page number and "turn to page", and `/paper/reports` and
+`/paper/columns`. An article is `/paper/{slug}`, one tap from its headline.
+
 **Craig's items:** `OPENAI_API_KEY` as a repository secret (optional — without
 it every edition files exactly as it does now, with a typographic band instead
 of a drawing); sign off the persona copy in `scripts/edition/voice/bylines.ts`

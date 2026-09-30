@@ -38,8 +38,6 @@ const ROUTES = [
   "/players/projections",
   "/matchday",
   "/matchday/desk",
-  "/paper/columns",
-  "/paper/reports",
   "/prem",
   "/prem/results",
   "/prem/fixtures",

@@ -1,6 +1,5 @@
 import { clubById, londonDayAndTime } from "@epl/core";
 import { named } from "../components/gazette/named";
-import Pages from "../components/gazette/Pages";
 import Teaser from "../components/gazette/Teaser";
 import Brief from "../components/gazette/Brief";
 import Scoreboard from "../components/gazette/Scoreboard";
@@ -46,7 +45,7 @@ export default async function GazettePage() {
   // One lookup for the whole paper: the lead's cut-out and the eleven's eleven
   // all want the same clubs, keyed the way a snapshot keys them.
   const clubs = paper.snapshot ? clubById(paper.snapshot) : new Map();
-  // The same join the inside pages make, plus the one case only this page has:
+  // The same join the article page makes, plus the one case only this page has:
   // a deal whose other side is nobody — a waiver claim comes from the wire, not
   // from a manager.
   const byId = named(paper.teams);
@@ -73,14 +72,6 @@ export default async function GazettePage() {
           why both went, which is that the page below already says what they
           said. */}
       <Masthead at={paper.snapshot?.fetchedAt ?? null} />
-
-      {/* The paper's own pages, and now the only strip on the sheet. The app's
-          six sections printed here too until 16 Sep 2026 (`gazette/Index`),
-          because the rail stood down on the paper and a front page with no way
-          out is a dead end. The rail is back (Craig's ruling, `Rail.tsx`), so
-          the app's navigation is the app's again and this says only which page
-          of the PAPER you are on — which is what it always meant. */}
-      <Pages here="/" />
 
       <div className="grid gap-5 @3xl:grid-cols-[1fr_19rem] @3xl:gap-x-10">
         {/* The lead column. `--page-gutter: 0` inside it once the sidebar exists:
@@ -165,7 +156,7 @@ export default async function GazettePage() {
             </div>
           ) : null}
 
-          {/* The rest, in briefs: standing head, headline, folio number. No deck
+          {/* The rest, in briefs: thumbnail, standing head, headline. No deck
               and no dateline, which is what keeps the third rank visibly third. */}
           {briefs.length > 0 ? (
             <ul>

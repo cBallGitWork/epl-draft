@@ -1,8 +1,7 @@
 import { PAPER_CORRESPONDENT, type PublishedStory, londonDayAndTime } from "@epl/core";
-import { pageOf } from "./paperPages";
 
 // Which edition filed a story, when, and where the rest of it is: "by <name>" (a person, never the standing head),
-// the edition, the filing time, and a turn-line unless the reader is already on that page (`turn`, `here`). The
+// the edition, the filing time, and "read on" unless this is the article (`turn`). The
 // small-caps class stays written out: sixteen sites in three weights that mean three different things.
 
 export default function Dateline({
@@ -10,7 +9,6 @@ export default function Dateline({
   as = "p",
   turn = true,
   byline,
-  here,
   className = "",
 }: {
   story: PublishedStory;
@@ -20,14 +18,9 @@ export default function Dateline({
   turn?: boolean;
   /** Whether to credit the house correspondent. False on the front's ranks and over a columnist's own byline. */
   byline: boolean;
-  /** The page the reader is ON, when it is a section page. A teaser sitting on
-   *  the page it points at said "turn to page 2" to somebody already reading
-   *  page 2 — true of every teaser on both section pages. */
-  here?: string;
   className?: string;
 }) {
   const Tag = as;
-  const page = pageOf(story.kind);
   // A story always has an edition or a filing instant or neither; `Written`
   // renders nothing at all when there is no `filedAt`, and that stays true here.
   if (story.filedAt === "") return null;
@@ -38,15 +31,8 @@ export default function Dateline({
       {byline && story.kind !== "predicted-xi" ? `by ${credit(story)} · ` : ""}
       {story.edition !== "" ? `${story.edition} · ` : ""}
       Filed {londonDayAndTime(story.filedAt)}
-      {/* The affordance, in words rather than a chevron, and literally true: a
-          paper says "turn to page four" and this one can. A kind with no page of
-          its own still has an article behind it, so it says so without naming a
-          page it does not have. */}
-      {turn ? (
-        <span className="text-muted">
-          {page === null || page.href === here ? " · read on" : ` · turn to page ${page.number}`}
-        </span>
-      ) : null}
+      {/* The affordance, in words rather than a chevron. */}
+      {turn ? <span className="text-muted">{" · read on"}</span> : null}
     </Tag>
   );
 }

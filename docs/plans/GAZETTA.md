@@ -284,7 +284,7 @@ product here, so a foreign one is not a starting point.**
 |---|---|---|
 | **1c** | Tie reports that update through the day — the covered-key carries `tieState` | — |
 | **1d** | Draft pedigree as a decaying `ledger` thread, re-opened if the drafting manager bins him | — |
-| **2a** | The Premier League classified, in agate, on page 2, our men marked | — |
+| **2a** | The Premier League classified, in agate, our men marked | — |
 | **2b** | Cups and Europe in the classified | export |
 | **3a** | Player articles, triggered on an availability **transition** | — |
 | **3b** | Projections ranking, labelled `xPts (FPL)` and never beside `FPts` | export |
