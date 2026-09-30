@@ -14,6 +14,7 @@ const man = (code: number, season: Partial<SeasonTotals>): Scouted => ({
   setPieceShare: null,
   shots: null,
   touches: null,
+  stats: null,
 });
 
 const place = (ranked: ReturnType<typeof rankings>, head: string) => ranked.find((r) => r.head === head);

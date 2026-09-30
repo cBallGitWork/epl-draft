@@ -55,7 +55,7 @@ export default function Measures({
         </caption>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.name} className="border-b border-line/60 last:border-b-0">
+            <tr key={`${row.name}|${row.from}`} className="border-b border-line/60 last:border-b-0">
               <td className={`${FIGURE} pr-3 text-right ${loudness(row.a, row.b)}`}>{row.a ?? DASH}</td>
               {/* The measure's own name, and its derivation in the `title` — the
                   single grid does the same, and DESIGN §7's amendment is why it
@@ -92,20 +92,22 @@ interface Row {
 /** Every measure either man has, in the order the first one's grid gives them,
  *  with the second's own extras appended.
  *
- *  Keyed on the name because that is the only handle the two grids share — see
- *  the file header on why index would be wrong. */
+ *  Keyed on the name and what it is measured from, because that is the only handle the two grids
+ *  share (see the file header on why index would be wrong), and a keeper's Positioning is not an
+ *  outfielder's. */
 function align(a: readonly Attribute[], b: readonly Attribute[]): Row[] {
-  const second = new Map(b.map((attribute) => [attribute.name, attribute]));
+  const handle = (attribute: Attribute) => `${attribute.name}|${attribute.from}`;
+  const second = new Map(b.map((attribute) => [handle(attribute), attribute]));
   const rows: Row[] = a.map((attribute) => ({
     name: attribute.name,
     from: attribute.from,
     a: attribute.rating,
-    b: second.get(attribute.name)?.rating ?? null,
+    b: second.get(handle(attribute))?.rating ?? null,
   }));
 
-  const first = new Set(a.map((attribute) => attribute.name));
+  const first = new Set(a.map(handle));
   for (const attribute of b) {
-    if (first.has(attribute.name)) continue;
+    if (first.has(handle(attribute))) continue;
     rows.push({ name: attribute.name, from: attribute.from, a: null, b: attribute.rating });
   }
   return rows;

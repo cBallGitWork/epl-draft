@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fetchBootstrap, projectionIntel, roundPlayed, shotIntel, squadIntel, strengthIntel, touchIntel, xiFault } from "@epl/core";
-import type { IntelProjections, IntelShots, IntelSquads, IntelStrength, IntelTouches, IntelXi } from "@epl/core";
+import type { IntelProjections, IntelShots, IntelSquads, IntelStats, IntelStrength, IntelTouches, IntelXi } from "@epl/core";
 import { INTEL_ROOT } from "./paths";
 import { INTEL_SEASON } from "./intel";
 
@@ -49,6 +49,7 @@ async function main(): Promise<void> {
   checkShots();
   checkStrength();
   checkProjections();
+  checkStats();
 
   // One rolling file, the latest Scout has; its round is in the manifest.
   const xiPath = join(INTEL_ROOT, "xi", `${INTEL_SEASON}.json`);
@@ -180,6 +181,20 @@ function checkProjections(): void {
   const run = projections.manifest.gameweek;
   console.log(`\nprojections: ${players.size} players from GW${run}, exported ${age(projections.manifest.exportedAt)}`);
   builtFrom(projections.manifest);
+}
+
+/** The stats league's counts, fetched here by `npm run stats`: a warning, and a count of the men
+ *  who have played that the bridge cannot key, whose counts the file cannot hold. */
+function checkStats(): void {
+  const stats = read<IntelStats>(join(INTEL_ROOT, "stats", `${INTEL_SEASON}.json`));
+  if (stats === null) {
+    console.log("\nstats: no file — run `npm run stats`.");
+    return;
+  }
+  console.log(`\nstats: ${stats.players.length} men, ${stats.columns.length} columns, changed ${age(stats.manifest.exportedAt)}`);
+  if (stats.unbridgedWithMinutes > 0) {
+    console.log(`  ${stats.unbridgedWithMinutes} who have played are not in the bridge — run \`npm run bridge\`.`);
+  }
 }
 
 /** Whether FPL has finished the round this export predicts, or null when it will

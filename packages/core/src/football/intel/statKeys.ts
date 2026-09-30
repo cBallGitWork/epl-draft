@@ -1,0 +1,93 @@
+// The season-to-date counts we hold for a footballer, in football terms. Opta's events, read off the
+// stats league by `npm run stats`; which Fantrax column fills each key is the script's business.
+
+/** A count a rate can be taken of, or what a rate is taken over. */
+export type StatKind = "count" | "denominator";
+
+export const STAT_COLUMNS = [
+  { key: "appearances", label: "GP", kind: "denominator" },
+  { key: "starts", label: "GS", kind: "denominator" },
+  { key: "minutes", label: "Min", kind: "denominator" },
+  { key: "subbedOn", label: "SBON", kind: "count" },
+  { key: "subbedOff", label: "SBOF", kind: "count" },
+  { key: "goals", label: "Gls", kind: "count" },
+  { key: "goalsInsideBox", label: "GIB", kind: "count" },
+  { key: "goalsOutsideBox", label: "GOB", kind: "count" },
+  { key: "freeKickGoals", label: "FKG", kind: "count" },
+  { key: "penaltyGoals", label: "PKG", kind: "count" },
+  { key: "penaltiesTaken", label: "PKA", kind: "count" },
+  { key: "penaltiesMissed", label: "PKM", kind: "count" },
+  { key: "penaltiesWon", label: "PKD", kind: "count" },
+  { key: "assists", label: "Ast", kind: "count" },
+  { key: "secondAssists", label: "A2", kind: "count" },
+  { key: "fantasyAssists", label: "AF", kind: "count" },
+  { key: "totalAssists", label: "AT", kind: "count" },
+  { key: "assistsFromBlockedShots", label: "ABS", kind: "count" },
+  { key: "assistsFromFreeKickGoals", label: "AFKG", kind: "count" },
+  { key: "assistsFromHandballsWon", label: "AHW", kind: "count" },
+  { key: "assistsFromOwnGoals", label: "AOG", kind: "count" },
+  { key: "assistsFromPassesLost", label: "APL", kind: "count" },
+  { key: "assistsFromPenaltyGoals", label: "APKG", kind: "count" },
+  { key: "assistsFromRebounds", label: "AR", kind: "count" },
+  { key: "assistsFromShotsOffPost", label: "ASOP", kind: "count" },
+  { key: "keyPasses", label: "KP", kind: "count" },
+  { key: "bigChancesCreated", label: "BCC", kind: "count" },
+  { key: "bigChancesScored", label: "BCS", kind: "count" },
+  { key: "bigChancesMissed", label: "BCM", kind: "count" },
+  { key: "shots", label: "Sh", kind: "count" },
+  { key: "shotsOnTarget", label: "SOT", kind: "count" },
+  { key: "shotsOffPost", label: "SOP", kind: "count" },
+  /** His own shots that were blocked, not blocks he made. */
+  { key: "shotsBlocked", label: "SB", kind: "count" },
+  { key: "freeKickShots", label: "FKS", kind: "count" },
+  { key: "offsides", label: "Off", kind: "count" },
+  { key: "accuratePasses", label: "AP", kind: "count" },
+  { key: "finalThirdPasses", label: "SFTP", kind: "count" },
+  { key: "longBalls", label: "LB", kind: "count" },
+  { key: "accurateLongBalls", label: "LBA", kind: "count" },
+  { key: "crosses", label: "Crs", kind: "count" },
+  { key: "accurateCrosses", label: "AC", kind: "count" },
+  { key: "crossesFailed", label: "CrF", kind: "count" },
+  { key: "cornersTaken", label: "CK", kind: "count" },
+  { key: "cornersForced", label: "CoF", kind: "count" },
+  { key: "cornersConceded", label: "CC", kind: "count" },
+  { key: "contestsAttempted", label: "Drb", kind: "count" },
+  { key: "duelsWon", label: "DW", kind: "count" },
+  { key: "duelsLost", label: "DL", kind: "count" },
+  { key: "aerialsWon", label: "Aer", kind: "count" },
+  { key: "tackles", label: "Tck", kind: "count" },
+  { key: "tacklesWon", label: "TkW", kind: "count" },
+  { key: "interceptions", label: "Int", kind: "count" },
+  { key: "interceptionsInBox", label: "IntB", kind: "count" },
+  { key: "clearancesAttempted", label: "CLRA", kind: "count" },
+  { key: "clearances", label: "Clr", kind: "count" },
+  { key: "clearancesOffLine", label: "CLO", kind: "count" },
+  { key: "recoveries", label: "BR", kind: "count" },
+  /** Fantrax's TkW + Int + blocks, their definition. */
+  { key: "defensivePoints", label: "DFP", kind: "count" },
+  /** DFP with clearances and recoveries added. */
+  { key: "defensivePoints3", label: "DFP3", kind: "count" },
+  { key: "turnovers", label: "Tu", kind: "count" },
+  { key: "dispossessed", label: "Dis", kind: "count" },
+  { key: "foulsCommitted", label: "FC", kind: "count" },
+  { key: "foulsSuffered", label: "FS", kind: "count" },
+  { key: "penaltiesConceded", label: "Pen", kind: "count" },
+  { key: "errorsLeadingToShot", label: "ErS", kind: "count" },
+  { key: "errorsLeadingToGoal", label: "ErG", kind: "count" },
+  { key: "criticalErrors", label: "CE", kind: "count" },
+  { key: "ownGoals", label: "OG", kind: "count" },
+  { key: "yellowCards", label: "Yel", kind: "count" },
+  { key: "redCards", label: "Red", kind: "count" },
+  /** The club's goals while he was on; an outfielder's figure. */
+  { key: "goalsAgainstOnPitch", label: "GAO", kind: "count" },
+  /** Sixty minutes and his club conceded none all match. */
+  { key: "cleanSheets", label: "CS", kind: "count" },
+  /** Sixty minutes and none conceded while he was on. */
+  { key: "cleanSheetsOnPitch", label: "CSOP", kind: "count" },
+  /** A keeper's own: the goals conceded while he was in goal. */
+  { key: "goalsAgainst", label: "GA", kind: "count" },
+  { key: "saves", label: "Sv", kind: "count" },
+  { key: "penaltySaves", label: "PKS", kind: "count" },
+] as const satisfies readonly { key: string; label: string; kind: StatKind }[];
+
+export type StatKey = (typeof STAT_COLUMNS)[number]["key"];

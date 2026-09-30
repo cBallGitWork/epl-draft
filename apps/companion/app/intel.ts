@@ -8,6 +8,7 @@ import type {
   IntelProjections,
   IntelSetPieces,
   IntelSquads,
+  IntelStats,
   IntelShots,
   IntelStrength,
   IntelTouches,
@@ -15,10 +16,11 @@ import type {
   ClubDepth,
   ClubStrength,
   ProjectedPlayer,
+  StatsRow,
   Shot,
   TouchPlayer,
 } from "@epl/core";
-import { careerIntel, depthIntel, matchIntel, projectionIntel, shotIntel, squadIntel, strengthIntel, touchIntel } from "@epl/core";
+import { careerIntel, depthIntel, matchIntel, projectionIntel, shotIntel, squadIntel, statIntel, strengthIntel, touchIntel } from "@epl/core";
 import squadsFile from "../../../data/intel/squads/26-27.json";
 import xiFile from "../../../data/intel/xi/26-27.json";
 import piecesFile from "../../../data/intel/set-pieces/26-27.json";
@@ -29,6 +31,7 @@ import strengthFile from "../../../data/intel/strength/26-27.json";
 import projectionsFile from "../../../data/intel/projections/26-27.json";
 import careersFile from "../../../data/intel/careers/26-27.json";
 import depthFile from "../../../data/intel/depth/26-27.json";
+import statsFile from "../../../data/intel/stats/26-27.json";
 
 // Where the app supplies the sister repo's export.
 //
@@ -121,3 +124,6 @@ export const intelCareers: Map<number, Map<string, string>> = careerIntel(career
 /** Each club's depth chart by its three-letter label, and the export's manifest for its date. */
 export const intelDepth: Map<string, ClubDepth> = depthIntel(depthFile as unknown as IntelDepth);
 export const intelDepthManifest = (depthFile as unknown as IntelDepth).manifest;
+
+/** The stats league's season counts by FPL code, for every man who has played (`npm run stats`). */
+export const intelStats: Map<number, StatsRow> = statIntel(statsFile as unknown as IntelStats);

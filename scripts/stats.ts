@@ -1,0 +1,103 @@
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import {
+  KEEPER,
+  OUTFIELD,
+  columnDrift,
+  fetchPoolStats,
+  mapStatSheet,
+  type Bridge,
+  type IntelStats,
+  type StatSheet,
+} from "@epl/core";
+import { INTEL_SEASON, readIntel } from "./intel";
+import { STATS_LEAGUE } from "./leagues";
+import { INTEL_ROOT, MAPPINGS_ROOT } from "./paths";
+import { buildStats } from "./stats/build";
+
+// The stats league's season-to-date counts for every man who has played, into `data/intel/stats/`
+// (Craig, 25 Sep 2026: every category enabled at no points, so `getPlayerStats` answers them all).
+// Run daily by `ingest-stats.yml`; the file is rewritten only when a figure changed.
+//
+//   npm run stats                    # or, once the vocabulary covers a changed league:
+//   npm run stats -- --accept-drift
+//
+// Exits 1 without writing on a projection, or when the league's columns changed: a changed scoring
+// must never quietly reshape the file.
+
+const PAGE = 1000;
+
+async function main(): Promise<void> {
+  // One group after the other, never both at once: Fantrax throttles a burst.
+  const sheets: StatSheet[] = [];
+  for (const group of [OUTFIELD, KEEPER]) {
+    sheets.push(mapStatSheet(await fetchPoolStats(STATS_LEAGUE.leagueId, PAGE, undefined, group)));
+  }
+  const projected = sheets.find((sheet) => sheet.season.projected);
+  if (projected !== undefined) {
+    return refuse(`Fantrax answered "${projected.season.name}", a projection`);
+  }
+
+  const bridge = JSON.parse(readFileSync(join(MAPPINGS_ROOT, "fantrax.json"), "utf8")) as Bridge;
+  const { stats, unknown, missing } = buildStats(sheets, bridge);
+  const file = `${INTEL_SEASON}.json`;
+  const held = readIntel<IntelStats>("stats", file);
+  const drift = columnDrift(held?.columns ?? stats.columns, stats.columns);
+  const drifted = [
+    ...unknown.map((stat) => `a column we have no key for: ${named(sheets, stat)}`),
+    ...missing.map((key) => `a key no sheet carried: ${key}`),
+    ...drift.added.map((key) => `a key the held file lacks: ${key}`),
+    ...drift.removed.map((key) => `a key the held file has and this read lacks: ${key}`),
+  ];
+  if (drifted.length > 0 && !process.argv.includes("--accept-drift")) {
+    return refuse("the stats league's columns changed", drifted);
+  }
+
+  if (held !== null && figures(held) === figures(stats)) {
+    console.log(`stats: unchanged since ${held.manifest.exportedAt}.`);
+    return;
+  }
+
+  const now = new Date().toISOString();
+  const out: IntelStats = {
+    manifest: {
+      season: INTEL_SEASON,
+      gameweek: null,
+      exportedAt: now,
+      rows: stats.players.length,
+      sources: [{ path: `Fantrax getPlayerStats, the "${STATS_LEAGUE.key}" league`, mtime: null }],
+    },
+    ...stats,
+  };
+  mkdirSync(join(INTEL_ROOT, "stats"), { recursive: true });
+  writeFileSync(join(INTEL_ROOT, "stats", file), dense(out));
+  console.log(
+    `stats: ${out.players.length} men, ${out.columns.length} columns written` +
+      ` (${out.unbridgedWithMinutes} who have played the bridge cannot key).`,
+  );
+}
+
+function refuse(why: string, lines: readonly string[] = []): void {
+  console.error(`stats: ${why}; nothing written.`);
+  for (const line of lines) console.error(`  ✗ ${line}`);
+  process.exitCode = 1;
+}
+
+/** A Fantrax stat id with its short name, for a person to add to the vocabulary. */
+function named(sheets: readonly StatSheet[], stat: string): string {
+  const column = sheets.flatMap((sheet) => sheet.columns).find((entry) => entry.stat === stat);
+  return column === undefined ? stat : `${stat} (${column.short}, "${column.name}")`;
+}
+
+/** Everything but the manifest, in one order whichever way the object was built. */
+function figures(stats: Omit<IntelStats, "manifest">): string {
+  return JSON.stringify([stats.season, stats.columns, stats.players, stats.unbridged, stats.unbridgedWithMinutes]);
+}
+
+/** The file with each man on one line: a value per line would be most of it whitespace. */
+function dense({ players, ...head }: IntelStats): string {
+  const top = JSON.stringify({ ...head, players: [] }, null, 2).replace(/\[\]\n\}$/, "[");
+  return `${top}\n${players.map((player) => `    ${JSON.stringify(player)}`).join(",\n")}\n  ]\n}\n`;
+}
+
+void main();
