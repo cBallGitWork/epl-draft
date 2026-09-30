@@ -29,6 +29,7 @@ export default function FixtureRun({
           const gw = against.fixture.gameweek;
           // A double gameweek's figure is the week's, so it sits under the week's first match only.
           const repeat = gw !== null && run.slice(0, at).some((earlier) => earlier.fixture.gameweek === gw);
+          const step = fdrStep(against.difficulty);
           return (
             <li key={against.fixture.id} className="flex min-w-0 flex-1 flex-col gap-1">
               <span className="numeric text-center text-2xs text-faint">
@@ -36,10 +37,8 @@ export default function FixtureRun({
                 {gw === null ? DASH : `GW${gw}`}
               </span>
               <span
-                className={`numeric flex min-h-11 flex-col items-center justify-center px-1 text-xs font-bold leading-tight ${
-                  fdrStep(against.difficulty).ink
-                }`}
-                style={{ backgroundColor: fdrStep(against.difficulty).ground }}
+                className={`numeric flex min-h-11 flex-col items-center justify-center px-1 text-xs font-bold leading-tight ${step.ink}`}
+                style={{ backgroundColor: step.ground }}
               >
                 <span className="truncate">{against.club.shortName}</span>
                 <span className="text-2xs font-normal opacity-80">{against.home ? "H" : "A"}</span>
@@ -53,12 +52,15 @@ export default function FixtureRun({
   );
 }
 
+/** The two lines under a block. */
+const PROJECTED = "numeric flex flex-col items-center text-xs leading-tight";
+
 /** His projected points and his place, in one ink; a dash each where the model has no reading. */
 function Projected({ week, group }: { week: ProjectedWeek | undefined; group: string | null }) {
   const place = week?.place ?? null;
   if (place === null) {
     return (
-      <span className="numeric flex flex-col items-center text-xs leading-tight text-faint">
+      <span className={`${PROJECTED} text-faint`}>
         <span>{DASH}</span>
         <span>{DASH}</span>
       </span>
@@ -67,7 +69,7 @@ function Projected({ week, group }: { week: ProjectedWeek | undefined; group: st
   const ink = standoutInk(place.points, week?.cut, "high");
   return (
     <span
-      className={`numeric flex flex-col items-center text-xs leading-tight ${ink === "" ? "text-ink" : ink}`}
+      className={`${PROJECTED} ${ink === "" ? "text-ink" : ink}`}
       title={`${place.points.toFixed(1)} projected FPL points, ${ordinal(place.rank)} of ${place.of} ${group ?? "players"}`}
     >
       <span className="font-bold">{place.points.toFixed(1)}</span>
