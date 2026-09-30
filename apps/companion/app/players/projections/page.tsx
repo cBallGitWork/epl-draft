@@ -1,6 +1,6 @@
 import BoardKey from "../../components/league/BoardKey";
 import Link from "next/link";
-import { PLANNER_RUN, gameweekSpan, londonDayAndDate, plannerGameweeks } from "@epl/core";
+import { PLANNER_RUN, plannerGameweeks } from "@epl/core";
 import ScoutShell from "../Shell";
 import Nothing from "../../components/shell/Nothing";
 import QuerySelect from "../QuerySelect";
@@ -10,7 +10,7 @@ import { PAGE_ROWS, boardHref, chosen, filterHref, isChosen, playersQuery, type 
 import { getLeaguePool } from "../pool";
 import { positionLabel } from "../../positions";
 import { footballNow, seasonFixtures } from "../../football";
-import { intelProjections, intelProjectionsManifest } from "../../intel";
+import { intelProjections } from "../../intel";
 import { PROJECTIONS } from "../routes";
 import {
   PROJECTION_CATEGORIES,
@@ -72,16 +72,9 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
   const capped = query.all ? shown : shown.slice(0, PAGE_ROWS);
   const clubs = [...new Set([...intelProjections.values()].map((player) => player.club))].sort();
   const leaguePositions = "unavailable" in pool ? [] : pool.positions;
-  const window = gameweekSpan(gameweeks);
 
   return (
     <ScoutShell current="projections">
-      {/* Provenance at the point of use (DESIGN §7): these are the sister model's FPL points, not Fantrax's. */}
-      <p className="text-3xs text-faint">
-        FPL-scoring projections by the sister model, {window}, exported{" "}
-        {londonDayAndDate(intelProjectionsManifest.exportedAt)} · <span className="text-info">ours</span>
-      </p>
-
       <div className="flex flex-wrap items-center gap-1.5">
         <Chip on={positions.length === 0} href={boardHref(query, { pos: undefined }, PROJECTIONS)}>
           All

@@ -103,11 +103,10 @@ export const intelShots: Map<number, Shot[]> = shotIntel(shotsFile as unknown as
 export const intelStrength: Map<number, ClubStrength> = strengthIntel(strengthFile as unknown as IntelStrength);
 export const intelStrengthManifest = (strengthFile as unknown as IntelStrength).manifest;
 
-/** The sister model's projected FPL points by player code, and the export's manifest for its provenance line. */
+/** The sister model's projected FPL points by player code. */
 export const intelProjections: Map<number, ProjectedPlayer> = projectionIntel(
   projectionsFile as unknown as IntelProjections,
 );
-export const intelProjectionsManifest = (projectionsFile as unknown as IntelProjections).manifest;
 
 /** The club each man was at in each season the sister's identity store holds, by FPL code. */
 export const intelCareers: Map<number, Map<string, string>> = careerIntel(careersFile as unknown as IntelCareers);
