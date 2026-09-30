@@ -20,6 +20,7 @@ describe("plClubSeason", () => {
       errorsLeadingToGoal: 2,
       redCards: 1,
       cleanSheets: 1,
+      recoveries: 231,
     });
   });
 

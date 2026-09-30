@@ -39,6 +39,7 @@ export const TEAM_COLUMNS: readonly TeamColumn[] = [
   { key: "sha", group: "Defence", head: "ShA", title: "Shots conceded", of: opta("shotsConceded"), rank: "low" },
   { key: "tk", group: "Defence", head: "Tk", title: "Tackles", of: opta("tackles"), rank: "high" },
   { key: "int", group: "Defence", head: "Int", title: "Interceptions", of: opta("interceptions"), rank: "high" },
+  { key: "rec", group: "Defence", head: "Rec", title: "Ball recoveries", of: opta("recoveries"), rank: "high" },
   { key: "blk", group: "Defence", head: "Blk", title: "Shots blocked", of: opta("blocks"), rank: "high" },
   { key: "ers", group: "Errors", head: "ErS", title: "Errors leading to a shot", of: opta("errorsLeadingToShot"), rank: "low" },
   { key: "erg", group: "Errors", head: "ErG", title: "Errors leading to a goal", of: opta("errorsLeadingToGoal"), rank: "low" },

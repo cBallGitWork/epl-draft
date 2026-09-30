@@ -21,6 +21,8 @@ export interface PlClubSeason {
   shotsConceded: number;
   tackles: number;
   interceptions: number;
+  /** Loose balls won back. */
+  recoveries: number;
   /** Shots blocked by an outfielder. */
   blocks: number;
   errorsLeadingToShot: number;
@@ -54,6 +56,7 @@ export function plClubSeason(raw: RawPlTeamStats): PlClubSeason | null {
     shotsConceded: sum("attempts_conceded_ibox", "attempts_conceded_obox"),
     tackles: sum("total_tackle"),
     interceptions: sum("interception"),
+    recoveries: sum("ball_recovery"),
     blocks: sum("outfielder_block"),
     errorsLeadingToShot: sum("error_lead_to_shot"),
     errorsLeadingToGoal: sum("error_lead_to_goal"),

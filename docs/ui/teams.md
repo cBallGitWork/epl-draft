@@ -7,14 +7,14 @@ anybody's, and no fixture run: the Planner owns that.
 
 ## On the page
 
-One board, twenty clubs, twenty-one measures in five labelled groups over one sortable head strip. The place
+One board, twenty clubs, twenty-two measures in five labelled groups over one sortable head strip. The place
 and the club are pinned while the figures scroll on a phone; the desk shows everything.
 
 | Group | Heads | Whose, and how |
 |---|---|---|
 | Attack | G Sh SoT BC xG | Opta's goals, shots, on target, big chances scored or missed; FPL's squad xG |
 | Chances | A KP BCC xA | Opta's assists, key passes (passes that led to a shot), big chances created; FPL's squad xA |
-| Defence | GC xGC CS ShA Tk Int Blk | Opta's conceded, clean sheets, shots conceded, tackles, interceptions, blocks; FPL's squad xGC over eleven |
+| Defence | GC xGC CS ShA Tk Int Rec Blk | Opta's conceded, clean sheets, shots conceded, tackles, interceptions, ball recoveries, blocks; FPL's squad xGC over eleven |
 | Errors | ErS ErG | Opta's errors leading to a shot, and to a goal |
 | Discipline | Fls YC RC | Opta's fouls committed, yellow and red cards |
 
