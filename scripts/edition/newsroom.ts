@@ -9,6 +9,19 @@ import { ANTHROPIC_MESSAGES_URL, MODEL_TIMEOUT_MS, normalizeStory } from "@epl/c
 // The one API call, and the shape a filed column takes in the rolling paper.
 
 const MODEL = process.env.GAZETTA_MODEL ?? "claude-opus-4-8";
+/** The model for the calls that read rather than write: a judge, a fan's read-back, a line edit. */
+const HELPER_MODEL = process.env.GAZETTA_HELPER_MODEL ?? "claude-sonnet-5";
+
+/** What a call is for: the writer's prose, or a helper's reading of it. */
+export type Tier = "writer" | "helper";
+
+/** Tokens a call cost, the cached prefix counted apart: read from cache at a fraction of the price, or written to it. */
+export interface Usage {
+  input_tokens?: number;
+  output_tokens?: number;
+  cache_read_input_tokens?: number;
+  cache_creation_input_tokens?: number;
+}
 const MAX_TOKENS = 8000;
 
 /** One call, by fetch. No SDK: CODE_RULES §2 says no dependency a small local
@@ -16,7 +29,8 @@ const MAX_TOKENS = 8000;
 export async function writeColumn(
   system: string,
   brief: string,
-  onUsage?: (usage: { input_tokens?: number; output_tokens?: number }) => void,
+  onUsage?: (usage: Usage) => void,
+  tier: Tier = "writer",
 ): Promise<Record<string, unknown>> {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) throw new Error("ANTHROPIC_API_KEY is not set. The column is written in CI, never on Vercel.");
@@ -29,9 +43,10 @@ export async function writeColumn(
       "content-type": "application/json",
     },
     body: JSON.stringify({
-      model: MODEL,
+      model: tier === "helper" ? HELPER_MODEL : MODEL,
       max_tokens: MAX_TOKENS,
-      system,
+      // The voice is long and the same on every call of a firing, so it is cached: a repeat reads it at a fraction of the price.
+      system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
       messages: [{ role: "user", content: brief }],
     }),
     signal: AbortSignal.timeout(MODEL_TIMEOUT_MS),
@@ -41,7 +56,7 @@ export async function writeColumn(
   const body = (await response.json()) as {
     stop_reason?: string;
     content?: { type?: string; text?: string }[];
-    usage?: { input_tokens?: number; output_tokens?: number };
+    usage?: Usage;
   };
   if (body.usage !== undefined) onUsage?.(body.usage);
   // A truncated column is a JSON parse away from garbage, and the parse would
