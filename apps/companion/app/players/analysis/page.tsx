@@ -48,8 +48,8 @@ import { seasonFixtures } from "../../football";
 //
 // **Both halves are read in parallel and neither blocks the other's frame.** The
 // bar needs both men, so it waits; the grids are streamed, because each is a
-// percentile over his position group and the screen is worth showing before they
-// land.
+// percentile over every man of his role and the screen is worth showing before
+// they land.
 
 export const revalidate = 30;
 

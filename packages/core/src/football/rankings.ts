@@ -1,4 +1,4 @@
-import type { ShotLine } from "./attributes";
+import type { ShotLine } from "./shotLine";
 import type { FootballPlayer } from "./types";
 
 // Where his season totals rank among the men he is rated against (Craig, 25 Sep 2026:

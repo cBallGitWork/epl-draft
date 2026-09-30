@@ -1,4 +1,3 @@
-import type { Shot } from "./intel/shots";
 import type { LineCount, Running, PlayerLine } from "./intel/lines";
 
 // Championship Manager's attribute grid, for a real footballer.
@@ -75,20 +74,17 @@ function total(line: PlayerLine, keys: readonly LineCount[]): number | null {
   return sum;
 }
 
+/** A figure per 90 of `minutes`, or null when either is missing. */
+const rate90 = (figure: number | null, minutes: number) => (figure === null || minutes <= 0 ? null : (figure * 90) / minutes);
+
 /** Counts per 90 of his minutes. */
 const per90 =
   (...keys: LineCount[]) =>
-  (man: Scouted) => {
-    const figure = man.line === null ? null : total(man.line, keys);
-    return figure === null || man.line === null || man.line.minutes <= 0 ? null : (figure * 90) / man.line.minutes;
-  };
+  (man: Scouted) =>
+    man.line === null ? null : rate90(total(man.line, keys), man.line.minutes);
 /** FPL's figure per 90 of the minutes FPL covered. */
-const fpl90 = (key: LineCount) => (man: Scouted) => {
-  const figure = man.line?.[key] ?? null;
-  return figure === null || man.line === null || man.line.fplMinutes <= 0 ? null : (figure * 90) / man.line.fplMinutes;
-};
-const ran90 = (key: "km" | "sprints") => (man: Scouted) =>
-  man.running === null || man.running.minutes <= 0 ? null : (man.running[key] * 90) / man.running.minutes;
+const fpl90 = (key: LineCount) => (man: Scouted) => (man.line === null ? null : rate90(man.line[key], man.line.fplMinutes));
+const ran90 = (key: "km" | "sprints") => (man: Scouted) => (man.running === null ? null : rate90(man.running[key], man.running.minutes));
 
 /** The grid, alphabetical down the columns as CM 01/02 sets it. */
 const MEASURES: readonly Measure[] = [
@@ -164,45 +160,12 @@ function saveShare(man: Scouted): number | null {
 
 function positioning(man: Scouted): number | null {
   const line = man.line;
-  if (line === null || line.xgc === null || line.conceded === null || line.fplMinutes <= 0) return null;
-  return ((line.xgc - line.conceded) * 90) / line.fplMinutes;
+  if (line === null || line.xgc === null || line.conceded === null) return null;
+  return rate90(line.xgc - line.conceded, line.fplMinutes);
 }
 
 /** Minutes per start; a man who has only come off the bench is not measured. */
 function stamina(man: Scouted): number | null {
   const line = man.line;
   return line === null || line.starts <= 0 ? null : line.minutes / line.starts;
-}
-
-/** One man's season on the sister repo's shot map. */
-export interface ShotLine {
-  struck: number;
-  /** Shots he set up: Understat's last touch before somebody else's shot. */
-  created: number;
-  left: number;
-  right: number;
-}
-
-/** His line on the shot map: his own shots, and how many he set up for others. */
-export function shotLine(own: readonly Shot[], created: number): ShotLine {
-  return {
-    struck: own.length,
-    created,
-    left: own.filter((shot) => shot.bodyPart === "left-foot").length,
-    right: own.filter((shot) => shot.bodyPart === "right-foot").length,
-  };
-}
-
-/** Fewer footed shots than this say nothing about his foot. */
-const FOOTED_FLOOR = 5;
-/** A weaker foot taking this share of his footed shots makes him two-footed. */
-const EITHER = 1 / 3;
-
-/** CM's Preferred Foot, read off the feet he shoots with; null until he has shot enough. */
-export function preferredFoot(line: ShotLine | null): "Right" | "Left" | "Either" | null {
-  if (line === null) return null;
-  const footed = line.left + line.right;
-  if (footed < FOOTED_FLOOR) return null;
-  if (Math.min(line.left, line.right) / footed >= EITHER) return "Either";
-  return line.right > line.left ? "Right" : "Left";
 }
