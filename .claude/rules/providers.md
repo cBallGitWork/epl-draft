@@ -127,6 +127,11 @@ Methods that matter:
   read positionally — the inverse of the read-by-key rule the league table needs
   — and its "Games Played" counts player appearances, not rounds. PLATFORM_NOTES
   carries the probe.
+- `getPlayerStats` narrows to one scoring period with `timeframeTypeCode: "BY_PERIOD"` and
+  **`transactionPeriod`** (off the page's own URL); `period` is silently ignored. Its columns
+  are the league's scoring list, so the typed fantasy assists (`APKG AOG AFKG AHW AR ABS ASOP
+  APL`, which sum to `AF`) and `FKG` appear only in a league that lists them: the stats league
+  (`"stats"` in `data/leagues/recorded.json`). The keepers' table carries none of them. PLATFORM_NOTES, 28 Sep.
 - `getScorerDetails`, `getPlayerProfile`, `getPlayerNews`, `setPlayerNews`,
   `setPlayerNote`, `removePlayerNote` — per-player notes are writable and are the
   native home for our player metadata.

@@ -30,6 +30,8 @@ export interface PlGoal {
    *  penalty. */
   assister: number | null;
   own: boolean;
+  /** A penalty scored; absent where the source did not say. */
+  penalty?: boolean;
 }
 
 /** Every goal in the match, oldest first. */
@@ -47,10 +49,20 @@ export function plGoals(fixture: RawPlFixture, optaToCode: Map<string, number>):
       scorer: event.personId === undefined ? null : (codes.get(event.personId) ?? null),
       assister: event.assistId === undefined ? null : (codes.get(event.assistId) ?? null),
       own: event.type === OWN_GOAL,
+      penalty: event.type === PENALTY,
     });
   }
 
   return goals.sort((a, b) => a.minute - b.minute);
+}
+
+/** How many of these goals each man is already placed on as the assister. */
+export function assistsPlaced(goals: readonly PlGoal[]): Map<number, number> {
+  const placed = new Map<number, number>();
+  for (const goal of goals) {
+    if (goal.assister !== null) placed.set(goal.assister, (placed.get(goal.assister) ?? 0) + 1);
+  }
+  return placed;
 }
 
 /** One side's goals with their assisters filled in, reconciled against FPL.
@@ -68,13 +80,14 @@ export function plGoals(fixture: RawPlFixture, optaToCode: Map<string, number>):
  *  man laid on which — so neither is credited and the caller shows what it knows.
  *  A mis-paired assist is the confident wrong statement DESIGN §7 refuses.
  *
- *  **This is the SECOND thing a caller tries, since 11 Sep 2026.** Arithmetic on
+ *  **This is the LAST thing a caller tries** (`creditSide`): after the stats
+ *  league's kinds (28 Sep 2026) and the commentary (11 Sep 2026). Arithmetic on
  *  its own cannot reach the case above, and `assists.ts` can: the commentary
  *  carries the penalty won, the shot that forced an own goal and the block that
  *  left a rebound as events, so it proposes a whole assignment and has FPL's own
  *  counts confirm it. Man Utd 5-2 Ipswich is the fixture that needed it — three
  *  men each short by one against three unexplained goals, where this function
- *  correctly credits nobody. It runs when that proposal does not verify, which
+ *  correctly credits nobody. It runs on whatever the two before it left, which
  *  is exactly the ground it always covered.
  *
  *  Returns the goals unchanged apart from the assisters it could resolve, so a
@@ -86,11 +99,7 @@ export function creditedGoals(
   goals: readonly PlGoal[],
   fplAssists: ReadonlyMap<number, number>,
 ): PlGoal[] {
-  const placed = new Map<number, number>();
-  for (const goal of goals) {
-    if (goal.assister === null) continue;
-    placed.set(goal.assister, (placed.get(goal.assister) ?? 0) + 1);
-  }
+  const placed = assistsPlaced(goals);
 
   const unexplained = goals.filter((goal) => goal.assister === null);
 

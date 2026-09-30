@@ -12,6 +12,7 @@ import { matchCards, namedOn } from "./matchCards";
 import { side } from "./scoreLines";
 import type { Match } from "./match";
 import { leagueOpinions } from "../../leagueOpinions";
+import { roundAssistKinds } from "../../../assistKinds";
 import { matchGoalMinutes } from "../../../matchFeed";
 import { matchFacts, matchGoals, matchInjuries, matchManEvents, matchStreamCredits, teamSheets } from "../../../matchDetail";
 
@@ -61,7 +62,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
 async function Sheet({ match }: { match: Match }) {
   const { gameweek, code } = match.fixture;
   const players = match.snapshot.players;
-  const [owners, minutes, goals, credits, did, injured, sheets, league] = await Promise.all([
+  const [owners, minutes, goals, credits, did, injured, sheets, league, kinds] = await Promise.all([
     matchOwners(match.fixture),
     matchGoalMinutes(gameweek, code, players, goalMinutes(match.logged)),
     matchGoals(gameweek, code, players),
@@ -73,10 +74,11 @@ async function Sheet({ match }: { match: Match }) {
     teamSheets(gameweek, code, players),
     // Each named man's Fantrax id, for his card.
     leagueOpinions(),
+    roundAssistKinds(gameweek),
   ]);
   const { home, away } = sides(match);
-  const ours = side(goals, home, away, minutes, credits, injured);
-  const theirs = side(goals, away, home, minutes, credits, injured);
+  const ours = side(goals, home, away, minutes, credits, kinds, injured);
+  const theirs = side(goals, away, home, minutes, credits, kinds, injured);
 
   return (
     <Scoresheet

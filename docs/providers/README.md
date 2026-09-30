@@ -91,7 +91,7 @@ with editions in the match windows. Planned: `ingest-stats.yml` at 05:40.
 
 ## Cached reads
 
-Every provider read the app makes at request time sits in one of these 32, in 20 files.
+Every provider read the app makes at request time sits in one of these 34, in 21 files.
 `leagueCache` (`apps/companion/app/leagueCache.ts`) is `unstable_cache` keyed
 `[key, FANTRAX_LEAGUE_ID]` and tagged `key:leagueId`, 30 s unless given a window. A refusal caught
 by `orRefusal` is returned from inside the cache, so it is held for the window like an answer.
@@ -125,6 +125,8 @@ All targets are `apps/companion/app/_reads/<provider>.ts`, one leaf read each.
 | `yearToDate` | `apps/companion/app/teamStats.ts` | `fantrax-season-code` | 21600 | fxpa `getPlayerStats`, one row | `_reads/fantrax.ts` |
 | `readTeamStats` | `apps/companion/app/teamStats.ts` | `fantrax-team-stats` | 30 | fxpa `getTeamRosterInfo` | `_reads/fantrax.ts` |
 | `getPlayerStats` | `apps/companion/app/players/playerStats.ts` | `player-stats` | 30 | fxpa `getPlayerStats`, outfield and keepers | `_reads/fantrax.ts` |
+| `periodsOf` | `apps/companion/app/assistKinds.ts` | `league-periods` + league | 300 | fxea `getLeagueInfo`, its scoring periods | `_reads/fantrax.ts` |
+| `kindsOf` | `apps/companion/app/assistKinds.ts` | `assist-kinds` + league, period | 300 | fxpa `getPlayerStats`, outfield, one period | `_reads/fantrax.ts` |
 | `readPool` | `apps/companion/app/players/pool.ts` | `league-pool` | 30 | fxea `getPlayerIds`, `getLeagueInfo`, `getTeamRosters` and fxpa `getPlayerStats`, four reads | `_reads/fantrax.ts` |
 | `readDraft` | `apps/companion/app/players/[fantraxId]/draft.ts` | `draft-results` | 86400 | fxea `getDraftResults`; a draft in progress is held as `[]` | `_reads/fantrax.ts`, window in config |
 | `readProfile` | `apps/companion/app/players/[fantraxId]/subject.ts` | `player-profile` | 30 | fxpa `getPlayerProfile` | `_reads/fantrax.ts` |

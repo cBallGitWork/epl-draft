@@ -1,4 +1,5 @@
 import {
+  type AssistKinds,
   type FixtureStream,
   type FootballPlayer,
   type FootballSnapshot,
@@ -103,12 +104,14 @@ export function roundRedCards(
 }
 
 /** The round's goals with the assists FPL pays and Opta never placed (`creditRoundAssists`).
- *  Costs no request: the streams are `roundRedCards`' own. */
+ *  The streams are `roundRedCards`' own; the kinds are the stats league's (`roundAssistKinds`). */
 export function creditAssists(
   goals: readonly MatchEvent[],
   snapshot: FootballSnapshot,
   stats: readonly PlayerMatchStats[],
   streams: ReadonlyMap<number, FixtureStream>,
+  kinds: ReadonlyMap<number, AssistKinds>,
 ): MatchEvent[] {
-  return creditRoundAssists(goals, snapshot.players, snapshot.fixtures, stats, streams, playerCodes(snapshot.players));
+  const codes = playerCodes(snapshot.players);
+  return creditRoundAssists(goals, snapshot.players, snapshot.fixtures, stats, streams, codes, kinds);
 }

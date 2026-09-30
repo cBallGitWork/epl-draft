@@ -129,6 +129,7 @@ export { mapSeasonStats } from "./fantrax/seasonStats";
 export { GROUPS, categoryFor, groupFor, inGroup, isMeasure } from "./categories";
 export type { GroupKey, Measure, StatCategory } from "./categories";
 export { mapPlayerStats, KEEPER, OUTFIELD } from "./fantrax/playerStats";
+export { mapAssistKinds } from "./fantrax/assistKinds";
 export type { PlayerStatLine, PositionGroup, RawPlayerStats } from "./fantrax/playerStats";
 export { PLAYER_CATEGORIES } from "./playerCategories";
 export type { PlayerCategory } from "./playerCategories";

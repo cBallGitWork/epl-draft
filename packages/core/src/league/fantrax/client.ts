@@ -253,6 +253,8 @@ export function fetchPoolStats(
    *  records the near-miss because reading the response harder would never have
    *  found it. */
   positionOrGroup?: PositionGroup,
+  /** One scoring period's numbers: `transactionPeriod`, off the page's own URL; `period` is ignored. */
+  period?: number,
 ): Promise<RawPoolStats> {
   return fxpaRead(leagueId, "getPlayerStats", {
     statusOrTeamFilter: "ALL",
@@ -260,6 +262,7 @@ export function fetchPoolStats(
     maxResultsPerPage: String(perPage),
     ...(positionOrGroup ? { positionOrGroup } : {}),
     ...(season ? { seasonOrProjection: season } : {}),
+    ...(period === undefined ? {} : { timeframeTypeCode: "BY_PERIOD", transactionPeriod: String(period) }),
   }) as Promise<RawPoolStats>;
 }
 

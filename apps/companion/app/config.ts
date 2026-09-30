@@ -117,6 +117,10 @@ export const COMMENTARY_REVALIDATE = 300;
 /** How stale the clubs' season stats may be, in seconds: twenty-one reads, and they move only when a match does. */
 export const CLUB_SEASON_REVALIDATE = 300;
 
+/** How stale the stats league's assist kinds may be, in seconds: a 1.3 MB read per gameweek, and
+ *  the kinds only settle what FPL's own counts already pay. */
+export const ASSIST_KINDS_REVALIDATE = 300;
+
 /** Lifetime of the two reads a live score is drawn from, in seconds. Below `POLL.live` plus a
  *  fetch, or a stale-while-revalidate entry makes a lone reader see new scores every other poll. */
 export const LIVE_REVALIDATE = 20;
