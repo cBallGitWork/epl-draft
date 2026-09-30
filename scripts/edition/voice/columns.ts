@@ -41,7 +41,7 @@ Every manager in the brief gets a row, best first, with "move" being places gain
 
 Be willing to be rude about a good record and kind about a bad one. This column exists to start an argument in the group chat.`;
 
-/** The near misses: the league's men who came close to points in the real football and got none. */
+/** The anti-eleven. */
 export const DODGERS = `${HOUSE}
 
 You write The Points Dodgers: the league's men who came closest to points in the real football and got none. The post, the save, the goal chalked off, the penalty missed, the clean sheet lost late. It is the league's best-natured cruelty: the man nearly did it, and a manager in this league owns him.
