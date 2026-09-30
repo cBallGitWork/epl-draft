@@ -98,9 +98,10 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
             </section>
           ) : (
             <AttributeGrid
-              attributes={grid}
+              attributes={grid.attributes}
               words={words(football?.player ?? null, standing)}
-              group={standing?.group ?? null}
+              season={grid.season}
+              keeper={grid.keeper}
             />
           )}
         </div>

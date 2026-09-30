@@ -1,4 +1,5 @@
-import type { Scouted } from "./attributes";
+import type { ShotLine } from "./attributes";
+import type { FootballPlayer } from "./types";
 
 // Where his season totals rank among the men he is rated against (Craig, 25 Sep 2026:
 // "rankings for data such as xg"). Totals, not rates: this is the league table of a figure.
@@ -15,14 +16,20 @@ export interface Ranked {
   of: number;
 }
 
+/** A man's season as FPL counts it, and his line on the shot map. */
+export interface Tallied {
+  player: FootballPlayer;
+  shots: ShotLine | null;
+}
+
 interface Ranking {
   head: string;
   title: string;
   digits?: number;
-  of: (man: Scouted) => number | null;
+  of: (man: Tallied) => number | null;
 }
 
-const s = (man: Scouted) => man.player.season;
+const s = (man: Tallied) => man.player.season;
 
 export const OUTFIELD_RANKINGS: readonly Ranking[] = [
   { head: "Min", title: "Minutes played", of: (m) => s(m).minutes },
@@ -45,7 +52,7 @@ export const KEEPER_RANKINGS: readonly Ranking[] = [
 ];
 
 /** His place on each figure among the cohort's men who have played. Pure. */
-export function rankings(man: Scouted, cohort: readonly Scouted[], list: readonly Ranking[]): Ranked[] {
+export function rankings(man: Tallied, cohort: readonly Tallied[], list: readonly Ranking[]): Ranked[] {
   const played = cohort.filter((other) => other.player.season.minutes > 0);
   return list.map((ranking) => {
     const value = ranking.of(man);

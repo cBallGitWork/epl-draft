@@ -1,38 +1,35 @@
 import { describe, expect, it } from "vitest";
-import { attributes, preferredFoot, shotLine } from "./attributes";
+import { ATTRIBUTE_ROWS, attributes, preferredFoot, ratedLine, ratedRunning, shotLine } from "./attributes";
 import type { Scouted, ShotLine } from "./attributes";
+import { LINE_COUNTS } from "./intel/lines";
+import type { Running, PlayerLine } from "./intel/lines";
 import type { Shot } from "./intel/shots";
-import { NO_SEASON } from "./noSeason";
-import type { FootballPlayer, SeasonTotals } from "./types";
 
-const man = (name: string, season: Partial<SeasonTotals>, setPieceShare: number | null = null): Scouted => ({
-  player: {
-    id: 1,
-    code: 1,
-    name,
-    fullName: name,
-    clubId: 1,
-    status: "a",
-    news: "",
-    chanceOfPlaying: null,
-    optaCode: null,
-    birthDate: null, region: null, newsAdded: null,
-    season: { ...NO_SEASON, ...season },
-  } satisfies FootballPlayer,
-  setPieceShare,
-  penaltyShare: setPieceShare,
-  shots: null,
-  touches: null,
+const line = (over: Partial<PlayerLine> = {}): PlayerLine => ({
+  code: 1,
+  minutes: 900,
+  starts: 10,
+  fplMinutes: 900,
+  ratings: [],
+  running: null,
+  ...(Object.fromEntries(LINE_COUNTS.map((key) => [key, 0])) as Record<(typeof LINE_COUNTS)[number], number>),
+  ...over,
 });
 
-/** Ten men on a spread of tackle rates, so a percentile has something to rank
- *  against. All well past the minutes floor. */
-const league = Array.from({ length: 10 }, (_, i) =>
-  man(`p${i}`, { minutes: 900, starts: 10, tackles: i, expectedGoalsConceded: 10 }),
-);
+const man = (over: Partial<PlayerLine> = {}, rest: Partial<Scouted> = {}): Scouted => ({
+  code: 1,
+  keeper: false,
+  line: line(over),
+  running: null,
+  penaltyShare: 0,
+  setPieceShare: 0,
+  ...rest,
+});
 
-const ratingOf = (grid: ReturnType<typeof attributes>, name: string) =>
-  grid.find((a) => a.name === name)?.rating ?? null;
+/** Ten men on a spread of tackle counts, so a percentile has something to rank against. */
+const league = Array.from({ length: 10 }, (_, i) => man({ tackles: i }));
+
+const ratingOf = (grid: ReturnType<typeof attributes>, name: string) => grid.find((a) => a.name === name)?.rating ?? null;
 
 describe("attributes", () => {
   it("rates on Championship Manager's 1–20 and never outside it", () => {
@@ -52,115 +49,108 @@ describe("attributes", () => {
   });
 
   it("reaches both ends of the scale on a real-sized league", () => {
-    // The bottom is reached at any size — nobody is below the worst. The top
-    // needs a real cohort: one man in ten is a tenth of the scale short of it,
-    // and the pool this ranks against is the ~225 men past the minutes floor.
-    expect(ratingOf(attributes(league[0], league), "Tackling")).toBe(1);
-    const big = Array.from({ length: 225 }, (_, i) =>
-      man(`q${i}`, { minutes: 900, starts: 10, tackles: i, expectedGoalsConceded: 10 }),
-    );
+    const big = Array.from({ length: 225 }, (_, i) => man({ tackles: i }));
     expect(ratingOf(attributes(big[224], big), "Tackling")).toBe(20);
     expect(ratingOf(attributes(big[0], big), "Tackling")).toBe(1);
   });
 
-  it("puts a man at the bottom of a measure most of the league scores nought on", () => {
-    // The bug this replaced a midrank percentile to fix. 203 of the 225 men past
-    // the minutes floor had made no saves on 4 Sep 2026, so the midpoint of the
-    // zero block was 0.451 and every outfielder came out at Handling 10 —
-    // Maguire rated a better handler than a fifth of the goalkeepers.
-    const keeper = man("keeper", { minutes: 900, starts: 10, saves: 40, expectedGoalsConceded: 12 });
-    const outfield = Array.from({ length: 90 }, (_, i) =>
-      man(`o${i}`, { minutes: 900, starts: 10, saves: 0, expectedGoalsConceded: 10 }),
-    );
-    const cohort = [keeper, ...outfield];
-    expect(ratingOf(attributes(outfield[0], cohort), "Handling")).toBe(1);
-    expect(ratingOf(attributes(keeper, cohort), "Handling")).toBe(20);
+  it("gives men on the same figure the same rating, at the bottom of a block of noughts", () => {
+    const level = Array.from({ length: 6 }, () => man({ tackles: 0 }));
+    const grid = level.map((subject) => ratingOf(attributes(subject, level), "Tackling"));
+    expect(new Set(grid)).toEqual(new Set([1]));
   });
 
-  it("gives every attribute a provenance", () => {
-    for (const attribute of attributes(league[0], league)) {
-      expect(attribute.from).toBeTruthy();
-    }
+  it("rates per 90 of his minutes, not on his total", () => {
+    const busy = man({ minutes: 900, tackles: 20 });
+    const sharp = man({ minutes: 450, tackles: 15 });
+    const cohort = [busy, sharp, ...league];
+    expect(ratingOf(attributes(sharp, cohort), "Tackling")).toBeGreaterThan(ratingOf(attributes(busy, cohort), "Tackling") ?? 0);
   });
 
-  it("says nothing at all about a man who has not played ninety minutes", () => {
-    // A rate off forty minutes is arithmetic, not evidence. Every rating is
-    // null rather than one — an absence, not a bottom mark.
-    const fringe = man("fringe", { minutes: 40, starts: 0, tackles: 2 });
-    const grid = attributes(fringe, league);
+  it("rates FPL's figures per 90 of the minutes FPL covered", () => {
+    const covered = man({ minutes: 900, fplMinutes: 450, bps: 200 });
+    const whole = man({ minutes: 900, fplMinutes: 900, bps: 300 });
+    const cohort = [covered, whole];
+    expect(ratingOf(attributes(covered, cohort), "Determination")).toBeGreaterThan(ratingOf(attributes(whole, cohort), "Determination") ?? 0);
+  });
+
+  it("rates finishing on expected goals on target, so the striker who hits the target most rates highest", () => {
+    const striker = man({ xgot: 20 });
+    const centreHalf = man({ xgot: 1 });
+    const cohort = [striker, centreHalf, ...league];
+    expect(ratingOf(attributes(striker, cohort), "Finishing")).toBeGreaterThan(ratingOf(attributes(centreHalf, cohort), "Finishing") ?? 0);
+  });
+
+  it("rates work rate, pace and acceleration on this season's running", () => {
+    const run = (km: number, sprints: number, topSpeed: number): Running => ({ minutes: 450, km, sprints, topSpeed });
+    const runner = man({}, { running: run(55, 100, 33) });
+    const walker = man({}, { running: run(45, 60, 35) });
+    const cohort = [runner, walker];
+    expect(ratingOf(attributes(runner, cohort), "Work Rate")).toBeGreaterThan(ratingOf(attributes(walker, cohort), "Work Rate") ?? 0);
+    expect(ratingOf(attributes(walker, cohort), "Pace")).toBeGreaterThan(ratingOf(attributes(runner, cohort), "Pace") ?? 0);
+    expect(ratingOf(attributes(man(), cohort), "Work Rate")).toBeNull();
+  });
+
+  it("rates consistency on how good his bad days are, not on how much his rating swings", () => {
+    // A striker's rating swings with his goals; his worst games still count as good.
+    const striker = man({ ratings: [9.5, 8.8, 7.4, 7.2, 9.1, 7.3, 8.9, 7.5] });
+    const plodder = man({ ratings: [6.6, 6.5, 6.7, 6.6, 6.5, 6.6, 6.7, 6.5] });
+    const cohort = [striker, plodder];
+    expect(ratingOf(attributes(striker, cohort), "Consistency")).toBeGreaterThan(ratingOf(attributes(plodder, cohort), "Consistency") ?? 0);
+    expect(ratingOf(attributes(man({ ratings: [7, 7, 7] }), cohort), "Consistency")).toBeNull();
+  });
+
+  it("rates a keeper against keepers only, on a keeper's rows", () => {
+    // Handling is his save share, so a keeper behind a tight defence is not marked down for idleness.
+    const keeper = man({ saves: 60, conceded: 20 }, { keeper: true });
+    const other = man({ saves: 30, conceded: 5 }, { keeper: true });
+    const grid = attributes(keeper, [keeper, other, ...league]);
+    expect(ratingOf(grid, "Handling")).toBe(1);
+    expect(grid.map((a) => a.name)).toEqual(ATTRIBUTE_ROWS.filter((row) => row.for !== "outfield").map((row) => row.name));
+    expect(grid.some((a) => a.name === "Finishing")).toBe(false);
+    expect(attributes(league[0], league).some((a) => a.name === "Handling")).toBe(false);
+  });
+
+  it("says nothing about a man with no season to rate", () => {
+    const grid = attributes(man({}, { line: null, penaltyShare: null, setPieceShare: null }), league);
     expect(grid.every((a) => a.rating === null)).toBe(true);
     expect(grid.length).toBeGreaterThan(0);
   });
 
-  it("ranks against men who have played, not against six hundred noughts", () => {
-    // The whole pool is mostly rows of zero. If they counted, anyone who had
-    // kicked a ball would sit in the top decile of everything.
-    const bench = Array.from({ length: 200 }, (_, i) => man(`b${i}`, { minutes: 0 }));
-    const withBench = attributes(league[5], [...league, ...bench]);
-    const without = attributes(league[5], league);
-    expect(ratingOf(withBench, "Tackling")).toBe(ratingOf(without, "Tackling"));
-  });
-
-  it("gives men on the same figure the same rating", () => {
-    // Four hundred men on nought tackles must not be spread from 1 to 13 by
-    // nothing but their order in the array.
-    const level = Array.from({ length: 6 }, (_, i) => man(`level${i}`, { minutes: 900, starts: 10, tackles: 0 }));
-    const grid = level.map((subject) => ratingOf(attributes(subject, level), "Tackling"));
-    expect(new Set(grid).size).toBe(1);
-  });
-
-  it("rates a keeper's handling above an outfielder's, on one scale for both", () => {
-    const keeper = man("keeper", { minutes: 900, starts: 10, saves: 40, expectedGoalsConceded: 12 });
-    const outfielder = man("outfielder", { minutes: 900, starts: 10, saves: 0, expectedGoalsConceded: 12 });
-    const cohort = [keeper, outfielder, ...league];
-    expect(ratingOf(attributes(keeper, cohort), "Handling")).toBeGreaterThan(
-      ratingOf(attributes(outfielder, cohort), "Handling") ?? 0,
-    );
-    // An outfielder is measured and the measurement is none — a low mark, not a
-    // blank. CM has Michael Ball at Reflexes 4.
-    expect(ratingOf(attributes(outfielder, cohort), "Reflexes")).not.toBeNull();
-  });
-
-  it("rates finishing on the gap to expected goals, not on the goals", () => {
-    // A winger on five from two expected must out-rank a striker on twenty from
-    // twenty-two, or the column is just a goal count wearing another name.
-    const winger = man("winger", { minutes: 900, starts: 10, goals: 5, expectedGoals: 2 });
-    const striker = man("striker", { minutes: 900, starts: 10, goals: 20, expectedGoals: 22 });
-    const cohort = [winger, striker, ...league];
-    expect(ratingOf(attributes(winger, cohort), "Finishing")).toBeGreaterThan(
-      ratingOf(attributes(striker, cohort), "Finishing") ?? 0,
-    );
-  });
-
   it("leaves set pieces blank when the sister repo has no file for his club", () => {
-    // Null is not "takes none" — it is "we were not told", and the two must not
-    // render the same.
-    const untold = man("untold", { minutes: 900, starts: 10 }, null);
+    const untold = man({}, { setPieceShare: null });
     expect(ratingOf(attributes(untold, [untold, ...league]), "Set Pieces")).toBeNull();
   });
 
-  it("is pure — the same inputs give the same grid", () => {
+  it("gives every attribute a provenance, and is pure", () => {
+    for (const attribute of attributes(league[0], league)) expect(attribute.from).toBeTruthy();
     expect(attributes(league[3], league)).toEqual(attributes(league[3], league));
   });
 });
 
-describe("the shot map's rows", () => {
-  const line = (over: Partial<ShotLine>): ShotLine => ({
-    struck: 0, headers: 0, outsideBox: 0, created: 0, left: 0, right: 0, ...over,
-  });
-  const scouted = (name: string, shots: ShotLine | null) => ({
-    ...man(name, { minutes: 900, starts: 10 }),
-    shots,
+describe("ratedLine", () => {
+  const floors = { last: 1140, now: 150 };
+
+  it("rates on last season when he played enough of it", () => {
+    const last = line({ minutes: 2953 });
+    expect(ratedLine(last, line({ minutes: 450 }), floors)).toBe(last);
   });
 
-  it("rates heading on headed shots, and leaves it blank where the map is silent", () => {
-    const aerial = scouted("aerial", line({ headers: 6 }));
-    const grounded = scouted("grounded", line({ headers: 0 }));
-    const cohort = [aerial, grounded, ...league.map((m) => ({ ...m, shots: line({}) }))];
-    expect(ratingOf(attributes(aerial, cohort), "Heading")).toBeGreaterThan(
-      ratingOf(attributes(grounded, cohort), "Heading") ?? 0,
-    );
-    expect(ratingOf(attributes(scouted("unmapped", null), cohort), "Heading")).toBeNull();
+  it("rates a new man, or a bit-part one last season, on this season", () => {
+    const now = line({ minutes: 450 });
+    expect(ratedLine(undefined, now, floors)).toBe(now);
+    expect(ratedLine(line({ minutes: 600 }), now, floors)).toBe(now);
+  });
+
+  it("rates nobody who has played enough of neither", () => {
+    expect(ratedLine(line({ minutes: 600 }), line({ minutes: 100 }), floors)).toBeNull();
+  });
+
+  it("counts this season's running once he has run enough of it", () => {
+    const running = { minutes: 400, km: 44, sprints: 80, topSpeed: 34 };
+    expect(ratedRunning(line({ running }), floors)).toBe(running);
+    expect(ratedRunning(line({ running: { ...running, minutes: 100 } }), floors)).toBeNull();
+    expect(ratedRunning(undefined, floors)).toBeNull();
   });
 });
 
@@ -170,22 +160,14 @@ describe("shotLine", () => {
     situation: null, bodyPart: "right-foot", assistCode: null, pass: null, ...over,
   });
 
-  it("counts a shot outside the box by distance and by width", () => {
-    const line = shotLine([shot({ x: 90, y: 50 }), shot({ x: 75, y: 50 }), shot({ x: 95, y: 5 })], 0);
-    expect(line.struck).toBe(3);
-    expect(line.outsideBox).toBe(2);
-  });
-
-  it("counts headers and each foot, and carries the chances he made", () => {
-    const line = shotLine([shot({ bodyPart: "head" }), shot({ bodyPart: "left-foot" }), shot({})], 4);
-    expect(line).toMatchObject({ headers: 1, left: 1, right: 1, created: 4 });
+  it("counts his shots and each foot, and carries the chances he made", () => {
+    const counted = shotLine([shot({ bodyPart: "head" }), shot({ bodyPart: "left-foot" }), shot({})], 4);
+    expect(counted).toEqual({ struck: 3, created: 4, left: 1, right: 1 });
   });
 });
 
 describe("preferredFoot", () => {
-  const feet = (left: number, right: number): ShotLine => ({
-    struck: left + right, headers: 0, outsideBox: 0, created: 0, left, right,
-  });
+  const feet = (left: number, right: number): ShotLine => ({ struck: left + right, created: 0, left, right });
 
   it("names the foot he shoots with", () => {
     expect(preferredFoot(feet(1, 9))).toBe("Right");

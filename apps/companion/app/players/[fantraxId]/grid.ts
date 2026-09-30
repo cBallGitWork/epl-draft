@@ -1,7 +1,5 @@
 import {
-  KEEPER_ONLY,
   KEEPER_RANKINGS,
-  OUTFIELD_ONLY,
   OUTFIELD_RANKINGS,
   attributes,
   clubById,
@@ -12,13 +10,23 @@ import {
   projectedPlace,
   projectedPoints,
   rankings,
+  ratedLine,
+  ratedRunning,
   shotLine,
 } from "@epl/core";
-import type { Attribute, FootballPlayer, IntelPlayer, PastSeason, ProjectedPlace, Ranked, Scouted } from "@epl/core";
+import type { Attribute, FootballPlayer, IntelPlayer, PastSeason, ProjectedPlace, Ranked, Scouted, Tallied } from "@epl/core";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import { footballNow } from "../../football";
-import { intelProjections, intelSetPieces, intelShots, intelSquads, intelTouches } from "../../intel";
+import {
+  intelLines,
+  intelProjections,
+  intelSetPieces,
+  intelShots,
+  intelSquads,
+  lineFloors,
+  lineSeasons,
+} from "../../intel";
 import type { StandoutCut } from "../../components/league/standout";
 import { poolCut } from "../standout";
 import { PAGE_REVALIDATE } from "../../config";
@@ -27,7 +35,7 @@ import { PAGE_REVALIDATE } from "../../config";
 // position under them, and the seasons behind them. Every rating is a percentile, so this needs
 // the division in hand; it is the snapshot every other screen keeps warm.
 
-/** The sister's position lines, gathered into the groups a man is rated within. */
+/** The sister's position lines, gathered into the groups his Rankings and projections sit within. */
 const GROUP: Readonly<Record<string, string>> = {
   GK: "goalkeepers",
   CB: "defenders",
@@ -45,8 +53,10 @@ function groupOf(code: number): string | null {
   return line ? (GROUP[line] ?? null) : null;
 }
 
-/** Every man on the books, with the sister's readings attached. Once per request. */
-const division = cache(async (): Promise<Scouted[]> => {
+const isKeeper = (code: number) => intelSquads.get(code)?.line === "GK";
+
+/** Every man on the books, as the grid rates him and as his Rankings count him. Once per request. */
+const division = cache(async (): Promise<{ rated: Scouted[]; tallied: Tallied[] }> => {
   const snapshot = await footballNow();
   const clubs = clubById(snapshot);
   const created = new Map<number, number>();
@@ -55,43 +65,67 @@ const division = cache(async (): Promise<Scouted[]> => {
       if (shot.assistCode !== null) created.set(shot.assistCode, (created.get(shot.assistCode) ?? 0) + 1);
     }
   }
-  return snapshot.players.filter(onTheBooks).map((player) => {
-    const pieces = intelSetPieces.clubs[clubs.get(player.clubId)?.shortName ?? ""];
-    const share = (duties: readonly ({ code: number; share: number }[] | undefined)[]) =>
-      pieces === undefined
-        ? null
-        : duties.flatMap((duty) => duty ?? []).reduce((sum, taker) => sum + (taker.code === player.code ? taker.share : 0), 0);
-    const touches = intelTouches.get(player.code);
-    return {
+  const players = snapshot.players.filter(onTheBooks);
+  return {
+    rated: players.map((player) => {
+      const pieces = intelSetPieces.clubs[clubs.get(player.clubId)?.shortName ?? ""];
+      const share = (duties: readonly ({ code: number; share: number }[] | undefined)[]) =>
+        pieces === undefined
+          ? null
+          : duties.flatMap((duty) => duty ?? []).reduce((sum, taker) => sum + (taker.code === player.code ? taker.share : 0), 0);
+      const now = intelLines.now.get(player.code);
+      return {
+        code: player.code,
+        keeper: isKeeper(player.code),
+        line: ratedLine(intelLines.last.get(player.code), now, lineFloors),
+        running: ratedRunning(now, lineFloors),
+        penaltyShare: share([pieces?.penalties]),
+        setPieceShare: share([pieces?.freeKicks, pieces?.corners]),
+      };
+    }),
+    tallied: players.map((player) => ({
       player,
-      penaltyShare: share([pieces?.penalties]),
-      setPieceShare: share([pieces?.freeKicks, pieces?.corners]),
       shots: intelShots.size === 0 ? null : shotLine(intelShots.get(player.code) ?? [], created.get(player.code) ?? 0),
-      touches: touches === undefined ? null : touches.fixtures.reduce((sum, fixture) => sum + fixture.p.length / 2, 0),
-    };
-  });
+    })),
+  };
 });
 
-/** Him, and who he is measured against: his group, or the whole division when he has none. */
+/** Him, and his position group: the men his Rankings and projections are placed among. */
 async function measured(player: FootballPlayer) {
-  const everyone = await division();
+  const { tallied } = await division();
   const group = groupOf(player.code);
-  const man = everyone.find((other) => other.player.code === player.code) ?? {
-    player,
-    penaltyShare: null,
-    setPieceShare: null,
-    shots: null,
-    touches: null,
-  };
-  const cohort = group === null ? everyone : everyone.filter((other) => groupOf(other.player.code) === group);
-  return { man, cohort, group, keeper: intelSquads.get(player.code)?.line === "GK" };
+  const man = tallied.find((other) => other.player.code === player.code) ?? { player, shots: null };
+  const cohort = group === null ? tallied : tallied.filter((other) => groupOf(other.player.code) === group);
+  return { man, cohort, group, keeper: isKeeper(player.code) };
 }
 
-/** His grid, rated within his group; a keeper's rows for a keeper and an outfielder's for the rest. */
-export async function playerGrid(player: FootballPlayer): Promise<Attribute[]> {
-  const { man, cohort, keeper } = await measured(player);
-  const skip = keeper ? OUTFIELD_ONLY : KEEPER_ONLY;
-  return attributes(man, cohort).filter((row) => !skip.includes(row.name));
+/** His grid, and which season it is rated on; null when he has played enough of neither. */
+export interface RatedGrid {
+  attributes: Attribute[];
+  season: string | null;
+  keeper: boolean;
+}
+
+/** His grid, rated against every man of his role: keepers against keepers, the rest against outfielders. */
+export async function playerGrid(player: FootballPlayer): Promise<RatedGrid> {
+  const { rated } = await division();
+  const keeper = isKeeper(player.code);
+  const man = rated.find((other) => other.code === player.code) ?? {
+    code: player.code,
+    keeper,
+    line: null,
+    running: null,
+    penaltyShare: null,
+    setPieceShare: null,
+  };
+  const season = man.line === null ? null : man.line === intelLines.last.get(player.code) ? lineSeasons.last : lineSeasons.now;
+  return { attributes: attributes(man, rated), season, keeper };
+}
+
+/** Every rated man's grid by FPL code, for ranking the pool by an attribute. */
+export async function divisionGrids(): Promise<Map<number, Attribute[]>> {
+  const { rated } = await division();
+  return new Map(rated.filter((man) => man.line !== null || man.running !== null).map((man) => [man.code, attributes(man, rated)]));
 }
 
 /** His season totals ranked within his group, the group's name, and whether he is a keeper. */

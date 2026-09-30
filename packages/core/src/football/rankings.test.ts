@@ -1,19 +1,16 @@
 import { describe, expect, it } from "vitest";
-import type { Scouted } from "./attributes";
 import { NO_SEASON } from "./noSeason";
 import { KEEPER_RANKINGS, OUTFIELD_RANKINGS, rankings } from "./rankings";
+import type { Tallied } from "./rankings";
 import type { SeasonTotals } from "./types";
 
-const man = (code: number, season: Partial<SeasonTotals>): Scouted => ({
+const man = (code: number, season: Partial<SeasonTotals>): Tallied => ({
   player: {
     id: code, code, name: `p${code}`, fullName: `p${code}`, clubId: 1, status: "a", news: "",
     chanceOfPlaying: null, optaCode: null, birthDate: null, region: null, newsAdded: null,
     season: { ...NO_SEASON, ...season },
   },
-  penaltyShare: null,
-  setPieceShare: null,
   shots: null,
-  touches: null,
 });
 
 const place = (ranked: ReturnType<typeof rankings>, head: string) => ranked.find((r) => r.head === head);
