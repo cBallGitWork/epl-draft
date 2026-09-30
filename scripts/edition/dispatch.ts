@@ -45,8 +45,6 @@ export interface DeskContext {
   sheets: SheetsDesk | null;
   /** Each match-day report this firing commissioned, by its London day. */
   reports: ReadonlyMap<string, ReportsJob>;
-  /** The gameweek's near misses by the league's men; null unless the Points Dodgers are due this firing. */
-  dodgers: readonly Dodger[] | null;
   /** This week's press-conference signals, for men the league holds. Empty until
    *  the intel export lands, which files no Team Sheet and spends nothing. */
   presserLines: PresserLine[];
@@ -65,6 +63,8 @@ export interface DeskContext {
   /** The predicted elevens, composed from facts rather than written — the one
    *  column with no voice and no brief. Null when it is not this firing's. */
   elevens: Record<string, unknown> | null;
+  /** The gameweek's near misses by the league's men; null unless the Points Dodgers are due this firing. */
+  dodgers: readonly Dodger[] | null;
 }
 
 /** One edition of the Team Sheet — the day's conferences, and nothing else.

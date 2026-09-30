@@ -47,7 +47,6 @@ export async function deskContext(input: {
     sheets: await sheetsDesk({ assignments, info, snapshot, facts, period, gameweeks, season, clubs, now, say }),
     // A match-day report's reads are its own, made only when one is assigned.
     reports: await reportsDesk({ assignments, snapshot, facts, gameweeks, say }),
-    dodgers: await dodgersDesk({ assignments, snapshot, facts, info, say }),
     presserLines: sheet.lines,
     presserQuotes: sheet.quotes,
     presserTies: sheet.ties,
@@ -66,5 +65,7 @@ export async function deskContext(input: {
             players: snapshot.players,
             season,
           }),
+    // The Points Dodgers read every finished match's commentary, only when the column is due.
+    dodgers: await dodgersDesk({ assignments, snapshot, facts, info, say }),
   };
 }
