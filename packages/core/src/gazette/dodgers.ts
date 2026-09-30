@@ -4,8 +4,8 @@ import type { Fixture, PlayerMatchStats } from "../football/types";
 import { isResolved, type ResolvedPlayer, type RosteredTeam } from "../join/roster";
 import { CLEAN_SHEET, categoryPoints, type ScoringRules } from "../league/scoring";
 
-// The Points Dodgers: the league's men who came closest to points in the real football and got none.
-// Nearness ranks them and is never printed; the brief prints only what happened (Craig, 30 Sep 2026).
+// The Points Dodgers: the league's men who came closest to points in the real football and did not get them.
+// Goals, assists and clean sheets are dodged one by one, so a scorer can still dodge an assist (Craig, 30 Sep 2026).
 
 /** A moment he nearly returned, at the clock as printed. */
 export interface NearMiss {
@@ -21,6 +21,10 @@ export interface Dodger {
   ownerTeamId: string;
   ownerName: string;
   minutes: number;
+  /** What he did get, which the column must not deny. */
+  goals: number;
+  assists: number;
+  cleanSheet: boolean;
   misses: NearMiss[];
   shots: number;
   onTarget: number;
@@ -28,7 +32,9 @@ export interface Dodger {
   inBox: number;
   close: number;
   chancesMade: number;
-  /** Expected goals and assists plus each miss's weight; orders the column, never printed. */
+  /** Shots he set up from inside the box. */
+  chancesInBox: number;
+  /** Expected goals and assists he did not turn into points, plus each miss's weight; orders the column, never printed. */
   nearness: number;
 }
 
@@ -58,7 +64,7 @@ export function dodgers(input: {
     for (const rostered of team.players) {
       if (!isResolved(rostered) || rostered.slot.position === null) continue;
       const dodger = dodgerOf(rostered, rostered.slot.position, team, byFixture, input);
-      if (dodger !== null && dodger.nearness >= DODGERS.from) found.push(dodger);
+      if (dodger !== null && dodger.nearness >= DODGERS.from.goal) found.push(dodger);
     }
   }
   return found.sort((a, b) => b.nearness - a.nearness).slice(0, DODGERS.shown);
@@ -74,11 +80,14 @@ function dodgerOf(
   const played = rostered.stats.filter((stat) => stat.minutes > 0);
   if (played.length === 0) return null;
   const pays = input.scoring !== null && (categoryPoints(input.scoring, CLEAN_SHEET, position) ?? 0) > 0;
-  // Any return is points: he is not a dodger, whatever else he missed.
-  if (played.some((stat) => stat.goals > 0 || stat.assists > 0 || (pays && stat.cleanSheet))) return null;
+  const goals = sum(played, (stat) => stat.goals);
+  const assists = sum(played, (stat) => stat.assists);
+  const cleanSheet = pays && played.some((stat) => stat.cleanSheet);
 
   const code = rostered.player.code;
   const clubId = rostered.player.clubId;
+  // An assist side at its bar weighs what a goal side at its bar does.
+  const assistScale = DODGERS.from.goal / DODGERS.from.assist;
   const dodger: Dodger = {
     playerName: rostered.player.name,
     playerCode: code,
@@ -87,13 +96,19 @@ function dodgerOf(
     ownerTeamId: team.teamId,
     ownerName: team.teamName,
     minutes: sum(played, (stat) => stat.minutes),
+    goals,
+    assists,
+    cleanSheet,
     misses: [],
     shots: 0,
     onTarget: 0,
     inBox: 0,
     close: 0,
     chancesMade: 0,
-    nearness: sum(played, (stat) => stat.expectedGoals + stat.expectedAssists),
+    chancesInBox: 0,
+    nearness:
+      (goals === 0 ? sum(played, (stat) => stat.expectedGoals) : 0) +
+      (assists === 0 ? sum(played, (stat) => stat.expectedAssists) * assistScale : 0),
   };
 
   for (const stat of played) {
@@ -101,7 +116,7 @@ function dodgerOf(
     if (match === undefined) continue;
     for (const moment of match.moments) {
       const [man, other] = moment.men;
-      if (man === code && OWN_MISSES.has(moment.kind)) miss(dodger, moment.kind as NearMiss["kind"], moment.minute);
+      if (goals === 0 && man === code && OWN_MISSES.has(moment.kind)) miss(dodger, moment.kind as NearMiss["kind"], moment.minute);
       if (man === code && SHOTS.has(moment.kind)) {
         dodger.shots += 1;
         if (ON_TARGET.has(moment.kind)) dodger.onTarget += 1;
@@ -110,18 +125,22 @@ function dodgerOf(
       }
       if (other === code && SHOTS.has(moment.kind) && moment.shot?.situation !== "penalty") {
         dodger.chancesMade += 1;
-        if (moment.kind === "woodwork") miss(dodger, "set-up-woodwork", moment.minute);
+        if (IN_BOX.has(moment.shot?.from ?? "")) dodger.chancesInBox += 1;
+        if (assists === 0 && moment.kind === "woodwork") miss(dodger, "set-up-woodwork", moment.minute, assistScale);
       }
     }
-    const lost = pays ? lateGoalAgainst(match, clubId, stat, input.clubOfCode) : null;
+    const lost = pays && !cleanSheet ? lateGoalAgainst(match, clubId, stat, input.clubOfCode) : null;
     if (lost !== null) miss(dodger, "clean-sheet-lost", lost);
   }
   return dodger;
 }
 
-function miss(dodger: Dodger, kind: NearMiss["kind"], minute: string): void {
+function miss(dodger: Dodger, kind: NearMiss["kind"], clock: string, scale = 1): void {
+  // Opta files a VAR-cancelled goal twice at one minute, and pads a single-figure clock ("07").
+  const minute = clock.replace(/^0+(?=\d)/, "");
+  if (dodger.misses.some((each) => each.kind === kind && each.minute === minute)) return;
   dodger.misses.push({ kind, minute });
-  dodger.nearness += DODGERS.weight[kind];
+  dodger.nearness += DODGERS.weight[kind] * scale;
 }
 
 /** The minute of the one goal his side let in, when it came late and he was on for it; else null. */

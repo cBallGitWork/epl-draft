@@ -22,8 +22,8 @@ export function buildDodgersBrief(brief: {
   const men = brief.dodgers.map((man) => `- ${man.playerName} (${man.position}), owned by ${man.ownerName}: ${nearly(man)}`);
 
   return [
-    `THE POINTS DODGERS, gameweek ${brief.gameweek}. The league's men who came closest to points in the real football and got none: no goal, no assist, no clean sheet. The post, the save, the goal chalked off, the clean sheet lost late. Name the man, name whose he is, and enjoy it.`,
-    ["THE NEAR MISSES. Every one of these men blanked; a minute is the match clock:", ...men].join("\n"),
+    `THE POINTS DODGERS, gameweek ${brief.gameweek}. The league's men who came closest to points in the real football and did not get them: the post, the save, the goal chalked off, the chances a teammate wasted, the clean sheet lost late. Name the man, name whose he is, and enjoy it.`,
+    ["THE NEAR MISSES. A minute is the match clock. Where a man did get other points, his line says so: never deny them.", ...men].join("\n"),
     "Two or three short paragraphs. Never say what any of them would have scored, never add a chance you were not given, and never tell anybody what to do next week.",
     storylinesBlock(brief.threads),
   ]
@@ -36,12 +36,17 @@ function nearly(man: Dodger): string {
     const at = man.misses.filter((miss) => miss.kind === kind).map((miss) => `${miss.minute} min`);
     return at.length === 0 ? [] : [`${MISSED[kind]} (${at.join(", ")})`];
   });
-  if (man.shots > 0) {
+  if (man.goals === 0 && man.shots > 0) {
     const close = man.close > 0 ? `, ${man.close} of them from close range` : "";
     const box = man.inBox > 0 ? `, ${man.inBox} from inside the box${close}` : "";
-    parts.push(`${count(man.shots, "shot")}${box}, ${man.onTarget} on target`);
+    parts.push(`${count(man.shots, "shot")}${box}, ${man.onTarget} on target, no goal`);
   }
-  if (man.chancesMade > 0) parts.push(`made ${count(man.chancesMade, "chance")} for others`);
+  if (man.assists === 0 && man.chancesMade > 0) {
+    const box = man.chancesInBox > 0 ? `, ${man.chancesInBox} from inside the box` : "";
+    parts.push(`set up ${count(man.chancesMade, "shot")} for others${box}, no assist`);
+  }
+  const got = [man.goals > 0 ? count(man.goals, "goal") : "", man.assists > 0 ? count(man.assists, "assist") : "", man.cleanSheet ? "a clean sheet" : ""].filter(Boolean);
+  if (got.length > 0) parts.push(`he did get ${got.join(" and ")}`);
   return `${parts.join("; ")}; ${man.minutes} min played`;
 }
 

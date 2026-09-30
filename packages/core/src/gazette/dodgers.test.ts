@@ -48,15 +48,27 @@ describe("dodgers", () => {
     expect(found.map((d) => [d.playerName, d.misses, d.shots])).toEqual([["Man1", [{ kind: "woodwork", minute: "34" }], 1]]);
   });
 
-  it("leaves out a man who returned, however much he missed", () => {
-    const woodwork = match(moment("woodwork", "34", 1), moment("woodwork", "40", 2));
-    expect(run(teams(man(1, "F", { goals: 1 }), man(2, "F", { assists: 1 })), woodwork)).toEqual([]);
+  it("leaves out a man who got every kind of points he nearly got", () => {
+    const woodwork = match(moment("woodwork", "34", 1));
+    expect(run(teams(man(1, "F", { goals: 1, expectedGoals: 2 })), woodwork)).toEqual([]);
   });
 
-  it("counts a clean sheet as points only where the league pays one", () => {
+  it("names a man with high expected assists and no assist, though he scored", () => {
+    const found = run(teams(man(1, "M", { goals: 1, expectedGoals: 2, expectedAssists: DODGERS.from.assist })), match(moment("woodwork", "10", 1)));
+    expect(found[0]).toMatchObject({ goals: 1, assists: 0, misses: [] });
+    expect(found[0].nearness).toBeCloseTo(DODGERS.from.goal);
+  });
+
+  it("keeps a scorer's shots off his near misses and an assister's chances off his", () => {
+    const found = run(teams(man(1, "F", { assists: 1, expectedGoals: 0.2, expectedAssists: 3 })), match(moment("woodwork", "34", 1), moment("woodwork", "50", 2, 1)));
+    expect(found[0].misses).toEqual([{ kind: "woodwork", minute: "34" }]);
+    expect(found[0].nearness).toBeCloseTo(0.2 + DODGERS.weight.woodwork);
+  });
+
+  it("counts a clean sheet as points only where the league pays one, and never as a goal", () => {
     const woodwork = match(moment("woodwork", "34", 1), moment("woodwork", "40", 2));
     const found = run(teams(man(1, "D", { cleanSheet: true, expectedGoals: 0.2 }), man(2, "F", { cleanSheet: true, expectedGoals: 0.2 })), woodwork);
-    expect(found.map((d) => d.playerName)).toEqual(["Man2"]);
+    expect(found.map((d) => [d.playerName, d.cleanSheet])).toEqual([["Man1", true], ["Man2", false]]);
   });
 
   it("names a defender whose only goal against came late, with its minute", () => {
@@ -71,14 +83,19 @@ describe("dodgers", () => {
     expect(run(teams(man(1, "D")), match(moment("goal", "60", 50), moment("goal", "88", 50)))).toEqual([]);
   });
 
+  it("counts a goal Opta cancelled twice at one minute once, and drops its clock's padding", () => {
+    const found = run(teams(man(1, "D", { cleanSheet: true })), match(moment("ruled-out", "07", 1), moment("ruled-out", "07", 1)));
+    expect(found[0].misses).toEqual([{ kind: "ruled-out", minute: "7" }]);
+  });
+
   it("reads an own goal as one against the scorer's own side", () => {
     const found = run(teams(man(1, "G")), match(moment("own-goal", "90+2", 2)));
     expect(found[0].misses).toEqual([{ kind: "clean-sheet-lost", minute: "90+2" }]);
   });
 
   it("credits the maker of a shot off the woodwork, and never a penalty as a chance made", () => {
-    const found = run(teams(man(1, "M", { expectedAssists: 0.3 })), match(moment("woodwork", "12", 50, 1), moment("penalty-missed", "70", 50, 1)));
-    expect(found[0]).toMatchObject({ chancesMade: 1, misses: [{ kind: "set-up-woodwork", minute: "12" }] });
+    const found = run(teams(man(1, "M", { expectedAssists: 0.3 })), match(moment("woodwork", "12", 50, 1, "from inside the box"), moment("penalty-missed", "70", 50, 1)));
+    expect(found[0]).toMatchObject({ chancesMade: 1, chancesInBox: 1, misses: [{ kind: "set-up-woodwork", minute: "12" }] });
   });
 
   it("counts a goal ruled out, a penalty missed and close-range shots", () => {
@@ -91,7 +108,8 @@ describe("dodgers", () => {
   });
 
   it("leaves out a man who was never near enough", () => {
-    expect(run(teams(man(1, "F", { expectedGoals: DODGERS.from / 2 })), match(moment("missed", "10", 1)))).toEqual([]);
+    const quiet = man(1, "F", { expectedGoals: DODGERS.from.goal / 2, expectedAssists: DODGERS.from.assist / 4 });
+    expect(run(teams(quiet), match(moment("missed", "10", 1)))).toEqual([]);
   });
 
   it("names the nearest first and stays a column", () => {

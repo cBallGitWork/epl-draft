@@ -401,9 +401,10 @@ export const SHEETS = {
 
 /** The Points Dodgers: men who came close to points and got none (Craig, 30 Sep 2026). */
 export const DODGERS = {
-  /** Men the column names, and how near a man must come (expected goals and assists plus the weights below). */
+  /** Men the column names, and how near a man must come: expected goals, or expected assists (Craig: "players with
+   *  high xa and no assist points"), plus the weights below. An assist side is scaled to the goal bar. */
   shown: 5,
-  from: 0.6,
+  from: { goal: 0.6, assist: 0.4 },
   /** A goal against from this minute is the one that took a clean sheet late. */
   lateGoal: 80,
   /** What each moment adds to his nearness; a shot's own expected goals already counts once. */

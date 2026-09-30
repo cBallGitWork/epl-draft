@@ -60,13 +60,17 @@ capture season-specific tradeoffs.
 
 - Craig: *"points dodgers are players IRL who came close to points but didnt get any, not players on the bench"*.
   The column had named five men who returned while benched; that is now nobody's column.
-- **A dodger** is a league-owned man with no goal, no assist and no clean sheet his slot pays for, who came near
-  one: a goal ruled out, a penalty missed or saved, the woodwork (his shot or one he set up), his side's only goal
-  against from `DODGERS.lateGoal`, or chances worth `DODGERS.from` together. Benched or not is never said.
+- **Each kind of points is dodged on its own** (Craig: *"players with high xa and no assist points"*): a man
+  with no goal who came near one (a goal ruled out, a penalty missed or saved, the woodwork, expected goals), with
+  no assist who came near one (expected assists, a shot he set up hitting the woodwork), or with no clean sheet his
+  slot pays for whose side's only goal against came from `DODGERS.lateGoal`. A scorer can dodge an assist, and the
+  brief says what he did get so the column never denies it. An assist side is scaled to the goal bar
+  (`DODGERS.from`: 0.6 goals, 0.4 assists). Benched or not is never said.
 - **Expected goals and assists order the column and never print**; the brief carries Opta's countable facts, the
-  moments' minutes (the one column given them), and shots from inside the box and close range.
-- GW5 (rehearsal league) named Wissa's saved penalty, Castagne and Leno's 89th-minute goal against, Gonzalo's
-  three shots in the box and Fernandes off the post; GW4, Le Fée's saved penalty and two 90th-minute goals against.
+  moments' minutes (the one column given them), and shots taken and set up from inside the box and close range.
+- Star test, rehearsal league: GW3 Calafiori, Ødegaard (scored, 4 shots set up, no assist), Bobb, Ballard, Cherki;
+  GW4 Le Fée's saved penalty, Justin, Ndoye, Ampadu, Trafford; GW5 Wissa's saved penalty, Gonzalo, Saka,
+  Fernandes off the post, Cunha (scored, set up a shot against the woodwork).
 
 ## Opta's commentary describes every shot, and says what VAR decided — probed 28 Sep 2026
 
