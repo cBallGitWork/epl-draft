@@ -48,7 +48,8 @@ capture season-specific tradeoffs.
 
 - **Counted**: the sister export projects **666 of 666** players for **each of GW6–17** (12 weeks); Fantrax's
   own per-player projection covers one period and only the men fielded (`ACTIVE`), behind the lineup gate, and
-  its reader was deleted on 25 Sep. So the run reads the export, in FPL scoring, and says so beside the heading.
+  its reader was deleted on 25 Sep. So the run reads the export, in FPL scoring; the panel carries no source caption, and each figure's title
+  says whose it is.
 - **The rank is among his grid's group** (the sister's line: 108 midfielders, 23 goalkeepers), the men with a
   reading that week, ties sharing a place (`projectedPlace` in core); lit on the pool board's shares (`poolCut`).
 - **Mail's frame and row are shared at two, by Craig's asking** ("use the mail template more"), a recorded

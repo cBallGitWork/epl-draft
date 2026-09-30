@@ -59,7 +59,8 @@ derived the same four from the same object.
 4. **The run to come**, the next eight across the row, in FPL's difficulty, and under each
    gameweek the sister model's projected FPL points and his place among his group's (Craig,
    30 Sep 2026: "maybe add projections here (and a ranking?)"), lit on the pool board's
-   standout rule; a week the model has not read is a dash. *Fantrax's projection for the
+   standout rule; a week the model has not read is a dash. No source caption on the panel
+   ("FPL's own · Fantrax's own remove"); each figure's title names the model and the group. *Fantrax's projection for the
    round was here and is gone* (25 Sep: "remove row"): it covered one period and only the men
    fielded, so it could not fill a run; the round just gone went on 4 Sep.
 5. **Season** — the same Total and Per 90 rows Data opens with. CM puts the

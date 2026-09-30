@@ -6,7 +6,8 @@ import { DASH, ordinal } from "@epl/core";
 import type { ProjectedWeek } from "./grid";
 
 // What is coming, as a run: FPL's difficulty on each block, and under it the sister model's projected FPL points
-// for that gameweek and his place in his group, lit on the pool board's standout rule.
+// for that gameweek and his place in his group, lit on the pool board's standout rule. No source caption
+// (Craig, 30 Sep 2026); each figure's title says whose it is.
 
 export default function FixtureRun({
   run,
@@ -23,7 +24,7 @@ export default function FixtureRun({
   if (run.length === 0) return null;
 
   return (
-    <Section title="Next up" aside="FPL's difficulty · our projected FPL points">
+    <Section title="Next up">
       <ol className="flex items-stretch gap-1">
         {run.map((against, at) => {
           const gw = against.fixture.gameweek;
@@ -70,7 +71,7 @@ function Projected({ week, group }: { week: ProjectedWeek | undefined; group: st
   return (
     <span
       className={`${PROJECTED} ${ink === "" ? "text-ink" : ink}`}
-      title={`${place.points.toFixed(1)} projected FPL points, ${ordinal(place.rank)} of ${place.of} ${group ?? "players"}`}
+      title={`Our model projects ${place.points.toFixed(1)} FPL points, ${ordinal(place.rank)} of ${place.of} ${group ?? "players"}`}
     >
       <span className="font-bold">{place.points.toFixed(1)}</span>
       <span>{ordinal(place.rank)}</span>
