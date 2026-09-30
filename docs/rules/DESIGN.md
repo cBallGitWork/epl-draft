@@ -406,8 +406,11 @@ alike — so no new colour family enters the app. The lightnesses run 0.66 · 0.
 
 **It never replaces the word.** `StateBox` still prints `Inj` · `Sus` · `Unav` ·
 `Dbt` beside the name in a list, because the colour says how likely and only the
-box says why. On the pitch there is no room for a box and the plate takes the
-colour instead; the list carries both, and a wash rather than a fill — 16% of the
+box says why. The pitch carries both too since 30 Sep 2026 (Craig: *"put an INJ OR
+DBT chip right after the player name"*): the plate takes the colour and the box
+rides after the surname, tightened so SEMENYO and his box share a 73px plate at
+390; on the plate the box keeps its own ground (`desk.css`). The list carries both
+as a wash rather than a fill — 16% of the
 colour into the row's own ground — because the row's own ink runs down to
 `--color-faint`, which is already 4.6:1 on `--raised`.
 
@@ -897,8 +900,9 @@ Recorded so the next agent does not read the absence as an oversight.
   the one live exception under the scale: `PitchRows.NAME_SIZE` was a container
   clamp bottoming at 7px inside the plate, and the points, chips and fixture
   under it were three more. All five are now declared steps — `--text-2xs` for
-  the name, `--text-xs` for the figure, `--text-3xs` for the fixture and the
-  chips — so **`--text-3xs` is a floor on the pitch and not merely the last step
+  the name, `--text-xs` for the figure and (since 30 Sep 2026, *"fixture in pitch
+  view still hard to read"*) the fixture, `--text-3xs` for a caller's own band
+  word and the chips — so **`--text-3xs` is a floor on the pitch and not merely the last step
   down**. The rule that got there is *the card shrinks, the type never does*: a
   crowded line gives up card width and truncates the name rather than shrinking
   it, because there is nothing smaller worth saying — FPL publishes

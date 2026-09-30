@@ -10,6 +10,7 @@ import {
   kickedOff,
   DASH,
 } from "@epl/core";
+import StateBox from "../football/StateBox";
 import EmptySlot from "./EmptySlot";
 import PlayerImage from "./PlayerImage";
 import PlayerShirt from "./PlayerShirt";
@@ -102,14 +103,18 @@ export default function PitchMarker({
             : ({ "--cm-face": DOUBT_GROUND[doubt] } as CSSProperties)
         }
       >
-        <span className="w-full truncate">{name}</span>
+        {/* Why he may miss, right after the surname: the name truncates, the box never does. */}
+        <span className="flex min-w-0 max-w-full items-center gap-px">
+          <span className="min-w-0 truncate">{name}</span>
+          <StateBox player={player} />
+        </span>
       </span>
 
       {/* Absent rather than empty when the caller has nothing to say here. */}
       {line === "" ? null : (
         <span
-          // A score is set a step above a fixture's letters: it is the number the screen was opened for.
-          className={`numeric ${show === "points" && band === undefined ? "text-xs" : "text-3xs"} ${PITCH_BAND}`}
+          // A score or a fixture is read at arm's length; a caller's own word is a label and stays small.
+          className={`numeric ${band === undefined ? "text-xs" : "text-3xs"} ${PITCH_BAND}`}
           style={{ background: "var(--color-bg)", color: "var(--color-cream)" }}
         >
           <span className="w-full truncate">{line}</span>

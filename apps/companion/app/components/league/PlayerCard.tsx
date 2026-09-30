@@ -1,6 +1,14 @@
 "use client";
 
-import { type SquadPlayerDetail, isDoubtful, isResolved, fullPlayerName } from "@epl/core";
+import { useEffect, useState } from "react";
+import {
+  type SquadPlayerDetail,
+  isDoubtful,
+  isResolved,
+  fullPlayerName,
+  londonDayAndDate,
+  londonTime,
+} from "@epl/core";
 import DialogFoot from "../shell/DialogFoot";
 import DialogHead from "../shell/DialogHead";
 import Modal from "../shell/Modal";
@@ -8,7 +16,9 @@ import Note from "./Note";
 import PlayerIdentity from "./PlayerIdentity";
 import { unresolvedReason } from "../../unresolved";
 import { playerHref } from "../../players/routes";
-import { SMALL_CAPS } from "@/app/desk";
+import { latestNews } from "../../players/[fantraxId]/latestNews";
+import { noteBody, type NewsItem } from "../../players/[fantraxId]/newsItems";
+import { LABEL, QUIET_FIGURE, SMALL_CAPS } from "@/app/desk";
 
 // One player, over the squad rather than instead of it.
 //
@@ -37,6 +47,19 @@ export default function PlayerCard({
   onClose: () => void;
 }) {
   const footballer = isResolved(rostered) ? rostered.player : null;
+  const fantraxId = rostered.slot.fantraxId;
+  // His newest Fantrax note, read on open. A read that fails costs the card the block, as on his News tab.
+  const [story, setStory] = useState<NewsItem | null>(null);
+  useEffect(() => {
+    let open = true;
+    latestNews(fantraxId).then(
+      (item) => open && setStory(item),
+      () => undefined,
+    );
+    return () => {
+      open = false;
+    };
+  }, [fantraxId]);
 
   return (
     <Modal onClose={onClose} width="24rem">
@@ -62,13 +85,38 @@ export default function PlayerCard({
           </div>
         ) : null}
 
+        {story ? <Story story={story} /> : null}
+
         {isResolved(rostered) ? null : <Note>{unresolvedReason(rostered.unresolved)}</Note>}
 
         <DialogFoot
-          href={playerHref(rostered.slot.fantraxId)}
+          href={playerHref(fantraxId)}
           onClose={onClose}
         />
       </div>
     </Modal>
+  );
+}
+
+/** Fantrax's newest note on him, whole and dated: the headline, the rest of the story, the analysis. */
+function Story({ story }: { story: NewsItem }) {
+  const at = story.at === null ? null : new Date(story.at).toISOString();
+  return (
+    <section className="cm-panel flex flex-col gap-1.5 px-3 py-2">
+      <p className="flex items-baseline justify-between gap-2">
+        <span className={LABEL}>News</span>
+        {at === null ? null : (
+          <span className={QUIET_FIGURE}>
+            {londonDayAndDate(at)} {londonTime(at)}
+          </span>
+        )}
+      </p>
+      <p className="text-sm font-bold leading-snug text-ink">{story.headline}</p>
+      {noteBody(story).map((paragraph) => (
+        <p key={paragraph} className="text-sm leading-snug text-ink">
+          {paragraph}
+        </p>
+      ))}
+    </section>
   );
 }

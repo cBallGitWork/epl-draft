@@ -102,13 +102,11 @@ export default function SquadRow({
           every other name in a list. The `flex-` is the caller's, because what
           gives way when the fixed columns outgrow the row is this screen's
           decision and not the recipe's. */}
-      <span className={`min-w-0 flex-[1_1_5rem] truncate ${ROW_NAME}`}>
-        {fullPlayerName(player.rostered)}
+      {/* Why he is not playing, right after his name (Craig, 30 Sep 2026); silent for a fit man. */}
+      <span className="flex min-w-0 flex-[1_1_5rem] items-center gap-1.5">
+        <span className={`min-w-0 truncate ${ROW_NAME}`}>{fullPlayerName(player.rostered)}</span>
+        <StateBox player={footballer} />
       </span>
-
-      {/* Why he is not playing, in the place CM put it: beside the name, before
-          anything numeric. Silent for a fit man. */}
-      <StateBox player={footballer} />
 
       {/* His club's fixture this week. Craig asked for it and the reference does
           not forbid it: `12.jpg` carries no opponent because it is a TRAINING

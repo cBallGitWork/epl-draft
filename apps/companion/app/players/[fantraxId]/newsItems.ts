@@ -47,6 +47,12 @@ export function inbox(stories: readonly PlayerStory[]): NewsItem[] {
     .sort((a, b) => (b.at ?? -Infinity) - (a.at ?? -Infinity));
 }
 
+/** The note after its headline, as paragraphs: the rest of the story, then the provider's analysis. */
+export function noteBody(item: NewsItem): string[] {
+  const rest = item.body.startsWith(item.headline) ? item.body.slice(item.headline.length).trim() : item.body;
+  return [rest, item.analysis].filter((part): part is string => part !== null && part.trim() !== "");
+}
+
 /** Fantrax's headline, or the story's whole first sentence where they cut it at "...". */
 function whole(headline: string, content: string): string {
   const cut = headline.trim().replace(/(\.\.\.|…)$/, "").trim();

@@ -181,8 +181,9 @@ no longer describes this one.
   whose names had shrunk were the ones you could no longer scan. Craig's call,
   22 Aug, reversing the earlier one.
 - **And the card shrinks, not the type.** That one size is `--text-2xs`, 11px, a
-  declared step — the figure under it is `--text-xs` and the fixture and the
-  chips are `--text-3xs`. It used to be `clamp(7px, 13cqw, 11px)`, a share of the
+  declared step — the figure and the fixture under it are `--text-xs` (the fixture
+  was `--text-3xs` until 30 Sep 2026, cream on the page ground at 15.5:1 and still
+  unreadable at arm's length at 9px), and the chips are `--text-3xs`. It used to be `clamp(7px, 13cqw, 11px)`, a share of the
   card, which is the inversion that made this screen Craig's least favourite in
   the app: a line of seven took its width out of the name and printed it at seven
   pixels. Nothing in the clamp was reachable — an 11px name needed an 84.6px card
