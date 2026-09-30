@@ -27,11 +27,11 @@ describe("buildDraftBrief", () => {
 
   it("tells how it unfolded a day at a time, returns without their points, and marks no day as optional", () => {
     expect(end).toContain("HOW IT UNFOLDED, in order:\n- Friday: test2 0, 123 11, making it 11-0 to 123");
-    expect(end).toContain("- Sunday: test2 18, 123 12, making it 38-34 to 123; returns: 123's Haaland of Man City (a goal in the 81st minute)");
+    expect(end).toContain("- Sunday: test2 18, 123 12, making it 38-34 to 123, the gap down from 10 to 4; returns: 123's Haaland of Man City (a goal in the 81st minute)");
     expect(end).toContain("- Friday: test2 0, 123 11, making it 11-0 to 123; no returns, the points all for minutes and defensive work\n");
-    expect(end).toContain("- The automatic substitutions: test2 3, 123 0, making it 38-37 to 123; no returns, the points all for minutes and defensive work");
+    expect(end).toContain("- The automatic substitutions: test2 3, 123 0, making it 38-37 to 123, the gap down from 4 to 1; no returns, the points all for minutes and defensive work");
     expect(end).not.toMatch(/left out/u);
-    expect(end).toContain("- The automatic substitutions: test4 2, test3 9, making it 33-28 to test3; returns: test3's Vuskovic of Tottenham (a clean sheet)");
+    expect(end).toContain("- The automatic substitutions: test4 2, test3 9, making it 33-28 to test3, the lead passing from test4 to test3; returns: test3's Vuskovic of Tottenham (a clean sheet)");
   });
 
   it("names every return in a day with its side, and never its points", () => {
@@ -64,7 +64,7 @@ describe("buildDraftBrief", () => {
     const angle = pickAngle(ctx, threadsOf(ctx, "gameweek", worthOf(), 5), [{ kind: "late-decider", family: "decider", teamIds: ["123", "test9"], cast: ["Haaland"] }]);
     const next = { home: { name: "test3", rank: 1 }, away: { name: "test4", rank: null } };
     const brief = buildDraftBrief("gameweek", 5, [{ ...ctx, angle, next }]);
-    expect(brief).toContain("NEXT GAMEWEEK, for a last line that looks out:\n- test2 play test3, 1st after this gameweek\n- 123 play test4");
+    expect(brief).toContain("NEXT GAMEWEEK, for a last line that looks out:\n- test2 play test3, who are 1st after this gameweek\n- 123 play test4");
     expect(brief).toContain("LAST TIME, not to be told the same way again:\n- 123: a late decider, told through Haaland");
   });
 });

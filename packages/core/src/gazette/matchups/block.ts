@@ -54,12 +54,26 @@ function castLine(ctx: MatchupContext, m: DraftMan): string {
   return `- ${whose}${withClub(m)}${day}: ${parts.filter((p) => p !== null).join("; ")}`;
 }
 
-/** A beat in a line: each side's points, the running score after it, and every return in it by name, without points. A
- *  reserve's return is told in the automatic substitutions, where it counted, never on the day he played. */
-function beatLine(ctx: MatchupContext, b: Beat): string {
+/** What a beat did to the gap, said outright: GW5's writers had a gap that fell from 11 to 10 "widened", and "nearly
+ *  levelled". */
+function moved(ctx: MatchupContext, before: { home: number; away: number }, b: Beat): string {
+  const leader = (s: { home: number; away: number }) => (s.home > s.away ? ctx.state.home.side.name : s.home < s.away ? ctx.state.away.side.name : null);
+  const [was, now] = [Math.abs(before.home - before.away), Math.abs(b.score.home - b.score.away)];
+  const [then, lead] = [leader(before), leader(b.score)];
+  if (lead === null) return then === null ? "still level" : "level again";
+  if (then === null) return "";
+  if (then !== lead) return `the lead passing from ${then} to ${lead}`;
+  return now === was ? `the gap unchanged at ${now}` : `the gap ${now > was ? "up" : "down"} from ${was} to ${now}`;
+}
+
+/** A beat in a line: each side's points, the running score after it and what that did to the gap, and every return in
+ *  it by name, without points. A reserve's return is told in the automatic substitutions, where it counted, never on
+ *  the day he played. */
+function beatLine(ctx: MatchupContext, b: Beat, before: { home: number; away: number }): string {
   const { home, away } = ctx.state;
   const [h, a] = [b.score.home, b.score.away];
-  const score = h === a ? `level at ${h}-${a}` : `${Math.max(h, a)}-${Math.min(h, a)} to ${h > a ? home.side.name : away.side.name}`;
+  const change = moved(ctx, before, b);
+  const score = `${h === a ? `level at ${h}-${a}` : `${Math.max(h, a)}-${Math.min(h, a)} to ${h > a ? home.side.name : away.side.name}`}${change === "" ? "" : `, ${change}`}`;
   const scored = b.returns.map((r) => {
     const goals = r.man.scoredAt.filter((t) => b.day === null || londonDayOf(t.kickoff) === b.day);
     return `${possessive(ctx.state[r.side].side.name)} ${withClub(r.man)} (${returnWords({ goals: r.goals, assists: r.assists, cleanSheets: r.cleanSheets, scoredAt: goals })})`;
@@ -107,7 +121,8 @@ function toCome(ctx: MatchupContext, cast: ReadonlySet<DraftMan>): string[] {
 
 /** Where each side goes next, for a last line that looks out; nothing after Saturday, with the gameweek unfinished. */
 function nextLines(ctx: MatchupContext): string[] {
-  const line = (name: string, next: NextOpponent | null) => (next === null ? [] : [`- ${name} play ${next.name}${next.rank === null ? "" : `, ${ordinal(next.rank)} after this gameweek`}`]);
+  // The rank is the opponent's, said so: GW5's writer read "test3 play test2, 3rd" as test3's place.
+  const line = (name: string, next: NextOpponent | null) => (next === null ? [] : [`- ${name} play ${next.name}${next.rank === null ? "" : `, who are ${ordinal(next.rank)} after this gameweek`}`]);
   return [...line(ctx.state.home.side.name, ctx.next.home), ...line(ctx.state.away.side.name, ctx.next.away)];
 }
 
@@ -132,7 +147,7 @@ export function matchupBlock(ctx: MatchupContext, cutoff: Cutoff, n: number): st
     angle === null ? "THE STORY: the result alone." : `THE STORY, which your first sentence tells: ${told(ctx, angle.story)}`,
     angle?.twist == null ? null : `THE TWIST, told in its beat: ${told(ctx, angle.twist)}`,
     block("THE CAST, each man's points given once:", [...cast].map((m) => castLine(ctx, m))),
-    block(saturday ? "HOW IT STANDS, in order:" : "HOW IT UNFOLDED, in order:", timeline(ctx.state).map((b) => beatLine(ctx, b))),
+    block(saturday ? "HOW IT STANDS, in order:" : "HOW IT UNFOLDED, in order:", timeline(ctx.state).map((b, i, all) => beatLine(ctx, b, all[i - 1]?.score ?? { home: 0, away: 0 }))),
     saturday ? block("STILL TO COME, the fixtures only:", toCome(ctx, cast)) : null,
     block("THREADS, each told in its beat:", (angle?.supporting ?? []).filter((t) => t.scope !== "season").map(line)),
     // The bracketed kind tells the writer which frame a fact takes; it is never printed.

@@ -32,7 +32,10 @@ export const DRAFT_REASONS: readonly string[] = ["left out", "absent", "missing"
 export const DRAFT_LABELS: readonly string[] = ["the twist", "the cast", "may be left out", "champion", "champions", "title holders", "the holders"];
 
 /** A minute belongs to its own match: GW5 set Haaland's 81st "eight minutes before" Cunha's 89th in another. */
-export const DRAFT_CLOCK: readonly string[] = ["minutes earlier", "minutes later", "minutes before", "minutes after", "minute earlier", "minute later"];
+export const DRAFT_CLOCK: readonly string[] = [
+  "minutes earlier", "minutes later", "minutes before", "minutes after", "minute earlier", "minute later",
+  "minutes-earlier", "minutes-later", "minute-earlier", "minute-later",
+];
 
 /** After Saturday the future tense is for fixtures only: never what a man or a gap will do. */
 export const DRAFT_FORECAST: readonly string[] = ["could", "might", "should", "likely", "expected to", "set to", "bound to", "going to"];
