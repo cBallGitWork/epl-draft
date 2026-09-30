@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { worthOf } from "./__fixtures__/worth";
 import { benchTurned, lateDecider, saturdayLead } from "./__fixtures__/gw5";
+import { contextOf } from "./__fixtures__/context";
+import { draftMan } from "./__fixtures__/draftMan";
+import { draftSide, eleven } from "./__fixtures__/draftSide";
 import { pickAngle } from "./angle";
 import { buildDraftBrief } from "./brief";
 import { threadsOf } from "./threads";
@@ -16,15 +19,16 @@ describe("buildDraftBrief", () => {
   it("builds each match-up on the desk's story: the result printed above, THE STORY for the lede, the twist, the cast", () => {
     expect(end).toContain("MATCH-UP 1: test2 v 123, THE LEAD");
     expect(end).toContain("THE RESULT, printed above your words, never in them: 123 beat test2 38-37.");
-    expect(end).toContain("THE STORY, which your first sentence tells: Haaland (Man City) scored in the 81st minute; without that goal test2 would have won (Sunday)");
+    expect(end).toContain("THE STORY, which your first sentence tells: 123: Haaland (Man City) scored in the 81st minute; without that goal test2 would have won (Sunday)");
     expect(end).toContain("THE TWIST, told in its beat: test2 were 11 behind after Friday and lost by 1 (Friday)");
     expect(end).toContain("THE CAST, each man's points given once:\n- Haaland (Man City) for 123: 6 points: a goal in the 81st minute (Sunday)");
   });
 
-  it("tells how it unfolded a day at a time, returns without their points, and lets a quiet day go", () => {
+  it("tells how it unfolded a day at a time, returns without their points, and marks no day as optional", () => {
     expect(end).toContain("HOW IT UNFOLDED, in order:\n- Friday: test2 0, 123 11, making it 11-0 to 123");
     expect(end).toContain("- Sunday: test2 18, 123 12, making it 38-34 to 123; returns: Haaland (a goal in the 81st minute) for 123");
-    expect(end).toContain("- The substitutions, may be left out: test2 3, 123 0, making it 38-37 to 123");
+    expect(end).toContain("- The substitutions: test2 3, 123 0, making it 38-37 to 123");
+    expect(end).not.toMatch(/left out/u);
     expect(end).toContain("- The substitutions: test4 2, test3 9, making it 33-28 to test3; returns: Vuskovic (a clean sheet) for test3");
   });
 
@@ -32,6 +36,12 @@ describe("buildDraftBrief", () => {
     expect(saturday).toContain("THE SCORE after Saturday's matches, printed above your words, never in them: 123 lead test2 26-16.");
     expect(saturday).toContain("STILL TO COME, the fixtures only:\n- Man City v Sunderland, Sunday: Hume and Haaland for 123; Meunier (if he plays) for test2");
     expect(saturday).not.toContain("NEXT GAMEWEEK");
+  });
+
+  it("names the side a thread is about, so one side's blanks are never given to the other", () => {
+    const arsenal = { 6: draftMan("Rice", "M", 1, 90, 0, { club: "Arsenal" }), 9: draftMan("Havertz", "F", 2, 90, 0, { club: "Arsenal" }) };
+    const ctx = contextOf(draftSide("test2", 30, eleven("t", arsenal)), draftSide("123", 40, eleven("o")));
+    expect(buildDraftBrief("gameweek", 5, [ctx])).toContain("test2: two Arsenal men, Rice and Havertz, both blanked (Saturday)");
   });
 
   it("leaves out where the sides stood, which the form strip prints, and meetings that are no thread", () => {
@@ -43,7 +53,7 @@ describe("buildDraftBrief", () => {
     const angle = pickAngle(ctx, threadsOf(ctx, "gameweek", worthOf(), 5), [{ kind: "late-decider", family: "decider", teamIds: ["123", "test9"], cast: ["Haaland"] }]);
     const next = { home: { name: "test3", rank: 1 }, away: { name: "test4", rank: null } };
     const brief = buildDraftBrief("gameweek", 5, [{ ...ctx, angle, next }]);
-    expect(brief).toContain("NEXT GAMEWEEK, may be left out:\n- test2 play test3, 1st after this gameweek\n- 123 play test4");
+    expect(brief).toContain("NEXT GAMEWEEK, for a last line that looks out:\n- test2 play test3, 1st after this gameweek\n- 123 play test4");
     expect(brief).toContain("LAST TIME, not to be told the same way again:\n- 123: a late decider, told through Haaland");
   });
 });

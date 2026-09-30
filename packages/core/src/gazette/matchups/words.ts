@@ -24,10 +24,22 @@ export const DRAFT_CHOICE: readonly string[] = ["keep back", "keeps back", "kept
 /** Why a man did not play is not in the facts: the brief says he did not, and nothing more. */
 export const DRAFT_REASONS: readonly string[] = ["left out", "absent", "missing", "dropped", "rested", "benched", "omitted", "sidelined"];
 
-/** The Prem report's never-list with the FM framing words let back in, and the speech and invented reasons added. */
+/** The brief's own labels, which a writer copies into print (GW5: "the twist is the fixture list"). */
+export const DRAFT_LABELS: readonly string[] = ["the twist", "the cast", "may be left out"];
+
+/** A minute belongs to its own match: GW5 set Haaland's 81st "eight minutes before" Cunha's 89th in another. */
+export const DRAFT_CLOCK: readonly string[] = ["minutes earlier", "minutes later", "minutes before", "minutes after", "minute earlier", "minute later"];
+
+/** After Saturday the future tense is for fixtures only: never what a man or a gap will do. */
+export const DRAFT_FORECAST: readonly string[] = ["could", "might", "should", "likely", "expected to", "set to", "bound to", "going to"];
+
+/** The Prem report's never-list with the FM framing words let back in, and the speech, invented reasons, the brief's
+ *  labels and another match's clock added. */
 export const DRAFT_NEVER: readonly string[] = [
   ...REPORT_NEVER.filter((phrase) => !REPORT_CROWD.includes(phrase) || !DRAFT_FRAMES.some((frame) => phrase.includes(frame))),
   ...DRAFT_SPEECH,
   ...DRAFT_REASONS,
   ...DRAFT_CHOICE,
+  ...DRAFT_LABELS,
+  ...DRAFT_CLOCK,
 ];

@@ -91,7 +91,7 @@ export { stepLabel, type StoryDraftStep } from "./matchups/days";
 export { returnText, rowNote, type StoryDraftReturn, type StoryDraftRow } from "./matchups/elevens";
 export { mergeDraft, matchupOf, readDraftWriting } from "./matchups/writing";
 export type { DraftPiece, DraftWriting } from "./matchups/writing";
-export { DRAFT_FRAMES, DRAFT_NEVER } from "./matchups/words";
+export { DRAFT_FORECAST, DRAFT_FRAMES, DRAFT_LABELS, DRAFT_NEVER } from "./matchups/words";
 export { applyFixes as applyDraftFixes, faultySentences as faultyDraftSentences } from "./matchups/lineEdit";
 export type { Cutoff, MatchupContext, NextOpponent, TablePlace } from "./matchups/brief";
 export { draftReportsDue, isSaturday } from "./matchups/due";

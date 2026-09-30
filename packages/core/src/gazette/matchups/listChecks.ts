@@ -1,10 +1,12 @@
 import { DRAFT_WRITING } from "../../config";
+import { banned } from "../banned";
 import type { Fault } from "../predictions/checks";
 import { masked, mentionAt, ngrams, numbersIn, sentences } from "../predictions/prose";
 import { surname } from "../reports/keyStats";
 import type { Cutoff, MatchupContext } from "./brief";
 import { everyMan } from "./state";
 import { SIDES, beatLabel, beatOf } from "./timeline";
+import { DRAFT_FORECAST } from "./words";
 import type { DraftMan } from "./types";
 import type { DraftPiece } from "./writing";
 
@@ -21,7 +23,6 @@ export interface PastProse {
 type Named = { man: DraftMan; names: string[] };
 
 const SCORE = /\b(\d{1,3})-(\d{1,3})\b/gu;
-const FORECAST = /\b(?:could|might|should|likely|expected|set to|bound to|going to)\b/iu;
 const WEEKDAY = /\b(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/u;
 const opening = (text: string) => text.split(/\s+/u).slice(0, DRAFT_WRITING.openerWords).join(" ");
 
@@ -108,7 +109,7 @@ export function listFaults(piece: DraftPiece, ctx: MatchupContext, at: number, c
   }
 
   if (cutoff === "saturday") {
-    for (const s of all) if (FORECAST.test(s) || (/\bwill\b/iu.test(s) && !WEEKDAY.test(s))) flag("a forecast after Saturday: the future is for fixtures only", s);
+    for (const s of all) if (banned(s, DRAFT_FORECAST).length > 0 || (/\bwill\b/iu.test(s) && !WEEKDAY.test(s))) flag("a forecast after Saturday: the future is for fixtures only", s);
   }
 
   const theirs = past.filter((p) => p.teamIds.some((id) => id === ctx.state.home.side.teamId || id === ctx.state.away.side.teamId));

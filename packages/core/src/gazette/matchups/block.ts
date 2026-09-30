@@ -13,7 +13,14 @@ import type { DraftMan } from "./types";
 // next and last time's story. A cast man's points appear once, in THE CAST. The labels are the writer's and never print.
 
 const when = (beat: string | null | undefined) => (beat === undefined ? "" : ` (${beatLabel(beat)})`);
-const told = (t: Thread) => `${t.facts.join("; ")}${when(t.beat)}`;
+
+/** A thread's facts in its beat, led by its side's name when they do not give it: GW5's writer gave test2's blanks to
+ *  123 from a line that named neither. */
+function told(ctx: MatchupContext, t: Thread): string {
+  const side = SIDES.map((w) => ctx.state[w].side).find((s) => s.teamId === t.teamId)?.name;
+  const facts = t.facts.join("; ");
+  return `${side === undefined || facts.includes(side) ? "" : `${side}: `}${facts}${when(t.beat)}`;
+}
 const block = (head: string, lines: readonly string[]) => (lines.length === 0 ? null : [head, ...lines].join("\n"));
 
 function sideOf(ctx: MatchupContext, m: DraftMan): SideState | undefined {
@@ -40,7 +47,7 @@ function castLine(ctx: MatchupContext, m: DraftMan): string {
 }
 
 /** A beat in a line: each side's points, the running score after it, and who returned in it, without their points. */
-function beatLine(ctx: MatchupContext, b: Beat, minor: boolean): string {
+function beatLine(ctx: MatchupContext, b: Beat): string {
   const { home, away } = ctx.state;
   const [h, a] = [b.score.home, b.score.away];
   const score = h === a ? `level at ${h}-${a}` : `${Math.max(h, a)}-${Math.min(h, a)} to ${h > a ? home.side.name : away.side.name}`;
@@ -50,7 +57,7 @@ function beatLine(ctx: MatchupContext, b: Beat, minor: boolean): string {
   });
   const who = returns.length === 0 ? "" : `; returns: ${listed(returns, "and")}`;
   const label = beatLabel(b.day);
-  return `- ${label[0].toUpperCase()}${label.slice(1)}${minor ? ", may be left out" : ""}: ${home.side.name} ${b.points.home}, ${away.side.name} ${b.points.away}, making it ${score}${who}`;
+  return `- ${label[0].toUpperCase()}${label.slice(1)}: ${home.side.name} ${b.points.home}, ${away.side.name} ${b.points.away}, making it ${score}${who}`;
 }
 
 /** After Saturday, each match still to come by its day, a match with both sides' men in it first. Fixtures only. */
@@ -89,25 +96,22 @@ function lastLines(ctx: MatchupContext): string[] {
 
 export function matchupBlock(ctx: MatchupContext, cutoff: Cutoff, n: number): string {
   const angle = ctx.angle;
-  const chosen = angle === null ? [] : [angle.story, ...(angle.twist === null ? [] : [angle.twist]), ...angle.supporting];
   const cast = new Set(angle?.cast ?? []);
-  const beats = timeline(ctx.state);
-  // A day with none of the cast in it and none of the chosen threads may be left out.
-  const minor = (b: Beat) => !b.returns.some((r) => cast.has(r.man)) && !chosen.some((t) => t.beat === b.day);
   const saturday = cutoff === "saturday";
+  const line = (t: Thread) => `- ${told(ctx, t)}`;
   return [
     `MATCH-UP ${n}: ${ctx.state.home.side.name} v ${ctx.state.away.side.name}${n === 1 ? ", THE LEAD" : ""}`,
     `${saturday ? "THE SCORE after Saturday's matches" : "THE RESULT"}, printed above your words, never in them: ${ctx.state.score}.`,
-    angle === null ? "THE STORY: the result alone." : `THE STORY, which your first sentence tells: ${told(angle.story)}`,
-    angle?.twist == null ? null : `THE TWIST, told in its beat: ${told(angle.twist)}`,
+    angle === null ? "THE STORY: the result alone." : `THE STORY, which your first sentence tells: ${told(ctx, angle.story)}`,
+    angle?.twist == null ? null : `THE TWIST, told in its beat: ${told(ctx, angle.twist)}`,
     block("THE CAST, each man's points given once:", [...cast].map((m) => castLine(ctx, m))),
-    block(saturday ? "HOW IT STANDS, in order:" : "HOW IT UNFOLDED, in order:", beats.map((b) => beatLine(ctx, b, minor(b)))),
+    block(saturday ? "HOW IT STANDS, in order:" : "HOW IT UNFOLDED, in order:", timeline(ctx.state).map((b) => beatLine(ctx, b))),
     saturday ? block("STILL TO COME, the fixtures only:", toCome(ctx)) : null,
-    block("THREADS, each told in its beat:", (angle?.supporting ?? []).filter((t) => t.scope !== "season").map((t) => `- ${told(t)}`)),
-    block("THE REST, may be left out, told as a group without points:", (angle?.rest ?? []).map((t) => `- ${told(t)}`)),
+    block("THREADS, each told in its beat:", (angle?.supporting ?? []).filter((t) => t.scope !== "season").map(line)),
+    block("THE REST, told as a group if at all, without points:", (angle?.rest ?? []).map(line)),
     // The bracketed kind tells the writer which frame a fact takes; it is never printed.
     block("FORM AND THE TABLE, for the close:", ctx.form.filter((f) => !angle?.story.facts.includes(f.text)).map((f) => `- ${f.text} [${f.kind}]`)),
-    saturday ? null : block("NEXT GAMEWEEK, may be left out:", nextLines(ctx)),
+    saturday ? null : block("NEXT GAMEWEEK, for a last line that looks out:", nextLines(ctx)),
     block("LAST TIME, not to be told the same way again:", lastLines(ctx)),
   ]
     .filter((b) => b !== null)
