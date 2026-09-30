@@ -296,7 +296,9 @@ product here, so a foreign one is not a starting point.**
 **Deliberately not planned**: ~~`round-preview`'s legacy `EditionKind` shape~~
 (done 24 Sep 2026: the kind went whole, having never filed); and a captured football calendar, because `periodAlignment.json` is a
 frozen test fixture with placeholder kickoffs on 33 of 38 rounds, and the
-schedule keys on the **day**, which needs no calendar at all.
+schedule keys on the **day**, which needs no calendar at all. **A foot folio**,
+dropped on Craig's word of 30 Sep 2026: a page number is the numbered pages
+he cut that day (*"the pages thing doesnt work"*), and the paper has none.
 
 ---
 
@@ -324,7 +326,7 @@ two-pass and one-line-comment rules (#8, #9).
    firing today, so a 2pm presser column could not publish on a Thursday.
    Blocked instead on `intel/pressers/26-27.json` (§5 of the export contract).
 2. **`feat/paper-furniture`** — running head, three rule weights, ruled standing
-   heads, foot folio, and the lead's opening paragraph.
+   heads, and the lead's opening paragraph.
 3. **`feat/paper-classified`** → **`feat/player-stories`** → **`feat/rolling-tie-reports`**.
 4. **Break weeks** — **must land before 9 Nov**, when the league hits its first
    empty week.
