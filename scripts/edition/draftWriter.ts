@@ -99,5 +99,7 @@ export async function draftColumn(job: DraftJob, say: (message: string) => void,
   for (const f of attempts.at(-1)!.faults.filter((x) => x.severity !== "warn")) say(`    fault ${f.section}: ${f.check} [${f.evidence}]`);
   const lead = job.contexts[0]?.state.score ?? "";
   say(`  draft report: ${pieces.size} of ${job.contexts.length} match-ups written; headline ${chosen === null ? "none chosen, the lead verdict prints" : `"${chosen}"`}; ${usage.input} tokens in, ${usage.cached} from cache, ${usage.output} out`);
-  return { headline: chosen ?? lead, deck: lead, body: "", draft: draftCargo(job.cutoff, job.gameweek, job.contexts, pieces, job.rankAfter) };
+  // A pun's deck is the lead result; a plain headline already is it, so its deck carries the gameweek's other results.
+  const others = job.contexts.slice(1).map((c) => c.state.score).join("; ");
+  return { headline: chosen ?? lead, deck: chosen === null ? others : lead, body: "", draft: draftCargo(job.cutoff, job.gameweek, job.contexts, pieces, job.rankAfter) };
 }
