@@ -2,8 +2,8 @@ import { listed } from "../../format";
 import { ordinal } from "../../league/ordinal";
 import { londonDayOf, londonWeekdayLong } from "../../time";
 import type { Cutoff, MatchupContext, NextOpponent } from "./brief";
-import { counted, type SideState } from "./state";
-import { fitnessLine, minutesLine, newLine, returnWords } from "./stories";
+import { counted, everyMan, type SideState } from "./state";
+import { fitnessLine, minutesLine, newLine, pts, returnWords, withClub } from "./stories";
 import type { Thread } from "./thread";
 import { SIDES, beatLabel, beatOf, timeline, type Beat } from "./timeline";
 import type { DraftMan } from "./types";
@@ -25,7 +25,7 @@ function castLine(ctx: MatchupContext, m: DraftMan): string {
   const s = sideOf(ctx, m);
   const sub = s?.subs.find((x) => x.in === m);
   const bench = s !== undefined && sub === undefined && !counted(s).includes(m);
-  const points = m.points === null || (m.minutes === 0 && m.left > 0) ? "yet to play" : `${m.points} point${m.points === 1 ? "" : "s"}${m.goals + m.assists + m.cleanSheets > 0 ? `: ${returnWords(m)}` : ""}`;
+  const points = m.points === null || (m.minutes === 0 && m.left > 0) ? "yet to play" : `${pts(m.points)}${m.goals + m.assists + m.cleanSheets > 0 ? `: ${returnWords(m)}` : ""}`;
   const next = m.left > 0 && m.next !== null ? `plays ${m.next.home ? "at home to" : "away to"} ${m.next.opponent} on ${londonWeekdayLong(m.next.kickoff)}` : null;
   const parts = [
     points,
@@ -36,7 +36,7 @@ function castLine(ctx: MatchupContext, m: DraftMan): string {
     fitnessLine(m),
     next,
   ];
-  return `- ${m.name} (${m.club}) for ${s?.side.name ?? "neither side"}: ${parts.filter((p) => p !== null).join("; ")}${when(beatOf(ctx.state, m))}`;
+  return `- ${withClub(m)} for ${s?.side.name ?? "neither side"}: ${parts.filter((p) => p !== null).join("; ")}${when(beatOf(ctx.state, m))}`;
 }
 
 /** A beat in a line: each side's points, the running score after it, and who returned in it, without their points. */
@@ -79,7 +79,7 @@ function nextLines(ctx: MatchupContext): string[] {
 
 /** Each side's last story in words, so this one is told another way. */
 function lastLines(ctx: MatchupContext): string[] {
-  const men = SIDES.flatMap((w) => [...ctx.state[w].side.eleven, ...ctx.state[w].side.bench]);
+  const men = everyMan(ctx.state);
   return (ctx.angle?.past ?? []).map((p) => {
     const sides = SIDES.map((w) => ctx.state[w].side).filter((s) => p.teamIds.includes(s.teamId)).map((s) => s.name);
     const cast = p.cast.flatMap((id) => men.find((m) => m.fantraxId === id)?.name ?? []);

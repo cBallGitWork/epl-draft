@@ -69,7 +69,7 @@ export { fullClubName, shortClubNames } from "./clubNames";
 export { sheetOf } from "./sheets/sheet";
 export { debuts } from "./sheets/changes";
 // The draft desk's surface is what its script reads; its other parts are inferred at the call sites.
-export { matchupState } from "./matchups/state";
+export { everyMan, matchupState } from "./matchups/state";
 export type { MatchupState } from "./matchups/state";
 export { goingIn, gameweekForm } from "./matchups/form";
 export type { SeasonFact } from "./matchups/form";

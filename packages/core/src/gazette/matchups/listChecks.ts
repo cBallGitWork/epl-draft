@@ -1,7 +1,9 @@
 import { DRAFT_WRITING } from "../../config";
 import type { Fault } from "../predictions/checks";
 import { masked, mentionAt, ngrams, numbersIn, sentences } from "../predictions/prose";
+import { surname } from "../reports/keyStats";
 import type { Cutoff, MatchupContext } from "./brief";
+import { everyMan } from "./state";
 import { SIDES, beatLabel, beatOf } from "./timeline";
 import type { DraftMan } from "./types";
 import type { DraftPiece } from "./writing";
@@ -23,8 +25,9 @@ const FORECAST = /\b(?:could|might|should|likely|expected|set to|bound to|going 
 const WEEKDAY = /\b(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/u;
 const opening = (text: string) => text.split(/\s+/u).slice(0, DRAFT_WRITING.openerWords).join(" ");
 
-function menOf(ctx: MatchupContext): Named[] {
-  return SIDES.flatMap((w) => [...ctx.state[w].side.eleven, ...ctx.state[w].side.bench]).map((man) => ({ man, names: [...new Set([man.name, man.name.split(/\s+/u).at(-1) ?? man.name])].filter((n) => n.length > 2) }));
+/** Every man a match-up may name, with the names the prose may use for him: full and surname. */
+export function menOf(ctx: MatchupContext): Named[] {
+  return everyMan(ctx.state).map((man) => ({ man, names: [...new Set([man.name, surname(man.name)])].filter((n) => n.length > 2) }));
 }
 
 const named = (text: string, men: readonly Named[]) => men.filter((m) => m.names.some((n) => mentionAt(text, n) >= 0));

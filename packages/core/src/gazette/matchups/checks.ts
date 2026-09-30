@@ -6,7 +6,7 @@ import { repeatsIn } from "../reports/repeats";
 import { REPORT_AMERICAN, REPORT_FPL } from "../reports/words";
 import { SHEETS_AMERICAN } from "../sheets/words";
 import type { Cutoff, MatchupContext } from "./brief";
-import { listFaults, type PastProse } from "./listChecks";
+import { listFaults, menOf, type PastProse } from "./listChecks";
 import type { DraftPiece, DraftWriting } from "./writing";
 import { DRAFT_NEVER } from "./words";
 
@@ -20,16 +20,11 @@ const SIDE_ELEVEN = /(?:\b(?:the|their|its|his|an|a|whose|that|this|every|each)\
 /** An FM frame is a register, never a person's feeling: a named manager given one is invented. */
 const FEELING = /\b(?:manager|boss|owner)\b[^.]{0,40}\b(?:feel|feels|felt|furious|delighted|angry|pleased|worried|fuming|livid)\b/iu;
 
-/** Every man a match-up may name: its elevens and benches, surname and full. */
-function menOf(ctx: MatchupContext): string[] {
-  return [ctx.state.home.side, ctx.state.away.side].flatMap((s) => [...s.eleven, ...s.bench]).flatMap((m) => [m.name, m.name.split(/\s+/u).at(-1) ?? m.name]);
-}
-
 /** `past` is the words of recent reports, for the echo; `cutoff` decides whether a forecast is a fault. */
 export function checkDraft(writing: DraftWriting, contexts: readonly MatchupContext[], blocks: readonly string[], cutoff: Cutoff = "gameweek", past: readonly PastProse[] = []): Fault[] {
   const faults: Fault[] = [];
   const fault = (section: string, check: string, severity: Severity, evidence: string) => faults.push({ section, check, severity, evidence });
-  const everyone = contexts.map(menOf);
+  const everyone = contexts.map((ctx) => menOf(ctx).flatMap((m) => m.names));
   const pieces: { code: number; prose: string }[] = [];
   contexts.forEach((ctx, at) => {
     const n = at + 1;

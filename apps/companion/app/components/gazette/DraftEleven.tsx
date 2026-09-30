@@ -1,9 +1,8 @@
 import { DASH, rowNote, type StoryDraftRow, type StoryDraftSide } from "@epl/core";
+import { STANDING_HEAD } from "./heads";
 
 // Both elevens of a draft match-up, side by side at every width as a team sheet sets two teams: each man's slot, name and
 // points, a reserve under the man he replaces, and the match and day for a man still to play (Craig, 30 Sep 2026).
-
-const HEAD = "font-sans text-3xs font-semibold uppercase tracking-[0.16em] text-muted";
 
 function Row({ row }: { row: StoryDraftRow }) {
   const note = rowNote(row);
@@ -23,7 +22,7 @@ function Row({ row }: { row: StoryDraftRow }) {
 function Eleven({ side }: { side: StoryDraftSide }) {
   return (
     <div className="min-w-0">
-      <h4 className={HEAD}>{side.name}</h4>
+      <h4 className={STANDING_HEAD}>{side.name}</h4>
       <ol className="flex flex-col gap-1 pt-1.5">
         {side.eleven.map((row, i) => (
           <Row key={i} row={row} />

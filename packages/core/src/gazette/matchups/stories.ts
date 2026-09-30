@@ -11,12 +11,14 @@ import { priceOf } from "./worth";
 // judgement alike; `sideStories` sets them out a man at a time, then the substitutions, a bench score of six or more,
 // men from one club who shared a fate, and a club's men with two matches.
 
-const pts = (n: number) => `${n} point${n === 1 ? "" : "s"}`;
+/** "1 point", "6 points". */
+export const pts = (n: number) => `${n} point${n === 1 ? "" : "s"}`;
 /** His returns: goals, assists and clean sheets. */
 export const returnCount = (m: DraftMan) => m.goals + m.assists + m.cleanSheets;
 const done = (m: DraftMan) => m.left === 0 && m.minutes > 0;
 const late = (t: GoalTime) => t.minute >= DRAFT_DESK.lateGoal;
-const named = (m: DraftMan) => `${m.name} (${m.club})`;
+/** "Haaland (Man City)": a man as the brief names him. */
+export const withClub = (m: DraftMan) => `${m.name} (${m.club})`;
 
 /** Goals in the order they went in: by their match's kickoff, then the clock. */
 export const byClock = (a: GoalTime, b: GoalTime) => a.kickoff.localeCompare(b.kickoff) || a.minute - b.minute || (a.added ?? 0) - (b.added ?? 0);
@@ -72,13 +74,13 @@ export const fitnessLine = (m: DraftMan) => (m.fitness === null ? null : `${m.mi
 /** One man's line, every fact about him in it, or null when there is nothing to say about him. */
 function manLine(m: DraftMan, side: DraftSide, worth: SlotWorth): string | null {
   const parts = [scoredLine(m, worth), lostCleanLine(m, worth), minutesLine(m), newLine(m, side), fitnessLine(m)].filter((p) => p !== null);
-  return parts.length === 0 ? null : `${named(m)} ${parts.join("; ")}`;
+  return parts.length === 0 ? null : `${withClub(m)} ${parts.join("; ")}`;
 }
 
 /** The substitution and what the man coming on did, in one line. */
 export function subLine(s: AutoSub, cutoff: Cutoff): string {
   // "Replaced", not "came on": the paper's banned list keeps "came on" for the Premier League's own substitutions.
-  const on = `${named(s.in)} ${cutoff === "gameweek" ? "replaced" : "replaces"} ${named(s.out)}, who did not play`;
+  const on = `${withClub(s.in)} ${cutoff === "gameweek" ? "replaced" : "replaces"} ${withClub(s.out)}, who did not play`;
   if (s.provisional) return `${on}, if he plays`;
   const got = gotLine(s.in);
   if (cutoff === "gameweek") return `${on}, and ${got ?? `brought ${pts(s.in.points ?? 0)}`}`;
@@ -86,7 +88,7 @@ export function subLine(s: AutoSub, cutoff: Cutoff): string {
 }
 
 /** A man in the eleven who did not play and no reserve can replace. */
-export const uncoveredLine = (m: DraftMan, side: DraftSide, cutoff: Cutoff) => `${named(m)} did not play and ${cutoff === "gameweek" ? "no reserve replaced him" : `${side.name} have no reserve to replace him`}`;
+export const uncoveredLine = (m: DraftMan, side: DraftSide, cutoff: Cutoff) => `${withClub(m)} did not play and ${cutoff === "gameweek" ? "no reserve replaced him" : `${side.name} have no reserve to replace him`}`;
 
 /** The reserves not coming on who scored benchScore or more, told whatever the margin and more so past the deficit of
  *  the side behind; `margin` is this side's points less the other's. */
@@ -95,7 +97,7 @@ export function benchLines(side: DraftSide, subs: readonly AutoSub[], margin: nu
     .filter((x) => !subs.some((s) => s.in === x) && (x.points ?? 0) >= DRAFT_DESK.benchScore)
     .map((m) => {
       const pastMargin = margin < 0 && (m.points ?? 0) > -margin;
-      return { man: m, pastMargin, line: `${named(m)} got ${pts(m.points ?? 0)} on the bench${pastMargin ? ", more than the margin" : ""}` };
+      return { man: m, pastMargin, line: `${withClub(m)} got ${pts(m.points ?? 0)} on the bench${pastMargin ? ", more than the margin" : ""}` };
     });
 }
 

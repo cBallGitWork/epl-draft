@@ -7,6 +7,7 @@ import {
   checkDraft,
   draftBlocks,
   draftCargo,
+  everyMan,
   fanHeadline,
   headlineEcho,
   matchupOf,
@@ -14,6 +15,7 @@ import {
   readDraftWriting,
   readHeadlines,
   strike,
+  surname,
   type Cutoff,
   type Fault,
   type MatchupContext,
@@ -65,8 +67,8 @@ export async function draftColumn(job: DraftJob, say: (message: string) => void,
   };
   const brief = buildDraftBrief(job.cutoff, job.gameweek, job.contexts);
   const blocks = draftBlocks(job.cutoff, job.contexts);
-  const men = job.contexts.flatMap((c) => [c.state.home.side, c.state.away.side]).flatMap((s) => [...s.eleven, ...s.bench]);
-  const surnames = men.map((m) => m.name.split(/\s+/u).at(-1) ?? m.name);
+  const men = job.contexts.flatMap((c) => everyMan(c.state));
+  const surnames = men.map((m) => surname(m.name));
   const names = [...job.contexts.flatMap((c) => [c.state.home.side.name, c.state.away.side.name]), ...men.map((m) => m.name)];
 
   const first = readDraftWriting(await writeColumn(DRAFT_VOICE, brief, count), surnames);
@@ -75,7 +77,7 @@ export async function draftColumn(job: DraftJob, say: (message: string) => void,
   // The pun writer's go on the lead match-up's story as the desk chose it, and the surnames of the men it is told through.
   const angle = job.contexts[0]?.angle ?? null;
   const story = angle === null ? first.headlineStory : angle.story.facts.join("; ");
-  const cast = angle === null ? "" : `\nTHE CAST: ${angle.cast.map((m) => m.name.split(/\s+/u).at(-1) ?? m.name).join(", ")}`;
+  const cast = angle === null ? "" : `\nTHE CAST: ${angle.cast.map((m) => surname(m.name)).join(", ")}`;
   const puns = await writeColumn(PUN_VOICE, `THE STORY: ${story}${cast}\n\n${blocks[0] ?? ""}`, count).then(readHeadlines).catch(() => ({ headlines: [], meanings: {} }));
   const offered = [...first.headlines, ...puns.headlines.filter((h) => !first.headlines.includes(h))].slice(0, DRAFT_WRITING.puns + 6);
   const meanings = { ...first.meanings, ...puns.meanings };

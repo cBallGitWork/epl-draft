@@ -2,7 +2,7 @@ import { DRAFT_DESK, DRAFT_NEWS } from "../../config";
 import { blank } from "./autoSubs";
 import type { Cutoff, MatchupContext } from "./brief";
 import { counted } from "./state";
-import { benchLines, clubLines, fitnessLine, keeperHauled, lostCleanLine, minutesLine, newLine, returnCount, scoredLine, uncoveredLine, whenScored } from "./stories";
+import { benchLines, clubLines, fitnessLine, keeperHauled, lostCleanLine, minutesLine, newLine, returnCount, scoredLine, uncoveredLine, whenScored, withClub } from "./stories";
 import { thread, type Thread, type ThreadKind } from "./thread";
 import { SIDES } from "./timeline";
 import type { DraftMan, GoalTime, SlotWorth } from "./types";
@@ -13,7 +13,7 @@ import type { DraftMan, GoalTime, SlotWorth } from "./types";
 
 const late = (t: GoalTime) => t.minute >= DRAFT_DESK.lateGoal;
 const same = (a: GoalTime, b: GoalTime) => a.kickoff === b.kickoff && a.minute === b.minute && a.added === b.added;
-const named = (m: DraftMan, text: string) => `${m.name} (${m.club}) ${text}`;
+const named = (m: DraftMan, text: string) => `${withClub(m)} ${text}`;
 
 /** A goal by one side's man that took the clean sheet of the other side's man, in the match they played against each other. */
 function crossfire(scorer: DraftMan, victims: readonly DraftMan[]): { victim: DraftMan; t: GoalTime } | null {
@@ -48,7 +48,7 @@ export function manThreads(ctx: MatchupContext, cutoff: Cutoff, worth: SlotWorth
         add("keeper-haul", [m], [named(m, scoredLine(m, worth)!)], false, Math.min(cap, base + DRAFT_NEWS.keeperHaulPerPoint * ((m.points ?? 0) - DRAFT_DESK.keeperHaul)));
       } else if (returnCount(m) > 1) add("haul", [m], [named(m, scoredLine(m, worth)!)]);
       const hit = crossfire(m, counted(them));
-      if (hit !== null) add("crossfire", [m, hit.victim], [named(m, `scored ${whenScored(hit.t)}, the goal that cost ${hit.victim.name} (${hit.victim.club}) his clean sheet for ${them.side.name}`)]);
+      if (hit !== null) add("crossfire", [m, hit.victim], [named(m, `scored ${whenScored(hit.t)}, the goal that cost ${withClub(hit.victim)} his clean sheet for ${them.side.name}`)]);
       for (const t of m.scoredAt.filter(late)) add("late-goal", [m], [named(m, `scored ${whenScored(t)}`)], t.added !== undefined);
       const lost = lostCleanLine(m, worth);
       if (lost !== null) add("clean-lost-late", [m], [named(m, lost)]);

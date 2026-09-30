@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PAPER_NAME } from "../config";
+import { STANDING_HEAD } from "../components/gazette/heads";
 
 // A 404 inside the paper, set in the paper.
 //
@@ -11,7 +12,7 @@ export default function NotFound() {
   return (
     <div className="flex flex-col">
       <div className="h-[3px] bg-current" />
-      <p className="pt-3 font-sans text-3xs font-semibold uppercase tracking-[0.16em] text-muted">
+      <p className={`pt-3 ${STANDING_HEAD}`}>
         {PAPER_NAME}
       </p>
       <h1 className="paper-display pt-2 text-4xl font-black leading-[1.02] text-ink">

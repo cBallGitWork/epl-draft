@@ -1,7 +1,7 @@
 import { DRAFT_DESK, DRAFT_NEWS } from "../../config";
 import type { MatchupContext } from "./brief";
 import { opposedMatches } from "./state";
-import { subLine } from "./stories";
+import { subLine, withClub } from "./stories";
 import { chaseLines } from "./swing";
 import { thread, type Thread } from "./thread";
 import type { SlotWorth } from "./types";
@@ -21,7 +21,7 @@ export function saturdayThreads(ctx: MatchupContext, worth: SlotWorth): Thread[]
     const waiting = s.subs.filter((x) => x.provisional);
     if (waiting.length > 0) out.push(thread("subs-waiting", { teamId: s.side.teamId, men: waiting.map((x) => x.in), facts: waiting.map((x) => subLine(x, "saturday")) }));
     const doubles = s.toPlay.filter((x) => x.played + x.left > 1);
-    if (doubles.length > 0) out.push(thread("double-to-come", { teamId: s.side.teamId, men: doubles, facts: doubles.map((x) => `${x.name} (${x.club}) has two matches this gameweek, ${x.left === 1 ? "one" : "both"} still to come`) }));
+    if (doubles.length > 0) out.push(thread("double-to-come", { teamId: s.side.teamId, men: doubles, facts: doubles.map((x) => `${withClub(x)} has two matches this gameweek, ${x.left === 1 ? "one" : "both"} still to come`) }));
   }
   if (m <= DRAFT_NEWS.closeWithin) out.push(thread("close", { teamId: margin === 0 ? null : ahead.side.teamId, bigger: m <= 1, facts: [margin === 0 ? `${home.side.name} and ${away.side.name} are level` : `${ahead.side.name} lead by ${m}`] }));
   else out.push(thread("saturday-lead", { teamId: ahead.side.teamId, bigger: m >= DRAFT_NEWS.bigLead, facts: [`${ahead.side.name} lead by ${m}`] }));

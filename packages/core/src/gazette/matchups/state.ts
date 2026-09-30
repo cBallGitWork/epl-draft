@@ -32,6 +32,9 @@ export interface MatchupState {
 
 const tag = (man: DraftMan) => `${man.name} (${man.club}${man.next === null ? "" : `, ${man.next.home ? "at home to" : "away to"} ${man.next.opponent} on ${londonWeekdayLong(man.next.kickoff)}`})`;
 
+/** Every man in a match-up: both elevens and both benches. */
+export const everyMan = (state: MatchupState): DraftMan[] => [state.home, state.away].flatMap((s) => [...s.side.eleven, ...s.side.bench]);
+
 /** The men whose points count: the eleven, each man a reserve is certain to replace swapped for that reserve. */
 export function counted(s: SideState): DraftMan[] {
   return s.side.eleven.map((m) => s.subs.find((x) => x.out === m && !x.provisional)?.in ?? m);

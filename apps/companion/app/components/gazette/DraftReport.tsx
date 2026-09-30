@@ -1,5 +1,6 @@
 import type { PublishedStory } from "@epl/core";
 import DraftMatchup from "./DraftMatchup";
+import { STANDING_HEAD } from "./heads";
 
 // A draft report: the gameweek's match-ups as a list, lead first, then each match-up. A phone shows one at a time, chosen
 // from the list by its anchor in CSS alone, as the Prem report does; a desk shows them all, the list as contents.
@@ -17,7 +18,7 @@ export default function DraftReport({ story }: { story: PublishedStory }) {
       <style>{marked}</style>
       {draft.matchups.length < 2 ? null : (
         <nav aria-label="The gameweek's match-ups" className="dft-list flex flex-col border-t" style={{ borderColor: "var(--paper-rule)" }}>
-          <h3 className="font-sans text-3xs font-semibold uppercase tracking-[0.16em] text-muted py-2">The match-ups</h3>
+          <h3 className={`${STANDING_HEAD} py-2`}>The match-ups</h3>
           {draft.matchups.map((m, i) => (
             <a key={i} href={`#d-${i + 1}`} className="grid min-h-11 grid-cols-[1fr_auto_1fr] items-center gap-2 border-b px-2 text-sm text-ink" style={{ borderColor: "var(--paper-rule)" }}>
               <span className="truncate text-right">{m.home.name}</span>
