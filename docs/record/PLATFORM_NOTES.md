@@ -1621,15 +1621,13 @@ whether the slot should reach them is a separate question and Craig's:
 |---|---|
 | `prem/club/[code]/SquadTable.tsx:169,172` | goals and assists, with minutes and starts ink on the same line |
 | `prem/club/[code]/stats/PlayerBoard.tsx:176` | every measure column |
-| `squad/[teamId]/stats/StatBoard.tsx:214,245` | every category and underlying column |
 | `players/[fantraxId]/MatchLog.tsx:124,184` | the FPts column, on a row of sixteen figures |
 | `players/[fantraxId]/AttributeGrid.tsx:98` | thirty ratings; its docblock quotes the RETIRED wording |
 | `components/league/SeasonGrid.tsx:47` | the same, and quotes it too |
 
 Three more put amber on something that is not a figure under either wording —
-position letters at `components/league/SquadRows.tsx:228`,
-`squad/[teamId]/transfers/Ledger.tsx:188` and `squad/[teamId]/stats/StatBoard.tsx:202`,
-and glossary abbreviations at `StatBoard.tsx:279` — and three put it on a
+position letters at `components/league/SquadRows.tsx:228` and
+`squad/[teamId]/transfers/Ledger.tsx:188` — and three put it on a
 PARAGRAPH of prose (`components/league/PlayerCard.tsx:92`,
 `components/league/LivePlayerCard.tsx:109,193`), where the unresolved-slot reason
 reads as a doubt and `--color-bad` is the slot for that.

@@ -117,9 +117,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
                   // On the CELL and not on the button inside it: the role that
                   // carries `aria-sort` is `columnheader`, which is the `<th>`.
                   // Without it the pressed bevel says which column orders this
-                  // board and nothing says it to a screen reader — the sibling
-                  // implementation in `squad/[teamId]/stats/SortHead` has always
-                  // had this, and the two boards look identical.
+                  // board and nothing says it to a screen reader.
                   aria-sort={
                     sort?.key === measure.key
                       ? sort.descending
