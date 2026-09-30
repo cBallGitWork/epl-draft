@@ -32,6 +32,11 @@ export interface MatchupState {
 
 const tag = (man: DraftMan) => `${man.name} (${man.club}${man.next === null ? "" : `, ${man.next.home ? "at home to" : "away to"} ${man.next.opponent} on ${londonWeekdayLong(man.next.kickoff)}`})`;
 
+/** The men whose points count: the eleven, each man a reserve is certain to replace swapped for that reserve. */
+export function counted(s: SideState): DraftMan[] {
+  return s.side.eleven.map((m) => s.subs.find((x) => x.out === m && !x.provisional)?.in ?? m);
+}
+
 function sideState(side: DraftSide, limits: PositionLimits): SideState {
   const numbered = side.subOrder.flatMap((id) => side.bench.filter((m) => m.fantraxId === id));
   const subs = autoSubs(side.eleven, numbered, limits);

@@ -1,15 +1,9 @@
 import type { StoryFace } from "../face";
 import type { MatchupContext } from "./brief";
-import type { DraftMan } from "./types";
+import { counted } from "./state";
 
 // The draft report's cover: one photograph for the article, of the lead match-up's key man, printed through the ink by
 // the page (Craig, 30 Sep 2026: "remove those thumbnails, i mean as a cover photo for an article"). The desk's choice.
-
-/** The men who counted for a side: its eleven less any man a reserve came on for, and the reserves certain to. */
-function counted(side: MatchupContext["state"]["home"]): DraftMan[] {
-  const certain = side.subs.filter((s) => !s.provisional);
-  return [...side.side.eleven.filter((m) => !certain.some((s) => s.out === m)), ...certain.map((s) => s.in)];
-}
 
 /** The lead match-up's key man: the winner's top scorer, both sides' when level; null when nobody has points. */
 export function draftFace(contexts: readonly MatchupContext[]): StoryFace | null {
