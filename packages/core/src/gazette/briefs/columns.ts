@@ -6,8 +6,8 @@ import { storylinesBlock } from "./storylines";
 
 // The opinion columns' briefs. One file because they share a shape — a facts
 // pack, one instruction about what the opinion may be about, and the memory
-// block — and splitting four twenty-line builders across four files would be
-// filing for its own sake.
+// block — and splitting three twenty-line builders across three files would be
+// filing for its own sake. The Points Dodgers read football, not the league, and have their own.
 //
 // The rule they all obey: **the facts are ours and the opinion is the
 // model's.** Each of these columns exists to be argued with in the group chat,
@@ -32,27 +32,6 @@ export function buildPowerBrief(brief: {
       ...rows,
     ].join("\n"),
     "Write the body as two short paragraphs of overview — who is going well, who is fooling nobody — and let `ranks` carry one line per manager, every one of them.",
-    storylinesBlock(brief.threads),
-  ]
-    .filter((block) => block !== null)
-    .join("\n\n");
-}
-
-/** The Points Dodgers: the anti-eleven. */
-export function buildDodgersBrief(brief: {
-  gameweek: number;
-  benched: readonly Pick[];
-  threads: readonly StoryThread[];
-}): string {
-  const men = brief.benched.map((pick) => `- ${pick.playerName} (${pick.position}), left out by ${pick.ownerName}: ${did(pick)}`);
-
-  return [
-    `THE POINTS DODGERS, gameweek ${brief.gameweek}. The men who did it while sitting on their own manager's bench. This is the league's best-natured cruelty: name the player, name the manager who benched him, and enjoy it.`,
-    [
-      "THE BENCHED. What each man DID — never what he would have scored, because a benched player is priced nowhere and any points figure would be invented:",
-      ...men,
-    ].join("\n"),
-    "Two or three short paragraphs. Do not tell anybody how they should have picked their side, and never suggest what they should do next week — you report, you do not advise.",
     storylinesBlock(brief.threads),
   ]
     .filter((block) => block !== null)

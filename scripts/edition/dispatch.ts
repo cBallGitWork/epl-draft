@@ -2,6 +2,7 @@ import {
   fullClubName,
   type Assignment,
   type Club,
+  type Dodger,
   type FootballSnapshot,
   type LeagueInfo,
   type PublishedStory,
@@ -62,6 +63,8 @@ export interface DeskContext {
   /** The predicted elevens, composed from facts rather than written — the one
    *  column with no voice and no brief. Null when it is not this firing's. */
   elevens: Record<string, unknown> | null;
+  /** The gameweek's near misses by the league's men; null unless the Points Dodgers are due this firing. */
+  dodgers: readonly Dodger[] | null;
 }
 
 /** One edition of the Team Sheet — the day's conferences, and nothing else.

@@ -11,12 +11,8 @@ export { kindOf, movement } from "./dealSides";
 export { strangers } from "./strangers";
 export { hasRoom } from "./running";
 export { buildFixturePreviewBrief } from "./briefs/fixturePreview";
-export {
-  buildDodgersBrief,
-  buildElevenBrief,
-  buildPowerBrief,
-  buildWireBrief,
-} from "./briefs/columns";
+export { buildElevenBrief, buildPowerBrief, buildWireBrief } from "./briefs/columns";
+export { buildDodgersBrief } from "./briefs/dodgers";
 export { buildNewsBrief } from "./briefs/news";
 export { buildPresserBrief } from "./briefs/presser";
 export type { PresserLine } from "./briefs/presser";
@@ -24,6 +20,7 @@ export { affectedBy } from "./newsTriage";
 export type { NewsAngle } from "./briefs/news";
 export type { Affected } from "./newsTriage";
 export { dodgers } from "./dodgers";
+export type { Dodger, DodgerMatch } from "./dodgers";
 export { powerRows } from "./powerRanking";
 export { wireFacts } from "./wire";
 export type { PowerRow } from "./powerRanking";

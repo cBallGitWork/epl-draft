@@ -1,5 +1,6 @@
 import { FANTRAX_LEAGUE_ID, type Assignment, type Club, type Fixture, type FootballSnapshot, type GameweekKickoff, type LeagueInfo } from "@epl/core";
 import type { DeskContext } from "./dispatch";
+import { dodgersDesk } from "./dodgers";
 import type { DeskFacts } from "./facts";
 import { predictionsDesk } from "./predictions";
 import { reportsDesk } from "./reports";
@@ -64,5 +65,7 @@ export async function deskContext(input: {
             players: snapshot.players,
             season,
           }),
+    // The Points Dodgers read every finished match's commentary, only when the column is due.
+    dodgers: await dodgersDesk({ assignments, snapshot, facts, info, say }),
   };
 }

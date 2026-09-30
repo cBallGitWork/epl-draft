@@ -69,6 +69,22 @@ the match-report and team-sheet prompts.
   exception to CODE_RULES §1 like `DateChip`'s: `news/Mailbox` and `news/MailRow` serve Mail and a player's
   News, and the row's headline now wraps to two lines on both rather than clipping on a phone.
 
+## The Points Dodgers are the real football's near misses, not a manager's bench — decided 30 Sep 2026
+
+- Craig: *"points dodgers are players IRL who came close to points but didnt get any, not players on the bench"*.
+  The column had named five men who returned while benched; that is now nobody's column.
+- **Each kind of points is dodged on its own** (Craig: *"players with high xa and no assist points"*): a man
+  with no goal who came near one (a goal ruled out, a penalty missed or saved, the woodwork, expected goals), with
+  no assist who came near one (expected assists, a shot he set up hitting the woodwork), or with no clean sheet his
+  slot pays for whose side's only goal against came from `DODGERS.lateGoal`. A scorer can dodge an assist, and the
+  brief says what he did get so the column never denies it. An assist side is scaled to the goal bar
+  (`DODGERS.from`: 0.6 goals, 0.4 assists). Benched or not is never said.
+- **Expected goals and assists order the column and never print**; the brief carries Opta's countable facts, the
+  moments' minutes (the one column given them), and shots taken and set up from inside the box and close range.
+- Star test, rehearsal league: GW3 Calafiori, Ødegaard (scored, 4 shots set up, no assist), Bobb, Ballard, Cherki;
+  GW4 Le Fée's saved penalty, Justin, Ndoye, Ampadu, Trafford; GW5 Wissa's saved penalty, Gonzalo, Saka,
+  Fernandes off the post, Cunha (scored, set up a shot against the woodwork).
+
 ## Opta's commentary describes every shot, and says what VAR decided — probed 28 Sep 2026
 
 For the match report's facts: the textstream (`/fixtures/{id}/textstream/EN`) over **all 50 fixtures
@@ -835,7 +851,8 @@ public endpoint is the string `status: "ACTIVE" | "RESERVE"` — not the SPA's
 Why it mattered: `gatherRoundFacts` asked without a period while every other
 read in it asked for the round's. `wasFielded` compares the two, so it was
 false for every column that fires after a round finishes — which is all of
-them — and `eleven` and `dodgers` refuse outright when it is false, because
+them — and `eleven` and `dodgers` refused outright when it was false (the dodgers stopped
+reading benches on 30 Sep 2026), because
 "benched" is a claim about a side somebody actually picked. Those two columns
 could never file, and because a refusal spends no covered-key they sat at the
 top of every firing's running order and wedged the paper behind them.
