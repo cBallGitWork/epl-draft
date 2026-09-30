@@ -22,9 +22,8 @@ import { DASH } from "@epl/core";
 // inverts the slot the rest of the app leans on. A player is not a fault for
 // being the weaker of two.
 //
-// **Rows align by NAME, never by index.** A keeper's grid drops the seven
-// measures about scoring and creating in open play and an outfielder's drops
-// Handling and Reflexes (`football/attributes.ts`), so zipping two arrays
+// **Rows align by NAME, never by index.** A keeper's grid and an outfielder's
+// hold different rows (each row's `for` in `football/attributes.ts`), so zipping two arrays
 // position by position would print a keeper's Reflexes against a striker's
 // Finishing under whichever label came first. A measure only one of them has is
 // still a row, with a dash on the other side — that is a real answer about a
@@ -45,7 +44,7 @@ export default function Measures({
   if (rows.length === 0) return null;
 
   return (
-    <Section title="Attributes" aside="Season · ours, 1–20">
+    <Section title="Attributes" aside="Ours, 1–20, per 90">
       {/* The ledger's shape: centred and narrow, each pair either side of its label (Craig, 24 Sep 2026). */}
       <table className="mx-auto w-full max-w-sm border-collapse">
         <caption className="sr-only">

@@ -15,12 +15,15 @@ import type {
   IntelXi,
   ClubDepth,
   ClubStrength,
+  Floors,
+  IntelLines,
+  PlayerLine,
   ProjectedPlayer,
   StatsRow,
   Shot,
   TouchPlayer,
 } from "@epl/core";
-import { careerIntel, depthIntel, matchIntel, projectionIntel, shotIntel, squadIntel, statIntel, strengthIntel, touchIntel } from "@epl/core";
+import { careerIntel, depthIntel, lineIntel, matchIntel, playedFloor, projectionIntel, shotIntel, squadIntel, statIntel, strengthIntel, touchIntel } from "@epl/core";
 import squadsFile from "../../../data/intel/squads/26-27.json";
 import xiFile from "../../../data/intel/xi/26-27.json";
 import piecesFile from "../../../data/intel/set-pieces/26-27.json";
@@ -32,6 +35,8 @@ import projectionsFile from "../../../data/intel/projections/26-27.json";
 import careersFile from "../../../data/intel/careers/26-27.json";
 import depthFile from "../../../data/intel/depth/26-27.json";
 import statsFile from "../../../data/intel/stats/26-27.json";
+import linesLastFile from "../../../data/intel/lines/25-26.json";
+import linesNowFile from "../../../data/intel/lines/26-27.json";
 
 // Where the app supplies the sister repo's export.
 //
@@ -127,3 +132,15 @@ export const intelDepthManifest = (depthFile as unknown as IntelDepth).manifest;
 
 /** The stats league's season counts by FPL code, for every man who has played (`npm run stats`). */
 export const intelStats: Map<number, StatsRow> = statIntel(statsFile as unknown as IntelStats);
+/** Each man's league season in totals by FPL code, last season's and this one's: what the attribute grid rates. */
+export const intelLines: { last: Map<number, PlayerLine>; now: Map<number, PlayerLine> } = {
+  last: lineIntel(linesLastFile as unknown as IntelLines),
+  now: lineIntel(linesNowFile as unknown as IntelLines),
+};
+/** Each file's season, `"25-26"`, for the grid's heading. */
+export const lineSeasons = {
+  last: (linesLastFile as unknown as IntelLines).manifest.season,
+  now: (linesNowFile as unknown as IntelLines).manifest.season,
+};
+/** The minutes a man needs in each season to count as playing it. */
+export const lineFloors: Floors = { last: playedFloor(intelLines.last.values()), now: playedFloor(intelLines.now.values()) };

@@ -4239,6 +4239,24 @@ fifteen-minute interval the match clock does not count, and enough stoppage that
 nothing is still live at the whistle. Named constants in `replay.ts`; the
 Premier League publishes no interval length and FPL publishes no clock at all.
 
+## The attribute grid rates by role on last season, and #127's stats league is not its source (30 Sep 2026)
+
+Craig: *"fernandes having no work rate, haaland not top for finishing. maybe we need to judge
+against all outfielders who actually play"*. Counted first (Fernandes Work Rate 4, Haaland
+Finishing 16), and the cohort alone moved neither: the measures were the fault.
+
+- **Cohort by role:** keepers against keepers, outfielders against every outfielder who
+  plays; a third of the season's most minutes counts as playing. Rankings and the fixture
+  run's places stay within the position group.
+- **Sample:** 25/26 when he played that third of it, else 26/27. Running is 26/27's only.
+- **Source:** the sister's `lines/{season}.json`, off its player log, which holds both
+  seasons. The Fantrax stats league (#127, merged as #188) holds only this one, so it is not the
+  grid's source; its daily capture still runs and nothing on screen reads it, which is Craig's
+  call to keep or retire.
+- **What reads wrong gets changed, not kept:** Consistency, Teamwork, Handling and Technique
+  each put a star at or near the bottom on its first measure; three were re-sourced and Technique dropped.
+  `docs/ui/player.md` names each row's source.
+
 ## The dummy league is the stats league, and its counts are a capture (26 Sep 2026)
 
 `w05aib75mtj36y1g`, recorded as `dummy` and named "ALLPOINTS" in Fantrax, enables every

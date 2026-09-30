@@ -46,20 +46,13 @@ derived the same four from the same object.
    to its foot (Craig, 25 Sep 2026: "cut off mid box").
 2. **The attribute grid** — CM 01/02's: alphabetical down three columns on the desk and two
    on a phone, 16–20 in CM's orange and 11–15 in amber, with **Preferred Foot** (off the shot
-   map) as its worded row. Every rating is OURS
-   and rated **within his position group** (Craig, 25 Sep 2026: "compare to just attackers,
-   defenders to just defenders"): the sister repo's line, gathered into goalkeepers,
-   defenders, midfielders and forwards; a man with no line is rated against everyone.
-   **The event counts are the stats league's** (Craig, 26 Sep 2026: *"now that we have the
-   extra stats, could use that?"*): Aggression (fouls), Creativity (key passes), Crossing
-   (accurate crosses), Dribbling (take-ons attempted), Heading (aerials won), Marking
-   (clearances), Passing (passes into the final third), Positioning (interceptions), Tackling
-   (tackles won) and Work Rate (tackles won, interceptions and recoveries), each per 90 of his
-   minutes there. FPL gives Anticipation (its recoveries, which equal the stats league's),
-   Determination, Influence, Finishing, Off The Ball and Stamina; the shot and touch maps give
-   Long Shots and Teamwork, and his club's set-piece orders Penalty Taking and Set Pieces. A man
-   the stats league holds nothing on reads `—` on its rows.
-   A keeper gets his own seven.
+   map) as its worded row. Every rating is OURS,
+   per 90, against **every man of his role** (Craig, 30 Sep 2026: "judge against all
+   outfielders who actually play"): keepers against keepers, the rest against all
+   outfielders, so a centre-half's Finishing is low as CM's is. The sample is **last
+   season's** when he played a third of the most minutes anyone did (1,140 in 25/26), else
+   this season's against the same third ("new players get this season"); the heading says
+   which, `25/26 · against outfielders`. A keeper gets eight rows, an outfielder twenty-two.
    **Fitness and News** sits under it (Craig, 26 Sep 2026: *"this page should contain the
    latest player news, and their fitness conditions"*): one row with FPL's note, his state box
    and his chance of playing, washed in the doubt ramp (Condition left the grid so the chance
@@ -67,7 +60,7 @@ derived the same four from the same object.
    newest note as Mail's row, opening it on the News tab, with the rest of it under the row.
    Only the newest: the list is News's. No source caption. A fit man with nothing filed gets
    the one row; a man FPL has never listed gets the note alone, and with neither, no panel.
-   **Rankings** sit under it: his season totals and his place among the same group
+   **Rankings** sit under it: his season totals and his place among his position group
    ("rankings for data such as xg").
    **Set pieces** under that: his place in his club's penalty, direct free-kick and corner
    orders (Craig, 30 Sep 2026: "their fk/pk/corner rank for the club"), the same order the
@@ -186,14 +179,21 @@ statistic it did not collect that year arrives as a nought rather than an absenc
 Sports Interactive's are licensed and there is no feed for them: the route through
 FM26 is a plugin, an in-game keypress and a manual CSV of whatever columns are on
 screen. So every rating here is derived from play we already measure, on CM's 1–20
-scale, and **what we cannot measure gets no row** — Pace, Acceleration, Agility,
-Balance, Bravery and Flair are absent rather than invented.
+scale, and **what we cannot measure gets no row** — Agility, Balance, Bravery, Flair and
+Technique are absent rather than invented.
 
-Ratings are a **percentile within his position group, against the men in it who have played**
-(since 25 Sep 2026; they were rated against the whole division until then, so a striker's
-Marking came out low as CM's would). It is the fraction he is strictly better than, not the
-midpoint of his tie — 203 of the 225 men past the minutes floor have made no saves, so a
-midrank put every outfielder at Handling 10.
+Each row's source is in its title. The ones Craig called on 30 Sep 2026: **Finishing** is
+expected goals on target per 90 ("finishing should be using xgot"; goals less xG put
+Haaland at 3 on 25/26, this puts him at 20); **Work Rate** is distance covered per 90 and
+**Pace** top speed, both off SofaScore's running, which exists only from 26/27 ("work rate
+could use our running data"); **Acceleration** is sprints per 90. **Consistency** is his
+mean match rating over his worst quarter of starts, because a spread of ratings put every
+striker at the bottom; **Teamwork** is xGBuildup per 90, because touches did the same;
+**Handling** is the share of shots on target he saved, because saves per 90 put Raya at 1.
+The counts are the sister's `lines/{season}.json` (`docs/providers/intel-export.md` §9).
+
+It is the fraction of the cohort he is strictly better than, not the midpoint of his tie,
+so a block of noughts sits at 1.
 
 The ratings are set in CM's orange (`--color-peak`) from 16 and amber (`--color-mid`) from 11,
 never CM's yellow: yellow is `--color-accent` and means *yours · selected · active*.
@@ -282,15 +282,10 @@ country is taken off the end of Fantrax's birthplace and the town dropped; the
 adjective is not invented, because a demonym table is not a fact we hold. The
 Birthplace/Height/Weight block went with it.
 
-**Keepers get their own grid.** Each measure in `football/attributes.ts` says
-whose it is (`for: "keeper" | "outfield"`, or both); the app passes the role off
-the sister repo's real position, because the football layer holds no position by
-rule. Positioning is both, measured apart: goals prevented for a keeper,
-interceptions for an outfielder. An outfielder loses Handling and Reflexes; a keeper loses the seven about
-scoring, creating and defending in open play. That reverses an argument this
-file's own header used to make — that a keeper handled himself, because an
-outfielder sits at the bottom of Handling — which was true and produced a grid
-with two dead rows for 600 men and thirteen for the other 51.
+**Keepers get their own grid.** Each row in `football/attributes.ts` says whose it is
+(`for: "keeper" | "outfield" | "both"`); the app reads the role off the sister repo's real
+position, because the football layer holds no position by rule. No name means one thing for
+a keeper and another for an outfielder, so Compare can pair rows by name.
 
 **Good attributes are the loud ones.** A step down in loudness rather than a
 second hue: `--color-mid` above 15, `--color-muted` to 8, `--color-faint` below.

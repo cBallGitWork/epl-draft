@@ -1,3 +1,4 @@
+import { finiteOrNull } from "../../untrusted";
 import type { IntelManifest } from "./types";
 
 // The sister model's projected FPL points per player per gameweek: FPL's scoring, not Fantrax's.
@@ -45,11 +46,11 @@ export function projectionIntel(file: IntelProjections | null): Map<number, Proj
       .filter((week) => Number.isInteger(week?.gw))
       .map((week) => ({
         ...week,
-        points: reading(week.points),
-        low: reading(week.low),
-        high: reading(week.high),
-        minutes: reading(week.minutes),
-        start: reading(week.start),
+        points: finiteOrNull(week.points),
+        low: finiteOrNull(week.low),
+        high: finiteOrNull(week.high),
+        minutes: finiteOrNull(week.minutes),
+        start: finiteOrNull(week.start),
         parts: week.parts == null ? null : parts(week.parts),
       }));
     byCode.set(player.code, { ...player, gameweeks });
@@ -96,9 +97,5 @@ export function projectedPlace(
 }
 
 function parts(raw: Record<string, unknown>): Record<ProjectionPart, number | null> {
-  return Object.fromEntries(PROJECTION_PARTS.map((part) => [part, reading(raw[part])])) as Record<ProjectionPart, number | null>;
-}
-
-function reading(value: unknown): number | null {
-  return typeof value === "number" && Number.isFinite(value) ? value : null;
+  return Object.fromEntries(PROJECTION_PARTS.map((part) => [part, finiteOrNull(raw[part])])) as Record<ProjectionPart, number | null>;
 }

@@ -17,12 +17,14 @@ export interface GridWord {
 export default function AttributeGrid({
   attributes,
   words,
-  group,
+  season,
+  keeper,
 }: {
   attributes: readonly Attribute[];
   words: readonly GridWord[];
-  /** Who he is rated against, for the heading; null when that is the whole division. */
-  group: string | null;
+  /** The season he is rated on, `"25-26"`; null when he has played enough of neither. */
+  season: string | null;
+  keeper: boolean;
 }) {
   const cells = [
     ...attributes.map((a) => ({ name: a.name, title: a.from, value: a.rating, ink: ink(a.rating) })),
@@ -31,7 +33,7 @@ export default function AttributeGrid({
   const rows = { "--rows": Math.ceil(cells.length / 2), "--rows-lg": Math.ceil(cells.length / 3) } as CSSProperties;
 
   return (
-    <Section title="Attributes" aside={group === null ? "Against the division" : `Against ${group}`}>
+    <Section title="Attributes" aside={`${season === null ? "" : `${season.replace("-", "/")} · `}against ${keeper ? "keepers" : "outfielders"}`}>
       <dl
         className="grid auto-cols-fr grid-flow-col gap-x-4 [grid-template-rows:repeat(var(--rows),auto)] lg:gap-x-6 lg:[grid-template-rows:repeat(var(--rows-lg),auto)]"
         style={rows}

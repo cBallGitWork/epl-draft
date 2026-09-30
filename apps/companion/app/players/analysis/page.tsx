@@ -48,8 +48,8 @@ import { seasonFixtures } from "../../football";
 //
 // **Both halves are read in parallel and neither blocks the other's frame.** The
 // bar needs both men, so it waits; the grids are streamed, because each is a
-// percentile over his position group and the screen is worth showing before they
-// land.
+// percentile over every man of his role and the screen is worth showing before
+// they land.
 
 export const revalidate = 30;
 
@@ -240,7 +240,7 @@ export default async function ComparePage({
         </div>
       ) : null}
 
-      {/* Streamed: each grid is a percentile over his position group. */}
+      {/* Streamed: each grid is a percentile over every man of his role. */}
       {view === "attributes" ? (
         <Suspense fallback={<StackWaiting />}>
           <Grids left={one_} right={second === null ? null : two} names={{ a: names.a, b: second === null ? null : names.b }} />
@@ -305,8 +305,8 @@ async function man(
 /** The two attribute grids, read behind the boundary above. */
 async function Grids({ left, right, names }: { left: Found; right: Found | null; names: { a: string; b: string | null } }) {
   const [gridA, gridB] = await Promise.all([
-    left.football ? playerGrid(left.football.player) : Promise.resolve([]),
-    right?.football ? playerGrid(right.football.player) : Promise.resolve([]),
+    left.football ? playerGrid(left.football.player).then((grid) => grid.attributes) : Promise.resolve([]),
+    right?.football ? playerGrid(right.football.player).then((grid) => grid.attributes) : Promise.resolve([]),
   ]);
   return <Measures a={gridA} b={gridB} names={names} />;
 }
