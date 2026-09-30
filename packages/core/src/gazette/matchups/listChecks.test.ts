@@ -71,6 +71,12 @@ describe("listFaults", () => {
     expect(page).not.toContain("a roll-call of men and points in one sentence");
   });
 
+  it("sends back a report that leaves out automatic substitutions that changed the score", () => {
+    const told = (body: string) => listFaults({ paragraphs: [LEDE, body, CLOSE] }, ctx, 1, "gameweek", matchupBlock(ctx, "gameweek", 2), []).map((f) => f.check);
+    expect(told("test2 closed to within four on Sunday.")).toContain("the automatic substitutions go untold");
+    expect(told("Meunier's three points closed it to one on Sunday.")).not.toContain("the automatic substitutions go untold");
+  });
+
   it("only warns when a report never says when, or ends on a man's points", () => {
     const flat = listFaults({ paragraphs: ["Haaland's goal broke test2.", "It was close."] }, ctx, 1, "gameweek", "", []);
     expect(flat.filter((f) => f.severity === "warn").map((f) => f.check)).toEqual(["no arc: it never says when"]);

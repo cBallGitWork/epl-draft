@@ -7,7 +7,7 @@ import { counted, lateDecider } from "./state";
 import { returnCount, returnWords, whenScored, withClub } from "./stories";
 import { thread, type Thread } from "./thread";
 import { SIDES, beatLabel, beatOf, ledForGood, type Beat, type Which } from "./timeline";
-import type { SlotWorth } from "./types";
+import type { DraftMan, SlotWorth } from "./types";
 import { possessive } from "./words";
 
 // The match's shape at the end of the gameweek: turned by the bench, decided late, a comeback, a lead lost, a fightback
@@ -39,12 +39,25 @@ function levelThreads(ctx: MatchupContext, beats: readonly Beat[]): Thread[] {
   return [thread("level", { teamId: null, facts: [`${home.side.name} and ${away.side.name} drew ${home.total}-${away.total}`] }), ...caught];
 }
 
+/** Two sides' men who both returned in the same Premier League match, on opposing clubs: one match, two stories. */
+function sameMatch(ctx: MatchupContext): Thread[] {
+  const [home, away] = [counted(ctx.state.home), counted(ctx.state.away)];
+  const labels = new Map([...home, ...away].flatMap((m) => m.matches.map((x) => [x.code, x.label] as const)));
+  return [...labels].flatMap(([code, label]) => {
+    const inIt = (men: readonly DraftMan[]) => men.filter((m) => returnCount(m) > 0 && m.minutes > 0 && m.matches.some((x) => x.code === code));
+    const [h, a] = [inIt(home), inIt(away)];
+    if (!h.some((x) => a.some((y) => x.club !== y.club))) return [];
+    const told = (men: readonly DraftMan[], name: string) => `${listed(men.map((m) => `${withClub(m)} (${returnWords(m)})`), "and")} for ${name}`;
+    return [thread("same-match", { teamId: null, men: [...h, ...a], facts: [`${label}, one match: ${told(h, ctx.state.home.side.name)}; ${told(a, ctx.state.away.side.name)}`] })];
+  });
+}
+
 export function matchThreads(ctx: MatchupContext, beats: readonly Beat[], worth: SlotWorth, gameweek: number): Thread[] {
   const { margin } = ctx.state;
-  if (margin === 0) return [...levelThreads(ctx, beats), ...oneManShows(ctx)];
+  if (margin === 0) return [...levelThreads(ctx, beats), ...oneManShows(ctx), ...sameMatch(ctx)];
   const [w, l]: [Which, Which] = margin > 0 ? ["home", "away"] : ["away", "home"];
   const [W, L, m] = [ctx.state[w], ctx.state[l], Math.abs(margin)];
-  const out = oneManShows(ctx);
+  const out = [...oneManShows(ctx), ...sameMatch(ctx)];
   // Turned by the bench: the side that lost led on the eleven's points alone.
   if ((L.side.total ?? 0) > (W.side.total ?? 0)) {
     const on = W.subs.filter((s) => !s.provisional);
@@ -66,6 +79,11 @@ export function matchThreads(ctx: MatchupContext, beats: readonly Beat[], worth:
   const behind = extreme(beats, l, -1);
   if (behind !== null && -lead(behind, l) >= DRAFT_NEWS.fightbackFrom && m <= DRAFT_NEWS.fightbackWithin) {
     out.push(thread("fightback-short", { teamId: L.side.teamId, beat: behind.day, facts: [`${L.side.name} were ${-lead(behind, l)} behind after ${beatLabel(behind.day)} and lost by ${m}`] }));
+  }
+  // The irony the reviewer found in GW5: test2 won three of its four stages and still lost by a point.
+  const won = (w: Which) => beats.filter((b) => b.points[w] > b.points[other(w)]);
+  if (won(l).length > won(w).length) {
+    out.push(thread("days-won", { teamId: L.side.teamId, facts: [`${L.side.name} won ${listed(won(l).map((b) => beatLabel(b.day)), "and")}, ${won(l).length} of the gameweek's ${beats.length} stages, and still lost by ${m}`] }));
   }
   if (m <= DRAFT_NEWS.closeWithin) out.push(thread("close", { teamId: W.side.teamId, bigger: m === 1, facts: [`${W.side.name} won by ${m}`] }));
   const [pw, pl] = [ctx.places[w], ctx.places[l]];

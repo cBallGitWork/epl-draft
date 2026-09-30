@@ -8,8 +8,11 @@ import type { DraftMan, PositionLimits } from "./types";
 export interface AutoSub {
   out: DraftMan;
   in: DraftMan;
-  /** True when the man coming on has not played yet: he comes on only if he does. */
+  /** True while it may not happen: the reserve has not played yet, or `ahead` may take him first. */
   provisional: boolean;
+  /** A man ahead of `out` in the eleven, still to play, who takes this reserve if he does not play: the pairing holds
+   *  only if he plays (GW5: Davis for Elanga after Saturday, for Rodon at the end). Null when nobody can. */
+  ahead: DraftMan | null;
 }
 
 /** A man who will finish the period with no minutes: every match done, none of it played. */
@@ -31,9 +34,10 @@ export function autoSubs(eleven: readonly DraftMan[], bench: readonly DraftMan[]
   for (const out of eleven.filter(blank)) {
     const candidate = bench.find((b) => !used.has(b.fantraxId) && available(b) && fits(lineup, out, b, limits));
     if (candidate === undefined) continue;
+    const ahead = eleven.slice(0, eleven.indexOf(out)).find((m) => m.left > 0 && m.minutes === 0 && fits(lineup, m, candidate, limits)) ?? null;
     used.add(candidate.fantraxId);
     lineup[lineup.indexOf(out)] = candidate;
-    subs.push({ out, in: candidate, provisional: candidate.minutes === 0 });
+    subs.push({ out, in: candidate, provisional: candidate.minutes === 0 || ahead !== null, ahead });
   }
   return subs;
 }

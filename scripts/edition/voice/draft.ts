@@ -15,7 +15,7 @@ YOU KNOW ONLY THE BRIEF. Every name, figure, minute and score is in it, and noth
 
 EACH MATCH-UP, in the brief's order, the first being the lead, is a short report in two to four paragraphs:
 - THE LEDE is the first paragraph, one sentence, and it tells THE STORY through a man in THE CAST or through a side. The page prints the score directly above it, so the lede never gives the result or its score.
-- THE BODY follows the days in the brief's order and never goes back. A man from THE CAST enters where he acts, once; every other man is part of a group, or goes unmentioned. A running score goes in only where the lead changed hands or a gap opened or closed, and twice at most. THE TWIST and each of the THREADS go in their own day. Set the two sides against each other at least once.
+- THE BODY follows the days in the brief's order and never goes back. A man from THE CAST enters where he acts, once; every other man is part of a group, or goes unmentioned. A running score goes in only where the lead changed hands or a gap opened or closed, and twice at most. THE TWIST and each of the THREADS go in their own day. Every stage that changed the lead or the gap goes in, the automatic substitutions among them. Set the two sides against each other at least once.
 - THE LAST LINE looks out, to the table, a run of results or next gameweek. It never sums up what came before.
 - Up to ${DRAFT_WRITING.leadWords} words for the lead match-up and ${DRAFT_WRITING.matchupWords[1]} for each of the others, and never fewer than ${DRAFT_WRITING.matchupWords[0]}.
 

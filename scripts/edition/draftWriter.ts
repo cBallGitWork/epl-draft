@@ -122,7 +122,8 @@ export async function draftColumn(job: DraftJob, say: (message: string) => void,
   if (fixes.length > 0) say(`  draft report: line edit fixed ${fixes.length - faultyDraftSentences(pieces, never, names).length} of ${fixes.length} sentences`);
   // The fact checker's read of the printed words against each block, on the cheap model: a claim it cannot put right goes.
   const printed = [...pieces].map(([n, p]) => `MATCH-UP ${n}:\nBRIEF:\n${blocks[n - 1] ?? ""}\n\nPRINTED:\n${p.paragraphs.join("\n")}`).join("\n\n=====\n\n");
-  const checked = await writeColumn(DRAFT_FACTS_VOICE, printed, count, "helper").catch(() => null);
+  // Checking every claim is slow thinking, and GW5's gameweek spent all 8,000 tokens of the default before answering.
+  const checked = await writeColumn(DRAFT_FACTS_VOICE, printed, count, "helper", DRAFT_WRITING.factTokens).catch(() => null);
   const factual = checked === null ? { pieces, made: 0 } : applyFactFixes(pieces, readFactFixes(checked), job.contexts, blocks);
   say(`  draft report: fact check ${checked === null ? "unavailable" : `made ${factual.made} fixes`}`);
   for (const f of attempts.at(-1)!.faults.filter((x) => x.severity !== "warn")) say(`    fault ${f.section}: ${f.check} [${f.evidence}]`);

@@ -25,12 +25,14 @@ export interface Usage {
 const MAX_TOKENS = 8000;
 
 /** One call, by fetch. No SDK: CODE_RULES §2 says no dependency a small local
- *  function would cover, and this is twenty lines. */
+ *  function would cover, and this is twenty lines. `maxTokens` is for a call that
+ *  thinks at length before it answers, whose thinking spends the same budget. */
 export async function writeColumn(
   system: string,
   brief: string,
   onUsage?: (usage: Usage) => void,
   tier: Tier = "writer",
+  maxTokens = MAX_TOKENS,
 ): Promise<Record<string, unknown>> {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) throw new Error("ANTHROPIC_API_KEY is not set. The column is written in CI, never on Vercel.");
@@ -44,7 +46,7 @@ export async function writeColumn(
     },
     body: JSON.stringify({
       model: tier === "helper" ? HELPER_MODEL : MODEL,
-      max_tokens: MAX_TOKENS,
+      max_tokens: maxTokens,
       // The voice is long and the same on every call of a firing, so it is cached: a repeat reads it at a fraction of the price.
       system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
       messages: [{ role: "user", content: brief }],

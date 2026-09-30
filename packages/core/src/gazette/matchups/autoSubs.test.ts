@@ -30,6 +30,14 @@ describe("autoSubs", () => {
     expect(autoSubs(eleven, [man("B3", "D", 0, 1)], LIMITS)[0]?.provisional).toBe(true);
   });
 
+  it("holds a pairing open while a man ahead of the blank, still to play, could take the reserve first", () => {
+    // GW5 after Saturday: Elanga blank, Rodon still to play and ahead of him; at the end Davis went to Rodon.
+    const saturday = eleven.map((m) => (m.name === "D3" ? man("Rodon", "D", 0, 1) : m.name === "F2" ? man("Elanga", "F", 0) : m));
+    const [sub] = autoSubs(saturday, [man("Davis", "D", 90)], LIMITS);
+    expect([sub?.out.name, sub?.in.name, sub?.provisional, sub?.ahead?.name]).toEqual(["Elanga", "Davis", true, "Rodon"]);
+    expect(autoSubs(eleven, [man("B3", "D", 90)], LIMITS)[0]).toMatchObject({ provisional: false, ahead: null });
+  });
+
   it("uses each reserve once, and leaves a blank unfilled when nobody fits", () => {
     const two = eleven.map((m) => (m.name === "D2" ? man("D2", "D", 0) : m));
     expect(autoSubs(two, [man("B3", "D", 90)], LIMITS).map((s) => `${s.out.name}>${s.in.name}`)).toEqual(["D2>B3"]);

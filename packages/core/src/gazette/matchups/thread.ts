@@ -10,7 +10,8 @@ export type ThreadKind = keyof typeof DRAFT_NEWS.weight;
 export type Family = "turn" | "decider" | "margin" | "star" | "setback" | "people" | "season" | "upset" | "chase";
 
 const FAMILY: Record<ThreadKind, Family> = {
-  "bench-turned": "turn", comeback: "turn", "lead-lost": "turn", "fightback-short": "turn", "subs-waiting": "turn", "to-play-gap": "turn",
+  "bench-turned": "turn", comeback: "turn", "lead-lost": "turn", "fightback-short": "turn", "subs-waiting": "turn", "to-play-gap": "turn", "days-won": "turn",
+  "same-match": "people",
   "late-decider": "decider", "turning-point": "decider", "late-goal": "decider", crossfire: "decider",
   level: "margin", close: "margin", rout: "margin", "saturday-lead": "margin",
   "one-man-show": "star", haul: "star", "keeper-haul": "star", "star-blank": "star",
@@ -24,7 +25,7 @@ const FAMILY: Record<ThreadKind, Family> = {
 
 /** The match's shape outranks a man's, and a man's the season's, when two threads score alike. */
 export type Scope = "match" | "man" | "season";
-const MATCH: readonly ThreadKind[] = ["bench-turned", "late-decider", "comeback", "one-man-show", "level", "close", "lead-lost", "fightback-short", "upset", "rout", "turning-point", "chase", "subs-waiting", "to-play-gap", "saturday-lead", "both-to-come"];
+const MATCH: readonly ThreadKind[] = ["bench-turned", "late-decider", "comeback", "one-man-show", "level", "close", "lead-lost", "fightback-short", "upset", "rout", "turning-point", "chase", "subs-waiting", "to-play-gap", "saturday-lead", "both-to-come", "days-won", "same-match"];
 
 export interface Thread {
   kind: ThreadKind;

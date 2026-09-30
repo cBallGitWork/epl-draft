@@ -22,24 +22,24 @@ describe("buildDraftBrief", () => {
     expect(end).toContain("THE RESULT, printed above your words, never in them: 123 beat test2 38-37.");
     expect(end).toContain("THE STORY, which your first sentence tells: 123: Haaland of Man City scored in the 81st minute; without that goal test2 would have won (Sunday)");
     expect(end).toContain("THE TWIST, told in its beat: test2 were 11 behind after Friday and lost by 1 (Friday)");
-    expect(end).toContain("THE CAST, each man's points given once:\n- Haaland of Man City for 123, on Sunday: 6 points: a goal in the 81st minute");
+    expect(end).toContain("THE CAST, each man's points given once:\n- 123's Haaland of Man City, on Sunday: 6 points: a goal in the 81st minute");
   });
 
   it("tells how it unfolded a day at a time, returns without their points, and marks no day as optional", () => {
     expect(end).toContain("HOW IT UNFOLDED, in order:\n- Friday: test2 0, 123 11, making it 11-0 to 123");
-    expect(end).toContain("- Sunday: test2 18, 123 12, making it 38-34 to 123; returns: Haaland of Man City for 123 (a goal in the 81st minute)");
-    expect(end).toContain("- Friday: test2 0, 123 11, making it 11-0 to 123; no returns, the points all for minutes and defensive work; none of the cast played");
+    expect(end).toContain("- Sunday: test2 18, 123 12, making it 38-34 to 123; returns: 123's Haaland of Man City (a goal in the 81st minute)");
+    expect(end).toContain("- Friday: test2 0, 123 11, making it 11-0 to 123; no returns, the points all for minutes and defensive work\n");
     expect(end).toContain("- The automatic substitutions: test2 3, 123 0, making it 38-37 to 123; no returns, the points all for minutes and defensive work");
     expect(end).not.toMatch(/left out/u);
-    expect(end).toContain("- The automatic substitutions: test4 2, test3 9, making it 33-28 to test3; returns: Vuskovic of Tottenham for test3 (a clean sheet)");
+    expect(end).toContain("- The automatic substitutions: test4 2, test3 9, making it 33-28 to test3; returns: test3's Vuskovic of Tottenham (a clean sheet)");
   });
 
-  it("names only the story's men in a day, and counts every other man's returns by side", () => {
+  it("names every return in a day with its side, and never its points", () => {
     const saka = draftMan("Saka", "M", 8, 90, 0, { club: "Arsenal", goals: 1 });
     const rice = draftMan("Rice", "M", 5, 90, 0, { club: "Arsenal", assists: 1 });
     const ctx = contextOf(draftSide("A", 40, eleven("h", { 5: saka })), draftSide("B", 30, eleven("a", { 6: rice })));
     const angle = { story: thread("haul", { teamId: "A", men: [saka], facts: ["Saka scored"] }), twist: null, supporting: [], cast: [saka], score: 45, past: [] };
-    expect(buildDraftBrief("gameweek", 5, [{ ...ctx, angle }])).toContain("returns: Saka of Arsenal for A (a goal) and an assist from the rest of B's men");
+    expect(buildDraftBrief("gameweek", 5, [{ ...ctx, angle }])).toContain("returns: A's Saka of Arsenal (a goal) and B's Rice of Arsenal (an assist)");
   });
 
   it("after Saturday, says how it stands and what is still to come, the shared match first, as fixtures only", () => {

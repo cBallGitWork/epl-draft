@@ -74,6 +74,7 @@ export const fitnessLine = (m: DraftMan) => (m.fitness === null ? null : `${m.mi
 export function subLine(s: AutoSub, cutoff: Cutoff): string {
   // "Replaced", not "came on": the paper's banned list keeps "came on" for the Premier League's own substitutions.
   const on = `${withClub(s.in)} ${cutoff === "gameweek" ? "replaced" : "replaces"} ${withClub(s.out)}, who did not play`;
+  if (s.ahead !== null) return `${on}, if ${s.ahead.name}, still to play, plays`;
   if (s.provisional) return `${on}, if he plays`;
   const got = gotLine(s.in);
   if (cutoff === "gameweek") return `${on}, and ${got ?? `brought ${pts(s.in.points ?? 0)}`}`;

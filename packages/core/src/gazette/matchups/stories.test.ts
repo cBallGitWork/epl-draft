@@ -42,10 +42,11 @@ describe("a draft man's facts, each in its own line", () => {
   });
 
   it("puts what a substitute did in the line that brings him on", () => {
-    const sub = { out: draftMan("Dunk", "D", null, 0, 0, { club: "Brighton" }), in: draftMan("Vuskovic", "D", 6, 90, 0, { club: "Brighton", cleanSheets: 1 }), provisional: false };
+    const sub = { out: draftMan("Dunk", "D", null, 0, 0, { club: "Brighton" }), in: draftMan("Vuskovic", "D", 6, 90, 0, { club: "Brighton", cleanSheets: 1 }), provisional: false, ahead: null };
     expect(subLine(sub, "gameweek")).toBe("Vuskovic of Brighton replaced Dunk of Brighton, who did not play, and got 6: a clean sheet");
     expect(subLine(sub, "saturday")).toBe("Vuskovic of Brighton replaces Dunk of Brighton, who did not play, with 6: a clean sheet");
     expect(subLine({ ...sub, provisional: true }, "saturday")).toBe("Vuskovic of Brighton replaces Dunk of Brighton, who did not play, if he plays");
+    expect(subLine({ ...sub, provisional: true, ahead: draftMan("Maguire", "D", null, 0, 1) }, "saturday")).toBe("Vuskovic of Brighton replaces Dunk of Brighton, who did not play, if Maguire, still to play, plays");
   });
 
   it("names a bench score of six or more whatever the margin, more so past the deficit, and a blank no reserve covered", () => {

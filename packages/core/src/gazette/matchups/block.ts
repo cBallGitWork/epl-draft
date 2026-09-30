@@ -5,13 +5,13 @@ import type { Cutoff, MatchupContext, NextOpponent } from "./brief";
 import { counted, everyMan, type SideState } from "./state";
 import { fitnessLine, minutesLine, newLine, pts, returnWords, withClub } from "./stories";
 import type { Thread } from "./thread";
-import { SIDES, beatLabel, beatOf, timeline, type Beat, type BeatReturn } from "./timeline";
+import { SIDES, beatLabel, beatOf, timeline, type Beat } from "./timeline";
 import { possessive } from "./words";
 import type { DraftMan } from "./types";
 
 // One match-up's block of the brief, built on the story the desk chose (`angle.ts`): the result, THE STORY and its twist,
 // the cast, how it unfolded a day at a time, the threads in their beats, the season for the close, what comes next and
-// last time's story. Only the cast are named, each with his points once; the labels are the writer's and never print.
+// last time's story. A cast man's points are given once, in THE CAST; the labels are the writer's and never print.
 
 const when = (beat: string | null | undefined) => (beat === undefined ? "" : ` (${beatLabel(beat)})`);
 
@@ -37,7 +37,7 @@ function castLine(ctx: MatchupContext, m: DraftMan): string {
   const next = m.left > 0 && m.next !== null ? `plays ${m.next.home ? "at home to" : "away to"} ${m.next.opponent} on ${londonWeekdayLong(m.next.kickoff)}` : null;
   const parts = [
     points,
-    sub === undefined ? null : `${sub.provisional ? "replaces" : "replaced"} ${sub.out.name}, who did not play${sub.provisional ? ", if he plays" : ""}`,
+    sub === undefined ? null : `${sub.provisional ? "replaces" : "replaced"} ${sub.out.name}, who did not play${sub.ahead !== null ? `, if ${sub.ahead.name} plays` : sub.provisional ? ", if he plays" : ""}`,
     // A reserve played his own match, on its own day, before the substitutions counted it: GW5 had him "yet to kick a ball".
     sub !== undefined && m.minutes > 0 ? `played ${m.minutes >= 90 ? "the whole match" : `${m.minutes} minutes`} for ${m.club}${m.byDay[0] === undefined ? "" : ` on ${beatLabel(m.byDay[0].day)}`}` : null,
     bench ? "on the bench, where his points count for nobody" : null,
@@ -49,39 +49,25 @@ function castLine(ctx: MatchupContext, m: DraftMan): string {
   // The day comes with the man, not after his figures: GW5's writer gave Groß's Saturday 11 to Friday's 11.
   const beat = beatOf(ctx.state, m);
   const day = beat === undefined ? "" : beat === null ? ", in the automatic substitutions" : `, on ${beatLabel(beat)}`;
-  return `- ${withClub(m)} for ${s?.side.name ?? "neither side"}${day}: ${parts.filter((p) => p !== null).join("; ")}`;
+  // The side comes first, and a reserve is called one: GW5's writer gave test3's reserves to test4.
+  const whose = s === undefined ? "" : `${possessive(s.side.name)} ${sub !== undefined || bench ? "reserve " : ""}`;
+  return `- ${whose}${withClub(m)}${day}: ${parts.filter((p) => p !== null).join("; ")}`;
 }
 
-/** Goals, assists and clean sheets between some men, as a count: "2 goals and a clean sheet". */
-function tally(returns: readonly BeatReturn[]): string {
-  const sum = (pick: (r: BeatReturn) => number) => returns.reduce((n, r) => n + pick(r), 0);
-  const count = (n: number, one: string, many: string) => (n === 0 ? [] : [n === 1 ? one : `${n} ${many}`]);
-  return listed([...count(sum((r) => r.goals), "a goal", "goals"), ...count(sum((r) => r.assists), "an assist", "assists"), ...count(sum((r) => r.cleanSheets), "a clean sheet", "clean sheets")], "and");
-}
-
-/** A beat in a line: each side's points, the running score after it, and what was scored in it: the cast by name, a
- *  reserve by name in the substitutions, every other man's returns as a side's count, so the writer names only the
- *  story's men (GW5 named sixteen); and which of the cast played that day, so none is given another day's points. */
-function beatLine(ctx: MatchupContext, b: Beat, cast: ReadonlySet<DraftMan>): string {
+/** A beat in a line: each side's points, the running score after it, and every return in it by name, without points. A
+ *  reserve's return is told in the automatic substitutions, where it counted, never on the day he played. */
+function beatLine(ctx: MatchupContext, b: Beat): string {
   const { home, away } = ctx.state;
   const [h, a] = [b.score.home, b.score.away];
   const score = h === a ? `level at ${h}-${a}` : `${Math.max(h, a)}-${Math.min(h, a)} to ${h > a ? home.side.name : away.side.name}`;
-  const told = (m: DraftMan) => cast.has(m) || b.day === null;
-  const named = b.returns.filter((r) => told(r.man)).map((r) => {
+  const scored = b.returns.map((r) => {
     const goals = r.man.scoredAt.filter((t) => b.day === null || londonDayOf(t.kickoff) === b.day);
-    return `${withClub(r.man)} for ${ctx.state[r.side].side.name} (${returnWords({ goals: r.goals, assists: r.assists, cleanSheets: r.cleanSheets, scoredAt: goals })})`;
+    return `${possessive(ctx.state[r.side].side.name)} ${withClub(r.man)} (${returnWords({ goals: r.goals, assists: r.assists, cleanSheets: r.cleanSheets, scoredAt: goals })})`;
   });
-  const others = SIDES.flatMap((w) => {
-    const rest = b.returns.filter((r) => r.side === w && !told(r.man));
-    return rest.length === 0 ? [] : [`${tally(rest)} from the rest of ${possessive(ctx.state[w].side.name)} men`];
-  });
-  const scored = [...named, ...others];
-  const played = b.day === null ? [] : [...cast].filter((m) => m.byDay.some((d) => d.day === b.day)).map((m) => m.name);
-  const whoPlayed = b.day === null ? "" : `; ${played.length === 0 ? "none of the cast played" : `of the cast, ${listed(played, "and")} played`}`;
-  const label = beatLabel(b.day);
   // Points with no return are minutes and defensive work: GW5's writer twice had a Friday won "before a ball was kicked".
   const none = b.points.home + b.points.away === 0 ? "no returns" : "no returns, the points all for minutes and defensive work";
-  return `- ${label[0].toUpperCase()}${label.slice(1)}: ${home.side.name} ${b.points.home}, ${away.side.name} ${b.points.away}, making it ${score}; ${scored.length === 0 ? none : `returns: ${listed(scored, "and")}`}${whoPlayed}`;
+  const label = beatLabel(b.day);
+  return `- ${label[0].toUpperCase()}${label.slice(1)}: ${home.side.name} ${b.points.home}, ${away.side.name} ${b.points.away}, making it ${score}; ${scored.length === 0 ? none : `returns: ${listed(scored, "and")}`}`;
 }
 
 /** After Saturday, what is still to come by match and day, fixtures only: a match with both sides' men in it named whole
@@ -146,7 +132,7 @@ export function matchupBlock(ctx: MatchupContext, cutoff: Cutoff, n: number): st
     angle === null ? "THE STORY: the result alone." : `THE STORY, which your first sentence tells: ${told(ctx, angle.story)}`,
     angle?.twist == null ? null : `THE TWIST, told in its beat: ${told(ctx, angle.twist)}`,
     block("THE CAST, each man's points given once:", [...cast].map((m) => castLine(ctx, m))),
-    block(saturday ? "HOW IT STANDS, in order:" : "HOW IT UNFOLDED, in order:", timeline(ctx.state).map((b) => beatLine(ctx, b, cast))),
+    block(saturday ? "HOW IT STANDS, in order:" : "HOW IT UNFOLDED, in order:", timeline(ctx.state).map((b) => beatLine(ctx, b))),
     saturday ? block("STILL TO COME, the fixtures only:", toCome(ctx, cast)) : null,
     block("THREADS, each told in its beat:", (angle?.supporting ?? []).filter((t) => t.scope !== "season").map(line)),
     // The bracketed kind tells the writer which frame a fact takes; it is never printed.

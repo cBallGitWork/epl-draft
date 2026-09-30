@@ -30,6 +30,18 @@ describe("threadsOf", () => {
     expect(threads.map((t) => t.kind)).not.toContain("late-decider");
   });
 
+  it("hands over the irony of a side that won more of the gameweek's stages and still lost", () => {
+    expect(kinds().find((t) => t.kind === "days-won")?.facts).toEqual(["test2 won Saturday, Sunday and the automatic substitutions, 3 of the gameweek's 4 stages, and still lost by 1"]);
+  });
+
+  it("tells two sides' men who both returned in the same Premier League match", () => {
+    const match = { matches: [{ code: 7, label: "Man City v Sunderland" }] };
+    const haaland = draftMan("Haaland", "F", 6, 90, 0, { ...match, club: "Man City", goals: 1 });
+    const meunier = draftMan("Meunier", "D", 5, 90, 0, { ...match, club: "Sunderland", assists: 1 });
+    const ctx = contextOf(draftSide("123", 40, eleven("o", { 9: haaland })), draftSide("test2", 30, eleven("t", { 1: meunier })));
+    expect(kinds(ctx).find((t) => t.kind === "same-match")?.facts).toEqual(["Man City v Sunderland, one match: Haaland of Man City (a goal) for 123; Meunier of Sunderland (an assist) for test2"]);
+  });
+
   it("works the side behind's sums once three or fewer are left, and none before", () => {
     const salah = draftMan("Salah", "M", null, 0, 1, { club: "Liverpool", next: { opponent: "Everton", home: false, kickoff: "2026-09-27T15:30:00Z" } });
     const chase = (away: ReturnType<typeof eleven>) => kinds(contextOf(draftSide("Home", 40, eleven("h")), draftSide("Away", 36, away), {}, "saturday"), "saturday").find((t) => t.kind === "chase");

@@ -5,7 +5,7 @@ import { masked, mentionAt, ngrams, numbersIn, sentences } from "../predictions/
 import { surname } from "../reports/keyStats";
 import type { Cutoff, MatchupContext } from "./brief";
 import { everyMan } from "./state";
-import { SIDES, beatLabel, beatOf } from "./timeline";
+import { SIDES, beatLabel, beatOf, timeline } from "./timeline";
 import { DRAFT_FORECAST } from "./words";
 import type { DraftMan } from "./types";
 import type { DraftPiece } from "./writing";
@@ -150,6 +150,11 @@ export function listFaults(piece: DraftPiece, ctx: MatchupContext, at: number, c
   const handed = ngrams(block, DRAFT_WRITING.echo, names);
   const echo = [...ngrams(prose, DRAFT_WRITING.echo, names)].find((g) => before.has(g) && !handed.has(g));
   if (echo !== undefined) flag("a phrase from these sides' last report", echo);
+
+  // Automatic substitutions that changed the score are part of the story: GW5's 38-37 never told how 38-34 became it.
+  const subs = timeline(ctx.state).find((b) => b.day === null && b.points.home !== b.points.away);
+  const reserves = SIDES.flatMap((w) => ctx.state[w].subs.filter((s) => !s.provisional).map((s) => s.in.name));
+  if (cutoff === "gameweek" && subs !== undefined && !/substitut|reserve/iu.test(prose) && !reserves.some((r) => mentionAt(prose, r) >= 0)) flag("the automatic substitutions go untold", `${subs.points.home}-${subs.points.away}`);
 
   // Warnings only: a report that never moves through the gameweek, or ends on a man's points instead of looking out.
   if (at > 0 && !WEEKDAY.test(prose) && !/substitut/iu.test(prose)) flag("no arc: it never says when", "", "warn");

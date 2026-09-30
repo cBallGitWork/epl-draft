@@ -409,7 +409,8 @@ export const DRAFT_NEWS = {
   weight: {
     // The match's shape, at the end of the gameweek.
     "bench-turned": [90], "late-decider": [80, 90], comeback: [75, 85], "one-man-show": [70], level: [65], close: [55, 65],
-    "lead-lost": [60], "fightback-short": [60], upset: [60, 75], rout: [50, 60], "turning-point": [40],
+    "lead-lost": [60], "fightback-short": [60], upset: [60, 75], rout: [50, 60], "turning-point": [40], "days-won": [55],
+    "same-match": [35],
     // A man's.
     injury: [50], crossfire: [50], haul: [45], "keeper-haul": [45, 60], "clean-lost-late": [45], "bench-six": [40, 55],
     "uncovered-blank": [35, 55], "late-goal": [35, 45], "star-blank": [35], "non-starter": [30, 45], "club-mates": [30, 40],
@@ -492,8 +493,10 @@ export const DRAFT_WRITING = {
    *  an echo. */
   copied: 6,
   echo: 4,
-  /** The fact checker's fixes made in one match-up at most: past that, the writing is the problem, not a sentence. */
+  /** The fact checker's fixes made in one match-up at most: past that, the writing is the problem, not a sentence. Its
+   *  token budget, thinking included. */
   factFixes: 4,
+  factTokens: 24000,
 } as const;
 
 /** The team sheets at the lock: when a benched man is news, and how much the article carries. */
