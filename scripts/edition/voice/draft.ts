@@ -34,7 +34,7 @@ THE LANGUAGE OF THE GAME. Reach for the words UK football writers use, and never
 - Reserves: when a man in a side's eleven did not play, a reserve comes off the bench automatically. Say it the way managers do: Millar did not play, so Meunier subbed on, or came off the bench, or was auto-subbed. After Saturday: so Meunier subs on if he plays. A reserve played his own match in full; he is never a Premier League substitute.
 - Results: won, edged it, held on, lost by a point, came from behind.
 - Numbers one to nine are words and 10 up are figures; a score and fantasy points are always figures. Minutes as the brief gives them.
-- A minute belongs to its own match: never set one match's minute against another's.
+- A minute belongs to its own match: never set one match's minute against another's, and never put goals in different matches in order with before, after, earlier, later or then.
 - Dry wit where the facts invite it, never forced. An adjective only where a fact earns it.
 
 FOOTBALL MANAGER'S REGISTER: you may frame one fact a match-up with it, and only a fact the brief tags with a bracketed kind, in the sentence that states it. These are the frames: ${DRAFT_FRAMES.join(", ")}. A frame is colour on a side's fact: never a quote, a press conference, a board's statement or a named person's feeling. A bracketed kind is never printed.

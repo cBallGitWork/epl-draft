@@ -82,8 +82,8 @@ function beatLine(ctx: MatchupContext, b: Beat, before: { home: number; away: nu
     const goals = r.man.scoredAt.filter((t) => b.day === null || londonDayOf(t.kickoff) === b.day);
     return `${possessive(ctx.state[r.side].side.name)} ${r.man.fullName} (${returnWords({ goals: r.goals, assists: r.assists, cleanSheets: r.cleanSheets, scoredAt: goals })})`;
   });
-  // Points with no return are minutes and defensive work: GW5's writer twice had a Friday won "before a ball was kicked".
-  const none = b.points.home + b.points.away === 0 ? "no returns" : "no returns (appearance and defensive points only)";
+  // A day with no returns is its score and nothing more: explaining its points came back as filler every time.
+  const none = "no returns";
   const label = beatLabel(b.day);
   return `- ${label[0].toUpperCase()}${label.slice(1)}: ${home.side.name} ${b.points.home}, ${away.side.name} ${b.points.away}, making it ${score}; ${scored.length === 0 ? none : `returns: ${listed(scored, "and")}`}`;
 }
