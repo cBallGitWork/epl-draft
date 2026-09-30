@@ -12,14 +12,15 @@ rankings switcher"*, *"rankings - best at top"*, and remove the rows that explai
   ranks each opponent's DEFENCE (who your forwards face); **Defence** ranks each opponent's ATTACK (who your
   back line faces); **Rankings** is every club's own strength.
 - **The board**: every club down, the next six gameweeks with a match left across (`plannerGameweeks`), easiest
-  run first. A cell is one fixture on one line: the opponent and its rank, 1 the kindest. A phone sets a home
-  side in capitals and an away side in lower case; the desk writes `(H)` / `(A)`. The ground is the ease ramp
-  (DESIGN §3), two ranks a step.
+  run first. A cell is one fixture: the opponent, its venue `(H)` / `(A)` (under the code on a phone, beside it
+  on a desk, Craig 30 Sep 2026) and its rank, 1 the easiest. The ground is the ease ramp (DESIGN §3), two ranks
+  a step.
 - **Avg**, last and in cyan (ours): the mean rank of the six. A blank round counts as the hardest; a double
   averages its two; a tie goes to the kinder run soonest.
-- **Rankings**: two tables, attack and defence, each under a section bar ("Attack, best first"), side by side
-  on a desk. Every club by its OWN strength at home and away, the strongest first (`strengthTable`), on the
-  same ramp with green the best. Ties share a place.
+- **Rankings**: two tables under section bars, "Defences, easiest to attack first" then "Attacks, easiest to
+  defend first", side by side on a desk. Every club by its OWN strength at home and away, the weakest first
+  (`strengthTable`), so 1 is the easiest to face and a club's rank is the one the boards print against it
+  (Craig, 30 Sep 2026: the two had run opposite ways). Same ramp, green the easiest. Ties share a place.
 - **A club's name** opens the Players board filtered to that club and the positions the view is about
   (`F,M` for Attack, `D,G` for Defence), respelled for Fantrax (`toFantraxClubCode`).
 
