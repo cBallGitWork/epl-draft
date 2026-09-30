@@ -1,4 +1,5 @@
 import {
+  categoryPoints,
   fetchPlFixture,
   fetchPlRound,
   mapBenchPlayerPoints,
@@ -11,6 +12,9 @@ import {
   type LeagueInfo,
   type LivePlayerPoints,
   type PlGoal,
+  type RosteredTeam,
+  type SlotWorth,
+  sheetOf,
 } from "@epl/core";
 
 // The draft desk's readings of one gameweek's payloads: each goal's minute and club from the PL feed, and each man's
@@ -109,4 +113,28 @@ export function mostPaid(raws: readonly Raw[], categories: ReadonlySet<string>, 
 function countOf(p: LivePlayerPoints, categories: ReadonlySet<string>): number {
   const row = p.counts.find((c) => categories.has(c.category));
   return row === undefined || row.value === null ? 0 : Number(row.value) || 0;
+}
+
+/** What each slot is paid for a return, read from the league's rules; a full match's minutes, and the most a defensive
+ *  bonus or a keeper's saves paid in a match, from the gameweek's own payments. A keeper's return is a clean sheet. */
+export function slotWorth(info: LeagueInfo, raws: readonly Raw[], teams: readonly RosteredTeam[], slots: readonly string[]): SlotWorth {
+  const rules = info.scoring;
+  const flat = (category: string, slot: string) => (rules === null ? 0 : (categoryPoints(rules, category, slot) ?? 0));
+  const ids = categoryIds(info);
+  const keeper = rules?.goaliePosition ?? null;
+  const slotOf = new Map(teams.flatMap((t) => { const s = sheetOf(t); return [...s.starters, ...s.bench].map((m) => [m.fantraxId, m.slot] as const); }));
+  return {
+    keeper,
+    appearance: appearance(raws, ids.minutes),
+    bonus: Object.fromEntries(slots.map((slot) => [slot, mostPaid(raws, slot === keeper ? ids.saves : ids.defence, slot, slotOf)])),
+    returns: Object.fromEntries(
+      slots.map((slot) => [
+        slot,
+        (slot === keeper
+          ? [{ kind: "clean sheet" as const, worth: flat("CS", slot) }]
+          : [{ kind: "goal" as const, worth: flat("G", slot) }, { kind: "assist" as const, worth: flat("A", slot) }, { kind: "clean sheet" as const, worth: flat("CS", slot) }]
+        ).filter((w) => w.worth > 0),
+      ]),
+    ),
+  };
 }

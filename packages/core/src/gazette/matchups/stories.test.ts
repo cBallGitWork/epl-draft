@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { draftMan } from "./__fixtures__/draftMan";
+import { draftSide } from "./__fixtures__/draftSide";
 import { worthOf } from "./__fixtures__/worth";
 import { sideStories } from "./stories";
 import type { DraftMan, DraftSide } from "./types";
 
-const side = (eleven: DraftMan[], bench: DraftMan[] = []): DraftSide => ({ teamId: "t", name: "Dons", total: 40, eleven, bench, subOrder: [] });
+const side = (men: DraftMan[], bench: DraftMan[] = []): DraftSide => draftSide("Dons", 40, men, bench);
 const stories = (s: DraftSide, margin = 10, cutoff: "saturday" | "gameweek" = "gameweek") => sideStories(s, [], worthOf(), cutoff, margin);
 
 describe("sideStories", () => {

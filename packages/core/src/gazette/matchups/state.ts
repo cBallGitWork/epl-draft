@@ -1,4 +1,5 @@
 import { DRAFT_DESK } from "../../config";
+import { londonWeekdayLong } from "../../time";
 import { autoSubs, type AutoSub } from "./autoSubs";
 import type { Cutoff } from "./brief";
 import { returnCount, sideStories, whenScored } from "./stories";
@@ -29,7 +30,7 @@ export interface MatchupState {
   stories: string[];
 }
 
-const tag = (man: DraftMan) => `${man.name} (${man.club}${man.next === null ? "" : `, ${man.next.home ? "at home to" : "away to"} ${man.next.opponent} on ${man.next.day}`})`;
+const tag = (man: DraftMan) => `${man.name} (${man.club}${man.next === null ? "" : `, ${man.next.home ? "at home to" : "away to"} ${man.next.opponent} on ${londonWeekdayLong(man.next.kickoff)}`})`;
 
 function sideState(side: DraftSide, limits: PositionLimits): SideState {
   const numbered = side.subOrder.flatMap((id) => side.bench.filter((m) => m.fantraxId === id));

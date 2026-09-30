@@ -2,16 +2,15 @@ import { describe, expect, it } from "vitest";
 import { LIMITS } from "./__fixtures__/limits";
 import { buildDraftBrief, leadFirst, type MatchupContext } from "./brief";
 import { matchupState } from "./state";
+import { draftSide, eleven } from "./__fixtures__/draftSide";
 import { draftMan } from "./__fixtures__/draftMan";
 import { worthOf } from "./__fixtures__/worth";
-import type { DraftMan, DraftSide } from "./types";
+import type { DraftMan } from "./types";
 
 const man = (name: string, slot: string, points: number | null, minutes: number, left = 0, more: Partial<DraftMan> = {}): DraftMan => draftMan(name, slot, points, minutes, left, { club: "EVE", projected: 4.2, ...more });
-const xi = (tag: string, over: Record<number, DraftMan> = {}) => ["G", "D", "D", "D", "D", "M", "M", "M", "M", "F", "F"].map((s, i) => over[i] ?? man(`${tag}${i}`, s, 2, 90));
-const side = (name: string, total: number, eleven: DraftMan[], bench: DraftMan[] = []): DraftSide => ({ teamId: name, name, total, eleven, bench, subOrder: bench.map((m) => m.fantraxId) });
 const worth = worthOf();
 const state = matchupState(
-  { home: side("Dons", 40, xi("h", { 1: man("Blank", "D", null, 0) }), [man("Sub", "D", 3, 90)]), away: side("Notemail", 38, xi("a", { 9: man("Isak", "F", null, 0, 1, { next: { opponent: "Bournemouth", home: false, day: "Sunday" } }) })) },
+  { home: draftSide("Dons", 40, eleven("h", { 1: man("Blank", "D", null, 0) }), [man("Sub", "D", 3, 90)]), away: draftSide("Notemail", 38, eleven("a", { 9: man("Isak", "F", null, 0, 1, { next: { opponent: "Bournemouth", home: false, kickoff: "2026-09-20T15:30:00Z" } }) })) },
   worth,
   LIMITS,
   "saturday",

@@ -42,11 +42,11 @@ export interface DraftMan {
   concededFirstAt: GoalTime[];
 }
 
-/** A man's next match: whom, where and on which day ("Sunday"). */
+/** A man's next match: whom, where, and its kickoff, from which the brief and the page say the day. */
 export interface NextMatch {
   opponent: string;
   home: boolean;
-  day: string;
+  kickoff: string;
 }
 
 /** A goal's minute, and the added time on the clock when there was some. */
