@@ -39,7 +39,8 @@ export default function Picture({
     const club = clubs.get(lead.pick.clubId);
     const colours = clubColoursOf(club);
     return (
-      <Band style={{ background: `linear-gradient(150deg, ${colours.primary} 0%, ${colours.secondary} 100%)` }}>
+      // The photograph and its club band print through the ink, as every picture on the paper does (DESIGN §4).
+      <Band className="paper-face" style={{ background: `linear-gradient(150deg, ${colours.primary} 0%, ${colours.secondary} 100%)` }}>
         {club ? (
           // The crest behind him, oversized and half out of frame. A watermark,
           // not a label — the club is already on his shirt.
@@ -136,10 +137,10 @@ function Total({ name, points, won }: { name: string; points: number; won: boole
  *  furniture rather than a colour plate, and nothing inside it wants the desk's
  *  tokens back. The bench story overrides the ground with the club's own
  *  colours, which are data and belong to the club. */
-function Band({ children, style }: { children: ReactNode; style?: CSSProperties }) {
+function Band({ children, style, className = "" }: { children: ReactNode; style?: CSSProperties; className?: string }) {
   return (
     <div
-      className="bleed relative flex h-[8.5rem] items-center justify-center overflow-hidden bg-ink @xl:h-[12rem]"
+      className={`bleed relative flex h-[8.5rem] items-center justify-center overflow-hidden bg-ink @xl:h-[12rem] ${className}`}
       style={style}
     >
       {children}

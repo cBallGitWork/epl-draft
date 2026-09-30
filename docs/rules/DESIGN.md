@@ -576,8 +576,12 @@ which was recorded doctrine until 3 Sep 2026* — true only while every photogra
 is the same size, and falsified by the reference Craig handed over, a news site's
 front page on a phone, which pictures the hero, both sub-heads and every list
 item and still reads as three ranks. **They print through the ink**
-(`.paper-face`), band and all: a saturated club colour under every headline,
-once per story down the page, is the themed screen this section spends a
+(`.paper-face`), band and all, and so does every other photograph on the paper:
+the front page's lead cut-out, a draft report's cover and a Prem report's video
+stills (`.paper-photo`). Craig, 30 Sep 2026: *"all paper thumbnails in the
+grey/sepia, not colour"*. Only a plate keeps its colour: the pitch, and a crest
+printed on its own (§5). The reason: a saturated club colour under every
+headline, once per story down the page, is the themed screen this section spends a
 paragraph on, and one band over one splash could afford what a picture at every
 rank cannot. **No article
 prints on the front page at all.** The splash ran whole there until 3 Sep 2026,
