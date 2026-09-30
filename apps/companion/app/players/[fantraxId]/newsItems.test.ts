@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { inbox, noteBody } from "./newsItems";
+import { filedAt, inbox, noteBody } from "./newsItems";
 
 const story = (headline: string, content: string) => ({ id: "1", headline, content, analysis: null, at: 1 });
 
@@ -41,5 +41,13 @@ describe("noteBody", () => {
     expect(noteBody(item("Palmer doubtful", "According to Maresca, Palmer is doubtful.", " "))).toEqual([
       "According to Maresca, Palmer is doubtful.",
     ]);
+  });
+});
+
+describe("filedAt", () => {
+  it("reads the epoch as an ISO moment, and a dateless note as null", () => {
+    const item = (at: number | null) => ({ id: "1", headline: "h", body: "b", analysis: null, at });
+    expect(filedAt(item(Date.UTC(2026, 8, 22, 19, 12)))).toBe("2026-09-22T19:12:00.000Z");
+    expect(filedAt(item(null))).toBeNull();
   });
 });

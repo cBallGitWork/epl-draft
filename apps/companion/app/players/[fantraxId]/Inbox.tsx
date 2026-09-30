@@ -4,7 +4,7 @@ import Nothing from "../../components/shell/Nothing";
 import Letter from "../../news/Letter";
 import MailRow from "../../news/MailRow";
 import Mailbox from "../../news/Mailbox";
-import type { NewsItem } from "./newsItems";
+import { filedAt, noteBody, type NewsItem } from "./newsItems";
 
 // His news in Mail's own frame, rows and letter (Craig, 25 Sep 2026: "should match the Email/news section").
 
@@ -32,7 +32,7 @@ export default function Inbox({
   return (
     <Mailbox letter={<Letter item={letter(open)} />}>
       {items.map((item) => {
-        const iso = item.at === null ? null : new Date(item.at).toISOString();
+        const iso = filedAt(item);
         return (
           <li key={item.id}>
             <MailRow
@@ -52,17 +52,14 @@ export default function Inbox({
 /** A story as Mail's letter: Fantrax's desk sends it, the headline is the subject, and the body is
  *  whatever of the story the subject has not said, then the provider's analysis. */
 function letter(item: NewsItem): InboxItem {
-  const rest = item.body.startsWith(item.headline) ? item.body.slice(item.headline.length).trim() : item.body;
-  const body = [rest, item.analysis]
-    .filter((part): part is string => part !== null && part.trim() !== "")
-    .join(" ");
+  const iso = filedAt(item);
   return {
     id: item.id,
     category: "message",
-    at: item.at === null ? null : { iso: new Date(item.at).toISOString() },
+    at: iso === null ? null : { iso },
     gameweek: null,
     headline: item.headline,
-    body,
+    body: noteBody(item).join(" "),
     from: "Fantrax's news desk",
     about: null,
     teamId: null,

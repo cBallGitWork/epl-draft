@@ -7,7 +7,7 @@ import MailRow from "../../news/MailRow";
 import { playerHref } from "../routes";
 import { condition } from "./condition";
 import { latestNews } from "./latestNews";
-import { noteBody, type NewsItem } from "./newsItems";
+import { filedAt, noteBody, type NewsItem } from "./newsItems";
 
 // Whether he can play and the newest thing written about him (Craig, 26 Sep 2026); the rest is on News.
 
@@ -42,7 +42,7 @@ function ConditionRow({ player }: { player: FootballPlayer }) {
 
 /** Fantrax's newest note on him: Mail's row, opening it on his News tab, then the rest of it. */
 function Story({ story, href }: { story: NewsItem; href: string }) {
-  const iso = story.at === null ? null : new Date(story.at).toISOString();
+  const iso = filedAt(story);
   return (
     <div className="flex flex-col gap-1.5">
       <ul className="cm-rows">
