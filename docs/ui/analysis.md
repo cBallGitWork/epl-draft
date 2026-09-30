@@ -344,9 +344,8 @@ wrong answer this app refuses.
 
 ## The attributes
 
-**Rows align by NAME, never by index.** A keeper's grid drops the seven measures
-about scoring and creating in open play and an outfielder's drops Handling and
-Reflexes (`football/attributes.ts`), so zipping two arrays position by position
+**Rows align by NAME, never by index.** A keeper's grid and an outfielder's hold
+different rows (each row's `for` in `football/attributes.ts`), so zipping two arrays position by position
 would print a keeper's Reflexes against a striker's Finishing under whichever
 label came first. A measure only one of them has is still a row with a dash
 opposite — a real answer about a keeper beside a forward, where dropping it would

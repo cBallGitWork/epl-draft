@@ -18,6 +18,8 @@ import {
 import { POOL } from "./routes";
 import { columnsIn, groupFor } from "./groups";
 import { figureOf } from "./figure";
+import { attributeStats } from "./attributeColumns";
+import { divisionGrids } from "./[fantraxId]/grid";
 import { cutsFor } from "./standout";
 import { FANTRAX_APP_BASE, FANTRAX_LEAGUE_ID, FANTRAX_PLAYERS_PATH, playerByCode } from "@epl/core";
 import { footballNow } from "../football";
@@ -36,11 +38,12 @@ export default async function PlayersPage({
 }: {
   searchParams: Promise<PlayersSearchParams>;
 }) {
-  const [pool, asked, lines, reader] = await Promise.all([
+  const [pool, asked, lines, reader, grids] = await Promise.all([
     getLeaguePool(),
     searchParams,
     getPlayerStats(),
     readerTeamId(),
+    divisionGrids(),
   ]);
   const query = playersQuery(asked);
 
@@ -60,6 +63,12 @@ export default async function PlayersPage({
         </FantraxSilent>
       </ScoutShell>
     );
+  }
+
+  // Our attribute ratings ride in the same bag, so the Attributes plate sorts and marks like any count.
+  for (const row of pool.rows) {
+    const grid = row.fplCode === null ? undefined : grids.get(row.fplCode);
+    if (grid !== undefined) raw.set(row.entry.player.fantraxId, { ...raw.get(row.entry.player.fantraxId), ...attributeStats(grid) });
   }
 
   const shown = shownRows(pool.rows, query, raw);

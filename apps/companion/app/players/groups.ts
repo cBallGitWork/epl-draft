@@ -30,7 +30,7 @@ import { COLUMNS, type PoolColumn } from "./columns";
  *  shared component's key type to `string` to serve a second caller with a
  *  different list would cost every existing caller its narrowing — so the strip
  *  is spelled twice, which is where CODE_RULES §1 leaves it until a third. */
-export type PoolGroup = "scoring" | "attacking" | "defensive" | "discipline" | "market";
+export type PoolGroup = "scoring" | "attacking" | "defensive" | "discipline" | "market" | "attributes";
 
 /** The plates, in the order a reader looks for them: what he returned, then what
  *  he did going forward, then at the back, then wrong, then what he costs.
@@ -49,6 +49,7 @@ export const POOL_GROUPS = [
   { key: "defensive", label: "Defensive" },
   { key: "discipline", label: "Discipline" },
   { key: "market", label: "Market" },
+  { key: "attributes", label: "Attributes" },
 ] as const;
 
 export type PoolGroupKey = (typeof POOL_GROUPS)[number]["key"];
@@ -60,7 +61,7 @@ export function groupFor(key: string | undefined): PoolGroupKey {
   return POOL_GROUPS.find((group) => group.key === key)?.key ?? "all";
 }
 
-/** The columns one plate shows.
+/** The columns one plate shows. The attribute grid stays off `All`, which has twenty already.
  *
  *  **The spine is always in it**, which is the rule that makes the plates safe:
  *  a column with no `group` — the man's name, his eligibility, his club — is
@@ -76,15 +77,21 @@ export function groupFor(key: string | undefined): PoolGroupKey {
  *  who sorts by `FPts` and then taps Discipline would get a table in an order
  *  nothing on screen explains, and a screen reader would get one with no
  *  `aria-sort` anywhere in it. The sort is honoured over the plate because the
- *  reader chose it more recently and more deliberately.
- *
- *  `all` returns the list itself rather than a copy of it, because the caller
- *  only ever reads it — and a filter that rebuilds twenty objects on every
- *  render of a six-hundred-row table is a cost paid for nothing. */
+ *  reader chose it more recently and more deliberately. */
 export function columnsIn(group: PoolGroupKey, sorted: string): readonly PoolColumn[] {
-  if (group === "all") return COLUMNS;
-  return COLUMNS.filter(
+  const shown = COLUMNS.filter(
     (column) =>
-      column.group === undefined || column.group === group || column.key === sorted,
+      column.group === undefined ||
+      column.key === sorted ||
+      (group === "all" ? column.group !== "attributes" : column.group === group),
   );
+  return group === "attributes" ? leadWith(shown, sorted) : shown;
+}
+
+/** The sorted column straight after the spine: twenty-five attributes run far past a phone's seven. */
+function leadWith(columns: readonly PoolColumn[], sorted: string): readonly PoolColumn[] {
+  const lead = columns.find((column) => column.key === sorted && column.group !== undefined);
+  if (lead === undefined) return columns;
+  const spine = columns.filter((column) => column.group === undefined);
+  return [...spine, lead, ...columns.filter((column) => column.group !== undefined && column !== lead)];
 }

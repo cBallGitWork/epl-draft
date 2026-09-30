@@ -1,58 +1,56 @@
-import type { Shot } from "./intel/shots";
-import type { StatKey } from "./intel/statKeys";
-import { per90 as countPer90, type StatsRow } from "./intel/stats";
-import type { FootballPlayer } from "./types";
+import type { LineCount, Running, PlayerLine } from "./intel/lines";
 
 // Championship Manager's attribute grid, for a real footballer.
 //
 // CM's attributes are Sports Interactive's, hand-authored and licensed, so every rating here is
-// OURS: a 1–20 percentile of something we measure, within the cohort the caller passes. Since
-// 25 Sep 2026 that is his position group (Craig: "compare to just attackers, defenders to just
-// defenders"), so a centre-half's Finishing says how he finishes for a centre-half.
-//
-// What nothing we hold measures gets NO ROW: Pace, Acceleration, Agility, Balance, Bravery.
-// A rating is a ranking in THIS season, so it is thin early and settles as the season fills.
-// Since 26 Sep 2026 the event counts (tackles won, aerials, crosses) are the stats league's.
+// OURS: a 1–20 percentile of something we measure, per 90. A keeper is rated against keepers and
+// an outfielder against every outfielder who plays (Craig, 30 Sep 2026), so a centre-half's
+// Finishing is low, as CM's is. The sample is last season's when he played enough of it, else
+// this season's; running exists only this season. Agility, Balance, Bravery, Flair and Technique
+// get no row.
 
 /** One attribute, as the grid draws it. */
 export interface Attribute {
   /** Championship Manager's own label, spelled CM's way. */
   name: string;
-  /** 1–20, or null when he has not played enough for the rate to mean anything. */
+  /** 1–20, or null when he has no reading. */
   rating: number | null;
   /** What it was derived from, for the row's title. */
   from: string;
 }
 
-/** One man's season on the sister repo's shot map. */
-export interface ShotLine {
-  struck: number;
-  headers: number;
-  outsideBox: number;
-  /** Shots he set up: Understat's last touch before somebody else's shot. */
-  created: number;
-  left: number;
-  right: number;
-}
-
-/** One man's inputs. Everything past `player` is the sister repo's, so each is null where it is silent. */
+/** One man's inputs. Null where he has not played enough to count, or the sister repo is silent. */
 export interface Scouted {
-  player: FootballPlayer;
+  code: number;
+  keeper: boolean;
+  /** The season he is rated on. */
+  line: PlayerLine | null;
+  /** This season's running. */
+  running: Running | null;
   /** His share of his club's penalties, 0 to 1. */
   penaltyShare: number | null;
   /** His share of its free kicks and corners added together, 0 to 2. */
   setPieceShare: number | null;
-  shots: ShotLine | null;
-  touches: number | null;
-  /** His counts off the stats league, or null where it holds none. */
-  stats: StatsRow | null;
 }
 
-/** Whose grid a row belongs to; a row with none is on both. */
-export type Role = "keeper" | "outfield";
+/** The minutes each season needs before a man counts as playing it. */
+export interface Floors {
+  last: number;
+  now: number;
+}
 
-/** Ninety minutes, below which a per-ninety rate is arithmetic rather than evidence. */
-const MINUTES_FLOOR = 90;
+/** Last season when he played enough of it, else this one; null when neither. */
+export function ratedLine(last: PlayerLine | undefined, now: PlayerLine | undefined, floors: Floors): PlayerLine | null {
+  if (last !== undefined && last.minutes >= floors.last) return last;
+  if (now !== undefined && now.minutes >= floors.now) return now;
+  return null;
+}
+
+/** This season's running, once he has run enough of it to count. */
+export function ratedRunning(now: PlayerLine | undefined, floors: Floors): Running | null {
+  const running = now?.running ?? null;
+  return running !== null && running.minutes >= floors.now ? running : null;
+}
 
 /** CM's own scale. */
 const BEST = 20;
@@ -61,113 +59,141 @@ const WORST = 1;
 interface Measure {
   name: string;
   from: string;
-  for?: Role;
-  /** His figure, or null when the statistic does not apply to him. */
+  /** Whose row it is. */
+  for: "keeper" | "outfield" | "both";
   of: (man: Scouted) => number | null;
 }
 
-const per90 = (total: (man: Scouted) => number | null) => (man: Scouted) => {
-  const minutes = man.player.season.minutes;
-  const figure = total(man);
-  return minutes > 0 && figure !== null ? (figure * 90) / minutes : null;
-};
+/** His counts added up, or null when any is missing. */
+function total(line: PlayerLine, keys: readonly LineCount[]): number | null {
+  let sum = 0;
+  for (const key of keys) {
+    const figure = line[key];
+    if (figure === null) return null;
+    sum += figure;
+  }
+  return sum;
+}
 
-const season = (man: Scouted) => man.player.season;
+/** A figure per 90 of `minutes`, or null when either is missing. */
+const rate90 = (figure: number | null, minutes: number) => (figure === null || minutes <= 0 ? null : (figure * 90) / minutes);
 
-/** Stats-league counts added up, per ninety of his minutes there; null where it holds none. */
-const counted = (...keys: StatKey[]) => (man: Scouted) => {
-  const rates = keys.map((key) => countPer90(man.stats ?? undefined, key));
-  return rates.some((rate) => rate === null) ? null : rates.reduce((sum: number, rate) => sum + (rate ?? 0), 0);
-};
+/** Counts per 90 of his minutes. */
+const per90 =
+  (...keys: LineCount[]) =>
+  (man: Scouted) =>
+    man.line === null ? null : rate90(total(man.line, keys), man.line.minutes);
+/** FPL's figure per 90 of the minutes FPL covered. */
+const fpl90 = (key: LineCount) => (man: Scouted) => (man.line === null ? null : rate90(man.line[key], man.line.fplMinutes));
+const ran90 = (key: "km" | "sprints") => (man: Scouted) => (man.running === null ? null : rate90(man.running[key], man.running.minutes));
 
 /** The grid, alphabetical down the columns as CM 01/02 sets it. */
 const MEASURES: readonly Measure[] = [
-  { name: "Aggression", from: "fouls committed per 90", for: "outfield", of: counted("foulsCommitted") },
-  { name: "Anticipation", from: "recoveries per 90", of: per90((m) => season(m).recoveries) },
-  { name: "Creativity", from: "key passes per 90", for: "outfield", of: counted("keyPasses") },
-  { name: "Crossing", from: "accurate crosses per 90", for: "outfield", of: counted("accurateCrosses") },
-  { name: "Determination", from: "FPL's bonus-points score per 90", of: per90((m) => season(m).bps) },
-  { name: "Dribbling", from: "take-ons attempted per 90", for: "outfield", of: counted("contestsAttempted") },
-  { name: "Finishing", from: "goals against expected goals per 90", for: "outfield", of: per90((m) => season(m).goals - season(m).expectedGoals) },
-  { name: "Handling", from: "saves per 90", for: "keeper", of: per90((m) => season(m).saves) },
-  { name: "Heading", from: "aerial duels won per 90", for: "outfield", of: counted("aerialsWon") },
-  { name: "Influence", from: "FPL's Influence per 90", of: per90((m) => season(m).influence) },
-  { name: "Long Shots", from: "shots from outside the box per 90, off the shot map", for: "outfield", of: per90((m) => m.shots?.outsideBox ?? null) },
-  { name: "Marking", from: "clearances per 90", for: "outfield", of: counted("clearances") },
-  { name: "Off The Ball", from: "expected goals per 90", for: "outfield", of: per90((m) => season(m).expectedGoals) },
-  { name: "Passing", from: "passes into the final third per 90", for: "outfield", of: counted("finalThirdPasses") },
+  { name: "Acceleration", from: "sprints per 90, this season", for: "outfield", of: ran90("sprints") },
+  { name: "Aggression", from: "fouls committed per 90", for: "outfield", of: per90("fouls") },
+  { name: "Anticipation", from: "recoveries per 90", for: "both", of: per90("recoveries") },
+  { name: "Consistency", from: "his average match rating in his worst quarter of starts", for: "both", of: consistency },
+  { name: "Creativity", from: "chances created per 90", for: "outfield", of: per90("chancesCreated") },
+  { name: "Crossing", from: "accurate crosses per 90", for: "outfield", of: per90("crosses") },
+  { name: "Determination", from: "FPL's bonus-points score per 90", for: "both", of: fpl90("bps") },
+  { name: "Dribbling", from: "successful dribbles per 90", for: "outfield", of: per90("dribbles") },
+  { name: "Finishing", from: "expected goals on target per 90", for: "outfield", of: per90("xgot") },
+  { name: "Handling", from: "share of the shots on target he faced that he saved", for: "keeper", of: saveShare },
+  { name: "Heading", from: "aerial duels won per 90", for: "outfield", of: per90("aerialsWon") },
+  { name: "Influence", from: "FPL's Influence per 90", for: "both", of: fpl90("influence") },
+  { name: "Long Shots", from: "shots from outside the box per 90", for: "outfield", of: per90("outsideBox") },
+  { name: "Marking", from: "clearances, blocks and interceptions per 90", for: "outfield", of: per90("clearances", "blocks", "interceptions") },
+  { name: "Off The Ball", from: "touches in the opposition box per 90", for: "outfield", of: per90("boxTouches") },
+  { name: "Pace", from: "top speed, this season", for: "outfield", of: (m) => m.running?.topSpeed ?? null },
+  { name: "Passing", from: "passes into the final third per 90", for: "outfield", of: per90("finalThirdPasses") },
   { name: "Penalty Taking", from: "share of his club's penalties", for: "outfield", of: (m) => m.penaltyShare },
-  { name: "Positioning", from: "expected goals conceded less goals conceded, per 90", for: "keeper", of: per90((m) => season(m).expectedGoalsConceded - season(m).goalsConceded) },
-  { name: "Positioning", from: "interceptions per 90", for: "outfield", of: counted("interceptions") },
-  { name: "Reflexes", from: "saves against expected goals conceded", for: "keeper", of: reflexes },
+  { name: "Positioning", from: "expected goals conceded less goals conceded, per 90", for: "keeper", of: positioning },
+  { name: "Reflexes", from: "goals prevented per 90", for: "keeper", of: per90("goalsPrevented") },
   { name: "Set Pieces", from: "share of his club's free kicks and corners", for: "outfield", of: (m) => m.setPieceShare },
   { name: "Stamina", from: "minutes per start", for: "outfield", of: stamina },
-  { name: "Tackling", from: "tackles won per 90", for: "outfield", of: counted("tacklesWon") },
-  { name: "Teamwork", from: "touches per 90, off the touch map", of: per90((m) => m.touches) },
-  { name: "Work Rate", from: "tackles won, interceptions and recoveries per 90", for: "outfield", of: counted("tacklesWon", "interceptions", "recoveries") },
+  { name: "Tackling", from: "tackles per 90", for: "outfield", of: per90("tackles") },
+  { name: "Teamwork", from: "part in the build-up to shots per 90 (xGBuildup)", for: "both", of: per90("xgBuildup") },
+  { name: "Work Rate", from: "distance covered per 90, this season", for: "outfield", of: ran90("km") },
 ];
 
-/** His grid for his role, rated against `cohort`. Pure; the cohort is filtered to men past the minutes floor. */
-export function attributes(man: Scouted, cohort: readonly Scouted[], role: Role): Attribute[] {
-  const played = cohort.filter((other) => other.player.season.minutes >= MINUTES_FLOOR);
-  const measured = man.player.season.minutes >= MINUTES_FLOOR;
-  return MEASURES.filter((measure) => measure.for === undefined || measure.for === role).map((measure) => ({
-    name: measure.name,
-    from: measure.from,
-    rating: measured ? rate(measure, man, played) : null,
+const forRole = (keeper: boolean) => (measure: Measure) => measure.for === "both" || (measure.for === "keeper") === keeper;
+
+/** Each of a role's measures with the cohort's figures on it, sorted, so a man is placed by search. */
+type Scale = readonly { measure: Measure; figures: readonly number[] }[];
+
+function scaleOf(keeper: boolean, cohort: readonly Scouted[]): Scale {
+  const peers = cohort.filter((other) => other.keeper === keeper);
+  return MEASURES.filter(forRole(keeper)).map((measure) => ({
+    measure,
+    figures: peers
+      .map(measure.of)
+      .filter((value): value is number => value !== null)
+      .sort((a, b) => a - b),
   }));
 }
 
-/** Where he sits on one measure as a 1–20: the share of the cohort he is STRICTLY better than, so a
- *  block of noughts sits at 1 rather than at the midpoint of its tie. */
-function rate(measure: Measure, man: Scouted, cohort: readonly Scouted[]): number | null {
-  const his = measure.of(man);
-  if (his === null) return null;
-  const theirs = cohort.map(measure.of).filter((value): value is number => value !== null);
-  if (theirs.length === 0) return null;
-  const below = theirs.filter((value) => value < his).length;
-  return WORST + Math.round((below / theirs.length) * (BEST - WORST));
+function gridOn(man: Scouted, scale: Scale): Attribute[] {
+  return scale.map(({ measure, figures }) => ({ name: measure.name, from: measure.from, rating: rate(measure.of(man), figures) }));
 }
 
-/** Saves against the goals he was expected to concede; an outfielder is nought, not null. */
-function reflexes(man: Scouted): number | null {
-  const { saves, expectedGoalsConceded } = man.player.season;
-  return expectedGoalsConceded > 0 ? saves / expectedGoalsConceded : null;
+/** His grid, rated against the men of his role in `cohort`. Pure. */
+export function attributes(man: Scouted, cohort: readonly Scouted[]): Attribute[] {
+  return gridOn(man, scaleOf(man.keeper, cohort));
+}
+
+/** Every man's grid by code, each role's scale built once rather than once per man. Pure. */
+export function divisionAttributes(cohort: readonly Scouted[]): Map<number, Attribute[]> {
+  const scales = { keeper: scaleOf(true, cohort), outfield: scaleOf(false, cohort) };
+  return new Map(cohort.map((man) => [man.code, gridOn(man, man.keeper ? scales.keeper : scales.outfield)]));
+}
+
+/** Every row of the grid: its name, what it is made of, and whose it is. */
+export const ATTRIBUTE_ROWS: readonly Omit<Measure, "of">[] = MEASURES.map(({ name, from, for: role }) => ({ name, from, for: role }));
+
+/** Where a figure sits on a sorted scale as a 1–20: the share of it he is STRICTLY better than, so a
+ *  block of noughts sits at 1 rather than at the midpoint of its tie. */
+function rate(figure: number | null, figures: readonly number[]): number | null {
+  if (figure === null || figures.length === 0) return null;
+  return WORST + Math.round((below(figures, figure) / figures.length) * (BEST - WORST));
+}
+
+/** How many of the sorted figures are strictly less than `figure`. */
+function below(figures: readonly number[], figure: number): number {
+  let low = 0;
+  let high = figures.length;
+  while (low < high) {
+    const mid = (low + high) >> 1;
+    if (figures[mid] < figure) low = mid + 1;
+    else high = mid;
+  }
+  return low;
+}
+
+/** His worst quarter of starts; under four starts it holds nobody. */
+const QUARTER = 4;
+
+/** How good his bad days are: his mean rating over the worst quarter of his starts. */
+function consistency(man: Scouted): number | null {
+  const ratings = [...(man.line?.ratings ?? [])].sort((a, b) => a - b);
+  if (ratings.length < QUARTER) return null;
+  const worst = ratings.slice(0, Math.floor(ratings.length / QUARTER));
+  return worst.reduce((a, b) => a + b, 0) / worst.length;
+}
+
+function saveShare(man: Scouted): number | null {
+  const line = man.line;
+  if (line === null || line.saves === null || line.conceded === null || line.saves + line.conceded <= 0) return null;
+  return line.saves / (line.saves + line.conceded);
+}
+
+function positioning(man: Scouted): number | null {
+  const line = man.line;
+  if (line === null || line.xgc === null || line.conceded === null) return null;
+  return rate90(line.xgc - line.conceded, line.fplMinutes);
 }
 
 /** Minutes per start; a man who has only come off the bench is not measured. */
 function stamina(man: Scouted): number | null {
-  const { minutes, starts } = man.player.season;
-  return starts > 0 ? minutes / starts : null;
-}
-
-/** The penalty area on the shot map's 0–100 axes: 16.5m deep of a 105m pitch, 40.3m wide of 68m. */
-const BOX_FROM = 100 - (16.5 / 105) * 100;
-const BOX_SIDE = (100 - (40.3 / 68) * 100) / 2;
-
-/** His line on the shot map: his own shots, and how many he set up for others. */
-export function shotLine(own: readonly Shot[], created: number): ShotLine {
-  const inBox = (shot: Shot) => shot.x >= BOX_FROM && shot.y >= BOX_SIDE && shot.y <= 100 - BOX_SIDE;
-  return {
-    struck: own.length,
-    headers: own.filter((shot) => shot.bodyPart === "head").length,
-    outsideBox: own.filter((shot) => !inBox(shot)).length,
-    created,
-    left: own.filter((shot) => shot.bodyPart === "left-foot").length,
-    right: own.filter((shot) => shot.bodyPart === "right-foot").length,
-  };
-}
-
-/** Fewer footed shots than this say nothing about his foot. */
-const FOOTED_FLOOR = 5;
-/** A weaker foot taking this share of his footed shots makes him two-footed. */
-const EITHER = 1 / 3;
-
-/** CM's Preferred Foot, read off the feet he shoots with; null until he has shot enough. */
-export function preferredFoot(line: ShotLine | null): "Right" | "Left" | "Either" | null {
-  if (line === null) return null;
-  const footed = line.left + line.right;
-  if (footed < FOOTED_FLOOR) return null;
-  if (Math.min(line.left, line.right) / footed >= EITHER) return "Either";
-  return line.right > line.left ? "Right" : "Left";
+  const line = man.line;
+  return line === null || line.starts <= 0 ? null : line.minutes / line.starts;
 }

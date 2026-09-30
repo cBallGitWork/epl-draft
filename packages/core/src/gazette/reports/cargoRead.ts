@@ -2,6 +2,7 @@ import type { ReportRowKind, StoryReport, StoryReportSide } from "./cargo";
 import type { FantasyMan, FantasyPanel } from "./fantasy";
 import type { KeyStat } from "./keyStats";
 import type { LineupMan, StoryLineup } from "./lineups";
+import { finiteOrNull as num } from "../../untrusted";
 
 // A filed match-day report read back field by field: a story is a contract, not a bag, so nothing a writer invented alongside
 // the shape reaches the page. A match prints with both sides and a standfirst, or not at all.
@@ -10,7 +11,6 @@ type Raw = Record<string, unknown>;
 const obj = (v: unknown): Raw => (v !== null && typeof v === "object" ? (v as Raw) : {});
 const str = (v: unknown) => (typeof v === "string" ? v : "");
 const strOrNull = (v: unknown) => (typeof v === "string" && v !== "" ? v : null);
-const num = (v: unknown) => (typeof v === "number" && Number.isFinite(v) ? v : null);
 const strs = (v: unknown) => (Array.isArray(v) ? v.filter((x): x is string => typeof x === "string" && x !== "") : []);
 const list = <T>(v: unknown, read: (r: Raw) => T | null): T[] => (Array.isArray(v) ? v.flatMap((x) => read(obj(x)) ?? []) : []);
 const code = (v: unknown) => (typeof v === "number" && Number.isInteger(v) && v > 0 ? v : null);

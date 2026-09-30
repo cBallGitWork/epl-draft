@@ -442,6 +442,27 @@ Read from the hub's `GET /roster/chart?team=<label>` (`weeks[0].slots`), each ho
 on 25 Sep 2026**, like §7 and for the same reason; `export-epl-draft` should take it over,
 and until then the chart is as fresh as that run (the club page says when).
 
+## 9. `lines/{season}.json` — a man's league season in totals
+
+What the attribute grid rates (`docs/ui/player.md`). One row per man with league minutes in
+the season, keyed on FPL's code through the person root and THIS season's roots, so 25-26
+lands on today's codes without a recycled element id:
+
+```jsonc
+{ "manifest": { /* … season: "25-26" */ }, "players": [
+  { "code": 223094, "minutes": 2953, "starts": 34, "fplMinutes": 2683, "xgot": 23.418, "fouls": 24,
+    "recoveries": 41, /* … the counts `LINE_COUNTS` names … */ "outsideBox": 13,
+    "ratings": [8.88, 6.3 /* … */], "running": null }
+] }
+```
+
+Counts are the player log's, and a blank on a played row is nought (the providers omit a
+zero). `fplMinutes` is the minutes FPL's columns cover, ~97% of rows; `bps`, `influence`,
+`saves`, `xgc` and `conceded` are per those. `outsideBox` is off SofaScore's shot feed.
+`ratings` are FotMob's, his starts only. `running` (`minutes`, `km`, `sprints`, `topSpeed`) is
+SofaScore's, staged from 26-27, and **null** for a season before it. 25-26 is exported once,
+by hand (the season is closed); 26-27 rides `export-epl-draft`. ~200 KB each, dense.
+
 ---
 
 ## The XI is fetched here, not exported
