@@ -55,6 +55,7 @@ export { applyMove, eligibilityOf, eligibleSlots, legalMoves } from "./moves";
 export type { Blocker, Eligibility, Move, SlotOption } from "./moves";
 
 export { violations } from "./violations";
+export { minimumsOf } from "./minimums";
 export type { Violation } from "./violations";
 
 export { isActive } from "./rosterStatus";
