@@ -15,7 +15,8 @@ import Portrait from "./Portrait";
 import Rankings from "./Rankings";
 import RealPosition from "./RealPosition";
 import SeasonTable from "./SeasonTable";
-import { playerGrid, playerStanding, projectedWeeks, realPosition } from "./grid";
+import SetPieces from "./SetPieces";
+import { playerGrid, playerPieces, playerStanding, projectedWeeks, realPosition } from "./grid";
 import { joinMatches } from "./matchRows";
 import { gameLog } from "./scouting";
 import { scouting } from "./scouting";
@@ -46,8 +47,10 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
   if ("unavailable" in found) return <NoProfile code={found.unavailable} />;
 
   const { intel, football } = found;
-  const [grid, standing] =
-    football === null ? [null, null] : await Promise.all([playerGrid(football.player), playerStanding(football.player)]);
+  const [grid, standing, pieces] =
+    football === null
+      ? [null, null, null]
+      : await Promise.all([playerGrid(football.player), playerStanding(football.player), playerPieces(football.player)]);
   const position = football === null ? null : realPosition(football.player.code);
   // What he has done in the round on screen and what is coming. Both read the
   // snapshot and the calendar every other screen already holds, so they cost FPL
@@ -107,6 +110,8 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
       </div>
 
       {standing === null ? null : <Rankings ranked={standing.ranked} group={standing.group} />}
+
+      {pieces === null ? null : <SetPieces pieces={pieces} club={football?.club?.name ?? null} />}
 
       {/* **CM puts the appearances table on the profile** (`cm9900/11.jpg`), and
           so does this (Craig, 4 Sep 2026: "the season totals are on the main
