@@ -132,6 +132,14 @@ describe("fxpaRead", () => {
 });
 
 describe("fxpaRead with a session", () => {
+  it("sends a session call once, even when Fantrax is busy, since it may be a write", async () => {
+    vi.useFakeTimers();
+    const count = serve(statusOnly(503), () => Response.json({ responses: [{ data: { a: 1 } }] }));
+    const error = await fxpaRead("league-under-test", "confirmOrExecuteTeamRosterChanges", {}, "cookie").catch((e: unknown) => e);
+    expect(error).toMatchObject({ code: "503" });
+    expect(count.calls).toBe(1);
+  });
+
   it("refuses any method off the allow-list before a request is made", async () => {
     await expect(fxpaRead("league", "deleteLeague", {}, "cookie")).rejects.toMatchObject({ code: "NOT_ALLOWED" });
   });
