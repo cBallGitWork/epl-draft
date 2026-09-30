@@ -38,8 +38,8 @@ function castLine(ctx: MatchupContext, m: DraftMan): string {
   const parts = [
     points,
     sub === undefined ? null : `${sub.provisional ? "replaces" : "replaced"} ${sub.out.name}, who did not play${sub.provisional ? ", if he plays" : ""}`,
-    // A reserve who played a whole match is no Premier League substitute: GW5 had two "neither on the pitch at kick-off".
-    sub !== undefined && m.minutes >= 90 ? `played the whole match for ${m.club}` : null,
+    // A reserve played his own match, on its own day, before the substitutions counted it: GW5 had him "yet to kick a ball".
+    sub !== undefined && m.minutes > 0 ? `played ${m.minutes >= 90 ? "the whole match" : `${m.minutes} minutes`} for ${m.club}${m.byDay[0] === undefined ? "" : ` on ${beatLabel(m.byDay[0].day)}`}` : null,
     bench ? "on the bench, where his points count for nobody" : null,
     minutesLine(m),
     s === undefined ? null : newLine(m, s.side),
@@ -79,7 +79,9 @@ function beatLine(ctx: MatchupContext, b: Beat, cast: ReadonlySet<DraftMan>): st
   const played = b.day === null ? [] : [...cast].filter((m) => m.byDay.some((d) => d.day === b.day)).map((m) => m.name);
   const whoPlayed = b.day === null ? "" : `; ${played.length === 0 ? "none of the cast played" : `of the cast, ${listed(played, "and")} played`}`;
   const label = beatLabel(b.day);
-  return `- ${label[0].toUpperCase()}${label.slice(1)}: ${home.side.name} ${b.points.home}, ${away.side.name} ${b.points.away}, making it ${score}; ${scored.length === 0 ? "no returns" : `returns: ${listed(scored, "and")}`}${whoPlayed}`;
+  // Points with no return are minutes and defensive work: GW5's writer twice had a Friday won "before a ball was kicked".
+  const none = b.points.home + b.points.away === 0 ? "no returns" : "no returns, the points all for minutes and defensive work";
+  return `- ${label[0].toUpperCase()}${label.slice(1)}: ${home.side.name} ${b.points.home}, ${away.side.name} ${b.points.away}, making it ${score}; ${scored.length === 0 ? none : `returns: ${listed(scored, "and")}`}${whoPlayed}`;
 }
 
 /** After Saturday, what is still to come by match and day, fixtures only: a match with both sides' men in it named whole

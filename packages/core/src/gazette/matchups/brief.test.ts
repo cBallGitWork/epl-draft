@@ -28,8 +28,8 @@ describe("buildDraftBrief", () => {
   it("tells how it unfolded a day at a time, returns without their points, and marks no day as optional", () => {
     expect(end).toContain("HOW IT UNFOLDED, in order:\n- Friday: test2 0, 123 11, making it 11-0 to 123");
     expect(end).toContain("- Sunday: test2 18, 123 12, making it 38-34 to 123; returns: Haaland of Man City for 123 (a goal in the 81st minute)");
-    expect(end).toContain("- Friday: test2 0, 123 11, making it 11-0 to 123; no returns; none of the cast played");
-    expect(end).toContain("- The automatic substitutions: test2 3, 123 0, making it 38-37 to 123; no returns");
+    expect(end).toContain("- Friday: test2 0, 123 11, making it 11-0 to 123; no returns, the points all for minutes and defensive work; none of the cast played");
+    expect(end).toContain("- The automatic substitutions: test2 3, 123 0, making it 38-37 to 123; no returns, the points all for minutes and defensive work");
     expect(end).not.toMatch(/left out/u);
     expect(end).toContain("- The automatic substitutions: test4 2, test3 9, making it 33-28 to test3; returns: Vuskovic of Tottenham for test3 (a clean sheet)");
   });
