@@ -17,6 +17,7 @@ export const STORY_BYLINE: Partial<Record<StoryKind, string>> = {
   presser: "The Team Sheet",
   "predicted-xi": "The Line-Ups",
   sheets: "The Team Sheets",
+  "bin-xi": "The Bin",
 };
 
 /** The columnists who write under their own name rather than the house correspondent's. Lawro's
@@ -37,6 +38,8 @@ export function editionName(kind: StoryKind, filedAt: string, playedOn?: string)
   if (kind === "fixture-preview" || kind === "news" || kind === "presser") return "The Team Sheet";
   if (kind === "wire" || kind === "dodgers") return "The Mercato Wire";
   if (kind === "eleven" || kind === "power-ranking") return "The Monday Club";
+  // The night the bins go out: waivers are collected on Wednesday.
+  if (kind === "bin-xi") return "Bins Out";
 
   const day = londonWeekday(filedAt);
   if (day === "Sat") return "The Pink 'Un";

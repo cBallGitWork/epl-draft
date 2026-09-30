@@ -14,6 +14,8 @@ import type { PredictionsDesk } from "./predictions";
 import type { ReportsJob } from "./reports";
 import type { SheetsDesk } from "./sheets";
 import { REPORTS_VOICE } from "./voice/reports";
+import { BIN_XI_VOICE } from "./voice/binXi";
+import type { BinDesk } from "./binXi";
 import { SHEETS_VOICE } from "./voice/sheets";
 import { NEWS } from "./voice/news";
 import { PRESSER } from "./voice/pressers";
@@ -25,6 +27,7 @@ import { edition, faceCtx, type DeskContext } from "./dispatch";
  *  facts the desk prints itself. */
 type Commission =
   | { system: string; brief: string; lawro?: PredictionsDesk; sheets?: SheetsDesk; reports?: ReportsJob }
+  | { system: string; brief: string; bin: BinDesk }
   | { printed: Record<string, unknown> };
 
 export function prepare(assignment: Assignment, ctx: DeskContext): Commission | null {
@@ -46,6 +49,11 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
   if (assignment.kind === "match-report") {
     const job = assignment.day === undefined ? undefined : ctx.reports.get(assignment.day);
     return job === undefined ? null : { system: REPORTS_VOICE, brief: job.brief, reports: job };
+  }
+
+  // The Bin XI is written and checked through its own editor, from the side the desk picked.
+  if (assignment.kind === "bin-xi") {
+    return ctx.bin === null ? null : { system: BIN_XI_VOICE, brief: ctx.bin.brief, bin: ctx.bin };
   }
 
   // Team news is written a paragraph a side through its own editor, from facts the desk already joined.

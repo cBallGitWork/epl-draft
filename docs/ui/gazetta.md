@@ -514,6 +514,22 @@ prose. The `v` heading keeps it one match. At a desk one paragraph across the sh
 
 **The reader's own side is in `yoursInk`**, in the heading and on its XI label, and nowhere else.
 
+## The Bin XI is picked by the desk and argued by the column
+
+Added 30 Sep 2026. `bin-xi` files on Tuesday morning: the best eleven nobody in the league has, from
+the gameweek just played, under the wire's byline ("The Bin") and the edition "Bins Out". `BinXi`
+prints `THE BIN XI · 5-4-1 · 81 PTS`, the eleven on the app's pitch with each man's Fantrax points
+under his name, then **`Bench:`** and a `Key stats` list. Stacked on a phone; from `@3xl` the pitch
+sits beside the bench and the stats, where alone it filled the 1,120px sheet.
+
+**Everything but the prose is the desk's.** The side, the points, the bench and the key stats are
+cargo stamped at filing, because Wednesday's waivers change who is in the bin. The standfirst is the
+desk's too: what the piece is and the one comparison, the eleven's total against the league's sides.
+xG and xA print as figures in the key stats and never in the column (Craig, 28 Sep 2026).
+
+**The bench is the hard-luck men**, the ones whose chances were worth most against what they
+scored, as many as the league has reserves. It is where the real-life numbers show on the page.
+
 ## The columns
 
 The three columns are `components/gazette/`, under `Column` rather than the

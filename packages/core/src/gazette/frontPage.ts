@@ -59,6 +59,8 @@ const KIND_WEIGHT: Record<StoryKind, number> = {
   "fixture-preview": 65,
   predictions: 55,
   eleven: 40,
+  // Tuesday's one column, above the Monday set it follows and below anything that happened.
+  "bin-xi": 45,
   "power-ranking": 35,
   dodgers: 30,
   wire: 25,
@@ -132,7 +134,7 @@ function expired(story: PublishedStory, now: string): boolean {
  *  DAY. Worse, the two need not share a period: Thursday's is filed before the
  *  round rolls over and Friday's after, so this retired one by the other. Team
  *  news expires at the kickoff it previewed instead. */
-const EDITIONS: readonly StoryKind[] = ["eleven", "power-ranking", "dodgers", "wire", "predictions", "sheets"];
+const EDITIONS: readonly StoryKind[] = ["eleven", "power-ranking", "dodgers", "wire", "predictions", "sheets", "bin-xi"];
 
 function editionRetires(newer: PublishedStory, older: PublishedStory): boolean {
   return newer.kind === older.kind && EDITIONS.includes(newer.kind) && newer.period > older.period;

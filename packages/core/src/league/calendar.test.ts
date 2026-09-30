@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { firstKickoff, periodGameweeks } from "./calendar";
+import { firstKickoff, periodDays, periodGameweeks } from "./calendar";
 import type { GameweekKickoff } from "./calendar";
 import type { LeaguePeriod } from "./types";
 import alignment from "./__fixtures__/periodAlignment.json";
@@ -108,5 +108,20 @@ describe("firstKickoff", () => {
 
   it("says nothing for a period with no football in it", () => {
     expect(firstKickoff(P3, [])).toBeNull();
+  });
+});
+
+describe("periodDays", () => {
+  const days = (start: string, end: string) => periodDays({ number: 0, start, end });
+
+  it("ends the day before a boundary that falls mid-afternoon, as Fantrax labels the period", () => {
+    // Rehearsal, 30 Sep 2026: "4 (Sep 11 - Sep 17)" and "5 (Sep 18 - Oct 8)".
+    expect(days("2026-09-11T06:00:00.0-0400", "2026-09-18T14:59:59.0-0400")).toEqual({ startDate: "2026-09-11", endDate: "2026-09-17" });
+    expect(days("2026-09-18T15:00:00.0-0400", "2026-10-09T05:59:59.0-0400")).toEqual({ startDate: "2026-09-18", endDate: "2026-10-08" });
+  });
+
+  it("keeps the end day when the period runs to its last second, and crosses a month", () => {
+    expect(days("2026-10-25T00:00:00-0400", "2026-10-31T23:59:59-0400")).toEqual({ startDate: "2026-10-25", endDate: "2026-10-31" });
+    expect(days("2026-11-27T06:00:00.0-0500", "2026-12-01T05:59:59.0-0500").endDate).toBe("2026-11-30");
   });
 });

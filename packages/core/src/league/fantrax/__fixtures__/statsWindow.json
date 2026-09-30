@@ -1,0 +1,905 @@
+{
+ "displayedSeasonOrProjection": {
+  "code": "SEASON_926_BY_DATE",
+  "endDate": 1811735999000,
+  "name": "2026-27 - Dates",
+  "showGoBackDays": true,
+  "shortName": "2026-27 Reg - Dates",
+  "timeframeTypeCode": "BY_DATE",
+  "startDate": 1787284800000
+ },
+ "posOrGroupList": [
+  {
+   "id": "ALL",
+   "shortName": "All"
+  },
+  {
+   "id": "SOCCER_NON_GOALIE",
+   "shortName": "OF"
+  },
+  {
+   "id": "POS_703",
+   "shortName": "D"
+  },
+  {
+   "id": "POS_702",
+   "shortName": "M"
+  },
+  {
+   "id": "POS_701",
+   "shortName": "F"
+  },
+  {
+   "id": "POS_704",
+   "shortName": "G"
+  }
+ ],
+ "tableHeader": {
+  "cells": [
+   {
+    "key": "status",
+    "shortName": "Sta"
+   },
+   {
+    "key": "opponent",
+    "shortName": "Opp"
+   },
+   {
+    "key": "contract",
+    "shortName": "Con"
+   },
+   {
+    "key": "fpts",
+    "shortName": "FPts"
+   },
+   {
+    "key": "fptsPerGame",
+    "shortName": "FP/G"
+   },
+   {
+    "shortName": "Ros"
+   },
+   {
+    "shortName": "+/-"
+   },
+   {
+    "key": "5010#6060#-1",
+    "shortName": "GP"
+   },
+   {
+    "key": "5010#6070#-1",
+    "shortName": "GS"
+   },
+   {
+    "key": "5010#6120#-1",
+    "shortName": "Min"
+   },
+   {
+    "key": "5010#6090#-1",
+    "shortName": "G"
+   },
+   {
+    "key": "5010#6092#-1",
+    "shortName": "GIB"
+   },
+   {
+    "key": "5010#6093#-1",
+    "shortName": "GOB"
+   },
+   {
+    "key": "5010#6000#-1",
+    "shortName": "A"
+   },
+   {
+    "key": "5010#6001#-1",
+    "shortName": "A2"
+   },
+   {
+    "key": "5010#6002#-1",
+    "shortName": "KP"
+   },
+   {
+    "key": "5010#600a#-1",
+    "shortName": "ABS"
+   },
+   {
+    "key": "5010#600b#-1",
+    "shortName": "AFKG"
+   },
+   {
+    "key": "5010#600c#-1",
+    "shortName": "AHW"
+   },
+   {
+    "key": "5010#600d#-1",
+    "shortName": "AOG"
+   },
+   {
+    "key": "5010#600e#-1",
+    "shortName": "APL"
+   },
+   {
+    "key": "5010#600f#-1",
+    "shortName": "APKG"
+   },
+   {
+    "key": "5010#600g#-1",
+    "shortName": "AR"
+   },
+   {
+    "key": "5010#600m#-1",
+    "shortName": "ASOP"
+   },
+   {
+    "key": "5010#6283#-1",
+    "shortName": "AF"
+   },
+   {
+    "key": "5010#6362#-1",
+    "shortName": "AT"
+   },
+   {
+    "key": "5010#6210#-1",
+    "shortName": "S"
+   },
+   {
+    "key": "5010#6356#-1",
+    "shortName": "S/G"
+   },
+   {
+    "key": "5010#6355#-1",
+    "shortName": "S/90"
+   },
+   {
+    "key": "5010#6230#-1",
+    "shortName": "SOT"
+   },
+   {
+    "key": "5010#6220#-1",
+    "shortName": "SOP"
+   },
+   {
+    "key": "5010#6215#-1",
+    "shortName": "SB"
+   },
+   {
+    "key": "5010#6254#-1",
+    "shortName": "Tk"
+   },
+   {
+    "key": "5010#6256#-1",
+    "shortName": "TkW"
+   },
+   {
+    "key": "5010#6045#-1",
+    "shortName": "Tu"
+   },
+   {
+    "key": "5010#6039#-1",
+    "shortName": "DIS"
+   },
+   {
+    "key": "5010#6040#-1",
+    "shortName": "FC"
+   },
+   {
+    "key": "5010#6050#-1",
+    "shortName": "FS"
+   },
+   {
+    "key": "5010#6044#-1",
+    "shortName": "ErS"
+   },
+   {
+    "key": "5010#6041#-1",
+    "shortName": "ErG"
+   },
+   {
+    "key": "5010#6280#-1",
+    "shortName": "YC"
+   },
+   {
+    "key": "5010#6190#-1",
+    "shortName": "RC"
+   },
+   {
+    "key": "5010#6138#-1",
+    "shortName": "Pen"
+   },
+   {
+    "key": "5010#6130#-1",
+    "shortName": "Off"
+   },
+   {
+    "key": "5010#6315#-1",
+    "shortName": "Off/G"
+   },
+   {
+    "key": "5010#6136#-1",
+    "shortName": "AP"
+   },
+   {
+    "key": "5010#625t#-1",
+    "shortName": "SFTP"
+   },
+   {
+    "key": "5010#6030#-1",
+    "shortName": "C"
+   },
+   {
+    "key": "5010#6031#-1",
+    "shortName": "AC"
+   },
+   {
+    "key": "5010#6034#-1",
+    "shortName": "CF"
+   },
+   {
+    "key": "5010#6020#-1",
+    "shortName": "CK"
+   },
+   {
+    "key": "5010#6026#-1",
+    "shortName": "CF"
+   },
+   {
+    "key": "5010#6695#-1",
+    "shortName": "CE"
+   },
+   {
+    "key": "5010#6696#-1",
+    "shortName": "DFP"
+   },
+   {
+    "key": "5010#6700#-1",
+    "shortName": "DFP3"
+   },
+   {
+    "key": "5010#6025#-1",
+    "shortName": "CC"
+   },
+   {
+    "key": "5010#6057#-1",
+    "shortName": "FKS"
+   },
+   {
+    "key": "5010#6108#-1",
+    "shortName": "Int"
+   },
+   {
+    "key": "5010#6109#-1",
+    "shortName": "IntB"
+   },
+   {
+    "key": "5010#6014#-1",
+    "shortName": "CLRA"
+   },
+   {
+    "key": "5010#6015#-1",
+    "shortName": "CLO"
+   },
+   {
+    "key": "5010#6016#-1",
+    "shortName": "CLR"
+   },
+   {
+    "key": "5010#6017#-1",
+    "shortName": "CoA"
+   },
+   {
+    "key": "5010#6038#-1",
+    "shortName": "DW"
+   },
+   {
+    "key": "5010#6037#-1",
+    "shortName": "DL"
+   },
+   {
+    "key": "5010#6007#-1",
+    "shortName": "AER"
+   },
+   {
+    "key": "5010#6004#-1",
+    "shortName": "BCC"
+   },
+   {
+    "key": "5010#6005#-1",
+    "shortName": "BCM"
+   },
+   {
+    "key": "5010#6006#-1",
+    "shortName": "BCS"
+   },
+   {
+    "key": "5010#600h#-1",
+    "shortName": "BR"
+   },
+   {
+    "key": "5010#6055#-1",
+    "shortName": "FKG"
+   },
+   {
+    "key": "5010#6042#-1",
+    "shortName": "LB"
+   },
+   {
+    "key": "5010#6043#-1",
+    "shortName": "LBA"
+   },
+   {
+    "key": "5010#6253#-1",
+    "shortName": "SBON"
+   },
+   {
+    "key": "5010#6252#-1",
+    "shortName": "SBOF"
+   },
+   {
+    "key": "5010#6150#-1",
+    "shortName": "PKG"
+   },
+   {
+    "key": "5010#6140#-1",
+    "shortName": "PKA"
+   },
+   {
+    "key": "5010#6332#-1",
+    "shortName": "PKM"
+   },
+   {
+    "key": "5010#6175#-1",
+    "shortName": "PKD"
+   },
+   {
+    "key": "5010#6105#-1",
+    "shortName": "OG"
+   },
+   {
+    "key": "5010#6101#-1",
+    "shortName": "GAO"
+   },
+   {
+    "key": "5010#6250#-1",
+    "shortName": "CS"
+   },
+   {
+    "key": "5010#6249#-1",
+    "shortName": "CS"
+   },
+   {
+    "key": "5010#600n#-1",
+    "shortName": "OUTP"
+   }
+  ]
+ },
+ "statsTable": [
+  {
+   "scorer": {
+    "scorerId": "06cm1",
+    "name": "Nicolas Jackson",
+    "teamName": "Aston Villa",
+    "teamShortName": "AVL",
+    "posShortNames": "F",
+    "defaultPosId": "701"
+   },
+   "cells": [
+    {
+     "content": "W <small>(Fri)</small>"
+    },
+    {
+     "content": "BRF<br/>Sat 10:00AM"
+    },
+    {
+     "content": "2028"
+    },
+    {
+     "content": "5"
+    },
+    {
+     "content": "5"
+    },
+    {
+     "content": "76%"
+    },
+    {
+     "content": "-1%"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "87"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "6"
+    },
+    {
+     "content": "6.0"
+    },
+    {
+     "content": "6.2"
+    },
+    {
+     "content": "2"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "3"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "2"
+    },
+    {
+     "content": "2.0"
+    },
+    {
+     "content": "12"
+    },
+    {
+     "content": "3"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "4"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "12"
+    },
+    {
+     "content": "7"
+    },
+    {
+     "content": "10"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "3"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "-5"
+    }
+   ]
+  },
+  {
+   "scorer": {
+    "scorerId": "03ybi",
+    "name": "Marcus Rashford",
+    "teamName": "Manchester United",
+    "teamShortName": "MUN",
+    "posShortNames": "F",
+    "defaultPosId": "701"
+   },
+   "cells": [
+    {
+     "content": "W <small>(Fri)</small>"
+    },
+    {
+     "content": "TOT<br/>Sat 12:30PM"
+    },
+    {
+     "content": "2028"
+    },
+    {
+     "content": "2"
+    },
+    {
+     "content": "2"
+    },
+    {
+     "content": "94%"
+    },
+    {
+     "content": "0%"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "76"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "4"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "6"
+    },
+    {
+     "content": "6.0"
+    },
+    {
+     "content": "7.1"
+    },
+    {
+     "content": "2"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "2"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "3"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "2"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "2"
+    },
+    {
+     "content": "2.0"
+    },
+    {
+     "content": "31"
+    },
+    {
+     "content": "18"
+    },
+    {
+     "content": "3"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "2"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "2"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "2"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "2"
+    },
+    {
+     "content": "2"
+    },
+    {
+     "content": "5"
+    },
+    {
+     "content": "2"
+    },
+    {
+     "content": "2"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "1"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "0"
+    },
+    {
+     "content": "-2"
+    }
+   ]
+  }
+ ]
+}

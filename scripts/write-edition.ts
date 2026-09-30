@@ -33,6 +33,7 @@ import { CARGO, headlineAndProse, prose } from "./edition/checks";
 import { writeSubedited } from "./edition/subedit";
 import { writeLawro } from "./edition/lawroWriter";
 import { writeSheets } from "./edition/sheetsWriter";
+import { writeBin } from "./edition/binWriter";
 import { reportsColumn } from "./edition/reportsWriter";
 import { presserDesk } from "./edition/presserWeek";
 import { readXi } from "./edition/xi";
@@ -198,7 +199,9 @@ async function main(): Promise<void> {
       // column back against the register and sends it back once if it reached
       // for a banned phrase.
       const column =
-        desk.reports !== undefined
+        "bin" in desk
+          ? await writeBin(desk.bin, brief, say)
+          : desk.reports !== undefined
           ? await reportsColumn(desk.reports, say)
           : desk.sheets !== undefined
           ? await writeSheets(desk.sheets, brief, say)

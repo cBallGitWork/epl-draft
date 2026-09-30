@@ -63,6 +63,18 @@ describe("newsdesk", () => {
     );
   });
 
+  it("files the Bin XI on a Tuesday in London once the round is over, and on no other day", () => {
+    const kinds = (now: string, finished = true) => newsdesk(desk({ finished }), none, now).map((a) => a.kind);
+    // 23:30 UTC on a Monday in September is already Tuesday in London.
+    expect(kinds("2026-09-28T23:30:00.000Z")).toContain("bin-xi");
+    expect(kinds("2026-09-29T08:15:00.000Z")).toContain("bin-xi");
+    expect(kinds("2026-09-28T08:15:00.000Z")).not.toContain("bin-xi");
+    expect(kinds("2026-09-30T08:15:00.000Z")).not.toContain("bin-xi");
+    // A midweek round still being played on a Tuesday has no week to pick from yet.
+    expect(kinds("2026-09-29T08:15:00.000Z", false)).not.toContain("bin-xi");
+    expect(newsdesk(desk({ finished: true }), none, "2026-09-29T08:15:00.000Z").find((a) => a.kind === "bin-xi")?.key).toBe("bin-xi:gw3");
+  });
+
   it("files each wire item once, and no more than the cap", () => {
     // The loop over the news list was written out TWICE, so a news day queued
     // every item two deep. `want` guards the LEDGER, not the running order, so

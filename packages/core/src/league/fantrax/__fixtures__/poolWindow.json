@@ -1,0 +1,185 @@
+{
+ "displayedSeasonOrProjection": {
+  "code": "SEASON_926_BY_DATE",
+  "endDate": 1811735999000,
+  "name": "2026-27 - Dates",
+  "showGoBackDays": true,
+  "shortName": "2026-27 Reg - Dates",
+  "timeframeTypeCode": "BY_DATE",
+  "startDate": 1787284800000
+ },
+ "posOrGroupList": [
+  {
+   "id": "ALL",
+   "shortName": "All"
+  },
+  {
+   "id": "SOCCER_NON_GOALIE",
+   "shortName": "OF"
+  },
+  {
+   "id": "POS_703",
+   "shortName": "D"
+  },
+  {
+   "id": "POS_702",
+   "shortName": "M"
+  },
+  {
+   "id": "POS_701",
+   "shortName": "F"
+  },
+  {
+   "id": "POS_704",
+   "shortName": "G"
+  }
+ ],
+ "tableHeader": {
+  "cells": [
+   {
+    "key": "status",
+    "shortName": "Sta"
+   },
+   {
+    "key": "opponent",
+    "shortName": "Opp"
+   },
+   {
+    "key": "fpts",
+    "shortName": "FPts"
+   },
+   {
+    "key": "fptsPerGame",
+    "shortName": "FP/G"
+   },
+   {
+    "shortName": "Ros"
+   },
+   {
+    "shortName": "+/-"
+   }
+  ]
+ },
+ "statsTable": [
+  {
+   "scorer": {
+    "scorerId": "03fgl",
+    "name": "Jay da Silva",
+    "teamName": "Coventry City",
+    "teamShortName": "COV",
+    "posShortNames": "D",
+    "defaultPosId": "703"
+   },
+   "cells": [
+    {
+     "content": "FA"
+    },
+    {
+     "content": "NEW<br/>Mon 3:00PM"
+    },
+    {
+     "content": "12"
+    },
+    {
+     "content": "12"
+    },
+    {
+     "content": "3%"
+    },
+    {
+     "content": "+1%"
+    }
+   ]
+  },
+  {
+   "scorer": {
+    "scorerId": "07848",
+    "name": "Johan Manzambi",
+    "teamName": "Aston Villa",
+    "teamShortName": "AVL",
+    "posShortNames": "M",
+    "defaultPosId": "702"
+   },
+   "cells": [
+    {
+     "content": "FA"
+    },
+    {
+     "content": "BRF<br/>Sat 10:00AM"
+    },
+    {
+     "content": "11"
+    },
+    {
+     "content": "11"
+    },
+    {
+     "content": "84%"
+    },
+    {
+     "content": "+1%"
+    }
+   ]
+  },
+  {
+   "scorer": {
+    "scorerId": "061vk",
+    "name": "Jaidon Anthony",
+    "teamName": "Brentford",
+    "teamShortName": "BRF",
+    "posShortNames": "M,F",
+    "defaultPosId": "701"
+   },
+   "cells": [
+    {
+     "content": "FA"
+    },
+    {
+     "content": "@AVL<br/>Sat 10:00AM"
+    },
+    {
+     "content": "6"
+    },
+    {
+     "content": "6"
+    },
+    {
+     "content": "56%"
+    },
+    {
+     "content": "-1%"
+    }
+   ]
+  },
+  {
+   "scorer": {
+    "scorerId": "06xze",
+    "name": "Walter Benítez",
+    "teamName": "Crystal Palace",
+    "teamShortName": "CRY",
+    "posShortNames": "G",
+    "defaultPosId": "704"
+   },
+   "cells": [
+    {
+     "content": "FA"
+    },
+    {
+     "content": "NOT<br/>Sun 9:00AM"
+    },
+    {
+     "content": "6"
+    },
+    {
+     "content": "6"
+    },
+    {
+     "content": "5%"
+    },
+    {
+     "content": "+1%"
+    }
+   ]
+  }
+ ]
+}

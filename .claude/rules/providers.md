@@ -119,6 +119,10 @@ Methods that matter:
   read positionally — the inverse of the read-by-key rule the league table needs
   — and its "Games Played" counts player appearances, not rounds. PLATFORM_NOTES
   carries the probe.
+- `getPlayerStats` answers a DATE RANGE: `timeframeTypeCode: "BY_DATE"` with `startDate`/`endDate`
+  (`YYYY-MM-DD`). A period's own days (`periodDays`) give Fantrax's points for that period, free
+  agents included: 132/133 and 123/124 against live scoring, each miss dual-eligible. `goBackDays`
+  and `BY_PERIOD` do not take. PLATFORM_NOTES, 30 Sep 2026.
 - `getScorerDetails`, `getPlayerProfile`, `getPlayerNews`, `setPlayerNews`,
   `setPlayerNote`, `removePlayerNote` — per-player notes are writable and are the
   native home for our player metadata.

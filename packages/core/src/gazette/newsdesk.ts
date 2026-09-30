@@ -1,3 +1,4 @@
+import { binXiDue } from "./binXi/due";
 import { predictionsDue } from "./predictions/due";
 import { type FixtureStake, bothSides } from "./relevance";
 import type { StoryKind } from "./story";
@@ -149,6 +150,8 @@ export function newsdesk(
     for (const kind of MONDAY_SET) {
       want({ kind, ...roundSlot(kind, desk.gameweek) });
     }
+    // Tuesday's Bin XI, the round's best eleven nobody has, filed before Wednesday's waivers.
+    if (binXiDue(now)) want({ kind: "bin-xi", ...roundSlot("bin-xi", desk.gameweek) });
   }
 
   // The sheets as locked, from the deadline until the last whistle: not "before a ball is kicked",

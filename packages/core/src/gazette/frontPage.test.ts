@@ -157,6 +157,11 @@ describe("composePaper — one edition of a column at a time", () => {
     expect(out.map((s) => s.slug)).toEqual(["gw5"]);
   });
 
+  it("retires last week's Bin XI when this week's files", () => {
+    const out = composePaper([story("bin-xi", "gw4", 4), story("bin-xi", "gw5", 5)], "2026-09-21T12:00:00.000Z");
+    expect(out.map((s) => s.slug)).toEqual(["gw5"]);
+  });
+
   it("keeps Thursday's and Friday's pressers, which share a round", () => {
     const out = composePaper([story("presser", "thu", 5), story("presser", "fri", 5)], "2026-09-21T12:00:00.000Z");
     expect(out).toHaveLength(2);
