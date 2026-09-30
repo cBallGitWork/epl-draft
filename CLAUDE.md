@@ -21,6 +21,8 @@ season; this repo republishes the league with what Fantrax lacks.
 - `.claude/rules/providers.md` holds the verified FPL, Fantrax and identity facts, including the
   login constraint. It loads in `packages/core/src`, `scripts` and the app's data modules. Read it
   before designing on a provider field.
+- `docs/providers/README.md` is the ingestion map: every source, who calls it, when it runs,
+  where it lands and what notices it stale. Read it before touching a client, a cron or a cache.
 - When asked for a plan, start from this season's needs, then the long-term platform.
 
 ## Stack
