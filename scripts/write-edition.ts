@@ -234,7 +234,7 @@ function commissioner(ctx: DeskContext, paper: readonly PublishedStory[], now: s
         say(`  ⚠ ${assignment.kind} names ${unknown.length} not in its brief: ${unknown.join(", ")}`);
       }
       // The backstop reads the FILED story, cargo included, and files anyway, loudly.
-      const printed = banned(headlineAndProse(filed.story));
+      const printed = banned(headlineAndProse(filed.story), assignment.kind === "match-report" ? REPORT_NEVER : undefined);
       if (printed.length > 0) {
         say(`  ⚠ ${assignment.kind} STILL prints banned phrasing after a rewrite: ${printed.join(", ")}`);
       }

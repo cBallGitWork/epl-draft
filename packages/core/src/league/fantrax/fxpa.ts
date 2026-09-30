@@ -65,11 +65,12 @@ export async function fxpaRead(
     if (canned !== null) return canned;
   }
 
+  // A read is safe to send twice; a session call may be a lineup write, so it goes once.
   const res = await politeFetch(`${FANTRAX_FXPA_BASE}?leagueId=${encodeURIComponent(leagueId)}`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...(session ? { Cookie: session } : {}) },
     body: JSON.stringify({ msgs: [{ method, data: { leagueId, ...data } }] }),
-  });
+  }, { idempotent: session === undefined });
 
   // As on fxea, a backstop only: fxpa reports its own refusals with a 200.
   if (!res.ok) throw new FantraxError(method, String(res.status), res.statusText);
