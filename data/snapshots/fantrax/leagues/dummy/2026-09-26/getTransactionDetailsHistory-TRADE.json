@@ -7,7 +7,7 @@
   },
   "filterSettings": {
     "positionOrGroup": "ALL",
-    "view": "CLAIM_DROP",
+    "view": "TRADE",
     "adminMode": false,
     "includeDeleted": false,
     "team": "ALL",
@@ -15,7 +15,7 @@
   },
   "displayedSelections": {
     "positionOrGroup": "ALL",
-    "view": "CLAIM_DROP",
+    "view": "TRADE",
     "adminMode": false,
     "includeDeleted": false,
     "team": "ALL",
@@ -50,7 +50,7 @@
       ],
       "text": "Are you sure you want to permanently delete this?"
     },
-    "heading": "2026 test1dsfds",
+    "heading": "2026 ALLPOINTS",
     "undoTransactionDialog": {
       "alwaysShowOpener": false,
       "options": [
@@ -127,43 +127,43 @@
       },
       {
         "name": "123",
-        "id": "8enbgqo5msgb375j"
-      },
-      {
-        "name": "Notemail",
-        "id": "v6bxgqm5mtj31znh"
+        "id": "98yx3o50mtj36y3g"
       },
       {
         "name": "test1",
-        "id": "jtsmt5jxmtj31znh"
+        "id": "hy0w28p5mtj36y3g"
       },
       {
         "name": "test2",
-        "id": "pbxm9fgimshcpazf"
+        "id": "1b6gp5utmtj36y3g"
       },
       {
         "name": "test211",
-        "id": "dq2yk3zxmtj31znh"
+        "id": "fq5omv5kmtj36y3g"
       },
       {
         "name": "test3",
-        "id": "j9zadacnmshcpazf"
+        "id": "y6viv6jfmtj36y3g"
+      },
+      {
+        "name": "test31",
+        "id": "dpdkp2bbmtj36y3g"
       },
       {
         "name": "test31121",
-        "id": "yf96763gmtj31zni"
+        "id": "g80h3bf5mtj36y3g"
       },
       {
         "name": "test3331",
-        "id": "vzqubu25mtj31zni"
+        "id": "kg18w2cvmtj36y3g"
       },
       {
         "name": "test4",
-        "id": "sezrgvl2mshcpazf"
+        "id": "deo9ljvtmtj36y3g"
       },
       {
         "name": "testf",
-        "id": "mxet9tt7mtj31zni"
+        "id": "pzmd243ymtj36y3g"
       }
     ],
     "tabs": [
@@ -208,21 +208,22 @@
     ]
   },
   "table": {
-    "caption": "Claims / Drops",
+    "caption": "Trades",
     "header": {
       "cells": [
         {
           "align": "LEFT",
           "sortDirection": 1,
-          "name": "Team",
-          "shortName": "Team",
-          "key": "team"
+          "name": "From",
+          "shortName": "From",
+          "key": "from"
         },
         {
+          "align": "LEFT",
           "sortDirection": 1,
-          "name": "Claim Priority",
-          "shortName": "Pr",
-          "key": "priority"
+          "name": "To",
+          "shortName": "To",
+          "key": "to"
         },
         {
           "align": "LEFT",
@@ -233,7 +234,7 @@
         },
         {
           "sortDirection": 1,
-          "name": "Gameweek",
+          "name": "{0} on which this transaction takes effect",
           "shortName": "Gameweek",
           "key": "week"
         }
@@ -242,17 +243,87 @@
     "rows": [
       {
         "scorer": {
-          "teamName": "Sunderland",
-          "urlName": "brian-brobbey",
-          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Sunderland.png",
-          "scorerId": "070hc",
+          "teamName": "Brighton",
+          "urlName": "maxim-de-cuyper",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Brighton_and_Hove_Albion.png",
+          "scorerId": "06y9m",
           "upcomingEventStatusId": "2",
           "teamLogo": true,
           "posIdsNoFlex": [
-            "701"
+            "703"
           ],
-          "defaultPosId": "701",
-          "posShortNames": "F",
+          "defaultPosId": "703",
+          "posShortNames": "D",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Expected to play in upcoming/current game",
+              "typeId": "32"
+            },
+            {
+              "tooltip": "Sep 20, 4:57 AM: De Cuyper generated one shot (zero on...",
+              "typeId": "9"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "703"
+          ],
+          "teamId": "110240",
+          "name": "Maxim De Cuyper",
+          "teamShortName": "BHA",
+          "shortName": "M. De Cuyper"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "numInGroup": 2,
+        "txSetId": "dho9tg1ymtjxs0r3",
+        "feesUsed": false,
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "test31",
+            "leagueId": "w05aib75mtj36y1g",
+            "key": "from",
+            "teamId": "dpdkp2bbmtj36y3g"
+          },
+          {
+            "align": "LEFT",
+            "content": "testf",
+            "leagueId": "w05aib75mtj36y1g",
+            "key": "to",
+            "teamId": "pzmd243ymtj36y3g"
+          },
+          {
+            "align": "LEFT",
+            "content": "Wed Sep 2, 2026, 6:11AM",
+            "rowspan": 2,
+            "key": "date"
+          },
+          {
+            "content": "3",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Sunderland",
+          "urlName": "danny-ballard",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Sunderland.png",
+          "scorerId": "05nns",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "703"
+          ],
+          "defaultPosId": "703",
+          "posShortNames": "D",
           "team": false,
           "icons": [
             {
@@ -264,104 +335,45 @@
               "typeId": "1"
             },
             {
-              "tooltip": "Sep 24, 6:51 PM: Brobbey (hamstring) is believed to be...",
+              "tooltip": "Sep 25, 2:05 PM: Ballard was forced off in the 95th...",
               "typeId": "14"
             }
           ],
           "rookie": false,
           "minorsEligible": false,
           "posIds": [
-            "701"
+            "703"
           ],
           "teamId": "110141",
-          "name": "Brian Brobbey",
+          "name": "Danny Ballard",
           "teamShortName": "SUN",
-          "shortName": "B. Brobbey"
+          "shortName": "D. Ballard"
         },
         "resultCode": "EXECUTED",
         "executed": true,
         "result": {
           "content": "Executed"
         },
-        "claimType": "WW",
-        "numInGroup": 2,
-        "txSetId": "gzddvzlpmubjfa5q",
+        "txSetId": "dho9tg1ymtjxs0r3",
         "feesUsed": false,
-        "transactionCode": "CLAIM",
-        "transactionType": "Claim",
         "deleted": false,
         "cells": [
           {
             "align": "LEFT",
-            "content": "test1",
-            "leagueId": "zbn1z3ukmsgb36sz",
-            "rowspan": 2,
-            "key": "team",
-            "teamId": "jtsmt5jxmtj31znh"
-          },
-          {
-            "content": "1",
-            "key": "priority"
+            "content": "testf",
+            "leagueId": "w05aib75mtj36y1g",
+            "key": "from",
+            "teamId": "pzmd243ymtj36y3g"
           },
           {
             "align": "LEFT",
-            "content": "Tue Sep 22, 2026, 5:00AM",
-            "rowspan": 2,
-            "key": "date"
+            "content": "test31",
+            "leagueId": "w05aib75mtj36y1g",
+            "key": "to",
+            "teamId": "dpdkp2bbmtj36y3g"
           },
           {
-            "content": "6",
-            "key": "week"
-          }
-        ]
-      },
-      {
-        "scorer": {
-          "teamName": "Ipswich",
-          "urlName": "kjell-scherpen",
-          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Ipswich_Town.png",
-          "scorerId": "05uds",
-          "teamLogo": true,
-          "posIdsNoFlex": [
-            "704"
-          ],
-          "defaultPosId": "704",
-          "posShortNames": "G",
-          "team": false,
-          "icons": [
-            {
-              "tooltip": "Sep 13, 2:17 AM: Scherpen made two saves and allowed two...",
-              "typeId": "8"
-            }
-          ],
-          "rookie": false,
-          "minorsEligible": false,
-          "posIds": [
-            "704"
-          ],
-          "teamId": "110271",
-          "name": "Kjell Scherpen",
-          "teamShortName": "IPS",
-          "shortName": "K. Scherpen"
-        },
-        "resultCode": "EXECUTED",
-        "executed": true,
-        "result": {
-          "content": "Executed"
-        },
-        "claimType": "",
-        "txSetId": "gzddvzlpmubjfa5q",
-        "feesUsed": false,
-        "transactionCode": "DROP",
-        "transactionType": "Drop",
-        "deleted": false,
-        "cells": [
-          {
-            "content": "1",
-            "key": "priority"
-          },
-          {
-            "content": "6",
+            "content": "3",
             "key": "week"
           }
         ]

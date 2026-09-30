@@ -3,7 +3,7 @@ import { lastLockedPeriod, periodToRead, planningPeriod, rosterDisplay } from ".
 import type { GameweekKickoff } from "./calendar";
 import type { LeaguePeriod } from "./types";
 
-// Verbatim from data/snapshots/fantrax/leagues/real/2026-08-27/getLeagueInfo.json.
+// Verbatim from data/snapshots/fantrax/leagues/ayyoh-abandoned/2026-08-27/getLeagueInfo.json.
 //
 // **The old fixture held periods 1 and 2 only, and that is why this survived.**
 // Both open at their own Friday-night kickoff, which are two of the four weeks

@@ -1,580 +1,5 @@
 {
-  "matchups": [
-    {
-      "period": 1,
-      "matchupList": [
-        {
-          "away": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 2,
-      "matchupList": [
-        {
-          "away": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 3,
-      "matchupList": [
-        {
-          "away": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          },
-          "home": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          }
-        }
-      ]
-    },
-    {
-      "period": 4,
-      "matchupList": []
-    },
-    {
-      "period": 5,
-      "matchupList": []
-    },
-    {
-      "period": 6,
-      "matchupList": [
-        {
-          "away": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          },
-          "home": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          }
-        }
-      ]
-    },
-    {
-      "period": 7,
-      "matchupList": [
-        {
-          "away": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          },
-          "home": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          }
-        }
-      ]
-    },
-    {
-      "period": 8,
-      "matchupList": [
-        {
-          "away": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 9,
-      "matchupList": [
-        {
-          "away": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          },
-          "home": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          }
-        }
-      ]
-    },
-    {
-      "period": 10,
-      "matchupList": [
-        {
-          "away": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 11,
-      "matchupList": [
-        {
-          "away": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 12,
-      "matchupList": [
-        {
-          "away": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          },
-          "home": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          }
-        }
-      ]
-    },
-    {
-      "period": 13,
-      "matchupList": [
-        {
-          "away": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 14,
-      "matchupList": [
-        {
-          "away": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 15,
-      "matchupList": [
-        {
-          "away": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          },
-          "home": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          }
-        }
-      ]
-    },
-    {
-      "period": 16,
-      "matchupList": [
-        {
-          "away": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 17,
-      "matchupList": [
-        {
-          "away": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 18,
-      "matchupList": [
-        {
-          "away": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          },
-          "home": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          }
-        }
-      ]
-    },
-    {
-      "period": 19,
-      "matchupList": [
-        {
-          "away": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 20,
-      "matchupList": [
-        {
-          "away": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 21,
-      "matchupList": [
-        {
-          "away": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          },
-          "home": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          }
-        }
-      ]
-    },
-    {
-      "period": 22,
-      "matchupList": [
-        {
-          "away": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 23,
-      "matchupList": [
-        {
-          "away": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 24,
-      "matchupList": [
-        {
-          "away": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          },
-          "home": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          }
-        }
-      ]
-    },
-    {
-      "period": 25,
-      "matchupList": [
-        {
-          "away": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 26,
-      "matchupList": [
-        {
-          "away": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 27,
-      "matchupList": [
-        {
-          "away": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          },
-          "home": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          }
-        }
-      ]
-    },
-    {
-      "period": 28,
-      "matchupList": [
-        {
-          "away": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 29,
-      "matchupList": [
-        {
-          "away": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 30,
-      "matchupList": [
-        {
-          "away": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          },
-          "home": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          }
-        }
-      ]
-    },
-    {
-      "period": 31,
-      "matchupList": [
-        {
-          "away": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 32,
-      "matchupList": [
-        {
-          "away": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 33,
-      "matchupList": [
-        {
-          "away": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          },
-          "home": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          }
-        }
-      ]
-    },
-    {
-      "period": 34,
-      "matchupList": [
-        {
-          "away": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 35,
-      "matchupList": [
-        {
-          "away": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 36,
-      "matchupList": [
-        {
-          "away": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          },
-          "home": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          }
-        }
-      ]
-    },
-    {
-      "period": 37,
-      "matchupList": [
-        {
-          "away": {
-            "name": "The Raccoons",
-            "id": "l5kunst8msgbirdf",
-            "shortName": "CB_fantr"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    },
-    {
-      "period": 38,
-      "matchupList": [
-        {
-          "away": {
-            "name": "Mcdegle86",
-            "id": "aekx2715mtzgcl3f",
-            "shortName": "Mcdegle8"
-          },
-          "home": {
-            "bye": true
-          }
-        }
-      ]
-    }
-  ],
+  "matchups": [],
   "rosterInfo": {
     "positionConstraints": {
       "D": {
@@ -590,9 +15,9 @@
         "maxActive": 5
       }
     },
-    "maxTotalPlayers": 15,
+    "maxTotalPlayers": 14,
     "maxTotalActivePlayers": 11,
-    "maxTotalReservePlayers": 4
+    "maxTotalReservePlayers": 3
   },
   "endDate": "2027-05-30",
   "playerInfo": {
@@ -692,12 +117,12 @@
       "eligiblePos": "F",
       "status": "FA"
     },
-    "06zbx": {
-      "eligiblePos": "M",
-      "status": "FA"
-    },
     "06yb9": {
       "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06zbx": {
+      "eligiblePos": "M",
       "status": "FA"
     },
     "063y7": {
@@ -740,12 +165,12 @@
       "eligiblePos": "D",
       "status": "FA"
     },
-    "0635j": {
-      "eligiblePos": "D",
-      "status": "FA"
-    },
     "05r4h": {
       "eligiblePos": "M",
+      "status": "FA"
+    },
+    "0635j": {
+      "eligiblePos": "D",
       "status": "FA"
     },
     "06r5b": {
@@ -760,12 +185,12 @@
       "eligiblePos": "M",
       "status": "FA"
     },
-    "06pry": {
-      "eligiblePos": "D",
-      "status": "FA"
-    },
     "05gcr": {
       "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06pry": {
+      "eligiblePos": "D",
       "status": "FA"
     },
     "03p9y": {
@@ -828,12 +253,12 @@
       "eligiblePos": "M",
       "status": "FA"
     },
-    "061vk": {
-      "eligiblePos": "F,M",
-      "status": "FA"
-    },
     "06jfe": {
       "eligiblePos": "G",
+      "status": "FA"
+    },
+    "061vk": {
+      "eligiblePos": "F,M",
       "status": "FA"
     },
     "061vn": {
@@ -1004,12 +429,12 @@
       "eligiblePos": "D",
       "status": "FA"
     },
-    "0788g": {
-      "eligiblePos": "G",
-      "status": "FA"
-    },
     "0522h": {
       "eligiblePos": "M",
+      "status": "FA"
+    },
+    "0788g": {
+      "eligiblePos": "G",
       "status": "FA"
     },
     "06zbm": {
@@ -1040,11 +465,11 @@
       "eligiblePos": "D",
       "status": "FA"
     },
-    "06f8y": {
+    "068a1": {
       "eligiblePos": "M",
       "status": "FA"
     },
-    "068a1": {
+    "06f8y": {
       "eligiblePos": "M",
       "status": "FA"
     },
@@ -1301,7 +726,7 @@
       "status": "FA"
     },
     "04abn": {
-      "eligiblePos": "F,M",
+      "eligiblePos": "M",
       "status": "FA"
     },
     "06znb": {
@@ -1425,7 +850,7 @@
       "status": "FA"
     },
     "056iy": {
-      "eligiblePos": "F,M",
+      "eligiblePos": "F",
       "status": "FA"
     },
     "076cw": {
@@ -1500,12 +925,12 @@
       "eligiblePos": "D",
       "status": "FA"
     },
-    "061z5": {
-      "eligiblePos": "D",
-      "status": "FA"
-    },
     "072wq": {
       "eligiblePos": "F",
+      "status": "FA"
+    },
+    "061z5": {
+      "eligiblePos": "D",
       "status": "FA"
     },
     "061xs": {
@@ -1532,12 +957,12 @@
       "eligiblePos": "G",
       "status": "FA"
     },
-    "06mnd": {
-      "eligiblePos": "F",
-      "status": "FA"
-    },
     "03m5i": {
       "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06mnd": {
+      "eligiblePos": "F",
       "status": "FA"
     },
     "05r9b": {
@@ -1872,16 +1297,16 @@
       "eligiblePos": "G",
       "status": "FA"
     },
-    "038ze": {
-      "eligiblePos": "F,M",
-      "status": "FA"
-    },
     "04qfz": {
       "eligiblePos": "D",
       "status": "FA"
     },
-    "05l8q": {
+    "038ze": {
       "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "05l8q": {
+      "eligiblePos": "M",
       "status": "FA"
     },
     "05rey": {
@@ -2000,11 +1425,11 @@
       "eligiblePos": "M",
       "status": "FA"
     },
-    "05uns": {
+    "05748": {
       "eligiblePos": "F,M",
       "status": "FA"
     },
-    "05748": {
+    "05uns": {
       "eligiblePos": "F,M",
       "status": "FA"
     },
@@ -2228,12 +1653,12 @@
       "eligiblePos": "D",
       "status": "FA"
     },
-    "06nyw": {
-      "eligiblePos": "D",
-      "status": "FA"
-    },
     "045ob": {
       "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06nyw": {
+      "eligiblePos": "D",
       "status": "FA"
     },
     "05mzt": {
@@ -2289,7 +1714,7 @@
       "status": "FA"
     },
     "06rlj": {
-      "eligiblePos": "M,D",
+      "eligiblePos": "D",
       "status": "FA"
     },
     "05oig": {
@@ -2592,12 +2017,12 @@
       "eligiblePos": "F",
       "status": "FA"
     },
-    "06rnn": {
-      "eligiblePos": "F",
-      "status": "FA"
-    },
     "05nil": {
       "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06rnn": {
+      "eligiblePos": "F",
       "status": "FA"
     },
     "02lp5": {
@@ -2673,7 +2098,7 @@
       "status": "FA"
     },
     "06xza": {
-      "eligiblePos": "F,M",
+      "eligiblePos": "F",
       "status": "FA"
     },
     "062ow": {
@@ -2700,15 +2125,15 @@
       "eligiblePos": "M",
       "status": "FA"
     },
-    "070hr": {
-      "eligiblePos": "F",
-      "status": "FA"
-    },
     "0689w": {
       "eligiblePos": "F",
       "status": "FA"
     },
     "0326x": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "070hr": {
       "eligiblePos": "F",
       "status": "FA"
     },
@@ -2740,12 +2165,12 @@
       "eligiblePos": "F",
       "status": "FA"
     },
-    "06hze": {
-      "eligiblePos": "M",
-      "status": "FA"
-    },
     "070hl": {
       "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06hze": {
+      "eligiblePos": "M",
       "status": "FA"
     },
     "070hi": {
@@ -3116,12 +2541,12 @@
       "eligiblePos": "M",
       "status": "FA"
     },
-    "05u1m": {
-      "eligiblePos": "D",
-      "status": "FA"
-    },
     "06v0l": {
       "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05u1m": {
+      "eligiblePos": "D",
       "status": "FA"
     },
     "07850": {
@@ -3165,7 +2590,7 @@
       "status": "FA"
     },
     "05ogb": {
-      "eligiblePos": "F,M",
+      "eligiblePos": "F",
       "status": "FA"
     },
     "06clt": {
@@ -3733,116 +3158,68 @@
       "startDate": "2027-05-28T06:00:00.0-0400"
     }
   ],
-  "teamInfo": {
-    "qgucu9dgmufwva1x": {
-      "name": "its_ohi",
-      "id": "qgucu9dgmufwva1x"
-    },
-    "aekx2715mtzgcl3f": {
-      "name": "Mcdegle86",
-      "id": "aekx2715mtzgcl3f"
-    },
-    "ipnp5y4mmu9j7kop": {
-      "name": "RichyN",
-      "id": "ipnp5y4mmu9j7kop"
-    },
-    "uexqrijomu8l5asi": {
-      "name": "AtleticoTimHortons",
-      "id": "uexqrijomu8l5asi"
-    },
-    "l5kunst8msgbirdf": {
-      "name": "The Raccoons",
-      "id": "l5kunst8msgbirdf"
-    },
-    "kpj0z744muh1qwtd": {
-      "name": "nickbtts",
-      "id": "kpj0z744muh1qwtd"
-    },
-    "7to6xosimu8hyyw5": {
-      "name": "traffordstephen",
-      "id": "7to6xosimu8hyyw5"
-    }
-  },
+  "teamInfo": {},
   "draftType": "snake",
   "draftSettings": {
     "draftType": "snake"
   },
-  "leagueName": "Tim Hortons Pro League 26/27",
+  "leagueName": "Tim Hortons Pro League 24/25",
+  "leagueHistoryId": "s4m1dbrjlyr9ytv7",
   "scoringSystem": {
     "scoringCategories": {
       "NON_GOALIE": {
-        "A": {
-          "Default": "points3"
+        "SBOF": {
+          "Default": "points0"
+        },
+        "MP": {
+          "Default": "points0",
+          "M": "range10|99|2|NULL"
         },
         "KP": {
-          "D": "points0",
-          "F": "points0",
-          "G": "points0",
-          "Default": "points0",
-          "M": "points0"
+          "Default": "range0|99|1|3.0"
         },
         "AF": {
-          "Default": "points3"
+          "Default": "points0"
+        },
+        "CLRA": {
+          "D": "range8|99|1|NULL",
+          "Default": "points0"
         },
         "G": {
           "D": "points6",
           "F": "points4",
-          "Default": "points0",
+          "Default": "points8",
           "M": "points5"
+        },
+        "SBON": {
+          "Default": "points1"
         },
         "YC": {
           "Default": "points-1"
         },
-        "ASOP": {
-          "D": "points0",
-          "F": "points0",
-          "G": "points0",
-          "Default": "points0",
-          "M": "points0"
+        "GS": {
+          "Default": "points1"
         },
-        "Off": {
-          "D": "points0",
-          "F": "points0",
-          "G": "points0",
-          "Default": "points0",
-          "M": "points0"
-        },
-        "AP": {
-          "D": "points0",
-          "F": "points0",
-          "G": "points0",
-          "Default": "points0",
-          "M": "points0"
+        "DFP": {
+          "D": "range5|99|2|NULL",
+          "Default": "points0"
         },
         "CS": {
-          "D": "points0",
-          "F": "points0",
-          "G": "points0",
+          "D": "points4",
           "Default": "points0",
-          "M": "points0"
-        },
-        "PA": {
-          "D": "points0",
-          "F": "points0",
-          "G": "points0",
-          "Default": "points0",
-          "M": "points0"
+          "M": "points1"
         },
         "RC": {
           "Default": "points-3"
         },
         "Min": {
-          "Default": "range1|59|1|NULL$60|90|1|NULL"
+          "Default": "range0|0|0|NULL"
         },
         "PKM": {
           "Default": "points-2"
         },
         "AT": {
-          "D": "points0",
-          "F": "points0",
-          "G": "points0",
-          "Default": "points0",
-          "M": "points0"
+          "Default": "points3"
         },
         "GAO": {
           "D": "range1|99|-1|2.0",
@@ -3850,58 +3227,29 @@
         },
         "OG": {
           "Default": "points-2"
-        },
-        "Pen": {
-          "D": "points0",
-          "F": "points0",
-          "G": "points0",
-          "Default": "points0",
-          "M": "points0"
-        },
-        "GOF": {
-          "D": "points0",
-          "F": "points0",
-          "G": "points0",
-          "Default": "points0",
-          "M": "points0"
         }
       },
       "GOALIE": {
-        "A": {
-          "Default": "points3"
-        },
-        "Sv": {
-          "Default": "range1|99|1|3.0"
+        "SBOF": {
+          "Default": "points0"
         },
         "AF": {
-          "Default": "points3"
+          "Default": "points0"
         },
         "G": {
-          "Default": "points6"
+          "Default": "points10"
         },
-        "SFTP": {
-          "D": "points0",
-          "F": "points0",
-          "G": "points0",
-          "Default": "points0",
-          "M": "points0"
-        },
-        "PKF": {
-          "D": "points0",
-          "F": "points0",
-          "G": "points0",
-          "Default": "points0",
-          "M": "points0"
+        "SBON": {
+          "Default": "points1"
         },
         "YC": {
           "Default": "points-1"
         },
-        "AP": {
-          "D": "points0",
-          "F": "points0",
-          "G": "points0",
-          "Default": "points0",
-          "M": "points0"
+        "GS": {
+          "Default": "points1"
+        },
+        "GKP": {
+          "Default": "range1|4|1|4.0$4|99|1|3.0"
         },
         "CS": {
           "Default": "points4"
@@ -3910,10 +3258,13 @@
           "Default": "points-3"
         },
         "Min": {
-          "Default": "range1|59|1|NULL$60|90|1|NULL"
+          "Default": "range0|0|0|NULL"
         },
         "PKM": {
           "Default": "points-2"
+        },
+        "AT": {
+          "Default": "points3"
         },
         "OG": {
           "Default": "points-2"
@@ -3938,12 +3289,12 @@
             },
             "cumulative": true,
             "scoringCategory": {
-              "code": "INDIVIDUAL_ASSISTS",
-              "name": "Assists (Official)",
-              "id": "6000",
-              "shortName": "A"
+              "code": "INDIVIDUAL_GAMES_STARTED",
+              "name": "Games Started",
+              "id": "6070",
+              "shortName": "GS"
             },
-            "points": 3
+            "points": 1
           },
           {
             "position": {
@@ -3959,7 +3310,7 @@
               "id": "6090",
               "shortName": "G"
             },
-            "points": 6
+            "points": 10
           },
           {
             "position": {
@@ -4005,39 +3356,6 @@
             "points": 0
           },
           {
-            "ranges": [
-              {
-                "range": {
-                  "start": 1,
-                  "end": 59
-                },
-                "points": 1
-              },
-              {
-                "range": {
-                  "start": 60,
-                  "end": 90
-                },
-                "points": 1
-              }
-            ],
-            "rangeType": "PER_GAME",
-            "position": {
-              "code": "DEFAULT",
-              "name": "Default",
-              "id": "-1",
-              "shortName": "Default"
-            },
-            "cumulative": true,
-            "scoringCategory": {
-              "code": "INDIVIDUAL_MINUTES_PLAYED",
-              "name": "Minutes Played",
-              "id": "6120",
-              "shortName": "Min"
-            },
-            "points": 0
-          },
-          {
             "position": {
               "code": "DEFAULT",
               "name": "Default",
@@ -4070,33 +3388,6 @@
             "points": -3
           },
           {
-            "ranges": [
-              {
-                "range": {
-                  "start": 1,
-                  "end": 99
-                },
-                "points": 1,
-                "interval": 3
-              }
-            ],
-            "rangeType": "PER_GAME",
-            "position": {
-              "code": "DEFAULT",
-              "name": "Default",
-              "id": "-1",
-              "shortName": "Default"
-            },
-            "cumulative": true,
-            "scoringCategory": {
-              "code": "INDIVIDUAL_SAVES",
-              "name": "Saves",
-              "id": "6200",
-              "shortName": "Sv"
-            },
-            "points": 0
-          },
-          {
             "position": {
               "code": "DEFAULT",
               "name": "Default",
@@ -4111,6 +3402,22 @@
               "shortName": "CS"
             },
             "points": 4
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_SUBSTITUTIONS_ON",
+              "name": "Substitutions On",
+              "id": "6253",
+              "shortName": "SBON"
+            },
+            "points": 1
           },
           {
             "position": {
@@ -4137,12 +3444,12 @@
             },
             "cumulative": true,
             "scoringCategory": {
-              "code": "INDIVIDUAL_ASSISTS_FANTASY",
-              "name": "Assists (Fantasy)",
-              "id": "6283",
-              "shortName": "AF"
+              "code": "INDIVIDUAL_PENALTY_KICKS_MISSED",
+              "name": "Penalty Kicks Missed",
+              "id": "6332",
+              "shortName": "PKM"
             },
-            "points": 3
+            "points": -2
           },
           {
             "position": {
@@ -4153,12 +3460,47 @@
             },
             "cumulative": true,
             "scoringCategory": {
-              "code": "INDIVIDUAL_PENALTY_KICKS_MISSED",
-              "name": "Penalty Kicks Missed",
-              "id": "6332",
-              "shortName": "PKM"
+              "code": "INDIVIDUAL_ASSISTS_TOTAL",
+              "name": "Assists (Total)",
+              "id": "6362",
+              "shortName": "AT"
             },
-            "points": -2
+            "points": 3
+          },
+          {
+            "ranges": [
+              {
+                "range": {
+                  "start": 1,
+                  "end": 4
+                },
+                "points": 1,
+                "interval": 4
+              },
+              {
+                "range": {
+                  "start": 4,
+                  "end": 99
+                },
+                "points": 1,
+                "interval": 3
+              }
+            ],
+            "rangeType": "PER_GAME",
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_KEEPER_POINTS",
+              "name": "Keeper Points",
+              "id": "6689",
+              "shortName": "GKP"
+            },
+            "points": 0
           }
         ],
         "group": {
@@ -4171,6 +3513,17 @@
       {
         "configs": [
           {
+            "ranges": [
+              {
+                "range": {
+                  "start": 0,
+                  "end": 99
+                },
+                "points": 1,
+                "interval": 3
+              }
+            ],
+            "rangeType": "PER_GAME",
             "position": {
               "code": "DEFAULT",
               "name": "Default",
@@ -4179,12 +3532,70 @@
             },
             "cumulative": true,
             "scoringCategory": {
-              "code": "INDIVIDUAL_ASSISTS",
-              "name": "Assists (Official)",
-              "id": "6000",
-              "shortName": "A"
+              "code": "INDIVIDUAL_ASSISTS_ON_SHOTS",
+              "name": "Key Passes (Assists on Shots)",
+              "id": "6002",
+              "shortName": "KP"
             },
-            "points": 3
+            "points": 0
+          },
+          {
+            "ranges": [
+              {
+                "range": {
+                  "start": 8,
+                  "end": 99
+                },
+                "points": 1
+              }
+            ],
+            "rangeType": "PER_GAME",
+            "position": {
+              "code": "DEFENDER",
+              "name": "Defender",
+              "id": "703",
+              "shortName": "D"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_CLEARANCES_ATTEMPTED",
+              "name": "Clearances Attempted",
+              "id": "6014",
+              "shortName": "CLRA"
+            },
+            "points": 0
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_GAMES_STARTED",
+              "name": "Games Started",
+              "id": "6070",
+              "shortName": "GS"
+            },
+            "points": 1
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_GOALS",
+              "name": "Goals",
+              "id": "6090",
+              "shortName": "G"
+            },
+            "points": 8
           },
           {
             "position": {
@@ -4281,32 +3692,25 @@
             "ranges": [
               {
                 "range": {
-                  "start": 1,
-                  "end": 59
+                  "start": 10,
+                  "end": 99
                 },
-                "points": 1
-              },
-              {
-                "range": {
-                  "start": 60,
-                  "end": 90
-                },
-                "points": 1
+                "points": 2
               }
             ],
             "rangeType": "PER_GAME",
             "position": {
-              "code": "DEFAULT",
-              "name": "Default",
-              "id": "-1",
-              "shortName": "Default"
+              "code": "MIDFIELDER",
+              "name": "Midfielder",
+              "id": "702",
+              "shortName": "M"
             },
             "cumulative": true,
             "scoringCategory": {
-              "code": "INDIVIDUAL_MINUTES_PLAYED",
-              "name": "Minutes Played",
-              "id": "6120",
-              "shortName": "Min"
+              "code": "INDIVIDUAL_MIDFIELDER_POINTS",
+              "name": "Midfielder Points",
+              "id": "6181",
+              "shortName": "MP"
             },
             "points": 0
           },
@@ -4367,6 +3771,22 @@
             },
             "cumulative": true,
             "scoringCategory": {
+              "code": "INDIVIDUAL_SUBSTITUTIONS_ON",
+              "name": "Substitutions On",
+              "id": "6253",
+              "shortName": "SBON"
+            },
+            "points": 1
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
               "code": "INDIVIDUAL_YELLOW_CARDS",
               "name": "Yellow Cards",
               "id": "6280",
@@ -4383,12 +3803,12 @@
             },
             "cumulative": true,
             "scoringCategory": {
-              "code": "INDIVIDUAL_ASSISTS_FANTASY",
-              "name": "Assists (Fantasy)",
-              "id": "6283",
-              "shortName": "AF"
+              "code": "INDIVIDUAL_PENALTY_KICKS_MISSED",
+              "name": "Penalty Kicks Missed",
+              "id": "6332",
+              "shortName": "PKM"
             },
-            "points": 3
+            "points": -2
           },
           {
             "position": {
@@ -4399,12 +3819,38 @@
             },
             "cumulative": true,
             "scoringCategory": {
-              "code": "INDIVIDUAL_PENALTY_KICKS_MISSED",
-              "name": "Penalty Kicks Missed",
-              "id": "6332",
-              "shortName": "PKM"
+              "code": "INDIVIDUAL_ASSISTS_TOTAL",
+              "name": "Assists (Total)",
+              "id": "6362",
+              "shortName": "AT"
             },
-            "points": -2
+            "points": 3
+          },
+          {
+            "ranges": [
+              {
+                "range": {
+                  "start": 5,
+                  "end": 99
+                },
+                "points": 2
+              }
+            ],
+            "rangeType": "PER_GAME",
+            "position": {
+              "code": "DEFENDER",
+              "name": "Defender",
+              "id": "703",
+              "shortName": "D"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_DEFENSIVE_POINTS",
+              "name": "Defensive Points",
+              "id": "6696",
+              "shortName": "DFP"
+            },
+            "points": 0
           }
         ],
         "group": {
@@ -4420,6 +3866,10 @@
   "seasonYear": 2026,
   "startDate": "2026-08-21",
   "playoffs": {
-    "used": false
+    "lastRegularSeasonPeriod": 34,
+    "numPlayoffTeams": 4,
+    "firstPlayoffPeriod": 35,
+    "mergePlayoffPeriods": false,
+    "used": true
   }
 }

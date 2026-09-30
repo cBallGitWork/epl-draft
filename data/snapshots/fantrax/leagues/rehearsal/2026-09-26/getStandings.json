@@ -36,11 +36,20 @@
     "winPercentage": 0.5
   },
   {
+    "teamName": "test31121",
+    "totalPointsFor": 0,
+    "teamId": "yf96763gmtj31zni",
+    "gamesBack": 0,
+    "rank": 5,
+    "points": "0-0-0",
+    "winPercentage": 0
+  },
+  {
     "teamName": "test1",
     "totalPointsFor": 0,
     "teamId": "jtsmt5jxmtj31znh",
     "gamesBack": 0,
-    "rank": 5,
+    "rank": 6,
     "points": "0-0-0",
     "winPercentage": 0
   },
@@ -49,25 +58,7 @@
     "totalPointsFor": 0,
     "teamId": "dq2yk3zxmtj31znh",
     "gamesBack": 0,
-    "rank": 6,
-    "points": "0-0-0",
-    "winPercentage": 0
-  },
-  {
-    "teamName": "Notemail",
-    "totalPointsFor": 0,
-    "teamId": "v6bxgqm5mtj31znh",
-    "gamesBack": 0,
     "rank": 7,
-    "points": "0-0-0",
-    "winPercentage": 0
-  },
-  {
-    "teamName": "test31121",
-    "totalPointsFor": 0,
-    "teamId": "yf96763gmtj31zni",
-    "gamesBack": 0,
-    "rank": 8,
     "points": "0-0-0",
     "winPercentage": 0
   },
@@ -75,6 +66,15 @@
     "teamName": "testf",
     "totalPointsFor": 0,
     "teamId": "mxet9tt7mtj31zni",
+    "gamesBack": 0,
+    "rank": 8,
+    "points": "0-0-0",
+    "winPercentage": 0
+  },
+  {
+    "teamName": "Notemail",
+    "totalPointsFor": 0,
+    "teamId": "v6bxgqm5mtj31znh",
     "gamesBack": 0,
     "rank": 9,
     "points": "0-0-0",

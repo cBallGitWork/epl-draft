@@ -1085,31 +1085,31 @@
       "eligiblePos": "D",
       "status": "FA"
     },
-    "06uzv": {
-      "eligiblePos": "M",
-      "status": "FA"
-    },
     "05os4": {
       "eligiblePos": "D",
       "status": "FA"
     },
-    "062x7": {
-      "eligiblePos": "D",
+    "06uzv": {
+      "eligiblePos": "M",
       "status": "FA"
     },
     "04mr4": {
       "eligiblePos": "G",
       "status": "FA"
     },
+    "062x7": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
     "06uzt": {
       "eligiblePos": "G",
       "status": "FA"
     },
-    "06uzo": {
+    "045c8": {
       "eligiblePos": "F",
       "status": "FA"
     },
-    "045c8": {
+    "06uzo": {
       "eligiblePos": "F",
       "status": "FA"
     },
@@ -1213,13 +1213,13 @@
       "eligiblePos": "M",
       "status": "FA"
     },
-    "05gcr": {
-      "eligiblePos": "M",
-      "status": "T"
-    },
     "06pry": {
       "eligiblePos": "D",
       "status": "FA"
+    },
+    "05gcr": {
+      "eligiblePos": "M",
+      "status": "T"
     },
     "03p9y": {
       "eligiblePos": "G",
@@ -1281,12 +1281,12 @@
       "eligiblePos": "M",
       "status": "T"
     },
-    "06jfe": {
-      "eligiblePos": "G",
-      "status": "FA"
-    },
     "061vk": {
       "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "06jfe": {
+      "eligiblePos": "G",
       "status": "FA"
     },
     "061vn": {
@@ -1305,12 +1305,12 @@
       "eligiblePos": "D",
       "status": "FA"
     },
-    "061va": {
-      "eligiblePos": "M",
-      "status": "FA"
-    },
     "06zef": {
       "eligiblePos": "D",
+      "status": "FA"
+    },
+    "061va": {
+      "eligiblePos": "M",
       "status": "FA"
     },
     "05n09": {
@@ -1385,12 +1385,12 @@
       "eligiblePos": "F,M",
       "status": "FA"
     },
-    "0414o": {
-      "eligiblePos": "M",
-      "status": "FA"
-    },
     "03r93": {
       "eligiblePos": "D",
+      "status": "FA"
+    },
+    "0414o": {
+      "eligiblePos": "M",
       "status": "FA"
     },
     "04tzt": {
@@ -1457,13 +1457,13 @@
       "eligiblePos": "D",
       "status": "FA"
     },
-    "0522h": {
-      "eligiblePos": "M",
-      "status": "FA"
-    },
     "0788g": {
       "eligiblePos": "G",
       "status": "T"
+    },
+    "0522h": {
+      "eligiblePos": "M",
+      "status": "FA"
     },
     "06zbm": {
       "eligiblePos": "D",
@@ -1647,7 +1647,7 @@
     },
     "05uds": {
       "eligiblePos": "G",
-      "status": "WW"
+      "status": "FA"
     },
     "05ylw": {
       "eligiblePos": "M",
@@ -4208,7 +4208,7 @@
       "id": "j9zadacnmshcpazf"
     },
     "v6bxgqm5mtj31znh": {
-      "name": "test31",
+      "name": "Notemail",
       "id": "v6bxgqm5mtj31znh"
     },
     "mxet9tt7mtj31zni": {
@@ -4233,13 +4233,46 @@
   "scoringSystem": {
     "scoringCategories": {
       "NON_GOALIE": {
+        "A": {
+          "Default": "points3"
+        },
+        "MP": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "AF": {
+          "Default": "points3"
+        },
+        "CBIT2": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "G": {
+          "D": "points6",
+          "F": "points4",
+          "Default": "points0",
+          "M": "points5"
+        },
+        "YC": {
+          "Default": "points-1"
+        },
+        "DFP": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
         "CS": {
           "D": "points4",
           "Default": "points0",
           "M": "points1"
-        },
-        "A": {
-          "Default": "points3"
         },
         "RC": {
           "Default": "points-3"
@@ -4254,20 +4287,36 @@
           "D": "range1|99|-1|2.0",
           "Default": "points0"
         },
-        "AF": {
-          "Default": "points3"
-        },
-        "G": {
-          "D": "points6",
-          "F": "points4",
+        "CBIT": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
           "Default": "points0",
-          "M": "points5"
+          "M": "points0"
         },
         "OG": {
           "Default": "points-2"
         },
-        "YC": {
-          "Default": "points-1"
+        "DFP3": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "DFP2": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "CBIRT2": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
         }
       },
       "GOALIE": {

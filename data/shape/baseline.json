@@ -1,27 +1,7 @@
 [
   {
-    "read": "getLeagueInfo",
-    "path": "scoringSystem.scoringCategories.GOALIE.A.Default:string",
-    "why": "The two leagues score different categories. Ours has no Assists (Official) and no Saves; the rehearsal league has both. `mapScoringRules` walks `scoringCategories` with `Object.entries` and names no category, so nothing reads this path \u2014 the difference is the leagues' settings, not a lost field. Audited 28 Aug 2026."
-  },
-  {
-    "read": "getLeagueInfo",
-    "path": "scoringSystem.scoringCategories.GOALIE.Sv.Default:string",
-    "why": "The two leagues score different categories. Ours has no Assists (Official) and no Saves; the rehearsal league has both. `mapScoringRules` walks `scoringCategories` with `Object.entries` and names no category, so nothing reads this path \u2014 the difference is the leagues' settings, not a lost field. Audited 28 Aug 2026."
-  },
-  {
-    "read": "getLeagueInfo",
-    "path": "scoringSystem.scoringCategories.NON_GOALIE.A.Default:string",
-    "why": "The two leagues score different categories. Ours has no Assists (Official) and no Saves; the rehearsal league has both. `mapScoringRules` walks `scoringCategories` with `Object.entries` and names no category, so nothing reads this path \u2014 the difference is the leagues' settings, not a lost field. Audited 28 Aug 2026."
-  },
-  {
     "read": "getDraftResults",
     "path": "draftDate:string",
-    "why": "No draft is scheduled in the real league yet, so Fantrax states no dates and no order. `RawDraftResults` models only `draftPicks`, `draftState` and `draftType`, above a comment saying draft results are deliberately unmodelled. No consumer anywhere. Audited 28 Aug 2026."
-  },
-  {
-    "read": "getDraftResults",
-    "path": "draftOrder[]:string",
     "why": "No draft is scheduled in the real league yet, so Fantrax states no dates and no order. `RawDraftResults` models only `draftPicks`, `draftState` and `draftType`, above a comment saying draft results are deliberately unmodelled. No consumer anywhere. Audited 28 Aug 2026."
   },
   {
@@ -65,123 +45,183 @@
     "why": "The real league's table is `{rows: [], emptyTableMsg}` where the rehearsal league's is `{caption, header, rows}` \u2014 a table with nothing in it is served without its header. `transactionDateLabel` already optional-chains `table.header.cells` and returns null when it is absent, which is absence modelled explicitly. Audited 28 Aug 2026."
   },
   {
-    "read": "fxpa getStandings (page)",
-    "path": "tableList[].header.cells[].align:string",
-    "why": "The rehearsal league answers two tables in `tableList` and the real league answers one, so `shapeOf` \u2014 which merges array elements into a single branch \u2014 reports the second element's fields as lost. Of this read's two mappers, `mapTeamBadges` reads only `fantasyTeamInfo`, and `mapStandings` reads header cells by `key` and never `align` or `subCaption`. Audited 28 Aug, re-checked 23 Sep 2026 when the read was renamed from `(badges)` to `(page)`."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.CBIRT2.D:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "fxpa getStandings (page)",
-    "path": "tableList[].subCaption:string",
-    "why": "The rehearsal league answers two tables in `tableList` and the real league answers one, so `shapeOf` \u2014 which merges array elements into a single branch \u2014 reports the second element's fields as lost. Of this read's two mappers, `mapTeamBadges` reads only `fantasyTeamInfo`, and `mapStandings` reads header cells by `key` and never `align` or `subCaption`. Audited 28 Aug, re-checked 23 Sep 2026 when the read was renamed from `(badges)` to `(page)`."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.CBIRT2.Default:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.allTeamsStats{}.BENCH.calculatedProjectedTotalsMap{}:number",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.CBIRT2.F:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.allTeamsStats{}.BENCH.gameStatusMap{}:string",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.CBIRT2.G:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.allTeamsStats{}.BENCH.projectedTotalsMap{}:number",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.CBIRT2.M:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.allTeamsStats{}.BENCH.remainingEventPercent{}:number",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.CBIT.D:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.allTeamsStats{}.BENCH.statsMap{}.object1:number",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.CBIT.Default:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.allTeamsStats{}.BENCH.statsMap{}.object2[].av:number",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.CBIT.F:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.allTeamsStats{}.BENCH.statsMap{}.object2[].fpts:number",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.CBIT.G:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.allTeamsStats{}.BENCH.statsMap{}.object2[].scipId:string",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.CBIT.M:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.allTeamsStats{}.BENCH.statsMap{}.object2[].sv:string",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.CBIT2.D:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.allTeamsStats{}.BENCH.totalFpts2:number",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.CBIT2.Default:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.allTeamsStats{}.BENCH.totalFpts:number",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.CBIT2.F:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.statsMap{}.BENCH.calculatedProjectedTotalsMap{}:number",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.CBIT2.G:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.statsMap{}.BENCH.gameStatusMap{}:string",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.CBIT2.M:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.statsMap{}.BENCH.projectedTotalsMap{}:number",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.DFP.D:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.statsMap{}.BENCH.remainingEventPercent{}:number",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.DFP.Default:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.statsMap{}.BENCH.statsMap{}.object1:number",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.DFP.F:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.statsMap{}.BENCH.statsMap{}.object2[].av:number",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.DFP.G:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.statsMap{}.BENCH.statsMap{}.object2[].fpts:number",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.DFP.M:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.statsMap{}.BENCH.statsMap{}.object2[].scipId:string",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.DFP2.D:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.statsMap{}.BENCH.statsMap{}.object2[].sv:string",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.DFP2.Default:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.statsMap{}.BENCH.totalFpts2:number",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.DFP2.F:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
   },
   {
-    "read": "getLiveScoringStats",
-    "path": "statsPerTeam.statsMap{}.BENCH.totalFpts:number",
-    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.DFP2.G:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
+  },
+  {
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.DFP2.M:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
+  },
+  {
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.DFP3.D:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
+  },
+  {
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.DFP3.Default:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
+  },
+  {
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.DFP3.F:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
+  },
+  {
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.DFP3.G:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
+  },
+  {
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.DFP3.M:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
+  },
+  {
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.MP.D:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
+  },
+  {
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.MP.Default:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
+  },
+  {
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.MP.F:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
+  },
+  {
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.MP.G:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
+  },
+  {
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.MP.M:string",
+    "why": "The two leagues score different categories. The rehearsal league carries CBIRT2, CBIT, CBIT2, DFP, DFP2, DFP3 and MP; the real league (`mqsjd23smsgbiqzr`) does not yet, because Craig is still setting its scoring on 25 Sep. `mapScoringRules` walks `scoringCategories` with `Object.entries` (scoring.ts) and names no category, so nothing reads these paths: the difference is the leagues' settings, not a lost field. Expect it to move when the real league's scoring is final. Audited 25 Sep 2026."
+  },
+  {
+    "read": "getDraftResults",
+    "path": "draftPicks[].playerId:string",
+    "why": "The real league has its draft order but no picks made: each pick carries `round`, `pick`, `teamId` and `time`, and no `playerId`. `mapDraftPicks` drops a pick whose `playerId` is not a string, so absence is already modelled. Re-check after the draft. Audited 25 Sep 2026."
   }
 ]
