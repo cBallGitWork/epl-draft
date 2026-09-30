@@ -19,7 +19,7 @@ export const DRAWN = {
   off: { fill: "none", width: 0.28, opacity: 0.55 },
 } as const;
 
-export type Tier = keyof typeof DRAWN;
+type Tier = keyof typeof DRAWN;
 
 /** Which tier a shot is drawn in, by what became of it. */
 export const TIER: Record<Shot["outcome"], Tier> = {

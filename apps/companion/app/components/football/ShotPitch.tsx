@@ -14,31 +14,43 @@ const PASS_UNDERLAY = 0.45;
 /** A pass is the lesser half of the picture, so its line sits back behind the marks. */
 const PASS_OPACITY = 0.85;
 
-/** A key pass's line, drawn under the marks: dashed in the side's colour over a faint cream underlay, from where it
- *  started to the edge of the shot's mark. */
-export function KeyPassLine({ shot, from, colour }: { shot: Shot; from: { x: number; y: number }; colour: string }) {
-  const line = passLine(from, shot);
-  if (line === null) return null;
+/** Each key pass's line, drawn under the marks: dashed in the side's colour over a faint cream underlay, from where
+ *  it started to the edge of the shot's mark. */
+export function KeyPassLines({ shots, colour }: { shots: readonly Shot[]; colour: string }) {
   return (
-    <g opacity={PASS_OPACITY}>
-      <line {...line} stroke="var(--color-cream)" strokeWidth={PASS_LINE} opacity={PASS_UNDERLAY} />
-      <line {...line} stroke={colour} strokeWidth={PASS_LINE} strokeDasharray={PASS_DASH} />
+    <g>
+      {shots.map((shot, at) => {
+        const line = shot.pass === null ? null : passLine(shot.pass, shot);
+        return line === null ? null : (
+          <g key={at} opacity={PASS_OPACITY}>
+            <line {...line} stroke="var(--color-cream)" strokeWidth={PASS_LINE} opacity={PASS_UNDERLAY} />
+            <line {...line} stroke={colour} strokeWidth={PASS_LINE} strokeDasharray={PASS_DASH} />
+          </g>
+        );
+      })}
     </g>
   );
 }
 
-/** Where a key pass started: a square, so it never reads as a shot, drawn over the marks so none can hide it. */
-export function KeyPassOrigin({ from, colour }: { from: { x: number; y: number }; colour: string }) {
+/** Where each key pass started: a square, so it never reads as a shot, drawn over the marks so none can hide it. */
+export function KeyPassOrigins({ shots, colour }: { shots: readonly Shot[]; colour: string }) {
   return (
-    <rect
-      x={from.x - PASS_SQUARE / 2}
-      y={toBoxY(from.y) - PASS_SQUARE / 2}
-      width={PASS_SQUARE}
-      height={PASS_SQUARE}
-      fill={colour}
-      stroke="var(--color-cream)"
-      strokeWidth={HALO}
-    />
+    <g>
+      {shots.map((shot, at) =>
+        shot.pass === null ? null : (
+          <rect
+            key={at}
+            x={shot.pass.x - PASS_SQUARE / 2}
+            y={toBoxY(shot.pass.y) - PASS_SQUARE / 2}
+            width={PASS_SQUARE}
+            height={PASS_SQUARE}
+            fill={colour}
+            stroke="var(--color-cream)"
+            strokeWidth={HALO}
+          />
+        ),
+      )}
+    </g>
   );
 }
 
