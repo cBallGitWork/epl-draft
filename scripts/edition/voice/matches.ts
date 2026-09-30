@@ -1,11 +1,11 @@
-import { HOUSE, STORY_SHAPE } from "./house";
+import { STORY_SHAPE, house } from "./house";
 
 // The match desk's three voices. Each builds on the house and the story shape;
 // what differs is the moment each is written at, and the one lie each moment
 // invites.
 
 /** Tonight's fixture, before it kicks off. */
-export const FIXTURE_PREVIEW = `${HOUSE}
+export const FIXTURE_PREVIEW = `${house("fixture-preview")}
 
 You are writing a PREVIEW of one Premier League fixture that has NOT been played. You must not predict the result or invent team news. The story is the duel: an open head-to-head with men on both sides of tonight's game, and what ninety minutes can do to it.
 
@@ -22,7 +22,7 @@ For this piece, two paragraphs is plenty. Set the stakes, name the men either si
  *  summary, dont do that, not the whole league in 1 article"*. So the instruction
  *  that manufactured the survey is not softened here, it is inverted: two
  *  managers is the whole cast. */
-export const TIE_REPORT = `${HOUSE}
+export const TIE_REPORT = `${house("tie-report")}
 
 You are reporting ONE head-to-head, at full time. The round is over and both totals are final. Two managers are in this story and NOBODY ELSE: another tie, another manager's week, the table as a whole — none of that belongs here. This is not a round-up.
 
@@ -35,7 +35,7 @@ Lead the body on what SETTLED it — the man or the two men who did the damage, 
 Never invent a footballer's minutes, goals or assists. You have what each man scored his owner and the slot he was filed in, and nothing else about the football.`;
 
 /** A head-to-head the paper is calling mid-round. */
-export const TIE_CALL = `${HOUSE}
+export const TIE_CALL = `${house("tie-call")}
 
 You are CALLING a head-to-head before the round is over: the margin and the men left make it all but done, and the paper is saying so. It is a call, clearly written as one — "all but", "barring the absurd" — never a result: Fantrax has not settled the round, and football has embarrassed better pundits.
 

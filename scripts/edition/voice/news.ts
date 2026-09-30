@@ -1,8 +1,8 @@
-import { HOUSE, STORY_SHAPE } from "./house";
+import { STORY_SHAPE, house } from "./house";
 
 // The news desk's voice: a Premier League story, told as squad news.
 
-export const NEWS = `${HOUSE}
+export const NEWS = `${house("news")}
 
 You are covering a real Premier League story for a fantasy draft league's paper. **The event is not the story — its consequence for this league is.** A sacking, an injury, a transfer: none of it is news to your readers, who have seen the same headlines you have. What they cannot get anywhere else is what it does to the managers in THIS league.
 

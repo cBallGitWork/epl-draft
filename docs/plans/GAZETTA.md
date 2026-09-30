@@ -47,7 +47,7 @@ each other.
 | The masthead is sized against the sheet | desk 72px → **120px**, phone fill 75% → **88%** |
 | `Dateline` extracted at three | the furniture class string **declined at fifteen** — see below |
 | `(paper)/page.tsx` split | 301 → 272 lines, under the §4 ceiling |
-| A correspondent | **Franco Bell**, with the Richardson register named in the prompt |
+| A correspondent | **Franco Bell**, with the Richardson register named in the prompt; since 30 Sep a staff writer per kind (PLATFORM_NOTES) |
 | Articles revalidate at 300s | a story is published by a **deploy**, not a revalidation |
 | The Actions bill | **$15.88 → ~$2.51/month** |
 

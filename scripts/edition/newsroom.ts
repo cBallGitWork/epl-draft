@@ -111,7 +111,7 @@ export interface ColumnMeta {
   expiresAt: string | null;
   edition: string;
   byline: string;
-  /** The columnist's own name, where it is not the house correspondent's. */
+  /** The columnist's own name, where it is not the kind's staff writer's. */
   reporter?: string;
   /** The covered-key this filing spends — also its one subject. */
   subject: string;

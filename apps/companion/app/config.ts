@@ -182,7 +182,7 @@ export const COLUMNISTS: Readonly<Record<string, Columnist>> = {
   },
 };
 
-/** The columnist a story is by, or null for the house correspondent. */
+/** The columnist a story is by, or null for a staff writer. */
 export function columnistOf(story: { reporter?: string }): Columnist | null {
   return story.reporter === undefined ? null : (COLUMNISTS[story.reporter] ?? null);
 }
