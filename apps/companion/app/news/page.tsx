@@ -117,11 +117,14 @@ export default async function NewsPage({
               The list itself: CM's is about eight rows deep with the reader's
               own scrollbar, and ours takes the same shape and the same bar,
               because a list cut at eight with no bar looks like a list with
-              eight things in it (`desk.css` on `.cm-scroll`). The 7:6 split:
-              the list is the screen's subject, so it takes the larger half.
-              Its depth is the viewport less the bar, the nav and 15rem kept for
-              the letter below it on a phone; beside it on a desk, less the bar alone. */}
-          <ul className={`${PANEL_FLUSH} cm-rows cm-scroll cm-scroll-y max-h-[max(18rem,calc(100svh-24rem))] overflow-y-auto lg:max-h-[calc(100svh-9rem)]`}>
+              eight things in it (`desk.css` on `.cm-scroll`). It is DEEPER on a
+              desk than on a phone now rather than shallower — `lg:max-h-64` was
+              a phone's ceiling applied to a screen with three times the room,
+              and Craig asked for more of it twice (17 Sep 2026: *"left list, use
+              more space, and make that column just a little bigger"*). Hence the
+              7:6 split as well: the list is the screen's subject and the letter
+              is what one row of it says, so the list takes the larger half. */}
+          <ul className={`${PANEL_FLUSH} cm-rows cm-scroll cm-scroll-y max-h-72 overflow-y-auto lg:max-h-[40rem]`}>
             {inbox.items.map((entry) => (
               <li key={entry.id}>
                 <Row
