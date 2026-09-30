@@ -6,20 +6,21 @@ import type { StoryKind } from "./story";
 /** The house correspondent, for a kind with no staff writer of its own. */
 const PAPER_CORRESPONDENT = "Henry Wintor";
 
-/** Lawro's predictions are not here: his column carries his own name, stamped at filing. The line-ups have no byline. */
-export const STAFF_WRITERS: Readonly<Partial<Record<StoryKind, string>>> = {
-  "match-report": "Phil McNutly",
-  "tie-report": "Daniel Tayler",
-  "tie-call": "Daniel Tayler",
-  "fixture-preview": "Daniel Tayler",
-  eleven: "Garth Crookes",
-  "power-ranking": "Martin Samual",
-  dodgers: "Danny Bakor",
-  wire: "Fabrizio Ramono",
-  news: "David Ornstien",
-  presser: "David Ornstien",
-  sheets: "David Ornstien",
-};
+/** Each staff writer and his beat. Lawro's predictions are not here: his column carries his own name, stamped at filing. */
+const STAFF: readonly (readonly [writer: string, beat: readonly StoryKind[]])[] = [
+  ["Phil McNutly", ["match-report"]],
+  ["Daniel Tayler", ["tie-report", "tie-call", "fixture-preview"]],
+  ["Garth Crookes", ["eleven"]],
+  ["Martin Samual", ["power-ranking"]],
+  ["Danny Bakor", ["dodgers"]],
+  ["Fabrizio Ramono", ["wire"]],
+  ["David Ornstien", ["news", "presser", "sheets"]],
+];
+
+/** The staff writer each kind runs under. */
+export const STAFF_WRITERS: Readonly<Partial<Record<StoryKind, string>>> = Object.fromEntries(
+  STAFF.flatMap(([writer, beat]) => beat.map((kind) => [kind, writer])),
+);
 
 /** Whose name a story runs under: the one stamped at filing, else its kind's staff writer, else the house's. */
 export function writerOf(story: { kind: StoryKind; reporter?: string }): string {
