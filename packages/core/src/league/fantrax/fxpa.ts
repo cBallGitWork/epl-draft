@@ -13,10 +13,7 @@ import { FantraxError, pageErrorEnvelope, responseErrorEnvelope } from "./errors
 // The wire format carries a BATCH — `{"msgs":[…]}` answered by `responses[]` —
 // and this asks exactly one question per request, because one question is all
 // anything needs. Batching arrives when a second caller wants it, not before.
-// The same goes for the session cookie: several reads here need no auth at all,
-// which is what let the transaction history land before any cookie flow exists,
-// and a credential parameter nothing passes is a parameter written for a
-// future we have not designed.
+// Most reads need no auth; the lineup save passes the commissioner's session.
 
 /** The one message's payload, or a `FantraxError` describing the refusal.
  *
@@ -49,20 +46,31 @@ export function unwrapFxpa(method: string, body: unknown): unknown {
   return (response as { data?: unknown } | null)?.data ?? null;
 }
 
-/** Ask fxpa one question. */
+/** The only methods a session may carry: the same cookie reaches `deleteLeague`. */
+const SESSION_METHODS: ReadonlySet<string> = new Set([
+  "getTeamRosterInfo",
+  "confirmOrExecuteTeamRosterChanges",
+  "setAutoSubsOrder",
+]);
+
+/** Ask fxpa one question, as the holder of `session` when one is given. */
 export async function fxpaRead(
   leagueId: string,
   method: string,
   data: Record<string, unknown> = {},
+  session?: string,
 ): Promise<unknown> {
-  if (isDemo(leagueId)) {
+  if (session !== undefined && !SESSION_METHODS.has(method)) {
+    throw new FantraxError(method, "NOT_ALLOWED", "this method may not carry a session");
+  }
+  if (session === undefined && isDemo(leagueId)) {
     const canned = demoFxpa(method);
     if (canned !== null) return canned;
   }
 
   const res = await politeFetch(`${FANTRAX_FXPA_BASE}?leagueId=${encodeURIComponent(leagueId)}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(session ? { Cookie: session } : {}) },
     body: JSON.stringify({ msgs: [{ method, data: { leagueId, ...data } }] }),
   });
 

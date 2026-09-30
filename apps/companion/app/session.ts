@@ -100,6 +100,12 @@ async function cookieTeam(): Promise<string | null> {
   return cookieTeamOf(raw, key);
 }
 
+/** The team this browser signed in as, in this league; never the demo team. A write asks this. */
+export async function signedTeamId(teams: readonly { teamId: string }[]): Promise<string | null> {
+  const signed = await cookieTeam();
+  return signed !== null && teams.some((team) => team.teamId === signed) ? signed : null;
+}
+
 /** Whether this browser holds a real code, as opposed to being lent the demo
  *  team. `/squad` asks it to decide whether to offer the sign-in. */
 export async function signedIn(): Promise<boolean> {

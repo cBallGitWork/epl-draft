@@ -1,0 +1,37 @@
+{
+ "fantasyResponse": {
+  "msgType": "CONFIRM",
+  "lineupChanges": [],
+  "showConfirmWindow": false,
+  "showApplyToFuturePeriods": false,
+  "removeSubmitButton": false,
+  "applyToFuturePeriods": true,
+  "resourceMap": {
+   "applyToFuturePeriods": "Apply to future gameweeks"
+  }
+ },
+ "textArray": {
+  "data": [],
+  "model": {
+   "rosterLimitPeriodDisplay": "(Oct 9, 2026 - Oct 15, 2026)",
+   "rosterAdjustmentInfo": {
+    "lineupChanges": [
+     "Reserve to Active",
+     "Active to Reserve"
+    ],
+    "totalFee": 0,
+    "totalClaimFee": 0,
+    "totalLineupChangeFee": 0,
+    "rosterLimitPeriod": 6,
+    "totalDropFee": 0
+   },
+   "firstIllegalRosterPeriod": 0,
+   "numIllegalRosterMsgs": 0,
+   "playerPickDeadlinePassed": true,
+   "illegalRosterMsgs": [],
+   "illegalBefore": false,
+   "changeAllowed": true
+  }
+ },
+ "commissioner": true
+}

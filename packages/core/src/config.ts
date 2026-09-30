@@ -260,6 +260,10 @@ export const POOL_PAGE_SIZE = 2000;
  *  sixteen people, which is the failure mode a deadline can least afford. */
 export const LINEUP_LOCK_LEAD_MINUTES = 15;
 
+/** How long before the lock a save to Fantrax stops being taken: the commissioner's write can override a
+ *  locked team, so a clock or a lock a few minutes out must fail short of it (Craig, 30 Sep 2026). */
+export const SAVE_MARGIN_MINUTES = 10;
+
 /** Where the Premier League serves its crests.
  *
  *  `next.config.ts` builds the image allow-list from this and the three below. */

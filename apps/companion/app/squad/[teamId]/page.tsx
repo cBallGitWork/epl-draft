@@ -13,6 +13,7 @@ import TeamShell from "./Shell";
 import { rosterMinimums } from "../../rosterMinimums";
 import { identify } from "./team";
 import { squadView } from "./squadView";
+import { commissionerSession } from "./saving";
 
 // One manager's squad, laid out on a pitch. The screen the league opens on a
 // Saturday, and the reason the join exists.
@@ -39,7 +40,7 @@ export default async function TeamPage({
   // `teamId` is what the folder is called; `slug` is what the reader typed, and
   // on the front door those are not the same thing. See `squad/routes.ts`.
   const [{ teamId: slug }, { gw }] = await Promise.all([params, searchParams]);
-  const { team, planning, open, eligibility, clubs, opposition, live, news, season, points, board, names, pending, squadIds } = await squadView(slug, gw);
+  const { team, planning, open, benchRanks, eligibility, clubs, opposition, live, news, season, points, board, names, pending, squadIds } = await squadView(slug, gw);
 
   return (
     /* The only live-points surface that did not move on a Saturday. Both
@@ -78,6 +79,9 @@ export default async function TeamPage({
           // The same week the planner shows, never Fantrax's open one.
           fantraxUrl={`${FANTRAX_APP_BASE}/${FANTRAX_LEAGUE_ID}${open === null ? "" : `/${FANTRAX_ROSTER_PATH};period=${open.period}`}`}
           pending={pending}
+          period={open?.period ?? 0}
+          benchRanks={benchRanks}
+          canSave={commissionerSession() !== null}
         />
       ) : board !== null ? (
         /* The gate. Before his lineups lock a rival's XI is not visible — the

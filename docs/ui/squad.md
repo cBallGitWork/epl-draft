@@ -312,11 +312,22 @@ unresolved when it is, and a way out to the full profile.
 - **A position is never listed as blocked when a move above reaches it.** A full
   XI reports every position as `squad-full` while simultaneously offering swaps
   into it; the sheet used to say both.
-- **It writes nothing.** The edited shape lives in browser state, the real roster
-  is untouched, and the button at the bottom hands you to Fantrax. `violations()`
-  reports what is already wrong — nothing the planner offers can create any of
-  it, so anything listed arrived from Fantrax, usually a commissioner narrowing
-  an eligibility under a lineup that was legal when it was set.
+- **Save lineup writes it to Fantrax** (Craig, 30 Sep 2026: "needs a save button ... make the save button
+  obvious, and a 'do you want to save' if you leave the screen"). The royal-blue primary plate under the pitch,
+  with Reset beside it, appears once anything has moved and is disabled while a rule is broken. `saveLineup`
+  (`squad/[teamId]/save.ts`) names the team from the signed code (never the lent demo team) and the week from
+  `planningRound()`, refuses a page planned for another week and anything inside `SAVE_MARGIN_MINUTES` of the
+  lock, re-checks the league's rules, then sends Fantrax's dry run and saves only on a clean `CONFIRM`. It runs
+  only where `LINEUP_SAVE=on` and `FANTRAX_COOKIE` (the commissioner's session) are set; elsewhere the bar reads
+  "Planned, not saved" and the Fantrax link is the way to submit. Each write logs one `lineup-save` line.
+- **The bench order is yours to set on the pitch.** Tap one sub, then another, and they swap places; the
+  numbers 1–4 are the order they come on. It starts from Fantrax's `autoSubOrderMap` and saves with
+  `setAutoSubsOrder`.
+- **Leaving with unsaved changes asks first**: "Save and leave", "Leave without saving" or "Stay" on a tap to
+  another screen, and the browser's own prompt on a reload or close. The back button is not caught.
+- `violations()` reports what is already wrong — nothing the planner offers can create any of it, so anything
+  listed arrived from Fantrax, usually a commissioner narrowing an eligibility under a lineup that was legal
+  when it was set.
 
 ## Constraints
 

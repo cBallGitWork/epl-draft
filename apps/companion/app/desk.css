@@ -73,6 +73,12 @@
   color: var(--color-ink);
 }
 
+/* The one primary action on a screen (the planner's Save): the royal-blue plate with its word in the accent. */
+.cm-bevel.cm-primary {
+  --cm-face: var(--color-chrome);
+  color: var(--color-accent);
+}
+
 /* The title bar is the biggest thing on a Championship Manager screen: 60px of
    a 600px canvas, which is 3.3 times its own row. Ours was 1.2 times. See the
    note on `.cm-tab` above — the same mistake, and this is where it showed most,

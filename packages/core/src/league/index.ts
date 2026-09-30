@@ -45,7 +45,7 @@ export type { SortKey } from "./standingsOrder";
 export { pedigreeOf } from "./pedigree";
 export type { Pedigree } from "./pedigree";
 
-export { firstKickoff, locksAt, openingGameweek, periodGameweeks } from "./calendar";
+export { firstKickoff, locksAt, openingGameweek, periodGameweeks, saveOpen } from "./calendar";
 export type { GameweekKickoff } from "./calendar";
 
 export { lastLockedPeriod, periodToRead, planningPeriod, rosterDisplay } from "./visibility";
@@ -112,6 +112,17 @@ export {
   fetchTransactions,
 } from "./fantrax/client";
 export { listName, mapLeagueInfo, mapPlayerPool } from "./fantrax/map";
+export { fetchLineupState, sendBenchOrder, sendLineup } from "./fantrax/lineupClient";
+export {
+  benchOrderMap,
+  changesBenchOrder,
+  changesLineup,
+  fieldMapFor,
+  mapLineupState,
+  readBenchAnswer,
+  readLineupAnswer,
+} from "./fantrax/lineupWrite";
+export type { FieldMap, LineupState, PlanRefusal, WriteAnswer } from "./fantrax/lineupWrite";
 export { mapTeamRosters } from "./fantrax/rosters";
 export { mapDraftPicks } from "./fantrax/draft";
 export type { DraftPick } from "./fantrax/draft";

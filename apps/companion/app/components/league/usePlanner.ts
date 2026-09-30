@@ -18,6 +18,7 @@ import {
   violations,
 } from "@epl/core";
 import type { PitchRow } from "./PitchRows";
+import { benchFrom, orderBench, swapInOrder } from "./benchOrder";
 
 // The lineup planner's state: the slots being arranged, the pick in progress, and every move the
 // league's rules allow from here. `LineupPlanner` draws it.
@@ -27,8 +28,16 @@ export function usePlanner(
   details: SquadPlayerDetail[],
   players: LeaguePlayerState[],
   limits: RosterLimits,
+  /** Fantrax's bench order, `scorerId → rank`; empty when none is set. */
+  benchRanks: Readonly<Record<string, number>>,
 ) {
   const [slots, setSlots] = useState<RosterSlot[]>(() => team.players.map((p) => p.slot));
+  // What Fantrax holds, which a save moves forward: the slots and the bench order last saved.
+  const [baseline, setBaseline] = useState<RosterSlot[]>(slots);
+  const [savedOrder, setSavedOrder] = useState<string[]>(() =>
+    benchFrom(benchRanks, lineup(team).bench.map((p) => p.slot.fantraxId)),
+  );
+  const [order, setOrder] = useState<string[]>(savedOrder);
   // Two ways in, and they are different questions, reached by the same target on
   // the first and second tap. `picked` is the quick swap: one tap chooses a man,
   // and the pitch answers "who can come off for him" by dimming everyone who
@@ -89,17 +98,17 @@ export function usePlanner(
         label: line.position,
         players: line.players.flatMap((p) => detail(p.slot)),
       })),
-      bench: arranged.bench.flatMap((p) => detail(p.slot)),
+      bench: orderBench(order, arranged.bench.map((p) => p.slot.fantraxId)).flatMap((id) => {
+        const slot = bySlot.get(id);
+        return slot === undefined ? [] : detail(slot);
+      }),
     };
-  }, [team, slots, detailOf]);
+  }, [team, slots, order, detailOf]);
+  const benchIds = bench.map((p) => p.rostered.slot.fantraxId);
 
-  const dirty = useMemo(
-    () =>
-      team.players.some(
-        (p, i) => p.slot.status !== slots[i]?.status || p.slot.position !== slots[i]?.position,
-      ),
-    [team, slots],
-  );
+  const moved = baseline.some((b, i) => b.status !== slots[i]?.status || b.position !== slots[i]?.position);
+  const reordered = orderBench(savedOrder, benchIds).some((id, i) => benchIds[i] !== id);
+  const dirty = moved || reordered;
 
   // What is wrong with the XI as it stands. No move offered can create any of
   // it, so an empty list is the ordinary case and anything in it came from
@@ -155,12 +164,15 @@ export function usePlanner(
     if (move) play(move);
   }
 
+  /** Whether a tap on `id` swaps two subs' places in the order the bench comes on. */
+  const benchSwap = (id: string) => picked !== null && benchIds.includes(picked) && benchIds.includes(id);
+
   /** A pitch card's state while a pick is in progress. */
   function pickStateOf(player: SquadPlayerDetail): "idle" | "picked" | "swappable" | "blocked" {
     const id = player.rostered.slot.fantraxId;
     if (picked === null) return "idle";
     if (picked === id) return "picked";
-    return partners.has(id) ? "swappable" : "blocked";
+    return partners.has(id) || benchSwap(id) ? "swappable" : "blocked";
   }
 
   /** A tap on a pitch card: pick him, open his moves on a second tap, or swap with the picked man. */
@@ -172,11 +184,22 @@ export function usePlanner(
       setPicked(null);
       setOpened(id);
     } else if (partners.has(id)) swapWith(id);
+    else if (benchSwap(id)) {
+      setOrder(swapInOrder(benchIds, picked, id));
+      setPicked(null);
+    }
   }
 
   function reset() {
-    setSlots(team.players.map((p) => p.slot));
+    setSlots(baseline);
+    setOrder(savedOrder);
     setPicked(null);
+  }
+
+  /** Fantrax now holds what is on screen. */
+  function markSaved() {
+    setBaseline(slots);
+    setSavedOrder(benchIds);
   }
 
   return {
@@ -195,6 +218,8 @@ export function usePlanner(
     pickStateOf,
     pick,
     reset,
+    markSaved,
+    plan: { slots, bench: benchIds },
     movesFor: (id: string) => legalMoves(slots, eligibility, limits, id),
     optionsFor: (id: string) => eligibleSlots(slots, eligibility, limits, id),
   };

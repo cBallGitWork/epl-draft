@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { FantraxError, errorEnvelope, pageErrorEnvelope, responseErrorEnvelope } from "./errors";
-import { unwrapFxpa } from "./fxpa";
+import { fxpaRead, unwrapFxpa } from "./fxpa";
 import pageError from "./__fixtures__/fxpaPageError.json";
 
 // The fxpa envelope, recorded 12 Aug 2026 by asking the real league for its
@@ -85,5 +85,11 @@ describe("unwrapFxpa", () => {
 
   it("maps a response with neither data nor errors to null", () => {
     expect(unwrapFxpa("x", { responses: [{}] })).toBeNull();
+  });
+});
+
+describe("fxpaRead with a session", () => {
+  it("refuses any method off the allow-list before a request is made", async () => {
+    await expect(fxpaRead("league", "deleteLeague", {}, "cookie")).rejects.toMatchObject({ code: "NOT_ALLOWED" });
   });
 });

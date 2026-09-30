@@ -95,7 +95,9 @@ npm run intel-check     # is the intel export fresh and whole
   `edition` reads the root's with `--env-file-if-exists` (CI has no file; the key is a
   repository secret).
 - Secrets: `write-edition` needs `ANTHROPIC_API_KEY` (`OPENAI_API_KEY` is optional, for the
-  drawing); `roster-limits` needs `FANTRAX_COOKIE`. Everything else reads public endpoints.
+  drawing); `roster-limits` needs `FANTRAX_COOKIE`. The app saves lineups to Fantrax only where
+  `LINEUP_SAVE=on` and `FANTRAX_COOKIE` (the commissioner's session) are both set in Vercel. Everything
+  else reads public endpoints.
 
 ## Architecture: two layers, never conflated
 
