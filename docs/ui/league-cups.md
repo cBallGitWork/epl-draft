@@ -10,7 +10,6 @@ ours* carries Craig's rules (27 Sep 2026).
 
 - Two pickers: the cup (Timbeibs Cup, Davy Propper Cup; `?cup=`) and the view (Fixtures, Bracket;
   `?view=`). The first of each is the default.
-- One line on how the cup is played.
 - **Fixtures** is the schedule's own list (`schedule/Round.tsx`), filtered to the cup: a gameweek head
   with its deadline, the cup and round on a plate, and a `ScoreRow` per tie with its number (M1…) where
   the `v` would be. Craig, 27 Sep 2026: *"Use similar UI to the league fixtures page."*

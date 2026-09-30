@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CUPS, cupGroups, cupPlan, cupTies, type Cup } from "@epl/core";
+import { CUPS, cupGroups, cupPlan, cupTies } from "@epl/core";
 import LeagueShell from "../Shell";
 import Nothing from "../../components/shell/Nothing";
 import FantraxSilent from "../../components/shell/FantraxSilent";
@@ -68,7 +68,6 @@ export default async function CupsPage({
         </Nothing>
       ) : (
         <>
-          <p className="px-3 text-2xs text-faint">{format(cup)}</p>
           {view === "bracket" ? (
             <div className="flex flex-col gap-4">
               <Groups groups={cupGroups(cup, teams)} />
@@ -89,6 +88,12 @@ export default async function CupsPage({
                   badges={NO_NAMES}
                   places={NO_PLACES}
                   mine={null}
+                  cup={{
+                    note:
+                      cup.seeding.from === "gameweek" && cup.seeding.gameweek === round.gameweek
+                        ? { title: "Seeding", text: "Every team's points this gameweek set the seeds." }
+                        : undefined,
+                  }}
                 />
               ))}
             </div>
@@ -122,18 +127,4 @@ function Picker({
       ))}
     </nav>
   );
-}
-
-/** One line on how the cup is played, in the words Craig set it in. */
-function format(cup: Cup): string {
-  const knockout =
-    cup.knockout.elimination === "double" ? "Double elimination, no reset final" : "Knockout";
-  if (cup.seeding.from === "groups") {
-    const { groups, qualify, drawGameweek } = cup.seeding.stage;
-    return `Placeholder draw. ${groups} groups drawn around GW${drawGameweek}, top ${qualify} through, group winners skip the first knockout round. ${knockout}, one leg.`;
-  }
-  const drawn = cup.knockout.drawnRounds ?? 0;
-  const rounds = drawn === 1 ? "Round 1" : drawn === 2 ? "Rounds 1 and 2" : `Rounds 1 to ${drawn}`;
-  const draw = drawn > 0 ? ` ${rounds} drawn at random, then a fixed bracket.` : "";
-  return `Placeholder draw. Seeded on GW${cup.seeding.gameweek} points, a tie going to the higher league place.${draw} ${knockout}, one leg.`;
 }

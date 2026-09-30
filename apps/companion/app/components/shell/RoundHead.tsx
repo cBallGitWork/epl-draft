@@ -26,9 +26,12 @@ import { SMALL_CAPS } from "@/app/desk";
 
 export default function RoundHead({
   gameweek,
+  title,
   children,
 }: {
   gameweek: number;
+  /** What is played in it, when the list holds one competition: "Round 1". */
+  title?: string;
   /** What this screen adds about the round — the schedule's deadline and its
    *  live mark. Absent on the two archives, where the round is finished and the
    *  scorelines under it have already said so. */
@@ -36,7 +39,10 @@ export default function RoundHead({
 }) {
   return (
     <h2 className={`cm-bevel flex h-7 items-center justify-between gap-3 px-1.5 ${SMALL_CAPS}`}>
-      <span className="shrink-0">Gameweek {gameweek}</span>
+      <span className="shrink-0">
+        Gameweek {gameweek}
+        {title === undefined ? null : ` · ${title}`}
+      </span>
       {children}
     </h2>
   );
