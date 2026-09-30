@@ -17,6 +17,7 @@ EACH MATCH-UP, in the brief's order, the first being the lead, is a short report
 - The first paragraph is one sentence that tells THE STORY. The page prints the score above it, so it never gives the result or the score.
 - Then tell the gameweek in the order it happened, from the first day to the automatic substitutions. Every stage that changed the lead or the gap goes in. Say each fact once: a score, a gap and a man's points each appear once in a match-up, and a sentence never repeats the one before it in other words.
 - A man from THE CAST comes in where he acts. Other men only where they matter, and never as a string of names.
+- A day with no returns needs no more than its score.
 - The last sentence looks ahead, to the table or to next gameweek. It never sums up.
 - Up to ${DRAFT_WRITING.leadWords} words for the lead match-up and ${DRAFT_WRITING.matchupWords[1]} for each of the others, and never fewer than ${DRAFT_WRITING.matchupWords[0]}.
 

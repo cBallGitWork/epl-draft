@@ -43,7 +43,7 @@ function castLine(ctx: MatchupContext, m: DraftMan): string {
     points,
     sub === undefined ? null : sub.ahead !== null ? "comes on at the end of the gameweek for a man who did not play" : `${sub.out.name} did not play, so he ${sub.provisional ? "comes on if he plays" : "came on"}`,
     // A reserve played his own match, on its own day, before the substitutions counted it: GW5 had him "yet to kick a ball".
-    sub !== undefined && m.minutes > 0 ? `played ${m.minutes >= 90 ? "the whole match" : `${m.minutes} minutes`} for ${m.club}${m.byDay[0] === undefined ? "" : ` on ${beatLabel(m.byDay[0].day)}`}` : null,
+    sub !== undefined && m.minutes > 0 && m.byDay[0] !== undefined ? `played for ${m.club} on ${beatLabel(m.byDay[0].day)}` : null,
     bench ? "on the bench, where his points count for nobody" : null,
     minutesLine(m),
     s === undefined ? null : newLine(m, s.side),
@@ -88,39 +88,18 @@ function beatLine(ctx: MatchupContext, b: Beat, before: { home: number; away: nu
   return `- ${label[0].toUpperCase()}${label.slice(1)}: ${home.side.name} ${b.points.home}, ${away.side.name} ${b.points.away}, making it ${score}; ${scored.length === 0 ? none : `returns: ${listed(scored, "and")}`}`;
 }
 
-/** After Saturday, what is still to come by match and day, fixtures only: a match with both sides' men in it named whole
- *  and first, the cast's matches named, and every other man counted. Each man carries his club, so none is sent to the
- *  wrong ground (GW5: "Isak away to Liverpool"). */
+/** After Saturday, what is still to come, fixtures only: the story's men, any reserve waiting on his match and each
+ *  side's likeliest man still to play (the projection picks him and never prints), each with his match and day, then how
+ *  many each side has left. Nobody else by name, so the writer lists nobody (GW5's Saturday named every man). */
 function toCome(ctx: MatchupContext, cast: ReadonlySet<DraftMan>): string[] {
-  const matches = new Map<string, { kickoff: string; men: Map<string, DraftMan[]> }>();
-  for (const s of [ctx.state.home, ctx.state.away]) {
-    for (const m of s.toPlay) {
-      if (m.next === null) continue;
-      const label = m.next.home ? `${m.club} v ${m.next.opponent}` : `${m.next.opponent} v ${m.club}`;
-      const match = matches.get(label) ?? { kickoff: m.next.kickoff, men: new Map<string, DraftMan[]>() };
-      match.men.set(s.side.name, [...(match.men.get(s.side.name) ?? []), m]);
-      matches.set(label, match);
-    }
-  }
   const waiting = new Set([ctx.state.home, ctx.state.away].flatMap((s) => s.subs.filter((x) => x.provisional).map((x) => x.in)));
-  const who = (m: DraftMan) => `${m.fullName}${waiting.has(m) ? " (if he plays)" : ""}`;
-  const lines: string[] = [];
-  // Men not named, by day and side: "On Sunday, 2 more of test2's men play, and 1 of 123's".
-  const unnamed = new Map<string, Map<string, number>>();
-  for (const [label, match] of [...matches].sort(([, a], [, b]) => b.men.size - a.men.size || a.kickoff.localeCompare(b.kickoff))) {
-    const day = londonWeekdayLong(match.kickoff);
-    const shown = [...match.men].map(([side, men]) => [side, match.men.size > 1 ? men : men.filter((m) => cast.has(m))] as const);
-    const told = shown.filter(([, men]) => men.length > 0);
-    if (told.length > 0) lines.push(`- ${label}, ${day}: ${told.map(([side, men]) => `${listed(men.map(who), "and")} for ${side}`).join("; ")}`);
-    const counts = unnamed.get(day) ?? new Map<string, number>();
-    for (const [side, men] of match.men) counts.set(side, (counts.get(side) ?? 0) + men.length - (shown.find(([s]) => s === side)?.[1].length ?? 0));
-    unnamed.set(day, counts);
-  }
-  for (const [day, counts] of unnamed) {
-    const rest = [...counts].filter(([, n]) => n > 0).map(([side, n]) => `${n} more of ${possessive(side)} men`);
-    if (rest.length > 0) lines.push(`- On ${day}, in other matches, ${listed(rest, "and")} play`);
-  }
-  return lines;
+  const lines = [ctx.state.home, ctx.state.away].flatMap((s) =>
+    s.toPlay
+      .filter((m, i) => m.next !== null && (i === 0 || cast.has(m) || waiting.has(m)))
+      .map((m) => `- ${m.fullName} for ${s.side.name}${waiting.has(m) ? ", if he plays" : ""}: ${m.next!.home ? "at home to" : "away to"} ${m.next!.opponent} on ${londonWeekdayLong(m.next!.kickoff)}`),
+  );
+  const left = [ctx.state.home, ctx.state.away].map((s) => `${s.side.name} ${s.toPlay.length}`);
+  return [...lines, `- Men still to play: ${listed(left, "and")}`];
 }
 
 /** Where each side goes next, for a last line that looks out; nothing after Saturday, with the gameweek unfinished. */

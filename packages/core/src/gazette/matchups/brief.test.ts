@@ -42,10 +42,9 @@ describe("buildDraftBrief", () => {
     expect(buildDraftBrief("gameweek", 5, [{ ...ctx, angle }])).toContain("returns: A's Saka (a goal) and B's Rice (an assist)");
   });
 
-  it("after Saturday, says how it stands and what is still to come, the shared match first, as fixtures only", () => {
+  it("after Saturday, says how it stands and who is still to come, naming only the men that matter, as fixtures only", () => {
     expect(saturday).toContain("THE SCORE after Saturday's matches, printed above your words, never in them: 123 lead test2 26-16.");
-    expect(saturday).toContain("STILL TO COME, the fixtures only:\n- Man City v Sunderland, Sunday: Hume and Haaland for 123; Meunier (if he plays) for test2");
-    expect(saturday).toContain("- On Sunday, in other matches, 1 more of 123's men and 2 more of test2's men play");
+    expect(saturday).toContain("STILL TO COME, the fixtures only:\n- Hume for 123: away to Man City on Sunday\n- Isak for test2: away to Bournemouth on Sunday\n- Meunier for test2, if he plays: away to Man City on Sunday\n- Men still to play: 123 3 and test2 3");
     expect(saturday).not.toContain("NEXT GAMEWEEK");
   });
 
