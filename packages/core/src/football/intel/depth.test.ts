@@ -31,18 +31,20 @@ describe("spotsOf", () => {
 describe("depthLines", () => {
   const club = (slots: DepthSlot[]): ClubDepth => ({ formation: "", slots });
 
-  it("draws a 4-2-3-1 from goal outward, left to right", () => {
+  it("draws a 4-2-3-1 from goal outward, the team's right on the reader's left", () => {
     const lines = depthLines(
       club([slot("ST", 1, [9]), slot("GK", 1, [1]), slot("RB", 1, [2]), slot("LB", 1, [3]), slot("LCB", 1, [5]), slot("RCB", 1, [4]),
         slot("DM", 2, [6, 8]), slot("RW", 1, [7]), slot("AM", 1, [10]), slot("LW", 1, [11])]),
     );
     expect(lines.map((line) => line.map((spot) => spot.slot))).toEqual([
       ["GK"],
-      ["LB", "LCB", "RCB", "RB"],
+      ["RB", "RCB", "LCB", "LB"],
       ["DM", "DM"],
-      ["LW", "AM", "RW"],
+      ["RW", "AM", "LW"],
       ["ST"],
     ]);
+    // A pair keeps its first choice in the first spot.
+    expect(codes(lines[2])).toEqual([[6], [8]]);
   });
 
   it("sends the full-backs up in a back three, and the wingers up beside a lone striker", () => {
@@ -52,9 +54,9 @@ describe("depthLines", () => {
     );
     expect(lines.map((line) => line.map((spot) => spot.slot))).toEqual([
       ["GK"],
-      ["LCB", "CCB", "RCB"],
-      ["LB", "CM", "CM", "RB"],
-      ["LW", "ST", "RW"],
+      ["RCB", "CCB", "LCB"],
+      ["RB", "CM", "CM", "LB"],
+      ["RW", "ST", "LW"],
     ]);
   });
 });

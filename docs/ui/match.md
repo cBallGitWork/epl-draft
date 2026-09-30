@@ -274,12 +274,10 @@ each team, THEN for list/pitch, rather than a big scroll"*): a row of `BRE · CH
 and `Team Sheet · Pitch` above the board (`?side=away`), and a desk shows both.
 
 **The Pitch** is the foot row's other plate (`?view=pitch`): each eleven in
-`sheet.shape`, the shape its manager drew, with **faces rather than kits**
-(Craig, 23 Sep 2026: *"player portraits instead of shirts"*), the score under
-each name, and an amber `▼ 69′` on a man taken off. The men who came on stand in
-a strip under the grass with `▲ 69′`. A man with no photograph falls back to his
-kit through `PlayerImage`'s ladder, so a line can mix the two — the trade the
-kit-only rule of 10 Sep existed to avoid, taken on purpose here. `pitch-match`
+`sheet.shape`, the shape its manager drew, in **kits** (Craig, 26 Sep 2026:
+faces are a club's predicted XI's alone; they stood here from 23 Sep), the score
+under each name, and an amber `▼ 69′` on a man taken off. The men who came on
+stand in a strip under the grass with `▲ 69′`. `pitch-match`
 budgets the grass so the strip clears the nav at 390×844 (767 against 798 with the
 phone's control row, measured 23 Sep). One `widest` across both pitches, so the halves are drawn to
 one scale. No doubt colour on the plates: today's injury flag has no business on
