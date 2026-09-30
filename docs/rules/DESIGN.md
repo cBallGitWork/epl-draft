@@ -572,7 +572,7 @@ the one exception and `.crest` restores it (§5).
 **Rank set in scale means the sheet needs ranks to set.** The front page runs
 three under the masthead, and all three are headlines: the **splash**, two
 **shoulders** side by side beneath it with their decks, and the rest as
-**briefs** — a thumbnail, standing head, headline, folio number, nothing else.
+**briefs** — a thumbnail, standing head, headline, nothing else.
 
 **Every rank carries a picture, and the size is the hierarchy.** A band over the
 splash, a card on each shoulder, a 56px thumbnail on a brief. *This reverses "a
@@ -589,8 +589,8 @@ prints on the front page at all.** The splash ran whole there until 3 Sep 2026,
 which is what a broadsheet does and the wrong answer on a phone: a full column
 put the second story on the sheet some nineteen hundred pixels down, so the two
 ranks below it were furniture nobody reached, and a front page that reads you
-the first story has stopped asking you to choose. The articles are on pages 2
-and 3 and at `/paper/{slug}`, a tap away. Two columns for the shoulders at every width including a
+the first story has stopped asking you to choose. The articles are at
+`/paper/{slug}`, a tap away. Two columns for the shoulders at every width including a
 phone's, because splash / two seconds / briefs is what a broadsheet does above
 the fold and what a news site does on a 390px screen, and a reader has to be able
 to rank the top three before reading a word of any of them. The tail was one flat

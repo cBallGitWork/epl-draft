@@ -32,9 +32,9 @@ export default function PaperLayout({ children }: { children: ReactNode }) {
     // 304 — two equal columns, which is not a lead and a sidebar. The frame is
     // wider now and the sidebar does arrive, but asking the container is what
     // makes that a consequence of there being room rather than a coincidence.
-    // `min-h-dvh`: a short page — an inside page's honest Nothing — must not
-    // run the stock out halfway down and show the desk's navy beneath the
-    // paper. The sheet is the sheet to the foot of the screen.
+    // `min-h-dvh`: a short page must not run the stock out halfway down and
+    // show the desk's navy beneath the paper. The sheet is the sheet to the
+    // foot of the screen.
     <div
       className={`paper @container ${fraunces.variable} ${newsreader.variable} -mx-[var(--page-gutter)] -mb-[var(--page-foot)] -mt-3 flex min-h-dvh flex-col gap-5 px-[var(--page-gutter)] pb-[calc(2rem+var(--page-foot))] pt-4`}
     >

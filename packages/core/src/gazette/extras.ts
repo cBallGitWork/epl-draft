@@ -15,7 +15,7 @@ import { normalizeSheets, type StorySheet } from "./sheets/cargo";
 // ditch."* They were the paper's one licensed invention — the doctrine was that
 // a sketch announced as a sketch may put words in a manager's mouth — and the
 // exception is gone with the columns that needed it. Nothing in this paper
-// invents a quote now, which is the plainer rule and the one HOUSE already
+// invents a quote now, which is the plainer rule and the one `house` already
 // states without an asterisk.
 //
 // **The eleven's CAPTIONS were deleted on 3 Sep 2026**, Craig: *"the

@@ -47,7 +47,7 @@ each other.
 | The masthead is sized against the sheet | desk 72px → **120px**, phone fill 75% → **88%** |
 | `Dateline` extracted at three | the furniture class string **declined at fifteen** — see below |
 | `(paper)/page.tsx` split | 301 → 272 lines, under the §4 ceiling |
-| A correspondent | **Franco Bell**, with the Richardson register named in the prompt |
+| A correspondent | **Franco Bell**, with the Richardson register named in the prompt; since 30 Sep a staff writer per kind (PLATFORM_NOTES) |
 | Articles revalidate at 300s | a story is published by a **deploy**, not a revalidation |
 | The Actions bill | **$15.88 → ~$2.51/month** |
 
@@ -284,7 +284,7 @@ product here, so a foreign one is not a starting point.**
 |---|---|---|
 | **1c** | Tie reports that update through the day — the covered-key carries `tieState` | — |
 | **1d** | Draft pedigree as a decaying `ledger` thread, re-opened if the drafting manager bins him | — |
-| **2a** | The Premier League classified, in agate, on page 2, our men marked | — |
+| **2a** | The Premier League classified, in agate, our men marked | — |
 | **2b** | Cups and Europe in the classified | export |
 | **3a** | Player articles, triggered on an availability **transition** | — |
 | **3b** | Projections ranking, labelled `xPts (FPL)` and never beside `FPts` | export |
@@ -296,7 +296,9 @@ product here, so a foreign one is not a starting point.**
 **Deliberately not planned**: ~~`round-preview`'s legacy `EditionKind` shape~~
 (done 24 Sep 2026: the kind went whole, having never filed); and a captured football calendar, because `periodAlignment.json` is a
 frozen test fixture with placeholder kickoffs on 33 of 38 rounds, and the
-schedule keys on the **day**, which needs no calendar at all.
+schedule keys on the **day**, which needs no calendar at all. **A foot folio**,
+dropped on Craig's word of 30 Sep 2026: a page number is the numbered pages
+he cut that day (*"the pages thing doesnt work"*), and the paper has none.
 
 ---
 
@@ -324,7 +326,7 @@ two-pass and one-line-comment rules (#8, #9).
    firing today, so a 2pm presser column could not publish on a Thursday.
    Blocked instead on `intel/pressers/26-27.json` (§5 of the export contract).
 2. **`feat/paper-furniture`** — running head, three rule weights, ruled standing
-   heads, foot folio, and the lead's opening paragraph.
+   heads, and the lead's opening paragraph.
 3. **`feat/paper-classified`** → **`feat/player-stories`** → **`feat/rolling-tie-reports`**.
 4. **Break weeks** — **must land before 9 Nov**, when the league hits its first
    empty week.

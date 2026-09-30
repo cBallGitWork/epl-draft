@@ -124,7 +124,7 @@ function expired(story: PublishedStory, now: string): boolean {
  *  **Not every kind.** A tie-report and a news item are about a SUBJECT — five
  *  ties and two stories from the wire, each its own piece — and `subjectRetires`
  *  already keeps those honest within a round. These are editions of one
- *  standing column, and page 3 printed two Power Rankings, two Points Dodgers
+ *  standing column, and the paper printed two Power Rankings, two Points Dodgers
  *  and two Teams of the Week side by side because nothing said so.
  *
  *  **The presser is NOT here**, and was until it ate Thursday's column. A week

@@ -3,7 +3,7 @@
 // **A rule in a prompt is a hope, and this file is the second half of it.**
 // `strangers.ts` says it for names: a rule the model can obey to the letter
 // while still breaking it is not a guardrail. The same is true of register.
-// HOUSE has banned American sports-desk phrasing since Craig's ruling — *"its
+// `house` has banned American sports-desk phrasing since Craig's ruling — *"its
 // pure american yank shite talk, its uk sport"* — and on 3 Sep 2026 a front page
 // still went out with five headlines built on "bank"; told in the same breath
 // never to write "off the bench", the next match report filed was headlined

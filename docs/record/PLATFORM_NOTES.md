@@ -44,6 +44,19 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## The paper's staff write under ISS names, one per kind of story — decided 30 Sep 2026
+
+Craig: *"need better sports journalists, ISS/pro evo used fake names based on player names, we do the same for
+journalists, find the most famous journalist names"*, and on the first draft, *"can go more iss/pro evo, thats one
+letter difference"*. So each kind runs under the famous journalist known for that kind of piece, mangled the way ISS
+Pro Evolution printed "Roberto Larcos": letters swapped or changed in **both** names, recognisable at a glance, and
+**never the real name**. Phill McLunty, Danial Talyor, Garf Crookes, Martyn Masuel, Donny Kaber, Fabrizzio Morano,
+Davide Onrstein, and Hendry Wimter for a kind with none. One table, `gazette/staff.ts`, feeds both the byline and the
+writer's "You are" line; the byline is resolved from the kind at render, so the archive reads the new names, and a
+`reporter` stamped at filing wins. Lawro is not staff: his column keeps his real name. Craig's *"yes bylines"* put
+the line-ups under the team-news writer, the front page's lead under its writer, and the writer's name at the head of
+the match-report and team-sheet prompts.
+
 ## A player's fixture run carries the sister model's projection, not Fantrax's — decided 30 Sep 2026
 
 - **Counted**: the sister export projects **666 of 666** players for **each of GW6–17** (12 weeks); Fantrax's
@@ -125,8 +138,8 @@ Craig set the formats on 27 Sep. The cups are declared in `packages/core/src/lea
 ## Lawro writes the predictions, under his own name, on Thursday evening — decided 24 Sep 2026
 
 - **The byline is "by Mark Lawrenson", with no impression marking** (Craig, 24 Sep 2026). It reverses,
-  for this one column, the rule that a byline over machine-written copy is an invented name (`config.ts`,
-  SEASON_LOG 28 Aug). It travels as `reporter` on the story; Franco Bell keeps every other kind.
+  for this one column, the rule that a byline over machine-written copy is an invented name (`gazette/staff.ts`,
+  SEASON_LOG 28 Aug). It travels as `reporter` on the story; every other kind runs under its staff writer.
 - **His career is his to use, in verified lines only**: the thirty BBC years (pundit, co-commentator,
   twenty-two years of predictions) and the playing and managing, as a core identity and 20 lines in turn in
   `gazette/predictions/past.ts`, each read back from the archive by its mark. A first-person career claim
@@ -1585,14 +1598,13 @@ with the retired match-report path; the lines below that name them are history.*
   id — and not the club-code `stake.key` the `fixture:gw{gw}:{key}` subject needs;
   that key exists only as a suffix of `assignment.key` and is computed at
   `relevance.ts:81`. B5's supersession is a three-file change, not a table.
-- **A new story kind has six tables to join and only one of them fails loudly.**
+- **A new story kind has five tables to join and only one of them fails loudly.**
   `KIND_WEIGHT` (`frontPage.ts:35`) is the only total `Record<StoryKind, …>` in
   the tree and will not compile without a row. `STORY_KINDS` (`story.ts:36-40`) is
   a plain array, so omitting the kind there makes `normalizeStory` refuse every
   story of it **with a green typecheck and a green build** — which is exactly the
-  failure B7 has just swept up. `PAPER_PAGES` is not in core at all
-  (`components/gazette/paperPages.ts`, `readonly string[]`), and `KICKER`,
-  `STORY_BYLINE` and `faceOf` all take an unhandled kind silently.
+  failure B7 has just swept up. `KICKER`, `STORY_BYLINE` and `faceOf` all take
+  an unhandled kind silently.
 
 ### Counts the plan quotes that have moved or were never right
 

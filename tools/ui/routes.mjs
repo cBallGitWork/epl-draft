@@ -63,7 +63,7 @@ export const PREM_ROUTE = "/prem";
 
 /** Newsprint. No photograph behind it — `isPaperRoute` stands the ground down —
  *  so `groundfit` has nothing to measure here, and the other two still do. */
-export const PAPER_ROUTES = ["/", "/paper/reports", "/paper/columns"];
+export const PAPER_ROUTES = ["/"];
 
 /** Every route worth measuring for contrast, overflow and tap targets.
  *

@@ -8,8 +8,7 @@ import Extras from "../../../components/gazette/Extras";
 import Folio from "../../../components/gazette/Folio";
 import { named } from "../../../components/gazette/named";
 import Written from "../../../components/gazette/Written";
-import Pages from "../../../components/gazette/Pages";
-import { pageOf } from "../../../components/gazette/paperPages";
+import { KICKER } from "../../../components/gazette/kickers";
 
 // One story, printed whole.
 //
@@ -57,9 +56,6 @@ export async function generateMetadata({
 }
 
 export default async function StoryPage({ params }: { params: Promise<{ slug: string }> }) {
-  // A static segment beats a dynamic one in Next, so `/paper/reports` is the
-  // reports page and never a story slugged "reports". Slugs are `gw{n}-…` in
-  // any case; the collision cannot arise.
   const story = find((await params).slug);
   if (story === null) notFound();
 
@@ -70,28 +66,9 @@ export default async function StoryPage({ params }: { params: Promise<{ slug: st
   const paper = await edition(mine);
   const who = named(paper.teams);
 
-  const page = pageOf(story.kind);
-
   return (
     <>
-      <Folio
-        section={page?.label ?? "The Gazetta"}
-        number={page?.number ?? 1}
-        at={story.filedAt}
-      />
-      <Pages here={page?.href ?? "/"} />
-
-      {/* `Written` and not a second copy of it. Page 2 and page 3 print their
-          own lead through it as well — byline chip, headline, deck, ornament,
-          dateline, two columns of prose and the tie-by-tie block — and hand-
-          rolling that here would be a second layout to keep in step, which is
-          the drift the whole `components/gazette` folder exists to avoid.
-
-          The FRONT page no longer prints an article at all: `Splash` there is
-          this component's opening block minus the prose, plus the link that
-          arrives here. Two components and not one variant, because what they
-          have in common is five lines of markup and what differs is whether a
-          reader has chosen to read yet. */}
+      <Folio section={KICKER[story.kind]} at={story.filedAt} />
       <article className="pt-4">
         <Written story={story} teams={paper.teams} clubs={paper.snapshot ? clubById(paper.snapshot) : undefined} />
         <Extras story={story} named={who} mine={paper.mine} snapshot={paper.snapshot} />

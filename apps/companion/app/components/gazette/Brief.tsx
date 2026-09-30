@@ -2,19 +2,10 @@ import TurnLink from "./TurnLink";
 import StoryFace from "./StoryFace";
 import type { Club, PublishedStory } from "@epl/core";
 import { KICKER } from "./kickers";
-import { pageOf, storyHref } from "./paperPages";
+import { storyHref } from "./paperPages";
 
-// A story in the tail: the standing head, the headline, and the page it is on.
-//
-// The third rank on the sheet, under the lead and the two shoulders. A brief
-// carries no deck and no dateline — those are what a shoulder has and this does
-// not, and the difference is the whole point. **The hierarchy is the design**:
-// a reader must be able to see which story is third before reading a word of
-// it, which a column of eight identical teasers made impossible.
-//
-// The page number is ranged right as a folio reference rather than spelled out
-// — "turn to page 2" five times down one column is a paper nagging. A kind with
-// no page of its own prints nothing there and is read on the front page.
+// A story in the tail: a thumbnail, the standing head and the headline, the sheet's third rank.
+// No deck and no dateline, which is what a shoulder has and this does not: the hierarchy is the design.
 
 export default function Brief({
   story,
@@ -24,7 +15,6 @@ export default function Brief({
   clubs: Map<number, Club>;
 }) {
   const kicker = KICKER[story.kind];
-  const page = pageOf(story.kind);
 
   return (
     <li id={story.slug} className="scroll-mt-4 border-t border-line">
@@ -34,10 +24,9 @@ export default function Brief({
       <TurnLink href={storyHref(story.slug)} className="flex min-h-11 items-center gap-3 py-2">
         <StoryFace story={story} clubs={clubs} rank="brief" />
         <span className="flex min-w-0 flex-1 flex-col justify-center gap-0.5">
-          <span className="flex items-baseline justify-between gap-3 font-sans text-3xs uppercase tracking-[0.16em]">
-            {kicker !== undefined ? <span className="font-bold text-muted">{kicker}</span> : <span />}
-            {page !== null ? <span className="numeric shrink-0 text-faint">p{page.number}</span> : null}
-          </span>
+          {kicker !== undefined ? (
+            <span className="font-sans text-3xs font-bold uppercase tracking-[0.16em] text-muted">{kicker}</span>
+          ) : null}
           <h3 className="paper-display text-pretty text-base font-bold leading-snug text-ink">
             {story.headline}
           </h3>

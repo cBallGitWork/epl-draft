@@ -19,8 +19,8 @@ export const STORY_BYLINE: Partial<Record<StoryKind, string>> = {
   sheets: "The Team Sheets",
 };
 
-/** The columnists who write under their own name rather than the house correspondent's. Lawro's
- *  is Mark Lawrenson's, by Craig's decision of 24 Sep 2026 (PLATFORM_NOTES). */
+/** The columnists who write under their own name, stamped at filing, rather than a staff writer's (`gazette/staff.ts`).
+ *  Lawro's is Mark Lawrenson's, by Craig's decision of 24 Sep 2026 (PLATFORM_NOTES). */
 export const COLUMNIST: Partial<Record<StoryKind, string>> = {
   predictions: "Mark Lawrenson",
 };
