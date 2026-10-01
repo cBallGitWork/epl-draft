@@ -2,38 +2,17 @@ import Link from "next/link";
 import type { Measure } from "@epl/core";
 import { SMALL_CAPS } from "@/app/desk";
 
-// Which of the two numbers every cell on the board is holding.
-//
-// **It used to be a pair of column heads, and the board outgrew that.** With one
-// category on screen, `FPts` and `Total` could each be a column and the reader
-// saw both at once; with a whole group on screen they would be eight columns of
-// alternating meaning. So the choice moved to the top of the board, where it is
-// made once and said once (Craig, 11 Sep 2026: *"at the top, allow a toggle
-// between fantasy points and actual raw values"*).
-//
-// **Grey and not blue**, which DESIGN §2's table decides rather than taste: the
-// grey plate is "something you press" and the pressed grey plate is "the view
-// you are on". The blue strip is navigation, and this screen already carries two
-// of those — the section nav above and the stat groups along the foot. A third
-// blue bar would be three objects of one colour with nothing ranking them.
-//
-// A link and not a button, for the reason the sort heads give: the server does
-// the work, the phone gets HTML, and the choice survives being shared.
-//
-// *The plate recipe is written out here rather than imported. `players/
-// BoardControls` holds the only other spelling of it (`PLATE_TYPE`/`PRESSABLE`),
-// and its own docblock says promoting it is the day a second board wants the
-// row. This is that second board, which CODE_RULES §1 leaves duplicated; the
-// third takes both to `desk.ts`.*
+// Which figure every cell on the board holds: one grey toggle over the board (Craig, 11 Sep 2026: "at the top, allow a
+// toggle between fantasy points and actual raw values"). Grey, as DESIGN §2's pressable plate; the blue is navigation.
+// A link, so the server orders and the choice survives a share. The plate recipe is `players/BoardControls`' too (2 of 3).
 
-/** The two heads that came off the table, in the order they stood in it. */
+/** The figures a cell can hold, in the order the plates stand. */
 const MEASURES: readonly { by: Measure; label: string; title: string }[] = [
   { by: "points", label: "FPts", title: "What Fantrax paid for each category" },
   { by: "value", label: "Total", title: "The raw figure behind each category" },
 ];
 
-/** The control floor at both widths — a plate is aimed at rather than read, and
- *  DESIGN §6 does not let one relax below its floor under a thumb. */
+/** The control floor at both widths (DESIGN §6). */
 const PLATE = `flex min-h-11 items-center px-3 ${SMALL_CAPS} lg:min-h-9`;
 
 export default function Measures({
@@ -41,8 +20,7 @@ export default function Measures({
   href,
 }: {
   measure: Measure;
-  /** Where each plate leads. The page spells its own query, so this knows
-   *  nothing about the group or the category it has to carry through. */
+  /** Where each plate leads; the page spells its own query. */
   href: (measure: Measure) => string;
 }) {
   return (
@@ -55,14 +33,10 @@ export default function Measures({
             href={href(entry.by)}
             title={entry.title}
             aria-pressed={on}
-            // The plate owns its ink at 7.52:1, so no `text-*` here — and the
-            // pressed one takes no hover, because a thing already held down does
-            // not lift.
+            // The plate owns its ink; a pressed plate takes no hover.
             className={on ? `cm-bevel-pressed ${PLATE}` : `cm-bevel hover:brightness-110 ${PLATE}`}
           >
-            {/* The pressed bevel is the state and the tick says it again in a
-                SHAPE — the grey plate cannot carry the accent (2.27:1), so
-                colour is not available to say it twice. */}
+            {/* The tick says the pressed state in a shape: the grey plate cannot carry the accent. */}
             {on ? (
               <span aria-hidden className="pr-1 text-[0.625rem] leading-none">
                 ✓
