@@ -762,7 +762,7 @@ apart silently.
 | A figure in a row | — | — | `sm`, `.numeric` | `ROW_FIGURE`, worn by `FIGURE` (centred) and `BOARD_FIGURE` (right) |
 | A label that is furniture | — | — | `2xs` bold caps | `LABEL` |
 
-**Three recorded exceptions, and what earns one.** `prem/match/[id]/TeamSheet` sets
+**Two recorded exceptions, and what earns one.** `prem/match/[id]/TeamSheet` sets
 its names and figures a step above the row default — `base`/`lg:text-lg` against
 `sm`/`lg:base` — on Craig's call of 10 Sep 2026 (*"the player text could be much
 bigger on this screen too like CM… data much bigger too"*). The argument is that
@@ -771,6 +771,10 @@ figures, so the game gives them room a many-column board cannot; every other lis
 on the desk shares its width with four or more measures. A screen wanting this
 exception has to be able to say the same thing about itself, and `ROW_NAME` stays
 where it is — six boards wear it and none has the room.
+
+`squad/[teamId]/transfers/Ledger` says it and takes the same step for its names
+(Craig, 1 Oct 2026: *"lots of space, make text bigger"*): a row there is a date, a
+type and two names.
 
 `prem/match/[id]/Scoresheet` is the second and says exactly that about itself:
 its entire content is a few names and a few minutes. `lg:text-3xl` on the scorer
@@ -784,10 +788,6 @@ is why the table above now reads `sm`–`2xl`. **The phone did not move at any o
 the four.** The complaint was about a desk, the arithmetic only argues for a
 desk, and the phone's budget above the first row of data is the thing that band
 is spent out of.
-
-`squad/[teamId]/transfers/Ledger` is the third: a row is a date, a type and two
-names, so its names take TeamSheet's `base`/`lg:text-lg` (Craig, 1 Oct 2026: *"lots
-of space, make text bigger"*).
 
 **Three of these are rules and the rest are consequences.** 44 is docs/rules/PRODUCT.md's
 tap floor and is not negotiable under a thumb; 36 is a control on the desk; 28 is
