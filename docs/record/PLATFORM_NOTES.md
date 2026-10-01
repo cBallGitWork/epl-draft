@@ -54,8 +54,10 @@ the served league's rules: the rehearsal's in production and the dummy's, every 
   league's public `getLeagueInfo`. The served league stays the environment's, and Fantrax's own points (FPts, the
   live totals, a man's breakdown) stay the served league's. From go-live the two are one league.
 - **Not a rule exception.** The rules still come from `getLeagueInfo` (CODE_RULES §3); data says whose.
-- **What it prices:** only what we work out ourselves. Today that is the clean sheets Fantrax has not credited yet,
-  on the head-to-head board and the squad sheet.
+- **What it prices:** only what we work out ourselves: the clean sheets Fantrax has not credited yet (head-to-head
+  board, squad sheet); the paper's prices (the Bin XI's goal and assist, the Points Dodgers' clean sheet, the draft
+  desk's returns and a full match's minutes); and our marks, read off the scoring league's points for the day
+  (`scripts/scoring.ts`, `readScoring()`). The draft desk's DefCon and keeper bonus stay what Fantrax paid this week.
 - **A range is read off the settings mirror, never the string.** `scoringCategorySettings` gives each band (`start`,
   `end`, `points`, `interval`), `rangeType` and `cumulative`; the string table has no `cumulative`. The real league's
   outfield minutes were `1|1` cumulative until 1 Oct (2 for 90) and are `1|2` non-cumulative now. Checked on the
@@ -116,7 +118,7 @@ the match-report and team-sheet prompts.
 - **Craig**: "put all the ratings in the prem match report", one decimal, and the Star man replaces the Draft Man of the
   Match. Each man's mark sits in the line-up sentence ("Ndiaye 6.3 (Doku 75, 3.4)"), `—` where he was too brief to rate;
   the Star man is the best mark of everyone who played, held or not. The writer never sees the marks.
-- **The reads, at filing**: the served league's points for the London day (`fetchPoolStats(…, byDate, group, …, day)`,
+- **The reads, at filing**: the scoring league's points for the London day (`fetchPoolStats(…, byDate, group, …, day)`,
   every man in its pool, split by `returnPoints`), the stats league's Opta counts for the same day, and the opponent from
   `clubResults` over FPL's past gameweeks. Six Fantrax reads a day, one after another; any failure files the report without
   marks. `byDate` is read from Fantrax's own season list (`SEASON_926_BY_DATE`), never composed.
@@ -132,9 +134,8 @@ the match-report and team-sheet prompts.
   (`app/ratings.ts`).
 - **Counted at backfill, 1 Oct**: 17 days, GW1–GW5, 1,483 appearances by 395 men, 1,369 marked (the rest too brief);
   25 KB.
-- **One league's points**: the file records the league that marked it, and a run against another league changes nothing
-  unless `--restart`. Production serves the rehearsal league until go-live, so CI rates nothing new until it serves the
-  real one the backfill used.
+- **The scoring league's points** (`recorded.json`), whichever league is served: the file records the league that marked
+  it, and a run against another changes nothing unless `--restart`. CI rates with the real league now, as the backfill did.
 
 ## Our player rating is the match alone, read off league points — decided 1 Oct 2026
 

@@ -35,6 +35,7 @@ import {
   type SheetMan,
 } from "@epl/core";
 import { INTEL_SEASON, readIntel } from "../intel";
+import { readScoring } from "../scoring";
 import { gatherRoundFacts } from "./facts";
 import { categoryIds, matchReads, slotWorth, tallies } from "./draftReads";
 import { withFitness, type StoryCache } from "./draftFitness";
@@ -70,7 +71,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const covering = periodGameweeks(info.scoringPeriods, datedKickoffs(schedule)).find((p) => p.gameweeks.includes(gameweek));
   if (covering === undefined) throw new Error(`No Fantrax period covers gameweek ${gameweek}.`);
   const period = covering.period;
-  const [facts, history, rawResults] = await Promise.all([gatherRoundFacts(info, snapshot, period), earlierSheets(info, snapshot, period), fetchSeasonResults(FANTRAX_LEAGUE_ID).catch(() => null)]);
+  const [facts, history, rawResults, scoring] = await Promise.all([gatherRoundFacts(info, snapshot, period), earlierSheets(info, snapshot, period), fetchSeasonResults(FANTRAX_LEAGUE_ID).catch(() => null), readScoring()]);
   const results = rawResults === null ? [] : mapSeasonResults(rawResults);
   const season = await draftSeason(info, facts.table, results, facts.pedigree, period);
 
@@ -90,7 +91,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const { goals, starters } = await matchReads(gameweek, fixtures, snapshot.players);
 
   const ids = categoryIds(info);
-  const worth = slotWorth(info, reads.map((r) => r.raw), facts.teams, SLOTS);
+  const worth = slotWorth(scoring, ids, reads.map((r) => r.raw), facts.teams, SLOTS);
   const min = minimums(FANTRAX_LEAGUE_ID);
   const limits = { min: min ?? {}, max: info.roster.maxActiveByPosition };
   const projections = projectionIntel(readIntel<IntelProjections>("projections", `${INTEL_SEASON}.json`));

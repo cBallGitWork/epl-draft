@@ -34,17 +34,8 @@ jobs:
           cache: npm
       - run: npm ci
 
-      # Vercel's FANTRAX_LEAGUE_ID is the only place a league is set, so the marks are read from the league production serves.
-      - name: Ask production which league it serves
-        id: league
-        run: |
-          league=$(curl -sf --max-time 30 "${{ vars.WARM_BASE_URL }}/api/league" | jq -r '.leagueId // empty')
-          if [ -z "$league" ]; then echo "::error::production did not say which league it serves"; exit 1; fi
-          echo "id=$league" >> "$GITHUB_OUTPUT"
-
+      # The marks are the scoring league's points (`data/leagues/recorded.json`), whichever league production serves.
       - name: Rate the settled days
-        env:
-          FANTRAX_LEAGUE_ID: ${{ steps.league.outputs.id }}
         run: npm run ratings
 
       - name: Commit them, if any were rated

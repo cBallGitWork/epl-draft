@@ -48,7 +48,7 @@ export async function deskContext(input: {
     // The team sheets' reads are their own too, and every earlier period's rosters are among them.
     sheets: await sheetsDesk({ assignments, info, snapshot, facts, period, gameweeks, season, clubs, now, say }),
     // A match-day report's reads are its own, made only when one is assigned.
-    reports: await reportsDesk({ assignments, snapshot, facts, info, gameweeks, say }),
+    reports: await reportsDesk({ assignments, snapshot, facts, gameweeks, say }),
     // The Bin XI's reads are its own, made only on the Tuesday it is assigned.
     bin: await binXiDesk({ assignments, info, snapshot, facts, period, gameweeks, season, kickoffs, clubs, threads: ledger[FANTRAX_LEAGUE_ID]?.threads ?? [], say }),
     // A draft report's reads likewise: the gameweek's day reads, rosters and results, only when one is assigned.
@@ -72,6 +72,6 @@ export async function deskContext(input: {
             season,
           }),
     // The Points Dodgers read every finished match's commentary, only when the column is due.
-    dodgers: await dodgersDesk({ assignments, snapshot, facts, info, say }),
+    dodgers: await dodgersDesk({ assignments, snapshot, facts, say }),
   };
 }

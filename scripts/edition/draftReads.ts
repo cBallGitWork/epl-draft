@@ -1,7 +1,6 @@
 import {
   ASSIST,
   KEEPER_WORK,
-  categoryPoints,
   firstScored,
   idsOf,
   fetchPlFixture,
@@ -11,9 +10,11 @@ import {
   plFixtureCode,
   plGoals,
   plTeamSheets,
+  pointsFor,
   type Fixture,
   type GoalTime,
   type LeagueInfo,
+  type LeagueScoring,
   type LivePlayerPoints,
   type PlGoal,
   type RosteredTeam,
@@ -21,8 +22,8 @@ import {
   sheetOf,
 } from "@epl/core";
 
-// The draft desk's readings of one gameweek's payloads: each goal's minute and club from the PL feed, and each man's
-// points and counts, and a full match's pay, from Fantrax's day reads.
+// The draft desk's readings of one gameweek's payloads: each goal's minute and club from the PL feed, each man's points
+// and counts from Fantrax's day reads, and what a slot is paid from the scoring league's rules.
 
 type Raw = Parameters<typeof mapLivePlayerPoints>[0];
 
@@ -99,17 +100,8 @@ export function tallies(raws: readonly Raw[], ids: ReturnType<typeof categoryIds
   return out;
 }
 
-/** What Fantrax paid for a full match's minutes this gameweek, the most common payment to a man who played 90: the
- *  league prices minutes in bands the scoring rules do not spell out, so the gameweek's own payments are the reading. */
-export function appearance(raws: readonly Raw[], minutes: ReadonlySet<string>): number {
-  const paid = new Map<number, number>();
-  for (const p of raws.flatMap((raw) => mapLivePlayerPoints(raw)).flatMap((squad) => squad.players)) {
-    if (countOf(p, minutes) < 90) continue;
-    const row = p.categories.find((c) => minutes.has(c.category));
-    if (row !== undefined) paid.set(row.points, (paid.get(row.points) ?? 0) + 1);
-  }
-  return [...paid].sort((a, b) => b[1] - a[1])[0]?.[0] ?? 0;
-}
+/** A full match's minutes, football's rule. */
+const FULL_MATCH = 90;
 
 /** The most Fantrax paid in some categories to one man at a slot in a match this gameweek; 0 when it paid nothing. */
 export function mostPaid(raws: readonly Raw[], categories: ReadonlySet<string>, slot: string, slotOf: ReadonlyMap<string, string>): number {
@@ -127,25 +119,30 @@ function countOf(p: LivePlayerPoints, categories: ReadonlySet<string>): number {
   return row === undefined || row.value === null ? 0 : Number(row.value) || 0;
 }
 
-/** What each slot is paid for a return, read from the league's rules; a full match's minutes, and the most a defensive
- *  bonus or a keeper's work paid in a match, from the gameweek's own payments. A keeper's return is a clean sheet. */
-export function slotWorth(info: LeagueInfo, raws: readonly Raw[], teams: readonly RosteredTeam[], slots: readonly string[]): SlotWorth {
-  const rules = info.scoring;
-  const flat = (category: string, slot: string) => (rules === null ? 0 : (categoryPoints(rules, category, slot) ?? 0));
-  const ids = categoryIds(info);
-  const assist = firstScored(info.scoringCategories, ASSIST);
+/** What each slot is paid for a return and a full match's minutes, by the scoring league's rules; the most a defensive
+ *  bonus or a keeper's work paid in a match, from the gameweek's own payments (`ids`). A keeper's return is a clean sheet. */
+export function slotWorth(
+  scoring: LeagueScoring | null,
+  ids: ReturnType<typeof categoryIds>,
+  raws: readonly Raw[],
+  teams: readonly RosteredTeam[],
+  slots: readonly string[],
+): SlotWorth {
+  const rules = scoring?.rules ?? null;
+  const priced = (category: string, slot: string, count = 1) => (rules === null ? 0 : (pointsFor(rules, category, slot, count) ?? 0));
+  const assist = scoring === null ? null : firstScored(scoring.categories, ASSIST);
   const keeper = rules?.goaliePosition ?? null;
   const slotOf = new Map(teams.flatMap((t) => { const s = sheetOf(t); return [...s.starters, ...s.bench].map((m) => [m.fantraxId, m.slot] as const); }));
   return {
     keeper,
-    appearance: appearance(raws, ids.minutes),
+    appearance: Math.max(0, ...slots.map((slot) => priced("Min", slot, FULL_MATCH))),
     bonus: Object.fromEntries(slots.map((slot) => [slot, mostPaid(raws, slot === keeper ? ids.keeping : ids.defence, slot, slotOf)])),
     returns: Object.fromEntries(
       slots.map((slot) => [
         slot,
         (slot === keeper
-          ? [{ kind: "clean sheet" as const, worth: flat("CS", slot) }]
-          : [{ kind: "goal" as const, worth: flat("G", slot) }, { kind: "assist" as const, worth: assist === null ? 0 : flat(assist.short, slot) }, { kind: "clean sheet" as const, worth: flat("CS", slot) }]
+          ? [{ kind: "clean sheet" as const, worth: priced("CS", slot) }]
+          : [{ kind: "goal" as const, worth: priced("G", slot) }, { kind: "assist" as const, worth: assist === null ? 0 : priced(assist.short, slot) }, { kind: "clean sheet" as const, worth: priced("CS", slot) }]
         ).filter((w) => w.worth > 0),
       ]),
     ),

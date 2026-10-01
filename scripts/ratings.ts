@@ -1,40 +1,38 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import {
-  FANTRAX_LEAGUE_ID,
   clubResults,
   fetchFixtures,
-  fetchLeagueInfo,
   fetchLive,
   getFootballSnapshot,
   londonDayOf,
   mapFixtures,
-  mapLeagueInfo,
   mapLiveStats,
   isUnmapped,
   readRatingStore,
-  requireLeague,
   type Bridge,
   type Fixture,
   type PlayerMatchStats,
   type RatingStore,
 } from "@epl/core";
 import { dayFigures, markOf, playedOn } from "./edition/matchdayRatings";
+import { SCORING_LEAGUE } from "./leagues";
 import { INTEL_SEASON } from "./intel";
 import { MAPPINGS_ROOT, RATINGS_ROOT } from "./paths";
+import { readScoring } from "./scoring";
 
 // Our mark for every man in every settled match day not yet rated, into `data/ratings/26-27.json`, which the player pages
-// read. A day is settled when FPL has closed every match on it. Marks are one league's points: a file marked by another
-// league is left alone unless `--restart` asks for it again. Six Fantrax reads a day rated, one FPL read per gameweek.
+// read. A day is settled when FPL has closed every match on it. Marks are the scoring league's points, whichever is served;
+// a file marked by another league is left alone unless `--restart` asks again. Six Fantrax reads a day, one FPL per gameweek.
 
 const FILE = join(RATINGS_ROOT, `${INTEL_SEASON}.json`);
 
 /** The file as held, a fresh one, or null when it was marked by another league and nobody asked to restart. */
 function held(): RatingStore | null {
   const store = readRatingStore(existsSync(FILE) ? JSON.parse(readFileSync(FILE, "utf8")) : undefined);
-  if (store.manifest.leagueId === FANTRAX_LEAGUE_ID) return store;
+  if (store.manifest.leagueId === SCORING_LEAGUE.leagueId) return store;
   if (store.manifest.leagueId !== "" && !process.argv.includes("--restart")) return null;
-  return { manifest: { season: INTEL_SEASON, leagueId: FANTRAX_LEAGUE_ID, updatedAt: "", days: [] }, marks: {} };
+  return { manifest: { season: INTEL_SEASON, leagueId: SCORING_LEAGUE.leagueId, updatedAt: "", days: [] }, marks: {} };
 }
 
 /** London days on which every match has finished and FPL has settled it, oldest first. */
@@ -48,13 +46,12 @@ function settledDays(fixtures: readonly Fixture[]): Map<string, Fixture[]> {
 }
 
 async function main(): Promise<void> {
-  requireLeague(FANTRAX_LEAGUE_ID);
   const store = held();
-  if (store === null) return console.log(`ratings: the file is marked from another league than ${FANTRAX_LEAGUE_ID}; --restart to mark it again.`);
-  const [fixtures, info] = await Promise.all([fetchFixtures().then(mapFixtures), fetchLeagueInfo(FANTRAX_LEAGUE_ID).then(mapLeagueInfo)]);
+  if (store === null) return console.log(`ratings: the file is marked from another league than ${SCORING_LEAGUE.leagueId}; --restart to mark it again.`);
+  const [fixtures, scoring] = await Promise.all([fetchFixtures().then(mapFixtures), readScoring()]);
   const due = [...settledDays(fixtures)].filter(([day]) => !store.manifest.days.includes(day));
   if (due.length === 0) return console.log(`ratings: no day due; ${store.manifest.days.length} rated.`);
-  if (info.scoring === null) throw new Error("the league described no scoring");
+  if (scoring === null) throw new Error("the scoring league described no scoring");
 
   const snapshot = await getFootballSnapshot();
   const gameweeks = [...new Set(fixtures.filter((f) => f.status === "finished" && f.gameweek !== null).map((f) => f.gameweek!))];
@@ -65,7 +62,7 @@ async function main(): Promise<void> {
   const idOfCode = new Map(snapshot.players.map((p) => [p.code, p.id]));
 
   for (const [day, on] of due) {
-    const figures = await dayFigures(FANTRAX_LEAGUE_ID, day);
+    const figures = await dayFigures(day);
     let rated = 0;
     for (const fantraxId of playedOn(figures)) {
       const entry = bridge[fantraxId];
@@ -77,7 +74,7 @@ async function main(): Promise<void> {
       const club = snapshot.players.find((p) => p.code === code)?.clubId;
       // A man whose club now is neither side moved since; his opponent is unknown, so he is left unrated.
       if (code == null || fixture === undefined || fixture.kickoff === null || (club !== fixture.homeClubId && club !== fixture.awayClubId)) continue;
-      const mark = markOf(figures, info.scoring, fantraxId, {
+      const mark = markOf(figures, scoring.rules, fantraxId, {
         minutes: figures.shorts.get(fantraxId)?.Min ?? 0,
         opponentClubId: club === fixture.homeClubId ? fixture.awayClubId : fixture.homeClubId,
         kickoff: fixture.kickoff,

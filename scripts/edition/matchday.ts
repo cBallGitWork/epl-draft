@@ -1,6 +1,5 @@
 import {
   DASH,
-  FANTRAX_LEAGUE_ID,
   clubResults,
   fetchFixtures,
   fetchHighlightsFeed,
@@ -35,7 +34,6 @@ import {
   type PlayerMatchStats,
   type ReportDayInput,
   type ReportMatchInput,
-  type ScoringRules,
   type SeasonLine,
 } from "@epl/core";
 import { INTEL_SEASON, readIntel } from "../intel";
@@ -83,8 +81,6 @@ export async function matchdayInput(opts: {
   snapshot: FootballSnapshot;
   facts: DeskFacts;
   periodGameweeks: readonly number[];
-  /** The served league's scoring, which our marks split its points by. */
-  rules: ScoringRules | null;
   pick: (fixture: Fixture) => boolean;
   say: (message: string) => void;
 }): Promise<ReportDayInput | null> {
@@ -107,8 +103,6 @@ export async function matchdayInput(opts: {
   const codeOfId = new Map(snapshot.players.map((p) => [p.id, p.code]));
   const liveLines = new Map(snapshot.stats.map((s) => [codeOfId.get(s.playerId) ?? -1, { minutes: s.minutes, saves: s.saves, expectedGoals: s.expectedGoals, expectedAssists: s.expectedAssists }]));
   const markFor = await dayMarks({
-    leagueId: FANTRAX_LEAGUE_ID,
-    rules: opts.rules,
     day,
     results: clubResults(season, [...past, snapshot.stats], new Map(snapshot.players.map((p) => [p.id, p.clubId]))),
     fantraxIds: league.fantraxIds,
