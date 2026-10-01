@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import type { PresserQuote } from "@epl/core";
 import { display } from "./pressers";
 import { presserEdition } from "./presserWeek";
 
@@ -51,7 +52,16 @@ describe("presserEdition", () => {
       { said: "2026-09-18T08:00:00.000Z", club: "Arsenal" },
       { said: "2026-09-18T12:30:00.000Z", club: "Spurs" },
     ],
-    quotes: [{ at: "2026-09-18T08:00:00.000Z", club: "Arsenal" }],
+    // A real quote's shape (data/intel/pressers/26-27.json): `said` is the SPEAKER, `at` the conference.
+    quotes: [
+      {
+        club: 3,
+        text: "In form, in the opponent, in the relationship that we have within that unit, there are a lot of factors.",
+        said: "Mikel Arteta",
+        about: "Eberechi Eze on the left wing",
+        at: "2026-09-18T08:00:00.000Z",
+      },
+    ],
     spoke: [{ at: "2026-09-17T12:30:00.000Z", club: "Chelsea" }],
   };
 
@@ -73,6 +83,11 @@ describe("presserEdition", () => {
     // 23:30 London on the 17th is 22:30Z; a UTC key would file it a day early.
     const late = { lines: [{ said: "2026-09-17T23:30:00.000Z" }], quotes: [], spoke: [] };
     expect(presserEdition("2026-09-18", late).lines).toHaveLength(1);
+  });
+
+  it("files an undated quote on no day", () => {
+    const quote: PresserQuote = { club: 3, said: "Mikel Arteta", text: "We will see." };
+    expect(presserEdition("2026-09-18", { lines: [], quotes: [quote], spoke: [] }).quotes).toHaveLength(0);
   });
 
   it("drops a row whose instant cannot be read", () => {

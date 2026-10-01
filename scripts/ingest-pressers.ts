@@ -171,7 +171,8 @@ function mergeDay(day: string, fresh: { rows: unknown[]; spoke: unknown[]; quote
         rows?: { said?: string }[];
       })
     : {};
-  const elsewhere = (at: unknown): boolean => typeof at !== "string" || !at.startsWith(day);
+  // An undated row belongs to no day and no edition; keeping it duplicated the re-ingested day.
+  const elsewhere = (at: unknown): boolean => typeof at === "string" && !at.startsWith(day);
   return {
     rows: [...(kept.rows ?? []).filter((row) => elsewhere(row.said)), ...fresh.rows],
     spoke: [...(kept.spoke ?? []).filter((row) => elsewhere(row.at)), ...fresh.spoke],

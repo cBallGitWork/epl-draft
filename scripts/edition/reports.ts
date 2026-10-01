@@ -1,4 +1,4 @@
-import { buildReportsBrief, deskDay, londonDayOf, type Assignment, type FootballSnapshot, type MatchDesk } from "@epl/core";
+import { buildReportsBrief, deskDay, onLondonDay, type Assignment, type FootballSnapshot, type MatchDesk } from "@epl/core";
 import type { DeskFacts } from "./facts";
 import { matchdayInput } from "./matchday";
 
@@ -26,7 +26,7 @@ export async function reportsDesk(input: {
       snapshot: input.snapshot,
       facts: input.facts,
       periodGameweeks: input.gameweeks,
-      pick: (fixture) => londonDayOf(fixture.kickoff ?? "") === day,
+      pick: (fixture) => onLondonDay(fixture.kickoff, day),
       say: input.say,
     });
     if (read === null || read.matches.length === 0) {

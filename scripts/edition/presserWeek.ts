@@ -1,4 +1,4 @@
-import { MS_PER_DAY, londonDayOf, type Club, type Fixture, type PresserLine, type RosteredTeam } from "@epl/core";
+import { MS_PER_DAY, londonDayOf, onLondonDay, type Club, type Fixture, type PresserLine, type RosteredTeam } from "@epl/core";
 import {
   presserFixtures,
   presserGameweek,
@@ -88,17 +88,16 @@ export function presserEdition<
   spoke: S[];
 } {
   return {
-    lines: onDay(all.lines, day),
-    quotes: onDay(all.quotes, day),
-    spoke: onDay(all.spoke, day),
+    lines: onDay(all.lines, day, (row) => row.said),
+    // A quote's `said` is the speaker's name; its day is `at`.
+    quotes: onDay(all.quotes, day, (row) => row.at),
+    spoke: onDay(all.spoke, day, (row) => row.at),
   };
 }
 
-/** Only what was said on one London day. */
-function onDay<T extends { said?: string; at?: string }>(rows: readonly T[], day: string): T[] {
-  return rows.filter((row) => {
-    return londonDayOf(row.said ?? row.at ?? "") === day;
-  });
+/** Only what was said on one London day; `when` names the row's instant. */
+function onDay<T>(rows: readonly T[], day: string, when: (row: T) => string | undefined): T[] {
+  return rows.filter((row) => onLondonDay(when(row), day));
 }
 
 /** One assignment per press-conference DAY. Craig's week runs pressers Thursday
