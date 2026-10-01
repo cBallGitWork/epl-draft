@@ -8,9 +8,7 @@ export interface RatedMatch {
   minutes: number;
   /** His league points, and how many came from goals and assists and from a clean sheet. */
   points: { total: number; attacking: number; cleanSheet: number } | null;
-  /** What a goal and an assist are worth to him in the league, so his chances can be priced. */
-  prices: { goal: number; assist: number } | null;
-  /** Football counts plus FPL's `xg`/`xa`; an absent stat is one the feed did not cover. */
+  /** Football counts; an absent stat is one the feed did not cover. */
   stats: Readonly<Record<string, number | null | undefined>>;
   /** The opponent's attack and defence before the match, 1.0 the league average. */
   opponent: { attack: number; defence: number } | null;
@@ -30,9 +28,6 @@ export interface MatchRating {
   /** His points after the opponent and the parts, which the mark is read from. */
   adjusted: number | null;
   parts: RatedPart[];
-  /** The mark his chances were worth, off the same table. */
-  underlying: number | null;
-  underlyingPoints: number | null;
   /** Goal, assist and clean-sheet points he got less those expected of him. */
   vsExpected: number | null;
 }
@@ -52,14 +47,6 @@ export function markFor(points: number, marks: RatingWeights["marks"]): number {
 function opponentFactor(strength: number | undefined, w: RatingWeights): number {
   if (strength == null) return 1;
   return Math.min(w.opponent.max, Math.max(w.opponent.min, strength ** w.opponent.exponent));
-}
-
-function underlyingPoints(match: RatedMatch, w: RatingWeights): number | null {
-  const { points, prices, stats } = match;
-  if (!points || !prices || stats.xg == null) return null;
-  const chances = stats.xg * prices.goal + (stats.xa ?? 0) * prices.assist;
-  const volume = (stats.shots ?? 0) * w.underlying.shots + (stats.keyPasses ?? 0) * w.underlying.keyPasses;
-  return points.total - points.attacking + chances + volume - w.underlying.ordinaryPer90 * (match.minutes / 90);
 }
 
 export function rateMatch(match: RatedMatch, w: RatingWeights): MatchRating {
@@ -83,14 +70,11 @@ export function rateMatch(match: RatedMatch, w: RatingWeights): MatchRating {
   const happened = w.ratedAnyway.some((stat) => (stats[stat] ?? 0) > 0);
   const rated = points != null && (match.minutes >= w.minMinutes || happened);
   const adjusted = rated ? parts.reduce((sum, p) => sum + (p.points ?? 0), 0) : null;
-  const under = rated ? underlyingPoints(match, w) : null;
   const e = match.expected;
   return {
     rating: adjusted == null ? null : oneDecimal(markFor(adjusted, w.marks)),
     adjusted,
     parts,
-    underlying: under == null ? null : oneDecimal(markFor(under, w.marks)),
-    underlyingPoints: under,
     vsExpected: points && e ? points.attacking + points.cleanSheet - e.attacking - e.cleanSheet : null,
   };
 }

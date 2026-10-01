@@ -40,7 +40,7 @@ def card(row, note=""):
     return {
         "name": row["name"], "pos": row.pos, "club": row.club, "opp": row.opp, "home": bool(row.home),
         "gw": int(row.gw), "minutes": int(row.minutes), "subOn": clean(row.subOn), "score": row.score,
-        "rating": row.rating, "underlying": clean(row.underlying), "pts": clean(row.pts),
+        "rating": row.rating, "pts": clean(row.pts),
         "adjusted": clean(row.adjusted), "vsExpected": clean(row.vsExpected), "source": row.pointsSource,
         "fotmob": clean(row.fotmobRating), "sofascore": clean(row.sofascoreRating),
         "oppAttack": clean(row.oppAttack), "oppDefence": clean(row.oppDefence),
@@ -73,22 +73,8 @@ def kind(title, question, cards, verdict):
     kinds.append({"title": title, "question": question, "cards": cards, "verdict": verdict(cards) if cards else ""})
 
 m = lambda c: f'{c["rating"]:.1f}'
-u = lambda c: f'{c["underlying"]:.1f}' if c["underlying"] is not None else "—"
 attackers = r[r.pos.isin(["MID", "FWD"]) & (r.minutes >= 80)]
 blank = (attackers.goals == 0) & (attackers.assists == 0)
-busy = attackers[blank].sort_values("underlyingPoints", ascending=False)
-quiet = attackers[blank & (attackers.pts == busy.iloc[0].pts)].sort_values("underlyingPoints")
-kind("Two blanks: one unlucky, one anonymous",
-     "Same points, same rating. Underlying should tell the busy blank from the anonymous one.",
-     [card(busy.iloc[0], "The season's biggest underlying in a blank"), card(quiet.iloc[0], "Same points, nothing happening")],
-     lambda c: f"Both rate {m(c[0])}. Underlying is {u(c[0])} against {u(c[1])}: the first will come good if he keeps getting those chances.")
-
-lucky = attackers[(attackers.goals == 1) & (attackers.assists == 0) & (attackers.penaltyGoals == 0)].sort_values("xg")
-kind("A lucky goal",
-     "The rating pays the goal; Underlying should say there was little behind it.",
-     [card(lucky.iloc[0], "One goal from the season's smallest xG")],
-     lambda c: f"Rated {m(c[0])} for the goal, Underlying {u(c[0])}: one shot, almost no chance, and no sign it repeats.")
-
 star_blank = attackers[attackers.club.isin(TOP_ATTACK) & attackers.opp.isin(WORST) & blank]
 star_score = attackers[attackers.club.isin(TOP_ATTACK) & attackers.opp.isin(WORST) & (attackers.goals == 1) & (attackers.assists == 0) & (attackers.penaltyGoals == 0)]
 hb, hs = star_blank[star_blank.name == "Haaland"], star_score[star_score.name == "Haaland"]
@@ -134,20 +120,17 @@ kind("A goal from outside the box",
 
 # ---- seasons
 season = r.groupby(["name", "pos", "club"]).agg(
-    apps=("rating", "size"), mins=("minutes", "sum"), avg=("rating", "mean"), und=("underlying", "mean"),
+    apps=("rating", "size"), mins=("minutes", "sum"), avg=("rating", "mean"),
     pts=("pts", "mean"), vs=("vsExpected", "sum"), goals=("goals", "sum"), assists=("assists", "sum"),
     tens=("rating", lambda s: int((s >= 9.95).sum()))).reset_index()
 season = season[season.mins >= 900].copy()
 season["rank"] = season.avg.rank(ascending=False, method="min").astype(int)
-season["urank"] = season.und.rank(ascending=False, method="min").astype(int)
-season["gap"] = season.und - season.avg
 STARS = ["Haaland", "B.Fernandes", "Saka", "Rice", "Gabriel", "Virgil", "M.Salah", "Palmer", "Raya", "Semenyo",
          "Mbeumo", "Watkins", "João Pedro", "Bruno G.", "Wood", "Isak", "Cunha", "Wirtz", "Ekitiké", "Gyökeres"]
 rnd = lambda f: json.loads(f.round(2).to_json(orient="records"))
 stars = rnd(season[season.name.isin(STARS)].sort_values("avg", ascending=False))
 promoted = rnd(season[season.club.isin(PROMOTED) & season.pos.isin(["FWD", "MID"])].sort_values("vs", ascending=False).head(6))
 by_pos = {p: rnd(season[season.pos == p].sort_values("avg", ascending=False).head(6)) for p in ["GK", "DEF", "MID", "FWD"]}
-due = rnd(season[season.pos.isin(["MID", "FWD"])].sort_values("gap", ascending=False).head(8))
 best_vs = rnd(season.sort_values("vs", ascending=False).head(6))
 worst_vs = rnd(season.sort_values("vs").head(6))
 
@@ -160,7 +143,7 @@ strength_corr = {"old": {"attack": round(float(strength.oldAtt.corr(strength.gf)
                  "new": {"attack": round(float(strength.att.corr(strength.gf)), 2), "defence": round(float(strength.dfn.corr(-strength.ga)), 2)}}
 
 full = r[r.minutes >= 60]
-spread = {p: {"median": round(float(g.rating.median()), 2), "underlying": round(float(g.underlying.median()), 2),
+spread = {p: {"median": round(float(g.rating.median()), 2),
               "p90": round(float(g.rating.quantile(.9)), 2), "nines": int((g.rating >= 9).sum()),
               "tens": int((g.rating >= 9.95).sum()), "ones": int((g.rating <= 1.05).sum()), "n": len(g)}
           for p, g in full.groupby("pos")}
@@ -171,10 +154,9 @@ bottom = [card(x) for _, x in r.sort_values("adjusted").head(12).iterrows()]
 sources = d[d.rating.notna()].pointsSource.value_counts().to_dict()
 
 out = {"rated": len(r), "matches": len(d), "ladder": ladder, "kinds": kinds, "stars": stars, "promoted": promoted,
-       "byPos": by_pos, "due": due, "bestVs": best_vs, "worstVs": worst_vs, "spread": spread, "bands": bands,
+       "byPos": by_pos, "bestVs": best_vs, "worstVs": worst_vs, "spread": spread, "bands": bands,
        "agreement": agreement, "tensAll": int((r.rating >= 9.95).sum()), "onesAll": int((r.rating <= 1.05).sum()), "top": top, "bottom": bottom, "sources": sources,
-       "strength": rnd(strength), "strengthCorr": strength_corr,
-       "underlyingFit": json.loads((HERE / "underlying-fit.json").read_text())}
+       "strength": rnd(strength), "strengthCorr": strength_corr}
 (HERE / "review.json").write_text(json.dumps(out, default=lambda o: None if pd.isna(o) else o))
 print("ladder", [(b["band"], b["count"], len(b["examples"])) for b in ladder])
 print("strength corr", strength_corr, "sources", sources)

@@ -25,9 +25,6 @@ export interface RatingWeights {
   parts: readonly Part[];
   /** League points → mark, straight lines between; below the first and above the last hold. */
   marks: readonly (readonly [number, number])[];
-  /** The points his chances were worth: xG and xA at his goal and assist prices, plus shooting and
-   *  key passes above an ordinary man's rate for his minutes. */
-  underlying: { shots: number; keyPasses: number; ordinaryPer90: number };
 }
 
 export const RATING_WEIGHTS: RatingWeights = {
@@ -67,5 +64,4 @@ export const RATING_WEIGHTS: RatingWeights = {
     [16, 9.5],
     [22, 10],
   ],
-  underlying: { shots: 0.25, keyPasses: 0.15, ordinaryPer90: 0.45 },
 };

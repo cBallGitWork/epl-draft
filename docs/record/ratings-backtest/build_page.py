@@ -86,7 +86,7 @@ def card(c):
     if c.get("oppDefence") is not None:
         opp = f'<span title="The opponent before the match: goals and xG so far against the league\'s, 1.0 average">their attack {c["oppAttack"]:.2f} · defence {c["oppDefence"]:.2f}</span>'
     return f"""<article class="card">
-  <div class="mark {band(c['rating'])}"><span>{fmt(c['rating'])}</span><small class="und {band(c['underlying'])}">U {fmt(c['underlying'])}</small></div>
+  <div class="mark {band(c['rating'])}"><span>{fmt(c['rating'])}</span><small>{fmt(c['pts'], 0)} pts</small></div>
   <div class="body">
     <header><strong>{e(c['name'])}</strong> <span class="pos">{c['pos']}</span>
       <span class="fx">{e(c['club'])} {venue} {e(c['opp'])}{score} · GW{c['gw']} · {c['minutes']}′{sub}</span></header>
@@ -116,7 +116,7 @@ def table(rows, cols):
 
 SEASON_COLS = [("name", "Player"), ("club", "Club"), ("pos", "Pos"), ("apps", "Apps", "n"), ("goals", "G", "n"),
                ("assists", "A", "n"), ("pts", "Pts/gm", "n"), ("avg", "Rating", "n hl"), ("rank", "Rank", "n"),
-               ("und", "Underlying", "n"), ("urank", "Rank", "n"), ("vs", "vs exp.", "n"), ("tens", "10s", "n")]
+               ("vs", "vs exp.", "n"), ("tens", "10s", "n")]
 
 
 def marks_table():
@@ -138,10 +138,7 @@ STAT_VERDICTS = [
     ("Rating", "Big chances missed, missed pens", "BCM · PKM", "−1 point each on top of the league's own −2 for a missed pen."),
     ("Rating", "Errors, pens conceded, dispossessed", "ErG · ErS · Pen · DIS", "−2, −0.5, −1.5, −0.15."),
     ("Rating", "Long-range goals, pens won, off the line, goals prevented", "GOB · PKD · CLO · shots export", "+1, +1, +1.5, +1 per goal prevented."),
-    ("Underlying", "xG and xA at his goal and assist prices", "FPL xG · xA", "The points his chances were worth. Over five matches it predicts the next five better than his real points (0.356 against 0.337)."),
-    ("Underlying", "Shots", "S", "On its own 0.245 with the next five; adds on top of xG. +0.25 each."),
-    ("Underlying", "Key passes", "KP", "Adds again on top: +0.15 each. Less an ordinary man's 0.45 per 90 of the two."),
-    ("Out", "Touches in the opponent's box", "touches export", "0.164 on its own, but nothing once shots are in (−0.04). It moves with shots."),
+    ("Out", "Shots, xG, key passes, touches in the box", "—", "What a man is likely to do next is the projections' job. The rating is the match."),
     ("Out", "Successful dribbles", "FotMob only", "The stats league has attempts only, so we cannot read it live."),
     ("Out", "The sister model's team strength", "data/intel/strength", "Too smoothed: Wolves' defence read as average while conceding 1.79 a game."),
 ]
@@ -165,10 +162,10 @@ kinds_html = "".join(
     f'<section class="kind"><h3>{e(k["title"])}</h3><p class="q">{e(k["question"])}</p><p class="verdict">{e(k["verdict"])}</p><div class="cards">{"".join(card(c) for c in k["cards"])}</div></section>'
     for k in R["kinds"])
 sp = R["spread"]
-spread_rows = "".join(f'<tr><td>{p}</td><td class="n">{sp[p]["n"]:,}</td><td class="n">{sp[p]["median"]}</td><td class="n">{sp[p]["underlying"]}</td><td class="n">{sp[p]["nines"]}</td><td class="n">{sp[p]["tens"]}</td><td class="n">{sp[p]["ones"]}</td></tr>' for p in ["GK", "DEF", "MID", "FWD"])
+spread_rows = "".join(f'<tr><td>{p}</td><td class="n">{sp[p]["n"]:,}</td><td class="n">{sp[p]["median"]}</td><td class="n">{sp[p]["nines"]}</td><td class="n">{sp[p]["tens"]}</td><td class="n">{sp[p]["ones"]}</td></tr>' for p in ["GK", "DEF", "MID", "FWD"])
 ag, sc, src = R["agreement"], R["strengthCorr"], R["sources"]
 stat_rows = "".join(f'<tr><td><span class="tag t-{v[0].lower()}">{v[0]}</span></td><td>{e(v[1])}</td><td class="src">{e(v[2])}</td><td>{e(v[3])}</td></tr>' for v in STAT_VERDICTS)
-pos_html = "".join(f'<div><h4>{p}</h4>{table(R["byPos"][p], [("name", "Player"), ("club", "Club"), ("avg", "Rating", "n hl"), ("und", "Und.", "n")])}</div>' for p in ["GK", "DEF", "MID", "FWD"])
+pos_html = "".join(f'<div><h4>{p}</h4>{table(R["byPos"][p], [("name", "Player"), ("club", "Club"), ("avg", "Rating", "n hl"), ("pts", "Pts/gm", "n")])}</div>' for p in ["GK", "DEF", "MID", "FWD"])
 tens, ones = R["tensAll"], R["onesAll"]
 haaland = next((s for s in R["stars"] if s["name"] == "Haaland"), None)
 
@@ -179,16 +176,15 @@ page = f"""<title>Draft Match Ratings</title>
 <style>
 .mark small.und {{ font: 700 12px var(--digits); }}
 .t-rating {{ background: color-mix(in oklch, var(--derived) 22%, transparent); color: var(--derived); }}
-.t-underlying {{ background: color-mix(in oklch, var(--good) 22%, transparent); color: var(--good); }}
 .t-out {{ background: color-mix(in oklch, var(--bad) 20%, transparent); color: var(--bad); }}
 table.marks {{ width: auto; min-width: 180px; }}
 .changes li {{ margin-bottom: 4px; }}
 </style>
 <div class="wrap">
 <header style="display:grid;gap:12px">
-  <p class="small">Tim Hortons Pro League · second draft for review · 25/26 backtest</p>
+  <p class="small">Tim Hortons Pro League · third draft for review · 25/26 backtest</p>
   <h1>Our own match rating, <em>out of ten</em></h1>
-  <p class="lede">Every Premier League appearance of 25/26, {R['rated']:,} long enough to rate, marked from the real league's own Fantrax points. The opponent and what the league does not score move the points; one table turns points into a mark. Each card carries a second mark, <b>U</b> for Underlying: the points his chances were worth, which says whether a bad day was bad luck.</p>
+  <p class="lede">Every Premier League appearance of 25/26, {R['rated']:,} long enough to rate, marked from the real league's own Fantrax points. The opponent and what the league does not score move the points; one table turns points into a mark. The small figure under each mark is his league points.</p>
 </header>
 
 <section>
@@ -199,7 +195,8 @@ table.marks {{ width: auto; min-width: 180px; }}
     <li><b>Fantrax points:</b> the real league's own points from Fantrax for {src.get('fantrax', 0):,} matches. The other {src.get('rules', 0):,} are men Fantrax no longer lists (relegated or gone abroad), priced by the league's own rules, which reproduce Fantrax's points exactly in 95.6% of matches and within a point in 99.6%.</li>
     <li><b>Points lead:</b> mark and league points correlate at {ag['points']}.</li>
     <li><b>Being terrible:</b> a big chance missed now costs a point before the table, an error leading to a goal two.</li>
-    <li><b>Good signs:</b> shots, xG and key passes moved out of the rating into Underlying, so a busy blank rates as a blank but shows as promising.</li>
+    <li><b>Underlying is gone:</b> what a man will do next is the projections' job, so the mark is the match alone.</li>
+    <li><b>Haaland</b> stays 7th: good, a little under what was expected of him.</li>
   </ul>
 </section>
 
@@ -214,16 +211,15 @@ table.marks {{ width: auto; min-width: 180px; }}
 <section>
   <h2>Questions for you</h2>
   <ol class="qs">
-    <li><b>Haaland is 7th on rating, 2nd on Underlying.</b> The real league pays a forward 4 a goal, so his 27 goals are worth less than Fernandes's assists. That is the league's scoring speaking. Right?</li>
     <li><b>The points table.</b> 2 points is 4.5, 6 is 6.8, 10 is 8.3, 16 is 9.5, 22 is 10. Steeper or flatter anywhere?</li>
-    <li><b>Underlying as its own mark, on the same table.</b> Useful beside the rating, or better as a five-match average on the player page, where it predicts best?</li>
+    <li><b>Two blanks rate the same.</b> The season's busiest attacking blank and an anonymous one on the same points both rate 4.1. Leave it to the points, or give activity a small say (half a mark at most)?</li>
     <li><b>Big chances missed at −1 point.</b> Enough, or should it be −2 like an error?</li>
   </ol>
 </section>
 
 <section>
   <h2>The ladder, 10 down to 1</h2>
-  <p class="q">Real matches for each whole mark, across positions. The big number is the rating; U underneath is Underlying.</p>
+  <p class="q">Real matches for each whole mark, across positions. Under each mark, his league points.</p>
   {ladder_html}
 </section>
 
@@ -237,7 +233,6 @@ table.marks {{ width: auto; min-width: 180px; }}
   <p class="q">Season averages, 900 minutes or more. "vs exp." sums his goal, assist and clean-sheet points against what the projection expected before each match.</p>
   {table(R['stars'], SEASON_COLS)}
   <div class="grid2">
-    <div><h4>Unlucky: Underlying furthest above rating</h4>{table(R['due'], [("name","Player"),("club","Club"),("avg","Rating","n"),("und","Und.","n hl"),("gap","Gap","n")])}</div>
     <div><h4>Promoted clubs' attackers, by vs expected</h4>{table(R['promoted'], [("name","Player"),("club","Club"),("goals","G","n"),("avg","Rating","n hl"),("vs","vs exp.","n")])}</div>
   </div>
   <div class="grid2">
@@ -258,7 +253,7 @@ table.marks {{ width: auto; min-width: 180px; }}
   <h2>How the marks spread</h2>
   <div class="grid2">
     <div>{histogram()}<p class="small">Every rated match, rounded to the whole mark.</p></div>
-    <div><div class="scroll"><table><thead><tr><th>Pos</th><th class="n">60+ min</th><th class="n">Median</th><th class="n">Und.</th><th class="n">9s</th><th class="n">10s</th><th class="n">1s</th></tr></thead><tbody>{spread_rows}</tbody></table></div>
+    <div><div class="scroll"><table><thead><tr><th>Pos</th><th class="n">60+ min</th><th class="n">Median</th><th class="n">9s</th><th class="n">10s</th><th class="n">1s</th></tr></thead><tbody>{spread_rows}</tbody></table></div>
     <p class="small" style="margin-top:8px">Correlation with league points {ag['points']}; with the FotMob/SofaScore average {ag['consensus']}.</p></div>
   </div>
 </section>

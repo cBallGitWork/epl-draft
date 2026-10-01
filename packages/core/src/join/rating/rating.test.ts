@@ -4,13 +4,11 @@ import type { RatedMatch } from "./rating";
 import { RATING_WEIGHTS } from "./weights";
 
 const AVERAGE = { attack: 1, defence: 1 };
-const FORWARD = { goal: 4, assist: 3 };
 
 /** A forward's ninety-minute blank against an average side: two points for his minutes. */
 const match = (over: Partial<RatedMatch> = {}): RatedMatch => ({
   minutes: 90,
   points: { total: 2, attacking: 0, cleanSheet: 0 },
-  prices: FORWARD,
   opponent: AVERAGE,
   stats: {},
   ...over,
@@ -66,24 +64,6 @@ describe("rateMatch", () => {
     const parts = rate(match()).parts;
     expect(parts.find((p) => p.name === "mistakes")?.points).toBeNull();
     expect(parts.find((p) => p.name === "points")?.points).toBe(2);
-  });
-});
-
-describe("underlying", () => {
-  it("tells a busy blank from a quiet one, though both rate the same", () => {
-    const quiet = rate(match({ stats: { xg: 0.05, xa: 0, shots: 0, keyPasses: 0 } }));
-    const busy = rate(match({ stats: { xg: 1.2, xa: 0.4, shots: 6, keyPasses: 3 } }));
-    expect(busy.rating).toBe(quiet.rating);
-    expect(busy.underlying ?? 0).toBeGreaterThan((quiet.underlying ?? 0) + 1.5);
-  });
-
-  it("marks a lucky goal's underlying below its rating", () => {
-    const lucky = rate(match({ points: scored(1), stats: { xg: 0.04, xa: 0, shots: 1, keyPasses: 0 } }));
-    expect(lucky.underlying ?? 10).toBeLessThan(lucky.rating ?? 0);
-  });
-
-  it("has no reading without xG", () => {
-    expect(rate(match()).underlying).toBeNull();
   });
 });
 

@@ -40,7 +40,6 @@ const out = rows.map((r) => {
   const m: RatedMatch = {
     minutes: r.minutes,
     points: r.points,
-    prices: { goal, assist },
     stats,
     opponent: opp,
     expected: e ? { attacking: e.goals * goal + e.assists * assist, cleanSheet: r.minutes >= 60 ? e.cleanSheet * sheet : 0 } : null,
@@ -50,13 +49,10 @@ const out = rows.map((r) => {
     ...r,
     oppAttack: opp?.attack ?? null, oppDefence: opp?.defence ?? null,
     pts: r.points?.total ?? null,
-    rating: rated.rating, adjusted: rated.adjusted, underlying: rated.underlying,
-    underlyingPoints: rated.underlyingPoints, vsExpected: rated.vsExpected,
+    rating: rated.rating, adjusted: rated.adjusted, vsExpected: rated.vsExpected,
     parts: Object.fromEntries(rated.parts.map((p) => [p.name, p.points])),
   };
 });
 writeFileSync(`${dir}ratings-25-26.json`, JSON.stringify(out));
 const rated = out.filter((r) => r.rating != null);
-const outfield = rows.filter((r) => r.pos !== "GK" && r.minutes > 0);
-const volume = outfield.reduce((s, r) => s + 0.25 * (r.shots ?? 0) + 0.15 * (r.keyPasses ?? 0), 0);
-console.log("rated", rated.length, "of", out.length, "| ordinary volume per 90:", (volume / outfield.reduce((s, r) => s + r.minutes, 0) * 90).toFixed(3));
+console.log("rated", rated.length, "of", out.length);

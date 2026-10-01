@@ -83,16 +83,15 @@ a { color: var(--derived); }
 <style>
 .mark small.und { font: 700 12px var(--digits); }
 .t-rating { background: color-mix(in oklch, var(--derived) 22%, transparent); color: var(--derived); }
-.t-underlying { background: color-mix(in oklch, var(--good) 22%, transparent); color: var(--good); }
 .t-out { background: color-mix(in oklch, var(--bad) 20%, transparent); color: var(--bad); }
 table.marks { width: auto; min-width: 180px; }
 .changes li { margin-bottom: 4px; }
 </style>
 <div class="wrap">
 <header style="display:grid;gap:12px">
-  <p class="small">Tim Hortons Pro League · second draft for review · 25/26 backtest</p>
+  <p class="small">Tim Hortons Pro League · third draft for review · 25/26 backtest</p>
   <h1>Our own match rating, <em>out of ten</em></h1>
-  <p class="lede">Every Premier League appearance of 25/26, 10,521 long enough to rate, marked from the real league's own Fantrax points. The opponent and what the league does not score move the points; one table turns points into a mark. Each card carries a second mark, <b>U</b> for Underlying: the points his chances were worth, which says whether a bad day was bad luck.</p>
+  <p class="lede">Every Premier League appearance of 25/26, 10,521 long enough to rate, marked from the real league's own Fantrax points. The opponent and what the league does not score move the points; one table turns points into a mark. The small figure under each mark is his league points.</p>
 </header>
 
 <section>
@@ -103,7 +102,8 @@ table.marks { width: auto; min-width: 180px; }
     <li><b>Fantrax points:</b> the real league's own points from Fantrax for 7,937 matches. The other 2,584 are men Fantrax no longer lists (relegated or gone abroad), priced by the league's own rules, which reproduce Fantrax's points exactly in 95.6% of matches and within a point in 99.6%.</li>
     <li><b>Points lead:</b> mark and league points correlate at 0.943.</li>
     <li><b>Being terrible:</b> a big chance missed now costs a point before the table, an error leading to a goal two.</li>
-    <li><b>Good signs:</b> shots, xG and key passes moved out of the rating into Underlying, so a busy blank rates as a blank but shows as promising.</li>
+    <li><b>Underlying is gone:</b> what a man will do next is the projections' job, so the mark is the match alone.</li>
+    <li><b>Haaland</b> stays 7th: good, a little under what was expected of him.</li>
   </ul>
 </section>
 
@@ -118,18 +118,17 @@ table.marks { width: auto; min-width: 180px; }
 <section>
   <h2>Questions for you</h2>
   <ol class="qs">
-    <li><b>Haaland is 7th on rating, 2nd on Underlying.</b> The real league pays a forward 4 a goal, so his 27 goals are worth less than Fernandes's assists. That is the league's scoring speaking. Right?</li>
     <li><b>The points table.</b> 2 points is 4.5, 6 is 6.8, 10 is 8.3, 16 is 9.5, 22 is 10. Steeper or flatter anywhere?</li>
-    <li><b>Underlying as its own mark, on the same table.</b> Useful beside the rating, or better as a five-match average on the player page, where it predicts best?</li>
+    <li><b>Two blanks rate the same.</b> The season's busiest attacking blank and an anonymous one on the same points both rate 4.1. Leave it to the points, or give activity a small say (half a mark at most)?</li>
     <li><b>Big chances missed at −1 point.</b> Enough, or should it be −2 like an error?</li>
   </ol>
 </section>
 
 <section>
   <h2>The ladder, 10 down to 1</h2>
-  <p class="q">Real matches for each whole mark, across positions. The big number is the rating; U underneath is Underlying.</p>
+  <p class="q">Real matches for each whole mark, across positions. Under each mark, his league points.</p>
   <div class="rung"><div class="rung-h"><span class="big b-top">10</span><span>7 matches round to 10</span></div><div class="cards"><article class="card">
-  <div class="mark b-top"><span>10.0</span><small class="und b-high">U 8.8</small></div>
+  <div class="mark b-top"><span>10.0</span><small>22 pts</small></div>
   <div class="body">
     <header><strong>J.Timber</strong> <span class="pos">DEF</span>
       <span class="fx">ARS v LEE 5–0 · GW2 · 63′</span></header>
@@ -139,7 +138,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.03 · defence 1.12</span><span>vs expected +16.5 pts</span><span>FotMob 9.2 · SofaScore 10.0</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-top"><span>9.7</span><small class="und b-mid">U 7.4</small></div>
+  <div class="mark b-top"><span>9.7</span><small>17 pts</small></div>
   <div class="body">
     <header><strong>Eze</strong> <span class="pos">MID</span>
       <span class="fx">ARS v TOT 4–1 · GW12 · 90′</span></header>
@@ -149,7 +148,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.01 · defence 1.12</span><span>vs expected +11.8 pts</span><span>FotMob 9.7 · SofaScore 10.0</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-top"><span>9.5</span><small class="und b-high">U 8.8</small></div>
+  <div class="mark b-top"><span>9.5</span><small>16 pts</small></div>
   <div class="body">
     <header><strong>João Pedro</strong> <span class="pos">FWD</span>
       <span class="fx">CHE at AVL 4–1 · GW29 · 84′</span></header>
@@ -159,7 +158,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.96 · defence 1.10</span><span>vs expected +11.2 pts</span><span>FotMob 9.8 · SofaScore 9.7</span></div>
   </div>
 </article></div></div><div class="rung"><div class="rung-h"><span class="big b-high">9</span><span>103 matches round to 9</span></div><div class="cards"><article class="card">
-  <div class="mark b-high"><span>9.0</span><small class="und b-mid">U 6.1</small></div>
+  <div class="mark b-high"><span>9.0</span><small>13 pts</small></div>
   <div class="body">
     <header><strong>Aaronson</strong> <span class="pos">MID</span>
       <span class="fx">LEE at NEW 3–4 · GW21 · 90′</span></header>
@@ -169,7 +168,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.03 · defence 1.15</span><span>vs expected +8.3 pts</span><span>FotMob 8.8 · SofaScore 9.3</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-high"><span>9.0</span><small class="und b-high">U 7.8</small></div>
+  <div class="mark b-high"><span>9.0</span><small>13 pts</small></div>
   <div class="body">
     <header><strong>Dorgu</strong> <span class="pos">DEF</span>
       <span class="fx">MUN v NEW 1–0 · GW18 · 90′</span></header>
@@ -179,7 +178,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.00 · defence 1.10</span><span>vs expected +8.3 pts</span><span>FotMob 8.3 · SofaScore 8.3</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-high"><span>9.0</span><small class="und b-mid">U 6.2</small></div>
+  <div class="mark b-high"><span>9.0</span><small>10 pts</small></div>
   <div class="body">
     <header><strong>Welbeck</strong> <span class="pos">FWD</span>
       <span class="fx">BHA v NEW 2–1 · GW8 · 89′</span></header>
@@ -189,7 +188,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.89 · defence 1.32</span><span>vs expected +6.0 pts</span><span>FotMob 9.1 · SofaScore 8.7</span></div>
   </div>
 </article></div></div><div class="rung"><div class="rung-h"><span class="big b-high">8</span><span>460 matches round to 8</span></div><div class="cards"><article class="card">
-  <div class="mark b-high"><span>8.0</span><small class="und b-mid">U 5.5</small></div>
+  <div class="mark b-high"><span>8.0</span><small>7 pts</small></div>
   <div class="body">
     <header><strong>Areola</strong> <span class="pos">GK</span>
       <span class="fx">WHU at BOU 2–2 · GW12 · 90′</span></header>
@@ -199,7 +198,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.02 · defence 0.93</span><span>vs expected +2.4 pts</span><span>FotMob 9.4 · SofaScore 9.3 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-high"><span>8.0</span><small class="und b-mid">U 4.7</small></div>
+  <div class="mark b-high"><span>8.0</span><small>8 pts</small></div>
   <div class="body">
     <header><strong>Bijol</strong> <span class="pos">DEF</span>
       <span class="fx">LEE v CHE 3–1 · GW14 · 90′</span></header>
@@ -209,7 +208,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.22 · defence 1.19</span><span>vs expected +5.0 pts</span><span>FotMob 8.4 · SofaScore 7.7</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-high"><span>8.0</span><small class="und b-high">U 8.5</small></div>
+  <div class="mark b-high"><span>8.0</span><small>11 pts</small></div>
   <div class="body">
     <header><strong>B.Fernandes</strong> <span class="pos">MID</span>
       <span class="fx">MUN at BOU 2–2 · GW31 · 90′</span></header>
@@ -219,7 +218,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.10 · defence 0.93</span><span>vs expected +5.4 pts</span><span>FotMob 8.3 · SofaScore 7.9</span></div>
   </div>
 </article></div></div><div class="rung"><div class="rung-h"><span class="big b-mid">7</span><span>1,136 matches round to 7</span></div><div class="cards"><article class="card">
-  <div class="mark b-mid"><span>7.0</span><small class="und b-mid">U 7.3</small></div>
+  <div class="mark b-mid"><span>7.0</span><small>7 pts</small></div>
   <div class="body">
     <header><strong>Acheampong</strong> <span class="pos">DEF</span>
       <span class="fx">CHE v CRY 0–0 · GW1 · 90′</span></header>
@@ -229,7 +228,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.00 · defence 1.00</span><span>vs expected +2.6 pts</span><span>FotMob 7.8 · SofaScore 7.5</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-mid"><span>7.0</span><small class="und b-mid">U 7.1</small></div>
+  <div class="mark b-mid"><span>7.0</span><small>6 pts</small></div>
   <div class="body">
     <header><strong>Ampadu</strong> <span class="pos">MID</span>
       <span class="fx">LEE v BRE 0–0 · GW31 · 90′</span></header>
@@ -239,7 +238,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.12 · defence 0.99</span><span>vs expected +2.4 pts</span><span>FotMob 7.6 · SofaScore 8.2</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-mid"><span>7.0</span><small class="und b-mid">U 5.6</small></div>
+  <div class="mark b-mid"><span>7.0</span><small>6 pts</small></div>
   <div class="body">
     <header><strong>Bowen</strong> <span class="pos">FWD</span>
       <span class="fx">WHU v CRY 1–2 · GW5 · 90′</span></header>
@@ -249,7 +248,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.00 · defence 1.25</span><span>vs expected +2.0 pts</span><span>FotMob 7.1 · SofaScore 7.5 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article></div></div><div class="rung"><div class="rung-h"><span class="big b-mid">6</span><span>1,378 matches round to 6</span></div><div class="cards"><article class="card">
-  <div class="mark b-mid"><span>6.0</span><small class="und b-mid">U 7.3</small></div>
+  <div class="mark b-mid"><span>6.0</span><small>6 pts</small></div>
   <div class="body">
     <header><strong>Aina</strong> <span class="pos">DEF</span>
       <span class="fx">NFO v WOL 0–0 · GW26 · 90′</span></header>
@@ -259,7 +258,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.65 · defence 0.86</span><span>vs expected +2.2 pts</span><span>FotMob 7.7 · SofaScore 7.6</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-mid"><span>6.0</span><small class="und b-high">U 7.8</small></div>
+  <div class="mark b-mid"><span>6.0</span><small>5 pts</small></div>
   <div class="body">
     <header><strong>Ayari</strong> <span class="pos">MID</span>
       <span class="fx">BHA v SUN 0–0 · GW17 · 90′</span></header>
@@ -269,7 +268,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.79 · defence 1.11</span><span>vs expected −0.3 pts</span><span>FotMob 7.7 · SofaScore 6.4</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-mid"><span>6.0</span><small class="und b-mid">U 4.8</small></div>
+  <div class="mark b-mid"><span>6.0</span><small>3 pts</small></div>
   <div class="body">
     <header><strong>Darlow</strong> <span class="pos">GK</span>
       <span class="fx">LEE v MCI 0–1 · GW28 · 90′</span></header>
@@ -279,7 +278,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.33 · defence 1.27</span><span>vs expected −0.6 pts</span><span>FotMob 8.1 · SofaScore 8.5</span></div>
   </div>
 </article></div></div><div class="rung"><div class="rung-h"><span class="big b-mid">5</span><span>1,569 matches round to 5</span></div><div class="cards"><article class="card">
-  <div class="mark b-mid"><span>5.0</span><small class="und b-mid">U 4.9</small></div>
+  <div class="mark b-mid"><span>5.0</span><small>3 pts</small></div>
   <div class="body">
     <header><strong>Adams</strong> <span class="pos">MID</span>
       <span class="fx">BOU v BHA 2–1 · GW4 · 90′</span></header>
@@ -289,7 +288,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.05 · defence 0.99</span><span>vs expected −0.8 pts</span><span>FotMob 7.2 · SofaScore 6.6</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-mid"><span>5.0</span><small class="und b-mid">U 5.4</small></div>
+  <div class="mark b-mid"><span>5.0</span><small>3 pts</small></div>
   <div class="body">
     <header><strong>Agbadou</strong> <span class="pos">DEF</span>
       <span class="fx">WOL v NFO 0–1 · GW14 · 90′</span></header>
@@ -299,7 +298,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.88 · defence 0.90</span><span>vs expected −1.3 pts</span><span>FotMob 6.6 · SofaScore 6.5 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-mid"><span>5.0</span><small class="und b-mid">U 4.8</small></div>
+  <div class="mark b-mid"><span>5.0</span><small>3 pts</small></div>
   <div class="body">
     <header><strong>Areola</strong> <span class="pos">GK</span>
       <span class="fx">WHU v NEW 3–1 · GW10 · 90′</span></header>
@@ -309,7 +308,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.93 · defence 1.27</span><span>vs expected −0.6 pts</span><span>FotMob 7.1 · SofaScore 7.0 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article></div></div><div class="rung"><div class="rung-h"><span class="big b-mid">4</span><span>3,948 matches round to 4</span></div><div class="cards"><article class="card">
-  <div class="mark b-mid"><span>4.0</span><small class="und b-mid">U 4.1</small></div>
+  <div class="mark b-mid"><span>4.0</span><small>2 pts</small></div>
   <div class="body">
     <header><strong>Adams</strong> <span class="pos">MID</span>
       <span class="fx">BOU v EVE 0–1 · GW14 · 90′</span></header>
@@ -319,7 +318,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.89 · defence 0.98</span><span>vs expected −1.0 pts</span><span>FotMob 6.6 · SofaScore 6.8</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-mid"><span>4.0</span><small class="und b-mid">U 5.1</small></div>
+  <div class="mark b-mid"><span>4.0</span><small>2 pts</small></div>
   <div class="body">
     <header><strong>Alderete</strong> <span class="pos">DEF</span>
       <span class="fx">SUN v BHA 0–1 · GW30 · 90′</span></header>
@@ -329,7 +328,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.00 · defence 1.06</span><span>vs expected −1.2 pts</span><span>FotMob 6.9 · SofaScore 7.1</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-mid"><span>4.0</span><small class="und b-mid">U 4.1</small></div>
+  <div class="mark b-mid"><span>4.0</span><small>2 pts</small></div>
   <div class="body">
     <header><strong>Areola</strong> <span class="pos">GK</span>
       <span class="fx">WHU at LEE 1–2 · GW9 · 90′</span></header>
@@ -339,7 +338,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.90 · defence 0.99</span><span>vs expected −0.8 pts</span><span>FotMob 5.7 · SofaScore 7.1 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article></div></div><div class="rung"><div class="rung-h"><span class="big b-low">3</span><span>1,078 matches round to 3</span></div><div class="cards"><article class="card">
-  <div class="mark b-low"><span>3.0</span><small class="und b-mid">U 5.1</small></div>
+  <div class="mark b-low"><span>3.0</span><small>1 pts</small></div>
   <div class="body">
     <header><strong>Alderete</strong> <span class="pos">DEF</span>
       <span class="fx">SUN v NFO 0–5 · GW34 · 90′</span></header>
@@ -349,7 +348,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.84 · defence 1.00</span><span>vs expected −1.3 pts</span><span>FotMob 4.8 · SofaScore 5.2</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-low"><span>3.0</span><small class="und b-mid">U 4.1</small></div>
+  <div class="mark b-low"><span>3.0</span><small>2 pts</small></div>
   <div class="body">
     <header><strong>Anderson</strong> <span class="pos">MID</span>
       <span class="fx">NFO at NEW 0–2 · GW7 · 90′</span></header>
@@ -359,7 +358,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.79 · defence 1.24</span><span>vs expected −0.9 pts</span><span>FotMob 6.8 · SofaScore 6.9</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-low"><span>3.0</span><small class="und b-mid">U 4.8</small></div>
+  <div class="mark b-low"><span>3.0</span><small>3 pts</small></div>
   <div class="body">
     <header><strong>Dúbravka</strong> <span class="pos">GK</span>
       <span class="fx">BUR v NEW 1–3 · GW19 · 90′</span></header>
@@ -369,7 +368,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.97 · defence 1.10</span><span>vs expected −0.6 pts</span><span>FotMob 5.1 · SofaScore 5.9</span></div>
   </div>
 </article></div></div><div class="rung"><div class="rung-h"><span class="big b-bad">2</span><span>822 matches round to 2</span></div><div class="cards"><article class="card">
-  <div class="mark b-bad"><span>2.0</span><small class="und b-mid">U 7.3</small></div>
+  <div class="mark b-bad"><span>2.0</span><small>2 pts</small></div>
   <div class="body">
     <header><strong>Tolu</strong> <span class="pos">FWD</span>
       <span class="fx">WOL at CRY 0–1 · GW27 · 90′</span></header>
@@ -379,7 +378,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.96 · defence 1.07</span><span>vs expected −1.0 pts</span><span>FotMob 6.0 · SofaScore 5.4 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-bad"><span>2.0</span><small class="und b-mid">U 4.5</small></div>
+  <div class="mark b-bad"><span>2.0</span><small>1 pts</small></div>
   <div class="body">
     <header><strong>Bellegarde</strong> <span class="pos">MID</span>
       <span class="fx">WOL v BUR 2–3 · GW9 · 90′</span></header>
@@ -389,7 +388,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.81 · defence 0.79</span><span>vs expected −1.4 pts</span><span>FotMob 6.0 · SofaScore 6.5 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-bad"><span>2.0</span><small class="und b-low">U 3.1</small></div>
+  <div class="mark b-bad"><span>2.0</span><small>1 pts</small></div>
   <div class="body">
     <header><strong>Dúbravka</strong> <span class="pos">GK</span>
       <span class="fx">BUR at NFO 1–4 · GW33 · 90′</span></header>
@@ -399,7 +398,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.82 · defence 0.99</span><span>vs expected −0.6 pts</span><span>FotMob 4.5 · SofaScore 5.2</span></div>
   </div>
 </article></div></div><div class="rung"><div class="rung-h"><span class="big b-bad">1</span><span>20 matches round to 1</span></div><div class="cards"><article class="card">
-  <div class="mark b-bad"><span>1.0</span><small class="und b-bad">U 1.0</small></div>
+  <div class="mark b-bad"><span>1.0</span><small>-4 pts</small></div>
   <div class="body">
     <header><strong>Estève</strong> <span class="pos">DEF</span>
       <span class="fx">BUR at MCI 1–5 · GW6 · 90′</span></header>
@@ -409,7 +408,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.21 · defence 1.04</span><span>vs expected −0.4 pts</span><span>FotMob 1.8 · SofaScore 4.5 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-bad"><span>1.0</span><small class="und b-low">U 3.1</small></div>
+  <div class="mark b-bad"><span>1.0</span><small>1 pts</small></div>
   <div class="body">
     <header><strong>Roefs</strong> <span class="pos">GK</span>
       <span class="fx">SUN v NFO 0–5 · GW34 · 90′</span></header>
@@ -419,7 +418,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.84 · defence 1.00</span><span>vs expected −1.1 pts</span><span>FotMob 3.2 · SofaScore 5.1</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-bad"><span>1.0</span><small class="und b-low">U 3.6</small></div>
+  <div class="mark b-bad"><span>1.0</span><small>-2 pts</small></div>
   <div class="body">
     <header><strong>Gordon</strong> <span class="pos">MID</span>
       <span class="fx">NEW v LIV 2–3 · GW2 · 47′</span></header>
@@ -433,38 +432,8 @@ table.marks { width: auto; min-width: 180px; }
 
 <section>
   <h2>Kinds of match</h2>
-  <section class="kind"><h3>Two blanks: one unlucky, one anonymous</h3><p class="q">Same points, same rating. Underlying should tell the busy blank from the anonymous one.</p><p class="verdict">Both rate 4.1. Underlying is 8.5 against 4.8: the first will come good if he keeps getting those chances.</p><div class="cards"><article class="card">
-  <div class="mark b-mid"><span>4.1</span><small class="und b-high">U 8.5</small></div>
-  <div class="body">
-    <header><strong>Cherki</strong> <span class="pos">MID</span>
-      <span class="fx">MCI at BUR 1–0 · GW33 · 90′</span></header>
-    <p class="note">The season&#x27;s biggest underlying in a blank</p>
-    <div class="chips"><span class="chip">0.78 xG</span><span class="chip">0.44 xA</span><span class="chip">8 shots</span><span class="chip">2 on target</span><span class="chip">8 key passes</span><span class="chip">1 big chances made</span><span class="chip bad">1 big chances missed</span><span class="chip ret">clean sheet</span><span class="chip bad">1 dispossessed</span></div>
-    <div class="parts"><span class="part base"><b>3</b> league pts</span><span class="part down"><b>−0.3</b> opponent</span><span class="part down"><b>−1.1</b> mistakes</span><span class="part base">= <b>1.6</b></span></div>
-    <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.73 · defence 0.72</span><span>vs expected −2.8 pts</span><span>FotMob 8.5 · SofaScore 7.7</span></div>
-  </div>
-</article><article class="card">
-  <div class="mark b-mid"><span>4.8</span><small class="und b-mid">U 4.8</small></div>
-  <div class="body">
-    <header><strong>Mateta</strong> <span class="pos">FWD</span>
-      <span class="fx">CRY v AVL 0–0 · GW21 · 90′</span></header>
-    <p class="note">Same points, nothing happening</p>
-    <div class="chips"><span class="chip ret">clean sheet</span><span class="chip bad">3 dispossessed</span></div>
-    <div class="parts"><span class="part base"><b>3</b> league pts</span><span class="part down"><b>−0.5</b> mistakes</span><span class="part base">= <b>2.5</b></span></div>
-    <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.04 · defence 1.03</span><span>vs expected −2.4 pts</span><span>FotMob 5.8 · SofaScore 6.4</span></div>
-  </div>
-</article></div></section><section class="kind"><h3>A lucky goal</h3><p class="q">The rating pays the goal; Underlying should say there was little behind it.</p><p class="verdict">Rated 7.7 for the goal, Underlying 4.4: one shot, almost no chance, and no sign it repeats.</p><div class="cards"><article class="card">
-  <div class="mark b-high"><span>7.7</span><small class="und b-mid">U 4.4</small></div>
-  <div class="body">
-    <header><strong>Gravenberch</strong> <span class="pos">MID</span>
-      <span class="fx">LIV at NEW 3–2 · GW2 · 90′</span></header>
-    <p class="note">One goal from the season&#x27;s smallest xG</p>
-    <div class="chips"><span class="chip ret">1G</span><span class="chip">1 from outside box</span><span class="chip">0.02 xG</span><span class="chip">0.01 xA</span><span class="chip">1 shots</span><span class="chip">1 on target</span><span class="chip bad">2 conceded</span><span class="chip bad">1 yellow</span><span class="chip bad">2 dispossessed</span></div>
-    <div class="parts"><span class="part base"><b>7</b> league pts</span><span class="part up"><b>+0.8</b> opponent</span><span class="part down"><b>−0.3</b> mistakes</span><span class="part up"><b>+1.0</b> extras</span><span class="part base">= <b>8.5</b></span></div>
-    <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.94 · defence 1.15</span><span>vs expected +4.2 pts</span><span>FotMob 7.3 · SofaScore 7.3</span></div>
-  </div>
-</article></div></section><section class="kind"><h3>The best attack against one of the worst teams</h3><p class="q">A star blanking against the bottom side, his goal against them, and a bottom side&#x27;s goal against the best defence.</p><p class="verdict">The blank is 4.4. The goal against the weakest defence is marked down to 5.5; the weak side&#x27;s goal against the best defence is worth 8.6.</p><div class="cards"><article class="card">
-  <div class="mark b-mid"><span>4.4</span><small class="und b-mid">U 5.7</small></div>
+  <section class="kind"><h3>The best attack against one of the worst teams</h3><p class="q">A star blanking against the bottom side, his goal against them, and a bottom side&#x27;s goal against the best defence.</p><p class="verdict">The blank is 4.4. The goal against the weakest defence is marked down to 5.5; the weak side&#x27;s goal against the best defence is worth 8.6.</p><div class="cards"><article class="card">
+  <div class="mark b-mid"><span>4.4</span><small>2 pts</small></div>
   <div class="body">
     <header><strong>Haaland</strong> <span class="pos">FWD</span>
       <span class="fx">MCI at WHU 1–1 · GW30 · 90′</span></header>
@@ -474,7 +443,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.90 · defence 0.83</span><span>vs expected −3.0 pts</span><span>FotMob 6.6 · SofaScore 6.5</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-mid"><span>5.5</span><small class="und b-mid">U 7.3</small></div>
+  <div class="mark b-mid"><span>5.5</span><small>6 pts</small></div>
   <div class="body">
     <header><strong>Haaland</strong> <span class="pos">FWD</span>
       <span class="fx">MCI at BUR 1–0 · GW33 · 90′</span></header>
@@ -484,7 +453,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.73 · defence 0.72</span><span>vs expected +0.9 pts</span><span>FotMob 8.3 · SofaScore 7.6</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-high"><span>8.6</span><small class="und b-mid">U 6.3</small></div>
+  <div class="mark b-high"><span>8.6</span><small>9 pts</small></div>
   <div class="body">
     <header><strong>Anderson</strong> <span class="pos">MID</span>
       <span class="fx">NFO at MCI 2–2 · GW29 · 90′</span></header>
@@ -494,7 +463,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.32 · defence 1.28</span><span>vs expected +4.3 pts</span><span>FotMob 8.5 · SofaScore 8.4</span></div>
   </div>
 </article></div></section><section class="kind"><h3>A clean sheet, weighed by the attack it kept out</h3><p class="q">A bottom-half side shutting out a top-four attack should beat a top side shutting out the bottom three.</p><p class="verdict">8.1 against 6.1 for the same clean sheet.</p><div class="cards"><article class="card">
-  <div class="mark b-high"><span>8.1</span><small class="und b-mid">U 7.4</small></div>
+  <div class="mark b-high"><span>8.1</span><small>8 pts</small></div>
   <div class="body">
     <header><strong>Alderete</strong> <span class="pos">DEF</span>
       <span class="fx">SUN v MCI 0–0 · GW19 · 90′</span></header>
@@ -504,7 +473,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.41 · defence 1.25</span><span>vs expected +3.2 pts</span><span>FotMob 7.6 · SofaScore 7.8</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-mid"><span>6.1</span><small class="und b-high">U 8.4</small></div>
+  <div class="mark b-mid"><span>6.1</span><small>7 pts</small></div>
   <div class="body">
     <header><strong>Canvot</strong> <span class="pos">DEF</span>
       <span class="fx">CRY v WOL 1–0 · GW27 · 90′</span></header>
@@ -514,7 +483,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.64 · defence 0.85</span><span>vs expected +1.9 pts</span><span>FotMob 7.5 · SofaScore 6.8</span></div>
   </div>
 </article></div></section><section class="kind"><h3>Being terrible</h3><p class="q">Big chances missed and errors should sink a man, whatever else he did.</p><p class="verdict">2.0, 1.3 and 1.0. Each big chance missed costs a point before the table, each error leading to a goal two.</p><div class="cards"><article class="card">
-  <div class="mark b-bad"><span>2.0</span><small class="und b-mid">U 6.4</small></div>
+  <div class="mark b-bad"><span>2.0</span><small>2 pts</small></div>
   <div class="body">
     <header><strong>Calvert-Lewin</strong> <span class="pos">FWD</span>
       <span class="fx">LEE v BOU 2–2 · GW6 · 90′</span></header>
@@ -524,7 +493,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.00 · defence 1.17</span><span>vs expected −0.9 pts</span><span>FotMob 6.5 · SofaScore 6.3</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-bad"><span>1.3</span><small class="und b-mid">U 7.0</small></div>
+  <div class="mark b-bad"><span>1.3</span><small>0 pts</small></div>
   <div class="body">
     <header><strong>Welbeck</strong> <span class="pos">FWD</span>
       <span class="fx">BHA at EVE 0–2 · GW2 · 90′</span></header>
@@ -534,7 +503,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.89 · defence 0.97</span><span>vs expected −2.0 pts</span><span>FotMob 5.0 · SofaScore 4.9</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-bad"><span>1.0</span><small class="und b-bad">U 1.0</small></div>
+  <div class="mark b-bad"><span>1.0</span><small>-4 pts</small></div>
   <div class="body">
     <header><strong>Estève</strong> <span class="pos">DEF</span>
       <span class="fx">BUR at MCI 1–5 · GW6 · 90′</span></header>
@@ -544,7 +513,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.21 · defence 1.04</span><span>vs expected −0.4 pts</span><span>FotMob 1.8 · SofaScore 4.5 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article></div></section><section class="kind"><h3>The late substitute who scored</h3><p class="q">A goal off the bench rates well, but his minutes point is one, not two.</p><p class="verdict">7.3: the league gives a short appearance one point, and the mark follows the points.</p><div class="cards"><article class="card">
-  <div class="mark b-mid"><span>7.3</span><small class="und b-low">U 3.9</small></div>
+  <div class="mark b-mid"><span>7.3</span><small>6 pts</small></div>
   <div class="body">
     <header><strong>Reed</strong> <span class="pos">MID</span>
       <span class="fx">FUL v LIV 2–2 · GW20 · 1′ · on 90′</span></header>
@@ -554,7 +523,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.11 · defence 1.06</span><span>vs expected +5.0 pts</span><span>FotMob — · SofaScore 7.6</span></div>
   </div>
 </article></div></section><section class="kind"><h3>The keeper who let in three</h3><p class="q">Conceding three but stopping far more should not sink him.</p><p class="verdict">6.5 for the keeper who saved his side from worse, 1.0 for the worst.</p><div class="cards"><article class="card">
-  <div class="mark b-mid"><span>6.5</span><small class="und b-mid">U 5.4</small></div>
+  <div class="mark b-mid"><span>6.5</span><small>4 pts</small></div>
   <div class="body">
     <header><strong>Kelleher</strong> <span class="pos">GK</span>
       <span class="fx">BRE at MCI 0–3 · GW36 · 90′</span></header>
@@ -564,7 +533,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.35 · defence 1.25</span><span>vs expected −0.4 pts</span><span>FotMob 8.2 · SofaScore 9.3</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-bad"><span>1.0</span><small class="und b-low">U 3.1</small></div>
+  <div class="mark b-bad"><span>1.0</span><small>1 pts</small></div>
   <div class="body">
     <header><strong>Roefs</strong> <span class="pos">GK</span>
       <span class="fx">SUN v NFO 0–5 · GW34 · 90′</span></header>
@@ -574,7 +543,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.84 · defence 1.00</span><span>vs expected −1.1 pts</span><span>FotMob 3.2 · SofaScore 5.1</span></div>
   </div>
 </article></div></section><section class="kind"><h3>A goal from outside the box</h3><p class="q">Worth a point more than a tap-in.</p><p class="verdict">7.7: the goal&#x27;s points plus one for the distance.</p><div class="cards"><article class="card">
-  <div class="mark b-high"><span>7.7</span><small class="und b-mid">U 4.4</small></div>
+  <div class="mark b-high"><span>7.7</span><small>7 pts</small></div>
   <div class="body">
     <header><strong>Gravenberch</strong> <span class="pos">MID</span>
       <span class="fx">LIV at NEW 3–2 · GW2 · 90′</span></header>
@@ -589,9 +558,8 @@ table.marks { width: auto; min-width: 180px; }
 <section>
   <h2>The star test</h2>
   <p class="q">Season averages, 900 minutes or more. "vs exp." sums his goal, assist and clean-sheet points against what the projection expected before each match.</p>
-  <div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="">Pos</th><th class="n">Apps</th><th class="n">G</th><th class="n">A</th><th class="n">Pts/gm</th><th class="n hl">Rating</th><th class="n">Rank</th><th class="n">Underlying</th><th class="n">Rank</th><th class="n">vs exp.</th><th class="n">10s</th></tr></thead><tbody><tr><td class="">B.Fernandes</td><td class="">MUN</td><td class="">MID</td><td class="n">35</td><td class="n">9</td><td class="n">24</td><td class="n">6.03</td><td class="n hl">6.22</td><td class="n">1</td><td class="n">6.59</td><td class="n">1</td><td class="n">+23.2</td><td class="n">0</td></tr><tr><td class="">Gabriel</td><td class="">ARS</td><td class="">DEF</td><td class="n">32</td><td class="n">3</td><td class="n">5</td><td class="n">5.50</td><td class="n hl">6.11</td><td class="n">2</td><td class="n">5.98</td><td class="n">6</td><td class="n">+20.2</td><td class="n">0</td></tr><tr><td class="">Bruno G.</td><td class="">NEW</td><td class="">MID</td><td class="n">29</td><td class="n">9</td><td class="n">7</td><td class="n">5.07</td><td class="n hl">5.84</td><td class="n">3</td><td class="n">5.83</td><td class="n">15</td><td class="n">+21.7</td><td class="n">0</td></tr><tr><td class="">Rice</td><td class="">ARS</td><td class="">MID</td><td class="n">36</td><td class="n">4</td><td class="n">9</td><td class="n">4.75</td><td class="n hl">5.80</td><td class="n">4</td><td class="n">5.95</td><td class="n">8</td><td class="n">−6.4</td><td class="n">0</td></tr><tr><td class="">Semenyo</td><td class="">BOU</td><td class="">MID</td><td class="n">20</td><td class="n">10</td><td class="n">5</td><td class="n">5.35</td><td class="n hl">5.76</td><td class="n">6</td><td class="n">5.92</td><td class="n">9</td><td class="n">+21.3</td><td class="n">0</td></tr><tr><td class="">Haaland</td><td class="">MCI</td><td class="">FWD</td><td class="n">35</td><td class="n">27</td><td class="n">8</td><td class="n">5.66</td><td class="n hl">5.75</td><td class="n">7</td><td class="n">6.35</td><td class="n">2</td><td class="n">+4.3</td><td class="n">0</td></tr><tr><td class="">Raya</td><td class="">ARS</td><td class="">GK</td><td class="n">37</td><td class="n">0</td><td class="n">0</td><td class="n">4.51</td><td class="n hl">5.64</td><td class="n">10</td><td class="n">5.55</td><td class="n">33</td><td class="n">+10.7</td><td class="n">0</td></tr><tr><td class="">Cunha</td><td class="">MUN</td><td class="">MID</td><td class="n">33</td><td class="n">10</td><td class="n">4</td><td class="n">4.03</td><td class="n hl">5.43</td><td class="n">27</td><td class="n">5.58</td><td class="n">30</td><td class="n">+3.2</td><td class="n">0</td></tr><tr><td class="">Semenyo</td><td class="">MCI</td><td class="">MID</td><td class="n">17</td><td class="n">7</td><td class="n">1</td><td class="n">4.00</td><td class="n hl">5.37</td><td class="n">34</td><td class="n">5.42</td><td class="n">50</td><td class="n">−2.4</td><td class="n">0</td></tr><tr><td class="">Saka</td><td class="">ARS</td><td class="">MID</td><td class="n">30</td><td class="n">7</td><td class="n">10</td><td class="n">4.20</td><td class="n hl">5.34</td><td class="n">37</td><td class="n">5.86</td><td class="n">14</td><td class="n">−28.2</td><td class="n">0</td></tr><tr><td class="">João Pedro</td><td class="">CHE</td><td class="">FWD</td><td class="n">35</td><td class="n">15</td><td class="n">9</td><td class="n">4.43</td><td class="n hl">5.29</td><td class="n">43</td><td class="n">5.52</td><td class="n">36</td><td class="n">+0.6</td><td class="n">0</td></tr><tr><td class="">M.Salah</td><td class="">LIV</td><td class="">MID</td><td class="n">27</td><td class="n">7</td><td class="n">7</td><td class="n">4.26</td><td class="n hl">5.17</td><td class="n">70</td><td class="n">6.05</td><td class="n">4</td><td class="n">−44.5</td><td class="n">0</td></tr><tr><td class="">Palmer</td><td class="">CHE</td><td class="">MID</td><td class="n">26</td><td class="n">10</td><td class="n">2</td><td class="n">4.08</td><td class="n hl">5.09</td><td class="n">84</td><td class="n">5.79</td><td class="n">22</td><td class="n">−12.2</td><td class="n">0</td></tr><tr><td class="">Mbeumo</td><td class="">MUN</td><td class="">MID</td><td class="n">33</td><td class="n">11</td><td class="n">3</td><td class="n">3.70</td><td class="n hl">5.09</td><td class="n">87</td><td class="n">5.75</td><td class="n">23</td><td class="n">−12.3</td><td class="n">0</td></tr><tr><td class="">Virgil</td><td class="">LIV</td><td class="">DEF</td><td class="n">38</td><td class="n">6</td><td class="n">1</td><td class="n">3.79</td><td class="n hl">4.95</td><td class="n">124</td><td class="n">5.03</td><td class="n">142</td><td class="n">+0.5</td><td class="n">0</td></tr><tr><td class="">Watkins</td><td class="">AVL</td><td class="">FWD</td><td class="n">37</td><td class="n">16</td><td class="n">4</td><td class="n">3.81</td><td class="n hl">4.88</td><td class="n">150</td><td class="n">5.41</td><td class="n">52</td><td class="n">−3.9</td><td class="n">0</td></tr><tr><td class="">Wirtz</td><td class="">LIV</td><td class="">MID</td><td class="n">33</td><td class="n">5</td><td class="n">4</td><td class="n">3.42</td><td class="n hl">4.87</td><td class="n">152</td><td class="n">5.62</td><td class="n">28</td><td class="n">−18.0</td><td class="n">0</td></tr><tr><td class="">Ekitiké</td><td class="">LIV</td><td class="">FWD</td><td class="n">27</td><td class="n">11</td><td class="n">4</td><td class="n">3.93</td><td class="n hl">4.87</td><td class="n">153</td><td class="n">5.51</td><td class="n">40</td><td class="n">−1.9</td><td class="n">0</td></tr><tr><td class="">Gyökeres</td><td class="">ARS</td><td class="">FWD</td><td class="n">33</td><td class="n">14</td><td class="n">1</td><td class="n">3.33</td><td class="n hl">4.66</td><td class="n">209</td><td class="n">5.12</td><td class="n">113</td><td class="n">−3.7</td><td class="n">0</td></tr></tbody></table></div>
+  <div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="">Pos</th><th class="n">Apps</th><th class="n">G</th><th class="n">A</th><th class="n">Pts/gm</th><th class="n hl">Rating</th><th class="n">Rank</th><th class="n">vs exp.</th><th class="n">10s</th></tr></thead><tbody><tr><td class="">B.Fernandes</td><td class="">MUN</td><td class="">MID</td><td class="n">35</td><td class="n">9</td><td class="n">24</td><td class="n">6.03</td><td class="n hl">6.22</td><td class="n">1</td><td class="n">+23.2</td><td class="n">0</td></tr><tr><td class="">Gabriel</td><td class="">ARS</td><td class="">DEF</td><td class="n">32</td><td class="n">3</td><td class="n">5</td><td class="n">5.50</td><td class="n hl">6.11</td><td class="n">2</td><td class="n">+20.2</td><td class="n">0</td></tr><tr><td class="">Bruno G.</td><td class="">NEW</td><td class="">MID</td><td class="n">29</td><td class="n">9</td><td class="n">7</td><td class="n">5.07</td><td class="n hl">5.84</td><td class="n">3</td><td class="n">+21.7</td><td class="n">0</td></tr><tr><td class="">Rice</td><td class="">ARS</td><td class="">MID</td><td class="n">36</td><td class="n">4</td><td class="n">9</td><td class="n">4.75</td><td class="n hl">5.80</td><td class="n">4</td><td class="n">−6.4</td><td class="n">0</td></tr><tr><td class="">Semenyo</td><td class="">BOU</td><td class="">MID</td><td class="n">20</td><td class="n">10</td><td class="n">5</td><td class="n">5.35</td><td class="n hl">5.76</td><td class="n">6</td><td class="n">+21.3</td><td class="n">0</td></tr><tr><td class="">Haaland</td><td class="">MCI</td><td class="">FWD</td><td class="n">35</td><td class="n">27</td><td class="n">8</td><td class="n">5.66</td><td class="n hl">5.75</td><td class="n">7</td><td class="n">+4.3</td><td class="n">0</td></tr><tr><td class="">Raya</td><td class="">ARS</td><td class="">GK</td><td class="n">37</td><td class="n">0</td><td class="n">0</td><td class="n">4.51</td><td class="n hl">5.64</td><td class="n">10</td><td class="n">+10.7</td><td class="n">0</td></tr><tr><td class="">Cunha</td><td class="">MUN</td><td class="">MID</td><td class="n">33</td><td class="n">10</td><td class="n">4</td><td class="n">4.03</td><td class="n hl">5.43</td><td class="n">27</td><td class="n">+3.2</td><td class="n">0</td></tr><tr><td class="">Semenyo</td><td class="">MCI</td><td class="">MID</td><td class="n">17</td><td class="n">7</td><td class="n">1</td><td class="n">4.00</td><td class="n hl">5.37</td><td class="n">34</td><td class="n">−2.4</td><td class="n">0</td></tr><tr><td class="">Saka</td><td class="">ARS</td><td class="">MID</td><td class="n">30</td><td class="n">7</td><td class="n">10</td><td class="n">4.20</td><td class="n hl">5.34</td><td class="n">37</td><td class="n">−28.2</td><td class="n">0</td></tr><tr><td class="">João Pedro</td><td class="">CHE</td><td class="">FWD</td><td class="n">35</td><td class="n">15</td><td class="n">9</td><td class="n">4.43</td><td class="n hl">5.29</td><td class="n">43</td><td class="n">+0.6</td><td class="n">0</td></tr><tr><td class="">M.Salah</td><td class="">LIV</td><td class="">MID</td><td class="n">27</td><td class="n">7</td><td class="n">7</td><td class="n">4.26</td><td class="n hl">5.17</td><td class="n">70</td><td class="n">−44.5</td><td class="n">0</td></tr><tr><td class="">Palmer</td><td class="">CHE</td><td class="">MID</td><td class="n">26</td><td class="n">10</td><td class="n">2</td><td class="n">4.08</td><td class="n hl">5.09</td><td class="n">84</td><td class="n">−12.2</td><td class="n">0</td></tr><tr><td class="">Mbeumo</td><td class="">MUN</td><td class="">MID</td><td class="n">33</td><td class="n">11</td><td class="n">3</td><td class="n">3.70</td><td class="n hl">5.09</td><td class="n">87</td><td class="n">−12.3</td><td class="n">0</td></tr><tr><td class="">Virgil</td><td class="">LIV</td><td class="">DEF</td><td class="n">38</td><td class="n">6</td><td class="n">1</td><td class="n">3.79</td><td class="n hl">4.95</td><td class="n">124</td><td class="n">+0.5</td><td class="n">0</td></tr><tr><td class="">Watkins</td><td class="">AVL</td><td class="">FWD</td><td class="n">37</td><td class="n">16</td><td class="n">4</td><td class="n">3.81</td><td class="n hl">4.88</td><td class="n">150</td><td class="n">−3.9</td><td class="n">0</td></tr><tr><td class="">Wirtz</td><td class="">LIV</td><td class="">MID</td><td class="n">33</td><td class="n">5</td><td class="n">4</td><td class="n">3.42</td><td class="n hl">4.87</td><td class="n">152</td><td class="n">−18.0</td><td class="n">0</td></tr><tr><td class="">Ekitiké</td><td class="">LIV</td><td class="">FWD</td><td class="n">27</td><td class="n">11</td><td class="n">4</td><td class="n">3.93</td><td class="n hl">4.87</td><td class="n">153</td><td class="n">−1.9</td><td class="n">0</td></tr><tr><td class="">Gyökeres</td><td class="">ARS</td><td class="">FWD</td><td class="n">33</td><td class="n">14</td><td class="n">1</td><td class="n">3.33</td><td class="n hl">4.66</td><td class="n">209</td><td class="n">−3.7</td><td class="n">0</td></tr></tbody></table></div>
   <div class="grid2">
-    <div><h4>Unlucky: Underlying furthest above rating</h4><div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="n">Rating</th><th class="n hl">Und.</th><th class="n">Gap</th></tr></thead><tbody><tr><td class="">M.Salah</td><td class="">LIV</td><td class="n">5.17</td><td class="n hl">6.05</td><td class="n">+0.9</td></tr><tr><td class="">Mateta</td><td class="">CRY</td><td class="n">4.60</td><td class="n hl">5.46</td><td class="n">+0.9</td></tr><tr><td class="">Yeremy</td><td class="">CRY</td><td class="n">4.28</td><td class="n hl">5.14</td><td class="n">+0.9</td></tr><tr><td class="">Taty</td><td class="">WHU</td><td class="n">4.54</td><td class="n hl">5.36</td><td class="n">+0.8</td></tr><tr><td class="">Gordon</td><td class="">NEW</td><td class="n">4.90</td><td class="n hl">5.70</td><td class="n">+0.8</td></tr><tr><td class="">Mitoma</td><td class="">BHA</td><td class="n">4.25</td><td class="n hl">5.05</td><td class="n">+0.8</td></tr><tr><td class="">Brooks</td><td class="">BOU</td><td class="n">3.91</td><td class="n hl">4.71</td><td class="n">+0.8</td></tr><tr><td class="">Muniz</td><td class="">FUL</td><td class="n">3.68</td><td class="n hl">4.43</td><td class="n">+0.8</td></tr></tbody></table></div></div>
     <div><h4>Promoted clubs' attackers, by vs expected</h4><div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="n">G</th><th class="n hl">Rating</th><th class="n">vs exp.</th></tr></thead><tbody><tr><td class="">Anthony</td><td class="">BUR</td><td class="n">8</td><td class="n hl">5.19</td><td class="n">+20.4</td></tr><tr><td class="">Flemming</td><td class="">BUR</td><td class="n">11</td><td class="n hl">4.88</td><td class="n">+18.8</td></tr><tr><td class="">Stach</td><td class="">LEE</td><td class="n">5</td><td class="n hl">5.63</td><td class="n">+18.8</td></tr><tr><td class="">Okafor</td><td class="">LEE</td><td class="n">8</td><td class="n hl">4.95</td><td class="n">+14.9</td></tr><tr><td class="">Diarra</td><td class="">SUN</td><td class="n">2</td><td class="n hl">4.69</td><td class="n">+14.0</td></tr><tr><td class="">Aaronson</td><td class="">LEE</td><td class="n">4</td><td class="n hl">4.88</td><td class="n">+13.9</td></tr></tbody></table></div></div>
   </div>
   <div class="grid2">
@@ -599,7 +567,7 @@ table.marks { width: auto; min-width: 180px; }
     <div><h4>Most below expectation</h4><div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="n">G</th><th class="n hl">Rating</th><th class="n">vs exp.</th></tr></thead><tbody><tr><td class="">M.Salah</td><td class="">LIV</td><td class="n">7</td><td class="n hl">5.17</td><td class="n">−44.5</td></tr><tr><td class="">Gakpo</td><td class="">LIV</td><td class="n">7</td><td class="n hl">4.97</td><td class="n">−30.8</td></tr><tr><td class="">Saka</td><td class="">ARS</td><td class="n">7</td><td class="n hl">5.34</td><td class="n">−28.2</td></tr><tr><td class="">Bernardo</td><td class="">MCI</td><td class="n">2</td><td class="n hl">4.78</td><td class="n">−25.4</td></tr><tr><td class="">Foden</td><td class="">MCI</td><td class="n">7</td><td class="n hl">5.01</td><td class="n">−23.4</td></tr><tr><td class="">Enzo</td><td class="">CHE</td><td class="n">10</td><td class="n hl">5.25</td><td class="n">−22.5</td></tr></tbody></table></div></div>
   </div>
   <h4>Best average by position</h4>
-  <div class="grid4"><div><h4>GK</h4><div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="n hl">Rating</th><th class="n">Und.</th></tr></thead><tbody><tr><td class="">Raya</td><td class="">ARS</td><td class="n hl">5.64</td><td class="n">5.55</td></tr><tr><td class="">Donnarumma</td><td class="">MCI</td><td class="n hl">5.56</td><td class="n">5.38</td></tr><tr><td class="">Roefs</td><td class="">SUN</td><td class="n hl">5.33</td><td class="n">5.35</td></tr><tr><td class="">Kelleher</td><td class="">BRE</td><td class="n hl">5.27</td><td class="n">5.34</td></tr><tr><td class="">Martinez</td><td class="">AVL</td><td class="n hl">5.26</td><td class="n">5.10</td></tr><tr><td class="">Henderson</td><td class="">CRY</td><td class="n hl">5.23</td><td class="n">5.10</td></tr></tbody></table></div></div><div><h4>DEF</h4><div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="n hl">Rating</th><th class="n">Und.</th></tr></thead><tbody><tr><td class="">Gabriel</td><td class="">ARS</td><td class="n hl">6.11</td><td class="n">5.98</td></tr><tr><td class="">Guéhi</td><td class="">MCI</td><td class="n hl">5.74</td><td class="n">6.27</td></tr><tr><td class="">Guéhi</td><td class="">CRY</td><td class="n hl">5.57</td><td class="n">5.58</td></tr><tr><td class="">Muñoz</td><td class="">CRY</td><td class="n hl">5.57</td><td class="n">5.51</td></tr><tr><td class="">J.Timber</td><td class="">ARS</td><td class="n hl">5.54</td><td class="n">5.81</td></tr><tr><td class="">O&#x27;Reilly</td><td class="">MCI</td><td class="n hl">5.52</td><td class="n">5.87</td></tr></tbody></table></div></div><div><h4>MID</h4><div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="n hl">Rating</th><th class="n">Und.</th></tr></thead><tbody><tr><td class="">B.Fernandes</td><td class="">MUN</td><td class="n hl">6.22</td><td class="n">6.59</td></tr><tr><td class="">Bruno G.</td><td class="">NEW</td><td class="n hl">5.84</td><td class="n">5.83</td></tr><tr><td class="">Rice</td><td class="">ARS</td><td class="n hl">5.80</td><td class="n">5.95</td></tr><tr><td class="">Semenyo</td><td class="">BOU</td><td class="n hl">5.76</td><td class="n">5.92</td></tr><tr><td class="">Anderson</td><td class="">NFO</td><td class="n hl">5.66</td><td class="n">5.86</td></tr><tr><td class="">Stach</td><td class="">LEE</td><td class="n hl">5.63</td><td class="n">5.81</td></tr></tbody></table></div></div><div><h4>FWD</h4><div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="n hl">Rating</th><th class="n">Und.</th></tr></thead><tbody><tr><td class="">Bowen</td><td class="">WHU</td><td class="n hl">5.79</td><td class="n">5.79</td></tr><tr><td class="">Haaland</td><td class="">MCI</td><td class="n hl">5.75</td><td class="n">6.35</td></tr><tr><td class="">João Pedro</td><td class="">CHE</td><td class="n hl">5.29</td><td class="n">5.52</td></tr><tr><td class="">Thiago</td><td class="">BRE</td><td class="n hl">5.27</td><td class="n">5.91</td></tr><tr><td class="">Kroupi.Jr</td><td class="">BOU</td><td class="n hl">5.15</td><td class="n">5.07</td></tr><tr><td class="">Richarlison</td><td class="">TOT</td><td class="n hl">4.97</td><td class="n">5.10</td></tr></tbody></table></div></div></div>
+  <div class="grid4"><div><h4>GK</h4><div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="n hl">Rating</th><th class="n">Pts/gm</th></tr></thead><tbody><tr><td class="">Raya</td><td class="">ARS</td><td class="n hl">5.64</td><td class="n">4.51</td></tr><tr><td class="">Donnarumma</td><td class="">MCI</td><td class="n hl">5.56</td><td class="n">4.26</td></tr><tr><td class="">Roefs</td><td class="">SUN</td><td class="n hl">5.33</td><td class="n">4.20</td></tr><tr><td class="">Kelleher</td><td class="">BRE</td><td class="n hl">5.27</td><td class="n">4.24</td></tr><tr><td class="">Martinez</td><td class="">AVL</td><td class="n hl">5.26</td><td class="n">3.91</td></tr><tr><td class="">Henderson</td><td class="">CRY</td><td class="n hl">5.23</td><td class="n">3.89</td></tr></tbody></table></div></div><div><h4>DEF</h4><div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="n hl">Rating</th><th class="n">Pts/gm</th></tr></thead><tbody><tr><td class="">Gabriel</td><td class="">ARS</td><td class="n hl">6.11</td><td class="n">5.50</td></tr><tr><td class="">Guéhi</td><td class="">MCI</td><td class="n hl">5.74</td><td class="n">5.07</td></tr><tr><td class="">Guéhi</td><td class="">CRY</td><td class="n hl">5.57</td><td class="n">4.70</td></tr><tr><td class="">Muñoz</td><td class="">CRY</td><td class="n hl">5.57</td><td class="n">4.45</td></tr><tr><td class="">J.Timber</td><td class="">ARS</td><td class="n hl">5.54</td><td class="n">4.93</td></tr><tr><td class="">O&#x27;Reilly</td><td class="">MCI</td><td class="n hl">5.52</td><td class="n">4.82</td></tr></tbody></table></div></div><div><h4>MID</h4><div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="n hl">Rating</th><th class="n">Pts/gm</th></tr></thead><tbody><tr><td class="">B.Fernandes</td><td class="">MUN</td><td class="n hl">6.22</td><td class="n">6.03</td></tr><tr><td class="">Bruno G.</td><td class="">NEW</td><td class="n hl">5.84</td><td class="n">5.07</td></tr><tr><td class="">Rice</td><td class="">ARS</td><td class="n hl">5.80</td><td class="n">4.75</td></tr><tr><td class="">Semenyo</td><td class="">BOU</td><td class="n hl">5.76</td><td class="n">5.35</td></tr><tr><td class="">Anderson</td><td class="">NFO</td><td class="n hl">5.66</td><td class="n">4.55</td></tr><tr><td class="">Stach</td><td class="">LEE</td><td class="n hl">5.63</td><td class="n">4.48</td></tr></tbody></table></div></div><div><h4>FWD</h4><div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="n hl">Rating</th><th class="n">Pts/gm</th></tr></thead><tbody><tr><td class="">Bowen</td><td class="">WHU</td><td class="n hl">5.79</td><td class="n">4.82</td></tr><tr><td class="">Haaland</td><td class="">MCI</td><td class="n hl">5.75</td><td class="n">5.66</td></tr><tr><td class="">João Pedro</td><td class="">CHE</td><td class="n hl">5.29</td><td class="n">4.43</td></tr><tr><td class="">Thiago</td><td class="">BRE</td><td class="n hl">5.27</td><td class="n">4.63</td></tr><tr><td class="">Kroupi.Jr</td><td class="">BOU</td><td class="n hl">5.15</td><td class="n">3.43</td></tr><tr><td class="">Richarlison</td><td class="">TOT</td><td class="n hl">4.97</td><td class="n">3.59</td></tr></tbody></table></div></div></div>
 </section>
 
 <section>
@@ -612,7 +580,7 @@ table.marks { width: auto; min-width: 180px; }
   <h2>How the marks spread</h2>
   <div class="grid2">
     <div><div class="hist"><div class="bar"><span class="cnt">20</span><i style="height:2px" class="b-bad"></i><span class="lab">1</span></div><div class="bar"><span class="cnt">822</span><i style="height:25px" class="b-bad"></i><span class="lab">2</span></div><div class="bar"><span class="cnt">1,078</span><i style="height:33px" class="b-low"></i><span class="lab">3</span></div><div class="bar"><span class="cnt">3,948</span><i style="height:120px" class="b-mid"></i><span class="lab">4</span></div><div class="bar"><span class="cnt">1,569</span><i style="height:48px" class="b-mid"></i><span class="lab">5</span></div><div class="bar"><span class="cnt">1,378</span><i style="height:42px" class="b-mid"></i><span class="lab">6</span></div><div class="bar"><span class="cnt">1,136</span><i style="height:35px" class="b-mid"></i><span class="lab">7</span></div><div class="bar"><span class="cnt">460</span><i style="height:14px" class="b-high"></i><span class="lab">8</span></div><div class="bar"><span class="cnt">103</span><i style="height:3px" class="b-high"></i><span class="lab">9</span></div><div class="bar"><span class="cnt">7</span><i style="height:2px" class="b-top"></i><span class="lab">10</span></div></div><p class="small">Every rated match, rounded to the whole mark.</p></div>
-    <div><div class="scroll"><table><thead><tr><th>Pos</th><th class="n">60+ min</th><th class="n">Median</th><th class="n">Und.</th><th class="n">9s</th><th class="n">10s</th><th class="n">1s</th></tr></thead><tbody><tr><td>GK</td><td class="n">757</td><td class="n">4.9</td><td class="n">4.8</td><td class="n">2</td><td class="n">0</td><td class="n">1</td></tr><tr><td>DEF</td><td class="n">3,026</td><td class="n">4.7</td><td class="n">4.9</td><td class="n">20</td><td class="n">1</td><td class="n">2</td></tr><tr><td>MID</td><td class="n">3,265</td><td class="n">5.0</td><td class="n">5.4</td><td class="n">15</td><td class="n">0</td><td class="n">0</td></tr><tr><td>FWD</td><td class="n">765</td><td class="n">4.5</td><td class="n">5.4</td><td class="n">4</td><td class="n">0</td><td class="n">0</td></tr></tbody></table></div>
+    <div><div class="scroll"><table><thead><tr><th>Pos</th><th class="n">60+ min</th><th class="n">Median</th><th class="n">9s</th><th class="n">10s</th><th class="n">1s</th></tr></thead><tbody><tr><td>GK</td><td class="n">757</td><td class="n">4.9</td><td class="n">2</td><td class="n">0</td><td class="n">1</td></tr><tr><td>DEF</td><td class="n">3,026</td><td class="n">4.7</td><td class="n">20</td><td class="n">1</td><td class="n">2</td></tr><tr><td>MID</td><td class="n">3,265</td><td class="n">5.0</td><td class="n">15</td><td class="n">0</td><td class="n">0</td></tr><tr><td>FWD</td><td class="n">765</td><td class="n">4.5</td><td class="n">4</td><td class="n">0</td><td class="n">0</td></tr></tbody></table></div>
     <p class="small" style="margin-top:8px">Correlation with league points 0.943; with the FotMob/SofaScore average 0.772.</p></div>
   </div>
 </section>
@@ -621,13 +589,13 @@ table.marks { width: auto; min-width: 180px; }
   <h2>The scale</h2>
   <p class="q">His league points, plus the opponent and the parts below, are read off this table, straight lines between the rows. Under 10 minutes a man is rated only if something happened.</p>
   <div class="grid2"><div><div class="scroll"><table class="marks"><thead><tr><th class="n">League pts</th><th class="n">Mark</th></tr></thead><tbody><tr><td class="n">−4</td><td class="n hl">1</td></tr><tr><td class="n">0</td><td class="n hl">2.5</td></tr><tr><td class="n">2</td><td class="n hl">4.5</td></tr><tr><td class="n">6</td><td class="n hl">6.8</td></tr><tr><td class="n">10</td><td class="n hl">8.3</td></tr><tr><td class="n">16</td><td class="n hl">9.5</td></tr><tr><td class="n">22</td><td class="n hl">10</td></tr></tbody></table></div></div><div><div class="scroll"><table class="wt"><thead><tr><th>Part</th><th>Stat</th><th class="n">League pts each</th></tr></thead><tbody><tr><td>Chances missed and errors</td><td>big chances missed</td><td class="n">−1.00</td></tr><tr><td></td><td>pen missed</td><td class="n">−1.00</td></tr><tr><td></td><td>error → goal</td><td class="n">−2.00</td></tr><tr><td></td><td>error → shot</td><td class="n">−0.50</td></tr><tr><td></td><td>pen conceded</td><td class="n">−1.50</td></tr><tr><td></td><td>dispossessed</td><td class="n">−0.15</td></tr><tr><td>What the league does not score</td><td>from outside box</td><td class="n">+1.00</td></tr><tr><td></td><td>pen won</td><td class="n">+1.00</td></tr><tr><td></td><td>off the line</td><td class="n">+1.50</td></tr><tr><td></td><td>prevented</td><td class="n">+1.00</td></tr></tbody></table></div></div></div>
-  <div class="scroll"><table><thead><tr><th></th><th>What</th><th>Live source</th><th>Why</th></tr></thead><tbody><tr><td><span class="tag t-rating">Rating</span></td><td>League points</td><td class="src">Fantrax, the real league&#x27;s scoring</td><td>The base of every mark. 0.94 correlation between mark and points.</td></tr><tr><td><span class="tag t-rating">Rating</span></td><td>Opponent</td><td class="src">goals + xG so far, ours</td><td>Goal and assist points × their defence, clean-sheet points × their attack, held to 0.7–1.5.</td></tr><tr><td><span class="tag t-rating">Rating</span></td><td>Big chances missed, missed pens</td><td class="src">BCM · PKM</td><td>−1 point each on top of the league&#x27;s own −2 for a missed pen.</td></tr><tr><td><span class="tag t-rating">Rating</span></td><td>Errors, pens conceded, dispossessed</td><td class="src">ErG · ErS · Pen · DIS</td><td>−2, −0.5, −1.5, −0.15.</td></tr><tr><td><span class="tag t-rating">Rating</span></td><td>Long-range goals, pens won, off the line, goals prevented</td><td class="src">GOB · PKD · CLO · shots export</td><td>+1, +1, +1.5, +1 per goal prevented.</td></tr><tr><td><span class="tag t-underlying">Underlying</span></td><td>xG and xA at his goal and assist prices</td><td class="src">FPL xG · xA</td><td>The points his chances were worth. Over five matches it predicts the next five better than his real points (0.356 against 0.337).</td></tr><tr><td><span class="tag t-underlying">Underlying</span></td><td>Shots</td><td class="src">S</td><td>On its own 0.245 with the next five; adds on top of xG. +0.25 each.</td></tr><tr><td><span class="tag t-underlying">Underlying</span></td><td>Key passes</td><td class="src">KP</td><td>Adds again on top: +0.15 each. Less an ordinary man&#x27;s 0.45 per 90 of the two.</td></tr><tr><td><span class="tag t-out">Out</span></td><td>Touches in the opponent&#x27;s box</td><td class="src">touches export</td><td>0.164 on its own, but nothing once shots are in (−0.04). It moves with shots.</td></tr><tr><td><span class="tag t-out">Out</span></td><td>Successful dribbles</td><td class="src">FotMob only</td><td>The stats league has attempts only, so we cannot read it live.</td></tr><tr><td><span class="tag t-out">Out</span></td><td>The sister model&#x27;s team strength</td><td class="src">data/intel/strength</td><td>Too smoothed: Wolves&#x27; defence read as average while conceding 1.79 a game.</td></tr></tbody></table></div>
+  <div class="scroll"><table><thead><tr><th></th><th>What</th><th>Live source</th><th>Why</th></tr></thead><tbody><tr><td><span class="tag t-rating">Rating</span></td><td>League points</td><td class="src">Fantrax, the real league&#x27;s scoring</td><td>The base of every mark. 0.94 correlation between mark and points.</td></tr><tr><td><span class="tag t-rating">Rating</span></td><td>Opponent</td><td class="src">goals + xG so far, ours</td><td>Goal and assist points × their defence, clean-sheet points × their attack, held to 0.7–1.5.</td></tr><tr><td><span class="tag t-rating">Rating</span></td><td>Big chances missed, missed pens</td><td class="src">BCM · PKM</td><td>−1 point each on top of the league&#x27;s own −2 for a missed pen.</td></tr><tr><td><span class="tag t-rating">Rating</span></td><td>Errors, pens conceded, dispossessed</td><td class="src">ErG · ErS · Pen · DIS</td><td>−2, −0.5, −1.5, −0.15.</td></tr><tr><td><span class="tag t-rating">Rating</span></td><td>Long-range goals, pens won, off the line, goals prevented</td><td class="src">GOB · PKD · CLO · shots export</td><td>+1, +1, +1.5, +1 per goal prevented.</td></tr><tr><td><span class="tag t-out">Out</span></td><td>Shots, xG, key passes, touches in the box</td><td class="src">—</td><td>What a man is likely to do next is the projections&#x27; job. The rating is the match.</td></tr><tr><td><span class="tag t-out">Out</span></td><td>Successful dribbles</td><td class="src">FotMob only</td><td>The stats league has attempts only, so we cannot read it live.</td></tr><tr><td><span class="tag t-out">Out</span></td><td>The sister model&#x27;s team strength</td><td class="src">data/intel/strength</td><td>Too smoothed: Wolves&#x27; defence read as average while conceding 1.79 a game.</td></tr></tbody></table></div>
 </section>
 
 <section>
   <h2>Season's top 20 and bottom 12</h2>
   <div class="cards"><article class="card">
-  <div class="mark b-top"><span>10.0</span><small class="und b-high">U 8.8</small></div>
+  <div class="mark b-top"><span>10.0</span><small>22 pts</small></div>
   <div class="body">
     <header><strong>J.Timber</strong> <span class="pos">DEF</span>
       <span class="fx">ARS v LEE 5–0 · GW2 · 63′</span></header>
@@ -637,7 +605,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.03 · defence 1.12</span><span>vs expected +16.5 pts</span><span>FotMob 9.2 · SofaScore 10.0</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-top"><span>9.7</span><small class="und b-high">U 9.0</small></div>
+  <div class="mark b-top"><span>9.7</span><small>19 pts</small></div>
   <div class="body">
     <header><strong>Van de Ven</strong> <span class="pos">DEF</span>
       <span class="fx">TOT at EVE 3–0 · GW9 · 90′</span></header>
@@ -647,7 +615,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.95 · defence 1.00</span><span>vs expected +14.7 pts</span><span>FotMob 9.1 · SofaScore 9.2</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-top"><span>9.7</span><small class="und b-mid">U 7.4</small></div>
+  <div class="mark b-top"><span>9.7</span><small>17 pts</small></div>
   <div class="body">
     <header><strong>Eze</strong> <span class="pos">MID</span>
       <span class="fx">ARS v TOT 4–1 · GW12 · 90′</span></header>
@@ -657,7 +625,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.01 · defence 1.12</span><span>vs expected +11.8 pts</span><span>FotMob 9.7 · SofaScore 10.0</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-top"><span>9.5</span><small class="und b-high">U 8.8</small></div>
+  <div class="mark b-top"><span>9.5</span><small>16 pts</small></div>
   <div class="body">
     <header><strong>João Pedro</strong> <span class="pos">FWD</span>
       <span class="fx">CHE at AVL 4–1 · GW29 · 84′</span></header>
@@ -667,7 +635,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.96 · defence 1.10</span><span>vs expected +11.2 pts</span><span>FotMob 9.8 · SofaScore 9.7</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-top"><span>9.5</span><small class="und b-high">U 7.8</small></div>
+  <div class="mark b-top"><span>9.5</span><small>16 pts</small></div>
   <div class="body">
     <header><strong>Sangaré</strong> <span class="pos">MID</span>
       <span class="fx">NFO v TOT 3–0 · GW16 · 90′</span></header>
@@ -677,7 +645,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.98 · defence 1.07</span><span>vs expected +11.1 pts</span><span>FotMob 9.2 · SofaScore 9.9</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-top"><span>9.5</span><small class="und b-high">U 8.1</small></div>
+  <div class="mark b-top"><span>9.5</span><small>20 pts</small></div>
   <div class="body">
     <header><strong>Wieffer</strong> <span class="pos">MID</span>
       <span class="fx">BHA at BUR 2–0 · GW32 · 90′</span></header>
@@ -687,7 +655,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.75 · defence 0.73</span><span>vs expected +13.0 pts</span><span>FotMob 9.1 · SofaScore 9.5</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-top"><span>9.5</span><small class="und b-top">U 9.7</small></div>
+  <div class="mark b-top"><span>9.5</span><small>18 pts</small></div>
   <div class="body">
     <header><strong>Schade</strong> <span class="pos">MID</span>
       <span class="fx">BRE v BOU 4–1 · GW18 · 90′</span></header>
@@ -697,7 +665,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.06 · defence 0.93</span><span>vs expected +10.5 pts</span><span>FotMob 9.7 · SofaScore 10.0</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-high"><span>9.4</span><small class="und b-high">U 8.3</small></div>
+  <div class="mark b-high"><span>9.4</span><small>13 pts</small></div>
   <div class="body">
     <header><strong>Dorgu</strong> <span class="pos">DEF</span>
       <span class="fx">MUN v MCI 2–0 · GW22 · 90′</span></header>
@@ -707,7 +675,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.36 · defence 1.27</span><span>vs expected +8.1 pts</span><span>FotMob 8.5 · SofaScore 8.2</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-high"><span>9.4</span><small class="und b-high">U 8.3</small></div>
+  <div class="mark b-high"><span>9.4</span><small>14 pts</small></div>
   <div class="body">
     <header><strong>Guéhi</strong> <span class="pos">DEF</span>
       <span class="fx">MCI at CHE 3–0 · GW32 · 90′</span></header>
@@ -717,7 +685,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.27 · defence 1.06</span><span>vs expected +7.3 pts</span><span>FotMob 8.8 · SofaScore 9.2</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-high"><span>9.4</span><small class="und b-mid">U 7.0</small></div>
+  <div class="mark b-high"><span>9.4</span><small>12 pts</small></div>
   <div class="body">
     <header><strong>Cash</strong> <span class="pos">DEF</span>
       <span class="fx">AVL v MCI 1–0 · GW9 · 90′</span></header>
@@ -727,7 +695,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.27 · defence 1.23</span><span>vs expected +8.9 pts</span><span>FotMob 8.1 · SofaScore 8.4</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-high"><span>9.4</span><small class="und b-high">U 7.8</small></div>
+  <div class="mark b-high"><span>9.4</span><small>15 pts</small></div>
   <div class="body">
     <header><strong>Gusto</strong> <span class="pos">DEF</span>
       <span class="fx">CHE v EVE 2–0 · GW16 · 90′</span></header>
@@ -737,7 +705,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.91 · defence 1.07</span><span>vs expected +10.7 pts</span><span>FotMob 8.8 · SofaScore 8.7</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-high"><span>9.3</span><small class="und b-high">U 7.9</small></div>
+  <div class="mark b-high"><span>9.3</span><small>15 pts</small></div>
   <div class="body">
     <header><strong>Dorgu</strong> <span class="pos">DEF</span>
       <span class="fx">MUN at BHA 3–0 · GW38 · 61′</span></header>
@@ -747,7 +715,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.05 · defence 1.11</span><span>vs expected +11.3 pts</span><span>FotMob 8.5 · SofaScore 8.1</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-high"><span>9.3</span><small class="und b-high">U 7.7</small></div>
+  <div class="mark b-high"><span>9.3</span><small>18 pts</small></div>
   <div class="body">
     <header><strong>Mavropanos</strong> <span class="pos">DEF</span>
       <span class="fx">WHU v WOL 4–0 · GW32 · 90′</span></header>
@@ -757,7 +725,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.68 · defence 0.86</span><span>vs expected +13.8 pts</span><span>FotMob 9.2 · SofaScore 9.7 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-high"><span>9.3</span><small class="und b-high">U 8.2</small></div>
+  <div class="mark b-high"><span>9.3</span><small>14 pts</small></div>
   <div class="body">
     <header><strong>Ballard</strong> <span class="pos">DEF</span>
       <span class="fx">SUN v WHU 3–0 · GW1 · 90′</span></header>
@@ -767,7 +735,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.00 · defence 1.00</span><span>vs expected +8.7 pts</span><span>FotMob 8.7 · SofaScore 9.3</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-high"><span>9.3</span><small class="und b-high">U 9.0</small></div>
+  <div class="mark b-high"><span>9.3</span><small>14 pts</small></div>
   <div class="body">
     <header><strong>Henderson</strong> <span class="pos">GK</span>
       <span class="fx">CRY v WOL 1–0 · GW27 · 90′</span></header>
@@ -777,7 +745,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.64 · defence 0.85</span><span>vs expected +2.3 pts</span><span>FotMob 9.3 · SofaScore 9.1</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-high"><span>9.3</span><small class="und b-high">U 8.6</small></div>
+  <div class="mark b-high"><span>9.3</span><small>17 pts</small></div>
   <div class="body">
     <header><strong>Palmer</strong> <span class="pos">MID</span>
       <span class="fx">CHE at WOL 3–1 · GW25 · 60′</span></header>
@@ -787,7 +755,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.65 · defence 0.88</span><span>vs expected +12.8 pts</span><span>FotMob 9.5 · SofaScore 8.9</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-high"><span>9.3</span><small class="und b-high">U 8.3</small></div>
+  <div class="mark b-high"><span>9.3</span><small>14 pts</small></div>
   <div class="body">
     <header><strong>Thiago</strong> <span class="pos">FWD</span>
       <span class="fx">BRE at EVE 4–2 · GW20 · 90′</span></header>
@@ -797,7 +765,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.84 · defence 1.08</span><span>vs expected +10.8 pts</span><span>FotMob 9.6 · SofaScore 10.0</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-high"><span>9.3</span><small class="und b-high">U 7.7</small></div>
+  <div class="mark b-high"><span>9.3</span><small>14 pts</small></div>
   <div class="body">
     <header><strong>Van Hecke</strong> <span class="pos">DEF</span>
       <span class="fx">BHA v AVL 3–4 · GW14 · 90′</span></header>
@@ -807,7 +775,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.85 · defence 1.17</span><span>vs expected +10.4 pts</span><span>FotMob 7.7 · SofaScore 7.7</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-high"><span>9.2</span><small class="und b-mid">U 5.7</small></div>
+  <div class="mark b-high"><span>9.2</span><small>14 pts</small></div>
   <div class="body">
     <header><strong>Romero</strong> <span class="pos">DEF</span>
       <span class="fx">TOT at NEW 2–2 · GW14 · 90′</span></header>
@@ -817,7 +785,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.98 · defence 1.09</span><span>vs expected +10.9 pts</span><span>FotMob 9.1 · SofaScore 8.8 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-high"><span>9.2</span><small class="und b-high">U 8.4</small></div>
+  <div class="mark b-high"><span>9.2</span><small>14 pts</small></div>
   <div class="body">
     <header><strong>Thiaw</strong> <span class="pos">DEF</span>
       <span class="fx">NEW v CRY 2–0 · GW20 · 90′</span></header>
@@ -829,7 +797,7 @@ table.marks { width: auto; min-width: 180px; }
 </article></div>
   <h4>Bottom 12</h4>
   <div class="cards"><article class="card">
-  <div class="mark b-bad"><span>1.0</span><small class="und b-bad">U 1.0</small></div>
+  <div class="mark b-bad"><span>1.0</span><small>-4 pts</small></div>
   <div class="body">
     <header><strong>Estève</strong> <span class="pos">DEF</span>
       <span class="fx">BUR at MCI 1–5 · GW6 · 90′</span></header>
@@ -839,7 +807,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.21 · defence 1.04</span><span>vs expected −0.4 pts</span><span>FotMob 1.8 · SofaScore 4.5 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-bad"><span>1.0</span><small class="und b-low">U 3.1</small></div>
+  <div class="mark b-bad"><span>1.0</span><small>1 pts</small></div>
   <div class="body">
     <header><strong>Roefs</strong> <span class="pos">GK</span>
       <span class="fx">SUN v NFO 0–5 · GW34 · 90′</span></header>
@@ -849,7 +817,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.84 · defence 1.00</span><span>vs expected −1.1 pts</span><span>FotMob 3.2 · SofaScore 5.1</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-bad"><span>1.0</span><small class="und b-bad">U 2.0</small></div>
+  <div class="mark b-bad"><span>1.0</span><small>-1 pts</small></div>
   <div class="body">
     <header><strong>Thiaw</strong> <span class="pos">DEF</span>
       <span class="fx">NEW v LEE 4–3 · GW21 · 45′</span></header>
@@ -859,7 +827,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.99 · defence 0.92</span><span>vs expected −0.8 pts</span><span>FotMob 4.7 · SofaScore 5.1</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-bad"><span>1.0</span><small class="und b-low">U 3.6</small></div>
+  <div class="mark b-bad"><span>1.0</span><small>-2 pts</small></div>
   <div class="body">
     <header><strong>Gordon</strong> <span class="pos">MID</span>
       <span class="fx">NEW v LIV 2–3 · GW2 · 47′</span></header>
@@ -869,7 +837,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.20 · defence 0.94</span><span>vs expected −1.0 pts</span><span>FotMob 6.1 · SofaScore 6.2 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-bad"><span>1.0</span><small class="und b-bad">U 1.7</small></div>
+  <div class="mark b-bad"><span>1.0</span><small>-2 pts</small></div>
   <div class="body">
     <header><strong>Romero</strong> <span class="pos">DEF</span>
       <span class="fx">TOT v LIV 1–2 · GW17 · 90′</span></header>
@@ -879,7 +847,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.13 · defence 1.01</span><span>vs expected −1.4 pts</span><span>FotMob 4.7 · SofaScore 6.1 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-bad"><span>1.1</span><small class="und b-low">U 2.6</small></div>
+  <div class="mark b-bad"><span>1.1</span><small>-1 pts</small></div>
   <div class="body">
     <header><strong>Laurent</strong> <span class="pos">MID</span>
       <span class="fx">BUR at FUL 1–3 · GW31 · 90′</span></header>
@@ -889,7 +857,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.94 · defence 0.98</span><span>vs expected −0.5 pts</span><span>FotMob 4.6 · SofaScore 5.9 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-bad"><span>1.1</span><small class="und b-bad">U 1.7</small></div>
+  <div class="mark b-bad"><span>1.1</span><small>-2 pts</small></div>
   <div class="body">
     <header><strong>N.Williams</strong> <span class="pos">DEF</span>
       <span class="fx">NFO v CRY 1–1 · GW24 · 44′</span></header>
@@ -899,7 +867,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.95 · defence 1.04</span><span>vs expected −0.2 pts</span><span>FotMob 4.9 · SofaScore 5.8</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-bad"><span>1.2</span><small class="und b-bad">U 1.7</small></div>
+  <div class="mark b-bad"><span>1.2</span><small>-2 pts</small></div>
   <div class="body">
     <header><strong>Van de Ven</strong> <span class="pos">DEF</span>
       <span class="fx">TOT v CRY 1–3 · GW29 · 37′</span></header>
@@ -909,7 +877,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.95 · defence 1.06</span><span>vs expected −0.2 pts</span><span>FotMob 5.4 · SofaScore 5.4</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-bad"><span>1.3</span><small class="und b-low">U 3.2</small></div>
+  <div class="mark b-bad"><span>1.3</span><small>0 pts</small></div>
   <div class="body">
     <header><strong>Spence</strong> <span class="pos">DEF</span>
       <span class="fx">TOT v ARS 1–4 · GW27 · 90′</span></header>
@@ -919,7 +887,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.27 · defence 1.63</span><span>vs expected −1.1 pts</span><span>FotMob 4.5 · SofaScore 6.4 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-bad"><span>1.3</span><small class="und b-mid">U 7.0</small></div>
+  <div class="mark b-bad"><span>1.3</span><small>0 pts</small></div>
   <div class="body">
     <header><strong>Welbeck</strong> <span class="pos">FWD</span>
       <span class="fx">BHA at EVE 0–2 · GW2 · 90′</span></header>
@@ -929,7 +897,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.89 · defence 0.97</span><span>vs expected −2.0 pts</span><span>FotMob 5.0 · SofaScore 4.9</span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-bad"><span>1.4</span><small class="und b-bad">U 1.3</small></div>
+  <div class="mark b-bad"><span>1.4</span><small>-3 pts</small></div>
   <div class="body">
     <header><strong>Cucurella</strong> <span class="pos">DEF</span>
       <span class="fx">CHE at FUL 1–2 · GW21 · 21′</span></header>
@@ -939,7 +907,7 @@ table.marks { width: auto; min-width: 180px; }
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.94 · defence 1.00</span><span>vs expected −0.1 pts</span><span>FotMob 5.4 · SofaScore 4.2 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article><article class="card">
-  <div class="mark b-bad"><span>1.4</span><small class="und b-bad">U 1.3</small></div>
+  <div class="mark b-bad"><span>1.4</span><small>-3 pts</small></div>
   <div class="body">
     <header><strong>Agbadou</strong> <span class="pos">DEF</span>
       <span class="fx">WOL at FUL 0–3 · GW10 · 35′</span></header>
