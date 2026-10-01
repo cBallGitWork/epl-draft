@@ -22,6 +22,7 @@ import { storyOfColumn } from "./newsroom";
 import { COLUMNIST, STORY_BYLINE, editionName } from "./voice/bylines";
 import { presserHeadline } from "./voice/pressers";
 import type { ReportsJob } from "./reports";
+import type { BinDesk } from "./binXi";
 
 // One assignment in, one prepared desk out: which voice writes it, from which
 // brief, and how the words come back as a story. A kind with no desk yet
@@ -45,6 +46,8 @@ export interface DeskContext {
   sheets: SheetsDesk | null;
   /** Each match-day report this firing commissioned, by its London day. */
   reports: ReadonlyMap<string, ReportsJob>;
+  /** The Bin XI's side, brief and cargo; null unless it is due this firing. */
+  bin: BinDesk | null;
   /** This week's press-conference signals, for men the league holds. Empty until
    *  the intel export lands, which files no Team Sheet and spends nothing. */
   presserLines: PresserLine[];
@@ -139,7 +142,7 @@ export function file(
     // The picture, chosen HERE from the facts and not from the prose. A model
     // that named the man would be a model choosing the photograph, which is the
     // one thing `strangers()` exists to catch it doing.
-    face: faceOf(assignment, faceCtx(ctx, assignment)),
+    face: assignment.kind === "bin-xi" ? (ctx.bin?.face ?? null) : faceOf(assignment, faceCtx(ctx, assignment)),
   });
 }
 

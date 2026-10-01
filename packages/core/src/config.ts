@@ -453,3 +453,16 @@ export const REPORTS = {
   /** Matches written in one call; a longer day is split, the later call shown what is already on the page. */
   perCall: 5,
 } as const;
+
+/** The Bin XI: the best eleven nobody has, filed on Tuesday before Wednesday's waivers. */
+export const BIN_XI = {
+  /** The London weekday it files on: the one day with no league event. */
+  weekday: "Tue",
+  /** How far the chances a man made or missed move his points when picking: a 9 still beats a 5. */
+  luck: 0.5,
+  /** Key-stats lines: how many men a top-xG or top-xA line names, and the least that earns a place. */
+  stats: { topMen: 3, expectedGoals: 0.2, expectedAssists: 0.15 },
+  /** The column's length, in words, and its paragraphs. */
+  words: [150, 220],
+  paragraphs: 3,
+} as const;

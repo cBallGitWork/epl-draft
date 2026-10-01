@@ -132,3 +132,15 @@ export function firstKickoff(
   }
   return earliest?.iso ?? null;
 }
+
+const LAST_SECOND = "23:59:59";
+const MS_PER_DAY = 86_400_000;
+
+/** A period as whole days, `YYYY-MM-DD`, as Fantrax labels it ("4 (Sep 11 - Sep 17)"): one ending before
+ *  a day's last second ends the day before, or the next gameweek's Friday night would count in it. */
+export function periodDays(period: LeaguePeriod): { startDate: string; endDate: string } {
+  const endDay = period.end.slice(0, 10);
+  if (period.end.slice(11, 19) === LAST_SECOND) return { startDate: period.start.slice(0, 10), endDate: endDay };
+  const [year, month, day] = endDay.split("-").map(Number);
+  return { startDate: period.start.slice(0, 10), endDate: new Date(Date.UTC(year, month - 1, day) - MS_PER_DAY).toISOString().slice(0, 10) };
+}

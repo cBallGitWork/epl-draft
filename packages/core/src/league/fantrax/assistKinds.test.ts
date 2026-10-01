@@ -9,6 +9,8 @@ const line = (fantraxId: string, stats: Record<string, number | null>): PlayerSt
   clubShort: null,
   position: null,
   ownerTeamId: null,
+  defaultPosition: null,
+  points: null,
   stats,
 });
 

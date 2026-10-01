@@ -45,7 +45,7 @@ export type { SortKey } from "./standingsOrder";
 export { pedigreeOf } from "./pedigree";
 export type { Pedigree } from "./pedigree";
 
-export { firstKickoff, locksAt, openingGameweek, periodGameweeks, saveOpen } from "./calendar";
+export { firstKickoff, locksAt, openingGameweek, periodDays, periodGameweeks, saveOpen } from "./calendar";
 export type { GameweekKickoff } from "./calendar";
 
 export { lastLockedPeriod, periodToRead, planningPeriod, rosterDisplay } from "./visibility";
@@ -55,6 +55,8 @@ export { applyMove, eligibilityOf, eligibleSlots, legalMoves } from "./moves";
 export type { Blocker, Eligibility, Move, SlotOption } from "./moves";
 
 export { violations } from "./violations";
+export { formations } from "./formations";
+export { minimumsOf } from "./minimums";
 export type { Violation } from "./violations";
 
 export { isActive } from "./rosterStatus";
@@ -77,6 +79,7 @@ export { cupGroups, cupPlan } from "./cups/plan";
 export type { CupFixture, CupStage } from "./cups/plan";
 
 export { FantraxError } from "./fantrax/errors";
+export { categoryPoints } from "./scoring";
 export type { ScoringCategory, ScoringRules } from "./scoring";
 export { orphaned, unacknowledged } from "./fantrax/baseline";
 export type { AcknowledgedDifference } from "./fantrax/baseline";
@@ -132,6 +135,7 @@ export { GROUPS, categoryFor, groupFor, inGroup, isMeasure } from "./categories"
 export type { GroupKey, Measure, StatCategory } from "./categories";
 export { mapPlayerStats, KEEPER, OUTFIELD } from "./fantrax/playerStats";
 export { mapAssistKinds } from "./fantrax/assistKinds";
+export { fetchPoolWindow } from "./fantrax/windowClient";
 export type { PlayerStatLine, PositionGroup, RawPlayerStats } from "./fantrax/playerStats";
 export { PLAYER_CATEGORIES } from "./playerCategories";
 export type { PlayerCategory } from "./playerCategories";

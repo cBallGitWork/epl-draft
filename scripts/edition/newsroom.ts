@@ -164,6 +164,7 @@ export function storyOfColumn(
       record: column.record,
       skit: column.skit,
       reports: column.reports,
+      bin: column.bin,
     },
   });
   if (story === null) throw new Error(`The ${meta.kind} did not come back in a printable shape.`);
