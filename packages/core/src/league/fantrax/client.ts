@@ -2,7 +2,7 @@ import { FANTRAX_FXEA_BASE, FANTRAX_SPORT, TRANSACTION_PAGE_SIZE } from "../../c
 import { politeFetch } from "../../http/fetch";
 import { readJson } from "../../http/json";
 import type { TransactionView } from "../types";
-import { FantraxError, errorEnvelope } from "./errors";
+import { FantraxError, errorEnvelope, statusFailure } from "./errors";
 import { fxpaRead } from "./fxpa";
 import { demoFxea, isDemo } from "./demo";
 import type { RawStandingsPage } from "./standingsPage";
@@ -47,9 +47,9 @@ async function fxeaGet<T>(method: string, params: Record<string, string>): Promi
 
   // A backstop only. Fantrax reports its own refusals with a 200 and an error
   // body, so this fires for transport failures, not for anything it means.
-  if (!res.ok) throw new FantraxError(method, String(res.status), res.statusText);
+  if (!res.ok) throw statusFailure(method, res);
 
-  const body = await readJson(res, (arrived) => new FantraxError(method, "NOT_JSON", arrived));
+  const body = await readJson(res, (arrived) => new FantraxError(method, "NOT_JSON", arrived, "malformed"));
   const error = errorEnvelope(body);
   if (error) {
     throw new FantraxError(method, error.code ?? "UNKNOWN", error.message ?? "no message");

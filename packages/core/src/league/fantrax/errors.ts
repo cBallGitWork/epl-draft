@@ -1,4 +1,4 @@
-import { ProviderError } from "../../http/errors";
+import { ProviderError, statusKind, type FailureKind } from "../../http/errors";
 import type { RawFantraxError } from "./raw";
 
 // Fantrax answers HTTP 200 whether or not it did what you asked. A missing
@@ -12,12 +12,18 @@ import type { RawFantraxError } from "./raw";
 // day fxea grows a `pageError` for some unrelated reason the confusion would
 // already be built in. The cross-detector tests exist to keep them apart.
 
-/** `code` is Fantrax's own ("NO_TEAMS", "INVALID_LEAGUE_ID") or the HTTP status of a backstop. */
+/** `code` is Fantrax's own ("NO_TEAMS", "INVALID_LEAGUE_ID") or the HTTP status of a backstop. An
+ *  envelope is a refusal, the default; a site that got no answer says which kind. */
 export class FantraxError extends ProviderError {
-  constructor(readonly method: string, code: string, message: string) {
-    super(code, `Fantrax ${method}: ${code} — ${message}`);
+  constructor(readonly method: string, code: string, message: string, kind: FailureKind = "refused") {
+    super(code, `Fantrax ${method}: ${code} — ${message}`, kind);
     this.name = "FantraxError";
   }
+}
+
+/** The backstop for a non-2xx answer, which Fantrax never uses for a refusal it means. */
+export function statusFailure(method: string, res: Response): FantraxError {
+  return new FantraxError(method, String(res.status), res.statusText, statusKind(res.status));
 }
 
 /** An untrusted value as an object, or null. Arrays pass, which is fine: every

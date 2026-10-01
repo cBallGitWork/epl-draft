@@ -1,29 +1,28 @@
 import { FANTRAX_LEAGUE_ID, FantraxError, fetchDraftResults, mapDraftPicks, pedigreeOf } from "@epl/core";
-import type { Pedigree } from "@epl/core";
+import type { DraftPick, Pedigree } from "@epl/core";
 import { leagueCache } from "../../leagueCache";
 import { orRefusal } from "../../refusals";
 import { getLeaguePool } from "../pool";
 
 // What his draft pick cost: the draft read, joined to the pool `/players` already keeps warm.
 
-/** **A draft does not change**, so this is held for a season rather than for a
- *  page window. The one thing that moves it is the draft itself running, and it
- *  runs once — the real league's is on 10 Oct, and until then the read answers a
- *  draft in progress, which `mapDraftPicks` refuses whole rather than serving
- *  half a board.
- *
- *  A refusal is empty rather than fatal: no picks reads as "we cannot say", which
- *  is exactly what a failed draft read means. */
+/** A final board is held a day; a draft still running, or a refusal, is asked on the page window. */
 const DRAFT_HELD = 60 * 60 * 24;
 
-const readDraft = leagueCache(
-  "draft-results",
-  async () => {
-    const raw = await orRefusal(fetchDraftResults(FANTRAX_LEAGUE_ID));
-    return raw instanceof FantraxError ? [] : mapDraftPicks(raw);
-  },
-  DRAFT_HELD,
-);
+async function readPicks(): Promise<DraftPick[]> {
+  const raw = await orRefusal(fetchDraftResults(FANTRAX_LEAGUE_ID));
+  return raw instanceof FantraxError ? [] : mapDraftPicks(raw);
+}
+
+const heldDraft = leagueCache("draft-results", readPicks, () => [], DRAFT_HELD);
+const runningDraft = leagueCache("draft-running", readPicks, () => []);
+
+/** The held board once it has picks (`mapDraftPicks` gives none until the draft completes);
+ *  until then the page window's, so a draft that finishes is seen within it, not a day later. */
+async function draftPicks(): Promise<DraftPick[]> {
+  const held = await heldDraft();
+  return held.length > 0 ? held : runningDraft();
+}
 
 /** His pedigree, and the name of the team that spent the pick.
  *
@@ -34,7 +33,7 @@ const readDraft = leagueCache(
 export async function playerPedigree(
   fantraxId: string,
 ): Promise<{ pedigree: Pedigree; drafterName: string | null }> {
-  const [picks, pool] = await Promise.all([readDraft(), getLeaguePool()]);
+  const [picks, pool] = await Promise.all([draftPicks(), getLeaguePool()]);
   if ("unavailable" in pool) return { pedigree: { origin: "unknown" }, drafterName: null };
 
   const scored = pool.rows.flatMap((row) => (row.stats === null ? [] : [row.stats]));
