@@ -97,8 +97,8 @@ No fluid clamps except inside the masthead.
 | `league/TeamSheet` | A live XI plus bench, or the same squad as rows, every player opening `LivePlayerCard`. Both boards that show a lineup that counts draw it. |
 | `league/Pending` | Points Fantrax has not credited yet — a clean sheet is settled at the final whistle and FPL has been paying it since the hour mark. Four screens print it; before this they were four spellings of one rule, two of which could reach a `+0`. |
 | `league/SeasonGrid` | Championship Manager's attribute grid — the squad's season as one bevelled panel per scoring group, thirteen keeper columns and eleven outfield, every figure Fantrax's own. The **second panel** on `/squad/[teamId]`, and it costs one cache hit: `squadSeason` already reads this table to price the board. |
-| `league/PlayerImage` | The cut-out photograph, with its fallback ladder. Client-only, and has to be — see below. The player profile, the paper's face and picture, the live card, and **one pitch**: a club's predicted XI, through `PitchMarker`'s `face`. |
-| `league/PlayerShirt` | The club's kit, and the only place it is drawn. What every pitch but a club's predicted XI draws. Server component — it has no ladder to walk. |
+| `league/PlayerImage` | The cut-out photograph, with its fallback ladder. Client-only, and has to be — see below. The player profile, the paper's face and picture, the live card, and **two pitches**: a club's predicted XI and the match line-up, through `PitchMarker`'s `face`. |
+| `league/PlayerShirt` | The club's kit, and the only place it is drawn. What every pitch but a club's predicted XI and the match line-up draws. Server component — it has no ladder to walk. |
 | `league/PitchMarker` · `league/CmGround` | A marker on the grass, and the ground it stands on. The marker is a kit on a translucent wash, the name on Championship Manager's bevelled plate, and under it the fixture or the score on the desk's navy. Was `PitchDisc`, a cut-out head in a coloured circle, until 10 Sep 2026; the band carried the opponent's club colour from 10 to 21 Sep, and gave it up when the card gained two other things to say in colour — how likely he is to MISS on the plate, and the whole card red when he is out. |
 | `football/fdr` | FPL's five difficulty steps, each with the ink that survives it. **Not a component** — `FixtureChip` drew one and lost its last caller on 21 Sep 2026 when the planner's band went to `PitchMarker`'s opponent colour, so the file is named for the scale that outlived it. Two consumers: the profile's fixture run and the player dialog's fixture line. |
 | `football/PlayerPortrait` | 32px headshot on club colour, for list rows. |
@@ -359,10 +359,12 @@ holds nine faces, a shirt and a set of letters — three kinds of object standin
 one row, which is what reads as broken. One man in seven is enough to spoil every
 pitch in the app and not nearly enough to notice on a profile page.
 
-**One exception: a club's predicted XI draws faces** (Craig, 26 Sep 2026: *"pitch
-view uses real players, every other pitch view uses shirts"*). It is one club, so a
-man with no photograph falls back to that club's kit and nothing else. The match
-pitch drew faces from 23 Sep and the squad pitches from 24 Sep; both are kits again.
+**Two exceptions draw faces: a club's predicted XI** (Craig, 26 Sep 2026: *"pitch
+view uses real players, every other pitch view uses shirts"*) **and the match
+line-up** (Craig, 1 Oct 2026: *"this pitch view, use portraits"*). Each half is one
+club, so a man with no photograph falls back to that club's kit and nothing else.
+The match pitch drew faces from 23 Sep, kits from 26 Sep, and faces again from 1 Oct;
+the squad pitches drew faces from 24 Sep and are kits again.
 
 **The keeper stands at the top, so the team faces the reader** (Craig, 10 Sep 2026). On
 the two pitches that know their flanks, a club's predicted XI and its depth chart, the

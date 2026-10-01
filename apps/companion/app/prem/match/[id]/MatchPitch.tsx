@@ -22,7 +22,7 @@ import type { Match } from "./match";
 import { joinOf, type Join } from "./sheetJoin";
 import SubMarker from "../../../components/football/SubMarker";
 
-// Both elevens in the shape their managers drew (`sheet.shape`), each man's kit and score (Craig, 26 Sep 2026).
+// Both elevens in the shape their managers drew (`sheet.shape`), each man's face and score (Craig, 1 Oct 2026).
 
 export default function MatchPitch({
   match,
@@ -115,7 +115,7 @@ function Side({
       className="block w-full text-left"
     >
       <PitchMarker
-        // Null so today's injury doubt stays off a match already played; the kit comes off the club.
+        // Null so today's injury doubt stays off a match already played.
         player={null}
         label="?"
         name={sheetName(man, match.byCode)}
@@ -123,6 +123,8 @@ function Side({
         club={club}
         opposition={against}
         points={join.points(man.code)}
+        // His photograph; PlayerImage falls back to the club's kit where there is none.
+        face={man.code === null ? undefined : { code: man.code, name: man.name }}
       />
     </MaybeCard>
   );
