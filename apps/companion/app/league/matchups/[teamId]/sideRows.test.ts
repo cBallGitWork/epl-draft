@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { FootballPlayer, LineupDetail, SquadPlayerDetail } from "@epl/core";
-import { figureOf, sideColumns, sideRows, type ManCounts } from "./sideRows";
+import { boardCategories, figureOf, sideColumns, sideRows, type ManCounts } from "./sideRows";
 
 const man = (fantraxId: string, points: number | null): SquadPlayerDetail => ({
   rostered: { slot: { fantraxId, position: "M", status: "" }, player: { code: 1, name: fantraxId } as FootballPlayer, stats: [] },
@@ -23,6 +23,16 @@ describe("sideColumns", () => {
       { keeper: false, counts: { Min: "90", G: "1", XX: "4" } },
     ];
     expect(sideColumns(categories, men).map((c) => c.code)).toEqual(["Min", "G", "Sv"]);
+  });
+});
+
+describe("boardCategories", () => {
+  it("leaves out minutes played by what the category is, whatever its short code", () => {
+    const categories = {
+      "5010#6120": { code: "Mins", name: "Minutes Played", longCode: "INDIVIDUAL_MINUTES_PLAYED" },
+      "5010#6090": { code: "G", name: "Goals", longCode: "INDIVIDUAL_GOALS" },
+    };
+    expect(Object.values(boardCategories(categories)).map((c) => c.code)).toEqual(["G"]);
   });
 });
 

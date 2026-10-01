@@ -1,10 +1,16 @@
-import { type LineupDetail, type ScoringCategory, type SquadPlayerDetail, isGoalkeeper } from "@epl/core";
+import { type LineupDetail, type ScoringCategory, type SquadPlayerDetail, MINUTES, idsOf, isGoalkeeper } from "@epl/core";
 import { everyone } from "./subs";
 import { byFigure } from "../../../components/league/order";
 import { DEFAULT_SIDE_SORT } from "./views";
 
 /** What each man did, by `fantraxId` then the league's category code, as Fantrax states it. */
 export type Counts = Readonly<Record<string, Readonly<Record<string, string>>>>;
+
+/** The league's categories the Stats boards print: all but minutes played (Craig, 1 Oct 2026). */
+export function boardCategories(categories: Record<string, ScoringCategory>): Record<string, ScoringCategory> {
+  const minutes = idsOf(categories, [MINUTES]);
+  return Object.fromEntries(Object.entries(categories).filter(([id]) => !minutes.has(id)));
+}
 
 /** One man's counts in Fantrax's own row order, and whether he keeps goal (keepers have their own rows). */
 export interface ManCounts {

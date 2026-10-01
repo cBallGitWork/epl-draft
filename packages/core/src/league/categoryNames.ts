@@ -15,6 +15,7 @@ export const ASSISTS_OFFICIAL: FantraxCategory = { code: "INDIVIDUAL_ASSISTS", s
 export const ASSISTS_FANTASY: FantraxCategory = { code: "INDIVIDUAL_ASSISTS_FANTASY", short: "AF", caption: "Assists (Fantasy)" };
 export const SAVES: FantraxCategory = { code: "INDIVIDUAL_SAVES", short: "Sv", caption: "Saves" };
 export const KEEPER_POINTS: FantraxCategory = { code: "INDIVIDUAL_KEEPER_POINTS", short: "GKP", caption: "Keeper Points" };
+export const MINUTES: FantraxCategory = { code: "INDIVIDUAL_MINUTES_PLAYED", short: "Min", caption: "Minutes Played" };
 
 /** Where a league pays an assist, best first. AT is A plus AF (455 of 455 outfielders, 1 Oct 2026), so it is never added to them. */
 export const ASSIST = [ASSISTS_TOTAL, ASSISTS_OFFICIAL] as const;

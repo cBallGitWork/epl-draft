@@ -135,7 +135,7 @@ export { mapSeasonResults } from "./fantrax/results";
 export type { PeriodResult } from "./fantrax/results";
 export { mapSeasonStats } from "./fantrax/seasonStats";
 export { GROUPS, categoryFor, groupFor, isMeasure, offeredIn } from "./categories";
-export { ASSIST, KEEPER_WORK, carries, firstScored, idsOf } from "./categoryNames";
+export { ASSIST, KEEPER_WORK, MINUTES, carries, firstScored, idsOf } from "./categoryNames";
 export type { GroupKey, Measure, StatCategory } from "./categories";
 export { mapPlayerStats, KEEPER, OUTFIELD } from "./fantrax/playerStats";
 export { mapAssistKinds } from "./fantrax/assistKinds";

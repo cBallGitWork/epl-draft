@@ -1,4 +1,4 @@
-import { ASSISTS_FANTASY, ASSISTS_OFFICIAL, ASSISTS_TOTAL, KEEPER_POINTS, SAVES, carries } from "./categoryNames";
+import { ASSISTS_FANTASY, ASSISTS_OFFICIAL, ASSISTS_TOTAL, KEEPER_POINTS, MINUTES, SAVES, carries } from "./categoryNames";
 
 // What the Team Stats board can rank a league by.
 //
@@ -79,7 +79,7 @@ export function groupFor(key: string | undefined): GroupKey {
  *  `Assists (Fantasy)` first and `Yellow Cards` last is an accident of the
  *  alphabet, not an order anybody wants to read. */
 export const CATEGORIES: readonly StatCategory[] = [
-  { key: "Minutes Played", group: "appearances", label: "Minutes", short: "Min" },
+  { key: MINUTES.caption, group: "appearances", label: "Minutes", short: MINUTES.short },
   { key: "Goals", group: "attacking", label: "Goals", short: "G" },
   { key: ASSISTS_TOTAL.caption, group: "attacking", label: "Assists (total)", short: ASSISTS_TOTAL.short },
   { key: ASSISTS_OFFICIAL.caption, group: "attacking", label: "Assists", short: ASSISTS_OFFICIAL.short },
