@@ -431,6 +431,9 @@ gameweek for every player, but only in a league whose scoring lists those column
   open-play goals with two rebound-type claimants still need the commentary, or stay blank.
 - **One read per gameweek**, outfield only (1.3 MB), cached five minutes (`ASSIST_KINDS_REVALIDATE`).
   Fantrax's A+AF matched FPL's assist count for every player across the five gameweeks.
+- **A second reader since 1 Oct 2026: the squad Stats board** reads this league's season live (`statsLeague.ts`,
+  both halves, 30 s like `getPlayerStats`), not its daily capture, so one row's columns are a cache window apart at
+  most. Joined on the Fantrax id. A column the served read has always wins, which keeps the repeated `CS` out.
 
 ## A screen's sub-views switch from its foot, not a second top strip — decided 24 Sep 2026
 
