@@ -1,0 +1,1118 @@
+<title>Draft Match Ratings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=Archivo+Narrow:wght@500;700&family=Oxanium:wght@600;800&display=swap">
+<style>
+:root {
+  color-scheme: dark;
+  --bg: oklch(0.19 0.045 265); --surface: oklch(0.245 0.012 80); --raised: oklch(0.29 0.014 80);
+  --line: oklch(0.40 0.012 80); --ink: oklch(0.97 0.008 80); --muted: oklch(0.78 0.022 80); --faint: oklch(0.66 0.022 80);
+  --yours: oklch(0.88 0.16 95); --derived: oklch(0.82 0.13 210); --peak: oklch(0.78 0.17 60);
+  --bad: oklch(0.66 0.215 22); --chrome: oklch(0.45 0.13 264); --good: oklch(0.80 0.17 150);
+  --body: "Archivo", "Helvetica Neue", Arial, sans-serif; --narrow: "Archivo Narrow", "Arial Narrow", sans-serif;
+  --digits: "Oxanium", "Archivo", monospace;
+}
+body { background: var(--bg); color: var(--ink); font: 15px/1.5 var(--body); margin: 0; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 64px; display: grid; gap: 40px; }
+h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
+h1 { font: 800 clamp(30px, 5vw, 46px)/1.05 var(--body); letter-spacing: -0.01em; }
+h1 em { font-style: normal; color: var(--derived); }
+h2 { font: 700 13px/1 var(--narrow); text-transform: uppercase; letter-spacing: .12em; color: var(--yours);
+     background: var(--chrome); padding: 8px 12px; }
+h3 { font: 700 19px/1.25 var(--body); }
+h4 { font: 700 12px var(--narrow); letter-spacing: .1em; color: var(--muted); margin-bottom: 6px; }
+p { margin: 0; max-width: 68ch; }
+section { display: grid; gap: 14px; }
+.lede { color: var(--muted); font-size: 16px; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.facts div { background: var(--surface); padding: 12px 14px; display: grid; gap: 2px; }
+.facts b { font: 800 24px var(--digits); color: var(--derived); font-variant-numeric: tabular-nums; }
+.facts span { color: var(--muted); font-size: 13px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(330px, 100%), 1fr)); gap: 10px; }
+.card { display: grid; grid-template-columns: 64px minmax(0, 1fr); background: var(--surface); border: 1px solid var(--line); }
+.mark { display: grid; place-content: center; text-align: center; gap: 2px; border-right: 1px solid var(--line); background: var(--raised); }
+.mark span { font: 800 26px var(--digits); font-variant-numeric: tabular-nums; }
+.mark small { font: 600 11px var(--narrow); color: var(--faint); }
+.b-top, .big.b-top { color: var(--peak); } .b-high { color: var(--derived); } .b-mid { color: var(--ink); }
+.b-low { color: var(--muted); } .b-bad { color: var(--bad); }
+.body { padding: 10px 12px; display: grid; gap: 7px; min-width: 0; }
+.body header { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: baseline; }
+.body header strong { font-size: 16px; }
+.pos { font: 700 11px var(--narrow); color: var(--bg); background: var(--muted); padding: 1px 5px; }
+.fx { color: var(--muted); font: 500 13px var(--narrow); }
+.note { font-size: 13px; color: var(--yours); }
+.chips, .parts, .meta { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+.chip { font: 500 12px var(--narrow); padding: 1px 6px; border: 1px solid var(--line); color: var(--muted); }
+.chip.ret { color: var(--ink); border-color: var(--good); }
+.chip.bad { color: var(--bad); border-color: color-mix(in oklch, var(--bad) 60%, var(--line)); }
+.part { font: 500 12px var(--narrow); color: var(--faint); }
+.part b { font-family: var(--digits); font-weight: 600; }
+.part.up b { color: var(--derived); } .part.down b { color: var(--bad); } .part.base b { color: var(--muted); }
+.meta { font: 500 11.5px var(--narrow); color: var(--faint); gap: 2px 12px; }
+.rung { display: grid; gap: 10px; }
+.rung-h { display: flex; align-items: baseline; gap: 12px; color: var(--muted); border-bottom: 1px solid var(--line); padding-bottom: 4px; }
+.big { font: 800 34px/1 var(--digits); }
+.kind { border-top: 1px solid var(--line); padding-top: 18px; }
+.q { color: var(--muted); }
+.verdict { color: var(--ink); border-left: 3px solid var(--derived); padding-left: 10px; }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th { font: 700 11px var(--narrow); text-transform: uppercase; letter-spacing: .08em; color: var(--yours); text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 5px 8px; border-bottom: 1px solid color-mix(in oklch, var(--line) 50%, transparent); vertical-align: top; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.hl { color: var(--derived); font-weight: 600; }
+td.src { color: var(--faint); font: 500 12px var(--narrow); white-space: nowrap; }
+.wt td:first-child { color: var(--muted); font: 600 12px var(--narrow); }
+.tag { font: 700 11px var(--narrow); padding: 1px 6px; white-space: nowrap; }
+.t-in { background: color-mix(in oklch, var(--good) 25%, transparent); color: var(--good); }
+.t-out { background: color-mix(in oklch, var(--bad) 20%, transparent); color: var(--bad); }
+.t-draft { background: color-mix(in oklch, var(--yours) 20%, transparent); color: var(--yours); }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 18px; }
+.grid4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 18px; }
+.hist { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; align-items: end; height: 170px; max-width: 560px; }
+.bar { display: grid; justify-items: center; align-content: end; gap: 4px; height: 100%; }
+.bar i { display: block; width: 100%; background: currentColor; }
+.bar .cnt { font: 600 11px var(--digits); color: var(--faint); }
+.bar .lab { font: 800 14px var(--digits); color: var(--muted); }
+ol.qs { margin: 0; padding-left: 22px; display: grid; gap: 10px; max-width: 72ch; }
+ol.qs b { color: var(--yours); }
+.small { font-size: 13px; color: var(--faint); }
+a { color: var(--derived); }
+:focus-visible { outline: 2px solid var(--yours); outline-offset: 2px; }
+@media (max-width: 420px) { .cards { grid-template-columns: 1fr; } .card { grid-template-columns: 56px 1fr; } }
+</style>
+<div class="wrap">
+<header style="display:grid;gap:12px">
+  <p class="small">Tim Hortons Pro League · prototype for review · 25/26 backtest</p>
+  <h1>Our own match rating, <em>out of ten</em></h1>
+  <p class="lede">Every Premier League appearance of 25/26 is rated here: 11,492 matches, 10,521 long enough to rate. The mark is built for a draft league. Returns come first, weighed by who they came against. Threat, defending and mistakes then move it. A typical match is 6.5 at every position, and only the season's biggest days reach 10. Each card shows both versions: <b>A</b> is the match alone; <b>B</b> blends in how he did against what was expected of him.</p>
+</header>
+
+<div class="facts">
+  <div><b>6.5</b><span>median mark, every position</span></div>
+  <div><b>14</b><span>tens all season</span></div>
+  <div><b>0.893</b><span>agreement with FotMob/SofaScore</span></div>
+  <div><b>0.882</b><span>agreement with FPL points</span></div>
+  <div><b>22/22</b><span>stats match the dummy league exactly</span></div>
+</div>
+
+<section>
+  <h2>Questions for you</h2>
+  <ol class="qs">
+    <li><b>A or B?</b> B adds 0.35 of "against expectation" to the mark. It barely moves the table: Haaland stays 2nd; Burnley's Flemming moves from 102 to 83. The expectation reads best as its own column: Haaland's 27 goals are par (+1.1); Flemming's 11 are +5.2.</li>
+    <li><b>Busy blank or quiet penalty?</b> Cherki's goalless match with lots of chances made rates above Anderson's penalty and little else. FotMob and SofaScore agree. In a draft league, should the penalty win?</li>
+    <li><b>Opponent strength:</b> factor = strength<sup>0.7</sup>, held to 0.75–1.35. Sunderland's Ballard scoring and assisting against Arsenal gets 9.1, where the websites give 7.4. Too much?</li>
+    <li><b>Reds and errors:</b> red −2.0, own goal −1.2, error leading to a goal −1.0. A defender's red lands near 3.3. Harsh enough?</li>
+    <li><b>Keepers:</b> a median of 6.5, but only 5 nines and no tens all season. Should a big save day reach 9 more often?</li>
+  </ol>
+</section>
+
+<section>
+  <h2>The ladder, 10 down to 2</h2>
+  <p class="q">Three real matches for each whole mark, across positions, nearest the mark. <span class="small">The big number is A; B is underneath.</span></p>
+  <div class="rung"><div class="rung-h"><span class="big b-top">10</span><span>45 matches round to 10</span></div><div class="cards"><article class="card">
+  <div class="mark b-top"><span>10.0</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>B.Fernandes</strong> <span class="pos">MID</span>
+      <span class="fx">MUN at WOL 4–1 · GW15 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">2G</span><span class="chip ret">1A</span><span class="chip">1 pen goal</span><span class="chip">0.37 npxG</span><span class="chip">0.85 xA</span><span class="chip">2 on target</span><span class="chip">5 key passes</span><span class="chip">4 big chances made</span><span class="chip">5 duels won</span><span class="chip">6 duels lost</span><span class="chip">1 tackles won</span><span class="chip">7 recoveries</span><span class="chip bad">1 conceded</span><span class="chip">53 passes</span><span class="chip">2 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+2.6</b> returns</span><span class="part up"><b>+1.8</b> threat</span><span class="part down"><b>−0.1</b> waste</span><span class="part up"><b>+0.3</b> defending</span><span class="part up"><b>+0.2</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.81 · defence 0.95</span><span>vs expected +2.5</span><span>FotMob 9.4 · SofaScore 9.3</span><span>FPL 18 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>10.0</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Haaland</strong> <span class="pos">FWD</span>
+      <span class="fx">MCI at FUL 5–4 · GW14 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">1G</span><span class="chip ret">2A</span><span class="chip">0.91 npxG</span><span class="chip">0.30 xA</span><span class="chip">1 on target</span><span class="chip">2 key passes</span><span class="chip">2 big chances made</span><span class="chip bad">1 big chances missed</span><span class="chip">6 duels won</span><span class="chip">5 duels lost</span><span class="chip">1 int</span><span class="chip">1 recoveries</span><span class="chip bad">4 conceded</span><span class="chip">12 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.2</b> base</span><span class="part up"><b>+3.0</b> returns</span><span class="part up"><b>+1.5</b> threat</span><span class="part down"><b>−0.2</b> waste</span><span class="part up"><b>+0.2</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.91 · defence 1.15</span><span>vs expected +1.8</span><span>FotMob 9.3 · SofaScore 8.6</span><span>FPL 14 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>10.0</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Lewis-Potter</strong> <span class="pos">DEF</span>
+      <span class="fx">BRE at WOL 2–0 · GW17 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">2G</span><span class="chip">0.48 npxG</span><span class="chip">0.28 xA</span><span class="chip">3 on target</span><span class="chip">1 key passes</span><span class="chip">1 big chances made</span><span class="chip">5 duels won</span><span class="chip">7 duels lost</span><span class="chip">2 int</span><span class="chip">2 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">16 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part up"><b>+3.6</b> returns</span><span class="part up"><b>+0.9</b> threat</span><span class="part up"><b>+0.1</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.78 · defence 0.92</span><span>vs expected +3.5</span><span>FotMob 8.9 · SofaScore 8.6</span><span>FPL 21 pts</span></div>
+  </div>
+</article></div></div><div class="rung"><div class="rung-h"><span class="big b-high">9</span><span>204 matches round to 9</span></div><div class="cards"><article class="card">
+  <div class="mark b-high"><span>9.0</span><small>B 9.5</small></div>
+  <div class="body">
+    <header><strong>Alderete</strong> <span class="pos">DEF</span>
+      <span class="fx">SUN at NFO 1–0 · GW6 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">1G</span><span class="chip">0.31 npxG</span><span class="chip">0.16 xA</span><span class="chip">1 on target</span><span class="chip">2 duels won</span><span class="chip">1 duels lost</span><span class="chip">9 clearances</span><span class="chip">2 blocks</span><span class="chip ret">clean sheet</span><span class="chip">27 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part up"><b>+2.3</b> returns</span><span class="part up"><b>+0.3</b> threat</span><span class="part up"><b>+0.5</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.86 · defence 1.03</span><span>vs expected +2.1</span><span>FotMob 8.2 · SofaScore 8.7</span><span>FPL 17 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-high"><span>9.0</span><small>B 9.2</small></div>
+  <div class="body">
+    <header><strong>Casemiro</strong> <span class="pos">MID</span>
+      <span class="fx">MUN v BRE 2–1 · GW34 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">1G</span><span class="chip">0.18 npxG</span><span class="chip">0.01 xA</span><span class="chip">1 on target</span><span class="chip">15 duels won</span><span class="chip">2 duels lost</span><span class="chip">4 tackles won</span><span class="chip">2 int</span><span class="chip">9 clearances</span><span class="chip">1 blocks</span><span class="chip">3 recoveries</span><span class="chip bad">1 conceded</span><span class="chip">43 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+1.3</b> returns</span><span class="part up"><b>+0.2</b> threat</span><span class="part up"><b>+1.7</b> defending</span><span class="part up"><b>+0.2</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.04 · defence 1.00</span><span>vs expected +0.9</span><span>FotMob 8.8 · SofaScore 9.3</span><span>FPL 12 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-high"><span>9.0</span><small>B 9.1</small></div>
+  <div class="body">
+    <header><strong>Martinez</strong> <span class="pos">GK</span>
+      <span class="fx">AVL v BOU 4–0 · GW11 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">1 clearances</span><span class="chip">9 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">3 saves</span><span class="chip">1.06 prevented</span><span class="chip ret">1 pen saved</span><span class="chip">26 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part up"><b>+1.8</b> returns</span><span class="part up"><b>+0.9</b> keeping</span><span class="part up"><b>+0.3</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.07 · defence 1.04</span><span>vs expected +0.6</span><span>FotMob 8.8 · SofaScore 8.2</span><span>FPL 14 pts</span></div>
+  </div>
+</article></div></div><div class="rung"><div class="rung-h"><span class="big b-high">8</span><span>1,176 matches round to 8</span></div><div class="cards"><article class="card">
+  <div class="mark b-high"><span>8.0</span><small>B 8.2</small></div>
+  <div class="body">
+    <header><strong>Acheampong</strong> <span class="pos">DEF</span>
+      <span class="fx">CHE v CRY 0–0 · GW1 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">0.09 npxG</span><span class="chip">0.01 xA</span><span class="chip">11 duels won</span><span class="chip">3 duels lost</span><span class="chip">2 tackles won</span><span class="chip">1 int</span><span class="chip">5 clearances</span><span class="chip">4 recoveries</span><span class="chip ret">clean sheet</span><span class="chip bad">1 error → shot</span><span class="chip">87 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part up"><b>+0.8</b> returns</span><span class="part up"><b>+0.1</b> threat</span><span class="part up"><b>+1.0</b> defending</span><span class="part up"><b>+0.3</b> passing</span><span class="part down"><b>−0.2</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.10 · defence 1.03</span><span>vs expected +0.5</span><span>FotMob 7.8 · SofaScore 7.5</span><span>FPL 9 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-high"><span>8.0</span><small>B 8.3</small></div>
+  <div class="body">
+    <header><strong>Adli</strong> <span class="pos">MID</span>
+      <span class="fx">BOU v LIV 3–2 · GW23 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">1G</span><span class="chip">0.38 npxG</span><span class="chip">0.10 xA</span><span class="chip">1 on target</span><span class="chip bad">1 big chances missed</span><span class="chip">6 duels won</span><span class="chip">7 duels lost</span><span class="chip">1 tackles won</span><span class="chip">1 int</span><span class="chip">3 clearances</span><span class="chip">1 blocks</span><span class="chip">8 recoveries</span><span class="chip bad">2 conceded</span><span class="chip">24 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+1.4</b> returns</span><span class="part up"><b>+0.5</b> threat</span><span class="part down"><b>−0.3</b> waste</span><span class="part up"><b>+0.5</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−0.1</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.07 · defence 1.15</span><span>vs expected +0.9</span><span>FotMob 8.1 · SofaScore 7.8</span><span>FPL 10 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-high"><span>8.0</span><small>B 8.2</small></div>
+  <div class="body">
+    <header><strong>M.Bizot</strong> <span class="pos">GK</span>
+      <span class="fx">AVL v NEW 0–0 · GW1 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">1 clearances</span><span class="chip">12 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">3 saves</span><span class="chip">0.64 prevented</span><span class="chip">20 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part up"><b>+0.9</b> returns</span><span class="part up"><b>+0.7</b> keeping</span><span class="part up"><b>+0.4</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.16 · defence 1.13</span><span>vs expected +0.6</span><span>FotMob 8.5 · SofaScore 6.9</span><span>FPL 7 pts</span></div>
+  </div>
+</article></div></div><div class="rung"><div class="rung-h"><span class="big b-mid">7</span><span>2,458 matches round to 7</span></div><div class="cards"><article class="card">
+  <div class="mark b-mid"><span>7.0</span><small>B 7.0</small></div>
+  <div class="body">
+    <header><strong>Adams</strong> <span class="pos">MID</span>
+      <span class="fx">BOU v NEW 0–0 · GW5 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">0.04 npxG</span><span class="chip">0.01 xA</span><span class="chip">1 on target</span><span class="chip">7 duels won</span><span class="chip">4 duels lost</span><span class="chip">2 tackles won</span><span class="chip">5 int</span><span class="chip">4 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">50 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+0.2</b> returns</span><span class="part up"><b>+0.1</b> threat</span><span class="part up"><b>+0.7</b> defending</span><span class="part up"><b>+0.2</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.11 · defence 1.21</span><span>vs expected +0.0</span><span>FotMob 7.7 · SofaScore 6.8</span><span>FPL 3 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-mid"><span>7.0</span><small>B 7.2</small></div>
+  <div class="body">
+    <header><strong>Ajer</strong> <span class="pos">DEF</span>
+      <span class="fx">BRE v LIV 3–2 · GW9 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">1A</span><span class="chip">0.06 npxG</span><span class="chip">0.05 xA</span><span class="chip">8 duels won</span><span class="chip">5 duels lost</span><span class="chip">2 tackles won</span><span class="chip">2 int</span><span class="chip">3 clearances</span><span class="chip">1 recoveries</span><span class="chip bad">2 conceded</span><span class="chip">8 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part up"><b>+0.3</b> returns</span><span class="part up"><b>+0.1</b> threat</span><span class="part up"><b>+0.6</b> defending</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.09 · defence 1.04</span><span>vs expected +0.5</span><span>FotMob 6.9 · SofaScore 6.8</span><span>FPL 4 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-mid"><span>7.0</span><small>B 7.0</small></div>
+  <div class="body">
+    <header><strong>Areola</strong> <span class="pos">GK</span>
+      <span class="fx">WHU at TOT 2–1 · GW22 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">1 clearances</span><span class="chip">7 recoveries</span><span class="chip bad">1 conceded</span><span class="chip">5 saves</span><span class="chip">0.59 prevented</span><span class="chip">19 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part down"><b>−0.2</b> returns</span><span class="part up"><b>+0.9</b> keeping</span><span class="part up"><b>+0.2</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.95 · defence 0.95</span><span>vs expected −0.1</span><span>FotMob 7.6 · SofaScore 7.7</span><span>FPL 3 pts</span></div>
+  </div>
+</article></div></div><div class="rung"><div class="rung-h"><span class="big b-mid">6</span><span>5,767 matches round to 6</span></div><div class="cards"><article class="card">
+  <div class="mark b-mid"><span>6.0</span><small>B 5.9</small></div>
+  <div class="body">
+    <header><strong>Aina</strong> <span class="pos">DEF</span>
+      <span class="fx">NFO v LIV 0–1 · GW27 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">0.01 xA</span><span class="chip">4 duels won</span><span class="chip">4 duels lost</span><span class="chip">1 int</span><span class="chip">3 clearances</span><span class="chip">6 recoveries</span><span class="chip bad">1 conceded</span><span class="chip bad">1 yellow</span><span class="chip">34 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part down"><b>−0.2</b> returns</span><span class="part up"><b>+0.3</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−0.3</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.11 · defence 1.12</span><span>vs expected −0.2</span><span>FotMob 6.8 · SofaScore 6.6</span><span>FPL 1 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-mid"><span>6.0</span><small>B 5.9</small></div>
+  <div class="body">
+    <header><strong>Anderson</strong> <span class="pos">MID</span>
+      <span class="fx">NFO v TOT 3–0 · GW16 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">0.02 xA</span><span class="chip">1 key passes</span><span class="chip">3 duels won</span><span class="chip">10 duels lost</span><span class="chip">1 tackles won</span><span class="chip">1 clearances</span><span class="chip">6 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">49 passes</span><span class="chip">4 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+0.2</b> returns</span><span class="part up"><b>+0.1</b> threat</span><span class="part down"><b>−0.2</b> waste</span><span class="part down"><b>−0.1</b> defending</span><span class="part up"><b>+0.2</b> passing</span><span class="part down"><b>−0.1</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.99 · defence 0.90</span><span>vs expected −0.1</span><span>FotMob 6.6 · SofaScore 6.5</span><span>FPL 3 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-mid"><span>6.0</span><small>B 5.9</small></div>
+  <div class="body">
+    <header><strong>Areola</strong> <span class="pos">GK</span>
+      <span class="fx">WHU at LEE 1–2 · GW9 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">8 recoveries</span><span class="chip bad">2 conceded</span><span class="chip">3 saves</span><span class="chip">-0.54 prevented</span><span class="chip">12 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part down"><b>−0.4</b> returns</span><span class="part up"><b>+0.1</b> keeping</span><span class="part up"><b>+0.2</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.02 · defence 1.05</span><span>vs expected −0.2</span><span>FotMob 5.7 · SofaScore 7.1</span><span>FPL 2 pts</span></div>
+  </div>
+</article></div></div><div class="rung"><div class="rung-h"><span class="big b-low">5</span><span>789 matches round to 5</span></div><div class="cards"><article class="card">
+  <div class="mark b-low"><span>5.0</span><small>B 4.9</small></div>
+  <div class="body">
+    <header><strong>Bogarde</strong> <span class="pos">DEF</span>
+      <span class="fx">AVL at MUN 1–3 · GW30 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">0.03 xA</span><span class="chip">4 duels won</span><span class="chip">3 duels lost</span><span class="chip">2 tackles won</span><span class="chip">1 int</span><span class="chip">4 clearances</span><span class="chip">7 recoveries</span><span class="chip bad">3 conceded</span><span class="chip bad">1 error → goal</span><span class="chip">41 passes</span><span class="chip">2 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part down"><b>−0.7</b> returns</span><span class="part down"><b>−0.1</b> waste</span><span class="part up"><b>+0.6</b> defending</span><span class="part up"><b>+0.2</b> passing</span><span class="part down"><b>−1.0</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.13 · defence 1.08</span><span>vs expected −0.2</span><span>FotMob 5.1 · SofaScore 5.7</span><span>FPL 1 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-low"><span>5.0</span><small>B 4.9</small></div>
+  <div class="body">
+    <header><strong>Darlow</strong> <span class="pos">GK</span>
+      <span class="fx">LEE v ARS 0–4 · GW24 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">0.01 xA</span><span class="chip">1 clearances</span><span class="chip">11 recoveries</span><span class="chip bad">4 conceded</span><span class="chip">4 saves</span><span class="chip">-2.49 prevented</span><span class="chip">18 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part down"><b>−0.7</b> returns</span><span class="part down"><b>−0.8</b> keeping</span><span class="part up"><b>+0.4</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.27 · defence 1.58</span><span>vs expected −0.1</span><span>FotMob 4.3 · SofaScore 5.7</span><span>FPL 1 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-low"><span>5.0</span><small>B 5.0</small></div>
+  <div class="body">
+    <header><strong>André</strong> <span class="pos">MID</span>
+      <span class="fx">WOL v MUN 1–4 · GW15 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">0.04 npxG</span><span class="chip">0.08 xA</span><span class="chip">2 key passes</span><span class="chip">2 duels won</span><span class="chip">9 duels lost</span><span class="chip">1 tackles won</span><span class="chip">2 int</span><span class="chip">1 blocks</span><span class="chip">8 recoveries</span><span class="chip bad">4 conceded</span><span class="chip bad">1 error → goal</span><span class="chip">26 passes</span><span class="chip">3 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+0.2</b> threat</span><span class="part down"><b>−0.1</b> waste</span><span class="part up"><b>+0.1</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−1.1</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.04 · defence 0.95</span><span>vs expected −0.1</span><span>FotMob 5.3 · SofaScore 5.9</span><span>FPL 2 pts</span></div>
+  </div>
+</article></div></div><div class="rung"><div class="rung-h"><span class="big b-bad">4</span><span>65 matches round to 4</span></div><div class="cards"><article class="card">
+  <div class="mark b-bad"><span>4.0</span><small>B 3.9</small></div>
+  <div class="body">
+    <header><strong>Spence</strong> <span class="pos">DEF</span>
+      <span class="fx">TOT v ARS 1–4 · GW27 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">0.35 xA</span><span class="chip">1 key passes</span><span class="chip">7 duels won</span><span class="chip">12 duels lost</span><span class="chip">3 clearances</span><span class="chip">3 recoveries</span><span class="chip bad">4 conceded</span><span class="chip bad">1 error → goal</span><span class="chip bad">1 error → shot</span><span class="chip">23 passes</span><span class="chip">5 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part down"><b>−0.9</b> returns</span><span class="part up"><b>+0.3</b> threat</span><span class="part down"><b>−0.2</b> waste</span><span class="part down"><b>−0.1</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−1.3</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.23 · defence 1.70</span><span>vs expected −0.2</span><span>FotMob 4.5 · SofaScore 6.4</span><span>FPL 0 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>4.0</span><small>B 3.9</small></div>
+  <div class="body">
+    <header><strong>Ugochukwu</strong> <span class="pos">MID</span>
+      <span class="fx">BUR v LIV 0–1 · GW4 · 83′</span></header>
+    
+    <div class="chips"><span class="chip">5 duels won</span><span class="chip">7 duels lost</span><span class="chip">2 tackles won</span><span class="chip">1 int</span><span class="chip">2 clearances</span><span class="chip">1 blocks</span><span class="chip">2 recoveries</span><span class="chip bad">1 conceded</span><span class="chip bad">1 RED</span><span class="chip">3 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+0.3</b> defending</span><span class="part down"><b>−2.1</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.01 · defence 1.02</span><span>vs expected −0.1</span><span>FotMob 5.4 · SofaScore 6.2</span><span>FPL -1 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>3.9</span><small>B 3.9</small></div>
+  <div class="body">
+    <header><strong>John</strong> <span class="pos">GK</span>
+      <span class="fx">NFO at AVL 1–3 · GW20 · 77′</span></header>
+    
+    <div class="chips"><span class="chip">1 clearances</span><span class="chip">4 recoveries</span><span class="chip bad">3 conceded</span><span class="chip">1 saves</span><span class="chip">-1.55 prevented</span><span class="chip bad">1 error → goal</span><span class="chip">12 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.9</b> base</span><span class="part down"><b>−0.6</b> returns</span><span class="part down"><b>−0.7</b> keeping</span><span class="part up"><b>+0.1</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−1.0</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.08 · defence 0.98</span><span>vs expected −0.1</span><span>FotMob 3.8 · SofaScore 5.2</span><span>FPL 1 pts</span></div>
+  </div>
+</article></div></div><div class="rung"><div class="rung-h"><span class="big b-bad">3</span><span>15 matches round to 3</span></div><div class="cards"><article class="card">
+  <div class="mark b-bad"><span>3.1</span><small>B 3.1</small></div>
+  <div class="body">
+    <header><strong>Burn</strong> <span class="pos">DEF</span>
+      <span class="fx">NEW at BRE 1–3 · GW11 · 72′</span></header>
+    
+    <div class="chips"><span class="chip">0.01 xA</span><span class="chip">8 duels won</span><span class="chip">9 duels lost</span><span class="chip">1 tackles won</span><span class="chip">11 clearances</span><span class="chip">1 blocks</span><span class="chip">1 recoveries</span><span class="chip bad">3 conceded</span><span class="chip bad">1 RED</span><span class="chip bad">1 pen conceded</span><span class="chip">20 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.9</b> base</span><span class="part down"><b>−0.7</b> returns</span><span class="part up"><b>+0.5</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−2.6</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.04 · defence 0.97</span><span>vs expected −0.2</span><span>FotMob 5.1 · SofaScore 5.6</span><span>FPL 0 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>3.4</span><small>B 3.4</small></div>
+  <div class="body">
+    <header><strong>Laurent</strong> <span class="pos">MID</span>
+      <span class="fx">BUR at FUL 1–3 · GW31 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">0.25 npxG</span><span class="chip bad">1 big chances missed</span><span class="chip">4 duels won</span><span class="chip">4 duels lost</span><span class="chip">5 recoveries</span><span class="chip bad">3 conceded</span><span class="chip bad">1 RED</span><span class="chip bad">1 pen conceded</span><span class="chip">22 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+0.1</b> threat</span><span class="part down"><b>−0.3</b> waste</span><span class="part up"><b>+0.2</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−2.5</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.94 · defence 1.04</span><span>vs expected −0.1</span><span>FotMob 4.6 · SofaScore 5.9</span><span>FPL -1 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>3.4</span><small>B 3.3</small></div>
+  <div class="body">
+    <header><strong>Romero</strong> <span class="pos">DEF</span>
+      <span class="fx">TOT v LIV 1–2 · GW17 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">0.01 npxG</span><span class="chip">0.01 xA</span><span class="chip">5 duels won</span><span class="chip">3 duels lost</span><span class="chip">12 clearances</span><span class="chip">1 blocks</span><span class="chip">3 recoveries</span><span class="chip bad">2 conceded</span><span class="chip bad">1 RED</span><span class="chip bad">1 error → goal</span><span class="chip">32 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part down"><b>−0.5</b> returns</span><span class="part up"><b>+0.7</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−3.0</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.11 · defence 1.09</span><span>vs expected −0.3</span><span>FotMob 4.7 · SofaScore 6.1</span><span>FPL 0 pts</span></div>
+  </div>
+</article></div></div><div class="rung"><div class="rung-h"><span class="big b-bad">2</span><span>2 matches round to 2</span></div><div class="cards"><article class="card">
+  <div class="mark b-bad"><span>2.3</span><small>B 2.3</small></div>
+  <div class="body">
+    <header><strong>Estève</strong> <span class="pos">DEF</span>
+      <span class="fx">BUR at MCI 1–5 · GW6 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">0.02 npxG</span><span class="chip">4 duels won</span><span class="chip">2 duels lost</span><span class="chip">1 tackles won</span><span class="chip">7 clearances</span><span class="chip">1 blocks</span><span class="chip">3 recoveries</span><span class="chip bad">5 conceded</span><span class="chip bad">2 own goal</span><span class="chip bad">1 error → goal</span><span class="chip">27 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part down"><b>−1.0</b> returns</span><span class="part up"><b>+0.6</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−3.4</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.34 · defence 1.13</span><span>vs expected −0.1</span><span>FotMob 1.8 · SofaScore 4.5</span><span>FPL -2 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>2.5</span><small>B 2.4</small></div>
+  <div class="body">
+    <header><strong>Roefs</strong> <span class="pos">GK</span>
+      <span class="fx">SUN v NFO 0–5 · GW34 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">5 recoveries</span><span class="chip bad">5 conceded</span><span class="chip">2 saves</span><span class="chip">-3.67 prevented</span><span class="chip bad">1 error → goal</span><span class="chip">26 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part down"><b>−1.1</b> returns</span><span class="part down"><b>−1.6</b> keeping</span><span class="part up"><b>+0.1</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−1.0</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.84 · defence 1.01</span><span>vs expected −0.2</span><span>FotMob 3.2 · SofaScore 5.1</span><span>FPL 0 pts</span></div>
+  </div>
+</article></div></div>
+</section>
+
+<section>
+  <h2>Kinds of match</h2>
+  <section class="kind"><h3>The best attack against one of the worst teams</h3><p class="q">A star blanking against the bottom side should land around 6; his goal against them should count for less.</p><p class="verdict">Haaland&#x27;s blank reads 6.6. A top attacker&#x27;s worst blank against the bottom three reads 5.6. One goal against the weakest defence gets 7.6: the goal is marked down for the opposition.</p><div class="cards"><article class="card">
+  <div class="mark b-mid"><span>6.6</span><small>B 6.3</small></div>
+  <div class="body">
+    <header><strong>Haaland</strong> <span class="pos">FWD</span>
+      <span class="fx">MCI at WHU 1–1 · GW30 · 90′</span></header>
+    <p class="note">Blank, the most xG he had without a return</p>
+    <div class="chips"><span class="chip">0.30 npxG</span><span class="chip">0.05 xA</span><span class="chip">1 on target</span><span class="chip">1 key passes</span><span class="chip">2 duels won</span><span class="chip">2 duels lost</span><span class="chip">2 recoveries</span><span class="chip bad">1 conceded</span><span class="chip">8 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>6.2</b> base</span><span class="part up"><b>+0.3</b> threat</span><span class="part up"><b>+0.1</b> defending</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.94 · defence 0.92</span><span>vs expected −0.8</span><span>FotMob 6.6 · SofaScore 6.5</span><span>FPL 2 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-low"><span>5.6</span><small>B 5.4</small></div>
+  <div class="body">
+    <header><strong>Martinelli</strong> <span class="pos">MID</span>
+      <span class="fx">ARS at WOL 2–2 · GW26 · 90′</span></header>
+    <p class="note">The worst blank by a top-four attacker against the bottom three</p>
+    <div class="chips"><span class="chip">0.42 npxG</span><span class="chip">0.12 xA</span><span class="chip">1 on target</span><span class="chip">2 key passes</span><span class="chip bad">1 big chances missed</span><span class="chip">4 duels won</span><span class="chip">14 duels lost</span><span class="chip">2 tackles won</span><span class="chip">7 recoveries</span><span class="chip bad">2 conceded</span><span class="chip">26 passes</span><span class="chip">7 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+0.5</b> threat</span><span class="part down"><b>−0.5</b> waste</span><span class="part down"><b>−0.2</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.76 · defence 1.00</span><span>vs expected −0.8</span><span>FotMob 6.2 · SofaScore 6.0</span><span>FPL — pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-mid"><span>7.6</span><small>B 7.7</small></div>
+  <div class="body">
+    <header><strong>Haaland</strong> <span class="pos">FWD</span>
+      <span class="fx">MCI at BUR 1–0 · GW33 · 90′</span></header>
+    <p class="note">One goal against the weakest defence</p>
+    <div class="chips"><span class="chip ret">1G</span><span class="chip">1.10 npxG</span><span class="chip">0.06 xA</span><span class="chip">2 on target</span><span class="chip bad">1 big chances missed</span><span class="chip">2 duels won</span><span class="chip">4 duels lost</span><span class="chip">1 clearances</span><span class="chip">2 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">8 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>6.2</b> base</span><span class="part up"><b>+0.9</b> returns</span><span class="part up"><b>+0.9</b> threat</span><span class="part down"><b>−0.3</b> waste</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.81 · defence 0.79</span><span>vs expected +0.2</span><span>FotMob 8.3 · SofaScore 7.6</span><span>FPL — pts</span></div>
+  </div>
+</article></div></section><section class="kind"><h3>The worst attack scoring against the best defence</h3><p class="q">The same single goal, but against a top-four defence: it should count for more.</p><p class="verdict">The same single open-play goal: 8.6 against a strong defence, 7.6 against a weak one.</p><div class="cards"><article class="card">
+  <div class="mark b-high"><span>8.6</span><small>B 8.9</small></div>
+  <div class="body">
+    <header><strong>Laurent</strong> <span class="pos">MID</span>
+      <span class="fx">BUR v NEW 1–3 · GW19 · 90′</span></header>
+    <p class="note">One goal against the strongest defence of the day</p>
+    <div class="chips"><span class="chip ret">1G</span><span class="chip">0.21 npxG</span><span class="chip">0.03 xA</span><span class="chip">1 on target</span><span class="chip">3 key passes</span><span class="chip">7 duels won</span><span class="chip">5 duels lost</span><span class="chip">2 tackles won</span><span class="chip">2 int</span><span class="chip">7 clearances</span><span class="chip">1 blocks</span><span class="chip">3 recoveries</span><span class="chip bad">3 conceded</span><span class="chip">25 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+1.4</b> returns</span><span class="part up"><b>+0.6</b> threat</span><span class="part up"><b>+0.8</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.07 · defence 1.17</span><span>vs expected +1.1</span><span>FotMob 8.1 · SofaScore 7.1</span><span>FPL 10 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-mid"><span>7.6</span><small>B 7.7</small></div>
+  <div class="body">
+    <header><strong>Haaland</strong> <span class="pos">FWD</span>
+      <span class="fx">MCI at BUR 1–0 · GW33 · 90′</span></header>
+    <p class="note">For comparison: one goal against the weakest</p>
+    <div class="chips"><span class="chip ret">1G</span><span class="chip">1.10 npxG</span><span class="chip">0.06 xA</span><span class="chip">2 on target</span><span class="chip bad">1 big chances missed</span><span class="chip">2 duels won</span><span class="chip">4 duels lost</span><span class="chip">1 clearances</span><span class="chip">2 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">8 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>6.2</b> base</span><span class="part up"><b>+0.9</b> returns</span><span class="part up"><b>+0.9</b> threat</span><span class="part down"><b>−0.3</b> waste</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.81 · defence 0.79</span><span>vs expected +0.2</span><span>FotMob 8.3 · SofaScore 7.6</span><span>FPL — pts</span></div>
+  </div>
+</article></div></section><section class="kind"><h3>A clean sheet, weighed by the attack it kept out</h3><p class="q">A bottom-half side shutting out a top-four attack should beat a top side shutting out the bottom three.</p><p class="verdict">7.8 for keeping a top-four attack out, against 7.1 for keeping out a bottom-three attack.</p><div class="cards"><article class="card">
+  <div class="mark b-mid"><span>7.8</span><small>B 7.9</small></div>
+  <div class="body">
+    <header><strong>Keane</strong> <span class="pos">DEF</span>
+      <span class="fx">EVE v CHE 3–0 · GW31 · 90′</span></header>
+    <p class="note">Bottom-half defender against a top-four attack</p>
+    <div class="chips"><span class="chip">6 duels won</span><span class="chip">2 duels lost</span><span class="chip">1 tackles won</span><span class="chip">9 clearances</span><span class="chip">3 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">41 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part up"><b>+0.9</b> returns</span><span class="part up"><b>+0.7</b> defending</span><span class="part up"><b>+0.2</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.37 · defence 1.06</span><span>vs expected +0.4</span><span>FotMob 7.7 · SofaScore 7.8</span><span>FPL 8 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-mid"><span>7.1</span><small>B 7.2</small></div>
+  <div class="body">
+    <header><strong>Khusanov</strong> <span class="pos">DEF</span>
+      <span class="fx">MCI v WOL 2–0 · GW23 · 90′</span></header>
+    <p class="note">Top side&#x27;s defender against a bottom-three attack</p>
+    <div class="chips"><span class="chip">0.02 xA</span><span class="chip">1 key passes</span><span class="chip">2 duels won</span><span class="chip">4 duels lost</span><span class="chip">1 tackles won</span><span class="chip">4 int</span><span class="chip">2 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">66 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part up"><b>+0.6</b> returns</span><span class="part up"><b>+0.1</b> threat</span><span class="part up"><b>+0.2</b> defending</span><span class="part up"><b>+0.3</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.75 · defence 1.00</span><span>vs expected +0.3</span><span>FotMob 7.4 · SofaScore 7.3</span><span>FPL 6 pts</span></div>
+  </div>
+</article></div></section><section class="kind"><h3>Lots of xG, nothing to show</h3><p class="q">Craig&#x27;s case: 1.5 xG from two penalties, both missed, is not a good day.</p><p class="verdict">The missed penalty gives nothing for its xG and costs 1.2 on top, so it lands at 4.4. A pile of big chances missed lands at 5.7.</p><div class="cards"><article class="card">
+  <div class="mark b-bad"><span>4.4</span><small>B 4.3</small></div>
+  <div class="body">
+    <header><strong>Welbeck</strong> <span class="pos">FWD</span>
+      <span class="fx">BHA at EVE 0–2 · GW2 · 90′</span></header>
+    <p class="note">Missed penalty, no goal</p>
+    <div class="chips"><span class="chip">0.77 npxG</span><span class="chip">0.10 xA</span><span class="chip">1 on target</span><span class="chip bad">2 big chances missed</span><span class="chip bad">1 pen missed</span><span class="chip">8 duels lost</span><span class="chip">1 recoveries</span><span class="chip bad">2 conceded</span><span class="chip">10 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>6.2</b> base</span><span class="part up"><b>+0.5</b> threat</span><span class="part down"><b>−1.7</b> waste</span><span class="part down"><b>−0.5</b> defending</span><span class="part down"><b>−0.1</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.80 · defence 1.11</span><span>vs expected −0.5</span><span>FotMob 5.0 · SofaScore 4.9</span><span>FPL 0 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-low"><span>5.7</span><small>B 5.6</small></div>
+  <div class="body">
+    <header><strong>Calvert-Lewin</strong> <span class="pos">FWD</span>
+      <span class="fx">LEE v BOU 2–2 · GW6 · 90′</span></header>
+    <p class="note">Most big chances missed without scoring</p>
+    <div class="chips"><span class="chip">0.70 npxG</span><span class="chip">0.04 xA</span><span class="chip">3 on target</span><span class="chip">1 key passes</span><span class="chip bad">3 big chances missed</span><span class="chip">7 duels won</span><span class="chip">14 duels lost</span><span class="chip">1 tackles won</span><span class="chip">2 recoveries</span><span class="chip bad">1 conceded</span><span class="chip">12 passes</span><span class="chip">3 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>6.2</b> base</span><span class="part up"><b>+0.7</b> threat</span><span class="part down"><b>−0.9</b> waste</span><span class="part down"><b>−0.2</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.11 · defence 1.16</span><span>vs expected −0.3</span><span>FotMob 6.5 · SofaScore 6.3</span><span>FPL 2 pts</span></div>
+  </div>
+</article></div></section><section class="kind"><h3>A quiet penalty against a busy blank</h3><p class="q">Same fantasy points roughly apart, but one man did far more.</p><p class="verdict">The busy blank (7.7) beats the quiet penalty (6.9). FotMob and SofaScore agree. Is that right for a draft league? See question 2.</p><div class="cards"><article class="card">
+  <div class="mark b-mid"><span>6.9</span><small>B 7.3</small></div>
+  <div class="body">
+    <header><strong>Anderson</strong> <span class="pos">MID</span>
+      <span class="fx">NFO v LEE 3–1 · GW11 · 90′</span></header>
+    <p class="note">A penalty and little else</p>
+    <div class="chips"><span class="chip ret">1G</span><span class="chip">1 pen goal</span><span class="chip">0.05 xA</span><span class="chip">1 on target</span><span class="chip">5 duels won</span><span class="chip">7 duels lost</span><span class="chip">1 tackles won</span><span class="chip">1 int</span><span class="chip">1 clearances</span><span class="chip">1 blocks</span><span class="chip">7 recoveries</span><span class="chip bad">1 conceded</span><span class="chip">38 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+0.6</b> returns</span><span class="part up"><b>+0.1</b> threat</span><span class="part up"><b>+0.3</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.99 · defence 0.99</span><span>vs expected +1.1</span><span>FotMob 7.9 · SofaScore 7.4</span><span>FPL 9 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-mid"><span>7.7</span><small>B 7.4</small></div>
+  <div class="body">
+    <header><strong>Cherki</strong> <span class="pos">MID</span>
+      <span class="fx">MCI at BUR 1–0 · GW33 · 90′</span></header>
+    <p class="note">No return, the busiest attacking blank of the season</p>
+    <div class="chips"><span class="chip">0.78 npxG</span><span class="chip">0.44 xA</span><span class="chip">2 on target</span><span class="chip">8 key passes</span><span class="chip">1 big chances made</span><span class="chip bad">1 big chances missed</span><span class="chip">3 duels won</span><span class="chip">5 duels lost</span><span class="chip">5 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">71 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+0.2</b> returns</span><span class="part up"><b>+1.7</b> threat</span><span class="part down"><b>−0.3</b> waste</span><span class="part up"><b>+0.1</b> defending</span><span class="part up"><b>+0.3</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.81 · defence 0.79</span><span>vs expected −0.8</span><span>FotMob 8.5 · SofaScore 7.7</span><span>FPL — pts</span></div>
+  </div>
+</article></div></section><section class="kind"><h3>The late substitute who scored</h3><p class="q">Ten minutes and a goal should rate well, but below a full ninety with the same goal.</p><p class="verdict">A goal a minute after coming on reads 7.1, and the best late cameo 7.6. Both sit below a 90-minute scorer, who starts 0.5 higher before doing anything.</p><div class="cards"><article class="card">
+  <div class="mark b-mid"><span>7.1</span><small>B 7.5</small></div>
+  <div class="body">
+    <header><strong>Reed</strong> <span class="pos">MID</span>
+      <span class="fx">FUL v LIV 2–2 · GW20 · 1′ · on 90′</span></header>
+    <p class="note">The latest scoring substitute</p>
+    <div class="chips"><span class="chip ret">1G</span><span class="chip">1 from outside box</span><span class="chip">0.04 npxG</span><span class="chip">1 on target</span><span class="chip bad">1 conceded</span><span class="chip">1 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.3</b> base</span><span class="part up"><b>+1.7</b> returns</span><span class="part up"><b>+0.1</b> threat</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.10 · defence 1.10</span><span>vs expected +1.3</span><span>FotMob — · SofaScore 7.6</span><span>FPL 8 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-mid"><span>7.6</span><small>B 8.2</small></div>
+  <div class="body">
+    <header><strong>De Cuyper</strong> <span class="pos">DEF</span>
+      <span class="fx">BHA at CHE 3–1 · GW6 · 5′ · on 85′</span></header>
+    <p class="note">The best late-sub cameo</p>
+    <div class="chips"><span class="chip ret">1G</span><span class="chip">0.64 npxG</span><span class="chip">1 on target</span><span class="chip">1 duels lost</span><span class="chip">5 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.5</b> base</span><span class="part up"><b>+1.8</b> returns</span><span class="part up"><b>+0.4</b> threat</span><span class="part down"><b>−0.1</b> defending</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.30 · defence 1.14</span><span>vs expected +1.6</span><span>FotMob — · SofaScore 7.5</span><span>FPL 8 pts</span></div>
+  </div>
+</article></div></section><section class="kind"><h3>A centre-back&#x27;s big day without a clean sheet</h3><p class="q">Blocks, clearances, duels and a clearance off the line should still earn a big mark.</p><p class="verdict">8.5 with no clean sheet. Defending alone can carry a centre-back to an 8.</p><div class="cards"><article class="card">
+  <div class="mark b-high"><span>8.5</span><small>B 8.4</small></div>
+  <div class="body">
+    <header><strong>Romero</strong> <span class="pos">DEF</span>
+      <span class="fx">TOT at BOU 2–3 · GW21 · 90′</span></header>
+    <p class="note">The most defending in a match his side conceded in</p>
+    <div class="chips"><span class="chip">0.18 npxG</span><span class="chip">0.44 xA</span><span class="chip">3 key passes</span><span class="chip">2 big chances made</span><span class="chip">21 duels won</span><span class="chip">2 duels lost</span><span class="chip">3 tackles won</span><span class="chip">2 int</span><span class="chip">7 clearances</span><span class="chip">2 blocks</span><span class="chip">6 recoveries</span><span class="chip bad">3 conceded</span><span class="chip">45 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part down"><b>−0.7</b> returns</span><span class="part up"><b>+0.9</b> threat</span><span class="part up"><b>+2.1</b> defending</span><span class="part up"><b>+0.2</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.17 · defence 1.02</span><span>vs expected −0.3</span><span>FotMob 8.3 · SofaScore 8.2</span><span>FPL 3 pts</span></div>
+  </div>
+</article></div></section><section class="kind"><h3>The keeper who let in three</h3><p class="q">Conceding three but stopping far more should not sink him.</p><p class="verdict">Conceding three but saving well gets 7.6. The same scoreline with an error behind it gets 2.5.</p><div class="cards"><article class="card">
+  <div class="mark b-mid"><span>7.6</span><small>B 7.6</small></div>
+  <div class="body">
+    <header><strong>Kelleher</strong> <span class="pos">GK</span>
+      <span class="fx">BRE at MCI 0–3 · GW36 · 90′</span></header>
+    <p class="note">Best keeping in a match he conceded three or more</p>
+    <div class="chips"><span class="chip">1 duels won</span><span class="chip">2 clearances</span><span class="chip">11 recoveries</span><span class="chip bad">3 conceded</span><span class="chip">7 saves</span><span class="chip">1.50 prevented</span><span class="chip">19 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part down"><b>−0.5</b> returns</span><span class="part up"><b>+1.6</b> keeping</span><span class="part up"><b>+0.5</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.34 · defence 1.14</span><span>vs expected −0.1</span><span>FotMob 8.2 · SofaScore 9.3</span><span>FPL 3 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>2.5</span><small>B 2.4</small></div>
+  <div class="body">
+    <header><strong>Roefs</strong> <span class="pos">GK</span>
+      <span class="fx">SUN v NFO 0–5 · GW34 · 90′</span></header>
+    <p class="note">Worst</p>
+    <div class="chips"><span class="chip">5 recoveries</span><span class="chip bad">5 conceded</span><span class="chip">2 saves</span><span class="chip">-3.67 prevented</span><span class="chip bad">1 error → goal</span><span class="chip">26 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part down"><b>−1.1</b> returns</span><span class="part down"><b>−1.6</b> keeping</span><span class="part up"><b>+0.1</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−1.0</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.84 · defence 1.01</span><span>vs expected −0.2</span><span>FotMob 3.2 · SofaScore 5.1</span><span>FPL 0 pts</span></div>
+  </div>
+</article></div></section><section class="kind"><h3>A red card on an otherwise good day</h3><p class="q">The red should cost him the day, not erase it.</p><p class="verdict">A goal and a red reads 6.3; a return with an own goal reads 5.5. The day survives, marked down hard.</p><div class="cards"><article class="card">
+  <div class="mark b-mid"><span>6.3</span><small>B 6.6</small></div>
+  <div class="body">
+    <header><strong>Szoboszlai</strong> <span class="pos">MID</span>
+      <span class="fx">LIV v MCI 1–2 · GW25 · 90′</span></header>
+    <p class="note">Best mark with a red card</p>
+    <div class="chips"><span class="chip ret">1G</span><span class="chip">1 from outside box</span><span class="chip">0.06 npxG</span><span class="chip">0.19 xA</span><span class="chip">2 on target</span><span class="chip">1 key passes</span><span class="chip">8 duels won</span><span class="chip">9 duels lost</span><span class="chip">1 tackles won</span><span class="chip">1 int</span><span class="chip">4 clearances</span><span class="chip">8 recoveries</span><span class="chip bad">2 conceded</span><span class="chip bad">1 RED</span><span class="chip bad">1 error → shot</span><span class="chip">52 passes</span><span class="chip">2 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+1.7</b> returns</span><span class="part up"><b>+0.4</b> threat</span><span class="part down"><b>−0.1</b> waste</span><span class="part up"><b>+0.5</b> defending</span><span class="part up"><b>+0.2</b> passing</span><span class="part down"><b>−2.2</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.27 · defence 1.13</span><span>vs expected +0.9</span><span>FotMob 7.0 · SofaScore 7.7</span><span>FPL 8 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-low"><span>5.5</span><small>B 5.7</small></div>
+  <div class="body">
+    <header><strong>Mykolenko</strong> <span class="pos">DEF</span>
+      <span class="fx">EVE at FUL 2–1 · GW25 · 84′</span></header>
+    <p class="note">Best mark with an own goal</p>
+    <div class="chips"><span class="chip ret">1A</span><span class="chip">0.19 xA</span><span class="chip">1 key passes</span><span class="chip">2 duels won</span><span class="chip">3 duels lost</span><span class="chip">2 int</span><span class="chip">1 clearances</span><span class="chip">4 recoveries</span><span class="chip bad">1 conceded</span><span class="chip bad">1 yellow</span><span class="chip bad">1 own goal</span><span class="chip">26 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part up"><b>+0.5</b> returns</span><span class="part up"><b>+0.2</b> threat</span><span class="part up"><b>+0.2</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−1.5</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.88 · defence 1.03</span><span>vs expected +0.6</span><span>FotMob 6.8 · SofaScore 6.4</span><span>FPL 2 pts</span></div>
+  </div>
+</article></div></section><section class="kind"><h3>A goal from outside the box</h3><p class="q">Worth a little more than a tap-in: +0.3 on top of the goal.</p><p class="verdict">7.6 for one long-range goal: the goal, plus 0.3 for the distance.</p><div class="cards"><article class="card">
+  <div class="mark b-mid"><span>7.6</span><small>B 7.9</small></div>
+  <div class="body">
+    <header><strong>Gravenberch</strong> <span class="pos">MID</span>
+      <span class="fx">LIV at NEW 3–2 · GW2 · 90′</span></header>
+    <p class="note">The lowest-xG screamer, one goal from outside the box</p>
+    <div class="chips"><span class="chip ret">1G</span><span class="chip">1 from outside box</span><span class="chip">0.02 npxG</span><span class="chip">0.01 xA</span><span class="chip">1 on target</span><span class="chip">3 duels won</span><span class="chip">7 duels lost</span><span class="chip">1 tackles won</span><span class="chip">1 int</span><span class="chip">3 clearances</span><span class="chip">4 recoveries</span><span class="chip bad">2 conceded</span><span class="chip bad">1 yellow</span><span class="chip">43 passes</span><span class="chip">2 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+1.8</b> returns</span><span class="part up"><b>+0.1</b> threat</span><span class="part down"><b>−0.1</b> waste</span><span class="part up"><b>+0.1</b> defending</span><span class="part up"><b>+0.2</b> passing</span><span class="part down"><b>−0.3</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.16 · defence 1.17</span><span>vs expected +1.1</span><span>FotMob 7.3 · SofaScore 7.3</span><span>FPL 7 pts</span></div>
+  </div>
+</article></div></section>
+</section>
+
+<section>
+  <h2>The star test</h2>
+  <p class="q">Season averages, 900 minutes or more. "vs exp." sums his returns against what the projection expected before each match. "Websites" is the FotMob/SofaScore average.</p>
+  <div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="">Pos</th><th class="n">Apps</th><th class="n">G</th><th class="n">A</th><th class="n hl">Avg (A)</th><th class="n">Rank</th><th class="n">Avg (B)</th><th class="n">Rank</th><th class="n">vs exp.</th><th class="n">Websites</th><th class="n">10s</th></tr></thead><tbody><tr><td class="">B.Fernandes</td><td class="">MUN</td><td class="">MID</td><td class="n">35</td><td class="n">9</td><td class="n">24</td><td class="n hl">7.63</td><td class="n">1</td><td class="n">7.65</td><td class="n">1</td><td class="n">+6.4</td><td class="n">7.82</td><td class="n">1</td></tr><tr><td class="">Haaland</td><td class="">MCI</td><td class="">FWD</td><td class="n">35</td><td class="n">27</td><td class="n">8</td><td class="n hl">7.56</td><td class="n">2</td><td class="n">7.54</td><td class="n">2</td><td class="n">+1.1</td><td class="n">7.50</td><td class="n">1</td></tr><tr><td class="">Gabriel</td><td class="">ARS</td><td class="">DEF</td><td class="n">32</td><td class="n">3</td><td class="n">5</td><td class="n hl">7.29</td><td class="n">3</td><td class="n">7.33</td><td class="n">3</td><td class="n">+3.5</td><td class="n">7.29</td><td class="n">0</td></tr><tr><td class="">Bruno G.</td><td class="">NEW</td><td class="">MID</td><td class="n">29</td><td class="n">9</td><td class="n">7</td><td class="n hl">7.18</td><td class="n">5</td><td class="n">7.23</td><td class="n">4</td><td class="n">+5.8</td><td class="n">7.49</td><td class="n">0</td></tr><tr><td class="">Rice</td><td class="">ARS</td><td class="">MID</td><td class="n">36</td><td class="n">4</td><td class="n">9</td><td class="n hl">7.16</td><td class="n">6</td><td class="n">7.14</td><td class="n">7</td><td class="n">−1.8</td><td class="n">7.51</td><td class="n">0</td></tr><tr><td class="">João Pedro</td><td class="">CHE</td><td class="">FWD</td><td class="n">35</td><td class="n">15</td><td class="n">9</td><td class="n hl">7.15</td><td class="n">7</td><td class="n">7.12</td><td class="n">8</td><td class="n">+0.1</td><td class="n">7.14</td><td class="n">1</td></tr><tr><td class="">Saka</td><td class="">ARS</td><td class="">MID</td><td class="n">30</td><td class="n">7</td><td class="n">10</td><td class="n hl">7.07</td><td class="n">10</td><td class="n">6.97</td><td class="n">19</td><td class="n">−8.4</td><td class="n">7.39</td><td class="n">0</td></tr><tr><td class="">Semenyo</td><td class="">BOU</td><td class="">MID</td><td class="n">20</td><td class="n">10</td><td class="n">5</td><td class="n hl">7.00</td><td class="n">13</td><td class="n">7.06</td><td class="n">10</td><td class="n">+6.8</td><td class="n">7.24</td><td class="n">0</td></tr><tr><td class="">Virgil</td><td class="">LIV</td><td class="">DEF</td><td class="n">38</td><td class="n">6</td><td class="n">1</td><td class="n hl">6.99</td><td class="n">15</td><td class="n">6.98</td><td class="n">17</td><td class="n">+0.9</td><td class="n">7.26</td><td class="n">0</td></tr><tr><td class="">Watkins</td><td class="">AVL</td><td class="">FWD</td><td class="n">37</td><td class="n">16</td><td class="n">4</td><td class="n hl">6.86</td><td class="n">31</td><td class="n">6.82</td><td class="n">43</td><td class="n">−1.1</td><td class="n">6.92</td><td class="n">0</td></tr><tr><td class="">Cunha</td><td class="">MUN</td><td class="">MID</td><td class="n">33</td><td class="n">10</td><td class="n">4</td><td class="n hl">6.85</td><td class="n">33</td><td class="n">6.87</td><td class="n">34</td><td class="n">+1.5</td><td class="n">7.19</td><td class="n">0</td></tr><tr><td class="">Semenyo</td><td class="">MCI</td><td class="">MID</td><td class="n">17</td><td class="n">7</td><td class="n">1</td><td class="n hl">6.85</td><td class="n">34</td><td class="n">6.83</td><td class="n">40</td><td class="n">−0.0</td><td class="n">7.12</td><td class="n">0</td></tr><tr><td class="">Ekitiké</td><td class="">LIV</td><td class="">FWD</td><td class="n">27</td><td class="n">11</td><td class="n">4</td><td class="n hl">6.84</td><td class="n">37</td><td class="n">6.80</td><td class="n">47</td><td class="n">−0.5</td><td class="n">7.01</td><td class="n">0</td></tr><tr><td class="">Raya</td><td class="">ARS</td><td class="">GK</td><td class="n">37</td><td class="n">0</td><td class="n">0</td><td class="n hl">6.81</td><td class="n">41</td><td class="n">6.83</td><td class="n">41</td><td class="n">+2.1</td><td class="n">7.05</td><td class="n">0</td></tr><tr><td class="">M.Salah</td><td class="">LIV</td><td class="">MID</td><td class="n">27</td><td class="n">7</td><td class="n">7</td><td class="n hl">6.71</td><td class="n">66</td><td class="n">6.55</td><td class="n">130</td><td class="n">−11.6</td><td class="n">6.99</td><td class="n">0</td></tr><tr><td class="">Mbeumo</td><td class="">MUN</td><td class="">MID</td><td class="n">33</td><td class="n">11</td><td class="n">3</td><td class="n hl">6.69</td><td class="n">71</td><td class="n">6.64</td><td class="n">90</td><td class="n">−3.3</td><td class="n">7.01</td><td class="n">0</td></tr><tr><td class="">Wirtz</td><td class="">LIV</td><td class="">MID</td><td class="n">33</td><td class="n">5</td><td class="n">4</td><td class="n hl">6.59</td><td class="n">113</td><td class="n">6.53</td><td class="n">143</td><td class="n">−4.8</td><td class="n">7.01</td><td class="n">0</td></tr><tr><td class="">Palmer</td><td class="">CHE</td><td class="">MID</td><td class="n">26</td><td class="n">10</td><td class="n">2</td><td class="n hl">6.56</td><td class="n">131</td><td class="n">6.50</td><td class="n">157</td><td class="n">−3.1</td><td class="n">7.04</td><td class="n">0</td></tr><tr><td class="">Gyökeres</td><td class="">ARS</td><td class="">FWD</td><td class="n">33</td><td class="n">14</td><td class="n">1</td><td class="n hl">6.54</td><td class="n">144</td><td class="n">6.52</td><td class="n">152</td><td class="n">−0.9</td><td class="n">6.72</td><td class="n">0</td></tr></tbody></table></div>
+  <div class="grid2">
+    <div><h4>Promoted clubs' attackers, by vs expected</h4><div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="n">G</th><th class="n hl">Avg</th><th class="n">Rank</th><th class="n">vs exp.</th></tr></thead><tbody><tr><td class="">Anthony</td><td class="">BUR</td><td class="n">8</td><td class="n hl">6.51</td><td class="n">157</td><td class="n">+6.4</td></tr><tr><td class="">Flemming</td><td class="">BUR</td><td class="n">11</td><td class="n hl">6.62</td><td class="n">102</td><td class="n">+5.2</td></tr><tr><td class="">Okafor</td><td class="">LEE</td><td class="n">8</td><td class="n hl">6.40</td><td class="n">198</td><td class="n">+5.1</td></tr><tr><td class="">Stach</td><td class="">LEE</td><td class="n">5</td><td class="n hl">7.00</td><td class="n">14</td><td class="n">+4.9</td></tr><tr><td class="">Talbi</td><td class="">SUN</td><td class="n">4</td><td class="n hl">6.07</td><td class="n">301</td><td class="n">+3.8</td></tr><tr><td class="">Diarra</td><td class="">SUN</td><td class="n">2</td><td class="n hl">6.26</td><td class="n">252</td><td class="n">+3.6</td></tr></tbody></table></div></div>
+    <div><h4>Most above expectation</h4><div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="n">G</th><th class="n hl">Avg</th><th class="n">vs exp.</th></tr></thead><tbody><tr><td class="">Wilson</td><td class="">FUL</td><td class="n">10</td><td class="n hl">6.81</td><td class="n">+8.6</td></tr><tr><td class="">Gibbs-White</td><td class="">NFO</td><td class="n">15</td><td class="n hl">6.81</td><td class="n">+7.9</td></tr><tr><td class="">Dewsbury-Hall</td><td class="">EVE</td><td class="n">8</td><td class="n hl">6.91</td><td class="n">+7.4</td></tr><tr><td class="">Semenyo</td><td class="">BOU</td><td class="n">10</td><td class="n hl">7.00</td><td class="n">+6.8</td></tr><tr><td class="">Anthony</td><td class="">BUR</td><td class="n">8</td><td class="n hl">6.51</td><td class="n">+6.4</td></tr><tr><td class="">B.Fernandes</td><td class="">MUN</td><td class="n">9</td><td class="n hl">7.63</td><td class="n">+6.4</td></tr></tbody></table></div>
+    <h4 style="margin-top:14px">Most below expectation</h4><div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="n">G</th><th class="n hl">Avg</th><th class="n">vs exp.</th></tr></thead><tbody><tr><td class="">M.Salah</td><td class="">LIV</td><td class="n">7</td><td class="n hl">6.71</td><td class="n">−11.6</td></tr><tr><td class="">Gakpo</td><td class="">LIV</td><td class="n">7</td><td class="n hl">6.72</td><td class="n">−9.2</td></tr><tr><td class="">Saka</td><td class="">ARS</td><td class="n">7</td><td class="n hl">7.07</td><td class="n">−8.4</td></tr><tr><td class="">Bernardo</td><td class="">MCI</td><td class="n">2</td><td class="n hl">6.45</td><td class="n">−6.8</td></tr><tr><td class="">Amad</td><td class="">MUN</td><td class="n">2</td><td class="n hl">6.56</td><td class="n">−6.5</td></tr><tr><td class="">Foden</td><td class="">MCI</td><td class="n">7</td><td class="n hl">6.79</td><td class="n">−6.3</td></tr></tbody></table></div></div>
+  </div>
+  <h4>Best average by position</h4>
+  <div class="grid4"><div><h4>GK</h4><div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="n hl">Avg</th><th class="n">vs exp.</th></tr></thead><tbody><tr><td class="">Raya</td><td class="">ARS</td><td class="n hl">6.81</td><td class="n">+2.1</td></tr><tr><td class="">Donnarumma</td><td class="">MCI</td><td class="n hl">6.79</td><td class="n">+2.0</td></tr><tr><td class="">Martinez</td><td class="">AVL</td><td class="n hl">6.74</td><td class="n">−0.7</td></tr><tr><td class="">Roefs</td><td class="">SUN</td><td class="n hl">6.72</td><td class="n">+1.7</td></tr><tr><td class="">Darlow</td><td class="">LEE</td><td class="n hl">6.69</td><td class="n">−0.6</td></tr><tr><td class="">Kelleher</td><td class="">BRE</td><td class="n hl">6.68</td><td class="n">+0.6</td></tr></tbody></table></div></div><div><h4>DEF</h4><div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="n hl">Avg</th><th class="n">vs exp.</th></tr></thead><tbody><tr><td class="">Gabriel</td><td class="">ARS</td><td class="n hl">7.29</td><td class="n">+3.5</td></tr><tr><td class="">Guéhi</td><td class="">MCI</td><td class="n hl">7.15</td><td class="n">−1.4</td></tr><tr><td class="">Guéhi</td><td class="">CRY</td><td class="n hl">7.13</td><td class="n">+4.0</td></tr><tr><td class="">Virgil</td><td class="">LIV</td><td class="n hl">6.99</td><td class="n">+0.9</td></tr><tr><td class="">Matheus N.</td><td class="">MCI</td><td class="n hl">6.97</td><td class="n">+0.9</td></tr><tr><td class="">James</td><td class="">CHE</td><td class="n hl">6.94</td><td class="n">+5.4</td></tr></tbody></table></div></div><div><h4>MID</h4><div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="n hl">Avg</th><th class="n">vs exp.</th></tr></thead><tbody><tr><td class="">B.Fernandes</td><td class="">MUN</td><td class="n hl">7.63</td><td class="n">+6.4</td></tr><tr><td class="">Bruno G.</td><td class="">NEW</td><td class="n hl">7.18</td><td class="n">+5.8</td></tr><tr><td class="">Rice</td><td class="">ARS</td><td class="n hl">7.16</td><td class="n">−1.8</td></tr><tr><td class="">Saka</td><td class="">ARS</td><td class="n hl">7.07</td><td class="n">−8.4</td></tr><tr><td class="">Garner</td><td class="">EVE</td><td class="n hl">7.02</td><td class="n">+2.3</td></tr><tr><td class="">Anderson</td><td class="">NFO</td><td class="n hl">7.02</td><td class="n">+2.3</td></tr></tbody></table></div></div><div><h4>FWD</h4><div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="n hl">Avg</th><th class="n">vs exp.</th></tr></thead><tbody><tr><td class="">Haaland</td><td class="">MCI</td><td class="n hl">7.56</td><td class="n">+1.1</td></tr><tr><td class="">Bowen</td><td class="">WHU</td><td class="n hl">7.20</td><td class="n">+3.5</td></tr><tr><td class="">João Pedro</td><td class="">CHE</td><td class="n hl">7.15</td><td class="n">+0.1</td></tr><tr><td class="">Watkins</td><td class="">AVL</td><td class="n hl">6.86</td><td class="n">−1.1</td></tr><tr><td class="">Ekitiké</td><td class="">LIV</td><td class="n hl">6.84</td><td class="n">−0.5</td></tr><tr><td class="">Thiago</td><td class="">BRE</td><td class="n hl">6.83</td><td class="n">+3.5</td></tr></tbody></table></div></div></div>
+</section>
+
+<section>
+  <h2>How the marks spread</h2>
+  <div class="grid2">
+    <div><div class="hist"><div class="bar"><span class="cnt">0</span><i style="height:0px" class="b-bad"></i><span class="lab">1</span></div><div class="bar"><span class="cnt">2</span><i style="height:2px" class="b-bad"></i><span class="lab">2</span></div><div class="bar"><span class="cnt">15</span><i style="height:2px" class="b-bad"></i><span class="lab">3</span></div><div class="bar"><span class="cnt">65</span><i style="height:2px" class="b-bad"></i><span class="lab">4</span></div><div class="bar"><span class="cnt">789</span><i style="height:16px" class="b-low"></i><span class="lab">5</span></div><div class="bar"><span class="cnt">5,767</span><i style="height:120px" class="b-mid"></i><span class="lab">6</span></div><div class="bar"><span class="cnt">2,458</span><i style="height:51px" class="b-mid"></i><span class="lab">7</span></div><div class="bar"><span class="cnt">1,176</span><i style="height:24px" class="b-high"></i><span class="lab">8</span></div><div class="bar"><span class="cnt">204</span><i style="height:4px" class="b-high"></i><span class="lab">9</span></div><div class="bar"><span class="cnt">45</span><i style="height:2px" class="b-top"></i><span class="lab">10</span></div></div><p class="small">Every rated match, rounded to the whole mark.</p></div>
+    <div><div class="scroll"><table><thead><tr><th>Pos</th><th class="n">60+ min</th><th class="n">Median</th><th class="n">Top 10%</th><th class="n">9s</th><th class="n">10s</th></tr></thead><tbody><tr><td>GK</td><td class="n">757</td><td class="n">6.5</td><td class="n">7.9</td><td class="n">5</td><td class="n">0</td></tr><tr><td>DEF</td><td class="n">3,026</td><td class="n">6.5</td><td class="n">7.7</td><td class="n">35</td><td class="n">4</td></tr><tr><td>MID</td><td class="n">3,265</td><td class="n">6.5</td><td class="n">7.9</td><td class="n">50</td><td class="n">6</td></tr><tr><td>FWD</td><td class="n">765</td><td class="n">6.5</td><td class="n">8.0</td><td class="n">25</td><td class="n">4</td></tr></tbody></table></div>
+    <p class="small" style="margin-top:8px">Correlation with FotMob 0.879, SofaScore 0.8, their average 0.893, FPL points 0.882.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Where we part from the websites</h2>
+  <p class="q">Our five biggest marks above the FotMob/SofaScore average, then our five biggest below. The gaps are mostly the draft tilt: returns, the opponent, and mistakes.</p>
+  <h4>We rate higher</h4><div class="cards"><article class="card">
+  <div class="mark b-high"><span>9.1</span><small>B 9.6</small></div>
+  <div class="body">
+    <header><strong>Ballard</strong> <span class="pos">DEF</span>
+      <span class="fx">SUN v ARS 2–2 · GW11 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">1G</span><span class="chip ret">1A</span><span class="chip">0.09 npxG</span><span class="chip">1 on target</span><span class="chip">6 duels won</span><span class="chip">7 duels lost</span><span class="chip">6 clearances</span><span class="chip">1 blocks</span><span class="chip bad">2 conceded</span><span class="chip">26 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part up"><b>+2.8</b> returns</span><span class="part up"><b>+0.1</b> threat</span><span class="part up"><b>+0.2</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.24 · defence 1.68</span><span>vs expected +2.2</span><span>FotMob 7.1 · SofaScore 7.7</span><span>FPL 10 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-mid"><span>6.1</span><small>B 6.0</small></div>
+  <div class="body">
+    <header><strong>Sessegnon</strong> <span class="pos">MID</span>
+      <span class="fx">FUL v MCI 4–5 · GW14 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">0.04 npxG</span><span class="chip">0.01 xA</span><span class="chip">2 duels won</span><span class="chip">6 duels lost</span><span class="chip">2 tackles won</span><span class="chip">1 int</span><span class="chip">1 clearances</span><span class="chip">7 recoveries</span><span class="chip bad">5 conceded</span><span class="chip">31 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+0.2</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.37 · defence 1.17</span><span>vs expected −0.3</span><span>FotMob 4.8 · SofaScore 4.8</span><span>FPL 2 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-mid"><span>7.9</span><small>B 8.0</small></div>
+  <div class="body">
+    <header><strong>Wieffer</strong> <span class="pos">MID</span>
+      <span class="fx">BHA v AVL 3–4 · GW14 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">1A</span><span class="chip">0.04 xA</span><span class="chip">1 key passes</span><span class="chip">1 big chances made</span><span class="chip">12 duels won</span><span class="chip">8 duels lost</span><span class="chip">3 tackles won</span><span class="chip">2 int</span><span class="chip">3 clearances</span><span class="chip">6 recoveries</span><span class="chip bad">4 conceded</span><span class="chip">39 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+0.8</b> returns</span><span class="part up"><b>+0.3</b> threat</span><span class="part up"><b>+0.9</b> defending</span><span class="part up"><b>+0.2</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.92 · defence 1.05</span><span>vs expected +0.4</span><span>FotMob 6.8 · SofaScore 6.4</span><span>FPL 8 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-high"><span>8.9</span><small>B 9.5</small></div>
+  <div class="body">
+    <header><strong>Diop</strong> <span class="pos">DEF</span>
+      <span class="fx">FUL v NEW 2–0 · GW38 · 85′</span></header>
+    
+    <div class="chips"><span class="chip ret">1G</span><span class="chip">0.78 npxG</span><span class="chip">1 on target</span><span class="chip">1 duels lost</span><span class="chip">1 int</span><span class="chip">3 clearances</span><span class="chip">1 blocks</span><span class="chip">1 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">31 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part up"><b>+2.4</b> returns</span><span class="part up"><b>+0.5</b> threat</span><span class="part up"><b>+0.2</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.13 · defence 1.02</span><span>vs expected +2.1</span><span>FotMob 7.8 · SofaScore 7.4</span><span>FPL 15 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>10.0</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Lewis-Potter</strong> <span class="pos">DEF</span>
+      <span class="fx">BRE at WOL 2–0 · GW17 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">2G</span><span class="chip">0.48 npxG</span><span class="chip">0.28 xA</span><span class="chip">3 on target</span><span class="chip">1 key passes</span><span class="chip">1 big chances made</span><span class="chip">5 duels won</span><span class="chip">7 duels lost</span><span class="chip">2 int</span><span class="chip">2 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">16 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part up"><b>+3.6</b> returns</span><span class="part up"><b>+0.9</b> threat</span><span class="part up"><b>+0.1</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.78 · defence 0.92</span><span>vs expected +3.5</span><span>FotMob 8.9 · SofaScore 8.6</span><span>FPL 21 pts</span></div>
+  </div>
+</article></div>
+  <h4>We rate lower</h4><div class="cards"><article class="card">
+  <div class="mark b-bad"><span>3.4</span><small>B 3.4</small></div>
+  <div class="body">
+    <header><strong>O&#x27;Nien</strong> <span class="pos">DEF</span>
+      <span class="fx">SUN at MCI 0–3 · GW15 · 3′ · on 88′</span></header>
+    
+    <div class="chips"><span class="chip">1 duels lost</span><span class="chip bad">1 RED</span><span class="chip">3 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.5</b> base</span><span class="part down"><b>−0.1</b> defending</span><span class="part down"><b>−2.0</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.39 · defence 1.18</span><span>vs expected +0.0</span><span>FotMob — · SofaScore 6.3</span><span>FPL -2 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>2.9</span><small>B 2.9</small></div>
+  <div class="body">
+    <header><strong>Van de Ven</strong> <span class="pos">DEF</span>
+      <span class="fx">TOT v CRY 1–3 · GW29 · 37′</span></header>
+    
+    <div class="chips"><span class="chip">4 duels won</span><span class="chip">2 duels lost</span><span class="chip">1 tackles won</span><span class="chip">3 clearances</span><span class="chip">2 recoveries</span><span class="chip bad">3 conceded</span><span class="chip bad">1 RED</span><span class="chip bad">1 pen conceded</span><span class="chip">14 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.7</b> base</span><span class="part down"><b>−0.7</b> returns</span><span class="part up"><b>+0.4</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−2.5</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.07 · defence 1.04</span><span>vs expected −0.0</span><span>FotMob 5.4 · SofaScore 5.4</span><span>FPL -3 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>3.2</span><small>B 3.2</small></div>
+  <div class="body">
+    <header><strong>Chalobah</strong> <span class="pos">DEF</span>
+      <span class="fx">CHE v BHA 1–3 · GW6 · 52′</span></header>
+    
+    <div class="chips"><span class="chip">1 duels lost</span><span class="chip">1 clearances</span><span class="chip">2 recoveries</span><span class="chip bad">3 conceded</span><span class="chip bad">1 RED</span><span class="chip">36 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part down"><b>−0.7</b> returns</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−2.0</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.04 · defence 1.05</span><span>vs expected −0.1</span><span>FotMob 5.4 · SofaScore 5.5</span><span>FPL -3 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>3.1</span><small>B 3.1</small></div>
+  <div class="body">
+    <header><strong>N.Williams</strong> <span class="pos">DEF</span>
+      <span class="fx">NFO v CRY 1–1 · GW24 · 44′</span></header>
+    
+    <div class="chips"><span class="chip">2 duels won</span><span class="chip">2 duels lost</span><span class="chip">1 clearances</span><span class="chip">1 blocks</span><span class="chip">1 recoveries</span><span class="chip bad">1 conceded</span><span class="chip bad">1 RED</span><span class="chip bad">1 pen conceded</span><span class="chip">7 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.7</b> base</span><span class="part down"><b>−0.2</b> returns</span><span class="part up"><b>+0.1</b> defending</span><span class="part down"><b>−2.5</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.10 · defence 0.95</span><span>vs expected −0.1</span><span>FotMob 4.9 · SofaScore 5.8</span><span>FPL -2 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-low"><span>4.5</span><small>B 4.4</small></div>
+  <div class="body">
+    <header><strong>Grealish</strong> <span class="pos">MID</span>
+      <span class="fx">EVE v WOL 1–1 · GW21 · 89′</span></header>
+    
+    <div class="chips"><span class="chip">0.07 npxG</span><span class="chip">0.07 xA</span><span class="chip">2 key passes</span><span class="chip">9 duels won</span><span class="chip">7 duels lost</span><span class="chip">1 blocks</span><span class="chip">4 recoveries</span><span class="chip bad">1 conceded</span><span class="chip bad">1 RED</span><span class="chip">36 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+0.3</b> threat</span><span class="part up"><b>+0.4</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−2.0</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.76 · defence 0.97</span><span>vs expected −0.4</span><span>FotMob 6.4 · SofaScore 7.1</span><span>FPL -1 pts</span></div>
+  </div>
+</article></div>
+</section>
+
+<section>
+  <h2>Which stats made the cut</h2>
+  <p class="q">Every candidate was tested for what it adds once goals, assists and clean sheets are counted, per position, against the FotMob/SofaScore average. A stat we cannot read live this season was dropped however well it did. Live sources: FPL per fixture, and the dummy league's Opta columns (short codes shown).</p>
+  <div class="scroll"><table><thead><tr><th></th><th>Stat</th><th>Live source</th><th>Why</th></tr></thead><tbody><tr><td><span class="tag t-in">In</span></td><td>Duels won / lost</td><td class="src">DW · DL</td><td>The biggest single signal for every outfield position (+0.11 R² for defenders).</td></tr><tr><td><span class="tag t-in">In</span></td><td>Tackles won, interceptions, clearances, blocks, recoveries</td><td class="src">TkW · Int · CLR · DFP · BR</td><td>Each adds on top of duels; blocks come from DFP − TkW − Int.</td></tr><tr><td><span class="tag t-in">In</span></td><td>Key passes, big chances created, xA</td><td class="src">KP · BCC · FPL xA</td><td>Creation: +0.05 R² for midfielders.</td></tr><tr><td><span class="tag t-in">In</span></td><td>Shots on target, woodwork, non-penalty xG</td><td class="src">SOT · SOP · FPL xG − pens</td><td>Threat. Penalty xG is taken out so a penalty earns nothing until it goes in.</td></tr><tr><td><span class="tag t-in">In</span></td><td>Penalties won, fouls suffered</td><td class="src">PKD · FS</td><td>Small but real, mostly for forwards.</td></tr><tr><td><span class="tag t-in">In</span></td><td>Dispossessed, fouls committed</td><td class="src">DIS · FC</td><td>Small negatives.</td></tr><tr><td><span class="tag t-in">In</span></td><td>Errors leading to a goal / shot</td><td class="src">ErG · ErS</td><td>About −0.7 on the websites, at every position. We use −1.0.</td></tr><tr><td><span class="tag t-in">In</span></td><td>Penalty conceded, clearance off the line</td><td class="src">Pen · CLO</td><td>Rare, but decisive when they happen.</td></tr><tr><td><span class="tag t-in">In</span></td><td>Accurate passes</td><td class="src">AP</td><td>0.004 each: 50 passes ≈ +0.2.</td></tr><tr><td><span class="tag t-in">In</span></td><td>Saves, goals prevented</td><td class="src">FPL saves · xGOT faced − conceded</td><td>Keepers&#x27; whole game (+0.31 R²). Goals prevented needs the shots export live.</td></tr><tr><td><span class="tag t-draft">Draft tilt</span></td><td>Big chances missed</td><td class="src">BCM</td><td>The websites barely count it (−0.03). We charge −0.25 because you asked.</td></tr><tr><td><span class="tag t-draft">Draft tilt</span></td><td>Goals from outside the box</td><td class="src">GOB</td><td>The websites give nothing extra. We give +0.3.</td></tr><tr><td><span class="tag t-out">Out</span></td><td>Successful dribbles</td><td class="src">FotMob only</td><td>Helps forwards (+0.04), but the stats league only has attempts (CoA), so we cannot read it live.</td></tr><tr><td><span class="tag t-out">Out</span></td><td>Aerials won</td><td class="src">AER</td><td>Already inside duels won; it goes negative once duels are counted.</td></tr><tr><td><span class="tag t-out">Out</span></td><td>Touches in the opponent&#x27;s box</td><td class="src">FotMob only</td><td>Adds nothing once shots and xG are in.</td></tr><tr><td><span class="tag t-out">Out</span></td><td>xGOT</td><td class="src">shots export</td><td>Overlaps shots on target and goals; almost no gain.</td></tr><tr><td><span class="tag t-out">Out</span></td><td>FPL defensive contribution</td><td class="src">FPL DC</td><td>A sum of stats we already count one by one.</td></tr><tr><td><span class="tag t-out">Out</span></td><td>Crosses, final-third passes, offsides</td><td class="src">Crs · SFTP · Off</td><td>Negligible once passing and creation are in.</td></tr></tbody></table></div>
+  <p class="small">The 25/26 counts came from the sister repo's SofaScore and FotMob files. Checked against the dummy league for two gameweeks: GW1: 217 players, 23/23 stats exact · GW20: 208 players, 22/23 stats exact (key passes differ on 3 rows). They are the same Opta feed.</p>
+</section>
+
+<section>
+  <h2>The scale</h2>
+  <p class="q">A typical match starts at the base for his position (GK 6.0, DEF 6.0, MID 5.8, FWD 6.15), up to 0.5 lower for a short cameo. Each part adds its stats at so many points apiece. Above 8.5, each further point counts 0.73, and the mark is capped at 10. Under 10 minutes, a man is rated only if something happened. Opponent strength is the sister repo's team model as it stood before that gameweek.</p>
+  <div class="scroll"><table class="wt"><thead><tr><th>Part</th><th>Stat</th><th class="n">Points each</th><th>Scaled by</th></tr></thead><tbody><tr><td>Goals, assists, clean sheets</td><td>openPlayGoals</td><td class="n">GK +1.60 · DEF +1.60 · MID +1.30 · FWD +1.10</td><td>× their defence</td></tr><tr><td></td><td>penaltyGoals</td><td class="n">+0.60</td><td></td></tr><tr><td></td><td>goalsOutsideBox</td><td class="n">+0.30</td><td></td></tr><tr><td></td><td>assists</td><td class="n">+0.80</td><td>× their defence</td></tr><tr><td></td><td>cleanSheet</td><td class="n">GK +0.80 · DEF +0.70 · MID +0.20</td><td>× their attack</td></tr><tr><td></td><td>goalsAgainstOnPitch</td><td class="n">GK −0.20 · DEF −0.25</td><td>÷ their attack</td></tr><tr><td></td><td>penaltySaves</td><td class="n">GK +1.00</td><td></td></tr><tr><td>Saves and goals prevented</td><td>saves</td><td class="n">GK +0.12</td><td></td></tr><tr><td></td><td>goalsPrevented</td><td class="n">GK +0.50</td><td></td></tr><tr><td>Threat and creation</td><td>nonPenaltyXg</td><td class="n">+0.50</td><td></td></tr><tr><td></td><td>xa</td><td class="n">+0.50</td><td></td></tr><tr><td></td><td>keyPasses</td><td class="n">+0.08</td><td></td></tr><tr><td></td><td>bigChancesCreated</td><td class="n">+0.15</td><td></td></tr><tr><td></td><td>shotsOnTarget</td><td class="n">+0.07</td><td></td></tr><tr><td></td><td>shotsOffPost</td><td class="n">+0.15</td><td></td></tr><tr><td></td><td>penaltiesWon</td><td class="n">+0.40</td><td></td></tr><tr><td></td><td>foulsSuffered</td><td class="n">+0.02</td><td></td></tr><tr><td>Chances and ball wasted</td><td>bigChancesMissed</td><td class="n">−0.25</td><td></td></tr><tr><td></td><td>penaltiesMissed</td><td class="n">−1.20</td><td></td></tr><tr><td></td><td>dispossessed</td><td class="n">−0.04</td><td></td></tr><tr><td>Duels and defending</td><td>duelsWon</td><td class="n">+0.07</td><td></td></tr><tr><td></td><td>duelsLost</td><td class="n">−0.06</td><td></td></tr><tr><td></td><td>tacklesWon</td><td class="n">+0.06</td><td></td></tr><tr><td></td><td>interceptions</td><td class="n">+0.04</td><td></td></tr><tr><td></td><td>clearances</td><td class="n">+0.03</td><td></td></tr><tr><td></td><td>blocks</td><td class="n">+0.07</td><td></td></tr><tr><td></td><td>recoveries</td><td class="n">+0.03</td><td></td></tr><tr><td></td><td>clearancesOffLine</td><td class="n">+0.50</td><td></td></tr><tr><td>Passing</td><td>accuratePasses</td><td class="n">+0.004</td><td></td></tr><tr><td>Cards and errors</td><td>yellowCards</td><td class="n">−0.25</td><td></td></tr><tr><td></td><td>redCards</td><td class="n">−2.00</td><td></td></tr><tr><td></td><td>ownGoals</td><td class="n">−1.20</td><td></td></tr><tr><td></td><td>errorsLeadingToGoal</td><td class="n">−1.00</td><td></td></tr><tr><td></td><td>errorsLeadingToShot</td><td class="n">−0.20</td><td></td></tr><tr><td></td><td>penaltiesConceded</td><td class="n">−0.50</td><td></td></tr><tr><td></td><td>foulsCommitted</td><td class="n">−0.02</td><td></td></tr></tbody></table></div>
+</section>
+
+<section>
+  <h2>Season's top 25 and bottom 15</h2>
+  <div class="cards"><article class="card">
+  <div class="mark b-top"><span>10.0</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>J.Timber</strong> <span class="pos">DEF</span>
+      <span class="fx">ARS v LEE 5–0 · GW2 · 63′</span></header>
+    
+    <div class="chips"><span class="chip ret">2G</span><span class="chip ret">1A</span><span class="chip">0.81 npxG</span><span class="chip">0.05 xA</span><span class="chip">2 on target</span><span class="chip">2 key passes</span><span class="chip">1 big chances made</span><span class="chip">6 duels won</span><span class="chip">3 duels lost</span><span class="chip">1 tackles won</span><span class="chip">2 int</span><span class="chip">1 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">33 passes</span><span class="chip">2 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+4.8</b> returns</span><span class="part up"><b>+0.9</b> threat</span><span class="part down"><b>−0.1</b> waste</span><span class="part up"><b>+0.4</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.01 · defence 1.02</span><span>vs expected +4.2</span><span>FotMob 9.2 · SofaScore 10.0</span><span>FPL 24 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>10.0</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>João Pedro</strong> <span class="pos">FWD</span>
+      <span class="fx">CHE at AVL 4–1 · GW29 · 84′</span></header>
+    
+    <div class="chips"><span class="chip ret">3G</span><span class="chip ret">1A</span><span class="chip">2.61 npxG</span><span class="chip">4 on target</span><span class="chip">1 key passes</span><span class="chip bad">1 big chances missed</span><span class="chip">6 duels won</span><span class="chip">6 duels lost</span><span class="chip">1 recoveries</span><span class="chip bad">1 conceded</span><span class="chip bad">1 yellow</span><span class="chip">10 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.1</b> base</span><span class="part up"><b>+4.2</b> returns</span><span class="part up"><b>+1.7</b> threat</span><span class="part down"><b>−0.2</b> waste</span><span class="part up"><b>+0.1</b> defending</span><span class="part down"><b>−0.3</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.04 · defence 1.05</span><span>vs expected +3.0</span><span>FotMob 9.8 · SofaScore 9.7</span><span>FPL 19 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>10.0</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Schade</strong> <span class="pos">MID</span>
+      <span class="fx">BRE v BOU 4–1 · GW18 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">3G</span><span class="chip">2.94 npxG</span><span class="chip">0.03 xA</span><span class="chip">5 on target</span><span class="chip bad">1 big chances missed</span><span class="chip">9 duels won</span><span class="chip">10 duels lost</span><span class="chip">1 tackles won</span><span class="chip">1 int</span><span class="chip">3 clearances</span><span class="chip">4 recoveries</span><span class="chip bad">1 conceded</span><span class="chip">15 passes</span><span class="chip">2 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+4.0</b> returns</span><span class="part up"><b>+1.8</b> threat</span><span class="part down"><b>−0.3</b> waste</span><span class="part up"><b>+0.3</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.11 · defence 1.03</span><span>vs expected +3.4</span><span>FotMob 9.7 · SofaScore 10.0</span><span>FPL 20 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>10.0</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Van de Ven</strong> <span class="pos">DEF</span>
+      <span class="fx">TOT at EVE 3–0 · GW9 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">2G</span><span class="chip">1.07 npxG</span><span class="chip">0.07 xA</span><span class="chip">2 on target</span><span class="chip">3 duels won</span><span class="chip">3 duels lost</span><span class="chip">3 int</span><span class="chip">7 clearances</span><span class="chip">2 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">63 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part up"><b>+3.9</b> returns</span><span class="part up"><b>+0.7</b> threat</span><span class="part up"><b>+0.4</b> defending</span><span class="part up"><b>+0.2</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.85 · defence 1.04</span><span>vs expected +3.6</span><span>FotMob 9.1 · SofaScore 9.2</span><span>FPL 23 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>10.0</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Eze</strong> <span class="pos">MID</span>
+      <span class="fx">ARS v TOT 4–1 · GW12 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">3G</span><span class="chip">0.66 npxG</span><span class="chip">0.37 xA</span><span class="chip">4 on target</span><span class="chip">1 key passes</span><span class="chip">1 big chances made</span><span class="chip">7 duels won</span><span class="chip">3 duels lost</span><span class="chip">1 tackles won</span><span class="chip">2 int</span><span class="chip">4 recoveries</span><span class="chip bad">1 conceded</span><span class="chip">21 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+3.5</b> returns</span><span class="part up"><b>+1.1</b> threat</span><span class="part up"><b>+0.6</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.01 · defence 0.86</span><span>vs expected +3.1</span><span>FotMob 9.7 · SofaScore 10.0</span><span>FPL 20 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>10.0</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Mateta</strong> <span class="pos">FWD</span>
+      <span class="fx">CRY v BOU 3–3 · GW8 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">3G</span><span class="chip">1 pen goal</span><span class="chip">2.88 npxG</span><span class="chip">0.03 xA</span><span class="chip">5 on target</span><span class="chip bad">3 big chances missed</span><span class="chip">11 duels won</span><span class="chip">3 duels lost</span><span class="chip">1 tackles won</span><span class="chip">2 recoveries</span><span class="chip bad">3 conceded</span><span class="chip">13 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.2</b> base</span><span class="part up"><b>+3.0</b> returns</span><span class="part up"><b>+1.8</b> threat</span><span class="part down"><b>−0.8</b> waste</span><span class="part up"><b>+0.7</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.09 · defence 1.12</span><span>vs expected +2.6</span><span>FotMob 9.7 · SofaScore 9.3</span><span>FPL 17 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>10.0</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Mavropanos</strong> <span class="pos">DEF</span>
+      <span class="fx">WHU v WOL 4–0 · GW32 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">2G</span><span class="chip">0.35 npxG</span><span class="chip">0.05 xA</span><span class="chip">2 on target</span><span class="chip">1 key passes</span><span class="chip">7 duels won</span><span class="chip">1 duels lost</span><span class="chip">1 tackles won</span><span class="chip">1 int</span><span class="chip">5 clearances</span><span class="chip">6 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">28 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part up"><b>+3.5</b> returns</span><span class="part up"><b>+0.4</b> threat</span><span class="part up"><b>+0.9</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.73 · defence 0.90</span><span>vs expected +3.4</span><span>FotMob 9.2 · SofaScore 9.7</span><span>FPL 21 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>10.0</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Thiago</strong> <span class="pos">FWD</span>
+      <span class="fx">BRE at EVE 4–2 · GW20 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">3G</span><span class="chip">1.72 npxG</span><span class="chip">0.03 xA</span><span class="chip">5 on target</span><span class="chip bad">1 big chances missed</span><span class="chip">6 duels won</span><span class="chip">11 duels lost</span><span class="chip">1 blocks</span><span class="chip">1 recoveries</span><span class="chip">1 off the line</span><span class="chip bad">2 conceded</span><span class="chip bad">1 error → shot</span><span class="chip">11 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>6.2</b> base</span><span class="part up"><b>+3.4</b> returns</span><span class="part up"><b>+1.2</b> threat</span><span class="part down"><b>−0.3</b> waste</span><span class="part up"><b>+0.4</b> defending</span><span class="part down"><b>−0.2</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.83 · defence 1.04</span><span>vs expected +3.0</span><span>FotMob 9.6 · SofaScore 10.0</span><span>FPL 17 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>10.0</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>B.Fernandes</strong> <span class="pos">MID</span>
+      <span class="fx">MUN at WOL 4–1 · GW15 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">2G</span><span class="chip ret">1A</span><span class="chip">1 pen goal</span><span class="chip">0.37 npxG</span><span class="chip">0.85 xA</span><span class="chip">2 on target</span><span class="chip">5 key passes</span><span class="chip">4 big chances made</span><span class="chip">5 duels won</span><span class="chip">6 duels lost</span><span class="chip">1 tackles won</span><span class="chip">7 recoveries</span><span class="chip bad">1 conceded</span><span class="chip">53 passes</span><span class="chip">2 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+2.6</b> returns</span><span class="part up"><b>+1.8</b> threat</span><span class="part down"><b>−0.1</b> waste</span><span class="part up"><b>+0.3</b> defending</span><span class="part up"><b>+0.2</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.81 · defence 0.95</span><span>vs expected +2.5</span><span>FotMob 9.4 · SofaScore 9.3</span><span>FPL 18 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>10.0</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Haaland</strong> <span class="pos">FWD</span>
+      <span class="fx">MCI at FUL 5–4 · GW14 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">1G</span><span class="chip ret">2A</span><span class="chip">0.91 npxG</span><span class="chip">0.30 xA</span><span class="chip">1 on target</span><span class="chip">2 key passes</span><span class="chip">2 big chances made</span><span class="chip bad">1 big chances missed</span><span class="chip">6 duels won</span><span class="chip">5 duels lost</span><span class="chip">1 int</span><span class="chip">1 recoveries</span><span class="chip bad">4 conceded</span><span class="chip">12 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.2</b> base</span><span class="part up"><b>+3.0</b> returns</span><span class="part up"><b>+1.5</b> threat</span><span class="part down"><b>−0.2</b> waste</span><span class="part up"><b>+0.2</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.91 · defence 1.15</span><span>vs expected +1.8</span><span>FotMob 9.3 · SofaScore 8.6</span><span>FPL 14 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>10.0</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Hudson-Odoi</strong> <span class="pos">MID</span>
+      <span class="fx">NFO v TOT 3–0 · GW16 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">2G</span><span class="chip ret">1A</span><span class="chip">1 from outside box</span><span class="chip">0.96 npxG</span><span class="chip">0.04 xA</span><span class="chip">2 on target</span><span class="chip">2 key passes</span><span class="chip">5 duels won</span><span class="chip">4 duels lost</span><span class="chip">4 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">23 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+3.7</b> returns</span><span class="part up"><b>+0.8</b> threat</span><span class="part up"><b>+0.2</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.99 · defence 0.90</span><span>vs expected +3.2</span><span>FotMob 9.3 · SofaScore 9.1</span><span>FPL 19 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>10.0</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Lewis-Potter</strong> <span class="pos">DEF</span>
+      <span class="fx">BRE at WOL 2–0 · GW17 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">2G</span><span class="chip">0.48 npxG</span><span class="chip">0.28 xA</span><span class="chip">3 on target</span><span class="chip">1 key passes</span><span class="chip">1 big chances made</span><span class="chip">5 duels won</span><span class="chip">7 duels lost</span><span class="chip">2 int</span><span class="chip">2 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">16 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part up"><b>+3.6</b> returns</span><span class="part up"><b>+0.9</b> threat</span><span class="part up"><b>+0.1</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.78 · defence 0.92</span><span>vs expected +3.5</span><span>FotMob 8.9 · SofaScore 8.6</span><span>FPL 21 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>10.0</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Foden</strong> <span class="pos">MID</span>
+      <span class="fx">MCI at FUL 5–4 · GW14 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">2G</span><span class="chip">1 from outside box</span><span class="chip">0.45 npxG</span><span class="chip">0.19 xA</span><span class="chip">2 on target</span><span class="chip">2 key passes</span><span class="chip">1 big chances made</span><span class="chip">6 duels won</span><span class="chip">3 duels lost</span><span class="chip">1 tackles won</span><span class="chip">3 int</span><span class="chip">1 clearances</span><span class="chip">5 recoveries</span><span class="chip bad">4 conceded</span><span class="chip">46 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+3.2</b> returns</span><span class="part up"><b>+0.8</b> threat</span><span class="part up"><b>+0.6</b> defending</span><span class="part up"><b>+0.2</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.91 · defence 1.15</span><span>vs expected +1.8</span><span>FotMob 9.2 · SofaScore 9.3</span><span>FPL 17 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>10.0</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Doku</strong> <span class="pos">MID</span>
+      <span class="fx">MCI at EVE 3–3 · GW35 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">2G</span><span class="chip">1 from outside box</span><span class="chip">0.11 npxG</span><span class="chip">0.27 xA</span><span class="chip">2 on target</span><span class="chip">4 key passes</span><span class="chip">14 duels won</span><span class="chip">5 duels lost</span><span class="chip">1 tackles won</span><span class="chip">1 int</span><span class="chip">5 recoveries</span><span class="chip bad">3 conceded</span><span class="chip">42 passes</span><span class="chip">2 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+2.9</b> returns</span><span class="part up"><b>+0.8</b> threat</span><span class="part down"><b>−0.1</b> waste</span><span class="part up"><b>+0.9</b> defending</span><span class="part up"><b>+0.2</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.86 · defence 1.00</span><span>vs expected +1.9</span><span>FotMob 9.3 · SofaScore 9.8</span><span>FPL 15 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>9.9</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Semenyo</strong> <span class="pos">MID</span>
+      <span class="fx">BOU v FUL 3–1 · GW7 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">2G</span><span class="chip ret">1A</span><span class="chip">0.66 npxG</span><span class="chip">0.06 xA</span><span class="chip">3 on target</span><span class="chip">1 key passes</span><span class="chip">4 duels won</span><span class="chip">6 duels lost</span><span class="chip">1 tackles won</span><span class="chip">1 clearances</span><span class="chip">7 recoveries</span><span class="chip bad">1 conceded</span><span class="chip">27 passes</span><span class="chip">2 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+3.8</b> returns</span><span class="part up"><b>+0.7</b> threat</span><span class="part down"><b>−0.1</b> waste</span><span class="part up"><b>+0.2</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.90 · defence 1.15</span><span>vs expected +2.8</span><span>FotMob 9.2 · SofaScore 9.5</span><span>FPL 18 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>9.9</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Gomez</strong> <span class="pos">MID</span>
+      <span class="fx">BHA v LEE 3–0 · GW10 · 80′</span></header>
+    
+    <div class="chips"><span class="chip ret">2G</span><span class="chip">1.35 npxG</span><span class="chip">0.01 xA</span><span class="chip">3 on target</span><span class="chip">2 key passes</span><span class="chip">9 duels won</span><span class="chip">3 duels lost</span><span class="chip">2 tackles won</span><span class="chip">1 int</span><span class="chip">1 clearances</span><span class="chip">2 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">18 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.7</b> base</span><span class="part up"><b>+2.9</b> returns</span><span class="part up"><b>+1.1</b> threat</span><span class="part up"><b>+0.7</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.01 · defence 1.04</span><span>vs expected +2.4</span><span>FotMob 9.3 · SofaScore 9.4</span><span>FPL 16 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>9.9</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Garner</strong> <span class="pos">MID</span>
+      <span class="fx">EVE at NFO 2–0 · GW19 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">1G</span><span class="chip ret">1A</span><span class="chip">0.19 npxG</span><span class="chip">0.62 xA</span><span class="chip">1 on target</span><span class="chip">3 key passes</span><span class="chip">2 big chances made</span><span class="chip">8 duels won</span><span class="chip">1 duels lost</span><span class="chip">2 tackles won</span><span class="chip">2 int</span><span class="chip">8 clearances</span><span class="chip">1 blocks</span><span class="chip">5 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">20 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+2.4</b> returns</span><span class="part up"><b>+1.1</b> threat</span><span class="part up"><b>+1.2</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.89 · defence 1.04</span><span>vs expected +2.1</span><span>FotMob 9.2 · SofaScore 9.6</span><span>FPL 16 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>9.9</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Longstaff</strong> <span class="pos">MID</span>
+      <span class="fx">LEE v BOU 2–2 · GW6 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">1G</span><span class="chip ret">1A</span><span class="chip">0.10 npxG</span><span class="chip">0.25 xA</span><span class="chip">1 on target</span><span class="chip">7 key passes</span><span class="chip">2 big chances made</span><span class="chip">10 duels won</span><span class="chip">3 duels lost</span><span class="chip">4 tackles won</span><span class="chip">1 int</span><span class="chip">3 clearances</span><span class="chip">1 blocks</span><span class="chip">2 recoveries</span><span class="chip bad">2 conceded</span><span class="chip">36 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+2.3</b> returns</span><span class="part up"><b>+1.1</b> threat</span><span class="part up"><b>+1.0</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.11 · defence 1.16</span><span>vs expected +1.9</span><span>FotMob 9.2 · SofaScore 9.3</span><span>FPL 15 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>9.9</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Gusto</strong> <span class="pos">DEF</span>
+      <span class="fx">CHE v EVE 2–0 · GW16 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">1G</span><span class="chip ret">1A</span><span class="chip">0.33 npxG</span><span class="chip">0.13 xA</span><span class="chip">2 on target</span><span class="chip">2 key passes</span><span class="chip">1 big chances made</span><span class="chip">2 duels won</span><span class="chip">1 duels lost</span><span class="chip">1 int</span><span class="chip">4 clearances</span><span class="chip">4 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">60 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part up"><b>+3.1</b> returns</span><span class="part up"><b>+0.7</b> threat</span><span class="part up"><b>+0.4</b> defending</span><span class="part up"><b>+0.2</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.85 · defence 1.06</span><span>vs expected +2.6</span><span>FotMob 8.8 · SofaScore 8.7</span><span>FPL 18 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>9.8</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Awoniyi</strong> <span class="pos">FWD</span>
+      <span class="fx">NFO at CHE 3–1 · GW35 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">2G</span><span class="chip ret">1A</span><span class="chip">1.11 npxG</span><span class="chip">2 on target</span><span class="chip">1 pen won</span><span class="chip">1 duels won</span><span class="chip">5 duels lost</span><span class="chip">1 blocks</span><span class="chip">3 recoveries</span><span class="chip bad">1 conceded</span><span class="chip">5 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>6.2</b> base</span><span class="part up"><b>+3.1</b> returns</span><span class="part up"><b>+1.1</b> threat</span><span class="part down"><b>−0.1</b> defending</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.29 · defence 1.04</span><span>vs expected +2.9</span><span>FotMob 8.9 · SofaScore 8.6</span><span>FPL 16 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>9.8</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Guéhi</strong> <span class="pos">DEF</span>
+      <span class="fx">MCI at CHE 3–0 · GW32 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">1G</span><span class="chip">0.33 npxG</span><span class="chip">0.04 xA</span><span class="chip">1 on target</span><span class="chip">1 key passes</span><span class="chip">8 duels won</span><span class="chip">1 duels lost</span><span class="chip">2 tackles won</span><span class="chip">3 int</span><span class="chip">1 clearances</span><span class="chip">2 blocks</span><span class="chip">2 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">101 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part up"><b>+2.5</b> returns</span><span class="part up"><b>+0.4</b> threat</span><span class="part up"><b>+1.0</b> defending</span><span class="part up"><b>+0.4</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.32 · defence 1.06</span><span>vs expected +1.7</span><span>FotMob 8.8 · SofaScore 9.2</span><span>FPL 15 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>9.8</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Thiaw</strong> <span class="pos">DEF</span>
+      <span class="fx">NEW at EVE 4–1 · GW13 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">2G</span><span class="chip">0.39 npxG</span><span class="chip">0.01 xA</span><span class="chip">2 on target</span><span class="chip">7 duels won</span><span class="chip">2 duels lost</span><span class="chip">1 tackles won</span><span class="chip">5 clearances</span><span class="chip">4 recoveries</span><span class="chip bad">1 conceded</span><span class="chip">58 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part up"><b>+3.0</b> returns</span><span class="part up"><b>+0.3</b> threat</span><span class="part up"><b>+0.7</b> defending</span><span class="part up"><b>+0.2</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.86 · defence 1.03</span><span>vs expected +2.9</span><span>FotMob 9.1 · SofaScore 9.4</span><span>FPL 16 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>9.7</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Flemming</strong> <span class="pos">FWD</span>
+      <span class="fx">BUR at WOL 3–2 · GW9 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">2G</span><span class="chip">1 from outside box</span><span class="chip">0.71 npxG</span><span class="chip">0.02 xA</span><span class="chip">3 on target</span><span class="chip">1 key passes</span><span class="chip">14 duels won</span><span class="chip">6 duels lost</span><span class="chip">1 tackles won</span><span class="chip">2 clearances</span><span class="chip">2 recoveries</span><span class="chip bad">2 conceded</span><span class="chip">13 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>6.2</b> base</span><span class="part up"><b>+2.5</b> returns</span><span class="part up"><b>+0.8</b> threat</span><span class="part up"><b>+0.8</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.84 · defence 0.99</span><span>vs expected +2.1</span><span>FotMob 9.2 · SofaScore 9.2</span><span>FPL 13 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>9.7</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Sangaré</strong> <span class="pos">MID</span>
+      <span class="fx">NFO v TOT 3–0 · GW16 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">1G</span><span class="chip ret">2A</span><span class="chip">1 from outside box</span><span class="chip">0.13 npxG</span><span class="chip">0.87 xA</span><span class="chip">1 on target</span><span class="chip">2 key passes</span><span class="chip">1 big chances made</span><span class="chip bad">1 big chances missed</span><span class="chip">4 duels won</span><span class="chip">6 duels lost</span><span class="chip">2 tackles won</span><span class="chip">3 clearances</span><span class="chip">1 blocks</span><span class="chip">6 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">36 passes</span><span class="chip">2 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+3.2</b> returns</span><span class="part up"><b>+1.0</b> threat</span><span class="part down"><b>−0.3</b> waste</span><span class="part up"><b>+0.4</b> defending</span><span class="part up"><b>+0.1</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.99 · defence 0.90</span><span>vs expected +2.9</span><span>FotMob 9.2 · SofaScore 9.9</span><span>FPL 18 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-top"><span>9.7</span><small>B 10.0</small></div>
+  <div class="body">
+    <header><strong>Thiaw</strong> <span class="pos">DEF</span>
+      <span class="fx">NEW v CRY 2–0 · GW20 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">1G</span><span class="chip">0.46 npxG</span><span class="chip">0.01 xA</span><span class="chip">1 on target</span><span class="chip">8 duels won</span><span class="chip">2 duels lost</span><span class="chip">3 tackles won</span><span class="chip">10 clearances</span><span class="chip">2 blocks</span><span class="chip">6 recoveries</span><span class="chip ret">clean sheet</span><span class="chip">46 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part up"><b>+2.4</b> returns</span><span class="part up"><b>+0.3</b> threat</span><span class="part up"><b>+1.2</b> defending</span><span class="part up"><b>+0.2</b> passing</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.14 · defence 1.02</span><span>vs expected +1.9</span><span>FotMob 9.0 · SofaScore 9.6</span><span>FPL 17 pts</span></div>
+  </div>
+</article></div>
+  <h4>Bottom 15</h4>
+  <div class="cards"><article class="card">
+  <div class="mark b-bad"><span>2.3</span><small>B 2.3</small></div>
+  <div class="body">
+    <header><strong>Estève</strong> <span class="pos">DEF</span>
+      <span class="fx">BUR at MCI 1–5 · GW6 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">0.02 npxG</span><span class="chip">4 duels won</span><span class="chip">2 duels lost</span><span class="chip">1 tackles won</span><span class="chip">7 clearances</span><span class="chip">1 blocks</span><span class="chip">3 recoveries</span><span class="chip bad">5 conceded</span><span class="chip bad">2 own goal</span><span class="chip bad">1 error → goal</span><span class="chip">27 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part down"><b>−1.0</b> returns</span><span class="part up"><b>+0.6</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−3.4</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.34 · defence 1.13</span><span>vs expected −0.1</span><span>FotMob 1.8 · SofaScore 4.5</span><span>FPL -2 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>2.5</span><small>B 2.4</small></div>
+  <div class="body">
+    <header><strong>Roefs</strong> <span class="pos">GK</span>
+      <span class="fx">SUN v NFO 0–5 · GW34 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">5 recoveries</span><span class="chip bad">5 conceded</span><span class="chip">2 saves</span><span class="chip">-3.67 prevented</span><span class="chip bad">1 error → goal</span><span class="chip">26 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part down"><b>−1.1</b> returns</span><span class="part down"><b>−1.6</b> keeping</span><span class="part up"><b>+0.1</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−1.0</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.84 · defence 1.01</span><span>vs expected −0.2</span><span>FotMob 3.2 · SofaScore 5.1</span><span>FPL 0 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>2.9</span><small>B 2.9</small></div>
+  <div class="body">
+    <header><strong>Van de Ven</strong> <span class="pos">DEF</span>
+      <span class="fx">TOT v CRY 1–3 · GW29 · 37′</span></header>
+    
+    <div class="chips"><span class="chip">4 duels won</span><span class="chip">2 duels lost</span><span class="chip">1 tackles won</span><span class="chip">3 clearances</span><span class="chip">2 recoveries</span><span class="chip bad">3 conceded</span><span class="chip bad">1 RED</span><span class="chip bad">1 pen conceded</span><span class="chip">14 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.7</b> base</span><span class="part down"><b>−0.7</b> returns</span><span class="part up"><b>+0.4</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−2.5</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.07 · defence 1.04</span><span>vs expected −0.0</span><span>FotMob 5.4 · SofaScore 5.4</span><span>FPL -3 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>3.1</span><small>B 3.1</small></div>
+  <div class="body">
+    <header><strong>Agbadou</strong> <span class="pos">DEF</span>
+      <span class="fx">WOL at FUL 0–3 · GW10 · 35′</span></header>
+    
+    <div class="chips"><span class="chip">3 duels won</span><span class="chip">4 duels lost</span><span class="chip">1 tackles won</span><span class="chip">3 clearances</span><span class="chip">2 recoveries</span><span class="chip bad">3 conceded</span><span class="chip bad">1 RED</span><span class="chip">17 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.7</b> base</span><span class="part down"><b>−0.8</b> returns</span><span class="part up"><b>+0.2</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−2.1</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.90 · defence 1.09</span><span>vs expected −0.0</span><span>FotMob 5.2 · SofaScore 5.2</span><span>FPL -3 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>3.1</span><small>B 3.1</small></div>
+  <div class="body">
+    <header><strong>Burn</strong> <span class="pos">DEF</span>
+      <span class="fx">NEW at BRE 1–3 · GW11 · 72′</span></header>
+    
+    <div class="chips"><span class="chip">0.01 xA</span><span class="chip">8 duels won</span><span class="chip">9 duels lost</span><span class="chip">1 tackles won</span><span class="chip">11 clearances</span><span class="chip">1 blocks</span><span class="chip">1 recoveries</span><span class="chip bad">3 conceded</span><span class="chip bad">1 RED</span><span class="chip bad">1 pen conceded</span><span class="chip">20 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.9</b> base</span><span class="part down"><b>−0.7</b> returns</span><span class="part up"><b>+0.5</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−2.6</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.04 · defence 0.97</span><span>vs expected −0.2</span><span>FotMob 5.1 · SofaScore 5.6</span><span>FPL 0 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>3.1</span><small>B 3.1</small></div>
+  <div class="body">
+    <header><strong>N.Williams</strong> <span class="pos">DEF</span>
+      <span class="fx">NFO v CRY 1–1 · GW24 · 44′</span></header>
+    
+    <div class="chips"><span class="chip">2 duels won</span><span class="chip">2 duels lost</span><span class="chip">1 clearances</span><span class="chip">1 blocks</span><span class="chip">1 recoveries</span><span class="chip bad">1 conceded</span><span class="chip bad">1 RED</span><span class="chip bad">1 pen conceded</span><span class="chip">7 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.7</b> base</span><span class="part down"><b>−0.2</b> returns</span><span class="part up"><b>+0.1</b> defending</span><span class="part down"><b>−2.5</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.10 · defence 0.95</span><span>vs expected −0.1</span><span>FotMob 4.9 · SofaScore 5.8</span><span>FPL -2 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>3.2</span><small>B 3.2</small></div>
+  <div class="body">
+    <header><strong>Ballard</strong> <span class="pos">DEF</span>
+      <span class="fx">SUN at WOL 1–1 · GW35 · 23′</span></header>
+    
+    <div class="chips"><span class="chip">1 duels won</span><span class="chip">3 duels lost</span><span class="chip bad">1 conceded</span><span class="chip bad">1 RED</span><span class="chip">10 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.6</b> base</span><span class="part down"><b>−0.3</b> returns</span><span class="part down"><b>−0.1</b> defending</span><span class="part down"><b>−2.0</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.71 · defence 0.90</span><span>vs expected −0.0</span><span>FotMob 4.9 · SofaScore 4.3</span><span>FPL -2 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>3.2</span><small>B 3.2</small></div>
+  <div class="body">
+    <header><strong>Chalobah</strong> <span class="pos">DEF</span>
+      <span class="fx">CHE v BHA 1–3 · GW6 · 52′</span></header>
+    
+    <div class="chips"><span class="chip">1 duels lost</span><span class="chip">1 clearances</span><span class="chip">2 recoveries</span><span class="chip bad">3 conceded</span><span class="chip bad">1 RED</span><span class="chip">36 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part down"><b>−0.7</b> returns</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−2.0</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.04 · defence 1.05</span><span>vs expected −0.1</span><span>FotMob 5.4 · SofaScore 5.5</span><span>FPL -3 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>3.2</span><small>B 3.2</small></div>
+  <div class="body">
+    <header><strong>Sánchez</strong> <span class="pos">GK</span>
+      <span class="fx">CHE at MUN 1–2 · GW5 · 4′</span></header>
+    
+    <div class="chips"><span class="chip">1 duels lost</span><span class="chip bad">2 conceded</span><span class="chip">1 saves</span><span class="chip">0.09 prevented</span><span class="chip bad">1 RED</span></div>
+    <div class="parts"><span class="part base"><b>5.5</b> base</span><span class="part down"><b>−0.4</b> returns</span><span class="part up"><b>+0.2</b> keeping</span><span class="part down"><b>−0.1</b> defending</span><span class="part down"><b>−2.0</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.04 · defence 0.92</span><span>vs expected +0.0</span><span>FotMob — · SofaScore 3.0</span><span>FPL -3 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>3.3</span><small>B 3.3</small></div>
+  <div class="body">
+    <header><strong>Cucurella</strong> <span class="pos">DEF</span>
+      <span class="fx">CHE at FUL 1–2 · GW21 · 21′</span></header>
+    
+    <div class="chips"><span class="chip">2 duels won</span><span class="chip">1 duels lost</span><span class="chip">1 recoveries</span><span class="chip bad">2 conceded</span><span class="chip bad">1 RED</span><span class="chip">19 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.6</b> base</span><span class="part down"><b>−0.5</b> returns</span><span class="part up"><b>+0.1</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−2.0</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.91 · defence 1.07</span><span>vs expected −0.0</span><span>FotMob 5.4 · SofaScore 4.2</span><span>FPL -3 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>3.3</span><small>B 3.3</small></div>
+  <div class="body">
+    <header><strong>Gana</strong> <span class="pos">MID</span>
+      <span class="fx">EVE at MUN 1–0 · GW12 · 12′</span></header>
+    
+    <div class="chips"><span class="chip">0.02 xA</span><span class="chip">1 int</span><span class="chip">2 recoveries</span><span class="chip bad">1 RED</span><span class="chip bad">1 error → shot</span><span class="chip">7 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.4</b> base</span><span class="part up"><b>+0.1</b> defending</span><span class="part down"><b>−2.2</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.05 · defence 0.91</span><span>vs expected −0.0</span><span>FotMob 5.3 · SofaScore 3.0</span><span>FPL -2 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>3.3</span><small>B 3.3</small></div>
+  <div class="body">
+    <header><strong>Reinildo</strong> <span class="pos">DEF</span>
+      <span class="fx">SUN v AVL 1–1 · GW5 · 32′</span></header>
+    
+    <div class="chips"><span class="chip">1 duels won</span><span class="chip">3 duels lost</span><span class="chip">1 int</span><span class="chip bad">1 conceded</span><span class="chip bad">1 RED</span><span class="chip">12 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.7</b> base</span><span class="part down"><b>−0.3</b> returns</span><span class="part down"><b>−0.1</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−2.0</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.96 · defence 0.98</span><span>vs expected −0.0</span><span>FotMob 5.0 · SofaScore 5.4</span><span>FPL -2 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>3.4</span><small>B 3.3</small></div>
+  <div class="body">
+    <header><strong>Romero</strong> <span class="pos">DEF</span>
+      <span class="fx">TOT v LIV 1–2 · GW17 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">0.01 npxG</span><span class="chip">0.01 xA</span><span class="chip">5 duels won</span><span class="chip">3 duels lost</span><span class="chip">12 clearances</span><span class="chip">1 blocks</span><span class="chip">3 recoveries</span><span class="chip bad">2 conceded</span><span class="chip bad">1 RED</span><span class="chip bad">1 error → goal</span><span class="chip">32 passes</span></div>
+    <div class="parts"><span class="part base"><b>6.0</b> base</span><span class="part down"><b>−0.5</b> returns</span><span class="part up"><b>+0.7</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−3.0</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.11 · defence 1.09</span><span>vs expected −0.3</span><span>FotMob 4.7 · SofaScore 6.1</span><span>FPL 0 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>3.4</span><small>B 3.4</small></div>
+  <div class="body">
+    <header><strong>Laurent</strong> <span class="pos">MID</span>
+      <span class="fx">BUR at FUL 1–3 · GW31 · 90′</span></header>
+    
+    <div class="chips"><span class="chip">0.25 npxG</span><span class="chip bad">1 big chances missed</span><span class="chip">4 duels won</span><span class="chip">4 duels lost</span><span class="chip">5 recoveries</span><span class="chip bad">3 conceded</span><span class="chip bad">1 RED</span><span class="chip bad">1 pen conceded</span><span class="chip">22 passes</span><span class="chip">1 dispossessed</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part up"><b>+0.1</b> threat</span><span class="part down"><b>−0.3</b> waste</span><span class="part up"><b>+0.2</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−2.5</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 0.94 · defence 1.04</span><span>vs expected −0.1</span><span>FotMob 4.6 · SofaScore 5.9</span><span>FPL -1 pts</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>3.4</span><small>B 3.3</small></div>
+  <div class="body">
+    <header><strong>Thiaw</strong> <span class="pos">DEF</span>
+      <span class="fx">NEW v LEE 4–3 · GW21 · 45′</span></header>
+    
+    <div class="chips"><span class="chip">1 duels won</span><span class="chip">6 duels lost</span><span class="chip">1 clearances</span><span class="chip">3 recoveries</span><span class="chip bad">2 conceded</span><span class="chip bad">1 yellow</span><span class="chip bad">1 error → goal</span><span class="chip bad">1 pen conceded</span><span class="chip">33 passes</span></div>
+    <div class="parts"><span class="part base"><b>5.8</b> base</span><span class="part down"><b>−0.5</b> returns</span><span class="part down"><b>−0.2</b> defending</span><span class="part up"><b>+0.1</b> passing</span><span class="part down"><b>−1.8</b> discipline</span></div>
+    <div class="meta"><span class="opp" title="Opponent strength before the match, 1.0 = league average">their attack 1.03 · defence 0.97</span><span>vs expected −0.2</span><span>FotMob 4.7 · SofaScore 5.1</span><span>FPL -1 pts</span></div>
+  </div>
+</article></div>
+</section>
+</div>
