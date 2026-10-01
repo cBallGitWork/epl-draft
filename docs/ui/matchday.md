@@ -78,6 +78,10 @@ football under it.
    him**. The two halves of the page finally share both grammars: the scoreline,
    and the accent mark that means "yours".
 
+Last, on every view, **Matchups on Fantrax**: their live scoring for this gameweek's period
+(`livescoring;period={n}`, `FANTRAX_MATCHUPS_PATH`), or their current period when we could not
+read ours (Craig, 1 Oct 2026: *"have fantrax link at bottom which goes to the match ups screen"*).
+
 Between rounds, the football half is replaced by a panel naming the first kickoff
 and FPL's deadline, with an explicit note that ours is the commissioner's and
 lives on the League tab.
