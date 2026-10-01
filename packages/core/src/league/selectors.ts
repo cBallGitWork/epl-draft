@@ -1,4 +1,6 @@
+import type { LeagueScoring } from "./scoring";
 import type {
+  LeagueInfo,
   LeagueMatchup,
   LeaguePlayer,
   LeaguePlayerState,
@@ -150,4 +152,9 @@ export function headToHead(
   return pairing.home.teamId === teamId
     ? { team: pairing.home, opponent: pairing.away, home: pairing.home }
     : { team: pairing.away, opponent: pairing.home, home: pairing.home };
+}
+
+/** A league's rules and its names for them, as our own sums are priced; null when it described no scoring. */
+export function scoringOf(info: LeagueInfo): LeagueScoring | null {
+  return info.scoring === null ? null : { rules: info.scoring, categories: info.scoringCategories };
 }

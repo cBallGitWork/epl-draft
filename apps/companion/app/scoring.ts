@@ -1,4 +1,4 @@
-import { FantraxError, type LeagueScoring, fetchLeagueInfo, mapLeagueInfo } from "@epl/core";
+import { FantraxError, type LeagueScoring, fetchLeagueInfo, mapLeagueInfo, scoringOf } from "@epl/core";
 import recorded from "../../../data/leagues/recorded.json";
 import { leagueCache } from "./leagueCache";
 import { orRefusal } from "./refusals";
@@ -13,9 +13,7 @@ export const leagueScoring = leagueCache("league-scoring",
   async (): Promise<LeagueScoring | null> => {
     if (SCORING_LEAGUE === null) return null;
     const raw = await orRefusal(fetchLeagueInfo(SCORING_LEAGUE));
-    if (raw instanceof FantraxError) return null;
-    const info = mapLeagueInfo(raw);
-    return info.scoring === null ? null : { rules: info.scoring, categories: info.scoringCategories };
+    return raw instanceof FantraxError ? null : scoringOf(mapLeagueInfo(raw));
   },
   () => null,
 );

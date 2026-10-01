@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mapLeagueInfo, type LeagueInfo } from "@epl/core";
+import { mapLeagueInfo, scoringOf } from "@epl/core";
 import real from "../../packages/core/src/league/fantrax/__fixtures__/leagueInfoScoringReal.json";
 import rehearsal from "../../packages/core/src/league/fantrax/__fixtures__/leagueInfoScoringRehearsal.json";
 import { categoryIds, mostPaid, slotWorth, startedOf, tallies } from "./draftReads";
@@ -33,7 +33,6 @@ const day = (assists: [string, number, number][], keeping: [string, number, numb
   },
 });
 const slotOf = new Map([["m1", "M"], ["k1", "G"]]);
-const scoringOf = (info: LeagueInfo) => (info.scoring === null ? null : { rules: info.scoring, categories: info.scoringCategories });
 
 describe("the draft desk on the real league, whose assists are AT and whose keepers are paid on GKP", () => {
   const info = mapLeagueInfo(real);
