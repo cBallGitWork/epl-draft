@@ -2,7 +2,7 @@ import Link from "next/link";
 import { leads, londonDate, DASH } from "@epl/core";
 import TeamBadge from "../../components/league/TeamBadge";
 import type { SeasonRow } from "./teamSeason";
-import { ROW_NAME, MINOR_CAPS } from "@/app/desk";
+import { ROW_NAME, SMALL_CAPS } from "@/app/desk";
 import { matchupHref } from "../routes";
 import { teamHref } from "@/app/squad/routes";
 
@@ -79,7 +79,7 @@ export default function Season({
 
             {/* The competition, in yellow, at every width (Craig, 30 Sep): a cup tie must
                 stand apart from a league one. A knockout's round sits under its name. */}
-            <span className={`flex w-24 shrink-0 flex-col ${MINOR_CAPS} text-accent lg:w-40`}>
+            <span className={`flex w-24 shrink-0 flex-col ${SMALL_CAPS} text-accent lg:w-40 lg:text-sm`}>
               <span className="truncate">{row.tie.competition.name}</span>
               {row.tie.round === null ? null : (
                 <span className="truncate font-normal">{row.tie.round}</span>
