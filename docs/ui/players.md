@@ -209,8 +209,10 @@ controls.
 we can get most things onto one row though"*, against Opta's desktop shot, which
 runs search, stat tabs and its two figure controls across a single line):
 
-- **below `lg`** — search, `Find`, the status chips, `Filter` (Craig, 1 Oct 2026: *"mobile can have owned
-  button show by default"*). Everything else in the drawer.
+- **below `lg`** — search, the status chips, `Filter` (Craig, 1 Oct 2026: *"mobile can have owned button show
+  by default"*, *"find a player bar super wide, theres space"*). Everything else in the drawer. The box grows
+  from 104px, what its placeholder needs; narrower than that, the chips and Filter take a second line together.
+  **`Find` is gone** at every width: the box searches as you type, and Enter submits it without a script.
 - **`lg`** — the stat-group strip joins them. It is the most frequent tap, and it
   is the one that most deserves to be one.
 - **`xl`** — the `Per 90` toggle joins them. It was `2xl` while the minutes

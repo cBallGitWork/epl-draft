@@ -54,29 +54,11 @@ export function Carried({
   );
 }
 
-/** **The geometry every control on this row shares.**
- *
- *  Craig, 10 Sep 2026: *"clean up this ui, all buttons different sizes, we can CM
- *  this now"*. He is right and the count says how badly — five kinds of control
- *  sat on one row at four heights and three type sizes: the search field at 44px
- *  and `text-base` with no desk step at all, `SUBMIT` and `BUTTON` at
- *  `text-sm font-medium` in sentence case, the chips at `text-2xs font-bold
- *  uppercase`, and the blue plates at a third height again.
- *
- *  Championship Manager's chrome is uniform — every plate on a screen is the
- *  same object at the same size, which is most of why the game reads as one
- *  machine — and `desk.css` already puts the chrome FACE on all four plate
- *  classes. What it could not do is the geometry, because that is layout and
- *  belongs to the caller (`desk.ts` sets out exactly this split). So the row now
- *  has one recipe and the plates differ only in colour: grey for a thing you
- *  press, blue for a view you are on.
- *
- *  Local to `players/` rather than in `desk.ts`: five sites, all of them here,
- *  and the app-wide `BUTTON`/`SUBMIT`/`SELECT` recipes are shared by nine other
- *  screens that were not asked to change. Promoting it is the day a second board
- *  wants the same row. */
+/** The geometry every control on this row shares (Craig, 10 Sep 2026: *"all buttons different sizes, we can CM
+ *  this now"*): one recipe, the plates differing only in colour. Two pixels tighter a side under a thumb, so the
+ *  status chips, Filter and the search share a 390 phone's row. Local to `players/`, where all its sites are. */
 export const PLATE_TYPE =
-  `min-h-11 px-2.5 ${SMALL_CAPS} lg:min-h-9`;
+  `min-h-11 px-2 ${SMALL_CAPS} lg:min-h-9 lg:px-2.5`;
 
 /** The same, plus the layout a plate with CONTENT in it needs.
  *
@@ -87,16 +69,8 @@ export const PLATE_TYPE =
 export const PLATE =
   `flex shrink-0 items-center justify-center gap-1 whitespace-nowrap ${PLATE_TYPE}`;
 
-/** A plate you press, in its resting state — the grey bevel plus the geometry.
- *
- *  **Three sites, counted 10 Sep 2026**: the `Find` button, the `Filter` link
- *  and an unpressed `Chip`. `QuerySelect`'s `<noscript>` button is a fourth and
- *  differs only in having no hover, which is an oversight rather than a
- *  decision — a plate you can press should light under the pointer whether or
- *  not a script is running. Folded in.
- *
- *  The pressed state is deliberately NOT here: `cm-bevel-pressed` is a different
- *  plate with no hover, because a thing already held down does not lift. */
+/** A plate you press, at rest: the `Filter` link, an unpressed `Chip`, `QuerySelect`'s `<noscript>` button and the
+ *  pick field's. Not the pressed state: `cm-bevel-pressed` is a plate with no hover, because a held thing does not lift. */
 export const PRESSABLE = `cm-bevel hover:brightness-110 ${PLATE}`;
 
 /** Which columns are on the board: the one strip that stays blue, at the control floor (`cm-tab-quiet`). */

@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { PRESSABLE } from "./BoardControls";
 
 // The search box, which narrows the board while you type.
 //
@@ -11,14 +10,9 @@ import { PRESSABLE } from "./BoardControls";
 // search, and a reader who mistyped a name got a whole page back before finding
 // out.
 //
-// **A GET form first and JavaScript second**, which is the pattern
-// `league/team-stats/Filters` already sets on this desk: without a script the
-// button submits and the page works exactly as it did; with one, typing
-// navigates on its own and the button becomes a way to skip the wait. That
-// matters more here than anywhere else in the app, because every other control
-// on this board is a link precisely so the page needs no script — a search box
-// that stopped working without one would be the exception that makes the rule
-// worthless.
+// **A GET form first and JavaScript second**: without a script Enter (a phone's
+// Search key) submits the one field; with one, typing navigates on its own. The
+// `Find` button went on 1 Oct 2026 to give the row's room to the status chips.
 //
 // **The filtering stays on the SERVER, and that is not laziness.** The obvious
 // dynamic search filters an array in the browser, and it would need the array:
@@ -120,7 +114,8 @@ export default function Search({
     <form
       ref={form}
       action={action}
-      className="flex min-w-0 flex-1 gap-1.5 lg:w-44 lg:flex-none xl:w-64"
+      // Under a thumb it shares the row with the chips until it would drop below its placeholder, then takes a line.
+      className="flex min-w-0 grow basis-26 lg:w-36 lg:flex-none"
     >
       {children}
       <input
@@ -139,14 +134,8 @@ export default function Search({
         // drawn. `text-base` STAYS: below 16px an iPhone zooms the page on
         // focus, which is a worse fault than a field whose type is a step above
         // its neighbours' — and a field is read and typed into, not pressed.
-        className="cm-panel min-h-11 min-w-0 flex-1 px-3 text-base lg:min-h-9"
+        className="cm-panel min-h-11 min-w-0 flex-1 px-2 text-base lg:min-h-9 lg:px-3"
       />
-      {/* Still here with a script running, and deliberately. It is the way out
-          for somebody who typed and does not want to wait 250ms, and it is the
-          only control on the row for a reader with no JavaScript at all. */}
-      <button type="submit" className={PRESSABLE}>
-        Find
-      </button>
     </form>
   );
 }
