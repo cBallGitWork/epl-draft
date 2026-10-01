@@ -15,6 +15,9 @@ const limits = {
   maxActiveByPosition: { D: 5, F: 3, G: 1, M: 5 }, minActiveByPosition: {},
 };
 
+/** Fantrax has priced nobody: the football alone ranks the side. */
+const UNPRICED = new Map<string, number>();
+
 const performer = (
   name: string,
   position: string,
@@ -39,6 +42,26 @@ const performer = (
 });
 
 describe("teamOfTheWeek", () => {
+  it("ranks by Fantrax's points for the period, the football breaking a tie", () => {
+    const picked = teamOfTheWeek(
+      [
+        performer("Scorer", "F", { goals: 2 }),
+        performer("Provider", "M", { assists: 1 }),
+        performer("Stopper", "D", { cleanSheet: true }),
+        performer("Header", "D", { goals: 1 }),
+      ],
+      limits,
+      new Map([["Scorer", 6], ["Provider", 11], ["Stopper", 6], ["Header", 6]]),
+    );
+    expect(picked.picks.map((p) => p.playerName)).toEqual(["Provider", "Scorer", "Header", "Stopper"]);
+    expect(picked.picks.map((p) => p.points)).toEqual([11, 6, 6, 6]);
+  });
+
+  it("prints no points for a man Fantrax has not priced", () => {
+    const picked = teamOfTheWeek([performer("Unpriced", "F", { goals: 1 })], limits, UNPRICED);
+    expect(picked.picks[0].points).toBeNull();
+  });
+
   it("ranks goals above assists above a clean sheet", () => {
     const picked = teamOfTheWeek(
       [
@@ -47,6 +70,7 @@ describe("teamOfTheWeek", () => {
         performer("Stopper", "D", { cleanSheet: true }),
       ],
       limits,
+      UNPRICED,
     );
     expect(picked.picks.map((p) => p.playerName)).toEqual(["Scorer", "Provider", "Stopper"]);
   });
@@ -59,6 +83,7 @@ describe("teamOfTheWeek", () => {
         performer("Keeper B", "G", { saves: 7, cleanSheet: true }, "t2"),
       ],
       limits,
+      UNPRICED,
     );
     expect(picked.picks.map((p) => p.playerName)).toEqual(["Keeper A"]);
   });
@@ -67,11 +92,11 @@ describe("teamOfTheWeek", () => {
     const squads = Array.from({ length: 14 }, (_, i) =>
       performer(`M${i}`, "M", { assists: 1 }, `t${i}`),
     );
-    expect(teamOfTheWeek(squads, limits).picks.length).toBeLessThanOrEqual(11);
+    expect(teamOfTheWeek(squads, limits, UNPRICED).picks.length).toBeLessThanOrEqual(11);
   });
 
   it("names the owner, which is the entire joke", () => {
-    const picked = teamOfTheWeek([performer("Haaland", "F", { goals: 3 }, "someone")], limits);
+    const picked = teamOfTheWeek([performer("Haaland", "F", { goals: 3 }, "someone")], limits, UNPRICED);
     expect(picked.picks[0].ownerTeamId).toBe("someone");
     expect(picked.picks[0].ownerName).toBe("someone");
   });
@@ -81,12 +106,13 @@ describe("teamOfTheWeek", () => {
     const picked = teamOfTheWeek(
       [performer("Benched", "F", { goals: 2 }, "t1", "RESERVE")],
       limits,
+      UNPRICED,
     );
     expect(picked.picks[0].started).toBe(false);
   });
 
   it("leaves out anyone who did not play", () => {
-    expect(teamOfTheWeek([performer("Unused", "F", { minutes: 0 })], limits).picks).toEqual([]);
+    expect(teamOfTheWeek([performer("Unused", "F", { minutes: 0 })], limits, UNPRICED).picks).toEqual([]);
   });
 
   it("counts the shape back to front, not alphabetically", () => {
@@ -103,6 +129,7 @@ describe("teamOfTheWeek", () => {
         performer("F3", "F", { goals: 1, assists: 1 }, "t6"),
       ],
       limits,
+      UNPRICED,
     );
     expect(picked.shape).toBe("1-2-3");
   });
@@ -110,7 +137,7 @@ describe("teamOfTheWeek", () => {
   it("will not fill a position the league sets no cap for", () => {
     // A commissioner adding "W" for wingers has not said how many may play, and
     // inventing that number is inventing a rule.
-    const picked = teamOfTheWeek([performer("Winger", "W", { goals: 3 })], limits);
+    const picked = teamOfTheWeek([performer("Winger", "W", { goals: 3 })], limits, UNPRICED);
     expect(picked.picks).toEqual([]);
   });
 
@@ -123,6 +150,7 @@ describe("teamOfTheWeek", () => {
         performer("Striker", "F", { goals: 2 }),
       ],
       limits,
+      UNPRICED,
     );
     // Not the payload's alphabetical D-F-G-M, which would put the keeper third.
     expect(picked.lines.map((line) => line.position)).toEqual(["G", "D", "M", "F"]);
@@ -131,17 +159,18 @@ describe("teamOfTheWeek", () => {
   });
 
   it("has nothing to say before a ball is kicked", () => {
-    expect(teamOfTheWeek([], limits)).toEqual({ picks: [], lines: [], shape: "" });
+    expect(teamOfTheWeek([], limits, UNPRICED)).toEqual({ picks: [], lines: [], shape: "" });
   });
 
   it("names nobody when the league has published no cap on the XI", () => {
     // Not a team of whatever the position caps add up to. Fourteen is as
     // invented as eleven when the league has said neither.
     expect(
-      teamOfTheWeek([performer("Haaland", "F", { goals: 3 })], {
-        ...limits,
-        maxActivePlayers: null,
-      }),
+      teamOfTheWeek(
+        [performer("Haaland", "F", { goals: 3 })],
+        { ...limits, maxActivePlayers: null },
+        UNPRICED,
+      ),
     ).toEqual({ picks: [], lines: [], shape: "" });
   });
 });

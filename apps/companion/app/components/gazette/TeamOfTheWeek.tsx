@@ -1,34 +1,8 @@
-import { NOTABLE_SAVES, type Pick, type TeamOfTheWeek as Eleven } from "@epl/core";
+import { DASH, type Pick, type TeamOfTheWeek as Eleven } from "@epl/core";
 import Column from "./Column";
 
-// The best eleven anyone owned this week, printed as a standing column.
-//
-// It has been both things now. Eleven rows on hairlines read as a table, so it
-// became a pitch — and a pitch is the largest object a page can carry: at a
-// phone's width the grass ran most of a screen on its own, and the front page
-// turned into a picture of a team with a newspaper wrapped round it. The shape
-// was worth having and the size was not.
-//
-// So the lines stay and the grass goes. A reader still sees 1-4-4-2 — it is in
-// the heading, and the men are grouped under it line by line — but as a sidebar
-// column beside the lead rather than as the widest thing on the sheet. The
-// reference paper does exactly this with its own best-of list, and it is the
-// block a manager scans rather than reads.
-//
-// The lines come from core, not from a second sort here: `shape` is counted off
-// the same lines, so what the heading says and what the column groups cannot
-// come apart.
-
-/** What got him picked, in the fewest words that are still true. */
-function did(pick: Pick): string {
-  const notes = [
-    pick.goals > 0 ? `${pick.goals}G` : null,
-    pick.assists > 0 ? `${pick.assists}A` : null,
-    pick.cleanSheet ? "CS" : null,
-    pick.saves >= NOTABLE_SAVES ? `${pick.saves} saves` : null,
-  ].filter((note): note is string => note !== null);
-  return notes.length > 0 ? notes.join(" · ") : `${pick.minutes}'`;
-}
+// The best eleven anyone owned this week, as a sidebar column grouped by line;
+// each man prints his owner and his Fantrax points (Craig, 1 Oct 2026: "just put points").
 
 export default function TeamOfTheWeek({
   eleven,
@@ -52,7 +26,7 @@ export default function TeamOfTheWeek({
   fielded: boolean;
 }) {
   return (
-    <Column title={partial ? "Team of the week so far" : "Team of the week"} aside={eleven.shape}>
+    <Column title={partial ? "Team of the week so far" : "Team of the week"}>
       {eleven.lines.map((line) => (
         <div key={line.position} className="py-1.5">
           <p className="font-sans text-3xs font-semibold uppercase tracking-[0.16em] text-faint">
@@ -74,13 +48,8 @@ export default function TeamOfTheWeek({
   );
 }
 
-/** One of the eleven, on one line.
- *
- *  Name and owner left, what he did right — the two things this section is
- *  about, now that the round is over: what he did, and whose he was. The
- *  benching is the best story on the page and keeps its place beside the owner
- *  who did it, said only of a lineup we know he was left out of.
- */
+/** One of the eleven, on one line: name and owner left, his points right. "Benched" is said
+ *  only of a lineup we know was fielded. */
 function Man({ pick, mine, fielded }: { pick: Pick; mine: boolean; fielded: boolean }) {
   return (
     <li className="pt-0.5">
@@ -93,7 +62,7 @@ function Man({ pick, mine, fielded }: { pick: Pick; mine: boolean; fielded: bool
             {!fielded || pick.started ? pick.ownerName : `${pick.ownerName} · benched`}
           </span>
         </span>
-        <span className="numeric shrink-0 text-2xs text-muted">{did(pick)}</span>
+        <span className="numeric shrink-0 font-semibold text-ink">{pick.points ?? DASH}</span>
       </span>
     </li>
   );

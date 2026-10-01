@@ -18,15 +18,13 @@ import type { Pick, TeamLine, TeamOfTheWeek } from "./types";
 // team's shape with it. The total is whatever the caps allow to take the field —
 // eleven under our settings, and read rather than assumed.
 
-/** Pick the week's eleven from every squad in the league.
- *
- *  Ranked by the countable football, not by fantasy points: Fantrax's per-player
- *  numbers are on a different read, and a team of the week that waits for a
- *  second network call is a team of the week that does not run. Goals outrank
- *  assists outrank clean sheets, which is how anybody would argue it in a pub. */
+/** Pick the week's eleven from every squad in the league, ranked by Fantrax's
+ *  points for the period (`points`, by Fantrax id); the football breaks a tie and
+ *  ranks alone when Fantrax has priced nobody. */
 export function teamOfTheWeek(
   teams: readonly RosteredTeam[],
   limits: RosterLimits,
+  points: ReadonlyMap<string, number>,
 ): TeamOfTheWeek {
   // **No published total is no team**, and not a team of whatever the position
   // caps happen to add up to. `RosterLimits.maxActivePlayers` is null where the
@@ -37,7 +35,7 @@ export function teamOfTheWeek(
   // — `league/violations` and `league/moves` — both guard the same way.
   if (limits.maxActivePlayers === null) return { picks: [], lines: [], shape: "" };
 
-  const candidates = rosteredPicks(teams);
+  const candidates = rosteredPicks(teams, points);
 
   const taken: Pick[] = [];
   const perPosition = new Map<string, number>();
@@ -62,15 +60,17 @@ export function teamOfTheWeek(
 }
 
 /** Every rostered man who actually played this round, strongest first; the eleven is a selection from this. */
-function rosteredPicks(teams: readonly RosteredTeam[]): Pick[] {
+function rosteredPicks(teams: readonly RosteredTeam[], points: ReadonlyMap<string, number>): Pick[] {
   const candidates: Pick[] = [];
   for (const team of teams) {
     for (const rostered of team.players) {
-      const pick = considered(rostered, team);
+      const pick = considered(rostered, team, points);
       if (pick !== null) candidates.push(pick);
     }
   }
-  return candidates.sort((a, b) => b.score - a.score || b.minutes - a.minutes);
+  return candidates.sort(
+    (a, b) => (b.points ?? -Infinity) - (a.points ?? -Infinity) || b.score - a.score || b.minutes - a.minutes,
+  );
 }
 
 /** A player worth considering, or null.
@@ -78,7 +78,7 @@ function rosteredPicks(teams: readonly RosteredTeam[]): Pick[] {
  *  Only players who were actually on the field: a squad member who did not play
  *  cannot be in a team of the week, and a reserve who scored is somebody's
  *  misfortune rather than a selection. */
-function considered(rostered: RosteredPlayer, team: RosteredTeam): Pick | null {
+function considered(rostered: RosteredPlayer, team: RosteredTeam, points: ReadonlyMap<string, number>): Pick | null {
   if (!isResolved(rostered)) return null;
   if (rostered.slot.position === null) return null;
 
@@ -110,6 +110,7 @@ function considered(rostered: RosteredPlayer, team: RosteredTeam): Pick | null {
     assists,
     cleanSheet,
     saves,
+    points: points.get(rostered.slot.fantraxId) ?? null,
     // How anybody would argue it: goals first, then assists, then keeping one
     // out. A red card takes a player out of the argument entirely.
     score: goals * 100 + assists * 60 + (cleanSheet ? 30 : 0) + saves * 5 - conceded * 8 - redCards * 200,

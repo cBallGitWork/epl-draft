@@ -131,8 +131,9 @@ export interface Pick {
   assists: number;
   cleanSheet: boolean;
   saves: number;
-  /** How the selection was argued, kept so a reader can see the ranking is not
-   *  arbitrary. Not fantasy points and never shown as them. */
+  /** Fantrax's points for him this period, at the slot he filled; null when Fantrax has not priced him. */
+  points: number | null;
+  /** The football's own ranking, which breaks a tie on points. Never shown as points. */
   score: number;
 }
 

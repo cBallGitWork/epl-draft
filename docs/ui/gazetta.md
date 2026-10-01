@@ -141,8 +141,9 @@ business, who is hurt, and when lineups lock.
    of it, and a page that gave every story a photograph would be a page with no
    lead on it.
 7. **Team of the week** — the best XI across the whole league, **in the rail**,
-   grouped into its lines. One man per row: his name and owner at the left, what
-   got him picked at the right (`2G · CS`, or minutes if nothing else). `benched` is
+   grouped into its lines and ranked by Fantrax's points for the period. One man
+   per row: his name and owner at the left, his points at the right, a dash where
+   Fantrax has not priced him (Craig, 1 Oct 2026: *"just put points"*). `benched` is
    appended to the owner when a manager left his own best player out — **and only
    when the arrangement it was read from is the one that was fielded**; see *What
    may be said about a bench* below.
@@ -438,16 +439,15 @@ on its own: the front page had become a picture of a team with a newspaper
 wrapped round it. Craig's call, same day.
 
 **The lines stay, the grass goes.** It is a rail column grouped by line, with a
-small-capital position label over each group and `shape` in the head's aside, so
-a reader still sees 1-4-4-2 without the page spending a screen to draw it. That
+small-capital position label over each group. The head no longer prints the
+formation (Craig, 1 Oct 2026: *"dont have formation in text"*); the lines show it. That
 also puts it where it belongs in the reading order: the eleven is the one block
 in the rail anybody reads for pleasure, so it leads the rail and the three admin
 columns follow.
 
 **The lines come from core, not from a second sort here.** `TeamOfTheWeek.lines`
 is the same men as `picks` in a second order — one is how they rank, the other is
-where they stand — and `shape` is counted off the lines, so the formation printed
-and the formation grouped cannot come apart. `picks` stays in score order because
+where they stand. `picks` stays in points order because
 the lead reads the first man his manager left out, and that only means anything
 if the list is ranked.
 
