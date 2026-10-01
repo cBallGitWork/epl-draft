@@ -4,11 +4,9 @@ import {
   FantraxError,
   OUTFIELD,
   POOL_PAGE_SIZE,
-  fetchLeagueInfo,
   fetchPoolStats,
   fplCodeOf,
   mapAssistKinds,
-  mapLeagueInfo,
   mapPlayerStats,
   periodGameweeks,
 } from "@epl/core";
@@ -16,21 +14,10 @@ import { ASSIST_KINDS_REVALIDATE } from "./config";
 import { seasonKickoffs } from "./football";
 import { orRefusal } from "./refusals";
 import { bridge } from "./squads";
-import { STATS_LEAGUE } from "./statsLeague";
+import { STATS_LEAGUE, periodsOf } from "./statsLeague";
 
 // The stats league's typed fantasy assists for a gameweek, keyed by FPL code. Outfield only: the
 // keepers' table carries no kinds. Nothing, never a throw, when the league is unnamed or silent.
-
-/** A league's own periods; the stats league's calendar need not be the served league's. The league
- *  is an argument, so it is in the cache key by construction. */
-const periodsOf = unstable_cache(
-  async (league: string) => {
-    const raw = await orRefusal(fetchLeagueInfo(league));
-    return raw instanceof FantraxError ? [] : mapLeagueInfo(raw).scoringPeriods;
-  },
-  ["league-periods"],
-  { revalidate: ASSIST_KINDS_REVALIDATE },
-);
 
 /** One period's kinds in a league, as entries, since a Map does not survive the cache. */
 const kindsOf = unstable_cache(
