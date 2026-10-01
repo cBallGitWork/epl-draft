@@ -61,8 +61,8 @@ host, and `/` and `/matchday/desk` at 390 and 1440 were pixel-identical to main 
 ## The paper files seven weekly kinds, nothing else — decided 1 Oct 2026
 
 Craig, 1 Oct, on the Anthropic bill (3.8M tokens in, 0.9M out over 30 days, much of it testing): keep the Prem
-match reports, the draft report, the Bin XI, the Team Sheet, the predicted elevens, the draft sheets at the
-deadline and Lawro. `newsdesk()` no longer queues news, the wire, the eleven, the power ranking, the dodgers, tie
+match reports, the draft report (once, when the gameweek ends; no Saturday edition), the Bin XI, the Team
+Sheet, the predicted elevens, the draft sheets at the deadline and Lawro. `newsdesk()` no longer queues news, the wire, the eleven, the power ranking, the dodgers, tie
 reports, tie calls or fixture previews, and `DeskState` lost the fields only they read (`started`, `stakes`,
 `dealsInWindow`, `news`). Their writers, briefs and prompts stay in the tree until they are deleted after GW6.
 

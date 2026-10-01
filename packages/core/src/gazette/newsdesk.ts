@@ -72,9 +72,11 @@ export function newsdesk(
   const fixtured = desk.ties.length > 0;
 
   if (fixtured) {
-    // A match-day report as each day's football settles, then the draft report on the league's own match-ups.
+    // A match-day report as each day's football settles, then one draft report once the gameweek ends (Craig, 1 Oct 2026).
     for (const day of desk.reportDays) want({ kind: "match-report", ...day });
-    for (const due of desk.draftReports) want({ kind: "draft-report", key: due.key, slug: due.slug, cutoff: due.cutoff, day: due.day });
+    for (const due of desk.draftReports) {
+      if (due.cutoff === "gameweek") want({ kind: "draft-report", key: due.key, slug: due.slug, cutoff: due.cutoff, day: due.day });
+    }
   }
 
   if (desk.finished && fixtured) {

@@ -88,11 +88,13 @@ describe("newsdesk", () => {
     expect(newsdesk(desk({ reportDays: [sat] }), (key) => key === sat.key, NOW).some((a) => a.kind === "match-report")).toBe(false);
   });
 
-  it("commissions a draft report at each cut-off it is due, with its cut-off, once", () => {
+  it("commissions the draft report once the gameweek ends, never after Saturday, and once", () => {
+    // Craig, 1 Oct 2026: one draft report a week, at the end of the gameweek.
     const saturday = { key: "draft-report:gw3:saturday", slug: "gw3-draft-report-saturday", cutoff: "saturday" as const, day: "2026-08-29" };
-    const filed = newsdesk(desk({ draftReports: [saturday] }), none, NOW).filter((a) => a.kind === "draft-report");
-    expect(filed).toEqual([{ kind: "draft-report", key: saturday.key, slug: saturday.slug, cutoff: "saturday", day: "2026-08-29" }]);
-    expect(newsdesk(desk({ draftReports: [saturday] }), (key) => key === saturday.key, NOW).some((a) => a.kind === "draft-report")).toBe(false);
+    const gameweek = { key: "draft-report:gw3:gameweek", slug: "gw3-draft-report", cutoff: "gameweek" as const, day: "2026-08-31" };
+    const filed = newsdesk(desk({ draftReports: [saturday, gameweek] }), none, NOW).filter((a) => a.kind === "draft-report");
+    expect(filed).toEqual([{ kind: "draft-report", key: gameweek.key, slug: gameweek.slug, cutoff: "gameweek", day: "2026-08-31" }]);
+    expect(newsdesk(desk({ draftReports: [gameweek] }), (key) => key === gameweek.key, NOW).some((a) => a.kind === "draft-report")).toBe(false);
   });
 
   it("files the team sheet on a day with pressers", () => {
