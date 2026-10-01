@@ -23,7 +23,7 @@ describe("COLUMNS", () => {
   it("runs phone-first, so the figures a thumb sees first are the ones worth seeing", () => {
     // Craig, 24 Sep 2026: seven figures fit beside a name at 390, and these are the seven.
     expect(COLUMNS.filter((column) => column.group !== "attributes").map((column) => column.label)).toEqual([
-      "Player", "FPts", "FP/G", "Min", "GP", "G", "A", "AF", "CS", "GAO", "GA", "Sv", "PKS", "YC", "RC", "PKM", "OG", "Ros", "+/-",
+      "Player", "FPts", "FP/G", "Min", "GP", "G", "AT", "A", "AF", "CS", "GAO", "GA", "Sv", "GKP", "PKS", "YC", "RC", "PKM", "OG", "Ros", "+/-",
     ]);
   });
 
@@ -57,6 +57,25 @@ describe("COLUMNS", () => {
   });
 });
 
+describe("the columns a league scores", () => {
+  // Each league's getPlayerStats columns on 1 Oct 2026, both halves together.
+  const real = new Set(["GP", "Min", "G", "AT", "YC", "RC", "Pen", "DFP", "DFP3", "PKM", "OG", "GAO", "CS", "GA", "PKS", "GKP"]);
+  const rehearsal = new Set(["GP", "Min", "G", "A", "AF", "YC", "RC", "DFP", "PKM", "OG", "GAO", "CS", "GA", "Sv", "PKS"]);
+  const counts = (scored: ReadonlySet<string>) => columnsIn("all", "fpts", scored).filter((column) => column.stat !== undefined).map((column) => column.label);
+
+  it("draws the real league's AT and GKP, and not the A, AF and Sv it no longer scores", () => {
+    expect(counts(real)).toEqual(["Min", "GP", "G", "AT", "CS", "GAO", "GA", "GKP", "PKS", "YC", "RC", "PKM", "OG"]);
+  });
+
+  it("draws the rehearsal league's as it always has", () => {
+    expect(counts(rehearsal)).toEqual(["Min", "GP", "G", "A", "AF", "CS", "GAO", "GA", "Sv", "PKS", "YC", "RC", "PKM", "OG"]);
+  });
+
+  it("keeps a column the board is sorted by, even where the league does not score it", () => {
+    expect(columnsIn("all", "a", real).some((column) => column.key === "a")).toBe(true);
+  });
+});
+
 describe("the attribute columns", () => {
   const attributeColumns = COLUMNS.filter((column) => column.group === "attributes");
 
@@ -72,15 +91,15 @@ describe("the attribute columns", () => {
   });
 
   it("stays off All and fills its own plate, the spine and the sort beside it", () => {
-    expect(columnsIn("all", "fpts").some((column) => column.group === "attributes")).toBe(false);
-    const plate = columnsIn("attributes", "fpts").map((column) => column.key);
+    expect(columnsIn("all", "fpts", new Set()).some((column) => column.group === "attributes")).toBe(false);
+    const plate = columnsIn("attributes", "fpts", new Set()).map((column) => column.key);
     expect(plate).toEqual(["name", "fpts", ...attributeColumns.map((column) => column.key)]);
-    expect(columnsIn("all", "fin").some((column) => column.key === "fin")).toBe(true);
+    expect(columnsIn("all", "fin", new Set()).some((column) => column.key === "fin")).toBe(true);
   });
 
   it("leads with the attribute it is sorted by, so a phone sees the order it is in", () => {
     // Sorted by Work Rate, the 25th column: a 390 phone shows seven, and they were Acc to Dri.
-    const plate = columnsIn("attributes", "wor").map((column) => column.key);
+    const plate = columnsIn("attributes", "wor", new Set()).map((column) => column.key);
     expect(plate.slice(0, 2)).toEqual(["name", "wor"]);
     expect(plate.filter((key) => key === "wor")).toHaveLength(1);
   });

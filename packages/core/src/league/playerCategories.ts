@@ -1,4 +1,5 @@
 import type { GroupKey } from "./categories";
+import { ASSISTS_FANTASY, ASSISTS_OFFICIAL, ASSISTS_TOTAL, KEEPER_POINTS, SAVES } from "./categoryNames";
 
 // What the Player Stats board can rank the pool by.
 //
@@ -45,6 +46,8 @@ export interface PlayerCategory {
    *  differently. Read as a fallback, never added: a player is in exactly one
    *  half, so at most one of the two columns is ever present on his row. */
   also?: string;
+  /** The category this one is a part of: a line carrying that whole never adds this part to its total. */
+  partOf?: string;
 }
 
 /** **Minutes are deliberately absent** (Craig: "dont do minutes"). It is on both
@@ -55,11 +58,13 @@ export interface PlayerCategory {
  *  did at the back, then what he did wrong. */
 export const PLAYER_CATEGORIES: readonly PlayerCategory[] = [
   { key: "G", group: "attacking", label: "Goals" },
-  { key: "A", group: "attacking", label: "Assists" },
-  { key: "AF", group: "attacking", label: "Assists (fantasy)" },
+  { key: ASSISTS_TOTAL.short, group: "attacking", label: "Assists (total)" },
+  { key: ASSISTS_OFFICIAL.short, group: "attacking", label: "Assists", partOf: ASSISTS_TOTAL.short },
+  { key: ASSISTS_FANTASY.short, group: "attacking", label: "Assists (fantasy)", partOf: ASSISTS_TOTAL.short },
   { key: "PKM", group: "attacking", label: "Penalties missed", lowIsGood: true },
   { key: "CS", group: "defensive", label: "Clean sheets" },
-  { key: "Sv", group: "defensive", label: "Saves", only: "keeper" },
+  { key: SAVES.short, group: "defensive", label: "Saves", only: "keeper" },
+  { key: KEEPER_POINTS.short, group: "defensive", label: "Keeper points", only: "keeper" },
   { key: "PKS", group: "defensive", label: "Penalties saved", only: "keeper" },
   // **One entry, two column names.** Fantrax calls it `GA` on a keeper's read
   // and `GAO` on an outfielder's, and they are the same defensive fact — the

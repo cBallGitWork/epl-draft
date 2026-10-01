@@ -1,4 +1,4 @@
-import { PLAYER_CATEGORIES, type PlayerStatLine, type SeasonTotals } from "@epl/core";
+import { PLAYER_CATEGORIES, carries, type PlayerStatLine, type SeasonTotals } from "@epl/core";
 
 // What the stats board can show, and the arithmetic behind each column.
 //
@@ -66,9 +66,9 @@ function figure(line: PlayerStatLine, key: string, also: string | undefined) {
  *  so DESIGN §7 requires it be labelled as ours: the column is headed `Pts` and
  *  never `FPts`, which is Fantrax's own name for a different number. */
 function totalOf(line: PlayerStatLine): number | null {
-  const figures = PLAYER_CATEGORIES.map((category) =>
-    figure(line, category.key, category.also),
-  ).filter((value): value is number => value !== null);
+  const figures = PLAYER_CATEGORIES.filter((category) => category.partOf === undefined || line.stats[category.partOf] == null)
+    .map((category) => figure(line, category.key, category.also))
+    .filter((value): value is number => value !== null);
   return figures.length === 0 ? null : figures.reduce((sum, value) => sum + value, 0);
 }
 
@@ -101,8 +101,9 @@ const TOTAL: Measure = {
  *  Fantasy is every category the league scores plus the total; the other two
  *  category views are that list filtered to one group and carry no total,
  *  because a total of three of eleven categories is not a total of anything.
- *  Underlying is FPL's, and shares no column with any of them. */
-export function measuresFor(view: ViewKey): readonly Measure[] {
+ *  Underlying is FPL's, and shares no column with any of them. A category the league's read has no column for is
+ *  left off; an empty `scored` keeps them all. */
+export function measuresFor(view: ViewKey, scored: ReadonlySet<string>): readonly Measure[] {
   if (view === "underlying")
     return UNDERLYING.map((column) => ({
       key: column.key,
@@ -114,10 +115,9 @@ export function measuresFor(view: ViewKey): readonly Measure[] {
         totals?.[column.key] ?? null,
     }));
 
-  const categories =
-    view === "fantasy"
-      ? PLAYER_CATEGORIES
-      : PLAYER_CATEGORIES.filter((category) => category.group === view);
+  const categories = PLAYER_CATEGORIES.filter(
+    (category) => (view === "fantasy" || category.group === view) && carries(scored, category.key, category.also),
+  );
   const measures: Measure[] = categories.map((category) => ({
     key: category.key,
     head: category.key,
@@ -137,7 +137,7 @@ export function measuresFor(view: ViewKey): readonly Measure[] {
  *  is what it did before this list existed. A comparator that could only see
  *  what is on screen would drop silently back to roster order on the switch. */
 const SORTABLE = new Map(
-  [...measuresFor("fantasy"), ...measuresFor("underlying")].map((measure) => [measure.key, measure]),
+  [...measuresFor("fantasy", new Set()), ...measuresFor("underlying", new Set())].map((measure) => [measure.key, measure]),
 );
 
 /** One reading, by column key — the sort comparator's way in, and the same

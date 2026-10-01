@@ -70,12 +70,14 @@ export interface PoolColumn {
    *  names and ranks from the top. */
   ascending: boolean;
   value: (row: PoolRow, stats: RawStats) => number | string | null;
+  /** The Fantrax column a count reads, so a board drops it where the league scores no such category. */
+  stat?: string;
 }
 
 /** A raw count read out of the grouped payload by its Fantrax abbreviation.
  *
- *  Every one of them is a count, so `rate` is set here rather than at each of
- *  the fourteen call sites — the exceptions are the columns that do NOT come
+ *  Every one of them is a count, so `rate` is set here rather than at each
+ *  call site — the exceptions are the columns that do NOT come
  *  through this helper, which is exactly the set that should not be rated. */
 function count(
   key: string,
@@ -94,6 +96,7 @@ function count(
     rate: true,
     ascending: false,
     value: (_row, stats) => stats?.[key] ?? null,
+    stat: key,
   };
 }
 
@@ -163,12 +166,14 @@ export const COLUMNS: PoolColumn[] = [
   denominator("Min", "Min", "Minutes played"),
   denominator("GP", "GP", "Games played"),
   count("G", "G", "Goals", "attacking"),
+  count("AT", "AT", "Assists, the official and the fantasy together", "attacking"),
   count("A", "A", "Assists, as the Premier League records them", "attacking"),
   count("AF", "AF", "Assists as Fantrax scores them, which is the wider count", "attacking"),
   count("CS", "CS", "Clean sheets, on 60 minutes on the field — Fantrax's own rule", "defensive"),
   count("GAO", "GAO", "Goals conceded while he was on the field. Outfielders only", "defensive", "low"),
   count("GA", "GA", "Goals conceded. Keepers only", "defensive", "low"),
   count("Sv", "Sv", "Saves. Keepers only", "defensive"),
+  count("GKP", "GKP", "Keeper points, Fantrax's count of a keeper's work. Keepers only", "defensive"),
   count("PKS", "PKS", "Penalties saved. Keepers only", "defensive"),
   count("YC", "YC", "Yellow cards", "discipline", "low"),
   count("RC", "RC", "Red cards", "discipline", "low"),

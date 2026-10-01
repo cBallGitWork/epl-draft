@@ -14,9 +14,9 @@ const counts = { a: { Min: "90", G: "1" }, b: { Min: "90", G: "0" }, c: { Min: "
 describe("sideColumns", () => {
   it("follows an outfielder's rows, adds a keeper's own after, and drops what the league does not name", () => {
     const categories = {
-      x: { code: "G", name: "Goals" },
-      y: { code: "Sv", name: "Saves" },
-      z: { code: "Min", name: "Minutes Played" },
+      x: { code: "G", name: "Goals", longCode: null },
+      y: { code: "Sv", name: "Saves", longCode: null },
+      z: { code: "Min", name: "Minutes Played", longCode: null },
     };
     const men: ManCounts[] = [
       { keeper: true, counts: { Min: "90", Sv: "3" } },

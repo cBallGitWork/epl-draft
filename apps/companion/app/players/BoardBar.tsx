@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { PoolGroupKey } from "./groups";
+import { sortableIn, type PoolGroupKey } from "./groups";
 import { activeSort, boardHref, filterHref, isChosen } from "./query";
 import { POOL } from "./routes";
 import Search from "./Search";
@@ -9,7 +9,6 @@ import { positionLabel } from "../positions";
 import { LABEL, PANEL, SECTION_BAR, SMALL_CAPS } from "@/app/desk";
 import { Carried, clubOptions, Chip, Count, Figures, PRESSABLE, Plates } from "./BoardControls";
 import QuerySelect from "./QuerySelect";
-import { COLUMNS } from "./columns";
 
 // Every control on the board: one row on the desk (search, the stat groups from `lg`, Per 90 from `xl`, Filter),
 // and under a thumb the row plus a sheet docked over the thumb rail. The sheet is URL state (`?panel=1`), so a
@@ -23,6 +22,7 @@ export default function BoardBar({
   counted,
   rated,
   shown,
+  scored,
 }: {
   query: PlayersQuery;
   group: PoolGroupKey;
@@ -35,6 +35,8 @@ export default function BoardBar({
   rated: boolean;
   /** How many rows the filters leave, for the sheet's way back to the board. */
   shown: number;
+  /** Every column the league's stat read carries, so the sort offers no count it does not score. */
+  scored: ReadonlySet<string>;
 }) {
   const open = query.panel === "1";
   const plates = <Plates query={query} group={group} />;
@@ -153,7 +155,7 @@ export default function BoardBar({
                   name="sort"
                   label="Sort by"
                   value={activeSort(query).key}
-                  options={COLUMNS.filter((column) => column.key !== "name").map((c) => ({ value: c.key, label: c.label }))}
+                  options={sortableIn(scored).map((c) => ({ value: c.key, label: c.label }))}
                   action={POOL}
                 >
                   <Carried query={query} except={["sort", "dir"]} />

@@ -31,8 +31,11 @@ export default function StatBoard({
   lines,
   footballers,
   names,
+  scored,
 }: {
   lines: readonly PlayerStatLine[];
+  /** Every column the league's stat read carries, which is the categories it scores. */
+  scored: readonly string[];
   /** The footballer behind each Fantrax id; absent where the bridge has not settled him, which reads as dashes. */
   footballers: Record<string, FootballPlayer>;
   /** The roster's spelling of each name, by id: Fantrax's stat rows say "Schade, Kevin". */
@@ -42,7 +45,7 @@ export default function StatBoard({
   // Null is the squad's own order, the one the Squad tab prints.
   const [sort, setSort] = useState<{ key: string; descending: boolean } | null>(null);
 
-  const measures = measuresFor(view);
+  const measures = measuresFor(view, new Set(scored));
   const cuts = new Map(
     measures.map((measure) => [
       measure.key,

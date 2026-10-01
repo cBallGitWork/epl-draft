@@ -131,9 +131,9 @@ describe("breakdownOf", () => {
 
 describe("liveBreakdown", () => {
   const names = {
-    "5010#6090": { code: "G", name: "Goals" },
-    "5010#6120": { code: "Min", name: "Minutes Played" },
-    "5010#6280": { code: "YC", name: "Yellow Cards" },
+    "5010#6090": { code: "G", name: "Goals", longCode: "INDIVIDUAL_GOALS" },
+    "5010#6120": { code: "Min", name: "Minutes Played", longCode: "INDIVIDUAL_MINUTES_PLAYED" },
+    "5010#6280": { code: "YC", name: "Yellow Cards", longCode: "INDIVIDUAL_YELLOW_CARDS" },
   };
 
   it("names the categories and sorts what he lost below what he earned", () => {

@@ -4,7 +4,7 @@ import {
   categoryFor,
   isMeasure,
   groupFor,
-  inGroup,
+  offeredIn,
   ordinal,
   rankBy,
   type Measure,
@@ -80,10 +80,6 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
   // group is not an error, it just falls back to this group's first: the choice
   // arrives in a URL, and a shared link should survive the row being reorganised.
   const group = groupFor(query.group);
-  const columns = inGroup(group);
-  const category =
-    columns.find((entry) => entry.key === query.cat) ?? columns[0] ?? categoryFor(undefined);
-
   const measure: Measure = isMeasure(query.by) ? query.by : "points";
 
   const [schedule, mine, badges, categories] = await Promise.all([
@@ -92,6 +88,10 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
     teamBadges(),
     getSeasonStats(),
   ]);
+
+  const columns = offeredIn(group, categories);
+  const category =
+    columns.find((entry) => entry.key === query.cat) ?? columns[0] ?? categoryFor(undefined);
 
   if ("unavailable" in schedule) {
     return (

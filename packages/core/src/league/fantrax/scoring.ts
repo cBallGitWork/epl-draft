@@ -29,7 +29,7 @@ export interface RawScoringGroup {
  *  position the league prices it for, which is why the names table collapses
  *  them. */
 export interface RawScoringConfig {
-  scoringCategory?: { id?: string; name?: string; shortName?: string };
+  scoringCategory?: { id?: string; name?: string; shortName?: string; code?: string };
 }
 
 /** Fantrax's own keys for the two tables. Platform constants, interpreted in the
@@ -119,6 +119,7 @@ export function mapScoringCategories(
       names[`${groupId}#${category.id}`] = {
         code: category.shortName,
         name: category.name ?? category.shortName,
+        longCode: category.code ?? null,
       };
     }
   }
