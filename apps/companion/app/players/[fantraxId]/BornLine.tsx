@@ -4,7 +4,7 @@ import { now } from "../../clock";
 import { regions } from "../../football";
 import { bornLine } from "./bio";
 
-/** CM's `Born 2.10.79 (Age 19). English.`, in its own panel: on Data alone (Craig, 25 Sep 2026). */
+/** CM's `Born 2.10.79 (Age 19). English.`, in its own panel: on the Profile alone (Craig, 1 Oct 2026). */
 export default async function BornLine({ player }: { player: FootballPlayer }) {
   const born = bornLine(player.birthDate, now(), countryOf(player.region, await regions()));
   if (born === null) return null;

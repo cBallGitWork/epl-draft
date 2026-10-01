@@ -21,9 +21,9 @@ derived the same four from the same object.
   truncating is shared behaviour rather than this screen's decision.
 - **The born line** — `Born 21.7.00 (Age 26). Norway.`, from FPL's `birth_date` in CM's own
   unpadded `d.m.yy`, then his country: FPL's `region`, named by `/api/regions/`, never
-  Fantrax's birthplace (which put Haaland, born in Leeds, down as England). **On Data
-  only** (Craig, 25 Sep 2026: "only have this on the data section, remove elsewhere");
-  it had been in every tab's shell.
+  Fantrax's birthplace (which put Haaland, born in Leeds, down as England). **On the
+  Profile only**, above the portrait (Craig, 1 Oct 2026, on Data: "remove the dob from all
+  sections except profile"). It had been in every tab's shell, then on Data alone from 25 Sep.
 - **The tabs** — Profile · Data · News · Transfer. **Five until 25 Sep 2026**, CM's own
   count, when History folded into Data. Fitness folded into News on 4 Sep 2026
   (Craig: "Fitness could be doubled in with news") — they were two tabs asking
@@ -41,7 +41,7 @@ derived the same four from the same object.
 
 ## Profile
 
-1. **The portrait**, his club's colour behind the cut-out, crest top-left: a banner across a
+1. **The born line**, then **the portrait**, his club's colour behind the cut-out, crest top-left: a banner across a
    phone showing the whole cut-out, and on a desk a 208px column as tall as the grid, filled
    to its foot (Craig, 25 Sep 2026: "cut off mid box").
 2. **The attribute grid** — CM 01/02's: alphabetical down three columns on the desk and two
@@ -89,7 +89,7 @@ His record, one season at a time (Craig, 25 Sep 2026: "maybe we merge data and h
 together, shows current season by default with other seasons on a dropdown"). **History
 is gone as a tab** and `/history` redirects to `?season=all`; the strip is four plates.
 
-- **The born line**, then a **Season** picker: this season (the default), each season
+- A **Season** picker: this season (the default), each season
   FPL's history lists, and **All seasons**. It is `?season=`, so a shared link keeps it.
 - **This season** — CM's appearances table headed with his club, then **Every match**:
   the house board (Craig: "not like our normal CM standards, use the shared code") —

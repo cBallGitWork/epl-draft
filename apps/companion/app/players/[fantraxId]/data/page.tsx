@@ -8,7 +8,6 @@ import { playerMarks } from "../../../ratings";
 import { intelCareers } from "../../../intel";
 import QuerySelect from "../../QuerySelect";
 import { ALL_SEASONS, playerDataHref } from "../../routes";
-import BornLine from "../BornLine";
 import MatchLog from "../MatchLog";
 import PastSeasons from "../PastSeasons";
 import SeasonTable from "../SeasonTable";
@@ -50,18 +49,15 @@ export default async function PlayerData({
           </Nothing>
         </section>
       ) : (
-        <>
-          <BornLine player={football.player} />
-          <Suspense fallback={<TableWaiting />}>
-            <Record
-              player={football.player}
-              fantraxId={fantraxId}
-              chosen={chosen}
-              paid={intel.matches}
-              season={intel.season}
-            />
-          </Suspense>
-        </>
+        <Suspense fallback={<TableWaiting />}>
+          <Record
+            player={football.player}
+            fantraxId={fantraxId}
+            chosen={chosen}
+            paid={intel.matches}
+            season={intel.season}
+          />
+        </Suspense>
       )}
     </PlayerShell>
   );
