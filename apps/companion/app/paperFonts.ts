@@ -1,48 +1,54 @@
-import { Fraunces, Newsreader } from "next/font/google";
+import localFont from "next/font/local";
 
-// The two faces the paper is set in, and nothing else in the app loads them.
-//
-// `app/layout.tsx` carries Archivo and Archivo Narrow because every screen needs
-// them — the narrow one sets every figure in both registers, which is the spine
-// the two halves of this site share. These two are the Gazetta's alone, so they
-// are imported by the paper route rather than by the layout: the five desk tabs
-// are a management terminal and must not pay for a newspaper's serifs.
-//
-// Georgia is the declared fallback and it is not a courtesy. It is a real
-// transitional serif on every device that will open this, which is what made it
-// the right choice while there was no webfont at all — the same argument the
-// portraits make for the crest. `adjustFontFallback` (next/font's default)
-// additionally synthesises a metric-matched face, so the swap when the real one
-// arrives moves the line breaks and not the layout.
+// The paper's two serifs, imported only by the paper's layout so the desk never loads them.
+// Files and the `*Ext` pattern as in deskFonts.ts; Georgia is the declared fallback, with no
+// metric-matched face, as Google's loader gave them none.
 
-/** Masthead, headlines, drop caps.
- *
- *  `opsz` is asked for by name because next/font ships only the weight axis
- *  otherwise, and Fraunces without it is a text face blown up: the whole point of
- *  a masthead at 4rem and a byline at 0.6rem cut from one family is that the
- *  drawing changes between them. `font-optical-sizing: auto` in `tokens.css` is
- *  what spends it. */
-export const fraunces = Fraunces({
-  subsets: ["latin"],
-  axes: ["opsz"],
+/** Masthead, headlines, drop caps; its `opsz` axis is spent by `font-optical-sizing: auto`. */
+const fraunces = localFont({
+  src: "./fonts/fraunces/latin.woff2",
+  weight: "100 900",
   variable: "--font-fraunces",
   display: "swap",
-  // Written out rather than shared with the stack below it: next/font is read by
-  // the compiler before anything runs, and it rejects a value it cannot see as a
-  // literal ("Font loader values must be explicitly written literals").
+  adjustFontFallback: false,
   fallback: ["Georgia", "Times New Roman", "Liberation Serif", "serif"],
+});
+const frauncesExt = localFont({
+  src: "./fonts/fraunces/latin-ext.woff2",
+  weight: "100 900",
+  variable: "--font-fraunces-ext",
+  display: "swap",
+  preload: false,
+  adjustFontFallback: false,
+  declarations: [{ prop: "unicode-range", value: "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF" }],
 });
 
-/** Body prose and the italic decks under a headline.
- *
- *  Both styles, because the deck is italic by design rather than by emphasis —
- *  a browser asked for italic it does not have will slant the roman, and a
- *  slanted serif is the one thing on a newspaper page that looks like a mistake. */
-export const newsreader = Newsreader({
-  subsets: ["latin"],
-  axes: ["opsz"],
-  style: ["normal", "italic"],
+/** Body prose, and the italic decks under a headline, which must not be a slanted roman. */
+const newsreader = localFont({
+  src: [
+    { path: "./fonts/newsreader/latin.woff2", style: "normal" },
+    { path: "./fonts/newsreader/italic-latin.woff2", style: "italic" },
+  ],
+  weight: "200 800",
   variable: "--font-newsreader",
   display: "swap",
+  adjustFontFallback: false,
   fallback: ["Georgia", "Times New Roman", "Liberation Serif", "serif"],
 });
+const newsreaderExt = localFont({
+  src: [
+    { path: "./fonts/newsreader/latin-ext.woff2", style: "normal" },
+    { path: "./fonts/newsreader/italic-latin-ext.woff2", style: "italic" },
+  ],
+  weight: "200 800",
+  variable: "--font-newsreader-ext",
+  display: "swap",
+  preload: false,
+  adjustFontFallback: false,
+  declarations: [{ prop: "unicode-range", value: "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF" }],
+});
+
+/** Every paper face's variable, for the paper layout's frame. */
+export const paperFontVariables = [fraunces, frauncesExt, newsreader, newsreaderExt]
+  .map((face) => face.variable)
+  .join(" ");

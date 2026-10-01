@@ -44,6 +44,20 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## The six faces are committed, so a build never asks Google Fonts — decided 1 Oct 2026
+
+`next/font/google` downloaded every face at build time, and a build failed whenever Google did not answer
+("queries have exactly one entry", or `fetch failed`, which a rerun cured). The faces now load through
+`next/font/local` from `apps/companion/app/fonts/`. Those files are Google's own latin and latin-ext woff2, byte for
+byte what the old builds fetched (same SHA-256), each family with its OFL. Vietnamese and Cyrillic were dropped, and
+no captured name uses them. Proved on 1 Oct: a clean build with Google unreachable passed, `.next` names no Google
+host, and `/` and `/matchday/desk` at 390 and 1440 were pixel-identical to main apart from the clock.
+- **One latin-ext range, written six times**: a recorded exception to CODE_RULES §1. next/font reads only literals,
+  so the `*Ext` calls in `deskFonts.ts` and `paperFonts.ts` cannot share a constant. Each `*Ext` face leads its stack
+  in `tokens.css` or `paper.css`, and its unicode-range keeps it unfetched until a ć or an š appears.
+- **The four desk fallbacks are pinned** in `fonts/fallbacks.css` to the figures `next/font/google` generated. Left to
+  `next/font/local`, they drew the rail's arrows 2–4% smaller, because those glyphs come from Arial.
+
 ## The paper's staff write under ISS names, one per kind of story — decided 30 Sep 2026
 
 Craig: *"need better sports journalists, ISS/pro evo used fake names based on player names, we do the same for

@@ -1,0 +1,34 @@
+/* Arial sized to each desk face, with the figures next/font/google gave them. It draws the
+   page before the face arrives, and every glyph the face lacks (the rail's arrows, ▲ ▼ ✓). */
+@font-face {
+  font-family: "Archivo Fallback";
+  src: local(Arial);
+  ascent-override: 88.96%;
+  descent-override: 21.28%;
+  line-gap-override: 0%;
+  size-adjust: 98.7%;
+}
+@font-face {
+  font-family: "Oxanium Fallback";
+  src: local(Arial);
+  ascent-override: 76.07%;
+  descent-override: 20.22%;
+  line-gap-override: 24.07%;
+  size-adjust: 103.86%;
+}
+@font-face {
+  font-family: "Jost Fallback";
+  src: local(Arial);
+  ascent-override: 111.45%;
+  descent-override: 39.06%;
+  line-gap-override: 0%;
+  size-adjust: 96.01%;
+}
+@font-face {
+  font-family: "Archivo Narrow Fallback";
+  src: local(Arial);
+  ascent-override: 125.38%;
+  descent-override: 37.8%;
+  line-gap-override: 0%;
+  size-adjust: 82.55%;
+}
