@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { FANTRAX_LEAGUE_ID, FANTRAX_PLAYER_BASE } from "@epl/core";
 import OutLink from "../../../components/shell/OutLink";
 import { readerTeamId } from "../../../squads";
 import { STATUS } from "../../status";
@@ -10,6 +9,7 @@ import { DraftLine } from "../Pedigree";
 import PlayerShell from "../PlayerShell";
 import TransferStatus from "../TransferStatus";
 import { playerPedigree } from "../draft";
+import { fantraxExit } from "../fantraxExit";
 import { joinedBy, playerMoves } from "../dossier";
 import { subject } from "../subject";
 import type { Subject } from "../subject";
@@ -45,14 +45,14 @@ async function Business({ found, fantraxId }: { found: Subject; fantraxId: strin
   const owner = found.intel.ownerTeamId;
   const status = found.intel.league.find((row) => row.label === "Status/Team")?.value?.trim() ?? "";
   const holder = found.ownerName ?? (STATUS[status] ?? (status || null));
-  const action = owner === null ? "Claim him on Fantrax" : owner === reader ? "Open on Fantrax" : "Offer a trade on Fantrax";
+  const exit = fantraxExit(fantraxId, owner, reader);
 
   return (
     <>
       <TransferStatus holder={holder} joined={joinedBy(moves, owner)} pedigree={pedigree} />
       <Moves moves={moves} />
       <DraftLine pedigree={pedigree} drafterName={drafterName} />
-      <OutLink href={`${FANTRAX_PLAYER_BASE}/${fantraxId}/${FANTRAX_LEAGUE_ID}`}>{action}</OutLink>
+      <OutLink href={exit.href}>{exit.label}</OutLink>
     </>
   );
 }

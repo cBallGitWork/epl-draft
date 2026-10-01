@@ -762,7 +762,7 @@ apart silently.
 | A figure in a row | — | — | `sm`, `.numeric` | `ROW_FIGURE`, worn by `FIGURE` (centred) and `BOARD_FIGURE` (right) |
 | A label that is furniture | — | — | `2xs` bold caps | `LABEL` |
 
-**Two recorded exceptions, and what earns one.** `prem/match/[id]/TeamSheet` sets
+**Three recorded exceptions, and what earns one.** `prem/match/[id]/TeamSheet` sets
 its names and figures a step above the row default — `base`/`lg:text-lg` against
 `sm`/`lg:base` — on Craig's call of 10 Sep 2026 (*"the player text could be much
 bigger on this screen too like CM… data much bigger too"*). The argument is that
@@ -784,6 +784,10 @@ is why the table above now reads `sm`–`2xl`. **The phone did not move at any o
 the four.** The complaint was about a desk, the arithmetic only argues for a
 desk, and the phone's budget above the first row of data is the thing that band
 is spent out of.
+
+`players/[fantraxId]/Moves`, a player's Business board, is the third (Craig, 1 Oct 2026: *"make text bigger in
+business"*): its whole content is one man's handful of moves in four columns, so it takes TeamSheet's step,
+`base`/`lg:text-lg`, on the date's index block, the move and both sides.
 
 **Three of these are rules and the rest are consequences.** 44 is docs/rules/PRODUCT.md's
 tap floor and is not negotiable under a thumb; 36 is a control on the desk; 28 is

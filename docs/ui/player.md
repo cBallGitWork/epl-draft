@@ -166,10 +166,14 @@ like"), in four blocks:
    executed move that put him there, or "In the draft"), and his draft pick with what it
    is worth against Fantrax's ranking (`+15 on his pick`).
 2. **Business** — every claim, drop and trade with him, newest first, on the house table:
-   the date in the index block, then the move, from and to ("The pool" for no team).
+   the date in the index block, then the move, from and to ("The pool" for no team), a step
+   above a row's type (Craig, 1 Oct 2026: "make text bigger in business"). Neither panel says
+   "This league" any more (Craig: "remove 'This league' twice"); the tab is only ever ours.
 3. **The cyan line**, how he arrived: `Taken by 123 with pick 21 of round 3.`
 4. **The way out**, worded for what the reader can do: "Claim him on Fantrax" for a man
-   nobody holds, "Offer a trade on Fantrax" for a rival's, "Open on Fantrax" for his own.
+   nobody holds and "Open on Fantrax" for his own, both to his Fantrax page in the league;
+   "Offer a trade on Fantrax" for a rival's, to the owner's roster with Fantrax's trade panel
+   up (`team/roster;teamId={owner}?tx=true`, Craig, 1 Oct 2026).
 
 The whole-of-Fantrax block (drafted %, ADP, rostered %) stays gone (4 Sep 2026).
 

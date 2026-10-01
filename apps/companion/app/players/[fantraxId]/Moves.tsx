@@ -3,7 +3,7 @@ import { DASH, fantraxTime } from "@epl/core";
 import Section from "../../components/shell/Section";
 import { IndexCell } from "../../components/league/TableCells";
 import { MUTE, PlateHead } from "../../components/league/TableHeads";
-import { BOARD, HEAD_CELL, ROW_NAME, ROW_RULE } from "@/app/desk";
+import { BOARD, HEAD_CELL, ROW_RULE } from "@/app/desk";
 import type { PlayerMove } from "./dossier";
 
 // Every claim, drop and trade this league has made with him, newest first, on the house table:
@@ -14,9 +14,9 @@ const KIND: Readonly<Record<string, string>> = { claim: "Claimed", drop: "Droppe
 
 export default function Moves({ moves }: { moves: readonly PlayerMove[] }) {
   return (
-    <Section title="Business" aside="This league">
+    <Section title="Business">
       {moves.length === 0 ? (
-        <p className="text-sm text-muted">No claim, drop or trade involving him.</p>
+        <p className="text-base text-muted lg:text-lg">No claim, drop or trade involving him.</p>
       ) : (
         <ScrollBoard>
           <table className={BOARD}>
@@ -36,15 +36,15 @@ export default function Moves({ moves }: { moves: readonly PlayerMove[] }) {
                   key={`${transaction.setId}-${transaction.kind}-${transaction.processedAt ?? ""}`}
                   className={`${ROW_RULE} ${transaction.executed ? "" : "text-faint"}`}
                 >
-                  <IndexCell className="whitespace-nowrap">
+                  <IndexCell className="whitespace-nowrap text-base lg:text-lg">
                     {fantraxTime(transaction.processedAt ?? "")?.replace(/ \S+$/, "") ?? DASH}
                   </IndexCell>
-                  <td className={`cm-row px-1.5 ${ROW_NAME}`}>
+                  <td className="cm-row px-1.5 font-chrome text-base font-bold lg:text-lg">
                     {KIND[transaction.kind] ?? transaction.kind}
                     {transaction.executed ? null : <span className="pl-2 text-2xs uppercase text-faint">Pending</span>}
                   </td>
-                  <td className="px-1.5 text-sm text-muted">{side(transaction.fromTeamId, fromName)}</td>
-                  <td className="px-1.5 text-sm text-ink">{side(transaction.toTeamId, toName)}</td>
+                  <td className="px-1.5 text-base text-muted lg:text-lg">{side(transaction.fromTeamId, fromName)}</td>
+                  <td className="px-1.5 text-base text-ink lg:text-lg">{side(transaction.toTeamId, toName)}</td>
                 </tr>
               ))}
             </tbody>

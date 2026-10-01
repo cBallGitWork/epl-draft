@@ -217,6 +217,9 @@ export const HALF_MINUTES = 45;
  *  how an edge refuses to run on nothing. The ids are public: they are in the league URLs. */
 export const FANTRAX_LEAGUE_ID = process.env.FANTRAX_LEAGUE_ID ?? "";
 
+/** The served league on Fantrax's website; a deeper page appends `/{path}`. */
+export const FANTRAX_LEAGUE_PAGE = `${FANTRAX_APP_BASE}/${FANTRAX_LEAGUE_ID}`;
+
 /** The league id, or a throw that says where to set it. */
 export function requireLeague(leagueId: string): string {
   if (leagueId.trim() === "") {
