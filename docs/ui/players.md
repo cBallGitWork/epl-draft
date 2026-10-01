@@ -31,13 +31,15 @@ on the phone: *"remove the yellow title for space"*, *"Mobile needs more room fo
 position title on the left here. Put position elsewhere"*, *"Remove opponent as well"*, *"Tighten the column
 headers too?"*. Where the sections below disagree with this one, this one is current.
 
-- **Phone-first order**: `FPts FP/G Min GP G A AF CS GAO GA Sv PKS YC RC PKM OG Ros +/-`. Seven figures sit
-  beside a name at 390 (FPts to AF), six at 360. **Opp is gone** at both widths; the next fixture is the
-  planner's question.
+- **Phone-first order**: `FPts FP/G Min GP G AT A AF CS GAO GA Sv PKS YC RC PKM OG Ros +/-`. Six figures sit
+  beside a name at 390 (FPts to AT), five at 360, since the lead widened for the name on 1 Oct 2026 (it was
+  seven and six). **Opp is gone** at both widths; the next fixture is the planner's question.
 - **The lead** is pinned (`players/BoardRow`, shared with Projections): crest, then the name with **who holds
   him in brackets straight after it** (Craig, 24 Sep 2026: *"put the manager in brackets right after the
   player to allow more room for columns"*). On a phone the name is CM's list form (`Gross, P`, `listName` in
-  core) and line two is the position (`MID`, in `LABEL` ink). On a desk the name is whole, CM's position tile
+  core) and has line one to itself and its doubt box, and line two is the position (`MID`, in `LABEL` ink) with
+  the holder after it (Craig, 1 Oct 2026: *"needs more space for player name on mobile"*); the lead is 160px,
+  room for a fifteen-letter "Surname, I". On a desk the name is whole, CM's position tile
   runs down the left, green for a man on no roster (`--color-index-free`, Craig 1 Oct 2026), and the lead is 256px.
 - **Who holds him**: `(Yours)` in the accent (the page reads the reader's team), `(a rival's team)` quiet, and
   Fantrax's own `(FA)` / `(WW)` loud, because that is the man a reader can act on; the word is its title. This
