@@ -38,33 +38,22 @@ import { now } from "../clock";
 import { BetweenGameweeks, MatchupWaiting } from "./Between";
 import OutLink from "../components/shell/OutLink";
 
-// The live centre. Your head-to-head first, the real football under it — the
-// order a manager actually cares about them in.
-//
-// The football half runs entirely off FPL's public API, so it works from the
-// first match of the season without Fantrax, a draft, or a single credential.
-// The head-to-head renders nothing when there is nothing to say, which keeps
-// that true.
+// The live centre: your head-to-head first, the real football under it. The football half runs
+// off FPL's public API alone, so it works with no Fantrax, no draft and no credential.
 
 // Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 
-/** The snapshot and whether there is football on. The clock is read here rather
- *  than in the component: a render is meant to be reproducible, and fetching is
- *  already where this page touches the world. */
+/** The snapshot and whether there is football on; the clock is read here so a render reproduces. */
 async function matchday(): Promise<{
   snapshot: FootballSnapshot;
-  /** The whole season's fixtures. Returned rather than dropped, because the real
-   *  table is built from them and re-fetching would be a second cache lookup for
-   *  a value already in hand. */
+  /** The whole season's fixtures, kept because the real table is built from them. */
   season: Fixture[];
   during: boolean;
   up: { gameweek: number; kickoff: string } | null;
 }> {
-  // The season, not the snapshot: `getFootballSnapshot` fetches one round's
-  // fixtures, so nothing on it can name the round after it. `seasonFixtures` is
-  // the read that sees the rest of the calendar, and it is already warm.
+  // The season, because the snapshot holds one round and cannot name the next.
   const [snapshot, season] = await Promise.all([footballNow(), seasonFixtures()]);
   const at = now().toISOString();
   return { snapshot, season, during: duringGameweek(snapshot, at), up: nextRound(season, at) };
@@ -75,22 +64,17 @@ export default async function MatchdayPage({
 }: {
   searchParams: Promise<{ view?: string }>;
 }) {
-  // Which of the two plates is open. **Scores is the landing view** (Craig,
-  // 21 Sep 2026): the real scores are the question a manager opens this tab
-  // holding, and the vidiprinter is a tap away rather than in front of them.
+  // Scores is the landing view (Craig, 21 Sep 2026); the vidiprinter is a tap away.
   const printing = (await searchParams).view === PRINTER;
   const { snapshot, season, during, up } = await matchday();
   const league = await marks(snapshot.fixtures);
 
-  // The round's goals, joined to the men who own them: one upstream request for
-  // ten matches, and the question neither Fantrax nor FPL can answer — not who
-  // scored, but whose he is. The breaks come off the same cached read.
+  // The round's goals joined to the men who own them, and the breaks, off one cached read.
   const [goals, streams, breaks, stats, mine, squads, kinds] = await Promise.all([
     roundGoals(snapshot.gameweek, snapshot.players),
     roundStreams(snapshot.gameweek),
     roundBreaks(snapshot.gameweek),
     // FPL's own per-man assist counts, which audit every proposal in `creditAssists`.
-    // One cached read for the round.
     gameweekLive(snapshot.gameweek),
     readerTeamId(),
     getLeagueSquads(),
@@ -99,38 +83,18 @@ export default async function MatchdayPage({
   const reds = roundRedCards(streams, snapshot.players);
   const scored = creditAssists(goals, snapshot, stats, streams, kinds);
 
-  // **The day being played, not the whole round** — Craig, 5 Sep 2026: *"Maybe
-  // the live tab only shows matches from TODAY, to keep the space?"* A gameweek
-  // runs Friday to Monday, so on a Sunday afternoon six of the ten rows are
-  // about matches that finished yesterday and the two that are on are below the
-  // fold.
-  //
-  // **The whole round is the fallback and that is the load-bearing half.** A
-  // reader who opens this on a Tuesday, or before FPL has dated the round, must
-  // not be shown an empty panel — `duringGameweek` is a four-day window and this
-  // filter is a one-day one, so the two disagree for most of the week.
-  // **Both tables, for CM's blue block** (Craig, 5 Sep 2026: "The blue box in CM
-  // is for league position… Put current league position there instead"). Two
-  // competitions on one screen means two rankings, and neither may stand in for
-  // the other: a manager's place is Fantrax's own rank off the standings, and a
-  // club's is its place in the real table, which is the ARRAY ORDER of
-  // `leagueTable` — a `TableRow` carries no rank of its own precisely because
-  // the list IS the ranking (`football/table.ts`).
-  //
-  // Costs nothing new: `seasonFixtures` is already fetched by `matchday()` above
-  // and `leagueTable` is pure.
+  // A club's place in the real table is its index in `leagueTable` (CM's blue block).
   const clubPlaces = new Map(
     realTable(season, snapshot.clubs).map((row, at) => [row.clubId, at + 1]),
   );
 
+  // Today's matches (Craig, 5 Sep 2026), and the whole round when today has none.
   const round = fixturesInOrder(snapshot);
   const day = londonDayOf(now().toISOString());
   const onToday = round.filter((f) => f.kickoff !== null && londonDayOf(f.kickoff) === day);
   const today: readonly Fixture[] = onToday.length > 0 ? onToday : round;
 
-  // The draft's eight ties, beside the round's ten matches. A league with no
-  // draft yet, no schedule, or a Fantrax that would not answer costs the first
-  // table and nothing else — the football half needs none of them.
+  // The draft's ties; no draft, no schedule or a silent Fantrax costs this half and nothing else.
   const drafted = "period" in squads ? squads : null;
   const period = drafted?.roundPeriod ?? null;
   const [{ scores }, badges, table] = await Promise.all([
@@ -139,18 +103,12 @@ export default async function MatchdayPage({
     leagueTable(),
   ]);
 
-  // Every tie being played this week, not only the league's eight — Craig, 5 Sep
-  // 2026: *"'The draft' should be which comp it is (we will have duel comps at
-  // times)."* The schedule's own shape and the schedule's own two sources:
-  // Fantrax's pairings, and our cups (`league/cups/declared.ts`).
-  // Both reads behind this are already warm — the board's badges and the table
-  // come off one cached `getStandings`.
-  // Fantrax's own rank, by team id. Empty when the scoreboard would not answer,
-  // which draws empty blocks rather than a made-up ordering.
+  // Fantrax's own rank, by team id; empty blocks rather than a made-up order when it is silent.
   const places = new Map(
     "unavailable" in table ? [] : table.map((row) => [row.teamId, row.rank] as const),
   );
 
+  // Every tie this week: the league's pairings and our cups (Craig, 5 Sep 2026).
   const ties: CompetitionTie[] =
     drafted?.info != null && period !== null
       ? [
@@ -159,86 +117,24 @@ export default async function MatchdayPage({
         ]
       : [];
 
-  // The tab is hidden between gameweeks, but the route still has to answer:
-  // someone lands here from a bookmark, or is reading it when the last match
-  // ends. A redirect would take the page out from under them; a `Nothing` would
-  // claim something failed. Neither is true, so it says where the football went.
-  // The head-to-head leads either way. Between rounds it is the pairing without
-  // a score, which is the honest version of "who am I playing next" — and it is
-  // the same component, so the one that matters on Saturday is the one that has
-  // been on screen all week.
+  // Between gameweeks the route still answers, saying where the football went.
   return (
     <div className="flex flex-col gap-4">
-      {/* **The round is the page's TITLE, at the top and at the size of one**
-          (Craig, 5 Sep 2026: "Gameweek 3 · Live - this should be at the top, big
-          title"). It was a yellow caption two thirds of the way down, between
-          the wire and the scores, where it read as a heading for the tables
-          under it rather than as the name of the screen — and the one fact a
-          manager wants first from this tab is which round is on and whether it
-          is live.
-
-          `PageHeader` and not `Caption`, which is the app's own rule (see
-          `app/titles.ts`): the plated bar names the SUBJECT of a screen and the
-          yellow caption names the view. The subject here is the round.
-
-          Drawn at every state, including between rounds — `BetweenGameweeks`
-          below carries its own header for the case where there is no football,
-          and this one answers the question the tab is named for. */}
+      {/* The round and its state are the page's title (Craig, 5 Sep 2026: "gameweek 3 LIVE as the
+          title"); the sub line carries "Full time" or "Final", never LIVE twice. */}
       <PageHeader
-        // **The round AND its state, on the bar** (Craig, 5 Sep 2026: "gameweek
-        // 3 LIVE as the title"). The state was under it, in `RoundWord`, on a
-        // 24px sub line — which is the right place for a date or a count and the
-        // wrong place for the one word this tab exists to say. A reader opening
-        // the Live tab at ten past four is asking whether football is on; the
-        // bar is what he reads first.
-        //
-        // Only when there IS a state. Between rounds `roundState` answers null,
-        // and a bar reading "Gameweek 4" with nothing after it is the honest
-        // shape of a Tuesday.
         title={`Draft Gameweek ${snapshot.gameweek}${roundState(snapshot) === "live" ? " LIVE" : ""}`}
         sub={
-          // `RoundWord` renders nothing between kickoffs, which is right — there
-          // is no state to name — and `PageHeader.Sub` renders nothing for a
-          // false child, so the strip goes with it rather than drawing empty.
-          //
-          // **And nothing while it is LIVE**, because the bar above now says that
-          // word. The two states this still carries are "Full time" and "Final",
-          // which are qualifications on a number rather than headlines: Final is
-          // a promise that the total has stopped moving, and a bar is the wrong
-          // place for a promise about a figure three panels down.
-          //
-          // The live DOT goes with it, and the rule it served survives: state
-          // never rides on colour alone, and the bar's own LIVE is the word.
           roundState(snapshot) === null || roundState(snapshot) === "live" ? undefined : (
             <RoundWord state={roundState(snapshot)} />
           )
         }
         competition
       />
-      {/* **No way out at the top of the page** (Craig, 5 Sep 2026: "remove desk
-          button"). The desk is still at `/matchday/desk` and the wall is still
-          the thing to put on a television; what it does not get is the first
-          object on the screen a manager opens at ten to four. The three
-          questions this tab exists to answer are all below it, and a control
-          above them pushed each one 56px further down the fold. */}
-      {/* The head-to-head arrives after the football, and the boundary is what
-          lets it. `YourMatchup` makes the one read on this page nothing else
-          waits for — `getLiveScoringStats`, the busiest request the app makes on
-          a Saturday — while the fixtures and the marks above are already
-          resolved by the time this renders. Without it the whole screen, the ten
-          scorelines included, waits on Fantrax's scoreboard.
-
-          It stays first in the document because it is the question the tab is
-          for: it lands into a card of its own height, so the football under it
-          does not move when it does. */}
+      {/* First in the document, streamed: Fantrax's scoreboard is the one read nothing waits on. */}
       <Suspense fallback={<MatchupWaiting />}>
         <YourMatchup />
       </Suspense>
-      {/* **No flash** (Craig, 5 Sep 2026: "live tab - remove the ticker row").
-          It was a full-width plate saying the newest goal once, loudly, above a
-          wire whose first row said the same goal — `cm0102/02.jpg` draws both on
-          one screen, and the game's version announces an event the screen has no
-          other record of. Ours had one directly underneath. */}
       <ViewPick printing={printing} />
       {printing ? (
         <Vidiprinter
@@ -270,11 +166,7 @@ export default async function MatchdayPage({
   );
 }
 
-/** Which plate the reader has open.
- *
- *  A query rather than a route: one page, two panels, and a second route would
- *  be a second page to keep in step. `cm-tab`, because picking one of a set is
- *  what a tab strip is. */
+/** Which plate is open: a query rather than a route, so one page keeps both panels in step. */
 const PRINTER = "vidiprinter";
 
 function ViewPick({ printing }: { printing: boolean }) {
