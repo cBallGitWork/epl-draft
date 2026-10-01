@@ -105,20 +105,10 @@ if [ "$fresh" -eq 0 ]; then
     fi
 
     # --- intel freshness ------------------------------------------------------
-    # Nothing in THIS repo can make the intel fresher: it is written by
-    # `make export-epl-draft` in ~/ai-carling-premiership. So the clock says how
-    # old it is, and says it loudest when the predicted eleven is for a round
-    # that has already been played — which is not staleness but a wrong answer.
-    # The check is skipped without a network; it is not worth a slow session
-    # start, and `npm run intel-check` is always there to ask directly.
+    # intel-check's verdict line: the stale kinds with their ages, or that all are fresh.
     intel=$(cd "$root" && npm run --silent intel-check 2>&1)
-    if printf '%s' "$intel" | grep -q '✗'; then
-      printf 'Intel needs attention:\n%s\n' "$(printf '%s' "$intel" | grep -E '✗|gameweek' | sed 's/^/  /')"
-    elif printf '%s' "$intel" | grep -q 'no squads export'; then
-      printf 'Intel: never exported — real positions, squad numbers and the predicted XI are all absent.\n'
-    else
-      printf 'Intel: %s\n' "$(printf '%s' "$intel" | grep -E 'squads:|xi:' | tr '\n' ' ' | sed 's/  */ /g')"
-    fi
+    verdict=$(printf '%s' "$intel" | sed -n 's/^verdict: //p')
+    printf 'Intel: %s\n' "${verdict:-intel-check gave no verdict. Run npm run intel-check.}"
 
     # --- dated one-offs, only when one is close -------------------------------
     due=""

@@ -1,41 +1,20 @@
 name: Intel staleness
 
-# The watchdog for the football intel the app cannot derive for itself — real
-# positions, squad numbers, and the predicted eleven the paper's Line-Ups and
-# Team Sheet columns are written from.
+# The watchdog for the football intel under `data/intel/`, which the app and the paper read and
+# which nothing in Verify checks. `npm run intel-check` exits 1 when a file is absent or will not
+# parse, when one is past its kind's age limit (`INTEL_AGE_LIMIT_DAYS` in
+# `packages/core/src/football/intel/freshness.ts`), when a predicted club is not an eleven, and
+# when the eleven is for a gameweek already played. A red run here is the notification.
 #
-# **The failure this exists for is SILENCE, not an error.** `readXi` asks for the
-# round ahead; with a stale export it gets null, the desk offers no assignment
-# and the firing exits quietly. The column looks like it works and prints
-# nothing. Designed behaviour, invisible failure — so the noticing has to happen
-# somewhere a human is told.
+# Its own job, not the producers': `scout-xi.yml` and `make export-epl-draft` in the sister repo
+# fail most plausibly by not running, which would silence a check that lived inside them.
 #
-# **`intel-check` has anticipated this workflow since it was written** and nobody
-# wrote it: its own docblock says "the same exit code, so a workflow or a hook
-# can gate on it". It exits non-zero on a missing export, a stale one, and — the
-# one that matters most — an eleven for a round that has already been played,
-# which is not stale so much as wrong. On 21 Sep it had been failing locally for
-# days with `gw3.json` on disk and nothing in CI saying so.
-#
-# **Its own workflow, on `capture-status.yml`'s reasoning.** The job that reports
-# on the export must not be the job that produces it, because the way that job
-# most plausibly dies is by not running at all — which is exactly how it would
-# stop reporting. The XI is produced by `scout-xi.yml` and the other exports by
-# `make export-epl-draft` in the sister repo, and neither is this job.
-#
-# **Not on `pull_request`.** A stale export is a fact about the DATA and never
-# about the branch, and gating every PR on it would block work nobody can unblock
-# from here.
-#
-# No issue-filing machinery: a red workflow already notifies, and a mechanism
-# with one caller is a mechanism we do not need.
+# Not on `pull_request`: a stale export is a fact about the data, not the branch, and would turn
+# every PR red with nothing in it to fix.
 
 on:
   schedule:
-    # 05:55 UTC daily: after `ingest-stats.yml` at 05:40, and ahead of every
-    # `editions.yml` cron — the earliest is 06:15 on a Thursday — so a wrong
-    # export is reported before the desk looks rather than after it has quietly
-    # filed nothing.
+    # 05:55 UTC daily: after `ingest-stats.yml` at 05:40, before the first `editions.yml` firing at 06:15.
     - cron: "55 5 * * *"
   workflow_dispatch:
 
@@ -58,7 +37,6 @@ jobs:
 
       - run: npm ci
 
-      # Reads FPL's bootstrap live to learn which round is current, which is what
-      # lets it tell "stale" from "wrong". Public, so no secret.
+      # Reads FPL's public bootstrap to learn whether the eleven's gameweek has been played.
       - name: Check the intel export
         run: npm run intel-check
