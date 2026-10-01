@@ -70,15 +70,15 @@ export default function PitchMarker({
         ? String(points ?? DASH)
         : (club?.shortName ?? DASH));
 
-  // How likely he is to miss, as the name plate's ground (red out, orange major, yellow slight); `--cm-face`
-  // keeps it CM's bevelled plate, and all three carry `--color-bg` ink.
+  // How likely he is to miss (red out, orange major, yellow slight), as the card's wash and the plate's ground.
   const doubt = doubtBand(availabilityOf(player));
 
   return (
     // A 45% wash behind the card, no border and no padding: the mow bands show through and the name keeps the width.
     <div
       // The space before `${` is load-bearing: Tailwind v4 does not see `bg-bg/45${…}` as a class and drops the wash.
-      className={`flex w-full flex-col gap-px bg-bg/45 ${doubt === "out" ? "cm-card-out" : ""}`}
+      className={`flex w-full flex-col gap-px bg-bg/45 ${doubt === null ? "" : "cm-card-doubt"}`}
+      style={doubt === null ? undefined : ({ "--doubt": DOUBT_GROUND[doubt] } as CSSProperties)}
     >
       {nobody ? (
         /* The same shape as a filled card, so an empty slot does not read as a hole in the formation. */
@@ -94,14 +94,7 @@ export default function PitchMarker({
       )}
 
       {/* CM's bevelled plate, run to the card's edge so every pixel goes to letters; the kit is what is inset. */}
-      <span
-        className={`cm-bevel uppercase ${PITCH_BAND} ${NAME_SIZE}`}
-        style={
-          doubt === null
-            ? undefined
-            : ({ "--cm-face": DOUBT_GROUND[doubt] } as CSSProperties)
-        }
-      >
+      <span className={`cm-bevel uppercase ${PITCH_BAND} ${NAME_SIZE}`}>
         <span className="w-full truncate">{name}</span>
       </span>
 

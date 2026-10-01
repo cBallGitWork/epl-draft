@@ -808,25 +808,14 @@
   background: var(--color-bg);
 }
 
-/* **A man who is OUT gets the whole card, not just his name plate** (Craig,
-   21 Sep 2026: "if red and out, make the players pitch view card (the
-   background) red as well"). The wash behind the kit is `bg-bg/45` — 45% of the
-   blue-black, so the mow bands read through it and the card sits ON the grass
-   rather than covering it. This is the same wash in the same place at the same
-   job, in the one colour that means he will not play.
+/* A pitch card in its doubt band, wash and name plate alike (`--doubt` set by `PitchMarker`); 75% so yellow
+   still reads yellow over the grass. Unlayered, so it beats `bg-bg/45` on the same element. */
+.cm-card-doubt {
+  background-color: color-mix(in oklab, var(--doubt) 75%, transparent);
+}
 
-   **Only `out`, and that is the hierarchy rather than an omission.** A doubt is
-   a question against a man and gets a plate; a certainty is a different
-   statement and gets the card. Three whole cards in three colours on one pitch
-   would be a formation drawn in traffic lights, and the two doubts would be
-   competing with the eleven fixtures underneath them for the same glance.
-
-   Unlayered, so it beats the `bg-bg/45` utility on the same element — the trap
-   this file warns about twice, used deliberately here. Nothing reads on this
-   wash: the name and the line below it carry their own grounds, so it sits
-   behind a kit and behind nothing else. */
-.cm-card-out {
-  background-color: color-mix(in oklab, var(--color-doubt-out) 55%, transparent);
+.cm-card-doubt > .cm-bevel {
+  --cm-face: var(--doubt);
 }
 
 /* **The state box keeps its own ink on a greyed row**, which is the fourth time
