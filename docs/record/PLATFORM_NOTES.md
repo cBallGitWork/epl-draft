@@ -558,11 +558,9 @@ anyway.
   `vars.FANTRAX_LEAGUE_ID` and fell back to the dummy league. Production serves
   rehearsal and `normalizePaper` filters by league, so every CI firing filed
   stories nobody could see. The job now asks production which league it serves.
-- **`GAZETTA_MODEL` defaults to `claude-opus-4-8`, and that is current** —
-  verified 17 Sep against the model table, $5/$25 per MTok, 1M context. It is
-  deliberately NOT `claude-opus-5` despite the identical price: on 4.8 an absent
-  `thinking` parameter means no thinking, while on Opus 5 thinking is ON by
-  default, so the same request would silently start thinking on every column.
+- **`GAZETTA_MODEL` defaults to `claude-opus-5-5` (Craig, 1 Oct 2026)**, at $4/$20 per MTok. It always thinks
+  and its default effort is `medium`, so the writer sets `effort: "medium"` explicitly and `max_tokens` rose from
+  8,000 to 16,000 so the thinking cannot truncate a column. The helper stays `claude-sonnet-5`.
 
 ## How CI pushes, and what it may touch — decided 23 Sep 2026
 
