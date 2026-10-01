@@ -32,3 +32,4 @@ export * from "./join/roster";
 export * from "./join/squadDetail";
 export * from "./league";
 export { politeFetch } from "./http/fetch";
+export { ProviderError } from "./http/errors";

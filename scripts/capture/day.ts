@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { FantraxError } from "@epl/core";
+import { ProviderError } from "@epl/core";
 
 // One day's capture: each read written verbatim beside a manifest of what answered and what refused.
 
@@ -35,7 +35,8 @@ async function capture(dir: string, { method, run }: CaptureRead): Promise<ReadO
     console.log(`  ${method}: ${json.length} bytes`);
     return { method, ok: true, bytes: json.length };
   } catch (error) {
-    if (!(error instanceof FantraxError)) throw error;
+    // A provider's failure costs this read only; a fault of our own still stops the run.
+    if (!(error instanceof ProviderError)) throw error;
     console.log(`  ${method}: ${error.code}`);
     return { method, ok: false, code: error.code, message: error.message };
   }

@@ -50,6 +50,8 @@ async function main(): Promise<void> {
     `\nCaptured ${outcomes.length - failed}/${outcomes.length} reads for ${date} ` +
       `into ${SNAPSHOT_ROOT}/{leagues,pool}`,
   );
+  // Red only after every directory is written, so the workflow still commits the partial day.
+  if (failed > 0) process.exitCode = 1;
 }
 
 // Not awaited at the top level: these scripts transpile to CJS, and a rejection should crash loudly.
