@@ -42,6 +42,9 @@ export default function Ledger({
    *  Fantrax copied at the time and does not update when a manager renames. */
   names: Record<string, string>;
 }) {
+  const rows = deals.map((deal) => ({ deal, ...movement(deal, teamId) }));
+  // A claim is with nobody, so the With column is drawn only when a trade is listed.
+  const traded = rows.some((row) => row.partners.length > 0);
   return (
     <section className={PANEL_FLUSH}>
       {/* The column heads, bevelled as one continuous run — `23.jpg` has no head
@@ -52,13 +55,12 @@ export default function Ledger({
         <span className="w-20 shrink-0">Type</span>
         <span className="min-w-0 flex-1">In</span>
         <span className="min-w-0 flex-1">Out</span>
-        <span className="w-16 shrink-0">With</span>
+        {traded ? <span className="w-16 shrink-0">With</span> : null}
       </div>
 
       <ScrollBoard>
         <ul className="cm-rows flex flex-col">
-          {deals.map((deal) => {
-            const { in: arrived, out: left, partners } = movement(deal, teamId);
+          {rows.map(({ deal, in: arrived, out: left, partners }) => {
             return (
               <li
                 key={deal.setId || `${deal.processedAt}-${deal.period}`}
@@ -99,37 +101,22 @@ export default function Ledger({
                 <Side players={arrived} tone="text-ink" label="In" />
                 <Side players={left} tone="text-faint" label="Out" />
 
-                {/* Who he dealt with, on that team's own colour — the same plate
-                    the Match screen gives a side, because this is the other
-                    place in the app where two teams meet. A claim came off the
-                    pool, which is not a team and gets no plate. */}
-                <span className="w-16 shrink-0 self-start lg:self-auto">
-                  {partners.length === 0 ? (
-                    /* **"The Bin", which is what this league calls the free
-                        pool** (Craig, 2 Sep). Fantrax says "free agent" and CM
-                        would say whatever the game says — the point of naming a
-                        thing is that the people using it recognise it, and ten
-                        managers who have said "the bin" for years do not
-                        recognise "free agent" as the same place. */
-                    <span className={`block truncate border border-line px-1.5 py-0.5 text-center ${MINOR_LABEL}`}>
-                      The Bin
-                    </span>
-                  ) : (
-                    /* One plate, and a count when there is more than one team on
-                        the deal. A three-way trade named only the first partner
-                        and read as a straight swap with him — `movement` returns
-                        the whole list now, so the truncation is this view's and
-                        it says so rather than hiding it. */
-                    <span className="flex flex-col items-stretch gap-0.5">
-                      <Partner teamId={partners[0]} name={names[partners[0]]} />
-                      {partners.length > 1 ? (
-                        <span className="text-center text-3xs text-faint">
-                          +{partners.length - 1}
-                        </span>
-                      ) : null}
-                    </span>
-                  )}
-                </span>
+                {/* Who he traded with, on that team's own colour; a claim's type already names the Bin. */}
+                {traded ? (
+                  <span className="w-16 shrink-0 self-start lg:self-auto">
+                    {partners.length === 0 ? null : (
+                      // The first partner's plate, and a count for a three-way trade.
+                      <span className="flex flex-col items-stretch gap-0.5">
+                        <Partner teamId={partners[0]} name={names[partners[0]]} />
+                        {partners.length > 1 ? (
+                          <span className="text-center text-3xs text-faint">
+                            +{partners.length - 1}
+                          </span>
+                        ) : null}
+                      </span>
+                    )}
+                  </span>
+                ) : null}
               </li>
             );
           })}
