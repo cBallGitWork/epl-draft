@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
-import { FANTRAX_LEAGUE_ID } from "@epl/core";
+import { FANTRAX_LEAGUE_ID, type ProviderError } from "@epl/core";
 import { PAGE_REVALIDATE } from "./config";
+import { orDegraded } from "./refusals";
 
 // One league read, cached for everybody.
 //
@@ -39,15 +40,17 @@ export function leagueCache<A extends unknown[], R>(
    *  make the key; never the whole key, so the id cannot be left out. */
   key: string,
   read: (...args: A) => Promise<R>,
-  /** How long it may be held. Defaults to the page's own window, which is what
-   *  ten of the eleven want; the season code is the exception, and it is one
-   *  because Fantrax's answer to it changes about twice a year. */
+  /** What a cold key shows when a provider could not answer. Never stored: a warm key serves its
+   *  last good answer instead, because Next keeps a stale entry whose refresh threw. */
+  degrade: (error: ProviderError, ...args: A) => R,
+  /** How long it may be held. Defaults to the page's own window; only a final answer earns longer. */
   revalidate: number = PAGE_REVALIDATE,
 ): (...args: A) => Promise<R> {
-  return unstable_cache(read, [key, FANTRAX_LEAGUE_ID], {
+  const cached = unstable_cache(read, [key, FANTRAX_LEAGUE_ID], {
     revalidate,
     tags: [leagueTag(key)],
   });
+  return (...args) => orDegraded(cached(...args), (error) => degrade(error, ...args));
 }
 
 /** The tag a `leagueCache` read is filed under, for a write to expire it. */

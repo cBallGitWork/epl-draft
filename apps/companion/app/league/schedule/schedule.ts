@@ -132,6 +132,7 @@ export const getSchedule = leagueCache("schedule-season",
       table: "unavailable" in standings ? [] : standings,
     };
   },
+  (error) => ({ unavailable: tell(error) }),
 );
 
 /** Every team's total in every period, from Fantrax's own results table.
@@ -150,5 +151,6 @@ export const getSeasonResults = leagueCache("schedule-results",
     const raw = await orRefusal(fetchSeasonResults(FANTRAX_LEAGUE_ID));
     return raw instanceof FantraxError ? [] : mapSeasonResults(raw);
   },
+  () => [],
 );
 

@@ -44,4 +44,5 @@ export const readDeals = leagueCache("gazette-deals",
       at: feeds.map((feed) => feed.at).find((label) => label !== null) ?? null,
     };
   },
+  () => ({ rows: [], at: null }),
 );

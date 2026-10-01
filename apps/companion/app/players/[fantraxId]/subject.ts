@@ -42,7 +42,7 @@ export interface Subject {
 const readProfile = leagueCache("player-profile", async (fantraxId: string) => {
   const raw = await orRefusal(fetchPlayerProfile(FANTRAX_LEAGUE_ID, fantraxId));
   return raw instanceof FantraxError ? { unavailable: tell(raw) } : raw;
-});
+}, (error) => ({ unavailable: tell(error) }));
 
 /** An id not in Fantrax's shape is a 404. A well-formed id Fantrax does not know and a Fantrax
  *  that is not answering arrive as the same refusal, with the tell on screen. */

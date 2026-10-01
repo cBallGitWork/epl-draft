@@ -15,6 +15,7 @@ describe("fxea reads", () => {
       method: "getLeagueInfo",
       code: "NOT_JSON",
       message: expect.stringContaining("Fantrax getLeagueInfo: NOT_JSON — 200 text/html"),
+      kind: "malformed",
     });
   });
 
@@ -22,12 +23,17 @@ describe("fxea reads", () => {
     serve(() => Response.json({ error: { code: "NO_TEAMS", message: "no teams" } }));
     const error = await fetchLeagueInfo(LEAGUE).catch((e: unknown) => e);
     expect(error).toBeInstanceOf(FantraxError);
-    expect(error).toMatchObject({ code: "NO_TEAMS" });
+    expect(error).toMatchObject({ code: "NO_TEAMS", kind: "refused" });
   });
 
   it("read a failing status as a FantraxError carrying it", async () => {
     serve(statusOnly(403));
     await expect(fetchLeagueInfo(LEAGUE)).rejects.toThrow(FantraxError);
-    await expect(fetchLeagueInfo(LEAGUE)).rejects.toMatchObject({ code: "403" });
+    await expect(fetchLeagueInfo(LEAGUE)).rejects.toMatchObject({ code: "403", kind: "unreachable" });
+  });
+
+  it("reads a status it models as a refusal, not an outage", async () => {
+    serve(statusOnly(404));
+    await expect(fetchLeagueInfo(LEAGUE)).rejects.toMatchObject({ code: "404", kind: "refused" });
   });
 });

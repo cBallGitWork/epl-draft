@@ -37,7 +37,7 @@ export const getPlayerStats = leagueCache("player-stats", async (): Promise<Play
   ]);
 
   return [...lines(outfield), ...lines(keepers)];
-});
+}, () => []);
 
 /** One half's response, mapped, or nothing if that half refused.
  *

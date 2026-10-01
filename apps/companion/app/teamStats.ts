@@ -36,27 +36,18 @@ export const yearToDate = leagueCache(
     if (raw instanceof FantraxError) return undefined;
     return mapPoolStats(raw).yearToDate ?? undefined;
   },
+  () => undefined,
   SEASON_CODE_LIFE,
 );
 
-/** One team's table, or nothing.
- *
- *  The refusal is swallowed inside the cache rather than thrown across it, and
- *  that is deliberate: `unstable_cache` serialises, so a `FantraxError` thrown
- *  through it need not arrive as one, and `instanceof` on the far side would
- *  quietly answer false. The same trap is recorded against `squads.ts`.
- *  Nothing here needs to tell one refusal from another — an undrafted league
- *  answering `WARNING` and Fantrax being down both mean there are no numbers to
- *  show, and both say so by not appearing. */
+/** One team's table, or nothing: a refusal (an undrafted league's `WARNING`) and an outage both
+ *  mean there are no numbers to show, and both say so by not appearing. */
 const readTeamStats = leagueCache("fantrax-team-stats",
   async (teamId: string, season: string | undefined): Promise<TeamStats | null> => {
-    try {
-      return mapTeamStats(await fetchTeamStats(FANTRAX_LEAGUE_ID, teamId, season));
-    } catch (error) {
-      if (error instanceof FantraxError) return null;
-      throw error;
-    }
+    const raw = await orRefusal(fetchTeamStats(FANTRAX_LEAGUE_ID, teamId, season));
+    return raw instanceof FantraxError ? null : mapTeamStats(raw);
   },
+  () => null,
 );
 
 /** One squad's season table, in the two shapes the squad page draws it in.

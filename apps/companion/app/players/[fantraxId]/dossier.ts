@@ -2,7 +2,7 @@ import { FANTRAX_LEAGUE_ID, FantraxError, fetchPlayerStories, mapPlayerStories }
 import { orderKey } from "@epl/core";
 import type { LeagueTransaction, PlayerStory } from "@epl/core";
 import { unstable_cache } from "next/cache";
-import { orRefusal } from "../../refusals";
+import { orDegraded, orRefusal } from "../../refusals";
 import { readDeals } from "../../business";
 import { getLeagueSquads } from "../../squads";
 import { PAGE_REVALIDATE } from "../../config";
@@ -27,7 +27,7 @@ import { PAGE_REVALIDATE } from "../../config";
  *
  *  A news read we cannot make costs the block and not the screen. */
 export function playerStories(fantraxId: string, now: Date): Promise<PlayerStory[]> {
-  return unstable_cache(
+  const stories = unstable_cache(
     async () => {
       const raw = await orRefusal(fetchPlayerStories(FANTRAX_LEAGUE_ID, fantraxId));
       if (raw instanceof FantraxError) return [];
@@ -37,6 +37,7 @@ export function playerStories(fantraxId: string, now: Date): Promise<PlayerStory
     ["player-stories", fantraxId],
     { revalidate: PAGE_REVALIDATE },
   )();
+  return orDegraded(stories, () => []);
 }
 
 /** Midnight on 1 July of the football year `now` falls in (Craig, 4 Sep 2026:

@@ -169,6 +169,7 @@ const readLeague = leagueCache(SQUADS_KEY,
       ? { rosters: null, refusal: { code: rosters.code, tell: tell(rosters) }, info, roundPeriod }
       : { rosters, refusal: null, info, roundPeriod };
   },
+  (error) => ({ rosters: null, refusal: { code: error.code, tell: tell(error) }, info: null, roundPeriod: null }),
 );
 
 export async function getLeagueSquads(round: Round | null = null): Promise<LeagueSquads> {

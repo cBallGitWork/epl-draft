@@ -45,6 +45,7 @@ export const leagueInfo = leagueCache("league-info",
     const raw = await orRefusal(fetchLeagueInfo(FANTRAX_LEAGUE_ID));
     return raw instanceof FantraxError ? null : mapLeagueInfo(raw);
   },
+  () => null,
 );
 
 /** A round other than the one Fantrax is currently pointing at.
@@ -71,6 +72,7 @@ const readCalendar = leagueCache("league-calendar",
     const [info, kickoffs] = await Promise.all([leagueInfo(), seasonKickoffs()]);
     return info === null ? [] : periodGameweeks(info.scoringPeriods, kickoffs);
   },
+  () => [],
 );
 
 /** The round the squad screens are about: the first whose lineups have not

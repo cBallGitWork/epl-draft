@@ -16,7 +16,7 @@ import { orRefusal } from "./refusals";
 export const readPoolNews = leagueCache("pool-news", async (): Promise<Record<string, PlayerStory>> => {
   const raw = await orRefusal(fetchPoolNews(FANTRAX_LEAGUE_ID));
   return raw instanceof FantraxError ? {} : mapPoolNews(raw);
-});
+}, () => ({}));
 
 /** The stories for the men on one screen, and nothing else.
  *
