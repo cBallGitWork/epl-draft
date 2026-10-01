@@ -1,4 +1,16 @@
-import { FantraxError, KEEPER, OUTFIELD, POOL_PAGE_SIZE, type RawPlayerStats, fetchPoolStats, mapPlayerStats } from "@epl/core";
+import { unstable_cache } from "next/cache";
+import {
+  FantraxError,
+  KEEPER,
+  OUTFIELD,
+  POOL_PAGE_SIZE,
+  type RawPlayerStats,
+  fetchLeagueInfo,
+  fetchPoolStats,
+  mapLeagueInfo,
+  mapPlayerStats,
+} from "@epl/core";
+import { ASSIST_KINDS_REVALIDATE } from "./config";
 import { leagueCache } from "./leagueCache";
 import { orRefusal } from "./refusals";
 import recorded from "../../../data/leagues/recorded.json";
@@ -6,6 +18,17 @@ import recorded from "../../../data/leagues/recorded.json";
 /** The league recorded under the `stats` role, listing every column at no points so the served
  *  league need not. Named in data, as `npm run stats` names it, so both read the same league. */
 export const STATS_LEAGUE = recorded.leagues.find((league) => league.key === recorded.stats)?.leagueId ?? null;
+
+/** A league's own periods; the stats league's calendar need not be the served league's. The league
+ *  is an argument, so it is in the cache key by construction. */
+export const periodsOf = unstable_cache(
+  async (league: string) => {
+    const raw = await orRefusal(fetchLeagueInfo(league));
+    return raw instanceof FantraxError ? [] : mapLeagueInfo(raw).scoringPeriods;
+  },
+  ["league-periods"],
+  { revalidate: ASSIST_KINDS_REVALIDATE },
+);
 
 /** One man's season counts in the stats league: his Fantrax id and the columns asked for, as entries for the cache. */
 export type StatsLeagueLine = [fantraxId: string, counts: Record<string, number | null>];
