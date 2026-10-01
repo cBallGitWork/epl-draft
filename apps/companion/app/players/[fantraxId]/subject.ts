@@ -8,7 +8,7 @@ import {
 } from "@epl/core";
 import { leagueCache } from "../../leagueCache";
 import type { Club, FootballPlayer, PlayerIntel } from "@epl/core";
-import { orRefusal, tell } from "../../refusals";
+import { orRefusal, unavailable } from "../../refusals";
 import type { Unavailable } from "../../refusals";
 import { getLeagueSquads } from "../../squads";
 import { footballSelf } from "./season";
@@ -41,8 +41,8 @@ export interface Subject {
  *  refusal is caught inside, because a `FantraxError` thrown through the cache need not arrive as one. */
 const readProfile = leagueCache("player-profile", async (fantraxId: string) => {
   const raw = await orRefusal(fetchPlayerProfile(FANTRAX_LEAGUE_ID, fantraxId));
-  return raw instanceof FantraxError ? { unavailable: tell(raw) } : raw;
-}, (error) => ({ unavailable: tell(error) }));
+  return raw instanceof FantraxError ? unavailable(raw) : raw;
+}, unavailable);
 
 /** An id not in Fantrax's shape is a 404. A well-formed id Fantrax does not know and a Fantrax
  *  that is not answering arrive as the same refusal, with the tell on screen. */

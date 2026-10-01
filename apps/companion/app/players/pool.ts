@@ -19,7 +19,7 @@ import {
 import type { PoolStatRow, PoolPlayer, StatSeason } from "@epl/core";
 import { footballNow } from "../football";
 import { leagueCache } from "../leagueCache";
-import { orRefusal, tell } from "../refusals";
+import { orRefusal, tell, unavailable } from "../refusals";
 import type { Unavailable } from "../refusals";
 import { bridge } from "../squads";
 
@@ -82,7 +82,7 @@ export type LeaguePool = (Pool & { teamNames: Map<string, string> }) | Unavailab
  *  silently reads "unowned". Entries go in, the Map is built on the way out. */
 type CachedPool = (Pool & { teamNames: [string, string][] }) | Unavailable;
 
-const readPool = leagueCache("league-pool", readLeaguePool, (error): CachedPool => ({ unavailable: tell(error) }));
+const readPool = leagueCache("league-pool", readLeaguePool, unavailable);
 
 /** Cached, and that is not an optimisation.
  *
@@ -132,8 +132,8 @@ async function readLeaguePool(): Promise<CachedPool> {
     orRefusal(fetchPoolStats(FANTRAX_LEAGUE_ID, POOL_PAGE_SIZE)),
   ]);
 
-  if (pool instanceof FantraxError) return { unavailable: tell(pool) };
-  if (info instanceof FantraxError) return { unavailable: tell(info) };
+  if (pool instanceof FantraxError) return unavailable(pool);
+  if (info instanceof FantraxError) return unavailable(info);
 
   // A league with no teams owns nobody, and saying so is true rather than
   // hedged — it is the state our real league is in until 10 Oct. Any OTHER
@@ -141,7 +141,7 @@ async function readLeaguePool(): Promise<CachedPool> {
   // quietly claiming a player is unowned, which is a confident wrong answer
   // about 697 players at once.
   if (rosters instanceof FantraxError && rosters.code !== "NO_TEAMS") {
-    return { unavailable: tell(rosters) };
+    return unavailable(rosters);
   }
   const held = rosters instanceof FantraxError ? { period: null, teams: [] } : mapTeamRosters(rosters);
 
