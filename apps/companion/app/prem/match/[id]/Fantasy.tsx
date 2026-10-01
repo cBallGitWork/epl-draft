@@ -4,9 +4,10 @@ import { GROUP_PLATE, PANEL } from "@/app/desk";
 import { FANTRAX_SILENT } from "@/app/config";
 import type { LeagueDayLine } from "@/app/scoringDay";
 import { fantasyBoxes, type Counted, type FantasyMan } from "./fantasyCategories";
+import { joinOf } from "./sheetJoin";
 import { sheetName, type Match } from "./match";
 
-// The match in our league's categories, counted by the scoring league itself: home left, away right.
+// The match in our league's categories, counted by the scoring league itself, then FPL's DefCon: home left, away right.
 
 export default function Fantasy({
   match,
@@ -21,6 +22,7 @@ export default function Fantasy({
   /** That league's counts for the match's day, by FPL code; null when Fantrax would not say. */
   day: [number, LeagueDayLine][] | null;
 }) {
+  const join = joinOf(match);
   const lines = new Map(day ?? []);
   const men = (sheet: PlTeamSheet): FantasyMan[] =>
     [...sheet.lineup, ...sheet.substitutes].flatMap((man) =>
@@ -30,7 +32,9 @@ export default function Fantasy({
             {
               code: man.code,
               name: sheetName(man, match.byCode),
+              named: man.position,
               league: lines.get(man.code),
+              fplDefCon: join.line(man.code)?.defensiveContribution,
             },
           ],
     );
@@ -61,7 +65,7 @@ function Note({ children }: { children: ReactNode }) {
   return <p className="py-2 text-center text-2xs text-faint">{children}</p>;
 }
 
-/** One side's men in a category, most first; home hugs the centre line from the left, away from the right.
+/** One side's men in a category, nearest their mark first; home hugs the centre line from the left, away from the right.
  *  Plain text, set close: a list to read down, not a set of doors (Craig, 23 Sep 2026). */
 function Names({ men, end }: { men: Counted[]; end: boolean }) {
   return (

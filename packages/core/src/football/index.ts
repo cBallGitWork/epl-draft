@@ -106,6 +106,7 @@ export type { GameLogEntry, RateTotals } from "./gameLog";
 // away. `matchSheet.ts` sets it against the two neighbours above and says what
 // it cannot answer, which is minutes.
 export { mapMatchSheets, scoresheet, sheetSides } from "./matchSheet";
+export { fplDefConAt } from "./defensiveContribution";
 // The other half of a match, from the sister repo: the minutes, the line-up
 // positions and the team figures FPL publishes nowhere. `intel/matches.ts` sets
 // it against the read above and says which one wins where both could answer.
