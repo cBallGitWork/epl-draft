@@ -1,3 +1,4 @@
+import { finiteOrNull } from "../../untrusted";
 import type { Band, CategoryTable, Price, ScoringCategory, ScoringRules, Tiers } from "../scoring";
 
 // Fantrax's scoring system as it arrives, and what we read of it.
@@ -93,14 +94,11 @@ function tiers(config: RawScoringConfig | undefined): Tiers | null {
 }
 
 function band(raw: RawScoringRange): Band | null {
-  const from = raw.range?.start;
-  const to = raw.range?.end;
-  const every = raw.interval ?? null;
-  if (!finite(from) || !finite(to) || !finite(raw.points) || (every !== null && !(finite(every) && every > 0))) return null;
-  return { from, to, points: raw.points, every };
+  const [from, to, points] = [raw.range?.start, raw.range?.end, raw.points].map(finiteOrNull);
+  const every = raw.interval === undefined ? null : finiteOrNull(raw.interval);
+  if (from == null || to == null || points == null || (raw.interval !== undefined && !(every !== null && every > 0))) return null;
+  return { from, to, points, every };
 }
-
-const finite = (n: number | undefined): n is number => typeof n === "number" && Number.isFinite(n);
 
 /** The keeper's position letter, from the goalie group's own short name.
  *
