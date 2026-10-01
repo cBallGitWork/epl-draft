@@ -44,6 +44,31 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## Every point we work out is priced by the real league's scoring — decided 1 Oct 2026
+
+Craig, 1 Oct: *"points system repo wide just use real league points system now"*. Before this, our own sums used
+the served league's rules: the rehearsal's in production and the dummy's, every category at nought, in local dev.
+
+- **The scoring league is a role in data**, `"scoring": "real"` in `data/leagues/recorded.json`, beside `stats`.
+  The app reads it in `apps/companion/app/scoring.ts` (`leagueScoring()`, cache `league-scoring`), live off that
+  league's public `getLeagueInfo`. The served league stays the environment's, and Fantrax's own points (FPts, the
+  live totals, a man's breakdown) stay the served league's. From go-live the two are one league.
+- **Not a rule exception.** The rules still come from `getLeagueInfo` (CODE_RULES §3); data says whose.
+- **What it prices:** only what we work out ourselves. Today that is the clean sheets Fantrax has not credited yet,
+  on the head-to-head board and the squad sheet.
+- **A range is read off the settings mirror, never the string.** `scoringCategorySettings` gives each band (`start`,
+  `end`, `points`, `interval`), `rangeType` and `cumulative`; the string table has no `cumulative`. The real league's
+  outfield minutes were `1|1` cumulative until 1 Oct (2 for 90) and are `1|2` non-cumulative now. Checked on the
+  rehearsal's recorded live payloads: every one-match minutes row matched, 90 paying 2 (1 + 1 stacked), and keepers' goals
+  against (−1 per 2) and saves (1 per 3) matched Fantrax on every row; the four misses were multi-match totals. A
+  `rangeType` other than `PER_GAME`, or a band missing a bound, prices nothing. The top band has no ceiling.
+- **The API**: `pointsFor(rules, category, slot, count)` in `league/scoring.ts` prices one match's count at a slot;
+  `categoryPoints` stays flat-only. `league/fantrax/scoring.test.ts` pins Craig's 29 Sep table against the real
+  league's `getLeagueInfo` of 1 Oct. Turning a football line into the league's counts is the caller's: the rating
+  backtest's (`docs/record/ratings-backtest/join_points.py`) matched Fantrax 99.5% for `DFP` (tackles won,
+  interceptions, blocks), 99.2% for `DFP3` (those, clearances and recoveries) and 85% for `GKP` (saves, punches,
+  high claims).
+
 ## The round-state probe is stopped: the league does not settle on FPL — decided 1 Oct 2026
 
 `round-state.yml` sampled FPL's event-status every hour to learn whether `bonus-settling` was a state a screen could
