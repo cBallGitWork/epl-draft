@@ -1,6 +1,6 @@
 import { connection } from "next/server";
-import { headToHead, isMatchdayLive } from "@epl/core";
-import { speaksForNow } from "../../football";
+import { headToHead, isMatchdayLive, ProviderError } from "@epl/core";
+import { footballNow, speaksForNow } from "../../football";
 import { liveScores } from "../../scoreboard";
 import { myTeamId } from "../../session";
 import { getLeagueSquads } from "../../squads";
@@ -38,15 +38,23 @@ export type LiveTie = {
 export async function liveTie(): Promise<LiveTie | null> {
   // Every route is per-request: the cookie below is read only in a live window, which flipped a prerendered page to dynamic at runtime.
   await connection();
+  try {
+    return await askedWhileLive();
+  } catch (error: unknown) {
+    // The layout draws this on every page, so a provider failing is no strip rather than no app.
+    if (error instanceof ProviderError) return null;
+    throw error;
+  }
+}
+
+async function askedWhileLive(): Promise<LiveTie | null> {
+  // `isMatchdayLive` and not `roundUnderway`: the strip claims right now. Asked of the football
+  // first, so Fantrax is not read at all for the six days a week it has nothing to say here.
+  const snapshot = await footballNow();
+  if (!isMatchdayLive(snapshot) || !speaksForNow(snapshot)) return null;
+
   const squads = await getLeagueSquads();
   if (!("period" in squads) || squads.info === null || squads.roundPeriod === null) return null;
-
-  // `isMatchdayLive` and not `roundUnderway`: the strip's whole content is a
-  // claim about right now. The front page burned a live dot for sixty-one of a
-  // round's seventy-four hours by asking the wider question, and this is the
-  // same dot. `speaksForNow` covers the other half — a cached snapshot will go
-  // on reporting a match in play for as long as the cache holds it.
-  if (!isMatchdayLive(squads.snapshot) || !speaksForNow(squads.snapshot)) return null;
 
   const mine = await myTeamId(squads.period.teams);
   if (mine === null) return null;

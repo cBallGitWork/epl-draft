@@ -2675,9 +2675,9 @@ half stopped being exempt from it, which is the whole argument for the split.
 thought.** The entry said "if an `error.tsx` ever lands, this should be
 revisited". One did, and revisiting it does not help: Next's App Router does not
 route a throw from the **root** layout to `app/error.tsx` — only
-`app/global-error.tsx` catches that, and there is no such file. So the exception
-stands, and the condition for lifting it is now stated correctly: **a
-`global-error.tsx`**, not an `error.tsx`.
+`app/global-error.tsx` catches that. **One landed on 1 Oct 2026, and the exception
+still stands**: `global-error.tsx` replaces the whole document, rail included, so a
+layout that throws still takes every route down; it is only no longer a blank page.
 
 ### Branching on a Fantrax error code in `app/squad/league.ts` (§3-adjacent)
 
