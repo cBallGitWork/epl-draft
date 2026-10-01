@@ -131,7 +131,7 @@ All targets are `apps/companion/app/_reads/<provider>.ts`, one leaf read each.
 | `readTeamStats` | `apps/companion/app/teamStats.ts` | `fantrax-team-stats` | 30 | fxpa `getTeamRosterInfo` | `_reads/fantrax.ts` |
 | `getPlayerStats` | `apps/companion/app/players/playerStats.ts` | `player-stats` | 30 | fxpa `getPlayerStats`, outfield and keepers | `_reads/fantrax.ts` |
 | `statsLeagueSeason` | `apps/companion/app/statsLeague.ts` | `stats-league-season` + columns | 30 | fxpa `getPlayerStats` in the league `recorded.json` names `stats`, outfield and keepers | `_reads/fantrax.ts` |
-| `periodsOf` | `apps/companion/app/assistKinds.ts` | `league-periods` + league | 300 | fxea `getLeagueInfo`, its scoring periods | `_reads/fantrax.ts` |
+| `periodsOf` | `apps/companion/app/statsLeague.ts` | `league-periods` + league | 300 | fxea `getLeagueInfo`, its scoring periods | `_reads/fantrax.ts` |
 | `kindsOf` | `apps/companion/app/assistKinds.ts` | `assist-kinds` + league, period | 300 | fxpa `getPlayerStats`, outfield, one period | `_reads/fantrax.ts` |
 | `readPool` | `apps/companion/app/players/pool.ts` | `league-pool` | 30 | fxea `getPlayerIds`, `getLeagueInfo`, `getTeamRosters` and fxpa `getPlayerStats`, four reads | `_reads/fantrax.ts` |
 | `heldDraft` | `apps/companion/app/players/[fantraxId]/draft.ts` | `draft-results` | 86400 | fxea `getDraftResults`; used only once it has picks, which `mapDraftPicks` gives only for a completed draft | `_reads/fantrax.ts`, window in config |
