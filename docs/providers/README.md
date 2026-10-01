@@ -90,7 +90,7 @@ own lines no longer overlap; until 1 Oct 2026 24 of its firings a week ran twice
 
 ## Cached reads
 
-Every provider read the app makes at request time sits in one of these 35, in 21 files.
+Every provider read the app makes at request time sits in one of these 36, in 22 files.
 `leagueCache` (`apps/companion/app/leagueCache.ts`) is `unstable_cache` keyed
 `[key, FANTRAX_LEAGUE_ID]` and tagged `key:leagueId`, 30 s unless given a window. A refusal Fantrax
 meant (`kind: "refused"`) is caught by `orRefusal` inside the cache and held for the window like an
@@ -129,6 +129,7 @@ All targets are `apps/companion/app/_reads/<provider>.ts`, one leaf read each.
 | `yearToDate` | `apps/companion/app/teamStats.ts` | `fantrax-season-code` | 21600 | fxpa `getPlayerStats`, one row | `_reads/fantrax.ts` |
 | `readTeamStats` | `apps/companion/app/teamStats.ts` | `fantrax-team-stats` | 30 | fxpa `getTeamRosterInfo` | `_reads/fantrax.ts` |
 | `getPlayerStats` | `apps/companion/app/players/playerStats.ts` | `player-stats` | 30 | fxpa `getPlayerStats`, outfield and keepers | `_reads/fantrax.ts` |
+| `statsLeagueSeason` | `apps/companion/app/statsLeague.ts` | `stats-league-season` + columns | 30 | fxpa `getPlayerStats` in the league `recorded.json` names `stats`, outfield and keepers | `_reads/fantrax.ts` |
 | `periodsOf` | `apps/companion/app/assistKinds.ts` | `league-periods` + league | 300 | fxea `getLeagueInfo`, its scoring periods | `_reads/fantrax.ts` |
 | `kindsOf` | `apps/companion/app/assistKinds.ts` | `assist-kinds` + league, period | 300 | fxpa `getPlayerStats`, outfield, one period | `_reads/fantrax.ts` |
 | `readPool` | `apps/companion/app/players/pool.ts` | `league-pool` | 30 | fxea `getPlayerIds`, `getLeagueInfo`, `getTeamRosters` and fxpa `getPlayerStats`, four reads | `_reads/fantrax.ts` |

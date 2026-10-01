@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { type FootballPlayer, type PlayerStatLine, DASH, crestForShortName, toFplClubCode } from "@epl/core";
-import { VIEWS, type ViewKey, measuresFor, readingOf } from "./statViews";
+import { type Counts, VIEWS, type ViewKey, measuresFor, readingOf } from "./statViews";
 import { playerHref } from "../../../players/routes";
 import { positionsFromList } from "../../../positions";
 import { SELECT } from "../../../components/shell/ButtonLink";
@@ -29,33 +29,39 @@ export default function StatBoard({
   lines,
   footballers,
   names,
-  scored,
+  served,
+  statsLeague,
+  statsColumns,
 }: {
   lines: readonly PlayerStatLine[];
-  /** Every column the league's stat read carries, which is the categories it scores. */
-  scored: readonly string[];
+  /** Every column the served league's read carries, which is the categories it scores. */
+  served: readonly string[];
+  /** His men's counts in the stats league by Fantrax id; absent for a man it has no row for, which reads as dashes. */
+  statsLeague: Record<string, Counts>;
+  /** Every column the stats league's read carries. */
+  statsColumns: readonly string[];
   /** The footballer behind each Fantrax id, for his availability; absent where the bridge has not settled him. */
   footballers: Record<string, FootballPlayer>;
   /** The roster's spelling of each name, by id: Fantrax's stat rows say "Schade, Kevin". */
   names: Record<string, string>;
 }) {
-  const [view, setView] = useState<ViewKey>("fantasy");
+  const [view, setView] = useState<ViewKey>("scoring");
   // Null is the squad's own order, the one the Squad tab prints.
   const [sort, setSort] = useState<{ key: string; descending: boolean } | null>(null);
 
-  const measures = measuresFor(view, new Set(scored));
+  const measures = measuresFor(view, new Set(served), new Set(statsColumns));
   const cuts = new Map(
     measures.map((measure) => [
       measure.key,
-      standoutCuts(lines.map((line) => measure.read(line)), SIDE_SHARES, { of: lines.length }),
+      standoutCuts(lines.map((line) => measure.read(line, statsLeague[line.fantraxId])), SIDE_SHARES, { of: lines.length }),
     ]),
   );
 
   const rows = useMemo(() => {
     if (sort === null) return [...lines];
-    const read = (line: PlayerStatLine) => readingOf(line, sort.key);
+    const read = (line: PlayerStatLine) => readingOf(line, statsLeague[line.fantraxId], sort.key);
     return [...lines].sort((a, b) => byFigure(read(a), read(b), sort.descending));
-  }, [lines, sort]);
+  }, [lines, sort, statsLeague]);
 
   /** Opens descending, since "most" is the first question even of cards; a second tap turns it round. */
   const sortBy = (key: string) =>
@@ -118,7 +124,7 @@ export default function StatBoard({
                     </Link>
                   </td>
                   {measures.map((measure) => {
-                    const value = measure.read(line);
+                    const value = measure.read(line, statsLeague[line.fantraxId]);
                     // A dash where he has no reading; a played nought is a figure like any other, in ink.
                     const ink =
                       value === null
