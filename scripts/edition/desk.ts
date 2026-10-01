@@ -1,10 +1,8 @@
 import {
-  fixtureStakes,
   draftReportsDue,
   reportDays,
   roundSlot,
   tieState,
-  type Club,
   type DeskState,
   type FootballSnapshot,
   type PresserLine,
@@ -19,39 +17,22 @@ import type { DeskFacts } from "./facts";
 // the round right now, while the file it left runs a firing — reads the ledger,
 // asks the newsdesk, spends the cap, persists.
 
-/** The slug a wire item files under, from its article URL. */
-function newsSlug(key: string): string {
-  const tail = key.split("/").filter(Boolean).pop() ?? key;
-  return `news-${tail}`.slice(0, 80);
-}
-
 export function deskState(input: {
   snapshot: FootballSnapshot;
   facts: DeskFacts;
-  clubs: Map<number, Club>;
   period: number;
   finished: boolean;
-  started: boolean;
-  locked: boolean;
   lines: readonly PresserLine[];
   /** The round the predicted elevens are for, or null when we do not hold it. */
   xiGameweek: number | null;
   ahead: DeskState["ahead"];
   next: DeskState["next"];
 }): DeskState {
-  const { snapshot, facts, clubs } = input;
+  const { snapshot, facts } = input;
   return {
     gameweek: snapshot.gameweek,
     period: input.period,
     finished: input.finished,
-    started: input.started,
-    locked: input.locked,
-    stakes: fixtureStakes(
-      snapshot.fixtures.filter((fixture) => fixture.gameweek === snapshot.gameweek),
-      facts.teams,
-      facts.pairings,
-      clubs,
-    ),
     pressers: presserDays(input.lines, snapshot.gameweek),
     lineups:
       input.xiGameweek === null
@@ -61,8 +42,6 @@ export function deskState(input: {
     next: input.next,
     reportDays: reportDays(snapshot.fixtures, snapshot.gameweek),
     draftReports: draftReportsDue(snapshot.fixtures, snapshot.gameweek),
-    dealsInWindow: facts.business.length,
-    news: facts.news.map((story) => ({ key: story.item.key, slug: newsSlug(story.item.key) })),
     ties: facts.pairings.map((pairing) => ({
       homeTeamId: pairing.home.teamId,
       awayTeamId: pairing.away.teamId,

@@ -1,12 +1,10 @@
 import { binXiDue } from "./binXi/due";
 import { predictionsDue } from "./predictions/due";
-import { type FixtureStake, bothSides } from "./relevance";
 import type { StoryKind } from "./story";
 import type { TieState } from "./tieState";
 
-// What is newsworthy this firing: whatever is new since its covered-key was spent, so a re-fired cron files nothing.
-// The running order is the editor's: the round's own reporting, then the perishable calls, then the look-ahead.
-// A finished round files a report per tie, never one about the whole league (Craig, 3 Sep 2026).
+// What is due this firing: whatever is new since its covered-key was spent, so a re-fired cron files nothing.
+// The paper files six weekly kinds (Craig, 1 Oct 2026): match and draft reports, Bin XI, the Team Sheet, the elevens and Lawro.
 
 export interface Assignment {
   kind: StoryKind;
@@ -36,18 +34,8 @@ export interface DeskState {
   period: number;
   /** The last whistle has gone. */
   finished: boolean;
-  /** A first ball has been kicked. */
-  started: boolean;
-  /** The round's lineup deadline has passed, so every sheet in it is fixed and may be printed. */
-  locked: boolean;
-  /** Every fixture of the round, most-consequential first (`fixtureStakes`). */
-  stakes: readonly FixtureStake[];
   /** The period's pairings; none is a period the league has no fixtures in, which has no round to write up. */
   ties: readonly DeskTie[];
-  /** Deals in the wire's trailing window; nought is a quiet week and files no column. */
-  dealsInWindow: number;
-  /** Wire items that name a man somebody in the league holds, freshest first. */
-  news: readonly { key: string; slug: string }[];
   /** A round-up per press-conference day, keyed by the caller; empty until the export lands. */
   pressers: readonly { key: string; slug: string; day: string }[];
   /** The predicted elevens, when the export holds the round ahead; keyed by the caller. */
@@ -62,19 +50,10 @@ export interface DeskState {
   draftReports: readonly { key: string; slug: string; cutoff: "saturday" | "gameweek"; day: string }[];
 }
 
-/** The columns a finished round earns, in the order they are worth reading. */
-const MONDAY_SET: StoryKind[] = ["eleven", "power-ranking", "dodgers"];
-
-/** Wire stories one firing may offer the cap, so a deadline-day afternoon cannot fill the paper with other people's news. */
-const NEWS_PER_FIRING = 2;
-
 /** A once-a-round story's covered-key and slug: filed once per gameweek, and its URL says which. */
 export function roundSlot(kind: string, gameweek: number): { key: string; slug: string } {
   return { key: `${kind}:gw${gameweek}`, slug: `gw${gameweek}-${kind}` };
 }
-
-/** How close a kickoff must be before a preview piece files. */
-const PREVIEW_WINDOW_HOURS = 12;
 
 export function newsdesk(
   desk: DeskState,
@@ -96,67 +75,8 @@ export function newsdesk(
   }
 
   if (desk.finished && fixtured) {
-    // One report per tie, each its own covered-key, so the cap takes what it has room for and the next firing the rest.
-    for (const tie of desk.ties) {
-      want({
-        kind: "tie-report",
-        key: `tie-report:p${desk.period}:${tie.homeTeamId}v${tie.awayTeamId}`,
-        slug: `p${desk.period}-report-${tie.homeTeamId}v${tie.awayTeamId}`,
-        tie: { homeTeamId: tie.homeTeamId, awayTeamId: tie.awayTeamId },
-      });
-    }
-    for (const kind of MONDAY_SET) {
-      want({ kind, ...roundSlot(kind, desk.gameweek) });
-    }
     // Tuesday's Bin XI, the round's best eleven nobody has, filed before Wednesday's waivers.
     if (binXiDue(now)) want({ kind: "bin-xi", ...roundSlot("bin-xi", desk.gameweek) });
-  }
-
-  // The sheets from the deadline until the last whistle: a 12:15 lock and a 12:30 kickoff fall inside one cron's delay.
-  if (desk.locked && !desk.finished && fixtured) {
-    want({ kind: "sheets", ...roundSlot("sheets", desk.gameweek) });
-  }
-
-  // Calls only while the round is being played: after the last whistle the report owns every verdict.
-  if (desk.started && !desk.finished) {
-    for (const tie of desk.ties) {
-      if (tie.state === "open") continue;
-      want({
-        kind: "tie-call",
-        key: `tie-call:p${desk.period}:${tie.homeTeamId}v${tie.awayTeamId}`,
-        slug: `p${desk.period}-call-${tie.homeTeamId}v${tie.awayTeamId}`,
-        tie: { homeTeamId: tie.homeTeamId, awayTeamId: tie.awayTeamId },
-      });
-    }
-  }
-
-  if (desk.started && !desk.finished) {
-    for (const stake of desk.stakes) {
-      if (stake.finished || !upcoming(stake.kickoff, now)) continue;
-      // Tonight's game is a piece when an open tie has men on both sides of it.
-      const swings = stake.ties.some(
-        (tie) =>
-          bothSides(tie) &&
-          desk.ties.some(
-            (live) =>
-              live.state === "open" &&
-              live.homeTeamId === tie.homeTeamId &&
-              live.awayTeamId === tie.awayTeamId,
-          ),
-      );
-      if (!swings) continue;
-      want({
-        kind: "fixture-preview",
-        key: `fixture-preview:gw${desk.gameweek}:${stake.key}`,
-        slug: `gw${desk.gameweek}-preview-${stake.key}`,
-        fixtureId: stake.fixtureId,
-      });
-    }
-  }
-
-  // The outside world after the calls, which go stale within hours; keyed on the article, fragment stripped.
-  for (const story of desk.news.slice(0, NEWS_PER_FIRING)) {
-    want({ kind: "news", key: `news:${story.key}`, slug: story.slug });
   }
 
   // The Team Sheet, outside the finished and lock gates: the caller offers only days said after the last lock.
@@ -176,18 +96,5 @@ export function newsdesk(
     want({ kind: "predictions", ...roundSlot("predictions", gameweek), round: { period, gameweek } });
   }
 
-  // The wire keys on the window, so a second firing in the same week has nothing new to say.
-  if (desk.dealsInWindow > 0 && fixtured) {
-    want({ kind: "wire", key: `wire:through-gw${desk.gameweek}`, slug: `gw${desk.gameweek}-wire` });
-  }
-
   return out;
-}
-
-function upcoming(kickoff: string | null, now: string): boolean {
-  if (kickoff === null) return false;
-  const at = Date.parse(kickoff);
-  const clock = Date.parse(now);
-  if (Number.isNaN(at) || Number.isNaN(clock)) return false;
-  return at > clock && at - clock <= PREVIEW_WINDOW_HOURS * 60 * 60 * 1000;
 }
