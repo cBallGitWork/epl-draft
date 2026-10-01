@@ -8,20 +8,8 @@ import Pending from "../../components/league/Pending";
 import { PANEL } from "@/app/desk";
 import ListAndPitch from "@/app/components/league/ListAndPitch";
 
-// A rival's eleven once his lineups have locked — with the Pitch/List control the
-// page had been losing at exactly that moment.
-//
-// The gap was invisible before a period had ever opened, which is why it lasted:
-// all week the page renders `SquadBoard`, which owns a toggle, and the branch
-// underneath it renders `TeamSheet`, which deliberately does not. `TeamSheet`'s
-// reasoning is sound where it was written — the head-to-head board owns one
-// control for both sides, and a second inside each side would be two controls
-// saying the same thing — but this route has one side and owned no control at
-// all. So the squad screen answered "who exactly is in it" all week and stopped
-// answering it the moment the football started.
-//
-// The state lives here rather than inside `TeamSheet` for the same reason it
-// lives in `MatchupBoard`: whoever draws the control owns it.
+// A read-only eleven, a rival's once his lineups lock or your own in any week but the open one, with the
+// Pitch/List control and the gameweek picker. The view state lives here: whoever draws the control owns it.
 
 export default function Sheet({
   rows,
