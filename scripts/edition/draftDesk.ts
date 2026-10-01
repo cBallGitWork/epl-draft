@@ -77,8 +77,16 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const fixtures = schedule.filter((f) => f.gameweek === gameweek && f.kickoff !== null);
   const days = [...new Set(fixtures.map((f) => londonDayOf(f.kickoff!)!))].sort();
   const saturday = days.find(isSaturday) ?? days[0];
-  const reads = await Promise.all(days.map(async (date) => ({ date, raw: await fetchLiveScoringDay(FANTRAX_LEAGUE_ID, period, date) })));
-  const orders = new Map(await Promise.all(facts.teams.map(async (t) => [t.teamId, mapBenchOrder(await fetchTeamRosterInfo(FANTRAX_LEAGUE_ID, t.teamId, period))] as const)));
+  const dayReads = await Promise.all(days.map((date) => fetchLiveScoringDay(FANTRAX_LEAGUE_ID, period, date).then((raw) => ({ date, raw })).catch(() => null)));
+  const benchReads = await Promise.all(facts.teams.map((t) => fetchTeamRosterInfo(FANTRAX_LEAGUE_ID, t.teamId, period).then((raw) => ({ teamId: t.teamId, raw })).catch(() => null)));
+  // A refused read leaves a score or a bench order we cannot tell, so no cut-off is due and the firing goes on.
+  const refused = [...dayReads, ...benchReads].filter((read) => read === null).length;
+  if (refused > 0) {
+    const notes = [`Due: nothing; Fantrax refused ${refused} of ${dayReads.length + benchReads.length} day and bench reads for period ${period}.`];
+    return { gameweek, period, days, cutoffs: new Map(), rankAfter: new Map(), pastHeadlines: new Map(), pastProse: new Map(), notes };
+  }
+  const reads = dayReads.filter((read) => read !== null);
+  const orders = new Map(benchReads.filter((read) => read !== null).map((read) => [read.teamId, mapBenchOrder(read.raw)] as const));
   const { goals, starters } = await matchReads(gameweek, fixtures, snapshot.players);
 
   const ids = categoryIds(info);

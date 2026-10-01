@@ -39,6 +39,7 @@ import mapping from "../../data/mappings/fantrax.json";
 /** Everything the desk and the briefs decide from, read once per firing. */
 export interface DeskFacts {
   pairings: PeriodPairing[];
+  /** Each team's score this period; empty when the live read refused. */
   scores: Map<string, LiveTeamScore>;
   /** The resolved squads, for the joins only a bridge can make — who owns the
    *  men in a fixture. Empty when the rosters read refused. */
@@ -67,7 +68,8 @@ export async function gatherRoundFacts(
   period: number,
 ): Promise<DeskFacts> {
   const [live, rosters, claims, trades, draft, standingsPage, wire] = await Promise.all([
-    fetchLiveScoring(FANTRAX_LEAGUE_ID, period),
+    // Refused for a period the league never played; the scores go empty and Lawro and the Team Sheet still file.
+    fetchLiveScoring(FANTRAX_LEAGUE_ID, period).catch(() => null),
     // **The ROUND's period, not today's.** Asked without one, Fantrax answers
     // with whatever it currently labels the rosters — and it rolls that label
     // the moment a round's last fixture ends, so for about four days in seven
@@ -106,10 +108,10 @@ export async function gatherRoundFacts(
 
   return {
     pairings: periodPairings(info.matchups, info.teams, period),
-    scores: new Map(mapLiveScores(live).map((score) => [score.teamId, score])),
+    scores: new Map((live === null ? [] : mapLiveScores(live)).map((score) => [score.teamId, score])),
     teams: squads?.teams ?? [],
     playerPoints: new Map(
-      mapLivePlayerPoints(live).flatMap((squad) =>
+      (live === null ? [] : mapLivePlayerPoints(live)).flatMap((squad) =>
         squad.players.map((player) => [player.fantraxId, player.points] as const),
       ),
     ),

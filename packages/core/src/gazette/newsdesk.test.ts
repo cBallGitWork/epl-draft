@@ -21,7 +21,8 @@ const desk = (over: Partial<DeskState> = {}): DeskState => ({
   started: true,
   locked: false,
   stakes: [],
-  ties: [],
+  // An ordinary round has fixtures; an open tie files nothing of its own.
+  ties: [{ homeTeamId: "x", awayTeamId: "y", state: "open" }],
   dealsInWindow: 0,
   news: [],
   pressers: [],
@@ -301,6 +302,34 @@ describe("newsdesk", () => {
 
   it("files no elevens when the export is not the round ahead's", () => {
     expect(newsdesk(desk({ lineups: null }), none, NOW).map((a) => a.kind)).not.toContain("predicted-xi");
+  });
+
+  it("writes up no round the served league has no fixtures in, and still looks ahead", () => {
+    // The real league from the 7 Oct switch: FPL's gameweek 5 is over, and the league's period 5 has no pairings.
+    const ahead = { period: 6, gameweek: 6 };
+    const unplayed = desk({
+      gameweek: 5,
+      period: 5,
+      finished: true,
+      ties: [],
+      reportDays: [{ key: "match-report:gw5:2026-10-03", slug: "gw5-prem-report-2026-10-03", day: "2026-10-03" }],
+      draftReports: [{ key: "draft-report:gw5:gameweek", slug: "gw5-draft-report-gameweek", cutoff: "gameweek", day: "2026-10-05" }],
+      dealsInWindow: 3,
+      news: [{ key: "a", slug: "news-a" }],
+      pressers: [{ key: "presser:gw5:2026-10-08", slug: "gw5-presser-2026-10-08", day: "2026-10-08" }],
+      lineups: { key: "predicted-xi:gw6", slug: "gw6-predicted-xi" },
+      ahead,
+      next: { ...ahead, locksAt: "2026-10-10T11:15:00.000Z" },
+    });
+    expect(newsdesk(unplayed, none, "2026-10-08T17:00:00.000Z").map((a) => a.key)).toEqual([
+      "news:a",
+      "presser:gw5:2026-10-08",
+      "predicted-xi:gw6",
+      "predictions:gw6",
+    ]);
+    // No Bin XI on the Tuesday, and no sheets for a deadline nobody played to.
+    expect(newsdesk(unplayed, none, "2026-10-06T08:15:00.000Z").map((a) => a.kind)).not.toContain("bin-xi");
+    expect(newsdesk({ ...unplayed, finished: false, locked: true }, none, NOW).map((a) => a.kind)).not.toContain("sheets");
   });
 
   it("stamps the Team Sheet and the elevens with the round they preview", () => {
