@@ -1,0 +1,79 @@
+<style>
+:root {{
+  color-scheme: dark;
+  --bg: oklch(0.19 0.045 265); --surface: oklch(0.245 0.012 80); --raised: oklch(0.29 0.014 80);
+  --line: oklch(0.40 0.012 80); --ink: oklch(0.97 0.008 80); --muted: oklch(0.78 0.022 80); --faint: oklch(0.66 0.022 80);
+  --yours: oklch(0.88 0.16 95); --derived: oklch(0.82 0.13 210); --peak: oklch(0.78 0.17 60);
+  --bad: oklch(0.66 0.215 22); --chrome: oklch(0.45 0.13 264); --good: oklch(0.80 0.17 150);
+  --body: "Archivo", "Helvetica Neue", Arial, sans-serif; --narrow: "Archivo Narrow", "Arial Narrow", sans-serif;
+  --digits: "Oxanium", "Archivo", monospace;
+}}
+body {{ background: var(--bg); color: var(--ink); font: 15px/1.5 var(--body); margin: 0; }}
+.wrap {{ max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 64px; display: grid; gap: 40px; }}
+h1, h2, h3, h4 {{ text-wrap: balance; margin: 0; }}
+h1 {{ font: 800 clamp(30px, 5vw, 46px)/1.05 var(--body); letter-spacing: -0.01em; }}
+h1 em {{ font-style: normal; color: var(--derived); }}
+h2 {{ font: 700 13px/1 var(--narrow); text-transform: uppercase; letter-spacing: .12em; color: var(--yours);
+     background: var(--chrome); padding: 8px 12px; }}
+h3 {{ font: 700 19px/1.25 var(--body); }}
+h4 {{ font: 700 12px var(--narrow); letter-spacing: .1em; color: var(--muted); margin-bottom: 6px; }}
+p {{ margin: 0; max-width: 68ch; }}
+section {{ display: grid; gap: 14px; }}
+.lede {{ color: var(--muted); font-size: 16px; }}
+.facts {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }}
+.facts div {{ background: var(--surface); padding: 12px 14px; display: grid; gap: 2px; }}
+.facts b {{ font: 800 24px var(--digits); color: var(--derived); font-variant-numeric: tabular-nums; }}
+.facts span {{ color: var(--muted); font-size: 13px; }}
+.cards {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(min(330px, 100%), 1fr)); gap: 10px; }}
+.card {{ display: grid; grid-template-columns: 64px minmax(0, 1fr); background: var(--surface); border: 1px solid var(--line); }}
+.mark {{ display: grid; place-content: center; text-align: center; gap: 2px; border-right: 1px solid var(--line); background: var(--raised); }}
+.mark span {{ font: 800 26px var(--digits); font-variant-numeric: tabular-nums; }}
+.mark small {{ font: 600 11px var(--narrow); color: var(--faint); }}
+.b-top, .big.b-top {{ color: var(--peak); }} .b-high {{ color: var(--derived); }} .b-mid {{ color: var(--ink); }}
+.b-low {{ color: var(--muted); }} .b-bad {{ color: var(--bad); }}
+.body {{ padding: 10px 12px; display: grid; gap: 7px; min-width: 0; }}
+.body header {{ display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: baseline; }}
+.body header strong {{ font-size: 16px; }}
+.pos {{ font: 700 11px var(--narrow); color: var(--bg); background: var(--muted); padding: 1px 5px; }}
+.fx {{ color: var(--muted); font: 500 13px var(--narrow); }}
+.note {{ font-size: 13px; color: var(--yours); }}
+.chips, .parts, .meta {{ display: flex; flex-wrap: wrap; gap: 4px 6px; }}
+.chip {{ font: 500 12px var(--narrow); padding: 1px 6px; border: 1px solid var(--line); color: var(--muted); }}
+.chip.ret {{ color: var(--ink); border-color: var(--good); }}
+.chip.bad {{ color: var(--bad); border-color: color-mix(in oklch, var(--bad) 60%, var(--line)); }}
+.part {{ font: 500 12px var(--narrow); color: var(--faint); }}
+.part b {{ font-family: var(--digits); font-weight: 600; }}
+.part.up b {{ color: var(--derived); }} .part.down b {{ color: var(--bad); }} .part.base b {{ color: var(--muted); }}
+.meta {{ font: 500 11.5px var(--narrow); color: var(--faint); gap: 2px 12px; }}
+.rung {{ display: grid; gap: 10px; }}
+.rung-h {{ display: flex; align-items: baseline; gap: 12px; color: var(--muted); border-bottom: 1px solid var(--line); padding-bottom: 4px; }}
+.big {{ font: 800 34px/1 var(--digits); }}
+.kind {{ border-top: 1px solid var(--line); padding-top: 18px; }}
+.q {{ color: var(--muted); }}
+.verdict {{ color: var(--ink); border-left: 3px solid var(--derived); padding-left: 10px; }}
+.scroll {{ overflow-x: auto; }}
+table {{ border-collapse: collapse; width: 100%; font-size: 13.5px; }}
+th {{ font: 700 11px var(--narrow); text-transform: uppercase; letter-spacing: .08em; color: var(--yours); text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }}
+td {{ padding: 5px 8px; border-bottom: 1px solid color-mix(in oklch, var(--line) 50%, transparent); vertical-align: top; }}
+td.n, th.n {{ text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }}
+td.hl {{ color: var(--derived); font-weight: 600; }}
+td.src {{ color: var(--faint); font: 500 12px var(--narrow); white-space: nowrap; }}
+.wt td:first-child {{ color: var(--muted); font: 600 12px var(--narrow); }}
+.tag {{ font: 700 11px var(--narrow); padding: 1px 6px; white-space: nowrap; }}
+.t-in {{ background: color-mix(in oklch, var(--good) 25%, transparent); color: var(--good); }}
+.t-out {{ background: color-mix(in oklch, var(--bad) 20%, transparent); color: var(--bad); }}
+.t-draft {{ background: color-mix(in oklch, var(--yours) 20%, transparent); color: var(--yours); }}
+.grid2 {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 18px; }}
+.grid4 {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 18px; }}
+.hist {{ display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; align-items: end; height: 170px; max-width: 560px; }}
+.bar {{ display: grid; justify-items: center; align-content: end; gap: 4px; height: 100%; }}
+.bar i {{ display: block; width: 100%; background: currentColor; }}
+.bar .cnt {{ font: 600 11px var(--digits); color: var(--faint); }}
+.bar .lab {{ font: 800 14px var(--digits); color: var(--muted); }}
+ol.qs {{ margin: 0; padding-left: 22px; display: grid; gap: 10px; max-width: 72ch; }}
+ol.qs b {{ color: var(--yours); }}
+.small {{ font-size: 13px; color: var(--faint); }}
+a {{ color: var(--derived); }}
+:focus-visible {{ outline: 2px solid var(--yours); outline-offset: 2px; }}
+@media (max-width: 420px) {{ .cards {{ grid-template-columns: 1fr; }} .card {{ grid-template-columns: 56px 1fr; }} }}
+</style>

@@ -86,6 +86,23 @@ writer's "You are" line; the byline is resolved from the kind at render, so the 
 the line-ups under the team-news writer, the front page's lead under its writer, and the writer's name at the head of
 the match-report and team-sheet prompts.
 
+## Our player rating is read off league points, with Underlying beside it — decided 1 Oct 2026
+
+- **What it is**: `join/rating/` marks one man's match out of ten from his real-league points, the
+  goal-and-assist points scaled by the opponent's defence and the clean-sheet points by his attack, plus
+  `mistakes` and `extras` in league points, read off `marks` in `weights.ts`. Underlying is the same table
+  read at the points his chances were worth (xG and xA at his prices, shots and key passes). Nothing reads
+  it on screen yet; it waits on Craig's review (`docs/record/ratings-backtest/`).
+- **Counted on 25/26**: 10,521 matches rated; median 4.5–5.0 by position, one 10, five 1s; mark against
+  league points 0.943. Fantrax's own points for 7,937; the 2,584 men it no longer lists were priced by the
+  league's rules from `getLeagueInfo`, which reproduce Fantrax exactly in 95.6% of matches and within a point
+  in 99.6%. A dual-eligible `M,F` man is scored as a forward.
+- **The opponent is `football/seasonStrength`**, goals and xG so far against the league's, eased in over six
+  games: 0.92 with the season's goals for attack and 0.90 for defence, where the sister export's season means
+  manage 0.80 and 0.81 (Wolves' defence read average while conceding 1.79 a game).
+- **Underlying earns its place**: over five matches it predicts the next five better than points do (0.356
+  against 0.337); touches in the box add nothing once shots are in, so they are out.
+
 ## A player's fixture run carries the sister model's projection, not Fantrax's — decided 30 Sep 2026
 
 - **Counted**: the sister export projects **666 of 666** players for **each of GW6–17** (12 weeks); Fantrax's
