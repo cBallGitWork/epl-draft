@@ -6,12 +6,8 @@ import { ROW_NAME, SMALL_CAPS } from "@/app/desk";
 import { matchupHref } from "../routes";
 import { teamHref } from "@/app/squad/routes";
 
-// One team's season on one screen: every round it is in, who it plays, and what
-// each one finished. The league's fixtures and any knockout it has been drawn
-// into, in gameweek order. `yours.ts` assembles the rows; this draws them.
-//
-// The asked-about team's total leads every row, because there is no ground and
-// the team you came to read about reads first.
+// One team's season as CM's fixture list: a blue gameweek block, the opponent in white, the
+// competition in yellow, and the score on a plate at the right edge. `teamSeason.ts` builds the rows.
 
 export default function Season({
   rows,
@@ -20,24 +16,10 @@ export default function Season({
 }: {
   rows: SeasonRow[];
   badges: Map<string, string>;
-  /** Whose season this is.
-   *
-   *  **Required, as of 5 Sep 2026.** It was optional because the schedule's own
-   *  `?team=` view drew this list with no matchup to open; that view went with
-   *  the schedule's dropdowns, so the team's own Fixtures tab is the only caller
-   *  and the score is always a link. The unlinked branch was dead code behind a
-   *  `?` (CODE_RULES §2). */
+  /** Whose season this is; every score links to his matchup. */
   teamId: string;
 }) {
   return (
-    // **Championship Manager's own fixture list** (Craig, 2 Sep, with the shot).
-    // Five columns and every one of them a colour with a job: a blue DATE block
-    // down the left, the opponent in white, H or A in cyan, the competition in
-    // yellow, and the result on a purple ground hard against the right edge.
-    // Ours had the date as grey prose inside the name column and the competition
-    // beside it in the same grey, which is the same five facts with four of them
-    // wearing the same clothes.
-    //
     // CM's visible scroll bar on a desk; a phone scrolls the page, or the list's foot sits under the rail.
     <ul className="cm-rows cm-scroll cm-scroll-y flex flex-col lg:max-h-[34rem] lg:overflow-y-auto">
       {rows.map((row) => (
@@ -47,13 +29,7 @@ export default function Season({
               row.round.started ? "" : "text-muted"
             }`}
           >
-            {/* The date block. CM carries the DAY here — "Sat 4th Aug" — and
-                the round number is ours to add, because a fantasy season is
-                numbered in a way a football calendar is not. */}
-            {/* The round always; the DATE only where there is room for it.
-                Both inside 5.5rem truncated the date to "Friday 21 Aug…" and
-                left the opponent — the one thing a fixture list is FOR — with
-                no width at all. */}
+            {/* The gameweek always; its date only on a desk, where the opponent still has room. */}
             <span className="cm-index numeric flex shrink-0 items-baseline gap-1 px-1.5 py-0.5">
               <span>GW{row.round.gameweek}</span>
               {row.round.deadline === null ? null : (
@@ -69,13 +45,7 @@ export default function Season({
               <Opponent opponent={row.opponent} gameweek={row.round.gameweek} />
             </span>
 
-            {/* **CM's H/A column is deliberately absent.** The shot has one and
-                a fantasy fixture cannot fill it: Fantrax names a home and an
-                away because its schedule has the fields, but there is no ground
-                and `teamSeason.ts` already drops the distinction for that
-                reason. Printing an H would be inventing a venue, and an empty
-                column is furniture. Four columns, then, and the fifth is the
-                one fact this list has that CM's does not — the score. */}
+            {/* No H/A column: a fantasy fixture has no ground. */}
 
             {/* The competition, in yellow, at every width (Craig, 30 Sep): a cup tie must
                 stand apart from a league one. A knockout's round sits under its name. */}
@@ -86,13 +56,7 @@ export default function Season({
               )}
             </span>
 
-            {/* **The score is the link, not the row** (Craig, 2 Sep: "tap a
-                row/score to go to the matchup page"). The row cannot be one:
-                it already contains the opponent's link to his squad, and an
-                anchor inside an anchor is invalid HTML that browsers resolve by
-                dropping one of them. So the two taps are the two things a reader
-                wants from the row — the name opens the squad, the score opens
-                the match. */}
+            {/* The score opens the matchup and the name opens his squad: a link cannot hold a link. */}
             <Link
               href={matchupHref(teamId, row.round.gameweek)}
               className="cm-row inline-flex min-h-11 shrink-0 items-center hover:underline"
@@ -106,19 +70,8 @@ export default function Season({
   );
 }
 
-/** The result, or the fact that there is not one yet. A fixture still to come
- *  shows nothing at all rather than a nought Fantrax would happily supply. */
+/** The result on an index plate, or a dash on the same plate for a gameweek still to come. */
 function Score({ row }: { row: SeasonRow }) {
-  // **A plate either way, played or not** — CM's fixture list runs a filled
-  // block down its right edge on every row, carrying `1:1` where there is a
-  // result and `---` where there is not (the shot Craig sent). A row whose
-  // right-hand column simply vanishes breaks the column, and the dashes are
-  // what make the list read as a season rather than as a handful of results.
-  //
-  // `cm-index` rather than a new purple: the game's money column is white on a
-  // filled ground, which is the same mechanism this token already is, and
-  // DESIGN §3 retired `pl-purple` deliberately — every colour here is a slot
-  // with one meaning and "a score" is not a new one.
   if (!row.round.started) {
     return (
       <span className="cm-index numeric flex h-6 w-12 shrink-0 items-center justify-center opacity-60">
@@ -127,19 +80,13 @@ function Score({ row }: { row: SeasonRow }) {
     );
   }
 
-  // Only at full time, exactly as the scoreline does it — see `gameweekStatus`
-  // in core for why a half-time lead is not a win.
+  // A win only at full time: a half-time lead is not one (`gameweekStatus` in core).
   const won =
     row.round.status === "finished" && leads(row.pointsFor, row.pointsAgainst);
 
   return (
     <span className="cm-index numeric flex h-6 w-12 shrink-0 items-center justify-center">
-      {/* **Weight, not colour, for a win.** The accent marked it until the
-          index block learned to take a team's own colour — and yellow on a
-          green plate measured 2.43:1, which `sweep` caught. A plate owns its
-          ink (DESIGN §2), and this plate's ink is now whatever `inkOn` chose
-          for that manager, so nothing may set a colour on top of it. Underline
-          says "this one won" without touching the pair. */}
+      {/* A win is underlined, not coloured: the plate takes the manager's colour and owns its ink. */}
       <span className={won ? "underline decoration-2 underline-offset-2" : ""}>
         {row.pointsFor ?? DASH}
       </span>
@@ -154,15 +101,10 @@ function Opponent({
   gameweek,
 }: {
   opponent: SeasonRow["opponent"];
-  /** The round this row is about. Carried into the squad link so a tap on a
-   *  March fixture opens March's squad, not this week's — the same reason
-   *  `Tie` carries it, and this view was missed when that one was fixed. */
+  /** The row's gameweek, so a tap on a March fixture opens March's squad. */
   gameweek: number;
 }) {
-  // **The gap is a class, not a trailing space in the markup.** It was `"v "`,
-  // and a flex container collapses that space away — which is how the tap-floor
-  // fix below turned every row into "Vtest3331". A space that only survives
-  // while its parent is not flex is not a space, it is a coincidence.
+  // The gap is a class: a flex parent collapses a trailing space in the markup.
   const name = (
     <>
       <span className="pr-1 text-2xs font-normal uppercase text-faint">v</span>
@@ -171,34 +113,12 @@ function Opponent({
   );
 
   return opponent.team === null ? (
-    // The same recipe as the linked branch below, because this is the same
-    // slot: one opponent name, drawn twice because only one of the two is a
-    // link. It was `text-sm italic text-faint` against the link's `ROW_NAME`,
-    // so a round with no opponent drawn yet sat a step smaller than the rounds
-    // around it — the exact drift Craig named on 7 Sep 2026. The italic and the
-    // faint stay: they are what says "nobody yet", and `ROW_NAME` carries no
-    // ink of its own to argue with.
+    // Nobody drawn yet: the same name recipe, italic and faint.
     <span className={`truncate italic text-faint ${ROW_NAME}`}>{name}</span>
   ) : (
     <Link
       href={teamHref(opponent.team.teamId, gameweek)}
-      // **`min-h-11` and the `.cm-row` pair**, which this link had neither of:
-      // it was 18px of text in a 56px row, so the row looked thumbable and only
-      // the name actually was. `tapfit` never saw it because its route list
-      // holds no query strings and this view only existed at
-      // `/league/schedule?team=`; a team's own Fixtures tab put it on a plain
-      // route and the instrument found all thirty-eight of them at once. That
-      // query view is gone as of 5 Sep 2026 and the Fixtures tab is the only
-      // caller, which is what put this component under the instrument for good.
-      //
-      // `.cm-row` is what lets the desk keep 28px while the phone gets 44 —
-      // pairing the two is the documented lesson from 1 Sep, not a belt-and-
-      // braces double rule.
-      //
-      // **`inline-flex`, not `flex`.** A block-level flex box took the link out
-      // of the line it shares with the "v" and the date, and the first cut of
-      // this fix printed "Vtestf" with the date pushed onto a row of its own.
-      // The height has to grow without the link leaving the text flow.
+      // `inline-flex` keeps the link in the line with its "v"; `.cm-row` gives a phone 44px, the desk 28.
       className={`cm-row inline-flex min-h-11 items-center truncate hover:underline ${ROW_NAME}`}
     >
       {name}

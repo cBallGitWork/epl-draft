@@ -8,19 +8,7 @@ import { seasonRows } from "../../../league/schedule/teamSeason";
 import { teamBadges } from "../../../standings";
 import { PANEL } from "@/app/desk";
 
-// Every round this side is in, end to end.
-//
-// **This is now the ONLY way to read one team's whole season.** It was the
-// second one: `/league/schedule?team=<id>` drew the same view behind a select,
-// and that select went on 5 Sep 2026 with the schedule's other two ("Dont show
-// all the grey arrows here, just show all fixtures for the league itself"). The
-// view moved rather than went, and this is where a reader looking for one team
-// already is — a squad's own Fixtures tab, rather than League, then Schedule,
-// then picking the side out of a dropdown.
-//
-// `seasonRows` and `Season` still live under `league/schedule/` because that is
-// where the shape belongs; nothing else reads them now.
-//
+// Every gameweek this side plays, played and to come: the only view of one team's whole season.
 // Cup ties are not here: nobody is drawn into one yet, so no cup fixture can name this team.
 
 // Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
@@ -47,10 +35,7 @@ export default async function FixturesPage({
   }
 
   const { info } = read;
-  // Every round, finished ones included — unlike the schedule screen, which
-  // hands its archive to Results. A team's own fixture list is the season it
-  // has had as well as the one it has left; that is what makes it a season
-  // rather than a to-do list.
+  // Finished gameweeks included, unlike the schedule screen, which hands them to Results.
   const tiesIn = (at: ScheduleRound): CompetitionTie[] =>
     leagueTies(periodPairings(info.matchups, info.teams, at.period));
 

@@ -5,18 +5,8 @@ import { leagueTeams } from "../team";
 import { readDeals } from "../../../business";
 import Ledger from "./Ledger";
 
-// What one manager has done all season.
-//
-// The feed behind this has been mapped, tested and cached since the paper's
-// business column was built, and until now the ONLY thing that read it was that
-// column — which prints the week's activity across the league. The rows were
-// deliberately kept flat so that a team's history, a player's history and the
-// week's activity could each be a filter over the same read (`league/types.ts`
-// says so in as many words); this is the first of the three that was missing.
-//
-// Grouped through `deals()` rather than listed raw, because a claim and the drop
-// that paid for it are one piece of business. Read apart they become a manager
-// signing somebody and, separately and mysteriously, losing somebody else.
+// What one manager has done all season: the paper's transaction feed, grouped by `deals()` so a
+// claim and the drop that paid for it are one row.
 
 // Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
@@ -32,8 +22,7 @@ export default async function TransfersPage({
   // The id the slug resolved to: `me` is a front door and not a team.
   const teamId = team.teamId;
 
-  // His side of the league's business. A deal is his if he is on either side of
-  // it — the claim he made, and the drop he made to afford it.
+  // A deal is his if he is on either side of it.
   const his = deals(feed.rows).filter(
     (deal) =>
       deal.inbound.some((side) => side.teamId === teamId) ||
