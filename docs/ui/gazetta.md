@@ -156,10 +156,10 @@ business, who is hurt, and when lineups lock.
    line, has nowhere to go but the stat and a flourish. The eleven column
    survives as a column: the case for the side, where a pundit's
    argument is something a pundit can actually write.
-8. **The three tables**, in the sidebar as a back page carries them: the
-   season's scorers (Fantrax's published season FPts — the player's own
-   season, which is not the same as what he earned his owner, so the head says
-   FPts and claims nothing more), the draft league (Fantrax's arithmetic,
+8. **The three tables**, in the sidebar as a back page carries them: **Top
+   scorers** (Fantrax's published season points — the player's own season, not
+   what he earned his owner; headed with no source since Craig, 1 Oct 2026: *"just
+   call it top scorers, and remove 'Fantrax FPts' header"*), the draft league (Fantrax's arithmetic,
    verbatim) and the Premier League (computed from finished fixtures, because
    FPL's own table is a dead field — three for a win is the competition's fixed
    rule and the football layer is where fixed rules may be constants).
