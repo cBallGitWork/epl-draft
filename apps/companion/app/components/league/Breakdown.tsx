@@ -4,8 +4,8 @@ import { FACT_LABEL, HEAD_PLATE, HEAD_PLATE_END, LABEL } from "@/app/desk";
 
 // The itemised table: one row per category that moved his total, then the total.
 //
-// Read from Fantrax, never computed — which is why the rows sum to the footer
-// without anything checking that they do.
+// Read from the provider, never computed — Fantrax on the live card, FPL on the FPL tab's —
+// which is why the rows sum to the footer without anything checking that they do.
 //
 // **Three columns and not two** (Craig, 21 Sep 2026: "points breakdown needs the
 // value and the points"). "Minutes Played +2" is a price with the thing it

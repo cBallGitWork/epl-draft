@@ -28,8 +28,8 @@ import PickPoints from "./PickPoints";
 // 1440, of which 622 was empty grass under the keeper. The ratio is on `.pitch`
 // and multiplies whatever width it is given, so the width is the only lever.
 //
-// **Every number here is FPL's, already multiplied.** A captain's 18 is what he
-// contributed, not what he scored, which is the number a manager is looking for.
+// **Every number here is FPL's.** The XI's are multiplied, so a captain's 18 is what he
+// contributed; the bench's are what each man scored, which FPL's nought would hide.
 
 export default function FplPitch({
   rows,
