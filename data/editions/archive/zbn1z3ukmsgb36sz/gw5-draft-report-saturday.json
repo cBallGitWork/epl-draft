@@ -1,0 +1,728 @@
+{
+  "slug": "gw5-draft-report-saturday",
+  "kind": "draft-report",
+  "leagueId": "zbn1z3ukmsgb36sz",
+  "period": 5,
+  "gameweek": 5,
+  "filedAt": "2026-10-01T14:11:30.928Z",
+  "expiresAt": null,
+  "edition": "Saturday Draft Report",
+  "byline": "The Dugout",
+  "headline": "Gross profit for 123 at the front",
+  "deck": "123 lead test2 26-16",
+  "body": "",
+  "subjects": [
+    "draft-report:gw5:saturday"
+  ],
+  "image": null,
+  "face": {
+    "code": 60307,
+    "name": "Gross",
+    "clubId": 5,
+    "position": "M"
+  },
+  "ties": [],
+  "extras": {
+    "draft": {
+      "cutoff": "saturday",
+      "gameweek": 5,
+      "matchups": [
+        {
+          "home": {
+            "teamId": "pbxm9fgimshcpazf",
+            "name": "test2",
+            "score": 16,
+            "rankBefore": 2,
+            "rankAfter": null,
+            "run": "W",
+            "returns": {
+              "goals": [
+                {
+                  "name": "Hall",
+                  "count": 1,
+                  "minutes": [
+                    "7"
+                  ]
+                }
+              ],
+              "assists": [],
+              "cleanSheets": []
+            },
+            "eleven": [
+              {
+                "name": "Trafford",
+                "slot": "G",
+                "points": null,
+                "next": {
+                  "opponent": "Crystal Palace",
+                  "home": true,
+                  "kickoff": "2026-09-20T13:00:00Z"
+                },
+                "mark": null
+              },
+              {
+                "name": "Ajayi",
+                "slot": "D",
+                "points": 1,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Hall",
+                "slot": "D",
+                "points": 8,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Giles",
+                "slot": "D",
+                "points": 0,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "McAtee",
+                "slot": "M",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Millar",
+                "slot": "M",
+                "points": null,
+                "next": null,
+                "mark": "dnp"
+              },
+              {
+                "name": "Meunier",
+                "slot": "D",
+                "points": null,
+                "next": {
+                  "opponent": "Man City",
+                  "home": false,
+                  "kickoff": "2026-09-20T13:00:00Z"
+                },
+                "mark": "sub"
+              },
+              {
+                "name": "Rice",
+                "slot": "M",
+                "points": 1,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Lukić",
+                "slot": "M",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Havertz",
+                "slot": "F",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Isak",
+                "slot": "F",
+                "points": null,
+                "next": {
+                  "opponent": "Bournemouth",
+                  "home": false,
+                  "kickoff": "2026-09-20T13:00:00Z"
+                },
+                "mark": null
+              },
+              {
+                "name": "Cunha",
+                "slot": "F",
+                "points": null,
+                "next": {
+                  "opponent": "Fulham",
+                  "home": false,
+                  "kickoff": "2026-09-20T15:30:00Z"
+                },
+                "mark": null
+              }
+            ],
+            "bench": [
+              {
+                "name": "Lewis-Skelly",
+                "slot": "D",
+                "points": null,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Hackney",
+                "slot": "M",
+                "points": 1,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Henderson",
+                "slot": "G",
+                "points": null,
+                "next": {
+                  "opponent": "Leeds",
+                  "home": false,
+                  "kickoff": "2026-09-20T13:00:00Z"
+                },
+                "mark": null
+              }
+            ]
+          },
+          "away": {
+            "teamId": "8enbgqo5msgb375j",
+            "name": "123",
+            "score": 26,
+            "rankBefore": 3,
+            "rankAfter": null,
+            "run": "L",
+            "returns": {
+              "goals": [
+                {
+                  "name": "Gross",
+                  "count": 1,
+                  "minutes": [
+                    "31"
+                  ]
+                }
+              ],
+              "assists": [
+                {
+                  "name": "Gross",
+                  "count": 1,
+                  "minutes": []
+                }
+              ],
+              "cleanSheets": []
+            },
+            "eleven": [
+              {
+                "name": "Horníček",
+                "slot": "G",
+                "points": 3,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Lacroix",
+                "slot": "D",
+                "points": 1,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Hume",
+                "slot": "D",
+                "points": null,
+                "next": {
+                  "opponent": "Man City",
+                  "home": false,
+                  "kickoff": "2026-09-20T13:00:00Z"
+                },
+                "mark": null
+              },
+              {
+                "name": "Reinildo",
+                "slot": "D",
+                "points": null,
+                "next": {
+                  "opponent": "Man City",
+                  "home": false,
+                  "kickoff": "2026-09-20T13:00:00Z"
+                },
+                "mark": null
+              },
+              {
+                "name": "B.Fernandes",
+                "slot": "M",
+                "points": null,
+                "next": {
+                  "opponent": "Fulham",
+                  "home": false,
+                  "kickoff": "2026-09-20T15:30:00Z"
+                },
+                "mark": null
+              },
+              {
+                "name": "George Hemmings",
+                "slot": "M",
+                "points": 1,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Stach",
+                "slot": "M",
+                "points": null,
+                "next": {
+                  "opponent": "Crystal Palace",
+                  "home": true,
+                  "kickoff": "2026-09-20T13:00:00Z"
+                },
+                "mark": null
+              },
+              {
+                "name": "Gross",
+                "slot": "M",
+                "points": 11,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Haaland",
+                "slot": "F",
+                "points": null,
+                "next": {
+                  "opponent": "Sunderland",
+                  "home": true,
+                  "kickoff": "2026-09-20T13:00:00Z"
+                },
+                "mark": null
+              },
+              {
+                "name": "Neto",
+                "slot": "F",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Schade",
+                "slot": "F",
+                "points": 8,
+                "next": null,
+                "mark": null
+              }
+            ],
+            "bench": [
+              {
+                "name": "Donnarumma",
+                "slot": "G",
+                "points": null,
+                "next": {
+                  "opponent": "Sunderland",
+                  "home": true,
+                  "kickoff": "2026-09-20T13:00:00Z"
+                },
+                "mark": null
+              },
+              {
+                "name": "Yeremy",
+                "slot": "M",
+                "points": null,
+                "next": {
+                  "opponent": "Leeds",
+                  "home": false,
+                  "kickoff": "2026-09-20T13:00:00Z"
+                },
+                "mark": null
+              },
+              {
+                "name": "Hato",
+                "slot": "D",
+                "points": null,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Mukiele",
+                "slot": "D",
+                "points": null,
+                "next": {
+                  "opponent": "Man City",
+                  "home": false,
+                  "kickoff": "2026-09-20T13:00:00Z"
+                },
+                "mark": null
+              }
+            ]
+          },
+          "verdict": "123 lead test2 26-16",
+          "standfirst": "Brighton midfielder Pascal Gross gave 123 a goal and an assist on Saturday.",
+          "paragraphs": [
+            "Saturday brought returns at both ends. Newcastle defender Lewis Hall scored for test2, eight points in all. Gross added his goal and his assist for 123, and the gap came down from 11 to 10.",
+            "Millar did not play for test2, so Sunderland defender Thomas Meunier comes on if he plays, away to Man City on Sunday. James Trafford is at home to Crystal Palace, and Trai Hume travels for 123. test2 have four still to play, 123 five."
+          ],
+          "byDay": [
+            {
+              "day": "2026-09-18",
+              "home": 0,
+              "away": 11
+            },
+            {
+              "day": "2026-09-19",
+              "home": 16,
+              "away": 26
+            }
+          ],
+          "story": {
+            "kind": "haul",
+            "family": "star",
+            "teamIds": [
+              "pbxm9fgimshcpazf",
+              "8enbgqo5msgb375j"
+            ],
+            "cast": [
+              "04fk1",
+              "0785j",
+              "05y9n"
+            ]
+          },
+          "face": {
+            "code": 487838,
+            "name": "Hall",
+            "clubId": 17,
+            "position": "D"
+          }
+        },
+        {
+          "home": {
+            "teamId": "sezrgvl2mshcpazf",
+            "name": "test4",
+            "score": 7,
+            "rankBefore": 4,
+            "rankAfter": null,
+            "run": "L",
+            "returns": {
+              "goals": [],
+              "assists": [],
+              "cleanSheets": []
+            },
+            "eleven": [
+              {
+                "name": "Raya",
+                "slot": "G",
+                "points": 1,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Justin",
+                "slot": "D",
+                "points": null,
+                "next": {
+                  "opponent": "Crystal Palace",
+                  "home": true,
+                  "kickoff": "2026-09-20T13:00:00Z"
+                },
+                "mark": null
+              },
+              {
+                "name": "Rodon",
+                "slot": "D",
+                "points": null,
+                "next": {
+                  "opponent": "Crystal Palace",
+                  "home": true,
+                  "kickoff": "2026-09-20T13:00:00Z"
+                },
+                "mark": null
+              },
+              {
+                "name": "N.Williams",
+                "slot": "D",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Cherki",
+                "slot": "M",
+                "points": null,
+                "next": {
+                  "opponent": "Sunderland",
+                  "home": true,
+                  "kickoff": "2026-09-20T13:00:00Z"
+                },
+                "mark": null
+              },
+              {
+                "name": "Foden",
+                "slot": "M",
+                "points": null,
+                "next": {
+                  "opponent": "Sunderland",
+                  "home": true,
+                  "kickoff": "2026-09-20T13:00:00Z"
+                },
+                "mark": null
+              },
+              {
+                "name": "Gray",
+                "slot": "M",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "E.Le Fée",
+                "slot": "M",
+                "points": null,
+                "next": {
+                  "opponent": "Man City",
+                  "home": false,
+                  "kickoff": "2026-09-20T13:00:00Z"
+                },
+                "mark": null
+              },
+              {
+                "name": "Isidor",
+                "slot": "F",
+                "points": null,
+                "next": {
+                  "opponent": "Man City",
+                  "home": false,
+                  "kickoff": "2026-09-20T13:00:00Z"
+                },
+                "mark": null
+              },
+              {
+                "name": "Elanga",
+                "slot": "F",
+                "points": null,
+                "next": null,
+                "mark": "dnp"
+              },
+              {
+                "name": "Davis",
+                "slot": "D",
+                "points": 2,
+                "next": null,
+                "mark": "sub"
+              },
+              {
+                "name": "Mbeumo",
+                "slot": "F",
+                "points": null,
+                "next": {
+                  "opponent": "Fulham",
+                  "home": false,
+                  "kickoff": "2026-09-20T15:30:00Z"
+                },
+                "mark": null
+              }
+            ],
+            "bench": [
+              {
+                "name": "Lammens",
+                "slot": "G",
+                "points": null,
+                "next": {
+                  "opponent": "Fulham",
+                  "home": false,
+                  "kickoff": "2026-09-20T15:30:00Z"
+                },
+                "mark": null
+              },
+              {
+                "name": "Collins",
+                "slot": "D",
+                "points": null,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Röhl",
+                "slot": "M",
+                "points": null,
+                "next": null,
+                "mark": null
+              }
+            ]
+          },
+          "away": {
+            "teamId": "j9zadacnmshcpazf",
+            "name": "test3",
+            "score": 24,
+            "rankBefore": 1,
+            "rankAfter": null,
+            "run": "W",
+            "returns": {
+              "goals": [],
+              "assists": [],
+              "cleanSheets": [
+                {
+                  "name": "Pickford",
+                  "count": 1,
+                  "minutes": []
+                },
+                {
+                  "name": "Vuskovic",
+                  "count": 1,
+                  "minutes": []
+                }
+              ]
+            },
+            "eleven": [
+              {
+                "name": "Pickford",
+                "slot": "G",
+                "points": 7,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Maguire",
+                "slot": "D",
+                "points": null,
+                "next": {
+                  "opponent": "Fulham",
+                  "home": false,
+                  "kickoff": "2026-09-20T15:30:00Z"
+                },
+                "mark": null
+              },
+              {
+                "name": "Dunk",
+                "slot": "D",
+                "points": null,
+                "next": null,
+                "mark": "dnp"
+              },
+              {
+                "name": "Vuskovic",
+                "slot": "D",
+                "points": 6,
+                "next": null,
+                "mark": "sub"
+              },
+              {
+                "name": "Calafiori",
+                "slot": "D",
+                "points": 1,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Jensen",
+                "slot": "M",
+                "points": null,
+                "next": null,
+                "mark": "dnp"
+              },
+              {
+                "name": "Janelt",
+                "slot": "M",
+                "points": 3,
+                "next": null,
+                "mark": "sub"
+              },
+              {
+                "name": "Ndiaye",
+                "slot": "M",
+                "points": null,
+                "next": {
+                  "opponent": "Sunderland",
+                  "home": true,
+                  "kickoff": "2026-09-20T13:00:00Z"
+                },
+                "mark": null
+              },
+              {
+                "name": "Grimes",
+                "slot": "M",
+                "points": 3,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Gibbs-White",
+                "slot": "M",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Emersonn",
+                "slot": "F",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Gonzalo",
+                "slot": "F",
+                "points": null,
+                "next": {
+                  "opponent": "Man Utd",
+                  "home": true,
+                  "kickoff": "2026-09-20T15:30:00Z"
+                },
+                "mark": null
+              },
+              {
+                "name": "Wissa",
+                "slot": "F",
+                "points": 0,
+                "next": null,
+                "mark": null
+              }
+            ],
+            "bench": [
+              {
+                "name": "Kinsky",
+                "slot": "G",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Mosquera",
+                "slot": "D",
+                "points": null,
+                "next": null,
+                "mark": null
+              }
+            ]
+          },
+          "verdict": "test3 lead test4 24-7",
+          "standfirst": "test3 built the lead in two stages, first in the day's play and then off the bench.",
+          "paragraphs": [
+            "test3 scored 15 to test4's five, with Everton goalkeeper Jordan Pickford keeping a shut-out for seven points. That made it 15-5.",
+            "The reserves widened it. Ipswich Town defender Leif Davis returned two points for test4, in for a man who did not play. Luka Vuskovic kept a clean sheet for test3, nine points to two that pushed the gap from 10 to 17.",
+            "James Justin is at home to Crystal Palace for test4, and Harry Maguire goes to Fulham for test3. test4 have seven men left and test3 three."
+          ],
+          "byDay": [
+            {
+              "day": "2026-09-19",
+              "home": 5,
+              "away": 15
+            },
+            {
+              "day": null,
+              "home": 7,
+              "away": 24
+            }
+          ],
+          "story": {
+            "kind": "saturday-lead",
+            "family": "margin",
+            "teamIds": [
+              "sezrgvl2mshcpazf",
+              "j9zadacnmshcpazf"
+            ],
+            "cast": [
+              "032f9",
+              "05nil"
+            ]
+          },
+          "face": {
+            "code": 111234,
+            "name": "Pickford",
+            "clubId": 9,
+            "position": "G"
+          }
+        }
+      ]
+    }
+  }
+}

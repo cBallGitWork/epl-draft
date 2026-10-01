@@ -1,0 +1,697 @@
+{
+  "slug": "gw5-draft-report",
+  "kind": "draft-report",
+  "leagueId": "zbn1z3ukmsgb36sz",
+  "period": 5,
+  "gameweek": 5,
+  "filedAt": "2026-10-01T14:11:30.928Z",
+  "expiresAt": null,
+  "edition": "Sunday Draft Report",
+  "byline": "The Dugout",
+  "headline": "test3 beat test4 33-28",
+  "deck": "123 beat test2 38-37",
+  "body": "",
+  "subjects": [
+    "draft-report:gw5:gameweek"
+  ],
+  "image": null,
+  "face": {
+    "code": 610799,
+    "name": "Vuskovic",
+    "clubId": 5,
+    "position": "D"
+  },
+  "ties": [],
+  "extras": {
+    "draft": {
+      "cutoff": "gameweek",
+      "gameweek": 5,
+      "matchups": [
+        {
+          "home": {
+            "teamId": "sezrgvl2mshcpazf",
+            "name": "test4",
+            "score": 28,
+            "rankBefore": 4,
+            "rankAfter": 4,
+            "run": "L",
+            "returns": {
+              "goals": [
+                {
+                  "name": "Cherki",
+                  "count": 1,
+                  "minutes": [
+                    "29"
+                  ]
+                }
+              ],
+              "assists": [
+                {
+                  "name": "E.Le Fée",
+                  "count": 1,
+                  "minutes": []
+                }
+              ],
+              "cleanSheets": [
+                {
+                  "name": "Justin",
+                  "count": 1,
+                  "minutes": []
+                }
+              ]
+            },
+            "eleven": [
+              {
+                "name": "Raya",
+                "slot": "G",
+                "points": 1,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Justin",
+                "slot": "D",
+                "points": 6,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Rodon",
+                "slot": "D",
+                "points": null,
+                "next": null,
+                "mark": "dnp"
+              },
+              {
+                "name": "Davis",
+                "slot": "D",
+                "points": 2,
+                "next": null,
+                "mark": "sub"
+              },
+              {
+                "name": "N.Williams",
+                "slot": "D",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Cherki",
+                "slot": "M",
+                "points": 7,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Foden",
+                "slot": "M",
+                "points": null,
+                "next": null,
+                "mark": "dnp"
+              },
+              {
+                "name": "Gray",
+                "slot": "M",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "E.Le Fée",
+                "slot": "M",
+                "points": 5,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Isidor",
+                "slot": "F",
+                "points": 1,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Elanga",
+                "slot": "F",
+                "points": null,
+                "next": null,
+                "mark": "dnp"
+              },
+              {
+                "name": "Mbeumo",
+                "slot": "F",
+                "points": 2,
+                "next": null,
+                "mark": null
+              }
+            ],
+            "bench": [
+              {
+                "name": "Lammens",
+                "slot": "G",
+                "points": 4,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Collins",
+                "slot": "D",
+                "points": null,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Röhl",
+                "slot": "M",
+                "points": null,
+                "next": null,
+                "mark": null
+              }
+            ]
+          },
+          "away": {
+            "teamId": "j9zadacnmshcpazf",
+            "name": "test3",
+            "score": 33,
+            "rankBefore": 1,
+            "rankAfter": 1,
+            "run": "W",
+            "returns": {
+              "goals": [],
+              "assists": [],
+              "cleanSheets": [
+                {
+                  "name": "Pickford",
+                  "count": 1,
+                  "minutes": []
+                },
+                {
+                  "name": "Vuskovic",
+                  "count": 1,
+                  "minutes": []
+                }
+              ]
+            },
+            "eleven": [
+              {
+                "name": "Pickford",
+                "slot": "G",
+                "points": 7,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Maguire",
+                "slot": "D",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Dunk",
+                "slot": "D",
+                "points": null,
+                "next": null,
+                "mark": "dnp"
+              },
+              {
+                "name": "Vuskovic",
+                "slot": "D",
+                "points": 6,
+                "next": null,
+                "mark": "sub"
+              },
+              {
+                "name": "Calafiori",
+                "slot": "D",
+                "points": 1,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Jensen",
+                "slot": "M",
+                "points": null,
+                "next": null,
+                "mark": "dnp"
+              },
+              {
+                "name": "Janelt",
+                "slot": "M",
+                "points": 3,
+                "next": null,
+                "mark": "sub"
+              },
+              {
+                "name": "Ndiaye",
+                "slot": "M",
+                "points": 5,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Grimes",
+                "slot": "M",
+                "points": 3,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Gibbs-White",
+                "slot": "M",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Emersonn",
+                "slot": "F",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Gonzalo",
+                "slot": "F",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Wissa",
+                "slot": "F",
+                "points": 0,
+                "next": null,
+                "mark": null
+              }
+            ],
+            "bench": [
+              {
+                "name": "Kinsky",
+                "slot": "G",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Mosquera",
+                "slot": "D",
+                "points": null,
+                "next": null,
+                "mark": null
+              }
+            ]
+          },
+          "verdict": "test3 beat test4 33-28",
+          "standfirst": "test3 beat test4 33-28.",
+          "paragraphs": [],
+          "byDay": [
+            {
+              "day": "2026-09-19",
+              "home": 5,
+              "away": 15
+            },
+            {
+              "day": "2026-09-20",
+              "home": 26,
+              "away": 24
+            },
+            {
+              "day": null,
+              "home": 28,
+              "away": 33
+            }
+          ],
+          "story": {
+            "kind": "bench-turned",
+            "family": "turn",
+            "teamIds": [
+              "sezrgvl2mshcpazf",
+              "j9zadacnmshcpazf"
+            ],
+            "cast": [
+              "06v0y",
+              "05tre",
+              "06v07"
+            ]
+          },
+          "face": {
+            "code": 204580,
+            "name": "Janelt",
+            "clubId": 4,
+            "position": "M"
+          }
+        },
+        {
+          "home": {
+            "teamId": "pbxm9fgimshcpazf",
+            "name": "test2",
+            "score": 37,
+            "rankBefore": 2,
+            "rankAfter": 3,
+            "run": "W",
+            "returns": {
+              "goals": [
+                {
+                  "name": "Hall",
+                  "count": 1,
+                  "minutes": [
+                    "7"
+                  ]
+                },
+                {
+                  "name": "Isak",
+                  "count": 1,
+                  "minutes": [
+                    "57"
+                  ]
+                },
+                {
+                  "name": "Cunha",
+                  "count": 1,
+                  "minutes": [
+                    "89"
+                  ]
+                }
+              ],
+              "assists": [
+                {
+                  "name": "Meunier",
+                  "count": 1,
+                  "minutes": []
+                }
+              ],
+              "cleanSheets": [
+                {
+                  "name": "Trafford",
+                  "count": 1,
+                  "minutes": []
+                }
+              ]
+            },
+            "eleven": [
+              {
+                "name": "Trafford",
+                "slot": "G",
+                "points": 7,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Ajayi",
+                "slot": "D",
+                "points": 1,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Hall",
+                "slot": "D",
+                "points": 8,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Giles",
+                "slot": "D",
+                "points": 0,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "McAtee",
+                "slot": "M",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Millar",
+                "slot": "M",
+                "points": null,
+                "next": null,
+                "mark": "dnp"
+              },
+              {
+                "name": "Meunier",
+                "slot": "D",
+                "points": 3,
+                "next": null,
+                "mark": "sub"
+              },
+              {
+                "name": "Rice",
+                "slot": "M",
+                "points": 1,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Lukić",
+                "slot": "M",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Havertz",
+                "slot": "F",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Isak",
+                "slot": "F",
+                "points": 5,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Cunha",
+                "slot": "F",
+                "points": 6,
+                "next": null,
+                "mark": null
+              }
+            ],
+            "bench": [
+              {
+                "name": "Lewis-Skelly",
+                "slot": "D",
+                "points": null,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Hackney",
+                "slot": "M",
+                "points": 1,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Henderson",
+                "slot": "G",
+                "points": null,
+                "next": null,
+                "mark": null
+              }
+            ]
+          },
+          "away": {
+            "teamId": "8enbgqo5msgb375j",
+            "name": "123",
+            "score": 38,
+            "rankBefore": 3,
+            "rankAfter": 2,
+            "run": "L",
+            "returns": {
+              "goals": [
+                {
+                  "name": "Gross",
+                  "count": 1,
+                  "minutes": [
+                    "31"
+                  ]
+                },
+                {
+                  "name": "Haaland",
+                  "count": 1,
+                  "minutes": [
+                    "81"
+                  ]
+                }
+              ],
+              "assists": [
+                {
+                  "name": "Gross",
+                  "count": 1,
+                  "minutes": []
+                }
+              ],
+              "cleanSheets": []
+            },
+            "eleven": [
+              {
+                "name": "Horníček",
+                "slot": "G",
+                "points": 3,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Lacroix",
+                "slot": "D",
+                "points": 1,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Hume",
+                "slot": "D",
+                "points": 1,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Reinildo",
+                "slot": "D",
+                "points": null,
+                "next": null,
+                "mark": "dnp"
+              },
+              {
+                "name": "Mukiele",
+                "slot": "D",
+                "points": 0,
+                "next": null,
+                "mark": "sub"
+              },
+              {
+                "name": "B.Fernandes",
+                "slot": "M",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "George Hemmings",
+                "slot": "M",
+                "points": 1,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Stach",
+                "slot": "M",
+                "points": 3,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Gross",
+                "slot": "M",
+                "points": 11,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Haaland",
+                "slot": "F",
+                "points": 6,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Neto",
+                "slot": "F",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Schade",
+                "slot": "F",
+                "points": 8,
+                "next": null,
+                "mark": null
+              }
+            ],
+            "bench": [
+              {
+                "name": "Donnarumma",
+                "slot": "G",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Yeremy",
+                "slot": "M",
+                "points": 2,
+                "next": null,
+                "mark": null
+              },
+              {
+                "name": "Hato",
+                "slot": "D",
+                "points": null,
+                "next": null,
+                "mark": null
+              }
+            ]
+          },
+          "verdict": "123 beat test2 38-37",
+          "standfirst": "123 edged it by a single point, and one goal from Erling Haaland made all the difference.",
+          "paragraphs": [
+            "Friday gave 123 an early cushion at 11-0. test2 answered on Saturday, Newcastle defender Lewis Hall scoring for eight to begin the chase, though Pascal Gross replied with a goal and an assist for an 11-point haul, and the margin held at 26-16.",
+            "Sunday brought the fightback properly alive. James Trafford kept a shut-out, Alexander Isak scored, and Matheus Cunha added another in the 89th minute. Haaland answered for 123 in the 81st, his six points holding the gap at four, 38-34. Thomas Meunier then laid one on among the substitutions to close it to 38-37.",
+            "test2 won three of the four stages and still lost. Reinildo did not play for 123, available again now his one-match suspension is served. test2 fell to third and 123 rose to second. test2 play test3 next, 123 face test4."
+          ],
+          "byDay": [
+            {
+              "day": "2026-09-18",
+              "home": 0,
+              "away": 11
+            },
+            {
+              "day": "2026-09-19",
+              "home": 16,
+              "away": 26
+            },
+            {
+              "day": "2026-09-20",
+              "home": 34,
+              "away": 38
+            },
+            {
+              "day": null,
+              "home": 37,
+              "away": 38
+            }
+          ],
+          "story": {
+            "kind": "late-decider",
+            "family": "decider",
+            "teamIds": [
+              "pbxm9fgimshcpazf",
+              "8enbgqo5msgb375j"
+            ],
+            "cast": [
+              "061vq",
+              "05y9n"
+            ]
+          },
+          "face": {
+            "code": 223094,
+            "name": "Haaland",
+            "clubId": 15,
+            "position": "F"
+          }
+        }
+      ]
+    }
+  }
+}

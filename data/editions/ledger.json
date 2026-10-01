@@ -251,9 +251,19 @@
       "news:https://www.bbc.co.uk/sport/football/articles/ckq5xp9p1v31o",
       "news:https://www.bbc.co.uk/sport/football/articles/ckge43e8nqdwo",
       "news:https://www.bbc.co.uk/sport/football/articles/cr1e5ep101wdo",
-      "news:https://www.bbc.co.uk/sport/football/articles/c3ew9vv7444xo"
+      "news:https://www.bbc.co.uk/sport/football/articles/c3ew9vv7444xo",
+      "draft-report:gw5:saturday",
+      "draft-report:gw5:gameweek",
+      "news:https://www.bbc.co.uk/news/articles/cm89j90gv57vo"
     ],
     "threads": [
+      {
+        "subject": "test3331's Thomas asset",
+        "beat": "Thomas in a crash near Hull's training ground, the club's second; no injury flagged.",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-10-01T14:11:30.928Z"
+      },
       {
         "subject": "123's scoring ceiling",
         "beat": "Haaland and Schade both named in Europe's summer interest, no move flagged",
@@ -267,13 +277,6 @@
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-30T20:22:17.275Z"
-      },
-      {
-        "subject": "test3331's Thomas asset",
-        "beat": "Tuchel calls the England captain irreplaceable; no fixture bearing.",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-30T19:39:51.636Z"
       },
       {
         "subject": "123's Haaland asset",
