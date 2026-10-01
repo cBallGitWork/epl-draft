@@ -180,6 +180,9 @@ export const FANTRAX_APP_BASE = "https://www.fantrax.com/fantasy/league";
  *  `FANTRAX_APP_BASE/{leagueId}/` and takes `;period={n}`. */
 export const FANTRAX_ROSTER_PATH = "team/roster";
 
+/** The league's pending claims and trades, off Craig's URL (1 Oct 2026); only a member's own session reads them. */
+export const FANTRAX_PENDING_PATH = "transactions/pending";
+
 /** One player on Fantrax, which is where a claim is actually made.
  *
  *  **`scorerId` alone, and that was probed rather than guessed** (5 Sep 2026).
