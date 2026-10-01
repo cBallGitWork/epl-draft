@@ -5,8 +5,8 @@ import { ASSISTS_FANTASY, ASSISTS_OFFICIAL, ASSISTS_TOTAL, KEEPER_POINTS, SAVES,
 // The list is OURS, not Fantrax's, and the difference matters. Fantrax publishes
 // 22 leaderboards because it publishes each category twice, once per position
 // block; a reader does not think of "clean sheets kept by my goalkeeper" and
-// "clean sheets kept by my defenders" as two things. So this is the twelve
-// categories the game actually pays for, and `mapSeasonStats` does the adding.
+// "clean sheets kept by my defenders" as two things. So this is the categories
+// the game actually pays for, and `mapSeasonStats` does the adding.
 //
 // Craig, 1 Sep 2026, on why goals against is one entry and not two: "goals
 // against is a def and keeper stat, so we can combine that." Saves and penalty
