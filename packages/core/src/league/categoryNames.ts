@@ -1,6 +1,6 @@
 import type { ScoringCategory } from "./scoring";
 
-// The scoring categories a commissioner can swap one for another, under each name Fantrax's reads give them.
+// Fantrax's scoring categories by meaning, under each name its reads give them.
 // Which ones a league scores is data: the real league moved from A, AF and Sv to AT and GKP on 1 Oct 2026.
 
 /** One Fantrax category: settings' long code, getPlayerStats' column, and SEASON_STATS' caption. */
@@ -15,6 +15,12 @@ export const ASSISTS_OFFICIAL: FantraxCategory = { code: "INDIVIDUAL_ASSISTS", s
 export const ASSISTS_FANTASY: FantraxCategory = { code: "INDIVIDUAL_ASSISTS_FANTASY", short: "AF", caption: "Assists (Fantasy)" };
 export const SAVES: FantraxCategory = { code: "INDIVIDUAL_SAVES", short: "Sv", caption: "Saves" };
 export const KEEPER_POINTS: FantraxCategory = { code: "INDIVIDUAL_KEEPER_POINTS", short: "GKP", caption: "Keeper Points" };
+export const GOALS: FantraxCategory = { code: "INDIVIDUAL_GOALS", short: "G", caption: "Goals" };
+export const OWN_GOALS: FantraxCategory = { code: "INDIVIDUAL_GOALS_ON_OWN_NET", short: "OG", caption: "Own Goals" };
+export const PENALTY_SAVES: FantraxCategory = { code: "INDIVIDUAL_PENALTY_KICK_SAVES", short: "PKS", caption: "Penalty Kick Saves" };
+export const PENALTIES_MISSED: FantraxCategory = { code: "INDIVIDUAL_PENALTY_KICKS_MISSED", short: "PKM", caption: "Penalty Kicks Missed" };
+export const YELLOW_CARDS: FantraxCategory = { code: "INDIVIDUAL_YELLOW_CARDS", short: "YC", caption: "Yellow Cards" };
+export const RED_CARDS: FantraxCategory = { code: "INDIVIDUAL_RED_CARDS", short: "RC", caption: "Red Cards" };
 
 /** Where a league pays an assist, best first. AT is A plus AF (455 of 455 outfielders, 1 Oct 2026), so it is never added to them. */
 export const ASSIST = [ASSISTS_TOTAL, ASSISTS_OFFICIAL] as const;

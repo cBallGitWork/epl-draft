@@ -68,6 +68,7 @@ const STAT_TYPES: readonly { file: string; types: readonly string[] }[] = [
   { file: "packages/core/src/gazette/extras.ts", types: ["StoryRank"] },
   { file: "packages/core/src/gazette/wire.ts", types: ["WireTeam", "WirePlayer", "WireFacts"] },
   { file: "packages/core/src/football/premierleague/clubSeason.ts", types: ["PlClubSeason"] },
+  { file: "apps/companion/app/scoringDay.ts", types: ["LeagueDayLine"] },
 ];
 
 /** Rows no written-type rule can pick out: text, lists, keys and objects, and the functions a row cites. */
