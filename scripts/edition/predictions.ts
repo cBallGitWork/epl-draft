@@ -25,7 +25,7 @@ import {
   seasonForm,
   squadMen,
   strengthIntel,
-  strengthTable,
+  strengthPlaces,
   type Assignment,
   type Bridge,
   type Club,
@@ -113,7 +113,7 @@ export async function predictionsDesk(input: {
     defence: rows("defence"),
     clubs: new Map(clubs.map((club) => [club.id, club])),
     clubName: (club: Club) => fullClubName(club.name),
-    standing: { attack: places(strengths, "attack"), defence: places(strengths, "defence") },
+    standing: { attack: strengthPlaces(strengths, "attack"), defence: strengthPlaces(strengths, "defence") },
     recent: recentGames(played, lives.map((each) => (each === null ? [] : mapLiveStats(each)))),
   };
   const squads = resolveRosters(snapshot, mapTeamRosters(rosters), mapping as Bridge).teams;
@@ -164,11 +164,6 @@ export async function predictionsDesk(input: {
     clubs: clubs.map((club) => club.name),
     doubts: [...new Set(men.filter((man) => man.availability.state !== "fit").map((man) => man.name))],
   };
-}
-
-/** Each club's place by the sister repo's ratings, strongest first, by FPL club code. */
-export function places(strengths: ReturnType<typeof strengthIntel>, measure: "attack" | "defence"): Map<number, number> {
-  return new Map(strengthTable(strengths, measure).map((row, at) => [row.code, at + 1]));
 }
 
 /** Men arriving for this round, as the brief names them: off the waiver list, or in a trade and what it cost. */

@@ -25,6 +25,7 @@ import {
   shortClubNames,
   sideFigures,
   strengthIntel,
+  strengthPlaces,
   type Club,
   type FootballSnapshot,
   type Fixture,
@@ -36,7 +37,6 @@ import {
 import { INTEL_SEASON, readIntel } from "../intel";
 import type { DeskFacts } from "./facts";
 import { fitnessAfter, leagueJoin } from "./matchdayLeague";
-import { places } from "./predictions";
 
 // The reads behind one match-day report: the Premier League's own account of each match, FPL's per-man figures, the league's.
 // Script-side: about four requests a match and one per past gameweek, made only when a report is being written.
@@ -146,6 +146,6 @@ export async function matchdayInput(opts: {
     matches,
     season,
     clubs: snapshot.clubs,
-    standing: { attack: places(strengths, "attack"), defence: places(strengths, "defence") },
+    standing: { attack: strengthPlaces(strengths, "attack"), defence: strengthPlaces(strengths, "defence") },
   };
 }

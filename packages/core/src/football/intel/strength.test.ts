@@ -8,6 +8,7 @@ import {
   easeStep,
   plannerRows,
   strengthIntel,
+  strengthPlaces,
   strengthTable,
 } from "./strength";
 
@@ -123,6 +124,12 @@ describe("strengthTable", () => {
     const table = strengthTable(STRENGTHS, "defence");
     const cells = easeRanks(STRENGTHS, "attack", "home");
     for (const row of table) expect(cells.get(row.code)).toBe(row.home);
+  });
+});
+
+describe("strengthPlaces", () => {
+  it("numbers the strongest 1, though the table lists the weakest first", () => {
+    expect(strengthPlaces(STRENGTHS, "attack")).toEqual(new Map([[ARS.code, 1], [CHE.code, 2], [BUR.code, 3], [HUL.code, 4]]));
   });
 });
 
