@@ -1,6 +1,7 @@
+import Image from "next/image";
 import ScrollBoard from "../../../components/league/ScrollBoard";
 import type { Deal, DealSide } from "@epl/core";
-import { dealDay, inkOn, kindOf, movement, teamColours } from "@epl/core";
+import { crestForShortName, dealDay, inkOn, kindOf, movement, teamColours, toFplClubCode } from "@epl/core";
 import { MINOR_CAPS, MINOR_LABEL, PANEL_FLUSH, ROW_NAME } from "@/app/desk";
 
 // One manager's business, drawn as Championship Manager's Transfers screen.
@@ -156,23 +157,23 @@ function Side({
       {players.length === 0 ? (
         <span className="truncate text-sm">—</span>
       ) : (
-        players.map((player) => (
-          <span key={player.playerName} className={`truncate ${ROW_NAME}`}>
-            {player.playerName}
-            {player.position ? (
-              <span className="pl-1 text-3xs font-bold text-mid">({player.position})</span>
-            ) : null}
-            {/* His real club (Craig, 2 Sep: "let's put the club team in here
-                too"). `23.jpg` prints the club he came FROM in yellow beside
-                every name, which is the same fact — a reader knows a signing by
-                who he plays for as much as by his name. Quiet rather than
-                yellow because the position beside it already has the amber and
-                two amber strings on one line is neither of them emphasised. */}
-            {player.club ? (
-              <span className="numeric pl-1 text-3xs text-faint">{player.club}</span>
-            ) : null}
-          </span>
-        ))
+        players.map((player) => {
+          // His real club as its crest; an unknown club leaves the slot empty rather than guess.
+          const crest = player.club ? crestForShortName(toFplClubCode(player.club)) : null;
+          return (
+            <span key={player.playerName} className={`flex min-w-0 items-center gap-1.5 ${ROW_NAME}`}>
+              <span className="grid size-5 shrink-0 place-items-center">
+                {crest ? (
+                  <Image src={crest} alt={player.clubName ?? player.club ?? ""} width={20} height={20} className="size-5 object-contain" />
+                ) : null}
+              </span>
+              <span className="truncate">{player.playerName}</span>
+              {player.position ? (
+                <span className="shrink-0 text-3xs font-bold text-mid">({player.position})</span>
+              ) : null}
+            </span>
+          );
+        })
       )}
       </span>
     </span>
