@@ -173,7 +173,7 @@ export const COLUMNS: PoolColumn[] = [
   count("GAO", "GAO", "Goals conceded while he was on the field. Outfielders only", "defensive", "low"),
   count("GA", "GA", "Goals conceded. Keepers only", "defensive", "low"),
   count("Sv", "Sv", "Saves. Keepers only", "defensive"),
-  count("GKP", "GKP", "Keeper points, Fantrax's count of a keeper's work. Keepers only", "defensive"),
+  count("GKP", "GKP", "Keeper actions: saves, smothers, punches and high claims won. Keepers only", "defensive"),
   count("PKS", "PKS", "Penalties saved. Keepers only", "defensive"),
   count("YC", "YC", "Yellow cards", "discipline", "low"),
   count("RC", "RC", "Red cards", "discipline", "low"),

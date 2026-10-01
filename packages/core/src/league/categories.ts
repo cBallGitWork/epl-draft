@@ -86,7 +86,7 @@ export const CATEGORIES: readonly StatCategory[] = [
   { key: ASSISTS_FANTASY.caption, group: "attacking", label: "Assists (fantasy)", short: ASSISTS_FANTASY.short },
   { key: "Clean Sheets On Field", group: "defensive", label: "Clean sheets", short: "CS" },
   { key: SAVES.caption, group: "defensive", label: "Saves", short: SAVES.short },
-  { key: KEEPER_POINTS.caption, group: "defensive", label: "Keeper points", short: KEEPER_POINTS.short },
+  { key: KEEPER_POINTS.caption, group: "defensive", label: "Keeper actions", short: KEEPER_POINTS.short },
   { key: "Penalty Kick Saves", group: "defensive", label: "Penalties saved", short: "PKS" },
   { key: "Goals Against", group: "defensive", label: "Goals against", short: "GA", lowIsGood: true },
   { key: "Yellow Cards", group: "discipline", label: "Yellow cards", short: "YC", lowIsGood: true },

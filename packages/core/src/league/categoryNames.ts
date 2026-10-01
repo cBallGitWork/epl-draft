@@ -19,7 +19,7 @@ export const KEEPER_POINTS: FantraxCategory = { code: "INDIVIDUAL_KEEPER_POINTS"
 /** Where a league pays an assist, best first. AT is A plus AF (455 of 455 outfielders, 1 Oct 2026), so it is never added to them. */
 export const ASSIST = [ASSISTS_TOTAL, ASSISTS_OFFICIAL] as const;
 
-/** What pays a keeper for his work. Not synonyms: GKP read above Sv for all 23 keepers who had played, so both are kept. */
+/** What pays a keeper for his work. GKP counts saves, smothers, punches and high claims won, so it is not Sv and both are kept. */
 export const KEEPER_WORK = [KEEPER_POINTS, SAVES] as const;
 
 /** Whether a league's category is this one: by long code where the league carried it, else by short code. */

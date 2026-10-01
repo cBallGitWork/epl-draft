@@ -61,7 +61,7 @@ export const PLAYER_CATEGORIES: readonly PlayerCategory[] = [
   { key: "PKM", group: "attacking", label: "Penalties missed", lowIsGood: true },
   { key: "CS", group: "defensive", label: "Clean sheets" },
   { key: SAVES.short, group: "defensive", label: "Saves" },
-  { key: KEEPER_POINTS.short, group: "defensive", label: "Keeper points" },
+  { key: KEEPER_POINTS.short, group: "defensive", label: "Keeper actions" },
   { key: "PKS", group: "defensive", label: "Penalties saved" },
   // **One entry, two column names.** Fantrax calls it `GA` on a keeper's read
   // and `GAO` on an outfielder's, and they are the same defensive fact — the

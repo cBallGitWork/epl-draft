@@ -305,7 +305,7 @@ position, the squad board's `Pts` left assists and keeper work out, and Team Sta
 - **Counted on `getPlayerStats`, both leagues the same day, no cookie.** `AT` = `A` + `AF` for **455 of 455**
   outfielders the two pools share, so AT supersedes its parts and a total never adds both. **`GKP` is not saves**:
   23 of 63 keepers have a non-zero `GKP`, and every one of the 23 reads higher than his `Sv` (Tzolakis 30 against 17),
-  so the two are separate categories and each keeps its own label.
+  because it counts saves, smothers, punches and high claims won (Craig, 1 Oct). Labelled "Keeper actions", never saves.
 - **Identity is the settings' long `code`**, read into `ScoringCategory.longCode`; the short code is the fallback for
   reads that carry only short codes (`getPlayerStats` columns, SEASON_STATS captions). One table holds the names,
   `league/categoryNames.ts`: `ASSIST` (AT, else A) and `KEEPER_WORK` (GKP and Sv).
