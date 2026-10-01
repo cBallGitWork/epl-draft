@@ -21,7 +21,7 @@ export interface CaptureTarget {
 export interface ReadOutcome {
   method: string;
   ok: boolean;
-  /** The provider's code when it refused; `NO_TEAMS` before a draft is expected, not a fault. */
+  /** The provider's code for a failed read: Fantrax's (`NO_TEAMS`) or the transport's (`ECONNRESET`). */
   code?: string;
   message?: string;
   bytes?: number;

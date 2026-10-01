@@ -14,7 +14,7 @@ import { SNAPSHOT_ROOT, leagueCaptureDir, poolCaptureDir, todayInLondon } from "
 // Records what Fantrax says about every recorded league and the pool today, verbatim, into dated
 // directories. Fantrax serves current state only, so a day not written down is gone.
 
-/** The transaction logs to record; a tab in a response's `displayedLists.tabs` missing here is one to add. */
+/** The transaction logs to record; a tab in `displayedLists.tabs` missing here is one to add. */
 const TRANSACTION_VIEWS: readonly TransactionView[] = ["CLAIM_DROP", "TRADE", "LINEUP_CHANGE"];
 
 const LEAGUE_READS = [
@@ -22,7 +22,7 @@ const LEAGUE_READS = [
   { method: "getTeamRosters", run: fetchTeamRosters },
   { method: "getStandings", run: fetchStandings },
   { method: "getDraftResults", run: fetchDraftResults },
-  // The one history Fantrax could prune and nothing else reconstructs; `LINEUP_CHANGE` is kept empty too.
+  // The one history Fantrax could prune and nothing else rebuilds; `LINEUP_CHANGE` is kept empty too.
   ...TRANSACTION_VIEWS.map((view) => ({
     method: `getTransactionDetailsHistory-${view}`,
     run: (leagueId: string) => fetchTransactions(leagueId, view),
