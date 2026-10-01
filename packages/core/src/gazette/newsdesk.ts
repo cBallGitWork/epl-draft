@@ -73,6 +73,7 @@ export interface DeskState {
   locked: boolean;
   /** Every fixture of the round, most-consequential first (`fixtureStakes`). */
   stakes: readonly FixtureStake[];
+  /** The period's pairings; none is a period the league has no fixtures in, which has no round to write up. */
   ties: readonly DeskTie[];
   /** Deals in the wire's trailing window. Nought is a quiet week and files no
    *  column — the paper does not manufacture business. */
@@ -131,12 +132,15 @@ export function newsdesk(
     if (!covered(assignment.key)) out.push(assignment);
   };
 
-  // A match-day report as each day's football settles, first because it is the newest news on the page.
-  for (const day of desk.reportDays) want({ kind: "match-report", ...day });
-  // The draft report after them: the league's own match-ups, once the day's football is in.
-  for (const due of desk.draftReports) want({ kind: "draft-report", key: due.key, slug: due.slug, cutoff: due.cutoff, day: due.day });
+  // The round's write-ups need fixtures: the real league's period 5, before its first, has none.
+  const fixtured = desk.ties.length > 0;
 
-  if (desk.finished) {
+  // A match-day report as each day's football settles, first because it is the newest news on the page.
+  if (fixtured) for (const day of desk.reportDays) want({ kind: "match-report", ...day });
+  // The draft report after them: the league's own match-ups, once the day's football is in.
+  if (fixtured) for (const due of desk.draftReports) want({ kind: "draft-report", key: due.key, slug: due.slug, cutoff: due.cutoff, day: due.day });
+
+  if (desk.finished && fixtured) {
     // One report per tie, in the order the ties are given — `desk.ties` arrives
     // from the period's pairings and the orchestrator's cap takes from the top,
     // so a busy firing reports the ties it has room for and the next one picks
@@ -162,7 +166,7 @@ export function newsdesk(
 
   // The sheets as locked, from the deadline until the last whistle: not "before a ball is kicked",
   // because a lock at 12:15 and a kickoff at 12:30 fall inside one cron's delay.
-  if (desk.locked && !desk.finished) {
+  if (desk.locked && !desk.finished && fixtured) {
     want({ kind: "sheets", ...roundSlot("sheets", desk.gameweek) });
   }
 
@@ -250,7 +254,7 @@ export function newsdesk(
   // The wire is weekly and keys on the WINDOW rather than the round: it reports
   // trends across recent business, so a second firing in the same week has
   // nothing new to say however many deals landed.
-  if (desk.dealsInWindow > 0) {
+  if (desk.dealsInWindow > 0 && fixtured) {
     want({ kind: "wire", key: `wire:through-gw${desk.gameweek}`, slug: `gw${desk.gameweek}-wire` });
   }
 

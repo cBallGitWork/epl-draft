@@ -13,7 +13,7 @@ export async function draftsDesk(input: { assignments: readonly Assignment[]; ga
   for (const a of wanted) {
     const contexts = desk.cutoffs.get(a.cutoff!);
     if (contexts === undefined || contexts.length === 0) {
-      input.say(`  draft report: nothing due for ${a.cutoff} in gameweek ${input.gameweek}`);
+      input.say(`  draft report: nothing due for ${a.cutoff} in gameweek ${input.gameweek}. ${desk.notes.at(-1) ?? ""}`);
       continue;
     }
     jobs.set(a.cutoff!, { cutoff: a.cutoff!, gameweek: input.gameweek, contexts, rankAfter: desk.rankAfter, pastHeadlines: desk.pastHeadlines.get(a.cutoff!) ?? [], pastProse: desk.pastProse.get(a.cutoff!) ?? [] });
