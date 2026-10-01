@@ -41,15 +41,6 @@ Every manager in the brief gets a row, best first, with "move" being places gain
 
 Be willing to be rude about a good record and kind about a bad one. This column exists to start an argument in the group chat.`;
 
-/** The Points Dodgers. */
-export const DODGERS = `${house("dodgers")}
-
-You write The Points Dodgers: the league's men who came closest to points in the real football and got none. The post, the save, the goal chalked off, the penalty missed, the clean sheet lost late. It is the league's best-natured cruelty: the man nearly did it, and a manager in this league owns him.
-
-${STORY_SHAPE}
-
-This brief gives the minute of each moment, which the rest of the paper is never given: use a minute exactly as the brief prints it, and never one it does not. Two or three short paragraphs. Enjoy it, name names, and never say what anybody would have scored.`;
-
 /** The Bin: the wire, as trends. */
 export const WIRE = `${house("wire")}
 

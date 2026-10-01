@@ -40,7 +40,7 @@ describe("newsdesk", () => {
       ...newsdesk(full, none, "2026-10-01T17:00:00.000Z").map((a) => a.kind),
     ]);
     for (const a of newsdesk({ ...full, finished: false, locked: true }, none, NOW)) kinds.add(a.kind);
-    expect([...kinds].sort()).toEqual(["bin-xi", "draft-report", "match-report", "predicted-xi", "predictions", "presser", "sheets"]);
+    expect([...kinds].sort()).toEqual(["bin-xi", "dodgers", "draft-report", "match-report", "predicted-xi", "predictions", "presser", "sheets"]);
   });
 
   it("files the Bin XI on a Tuesday in London once the round is over, and on no other day", () => {
@@ -53,6 +53,11 @@ describe("newsdesk", () => {
     // A midweek round still being played on a Tuesday has no week to pick from yet.
     expect(kinds("2026-09-29T08:15:00.000Z", false)).not.toContain("bin-xi");
     expect(newsdesk(desk({ finished: true }), none, "2026-09-29T08:15:00.000Z").find((a) => a.kind === "bin-xi")?.key).toBe("bin-xi:gw3");
+  });
+
+  it("files the printed Points Dodgers once the gameweek is over, and not before", () => {
+    expect(newsdesk(desk({ finished: true }), none, NOW).find((a) => a.kind === "dodgers")?.key).toBe("dodgers:gw3");
+    expect(newsdesk(desk({ finished: false }), none, NOW).map((a) => a.kind)).not.toContain("dodgers");
   });
 
   it("never lists one assignment twice, whatever the desk is holding", () => {

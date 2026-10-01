@@ -106,10 +106,14 @@ the match-report and team-sheet prompts.
   with no goal who came near one (a goal ruled out, a penalty missed or saved, the woodwork, expected goals), with
   no assist who came near one (expected assists, a shot he set up hitting the woodwork), or with no clean sheet his
   slot pays for whose side's only goal against came from `DODGERS.lateGoal`. A scorer can dodge an assist, and the
-  brief says what he did get so the column never denies it. An assist side is scaled to the goal bar
+  column says what he did get so it never denies it. An assist side is scaled to the goal bar
   (`DODGERS.from`: 0.6 goals, 0.4 assists). Benched or not is never said.
-- **Expected goals and assists order the column and never print**; the brief carries Opta's countable facts, the
-  moments' minutes (the one column given them), and shots taken and set up from inside the box and close range.
+- **Expected goals and assists order the column and never print**; it carries Opta's countable facts, each
+  moment's minute in words, and shots taken and set up from inside the box.
+- **The desk prints it; no model writes it** (Craig, 1 Oct 2026: "refactor to reduce cost"). #211 had stopped
+  filing it on cost, at about 7p a gameweek on Opus 5.5. `dodgersColumn` turns the near misses into a headline,
+  a deck and one line a man ("Wissa (test3): penalty saved …; two shots, one on target."), so it files at £0 and
+  the newsdesk queues it again when the gameweek ends. Its only reads are the Premier League's free commentary.
 - Star test, rehearsal league: GW3 Calafiori, Ødegaard (scored, 4 shots set up, no assist), Bobb, Ballard, Cherki;
   GW4 Le Fée's saved penalty, Justin, Ndoye, Ampadu, Trafford; GW5 Wissa's saved penalty, Gonzalo, Saka,
   Fernandes off the post, Cunha (scored, set up a shot against the woodwork).

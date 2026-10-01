@@ -5,7 +5,7 @@ import type { TieState } from "./tieState";
 
 // What is due this firing: whatever is new since its covered-key was spent, so a re-fired cron files nothing.
 // The paper files seven weekly kinds (Craig, 1 Oct 2026): match and draft reports, Bin XI, the Team Sheet, the elevens,
-// the draft sheets at the deadline, and Lawro.
+// the draft sheets at the deadline, and Lawro; and the Points Dodgers, printed by the desk at no cost.
 
 export interface Assignment {
   kind: StoryKind;
@@ -82,6 +82,8 @@ export function newsdesk(
   if (desk.finished && fixtured) {
     // Tuesday's Bin XI, the round's best eleven nobody has, filed before Wednesday's waivers.
     if (binXiDue(now)) want({ kind: "bin-xi", ...roundSlot("bin-xi", desk.gameweek) });
+    // Printed by the desk with no model call, so it costs nothing to file.
+    want({ kind: "dodgers", ...roundSlot("dodgers", desk.gameweek) });
   }
 
   // The sheets from the deadline until the last whistle: a 12:15 lock and a 12:30 kickoff fall inside one cron's delay.

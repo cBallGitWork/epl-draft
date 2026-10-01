@@ -12,7 +12,7 @@ export { strangers } from "./strangers";
 export { hasRoom } from "./running";
 export { buildFixturePreviewBrief } from "./briefs/fixturePreview";
 export { buildElevenBrief, buildPowerBrief, buildWireBrief } from "./briefs/columns";
-export { buildDodgersBrief } from "./briefs/dodgers";
+export { dodgersColumn } from "./dodgersColumn";
 export { buildNewsBrief } from "./briefs/news";
 export { buildPresserBrief } from "./briefs/presser";
 export type { PresserLine } from "./briefs/presser";

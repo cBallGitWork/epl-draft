@@ -1,4 +1,4 @@
-import { type Assignment, buildLawroBrief, buildPresserBrief } from "@epl/core";
+import { type Assignment, dodgersColumn, buildLawroBrief, buildPresserBrief } from "@epl/core";
 import { faceOf } from "./faces";
 import {
   fixturePreviewBrief,
@@ -8,7 +8,7 @@ import {
 import { columnBrief } from "./columns";
 import { newsBrief } from "./news";
 import { FIXTURE_PREVIEW, TIE_CALL, TIE_REPORT } from "./voice/matches";
-import { DODGERS, ELEVEN, POWER_RANKING, WIRE } from "./voice/columns";
+import { ELEVEN, POWER_RANKING, WIRE } from "./voice/columns";
 import { LAWRO } from "./voice/lawro";
 import type { PredictionsDesk } from "./predictions";
 import type { DraftJob } from "./draftWriter";
@@ -37,6 +37,12 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
   // printed from the export and never written from it.
   if (assignment.kind === "predicted-xi") {
     return ctx.elevens === null ? null : { printed: ctx.elevens };
+  }
+
+  // The near misses are counted facts, so the desk prints them and no model is paid to write them.
+  if (assignment.kind === "dodgers") {
+    const column = ctx.dodgers === null ? null : dodgersColumn(ctx.snapshot.gameweek, ctx.dodgers);
+    return column === null ? null : { printed: column };
   }
 
   // Lawro's column goes through his own newsroom, with every call already made.
@@ -87,7 +93,6 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
               gameweek: ctx.snapshot.gameweek,
               facts: ctx.facts,
               table: ctx.table,
-              dodgers: ctx.dodgers,
               threads: ctx.threads,
               named: (teamId) =>
                 ctx.info.teams.find((team) => team.teamId === teamId)?.name ?? teamId,
@@ -108,7 +113,6 @@ const VOICE: Partial<Record<Assignment["kind"], string>> = {
   "tie-report": TIE_REPORT,
   eleven: ELEVEN,
   "power-ranking": POWER_RANKING,
-  dodgers: DODGERS,
   wire: WIRE,
   news: NEWS,
   presser: PRESSER,
