@@ -7,9 +7,10 @@ import { YOUTUBE_EMBED_BASE, YOUTUBE_THUMB_BASE } from "@epl/core";
 export default function Highlights({ id, title }: { id: string; title: string }) {
   return (
     <details className="group">
-      <summary className="relative block aspect-video w-full max-w-full cursor-pointer list-none overflow-hidden group-open:hidden [&::-webkit-details-marker]:hidden">
+      {/* The still prints through the ink like every photograph on the paper; the play mark sits above its halftone. */}
+      <summary className="paper-photo relative block aspect-video w-full max-w-full cursor-pointer list-none overflow-hidden group-open:hidden [&::-webkit-details-marker]:hidden">
         <Image src={`${YOUTUBE_THUMB_BASE}/${id}/hqdefault.jpg`} alt={`${title}, highlights`} fill sizes="(min-width: 1024px) 40rem, 100vw" className="object-cover" />
-        <span className="absolute inset-0 flex items-center justify-center">
+        <span className="absolute inset-0 z-10 flex items-center justify-center">
           <span className="flex h-14 w-14 items-center justify-center rounded-full bg-ink/80 text-bg" aria-hidden>
             <svg viewBox="0 0 24 24" className="h-7 w-7 fill-current"><path d="M8 5v14l11-7z" /></svg>
           </span>

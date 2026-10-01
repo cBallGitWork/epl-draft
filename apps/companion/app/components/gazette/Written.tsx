@@ -137,5 +137,5 @@ export default function Written({
 /** Whether the article's substance is the block below its prose, so the prose above is an introduction. */
 function hasBlockBelow(story: PublishedStory): boolean {
   const extras = story.extras;
-  return extras?.teamNews !== undefined || extras?.ranks !== undefined || extras?.reports !== undefined;
+  return extras?.teamNews !== undefined || extras?.ranks !== undefined || extras?.reports !== undefined || extras?.draft !== undefined;
 }

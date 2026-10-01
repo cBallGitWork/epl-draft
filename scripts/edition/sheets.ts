@@ -129,7 +129,7 @@ export async function sheetsDesk(input: {
 }
 
 /** Each side's fielded sheets from every earlier period, oldest first. */
-async function earlierSheets(info: LeagueInfo, snapshot: FootballSnapshot, period: number): Promise<Map<string, Sheet[]>> {
+export async function earlierSheets(info: LeagueInfo, snapshot: FootballSnapshot, period: number): Promise<Map<string, Sheet[]>> {
   const periods = info.rosterPeriods.map((each) => each.number).filter((number) => number < period).sort((a, b) => a - b);
   const read: Sheet[][] = [];
   for (let at = 0; at < periods.length; at += HISTORY_BATCH) {

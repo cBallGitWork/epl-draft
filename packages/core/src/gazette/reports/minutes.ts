@@ -17,6 +17,8 @@ export function numeral(n: number): string {
 
 const counted = (n: number, word: string) => `${numeral(n)} ${plural(n, word)}`;
 
+export { ordinal };
+
 /** `"45+4"` → 45 and 4; `"67"` → 67 and 0. Null for a label with no clock. */
 export function clock(label: string): { minute: number; added: number } | null {
   const found = /^(\d+)(?:\+(\d+))?/.exec(label);

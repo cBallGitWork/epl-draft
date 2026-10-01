@@ -3,6 +3,7 @@ import { DASH, crestUrl, fullClubName, type FootballSnapshot, type PublishedStor
 import { seasonFixtures } from "../../football";
 import { matchHighlight } from "../../matchFeed";
 import { matchHref } from "../../prem/match/[id]/matchRoutes";
+import { STANDING_HEAD } from "./heads";
 import ReportMatch from "./ReportMatch";
 
 // A match-day report: the day's scores as a list, lead first, then each match. A phone shows one match at a time, chosen from
@@ -34,7 +35,7 @@ export default async function Reports({ story, snapshot }: { story: PublishedSto
       <style>{marked}</style>
       {reports.length < 2 ? null : (
         <nav aria-label="The day's matches" className="rpt-list flex flex-col border-t" style={{ borderColor: "var(--paper-rule)" }}>
-          <h3 className="font-sans text-3xs font-semibold uppercase tracking-[0.16em] text-muted py-2">The day&apos;s matches</h3>
+          <h3 className={`${STANDING_HEAD} py-2`}>The day&apos;s matches</h3>
           {reports.map((r) => (
             <a
               key={r.fixtureCode}

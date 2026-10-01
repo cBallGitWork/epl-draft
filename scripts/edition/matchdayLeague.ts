@@ -1,4 +1,4 @@
-import { FANTRAX_LEAGUE_ID, MS_PER_DAY, fetchPlayerStories, isActive, isResolved, mapPlayerStories, type Fixture, type ReportMan } from "@epl/core";
+import { FANTRAX_LEAGUE_ID, MS_PER_DAY, fetchPlayerStories, isActive, isResolved, mapPlayerStories, type Fixture, type PlayerStory, type ReportMan } from "@epl/core";
 import mapping from "../../data/mappings/fantrax.json";
 import type { DeskFacts } from "./facts";
 
@@ -39,18 +39,26 @@ export function leagueJoin(facts: DeskFacts, periodFixtures: readonly Fixture[],
 
 const FITNESS_DAYS = 5;
 
+/** Fantrax's stories on one man, none when they cannot be read. */
+export const storiesOn = (fantraxId: string): Promise<PlayerStory[]> => fetchPlayerStories(FANTRAX_LEAGUE_ID, fantraxId).then(mapPlayerStories).catch(() => []);
+
+/** The headline of the first story published after a match kicked off and within a few days of it, and by `until` when
+ *  one is given; null when there is none. */
+export function firstStoryAfter(stories: readonly PlayerStory[], kickoff: string, until = Infinity): string | null {
+  const from = Date.parse(kickoff);
+  const last = Math.min(from + FITNESS_DAYS * MS_PER_DAY, until);
+  return stories.filter((s) => s.at !== null && s.at > from && s.at <= last).sort((a, b) => (a.at ?? 0) - (b.at ?? 0))[0]?.headline ?? null;
+}
+
 /** Fantrax's first story on each man taken off injured, published after the match and within a few days of it. */
 export async function fitnessAfter(codes: readonly number[], kickoff: string, fantraxIds: ReadonlyMap<number, string>): Promise<Map<number, string>> {
-  const from = Date.parse(kickoff);
-  const until = from + FITNESS_DAYS * MS_PER_DAY;
   const out = new Map<number, string>();
   await Promise.all(
     codes.map(async (code) => {
       const id = fantraxIds.get(code);
       if (id === undefined) return;
-      const stories = await fetchPlayerStories(FANTRAX_LEAGUE_ID, id).then(mapPlayerStories).catch(() => []);
-      const story = stories.filter((s) => s.at !== null && s.at > from && s.at <= until).sort((a, b) => (a.at ?? 0) - (b.at ?? 0))[0];
-      if (story !== undefined) out.set(code, story.headline);
+      const story = firstStoryAfter(await storiesOn(id), kickoff);
+      if (story !== null) out.set(code, story);
     }),
   );
   return out;

@@ -1,5 +1,6 @@
 import {
   fixtureStakes,
+  draftReportsDue,
   reportDays,
   roundSlot,
   tieState,
@@ -59,6 +60,7 @@ export function deskState(input: {
     ahead: input.ahead,
     next: input.next,
     reportDays: reportDays(snapshot.fixtures, snapshot.gameweek),
+    draftReports: draftReportsDue(snapshot.fixtures, snapshot.gameweek),
     dealsInWindow: facts.business.length,
     news: facts.news.map((story) => ({ key: story.item.key, slug: newsSlug(story.item.key) })),
     ties: facts.pairings.map((pairing) => ({

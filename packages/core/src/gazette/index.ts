@@ -64,14 +64,44 @@ export type {
 export { fullClubName, shortClubNames } from "./clubNames";
 
 // Team news at the lock: each side's sheet, what changed, the brief, the editor and the column.
-export { sheetOf } from "./sheets/sheet";
+export { fullPrintName, sheetOf, ukSpelling } from "./sheets/sheet";
+export { debuts } from "./sheets/changes";
+// The draft desk's surface is what its script reads; its other parts are inferred at the call sites.
+export { everyMan, matchupState } from "./matchups/state";
+export type { MatchupState } from "./matchups/state";
+export { goingIn, gameweekForm } from "./matchups/form";
+export type { SeasonFact } from "./matchups/form";
+export { tableAfter, tableBefore, tableMoves, tablePoints } from "./matchups/table";
+export { meetingsWon, oldBoys } from "./matchups/meetings";
+export type { FormerSide } from "./matchups/meetings";
+export type { DayPoints, DraftMan, DraftSide, GoalTime, NextMatch, SlotWorth } from "./matchups/types";
+export { buildDraftBrief, draftBlocks } from "./matchups/brief";
+export { judgePage, type AngleRecord } from "./matchups/angle";
+export { threadsOf } from "./matchups/threads";
+export { headlineEcho } from "./matchups/echo";
+export { unbriefedNames, type PastProse } from "./matchups/listChecks";
+export { applyFactFixes, knownFixes, readFactFixes } from "./matchups/factCheck";
+export type { Thread } from "./matchups/thread";
+export { checkDraft } from "./matchups/checks";
+export { draftCargo } from "./matchups/cargo";
+export { draftFace } from "./matchups/cover";
+export type { StoryDraftMatchup, StoryDraftReport, StoryDraftSide } from "./matchups/cargo";
+export { stepLabel, type StoryDraftStep } from "./matchups/days";
+export { benchText, lineupText, returnText, rowNote, type StoryDraftReturn, type StoryDraftRow } from "./matchups/elevens";
+export { mergeDraft, matchupOf, readDraftWriting } from "./matchups/writing";
+export type { DraftPiece, DraftWriting } from "./matchups/writing";
+export { DRAFT_FORECAST, DRAFT_FRAMES, DRAFT_LABELS, DRAFT_NEVER } from "./matchups/words";
+export { applyFixes as applyDraftFixes, faultySentences as faultyDraftSentences } from "./matchups/lineEdit";
+export type { Cutoff, MatchupContext, NextOpponent, TablePlace } from "./matchups/brief";
+export { draftReportsDue, isSaturday } from "./matchups/due";
+export { priceOf } from "./matchups/worth";
 export { sheetsFacts } from "./sheets/facts";
 export { buildSheetsBrief } from "./briefs/sheets";
 export { SHEETS_OPINION, checkSheets } from "./sheets/checks";
 export { SHEETS_AMERICAN, SHEETS_LEXICON, SHEETS_STOCK } from "./sheets/words";
 export { mergeSheets, readSheetsDraft } from "./sheets/draft";
 export { assembleSheets } from "./sheets/column";
-export type { Sheet } from "./sheets/sheet";
+export type { Sheet, SheetMan } from "./sheets/sheet";
 export type { TieFacts } from "./sheets/facts";
 export type { SheetsDraft } from "./sheets/column";
 export type { StorySheetMan, StorySheetSide } from "./sheets/cargo";

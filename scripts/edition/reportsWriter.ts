@@ -81,7 +81,7 @@ export async function writeReports(
   first.meanings = { ...first.meanings, ...puns.meanings };
   const candidates = survivors(first.headlines, names);
   for (const h of first.headlines) say(`    headline candidate: "${h}"${candidates.includes(h) ? "" : ` struck (${strike(h, names)})`}${first.meanings?.[h] === undefined ? "" : ` [${first.meanings[h]}]`}`);
-  const fanRaw = await writeColumn(FAN_VOICE, fanBrief(first, desks, candidates), count).catch(() => null);
+  const fanRaw = await writeColumn(FAN_VOICE, fanBrief(first, desks, candidates), count, "helper").catch(() => null);
   const fan = fanRaw === null ? [] : fanFaults(fanRaw, first, REPORTS.fanFlags);
   const chosen = fanRaw === null ? null : fanHeadline(fanRaw, candidates);
   if (fanRaw === null) say("  ⚠ reports: the fan's read-back failed; the mechanical checks stand alone.");
@@ -114,7 +114,7 @@ export async function writeReports(
   const fixes = faultySentences(headed, names);
   let draft = headed;
   if (fixes.length > 0) {
-    const edited = await writeColumn(LINE_EDIT_VOICE, fixes.map((f, i) => `${i + 1}. ${f.sentence} [${f.words.join(", ")}]`).join("\n"), count).catch(() => null);
+    const edited = await writeColumn(LINE_EDIT_VOICE, fixes.map((f, i) => `${i + 1}. ${f.sentence} [${f.words.join(", ")}]`).join("\n"), count, "helper").catch(() => null);
     const lines = Array.isArray(edited?.lines) ? edited.lines.map(String) : [];
     draft = applyFixes(headed, fixes, lines);
     say(`  reports: line edit fixed ${fixes.length - faultySentences(draft, names).length} of ${fixes.length} sentences`);

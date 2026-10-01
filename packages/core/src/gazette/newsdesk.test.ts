@@ -29,6 +29,7 @@ const desk = (over: Partial<DeskState> = {}): DeskState => ({
   ahead: null,
   next: null,
   reportDays: [],
+  draftReports: [],
   ...over,
 });
 
@@ -143,6 +144,13 @@ describe("newsdesk", () => {
   it("never files a day's report twice", () => {
     const sat = { key: "match-report:gw3:2026-08-29", slug: "gw3-prem-report-2026-08-29", day: "2026-08-29" };
     expect(newsdesk(desk({ reportDays: [sat] }), (key) => key === sat.key, NOW).some((a) => a.kind === "match-report")).toBe(false);
+  });
+
+  it("commissions a draft report at each cut-off it is due, with its cut-off, once", () => {
+    const saturday = { key: "draft-report:gw3:saturday", slug: "gw3-draft-report-saturday", cutoff: "saturday" as const, day: "2026-08-29" };
+    const filed = newsdesk(desk({ draftReports: [saturday] }), none, NOW).filter((a) => a.kind === "draft-report");
+    expect(filed).toEqual([{ kind: "draft-report", key: saturday.key, slug: saturday.slug, cutoff: "saturday", day: "2026-08-29" }]);
+    expect(newsdesk(desk({ draftReports: [saturday] }), (key) => key === saturday.key, NOW).some((a) => a.kind === "draft-report")).toBe(false);
   });
 
   it("files the team sheet on a day with pressers", () => {

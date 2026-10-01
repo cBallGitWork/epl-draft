@@ -1,3 +1,4 @@
+import { listed } from "../format";
 import type { Deal, DealSide } from "../gazette/types";
 import type { InboxItem } from "./types";
 
@@ -23,12 +24,6 @@ import type { InboxItem } from "./types";
  *  there is room for all of them. */
 const NAMES_IN_HEADLINE = 2;
 
-/** A list of people, said the way a person would say it. */
-function listed(names: readonly string[]): string {
-  if (names.length === 0) return "";
-  if (names.length === 1) return names[0];
-  return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
-}
 
 /** A side's name for a headline: `Brian Brobbey (SUN)`, where the feed gave a club. */
 function named(side: DealSide): string {
