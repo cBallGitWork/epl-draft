@@ -5,5 +5,6 @@
     { "key": "rehearsal", "leagueId": "zbn1z3ukmsgb36sz" }
   ],
   "shapeDiff": { "reference": "rehearsal", "subject": "real" },
-  "stats": "dummy"
+  "stats": "dummy",
+  "scoring": "real"
 }
