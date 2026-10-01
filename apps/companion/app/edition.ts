@@ -21,6 +21,7 @@ import {
 import { now } from "./clock";
 import { type Board, readBoard } from "./board";
 import { readDeals } from "./business";
+import { periodPoints } from "./scoreboard";
 import { roundUnderway, seasonKickoffs } from "./football";
 import { yoursFirst } from "./mine";
 import { filed } from "./paper";
@@ -154,7 +155,7 @@ export async function edition(mine: string | null): Promise<Edition> {
   const roundPeriod = drafted?.roundPeriod ?? null;
 
   const business = deals(feed.rows);
-  const picked = eleven(drafted);
+  const picked = eleven(drafted, roundPeriod === null ? new Map() : await periodPoints(roundPeriod));
   const board = drafted === null ? null : await readBoard(drafted);
   // The desk's own manufactured stories wait for the round to finish: unlike a
   // filed column they carry no dateline, so mid-round they would claim the
@@ -222,9 +223,12 @@ function silenceOf(squads: LeagueSquads, paper: Omit<Edition, "silence">): Silen
  *
  *  Null rather than an empty side before a ball is kicked: a team of the week
  *  with nobody in it is not a shorter section, it is a wrong one. */
-function eleven(drafted: { period: { teams: RosteredTeam[] }; info: LeagueInfo | null } | null) {
+function eleven(
+  drafted: { period: { teams: RosteredTeam[] }; info: LeagueInfo | null } | null,
+  points: ReadonlyMap<string, number>,
+) {
   if (!drafted?.info) return null;
-  const picked = teamOfTheWeek(drafted.period.teams, drafted.info.roster);
+  const picked = teamOfTheWeek(drafted.period.teams, drafted.info.roster, points);
   return picked.picks.length === 0 ? null : picked;
 }
 

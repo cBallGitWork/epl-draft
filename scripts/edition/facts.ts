@@ -104,7 +104,7 @@ export async function gatherRoundFacts(
   // for the same reason.
   const squads =
     rosters === null ? null : resolveRosters(snapshot, mapTeamRosters(rosters), mapping as Bridge);
-  const eleven = squads === null ? null : teamOfTheWeek(squads.teams, info.roster);
+  const eleven = squads === null ? null : teamOfTheWeek(squads.teams, info.roster, new Map());
 
   return {
     pairings: periodPairings(info.matchups, info.teams, period),
