@@ -180,10 +180,11 @@ function fold(value: string): string {
  *  An unresolved slot still answers with its id, exactly as `playerName` does:
  *  there is no footballer behind it and so no name of any length. */
 export function fullPlayerName(rostered: RosteredPlayer): string {
-  if (!isResolved(rostered)) return rostered.slot.fantraxId;
+  return isResolved(rostered) ? fullFootballerName(rostered.player) : rostered.slot.fantraxId;
+}
 
-  const { fullName, name } = rostered.player;
-
+/** A footballer's name in full, `fullPlayerName`'s answer for a man with no roster slot. */
+export function fullFootballerName({ fullName, name }: FootballPlayer): string {
   // **A forename and the shirt name, not the whole birth certificate** (Craig,
   // 2 Sep: "Fantrax uses a shorter name on their roster list page — Matheus
   // Cunha and not Matheus Santos Carneiro da Cunha").
