@@ -16,14 +16,10 @@ import { ASSIST_KINDS_REVALIDATE } from "./config";
 import { seasonKickoffs } from "./football";
 import { orRefusal } from "./refusals";
 import { bridge } from "./squads";
-import recorded from "../../../data/leagues/recorded.json";
+import { STATS_LEAGUE } from "./statsLeague";
 
 // The stats league's typed fantasy assists for a gameweek, keyed by FPL code. Outfield only: the
 // keepers' table carries no kinds. Nothing, never a throw, when the league is unnamed or silent.
-
-/** The league recorded under the `stats` role, listing every column at no points so the served
- *  league need not. Named in data, as `npm run stats` names it, so both read the same league. */
-const STATS_LEAGUE = recorded.leagues.find((league) => league.key === recorded.stats)?.leagueId ?? null;
 
 /** A league's own periods; the stats league's calendar need not be the served league's. The league
  *  is an argument, so it is in the cache key by construction. */
