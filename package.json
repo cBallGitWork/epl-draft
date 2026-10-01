@@ -17,7 +17,6 @@
     "capture": "tsx scripts/capture-fantrax.ts",
     "capture:status": "tsx scripts/capture-status.ts",
     "periods": "tsx scripts/period-alignment.ts",
-    "round-state": "tsx scripts/round-state-sample.ts",
     "shape-diff": "tsx scripts/shape-diff.ts",
     "check:replay": "tsx scripts/check/replay.ts",
     "smoke": "tsx scripts/smoke.ts",
