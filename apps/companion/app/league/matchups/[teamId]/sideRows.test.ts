@@ -24,6 +24,23 @@ describe("sideColumns", () => {
     ];
     expect(sideColumns(categories, men).map((c) => c.code)).toEqual(["Min", "G", "Sv"]);
   });
+
+  it("prints the real league's own categories, DefCon and keeper points among them, and not its minutes", () => {
+    // The real league's categories as its getLeagueInfo named them on 1 Oct 2026.
+    const real = boardCategories({
+      "5020#6120": { code: "Min", name: "Minutes Played", longCode: "INDIVIDUAL_MINUTES_PLAYED" },
+      "5020#6689": { code: "GKP", name: "Keeper Points", longCode: "INDIVIDUAL_KEEPER_POINTS" },
+      "5010#6090": { code: "G", name: "Goals", longCode: "INDIVIDUAL_GOALS" },
+      "5010#6362": { code: "AT", name: "Assists (Total)", longCode: "INDIVIDUAL_ASSISTS_TOTAL" },
+      "5010#6696": { code: "DFP", name: "Defensive Points", longCode: "INDIVIDUAL_DEFENSIVE_POINTS" },
+      "5010#6700": { code: "DFP3", name: "Defensive Points 3", longCode: "INDIVIDUAL_DEFENSIVE_POINTS_3" },
+    });
+    const men: ManCounts[] = [
+      { keeper: true, counts: { Min: "90", GKP: "4" } },
+      { keeper: false, counts: { Min: "90", G: "1", AT: "0", DFP: "5", DFP3: "7" } },
+    ];
+    expect(sideColumns(real, men).map((c) => c.code)).toEqual(["G", "AT", "DFP", "DFP3", "GKP"]);
+  });
 });
 
 describe("boardCategories", () => {
