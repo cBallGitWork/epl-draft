@@ -15,6 +15,11 @@ export function tell(error: ProviderError): string {
   return error instanceof FantraxError ? `${error.method} → ${error.code}` : error.message;
 }
 
+/** The page's refusal panel for a provider that said no, or nothing. */
+export function unavailable(error: ProviderError): Unavailable {
+  return { unavailable: tell(error) };
+}
+
 /** The read, or the refusal Fantrax meant. An outage still throws, so a cache keeps its last good
  *  answer rather than holding the outage as one. */
 export async function orRefusal<T>(read: Promise<T>): Promise<T | FantraxError> {

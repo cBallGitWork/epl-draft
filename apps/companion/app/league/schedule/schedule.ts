@@ -19,7 +19,7 @@ import {
 import { leagueCache } from "../../leagueCache";
 import { leagueTable } from "../../standings";
 import { seasonFixtures } from "../../football";
-import { orRefusal, tell } from "../../refusals";
+import { orRefusal, unavailable } from "../../refusals";
 import type { Unavailable } from "../../refusals";
 
 // What the schedule is made of, kept out of the route for the same reason
@@ -86,7 +86,7 @@ export const getSchedule = leagueCache("schedule-season",
       seasonFixtures(),
       leagueTable(),
     ]);
-    if (raw instanceof FantraxError) return { unavailable: tell(raw) };
+    if (raw instanceof FantraxError) return unavailable(raw);
 
     const info = mapLeagueInfo(raw);
     const kickoffs = datedKickoffs(season);
@@ -132,7 +132,7 @@ export const getSchedule = leagueCache("schedule-season",
       table: "unavailable" in standings ? [] : standings,
     };
   },
-  (error) => ({ unavailable: tell(error) }),
+  unavailable,
 );
 
 /** Every team's total in every period, from Fantrax's own results table.
