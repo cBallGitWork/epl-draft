@@ -1,0 +1,89 @@
+{
+ "goalie": {
+  "CS": {
+   "Default": 4
+  },
+  "RC": {
+   "Default": -3
+  },
+  "Min": {
+   "Default": null
+  },
+  "PKM": {
+   "Default": -2
+  },
+  "AT": {
+   "Default": 3
+  },
+  "G": {
+   "Default": 10
+  },
+  "OG": {
+   "Default": -2
+  },
+  "PKS": {
+   "Default": 5
+  },
+  "GA": {
+   "Default": null
+  },
+  "YC": {
+   "Default": -1
+  },
+  "GKP": {
+   "Default": null
+  }
+ },
+ "outfield": {
+  "CS": {
+   "D": 4,
+   "Default": 0,
+   "M": 1
+  },
+  "RC": {
+   "Default": -3
+  },
+  "Min": {
+   "Default": null
+  },
+  "PKM": {
+   "Default": -2
+  },
+  "AT": {
+   "Default": 3
+  },
+  "GAO": {
+   "D": null,
+   "Default": 0
+  },
+  "G": {
+   "D": 6,
+   "F": 4,
+   "Default": 0,
+   "M": 5
+  },
+  "OG": {
+   "Default": -2
+  },
+  "Pen": {
+   "D": 0,
+   "F": 0,
+   "G": 0,
+   "Default": 0,
+   "M": 0
+  },
+  "YC": {
+   "Default": -1
+  },
+  "DFP3": {
+   "F": null,
+   "Default": 0,
+   "M": null
+  },
+  "DFP": {
+   "D": null,
+   "Default": 0
+  }
+ },
+ "goaliePosition": "G"
+}

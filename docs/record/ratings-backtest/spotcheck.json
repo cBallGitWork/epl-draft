@@ -1,0 +1,290 @@
+[
+ {
+  "gw": 1,
+  "joined": 217,
+  "pairs": {
+   "BCM": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 17,
+    "ours": 17
+   },
+   "BCC": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 17,
+    "ours": 17
+   },
+   "KP": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 139,
+    "ours": 139
+   },
+   "SOT": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 63,
+    "ours": 63
+   },
+   "S": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 200,
+    "ours": 200
+   },
+   "TkW": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 151,
+    "ours": 151
+   },
+   "Int": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 111,
+    "ours": 111
+   },
+   "CLR": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 423,
+    "ours": 423
+   },
+   "BR": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 566,
+    "ours": 566
+   },
+   "DW": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 809,
+    "ours": 809
+   },
+   "DL": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 784,
+    "ours": 784
+   },
+   "AP": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 4902,
+    "ours": 4902
+   },
+   "DIS": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 119,
+    "ours": 119
+   },
+   "FC": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 175,
+    "ours": 175
+   },
+   "FS": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 174,
+    "ours": 174
+   },
+   "ErS": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 9,
+    "ours": 9
+   },
+   "ErG": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 2,
+    "ours": 2
+   },
+   "PKD": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 1,
+    "ours": 1
+   },
+   "GOB": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 2,
+    "ours": 2
+   },
+   "Pen": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 3,
+    "ours": 3
+   },
+   "CLO": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 2,
+    "ours": 2
+   },
+   "AF": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 19,
+    "ours": 19
+   },
+   "A": {
+    "n": 217,
+    "exact": 217,
+    "fantrax": 13,
+    "ours": 13
+   }
+  }
+ },
+ {
+  "gw": 20,
+  "joined": 208,
+  "pairs": {
+   "BCM": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 15,
+    "ours": 15
+   },
+   "BCC": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 26,
+    "ours": 26
+   },
+   "KP": {
+    "n": 208,
+    "exact": 205,
+    "fantrax": 127,
+    "ours": 130
+   },
+   "SOT": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 65,
+    "ours": 65
+   },
+   "S": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 187,
+    "ours": 187
+   },
+   "TkW": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 173,
+    "ours": 173
+   },
+   "Int": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 149,
+    "ours": 149
+   },
+   "CLR": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 403,
+    "ours": 403
+   },
+   "BR": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 674,
+    "ours": 674
+   },
+   "DW": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 821,
+    "ours": 821
+   },
+   "DL": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 801,
+    "ours": 801
+   },
+   "AP": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 5517,
+    "ours": 5517
+   },
+   "DIS": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 162,
+    "ours": 162
+   },
+   "FC": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 150,
+    "ours": 150
+   },
+   "FS": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 143,
+    "ours": 143
+   },
+   "ErS": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 12,
+    "ours": 12
+   },
+   "ErG": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 3,
+    "ours": 3
+   },
+   "PKD": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 0,
+    "ours": 0
+   },
+   "GOB": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 5,
+    "ours": 5
+   },
+   "Pen": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 0,
+    "ours": 0
+   },
+   "CLO": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 2,
+    "ours": 2
+   },
+   "AF": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 23,
+    "ours": 23
+   },
+   "A": {
+    "n": 208,
+    "exact": 208,
+    "fantrax": 21,
+    "ours": 21
+   }
+  }
+ }
+]
