@@ -4,6 +4,7 @@ import {
   careerIntel,
   depthIntel,
   fetchBootstrap,
+  instantOf,
   intelFreshness,
   lineIntel,
   matchIntel,
@@ -173,8 +174,8 @@ function read<T>(path: string): T | null {
 /** "3h ago", or that nothing said. */
 function age(at: string | null | undefined): string {
   if (!at) return "at an unrecorded time";
-  const when = new Date(at).getTime();
-  if (Number.isNaN(when)) return "at an unreadable time";
+  const when = instantOf(at);
+  if (when === null) return "at an unreadable time";
   const hours = Math.floor((Date.now() - when) / 3_600_000);
   if (hours < 1) return "less than an hour ago";
   if (hours < 48) return `${hours}h ago`;
