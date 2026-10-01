@@ -85,6 +85,12 @@ export function strengthTable(strengths: Map<number, ClubStrength>, measure: "at
     .sort((a, b) => a.home + a.away - (b.home + b.away) || a.club.localeCompare(b.club));
 }
 
+/** Each club's place at both ends, 1 the strongest, by FPL club code: what the paper's strength words read. */
+export interface StrengthPlaces {
+  attack: ReadonlyMap<number, number>;
+  defence: ReadonlyMap<number, number>;
+}
+
 /** Each club's place by its own attack or defence, 1 the strongest, by FPL club code; the table runs weakest first. */
 export function strengthPlaces(strengths: Map<number, ClubStrength>, measure: "attack" | "defence"): Map<number, number> {
   const table = strengthTable(strengths, measure);

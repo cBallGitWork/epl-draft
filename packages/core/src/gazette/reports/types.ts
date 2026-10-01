@@ -1,3 +1,4 @@
+import type { StrengthPlaces } from "../../football/intel/strength";
 import type { PlMoment } from "../../football/premierleague/moments";
 import type { StoryLineup } from "./lineups";
 import type { Club, Fixture } from "../../football/types";
@@ -82,6 +83,5 @@ export interface ReportDayInput {
   /** Every fixture of the season, for the table and what comes next. */
   season: readonly Fixture[];
   clubs: readonly Club[];
-  /** Each club's place by the strength ratings, strongest first, by FPL club code. */
-  standing: { attack: ReadonlyMap<number, number>; defence: ReadonlyMap<number, number> };
+  standing: StrengthPlaces;
 }

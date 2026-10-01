@@ -1,3 +1,4 @@
+import type { StrengthPlaces } from "../../football/intel/strength";
 import { byKickoff } from "../../football/selectors";
 import type { Club, Fixture } from "../../football/types";
 import { londonDayOf } from "../../time";
@@ -20,7 +21,7 @@ export function nextThree(
   clubs: readonly Club[],
   clubCode: number,
   day: string,
-  table: { attack: ReadonlyMap<number, number>; defence: ReadonlyMap<number, number> },
+  table: StrengthPlaces,
 ): NextMatch[] {
   const club = clubs.find((c) => c.code === clubCode);
   if (club === undefined) return [];

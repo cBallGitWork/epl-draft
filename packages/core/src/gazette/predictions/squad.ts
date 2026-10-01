@@ -1,6 +1,6 @@
 import { PREDICTIONS } from "../../config";
 import { projectedTotal, type ProjectedPlayer } from "../../football/intel/projections";
-import type { PlannerRow } from "../../football/intel/strength";
+import type { PlannerRow, StrengthPlaces } from "../../football/intel/strength";
 import { availabilityOf } from "../../football/playerState";
 import type { Club } from "../../football/types";
 import { isResolved, type RosteredTeam } from "../../join/roster";
@@ -21,8 +21,7 @@ export interface SquadJoin {
   clubs: ReadonlyMap<number, Club>;
   /** The club's name as the brief prints it. */
   clubName: (club: Club) => string;
-  /** Each club's place by the sister repo's ratings, strongest first, by FPL club code. */
-  standing: { attack: ReadonlyMap<number, number>; defence: ReadonlyMap<number, number> };
+  standing: StrengthPlaces;
   /** Each man's last finished gameweeks by FPL's per-season id, oldest first. */
   recent: ReadonlyMap<number, readonly RecentGame[]>;
 }
