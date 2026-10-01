@@ -25,7 +25,7 @@ name: Editions
 # Cost when it DOES write: at most GAZETTA_STORY_CAP (10, set below) stories
 # per firing, and one Anthropic call each. A desk that refuses spends nothing,
 # so a firing costs what it FILES rather than what it considers. The
-# Actions-minutes budget is still the real spend — roughly 110 runs a
+# Actions-minutes budget is still the real spend — 136 runs a
 # week at a minute or two each against the 2000 free monthly minutes shared
 # with capture and round-state — and this cron block is the data to trim if
 # that ever bites.
@@ -37,21 +37,16 @@ name: Editions
 
 on:
   schedule:
-    # The lock window. Locks land Friday evening or Saturday lunchtime depending
-    # on the round's first kickoff, so this covers both without knowing which.
+    # The lock and the match windows, one line per day so no two lines fire in one slot (they did,
+    # 24 times a week, until 1 Oct 2026). Locks land Friday evening or Saturday lunchtime; match
+    # reports and tie calls file as games finish, Friday and Monday evenings included.
     #
-    # **Friday opens at 14:00 UTC and not 17:00**, because the Line-Ups column is
-    # written for 16:00 London — an hour after the press conferences — and the
-    # first firing that could see it was 18:00 London in summer. Two hours late,
-    # every week (#33). 14:00 UTC is the start that holds under both offsets:
-    # 15:00 London is 14:00 UTC in summer and 15:00 in winter.
+    # **Friday opens at 14:00 UTC**, for the Line-Ups column at 16:00 London (#33): 15:00 London is
+    # 14:00 UTC in summer and 15:00 in winter.
     - cron: "0,30 14-23 * * 5"
-    - cron: "0,30 10-16 * * 6"
-    # The match windows: Saturday and Sunday afternoons into the evening, and
-    # weekday evenings for the Friday/Monday fixtures — match reports and tie
-    # calls file as things finish, and the round report rides the same net.
-    - cron: "0,30 11-22 * * 6,0"
-    - cron: "0,30 17-22 * * 1,2,5"
+    - cron: "0,30 10-22 * * 6"
+    - cron: "0,30 11-22 * * 0"
+    - cron: "0,30 17-22 * * 1,2"
     # The morning-after sweep: whatever the evening net missed — a late whistle,
     # a skipped run — files with coffee rather than waiting for football.
     - cron: "15 6-9 * * 0,1,2"
