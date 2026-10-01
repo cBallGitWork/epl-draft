@@ -9,6 +9,7 @@ import {
   roundState,
 } from "@epl/core";
 import { Match, Pairing } from "./Rows";
+import { headToHeadQuiet } from "./headToHead";
 import RoundWord from "../../components/league/RoundWord";
 import { footballNow } from "../../football";
 import { liveScores } from "../../scoreboard";
@@ -56,6 +57,7 @@ export default async function DeskPage() {
     league?.info != null && period !== null
       ? periodPairings(league.info.matchups, league.info.teams, period)
       : [];
+  const quiet = headToHeadQuiet(squads, pairings);
 
   const mine = await readerTeamId();
   const { scores, refused } =
@@ -82,8 +84,8 @@ export default async function DeskPage() {
             pairings are still right. <span className="numeric">{refused}</span>
           </Quiet>
         )}
-        {pairings.length === 0 ? (
-          <Quiet>Fantrax has no pairings for this gameweek, so there is nothing to post.</Quiet>
+        {quiet !== null ? (
+          <Quiet>{quiet}</Quiet>
         ) : (
           yoursFirst(pairings, (p) => pairingInvolves(p, mine)).map((pairing) => (
             <Pairing

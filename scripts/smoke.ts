@@ -59,7 +59,7 @@ const UNDRAFTED: Record<string, string> = {
   "/league": "No table yet",
   "/league/matchups": "Nobody plays anybody yet",
   "/squad": "Nobody has a squad yet",
-  "/matchday/desk": "nothing to post",
+  "/matchday/desk": "The league has not drafted yet",
 };
 
 /** Every outage panel's sentence (`FANTRAX_SILENT`). Used only to explain a failure: an outage, not
