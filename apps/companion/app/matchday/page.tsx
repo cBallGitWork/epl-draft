@@ -4,6 +4,8 @@ import {
   type Fixture,
   type FootballSnapshot,
   type LiveTeamScore,
+  FANTRAX_LEAGUE_PAGE,
+  FANTRAX_MATCHUPS_PATH,
   clubById,
   duringGameweek,
   fixturesInOrder,
@@ -34,6 +36,7 @@ import Vidiprinter from "./Vidiprinter";
 import { wireLines } from "./wireLines";
 import { now } from "../clock";
 import { BetweenGameweeks, MatchupWaiting } from "./Between";
+import OutLink from "../components/shell/OutLink";
 
 // The live centre. Your head-to-head first, the real football under it — the
 // order a manager actually cares about them in.
@@ -257,6 +260,12 @@ export default async function MatchdayPage({
       ) : (
         <BetweenGameweeks snapshot={snapshot} up={up} />
       )}
+      {/* Fantrax's Matchups for this gameweek's period; its current one when we could not read it. */}
+      <OutLink
+        href={`${FANTRAX_LEAGUE_PAGE}/${FANTRAX_MATCHUPS_PATH}${period === null ? "" : `;period=${period}`}`}
+      >
+        Matchups on Fantrax
+      </OutLink>
     </div>
   );
 }
