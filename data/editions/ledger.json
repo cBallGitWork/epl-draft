@@ -254,9 +254,17 @@
       "news:https://www.bbc.co.uk/sport/football/articles/c3ew9vv7444xo",
       "draft-report:gw5:saturday",
       "draft-report:gw5:gameweek",
-      "news:https://www.bbc.co.uk/news/articles/cm89j90gv57vo"
+      "news:https://www.bbc.co.uk/news/articles/cm89j90gv57vo",
+      "news:https://www.bbc.co.uk/sport/football/articles/c6kg0gkjngzmo"
     ],
     "threads": [
+      {
+        "subject": "test3331's O'Reilly fitness",
+        "beat": "Doubt becomes withdrawal; O'Reilly out of England's final two games, no timeline given.",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-10-01T14:40:57.237Z"
+      },
       {
         "subject": "test3331's Thomas asset",
         "beat": "Thomas in a crash near Hull's training ground, the club's second; no injury flagged.",
@@ -297,13 +305,6 @@
         "beat": "Thomas and McBurnie both in the international frame around the same Tuesday fixture",
         "status": "open",
         "beats": 2,
-        "lastUsedAt": "2026-09-28T17:12:18.444Z"
-      },
-      {
-        "subject": "test3331's O'Reilly fitness",
-        "beat": "O'Reilly a doubt for England against the Czech Republic on Tuesday, no timeline given",
-        "status": "open",
-        "beats": 1,
         "lastUsedAt": "2026-09-28T17:12:18.444Z"
       },
       {
