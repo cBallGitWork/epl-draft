@@ -157,8 +157,8 @@ export default async function HeadToHeadPage({
   const { arranged, widest } = arrangeBoth({ pairing, rostered, shows, scored, clubs, opposition });
   const listed = started ? null : unplayedLists({ pairing, rostered, clubs, opposition });
 
-  const boards = view === "lineups" || (view === "stats" && of !== "fantasy");
-  const events = boards ? await sheetEvents(arranged.values(), squads.snapshot) : new Map();
+  // Who came on and off, which only the pitch marks.
+  const events = view === "lineups" ? await sheetEvents(arranged.values(), squads.snapshot) : new Map();
 
   // The league's categories either side has a count in, so both boards carry the same columns.
   const printed = boardCategories(categories);
@@ -238,7 +238,6 @@ export default async function HeadToHeadPage({
                 side={stat}
                 columns={columns}
                 counts={(of === "team" ? yours : theirs)?.counts ?? {}}
-                subs={stat.detail === undefined ? {} : subMarks(everyone(stat.detail), events)}
                 sort={sort}
                 hrefFor={(head: string) =>
                   statsHref(teamId, gameweek, of, { head, descending: head === sort.head ? !sort.descending : true })

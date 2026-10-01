@@ -1,13 +1,11 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import { type LeagueTeam, type LineupDetail, type ScoringCategory, type SquadPlayerDetail, crestUrl, inkOn, playerName, teamColours, DASH } from "@epl/core";
-import type { SubMark } from "../../../components/football/SubMarker";
 import Section from "../../../components/shell/Section";
 import PositionTile from "../../../components/league/PositionTile";
 import { ROW_LINK } from "../../../components/league/TableCells";
 import { LeadHeads, sortedAs, SortHead } from "../../../components/league/TableHeads";
 import { BOARD, FIGURE_CELL, PINNED_BESIDE_TILE, PINNED_TILE, ROW_NAME, ROW_RULE, SMALL_CAPS } from "@/app/desk";
-import SubNote from "../../../prem/match/[id]/SubNote";
 import ScrollBoard from "../../../components/league/ScrollBoard";
 import { MaybeCard } from "../../../prem/match/[id]/PlayerCardButton";
 import { MATCH_ROW } from "../../../prem/match/[id]/matchRow";
@@ -22,7 +20,6 @@ export default function SideStats({
   sheet,
   columns,
   counts,
-  subs,
   sort,
   hrefFor,
 }: {
@@ -30,7 +27,6 @@ export default function SideStats({
   sheet: LineupDetail;
   columns: readonly ScoringCategory[];
   counts: Counts;
-  subs: Readonly<Record<string, SubMark>>;
   sort: { head: string; descending: boolean };
   /** The same board ordered by one column, with that column's default direction. */
   hrefFor: (head: string) => string;
@@ -43,7 +39,6 @@ export default function SideStats({
       player={player}
       heads={heads}
       counts={counts}
-      sub={subs[player.rostered.slot.fantraxId]}
       reserve={reserve}
     />
   );
@@ -93,13 +88,11 @@ function SideRow({
   player,
   heads,
   counts,
-  sub,
   reserve,
 }: {
   player: SquadPlayerDetail;
   heads: readonly ScoringCategory[];
   counts: Counts;
-  sub: SubMark | undefined;
   reserve: boolean;
 }) {
   const { rostered, club } = player;
@@ -112,9 +105,6 @@ function SideRow({
             {club ? <Image src={crestUrl(club)} alt="" width={20} height={20} className="size-5 object-contain" /> : null}
           </span>
           <span className={`min-w-0 truncate ${ROW_NAME}`}>{playerName(rostered)}</span>
-          {sub === undefined ? null : (
-            <SubNote onAt={sub.off ? null : sub.minute} offAt={sub.off ? sub.minute : null} className="hidden lg:inline" />
-          )}
         </MaybeCard>
       </td>
       {heads.map((head) => {
