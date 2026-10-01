@@ -1,11 +1,12 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import type { ProjectedPlayer } from "../../football/intel/projections";
-import type { PlannerRow } from "../../football/intel/strength";
+import { strengthIntel, strengthPlaces, type IntelStrength, type PlannerRow } from "../../football/intel/strength";
 import { NO_SEASON } from "../../football/noSeason";
 import type { Club, FootballPlayer } from "../../football/types";
 import type { RosteredTeam } from "../../join/roster";
 import { predictionSide } from "./sides";
-import { squadMen, type SquadJoin } from "./squad";
+import { squadMen, standing, type SquadJoin } from "./squad";
 
 const club = (id: number, code: number, name: string): Club => ({ id, code, name, shortName: name.slice(0, 3).toUpperCase() }) as Club;
 const ARSENAL = club(1, 3, "Arsenal");
@@ -87,5 +88,20 @@ describe("predictionSide", () => {
     expect(side.backLine.map((man) => man.name)).toEqual(["Gabriel", "Nobody"]);
     expect(side.backLineEase).toBe((1 + 18) / 2);
     expect(side.hard?.name).toBe("Nobody");
+  });
+});
+
+describe("standing", () => {
+  // The sister repo's export of 24 Sep 2026 as the paper reads it: Man City and Arsenal top, Hull bottom at both.
+  const file = JSON.parse(readFileSync(new URL("../../football/__fixtures__/intelStrength.json", import.meta.url), "utf8")) as IntelStrength;
+  const strengths = strengthIntel(file);
+  const table = { attack: strengthPlaces(strengths, "attack"), defence: strengthPlaces(strengths, "defence") };
+  const [MCI, ARS, HUL] = [43, 3, 88];
+
+  it("calls the strongest clubs dangerous and tough, and the weakest weak and soft", () => {
+    expect(standing(MCI, "attack", table)).toBe("a dangerous attack");
+    expect(standing(ARS, "defence", table)).toBe("a tough defence to score against");
+    expect(standing(HUL, "attack", table)).toBe("a weak attack");
+    expect(standing(HUL, "defence", table)).toBe("a soft defence");
   });
 });
