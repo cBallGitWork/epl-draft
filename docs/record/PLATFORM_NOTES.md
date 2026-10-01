@@ -44,14 +44,6 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
-## The paper files six weekly kinds, nothing else — decided 1 Oct 2026
-
-Craig, 1 Oct, on the Anthropic bill (3.8M tokens in, 0.9M out over 30 days, much of it testing): keep the Prem
-match reports, the draft report, the Bin XI, the Team Sheet, the predicted elevens and Lawro. `newsdesk()` no
-longer queues news, the wire, the eleven, the power ranking, the dodgers, tie reports, tie calls, fixture previews
-or the sheets, and `DeskState` lost the fields only they read (`started`, `locked`, `stakes`, `dealsInWindow`,
-`news`). Their writers, briefs and prompts stay in the tree until they are deleted after GW6.
-
 ## The six faces are committed, so a build never asks Google Fonts — decided 1 Oct 2026
 
 `next/font/google` downloaded every face at build time, and a build failed whenever Google did not answer
@@ -65,6 +57,14 @@ host, and `/` and `/matchday/desk` at 390 and 1440 were pixel-identical to main 
   in `tokens.css` or `paper.css`, and its unicode-range keeps it unfetched until a ć or an š appears.
 - **The four desk fallbacks are pinned** in `fonts/fallbacks.css` to the figures `next/font/google` generated. Left to
   `next/font/local`, they drew the rail's arrows 2–4% smaller, because those glyphs come from Arial.
+
+## The paper files six weekly kinds, nothing else — decided 1 Oct 2026
+
+Craig, 1 Oct, on the Anthropic bill (3.8M tokens in, 0.9M out over 30 days, much of it testing): keep the Prem
+match reports, the draft report, the Bin XI, the Team Sheet, the predicted elevens and Lawro. `newsdesk()` no
+longer queues news, the wire, the eleven, the power ranking, the dodgers, tie reports, tie calls, fixture previews
+or the sheets, and `DeskState` lost the fields only they read (`started`, `locked`, `stakes`, `dealsInWindow`,
+`news`). Their writers, briefs and prompts stay in the tree until they are deleted after GW6.
 
 ## The paper's staff write under ISS names, one per kind of story — decided 30 Sep 2026
 
