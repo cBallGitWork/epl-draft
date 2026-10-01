@@ -20,3 +20,10 @@ describe("editionName for a match-day report", () => {
     expect(editionName("match-report", "2026-09-19T07:00:00Z", "2026-09-18T19:00:00Z")).toBe("Friday Prem Report");
   });
 });
+
+describe("editionName for the Bin XI", () => {
+  it("goes out the night the bins do, whatever the hour it files on Tuesday", () => {
+    expect(editionName("bin-xi", "2026-09-29T06:15:00Z")).toBe("Bins Out");
+    expect(editionName("bin-xi", "2026-09-28T23:30:00Z")).toBe("Bins Out");
+  });
+});

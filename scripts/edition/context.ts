@@ -1,4 +1,5 @@
 import { FANTRAX_LEAGUE_ID, type Assignment, type Club, type Fixture, type FootballSnapshot, type GameweekKickoff, type LeagueInfo } from "@epl/core";
+import { binXiDesk } from "./binXi";
 import type { DeskContext } from "./dispatch";
 import { dodgersDesk } from "./dodgers";
 import type { DeskFacts } from "./facts";
@@ -47,6 +48,8 @@ export async function deskContext(input: {
     sheets: await sheetsDesk({ assignments, info, snapshot, facts, period, gameweeks, season, clubs, now, say }),
     // A match-day report's reads are its own, made only when one is assigned.
     reports: await reportsDesk({ assignments, snapshot, facts, gameweeks, say }),
+    // The Bin XI's reads are its own, made only on the Tuesday it is assigned.
+    bin: await binXiDesk({ assignments, info, snapshot, facts, period, gameweeks, season, kickoffs, clubs, threads: ledger[FANTRAX_LEAGUE_ID]?.threads ?? [], say }),
     presserLines: sheet.lines,
     presserQuotes: sheet.quotes,
     presserTies: sheet.ties,

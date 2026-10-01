@@ -53,11 +53,15 @@ interface RawScorer {
   teamShortName?: string;
   /** Fantrax's position letters for him, e.g. "F" or "F,M". */
   posShortNames?: string;
+  /** The position his points are priced at, as an id into `posOrGroupList`: "702". */
+  defaultPosId?: string;
 }
 
 export interface RawPlayerStats {
   statsTable?: { scorer?: RawScorer; cells?: RawStatCell[] }[];
   tableHeader?: { cells?: RawHeaderCell[] };
+  /** Each position's id and letter: `{ id: "POS_702", shortName: "M" }`. */
+  posOrGroupList?: { id?: string; shortName?: string }[];
 }
 
 /** One player's line: who he is, who holds him, and every raw stat the read
@@ -75,6 +79,10 @@ export interface PlayerStatLine {
   /** The fantasy team holding him, or null for nobody. Null is the honest
    *  answer for a free agent and the board says so in words. */
   ownerTeamId: string | null;
+  /** The letter his points are priced at: a free agent has no slot, so this is the only honest one. */
+  defaultPosition: string | null;
+  /** Fantrax's points over whatever the read covered. */
+  points: number | null;
   /** Raw counts by column abbreviation — `G`, `A`, `CS`, `Sv`, `YC`. Absent
    *  rather than nought when the column was not in this half's vocabulary: a
    *  keeper has no `GAO` and an outfielder has no `Sv`, and printing nought for
@@ -92,6 +100,9 @@ const FANTASY_COLUMNS = new Set(["Rk", "Sta", "Opp", "FPts", "FP/G", "Ros", "+/-
  *  its header rather than at index 1 — the same rule the rest of this file
  *  follows and for the same reason. */
 const STATUS = "Sta";
+const POINTS = "FPts";
+/** `defaultPosId` "702" is `posOrGroupList`'s "POS_702". */
+const POSITION_ID = "POS_";
 
 /** Read one group's response.
  *
@@ -103,6 +114,7 @@ const STATUS = "Sta";
  *  needs, because `key` is the useless `sc` on every stat column. */
 export function mapPlayerStats(raw: RawPlayerStats): PlayerStatLine[] {
   const heads = (raw.tableHeader?.cells ?? []).map((cell) => cell.shortName ?? "");
+  const letters = new Map((raw.posOrGroupList ?? []).map((each) => [each.id ?? "", each.shortName ?? null]));
   const lines: PlayerStatLine[] = [];
 
   for (const row of raw.statsTable ?? []) {
@@ -112,6 +124,7 @@ export function mapPlayerStats(raw: RawPlayerStats): PlayerStatLine[] {
     const cells = row.cells ?? [];
     const stats: Record<string, number | null> = {};
     let ownerTeamId: string | null = null;
+    let points: number | null = null;
 
     for (const [at, head] of heads.entries()) {
       const cell = cells[at];
@@ -119,6 +132,7 @@ export function mapPlayerStats(raw: RawPlayerStats): PlayerStatLine[] {
         ownerTeamId = cell?.teamId ?? null;
         continue;
       }
+      if (head === POINTS) points = numeric(cell?.content);
       if (head === "" || FANTASY_COLUMNS.has(head)) continue;
       stats[head] = numeric(cell?.content);
     }
@@ -130,6 +144,8 @@ export function mapPlayerStats(raw: RawPlayerStats): PlayerStatLine[] {
       clubShort: row.scorer?.teamShortName ?? null,
       position: row.scorer?.posShortNames ?? null,
       ownerTeamId,
+      defaultPosition: letters.get(`${POSITION_ID}${row.scorer?.defaultPosId ?? ""}`) ?? null,
+      points,
       stats,
     });
   }

@@ -146,7 +146,7 @@ this and not on a guess about when things happen:
 | Day | What the LEAGUE does | Edition | Files |
 |---|---|---|---|
 | **Sun/Mon** | the round ends, either night | The Monday Club | `eleven` (Crooks), `power-ranking`, `dodgers` |
-| **Tue** | **nothing at all** | *(open)* | the evergreen piece — see below |
+| **Tue** | **nothing at all** | Bins Out | `bin-xi`, "Top Bins": the best eleven nobody has — SHIPPED 30 Sep, see below |
 | **Wed 17:00** | waivers process, free agency opens | The Mercato Wire | `wire`, on **detection** of a claim batch |
 | **Thu 14:00** | press conferences end | The Team Sheet | `presser` — the round-up **publishes 15:00** |
 | **Thu 18:00** | the evening before the round | The Form Guide | `predictions`, Lawro's calls on every tie — SHIPPED 24 Sep (the evening before an earlier lock) |
@@ -355,6 +355,34 @@ Two things deliberately left, so they are not re-litigated as oversights:
 - **The ties are alphabetical by HOME club** (Craig, 21 Sep 2026), which answers
   §*Order the clubs by something* below for this column, though not for the Team
   Sheet. Each tie still carries its own kickoff.
+
+### The Bin XI — 30 Sep 2026
+
+Craig: *"article for tuesday morning, Bin Players of the week — valid formation for the league;
+players not on a squad; use mostly fpts but also real life stats too whether its shots, xg etc"*.
+A sports editor, a draft-league writer and an engineer reviewed the plan before it was built.
+
+- **The points are Fantrax's, over the period's own days.** `getPlayerStats` answers a date range
+  (PLATFORM_NOTES, 30 Sep), free agents included; the stats league answers shots and chances over
+  the same days, and FPL gives xG and xA. Joined through the bridge, never by name; a scorer the
+  bridge lacks is left out and named in the firing log.
+- **A valid formation is read, not listed**: every count between the league's minimum and maximum
+  per position summing to its active total (`formations`). No total or no minimums, no side.
+- **Mostly points, and real life moves the close calls.** A man ranks on his points plus half of
+  what his chances were worth beyond what he scored, priced at the league's own goal and assist
+  values (`BIN_XI.luck`). Across GW1–5 it moved 17 of 55 places, all on ties at 2 or 6, and never
+  cost more than 2 points; no club put more than 4 men in, so there is no per-club cap.
+- **Only starters make the eleven**; a cameo scorer does not.
+- **Positive facts only about how he got there**: who had him this gameweek, who dropped him and
+  ahead of which gameweek, who drafted him, and once for the side, who went undrafted. Never the
+  draft's round, never "unwanted" (the check refuses it), never "never owned".
+- **The checks refuse the market** (claim, waivers, Wednesday), a source, a figure or a name the
+  brief lacks, and a verdict on neglect; they send back ownership words, roles and length. A column
+  that fails twice on a hard fault is not filed, and the next Tuesday firing tries again.
+
+Left deliberately: a midweek round still being played on Tuesday has no Bin XI that week; a man's
+waiver status and next fixture are not printed (the wire owns the market, and a fixture is a tip);
+the wire does not yet say who was claimed out of Tuesday's eleven.
 
 ### The Team Sheets at the lock — 26 Sep 2026
 

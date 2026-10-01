@@ -4,6 +4,7 @@ import type { Marked } from "./predictions/record";
 import type { StoryReport } from "./reports/cargo";
 import { normalizeReports } from "./reports/cargoRead";
 import { normalizeSheets, type StorySheet } from "./sheets/cargo";
+import { normalizeBin, type StoryBin } from "./binXi/cargo";
 
 // The structured cargo some story kinds carry beside their prose: a power
 // ranking's rows, and the wire's quiz. Its own file because it is its own
@@ -132,6 +133,8 @@ export interface StoryExtras {
   skit?: StorySkit[];
   /** A match-day report: each match's score block, pieces, key stats, timeline and video. */
   reports?: StoryReport[];
+  /** The Bin XI: the eleven nobody has, its bench and its key stats, as the desk printed them. */
+  bin?: StoryBin;
 }
 
 /** A closed set, so the column cannot invent a fifth state. Anything else is a
@@ -273,6 +276,8 @@ export function normalizeExtras(raw: unknown): StoryExtras | undefined {
   if (skit !== undefined) out.skit = skit;
   const reports = normalizeReports(extras.reports);
   if (reports !== undefined) out.reports = reports;
+  const bin = normalizeBin(extras.bin);
+  if (bin !== undefined) out.bin = bin;
 
   return Object.keys(out).length > 0 ? out : undefined;
 }

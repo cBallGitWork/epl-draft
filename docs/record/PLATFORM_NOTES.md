@@ -1010,6 +1010,24 @@ mistake as `hideStatsFilter` above and `squad_number` in CLAUDE.md.
 rating and FPL minutes, not a Fantrax `FPts (30d)`. Recorded so it is not
 re-planned.
 
+### ~~No window~~ — an explicit date range IS a window, probed 30 Sep 2026
+
+`goBackDays` is still inert, but `timeframeTypeCode: "BY_DATE"` with `startDate`
+and `endDate` as `YYYY-MM-DD` answers that range and nothing else: Gross reads 14
+for 11–17 Sep against 38 for the season, and the echo carries the dates back.
+**132 of 133** rostered men in rehearsal period 4 match `getLiveScoringStats`
+exactly, and **123 of 124** in period 5; each miss is dual-eligible (live prices
+his slot, the pool his default position). A period ends mid-afternoon on the next
+Friday (`14:59:59-0400`), so its last day is the day before (`periodDays`), which
+is how Fantrax labels it ("4 (Sep 11 - Sep 17)"); period 5 opens on a Friday
+night and proves the boundary. So a period's own dates give Fantrax's points for every man
+in the pool, free agents included, in one read. It works with `positionOrGroup`,
+so the stats league answers a gameweek's shots and key passes the same way.
+`BY_PERIOD` exists ("2026-27 - Game Week") but no spelling of the period took
+(`period`, `startPeriod`/`endPeriod`, `displayedPeriod`, `periodNum`,
+`scoringPeriod`, `selectedPeriod`): each echoed `displayedPeriod 6` and every
+figure 0. The Bin XI reads it (`fetchPoolWindow`).
+
 ### The player deep link is `/player/{scorerId}`, read out of their bundle
 
 Probed 5 Sep 2026, because the plan called for a link out to Fantrax and a

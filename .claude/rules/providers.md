@@ -132,6 +132,10 @@ Methods that matter:
   are the league's scoring list, so the typed fantasy assists (`APKG AOG AFKG AHW AR ABS ASOP
   APL`, which sum to `AF`) and `FKG` appear only in a league that lists them: the stats league
   (`"stats"` in `data/leagues/recorded.json`). The keepers' table carries none of them. PLATFORM_NOTES, 28 Sep.
+- It also answers a DATE RANGE: `timeframeTypeCode: "BY_DATE"` with `startDate`/`endDate`
+  (`YYYY-MM-DD`). A period's own days (`periodDays`) give Fantrax's points for that period, free
+  agents included: 132/133 and 123/124 against live scoring, each miss dual-eligible. `goBackDays`
+  does not take, nor `BY_PERIOD` without `transactionPeriod`. PLATFORM_NOTES, 30 Sep 2026.
 - `getScorerDetails`, `getPlayerProfile`, `getPlayerNews`, `setPlayerNews`,
   `setPlayerNote`, `removePlayerNote` — per-player notes are writable and are the
   native home for our player metadata.
