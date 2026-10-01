@@ -36,7 +36,7 @@ export interface Counted {
   count: number;
 }
 
-export interface FantasyBox {
+interface FantasyBox {
   key: string;
   label: string;
   home: Counted[];

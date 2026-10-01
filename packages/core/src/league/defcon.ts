@@ -4,7 +4,7 @@ import { type LeagueScoring, priceOf } from "./scoring";
 // Our DefCon at one slot, read off the league's own bands rather than assumed.
 
 /** The league's DefCon category at a slot, the count its first band starts at, and the count from which a man is close to it. */
-export interface DefConAt {
+interface DefConAt {
   short: string;
   mark: number;
   /** Half the mark, floored (Craig, 1 Oct 2026: "only show when they get close"). */
