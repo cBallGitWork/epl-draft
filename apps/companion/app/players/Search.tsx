@@ -3,16 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-// The search box, which narrows the board while you type.
-//
-// Craig, 10 Sep 2026: *"searching should be dynamic, so it updates while i
-// type"*. The board was a GET form with a `Find` button — one round trip per
-// search, and a reader who mistyped a name got a whole page back before finding
-// out.
-//
-// **A GET form first and JavaScript second**: without a script Enter (a phone's
-// Search key) submits the one field; with one, typing navigates on its own. The
-// `Find` button went on 1 Oct 2026 to give the row's room to the status chips.
+// The search box, which narrows the board while you type (Craig, 10 Sep 2026: *"searching should be dynamic"*).
+// A GET form first and JavaScript second: without a script Enter (a phone's Search key) submits the one field, so
+// it needs no button; with one, typing navigates on its own.
 //
 // **The filtering stays on the SERVER, and that is not laziness.** The obvious
 // dynamic search filters an array in the browser, and it would need the array:

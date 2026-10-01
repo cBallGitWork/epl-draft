@@ -199,7 +199,8 @@ right for a ten-row table in `text-base` and wrong for twenty-four columns of
 been opaque since it was frozen, so the board was rendering one solid column and
 twenty-three translucent ones.
 
-**The controls are one row at every width.** Craig: *"when i said messy, i meant
+**The controls are one row at every width** but the narrowest phones, where the status chips and Filter take a
+second line together (320 today; under 390 once a league carries three statuses). Craig: *"when i said messy, i meant
 essentially three rows of column headers"* — the blue group strip, the grey chip
 field and the table's own grey head strip, the middle two wearing the same
 `cm-bevel`. A chip and a column head are the same object in this vocabulary, so

@@ -6,16 +6,9 @@ import type { PlayersQuery } from "./query";
 import { STATUS, STATUS_CHIP } from "./status";
 import { SMALL_CAPS } from "@/app/desk";
 
-// The pieces `BoardBar` arranges: the stat-group strip, the figure chips, the
-// badge that counts what is on, and the two shapes they are drawn in.
-//
-// Split out of `BoardBar.tsx` when the one-row layout took that file past
-// CODE_RULES §4's 300-line hard ceiling. The seam is the one the layout already
-// implies: `BoardBar` decides WHERE a control goes at a given width, and every
-// control here decides what it looks like and what it links to. That is also why
-// `Plates` and `Figures` are components rather than fragments inlined twice —
-// the row and the drawer render the same element, and a copy in each would be
-// two controls that can disagree.
+// The pieces `BoardBar` arranges: the stat-group strip, the status chips, the figure chip, the badge that counts
+// what is on, and the shapes they are drawn in. `BoardBar` decides where a control goes at a width; each here decides
+// what it looks like and links to, so the row and the sheet render one element rather than two that can disagree.
 
 /** Every field the board's URL can carry: a GET form posts only its own fields, so each renders the rest hidden
  *  (`Carried`) or using it clears the board. One list, because two had drifted and dropped `compare`. */
