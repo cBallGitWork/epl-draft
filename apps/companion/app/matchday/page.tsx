@@ -15,24 +15,27 @@ import {
   periodPairings,
   roundState,
   cupTies,
+  fplCodeOf,
   londonDayOf,
 } from "@epl/core";
 import { leagueTable, teamBadges } from "../standings";
 import { footballNow, gameweekLive, seasonFixtures, speaksForNow } from "../football";
 import { Scores } from "./Scores";
 import RoundWord from "../components/league/RoundWord";
-import Link from "next/link";
 import PageHeader from "../components/shell/PageHeader";
-import { getLeagueSquads } from "../squads";
-import { liveScores } from "../scoreboard";
+import TabStrip from "../components/shell/TabStrip";
+import { bridge, getLeagueSquads } from "../squads";
+import { liveScores, pricedThisPeriod } from "../scoreboard";
 import YourMatchup from "./YourMatchup";
 import { marks } from "../involvement";
 
 import { readerTeamId } from "../squads";
 import { creditAssists, roundBreaks, roundGoals, roundRedCards, roundStreams } from "../commentary";
 import { roundAssistKinds } from "../assistKinds";
-import { TAB } from "@/app/desk";
+import { LEADERS_SHOWN } from "../config";
 import Vidiprinter from "./Vidiprinter";
+import TopStats, { STATS_VIEW, statsHref } from "./TopStats";
+import { LEADER_STATS, gameweekLeaders } from "./leaders";
 import { wireLines } from "./wireLines";
 import { now } from "../clock";
 import { BetweenGameweeks, MatchupWaiting } from "./Between";
@@ -62,10 +65,13 @@ async function matchday(): Promise<{
 export default async function MatchdayPage({
   searchParams,
 }: {
-  searchParams: Promise<{ view?: string }>;
+  searchParams: Promise<{ view?: string; stat?: string }>;
 }) {
-  // Scores is the landing view (Craig, 21 Sep 2026); the vidiprinter is a tap away.
-  const printing = (await searchParams).view === PRINTER;
+  // Scores is the landing view (Craig, 21 Sep 2026); the vidiprinter and the top stats are a tap away.
+  const query = await searchParams;
+  const printing = query.view === PRINTER;
+  const leading = query.view === STATS_VIEW;
+  const stat = LEADER_STATS.find((each) => each === query.stat) ?? LEADER_STATS[0];
   const { snapshot, season, during, up } = await matchday();
   const league = await marks(snapshot.fixtures);
 
@@ -117,6 +123,19 @@ export default async function MatchdayPage({
         ]
       : [];
 
+  // The gameweek's leaders, off reads already made: Fantrax's cached live read and FPL's round.
+  const boards = leading
+    ? gameweekLeaders({
+        snapshot,
+        stats,
+        priced: period === null ? [] : await pricedThisPeriod(period),
+        codeOf: (fantraxId) => fplCodeOf(bridge, fantraxId),
+        owners: league.owners,
+        mine,
+        shown: LEADERS_SHOWN,
+      })
+    : null;
+
   // Between gameweeks the route still answers, saying where the football went.
   return (
     <div className="flex flex-col gap-4">
@@ -135,11 +154,21 @@ export default async function MatchdayPage({
       <Suspense fallback={<MatchupWaiting />}>
         <YourMatchup />
       </Suspense>
-      <ViewPick printing={printing} />
+      <TabStrip
+        label="Which view"
+        tabs={[
+          { key: PRINTER, label: "Vidiprinter", href: `/matchday?view=${PRINTER}` },
+          { key: "scores", label: "Scores", href: "/matchday" },
+          { key: STATS_VIEW, label: "Top stats", href: statsHref(LEADER_STATS[0]) },
+        ]}
+        current={printing ? PRINTER : leading ? STATS_VIEW : "scores"}
+      />
       {printing ? (
         <Vidiprinter
           lines={wireLines([...scored, ...reds], breaks, snapshot, league.owners, mine).lines}
         />
+      ) : boards !== null ? (
+        <TopStats boards={boards} stat={stat} />
       ) : during ? (
         <Scores
           ties={ties}
@@ -166,26 +195,5 @@ export default async function MatchdayPage({
   );
 }
 
-/** Which plate is open: a query rather than a route, so one page keeps both panels in step. */
+/** Which plate is open: a query rather than a route, so one page keeps its panels in step. */
 const PRINTER = "vidiprinter";
-
-function ViewPick({ printing }: { printing: boolean }) {
-  return (
-    <nav aria-label="Which view" className="flex">
-      <Link
-        href={`/matchday?view=${PRINTER}`}
-        aria-current={printing ? "page" : undefined}
-        className={`${TAB} px-2 text-center text-2xs`}
-      >
-        Vidiprinter
-      </Link>
-      <Link
-        href="/matchday"
-        aria-current={printing ? undefined : "page"}
-        className={`${TAB} px-2 text-center text-2xs`}
-      >
-        Scores
-      </Link>
-    </nav>
-  );
-}

@@ -78,6 +78,14 @@ football under it.
    him**. The two halves of the page finally share both grammars: the scoreline,
    and the accent mark that means "yours".
 
+**Top stats**, the third view (`?view=stats`; Craig, 1 Oct 2026: *"match day have 3rd tab, that
+shows top stats for just this gameweek, like xg, fpts, ratings etc"*): the gameweek's five leaders
+in Fantrax points, xG, xA and defensive contributions, each man with whoever holds him, the figure
+in amber (a board's one measure). The phone picks one list from a strip (`&stat=`); a desk shows
+all four. Fantrax points are the live read's, the eleven and the reserves in one list, so nothing
+says who started; free agents are not in that read. FPL's three are round figures, read once per
+man in a double gameweek. Our match rating waits on #214's reads.
+
 Last, on every view, **Matchups on Fantrax**: their live scoring for this gameweek's period
 (`livescoring;period={n}`, `FANTRAX_MATCHUPS_PATH`), or their current period when we could not
 read ours (Craig, 1 Oct 2026: *"have fantrax link at bottom which goes to the match ups screen"*).
