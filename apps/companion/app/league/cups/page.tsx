@@ -52,7 +52,9 @@ export default async function CupsPage({
         </Nothing>
       ) : (
         <div className="flex flex-col gap-4">
-          <Groups groups={cupGroups(cup, teams)} />
+          {cup.seeding.from === "groups" ? (
+            <Groups groups={cupGroups(cup, teams)} stage={cup.seeding.stage} />
+          ) : null}
           <Bracket
             title={cup.knockout.elimination === "double" ? "Winners' side" : "Knockout"}
             stages={stages.filter((stage) => stage.side === "winners")}

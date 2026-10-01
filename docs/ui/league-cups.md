@@ -11,10 +11,14 @@ rules (27 Sep 2026). Their fixtures are on the schedule (`/league/schedule`), no
 - One picker: the cup (Timbeibs Cup, Davy Propper Cup; `?cup=`), the first by default. Craig, 1 Oct
   2026: *"just put fixtures in fixtures section, too many buttons, leave brackets here"*. The Fixtures
   view went, and with it the view picker; an old `?view=` link is ignored.
-- Each side of the draw is drawn as columns of ties, first round on the left, scrolling sideways on a
-  phone: the winners' side (with the final) and the losers' side for the Timbeibs Cup, the two groups'
-  slots and the knockout for the Davy Propper Cup. Craig, 27 Sep: *"we really need a bracket view as
-  well."*
+- **The Timbeibs Cup** is two brackets, each side of the draw as columns of ties, first round on the
+  left, scrolling sideways on a phone: the winners' side (with the final) and the losers' side. Craig,
+  27 Sep: *"we really need a bracket view as well."*
+- **The Davy Propper Cup** is its two groups as league tables (Craig, 1 Oct: *"propper cup should be a
+  table view"*), then its knockout as a bracket. A group's columns are the league table's (Pld W D L
+  For Ag Pts, Ag standing down under a thumb), its rows the draw slots A1–A5 placed by `groupTable`,
+  and a dashed line under the last place through to the knockout. Until the group stage is played every
+  figure is 0: no group tie has a result to count.
 
 ## Placeholder draw
 
