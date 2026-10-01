@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { CUPS, cupGroups, cupPlan } from "@epl/core";
 import LeagueShell from "../Shell";
 import Nothing from "../../components/shell/Nothing";
@@ -7,7 +6,7 @@ import { getSchedule } from "../schedule/schedule";
 import { cupHref } from "../SectionNav";
 import Bracket from "./Bracket";
 import Groups from "./Groups";
-import { TAB } from "@/app/desk";
+import TabStrip from "../../components/shell/TabStrip";
 
 // Each cup's draw; its fixtures are on the schedule. Every side is a placeholder until the draws are made.
 
@@ -40,9 +39,9 @@ export default async function CupsPage({
 
   return (
     <LeagueShell current="cups" teams={teams}>
-      <Picker
+      <TabStrip
         label="Cups"
-        options={CUPS.map((each) => ({ key: each.id, label: each.name, href: cupHref(each.id) }))}
+        tabs={CUPS.map((each) => ({ key: each.id, label: each.name, href: cupHref(each.id) }))}
         current={cup.id}
       />
 
@@ -63,30 +62,5 @@ export default async function CupsPage({
         </div>
       )}
     </LeagueShell>
-  );
-}
-
-function Picker({
-  label,
-  options,
-  current,
-}: {
-  label: string;
-  options: readonly { key: string; label: string; href: string }[];
-  current: string;
-}) {
-  return (
-    <nav aria-label={label} className="flex flex-wrap">
-      {options.map((option) => (
-        <Link
-          key={option.key}
-          href={option.href}
-          aria-current={option.key === current ? "page" : undefined}
-          className={`${TAB} min-h-11 px-2 text-2xs lg:min-h-9`}
-        >
-          {option.label}
-        </Link>
-      ))}
-    </nav>
   );
 }
