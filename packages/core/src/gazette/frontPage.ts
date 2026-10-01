@@ -101,6 +101,14 @@ export function composePaper(stories: readonly PublishedStory[], now: string): P
   );
 }
 
+/** Kinds the front page no longer prints (Craig, 1 Oct 2026); each article keeps its own page. */
+const OFF_THE_FRONT: readonly StoryKind[] = ["news", "wire"];
+
+/** The paper as the front page prints it. */
+export function frontPage(stories: readonly PublishedStory[], now: string): PublishedStory[] {
+  return composePaper(stories, now).filter((story) => !OFF_THE_FRONT.includes(story.kind));
+}
+
 /** The London day a story was filed on, `""` when unreadable so it sorts last. */
 function dayKey(iso: string): string {
   return londonDayOf(iso) ?? "";

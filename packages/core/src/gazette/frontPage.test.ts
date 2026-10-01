@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { composePaper } from "./frontPage";
+import { composePaper, frontPage } from "./frontPage";
 import type { PublishedStory } from "./story";
 
 const NOW = "2026-08-31T12:00:00.000Z";
@@ -205,5 +205,20 @@ describe("the match report on the day it files", () => {
       "2026-09-19T21:00:00.000Z",
     );
     expect(paper[0].slug).toBe("report");
+  });
+});
+
+describe("frontPage", () => {
+  it("leaves the wire's news and the bin off the front page, in print order otherwise", () => {
+    const paper = frontPage(
+      [
+        story({ slug: "news", kind: "news", subjects: ["news:a"] }),
+        story({ slug: "bin", kind: "wire", subjects: ["wire:p3"] }),
+        story({ slug: "report", kind: "match-report", subjects: ["match-report:p3"] }),
+        story({ slug: "presser", kind: "presser", subjects: ["presser:p3"] }),
+      ],
+      NOW,
+    );
+    expect(paper.map((s) => s.slug)).toEqual(["report", "presser"]);
   });
 });

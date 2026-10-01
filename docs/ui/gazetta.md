@@ -73,6 +73,10 @@ business, who is hurt, and when lineups lock.
    the splash rather than one. `HEADLINES_SHOWN` caps the whole tail at eight so
    a busy round does not turn the front page into an index of itself.
 
+   **News (bylined The Wire) and the bin are left off** (`frontPage`, Craig, 1 Oct
+   2026: *"remove 'the wire' and news"*). The desk stopped filing both that day;
+   the ones already filed keep their article pages.
+
    The splash's own picture is `gazette/Drawing` when CI drew one and
    `gazette/Face` otherwise; it was `Splash.tsx` until 3 Sep 2026, which is the
    wrong word for a photograph — a paper's splash is its top story, and that
