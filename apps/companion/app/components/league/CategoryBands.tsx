@@ -95,7 +95,7 @@ function Men({ men, names, end }: { men: readonly CategoryMan[]; names: Names; e
             <Image src={crestUrl(man.club)} alt="" width={16} height={16} className="size-4 shrink-0 object-contain" />
           )}
           <span className="truncate font-chrome font-bold">{man.name}</span>
-          <span className="numeric shrink-0 text-muted">({man.points})</span>
+          <span className={`numeric shrink-0 ${man.points > 0 ? "text-up" : man.points < 0 ? "text-bad" : "text-muted"}`}>({man.points})</span>
         </li>
       ))}
     </ul>

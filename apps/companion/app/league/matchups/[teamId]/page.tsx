@@ -238,6 +238,7 @@ export default async function HeadToHeadPage({
                 side={stat}
                 columns={columns}
                 counts={(of === "team" ? yours : theirs)?.counts ?? {}}
+                breakdown={(of === "team" ? yours : theirs)?.breakdown ?? {}}
                 sort={sort}
                 hrefFor={(head: string) =>
                   statsHref(teamId, gameweek, of, { head, descending: head === sort.head ? !sort.descending : true })

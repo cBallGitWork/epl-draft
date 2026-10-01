@@ -9,7 +9,7 @@ import { BOARD, FIGURE_CELL, PINNED_BESIDE_TILE, PINNED_TILE, ROW_NAME, ROW_RULE
 import ScrollBoard from "../../../components/league/ScrollBoard";
 import { MaybeCard } from "../../../prem/match/[id]/PlayerCardButton";
 import { MATCH_ROW } from "../../../prem/match/[id]/matchRow";
-import { figureOf, sideRows, type Counts } from "./sideRows";
+import { figureOf, paidIn, sideRows, type Breakdowns, type Counts } from "./sideRows";
 import { DEFAULT_SIDE_SORT } from "./views";
 
 // One manager's fifteen in the match page's club board (`prem/match/[id]/ClubStats`): his colours on the
@@ -20,6 +20,7 @@ export default function SideStats({
   sheet,
   columns,
   counts,
+  breakdown,
   sort,
   hrefFor,
 }: {
@@ -27,6 +28,8 @@ export default function SideStats({
   sheet: LineupDetail;
   columns: readonly ScoringCategory[];
   counts: Counts;
+  /** What Fantrax paid each man in each category, which inks his figure. */
+  breakdown: Breakdowns;
   sort: { head: string; descending: boolean };
   /** The same board ordered by one column, with that column's default direction. */
   hrefFor: (head: string) => string;
@@ -39,7 +42,7 @@ export default function SideStats({
       player={player}
       heads={heads}
       counts={counts}
-      reserve={reserve}
+      breakdown={reserve ? null : breakdown}
     />
   );
 
@@ -88,16 +91,17 @@ function SideRow({
   player,
   heads,
   counts,
-  reserve,
+  breakdown,
 }: {
   player: SquadPlayerDetail;
   heads: readonly ScoringCategory[];
   counts: Counts;
-  reserve: boolean;
+  /** Null on the bench, which is not counted and so neither gains nor loses. */
+  breakdown: Breakdowns | null;
 }) {
   const { rostered, club } = player;
   return (
-    <tr className={`${ROW_RULE} ${reserve ? "cm-out" : ""}`} {...MATCH_ROW}>
+    <tr className={`${ROW_RULE} ${breakdown === null ? "cm-out" : ""}`} {...MATCH_ROW}>
       <PositionTile positions={rostered.slot.position ? [rostered.slot.position] : []} cell className={PINNED_TILE} />
       <td className={`p-0 ${PIN_NAME} ${NAME_WIDTH}`}>
         <MaybeCard player={player} className={`${ROW_LINK} ${PHONE_ROW} w-full gap-1.5 px-1.5 text-left`}>
@@ -109,9 +113,12 @@ function SideRow({
       </td>
       {heads.map((head) => {
         const value = figureOf(player, head.code, counts);
-        const points = head.code === DEFAULT_SIDE_SORT;
+        // A gain green and a loss red, as his breakdown card prints them (DESIGN §3's direction pair).
+        const paid = breakdown === null || value === null ? 0 : paidIn(breakdown, player, head.code);
+        const bold = breakdown !== null && head.code === DEFAULT_SIDE_SORT ? "font-bold" : "";
+        const ink = `${bold} ${paid > 0 ? "text-up" : paid < 0 ? "text-bad" : ""}`;
         return (
-          <td key={head.code} className={`${FIGURE_CELL} ${points && value !== null && !reserve ? "font-bold text-info" : ""}`}>
+          <td key={head.code} className={`${FIGURE_CELL} ${ink}`}>
             {value === null ? <span className="text-faint">{DASH}</span> : value}
           </td>
         );

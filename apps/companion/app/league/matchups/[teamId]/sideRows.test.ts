@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { FootballPlayer, LineupDetail, SquadPlayerDetail } from "@epl/core";
-import { boardCategories, figureOf, sideColumns, sideRows, type ManCounts } from "./sideRows";
+import { boardCategories, figureOf, paidIn, sideColumns, sideRows, type ManCounts } from "./sideRows";
 
 const man = (fantraxId: string, points: number | null): SquadPlayerDetail => ({
   rostered: { slot: { fantraxId, position: "M", status: "" }, player: { code: 1, name: fantraxId } as FootballPlayer, stats: [] },
@@ -63,5 +63,21 @@ describe("sideRows", () => {
   it("sinks a man with no reading whichever way the column runs", () => {
     const { eleven } = sideRows(sheet, counts, { head: "Pts", descending: false });
     expect(eleven.map((p) => p.rostered.slot.fantraxId)).toEqual(["b", "a", "d"]);
+  });
+});
+
+describe("paidIn", () => {
+  const line = (code: string, points: number) => ({ code, name: code, definition: null, points, value: "1" });
+  const paid = { a: [line("G", 4), line("YC", -1)] };
+
+  it("reads what Fantrax paid him in a column, a deduction signed, and his total under Pts", () => {
+    expect(paidIn(paid, man("a", 3), "G")).toBe(4);
+    expect(paidIn(paid, man("a", 3), "YC")).toBe(-1);
+    expect(paidIn(paid, man("a", 3), "Pts")).toBe(3);
+  });
+
+  it("is nought for a count that earned nothing, and for a man Fantrax priced nowhere", () => {
+    expect(paidIn(paid, man("a", 3), "GAO")).toBe(0);
+    expect(paidIn(paid, man("z", null), "Pts")).toBe(0);
   });
 });
