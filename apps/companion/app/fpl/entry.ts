@@ -4,13 +4,14 @@ import {
   type FplEntry,
   type FplSquad,
   fetchEntry,
+  fetchLive,
   fetchPicks,
-  fplPointsByElement,
   mapEntry,
+  mapScoreLines,
   mapSquad,
 } from "@epl/core";
 import { ENTRY_COOKIE, PAGE_REVALIDATE } from "../config";
-import { footballNow, gameweekLive } from "../football";
+import { footballNow } from "../football";
 
 // The other game. A manager's FPL side, read from the id in the URL they already
 // share — not a credential, so no sign-in and no secret.
@@ -47,6 +48,13 @@ const readEntry = unstable_cache(
   { revalidate: PAGE_REVALIDATE },
 );
 
+/** FPL's scoring lines for every man in a round, by element id: one read for the pitch and the card. */
+const roundScoring = unstable_cache(
+  async (gameweek: number) => mapScoreLines(await fetchLive(gameweek)),
+  ["fpl-score-lines"],
+  { revalidate: PAGE_REVALIDATE },
+);
+
 export async function mySide(): Promise<FplSide | null> {
   const entryId = await myEntryId();
   if (entryId === null) return null;
@@ -57,13 +65,13 @@ export async function mySide(): Promise<FplSide | null> {
 
   // Element ids are per-season, so this join lives inside one snapshot and is never persisted.
   const byId = new Map(snapshot.players.map((player) => [player.id, player]));
-  const points = fplPointsByElement(await gameweekLive(read.gameweek));
+  const lines = await roundScoring(read.gameweek);
   return {
     entry: read.entry,
     squad: mapSquad(
       read.picks,
       (element) => byId.get(element)?.code ?? null,
-      (element) => points.get(element) ?? 0,
+      (element) => lines[element] ?? [],
     ),
   };
 }

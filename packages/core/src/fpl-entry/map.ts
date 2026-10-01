@@ -1,5 +1,5 @@
-import type { RawClassicLeague, RawEntry, RawPicks } from "./raw";
-import type { FplEntry, FplMiniLeague, FplPick, FplSquad } from "./types";
+import type { RawClassicLeague, RawEntry, RawLiveExplain, RawPicks } from "./raw";
+import type { FplEntry, FplMiniLeague, FplPick, FplScoreLine, FplSquad } from "./types";
 
 // Pure. Everything a manager's entry says about itself, cleaned but not
 // interpreted — pre-season nulls stay null, because "has not played yet" and
@@ -35,14 +35,14 @@ function mapLeague(raw: RawClassicLeague): FplMiniLeague[] {
 
 /** The fifteen, with FPL's own points already multiplied.
  *
- *  `pointsFor` resolves an element id to that player's FPL points for the round;
- *  the caller supplies it, because the live feed is the football layer's read and
- *  this adapter has no business fetching it. Same for `codeFor`: element ids are
- *  per-season and must never leave here. */
+ *  `linesFor` resolves an element id to his FPL scoring lines for the round
+ *  (`mapScoreLines`); the caller supplies it, because the live feed is the football
+ *  layer's read and this adapter has no business fetching it. Same for `codeFor`:
+ *  element ids are per-season and must never leave here. */
 export function mapSquad(
   raw: RawPicks,
   codeFor: (element: number) => number | null,
-  pointsFor: (element: number) => number,
+  linesFor: (element: number) => FplScoreLine[],
 ): FplSquad | null {
   const gameweek = raw.entry_history?.event;
   if (gameweek === undefined) return null;
@@ -55,7 +55,8 @@ export function mapSquad(
     if (code === null) return [];
 
     const multiplier = pick.multiplier ?? 0;
-    const scored = pointsFor(pick.element);
+    const lines = linesFor(pick.element);
+    const scored = lines.reduce((sum, line) => sum + line.points, 0);
     return [
       {
         code,
@@ -74,6 +75,7 @@ export function mapSquad(
         isViceCaptain: pick.is_vice_captain ?? false,
         points: scored * multiplier,
         scored,
+        lines,
       },
     ];
   });
@@ -86,4 +88,25 @@ export function mapSquad(
     total: raw.entry_history?.points ?? null,
     hit: raw.entry_history?.event_transfers_cost ?? null,
   };
+}
+
+/** Every man's FPL scoring lines for a round, by element id, a double's fixtures merged by
+ *  identifier in the order FPL first lists them. Keyed by the per-season id: never persisted. */
+export function mapScoreLines(raw: RawLiveExplain): Record<number, FplScoreLine[]> {
+  const out: Record<number, FplScoreLine[]> = {};
+  for (const element of raw.elements ?? []) {
+    if (element.id === undefined) continue;
+    const merged = new Map<string, FplScoreLine>();
+    for (const stat of (element.explain ?? []).flatMap((block) => block.stats ?? [])) {
+      if (stat.identifier === undefined) continue;
+      const line = merged.get(stat.identifier) ?? { identifier: stat.identifier, value: 0, points: 0 };
+      merged.set(stat.identifier, {
+        ...line,
+        value: line.value + (stat.value ?? 0),
+        points: line.points + (stat.points ?? 0),
+      });
+    }
+    out[element.id] = [...merged.values()];
+  }
+  return out;
 }

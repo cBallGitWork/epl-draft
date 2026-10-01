@@ -56,6 +56,8 @@ export interface FplPick {
   points: number;
   /** His own points, unmultiplied: what a benched man scored, which `points` zeroes. */
   scored: number;
+  /** FPL's scoring lines behind `scored`, in FPL's order, a double's fixtures merged. */
+  lines: FplScoreLine[];
   /** FPL's own `element_type`: 1 keeper, 2 defender, 3 midfielder, 4 forward.
    *
    *  **Here rather than in the football layer, and that is the whole reason this
@@ -68,6 +70,14 @@ export interface FplPick {
    *  Zero when FPL did not say, which sorts before the keeper's line and lands
    *  the pick at the top of the pitch rather than dropping him from a fifteen. */
   line: number;
+}
+
+/** One line of FPL's own scoring for a man's round: what he did, and what FPL paid for it. */
+export interface FplScoreLine {
+  /** FPL's identifier, raw: `minutes`, `goals_scored`, `bonus`. */
+  identifier: string;
+  value: number;
+  points: number;
 }
 
 export interface FplSquad {
@@ -98,6 +108,28 @@ export const FPL_LINES: readonly { line: number; name: string }[] = [
   { line: 3, name: "MID" },
   { line: 4, name: "FWD" },
 ];
+
+/** FPL's scoring identifiers in FPL's own words. */
+const FPL_SCORE_NAMES: Readonly<Record<string, string>> = {
+  minutes: "Minutes played",
+  goals_scored: "Goals scored",
+  assists: "Assists",
+  clean_sheets: "Clean sheets",
+  goals_conceded: "Goals conceded",
+  own_goals: "Own goals",
+  penalties_saved: "Penalties saved",
+  penalties_missed: "Penalties missed",
+  yellow_cards: "Yellow cards",
+  red_cards: "Red cards",
+  saves: "Saves",
+  bonus: "Bonus",
+  defensive_contribution: "Defensive contribution",
+};
+
+/** A scoring line's name; one FPL adds later is printed verbatim rather than guessed at. */
+export function fplScoreName(identifier: string): string {
+  return FPL_SCORE_NAMES[identifier] ?? identifier;
+}
 
 /** Whether FPL files this man in goal.
  *

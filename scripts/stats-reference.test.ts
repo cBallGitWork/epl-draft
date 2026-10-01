@@ -24,7 +24,7 @@ const STAT_TYPES: readonly { file: string; types: readonly string[] }[] = [
   { file: "packages/core/src/football/attributes.ts", types: ["Scouted"] },
   { file: "packages/core/src/football/shotLine.ts", types: ["ShotLine"] },
   { file: "packages/core/src/football/selectors.ts", types: ["MatchContribution"] },
-  { file: "packages/core/src/fpl-entry/types.ts", types: ["FplEntry", "FplMiniLeague", "FplPick", "FplSquad"] },
+  { file: "packages/core/src/fpl-entry/types.ts", types: ["FplEntry", "FplMiniLeague", "FplPick", "FplScoreLine", "FplSquad"] },
   { file: "packages/core/src/football/premierleague/matchFacts.ts", types: ["PlMatchFacts"] },
   { file: "packages/core/src/football/premierleague/matchStats.ts", types: ["MatchStatRow"] },
   { file: "packages/core/src/football/premierleague/teamSheet.ts", types: ["PlSquadMan"] },

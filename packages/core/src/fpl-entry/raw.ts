@@ -37,6 +37,14 @@ export interface RawPick {
   element_type?: number;
 }
 
+/** The event live endpoint, as far as a pick's scoring reads it. Football's `fetchLive` fetches it. */
+export interface RawLiveExplain {
+  elements?: {
+    id?: number;
+    explain?: { fixture?: number; stats?: { identifier?: string; value?: number; points?: number }[] }[];
+  }[];
+}
+
 export interface RawPicks {
   picks?: RawPick[];
   entry_history?: {

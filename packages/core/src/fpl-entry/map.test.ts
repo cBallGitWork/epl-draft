@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mapEntry, mapSquad } from "./map";
+import { mapEntry, mapScoreLines, mapSquad } from "./map";
 
 describe("mapEntry", () => {
   it("reads a manager's side", () => {
@@ -43,7 +43,10 @@ describe("mapEntry", () => {
 });
 
 const code = (element: number) => (element === 404 ? null : 1000 + element);
-const points = (element: number) => (element === 1 ? 12 : 2);
+const points = (element: number) =>
+  element === 1
+    ? [{ identifier: "minutes", value: 90, points: 2 }, { identifier: "goals_scored", value: 2, points: 10 }]
+    : [{ identifier: "minutes", value: 90, points: 2 }];
 
 describe("mapSquad", () => {
   it("carries FPL's slot order, which is what tells a starter from a substitute", () => {
@@ -90,6 +93,12 @@ describe("mapSquad", () => {
       points,
     );
     expect(squad?.picks.map((p) => p.scored)).toEqual([12, 2]);
+  });
+
+  it("carries the lines his points are made of, which sum to what he scored", () => {
+    const squad = mapSquad({ picks: [{ element: 1, multiplier: 2 }], entry_history: { event: 3 } }, code, points);
+    expect(squad?.picks[0]?.lines.map((line) => line.identifier)).toEqual(["minutes", "goals_scored"]);
+    expect(squad?.picks[0]?.points).toBe(24);
   });
 
   it("shows FPL's total rather than adding the picks up", () => {
@@ -143,5 +152,51 @@ describe("mapSquad line", () => {
       points,
     );
     expect(squad?.picks[0]?.line).toBe(0);
+  });
+});
+
+describe("mapScoreLines", () => {
+  it("reads each man's lines in FPL's order", () => {
+    const lines = mapScoreLines({
+      elements: [
+        {
+          id: 385,
+          explain: [{ fixture: 44, stats: [
+            { identifier: "minutes", value: 90, points: 2 },
+            { identifier: "clean_sheets", value: 1, points: 4 },
+            { identifier: "bonus", value: 3, points: 3 },
+          ] }],
+        },
+      ],
+    });
+    expect(lines[385]?.map((line) => [line.identifier, line.value, line.points])).toEqual([
+      ["minutes", 90, 2],
+      ["clean_sheets", 1, 4],
+      ["bonus", 3, 3],
+    ]);
+  });
+
+  it("merges a double's two fixtures by identifier", () => {
+    const lines = mapScoreLines({
+      elements: [
+        {
+          id: 7,
+          explain: [
+            { fixture: 1, stats: [{ identifier: "minutes", value: 90, points: 2 }, { identifier: "goals_scored", value: 1, points: 4 }] },
+            { fixture: 2, stats: [{ identifier: "minutes", value: 30, points: 1 }] },
+          ],
+        },
+      ],
+    });
+    expect(lines[7]).toEqual([
+      { identifier: "minutes", value: 120, points: 3 },
+      { identifier: "goals_scored", value: 1, points: 4 },
+    ]);
+  });
+
+  it("gives a man with no explain no lines, and skips what it cannot key", () => {
+    const lines = mapScoreLines({ elements: [{ id: 9, explain: [] }, { explain: [] }, { id: 10, explain: [{ stats: [{ value: 1 }] }] }] });
+    expect(lines).toEqual({ 9: [], 10: [] });
+    expect(mapScoreLines({})).toEqual({});
   });
 });

@@ -166,11 +166,3 @@ export function datedKickoffs(
       : [{ gameweek: fixture.gameweek, kickoff: fixture.kickoff }],
   );
 }
-
-/** FPL's own points per element for one round, summed across a double's fixtures.
- *  Keyed by the per-season `id`, so it lives only as long as the round's read. */
-export function fplPointsByElement(stats: readonly PlayerMatchStats[]): Map<number, number> {
-  const points = new Map<number, number>();
-  for (const row of stats) points.set(row.playerId, (points.get(row.playerId) ?? 0) + row.fplPoints);
-  return points;
-}

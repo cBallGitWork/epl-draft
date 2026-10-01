@@ -1,8 +1,9 @@
-import { isFplKeeper, DASH } from "@epl/core";
+import { fullFootballerName, isFplKeeper, kickedOff, DASH } from "@epl/core";
 import type { Club, FootballPlayer, FplLine, FplPick, Opposition } from "@epl/core";
 import PitchMarker from "../components/league/PitchMarker";
 import SubMarker, { type SubMark } from "../components/football/SubMarker";
 import PitchRows, { BENCH_KIT, FAR_INSET, GAP_CLASS, cardBasis, rowBudget, widestLine } from "../components/league/PitchRows";
+import PickPoints from "./PickPoints";
 
 // Your FPL XI on the grass — the same grass as everywhere else.
 //
@@ -54,16 +55,25 @@ export default function FplPitch({
   // A benched man shows what he scored; his pick's own points are multiplied by nought.
   const marker = (pick: FplPick, benched = false) => {
     const player = players.get(pick.code) ?? null;
+    const club = player === null ? undefined : clubs.get(player.clubId);
+    const fixtures = player === null ? undefined : opposition.get(player.clubId);
     const mark = subs[pick.code];
     return (
       <SubMarker minute={mark?.minute ?? null} off={mark?.off ?? false}>
-        <Pick
+        <PickPoints
           pick={pick}
-          points={benched ? pick.scored : pick.points}
-          player={player}
-          club={player === null ? undefined : clubs.get(player.clubId)}
-          opposition={player === null ? undefined : opposition.get(player.clubId)}
-        />
+          name={player === null ? DASH : fullFootballerName(player)}
+          club={club?.shortName ?? null}
+          started={kickedOff(fixtures)}
+        >
+          <Pick
+            pick={pick}
+            points={benched ? pick.scored : pick.points}
+            player={player}
+            club={club}
+            opposition={fixtures}
+          />
+        </PickPoints>
       </SubMarker>
     );
   };

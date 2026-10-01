@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { fplLineup } from "./lineup";
-import { isFplKeeper } from "./types";
+import { fplScoreName, isFplKeeper } from "./types";
 import type { FplPick, FplSquad } from "./types";
 
 const pick = (fill: Partial<FplPick> & { slot: number; line: number }): FplPick => ({
@@ -10,6 +10,7 @@ const pick = (fill: Partial<FplPick> & { slot: number; line: number }): FplPick 
   isViceCaptain: false,
   points: 0,
   scored: 0,
+  lines: [],
   ...fill,
 });
 
@@ -82,5 +83,16 @@ describe("isFplKeeper", () => {
     // Zero is what `mapSquad` writes when the payload omits `element_type`.
     // Drawing him a keeper's shirt on that would be a guess.
     expect(isFplKeeper(0)).toBe(false);
+  });
+});
+
+describe("fplScoreName", () => {
+  it("names FPL's identifiers in FPL's words", () => {
+    expect(fplScoreName("goals_scored")).toBe("Goals scored");
+    expect(fplScoreName("defensive_contribution")).toBe("Defensive contribution");
+  });
+
+  it("prints one it has not seen verbatim rather than guessing", () => {
+    expect(fplScoreName("set_piece_goals")).toBe("set_piece_goals");
   });
 });
