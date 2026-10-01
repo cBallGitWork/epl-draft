@@ -79,6 +79,7 @@ Every workflow in `.github/workflows/`, crons in UTC as written. Writers commit 
 | `.github/workflows/intel-check.yml` | `55 5 * * *` | `npm run intel-check` | nothing | none | `check-intel.yml` |
 | `.github/workflows/capture-status.yml` | `25 14 * * *` | `npm run capture:status` | nothing | none | `check-captures.yml` |
 | `.github/workflows/scout-xi.yml` | `40 */2 * * *` | `npm run scout-xi` | `data/intel/xi`, "data: Scout's predicted elevens, {time}" | `scout-xi` | `ingest-xi.yml` |
+| `.github/workflows/ratings.yml` | `20 17,19,21,23 * * 5,6,0,1,2`<br>`20 7 * * *` | asks production `GET /api/league`, then `npm run ratings` | `data/ratings`, "data: ratings, {time}" | `ratings` | stays |
 | `.github/workflows/editions.yml` | `0,30 14-23 * * 5`<br>`0,30 10-22 * * 6`<br>`0,30 11-22 * * 0`<br>`0,30 17-22 * * 1,2`<br>`15 6-9 * * 0,1,2`<br>`0,30 17-22 * * 3`<br>`15 6-9 * * 4`<br>`0,30 14-20 * * 4` | asks production `GET /api/league`, then `npm run edition` | `data/editions`, `apps/companion/public/paper`, "data: the paper for {date}" | `editions` | stays |
 | `.github/workflows/warm.yml` | `*/30 11-22 * * 6,0`<br>`*/30 17-22 * * 1,5` | curls `/` and `/matchday` | nothing | `warm`, cancels in progress | stays |
 | `.github/workflows/verify.yml` | none: push, pull_request | the four gates, smoke per recorded league, `npm run bridge:check` | nothing | none | stays |

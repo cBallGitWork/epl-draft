@@ -27,6 +27,8 @@ export * from "./join/involvement";
 export { rateMatch } from "./join/rating/rating";
 export type { RatedMatch, MatchRating } from "./join/rating/rating";
 export { RATING_WEIGHTS } from "./join/rating/weights";
+export { marksOf, readRatingStore } from "./join/rating/store";
+export type { RatingStore } from "./join/rating/store";
 export * from "./fpl-entry";
 export * from "./gazette";
 export * from "./inbox";

@@ -99,6 +99,18 @@ the match-report and team-sheet prompts.
   Affengruber, Fofana, Larsson); `npm run bridge` fills them. The real league's pool lists 484 outfielders against the
   stats league's 601, so a man it does not list prints `—`.
 
+## The player pages print our marks from a filed season file — decided 1 Oct 2026
+
+- **Craig**: ratings on the player profile and its Data tab too. A page cannot make six Fantrax reads per match it shows,
+  so `npm run ratings` (`.github/workflows/ratings.yml`, match evenings and a morning sweep) rates each settled London day
+  once into `data/ratings/26-27.json`, keyed by player code and fixture code, and the app reads it statically
+  (`app/ratings.ts`).
+- **Counted at backfill, 1 Oct**: 17 days, GW1–GW5, 1,483 appearances by 395 men, 1,369 marked (the rest too brief);
+  25 KB.
+- **One league's points**: the file records the league that marked it, and a run against another league changes nothing
+  unless `--restart`. Production serves the rehearsal league until go-live, so CI rates nothing new until it serves the
+  real one the backfill used.
+
 ## Our player rating is the match alone, read off league points — decided 1 Oct 2026
 
 - **What it is**: `join/rating/` marks one man's match out of ten from his real-league points, the

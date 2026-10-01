@@ -1,0 +1,55 @@
+name: Ratings
+
+# Our mark for every man in every settled match day into `data/ratings/26-27.json`, which the player pages read.
+# `npm run ratings` rates only days FPL has closed and the file does not hold, so most runs read two things and commit
+# nothing; a commit that lands redeploys, because `vercel.json` does not exclude `data/ratings`.
+
+on:
+  schedule:
+    # Match evenings, when FPL settles a day an hour or two after its last whistle (UTC; the league's clock is London).
+    - cron: "20 17,19,21,23 * * 5,6,0,1,2"
+    # And a morning sweep, for a day that settled overnight.
+    - cron: "20 7 * * *"
+  workflow_dispatch: {}
+
+# Its own group, on `editions.yml`'s reasoning: a shared group lets one workflow cancel another's queued run.
+concurrency:
+  group: ratings
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  rate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      # Vercel's FANTRAX_LEAGUE_ID is the only place a league is set, so the marks are read from the league production serves.
+      - name: Ask production which league it serves
+        id: league
+        run: |
+          league=$(curl -sf --max-time 30 "${{ vars.WARM_BASE_URL }}/api/league" | jq -r '.leagueId // empty')
+          if [ -z "$league" ]; then echo "::error::production did not say which league it serves"; exit 1; fi
+          echo "id=$league" >> "$GITHUB_OUTPUT"
+
+      - name: Rate the settled days
+        env:
+          FANTRAX_LEAGUE_ID: ${{ steps.league.outputs.id }}
+        run: npm run ratings
+
+      - name: Commit them, if any were rated
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git add data/ratings
+          scripts/ci/push.sh "data: ratings, $(date -u +%Y-%m-%dT%H:%MZ)" "No match day was due a rating."

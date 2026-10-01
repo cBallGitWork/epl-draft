@@ -68,6 +68,16 @@ describe("joinMatches", () => {
     expect(rows[1].paid).not.toBeNull();
   });
 
+  it("puts our mark against its match by fixture, and null where none was filed", () => {
+    const rows = joinMatches(
+      [{ match: match({ fixtureId: 7 }), opponent: CLUBS.get(1) }, { match: match({ fixtureId: 8, opponentClubId: 2 }), opponent: CLUBS.get(2) }],
+      [],
+      CLUBS,
+      new Map([[7, 6.8]]),
+    );
+    expect(rows.map((r) => r.mark)).toEqual([6.8, null]);
+  });
+
   it("survives a match whose opponent the snapshot cannot name", () => {
     const rows = joinMatches([{ match: match({ opponentClubId: 99 }), opponent: undefined }], [paid()], CLUBS);
     expect(rows[0].paid).toBeNull();
@@ -76,8 +86,8 @@ describe("joinMatches", () => {
 
 describe("totalsOf", () => {
   const rows: MatchRow[] = [
-    { fpl: { match: match({ goals: 1, minutes: 90, bps: 30 }), opponent: CLUBS.get(1) }, paid: paid({ points: 9, shots: 3 }) },
-    { fpl: { match: match({ gameweek: 2, minutes: 45, bps: 10 }), opponent: CLUBS.get(2) }, paid: null },
+    { fpl: { match: match({ goals: 1, minutes: 90, bps: 30 }), opponent: CLUBS.get(1) }, paid: paid({ points: 9, shots: 3 }), mark: null },
+    { fpl: { match: match({ gameweek: 2, minutes: 45, bps: 10 }), opponent: CLUBS.get(2) }, paid: null, mark: null },
   ];
 
   it("sums FPL's columns over every match", () => {
@@ -93,7 +103,7 @@ describe("totalsOf", () => {
   });
 
   it("says nothing rather than nought when Fantrax reached none of them", () => {
-    const none: MatchRow[] = [{ fpl: rows[0].fpl, paid: null }];
+    const none: MatchRow[] = [{ fpl: rows[0].fpl, paid: null, mark: null }];
     expect(totalsOf(none).points).toBeNull();
     expect(totalsOf(none).shots).toBeNull();
   });
@@ -111,5 +121,17 @@ describe("per90", () => {
 
   it("has no rate for a total it was not given", () => {
     expect(per90(null, 900)).toBeNull();
+  });
+});
+
+describe("totalsOf's rating", () => {
+  const row = (mark: number | null): MatchRow => ({ fpl: { match: match(), opponent: CLUBS.get(1) }, paid: null, mark });
+
+  it("averages the marks he has, passing over the matches without one", () => {
+    expect(totalsOf([row(6), row(null), row(8)]).rating).toBe(7);
+  });
+
+  it("has no rating when no match was rated", () => {
+    expect(totalsOf([row(null)]).rating).toBeNull();
   });
 });

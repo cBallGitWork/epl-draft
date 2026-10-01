@@ -1,7 +1,8 @@
 import { Suspense } from "react";
 import { clubById } from "@epl/core";
 import type { FootballPlayer, PlayerMatch } from "@epl/core";
-import { footballNow } from "../../football";
+import { footballNow, seasonFixtures } from "../../football";
+import { playerMarks } from "../../ratings";
 import Nothing from "../../components/shell/Nothing";
 import { PANEL } from "@/app/desk";
 import ButtonLink from "../../components/shell/ButtonLink";
@@ -177,8 +178,8 @@ async function Season({
   paid: PlayerMatch[];
   season: string | null;
 }) {
-  const [rows, snapshot] = await Promise.all([gameLog(player), footballNow()]);
-  return <SeasonTable rows={joinMatches(rows, paid, clubById(snapshot))} season={season} />;
+  const [rows, snapshot, fixtures] = await Promise.all([gameLog(player), footballNow(), seasonFixtures()]);
+  return <SeasonTable rows={joinMatches(rows, paid, clubById(snapshot), playerMarks(player.code, fixtures))} season={season} />;
 }
 
 /** CM's worded row under the ratings: the foot he shoots with, never a keeper's. Condition is Fitness's. */

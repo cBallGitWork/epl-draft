@@ -110,6 +110,12 @@ including **`FPts`, the only per-match source of this league's points anywhere**
 and the five things FPL does not publish at all: shots, shots on target, fouls
 committed, fouls suffered, offsides.
 
+**Our mark closes the row, behind a third rule** (Craig, 1 Oct 2026: "put ratings into the player/data section too").
+`Rtg` is our rating out of ten for the match, in the derived reading's cyan and never lit as a standout, from
+`data/ratings/26-27.json`, which `npm run ratings` files after each settled match day. The season table above carries
+his average over the matches rated, on the profile and on Data alike. A match not yet rated, or too brief to rate,
+dashes.
+
 **FPL's history is the spine and Fantrax fills in.** They are joined on the
 opponent and the venue — safe in a league season, since a man plays each opponent
 once at home and once away — and the codes are translated first, because Fantrax

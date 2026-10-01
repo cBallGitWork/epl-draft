@@ -26,12 +26,16 @@ export interface MatchRow {
   /** What our league paid for it, or null when Fantrax's window does not reach
    *  back this far. Null is "we were not told", never "he scored nothing". */
   paid: PlayerMatch | null;
+  /** Our mark out of ten; null when the match was not rated or he was too brief to rate. */
+  mark: number | null;
 }
 
 export function joinMatches(
   fpl: readonly GameLogRow[],
   fantrax: readonly PlayerMatch[],
   clubs: ReadonlyMap<number, Club>,
+  /** Our marks by FPL fixture id. */
+  marks: ReadonlyMap<number, number | null> = new Map(),
 ): MatchRow[] {
   const paid = new Map<string, PlayerMatch>();
   for (const match of fantrax) paid.set(key(toFplClubCode(match.opponent), match.home), match);
@@ -41,6 +45,7 @@ export function joinMatches(
     return {
       fpl: row,
       paid: (opponent === undefined ? undefined : paid.get(key(opponent, row.match.home))) ?? null,
+      mark: marks.get(row.match.fixtureId) ?? null,
     };
   });
 }
@@ -84,6 +89,8 @@ export interface MatchTotals {
   yellowCards: number;
   redCards: number;
   saves: number;
+  /** His average mark over the matches rated; null when none was. */
+  rating: number | null;
 }
 
 export function totalsOf(rows: readonly MatchRow[]): MatchTotals {
@@ -112,6 +119,7 @@ export function totalsOf(rows: readonly MatchRow[]): MatchTotals {
     yellowCards: sum((r) => r.fpl.match.yellowCards),
     redCards: sum((r) => r.fpl.match.redCards),
     saves: sum((r) => r.fpl.match.saves),
+    rating: average(rows.flatMap((r) => (r.mark === null ? [] : [r.mark]))),
     points: theirs((m) => m.points),
     shots: theirs((m) => m.shots),
     shotsOnTarget: theirs((m) => m.shotsOnTarget),
@@ -124,3 +132,5 @@ export function per90(total: number | null, minutes: number): number | null {
   if (total === null || minutes <= 0) return null;
   return (total * 90) / minutes;
 }
+
+const average = (marks: readonly number[]) => (marks.length === 0 ? null : marks.reduce((a, b) => a + b, 0) / marks.length);

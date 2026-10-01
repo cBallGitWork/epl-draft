@@ -8,13 +8,15 @@ import { standoutCuts, standoutInk, type StandoutCut } from "../../components/le
 import Section from "../../components/shell/Section";
 import { BOARD, FIGURE, HEAD_CELL, PINNED_NAME, PINNED_TILE, ROW_RULE } from "@/app/desk";
 import { matchHref } from "../../prem/match/[id]/matchRoutes";
+import { RATING_TITLE } from "../../ratings";
 import type { MatchRow } from "./matchRows";
 
 // Every match of his season on the house board (Craig, 25 Sep 2026: "this table is not like our
 // normal CM standards, use the shared code"): bevelled plates over the figures, the round in CM's
 // blue index block, the opponent pinned beside it, and each column's standouts lit as a board lights
 // them. Left of the rule is FPL's account of the match; right of it Fantrax's, including `FPts`, and
-// FPL's own points are left off so neither side's points sit beside the other's.
+// FPL's own points are left off so neither side's points sit beside the other's. Our mark closes the
+// row behind its own rule, in the derived reading's cyan.
 
 interface Column {
   head: string;
@@ -26,6 +28,8 @@ interface Column {
   flag?: boolean;
   /** The first of Fantrax's columns, which carries the rule. */
   rule?: boolean;
+  /** Ours rather than recorded: cyan, and never lit as a standout. */
+  derived?: boolean;
 }
 
 const COLUMNS: readonly Column[] = [
@@ -45,6 +49,7 @@ const COLUMNS: readonly Column[] = [
   { head: "FC", title: "Fouls committed — Fantrax's own", of: (r) => r.paid?.foulsCommitted ?? null },
   { head: "FS", title: "Fouls suffered — Fantrax's own", of: (r) => r.paid?.foulsSuffered ?? null },
   { head: "Off", title: "Offsides — Fantrax's own", of: (r) => r.paid?.offsides ?? null },
+  { head: "Rtg", title: RATING_TITLE, of: (r) => r.mark, digits: 1, rule: true, derived: true },
 ];
 
 /** A column's standouts over his matches: its best in orange, its top quarter in yellow. */
@@ -120,7 +125,7 @@ export default function MatchLog({ rows }: { rows: readonly MatchRow[] }) {
 function Figure({ column, value, cut }: { column: Column; value: number | null; cut: StandoutCut | undefined }) {
   const shown =
     value === null ? DASH : column.flag ? (value > 0 ? "Y" : DASH) : column.digits ? value.toFixed(column.digits) : value;
-  const ink = value === null ? "text-faint" : standoutInk(value, cut, "high") || (value === 0 ? "text-muted" : "");
+  const ink = value === null ? "text-faint" : column.derived ? "text-info" : standoutInk(value, cut, "high") || (value === 0 ? "text-muted" : "");
   return <td className={`${FIGURE} ${column.rule ? RULE : ""} ${ink}`}>{shown}</td>;
 }
 
