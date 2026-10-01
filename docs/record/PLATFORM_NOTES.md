@@ -44,6 +44,13 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## The round-state probe is stopped: the league does not settle on FPL — decided 1 Oct 2026
+
+`round-state.yml` sampled FPL's event-status every hour to learn whether `bonus-settling` was a state a screen could
+be in. Nothing read its files, and the league settles on Craig's auto-sub run three hours after the last kick-off
+(Craig, 1 Oct). It was about 180 Actions minutes a week, a third of the scheduled spend. The 51 lines it recorded stay
+in `data/probes/round-state/`; the workflow, `scripts/round-state-sample.ts` and the npm script are gone.
+
 ## The six faces are committed, so a build never asks Google Fonts — decided 1 Oct 2026
 
 `next/font/google` downloaded every face at build time, and a build failed whenever Google did not answer
@@ -4380,16 +4387,8 @@ category at no points, so `getPlayerStats` by position group answers **77 scorin
   clean sheet, so a defender subbed off before his team concedes is one we
   undercount. Still first checkable on 21 Aug: watch one defender through a
   final whistle and see whether our +4 becomes their +4.
-- **Is Fantrax's middle rung reachable?** *Gameweek 1's window was missed — by
-  27 Aug all four GW1 dates read `bonus_added: true` with the round
-  `data_checked`, so the flip order is gone. Next chance is Mon 31 Aug from
-  ~21:00Z.* If FPL confirms bonus per gameweek
-  rather than per match day, every fixture's `finished` flips at about the same
-  moment as `data_checked` and the `provisional` rung — all settled, not signed
-  off — is a near-zero-width window, leaving one of three rungs effectively dead.
-  Settle it by sampling `/api/event-status/`, `/api/fixtures/?event=1` and
-  bootstrap `data_checked` together from Mon 24 Aug ~21:00Z and recording the
-  flip order.
+- ~~**Is Fantrax's middle rung reachable?**~~ Closed 1 Oct 2026 without an answer: the league settles on Craig's
+  auto-sub run three hours after the last kick-off, never on FPL's rungs, so the probe stopped.
 - **Does `playerGameInfo[1]` count players in a match in progress?** Inferred
   from the other four positions, never seen non-zero. First witnessable during
   any live match.

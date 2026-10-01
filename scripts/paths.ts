@@ -32,7 +32,6 @@ export const LEAGUE_LIMITS = join(REPO_ROOT, "data", "leagues");
 /** One file per gameweek, one line per change, recording how a round settles.
  *  Under `probes/` and not `snapshots/`: a snapshot is league state we would
  *  otherwise lose, and this is an experiment answering a question. */
-export const ROUND_STATE_ROOT = join(REPO_ROOT, "data", "probes", "round-state");
 
 /** The shape differences somebody has read and accepted. Beside the mappings for
  *  the same reason: both are a person's judgement, checked in as data. */

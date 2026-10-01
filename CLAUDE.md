@@ -207,8 +207,8 @@ never in an issue.
 
 **Branches and PRs**
 
-8. Never work on `main`. Cut from `origin/main`: four crons push to it (capture, editions,
-   round-state, scout-xi, all through `scripts/ci/push.sh`). Prefixes: `feat/` `fix/` `refactor/`
+8. Never work on `main`. Cut from `origin/main`: three crons push to it (capture, editions and
+   scout-xi, all through `scripts/ci/push.sh`). Prefixes: `feat/` `fix/` `refactor/`
    `docs/` `chore/`.
 9. Squash-merge, always (see Pitfalls).
 10. Stage named paths; another session may be committing in the same tree.

@@ -27,7 +27,7 @@ name: Editions
 # so a firing costs what it FILES rather than what it considers. The
 # Actions-minutes budget is still the real spend — 136 runs a
 # week at a minute or two each against the 2000 free monthly minutes shared
-# with capture and round-state — and this cron block is the data to trim if
+# with capture and scout-xi — and this cron block is the data to trim if
 # that ever bites.
 #
 # Setup, once: ANTHROPIC_API_KEY as a repository secret. The key lives here and
@@ -67,7 +67,7 @@ on:
     - cron: "0,30 14-20 * * 4"
   workflow_dispatch: {}
 
-# Its own group, deliberately NOT shared with the capture or round-state jobs:
+# Its own group, deliberately NOT shared with the capture or scout-xi jobs:
 # GitHub keeps only the latest PENDING run per group, so a shared group would let
 # one workflow silently cancel another's queued run. Rebasing before push is what
 # keeps them out of each other's way, not queueing.
