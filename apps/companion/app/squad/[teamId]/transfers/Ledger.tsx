@@ -1,6 +1,6 @@
 import ScrollBoard from "../../../components/league/ScrollBoard";
 import type { Deal, DealSide } from "@epl/core";
-import { inkOn, kindOf, movement, teamColours, DASH } from "@epl/core";
+import { dealDay, inkOn, kindOf, movement, teamColours } from "@epl/core";
 import { MINOR_CAPS, MINOR_LABEL, PANEL_FLUSH, ROW_NAME } from "@/app/desk";
 
 // One manager's business, drawn as Championship Manager's Transfers screen.
@@ -71,23 +71,10 @@ export default function Ledger({
                 // two-line row; this is the same rule at row scale.
                 className="cm-row flex min-h-11 flex-col gap-1 px-1.5 py-1.5 lg:flex-row lg:items-center lg:gap-2 lg:py-0"
               >
-                {/* CM's leading index cell carrying the DATE — `23.jpg` runs
-                    "Mon 23rd Aug" down the left in exactly this blue block.
-                    Fantrax's string verbatim: it has no offset in it, so it is
-                    printed as they wrote it and the zone is named once in the
-                    header rather than guessed at per row. */}
-                {/* **The date, not the timestamp.** Fantrax sends
-                    "Wed Sep 2, 2026, 6:11AM" — 23 characters, which at 390 took
-                    a third of the row and pushed the OUT and WITH columns off
-                    the screen entirely. `23.jpg`'s block is "Mon 23rd Aug": day
-                    and month, no year, no clock. The year is on every row and
-                    says nothing; the minute is a precision a waiver ledger has
-                    no use for. Trimmed by splitting on Fantrax's own commas
-                    rather than parsed — their string carries no offset, so
-                    turning it into a Date would invent one. */}
+                {/* The day, never cut: CM's blue date block ("Mon 23rd Aug" in `23.jpg`). */}
                 <span className="flex items-center gap-2 lg:contents">
-                <span className="cm-index numeric w-24 shrink-0 truncate px-1.5 py-0.5">
-                  {shortDate(deal.processedAt)}
+                <span className="cm-index numeric w-24 shrink-0 whitespace-nowrap px-1.5 py-0.5">
+                  {dealDay(deal.processedAt)}
                 </span>
 
                 {/* Type and period ride together in one narrow cell rather than
@@ -203,15 +190,6 @@ function Side({
       </span>
     </span>
   );
-}
-
-/** Fantrax's timestamp, trimmed to the day. Their own commas do the work: the
- *  string is "Wed Sep 2, 2026, 6:11AM" and the first two segments are the date.
- *  Never parsed into a `Date` — it carries no offset, so parsing invents one. */
-function shortDate(at: string | null): string {
-  if (at === null) return DASH;
-  const [day, month] = at.split(",");
-  return month === undefined ? at : `${day.trim()} ${month.trim()}`;
 }
 
 /** The other side of a trade, as a plate in its own colour.

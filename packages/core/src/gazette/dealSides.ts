@@ -1,3 +1,4 @@
+import { DASH } from "../format";
 import type { Deal, DealSide } from "./types";
 
 // One manager's side of a deal, and what to call it.
@@ -67,4 +68,9 @@ export function kindOf(deal: Deal, arrived: number, left: number): string {
   // `out`, so a bare `left > 0` means something else there.
   if (arrived === 0 && left > 0) return "To The Bin";
   return left === 0 ? "Bin Pick Up" : "Waiver";
+}
+
+/** Fantrax's "Wed Sep 2, 2026, 6:11AM" as "Wed Sep 2". Never parsed into a `Date`: it carries no offset. */
+export function dealDay(at: string | null): string {
+  return at === null ? DASH : at.split(",")[0].trim();
 }
