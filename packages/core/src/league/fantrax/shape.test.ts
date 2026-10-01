@@ -57,6 +57,18 @@ describe("shapeOf", () => {
     );
   });
 
+  it("merges a league's scoring categories and their positions, which are settings and not fields", () => {
+    // The real league swapped A, AF and Sv for AT and GKP on 1 Oct 2026; that is a league choosing, not a lost field.
+    const rehearsal = { scoringSystem: { scoringCategories: { GOALIE: { A: { Default: "points3" }, Sv: { Default: "range1|99|1|3.0" } } } } };
+    const real = { scoringSystem: { scoringCategories: { GOALIE: { AT: { Default: "points3" }, GKP: { G: "points0" } } } } };
+    expect(shapeOf(real)).toEqual(new Set(["scoringSystem.scoringCategories.GOALIE{}{}:string"]));
+    expect(diffShapes(shapeOf(rehearsal), shapeOf(real))).toEqual({ missing: [], emptied: [], added: [] });
+    // The groups themselves stay fields: losing NON_GOALIE is a real difference.
+    expect(diffShapes(shapeOf({ scoringSystem: { scoringCategories: { GOALIE: {}, NON_GOALIE: { G: { D: "points6" } } } } }), shapeOf(real)).missing).toEqual([
+      "scoringSystem.scoringCategories.NON_GOALIE{}{}:string",
+    ]);
+  });
+
   it("tells an empty array apart from a missing key", () => {
     // The difference between "no teams yet" and "no such field", which is the
     // whole reason this file exists. Our real league answers `[]` for months.

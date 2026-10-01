@@ -45,6 +45,9 @@ function looksLikeIds(keys: string[]): boolean {
   return keys.length > 0 && keys.every(looksLikeId);
 }
 
+/** A scoring group's categories, and the positions each one prices: keyed by a league's settings, not by fields. */
+const KEYED_BY_SETTINGS = /^scoringSystem\.scoringCategories\.[A-Z_]+(\{\})?$/;
+
 /** Every path in a payload, with arrays and id-keyed maps collapsed.
  *
  *  A path ends in its type — `rosterInfo.teamName:string` — because a field that
@@ -69,7 +72,7 @@ export function shapeOf(value: unknown, prefix = ""): Set<string> {
   }
 
   const entries = Object.entries(value as Record<string, unknown>);
-  if (looksLikeIds(entries.map(([key]) => key))) {
+  if (looksLikeIds(entries.map(([key]) => key)) || KEYED_BY_SETTINGS.test(prefix)) {
     for (const [, inner] of entries) for (const path of shapeOf(inner, `${prefix}{}`)) paths.add(path);
     return paths;
   }
