@@ -44,13 +44,8 @@ export const WRONG_CODE_DELAY_MS = 700;
  *  a slogan does. */
 export const PAPER_NAME = "The Gazetta";
 
-/** How much of the paper prints on the front page.
- *
- *  A front page is a front page: the rest is a page of its own when there is
- *  enough to warrant one. Both sections say their true total in the heading, so
- *  a reader can see they are looking at a selection. */
+/** How many deals the front page prints; the heading says the true total. */
 export const DEALS_SHOWN = 6;
-export const DOUBTS_SHOWN = 8;
 
 
 /** How many filed stories run beside the lead, at the second rank.
