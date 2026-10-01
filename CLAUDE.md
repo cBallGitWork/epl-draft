@@ -103,8 +103,8 @@ npm run intel-check     # is the intel export fresh and whole
   repository secret).
 - Secrets: `write-edition` needs `ANTHROPIC_API_KEY` (`OPENAI_API_KEY` is optional, for the
   drawing); `roster-limits` needs `FANTRAX_COOKIE`. The app saves lineups to Fantrax only where
-  `LINEUP_SAVE=on` and `FANTRAX_COOKIE` (the commissioner's session) are both set in Vercel. Everything
-  else reads public endpoints.
+  `FANTRAX_COOKIE` (the commissioner's session) and `LINEUP_SAVE` are set in Vercel: `on` for every
+  team, or comma-separated Fantrax team ids for only those. Everything else reads public endpoints.
 
 ## Architecture: two layers, never conflated
 
