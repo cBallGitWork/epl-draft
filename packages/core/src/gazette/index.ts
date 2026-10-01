@@ -7,7 +7,7 @@
 export { availability } from "./availability";
 export { nextDeadline } from "./deadline";
 export { deals } from "./deals";
-export { dealDay, kindOf, movement } from "./dealSides";
+export { kindOf, movement } from "./dealSides";
 export { strangers } from "./strangers";
 export { hasRoom } from "./running";
 export { buildFixturePreviewBrief } from "./briefs/fixturePreview";

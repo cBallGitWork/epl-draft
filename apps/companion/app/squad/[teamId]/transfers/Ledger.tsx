@@ -1,7 +1,7 @@
 import Image from "next/image";
 import ScrollBoard from "../../../components/league/ScrollBoard";
 import type { Deal, DealSide } from "@epl/core";
-import { crestForShortName, dealDay, inkOn, kindOf, movement, teamColours, toFplClubCode, DASH } from "@epl/core";
+import { crestForShortName, fantraxDay, inkOn, kindOf, movement, teamColours, toFplClubCode, DASH } from "@epl/core";
 import { LABEL, PANEL_FLUSH, SMALL_CAPS } from "@/app/desk";
 
 // One manager's business as CM's Transfers screen (`cm0102/23.jpg`): a blue date block, the type in
@@ -45,9 +45,9 @@ export default function Ledger({
               className="cm-row flex min-h-14 items-center gap-2 px-1.5 py-1.5"
             >
               <span className="flex w-24 shrink-0 flex-col gap-1 lg:contents">
-                {/* The day, never cut. */}
+                {/* The day, British as Mail spells it, never cut. */}
                 <span className="cm-index numeric w-24 shrink-0 whitespace-nowrap px-1.5 py-0.5">
-                  {dealDay(deal.processedAt)}
+                  {fantraxDay(deal.processedAt ?? "") ?? DASH}
                 </span>
                 <span className={`w-24 shrink-0 ${SMALL_CAPS} text-accent lg:text-sm`}>
                   {kindOf(deal, arrived.length, left.length)}

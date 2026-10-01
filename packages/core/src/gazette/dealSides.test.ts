@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Deal, DealSide } from "./types";
-import { dealDay, kindOf, movement } from "./dealSides";
+import { kindOf, movement } from "./dealSides";
 
 const side = (playerName: string, teamId: string | null): DealSide => ({
   playerName,
@@ -80,20 +80,5 @@ describe("kindOf", () => {
   it("keeps Fantrax's other kinds distinguishable", () => {
     expect(kindOf(deal({ kind: "lineup" }), 0, 0)).toBe("Lineup");
     expect(kindOf(deal({ kind: "unknown" }), 0, 0)).toBe("Move");
-  });
-});
-
-describe("dealDay", () => {
-  it("keeps the day and drops the year and the clock", () => {
-    // THE BUG. The second comma segment is the year, so the chip read "Wed Aug 12 2026" and truncated.
-    expect(dealDay("Wed Aug 12, 2026, 9:14AM")).toBe("Wed Aug 12");
-  });
-
-  it("prints a dash when Fantrax sent no date", () => {
-    expect(dealDay(null)).toBe("—");
-  });
-
-  it("passes a string with no comma through unchanged", () => {
-    expect(dealDay("Wed Aug 12")).toBe("Wed Aug 12");
   });
 });
