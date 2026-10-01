@@ -15,7 +15,7 @@ import { getLeagueSquads } from "./squads";
 // quote, and the Premier League's is arithmetic we do under rules that are
 // fixed for everyone. Only the second could ever be ours to compute.
 
-/** The draft league, in Fantrax's own order and arithmetic. */
+/** The draft league, in Fantrax's own order: names and points (Craig, 1 Oct 2026). */
 export async function draftRows(mine: string | null): Promise<PaperTableRow[]> {
   const table = await draftTable();
   if ("unavailable" in table) return [];
@@ -23,8 +23,8 @@ export async function draftRows(mine: string | null): Promise<PaperTableRow[]> {
     key: row.teamId,
     rank: row.rank,
     name: row.teamName,
-    played: row.won + row.drawn + row.lost,
-    detail: `${row.won}-${row.drawn}-${row.lost}`,
+    played: null,
+    detail: null,
     points: row.points,
     yours: row.teamId === mine,
   }));
