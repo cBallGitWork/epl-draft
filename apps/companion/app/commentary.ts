@@ -15,6 +15,7 @@ import {
 } from "@epl/core";
 import { replayAt } from "./clock";
 import { plRound, plStream, playerCodes } from "./plFeed";
+import { orDegraded } from "./refusals";
 
 // The ROUND's questions, from the Premier League's own feed. One match's are next
 // door in `matchFeed.ts`; the reads and the identity join both use are in
@@ -48,15 +49,14 @@ function asOf<T extends { absolute: number | null }>(events: readonly T[]): T[] 
  *
  *  Newest first, because the question this answers is "what just happened".
  *
- *  Returns `[]` rather than throwing when their API refuses. That is not the
- *  swallow §2 forbids: the caller renders the round's football either way, and
- *  an empty wire under a live scoreline is a panel with nothing in it, not a
- *  claim that nothing happened — `Wire` says which it is from `speaksForNow`. */
+ *  `[]` when their API fails, which is not the swallow §2 forbids: an empty wire under a live
+ *  scoreline is a panel with nothing in it, and `Wire` says which from `speaksForNow`. */
 export async function roundGoals(
   gameweek: number,
   players: readonly FootballPlayer[],
 ): Promise<MatchEvent[]> {
-  const round = await plRound(gameweek);
+  const round = await orDegraded(plRound(gameweek), () => null);
+  if (round === null) return [];
   const goals = asOf(mapRoundGoals(round.content, playerCodes(players)));
   return goals.sort((a, b) => (b.absolute ?? 0) - (a.absolute ?? 0));
 }
@@ -68,7 +68,8 @@ export async function roundGoals(
  *  wire with no full-time lines is a wire with fewer lines, not a claim that
  *  nothing has finished. */
 export async function roundBreaks(gameweek: number): Promise<RoundBreak[]> {
-  return asOf(mapRoundBreaks((await plRound(gameweek)).content));
+  const round = await orDegraded(plRound(gameweek), () => null);
+  return round === null ? [] : asOf(mapRoundBreaks(round.content));
 }
 
 /** Each kicked-off fixture's commentary this round, filed under FPL's fixture code.

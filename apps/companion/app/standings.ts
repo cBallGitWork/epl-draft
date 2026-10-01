@@ -47,6 +47,7 @@ const read = leagueCache("standings-page",
       refused: null,
     };
   },
+  (error) => ({ table: [], badges: [], refused: tell(error) }),
 );
 
 /** The table, or the reason there isn't one.

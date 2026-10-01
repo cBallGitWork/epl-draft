@@ -82,7 +82,7 @@ export type LeaguePool = (Pool & { teamNames: Map<string, string> }) | Unavailab
  *  silently reads "unowned". Entries go in, the Map is built on the way out. */
 type CachedPool = (Pool & { teamNames: [string, string][] }) | Unavailable;
 
-const readPool = leagueCache("league-pool", readLeaguePool);
+const readPool = leagueCache("league-pool", readLeaguePool, (error): CachedPool => ({ unavailable: tell(error) }));
 
 /** Cached, and that is not an optimisation.
  *

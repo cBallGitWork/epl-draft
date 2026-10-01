@@ -2,7 +2,7 @@ import { FANTRAX_FXPA_BASE } from "../../config";
 import { demoFxpa, isDemo } from "./demo";
 import { politeFetch } from "../../http/fetch";
 import { readJson } from "../../http/json";
-import { FantraxError, pageErrorEnvelope, responseErrorEnvelope } from "./errors";
+import { FantraxError, pageErrorEnvelope, responseErrorEnvelope, statusFailure } from "./errors";
 
 // Fantrax's SPA API. A separate file from `client.ts` on purpose: different
 // protocol, different failure envelope. Folding it into the fxea client would
@@ -27,7 +27,7 @@ export function unwrapFxpa(method: string, body: unknown): unknown {
 
   const responses = (body as { responses?: unknown[] } | null)?.responses;
   if (!Array.isArray(responses) || responses.length === 0) {
-    throw new FantraxError(method, "NO_RESPONSES", "fxpa returned no responses");
+    throw new FantraxError(method, "NO_RESPONSES", "fxpa returned no responses", "malformed");
   }
 
   const [response] = responses;
@@ -38,7 +38,7 @@ export function unwrapFxpa(method: string, body: unknown): unknown {
 
   const data = (response as { data?: unknown } | null)?.data;
   if (data === undefined || data === null) {
-    throw new FantraxError(method, "NO_DATA", "fxpa answered with neither data nor errors");
+    throw new FantraxError(method, "NO_DATA", "fxpa answered with neither data nor errors", "malformed");
   }
   return data;
 }
@@ -73,8 +73,8 @@ export async function fxpaRead(
   }, { idempotent: session === undefined });
 
   // As on fxea, a backstop only: fxpa reports its own refusals with a 200.
-  if (!res.ok) throw new FantraxError(method, String(res.status), res.statusText);
+  if (!res.ok) throw statusFailure(method, res);
 
-  const body = await readJson(res, (arrived) => new FantraxError(method, "NOT_JSON", arrived));
+  const body = await readJson(res, (arrived) => new FantraxError(method, "NOT_JSON", arrived, "malformed"));
   return unwrapFxpa(method, body);
 }

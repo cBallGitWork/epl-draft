@@ -57,6 +57,7 @@ const readScores = leagueCache("live-scores",
       refused: null,
     };
   },
+  (error) => ({ scores: [], players: [], bench: [], refused: tell(error) }),
 );
 
 export async function liveScores(

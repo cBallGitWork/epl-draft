@@ -69,6 +69,7 @@ describe("unwrapFxpa", () => {
   it("throws the request-level refusal", () => {
     expect(() => unwrapFxpa("getCommissionerHubInfo", pageError)).toThrow(FantraxError);
     expect(() => unwrapFxpa("getCommissionerHubInfo", pageError)).toThrow(/WARNING_NOT_LOGGED_IN/);
+    expect(() => unwrapFxpa("getCommissionerHubInfo", pageError)).toThrow(expect.objectContaining({ kind: "refused" }));
   });
 
   // The envelope is fine and the message inside it is not. Checking only the top
@@ -84,6 +85,7 @@ describe("unwrapFxpa", () => {
     expect(() => unwrapFxpa("x", {})).toThrow(/NO_RESPONSES/);
     expect(() => unwrapFxpa("x", null)).toThrow(/NO_RESPONSES/);
     expect(() => unwrapFxpa("x", { responses: [] })).toThrow(/NO_RESPONSES/);
+    expect(() => unwrapFxpa("x", {})).toThrow(expect.objectContaining({ kind: "malformed" }));
   });
 
   // Handing back null here let a mapper find out, as a TypeError on its first field.
@@ -91,7 +93,7 @@ describe("unwrapFxpa", () => {
     for (const response of [{}, { data: null }, null]) {
       const read = () => unwrapFxpa("getStandings", { responses: [response] });
       expect(read).toThrow(FantraxError);
-      expect(read).toThrow(expect.objectContaining({ code: "NO_DATA" }));
+      expect(read).toThrow(expect.objectContaining({ code: "NO_DATA", kind: "malformed" }));
     }
   });
 
@@ -111,6 +113,7 @@ describe("fxpaRead", () => {
       method: "getStandings",
       code: "NOT_JSON",
       message: expect.stringContaining("Fantrax getStandings: NOT_JSON — 200 text/html"),
+      kind: "malformed",
     });
   });
 
@@ -123,11 +126,19 @@ describe("fxpaRead", () => {
     expect(count.calls).toBe(2);
   });
 
+  it("reads a 5xx that outlasts the retries as Fantrax unreachable", async () => {
+    vi.useFakeTimers();
+    serve(statusOnly(503));
+    const pending = fxpaRead(LEAGUE, "getStandings").catch((e: unknown) => e);
+    await vi.runAllTimersAsync();
+    expect(await pending).toMatchObject({ code: "503", kind: "unreachable" });
+  });
+
   it("reads a 404 as a Fantrax refusal", async () => {
     serve(statusOnly(404));
     const error = await fxpaRead(LEAGUE, "getStandings").catch((e: unknown) => e);
     expect(error).toBeInstanceOf(FantraxError);
-    expect(error).toMatchObject({ code: "404" });
+    expect(error).toMatchObject({ code: "404", kind: "refused" });
   });
 });
 

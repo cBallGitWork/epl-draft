@@ -37,7 +37,7 @@ const readSeasonStats = leagueCache("season-stats", async (): Promise<CategoryEn
   const raw = await orRefusal(fetchSeasonStats(FANTRAX_LEAGUE_ID));
   if (raw instanceof FantraxError) return [];
   return [...mapSeasonStats(raw)].map(([category, lines]) => ({ category, lines }));
-});
+}, () => []);
 
 /** The categories, keyed for lookup. The Map is built on this side of the cache
  *  because only this side can hold one. */
