@@ -44,11 +44,9 @@ function at(key: (typeof SECTIONS)[number]["key"]): string {
 export const TEAM_STATS = at("teamStats");
 const CUPS_PAGE = at("cups");
 
-/** One cup's page, on its fixtures unless a view is named. */
-export function cupHref(cupId: string, view?: string): string {
-  const query = new URLSearchParams({ cup: cupId });
-  if (view !== undefined) query.set("view", view);
-  return `${CUPS_PAGE}?${query}`;
+/** One cup's page. */
+export function cupHref(cupId: string): string {
+  return `${CUPS_PAGE}?${new URLSearchParams({ cup: cupId })}`;
 }
 
 /** The four tabs, plus the one section a route can BE on without being in the

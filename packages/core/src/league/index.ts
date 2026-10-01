@@ -71,7 +71,7 @@ export { headToHead, leaguePool, pairingInvolves, periodPairings } from "./selec
 export { leads, trails } from "./scoreline";
 export type { HeadToHead, PeriodPairing, PoolPlayer } from "./selectors";
 
-export { COMPETITIONS, LEAGUE_COMPETITION, cupTies, groupTies, leagueTies } from "./competitions";
+export { COMPETITIONS, LEAGUE_COMPETITION, cupTies, groupTies, leagueTies, seededIn } from "./competitions";
 export type { CompetitionTie, TieSide } from "./competitions";
 export { CUPS } from "./cups/declared";
 export type { Cup } from "./cups/declared";

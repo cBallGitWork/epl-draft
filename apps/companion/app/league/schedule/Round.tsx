@@ -12,7 +12,7 @@ export default function Round({
   badges,
   places,
   mine,
-  cup,
+  note,
 }: {
   round: ScheduleRound;
   ties: CompetitionTie[];
@@ -20,36 +20,21 @@ export default function Round({
   badges: Map<string, string>;
   places: Map<string, number>;
   mine: string | null;
-  /** Set on one cup's own list: its name is dropped, a lone round heads the gameweek, and a
-   *  week with no tie can still carry a line, such as the seeding. */
-  cup?: { note?: { title: string; text: string } };
+  /** A cup's line in a week it plays no tie, such as its seeding. */
+  note?: { title: string; text: string } | undefined;
 }) {
   const groups = groupTies(ties);
-  const note = cup?.note;
   if (groups.length === 0 && note === undefined) return null;
-  const lone = cup !== undefined && groups.length === 1 ? (groups[0]?.round ?? undefined) : undefined;
 
   return (
     <section className="flex flex-col gap-1">
-      <RoundHeader round={round} title={note?.title ?? lone} />
-      {note === undefined ? null : (
-        <p className="cm-rows flex min-h-11 items-center px-3 text-sm">{note.text}</p>
-      )}
+      <RoundHeader round={round} />
       {groups.map((group) => (
         <div key={`${group.competition.id}-${group.round ?? ""}`} className="flex flex-col">
-          {/* The competition's own head, in the chrome face, the way CM captions
-              a block inside a panel. The LEAGUE's block is unheaded: a schedule
-              of which nine rows in ten are the league would be a column of one
-              repeated word, and the two lines a cup round adds are exactly the
-              rows that need naming. */}
-          {(group.competition.id === LEAGUE_COMPETITION.id && group.round === null) ||
-          lone !== undefined ? null : (
+          {/* The league's own block is unheaded; a cup's round is named on a plate. */}
+          {group.competition.id === LEAGUE_COMPETITION.id && group.round === null ? null : (
             <h3 className={BLOCK_PLATE}>
-              {cup !== undefined
-                ? group.round
-                : group.round === null
-                  ? group.competition.name
-                  : `${group.competition.name} · ${group.round}`}
+              {group.round === null ? group.competition.name : `${group.competition.name} · ${group.round}`}
             </h3>
           )}
           <ul className="cm-rows flex flex-col">
@@ -68,6 +53,12 @@ export default function Round({
           </ul>
         </div>
       ))}
+      {note === undefined ? null : (
+        <div className="flex flex-col">
+          <h3 className={BLOCK_PLATE}>{note.title}</h3>
+          <p className="cm-rows flex min-h-11 items-center px-3 text-sm">{note.text}</p>
+        </div>
+      )}
     </section>
   );
 }
