@@ -88,10 +88,11 @@ npm run intel-check     # is the intel export fresh and whole
   (`GET /api/league`). **Go-live is one Vercel change on 7 Oct**: set it to `mqsjd23smsgbiqzr`
   with the codes and save switches, and redeploy (`/swap-day`).
 - The leagues the archive records are data, in `data/leagues/recorded.json`, each named by a
-  word (`real`, `dummy`, `rehearsal`). Scripts read it; the app reads one role from it, `stats`:
+  word (`real`, `dummy`, `rehearsal`). Scripts read it; the app reads two roles from it: `stats`,
   the league whose scoring lists every column at no points, read only for columns the served
-  league must not list. **Two leagues, never interchangeable**: the served one is the environment's
-  and swaps on 7 Oct; the stats one is data and does not.
+  league must not list, and `scoring`, the league whose rules price every point we work out
+  ourselves (`app/scoring.ts`). **Never interchangeable with the served one**: that is the
+  environment's and swaps on 7 Oct; the roles are data and do not.
 - `FANTRAX_DEMO_TEAM_ID` lends a test league's team to a reader with no code, and only when that
   team is in the served league.
 - **Two `.env.local` files.** `next dev` roots at `apps/companion`, so the app reads

@@ -13,6 +13,7 @@ import { getLeagueSquads, readableOr404, teamDisplay } from "../../squads";
 import { lastLockedRound, leagueInfo, planningRound, roundOf } from "../../round";
 import { newsFor, readPoolNews } from "../../poolNews";
 import { pendingByTeam, squadLivePoints } from "../../scoreboard";
+import { leagueScoring } from "../../scoring";
 import { squadSeason } from "../../teamStats";
 import { myTeamId } from "../../session";
 import { OWN, SQUAD } from "../routes";
@@ -135,9 +136,10 @@ export async function squadView(slug: string, gw: string | undefined) {
   // because the answer decides whether the news read is worth making.
   const sheet = planning === null && display.show === "lineup";
   // Concurrent, not serial: this screen is read on a matchday. Only the sheet reads the round.
-  const [live, stories] = await Promise.all([
+  const [live, stories, scoring] = await Promise.all([
     priced === null || !sheet ? null : squadLivePoints(priced.period, teamId, priced.categories),
     sheet ? readPoolNews() : null,
+    leagueScoring(),
   ]);
   // Fifteen men's news, not the pool's 74 — this crosses to the browser.
   const news = stories === null ? undefined : newsFor(stories, [...squadIds]);
@@ -186,7 +188,7 @@ export async function squadView(slug: string, gw: string | undefined) {
   //
   // Nought is not a preview. A squad owed nothing prints nothing rather than a
   // `+0`, which would read as a claim that the clean sheets have been counted.
-  const owed = pendingByTeam([team], squads.info?.scoring ?? null, squads.snapshot, display).get(
+  const owed = pendingByTeam([team], scoring?.rules ?? null, squads.snapshot, display).get(
     teamId,
   )?.points;
   const pending = owed ? owed : null;
