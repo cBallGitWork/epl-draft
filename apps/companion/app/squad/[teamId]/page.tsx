@@ -9,6 +9,7 @@ import LineupPlanner from "../../components/league/LineupPlanner";
 import SeasonGrid from "../../components/league/SeasonGrid";
 import SquadBoard from "../../components/league/SquadBoard";
 import Sheet from "./Sheet";
+import GameweekPicker from "./GameweekPicker";
 import TeamShell from "./Shell";
 import { rosterMinimums } from "../../rosterMinimums";
 import { identify } from "./team";
@@ -40,7 +41,9 @@ export default async function TeamPage({
   // `teamId` is what the folder is called; `slug` is what the reader typed, and
   // on the front door those are not the same thing. See `squad/routes.ts`.
   const [{ teamId: slug }, { gw }] = await Promise.all([params, searchParams]);
-  const { team, planning, open, benchRanks, eligibility, clubs, opposition, live, news, season, points, board, names, pending, squadIds } = await squadView(slug, gw);
+  const { team, mine, planning, open, standing, weeks, benchRanks, eligibility, clubs, opposition, live, news, season, points, board, names, pending, squadIds } = await squadView(slug, gw);
+  // Fantrax's period selector, on every branch: an earlier week shows its scores, a later one its opponents.
+  const picker = weeks === null ? null : <GameweekPicker key={weeks.shown} slug={slug} shown={weeks.shown} options={weeks.options} />;
 
   return (
     /* The only live-points surface that did not move on a Saturday. Both
@@ -82,6 +85,7 @@ export default async function TeamPage({
           period={open?.period ?? 0}
           benchRanks={benchRanks}
           canSave={commissionerSession(team.teamId) !== null}
+          picker={picker}
         />
       ) : board !== null ? (
         /* The gate. Before his lineups lock a rival's XI is not visible — the
@@ -106,6 +110,8 @@ export default async function TeamPage({
            columns widened the whole page rather than scrolling inside their own
            panel — a 390 phone laid out at 627. The `overflow-x-auto` around the
            table cannot help while the column it sits in is free to grow. */
+        <div className="flex flex-col gap-2">
+        {picker === null ? null : <div className="flex justify-end px-1">{picker}</div>}
         <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
           <SquadBoard
             lines={board.lines}
@@ -119,10 +125,11 @@ export default async function TeamPage({
               own name for the season. */}
           {season !== null ? <SeasonGrid stats={season.stats} names={names} /> : null}
         </div>
+        </div>
       ) : (
-        /* A rival's XI, once his lineups have locked. Read-only: it is his — but
-           every man on it opens the same card the head-to-head board opens, so
-           "why is he on 12" has one answer wherever it is asked.
+        /* An XI nobody may change here: a rival's once his lineups have locked, or
+           your own in any week but the open one. Every man on it opens the same
+           card the head-to-head board opens, so "why is he on 12" has one answer.
 
            Arranged here and only here: this is the branch where the lineup is
            public, and building it on the others would be work whose only product
@@ -134,6 +141,10 @@ export default async function TeamPage({
           news={news}
           pending={pending}
           eligibility={eligibility}
+          picker={picker}
+          show={standing === "locked" ? "points" : "fixture"}
+          // Your own opens on the pitch, as the planner does, so changing week keeps the reading.
+          opens={mine ? "pitch" : "list"}
         />
       )}
     </TeamShell>

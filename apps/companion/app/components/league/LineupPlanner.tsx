@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import type { LeaguePlayerState, RosterLimits, RosteredTeam, SquadPlayerDetail } from "@epl/core";
 import LineupPitch from "./LineupPitch";
 import PlayerCard from "./PlayerCard";
@@ -36,6 +36,7 @@ export default function LineupPlanner({
   period,
   benchRanks,
   canSave,
+  picker,
 }: {
   team: RosteredTeam;
   /** The squad's football detail, flat and unarranged. Arranging it is this
@@ -56,6 +57,8 @@ export default function LineupPlanner({
   benchRanks: Record<string, number>;
   /** Whether this deployment saves to Fantrax. */
   canSave: boolean;
+  /** The gameweek picker, beside the toggle; a tap away goes through `LeaveGuard` like any link. */
+  picker: ReactNode;
 }) {
   const {
     rows,
@@ -129,8 +132,12 @@ export default function LineupPlanner({
             the 44px a tap target costs — `pitchfit` had the pitch clearing the
             fold by 5px at 1440 with the toggle in the column, and by 26 with
             it gone. */}
-        <div className="lg:hidden">
-          <ViewToggle view={view} onPick={setView} />
+        {/* The week beside the toggle on a phone, so the grass loses no height to it; alone at the right above `lg`. */}
+        <div className="flex gap-2 lg:order-3">
+          <div className="flex flex-1 lg:hidden">
+            <ViewToggle view={view} onPick={setView} />
+          </div>
+          {picker}
         </div>
       </div>
 

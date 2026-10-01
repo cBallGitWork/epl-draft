@@ -67,7 +67,7 @@ export interface Round {
  *  you cannot request a period's rosters until you know which period a gameweek
  *  is. Read rather than assumed — the two are one-to-one every week this season
  *  and a postponement is the known way they come apart. */
-const readCalendar = leagueCache("league-calendar",
+export const readCalendar = leagueCache("league-calendar",
   async () => {
     const [info, kickoffs] = await Promise.all([leagueInfo(), seasonKickoffs()]);
     return info === null ? [] : periodGameweeks(info.scoringPeriods, kickoffs);
