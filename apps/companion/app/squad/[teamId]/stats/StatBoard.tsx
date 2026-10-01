@@ -24,6 +24,8 @@ import { BOARD, BOARD_FIGURE, MINOR_LABEL, PANEL_FLUSH, PINNED_BESIDE_TILE, PINN
 
 /** The name column starts where the tile ends. */
 const LEAD = `${PINNED_BESIDE_TILE}`;
+/** One width for every figure column, so the name takes the slack and a long head does not. */
+const FIGURE_WIDTH = "w-10 lg:w-14";
 
 export default function StatBoard({
   lines,
@@ -99,6 +101,7 @@ export default function StatBoard({
                   key={measure.key}
                   label={measure.head}
                   title={measure.label}
+                  width={FIGURE_WIDTH}
                   align="right"
                   sorted={sortedAs(sort?.key === measure.key, sort?.descending ?? true)}
                   onSort={() => sortBy(measure.key)}
