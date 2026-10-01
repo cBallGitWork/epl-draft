@@ -7,7 +7,7 @@ import { footballNow } from "../../../football";
 import { getLeaguePool } from "../../../players/pool";
 import { seasonMarks } from "../../../ratings";
 import LeaderBoard, { type Row } from "./LeaderBoard";
-import ListPicker from "./ListPicker";
+import QuerySelect from "../../../players/QuerySelect";
 import { LISTS, MOST, TOP, asPrinted, listFor, ranked, seasonRatings, type Leader, type LeaderList } from "./leaders";
 
 // The season's leaders as plain lists (Craig, 1 Oct 2026: "simple list like top scorer, top xg, top fantasy ratings etc
@@ -17,6 +17,9 @@ import { LISTS, MOST, TOP, asPrinted, listFor, ranked, seasonRatings, type Leade
 export const revalidate = 30;
 
 type Search = Promise<{ list?: string; n?: string }>;
+
+/** The phone's picker, one entry a list. */
+const PICKS = LISTS.map((list) => ({ value: list.key, label: list.title }));
 
 export default async function DataPage({ searchParams }: { searchParams: Search }) {
   const query = await searchParams;
@@ -59,7 +62,9 @@ export default async function DataPage({ searchParams }: { searchParams: Search 
   return (
     <PremShell current="data">
       <div className="flex items-center gap-2 border-b border-line px-2 py-1.5 lg:hidden">
-        <ListPicker list={asked.key} />
+        <QuerySelect name="list" label="List" value={asked.key} options={PICKS} action={DATA}>
+          {null}
+        </QuerySelect>
       </div>
       <div className="grid items-start gap-2 lg:grid-cols-4">
         {LISTS.map((list) => {
