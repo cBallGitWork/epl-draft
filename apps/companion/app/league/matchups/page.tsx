@@ -6,6 +6,7 @@ import LeagueShell from "../Shell";
 import { getLeagueSquads } from "../../squads";
 import { myTeamId } from "../../session";
 import { liveScores, pendingByTeam } from "../../scoreboard";
+import { leagueScoring } from "../../scoring";
 import { teamBadges } from "../../standings";
 import { roundUnderway } from "../../football";
 import { yoursFirst } from "../../mine";
@@ -79,9 +80,9 @@ export default async function MatchupPage() {
   // kickoffs — and printed "4 to play" on the other side of the same line anyway.
   const underway = roundUnderway(squads.snapshot);
 
-  const [mine, badges] = await Promise.all([myTeamId(squads.period.teams), teamBadges()]);
+  const [mine, badges, scoring] = await Promise.all([myTeamId(squads.period.teams), teamBadges(), leagueScoring()]);
   const { scores, refused } = await liveScores(period);
-  const pending = pendingByTeam(squads.period.teams, squads.info.scoring, squads.snapshot, squads.display);
+  const pending = pendingByTeam(squads.period.teams, scoring?.rules ?? null, squads.snapshot, squads.display);
   const owed = [...pending.values()].reduce((total, team) => total + team.players, 0);
 
   // Yours first. Sixteen pairings is a scroll, and the one a manager came for is
