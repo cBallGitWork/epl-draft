@@ -21,6 +21,7 @@ import type { SheetsDesk } from "./sheets";
 import { storyOfColumn } from "./newsroom";
 import { COLUMNIST, STORY_BYLINE, editionName } from "./voice/bylines";
 import { presserHeadline } from "./voice/pressers";
+import type { DraftJob } from "./draftWriter";
 import type { ReportsJob } from "./reports";
 import type { BinDesk } from "./binXi";
 
@@ -48,6 +49,7 @@ export interface DeskContext {
   reports: ReadonlyMap<string, ReportsJob>;
   /** The Bin XI's side, brief and cargo; null unless it is due this firing. */
   bin: BinDesk | null;
+  drafts: ReadonlyMap<"saturday" | "gameweek", DraftJob>;
   /** This week's press-conference signals, for men the league holds. Empty until
    *  the intel export lands, which files no Team Sheet and spends nothing. */
   presserLines: PresserLine[];
@@ -88,6 +90,7 @@ export function faceCtx(ctx: DeskContext, assignment: Assignment): FaceContext {
     fixtures: ctx.snapshot.fixtures,
     presserLines: assignment.kind === "presser" ? edition(ctx, assignment).lines : ctx.presserLines,
     players: ctx.snapshot.players,
+    drafts: ctx.drafts,
   };
 }
 

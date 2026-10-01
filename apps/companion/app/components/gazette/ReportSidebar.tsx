@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { FantasyMan, StoryLineup, StoryReport } from "@epl/core";
 import { plural } from "@epl/core";
+import { STANDING_HEAD as HEAD } from "./heads";
 
 // The sidebar beside a match's report: the line-ups first as a paper prints them, then the league's side (Draft Man of the
 // Match, top scorers, free agents who scored) and the key stats. A phone reads it after the report.
@@ -8,7 +9,6 @@ import { plural } from "@epl/core";
 /** Fantasy points as the sidebar prints them: "1 pt", "7 pts". */
 const pts = (n: number) => `${n} ${plural(n, "pt")}`;
 
-const HEAD = "font-sans text-3xs font-semibold uppercase tracking-[0.16em] text-muted";
 const RULE = { borderColor: "var(--paper-rule)" };
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {

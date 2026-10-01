@@ -92,6 +92,7 @@ export {
 export { mapPoolStats, mapTeamStats } from "./fantrax/stats";
 export { mapStatSheet } from "./fantrax/statSheet";
 export type { SheetColumn, SheetLine, StatSheet } from "./fantrax/statSheet";
+export { mapBenchOrder } from "./fantrax/benchOrder";
 export { isFantraxPlayerId, mapPlayerProfile } from "./fantrax/profile";
 export type { LabelledValue, PlayerIntel, PlayerMatch } from "./fantrax/profile";
 export { mapTransactions, orderKey, transactionDateLabel } from "./fantrax/transactions";
@@ -105,6 +106,8 @@ export type { PlayerStory } from "./fantrax/playerNews";
 export type { RawTeamRosters } from "./fantrax/raw";
 export {
   fetchLiveScoring,
+  fetchLiveScoringDay,
+  fetchTeamRosterInfo,
   fetchPlayerProfile,
   fetchPoolStats,
   fetchTeamStats,

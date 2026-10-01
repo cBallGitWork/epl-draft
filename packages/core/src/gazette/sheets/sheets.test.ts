@@ -7,7 +7,7 @@ import { crossovers } from "./crossovers";
 import { sheetsFacts } from "./facts";
 import { injuryIn, starterFlags } from "./flags";
 import { inForm } from "./form";
-import { formation, printName, sheetOf } from "./sheet";
+import { formation, fullPrintName, printName, sheetOf } from "./sheet";
 import { man, rostered, side } from "./__fixtures__/sides";
 
 const XI = ["Raya:G:1", "Saliba:D:1", "Gabriel:D:1", "Munoz:D:2", "Rice:M:1", "Saka:M:1", "Palmer:M:3", "Mbeumo:M:4", "Isak:F:5", "Wood:F:6", "Watkins:F:7"];
@@ -24,6 +24,16 @@ describe("sheetOf", () => {
     expect(printName(man("B.Fernandes:M:1").player)).toBe("Fernandes");
     expect(printName(man("E.Le Fée:M:1").player)).toBe("Le Fée");
     expect(printName(man("Saka:M:1").player)).toBe("Saka");
+  });
+
+  it("prints a man's first name as a paper does, and leaves a man known by one name alone", () => {
+    const named = (name: string, fullName: string) => fullPrintName({ ...man(`${name}:M:1`).player, name, fullName });
+    expect(named("B.Fernandes", "Bruno Borges Fernandes")).toBe("Bruno Fernandes");
+    expect(named("E.Le Fée", "Enzo Le Fée")).toBe("Enzo Le Fée");
+    expect(named("Vuskovic", "Luka Vušković")).toBe("Luka Vuskovic");
+    expect(named("Rodri", "Rodrigo Hernández Cascante")).toBe("Rodri");
+    expect(named("Gabriel", "Gabriel dos Santos Magalhães")).toBe("Gabriel");
+    expect(named("George Hemmings", "George Hemmings")).toBe("George Hemmings");
   });
 });
 

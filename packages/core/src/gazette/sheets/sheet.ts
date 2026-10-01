@@ -52,6 +52,21 @@ export function printName(player: FootballPlayer): string {
   return player.name.replace(/^(?:\p{Lu}\.\s*)+/u, "") || player.name;
 }
 
+/** A name as UK papers spell it: the BBC, the Premier League and Fantasy Football Scout all print Groß as "Gross". */
+export const ukSpelling = (name: string) => name.replace(/ß/gu, "ss");
+
+/** The name a paper prints first: "Bruno Fernandes" for FPL's "B.Fernandes" and "Erling Haaland", but "Rodri" and
+ *  "Gabriel" as they are known, since their surname is not in their full name or is their first. */
+export function fullPrintName(player: FootballPlayer): string {
+  const known = printName(player);
+  const plain = (s: string) => s.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+  const words = player.fullName.split(/\s+/u).filter((w) => w !== "");
+  const last = plain(known.split(/\s+/u).at(-1) ?? known);
+  if (known === player.name && known.includes(" ")) return known;
+  if (words.length === 0 || plain(words[0]) === plain(known) || !words.some((w) => plain(w) === last)) return known;
+  return `${words[0]} ${known}`;
+}
+
 /** A keeper or defender's slot, and a midfielder or forward's: the two ends of a side. */
 export const isBack = (slot: string) => slot === "G" || slot === "D";
 export const isFront = (slot: string) => slot === "M" || slot === "F";

@@ -4,6 +4,7 @@ import type { DeskContext } from "./dispatch";
 import { dodgersDesk } from "./dodgers";
 import type { DeskFacts } from "./facts";
 import { predictionsDesk } from "./predictions";
+import { draftsDesk } from "./drafts";
 import { reportsDesk } from "./reports";
 import { sheetsDesk } from "./sheets";
 import type { readLedger } from "./persist";
@@ -50,6 +51,8 @@ export async function deskContext(input: {
     reports: await reportsDesk({ assignments, snapshot, facts, gameweeks, say }),
     // The Bin XI's reads are its own, made only on the Tuesday it is assigned.
     bin: await binXiDesk({ assignments, info, snapshot, facts, period, gameweeks, season, kickoffs, clubs, threads: ledger[FANTRAX_LEAGUE_ID]?.threads ?? [], say }),
+    // A draft report's reads likewise: the gameweek's day reads, rosters and results, only when one is assigned.
+    drafts: await draftsDesk({ assignments, gameweek: snapshot.gameweek, say }),
     presserLines: sheet.lines,
     presserQuotes: sheet.quotes,
     presserTies: sheet.ties,

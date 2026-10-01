@@ -1,10 +1,9 @@
 import Image from "next/image";
 import { crestUrl, londonDayAndDate, thousands, type StoryReport, type StoryReportSide } from "@epl/core";
+import { STANDING_HEAD as SMALL } from "./heads";
 
 // A match's header as BBC Sport sets one (Craig, 28 Sep 2026): date and competition, each club with its crest either side of
 // the score, full time and half-time, the goals and the men who made them under their own side, then the ground and the crowd.
-
-const SMALL = "font-sans text-3xs font-semibold uppercase tracking-[0.16em] text-muted";
 
 function Club({ side, name, align }: { side: StoryReportSide; name: string; align: "start" | "end" }) {
   return (

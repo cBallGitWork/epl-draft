@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Assignment, Fixture, ResolvedPlayer, RosteredTeam } from "@epl/core";
+import type { MatchupContext } from "@epl/core";
 import { faceOf, weight } from "./faces";
 import type { DeskFacts } from "./facts";
 
@@ -139,6 +140,16 @@ describe("faceOf", () => {
       fixtures: NO_FIXTURES,
     };
     expect(faceOf(tieReport("a", "b"), ctx)?.name).toBe("Ardiles");
+  });
+
+  it("gives a draft report the cover its cut-off's lead match-up chooses, and none without a job", () => {
+    const man = { code: 7, name: "Groß", clubId: 5, slot: "M", points: 11, fantraxId: "g" };
+    const side = (points: number, men: unknown[]) => ({ side: { eleven: men, bench: [], total: points }, subs: [], total: points, toPlay: [] });
+    const lead = { state: { home: side(38, [man]), away: side(30, []), margin: 8 } } as unknown as MatchupContext;
+    const draft: Assignment = { kind: "draft-report", key: "draft-report:gw5:gameweek", slug: "gw5-draft-report", cutoff: "gameweek" };
+    const ctx = { facts: facts(), fixtures: NO_FIXTURES, drafts: new Map([["gameweek" as const, { contexts: [lead] }]]) };
+    expect(faceOf(draft, ctx)).toEqual({ code: 7, name: "Groß", clubId: 5, position: "M" });
+    expect(faceOf({ ...draft, cutoff: "saturday" }, ctx)).toBeNull();
   });
 
   it("gives no face to a kind with no man in it", () => {

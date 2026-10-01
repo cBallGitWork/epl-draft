@@ -112,3 +112,13 @@ export function londonWeekday(iso: string): string {
 export function londonWeekdayLong(iso: string): string {
   return readable(iso, WEEKDAY_LONG);
 }
+
+/** `Sat` for a London day, `2026-10-10`: noon UTC falls on that date in London in summer and in winter. */
+export function weekdayOfDay(day: string): string {
+  return londonWeekday(`${day}T12:00:00Z`);
+}
+
+/** `Saturday` for a London day, `2026-10-10`. */
+export function weekdayLongOfDay(day: string): string {
+  return londonWeekdayLong(`${day}T12:00:00Z`);
+}
