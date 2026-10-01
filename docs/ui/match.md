@@ -103,6 +103,13 @@ match's London day, and `fantasyCategories.ts` lists the categories it scores, e
 meaning (`AT` not `A`, `GKP` as *Keeper actions*, never `Sv`). Minutes, clean sheets and goals
 against are left off: every man has the first, and the score says the other two.
 
+**DefCon only when a man gets close** (*"defenders, only when they get 1, mids when they have 4
+or more, forwards 3 or more"*): half the first band of the league's own DefCon at the letter his
+points are priced at (`defConAt`: DFP from 3, DFP3 from 8 and 6), nearest the band first, nobody
+below it. **FPL DefCon is a box of its own** (*"show fpl defcon too"*): FPL's count, by the same
+half of FPL's threshold (5 of 10 for a man named in defence, 6 of 12 further up), and never on a
+line beside ours.
+
 **Stats is Player Stats and Match Stats merged** (Craig, 23 Sep 2026: *"player
 stats and match stats can be merged to stats"*). `/stats` opens on the two sides
 against each other; the foot row's club plates (`?view=home|away`) open that

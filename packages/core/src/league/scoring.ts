@@ -75,7 +75,7 @@ export function pointsFor(rules: ScoringRules, category: string, position: strin
 }
 
 /** One category's price at one position; null when the rules do not cover it. */
-function priceOf(rules: ScoringRules, category: string, position: string): Price | null {
+export function priceOf(rules: ScoringRules, category: string, position: string): Price | null {
   const goalie = rules.goaliePosition !== null && position === rules.goaliePosition;
   const row = (goalie ? rules.goalie : rules.outfield)[category];
   if (!row) return null;
