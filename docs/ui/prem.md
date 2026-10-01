@@ -167,6 +167,12 @@ scoring open smallest-first, because a board that did otherwise would head the
 ranking with the worst side in the division. Ties fall back to the table's own
 order, so two clubs level on clean sheets do not swap places between refreshes.
 
+**Expected conceded is the squad's FPL xGC over eleven** (1 Oct 2026). FPL credits
+every man on the pitch with the side's chances against, so the squad's sum is about
+eleven sides' worth: Arsenal printed 44.4 after GW5 where the side's own figure
+is 4.04. Data › Teams divides the same way. The three expected figures print to two
+places, as FPL publishes them.
+
 ## The club — a spine, not a page
 
 Grown out of the stub on 3 Sep 2026 (Craig: *"the prem team page. similar
