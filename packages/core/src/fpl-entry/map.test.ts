@@ -83,6 +83,15 @@ describe("mapSquad", () => {
     expect(squad?.picks[0].isCaptain).toBe(true);
   });
 
+  it("keeps what each man scored, which a bench's nought multiplier hides", () => {
+    const squad = mapSquad(
+      { picks: [{ element: 1, multiplier: 2 }, { element: 3, multiplier: 0 }], entry_history: { event: 3 } },
+      code,
+      points,
+    );
+    expect(squad?.picks.map((p) => p.scored)).toEqual([12, 2]);
+  });
+
   it("shows FPL's total rather than adding the picks up", () => {
     // Autosubs and transfer hits both move it, and our sum would disagree with
     // the app the manager is looking at.

@@ -51,13 +51,15 @@ export default function FplPitch({
   /** Who came on or went off in his real match, by FPL code. */
   subs: Record<number, SubMark>;
 }) {
-  const marker = (pick: FplPick) => {
+  // A benched man shows what he scored; his pick's own points are multiplied by nought.
+  const marker = (pick: FplPick, benched = false) => {
     const player = players.get(pick.code) ?? null;
     const mark = subs[pick.code];
     return (
       <SubMarker minute={mark?.minute ?? null} off={mark?.off ?? false}>
         <Pick
           pick={pick}
+          points={benched ? pick.scored : pick.points}
           player={player}
           club={player === null ? undefined : clubs.get(player.clubId)}
           opposition={player === null ? undefined : opposition.get(player.clubId)}
@@ -83,7 +85,7 @@ export default function FplPitch({
               <p className="flex items-center justify-center pb-0.5 leading-none">
                 <span className="cm-index numeric px-1 text-3xs">{at + 1}</span>
               </p>
-              {marker(pick)}
+              {marker(pick, true)}
             </li>
           ))}
         </ul>
@@ -105,11 +107,13 @@ export default function FplPitch({
  *  rejected — the chrome default is what a pitch with no single team gets. */
 function Pick({
   pick,
+  points,
   player,
   club,
   opposition,
 }: {
   pick: FplPick;
+  points: number;
   player: FootballPlayer | null;
   club: Club | undefined;
   opposition: Opposition[] | undefined;
@@ -125,7 +129,7 @@ function Pick({
         keeper={isFplKeeper(pick.line)}
         club={club}
         opposition={opposition}
-        points={pick.points}
+        points={points}
       />
       {/* FPL names both a captain and a vice, and which one actually doubled is
           decided after the fact — so the vice is drawn whether or not there is a

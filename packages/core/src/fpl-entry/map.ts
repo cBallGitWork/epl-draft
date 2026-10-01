@@ -55,6 +55,7 @@ export function mapSquad(
     if (code === null) return [];
 
     const multiplier = pick.multiplier ?? 0;
+    const scored = pointsFor(pick.element);
     return [
       {
         code,
@@ -71,7 +72,8 @@ export function mapSquad(
         multiplier,
         isCaptain: pick.is_captain ?? false,
         isViceCaptain: pick.is_vice_captain ?? false,
-        points: pointsFor(pick.element) * multiplier,
+        points: scored * multiplier,
+        scored,
       },
     ];
   });

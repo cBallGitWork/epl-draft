@@ -54,6 +54,8 @@ export interface FplPick {
   isViceCaptain: boolean;
   /** Already multiplied — what this pick contributed to the manager's score. */
   points: number;
+  /** His own points, unmultiplied: what a benched man scored, which `points` zeroes. */
+  scored: number;
   /** FPL's own `element_type`: 1 keeper, 2 defender, 3 midfielder, 4 forward.
    *
    *  **Here rather than in the football layer, and that is the whole reason this

@@ -227,7 +227,7 @@ function Figure({ label, value }: { label: string; value: number | null }) {
 function BenchTotal({ picks, played }: { picks: FplPick[]; played: Played }) {
   if (picks.length === 0) return null;
   const counted = picks.filter((pick) => played(pick.code));
-  const total = counted.reduce((sum, pick) => sum + pick.points, 0);
+  const total = counted.reduce((sum, pick) => sum + pick.scored, 0);
   return (
     <p className={`flex items-baseline justify-between gap-3 pt-1 ${LABEL}`}>
       Bench

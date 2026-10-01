@@ -26,7 +26,9 @@ and this is not a second attempt at it.
   screen off the grass, so the XI and the bench share one screen: about 430px wide on a
   1440 desk, beside the mini-leagues, and full width but 392px tall at 390x844. A line
   under the strip totals what the bench left: "did my bench outscore my side" is the
-  question a benched hat-trick provokes.
+  question a benched hat-trick provokes. A bench kit and that total read `FplPick.scored`,
+  his own points: the pick's `points` are multiplied by FPL's nought for the bench, and
+  printed nought under every man on it until 1 Oct 2026.
 
   A man who came on or went off in his real match carries the minute in `SubMarker`'s
   corner, as the head-to-head pitch draws it (Craig, 1 Oct 2026: *"use sub off/on icons"*),

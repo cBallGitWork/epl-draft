@@ -9,6 +9,7 @@ const pick = (fill: Partial<FplPick> & { slot: number; line: number }): FplPick 
   isCaptain: false,
   isViceCaptain: false,
   points: 0,
+  scored: 0,
   ...fill,
 });
 
