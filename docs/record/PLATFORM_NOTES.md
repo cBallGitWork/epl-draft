@@ -71,6 +71,15 @@ the served league's rules: the rehearsal's in production and the dummy's, every 
   interceptions, blocks), 99.2% for `DFP3` (those, clearances and recoveries) and 85% for `GKP` (saves, punches,
   high claims).
 
+## The Fantasy Report counts by the real league — decided 1 Oct 2026
+
+Craig, 1 Oct, on `/prem/match/41/stats?view=fantasy`: *"use the real league stats"*.
+
+- **The counts are the scoring league's own**, not FPL's: `apps/companion/app/scoringDay.ts` reads its
+  `getPlayerStats` `BY_DATE` for the match's London day (outfield and keepers, cache `scoring-day`, 300 s). A club plays
+  once a day, so his day is his match. The real league's day sheet carries exactly its scored columns (`G AT YC RC
+  DFP DFP3 PKM OG GAO CS Min GP Pen`, keepers `GKP PKS GA`), each a count; 18 Sep 2026 read whole on 1 Oct.
+
 ## The round-state probe is stopped: the league does not settle on FPL — decided 1 Oct 2026
 
 `round-state.yml` sampled FPL's event-status every hour to learn whether `bonus-settling` was a state a screen could
