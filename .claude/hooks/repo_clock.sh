@@ -24,10 +24,7 @@ mode="${1:-hook}"
 day_s() { TZ=UTC date -j -f '%Y-%m-%d %H:%M:%S' "$1 00:00:00" +%s 2>/dev/null; }
 
 # date | the last day it is worth doing | what it is
-ONE_OFFS="2026-08-31|The flip-order sample, from ~21:00Z. /api/event-status/, /api/fixtures/?event=N and bootstrap data_checked sampled TOGETHER — GW1's chance was missed and this is the last easy one this month (PLATFORM_NOTES 'Two observations').
-2026-09-10|One look at lineupLockType before period 4 locks. Its TYPE, not its value: if the commissioner's lock is really the period boundary, the whole lineup-window design is wrong.
-2026-09-11|Period 4, the first gate-bite: the first period whose lock does NOT sit safely inside its gameweek. Watch it with /shoot and /probe.
-2026-10-03|THE DRAFT, 10:00 BST on Fantrax. After it: pull, capture, roster-limits, bridge + bridge:check, shape-diff then baseline.json, and probe period 5's rosters and draftState (every pick carries a playerId).
+ONE_OFFS="2026-10-03|THE DRAFT, 10:00 BST on Fantrax. After it: pull, capture, roster-limits, bridge + bridge:check, shape-diff then baseline.json, and probe period 5's rosters and draftState (every pick carries a playerId).
 2026-10-04|CI's first capture after the draft, 05:10 UTC. The Actions budget must be on before it; that history cannot be backfilled.
 2026-10-05|Monday gate on the capture: five fixtures in each of periods 6-38, every team 0-0-0. Then team codes for the final ten, with production's SESSION_SECRET.
 2026-10-06|DRY RUN on mqsjd23smsgbiqzr locally: smoke, shoot /, a rival's squad and /matchday/desk at 390 and 1440, the editions queue check, then /swap-day --dry-run.
