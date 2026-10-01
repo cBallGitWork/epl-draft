@@ -846,26 +846,6 @@
   color: var(--color-bad);
 }
 
-/* The box on a pitch name plate, whose ground is the doubt ramp: an outline takes the page
-   ground (red on amber is 3.6:1), and a fill takes a dark rim or it vanishes into the red plate. */
-.cm-bevel .cm-state-doubt {
-  background: var(--color-bg);
-}
-
-.cm-bevel .cm-state {
-  box-shadow: inset 0 0 0 1px var(--color-bg);
-}
-
-/* Tight on the plate, so SEMENYO and his DBT share a 73px plate at 390 without an ellipsis. */
-.cm-bevel .cm-state,
-.cm-bevel .cm-state-doubt {
-  padding-inline: 0.125rem;
-}
-
-.cm-bevel:has(.cm-state, .cm-state-doubt) {
-  padding-inline: 0;
-}
-
 /* A man who cannot be picked. CM greyed him almost out — measured 2.54:1 in the
    game's own screenshots, which is under any modern floor — so this greys to
    `--color-faint` instead: 5.30:1 on the ground and 4.56:1 on a raised row, the

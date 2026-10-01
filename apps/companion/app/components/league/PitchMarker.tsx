@@ -10,7 +10,6 @@ import {
   kickedOff,
   DASH,
 } from "@epl/core";
-import StateBox from "../football/StateBox";
 import EmptySlot from "./EmptySlot";
 import PlayerImage from "./PlayerImage";
 import PlayerShirt from "./PlayerShirt";
@@ -37,7 +36,6 @@ export default function PitchMarker({
   show = "points",
   band,
   face,
-  stateBox = true,
 }: {
   /** The footballer, or null for a slot with nobody behind it — read to tell the two apart and for his doubt. */
   player: FootballPlayer | null;
@@ -57,8 +55,6 @@ export default function PitchMarker({
   band?: string;
   /** His face instead of the club's kit, falling back to the kit where there is no photograph. */
   face?: { code: number; name: string };
-  /** The desk's INJ/DBT box after his name; the paper prints none (DESIGN §4). */
-  stateBox?: boolean;
 }) {
   const started = kickedOff(opposition);
   // Nobody at all: no man AND no club. A named man the bootstrap lacks still has his club's kit.
@@ -106,11 +102,7 @@ export default function PitchMarker({
             : ({ "--cm-face": DOUBT_GROUND[doubt] } as CSSProperties)
         }
       >
-        {/* Why he may miss, right after the surname: the name truncates, the box never does. */}
-        <span className="flex min-w-0 max-w-full items-center gap-px">
-          <span className="min-w-0 truncate">{name}</span>
-          {stateBox ? <StateBox player={player} /> : null}
-        </span>
+        <span className="w-full truncate">{name}</span>
       </span>
 
       {/* Absent rather than empty when the caller has nothing to say here. */}

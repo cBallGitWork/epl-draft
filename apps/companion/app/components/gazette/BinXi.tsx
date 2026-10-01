@@ -36,7 +36,6 @@ export default function BinXi({ story, snapshot }: { story: PublishedStory; snap
                 // Fantrax's points for the week, as filed: the marker only prints points once a match is live.
                 band={`${man.points} pts`}
                 face={player ?? undefined}
-                stateBox={false}
               />
             );
           }}
