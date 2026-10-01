@@ -8,7 +8,7 @@ import { ANTHROPIC_MESSAGES_URL, MODEL_TIMEOUT_MS, normalizeStory } from "@epl/c
 
 // The one API call, and the shape a filed column takes in the rolling paper.
 
-const MODEL = process.env.GAZETTA_MODEL ?? "claude-opus-4-8";
+const MODEL = process.env.GAZETTA_MODEL ?? "claude-opus-5-5";
 /** The model for the calls that read rather than write: a judge, a fan's read-back, a line edit. */
 const HELPER_MODEL = process.env.GAZETTA_HELPER_MODEL ?? "claude-sonnet-5";
 
@@ -22,7 +22,8 @@ export interface Usage {
   cache_read_input_tokens?: number;
   cache_creation_input_tokens?: number;
 }
-const MAX_TOKENS = 8000;
+/** Opus 5.5 always thinks, and its thinking spends this budget before the column does. */
+const MAX_TOKENS = 16000;
 
 /** One call, by fetch. No SDK: CODE_RULES §2 says no dependency a small local
  *  function would cover, and this is twenty lines. `maxTokens` is for a call that
@@ -47,6 +48,8 @@ export async function writeColumn(
     body: JSON.stringify({
       model: tier === "helper" ? HELPER_MODEL : MODEL,
       max_tokens: maxTokens,
+      // Opus 5.5's default; set so a change of default never moves the bill unseen.
+      ...(tier === "writer" ? { output_config: { effort: "medium" } } : {}),
       // The voice is long and the same on every call of a firing, so it is cached: a repeat reads it at a fraction of the price.
       system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
       messages: [{ role: "user", content: brief }],

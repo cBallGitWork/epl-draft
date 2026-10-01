@@ -71,13 +71,8 @@ can file.
 
 *`intel/pressers/` landed 21 Sep with the Team Sheet.*
 
-*`GAZETTA_MODEL` was listed here as the next landmine and is not one.* Checked
-17 Sep against the model table: `claude-opus-4-8` is **current and valid**,
-$5/$25 per MTok, 1M context. It also stays 4.8 rather than moving to
-`claude-opus-5` at the identical price, and the reason is worth keeping: on 4.8
-an absent `thinking` parameter means no thinking, while on Opus 5 thinking is ON
-by default — and `newsroom.ts` sends no `thinking`, so the free-looking upgrade
-would silently think on every column of every firing.
+*`GAZETTA_MODEL` is `claude-opus-5-5` from 1 Oct (Craig).* $4/$20 per MTok, below 4.8's $5/$25. It always
+thinks, so the writer sends `effort: "medium"` explicitly and `max_tokens` is 16,000. The helper stays Sonnet 5.
 
 **The column follows whatever league production serves** (Craig, 17 Sep: *"keep
 the 10 team rehearsal league for now"*; 23 Sep: *"We shouldn't be hard coding any
