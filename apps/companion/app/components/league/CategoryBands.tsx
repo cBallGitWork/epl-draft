@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { CategoryBand, CategoryMan, Club } from "@epl/core";
 import Nothing from "../shell/Nothing";
-import { GROUP_PLATE, PANEL } from "@/app/desk";
+import { GROUP_PLATE, PANEL, gainOrLoss } from "@/app/desk";
 import { DASH, crestUrl } from "@epl/core";
 
 // Where the scoreline came from, and who put it there.
@@ -95,7 +95,7 @@ function Men({ men, names, end }: { men: readonly CategoryMan[]; names: Names; e
             <Image src={crestUrl(man.club)} alt="" width={16} height={16} className="size-4 shrink-0 object-contain" />
           )}
           <span className="truncate font-chrome font-bold">{man.name}</span>
-          <span className={`numeric shrink-0 ${man.points > 0 ? "text-up" : man.points < 0 ? "text-bad" : "text-muted"}`}>({man.points})</span>
+          <span className={`numeric shrink-0 ${gainOrLoss(man.points) || "text-muted"}`}>({man.points})</span>
         </li>
       ))}
     </ul>

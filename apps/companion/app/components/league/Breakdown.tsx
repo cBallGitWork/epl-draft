@@ -1,6 +1,6 @@
 import { type BreakdownLine, signed, DASH } from "@epl/core";
 import Note from "./Note";
-import { FACT_LABEL, HEAD_PLATE, HEAD_PLATE_END, LABEL } from "@/app/desk";
+import { FACT_LABEL, HEAD_PLATE, HEAD_PLATE_END, LABEL, gainOrLoss } from "@/app/desk";
 
 // The itemised table: one row per category that moved his total, then the total.
 //
@@ -112,9 +112,7 @@ export default function Breakdown({
   );
 }
 
-/** The direction pair, and nought is neither. A zero row reached in a positive
- *  branch would be green, which would call a man who earned nothing a gain. */
+/** The direction pair, and nought is neither: a man who earned nothing is quiet, not a gain. */
 function tone(points: number): string {
-  if (points > 0) return "text-up";
-  return points < 0 ? "text-bad" : "text-muted";
+  return gainOrLoss(points) || "text-muted";
 }

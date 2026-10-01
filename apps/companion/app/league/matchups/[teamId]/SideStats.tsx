@@ -5,7 +5,7 @@ import Section from "../../../components/shell/Section";
 import PositionTile from "../../../components/league/PositionTile";
 import { ROW_LINK } from "../../../components/league/TableCells";
 import { LeadHeads, sortedAs, SortHead } from "../../../components/league/TableHeads";
-import { BOARD, FIGURE_CELL, PINNED_BESIDE_TILE, PINNED_TILE, ROW_NAME, ROW_RULE, SMALL_CAPS } from "@/app/desk";
+import { BOARD, FIGURE_CELL, PINNED_BESIDE_TILE, PINNED_TILE, ROW_NAME, ROW_RULE, SMALL_CAPS, gainOrLoss } from "@/app/desk";
 import ScrollBoard from "../../../components/league/ScrollBoard";
 import { MaybeCard } from "../../../prem/match/[id]/PlayerCardButton";
 import { MATCH_ROW } from "../../../prem/match/[id]/matchRow";
@@ -116,7 +116,7 @@ function SideRow({
         // A gain green and a loss red, as his breakdown card prints them (DESIGN §3's direction pair).
         const paid = breakdown === null || value === null ? 0 : paidIn(breakdown, player, head.code);
         const bold = breakdown !== null && head.code === DEFAULT_SIDE_SORT ? "font-bold" : "";
-        const ink = `${bold} ${paid > 0 ? "text-up" : paid < 0 ? "text-bad" : ""}`;
+        const ink = `${bold} ${gainOrLoss(paid)}`;
         return (
           <td key={head.code} className={`${FIGURE_CELL} ${ink}`}>
             {value === null ? <span className="text-faint">{DASH}</span> : value}
