@@ -76,6 +76,15 @@ def parts(c):
     return "".join(out)
 
 
+CAT_LABEL = {"Min": "mins", "G": "goals", "AT": "assists", "CS": "clean sheet", "DFP": "DefCon", "DFP3": "DefCon",
+             "GKP": "keeper pts", "PKS": "pen saved", "GA": "conceded", "GAO": "conceded", "YC": "yellow",
+             "RC": "red", "OG": "own goal", "PKM": "pen missed"}
+
+
+def league_chips(by):
+    return "".join(f'<span class="lp {"down" if v < 0 else "up"}"><b>{signed(v, 0)}</b> {CAT_LABEL.get(k, k)}</span>' for k, v in by.items())
+
+
 def card(c):
     venue = "v" if c["home"] else "at"
     score = f' {c["score"][0]}–{c["score"][1]}' if c.get("score") else ""
@@ -92,6 +101,7 @@ def card(c):
       <span class="fx">{e(c['club'])} {venue} {e(c['opp'])}{score} · GW{c['gw']} · {c['minutes']}′{sub}</span></header>
     {note}
     <div class="chips">{chips(c['line'], c['pos'])}</div>
+    <div class="parts lps">{league_chips(c.get('pointsBy') or {})}</div>
     <div class="parts">{parts(c)}</div>
     <div class="meta">{opp}<span>vs expected {signed(c['vsExpected'])} pts</span><span>FotMob {fmt(c['fotmob'])} · SofaScore {fmt(c['sofascore'])}{priced}</span></div>
   </div>
@@ -155,6 +165,13 @@ def histogram():
     return f'<div class="hist">{bars}</div>'
 
 
+def paid_table():
+    cats = ["Min", "G", "AT", "CS", "DFP", "DFP3", "GKP", "PKS", "GA", "GAO", "YC", "RC", "OG", "PKM"]
+    head = "".join(f'<th class="n">{CAT_LABEL[c] if c not in ("DFP", "DFP3") else c}</th>' for c in cats)
+    body = "".join(f'<tr><td>{p}</td>' + "".join(f'<td class="n">{fmt(R["paidBy"][p].get(c), 2) if R["paidBy"][p].get(c) else ""}</td>' for c in cats) + "</tr>" for p in ["GK", "DEF", "MID", "FWD"])
+    return f'<div class="scroll"><table><thead><tr><th>Pos</th>{head}</tr></thead><tbody>{body}</tbody></table></div>'
+
+
 ladder_html = "".join(
     f'<div class="rung"><div class="rung-h"><span class="big {band(s["band"])}">{s["band"]}</span><span>{s["count"]:,} matches round to {s["band"]}</span></div><div class="cards">{"".join(card(c) for c in s["examples"])}</div></div>'
     for s in R["ladder"])
@@ -179,6 +196,10 @@ page = f"""<title>Draft Match Ratings</title>
 .t-out {{ background: color-mix(in oklch, var(--bad) 20%, transparent); color: var(--bad); }}
 table.marks {{ width: auto; min-width: 180px; }}
 .changes li {{ margin-bottom: 4px; }}
+.lps {{ gap: 3px 10px; }}
+.lp {{ font: 500 12px var(--narrow); color: var(--muted); }}
+.lp b {{ font-family: var(--digits); font-weight: 600; }}
+.lp.up b {{ color: var(--good); }} .lp.down b {{ color: var(--bad); }}
 </style>
 <div class="wrap">
 <header style="display:grid;gap:12px">
@@ -192,11 +213,12 @@ table.marks {{ width: auto; min-width: 180px; }}
   <ul class="changes" style="margin:0;padding-left:20px;max-width:72ch">
     <li><b>Strengths:</b> the sister model was too smoothed (Wolves' defence read as average while conceding 1.79 a game). Ours is goals and xG so far this season against the league's, eased in over six games. It tracks the season's goals at {sc['new']['attack']} for attack and {sc['new']['defence']} for defence, against {sc['old']['attack']} and {sc['old']['defence']} before.</li>
     <li><b>Scale:</b> a blank is now 4–5; across the season {tens} match reaches 10 and {ones} reach 1.</li>
-    <li><b>Fantrax points:</b> the real league's own points from Fantrax for {src.get('fantrax', 0):,} matches. The other {src.get('rules', 0):,} are men Fantrax no longer lists (relegated or gone abroad), priced by the league's own rules, which reproduce Fantrax's points exactly in 95.6% of matches and within a point in 99.6%.</li>
+    <li><b>Fantrax points:</b> the real league's own points from Fantrax for {src.get('fantrax', 0):,} matches. The other {src.get('rules', 0):,} are men Fantrax no longer lists (relegated or gone abroad), priced by the league's own rules, which reproduce Fantrax's points exactly in 98.3% of matches and within a point in 99.9%.</li>
     <li><b>Points lead:</b> mark and league points correlate at {ag['points']}.</li>
     <li><b>Being terrible:</b> a big chance missed now costs a point before the table, an error leading to a goal two.</li>
     <li><b>Underlying is gone:</b> what a man will do next is the projections' job, so the mark is the match alone.</li>
     <li><b>Haaland</b> stays 7th: good, a little under what was expected of him.</li>
+    <li><b>The real league's scoring, in full:</b> every card now shows his league points by category, DefCon and keeper points included. Departed keepers were short: their keeper points now count saves, punches and high claims as Fantrax does, and the league's rules match Fantrax exactly in 98.3% of matches.</li>
   </ul>
 </section>
 
@@ -241,6 +263,12 @@ table.marks {{ width: auto; min-width: 180px; }}
   </div>
   <h4>Best average by position</h4>
   <div class="grid4">{pos_html}</div>
+</section>
+
+<section>
+  <h2>What the real league paid for</h2>
+  <p class="q">Average league points per rated match, by category, across 25/26. DefCon is tackles won, interceptions and blocks for defenders (3 = 1 point, 5 = 2) and those plus clearances and recoveries for midfielders (8 = 1, 11 = 2) and forwards (6 = 1, 9 = 2). Keeper points are saves, punches and high claims, one point per three.</p>
+  {paid_table()}
 </section>
 
 <section>

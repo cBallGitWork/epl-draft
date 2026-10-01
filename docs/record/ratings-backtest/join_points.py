@@ -43,7 +43,14 @@ def our_counts(r):
             "GAO": r.get("goalsAgainstOnPitch") or 0, "GA": r.get("goalsAgainstOnPitch") or 0,
             "PKS": r.get("penaltySaves") or 0, "DFP": dfp,
             "DFP3": dfp + (r.get("clearances") or 0) + (r.get("recoveries") or 0),
-            "GKP": (r.get("fplSaves") or 0)}
+            "GKP": sum((r.get(k) or 0) for k in ("fplSaves", "keeperPunches", "keeperHighClaims"))}
+
+
+def points_by(counts, pos):
+    """The league's points for each category it prices, keeping only those that paid or cost something."""
+    table = RAW["GOALIE" if pos == "G" else "NON_GOALIE"]
+    out = {cat: rule_points(prices.get(pos, prices.get("Default")), counts.get(cat)) for cat, prices in table.items()}
+    return {cat: v for cat, v in out.items() if v}
 rows = json.loads((HERE / "ratings-input-25-26.json").read_text())
 
 
@@ -75,7 +82,8 @@ for f in glob.glob(str(HERE / "points-cache/*.json")):
         sheet = num(c.get("CS")) * price(table, "CS", pos)
         fx[(code, j["date"])] = {"total": num(c.get("FPts")), "attacking": attacking, "cleanSheet": sheet,
                                  "fxPos": pos, "fxMinutes": num(c.get("Min")),
-                                 "fromCells": league_points({k: num(v) for k, v in c.items()}, pos)}
+                                 "fromCells": league_points({k: num(v) for k, v in c.items()}, pos),
+                                 "by": points_by({k: num(v) for k, v in c.items()}, pos)}
 
 stats = Counter()
 diffs = Counter()
@@ -90,12 +98,14 @@ for r in rows:
         diffs[round(ours - p["total"])] += 1
         r["points"] = {k: p[k] for k in ("total", "attacking", "cleanSheet")}
         r["pointsSource"] = "fantrax"
+        r["pointsBy"] = p["by"]
     else:
         table = "goalie" if pos == "G" else "outfield"
         r["points"] = {"total": ours,
                        "attacking": r["goals"] * price(table, "G", pos) + r["assists"] * price(table, "AT", pos),
                        "cleanSheet": r["cleanSheet"] * price(table, "CS", pos)}
         r["pointsSource"] = "rules"
+        r["pointsBy"] = points_by(our_counts(r), pos)
         stats["priced by the league's rules"] += 1
     r["fxPos"] = pos
 print("engine minus Fantrax, by points:", dict(sorted(diffs.items())))

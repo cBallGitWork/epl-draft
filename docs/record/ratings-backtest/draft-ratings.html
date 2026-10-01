@@ -86,6 +86,10 @@ a { color: var(--derived); }
 .t-out { background: color-mix(in oklch, var(--bad) 20%, transparent); color: var(--bad); }
 table.marks { width: auto; min-width: 180px; }
 .changes li { margin-bottom: 4px; }
+.lps { gap: 3px 10px; }
+.lp { font: 500 12px var(--narrow); color: var(--muted); }
+.lp b { font-family: var(--digits); font-weight: 600; }
+.lp.up b { color: var(--good); } .lp.down b { color: var(--bad); }
 </style>
 <div class="wrap">
 <header style="display:grid;gap:12px">
@@ -99,11 +103,12 @@ table.marks { width: auto; min-width: 180px; }
   <ul class="changes" style="margin:0;padding-left:20px;max-width:72ch">
     <li><b>Strengths:</b> the sister model was too smoothed (Wolves' defence read as average while conceding 1.79 a game). Ours is goals and xG so far this season against the league's, eased in over six games. It tracks the season's goals at 0.92 for attack and 0.9 for defence, against 0.8 and 0.81 before.</li>
     <li><b>Scale:</b> a blank is now 4–5; across the season 1 match reaches 10 and 5 reach 1.</li>
-    <li><b>Fantrax points:</b> the real league's own points from Fantrax for 7,937 matches. The other 2,584 are men Fantrax no longer lists (relegated or gone abroad), priced by the league's own rules, which reproduce Fantrax's points exactly in 95.6% of matches and within a point in 99.6%.</li>
+    <li><b>Fantrax points:</b> the real league's own points from Fantrax for 7,937 matches. The other 2,584 are men Fantrax no longer lists (relegated or gone abroad), priced by the league's own rules, which reproduce Fantrax's points exactly in 98.3% of matches and within a point in 99.9%.</li>
     <li><b>Points lead:</b> mark and league points correlate at 0.943.</li>
     <li><b>Being terrible:</b> a big chance missed now costs a point before the table, an error leading to a goal two.</li>
     <li><b>Underlying is gone:</b> what a man will do next is the projections' job, so the mark is the match alone.</li>
     <li><b>Haaland</b> stays 7th: good, a little under what was expected of him.</li>
+    <li><b>The real league's scoring, in full:</b> every card now shows his league points by category, DefCon and keeper points included. Departed keepers were short: their keeper points now count saves, punches and high claims as Fantrax does, and the league's rules match Fantrax exactly in 98.3% of matches.</li>
   </ul>
 </section>
 
@@ -134,6 +139,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">ARS v LEE 5–0 · GW2 · 63′</span></header>
     
     <div class="chips"><span class="chip ret">2G</span><span class="chip ret">1A</span><span class="chip">0.81 xG</span><span class="chip">0.05 xA</span><span class="chip">3 shots</span><span class="chip">2 on target</span><span class="chip">2 key passes</span><span class="chip">1 big chances made</span><span class="chip ret">clean sheet</span><span class="chip bad">2 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+3</b> assists</span><span class="lp up"><b>+12</b> goals</span><span class="lp up"><b>+1</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>22</b> league pts</span><span class="part up"><b>+2.0</b> opponent</span><span class="part down"><b>−0.3</b> mistakes</span><span class="part base">= <b>23.7</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.03 · defence 1.12</span><span>vs expected +16.5 pts</span><span>FotMob 9.2 · SofaScore 10.0</span></div>
   </div>
@@ -144,6 +150,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">ARS v TOT 4–1 · GW12 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">3G</span><span class="chip">0.66 xG</span><span class="chip">0.37 xA</span><span class="chip">6 shots</span><span class="chip">4 on target</span><span class="chip">1 key passes</span><span class="chip">1 big chances made</span><span class="chip bad">1 conceded</span><span class="chip bad">1 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+15</b> goals</span></div>
     <div class="parts"><span class="part base"><b>17</b> league pts</span><span class="part up"><b>+1.7</b> opponent</span><span class="part down"><b>−0.1</b> mistakes</span><span class="part base">= <b>18.6</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.01 · defence 1.12</span><span>vs expected +11.8 pts</span><span>FotMob 9.7 · SofaScore 10.0</span></div>
   </div>
@@ -154,16 +161,18 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">CHE at AVL 4–1 · GW29 · 84′</span></header>
     
     <div class="chips"><span class="chip ret">3G</span><span class="chip ret">1A</span><span class="chip">2.61 xG</span><span class="chip">5 shots</span><span class="chip">4 on target</span><span class="chip">1 key passes</span><span class="chip bad">1 big chances missed</span><span class="chip bad">1 conceded</span><span class="chip bad">1 yellow</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+3</b> assists</span><span class="lp up"><b>+12</b> goals</span><span class="lp down"><b>−1</b> yellow</span></div>
     <div class="parts"><span class="part base"><b>16</b> league pts</span><span class="part up"><b>+1.5</b> opponent</span><span class="part down"><b>−1.0</b> mistakes</span><span class="part base">= <b>16.5</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.96 · defence 1.10</span><span>vs expected +11.2 pts</span><span>FotMob 9.8 · SofaScore 9.7</span></div>
   </div>
-</article></div></div><div class="rung"><div class="rung-h"><span class="big b-high">9</span><span>103 matches round to 9</span></div><div class="cards"><article class="card">
+</article></div></div><div class="rung"><div class="rung-h"><span class="big b-high">9</span><span>105 matches round to 9</span></div><div class="cards"><article class="card">
   <div class="mark b-high"><span>9.0</span><small>13 pts</small></div>
   <div class="body">
     <header><strong>Aaronson</strong> <span class="pos">MID</span>
       <span class="fx">LEE at NEW 3–4 · GW21 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">2G</span><span class="chip">1 from outside box</span><span class="chip">0.22 xG</span><span class="chip">0.07 xA</span><span class="chip">3 shots</span><span class="chip">3 on target</span><span class="chip">1 key passes</span><span class="chip bad">3 conceded</span><span class="chip bad">1 pen conceded</span><span class="chip bad">4 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+10</b> goals</span><span class="lp up"><b>+1</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>13</b> league pts</span><span class="part up"><b>+1.5</b> opponent</span><span class="part down"><b>−2.1</b> mistakes</span><span class="part up"><b>+1.0</b> extras</span><span class="part base">= <b>13.4</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.03 · defence 1.15</span><span>vs expected +8.3 pts</span><span>FotMob 8.8 · SofaScore 9.3</span></div>
   </div>
@@ -174,6 +183,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">MUN v NEW 1–0 · GW18 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">1G</span><span class="chip">0.16 xG</span><span class="chip">0.07 xA</span><span class="chip">3 shots</span><span class="chip">3 on target</span><span class="chip">1 key passes</span><span class="chip ret">clean sheet</span><span class="chip bad">1 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+6</b> goals</span><span class="lp up"><b>+1</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>13</b> league pts</span><span class="part up"><b>+0.6</b> opponent</span><span class="part down"><b>−0.1</b> mistakes</span><span class="part base">= <b>13.4</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.00 · defence 1.10</span><span>vs expected +8.3 pts</span><span>FotMob 8.3 · SofaScore 8.3</span></div>
   </div>
@@ -184,26 +194,18 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">BHA v NEW 2–1 · GW8 · 89′</span></header>
     
     <div class="chips"><span class="chip ret">2G</span><span class="chip">1 from outside box</span><span class="chip">0.58 xG</span><span class="chip">0.07 xA</span><span class="chip">2 shots</span><span class="chip">2 on target</span><span class="chip">3 key passes</span><span class="chip bad">1 conceded</span><span class="chip bad">1 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+8</b> goals</span></div>
     <div class="parts"><span class="part base"><b>10</b> league pts</span><span class="part up"><b>+2.6</b> opponent</span><span class="part down"><b>−0.1</b> mistakes</span><span class="part up"><b>+1.0</b> extras</span><span class="part base">= <b>13.4</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.89 · defence 1.32</span><span>vs expected +6.0 pts</span><span>FotMob 9.1 · SofaScore 8.7</span></div>
   </div>
-</article></div></div><div class="rung"><div class="rung-h"><span class="big b-high">8</span><span>460 matches round to 8</span></div><div class="cards"><article class="card">
-  <div class="mark b-high"><span>8.0</span><small>7 pts</small></div>
-  <div class="body">
-    <header><strong>Areola</strong> <span class="pos">GK</span>
-      <span class="fx">WHU at BOU 2–2 · GW12 · 90′</span></header>
-    
-    <div class="chips"><span class="chip ret">1A</span><span class="chip">1 key passes</span><span class="chip bad">2 conceded</span><span class="chip">10 saves</span><span class="chip">2.49 prevented</span></div>
-    <div class="parts"><span class="part base"><b>7</b> league pts</span><span class="part down"><b>−0.2</b> opponent</span><span class="part up"><b>+2.5</b> extras</span><span class="part base">= <b>9.3</b></span></div>
-    <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.02 · defence 0.93</span><span>vs expected +2.4 pts</span><span>FotMob 9.4 · SofaScore 9.3 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
-  </div>
-</article><article class="card">
+</article></div></div><div class="rung"><div class="rung-h"><span class="big b-high">8</span><span>466 matches round to 8</span></div><div class="cards"><article class="card">
   <div class="mark b-high"><span>8.0</span><small>8 pts</small></div>
   <div class="body">
     <header><strong>Bijol</strong> <span class="pos">DEF</span>
       <span class="fx">LEE v CHE 3–1 · GW14 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">1G</span><span class="chip">0.09 xG</span><span class="chip">1 shots</span><span class="chip">1 on target</span><span class="chip bad">1 conceded</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+6</b> goals</span></div>
     <div class="parts"><span class="part base"><b>8</b> league pts</span><span class="part up"><b>+1.1</b> opponent</span><span class="part base">= <b>9.1</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.22 · defence 1.19</span><span>vs expected +5.0 pts</span><span>FotMob 8.4 · SofaScore 7.7</span></div>
   </div>
@@ -214,16 +216,29 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">MUN at BOU 2–2 · GW31 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">1G</span><span class="chip ret">1A</span><span class="chip">1 pen goal</span><span class="chip">1.16 xG</span><span class="chip">0.25 xA</span><span class="chip">6 shots</span><span class="chip">3 on target</span><span class="chip">3 key passes</span><span class="chip bad">1 big chances missed</span><span class="chip bad">2 conceded</span><span class="chip bad">2 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+3</b> assists</span><span class="lp up"><b>+5</b> goals</span><span class="lp up"><b>+1</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>11</b> league pts</span><span class="part down"><b>−0.6</b> opponent</span><span class="part down"><b>−1.3</b> mistakes</span><span class="part base">= <b>9.1</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.10 · defence 0.93</span><span>vs expected +5.4 pts</span><span>FotMob 8.3 · SofaScore 7.9</span></div>
   </div>
-</article></div></div><div class="rung"><div class="rung-h"><span class="big b-mid">7</span><span>1,136 matches round to 7</span></div><div class="cards"><article class="card">
+</article><article class="card">
+  <div class="mark b-high"><span>8.0</span><small>8 pts</small></div>
+  <div class="body">
+    <header><strong>Donnarumma</strong> <span class="pos">GK</span>
+      <span class="fx">MCI at CRY 3–0 · GW16 · 90′</span></header>
+    
+    <div class="chips"><span class="chip ret">clean sheet</span><span class="chip">4 saves</span><span class="chip">1.07 prevented</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+2</b> keeper pts</span></div>
+    <div class="parts"><span class="part base"><b>8</b> league pts</span><span class="part up"><b>+0.2</b> opponent</span><span class="part up"><b>+1.1</b> extras</span><span class="part base">= <b>9.3</b></span></div>
+    <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.06 · defence 1.25</span><span>vs expected +2.8 pts</span><span>FotMob 8.5 · SofaScore 7.7</span></div>
+  </div>
+</article></div></div><div class="rung"><div class="rung-h"><span class="big b-mid">7</span><span>1,131 matches round to 7</span></div><div class="cards"><article class="card">
   <div class="mark b-mid"><span>7.0</span><small>7 pts</small></div>
   <div class="body">
     <header><strong>Acheampong</strong> <span class="pos">DEF</span>
       <span class="fx">CHE v CRY 0–0 · GW1 · 90′</span></header>
     
     <div class="chips"><span class="chip">0.09 xG</span><span class="chip">0.01 xA</span><span class="chip">1 shots</span><span class="chip ret">clean sheet</span><span class="chip bad">1 error → shot</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+1</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>7</b> league pts</span><span class="part down"><b>−0.5</b> mistakes</span><span class="part base">= <b>6.5</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.00 · defence 1.00</span><span>vs expected +2.6 pts</span><span>FotMob 7.8 · SofaScore 7.5</span></div>
   </div>
@@ -234,6 +249,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">LEE v BRE 0–0 · GW31 · 90′</span></header>
     
     <div class="chips"><span class="chip">0.02 xG</span><span class="chip">0.30 xA</span><span class="chip">1 shots</span><span class="chip">1 on target</span><span class="chip ret">clean sheet</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span></div>
     <div class="parts"><span class="part base"><b>6</b> league pts</span><span class="part up"><b>+0.5</b> opponent</span><span class="part base">= <b>6.5</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.12 · defence 0.99</span><span>vs expected +2.4 pts</span><span>FotMob 7.6 · SofaScore 8.2</span></div>
   </div>
@@ -244,18 +260,31 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">WHU v CRY 1–2 · GW5 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">1G</span><span class="chip">0.24 xG</span><span class="chip">0.23 xA</span><span class="chip">2 shots</span><span class="chip">1 on target</span><span class="chip">1 key passes</span><span class="chip bad">2 conceded</span><span class="chip bad">4 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+4</b> goals</span></div>
     <div class="parts"><span class="part base"><b>6</b> league pts</span><span class="part up"><b>+1.0</b> opponent</span><span class="part down"><b>−0.6</b> mistakes</span><span class="part base">= <b>6.4</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.00 · defence 1.25</span><span>vs expected +2.0 pts</span><span>FotMob 7.1 · SofaScore 7.5 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
-</article></div></div><div class="rung"><div class="rung-h"><span class="big b-mid">6</span><span>1,378 matches round to 6</span></div><div class="cards"><article class="card">
+</article></div></div><div class="rung"><div class="rung-h"><span class="big b-mid">6</span><span>1,386 matches round to 6</span></div><div class="cards"><article class="card">
   <div class="mark b-mid"><span>6.0</span><small>6 pts</small></div>
   <div class="body">
     <header><strong>Aina</strong> <span class="pos">DEF</span>
       <span class="fx">NFO v WOL 0–0 · GW26 · 90′</span></header>
     
     <div class="chips"><span class="chip">0.08 xG</span><span class="chip">0.17 xA</span><span class="chip">2 shots</span><span class="chip">2 key passes</span><span class="chip ret">clean sheet</span><span class="chip bad">1 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span></div>
     <div class="parts"><span class="part base"><b>6</b> league pts</span><span class="part down"><b>−1.2</b> opponent</span><span class="part down"><b>−0.1</b> mistakes</span><span class="part base">= <b>4.7</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.65 · defence 0.86</span><span>vs expected +2.2 pts</span><span>FotMob 7.7 · SofaScore 7.6</span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-mid"><span>6.0</span><small>4 pts</small></div>
+  <div class="body">
+    <header><strong>Areola</strong> <span class="pos">GK</span>
+      <span class="fx">WHU at TOT 2–1 · GW22 · 90′</span></header>
+    
+    <div class="chips"><span class="chip bad">1 conceded</span><span class="chip">5 saves</span><span class="chip">0.59 prevented</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+2</b> keeper pts</span></div>
+    <div class="parts"><span class="part base"><b>4</b> league pts</span><span class="part up"><b>+0.6</b> extras</span><span class="part base">= <b>4.6</b></span></div>
+    <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.90 · defence 1.07</span><span>vs expected −0.7 pts</span><span>FotMob 7.6 · SofaScore 7.7 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article><article class="card">
   <div class="mark b-mid"><span>6.0</span><small>5 pts</small></div>
@@ -264,26 +293,18 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">BHA v SUN 0–0 · GW17 · 90′</span></header>
     
     <div class="chips"><span class="chip">0.59 xG</span><span class="chip">5 shots</span><span class="chip">2 on target</span><span class="chip ret">clean sheet</span><span class="chip bad">1 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+1</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+2</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>5</b> league pts</span><span class="part down"><b>−0.2</b> opponent</span><span class="part down"><b>−0.1</b> mistakes</span><span class="part base">= <b>4.6</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.79 · defence 1.11</span><span>vs expected −0.3 pts</span><span>FotMob 7.7 · SofaScore 6.4</span></div>
   </div>
-</article><article class="card">
-  <div class="mark b-mid"><span>6.0</span><small>3 pts</small></div>
-  <div class="body">
-    <header><strong>Darlow</strong> <span class="pos">GK</span>
-      <span class="fx">LEE v MCI 0–1 · GW28 · 90′</span></header>
-    
-    <div class="chips"><span class="chip bad">1 conceded</span><span class="chip">4 saves</span><span class="chip">1.63 prevented</span></div>
-    <div class="parts"><span class="part base"><b>3</b> league pts</span><span class="part up"><b>+1.6</b> extras</span><span class="part base">= <b>4.6</b></span></div>
-    <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.33 · defence 1.27</span><span>vs expected −0.6 pts</span><span>FotMob 8.1 · SofaScore 8.5</span></div>
-  </div>
-</article></div></div><div class="rung"><div class="rung-h"><span class="big b-mid">5</span><span>1,569 matches round to 5</span></div><div class="cards"><article class="card">
+</article></div></div><div class="rung"><div class="rung-h"><span class="big b-mid">5</span><span>1,573 matches round to 5</span></div><div class="cards"><article class="card">
   <div class="mark b-mid"><span>5.0</span><small>3 pts</small></div>
   <div class="body">
     <header><strong>Adams</strong> <span class="pos">MID</span>
       <span class="fx">BOU v BHA 2–1 · GW4 · 90′</span></header>
     
     <div class="chips"><span class="chip">0.01 xA</span><span class="chip">1 key passes</span><span class="chip bad">1 conceded</span><span class="chip bad">1 yellow</span><span class="chip bad">1 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−1</b> yellow</span><span class="lp up"><b>+2</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>3</b> league pts</span><span class="part down"><b>−0.1</b> mistakes</span><span class="part base">= <b>2.9</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.05 · defence 0.99</span><span>vs expected −0.8 pts</span><span>FotMob 7.2 · SofaScore 6.6</span></div>
   </div>
@@ -294,26 +315,29 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">WOL v NFO 0–1 · GW14 · 90′</span></header>
     
     <div class="chips"><span class="chip">0.08 xG</span><span class="chip">0.04 xA</span><span class="chip">1 shots</span><span class="chip">1 key passes</span><span class="chip bad">1 conceded</span><span class="chip bad">1 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+1</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>3</b> league pts</span><span class="part down"><b>−0.1</b> mistakes</span><span class="part base">= <b>2.9</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.88 · defence 0.90</span><span>vs expected −1.3 pts</span><span>FotMob 6.6 · SofaScore 6.5 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article><article class="card">
   <div class="mark b-mid"><span>5.0</span><small>3 pts</small></div>
   <div class="body">
-    <header><strong>Areola</strong> <span class="pos">GK</span>
-      <span class="fx">WHU v NEW 3–1 · GW10 · 90′</span></header>
+    <header><strong>A.Becker</strong> <span class="pos">GK</span>
+      <span class="fx">LIV at NEW 3–2 · GW2 · 90′</span></header>
     
-    <div class="chips"><span class="chip bad">1 conceded</span><span class="chip">3 saves</span><span class="chip">-0.21 prevented</span></div>
-    <div class="parts"><span class="part base"><b>3</b> league pts</span><span class="part down"><b>−0.2</b> extras</span><span class="part base">= <b>2.8</b></span></div>
-    <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.93 · defence 1.27</span><span>vs expected −0.6 pts</span><span>FotMob 7.1 · SofaScore 7.0 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
+    <div class="chips"><span class="chip bad">2 conceded</span><span class="chip">1 saves</span><span class="chip">-0.13 prevented</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−1</b> conceded</span><span class="lp up"><b>+2</b> keeper pts</span></div>
+    <div class="parts"><span class="part base"><b>3</b> league pts</span><span class="part down"><b>−0.1</b> extras</span><span class="part base">= <b>2.9</b></span></div>
+    <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.94 · defence 1.15</span><span>vs expected −1.1 pts</span><span>FotMob 7.0 · SofaScore 6.7</span></div>
   </div>
-</article></div></div><div class="rung"><div class="rung-h"><span class="big b-mid">4</span><span>3,948 matches round to 4</span></div><div class="cards"><article class="card">
+</article></div></div><div class="rung"><div class="rung-h"><span class="big b-mid">4</span><span>3,952 matches round to 4</span></div><div class="cards"><article class="card">
   <div class="mark b-mid"><span>4.0</span><small>2 pts</small></div>
   <div class="body">
     <header><strong>Adams</strong> <span class="pos">MID</span>
       <span class="fx">BOU v EVE 0–1 · GW14 · 90′</span></header>
     
     <div class="chips"><span class="chip">0.02 xA</span><span class="chip bad">1 conceded</span><span class="chip bad">1 yellow</span><span class="chip bad">1 error → shot</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−1</b> yellow</span><span class="lp up"><b>+1</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>2</b> league pts</span><span class="part down"><b>−0.5</b> mistakes</span><span class="part base">= <b>1.5</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.89 · defence 0.98</span><span>vs expected −1.0 pts</span><span>FotMob 6.6 · SofaScore 6.8</span></div>
   </div>
@@ -324,6 +348,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">SUN v BHA 0–1 · GW30 · 90′</span></header>
     
     <div class="chips"><span class="chip">0.14 xG</span><span class="chip">0.03 xA</span><span class="chip">2 shots</span><span class="chip">2 on target</span><span class="chip bad">1 conceded</span><span class="chip bad">1 error → shot</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span></div>
     <div class="parts"><span class="part base"><b>2</b> league pts</span><span class="part down"><b>−0.5</b> mistakes</span><span class="part base">= <b>1.5</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.00 · defence 1.06</span><span>vs expected −1.2 pts</span><span>FotMob 6.9 · SofaScore 7.1</span></div>
   </div>
@@ -334,16 +359,18 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">WHU at LEE 1–2 · GW9 · 90′</span></header>
     
     <div class="chips"><span class="chip bad">2 conceded</span><span class="chip">3 saves</span><span class="chip">-0.54 prevented</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−1</b> conceded</span><span class="lp up"><b>+1</b> keeper pts</span></div>
     <div class="parts"><span class="part base"><b>2</b> league pts</span><span class="part down"><b>−0.5</b> extras</span><span class="part base">= <b>1.5</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.90 · defence 0.99</span><span>vs expected −0.8 pts</span><span>FotMob 5.7 · SofaScore 7.1 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
-</article></div></div><div class="rung"><div class="rung-h"><span class="big b-low">3</span><span>1,078 matches round to 3</span></div><div class="cards"><article class="card">
+</article></div></div><div class="rung"><div class="rung-h"><span class="big b-low">3</span><span>1,070 matches round to 3</span></div><div class="cards"><article class="card">
   <div class="mark b-low"><span>3.0</span><small>1 pts</small></div>
   <div class="body">
     <header><strong>Alderete</strong> <span class="pos">DEF</span>
       <span class="fx">SUN v NFO 0–5 · GW34 · 90′</span></header>
     
     <div class="chips"><span class="chip">0.23 xG</span><span class="chip">0.01 xA</span><span class="chip">4 shots</span><span class="chip">1 on target</span><span class="chip bad">5 conceded</span><span class="chip bad">1 error → shot</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−2</b> conceded</span><span class="lp up"><b>+1</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>1</b> league pts</span><span class="part down"><b>−0.5</b> mistakes</span><span class="part base">= <b>0.5</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.84 · defence 1.00</span><span>vs expected −1.3 pts</span><span>FotMob 4.8 · SofaScore 5.2</span></div>
   </div>
@@ -354,6 +381,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">NFO at NEW 0–2 · GW7 · 90′</span></header>
     
     <div class="chips"><span class="chip">0.03 xA</span><span class="chip bad">2 conceded</span><span class="chip bad">1 yellow</span><span class="chip bad">1 pen conceded</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−1</b> yellow</span><span class="lp up"><b>+1</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>2</b> league pts</span><span class="part down"><b>−1.5</b> mistakes</span><span class="part base">= <b>0.5</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.79 · defence 1.24</span><span>vs expected −0.9 pts</span><span>FotMob 6.8 · SofaScore 6.9</span></div>
   </div>
@@ -364,16 +392,18 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">BUR v NEW 1–3 · GW19 · 90′</span></header>
     
     <div class="chips"><span class="chip bad">3 conceded</span><span class="chip">4 saves</span><span class="chip">-0.52 prevented</span><span class="chip bad">1 error → goal</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−1</b> conceded</span><span class="lp up"><b>+2</b> keeper pts</span></div>
     <div class="parts"><span class="part base"><b>3</b> league pts</span><span class="part down"><b>−2.0</b> mistakes</span><span class="part down"><b>−0.5</b> extras</span><span class="part base">= <b>0.5</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.97 · defence 1.10</span><span>vs expected −0.6 pts</span><span>FotMob 5.1 · SofaScore 5.9</span></div>
   </div>
-</article></div></div><div class="rung"><div class="rung-h"><span class="big b-bad">2</span><span>822 matches round to 2</span></div><div class="cards"><article class="card">
+</article></div></div><div class="rung"><div class="rung-h"><span class="big b-bad">2</span><span>811 matches round to 2</span></div><div class="cards"><article class="card">
   <div class="mark b-bad"><span>2.0</span><small>2 pts</small></div>
   <div class="body">
     <header><strong>Tolu</strong> <span class="pos">FWD</span>
       <span class="fx">WOL at CRY 0–1 · GW27 · 90′</span></header>
     
     <div class="chips"><span class="chip">1.10 xG</span><span class="chip">0.01 xA</span><span class="chip">5 shots</span><span class="chip">3 on target</span><span class="chip bad">2 big chances missed</span><span class="chip bad">1 pen missed</span><span class="chip bad">1 conceded</span><span class="chip bad">2 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−2</b> pen missed</span><span class="lp up"><b>+2</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>2</b> league pts</span><span class="part down"><b>−3.3</b> mistakes</span><span class="part base">= <b>-1.3</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.96 · defence 1.07</span><span>vs expected −1.0 pts</span><span>FotMob 6.0 · SofaScore 5.4 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
@@ -384,6 +414,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">WOL v BUR 2–3 · GW9 · 90′</span></header>
     
     <div class="chips"><span class="chip">0.10 xG</span><span class="chip">0.12 xA</span><span class="chip">2 shots</span><span class="chip">1 on target</span><span class="chip">1 key passes</span><span class="chip bad">3 conceded</span><span class="chip bad">1 yellow</span><span class="chip bad">1 error → goal</span><span class="chip bad">3 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−1</b> yellow</span></div>
     <div class="parts"><span class="part base"><b>1</b> league pts</span><span class="part down"><b>−2.5</b> mistakes</span><span class="part base">= <b>-1.4</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.81 · defence 0.79</span><span>vs expected −1.4 pts</span><span>FotMob 6.0 · SofaScore 6.5 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
@@ -394,6 +425,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">BUR at NFO 1–4 · GW33 · 90′</span></header>
     
     <div class="chips"><span class="chip bad">4 conceded</span><span class="chip">-2.35 prevented</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−2</b> conceded</span><span class="lp up"><b>+1</b> keeper pts</span></div>
     <div class="parts"><span class="part base"><b>1</b> league pts</span><span class="part down"><b>−2.4</b> extras</span><span class="part base">= <b>-1.4</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.82 · defence 0.99</span><span>vs expected −0.6 pts</span><span>FotMob 4.5 · SofaScore 5.2</span></div>
   </div>
@@ -404,6 +436,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">BUR at MCI 1–5 · GW6 · 90′</span></header>
     
     <div class="chips"><span class="chip">0.02 xG</span><span class="chip">1 shots</span><span class="chip bad">5 conceded</span><span class="chip bad">2 own goal</span><span class="chip bad">1 error → goal</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−2</b> conceded</span><span class="lp down"><b>−4</b> own goal</span></div>
     <div class="parts"><span class="part base"><b>-4</b> league pts</span><span class="part down"><b>−2.0</b> mistakes</span><span class="part base">= <b>-6.0</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.21 · defence 1.04</span><span>vs expected −0.4 pts</span><span>FotMob 1.8 · SofaScore 4.5 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
@@ -414,6 +447,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">SUN v NFO 0–5 · GW34 · 90′</span></header>
     
     <div class="chips"><span class="chip bad">5 conceded</span><span class="chip">2 saves</span><span class="chip">-3.67 prevented</span><span class="chip bad">1 error → goal</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−2</b> conceded</span><span class="lp up"><b>+1</b> keeper pts</span></div>
     <div class="parts"><span class="part base"><b>1</b> league pts</span><span class="part down"><b>−2.0</b> mistakes</span><span class="part down"><b>−3.7</b> extras</span><span class="part base">= <b>-4.7</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.84 · defence 1.00</span><span>vs expected −1.1 pts</span><span>FotMob 3.2 · SofaScore 5.1</span></div>
   </div>
@@ -424,6 +458,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">NEW v LIV 2–3 · GW2 · 47′</span></header>
     
     <div class="chips"><span class="chip">0.48 xG</span><span class="chip">0.02 xA</span><span class="chip">3 shots</span><span class="chip">1 on target</span><span class="chip">1 key passes</span><span class="chip bad">2 big chances missed</span><span class="chip bad">3 conceded</span><span class="chip bad">1 RED</span></div>
+    <div class="parts lps"><span class="lp down"><b>−3</b> red</span><span class="lp up"><b>+1</b> mins</span></div>
     <div class="parts"><span class="part base"><b>-2</b> league pts</span><span class="part down"><b>−2.0</b> mistakes</span><span class="part base">= <b>-4.0</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.20 · defence 0.94</span><span>vs expected −1.0 pts</span><span>FotMob 6.1 · SofaScore 6.2 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
@@ -439,6 +474,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">MCI at WHU 1–1 · GW30 · 90′</span></header>
     <p class="note">A blank against a bottom-three side</p>
     <div class="chips"><span class="chip">0.30 xG</span><span class="chip">0.05 xA</span><span class="chip">4 shots</span><span class="chip">1 on target</span><span class="chip">1 key passes</span><span class="chip bad">1 conceded</span><span class="chip bad">1 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span></div>
     <div class="parts"><span class="part base"><b>2</b> league pts</span><span class="part down"><b>−0.1</b> mistakes</span><span class="part base">= <b>1.9</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.90 · defence 0.83</span><span>vs expected −3.0 pts</span><span>FotMob 6.6 · SofaScore 6.5</span></div>
   </div>
@@ -449,6 +485,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">MCI at BUR 1–0 · GW33 · 90′</span></header>
     <p class="note">One goal against the weakest defence</p>
     <div class="chips"><span class="chip ret">1G</span><span class="chip">1.10 xG</span><span class="chip">0.06 xA</span><span class="chip">5 shots</span><span class="chip">2 on target</span><span class="chip bad">1 big chances missed</span><span class="chip ret">clean sheet</span><span class="chip bad">1 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+4</b> goals</span></div>
     <div class="parts"><span class="part base"><b>6</b> league pts</span><span class="part down"><b>−1.1</b> opponent</span><span class="part down"><b>−1.1</b> mistakes</span><span class="part base">= <b>3.7</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.73 · defence 0.72</span><span>vs expected +0.9 pts</span><span>FotMob 8.3 · SofaScore 7.6</span></div>
   </div>
@@ -459,6 +496,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">NFO at MCI 2–2 · GW29 · 90′</span></header>
     <p class="note">A weak attack&#x27;s goal against the strongest defence</p>
     <div class="chips"><span class="chip ret">1G</span><span class="chip">1 from outside box</span><span class="chip">0.10 xG</span><span class="chip">0.08 xA</span><span class="chip">3 shots</span><span class="chip">1 on target</span><span class="chip">1 key passes</span><span class="chip">1 big chances made</span><span class="chip bad">2 conceded</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+5</b> goals</span><span class="lp up"><b>+2</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>9</b> league pts</span><span class="part up"><b>+1.4</b> opponent</span><span class="part up"><b>+1.0</b> extras</span><span class="part base">= <b>11.4</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.32 · defence 1.28</span><span>vs expected +4.3 pts</span><span>FotMob 8.5 · SofaScore 8.4</span></div>
   </div>
@@ -469,6 +507,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">SUN v MCI 0–0 · GW19 · 90′</span></header>
     <p class="note">Bottom-half defender against a top-four attack</p>
     <div class="chips"><span class="chip">0.03 xA</span><span class="chip ret">clean sheet</span><span class="chip bad">1 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+2</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>8</b> league pts</span><span class="part up"><b>+1.6</b> opponent</span><span class="part down"><b>−0.1</b> mistakes</span><span class="part base">= <b>9.5</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.41 · defence 1.25</span><span>vs expected +3.2 pts</span><span>FotMob 7.6 · SofaScore 7.8</span></div>
   </div>
@@ -479,6 +518,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">CRY v WOL 1–0 · GW27 · 90′</span></header>
     <p class="note">Top side&#x27;s defender against a bottom-three attack</p>
     <div class="chips"><span class="chip">0.56 xG</span><span class="chip">0.04 xA</span><span class="chip">1 shots</span><span class="chip bad">1 big chances missed</span><span class="chip ret">clean sheet</span><span class="chip bad">1 yellow</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−1</b> yellow</span><span class="lp up"><b>+2</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>7</b> league pts</span><span class="part down"><b>−1.2</b> opponent</span><span class="part down"><b>−1.0</b> mistakes</span><span class="part base">= <b>4.8</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.64 · defence 0.85</span><span>vs expected +1.9 pts</span><span>FotMob 7.5 · SofaScore 6.8</span></div>
   </div>
@@ -489,6 +529,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">LEE v BOU 2–2 · GW6 · 90′</span></header>
     <p class="note">Most big chances missed without scoring</p>
     <div class="chips"><span class="chip">0.70 xG</span><span class="chip">0.04 xA</span><span class="chip">3 shots</span><span class="chip">3 on target</span><span class="chip">1 key passes</span><span class="chip bad">3 big chances missed</span><span class="chip bad">1 conceded</span><span class="chip bad">3 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span></div>
     <div class="parts"><span class="part base"><b>2</b> league pts</span><span class="part down"><b>−3.5</b> mistakes</span><span class="part base">= <b>-1.4</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.00 · defence 1.17</span><span>vs expected −0.9 pts</span><span>FotMob 6.5 · SofaScore 6.3</span></div>
   </div>
@@ -499,6 +540,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">BHA at EVE 0–2 · GW2 · 90′</span></header>
     <p class="note">A missed penalty and no goal</p>
     <div class="chips"><span class="chip">1.56 xG</span><span class="chip">0.10 xA</span><span class="chip">2 shots</span><span class="chip">1 on target</span><span class="chip bad">2 big chances missed</span><span class="chip bad">1 pen missed</span><span class="chip bad">2 conceded</span><span class="chip bad">1 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−2</b> pen missed</span></div>
     <div class="parts"><span class="part base"><b>0</b> league pts</span><span class="part down"><b>−3.1</b> mistakes</span><span class="part base">= <b>-3.1</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.89 · defence 0.97</span><span>vs expected −2.0 pts</span><span>FotMob 5.0 · SofaScore 4.9</span></div>
   </div>
@@ -509,6 +551,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">BUR at MCI 1–5 · GW6 · 90′</span></header>
     <p class="note">The worst error-led day</p>
     <div class="chips"><span class="chip">0.02 xG</span><span class="chip">1 shots</span><span class="chip bad">5 conceded</span><span class="chip bad">2 own goal</span><span class="chip bad">1 error → goal</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−2</b> conceded</span><span class="lp down"><b>−4</b> own goal</span></div>
     <div class="parts"><span class="part base"><b>-4</b> league pts</span><span class="part down"><b>−2.0</b> mistakes</span><span class="part base">= <b>-6.0</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.21 · defence 1.04</span><span>vs expected −0.4 pts</span><span>FotMob 1.8 · SofaScore 4.5 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
@@ -519,6 +562,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">FUL v LIV 2–2 · GW20 · 1′ · on 90′</span></header>
     <p class="note">The latest scoring substitute</p>
     <div class="chips"><span class="chip ret">1G</span><span class="chip">1 from outside box</span><span class="chip">0.04 xG</span><span class="chip">1 shots</span><span class="chip">1 on target</span><span class="chip bad">1 conceded</span></div>
+    <div class="parts lps"><span class="lp up"><b>+1</b> mins</span><span class="lp up"><b>+5</b> goals</span></div>
     <div class="parts"><span class="part base"><b>6</b> league pts</span><span class="part up"><b>+0.3</b> opponent</span><span class="part up"><b>+1.0</b> extras</span><span class="part base">= <b>7.3</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.11 · defence 1.06</span><span>vs expected +5.0 pts</span><span>FotMob — · SofaScore 7.6</span></div>
   </div>
@@ -529,6 +573,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">BRE at MCI 0–3 · GW36 · 90′</span></header>
     <p class="note">Most goals prevented in a match he conceded three</p>
     <div class="chips"><span class="chip bad">3 conceded</span><span class="chip">7 saves</span><span class="chip">1.50 prevented</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−1</b> conceded</span><span class="lp up"><b>+3</b> keeper pts</span></div>
     <div class="parts"><span class="part base"><b>4</b> league pts</span><span class="part up"><b>+1.5</b> extras</span><span class="part base">= <b>5.5</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.35 · defence 1.25</span><span>vs expected −0.4 pts</span><span>FotMob 8.2 · SofaScore 9.3</span></div>
   </div>
@@ -539,8 +584,42 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">SUN v NFO 0–5 · GW34 · 90′</span></header>
     <p class="note">Worst</p>
     <div class="chips"><span class="chip bad">5 conceded</span><span class="chip">2 saves</span><span class="chip">-3.67 prevented</span><span class="chip bad">1 error → goal</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−2</b> conceded</span><span class="lp up"><b>+1</b> keeper pts</span></div>
     <div class="parts"><span class="part base"><b>1</b> league pts</span><span class="part down"><b>−2.0</b> mistakes</span><span class="part down"><b>−3.7</b> extras</span><span class="part base">= <b>-4.7</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.84 · defence 1.00</span><span>vs expected −1.1 pts</span><span>FotMob 3.2 · SofaScore 5.1</span></div>
+  </div>
+</article></div></section><section class="kind"><h3>DefCon: defending the league pays for</h3><p class="q">Defenders earn up to two points for tackles won, interceptions and blocks; midfielders for those plus clearances and recoveries.</p><p class="verdict">7.2 and 6.4: DefCon&#x27;s two points lift a blank from 4.5 to about 5.5 before anything else.</p><div class="cards"><article class="card">
+  <div class="mark b-mid"><span>7.2</span><small>4 pts</small></div>
+  <div class="body">
+    <header><strong>Mavropanos</strong> <span class="pos">DEF</span>
+      <span class="fx">WHU v ARS 0–1 · GW36 · 90′</span></header>
+    <p class="note">Best defender&#x27;s day with no return and no clean sheet</p>
+    <div class="chips"><span class="chip">0.02 xG</span><span class="chip">0.04 xA</span><span class="chip">1 shots</span><span class="chip">1 key passes</span><span class="chip">2 off the line</span><span class="chip bad">1 conceded</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+2</b> DefCon</span></div>
+    <div class="parts"><span class="part base"><b>4</b> league pts</span><span class="part up"><b>+3.0</b> extras</span><span class="part base">= <b>7.0</b></span></div>
+    <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.28 · defence 1.63</span><span>vs expected −1.1 pts</span><span>FotMob 8.1 · SofaScore 8.4 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-mid"><span>6.4</span><small>4 pts</small></div>
+  <div class="body">
+    <header><strong>Hinshelwood</strong> <span class="pos">MID</span>
+      <span class="fx">BHA at MCI 1–1 · GW21 · 90′</span></header>
+    <p class="note">Best midfielder&#x27;s day with no return</p>
+    <div class="chips"><span class="chip">0.16 xA</span><span class="chip">1 off the line</span><span class="chip bad">1 conceded</span><span class="chip bad">1 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+2</b> DefCon</span></div>
+    <div class="parts"><span class="part base"><b>4</b> league pts</span><span class="part down"><b>−0.1</b> mistakes</span><span class="part up"><b>+1.5</b> extras</span><span class="part base">= <b>5.3</b></span></div>
+    <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.36 · defence 1.26</span><span>vs expected −1.1 pts</span><span>FotMob 7.4 · SofaScore 7.4</span></div>
+  </div>
+</article></div></section><section class="kind"><h3>Keeper points: a busy keeper</h3><p class="q">A save, punch or high claim each count; every three is a point.</p><p class="verdict">8.6: his keeper points carry a day his side conceded on.</p><div class="cards"><article class="card">
+  <div class="mark b-high"><span>8.6</span><small>9 pts</small></div>
+  <div class="body">
+    <header><strong>Areola</strong> <span class="pos">GK</span>
+      <span class="fx">WHU at BOU 2–2 · GW12 · 90′</span></header>
+    <p class="note">Most keeper points in a match without a clean sheet</p>
+    <div class="chips"><span class="chip ret">1A</span><span class="chip">1 key passes</span><span class="chip bad">2 conceded</span><span class="chip">10 saves</span><span class="chip">2.49 prevented</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+3</b> assists</span><span class="lp down"><b>−1</b> conceded</span><span class="lp up"><b>+5</b> keeper pts</span></div>
+    <div class="parts"><span class="part base"><b>9</b> league pts</span><span class="part down"><b>−0.2</b> opponent</span><span class="part up"><b>+2.5</b> extras</span><span class="part base">= <b>11.3</b></span></div>
+    <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.02 · defence 0.93</span><span>vs expected +2.4 pts</span><span>FotMob 9.4 · SofaScore 9.3 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article></div></section><section class="kind"><h3>A goal from outside the box</h3><p class="q">Worth a point more than a tap-in.</p><p class="verdict">7.7: the goal&#x27;s points plus one for the distance.</p><div class="cards"><article class="card">
   <div class="mark b-high"><span>7.7</span><small>7 pts</small></div>
@@ -549,6 +628,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">LIV at NEW 3–2 · GW2 · 90′</span></header>
     <p class="note">The lowest-xG long-range goal</p>
     <div class="chips"><span class="chip ret">1G</span><span class="chip">1 from outside box</span><span class="chip">0.02 xG</span><span class="chip">0.01 xA</span><span class="chip">1 shots</span><span class="chip">1 on target</span><span class="chip bad">2 conceded</span><span class="chip bad">1 yellow</span><span class="chip bad">2 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+5</b> goals</span><span class="lp down"><b>−1</b> yellow</span><span class="lp up"><b>+1</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>7</b> league pts</span><span class="part up"><b>+0.8</b> opponent</span><span class="part down"><b>−0.3</b> mistakes</span><span class="part up"><b>+1.0</b> extras</span><span class="part base">= <b>8.5</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.94 · defence 1.15</span><span>vs expected +4.2 pts</span><span>FotMob 7.3 · SofaScore 7.3</span></div>
   </div>
@@ -558,7 +638,7 @@ table.marks { width: auto; min-width: 180px; }
 <section>
   <h2>The star test</h2>
   <p class="q">Season averages, 900 minutes or more. "vs exp." sums his goal, assist and clean-sheet points against what the projection expected before each match.</p>
-  <div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="">Pos</th><th class="n">Apps</th><th class="n">G</th><th class="n">A</th><th class="n">Pts/gm</th><th class="n hl">Rating</th><th class="n">Rank</th><th class="n">vs exp.</th><th class="n">10s</th></tr></thead><tbody><tr><td class="">B.Fernandes</td><td class="">MUN</td><td class="">MID</td><td class="n">35</td><td class="n">9</td><td class="n">24</td><td class="n">6.03</td><td class="n hl">6.22</td><td class="n">1</td><td class="n">+23.2</td><td class="n">0</td></tr><tr><td class="">Gabriel</td><td class="">ARS</td><td class="">DEF</td><td class="n">32</td><td class="n">3</td><td class="n">5</td><td class="n">5.50</td><td class="n hl">6.11</td><td class="n">2</td><td class="n">+20.2</td><td class="n">0</td></tr><tr><td class="">Bruno G.</td><td class="">NEW</td><td class="">MID</td><td class="n">29</td><td class="n">9</td><td class="n">7</td><td class="n">5.07</td><td class="n hl">5.84</td><td class="n">3</td><td class="n">+21.7</td><td class="n">0</td></tr><tr><td class="">Rice</td><td class="">ARS</td><td class="">MID</td><td class="n">36</td><td class="n">4</td><td class="n">9</td><td class="n">4.75</td><td class="n hl">5.80</td><td class="n">4</td><td class="n">−6.4</td><td class="n">0</td></tr><tr><td class="">Semenyo</td><td class="">BOU</td><td class="">MID</td><td class="n">20</td><td class="n">10</td><td class="n">5</td><td class="n">5.35</td><td class="n hl">5.76</td><td class="n">6</td><td class="n">+21.3</td><td class="n">0</td></tr><tr><td class="">Haaland</td><td class="">MCI</td><td class="">FWD</td><td class="n">35</td><td class="n">27</td><td class="n">8</td><td class="n">5.66</td><td class="n hl">5.75</td><td class="n">7</td><td class="n">+4.3</td><td class="n">0</td></tr><tr><td class="">Raya</td><td class="">ARS</td><td class="">GK</td><td class="n">37</td><td class="n">0</td><td class="n">0</td><td class="n">4.51</td><td class="n hl">5.64</td><td class="n">10</td><td class="n">+10.7</td><td class="n">0</td></tr><tr><td class="">Cunha</td><td class="">MUN</td><td class="">MID</td><td class="n">33</td><td class="n">10</td><td class="n">4</td><td class="n">4.03</td><td class="n hl">5.43</td><td class="n">27</td><td class="n">+3.2</td><td class="n">0</td></tr><tr><td class="">Semenyo</td><td class="">MCI</td><td class="">MID</td><td class="n">17</td><td class="n">7</td><td class="n">1</td><td class="n">4.00</td><td class="n hl">5.37</td><td class="n">34</td><td class="n">−2.4</td><td class="n">0</td></tr><tr><td class="">Saka</td><td class="">ARS</td><td class="">MID</td><td class="n">30</td><td class="n">7</td><td class="n">10</td><td class="n">4.20</td><td class="n hl">5.34</td><td class="n">37</td><td class="n">−28.2</td><td class="n">0</td></tr><tr><td class="">João Pedro</td><td class="">CHE</td><td class="">FWD</td><td class="n">35</td><td class="n">15</td><td class="n">9</td><td class="n">4.43</td><td class="n hl">5.29</td><td class="n">43</td><td class="n">+0.6</td><td class="n">0</td></tr><tr><td class="">M.Salah</td><td class="">LIV</td><td class="">MID</td><td class="n">27</td><td class="n">7</td><td class="n">7</td><td class="n">4.26</td><td class="n hl">5.17</td><td class="n">70</td><td class="n">−44.5</td><td class="n">0</td></tr><tr><td class="">Palmer</td><td class="">CHE</td><td class="">MID</td><td class="n">26</td><td class="n">10</td><td class="n">2</td><td class="n">4.08</td><td class="n hl">5.09</td><td class="n">84</td><td class="n">−12.2</td><td class="n">0</td></tr><tr><td class="">Mbeumo</td><td class="">MUN</td><td class="">MID</td><td class="n">33</td><td class="n">11</td><td class="n">3</td><td class="n">3.70</td><td class="n hl">5.09</td><td class="n">87</td><td class="n">−12.3</td><td class="n">0</td></tr><tr><td class="">Virgil</td><td class="">LIV</td><td class="">DEF</td><td class="n">38</td><td class="n">6</td><td class="n">1</td><td class="n">3.79</td><td class="n hl">4.95</td><td class="n">124</td><td class="n">+0.5</td><td class="n">0</td></tr><tr><td class="">Watkins</td><td class="">AVL</td><td class="">FWD</td><td class="n">37</td><td class="n">16</td><td class="n">4</td><td class="n">3.81</td><td class="n hl">4.88</td><td class="n">150</td><td class="n">−3.9</td><td class="n">0</td></tr><tr><td class="">Wirtz</td><td class="">LIV</td><td class="">MID</td><td class="n">33</td><td class="n">5</td><td class="n">4</td><td class="n">3.42</td><td class="n hl">4.87</td><td class="n">152</td><td class="n">−18.0</td><td class="n">0</td></tr><tr><td class="">Ekitiké</td><td class="">LIV</td><td class="">FWD</td><td class="n">27</td><td class="n">11</td><td class="n">4</td><td class="n">3.93</td><td class="n hl">4.87</td><td class="n">153</td><td class="n">−1.9</td><td class="n">0</td></tr><tr><td class="">Gyökeres</td><td class="">ARS</td><td class="">FWD</td><td class="n">33</td><td class="n">14</td><td class="n">1</td><td class="n">3.33</td><td class="n hl">4.66</td><td class="n">209</td><td class="n">−3.7</td><td class="n">0</td></tr></tbody></table></div>
+  <div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="">Pos</th><th class="n">Apps</th><th class="n">G</th><th class="n">A</th><th class="n">Pts/gm</th><th class="n hl">Rating</th><th class="n">Rank</th><th class="n">vs exp.</th><th class="n">10s</th></tr></thead><tbody><tr><td class="">B.Fernandes</td><td class="">MUN</td><td class="">MID</td><td class="n">35</td><td class="n">9</td><td class="n">24</td><td class="n">6.03</td><td class="n hl">6.22</td><td class="n">1</td><td class="n">+23.2</td><td class="n">0</td></tr><tr><td class="">Gabriel</td><td class="">ARS</td><td class="">DEF</td><td class="n">32</td><td class="n">3</td><td class="n">5</td><td class="n">5.50</td><td class="n hl">6.11</td><td class="n">2</td><td class="n">+20.2</td><td class="n">0</td></tr><tr><td class="">Bruno G.</td><td class="">NEW</td><td class="">MID</td><td class="n">29</td><td class="n">9</td><td class="n">7</td><td class="n">5.07</td><td class="n hl">5.84</td><td class="n">3</td><td class="n">+21.7</td><td class="n">0</td></tr><tr><td class="">Rice</td><td class="">ARS</td><td class="">MID</td><td class="n">36</td><td class="n">4</td><td class="n">9</td><td class="n">4.75</td><td class="n hl">5.80</td><td class="n">4</td><td class="n">−6.4</td><td class="n">0</td></tr><tr><td class="">Semenyo</td><td class="">BOU</td><td class="">MID</td><td class="n">20</td><td class="n">10</td><td class="n">5</td><td class="n">5.35</td><td class="n hl">5.76</td><td class="n">6</td><td class="n">+21.3</td><td class="n">0</td></tr><tr><td class="">Haaland</td><td class="">MCI</td><td class="">FWD</td><td class="n">35</td><td class="n">27</td><td class="n">8</td><td class="n">5.66</td><td class="n hl">5.75</td><td class="n">7</td><td class="n">+4.3</td><td class="n">0</td></tr><tr><td class="">Raya</td><td class="">ARS</td><td class="">GK</td><td class="n">37</td><td class="n">0</td><td class="n">0</td><td class="n">4.51</td><td class="n hl">5.64</td><td class="n">10</td><td class="n">+10.7</td><td class="n">0</td></tr><tr><td class="">Cunha</td><td class="">MUN</td><td class="">MID</td><td class="n">33</td><td class="n">10</td><td class="n">4</td><td class="n">4.03</td><td class="n hl">5.43</td><td class="n">27</td><td class="n">+3.2</td><td class="n">0</td></tr><tr><td class="">Semenyo</td><td class="">MCI</td><td class="">MID</td><td class="n">17</td><td class="n">7</td><td class="n">1</td><td class="n">4.00</td><td class="n hl">5.37</td><td class="n">34</td><td class="n">−2.4</td><td class="n">0</td></tr><tr><td class="">Saka</td><td class="">ARS</td><td class="">MID</td><td class="n">30</td><td class="n">7</td><td class="n">10</td><td class="n">4.20</td><td class="n hl">5.34</td><td class="n">37</td><td class="n">−28.2</td><td class="n">0</td></tr><tr><td class="">João Pedro</td><td class="">CHE</td><td class="">FWD</td><td class="n">35</td><td class="n">15</td><td class="n">9</td><td class="n">4.43</td><td class="n hl">5.29</td><td class="n">43</td><td class="n">+0.6</td><td class="n">0</td></tr><tr><td class="">M.Salah</td><td class="">LIV</td><td class="">MID</td><td class="n">27</td><td class="n">7</td><td class="n">7</td><td class="n">4.26</td><td class="n hl">5.17</td><td class="n">71</td><td class="n">−44.5</td><td class="n">0</td></tr><tr><td class="">Palmer</td><td class="">CHE</td><td class="">MID</td><td class="n">26</td><td class="n">10</td><td class="n">2</td><td class="n">4.08</td><td class="n hl">5.09</td><td class="n">86</td><td class="n">−12.2</td><td class="n">0</td></tr><tr><td class="">Mbeumo</td><td class="">MUN</td><td class="">MID</td><td class="n">33</td><td class="n">11</td><td class="n">3</td><td class="n">3.70</td><td class="n hl">5.09</td><td class="n">89</td><td class="n">−12.3</td><td class="n">0</td></tr><tr><td class="">Virgil</td><td class="">LIV</td><td class="">DEF</td><td class="n">38</td><td class="n">6</td><td class="n">1</td><td class="n">3.79</td><td class="n hl">4.95</td><td class="n">126</td><td class="n">+0.5</td><td class="n">0</td></tr><tr><td class="">Watkins</td><td class="">AVL</td><td class="">FWD</td><td class="n">37</td><td class="n">16</td><td class="n">4</td><td class="n">3.81</td><td class="n hl">4.88</td><td class="n">153</td><td class="n">−3.9</td><td class="n">0</td></tr><tr><td class="">Wirtz</td><td class="">LIV</td><td class="">MID</td><td class="n">33</td><td class="n">5</td><td class="n">4</td><td class="n">3.42</td><td class="n hl">4.87</td><td class="n">155</td><td class="n">−18.0</td><td class="n">0</td></tr><tr><td class="">Ekitiké</td><td class="">LIV</td><td class="">FWD</td><td class="n">27</td><td class="n">11</td><td class="n">4</td><td class="n">3.93</td><td class="n hl">4.87</td><td class="n">156</td><td class="n">−1.9</td><td class="n">0</td></tr><tr><td class="">Gyökeres</td><td class="">ARS</td><td class="">FWD</td><td class="n">33</td><td class="n">14</td><td class="n">1</td><td class="n">3.33</td><td class="n hl">4.66</td><td class="n">212</td><td class="n">−3.7</td><td class="n">0</td></tr></tbody></table></div>
   <div class="grid2">
     <div><h4>Promoted clubs' attackers, by vs expected</h4><div class="scroll"><table><thead><tr><th class="">Player</th><th class="">Club</th><th class="n">G</th><th class="n hl">Rating</th><th class="n">vs exp.</th></tr></thead><tbody><tr><td class="">Anthony</td><td class="">BUR</td><td class="n">8</td><td class="n hl">5.19</td><td class="n">+20.4</td></tr><tr><td class="">Flemming</td><td class="">BUR</td><td class="n">11</td><td class="n hl">4.88</td><td class="n">+18.8</td></tr><tr><td class="">Stach</td><td class="">LEE</td><td class="n">5</td><td class="n hl">5.63</td><td class="n">+18.8</td></tr><tr><td class="">Okafor</td><td class="">LEE</td><td class="n">8</td><td class="n hl">4.95</td><td class="n">+14.9</td></tr><tr><td class="">Diarra</td><td class="">SUN</td><td class="n">2</td><td class="n hl">4.69</td><td class="n">+14.0</td></tr><tr><td class="">Aaronson</td><td class="">LEE</td><td class="n">4</td><td class="n hl">4.88</td><td class="n">+13.9</td></tr></tbody></table></div></div>
   </div>
@@ -571,6 +651,12 @@ table.marks { width: auto; min-width: 180px; }
 </section>
 
 <section>
+  <h2>What the real league paid for</h2>
+  <p class="q">Average league points per rated match, by category, across 25/26. DefCon is tackles won, interceptions and blocks for defenders (3 = 1 point, 5 = 2) and those plus clearances and recoveries for midfielders (8 = 1, 11 = 2) and forwards (6 = 1, 9 = 2). Keeper points are saves, punches and high claims, one point per three.</p>
+  <div class="scroll"><table><thead><tr><th>Pos</th><th class="n">mins</th><th class="n">goals</th><th class="n">assists</th><th class="n">clean sheet</th><th class="n">DFP</th><th class="n">DFP3</th><th class="n">keeper pts</th><th class="n">pen saved</th><th class="n">conceded</th><th class="n">conceded</th><th class="n">yellow</th><th class="n">red</th><th class="n">own goal</th><th class="n">pen missed</th></tr></thead><tbody><tr><td>GK</td><td class="n">1.99</td><td class="n"></td><td class="n">0.02</td><td class="n">1.01</td><td class="n"></td><td class="n"></td><td class="n">1.11</td><td class="n">0.07</td><td class="n">-0.45</td><td class="n"></td><td class="n">-0.07</td><td class="n"></td><td class="n">-0.01</td><td class="n"></td></tr><tr><td>DEF</td><td class="n">1.83</td><td class="n">0.22</td><td class="n">0.20</td><td class="n">0.89</td><td class="n">0.51</td><td class="n">0.01</td><td class="n"></td><td class="n"></td><td class="n"></td><td class="n">-0.37</td><td class="n">-0.16</td><td class="n">-0.02</td><td class="n">-0.02</td><td class="n"></td></tr><tr><td>MID</td><td class="n">1.67</td><td class="n">0.51</td><td class="n">0.37</td><td class="n">0.16</td><td class="n">0.01</td><td class="n">0.45</td><td class="n"></td><td class="n"></td><td class="n"></td><td class="n">-0.01</td><td class="n">-0.13</td><td class="n">-0.01</td><td class="n"></td><td class="n"></td></tr><tr><td>FWD</td><td class="n">1.60</td><td class="n">1.06</td><td class="n">0.25</td><td class="n"></td><td class="n"></td><td class="n">0.16</td><td class="n"></td><td class="n"></td><td class="n"></td><td class="n"></td><td class="n">-0.09</td><td class="n"></td><td class="n"></td><td class="n">-0.01</td></tr></tbody></table></div>
+</section>
+
+<section>
   <h2>Team strength, old and new</h2>
   <p class="q">Season averages of each club's reading, beside what happened. Higher defence concedes less.</p>
   <div class="scroll"><table><thead><tr><th class="">Club</th><th class="n">Scored/gm</th><th class="n">Conceded/gm</th><th class="n">Old att.</th><th class="n hl">New att.</th><th class="n">Old def.</th><th class="n hl">New def.</th></tr></thead><tbody><tr><td class="">MCI</td><td class="n">2.00</td><td class="n">0.95</td><td class="n">1.32</td><td class="n hl">1.30</td><td class="n">1.16</td><td class="n hl">1.21</td></tr><tr><td class="">ARS</td><td class="n">1.87</td><td class="n">0.71</td><td class="n">1.23</td><td class="n hl">1.23</td><td class="n">1.64</td><td class="n hl">1.56</td></tr><tr><td class="">MUN</td><td class="n">1.82</td><td class="n">1.32</td><td class="n">1.08</td><td class="n hl">1.17</td><td class="n">0.99</td><td class="n hl">0.98</td></tr><tr><td class="">LIV</td><td class="n">1.66</td><td class="n">1.39</td><td class="n">1.10</td><td class="n hl">1.14</td><td class="n">1.08</td><td class="n hl">1.04</td></tr><tr><td class="">BOU</td><td class="n">1.53</td><td class="n">1.42</td><td class="n">1.14</td><td class="n hl">1.08</td><td class="n">1.03</td><td class="n hl">0.94</td></tr><tr><td class="">CHE</td><td class="n">1.53</td><td class="n">1.37</td><td class="n">1.30</td><td class="n hl">1.20</td><td class="n">1.07</td><td class="n hl">1.08</td></tr><tr><td class="">AVL</td><td class="n">1.47</td><td class="n">1.29</td><td class="n">1.01</td><td class="n hl">0.92</td><td class="n">1.01</td><td class="n hl">1.06</td></tr><tr><td class="">BRE</td><td class="n">1.45</td><td class="n">1.37</td><td class="n">1.05</td><td class="n hl">1.07</td><td class="n">0.97</td><td class="n hl">0.98</td></tr><tr><td class="">NEW</td><td class="n">1.39</td><td class="n">1.45</td><td class="n">1.11</td><td class="n hl">0.98</td><td class="n">1.12</td><td class="n hl">1.10</td></tr><tr><td class="">BHA</td><td class="n">1.37</td><td class="n">1.21</td><td class="n">1.07</td><td class="n hl">1.06</td><td class="n">1.07</td><td class="n hl">1.02</td></tr><tr><td class="">LEE</td><td class="n">1.29</td><td class="n">1.47</td><td class="n">1.01</td><td class="n hl">0.95</td><td class="n">1.00</td><td class="n hl">0.93</td></tr><tr><td class="">NFO</td><td class="n">1.26</td><td class="n">1.34</td><td class="n">0.88</td><td class="n hl">0.86</td><td class="n">1.01</td><td class="n hl">0.94</td></tr><tr><td class="">TOT</td><td class="n">1.26</td><td class="n">1.50</td><td class="n">1.00</td><td class="n hl">0.96</td><td class="n">0.88</td><td class="n hl">1.04</td></tr><tr><td class="">FUL</td><td class="n">1.24</td><td class="n">1.34</td><td class="n">0.91</td><td class="n hl">0.93</td><td class="n">1.07</td><td class="n hl">0.98</td></tr><tr><td class="">EVE</td><td class="n">1.24</td><td class="n">1.32</td><td class="n">0.85</td><td class="n hl">0.90</td><td class="n">1.02</td><td class="n hl">1.03</td></tr><tr><td class="">WHU</td><td class="n">1.21</td><td class="n">1.71</td><td class="n">0.89</td><td class="n hl">0.87</td><td class="n">0.89</td><td class="n hl">0.82</td></tr><tr><td class="">CRY</td><td class="n">1.11</td><td class="n">1.30</td><td class="n">1.14</td><td class="n hl">1.01</td><td class="n">1.03</td><td class="n hl">1.12</td></tr><tr><td class="">SUN</td><td class="n">1.11</td><td class="n">1.26</td><td class="n">0.86</td><td class="n hl">0.82</td><td class="n">0.97</td><td class="n hl">1.09</td></tr><tr><td class="">BUR</td><td class="n">1.00</td><td class="n">1.97</td><td class="n">0.85</td><td class="n hl">0.80</td><td class="n">0.83</td><td class="n hl">0.76</td></tr><tr><td class="">WOL</td><td class="n">0.71</td><td class="n">1.79</td><td class="n">0.78</td><td class="n hl">0.71</td><td class="n">0.95</td><td class="n hl">0.84</td></tr></tbody></table></div>
@@ -579,9 +665,9 @@ table.marks { width: auto; min-width: 180px; }
 <section>
   <h2>How the marks spread</h2>
   <div class="grid2">
-    <div><div class="hist"><div class="bar"><span class="cnt">20</span><i style="height:2px" class="b-bad"></i><span class="lab">1</span></div><div class="bar"><span class="cnt">822</span><i style="height:25px" class="b-bad"></i><span class="lab">2</span></div><div class="bar"><span class="cnt">1,078</span><i style="height:33px" class="b-low"></i><span class="lab">3</span></div><div class="bar"><span class="cnt">3,948</span><i style="height:120px" class="b-mid"></i><span class="lab">4</span></div><div class="bar"><span class="cnt">1,569</span><i style="height:48px" class="b-mid"></i><span class="lab">5</span></div><div class="bar"><span class="cnt">1,378</span><i style="height:42px" class="b-mid"></i><span class="lab">6</span></div><div class="bar"><span class="cnt">1,136</span><i style="height:35px" class="b-mid"></i><span class="lab">7</span></div><div class="bar"><span class="cnt">460</span><i style="height:14px" class="b-high"></i><span class="lab">8</span></div><div class="bar"><span class="cnt">103</span><i style="height:3px" class="b-high"></i><span class="lab">9</span></div><div class="bar"><span class="cnt">7</span><i style="height:2px" class="b-top"></i><span class="lab">10</span></div></div><p class="small">Every rated match, rounded to the whole mark.</p></div>
-    <div><div class="scroll"><table><thead><tr><th>Pos</th><th class="n">60+ min</th><th class="n">Median</th><th class="n">9s</th><th class="n">10s</th><th class="n">1s</th></tr></thead><tbody><tr><td>GK</td><td class="n">757</td><td class="n">4.9</td><td class="n">2</td><td class="n">0</td><td class="n">1</td></tr><tr><td>DEF</td><td class="n">3,026</td><td class="n">4.7</td><td class="n">20</td><td class="n">1</td><td class="n">2</td></tr><tr><td>MID</td><td class="n">3,265</td><td class="n">5.0</td><td class="n">15</td><td class="n">0</td><td class="n">0</td></tr><tr><td>FWD</td><td class="n">765</td><td class="n">4.5</td><td class="n">4</td><td class="n">0</td><td class="n">0</td></tr></tbody></table></div>
-    <p class="small" style="margin-top:8px">Correlation with league points 0.943; with the FotMob/SofaScore average 0.772.</p></div>
+    <div><div class="hist"><div class="bar"><span class="cnt">20</span><i style="height:2px" class="b-bad"></i><span class="lab">1</span></div><div class="bar"><span class="cnt">811</span><i style="height:25px" class="b-bad"></i><span class="lab">2</span></div><div class="bar"><span class="cnt">1,070</span><i style="height:32px" class="b-low"></i><span class="lab">3</span></div><div class="bar"><span class="cnt">3,952</span><i style="height:120px" class="b-mid"></i><span class="lab">4</span></div><div class="bar"><span class="cnt">1,573</span><i style="height:48px" class="b-mid"></i><span class="lab">5</span></div><div class="bar"><span class="cnt">1,386</span><i style="height:42px" class="b-mid"></i><span class="lab">6</span></div><div class="bar"><span class="cnt">1,131</span><i style="height:34px" class="b-mid"></i><span class="lab">7</span></div><div class="bar"><span class="cnt">466</span><i style="height:14px" class="b-high"></i><span class="lab">8</span></div><div class="bar"><span class="cnt">105</span><i style="height:3px" class="b-high"></i><span class="lab">9</span></div><div class="bar"><span class="cnt">7</span><i style="height:2px" class="b-top"></i><span class="lab">10</span></div></div><p class="small">Every rated match, rounded to the whole mark.</p></div>
+    <div><div class="scroll"><table><thead><tr><th>Pos</th><th class="n">60+ min</th><th class="n">Median</th><th class="n">9s</th><th class="n">10s</th><th class="n">1s</th></tr></thead><tbody><tr><td>GK</td><td class="n">757</td><td class="n">5.0</td><td class="n">2</td><td class="n">0</td><td class="n">1</td></tr><tr><td>DEF</td><td class="n">3,026</td><td class="n">4.7</td><td class="n">20</td><td class="n">1</td><td class="n">2</td></tr><tr><td>MID</td><td class="n">3,265</td><td class="n">5.0</td><td class="n">15</td><td class="n">0</td><td class="n">0</td></tr><tr><td>FWD</td><td class="n">765</td><td class="n">4.5</td><td class="n">4</td><td class="n">0</td><td class="n">0</td></tr></tbody></table></div>
+    <p class="small" style="margin-top:8px">Correlation with league points 0.943; with the FotMob/SofaScore average 0.773.</p></div>
   </div>
 </section>
 
@@ -601,6 +687,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">ARS v LEE 5–0 · GW2 · 63′</span></header>
     
     <div class="chips"><span class="chip ret">2G</span><span class="chip ret">1A</span><span class="chip">0.81 xG</span><span class="chip">0.05 xA</span><span class="chip">3 shots</span><span class="chip">2 on target</span><span class="chip">2 key passes</span><span class="chip">1 big chances made</span><span class="chip ret">clean sheet</span><span class="chip bad">2 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+3</b> assists</span><span class="lp up"><b>+12</b> goals</span><span class="lp up"><b>+1</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>22</b> league pts</span><span class="part up"><b>+2.0</b> opponent</span><span class="part down"><b>−0.3</b> mistakes</span><span class="part base">= <b>23.7</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.03 · defence 1.12</span><span>vs expected +16.5 pts</span><span>FotMob 9.2 · SofaScore 10.0</span></div>
   </div>
@@ -611,6 +698,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">TOT at EVE 3–0 · GW9 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">2G</span><span class="chip">1.07 xG</span><span class="chip">0.07 xA</span><span class="chip">2 shots</span><span class="chip">2 on target</span><span class="chip ret">clean sheet</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+12</b> goals</span><span class="lp up"><b>+1</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>19</b> league pts</span><span class="part down"><b>−0.2</b> opponent</span><span class="part base">= <b>18.8</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.95 · defence 1.00</span><span>vs expected +14.7 pts</span><span>FotMob 9.1 · SofaScore 9.2</span></div>
   </div>
@@ -621,6 +709,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">ARS v TOT 4–1 · GW12 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">3G</span><span class="chip">0.66 xG</span><span class="chip">0.37 xA</span><span class="chip">6 shots</span><span class="chip">4 on target</span><span class="chip">1 key passes</span><span class="chip">1 big chances made</span><span class="chip bad">1 conceded</span><span class="chip bad">1 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+15</b> goals</span></div>
     <div class="parts"><span class="part base"><b>17</b> league pts</span><span class="part up"><b>+1.7</b> opponent</span><span class="part down"><b>−0.1</b> mistakes</span><span class="part base">= <b>18.6</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.01 · defence 1.12</span><span>vs expected +11.8 pts</span><span>FotMob 9.7 · SofaScore 10.0</span></div>
   </div>
@@ -631,6 +720,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">CHE at AVL 4–1 · GW29 · 84′</span></header>
     
     <div class="chips"><span class="chip ret">3G</span><span class="chip ret">1A</span><span class="chip">2.61 xG</span><span class="chip">5 shots</span><span class="chip">4 on target</span><span class="chip">1 key passes</span><span class="chip bad">1 big chances missed</span><span class="chip bad">1 conceded</span><span class="chip bad">1 yellow</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+3</b> assists</span><span class="lp up"><b>+12</b> goals</span><span class="lp down"><b>−1</b> yellow</span></div>
     <div class="parts"><span class="part base"><b>16</b> league pts</span><span class="part up"><b>+1.5</b> opponent</span><span class="part down"><b>−1.0</b> mistakes</span><span class="part base">= <b>16.5</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.96 · defence 1.10</span><span>vs expected +11.2 pts</span><span>FotMob 9.8 · SofaScore 9.7</span></div>
   </div>
@@ -641,6 +731,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">NFO v TOT 3–0 · GW16 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">1G</span><span class="chip ret">2A</span><span class="chip">1 from outside box</span><span class="chip">0.13 xG</span><span class="chip">0.87 xA</span><span class="chip">2 shots</span><span class="chip">1 on target</span><span class="chip">2 key passes</span><span class="chip">1 big chances made</span><span class="chip bad">1 big chances missed</span><span class="chip ret">clean sheet</span><span class="chip bad">2 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+1</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+6</b> assists</span><span class="lp up"><b>+5</b> goals</span><span class="lp up"><b>+2</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>16</b> league pts</span><span class="part up"><b>+0.8</b> opponent</span><span class="part down"><b>−1.3</b> mistakes</span><span class="part up"><b>+1.0</b> extras</span><span class="part base">= <b>16.4</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.98 · defence 1.07</span><span>vs expected +11.1 pts</span><span>FotMob 9.2 · SofaScore 9.9</span></div>
   </div>
@@ -651,6 +742,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">BHA at BUR 2–0 · GW32 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">2G</span><span class="chip">1 from outside box</span><span class="chip">0.25 xG</span><span class="chip">2 shots</span><span class="chip">2 on target</span><span class="chip ret">clean sheet</span><span class="chip bad">2 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+12</b> goals</span><span class="lp up"><b>+2</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>20</b> league pts</span><span class="part down"><b>−4.3</b> opponent</span><span class="part down"><b>−0.3</b> mistakes</span><span class="part up"><b>+1.0</b> extras</span><span class="part base">= <b>16.4</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.75 · defence 0.73</span><span>vs expected +13.0 pts</span><span>FotMob 9.1 · SofaScore 9.5</span></div>
   </div>
@@ -661,6 +753,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">BRE v BOU 4–1 · GW18 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">3G</span><span class="chip">2.94 xG</span><span class="chip">0.03 xA</span><span class="chip">6 shots</span><span class="chip">5 on target</span><span class="chip bad">1 big chances missed</span><span class="chip bad">1 conceded</span><span class="chip bad">2 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+12</b> goals</span><span class="lp up"><b>+2</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>18</b> league pts</span><span class="part down"><b>−0.9</b> opponent</span><span class="part down"><b>−1.3</b> mistakes</span><span class="part base">= <b>15.8</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.06 · defence 0.93</span><span>vs expected +10.5 pts</span><span>FotMob 9.7 · SofaScore 10.0</span></div>
   </div>
@@ -671,6 +764,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">MUN v MCI 2–0 · GW22 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">1G</span><span class="chip">0.47 xG</span><span class="chip">0.02 xA</span><span class="chip">2 shots</span><span class="chip">2 on target</span><span class="chip">1 key passes</span><span class="chip ret">clean sheet</span><span class="chip bad">2 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+6</b> goals</span><span class="lp up"><b>+1</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>13</b> league pts</span><span class="part up"><b>+3.0</b> opponent</span><span class="part down"><b>−0.3</b> mistakes</span><span class="part base">= <b>15.7</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.36 · defence 1.27</span><span>vs expected +8.1 pts</span><span>FotMob 8.5 · SofaScore 8.2</span></div>
   </div>
@@ -681,6 +775,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">MCI at CHE 3–0 · GW32 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">1G</span><span class="chip">0.33 xG</span><span class="chip">0.04 xA</span><span class="chip">1 shots</span><span class="chip">1 on target</span><span class="chip">1 key passes</span><span class="chip ret">clean sheet</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+6</b> goals</span><span class="lp up"><b>+2</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>14</b> league pts</span><span class="part up"><b>+1.4</b> opponent</span><span class="part base">= <b>15.4</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.27 · defence 1.06</span><span>vs expected +7.3 pts</span><span>FotMob 8.8 · SofaScore 9.2</span></div>
   </div>
@@ -691,6 +786,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">AVL v MCI 1–0 · GW9 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">1G</span><span class="chip">1 from outside box</span><span class="chip">0.06 xG</span><span class="chip">0.07 xA</span><span class="chip">1 shots</span><span class="chip">1 on target</span><span class="chip">1 key passes</span><span class="chip">1 big chances made</span><span class="chip ret">clean sheet</span><span class="chip bad">1 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+6</b> goals</span></div>
     <div class="parts"><span class="part base"><b>12</b> league pts</span><span class="part up"><b>+2.5</b> opponent</span><span class="part down"><b>−0.1</b> mistakes</span><span class="part up"><b>+1.0</b> extras</span><span class="part base">= <b>15.3</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.27 · defence 1.23</span><span>vs expected +8.9 pts</span><span>FotMob 8.1 · SofaScore 8.4</span></div>
   </div>
@@ -701,6 +797,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">CHE v EVE 2–0 · GW16 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">1G</span><span class="chip ret">1A</span><span class="chip">0.33 xG</span><span class="chip">0.13 xA</span><span class="chip">2 shots</span><span class="chip">2 on target</span><span class="chip">2 key passes</span><span class="chip">1 big chances made</span><span class="chip ret">clean sheet</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+3</b> assists</span><span class="lp up"><b>+6</b> goals</span></div>
     <div class="parts"><span class="part base"><b>15</b> league pts</span><span class="part up"><b>+0.3</b> opponent</span><span class="part base">= <b>15.3</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.91 · defence 1.07</span><span>vs expected +10.7 pts</span><span>FotMob 8.8 · SofaScore 8.7</span></div>
   </div>
@@ -711,6 +808,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">MUN at BHA 3–0 · GW38 · 61′</span></header>
     
     <div class="chips"><span class="chip ret">1G</span><span class="chip ret">1A</span><span class="chip">0.35 xG</span><span class="chip">0.06 xA</span><span class="chip">3 shots</span><span class="chip">3 on target</span><span class="chip">2 key passes</span><span class="chip">1 big chances made</span><span class="chip bad">1 big chances missed</span><span class="chip ret">clean sheet</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+3</b> assists</span><span class="lp up"><b>+6</b> goals</span></div>
     <div class="parts"><span class="part base"><b>15</b> league pts</span><span class="part up"><b>+1.2</b> opponent</span><span class="part down"><b>−1.0</b> mistakes</span><span class="part base">= <b>15.2</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.05 · defence 1.11</span><span>vs expected +11.3 pts</span><span>FotMob 8.5 · SofaScore 8.1</span></div>
   </div>
@@ -721,6 +819,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">WHU v WOL 4–0 · GW32 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">2G</span><span class="chip">0.35 xG</span><span class="chip">0.05 xA</span><span class="chip">2 shots</span><span class="chip">2 on target</span><span class="chip">1 key passes</span><span class="chip ret">clean sheet</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+12</b> goals</span></div>
     <div class="parts"><span class="part base"><b>18</b> league pts</span><span class="part down"><b>−2.9</b> opponent</span><span class="part base">= <b>15.2</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.68 · defence 0.86</span><span>vs expected +13.8 pts</span><span>FotMob 9.2 · SofaScore 9.7 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
@@ -731,6 +830,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">SUN v WHU 3–0 · GW1 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">1G</span><span class="chip">0.18 xG</span><span class="chip">0.01 xA</span><span class="chip">4 shots</span><span class="chip">2 on target</span><span class="chip">1 off the line</span><span class="chip ret">clean sheet</span><span class="chip bad">1 error → shot</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+6</b> goals</span><span class="lp up"><b>+2</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>14</b> league pts</span><span class="part down"><b>−0.5</b> mistakes</span><span class="part up"><b>+1.5</b> extras</span><span class="part base">= <b>15.0</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.00 · defence 1.00</span><span>vs expected +8.7 pts</span><span>FotMob 8.7 · SofaScore 9.3</span></div>
   </div>
@@ -741,6 +841,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">CRY v WOL 1–0 · GW27 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">clean sheet</span><span class="chip">7 saves</span><span class="chip">2.06 prevented</span><span class="chip ret">1 pen saved</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+5</b> pen saved</span><span class="lp up"><b>+3</b> keeper pts</span></div>
     <div class="parts"><span class="part base"><b>14</b> league pts</span><span class="part down"><b>−1.2</b> opponent</span><span class="part up"><b>+2.1</b> extras</span><span class="part base">= <b>14.9</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.64 · defence 0.85</span><span>vs expected +2.3 pts</span><span>FotMob 9.3 · SofaScore 9.1</span></div>
   </div>
@@ -751,6 +852,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">CHE at WOL 3–1 · GW25 · 60′</span></header>
     
     <div class="chips"><span class="chip ret">3G</span><span class="chip">2 pen goal</span><span class="chip">1.79 xG</span><span class="chip">0.01 xA</span><span class="chip">3 shots</span><span class="chip">3 on target</span><span class="chip bad">1 conceded</span><span class="chip bad">3 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+15</b> goals</span></div>
     <div class="parts"><span class="part base"><b>17</b> league pts</span><span class="part down"><b>−1.8</b> opponent</span><span class="part down"><b>−0.5</b> mistakes</span><span class="part base">= <b>14.8</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.65 · defence 0.88</span><span>vs expected +12.8 pts</span><span>FotMob 9.5 · SofaScore 8.9</span></div>
   </div>
@@ -761,6 +863,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">BRE at EVE 4–2 · GW20 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">3G</span><span class="chip">1.72 xG</span><span class="chip">0.03 xA</span><span class="chip">6 shots</span><span class="chip">5 on target</span><span class="chip bad">1 big chances missed</span><span class="chip">1 off the line</span><span class="chip bad">2 conceded</span><span class="chip bad">1 error → shot</span><span class="chip bad">1 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+12</b> goals</span></div>
     <div class="parts"><span class="part base"><b>14</b> league pts</span><span class="part up"><b>+0.9</b> opponent</span><span class="part down"><b>−1.6</b> mistakes</span><span class="part up"><b>+1.5</b> extras</span><span class="part base">= <b>14.8</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.84 · defence 1.08</span><span>vs expected +10.8 pts</span><span>FotMob 9.6 · SofaScore 10.0</span></div>
   </div>
@@ -771,6 +874,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">BHA v AVL 3–4 · GW14 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">2G</span><span class="chip">1.03 xG</span><span class="chip">0.01 xA</span><span class="chip">3 shots</span><span class="chip">3 on target</span><span class="chip bad">1 big chances missed</span><span class="chip bad">4 conceded</span><span class="chip bad">2 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−2</b> conceded</span><span class="lp up"><b>+12</b> goals</span><span class="lp up"><b>+2</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>14</b> league pts</span><span class="part up"><b>+2.1</b> opponent</span><span class="part down"><b>−1.3</b> mistakes</span><span class="part base">= <b>14.8</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.85 · defence 1.17</span><span>vs expected +10.4 pts</span><span>FotMob 7.7 · SofaScore 7.7</span></div>
   </div>
@@ -781,6 +885,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">TOT at NEW 2–2 · GW14 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">2G</span><span class="chip">0.32 xG</span><span class="chip">2 shots</span><span class="chip">2 on target</span><span class="chip">1 key passes</span><span class="chip bad">2 conceded</span><span class="chip bad">1 yellow</span><span class="chip bad">2 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−1</b> conceded</span><span class="lp up"><b>+12</b> goals</span><span class="lp down"><b>−1</b> yellow</span><span class="lp up"><b>+2</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>14</b> league pts</span><span class="part up"><b>+1.1</b> opponent</span><span class="part down"><b>−0.3</b> mistakes</span><span class="part base">= <b>14.8</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.98 · defence 1.09</span><span>vs expected +10.9 pts</span><span>FotMob 9.1 · SofaScore 8.8 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
@@ -791,6 +896,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">NEW v CRY 2–0 · GW20 · 90′</span></header>
     
     <div class="chips"><span class="chip ret">1G</span><span class="chip">0.46 xG</span><span class="chip">0.01 xA</span><span class="chip">1 shots</span><span class="chip">1 on target</span><span class="chip ret">clean sheet</span></div>
+    <div class="parts lps"><span class="lp up"><b>+4</b> clean sheet</span><span class="lp up"><b>+2</b> mins</span><span class="lp up"><b>+6</b> goals</span><span class="lp up"><b>+2</b> DefCon</span></div>
     <div class="parts"><span class="part base"><b>14</b> league pts</span><span class="part up"><b>+0.7</b> opponent</span><span class="part base">= <b>14.7</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.01 · defence 1.11</span><span>vs expected +7.8 pts</span><span>FotMob 9.0 · SofaScore 9.6</span></div>
   </div>
@@ -803,6 +909,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">BUR at MCI 1–5 · GW6 · 90′</span></header>
     
     <div class="chips"><span class="chip">0.02 xG</span><span class="chip">1 shots</span><span class="chip bad">5 conceded</span><span class="chip bad">2 own goal</span><span class="chip bad">1 error → goal</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−2</b> conceded</span><span class="lp down"><b>−4</b> own goal</span></div>
     <div class="parts"><span class="part base"><b>-4</b> league pts</span><span class="part down"><b>−2.0</b> mistakes</span><span class="part base">= <b>-6.0</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.21 · defence 1.04</span><span>vs expected −0.4 pts</span><span>FotMob 1.8 · SofaScore 4.5 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
@@ -813,6 +920,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">SUN v NFO 0–5 · GW34 · 90′</span></header>
     
     <div class="chips"><span class="chip bad">5 conceded</span><span class="chip">2 saves</span><span class="chip">-3.67 prevented</span><span class="chip bad">1 error → goal</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−2</b> conceded</span><span class="lp up"><b>+1</b> keeper pts</span></div>
     <div class="parts"><span class="part base"><b>1</b> league pts</span><span class="part down"><b>−2.0</b> mistakes</span><span class="part down"><b>−3.7</b> extras</span><span class="part base">= <b>-4.7</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.84 · defence 1.00</span><span>vs expected −1.1 pts</span><span>FotMob 3.2 · SofaScore 5.1</span></div>
   </div>
@@ -823,18 +931,9 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">NEW v LEE 4–3 · GW21 · 45′</span></header>
     
     <div class="chips"><span class="chip bad">2 conceded</span><span class="chip bad">1 yellow</span><span class="chip bad">1 error → goal</span><span class="chip bad">1 pen conceded</span></div>
+    <div class="parts lps"><span class="lp up"><b>+1</b> mins</span><span class="lp down"><b>−1</b> conceded</span><span class="lp down"><b>−1</b> yellow</span></div>
     <div class="parts"><span class="part base"><b>-1</b> league pts</span><span class="part down"><b>−3.5</b> mistakes</span><span class="part base">= <b>-4.5</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.99 · defence 0.92</span><span>vs expected −0.8 pts</span><span>FotMob 4.7 · SofaScore 5.1</span></div>
-  </div>
-</article><article class="card">
-  <div class="mark b-bad"><span>1.0</span><small>-2 pts</small></div>
-  <div class="body">
-    <header><strong>Gordon</strong> <span class="pos">MID</span>
-      <span class="fx">NEW v LIV 2–3 · GW2 · 47′</span></header>
-    
-    <div class="chips"><span class="chip">0.48 xG</span><span class="chip">0.02 xA</span><span class="chip">3 shots</span><span class="chip">1 on target</span><span class="chip">1 key passes</span><span class="chip bad">2 big chances missed</span><span class="chip bad">3 conceded</span><span class="chip bad">1 RED</span></div>
-    <div class="parts"><span class="part base"><b>-2</b> league pts</span><span class="part down"><b>−2.0</b> mistakes</span><span class="part base">= <b>-4.0</b></span></div>
-    <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.20 · defence 0.94</span><span>vs expected −1.0 pts</span><span>FotMob 6.1 · SofaScore 6.2 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article><article class="card">
   <div class="mark b-bad"><span>1.0</span><small>-2 pts</small></div>
@@ -843,8 +942,20 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">TOT v LIV 1–2 · GW17 · 90′</span></header>
     
     <div class="chips"><span class="chip">0.01 xG</span><span class="chip">0.01 xA</span><span class="chip">1 shots</span><span class="chip bad">2 conceded</span><span class="chip bad">1 RED</span><span class="chip bad">1 error → goal</span></div>
+    <div class="parts lps"><span class="lp down"><b>−3</b> red</span><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−1</b> conceded</span></div>
     <div class="parts"><span class="part base"><b>-2</b> league pts</span><span class="part down"><b>−2.0</b> mistakes</span><span class="part base">= <b>-4.0</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.13 · defence 1.01</span><span>vs expected −1.4 pts</span><span>FotMob 4.7 · SofaScore 6.1 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
+  </div>
+</article><article class="card">
+  <div class="mark b-bad"><span>1.0</span><small>-2 pts</small></div>
+  <div class="body">
+    <header><strong>Gordon</strong> <span class="pos">MID</span>
+      <span class="fx">NEW v LIV 2–3 · GW2 · 47′</span></header>
+    
+    <div class="chips"><span class="chip">0.48 xG</span><span class="chip">0.02 xA</span><span class="chip">3 shots</span><span class="chip">1 on target</span><span class="chip">1 key passes</span><span class="chip bad">2 big chances missed</span><span class="chip bad">3 conceded</span><span class="chip bad">1 RED</span></div>
+    <div class="parts lps"><span class="lp down"><b>−3</b> red</span><span class="lp up"><b>+1</b> mins</span></div>
+    <div class="parts"><span class="part base"><b>-2</b> league pts</span><span class="part down"><b>−2.0</b> mistakes</span><span class="part base">= <b>-4.0</b></span></div>
+    <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.20 · defence 0.94</span><span>vs expected −1.0 pts</span><span>FotMob 6.1 · SofaScore 6.2 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article><article class="card">
   <div class="mark b-bad"><span>1.1</span><small>-1 pts</small></div>
@@ -853,6 +964,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">BUR at FUL 1–3 · GW31 · 90′</span></header>
     
     <div class="chips"><span class="chip">0.25 xG</span><span class="chip">1 shots</span><span class="chip bad">1 big chances missed</span><span class="chip bad">3 conceded</span><span class="chip bad">1 RED</span><span class="chip bad">1 pen conceded</span><span class="chip bad">1 dispossessed</span></div>
+    <div class="parts lps"><span class="lp down"><b>−3</b> red</span><span class="lp up"><b>+2</b> mins</span></div>
     <div class="parts"><span class="part base"><b>-1</b> league pts</span><span class="part down"><b>−2.6</b> mistakes</span><span class="part base">= <b>-3.6</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.94 · defence 0.98</span><span>vs expected −0.5 pts</span><span>FotMob 4.6 · SofaScore 5.9 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
@@ -863,6 +975,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">NFO v CRY 1–1 · GW24 · 44′</span></header>
     
     <div class="chips"><span class="chip bad">1 conceded</span><span class="chip bad">1 RED</span><span class="chip bad">1 pen conceded</span><span class="chip bad">1 dispossessed</span></div>
+    <div class="parts lps"><span class="lp down"><b>−3</b> red</span><span class="lp up"><b>+1</b> mins</span></div>
     <div class="parts"><span class="part base"><b>-2</b> league pts</span><span class="part down"><b>−1.6</b> mistakes</span><span class="part base">= <b>-3.6</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.95 · defence 1.04</span><span>vs expected −0.2 pts</span><span>FotMob 4.9 · SofaScore 5.8</span></div>
   </div>
@@ -873,6 +986,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">TOT v CRY 1–3 · GW29 · 37′</span></header>
     
     <div class="chips"><span class="chip bad">3 conceded</span><span class="chip bad">1 RED</span><span class="chip bad">1 pen conceded</span></div>
+    <div class="parts lps"><span class="lp down"><b>−3</b> red</span><span class="lp up"><b>+1</b> mins</span></div>
     <div class="parts"><span class="part base"><b>-2</b> league pts</span><span class="part down"><b>−1.5</b> mistakes</span><span class="part base">= <b>-3.5</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.95 · defence 1.06</span><span>vs expected −0.2 pts</span><span>FotMob 5.4 · SofaScore 5.4</span></div>
   </div>
@@ -883,6 +997,7 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">TOT v ARS 1–4 · GW27 · 90′</span></header>
     
     <div class="chips"><span class="chip">0.35 xA</span><span class="chip">1 key passes</span><span class="chip bad">4 conceded</span><span class="chip bad">1 error → goal</span><span class="chip bad">1 error → shot</span><span class="chip bad">5 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−2</b> conceded</span></div>
     <div class="parts"><span class="part base"><b>0</b> league pts</span><span class="part down"><b>−3.2</b> mistakes</span><span class="part base">= <b>-3.2</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.27 · defence 1.63</span><span>vs expected −1.1 pts</span><span>FotMob 4.5 · SofaScore 6.4 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
@@ -893,28 +1008,31 @@ table.marks { width: auto; min-width: 180px; }
       <span class="fx">BHA at EVE 0–2 · GW2 · 90′</span></header>
     
     <div class="chips"><span class="chip">1.56 xG</span><span class="chip">0.10 xA</span><span class="chip">2 shots</span><span class="chip">1 on target</span><span class="chip bad">2 big chances missed</span><span class="chip bad">1 pen missed</span><span class="chip bad">2 conceded</span><span class="chip bad">1 dispossessed</span></div>
+    <div class="parts lps"><span class="lp up"><b>+2</b> mins</span><span class="lp down"><b>−2</b> pen missed</span></div>
     <div class="parts"><span class="part base"><b>0</b> league pts</span><span class="part down"><b>−3.1</b> mistakes</span><span class="part base">= <b>-3.1</b></span></div>
     <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.89 · defence 0.97</span><span>vs expected −2.0 pts</span><span>FotMob 5.0 · SofaScore 4.9</span></div>
   </div>
 </article><article class="card">
   <div class="mark b-bad"><span>1.4</span><small>-3 pts</small></div>
   <div class="body">
-    <header><strong>Cucurella</strong> <span class="pos">DEF</span>
-      <span class="fx">CHE at FUL 1–2 · GW21 · 21′</span></header>
+    <header><strong>Mosquera</strong> <span class="pos">DEF</span>
+      <span class="fx">WOL at FUL 0–3 · GW10 · 45′ · on 46′</span></header>
     
-    <div class="chips"><span class="chip bad">2 conceded</span><span class="chip bad">1 RED</span></div>
+    <div class="chips"><span class="chip bad">2 conceded</span><span class="chip bad">1 yellow</span><span class="chip bad">1 own goal</span></div>
+    <div class="parts lps"><span class="lp up"><b>+1</b> mins</span><span class="lp down"><b>−1</b> conceded</span><span class="lp down"><b>−2</b> own goal</span><span class="lp down"><b>−1</b> yellow</span></div>
     <div class="parts"><span class="part base"><b>-3</b> league pts</span><span class="part base">= <b>-3.0</b></span></div>
-    <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.94 · defence 1.00</span><span>vs expected −0.1 pts</span><span>FotMob 5.4 · SofaScore 4.2 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
+    <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.86 · defence 0.93</span><span>vs expected −0.0 pts</span><span>FotMob 5.4 · SofaScore 6.1 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article><article class="card">
   <div class="mark b-bad"><span>1.4</span><small>-3 pts</small></div>
   <div class="body">
-    <header><strong>Agbadou</strong> <span class="pos">DEF</span>
-      <span class="fx">WOL at FUL 0–3 · GW10 · 35′</span></header>
+    <header><strong>Chalobah</strong> <span class="pos">DEF</span>
+      <span class="fx">CHE v BHA 1–3 · GW6 · 52′</span></header>
     
     <div class="chips"><span class="chip bad">3 conceded</span><span class="chip bad">1 RED</span></div>
+    <div class="parts lps"><span class="lp down"><b>−3</b> red</span><span class="lp up"><b>+1</b> mins</span><span class="lp down"><b>−1</b> conceded</span></div>
     <div class="parts"><span class="part base"><b>-3</b> league pts</span><span class="part base">= <b>-3.0</b></span></div>
-    <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 0.86 · defence 0.93</span><span>vs expected −0.1 pts</span><span>FotMob 5.2 · SofaScore 5.2 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
+    <div class="meta"><span title="The opponent before the match: goals and xG so far against the league's, 1.0 average">their attack 1.06 · defence 0.92</span><span>vs expected −0.4 pts</span><span>FotMob 5.4 · SofaScore 5.5 · <span title="Not in Fantrax's pool now; priced by the league's own rules">priced by rules</span></span></div>
   </div>
 </article></div>
 </section>

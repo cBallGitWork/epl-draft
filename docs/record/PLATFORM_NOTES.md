@@ -94,8 +94,9 @@ the match-report and team-sheet prompts.
   yet; it waits on Craig's review (`docs/record/ratings-backtest/`).
 - **Counted on 25/26**: 10,521 matches rated; median 4.5–5.0 by position, one 10, five 1s; mark against
   league points 0.943. Fantrax's own points for 7,937; the 2,584 men it no longer lists were priced by the
-  league's rules from `getLeagueInfo`, which reproduce Fantrax exactly in 95.6% of matches and within a point
-  in 99.6%. A dual-eligible `M,F` man is scored as a forward.
+  league's rules from `getLeagueInfo`, which reproduce Fantrax exactly in 98.3% of matches and within a point
+  in 99.9%. A dual-eligible `M,F` man is scored as a forward; Keeper Points (GKP) count saves, punches and high
+  claims (85% exact against Fantrax's cell, saves alone 26%); DFP and DFP3 from Opta's counts match 99.5% and 99.2%.
 - **The opponent is `football/seasonStrength`**, goals and xG so far against the league's, eased in over six
   games: 0.92 with the season's goals for attack and 0.90 for defence, where the sister export's season means
   manage 0.80 and 0.81 (Wolves' defence read average while conceding 1.79 a game).

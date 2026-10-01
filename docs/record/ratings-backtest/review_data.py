@@ -42,6 +42,7 @@ def card(row, note=""):
         "gw": int(row.gw), "minutes": int(row.minutes), "subOn": clean(row.subOn), "score": row.score,
         "rating": row.rating, "pts": clean(row.pts),
         "adjusted": clean(row.adjusted), "vsExpected": clean(row.vsExpected), "source": row.pointsSource,
+        "pointsBy": row.pointsBy if isinstance(row.pointsBy, dict) else {},
         "fotmob": clean(row.fotmobRating), "sofascore": clean(row.sofascoreRating),
         "oppAttack": clean(row.oppAttack), "oppDefence": clean(row.oppDefence),
         "line": line, "parts": {p: clean(row["p_" + p]) for p in PARTS}, "note": note,
@@ -112,6 +113,20 @@ kind("The keeper who let in three",
      [card(best(gk, "goalsPrevented"), "Most goals prevented in a match he conceded three"), card(best(gk, "adjusted", asc=True), "Worst")],
      lambda c: f"{m(c[0])} for the keeper who saved his side from worse, {m(c[1])} for the worst.")
 
+r["defcon"] = r.pointsBy.map(lambda b: (b.get("DFP", 0) + b.get("DFP3", 0)) if isinstance(b, dict) else 0)
+r["gkp"] = r.pointsBy.map(lambda b: b.get("GKP", 0) if isinstance(b, dict) else 0)
+dc = r[r.pos.isin(["DEF", "MID"]) & (r.defcon >= 2) & (r.goals == 0) & (r.assists == 0) & (r.cleanSheet == 0) & (r.minutes >= 90)]
+kind("DefCon: defending the league pays for",
+     "Defenders earn up to two points for tackles won, interceptions and blocks; midfielders for those plus clearances and recoveries.",
+     [card(best(dc[dc.pos == "DEF"], "adjusted"), "Best defender's day with no return and no clean sheet"),
+      card(best(dc[dc.pos == "MID"], "adjusted"), "Best midfielder's day with no return")],
+     lambda c: f"{m(c[0])} and {m(c[1])}: DefCon's two points lift a blank from 4.5 to about 5.5 before anything else.")
+kp = r[(r.pos == "GK") & (r.cleanSheet == 0)]
+kind("Keeper points: a busy keeper",
+     "A save, punch or high claim each count; every three is a point.",
+     [card(best(kp, "gkp"), "Most keeper points in a match without a clean sheet")],
+     lambda c: f"{m(c[0])}: his keeper points carry a day his side conceded on.")
+
 outside = r[(r.goalsOutsideBox >= 1) & (r.goals == 1) & (r.assists == 0) & (r.minutes >= 80)]
 kind("A goal from outside the box",
      "Worth a point more than a tap-in.",
@@ -152,10 +167,15 @@ agreement = {"points": round(float(r.rating.corr(r.pts)), 3), "consensus": round
 top = [card(x) for _, x in r.sort_values("adjusted", ascending=False).head(20).iterrows()]
 bottom = [card(x) for _, x in r.sort_values("adjusted").head(12).iterrows()]
 sources = d[d.rating.notna()].pointsSource.value_counts().to_dict()
+CATS = ["Min", "G", "AT", "CS", "DFP", "DFP3", "GKP", "PKS", "GA", "GAO", "YC", "RC", "OG", "PKM"]
+by = pd.DataFrame([{**{c: (b or {}).get(c, 0) for c in CATS}, "pos": p} for b, p in zip(r.pointsBy, r.pos)])
+paid = by.groupby("pos")[CATS].sum()
+paid = (paid.div(by.groupby("pos").size(), axis=0)).round(2)
+paid_by = {p: {c: float(paid.loc[p, c]) for c in CATS if paid.loc[p, c]} for p in ["GK", "DEF", "MID", "FWD"]}
 
 out = {"rated": len(r), "matches": len(d), "ladder": ladder, "kinds": kinds, "stars": stars, "promoted": promoted,
        "byPos": by_pos, "bestVs": best_vs, "worstVs": worst_vs, "spread": spread, "bands": bands,
-       "agreement": agreement, "tensAll": int((r.rating >= 9.95).sum()), "onesAll": int((r.rating <= 1.05).sum()), "top": top, "bottom": bottom, "sources": sources,
+       "agreement": agreement, "tensAll": int((r.rating >= 9.95).sum()), "onesAll": int((r.rating <= 1.05).sum()), "top": top, "bottom": bottom, "sources": sources, "paidBy": paid_by,
        "strength": rnd(strength), "strengthCorr": strength_corr}
 (HERE / "review.json").write_text(json.dumps(out, default=lambda o: None if pd.isna(o) else o))
 print("ladder", [(b["band"], b["count"], len(b["examples"])) for b in ladder])

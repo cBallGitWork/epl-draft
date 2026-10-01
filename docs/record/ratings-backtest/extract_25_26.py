@@ -173,6 +173,7 @@ for r in ml.itertuples():
         **{k: ev.get(k) for k in SOFA_KEYS.values()},
         "cleanSheet": cs, "goalsAgainstOnPitch": gao,
         "fplSaves": num(r.fpl_saves), "defcon": num(r.fpl_defensive_contribution),
+        "keeperPunches": num(r.fotmob_punches, 0.0), "keeperHighClaims": num(r.fotmob_keeper_high_claims, 0.0),
         "yellowCards": int(r.yellow_cards), "redCards": int(r.red_cards),
         "oppAttack": None if opp is None else (opp.attack_home if home is False else opp.attack_away),
         "oppDefence": None if opp is None else (opp.defense_home if home is False else opp.defense_away),
