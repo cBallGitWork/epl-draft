@@ -1,4 +1,4 @@
-import { MS_PER_DAY, londonDayOf, type Club, type Fixture, type PresserLine, type RosteredTeam } from "@epl/core";
+import { MS_PER_DAY, londonDayOf, onLondonDay, type Club, type Fixture, type PresserLine, type RosteredTeam } from "@epl/core";
 import {
   presserFixtures,
   presserGameweek,
@@ -97,7 +97,7 @@ export function presserEdition<
 
 /** Only what was said on one London day; `when` names the row's instant. */
 function onDay<T>(rows: readonly T[], day: string, when: (row: T) => string | undefined): T[] {
-  return rows.filter((row) => londonDayOf(when(row) ?? "") === day);
+  return rows.filter((row) => onLondonDay(when(row), day));
 }
 
 /** One assignment per press-conference DAY. Craig's week runs pressers Thursday

@@ -24,6 +24,11 @@ export function londonDayOf(iso: string): string | null {
   return at === null ? null : londonDay(new Date(at));
 }
 
+/** Whether an instant falls on this league day; a missing or unreadable one is on no day. */
+export function onLondonDay(iso: string | null | undefined, day: string): boolean {
+  return londonDayOf(iso ?? "") === day;
+}
+
 /** A date as the league's own day, `YYYY-MM-DD`. `en-CA` because it is the
  *  sortable spelling; nothing formatted by it reaches a screen.
  *

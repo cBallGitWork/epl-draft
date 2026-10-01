@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { londonDate, londonDayAndTime, londonDayOf, londonTime, londonWeekday } from "./time";
+import { londonDate, londonDayAndTime, londonDayOf, londonTime, londonWeekday, onLondonDay } from "./time";
 
 // A real kickoff: 14:00Z in October is 15:00 in London, which is the whole
 // reason this module exists rather than a call to `toLocaleString`.
@@ -50,5 +50,10 @@ describe("London time", () => {
     // And the other way: 00:30 UTC in January is still the small hours of the
     // same day in London, because Britain is on UTC in winter.
     expect(londonDayOf("2027-01-05T00:30:00Z")).toBe("2027-01-05");
+  });
+
+  it("puts a missing or unreadable instant on no day", () => {
+    expect(onLondonDay("2026-07-04T23:30:00Z", "2026-07-05")).toBe(true);
+    for (const bad of [null, undefined, "", "Mikel Arteta"]) expect(onLondonDay(bad, "2026-07-05")).toBe(false);
   });
 });

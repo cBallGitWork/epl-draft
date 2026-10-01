@@ -8,8 +8,8 @@ import {
   fetchFixtures,
   fetchLeagueInfo,
   getFootballSnapshot,
-  londonDayOf,
   mapFixtures,
+  onLondonDay,
   mapLeagueInfo,
   periodGameweeks,
   requireLeague,
@@ -51,7 +51,7 @@ async function main(): Promise<void> {
     snapshot,
     facts,
     periodGameweeks: round.gameweeks,
-    pick: (f) => (ids.length > 0 ? ids.includes(f.id) : londonDayOf(f.kickoff ?? "") === day),
+    pick: (f) => (ids.length > 0 ? ids.includes(f.id) : onLondonDay(f.kickoff, day)),
     say,
   });
   if (input === null || input.matches.length === 0) return say("Nothing to report for that choice.");
