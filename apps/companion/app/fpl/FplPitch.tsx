@@ -1,6 +1,7 @@
 import { isFplKeeper, DASH } from "@epl/core";
 import type { Club, FootballPlayer, FplLine, FplPick, Opposition } from "@epl/core";
 import PitchMarker from "../components/league/PitchMarker";
+import SubMarker, { type SubMark } from "../components/football/SubMarker";
 import PitchRows, { BENCH_KIT, FAR_INSET, GAP_CLASS, cardBasis, rowBudget, widestLine } from "../components/league/PitchRows";
 
 // Your FPL XI on the grass — the same grass as everywhere else.
@@ -35,6 +36,7 @@ export default function FplPitch({
   players,
   clubs,
   opposition,
+  subs,
 }: {
   rows: FplLine[];
   /** The four who did not start, in the order FPL would bring them on. */
@@ -46,16 +48,21 @@ export default function FplPitch({
    *  club rather than a nought — `played.ts`'s predicate is still what the round
    *  total and the bench need, but the grass no longer asks it. */
   opposition: Map<number, Opposition[]>;
+  /** Who came on or went off in his real match, by FPL code. */
+  subs: Record<number, SubMark>;
 }) {
   const marker = (pick: FplPick) => {
     const player = players.get(pick.code) ?? null;
+    const mark = subs[pick.code];
     return (
-      <Pick
-        pick={pick}
-        player={player}
-        club={player === null ? undefined : clubs.get(player.clubId)}
-        opposition={player === null ? undefined : opposition.get(player.clubId)}
-      />
+      <SubMarker minute={mark?.minute ?? null} off={mark?.off ?? false}>
+        <Pick
+          pick={pick}
+          player={player}
+          club={player === null ? undefined : clubs.get(player.clubId)}
+          opposition={player === null ? undefined : opposition.get(player.clubId)}
+        />
+      </SubMarker>
     );
   };
   return (

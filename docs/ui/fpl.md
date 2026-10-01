@@ -28,6 +28,10 @@ and this is not a second attempt at it.
   under the strip totals what the bench left: "did my bench outscore my side" is the
   question a benched hat-trick provokes.
 
+  A man who came on or went off in his real match carries the minute in `SubMarker`'s
+  corner, as the head-to-head pitch draws it (Craig, 1 Oct 2026: *"use sub off/on icons"*),
+  off the same cached match detail reads (`fpl/events.ts`).
+
   The split rests on `FplPick.slot` — FPL's own 1–15 ordering, named `slot` and
   not `position` because `position` in this codebase means the letter a league
   files a player under, and this is neither that nor a place on a pitch.
