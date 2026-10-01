@@ -52,7 +52,7 @@ headers too?"*. Where the sections below disagree with this one, this one is cur
   projection, a warning prints above the board instead.
 - **The filters are a sheet** docked over the thumb rail below `lg` (inline from `lg`), headed "Filter
   players": Position as CM's index tiles (chosen: an accent edge and a tick, the word stays white), Status
-  chips with counts, Club and **Sort by** selects side by side (`QuerySelect`, one component for every Data
+  chips on a desk (under a thumb they are on the row), Club and **Sort by** selects side by side (`QuerySelect`, one component for every Data
   select), the stat groups (which a phone could not reach
   before: the old drawer never drew them), Per 90, then Reset and `Show N`. A tap outside closes it.
 
@@ -209,7 +209,8 @@ controls.
 we can get most things onto one row though"*, against Opta's desktop shot, which
 runs search, stat tabs and its two figure controls across a single line):
 
-- **below `lg`** — search, `Find`, `Filter`. Everything else in the drawer.
+- **below `lg`** — search, `Find`, the status chips, `Filter` (Craig, 1 Oct 2026: *"mobile can have owned
+  button show by default"*). Everything else in the drawer.
 - **`lg`** — the stat-group strip joins them. It is the most frequent tap, and it
   is the one that most deserves to be one.
 - **`xl`** — the `Per 90` toggle joins them. It was `2xl` while the minutes
@@ -274,7 +275,9 @@ paragraph says it would be. The pressed bevel carries the state and the tick
 carries it again as a SHAPE, which is docs/rules/PRODUCT.md's accessibility rule.
 
 The status codes are Fantrax's (`FA`, `WW`, `T`); anything we have not seen
-renders as the raw code rather than as a guess.
+renders as the raw code rather than as a guess. A chip prints the code the rows
+print in brackets, and `Owned` for `T` (Craig's word), which the rows never print;
+the word and the count are its title (`STATUS_CHIP` beside `STATUS`).
 
 ## Provenance, which is load-bearing here
 

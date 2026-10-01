@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { POOL_GROUPS, type PoolGroupKey } from "./groups";
-import { boardHref, chosen } from "./query";
+import { boardHref, chosen, filterHref, isChosen } from "./query";
 import type { QueryOption } from "./QuerySelect";
 import type { PlayersQuery } from "./query";
+import { STATUS, STATUS_CHIP } from "./status";
 import { SMALL_CAPS } from "@/app/desk";
 
 // The pieces `BoardBar` arranges: the stat-group strip, the figure chips, the
@@ -131,6 +132,36 @@ export function Plates({
   );
 }
 
+/** Who he belongs to, one chip per Fantrax status the pool carries: its code on the chip, its word and count in the
+ *  title. */
+export function Statuses({
+  query,
+  counted,
+  className,
+}: {
+  query: PlayersQuery;
+  counted: ReadonlyMap<string, number>;
+  /** Where the group shows: the row and the drawer each carry it at the widths the other does not. */
+  className: string;
+}) {
+  return (
+    <div role="group" aria-label="Status" className={`gap-1.5 ${className}`}>
+      {[...counted.entries()]
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([code, tally]) => (
+          <Chip
+            key={code}
+            on={isChosen(query, "status", code)}
+            href={filterHref(query, "status", code)}
+            title={`${STATUS[code] ?? code}: ${tally}`}
+          >
+            {STATUS_CHIP[code] ?? code}
+          </Chip>
+        ))}
+    </div>
+  );
+}
+
 /** How the figures read: one toggle, and it is the only one.
  *
  *  **The minutes floors came off on 10 Sep 2026** (Craig: *"per 90 is just a
@@ -159,22 +190,9 @@ export function Figures({
   );
 }
 
-/** How many of the board's settings are away from their default, counting only
- *  what this width cannot already see.
- *
- *  Two numbers rather than one, and the difference is the whole point of the
- *  badge: it exists so a SHUT DRAWER cannot hide a filtered board. Above `lg`
- *  the strip and the figure chips are on the row wearing their own pressed
- *  bevels, so counting them again would be the screen saying the same thing
- *  twice — and worse, saying "3" beside three controls a reader can already see
- *  are on.
- *
- *  The SORT is in neither: the table draws its own arrow on its own head, and a
- *  reader who ordered by goals has not filtered anything.
- *
- *  Both counts render, one hidden at each width, for the reason the strip does —
- *  a server component cannot know the viewport, and guessing is worse than
- *  drawing both and letting the cascade choose. */
+/** How many of the board's settings are away from their default, counting only what this width cannot already see:
+ *  it exists so a shut drawer cannot hide a filtered board. The sort is never counted; the table's head says it.
+ *  One count per step of the row, each hidden at the others, because a server component cannot know the viewport. */
 export function Count({
   query,
   group,
@@ -184,18 +202,15 @@ export function Count({
   group: PoolGroupKey;
   rated: boolean;
 }) {
-  const who =
-    chosen(query.status).length + chosen(query.pos).length + (query.club ? 1 : 0);
+  const status = chosen(query.status).length;
+  const who = chosen(query.pos).length + (query.club ? 1 : 0);
   const figures = rated ? 1 : 0;
   const columns = group === "all" ? 0 : 1;
-
-  // Three counts, one per step of the row above. Only one is ever visible, and
-  // each totals exactly what the drawer still holds at that width.
   return (
     <>
       <Tally at="lg:hidden" total={who + figures + columns} />
-      <Tally at="hidden lg:inline xl:hidden" total={who + figures} />
-      <Tally at="hidden xl:inline" total={who} />
+      <Tally at="hidden lg:inline xl:hidden" total={status + who + figures} />
+      <Tally at="hidden xl:inline" total={status + who} />
     </>
   );
 }
@@ -219,14 +234,25 @@ function Tally({ at, total }: { at: string; total: number }) {
  *  `min-h-11 lg:min-h-9` is the CONTROL floor and not a row's: a filter is aimed
  *  at rather than read, and DESIGN §6 is explicit that a control never relaxes
  *  below its floor under a thumb. */
-export function Chip({ on, href, children }: { on: boolean; href: string; children: React.ReactNode }) {
+export function Chip({
+  on,
+  href,
+  title,
+  children,
+}: {
+  on: boolean;
+  href: string;
+  title?: string;
+  children: React.ReactNode;
+}) {
   return (
     <Link
       href={href}
       // A chip changes the view in place; the page must not jump to the top under the thumb.
       scroll={false}
       aria-pressed={on}
-      className={on ? `cm-bevel-pressed ${PLATE}` : PRESSABLE}
+      title={title}
+      className={`min-w-11 ${on ? `cm-bevel-pressed ${PLATE}` : PRESSABLE}`}
     >
       {/* `aria-hidden` because `aria-pressed` on the link already says it, and a
           screen reader announcing "tick DEF pressed" says it twice. */}

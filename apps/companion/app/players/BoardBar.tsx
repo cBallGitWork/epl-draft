@@ -4,10 +4,9 @@ import { activeSort, boardHref, filterHref, isChosen } from "./query";
 import { POOL } from "./routes";
 import Search from "./Search";
 import type { PlayersQuery } from "./query";
-import { STATUS } from "./status";
 import { positionLabel } from "../positions";
 import { LABEL, PANEL, SECTION_BAR, SMALL_CAPS } from "@/app/desk";
-import { Carried, clubOptions, Chip, Count, Figures, PRESSABLE, Plates } from "./BoardControls";
+import { Carried, clubOptions, Count, Figures, PRESSABLE, Plates, Statuses } from "./BoardControls";
 import QuerySelect from "./QuerySelect";
 
 // Every control on the board: one row on the desk (search, the stat groups from `lg`, Per 90 from `xl`, Filter),
@@ -84,25 +83,25 @@ export default function BoardBar({
         </Search>
 
         <div className="hidden flex-1 lg:block">{plates}</div>
-        <div className="hidden xl:flex xl:gap-1.5">{figures}</div>
 
-        <Link
-          href={boardHref(query, { panel: open ? undefined : "1" })}
-          scroll={false}
-          aria-expanded={open}
-          className={PRESSABLE}
-        >
-          Filter
-          {/* **The count, so a shut drawer cannot hide a filtered board.** A
-              reader landing on a shared link with three filters on and the panel
-              closed would otherwise see six hundred names cut to forty with
-              nothing on screen saying why. `aria-expanded` says how the drawer
-              is; this says how the board is. Above `lg` the strip and the chips
-              are on the row saying it themselves, so only what the drawer still
-              holds is counted there. */}
-          <Count query={query} group={group} rated={rated} />
-          <span aria-hidden>{open ? "▾" : "▸"}</span>
-        </Link>
+        {/* One cluster, so under a thumb the chips and Filter take a second line together when the search needs it. */}
+        <div className="ml-auto flex gap-1.5">
+          {/* Who he belongs to, on the row under a thumb (Craig, 1 Oct 2026: "mobile can have owned button show
+              by default"); the sheet carries it on a desk. */}
+          <Statuses query={query} counted={counted} className="flex lg:hidden" />
+          <div className="hidden xl:flex">{figures}</div>
+          <Link
+            href={boardHref(query, { panel: open ? undefined : "1" })}
+            scroll={false}
+            aria-expanded={open}
+            className={PRESSABLE}
+          >
+            Filter
+            {/* What the drawer holds that is on, so a shut drawer cannot hide a filtered board. */}
+            <Count query={query} group={group} rated={rated} />
+            <span aria-hidden>{open ? "▾" : "▸"}</span>
+          </Link>
+        </div>
       </div>
 
       {open ? (
@@ -125,17 +124,8 @@ export default function BoardBar({
               </div>
             </Block>
 
-            <Block label="Status">
-              <div className="flex flex-wrap gap-1.5">
-                {[...counted.entries()]
-                  .sort(([a], [b]) => a.localeCompare(b))
-                  .map(([code, tally]) => (
-                    <Chip key={code} on={isChosen(query, "status", code)} href={filterHref(query, "status", code)}>
-                      {STATUS[code] ?? code}
-                      <span className="numeric font-normal">{tally}</span>
-                    </Chip>
-                  ))}
-              </div>
+            <Block label="Status" className="max-lg:hidden">
+              <Statuses query={query} counted={counted} className="flex flex-wrap" />
             </Block>
 
             <div className="grid grid-cols-2 gap-1.5">
