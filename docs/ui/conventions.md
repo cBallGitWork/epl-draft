@@ -338,7 +338,7 @@ A recipe is named at its third occurrence (CODE_RULES §1); these were not.
 | `${ROW_RULE} ${mine ? "bg-raised" : "hover:bg-surface"}` | 2 (`league/TableRow`, league team-stats) | `desk.ts`, beside `ROW_HOVER`. |
 | Panel sized in rows by hand | 2 (`SectionShell`, the club's fixtures tab) | A `Panel` taking `rows`. |
 | `raw instanceof FantraxError ? fallback : map(raw)` | 15 read modules, each with its own fallback (23 Sep) | Left: a helper would rename a one-line ternary. |
-| The refusal pair (`shell/Nothing`, `error`, `not-found`) | 3 | Two of them should use `Nothing` itself. |
+| The refusal pair (`shell/Nothing`, `error`, `not-found`) | 3 written out; `global-error` draws `Nothing` (1 Oct) | `error` and `not-found` should use `Nothing` too. |
 | `border-collapse w-full whitespace-nowrap` | 3 | Reconcile with `BOARD` rather than name it. |
 
 DESIGN §6's density table is the other half of this — it says how tall each of

@@ -6,25 +6,9 @@ import { myTeamId } from "../../session";
 import { getLeagueSquads } from "../../squads";
 import { matchupHref } from "@/app/league/routes";
 
-// Whether there is a live scoreline of the reader's to put in the chrome, and
-// what it says.
-//
-// Every one of the guards below is a reason to render nothing at all, and
-// nothing is the right answer to all of them — a strip that appears empty, or
-// appears on a Wednesday, is furniture. Between them they mean: football is
-// actually being played, we know that recently enough to say so in the present
-// tense, this reader is signed in, his league has drafted, and Fantrax has
-// given a number for at least one side of his tie.
-//
-// **The question left `LiveNow` when it grew a second asker.** The strip on the
-// desk and the count on the phone's Live plate are one fact drawn twice, and a
-// component that answers a question cannot also be the answer — the layout
-// starts this ONCE, un-awaited, and hands the same promise to both, so the
-// second wearer costs Fantrax nothing.
-//
-// The composition below is `YourMatchup`'s, copied rather than shared. Two is a
-// coincidence (CODE_RULES §1) and the two genuinely differ: that one is the
-// answer and this is the question. A third caller would say what varies.
+// Whether there is a live scoreline of the reader's to put in the chrome, and what it says. Every
+// guard is a reason to draw nothing; the layout starts it once, un-awaited, for the desk's strip and
+// the phone's Live plate. `YourMatchup` composes the same tie: two, so copied (CODE_RULES §1).
 
 export type LiveTie = {
   /** Null is a total Fantrax did not give, and it prints as a dash. A live
