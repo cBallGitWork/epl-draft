@@ -18,23 +18,8 @@ import { marksFor } from "../../involvement";
 import { yoursFirst } from "../../mine";
 import { GAMEWEEK_HEAD, GAMEWEEK_TITLE, LABEL, PANEL } from "@/app/desk";
 
-// The desk: every score in the league and every score in the round, on one
-// screen, with nothing else on it.
-//
-// Jeff's wall of monitors, and the vidiprinter's conventions borrowed in voice
-// and typography rather than in colour — the app's own tokens stay, because the
-// colour registers are binding and Ceefax's are not ours. What is borrowed is
-// the density, the tabular figures, and the two things the vidiprinter is
-// actually remembered for: the spelled-out thrashing, and a tick of state where
-// the kickoff time used to be.
-//
-// **Nothing here is a link.** It is a wall of scores, read at arm's length,
-// and every row exists somewhere else as a tappable thing — the matchups list,
-// the fixture list. Making 18 rows into 44px targets would cost the screen the
-// one property it is for: all of it visible at once.
-//
-// No seventh tab. Six already brushes the 320px clip `tools/ui/navfit.mjs`
-// measures, so this is reached from the Live tab and nowhere else.
+// Every league score and every Premier League score on one screen, read at arm's length.
+// Nothing here is a link: each row is tappable elsewhere, and 44px rows would push it off one screen.
 
 // Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
@@ -48,9 +33,7 @@ export default async function DeskPage() {
 
   const state = roundState(snapshot);
 
-  // A desk with no league behind it is still a desk: the football half needs no
-  // Fantrax at all, so an undrafted or silent league costs the top section and
-  // nothing else.
+  // The football half needs no Fantrax: an undrafted or silent league costs the top section only.
   const league = "period" in squads ? squads : null;
   const period = league?.roundPeriod ?? null;
   const pairings =
