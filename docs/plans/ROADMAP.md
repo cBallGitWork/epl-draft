@@ -1,4 +1,4 @@
-# Roadmap to 10 Oct — the UI refactor, the dated work, and two ideas un-parked
+# Roadmap to go-live, 7 Oct — the UI refactor, the dated work, and two ideas un-parked
 
 Written 19 Aug 2026. When an item lands, mark it here in the same commit —
 like `docs/ui/`, this file starts lying the moment the work moves without it.
@@ -19,7 +19,7 @@ sequences it against the dated season work and un-parks two ideas Craig chose:
 |---|---|---|
 | Custom competitions (H2H groups, cups, points leagues over Fantrax points) | docs/rules/PRODUCT.md | **Shape landed 20 Aug** — a declared cup and playoff, labelled a placeholder, on `/league/schedule`. **On screen 27 Sep** — the Timbeibs Cup (double elimination, GW9–17) and the Davy Propper Cup (groups then knockout, GW22–30) in `league/cups/`, shown on `/league/cups` (fixtures and bracket), Schedule and Live with a placeholder draw; the playoff stays Fantrax's. Next: put teams into the slots once GW9 is scored and the groups drawn. |
 | Per-player intelligence store via `setPlayerNote` | CLAUDE.md fxpa methods | **In scope** (this session) |
-| Commissioner cookie + `adminMode` as the only viable write path | PLATFORM_NOTES "extension plan is dead" | **Probed 28 Sep: it writes.** The save is next |
+| Commissioner cookie + `adminMode` as the only viable write path | PLATFORM_NOTES "extension plan is dead" | **Probed 28 Sep: it writes.** **Save landed 30 Sep** (#179): the planner saves a lineup and the bench order, behind `LINEUP_SAVE` and `FANTRAX_COOKIE` |
 | 27/28 draft/FM hybrid, `apps/lab` | docs/rules/PRODUCT.md | Parked, empty on purpose |
 | FPL as one small tab | memory, 6 Aug | Done — keep it small |
 
@@ -233,16 +233,21 @@ home for our per-player metadata (CLAUDE.md).
   write UI; the write UI itself may wait on the §2 cookie-flow answer since
   it's the same auth question.
 
-## 8. Before 10 Oct — launch checklist
+## 8. Before go-live, 7 Oct — launch checklist
+
+The real league drafts Sat 3 Oct, the dry run is Tue 6 Oct, the app goes live Wed 7 Oct,
+and GW6 locks Sat 10 Oct at 11:15 UTC. `/swap-day` is the runbook.
 
 - ~~**Commissioner renames the league in Fantrax**~~ — settled 25 Sep: the real
   league is `mqsjd23smsgbiqzr`, already "Tim Hortons Pro League 26/27" (#110).
 - The 3 review rows (`Fred Heath`, `Enzo Kana Biyik`, `Lucas Pitt`) — Craig's
   call; only a person writes `unmappedBy: "manual"`.
-- Issue team codes to the sixteen (`npm run team-codes`).
-- Ship-day runbook: set `FANTRAX_LEAGUE_ID=mqsjd23smsgbiqzr` **in the Vercel
-  dashboard** → capture → shape-diff → bridge → unmapped gate → redeploy →
-  verify the deployed URL, not the commit.
+- Issue team codes to the ten (`FANTRAX_LEAGUE_ID=mqsjd23smsgbiqzr npm run team-codes`,
+  with production's `SESSION_SECRET`).
+- After the draft: capture → roster-limits → bridge → unmapped gate → shape-diff, each a
+  data PR. On 7 Oct, one Vercel change (`FANTRAX_LEAGUE_ID=mqsjd23smsgbiqzr`, `TEAM_CODES`,
+  `LINEUP_SAVE` naming Craig's team with `FANTRAX_COOKIE`, `FANTRAX_DEMO_TEAM_ID` removed) →
+  redeploy → verify the deployed URL, not the commit → `warm.yml`.
 - **And "verify the deployed URL" is now one command**, which it was not before
   27 Aug:
 

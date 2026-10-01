@@ -1,7 +1,8 @@
 # Tim Hortons Pro League — companion + platform monorepo
 
-A companion app for a 10-team Fantrax Premier League draft league that starts **GW6, 10 Oct
-2026**, and the groundwork for our own platform in 27/28. Fantrax is the source of truth this
+A companion app for a 10-team Fantrax Premier League draft league that drafts **Sat 3 Oct 2026**,
+goes live in this app **Wed 7 Oct** and plays from **GW6, 10 Oct**, and the groundwork for our
+own platform in 27/28. Fantrax is the source of truth this
 season; this repo republishes the league with what Fantrax lacks.
 
 ## Read first
@@ -81,16 +82,16 @@ npm run intel-check     # is the intel export fresh and whole
 ## Environment
 
 - **No league is named in code.** `FANTRAX_LEAGUE_ID` names the one league served, with no
-  default: Vercel for the app (the rehearsal league, `zbn1z3ukmsgb36sz`, until 10 Oct),
+  default: Vercel for the app (the rehearsal league, `zbn1z3ukmsgb36sz`, until 7 Oct),
   `apps/companion/.env.local` for `next dev`, the shell for a script. The server, the writer,
   smoke and team-codes refuse to run without it. CI keeps no copy: it asks production
-  (`GET /api/league`). **The swap is one change**: set it to `mqsjd23smsgbiqzr` in Vercel and
-  redeploy (`/swap-day`).
+  (`GET /api/league`). **Go-live is one Vercel change on 7 Oct**: set it to `mqsjd23smsgbiqzr`
+  with the codes and save switches, and redeploy (`/swap-day`).
 - The leagues the archive records are data, in `data/leagues/recorded.json`, each named by a
   word (`real`, `dummy`, `rehearsal`). Scripts read it; the app reads one role from it, `stats`:
   the league whose scoring lists every column at no points, read only for columns the served
   league must not list. **Two leagues, never interchangeable**: the served one is the environment's
-  and swaps on 10 Oct; the stats one is data and does not.
+  and swaps on 7 Oct; the stats one is data and does not.
 - `FANTRAX_DEMO_TEAM_ID` lends a test league's team to a reader with no code, and only when that
   team is in the served league.
 - **Two `.env.local` files.** `next dev` roots at `apps/companion`, so the app reads
@@ -221,7 +222,7 @@ never in an issue.
 **Labels** live only in GitHub. Type, exactly one: `feat` `fix` `refactor` `docs` `chore`. Area,
 at most one: `paper` `desk` `league` `football` `ci` `intel`. State, only when true: `blocked`
 (name the blocker and who can clear it) and `swap-day`. No `parked` or `deferred` label, and no
-label for the commit-only prefixes `perf`, `test` and `probe`. One milestone: `10 Oct — swap day`.
+label for the commit-only prefixes `perf`, `test` and `probe`. One milestone: `7 Oct — go live`.
 
 **`@claude` on a PR** asks `.github/workflows/claude.yml` for a review. It answers only an owner,
 member or collaborator, and it reviews, never merges.

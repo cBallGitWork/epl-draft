@@ -16,9 +16,9 @@ if [ ! -f "$cache" ] || [ $(( $(date +%s) - $(stat -f %m "$cache" 2>/dev/null ||
   CLAUDE_PROJECT_DIR="$root" "$root/.claude/hooks/repo_clock.sh" --print >/dev/null 2>&1
 fi
 
-swap=$(grep -o 'in [0-9]*d\.' "$cache" 2>/dev/null | head -1 | tr -d '.')
-[ -z "$swap" ] && swap="swap ?" || swap="swap $swap"
-grep -q 'SWAP DAY IS TODAY' "$cache" 2>/dev/null && swap="SWAP DAY"
+# "Draft (Sat 3 Oct) in 2d." becomes "Draft 2d"; the day itself and after pass through.
+clock=$(sed -n 's/^Countdown: //p' "$cache" 2>/dev/null | head -1 | sed -E 's/ \([^)]*\) in ([0-9]+)d\./ \1d/; s/\.$//')
+[ -z "$clock" ] && clock="countdown ?"
 
 branch=$(cd "$root" 2>/dev/null && git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "?")
 counts=$(cd "$root" 2>/dev/null && git rev-list --left-right --count '@{u}...HEAD' 2>/dev/null || echo "")
@@ -47,4 +47,4 @@ else
   app=":3000 down"
 fi
 
-printf '%s | %s | %s | %s | %s\n' "$swap" "$pos" "$queue" "$cap" "$app"
+printf '%s | %s | %s | %s | %s\n' "$clock" "$pos" "$queue" "$cap" "$app"
