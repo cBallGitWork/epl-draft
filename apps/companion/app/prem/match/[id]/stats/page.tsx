@@ -1,3 +1,4 @@
+import { londonDayOf } from "@epl/core";
 import Nothing from "../../../../components/shell/Nothing";
 import TabStrip from "../../../../components/shell/TabStrip";
 import MatchShell from "../Shell";
@@ -12,6 +13,8 @@ import { DEFAULT_SORT, isStatSort } from "../statColumns";
 import { statsView, viewHref, type StatsView } from "../statsSort";
 import { matchStatsBoard } from "../../../../matchFeed";
 import { matchInjuries, matchManEvents, teamSheets } from "../../../../matchDetail";
+import { leagueScoring } from "../../../../scoring";
+import { scoringDay } from "../../../../scoringDay";
 
 // Both sides against each other, one club's men, or the Fantasy Report — CM 01/02's Match Stats with its foot row.
 
@@ -64,10 +67,15 @@ function Foot({ match, view }: { match: Match; view: StatsView }) {
   );
 }
 
-/** What the match meant in our league's categories, a page of its own (Craig, 23 Sep 2026). */
+/** What the match meant in our league's categories, a page of its own (Craig, 23 Sep 2026), counted by the real league. */
 async function FantasyReport({ match }: { match: Match }) {
-  const sheets = await teamSheets(match.fixture.gameweek, match.fixture.code, match.snapshot.players);
-  return sheets === null ? <NoSheet /> : <Fantasy match={match} sheets={sheets} />;
+  const day = match.fixture.kickoff === null ? null : londonDayOf(match.fixture.kickoff);
+  const [sheets, scoring, counts] = await Promise.all([
+    teamSheets(match.fixture.gameweek, match.fixture.code, match.snapshot.players),
+    leagueScoring(),
+    day === null ? null : scoringDay(day),
+  ]);
+  return sheets === null ? <NoSheet /> : <Fantasy match={match} sheets={sheets} scoring={scoring} day={counts} />;
 }
 
 async function OneClub({
