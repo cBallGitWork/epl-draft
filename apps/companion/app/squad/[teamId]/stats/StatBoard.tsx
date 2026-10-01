@@ -34,7 +34,7 @@ export default function StatBoard({
   lines: readonly PlayerStatLine[];
   /** Every column the league's stat read carries, which is the categories it scores. */
   scored: readonly string[];
-  /** The footballer behind each Fantrax id; absent where the bridge has not settled him, which reads as dashes. */
+  /** The footballer behind each Fantrax id, for his availability; absent where the bridge has not settled him. */
   footballers: Record<string, FootballPlayer>;
   /** The roster's spelling of each name, by id: Fantrax's stat rows say "Schade, Kevin". */
   names: Record<string, string>;
@@ -47,15 +47,15 @@ export default function StatBoard({
   const cuts = new Map(
     measures.map((measure) => [
       measure.key,
-      standoutCuts(lines.map((line) => measure.read(line, footballers[line.fantraxId]?.season)), SIDE_SHARES, { of: lines.length }),
+      standoutCuts(lines.map((line) => measure.read(line)), SIDE_SHARES, { of: lines.length }),
     ]),
   );
 
   const rows = useMemo(() => {
     if (sort === null) return [...lines];
-    const read = (line: PlayerStatLine) => readingOf(line, footballers[line.fantraxId]?.season, sort.key);
+    const read = (line: PlayerStatLine) => readingOf(line, sort.key);
     return [...lines].sort((a, b) => byFigure(read(a), read(b), sort.descending));
-  }, [lines, sort, footballers]);
+  }, [lines, sort]);
 
   /** Opens descending, since "most" is the first question even of cards; a second tap turns it round. */
   const sortBy = (key: string) =>
@@ -118,7 +118,7 @@ export default function StatBoard({
                     </Link>
                   </td>
                   {measures.map((measure) => {
-                    const value = measure.read(line, footballer?.season);
+                    const value = measure.read(line);
                     // A dash where he has no reading; a played nought is a figure like any other, in ink.
                     const ink =
                       value === null
@@ -126,7 +126,7 @@ export default function StatBoard({
                         : standoutInk(value, cuts.get(measure.key), measure.worse ? "low" : "high") || "text-ink";
                     return (
                       <td key={measure.key} className={`${BOARD_FIGURE} ${ink}`}>
-                        {value === null ? DASH : measure.decimals ? value.toFixed(2) : value}
+                        {value === null ? DASH : value}
                       </td>
                     );
                   })}

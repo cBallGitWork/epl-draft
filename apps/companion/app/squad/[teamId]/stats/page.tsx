@@ -5,25 +5,8 @@ import { leagueTeams } from "../team";
 import { getPlayerStats } from "../../../players/playerStats";
 import StatBoard from "./StatBoard";
 
-// Every man this manager owns, and what each of them has actually done.
-//
-// **It costs no request.** `getPlayerStats` is the read the Player Stats board
-// already makes and already caches, and every row on it carries `ownerTeamId` —
-// so one squad's whole statistical season is a filter over a warm cache rather
-// than anything new asked of Fantrax. That is the entire reason this screen is
-// cheap enough to be a tab.
-//
-// **The figures are Fantrax's, and that is deliberate.** `playerCategories.ts`
-// carries the argument at length: these are the categories our league scores, so
-// the authority on them is the league's own provider. FPL's goals and assists
-// are a different question answered by a different source, and mixing them here
-// would print a number that does not explain the points the manager got.
-//
-// One caveat this screen must not forget: the pool's `FPts` prices a man at his
-// DEFAULT position, never the slot his manager filed him in (CLAUDE.md, and 48
-// of 607 players are eligible at two). So this board prints the raw counts —
-// goals, assists, clean sheets — which are facts about the footballer, and
-// leaves points to the squad tab, which reads them off the slot.
+// Every man this manager owns and what each has done: the Player Stats board's warm read, filtered on owner. The
+// figures are Fantrax's raw counts, the categories the league scores; points belong to the Squad tab.
 
 // Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
@@ -40,7 +23,7 @@ export default async function StatsPage({
   // `team.teamId` and not the slug, which on the front door is the word `me`.
   const his = all.filter((line) => line.ownerTeamId === team.teamId);
 
-  // The footballer behind each resolved slot: FPL's season for the underlying view, and his availability.
+  // The footballer behind each resolved slot, for his availability.
   const footballers: Record<string, FootballPlayer> = {};
   for (const rostered of squad.players) {
     if (isResolved(rostered)) footballers[rostered.slot.fantraxId] = rostered.player;
