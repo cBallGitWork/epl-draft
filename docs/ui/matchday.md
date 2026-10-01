@@ -80,11 +80,12 @@ football under it.
 
 **Top stats**, the third view (`?view=stats`; Craig, 1 Oct 2026: *"match day have 3rd tab, that
 shows top stats for just this gameweek, like xg, fpts, ratings etc"*): the gameweek's five leaders
-in Fantrax points, xG, xA and defensive contributions, each man with whoever holds him, the figure
-in amber (a board's one measure). The phone picks one list from a strip (`&stat=`); a desk shows
-all four. Fantrax points are the live read's, the eleven and the reserves in one list, so nothing
-says who started; free agents are not in that read. FPL's three are round figures, read once per
-man in a double gameweek. Our match rating waits on #214's reads.
+in Fantrax points, our rating, xG and xA, each man with whoever holds him. Figures are amber (a
+board's one measure), except our rating, which is cyan (ours, derived). The phone picks one list from
+a strip (`&stat=`); a desk shows all four. Fantrax points are the live read's, the eleven and the
+reserves in one list, so nothing says who started; free agents are not in that read. The rating is
+the filed store's (`data/ratings`, written after each settled match day), averaged over a double
+gameweek's two matches. FPL's xG and xA are round figures, read once per man.
 
 Last, on every view, **Matchups on Fantrax**: their live scoring for this gameweek's period
 (`livescoring;period={n}`, `FANTRAX_MATCHUPS_PATH`), or their current period when we could not

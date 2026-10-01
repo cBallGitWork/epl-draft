@@ -1,5 +1,7 @@
 import Image from "next/image";
+import type { ReactNode } from "react";
 import { ordinal } from "@epl/core";
+import { RATING_TITLE } from "../ratings";
 import Section from "../components/shell/Section";
 import TabStrip from "../components/shell/TabStrip";
 import Absent from "../components/shell/Absent";
@@ -15,17 +17,24 @@ export const STATS_VIEW = "stats";
 
 const TITLE: Record<LeaderStat, string> = {
   points: "Fantrax points",
+  rating: "Rating",
   xg: "Expected goals",
   xa: "Expected assists",
-  defcon: "Defensive contributions",
 };
 
-const TAB: Record<LeaderStat, string> = { points: "Points", xg: "xG", xa: "xA", defcon: "DefCon" };
+const TAB: Record<LeaderStat, string> = { points: "Points", rating: "Rating", xg: "xG", xa: "xA" };
 
 /** Whose figures each list is, at the point of use (DESIGN §7); Fantrax's title already says so. */
-const SOURCE: Partial<Record<LeaderStat, string>> = { xg: "FPL", xa: "FPL", defcon: "FPL" };
+const SOURCE: Partial<Record<LeaderStat, ReactNode>> = {
+  rating: <span title={RATING_TITLE}>Ours</span>,
+  xg: "FPL",
+  xa: "FPL",
+};
 
-const DECIMALS: Partial<Record<LeaderStat, number>> = { xg: 2, xa: 2 };
+const DECIMALS: Partial<Record<LeaderStat, number>> = { rating: 1, xg: 2, xa: 2 };
+
+/** Our mark is a derived reading, so cyan; the rest are a board's one measure, so amber (DESIGN §3). */
+const INK: Record<LeaderStat, string> = { points: "text-mid", rating: "text-info", xg: "text-mid", xa: "text-mid" };
 
 /** One list's own address; the first is the view's plain one. */
 export function statsHref(stat: LeaderStat): string {
@@ -47,7 +56,7 @@ export default function TopStats({ boards, stat }: { boards: Record<LeaderStat, 
         {LEADER_STATS.map((key) => (
           <div key={key} className={phoneShows(key === stat)}>
             <Section title={TITLE[key]} aside={SOURCE[key]}>
-              <Board leaders={boards[key]} decimals={DECIMALS[key]} />
+              <Board leaders={boards[key]} decimals={DECIMALS[key]} ink={INK[key]} />
             </Section>
           </div>
         ))}
@@ -56,7 +65,7 @@ export default function TopStats({ boards, stat }: { boards: Record<LeaderStat, 
   );
 }
 
-function Board({ leaders, decimals }: { leaders: Leader[]; decimals?: number }) {
+function Board({ leaders, decimals, ink }: { leaders: Leader[]; decimals?: number; ink: string }) {
   if (leaders.length === 0) return <Absent />;
   return (
     <table className={BOARD}>
@@ -79,8 +88,7 @@ function Board({ leaders, decimals }: { leaders: Leader[]; decimals?: number }) 
                 )}
               </span>
             </td>
-            {/* Amber: a board's one measure (DESIGN §3). */}
-            <td className={`${FIGURE} w-14 text-mid lg:w-20`}>
+            <td className={`${FIGURE} w-14 lg:w-20 ${ink}`}>
               {decimals === undefined ? leader.value : leader.value.toFixed(decimals)}
             </td>
           </tr>

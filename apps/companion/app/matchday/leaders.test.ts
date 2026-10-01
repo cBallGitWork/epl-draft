@@ -11,7 +11,11 @@ function player(code: number, name: string): FootballPlayer {
 const SAKA = player(1, "Saka");
 const RICE = player(2, "Rice");
 const WHITE = player(3, "White");
-const SNAPSHOT = { clubs: [CLUB], players: [SAKA, RICE, WHITE] } as FootballSnapshot;
+const SNAPSHOT = {
+  clubs: [CLUB],
+  players: [SAKA, RICE, WHITE],
+  fixtures: [{ code: 101 }, { code: 102 }],
+} as FootballSnapshot;
 
 function row(man: FootballPlayer, over: Partial<PlayerMatchStats>): PlayerMatchStats {
   return {
@@ -20,7 +24,6 @@ function row(man: FootballPlayer, over: Partial<PlayerMatchStats>): PlayerMatchS
     minutes: 90,
     expectedGoals: 0,
     expectedAssists: 0,
-    defensiveContribution: 0,
     ...over,
   } as PlayerMatchStats;
 }
@@ -35,6 +38,7 @@ function leaders(over: Partial<Parameters<typeof gameweekLeaders>[0]> = {}) {
     snapshot: SNAPSHOT,
     stats: [],
     priced: [],
+    marks: {},
     codeOf: (fantraxId) => Number(fantraxId.slice(1)),
     owners: OWNERS,
     mine: "t2",
@@ -60,10 +64,24 @@ describe("gameweekLeaders", () => {
   });
 
   it("leads on nobody who did not play or did not register", () => {
-    const { defcon } = leaders({
-      stats: [row(SAKA, { minutes: 0, defensiveContribution: 3 }), row(RICE, { defensiveContribution: 0 })],
+    const { xg } = leaders({
+      stats: [row(SAKA, { minutes: 0, expectedGoals: 0.3 }), row(RICE, { expectedGoals: 0 })],
     });
-    expect(defcon).toEqual([]);
+    expect(xg).toEqual([]);
+  });
+
+  it("rates a man on this gameweek's matches only, averaging two, never a mark too brief to give", () => {
+    const { rating } = leaders({
+      marks: {
+        [SAKA.code]: { 101: 7.4, 102: 8.1, 900: 10 },
+        [RICE.code]: { 101: null },
+        [WHITE.code]: { 101: 6.3 },
+      },
+    });
+    expect(rating.map((l) => [l.player.name, l.value])).toEqual([
+      ["Saka", 7.8],
+      ["White", 6.3],
+    ]);
   });
 
   it("joins Fantrax's priced men through the bridge and drops one it cannot place", () => {

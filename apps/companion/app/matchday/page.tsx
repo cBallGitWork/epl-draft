@@ -33,6 +33,7 @@ import { readerTeamId } from "../squads";
 import { creditAssists, roundBreaks, roundGoals, roundRedCards, roundStreams } from "../commentary";
 import { roundAssistKinds } from "../assistKinds";
 import { LEADERS_SHOWN } from "../config";
+import { filedMarks } from "../ratings";
 import Vidiprinter from "./Vidiprinter";
 import TopStats, { STATS_VIEW, statsHref } from "./TopStats";
 import { LEADER_STATS, gameweekLeaders } from "./leaders";
@@ -129,6 +130,7 @@ export default async function MatchdayPage({
         snapshot,
         stats,
         priced: period === null ? [] : await pricedThisPeriod(period),
+        marks: filedMarks,
         codeOf: (fantraxId) => fplCodeOf(bridge, fantraxId),
         owners: league.owners,
         mine,

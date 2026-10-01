@@ -5,6 +5,9 @@ import ratingsFile from "../../../data/ratings/26-27.json";
 
 const store = readRatingStore(ratingsFile);
 
+/** Every filed mark, player code → fixture code; the Live tab ranks a gameweek's. */
+export const filedMarks = store.marks;
+
 /** Where the mark comes from, on hover wherever it prints: ours, not Fantrax's or FPL's. */
 export const RATING_TITLE = "Our rating out of ten: his league points, weighed by the opponent and by the chances missed, errors and extras the league does not score";
 
