@@ -71,11 +71,10 @@ export async function liveScores(
   return { scores: new Map(scores), refused };
 }
 
-/** Every man Fantrax priced this period, the eleven and the reserves in one list so it says nothing of
- *  who started. Empty when Fantrax refused. */
-export async function pricedThisPeriod(period: number): Promise<{ fantraxId: string; points: number }[]> {
+/** Every man Fantrax priced this period, eleven and reserves, by Fantrax id; empty when it refused. */
+export async function periodPoints(period: number): Promise<Map<string, number>> {
   const { players, bench } = await readScores(period);
-  return [...players, ...bench].flatMap(([, squad]) => squad.map(({ fantraxId, points }) => ({ fantraxId, points })));
+  return new Map([...players, ...bench].flatMap(([, squad]) => squad.map((man) => [man.fantraxId, man.points])));
 }
 
 /** One squad's points this period, priced at the slot each man is filling.

@@ -21,8 +21,8 @@ const oneDecimal = (n: number) => Math.round(n * 10) / 10;
 export function gameweekLeaders(opts: {
   snapshot: Pick<FootballSnapshot, "clubs" | "players" | "fixtures">;
   stats: readonly PlayerMatchStats[];
-  /** Every man Fantrax priced this period, eleven and reserves alike. */
-  priced: readonly { fantraxId: string; points: number }[];
+  /** Every man Fantrax priced this period, eleven and reserves alike, by Fantrax id. */
+  priced: ReadonlyMap<string, number>;
   /** Our filed marks, player code → fixture code; null where he was too brief to rate. */
   marks: RatingStore["marks"];
   /** The bridge: a Fantrax id's FPL code, or null. */
@@ -58,7 +58,7 @@ export function gameweekLeaders(opts: {
   };
 
   const points = new Map<FootballPlayer, number>();
-  for (const { fantraxId, points: value } of opts.priced) {
+  for (const [fantraxId, value] of opts.priced) {
     const code = opts.codeOf(fantraxId);
     const player = code === null ? undefined : byCode.get(code);
     if (player !== undefined) points.set(player, value);

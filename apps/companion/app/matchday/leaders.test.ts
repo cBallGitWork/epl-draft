@@ -37,7 +37,7 @@ function leaders(over: Partial<Parameters<typeof gameweekLeaders>[0]> = {}) {
   return gameweekLeaders({
     snapshot: SNAPSHOT,
     stats: [],
-    priced: [],
+    priced: new Map(),
     marks: {},
     codeOf: (fantraxId) => Number(fantraxId.slice(1)),
     owners: OWNERS,
@@ -86,11 +86,11 @@ describe("gameweekLeaders", () => {
 
   it("joins Fantrax's priced men through the bridge and drops one it cannot place", () => {
     const { points } = leaders({
-      priced: [
-        { fantraxId: "f1", points: 9 },
-        { fantraxId: "f2", points: 14 },
-        { fantraxId: "f99", points: 20 },
-      ],
+      priced: new Map([
+        ["f1", 9],
+        ["f2", 14],
+        ["f99", 20],
+      ]),
     });
     expect(points.map((l) => [l.player.name, l.value])).toEqual([
       ["Rice", 14],
@@ -99,7 +99,7 @@ describe("gameweekLeaders", () => {
   });
 
   it("says whose each man is, and which are the reader's", () => {
-    const { points } = leaders({ priced: [{ fantraxId: "f2", points: 6 }, { fantraxId: "f3", points: 4 }] });
+    const { points } = leaders({ priced: new Map([["f2", 6], ["f3", 4]]) });
     expect(points.map((l) => [l.owner?.teamName ?? null, l.mine])).toEqual([
       ["Mine United", true],
       [null, false],

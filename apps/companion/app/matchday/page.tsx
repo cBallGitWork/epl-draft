@@ -25,7 +25,7 @@ import RoundWord from "../components/league/RoundWord";
 import PageHeader from "../components/shell/PageHeader";
 import TabStrip from "../components/shell/TabStrip";
 import { bridge, getLeagueSquads } from "../squads";
-import { liveScores, pricedThisPeriod } from "../scoreboard";
+import { liveScores, periodPoints } from "../scoreboard";
 import YourMatchup from "./YourMatchup";
 import { marks } from "../involvement";
 
@@ -129,7 +129,7 @@ export default async function MatchdayPage({
     ? gameweekLeaders({
         snapshot,
         stats,
-        priced: period === null ? [] : await pricedThisPeriod(period),
+        priced: period === null ? new Map() : await periodPoints(period),
         marks: filedMarks,
         codeOf: (fantraxId) => fplCodeOf(bridge, fantraxId),
         owners: league.owners,
