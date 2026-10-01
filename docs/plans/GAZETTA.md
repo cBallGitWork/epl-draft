@@ -13,6 +13,12 @@ Those three are binding and this file never overrules them.
 Premier League paper with a draft section. The real football is the classified
 pages at the back.
 
+**The paper files seven weekly kinds (Craig, 1 Oct 2026), to keep the bill down:** the Prem match reports, the
+draft report (once, when the gameweek ends), the Bin XI, the Team Sheet (pressers), the predicted elevens, the draft sheets at the deadline and
+Lawro. News, the wire, the eleven, the power ranking, the dodgers, tie reports, tie calls and fixture previews no
+longer file; the
+newsdesk does not queue them. Their writers are still in the tree until the clean-up after GW6.
+
 ---
 
 ## Where we are — 17 Sep 2026

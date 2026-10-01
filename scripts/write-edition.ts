@@ -9,7 +9,6 @@ import {
   fetchFixtures,
   fetchLeagueInfo,
   firstKickoff,
-  gameweekStarted,
   getFootballSnapshot,
   isCovered,
   locksAt,
@@ -114,7 +113,6 @@ async function main(): Promise<void> {
   const kickoff = period ? firstKickoff(period, kickoffs) : null;
   const lock = kickoff === null ? null : locksAt(kickoff);
   const locked = lock !== null && Date.parse(now) >= Date.parse(lock);
-  const started = gameweekStarted(snapshot.fixtures, snapshot.gameweek);
 
   const ledger = readLedger();
   const paper = readPaperStories();
@@ -134,10 +132,8 @@ async function main(): Promise<void> {
     deskState({
       snapshot,
       facts,
-      clubs,
       period: round.period,
       finished,
-      started,
       locked,
       lines: sheet.lines,
       xiGameweek: xi === null ? null : sheet.gameweek,
