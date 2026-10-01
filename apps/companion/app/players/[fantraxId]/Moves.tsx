@@ -12,11 +12,14 @@ import type { PlayerMove } from "./dossier";
 /** Fantrax's own words for what happened, in ours. */
 const KIND: Readonly<Record<string, string>> = { claim: "Claimed", drop: "Dropped", trade: "Traded" };
 
+/** A step above a row's type, on every cell: DESIGN §6's third exception. */
+const TYPE = "text-base lg:text-lg";
+
 export default function Moves({ moves }: { moves: readonly PlayerMove[] }) {
   return (
     <Section title="Business">
       {moves.length === 0 ? (
-        <p className="text-base text-muted lg:text-lg">No claim, drop or trade involving him.</p>
+        <p className={`text-muted ${TYPE}`}>No claim, drop or trade involving him.</p>
       ) : (
         <ScrollBoard>
           <table className={BOARD}>
@@ -36,15 +39,15 @@ export default function Moves({ moves }: { moves: readonly PlayerMove[] }) {
                   key={`${transaction.setId}-${transaction.kind}-${transaction.processedAt ?? ""}`}
                   className={`${ROW_RULE} ${transaction.executed ? "" : "text-faint"}`}
                 >
-                  <IndexCell className="whitespace-nowrap text-base lg:text-lg">
+                  <IndexCell className={`whitespace-nowrap ${TYPE}`}>
                     {fantraxTime(transaction.processedAt ?? "")?.replace(/ \S+$/, "") ?? DASH}
                   </IndexCell>
-                  <td className="cm-row px-1.5 font-chrome text-base font-bold lg:text-lg">
+                  <td className={`cm-row px-1.5 font-chrome font-bold ${TYPE}`}>
                     {KIND[transaction.kind] ?? transaction.kind}
                     {transaction.executed ? null : <span className="pl-2 text-2xs uppercase text-faint">Pending</span>}
                   </td>
-                  <td className="px-1.5 text-base text-muted lg:text-lg">{side(transaction.fromTeamId, fromName)}</td>
-                  <td className="px-1.5 text-base text-ink lg:text-lg">{side(transaction.toTeamId, toName)}</td>
+                  <td className={`px-1.5 text-muted ${TYPE}`}>{side(transaction.fromTeamId, fromName)}</td>
+                  <td className={`px-1.5 text-ink ${TYPE}`}>{side(transaction.toTeamId, toName)}</td>
                 </tr>
               ))}
             </tbody>
