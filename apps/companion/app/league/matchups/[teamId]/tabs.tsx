@@ -1,12 +1,13 @@
 import type { ReactNode } from "react";
 import { Withheld } from "./sides";
 import { teamDisplay } from "../../../squads";
-import type { CategoryBand, LeagueTeam, RosteredTeam } from "@epl/core";
+import type { CategoryBand, Club, LeagueTeam, RosteredTeam } from "@epl/core";
 import { isResolved, playerName } from "@epl/core";
 import type { LineupDetail } from "@epl/core";
 import Section from "../../../components/shell/Section";
-import CategoryBands from "../../../components/league/CategoryBands";
+import CategoryBands, { type Names } from "../../../components/league/CategoryBands";
 import SideStats from "./SideStats";
+import { everyone } from "./subs";
 
 // Stats' boards: the fantasy report (where the scoreline came from) and one manager's board. `wider.tsx`
 // holds the boards that place the tie rather than explain it.
@@ -17,7 +18,7 @@ export interface SharedSide {
   roster: RosteredTeam | undefined;
   shown: boolean;
   detail: LineupDetail | undefined;
-  names: Map<string, string>;
+  names: Names;
   withheld: ReactNode;
 }
 
@@ -41,8 +42,8 @@ export function StatsTab({
   fielded,
 }: {
   bands: readonly CategoryBand[];
-  names: ReadonlyMap<string, string>;
-  theirNames: ReadonlyMap<string, string>;
+  names: Names;
+  theirNames: Names;
   withheld: ReactNode;
   played: boolean;
   fielded: boolean;
@@ -74,17 +75,13 @@ export function SideTab({
   );
 }
 
-/** What to call each man, by the `fantraxId` core holds.
- *
- *  **Built by the caller and only for a side the gate has opened.** Core deals in
- *  ids and never in names, which is what keeps a category figure from naming a
- *  man in an eleven that is not public yet; this is the other half of that, and
- *  building the map behind the gate makes the leak impossible rather than merely
- *  unexercised. */
-function namesOf(roster: RosteredTeam | undefined): Map<string, string> {
-  const names = new Map<string, string>();
+/** Each man's name and club by `fantraxId`; built only for a side the gate has opened, so a band cannot leak one. */
+function namesOf(roster: RosteredTeam | undefined, detail: LineupDetail | undefined): Names {
+  const clubs = new Map((detail === undefined ? [] : everyone(detail)).map((man) => [man.rostered.slot.fantraxId, man.club]));
+  const names = new Map<string, { name: string; club: Club | undefined }>();
   for (const rostered of roster?.players ?? []) {
-    names.set(rostered.slot.fantraxId, isResolved(rostered) ? playerName(rostered) : rostered.slot.fantraxId);
+    const id = rostered.slot.fantraxId;
+    names.set(id, { name: isResolved(rostered) ? playerName(rostered) : id, club: clubs.get(id) });
   }
   return names;
 }
@@ -115,12 +112,13 @@ export function sharedSides({
   const one = (team: LeagueTeam): SharedSide => {
     const roster = rostered.get(team.teamId);
     const shown = roster !== undefined && shows(team);
+    const detail = shown ? arranged.get(team.teamId) : undefined;
     return {
       team,
       roster,
       shown,
-      detail: shown ? arranged.get(team.teamId) : undefined,
-      names: shown ? namesOf(roster) : new Map<string, string>(),
+      detail,
+      names: shown ? namesOf(roster, detail) : new Map(),
       withheld: (
         <Withheld
           team={team}
