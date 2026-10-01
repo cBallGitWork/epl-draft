@@ -53,6 +53,12 @@ export function noteBody(item: NewsItem): string[] {
   return [rest, item.analysis].filter((part): part is string => part !== null && part.trim() !== "");
 }
 
+/** The whole story as paragraphs, said once: its text (after the headline where it does not open with it), then the analysis. */
+export function storyText(item: NewsItem): string[] {
+  const opening = item.body.startsWith(item.headline) ? [] : [item.headline];
+  return [...opening, item.body, item.analysis ?? ""].filter((part) => part.trim() !== "");
+}
+
 /** When it was filed, as an ISO string for the London formatters, or null for a dateless note. */
 export function filedAt(item: NewsItem): string | null {
   return item.at === null ? null : new Date(item.at).toISOString();

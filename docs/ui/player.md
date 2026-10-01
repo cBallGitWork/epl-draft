@@ -54,12 +54,12 @@ derived the same four from the same object.
    this season's against the same third ("new players get this season"); the heading says
    which, `25/26 · against outfielders`. A keeper gets eight rows, an outfielder twenty-two.
    **Fitness and News** sits under it (Craig, 26 Sep 2026: *"this page should contain the
-   latest player news, and their fitness conditions"*): one row with FPL's note, his state box
-   and his chance of playing, washed in the doubt ramp (Condition left the grid so the chance
-   prints once, and `noteBesideChance` keeps the note from saying it again); then Fantrax's
-   newest note as Mail's row, opening it on the News tab, with the rest of it under the row.
-   Only the newest: the list is News's. No source caption. A fit man with nothing filed gets
-   the one row; a man FPL has never listed gets the note alone, and with neither, no panel.
+   latest player news, and their fitness conditions"*), as **plain text** (Craig, 1 Oct 2026:
+   *"just remove the chip row and email style preview, just put the text in, with date/time and
+   make text bigger"*): for a man who may miss out, FPL's note as one sentence with his chance
+   said once (`Muscular injury, 75% chance of playing`); then when Fantrax's newest note was
+   filed and the whole of it with its analysis, at `base`/`lg:text-lg`. A fit man gets no
+   fitness line. Only the newest: the list is News's. No source caption. With neither, no panel.
    **Rankings** sit under it: his season totals and his place among his position group
    ("rankings for data such as xg").
    **Set pieces** under that: his place in his club's penalty, direct free-kick and corner
