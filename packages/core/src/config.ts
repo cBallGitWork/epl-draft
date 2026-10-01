@@ -204,6 +204,9 @@ export const FANTRAX_PLAYER_BASE = "https://www.fantrax.com/player";
  *  (PLATFORM_NOTES). It hangs off `FANTRAX_APP_BASE/{leagueId}`. */
 export const FANTRAX_PLAYERS_PATH = "players;statusOrTeamFilter=ALL;pageNumber=1";
 
+/** The league's home page, off Craig's browser URL (1 Oct 2026); appends to `FANTRAX_LEAGUE_PAGE/`. */
+export const FANTRAX_HOME_PATH = "home";
+
 /** Fantrax's sport code for the Premier League. `SOCCER` is a different sport to
  *  them and returns the wrong player pool. */
 export const FANTRAX_SPORT = "EPL";
@@ -226,6 +229,9 @@ export const HALF_MINUTES = 45;
  *  for it (`/api/league`) rather than keeping a copy. Empty when unset, and `requireLeague` is
  *  how an edge refuses to run on nothing. The ids are public: they are in the league URLs. */
 export const FANTRAX_LEAGUE_ID = process.env.FANTRAX_LEAGUE_ID ?? "";
+
+/** The served league on Fantrax's website; a deeper page appends `/{path}`. */
+export const FANTRAX_LEAGUE_PAGE = `${FANTRAX_APP_BASE}/${FANTRAX_LEAGUE_ID}`;
 
 /** The league id, or a throw that says where to set it. */
 export function requireLeague(leagueId: string): string {
