@@ -39,9 +39,6 @@ export interface PlayerCategory {
   label: string;
   /** True when a low count is the better one. */
   lowIsGood?: boolean;
-  /** Keepers and outfielders publish different vocabularies, so a category can
-   *  belong to one of them. Absent means both carry it. */
-  only?: "keeper" | "outfield";
   /** The other half's name for the same fact, when Fantrax spells it
    *  differently. Read as a fallback, never added: a player is in exactly one
    *  half, so at most one of the two columns is ever present on his row. */
@@ -63,9 +60,9 @@ export const PLAYER_CATEGORIES: readonly PlayerCategory[] = [
   { key: ASSISTS_FANTASY.short, group: "attacking", label: "Assists (fantasy)", partOf: ASSISTS_TOTAL.short },
   { key: "PKM", group: "attacking", label: "Penalties missed", lowIsGood: true },
   { key: "CS", group: "defensive", label: "Clean sheets" },
-  { key: SAVES.short, group: "defensive", label: "Saves", only: "keeper" },
-  { key: KEEPER_POINTS.short, group: "defensive", label: "Keeper points", only: "keeper" },
-  { key: "PKS", group: "defensive", label: "Penalties saved", only: "keeper" },
+  { key: SAVES.short, group: "defensive", label: "Saves" },
+  { key: KEEPER_POINTS.short, group: "defensive", label: "Keeper points" },
+  { key: "PKS", group: "defensive", label: "Penalties saved" },
   // **One entry, two column names.** Fantrax calls it `GA` on a keeper's read
   // and `GAO` on an outfielder's, and they are the same defensive fact — the
   // goals that went in while he was on the pitch. Two entries shipped for an
@@ -84,5 +81,3 @@ export const PLAYER_CATEGORIES: readonly PlayerCategory[] = [
   // is the most defensive thing on the list. A card is a foul; this is a goal.
   { key: "OG", group: "defensive", label: "Own goals", lowIsGood: true },
 ];
-
-/** The categories in one group. */

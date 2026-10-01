@@ -114,7 +114,7 @@ export interface SlotWorth {
   appearance: number;
   /** The league's goalie slot, whose big score is a haul in goal; null when the league does not say. */
   keeper: string | null;
-  /** The most a match pays at a slot beyond its returns and minutes (a defensive bonus, a keeper's saves), as Fantrax
+  /** The most a match pays at a slot beyond its returns and minutes (a defensive bonus, a keeper's work), as Fantrax
    *  paid it this gameweek: counted only before a lead is called out of reach. */
   bonus: Record<string, number>;
 }

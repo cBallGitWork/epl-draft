@@ -22,8 +22,6 @@ import { BOARD, BOARD_FIGURE, MINOR_LABEL, PANEL_FLUSH, PINNED_BESIDE_TILE, PINN
 // One squad's season on the house board, as a club's stat board draws it: our position in the index tile, the crest
 // before the pinned name, a view picked above, a tap on a head to sort, and each column's standouts lit in ink.
 
-/** A column's orange for its best tenth and yellow for its top fifth, of the squad. */
-
 /** The name column starts where the tile ends. */
 const LEAD = `${PINNED_BESIDE_TILE}`;
 
