@@ -1,81 +1,37 @@
 import type { GroupKey } from "./categories";
 import { ASSISTS_FANTASY, ASSISTS_OFFICIAL, ASSISTS_TOTAL, KEEPER_POINTS, SAVES } from "./categoryNames";
 
-// What the Player Stats board can rank the pool by.
-//
-// **These are Fantrax's scoring categories, and that is the whole argument for
-// the source.** Craig, 1 Sep 2026: "im using player stats here for mainly
-// fantasy stats… this is just fantasy scoring quick table", with a separate
-// scouting screen to come. So this screen asks what a player did IN OUR GAME,
-// and Fantrax is the authority on that (CLAUDE.md: "Fantrax's numbers are
-// authoritative; ours are labelled").
-//
-// FPL carries goals and assists too and is not used here. Three reasons, in
-// order of weight:
-//
-//   · **`AF` does not exist in FPL.** Fantasy assists — rebounds, blocked
-//     shots, won handballs, own goals forced — are Fantrax's own invention and
-//     one of the larger scoring categories in this league. A board built on FPL
-//     could not print the column.
-//   · **The definitions do not reconcile.** FPL counts a clean sheet per match
-//     played; Fantrax awards one for sixty minutes on the field with the sheet
-//     intact while he was on it. Printing FPL's number beside a fantasy team
-//     would show a figure that does not explain the points that manager got.
-//   · **Provenance.** DESIGN §7 keeps our numbers out of columns headed like
-//     theirs. The cheapest way to obey it is for the numbers to be theirs.
-//
-// The scouting screen is where FPL belongs — xG, xA, shots, the intel pipeline.
-// Different question, different source, and the bridge already joins the two.
-// One crossing stays here: the PORTRAIT is FPL's, because that is identity
-// rather than statistics, and identity is what the bridge is for.
+// The categories a league can pay a player for, keyed by getPlayerStats' column abbreviation: a squad's Stats board.
 
-/** A category the player board can rank by.
- *
- *  `key` is Fantrax's own column abbreviation — `G`, `AF`, `CS` — because that
- *  is what `mapPlayerStats` files each figure under, straight off the header. */
+/** A category the squad board can show, under Fantrax's own column abbreviation: `G`, `AF`, `CS`. */
 export interface PlayerCategory {
   key: string;
   group: GroupKey;
   label: string;
   /** True when a low count is the better one. */
   lowIsGood?: boolean;
-  /** The other half's name for the same fact, when Fantrax spells it
-   *  differently. Read as a fallback, never added: a player is in exactly one
-   *  half, so at most one of the two columns is ever present on his row. */
+  /** The other half's name for the same fact; read as a fallback, never added, as a man is in one half only. */
   also?: string;
 }
 
-/** **Minutes are deliberately absent** (Craig: "dont do minutes"). It is on both
- *  reads and it is not a fantasy achievement — it is the denominator under one,
- *  and it belongs to the scouting screen with the rest of the context.
- *
- *  Ordered as a reader looks for them: what he did going forward, then what he
- *  did at the back, then what he did wrong. */
+/** Ordered as a reader looks for them: his time on the pitch, then going forward, at the back, and what he did wrong. */
 export const PLAYER_CATEGORIES: readonly PlayerCategory[] = [
+  { key: "Min", group: "appearances", label: "Minutes played" },
   { key: "G", group: "attacking", label: "Goals" },
   { key: ASSISTS_TOTAL.short, group: "attacking", label: "Assists (total)" },
   { key: ASSISTS_OFFICIAL.short, group: "attacking", label: "Assists" },
   { key: ASSISTS_FANTASY.short, group: "attacking", label: "Assists (fantasy)" },
   { key: "PKM", group: "attacking", label: "Penalties missed", lowIsGood: true },
   { key: "CS", group: "defensive", label: "Clean sheets" },
+  { key: "DFP", group: "defensive", label: "DefCon: tackles won, interceptions and blocks" },
+  { key: "DFP3", group: "defensive", label: "DefCon: tackles won, interceptions, blocks, clearances and recoveries" },
   { key: SAVES.short, group: "defensive", label: "Saves" },
   { key: KEEPER_POINTS.short, group: "defensive", label: "Keeper actions" },
   { key: "PKS", group: "defensive", label: "Penalties saved" },
-  // **One entry, two column names.** Fantrax calls it `GA` on a keeper's read
-  // and `GAO` on an outfielder's, and they are the same defensive fact — the
-  // goals that went in while he was on the pitch. Two entries shipped for an
-  // hour and put "Goals against" in the category strip TWICE, leading to two
-  // different boards a reader could not tell apart. `also` is how one category
-  // reads a column that is spelled differently in the other half; the team board
-  // settled the same question the same way (Craig, 1 Sep: "goals against is a
-  // def and keeper stat, so we can combine that").
+  // A keeper's read calls it GA and an outfielder's GAO: one fact, one column.
   { key: "GA", group: "defensive", label: "Goals against", lowIsGood: true, also: "GAO" },
   { key: "YC", group: "discipline", label: "Yellow cards", lowIsGood: true },
   { key: "RC", group: "discipline", label: "Red cards", lowIsGood: true },
-  // **Defensive, not discipline** (Craig, 2 Sep: "OG to defensive"). It was
-  // filed with the cards on the reading that an own goal is a blunder, and the
-  // team board still files it that way — but on a PLAYER's row the question
-  // being asked is what he did at the back, and putting the ball in his own net
-  // is the most defensive thing on the list. A card is a foul; this is a goal.
+  // Defensive, not discipline (Craig, 2 Sep): on a player's row an own goal is what he did at the back.
   { key: "OG", group: "defensive", label: "Own goals", lowIsGood: true },
 ];
