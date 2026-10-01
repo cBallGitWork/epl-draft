@@ -1,4 +1,4 @@
-import type { Club, StrengthRank } from "@epl/core";
+import { ordinal, type Club, type StrengthRank } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import { easeGround } from "../../components/football/ease";
 import { MUTE, PlateHead } from "../../components/league/TableHeads";
@@ -40,7 +40,7 @@ export default function StrengthRanks({
           const club = clubs.get(row.code);
           return (
             <tr key={row.code} className={ROW_RULE}>
-              <td className="cm-index numeric text-center text-2xs">{at + 1}</td>
+              <td className="cm-index numeric text-center text-2xs">{ordinal(at + 1)}</td>
               <th scope="row" className="p-0 text-left font-normal">
                 <span className="cm-row flex min-h-9 items-center gap-1.5 px-1.5 lg:min-h-7">
                   {club ? <ClubLabel club={club} /> : row.club}
@@ -60,7 +60,7 @@ function Rank({ rank }: { rank: number }) {
   const { ground, ink } = easeGround(rank);
   return (
     <td className={`numeric border-l border-bg text-center text-xs font-bold ${ink}`} style={{ background: ground }}>
-      {rank}
+      {ordinal(rank)}
     </td>
   );
 }

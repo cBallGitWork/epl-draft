@@ -1,6 +1,6 @@
 import ScrollBoard from "../../components/league/ScrollBoard";
 import Link from "next/link";
-import { DASH, toFantraxClubCode, type PlannerCell, type PlannerRow, type PlannerView } from "@epl/core";
+import { DASH, ordinal, toFantraxClubCode, type PlannerCell, type PlannerRow, type PlannerView } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import { easeGround } from "../../components/football/ease";
 import { MUTE, PlateHead, SortArrow } from "../../components/league/TableHeads";
@@ -82,7 +82,9 @@ export default function PlannerBoard({
   );
 }
 
-/** One fixture: the opponent and its rank on one line, grounded on the ramp. A blank round is a quiet hole. */
+/** One fixture grounded on the ramp: the opponent, its venue and its rank as an ordinal, on one line on a desk and
+ *  the venue and rank under the code on a phone, where a 37px cell cannot hold "20th" beside it. A blank round is a
+ *  quiet hole. */
 function Fixture({ view, cell }: { view: PlannerView; cell: PlannerCell | null }) {
   const { ground, ink } = easeGround(cell?.rank ?? null);
   if (cell === null) {
@@ -93,17 +95,16 @@ function Fixture({ view, cell }: { view: PlannerView; cell: PlannerCell | null }
     );
   }
   const code = cell.opponent.shortName;
+  const rank = cell.rank === null ? DASH : ordinal(cell.rank);
   return (
     <div
-      className={`numeric flex min-h-11 items-center justify-center gap-1 whitespace-nowrap px-0.5 text-2xs leading-none lg:min-h-7 lg:justify-between lg:px-1.5 lg:text-xs ${ink}`}
+      className={`numeric grid min-h-11 grid-cols-[auto_auto] content-center items-baseline justify-center gap-0.5 whitespace-nowrap text-2xs leading-none lg:flex lg:min-h-7 lg:items-center lg:gap-1 lg:px-1.5 lg:text-xs ${ink}`}
       style={{ background: ground }}
-      title={`${cell.opponent.name} ${cell.home ? "at home" : "away"}: their ${THEIR[view]} ranks ${cell.rank ?? DASH}, 1 the easiest`}
+      title={`${cell.opponent.name} ${cell.home ? "at home" : "away"}: their ${THEIR[view]} ranks ${rank}, 1st the easiest`}
     >
-      <span className="flex flex-col items-center gap-0.5 lg:flex-row lg:gap-1">
-        <span>{code}</span>
-        <span className="text-3xs lg:text-xs">({cell.home ? "H" : "A"})</span>
-      </span>
-      <span className="font-bold">{cell.rank ?? DASH}</span>
+      <span className="col-span-2 text-center">{code}</span>
+      <span className="text-3xs lg:text-xs">({cell.home ? "H" : "A"})</span>
+      <span className="font-bold lg:ml-auto">{rank}</span>
     </div>
   );
 }
