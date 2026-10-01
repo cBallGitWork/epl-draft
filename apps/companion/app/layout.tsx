@@ -13,19 +13,19 @@ import UnreadBadge from "./components/shell/UnreadBadge";
 import { liveTie } from "./components/shell/liveTie";
 import { readInbox } from "./news/inbox";
 import { deskFontVariables } from "./deskFonts";
+import { APP_SHORT_NAME, TOKEN_SRGB } from "./config";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: LEAGUE_NAME,
   description: `Live scores, head-to-head and the week's news for the ${LEAGUE_NAME}.`,
+  // An iPhone names a home-screen icon after the page's title, which on `/more` is "More".
+  appleWebApp: { title: APP_SHORT_NAME },
 };
 
 export const viewport: Viewport = {
-  // sRGB of `--color-bg` in tokens.css. Repeated as a literal because this is
-  // serialised into a <meta> tag at build time and cannot read a CSS variable —
-  // the same constraint as `revalidate`. Change both together. The front page
-  // overrides it, being the one surface that is not the desk.
-  themeColor: "#091227",
+  // The front page overrides it, being the one surface that is not the desk.
+  themeColor: TOKEN_SRGB.bg,
   // The reference device is a phone held one-handed; lock out the accidental
   // double-tap zoom without disabling deliberate pinch-zoom.
   width: "device-width",
