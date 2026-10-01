@@ -6,10 +6,9 @@ name: Capture Fantrax
 # current state only and nothing crawls a private league id, so a day not written
 # down is a day gone — no backfill, not from them and not from anywhere else.
 #
-# Deliberately does NOT fail when a read fails. `NO_TEAMS` from the real league is
-# the expected answer until 10 Oct, and a partial capture is worth keeping. The
-# manifest records every refusal, and `capture-status.yml` is what notices when
-# captures stop arriving altogether.
+# A failed read is recorded in its manifest and the rest of the day still captured; the
+# capture step then goes red, and the commit step runs anyway so the partial day is kept.
+# `capture-status.yml` notices when captures stop arriving altogether.
 
 on:
   schedule:
@@ -46,6 +45,7 @@ jobs:
         run: npm run capture
 
       - name: Commit the snapshots
+        if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
