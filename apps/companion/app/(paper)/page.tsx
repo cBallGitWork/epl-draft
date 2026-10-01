@@ -19,23 +19,13 @@ import { edition } from "../edition";
 import { readerTeamId } from "../squads";
 import { draftRows, footballRows, scorerRows } from "../tables";
 
-// The Gazetta. What the league did this week, on the front page.
-//
-// A first edition rather than the full paper: the lead, the week's business, who
-// is injured, and when lineups lock. It ships early on purpose, so it is read on
-// real Saturdays while the stakes are four rehearsal teams rather than met for
-// the first time on 10 Oct.
-//
-// Sections that have nothing to say do not appear. An edition padded out with
-// "no transactions this week" is a worse paper than a shorter one.
-//
-// The `.paper` register, the serifs, the cream chrome and the poll cadence are
-// the group layout's — `(paper)/layout.tsx` — so this file is only the edition.
+// The Gazetta's front page: the stories, the eleven, the tables, the business and the lock.
+// A section with nothing to say does not appear; the register is `(paper)/layout.tsx`'s.
 
 export default async function GazettePage() {
   const mine = await readerTeamId();
   const paper = await edition(mine);
-  // The two tables, from reads the page already makes.
+  // The three tables, from reads the page already makes.
   const [draft, football, scorers] = await Promise.all([
     draftRows(mine),
     footballRows(),
@@ -183,11 +173,7 @@ export default async function GazettePage() {
             />
           ) : null}
 
-          {/* The two tables, the way a back page carries them: the league we
-              are actually in first, the one it is played out of second. Rank ·
-              team · played · record or goal difference · points, and neither
-              is a link — the sortable, tappable, badged versions are on the
-              League and Players tabs, where a manager goes to USE them. */}
+          {/* Printed copies, not links: the sortable versions live on their own tabs. */}
           <PaperTable title="Top scorers" rows={scorers} />
           <PaperTable title="The draft table" rows={draft} />
           <PaperTable title="The Premier League" aside="P · GD · Pts" rows={football} />
