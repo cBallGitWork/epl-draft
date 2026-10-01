@@ -2,8 +2,8 @@ import ScrollBoard from "../../components/league/ScrollBoard";
 import Link from "next/link";
 import {
   categoryFor,
-  isMeasure,
   groupFor,
+  londonDayAndDate,
   offeredIn,
   ordinal,
   rankBy,
@@ -19,17 +19,21 @@ import { IndexCell, ROW_LINK } from "../../components/league/TableCells";
 import GroupNav from "../../components/league/GroupNav";
 import { TEAM_STATS } from "../SectionNav";
 import LeagueShell from "../Shell";
-import Measures from "./Measures";
+import Measures, { viewFor, type View } from "./Measures";
 import { getSeasonStats } from "./seasonStats";
+import { getSquadStats } from "./squadStats";
+import { squadColumnsIn } from "./squadColumns";
+import { intelStatsManifest } from "../../intel";
 import { getSchedule } from "../schedule/schedule";
 import { readerTeamId } from "../../squads";
 import { yoursInk } from "../../mine";
 import { teamBadges } from "../../standings";
-import { BOARD, BOARD_FIGURE, INDEX_WIDTH, ROW_NAME, ROW_RULE } from "@/app/desk";
+import { BOARD, BOARD_FIGURE, INDEX_WIDTH, MINOR_LABEL, ROW_NAME, ROW_RULE } from "@/app/desk";
 import { teamHref } from "@/app/squad/routes";
 import FantraxSilent from "../../components/shell/FantraxSilent";
 
 // Every team against one group of scoring categories, ordered by the head pressed: CM's stat board on fantasy data.
+// FPts and Total are Fantrax's for each lineup; Squad adds up the stats league's counts for the men each team holds.
 // No owner column: Fantrax's teamInfo is `{name, id}` and we hold no list of managers (Craig, 1 Sep: "ditch the manager name").
 
 // Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
@@ -43,16 +47,19 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
   const query = await searchParams;
   // A category outside the group falls back to the group's first, so a shared link survives a regrouping.
   const group = groupFor(query.group);
-  const measure: Measure = isMeasure(query.by) ? query.by : "points";
+  const view = viewFor(query.by);
+  const squad = view === "squad";
+  // A squad's counts are raw figures, so they rank as Total does.
+  const measure: Measure = squad ? "value" : view;
 
-  const [schedule, mine, badges, categories] = await Promise.all([
+  const [schedule, mine, badges, lines] = await Promise.all([
     getSchedule(),
     readerTeamId(),
     teamBadges(),
-    getSeasonStats(),
+    squad ? getSquadStats() : getSeasonStats(),
   ]);
 
-  const columns = offeredIn(group, categories);
+  const columns = squad ? squadColumnsIn(group) : offeredIn(group, lines);
   const category =
     columns.find((entry) => entry.key === query.cat) ?? columns[0] ?? categoryFor(undefined);
 
@@ -75,25 +82,34 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
       .map((round) => round.period),
   );
 
-  const board = rankBy(columns, categories, category, measure);
+  const board = rankBy(columns, lines, category, measure);
   const named = new Map(table.map((row) => [row.teamId, row.teamName]));
   const groupLabel = columns.map((entry) => entry.label).join(", ");
 
   return (
     <LeagueShell current="teamStats" teams={info.teams.length}>
-      <Measures measure={measure} href={(by) => boardHref(by, group, category.key)} />
+      <div className="flex items-center justify-between gap-2">
+        <Measures view={view} href={(by) => boardHref(by, group, category.key)} />
+        {squad ? <p className={MINOR_LABEL}>Season to {londonDayAndDate(intelStatsManifest.exportedAt)}</p> : null}
+      </div>
 
       {board.length === 0 ? (
-        <Nothing title="Nothing recorded yet" code={`${played.size} finished rounds scored`}>
-          {groupLabel} fill in as {info.name} plays.
-        </Nothing>
+        squad ? (
+          <Nothing title="No squads yet" code="getTeamRosters → no squads">
+            Each squad&apos;s season adds up here once {info.name} has drafted.
+          </Nothing>
+        ) : (
+          <Nothing title="Nothing recorded yet" code={`${played.size} finished rounds scored`}>
+            {groupLabel} fill in as {info.name} plays.
+          </Nothing>
+        )
       ) : (
         <ScrollBoard>
           {/* `border-collapse` draws the row rules; `table-fixed` holds each figure at its width and lets the name give. */}
           <table className={`${BOARD} table-fixed`}>
             <caption className="sr-only">
               Every team across {groupLabel}, ordered by {category.label} in{" "}
-              {ORDERED_BY[measure]}
+              {ORDERED_BY[view]}
             </caption>
             <thead>
               <HeadRow>
@@ -106,8 +122,8 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                   <SortHead
                     key={entry.key}
                     width={FIGURE_WIDTH}
-                    title={`${entry.label} — ${entry.key}`}
-                    href={boardHref(measure, group, entry.key)}
+                    title={squad ? entry.label : `${entry.label} — ${entry.key}`}
+                    href={boardHref(view, group, entry.key)}
                     label={entry.short}
                     align="right"
                     sorted={entry.key === category.key ? direction(entry, measure) : undefined}
@@ -161,7 +177,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
 }
 
 /** Where a head or a measure plate leads; the default measure is spelled as no parameter, one URL rather than two. */
-function boardHref(by: Measure, group: string, category: string): string {
+function boardHref(by: View, group: string, category: string): string {
   const query = new URLSearchParams({ group, cat: category });
   if (by !== "points") query.set("by", by);
   return `${TEAM_STATS}?${query.toString()}`;
@@ -176,7 +192,8 @@ function direction(category: StatCategory, measure: Measure): "ascending" | "des
 const FIGURE_WIDTH = "w-12 lg:w-20";
 
 /** How the caption says which way the board is ordered. */
-const ORDERED_BY: Record<Measure, string> = {
+const ORDERED_BY: Record<View, string> = {
   points: "fantasy points",
   value: "raw totals",
+  squad: "the season counts of the men each team holds",
 };

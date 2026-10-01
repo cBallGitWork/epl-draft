@@ -91,6 +91,14 @@ alternating meaning, and a reader compares a column against the one beside it.
 Fantasy points is the default, because 1,500 minutes is not better than 1,400
 unless those minutes were worth more.
 
+**A third plate, `Squad`, asks a different question** (1 Oct 2026): what the men each
+team holds now have done all season, added up off the stats league's counts
+(`squadColumns.ts`: goals, assists, shots and key passes; tackles won,
+interceptions, clearances and recoveries; saves, penalties saved and goals
+conceded in goal; appearances, starts and minutes; cards, own goals and errors
+leading to a goal). It fills in the day the draft ends, a week before Fantrax has
+scored a lineup, and a quiet `Season to …` line names the file's date.
+
 **The column heads sort**, as `/league`'s do — a link, so the server orders and
 the ordering survives being shared. The pressed plate is the only mark of the
 sorted column; every figure is ink, because the accent slot means "yours" and the

@@ -1,32 +1,40 @@
 import Link from "next/link";
-import type { Measure } from "@epl/core";
+import { isMeasure, type Measure } from "@epl/core";
 import { SMALL_CAPS } from "@/app/desk";
 
 // Which figure every cell on the board holds: one grey toggle over the board (Craig, 11 Sep 2026: "at the top, allow a
 // toggle between fantasy points and actual raw values"). Grey, as DESIGN §2's pressable plate; the blue is navigation.
 // A link, so the server orders and the choice survives a share. The plate recipe is `players/BoardControls`' too (2 of 3).
 
+/** Fantrax's two figures for what each lineup scored, or the stats league's counts for each squad's season. */
+export type View = Measure | "squad";
+
+export function viewFor(by: string | undefined): View {
+  return by === "squad" ? by : isMeasure(by) ? by : "points";
+}
+
 /** The figures a cell can hold, in the order the plates stand. */
-const MEASURES: readonly { by: Measure; label: string; title: string }[] = [
+const VIEWS: readonly { by: View; label: string; title: string }[] = [
   { by: "points", label: "FPts", title: "What Fantrax paid for each category" },
   { by: "value", label: "Total", title: "The raw figure behind each category" },
+  { by: "squad", label: "Squad", title: "What the men each team holds now have done all season, from the stats league" },
 ];
 
 /** The control floor at both widths (DESIGN §6). */
 const PLATE = `flex min-h-11 items-center px-3 ${SMALL_CAPS} lg:min-h-9`;
 
 export default function Measures({
-  measure,
+  view,
   href,
 }: {
-  measure: Measure;
+  view: View;
   /** Where each plate leads; the page spells its own query. */
-  href: (measure: Measure) => string;
+  href: (view: View) => string;
 }) {
   return (
     <div role="group" aria-label="Which figure the board shows" className="flex">
-      {MEASURES.map((entry) => {
-        const on = entry.by === measure;
+      {VIEWS.map((entry) => {
+        const on = entry.by === view;
         return (
           <Link
             key={entry.by}
