@@ -198,7 +198,7 @@ export default async function GazettePage() {
               is a link — the sortable, tappable, badged versions are on the
               League and Players tabs, where a manager goes to USE them. */}
           <PaperTable title="Top scorers" rows={scorers} />
-          <PaperTable title="The draft table" aside="Fantrax" rows={draft} />
+          <PaperTable title="The draft table" rows={draft} />
           <PaperTable title="The Premier League" aside="P · GD · Pts" rows={football} />
 
           {paper.deals.length > 0 ? (

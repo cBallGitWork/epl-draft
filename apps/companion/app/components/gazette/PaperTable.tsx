@@ -1,16 +1,8 @@
 import Column from "./Column";
 import { DASH } from "@epl/core";
 
-// A table as newsprint sets one: a ruled head, hairline rows, and figures in
-// the tabular face — the shape a back page has printed since long before any
-// of this. Both the tables the paper carries feed it, because a table is the
-// same object whichever competition it is about.
-//
-// **It never adds anything up that its caller did not.** The draft table is
-// Fantrax's own arithmetic, verbatim, and the Premier League's is computed
-// from finished fixtures under the competition's own fixed rules
-// (`football/table.ts`). The distinction is stated in the caller's heading,
-// not smoothed over here.
+// A table as newsprint sets one: a ruled head, hairline rows, figures in the tabular
+// face. It never adds anything up that its caller did not.
 
 export interface PaperTableRow {
   key: string;
@@ -20,8 +12,7 @@ export interface PaperTableRow {
   rank: number;
   name: string;
   played: number | null;
-  /** The middle column: goal difference on the football table, W-D-L on the
-   *  draft one. Absence prints as a dash. */
+  /** The middle column: goal difference on the football table, the owner on the scorers chart. */
   detail: string | null;
   points: number | null;
   /** The reader's own team, marked the way "yours" is marked everywhere. */
@@ -39,9 +30,9 @@ export default function PaperTable({
   rows: readonly PaperTableRow[];
 }) {
   if (rows.length === 0) return null;
-  // A column of dashes is not a column. The scorers chart has no "played" to
-  // print, so the cell goes rather than standing empty ten times over.
+  // A column of dashes is not a column: a figure no row carries is not printed.
   const played = rows.some((row) => row.played !== null);
+  const detail = rows.some((row) => row.detail !== null);
 
   return (
     <Column title={title} aside={aside}>
@@ -60,13 +51,14 @@ export default function PaperTable({
           {played ? (
             <span className="numeric w-6 shrink-0 text-right text-muted">{row.played ?? DASH}</span>
           ) : null}
-          {/* Not `.numeric`: this cell is a record on a table and a manager's
-              name on a chart, and letterspacing rules follow the content. */}
-          <span
-            className={`w-20 shrink-0 truncate text-right text-muted ${played ? "numeric w-12" : ""}`}
-          >
-            {row.detail ?? DASH}
-          </span>
+          {/* Not `.numeric` on the chart: there this cell is a manager's name. */}
+          {detail ? (
+            <span
+              className={`w-20 shrink-0 truncate text-right text-muted ${played ? "numeric w-12" : ""}`}
+            >
+              {row.detail ?? DASH}
+            </span>
+          ) : null}
           <span className="numeric w-7 shrink-0 text-right font-semibold text-ink">
             {row.points ?? DASH}
           </span>
