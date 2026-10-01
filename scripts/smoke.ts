@@ -47,6 +47,7 @@ const ROUTES = [
   "/prem/results",
   "/prem/fixtures",
   "/prem/team-stats",
+  "/prem/data",
   "/gw/1",
   "/fpl",
   "/more",

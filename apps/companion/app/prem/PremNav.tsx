@@ -1,26 +1,8 @@
 import TabStrip from "../components/shell/TabStrip";
-import { POOL } from "../players/routes";
 
-// The Premiership section's own views, and how you get between them.
-//
-// **Four, which is the width `cm9900/24.jpg` runs.** The reference shot for this
-// whole section is a Premier League table screen, and its strip is `Table ·
-// Results · Fixtures · Schedule` with a foot row of five underneath. Ours drops
-// Schedule — a fixture list already IS the schedule when the competition is the
-// one being played, and CM needed both because its Schedule screen is a
-// calendar of the manager's own season — and spends the slot on Team Stats,
-// which the game files downstairs.
-//
-// **There is no foot row yet, and that is a decision rather than an omission.**
-// Player Stats belongs there, beside Team Stats, exactly as the game has it. It
-// is deferred (Craig, 2 Sep: "leave the player stats bit for now, that's a full
-// section on its own"), and a foot row of ONE is the stray button under a panel
-// that `league/SectionNav` already recorded him rejecting. The row comes back
-// with the second entry in it.
-//
-// A server component for `SectionNav`'s reason: each page here knows which one
-// it is, so passing that in costs a prop and saves shipping a component to the
-// phone to work out what the URL already says.
+// The Premiership section's own views, after `cm9900/24.jpg`'s strip with Schedule dropped (a fixture list is one).
+// Player Stats, deferred on 2 Sep, arrived on 1 Oct 2026 as the Data tab's lists rather than a foot row of one.
+// A server component: each page knows which view it is, so the strip ships no script to work it out.
 
 const TABS = [
   { href: "/prem", label: "Table", key: "table" },
@@ -30,14 +12,12 @@ const TABS = [
   { href: "/prem/results", label: "Results", key: "results" },
   { href: "/prem/fixtures", label: "Fixtures", key: "fixtures" },
   { href: "/prem/team-stats", label: "Team Stats", key: "teamStats" },
-  // A way OUT to Data, not a view of this section, so no tab draws current on it (`PremSection` omits the key).
-  { href: POOL, label: "Data", key: "players" },
+  // The season's leaders as lists, a view of this section since 1 Oct 2026; it led out to the pool before.
+  { href: "/prem/data", label: "Data", key: "data" },
 ] as const;
 
-/** Which tab a page IS. `players` is deliberately not one: that entry leaves the
- *  section (see the note on it), so no page passes it and no tab draws as
- *  current when a reader is on the pool. */
-export type PremSection = Exclude<(typeof TABS)[number]["key"], "players">;
+/** Which tab a page IS. */
+export type PremSection = (typeof TABS)[number]["key"];
 
 /** These routes, found by KEY rather than by position.
  *
@@ -63,6 +43,9 @@ export const TABLE = at("table");
 /** The board's own route: a route spelled in three files is a route that can be
  *  renamed in two of them. */
 export const TEAM_STATS = at("teamStats");
+
+/** The leaders' lists, which the list picker and each list's Top 50 plate spell. */
+export const DATA = at("data");
 
 /* `RESULTS` and `FIXTURES` were here, named `at("results")` and `at("fixtures")`
    for a consumer the docblock described as "a match page's way out ... whichever
