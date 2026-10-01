@@ -9,9 +9,9 @@ import { LABEL, PANEL, SECTION_BAR, SMALL_CAPS } from "@/app/desk";
 import { Carried, clubOptions, Count, Figures, PRESSABLE, Plates, Statuses } from "./BoardControls";
 import QuerySelect from "./QuerySelect";
 
-// Every control on the board: one row on the desk (search, the stat groups from `lg`, Per 90 from `xl`, Filter),
-// and under a thumb the row plus a sheet docked over the thumb rail. The sheet is URL state (`?panel=1`), so a
-// filtered board can be shared, and the stat groups render in both places with only one ever shown.
+// Every control on the board: one row on the desk (search, the stat groups from `lg`, status and Per 90 from `xl`,
+// Filter), and under a thumb the row plus a sheet docked over the thumb rail. The sheet is URL state (`?panel=1`), so
+// a filtered board can be shared; a control the row carries at a width is the one the sheet leaves out there.
 
 export default function BoardBar({
   query,
@@ -43,37 +43,7 @@ export default function BoardBar({
 
   return (
     <>
-      {/* **What sits on the row grows with the width, in two steps**, and that
-          is measured rather than chosen. The first cut put the strip and both
-          figure chips inline from `lg`, and at 1024 the row broke in the two
-          ways a flex row breaks: the search box — `flex-1` with `min-w-0` —
-          shrank to a 40px slot with no room for a word, and the `Filter` plate
-          wrapped to a second line on its own. A desk of 1024 has about 870px
-          inside the rail and the panel, and the full set wants 920.
-
-          So `lg` takes the stat groups, which are the most frequent tap, and
-          `2xl` adds the figure chips. Whatever is not on the row is in the
-          drawer at that width, so nothing is ever unreachable — and the search
-          box takes a FIXED width from `lg` rather than a flexible one, because
-          the thing that must never collapse cannot be the thing that absorbs
-          the slack.
-
-          **Both steps are measured, and the second moved after it was.** The row
-          and its children, read off the rendered page at five widths on 10 Sep
-          2026:
-
-            1024   row 842   form 176 + plates 579 + filter 75 = 830
-            1280   row 1098  …with the figure chips, 1136. Over.
-            1440   row 1100  the same, and the frame is capped — 1440 is barely
-                             wider than 1280 inside the rail
-            1536   row 1354  1152. Fits, and it is where `globals.css` grows the
-                             frame to 96rem
-            1800   row 1484
-
-          `xl` was the first guess and it is wrong by 36px: the plate strip is
-          `flex-1`, so instead of overflowing it quietly took 525 of the 579 it
-          needs and wrapped `Market` onto a line of its own. A row that fits
-          because one of its children folded is not a row that fits. */}
+      {/* The row grows with the width in measured steps (PLATFORM_NOTES): a row that fits by folding a child does not fit. */}
       <div className="flex flex-wrap items-center gap-1.5">
         {/* The hidden fields are rendered HERE, on the server, and handed to
             the client box as children — `panel` among them, so finding a player
@@ -86,9 +56,9 @@ export default function BoardBar({
 
         {/* One cluster, so under a thumb the chips and Filter take a second line together when the search needs it. */}
         <div className="ml-auto flex gap-1.5">
-          {/* Who he belongs to, on the row under a thumb (Craig, 1 Oct 2026: "mobile can have owned button show
-              by default"); the sheet carries it on a desk. */}
-          <Statuses query={query} counted={counted} className="flex lg:hidden" />
+          {/* Who he belongs to (Craig, 1 Oct 2026: "on desktop have ww/fa filter in view", "mobile can have owned
+              button show by default"); between `lg` and `xl` the row has no room and the sheet carries it. */}
+          <Statuses query={query} counted={counted} className="flex lg:max-xl:hidden" />
           <div className="hidden xl:flex">{figures}</div>
           <Link
             href={boardHref(query, { panel: open ? undefined : "1" })}
@@ -124,7 +94,7 @@ export default function BoardBar({
               </div>
             </Block>
 
-            <Block label="Status" className="max-lg:hidden">
+            <Block label="Status" className="max-lg:hidden xl:hidden">
               <Statuses query={query} counted={counted} className="flex flex-wrap" />
             </Block>
 

@@ -2318,6 +2318,23 @@ in its heading — a zone note over a column with no clock in it is furniture
 explaining something that is no longer there — and, the time gone, the column is
 narrow enough to come back to the phone.
 
+**1 Oct 2026: status joined the row and `Find` left it.** Craig: *"on desktop have ww/fa filter in view"*,
+*"mobile can have owned button show by default, find a player bar super wide, theres space"*. The status chips
+(`Owned`, `WW`, `FA`) sit on the row under a thumb and from `xl`; between `lg` and `xl` the sheet carries them.
+`Find` went at every width (the box searches as you type, and Enter submits it without a script), the box is
+`w-36` from `lg`, and under a thumb it grows from a 104px basis, below which the chips and Filter take a second
+line together. Re-measured in Chrome and WebKit, with the rehearsal league's two statuses and with a third (`FA`)
+cloned into the page for the real league after its draft:
+
+```
+        two chips                         three, one pressed
+320     search, then chips on line 2      the same
+360     one line, search 137              two lines
+390     one line, search 167              one line, search 110
+1024    one line: 144 + plates 614 + Filter 72 (status in the sheet); Attributes had folded since it arrived
+1440    one line: plates 675 of 592       one line: plates 612 of 592
+```
+
 ## The pitch had no ceiling, and that is what "too big on mobile" was (11 Sep 2026)
 
 Craig, with the head-to-head open on a wide phone: *"too big on mobile still /

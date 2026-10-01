@@ -184,7 +184,7 @@ export function Count({
     <>
       <Tally at="lg:hidden" total={who + figures + columns} />
       <Tally at="hidden lg:inline xl:hidden" total={status + who + figures} />
-      <Tally at="hidden xl:inline" total={status + who} />
+      <Tally at="hidden xl:inline" total={who} />
     </>
   );
 }

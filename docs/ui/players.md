@@ -52,7 +52,7 @@ headers too?"*. Where the sections below disagree with this one, this one is cur
   projection, a warning prints above the board instead.
 - **The filters are a sheet** docked over the thumb rail below `lg` (inline from `lg`), headed "Filter
   players": Position as CM's index tiles (chosen: an accent edge and a tick, the word stays white), Status
-  chips on a desk (under a thumb they are on the row), Club and **Sort by** selects side by side (`QuerySelect`, one component for every Data
+  chips between `lg` and `xl` (the row carries them at every other width), Club and **Sort by** selects side by side (`QuerySelect`, one component for every Data
   select), the stat groups (which a phone could not reach
   before: the old drawer never drew them), Per 90, then Reset and `Show N`. A tap outside closes it.
 
@@ -215,7 +215,8 @@ runs search, stat tabs and its two figure controls across a single line):
   **`Find` is gone** at every width: the box searches as you type, and Enter submits it without a script.
 - **`lg`** — the stat-group strip joins them. It is the most frequent tap, and it
   is the one that most deserves to be one.
-- **`xl`** — the `Per 90` toggle joins them. It was `2xl` while the minutes
+- **`xl`** — the status chips and the `Per 90` toggle join them (Craig, 1 Oct 2026: *"on desktop have ww/fa
+  filter in view"*); between `lg` and `xl` the sheet carries status. Per 90 was `2xl` while the minutes
   chips existed, measured: the frame is max-width capped, so 1440 has only 36px
   more than 1280 and the full set wanted 1136 of 1100. One chip fits at 1280.
   PLATFORM_NOTES carries the measured widths and the way the first guess failed —
