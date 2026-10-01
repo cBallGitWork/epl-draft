@@ -1,205 +1,159 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { fetchBootstrap, projectionIntel, roundPlayed, shotIntel, squadIntel, strengthIntel, touchIntel, xiFault } from "@epl/core";
-import type { IntelProjections, IntelShots, IntelSquads, IntelStats, IntelStrength, IntelTouches, IntelXi } from "@epl/core";
+import {
+  careerIntel,
+  depthIntel,
+  fetchBootstrap,
+  instantOf,
+  intelFreshness,
+  lineIntel,
+  matchIntel,
+  projectionIntel,
+  roundPlayed,
+  shotIntel,
+  squadIntel,
+  strengthIntel,
+  touchIntel,
+  xiFault,
+} from "@epl/core";
+import type {
+  IntelCareers,
+  IntelDepth,
+  IntelKind,
+  IntelLines,
+  IntelManifest,
+  IntelMatches,
+  IntelPressers,
+  IntelProjections,
+  IntelSetPieces,
+  IntelShots,
+  IntelSquads,
+  IntelStats,
+  IntelStrength,
+  IntelTouches,
+  IntelXi,
+} from "@epl/core";
 import { INTEL_ROOT } from "./paths";
 import { INTEL_SEASON } from "./intel";
 
-// How old the intel is, and whether it still says what the app assumes.
-//
-// **Nothing in this repo can make it fresher.** The export is written by
-// `make export-epl-draft` in `~/ai-carling-premiership`, so the least this side
-// can do is say plainly when what it is serving has gone stale — the same
-// argument `capture-status.ts` makes for the snapshots, and the same exit code,
-// so a workflow or a hook can gate on it.
-//
-// The check that matters most is the LAST one: the predicted eleven is for a
-// named round, and once that round has been played the file is not stale so much
-// as wrong. A pitch drawn from last week's team sheet under this week's heading
-// is the failure nobody notices.
+// Whether every intel file is present, parses, and is inside its kind's age limit
+// (`INTEL_AGE_LIMIT_DAYS`), and whether the predicted eleven is for a round still to come.
+// Exits 1 on any of them; the last line is the verdict the repo clock prints.
+
+/** Last season's file, `25-26` beside `26-27`: the attribute grid rates both. */
+const LAST_SEASON = INTEL_SEASON.replace(/\d+/g, (year) => String(Number(year) - 1).padStart(2, "0"));
+
+interface Check {
+  kind: IntelKind;
+  season: string;
+  /** What the file holds, in the count that would fall if the export were rotting. */
+  summary: (file: never) => string;
+}
+
+const check = <T>(kind: IntelKind, summary: (file: T) => string, season = INTEL_SEASON): Check => ({ kind, season, summary });
+
+const CHECKS: Check[] = [
+  check<IntelSquads>("squads", squadsSummary),
+  check<IntelXi>("xi", (xi) => `gameweek ${xi.manifest?.gameweek ?? "unnamed"}, ${Object.keys(xi.clubs ?? {}).length} clubs`),
+  check<IntelSetPieces>("set-pieces", (pieces) => `${Object.keys(pieces.clubs ?? {}).length} clubs`),
+  check<IntelMatches>("matches", (matches) => `${matchIntel(matches).size} fixtures`),
+  check<IntelTouches>("touches", (touches) => `${touchIntel(touches).size} players, ${touches.manifest.rows} points`),
+  check<IntelShots>("shots", shotsSummary),
+  check<IntelStrength>("strength", (strength) => `${strengthIntel(strength).size} clubs rated`),
+  check<IntelProjections>("projections", (run) => `${projectionIntel(run).size} players from GW${run.manifest.gameweek}`),
+  check<IntelDepth>("depth", (depth) => `${depthIntel(depth).size} clubs, GW${depth.manifest.gameweek}`),
+  check<IntelLines>("lines", (lines) => `${lineIntel(lines).size} players`),
+  check<IntelLines>("lines", (lines) => `${lineIntel(lines).size} players`, LAST_SEASON),
+  check<IntelCareers>("careers", (careers) => `${careerIntel(careers).size} players`),
+  check<IntelPressers>("pressers", (said) => `GW${said.manifest.gameweek}, ${said.rows.length} signals, ${said.quotes?.length ?? 0} quotes`),
+  check<IntelStats>("stats", statsSummary),
+];
 
 async function main(): Promise<void> {
-  const squadsPath = join(INTEL_ROOT, "squads", `${INTEL_SEASON}.json`);
-  const squads = read<IntelSquads>(squadsPath);
-  if (squads === null) {
-    console.error("no squads export — run `make export-epl-draft` in the sister repo.");
-    process.exitCode = 1;
-    return;
+  const now = new Date();
+  const stale: string[] = [];
+  const broken: string[] = [];
+
+  for (const { kind, season, summary } of CHECKS) {
+    const label = season === INTEL_SEASON ? kind : `${kind} ${season}`;
+    const file = read<{ manifest: IntelManifest }>(join(INTEL_ROOT, kind, `${season}.json`));
+    if (file === null) {
+      console.error(`\n✗ ${label}: absent, or will not parse.`);
+      broken.push(`${label} absent`);
+      continue;
+    }
+    console.log(`\n${label}: ${summary(file as never)}, exported ${age(file.manifest.exportedAt)}`);
+    for (const source of file.manifest.sources ?? []) console.log(`  built from ${source.path} (${age(source.mtime)})`);
+    const fresh = intelFreshness(kind, file.manifest, INTEL_SEASON, now);
+    if (fresh.stale) {
+      console.error(`  ✗ stale: past its ${fresh.limitDays}-day limit. Re-export it.`);
+      stale.push(`${label} ${fresh.ageDays ?? "?"}d`);
+    }
   }
 
-  const players = squadIntel(squads);
-  const real = [...players.values()].filter((player) => player.position !== null).length;
-  const numbers = [...players.values()].filter((player) => player.squadNumber !== null).length;
-  const cleared = squads.manifest.numberCollisions ?? 0;
+  broken.push(...(await xiFaults()));
+  const verdict = [stale.length > 0 ? `stale: ${stale.join(", ")}` : null, ...broken].filter((part) => part !== null);
+  console.log(`\nverdict: ${verdict.length === 0 ? `all ${CHECKS.length} files fresh and whole` : verdict.join("; ")}`);
+  if (verdict.length > 0) process.exitCode = 1;
+}
 
-  console.log(`squads: ${players.size} players, exported ${age(squads.manifest.exportedAt)}`);
-  console.log(`  ${real} with a real position, ${players.size - real} FPL's own guess`);
-  // Reported and not resolved: the source has genuine duplicates — three
-  // Manchester City players all claim 8 — so there is no tie-break that is not a
-  // guess, and a guess that deletes numbers a club actually wears is worse than
-  // printing what the source says. A rising count is the tell that the upstream
-  // squad numbers are getting worse.
-  console.log(
-    `  ${numbers} squad numbers` +
-      (cleared > 0 ? `, ${cleared} of them shared with a club-mate` : ""),
-  );
-  builtFrom(squads.manifest);
-
-  checkTouches();
-  checkShots();
-  checkStrength();
-  checkProjections();
-  checkStats();
-
-  // One rolling file, the latest Scout has; its round is in the manifest.
-  const xiPath = join(INTEL_ROOT, "xi", `${INTEL_SEASON}.json`);
-  const xi = read<IntelXi>(xiPath);
-  if (xi === null) {
-    console.error(`\nno predicted eleven exported, or xi/${INTEL_SEASON}.json will not parse.`);
-    process.exitCode = 1;
-    return;
-  }
+/** What is wrong with the predicted eleven beyond its age: a club that is not eleven, or a round already played. */
+async function xiFaults(): Promise<string[]> {
+  const xi = read<IntelXi>(join(INTEL_ROOT, "xi", `${INTEL_SEASON}.json`));
+  if (xi === null) return [];
   const round = xi.manifest?.gameweek;
   if (typeof round !== "number") {
-    console.error("\nthe predicted eleven names no round.");
-    process.exitCode = 1;
-    return;
+    console.error("\n✗ the predicted eleven names no gameweek.");
+    return ["xi names no gameweek"];
   }
 
-  console.log(`\nxi: gameweek ${round}, ${Object.keys(xi.clubs).length} clubs`);
-  console.log(`  ${xi.source ?? "unnamed source"} fetched ${age(xi.fetchedAt)}`);
-
-  // Every club an eleven, in the shape it says it plays. Checked here as well as
-  // in the exporter because the two run in different repos on different days.
-  const faults = Object.entries(xi.clubs)
+  // Checked here as well as in `scout-xi`, because the club page and the paper both draw it.
+  const faults = Object.entries(xi.clubs ?? {})
     .map(([club, entry]) => [club, xiFault(entry)] as const)
     .filter(([, fault]) => fault !== null);
-  if (faults.length > 0) {
-    for (const [club, fault] of faults) console.error(`  ✗ ${club}: ${fault}`);
-    process.exitCode = 1;
-  } else {
-    console.log("  every club is an eleven.");
-  }
+  for (const [club, fault] of faults) console.error(`  ✗ xi ${club}: ${fault}`);
+  const found = faults.length > 0 ? [`xi: ${faults.length} clubs are not an eleven`] : [];
 
-  // The one that makes this file worth running: is the prediction for a round
-  // whose football has already been played?
-  //
-  // **`finished`, and not `is_next`, which is what this asked until 5 Sep 2026.**
-  // FPL flips `is_next` the moment a deadline passes, so from Friday teatime it
-  // names the round AFTER the one being played — and this check called Saturday's
-  // own prediction "wrong" every single matchday, which is how a check trains the
-  // person reading it to ignore it. Verified live that day: GW3 `is_current` with
-  // ten matches in play, `is_next` already 4.
+  // `finished`, not `is_next`: FPL flips `is_next` at the deadline, mid-round.
   const played = await askFpl(round);
   if (played === null) {
-    console.log("  FPL would not say whether that round has been played, so the age is unchecked.");
+    console.log(`\nxi: FPL would not say whether gameweek ${round} has been played; unchecked.`);
   } else if (played) {
-    console.error(
-      `  ✗ this eleven is for gameweek ${round}, whose football has been played. The club ` +
-        "pages still draw it under its last-updated date, and the paper will not print it. Re-run the export.",
-    );
-    process.exitCode = 1;
+    console.error(`\n✗ xi: the eleven is for gameweek ${round}, whose football has been played. The paper will not print it.`);
+    found.push(`xi is for played GW${round}`);
   } else {
-    console.log(`  gameweek ${round} still has football to come.`);
+    console.log(`\nxi: gameweek ${round} still has football to come.`);
   }
+  return found;
 }
 
-/** The touch clouds behind the comparison heat maps.
- *
- *  **Absent is a WARNING and not a failure**, unlike the squads. The maps are one
- *  section of one screen and it says so itself when there is nothing to draw;
- *  the squad export is the football layer's real position for the whole app.
- *
- *  The count worth printing is players rather than points, because that is the
- *  one a reader can judge: 367 of about 650 is what a bridge covering the men
- *  who have actually played looks like, and a number that falls is the tell that
- *  the SofaScore join is rotting. */
-function checkTouches(): void {
-  const path = join(INTEL_ROOT, "touches", `${INTEL_SEASON}.json`);
-  const touches = read<IntelTouches>(path);
-  if (touches === null) {
-    console.log("\ntouches: no export — the comparison heat maps will be empty.");
-    return;
-  }
-  const players = touchIntel(touches);
-  const points = touches.manifest.rows;
-  console.log(
-    `\ntouches: ${players.size} players, ${points} points, ` +
-      `exported ${age(touches.manifest.exportedAt)}`,
+/** The squad numbers are reported, not resolved: three City men all claim 8, and no tie-break is not a guess. */
+function squadsSummary(squads: IntelSquads): string {
+  const players = [...squadIntel(squads).values()];
+  const real = players.filter((player) => player.position !== null).length;
+  const numbers = players.filter((player) => player.squadNumber !== null).length;
+  const shared = squads.manifest.numberCollisions ?? 0;
+  return (
+    `${players.length} players, ${real} with a real position, ${numbers} squad numbers` +
+    (shared > 0 ? ` (${shared} shared with a club-mate)` : "")
   );
-  builtFrom(touches.manifest);
 }
 
-/** The shots behind the analysis screen's map and the match screen's.
- *
- *  **It shipped without a line here**, which the export contract requires in the
- *  same commit as a file's first reader — `intel.ts` has read it since 10 Sep and
- *  this script checked squads, xi and touches only. Added when the match screen
- *  became its second reader.
- *
- *  A WARNING and not a failure, for `checkTouches`' reason. The count worth
- *  printing is FIXTURES rather than shots: a season's shot total only ever goes
- *  up, so it cannot tell you the export has stopped, and the round it reaches
- *  can. */
-function checkShots(): void {
-  const path = join(INTEL_ROOT, "shots", `${INTEL_SEASON}.json`);
-  const shots = read<IntelShots>(path);
-  if (shots === null) {
-    console.log("\nshots: no export — the shot maps will be empty.");
-    return;
-  }
+/** Fixtures rather than shots: a season's shot total only rises, so it cannot show the export stopping. */
+function shotsSummary(shots: IntelShots): string {
   const byCode = shotIntel(shots);
   const taken = [...byCode.values()].flat();
   const fixtures = new Set(taken.map((shot) => shot.fplFixtureId)).size;
-  console.log(
-    `\nshots: ${taken.length} shots, ${byCode.size} players, ${fixtures} fixtures, ` +
-      `exported ${age(shots.manifest.exportedAt)}`,
-  );
-  builtFrom(shots.manifest);
+  return `${taken.length} shots, ${byCode.size} players, ${fixtures} fixtures`;
 }
 
-/** The club ratings behind the fixture planner: a warning, like the maps, because the planner draws blank without them. */
-function checkStrength(): void {
-  const strength = read<IntelStrength>(join(INTEL_ROOT, "strength", `${INTEL_SEASON}.json`));
-  if (strength === null) {
-    console.log("\nstrength: no export — the fixture planner will be empty.");
-    return;
-  }
-  const clubs = strengthIntel(strength);
-  console.log(`\nstrength: ${clubs.size} clubs rated, exported ${age(strength.manifest.exportedAt)}`);
-  builtFrom(strength.manifest);
+/** The men who have played that the bridge cannot key, whose counts the file cannot hold. */
+function statsSummary(stats: IntelStats): string {
+  const unbridged = stats.unbridgedWithMinutes > 0 ? `, ${stats.unbridgedWithMinutes} unbridged (run \`npm run bridge\`)` : "";
+  return `${stats.players.length} men, ${stats.columns.length} columns${unbridged}`;
 }
 
-/** The projections behind the Projections tab: a warning, because the tab draws blank without them. */
-function checkProjections(): void {
-  const projections = read<IntelProjections>(join(INTEL_ROOT, "projections", `${INTEL_SEASON}.json`));
-  if (projections === null) {
-    console.log("\nprojections: no export — the Projections tab will be empty.");
-    return;
-  }
-  const players = projectionIntel(projections);
-  const run = projections.manifest.gameweek;
-  console.log(`\nprojections: ${players.size} players from GW${run}, exported ${age(projections.manifest.exportedAt)}`);
-  builtFrom(projections.manifest);
-}
-
-/** The stats league's counts, fetched here by `npm run stats`: a warning, and a count of the men
- *  who have played that the bridge cannot key, whose counts the file cannot hold. */
-function checkStats(): void {
-  const stats = read<IntelStats>(join(INTEL_ROOT, "stats", `${INTEL_SEASON}.json`));
-  if (stats === null) {
-    console.log("\nstats: no file — run `npm run stats`.");
-    return;
-  }
-  console.log(`\nstats: ${stats.players.length} men, ${stats.columns.length} columns, changed ${age(stats.manifest.exportedAt)}`);
-  if (stats.unbridgedWithMinutes > 0) {
-    console.log(`  ${stats.unbridgedWithMinutes} who have played are not in the bridge — run \`npm run bridge\`.`);
-  }
-}
-
-/** Whether FPL has finished the round this export predicts, or null when it will
- *  not answer. Not fatal: this script's other answers are still true without the
- *  network. The judgement is `roundPlayed` in core, where it is tested. */
+/** Whether FPL has finished the round, or null when it will not answer: the other checks stand without the network. */
 async function askFpl(round: number): Promise<boolean | null> {
   try {
     return roundPlayed(await fetchBootstrap(), round);
@@ -208,13 +162,7 @@ async function askFpl(round: number): Promise<boolean | null> {
   }
 }
 
-/** Each file an export was built from, and how old it is: "the export is fresh" is not "its sources are". */
-function builtFrom(manifest: { sources: { path: string; mtime: string | null }[] }): void {
-  for (const source of manifest.sources) console.log(`  built from ${source.path} (${age(source.mtime)})`);
-}
-
-/** A committed JSON file, or null when it is absent or will not parse. Both are
- *  ordinary here — the export is written by another repo and may not have run. */
+/** A committed JSON file, or null when it is absent or will not parse: saying so is this script's job. */
 function read<T>(path: string): T | null {
   try {
     return JSON.parse(readFileSync(path, "utf8")) as T;
@@ -223,11 +171,11 @@ function read<T>(path: string): T | null {
   }
 }
 
-/** "3 hours ago", or that nothing said. */
+/** "3h ago", or that nothing said. */
 function age(at: string | null | undefined): string {
   if (!at) return "at an unrecorded time";
-  const when = new Date(at).getTime();
-  if (Number.isNaN(when)) return "at an unreadable time";
+  const when = instantOf(at);
+  if (when === null) return "at an unreadable time";
   const hours = Math.floor((Date.now() - when) / 3_600_000);
   if (hours < 1) return "less than an hour ago";
   if (hours < 48) return `${hours}h ago`;

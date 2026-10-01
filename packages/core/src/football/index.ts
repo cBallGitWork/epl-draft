@@ -234,3 +234,5 @@ export type {
 export type { Opposition } from "./opposition";
 export { FIRM, pressers } from "./intel/pressers";
 export type { IntelPressers, PresserQuote, PresserSignal, PresserSpoke } from "./intel/pressers";
+export { intelFreshness } from "./intel/freshness";
+export type { IntelKind } from "./intel/freshness";
