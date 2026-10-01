@@ -7,5 +7,7 @@ import { SQUAD_COLUMNS } from "./squadColumns";
 export async function getSquadStats(): Promise<Map<string, CategoryLine[]>> {
   const squads = await getLeagueSquads();
   if (!("period" in squads)) return new Map();
-  return squadLines(squads.period.teams, intelStats, SQUAD_COLUMNS.map((column) => column.key));
+  // An undrafted league answers every team with an empty roster: no squads, not a board of dashes.
+  const held = squads.period.teams.filter((team) => team.players.length > 0);
+  return squadLines(held, intelStats, SQUAD_COLUMNS.map((column) => column.key));
 }
