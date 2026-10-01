@@ -22,6 +22,7 @@ export function deskState(input: {
   facts: DeskFacts;
   period: number;
   finished: boolean;
+  locked: boolean;
   lines: readonly PresserLine[];
   /** The round the predicted elevens are for, or null when we do not hold it. */
   xiGameweek: number | null;
@@ -33,6 +34,7 @@ export function deskState(input: {
     gameweek: snapshot.gameweek,
     period: input.period,
     finished: input.finished,
+    locked: input.locked,
     pressers: presserDays(input.lines, snapshot.gameweek),
     lineups:
       input.xiGameweek === null

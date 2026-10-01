@@ -7,6 +7,7 @@ const desk = (over: Partial<DeskState> = {}): DeskState => ({
   gameweek: 3,
   period: 3,
   finished: false,
+  locked: false,
   // An ordinary round has fixtures; an open tie files nothing of its own.
   ties: [{ homeTeamId: "x", awayTeamId: "y", state: "open" }],
   pressers: [],
@@ -21,8 +22,8 @@ const desk = (over: Partial<DeskState> = {}): DeskState => ({
 const none = () => false;
 
 describe("newsdesk", () => {
-  it("files only the six weekly kinds, whatever the desk holds", () => {
-    // Craig, 1 Oct 2026: match and draft reports, Bin XI, the Team Sheet, the elevens and Lawro; nothing else.
+  it("files only the seven weekly kinds, whatever the desk holds", () => {
+    // Craig, 1 Oct 2026: match and draft reports, Bin XI, the Team Sheet, the elevens, the sheets and Lawro; nothing else.
     const ahead = { period: 4, gameweek: 4 };
     const full = desk({
       finished: true,
@@ -38,7 +39,8 @@ describe("newsdesk", () => {
       ...newsdesk(full, none, "2026-09-29T08:15:00.000Z").map((a) => a.kind),
       ...newsdesk(full, none, "2026-10-01T17:00:00.000Z").map((a) => a.kind),
     ]);
-    expect([...kinds].sort()).toEqual(["bin-xi", "draft-report", "match-report", "predicted-xi", "predictions", "presser"]);
+    for (const a of newsdesk({ ...full, finished: false, locked: true }, none, NOW)) kinds.add(a.kind);
+    expect([...kinds].sort()).toEqual(["bin-xi", "draft-report", "match-report", "predicted-xi", "predictions", "presser", "sheets"]);
   });
 
   it("files the Bin XI on a Tuesday in London once the round is over, and on no other day", () => {
@@ -137,6 +139,15 @@ describe("newsdesk", () => {
     // Nothing in a break week, and nothing without a next round.
     expect(newsdesk(desk({ finished: true, next }), none, "2026-10-01T17:00:00.000Z").map((a) => a.kind)).not.toContain("predictions");
     expect(newsdesk(desk({ finished: true, next: null }), none, "2026-10-08T17:00:00.000Z").map((a) => a.kind)).not.toContain("predictions");
+  });
+
+  it("files the sheets once the deadline passes, until the last whistle, and never twice", () => {
+    const sheets = (over: Partial<DeskState>) => newsdesk(desk(over), none, NOW).filter((a) => a.kind === "sheets");
+    expect(sheets({ locked: false })).toEqual([]);
+    expect(sheets({ locked: true }).map((a) => a.key)).toEqual(["sheets:gw3"]);
+    expect(sheets({ locked: true, finished: true })).toEqual([]);
+    expect(sheets({ locked: true, ties: [] })).toEqual([]);
+    expect(newsdesk(desk({ locked: true }), (key) => key === "sheets:gw3", NOW).some((a) => a.kind === "sheets")).toBe(false);
   });
 
   it("files the elevens when the export holds the round ahead, and never twice", () => {

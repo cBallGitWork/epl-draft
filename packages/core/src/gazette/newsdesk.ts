@@ -4,7 +4,8 @@ import type { StoryKind } from "./story";
 import type { TieState } from "./tieState";
 
 // What is due this firing: whatever is new since its covered-key was spent, so a re-fired cron files nothing.
-// The paper files six weekly kinds (Craig, 1 Oct 2026): match and draft reports, Bin XI, the Team Sheet, the elevens and Lawro.
+// The paper files seven weekly kinds (Craig, 1 Oct 2026): match and draft reports, Bin XI, the Team Sheet, the elevens,
+// the draft sheets at the deadline, and Lawro.
 
 export interface Assignment {
   kind: StoryKind;
@@ -34,6 +35,8 @@ export interface DeskState {
   period: number;
   /** The last whistle has gone. */
   finished: boolean;
+  /** The round's lineup deadline has passed, so every sheet in it is fixed and may be printed. */
+  locked: boolean;
   /** The period's pairings; none is a period the league has no fixtures in, which has no round to write up. */
   ties: readonly DeskTie[];
   /** A round-up per press-conference day, keyed by the caller; empty until the export lands. */
@@ -77,6 +80,11 @@ export function newsdesk(
   if (desk.finished && fixtured) {
     // Tuesday's Bin XI, the round's best eleven nobody has, filed before Wednesday's waivers.
     if (binXiDue(now)) want({ kind: "bin-xi", ...roundSlot("bin-xi", desk.gameweek) });
+  }
+
+  // The sheets from the deadline until the last whistle: a 12:15 lock and a 12:30 kickoff fall inside one cron's delay.
+  if (desk.locked && !desk.finished && fixtured) {
+    want({ kind: "sheets", ...roundSlot("sheets", desk.gameweek) });
   }
 
   // The Team Sheet, outside the finished and lock gates: the caller offers only days said after the last lock.

@@ -134,6 +134,7 @@ async function main(): Promise<void> {
       facts,
       period: round.period,
       finished,
+      locked,
       lines: sheet.lines,
       xiGameweek: xi === null ? null : sheet.gameweek,
       ahead: ahead === undefined ? null : { period: ahead.period, gameweek: sheet.gameweek },
