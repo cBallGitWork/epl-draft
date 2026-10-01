@@ -2,12 +2,12 @@
  "manifest": {
   "season": "26-27",
   "gameweek": null,
-  "exportedAt": "2026-09-24T09:17:57.396470+00:00",
+  "exportedAt": "2026-10-01T14:21:05.009322+00:00",
   "rows": 20,
   "sources": [
    {
     "path": "data/derived/team_strength/season=26-27/team_strength.parquet",
-    "mtime": "2026-09-24T08:39:21.839644+00:00"
+    "mtime": "2026-09-27T17:20:25.065579+00:00"
    }
   ],
   "fpl": "https://fantasy.premierleague.com/api/bootstrap-static/"
@@ -33,12 +33,12 @@
    "code": 7,
    "shortName": "AVL",
    "attack": {
-    "home": 0.9505,
-    "away": 0.9522
+    "home": 0.9363,
+    "away": 0.938
    },
    "defence": {
-    "home": 0.925,
-    "away": 0.9236
+    "home": 0.9141,
+    "away": 0.9127
    },
    "games": {
     "home": 2,
@@ -145,12 +145,12 @@
    "code": 11,
    "shortName": "EVE",
    "attack": {
-    "home": 0.9396,
-    "away": 0.9385
+    "home": 0.9678,
+    "away": 0.9667
    },
    "defence": {
-    "home": 0.9402,
-    "away": 0.937
+    "home": 0.9648,
+    "away": 0.9615
    },
    "games": {
     "home": 3,
@@ -289,12 +289,12 @@
    "code": 17,
    "shortName": "NFO",
    "attack": {
-    "home": 0.8589,
-    "away": 0.8632
+    "home": 0.873,
+    "away": 0.8773
    },
    "defence": {
-    "home": 0.964,
-    "away": 0.9627
+    "home": 0.9818,
+    "away": 0.9804
    },
    "games": {
     "home": 3,
@@ -321,12 +321,12 @@
    "code": 6,
    "shortName": "TOT",
    "attack": {
-    "home": 0.8086,
-    "away": 0.8083
+    "home": 0.7945,
+    "away": 0.7942
    },
    "defence": {
-    "home": 0.9517,
-    "away": 0.9478
+    "home": 0.935,
+    "away": 0.9312
    },
    "games": {
     "home": 3,

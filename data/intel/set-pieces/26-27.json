@@ -2,91 +2,75 @@
  "manifest": {
   "season": "26-27",
   "gameweek": null,
-  "exportedAt": "2026-09-04T18:08:10.329727+00:00",
+  "exportedAt": "2026-10-01T14:21:04.345277+00:00",
   "rows": 20,
   "sources": [
    {
     "path": "data/reference/set_piece_takers.json",
-    "mtime": "2026-09-04T16:53:58.471963+00:00"
+    "mtime": "2026-09-26T16:25:43.024002+00:00"
    }
   ],
   "fpl": "https://fantasy.premierleague.com/api/bootstrap-static/"
  },
  "source": "fpl_scout",
  "clubs": {
-  "ARS": {
+  "ARSENAL": {
    "penalties": [
     {
      "code": 223340,
-     "share": 0.5333
+     "share": 0.641
     },
     {
      "code": 224117,
-     "share": 0.2667
+     "share": 0.2564
     },
     {
      "code": 184029,
-     "share": 0.1333
-    },
-    {
-     "code": 208706,
-     "share": 0.0667
+     "share": 0.1026
     }
    ],
    "freeKicks": [
     {
      "code": 204480,
-     "share": 0.5333
+     "share": 0.6158
     },
     {
      "code": 223340,
-     "share": 0.2667
+     "share": 0.2463
     },
     {
      "code": 232413,
-     "share": 0.1333
+     "share": 0.0985
     },
     {
      "code": 184029,
-     "share": 0.0667
+     "share": 0.0394
     }
    ],
    "corners": [
     {
      "code": 204480,
-     "share": 0.5079
+     "share": 0.6158
     },
     {
      "code": 223340,
-     "share": 0.254
+     "share": 0.2463
     },
     {
      "code": 439509,
-     "share": 0.127
-    },
-    {
-     "code": 184029,
-     "share": 0.0635
-    },
-    {
-     "code": 208706,
-     "share": 0.0317
+     "share": 0.0985
     },
     {
      "code": 248857,
-     "share": 0.0159
+     "share": 0.0394
     }
    ]
   },
-  "AVL": {
+  "ASTON VILLA": {
    "penalties": [
     {
      "code": 195546,
-     "share": 0.6667
-    },
-    {
-     "code": 178301,
-     "share": 0.3333
+     "share": 1.0
     }
    ],
    "freeKicks": [
@@ -97,876 +81,778 @@
    ],
    "corners": [
     {
+     "code": 88894,
+     "share": 0.6158
+    },
+    {
+     "code": 195546,
+     "share": 0.2463
+    },
+    {
      "code": 199796,
-     "share": 0.5333
+     "share": 0.0985
     },
     {
      "code": 122806,
-     "share": 0.2667
-    },
-    {
-     "code": 195546,
-     "share": 0.1333
-    },
-    {
-     "code": 88894,
-     "share": 0.0667
+     "share": 0.0394
     }
    ]
   },
-  "BOU": {
+  "BOURNEMOUTH": {
    "penalties": [
     {
-     "code": 560262,
-     "share": 0.5714
+     "code": 222683,
+     "share": 0.641
     },
     {
-     "code": 222683,
-     "share": 0.2857
+     "code": 560262,
+     "share": 0.2564
     },
     {
      "code": 201658,
-     "share": 0.1429
+     "share": 0.1026
     }
    ],
    "freeKicks": [
     {
      "code": 201658,
-     "share": 0.5333
+     "share": 0.6158
     },
     {
      "code": 222683,
-     "share": 0.2667
+     "share": 0.2463
     },
     {
      "code": 111317,
-     "share": 0.1333
+     "share": 0.0985
     },
     {
      "code": 503139,
-     "share": 0.0667
+     "share": 0.0394
     }
    ],
    "corners": [
     {
      "code": 201658,
-     "share": 0.5079
+     "share": 0.6062
     },
     {
      "code": 503139,
-     "share": 0.254
+     "share": 0.2425
     },
     {
-     "code": 222683,
-     "share": 0.127
+     "code": 494521,
+     "share": 0.097
     },
     {
      "code": 111317,
-     "share": 0.0635
-    },
-    {
-     "code": 155408,
-     "share": 0.0317
+     "share": 0.0388
     },
     {
      "code": 158499,
-     "share": 0.0159
+     "share": 0.0155
     }
    ]
   },
-  "BRE": {
+  "BRENTFORD": {
    "penalties": [
     {
      "code": 502500,
-     "share": 0.5714
+     "share": 0.6158
     },
     {
      "code": 513418,
-     "share": 0.2857
+     "share": 0.2463
+    },
+    {
+     "code": 244858,
+     "share": 0.0985
     },
     {
      "code": 207283,
-     "share": 0.1429
+     "share": 0.0394
     }
    ],
    "freeKicks": [
     {
-     "code": 249231,
-     "share": 0.5714
+     "code": 207283,
+     "share": 0.641
     },
     {
-     "code": 207283,
-     "share": 0.2857
+     "code": 249231,
+     "share": 0.2564
     },
     {
      "code": 440089,
-     "share": 0.1429
+     "share": 0.1026
     }
    ],
    "corners": [
     {
      "code": 207283,
-     "share": 0.5333
-    },
-    {
-     "code": 533463,
-     "share": 0.2667
-    },
-    {
-     "code": 440089,
-     "share": 0.1333
+     "share": 0.641
     },
     {
      "code": 204580,
-     "share": 0.0667
+     "share": 0.2564
+    },
+    {
+     "code": 440089,
+     "share": 0.1026
     }
    ]
   },
-  "BHA": {
+  "BRIGHTON AND HOVE ALBION": {
    "penalties": [
     {
      "code": 60307,
-     "share": 0.5714
-    },
-    {
-     "code": 538007,
-     "share": 0.2857
+     "share": 0.7143
     },
     {
      "code": 219249,
-     "share": 0.1429
+     "share": 0.2857
     }
    ],
    "freeKicks": [
     {
-     "code": 60307,
-     "share": 0.5161
-    },
-    {
-     "code": 509416,
-     "share": 0.2581
+     "code": 465730,
+     "share": 0.641
     },
     {
      "code": 83299,
-     "share": 0.129
-    },
-    {
-     "code": 465730,
-     "share": 0.0645
+     "share": 0.2564
     },
     {
      "code": 514254,
-     "share": 0.0323
+     "share": 0.1026
     }
    ],
    "corners": [
     {
      "code": 60307,
-     "share": 0.5161
+     "share": 0.641
     },
     {
      "code": 465730,
-     "share": 0.2581
-    },
-    {
-     "code": 231416,
-     "share": 0.129
-    },
-    {
-     "code": 509416,
-     "share": 0.0645
+     "share": 0.2564
     },
     {
      "code": 592031,
-     "share": 0.0323
+     "share": 0.1026
     }
    ]
   },
-  "CHE": {
+  "CHELSEA": {
    "penalties": [
     {
      "code": 244851,
-     "share": 0.6667
+     "share": 0.7143
     },
     {
      "code": 624773,
-     "share": 0.3333
+     "share": 0.2857
     }
    ],
    "freeKicks": [
     {
      "code": 225796,
-     "share": 0.5714
+     "share": 0.641
     },
     {
      "code": 244851,
-     "share": 0.2857
+     "share": 0.2564
     },
     {
      "code": 247632,
-     "share": 0.1429
+     "share": 0.1026
     }
    ],
    "corners": [
     {
-     "code": 225796,
-     "share": 0.5333
+     "code": 247632,
+     "share": 0.6025
     },
     {
-     "code": 247632,
-     "share": 0.2667
+     "code": 225796,
+     "share": 0.241
+    },
+    {
+     "code": 244851,
+     "share": 0.0964
+    },
+    {
+     "code": 624773,
+     "share": 0.0386
     },
     {
      "code": 244850,
-     "share": 0.1333
+     "share": 0.0154
     },
     {
-     "code": 624773,
-     "share": 0.0667
+     "code": 482609,
+     "share": 0.0062
     }
    ]
   },
-  "COV": {
+  "COVENTRY CITY": {
    "penalties": [
     {
      "code": 176412,
-     "share": 0.5161
+     "share": 0.6158
     },
     {
      "code": 226965,
-     "share": 0.2581
-    },
-    {
-     "code": 168144,
-     "share": 0.129
+     "share": 0.2463
     },
     {
      "code": 230730,
-     "share": 0.0645
+     "share": 0.0985
     },
     {
-     "code": 210156,
-     "share": 0.0323
+     "code": 168144,
+     "share": 0.0394
     }
    ],
    "freeKicks": [
     {
-     "code": 480457,
-     "share": 0.6667
+     "code": 226965,
+     "share": 0.641
     },
     {
-     "code": 226965,
-     "share": 0.3333
+     "code": 230730,
+     "share": 0.2564
+    },
+    {
+     "code": 451284,
+     "share": 0.1026
     }
    ],
    "corners": [
     {
      "code": 168144,
-     "share": 0.5333
+     "share": 0.641
     },
     {
      "code": 226965,
-     "share": 0.2667
-    },
-    {
-     "code": 196100,
-     "share": 0.1333
+     "share": 0.2564
     },
     {
      "code": 480457,
-     "share": 0.0667
+     "share": 0.1026
     }
    ]
   },
-  "CRY": {
+  "CRYSTAL PALACE": {
    "penalties": [
     {
      "code": 231747,
-     "share": 0.5714
+     "share": 0.641
     },
     {
      "code": 232185,
-     "share": 0.2857
+     "share": 0.2564
     },
     {
      "code": 489706,
-     "share": 0.1429
+     "share": 0.1026
     }
    ],
    "freeKicks": [
     {
      "code": 488024,
-     "share": 0.6667
+     "share": 0.7143
     },
     {
      "code": 489706,
-     "share": 0.3333
+     "share": 0.2857
     }
    ],
    "corners": [
     {
      "code": 488024,
-     "share": 0.5333
+     "share": 0.6062
     },
     {
      "code": 496221,
-     "share": 0.2667
-    },
-    {
-     "code": 209400,
-     "share": 0.1333
+     "share": 0.2425
     },
     {
      "code": 108413,
-     "share": 0.0667
+     "share": 0.097
+    },
+    {
+     "code": 209400,
+     "share": 0.0388
+    },
+    {
+     "code": 433154,
+     "share": 0.0155
     }
    ]
   },
-  "EVE": {
+  "EVERTON": {
    "penalties": [
     {
-     "code": 586309,
-     "share": 0.5714
-    },
-    {
      "code": 232928,
-     "share": 0.2857
+     "share": 0.7143
     },
     {
-     "code": 486385,
-     "share": 0.1429
+     "code": 586309,
+     "share": 0.2857
     }
    ],
    "freeKicks": [
     {
      "code": 232928,
-     "share": 1.0
-    }
-   ],
-   "corners": [
-    {
-     "code": 232928,
-     "share": 0.5714
+     "share": 0.7143
     },
     {
      "code": 215413,
      "share": 0.2857
+    }
+   ],
+   "corners": [
+    {
+     "code": 232928,
+     "share": 0.6158
+    },
+    {
+     "code": 215413,
+     "share": 0.2463
     },
     {
      "code": 244860,
-     "share": 0.1429
+     "share": 0.0985
+    },
+    {
+     "code": 496661,
+     "share": 0.0394
     }
    ]
   },
-  "FUL": {
+  "FULHAM": {
    "penalties": [
     {
-     "code": 551466,
-     "share": 0.5714
-    },
-    {
-     "code": 169528,
-     "share": 0.2857
+     "code": 244042,
+     "share": 0.641
     },
     {
      "code": 153133,
-     "share": 0.1429
+     "share": 0.2564
+    },
+    {
+     "code": 169528,
+     "share": 0.1026
     }
    ],
    "freeKicks": [
     {
-     "code": 153133,
+     "code": 560552,
      "share": 1.0
     }
    ],
    "corners": [
     {
      "code": 153133,
-     "share": 0.5714
+     "share": 0.641
     },
     {
      "code": 477555,
-     "share": 0.2857
+     "share": 0.2564
     },
     {
      "code": 560552,
-     "share": 0.1429
+     "share": 0.1026
     }
    ]
   },
-  "HUL": {
+  "HULL CITY": {
    "penalties": [
     {
      "code": 169432,
      "share": 1.0
     }
    ],
-   "freeKicks": [
-    {
-     "code": 232351,
-     "share": 0.6667
-    },
-    {
-     "code": 540324,
-     "share": 0.3333
-    }
-   ],
    "corners": [
     {
-     "code": 232351,
-     "share": 0.5714
-    },
-    {
      "code": 243413,
-     "share": 0.2857
+     "share": 0.641
     },
     {
      "code": 540324,
-     "share": 0.1429
+     "share": 0.2564
+    },
+    {
+     "code": 232351,
+     "share": 0.1026
     }
    ]
   },
-  "IPS": {
+  "IPSWICH TOWN": {
    "penalties": [
     {
      "code": 443261,
-     "share": 0.5714
+     "share": 0.641
     },
     {
-     "code": 543968,
-     "share": 0.2857
-    },
-    {
-     "code": 481624,
-     "share": 0.1429
+     "code": 222625,
+     "share": 0.1026
     }
    ],
    "freeKicks": [
     {
      "code": 501390,
-     "share": 0.5714
-    },
-    {
-     "code": 455084,
-     "share": 0.2857
-    },
-    {
-     "code": 443261,
-     "share": 0.1429
+     "share": 1.0
     }
    ],
    "corners": [
     {
-     "code": 501390,
-     "share": 0.5161
-    },
-    {
-     "code": 455084,
-     "share": 0.2581
-    },
-    {
-     "code": 443261,
-     "share": 0.129
-    },
-    {
      "code": 212314,
-     "share": 0.0645
+     "share": 0.641
     },
     {
-     "code": 481624,
-     "share": 0.0323
+     "code": 501390,
+     "share": 0.2564
+    },
+    {
+     "code": 531442,
+     "share": 0.1026
     }
    ]
   },
-  "LEE": {
+  "LEEDS UNITED": {
    "penalties": [
     {
      "code": 177815,
-     "share": 0.5714
+     "share": 0.7143
     },
     {
      "code": 174594,
      "share": 0.2857
-    },
-    {
-     "code": 235826,
-     "share": 0.1429
     }
    ],
    "freeKicks": [
     {
      "code": 466525,
-     "share": 0.5714
-    },
-    {
-     "code": 180135,
-     "share": 0.2857
-    },
-    {
-     "code": 427637,
-     "share": 0.1429
-    }
-   ],
-   "corners": [
-    {
-     "code": 466525,
-     "share": 0.5333
+     "share": 0.641
     },
     {
      "code": 153682,
-     "share": 0.2667
+     "share": 0.2564
     },
     {
      "code": 180135,
-     "share": 0.1333
+     "share": 0.1026
+    }
+   ],
+   "corners": [
+    {
+     "code": 466525,
+     "share": 0.641
     },
     {
-     "code": 248056,
-     "share": 0.0667
+     "code": 153682,
+     "share": 0.2564
+    },
+    {
+     "code": 180135,
+     "share": 0.1026
     }
    ]
   },
-  "LIV": {
+  "LIVERPOOL": {
    "penalties": [
     {
      "code": 424876,
-     "share": 0.5161
+     "share": 0.6158
     },
     {
      "code": 219168,
-     "share": 0.2581
+     "share": 0.2463
     },
     {
      "code": 243298,
-     "share": 0.129
-    },
-    {
-     "code": 494595,
-     "share": 0.0645
+     "share": 0.0985
     },
     {
      "code": 243016,
-     "share": 0.0323
+     "share": 0.0394
     }
    ],
    "freeKicks": [
     {
      "code": 424876,
-     "share": 0.6667
+     "share": 0.7143
     },
     {
      "code": 494595,
-     "share": 0.3333
+     "share": 0.2857
     }
    ],
    "corners": [
     {
      "code": 424876,
-     "share": 0.5714
+     "share": 0.641
     },
     {
      "code": 243298,
-     "share": 0.2857
+     "share": 0.2564
     },
     {
      "code": 494595,
-     "share": 0.1429
+     "share": 0.1026
     }
    ]
   },
-  "MCI": {
+  "MANCHESTER CITY": {
    "penalties": [
     {
      "code": 223094,
-     "share": 0.5333
-    },
-    {
-     "code": 437730,
-     "share": 0.2667
+     "share": 0.641
     },
     {
      "code": 248875,
-     "share": 0.1333
+     "share": 0.2564
     },
     {
      "code": 465351,
-     "share": 0.0667
+     "share": 0.1026
     }
    ],
    "freeKicks": [
     {
      "code": 466052,
-     "share": 0.6667
+     "share": 0.7143
     },
     {
-     "code": 209244,
-     "share": 0.3333
+     "code": 437730,
+     "share": 0.2857
     }
    ],
    "corners": [
     {
+     "code": 209244,
+     "share": 0.641
+    },
+    {
      "code": 466052,
-     "share": 0.5714
+     "share": 0.2564
     },
     {
      "code": 215379,
-     "share": 0.2857
-    },
-    {
-     "code": 209244,
-     "share": 0.1429
+     "share": 0.1026
     }
    ]
   },
-  "MUN": {
+  "MANCHESTER UNITED": {
    "penalties": [
     {
      "code": 141746,
-     "share": 0.5714
-    },
-    {
-     "code": 446008,
-     "share": 0.2857
-    },
-    {
-     "code": 166989,
-     "share": 0.1429
+     "share": 1.0
     }
    ],
    "freeKicks": [
     {
      "code": 141746,
-     "share": 0.5333
+     "share": 0.641
     },
     {
      "code": 446008,
-     "share": 0.2667
+     "share": 0.2564
     },
     {
      "code": 176297,
-     "share": 0.1333
-    },
-    {
-     "code": 184341,
-     "share": 0.0667
+     "share": 0.1026
     }
    ],
    "corners": [
     {
      "code": 141746,
-     "share": 0.5333
+     "share": 0.641
     },
     {
      "code": 446008,
-     "share": 0.2667
-    },
-    {
-     "code": 106760,
-     "share": 0.1333
+     "share": 0.2564
     },
     {
      "code": 493250,
-     "share": 0.0667
+     "share": 0.1026
     }
    ]
   },
-  "NEW": {
+  "NEWCASTLE UNITED": {
    "penalties": [
     {
-     "code": 470313,
-     "share": 0.5714
-    },
-    {
-     "code": 538207,
-     "share": 0.2857
-    },
-    {
      "code": 216646,
-     "share": 0.1429
+     "share": 1.0
     }
    ],
    "freeKicks": [
     {
      "code": 487838,
-     "share": 0.6667
+     "share": 0.641
+    },
+    {
+     "code": 538207,
+     "share": 0.2564
     },
     {
      "code": 119471,
-     "share": 0.3333
+     "share": 0.1026
     }
    ],
    "corners": [
     {
      "code": 487838,
-     "share": 0.5161
-    },
-    {
-     "code": 114243,
-     "share": 0.2581
-    },
-    {
-     "code": 547719,
-     "share": 0.129
+     "share": 0.7143
     },
     {
      "code": 449434,
-     "share": 0.0645
-    },
-    {
-     "code": 201666,
-     "share": 0.0323
+     "share": 0.2857
     }
    ]
   },
-  "NFO": {
+  "NOTTINGHAM FOREST": {
    "penalties": [
     {
-     "code": 222531,
-     "share": 0.5333
-    },
-    {
      "code": 60689,
-     "share": 0.2667
+     "share": 0.6158
     },
     {
-     "code": 463034,
-     "share": 0.1333
+     "code": 222531,
+     "share": 0.2463
     },
     {
      "code": 482973,
-     "share": 0.0667
+     "share": 0.0985
+    },
+    {
+     "code": 432714,
+     "share": 0.0394
     }
    ],
    "freeKicks": [
     {
      "code": 222531,
-     "share": 0.5333
-    },
-    {
-     "code": 215136,
-     "share": 0.2667
+     "share": 0.7143
     },
     {
      "code": 575476,
-     "share": 0.1333
-    },
-    {
-     "code": 209046,
-     "share": 0.0667
+     "share": 0.2857
     }
    ],
    "corners": [
     {
      "code": 432714,
-     "share": 0.5714
+     "share": 0.6158
     },
     {
      "code": 215136,
-     "share": 0.2857
+     "share": 0.2463
     },
     {
-     "code": 204561,
-     "share": 0.1429
+     "code": 222531,
+     "share": 0.0985
+    },
+    {
+     "code": 456512,
+     "share": 0.0394
     }
    ]
   },
-  "TOT": {
+  "TOTTENHAM HOTSPUR": {
    "penalties": [
     {
      "code": 154566,
-     "share": 0.5161
-    },
-    {
-     "code": 438234,
-     "share": 0.2581
+     "share": 0.6158
     },
     {
      "code": 460842,
-     "share": 0.129
+     "share": 0.2463
     },
     {
      "code": 493362,
-     "share": 0.0645
+     "share": 0.0985
     },
     {
      "code": 212319,
-     "share": 0.0323
+     "share": 0.0394
     }
    ],
    "freeKicks": [
     {
      "code": 441164,
-     "share": 0.5161
+     "share": 0.6158
     },
     {
      "code": 493362,
-     "share": 0.2581
+     "share": 0.2463
     },
     {
      "code": 460842,
-     "share": 0.129
+     "share": 0.0985
     },
     {
      "code": 511499,
-     "share": 0.0645
-    },
-    {
-     "code": 432422,
-     "share": 0.0323
+     "share": 0.0394
     }
    ],
    "corners": [
     {
-     "code": 122798,
-     "share": 0.5714
+     "code": 511499,
+     "share": 0.6062
     },
     {
      "code": 551226,
-     "share": 0.2857
+     "share": 0.2425
     },
     {
      "code": 441164,
-     "share": 0.1429
+     "share": 0.097
+    },
+    {
+     "code": 122798,
+     "share": 0.0388
+    },
+    {
+     "code": 460842,
+     "share": 0.0155
     }
    ]
   },
-  "SUN": {
+  "SUNDERLAND": {
    "penalties": [
     {
      "code": 547027,
-     "share": 0.6667
+     "share": 0.7143
     },
     {
      "code": 484420,
-     "share": 0.3333
+     "share": 0.2857
     }
    ],
    "freeKicks": [
     {
      "code": 84450,
-     "share": 0.5714
+     "share": 0.2564
     },
     {
      "code": 484420,
-     "share": 0.2857
-    },
-    {
-     "code": 536661,
-     "share": 0.1429
+     "share": 0.1026
     }
    ],
    "corners": [
     {
-     "code": 484420,
-     "share": 0.5714
-    },
-    {
      "code": 84450,
-     "share": 0.2857
+     "share": 0.641
     },
     {
      "code": 487676,
-     "share": 0.1429
+     "share": 0.2564
+    },
+    {
+     "code": 484420,
+     "share": 0.1026
     }
    ]
   }

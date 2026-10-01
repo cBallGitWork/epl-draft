@@ -2,12 +2,12 @@
  "manifest": {
   "season": "26-27",
   "gameweek": null,
-  "exportedAt": "2026-09-04T18:08:10.325766+00:00",
-  "rows": 651,
+  "exportedAt": "2026-10-01T14:21:04.341083+00:00",
+  "rows": 666,
   "sources": [
    {
     "path": "data/derived/team_squad/season=26-27/team_squad.parquet",
-    "mtime": "2026-09-04T16:53:58.418250+00:00"
+    "mtime": "2026-09-27T06:45:06.114589+00:00"
    }
   ],
   "fpl": "https://fantasy.premierleague.com/api/bootstrap-static/",
@@ -31,7 +31,7 @@
    "code": 154561,
    "clubCode": "ARS",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -44,7 +44,7 @@
    "code": 184029,
    "clubCode": "ARS",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -72,7 +72,7 @@
     "CM",
     "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 8,
    "status": "available",
    "expectedReturnGw": null
@@ -89,22 +89,26 @@
     "RM",
     "RWB"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 12,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 6
   },
   {
    "code": 199798,
    "clubCode": "ARS",
-   "position": "RCB",
-   "positionSource": "identity_primary_role",
+   "position": "CB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
-   "canCover": [],
-   "depthTier": 3,
+   "canCover": [
+    "DM",
+    "LB",
+    "RB"
+   ],
+   "depthTier": 2,
    "squadNumber": 4,
-   "status": "doubtful",
+   "status": "available",
    "expectedReturnGw": null
   },
   {
@@ -122,24 +126,23 @@
    ],
    "depthTier": 0,
    "squadNumber": 24,
-   "status": "injured",
+   "status": "left_club",
    "expectedReturnGw": null
   },
   {
    "code": 204480,
    "clubCode": "ARS",
-   "position": "CM",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "CM",
+   "position": "DM",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "DM",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
-    "CAM",
-    "DM"
+    "CB",
+    "CM"
    ],
    "depthTier": 1,
    "squadNumber": 41,
-   "status": "available",
+   "status": "doubtful",
    "expectedReturnGw": null
   },
   {
@@ -161,47 +164,43 @@
   {
    "code": 208706,
    "clubCode": "ARS",
-   "position": "CM",
-   "positionSource": "identity_primary_role",
-   "line": "CM",
-   "secondaryPositions": [
-    "DM",
-    "RAM"
-   ],
+   "position": "DM",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "DM",
+   "secondaryPositions": [],
    "canCover": [
-    "AM",
-    "CAM",
-    "DM",
-    "RAM"
+    "CB",
+    "CM"
    ],
-   "depthTier": 0,
+   "depthTier": 3,
    "squadNumber": 39,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": 6
   },
   {
    "code": 219847,
    "clubCode": "ARS",
-   "position": "CF",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "position": "ST",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "CF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "CF"
+   ],
    "canCover": [
-    "LW",
-    "RW",
-    "SS",
-    "ST"
+    "CF",
+    "CM",
+    "SS"
    ],
    "depthTier": 1,
    "squadNumber": 29,
-   "status": "available",
+   "status": "doubtful",
    "expectedReturnGw": null
   },
   {
    "code": 223340,
    "clubCode": "ARS",
    "position": "RW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -235,7 +234,7 @@
    "code": 226597,
    "clubCode": "ARS",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -293,9 +292,9 @@
   {
    "code": 437495,
    "clubCode": "ARS",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "GK",
+   "positionSource": "transfermarkt_position",
+   "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
@@ -306,14 +305,15 @@
   {
    "code": 438098,
    "clubCode": "ARS",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "AM",
+   "positionSource": "transfermarkt_position",
+   "line": "AM",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
     "CAM",
-    "DM"
+    "CM",
+    "LW",
+    "RW"
    ],
    "depthTier": 0,
    "squadNumber": null,
@@ -324,7 +324,7 @@
    "code": 439509,
    "clubCode": "ARS",
    "position": "LW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -360,7 +360,7 @@
    "code": 445122,
    "clubCode": "ARS",
    "position": "RB",
-   "positionSource": "identity_primary_role",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -368,10 +368,10 @@
     "RM",
     "RWB"
    ],
-   "depthTier": 0,
+   "depthTier": 1,
    "squadNumber": 2,
-   "status": "injured",
-   "expectedReturnGw": 7
+   "status": "available",
+   "expectedReturnGw": 6
   },
   {
    "code": 448104,
@@ -390,7 +390,7 @@
    "depthTier": 2,
    "squadNumber": 3,
    "status": "available",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 462424,
@@ -409,7 +409,7 @@
    "code": 466075,
    "clubCode": "ARS",
    "position": "LB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -433,9 +433,10 @@
    ],
    "canCover": [
     "CB",
-    "CM"
+    "CM",
+    "RB"
    ],
-   "depthTier": 1,
+   "depthTier": 4,
    "squadNumber": 4,
    "status": "available",
    "expectedReturnGw": null
@@ -443,16 +444,15 @@
   {
    "code": 499169,
    "clubCode": "ARS",
-   "position": "CM",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
-   "line": "CM",
+   "position": "DM",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "DM",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
-    "CAM",
-    "DM"
+    "CB",
+    "CM"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 49,
    "status": "available",
    "expectedReturnGw": null
@@ -478,7 +478,7 @@
    "code": 500040,
    "clubCode": "ARS",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -489,7 +489,7 @@
    "depthTier": 0,
    "squadNumber": 3,
    "status": "injured",
-   "expectedReturnGw": 3
+   "expectedReturnGw": 6
   },
   {
    "code": 616077,
@@ -512,29 +512,27 @@
    "code": 72147,
    "clubCode": "AVL",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
-   "depthTier": 2,
+   "depthTier": 0,
    "squadNumber": 1,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 6
   },
   {
    "code": 88894,
    "clubCode": "AVL",
-   "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "AM",
+   "position": "DM",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "DM",
    "secondaryPositions": [],
    "canCover": [
-    "CAM",
-    "CM",
-    "LW",
-    "RW"
+    "CB",
+    "CM"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 20,
    "status": "available",
    "expectedReturnGw": null
@@ -559,25 +557,25 @@
   {
    "code": 119090,
    "clubCode": "AVL",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CM",
+   "positionSource": "transfermarkt_position",
+   "line": "CM",
    "secondaryPositions": [],
    "canCover": [
     "AM",
     "CAM",
     "DM"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": null,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 6
   },
   {
    "code": 122806,
    "clubCode": "AVL",
    "position": "RW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -594,12 +592,16 @@
   {
    "code": 149484,
    "clubCode": "AVL",
-   "position": "LCB",
-   "positionSource": "identity_primary_role",
+   "position": "CB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
-   "canCover": [],
-   "depthTier": 1,
+   "canCover": [
+    "DM",
+    "LB",
+    "RB"
+   ],
+   "depthTier": 2,
    "squadNumber": 5,
    "status": "available",
    "expectedReturnGw": null
@@ -615,10 +617,10 @@
     "CF",
     "SS"
    ],
-   "depthTier": 0,
+   "depthTier": 2,
    "squadNumber": 9,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 178301,
@@ -640,7 +642,7 @@
    "code": 184667,
    "clubCode": "AVL",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -657,7 +659,7 @@
    "code": 195546,
    "clubCode": "AVL",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -675,7 +677,24 @@
    "code": 199796,
    "clubCode": "AVL",
    "position": "RB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "FB",
+   "secondaryPositions": [],
+   "canCover": [
+    "RCB",
+    "RM",
+    "RWB"
+   ],
+   "depthTier": 2,
+   "squadNumber": 2,
+   "status": "available",
+   "expectedReturnGw": 6
+  },
+  {
+   "code": 214590,
+   "clubCode": "AVL",
+   "position": "RB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -684,23 +703,6 @@
     "RWB"
    ],
    "depthTier": 1,
-   "squadNumber": 2,
-   "status": "available",
-   "expectedReturnGw": null
-  },
-  {
-   "code": 214590,
-   "clubCode": "AVL",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
-   "secondaryPositions": [],
-   "canCover": [
-    "DM",
-    "LB",
-    "RB"
-   ],
-   "depthTier": 2,
    "squadNumber": 29,
    "status": "available",
    "expectedReturnGw": null
@@ -721,13 +723,13 @@
    "depthTier": 0,
    "squadNumber": 31,
    "status": "left_club",
-   "expectedReturnGw": 3
+   "expectedReturnGw": 6
   },
   {
    "code": 226944,
    "clubCode": "AVL",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
@@ -743,7 +745,7 @@
    "code": 244954,
    "clubCode": "AVL",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -751,10 +753,10 @@
     "LB",
     "RB"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 4,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 6
   },
   {
    "code": 245719,
@@ -768,7 +770,7 @@
     "LB",
     "RB"
    ],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -777,7 +779,7 @@
    "code": 433969,
    "clubCode": "AVL",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -790,7 +792,7 @@
    "code": 441302,
    "clubCode": "AVL",
    "position": "LB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -798,10 +800,10 @@
     "LM",
     "LWB"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 22,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 9
   },
   {
    "code": 448089,
@@ -814,10 +816,10 @@
     "CB",
     "CM"
    ],
-   "depthTier": 0,
+   "depthTier": 3,
    "squadNumber": 35,
-   "status": "suspended",
-   "expectedReturnGw": 5
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 449871,
@@ -833,19 +835,20 @@
    "depthTier": 0,
    "squadNumber": 24,
    "status": "injured",
-   "expectedReturnGw": 31
+   "expectedReturnGw": 32
   },
   {
    "code": 469247,
    "clubCode": "AVL",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "LW",
+   "positionSource": "transfermarkt_position",
+   "line": "WF",
    "secondaryPositions": [],
    "canCover": [
     "AM",
-    "CAM",
-    "DM"
+    "CF",
+    "LM",
+    "ST"
    ],
    "depthTier": 0,
    "squadNumber": 17,
@@ -853,18 +856,31 @@
    "expectedReturnGw": null
   },
   {
-   "code": 487992,
+   "code": 481283,
    "clubCode": "AVL",
    "position": null,
    "positionSource": "fpl_element_type",
    "line": null,
    "secondaryPositions": [],
-   "canCover": [
-    "DM",
-    "LB",
-    "RB"
-   ],
+   "canCover": [],
    "depthTier": 2,
+   "squadNumber": null,
+   "status": "available",
+   "expectedReturnGw": null
+  },
+  {
+   "code": 487992,
+   "clubCode": "AVL",
+   "position": "LB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "FB",
+   "secondaryPositions": [],
+   "canCover": [
+    "LCB",
+    "LM",
+    "LWB"
+   ],
+   "depthTier": 1,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -901,7 +917,7 @@
     "CM",
     "RB"
    ],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": 26,
    "status": "available",
    "expectedReturnGw": null
@@ -909,15 +925,15 @@
   {
    "code": 517052,
    "clubCode": "AVL",
-   "position": "CF",
-   "positionSource": "understat_pl",
+   "position": "ST",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "CF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "CF"
+   ],
    "canCover": [
-    "LW",
-    "RW",
-    "SS",
-    "ST"
+    "CF",
+    "SS"
    ],
    "depthTier": 1,
    "squadNumber": 15,
@@ -936,7 +952,7 @@
     "LB",
     "RB"
    ],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -962,7 +978,7 @@
    "code": 577285,
    "clubCode": "AVL",
    "position": "LW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -1005,7 +1021,7 @@
     "RM",
     "RWB"
    ],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": 16,
    "status": "available",
    "expectedReturnGw": null
@@ -1013,33 +1029,35 @@
   {
    "code": 614071,
    "clubCode": "AVL",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "AM",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "AM",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
     "CAM",
-    "DM"
+    "CM",
+    "LW",
+    "RW"
    ],
-   "depthTier": 0,
+   "depthTier": 2,
    "squadNumber": null,
-   "status": "injured",
-   "expectedReturnGw": 4
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 638987,
    "clubCode": "AVL",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "RW",
+   "positionSource": "understat_career",
+   "line": "WF",
    "secondaryPositions": [],
    "canCover": [
     "AM",
-    "CAM",
-    "DM"
+    "CF",
+    "RM",
+    "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -1047,16 +1065,15 @@
   {
    "code": 645618,
    "clubCode": "AVL",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "ST",
+   "positionSource": "transfermarkt_position",
+   "line": "CF",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
-    "CAM",
-    "DM"
+    "CF",
+    "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 7,
    "status": "available",
    "expectedReturnGw": null
@@ -1075,8 +1092,8 @@
    ],
    "depthTier": 1,
    "squadNumber": 47,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "doubtful",
+   "expectedReturnGw": 6
   },
   {
    "code": 690838,
@@ -1092,7 +1109,7 @@
    "depthTier": 0,
    "squadNumber": null,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 49262,
@@ -1113,7 +1130,9 @@
    "position": "DM",
    "positionSource": "understat_pl+fotmob_position_id",
    "line": "DM",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "CM"
+   ],
    "canCover": [
     "CB",
     "CM"
@@ -1127,7 +1146,7 @@
    "code": 83299,
    "clubCode": "BHA",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -1135,21 +1154,22 @@
     "LB",
     "RB"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 5,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "doubtful",
+   "expectedReturnGw": 6
   },
   {
    "code": 204120,
    "clubCode": "BHA",
-   "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "DM",
+   "position": "LB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "CB",
-    "CM"
+    "LCB",
+    "LM",
+    "LWB"
    ],
    "depthTier": 1,
    "squadNumber": 28,
@@ -1168,23 +1188,27 @@
     "CM",
     "SS"
    ],
-   "depthTier": 0,
+   "depthTier": 1,
    "squadNumber": 33,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 222694,
    "clubCode": "BHA",
-   "position": "LCB",
-   "positionSource": "identity_primary_role",
+   "position": "CB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
-   "canCover": [],
-   "depthTier": 0,
+   "canCover": [
+    "DM",
+    "LB",
+    "RB"
+   ],
+   "depthTier": 3,
    "squadNumber": 21,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "doubtful",
+   "expectedReturnGw": null
   },
   {
    "code": 223434,
@@ -1206,14 +1230,14 @@
   {
    "code": 231416,
    "clubCode": "BHA",
-   "position": "LB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "position": "RB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "LCB",
-    "LM",
-    "LWB"
+    "RCB",
+    "RM",
+    "RWB"
    ],
    "depthTier": 1,
    "squadNumber": 16,
@@ -1236,19 +1260,19 @@
    "depthTier": 0,
    "squadNumber": 22,
    "status": "injured",
-   "expectedReturnGw": 3
+   "expectedReturnGw": 6
   },
   {
    "code": 451490,
    "clubCode": "BHA",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "RB",
+   "positionSource": "transfermarkt_position",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
-    "LB",
-    "RB"
+    "RCB",
+    "RM",
+    "RWB"
    ],
    "depthTier": 2,
    "squadNumber": null,
@@ -1258,16 +1282,16 @@
   {
    "code": 454490,
    "clubCode": "BHA",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CB",
+   "positionSource": "understat_career",
+   "line": "CB",
    "secondaryPositions": [],
    "canCover": [
     "DM",
     "LB",
     "RB"
    ],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -1275,26 +1299,24 @@
   {
    "code": 463067,
    "clubCode": "BHA",
-   "position": "CF",
-   "positionSource": "understat_pl",
+   "position": "ST",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "CF",
    "secondaryPositions": [],
    "canCover": [
-    "LW",
-    "RW",
-    "SS",
-    "ST"
+    "CF",
+    "SS"
    ],
-   "depthTier": 0,
+   "depthTier": 2,
    "squadNumber": 24,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": 6
   },
   {
    "code": 465730,
    "clubCode": "BHA",
    "position": "LW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -1312,10 +1334,11 @@
    "code": 467779,
    "clubCode": "BHA",
    "position": "RB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
+    "CM",
     "RCB",
     "RM",
     "RWB"
@@ -1323,7 +1346,7 @@
    "depthTier": 0,
    "squadNumber": 20,
    "status": "injured",
-   "expectedReturnGw": 8
+   "expectedReturnGw": 7
   },
   {
    "code": 471551,
@@ -1340,14 +1363,14 @@
    "depthTier": 0,
    "squadNumber": null,
    "status": "injured",
-   "expectedReturnGw": 4
+   "expectedReturnGw": 6
   },
   {
    "code": 487117,
    "clubCode": "BHA",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "ST",
+   "positionSource": "understat_career",
+   "line": "CF",
    "secondaryPositions": [],
    "canCover": [
     "CF",
@@ -1362,7 +1385,7 @@
    "code": 489639,
    "clubCode": "BHA",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -1375,29 +1398,29 @@
    "code": 509416,
    "clubCode": "BHA",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
     "CB",
     "CM"
    ],
-   "depthTier": 0,
+   "depthTier": 2,
    "squadNumber": 26,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 512123,
    "clubCode": "BHA",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "LB",
+   "positionSource": "transfermarkt_position",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
-    "LB",
-    "RB"
+    "LCB",
+    "LM",
+    "LWB"
    ],
    "depthTier": 2,
    "squadNumber": null,
@@ -1408,7 +1431,7 @@
    "code": 514254,
    "clubCode": "BHA",
    "position": "RW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -1443,7 +1466,7 @@
    "code": 532529,
    "clubCode": "BHA",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -1455,7 +1478,7 @@
    "depthTier": 0,
    "squadNumber": 41,
    "status": "injured",
-   "expectedReturnGw": 4
+   "expectedReturnGw": 6
   },
   {
    "code": 536916,
@@ -1473,15 +1496,15 @@
   {
    "code": 538007,
    "clubCode": "BHA",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "ST",
+   "positionSource": "transfermarkt_position",
+   "line": "CF",
    "secondaryPositions": [],
    "canCover": [
     "CF",
     "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 4,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -1519,16 +1542,17 @@
   {
    "code": 556637,
    "clubCode": "BHA",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "LW",
+   "positionSource": "transfermarkt_position",
+   "line": "WF",
    "secondaryPositions": [],
    "canCover": [
     "AM",
-    "CAM",
-    "DM"
+    "CF",
+    "LM",
+    "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 11,
    "status": "available",
    "expectedReturnGw": null
@@ -1557,16 +1581,15 @@
   {
    "code": 592984,
    "clubCode": "BHA",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "DM",
+   "positionSource": "understat_pl+fotmob_position_id",
+   "line": "DM",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
-    "CAM",
-    "DM"
+    "CB",
+    "CM"
    ],
-   "depthTier": 1,
+   "depthTier": 3,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -1603,13 +1626,13 @@
    "depthTier": 0,
    "squadNumber": 9,
    "status": "injured",
-   "expectedReturnGw": 3
+   "expectedReturnGw": 6
   },
   {
    "code": 610799,
    "clubCode": "BHA",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -1626,7 +1649,7 @@
    "code": 611695,
    "clubCode": "BHA",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -1643,16 +1666,17 @@
   {
    "code": 612855,
    "clubCode": "BHA",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "LW",
+   "positionSource": "understat_career",
+   "line": "WF",
    "secondaryPositions": [],
    "canCover": [
     "AM",
-    "CAM",
-    "DM"
+    "CF",
+    "LM",
+    "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -1660,15 +1684,15 @@
   {
    "code": 647850,
    "clubCode": "BHA",
-   "position": "CF",
-   "positionSource": "understat_pl",
+   "position": "ST",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "CF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "CF"
+   ],
    "canCover": [
-    "LW",
-    "RW",
-    "SS",
-    "ST"
+    "CF",
+    "SS"
    ],
    "depthTier": 1,
    "squadNumber": 84,
@@ -1676,7 +1700,7 @@
    "expectedReturnGw": null
   },
   {
-   "code": 700308,
+   "code": 661016,
    "clubCode": "BHA",
    "position": null,
    "positionSource": "fpl_element_type",
@@ -1693,11 +1717,29 @@
    "expectedReturnGw": null
   },
   {
+   "code": 700308,
+   "clubCode": "BHA",
+   "position": "RW",
+   "positionSource": "transfermarkt_position",
+   "line": "WF",
+   "secondaryPositions": [],
+   "canCover": [
+    "AM",
+    "CF",
+    "RM",
+    "ST"
+   ],
+   "depthTier": 0,
+   "squadNumber": null,
+   "status": "injured",
+   "expectedReturnGw": 6
+  },
+  {
    "code": 40383,
    "clubCode": "BOU",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "GK",
+   "positionSource": "transfermarkt_position",
+   "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
@@ -1709,7 +1751,7 @@
    "code": 54469,
    "clubCode": "BOU",
    "position": "RB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -1739,23 +1781,23 @@
     "RM",
     "ST"
    ],
-   "depthTier": 0,
+   "depthTier": 2,
    "squadNumber": 7,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 155408,
    "clubCode": "BOU",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
     "CB",
     "CM"
    ],
-   "depthTier": 1,
+   "depthTier": 3,
    "squadNumber": 4,
    "status": "available",
    "expectedReturnGw": null
@@ -1763,15 +1805,17 @@
   {
    "code": 158499,
    "clubCode": "BOU",
-   "position": "DM",
-   "positionSource": "identity_primary_role",
-   "line": "DM",
+   "position": "AM",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "AM",
    "secondaryPositions": [],
    "canCover": [
-    "CB",
-    "CM"
+    "CAM",
+    "CM",
+    "LW",
+    "RW"
    ],
-   "depthTier": 2,
+   "depthTier": 1,
    "squadNumber": 10,
    "status": "available",
    "expectedReturnGw": null
@@ -1797,23 +1841,23 @@
    "code": 200785,
    "clubCode": "BOU",
    "position": "DM",
-   "positionSource": "identity_primary_role",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
     "CB",
     "CM"
    ],
-   "depthTier": 0,
+   "depthTier": 2,
    "squadNumber": 4,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 201658,
    "clubCode": "BOU",
    "position": "LW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -1831,7 +1875,7 @@
    "code": 222683,
    "clubCode": "BOU",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -1840,17 +1884,17 @@
     "LW",
     "RW"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 19,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 8
   },
   {
    "code": 230650,
    "clubCode": "BOU",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "GK",
+   "positionSource": "transfermarkt_position",
+   "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
@@ -1878,32 +1922,32 @@
   {
    "code": 436893,
    "clubCode": "BOU",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "RB",
+   "positionSource": "transfermarkt_position",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
-    "LB",
-    "RB"
+    "RCB",
+    "RM",
+    "RWB"
    ],
    "depthTier": 0,
    "squadNumber": null,
    "status": "injured",
-   "expectedReturnGw": 8
+   "expectedReturnGw": 7
   },
   {
    "code": 444102,
    "clubCode": "BOU",
-   "position": "CF",
-   "positionSource": "understat_pl",
+   "position": "ST",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "CF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "CF"
+   ],
    "canCover": [
-    "LW",
-    "RW",
-    "SS",
-    "ST"
+    "CF",
+    "SS"
    ],
    "depthTier": 1,
    "squadNumber": 30,
@@ -1913,9 +1957,9 @@
   {
    "code": 444172,
    "clubCode": "BOU",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "GK",
+   "positionSource": "transfermarkt_position",
+   "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 0,
@@ -1927,7 +1971,7 @@
    "code": 457569,
    "clubCode": "BOU",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -1940,7 +1984,7 @@
    "code": 463981,
    "clubCode": "BOU",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -1957,7 +2001,7 @@
    "code": 483067,
    "clubCode": "BOU",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -1989,13 +2033,13 @@
    "depthTier": 0,
    "squadNumber": 21,
    "status": "injured",
-   "expectedReturnGw": 3
+   "expectedReturnGw": 7
   },
   {
    "code": 494521,
    "clubCode": "BOU",
    "position": "LB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -2011,14 +2055,14 @@
   {
    "code": 494928,
    "clubCode": "BOU",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "RB",
+   "positionSource": "transfermarkt_position",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
-    "LB",
-    "RB"
+    "RCB",
+    "RM",
+    "RWB"
    ],
    "depthTier": 2,
    "squadNumber": null,
@@ -2047,7 +2091,7 @@
    "code": 499604,
    "clubCode": "BOU",
    "position": "RW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -2067,7 +2111,9 @@
    "position": "DM",
    "positionSource": "understat_pl+fotmob_position_id",
    "line": "DM",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "CM"
+   ],
    "canCover": [
     "CB",
     "CM"
@@ -2080,15 +2126,15 @@
   {
    "code": 523700,
    "clubCode": "BOU",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "ST",
+   "positionSource": "transfermarkt_position",
+   "line": "CF",
    "secondaryPositions": [],
    "canCover": [
     "CF",
     "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -2116,15 +2162,15 @@
   {
    "code": 561245,
    "clubCode": "BOU",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "ST",
+   "positionSource": "understat_career",
+   "line": "CF",
    "secondaryPositions": [],
    "canCover": [
     "CF",
     "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -2157,7 +2203,7 @@
     "CB",
     "CM"
    ],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": 64,
    "status": "available",
    "expectedReturnGw": null
@@ -2173,7 +2219,7 @@
    "depthTier": 0,
    "squadNumber": 4,
    "status": "injured",
-   "expectedReturnGw": 3
+   "expectedReturnGw": 6
   },
   {
    "code": 75115,
@@ -2189,7 +2235,7 @@
     "CF",
     "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 13,
    "status": "available",
    "expectedReturnGw": null
@@ -2197,9 +2243,9 @@
   {
    "code": 183656,
    "clubCode": "BRE",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CM",
+   "positionSource": "transfermarkt_position",
+   "line": "CM",
    "secondaryPositions": [],
    "canCover": [
     "AM",
@@ -2215,7 +2261,7 @@
    "code": 191866,
    "clubCode": "BRE",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -2249,7 +2295,7 @@
    "code": 200720,
    "clubCode": "BRE",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -2262,7 +2308,7 @@
    "code": 204580,
    "clubCode": "BRE",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
@@ -2278,7 +2324,7 @@
    "code": 207283,
    "clubCode": "BRE",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -2290,7 +2336,20 @@
    "depthTier": 0,
    "squadNumber": 8,
    "status": "injured",
-   "expectedReturnGw": 5
+   "expectedReturnGw": 6
+  },
+  {
+   "code": 235448,
+   "clubCode": "BRE",
+   "position": "GK",
+   "positionSource": "transfermarkt_position",
+   "line": "GK",
+   "secondaryPositions": [],
+   "canCover": [],
+   "depthTier": 2,
+   "squadNumber": null,
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 244858,
@@ -2314,7 +2373,7 @@
    "code": 249231,
    "clubCode": "BRE",
    "position": "LB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -2331,7 +2390,7 @@
    "code": 432830,
    "clubCode": "BRE",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -2339,16 +2398,16 @@
     "LB",
     "RB"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 22,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 6
   },
   {
    "code": 440089,
    "clubCode": "BRE",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -2366,7 +2425,7 @@
    "code": 444180,
    "clubCode": "BRE",
    "position": "RW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -2395,24 +2454,19 @@
    "depthTier": 0,
    "squadNumber": 4,
    "status": "injured",
-   "expectedReturnGw": 8
+   "expectedReturnGw": 6
   },
   {
    "code": 472713,
    "clubCode": "BRE",
-   "position": "LB",
-   "positionSource": "identity_primary_role",
+   "position": "RB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
-   "secondaryPositions": [
-    "RB",
-    "CM"
-   ],
+   "secondaryPositions": [],
    "canCover": [
-    "CM",
-    "LCB",
-    "LM",
-    "LWB",
-    "RB"
+    "RCB",
+    "RM",
+    "RWB"
    ],
    "depthTier": 2,
    "squadNumber": 2,
@@ -2422,15 +2476,15 @@
   {
    "code": 502500,
    "clubCode": "BRE",
-   "position": "CF",
-   "positionSource": "understat_pl",
+   "position": "ST",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "CF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "CF"
+   ],
    "canCover": [
-    "LW",
-    "RW",
-    "SS",
-    "ST"
+    "CF",
+    "SS"
    ],
    "depthTier": 1,
    "squadNumber": 9,
@@ -2453,15 +2507,15 @@
   {
    "code": 508395,
    "clubCode": "BRE",
-   "position": "DM",
-   "positionSource": "identity_primary_role",
-   "line": "DM",
-   "secondaryPositions": [
-    "CM"
-   ],
+   "position": "AM",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "AM",
+   "secondaryPositions": [],
    "canCover": [
-    "CB",
-    "CM"
+    "CAM",
+    "CM",
+    "LW",
+    "RW"
    ],
    "depthTier": 2,
    "squadNumber": 18,
@@ -2471,9 +2525,9 @@
   {
    "code": 513086,
    "clubCode": "BRE",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "CB",
    "secondaryPositions": [],
    "canCover": [
     "DM",
@@ -2489,7 +2543,7 @@
    "code": 513418,
    "clubCode": "BRE",
    "position": "LW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -2507,14 +2561,14 @@
    "code": 513545,
    "clubCode": "BRE",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
     "CB",
     "CM"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -2523,7 +2577,7 @@
    "code": 533463,
    "clubCode": "BRE",
    "position": "RW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -2552,21 +2606,21 @@
    "depthTier": 0,
    "squadNumber": 27,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 570241,
    "clubCode": "BRE",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CB",
+   "positionSource": "transfermarkt_position",
+   "line": "CB",
    "secondaryPositions": [],
    "canCover": [
     "DM",
     "LB",
     "RB"
    ],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -2582,16 +2636,16 @@
     "CF",
     "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 87,
-   "status": "available",
+   "status": "injured",
    "expectedReturnGw": null
   },
   {
    "code": 607464,
    "clubCode": "BRE",
    "position": "RB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -2605,16 +2659,34 @@
    "expectedReturnGw": null
   },
   {
-   "code": 613804,
+   "code": 612534,
    "clubCode": "BRE",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CB",
+   "positionSource": "transfermarkt_position",
+   "line": "CB",
    "secondaryPositions": [],
    "canCover": [
     "DM",
     "LB",
     "RB"
+   ],
+   "depthTier": 4,
+   "squadNumber": null,
+   "status": "available",
+   "expectedReturnGw": null
+  },
+  {
+   "code": 613804,
+   "clubCode": "BRE",
+   "position": "LW",
+   "positionSource": "understat_career",
+   "line": "WF",
+   "secondaryPositions": [],
+   "canCover": [
+    "AM",
+    "CF",
+    "LM",
+    "ST"
    ],
    "depthTier": 2,
    "squadNumber": 12,
@@ -2622,17 +2694,36 @@
    "expectedReturnGw": null
   },
   {
+   "code": 626464,
+   "clubCode": "BRE",
+   "position": null,
+   "positionSource": "fpl_element_type",
+   "line": null,
+   "secondaryPositions": [],
+   "canCover": [
+    "AM",
+    "CAM",
+    "DM"
+   ],
+   "depthTier": 1,
+   "squadNumber": null,
+   "status": "available",
+   "expectedReturnGw": null
+  },
+  {
    "code": 50175,
    "clubCode": "CHE",
-   "position": "ST",
-   "positionSource": "identity_primary_role",
+   "position": "CF",
+   "positionSource": "understat_pl+fotmob_position_id",
    "line": "CF",
    "secondaryPositions": [],
    "canCover": [
-    "CF",
-    "SS"
+    "LW",
+    "RW",
+    "SS",
+    "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 18,
    "status": "available",
    "expectedReturnGw": null
@@ -2640,26 +2731,25 @@
   {
    "code": 56979,
    "clubCode": "CHE",
-   "position": "DM",
-   "positionSource": "identity_primary_role",
-   "line": "DM",
-   "secondaryPositions": [
-    "CM"
-   ],
+   "position": "CM",
+   "positionSource": "understat_pl+sofascore_band",
+   "line": "CM",
+   "secondaryPositions": [],
    "canCover": [
-    "CB",
-    "CM"
+    "AM",
+    "CAM",
+    "DM"
    ],
-   "depthTier": 0,
+   "depthTier": 3,
    "squadNumber": 14,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": 6
   },
   {
    "code": 98980,
    "clubCode": "CHE",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -2689,7 +2779,7 @@
    "code": 215059,
    "clubCode": "CHE",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -2701,18 +2791,21 @@
   {
    "code": 225796,
    "clubCode": "CHE",
-   "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "DM",
-   "secondaryPositions": [],
-   "canCover": [
-    "CB",
-    "CM"
+   "position": "CM",
+   "positionSource": "understat_pl+sofascore_band",
+   "line": "CM",
+   "secondaryPositions": [
+    "DM"
    ],
-   "depthTier": 2,
+   "canCover": [
+    "AM",
+    "CAM",
+    "DM"
+   ],
+   "depthTier": 1,
    "squadNumber": 24,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "doubtful",
+   "expectedReturnGw": 6
   },
   {
    "code": 242880,
@@ -2725,13 +2818,13 @@
    "depthTier": 0,
    "squadNumber": 5,
    "status": "left_club",
-   "expectedReturnGw": 5
+   "expectedReturnGw": null
   },
   {
    "code": 244850,
    "clubCode": "CHE",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -2749,7 +2842,7 @@
    "code": 244851,
    "clubCode": "CHE",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -2760,8 +2853,8 @@
    ],
    "depthTier": 1,
    "squadNumber": 80,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "doubtful",
+   "expectedReturnGw": 6
   },
   {
    "code": 247632,
@@ -2769,10 +2862,13 @@
    "position": "RWB",
    "positionSource": "understat_pl+fotmob_position_id",
    "line": "FB",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "RW"
+   ],
    "canCover": [
     "RB",
-    "RM"
+    "RM",
+    "RW"
    ],
    "depthTier": 1,
    "squadNumber": 7,
@@ -2783,7 +2879,7 @@
    "code": 437499,
    "clubCode": "CHE",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -2791,7 +2887,7 @@
     "LB",
     "RB"
    ],
-   "depthTier": 1,
+   "depthTier": 3,
    "squadNumber": 4,
    "status": "available",
    "expectedReturnGw": null
@@ -2800,24 +2896,7 @@
    "code": 444463,
    "clubCode": "CHE",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "CB",
-   "secondaryPositions": [],
-   "canCover": [
-    "DM",
-    "LB",
-    "RB"
-   ],
-   "depthTier": 2,
-   "squadNumber": 3,
-   "status": "available",
-   "expectedReturnGw": null
-  },
-  {
-   "code": 460028,
-   "clubCode": "CHE",
-   "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -2826,6 +2905,23 @@
     "RB"
    ],
    "depthTier": 1,
+   "squadNumber": 3,
+   "status": "available",
+   "expectedReturnGw": null
+  },
+  {
+   "code": 460028,
+   "clubCode": "CHE",
+   "position": "CB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
+   "line": "CB",
+   "secondaryPositions": [],
+   "canCover": [
+    "DM",
+    "LB",
+    "RB"
+   ],
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -2849,7 +2945,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 43,
-   "status": "available",
+   "status": "doubtful",
    "expectedReturnGw": null
   },
   {
@@ -2858,7 +2954,9 @@
    "position": "CF",
    "positionSource": "understat_pl+fotmob_position_id",
    "line": "CF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "ST"
+   ],
    "canCover": [
     "LW",
     "RW",
@@ -2867,21 +2965,23 @@
    ],
    "depthTier": 1,
    "squadNumber": 10,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "doubtful",
+   "expectedReturnGw": 7
   },
   {
    "code": 482609,
    "clubCode": "CHE",
-   "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "DM",
+   "position": "CM",
+   "positionSource": "understat_pl+sofascore_band",
+   "line": "CM",
    "secondaryPositions": [],
    "canCover": [
-    "CB",
-    "CM"
+    "AM",
+    "CAM",
+    "DM",
+    "RWB"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 27,
    "status": "available",
    "expectedReturnGw": null
@@ -2900,14 +3000,14 @@
    "depthTier": 0,
    "squadNumber": 25,
    "status": "injured",
-   "expectedReturnGw": 3
+   "expectedReturnGw": 6
   },
   {
    "code": 491007,
    "clubCode": "CHE",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CM",
+   "positionSource": "understat_career",
+   "line": "CM",
    "secondaryPositions": [],
    "canCover": [
     "AM",
@@ -2922,16 +3022,15 @@
   {
    "code": 498444,
    "clubCode": "CHE",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "LWB",
+   "positionSource": "understat_pl+fotmob_position_id",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
     "LB",
-    "RB"
+    "LM"
    ],
-   "depthTier": 4,
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -2955,18 +3054,18 @@
   {
    "code": 503037,
    "clubCode": "CHE",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "ST",
+   "positionSource": "transfermarkt_position",
+   "line": "CF",
    "secondaryPositions": [],
    "canCover": [
     "CF",
     "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": null,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 6
   },
   {
    "code": 508479,
@@ -2985,9 +3084,11 @@
    "code": 514356,
    "clubCode": "CHE",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "DM",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "CM"
+   ],
    "canCover": [
     "CB",
     "CM"
@@ -3000,16 +3101,16 @@
   {
    "code": 543158,
    "clubCode": "CHE",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CM",
+   "positionSource": "understat_pl+sofascore_band",
+   "line": "CM",
    "secondaryPositions": [],
    "canCover": [
     "AM",
     "CAM",
     "DM"
    ],
-   "depthTier": 1,
+   "depthTier": 3,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -3017,9 +3118,9 @@
   {
    "code": 549939,
    "clubCode": "CHE",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "GK",
+   "positionSource": "understat_career",
+   "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
@@ -3033,10 +3134,14 @@
    "position": "LWB",
    "positionSource": "understat_pl+fotmob_position_id",
    "line": "FB",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "LW"
+   ],
    "canCover": [
     "LB",
-    "LM"
+    "LM",
+    "LW",
+    "RWB"
    ],
    "depthTier": 1,
    "squadNumber": 4,
@@ -3070,13 +3175,13 @@
    "depthTier": 0,
    "squadNumber": 23,
    "status": "left_club",
-   "expectedReturnGw": 3
+   "expectedReturnGw": null
   },
   {
    "code": 577016,
    "clubCode": "CHE",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -3092,14 +3197,16 @@
   {
    "code": 593117,
    "clubCode": "CHE",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "RW",
+   "positionSource": "transfermarkt_position",
+   "line": "WF",
    "secondaryPositions": [],
    "canCover": [
     "AM",
-    "CAM",
-    "DM"
+    "CF",
+    "RM",
+    "RWB",
+    "ST"
    ],
    "depthTier": 1,
    "squadNumber": null,
@@ -3109,9 +3216,25 @@
   {
    "code": 620109,
    "clubCode": "CHE",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "RWB",
+   "positionSource": "understat_career",
+   "line": "FB",
+   "secondaryPositions": [],
+   "canCover": [
+    "RB",
+    "RM"
+   ],
+   "depthTier": 2,
+   "squadNumber": null,
+   "status": "doubtful",
+   "expectedReturnGw": 6
+  },
+  {
+   "code": 622758,
+   "clubCode": "CHE",
+   "position": "CB",
+   "positionSource": "transfermarkt_position",
+   "line": "CB",
    "secondaryPositions": [],
    "canCover": [
     "DM",
@@ -3119,26 +3242,9 @@
     "RB"
    ],
    "depthTier": 4,
-   "squadNumber": null,
-   "status": "doubtful",
-   "expectedReturnGw": null
-  },
-  {
-   "code": 622758,
-   "clubCode": "CHE",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
-   "secondaryPositions": [],
-   "canCover": [
-    "DM",
-    "LB",
-    "RB"
-   ],
-   "depthTier": 0,
    "squadNumber": 38,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 624773,
@@ -3159,11 +3265,28 @@
    "expectedReturnGw": null
   },
   {
-   "code": 79602,
-   "clubCode": "COV",
+   "code": 636846,
+   "clubCode": "CHE",
    "position": null,
    "positionSource": "fpl_element_type",
    "line": null,
+   "secondaryPositions": [],
+   "canCover": [
+    "AM",
+    "CAM",
+    "DM"
+   ],
+   "depthTier": 4,
+   "squadNumber": null,
+   "status": "available",
+   "expectedReturnGw": null
+  },
+  {
+   "code": 79602,
+   "clubCode": "COV",
+   "position": "GK",
+   "positionSource": "understat_career",
+   "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
@@ -3183,7 +3306,7 @@
     "LM",
     "LWB"
    ],
-   "depthTier": 2,
+   "depthTier": 1,
    "squadNumber": 24,
    "status": "available",
    "expectedReturnGw": null
@@ -3207,7 +3330,9 @@
    "position": "CM",
    "positionSource": "understat_pl+fotmob_position_id",
    "line": "CM",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "DM"
+   ],
    "canCover": [
     "AM",
     "CAM",
@@ -3221,14 +3346,16 @@
   {
    "code": 173878,
    "clubCode": "COV",
-   "position": "LB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "position": "LWB",
+   "positionSource": "understat_pl",
    "line": "FB",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "LW"
+   ],
    "canCover": [
-    "LCB",
+    "LB",
     "LM",
-    "LWB"
+    "LW"
    ],
    "depthTier": 1,
    "squadNumber": 3,
@@ -3254,16 +3381,17 @@
   {
    "code": 196100,
    "clubCode": "COV",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "AM",
+   "positionSource": "understat_career",
+   "line": "AM",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
     "CAM",
-    "DM"
+    "CM",
+    "LW",
+    "RW"
    ],
-   "depthTier": 4,
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -3280,7 +3408,7 @@
     "LB",
     "RB"
    ],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": 22,
    "status": "available",
    "expectedReturnGw": null
@@ -3289,19 +3417,21 @@
    "code": 210156,
    "clubCode": "COV",
    "position": "CF",
-   "positionSource": "understat_pl",
+   "positionSource": "understat_pl+fotmob_position_id",
    "line": "CF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "ST"
+   ],
    "canCover": [
     "LW",
     "RW",
     "SS",
     "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 9,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "suspended",
+   "expectedReturnGw": 7
   },
   {
    "code": 218997,
@@ -3336,7 +3466,7 @@
    "depthTier": 0,
    "squadNumber": 6,
    "status": "injured",
-   "expectedReturnGw": 4
+   "expectedReturnGw": 7
   },
   {
    "code": 226965,
@@ -3358,14 +3488,14 @@
   {
    "code": 230730,
    "clubCode": "COV",
-   "position": "LW",
+   "position": "CF",
    "positionSource": "understat_pl+fotmob_position_id",
-   "line": "WF",
+   "line": "CF",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
-    "CF",
-    "LM",
+    "LW",
+    "RW",
+    "SS",
     "ST"
    ],
    "depthTier": 1,
@@ -3376,12 +3506,16 @@
   {
    "code": 231065,
    "clubCode": "COV",
-   "position": "LCB",
-   "positionSource": "identity_primary_role",
+   "position": "CB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
-   "canCover": [],
-   "depthTier": 1,
+   "canCover": [
+    "DM",
+    "LB",
+    "RB"
+   ],
+   "depthTier": 2,
    "squadNumber": 5,
    "status": "available",
    "expectedReturnGw": null
@@ -3389,28 +3523,47 @@
   {
    "code": 241293,
    "clubCode": "COV",
-   "position": "LW",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "WF",
+   "position": "AM",
+   "positionSource": "understat_pl+tm_position",
+   "line": "AM",
+   "secondaryPositions": [],
+   "canCover": [
+    "CAM",
+    "CM",
+    "LW",
+    "RW"
+   ],
+   "depthTier": 1,
+   "squadNumber": 10,
+   "status": "available",
+   "expectedReturnGw": null
+  },
+  {
+   "code": 242893,
+   "clubCode": "COV",
+   "position": null,
+   "positionSource": "fpl_element_type",
+   "line": null,
    "secondaryPositions": [],
    "canCover": [
     "AM",
-    "CF",
-    "LM",
-    "ST"
+    "CAM",
+    "DM"
    ],
-   "depthTier": 0,
-   "squadNumber": 10,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "depthTier": 4,
+   "squadNumber": null,
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 428580,
    "clubCode": "COV",
    "position": "CM",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
+   "positionSource": "understat_pl+fotmob_position_id",
    "line": "CM",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "DM"
+   ],
    "canCover": [
     "AM",
     "CAM",
@@ -3419,7 +3572,7 @@
    "depthTier": 2,
    "squadNumber": 38,
    "status": "available",
-   "expectedReturnGw": 3
+   "expectedReturnGw": 6
   },
   {
    "code": 436761,
@@ -3450,16 +3603,16 @@
     "CAM",
     "DM"
    ],
-   "depthTier": 4,
+   "depthTier": 0,
    "squadNumber": 28,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 6
   },
   {
    "code": 451284,
    "clubCode": "COV",
    "position": "RB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -3469,14 +3622,14 @@
    ],
    "depthTier": 1,
    "squadNumber": 27,
-   "status": "available",
+   "status": "doubtful",
    "expectedReturnGw": null
   },
   {
    "code": 461102,
    "clubCode": "COV",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -3504,13 +3657,13 @@
    "depthTier": 0,
    "squadNumber": 29,
    "status": "injured",
-   "expectedReturnGw": 4
+   "expectedReturnGw": 7
   },
   {
    "code": 469272,
    "clubCode": "COV",
    "position": "RW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -3528,7 +3681,7 @@
    "code": 472739,
    "clubCode": "COV",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -3541,7 +3694,7 @@
    "code": 480457,
    "clubCode": "COV",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -3550,10 +3703,10 @@
     "LW",
     "RW"
    ],
-   "depthTier": 0,
+   "depthTier": 1,
    "squadNumber": 12,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 484389,
@@ -3608,7 +3761,7 @@
    "code": 539142,
    "clubCode": "COV",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -3616,10 +3769,10 @@
     "LB",
     "RB"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 4,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 6
   },
   {
    "code": 549653,
@@ -3656,6 +3809,23 @@
    "expectedReturnGw": null
   },
   {
+   "code": 566213,
+   "clubCode": "COV",
+   "position": "CB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "CB",
+   "secondaryPositions": [],
+   "canCover": [
+    "DM",
+    "LB",
+    "RB"
+   ],
+   "depthTier": 3,
+   "squadNumber": null,
+   "status": "available",
+   "expectedReturnGw": null
+  },
+  {
    "code": 577411,
    "clubCode": "COV",
    "position": "LB",
@@ -3675,15 +3845,17 @@
   {
    "code": 627221,
    "clubCode": "COV",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "AM",
+   "positionSource": "understat_career",
+   "line": "AM",
    "secondaryPositions": [],
    "canCover": [
-    "CF",
-    "SS"
+    "CAM",
+    "CM",
+    "LW",
+    "RW"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -3709,7 +3881,7 @@
    "code": 661888,
    "clubCode": "COV",
    "position": "CM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CM",
    "secondaryPositions": [],
    "canCover": [
@@ -3717,7 +3889,7 @@
     "CAM",
     "DM"
    ],
-   "depthTier": 1,
+   "depthTier": 3,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -3752,7 +3924,7 @@
     "CB",
     "CM"
    ],
-   "depthTier": 2,
+   "depthTier": 1,
    "squadNumber": 19,
    "status": "available",
    "expectedReturnGw": null
@@ -3761,11 +3933,11 @@
    "code": 121709,
    "clubCode": "CRY",
    "position": "GK",
-   "positionSource": "identity_primary_role",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
-   "depthTier": 2,
+   "depthTier": 1,
    "squadNumber": 40,
    "status": "available",
    "expectedReturnGw": null
@@ -3785,7 +3957,7 @@
     "CM",
     "RCB"
    ],
-   "depthTier": 2,
+   "depthTier": 1,
    "squadNumber": 8,
    "status": "available",
    "expectedReturnGw": null
@@ -3793,9 +3965,9 @@
   {
    "code": 169593,
    "clubCode": "CRY",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "GK",
+   "positionSource": "transfermarkt_position",
+   "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
@@ -3807,37 +3979,36 @@
    "code": 172649,
    "clubCode": "CRY",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 1,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 6
   },
   {
    "code": 172850,
    "clubCode": "CRY",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "LWB",
+   "positionSource": "understat_career",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
     "LB",
-    "RB"
+    "LM"
    ],
-   "depthTier": 0,
+   "depthTier": 2,
    "squadNumber": null,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 205533,
    "clubCode": "CRY",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -3846,21 +4017,23 @@
     "LW",
     "RW"
    ],
-   "depthTier": 1,
+   "depthTier": 3,
    "squadNumber": 9,
    "status": "available",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 209400,
    "clubCode": "CRY",
-   "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "DM",
+   "position": "AM",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "AM",
    "secondaryPositions": [],
    "canCover": [
-    "CB",
-    "CM"
+    "CAM",
+    "CM",
+    "LW",
+    "RW"
    ],
    "depthTier": 1,
    "squadNumber": 15,
@@ -3887,19 +4060,19 @@
   {
    "code": 220362,
    "clubCode": "CRY",
-   "position": "LCB",
-   "positionSource": "identity_primary_role",
+   "position": "CB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
-   "secondaryPositions": [
-    "RCB"
-   ],
+   "secondaryPositions": [],
    "canCover": [
-    "RCB"
+    "DM",
+    "LB",
+    "RB"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 6,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "suspended",
+   "expectedReturnGw": 8
   },
   {
    "code": 223723,
@@ -3913,9 +4086,9 @@
     "LB",
     "RB"
    ],
-   "depthTier": 2,
+   "depthTier": 3,
    "squadNumber": null,
-   "status": "available",
+   "status": "doubtful",
    "expectedReturnGw": null
   },
   {
@@ -3944,24 +4117,24 @@
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [],
-   "depthTier": 0,
+   "depthTier": 1,
    "squadNumber": 23,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": 6
   },
   {
    "code": 242313,
    "clubCode": "CRY",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "RB",
+   "positionSource": "understat_career",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
-    "LB",
-    "RB"
+    "RCB",
+    "RM",
+    "RWB"
    ],
-   "depthTier": 4,
+   "depthTier": 1,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -3972,10 +4145,13 @@
    "position": "LWB",
    "positionSource": "understat_pl+fotmob_position_id",
    "line": "FB",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "LW"
+   ],
    "canCover": [
     "LB",
-    "LM"
+    "LM",
+    "LW"
    ],
    "depthTier": 1,
    "squadNumber": 3,
@@ -3988,7 +4164,9 @@
    "position": "CF",
    "positionSource": "understat_pl+fotmob_position_id",
    "line": "CF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "ST"
+   ],
    "canCover": [
     "LW",
     "RW",
@@ -4004,7 +4182,7 @@
    "code": 427623,
    "clubCode": "CRY",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -4046,24 +4224,24 @@
     "CB",
     "CM"
    ],
-   "depthTier": 2,
+   "depthTier": 1,
    "squadNumber": 28,
    "status": "available",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 450063,
    "clubCode": "CRY",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CM",
+   "positionSource": "understat_pl",
+   "line": "CM",
    "secondaryPositions": [],
    "canCover": [
     "AM",
     "CAM",
     "DM"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -4071,18 +4249,19 @@
   {
    "code": 450542,
    "clubCode": "CRY",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "RW",
+   "positionSource": "transfermarkt_position",
+   "line": "WF",
    "secondaryPositions": [],
    "canCover": [
     "AM",
-    "CAM",
-    "DM"
+    "CF",
+    "RM",
+    "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 11,
-   "status": "available",
+   "status": "left_club",
    "expectedReturnGw": null
   },
   {
@@ -4110,7 +4289,7 @@
    "code": 488024,
    "clubCode": "CRY",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -4146,13 +4325,16 @@
   {
    "code": 496221,
    "clubCode": "CRY",
-   "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "DM",
-   "secondaryPositions": [],
+   "position": "CM",
+   "positionSource": "understat_pl+sofascore_band",
+   "line": "CM",
+   "secondaryPositions": [
+    "DM"
+   ],
    "canCover": [
-    "CB",
-    "CM"
+    "AM",
+    "CAM",
+    "DM"
    ],
    "depthTier": 1,
    "squadNumber": 20,
@@ -4163,7 +4345,7 @@
    "code": 515621,
    "clubCode": "CRY",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -4174,7 +4356,7 @@
    "depthTier": 0,
    "squadNumber": 28,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 999
   },
   {
    "code": 533646,
@@ -4188,7 +4370,7 @@
     "CAM",
     "DM"
    ],
-   "depthTier": 1,
+   "depthTier": 4,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -4205,27 +4387,28 @@
     "CAM",
     "DM"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": null,
-   "status": "available",
+   "status": "left_club",
    "expectedReturnGw": null
   },
   {
    "code": 559152,
    "clubCode": "CRY",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "RW",
+   "positionSource": "transfermarkt_position",
+   "line": "WF",
    "secondaryPositions": [],
    "canCover": [
     "AM",
-    "CAM",
-    "DM"
+    "CF",
+    "RM",
+    "ST"
    ],
-   "depthTier": 0,
+   "depthTier": 1,
    "squadNumber": null,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 570794,
@@ -4233,10 +4416,13 @@
    "position": "RWB",
    "positionSource": "understat_pl+fotmob_position_id",
    "line": "FB",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "RW"
+   ],
    "canCover": [
     "RB",
-    "RM"
+    "RM",
+    "RW"
    ],
    "depthTier": 1,
    "squadNumber": null,
@@ -4265,16 +4451,16 @@
   {
    "code": 605972,
    "clubCode": "CRY",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CB",
+   "positionSource": "understat_pl+fotmob_position_id",
+   "line": "CB",
    "secondaryPositions": [],
    "canCover": [
     "DM",
     "LB",
     "RB"
    ],
-   "depthTier": 4,
+   "depthTier": 3,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -4300,7 +4486,7 @@
    "code": 651426,
    "clubCode": "CRY",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -4308,7 +4494,7 @@
     "LB",
     "RB"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 23,
    "status": "available",
    "expectedReturnGw": null
@@ -4338,7 +4524,7 @@
    "code": 17761,
    "clubCode": "EVE",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -4368,7 +4554,7 @@
    "code": 111234,
    "clubCode": "EVE",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -4381,7 +4567,7 @@
    "code": 114283,
    "clubCode": "EVE",
    "position": "LW",
-   "positionSource": "identity_primary_role",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -4409,7 +4595,7 @@
    "depthTier": 0,
    "squadNumber": 6,
    "status": "injured",
-   "expectedReturnGw": 2
+   "expectedReturnGw": 7
   },
   {
    "code": 138001,
@@ -4427,16 +4613,16 @@
   {
    "code": 154043,
    "clubCode": "EVE",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "RB",
+   "positionSource": "understat_pl+fotmob_position_id",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
-    "LB",
-    "RB"
+    "RCB",
+    "RM",
+    "RWB"
    ],
-   "depthTier": 2,
+   "depthTier": 1,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -4445,7 +4631,7 @@
    "code": 215413,
    "clubCode": "EVE",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -4463,7 +4649,7 @@
    "code": 224967,
    "clubCode": "EVE",
    "position": "LB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -4493,33 +4679,30 @@
    "code": 232928,
    "clubCode": "EVE",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
     "CB",
     "CM"
    ],
-   "depthTier": 0,
+   "depthTier": 2,
    "squadNumber": 37,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 242898,
    "clubCode": "EVE",
-   "position": "RAM",
-   "positionSource": "identity_primary_role",
+   "position": "RW",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
-   "secondaryPositions": [
-    "LAM",
-    "RW",
-    "LW"
-   ],
+   "secondaryPositions": [],
    "canCover": [
-    "LAM",
-    "LW",
-    "RW"
+    "AM",
+    "CF",
+    "RM",
+    "ST"
    ],
    "depthTier": 1,
    "squadNumber": 20,
@@ -4554,7 +4737,7 @@
     "CB",
     "CM"
    ],
-   "depthTier": 2,
+   "depthTier": 3,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -4563,7 +4746,7 @@
    "code": 480455,
    "clubCode": "EVE",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -4608,7 +4791,7 @@
     "RM",
     "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 33,
    "status": "available",
    "expectedReturnGw": null
@@ -4616,14 +4799,14 @@
   {
    "code": 499300,
    "clubCode": "EVE",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "LB",
+   "positionSource": "transfermarkt_position",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
-    "LB",
-    "RB"
+    "LCB",
+    "LM",
+    "LWB"
    ],
    "depthTier": 0,
    "squadNumber": 39,
@@ -4671,7 +4854,7 @@
    "code": 513466,
    "clubCode": "EVE",
    "position": "RB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -4679,16 +4862,16 @@
     "RM",
     "RWB"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 34,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 6
   },
   {
    "code": 550615,
    "clubCode": "EVE",
    "position": "LW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -4705,15 +4888,15 @@
   {
    "code": 586309,
    "clubCode": "EVE",
-   "position": "CF",
-   "positionSource": "understat_pl",
+   "position": "ST",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "CF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "CF"
+   ],
    "canCover": [
-    "LW",
-    "RW",
-    "SS",
-    "ST"
+    "CF",
+    "SS"
    ],
    "depthTier": 1,
    "squadNumber": 9,
@@ -4724,7 +4907,7 @@
    "code": 609873,
    "clubCode": "EVE",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
@@ -4733,6 +4916,23 @@
    ],
    "depthTier": 1,
    "squadNumber": 45,
+   "status": "available",
+   "expectedReturnGw": null
+  },
+  {
+   "code": 629068,
+   "clubCode": "EVE",
+   "position": null,
+   "positionSource": "fpl_element_type",
+   "line": null,
+   "secondaryPositions": [],
+   "canCover": [
+    "AM",
+    "CAM",
+    "DM"
+   ],
+   "depthTier": 1,
+   "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4756,7 +4956,7 @@
    "code": 80201,
    "clubCode": "FUL",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -4782,7 +4982,7 @@
    "code": 153133,
    "clubCode": "FUL",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
@@ -4805,7 +5005,7 @@
     "CB",
     "CM"
    ],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": 6,
    "status": "available",
    "expectedReturnGw": null
@@ -4814,7 +5014,7 @@
    "code": 166477,
    "clubCode": "FUL",
    "position": "RB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -4842,13 +5042,13 @@
    "depthTier": 2,
    "squadNumber": 2,
    "status": "available",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 169528,
    "clubCode": "FUL",
    "position": "LB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -4865,7 +5065,7 @@
    "code": 174874,
    "clubCode": "FUL",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -4873,7 +5073,7 @@
     "LB",
     "RB"
    ],
-   "depthTier": 2,
+   "depthTier": 3,
    "squadNumber": 3,
    "status": "available",
    "expectedReturnGw": null
@@ -4893,20 +5093,20 @@
    "depthTier": 2,
    "squadNumber": 30,
    "status": "available",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 207189,
    "clubCode": "FUL",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
     "CB",
     "CM"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 8,
    "status": "available",
    "expectedReturnGw": null
@@ -4932,7 +5132,7 @@
    "code": 232892,
    "clubCode": "FUL",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -4956,7 +5156,7 @@
     "CF",
     "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 9,
    "status": "available",
    "expectedReturnGw": null
@@ -4965,7 +5165,7 @@
    "code": 246301,
    "clubCode": "FUL",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -4981,25 +5181,8 @@
   {
    "code": 442299,
    "clubCode": "FUL",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
-   "secondaryPositions": [],
-   "canCover": [
-    "DM",
-    "LB",
-    "RB"
-   ],
-   "depthTier": 4,
-   "squadNumber": null,
-   "status": "available",
-   "expectedReturnGw": null
-  },
-  {
-   "code": 463210,
-   "clubCode": "FUL",
    "position": "CB",
-   "positionSource": "identity_primary_role",
+   "positionSource": "understat_pl+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -5007,7 +5190,23 @@
     "LB",
     "RB"
    ],
-   "depthTier": 4,
+   "depthTier": 2,
+   "squadNumber": null,
+   "status": "available",
+   "expectedReturnGw": null
+  },
+  {
+   "code": 463210,
+   "clubCode": "FUL",
+   "position": "DM",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "DM",
+   "secondaryPositions": [],
+   "canCover": [
+    "CB",
+    "CM"
+   ],
+   "depthTier": 3,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -5016,7 +5215,7 @@
    "code": 477555,
    "clubCode": "FUL",
    "position": "RW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -5050,9 +5249,9 @@
   {
    "code": 505079,
    "clubCode": "FUL",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "GK",
+   "positionSource": "transfermarkt_position",
+   "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 0,
@@ -5063,33 +5262,32 @@
   {
    "code": 547686,
    "clubCode": "FUL",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CB",
+   "positionSource": "transfermarkt_position",
+   "line": "CB",
    "secondaryPositions": [],
    "canCover": [
     "DM",
     "LB",
     "RB"
    ],
-   "depthTier": 4,
+   "depthTier": 0,
    "squadNumber": null,
-   "status": "doubtful",
+   "status": "left_club",
    "expectedReturnGw": null
   },
   {
    "code": 551050,
    "clubCode": "FUL",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "DM",
+   "positionSource": "understat_career",
+   "line": "DM",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
-    "CAM",
-    "DM"
+    "CB",
+    "CM"
    ],
-   "depthTier": 1,
+   "depthTier": 4,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -5097,15 +5295,15 @@
   {
    "code": 551466,
    "clubCode": "FUL",
-   "position": "CF",
-   "positionSource": "understat_pl",
+   "position": "ST",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "CF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "CF"
+   ],
    "canCover": [
-    "LW",
-    "RW",
-    "SS",
-    "ST"
+    "CF",
+    "SS"
    ],
    "depthTier": 1,
    "squadNumber": null,
@@ -5134,7 +5332,7 @@
    "code": 571779,
    "clubCode": "FUL",
    "position": "LW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -5152,7 +5350,7 @@
    "code": 577725,
    "clubCode": "FUL",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -5194,7 +5392,7 @@
     "CF",
     "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 9,
    "status": "available",
    "expectedReturnGw": null
@@ -5203,7 +5401,7 @@
    "code": 101282,
    "clubCode": "HUL",
    "position": "CM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CM",
    "secondaryPositions": [],
    "canCover": [
@@ -5213,7 +5411,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 25,
-   "status": "doubtful",
+   "status": "available",
    "expectedReturnGw": null
   },
   {
@@ -5227,13 +5425,13 @@
    "depthTier": 0,
    "squadNumber": 1,
    "status": "injured",
-   "expectedReturnGw": 10
+   "expectedReturnGw": 8
   },
   {
    "code": 108416,
    "clubCode": "HUL",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -5250,7 +5448,7 @@
    "code": 146426,
    "clubCode": "HUL",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -5275,10 +5473,10 @@
     "LB",
     "RB"
    ],
-   "depthTier": 0,
+   "depthTier": 4,
    "squadNumber": 17,
-   "status": "injured",
-   "expectedReturnGw": 4
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 167825,
@@ -5305,23 +5503,23 @@
     "LM",
     "LWB"
    ],
-   "depthTier": 2,
+   "depthTier": 0,
    "squadNumber": 3,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 6
   },
   {
    "code": 169432,
    "clubCode": "HUL",
-   "position": "CF",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "position": "ST",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "CF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "CF"
+   ],
    "canCover": [
-    "LW",
-    "RW",
-    "SS",
-    "ST"
+    "CF",
+    "SS"
    ],
    "depthTier": 1,
    "squadNumber": 9,
@@ -5350,7 +5548,7 @@
    "code": 193278,
    "clubCode": "HUL",
    "position": "RB",
-   "positionSource": "understat_pl",
+   "positionSource": "understat_pl+tm_position",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -5360,7 +5558,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 2,
-   "status": "doubtful",
+   "status": "available",
    "expectedReturnGw": null
   },
   {
@@ -5393,16 +5591,16 @@
     "RM",
     "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 11,
-   "status": "available",
+   "status": "left_club",
    "expectedReturnGw": null
   },
   {
    "code": 232351,
    "clubCode": "HUL",
    "position": "LB",
-   "positionSource": "understat_pl",
+   "positionSource": "understat_pl+tm_position",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -5439,7 +5637,9 @@
    "position": "CM",
    "positionSource": "understat_pl+fotmob_position_id",
    "line": "CM",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "DM"
+   ],
    "canCover": [
     "AM",
     "CAM",
@@ -5453,16 +5653,16 @@
   {
    "code": 243951,
    "clubCode": "HUL",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "LM",
+   "positionSource": "understat_pl+fotmob_position_id",
+   "line": "WF",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
-    "CAM",
-    "DM"
+    "LB",
+    "LW",
+    "LWB"
    ],
-   "depthTier": 4,
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -5482,7 +5682,7 @@
    "depthTier": 0,
    "squadNumber": 2,
    "status": "left_club",
-   "expectedReturnGw": 3
+   "expectedReturnGw": null
   },
   {
    "code": 444307,
@@ -5512,7 +5712,7 @@
    "depthTier": 0,
    "squadNumber": 5,
    "status": "injured",
-   "expectedReturnGw": 3
+   "expectedReturnGw": 6
   },
   {
    "code": 449428,
@@ -5534,19 +5734,18 @@
   {
    "code": 462635,
    "clubCode": "HUL",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "ST",
+   "positionSource": "transfermarkt_position",
+   "line": "CF",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
-    "CAM",
-    "DM"
+    "CF",
+    "SS"
    ],
-   "depthTier": 0,
+   "depthTier": 2,
    "squadNumber": 30,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 465525,
@@ -5568,16 +5767,15 @@
   {
    "code": 469266,
    "clubCode": "HUL",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "DM",
+   "positionSource": "understat_pl+tm_position",
+   "line": "DM",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
-    "CAM",
-    "DM"
+    "CB",
+    "CM"
    ],
-   "depthTier": 4,
+   "depthTier": 1,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -5597,13 +5795,13 @@
    "depthTier": 0,
    "squadNumber": 18,
    "status": "injured",
-   "expectedReturnGw": 10
+   "expectedReturnGw": 8
   },
   {
    "code": 473284,
    "clubCode": "HUL",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -5623,10 +5821,10 @@
     "CB",
     "CM"
    ],
-   "depthTier": 0,
+   "depthTier": 2,
    "squadNumber": 47,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": 6
   },
   {
    "code": 490161,
@@ -5649,16 +5847,15 @@
   {
    "code": 490884,
    "clubCode": "HUL",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "ST",
+   "positionSource": "transfermarkt_position",
+   "line": "CF",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
-    "CAM",
-    "DM"
+    "CF",
+    "SS"
    ],
-   "depthTier": 4,
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -5679,18 +5876,18 @@
   {
    "code": 496181,
    "clubCode": "HUL",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "RB",
+   "positionSource": "understat_career",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
-    "LB",
-    "RB"
+    "RCB",
+    "RM",
+    "RWB"
    ],
    "depthTier": 2,
    "squadNumber": null,
-   "status": "available",
+   "status": "doubtful",
    "expectedReturnGw": null
   },
   {
@@ -5724,7 +5921,7 @@
    "depthTier": 0,
    "squadNumber": 4,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 534392,
@@ -5748,7 +5945,9 @@
    "position": "RM",
    "positionSource": "understat_pl+fotmob_position_id",
    "line": "WF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "RW"
+   ],
    "canCover": [
     "RB",
     "RW",
@@ -5762,9 +5961,9 @@
   {
    "code": 552946,
    "clubCode": "HUL",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CM",
+   "positionSource": "transfermarkt_position",
+   "line": "CM",
    "secondaryPositions": [],
    "canCover": [
     "AM",
@@ -5787,17 +5986,34 @@
     "CB",
     "CM"
    ],
-   "depthTier": 0,
+   "depthTier": 2,
    "squadNumber": 5,
-   "status": "injured",
+   "status": "available",
    "expectedReturnGw": null
   },
   {
    "code": 597462,
    "clubCode": "HUL",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
+   "line": "CB",
+   "secondaryPositions": [],
+   "canCover": [
+    "DM",
+    "LB",
+    "RB"
+   ],
+   "depthTier": 3,
+   "squadNumber": null,
+   "status": "available",
+   "expectedReturnGw": null
+  },
+  {
+   "code": 606930,
+   "clubCode": "HUL",
+   "position": "CB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "CB",
    "secondaryPositions": [],
    "canCover": [
     "DM",
@@ -5807,24 +6023,7 @@
    "depthTier": 2,
    "squadNumber": null,
    "status": "available",
-   "expectedReturnGw": null
-  },
-  {
-   "code": 606930,
-   "clubCode": "HUL",
-   "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "CB",
-   "secondaryPositions": [],
-   "canCover": [
-    "DM",
-    "LB",
-    "RB"
-   ],
-   "depthTier": 1,
-   "squadNumber": null,
-   "status": "available",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 608227,
@@ -5832,7 +6031,9 @@
    "position": "LM",
    "positionSource": "understat_pl+fotmob_position_id",
    "line": "WF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "LW"
+   ],
    "canCover": [
     "LB",
     "LW",
@@ -5854,9 +6055,9 @@
     "CF",
     "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": null,
-   "status": "available",
+   "status": "injured",
    "expectedReturnGw": null
   },
   {
@@ -5870,7 +6071,7 @@
     "CF",
     "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -5904,7 +6105,7 @@
     "LB",
     "RB"
    ],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -5917,7 +6118,7 @@
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": 27,
    "status": "available",
    "expectedReturnGw": null
@@ -5926,7 +6127,7 @@
    "code": 108813,
    "clubCode": "IPS",
    "position": "GK",
-   "positionSource": "identity_primary_role",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -5943,7 +6144,7 @@
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": 1,
    "status": "available",
    "expectedReturnGw": null
@@ -5959,7 +6160,7 @@
     "CF",
     "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 47,
    "status": "available",
    "expectedReturnGw": null
@@ -6010,7 +6211,7 @@
     "RM",
     "RWB"
    ],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": 2,
    "status": "available",
    "expectedReturnGw": null
@@ -6027,7 +6228,7 @@
     "LB",
     "RB"
    ],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": 21,
    "status": "available",
    "expectedReturnGw": null
@@ -6038,7 +6239,9 @@
    "position": "DM",
    "positionSource": "understat_pl+fotmob_position_id",
    "line": "DM",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "CM"
+   ],
    "canCover": [
     "CB",
     "CM"
@@ -6059,16 +6262,16 @@
     "CB",
     "CM"
    ],
-   "depthTier": 0,
+   "depthTier": 4,
    "squadNumber": 61,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 216616,
    "clubCode": "IPS",
    "position": "RB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -6084,16 +6287,17 @@
   {
    "code": 218543,
    "clubCode": "IPS",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
-   "secondaryPositions": [],
-   "canCover": [
-    "AM",
-    "CAM",
-    "DM"
+   "position": "DM",
+   "positionSource": "understat_pl+fotmob_position_id",
+   "line": "DM",
+   "secondaryPositions": [
+    "CM"
    ],
-   "depthTier": 1,
+   "canCover": [
+    "CB",
+    "CM"
+   ],
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -6102,7 +6306,7 @@
    "code": 219924,
    "clubCode": "IPS",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -6181,7 +6385,7 @@
    "depthTier": 0,
    "squadNumber": 14,
    "status": "injured",
-   "expectedReturnGw": 4
+   "expectedReturnGw": 6
   },
   {
    "code": 232457,
@@ -6205,7 +6409,7 @@
    "code": 240514,
    "clubCode": "IPS",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -6225,23 +6429,23 @@
     "CB",
     "CM"
    ],
-   "depthTier": 0,
+   "depthTier": 4,
    "squadNumber": 6,
-   "status": "injured",
+   "status": "available",
    "expectedReturnGw": null
   },
   {
    "code": 431639,
    "clubCode": "IPS",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "ST",
+   "positionSource": "transfermarkt_position",
+   "line": "CF",
    "secondaryPositions": [],
    "canCover": [
     "CF",
     "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -6250,25 +6454,7 @@
    "code": 442967,
    "clubCode": "IPS",
    "position": "LW",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "WF",
-   "secondaryPositions": [],
-   "canCover": [
-    "AM",
-    "CF",
-    "LM",
-    "ST"
-   ],
-   "depthTier": 1,
-   "squadNumber": 38,
-   "status": "available",
-   "expectedReturnGw": null
-  },
-  {
-   "code": 443261,
-   "clubCode": "IPS",
-   "position": "LW",
-   "positionSource": "identity_primary_role",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -6278,6 +6464,24 @@
     "ST"
    ],
    "depthTier": 2,
+   "squadNumber": 38,
+   "status": "available",
+   "expectedReturnGw": null
+  },
+  {
+   "code": 443261,
+   "clubCode": "IPS",
+   "position": "LW",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "WF",
+   "secondaryPositions": [],
+   "canCover": [
+    "AM",
+    "CF",
+    "LM",
+    "ST"
+   ],
+   "depthTier": 1,
    "squadNumber": 47,
    "status": "available",
    "expectedReturnGw": null
@@ -6286,7 +6490,7 @@
    "code": 449429,
    "clubCode": "IPS",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -6294,7 +6498,7 @@
     "LB",
     "RB"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 4,
    "status": "available",
    "expectedReturnGw": null
@@ -6303,10 +6507,11 @@
    "code": 455084,
    "clubCode": "IPS",
    "position": "LB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
+    "CM",
     "LCB",
     "LM",
     "LWB"
@@ -6353,7 +6558,7 @@
    "code": 474120,
    "clubCode": "IPS",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -6380,10 +6585,10 @@
     "LM",
     "ST"
    ],
-   "depthTier": 0,
+   "depthTier": 4,
    "squadNumber": 11,
-   "status": "injured",
-   "expectedReturnGw": 4
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 501390,
@@ -6396,7 +6601,7 @@
     "CB",
     "CM"
    ],
-   "depthTier": 1,
+   "depthTier": 3,
    "squadNumber": 26,
    "status": "available",
    "expectedReturnGw": null
@@ -6404,9 +6609,9 @@
   {
    "code": 524180,
    "clubCode": "IPS",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CM",
+   "positionSource": "transfermarkt_position",
+   "line": "CM",
    "secondaryPositions": [],
    "canCover": [
     "AM",
@@ -6422,7 +6627,7 @@
    "code": 531442,
    "clubCode": "IPS",
    "position": "RW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -6433,21 +6638,21 @@
    ],
    "depthTier": 0,
    "squadNumber": 7,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "suspended",
+   "expectedReturnGw": 7
   },
   {
    "code": 543968,
    "clubCode": "IPS",
-   "position": "CF",
-   "positionSource": "understat_pl",
+   "position": "ST",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "CF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "CF"
+   ],
    "canCover": [
-    "LW",
-    "RW",
-    "SS",
-    "ST"
+    "CF",
+    "SS"
    ],
    "depthTier": 1,
    "squadNumber": 20,
@@ -6488,14 +6693,14 @@
   {
    "code": 572584,
    "clubCode": "IPS",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "RB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
-    "LB",
-    "RB"
+    "RCB",
+    "RM",
+    "RWB"
    ],
    "depthTier": 2,
    "squadNumber": null,
@@ -6505,9 +6710,9 @@
   {
    "code": 97846,
    "clubCode": "LEE",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "GK",
+   "positionSource": "transfermarkt_position",
+   "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
@@ -6518,20 +6723,20 @@
   {
    "code": 153682,
    "clubCode": "LEE",
-   "position": "RW",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "WF",
+   "position": "AM",
+   "positionSource": "understat_pl+tm_position",
+   "line": "AM",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
-    "CF",
-    "RM",
-    "ST"
+    "CAM",
+    "CM",
+    "LW",
+    "RW"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 8,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 6
   },
   {
    "code": 155465,
@@ -6549,9 +6754,9 @@
   {
    "code": 173774,
    "clubCode": "LEE",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
+   "line": "CB",
    "secondaryPositions": [],
    "canCover": [
     "DM",
@@ -6585,7 +6790,9 @@
    "position": "CF",
    "positionSource": "understat_pl+fotmob_position_id",
    "line": "CF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "ST"
+   ],
    "canCover": [
     "LW",
     "RW",
@@ -6612,7 +6819,7 @@
     "DM",
     "RAM"
    ],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": 36,
    "status": "available",
    "expectedReturnGw": null
@@ -6623,7 +6830,9 @@
    "position": "CM",
    "positionSource": "understat_pl+fotmob_position_id",
    "line": "CM",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "DM"
+   ],
    "canCover": [
     "AM",
     "CAM",
@@ -6650,7 +6859,7 @@
     "RM",
     "ST"
    ],
-   "depthTier": 2,
+   "depthTier": 1,
    "squadNumber": 20,
    "status": "available",
    "expectedReturnGw": null
@@ -6666,13 +6875,13 @@
    "depthTier": 0,
    "squadNumber": 12,
    "status": "left_club",
-   "expectedReturnGw": 3
+   "expectedReturnGw": null
   },
   {
    "code": 214225,
    "clubCode": "LEE",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -6688,14 +6897,14 @@
   {
    "code": 220627,
    "clubCode": "LEE",
-   "position": "LM",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "WF",
+   "position": "CB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
+   "line": "CB",
    "secondaryPositions": [],
    "canCover": [
+    "DM",
     "LB",
-    "LW",
-    "LWB"
+    "RB"
    ],
    "depthTier": 1,
    "squadNumber": 2,
@@ -6723,14 +6932,17 @@
   {
    "code": 226182,
    "clubCode": "LEE",
-   "position": "RM",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "WF",
-   "secondaryPositions": [],
-   "canCover": [
+   "position": "DM",
+   "positionSource": "identity_primary_role",
+   "line": "DM",
+   "secondaryPositions": [
     "RB",
-    "RW",
-    "RWB"
+    "CM"
+   ],
+   "canCover": [
+    "CB",
+    "CM",
+    "RB"
    ],
    "depthTier": 1,
    "squadNumber": 2,
@@ -6756,33 +6968,29 @@
   {
    "code": 243526,
    "clubCode": "LEE",
-   "position": "DM",
-   "positionSource": "identity_primary_role",
-   "line": "DM",
+   "position": "LWB",
+   "positionSource": "understat_pl",
+   "line": "FB",
    "secondaryPositions": [
-    "LB",
-    "LM"
+    "LW"
    ],
    "canCover": [
-    "CB",
-    "CM",
     "LB",
-    "LM"
+    "LM",
+    "LW"
    ],
-   "depthTier": 0,
+   "depthTier": 1,
    "squadNumber": 5,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 248056,
    "clubCode": "LEE",
    "position": "CM",
-   "positionSource": "identity_primary_role",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CM",
-   "secondaryPositions": [
-    "DM"
-   ],
+   "secondaryPositions": [],
    "canCover": [
     "AM",
     "CAM",
@@ -6797,7 +7005,7 @@
    "code": 427637,
    "clubCode": "LEE",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -6815,7 +7023,7 @@
    "code": 432720,
    "clubCode": "LEE",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -6828,7 +7036,7 @@
    "code": 434752,
    "clubCode": "LEE",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -6836,7 +7044,7 @@
     "LB",
     "RB"
    ],
-   "depthTier": 1,
+   "depthTier": 3,
    "squadNumber": 29,
    "status": "available",
    "expectedReturnGw": null
@@ -6844,15 +7052,17 @@
   {
    "code": 435997,
    "clubCode": "LEE",
-   "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "AM",
-   "secondaryPositions": [],
+   "position": "CF",
+   "positionSource": "understat_pl",
+   "line": "CF",
+   "secondaryPositions": [
+    "ST"
+   ],
    "canCover": [
-    "CAM",
-    "CM",
     "LW",
-    "RW"
+    "RW",
+    "SS",
+    "ST"
    ],
    "depthTier": 2,
    "squadNumber": 11,
@@ -6862,14 +7072,13 @@
   {
    "code": 437497,
    "clubCode": "LEE",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "LWB",
+   "positionSource": "understat_career",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
     "LB",
-    "RB"
+    "LM"
    ],
    "depthTier": 2,
    "squadNumber": null,
@@ -6897,9 +7106,11 @@
    "code": 466525,
    "clubCode": "LEE",
    "position": "CM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
    "line": "CM",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "DM"
+   ],
    "canCover": [
     "AM",
     "CAM",
@@ -6922,10 +7133,10 @@
     "CAM",
     "DM"
    ],
-   "depthTier": 0,
+   "depthTier": 4,
    "squadNumber": 44,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": 6
   },
   {
    "code": 492859,
@@ -6945,13 +7156,13 @@
    "depthTier": 0,
    "squadNumber": 29,
    "status": "left_club",
-   "expectedReturnGw": 4
+   "expectedReturnGw": null
   },
   {
    "code": 522047,
    "clubCode": "LEE",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -6967,9 +7178,9 @@
   {
    "code": 565297,
    "clubCode": "LEE",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "ST",
+   "positionSource": "transfermarkt_position",
+   "line": "CF",
    "secondaryPositions": [],
    "canCover": [
     "CF",
@@ -6992,7 +7203,7 @@
     "CAM",
     "DM"
    ],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -7009,7 +7220,7 @@
     "CAM",
     "DM"
    ],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -7026,7 +7237,7 @@
     "LB",
     "RB"
    ],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -7035,7 +7246,7 @@
    "code": 97032,
    "clubCode": "LIV",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -7052,7 +7263,7 @@
    "code": 116535,
    "clubCode": "LIV",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -7086,7 +7297,7 @@
     "RM",
     "RWB"
    ],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -7105,10 +7316,10 @@
     "RM",
     "RWB"
    ],
-   "depthTier": 0,
+   "depthTier": 4,
    "squadNumber": 12,
-   "status": "injured",
-   "expectedReturnGw": 2
+   "status": "available",
+   "expectedReturnGw": 6
   },
   {
    "code": 206915,
@@ -7128,19 +7339,19 @@
    "depthTier": 0,
    "squadNumber": 17,
    "status": "left_club",
-   "expectedReturnGw": 3
+   "expectedReturnGw": null
   },
   {
    "code": 214285,
    "clubCode": "LIV",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "LB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
-    "LB",
-    "RB"
+    "LCB",
+    "LM",
+    "LWB"
    ],
    "depthTier": 2,
    "squadNumber": 21,
@@ -7151,7 +7362,7 @@
    "code": 216094,
    "clubCode": "LIV",
    "position": "RB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -7159,7 +7370,7 @@
     "RM",
     "RWB"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 30,
    "status": "available",
    "expectedReturnGw": null
@@ -7167,15 +7378,15 @@
   {
    "code": 219168,
    "clubCode": "LIV",
-   "position": "CF",
-   "positionSource": "understat_pl",
+   "position": "ST",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "CF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "CF"
+   ],
    "canCover": [
-    "LW",
-    "RW",
-    "SS",
-    "ST"
+    "CF",
+    "SS"
    ],
    "depthTier": 1,
    "squadNumber": 14,
@@ -7198,13 +7409,13 @@
    "depthTier": 0,
    "squadNumber": 25,
    "status": "injured",
-   "expectedReturnGw": 8
+   "expectedReturnGw": 7
   },
   {
    "code": 243016,
    "clubCode": "LIV",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
@@ -7220,7 +7431,7 @@
    "code": 243298,
    "clubCode": "LIV",
    "position": "LW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -7232,13 +7443,13 @@
    "depthTier": 1,
    "squadNumber": 18,
    "status": "available",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 424876,
    "clubCode": "LIV",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
@@ -7253,21 +7464,21 @@
   {
    "code": 432987,
    "clubCode": "LIV",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "GK",
+   "positionSource": "transfermarkt_position",
+   "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 0,
    "squadNumber": null,
    "status": "injured",
-   "expectedReturnGw": 3
+   "expectedReturnGw": null
   },
   {
    "code": 441266,
    "clubCode": "LIV",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
@@ -7299,16 +7510,16 @@
   {
    "code": 445087,
    "clubCode": "LIV",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "RB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
-    "LB",
-    "RB"
+    "RCB",
+    "RM",
+    "RWB"
    ],
-   "depthTier": 2,
+   "depthTier": 1,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -7329,9 +7540,9 @@
   {
    "code": 464353,
    "clubCode": "LIV",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "GK",
+   "positionSource": "transfermarkt_position",
+   "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
@@ -7342,16 +7553,18 @@
   {
    "code": 482616,
    "clubCode": "LIV",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "LW",
+   "positionSource": "understat_pl+fotmob_position_id",
+   "line": "WF",
    "secondaryPositions": [],
    "canCover": [
     "AM",
-    "CAM",
-    "DM"
+    "CF",
+    "LM",
+    "RW",
+    "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -7376,9 +7589,9 @@
   {
    "code": 491501,
    "clubCode": "LIV",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CM",
+   "positionSource": "transfermarkt_position",
+   "line": "CM",
    "secondaryPositions": [],
    "canCover": [
     "AM",
@@ -7405,13 +7618,13 @@
    "depthTier": 0,
    "squadNumber": 2,
    "status": "injured",
-   "expectedReturnGw": 5
+   "expectedReturnGw": 20
   },
   {
    "code": 494595,
    "clubCode": "LIV",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -7428,15 +7641,15 @@
   {
    "code": 500058,
    "clubCode": "LIV",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "ST",
+   "positionSource": "transfermarkt_position",
+   "line": "CF",
    "secondaryPositions": [],
    "canCover": [
     "CF",
     "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 9,
    "status": "available",
    "expectedReturnGw": null
@@ -7477,9 +7690,9 @@
   {
    "code": 519440,
    "clubCode": "LIV",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CB",
+   "positionSource": "transfermarkt_position",
+   "line": "CB",
    "secondaryPositions": [],
    "canCover": [
     "DM",
@@ -7505,13 +7718,13 @@
    "depthTier": 0,
    "squadNumber": 43,
    "status": "left_club",
-   "expectedReturnGw": 3
+   "expectedReturnGw": 6
   },
   {
    "code": 544877,
    "clubCode": "LIV",
    "position": "LB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -7527,17 +7740,17 @@
   {
    "code": 551499,
    "clubCode": "LIV",
-   "position": "LW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "position": "RW",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
     "AM",
     "CF",
-    "LM",
+    "RM",
     "ST"
    ],
-   "depthTier": 2,
+   "depthTier": 1,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -7545,9 +7758,9 @@
   {
    "code": 586268,
    "clubCode": "LIV",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "GK",
+   "positionSource": "transfermarkt_position",
+   "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 0,
@@ -7579,7 +7792,7 @@
    "code": 606702,
    "clubCode": "LIV",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -7596,7 +7809,7 @@
    "code": 611922,
    "clubCode": "LIV",
    "position": "RW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -7605,7 +7818,7 @@
     "RM",
     "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 73,
    "status": "available",
    "expectedReturnGw": null
@@ -7621,7 +7834,7 @@
    "depthTier": 0,
    "squadNumber": 46,
    "status": "injured",
-   "expectedReturnGw": 3
+   "expectedReturnGw": 7
   },
   {
    "code": 91651,
@@ -7639,9 +7852,9 @@
   {
    "code": 106921,
    "clubCode": "MCI",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "GK",
+   "positionSource": "transfermarkt_position",
+   "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
@@ -7652,9 +7865,9 @@
   {
    "code": 122074,
    "clubCode": "MCI",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "GK",
+   "positionSource": "transfermarkt_position",
+   "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
@@ -7665,14 +7878,13 @@
   {
    "code": 155405,
    "clubCode": "MCI",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "DM",
+   "positionSource": "transfermarkt_position",
+   "line": "DM",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
-    "CAM",
-    "DM"
+    "CB",
+    "CM"
    ],
    "depthTier": 0,
    "squadNumber": 23,
@@ -7683,7 +7895,7 @@
    "code": 171314,
    "clubCode": "MCI",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -7700,7 +7912,7 @@
    "code": 204936,
    "clubCode": "MCI",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -7713,10 +7925,11 @@
    "code": 209036,
    "clubCode": "MCI",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
+    "CM",
     "DM",
     "LB",
     "RB"
@@ -7730,7 +7943,7 @@
    "code": 209244,
    "clubCode": "MCI",
    "position": "RW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -7739,16 +7952,16 @@
     "RM",
     "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 47,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "suspended",
+   "expectedReturnGw": 7
   },
   {
    "code": 215379,
    "clubCode": "MCI",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
@@ -7774,20 +7987,21 @@
    "depthTier": 0,
    "squadNumber": 16,
    "status": "left_club",
-   "expectedReturnGw": 2
+   "expectedReturnGw": 6
   },
   {
    "code": 223094,
    "clubCode": "MCI",
-   "position": "CF",
-   "positionSource": "understat_pl",
+   "position": "ST",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "CF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "CF"
+   ],
    "canCover": [
-    "LW",
-    "RW",
-    "SS",
-    "ST"
+    "CF",
+    "CM",
+    "SS"
    ],
    "depthTier": 1,
    "squadNumber": 9,
@@ -7811,10 +8025,10 @@
     "LM",
     "ST"
    ],
-   "depthTier": 0,
+   "depthTier": 2,
    "squadNumber": 11,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": 6
   },
   {
    "code": 433036,
@@ -7841,7 +8055,7 @@
    "code": 437730,
    "clubCode": "MCI",
    "position": "LW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -7852,14 +8066,14 @@
    ],
    "depthTier": 1,
    "squadNumber": 18,
-   "status": "available",
+   "status": "doubtful",
    "expectedReturnGw": null
   },
   {
    "code": 440993,
    "clubCode": "MCI",
    "position": "RW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -7876,22 +8090,21 @@
   {
    "code": 448047,
    "clubCode": "MCI",
-   "position": "CAM",
-   "positionSource": "identity_primary_role",
-   "line": "AM",
+   "position": "CM",
+   "positionSource": "tm_position+sofascore_band",
+   "line": "CM",
    "secondaryPositions": [
     "DM"
    ],
    "canCover": [
     "AM",
-    "CM",
-    "DM",
-    "SS"
+    "CAM",
+    "DM"
    ],
-   "depthTier": 0,
+   "depthTier": 1,
    "squadNumber": 8,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 448514,
@@ -7917,7 +8130,7 @@
    "code": 465351,
    "clubCode": "MCI",
    "position": "RB",
-   "positionSource": "identity_primary_role",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -7925,16 +8138,16 @@
     "RM",
     "RWB"
    ],
-   "depthTier": 0,
+   "depthTier": 1,
    "squadNumber": 27,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 466052,
    "clubCode": "MCI",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -7943,7 +8156,7 @@
     "LW",
     "RW"
    ],
-   "depthTier": 2,
+   "depthTier": 1,
    "squadNumber": 18,
    "status": "available",
    "expectedReturnGw": null
@@ -7952,16 +8165,17 @@
    "code": 472769,
    "clubCode": "MCI",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
     "CAM",
     "CM",
+    "LB",
     "LW",
     "RW"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 75,
    "status": "available",
    "expectedReturnGw": null
@@ -7970,7 +8184,7 @@
    "code": 477064,
    "clubCode": "MCI",
    "position": "RB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -7978,7 +8192,7 @@
     "RM",
     "RWB"
    ],
-   "depthTier": 1,
+   "depthTier": 3,
    "squadNumber": 82,
    "status": "available",
    "expectedReturnGw": null
@@ -7987,7 +8201,7 @@
    "code": 477424,
    "clubCode": "MCI",
    "position": "LB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -8033,14 +8247,15 @@
   {
    "code": 575204,
    "clubCode": "MCI",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "AM",
+   "positionSource": "transfermarkt_position",
+   "line": "AM",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
     "CAM",
-    "DM"
+    "CM",
+    "LW",
+    "RW"
    ],
    "depthTier": 0,
    "squadNumber": 19,
@@ -8050,16 +8265,16 @@
   {
    "code": 578153,
    "clubCode": "MCI",
-   "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
-   "line": "CB",
+   "position": "RB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
-    "LB",
-    "RB"
+    "RCB",
+    "RM",
+    "RWB"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 45,
    "status": "available",
    "expectedReturnGw": null
@@ -8084,11 +8299,28 @@
    "expectedReturnGw": null
   },
   {
-   "code": 616222,
+   "code": 595480,
    "clubCode": "MCI",
    "position": null,
    "positionSource": "fpl_element_type",
    "line": null,
+   "secondaryPositions": [],
+   "canCover": [
+    "AM",
+    "CAM",
+    "DM"
+   ],
+   "depthTier": 2,
+   "squadNumber": null,
+   "status": "available",
+   "expectedReturnGw": null
+  },
+  {
+   "code": 616222,
+   "clubCode": "MCI",
+   "position": "CB",
+   "positionSource": "transfermarkt_position",
+   "line": "CB",
    "secondaryPositions": [],
    "canCover": [
     "DM",
@@ -8103,16 +8335,17 @@
   {
    "code": 616288,
    "clubCode": "MCI",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "RW",
+   "positionSource": "transfermarkt_position",
+   "line": "WF",
    "secondaryPositions": [],
    "canCover": [
     "AM",
-    "CAM",
-    "DM"
+    "CF",
+    "RM",
+    "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -8129,7 +8362,7 @@
     "CAM",
     "DM"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -8137,16 +8370,16 @@
   {
    "code": 637238,
    "clubCode": "MCI",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CM",
+   "positionSource": "transfermarkt_position",
+   "line": "CM",
    "secondaryPositions": [],
    "canCover": [
     "AM",
     "CAM",
     "DM"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -8171,15 +8404,15 @@
   {
    "code": 21205,
    "clubCode": "MUN",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "GK",
+   "positionSource": "transfermarkt_position",
+   "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 0,
    "squadNumber": 1,
    "status": "injured",
-   "expectedReturnGw": 3
+   "expectedReturnGw": 6
   },
   {
    "code": 59735,
@@ -8189,16 +8422,16 @@
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
-   "depthTier": 0,
+   "depthTier": 2,
    "squadNumber": 26,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "doubtful",
+   "expectedReturnGw": null
   },
   {
    "code": 95658,
    "clubCode": "MUN",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -8215,7 +8448,7 @@
    "code": 106760,
    "clubCode": "MUN",
    "position": "LB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -8232,7 +8465,7 @@
    "code": 141746,
    "clubCode": "MUN",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -8250,7 +8483,7 @@
    "code": 166989,
    "clubCode": "MUN",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
@@ -8266,7 +8499,7 @@
    "code": 176297,
    "clubCode": "MUN",
    "position": "LW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -8277,7 +8510,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 10,
-   "status": "available",
+   "status": "doubtful",
    "expectedReturnGw": null
   },
   {
@@ -8292,10 +8525,10 @@
    "canCover": [
     "DM"
    ],
-   "depthTier": 0,
+   "depthTier": 1,
    "squadNumber": 19,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": 6
   },
   {
    "code": 209365,
@@ -8308,13 +8541,13 @@
    "depthTier": 0,
    "squadNumber": 4,
    "status": "injured",
-   "expectedReturnGw": 5
+   "expectedReturnGw": 6
   },
   {
    "code": 216051,
    "clubCode": "MUN",
    "position": "RB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -8331,7 +8564,7 @@
    "code": 221820,
    "clubCode": "MUN",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -8348,7 +8581,7 @@
    "code": 230001,
    "clubCode": "MUN",
    "position": "RB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -8375,20 +8608,20 @@
    "depthTier": 0,
    "squadNumber": 15,
    "status": "injured",
-   "expectedReturnGw": 33
+   "expectedReturnGw": 31
   },
   {
    "code": 430871,
    "clubCode": "MUN",
-   "position": "CF",
-   "positionSource": "understat_pl",
+   "position": "ST",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "CF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "CF"
+   ],
    "canCover": [
-    "LW",
-    "RW",
-    "SS",
-    "ST"
+    "CF",
+    "SS"
    ],
    "depthTier": 1,
    "squadNumber": 10,
@@ -8399,7 +8632,7 @@
    "code": 446008,
    "clubCode": "MUN",
    "position": "RW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -8440,7 +8673,7 @@
     "RW",
     "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 11,
    "status": "available",
    "expectedReturnGw": null
@@ -8449,7 +8682,7 @@
    "code": 465247,
    "clubCode": "MUN",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -8472,19 +8705,18 @@
    "depthTier": 0,
    "squadNumber": 30,
    "status": "injured",
-   "expectedReturnGw": 3
+   "expectedReturnGw": 6
   },
   {
    "code": 490881,
    "clubCode": "MUN",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "DM",
+   "positionSource": "transfermarkt_position",
+   "line": "DM",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
-    "CAM",
-    "DM"
+    "CB",
+    "CM"
    ],
    "depthTier": 0,
    "squadNumber": 43,
@@ -8507,7 +8739,7 @@
    "depthTier": 0,
    "squadNumber": 16,
    "status": "injured",
-   "expectedReturnGw": 4
+   "expectedReturnGw": 6
   },
   {
    "code": 516895,
@@ -8522,15 +8754,15 @@
    ],
    "depthTier": 2,
    "squadNumber": 37,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "doubtful",
+   "expectedReturnGw": 6
   },
   {
    "code": 519913,
    "clubCode": "MUN",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CM",
+   "positionSource": "transfermarkt_position",
+   "line": "CM",
    "secondaryPositions": [],
    "canCover": [
     "AM",
@@ -8546,7 +8778,7 @@
    "code": 532605,
    "clubCode": "MUN",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
@@ -8569,10 +8801,10 @@
     "CB",
     "CM"
    ],
-   "depthTier": 0,
+   "depthTier": 4,
    "squadNumber": 20,
-   "status": "injured",
-   "expectedReturnGw": 5
+   "status": "available",
+   "expectedReturnGw": 6
   },
   {
    "code": 547037,
@@ -8620,16 +8852,17 @@
   {
    "code": 576620,
    "clubCode": "MUN",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "RW",
+   "positionSource": "transfermarkt_position",
+   "line": "WF",
    "secondaryPositions": [],
    "canCover": [
     "AM",
-    "CAM",
-    "DM"
+    "CF",
+    "RM",
+    "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 7,
    "status": "available",
    "expectedReturnGw": null
@@ -8637,16 +8870,17 @@
   {
    "code": 576628,
    "clubCode": "MUN",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "RW",
+   "positionSource": "transfermarkt_position",
+   "line": "WF",
    "secondaryPositions": [],
    "canCover": [
     "AM",
-    "CAM",
-    "DM"
+    "CF",
+    "RM",
+    "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 7,
    "status": "available",
    "expectedReturnGw": null
@@ -8654,14 +8888,14 @@
   {
    "code": 577974,
    "clubCode": "MUN",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "LB",
+   "positionSource": "transfermarkt_position",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
-    "LB",
-    "RB"
+    "LCB",
+    "LM",
+    "LWB"
    ],
    "depthTier": 4,
    "squadNumber": 3,
@@ -8680,23 +8914,22 @@
     "CAM",
     "DM"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 9,
-   "status": "available",
+   "status": "left_club",
    "expectedReturnGw": null
   },
   {
    "code": 596777,
    "clubCode": "MUN",
-   "position": "LW",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "WF",
+   "position": "LB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
-    "CF",
+    "LCB",
     "LM",
-    "ST"
+    "LWB"
    ],
    "depthTier": 2,
    "squadNumber": 13,
@@ -8707,7 +8940,7 @@
    "code": 606745,
    "clubCode": "MUN",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -8735,14 +8968,14 @@
    "depthTier": 0,
    "squadNumber": 33,
    "status": "injured",
-   "expectedReturnGw": 4
+   "expectedReturnGw": 6
   },
   {
    "code": 81441,
    "clubCode": "NEW",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "GK",
+   "positionSource": "transfermarkt_position",
+   "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
@@ -8767,19 +9000,16 @@
    "code": 114243,
    "clubCode": "NEW",
    "position": "RW",
-   "positionSource": "identity_primary_role",
+   "positionSource": "understat_pl+tm_position",
    "line": "WF",
-   "secondaryPositions": [
-    "DM"
-   ],
+   "secondaryPositions": [],
    "canCover": [
     "AM",
     "CF",
-    "DM",
     "RM",
     "ST"
    ],
-   "depthTier": 2,
+   "depthTier": 1,
    "squadNumber": 23,
    "status": "available",
    "expectedReturnGw": null
@@ -8819,13 +9049,13 @@
    "depthTier": 0,
    "squadNumber": 7,
    "status": "injured",
-   "expectedReturnGw": 3
+   "expectedReturnGw": 7
   },
   {
    "code": 200089,
    "clubCode": "NEW",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -8834,16 +9064,16 @@
     "LW",
     "RW"
    ],
-   "depthTier": 0,
+   "depthTier": 1,
    "squadNumber": 28,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 201666,
    "clubCode": "NEW",
    "position": "LW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -8860,15 +9090,15 @@
   {
    "code": 216646,
    "clubCode": "NEW",
-   "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "AM",
-   "secondaryPositions": [],
+   "position": "ST",
+   "positionSource": "tm_position+fotmob_position_id",
+   "line": "CF",
+   "secondaryPositions": [
+    "CF"
+   ],
    "canCover": [
-    "CAM",
-    "CM",
-    "LW",
-    "RW"
+    "CF",
+    "SS"
    ],
    "depthTier": 1,
    "squadNumber": 11,
@@ -8879,7 +9109,7 @@
    "code": 220237,
    "clubCode": "NEW",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -8908,10 +9138,10 @@
     "DM",
     "LW"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 41,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 7
   },
   {
    "code": 441191,
@@ -8928,16 +9158,16 @@
     "RM",
     "RWB"
    ],
-   "depthTier": 0,
+   "depthTier": 1,
    "squadNumber": 21,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "doubtful",
+   "expectedReturnGw": null
   },
   {
    "code": 449434,
    "clubCode": "NEW",
    "position": "RW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -8946,16 +9176,16 @@
     "RM",
     "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 36,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 7
   },
   {
    "code": 463726,
    "clubCode": "NEW",
    "position": "RB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -8963,16 +9193,16 @@
     "RM",
     "RWB"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": null,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 7
   },
   {
    "code": 465642,
    "clubCode": "NEW",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -8989,7 +9219,7 @@
    "code": 465694,
    "clubCode": "NEW",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
@@ -8999,7 +9229,7 @@
    "depthTier": 2,
    "squadNumber": 14,
    "status": "available",
-   "expectedReturnGw": null
+   "expectedReturnGw": 8
   },
   {
    "code": 470313,
@@ -9024,7 +9254,7 @@
    "code": 470551,
    "clubCode": "NEW",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -9037,7 +9267,7 @@
    "code": 487838,
    "clubCode": "NEW",
    "position": "LB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -9053,20 +9283,18 @@
   {
    "code": 538207,
    "clubCode": "NEW",
-   "position": "CF",
-   "positionSource": "understat_pl",
+   "position": "ST",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "CF",
    "secondaryPositions": [],
    "canCover": [
-    "LW",
-    "RW",
-    "SS",
-    "ST"
+    "CF",
+    "SS"
    ],
    "depthTier": 0,
    "squadNumber": 18,
    "status": "injured",
-   "expectedReturnGw": 4
+   "expectedReturnGw": 7
   },
   {
    "code": 545477,
@@ -9089,12 +9317,13 @@
    "code": 547719,
    "clubCode": "NEW",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
     "CB",
-    "CM"
+    "CM",
+    "RB"
    ],
    "depthTier": 1,
    "squadNumber": 67,
@@ -9104,28 +9333,45 @@
   {
    "code": 553746,
    "clubCode": "NEW",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "RB",
+   "positionSource": "transfermarkt_position",
+   "line": "FB",
+   "secondaryPositions": [],
+   "canCover": [
+    "RCB",
+    "RM",
+    "RWB"
+   ],
+   "depthTier": 0,
+   "squadNumber": 2,
+   "status": "left_club",
+   "expectedReturnGw": null
+  },
+  {
+   "code": 554578,
+   "clubCode": "NEW",
+   "position": "GK",
+   "positionSource": "transfermarkt_position",
+   "line": "GK",
+   "secondaryPositions": [],
+   "canCover": [],
+   "depthTier": 0,
+   "squadNumber": null,
+   "status": "injured",
+   "expectedReturnGw": 7
+  },
+  {
+   "code": 578512,
+   "clubCode": "NEW",
+   "position": "CB",
+   "positionSource": "transfermarkt_position",
+   "line": "CB",
    "secondaryPositions": [],
    "canCover": [
     "DM",
     "LB",
     "RB"
    ],
-   "depthTier": 2,
-   "squadNumber": 2,
-   "status": "available",
-   "expectedReturnGw": null
-  },
-  {
-   "code": 554578,
-   "clubCode": "NEW",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
-   "secondaryPositions": [],
-   "canCover": [],
    "depthTier": 2,
    "squadNumber": null,
    "status": "available",
@@ -9134,9 +9380,9 @@
   {
    "code": 599303,
    "clubCode": "NEW",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "ST",
+   "positionSource": "transfermarkt_position",
+   "line": "CF",
    "secondaryPositions": [],
    "canCover": [
     "CF",
@@ -9148,24 +9394,7 @@
    "expectedReturnGw": null
   },
   {
-   "code": 611665,
-   "clubCode": "NEW",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
-   "secondaryPositions": [],
-   "canCover": [
-    "AM",
-    "CAM",
-    "DM"
-   ],
-   "depthTier": 1,
-   "squadNumber": null,
-   "status": "available",
-   "expectedReturnGw": null
-  },
-  {
-   "code": 613221,
+   "code": 601767,
    "clubCode": "NEW",
    "position": null,
    "positionSource": "fpl_element_type",
@@ -9175,7 +9404,43 @@
     "CF",
     "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
+   "squadNumber": null,
+   "status": "available",
+   "expectedReturnGw": null
+  },
+  {
+   "code": 611665,
+   "clubCode": "NEW",
+   "position": "LW",
+   "positionSource": "understat_career",
+   "line": "WF",
+   "secondaryPositions": [],
+   "canCover": [
+    "AM",
+    "CF",
+    "LM",
+    "ST"
+   ],
+   "depthTier": 2,
+   "squadNumber": null,
+   "status": "available",
+   "expectedReturnGw": null
+  },
+  {
+   "code": 613221,
+   "clubCode": "NEW",
+   "position": "AM",
+   "positionSource": "understat_pl+fotmob_position_id",
+   "line": "AM",
+   "secondaryPositions": [],
+   "canCover": [
+    "CAM",
+    "CM",
+    "LW",
+    "RW"
+   ],
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -9201,7 +9466,7 @@
    "code": 636852,
    "clubCode": "NEW",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
@@ -9209,6 +9474,57 @@
     "CM"
    ],
    "depthTier": 3,
+   "squadNumber": null,
+   "status": "available",
+   "expectedReturnGw": null
+  },
+  {
+   "code": 655585,
+   "clubCode": "NEW",
+   "position": null,
+   "positionSource": "fpl_element_type",
+   "line": null,
+   "secondaryPositions": [],
+   "canCover": [
+    "AM",
+    "CAM",
+    "DM"
+   ],
+   "depthTier": 1,
+   "squadNumber": null,
+   "status": "available",
+   "expectedReturnGw": null
+  },
+  {
+   "code": 665243,
+   "clubCode": "NEW",
+   "position": null,
+   "positionSource": "fpl_element_type",
+   "line": null,
+   "secondaryPositions": [],
+   "canCover": [
+    "AM",
+    "CAM",
+    "DM"
+   ],
+   "depthTier": 1,
+   "squadNumber": null,
+   "status": "available",
+   "expectedReturnGw": null
+  },
+  {
+   "code": 671875,
+   "clubCode": "NEW",
+   "position": null,
+   "positionSource": "fpl_element_type",
+   "line": null,
+   "secondaryPositions": [],
+   "canCover": [
+    "AM",
+    "CAM",
+    "DM"
+   ],
+   "depthTier": 1,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -9222,6 +9538,7 @@
    "secondaryPositions": [],
    "canCover": [
     "CF",
+    "LWB",
     "SS"
    ],
    "depthTier": 1,
@@ -9233,7 +9550,7 @@
    "code": 85633,
    "clubCode": "NFO",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -9248,10 +9565,13 @@
    "position": "RWB",
    "positionSource": "understat_pl+fotmob_position_id",
    "line": "FB",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "RW"
+   ],
    "canCover": [
     "RB",
-    "RM"
+    "RM",
+    "RW"
    ],
    "depthTier": 1,
    "squadNumber": 34,
@@ -9262,14 +9582,16 @@
    "code": 204561,
    "clubCode": "NFO",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "DM",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "CM"
+   ],
    "canCover": [
     "CB",
     "CM"
    ],
-   "depthTier": 2,
+   "depthTier": 1,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -9277,16 +9599,16 @@
   {
    "code": 204822,
    "clubCode": "NFO",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "LB",
+   "positionSource": "transfermarkt_position",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
-    "LB",
-    "RB"
+    "LCB",
+    "LM",
+    "LWB"
    ],
-   "depthTier": 2,
+   "depthTier": 1,
    "squadNumber": 3,
    "status": "available",
    "expectedReturnGw": null
@@ -9332,7 +9654,7 @@
    "code": 210462,
    "clubCode": "NFO",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
@@ -9342,7 +9664,7 @@
    "depthTier": 2,
    "squadNumber": 6,
    "status": "available",
-   "expectedReturnGw": 3
+   "expectedReturnGw": 6
   },
   {
    "code": 215136,
@@ -9350,10 +9672,14 @@
    "position": "LWB",
    "positionSource": "understat_pl+fotmob_position_id",
    "line": "FB",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "LW"
+   ],
    "canCover": [
     "LB",
-    "LM"
+    "LM",
+    "LW",
+    "RWB"
    ],
    "depthTier": 1,
    "squadNumber": 7,
@@ -9377,7 +9703,7 @@
    "code": 222531,
    "clubCode": "NFO",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -9395,7 +9721,7 @@
    "code": 227444,
    "clubCode": "NFO",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -9403,10 +9729,10 @@
     "LB",
     "RB"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 4,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 6
   },
   {
    "code": 247348,
@@ -9414,10 +9740,13 @@
    "position": "RWB",
    "positionSource": "understat_pl+fotmob_position_id",
    "line": "FB",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "RW"
+   ],
    "canCover": [
     "RB",
-    "RM"
+    "RM",
+    "RW"
    ],
    "depthTier": 2,
    "squadNumber": 23,
@@ -9447,9 +9776,9 @@
   {
    "code": 428971,
    "clubCode": "NFO",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "GK",
+   "positionSource": "transfermarkt_position",
+   "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
@@ -9460,13 +9789,16 @@
   {
    "code": 432714,
    "clubCode": "NFO",
-   "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "DM",
-   "secondaryPositions": [],
+   "position": "CM",
+   "positionSource": "understat_pl+sofascore_band",
+   "line": "CM",
+   "secondaryPositions": [
+    "DM"
+   ],
    "canCover": [
-    "CB",
-    "CM"
+    "AM",
+    "CAM",
+    "DM"
    ],
    "depthTier": 1,
    "squadNumber": 87,
@@ -9477,7 +9809,7 @@
    "code": 456512,
    "clubCode": "NFO",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -9494,13 +9826,17 @@
   {
    "code": 463034,
    "clubCode": "NFO",
-   "position": "ST",
-   "positionSource": "identity_primary_role",
+   "position": "CF",
+   "positionSource": "understat_pl+fotmob_position_id",
    "line": "CF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "ST"
+   ],
    "canCover": [
-    "CF",
-    "SS"
+    "LW",
+    "RW",
+    "SS",
+    "ST"
    ],
    "depthTier": 1,
    "squadNumber": 9,
@@ -9519,7 +9855,7 @@
     "CAM",
     "DM"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 9,
    "status": "available",
    "expectedReturnGw": null
@@ -9580,7 +9916,7 @@
     "SS",
     "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 99,
    "status": "available",
    "expectedReturnGw": null
@@ -9592,7 +9928,9 @@
    "positionSource": "identity_primary_role",
    "line": "CB",
    "secondaryPositions": [],
-   "canCover": [],
+   "canCover": [
+    "CB"
+   ],
    "depthTier": 0,
    "squadNumber": null,
    "status": "left_club",
@@ -9613,7 +9951,7 @@
    "depthTier": 0,
    "squadNumber": 2,
    "status": "injured",
-   "expectedReturnGw": 3
+   "expectedReturnGw": 6
   },
   {
    "code": 503301,
@@ -9672,16 +10010,16 @@
   {
    "code": 568420,
    "clubCode": "NFO",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "CB",
    "secondaryPositions": [],
    "canCover": [
     "DM",
     "LB",
     "RB"
    ],
-   "depthTier": 2,
+   "depthTier": 3,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -9690,7 +10028,7 @@
    "code": 575458,
    "clubCode": "NFO",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -9698,16 +10036,16 @@
     "LB",
     "RB"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 32,
    "status": "available",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 575476,
    "clubCode": "NFO",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -9724,7 +10062,7 @@
    "code": 84450,
    "clubCode": "SUN",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
@@ -9739,19 +10077,20 @@
   {
    "code": 93605,
    "clubCode": "SUN",
-   "position": "RB",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "FB",
+   "position": "RW",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "WF",
    "secondaryPositions": [],
    "canCover": [
-    "RCB",
+    "AM",
+    "CF",
     "RM",
-    "RWB"
+    "ST"
    ],
-   "depthTier": 0,
+   "depthTier": 1,
    "squadNumber": null,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 105717,
@@ -9773,21 +10112,8 @@
   {
    "code": 135720,
    "clubCode": "SUN",
-   "position": "RCB",
-   "positionSource": "identity_primary_role",
-   "line": "CB",
-   "secondaryPositions": [],
-   "canCover": [],
-   "depthTier": 1,
-   "squadNumber": 4,
-   "status": "available",
-   "expectedReturnGw": null
-  },
-  {
-   "code": 167512,
-   "clubCode": "SUN",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -9796,15 +10122,15 @@
     "RB"
    ],
    "depthTier": 2,
-   "squadNumber": 13,
+   "squadNumber": 4,
    "status": "available",
    "expectedReturnGw": null
   },
   {
-   "code": 200834,
+   "code": 167512,
    "clubCode": "SUN",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -9812,10 +10138,27 @@
     "LB",
     "RB"
    ],
-   "depthTier": 0,
+   "depthTier": 3,
+   "squadNumber": 13,
+   "status": "available",
+   "expectedReturnGw": null
+  },
+  {
+   "code": 200834,
+   "clubCode": "SUN",
+   "position": "RB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "FB",
+   "secondaryPositions": [],
+   "canCover": [
+    "RCB",
+    "RM",
+    "RWB"
+   ],
+   "depthTier": 1,
    "squadNumber": 22,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 201895,
@@ -9825,16 +10168,16 @@
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [],
-   "depthTier": 0,
+   "depthTier": 1,
    "squadNumber": 15,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 223827,
    "clubCode": "SUN",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -9844,15 +10187,15 @@
    ],
    "depthTier": 1,
    "squadNumber": 5,
-   "status": "available",
+   "status": "doubtful",
    "expectedReturnGw": null
   },
   {
    "code": 232571,
    "clubCode": "SUN",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "GK",
+   "positionSource": "transfermarkt_position",
+   "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 0,
@@ -9864,7 +10207,7 @@
    "code": 434399,
    "clubCode": "SUN",
    "position": "LB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -9872,10 +10215,10 @@
     "LM",
     "LWB"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 23,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "suspended",
+   "expectedReturnGw": 6
   },
   {
    "code": 437505,
@@ -9888,7 +10231,7 @@
     "CF",
     "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 18,
    "status": "available",
    "expectedReturnGw": null
@@ -9896,19 +10239,19 @@
   {
    "code": 441264,
    "clubCode": "SUN",
-   "position": "CF",
-   "positionSource": "understat_pl",
+   "position": "ST",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "CF",
-   "secondaryPositions": [],
+   "secondaryPositions": [
+    "CF"
+   ],
    "canCover": [
-    "LW",
-    "RW",
-    "SS",
-    "ST"
+    "CF",
+    "SS"
    ],
    "depthTier": 1,
    "squadNumber": 9,
-   "status": "available",
+   "status": "doubtful",
    "expectedReturnGw": null
   },
   {
@@ -9926,22 +10269,22 @@
     "LM",
     "ST"
    ],
-   "depthTier": 2,
+   "depthTier": 0,
    "squadNumber": 14,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 20
   },
   {
    "code": 477547,
    "clubCode": "SUN",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "LB",
+   "positionSource": "transfermarkt_position",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
-    "LB",
-    "RB"
+    "LCB",
+    "LM",
+    "LWB"
    ],
    "depthTier": 0,
    "squadNumber": 33,
@@ -9952,7 +10295,7 @@
    "code": 484420,
    "clubCode": "SUN",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -9970,16 +10313,17 @@
    "code": 487676,
    "clubCode": "SUN",
    "position": "RW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
     "AM",
     "CF",
+    "RB",
     "RM",
     "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 32,
    "status": "available",
    "expectedReturnGw": null
@@ -9988,7 +10332,7 @@
    "code": 498016,
    "clubCode": "SUN",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -10041,13 +10385,13 @@
    "depthTier": 0,
    "squadNumber": 11,
    "status": "left_club",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 536661,
    "clubCode": "SUN",
    "position": "LW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -10078,7 +10422,7 @@
    "depthTier": 0,
    "squadNumber": 19,
    "status": "injured",
-   "expectedReturnGw": 9
+   "expectedReturnGw": 8
   },
   {
    "code": 549912,
@@ -10134,7 +10478,7 @@
     "RM",
     "ST"
    ],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": 11,
    "status": "available",
    "expectedReturnGw": null
@@ -10143,7 +10487,7 @@
    "code": 577669,
    "clubCode": "SUN",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
@@ -10158,16 +10502,16 @@
   {
    "code": 638411,
    "clubCode": "SUN",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "LB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
-    "LB",
-    "RB"
+    "LCB",
+    "LM",
+    "LWB"
    ],
-   "depthTier": 4,
+   "depthTier": 1,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -10183,7 +10527,7 @@
     "CF",
     "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
@@ -10264,7 +10608,7 @@
     "LM",
     "LWB"
    ],
-   "depthTier": 2,
+   "depthTier": 4,
    "squadNumber": 33,
    "status": "available",
    "expectedReturnGw": null
@@ -10273,7 +10617,7 @@
    "code": 122798,
    "clubCode": "TOT",
    "position": "LB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -10290,17 +10634,17 @@
    "code": 154566,
    "clubCode": "TOT",
    "position": "ST",
-   "positionSource": "identity_primary_role",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "CF",
    "secondaryPositions": [],
    "canCover": [
     "CF",
     "SS"
    ],
-   "depthTier": 0,
+   "depthTier": 1,
    "squadNumber": 9,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 172780,
@@ -10314,10 +10658,10 @@
     "CAM",
     "DM"
    ],
-   "depthTier": 0,
+   "depthTier": 1,
    "squadNumber": 10,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": 6
   },
   {
    "code": 184254,
@@ -10336,7 +10680,7 @@
    "code": 202993,
    "clubCode": "TOT",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
@@ -10351,27 +10695,25 @@
   {
    "code": 212319,
    "clubCode": "TOT",
-   "position": "CF",
-   "positionSource": "understat_pl",
+   "position": "ST",
+   "positionSource": "tm_position+fotmob_position_id",
    "line": "CF",
    "secondaryPositions": [],
    "canCover": [
-    "LW",
-    "RW",
-    "SS",
-    "ST"
+    "CF",
+    "SS"
    ],
    "depthTier": 0,
    "squadNumber": 9,
-   "status": "injured",
+   "status": "left_club",
    "expectedReturnGw": null
   },
   {
    "code": 214572,
    "clubCode": "TOT",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "GK",
+   "positionSource": "transfermarkt_position",
+   "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
@@ -10383,7 +10725,7 @@
    "code": 221466,
    "clubCode": "TOT",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -10391,7 +10733,7 @@
     "LB",
     "RB"
    ],
-   "depthTier": 2,
+   "depthTier": 3,
    "squadNumber": 4,
    "status": "available",
    "expectedReturnGw": null
@@ -10413,7 +10755,7 @@
    "code": 232787,
    "clubCode": "TOT",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -10451,7 +10793,7 @@
    "code": 432422,
    "clubCode": "TOT",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
@@ -10461,19 +10803,19 @@
    "depthTier": 1,
    "squadNumber": 8,
    "status": "available",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 438234,
    "clubCode": "TOT",
-   "position": "CF",
-   "positionSource": "understat_pl",
-   "line": "CF",
+   "position": "LW",
+   "positionSource": "tm_position+fotmob_position_id",
+   "line": "WF",
    "secondaryPositions": [],
    "canCover": [
-    "LW",
-    "RW",
-    "SS",
+    "AM",
+    "CF",
+    "LM",
     "ST"
    ],
    "depthTier": 1,
@@ -10484,20 +10826,20 @@
   {
    "code": 441164,
    "clubCode": "TOT",
-   "position": "RW",
-   "positionSource": "understat_pl+fotmob_position_id",
-   "line": "WF",
+   "position": "RB",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
-    "CF",
+    "RCB",
     "RM",
-    "ST"
+    "RW",
+    "RWB"
    ],
-   "depthTier": 0,
+   "depthTier": 1,
    "squadNumber": 23,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "doubtful",
+   "expectedReturnGw": 7
   },
   {
    "code": 445044,
@@ -10514,7 +10856,7 @@
    "depthTier": 0,
    "squadNumber": 21,
    "status": "injured",
-   "expectedReturnGw": 3
+   "expectedReturnGw": 6
   },
   {
    "code": 460842,
@@ -10531,33 +10873,34 @@
     "RM",
     "ST"
    ],
-   "depthTier": 0,
+   "depthTier": 2,
    "squadNumber": 20,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 465920,
    "clubCode": "TOT",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "LW",
+   "positionSource": "understat_career",
+   "line": "WF",
    "secondaryPositions": [],
    "canCover": [
     "AM",
-    "CAM",
-    "DM"
+    "CF",
+    "LM",
+    "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 10,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 10
   },
   {
    "code": 469142,
    "clubCode": "TOT",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id+sofascore_band",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -10587,13 +10930,13 @@
    "depthTier": 0,
    "squadNumber": 29,
    "status": "left_club",
-   "expectedReturnGw": 4
+   "expectedReturnGw": 6
   },
   {
    "code": 485055,
    "clubCode": "TOT",
    "position": "GK",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "GK",
    "secondaryPositions": [],
    "canCover": [],
@@ -10606,7 +10949,7 @@
    "code": 487053,
    "clubCode": "TOT",
    "position": "LB",
-   "positionSource": "identity_primary_role",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -10622,9 +10965,9 @@
   {
    "code": 490145,
    "clubCode": "TOT",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "ST",
+   "positionSource": "transfermarkt_position",
+   "line": "CF",
    "secondaryPositions": [],
    "canCover": [
     "CF",
@@ -10639,7 +10982,7 @@
    "code": 491279,
    "clubCode": "TOT",
    "position": "CB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id+sofascore_band",
    "line": "CB",
    "secondaryPositions": [],
    "canCover": [
@@ -10647,10 +10990,10 @@
     "LB",
     "RB"
    ],
-   "depthTier": 0,
+   "depthTier": 2,
    "squadNumber": 37,
-   "status": "injured",
-   "expectedReturnGw": 3
+   "status": "available",
+   "expectedReturnGw": null
   },
   {
    "code": 493362,
@@ -10676,14 +11019,14 @@
   {
    "code": 499716,
    "clubCode": "TOT",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "RB",
+   "positionSource": "transfermarkt_position",
+   "line": "FB",
    "secondaryPositions": [],
    "canCover": [
-    "DM",
-    "LB",
-    "RB"
+    "RCB",
+    "RM",
+    "RWB"
    ],
    "depthTier": 4,
    "squadNumber": 2,
@@ -10694,7 +11037,7 @@
    "code": 499721,
    "clubCode": "TOT",
    "position": "RW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -10711,9 +11054,9 @@
   {
    "code": 499726,
    "clubCode": "TOT",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CM",
+   "positionSource": "transfermarkt_position",
+   "line": "CM",
    "secondaryPositions": [],
    "canCover": [
     "AM",
@@ -10728,32 +11071,26 @@
   {
    "code": 510281,
    "clubCode": "TOT",
-   "position": "LW",
-   "positionSource": "identity_primary_role",
+   "position": "RW",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
-   "secondaryPositions": [
-    "RW",
-    "RM",
-    "LM"
-   ],
+   "secondaryPositions": [],
    "canCover": [
     "AM",
     "CF",
-    "LM",
     "RM",
-    "RW",
     "ST"
    ],
-   "depthTier": 0,
+   "depthTier": 1,
    "squadNumber": 33,
-   "status": "injured",
-   "expectedReturnGw": 2
+   "status": "available",
+   "expectedReturnGw": 6
   },
   {
    "code": 511499,
    "clubCode": "TOT",
    "position": "LW",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "WF",
    "secondaryPositions": [],
    "canCover": [
@@ -10762,7 +11099,7 @@
     "LM",
     "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 39,
    "status": "available",
    "expectedReturnGw": null
@@ -10771,7 +11108,7 @@
    "code": 547701,
    "clubCode": "TOT",
    "position": "RB",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "FB",
    "secondaryPositions": [],
    "canCover": [
@@ -10779,7 +11116,7 @@
     "RM",
     "RWB"
    ],
-   "depthTier": 1,
+   "depthTier": 2,
    "squadNumber": 14,
    "status": "available",
    "expectedReturnGw": null
@@ -10787,9 +11124,9 @@
   {
    "code": 548308,
    "clubCode": "TOT",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CB",
+   "positionSource": "transfermarkt_position",
+   "line": "CB",
    "secondaryPositions": [],
    "canCover": [
     "DM",
@@ -10820,13 +11157,13 @@
    "depthTier": 0,
    "squadNumber": 28,
    "status": "injured",
-   "expectedReturnGw": 11
+   "expectedReturnGw": 10
   },
   {
    "code": 551226,
    "clubCode": "TOT",
    "position": "AM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "AM",
    "secondaryPositions": [],
    "canCover": [
@@ -10844,7 +11181,7 @@
    "code": 570526,
    "clubCode": "TOT",
    "position": "DM",
-   "positionSource": "understat_pl+fotmob_position_id",
+   "positionSource": "understat_pl+tm_position+fotmob_position_id",
    "line": "DM",
    "secondaryPositions": [],
    "canCover": [
@@ -10859,16 +11196,17 @@
   {
    "code": 611917,
    "clubCode": "TOT",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "AM",
+   "positionSource": "transfermarkt_position",
+   "line": "AM",
    "secondaryPositions": [],
    "canCover": [
-    "AM",
     "CAM",
-    "DM"
+    "CM",
+    "LW",
+    "RW"
    ],
-   "depthTier": 1,
+   "depthTier": 4,
    "squadNumber": 10,
    "status": "available",
    "expectedReturnGw": null
@@ -10898,9 +11236,9 @@
   {
    "code": 640419,
    "clubCode": "TOT",
-   "position": null,
-   "positionSource": "fpl_element_type",
-   "line": null,
+   "position": "CB",
+   "positionSource": "transfermarkt_position",
+   "line": "CB",
    "secondaryPositions": [],
    "canCover": [
     "DM",
