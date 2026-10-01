@@ -17,7 +17,7 @@ export interface SeasonStrengthConfig {
   settleGames: number;
 }
 
-export interface ClubStrength {
+export interface StrengthSoFar {
   attack: number;
   defence: number;
 }
@@ -27,7 +27,7 @@ export function strengthBefore(
   club: string,
   before: string,
   config: SeasonStrengthConfig,
-): ClubStrength {
+): StrengthSoFar {
   const blend = (goals: number, xg: number) => config.goalsShare * goals + (1 - config.goalsShare) * xg;
   const earlier = results.filter((r) => r.kickoff < before);
   if (earlier.length === 0) return { attack: 1, defence: 1 };

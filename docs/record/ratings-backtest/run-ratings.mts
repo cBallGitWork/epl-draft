@@ -10,7 +10,7 @@ const dir = new URL(".", import.meta.url).pathname;
 const rows = JSON.parse(readFileSync(`${dir}ratings-input-pts-25-26.json`, "utf8")) as Record<string, any>[];
 const results = JSON.parse(readFileSync(`${dir}club-results-25-26.json`, "utf8")) as ClubResult[];
 const rules = JSON.parse(readFileSync(`${dir}rules-real.json`, "utf8"));
-export const STRENGTH = { goalsShare: 0.5, settleGames: 6 };
+const STRENGTH = { goalsShare: 0.5, settleGames: 6 };
 
 const price = (cat: string, pos: string) => {
   const table = pos === "G" ? rules.goalie : rules.outfield;

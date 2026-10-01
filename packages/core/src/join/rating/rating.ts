@@ -35,7 +35,7 @@ export interface MatchRating {
 const oneDecimal = (n: number) => Math.round(n * 10) / 10;
 
 /** Straight lines between the table's points; flat beyond either end. */
-export function markFor(points: number, marks: RatingWeights["marks"]): number {
+function markFor(points: number, marks: RatingWeights["marks"]): number {
   const [first, last] = [marks[0], marks[marks.length - 1]];
   if (points <= first[0]) return first[1];
   if (points >= last[0]) return last[1];
