@@ -79,7 +79,7 @@ chip.
 
 Same shell, different question: not who is winning, but what each side is
 actually DOING. The blue foot row picks the group — Attacking · Defensive ·
-Appearances · Discipline — and **the whole group draws at once**, three or four
+Keeping · Appearances · Discipline — and **the whole group draws at once**, three or four
 categories across the top with every team down the side (Craig, 11 Sep 2026:
 *"for each section, we can get all the columns in one go"*).
 
@@ -110,6 +110,12 @@ columns and no sideways scroll.
 The categories are ours, not Fantrax's — their `SEASON_STATS` view publishes each
 one twice, split into a goalkeeper block and an outfielder block, and
 `mapSeasonStats` adds them back together.
+
+**DefCon is two columns, `DFP` and `DFP3`, and Keeping is its own group** (1 Oct
+2026). The real league pays a defender on `Defensive Points` and a midfielder or
+forward on `Defensive Points 3`, so their points are two halves of one bonus and
+their counts are two different sums; adding them would be neither. Saves, keeper
+actions and penalties saved moved to Keeping so Defensive stays at four.
 
 ## States
 

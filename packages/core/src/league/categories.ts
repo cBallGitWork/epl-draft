@@ -34,7 +34,7 @@ export interface StatCategory {
   lowIsGood?: boolean;
 }
 
-/** The four kinds of thing a squad does, which is CM's second foot row.
+/** The kinds of thing a squad does, which is CM's second foot row.
  *
  *  Craig, 1 Sep 2026: "like CM, we could have another row of blue buttons under
  *  the table, could then separate the categories into defensive / attacking /
@@ -57,6 +57,8 @@ export interface StatCategory {
 export const GROUPS = [
   { key: "attacking", label: "Attacking" },
   { key: "defensive", label: "Defensive" },
+  // A keeper's own work, apart so DefCon's two counts fit a phone beside clean sheets.
+  { key: "keeping", label: "Keeping" },
   { key: "appearances", label: "Appearances" },
   { key: "discipline", label: "Discipline" },
 ] as const;
@@ -85,10 +87,13 @@ export const CATEGORIES: readonly StatCategory[] = [
   { key: ASSISTS_OFFICIAL.caption, group: "attacking", label: "Assists", short: ASSISTS_OFFICIAL.short },
   { key: ASSISTS_FANTASY.caption, group: "attacking", label: "Assists (fantasy)", short: ASSISTS_FANTASY.short },
   { key: "Clean Sheets On Field", group: "defensive", label: "Clean sheets", short: "CS" },
-  { key: SAVES.caption, group: "defensive", label: "Saves", short: SAVES.short },
-  { key: KEEPER_POINTS.caption, group: "defensive", label: "Keeper actions", short: KEEPER_POINTS.short },
-  { key: "Penalty Kick Saves", group: "defensive", label: "Penalties saved", short: "PKS" },
+  // DefCon's two counts: the real league pays a defender on the first and the men in front of him on the second.
+  { key: "Defensive Points", group: "defensive", label: "Tackles won, interceptions and blocks", short: "DFP" },
+  { key: "Defensive Points 3", group: "defensive", label: "Tackles won, interceptions, blocks, clearances and recoveries", short: "DFP3" },
   { key: "Goals Against", group: "defensive", label: "Goals against", short: "GA", lowIsGood: true },
+  { key: SAVES.caption, group: "keeping", label: "Saves", short: SAVES.short },
+  { key: KEEPER_POINTS.caption, group: "keeping", label: "Keeper actions", short: KEEPER_POINTS.short },
+  { key: "Penalty Kick Saves", group: "keeping", label: "Penalties saved", short: "PKS" },
   { key: "Yellow Cards", group: "discipline", label: "Yellow cards", short: "YC", lowIsGood: true },
   { key: "Red Cards", group: "discipline", label: "Red cards", short: "RC", lowIsGood: true },
   { key: "Penalty Kicks Missed", group: "attacking", label: "Penalties missed", short: "PKM", lowIsGood: true },
