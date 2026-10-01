@@ -76,8 +76,8 @@ describe("mapScoringCategories", () => {
   const real = mapScoringCategories(realCategories);
 
   it("names a category the way getLiveScoringStats keys it", () => {
-    expect(rehearsal["5010#6090"]).toEqual({ code: "G", name: "Goals" });
-    expect(rehearsal["5020#6200"]).toEqual({ code: "Sv", name: "Saves" });
+    expect(rehearsal["5010#6090"]).toEqual({ code: "G", name: "Goals", longCode: "INDIVIDUAL_GOALS" });
+    expect(rehearsal["5020#6200"]).toEqual({ code: "Sv", name: "Saves", longCode: "INDIVIDUAL_SAVES" });
   });
 
   it("keys on group and category, never on the position", () => {
@@ -97,10 +97,11 @@ describe("mapScoringCategories", () => {
   });
 
   it("reads the real league's own vocabulary, which is not the rehearsal one", () => {
-    expect(real["5010#6181"]).toEqual({ code: "MP", name: "Midfielder Points" });
+    expect(real["5010#6181"]).toEqual({ code: "MP", name: "Midfielder Points", longCode: "INDIVIDUAL_MIDFIELDER_POINTS" });
     expect(real["5010#6002"]).toEqual({
       code: "KP",
       name: "Key Passes (Assists on Shots)",
+      longCode: "INDIVIDUAL_ASSISTS_ON_SHOTS",
     });
     expect(real["5020#6689"]?.code).toBe("GKP");
     // Categories the rehearsal league scores and ours does not, and the reverse.

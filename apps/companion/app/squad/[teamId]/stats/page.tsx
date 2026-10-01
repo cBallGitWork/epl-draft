@@ -61,7 +61,7 @@ export default async function StatsPage({
       {his.length === 0 ? (
         <TabEmpty>Fantrax has no statistical line for anybody on this squad yet.</TabEmpty>
       ) : (
-        <StatBoard lines={his} footballers={footballers} names={names} />
+        <StatBoard lines={his} footballers={footballers} names={names} scored={[...new Set(all.flatMap((line) => Object.keys(line.stats)))]} />
       )}
     </TeamShell>
   );

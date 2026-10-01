@@ -14,6 +14,8 @@ export interface ScoringCategory {
   code: string;
   /** Their name for it: "Goals", "Clean Sheets On Field". */
   name: string;
+  /** Their long code, "INDIVIDUAL_ASSISTS_TOTAL": what a category is, whatever a league calls it. Null when not sent. */
+  longCode: string | null;
 }
 
 /** Keepers score differently enough that Fantrax keeps two tables. */

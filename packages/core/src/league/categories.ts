@@ -1,3 +1,5 @@
+import { ASSISTS_FANTASY, ASSISTS_OFFICIAL, ASSISTS_TOTAL, KEEPER_POINTS, SAVES, carries } from "./categoryNames";
+
 // What the Team Stats board can rank a league by.
 //
 // The list is OURS, not Fantrax's, and the difference matters. Fantrax publishes
@@ -61,9 +63,11 @@ export const GROUPS = [
 
 export type GroupKey = (typeof GROUPS)[number]["key"];
 
-/** The categories in one group, in the order they are declared. */
-export function inGroup(group: GroupKey): StatCategory[] {
-  return CATEGORIES.filter((category) => category.group === group);
+/** A group's categories the league publishes, by caption, in the order they are declared; the whole group when
+ *  Fantrax answered nothing. */
+export function offeredIn(group: GroupKey, lines: ReadonlyMap<string, unknown>): StatCategory[] {
+  const carried = new Set(lines.keys());
+  return CATEGORIES.filter((category) => category.group === group && carries(carried, category.key));
 }
 
 export function groupFor(key: string | undefined): GroupKey {
@@ -77,10 +81,12 @@ export function groupFor(key: string | undefined): GroupKey {
 export const CATEGORIES: readonly StatCategory[] = [
   { key: "Minutes Played", group: "appearances", label: "Minutes", short: "Min" },
   { key: "Goals", group: "attacking", label: "Goals", short: "G" },
-  { key: "Assists (Official)", group: "attacking", label: "Assists", short: "A" },
-  { key: "Assists (Fantasy)", group: "attacking", label: "Assists (fantasy)", short: "AF" },
+  { key: ASSISTS_TOTAL.caption, group: "attacking", label: "Assists (total)", short: ASSISTS_TOTAL.short },
+  { key: ASSISTS_OFFICIAL.caption, group: "attacking", label: "Assists", short: ASSISTS_OFFICIAL.short },
+  { key: ASSISTS_FANTASY.caption, group: "attacking", label: "Assists (fantasy)", short: ASSISTS_FANTASY.short },
   { key: "Clean Sheets On Field", group: "defensive", label: "Clean sheets", short: "CS" },
-  { key: "Saves", group: "defensive", label: "Saves", short: "Sv" },
+  { key: SAVES.caption, group: "defensive", label: "Saves", short: SAVES.short },
+  { key: KEEPER_POINTS.caption, group: "defensive", label: "Keeper actions", short: KEEPER_POINTS.short },
   { key: "Penalty Kick Saves", group: "defensive", label: "Penalties saved", short: "PKS" },
   { key: "Goals Against", group: "defensive", label: "Goals against", short: "GA", lowIsGood: true },
   { key: "Yellow Cards", group: "discipline", label: "Yellow cards", short: "YC", lowIsGood: true },

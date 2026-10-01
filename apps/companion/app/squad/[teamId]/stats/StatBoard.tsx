@@ -22,8 +22,6 @@ import { BOARD, BOARD_FIGURE, MINOR_LABEL, PANEL_FLUSH, PINNED_BESIDE_TILE, PINN
 // One squad's season on the house board, as a club's stat board draws it: our position in the index tile, the crest
 // before the pinned name, a view picked above, a tap on a head to sort, and each column's standouts lit in ink.
 
-/** A column's orange for its best tenth and yellow for its top fifth, of the squad. */
-
 /** The name column starts where the tile ends. */
 const LEAD = `${PINNED_BESIDE_TILE}`;
 
@@ -31,8 +29,11 @@ export default function StatBoard({
   lines,
   footballers,
   names,
+  scored,
 }: {
   lines: readonly PlayerStatLine[];
+  /** Every column the league's stat read carries, which is the categories it scores. */
+  scored: readonly string[];
   /** The footballer behind each Fantrax id; absent where the bridge has not settled him, which reads as dashes. */
   footballers: Record<string, FootballPlayer>;
   /** The roster's spelling of each name, by id: Fantrax's stat rows say "Schade, Kevin". */
@@ -42,7 +43,7 @@ export default function StatBoard({
   // Null is the squad's own order, the one the Squad tab prints.
   const [sort, setSort] = useState<{ key: string; descending: boolean } | null>(null);
 
-  const measures = measuresFor(view);
+  const measures = measuresFor(view, new Set(scored));
   const cuts = new Map(
     measures.map((measure) => [
       measure.key,
@@ -124,7 +125,7 @@ export default function StatBoard({
                         ? "text-faint"
                         : standoutInk(value, cuts.get(measure.key), measure.worse ? "low" : "high") || "text-ink";
                     return (
-                      <td key={measure.key} className={`${BOARD_FIGURE} ${measure.loud ? "font-bold" : ""} ${ink}`}>
+                      <td key={measure.key} className={`${BOARD_FIGURE} ${ink}`}>
                         {value === null ? DASH : measure.decimals ? value.toFixed(2) : value}
                       </td>
                     );

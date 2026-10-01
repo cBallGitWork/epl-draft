@@ -1,4 +1,5 @@
 import {
+  ASSIST,
   FANTRAX_LEAGUE_ID,
   KEEPER,
   OUTFIELD,
@@ -14,6 +15,7 @@ import {
   fetchLive,
   fetchPoolWindow,
   fetchTransactions,
+  firstScored,
   formations,
   fplWeeks,
   fullClubName,
@@ -112,12 +114,13 @@ export async function binXiDesk(input: {
   if (unjoined.length > 0) say(`  Bin XI: ${unjoined.length} scorers could not be joined (npm run bridge): ${unjoined.slice(0, 5).join(", ")}`);
 
   const rules = info.scoring;
+  const assistCategory = firstScored(info.scoringCategories, ASSIST);
   const side = binXi(
     men,
     shapes,
     (position) => {
       const goal = rules === null ? null : categoryPoints(rules, "G", position);
-      const assist = rules === null ? null : categoryPoints(rules, "A", position);
+      const assist = rules === null || assistCategory === null ? null : categoryPoints(rules, assistCategory.short, position);
       return goal === null || assist === null ? null : { goal, assist };
     },
     info.roster.maxReservePlayers,

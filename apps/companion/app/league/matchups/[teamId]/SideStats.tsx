@@ -36,7 +36,7 @@ export default function SideStats({
   hrefFor: (head: string) => string;
 }) {
   const { eleven, bench } = sideRows(sheet, counts, sort);
-  const heads = [{ code: DEFAULT_SIDE_SORT, name: "Fantrax points" }, ...columns];
+  const heads = [{ code: DEFAULT_SIDE_SORT, name: "Fantrax points", longCode: null }, ...columns];
   const row = (player: SquadPlayerDetail, reserve: boolean) => (
     <SideRow
       key={player.rostered.slot.fantraxId}

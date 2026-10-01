@@ -1,4 +1,5 @@
 import type { GroupKey } from "./categories";
+import { ASSISTS_FANTASY, ASSISTS_OFFICIAL, ASSISTS_TOTAL, KEEPER_POINTS, SAVES } from "./categoryNames";
 
 // What the Player Stats board can rank the pool by.
 //
@@ -38,9 +39,6 @@ export interface PlayerCategory {
   label: string;
   /** True when a low count is the better one. */
   lowIsGood?: boolean;
-  /** Keepers and outfielders publish different vocabularies, so a category can
-   *  belong to one of them. Absent means both carry it. */
-  only?: "keeper" | "outfield";
   /** The other half's name for the same fact, when Fantrax spells it
    *  differently. Read as a fallback, never added: a player is in exactly one
    *  half, so at most one of the two columns is ever present on his row. */
@@ -55,12 +53,14 @@ export interface PlayerCategory {
  *  did at the back, then what he did wrong. */
 export const PLAYER_CATEGORIES: readonly PlayerCategory[] = [
   { key: "G", group: "attacking", label: "Goals" },
-  { key: "A", group: "attacking", label: "Assists" },
-  { key: "AF", group: "attacking", label: "Assists (fantasy)" },
+  { key: ASSISTS_TOTAL.short, group: "attacking", label: "Assists (total)" },
+  { key: ASSISTS_OFFICIAL.short, group: "attacking", label: "Assists" },
+  { key: ASSISTS_FANTASY.short, group: "attacking", label: "Assists (fantasy)" },
   { key: "PKM", group: "attacking", label: "Penalties missed", lowIsGood: true },
   { key: "CS", group: "defensive", label: "Clean sheets" },
-  { key: "Sv", group: "defensive", label: "Saves", only: "keeper" },
-  { key: "PKS", group: "defensive", label: "Penalties saved", only: "keeper" },
+  { key: SAVES.short, group: "defensive", label: "Saves" },
+  { key: KEEPER_POINTS.short, group: "defensive", label: "Keeper actions" },
+  { key: "PKS", group: "defensive", label: "Penalties saved" },
   // **One entry, two column names.** Fantrax calls it `GA` on a keeper's read
   // and `GAO` on an outfielder's, and they are the same defensive fact — the
   // goals that went in while he was on the pitch. Two entries shipped for an
@@ -79,5 +79,3 @@ export const PLAYER_CATEGORIES: readonly PlayerCategory[] = [
   // is the most defensive thing on the list. A card is a foul; this is a goal.
   { key: "OG", group: "defensive", label: "Own goals", lowIsGood: true },
 ];
-
-/** The categories in one group. */

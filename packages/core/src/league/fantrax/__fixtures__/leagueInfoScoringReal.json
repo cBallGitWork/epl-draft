@@ -1,0 +1,650 @@
+{
+  "leagueName": "Tim Hortons Pro League 26/27",
+  "scoringSystem": {
+    "scoringCategories": {
+      "NON_GOALIE": {
+        "CS": {
+          "D": "points4",
+          "Default": "points0",
+          "M": "points1"
+        },
+        "RC": {
+          "Default": "points-3"
+        },
+        "Min": {
+          "Default": "range1|59|1|NULL$60|90|1|NULL"
+        },
+        "PKM": {
+          "Default": "points-2"
+        },
+        "AT": {
+          "Default": "points3"
+        },
+        "GAO": {
+          "D": "range1|99|-1|2.0",
+          "Default": "points0"
+        },
+        "G": {
+          "D": "points6",
+          "F": "points4",
+          "Default": "points0",
+          "M": "points5"
+        },
+        "OG": {
+          "Default": "points-2"
+        },
+        "Pen": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "YC": {
+          "Default": "points-1"
+        },
+        "DFP3": {
+          "F": "range6|8|1|NULL$9|99|2|NULL",
+          "Default": "points0",
+          "M": "range8|10|1|NULL$11|99|2|NULL"
+        },
+        "DFP": {
+          "D": "range3|4|1|NULL$5|99|2|NULL",
+          "Default": "points0"
+        }
+      },
+      "GOALIE": {
+        "CS": {
+          "Default": "points4"
+        },
+        "RC": {
+          "Default": "points-3"
+        },
+        "Min": {
+          "Default": "range1|59|1|NULL$60|90|2|NULL"
+        },
+        "PKM": {
+          "Default": "points-2"
+        },
+        "AT": {
+          "Default": "points3"
+        },
+        "G": {
+          "Default": "points10"
+        },
+        "OG": {
+          "Default": "points-2"
+        },
+        "PKS": {
+          "Default": "points5"
+        },
+        "GA": {
+          "Default": "range1|99|-1|2.0"
+        },
+        "YC": {
+          "Default": "points-1"
+        },
+        "GKP": {
+          "Default": "range1|99|1|3.0"
+        }
+      }
+    },
+    "scoringCategorySettings": [
+      {
+        "configs": [
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_GOALS",
+              "name": "Goals",
+              "id": "6090",
+              "shortName": "G"
+            },
+            "points": 10.0
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_GOALS_ON_OWN_NET",
+              "name": "Own Goals",
+              "id": "6105",
+              "shortName": "OG"
+            },
+            "points": -2.0
+          },
+          {
+            "ranges": [
+              {
+                "range": {
+                  "start": 1.0,
+                  "end": 99.0
+                },
+                "points": -1.0,
+                "interval": 2.0
+              }
+            ],
+            "rangeType": "PER_GAME",
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_GOALS_AGAINST",
+              "name": "Goals Against",
+              "id": "6112",
+              "shortName": "GA"
+            },
+            "points": 0.0
+          },
+          {
+            "ranges": [
+              {
+                "range": {
+                  "start": 1.0,
+                  "end": 59.0
+                },
+                "points": 1.0
+              },
+              {
+                "range": {
+                  "start": 60.0,
+                  "end": 90.0
+                },
+                "points": 2.0
+              }
+            ],
+            "rangeType": "PER_GAME",
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": false,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_MINUTES_PLAYED",
+              "name": "Minutes Played",
+              "id": "6120",
+              "shortName": "Min"
+            },
+            "points": 0.0
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_PENALTY_KICK_SAVES",
+              "name": "Penalty Kick Saves",
+              "id": "6170",
+              "shortName": "PKS"
+            },
+            "points": 5.0
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_RED_CARDS",
+              "name": "Red Cards",
+              "id": "6190",
+              "shortName": "RC"
+            },
+            "points": -3.0
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_SHUTOUTS_ON_FIELD",
+              "name": "Clean Sheets On Field",
+              "id": "6249",
+              "shortName": "CS"
+            },
+            "points": 4.0
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_YELLOW_CARDS",
+              "name": "Yellow Cards",
+              "id": "6280",
+              "shortName": "YC"
+            },
+            "points": -1.0
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_PENALTY_KICKS_MISSED",
+              "name": "Penalty Kicks Missed",
+              "id": "6332",
+              "shortName": "PKM"
+            },
+            "points": -2.0
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_ASSISTS_TOTAL",
+              "name": "Assists (Total)",
+              "id": "6362",
+              "shortName": "AT"
+            },
+            "points": 3.0
+          },
+          {
+            "ranges": [
+              {
+                "range": {
+                  "start": 1.0,
+                  "end": 99.0
+                },
+                "points": 1.0,
+                "interval": 3.0
+              }
+            ],
+            "rangeType": "PER_GAME",
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_KEEPER_POINTS",
+              "name": "Keeper Points",
+              "id": "6689",
+              "shortName": "GKP"
+            },
+            "points": 0.0
+          }
+        ],
+        "group": {
+          "code": "SOCCER_GOALIE",
+          "name": "Goalkeeper",
+          "id": "5020",
+          "shortName": "G"
+        }
+      },
+      {
+        "configs": [
+          {
+            "position": {
+              "code": "FORWARD",
+              "name": "Forward",
+              "id": "701",
+              "shortName": "F"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_GOALS",
+              "name": "Goals",
+              "id": "6090",
+              "shortName": "G"
+            },
+            "points": 4.0
+          },
+          {
+            "position": {
+              "code": "MIDFIELDER",
+              "name": "Midfielder",
+              "id": "702",
+              "shortName": "M"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_GOALS",
+              "name": "Goals",
+              "id": "6090",
+              "shortName": "G"
+            },
+            "points": 5.0
+          },
+          {
+            "position": {
+              "code": "DEFENDER",
+              "name": "Defender",
+              "id": "703",
+              "shortName": "D"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_GOALS",
+              "name": "Goals",
+              "id": "6090",
+              "shortName": "G"
+            },
+            "points": 6.0
+          },
+          {
+            "ranges": [
+              {
+                "range": {
+                  "start": 1.0,
+                  "end": 99.0
+                },
+                "points": -1.0,
+                "interval": 2.0
+              }
+            ],
+            "rangeType": "PER_GAME",
+            "position": {
+              "code": "DEFENDER",
+              "name": "Defender",
+              "id": "703",
+              "shortName": "D"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_GOALS_AGAINST_OUTFIELDERS",
+              "name": "Goals Against Outfielders ",
+              "id": "6101",
+              "shortName": "GAO"
+            },
+            "points": 0.0
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_GOALS_ON_OWN_NET",
+              "name": "Own Goals",
+              "id": "6105",
+              "shortName": "OG"
+            },
+            "points": -2.0
+          },
+          {
+            "ranges": [
+              {
+                "range": {
+                  "start": 1.0,
+                  "end": 59.0
+                },
+                "points": 1.0
+              },
+              {
+                "range": {
+                  "start": 60.0,
+                  "end": 90.0
+                },
+                "points": 1.0
+              }
+            ],
+            "rangeType": "PER_GAME",
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_MINUTES_PLAYED",
+              "name": "Minutes Played",
+              "id": "6120",
+              "shortName": "Min"
+            },
+            "points": 0.0
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_RED_CARDS",
+              "name": "Red Cards",
+              "id": "6190",
+              "shortName": "RC"
+            },
+            "points": -3.0
+          },
+          {
+            "position": {
+              "code": "MIDFIELDER",
+              "name": "Midfielder",
+              "id": "702",
+              "shortName": "M"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_SHUTOUTS_ON_FIELD",
+              "name": "Clean Sheets On Field",
+              "id": "6249",
+              "shortName": "CS"
+            },
+            "points": 1.0
+          },
+          {
+            "position": {
+              "code": "DEFENDER",
+              "name": "Defender",
+              "id": "703",
+              "shortName": "D"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_SHUTOUTS_ON_FIELD",
+              "name": "Clean Sheets On Field",
+              "id": "6249",
+              "shortName": "CS"
+            },
+            "points": 4.0
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_YELLOW_CARDS",
+              "name": "Yellow Cards",
+              "id": "6280",
+              "shortName": "YC"
+            },
+            "points": -1.0
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_PENALTY_KICKS_MISSED",
+              "name": "Penalty Kicks Missed",
+              "id": "6332",
+              "shortName": "PKM"
+            },
+            "points": -2.0
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_ASSISTS_TOTAL",
+              "name": "Assists (Total)",
+              "id": "6362",
+              "shortName": "AT"
+            },
+            "points": 3.0
+          },
+          {
+            "ranges": [
+              {
+                "range": {
+                  "start": 3.0,
+                  "end": 4.0
+                },
+                "points": 1.0
+              },
+              {
+                "range": {
+                  "start": 5.0,
+                  "end": 99.0
+                },
+                "points": 2.0
+              }
+            ],
+            "rangeType": "PER_GAME",
+            "position": {
+              "code": "DEFENDER",
+              "name": "Defender",
+              "id": "703",
+              "shortName": "D"
+            },
+            "cumulative": false,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_DEFENSIVE_POINTS",
+              "name": "Defensive Points",
+              "id": "6696",
+              "shortName": "DFP"
+            },
+            "points": 0.0
+          },
+          {
+            "ranges": [
+              {
+                "range": {
+                  "start": 6.0,
+                  "end": 8.0
+                },
+                "points": 1.0
+              },
+              {
+                "range": {
+                  "start": 9.0,
+                  "end": 99.0
+                },
+                "points": 2.0
+              }
+            ],
+            "rangeType": "PER_GAME",
+            "position": {
+              "code": "FORWARD",
+              "name": "Forward",
+              "id": "701",
+              "shortName": "F"
+            },
+            "cumulative": false,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_DEFENSIVE_POINTS_3",
+              "name": "Defensive Points 3",
+              "id": "6700",
+              "shortName": "DFP3"
+            },
+            "points": 0.0
+          },
+          {
+            "ranges": [
+              {
+                "range": {
+                  "start": 8.0,
+                  "end": 10.0
+                },
+                "points": 1.0
+              },
+              {
+                "range": {
+                  "start": 11.0,
+                  "end": 99.0
+                },
+                "points": 2.0
+              }
+            ],
+            "rangeType": "PER_GAME",
+            "position": {
+              "code": "MIDFIELDER",
+              "name": "Midfielder",
+              "id": "702",
+              "shortName": "M"
+            },
+            "cumulative": false,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_DEFENSIVE_POINTS_3",
+              "name": "Defensive Points 3",
+              "id": "6700",
+              "shortName": "DFP3"
+            },
+            "points": 0.0
+          }
+        ],
+        "group": {
+          "code": "SOCCER_NON_GOALIE",
+          "name": "Outfielder",
+          "id": "5010",
+          "shortName": "OF"
+        }
+      }
+    ],
+    "type": "HEAD_TO_HEAD_POINTS_BASED"
+  }
+}

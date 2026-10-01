@@ -76,7 +76,8 @@ export default async function PlayersPage({
 
   const group = groupFor(query.group);
   const rated = isPer90(query);
-  const columns = columnsIn(group, activeSort(query).key);
+  const scored = new Set(lines.flatMap((line) => Object.keys(line.stats)));
+  const columns = columnsIn(group, activeSort(query).key, scored);
 
   // **The cuts are taken over the rows actually DRAWN**, which is what makes a
   // mark mean "the top of this column, among what is in front of you" — see
@@ -133,6 +134,7 @@ export default async function PlayersPage({
         counted={counted}
         rated={rated}
         shown={shown.length}
+        scored={scored}
       />
 
       {/* A column headed FPts that silently became Fantrax's projection would be the confident wrong answer (DESIGN §7). */}

@@ -307,6 +307,29 @@ draft, and 15/11/5.
   (`DYNAMIC_SERVER_USAGE`). Production names the league when it builds; build with it set before shooting an
   article locally.
 
+## Which categories a league scores is data too: A, AF and Sv became AT and GKP — probed 1 Oct 2026
+
+The commissioner rebuilt the real league's scoring in pre-season. Public `getLeagueInfo` (no cookie), 14:20Z:
+assists are `AT` (`INDIVIDUAL_ASSISTS_TOTAL`, "Assists (Total)", id 6362, 3 points) where they were `A` (6000) and
+`AF` (6283); a keeper's 1-per-3 bonus is `GKP` (`INDIVIDUAL_KEEPER_POINTS`, "Keeper Points", 6689) where it was
+`Sv` (6200). The rehearsal league still scores A, AF and Sv. Code that named `"A"`, `"AF"` and `"Sv"` read nothing on
+the real league and said nothing: the draft desk tallied no assists and priced none, the Bin XI could price no
+position, the squad board's `Pts` left assists and keeper work out, and Team Stats showed no assist or keeper column.
+
+- **Counted on `getPlayerStats`, both leagues the same day, no cookie.** `AT` = `A` + `AF` for **455 of 455**
+  outfielders the two pools share, so AT supersedes its parts and a total never adds both. **`GKP` is not saves**:
+  23 of 63 keepers have a non-zero `GKP`, and every one of the 23 reads higher than his `Sv` (Tzolakis 30 against 17),
+  because it counts saves, smothers, punches and high claims won (Craig, 1 Oct). Labelled "Keeper actions", never saves.
+- **The squad board's `Pts` is dropped (Craig, 1 Oct).** It summed raw counts, so goals conceded and cards raised it;
+  pricing it needs the tiered rules (minutes, DefCon, GKP) our scoring reader cannot price yet.
+- **Identity is the settings' long `code`**, read into `ScoringCategory.longCode`; the short code is the fallback for
+  reads that carry only short codes (`getPlayerStats` columns, SEASON_STATS captions). One table holds the names,
+  `league/categoryNames.ts`: `ASSIST` (AT, else A) and `KEEPER_WORK` (GKP and Sv).
+- **Boards draw what the league scores.** Squad stats, the pool board and Team Stats drop a category the league's own
+  read does not carry, and keep them all when the read carried nothing.
+- An orphan `Pen` sits in the real league's `scoringCategories` table at 0 for every position, with no entry in
+  `scoringCategorySettings`; `getPlayerStats` lists it (8 non-zero). Nothing labels it.
+
 ## Typed assists come from a stats league, not the served one — decided 28 Sep 2026
 
 The vidiprinter and the match scoresheet dropped assists Opta never placed: across GW1–5, 138

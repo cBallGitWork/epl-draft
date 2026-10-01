@@ -1,3 +1,4 @@
+import { carries } from "@epl/core";
 import { COLUMNS, type PoolColumn } from "./columns";
 
 // Which columns a reader is looking at, and the plates that choose between them.
@@ -78,14 +79,24 @@ export function groupFor(key: string | undefined): PoolGroupKey {
  *  nothing on screen explains, and a screen reader would get one with no
  *  `aria-sort` anywhere in it. The sort is honoured over the plate because the
  *  reader chose it more recently and more deliberately. */
-export function columnsIn(group: PoolGroupKey, sorted: string): readonly PoolColumn[] {
+export function columnsIn(group: PoolGroupKey, sorted: string, scored: ReadonlySet<string>): readonly PoolColumn[] {
   const shown = COLUMNS.filter(
     (column) =>
       column.group === undefined ||
       column.key === sorted ||
-      (group === "all" ? column.group !== "attributes" : column.group === group),
+      ((group === "all" ? column.group !== "attributes" : column.group === group) && isScored(column, scored)),
   );
   return group === "attributes" ? leadWith(shown, sorted) : shown;
+}
+
+/** Every column a reader can sort by: all but the name, and no count the league does not score. */
+export function sortableIn(scored: ReadonlySet<string>): readonly PoolColumn[] {
+  return COLUMNS.filter((column) => column.key !== "name" && isScored(column, scored));
+}
+
+/** A count the league's read carries, or a column that is not a count. */
+function isScored(column: PoolColumn, scored: ReadonlySet<string>): boolean {
+  return column.stat === undefined || carries(scored, column.stat);
 }
 
 /** The sorted column straight after the spine: twenty-five attributes run far past a phone's seven. */

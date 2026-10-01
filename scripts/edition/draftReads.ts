@@ -1,5 +1,9 @@
 import {
+  ASSIST,
+  KEEPER_WORK,
   categoryPoints,
+  firstScored,
+  idsOf,
   fetchPlFixture,
   fetchPlRound,
   mapBenchPlayerPoints,
@@ -64,11 +68,19 @@ export function startedOf(code: number, played: readonly number[], starters: Rea
 
 export const timeOf = (g: ClubGoal): GoalTime => (g.added === undefined ? { minute: g.minute, kickoff: g.kickoff } : { minute: g.minute, added: g.added, kickoff: g.kickoff });
 
-/** Fantrax's category ids for minutes, goals, assists and clean sheets, by their short codes. */
-export function categoryIds(info: LeagueInfo): Record<"minutes" | "goals" | "assists" | "cleanSheets" | "saves" | "defence", ReadonlySet<string>> {
+/** Fantrax's category ids for minutes, goals, assists and clean sheets, and what pays a keeper's work or a defence. */
+export function categoryIds(info: LeagueInfo): Record<"minutes" | "goals" | "assists" | "cleanSheets" | "keeping" | "defence", ReadonlySet<string>> {
   const by = (match: (code: string, name: string) => boolean) => new Set(Object.entries(info.scoringCategories).filter(([, c]) => match(c.code, c.name)).map(([id]) => id));
   const code = (wanted: string) => by((c) => c === wanted);
-  return { minutes: code("Min"), goals: code("G"), assists: code("A"), cleanSheets: code("CS"), saves: code("Sv"), defence: by((_, name) => /^Defensive Points/u.test(name)) };
+  const assist = firstScored(info.scoringCategories, ASSIST);
+  return {
+    minutes: code("Min"),
+    goals: code("G"),
+    assists: assist === null ? new Set() : idsOf(info.scoringCategories, [assist]),
+    cleanSheets: code("CS"),
+    keeping: idsOf(info.scoringCategories, KEEPER_WORK),
+    defence: by((_, name) => /^Defensive Points/u.test(name)),
+  };
 }
 
 /** Each man's points and counts over the days read, eleven and bench alike. */
@@ -116,23 +128,24 @@ function countOf(p: LivePlayerPoints, categories: ReadonlySet<string>): number {
 }
 
 /** What each slot is paid for a return, read from the league's rules; a full match's minutes, and the most a defensive
- *  bonus or a keeper's saves paid in a match, from the gameweek's own payments. A keeper's return is a clean sheet. */
+ *  bonus or a keeper's work paid in a match, from the gameweek's own payments. A keeper's return is a clean sheet. */
 export function slotWorth(info: LeagueInfo, raws: readonly Raw[], teams: readonly RosteredTeam[], slots: readonly string[]): SlotWorth {
   const rules = info.scoring;
   const flat = (category: string, slot: string) => (rules === null ? 0 : (categoryPoints(rules, category, slot) ?? 0));
   const ids = categoryIds(info);
+  const assist = firstScored(info.scoringCategories, ASSIST);
   const keeper = rules?.goaliePosition ?? null;
   const slotOf = new Map(teams.flatMap((t) => { const s = sheetOf(t); return [...s.starters, ...s.bench].map((m) => [m.fantraxId, m.slot] as const); }));
   return {
     keeper,
     appearance: appearance(raws, ids.minutes),
-    bonus: Object.fromEntries(slots.map((slot) => [slot, mostPaid(raws, slot === keeper ? ids.saves : ids.defence, slot, slotOf)])),
+    bonus: Object.fromEntries(slots.map((slot) => [slot, mostPaid(raws, slot === keeper ? ids.keeping : ids.defence, slot, slotOf)])),
     returns: Object.fromEntries(
       slots.map((slot) => [
         slot,
         (slot === keeper
           ? [{ kind: "clean sheet" as const, worth: flat("CS", slot) }]
-          : [{ kind: "goal" as const, worth: flat("G", slot) }, { kind: "assist" as const, worth: flat("A", slot) }, { kind: "clean sheet" as const, worth: flat("CS", slot) }]
+          : [{ kind: "goal" as const, worth: flat("G", slot) }, { kind: "assist" as const, worth: assist === null ? 0 : flat(assist.short, slot) }, { kind: "clean sheet" as const, worth: flat("CS", slot) }]
         ).filter((w) => w.worth > 0),
       ]),
     ),
