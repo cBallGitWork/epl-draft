@@ -1,7 +1,6 @@
 import Image from "next/image";
 import type { MatchEventKind } from "@epl/core";
 import Section from "../components/shell/Section";
-import { SMALL_CAPS } from "@/app/desk";
 import { isBreak, type WireBreak, type WireLine, type WireRow } from "./wireLines";
 import Absent from "@/app/components/shell/Absent";
 
@@ -66,12 +65,7 @@ const WORD: Record<MatchEventKind | WireBreak["kind"], string> = {
   "full-time": "FT",
 };
 
-/** A red card is the negative slot; a yellow one is NOT the accent slot.
- *
- *  `cm9900/22.jpg` inks its own Red Cards label red and we have the same slot
- *  for it. Yellow is unavailable at any price — the accent means "yours" on this
- *  very panel, and a second meaning for it would break the one reading aid five
- *  screens depend on. An own goal and a disallowed goal are losses too. */
+/** A red card, an own goal and a chalked-off goal are losses: the negative slot. */
 const TONE: Partial<Record<MatchEventKind, string>> = {
   "red-card": "text-bad",
   "own-goal": "text-bad",
@@ -113,30 +107,26 @@ const SECOND_WORD: Partial<Record<MatchEventKind, string>> = {
   substitution: "Off",
 };
 
-/** The event word's own column, at one width so the names beside it line up
- *  whatever the row says.
- *
- *  36px, which is four characters: this wire carries goals, reds and full time,
- *  so `Goal` is the longest word it ever prints. `Booked` and `Sub` are in the
- *  table because `MatchEventKind` requires them and not because anything here
- *  draws them — `Sent off` was, and it wrapped to two lines, which made one row
- *  taller than the wire it sits in. */
-const WORD_SLOT = "flex w-9 shrink-0 items-center lg:w-12";
+/** The event word's own column, one width so the names beside it line up. `Goal` is the longest. */
+const WORD_SLOT = "flex w-10 shrink-0 items-center lg:w-14";
 
-/** A man's name on this panel: `ROW_NAME`'s size under a thumb and a step above
- *  it on the desk.
- *
- *  Not `ROW_NAME` itself, which is a name in a TABLE row — this row carries two
- *  of them, two managers and a clock on one 390px line, so its two sizes are
- *  solved against that and not against a table's. Measured 21 Sep 2026 at 390:
- *  the row is 346px, the word slot takes 36, and the two halves need 167 and
- *  125 of the 302 left. */
-const WIRE_NAME = "font-chrome text-sm font-bold lg:text-lg";
+/** One face for the whole line, figures included (Craig, 1 Oct 2026: "font is different for
+ *  different things like goal etc"), so a line differs only in size: names, and everything else. */
+const LINE = "flex min-h-9 items-center gap-2 font-chrome lg:min-h-7";
+
+/** A name: the line's one step up. */
+const WIRE_NAME = "text-sm font-bold lg:text-lg";
+
+/** The rest of the line: the event word, the minute, the manager. */
+const WIRE_TEXT = "text-xs lg:text-base";
+
+/** The event word, and the second man's. */
+const WIRE_WORD = `${WIRE_TEXT} font-bold uppercase`;
 
 function Row({ line }: { line: WireLine }) {
   return (
-    <li className="flex min-h-9 items-center gap-2 lg:min-h-7">
-      <span className={`${WORD_SLOT} ${SMALL_CAPS} ${TONE[line.kind] ?? "text-ink"}`}>
+    <li className={LINE}>
+      <span className={`${WORD_SLOT} ${WIRE_WORD} ${TONE[line.kind] ?? "text-ink"}`}>
         {WORD[line.kind]}
       </span>
       {/* **One line, both men, at every width** (Craig, 21 Sep 2026), and the
@@ -214,17 +204,16 @@ function Man({
           className="h-5 w-5 shrink-0 object-contain"
         />
       )}
-      {label ? <span className={`${SMALL_CAPS} shrink-0 text-faint`}>{label}</span> : null}
+      {label ? <span className={`${WIRE_WORD} shrink-0 text-muted`}>{label}</span> : null}
       {/* **The name does not shrink and the manager does.** Both were flexible
           and both truncated, so the row lost the man and his owner together;
           measured at 390 with this pair, no player name clips on either half. */}
       <span className={`min-w-0 shrink-0 truncate text-ink ${WIRE_NAME}`}>
         {man?.player.name ?? "\u2014"}
       </span>
+      {/* Ink, as loud as the name it brackets (Craig, 1 Oct 2026: "minutes hard to see"). */}
       {minute === undefined ? null : (
-        <span className="numeric shrink-0 text-xs text-muted lg:text-sm">
-          ({minute}&prime;)
-        </span>
+        <span className={`${WIRE_TEXT} shrink-0 text-ink`}>({minute}&prime;)</span>
       )}
       {/* **Bracketed, like the minute** (Craig, 21 Sep 2026). The row reads
           `Kostoulas (45') (test31121)` — the man, then the two things qualifying
@@ -233,12 +222,9 @@ function Man({
           this panel DESIGN §7's dash does not apply: the dash means a figure we
           could not get, and "in nobody's squad" is a fact about a 600-man pool
           that five hundred of them share. */}
+      {/* A name is white, yours the accent (Craig, 1 Oct 2026: "manager name hard to see"). */}
       {man?.owner?.teamName === undefined ? null : (
-        <span
-          className={`min-w-0 max-w-12 shrink truncate text-2xs lg:max-w-none lg:text-xs ${
-            man.mine ? "text-accent" : "text-muted"
-          }`}
-        >
+        <span className={`${WIRE_TEXT} min-w-0 shrink truncate ${man.mine ? "text-accent" : "text-ink"}`}>
           ({man.owner.teamName})
         </span>
       )}
@@ -246,28 +232,14 @@ function Man({
   );
 }
 
-/** A match reaching half time or full time — Sky's own `HALF TIME  LEEDS 1
- *  BRISTOL CITY 0`, in the word slot and the two columns the events use.
- *
- *  **No manager under it, and that is what makes it read as a different kind of
- *  line** without a second treatment: an event row is two names over two
- *  managers, and this is one scoreline across the middle. It is the same 44px
- *  row, because a wire whose rows are two heights stops scanning as a wire.
- *
- *  The score is a figure standing alone beside a name, which is the amber slot
- *  (DESIGN §3) — but this line has two of them and they are being compared, so
- *  they are ink like every other scoreline in the app, and only the dash for a
- *  score the provider withheld is quiet. */
+/** A match reaching full time — Sky's `FULL TIME  LEEDS 1  BRISTOL CITY 0` — on the event row's
+ *  word slot and line. The clubs are names, so white; the two scores are compared, so ink. */
 function BreakRow({ row }: { row: WireBreak }) {
   return (
-    <li className="flex min-h-9 items-center gap-2 lg:min-h-7">
-      {/* **Not the accent**, which means "yours · selected · active" on this very
-          panel and would be a second meaning for the one mark five screens read.
-          Not `--color-live` either: that means a match in PLAY and this is a
-          match that has stopped. Quieter than an event word, which is the honest
-          rank — a break is a state rather than something that happened to
-          somebody, and the scoreline beside it is the news. */}
-      <span className={`${WORD_SLOT} ${SMALL_CAPS} text-muted`}>{WORD[row.kind]}</span>
+    <li className={LINE}>
+      {/* Amber, the slot for a fact and a ledger line, which a result is (Craig, 1 Oct 2026: "FT
+          should be yellow, grey bad"). Not the accent: that marks your managers on these rows. */}
+      <span className={`${WORD_SLOT} ${WIRE_WORD} text-mid`}>{WORD[row.kind]}</span>
       <span className="flex min-w-0 flex-1 items-center gap-3">
         {row.sides.map((side) => (
           <span key={side.name} className="flex min-w-0 items-center gap-1.5">
@@ -278,12 +250,8 @@ function BreakRow({ row }: { row: WireBreak }) {
               height={22}
               className="h-[1.125rem] w-[1.125rem] shrink-0 object-contain lg:h-[1.375rem] lg:w-[1.375rem]"
             />
-            <span className={`${SMALL_CAPS} min-w-0 truncate text-muted lg:text-xs`}>
-              {side.name}
-            </span>
-            <span className="numeric shrink-0 text-sm font-bold text-ink lg:text-base">
-              {side.score ?? <Absent />}
-            </span>
+            <span className={`${WIRE_NAME} min-w-0 truncate text-ink`}>{side.name}</span>
+            <span className={`${WIRE_NAME} shrink-0 text-ink`}>{side.score ?? <Absent />}</span>
           </span>
         ))}
       </span>

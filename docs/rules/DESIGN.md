@@ -631,6 +631,11 @@ Four faces, four roles.
 | Archivo | letterspaced small capitals | Paper |
 | Archivo Narrow, `tnum` | **every figure** | both |
 
+**One exception: the vidiprinter line is one face** (Craig, 1 Oct 2026: *"font is different for
+different things like goal etc"*). On `/matchday` its word, names, minute, managers and full-time
+scores are all Oxanium, at two sizes. Its figures sit inline and never in a column, so `tnum` has
+nothing to line up.
+
 Fraunces and Newsreader load from `app/paperFonts.ts`, imported only by paper
 routes, so the desk pays nothing for them. Georgia is the declared fallback and
 is a real transitional serif on every device that will open this. Both carry

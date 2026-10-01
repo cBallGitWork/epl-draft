@@ -49,11 +49,15 @@ football under it.
 
    **`FT` rows carry the scoreline**, interleaved by wall clock like everything
    else, because full time is the one thing a scoreline cannot say about itself: a
-   2-1 with a clock on it and a 2-1 that is finished look identical. They are
-   `text-muted` and deliberately neither the accent (which means "yours" on this
-   very panel) nor `--color-live` (which means a match in PLAY, and these have
-   stopped). Off the SAME cached round read as the goals — one upstream request
-   for ten matches.
+   2-1 with a clock on it and a 2-1 that is finished look identical. `FT` is
+   amber (`--color-mid`, a fact and a ledger line) since Craig's *"FT should be
+   yellow, grey bad"* (1 Oct 2026): not the accent, which means "yours" on this
+   very panel, nor `--color-live`, which means a match in PLAY. Off the SAME
+   cached round read as the goals — one upstream request for ten matches.
+
+   **One face for the whole line** (1 Oct 2026): the chrome face for the word,
+   the names, the minute and the managers, names a step up. The minute and the
+   manager are ink: a name is white, and yours is the accent.
 
    **Half time was here for an evening and went** (Craig, 5 Sep 2026: *"ditch the
    HT"*). On a Saturday teatime it lands within an hour of full time with the
