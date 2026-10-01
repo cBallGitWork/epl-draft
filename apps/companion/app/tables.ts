@@ -37,24 +37,10 @@ const SCORERS_SHOWN = 10;
 /** What the chart calls a man nobody holds. */
 const UNOWNED = "free agent";
 
-/** The season's top scorers, in Fantrax's own season totals.
+/** The season's top scorers, in Fantrax's own season totals off the pool table.
  *
- *  **Fantrax's published number, not one of ours.** Their pool table carries a
- *  season `FPts` for every player and comes back ranked by it, so this is the
- *  same figure a manager sees on Fantrax's own player list — which is what a
- *  scorers chart in a paper should be, and it costs nothing: `getLeaguePool`
- *  already reads it for the Players tab.
- *
- *  **It is the player's season, not his owner's return, and the heading says
- *  so.** Two honest numbers differ here and neither is wrong: this one counts
- *  every point a man scored whether or not his manager started him — Bruno
- *  Fernandes tops it on 22 having spent a round on somebody's bench — and it
- *  prices a dual-eligible man at his default position, so a player filed
- *  deeper earned his owner more than this says (probed 31 Aug: Saka 6 here
- *  against the 8 midfield rates paid). What a man was worth to the manager
- *  holding him is the live-scoring number, per period, and that is a different
- *  column for a different day. Never print this one under a heading claiming
- *  it. */
+ *  The player's season, not his owner's return: it counts points from the bench and
+ *  prices a dual-eligible man at his default position. Never head it as his owner's. */
 export async function scorerRows(): Promise<PaperTableRow[]> {
   const pool = await getLeaguePool();
   if ("unavailable" in pool) return [];

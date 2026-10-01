@@ -197,7 +197,7 @@ export default async function GazettePage() {
               team · played · record or goal difference · points, and neither
               is a link — the sortable, tappable, badged versions are on the
               League and Players tabs, where a manager goes to USE them. */}
-          <PaperTable title="The season's scorers" aside="Fantrax FPts" rows={scorers} />
+          <PaperTable title="Top scorers" rows={scorers} />
           <PaperTable title="The draft table" aside="Fantrax" rows={draft} />
           <PaperTable title="The Premier League" aside="P · GD · Pts" rows={football} />
 
