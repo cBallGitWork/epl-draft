@@ -1,6 +1,6 @@
 # apps/lab — the 27/28 platform prototype
 
-Deliberately empty until the companion ships (GW6, 10 Oct 2026).
+Deliberately empty until the companion goes live on the real league (7 Oct 2026).
 
 This is where the *own draft platform* gets built over the season: a draft / EPL /
 Football Manager hybrid with real formations and tactics, FM-style narratives

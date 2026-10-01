@@ -43,8 +43,9 @@ the real league's `getLeagueInfo` carried `draftType` and `leagueHistoryId` and
 the rehearsal league's carried neither. A field probed in one league is a fact
 about that league.
 
-The real league is pre-draft until 10 Oct and refuses `getTeamRosters` with
-`NO_TEAMS`, which is a true answer about the league and not a failure.
+The real league drafts on 3 Oct. Before that it refuses `getTeamRosters` with
+`NO_TEAMS`, which is a true answer about the league and not a failure; after it, a
+refusal is a finding.
 
 ## 4. Count, do not quote
 

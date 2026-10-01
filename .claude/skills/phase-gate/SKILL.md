@@ -33,8 +33,9 @@ under `.paper`, a component that turned out to be shared — and both times the
 phase that broke it reported green.
 
 Also render both leagues where the phase touched league data. The canary is the
-roster limits, and the direction matters: the REAL league is **14/11/3** and the
-rehearsal is **15/11/5** — read off both `getLeagueInfo` payloads on 30 Aug 2026.
+roster limits: read the squad and bench sizes off both `getLeagueInfo` payloads
+(the real league's bench was unsettled before the 3 Oct draft), and the position
+totals already differ: real D 6 · M 6 · F 4 · G 3, rehearsal 5 · 5 · 3 · 2.
 One league rendering is not two.
 
 ## 4. Docs drift

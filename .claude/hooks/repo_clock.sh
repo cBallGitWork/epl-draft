@@ -1,6 +1,6 @@
 #!/bin/bash
 # Repo clock: what a session needs to know before it touches anything.
-#   - how long until the league-id swap on 10 Oct, which is the only real deadline
+#   - how long until the next of the draft (3 Oct), the dry run (6 Oct) and go-live (7 Oct)
 #   - where this branch sits against origin, because more than one session commits
 #     here and 24 unpushed commits have looked like a finished day before
 #   - whether the daily capture is current (its history cannot be backfilled)
@@ -20,12 +20,16 @@ cache="${TMPDIR:-/tmp}/epl_draft_repo_clock.txt"
 ttl=600
 mode="${1:-hook}"
 
+# Midnight UTC of a date: a bare -f %Y-%m-%d keeps the clock's seconds, and yesterday read as today.
+day_s() { TZ=UTC date -j -f '%Y-%m-%d %H:%M:%S' "$1 00:00:00" +%s 2>/dev/null; }
+
 # date | the last day it is worth doing | what it is
-ONE_OFFS="2026-08-31|The flip-order sample, from ~21:00Z. /api/event-status/, /api/fixtures/?event=N and bootstrap data_checked sampled TOGETHER — GW1's chance was missed and this is the last easy one this month (PLATFORM_NOTES 'Two observations').
-2026-09-10|One look at lineupLockType before period 4 locks. Its TYPE, not its value: if the commissioner's lock is really the period boundary, the whole lineup-window design is wrong.
-2026-09-11|Period 4, the first gate-bite: the first period whose lock does NOT sit safely inside its gameweek. Watch it with /shoot and /probe.
-2026-10-09|Period 6 opens. Swap eve — run /swap-day --dry-run today, not tomorrow.
-2026-10-10|THE SWAP. FANTRAX_LEAGUE_ID in Vercel, the one place a league is set; CI asks production."
+ONE_OFFS="2026-10-03|THE DRAFT, 10:00 BST on Fantrax. After it: pull, capture, roster-limits, bridge + bridge:check, shape-diff then baseline.json, and probe period 5's rosters and draftState (every pick carries a playerId).
+2026-10-04|CI's first capture after the draft, 05:10 UTC. The Actions budget must be on before it; that history cannot be backfilled.
+2026-10-05|Monday gate on the capture: five fixtures in each of periods 6-38, every team 0-0-0. Then team codes for the final ten, with production's SESSION_SECRET.
+2026-10-06|DRY RUN on mqsjd23smsgbiqzr locally: smoke, shoot /, a rival's squad and /matchday/desk at 390 and 1440, the editions queue check, then /swap-day --dry-run.
+2026-10-07|GO LIVE. One Vercel change (FANTRAX_LEAGUE_ID=mqsjd23smsgbiqzr, TEAM_CODES, LINEUP_SAVE=<Craig's team id> with FANTRAX_COOKIE, FANTRAX_DEMO_TEAM_ID removed), redeploy, then /swap-day. Anthropic auto-reload on before 17:00 UTC.
+2026-10-10|GW6 locks at 11:15 UTC, the first real lock. Fixes only; /rehearsal-saturday."
 
 fresh=0
 if [ -f "$cache" ]; then
@@ -36,17 +40,23 @@ fi
 if [ "$fresh" -eq 0 ]; then
   {
     today=$(date +%Y-%m-%d)
-    today_s=$(date -j -f %Y-%m-%d "$today" +%s 2>/dev/null || echo 0)
-    swap_s=$(date -j -f %Y-%m-%d "2026-10-10" +%s 2>/dev/null || echo 0)
-    days=$(( (swap_s - today_s) / 86400 ))
-
-    if [ "$days" -gt 0 ]; then
-      printf 'Swap day (10 Oct, GW6) in %sd.\n' "$days"
-    elif [ "$days" -eq 0 ]; then
-      printf 'SWAP DAY IS TODAY. Run /swap-day.\n'
-    else
-      printf 'Season is live — swap day was %sd ago.\n' "$(( -days ))"
-    fi
+    today_s=$(day_s "$today" || echo 0)
+    # date | name | label: the countdown names the next one still ahead
+    milestones="2026-10-03|Draft|Sat 3 Oct
+2026-10-06|Dry run|Tue 6 Oct
+2026-10-07|Go live|Wed 7 Oct"
+    countdown=""
+    while IFS='|' read -r when name label; do
+      when_s=$(day_s "$when" || echo 0)
+      days=$(( (when_s - today_s) / 86400 ))
+      if [ "$days" -gt 0 ]; then
+        countdown="Countdown: ${name} (${label}) in ${days}d."; break
+      elif [ "$days" -eq 0 ]; then
+        countdown="Countdown: $(printf '%s' "$name" | tr '[:lower:]' '[:upper:]') IS TODAY (${label})."; break
+      fi
+      countdown="Countdown: live since ${label}, $(( -days ))d ago."
+    done <<< "$milestones"
+    printf '%s\n' "$countdown"
 
     # --- branch against origin ------------------------------------------------
     if [ -d "$root/.git" ]; then
@@ -72,7 +82,7 @@ if [ "$fresh" -eq 0 ]; then
       -q 'sort_by(.createdAt) | "\(length) \(.[0].number // "") \(.[0].createdAt[:10] // "")"' 2>/dev/null)
     if [ -n "$prs" ] && [ "${prs%% *}" -gt 0 ]; then
       read -r open oldest since <<< "$prs"
-      since_s=$(date -j -f %Y-%m-%d "$since" +%s 2>/dev/null || echo "$today_s")
+      since_s=$(day_s "$since" || echo "$today_s")
       printf 'PRs waiting to merge: %s, oldest #%s (%sd). Only Craig merges; say so if yours is among them.\n' \
         "$open" "$oldest" "$(( (today_s - since_s + 43200) / 86400 ))"
     fi
@@ -124,7 +134,7 @@ if [ "$fresh" -eq 0 ]; then
     due=""
     while IFS='|' read -r when what; do
       [ -z "$when" ] && continue
-      when_s=$(date -j -f %Y-%m-%d "$when" +%s 2>/dev/null || echo 0)
+      when_s=$(day_s "$when" || echo 0)
       left=$(( (when_s - today_s) / 86400 ))
       if [ "$left" -ge 0 ] && [ "$left" -le 3 ]; then
         case "$left" in

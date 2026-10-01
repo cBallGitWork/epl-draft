@@ -186,7 +186,7 @@ export type RawStandings = RawStandingsRow[];
 export interface RawDraftResults {
   draftPicks?: RawDraftPick[];
   /** `"completed"` once it is done. A draft in progress is a partial list, which
-   *  is a real state for nine weeks: the real league drafts on 10 Oct. */
+   *  is a real state until the draft is done: the real league drafts on 3 Oct. */
   draftState?: string;
   draftType?: string;
 }

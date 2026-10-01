@@ -16,8 +16,8 @@ import type { PoolStatRow } from "./stats";
 // **Three origins, and the third is why this is a union.** He was taken in the
 // draft; or the draft happened and nobody took him, which is its own pedigree —
 // he came off the wire; or there is no draft to read at all. That last one is
-// not a hypothetical or a failure mode: our real league drafts on 10 Oct, so for
-// nine weeks `getDraftResults` answers a draft that has not run, and a player
+// not a hypothetical or a failure mode: our real league drafts on 3 Oct, so until
+// then `getDraftResults` answers a draft that has not run, and a player
 // filed as "undrafted" then would be a confident wrong answer about all 671 of
 // them at once.
 

@@ -28,7 +28,7 @@ even drafts.
 |---|---|
 | `packages/core` | Domain types, provider adapters, competition engines |
 | `packages/ui` | Shared components (empty until a second consumer needs them) |
-| `apps/companion` | The 26/27 Next.js app — ships GW6, 10 Oct 2026 |
+| `apps/companion` | The 26/27 Next.js app — live on the real league 7 Oct 2026, GW6 from 10 Oct |
 | `apps/lab` | The 27/28 platform prototype — empty on purpose |
 
 ## Reading order
