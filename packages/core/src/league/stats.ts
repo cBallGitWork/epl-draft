@@ -94,6 +94,8 @@ export interface PoolStatRow {
    *  never documented, and the football layer already models fixtures properly
    *  for every screen that needs them as data rather than as a line of text. */
   opponent: string | null;
+  /** The position his points are scored at: the last he is eligible for ("F" for "M,F"). */
+  position: string | null;
 }
 
 /** `getPlayerStats` for the whole pool. */
@@ -110,4 +112,6 @@ export interface PoolStats {
    *  written down: a literal would need editing every August, and this is the
    *  only endpoint that publishes the list. Null when it offered none. */
   yearToDate: string | null;
+  /** The same season's per-date code (`SEASON_926_BY_DATE`), for one day's numbers; read like `yearToDate`. */
+  byDate: string | null;
 }

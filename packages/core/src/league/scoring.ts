@@ -69,3 +69,16 @@ export function categoryPoints(
   const fallback = row[DEFAULT_POSITION];
   return typeof fallback === "number" ? fallback : null;
 }
+
+/** The categories a goal, an assist and a clean sheet arrive under; a league prices only its own (`AT`, or `A` and `AF`). */
+const ATTACKING = ["G", "AT", "A", "AF"];
+
+/** What his goals and assists, and his clean sheet, were worth to him; a category the league does not price adds nothing. */
+export function returnPoints(
+  counts: Readonly<Record<string, number | null | undefined>>,
+  rules: ScoringRules,
+  position: string,
+): { attacking: number; cleanSheet: number } {
+  const worth = (category: string) => (counts[category] ?? 0) * (categoryPoints(rules, category, position) ?? 0);
+  return { attacking: ATTACKING.reduce((sum, c) => sum + worth(c), 0), cleanSheet: worth(CLEAN_SHEET) };
+}

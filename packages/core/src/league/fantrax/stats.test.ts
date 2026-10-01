@@ -109,7 +109,13 @@ describe("mapPoolStats", () => {
       rostered: 100,
       trend: 0,
       opponent: "BOU Sun 9:00AM",
+      position: null,
     });
+  });
+
+  it("scores a dual-eligible man at his last position, as the pool's points do", () => {
+    const pool = mapPoolStats({ statsTable: [{ scorer: { scorerId: "x", posShortNames: "M,F" } }, { scorer: { scorerId: "y", posShortNames: "D" } }] });
+    expect(pool.rows.map((r) => r.position)).toEqual(["F", "D"]);
   });
 
   it("turns Fantrax's literal <br/> into a space rather than shipping the tag", () => {
@@ -134,6 +140,7 @@ describe("mapPoolStats", () => {
 
   it("finds the current season's code by date, not by list order", () => {
     expect(pool.yearToDate).toBe("SEASON_926_YEAR_TO_DATE");
+    expect(pool.byDate).toBe("SEASON_926_BY_DATE");
   });
 
   it("reports how many players Fantrax has, so a short read can say so", () => {

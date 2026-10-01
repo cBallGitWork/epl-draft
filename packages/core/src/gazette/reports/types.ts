@@ -73,6 +73,8 @@ export interface ReportMatchInput {
   venue: string | null;
   attendance: number | null;
   lineups: { home: StoryLineup; away: StoryLineup } | null;
+  /** Our mark out of ten for each man who played, by code; null where he was too brief to rate. Empty when unread. */
+  marks: ReadonlyMap<number, number | null>;
 }
 
 export interface ReportDayInput {

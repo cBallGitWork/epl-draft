@@ -63,6 +63,8 @@ export interface RawStatRow {
  *  short form this payload uses. */
 export interface RawScorer {
   scorerId?: string;
+  /** "D", or "M,F" for a man eligible at both; the pool's points score him at the last. */
+  posShortNames?: string;
 }
 
 export interface RawCell {
@@ -195,6 +197,7 @@ export function mapPoolStats(raw: RawPoolStats): PoolStats {
         rostered: cell(rosteredAt),
         trend: cell(trendAt),
         opponent: opponentAt < 0 ? null : plain(cells[opponentAt]?.content),
+        position: row.scorer.posShortNames?.split(",").at(-1)?.trim() || null,
       },
     ];
   });
@@ -203,11 +206,12 @@ export function mapPoolStats(raw: RawPoolStats): PoolStats {
     season: season(raw.displayedSeasonOrProjection),
     rows,
     total: raw.paginatedResultSet?.totalNumResults ?? null,
-    yearToDate: yearToDateCode(raw.displayedLists?.displayedSeasonOrProjections ?? []),
+    yearToDate: latestSeason(raw.displayedLists?.displayedSeasonOrProjections ?? [], "YEAR_TO_DATE"),
+    byDate: latestSeason(raw.displayedLists?.displayedSeasonOrProjections ?? [], "BY_DATE"),
   };
 }
 
-/** The code for the current season's year-to-date numbers.
+/** The code for the current season's numbers in one timeframe (`YEAR_TO_DATE`, `BY_DATE`).
  *
  *  Chosen by start date rather than by list position or by parsing the season
  *  number out of the code, because both of those are guesses about a format
@@ -216,10 +220,10 @@ export function mapPoolStats(raw: RawPoolStats): PoolStats {
  *
  *  Null when they offer none — honoured by the caller as "ask for nothing and
  *  label whatever comes back", never as licence to compose a code ourselves. */
-function yearToDateCode(seasons: readonly RawSeason[]): string | null {
+function latestSeason(seasons: readonly RawSeason[], timeframe: string): string | null {
   let best: RawSeason | null = null;
   for (const entry of seasons) {
-    if (entry.timeframeTypeCode !== "YEAR_TO_DATE" || !entry.code) continue;
+    if (entry.timeframeTypeCode !== timeframe || !entry.code) continue;
     if (typeof entry.startDate !== "number") continue;
     if (best === null || entry.startDate > (best.startDate ?? -Infinity)) best = entry;
   }

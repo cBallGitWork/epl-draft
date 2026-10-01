@@ -5,7 +5,8 @@ import { PlateHead } from "../../components/league/TableHeads";
 import type { MatchRow } from "./matchRows";
 import { totalsOf } from "./matchRows";
 import { IndexCell } from "../../components/league/TableCells";
-import { thousands } from "@epl/core";
+import { DASH, thousands } from "@epl/core";
+import { RATING_TITLE } from "../../ratings";
 
 // What the season adds up to, above the matches that made it.
 //
@@ -59,7 +60,7 @@ export default function SeasonTable({
             <tr>
               <PlateHead>Competition</PlateHead>
               {COLUMNS.map((column) => (
-                <PlateHead key={column.head} at="end" title={column.title}>
+                <PlateHead key={column.head} at="end" title={column.title} className={column.rule ? "border-l border-line" : undefined}>
                   {column.head}
                 </PlateHead>
               ))}
@@ -71,7 +72,7 @@ export default function SeasonTable({
                   `League` is the only one FPL publishes. */}
               <IndexCell>League</IndexCell>
               {COLUMNS.map((column) => (
-                <td key={column.head} className={`${BOARD_FIGURE} font-bold`}>
+                <td key={column.head} className={`${BOARD_FIGURE} font-bold ${column.rule ? "border-l border-line" : ""} ${column.derived ? "text-info" : ""}`}>
                   {column.total(t)}
                 </td>
               ))}
@@ -90,6 +91,8 @@ interface Column {
   title: string;
   /** A rule down the left marks where FPL's account ends and Fantrax's begins. */
   rule?: boolean;
+  /** Ours rather than recorded, in the derived reading's cyan. */
+  derived?: boolean;
   total: (t: Totals) => React.ReactNode;
 }
 
@@ -106,4 +109,5 @@ const COLUMNS: readonly Column[] = [
   // FPL's own points, and headed as FPL's. Never `FPts`, which is Fantrax's word
   // for Fantrax's scoring of a roster slot we chose.
   { head: "FPL", title: "FPL's own points", total: (t) => whole(t.fplPoints) },
+  { head: "Rtg", title: `${RATING_TITLE}; his average over the matches rated`, rule: true, derived: true, total: (t) => (t.rating === null ? DASH : t.rating.toFixed(1)) },
 ];

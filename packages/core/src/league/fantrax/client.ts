@@ -274,6 +274,8 @@ export function fetchPoolStats(
   positionOrGroup?: PositionGroup,
   /** One scoring period's numbers: `transactionPeriod`, off the page's own URL; `period` is ignored. */
   period?: number,
+  /** One London day's numbers, `2026-09-19`; needs the season's `BY_DATE` code as `season`. */
+  date?: string,
 ): Promise<RawPoolStats> {
   return fxpaRead(leagueId, "getPlayerStats", {
     statusOrTeamFilter: "ALL",
@@ -282,6 +284,7 @@ export function fetchPoolStats(
     ...(positionOrGroup ? { positionOrGroup } : {}),
     ...(season ? { seasonOrProjection: season } : {}),
     ...(period === undefined ? {} : { timeframeTypeCode: "BY_PERIOD", transactionPeriod: String(period) }),
+    ...(date === undefined ? {} : { timeframeTypeCode: "BY_DATE", startDate: date, endDate: date }),
   }) as Promise<RawPoolStats>;
 }
 

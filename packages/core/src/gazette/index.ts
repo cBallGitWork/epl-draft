@@ -143,6 +143,7 @@ export type { StoryReport, StoryReportSide } from "./reports/cargo";
 export { reportDays } from "./reports/due";
 export { lineupOf } from "./reports/lineups";
 export type { StoryLineup } from "./reports/lineups";
+export type { StarMan } from "./reports/star";
 export type { FantasyMan } from "./reports/fantasy";
 export { strike, survivors } from "./reports/headline";
 export { applyFixes, faultySentences } from "./reports/lineEdit";

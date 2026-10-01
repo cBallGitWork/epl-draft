@@ -236,3 +236,6 @@ export { FIRM, pressers } from "./intel/pressers";
 export type { IntelPressers, PresserQuote, PresserSignal, PresserSpoke } from "./intel/pressers";
 export { intelFreshness } from "./intel/freshness";
 export type { IntelKind } from "./intel/freshness";
+// A club's strength as the season has gone so far, for weighing a match by its opponent.
+export { clubResults, strengthBefore, STRENGTH_SO_FAR } from "./seasonStrength";
+export type { ClubResult, StrengthSoFar } from "./seasonStrength";

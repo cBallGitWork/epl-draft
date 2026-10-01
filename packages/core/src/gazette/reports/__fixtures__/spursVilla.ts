@@ -50,5 +50,6 @@ export function spursVilla(extras: Partial<MenExtras> = {}): ReportMatchInput {
     venue: "Tottenham Hotspur Stadium",
     attendance: 60920,
     lineups: { home: lineupOf(sheets.home, moments), away: lineupOf(sheets.away, moments) },
+    marks: new Map(),
   };
 }

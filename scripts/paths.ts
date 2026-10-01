@@ -60,6 +60,9 @@ export const EDITIONS_ROOT = join(REPO_ROOT, "data", "editions");
  *  make it fresher, so the least it can do is say how old it is. */
 export const INTEL_ROOT = join(REPO_ROOT, "data", "intel");
 
+/** Our marks for every man in every match, which `npm run ratings` files and the player pages read. */
+export const RATINGS_ROOT = join(REPO_ROOT, "data", "ratings");
+
 /** Where the matcher leaves what it would not decide, for a human to settle. */
 export const REVIEW_ROOT = join(MAPPINGS_ROOT, "review");
 

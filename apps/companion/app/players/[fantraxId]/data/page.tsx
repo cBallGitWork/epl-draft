@@ -3,7 +3,8 @@ import { clubById, seasonKey } from "@epl/core";
 import type { FootballPlayer, PastSeason, PlayerMatch } from "@epl/core";
 import Nothing from "../../../components/shell/Nothing";
 import { LABEL, PANEL } from "@/app/desk";
-import { footballNow } from "../../../football";
+import { footballNow, seasonFixtures } from "../../../football";
+import { playerMarks } from "../../../ratings";
 import { intelCareers } from "../../../intel";
 import QuerySelect from "../../QuerySelect";
 import { ALL_SEASONS, playerDataHref } from "../../routes";
@@ -80,8 +81,8 @@ async function Record({
   paid: PlayerMatch[];
   season: string | null;
 }) {
-  const [past, log, snapshot] = await Promise.all([pastSeasons(player), gameLog(player), footballNow()]);
-  const joined = joinMatches(log, paid, clubById(snapshot));
+  const [past, log, snapshot, fixtures] = await Promise.all([pastSeasons(player), gameLog(player), footballNow(), seasonFixtures()]);
+  const joined = joinMatches(log, paid, clubById(snapshot), playerMarks(player.code, fixtures));
   const clubs = intelCareers.get(player.code) ?? new Map<string, string>();
   const label = season ?? "This season";
   const options = [

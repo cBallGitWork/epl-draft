@@ -1,6 +1,8 @@
 // A club's attack and defence as this season has gone so far: goals and xG per game against the
 // league's, eased in over the first few games. 1.0 is average; a higher defence concedes less.
 
+import type { Fixture, PlayerMatchStats } from "./types";
+
 export interface ClubResult {
   club: string;
   kickoff: string;
@@ -16,6 +18,9 @@ export interface SeasonStrengthConfig {
   /** Games of league average a club starts with, so its first results move it gently. */
   settleGames: number;
 }
+
+/** The reading the backtest settled on (PLATFORM_NOTES, "Our player rating…"). */
+export const STRENGTH_SO_FAR: SeasonStrengthConfig = { goalsShare: 0.5, settleGames: 6 };
 
 export interface StrengthSoFar {
   attack: number;
@@ -37,4 +42,30 @@ export function strengthBefore(
   const scored = settled(own.reduce((sum, r) => sum + blend(r.goalsFor, r.xgFor), 0));
   const conceded = settled(own.reduce((sum, r) => sum + blend(r.goalsAgainst, r.xgAgainst), 0));
   return { attack: scored / league, defence: league / conceded };
+}
+
+/** Every finished fixture from both sides, with each side's xG summed from FPL's per-man rows, one list per gameweek. A
+ *  man's xG on a double gameweek arrives as the round's total on both his rows, so it is shared between them. */
+export function clubResults(
+  fixtures: readonly Fixture[],
+  rounds: readonly (readonly PlayerMatchStats[])[],
+  clubOf: ReadonlyMap<number, number>,
+): ClubResult[] {
+  const xg = new Map<string, number>();
+  for (const rows of rounds) {
+    const fixturesOf = new Map<number, number>();
+    for (const row of rows) fixturesOf.set(row.playerId, (fixturesOf.get(row.playerId) ?? 0) + 1);
+    for (const row of rows) {
+      const key = `${row.fixtureId}|${clubOf.get(row.playerId)}`;
+      xg.set(key, (xg.get(key) ?? 0) + row.expectedGoals / (fixturesOf.get(row.playerId) ?? 1));
+    }
+  }
+  return fixtures.flatMap((f) => {
+    if (f.status !== "finished" || f.kickoff === null || f.homeScore === null || f.awayScore === null) return [];
+    const [home, away] = [xg.get(`${f.id}|${f.homeClubId}`) ?? 0, xg.get(`${f.id}|${f.awayClubId}`) ?? 0];
+    return [
+      { club: String(f.homeClubId), kickoff: f.kickoff, goalsFor: f.homeScore, goalsAgainst: f.awayScore, xgFor: home, xgAgainst: away },
+      { club: String(f.awayClubId), kickoff: f.kickoff, goalsFor: f.awayScore, goalsAgainst: f.homeScore, xgFor: away, xgAgainst: home },
+    ];
+  });
 }
