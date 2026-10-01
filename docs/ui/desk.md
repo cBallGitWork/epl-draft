@@ -30,16 +30,9 @@ deliberately not written here — it said six through two additions of a seventh
 ## The vidiprinter register
 
 Borrowed **in voice and typography, not in colour**. The app's tokens stay; the
-colour registers are binding and Ceefax's are not ours. Two conventions:
+colour registers are binding and Ceefax's are not ours. The spelled-out
+thrashing (`BOU 4 (FOUR) – 1 LIV`) went on 1 Oct 2026 (Craig: *"remove 'FIVE'"*).
 
-- **The spelled-out thrashing.** A side on four or more prints the number in
-  words after the digit — `BOU 4 (FOUR) – 1 LIV`. Four is Sky's threshold, not
-  one of ours, and the whole joke is the machine no longer trusting you to
-  believe the digit. Above nine the digit stands alone.
-
-  **A football fact only.** There is no equivalent for a fantasy total: "a lot
-  of points" has no custom behind it, and inventing a threshold would be us
-  making the joke rather than quoting it.
 - **The day, in the tick's slot, until the match starts** — `Sat`, `Sun`, `Mon`.
   A round runs Friday to Monday, so eighteen rows sorted by instant print 17:30
   above 14:00 and read as scrambled. It goes here rather than beside the time
@@ -77,4 +70,4 @@ still worth reading.
 ## Known gaps
 
 Unproven against real football — every row above was written before a ball was
-kicked in 26/27. The spelled-out thrashing in particular has never rendered.
+kicked in 26/27.
