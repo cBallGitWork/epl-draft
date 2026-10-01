@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mapLeagueInfo } from "@epl/core";
+import { mapLeagueInfo, type LeagueInfo } from "@epl/core";
 import real from "../../packages/core/src/league/fantrax/__fixtures__/leagueInfoScoringReal.json";
 import rehearsal from "../../packages/core/src/league/fantrax/__fixtures__/leagueInfoScoringRehearsal.json";
 import { categoryIds, mostPaid, slotWorth, startedOf, tallies } from "./draftReads";
@@ -33,6 +33,7 @@ const day = (assists: [string, number, number][], keeping: [string, number, numb
   },
 });
 const slotOf = new Map([["m1", "M"], ["k1", "G"]]);
+const scoringOf = (info: LeagueInfo) => (info.scoring === null ? null : { rules: info.scoring, categories: info.scoringCategories });
 
 describe("the draft desk on the real league, whose assists are AT and whose keepers are paid on GKP", () => {
   const info = mapLeagueInfo(real);
@@ -47,7 +48,16 @@ describe("the draft desk on the real league, whose assists are AT and whose keep
   });
 
   it("pays a slot for an assist at the league's own price", () => {
-    expect(slotWorth(info, raws, [], ["M"]).returns.M).toContainEqual({ kind: "assist", worth: 3 });
+    expect(slotWorth(scoringOf(info), categoryIds(info), raws, [], ["M"]).returns.M).toContainEqual({ kind: "assist", worth: 3 });
+  });
+
+  it("pays a full match's minutes by the rules, 2 for 60 or more, not by what a man happened to be paid", () => {
+    expect(slotWorth(scoringOf(info), categoryIds(info), [], [], ["G", "D", "M", "F"]).appearance).toBe(2);
+  });
+
+  it("prices nothing when the scoring league would not describe its scoring", () => {
+    const worth = slotWorth(null, categoryIds(info), raws, [], ["M"]);
+    expect([worth.appearance, worth.keeper, worth.returns.M]).toEqual([0, null, []]);
   });
 });
 
@@ -64,6 +74,6 @@ describe("the draft desk on the rehearsal league, whose assists are A and AF and
   });
 
   it("pays a slot for an assist at the league's own price", () => {
-    expect(slotWorth(info, raws, [], ["M"]).returns.M).toContainEqual({ kind: "assist", worth: 3 });
+    expect(slotWorth(scoringOf(info), categoryIds(info), raws, [], ["M"]).returns.M).toContainEqual({ kind: "assist", worth: 3 });
   });
 });

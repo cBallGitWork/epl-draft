@@ -51,7 +51,6 @@ async function main(): Promise<void> {
     snapshot,
     facts,
     periodGameweeks: round.gameweeks,
-    rules: info.scoring,
     pick: (f) => (ids.length > 0 ? ids.includes(f.id) : onLondonDay(f.kickoff, day)),
     say,
   });

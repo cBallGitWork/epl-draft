@@ -10,8 +10,8 @@ import {
   type Dodger,
   type DodgerMatch,
   type FootballSnapshot,
-  type LeagueInfo,
 } from "@epl/core";
+import { readScoring } from "../scoring";
 import type { DeskFacts } from "./facts";
 
 // The Points Dodgers' reads: every finished match's commentary this gameweek, two requests a match, only when the column is due.
@@ -20,7 +20,6 @@ export async function dodgersDesk(input: {
   assignments: readonly Assignment[];
   snapshot: FootballSnapshot;
   facts: DeskFacts;
-  info: LeagueInfo;
   say: (message: string) => void;
 }): Promise<Dodger[] | null> {
   if (!input.assignments.some((each) => each.kind === "dodgers")) return null;
@@ -44,7 +43,7 @@ export async function dodgersDesk(input: {
   return dodgers({
     teams: input.facts.teams,
     matches,
-    scoring: input.info.scoring,
+    scoring: (await readScoring())?.rules ?? null,
     clubOfCode: new Map(snapshot.players.map((p) => [p.code, p.clubId])),
   });
 }
