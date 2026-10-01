@@ -31,6 +31,7 @@ export interface PresserQuote {
   club: number;
   /** His own words, with no quotation marks — the renderer adds those. */
   text: string;
+  /** Who said it — the speaker's name, not an instant. */
   said: string;
   /** What he was asked about, when the source says. */
   about?: string;
