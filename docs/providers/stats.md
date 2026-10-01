@@ -8,7 +8,7 @@
 - **History.** *Stored history and live-only reads* says which of these figures we keep a dated copy of, and which exist only as the provider's answer on the day we ask.
 - **Grain**: count, rate, per-90, derived or projection; then match, gameweek, season, career or live. A gameweek figure on a double gameweek covers two matches.
 - **Glossary.** *code*: FPL's season-stable player or fixture key, the only one persisted. *elementId*: FPL's per-season player id (`id`), never persisted. *fantraxId*: Fantrax's five-character player id. *club*: a real Premier League side. *team*: a fantasy side in our league. *gameweek*: FPL's round of fixtures. *period*: Fantrax's scoring window, numbered with the gameweeks but on its own dates. *Round*: the gameweek as the app speaks of it. *fixture*: one real match. *matchup*: one pairing of two teams in one period. *fetchedAt*: when a snapshot was read, injected so mappers stay pure.
-- The stats league's columns are listed for what they would give us; Team Stats' Squad view sums 18 of them by squad off `data/intel/stats` (`league/team-stats/squadColumns.ts`).
+- The stats league's columns are listed for what they would give us; nothing reads that league yet.
 
 ## FPL bootstrap-static and fixtures
 
