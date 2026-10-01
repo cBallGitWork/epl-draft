@@ -101,8 +101,10 @@ export default function SquadRows({
           rather than a small-caps label per position group, which made five
           headings and no columns. The group bars below separate; this names. */}
         {head ? (
-        <div className={`cm-bevel flex min-h-7 items-center gap-1.5 px-1.5 ${SMALL_CAPS}`}>
-          <span className="w-10 shrink-0">Pos</span>
+        // `px-1` plus the bevel's 2px border is the row's `px-1.5`, so every head sits over its column.
+        <div className={`cm-bevel flex min-h-7 items-center gap-1.5 px-1 ${SMALL_CAPS}`}>
+          {/* Centred, as the tile's letters are. */}
+          <span className="w-10 shrink-0 text-center">Pos</span>
           <span className="w-7 shrink-0" />
           {/* **`min-w-0 flex-1` and a basis, not a min-width.** The name column
               is the only elastic one on the row, so it is what gives way when
