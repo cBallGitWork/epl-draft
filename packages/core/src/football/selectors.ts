@@ -2,6 +2,9 @@ import { NOTABLE_SAVES } from "../config";
 import { onTheBooks } from "./playerState";
 import type { Club, FootballPlayer, FootballSnapshot, Fixture, PlayerMatchStats } from "./types";
 
+/** Earliest kickoff first; an unscheduled match sorts first. */
+export const byKickoff = (a: { kickoff: string | null }, b: { kickoff: string | null }) => (a.kickoff ?? "").localeCompare(b.kickoff ?? "");
+
 // Pure read-side selectors over a snapshot. Kept here rather than in components
 // so they stay unit-testable — the same rule that let the World Cup app's
 // competition logic survive a change of provider intact.

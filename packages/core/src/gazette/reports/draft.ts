@@ -50,7 +50,7 @@ export function plainHead(head: string, pitch: string, surnames: readonly string
 }
 
 /** A surname's particle is lower case except where it opens a sentence: "holds Van Hecke" → "holds van Hecke". */
-export function particles(prose: string, surnames: readonly string[]): string {
+function particles(prose: string, surnames: readonly string[]): string {
   return surnames
     .filter((name) => /^\p{Ll}/u.test(name))
     .reduce((out, name) => {

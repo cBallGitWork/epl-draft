@@ -1,8 +1,12 @@
 import Link from "next/link";
 import type { FantasyMan, StoryLineup, StoryReport } from "@epl/core";
+import { plural } from "@epl/core";
 
 // The sidebar beside a match's report: the line-ups first as a paper prints them, then the league's side (Draft Man of the
 // Match, top scorers, free agents who scored) and the key stats. A phone reads it after the report.
+
+/** Fantasy points as the sidebar prints them: "1 pt", "7 pts". */
+const pts = (n: number) => `${n} ${plural(n, "pt")}`;
 
 const HEAD = "font-sans text-3xs font-semibold uppercase tracking-[0.16em] text-muted";
 const RULE = { borderColor: "var(--paper-rule)" };
@@ -25,7 +29,7 @@ function Men({ men, points }: { men: readonly FantasyMan[]; points: boolean }) {
             <span className="font-semibold">{man.name}</span> <span className="text-muted">({man.club}{man.holder === null ? ", free" : `, ${man.holder}`})</span>
             {man.did === "" ? null : <span className="block text-2xs text-muted">{man.did}</span>}
           </span>
-          {points && man.points !== null ? <span className="numeric shrink-0">{man.points} pt{man.points === 1 ? "" : "s"}</span> : null}
+          {points && man.points !== null ? <span className="numeric shrink-0">{pts(man.points)}</span> : null}
         </li>
       ))}
     </ul>
@@ -72,7 +76,7 @@ export default function ReportSidebar({ report, names, matchHref }: { report: St
           <p className="paper-display text-lg leading-tight font-semibold text-ink">{fantasy.motm.name}</p>
           <p className="text-xs text-muted">
             {fantasy.motm.club}, {fantasy.motm.holder}
-            {fantasy.motm.points === null ? "" : `, ${fantasy.motm.points} pts`}
+            {fantasy.motm.points === null ? "" : `, ${pts(fantasy.motm.points)}`}
             {fantasy.motm.did === "" ? "" : ` · ${fantasy.motm.did}`}
           </p>
         </Panel>

@@ -1,6 +1,9 @@
 import type { RawPlEvent } from "./raw";
 import { saysInjury } from "./injuries";
 import { addedMinutesOf, shotOf, varCallOf, type PlShot } from "./momentWords";
+import { clockMinute } from "./fixtureEvents";
+import { codeOf } from "./teamSheet";
+import { HALF_MINUTES } from "../../config";
 
 // One match's commentary as the moments a report is built from: every shot, goal, card, change and VAR call, in order.
 // Names come from `playerIds` alone; the prose is read only for Opta's fixed clauses (`momentWords.ts`).
@@ -57,9 +60,9 @@ const SHOTS: ReadonlySet<MomentKind> = new Set([
 
 /** The first half's clock reads 45 or less, its added time included (`"45+4"`); a label with no clock is not placed. */
 function halfOf(minute: string): 1 | 2 | null {
-  const at = Number.parseInt(minute, 10);
-  if (Number.isNaN(at)) return null;
-  return at <= 45 ? 1 : 2;
+  const at = clockMinute(minute);
+  if (at === null) return null;
+  return at <= HALF_MINUTES ? 1 : 2;
 }
 
 /** The match's moments in the feed's own order (read with `sort=asc`); `secs` runs backwards across half-time. */
@@ -75,7 +78,7 @@ export function plMoments(events: readonly RawPlEvent[], codes: ReadonlyMap<numb
 
     const kind = base !== "penalty-won" && /^Penalty missed!/.test(event.text) ? "penalty-missed" : base;
     const ids = event.playerIds ?? [];
-    const man = (i: number) => (ids[i] === undefined ? null : (codes.get(ids[i]) ?? null));
+    const man = (i: number) => codeOf(codes, ids[i]);
     moments.push({
       id: event.id,
       minute,

@@ -1,6 +1,7 @@
 import type { PlMoment } from "../../football/premierleague/moments";
 import type { PlSquadMan, PlTeamSheet } from "../../football/premierleague/teamSheet";
 import { surname } from "./keyStats";
+import { isDismissal } from "./timeline";
 
 // A side's line-up as a paper prints it under a report: the shape keeper first, each man with the one who replaced him and
 // when, his booking or dismissal, and the substitutes not used. Built from the sheet's own formation lines; pure.
@@ -22,7 +23,7 @@ export interface StoryLineup {
 
 export function lineupOf(sheet: PlTeamSheet, moments: readonly PlMoment[]): StoryLineup {
   const booked = new Set(moments.filter((m) => m.kind === "booked").flatMap((m) => (m.men[0] === null ? [] : [m.men[0]])));
-  const off = new Set(moments.filter((m) => m.kind === "sent-off" || m.kind === "second-yellow").flatMap((m) => (m.men[0] === null ? [] : [m.men[0]])));
+  const off = new Set(moments.filter((m) => isDismissal(m.kind)).flatMap((m) => (m.men[0] === null ? [] : [m.men[0]])));
   const byCode = new Map([...sheet.lineup, ...sheet.substitutes].flatMap((man) => (man.code === null ? [] : [[man.code, man] as const])));
   const replaced = new Map<number, { on: number; minute: string }>();
   for (const m of moments) if (m.kind === "substitution" && m.men[0] !== null && m.men[1] !== null) replaced.set(m.men[1], { on: m.men[0], minute: m.minute });

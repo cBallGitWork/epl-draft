@@ -1,5 +1,5 @@
 import { REPORTS } from "../../config";
-import type { Fault, Severity } from "../predictions/checks";
+import type { Fault, Report, Severity } from "../predictions/checks";
 import { mentionAt as mentionExact, numbersIn, sentences, wordCount } from "../predictions/prose";
 import type { MatchDesk } from "./desk";
 import type { ReportPiece, ReportsDraft } from "./draft";
@@ -7,7 +7,9 @@ import { surname } from "./keyStats";
 import { partFaults } from "./parts";
 import { repeatsIn } from "./repeats";
 import { dayFaults, wordFaults } from "./style";
-import { isGoal } from "./timeline";
+import { isDismissal, isGoal } from "./timeline";
+import { higherFirst } from "./derived";
+import { sectionKey } from "./parts";
 
 // The editor reads every match against its own facts: names, figures, scorelines, the order of the goals, what must be
 // covered and how long it runs. Pure; the writer sends back once on these and never on taste.
@@ -67,8 +69,8 @@ export function checkReports(draft: ReportsDraft, ctx: ReportsCheck): Fault[] {
     wordFaults(`${code}:standfirst`, piece.standfirst, true, names, fault);
     wordFaults(`${code}:account`, piece.account, true, names, fault);
     piece.sections.forEach((s, i) => {
-      wordFaults(`${code}:s${i + 1}`, `${s.head}. ${s.pitch}`, true, names, fault);
-      wordFaults(`${code}:s${i + 1}`, s.stake, false, names, fault);
+      wordFaults(sectionKey(code, i), `${s.head}. ${s.pitch}`, true, names, fault);
+      wordFaults(sectionKey(code, i), s.stake, false, names, fault);
     });
 
     facts(code, prose, desk, block, ctx, allMen, names, fault);
@@ -98,7 +100,7 @@ function namesOf(desk: MatchDesk): string[] {
   ];
 }
 
-function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx: ReportsCheck, allMen: readonly string[], names: readonly string[], fault: (s: string, c: string, v: Severity, e: string) => void): void {
+function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx: ReportsCheck, allMen: readonly string[], names: readonly string[], fault: Report): void {
   const section = `${code}:match`;
   // A man from another match in this one's prose is the confident wrong statement this paper refuses.
   const mine = new Set(names);
@@ -109,7 +111,7 @@ function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx:
   }
   // Besides the block's own figures: the goal total ("an eight-goal match"), and ten or nine men after a red card.
   const total = (desk.match.fixture.homeScore ?? 0) + (desk.match.fixture.awayScore ?? 0);
-  const reds = desk.events.filter((e) => e.kind === "sent-off" || e.kind === "second-yellow").length;
+  const reds = desk.events.filter((e) => isDismissal(e.kind)).length;
   const allowed = new Set([...numbersIn(block), 0, 90, 45, ctx.gameweek, total, ...(reds > 0 ? [10, 11 - reds] : [])]);
   for (const n of numbersIn(prose.replace(SCORE, " "))) if (!allowed.has(n)) fault(section, "a figure the facts do not give", "hard", String(n));
 
@@ -168,14 +170,14 @@ function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx:
 }
 
 /** The standfirst, the order of the goals in the account, the heads and the length. */
-function shape(code: number, piece: ReportPiece, desk: MatchDesk, fault: (s: string, c: string, v: Severity, e: string) => void): void {
+function shape(code: number, piece: ReportPiece, desk: MatchDesk, fault: Report): void {
   const { match, budget } = desk;
   const sf = piece.standfirst;
   const clubNamed = (c: typeof match.home) => [c.name, ...c.shorts].some((n) => mentionAt(sf, n) >= 0);
   const [h, a] = [match.fixture.homeScore ?? 0, match.fixture.awayScore ?? 0];
   if (sentences(sf).length !== 1 || wordCount(sf) > REPORTS.standfirstWords) fault(`${code}:standfirst`, `one sentence of ${REPORTS.standfirstWords} words or fewer`, "send-back", `${sentences(sf).length} sentences, ${wordCount(sf)} words`);
   if (!clubNamed(match.home) || !clubNamed(match.away)) fault(`${code}:standfirst`, "names both clubs", "send-back", sf);
-  if (!sf.includes(`${Math.max(h, a)}-${Math.min(h, a)}`)) fault(`${code}:standfirst`, "gives the score, higher first", "send-back", sf);
+  if (!sf.includes(higherFirst(h, a))) fault(`${code}:standfirst`, "gives the score, higher first", "send-back", sf);
   if (desk.events.some((e) => e.phrases.some((p) => sf.includes(p)))) fault(`${code}:standfirst`, "a minute in the standfirst", "send-back", sf);
 
   const scorers = desk.events.filter((e) => isGoal(e) && e.kind !== "own-goal" && e.man !== null).map((e) => surname(e.man!.name));
@@ -192,9 +194,9 @@ function shape(code: number, piece: ReportPiece, desk: MatchDesk, fault: (s: str
   else if (piece.sections.length !== budget.sections) fault(`${code}:match`, `${budget.sections} sections, not ${piece.sections.length}`, "send-back", String(piece.sections.length));
   const mine = [...match.men.map((m) => surname(m.name)), match.home.name, match.away.name, ...match.home.shorts, ...match.away.shorts];
   piece.sections.forEach((s, i) => {
-    if (wordCount(s.head) > 4 || s.head === "") fault(`${code}:s${i + 1}`, "a head of four words or fewer", "send-back", s.head);
-    if (!mine.some((n) => mentionAt(s.head, n) >= 0)) fault(`${code}:s${i + 1}`, "a head names a man or club from this match", "send-back", s.head);
-    if (s.pitch === "" || s.stake === "") fault(`${code}:s${i + 1}`, "a section needs its football and its stake", "hard", s.head);
+    if (wordCount(s.head) > 4 || s.head === "") fault(sectionKey(code, i), "a head of four words or fewer", "send-back", s.head);
+    if (!mine.some((n) => mentionAt(s.head, n) >= 0)) fault(sectionKey(code, i), "a head names a man or club from this match", "send-back", s.head);
+    if (s.pitch === "" || s.stake === "") fault(sectionKey(code, i), "a section needs its football and its stake", "hard", s.head);
   });
   const [least, most] = budget.account;
   const words = wordCount(piece.account);
@@ -202,7 +204,7 @@ function shape(code: number, piece: ReportPiece, desk: MatchDesk, fault: (s: str
   const [sLeast, sMost] = REPORTS.sectionWords;
   piece.sections.forEach((s, i) => {
     const n = wordCount(`${s.pitch} ${s.stake}`);
-    if (n < sLeast * SLACK_UNDER || n > sMost * SLACK_OVER) fault(`${code}:s${i + 1}`, `a section of ${sLeast} to ${sMost} words`, "send-back", `${n} words`);
+    if (n < sLeast * SLACK_UNDER || n > sMost * SLACK_OVER) fault(sectionKey(code, i), `a section of ${sLeast} to ${sMost} words`, "send-back", `${n} words`);
   });
   partFaults(code, piece, desk, fault);
 }

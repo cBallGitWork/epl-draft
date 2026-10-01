@@ -30,6 +30,13 @@ const ON_TARGET: ReadonlySet<MomentKind> = new Set(["goal", "penalty-goal", "sav
 const CHANGES: ReadonlySet<MomentKind> = new Set(["substitution"]);
 
 export const isGoal = (event: MatchEvent) => GOALS.has(event.kind);
+/** Goals he scored, own goals aside. */
+export const goalsBy = (events: readonly MatchEvent[], code: number) =>
+  events.filter((e) => isGoal(e) && e.kind !== "own-goal" && e.man?.code === code).length;
+/** Goals he set up. */
+export const assistsBy = (events: readonly MatchEvent[], code: number) => events.filter((e) => isGoal(e) && e.other?.code === code).length;
+/** A red card, straight or a second yellow. */
+export const isDismissal = (kind: MomentKind) => kind === "sent-off" || kind === "second-yellow";
 const other = (side: Side): Side => (side === "home" ? "away" : "home");
 
 /** The match in order. A moment about a man we cannot place is kept only when it is about nobody (added time, the whistles). */

@@ -1,4 +1,4 @@
-import { plPlayerCodes } from "./teamSheet";
+import { codeOf, plPlayerCodes } from "./teamSheet";
 import { BOOKING, GOAL, OWN_GOAL, PENALTY, SUBSTITUTION, minuteOf } from "./fixtureEvents";
 import type { RawPlFixture } from "./raw";
 
@@ -183,8 +183,8 @@ export function plSubstitutions(
     if (minute === null || minuteOf(off) !== minute) continue;
     swaps.push({
       minute,
-      on: on.personId === undefined ? null : (codes.get(on.personId) ?? null),
-      off: off.personId === undefined ? null : (codes.get(off.personId) ?? null),
+      on: codeOf(codes, on.personId),
+      off: codeOf(codes, off.personId),
     });
   }
 

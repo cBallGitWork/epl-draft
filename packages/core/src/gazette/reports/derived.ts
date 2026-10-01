@@ -1,7 +1,8 @@
 import { REPORTS } from "../../config";
 import { minutesLeft, numeral } from "./minutes";
-import { finalScore, isGoal, type MatchEvent } from "./timeline";
+import { finalScore, goalsBy, isGoal, type MatchEvent } from "./timeline";
 import type { ReportMatchInput, Side } from "./types";
+import { plural } from "../../format";
 
 // Facts worked out from the timeline so the writer never does sums: a lead, a burst, a late winner, a conversion rate.
 
@@ -9,12 +10,12 @@ const { burstMinutes: BURST, lateMinute: LATE, cleanSheetLostFrom: CLEAN_SHEET_L
 const { most: MOST, more: MORE } = REPORTS.ball;
 
 const other = (side: Side): Side => (side === "home" ? "away" : "home");
-const higherFirst = (a: number, b: number) => `${Math.max(a, b)}-${Math.min(a, b)}`;
+export const higherFirst = (a: number, b: number) => `${Math.max(a, b)}-${Math.min(a, b)}`;
 
 /** A goal's minute as a report says it: "with 11 minutes left", or its first phrase. */
 function when(event: MatchEvent): string {
   const left = minutesLeft(event.minute);
-  return left !== null && event.at >= 60 ? `with ${numeral(left)} minute${left === 1 ? "" : "s"} left` : (event.phrases[0] ?? "");
+  return left !== null && event.at >= 60 ? `with ${numeral(left)} ${plural(left, "minute")} left` : (event.phrases[0] ?? "");
 }
 
 export function derivedFacts(match: ReportMatchInput, events: readonly MatchEvent[]): string[] {
@@ -65,7 +66,7 @@ export function derivedFacts(match: ReportMatchInput, events: readonly MatchEven
 
   // A man whose chances added up to a goal and more, with none scored, in words (the paper never prints the figure).
   for (const man of match.men) {
-    const scored = goals.some((g) => g.kind !== "own-goal" && g.man?.code === man.code);
+    const scored = goalsBy(goals, man.code) > 0;
     if (!scored && man.expectedGoals >= REPORTS.missed.expectedGoals) facts.push(`${man.name} (${name(man.side)}) had chances good enough to score and did not`);
   }
 
@@ -74,7 +75,7 @@ export function derivedFacts(match: ReportMatchInput, events: readonly MatchEven
     for (const side of ["home", "away"] as const) {
       const f = figures[side];
       if (final[side] > 0 && f.onTarget >= final[side]) facts.push(`${name(side)} scored ${numeral(final[side])} from ${numeral(f.onTarget)} on target`);
-      if (f.clearChances > 0) facts.push(`${name(side)} made ${numeral(f.clearChances)} clear chance${f.clearChances === 1 ? "" : "s"} and took ${numeral(f.clearChancesScored)}`);
+      if (f.clearChances > 0) facts.push(`${name(side)} made ${numeral(f.clearChances)} clear ${plural(f.clearChances, "chance")} and took ${numeral(f.clearChancesScored)}`);
       if (f.possession >= MOST) facts.push(`${name(side)} had most of the ball`);
       else if (f.possession >= MORE) facts.push(`${name(side)} had more of the ball`);
     }

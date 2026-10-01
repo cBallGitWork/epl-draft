@@ -1,7 +1,7 @@
 import ScrollBoard from "../../../components/league/ScrollBoard";
 import type { Deal, DealSide } from "@epl/core";
 import { inkOn, kindOf, movement, teamColours, DASH } from "@epl/core";
-import { PANEL_FLUSH, ROW_NAME, MINOR_CAPS } from "@/app/desk";
+import { MINOR_CAPS, MINOR_LABEL, PANEL_FLUSH, ROW_NAME } from "@/app/desk";
 
 // One manager's business, drawn as Championship Manager's Transfers screen.
 //
@@ -124,7 +124,7 @@ export default function Ledger({
                         thing is that the people using it recognise it, and ten
                         managers who have said "the bin" for years do not
                         recognise "free agent" as the same place. */
-                    <span className={`block truncate border border-line px-1.5 py-0.5 text-center ${MINOR_CAPS} text-faint`}>
+                    <span className={`block truncate border border-line px-1.5 py-0.5 text-center ${MINOR_LABEL}`}>
                       The Bin
                     </span>
                   ) : (
@@ -175,7 +175,7 @@ function Side({
 }) {
   return (
     <span className={`flex min-w-0 flex-1 items-baseline gap-1.5 lg:block ${tone}`}>
-      <span className={`w-6 shrink-0 ${MINOR_CAPS} text-faint lg:hidden`}>
+      <span className={`w-6 shrink-0 ${MINOR_LABEL} lg:hidden`}>
         {label}
       </span>
       <span className="flex min-w-0 flex-1 flex-col justify-center leading-tight">

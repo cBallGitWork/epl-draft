@@ -8,6 +8,7 @@ import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
 import { readInbox } from "./inbox";
 import { NEWS } from "../titles";
+import { MAIL } from "../components/shell/sections";
 import { SMALL_CAPS, MINOR_CAPS } from "@/app/desk";
 
 // The manager's news, the way Championship Manager files it.
@@ -49,7 +50,6 @@ import { SMALL_CAPS, MINOR_CAPS } from "@/app/desk";
 // words are the ones it comes back as — `InboxCategory` still carries them and
 // every item is still filed under one.
 
-const HERE = "/news";
 
 export default async function NewsPage({
   searchParams,
@@ -141,7 +141,7 @@ function Row({
   const when = itemDay(item);
   return (
     <MailRow
-      href={`${HERE}?item=${encodeURIComponent(item.id)}`}
+      href={`${MAIL}?item=${encodeURIComponent(item.id)}`}
       open={open}
       day={when.day}
       time={when.time}

@@ -6,7 +6,6 @@ import type { ReportsDraft } from "./draft";
 // say or believe. He never rewrites; his words would become next week's tics. His flags go back once and never print.
 
 export const FAN_TAGS = ["not so", "not said", "invented", "same again", "said twice", "draft"] as const;
-export type FanTag = (typeof FAN_TAGS)[number];
 
 const squash = (text: string) => text.replace(/\s+/gu, " ").trim().toLowerCase();
 

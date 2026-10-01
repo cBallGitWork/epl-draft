@@ -9,6 +9,8 @@
 // nothing crawls our league. Silent failure is the actual risk, so staleness is
 // something a human can see rather than something we hope about.
 
+import { MS_PER_DAY } from "../time";
+
 /** The CADENCE we capture on, not an age we tolerate. Before the draft the pool
  *  barely moves and a weekly capture is plenty; once managers can add, drop and
  *  bench, every day is a day of history.
@@ -19,8 +21,6 @@
  *  today's is merely pending. */
 const PRE_DRAFT_CADENCE_DAYS = 7;
 const POST_DRAFT_CADENCE_DAYS = 1;
-
-const MS_PER_DAY = 86_400_000;
 
 export interface CaptureStaleness {
   /** Most recent capture date (YYYY-MM-DD), or null if we have never captured. */

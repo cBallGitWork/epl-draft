@@ -3,7 +3,7 @@ import { DASH, toFantraxClubCode } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import { ROW_LINK } from "../../components/league/TableCells";
 import { MUTE, SortHead, sortedAs } from "../../components/league/TableHeads";
-import { standoutCuts, standoutInk, type StandoutCut } from "../../components/league/standout";
+import { SIDE_SHARES, standoutCuts, standoutInk, type StandoutCut } from "../../components/league/standout";
 import { BOARD, GROUP_PLATE, HEAD_CELL, INDEX_WIDTH, PINNED_NAME, PINNED_TILE, ROW_FIGURE, ROW_RULE } from "@/app/desk";
 import ScrollBoard from "../../components/league/ScrollBoard";
 import { POOL, TEAMS } from "../routes";
@@ -13,8 +13,6 @@ import type { TeamRow } from "./teamRows";
 // The clubs as one board of football figures in labelled groups: CM's densest board (`cm9900/21.jpg`) sets its
 // heads in groups the same way. Standouts are lit in ink.
 
-/** A fifth in yellow and a tenth in orange, of the twenty: the match board's shares. */
-const SHARES = { good: 1 / 5, best: 1 / 10 } as const;
 
 export default function TeamBoard({
   rows,
@@ -28,7 +26,7 @@ export default function TeamBoard({
   const cuts = new Map<string, StandoutCut>(
     TEAM_COLUMNS.map((column) => [
       column.key,
-      standoutCuts(rows.map(column.of), SHARES, { of: rows.length }),
+      standoutCuts(rows.map(column.of), SIDE_SHARES, { of: rows.length }),
     ]),
   );
   const firsts = new Set(columnGroups(TEAM_COLUMNS).map((entry) => TEAM_COLUMNS.find((c) => c.group === entry.group)?.key));

@@ -1,3 +1,4 @@
+import { byKickoff } from "../football/selectors";
 import type { Club, Fixture } from "../football/types";
 import { isResolved, type RosteredTeam } from "../join/roster";
 import { isActive } from "../league/rosterStatus";
@@ -91,7 +92,7 @@ export function fixtureStakes(
     (a, b) =>
       Number(tieCritical(b)) - Number(tieCritical(a)) ||
       b.men - a.men ||
-      (a.kickoff ?? "").localeCompare(b.kickoff ?? ""),
+      byKickoff(a, b),
   );
 }
 

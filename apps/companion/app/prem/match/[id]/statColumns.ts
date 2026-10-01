@@ -60,6 +60,3 @@ export function sorted<T extends StatLine>(rows: readonly T[], sort: StatSort, d
   return [...rows].sort((a, b) => byFigure(column.of(a), column.of(b), descending));
 }
 
-/** How much of a side a column may light: a fifth in yellow, so three scorers of sixteen stand out,
- *  and a tenth in orange, which is its one best man. */
-export const STANDOUT = { good: 1 / 5, best: 1 / 10 } as const;

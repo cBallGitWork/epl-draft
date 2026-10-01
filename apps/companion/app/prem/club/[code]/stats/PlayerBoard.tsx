@@ -5,20 +5,11 @@ import NameLink from "../NameLink";
 import type { FootballPlayer } from "@epl/core";
 import { SELECT } from "../../../../components/shell/ButtonLink";
 import { VIEWS, reading } from "./measures";
-import {
-  BOARD_FIGURE,
-  HEAD_CELL,
-  PANEL_FLUSH,
-  PINNED_NAME,
-  PINNED_TILE,
-  ROW_NAME,
-  ROW_HOVER,
-  MINOR_CAPS,
-} from "@/app/desk";
-import { MUTE, SortArrow, HeadRow } from "../../../../components/league/TableHeads";
-import PositionTile, { TILE_WIDTH } from "../../../../components/league/PositionTile";
+import { BOARD_FIGURE, MINOR_LABEL, PANEL_FLUSH, PINNED_BESIDE_TILE, PINNED_TILE, ROW_HOVER, ROW_NAME } from "@/app/desk";
+import { HeadRow, LeadHeads, SortHead, sortedAs } from "../../../../components/league/TableHeads";
+import PositionTile from "../../../../components/league/PositionTile";
 import ScrollBoard from "../../../../components/league/ScrollBoard";
-import { standoutCuts, standoutInk } from "../../../../components/league/standout";
+import { SIDE_SHARES, standoutCuts, standoutInk } from "../../../../components/league/standout";
 import StateBox from "../../../../components/football/StateBox";
 import { doubtRow } from "../../../../components/football/doubtRow";
 
@@ -54,7 +45,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
   const cuts = new Map(
     measures.map((measure) => [
       measure.key,
-      standoutCuts(rows.map((row) => row.player.season[measure.key]), SHARES, { of: played }),
+      standoutCuts(rows.map((row) => row.player.season[measure.key]), SIDE_SHARES, { of: played }),
     ]),
   );
 
@@ -82,7 +73,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
       {/* CM's grey bevelled control, on its own strip above the table, which is
           where the game puts it (`21.jpg`, `25.jpg`). */}
       <div className="flex items-center gap-2 border-b border-line px-2 py-1.5">
-        <label className={`${MINOR_CAPS} text-faint`} htmlFor="club-stat-view">
+        <label className={`${MINOR_LABEL}`} htmlFor="club-stat-view">
           View
         </label>
         <select
@@ -104,46 +95,16 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
           <caption className="sr-only">Every player, by {view}</caption>
           <thead>
             <HeadRow>
-              <th scope="col" className={`${HEAD_CELL} ${PINNED_TILE} ${TILE_WIDTH} bg-surface`}>
-                <span className={MUTE}>Fantrax position</span>
-              </th>
-              <th scope="col" className={`${HEAD_CELL} ${PINNED_NAME} left-10 lg:left-14`}>
-                <span className={MUTE}>Player</span>
-              </th>
+              <LeadHeads tile={PINNED_TILE} name={PINNED_BESIDE_TILE} />
               {measures.map((measure) => (
-                <th
+                <SortHead
                   key={measure.key}
-                  scope="col"
-                  className="p-0 font-bold"
+                  label={measure.head}
                   title={measure.label}
-                  // On the CELL and not on the button inside it: the role that
-                  // carries `aria-sort` is `columnheader`, which is the `<th>`.
-                  // Without it the pressed bevel says which column orders this
-                  // board and nothing says it to a screen reader.
-                  aria-sort={
-                    sort?.key === measure.key
-                      ? sort.descending
-                        ? "descending"
-                        : "ascending"
-                      : "none"
-                  }
-                >
-                  <button
-                    type="button"
-                    onClick={() => sortBy(measure.key)}
-                    aria-label={`Sort by ${measure.label}`}
-                    className={`flex h-6 w-full items-center justify-end px-1.5 ${
-                      sort?.key === measure.key
-                        ? "cm-bevel-pressed"
-                        : "cm-bevel hover:brightness-110"
-                    }`}
-                  >
-                    {measure.head}
-                    {sort?.key === measure.key ? (
-                      <SortArrow down={sort.descending} className="pl-0.5" />
-                    ) : null}
-                  </button>
-                </th>
+                  align="right"
+                  sorted={sortedAs(sort?.key === measure.key, sort?.descending ?? true)}
+                  onSort={() => sortBy(measure.key)}
+                />
               ))}
             </HeadRow>
           </thead>
@@ -151,7 +112,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
             {ordered.map(({ player, positions, href }) => (
               <tr key={player.id} className={`cm-row ${ROW_HOVER} ${doubtRow(player)}`}>
                 <PositionTile positions={positions} cell className={PINNED_TILE} />
-                <td className={`px-1.5 ${ROW_NAME} ${PINNED_NAME} left-10 text-ink lg:left-14 ${doubtRow(player)}`}>
+                <td className={`px-1.5 ${ROW_NAME} ${PINNED_BESIDE_TILE} text-ink ${doubtRow(player)}`}>
                   <NameLink href={href} className="cm-row flex min-h-11 w-36 items-center gap-2 lg:w-auto">
                     <span className="truncate">{player.fullName}</span>
                     <StateBox player={player} />
@@ -175,5 +136,3 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
   );
 }
 
-/** A column's orange for its best tenth and yellow for its top fifth, as a match board lights them. */
-const SHARES = { good: 0.2, best: 0.1 };

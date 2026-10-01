@@ -34,7 +34,11 @@ export const SUBSTITUTION = "S";
  *  goal in the 47th minute of the first half is a 45th-minute goal on any
  *  teleprinter, and `"90+1'00"` is read as 90. */
 export function minuteOf(event: RawPlFixtureEvent): number | null {
-  const label = event.clock?.label;
+  return clockMinute(event.clock?.label);
+}
+
+/** A printed clock's minute, added time dropped: `"56'00"` and `"56"` are 56, `"90+1"` is 90. */
+export function clockMinute(label: string | undefined): number | null {
   if (label === undefined) return null;
   const at = Number.parseInt(label, 10);
   return Number.isNaN(at) ? null : at;

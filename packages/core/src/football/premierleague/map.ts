@@ -1,6 +1,7 @@
 import type { MatchEvent, MatchEventKind } from "../types";
 import type { RawPlEvent, RawPlFixture } from "./raw";
 import type { RawPlMatchStats } from "./rawStats";
+import { codeOf } from "./teamSheet";
 
 // Pure raw → domain. No clock, no network, no environment (CODE_RULES §5).
 //
@@ -225,7 +226,7 @@ export function mapRoundGoals(
         // the value is null rather than the array being one long.
         players: [
           codes.get(goal.personId) ?? null,
-          goal.assistId === undefined ? null : (codes.get(goal.assistId) ?? null),
+          codeOf(codes, goal.assistId),
         ],
         text: "",
       });

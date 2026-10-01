@@ -1,10 +1,10 @@
-import { FANTRAX_LEAGUE_ID, fetchPlayerStories, isActive, isResolved, mapPlayerStories, type Fixture, type ReportMan } from "@epl/core";
+import { FANTRAX_LEAGUE_ID, MS_PER_DAY, fetchPlayerStories, isActive, isResolved, mapPlayerStories, type Fixture, type ReportMan } from "@epl/core";
 import mapping from "../../data/mappings/fantrax.json";
 import type { DeskFacts } from "./facts";
 
 // The league's side of a match report: who holds each footballer at the match's period, his points, and the club's word on him.
 
-export interface LeagueJoin {
+interface LeagueJoin {
   holders: Map<number, NonNullable<ReportMan["holder"]>>;
   points: Map<number, number>;
   fantraxIds: Map<number, string>;
@@ -42,7 +42,7 @@ const FITNESS_DAYS = 5;
 /** Fantrax's first story on each man taken off injured, published after the match and within a few days of it. */
 export async function fitnessAfter(codes: readonly number[], kickoff: string, fantraxIds: ReadonlyMap<number, string>): Promise<Map<number, string>> {
   const from = Date.parse(kickoff);
-  const until = from + FITNESS_DAYS * 24 * 60 * 60 * 1000;
+  const until = from + FITNESS_DAYS * MS_PER_DAY;
   const out = new Map<number, string>();
   await Promise.all(
     codes.map(async (code) => {

@@ -21,6 +21,9 @@ interface Population {
   floor?: number;
 }
 
+/** A side-sized board: a fifth in yellow, so three scorers of sixteen stand out, and a tenth in orange, its one best man. */
+export const SIDE_SHARES: StandoutShares = { good: 1 / 5, best: 1 / 10 };
+
 /** The figure a column's standouts reach: its top values, whole values at a time, while they fit inside
  *  `share`. Null when the column is thin or its top value is common. */
 export function standoutCut(
