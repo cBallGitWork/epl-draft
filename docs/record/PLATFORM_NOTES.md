@@ -72,6 +72,7 @@ match reports, the draft report (once, when the gameweek ends; no Saturday editi
 Sheet, the predicted elevens, the draft sheets at the deadline and Lawro. `newsdesk()` no longer queues news, the wire, the eleven, the power ranking, the dodgers, tie
 reports, tie calls or fixture previews, and `DeskState` lost the fields only they read (`started`, `stakes`,
 `dealsInWindow`, `news`). Their writers, briefs and prompts stay in the tree until they are deleted after GW6.
+The front page leaves the news and the wire already filed off as well (`frontPage`, same day); their articles keep their pages.
 
 ## The paper's staff write under ISS names, one per kind of story — decided 30 Sep 2026
 

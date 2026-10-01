@@ -10,8 +10,8 @@ import {
   type LeagueTeam,
   type TeamOfTheWeek,
   availability,
-  composePaper,
   deals,
+  frontPage,
   isMatchdayLive,
   nextDeadline,
   stories,
@@ -111,15 +111,8 @@ export interface Edition {
    *  players did is football and stands either way, which is why the eleven
    *  itself still prints. */
   fielded: boolean;
-  /** The rolling paper in print order: the first story leads, the rest run
-   *  under it as further articles. The paper is ONE page, so everything filed
-   *  prints here.
-   *
-   *  Unlike the old one-column-a-round shape, the lead does NOT go null
-   *  between rounds — a paper keeps printing its most recent edition until
-   *  the next one, and the filed instant is what keeps an old opinion honest
-   *  under today's masthead. `composePaper` owns expiry, supersession and the
-   *  order. */
+  /** The rolling paper in print order, the first story leading; `frontPage` owns
+   *  expiry, supersession, the order and the kinds it leaves off. */
   filed: PublishedStory[];
   /** Every story the week produced, strongest first: the front page leads on the
    *  first and runs the rest as headlines under it. Empty is ordinary — a paper
@@ -192,7 +185,7 @@ export async function edition(mine: string | null): Promise<Edition> {
     stories: told,
     // The clock is the app edge's to read (`football.ts`'s rule), which is why
     // the compose happens here rather than in `paper.ts`.
-    filed: composePaper(filed, at),
+    filed: frontPage(filed, at),
     board,
     mine,
   };
