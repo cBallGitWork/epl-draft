@@ -85,6 +85,11 @@ export function strengthTable(strengths: Map<number, ClubStrength>, measure: "at
     .sort((a, b) => a.home + a.away - (b.home + b.away) || a.club.localeCompare(b.club));
 }
 
+/** Each club's place by its own attack or defence, strongest first, by FPL club code. */
+export function strengthPlaces(strengths: Map<number, ClubStrength>, measure: "attack" | "defence"): Map<number, number> {
+  return new Map(strengthTable(strengths, measure).map((row, at) => [row.code, at + 1]));
+}
+
 /** Each club's place by `rating`, 1 first in the given direction; a tie shares the higher place (1, 2, 2, 4). */
 function competitionRanks(
   strengths: Map<number, ClubStrength>,
