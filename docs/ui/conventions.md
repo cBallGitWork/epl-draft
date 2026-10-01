@@ -83,7 +83,7 @@ No fluid clamps except inside the masthead.
 | `shell/LeagueCrest` | Our crest. `mark` (no type, legible to ~24px) and `full`. |
 | `shell/AutoRefresh` | The app's **single** client poller, mounted by the layout. `POLL.live` during football, `POLL.idle` otherwise, waking at kickoff: it counts down the layout's `liveIn` (`cadence.ts`). Eight pages each mounted their own until 29 Aug, sized from whatever snapshot each happened to hold — so a page with no football read of its own simply froze. |
 | `core/inbox/when` | When an inbox item happened, and WHICH KIND of "when". Two sources date themselves differently — Fantrax's offsetless `"Wed Sep 2, 2026, 6:11AM"` and our ISO deadline — and one untagged string carrying both sorted the 12 Sep deadline under 2 Sep deals and drew a US stamp beside a British date. `fantraxDay`/`fantraxMoment` RE-SPELL their parts (`Sep 2` → `2 Sept`, and the zone named: `6:11 AM ET`); nothing converts them, because a converted transaction can move a day. `whenKey` puts both into Fantrax's own calendar for ordering only. |
-| `shell/liveTie` | Whether there is a live tie of the reader's, as one question with six guards. The layout starts it ONCE, un-awaited, and hands the promise to both wearers — so the desk's strip and the phone's plate are one Fantrax read, and neither blocks the shell. |
+| `shell/liveTie` | Whether there is a live tie of the reader's, as one question with six guards, the football's asked before Fantrax is read. The layout starts it ONCE, un-awaited, and hands the promise to both wearers — so the desk's strip and the phone's plate are one Fantrax read, and neither blocks the shell. A provider failing is no strip; anything else still throws. |
 | `shell/LiveNow` · `shell/LiveStrip` | Your tie in the chrome while a ball is in the air, **on the desk**. Stands down on `/` and `/matchday`, which print the same tie larger, and below `lg` everywhere — 44px across the top of a phone for a number the thumb rail can carry in room it already has. |
 | `shell/LiveFigure` | The same tie as the Live tab's figure, in the glyph's slot below `lg`, stepping down the type scale by length (`scoreSize`); the match clock when there is no tie of yours. |
 | `shell/Skeleton` | The loading block. Paints `currentColor` at low alpha, so it self-skins in whichever register it lands in — one primitive, no variants. |
@@ -338,7 +338,7 @@ A recipe is named at its third occurrence (CODE_RULES §1); these were not.
 | `${ROW_RULE} ${mine ? "bg-raised" : "hover:bg-surface"}` | 2 (`league/TableRow`, league team-stats) | `desk.ts`, beside `ROW_HOVER`. |
 | Panel sized in rows by hand | 2 (`SectionShell`, the club's fixtures tab) | A `Panel` taking `rows`. |
 | `raw instanceof FantraxError ? fallback : map(raw)` | 15 read modules, each with its own fallback (23 Sep) | Left: a helper would rename a one-line ternary. |
-| The refusal pair (`shell/Nothing`, `error`, `not-found`) | 3 | Two of them should use `Nothing` itself. |
+| The refusal pair (`shell/Nothing`, `error`, `not-found`) | 3 written out; `global-error` draws `Nothing` (1 Oct) | `error` and `not-found` should use `Nothing` too. |
 | `border-collapse w-full whitespace-nowrap` | 3 | Reconcile with `BOARD` rather than name it. |
 
 DESIGN §6's density table is the other half of this — it says how tall each of
