@@ -1,60 +1,86 @@
-import { Archivo, Archivo_Narrow, Jost, Oxanium } from "next/font/google";
+import localFont from "next/font/local";
 
-// **Championship Manager had two faces and so does the desk now** (Craig, 31
-// Aug). The game set its top header and menu bars in Handel Gothic — geometric,
-// wide, 1970s-futuristic — and its player names and data in Eras Demi, a
-// humanist geometric. Both are licensed and neither is free, so these are the
-// nearest faces that are:
-//
-// · **Oxanium** for chrome — title bars, tab strips, the rail, column heads.
-//   Squarish geometric with 200–800 weights, which is what Handel Gothic's
-//   descendants in game interfaces look like, and it holds up in capitals at
-//   nine pixels where Michroma (closer in shape) is far too wide for a 64px
-//   rail label.
-// · **Jost** for text and names — Futura-lineage geometric humanist, in Eras's
-//   role. It is not an Eras clone; what it shares is the register.
-//
-// Archivo stays, and only the PAPER uses it: DESIGN §6 gives it the letterspaced
-// small capitals a newspaper sets its standing heads in, and a serif at nine
-// pixels with 0.16em of tracking is a smudge. It no longer dresses the desk,
-// which is the whole point — a neutral grotesque is what a screen looks like
-// when nobody chose a typeface.
-//
-// Archivo Narrow keeps every figure in both registers, untouched. That is not
-// deference to the old pairing: `tnum` tabular numerals are why a score does not
-// jitter as it ticks, and DESIGN §6 calls it the single most important
-// typographic decision in a live view.
-export const archivo = Archivo({
-  subsets: ["latin"],
+// Google Fonts' own latin and latin-ext files, committed (OFL) so a build never asks Google. Each
+// `*Ext` face leads its stack in tokens.css/paper.css; its unicode-range (a literal: next/font reads
+// no other) keeps it unfetched until a ć or an š. The Arial fallbacks are in fonts/fallbacks.css.
+
+// Archivo sets the paper's letterspaced small capitals; the desk no longer wears it.
+const archivo = localFont({
+  src: "./fonts/archivo/latin.woff2",
+  weight: "400 700",
   variable: "--font-archivo",
-  weight: ["400", "500", "600", "700"],
   display: "swap",
+  adjustFontFallback: false,
+  fallback: ["Archivo Fallback"],
+});
+const archivoExt = localFont({
+  src: "./fonts/archivo/latin-ext.woff2",
+  weight: "400 700",
+  variable: "--font-archivo-ext",
+  display: "swap",
+  preload: false,
+  adjustFontFallback: false,
+  declarations: [{ prop: "unicode-range", value: "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF" }],
 });
 
-// **800 is the blue index block's text and nothing else** (Craig, 7 Sep 2026:
-// *"the text in the blue box"* — bolder, larger, with a slight shadow). 700 was
-// the ceiling here and every one of those twenty sites was already at it, so
-// "bolder" had nowhere to go without another file. One more weight is the cost,
-// and `.cm-index` in `desk.css` is its only consumer: the league placing is the
-// mark a reader counts a table down by, and `cm9900/24.jpg` sets it heavier than
-// the club names beside it. Everything else on the desk stays at 700.
-export const oxanium = Oxanium({
-  subsets: ["latin"],
+// Oxanium is the chrome (Handel Gothic's role in CM); 800 is `.cm-index`'s alone.
+const oxanium = localFont({
+  src: "./fonts/oxanium/latin.woff2",
+  weight: "400 800",
   variable: "--font-oxanium",
-  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
+  adjustFontFallback: false,
+  fallback: ["Oxanium Fallback"],
+});
+const oxaniumExt = localFont({
+  src: "./fonts/oxanium/latin-ext.woff2",
+  weight: "400 800",
+  variable: "--font-oxanium-ext",
+  display: "swap",
+  preload: false,
+  adjustFontFallback: false,
+  declarations: [{ prop: "unicode-range", value: "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF" }],
 });
 
-export const jost = Jost({
-  subsets: ["latin"],
+// Jost is text and names (Eras Demi's role).
+const jost = localFont({
+  src: "./fonts/jost/latin.woff2",
+  weight: "400 700",
   variable: "--font-jost",
-  weight: ["400", "500", "600", "700"],
   display: "swap",
+  adjustFontFallback: false,
+  fallback: ["Jost Fallback"],
+});
+const jostExt = localFont({
+  src: "./fonts/jost/latin-ext.woff2",
+  weight: "400 700",
+  variable: "--font-jost-ext",
+  display: "swap",
+  preload: false,
+  adjustFontFallback: false,
+  declarations: [{ prop: "unicode-range", value: "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF" }],
 });
 
-export const archivoNarrow = Archivo_Narrow({
-  subsets: ["latin"],
+// Archivo Narrow sets every figure in both registers, with `tnum`.
+const archivoNarrow = localFont({
+  src: "./fonts/archivo-narrow/latin.woff2",
+  weight: "600 700",
   variable: "--font-archivo-narrow",
-  weight: ["600", "700"],
   display: "swap",
+  adjustFontFallback: false,
+  fallback: ["Archivo Narrow Fallback"],
 });
+const archivoNarrowExt = localFont({
+  src: "./fonts/archivo-narrow/latin-ext.woff2",
+  weight: "600 700",
+  variable: "--font-archivo-narrow-ext",
+  display: "swap",
+  preload: false,
+  adjustFontFallback: false,
+  declarations: [{ prop: "unicode-range", value: "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF" }],
+});
+
+/** Every desk face's variable, for the root layout's <html>. */
+export const deskFontVariables = [archivo, archivoExt, oxanium, oxaniumExt, jost, jostExt, archivoNarrow, archivoNarrowExt]
+  .map((face) => face.variable)
+  .join(" ");

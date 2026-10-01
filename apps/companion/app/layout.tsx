@@ -12,7 +12,7 @@ import ReplayStrip from "./components/shell/ReplayStrip";
 import UnreadBadge from "./components/shell/UnreadBadge";
 import { liveTie } from "./components/shell/liveTie";
 import { readInbox } from "./news/inbox";
-import { archivo, archivoNarrow, jost, oxanium } from "./deskFonts";
+import { deskFontVariables } from "./deskFonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -69,7 +69,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     .catch(() => []);
 
   return (
-    <html lang="en-GB" className={`${archivo.variable} ${archivoNarrow.variable} ${oxanium.variable} ${jost.variable}`}>
+    <html lang="en-GB" className={deskFontVariables}>
       {/* A row, not a stack: Championship Manager's screen is a rail down the
           side and everything else beside it. `min-w-0` on the content column is
           not optional — it is full of `truncate` and `overflow-x-auto` children,

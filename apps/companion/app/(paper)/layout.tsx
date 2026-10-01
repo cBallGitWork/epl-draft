@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { Viewport } from "next";
-import { fraunces, newsreader } from "../paperFonts";
+import { paperFontVariables } from "../paperFonts";
 
 // The paper's own layout. Every route in this group is newsprint, and the
 // register is put on HERE so that a paper page cannot ship without it — the
@@ -36,7 +36,7 @@ export default function PaperLayout({ children }: { children: ReactNode }) {
     // show the desk's navy beneath the paper. The sheet is the sheet to the
     // foot of the screen.
     <div
-      className={`paper @container ${fraunces.variable} ${newsreader.variable} -mx-[var(--page-gutter)] -mb-[var(--page-foot)] -mt-3 flex min-h-dvh flex-col gap-5 px-[var(--page-gutter)] pb-[calc(2rem+var(--page-foot))] pt-4`}
+      className={`paper @container ${paperFontVariables} -mx-[var(--page-gutter)] -mb-[var(--page-foot)] -mt-3 flex min-h-dvh flex-col gap-5 px-[var(--page-gutter)] pb-[calc(2rem+var(--page-foot))] pt-4`}
     >
       {children}
     </div>

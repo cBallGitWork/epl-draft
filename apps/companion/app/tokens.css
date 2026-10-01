@@ -318,12 +318,12 @@
      two stand in for Championship Manager's own Handel Gothic and Eras Demi,
      both of which are licensed. Archivo is now the PAPER's alone, where §6 gives
      it the letterspaced small capitals. --- */
-  --font-sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-jost-ext), var(--font-jost), ui-sans-serif, system-ui, sans-serif;
   /* The chrome's own face: title bars, tab strips, the rail, column heads —
      Handel Gothic's role in the game. `.paper` does not re-point it, because
      newsprint has no chrome. */
-  --font-chrome: var(--font-oxanium), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-archivo-narrow), "Arial Narrow", ui-sans-serif, sans-serif;
+  --font-chrome: var(--font-oxanium-ext), var(--font-oxanium), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-archivo-narrow-ext), var(--font-archivo-narrow), "Arial Narrow", ui-sans-serif, sans-serif;
   --font-display--font-feature-settings: "tnum";
 
   /* --- Fixed rem scale, ratio ~1.15, rounded to the sixteenth of a rem the
