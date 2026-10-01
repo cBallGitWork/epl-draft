@@ -31,12 +31,16 @@ is not used for anything: there is no ground.
    `?of=`): *side A · side B · Fantasy*, opening on Fantasy (Craig, 24 Sep 2026).
    - **Fantasy** — `CategoryBands` in the match page's Fantasy layout: a grey plate
      per category with each side's total at its end, then each side's men meeting at
-     a centre rule, "Name (pts)". The eleven only, so it sums to the scoreline.
+     a centre rule, "crest Name (pts)", the points green or red. The eleven only.
    - **A side** — `SideStats`, the match page's club board for one manager: his
-     colours on the position tiles, each man's club crest, "sub off 81′" on a desk,
-     Fantrax's points, then what he did in each league category (counts, noughts
-     included), in Fantrax's own row order. Sortable (`?sort=`, `?dir=asc`); the
-     bench below the eleven, dimmed and "not counted".
+     colours on the position tiles, each man's club crest, Fantrax's points, then
+     what he did in each league category (counts, noughts included), in Fantrax's
+     own row order. A figure is green where Fantrax paid him for it and red where it
+     docked him (`gainOrLoss`), at his roster slot. No sub notes: the pitch has them.
+     Sortable (`?sort=`, `?dir=asc`); the bench below the eleven, dimmed and "not counted".
+   - **Minutes played is on neither** (Craig, 1 Oct 2026), found by Fantrax's long
+     code (`MINUTES`), so the bands no longer sum to the scoreline. Both read the
+     served league's own categories: the real league's (`AT`, `GKP`, `DFP`, `DFP3`) from go-live.
    The Players tab went into this on 24 Sep.
 5. **Table** — the league standings, with **both sides of the tie edged in their
    own colours** (`TableTab` → `/league`'s own `Columns` and `TableRow`).
