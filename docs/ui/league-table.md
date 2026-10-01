@@ -81,7 +81,8 @@ Same shell, different question: not who is winning, but what each side is
 actually DOING. The blue foot row picks the group — Attacking · Defensive ·
 Keeping · Appearances · Discipline — and **the whole group draws at once**, three or four
 categories across the top with every team down the side (Craig, 11 Sep 2026:
-*"for each section, we can get all the columns in one go"*).
+*"for each section, we can get all the columns in one go"*). Under `lg` the plates
+read Attack · Defence · Keeping · Apps · Discipline, which keeps five on one row at 390.
 
 **One grey toggle at the top, `FPts` · `Total`, and it governs every cell.** The
 same category is two numbers — what Fantrax paid for it and the raw figure behind

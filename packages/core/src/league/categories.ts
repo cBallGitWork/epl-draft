@@ -55,12 +55,12 @@ export interface StatCategory {
  *  for them here. A league with every category enabled would say what the full
  *  set is — deferred, and recorded in PLATFORM_NOTES. */
 export const GROUPS = [
-  { key: "attacking", label: "Attacking" },
-  { key: "defensive", label: "Defensive" },
+  { key: "attacking", label: "Attacking", short: "Attack" },
+  { key: "defensive", label: "Defensive", short: "Defence" },
   // A keeper's own work, apart so DefCon's two counts fit a phone beside clean sheets.
-  { key: "keeping", label: "Keeping" },
-  { key: "appearances", label: "Appearances" },
-  { key: "discipline", label: "Discipline" },
+  { key: "keeping", label: "Keeping", short: "Keeping" },
+  { key: "appearances", label: "Appearances", short: "Apps" },
+  { key: "discipline", label: "Discipline", short: "Discipline" },
 ] as const;
 
 export type GroupKey = (typeof GROUPS)[number]["key"];
