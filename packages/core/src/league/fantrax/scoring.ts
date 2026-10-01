@@ -1,18 +1,11 @@
-import type { CategoryTable, ScoringCategory, ScoringRules } from "../scoring";
+import type { Band, CategoryTable, Price, ScoringCategory, ScoringRules, Tiers } from "../scoring";
 
-// Fantrax's scoring system as it arrives, and the little of it we read.
+// Fantrax's scoring system as it arrives, and what we read of it.
 //
-// The payload states the rules twice: `scoringCategories` is the complete table
-// as strings, and `scoringCategorySettings` is a structured mirror carrying the
-// names and the group identities. We take the table for the numbers and the
-// mirror for one thing the table cannot say — which of its two groups is the
-// keepers'.
-//
-// Only flat `pointsN` values are read. Fantrax also writes ranges
-// (`"range1|59|1|NULL$60|90|1|NULL"`) for minutes, saves and goals conceded, and
-// those are deliberately not parsed: nothing needs them, because we do not score
-// matches. A value we cannot read is left out rather than guessed at, and the
-// caller gets null.
+// The payload states the rules twice: `scoringCategories` is the complete table as strings, and
+// `scoringCategorySettings` a structured mirror carrying names, group identities and each range's bands.
+// Flat prices come from the table; a range comes from the mirror, because only the mirror says whether its
+// bands stack (`"range1|59|1|NULL$60|90|1|NULL"` pays 2 for 90 minutes when cumulative and 1 when not).
 
 export interface RawScoringSystem {
   /** group key → category short name → position letter → expression. */
@@ -30,6 +23,20 @@ export interface RawScoringGroup {
  *  them. */
 export interface RawScoringConfig {
   scoringCategory?: { id?: string; name?: string; shortName?: string; code?: string };
+  /** "Default", "D", "M"…: the table's position key. */
+  position?: { shortName?: string };
+  points?: number;
+  cumulative?: boolean;
+  /** "PER_GAME" on every range seen. */
+  rangeType?: string;
+  ranges?: RawScoringRange[];
+}
+
+/** One band: `points` for a count from `start` to `end`, or for every `interval` of it. */
+export interface RawScoringRange {
+  range?: { start?: number; end?: number };
+  points?: number;
+  interval?: number;
 }
 
 /** Fantrax's own keys for the two tables. Platform constants, interpreted in the
@@ -38,42 +45,62 @@ export interface RawScoringConfig {
 const GOALIE_GROUP = "GOALIE";
 const OUTFIELD_GROUP = "NON_GOALIE";
 const GOALIE_GROUP_CODE = "SOCCER_GOALIE";
+const OUTFIELD_GROUP_CODE = "SOCCER_NON_GOALIE";
+/** The only range type read: bands applied to one match's count. */
+const PER_GAME = "PER_GAME";
 
 export function mapScoringRules(raw: RawScoringSystem | undefined): ScoringRules | null {
   const categories = raw?.scoringCategories;
   if (!categories) return null;
+  const configs = (code: string) => raw?.scoringCategorySettings?.find((group) => group.group?.code === code)?.configs ?? [];
 
   return {
-    goalie: table(categories[GOALIE_GROUP]),
-    outfield: table(categories[OUTFIELD_GROUP]),
+    goalie: table(categories[GOALIE_GROUP], configs(GOALIE_GROUP_CODE)),
+    outfield: table(categories[OUTFIELD_GROUP], configs(OUTFIELD_GROUP_CODE)),
     goaliePosition: goaliePosition(raw?.scoringCategorySettings),
   };
 }
 
-function table(group: Record<string, Record<string, string | undefined>> | undefined): CategoryTable {
+function table(group: Record<string, Record<string, string | undefined>> | undefined, configs: readonly RawScoringConfig[]): CategoryTable {
   const out: CategoryTable = {};
   for (const [category, positions] of Object.entries(group ?? {})) {
-    const row: Record<string, number | null> = {};
+    const row: Record<string, Price | null> = {};
     for (const [position, expression] of Object.entries(positions ?? {})) {
       if (typeof expression !== "string") continue;
-      // Every position the wire priced is kept, even the ones we cannot read.
-      // Dropping an unreadable one would let it fall through to `Default` and
-      // report a number from a different rule as if it were this one.
-      row[position] = flatPoints(expression);
+      // Every position the wire priced is kept, even unreadable, so it cannot fall through to `Default`.
+      const config = configs.find((c) => c.scoringCategory?.shortName === category && c.position?.shortName === position);
+      row[position] = flatPoints(expression) ?? tiers(config);
     }
     if (Object.keys(row).length > 0) out[category] = row;
   }
   return out;
 }
 
-/** `"points6"` → 6, `"points-1"` → -1. Anything else — a range, a shape we have
- *  not seen — is not a flat number and is left for a reader who needs it. */
+/** `"points6"` → 6, `"points-1"` → -1; anything else is not a flat number. */
 function flatPoints(expression: string): number | null {
   const match = /^points(-?\d+(?:\.\d+)?)$/.exec(expression.trim());
   if (!match) return null;
   const points = Number(match[1]);
   return Number.isFinite(points) ? points : null;
 }
+
+/** A range's bands off the settings mirror; null for one not per match, or with a band we cannot read. */
+function tiers(config: RawScoringConfig | undefined): Tiers | null {
+  if (config?.rangeType !== PER_GAME || typeof config.cumulative !== "boolean") return null;
+  const bands = (config.ranges ?? []).map(band);
+  if (bands.length === 0 || !bands.every((b): b is Band => b !== null)) return null;
+  return { bands: bands.sort((a, b) => a.from - b.from), cumulative: config.cumulative };
+}
+
+function band(raw: RawScoringRange): Band | null {
+  const from = raw.range?.start;
+  const to = raw.range?.end;
+  const every = raw.interval ?? null;
+  if (!finite(from) || !finite(to) || !finite(raw.points) || (every !== null && !(finite(every) && every > 0))) return null;
+  return { from, to, points: raw.points, every };
+}
+
+const finite = (n: number | undefined): n is number => typeof n === "number" && Number.isFinite(n);
 
 /** The keeper's position letter, from the goalie group's own short name.
  *
