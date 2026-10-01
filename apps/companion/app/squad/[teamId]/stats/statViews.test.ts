@@ -21,17 +21,11 @@ const realKeys = new Set([...Object.keys(realGross.stats), "GA", "PKS", "GKP"]);
 const rehearsalKeys = new Set([...Object.keys(rehearsalGross.stats), "GA", "PKS", "Sv"]);
 
 describe("the squad board's total", () => {
-  it("counts the real league's assists, so one man totals the same in both leagues", () => {
-    expect(readingOf(realGross, undefined, "pts")).toBe(17);
-    expect(readingOf(rehearsalGross, undefined, "pts")).toBe(17);
-  });
-
-  it("counts a keeper's GKP in the real league", () => {
-    expect(readingOf(line({ CS: 3, GA: 4, GKP: 30, YC: 1, PKS: 1 }), undefined, "pts")).toBe(39);
-  });
-
-  it("never adds A and AF to the AT they make up, in a league that scores all three", () => {
-    expect(readingOf(line({ G: 3, A: 3, AF: 1, AT: 4 }), undefined, "pts")).toBe(7);
+  // The categories are raw counts, so a sum of them added goals conceded and cards as if they were points.
+  it("draws no total in any view, and sorts by none", () => {
+    for (const view of ["fantasy", "attacking", "defensive", "discipline", "underlying"] as const)
+      expect(measuresFor(view, realKeys).map((measure) => measure.key)).not.toContain("pts");
+    expect(readingOf(realGross, undefined, "pts")).toBeNull();
   });
 });
 
@@ -39,11 +33,11 @@ describe("the squad board's columns", () => {
   const heads = (scored: ReadonlySet<string>) => measuresFor("fantasy", scored).map((measure) => measure.head);
 
   it("draws the real league's AT and GKP, and not the A, AF and Sv it no longer scores", () => {
-    expect(heads(realKeys)).toEqual(["G", "AT", "PKM", "CS", "GKP", "PKS", "GA", "YC", "RC", "OG", "Pts"]);
+    expect(heads(realKeys)).toEqual(["G", "AT", "PKM", "CS", "GKP", "PKS", "GA", "YC", "RC", "OG"]);
   });
 
   it("draws the rehearsal league's columns as it always has", () => {
-    expect(heads(rehearsalKeys)).toEqual(["G", "A", "AF", "PKM", "CS", "Sv", "PKS", "GA", "YC", "RC", "OG", "Pts"]);
+    expect(heads(rehearsalKeys)).toEqual(["G", "A", "AF", "PKM", "CS", "Sv", "PKS", "GA", "YC", "RC", "OG"]);
   });
 
   it("reads the AT column off the line", () => {

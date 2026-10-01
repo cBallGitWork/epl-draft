@@ -125,7 +125,7 @@ export default function StatBoard({
                         ? "text-faint"
                         : standoutInk(value, cuts.get(measure.key), measure.worse ? "low" : "high") || "text-ink";
                     return (
-                      <td key={measure.key} className={`${BOARD_FIGURE} ${measure.loud ? "font-bold" : ""} ${ink}`}>
+                      <td key={measure.key} className={`${BOARD_FIGURE} ${ink}`}>
                         {value === null ? DASH : measure.decimals ? value.toFixed(2) : value}
                       </td>
                     );

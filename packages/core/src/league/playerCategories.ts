@@ -43,8 +43,6 @@ export interface PlayerCategory {
    *  differently. Read as a fallback, never added: a player is in exactly one
    *  half, so at most one of the two columns is ever present on his row. */
   also?: string;
-  /** The category this one is a part of: a line carrying that whole never adds this part to its total. */
-  partOf?: string;
 }
 
 /** **Minutes are deliberately absent** (Craig: "dont do minutes"). It is on both
@@ -56,8 +54,8 @@ export interface PlayerCategory {
 export const PLAYER_CATEGORIES: readonly PlayerCategory[] = [
   { key: "G", group: "attacking", label: "Goals" },
   { key: ASSISTS_TOTAL.short, group: "attacking", label: "Assists (total)" },
-  { key: ASSISTS_OFFICIAL.short, group: "attacking", label: "Assists", partOf: ASSISTS_TOTAL.short },
-  { key: ASSISTS_FANTASY.short, group: "attacking", label: "Assists (fantasy)", partOf: ASSISTS_TOTAL.short },
+  { key: ASSISTS_OFFICIAL.short, group: "attacking", label: "Assists" },
+  { key: ASSISTS_FANTASY.short, group: "attacking", label: "Assists (fantasy)" },
   { key: "PKM", group: "attacking", label: "Penalties missed", lowIsGood: true },
   { key: "CS", group: "defensive", label: "Clean sheets" },
   { key: SAVES.short, group: "defensive", label: "Saves" },
