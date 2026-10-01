@@ -1,5 +1,4 @@
 import {
-  type AvailabilityNote,
   type Deadline,
   type Deal,
   type FootballSnapshot,
@@ -9,7 +8,6 @@ import {
   type RosteredTeam,
   type LeagueTeam,
   type TeamOfTheWeek,
-  availability,
   deals,
   frontPage,
   isMatchdayLive,
@@ -23,7 +21,6 @@ import { type Board, readBoard } from "./board";
 import { readDeals } from "./business";
 import { periodPoints } from "./scoreboard";
 import { roundUnderway, seasonKickoffs } from "./football";
-import { yoursFirst } from "./mine";
 import { filed } from "./paper";
 import { type LeagueSquads, getLeagueSquads } from "./squads";
 
@@ -80,7 +77,6 @@ export interface Edition {
   round: number | null;
   snapshot: FootballSnapshot | null;
   deals: Deal[];
-  availability: AvailabilityNote[];
   deadline: Deadline | null;
   teams: LeagueTeam[];
   /** Null until somebody has actually played. */
@@ -172,11 +168,6 @@ export async function edition(mine: string | null): Promise<Edition> {
     snapshot: drafted?.snapshot ?? null,
     deals: business,
     dealsAt: feed.at,
-    // Your problems first: a manager scanning injury news on a Friday is
-    // looking for his own name before anybody else's.
-    availability: drafted
-      ? yoursFirst(availability(drafted.period.teams), (note) => note.teamId === mine)
-      : [],
     deadline: drafted?.info ? nextDeadline(drafted.info.rosterPeriods, kickoffs, at) : null,
     teams: drafted?.info?.teams ?? [],
     eleven: picked,
@@ -209,7 +200,6 @@ function silenceOf(squads: LeagueSquads, paper: Omit<Edition, "silence">): Silen
   const empty =
     paper.eleven === null &&
     paper.deals.length === 0 &&
-    paper.availability.length === 0 &&
     paper.deadline === null &&
     paper.filed.length === 0;
   if (!empty) return null;

@@ -6,7 +6,6 @@ import Scoreboard from "../components/gazette/Scoreboard";
 import Drawing from "../components/gazette/Drawing";
 import Splash from "../components/gazette/Splash";
 import Deals from "../components/gazette/Deals";
-import Doubts from "../components/gazette/Doubts";
 import Lead from "../components/gazette/Stories";
 import Picture from "../components/gazette/Picture";
 import StoryFace, { hasPicture } from "../components/gazette/StoryFace";
@@ -172,16 +171,8 @@ export default async function GazettePage() {
 
         </div>
 
-        {/* The sidebar. Four short columns a manager scans rather than reads — the
-            week's best eleven, who is hurt, who signed whom, when the lock is —
-            so they are the four that come out of the lead's flow and stand
-            beside it. On a phone the grid is one column and this is simply what
-            follows, which is the order `docs/ui/gazetta.md` sets.
-
-            The eleven leads the sidebar because it is the one block here anybody
-            reads for pleasure; the other three are admin. It used to close the
-            lead column as a full-width pitch, which is the size a picture gets
-            and not the size a list of names earns. */}
+        {/* The sidebar: the week's eleven, the three tables, who signed whom and
+            when the lock is. On a phone it follows the lead, in `docs/ui/gazetta.md`'s order. */}
         <div className="flex flex-col gap-5 @3xl:border-l @3xl:border-line @3xl:pl-6">
           {paper.eleven ? (
             <TeamOfTheWeek
@@ -203,10 +194,6 @@ export default async function GazettePage() {
 
           {paper.deals.length > 0 ? (
             <Deals deals={paper.deals} at={paper.dealsAt} who={who} />
-          ) : null}
-
-          {paper.availability.length > 0 ? (
-            <Doubts notes={paper.availability} mine={paper.mine} who={who} />
           ) : null}
 
           {paper.deadline ? (

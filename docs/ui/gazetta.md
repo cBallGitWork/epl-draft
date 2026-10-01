@@ -1,7 +1,7 @@
 # `/` — the Gazetta
 
 The front page, and the first thing ten people open: the lead, the week's
-business, who is hurt, and when lineups lock.
+business, and when lineups lock.
 
 ## In reading order
 
@@ -167,23 +167,23 @@ business, who is hurt, and when lineups lock.
    Rank · name · played · goal difference or owner · points, on hairlines, in
    the tabular face; a column no row carries is not printed, so the scorers chart
    has no played column and the draft table is rank, name and points alone
-   (Craig, 1 Oct 2026: *"remove the WLT and gp, just points and names fine"*). None of the three is a link or a tap target — the
-   sortable, tappable, badged versions are on the League and Players tabs,
-   where a manager goes to USE them, and these are the printed copies.
+   (Craig, 1 Oct 2026: *"remove the WLT and gp, just points and names fine"*).
+   None of the three is a link or a tap target — the sortable, tappable, badged
+   versions are on the League and Players tabs, where a manager goes to USE
+   them, and these are the printed copies.
 9. **The week's business** — trades and claims, grouped so both halves of a trade
    read as one deal. Fantrax's timestamps, shown verbatim with their zone named
    in the heading, because they carry a US Eastern offset.
-10. **Doubts** — FPL's injury news across every squad, with chance of playing.
-   `no word` when FPL has no opinion, which is not the same as 0%.
-11. **Next deadline** — the period boundary, with an explicit note that the
+10. **Next deadline** — the period boundary, with an explicit note that the
    commissioner's real lock is fifteen minutes before the first fixture and is
    not something Fantrax publishes.
 
-Your own team is marked throughout with the left-edge accent border
-(`yoursBorder`) — and the same one, on a different ground. The class it returns
-sets a border *colour* plus an explicit left width, so on a ruled row with no
-`border` utility it draws the accent bar and nothing else. One treatment, two
-grounds, and `mine.ts` stays the only place that knows what "yours" looks like.
+Your own team is marked in the accent: your tie on the scoreboard, your men in
+the eleven, your row in the draft table.
+
+*The Doubts column, FPL's injury news across every squad, was cut on 1 Oct 2026*
+(Craig pasted it and said remove it). The Mail tab's doubt letters still read
+the same notes.
 
 ## The scoreboard
 
@@ -443,8 +443,8 @@ wrapped round it. Craig's call, same day.
 small-capital position label over each group. The head no longer prints the
 formation (Craig, 1 Oct 2026: *"dont have formation in text"*); the lines show it. That
 also puts it where it belongs in the reading order: the eleven is the one block
-in the rail anybody reads for pleasure, so it leads the rail and the three admin
-columns follow.
+in the rail anybody reads for pleasure, so it leads the rail and the tables,
+the business and the deadline follow.
 
 **The lines come from core, not from a second sort here.** `TeamOfTheWeek.lines`
 is the same men as `picks` in a second order — one is how they rank, the other is
