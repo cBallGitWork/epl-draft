@@ -5,12 +5,13 @@ import type { FantasyPanel } from "./fantasy";
 import type { KeyStat } from "./keyStats";
 import { surname } from "./keyStats";
 import type { StoryLineup } from "./lineups";
+import type { StarMan } from "./star";
 import { isGoal, type MatchEvent } from "./timeline";
 import type { Side } from "./types";
 
 // What a match-day report carries beside its prose, per match, laid out as BBC Sport sets a match (Craig, 28 Sep 2026): the
-// header (crests, score, FT and HT, goals and assists by side, venue and attendance), the pieces, and a sidebar of the Draft
-// Man of the Match, the top league scorers, key stats, line-ups and the timeline. Codes only; names of clubs at render.
+// header (crests, score, FT and HT, goals and assists by side, venue and attendance), the pieces, and a sidebar of the line-ups
+// with our marks, the Star man, the top league scorers, key stats and the timeline. Codes only; names of clubs at render.
 
 export type ReportRowKind = "Goal" | "Pen" | "OG" | "VAR" | "Pen missed" | "Pen saved" | "Post" | "Booked" | "Sent off" | "Sub";
 
@@ -53,6 +54,8 @@ export interface StoryReport {
   sections: StoryReportSection[];
   keyStats: KeyStat[];
   fantasy: FantasyPanel;
+  /** Absent on a report filed before marks; null when nobody was rated. */
+  star?: StarMan | null;
   rows: StoryReportRow[];
   video: string | null;
 }
@@ -115,6 +118,7 @@ export function reportsCargo(desks: readonly MatchDesk[], draft: ReportsDraft): 
       sections: piece?.sections ?? [],
       keyStats: desk.keyStats,
       fantasy: desk.fantasy,
+      star: desk.star,
       rows: events.flatMap((e) => row(e) ?? []),
       video: match.videoId,
     };

@@ -2,6 +2,7 @@ import { REPORTS } from "../../config";
 import { nextThree, type NextMatch } from "./ahead";
 import { derivedFacts } from "./derived";
 import { fantasyPanel, type FantasyPanel } from "./fantasy";
+import { starMan, type StarMan } from "./star";
 import { keyStats, type KeyStat } from "./keyStats";
 import { played } from "./men";
 import { clubStandings, type ClubStanding } from "./standing";
@@ -36,6 +37,7 @@ export interface MatchDesk {
   nominees: Nominee[];
   keyStats: KeyStat[];
   fantasy: FantasyPanel;
+  star: StarMan | null;
   lead: boolean;
 }
 
@@ -157,6 +159,7 @@ export function deskDay(input: ReportDayInput): MatchDesk[] {
       nominees: nominees(match, events, counts),
       keyStats: keyStats(match, events, counts, size.stats),
       fantasy: fantasyPanel(match, events),
+      star: starMan(match, events),
       lead: i === 0,
     };
   });

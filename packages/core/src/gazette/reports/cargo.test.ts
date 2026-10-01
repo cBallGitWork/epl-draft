@@ -40,6 +40,16 @@ describe("normalizeReports", () => {
     expect(normalizeReports(JSON.parse(JSON.stringify([report])))).toEqual([report]);
   });
 
+  it("round-trips marks and the Star man, and reads a report filed before them without either", () => {
+    const rated = { ...report, star: { name: "Manzambi", club: "Villa", holder: null, mark: 8.9, did: "1 goal" } };
+    rated.home = { ...report.home, lineup: { ...report.home.lineup!, lines: [[{ ...report.home.lineup!.lines[0][0], mark: 5.2 }]] } };
+    expect(normalizeReports(JSON.parse(JSON.stringify([rated])))).toEqual([rated]);
+    const { star: _filedBefore, ...old } = report;
+    const read = normalizeReports(JSON.parse(JSON.stringify([old])))![0];
+    expect("star" in read).toBe(false);
+    expect("mark" in read.home.lineup!.lines[0][0]).toBe(false);
+  });
+
   it("refuses a match with one side, and a row of a kind it does not know", () => {
     expect(normalizeReports([{ ...report, away: null }])).toBeUndefined();
     const odd = normalizeReports([{ ...report, rows: [{ minute: "9", kind: "Tackle", side: "home", text: "x" }], video: "not a video id!" }]);

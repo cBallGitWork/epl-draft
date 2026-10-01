@@ -86,6 +86,19 @@ writer's "You are" line; the byline is resolved from the kind at render, so the 
 the line-ups under the team-news writer, the front page's lead under its writer, and the writer's name at the head of
 the match-report and team-sheet prompts.
 
+## The Prem match report prints our marks in its line-ups, and a Star man — decided 1 Oct 2026
+
+- **Craig**: "put all the ratings in the prem match report", one decimal, and the Star man replaces the Draft Man of the
+  Match. Each man's mark sits in the line-up sentence ("Ndiaye 6.3 (Doku 75, 3.4)"), `—` where he was too brief to rate;
+  the Star man is the best mark of everyone who played, held or not. The writer never sees the marks.
+- **The reads, at filing**: the served league's points for the London day (`fetchPoolStats(…, byDate, group, …, day)`,
+  every man in its pool, split by `returnPoints`), the stats league's Opta counts for the same day, and the opponent from
+  `clubResults` over FPL's past gameweeks. Six Fantrax reads a day, one after another; any failure files the report without
+  marks. `byDate` is read from Fantrax's own season list (`SEASON_926_BY_DATE`), never composed.
+- **Counted on GW5, 20 Sep**: every man with ten minutes rated except four the bridge does not know (Q. Timber,
+  Affengruber, Fofana, Larsson); `npm run bridge` fills them. The real league's pool lists 484 outfielders against the
+  stats league's 601, so a man it does not list prints `—`.
+
 ## Our player rating is the match alone, read off league points — decided 1 Oct 2026
 
 - **What it is**: `join/rating/` marks one man's match out of ten from his real-league points, the

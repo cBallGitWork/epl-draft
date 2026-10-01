@@ -51,6 +51,7 @@ async function main(): Promise<void> {
     snapshot,
     facts,
     periodGameweeks: round.gameweeks,
+    rules: info.scoring,
     pick: (f) => (ids.length > 0 ? ids.includes(f.id) : onLondonDay(f.kickoff, day)),
     say,
   });
@@ -61,6 +62,10 @@ async function main(): Promise<void> {
   if (process.env.DRY_RUN === "1") {
     say(`\n${brief}`);
     for (const desk of desks) say(`\nKEY STATS, ${desk.match.home.name} v ${desk.match.away.name}:\n${desk.keyStats.map((k) => `- ${k.label}: ${k.value}`).join("\n")}`);
+    for (const desk of desks) {
+      const marks = [...desk.match.marks].map(([code, mark]) => `${desk.match.men.find((m) => m.code === code)?.name ?? code} ${mark ?? "—"}`);
+      say(`\nMARKS, ${desk.match.home.name} v ${desk.match.away.name} (Star man ${desk.star?.name ?? "—"}):\n${marks.join(", ")}`);
+    }
     return;
   }
   const out = process.env.GAZETTA_PROOF_OUT ?? "";

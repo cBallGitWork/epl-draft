@@ -79,7 +79,7 @@ export { cupGroups, cupPlan } from "./cups/plan";
 export type { CupFixture, CupStage } from "./cups/plan";
 
 export { FantraxError } from "./fantrax/errors";
-export { categoryPoints } from "./scoring";
+export { categoryPoints, returnPoints } from "./scoring";
 export type { ScoringCategory, ScoringRules } from "./scoring";
 export { orphaned, unacknowledged } from "./fantrax/baseline";
 export type { AcknowledgedDifference } from "./fantrax/baseline";

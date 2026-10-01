@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { moments, sheets } from "./__fixtures__/spursVilla";
+import { moments, sheets, spursVilla } from "./__fixtures__/spursVilla";
 import { lineupOf } from "./lineups";
 
 describe("lineupOf on Tottenham 2-3 Aston Villa", () => {
@@ -24,5 +24,20 @@ describe("lineupOf on Tottenham 2-3 Aston Villa", () => {
     expect(wanBissaka?.replacedBy).toEqual({ name: "Cash", minute: "46", booked: true });
     expect(spurs.unused.length).toBeGreaterThan(0);
     expect(spurs.unused).not.toContain("Gray");
+  });
+});
+
+describe("lineupOf with marks", () => {
+  const men = spursVilla().men;
+  const code = (name: string) => men.find((m) => m.name.endsWith(name))!.code;
+  const spurs = lineupOf(sheets.home, moments, new Map([[code("Kinsky"), 5.2], [code("Gray"), 6.1]]));
+
+  it("puts each man's mark against him and his replacement, and — where he had none", () => {
+    expect(spurs.lines[0][0].mark).toBe(5.2);
+    expect(spurs.lines[1].find((m) => m.name === "Porro")).toMatchObject({ mark: null, replacedBy: { name: "Gray", mark: 6.1 } });
+  });
+
+  it("leaves marks out altogether when none were read", () => {
+    expect("mark" in lineupOf(sheets.home, moments).lines[0][0]).toBe(false);
   });
 });

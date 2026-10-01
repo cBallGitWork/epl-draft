@@ -2,6 +2,7 @@ import type { ReportRowKind, StoryReport, StoryReportSide } from "./cargo";
 import type { FantasyMan, FantasyPanel } from "./fantasy";
 import type { KeyStat } from "./keyStats";
 import type { LineupMan, StoryLineup } from "./lineups";
+import type { StarMan } from "./star";
 import { finiteOrNull as num } from "../../untrusted";
 
 // A filed match-day report read back field by field: a story is a contract, not a bag, so nothing a writer invented alongside
@@ -16,6 +17,9 @@ const list = <T>(v: unknown, read: (r: Raw) => T | null): T[] => (Array.isArray(
 const code = (v: unknown) => (typeof v === "number" && Number.isInteger(v) && v > 0 ? v : null);
 const KINDS: readonly ReportRowKind[] = ["Goal", "Pen", "OG", "VAR", "Pen missed", "Pen saved", "Post", "Booked", "Sent off", "Sub"];
 
+/** A mark as filed: absent on a report filed before marks, null when he was too brief to rate. */
+const mark = (r: Raw) => ("mark" in r ? { mark: num(r.mark) } : {});
+
 function lineupMan(r: Raw): LineupMan | null {
   if (str(r.name) === "") return null;
   const by = obj(r.replacedBy);
@@ -23,8 +27,16 @@ function lineupMan(r: Raw): LineupMan | null {
     name: str(r.name),
     booked: r.booked === true,
     sentOff: r.sentOff === true,
-    replacedBy: str(by.name) === "" ? null : { name: str(by.name), minute: str(by.minute), booked: by.booked === true },
+    replacedBy: str(by.name) === "" ? null : { name: str(by.name), minute: str(by.minute), booked: by.booked === true, ...mark(by) },
+    ...mark(r),
   };
+}
+
+function star(v: unknown): StarMan | null | undefined {
+  if (v === undefined) return undefined;
+  const r = obj(v);
+  const m = num(r.mark);
+  return str(r.name) === "" || m === null ? null : { name: str(r.name), club: str(r.club), holder: strOrNull(r.holder), mark: m, did: str(r.did) };
 }
 
 function lineup(v: unknown): StoryLineup | null {
@@ -47,7 +59,7 @@ function fantasyMan(r: Raw): FantasyMan | null {
 
 function fantasy(v: unknown): FantasyPanel {
   const r = obj(v);
-  return { motm: fantasyMan(obj(r.motm)), top: list(r.top, fantasyMan), wire: list(r.wire, fantasyMan) };
+  return { top: list(r.top, fantasyMan), wire: list(r.wire, fantasyMan) };
 }
 
 export function normalizeReports(raw: unknown): StoryReport[] | undefined {
@@ -71,6 +83,7 @@ export function normalizeReports(raw: unknown): StoryReport[] | undefined {
       sections: list(r.sections, (s) => (str(s.head) !== "" && str(s.pitch) !== "" ? { head: str(s.head), pitch: str(s.pitch), stake: str(s.stake) } : null)),
       keyStats: list(r.keyStats, (k): KeyStat | null => (str(k.label) !== "" && str(k.value) !== "" ? { label: str(k.label), value: str(k.value) } : null)),
       fantasy: fantasy(r.fantasy),
+      ...(star(r.star) === undefined ? {} : { star: star(r.star) }),
       rows: list(r.rows, (x) =>
         KINDS.includes(x.kind as ReportRowKind) && str(x.minute) !== ""
           ? { minute: str(x.minute), kind: x.kind as ReportRowKind, side: x.side === "home" || x.side === "away" ? x.side : null, text: str(x.text) }
