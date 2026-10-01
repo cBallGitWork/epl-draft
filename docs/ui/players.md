@@ -38,7 +38,7 @@ headers too?"*. Where the sections below disagree with this one, this one is cur
   him in brackets straight after it** (Craig, 24 Sep 2026: *"put the manager in brackets right after the
   player to allow more room for columns"*). On a phone the name is CM's list form (`Gross, P`, `listName` in
   core) and line two is the position (`MID`, in `LABEL` ink). On a desk the name is whole, CM's position tile
-  runs down the left, and the lead is 256px.
+  runs down the left, green for a man on no roster (`--color-index-free`, Craig 1 Oct 2026), and the lead is 256px.
 - **Who holds him**: `(Yours)` in the accent (the page reads the reader's team), `(a rival's team)` quiet, and
   Fantrax's own `(FA)` / `(WW)` loud, because that is the man a reader can act on; the word is its title. This
   reverses 10 Sep's "owner loud, status quiet".

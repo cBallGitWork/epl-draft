@@ -379,6 +379,13 @@ is more specific than a palette; it is the reason the token names in
 | Quiet on a plate | `--color-faint-plate` | the same **quiet** as `--color-faint`, on the blue plate that will not carry it | — |
 | Doubt | `--color-doubt-out` `-major` `-slight` | **how likely he is to MISS**, as a ramp of three. A ground, never ink | ink 5.5 · 7.1 · 9.5 |
 | Ease | `--color-ease-1` … `-10` | **how kind an opponent is, by OUR strength model**: the planner's 1–20 rank, two a step, green easiest to dark red hardest. A ground, never ink; FPL's difficulty keeps the FDR steps | black 4.8–11.7 · cream 4.9–8.6 |
+| Free | `--color-index-free` | **a man on no roster**, anybody's to claim: the index block's ground in place of its blue. A ground, never ink | ink 4.8 at the ramp's top · 8.4 on the face |
+
+**A man nobody holds wears a green index block** (Craig, 1 Oct 2026: *"chips, all blue currently, lets put non
+roster players with a green chip"*). No slot meant "claimable": `--color-up` is a direction and ink, and the ease
+ramp is an opponent's kindness. So it is its own slot, hue-locked to `--color-up` so no new colour family enters,
+at the index blue's depth so the column's one gradient (§2) keeps its ink. It keys on the empty owner, never on a
+status letter, so an undrafted league is green top to bottom, which is true. The pool board's tile only, for now.
 
 **The ease ramp is ten steps and one meaning** (Craig, 24 Sep 2026: *"Use a bigger range of colours too"*, of
 the fixture planner). The five FDR steps are FPL's and carry FPL's difficulty; the planner's cells carry OUR

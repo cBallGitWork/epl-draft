@@ -112,6 +112,9 @@
      the block reads as its own object beside the strip rather than as a patch of
      it. White on it is 8.9:1. */
   --color-index: oklch(0.40 0.16 266);
+  /* The same block for a man on NO roster, anybody's to claim (Craig, 1 Oct 2026: "non roster players with a green
+     chip"). `--color-up`'s hue at the blue's depth, so the ramp's ink holds: 4.8:1 at its light top, 8.4 on the face. */
+  --color-index-free: oklch(0.39 0.11 148);
 
   /* CM's grey button plate: a column head, a tab, a bevelled control. The second
      colour that exists to be chrome and nothing else.
