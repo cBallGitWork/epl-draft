@@ -4472,6 +4472,7 @@ Craig asked for a Save button on the planner and chose a real write over a save 
   a second write, `setAutoSubsOrder`, sent only when it changed.
 - **A session may carry three methods and no others** (`fxpa.ts`), because the same cookie reaches
   `deleteLeague`.
-- **Switched on per deployment**: `LINEUP_SAVE=on` plus `FANTRAX_COOKIE`. A stale cookie fails the save with a
+- **Switched on per team**: `FANTRAX_COOKIE` plus `LINEUP_SAVE`, `on` for every team or comma-separated Fantrax
+  team ids for only those (`saveAllowed`, also checked in the server action). A stale cookie fails the save with a
   hand-off to Fantrax and a `lineup-save` error line in the logs, which is the staleness signal.
 

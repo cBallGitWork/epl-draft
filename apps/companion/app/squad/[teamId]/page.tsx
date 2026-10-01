@@ -81,7 +81,7 @@ export default async function TeamPage({
           pending={pending}
           period={open?.period ?? 0}
           benchRanks={benchRanks}
-          canSave={commissionerSession() !== null}
+          canSave={commissionerSession(team.teamId) !== null}
         />
       ) : board !== null ? (
         /* The gate. Before his lineups lock a rival's XI is not visible — the

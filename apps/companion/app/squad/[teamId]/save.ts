@@ -61,8 +61,6 @@ function isPlan(value: unknown): value is Plan {
 
 export async function saveLineup(input: unknown): Promise<WriteAnswer> {
   if (!isPlan(input)) return refuse(RELOAD);
-  const session = commissionerSession();
-  if (session === null) return refuse(SWITCHED_OFF);
 
   const round = await planningRound();
   const squads = await getLeagueSquads(round);
@@ -76,6 +74,8 @@ export async function saveLineup(input: unknown): Promise<WriteAnswer> {
 
   const teamId = await signedTeamId(squads.period.teams);
   if (teamId === null) return refuse("Sign in with your team code to save.");
+  const session = commissionerSession(teamId);
+  if (session === null) return refuse(SWITCHED_OFF);
 
   const limits = { ...squads.info.roster, minActiveByPosition: rosterMinimums() };
   if (violations(input.slots, eligibilityOf(squads.info.players), limits).length > 0) {
