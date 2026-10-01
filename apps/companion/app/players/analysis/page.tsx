@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import {
+  FANTRAX_LEAGUE_ID,
   FANTRAX_PLAYER_BASE,
   assistsOf,
   fixtureGameweeks,
@@ -252,7 +253,7 @@ export default async function ComparePage({
           { id: a, name: names.a },
           ...(second === null || names.b === null ? [] : [{ id: b, name: names.b }]),
         ].map((each) => (
-          <OutLink key={each.id} href={`${FANTRAX_PLAYER_BASE}/${each.id}`}>
+          <OutLink key={each.id} href={`${FANTRAX_PLAYER_BASE}/${each.id}/${FANTRAX_LEAGUE_ID}`}>
             {each.name} on Fantrax
           </OutLink>
         ))}
@@ -260,7 +261,6 @@ export default async function ComparePage({
     </ScoutShell>
   );
 }
-
 
 /** The tell from a side that refused, or null. */
 function refusal(side: Awaited<ReturnType<typeof subject>> | null): string | null {

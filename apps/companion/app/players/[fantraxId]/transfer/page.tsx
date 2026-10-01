@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { FANTRAX_PLAYER_BASE } from "@epl/core";
+import { FANTRAX_LEAGUE_ID, FANTRAX_PLAYER_BASE } from "@epl/core";
 import OutLink from "../../../components/shell/OutLink";
 import { readerTeamId } from "../../../squads";
 import { STATUS } from "../../status";
@@ -52,8 +52,7 @@ async function Business({ found, fantraxId }: { found: Subject; fantraxId: strin
       <TransferStatus holder={holder} joined={joinedBy(moves, owner)} pedigree={pedigree} />
       <Moves moves={moves} />
       <DraftLine pedigree={pedigree} drafterName={drafterName} />
-      {/* `scorerId` is our `fantraxId`, and `player/:playerId` is the route their bundle declares. */}
-      <OutLink href={`${FANTRAX_PLAYER_BASE}/${fantraxId}`}>{action}</OutLink>
+      <OutLink href={`${FANTRAX_PLAYER_BASE}/${fantraxId}/${FANTRAX_LEAGUE_ID}`}>{action}</OutLink>
     </>
   );
 }
