@@ -44,6 +44,13 @@ export const WRONG_CODE_DELAY_MS = 700;
  *  a slogan does. */
 export const PAPER_NAME = "The Gazetta";
 
+/** The name under the icon on a phone's home screen, where twelve characters is about all that fits. */
+export const APP_SHORT_NAME = "Pro League";
+
+/** Three colours of tokens.css as sRGB, for what cannot read a CSS variable: the theme-colour meta,
+ *  the web-app manifest and its icon. Change with the tokens. */
+export const TOKEN_SRGB = { bg: "#091227", league: "#c8102e", cream: "#f3eadd" } as const;
+
 /** How much of the paper prints on the front page.
  *
  *  A front page is a front page: the rest is a page of its own when there is

@@ -207,6 +207,9 @@ export const FANTRAX_PLAYER_BASE = "https://www.fantrax.com/player";
  *  (PLATFORM_NOTES). It hangs off `FANTRAX_LEAGUE_PAGE/`. */
 export const FANTRAX_PLAYERS_PATH = "players;statusOrTeamFilter=ALL;pageNumber=1";
 
+/** The league's home page, off Craig's browser URL (1 Oct 2026); appends to `FANTRAX_LEAGUE_PAGE/`. */
+export const FANTRAX_HOME_PATH = "home";
+
 /** Fantrax's sport code for the Premier League. `SOCCER` is a different sport to
  *  them and returns the wrong player pool. */
 export const FANTRAX_SPORT = "EPL";

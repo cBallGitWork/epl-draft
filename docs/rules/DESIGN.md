@@ -266,7 +266,9 @@ none before a first visit, and cleared by opening Mail. It pulses three times wh
 app is open and never for a count already there.
 
 **More opens a page, `/more`, not a drawer.** The sections behind it, the squad index with your team's name
-or `Sign in`, and the credits, as rows in a panel with CM's small filled triangle. The More tab is current
+or `Sign in`, and the credits, as rows in a panel with CM's small filled triangle; between them, a button to
+the league's home on Fantrax and how to add the app to a home screen, which stands down once it is installed
+(Craig, 1 Oct 2026). The More tab is current
 on that page, the credits, the squad index and any section behind it, so the rail never goes blank when you
 walk through the door. **The desk rail does not use it**: a 1440 screen has room for every section.
 
