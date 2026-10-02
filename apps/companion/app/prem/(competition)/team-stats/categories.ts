@@ -21,6 +21,8 @@ export interface Category {
   title: string;
   /** Whether the biggest is the best. */
   descending: boolean;
+  /** Decimal places; whole when absent. */
+  digits?: number;
   of: (club: Club) => number;
 }
 
@@ -31,10 +33,8 @@ export interface Club {
   stats: ClubStats;
 }
 
-/** Rounded, because these are averages and expected figures and nobody reads
- *  `12.399999999999` — and to one place, because `xG 12.4` is a claim the data
- *  supports and `12` is one it does not. */
-const round = (value: number): number => Math.round(value * 10) / 10;
+/** FPL counts each chance against once for every man on the pitch, so eleven share one (as Data › Teams divides). */
+const ON_THE_PITCH = 11;
 
 export const CATEGORIES: readonly Category[] = [
   { key: "for", label: "Goals scored", title: "Goals scored", descending: true, of: (c) => c.table.goalsFor },
@@ -51,9 +51,9 @@ export const CATEGORIES: readonly Category[] = [
   // The squad's own season. Every man FPL files at the club, whether or not he
   // has played — the denominator is the squad, so a club with a big treatment
   // room reads as one.
-  { key: "xg", label: "Expected goals", title: "FPL's expected goals, the squad added up", descending: true, of: (c) => round(c.stats.squad.expectedGoals) },
-  { key: "xgc", label: "Expected conceded", title: "FPL's expected goals conceded — fewest is best", descending: false, of: (c) => round(c.stats.squad.expectedGoalsConceded) },
-  { key: "xa", label: "Expected assists", title: "FPL's expected assists, the squad added up", descending: true, of: (c) => round(c.stats.squad.expectedAssists) },
+  { key: "xg", label: "Expected goals", title: "FPL's expected goals, the squad added up", descending: true, digits: 2, of: (c) => c.stats.squad.expectedGoals },
+  { key: "xgc", label: "Expected conceded", title: "FPL's expected goals conceded — fewest is best", descending: false, digits: 2, of: (c) => c.stats.squad.expectedGoalsConceded / ON_THE_PITCH },
+  { key: "xa", label: "Expected assists", title: "FPL's expected assists, the squad added up", descending: true, digits: 2, of: (c) => c.stats.squad.expectedAssists },
   { key: "saves", label: "Saves", title: "Saves made", descending: true, of: (c) => c.stats.squad.saves },
   { key: "tackles", label: "Tackles", title: "Tackles made", descending: true, of: (c) => c.stats.squad.tackles },
   { key: "cbi", label: "Clearances etc.", title: "Clearances, blocks and interceptions — FPL publishes the three as one figure", descending: true, of: (c) => c.stats.squad.clearancesBlocksInterceptions },
@@ -68,4 +68,10 @@ export const CATEGORIES: readonly Category[] = [
  *  a board. */
 export function categoryFor(key: string | undefined): Category {
   return CATEGORIES.find((entry) => entry.key === key) ?? CATEGORIES[0];
+}
+
+/** A figure as the board prints it: to the category's places, the British way (`1,234`, `4.04`). */
+export function printed(category: Category, figure: number): string {
+  const digits = category.digits ?? 0;
+  return figure.toLocaleString("en-GB", { minimumFractionDigits: digits, maximumFractionDigits: digits });
 }

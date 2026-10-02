@@ -1,7 +1,8 @@
 # `/prem` — the FA Barclays Premiership
 
-The real competition, on the desk. Five routes: the table, the results, the
-fixtures, the team-stats board, and a club page the first two link into.
+The real competition, on the desk. Six routes: the table, the results, the
+fixtures, the team-stats board, the season's leaders (Data), and a club page the
+first two link into.
 
 `../rules/DESIGN.md` is binding for colour and type and this file defers to it.
 
@@ -61,14 +62,11 @@ reproduction in the app and sets most of its decisions:
 
 ## The strip
 
-`Table · Results · Fixtures · Team Stats`. Four is the width the reference runs.
-
-There is **no foot row**, and that is a decision. Player Stats belongs there
-beside Team Stats, exactly as the game files them, and it is deferred (Craig,
-2 Sep 2026: *"leave the player stats bit for now, that's a full section on its
-own"*). A foot row of **one** is the stray button under a panel that
-`league/SectionNav` already records Craig rejecting. The row comes back with the
-second entry in it.
+`Table · Results · Fixtures · Team Stats · Data`. The reference runs four; Data
+is CM's Player Stats, deferred on 2 Sep 2026 and arrived on 1 Oct as a view of
+this section. Until then the Data plate led out to the pool and no tab drew
+current on it. There is still **no foot row**: a row of one is the stray button
+`league/SectionNav` records Craig rejecting.
 
 The strip is a `word` strip: under a thumb each plate is sized to its label, so
 "Team Stats" sits on one line at 11px from 375 up (27 Sep 2026; it wrapped in an
@@ -124,7 +122,9 @@ season's `stats` blocks are 183 KB today and about 1.1 MB by May, and that read
 is on the paper's front page.
 
 `/prem` itself — the table, results, fixtures, team stats — still costs no
-provider request.
+provider request. **Data does**: its Fantrax points list reads the pool
+(`getLeaguePool`, the Data board's own cache entry) and its names link through
+`leagueOpinions`, as a club page's do.
 
 ## Results and Fixtures
 
@@ -166,6 +166,29 @@ Every category declares which way is good. Goals conceded and matches without
 scoring open smallest-first, because a board that did otherwise would head the
 ranking with the worst side in the division. Ties fall back to the table's own
 order, so two clubs level on clean sheets do not swap places between refreshes.
+
+**Expected conceded is the squad's FPL xGC over eleven** (1 Oct 2026). FPL credits
+every man on the pitch with the side's chances against, so the squad's sum is about
+eleven sides' worth: Arsenal printed 44.4 after GW5 where the side's own figure
+is 4.04. Data › Teams divides the same way. The three expected figures print to two
+places, as FPL publishes them.
+
+## Data — the season's leaders
+
+Craig, 1 Oct 2026: *"simple list like top scorer, top xg, top fantasy ratings etc
+in a list, not a link to data section, with a top 50 for each"*. Eight lists,
+each the top ten with a `Top 50` plate under it (`?list=…&n=50`): top scorers,
+expected goals, our match ratings, Fantrax points, assists, expected assists,
+clean sheets, saves. On the desk all eight stand four across, and the one asked for
+runs to fifty. A phone gets a picker and one list at a time.
+
+- **One figure per list, and a list that is not FPL's says whose it is in its
+  bar**: *Our match ratings* (cyan, the derived slot; the average of his marks
+  once he is rated in half as many matches as the most-rated man) and *Fantrax
+  points* (the served league's own, never beside FPL's count of anything).
+- **A list ranks on the figure it prints**, so two marks that both read 6.3
+  share a place, and a nought earns none.
+- A man who has left the division is off every list (`onTheBooks`).
 
 ## The club — a spine, not a page
 

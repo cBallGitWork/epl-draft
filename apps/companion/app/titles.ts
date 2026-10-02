@@ -68,6 +68,7 @@ export const PREM_CAPTION: Record<PremSection, string> = {
   results: "Results",
   fixtures: "Fixtures",
   teamStats: "Team Stats",
+  data: "Player Stats",
 };
 
 /** The manager's inbox — the word his own bar ends with (`123 Mail`; CM's reads `Mike Paul News`), and the
