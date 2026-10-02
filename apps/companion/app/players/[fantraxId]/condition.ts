@@ -1,20 +1,16 @@
 import type { Availability, PlayerState } from "@epl/core";
-import { DASH, noteBesideChance } from "@epl/core";
+import { noteBesideChance } from "@epl/core";
 
-const WORD: Record<PlayerState, string> = {
-  fit: "Fit",
+const WORD: Record<Exclude<PlayerState, "fit">, string> = {
   doubt: "Doubtful",
   injured: "Injured",
   suspended: "Suspended",
   unavailable: "Unavailable",
 };
 
-/** His fitness row: FPL's note, or his state where it wrote none, and his chance, said once. */
-export function condition(availability: Availability): { said: string; chance: string } {
-  if (availability.state === "fit") return { said: WORD.fit, chance: "100%" };
-  const note = noteBesideChance(availability.news, availability.chance);
-  return {
-    said: note || WORD[availability.state],
-    chance: availability.chance === null ? DASH : `${availability.chance}%`,
-  };
+/** FPL's note on a man who may miss out, his chance said once; null for a fit man, who needs no line. */
+export function fitnessNote(availability: Availability): string | null {
+  if (availability.state === "fit") return null;
+  const said = noteBesideChance(availability.news, availability.chance) || WORD[availability.state];
+  return availability.chance === null ? said : `${said}, ${availability.chance}% chance of playing`;
 }

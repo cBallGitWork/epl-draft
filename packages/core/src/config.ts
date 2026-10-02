@@ -185,18 +185,8 @@ export const FANTRAX_PENDING_PATH = "transactions/pending";
 
 /** One player on Fantrax, which is where a claim is actually made.
  *
- *  **`scorerId` alone, and that was probed rather than guessed** (5 Sep 2026).
- *  Their rows carry a `urlName` slug beside the id — `semi-ajayi`,
- *  `bruno-miguel-borges-fernandes` — and their own anchors use both, so the
- *  obvious shape is `/player/{slug}/{id}`. The route is not that.
- *
- *  A status code cannot tell you: Fantrax is a single-page app and serves its
- *  shell with a 200 for `/player/not-a-real-person/zzzzz`, with the same
- *  `<title>` and no canonical link. So the route was read out of their own
- *  production bundle, which declares `player/:playerId` — one segment. The slug
- *  is decoration. PLATFORM_NOTES carries the probe.
- *
- *  `scorerId` IS our `fantraxId`, so this needs nothing we do not already hold. */
+ *  Append `/{scorerId}/{leagueId}`: `/{scorerId}` alone draws a blank page since their bundle changed,
+ *  and the slug and team id after the league are optional (PLATFORM_NOTES, 1 Oct 2026). */
 export const FANTRAX_PLAYER_BASE = "https://www.fantrax.com/player";
 
 /** The league's own player list on Fantrax, which is where a claim is made.

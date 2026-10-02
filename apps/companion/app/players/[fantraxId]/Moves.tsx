@@ -3,7 +3,7 @@ import { DASH, fantraxTime } from "@epl/core";
 import Section from "../../components/shell/Section";
 import { IndexCell } from "../../components/league/TableCells";
 import { MUTE, PlateHead } from "../../components/league/TableHeads";
-import { BOARD, HEAD_CELL, ROW_NAME, ROW_RULE } from "@/app/desk";
+import { BOARD, HEAD_CELL, ROW_RULE } from "@/app/desk";
 import type { PlayerMove } from "./dossier";
 
 // Every claim, drop and trade this league has made with him, newest first, on the house table:
@@ -12,11 +12,14 @@ import type { PlayerMove } from "./dossier";
 /** Fantrax's own words for what happened, in ours. */
 const KIND: Readonly<Record<string, string>> = { claim: "Claimed", drop: "Dropped", trade: "Traded" };
 
+/** A step above a row's type, on every cell: DESIGN §6's third exception. */
+const TYPE = "text-base lg:text-lg";
+
 export default function Moves({ moves }: { moves: readonly PlayerMove[] }) {
   return (
-    <Section title="Business" aside="This league">
+    <Section title="Business">
       {moves.length === 0 ? (
-        <p className="text-sm text-muted">No claim, drop or trade involving him.</p>
+        <p className={`text-muted ${TYPE}`}>No claim, drop or trade involving him.</p>
       ) : (
         <ScrollBoard>
           <table className={BOARD}>
@@ -36,15 +39,15 @@ export default function Moves({ moves }: { moves: readonly PlayerMove[] }) {
                   key={`${transaction.setId}-${transaction.kind}-${transaction.processedAt ?? ""}`}
                   className={`${ROW_RULE} ${transaction.executed ? "" : "text-faint"}`}
                 >
-                  <IndexCell className="whitespace-nowrap">
+                  <IndexCell className={`whitespace-nowrap ${TYPE}`}>
                     {fantraxTime(transaction.processedAt ?? "")?.replace(/ \S+$/, "") ?? DASH}
                   </IndexCell>
-                  <td className={`cm-row px-1.5 ${ROW_NAME}`}>
+                  <td className={`cm-row px-1.5 font-chrome font-bold ${TYPE}`}>
                     {KIND[transaction.kind] ?? transaction.kind}
                     {transaction.executed ? null : <span className="pl-2 text-2xs uppercase text-faint">Pending</span>}
                   </td>
-                  <td className="px-1.5 text-sm text-muted">{side(transaction.fromTeamId, fromName)}</td>
-                  <td className="px-1.5 text-sm text-ink">{side(transaction.toTeamId, toName)}</td>
+                  <td className={`px-1.5 text-muted ${TYPE}`}>{side(transaction.fromTeamId, fromName)}</td>
+                  <td className={`px-1.5 text-ink ${TYPE}`}>{side(transaction.toTeamId, toName)}</td>
                 </tr>
               ))}
             </tbody>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { filedAt, inbox, noteBody } from "./newsItems";
+import { filedAt, inbox, noteBody, storyText } from "./newsItems";
 
 const story = (headline: string, content: string) => ({ id: "1", headline, content, analysis: null, at: 1 });
 
@@ -39,6 +39,24 @@ describe("noteBody", () => {
 
   it("keeps a body the headline does not begin, and drops a blank analysis", () => {
     expect(noteBody(item("Palmer doubtful", "According to Maresca, Palmer is doubtful.", " "))).toEqual([
+      "According to Maresca, Palmer is doubtful.",
+    ]);
+  });
+});
+
+describe("storyText", () => {
+  const item = (headline: string, body: string, analysis: string | null) => ({ id: "1", headline, body, analysis, at: 1 });
+
+  it("prints the whole story once, then the analysis", () => {
+    // Craig, 1 Oct 2026: "just put the text in, with date/time".
+    expect(
+      storyText(item("Semenyo (ankle) left camp.", "Semenyo (ankle) left camp. He will have tests.", "He could face Liverpool.")),
+    ).toEqual(["Semenyo (ankle) left camp. He will have tests.", "He could face Liverpool."]);
+  });
+
+  it("keeps a headline the story does not begin with, and drops a blank analysis", () => {
+    expect(storyText(item("Palmer doubtful", "According to Maresca, Palmer is doubtful.", " "))).toEqual([
+      "Palmer doubtful",
       "According to Maresca, Palmer is doubtful.",
     ]);
   });

@@ -30,7 +30,7 @@ export default function TransferStatus({
       : null;
 
   return (
-    <Section title="Transfer status" aside="This league">
+    <Section title="Transfer status">
       <dl className="grid gap-x-6 lg:grid-cols-3">
         <Fact label="Held by">{holder}</Fact>
         <Fact label="Joined">{arrival}</Fact>

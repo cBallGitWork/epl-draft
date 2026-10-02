@@ -1164,25 +1164,39 @@ so the stats league answers a gameweek's shots and key passes the same way.
 `scoringPeriod`, `selectedPeriod`): each echoed `displayedPeriod 6` and every
 figure 0. The Bin XI reads it (`fetchPoolWindow`).
 
-### The player deep link is `/player/{scorerId}`, read out of their bundle
+### The player deep link is `/player/{scorerId}/{leagueId}`, read out of their bundle
 
-Probed 5 Sep 2026, because the plan called for a link out to Fantrax and a
-guessed provider URL is forbidden.
+Re-probed 1 Oct 2026 off Craig's own link,
+`/player/04fk1/mqsjd23smsgbiqzr/pascal-gross/l5kunst8msgbirdf`.
 
-**The status code cannot answer this.** Fantrax is a single-page app:
-`/player/semi-ajayi/03ksl`, `/player/03ksl` and
-`/player/not-a-real-person/zzzzz` all answer **200** with the same shell, the
-same `<title>Fantrax - The Home of Fantasy Sports</title>`, no `og:title` for
-the man and no canonical link. A 200 here means the server served its shell.
+**The status code cannot answer this.** Fantrax is a single-page app and every
+path answers **200** with the same shell and `<title>`, so the routes were read
+out of their production bundle. `main-GK4CIWH5.js` declares `player/:playerId`
+with two children, `public` and `:leagueId`, and **no empty child**; the lazy
+`PlayerProfileModule` (`chunk-IKDYPAY6.js`) then takes `""`, `:playerName` and
+`:playerName/:teamId`. So the full shape is
+`/player/{scorerId}/{leagueId|public}/{urlName}/{teamId}`.
 
-So the route was read out of Fantrax's own production bundle — the technique
-that settled `premierleague25` for the portraits. `main-5QAFZCGR.js` declares
-`player/:playerId`, one segment. **`scorerId` alone is the route**; the
-`urlName` slug that rides on every `statsTable` row (`semi-ajayi`,
-`bruno-miguel-borges-fernandes`) is decoration in their own anchors and not part
-of the path.
+- **`l5kunst8msgbirdf` is a fantasy TEAM id**: The Raccoons in `getLeagueInfo`'s
+  `teamInfo` for `mqsjd23smsgbiqzr`. It is not the player's owner (every roster
+  is empty before the 3 Oct draft); it is the team the SPA was browsing as, and
+  the resolver passes it to `getPlayerProfile` as `teamId`.
+- Loaded in a clean headless Chrome: **`/player/04fk1` draws a blank page**
+  (title stays the shell's, no profile). `/player/04fk1/{leagueId}`, with or
+  without the slug and team id, and `/player/04fk1/public` all draw Pascal Gross,
+  the league ones with his league status (`FA`). Anonymously the team id changes
+  nothing visible.
 
-`scorerId` is our `fantraxId`, so the link needs nothing we do not already hold.
+So **`/player/{scorerId}/{leagueId}` is the shortest working link**, with the
+league from `FANTRAX_LEAGUE_ID`. The single-segment route this section recorded on
+5 Sep 2026 (`main-5QAFZCGR.js`) was true then and is gone.
+
+A trade goes to the owner's roster instead:
+`/fantasy/league/{leagueId}/team/roster;teamId={ownerTeamId}?tx=true`, off Craig's
+browser URL. The roster chunk (`chunk-LYQAGP3V.js`) reads `teamId` as a matrix
+parameter and passes `tx` to the roster as `showTrade`.
+
+`scorerId` is our `fantraxId`, so neither link needs anything we do not already hold.
 
 **A third league, to see the whole vocabulary.** Craig, 1 Sep 2026: "i could
 make another fantrax league that opens up all scoring categories so we can get

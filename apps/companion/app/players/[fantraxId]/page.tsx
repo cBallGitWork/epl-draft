@@ -8,6 +8,7 @@ import { PANEL } from "@/app/desk";
 import ButtonLink from "../../components/shell/ButtonLink";
 import { POOL } from "../routes";
 import AttributeGrid from "./AttributeGrid";
+import BornLine from "./BornLine";
 import type { GridWord } from "./AttributeGrid";
 import FixtureRun from "./FixtureRun";
 import Fitness from "./Fitness";
@@ -70,6 +71,7 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
       fantraxId={fantraxId}
       current="profile"
     >
+      {football === null ? null : <BornLine player={football.player} />}
       {/* Portrait beside the grid on the desk, above it on a phone. The desk
           layout is drawn first and the phone is a second design of the same data
           (docs/rules/PRODUCT.md, 31 Aug) — at 1440 a single column left 900px of empty row
