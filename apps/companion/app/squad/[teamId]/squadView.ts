@@ -10,7 +10,7 @@ import {
   squadUnarranged,
 } from "@epl/core";
 import { getLeagueSquads, readableOr404, teamDisplay } from "../../squads";
-import { lastLockedRound, leagueInfo, planningRound, roundOf } from "../../round";
+import { lastLockedRound, leagueInfo, planningRound, readCalendar, roundOf } from "../../round";
 import { newsFor, readPoolNews } from "../../poolNews";
 import { pendingByTeam, squadLivePoints } from "../../scoreboard";
 import { leagueScoring } from "../../scoring";
@@ -18,6 +18,7 @@ import { squadSeason } from "../../teamStats";
 import { myTeamId } from "../../session";
 import { OWN, SQUAD } from "../routes";
 import { plannable } from "./plannable";
+import { gameweekPicker, weekStanding } from "./weeks";
 import { whoseTeam } from "./team";
 
 // One manager's squad, laid out on a pitch. The screen the league opens on a
@@ -63,8 +64,11 @@ export async function squadView(slug: string, gw: string | undefined) {
   const asksOwn =
     slug === OWN || (info !== null && (await myTeamId(info.teams)) === slug);
 
-  const open = await planningRound();
+  const [open, calendar] = await Promise.all([planningRound(), readCalendar()]);
   const round = Number.isInteger(asked) ? await roundOf(asked) : asksOwn ? open : await lastLockedRound();
+  // A week ahead of the open one has no score yet; Fantrax answers it with noughts, which are not a reading.
+  const standing = weekStanding(round, open);
+  const weeks = gameweekPicker(calendar, round);
   const squads = readableOr404(await getLeagueSquads(round), SQUAD);
 
   // Whose squad this is. Most visits to this route are to somebody else's — the
@@ -129,7 +133,7 @@ export async function squadView(slug: string, gw: string | undefined) {
   // above is one: there is then no arrangement of the two that type-checks and
   // still asks the live scoreboard for a period nobody named.
   const priced =
-    display.show === "lineup" && squads.roundPeriod !== null && squads.info !== null
+    display.show === "lineup" && standing !== "ahead" && squads.roundPeriod !== null && squads.info !== null
       ? { period: squads.roundPeriod, categories: squads.info.scoringCategories }
       : null;
   // Whether the sheet below is the branch that renders, asked before the fetch
@@ -193,7 +197,7 @@ export async function squadView(slug: string, gw: string | undefined) {
   )?.points;
   const pending = owed ? owed : null;
 
-  return { team, planning, open, benchRanks, eligibility, clubs, opposition, live, news, season, points, board, names, pending, squadIds };
+  return { team, mine, planning, open, standing, weeks, benchRanks, eligibility, clubs, opposition, live, news, season, points, board, names, pending, squadIds };
 }
 
 /** Fantrax's bench order for the planned week, `scorerId → rank`; none when the read fails or names another week. */

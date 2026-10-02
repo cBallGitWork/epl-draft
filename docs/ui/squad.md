@@ -46,7 +46,8 @@ squad never lights a plate that says My Team.
 
 | When | What renders |
 |---|---|
-| **Your own team** | `LineupPlanner` — XI on the pitch, bench under it, one target per player. See below. |
+| **Your own team, the open week** | `LineupPlanner` — XI on the pitch, bench under it, one target per player. See below. |
+| Your own team, any other week | `TeamSheet`, read-only, as a rival's locked one. See the gameweek picker below. |
 | A rival, his period open | `TeamSheet` — his eleven on the grass and his bench in a strip under it, read-only, with Fantrax's points and FPL's goals on each player, and every one of them opening the live card. The head-to-head board ([matchup.md](matchup.md)) draws the same component. |
 | A rival, his period not open | `SquadBoard` — fifteen names, no arrangement. See below. |
 
@@ -56,6 +57,23 @@ matters *before* the deadline. Every other team's waits for its period to open.
 `teamDisplay(squads, mine)` answers for the one team on screen; the league-wide
 `squads.display` stays a rival's answer and must, because things like the
 matchups board's pending clean sheets read it for all ten at once.
+
+## The gameweek picker
+
+Craig, 1 Oct 2026: *"lets have a gameweek dropdown like fantrax does, shows their opp for that week (and
+previous week would show their score)"*. `GameweekPicker` sits beside the Pitch/List toggle on every branch
+(alone at the right above `lg`) and sets `?gw=`. Its options are the league's own calendar, one per period
+(`readCalendar`, from `getLeagueInfo`'s periods), never FPL's gameweek list; the real league's starts at
+Gameweek 6. `weekStanding` (`weeks.ts`, tested) says where the week on screen stands against the open one:
+
+| Week | Your own | Each man shows |
+|---|---|---|
+| Locked (played or in play) | read-only `Sheet` | his score that week, on the grass and under FPts |
+| Open | `LineupPlanner`, the only week Save touches | his opponent; FPts is the season |
+| Ahead | read-only `Sheet` | his opponent; no FPts column, because Fantrax answers a future week with noughts |
+
+A rival's weeks follow the gate as before: locked weeks draw his sheet, the open and later ones his squad.
+A change made with an unsaved lineup goes through `LeaveGuard`'s prompt like any link.
 
 ## How the data reaches the view
 

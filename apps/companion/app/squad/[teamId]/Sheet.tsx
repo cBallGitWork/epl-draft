@@ -1,27 +1,15 @@
 "use client";
 
 import type { BreakdownLine, PlayerStory, SquadDetailLine, SquadPlayerDetail } from "@epl/core";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import TeamSheet from "../../components/league/TeamSheet";
 import ViewToggle, { type View } from "../../components/league/ViewToggle";
 import Pending from "../../components/league/Pending";
 import { PANEL } from "@/app/desk";
 import ListAndPitch from "@/app/components/league/ListAndPitch";
 
-// A rival's eleven once his lineups have locked — with the Pitch/List control the
-// page had been losing at exactly that moment.
-//
-// The gap was invisible before a period had ever opened, which is why it lasted:
-// all week the page renders `SquadBoard`, which owns a toggle, and the branch
-// underneath it renders `TeamSheet`, which deliberately does not. `TeamSheet`'s
-// reasoning is sound where it was written — the head-to-head board owns one
-// control for both sides, and a second inside each side would be two controls
-// saying the same thing — but this route has one side and owned no control at
-// all. So the squad screen answered "who exactly is in it" all week and stopped
-// answering it the moment the football started.
-//
-// The state lives here rather than inside `TeamSheet` for the same reason it
-// lives in `MatchupBoard`: whoever draws the control owns it.
+// A read-only eleven, a rival's once his lineups lock or your own in any week but the open one, with the
+// Pitch/List control and the gameweek picker. The view state lives here: whoever draws the control owns it.
 
 export default function Sheet({
   rows,
@@ -30,6 +18,9 @@ export default function Sheet({
   news,
   pending,
   eligibility,
+  picker,
+  show,
+  opens,
 }: {
   rows: SquadDetailLine[];
   bench: SquadPlayerDetail[];
@@ -45,11 +36,15 @@ export default function Sheet({
   pending: number | null;
   /** Eligible positions by Fantrax id, for the list's position column. */
   eligibility?: Record<string, string[]>;
+  /** The gameweek picker, beside the toggle; null when the calendar cannot place the week. */
+  picker: ReactNode;
+  /** Under each name on the grass: his score in a locked week, his opponent in a later one. */
+  show: "points" | "fixture";
+  /** The view on a phone at first: a rival's list (who he has), your own pitch (as the planner opens). */
+  opens: View;
 }) {
-  // Opens on the LIST: a squad screen is a list of who you have, and the pitch
-  // is the second reading of it. Phone only — above `lg` both are drawn and the
-  // control is hidden.
-  const [view, setView] = useState<View>("list");
+  // Phone only — above `lg` both are drawn and the control is hidden.
+  const [view, setView] = useState<View>(opens);
 
   return (
     <div className="flex flex-col gap-2">
@@ -67,15 +62,14 @@ export default function Sheet({
           Above `lg` there is room for both and no choice to make, so the control
           goes: a toggle between two things you can already see is a control that
           does nothing. */}
-      <div className="flex items-center justify-between gap-2 px-1 lg:hidden">
-        <ViewToggle view={view} onPick={setView} />
-        <Pending points={pending} />
-      </div>
-      {pending === null ? null : (
-        <div className="hidden justify-end px-1 lg:flex">
-          <Pending points={pending} />
+      {/* The toggle, the pending figure and the week on one row, so the grass loses no height to the picker. */}
+      <div className="flex items-center gap-2 px-1 lg:justify-end">
+        <div className="flex flex-1 lg:hidden">
+          <ViewToggle view={view} onPick={setView} />
         </div>
-      )}
+        <Pending points={pending} />
+        {picker}
+      </div>
 
       {/* **List left, pitch right, and the two the same width** (Craig, 2 Sep:
           "the pitch needs to be longer, and same size as the list really"). The
@@ -139,7 +133,7 @@ export default function Sheet({
               news={news}
               mode="pitch"
               inColumn
-              show="fixture"
+              show={show}
             />
           </>
         }
