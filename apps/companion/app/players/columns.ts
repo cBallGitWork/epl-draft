@@ -1,3 +1,22 @@
+import {
+  ASSISTS_FANTASY,
+  ASSISTS_OFFICIAL,
+  ASSISTS_TOTAL,
+  CLEAN_SHEETS,
+  GOALS,
+  GOALS_AGAINST,
+  GOALS_AGAINST_OUTFIELD,
+  KEEPER_POINTS,
+  MINUTES,
+  OWN_GOALS,
+  PENALTIES_MISSED,
+  PENALTY_SAVES,
+  RED_CARDS,
+  SAVES,
+  YELLOW_CARDS,
+  wordsFor,
+  type FantraxCategory,
+} from "@epl/core";
 import type { PoolRow } from "./pool";
 import type { PoolGroup } from "./groups";
 import { ATTRIBUTE_COLUMNS } from "./attributeColumns";
@@ -79,16 +98,10 @@ export interface PoolColumn {
  *  Every one of them is a count, so `rate` is set here rather than at each
  *  call site — the exceptions are the columns that do NOT come
  *  through this helper, which is exactly the set that should not be rated. */
-function count(
-  key: string,
-  label: string,
-  title: string,
-  group: PoolGroup,
-  mark: Mark = "high",
-): PoolColumn {
+function byAbbreviation(key: string, title: string, group: PoolGroup, mark: Mark = "high"): PoolColumn {
   return {
     key: key.toLowerCase().replace(/[^a-z0-9]/g, ""),
-    label,
+    label: key,
     title,
     kind: "number",
     group,
@@ -100,9 +113,14 @@ function count(
   };
 }
 
+/** A scoring category's count, with its plain words in the key. */
+function count(category: FantraxCategory, group: PoolGroup, mark: Mark = "high"): PoolColumn {
+  return byAbbreviation(category.short, wordsFor(category).key, group, mark);
+}
+
 /** The football BEHIND the figures — how many matches, and how many minutes.
  *
- *  Identical to `count` but for the one field that matters: these are never
+ *  Built as a `count` is, but for the one field that matters: these are never
  *  rated. Ninety minutes' worth of minutes is ninety, on every row, which is a
  *  tautology drawn as a column; and games per ninety minutes is the same fact as
  *  minutes per game, upside down. The board shipped for an hour with both going
@@ -113,8 +131,8 @@ function count(
  *  They keep their `mark`: playing the most minutes in the pool is a real thing
  *  to be top of, even though the tie rule leaves the column dark until the
  *  ever-presents thin out. */
-function denominator(key: string, label: string, title: string): PoolColumn {
-  return { ...count(key, label, title, "scoring"), rate: undefined };
+function denominator(key: string, title: string): PoolColumn {
+  return { ...byAbbreviation(key, title, "scoring"), rate: undefined };
 }
 
 /** **Position, club and status are not columns any more** (Craig, 10 Sep 2026:
@@ -163,22 +181,22 @@ export const COLUMNS: PoolColumn[] = [
     ascending: false,
     value: (row) => row.stats?.perGame ?? null,
   },
-  denominator("Min", "Min", "Minutes played"),
-  denominator("GP", "GP", "Games played"),
-  count("G", "G", "Goals", "attacking"),
-  count("AT", "AT", "Assists, the official and the fantasy together", "attacking"),
-  count("A", "A", "Assists, as the Premier League records them", "attacking"),
-  count("AF", "AF", "Assists as Fantrax scores them, which is the wider count", "attacking"),
-  count("CS", "CS", "Clean sheets, on 60 minutes on the field — Fantrax's own rule", "defensive"),
-  count("GAO", "GAO", "Goals conceded while he was on the field. Outfielders only", "defensive", "low"),
-  count("GA", "GA", "Goals conceded. Keepers only", "defensive", "low"),
-  count("Sv", "Sv", "Saves. Keepers only", "defensive"),
-  count("GKP", "GKP", "Keeper actions: saves, smothers, punches and high claims won. Keepers only", "defensive"),
-  count("PKS", "PKS", "Penalties saved. Keepers only", "defensive"),
-  count("YC", "YC", "Yellow cards", "discipline", "low"),
-  count("RC", "RC", "Red cards", "discipline", "low"),
-  count("PKM", "PKM", "Penalties missed", "attacking", "low"),
-  count("OG", "OG", "Own goals", "defensive", "low"),
+  denominator(MINUTES.short, wordsFor(MINUTES).key),
+  denominator("GP", "Games played"),
+  count(GOALS, "attacking"),
+  count(ASSISTS_TOTAL, "attacking"),
+  count(ASSISTS_OFFICIAL, "attacking"),
+  count(ASSISTS_FANTASY, "attacking"),
+  count(CLEAN_SHEETS, "defensive"),
+  count(GOALS_AGAINST_OUTFIELD, "defensive", "low"),
+  count(GOALS_AGAINST, "defensive", "low"),
+  count(SAVES, "defensive"),
+  count(KEEPER_POINTS, "defensive"),
+  count(PENALTY_SAVES, "defensive"),
+  count(YELLOW_CARDS, "discipline", "low"),
+  count(RED_CARDS, "discipline", "low"),
+  count(PENALTIES_MISSED, "attacking", "low"),
+  count(OWN_GOALS, "defensive", "low"),
   {
     key: "ros",
     label: "Ros",

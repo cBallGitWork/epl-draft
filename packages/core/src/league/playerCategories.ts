@@ -1,5 +1,25 @@
 import type { GroupKey } from "./categories";
-import { ASSISTS_FANTASY, ASSISTS_OFFICIAL, ASSISTS_TOTAL, DEFENSIVE_POINTS, DEFENSIVE_POINTS_3, KEEPER_POINTS, SAVES } from "./categoryNames";
+import {
+  ASSISTS_FANTASY,
+  ASSISTS_OFFICIAL,
+  ASSISTS_TOTAL,
+  CLEAN_SHEETS,
+  DEFENSIVE_POINTS,
+  DEFENSIVE_POINTS_3,
+  GOALS,
+  GOALS_AGAINST,
+  GOALS_AGAINST_OUTFIELD,
+  KEEPER_POINTS,
+  MINUTES,
+  OWN_GOALS,
+  PENALTIES_MISSED,
+  PENALTY_SAVES,
+  RED_CARDS,
+  SAVES,
+  YELLOW_CARDS,
+  type FantraxCategory,
+} from "./categoryNames";
+import { wordsFor } from "./categoryWords";
 
 // The categories a league can pay a player for, keyed by getPlayerStats' column abbreviation: a squad's Stats board.
 
@@ -14,24 +34,31 @@ export interface PlayerCategory {
   also?: string;
 }
 
+const entry = (category: FantraxCategory, group: GroupKey, lowIsGood?: true, label = wordsFor(category).key): PlayerCategory => ({
+  key: category.short,
+  group,
+  label,
+  lowIsGood,
+});
+
 /** Ordered as a reader looks for them: his time on the pitch, then going forward, at the back, and what he did wrong. */
 export const PLAYER_CATEGORIES: readonly PlayerCategory[] = [
-  { key: "Min", group: "appearances", label: "Minutes played" },
-  { key: "G", group: "attacking", label: "Goals" },
-  { key: ASSISTS_TOTAL.short, group: "attacking", label: "Assists (total)" },
-  { key: ASSISTS_OFFICIAL.short, group: "attacking", label: "Assists" },
-  { key: ASSISTS_FANTASY.short, group: "attacking", label: "Assists (fantasy)" },
-  { key: "PKM", group: "attacking", label: "Penalties missed", lowIsGood: true },
-  { key: "CS", group: "defensive", label: "Clean sheets" },
-  { key: DEFENSIVE_POINTS.short, group: "defensive", label: "DefCon: tackles won, interceptions and blocks" },
-  { key: DEFENSIVE_POINTS_3.short, group: "defensive", label: "DefCon: tackles won, interceptions, blocks, clearances and recoveries" },
-  { key: SAVES.short, group: "defensive", label: "Saves" },
-  { key: KEEPER_POINTS.short, group: "defensive", label: "Keeper actions" },
-  { key: "PKS", group: "defensive", label: "Penalties saved" },
-  // A keeper's read calls it GA and an outfielder's GAO: one fact, one column.
-  { key: "GA", group: "defensive", label: "Goals against", lowIsGood: true, also: "GAO" },
-  { key: "YC", group: "discipline", label: "Yellow cards", lowIsGood: true },
-  { key: "RC", group: "discipline", label: "Red cards", lowIsGood: true },
+  entry(MINUTES, "appearances"),
+  entry(GOALS, "attacking"),
+  entry(ASSISTS_TOTAL, "attacking"),
+  entry(ASSISTS_OFFICIAL, "attacking"),
+  entry(ASSISTS_FANTASY, "attacking"),
+  entry(PENALTIES_MISSED, "attacking", true),
+  entry(CLEAN_SHEETS, "defensive"),
+  entry(DEFENSIVE_POINTS, "defensive"),
+  entry(DEFENSIVE_POINTS_3, "defensive"),
+  entry(SAVES, "defensive"),
+  entry(KEEPER_POINTS, "defensive"),
+  entry(PENALTY_SAVES, "defensive"),
+  // A keeper's read calls it GA and an outfielder's GAO: one fact, one column, under the name both share.
+  { ...entry(GOALS_AGAINST, "defensive", true, wordsFor(GOALS_AGAINST).name), also: GOALS_AGAINST_OUTFIELD.short },
+  entry(YELLOW_CARDS, "discipline", true),
+  entry(RED_CARDS, "discipline", true),
   // Defensive, not discipline (Craig, 2 Sep): on a player's row an own goal is what he did at the back.
-  { key: "OG", group: "defensive", label: "Own goals", lowIsGood: true },
+  entry(OWN_GOALS, "defensive", true),
 ];

@@ -122,7 +122,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                   <SortHead
                     key={entry.key}
                     width={FIGURE_WIDTH}
-                    title={squad ? entry.label : `${entry.label} — ${entry.key}`}
+                    title={entry.title ?? entry.label}
                     href={boardHref(view, group, entry.key)}
                     label={entry.short}
                     align="right"

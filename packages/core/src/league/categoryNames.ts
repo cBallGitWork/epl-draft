@@ -23,6 +23,10 @@ export const YELLOW_CARDS: FantraxCategory = { code: "INDIVIDUAL_YELLOW_CARDS", 
 export const RED_CARDS: FantraxCategory = { code: "INDIVIDUAL_RED_CARDS", short: "RC", caption: "Red Cards" };
 export const DEFENSIVE_POINTS: FantraxCategory = { code: "INDIVIDUAL_DEFENSIVE_POINTS", short: "DFP", caption: "Defensive Points" };
 export const DEFENSIVE_POINTS_3: FantraxCategory = { code: "INDIVIDUAL_DEFENSIVE_POINTS_3", short: "DFP3", caption: "Defensive Points 3" };
+export const CLEAN_SHEETS: FantraxCategory = { code: "INDIVIDUAL_SHUTOUTS_ON_FIELD", short: "CS", caption: "Clean Sheets On Field" };
+export const GOALS_AGAINST: FantraxCategory = { code: "INDIVIDUAL_GOALS_AGAINST", short: "GA", caption: "Goals Against" };
+export const GOALS_AGAINST_OUTFIELD: FantraxCategory = { code: "INDIVIDUAL_GOALS_AGAINST_OUTFIELDERS", short: "GAO", caption: "Goals Against Outfielders" };
+export const MINUTES: FantraxCategory = { code: "INDIVIDUAL_MINUTES_PLAYED", short: "Min", caption: "Minutes Played" };
 
 /** Where a league pays an assist, best first. AT is A plus AF (455 of 455 outfielders, 1 Oct 2026), so it is never added to them. */
 export const ASSIST = [ASSISTS_TOTAL, ASSISTS_OFFICIAL] as const;
@@ -34,8 +38,13 @@ export const KEEPER_WORK = [KEEPER_POINTS, SAVES] as const;
 export const DEFCON = [DEFENSIVE_POINTS, DEFENSIVE_POINTS_3] as const;
 
 /** Whether a league's category is this one: by long code where the league carried it, else by short code. */
-function is(scoring: ScoringCategory, category: FantraxCategory): boolean {
+function is(scoring: Pick<ScoringCategory, "code" | "longCode">, category: FantraxCategory): boolean {
   return scoring.longCode ? scoring.longCode === category.code : scoring.code === category.short;
+}
+
+/** Which of some categories a league's one is; null when it is none of them. */
+export function meaningOf(scoring: Pick<ScoringCategory, "code" | "longCode">, among: readonly FantraxCategory[]): FantraxCategory | null {
+  return among.find((category) => is(scoring, category)) ?? null;
 }
 
 /** The first of some categories the league scores; null when it scores none of them. */
@@ -52,6 +61,3 @@ export function idsOf(categories: Record<string, ScoringCategory>, wanted: reado
 export function carries(carried: ReadonlySet<string>, ...names: (string | undefined)[]): boolean {
   return carried.size === 0 || names.some((name) => name !== undefined && carried.has(name));
 }
-
-/** Minutes played: a count every league scores, and one a board may leave out. */
-export const MINUTES: FantraxCategory = { code: "INDIVIDUAL_MINUTES_PLAYED", short: "Min", caption: "Minutes Played" };

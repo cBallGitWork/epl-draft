@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
-import { type LeagueTeam, type LineupDetail, type ScoringCategory, type SquadPlayerDetail, crestUrl, inkOn, playerName, teamColours, DASH } from "@epl/core";
+import { type LeagueTeam, type LineupDetail, type ScoringCategory, type SquadPlayerDetail, crestUrl, inkOn, playerName, teamColours, wordsOf, DASH } from "@epl/core";
 import Section from "../../../components/shell/Section";
 import PositionTile from "../../../components/league/PositionTile";
 import { ROW_LINK } from "../../../components/league/TableCells";
@@ -56,7 +56,7 @@ export default function SideStats({
               {heads.map((head) => (
                 <SortHead
                   key={head.code}
-                  title={head.name}
+                  title={wordsOf(head).key}
                   href={hrefFor(head.code)}
                   label={head.code}
                   sorted={sortedAs(head.code === sort.head, sort.descending)}

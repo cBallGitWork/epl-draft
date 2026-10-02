@@ -101,7 +101,7 @@ rather than a column of doors. **Counted by the real league** (Craig, 1 Oct 2026
 real league stats"*): `scoringDay.ts` reads the `scoring` league's `getPlayerStats` for the
 match's London day, and `fantasyCategories.ts` lists the categories it scores, each found by
 meaning (`AT` not `A`, `GKP` as *Keeper actions*, never `Sv`) and headed in plain football
-words by the same meaning (*Assists*, never Fantrax's *Assists (Total)*). Minutes, clean sheets
+words by the same meaning (`categoryWords.ts`: *Assists*, never Fantrax's *Assists (Total)*). Minutes, clean sheets
 and goals against are left off: every man has the first, and the score says the other two.
 
 **DefCon only when a man gets close** (*"defenders, only when they get 1, mids when they have 4
