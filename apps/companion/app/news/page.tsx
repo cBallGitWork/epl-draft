@@ -176,30 +176,7 @@ function Row({
   );
 }
 
-/** What the blue block says: the day it happened, or the round it belongs to.
- *
- *  **Two vocabularies, and the tag on `at` is what tells them apart.** Ours is an
- *  instant and is formatted in London like every other time this app prints;
- *  Fantrax's is a stamp in their own zone and is RE-SPELLED — `Sep 2` into
- *  `2 Sep` — because converting it is how a transaction moves a day. The block
- *  drew their US string verbatim beside our `Sat 12 Sept` until 5 Sep 2026, and
- *  the item with neither falls back to its round.
- *
- *  **And it carries the CLOCK** (Craig, 5 Sep 2026: "the blue row tab should
- *  include the time too, we have it"). He is right that we have it: every deal
- *  carries Fantrax's hour and minute by construction — `fantraxParts`' regex
- *  requires one — and the deadline is a real instant.
- *
- *  **A doubt has one too, and this docblock was the last place saying it did
- *  not.** It read that "every doubt is `at: null` … because FPL publishes no
- *  'as of' for a doubt" — the claim `doubts.ts` and PLATFORM_NOTES now record as
- *  false (`news_added`, 198/198). It was written down in three files and
- *  corrected in two; this was the third, left standing above code that already
- *  did the opposite.
- *
- *  What is genuinely undated is the round's own RESULT — a standing fact about a
- *  finished tie — and a doubt FPL published no stamp for. Both fall back to the
- *  round, which is what the first branch is for. */
+/** What the blue block says: the London day and clock it happened, or the round it belongs to. */
 function itemDay(item: InboxItem): { day: string; time: string | null } {
   if (item.at === null) {
     return { day: item.gameweek === null ? "" : `GW${item.gameweek}`, time: null };

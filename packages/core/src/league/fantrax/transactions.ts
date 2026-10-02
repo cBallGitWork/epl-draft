@@ -61,26 +61,8 @@ export interface RawTransactionHistory {
   table?: {
     caption?: string;
     rows?: RawTxRow[];
-    /** Column headings. Read only to find the date column's own label — never to
-     *  identify a column, which is what `cell.key` is for. */
-    header?: { cells?: { key?: string; name?: string; shortName?: string }[] };
   };
   paginatedResultSet?: { totalNumResults?: number; totalNumPages?: number };
-}
-
-/** Fantrax's own label for the date column, e.g. "Date (EDT)", or null.
- *
- *  The timezone is the point. `processedAt` is a bare "Wed Aug 12, 2026, 9:14AM"
- *  with no offset in it, so a British reader takes it for British time and is
- *  four hours out. Fantrax states the zone in the heading and nowhere else, so
- *  this hands their words through verbatim rather than converting — which would
- *  mean mapping an abbreviation to an offset and asserting a fact about somebody
- *  else's clock.
- *
- *  Found by `key`, as every other read here is; only the label itself is text. */
-export function transactionDateLabel(raw: RawTransactionHistory): string | null {
-  const cell = raw.table?.header?.cells?.find((header) => header.key === "date");
-  return cell?.shortName ?? cell?.name ?? null;
 }
 
 /** Resolve a row's cells, inheriting any a previous row is still spanning.
@@ -193,10 +175,7 @@ export function mapTransactions(
       clubName: row.scorer?.teamName ?? null,
       via: VIA[row.claimType ?? ""] ?? null,
       ...movement(kind, cells),
-      // Verbatim, e.g. "Wed Aug 12, 2026, 9:14AM". Left unparsed for the same
-      // reason the standings record is: the string carries no offset, the header
-      // says EDT elsewhere, and turning it into an instant would mean assuming a
-      // timezone and a format on data we do not control.
+      // Verbatim, e.g. "Wed Aug 12, 2026, 9:14AM": US Eastern, with no offset in it.
       processedAt: cells.get("date")?.content ?? null,
       period: periodOf(cells),
       executed: row.executed === true,
@@ -206,26 +185,10 @@ export function mapTransactions(
   return transactions;
 }
 
-/** A sortable number for "Wed Aug 12, 2026, 9:14AM", or null if it does not read.
- *
- *  Deliberately not an instant and never stored as one. The string carries no
- *  offset — Fantrax puts that in the column heading, in English, as "Date
- *  Processed (EDT)" — so the only honest reading is a key for comparing rows that
- *  all came from one league's feed in one displayed timezone. `Deal.processedAt`
- *  stays their string verbatim, and nothing but ordering ever sees this number.
- *
- *  Null on anything unrecognised, a translated month included. */
 const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 
-/** A sortable key for Fantrax's own date string, and never an instant.
- *
- *  **It lives here rather than in the paper, because this is the file that owns
- *  the field it reads.** `LeagueTransaction.processedAt` is Fantrax's string
- *  verbatim; this is the only thing entitled to make a number of it, and it moved
- *  the day a second reader appeared — a player's own move list, which needs the
- *  same order for the same reason.
- *
- *  Nothing but ordering ever sees the number. */
+/** A sortable key for "Wed Aug 12, 2026, 9:14AM", in their own calendar; null if it does not read.
+ *  The stamp's second parser, beside `inbox/when.ts`'s instant: two, so not yet shared. */
 export function orderKey(processedAt: string | null): number | null {
   const parts = /([a-z]{3})[a-z]* (\d{1,2}), (\d{4}), (\d{1,2}):(\d{2})\s*([ap])m/i.exec(
     processedAt ?? "",

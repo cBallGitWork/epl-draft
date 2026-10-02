@@ -46,10 +46,6 @@ export type Silence =
 export interface Edition {
   /** Null when there is something to print. */
   silence: Silence | null;
-  /** Fantrax's own heading for the transaction date column — "Date (EDT)". Shown
-   *  because their timestamps carry no offset, so without it a British reader
-   *  takes a New York morning for a British one. Null if they stop saying. */
-  dealsAt: string | null;
   /** Football in play *right now*, which changes what the paper leads with.
    *
    *  `isMatchdayLive` and deliberately not `duringGameweek`: this drives a
@@ -167,7 +163,6 @@ export async function edition(mine: string | null): Promise<Edition> {
     round: roundPeriod,
     snapshot: drafted?.snapshot ?? null,
     deals: business,
-    dealsAt: feed.at,
     deadline: drafted?.info ? nextDeadline(drafted.info.rosterPeriods, kickoffs, at) : null,
     teams: drafted?.info?.teams ?? [],
     eleven: picked,

@@ -1,62 +1,30 @@
 import { FANTRAX_TIMEZONE } from "../config";
+import { londonDayAndDate, londonTime } from "../time";
 
-// When an inbox item happened, and which KIND of "when" it is.
-//
-// The inbox merges two sources that date themselves differently and the merge
-// was reading them as one string:
-//
-// · the league's business, off Fantrax, stamped `"Wed Sep 2, 2026, 6:11AM"` —
-//   their own display string, in their own displayed zone, **with no offset in
-//   it**. `LeagueTransaction.processedAt` keeps it verbatim for exactly that
-//   reason, and turning it into an instant would mean assuming a format and a
-//   timezone on data we do not control.
-// · the round's deadline, ours, a real ISO instant.
-//
-// Sorted as text they interleave by first character, so `"2026-09-12T…"` sorts
-// under `"Wed Sep 2…"` and the deadline appeared beneath ten days of older
-// deals; printed through `londonDayAndDate` the Fantrax string is an invalid
-// date, so the list drew their US stamp beside our `Sat 12 Sept`. One field
-// carrying two vocabularies is what produced both.
-//
-// **So the field says which it is.** A tagged shape costs one property and buys
-// a renderer that cannot get it wrong: `{ iso }` is an instant and is formatted
-// in London like every other time this app prints; `{ fantrax }` is a string in
-// somebody else's zone and is RE-SPELLED rather than converted, with the zone
-// named on the face of it.
+// When an inbox item happened. Fantrax stamps its business `"Wed Sep 2, 2026, 6:11AM"`, in US Eastern
+// with no offset; the deadline is ours, an ISO instant. Both are printed in London.
 
 /** When an item happened. Two shapes, because two sources. */
 export type InboxWhen =
-  /** A real instant, ours. Formatted in London wherever it is read. */
+  /** A real instant, ours. */
   | { iso: string }
-  /** Fantrax's own stamp, verbatim, offsetless. Never parsed into an instant
-   *  for display — only re-spelled, and only ordered. */
+  /** Fantrax's own stamp, verbatim; `fantraxInstant` reads it. */
   | { fantrax: string };
 
-/** Fantrax's stamp, taken apart. Null on anything that does not read — a
- *  translated month included.
- *
- *  **A second parser of this format, and deliberately.** `orderKey` in
- *  `league/fantrax/transactions.ts` reads the same string into a synthetic
- *  sortable number for the transaction feed's own ordering; this reads it into
- *  the PARTS, for spelling them back out. Two occurrences is a coincidence
- *  (CODE_RULES §1) and the two want different things. A third asks for one
- *  parser and a shared shape. */
-export function fantraxParts(stamp: string): FantraxStamp | null {
+/** Fantrax's stamp, taken apart. Null on anything that does not read, a translated month included. */
+function fantraxParts(stamp: string): FantraxStamp | null {
   const parts =
-    /^\s*([a-z]{3})[a-z]*,?\s+([a-z]{3})[a-z]*\s+(\d{1,2}),\s*(\d{4}),\s*(\d{1,2}):(\d{2})\s*([ap])m/i.exec(
+    /^\s*[a-z]{3}[a-z]*,?\s+([a-z]{3})[a-z]*\s+(\d{1,2}),\s*(\d{4}),\s*(\d{1,2}):(\d{2})\s*([ap])m/i.exec(
       stamp,
     );
   if (!parts) return null;
 
-  // Defaults only satisfy the type checker: a match supplies all seven groups.
-  const [, weekday = "", month = "", day = "", year = "", hour = "", minute = "", meridiem = ""] =
-    parts;
+  // Defaults only satisfy the type checker: a match supplies all six groups.
+  const [, month = "", day = "", year = "", hour = "", minute = "", meridiem = ""] = parts;
   const monthIndex = MONTHS.indexOf(month.toLowerCase());
   if (monthIndex < 0) return null;
 
   return {
-    weekday: capitalised(weekday),
-    month: BRITISH_MONTHS[monthIndex] ?? capitalised(month),
     monthIndex,
     day: Number(day),
     year: Number(year),
@@ -66,110 +34,52 @@ export function fantraxParts(stamp: string): FantraxStamp | null {
   };
 }
 
-export interface FantraxStamp {
-  /** `"Wed"`, as they wrote it. */
-  weekday: string;
-  /** The month in the British short form the rest of the desk uses — `"Sept"`
-   *  where Fantrax wrote `"Sep"`. A re-spelling, like the date order. */
-  month: string;
+interface FantraxStamp {
   monthIndex: number;
   day: number;
   year: number;
-  /** 0-23. Their string is 12-hour; this is the same clock said once. */
+  /** 0-23. */
   hours: number;
   minutes: number;
 }
 
 const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 
-/** The same twelve months as `en-GB` abbreviates them, which is what every other
- *  date on the desk is set in (`time.ts`).
- *
- *  **Only September differs, and it differs on the one column that shows both.**
- *  Fantrax writes `Sep`; British short form is `Sept`, so the inbox drew
- *  `Sat 12 Sept` for the round's deadline directly above `Wed 2 Sep` for a
- *  transaction — two spellings of one month in one blue block. Re-spelling their
- *  month is the same act as re-ordering their date and carries the same
- *  guarantee: it cannot move a transaction, because it changes no number.
- *
- *  Written out rather than formatted through `Intl`, because a formatter here
- *  would need a locale and the locale belongs to the app's own `londonTime`, not
- *  to a core mapper. If that file's locale ever moves, this is the second place
- *  to move it — which is why the disagreement is named here rather than assumed
- *  away. */
-const BRITISH_MONTHS = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sept",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-function capitalised(word: string): string {
-  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-}
-
-/** `"Wed 2 Sept, 6:11 AM ET"` — the same date with the clock, and the zone named.
- *
- *  **The zone is on the face of it because we did not convert it.** Fantrax
- *  publishes this in Eastern Time — their own column heading says so, in
- *  English, as "Date Processed (EDT)" — and a bare `6:11 AM` beside our London
- *  kickoffs would be read as London. Naming it is the honest alternative to
- *  either converting it or hiding it. */
-export function fantraxMoment(stamp: string): string | null {
+/** Fantrax's stamp as the ISO instant it names, or null when it does not read. Their clock is
+ *  US Eastern, EDT or EST by the stamp's own date, and the offset is read for that date. */
+export function fantraxInstant(stamp: string): string | null {
   const parts = fantraxParts(stamp);
   if (parts === null) return null;
-  const hour = parts.hours % 12 === 0 ? 12 : parts.hours % 12;
-  const meridiem = parts.hours < 12 ? "AM" : "PM";
-  const minute = String(parts.minutes).padStart(2, "0");
-  return `${parts.weekday} ${parts.day} ${parts.month}, ${hour}:${minute} ${meridiem} ET`;
+  const wall = Date.UTC(parts.year, parts.monthIndex, parts.day, parts.hours, parts.minutes);
+  // The offset at the wall reading is right but for the hours around a change; read again where it lands.
+  const guess = wall - (easternWall(wall) - wall);
+  return new Date(wall - (easternWall(guess) - guess)).toISOString();
 }
 
-/** `"Wed 2 Sept 6:11am"` — the date and the clock, for a cell too narrow to name
- *  the zone.
- *
- *  **The zone is dropped and the case is lowered, and both are the blue block's
- *  doing.** `fantraxMoment` spells `6:11 AM ET` because it sits under a paragraph
- *  where a bare hour beside our London kickoffs would be read as London; the
- *  index block is 64px of three-extra-small type where "ET" is a third of the
- *  line and the reader's own deadline is two rows above in London. The block's
- *  job is ordering — is this newer than that — and the read pane below it carries
- *  the full moment with the zone named for anyone comparing.
- *
- *  Still a re-spelling and never a conversion: every part comes out of their
- *  string. */
+/** Eastern's wall clock at an instant, read back as if it were UTC. */
+function easternWall(at: number): number {
+  const parts = easternParts(new Date(at).toISOString());
+  return parts === null
+    ? at
+    : Date.UTC(parts.year, parts.monthIndex, parts.day, parts.hours, parts.minutes);
+}
+
+/** `"Wed 2 Sept 11:11"`: Fantrax's stamp in London time. */
 export function fantraxTime(stamp: string): string | null {
-  const parts = fantraxParts(stamp);
-  return parts === null ? null : `${dayOf(parts)} ${clockOf(parts)}`;
+  const day = fantraxDay(stamp);
+  return day === null ? null : `${day} ${fantraxClock(stamp)}`;
 }
 
-/** `"Wed 2 Sept"`: `fantraxTime`'s date without its clock, for a chip with room for the day alone. */
+/** `"Wed 2 Sept"`: the London day a Fantrax stamp falls on. */
 export function fantraxDay(stamp: string): string | null {
-  const parts = fantraxParts(stamp);
-  return parts === null ? null : dayOf(parts);
+  const at = fantraxInstant(stamp);
+  return at === null ? null : londonDayAndDate(at);
 }
 
-/** `"6:11am"`: `fantraxTime`'s clock without its date, for a block that sets the two on separate lines. */
+/** `"11:11"`: a Fantrax stamp's London clock. */
 export function fantraxClock(stamp: string): string | null {
-  const parts = fantraxParts(stamp);
-  return parts === null ? null : clockOf(parts);
-}
-
-function dayOf(parts: FantraxStamp): string {
-  return `${parts.weekday} ${parts.day} ${parts.month}`;
-}
-
-function clockOf(parts: FantraxStamp): string {
-  const hour = parts.hours % 12 === 0 ? 12 : parts.hours % 12;
-  const meridiem = parts.hours < 12 ? "am" : "pm";
-  return `${hour}:${String(parts.minutes).padStart(2, "0")}${meridiem}`;
+  const at = fantraxInstant(stamp);
+  return at === null ? null : londonTime(at);
 }
 
 /** One comparable number for both shapes, and nothing but ordering ever sees it.
@@ -204,8 +114,6 @@ function easternParts(iso: string): FantraxStamp | null {
   const monthIndex = MONTHS.indexOf(month.toLowerCase());
   if (monthIndex < 0) return null;
   return {
-    weekday: "",
-    month,
     monthIndex,
     day: Number(fields.get("day")),
     year: Number(fields.get("year")),

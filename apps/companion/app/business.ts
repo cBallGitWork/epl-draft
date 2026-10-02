@@ -4,7 +4,6 @@ import {
   type TransactionView,
   fetchTransactions,
   mapTransactions,
-  transactionDateLabel,
 } from "@epl/core";
 import { leagueCache } from "./leagueCache";
 import { orRefusal } from "./refusals";
@@ -34,15 +33,10 @@ export const readDeals = leagueCache("gazette-deals",
     const feeds = await Promise.all(
       DEAL_VIEWS.map(async (view) => {
         const raw = await orRefusal(fetchTransactions(FANTRAX_LEAGUE_ID, view));
-        if (raw instanceof FantraxError) return { rows: [], at: null };
-        return { rows: mapTransactions(raw, view), at: transactionDateLabel(raw) };
+        return raw instanceof FantraxError ? [] : mapTransactions(raw, view);
       }),
     );
-    return {
-      rows: feeds.flatMap((feed) => feed.rows),
-      // Every view heads the column the same way; the first that answered wins.
-      at: feeds.map((feed) => feed.at).find((label) => label !== null) ?? null,
-    };
+    return { rows: feeds.flat() };
   },
-  () => ({ rows: [], at: null }),
+  () => ({ rows: [] }),
 );

@@ -172,9 +172,9 @@ business, and when lineups lock.
    versions are on the League and Players tabs, where a manager goes to USE
    them, and these are the printed copies.
 9. **The week's business** — trades and claims, grouped so both halves of a trade
-   read as one deal. Fantrax's timestamps, re-spelled in British order
-   (`fantraxTime`, never converted) with their zone named in the heading,
-   because they carry a US Eastern offset.
+   read as one deal. Fantrax's US Eastern timestamps are printed in London time
+   (`fantraxTime`), with no zone in the heading (Craig, 2 Oct 2026: *"Times need
+   to be local time"*).
 10. **Next deadline** — the period boundary, with an explicit note that the
    commissioner's real lock is fifteen minutes before the first fixture and is
    not something Fantrax publishes.

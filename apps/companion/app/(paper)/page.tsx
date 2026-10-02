@@ -179,7 +179,7 @@ export default async function GazettePage() {
           <PaperTable title="The Premier League" aside="P · GD · Pts" rows={football} />
 
           {paper.deals.length > 0 ? (
-            <Deals deals={paper.deals} at={paper.dealsAt} who={who} />
+            <Deals deals={paper.deals} who={who} />
           ) : null}
 
           {paper.deadline ? (

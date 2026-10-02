@@ -1,5 +1,5 @@
 import type { InboxItem } from "@epl/core";
-import { fantraxMoment, londonDayAndDate, londonTime } from "@epl/core";
+import { fantraxClock, fantraxDay, londonDayAndDate, londonTime } from "@epl/core";
 import { LABEL } from "@/app/desk";
 
 // The item you are reading, as a letter.
@@ -107,10 +107,10 @@ function Field({
   );
 }
 
-/** The same date with its clock, for the item being read. Fantrax's carries the
- *  zone on its face (`Wed 2 Sep, 6:11 AM ET`) because we did not convert it. */
+/** The same date with its clock, for the item being read: `Wed 2 Sept, 11:11`, in London. */
 function itemMoment(item: InboxItem): string | null {
   if (item.at === null) return null;
   if ("iso" in item.at) return `${londonDayAndDate(item.at.iso)}, ${londonTime(item.at.iso)}`;
-  return fantraxMoment(item.at.fantrax);
+  const day = fantraxDay(item.at.fantrax);
+  return day === null ? null : `${day}, ${fantraxClock(item.at.fantrax)}`;
 }

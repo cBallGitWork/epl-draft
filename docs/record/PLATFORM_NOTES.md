@@ -44,6 +44,22 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## Every time is printed in London, Fantrax's included — decided 2 Oct 2026
+
+Craig, 2 Oct: *"Times need to be local time"*. Until then Fantrax's transaction stamps (`"Wed Sep 2, 2026,
+6:11AM"`, US Eastern with no offset) were re-spelled but never converted, under a `Date (EDT)` head on the paper
+and an `ET` in Mail, so the paper printed New York's 6:11am beside our London deadline.
+
+- **One zone prints**: `LEAGUE_TIMEZONE`, through core's `time.ts` formatters. No zone label anywhere.
+- **Their stamp is read with its own date's offset**: `fantraxInstant` (`inbox/when.ts`) takes the wall clock in
+  `FANTRAX_TIMEZONE`, so EDT or EST follows America's change dates (1 Nov 2026, 14 Mar 2027), not Britain's
+  (25 Oct, 28 Mar); in the weeks between, London is four hours ahead, not five. An evening claim moves to London's
+  next day, which is the point.
+- **The clock is the app's 24-hour one** (`londonTime`, `11:11`), so a deal and the deadline above it in Mail
+  read alike; the old stamps' `6:11am` was the only twelve-hour clock in the app.
+- `LeagueTransaction.processedAt` stays their string verbatim; `orderKey` still orders it in their own calendar,
+  which gives the same order.
+
 ## The real league's schedule went in through Fantrax's own schedule editor — written 2 Oct 2026
 
 The 26/27 head-to-head schedule was written with the two fxpa calls the commissioner's schedule editor makes, on

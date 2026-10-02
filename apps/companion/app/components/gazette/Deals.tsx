@@ -7,20 +7,13 @@ import { DEALS_SHOWN } from "../../config";
 
 export default function Deals({
   deals,
-  at,
   who,
 }: {
   deals: Deal[];
-  /** Fantrax's own heading for the transaction date column — "Date (EDT)". The
-   *  zone belongs in the heading, where a table would put it: the timestamps
-   *  below are their strings and carry no offset, so without the label a British
-   *  reader takes a New York morning for a British one. Their words, not our
-   *  conversion. */
-  at: string | null;
   who: (teamId: string | null) => string;
 }) {
   return (
-    <Column title="The week's business" aside={at ? `${deals.length} · ${at}` : `${deals.length}`}>
+    <Column title="The week's business" aside={`${deals.length}`}>
       <ul>
         {deals.slice(0, DEALS_SHOWN).map((deal) => (
           <li

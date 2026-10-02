@@ -42,8 +42,7 @@ export interface Deal {
   inbound: DealSide[];
   /** Who lost, and what. Empty for a claim off the wire that cost nobody. */
   outbound: DealSide[];
-  /** Fantrax's own string, verbatim. It carries no offset, so it is shown as
-   *  they wrote it rather than reinterpreted into a timezone we guessed. */
+  /** Fantrax's own string, verbatim; `fantraxTime` prints it in London. */
   processedAt: string | null;
   period: number | null;
   /** How a claim was made, off the claim itself; null for a trade or a bare drop. */

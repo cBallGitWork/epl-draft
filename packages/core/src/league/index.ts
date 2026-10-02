@@ -99,7 +99,7 @@ export type { SheetColumn, SheetLine, StatSheet } from "./fantrax/statSheet";
 export { mapBenchOrder } from "./fantrax/benchOrder";
 export { isFantraxPlayerId, mapPlayerProfile } from "./fantrax/profile";
 export type { LabelledValue, PlayerIntel, PlayerMatch } from "./fantrax/profile";
-export { mapTransactions, orderKey, transactionDateLabel } from "./fantrax/transactions";
+export { mapTransactions, orderKey } from "./fantrax/transactions";
 // Everything written about one player. `playerNews.ts` records the `tab`
 // parameter that reaches it, and the eleven names that did not.
 export { fetchPlayerStories, fetchPoolNews } from "./fantrax/client";

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mapTransactions, transactionDateLabel } from "./transactions";
+import { mapTransactions } from "./transactions";
 import type { RawTransactionHistory } from "./transactions";
 import claimDrop from "./__fixtures__/txClaimDrop.json";
 import trade from "./__fixtures__/txTrade.json";
@@ -169,30 +169,6 @@ describe("mapTransactions, on views and shapes with nothing in them", () => {
     // The cell's `content` is "test3"; what we keep is the id beside it.
     expect(rows[0]?.toTeamId).not.toBe("test3");
     expect(rows[0]?.toTeamId).toMatch(/^\w{8,}$/);
-  });
-});
-
-describe("transactionDateLabel", () => {
-  it("hands back Fantrax's own heading, timezone and all", () => {
-    // The whole point: `processedAt` is "Wed Aug 12, 2026, 9:14AM" with no
-    // offset in it, and Fantrax states the zone here and nowhere else. A British
-    // reader without this takes a New York morning for a British one.
-    expect(transactionDateLabel(claimDrop as RawTransactionHistory)).toBe("Date (EDT)");
-    expect(transactionDateLabel(trade as RawTransactionHistory)).toBe("Date (EDT)");
-  });
-
-  it("finds the column by key, never by what the heading says", () => {
-    // Every other read here binds to `cell.key`, because one of these headings
-    // ships an unsubstituted i18n placeholder. Only the label itself is text.
-    const renamed: RawTransactionHistory = {
-      table: { header: { cells: [{ key: "date", shortName: "Fecha (CET)" }] } },
-    };
-    expect(transactionDateLabel(renamed)).toBe("Fecha (CET)");
-  });
-
-  it("says null rather than guessing when they stop publishing it", () => {
-    expect(transactionDateLabel({ table: { rows: [] } })).toBe(null);
-    expect(transactionDateLabel(lineupChange as RawTransactionHistory)).toBe(null);
   });
 });
 
