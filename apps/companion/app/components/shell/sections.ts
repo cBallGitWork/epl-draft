@@ -179,14 +179,8 @@ export function isPaperRoute(pathname: string): boolean {
  *  fixture is about that the two crests on the bar do not already say. */
 const SUBJECT_GROUND_ROUTES = [CLUB, MATCH];
 
-/** Whether the page under this route draws its own ground, so the shell's
- *  standing one should stand down rather than load a photograph nobody sees.
- *
- *  The shell cannot resolve the club itself — it renders above every route in
- *  the app and a match id says nothing about who is at home — so the two Shells
- *  that DO know draw it, and this is how the shell knows to get out of the way.
- *  Same shape and same reason as `isPaperRoute`. */
+/** Whether the page under this route draws its own ground, so the shell's standing one stands down: a club,
+ *  a match, and a head-to-head over its home team's venue (not the list of them). Only the page knows whose. */
 export function drawsOwnGround(pathname: string): boolean {
-  // A head-to-head too, over its home team's venue; the list of them above it keeps the desk's.
   return owns(SUBJECT_GROUND_ROUTES, pathname) || pathname.startsWith(`${MATCHUPS}/`);
 }
