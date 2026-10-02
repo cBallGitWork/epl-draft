@@ -24,7 +24,7 @@ import { footballNow } from "../../football";
 import {
   SET_PIECES,
   intelLines,
-  intelProjections,
+  intelLeagueProjections,
   intelSetPieces,
   intelShots,
   intelSquads,
@@ -149,7 +149,7 @@ export async function playerStanding(player: FootballPlayer): Promise<{
   };
 }
 
-/** One gameweek of the model's projection: his points and place in his group, and the group's standout cuts. */
+/** One gameweek of the model's projection in our league's points: his place in his group, and the group's standout cuts. */
 export interface ProjectedWeek {
   place: ProjectedPlace | null;
   cut: StandoutCut;
@@ -163,8 +163,8 @@ export async function projectedWeeks(player: FootballPlayer, gameweeks: readonly
     gameweeks.map((gw) => [
       gw,
       {
-        place: projectedPlace(player.code, codes, intelProjections, gw),
-        cut: poolCut(codes.map((code) => projectedPoints(intelProjections, code, gw))),
+        place: projectedPlace(player.code, codes, intelLeagueProjections, gw),
+        cut: poolCut(codes.map((code) => projectedPoints(intelLeagueProjections, code, gw))),
       },
     ]),
   );

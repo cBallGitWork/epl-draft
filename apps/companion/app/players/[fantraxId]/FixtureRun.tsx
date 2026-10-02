@@ -5,8 +5,8 @@ import { standoutInk } from "../../components/league/standout";
 import { DASH, fixed, ordinal } from "@epl/core";
 import type { ProjectedWeek } from "./grid";
 
-// What is coming, as a run: FPL's difficulty on each block, and under it the sister model's projected FPL points
-// for that gameweek and his place in his group, lit on the pool board's standout rule. No source caption
+// What is coming, as a run: FPL's difficulty on each block, and under it the sister model's projection in our league's
+// points for that gameweek and his place in his group, lit on the pool board's standout rule. No source caption
 // (Craig, 30 Sep 2026); each figure's title says whose it is.
 
 export default function FixtureRun({
@@ -71,7 +71,7 @@ function Projected({ week, group }: { week: ProjectedWeek | undefined; group: st
   return (
     <span
       className={`${PROJECTED} ${ink === "" ? "text-ink" : ink}`}
-      title={`Our model projects ${fixed(place.points, "projected")} FPL points, ${ordinal(place.rank)} of ${place.of} ${group ?? "players"}`}
+      title={`Our model projects ${fixed(place.points, "projected")} points, ${ordinal(place.rank)} of ${place.of} ${group ?? "players"}`}
     >
       <span className="font-bold">{fixed(place.points, "projected")}</span>
       <span>{ordinal(place.rank)}</span>

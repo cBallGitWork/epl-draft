@@ -104,7 +104,7 @@ export function projectionHeads(
 ): { key: ProjectionSort; label: string; title: string }[] {
   return [
     { key: "xmins", label: "xMins", title: "The minutes the model expects him to play, a week" },
-    { key: "tot", label: "Tot", title: `${category}, ${gameweekSpan(gameweeks)} added up: FPL scoring, never Fantrax's` },
+    { key: "tot", label: "Tot", title: `${category}, ${gameweekSpan(gameweeks)} added up: our league's points at his best slot` },
     ...gameweeks.map((gw) => ({ key: `gw${gw}`, label: String(gw), title: `Gameweek ${gw}: ${category}, projected` })),
   ];
 }

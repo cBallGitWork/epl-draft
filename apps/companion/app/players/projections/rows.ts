@@ -1,8 +1,8 @@
-import { PROJECTION_PARTS, nextGameweeks, type ProjectedPlayer, type ProjectionPart } from "@epl/core";
+import { LEAGUE_PROJECTION_PARTS, nextGameweeks, type LeagueProjection, type LeagueProjectionPart } from "@epl/core";
 import { byFigure } from "../../components/league/order";
 
-// The Projections board's rows: the sister model's FPL-scoring points for each gameweek in the window, a total and
-// the minutes it expects, joined to our league's view of the man. A week the model has no reading for is a dash.
+// The Projections board's rows: the sister model's projection in our league's points for each gameweek in the window,
+// a total and the minutes it expects, joined to our league's view of the man. A week with no reading is a dash.
 
 /** Who a projected man is on our side: his names, his Fantrax page and eligibility when the pool holds him. */
 export interface Known {
@@ -21,28 +21,28 @@ export interface ProjectionRow extends Known {
 }
 
 /** What the week columns show: every point, or the points one category earns. */
-export type ProjectionCategory = "points" | ProjectionPart;
+export type ProjectionCategory = "points" | LeagueProjectionPart;
 
 export const PROJECTION_CATEGORIES: readonly { value: ProjectionCategory; label: string }[] = [
   { value: "points", label: "All points" },
   { value: "goals", label: "Goals" },
   { value: "assists", label: "Assists" },
   { value: "cleanSheets", label: "Clean sheets" },
-  { value: "bonus", label: "Bonus" },
-  { value: "saves", label: "Saves" },
-  { value: "defcon", label: "Def. contributions" },
   { value: "appearance", label: "Appearance" },
+  { value: "conceded", label: "Deductions" },
+  { value: "defcon", label: "DefCon" },
+  { value: "keeper", label: "Keeper points" },
 ];
 
 /** The category a URL asked for, or every point. */
 export function projectionCategory(asked: string | undefined): ProjectionCategory {
-  return (PROJECTION_PARTS as readonly string[]).includes(asked ?? "") ? (asked as ProjectionPart) : "points";
+  return (LEAGUE_PROJECTION_PARTS as readonly string[]).includes(asked ?? "") ? (asked as LeagueProjectionPart) : "points";
 }
 
 /** Every projected man we can name, over the window, in one category. A man neither FPL nor the pool names is left
  *  out; a week the model has no reading for is a dash. */
 export function projectionRows(
-  players: ReadonlyMap<number, ProjectedPlayer>,
+  players: ReadonlyMap<number, LeagueProjection>,
   gameweeks: readonly number[],
   known: ReadonlyMap<number, Known>,
   category: ProjectionCategory = "points",
@@ -52,7 +52,7 @@ export function projectionRows(
     const who = known.get(player.code);
     if (who === undefined) continue;
     const weeks = nextGameweeks(player, gameweeks);
-    const figures = weeks.map((week) => (week === null ? null : category === "points" ? week.points : (week.parts?.[category] ?? null)));
+    const figures = weeks.map((week) => (week === null ? null : category === "points" ? week.points : week.parts[category]));
     const read = figures.filter((figure): figure is number => figure !== null);
     const minutes = weeks.flatMap((week) => (week?.minutes == null ? [] : [week.minutes]));
     rows.push({
