@@ -1,5 +1,5 @@
 import type { GroupKey } from "./categories";
-import { ASSISTS_FANTASY, ASSISTS_OFFICIAL, ASSISTS_TOTAL, KEEPER_POINTS, SAVES } from "./categoryNames";
+import { ASSISTS_FANTASY, ASSISTS_OFFICIAL, ASSISTS_TOTAL, DEFENSIVE_POINTS, DEFENSIVE_POINTS_3, KEEPER_POINTS, SAVES } from "./categoryNames";
 
 // The categories a league can pay a player for, keyed by getPlayerStats' column abbreviation: a squad's Stats board.
 
@@ -23,8 +23,8 @@ export const PLAYER_CATEGORIES: readonly PlayerCategory[] = [
   { key: ASSISTS_FANTASY.short, group: "attacking", label: "Assists (fantasy)" },
   { key: "PKM", group: "attacking", label: "Penalties missed", lowIsGood: true },
   { key: "CS", group: "defensive", label: "Clean sheets" },
-  { key: "DFP", group: "defensive", label: "DefCon: tackles won, interceptions and blocks" },
-  { key: "DFP3", group: "defensive", label: "DefCon: tackles won, interceptions, blocks, clearances and recoveries" },
+  { key: DEFENSIVE_POINTS.short, group: "defensive", label: "DefCon: tackles won, interceptions and blocks" },
+  { key: DEFENSIVE_POINTS_3.short, group: "defensive", label: "DefCon: tackles won, interceptions, blocks, clearances and recoveries" },
   { key: SAVES.short, group: "defensive", label: "Saves" },
   { key: KEEPER_POINTS.short, group: "defensive", label: "Keeper actions" },
   { key: "PKS", group: "defensive", label: "Penalties saved" },
