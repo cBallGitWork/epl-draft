@@ -141,7 +141,8 @@ export function SortHead({
           {face}
         </Link>
       ) : (
-        <button type="button" onClick={onSort} className={`w-full ${plate}`}>
+        // `uppercase` again: a button does not inherit the row's capitals, as a link does.
+        <button type="button" onClick={onSort} className={`w-full uppercase ${plate}`}>
           {face}
         </button>
       )}
