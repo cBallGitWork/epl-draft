@@ -157,7 +157,8 @@ export {
   idsOf,
 } from "./categoryNames";
 export type { FantraxCategory } from "./categoryNames";
-export { defConAt } from "./defcon";
+export { defConAt, defConPoints, defConScored } from "./defcon";
+export type { DefConPeriod } from "./defcon";
 export type { GroupKey, Measure, StatCategory } from "./categories";
 export { mapPlayerStats, KEEPER, OUTFIELD } from "./fantrax/playerStats";
 export { mapAssistKinds } from "./fantrax/assistKinds";

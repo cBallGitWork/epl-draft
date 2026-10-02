@@ -21,8 +21,8 @@ export const PENALTY_SAVES: FantraxCategory = { code: "INDIVIDUAL_PENALTY_KICK_S
 export const PENALTIES_MISSED: FantraxCategory = { code: "INDIVIDUAL_PENALTY_KICKS_MISSED", short: "PKM", caption: "Penalty Kicks Missed" };
 export const YELLOW_CARDS: FantraxCategory = { code: "INDIVIDUAL_YELLOW_CARDS", short: "YC", caption: "Yellow Cards" };
 export const RED_CARDS: FantraxCategory = { code: "INDIVIDUAL_RED_CARDS", short: "RC", caption: "Red Cards" };
-const DEFENSIVE_POINTS: FantraxCategory = { code: "INDIVIDUAL_DEFENSIVE_POINTS", short: "DFP", caption: "Defensive Points" };
-const DEFENSIVE_POINTS_3: FantraxCategory = { code: "INDIVIDUAL_DEFENSIVE_POINTS_3", short: "DFP3", caption: "Defensive Points 3" };
+export const DEFENSIVE_POINTS: FantraxCategory = { code: "INDIVIDUAL_DEFENSIVE_POINTS", short: "DFP", caption: "Defensive Points" };
+export const DEFENSIVE_POINTS_3: FantraxCategory = { code: "INDIVIDUAL_DEFENSIVE_POINTS_3", short: "DFP3", caption: "Defensive Points 3" };
 
 /** Where a league pays an assist, best first. AT is A plus AF (455 of 455 outfielders, 1 Oct 2026), so it is never added to them. */
 export const ASSIST = [ASSISTS_TOTAL, ASSISTS_OFFICIAL] as const;
