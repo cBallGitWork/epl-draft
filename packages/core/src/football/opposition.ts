@@ -81,6 +81,12 @@ export function kickedOff(opposition: readonly Opposition[] | undefined): boolea
   return opposition?.some((against) => against.fixture.status !== "upcoming") ?? false;
 }
 
+/** Whether every match a club has this round is finished; false with none, so a blank is never "over". */
+export function matchesOver(opposition: readonly Opposition[] | undefined): boolean {
+  if (opposition === undefined || opposition.length === 0) return false;
+  return opposition.every((against) => against.fixture.status === "finished");
+}
+
 /** The next `count` matches a club has, soonest first.
  *
  *  A single chip answers "who has he got this week", which is the wrong question

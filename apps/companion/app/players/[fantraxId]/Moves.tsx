@@ -1,5 +1,5 @@
 import ScrollBoard from "../../components/league/ScrollBoard";
-import { DASH, fantraxTime } from "@epl/core";
+import { DASH, fantraxDay } from "@epl/core";
 import Section from "../../components/shell/Section";
 import { IndexCell } from "../../components/league/TableCells";
 import { MUTE, PlateHead } from "../../components/league/TableHeads";
@@ -40,7 +40,7 @@ export default function Moves({ moves }: { moves: readonly PlayerMove[] }) {
                   className={`${ROW_RULE} ${transaction.executed ? "" : "text-faint"}`}
                 >
                   <IndexCell className={`whitespace-nowrap ${TYPE}`}>
-                    {fantraxTime(transaction.processedAt ?? "")?.replace(/ \S+$/, "") ?? DASH}
+                    {fantraxDay(transaction.processedAt ?? "") ?? DASH}
                   </IndexCell>
                   <td className={`cm-row px-1.5 font-chrome font-bold ${TYPE}`}>
                     {KIND[transaction.kind] ?? transaction.kind}

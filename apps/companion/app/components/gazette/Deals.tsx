@@ -1,4 +1,4 @@
-import type { Deal } from "@epl/core";
+import { type Deal, fantraxTime } from "@epl/core";
 import Column from "./Column";
 import { DEALS_SHOWN } from "../../config";
 
@@ -51,7 +51,7 @@ export default function Deals({
               ) : null}
             </p>
             {deal.processedAt ? (
-              <p className="pt-0.5 text-2xs text-faint">{deal.processedAt}</p>
+              <p className="pt-0.5 text-2xs text-faint">{fantraxTime(deal.processedAt) ?? deal.processedAt}</p>
             ) : null}
           </li>
         ))}

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { Pedigree } from "@epl/core";
-import { DASH, fantraxTime } from "@epl/core";
+import { DASH, fantraxDay } from "@epl/core";
 import Section from "../../components/shell/Section";
 import { Value } from "./Pedigree";
 import type { PlayerMove } from "./dossier";
@@ -22,7 +22,7 @@ export default function TransferStatus({
 }) {
   const drafted = pedigree.origin === "draft" ? pedigree : null;
   const arrival = joined
-    ? [HOW[joined.transaction.kind] ?? joined.transaction.kind, fantraxTime(joined.transaction.processedAt ?? "")?.replace(/ \S+$/, "")]
+    ? [HOW[joined.transaction.kind] ?? joined.transaction.kind, fantraxDay(joined.transaction.processedAt ?? "")]
         .filter(Boolean)
         .join(", ")
     : drafted

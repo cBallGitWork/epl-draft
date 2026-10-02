@@ -9,6 +9,7 @@ import {
   isResolved,
   kickedOff,
   londonDayAndTime,
+  matchesOver,
 } from "@epl/core";
 import DialogFoot from "../shell/DialogFoot";
 import DialogHead from "../shell/DialogHead";
@@ -80,6 +81,7 @@ export default function LivePlayerCard({
               points={points}
               reserve={reserve}
               minutes={done.minutes}
+              over={matchesOver(opposition)}
             />
             <FplRecords done={done} />
           </>
