@@ -164,7 +164,7 @@ describe("availabilityNews", () => {
     // counted live 17 Sep 2026. This builder used to set `at: null` on the
     // written belief that FPL publishes no "as of".
     const [item] = availabilityNews([note()], 5, squads);
-    expect(item.at).toEqual({ iso: "2026-09-15T19:30:09Z" });
+    expect(item.at).toBe("2026-09-15T19:30:09Z");
     expect(item.gameweek).toBe(5);
     // And a note with no stamp still falls back to its round, which is what the
     // blue block drew for every doubt until today.

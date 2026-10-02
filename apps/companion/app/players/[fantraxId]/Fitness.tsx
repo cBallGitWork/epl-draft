@@ -1,5 +1,5 @@
 import type { FootballPlayer } from "@epl/core";
-import { availabilityOf, londonDayAndDate, londonTime } from "@epl/core";
+import { availabilityOf, londonMoment } from "@epl/core";
 import Section from "../../components/shell/Section";
 import { fitnessNote } from "./condition";
 import { latestNews } from "./latestNews";
@@ -30,7 +30,7 @@ function Story({ story }: { story: NewsItem }) {
     <div className="flex flex-col gap-1.5">
       {iso === null ? null : (
         <time dateTime={iso} className="text-sm text-muted lg:text-base">
-          {londonDayAndDate(iso)}, {londonTime(iso)}
+          {londonMoment(iso)}
         </time>
       )}
       {storyText(story).map((paragraph) => (

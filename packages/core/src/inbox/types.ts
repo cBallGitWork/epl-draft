@@ -1,5 +1,4 @@
 import type { DoubtBand } from "../football/playerState";
-import type { InboxWhen } from "./when";
 
 // The manager's inbox: what the club has been told, newest first.
 //
@@ -46,19 +45,9 @@ export interface InboxItem {
    *  never from an index, which changes the moment anything is filed above it. */
   id: string;
   category: InboxCategory;
-  /** When it happened, and WHICH KIND of "when" it is — `when.ts` carries the
-   *  argument. Fantrax's own string is kept verbatim where it has one, because it
-   *  carries no offset and reinterpreting it into a timezone we guessed is how a
-   *  transaction moves a day; ours is a real instant. One field carrying both
-   *  vocabularies untagged is what sorted a 12 Sep deadline under 2 Sep deals and
-   *  printed a US stamp beside a British date.
-   *
-   *  Null for an item whose source is a standing state rather than an event —
-   *  the round's own result, which is a fact about a finished tie rather than
-   *  something filed at a moment. **A doubt used to be in that sentence and is
-   *  not any more**: FPL stamps every note it publishes (`news_added`, 198/198
-   *  counted 17 Sep 2026), so an injury is an event with a date like the rest. */
-  at: InboxWhen | null;
+  /** When it happened, an ISO instant (a Fantrax stamp read by `fantraxInstant`); null for a
+   *  standing fact, the round's own result. */
+  at: string | null;
   /** The round it belongs to, for an item with no date of its own. Between them
    *  the two answer "when", which is what CM's blue block carries. */
   gameweek: number | null;

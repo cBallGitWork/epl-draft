@@ -1,4 +1,4 @@
-import { instantOf } from "@epl/core";
+import { instantOf, weekdayLongOfDay } from "@epl/core";
 import { STORY_SHAPE, house } from "./house";
 
 // Team news: an information thread, not a column.
@@ -7,10 +7,7 @@ import { STORY_SHAPE, house } from "./house";
  *  The desk's, not the writer's — a reader looking for team news should find
  *  the words, and a weekly thread under a new name reads as a new article. */
 export function presserHeadline(day: string): string {
-  const at = instantOf(`${day}T12:00:00Z`);
-  if (at === null) return "Team News";
-  const weekday = new Intl.DateTimeFormat("en-GB", { weekday: "long", timeZone: "UTC" }).format(new Date(at));
-  return `${weekday} Pressers`;
+  return instantOf(`${day}T12:00:00Z`) === null ? "Team News" : `${weekdayLongOfDay(day)} Pressers`;
 }
 
 /** Team News: the press-conference thread. The voice owns the REGISTER and

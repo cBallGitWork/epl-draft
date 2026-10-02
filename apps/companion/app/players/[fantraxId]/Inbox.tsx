@@ -52,11 +52,10 @@ export default function Inbox({
 /** A story as Mail's letter: Fantrax's desk sends it, the headline is the subject, and the body is
  *  whatever of the story the subject has not said, then the provider's analysis. */
 function letter(item: NewsItem): InboxItem {
-  const iso = filedAt(item);
   return {
     id: item.id,
     category: "message",
-    at: iso === null ? null : { iso },
+    at: filedAt(item),
     gameweek: null,
     headline: item.headline,
     body: noteBody(item).join(" "),

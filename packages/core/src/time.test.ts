@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { londonDate, londonDayAndTime, londonDayOf, londonTime, londonWeekday, onLondonDay } from "./time";
+import { londonDate, londonDayAndTime, londonDayOf, londonMoment, londonTime, londonWeekday, onLondonDay } from "./time";
 
 // A real kickoff: 14:00Z in October is 15:00 in London, which is the whole
 // reason this module exists rather than a call to `toLocaleString`.
@@ -15,6 +15,7 @@ describe("London time", () => {
     expect(londonDayAndTime(KICKOFF)).toBe("Sat 15:00");
     expect(londonWeekday(KICKOFF)).toBe("Sat");
     expect(londonDate(KICKOFF)).toBe("Saturday 10 October");
+    expect(londonMoment(KICKOFF)).toBe("Sat 10 Oct, 15:00");
   });
 
   it("follows British Summer Time rather than a fixed offset", () => {

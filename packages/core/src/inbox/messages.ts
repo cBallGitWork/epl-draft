@@ -1,6 +1,7 @@
 import { listed } from "../format";
 import type { Deal, DealSide } from "../gazette/types";
 import type { InboxItem } from "./types";
+import { fantraxInstant } from "./when";
 
 // The league's business, as CM's Messages: who signed, who released, who traded.
 //
@@ -84,9 +85,7 @@ export function dealNews(
       {
         id: `deal:${deal.setId}`,
         category: "message" as const,
-        // Their stamp, tagged as theirs. `Deal.processedAt` is
-        // `"Wed Sep 2, 2026, 6:11AM"` — offsetless, in their zone.
-        at: deal.processedAt === null ? null : { fantrax: deal.processedAt },
+        at: deal.processedAt === null ? null : fantraxInstant(deal.processedAt),
         gameweek: null,
         headline,
         body,

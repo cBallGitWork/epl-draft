@@ -103,6 +103,11 @@ export function londonTime(iso: string): string {
   return readable(iso, TIME);
 }
 
+/** `Sat 10 Oct, 15:00`: an instant to the minute, as a letter or a "last updated" line dates it. */
+export function londonMoment(iso: string): string {
+  return `${londonDayAndDate(iso)}, ${londonTime(iso)}`;
+}
+
 /** `Sat 15:00`. */
 export function londonDayAndTime(iso: string): string {
   return readable(iso, DAY_AND_TIME);

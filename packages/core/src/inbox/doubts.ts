@@ -92,7 +92,7 @@ export function availabilityNews(
         id: `doubt:${note.teamId}:${note.playerName}`,
         category: "injury" as const,
         // FPL's stamp for the line. Null falls back to the round, as before.
-        at: note.newsAt === null ? null : { iso: note.newsAt },
+        at: note.newsAt,
         gameweek,
         headline: headline(note, gameweek),
         body: doubtLetter(note, gameweek, side, who),

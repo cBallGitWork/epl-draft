@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fantraxClock, fantraxDay, fantraxInstant, fantraxTime, whenKey } from "./when";
+import { fantraxDay, fantraxInstant, fantraxTime } from "./when";
 
 // Fantrax's real stamp, as `LeagueTransaction.processedAt` carries it: US Eastern, with no offset in it.
 const STAMP = "Wed Sep 2, 2026, 6:11AM";
@@ -20,6 +20,12 @@ describe("fantraxInstant", () => {
     // And go forward on 14 Mar 2027, a fortnight before Britain's (28 Mar).
     expect(fantraxInstant("Sat Mar 13, 2027, 6:11AM")).toBe("2027-03-13T11:11:00.000Z");
     expect(fantraxInstant("Mon Mar 15, 2027, 6:11AM")).toBe("2027-03-15T10:11:00.000Z");
+  });
+
+  it("orders against our own instants: 8PM in New York is after 23:30 UTC", () => {
+    expect(Date.parse(fantraxInstant("Wed Sep 2, 2026, 8:00PM") ?? "")).toBeGreaterThan(
+      Date.parse("2026-09-02T23:30:00Z"),
+    );
   });
 
   it("says noon and midnight the way a clock does", () => {
@@ -60,61 +66,17 @@ describe("fantraxTime", () => {
   });
 });
 
-describe("fantraxDay and fantraxClock", () => {
-  it("are fantraxTime's two halves", () => {
+describe("fantraxDay", () => {
+  it("is fantraxTime's day", () => {
     expect(fantraxDay(STAMP)).toBe("Wed 2 Sept");
-    expect(fantraxClock(STAMP)).toBe("11:11");
-    expect(`${fantraxDay(STAMP)} ${fantraxClock(STAMP)}`).toBe(fantraxTime(STAMP));
+    expect(fantraxTime(STAMP)).toBe(`${fantraxDay(STAMP)} 11:11`);
   });
 
   it("files a late-night claim under London's day", () => {
     expect(fantraxDay("Wed Sep 30, 2026, 11:59PM")).toBe("Thu 1 Oct");
   });
 
-  it("give null for anything that does not read", () => {
+  it("gives null for anything that does not read", () => {
     expect(fantraxDay("Wed Sep 2")).toBeNull();
-    expect(fantraxClock("Wed Sep 2")).toBeNull();
-  });
-});
-
-describe("whenKey", () => {
-  it("orders the two shapes against each other", () => {
-    // The bug: sorted as text, "2026-09-12T…" fell under "Wed Sep 2…" by first
-    // character, so the round's deadline appeared beneath ten days of older
-    // deals.
-    const deal = whenKey({ fantrax: STAMP });
-    const deadline = whenKey({ iso: "2026-09-12T11:45:00Z" });
-    expect(deal).not.toBeNull();
-    expect(deadline).not.toBeNull();
-    expect(deadline!).toBeGreaterThan(deal!);
-  });
-
-  it("reads an instant in Fantrax's calendar, not ours", () => {
-    // 00:30 London on 3 Sep is 19:30 Eastern on the 2nd, so it is BEFORE a stamp
-    // Fantrax filed at 8PM on the 2nd. Comparing London days would invert it.
-    const late = whenKey({ iso: "2026-09-02T23:30:00Z" });
-    const stamp = whenKey({ fantrax: "Wed Sep 2, 2026, 8:00PM" });
-    expect(late!).toBeLessThan(stamp!);
-  });
-
-  it("orders two of Fantrax's own by their clock", () => {
-    expect(whenKey({ fantrax: "Wed Sep 2, 2026, 6:11AM" })!).toBeLessThan(
-      whenKey({ fantrax: "Wed Sep 2, 2026, 6:12AM" })!,
-    );
-    expect(whenKey({ fantrax: "Wed Sep 2, 2026, 11:59PM" })!).toBeLessThan(
-      whenKey({ fantrax: "Thu Sep 3, 2026, 12:01AM" })!,
-    );
-  });
-
-  it("does not let a long month run into the next", () => {
-    expect(whenKey({ fantrax: "Thu Dec 31, 2026, 11:00PM" })!).toBeLessThan(
-      whenKey({ fantrax: "Fri Jan 1, 2027, 1:00AM" })!,
-    );
-  });
-
-  it("is null for no date and for a stamp that does not read", () => {
-    expect(whenKey(null)).toBeNull();
-    expect(whenKey({ fantrax: "yesterday" })).toBeNull();
-    expect(whenKey({ iso: "not a date" })).toBeNull();
   });
 });

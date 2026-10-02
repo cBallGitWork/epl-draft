@@ -72,7 +72,7 @@ describe("inboxItems", () => {
       // Fantrax's own shape, which is what `Deal.processedAt` actually carries —
       // an ISO here made the test agree with a merge that could not order the
       // two. 9AM Eastern on the 5th is after the deadline's 14:45 Eastern on the
-      // 4th, which is the comparison `whenKey` exists to make.
+      // 4th, which is the comparison the merge exists to make.
       dealNews(
         [
           {

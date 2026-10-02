@@ -1,5 +1,5 @@
 import type { InboxItem } from "@epl/core";
-import { FANTRAX_LEAGUE_PAGE, FANTRAX_PENDING_PATH, fantraxClock, fantraxDay, londonDayAndDate, londonTime } from "@epl/core";
+import { FANTRAX_LEAGUE_PAGE, FANTRAX_PENDING_PATH, londonDayAndDate, londonTime } from "@epl/core";
 import Letter from "./Letter";
 import MailRow from "./MailRow";
 import Mailbox from "./Mailbox";
@@ -181,8 +181,5 @@ function itemDay(item: InboxItem): { day: string; time: string | null } {
   if (item.at === null) {
     return { day: item.gameweek === null ? "" : `GW${item.gameweek}`, time: null };
   }
-  if ("iso" in item.at) {
-    return { day: londonDayAndDate(item.at.iso), time: londonTime(item.at.iso) };
-  }
-  return { day: fantraxDay(item.at.fantrax) ?? "", time: fantraxClock(item.at.fantrax) };
+  return { day: londonDayAndDate(item.at), time: londonTime(item.at) };
 }

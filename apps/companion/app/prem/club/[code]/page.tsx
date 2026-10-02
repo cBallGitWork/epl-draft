@@ -5,7 +5,7 @@ import {
   squadOf,
   xiFault,
   londonDayAndDate,
-  londonTime,
+  londonMoment,
 } from "@epl/core";
 import TabEmpty from "../../../components/league/TabEmpty";
 import ButtonLink from "../../../components/shell/ButtonLink";
@@ -79,10 +79,7 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
   // updated date"). Only a broken eleven (`xiFault`) is refused.
   const predicted = intelXi.clubs[club.shortName];
   const eleven = xiFault(predicted) === null ? predictedEleven(predicted) : [];
-  const updated =
-    intelXi.fetchedAt === null
-      ? null
-      : `${londonDayAndDate(intelXi.fetchedAt)}, ${londonTime(intelXi.fetchedAt)}`;
+  const updated = intelXi.fetchedAt === null ? null : londonMoment(intelXi.fetchedAt);
 
   return (
     <ClubShell club={club} current="squad">
