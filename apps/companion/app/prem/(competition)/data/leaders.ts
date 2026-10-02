@@ -21,7 +21,7 @@ export type Source = { fpl: (season: SeasonTotals) => number } | "rating" | "poi
 
 export interface LeaderList {
   key: string;
-  /** The bar over the list; a figure that is not FPL's says whose it is. */
+  /** The bar over the list; Fantrax's figure says whose it is, and ours is cyan. */
   title: string;
   head: string;
   /** What the head means, on hover. */
@@ -34,7 +34,7 @@ export interface LeaderList {
 export const LISTS: readonly LeaderList[] = [
   { key: "goals", title: "Top scorers", head: "G", explain: "Goals", source: { fpl: (s) => s.goals }, digits: 0 },
   { key: "xg", title: "Expected goals", head: "xG", explain: "FPL's expected goals", source: { fpl: (s) => s.expectedGoals }, digits: 2 },
-  { key: "rating", title: "Our match ratings", head: "Rtg", explain: "His average mark", source: "rating", digits: 1 },
+  { key: "rating", title: "Match ratings", head: "Rtg", explain: "His average mark", source: "rating", digits: 1 },
   { key: "points", title: "Fantrax points", head: "FPts", explain: "Fantasy points, under this league's scoring", source: "points", digits: 0 },
   { key: "assists", title: "Assists", head: "A", explain: "Assists", source: { fpl: (s) => s.assists }, digits: 0 },
   { key: "xa", title: "Expected assists", head: "xA", explain: "FPL's expected assists", source: { fpl: (s) => s.expectedAssists }, digits: 2 },

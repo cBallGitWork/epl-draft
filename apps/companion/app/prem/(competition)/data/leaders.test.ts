@@ -39,6 +39,10 @@ describe("the lists' figures", () => {
     expect(list.map((row) => [row.rank, row.name])).toEqual([[1, "Bogle"], [1, "Scott"]]);
   });
 
+  it("calls our marks match ratings, plainly; the cyan says whose they are", () => {
+    expect(listFor("rating").title).toBe("Match ratings");
+  });
+
   it("falls back to the top scorers for a key it does not know", () => {
     expect(listFor("nonsense").key).toBe("goals");
   });
