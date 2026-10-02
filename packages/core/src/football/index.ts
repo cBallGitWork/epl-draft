@@ -193,7 +193,7 @@ export type { FinishedState, RoundState } from "./round";
 // on when no football is on. A rehearsal instrument: `app/clock.ts` is the only
 // caller and the app says on screen when it is running on one.
 export { before, rewindRound, roundAt } from "./replay";
-export { fixtureLabel, kickedOff, nextFixtures, oppositionByClub } from "./opposition";
+export { fixtureLabel, kickedOff, matchesOver, nextFixtures, oppositionByClub } from "./opposition";
 export { leagueTable } from "./table";
 export type { TableRow } from "./table";
 export { clubStats } from "./clubStats";

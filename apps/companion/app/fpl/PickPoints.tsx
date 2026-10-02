@@ -15,6 +15,7 @@ export default function PickPoints({
   name,
   club,
   started,
+  over,
   children,
 }: {
   pick: FplPick;
@@ -24,6 +25,8 @@ export default function PickPoints({
   club: string | null;
   /** Whether his club has kicked off this round: before that there is nothing to break down. */
   started: boolean;
+  /** Whether every match his club has this round is finished. */
+  over: boolean;
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
@@ -45,6 +48,7 @@ export default function PickPoints({
                 points={reserve ? pick.scored : pick.points}
                 reserve={reserve}
                 minutes={minutesOf(pick)}
+                over={over}
               />
             ) : (
               <Note>His match has not kicked off.</Note>

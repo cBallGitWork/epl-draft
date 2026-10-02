@@ -1,5 +1,6 @@
 import { type BreakdownLine, signed, DASH } from "@epl/core";
 import Note from "./Note";
+import { emptyBreakdownNote } from "./breakdownNote";
 import { FACT_LABEL, HEAD_PLATE, HEAD_PLATE_END, LABEL, gainOrLoss } from "@/app/desk";
 
 // The itemised table: one row per category that moved his total, then the total.
@@ -27,6 +28,7 @@ export default function Breakdown({
   points,
   reserve,
   minutes,
+  over,
 }: {
   breakdown: BreakdownLine[];
   points: number | null | undefined;
@@ -34,6 +36,8 @@ export default function Breakdown({
   /** What FPL says he actually played. The one thing that can tell "Fantrax has
    *  not named him yet" from "he did nothing". */
   minutes: number;
+  /** Whether his match is finished, so an empty table reads as final rather than "yet". */
+  over: boolean;
 }) {
   // Three states and they are three different sentences. No table at all is
   // Fantrax refusing; a table that does not name him is a dash; a table that
@@ -63,13 +67,7 @@ export default function Breakdown({
       <div className="cm-panel flex flex-col">
         {breakdown.length === 0 ? (
           <p className="px-3 py-2 text-2xs text-muted">
-            {/* A total with no parts is a category this league does not describe;
-                a nought with minutes on it is a different man from one without. */}
-            {points
-              ? "Fantrax scored him, but did not say what for."
-              : minutes > 0
-                ? "Nothing has scored for him yet."
-                : "Nothing has scored for him yet — his minutes have not registered either."}
+            {emptyBreakdownNote(points, minutes, over)}
           </p>
         ) : (
           <ul className="cm-rows flex flex-col">

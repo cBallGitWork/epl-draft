@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Club, Fixture, FootballSnapshot } from "./types";
 import type { Opposition } from "./opposition";
-import { fixtureLabel, kickedOff, nextFixtures, oppositionByClub } from "./opposition";
+import { fixtureLabel, kickedOff, matchesOver, nextFixtures, oppositionByClub } from "./opposition";
 
 const club = (id: number, shortName: string) => ({ id, code: id * 10, name: shortName, shortName });
 
@@ -124,6 +124,29 @@ describe("kickedOff", () => {
     // A blank gameweek and an unresolved roster slot arrive here the same way.
     expect(kickedOff(oppositionByClub(snap([])).get(1))).toBe(false);
     expect(kickedOff(undefined)).toBe(false);
+  });
+});
+
+describe("matchesOver", () => {
+  const against = (...statuses: Fixture["status"][]) =>
+    oppositionByClub(
+      snap(statuses.map((status, at) => fixture({ id: at + 1, homeClubId: 1, awayClubId: at + 2, status }))),
+    ).get(1);
+
+  it("is true once his only match is finished, and not while it is on or to come", () => {
+    expect(matchesOver(against("finished"))).toBe(true);
+    expect(matchesOver(against("live"))).toBe(false);
+    expect(matchesOver(against("upcoming"))).toBe(false);
+  });
+
+  it("waits for both matches of a double", () => {
+    expect(matchesOver(against("finished", "upcoming"))).toBe(false);
+    expect(matchesOver(against("finished", "finished"))).toBe(true);
+  });
+
+  it("is false for a club with no match, and for a slot with no club", () => {
+    expect(matchesOver(oppositionByClub(snap([])).get(1))).toBe(false);
+    expect(matchesOver(undefined)).toBe(false);
   });
 });
 
