@@ -6,8 +6,9 @@ import { Head, HeadRow, NameHead } from "../../../components/league/TableHeads";
 import { IndexCell, ROW_LINK } from "../../../components/league/TableCells";
 import PremShell from "../../Shell";
 import { CLUB } from "../../routes";
-import Filters from "./Filters";
-import { categoryFor, printed, type Club } from "./categories";
+import { TEAM_STATS } from "../../PremNav";
+import QuerySelect from "../../../components/shell/QuerySelect";
+import { CATEGORIES, categoryFor, printed, type Club } from "./categories";
 import { footballNow, seasonFixtures } from "../../../football";
 import { BOARD, FIGURE, ROW_HOVER } from "@/app/desk";
 import ClubLabel from "@/app/components/football/ClubLabel";
@@ -32,6 +33,8 @@ export const revalidate = 30;
 
 /** Next 16 hands these as a Promise, so it is awaited like `params`. */
 type Search = Promise<{ cat?: string }>;
+
+const CATEGORY_OPTIONS = CATEGORIES.map((entry) => ({ value: entry.key, label: entry.label }));
 
 export default async function TeamStatsPage({ searchParams }: { searchParams: Search }) {
   const query = await searchParams;
@@ -75,7 +78,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
           under it — `cm9900`'s stat screen puts its two grey controls exactly
           here, and `league/team-stats` follows the same shot. */}
       <div className="flex items-center justify-between gap-2 border-b border-line px-2 py-1.5">
-        <Filters category={category.key} />
+        <QuerySelect name="cat" label="Category" value={category.key} options={CATEGORY_OPTIONS} action={TEAM_STATS} />
         <p className="text-3xs uppercase text-faint">FPL&apos;s own figures</p>
       </div>
 

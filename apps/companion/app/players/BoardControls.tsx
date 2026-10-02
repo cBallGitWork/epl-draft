@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { POOL_GROUPS, type PoolGroupKey } from "./groups";
 import { boardHref, chosen, filterHref, isChosen } from "./query";
-import type { QueryOption } from "./QuerySelect";
+import type { QueryOption } from "../components/shell/QuerySelect";
 import type { PlayersQuery } from "./query";
 import { STATUS, STATUS_CHIP } from "./status";
 import { SMALL_CAPS } from "@/app/desk";
@@ -62,8 +62,8 @@ export const PLATE_TYPE =
 export const PLATE =
   `flex shrink-0 items-center justify-center gap-1 whitespace-nowrap ${PLATE_TYPE}`;
 
-/** A plate you press, at rest: the `Filter` link, an unpressed `Chip`, `QuerySelect`'s `<noscript>` button and the
- *  pick field's. Not the pressed state: `cm-bevel-pressed` is a plate with no hover, because a held thing does not lift. */
+/** A plate you press, at rest: the `Filter` link, an unpressed `Chip` and the pick field's button. Not the pressed
+ *  state: `cm-bevel-pressed` is a plate with no hover, because a held thing does not lift. */
 export const PRESSABLE = `cm-bevel hover:brightness-110 ${PLATE}`;
 
 /** Which columns are on the board: the one strip that stays blue, at the control floor (`cm-tab-quiet`). */

@@ -61,7 +61,7 @@ matchups board's pending clean sheets read it for all ten at once.
 ## The gameweek picker
 
 Craig, 1 Oct 2026: *"lets have a gameweek dropdown like fantrax does, shows their opp for that week (and
-previous week would show their score)"*. `GameweekPicker` sits beside the Pitch/List toggle on every branch
+previous week would show their score)"*. The picker (`shell/QuerySelect`) sits beside the Pitch/List toggle on every branch
 (alone at the right above `lg`) and sets `?gw=`. Its options are the league's own calendar, one per period
 (`readCalendar`, from `getLeagueInfo`'s periods), never FPL's gameweek list; the real league's starts at
 Gameweek 6. `weekStanding` (`weeks.ts`, tested) says where the week on screen stands against the open one:

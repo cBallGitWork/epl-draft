@@ -6,7 +6,7 @@ import { LABEL, PANEL } from "@/app/desk";
 import { footballNow, seasonFixtures } from "../../../football";
 import { playerMarks } from "../../../ratings";
 import { intelCareers } from "../../../intel";
-import QuerySelect from "../../QuerySelect";
+import QuerySelect from "../../../components/shell/QuerySelect";
 import { ALL_SEASONS, playerDataHref } from "../../routes";
 import MatchLog from "../MatchLog";
 import PastSeasons from "../PastSeasons";
@@ -94,9 +94,7 @@ async function Record({
       <section className={`${PANEL} lg:flex-row lg:items-center`}>
         <span className={LABEL}>Season</span>
         <div className="lg:w-64">
-          <QuerySelect name="season" label="Season" value={value} options={options} action={playerDataHref(fantraxId)}>
-            {null}
-          </QuerySelect>
+          <QuerySelect name="season" label="Season" value={value} options={options} action={playerDataHref(fantraxId)} />
         </div>
       </section>
       {value === ALL_SEASONS ? (

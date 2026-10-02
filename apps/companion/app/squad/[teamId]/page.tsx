@@ -8,7 +8,8 @@ import LineupPlanner from "../../components/league/LineupPlanner";
 import SeasonGrid from "../../components/league/SeasonGrid";
 import SquadBoard from "../../components/league/SquadBoard";
 import Sheet from "./Sheet";
-import GameweekPicker from "./GameweekPicker";
+import QuerySelect from "../../components/shell/QuerySelect";
+import { teamHref } from "../routes";
 import TeamShell from "./Shell";
 import { rosterMinimums } from "../../rosterMinimums";
 import { identify } from "./team";
@@ -42,7 +43,16 @@ export default async function TeamPage({
   const [{ teamId: slug }, { gw }] = await Promise.all([params, searchParams]);
   const { team, mine, planning, open, standing, weeks, benchRanks, eligibility, clubs, opposition, live, news, season, points, board, names, pending, squadIds } = await squadView(slug, gw);
   // Fantrax's period selector, on every branch: an earlier week shows its scores, a later one its opponents.
-  const picker = weeks === null ? null : <GameweekPicker key={weeks.shown} slug={slug} shown={weeks.shown} options={weeks.options} />;
+  const picker =
+    weeks === null ? null : (
+      <QuerySelect
+        name="gw"
+        label="Gameweek"
+        value={String(weeks.shown)}
+        options={weeks.options.map((option) => ({ value: String(option.gameweek), label: option.label }))}
+        action={teamHref(slug)}
+      />
+    );
 
   return (
     /* The only live-points surface that did not move on a Saturday. Both
