@@ -5,7 +5,8 @@ you are looking at.
 
 The team in the URL is the side the board **opens on**, so tapping a name
 anywhere in the app arrives on that name's team. Which side Fantrax calls home
-is not used for anything: there is no ground.
+decides only the ground: the page is drawn over the home team's venue
+(`data/leagues/venues.json`, the desk's own photograph for a team it does not list).
 
 ## On the page
 

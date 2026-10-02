@@ -52,3 +52,24 @@ days and a drafted one a day, and exits non-zero when any is overdue.
 
 **Raw in, raw out.** A capture writes exactly what the provider returned and derives nothing: what
 we can ask later is limited by what we kept.
+
+## Home venues
+
+`leagues/venues.json` gives each team in the real league a home ground, keyed by its Fantrax team
+id (`team` is a label for people; nothing reads it). It is written by hand and read by the app
+(`apps/companion/app/venues.ts`), so a change to it redeploys. A head-to-head is drawn over the
+home side's venue, home being the side Fantrax's schedule lists as home. Every entry points at the
+desk's own photograph, `/ground/crowd.jpg`, until a real one lands, and a team the file does not
+list gets the same. The real league had nine teams on 1 Oct; a team that joins later needs a line,
+and its id is in `getLeagueInfo`'s teams.
+
+To give a team its own ground:
+
+1. Put the photograph in `apps/companion/public/ground/venues/`: landscape, 1400px wide or more,
+   capped at 1920px on the long edge at JPEG quality 75, as the clubs' grounds are.
+2. Point the team's `src` at it: `"src": "/ground/venues/<file>.jpg"`.
+3. Optionally add `"blur"`, the same picture 16px wide as a `data:image/jpeg;base64,…` URL
+   (`sips -Z 16 <file>.jpg --out /tmp/b.jpg && base64 -i /tmp/b.jpg` on a Mac). It paints while the
+   photograph loads; without it the screen is dark for that moment.
+4. A photograph that is not your own needs its credit on `/credits` (author, licence, source), as
+   every ground there has: add it in `apps/companion/app/credits/page.tsx`.
