@@ -205,11 +205,31 @@ the match-report and team-sheet prompts.
 - **No Underlying**: a second mark for the chances behind a match predicted the next five better than points
   (0.356 against 0.337), but Craig ruled it out: what a man will do next is the projections' job.
 
+## Projections print our league's points, repriced from FPL's — decided 2 Oct 2026
+
+- Craig: *"I need a draft pack. Projections for all players using real league's points."* `npm run draft-pack`
+  writes `data/intel/league-projections/26-27.json`; the Projections board and a player's run read it, at his best
+  slot. **520 men**: the scoring league's pool (547) less the 27 the bridge cannot key. 86 bridged men with a
+  projection are not in that pool (75 of them FPL status `u`, none above 20 points over GW6–17), so not priced.
+- **Method**: FPL's parts back to counts at FPL's prices for his FPL line, then priced at the slot by
+  `pointsFor`. The real league pays FPL's prices for goals, assists, clean sheets, minutes and conceding, so a man
+  whose slot matches his FPL line keeps those parts; 96 do not (88 FPL midfielders filed F or F,M, 4 filed D,
+  2 FPL defenders filed M, 2 FPL forwards filed F,M). Bonus goes. DefCon and keeper work are his own per 90 over the periods
+  begun, each match priced alone, drawn toward the slot's average by **270 minutes**; method of moments on GW1–5
+  puts the right weight near five matches for D and three for M and F. Conceding is re-costed (Poisson on the
+  club's clean-sheet chance) only where slot and line disagree.
+- **GKP is the scoring league's own read**: the stats league's keeper sheet carries `Sv` and no `GKP` (counted
+  2 Oct: 20 columns, none of them GKP); GKP ran about 1.5× Sv over GW1.
+- **Star test** (GW6–17, FPL → ours): Haaland 77.8 → 72.0 (bonus −8.8, DefCon +3.0); Bruno Fernandes 70.6 → 60.5;
+  Saka 59.7 → 58.7 at M, 52.4 at F; Raya 47.5 → 51.7 (keeper work +7.3, bonus −3.1); Gvardiol 44.2 → 47.9;
+  Rice 45.1 → 41.0; Cunha 41.1 → 33.5 (filed F: goals at 4, no clean sheets). Salah has no FPL row this season.
+- The file is a snapshot: rerun after a new projections export or a gameweek's counts.
+
 ## A player's fixture run carries the sister model's projection, not Fantrax's — decided 30 Sep 2026
 
 - **Counted**: the sister export projects **666 of 666** players for **each of GW6–17** (12 weeks); Fantrax's
   own per-player projection covers one period and only the men fielded (`ACTIVE`), behind the lineup gate, and
-  its reader was deleted on 25 Sep. So the run reads the export, in FPL scoring; the panel carries no source caption, and each figure's title
+  its reader was deleted on 25 Sep. So the run reads the export, in FPL scoring until 2 Oct (above); the panel carries no source caption, and each figure's title
   says whose it is.
 - **The rank is among his grid's group** (the sister's line: 108 midfielders, 23 goalkeepers), the men with a
   reading that week, ties sharing a place (`projectedPlace` in core); lit on the pool board's shares (`poolCut`).

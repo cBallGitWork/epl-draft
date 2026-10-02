@@ -1,15 +1,16 @@
 import { describe, expect, it } from "vitest";
-import type { ProjectedPlayer } from "@epl/core";
+import type { LeagueProjection } from "@epl/core";
 import { projectionCategory, projectionRows, projectionSort, sortedProjections, type Known } from "./rows";
 
 function week(gw: number, points: number, minutes = 80) {
-  const parts = { goals: points / 2, assists: 1, cleanSheets: 0, bonus: 0, saves: 0, defcon: 0, appearance: 2 };
-  return { gw, points, low: null, high: null, minutes, start: 0.9, fixtures: 1, parts };
+  const parts = { goals: points / 2, assists: 1, cleanSheets: 0, appearance: 2, conceded: 0, defcon: 0, keeper: 0 };
+  return { gw, points, minutes, parts };
 }
 
-const HAALAND: ProjectedPlayer = { code: 1, club: "MCI", role: "ST", gameweeks: [week(6, 6), week(7, 7.5, 90), week(9, 5)] };
-const SAKA: ProjectedPlayer = { code: 2, club: "ARS", role: "RW", gameweeks: [week(6, 5), week(7, 5), week(8, 6)] };
-const GHOST: ProjectedPlayer = { code: 3, club: "HUL", role: "CB", gameweeks: [week(6, 9)] };
+const man = (code: number, club: string, gameweeks: LeagueProjection["gameweeks"]): LeagueProjection => ({ code, fantraxId: String(code), club, slot: "M", gameweeks });
+const HAALAND = man(1, "MCI", [week(6, 6), week(7, 7.5, 90), week(9, 5)]);
+const SAKA = man(2, "ARS", [week(6, 5), week(7, 5), week(8, 6)]);
+const GHOST = man(3, "HUL", [week(6, 9)]);
 
 const known = (name: string): Known => ({ name, fullName: name, fantraxId: null, positions: [] });
 const KNOWN = new Map([
@@ -59,6 +60,7 @@ describe("a category", () => {
 
   it("reads an unknown category as every point", () => {
     expect(projectionCategory("nope")).toBe("points");
-    expect(projectionCategory("bonus")).toBe("bonus");
+    expect(projectionCategory("bonus")).toBe("points");
+    expect(projectionCategory("defcon")).toBe("defcon");
   });
 });

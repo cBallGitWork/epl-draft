@@ -5,7 +5,6 @@ import type {
   IntelMatch,
   IntelMatches,
   IntelPlayer,
-  IntelProjections,
   IntelSetPieces,
   IntelSquads,
   IntelStats,
@@ -18,12 +17,13 @@ import type {
   Floors,
   IntelLines,
   PlayerLine,
-  ProjectedPlayer,
+  LeagueProjection,
+  LeagueProjectionFile,
   StatsRow,
   Shot,
   TouchPlayer,
 } from "@epl/core";
-import { careerIntel, depthIntel, lineIntel, matchIntel, playedFloor, projectionIntel, shotIntel, squadIntel, statIntel, strengthIntel, touchIntel } from "@epl/core";
+import { careerIntel, depthIntel, leagueProjectionIntel, lineIntel, matchIntel, playedFloor, shotIntel, squadIntel, statIntel, strengthIntel, touchIntel } from "@epl/core";
 import squadsFile from "../../../data/intel/squads/26-27.json";
 import xiFile from "../../../data/intel/xi/26-27.json";
 import piecesFile from "../../../data/intel/set-pieces/26-27.json";
@@ -31,7 +31,7 @@ import matchesFile from "../../../data/intel/matches/26-27.json";
 import touchesFile from "../../../data/intel/touches/26-27.json";
 import shotsFile from "../../../data/intel/shots/26-27.json";
 import strengthFile from "../../../data/intel/strength/26-27.json";
-import projectionsFile from "../../../data/intel/projections/26-27.json";
+import leagueProjectionsFile from "../../../data/intel/league-projections/26-27.json";
 import careersFile from "../../../data/intel/careers/26-27.json";
 import depthFile from "../../../data/intel/depth/26-27.json";
 import statsFile from "../../../data/intel/stats/26-27.json";
@@ -119,9 +119,9 @@ export const intelShots: Map<number, Shot[]> = shotIntel(shotsFile as unknown as
 export const intelStrength: Map<number, ClubStrength> = strengthIntel(strengthFile as unknown as IntelStrength);
 export const intelStrengthManifest = (strengthFile as unknown as IntelStrength).manifest;
 
-/** The sister model's projected FPL points by player code. */
-export const intelProjections: Map<number, ProjectedPlayer> = projectionIntel(
-  projectionsFile as unknown as IntelProjections,
+/** The sister model's projection repriced in the scoring league's points, by player code at his best slot (`npm run draft-pack`). */
+export const intelLeagueProjections: Map<number, LeagueProjection> = leagueProjectionIntel(
+  leagueProjectionsFile as unknown as LeagueProjectionFile,
 );
 
 /** The club each man was at in each season the sister's identity store holds, by FPL code. */

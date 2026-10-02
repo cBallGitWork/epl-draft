@@ -58,19 +58,24 @@ export function projectionIntel(file: IntelProjections | null): Map<number, Proj
   return byCode;
 }
 
+/** Any projection's run of weeks, in FPL points or a league's: what the helpers below read. */
+export interface PointsRun {
+  gameweeks: readonly { gw: number; points: number | null }[];
+}
+
 /** His projection for each gameweek in the window, or null where the model has none. */
-export function nextGameweeks(player: ProjectedPlayer, gameweeks: readonly number[]): (ProjectedGameweek | null)[] {
+export function nextGameweeks<W extends { gw: number }>(player: { gameweeks: readonly W[] }, gameweeks: readonly number[]): (W | null)[] {
   return gameweeks.map((gw) => player.gameweeks.find((week) => week.gw === gw) ?? null);
 }
 
 /** The points over the window's rounds that have a reading; null when none does. */
-export function projectedTotal(player: ProjectedPlayer, gameweeks: readonly number[]): number | null {
+export function projectedTotal(player: PointsRun, gameweeks: readonly number[]): number | null {
   const points = nextGameweeks(player, gameweeks).flatMap((week) => (week?.points == null ? [] : [week.points]));
   return points.length === 0 ? null : points.reduce((sum, value) => sum + value, 0);
 }
 
 /** One man's projected points in one gameweek, or null where the model has none. */
-export function projectedPoints(players: ReadonlyMap<number, ProjectedPlayer>, code: number, gw: number): number | null {
+export function projectedPoints(players: ReadonlyMap<number, PointsRun>, code: number, gw: number): number | null {
   return players.get(code)?.gameweeks.find((week) => week.gw === gw)?.points ?? null;
 }
 
@@ -87,7 +92,7 @@ export interface ProjectedPlace {
 export function projectedPlace(
   code: number,
   cohort: readonly number[],
-  players: ReadonlyMap<number, ProjectedPlayer>,
+  players: ReadonlyMap<number, PointsRun>,
   gw: number,
 ): ProjectedPlace | null {
   const points = projectedPoints(players, code, gw);

@@ -10,7 +10,7 @@ import { PAGE_ROWS, boardHref, chosen, filterHref, isChosen, playersQuery, type 
 import { getLeaguePool } from "../pool";
 import { positionLabel } from "../../positions";
 import { footballNow, seasonFixtures } from "../../football";
-import { intelProjections } from "../../intel";
+import { intelLeagueProjections } from "../../intel";
 import { PROJECTIONS } from "../routes";
 import {
   PROJECTION_CATEGORIES,
@@ -21,8 +21,8 @@ import {
   type Known,
 } from "./rows";
 
-// Data › Projections, a scaffold (Craig, 24 Sep 2026: "just scaffold this … next 6 gameweeks … could import the
-// current projections"): who the sister model tips over the next six, FPL-scoring, never Fantrax's.
+// Data › Projections: who the sister model tips over the next six, repriced in our league's points at each man's best
+// slot (Craig, 2 Oct 2026: "projections for all players using real league's points"). FPL's own figure is never here.
 
 export const revalidate = 30;
 
@@ -31,7 +31,7 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
   const [pool, fixtures, snapshot] = await Promise.all([getLeaguePool(), seasonFixtures(), footballNow()]);
   const gameweeks = plannerGameweeks(fixtures, PLANNER_RUN);
 
-  if (intelProjections.size === 0 || gameweeks.length === 0) {
+  if (intelLeagueProjections.size === 0 || gameweeks.length === 0) {
     return (
       <ScoutShell current="projections">
         <Nothing title="No projections yet">The sister model&apos;s projections have not been exported.</Nothing>
@@ -60,7 +60,7 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
   const category = projectionCategory(query.cat);
   const categoryLabel = PROJECTION_CATEGORIES.find((entry) => entry.value === category)?.label ?? category;
   const shown = sortedProjections(
-    projectionRows(intelProjections, gameweeks, known, category).filter(
+    projectionRows(intelLeagueProjections, gameweeks, known, category).filter(
       (row) =>
         (club === "" || row.club === club) &&
         (positions.length === 0 || positions.some((position) => row.positions.includes(position))),
@@ -70,7 +70,7 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
     descending,
   );
   const capped = query.all ? shown : shown.slice(0, PAGE_ROWS);
-  const clubs = [...new Set([...intelProjections.values()].map((player) => player.club))].sort();
+  const clubs = [...new Set([...intelLeagueProjections.values()].map((player) => player.club))].sort();
   const leaguePositions = "unavailable" in pool ? [] : pool.positions;
 
   return (
