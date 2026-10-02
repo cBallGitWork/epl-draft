@@ -3,7 +3,7 @@ import { DASH, gameweekSpan } from "@epl/core";
 import PositionTile from "../../components/league/PositionTile";
 import { LeadHeads, sortedAs, SortHead } from "../../components/league/TableHeads";
 import { ROW_LINK } from "../../components/league/TableCells";
-import { BOARD, ROW_RULE } from "@/app/desk";
+import { BOARD, ROW_HOVER_ON_SURFACE } from "@/app/desk";
 import ScrollBoard from "../../components/league/ScrollBoard";
 import { FIGURE, LEAD_WIDTH, LeadFace, PIN_NAME, PIN_TILE } from "../BoardRow";
 import { standoutInk } from "../../components/league/standout";
@@ -58,7 +58,7 @@ export default function ProjectionBoard({
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.code} className={`${ROW_RULE} hover:bg-raised`}>
+            <tr key={row.code} className={ROW_HOVER_ON_SURFACE}>
               <PositionTile positions={row.positions} cell className={PIN_TILE} />
               <td className={PIN_NAME}>
                 <Lead row={row} />

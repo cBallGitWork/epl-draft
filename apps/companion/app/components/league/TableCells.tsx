@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { INDEX_WIDTH } from "@/app/desk";
+import { INDEX_WIDTH, MINOR_LABEL } from "@/app/desk";
 
 // The two cells a CM board's rows are built from, opposite `TableHeads`.
 //
@@ -49,3 +49,27 @@ export function IndexCell({ children, className = "" }: { children: ReactNode; c
  *  28. Dropping the `min-h` took every row on a 390 phone to 32px, which
  *  `tapfit` caught as 50 under-floor targets in one sweep. */
 export const ROW_LINK = "cm-row flex min-h-11 items-center gap-2 hover:underline";
+
+/** The points in a block of their own, the way CM ends its table: the eye runs down the column to find them. */
+export function PointsCell({ children }: { children: ReactNode }) {
+  return (
+    <td className="p-0">
+      <span className="cm-index numeric flex min-h-7 items-center justify-center px-1.5">{children}</span>
+    </td>
+  );
+}
+
+/** A dashed rule across a table naming what it separates. `tone` is the rule's border colour, written out in full. */
+export function CutRow({ span, label, tone }: { span: number; label: string; tone: string }) {
+  return (
+    <tr aria-hidden>
+      <td colSpan={span} className="p-0">
+        <span className={`flex items-center gap-2 py-1.5 ${MINOR_LABEL}`}>
+          <span className={`flex-1 border-t border-dashed ${tone}`} />
+          {label}
+          <span className={`flex-1 border-t border-dashed ${tone}`} />
+        </span>
+      </td>
+    </tr>
+  );
+}

@@ -1,7 +1,8 @@
 import { Fragment } from "react";
 import { groupTable, ordinal, type GroupStage } from "@epl/core";
 import { Head, HeadRow, MUTE, NameHead, PLATE } from "../../components/league/TableHeads";
-import { BLOCK_PLATE, BOARD, DESK_ONLY, FIGURE, MINOR_LABEL, ROW_NAME, ROW_RULE } from "@/app/desk";
+import { CutRow, PointsCell } from "../../components/league/TableCells";
+import { BLOCK_PLATE, BOARD, DESK_ONLY, FIGURE, ROW_NAME, ROW_RULE } from "@/app/desk";
 
 /** Each group as a league table, its slots in draw order until there are results to place them. */
 export default function Groups({ groups, stage }: { groups: readonly string[][]; stage: GroupStage }) {
@@ -44,22 +45,10 @@ export default function Groups({ groups, stage }: { groups: readonly string[][];
                     <td className={`${FIGURE} text-ink`}>{row.lost}</td>
                     <td className={`${FIGURE} text-ink`}>{row.pointsFor}</td>
                     <td className={`${FIGURE} text-ink ${DESK_ONLY}`}>{row.pointsAgainst}</td>
-                    <td className="p-0">
-                      <span className="cm-index numeric flex min-h-7 items-center justify-center px-1.5">
-                        {row.points}
-                      </span>
-                    </td>
+                    <PointsCell>{row.points}</PointsCell>
                   </tr>
                   {place + 1 === stage.qualify && place + 1 < slots.length ? (
-                    <tr aria-hidden>
-                      <td colSpan={COLUMNS.length + 2} className="p-0">
-                        <span className={`flex items-center gap-2 py-1.5 ${MINOR_LABEL}`}>
-                          <span className="flex-1 border-t border-dashed border-accent/80" />
-                          Knockout
-                          <span className="flex-1 border-t border-dashed border-accent/80" />
-                        </span>
-                      </td>
-                    </tr>
+                    <CutRow span={COLUMNS.length + 2} label="Knockout" tone="border-accent/80" />
                   ) : null}
                 </Fragment>
               ))}

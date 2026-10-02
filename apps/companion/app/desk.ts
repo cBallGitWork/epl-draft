@@ -68,6 +68,9 @@ export const ROW_RULE = "border-b border-bg";
 /** A board row that answers the pointer: the rule, and the surface under a hover. */
 export const ROW_HOVER = `${ROW_RULE} hover:bg-surface`;
 
+/** `ROW_HOVER` on a board that already sits on the surface: the hover steps up to raised. */
+export const ROW_HOVER_ON_SURFACE = `${ROW_RULE} hover:bg-raised`;
+
 /** The wrapper that lets a phone reach a board's far columns. */
 export const SCROLL = "overflow-x-auto";
 
@@ -80,6 +83,9 @@ export const PINNED_NAME = "cm-lead sticky z-10 border-r border-line bg-surface"
 
 /** `PINNED_NAME` starting where a pinned position tile ends; the offsets are `TILE_WIDTH`'s widths. */
 export const PINNED_BESIDE_TILE = `${PINNED_NAME} left-10 lg:left-14`;
+
+/** `PINNED_NAME` starting where a pinned index block ends; the offsets are `INDEX_WIDTH`'s widths. */
+export const PINNED_BESIDE_INDEX = `${PINNED_NAME} left-8 lg:left-9`;
 
 /** A gameweek view's header row and title. Its loading skeletons use them too, or the page jumps
  *  when it lands. */

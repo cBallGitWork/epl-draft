@@ -22,8 +22,6 @@ import { BOARD, BOARD_FIGURE, MINOR_LABEL, PANEL_FLUSH, PINNED_BESIDE_TILE, PINN
 // One squad's season on the house board, as a club's stat board draws it: our position in the index tile, the crest
 // before the pinned name, a view picked above, a tap on a head to sort, and each column's standouts lit in ink.
 
-/** The name column starts where the tile ends. */
-const LEAD = `${PINNED_BESIDE_TILE}`;
 /** One width for every figure column, so the name takes the slack and a long head does not. */
 const FIGURE_WIDTH = "w-10 lg:w-14";
 
@@ -103,7 +101,7 @@ export default function StatBoard({
         <table className={`${BOARD} whitespace-nowrap`}>
           <thead>
             <HeadRow>
-              <LeadHeads tile={PINNED_TILE} name={LEAD} />
+              <LeadHeads tile={PINNED_TILE} name={PINNED_BESIDE_TILE} />
               {measures.map((measure) => (
                 <SortHead
                   key={measure.key}
@@ -125,7 +123,7 @@ export default function StatBoard({
               return (
                 <tr key={line.fantraxId} className={`cm-row ${ROW_HOVER} ${doubtRow(footballer)}`}>
                   <PositionTile positions={positionsFromList(line.position)} cell className={PINNED_TILE} />
-                  <td className={`px-1.5 ${ROW_NAME} ${LEAD} text-ink ${doubtRow(footballer)}`}>
+                  <td className={`px-1.5 ${ROW_NAME} ${PINNED_BESIDE_TILE} text-ink ${doubtRow(footballer)}`}>
                     <Link href={playerHref(line.fantraxId)} className={`${ROW_LINK} w-36 lg:w-auto`}>
                       <span className="grid size-6 shrink-0 place-items-center">
                         {crest ? <Image src={crest} alt="" width={20} height={20} className="size-5 object-contain" /> : null}

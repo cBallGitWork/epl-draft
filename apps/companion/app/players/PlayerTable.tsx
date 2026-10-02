@@ -6,7 +6,7 @@ import PositionTile from "../components/league/PositionTile";
 import type { StandoutCut } from "../components/league/standout";
 import { activeSort, sortHref } from "./query";
 import type { PlayersQuery } from "./query";
-import { BOARD, ROW_RULE } from "@/app/desk";
+import { BOARD, ROW_HOVER_ON_SURFACE } from "@/app/desk";
 import ScrollBoard from "../components/league/ScrollBoard";
 import Cell, { Lead } from "./Cell";
 import { doubtRow } from "../components/football/doubtRow";
@@ -70,7 +70,7 @@ export default function PlayerTable({
             const footballer = row.fplCode === null ? null : (footballers.get(row.fplCode) ?? null);
             const wash = doubtRow(footballer);
             return (
-            <tr key={row.entry.player.fantraxId} className={`${ROW_RULE} hover:bg-raised ${wash}`}>
+            <tr key={row.entry.player.fantraxId} className={`${ROW_HOVER_ON_SURFACE} ${wash}`}>
               <PositionTile
                 positions={row.entry.eligiblePositions}
                 cell

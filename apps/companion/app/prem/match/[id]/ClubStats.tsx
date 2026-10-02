@@ -83,7 +83,7 @@ export default function ClubStats({
         <table className={BOARD}>
           <thead>
             <tr>
-              <LeadHeads tile={PINNED_TILE} name={`${PIN_NAME} ${NAME_WIDTH}`} />
+              <LeadHeads tile={PINNED_TILE} name={`${PINNED_BESIDE_TILE} ${NAME_WIDTH}`} />
               {COLUMNS.map((column) => (
                 <SortHead
                   key={column.head}
@@ -147,7 +147,7 @@ function StatRow({
   return (
     <tr className={`${ROW_RULE} ${finished ? "" : "cm-out"}`} {...MATCH_ROW}>
       <PositionTile positions={positions} cell className={PINNED_TILE} />
-      <td className={`p-0 ${PIN_NAME} ${NAME_WIDTH}`}>
+      <td className={`p-0 ${PINNED_BESIDE_TILE} ${NAME_WIDTH}`}>
         {/* His card, not his page — every name on a match screen opens the same card (Craig, 23 Sep 2026). */}
         <MaybeCard player={card} className={`${ROW_LINK} ${PHONE_ROW} w-full gap-1.5 px-1.5 text-left`}>
           {name}
@@ -178,9 +178,6 @@ function StatRow({
 
 /** 36px under a thumb, not 44 — PRODUCT's recorded exception for the match screens. */
 const PHONE_ROW = "max-lg:min-h-9";
-
-/** The tile and the name stay put while the measures scroll under them; the name starts where `TILE_WIDTH` ends. */
-const PIN_NAME = `${PINNED_BESIDE_TILE}`;
 
 /** About four measures in view beside the name at 390; the sub note joins it on a desk. */
 const NAME_WIDTH = "w-32 lg:w-72";

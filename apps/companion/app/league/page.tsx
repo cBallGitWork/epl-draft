@@ -10,7 +10,8 @@ import Nothing from "../components/shell/Nothing";
 import LeagueShell from "./Shell";
 import { readerTeamId } from "../squads";
 import { leagueInfo } from "../round";
-import { BOARD, MINOR_LABEL } from "@/app/desk";
+import { CutRow } from "../components/league/TableCells";
+import { BOARD } from "@/app/desk";
 import FantraxSilent from "../components/shell/FantraxSilent";
 
 // The table. Fantrax computes it — the record, the points and the order are
@@ -138,15 +139,7 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
                      Absent entirely for a league that declares no playoff, and
                      for a table shorter than the cut — a line under the bottom
                      row states a qualification nobody missed. */
-                  <tr aria-hidden>
-                    <td colSpan={COLUMNS.length} className="p-0">
-                      <span className={`flex items-center gap-2 py-1.5 ${MINOR_LABEL}`}>
-                        <span className="flex-1 border-t border-dashed border-accent/80" />
-                        Playoffs
-                        <span className="flex-1 border-t border-dashed border-accent/80" />
-                      </span>
-                    </td>
-                  </tr>
+                  <CutRow span={COLUMNS.length} label="Playoffs" tone="border-accent/80" />
                 ) : null}
               </Fragment>
             ))}

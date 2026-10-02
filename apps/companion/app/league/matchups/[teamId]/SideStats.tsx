@@ -52,7 +52,7 @@ export default function SideStats({
         <table className={BOARD}>
           <thead>
             <tr>
-              <LeadHeads tile={PINNED_TILE} name={`${PIN_NAME} ${NAME_WIDTH}`} />
+              <LeadHeads tile={PINNED_TILE} name={`${PINNED_BESIDE_TILE} ${NAME_WIDTH}`} />
               {heads.map((head) => (
                 <SortHead
                   key={head.code}
@@ -103,7 +103,7 @@ function SideRow({
   return (
     <tr className={`${ROW_RULE} ${breakdown === null ? "cm-out" : ""}`} {...MATCH_ROW}>
       <PositionTile positions={rostered.slot.position ? [rostered.slot.position] : []} cell className={PINNED_TILE} />
-      <td className={`p-0 ${PIN_NAME} ${NAME_WIDTH}`}>
+      <td className={`p-0 ${PINNED_BESIDE_TILE} ${NAME_WIDTH}`}>
         <MaybeCard player={player} className={`${ROW_LINK} ${PHONE_ROW} w-full gap-1.5 px-1.5 text-left`}>
           <span className="grid size-5 shrink-0 place-items-center">
             {club ? <Image src={crestUrl(club)} alt="" width={20} height={20} className="size-5 object-contain" /> : null}
@@ -135,5 +135,4 @@ function managerIndex(team: LeagueTeam): CSSProperties {
 
 // The match page's club board's cells, copied rather than shared: two boards so far (`ClubStats` is the other).
 const PHONE_ROW = "max-lg:min-h-9";
-const PIN_NAME = `${PINNED_BESIDE_TILE}`;
 const NAME_WIDTH = "w-32 lg:w-72";

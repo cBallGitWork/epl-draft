@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { type Result, type TableRow, type TableSortKey, ordinal } from "@epl/core";
+import { type Result, type TableRow, type TableSortKey, ordinal, signed } from "@epl/core";
 import { cellAlign, deskOnly } from "./Columns";
 import { CLUB } from "./routes";
-import { ROW_LINK } from "../components/league/TableCells";
+import { PointsCell, ROW_LINK } from "../components/league/TableCells";
 import { FIGURE, FIGURE_CELL, ROW_HOVER, TONE } from "@/app/desk";
 import Absent from "@/app/components/shell/Absent";
 import ClubLabel from "@/app/components/football/ClubLabel";
@@ -90,14 +90,7 @@ export default function ClubRow({
           Nought is neither, and reads quiet. */}
       <td className={`${FIGURE} ${SWING(row.goalDifference)}`}>{signed(row.goalDifference)}</td>
 
-      {/* Points in a plate of their own, the way CM ends its table: the one
-          figure that decides the season, blocked out so the eye runs down the
-          column rather than across the row to find it. */}
-      <td className="p-0">
-        <span className="cm-index numeric flex min-h-7 items-center justify-center px-1.5">
-          {row.points}
-        </span>
-      </td>
+      <PointsCell>{row.points}</PointsCell>
 
       <td className={`${FIGURE_CELL} ${deskOnly("form", sort)}`}>
         <Form run={form} />
@@ -110,13 +103,6 @@ function SWING(difference: number): string {
   if (difference > 0) return "text-up";
   if (difference < 0) return "text-bad";
   return "text-faint";
-}
-
-/** `+4`, `-6`, `0`. The plus is the whole point of the column: a difference
- *  printed without its sign is a number whose meaning the reader has to work
- *  out from the two columns to its left. */
-function signed(difference: number): string {
-  return difference > 0 ? `+${difference}` : String(difference);
 }
 
 /** The last few results, newest LAST — left to right is the direction the season

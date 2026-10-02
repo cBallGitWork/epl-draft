@@ -6,7 +6,7 @@ import { IndexCell } from "../../components/league/TableCells";
 import { MUTE, PlateHead } from "../../components/league/TableHeads";
 import { standoutCuts, standoutInk, type StandoutCut } from "../../components/league/standout";
 import Section from "../../components/shell/Section";
-import { BOARD, FIGURE, HEAD_CELL, PINNED_NAME, PINNED_TILE, ROW_RULE } from "@/app/desk";
+import { BOARD, FIGURE, HEAD_CELL, PINNED_BESIDE_INDEX, PINNED_TILE, ROW_HOVER_ON_SURFACE } from "@/app/desk";
 import { matchHref } from "../../prem/match/[id]/matchRoutes";
 import { RATING_TITLE } from "../../ratings";
 import type { MatchRow } from "./matchRows";
@@ -80,7 +80,7 @@ export default function MatchLog({ rows }: { rows: readonly MatchRow[] }) {
               <th scope="col" className={`${HEAD_CELL} ${PINNED_TILE} min-w-8 bg-surface lg:min-w-9`}>
                 <span className={MUTE}>Gameweek</span>
               </th>
-              <th scope="col" className={`${HEAD_CELL} ${PINNED_NAME} left-8 lg:left-9`}>
+              <th scope="col" className={`${HEAD_CELL} ${PINNED_BESIDE_INDEX}`}>
                 <span className={MUTE}>Opponent</span>
               </th>
               <PlateHead at="centre" title="The score, from his club's point of view — tap it for the match" className="whitespace-nowrap">
@@ -95,9 +95,9 @@ export default function MatchLog({ rows }: { rows: readonly MatchRow[] }) {
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr key={`${row.fpl.match.gameweek}-${row.fpl.match.fixtureId}`} className={`${ROW_RULE} hover:bg-raised`}>
+              <tr key={`${row.fpl.match.gameweek}-${row.fpl.match.fixtureId}`} className={ROW_HOVER_ON_SURFACE}>
                 <IndexCell className={PINNED_TILE}>{row.fpl.match.gameweek ?? DASH}</IndexCell>
-                <td className={`${PINNED_NAME} left-8 px-1.5 lg:left-9`}>
+                <td className={`${PINNED_BESIDE_INDEX} px-1.5`}>
                   <span className="flex items-center gap-1.5 whitespace-nowrap">
                     {row.fpl.opponent ? <ClubLabel club={row.fpl.opponent} /> : DASH}
                     <span className="text-2xs text-faint">{row.fpl.match.home ? "H" : "A"}</span>
