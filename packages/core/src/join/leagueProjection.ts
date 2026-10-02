@@ -21,6 +21,11 @@ import { categoryPoints, pointsFor, type LeagueScoring, type ScoringRules } from
 export const LEAGUE_PROJECTION_PARTS = ["goals", "assists", "cleanSheets", "appearance", "conceded", "defcon", "keeper"] as const;
 export type LeagueProjectionPart = (typeof LEAGUE_PROJECTION_PARTS)[number];
 
+/** A record over the parts, each its own value. */
+export function eachPart<T>(value: (part: LeagueProjectionPart) => T): Record<LeagueProjectionPart, T> {
+  return Object.fromEntries(LEAGUE_PROJECTION_PARTS.map((part) => [part, value(part)])) as Record<LeagueProjectionPart, T>;
+}
+
 export interface LeagueWeek {
   gw: number;
   points: number;

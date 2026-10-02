@@ -1,7 +1,7 @@
 import {
-  LEAGUE_PROJECTION_PARTS,
   clubCleanSheets,
   cohortRate,
+  eachPart,
   fplCodeOf,
   leagueWeek,
   observedAt,
@@ -9,7 +9,6 @@ import {
   shrunkRate,
   type Bridge,
   type LeagueMatch,
-  type LeagueProjectionPart,
   type LeagueProjectionRow,
   type LeagueScoring,
   type ProjectedPlayer,
@@ -90,8 +89,8 @@ export function buildPack(inputs: PackInputs): { rows: LeagueProjectionRow[]; pr
         total: round(total),
         perGw: priced.map((week) => (week === null ? null : round(week.points))),
         perMatch: appearances > 0 ? round(total / appearances) : null,
-        parts: byPart((part) => round(priced.reduce((sum, week) => sum + (week?.parts[part] ?? 0), 0))),
-        partsPerGw: byPart((part) => priced.map((week) => (week === null ? null : round(week.parts[part])))),
+        parts: eachPart((part) => round(priced.reduce((sum, week) => sum + (week?.parts[part] ?? 0), 0))),
+        partsPerGw: eachPart((part) => priced.map((week) => (week === null ? null : round(week.parts[part])))),
         rates: { defcon: round(rates.defcon), keeper: round(rates.keeper) },
       };
     }
@@ -124,10 +123,6 @@ export function buildPack(inputs: PackInputs): { rows: LeagueProjectionRow[]; pr
   }
   const rounded = Object.fromEntries(Object.entries(priors).map(([slot, rates]) => [slot, { defcon: round(rates.defcon), keeper: round(rates.keeper) }]));
   return { rows: rows.sort((a, b) => b.total - a.total || a.name.localeCompare(b.name)), priors: rounded };
-}
-
-function byPart<T>(value: (part: LeagueProjectionPart) => T): Record<LeagueProjectionPart, T> {
-  return Object.fromEntries(LEAGUE_PROJECTION_PARTS.map((part) => [part, value(part)])) as Record<LeagueProjectionPart, T>;
 }
 
 /** A week's expected appearances: starts, which mostly run past an hour, then what the appearance points leave over. */

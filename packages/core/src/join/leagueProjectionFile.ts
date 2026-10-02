@@ -1,5 +1,5 @@
 import { finiteOrNull } from "../untrusted";
-import { LEAGUE_PROJECTION_PARTS, type LeagueProjectionPart, type SlotRates } from "./leagueProjection";
+import { eachPart, type LeagueProjectionPart, type SlotRates } from "./leagueProjection";
 
 // `npm run draft-pack`'s file: the projection in our league's points for every pool man, at each slot he is eligible
 // for, and the reading the boards take from it. A week the model has no reading for is null, never nought.
@@ -83,9 +83,7 @@ export function leagueProjectionIntel(file: LeagueProjectionFile | null): Map<nu
         gw,
         points: finiteOrNull(best.perGw?.[at]),
         minutes: finiteOrNull(row.minutesPerGw?.[at]),
-        parts: Object.fromEntries(
-          LEAGUE_PROJECTION_PARTS.map((part) => [part, finiteOrNull(best.partsPerGw?.[part]?.[at])]),
-        ) as Record<LeagueProjectionPart, number | null>,
+        parts: eachPart((part) => finiteOrNull(best.partsPerGw?.[part]?.[at])),
       })),
     });
   }
