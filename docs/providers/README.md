@@ -90,7 +90,8 @@ own lines no longer overlap; until 1 Oct 2026 24 of its firings a week ran twice
 
 ## Cached reads
 
-Every provider read the app makes at request time sits in one of these 39, in 23 files.
+Every provider read the app makes at request time sits in one of these 41, in 24 files (counted 2 Oct
+2026; the `leagueCache` row is the helper they share, not a read).
 `leagueCache` (`apps/companion/app/leagueCache.ts`) is `unstable_cache` keyed
 `[key, FANTRAX_LEAGUE_ID]` and tagged `key:leagueId`, 30 s unless given a window. A refusal Fantrax
 meant (`kind: "refused"`) is caught by `orRefusal` inside the cache and held for the window like an

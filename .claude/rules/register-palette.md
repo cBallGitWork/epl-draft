@@ -20,6 +20,7 @@ paths:
 | `--color-live` | **a match in play**, and nothing else |
 | `--color-league` | the league's own mark. **Chrome only — it never says "active"** |
 | `--color-league-deep` | the same red as a **ground with text on it** |
+| `--color-index-free` | **a man on no roster**, anybody's to claim: the index block's green in place of its blue. **A ground, never ink** |
 | `--color-bg` `surface` `raised` `line` | depth, never meaning |
 | `--color-ink` `muted` `faint` | how loud |
 | `--color-faint-plate` | the same quiet **on a blue plate** — `faint` is 2.35:1 there |

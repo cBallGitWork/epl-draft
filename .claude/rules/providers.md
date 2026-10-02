@@ -120,6 +120,11 @@ Methods that matter:
   owns every team. So another team's pending claims are not readable. Claims arrive
   in `tables[].txSets[]` (`tablesPerTeam` for all teams), trades in
   `tradeInfoList[]`. PLATFORM_NOTES, 1 Oct 2026.
+- `getLeagueSetup {action: "schedules"}` reads the head-to-head schedule (commissioner cookie):
+  `matchupMap` is `[{key: period, value: ["awayId_homeId", …]}]`, beside `numMatchupsPerPeriod`, bye `"-1"`
+  and TBD `"-2"`. `saveLeagueSetup {action: "scheduleMatchups", matchups: ["<period>|<away>_<home>|…"],
+  matchupsEditedManually: true, matchupsReviewed: true}` replaces it whole; a period left out is cleared, and
+  one may hold a double header at `numMatchupsPerPeriod` 1. PLATFORM_NOTES, 2 Oct 2026.
 - `getCommissionerHubInfo` + `executeCommissionerHubAction({actionKey, …})` — the
   commissioner console. The returned action list is server-driven; do not hardcode.
 - `getMatchups` — Fantrax computes live H2H points itself. Their live scores are

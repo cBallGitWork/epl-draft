@@ -44,6 +44,21 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## The real league's schedule went in through Fantrax's own schedule editor — written 2 Oct 2026
+
+The 26/27 head-to-head schedule was written with the two fxpa calls the commissioner's schedule editor makes, on
+the commissioner's cookie.
+
+- **Read:** `getLeagueSetup {action: "schedules"}`. `matchupMap` is `[{key: period, value: ["awayId_homeId", …]}]`,
+  beside `numMatchupsPerPeriod`, `matchupByeId` (`"-1"`), `matchupTbdId` (`"-2"`) and
+  `headToHeadRegularSeasonEndPeriod`.
+- **Write:** `saveLeagueSetup {action: "scheduleMatchups", matchups: ["<period>|<away>_<home>|…"],
+  matchupsEditedManually: true, matchupsReviewed: true}` replaces the regular season's matchups whole. A period
+  left out is cleared.
+- **A period may hold two matchups per team** (a double header), even with `numMatchupsPerPeriod` at 1.
+- **What went in:** GW6–GW34 with no GW21 and a double header in GW34, 145 matchups. Fantrax answered "Matchups
+  have been saved", and a re-read matched on 38 of 38 periods.
+
 ## Every point we work out is priced by the real league's scoring — decided 1 Oct 2026
 
 Craig, 1 Oct: *"points system repo wide just use real league points system now"*. Before this, our own sums used
