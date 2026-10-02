@@ -1,7 +1,5 @@
 import Image from "next/image";
-import type { ReactNode } from "react";
 import { ordinal } from "@epl/core";
-import { RATING_TITLE } from "../ratings";
 import Section from "../components/shell/Section";
 import TabStrip from "../components/shell/TabStrip";
 import Absent from "../components/shell/Absent";
@@ -23,13 +21,6 @@ const TITLE: Record<LeaderStat, string> = {
 };
 
 const TAB: Record<LeaderStat, string> = { points: "Points", rating: "Rating", xg: "xG", xa: "xA" };
-
-/** Whose figures each list is, at the point of use (DESIGN §7); Fantrax's title already says so. */
-const SOURCE: Partial<Record<LeaderStat, ReactNode>> = {
-  rating: <span title={RATING_TITLE}>Ours</span>,
-  xg: "FPL",
-  xa: "FPL",
-};
 
 const DECIMALS: Partial<Record<LeaderStat, number>> = { rating: 1, xg: 2, xa: 2 };
 
@@ -55,7 +46,7 @@ export default function TopStats({ boards, stat }: { boards: Record<LeaderStat, 
       <div className="grid gap-4 lg:grid-cols-2">
         {LEADER_STATS.map((key) => (
           <div key={key} className={phoneShows(key === stat)}>
-            <Section title={TITLE[key]} aside={SOURCE[key]}>
+            <Section title={TITLE[key]}>
               <Board leaders={boards[key]} decimals={DECIMALS[key]} ink={INK[key]} />
             </Section>
           </div>
