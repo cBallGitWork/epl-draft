@@ -365,9 +365,8 @@ for a thing you press, blue for a view you are on.
 
 Two exceptions, both stated rather than drifted: the search **field** keeps
 `text-base`, because below 16px an iPhone zooms the page on focus and a field is
-read and typed into rather than pressed; and the club `<select>` takes
-`PLATE_TYPE` — the same recipe without the flex — because `display: flex` on a
-replaced element is not a thing browsers agree about.
+read and typed into rather than pressed; and the club and sort `<select>`s are the app's one dropdown
+(`shell/QuerySelect`, `SELECT`), the same plate every other screen's picker wears (2 Oct 2026).
 
 **The stat plates are `cm-tab-quiet`**, a new modifier — *"we already have blue
 bars on this page, do we need them this big?"*. `.cm-tab` is 56px above `lg`

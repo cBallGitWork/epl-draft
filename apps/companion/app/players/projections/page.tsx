@@ -3,7 +3,7 @@ import Link from "next/link";
 import { PLANNER_RUN, plannerGameweeks } from "@epl/core";
 import ScoutShell from "../Shell";
 import Nothing from "../../components/shell/Nothing";
-import QuerySelect from "../QuerySelect";
+import QuerySelect from "../../components/shell/QuerySelect";
 import ProjectionBoard, { projectionHeads } from "./ProjectionBoard";
 import { Carried, Chip, clubOptions } from "../BoardControls";
 import { PAGE_ROWS, boardHref, chosen, filterHref, isChosen, playersQuery, type PlayersSearchParams } from "../query";

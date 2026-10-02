@@ -26,19 +26,9 @@ import type { ReactNode } from "react";
 export const BUTTON =
   "cm-bevel flex min-h-11 items-center justify-center px-3 py-2.5 text-sm font-medium hover:brightness-110 lg:min-h-9";
 
-/** The same plate as a dropdown. Three screens now put a `<select>` on the desk
- *  — the schedule's gameweek and team pickers, Team Stats' category, and the
- *  squad's stat view — and all three had written the plate out by hand.
- *
- *  **Only the closed control is ours.** The option list is the platform's popup
- *  and cannot be styled, which is why these are still `<select>` and not a
- *  disclosure. `font-semibold` rather than `BUTTON`'s `medium`: a control that
- *  states a current VALUE reads it, where a button reads its verb.
- *
- *  Geometry stays at the call site, because it is genuinely per-screen — the
- *  schedule's pair share a row and take `flex-1`, while Team Stats is sized by
- *  its own longest option after a percentage cap clipped "Goals against" to
- *  "Goals agains" on a 390 phone. */
+/** The same plate as a dropdown: `QuerySelect` and the two stat boards' view pickers. `desk.css` draws its ▼ and
+ *  switches off the platform's own box, which WebKit drew at 25–33px whatever the floor said. The option list is
+ *  still the platform's popup. Width stays at the call site. */
 export const SELECT = "cm-bevel min-h-11 px-2.5 text-sm font-semibold lg:min-h-9";
 
 export default function ButtonLink({

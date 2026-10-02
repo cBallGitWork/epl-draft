@@ -2422,8 +2422,8 @@ already puts the chrome face on every plate class; the geometry is layout and
 belongs to the caller, so `players/BoardControls` exports `PLATE` and the row now
 differs only in colour. Two stated exceptions: the search field keeps
 `text-base`, because an iPhone zooms the page on focus below 16px; and the club
-`<select>` takes `PLATE_TYPE`, the same recipe minus the flex, because
-`display: flex` on a replaced element is not portable.
+`<select>` is the app's one dropdown (`shell/QuerySelect`, `SELECT`) since 2 Oct 2026, when
+`PLATE_TYPE` went with its last caller.
 
 **The club filter is the one thing the removed columns actually cost.** Position
 and status have had filters since 6 Sep — they predate this work, so dropping

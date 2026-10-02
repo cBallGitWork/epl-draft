@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { POOL_GROUPS, type PoolGroupKey } from "./groups";
 import { boardHref, chosen, filterHref, isChosen } from "./query";
-import type { QueryOption } from "./QuerySelect";
+import type { QueryOption } from "../components/shell/QuerySelect";
 import type { PlayersQuery } from "./query";
 import { STATUS, STATUS_CHIP } from "./status";
 import { SMALL_CAPS } from "@/app/desk";
@@ -50,20 +50,11 @@ export function Carried({
 /** The geometry every control on this row shares (Craig, 10 Sep 2026: *"all buttons different sizes, we can CM
  *  this now"*): one recipe, the plates differing only in colour. Two pixels tighter a side under a thumb, so the
  *  status chips, Filter and the search share a 390 phone's row. Local to `players/`, where all its sites are. */
-export const PLATE_TYPE =
-  `min-h-11 px-2 ${SMALL_CAPS} lg:min-h-9 lg:px-2.5`;
-
-/** The same, plus the layout a plate with CONTENT in it needs.
- *
- *  Two recipes because one caller cannot take the layout: a `<select>` is a
- *  replaced element the platform draws, and `display: flex` on one is not a
- *  thing browsers agree about. It needs the height, the padding and the type —
- *  which is what makes it match the plates beside it — and none of the flex. */
 export const PLATE =
-  `flex shrink-0 items-center justify-center gap-1 whitespace-nowrap ${PLATE_TYPE}`;
+  `flex shrink-0 items-center justify-center gap-1 whitespace-nowrap min-h-11 px-2 ${SMALL_CAPS} lg:min-h-9 lg:px-2.5`;
 
-/** A plate you press, at rest: the `Filter` link, an unpressed `Chip`, `QuerySelect`'s `<noscript>` button and the
- *  pick field's. Not the pressed state: `cm-bevel-pressed` is a plate with no hover, because a held thing does not lift. */
+/** A plate you press, at rest: the `Filter` link, an unpressed `Chip` and the pick field's button. Not the pressed
+ *  state: `cm-bevel-pressed` is a plate with no hover, because a held thing does not lift. */
 export const PRESSABLE = `cm-bevel hover:brightness-110 ${PLATE}`;
 
 /** Which columns are on the board: the one strip that stays blue, at the control floor (`cm-tab-quiet`). */

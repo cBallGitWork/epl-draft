@@ -64,6 +64,21 @@
   border-color: var(--cm-dark) var(--cm-light) var(--cm-light) var(--cm-dark);
 }
 
+/* A dropdown is the plate in both engines, with CM's ▼ drawn in its ink: WebKit's own menulist ignored
+   `min-height` and the bevel, and drew a 25–33px flat box. */
+select.cm-bevel {
+  appearance: none;
+  padding-right: 1.75rem;
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(-45deg, transparent 50%, currentColor 50%);
+  background-size: 0.3125rem 0.3125rem;
+  background-position:
+    right 0.8125rem center,
+    right 0.5rem center;
+  background-repeat: no-repeat;
+}
+
 /* The royal-blue plate: the title bar every CM screen opens with, and the tab
    strip under it. Ink on it is 7.0:1. The plate is only 2.44:1 off the page,
    which is why its light edge matters — that edge is what draws the bar. */

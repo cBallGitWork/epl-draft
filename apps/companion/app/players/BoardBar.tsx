@@ -7,7 +7,7 @@ import type { PlayersQuery } from "./query";
 import { positionLabel } from "../positions";
 import { LABEL, PANEL, SECTION_BAR, SMALL_CAPS } from "@/app/desk";
 import { Carried, clubOptions, Count, Figures, PRESSABLE, Plates, Statuses } from "./BoardControls";
-import QuerySelect from "./QuerySelect";
+import QuerySelect from "../components/shell/QuerySelect";
 
 // Every control on the board: one row on the desk (search, the stat groups from `lg`, status and Per 90 from `xl`,
 // Filter), and under a thumb the row plus a sheet docked over the thumb rail. The sheet is URL state (`?panel=1`), so
