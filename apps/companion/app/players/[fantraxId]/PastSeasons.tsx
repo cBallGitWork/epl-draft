@@ -2,7 +2,7 @@ import ScrollBoard from "../../components/league/ScrollBoard";
 import type { PastSeason } from "@epl/core";
 import Section from "../../components/shell/Section";
 import { BOARD, FIGURE, ROW_NAME, ROW_RULE, TEXT } from "@/app/desk";
-import { HeadRow, PlateHead } from "../../components/league/TableHeads";
+import { HeadRow, MUTE, PlateHead } from "../../components/league/TableHeads";
 import { IndexCell } from "../../components/league/TableCells";
 import { seasonKey, thousands } from "@epl/core";
 
@@ -55,8 +55,12 @@ export default function PastSeasons({
         <table className={BOARD}>
           <thead>
             <HeadRow>
-              <PlateHead>Season</PlateHead>
-              <PlateHead>Club</PlateHead>
+              <PlateHead>
+                <span className={MUTE}>Season</span>
+              </PlateHead>
+              <PlateHead>
+                <span className={MUTE}>Club</span>
+              </PlateHead>
               {COLUMNS.map((column) => (
                 <PlateHead key={column.head} at="centre" title={column.title}>
                   {column.head}
