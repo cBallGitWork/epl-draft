@@ -141,12 +141,16 @@ export { mapSeasonStats } from "./fantrax/seasonStats";
 export { GROUPS, categoryFor, groupFor, isMeasure, offeredIn } from "./categories";
 export {
   ASSIST,
+  ASSISTS_OFFICIAL,
+  ASSISTS_TOTAL,
   GOALS,
+  KEEPER_POINTS,
   KEEPER_WORK,
   OWN_GOALS,
   PENALTIES_MISSED,
   PENALTY_SAVES,
   RED_CARDS,
+  SAVES,
   YELLOW_CARDS,
   carries,
   firstScored,
