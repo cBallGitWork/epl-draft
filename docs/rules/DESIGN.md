@@ -238,6 +238,12 @@ plate drawn empty on a stat board is this decision, not an oversight.
 Settled 5 Sep 2026, and §9's `/players` decision is the same rule read the other
 way — the pool is the board that scrolls.
 
+**Every figure is centred under a centred head, and only a name is left** (Craig, 2 Oct 2026: *"columns (repo wide,
+centre align)"*). Stat boards flushed right "so units line up", standings tables centred, and boards of one kind
+came in both. One cell now (`FIGURE_CELL`), on the desk's tables and boards and the paper's printed tables alike.
+Two layouts keep a side: a home/away pair mirrors about its middle, and Compare sets each man's figure towards
+the other's.
+
 **The phone's nav is the rail laid along the foot** (Craig, 23 Sep 2026: *"Bottom nav bars are bad. Needs
 to be mobile standard. More needs a proper menu. CM inspired still"*). It had been dressed as the foot row,
 but a phone's tab bar answers "where can I go from anywhere", so it takes the rail's navy, white words and
@@ -776,7 +782,7 @@ apart silently.
 | **A row of a list** | **44** | **28** | `sm`/`lg:base` name in the CHROME face, `sm` figures at both widths | `.cm-row` + `ROW_LINK` + `ROW_NAME` + `FIGURE` |
 | A column head over a table | 28 | 28 | `2xs` | `PLATE` (`h-7`) |
 | A column head over a stats board | 24 | 24 | `2xs` | `HEAD_PLATE` (`h-6`) |
-| A figure in a row | — | — | `sm`, `.numeric` | `ROW_FIGURE`, worn by `FIGURE` (centred) and `BOARD_FIGURE` (right) |
+| A figure in a row | — | — | `sm`, `.numeric` | `ROW_FIGURE`, worn by `FIGURE_CELL` and `FIGURE` (bold), centred on every table |
 | A label that is furniture | — | — | `2xs` bold caps | `LABEL` |
 
 **Three recorded exceptions, and what earns one.** `prem/match/[id]/TeamSheet` sets

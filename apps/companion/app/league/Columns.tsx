@@ -28,7 +28,7 @@ type Column = {
   key: SortKey | "team" | "form";
   label: string;
   title: string | undefined;
-  align: "left" | "center" | "right";
+  align: "left" | "center";
   width: string;
   /** A column the phone does without, so the last one — the column the table is
    *  FOR — fits at 390 without a sideways scroll. */

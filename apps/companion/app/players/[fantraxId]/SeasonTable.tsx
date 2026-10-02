@@ -1,6 +1,6 @@
 import ScrollBoard from "../../components/league/ScrollBoard";
 import Section from "../../components/shell/Section";
-import { BOARD, BOARD_FIGURE, ROW_RULE } from "@/app/desk";
+import { BOARD, FIGURE_CELL, ROW_RULE } from "@/app/desk";
 import { PlateHead } from "../../components/league/TableHeads";
 import type { MatchRow } from "./matchRows";
 import { totalsOf } from "./matchRows";
@@ -60,7 +60,7 @@ export default function SeasonTable({
             <tr>
               <PlateHead>Competition</PlateHead>
               {COLUMNS.map((column) => (
-                <PlateHead key={column.head} at="end" title={column.title} className={column.rule ? "border-l border-line" : undefined}>
+                <PlateHead key={column.head} at="centre" title={column.title} className={column.rule ? "border-l border-line" : undefined}>
                   {column.head}
                 </PlateHead>
               ))}
@@ -72,7 +72,7 @@ export default function SeasonTable({
                   `League` is the only one FPL publishes. */}
               <IndexCell>League</IndexCell>
               {COLUMNS.map((column) => (
-                <td key={column.head} className={`${BOARD_FIGURE} font-bold ${column.rule ? "border-l border-line" : ""} ${column.derived ? "text-info" : ""}`}>
+                <td key={column.head} className={`${FIGURE_CELL} font-bold ${column.rule ? "border-l border-line" : ""} ${column.derived ? "text-info" : ""}`}>
                   {column.total(t)}
                 </td>
               ))}

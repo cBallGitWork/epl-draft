@@ -4,7 +4,7 @@ import { DASH, fixed, ordinal } from "@epl/core";
 import Section from "../../components/shell/Section";
 import { IndexCell } from "../../components/league/TableCells";
 import { MUTE, PlateHead } from "../../components/league/TableHeads";
-import { BOARD, BOARD_FIGURE, ROW_RULE } from "@/app/desk";
+import { BOARD, FIGURE_CELL, ROW_RULE } from "@/app/desk";
 
 // Where his season totals rank among the men he is rated against (Craig, 25 Sep 2026:
 // "rankings for data such as xg"): the totals on one row, his place on the next.
@@ -23,7 +23,7 @@ export default function Rankings({ ranked, group }: { ranked: readonly Ranked[];
                 <span className={MUTE}>Row</span>
               </PlateHead>
               {ranked.map((r) => (
-                <PlateHead key={r.head} at="end" title={r.title}>
+                <PlateHead key={r.head} at="centre" title={r.title}>
                   {r.head}
                 </PlateHead>
               ))}
@@ -33,7 +33,7 @@ export default function Rankings({ ranked, group }: { ranked: readonly Ranked[];
             <tr className={ROW_RULE}>
               <IndexCell>Total</IndexCell>
               {ranked.map((r) => (
-                <td key={r.head} className={`${BOARD_FIGURE} font-bold`}>
+                <td key={r.head} className={`${FIGURE_CELL} font-bold`}>
                   {r.value === null ? DASH : fixed(r.value, r.kind)}
                 </td>
               ))}
@@ -43,7 +43,7 @@ export default function Rankings({ ranked, group }: { ranked: readonly Ranked[];
               {ranked.map((r) => (
                 <td
                   key={r.head}
-                  className={`${BOARD_FIGURE} font-bold ${ink(r.rank, r.of)}`}
+                  className={`${FIGURE_CELL} font-bold ${ink(r.rank, r.of)}`}
                   title={r.rank === null ? undefined : `${ordinal(r.rank)} of ${r.of}`}
                 >
                   {r.rank === null ? DASH : ordinal(r.rank)}

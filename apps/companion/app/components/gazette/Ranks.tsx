@@ -25,7 +25,7 @@ export default function Ranks({
       {ranks.map((rank, at) => (
         <li key={rank.teamId} className="py-2">
           <p className="flex items-baseline gap-2">
-            <span className="numeric w-5 shrink-0 text-right text-faint">{at + 1}</span>
+            <span className="numeric w-5 shrink-0 text-center text-faint">{at + 1}</span>
             <span
               className={`min-w-0 flex-1 truncate font-semibold ${yoursInk(
                 rank.teamId === mine,

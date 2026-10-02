@@ -132,7 +132,7 @@ export default function SquadRows({
               is where `cm9900/12.jpg` puts its own, Value hard against the right
               edge with the readings before it. */}
           {scored ? (
-            <span className="w-9 shrink-0 text-right">
+            <span className="w-9 shrink-0 text-center">
               {projected ? "Proj" : "FPts"}
             </span>
           ) : null}

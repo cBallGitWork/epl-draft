@@ -25,7 +25,8 @@ export const ROW_NAME = "font-chrome text-sm font-bold lg:text-base";
  *  proportion. */
 export const ROW_FIGURE = "text-sm";
 
-/** A row's figure cell: tabular and centred. `.numeric` already tracks, so never add `tracking-*`. */
+/** A row's figure cell, on every table and board: tabular and centred under a centred head. `.numeric` already
+ *  tracks, so never add `tracking-*`. */
 export const FIGURE_CELL = `numeric px-1.5 text-center ${ROW_FIGURE}`;
 
 /** A standings figure: `FIGURE_CELL`, bold. */
@@ -38,10 +39,6 @@ export const INDEX_WIDTH = "w-8 lg:w-9";
 /** A figure to scan past: a club's letters beside a name, a record under a heading. */
 export const QUIET_FIGURE = "numeric text-2xs text-faint";
 
-/** A stat-board figure, flushed right so units line up down a column; ink and weight are the
- *  caller's. */
-export const BOARD_FIGURE = `numeric px-1.5 text-right ${ROW_FIGURE}`;
-
 /** A form result's ink: DESIGN §3's direction pair, with a draw quiet rather than a third colour. */
 export const TONE = { W: "text-up", D: "text-faint", L: "text-bad" } as const;
 
@@ -50,11 +47,10 @@ export function gainOrLoss(points: number): string {
   return points > 0 ? "text-up" : points < 0 ? "text-bad" : "";
 }
 
-/** Where a column's text sits; `TableHeads` has the `justify-*` twin. */
+/** Where a column's text sits: a name left, a figure centred. `TableHeads` has the `justify-*` twin. */
 export const TEXT = {
   left: "text-left",
   center: "text-center",
-  right: "text-right",
 } as const;
 
 /* ---- Boards --------------------------------------------------------------- */
@@ -100,11 +96,9 @@ export const TAB =
 export const SECTION_BAR =
   "flex min-h-7 items-center justify-center bg-chrome px-3 font-chrome text-2xs font-bold uppercase text-ink lg:min-h-8 lg:text-xs";
 
-/** A stats board's column head: left over a name; `_END` right over a figure. */
+/** A stats board's column head, left over a name. */
 export const HEAD_PLATE = "cm-bevel flex h-6 items-center px-1.5";
-export const HEAD_PLATE_END =
-  "cm-bevel flex h-6 items-center justify-end px-1.5";
-/** The same plate over a centred figure column or a group of them. */
+/** The same plate over a figure column or a group of them: centred, as every figure is. */
 export const HEAD_PLATE_CENTRE = `${HEAD_PLATE} justify-center`;
 
 /** A plate naming a group of columns or a section of a match board. */

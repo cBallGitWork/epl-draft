@@ -4,7 +4,7 @@ import ScrollBoard from "../../components/league/ScrollBoard";
 import Section from "../../components/shell/Section";
 import { IndexCell } from "../../components/league/TableCells";
 import { MUTE, PlateHead } from "../../components/league/TableHeads";
-import { BOARD, BOARD_FIGURE, ROW_RULE } from "@/app/desk";
+import { BOARD, FIGURE_CELL, ROW_RULE } from "@/app/desk";
 
 // Where he stands in his club's penalty, free-kick and corner orders: first choice in CM's orange.
 
@@ -21,7 +21,7 @@ export default function SetPieces({ pieces, club }: { pieces: readonly SetPieceR
                 <span className={MUTE}>Row</span>
               </PlateHead>
               {pieces.map((p) => (
-                <PlateHead key={p.piece} at="end">
+                <PlateHead key={p.piece} at="centre">
                   {p.label}
                 </PlateHead>
               ))}
@@ -33,7 +33,7 @@ export default function SetPieces({ pieces, club }: { pieces: readonly SetPieceR
               {pieces.map((p) => (
                 <td
                   key={p.piece}
-                  className={`${BOARD_FIGURE} font-bold ${p.rank === null ? "text-faint" : p.rank === 1 ? "text-peak" : ""}`}
+                  className={`${FIGURE_CELL} font-bold ${p.rank === null ? "text-faint" : p.rank === 1 ? "text-peak" : ""}`}
                   title={p.rank !== null ? `${ordinal(p.rank)} of ${p.of} takers` : p.of === 0 ? "Nobody ranked yet" : `Not among the ${p.of} takers`}
                 >
                   {p.rank === null ? DASH : ordinal(p.rank)}

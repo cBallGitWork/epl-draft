@@ -1,7 +1,7 @@
 import { type BreakdownLine, signed, DASH } from "@epl/core";
 import Note from "./Note";
 import { emptyBreakdownNote } from "./breakdownNote";
-import { FACT_LABEL, HEAD_PLATE, HEAD_PLATE_END, LABEL, gainOrLoss } from "@/app/desk";
+import { FACT_LABEL, HEAD_PLATE, HEAD_PLATE_CENTRE, LABEL, gainOrLoss } from "@/app/desk";
 
 // The itemised table: one row per category that moved his total, then the total.
 //
@@ -61,7 +61,7 @@ export default function Breakdown({
         <span className={`${HEAD_PLATE} min-w-0 flex-1 ${LABEL}`}>
           {reserve ? "On the bench · not counted" : "This gameweek"}
         </span>
-        <span className={`${HEAD_PLATE_END} ${PTS_COLUMN} ${LABEL}`}>Pts</span>
+        <span className={`${HEAD_PLATE_CENTRE} ${PTS_COLUMN} ${LABEL}`}>Pts</span>
       </div>
 
       <div className="cm-panel flex flex-col">
@@ -82,11 +82,11 @@ export default function Breakdown({
                 {/* Quiet, because the column the reader is scanning is the one
                     on the right. Absent rather than nought where the season
                     table's FPTS view has spent the count (DESIGN §7). */}
-                <span className="numeric w-10 shrink-0 text-right text-sm text-muted">
+                <span className="numeric w-10 shrink-0 text-center text-sm text-muted">
                   {line.value ?? DASH}
                 </span>
                 <span
-                  className={`numeric ${PTS_COLUMN} shrink-0 pr-1.5 text-right text-sm font-bold ${tone(line.points)}`}
+                  className={`numeric ${PTS_COLUMN} shrink-0 text-center text-sm font-bold ${tone(line.points)}`}
                 >
                   {signed(line.points)}
                 </span>
@@ -98,7 +98,7 @@ export default function Breakdown({
         <div className="flex items-center gap-2 border-t border-line px-2 py-1.5">
           <span className={`min-w-0 flex-1 ${LABEL}`}>Total</span>
           <span
-            className={`numeric ${PTS_COLUMN} shrink-0 pr-1.5 text-right text-xl font-bold leading-none ${
+            className={`numeric ${PTS_COLUMN} shrink-0 text-center text-xl font-bold leading-none ${
               points === null ? "text-faint" : tone(points)
             }`}
           >

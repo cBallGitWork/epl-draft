@@ -5,7 +5,7 @@ import { Head, HeadRow, NameHead } from "../../../components/league/TableHeads";
 import { IndexCell, ROW_LINK } from "../../../components/league/TableCells";
 import { ROW_CREST } from "../../../components/football/ClubLabel";
 import NameLink from "../../club/[code]/NameLink";
-import { BOARD, BOARD_FIGURE, INDEX_WIDTH, PANEL_FLUSH, ROW_HOVER, ROW_NAME, SECTION_BAR, SMALL_CAPS } from "@/app/desk";
+import { BOARD, FIGURE_CELL, INDEX_WIDTH, PANEL_FLUSH, ROW_HOVER, ROW_NAME, SECTION_BAR, SMALL_CAPS } from "@/app/desk";
 import { printed, type LeaderList, type Ranked } from "./leaders";
 
 // One list: the men in order, his club's crest and his name, the one figure in amber (ours in cyan), and the way to fifty.
@@ -48,7 +48,7 @@ export default function LeaderBoard({
               </Head>
               <NameHead label="Player" />
               <Head width="w-16" title={list.explain}>
-                <span className="cm-bevel-pressed flex h-7 items-center justify-end px-1.5">{list.head}</span>
+                <span className="cm-bevel-pressed flex h-7 items-center justify-center px-1.5">{list.head}</span>
               </Head>
             </HeadRow>
           </thead>
@@ -72,7 +72,7 @@ export default function LeaderBoard({
                     <span className={`min-w-0 truncate ${ROW_NAME}`}>{row.name}</span>
                   </NameLink>
                 </td>
-                <td className={`${BOARD_FIGURE} ${ink}`}>{printed(list, row.figure)}</td>
+                <td className={`${FIGURE_CELL} ${ink}`}>{printed(list, row.figure)}</td>
               </tr>
             ))}
           </tbody>

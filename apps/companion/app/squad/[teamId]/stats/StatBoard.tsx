@@ -17,7 +17,7 @@ import { HeadRow, LeadHeads, SortHead, sortedAs } from "../../../components/leag
 import { ROW_LINK } from "../../../components/league/TableCells";
 import { byFigure } from "../../../components/league/order";
 import { SIDE_SHARES, standoutCuts, standoutInk } from "../../../components/league/standout";
-import { BOARD, BOARD_FIGURE, MINOR_LABEL, PANEL_FLUSH, PINNED_BESIDE_TILE, PINNED_TILE, ROW_HOVER, ROW_NAME } from "@/app/desk";
+import { BOARD, FIGURE_CELL, MINOR_LABEL, PANEL_FLUSH, PINNED_BESIDE_TILE, PINNED_TILE, ROW_HOVER, ROW_NAME } from "@/app/desk";
 
 // One squad's season on the house board, as a club's stat board draws it: our position in the index tile, the crest
 // before the pinned name, a view picked above, a tap on a head to sort, and each column's standouts lit in ink.
@@ -108,7 +108,6 @@ export default function StatBoard({
                   label={measure.head}
                   title={measure.label}
                   width={FIGURE_WIDTH}
-                  align="right"
                   sorted={sortedAs(sort?.key === measure.key, sort?.descending ?? true)}
                   onSort={() => sortBy(measure.key)}
                 />
@@ -142,7 +141,7 @@ export default function StatBoard({
                           ? "text-info"
                           : standoutInk(value, cuts.get(measure.key), measure.worse ? "low" : "high") || "text-ink";
                     return (
-                      <td key={measure.key} className={`${BOARD_FIGURE} ${ink}`}>
+                      <td key={measure.key} className={`${FIGURE_CELL} ${ink}`}>
                         {value === null ? DASH : value}
                       </td>
                     );

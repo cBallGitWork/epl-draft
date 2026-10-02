@@ -131,7 +131,7 @@ export default function SquadRow({
           What DID move is the three cells that were BELOW the recipe: the head
           strip, the position and the opponent. */}
       {points === undefined ? null : (
-        <span className="numeric w-9 shrink-0 text-right text-sm font-bold text-accent">
+        <span className="numeric w-9 shrink-0 text-center text-sm font-bold text-accent">
           {points ?? DASH}
         </span>
       )}

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { HEAD_CELL, HEAD_PLATE, HEAD_PLATE_CENTRE, HEAD_PLATE_END } from "@/app/desk";
+import { HEAD_CELL, HEAD_PLATE, HEAD_PLATE_CENTRE } from "@/app/desk";
 import { TILE_WIDTH } from "./PositionTile";
 
 // The bevelled head strip both league tables print.
@@ -89,7 +89,7 @@ export const PLATE = "cm-bevel flex h-7 items-center justify-center whitespace-n
  *  club and squad stat boards, the season grid, a match's player stats and the
  *  pool — and between them they wrap the word in **seven** different things:
  *  `SortHead`'s link, `NameHead`'s bare span, `PLATE`, `HEAD_PLATE`,
- *  `HEAD_PLATE_END`, the pool's own sticky lead cell and its skeleton's plain
+ *  `HEAD_PLATE_CENTRE`, the pool's own sticky lead cell and its skeleton's plain
  *  `<th>`. A component spanning those takes a wrapper, a width and an element,
  *  which is CODE_RULES §1's "never build a generic mechanism". What they share
  *  is this one class. */
@@ -98,7 +98,7 @@ export const MUTE = "sr-only";
 /** Where a sortable head's label sits inside its plate. The figures are centred
  *  — every one in `cm9900/24.jpg` is, under a centred head — and a name is read
  *  rather than compared, so it stays left. */
-const JUSTIFY = { left: "justify-start", center: "justify-center", right: "justify-end" } as const;
+const JUSTIFY = { left: "justify-start", center: "justify-center" } as const;
 
 /** A head cell the reader can order by: the bevelled plate as a link or a button, drawn
  *  pressed when the table is ordered by it.
@@ -123,7 +123,7 @@ export function SortHead({
   width?: string;
   title?: string | undefined;
   label: string;
-  align?: "left" | "center" | "right";
+  align?: "left" | "center";
   /** Which way the table is ordered by THIS column, or undefined when it is not
    *  the column in force. Drives the pressed plate, `aria-sort` and the arrow
    *  together, so the three can never disagree — which they did on `/players`
@@ -210,8 +210,8 @@ export function NameHead({ label }: { label: string }) {
   );
 }
 
-/** Where a stats board's head sits in its plate: a name's at the start, a figure's at the end or centred. */
-const PLATE_AT = { start: HEAD_PLATE, end: HEAD_PLATE_END, centre: HEAD_PLATE_CENTRE } as const;
+/** Where a stats board's head sits in its plate: a name's at the start, a figure's centred. */
+const PLATE_AT = { start: HEAD_PLATE, centre: HEAD_PLATE_CENTRE } as const;
 
 /** A stats board's head that does not sort: the cell and the 24px bevelled plate inside it. */
 export function PlateHead({
