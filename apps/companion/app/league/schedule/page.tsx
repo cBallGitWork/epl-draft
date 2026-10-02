@@ -3,6 +3,7 @@ import {
   cupTies,
   leagueTies,
   periodPairings,
+  seededIn,
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import LeagueShell from "../Shell";
@@ -143,9 +144,18 @@ export default async function SchedulePage() {
             badges={crests}
             places={places}
             mine={mine}
+            note={seeding(round.gameweek)}
           />
         ))}
       </div>
     </LeagueShell>
   );
+}
+
+/** A cup seeded on this gameweek's points says so under its fixtures. */
+function seeding(gameweek: number) {
+  const cup = seededIn(gameweek);
+  return cup === undefined
+    ? undefined
+    : { title: `${cup.name} · Seeding`, text: "Every team's points this gameweek set the seeds." };
 }

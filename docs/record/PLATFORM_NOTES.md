@@ -258,11 +258,13 @@ Craig set the formats on 27 Sep. The cups are declared in `packages/core/src/lea
 - **Group points are 3 for a win and 1 for a draw** (Craig, 27 Sep). A group is placed on points, then
   points for, then draw order; the order after points for is assumed.
 - **On screen with a placeholder draw** (Craig, 27 Sep: *"Placeholder brackets are fine for now"*):
-  `/league/cups` shows each cup as the schedule's fixture list or as a bracket, and Schedule and Live
-  carry the cup ties. Every side is "To be drawn", "A1", "2nd B" or "Winner M5" until the draws are
-  made; nothing yet puts a team into a slot. The screen no longer says "Placeholder draw" (Craig, 30 Sep:
-  *"remove placeholder draw sentence"*); a cup's own list heads a lone round on the gameweek's plate. `knockoutWinner`, `seedByPoints` and
-  `groupTable` are tested but still read by no screen, which is the step that does.
+  `/league/cups` shows each cup's bracket, and Schedule and Live carry the cup ties, the cups' only fixture
+  list (Craig, 1 Oct: *"just put fixtures in fixtures section, too many buttons, leave brackets here"*; GW9's
+  seeding line moved to the schedule with them). Every side is "To be drawn", "A1", "2nd B" or "Winner M5"
+  until the draws are made; nothing yet puts a team into a slot. The screen no longer says "Placeholder
+  draw" (Craig, 30 Sep: *"remove placeholder draw sentence"*). The Davy Propper groups are drawn as
+  `groupTable` league tables (Craig, 1 Oct: *"propper cup should be a table view"*), every figure 0 until
+  results are wired in. `knockoutWinner` and `seedByPoints` are tested but still read by no screen.
 
 ## The real league is `mqsjd23smsgbiqzr`, not `ayyoh3n2mr326v2o` — settled 25 Sep 2026
 

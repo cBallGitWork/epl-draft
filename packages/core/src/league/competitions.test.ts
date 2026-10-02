@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { COMPETITIONS, LEAGUE_COMPETITION, cupTies, groupTies, leagueTies } from "./competitions";
+import { COMPETITIONS, LEAGUE_COMPETITION, cupTies, groupTies, leagueTies, seededIn } from "./competitions";
 
 const team = (teamId: string, name: string) => ({ teamId, name });
 
@@ -32,6 +32,18 @@ describe("cupTies", () => {
     const known = new Set(COMPETITIONS.map((competition) => competition.id));
     for (let gameweek = 1; gameweek <= 38; gameweek++) {
       for (const tie of cupTies(10, gameweek)) expect(known.has(tie.competition.id)).toBe(true);
+    }
+  });
+});
+
+describe("seededIn", () => {
+  it("names the Timbeibs Cup on GW9, whose points set its seeds", () => {
+    expect(seededIn(9)?.id).toBe("timbeibs");
+  });
+
+  it("names no cup on any other gameweek, the group-seeded cup included", () => {
+    for (let gameweek = 1; gameweek <= 38; gameweek++) {
+      if (gameweek !== 9) expect(seededIn(gameweek)).toBeUndefined();
     }
   });
 });

@@ -1,4 +1,4 @@
-import { CUPS } from "./cups/declared";
+import { CUPS, type Cup } from "./cups/declared";
 import { cupPlan } from "./cups/plan";
 import type { PeriodPairing } from "./selectors";
 import type { LeagueTeam } from "./types";
@@ -65,6 +65,11 @@ export function cupTies(teams: number, gameweek: number): CompetitionTie[] {
         })),
       ),
   );
+}
+
+/** The cup whose seeds this gameweek's points set, if any. */
+export function seededIn(gameweek: number): Cup | undefined {
+  return CUPS.find((cup) => cup.seeding.from === "gameweek" && cup.seeding.gameweek === gameweek);
 }
 
 /** One competition's ties in one gameweek, or one round of one competition's.
