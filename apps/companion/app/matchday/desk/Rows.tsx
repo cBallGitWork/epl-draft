@@ -61,7 +61,7 @@ function Name({
   );
 }
 
-/** One match, one line, with the vidiprinter's two conventions. */
+/** One match, one line. */
 export function Match({
   fixture,
   clubs,
@@ -83,9 +83,9 @@ export function Match({
       <span className="numeric shrink-0 font-bold tabular-nums">
         {played ? (
           <>
-            {spelled(fixture.homeScore)}
+            <span className="px-0.5">{fixture.homeScore}</span>
             <span className="text-faint">–</span>
-            {spelled(fixture.awayScore)}
+            <span className="px-0.5">{fixture.awayScore}</span>
           </>
         ) : (
           <span className="font-normal text-muted">
@@ -109,32 +109,5 @@ export function Match({
         ) : null}
       </span>
     </div>
-  );
-}
-
-/** How many a side has to put past you before the vidiprinter says it twice.
- *
- *  Four. Not a number of ours: it is the threshold the Sky teleprinter has used
- *  for decades, and the whole joke is that the machine stops trusting you to
- *  believe the digit. */
-const SPELL_FROM = 4;
-
-const WORDS = ["ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"];
-
-/** `4` becomes `4 (FOUR)`. A **football** fact only: there is no equivalent for
- *  a fantasy total, because "a lot of points" has no custom behind it and
- *  inventing a threshold for one would be us making the joke rather than
- *  quoting it.
- *
- *  Above nine the digit stands alone. Ten past a Premier League side is not a
- *  scoreline this needs to have an opinion about. */
-function spelled(goals: number | null) {
-  if (goals === null) return null;
-  const word = goals >= SPELL_FROM ? WORDS[goals] : undefined;
-  return (
-    <span className="px-0.5">
-      {goals}
-      {word ? <span className="pl-1 text-2xs font-bold text-faint">({word})</span> : null}
-    </span>
   );
 }

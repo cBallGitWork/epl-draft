@@ -49,11 +49,17 @@ football under it.
 
    **`FT` rows carry the scoreline**, interleaved by wall clock like everything
    else, because full time is the one thing a scoreline cannot say about itself: a
-   2-1 with a clock on it and a 2-1 that is finished look identical. They are
-   `text-muted` and deliberately neither the accent (which means "yours" on this
-   very panel) nor `--color-live` (which means a match in PLAY, and these have
-   stopped). Off the SAME cached round read as the goals — one upstream request
-   for ten matches.
+   2-1 with a clock on it and a 2-1 that is finished look identical. `FT` is
+   amber (`--color-mid`, a fact and a ledger line) since Craig's *"FT should be
+   yellow, grey bad"* (1 Oct 2026): not the accent, which means "yours" on this
+   very panel, nor `--color-live`, which means a match in PLAY. Off the SAME
+   cached round read as the goals — one upstream request for ten matches.
+
+   **One face for the whole line** (1 Oct 2026): the chrome face for the word,
+   the names, the minute and the managers, names a step up. The minute and the
+   manager are ink: a name is white, and yours is the accent. The assister is
+   marked `As`, not `Assist`, so his manager fits at 390 (Craig, 2 Oct 2026:
+   *"Could just put 'As'"*).
 
    **Half time was here for an evening and went** (Craig, 5 Sep 2026: *"ditch the
    HT"*). On a Saturday teatime it lands within an hour of full time with the
@@ -73,6 +79,19 @@ football under it.
    now with **your players marked and every scorer tagged with the squad holding
    him**. The two halves of the page finally share both grammars: the scoreline,
    and the accent mark that means "yours".
+
+**Top stats**, the third view (`?view=stats`; Craig, 1 Oct 2026: *"match day have 3rd tab, that
+shows top stats for just this gameweek, like xg, fpts, ratings etc"*): the gameweek's five leaders
+in Fantrax points, our rating, xG and xA, each man with whoever holds him. Figures are amber (a
+board's one measure), except our rating, which is cyan (ours, derived). The phone picks one list from
+a strip (`&stat=`); a desk shows all four. Fantrax points are the live read's, the eleven and the
+reserves in one list, so nothing says who started; free agents are not in that read. The rating is
+the filed store's (`data/ratings`, written after each settled match day), averaged over a double
+gameweek's two matches. FPL's xG and xA are round figures, read once per man.
+
+Last, on every view, **Matchups on Fantrax**: their live scoring for this gameweek's period
+(`livescoring;period={n}`, `FANTRAX_MATCHUPS_PATH`), or their current period when we could not
+read ours (Craig, 1 Oct 2026: *"have fantrax link at bottom which goes to the match ups screen"*).
 
 Between rounds, the football half is replaced by a panel naming the first kickoff
 and FPL's deadline, with an explicit note that ours is the commissioner's and

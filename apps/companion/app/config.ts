@@ -59,6 +59,9 @@ export const TOKEN_SRGB = { bg: "#091227", league: "#c8102e", cream: "#f3eadd" }
 export const DEALS_SHOWN = 6;
 export const DOUBTS_SHOWN = 8;
 
+/** How many men each of the Live tab's gameweek leaders lists. */
+export const LEADERS_SHOWN = 5;
+
 
 /** How many filed stories run beside the lead, at the second rank.
  *

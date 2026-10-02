@@ -71,6 +71,12 @@ export async function liveScores(
   return { scores: new Map(scores), refused };
 }
 
+/** Every man Fantrax priced this period, eleven and reserves, by Fantrax id; empty when it refused. */
+export async function periodPoints(period: number): Promise<Map<string, number>> {
+  const { players, bench } = await readScores(period);
+  return new Map([...players, ...bench].flatMap(([, squad]) => squad.map((man) => [man.fantraxId, man.points])));
+}
+
 /** One squad's points this period, priced at the slot each man is filling.
  *
  *  **Filtered to one team out here, never inside the cache.** The cached read is

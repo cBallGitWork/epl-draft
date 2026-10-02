@@ -42,6 +42,9 @@ export const DESK_ROUTES = [
   "/players/planner?view=defence",
   "/players/projections",
   "/matchday",
+  // The Live tab's other two views are queries, so nothing links a crawler to them.
+  "/matchday?view=vidiprinter",
+  "/matchday?view=stats",
   "/matchday/desk",
   "/fpl",
   // The manager's inbox, added with the section on 5 Sep 2026. A route this
