@@ -50,17 +50,8 @@ export function Carried({
 /** The geometry every control on this row shares (Craig, 10 Sep 2026: *"all buttons different sizes, we can CM
  *  this now"*): one recipe, the plates differing only in colour. Two pixels tighter a side under a thumb, so the
  *  status chips, Filter and the search share a 390 phone's row. Local to `players/`, where all its sites are. */
-export const PLATE_TYPE =
-  `min-h-11 px-2 ${SMALL_CAPS} lg:min-h-9 lg:px-2.5`;
-
-/** The same, plus the layout a plate with CONTENT in it needs.
- *
- *  Two recipes because one caller cannot take the layout: a `<select>` is a
- *  replaced element the platform draws, and `display: flex` on one is not a
- *  thing browsers agree about. It needs the height, the padding and the type —
- *  which is what makes it match the plates beside it — and none of the flex. */
 export const PLATE =
-  `flex shrink-0 items-center justify-center gap-1 whitespace-nowrap ${PLATE_TYPE}`;
+  `flex shrink-0 items-center justify-center gap-1 whitespace-nowrap min-h-11 px-2 ${SMALL_CAPS} lg:min-h-9 lg:px-2.5`;
 
 /** A plate you press, at rest: the `Filter` link, an unpressed `Chip` and the pick field's button. Not the pressed
  *  state: `cm-bevel-pressed` is a plate with no hover, because a held thing does not lift. */
