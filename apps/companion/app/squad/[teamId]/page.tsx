@@ -1,6 +1,5 @@
 import {
-  FANTRAX_APP_BASE,
-  FANTRAX_LEAGUE_ID,
+  FANTRAX_LEAGUE_PAGE,
   FANTRAX_ROSTER_PATH,
   lineupDetail,
   playerDetail,
@@ -77,7 +76,7 @@ export default async function TeamPage({
           // every caller of the mapper.
           limits={{ ...planning.roster, minActiveByPosition: rosterMinimums() }}
           // The same week the planner shows, never Fantrax's open one.
-          fantraxUrl={`${FANTRAX_APP_BASE}/${FANTRAX_LEAGUE_ID}${open === null ? "" : `/${FANTRAX_ROSTER_PATH};period=${open.period}`}`}
+          fantraxUrl={`${FANTRAX_LEAGUE_PAGE}${open === null ? "" : `/${FANTRAX_ROSTER_PATH};period=${open.period}`}`}
           pending={pending}
           period={open?.period ?? 0}
           benchRanks={benchRanks}

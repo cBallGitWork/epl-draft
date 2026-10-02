@@ -987,7 +987,7 @@ invention.
 `claimTypes` is `{1: FREE_FOR_ALL, 2: RANKING}` and `selectedTxType` is `CLAIM`.
 `noResults: true` in dummy at the time of probing — the method answers, the
 league simply had nothing pending, so **the populated table shape is also
-unknown**. Read it on a Wednesday.
+unknown**. Read it on a Wednesday. (Read on 1 Oct 2026: *Re-probed 1 Oct 2026 off the page itself*, below.)
 
 ### Nineteen commissioner actions, in five groups
 
@@ -3896,6 +3896,38 @@ and the answer stayed The Raccoons. **Blocked** until something turns
 
 The real league, `mqsjd23smsgbiqzr`, has seven teams on 28 Sep, six of them other
 people's. Nothing above was sent to it but reads.
+
+### Re-probed 1 Oct 2026 off the page itself, and Mail links out instead
+
+Craig asked for pending moves in Mail, with `…/{leagueId}/transactions/pending`. That page sends one fxpa batch,
+`getPendingTransactions({leagueId})`. Its two tabs add `txType: "CLAIM" | "TRADE"`, its team picker adds `teamId`,
+and the picker's "All Teams" sends **`teamId: "ALL_TEAMS"`**: the 28 Sep probe tried `"ALL"`. fxea has no such
+method. Reads only, with the commissioner's cookie where marked:
+
+| | dummy | rehearsal | real |
+|---|---|---|---|
+| no cookie, any body | `NOT_MEMBER_OF_LEAGUE` | `NOT_MEMBER_OF_LEAGUE` | `NOT_MEMBER_OF_LEAGUE` |
+| cookie, `ALL_TEAMS` | **every team**: 3 claims, all test2's | his own team | his own team |
+| cookie, another team's id, or `ALL_TEAMS` with `adminMode` | (he owns all ten) | his own team | his own team |
+| `miscData.showAllTeamsChoice` | `true` | `false` | `false` |
+| his teams (`myTeamIds`) of the league's | 10 of 10 | 9 of 10 | 1 of 9 |
+
+So the whole league's pending moves are readable only where one account owns every team, which is the dummy league.
+For 8 of the 9 real managers, nothing the server holds can read their own claims either. **Mail links to the served
+league's page** (`FANTRAX_PENDING_PATH`) rather than showing one manager in nine his moves and the rest nothing.
+
+The populated shapes, which the 21 Sep note could not see:
+
+- **Claims**: one team's in `tables[]`, every team's in `tablesPerTeam[{key: teamId, value: tables}]`. A table is
+  `claimType` (`WAIVER_WIRE`), `processDate` ("Fri Oct 2, 10:00 AM BST") with `processDateRaw`, and `txSets[]`:
+  `claimScorer` and `dropOrMoveScorer` (full scorers), `dropOrMoveTxType` `DROP`, `priority`, `group`,
+  `dateSubmitted`, `toPositionName`, `toStatusName`. Empty is `noResults: true` and no `tables`.
+- **Trades**: `tradeInfoList[]`, real 1 (eight draft picks, The Raccoons and one other team): `status` "Pending
+  Acceptance", `creatorTeamId`, `usefulInfo[{name, value}]` (Proposed, Proposed by, To be executed, Awaiting
+  acceptance from) and `moves[]{from.team, to.team, type: "TRADE", draftPick{year, round, pickNumber}}`.
+- `getLeagueHomeInfo.pendingTransactions.pendingTransactionSets[]` carries the same sets more thinly
+  (`statusDisplay`, `typeCode`, `transactions[]{type.code, scorerId, sourceTeamId, destinationTeamId}`), and is
+  cookie-only too.
 
 ## A Fantrax points figure per man per MATCH is a capture, not a read (4 Sep 2026)
 

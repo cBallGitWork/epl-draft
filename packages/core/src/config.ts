@@ -174,11 +174,14 @@ export const FANTRAX_SETUP_PAGE = "https://www.fantrax.com/newui/fantasy/createL
 export const FANTRAX_FXPA_BASE = "https://www.fantrax.com/fxpa/req";
 
 /** Fantrax's website, for handing a manager back to it. Deeper paths are only ones seen in a real browser. */
-export const FANTRAX_APP_BASE = "https://www.fantrax.com/fantasy/league";
+const FANTRAX_APP_BASE = "https://www.fantrax.com/fantasy/league";
 
 /** The signed-in manager's own roster for one period, off Craig's browser URL (30 Sep 2026); appends to
- *  `FANTRAX_APP_BASE/{leagueId}/` and takes `;period={n}`. */
+ *  `FANTRAX_LEAGUE_PAGE/` and takes `;period={n}`. */
 export const FANTRAX_ROSTER_PATH = "team/roster";
+
+/** The league's pending claims and trades, off Craig's URL (1 Oct 2026); only a member's own session reads them. */
+export const FANTRAX_PENDING_PATH = "transactions/pending";
 
 /** One player on Fantrax, which is where a claim is actually made.
  *
@@ -201,7 +204,7 @@ export const FANTRAX_PLAYER_BASE = "https://www.fantrax.com/player";
  *  Their matrix-parameter path, taken off Craig's own browser URL rather than
  *  constructed — the same session that gave up `positionOrGroup`, which is a
  *  parameter no amount of reading their payload would have found
- *  (PLATFORM_NOTES). It hangs off `FANTRAX_APP_BASE/{leagueId}`. */
+ *  (PLATFORM_NOTES). It hangs off `FANTRAX_LEAGUE_PAGE/`. */
 export const FANTRAX_PLAYERS_PATH = "players;statusOrTeamFilter=ALL;pageNumber=1";
 
 /** Fantrax's sport code for the Premier League. `SOCCER` is a different sport to
@@ -226,6 +229,9 @@ export const HALF_MINUTES = 45;
  *  for it (`/api/league`) rather than keeping a copy. Empty when unset, and `requireLeague` is
  *  how an edge refuses to run on nothing. The ids are public: they are in the league URLs. */
 export const FANTRAX_LEAGUE_ID = process.env.FANTRAX_LEAGUE_ID ?? "";
+
+/** The served league on Fantrax's website; a deeper page appends `/{path}`. */
+export const FANTRAX_LEAGUE_PAGE = `${FANTRAX_APP_BASE}/${FANTRAX_LEAGUE_ID}`;
 
 /** The league id, or a throw that says where to set it. */
 export function requireLeague(leagueId: string): string {

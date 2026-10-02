@@ -114,8 +114,12 @@ Methods that matter:
   **It saves an illegal lineup** after a warning, so the caller must refuse one.
 - `setAutoSubsOrder({teamId, period, adminMode, autoSubOrderMap})` — the bench
   order, `scorerId → rank`.
-- `getPendingTransactions` answers for the caller's own team whatever `teamId`
-  says, so another team's pending claims are not readable.
+- `getPendingTransactions` (`txType` `CLAIM`|`TRADE`; `teamId`, or `"ALL_TEAMS"`)
+  refuses without a cookie and answers for the caller's own team whatever `teamId`
+  says, unless `miscData.showAllTeamsChoice`, which is true only where one account
+  owns every team. So another team's pending claims are not readable. Claims arrive
+  in `tables[].txSets[]` (`tablesPerTeam` for all teams), trades in
+  `tradeInfoList[]`. PLATFORM_NOTES, 1 Oct 2026.
 - `getCommissionerHubInfo` + `executeCommissionerHubAction({actionKey, …})` — the
   commissioner console. The returned action list is server-driven; do not hardcode.
 - `getMatchups` — Fantrax computes live H2H points itself. Their live scores are

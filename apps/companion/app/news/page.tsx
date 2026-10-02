@@ -1,10 +1,12 @@
 import type { InboxItem } from "@epl/core";
-import { fantraxTime, londonDayAndDate, londonTime } from "@epl/core";
+import { FANTRAX_LEAGUE_PAGE, FANTRAX_PENDING_PATH, fantraxTime, londonDayAndDate, londonTime } from "@epl/core";
 import Letter from "./Letter";
 import MailRow from "./MailRow";
 import Mailbox from "./Mailbox";
 import { doubtWash } from "../components/football/doubtRow";
 import Nothing from "../components/shell/Nothing";
+import OutLink from "../components/shell/OutLink";
+import { BUTTON } from "../components/shell/ButtonLink";
 import PageHeader from "../components/shell/PageHeader";
 import { readInbox } from "./inbox";
 import { NEWS } from "../titles";
@@ -84,6 +86,11 @@ export default async function NewsPage({
           A reader with no team keeps a bar and it says the plain word, which is
           also what the loading frame shows. */}
       <PageHeader title={mine === null ? NEWS : `${mine} ${NEWS}`} />
+
+      {/* Fantrax shows a manager's pending claims and trades only to his own session (PLATFORM_NOTES, 1 Oct 2026). */}
+      <OutLink href={`${FANTRAX_LEAGUE_PAGE}/${FANTRAX_PENDING_PATH}`} className={`${BUTTON} lg:self-start`}>
+        Pending claims and trades on Fantrax
+      </OutLink>
 
       {inbox.items.length === 0 ? (
         <section className="cm-panel p-3">

@@ -21,7 +21,7 @@ import { figureOf } from "./figure";
 import { attributeStats } from "./attributeColumns";
 import { divisionGrids } from "./[fantraxId]/grid";
 import { cutsFor } from "./standout";
-import { FANTRAX_APP_BASE, FANTRAX_LEAGUE_ID, FANTRAX_PLAYERS_PATH, playerByCode } from "@epl/core";
+import { FANTRAX_LEAGUE_PAGE, FANTRAX_PLAYERS_PATH, playerByCode } from "@epl/core";
 import { footballNow } from "../football";
 import OutLink from "../components/shell/OutLink";
 import FantraxSilent from "../components/shell/FantraxSilent";
@@ -193,7 +193,7 @@ export default async function PlayersPage({
           matrix-parameter path taken off a real browser session; a deeper guess
           would break silently the day they reorganise their routes, which is the
           reason `FANTRAX_APP_BASE` has carried that warning since it was added. */}
-      <OutLink href={`${FANTRAX_APP_BASE}/${FANTRAX_LEAGUE_ID}/${FANTRAX_PLAYERS_PATH}`}>
+      <OutLink href={`${FANTRAX_LEAGUE_PAGE}/${FANTRAX_PLAYERS_PATH}`}>
         Claim on Fantrax
       </OutLink>
     </ScoutShell>
