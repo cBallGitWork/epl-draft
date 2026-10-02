@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { bornLine } from "./bio";
 
 // `now` is injected, so these are dates and not a clock.
-const today = new Date(2026, 8, 4); // 4 Sep 2026, local — the day this was written.
+const today = new Date("2026-09-04T11:00:00Z"); // Noon in London on 4 Sep 2026, the day this was written.
 
 describe("bornLine", () => {
   it("writes Championship Manager's own line", () => {
@@ -21,6 +21,12 @@ describe("bornLine", () => {
   it("counts the birthday as the day he turns", () => {
     expect(bornLine("2000-09-04", today)).toBe("Born 4.9.00 (Age 26).");
     expect(bornLine("2000-09-05", today)).toBe("Born 5.9.00 (Age 25).");
+  });
+
+  it("turns him a year older at midnight in London, whatever the server's own zone", () => {
+    // 23:30 UTC on 3 Sep is 00:30 BST on the 4th, his birthday; Vercel's clock reads UTC.
+    expect(bornLine("2000-09-04", new Date("2026-09-03T23:30:00Z"))).toBe("Born 4.9.00 (Age 26).");
+    expect(bornLine("2000-09-04", new Date("2026-09-03T22:30:00Z"))).toBe("Born 4.9.00 (Age 25).");
   });
 
   it("does not shift the date for a reader west of Greenwich", () => {

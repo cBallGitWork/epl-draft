@@ -1,3 +1,5 @@
+import { londonDay } from "@epl/core";
+
 // Championship Manager's caption line: `Born 2.10.79 (Age 19). English.`, in CM's unpadded d.m.yy.
 
 /** `Born 5.3.93 (Age 33).`, or null when FPL has not filled his date in.
@@ -49,10 +51,10 @@ function parseIsoDate(value: string | null): BornOn | null {
  *  worse, and a `(Age -1)` on screen is the confident wrong number this app
  *  spends its comments avoiding. */
 function ageOn(born: BornOn, now: Date): number | null {
-  let age = now.getFullYear() - born.year;
-  const beforeBirthday =
-    now.getMonth() + 1 < born.month ||
-    (now.getMonth() + 1 === born.month && now.getDate() < born.day);
+  // London's date, not the server's: Vercel's clock reads UTC, an hour behind all summer.
+  const [year = 0, month = 0, day = 0] = londonDay(now).split("-").map(Number);
+  let age = year - born.year;
+  const beforeBirthday = month < born.month || (month === born.month && day < born.day);
   if (beforeBirthday) age -= 1;
   return age < 0 ? null : age;
 }
