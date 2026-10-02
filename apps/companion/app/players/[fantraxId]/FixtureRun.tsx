@@ -2,7 +2,7 @@ import type { Opposition } from "@epl/core";
 import Section from "../../components/shell/Section";
 import { fdrStep } from "../../components/football/fdr";
 import { standoutInk } from "../../components/league/standout";
-import { DASH, ordinal } from "@epl/core";
+import { DASH, fixed, ordinal } from "@epl/core";
 import type { ProjectedWeek } from "./grid";
 
 // What is coming, as a run: FPL's difficulty on each block, and under it the sister model's projected FPL points
@@ -71,9 +71,9 @@ function Projected({ week, group }: { week: ProjectedWeek | undefined; group: st
   return (
     <span
       className={`${PROJECTED} ${ink === "" ? "text-ink" : ink}`}
-      title={`Our model projects ${place.points.toFixed(1)} FPL points, ${ordinal(place.rank)} of ${place.of} ${group ?? "players"}`}
+      title={`Our model projects ${fixed(place.points, "projected")} FPL points, ${ordinal(place.rank)} of ${place.of} ${group ?? "players"}`}
     >
-      <span className="font-bold">{place.points.toFixed(1)}</span>
+      <span className="font-bold">{fixed(place.points, "projected")}</span>
       <span>{ordinal(place.rank)}</span>
     </span>
   );

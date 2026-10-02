@@ -1,7 +1,7 @@
 import { ordinal, type Club, type StrengthRank } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import { easeGround } from "../../components/football/ease";
-import { MUTE, PlateHead } from "../../components/league/TableHeads";
+import { HeadRow, MUTE, PlateHead } from "../../components/league/TableHeads";
 import { HEAD_CELL, ROW_RULE } from "@/app/desk";
 
 // The planner's rankings: every club's own attack or defence at home and away, the weakest first, so 1 is the
@@ -24,7 +24,7 @@ export default function StrengthRanks({
         <col className="w-16" />
       </colgroup>
       <thead>
-        <tr className="text-2xs">
+        <HeadRow>
           <th scope="col" className={HEAD_CELL}>
             <span className={MUTE}>Rank</span>
           </th>
@@ -33,7 +33,7 @@ export default function StrengthRanks({
           </th>
           <PlateHead at="centre">Home</PlateHead>
           <PlateHead at="centre">Away</PlateHead>
-        </tr>
+        </HeadRow>
       </thead>
       <tbody>
         {table.map((row, at) => {

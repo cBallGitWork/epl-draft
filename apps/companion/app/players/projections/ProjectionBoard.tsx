@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { DASH, gameweekSpan } from "@epl/core";
+import { DASH, fixed, gameweekSpan } from "@epl/core";
 import PositionTile from "../../components/league/PositionTile";
-import { LeadHeads, sortedAs, SortHead } from "../../components/league/TableHeads";
+import { HeadRow, LeadHeads, sortedAs, SortHead } from "../../components/league/TableHeads";
 import { ROW_LINK } from "../../components/league/TableCells";
-import { BOARD, ROW_RULE } from "@/app/desk";
+import { BOARD, ROW_HOVER_ON_SURFACE } from "@/app/desk";
 import ScrollBoard from "../../components/league/ScrollBoard";
 import { FIGURE, LEAD_WIDTH, LeadFace, PIN_NAME, PIN_TILE } from "../BoardRow";
 import { standoutInk } from "../../components/league/standout";
@@ -42,7 +42,7 @@ export default function ProjectionBoard({
     <ScrollBoard className="bg-surface">
       <table className={BOARD}>
         <thead>
-          <tr className="text-2xs">
+          <HeadRow>
             <LeadHeads tile={PIN_TILE} name={PIN_NAME} />
             {heads.map((head) => (
               <SortHead
@@ -54,11 +54,11 @@ export default function ProjectionBoard({
                 sorted={sortedAs(head.key === sort, descending)}
               />
             ))}
-          </tr>
+          </HeadRow>
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.code} className={`${ROW_RULE} hover:bg-raised`}>
+            <tr key={row.code} className={ROW_HOVER_ON_SURFACE}>
               <PositionTile positions={row.positions} cell className={PIN_TILE} />
               <td className={PIN_NAME}>
                 <Lead row={row} />
@@ -73,7 +73,7 @@ export default function ProjectionBoard({
                       : standoutInk(figure, cuts.get(head.key), "high");
                 return (
                   <td key={head.key} className={`${FIGURE} ${head.key === "tot" ? "font-bold" : ""} ${ink}`}>
-                    {figure === null ? DASH : head.key === "xmins" ? figure : figure.toFixed(1)}
+                    {figure === null ? DASH : head.key === "xmins" ? figure : fixed(figure, "projected")}
                   </td>
                 );
               })}

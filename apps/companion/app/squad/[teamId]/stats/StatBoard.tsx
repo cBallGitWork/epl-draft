@@ -17,13 +17,11 @@ import { HeadRow, LeadHeads, SortHead, sortedAs } from "../../../components/leag
 import { ROW_LINK } from "../../../components/league/TableCells";
 import { byFigure } from "../../../components/league/order";
 import { SIDE_SHARES, standoutCuts, standoutInk } from "../../../components/league/standout";
-import { BOARD, BOARD_FIGURE, MINOR_LABEL, PANEL_FLUSH, PINNED_BESIDE_TILE, PINNED_TILE, ROW_HOVER, ROW_NAME } from "@/app/desk";
+import { BOARD, FIGURE_CELL, MINOR_LABEL, PANEL_FLUSH, PINNED_BESIDE_TILE, PINNED_TILE, ROW_HOVER, ROW_NAME } from "@/app/desk";
 
 // One squad's season on the house board, as a club's stat board draws it: our position in the index tile, the crest
 // before the pinned name, a view picked above, a tap on a head to sort, and each column's standouts lit in ink.
 
-/** The name column starts where the tile ends. */
-const LEAD = `${PINNED_BESIDE_TILE}`;
 /** One width for every figure column, so the name takes the slack and a long head does not. */
 const FIGURE_WIDTH = "w-10 lg:w-14";
 
@@ -103,14 +101,13 @@ export default function StatBoard({
         <table className={`${BOARD} whitespace-nowrap`}>
           <thead>
             <HeadRow>
-              <LeadHeads tile={PINNED_TILE} name={LEAD} />
+              <LeadHeads tile={PINNED_TILE} name={PINNED_BESIDE_TILE} />
               {measures.map((measure) => (
                 <SortHead
                   key={measure.key}
                   label={measure.head}
                   title={measure.label}
                   width={FIGURE_WIDTH}
-                  align="right"
                   sorted={sortedAs(sort?.key === measure.key, sort?.descending ?? true)}
                   onSort={() => sortBy(measure.key)}
                 />
@@ -125,7 +122,7 @@ export default function StatBoard({
               return (
                 <tr key={line.fantraxId} className={`cm-row ${ROW_HOVER} ${doubtRow(footballer)}`}>
                   <PositionTile positions={positionsFromList(line.position)} cell className={PINNED_TILE} />
-                  <td className={`px-1.5 ${ROW_NAME} ${LEAD} text-ink ${doubtRow(footballer)}`}>
+                  <td className={`px-1.5 ${ROW_NAME} ${PINNED_BESIDE_TILE} text-ink ${doubtRow(footballer)}`}>
                     <Link href={playerHref(line.fantraxId)} className={`${ROW_LINK} w-36 lg:w-auto`}>
                       <span className="grid size-6 shrink-0 place-items-center">
                         {crest ? <Image src={crest} alt="" width={20} height={20} className="size-5 object-contain" /> : null}
@@ -144,7 +141,7 @@ export default function StatBoard({
                           ? "text-info"
                           : standoutInk(value, cuts.get(measure.key), measure.worse ? "low" : "high") || "text-ink";
                     return (
-                      <td key={measure.key} className={`${BOARD_FIGURE} ${ink}`}>
+                      <td key={measure.key} className={`${FIGURE_CELL} ${ink}`}>
                         {value === null ? DASH : value}
                       </td>
                     );

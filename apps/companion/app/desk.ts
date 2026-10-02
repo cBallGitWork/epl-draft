@@ -25,7 +25,8 @@ export const ROW_NAME = "font-chrome text-sm font-bold lg:text-base";
  *  proportion. */
 export const ROW_FIGURE = "text-sm";
 
-/** A row's figure cell: tabular and centred. `.numeric` already tracks, so never add `tracking-*`. */
+/** A row's figure cell, on every table and board: tabular and centred under a centred head. `.numeric` already
+ *  tracks, so never add `tracking-*`. */
 export const FIGURE_CELL = `numeric px-1.5 text-center ${ROW_FIGURE}`;
 
 /** A standings figure: `FIGURE_CELL`, bold. */
@@ -38,10 +39,6 @@ export const INDEX_WIDTH = "w-8 lg:w-9";
 /** A figure to scan past: a club's letters beside a name, a record under a heading. */
 export const QUIET_FIGURE = "numeric text-2xs text-faint";
 
-/** A stat-board figure, flushed right so units line up down a column; ink and weight are the
- *  caller's. */
-export const BOARD_FIGURE = `numeric px-1.5 text-right ${ROW_FIGURE}`;
-
 /** A form result's ink: DESIGN §3's direction pair, with a draw quiet rather than a third colour. */
 export const TONE = { W: "text-up", D: "text-faint", L: "text-bad" } as const;
 
@@ -50,11 +47,10 @@ export function gainOrLoss(points: number): string {
   return points > 0 ? "text-up" : points < 0 ? "text-bad" : "";
 }
 
-/** Where a column's text sits; `TableHeads` has the `justify-*` twin. */
+/** Where a column's text sits: a name left, a figure centred. `TableHeads` has the `justify-*` twin. */
 export const TEXT = {
   left: "text-left",
   center: "text-center",
-  right: "text-right",
 } as const;
 
 /* ---- Boards --------------------------------------------------------------- */
@@ -67,6 +63,9 @@ export const ROW_RULE = "border-b border-bg";
 
 /** A board row that answers the pointer: the rule, and the surface under a hover. */
 export const ROW_HOVER = `${ROW_RULE} hover:bg-surface`;
+
+/** `ROW_HOVER` on a board that already sits on the surface: the hover steps up to raised. */
+export const ROW_HOVER_ON_SURFACE = `${ROW_RULE} hover:bg-raised`;
 
 /** The wrapper that lets a phone reach a board's far columns. */
 export const SCROLL = "overflow-x-auto";
@@ -81,6 +80,9 @@ export const PINNED_NAME = "cm-lead sticky z-10 border-r border-line bg-surface"
 /** `PINNED_NAME` starting where a pinned position tile ends; the offsets are `TILE_WIDTH`'s widths. */
 export const PINNED_BESIDE_TILE = `${PINNED_NAME} left-10 lg:left-14`;
 
+/** `PINNED_NAME` starting where a pinned index block ends; the offsets are `INDEX_WIDTH`'s widths. */
+export const PINNED_BESIDE_INDEX = `${PINNED_NAME} left-8 lg:left-9`;
+
 /** A gameweek view's header row and title. Its loading skeletons use them too, or the page jumps
  *  when it lands. */
 export const GAMEWEEK_HEAD = "flex items-baseline justify-between gap-3 pt-1";
@@ -94,11 +96,9 @@ export const TAB =
 export const SECTION_BAR =
   "flex min-h-7 items-center justify-center bg-chrome px-3 font-chrome text-2xs font-bold uppercase text-ink lg:min-h-8 lg:text-xs";
 
-/** A stats board's column head: left over a name; `_END` right over a figure. */
+/** A 24px caption plate, left: a block's or a card's strip. A table's column head is `TableHeads.PLATE`, 28. */
 export const HEAD_PLATE = "cm-bevel flex h-6 items-center px-1.5";
-export const HEAD_PLATE_END =
-  "cm-bevel flex h-6 items-center justify-end px-1.5";
-/** The same plate over a centred figure column or a group of them. */
+/** The same plate centred, over a group of columns or a card's figure. */
 export const HEAD_PLATE_CENTRE = `${HEAD_PLATE} justify-center`;
 
 /** A plate naming a group of columns or a section of a match board. */

@@ -1,8 +1,8 @@
 import ScrollBoard from "./ScrollBoard";
-import { columnLabel, DASH } from "@epl/core";
+import { columnLabel, DASH, fixed } from "@epl/core";
 import type { TeamStats } from "@epl/core";
 import {
-  BOARD_FIGURE,
+  FIGURE_CELL,
   PANEL_FLUSH,
   ROW_NAME,
   ROW_RULE,
@@ -96,7 +96,7 @@ export default function SeasonGrid({
                     {/* The bevel goes on a block inside each cell and never on
                         the cell: these tables collapse their borders, so a strip
                         of bevelled cells loses its inner edges (desk.css). */}
-                    <PlateHead at="end">
+                    <PlateHead at="centre">
                       <span className={MUTE}>Rank</span>
                     </PlateHead>
                     <PlateHead>
@@ -106,13 +106,13 @@ export default function SeasonGrid({
                       const { name, definition } = columnLabel(column);
                       return (
                         // Fantrax's own sentence is where this league's rules are published, so the title carries it.
-                        <PlateHead key={column.code} at="end" title={definition === null ? name : `${name} — ${definition}`}>
+                        <PlateHead key={column.code} at="centre" title={definition === null ? name : `${name} — ${definition}`}>
                           {column.code}
                         </PlateHead>
                       );
                     })}
-                    <PlateHead at="end" title="Fantasy points, Fantrax's own">FPts</PlateHead>
-                    <PlateHead at="end" title="Fantasy points a game">FP/G</PlateHead>
+                    <PlateHead at="centre" title="Fantasy points, Fantrax's own">FPts</PlateHead>
+                    <PlateHead at="centre" title="Fantasy points a game">FP/G</PlateHead>
                   </HeadRow>
                 </thead>
 
@@ -121,7 +121,7 @@ export default function SeasonGrid({
                     <tr key={line.fantraxId} className={ROW_RULE}>
                       {/* CM's leading index block, so the eye counts down the
                           blocks rather than the rows. */}
-                      <td className="cm-index numeric px-1.5 py-1 text-right">
+                      <td className="cm-index numeric px-1.5 py-1 text-center">
                         {index + 1}
                       </td>
                       {/* Sized to the longest name rather than truncated. The
@@ -135,16 +135,16 @@ export default function SeasonGrid({
                       {line.values.map((value, at) => (
                         <td
                           key={group.columns[at]?.code ?? at}
-                          className={`${BOARD_FIGURE} py-1 ${tone(value)}`}
+                          className={`${FIGURE_CELL} py-1 ${tone(value)}`}
                         >
                           {value ?? DASH}
                         </td>
                       ))}
-                      <td className={`${BOARD_FIGURE} py-1 font-bold text-ink`}>
+                      <td className={`${FIGURE_CELL} py-1 font-bold text-ink`}>
                         {line.points ?? DASH}
                       </td>
-                      <td className={`${BOARD_FIGURE} py-1 text-muted`}>
-                        {line.perGame ?? DASH}
+                      <td className={`${FIGURE_CELL} py-1 text-muted`}>
+                        {line.perGame === null ? DASH : fixed(line.perGame, "perGame")}
                       </td>
                     </tr>
                   ))}

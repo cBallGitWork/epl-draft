@@ -14,7 +14,8 @@ import ClubRow from "../ClubRow";
 import PremShell from "../Shell";
 import Nothing from "../../components/shell/Nothing";
 import { footballNow, seasonFixtures } from "../../football";
-import { BOARD, MINOR_LABEL } from "@/app/desk";
+import { CutRow } from "../../components/league/TableCells";
+import { BOARD } from "@/app/desk";
 
 // The Premier League table.
 //
@@ -109,10 +110,10 @@ export default async function TablePage({ searchParams }: { searchParams: Search
                     scored has no cut in it, because fourth on that list is not
                     fourth in the league. */}
                 {ordered(sort, descending) && place === PREMIERSHIP_CUTS.qualify && place < table.length ? (
-                  <Cut label="Champions League" tone="border-accent/80" />
+                  <CutRow span={COLUMNS.length} label="Champions League" tone="border-accent/80" />
                 ) : null}
                 {ordered(sort, descending) && place === relegation && place < table.length ? (
-                  <Cut label="Relegation" tone="border-bad/80" />
+                  <CutRow span={COLUMNS.length} label="Relegation" tone="border-bad/80" />
                 ) : null}
               </Fragment>
             ))}
@@ -120,21 +121,6 @@ export default async function TablePage({ searchParams }: { searchParams: Search
         </table>
       </ScrollBoard>
     </PremShell>
-  );
-}
-
-/** A rule across the whole table, naming what it separates. */
-function Cut({ label, tone }: { label: string; tone: string }) {
-  return (
-    <tr aria-hidden>
-      <td colSpan={COLUMNS.length} className="p-0">
-        <span className={`flex items-center gap-2 py-1.5 ${MINOR_LABEL}`}>
-          <span className={`flex-1 border-t border-dashed ${tone}`} />
-          {label}
-          <span className={`flex-1 border-t border-dashed ${tone}`} />
-        </span>
-      </td>
-    </tr>
   );
 }
 

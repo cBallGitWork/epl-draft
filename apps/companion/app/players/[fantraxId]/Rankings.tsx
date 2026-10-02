@@ -1,10 +1,10 @@
 import ScrollBoard from "../../components/league/ScrollBoard";
 import type { Ranked } from "@epl/core";
-import { DASH, ordinal } from "@epl/core";
+import { DASH, fixed, ordinal } from "@epl/core";
 import Section from "../../components/shell/Section";
 import { IndexCell } from "../../components/league/TableCells";
-import { MUTE, PlateHead } from "../../components/league/TableHeads";
-import { BOARD, BOARD_FIGURE, ROW_RULE } from "@/app/desk";
+import { HeadRow, MUTE, PlateHead } from "../../components/league/TableHeads";
+import { BOARD, FIGURE_CELL, ROW_RULE } from "@/app/desk";
 
 // Where his season totals rank among the men he is rated against (Craig, 25 Sep 2026:
 // "rankings for data such as xg"): the totals on one row, his place on the next.
@@ -18,23 +18,23 @@ export default function Rankings({ ranked, group }: { ranked: readonly Ranked[];
       <ScrollBoard>
         <table className={BOARD}>
           <thead>
-            <tr>
+            <HeadRow>
               <PlateHead>
                 <span className={MUTE}>Row</span>
               </PlateHead>
               {ranked.map((r) => (
-                <PlateHead key={r.head} at="end" title={r.title}>
+                <PlateHead key={r.head} at="centre" title={r.title}>
                   {r.head}
                 </PlateHead>
               ))}
-            </tr>
+            </HeadRow>
           </thead>
           <tbody>
             <tr className={ROW_RULE}>
               <IndexCell>Total</IndexCell>
               {ranked.map((r) => (
-                <td key={r.head} className={`${BOARD_FIGURE} font-bold`}>
-                  {r.value === null ? DASH : r.value.toFixed(r.digits)}
+                <td key={r.head} className={`${FIGURE_CELL} font-bold`}>
+                  {r.value === null ? DASH : fixed(r.value, r.kind)}
                 </td>
               ))}
             </tr>
@@ -43,7 +43,7 @@ export default function Rankings({ ranked, group }: { ranked: readonly Ranked[];
               {ranked.map((r) => (
                 <td
                   key={r.head}
-                  className={`${BOARD_FIGURE} font-bold ${ink(r.rank, r.of)}`}
+                  className={`${FIGURE_CELL} font-bold ${ink(r.rank, r.of)}`}
                   title={r.rank === null ? undefined : `${ordinal(r.rank)} of ${r.of}`}
                 >
                   {r.rank === null ? DASH : ordinal(r.rank)}

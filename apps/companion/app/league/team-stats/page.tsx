@@ -28,7 +28,7 @@ import { getSchedule } from "../schedule/schedule";
 import { readerTeamId } from "../../squads";
 import { yoursInk } from "../../mine";
 import { teamBadges } from "../../standings";
-import { BOARD, BOARD_FIGURE, INDEX_WIDTH, MINOR_LABEL, ROW_NAME, ROW_RULE } from "@/app/desk";
+import { BOARD, FIGURE_CELL, INDEX_WIDTH, MINOR_LABEL, ROW_NAME, ROW_RULE } from "@/app/desk";
 import { teamHref } from "@/app/squad/routes";
 import FantraxSilent from "../../components/shell/FantraxSilent";
 
@@ -125,7 +125,6 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                     title={entry.title ?? entry.label}
                     href={boardHref(view, group, entry.key)}
                     label={entry.short}
-                    align="right"
                     sorted={entry.key === category.key ? direction(entry, measure) : undefined}
                   />
                 ))}
@@ -157,7 +156,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                     </td>
                     {row.figures.map((figure, at) => (
                       // Every figure is ink: the accent means "yours", and the pressed plate says which column sorts.
-                      <td key={columns[at]?.key ?? at} className={`${BOARD_FIGURE} text-ink`}>
+                      <td key={columns[at]?.key ?? at} className={`${FIGURE_CELL} text-ink`}>
                         {figure === null ? DASH : thousands(figure)}
                       </td>
                     ))}

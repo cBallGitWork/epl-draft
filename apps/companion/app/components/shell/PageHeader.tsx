@@ -155,7 +155,7 @@ export default function PageHeader({
  *  ratio in DESIGN §3 was measured against, so a caller's ink keeps the contrast
  *  it was checked at and the line is still not on the photograph.
  *
- *  `h-6` is `HEAD_PLATE`'s height, so this strip and the column heads further
+ *  `h-6` is `HEAD_PLATE`'s height, so this strip and the caption plates further
  *  down a page agree. */
 function Sub({ children }: { children?: ReactNode }) {
   if (children === undefined || children === null || children === false) return null;

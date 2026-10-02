@@ -1,4 +1,4 @@
-import type { ClubStats, TableRow } from "@epl/core";
+import { type ClubStats, type FigureKind, type TableRow, fixed } from "@epl/core";
 
 // What the board can rank the twenty by.
 //
@@ -22,7 +22,7 @@ export interface Category {
   /** Whether the biggest is the best. */
   descending: boolean;
   /** Decimal places; whole when absent. */
-  digits?: number;
+  kind?: FigureKind;
   of: (club: Club) => number;
 }
 
@@ -51,9 +51,9 @@ export const CATEGORIES: readonly Category[] = [
   // The squad's own season. Every man FPL files at the club, whether or not he
   // has played — the denominator is the squad, so a club with a big treatment
   // room reads as one.
-  { key: "xg", label: "Expected goals", title: "FPL's expected goals, the squad added up", descending: true, digits: 2, of: (c) => c.stats.squad.expectedGoals },
-  { key: "xgc", label: "Expected conceded", title: "FPL's expected goals conceded — fewest is best", descending: false, digits: 2, of: (c) => c.stats.squad.expectedGoalsConceded / ON_THE_PITCH },
-  { key: "xa", label: "Expected assists", title: "FPL's expected assists, the squad added up", descending: true, digits: 2, of: (c) => c.stats.squad.expectedAssists },
+  { key: "xg", label: "Expected goals", title: "FPL's expected goals, the squad added up", descending: true, kind: "expected", of: (c) => c.stats.squad.expectedGoals },
+  { key: "xgc", label: "Expected conceded", title: "FPL's expected goals conceded — fewest is best", descending: false, kind: "expected", of: (c) => c.stats.squad.expectedGoalsConceded / ON_THE_PITCH },
+  { key: "xa", label: "Expected assists", title: "FPL's expected assists, the squad added up", descending: true, kind: "expected", of: (c) => c.stats.squad.expectedAssists },
   { key: "saves", label: "Saves", title: "Saves made", descending: true, of: (c) => c.stats.squad.saves },
   { key: "tackles", label: "Tackles", title: "Tackles made", descending: true, of: (c) => c.stats.squad.tackles },
   { key: "cbi", label: "Clearances etc.", title: "Clearances, blocks and interceptions — FPL publishes the three as one figure", descending: true, of: (c) => c.stats.squad.clearancesBlocksInterceptions },
@@ -72,6 +72,5 @@ export function categoryFor(key: string | undefined): Category {
 
 /** A figure as the board prints it: to the category's places, the British way (`1,234`, `4.04`). */
 export function printed(category: Category, figure: number): string {
-  const digits = category.digits ?? 0;
-  return figure.toLocaleString("en-GB", { minimumFractionDigits: digits, maximumFractionDigits: digits });
+  return fixed(figure, category.kind ?? "count");
 }

@@ -44,22 +44,22 @@ export default function PaperTable({
           // League and Players tabs where a manager goes to use them.
           className="flex items-baseline gap-2 py-1 text-xs"
         >
-          <span className="numeric w-5 shrink-0 text-right text-faint">{row.rank}</span>
+          <span className="numeric w-5 shrink-0 text-center text-faint">{row.rank}</span>
           <span className={`min-w-0 flex-1 truncate ${row.yours ? "font-bold text-accent" : "text-ink"}`}>
             {row.name}
           </span>
           {played ? (
-            <span className="numeric w-6 shrink-0 text-right text-muted">{row.played ?? DASH}</span>
+            <span className="numeric w-6 shrink-0 text-center text-muted">{row.played ?? DASH}</span>
           ) : null}
           {/* Not `.numeric` on the chart: there this cell is a manager's name. */}
           {detail ? (
             <span
-              className={`w-20 shrink-0 truncate text-right text-muted ${played ? "numeric w-12" : ""}`}
+              className={`w-20 shrink-0 truncate text-muted ${played ? "numeric w-12 text-center" : ""}`}
             >
               {row.detail ?? DASH}
             </span>
           ) : null}
-          <span className="numeric w-7 shrink-0 text-right font-semibold text-ink">
+          <span className="numeric w-7 shrink-0 text-center font-semibold text-ink">
             {row.points ?? DASH}
           </span>
         </div>

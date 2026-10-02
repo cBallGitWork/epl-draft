@@ -2,7 +2,7 @@ import ScrollBoard from "../../../components/league/ScrollBoard";
 import Link from "next/link";
 import { clubStats, leagueTable, ordinal } from "@epl/core";
 import Nothing from "../../../components/shell/Nothing";
-import { Head, HeadRow, NameHead } from "../../../components/league/TableHeads";
+import { Head, HeadRow, NameHead, PRESSED_PLATE } from "../../../components/league/TableHeads";
 import { IndexCell, ROW_LINK } from "../../../components/league/TableCells";
 import PremShell from "../../Shell";
 import { CLUB } from "../../routes";
@@ -94,7 +94,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                     that cannot be pressed is a control that lies, so the head is
                     a plain plate — the same distinction `TableHeads.NameHead`
                     makes for the name column. */}
-                <span className="cm-bevel-pressed flex h-7 items-center justify-center whitespace-nowrap px-1.5">
+                <span className={PRESSED_PLATE}>
                   {category.label}
                 </span>
               </Head>

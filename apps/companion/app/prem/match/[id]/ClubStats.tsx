@@ -1,11 +1,11 @@
-import { loggedPlayers, DASH } from "@epl/core";
+import { fixed, loggedPlayers, DASH } from "@epl/core";
 import { clubIndex } from "../../../components/football/clubIndex";
 import type { Club, PlManMatch, PlTeamSheet, SquadPlayerDetail } from "@epl/core";
 import { fantraxPositions, type LeagueOpinion } from "../../leagueOpinions";
 import Section from "../../../components/shell/Section";
 import PositionTile from "../../../components/league/PositionTile";
 import { ROW_LINK } from "../../../components/league/TableCells";
-import { LeadHeads, sortedAs, SortHead } from "../../../components/league/TableHeads";
+import { HeadRow, LeadHeads, sortedAs, SortHead } from "../../../components/league/TableHeads";
 import { BOARD, FIGURE_CELL, PINNED_BESIDE_TILE, PINNED_TILE, ROW_NAME, ROW_RULE } from "@/app/desk";
 import ScrollBoard from "../../../components/league/ScrollBoard";
 import { MaybeCard } from "./PlayerCardButton";
@@ -82,8 +82,8 @@ export default function ClubStats({
       <ScrollBoard className="cm-index-scoped bg-surface" style={clubIndex(club)}>
         <table className={BOARD}>
           <thead>
-            <tr>
-              <LeadHeads tile={PINNED_TILE} name={`${PIN_NAME} ${NAME_WIDTH}`} />
+            <HeadRow>
+              <LeadHeads tile={PINNED_TILE} name={`${PINNED_BESIDE_TILE} ${NAME_WIDTH}`} />
               {COLUMNS.map((column) => (
                 <SortHead
                   key={column.head}
@@ -93,7 +93,7 @@ export default function ClubStats({
                   sorted={sortedAs(column.head === sort, descending)}
                 />
               ))}
-            </tr>
+            </HeadRow>
           </thead>
           <tbody>
             {rows.map((row, at) => (
@@ -147,7 +147,7 @@ function StatRow({
   return (
     <tr className={`${ROW_RULE} ${finished ? "" : "cm-out"}`} {...MATCH_ROW}>
       <PositionTile positions={positions} cell className={PINNED_TILE} />
-      <td className={`p-0 ${PIN_NAME} ${NAME_WIDTH}`}>
+      <td className={`p-0 ${PINNED_BESIDE_TILE} ${NAME_WIDTH}`}>
         {/* His card, not his page — every name on a match screen opens the same card (Craig, 23 Sep 2026). */}
         <MaybeCard player={card} className={`${ROW_LINK} ${PHONE_ROW} w-full gap-1.5 px-1.5 text-left`}>
           {name}
@@ -155,7 +155,7 @@ function StatRow({
       </td>
       {COLUMNS.map((column) => {
         const value = column.of(row);
-        const dp = "dp" in column ? column.dp : 0;
+        const kind = ("kind" in column ? column.kind : undefined) ?? "count";
         const ink =
           !played || value === null
             ? ""
@@ -166,7 +166,7 @@ function StatRow({
                 : "";
         return (
           <td key={column.head} className={`${FIGURE_CELL} ${ink}`}>
-            {value === null || !played ? <span className="text-faint">{DASH}</span> : value.toFixed(dp)}
+            {value === null || !played ? <span className="text-faint">{DASH}</span> : fixed(value, kind)}
           </td>
         );
       })}
@@ -178,9 +178,6 @@ function StatRow({
 
 /** 36px under a thumb, not 44 — PRODUCT's recorded exception for the match screens. */
 const PHONE_ROW = "max-lg:min-h-9";
-
-/** The tile and the name stay put while the measures scroll under them; the name starts where `TILE_WIDTH` ends. */
-const PIN_NAME = `${PINNED_BESIDE_TILE}`;
 
 /** About four measures in view beside the name at 390; the sub note joins it on a desk. */
 const NAME_WIDTH = "w-32 lg:w-72";

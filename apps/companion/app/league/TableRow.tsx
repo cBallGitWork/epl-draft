@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ordinal, type FormGame, type SortKey, type StandingsRow } from "@epl/core";
 import TeamBadge from "../components/league/TeamBadge";
-import { ROW_LINK } from "../components/league/TableCells";
+import { PointsCell, ROW_LINK } from "../components/league/TableCells";
 import { cellAlign, deskOnly } from "./Columns";
 import { yoursEdge, yoursInk } from "../mine";
 import { FIGURE, FIGURE_CELL, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
@@ -163,14 +163,7 @@ export default function TableRow({
       <td className={`${FIGURE} text-ink`}>{row.pointsFor}</td>
       <td className={`${FIGURE} text-ink ${deskOnly("against", sort)}`}>{row.pointsAgainst}</td>
 
-      {/* Points in a plate of their own, the way CM ends its table: the one
-          figure that decides the season, blocked out so the eye runs down the
-          column rather than across the row to find it. */}
-      <td className="p-0">
-        <span className="cm-index numeric flex min-h-7 items-center justify-center px-1.5">
-          {row.points}
-        </span>
-      </td>
+      <PointsCell>{row.points}</PointsCell>
 
       {/* After the points, where a modern table prints it — CM's own row ends at
           Pts and has no form guide at all. */}

@@ -1,6 +1,6 @@
 import type { Contribution } from "@epl/core";
 import { LABEL } from "@/app/desk";
-import { DASH } from "@epl/core";
+import { DASH, fixed } from "@epl/core";
 
 // What the football says, under a drop-down (Craig, 21 Sep 2026: "dropdown
 // arrow for the full match stats").
@@ -88,10 +88,10 @@ function recordsOf(done: Contribution): Row[] {
       label: "Defensive contribution",
       value: measured === null ? null : String(measured.defensiveContribution),
     },
-    { label: "Expected goals", value: measured === null ? null : measured.expectedGoals.toFixed(2) },
+    { label: "Expected goals", value: measured === null ? null : fixed(measured.expectedGoals, "expected") },
     {
       label: "Expected assists",
-      value: measured === null ? null : measured.expectedAssists.toFixed(2),
+      value: measured === null ? null : fixed(measured.expectedAssists, "expected"),
     },
   );
   return rows;

@@ -46,7 +46,7 @@ export default function Loading() {
                         <Skeleton width="45%" height="0.875rem" />
                       </span>
                     ) : (
-                      <span className="flex justify-end">
+                      <span className="flex justify-center">
                         <Skeleton width="100%" height="0.75rem" />
                       </span>
                     )}

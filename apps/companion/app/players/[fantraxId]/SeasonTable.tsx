@@ -1,11 +1,11 @@
 import ScrollBoard from "../../components/league/ScrollBoard";
 import Section from "../../components/shell/Section";
-import { BOARD, BOARD_FIGURE, ROW_RULE } from "@/app/desk";
-import { PlateHead } from "../../components/league/TableHeads";
+import { BOARD, FIGURE_CELL, ROW_RULE } from "@/app/desk";
+import { HeadRow, MUTE, PlateHead } from "../../components/league/TableHeads";
 import type { MatchRow } from "./matchRows";
 import { totalsOf } from "./matchRows";
 import { IndexCell } from "../../components/league/TableCells";
-import { DASH, thousands } from "@epl/core";
+import { DASH, fixed, thousands } from "@epl/core";
 import { RATING_TITLE } from "../../ratings";
 
 // What the season adds up to, above the matches that made it.
@@ -57,14 +57,16 @@ export default function SeasonTable({
       <ScrollBoard>
         <table className={BOARD}>
           <thead>
-            <tr>
-              <PlateHead>Competition</PlateHead>
+            <HeadRow>
+              <PlateHead>
+                <span className={MUTE}>Competition</span>
+              </PlateHead>
               {COLUMNS.map((column) => (
-                <PlateHead key={column.head} at="end" title={column.title} className={column.rule ? "border-l border-line" : undefined}>
+                <PlateHead key={column.head} at="centre" title={column.title} className={column.rule ? "border-l border-line" : undefined}>
                   {column.head}
                 </PlateHead>
               ))}
-            </tr>
+            </HeadRow>
           </thead>
           <tbody>
             <tr className={ROW_RULE}>
@@ -72,7 +74,7 @@ export default function SeasonTable({
                   `League` is the only one FPL publishes. */}
               <IndexCell>League</IndexCell>
               {COLUMNS.map((column) => (
-                <td key={column.head} className={`${BOARD_FIGURE} font-bold ${column.rule ? "border-l border-line" : ""} ${column.derived ? "text-info" : ""}`}>
+                <td key={column.head} className={`${FIGURE_CELL} font-bold ${column.rule ? "border-l border-line" : ""} ${column.derived ? "text-info" : ""}`}>
                   {column.total(t)}
                 </td>
               ))}
@@ -109,5 +111,5 @@ const COLUMNS: readonly Column[] = [
   // FPL's own points, and headed as FPL's. Never `FPts`, which is Fantrax's word
   // for Fantrax's scoring of a roster slot we chose.
   { head: "FPL", title: "FPL's own points", total: (t) => whole(t.fplPoints) },
-  { head: "Rtg", title: `${RATING_TITLE}; his average over the matches rated`, rule: true, derived: true, total: (t) => (t.rating === null ? DASH : t.rating.toFixed(1)) },
+  { head: "Rtg", title: `${RATING_TITLE}; his average over the matches rated`, rule: true, derived: true, total: (t) => (t.rating === null ? DASH : fixed(t.rating, "rating")) },
 ];

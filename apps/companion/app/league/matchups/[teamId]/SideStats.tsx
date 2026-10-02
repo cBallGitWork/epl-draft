@@ -4,7 +4,7 @@ import { type LeagueTeam, type LineupDetail, type ScoringCategory, type SquadPla
 import Section from "../../../components/shell/Section";
 import PositionTile from "../../../components/league/PositionTile";
 import { ROW_LINK } from "../../../components/league/TableCells";
-import { LeadHeads, sortedAs, SortHead } from "../../../components/league/TableHeads";
+import { HeadRow, LeadHeads, sortedAs, SortHead } from "../../../components/league/TableHeads";
 import { BOARD, FIGURE_CELL, PINNED_BESIDE_TILE, PINNED_TILE, ROW_NAME, ROW_RULE, SMALL_CAPS, gainOrLoss } from "@/app/desk";
 import ScrollBoard from "../../../components/league/ScrollBoard";
 import { MaybeCard } from "../../../prem/match/[id]/PlayerCardButton";
@@ -51,8 +51,8 @@ export default function SideStats({
       <ScrollBoard className="cm-index-scoped bg-surface" style={managerIndex(team)}>
         <table className={BOARD}>
           <thead>
-            <tr>
-              <LeadHeads tile={PINNED_TILE} name={`${PIN_NAME} ${NAME_WIDTH}`} />
+            <HeadRow>
+              <LeadHeads tile={PINNED_TILE} name={`${PINNED_BESIDE_TILE} ${NAME_WIDTH}`} />
               {heads.map((head) => (
                 <SortHead
                   key={head.code}
@@ -62,7 +62,7 @@ export default function SideStats({
                   sorted={sortedAs(head.code === sort.head, sort.descending)}
                 />
               ))}
-            </tr>
+            </HeadRow>
           </thead>
           <tbody>
             {eleven.map((player) => row(player, false))}
@@ -103,7 +103,7 @@ function SideRow({
   return (
     <tr className={`${ROW_RULE} ${breakdown === null ? "cm-out" : ""}`} {...MATCH_ROW}>
       <PositionTile positions={rostered.slot.position ? [rostered.slot.position] : []} cell className={PINNED_TILE} />
-      <td className={`p-0 ${PIN_NAME} ${NAME_WIDTH}`}>
+      <td className={`p-0 ${PINNED_BESIDE_TILE} ${NAME_WIDTH}`}>
         <MaybeCard player={player} className={`${ROW_LINK} ${PHONE_ROW} w-full gap-1.5 px-1.5 text-left`}>
           <span className="grid size-5 shrink-0 place-items-center">
             {club ? <Image src={crestUrl(club)} alt="" width={20} height={20} className="size-5 object-contain" /> : null}
@@ -135,5 +135,4 @@ function managerIndex(team: LeagueTeam): CSSProperties {
 
 // The match page's club board's cells, copied rather than shared: two boards so far (`ClubStats` is the other).
 const PHONE_ROW = "max-lg:min-h-9";
-const PIN_NAME = `${PINNED_BESIDE_TILE}`;
 const NAME_WIDTH = "w-32 lg:w-72";

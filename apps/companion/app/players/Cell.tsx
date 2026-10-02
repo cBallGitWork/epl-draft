@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { listName, signed, toFplClubCode, DASH } from "@epl/core";
+import { fixed, listName, signed, toFplClubCode, DASH } from "@epl/core";
 import type { FootballPlayer } from "@epl/core";
 import type { PoolRow } from "./pool";
 import type { PoolColumn, RawStats } from "./columns";
@@ -118,14 +118,11 @@ export default function Cell({
     );
   }
   const figure = Number(value);
+  const printed = rated && column.rate === true ? fixed(figure, "perNinety") : column.places ? fixed(figure, column.places) : String(value);
+  const text = column.kind === "percent" ? `${printed}%` : printed;
   // Zero is a stat, and a quiet one.
-  if (figure === 0) return <td className={`${FIGURE} text-faint`}>{column.kind === "percent" ? "0%" : "0"}</td>;
-  const printed = rated && column.rate === true ? figure.toFixed(2) : String(value);
-  return (
-    <td className={`${FIGURE} ${column.mark ? standoutInk(figure, cut, column.mark) : ""}`}>
-      {column.kind === "percent" ? `${printed}%` : printed}
-    </td>
-  );
+  if (figure === 0) return <td className={`${FIGURE} text-faint`}>{text}</td>;
+  return <td className={`${FIGURE} ${column.mark ? standoutInk(figure, cut, column.mark) : ""}`}>{text}</td>;
 }
 
 /** Which way ownership moved, said in the sign as well as the colour. Nought is drawn quiet. */

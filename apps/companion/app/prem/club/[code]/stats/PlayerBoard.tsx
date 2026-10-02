@@ -5,7 +5,7 @@ import NameLink from "../NameLink";
 import type { FootballPlayer } from "@epl/core";
 import { SELECT } from "../../../../components/shell/ButtonLink";
 import { VIEWS, reading } from "./measures";
-import { BOARD_FIGURE, MINOR_LABEL, PANEL_FLUSH, PINNED_BESIDE_TILE, PINNED_TILE, ROW_HOVER, ROW_NAME } from "@/app/desk";
+import { FIGURE_CELL, MINOR_LABEL, PANEL_FLUSH, PINNED_BESIDE_TILE, PINNED_TILE, ROW_HOVER, ROW_NAME } from "@/app/desk";
 import { HeadRow, LeadHeads, SortHead, sortedAs } from "../../../../components/league/TableHeads";
 import PositionTile from "../../../../components/league/PositionTile";
 import ScrollBoard from "../../../../components/league/ScrollBoard";
@@ -101,7 +101,6 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
                   key={measure.key}
                   label={measure.head}
                   title={measure.label}
-                  align="right"
                   sorted={sortedAs(sort?.key === measure.key, sort?.descending ?? true)}
                   onSort={() => sortBy(measure.key)}
                 />
@@ -122,8 +121,8 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
                   const value = player.season[measure.key];
                   const ink = standoutInk(value, cuts.get(measure.key), measure.worse ? "low" : "high");
                   return (
-                    <td key={measure.key} className={`${BOARD_FIGURE} ${ink || (value === 0 ? "text-muted" : "text-ink")}`}>
-                      {reading(value)}
+                    <td key={measure.key} className={`${FIGURE_CELL} ${ink || (value === 0 ? "text-muted" : "text-ink")}`}>
+                      {reading(measure, value)}
                     </td>
                   );
                 })}

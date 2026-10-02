@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { DASH } from "@epl/core";
+import { DASH, type FigureKind, fixed } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import ScrollBoard from "../../components/league/ScrollBoard";
 import { IndexCell } from "../../components/league/TableCells";
-import { MUTE, PlateHead } from "../../components/league/TableHeads";
+import { HeadRow, MUTE, PlateHead } from "../../components/league/TableHeads";
 import { standoutCuts, standoutInk, type StandoutCut } from "../../components/league/standout";
 import Section from "../../components/shell/Section";
-import { BOARD, FIGURE, HEAD_CELL, PINNED_NAME, PINNED_TILE, ROW_RULE } from "@/app/desk";
+import { BOARD, FIGURE, HEAD_CELL, PINNED_BESIDE_INDEX, PINNED_TILE, ROW_HOVER_ON_SURFACE } from "@/app/desk";
 import { matchHref } from "../../prem/match/[id]/matchRoutes";
 import { RATING_TITLE } from "../../ratings";
 import type { MatchRow } from "./matchRows";
@@ -23,7 +23,7 @@ interface Column {
   title: string;
   of: (row: MatchRow) => number | null;
   /** Decimal places, for the expected figures. */
-  digits?: number;
+  kind?: FigureKind;
   /** A yes-or-no column, printed `Y` or a dash. */
   flag?: boolean;
   /** The first of Fantrax's columns, which carries the rule. */
@@ -38,8 +38,8 @@ const COLUMNS: readonly Column[] = [
   { head: "A", title: "Assists", of: (r) => r.fpl.match.assists },
   { head: "CS", title: "Clean sheet", of: (r) => (r.fpl.match.cleanSheet ? 1 : 0), flag: true },
   { head: "Sv", title: "Saves", of: (r) => r.fpl.match.saves },
-  { head: "xG", title: "Expected goals", of: (r) => r.fpl.match.expectedGoals, digits: 2 },
-  { head: "xA", title: "Expected assists", of: (r) => r.fpl.match.expectedAssists, digits: 2 },
+  { head: "xG", title: "Expected goals", of: (r) => r.fpl.match.expectedGoals, kind: "expected" },
+  { head: "xA", title: "Expected assists", of: (r) => r.fpl.match.expectedAssists, kind: "expected" },
   { head: "Def", title: "Defensive contribution", of: (r) => r.fpl.match.defensiveContribution },
   { head: "BPS", title: "FPL's bonus-points score", of: (r) => r.fpl.match.bps },
   { head: "B", title: "Bonus points", of: (r) => r.fpl.match.bonus },
@@ -49,7 +49,7 @@ const COLUMNS: readonly Column[] = [
   { head: "FC", title: "Fouls committed — Fantrax's own", of: (r) => r.paid?.foulsCommitted ?? null },
   { head: "FS", title: "Fouls suffered — Fantrax's own", of: (r) => r.paid?.foulsSuffered ?? null },
   { head: "Off", title: "Offsides — Fantrax's own", of: (r) => r.paid?.offsides ?? null },
-  { head: "Rtg", title: RATING_TITLE, of: (r) => r.mark, digits: 1, rule: true, derived: true },
+  { head: "Rtg", title: RATING_TITLE, of: (r) => r.mark, kind: "rating", rule: true, derived: true },
 ];
 
 /** A column's standouts over his matches: its best in orange, its top quarter in yellow. */
@@ -76,11 +76,11 @@ export default function MatchLog({ rows }: { rows: readonly MatchRow[] }) {
       <ScrollBoard className="bg-surface">
         <table className={BOARD}>
           <thead>
-            <tr className="text-2xs">
+            <HeadRow>
               <th scope="col" className={`${HEAD_CELL} ${PINNED_TILE} min-w-8 bg-surface lg:min-w-9`}>
                 <span className={MUTE}>Gameweek</span>
               </th>
-              <th scope="col" className={`${HEAD_CELL} ${PINNED_NAME} left-8 lg:left-9`}>
+              <th scope="col" className={`${HEAD_CELL} ${PINNED_BESIDE_INDEX}`}>
                 <span className={MUTE}>Opponent</span>
               </th>
               <PlateHead at="centre" title="The score, from his club's point of view — tap it for the match" className="whitespace-nowrap">
@@ -91,13 +91,13 @@ export default function MatchLog({ rows }: { rows: readonly MatchRow[] }) {
                   {column.head}
                 </PlateHead>
               ))}
-            </tr>
+            </HeadRow>
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr key={`${row.fpl.match.gameweek}-${row.fpl.match.fixtureId}`} className={`${ROW_RULE} hover:bg-raised`}>
+              <tr key={`${row.fpl.match.gameweek}-${row.fpl.match.fixtureId}`} className={ROW_HOVER_ON_SURFACE}>
                 <IndexCell className={PINNED_TILE}>{row.fpl.match.gameweek ?? DASH}</IndexCell>
-                <td className={`${PINNED_NAME} left-8 px-1.5 lg:left-9`}>
+                <td className={`${PINNED_BESIDE_INDEX} px-1.5`}>
                   <span className="flex items-center gap-1.5 whitespace-nowrap">
                     {row.fpl.opponent ? <ClubLabel club={row.fpl.opponent} /> : DASH}
                     <span className="text-2xs text-faint">{row.fpl.match.home ? "H" : "A"}</span>
@@ -124,7 +124,7 @@ export default function MatchLog({ rows }: { rows: readonly MatchRow[] }) {
 /** One figure, centred, lit when it stands out; a dash where nobody measured it. */
 function Figure({ column, value, cut }: { column: Column; value: number | null; cut: StandoutCut | undefined }) {
   const shown =
-    value === null ? DASH : column.flag ? (value > 0 ? "Y" : DASH) : column.digits ? value.toFixed(column.digits) : value;
+    value === null ? DASH : column.flag ? (value > 0 ? "Y" : DASH) : column.kind ? fixed(value, column.kind) : value;
   const ink = value === null ? "text-faint" : column.derived ? "text-info" : standoutInk(value, cut, "high") || (value === 0 ? "text-muted" : "");
   return <td className={`${FIGURE} ${column.rule ? RULE : ""} ${ink}`}>{shown}</td>;
 }

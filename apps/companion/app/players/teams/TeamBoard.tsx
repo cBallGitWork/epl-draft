@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { DASH, toFantraxClubCode } from "@epl/core";
+import { DASH, fixed, toFantraxClubCode } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import { ROW_LINK } from "../../components/league/TableCells";
-import { MUTE, SortHead, sortedAs } from "../../components/league/TableHeads";
+import { HeadRow, MUTE, SortHead, sortedAs } from "../../components/league/TableHeads";
 import { SIDE_SHARES, standoutCuts, standoutInk, type StandoutCut } from "../../components/league/standout";
-import { BOARD, GROUP_PLATE, HEAD_CELL, INDEX_WIDTH, PINNED_NAME, PINNED_TILE, ROW_FIGURE, ROW_RULE } from "@/app/desk";
+import { BOARD, GROUP_PLATE, HEAD_CELL, INDEX_WIDTH, PINNED_BESIDE_INDEX, PINNED_TILE, ROW_FIGURE, ROW_RULE } from "@/app/desk";
 import ScrollBoard from "../../components/league/ScrollBoard";
 import { POOL, TEAMS } from "../routes";
 import { TEAM_COLUMNS, columnGroups, type TeamColumn } from "./columns";
@@ -47,11 +47,11 @@ export default function TeamBoard({
               </th>
             ))}
           </tr>
-          <tr className="text-2xs">
+          <HeadRow>
             <th scope="col" className={`${HEAD_CELL} ${PIN_INDEX} bg-surface`}>
               <span className={MUTE}>Place</span>
             </th>
-            <th scope="col" className={`${HEAD_CELL} ${PIN_NAME}`}>
+            <th scope="col" className={`${HEAD_CELL} ${PINNED_BESIDE_INDEX}`}>
               <span className={MUTE}>Club</span>
             </th>
             {TEAM_COLUMNS.map((column) => (
@@ -64,14 +64,14 @@ export default function TeamBoard({
                 sorted={sortedAs(column.key === sort.key, descending)}
               />
             ))}
-          </tr>
+          </HeadRow>
         </thead>
         <tbody>
           {rows.map((row, at) => (
             <tr key={row.club.code} className={ROW_RULE}>
               {/* `IndexCell`'s block, pinned: it takes no class, and this board scrolls sideways. */}
               <td className={`cm-index numeric px-1.5 text-center ${PIN_INDEX}`}>{at + 1}</td>
-              <th scope="row" className={`p-0 text-left font-normal ${PIN_NAME}`}>
+              <th scope="row" className={`p-0 text-left font-normal ${PINNED_BESIDE_INDEX}`}>
                 <Link href={`${POOL}?club=${toFantraxClubCode(row.club.shortName)}`} className={`${ROW_LINK} gap-1.5 px-1.5`}>
                   <ClubLabel club={row.club} />
                 </Link>
@@ -91,7 +91,7 @@ function Figure({ column, row, cut, first }: { column: TeamColumn; row: TeamRow;
   const value = column.of(row);
   const edge = first ? "border-l border-line/60" : "";
   if (value === null) return <td className={`${FIGURE} ${edge} text-faint`}>{DASH}</td>;
-  return <td className={`${FIGURE} ${edge} ${standoutInk(value, cut, column.rank)}`}>{value.toFixed(column.dp ?? 0)}</td>;
+  return <td className={`${FIGURE} ${edge} ${standoutInk(value, cut, column.rank)}`}>{fixed(value, column.kind ?? "count")}</td>;
 }
 
 /** Centred under its head, the way CM sets a column. */
@@ -99,7 +99,6 @@ const FIGURE = `numeric w-12 px-1.5 text-center lg:w-10 ${ROW_FIGURE}`;
 
 /** The place and the club stay put while the measures scroll under them. */
 const PIN_INDEX = `${PINNED_TILE} ${INDEX_WIDTH}`;
-const PIN_NAME = `${PINNED_NAME} left-8 lg:left-9`;
 
 /** A head's link: a column not sorted starts in its own direction; the sorted one reverses. */
 function teamsHref(column: TeamColumn, sort: TeamColumn, descending: boolean): string {
