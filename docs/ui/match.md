@@ -274,8 +274,9 @@ each team, THEN for list/pitch, rather than a big scroll"*): a row of `BRE · CH
 and `Team Sheet · Pitch` above the board (`?side=away`), and a desk shows both.
 
 **The Pitch** is the foot row's other plate (`?view=pitch`): each eleven in
-`sheet.shape`, the shape its manager drew, in **kits** (Craig, 26 Sep 2026:
-faces are a club's predicted XI's alone; they stood here from 23 Sep), the score
+`sheet.shape`, the shape its manager drew, in **faces** (Craig, 1 Oct 2026: *"this
+pitch view, use portraits"*; kits from 26 Sep to 1 Oct), a man with no photograph
+in his club's kit, the score
 under each name, and an amber `▼ 69′` on a man taken off. The men who came on
 stand in a strip under the grass with `▲ 69′`. `pitch-match`
 budgets the grass so the strip clears the nav at 390×844 (767 against 798 with the
