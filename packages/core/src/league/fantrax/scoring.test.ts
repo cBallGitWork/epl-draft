@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { categoryPoints } from "../scoring";
+import { categoryPoints, pointsFor } from "../scoring";
+import realInfo from "./__fixtures__/leagueInfoScoringReal.json";
 import realCategories from "./__fixtures__/scoringCategoriesReal.json";
 import rehearsalCategories from "./__fixtures__/scoringCategoriesRehearsal.json";
 import recorded from "./__fixtures__/scoringSystem.json";
@@ -29,18 +30,15 @@ describe("mapScoringRules", () => {
     expect(categoryPoints(rules!, "CS", "F")).toBe(0);
   });
 
-  it("leaves ranges unparsed rather than guessing a number", () => {
-    // Minutes are banded ("range1|59|1|NULL$60|90|1|NULL"). Nothing reads them,
-    // because we do not score matches — so they are absent, not invented.
+  it("reads no range off the string alone, which cannot say whether its bands stack", () => {
+    // This recording carries no settings mirror, so "range1|59|1|NULL$60|90|1|NULL" stays unpriced.
     expect(categoryPoints(rules!, "Min", "D")).toBeNull();
+    expect(pointsFor(rules!, "Min", "D", 90)).toBeNull();
   });
 
   it("does not let an unreadable price fall through to Default", () => {
-    // Goals against outfielders is banded for defenders ("range1|99|-1|2.0") and
-    // flat zero for everyone else. Dropping the unreadable defender entry would
-    // hand back Default's nought — a number from a different rule, reported as
-    // if it were this one, which is the confident wrong answer principle 4 bans.
-    expect(categoryPoints(rules!, "GAO", "D")).toBeNull();
+    // Defenders' goals against is banded and unread here; Default's nought is another rule.
+    expect(pointsFor(rules!, "GAO", "D", 2)).toBeNull();
     expect(categoryPoints(rules!, "GAO", "M")).toBe(0);
   });
 
@@ -65,6 +63,83 @@ describe("mapScoringRules", () => {
   it("returns nothing at all when Fantrax describes no scoring", () => {
     expect(mapScoringRules(undefined)).toBeNull();
     expect(mapScoringRules({})).toBeNull();
+  });
+});
+
+// The real league's getLeagueInfo on 1 Oct 2026, which pays exactly Craig's table of 29 Sep.
+describe("pointsFor on the real league's table", () => {
+  const real = mapScoringRules(realInfo.scoringSystem as RawScoringSystem)!;
+  const at = (category: string, slot: string, counts: number[]) => counts.map((n) => pointsFor(real, category, slot, n));
+
+  it("pays a goal 10 in goal, 6 at the back, 5 in midfield and 4 up front", () => {
+    expect(["G", "D", "M", "F"].map((slot) => pointsFor(real, "G", slot, 1))).toEqual([10, 6, 5, 4]);
+    expect(pointsFor(real, "G", "M", 2)).toBe(10);
+  });
+
+  it("pays an assist 3 at every slot", () => {
+    expect(["G", "D", "M", "F"].map((slot) => pointsFor(real, "AT", slot, 1))).toEqual([3, 3, 3, 3]);
+  });
+
+  it("pays a clean sheet 4 to a keeper or defender, 1 to a midfielder and nothing to a forward", () => {
+    expect(["G", "D", "M", "F"].map((slot) => pointsFor(real, "CS", slot, 1))).toEqual([4, 4, 1, 0]);
+  });
+
+  it("takes 1 for every two conceded from a keeper or defender, and nothing from anyone else", () => {
+    expect(at("GA", "G", [0, 1, 2, 3, 4, 5])).toEqual([0, 0, -1, -1, -2, -2]);
+    expect(at("GAO", "D", [1, 2, 4])).toEqual([0, -1, -2]);
+    expect(at("GAO", "M", [4])).toEqual([0]);
+  });
+
+  it("pays minutes 1 for 1 to 59 and 2 for 60 or more, keeper and outfielder alike", () => {
+    expect(at("Min", "D", [0, 1, 59, 60, 90, 94])).toEqual([0, 1, 1, 2, 2, 2]);
+    expect(at("Min", "G", [0, 1, 59, 60, 90, 94])).toEqual([0, 1, 1, 2, 2, 2]);
+  });
+
+  it("stacks cumulative bands and pays non-cumulative ones once, as the mirror says", () => {
+    // Outfield minutes are 1 and 1 stacked, the keeper's 1 or 2: the strings alone would pay 1 for 90.
+    expect(real.outfield.Min.Default).toMatchObject({ cumulative: true, bands: [{ points: 1 }, { points: 1 }] });
+    expect(real.goalie.Min.Default).toMatchObject({ cumulative: false, bands: [{ points: 1 }, { points: 2 }] });
+  });
+
+  it("pays a keeper 5 for a penalty saved and 1 for every 3 keeper points", () => {
+    expect(pointsFor(real, "PKS", "G", 1)).toBe(5);
+    expect(at("GKP", "G", [2, 3, 5, 6, 9])).toEqual([0, 1, 1, 2, 3]);
+  });
+
+  it("docks a yellow 1, a red 3, and a missed penalty or an own goal 2", () => {
+    for (const slot of ["G", "D", "M", "F"]) {
+      expect(["YC", "RC", "PKM", "OG"].map((category) => pointsFor(real, category, slot, 1))).toEqual([-1, -3, -2, -2]);
+    }
+    expect(pointsFor(real, "YC", "M", 0)).toBe(0);
+  });
+
+  it("pays a defender's defensive points 1 at 3 and 2 from 5", () => {
+    expect(at("DFP", "D", [2, 3, 4, 5, 12])).toEqual([0, 1, 1, 2, 2]);
+    expect(at("DFP", "M", [12])).toEqual([0]);
+  });
+
+  it("pays a midfielder's CBIRT 1 at 8 and 2 from 11, and a forward's 1 at 6 and 2 from 9", () => {
+    expect(at("DFP3", "M", [7, 8, 10, 11, 20])).toEqual([0, 1, 1, 2, 2]);
+    expect(at("DFP3", "F", [5, 6, 8, 9, 20])).toEqual([0, 1, 1, 2, 2]);
+    expect(at("DFP3", "D", [20])).toEqual([0]);
+  });
+
+  it("prices a flat category per unit and a banded one only through pointsFor", () => {
+    expect(categoryPoints(real, "G", "D")).toBe(6);
+    expect(categoryPoints(real, "Min", "D")).toBeNull();
+  });
+
+  it("refuses a band it cannot read rather than pricing part of it", () => {
+    const banded = (config: object) =>
+      mapScoringRules({
+        scoringCategories: { NON_GOALIE: { Min: { Default: "range1|59|1|NULL" } } },
+        scoringCategorySettings: [{ group: { code: "SOCCER_NON_GOALIE" }, configs: [{ scoringCategory: { shortName: "Min" }, position: { shortName: "Default" }, ...config }] }],
+      })!;
+    const band = { range: { start: 1, end: 59 }, points: 1 };
+    expect(pointsFor(banded({ rangeType: "PER_GAME", cumulative: false, ranges: [band] }), "Min", "D", 30)).toBe(1);
+    expect(pointsFor(banded({ rangeType: "PER_PERIOD", cumulative: false, ranges: [band] }), "Min", "D", 30)).toBeNull();
+    expect(pointsFor(banded({ rangeType: "PER_GAME", ranges: [band] }), "Min", "D", 30)).toBeNull();
+    expect(pointsFor(banded({ rangeType: "PER_GAME", cumulative: false, ranges: [{ range: { start: 1 }, points: 1 }] }), "Min", "D", 30)).toBeNull();
   });
 });
 
