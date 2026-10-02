@@ -141,10 +141,14 @@ export { mapSeasonStats } from "./fantrax/seasonStats";
 export { GROUPS, categoryFor, groupFor, isMeasure, offeredIn } from "./categories";
 export {
   ASSIST,
+  ASSISTS_FANTASY,
   ASSISTS_OFFICIAL,
   ASSISTS_TOTAL,
+  CLEAN_SHEETS,
   DEFCON,
   GOALS,
+  GOALS_AGAINST,
+  GOALS_AGAINST_OUTFIELD,
   KEEPER_POINTS,
   KEEPER_WORK,
   OWN_GOALS,
@@ -158,6 +162,8 @@ export {
   idsOf,
 } from "./categoryNames";
 export type { FantraxCategory } from "./categoryNames";
+export { wordsFor, wordsOf } from "./categoryWords";
+export type { CategoryWords } from "./categoryWords";
 export { defConAt, defConPoints, defConScored } from "./defcon";
 export type { DefConPeriod } from "./defcon";
 export type { GroupKey, Measure, StatCategory } from "./categories";
