@@ -24,6 +24,7 @@ paths:
 | `--color-bg` `surface` `raised` `line` | depth, never meaning |
 | `--color-ink` `muted` `faint` | how loud |
 | `--color-faint-plate` | the same quiet **on a blue plate** — `faint` is 2.35:1 there |
+| `--color-bad-wash` | the same red **on a doubt wash** — `bad` is 3.6:1 there; `faint` greys to `muted` on one |
 
 Two that have already caught us: **league red never fills a selected item** — the
 accent slot has already answered that question, and a red "active" is three
