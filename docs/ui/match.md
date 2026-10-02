@@ -100,8 +100,9 @@ Assists · …`) for our league: each category's men, home left and away right,
 rather than a column of doors. **Counted by the real league** (Craig, 1 Oct 2026: *"use the
 real league stats"*): `scoringDay.ts` reads the `scoring` league's `getPlayerStats` for the
 match's London day, and `fantasyCategories.ts` lists the categories it scores, each found by
-meaning (`AT` not `A`, `GKP` as *Keeper actions*, never `Sv`). Minutes, clean sheets and goals
-against are left off: every man has the first, and the score says the other two.
+meaning (`AT` not `A`, `GKP` as *Keeper actions*, never `Sv`) and headed in plain football
+words by the same meaning (*Assists*, never Fantrax's *Assists (Total)*). Minutes, clean sheets
+and goals against are left off: every man has the first, and the score says the other two.
 
 **DefCon only when a man gets close** (*"defenders, only when they get 1, mids when they have 4
 or more, forwards 3 or more"*): half the first band of the league's own DefCon at the letter his

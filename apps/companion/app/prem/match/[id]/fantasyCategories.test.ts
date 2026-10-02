@@ -1,11 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { mapLeagueInfo, type LeagueScoring } from "@epl/core";
 import real from "../../../../../../packages/core/src/league/fantrax/__fixtures__/leagueInfoScoringReal.json";
+import rehearsal from "../../../../../../packages/core/src/league/fantrax/__fixtures__/leagueInfoScoringRehearsal.json";
 import { fantasyBoxes, type FantasyMan } from "./fantasyCategories";
 
-// The real league's getLeagueInfo of 1 Oct 2026, which scores AT, GKP, DFP and DFP3.
-const info = mapLeagueInfo(real);
-const scoring: LeagueScoring | null = info.scoring === null ? null : { rules: info.scoring, categories: info.scoringCategories };
+// Both leagues' getLeagueInfo of 1 Oct 2026: the real one scores AT, GKP, DFP and DFP3, the rehearsal A, AF and Sv.
+function scoringOf(info: ReturnType<typeof mapLeagueInfo>): LeagueScoring | null {
+  return info.scoring === null ? null : { rules: info.scoring, categories: info.scoringCategories };
+}
+const scoring = scoringOf(mapLeagueInfo(real));
 
 let next = 1;
 function man(named: string, position: string, counts: Record<string, number>, fplDefCon?: number): FantasyMan {
@@ -21,9 +24,18 @@ describe("fantasyBoxes on the real league", () => {
     const keeper = man("G", "G", { GKP: 4, AT: 1 });
     const boxes = fantasyBoxes({ home: [keeper], away: [] }, scoring);
     expect(boxes.map((box) => [box.key, box.label])).toEqual([
-      ["INDIVIDUAL_ASSISTS_TOTAL", "Assists (total)"],
+      ["INDIVIDUAL_ASSISTS_TOTAL", "Assists"],
       ["INDIVIDUAL_KEEPER_POINTS", "Keeper actions"],
     ]);
+  });
+
+  it("heads every box in plain football words, never Fantrax's caption", () => {
+    const everything = { G: 1, AT: 1, A: 1, GKP: 1, Sv: 1, PKS: 1, PKM: 1, OG: 1, YC: 1, RC: 1 };
+    const heads = (league: LeagueScoring | null) =>
+      fantasyBoxes({ home: [man("G", "G", everything)], away: [] }, league).map((box) => box.label);
+    const plain = ["Goals", "Assists", "Keeper actions", "Penalties saved", "Penalties missed", "Own goals", "Yellow cards", "Red cards"];
+    expect(heads(scoring)).toEqual(plain);
+    expect(heads(scoringOf(mapLeagueInfo(rehearsal)))).toEqual(plain.map((head) => (head === "Keeper actions" ? "Saves" : head)));
   });
 
   it("lists our DefCon from 1 for a defender, 4 for a midfielder and 3 for a forward, and nobody below", () => {

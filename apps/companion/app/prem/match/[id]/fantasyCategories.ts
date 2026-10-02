@@ -1,13 +1,16 @@
 import {
   ASSIST,
+  ASSISTS_OFFICIAL,
+  ASSISTS_TOTAL,
   GOALS,
+  KEEPER_POINTS,
   KEEPER_WORK,
   OWN_GOALS,
   PENALTIES_MISSED,
   PENALTY_SAVES,
   RED_CARDS,
+  SAVES,
   YELLOW_CARDS,
-  categoryFor,
   defConAt,
   firstScored,
   fplDefConAt,
@@ -58,6 +61,20 @@ const PANEL: readonly (readonly FantraxCategory[])[] = [
   [RED_CARDS],
 ];
 
+/** Each of those under a plain football word, by meaning: Fantrax's own captions say "Assists (Total)". */
+const HEAD: ReadonlyMap<FantraxCategory, string> = new Map([
+  [GOALS, "Goals"],
+  [ASSISTS_TOTAL, "Assists"],
+  [ASSISTS_OFFICIAL, "Assists"],
+  [KEEPER_POINTS, "Keeper actions"],
+  [SAVES, "Saves"],
+  [PENALTY_SAVES, "Penalties saved"],
+  [PENALTIES_MISSED, "Penalties missed"],
+  [OWN_GOALS, "Own goals"],
+  [YELLOW_CARDS, "Yellow cards"],
+  [RED_CARDS, "Red cards"],
+]);
+
 /** Every box with somebody in it: ours when the league answered, then FPL's DefCon, which is never ours. */
 export function fantasyBoxes(sides: { home: FantasyMan[]; away: FantasyMan[] }, scoring: LeagueScoring | null): FantasyBox[] {
   const boxes: { key: string; label: string; of: Reading }[] = [];
@@ -66,7 +83,7 @@ export function fantasyBoxes(sides: { home: FantasyMan[]; away: FantasyMan[] }, 
       const category = firstScored(scoring.categories, options);
       if (category === null) continue;
       const of: Reading = (man) => (man.league === undefined ? null : { count: man.league.counts[category.short] ?? null, from: 1, mark: 1 });
-      boxes.push({ key: category.code, label: categoryFor(category.caption).label, of });
+      boxes.push({ key: category.code, label: HEAD.get(category) ?? category.caption, of });
     }
     boxes.push({ key: "defcon", label: "DefCon", of: (man) => ourDefCon(scoring, man) });
   }
