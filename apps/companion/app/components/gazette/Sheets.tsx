@@ -82,8 +82,6 @@ function Side({
               band={man.against === null ? DASH : `v ${man.against}`}
               // His photograph, as the match pitch draws him; the kit stands in where there is none.
               face={player ?? undefined}
-              // A sheet as it stood at the lock: today's INJ/DBT box is the desk's word, not the paper's.
-              stateBox={false}
             />
           );
         }}

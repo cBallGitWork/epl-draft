@@ -10,7 +10,6 @@ import {
   kickedOff,
   DASH,
 } from "@epl/core";
-import StateBox from "../football/StateBox";
 import EmptySlot from "./EmptySlot";
 import PlayerImage from "./PlayerImage";
 import PlayerShirt from "./PlayerShirt";
@@ -37,7 +36,6 @@ export default function PitchMarker({
   show = "points",
   band,
   face,
-  stateBox = true,
 }: {
   /** The footballer, or null for a slot with nobody behind it — read to tell the two apart and for his doubt. */
   player: FootballPlayer | null;
@@ -57,8 +55,6 @@ export default function PitchMarker({
   band?: string;
   /** His face instead of the club's kit, falling back to the kit where there is no photograph. */
   face?: { code: number; name: string };
-  /** The desk's INJ/DBT box after his name; the paper prints none (DESIGN §4). */
-  stateBox?: boolean;
 }) {
   const started = kickedOff(opposition);
   // Nobody at all: no man AND no club. A named man the bootstrap lacks still has his club's kit.
@@ -74,15 +70,15 @@ export default function PitchMarker({
         ? String(points ?? DASH)
         : (club?.shortName ?? DASH));
 
-  // How likely he is to miss, as the name plate's ground (red out, orange major, yellow slight); `--cm-face`
-  // keeps it CM's bevelled plate, and all three carry `--color-bg` ink.
+  // How likely he is to miss (red out, orange major, yellow slight), as the card's wash and the plate's ground.
   const doubt = doubtBand(availabilityOf(player));
 
   return (
     // A 45% wash behind the card, no border and no padding: the mow bands show through and the name keeps the width.
     <div
       // The space before `${` is load-bearing: Tailwind v4 does not see `bg-bg/45${…}` as a class and drops the wash.
-      className={`flex w-full flex-col gap-px bg-bg/45 ${doubt === "out" ? "cm-card-out" : ""}`}
+      className={`flex w-full flex-col gap-px bg-bg/45 ${doubt === null ? "" : "cm-card-doubt"}`}
+      style={doubt === null ? undefined : ({ "--doubt": DOUBT_GROUND[doubt] } as CSSProperties)}
     >
       {nobody ? (
         /* The same shape as a filled card, so an empty slot does not read as a hole in the formation. */
@@ -98,19 +94,8 @@ export default function PitchMarker({
       )}
 
       {/* CM's bevelled plate, run to the card's edge so every pixel goes to letters; the kit is what is inset. */}
-      <span
-        className={`cm-bevel uppercase ${PITCH_BAND} ${NAME_SIZE}`}
-        style={
-          doubt === null
-            ? undefined
-            : ({ "--cm-face": DOUBT_GROUND[doubt] } as CSSProperties)
-        }
-      >
-        {/* Why he may miss, right after the surname: the name truncates, the box never does. */}
-        <span className="flex min-w-0 max-w-full items-center gap-px">
-          <span className="min-w-0 truncate">{name}</span>
-          {stateBox ? <StateBox player={player} /> : null}
-        </span>
+      <span className={`cm-bevel uppercase ${PITCH_BAND} ${NAME_SIZE}`}>
+        <span className="w-full truncate">{name}</span>
       </span>
 
       {/* Absent rather than empty when the caller has nothing to say here. */}
