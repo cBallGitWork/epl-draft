@@ -47,6 +47,7 @@ const pick = (over: Partial<Pick> = {}): Pick => ({
   assists: 0,
   cleanSheet: true,
   saves: 4,
+  points: null,
   score: 50,
   ...over,
 });

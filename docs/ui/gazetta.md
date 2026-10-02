@@ -1,7 +1,7 @@
 # `/` — the Gazetta
 
 The front page, and the first thing ten people open: the lead, the week's
-business, who is hurt, and when lineups lock.
+business, and when lineups lock.
 
 ## In reading order
 
@@ -73,6 +73,10 @@ business, who is hurt, and when lineups lock.
    the splash rather than one. `HEADLINES_SHOWN` caps the whole tail at eight so
    a busy round does not turn the front page into an index of itself.
 
+   **News (bylined The Wire) and the bin are left off** (`frontPage`, Craig, 1 Oct
+   2026: *"remove 'the wire' and news"*). The desk stopped filing both that day;
+   the ones already filed keep their article pages.
+
    The splash's own picture is `gazette/Drawing` when CI drew one and
    `gazette/Face` otherwise; it was `Splash.tsx` until 3 Sep 2026, which is the
    wrong word for a photograph — a paper's splash is its top story, and that
@@ -137,8 +141,9 @@ business, who is hurt, and when lineups lock.
    of it, and a page that gave every story a photograph would be a page with no
    lead on it.
 7. **Team of the week** — the best XI across the whole league, **in the rail**,
-   grouped into its lines. One man per row: his name and owner at the left, what
-   got him picked at the right (`2G · CS`, or minutes if nothing else). `benched` is
+   grouped into its lines and ranked by Fantrax's points for the period. One man
+   per row: his name and owner at the left, his points at the right, a dash where
+   Fantrax has not priced him (Craig, 1 Oct 2026: *"just put points"*). `benched` is
    appended to the owner when a manager left his own best player out — **and only
    when the arrangement it was read from is the one that was fielded**; see *What
    may be said about a bench* below.
@@ -151,33 +156,34 @@ business, who is hurt, and when lineups lock.
    line, has nowhere to go but the stat and a flourish. The eleven column
    survives as a column: the case for the side, where a pundit's
    argument is something a pundit can actually write.
-8. **The three tables**, in the sidebar as a back page carries them: the
-   season's scorers (Fantrax's published season FPts — the player's own
-   season, which is not the same as what he earned his owner, so the head says
-   FPts and claims nothing more), the draft league (Fantrax's arithmetic,
+8. **The three tables**, in the sidebar as a back page carries them: **Top
+   scorers** (Fantrax's published season points — the player's own season, not
+   what he earned his owner; headed with no source since Craig, 1 Oct 2026: *"just
+   call it top scorers, and remove 'Fantrax FPts' header"*), the draft league (Fantrax's arithmetic,
    verbatim) and the Premier League (computed from finished fixtures, because
    FPL's own table is a dead field — three for a win is the competition's fixed
    rule and the football layer is where fixed rules may be constants).
 
-   Rank · name · played · record or goal difference · points, on hairlines, in
-   the tabular face; the scorers chart drops the played column rather than
-   printing ten dashes. None of the three is a link or a tap target — the
-   sortable, tappable, badged versions are on the League and Players tabs,
-   where a manager goes to USE them, and these are the printed copies.
+   Rank · name · played · goal difference or owner · points, on hairlines, in
+   the tabular face; a column no row carries is not printed, so the scorers chart
+   has no played column and the draft table is rank, name and points alone
+   (Craig, 1 Oct 2026: *"remove the WLT and gp, just points and names fine"*).
+   None of the three is a link or a tap target — the sortable, tappable, badged
+   versions are on the League and Players tabs, where a manager goes to USE
+   them, and these are the printed copies.
 9. **The week's business** — trades and claims, grouped so both halves of a trade
    read as one deal. Fantrax's timestamps, shown verbatim with their zone named
    in the heading, because they carry a US Eastern offset.
-10. **Doubts** — FPL's injury news across every squad, with chance of playing.
-   `no word` when FPL has no opinion, which is not the same as 0%.
-11. **Next deadline** — the period boundary, with an explicit note that the
+10. **Next deadline** — the period boundary, with an explicit note that the
    commissioner's real lock is fifteen minutes before the first fixture and is
    not something Fantrax publishes.
 
-Your own team is marked throughout with the left-edge accent border
-(`yoursBorder`) — and the same one, on a different ground. The class it returns
-sets a border *colour* plus an explicit left width, so on a ruled row with no
-`border` utility it draws the accent bar and nothing else. One treatment, two
-grounds, and `mine.ts` stays the only place that knows what "yours" looks like.
+Your own team is marked in the accent: your tie on the scoreboard, your men in
+the eleven, your row in the draft table.
+
+*The Doubts column, FPL's injury news across every squad, was cut on 1 Oct 2026*
+(Craig pasted it and said remove it). The Mail tab's doubt letters still read
+the same notes.
 
 ## The scoreboard
 
@@ -434,16 +440,15 @@ on its own: the front page had become a picture of a team with a newspaper
 wrapped round it. Craig's call, same day.
 
 **The lines stay, the grass goes.** It is a rail column grouped by line, with a
-small-capital position label over each group and `shape` in the head's aside, so
-a reader still sees 1-4-4-2 without the page spending a screen to draw it. That
+small-capital position label over each group. The head no longer prints the
+formation (Craig, 1 Oct 2026: *"dont have formation in text"*); the lines show it. That
 also puts it where it belongs in the reading order: the eleven is the one block
-in the rail anybody reads for pleasure, so it leads the rail and the three admin
-columns follow.
+in the rail anybody reads for pleasure, so it leads the rail and the tables,
+the business and the deadline follow.
 
 **The lines come from core, not from a second sort here.** `TeamOfTheWeek.lines`
 is the same men as `picks` in a second order — one is how they rank, the other is
-where they stand — and `shape` is counted off the lines, so the formation printed
-and the formation grouped cannot come apart. `picks` stays in score order because
+where they stand. `picks` stays in points order because
 the lead reads the first man his manager left out, and that only means anything
 if the list is ranked.
 

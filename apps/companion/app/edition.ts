@@ -1,5 +1,4 @@
 import {
-  type AvailabilityNote,
   type Deadline,
   type Deal,
   type FootballSnapshot,
@@ -9,9 +8,8 @@ import {
   type RosteredTeam,
   type LeagueTeam,
   type TeamOfTheWeek,
-  availability,
-  composePaper,
   deals,
+  frontPage,
   isMatchdayLive,
   nextDeadline,
   stories,
@@ -21,8 +19,8 @@ import {
 import { now } from "./clock";
 import { type Board, readBoard } from "./board";
 import { readDeals } from "./business";
+import { periodPoints } from "./scoreboard";
 import { roundUnderway, seasonKickoffs } from "./football";
-import { yoursFirst } from "./mine";
 import { filed } from "./paper";
 import { type LeagueSquads, getLeagueSquads } from "./squads";
 
@@ -79,7 +77,6 @@ export interface Edition {
   round: number | null;
   snapshot: FootballSnapshot | null;
   deals: Deal[];
-  availability: AvailabilityNote[];
   deadline: Deadline | null;
   teams: LeagueTeam[];
   /** Null until somebody has actually played. */
@@ -111,15 +108,8 @@ export interface Edition {
    *  players did is football and stands either way, which is why the eleven
    *  itself still prints. */
   fielded: boolean;
-  /** The rolling paper in print order: the first story leads, the rest run
-   *  under it as further articles. The paper is ONE page, so everything filed
-   *  prints here.
-   *
-   *  Unlike the old one-column-a-round shape, the lead does NOT go null
-   *  between rounds — a paper keeps printing its most recent edition until
-   *  the next one, and the filed instant is what keeps an old opinion honest
-   *  under today's masthead. `composePaper` owns expiry, supersession and the
-   *  order. */
+  /** The rolling paper in print order, the first story leading; `frontPage` owns
+   *  expiry, supersession, the order and the kinds it leaves off. */
   filed: PublishedStory[];
   /** Every story the week produced, strongest first: the front page leads on the
    *  first and runs the rest as headlines under it. Empty is ordinary — a paper
@@ -161,7 +151,7 @@ export async function edition(mine: string | null): Promise<Edition> {
   const roundPeriod = drafted?.roundPeriod ?? null;
 
   const business = deals(feed.rows);
-  const picked = eleven(drafted);
+  const picked = eleven(drafted, roundPeriod === null ? new Map() : await periodPoints(roundPeriod));
   const board = drafted === null ? null : await readBoard(drafted);
   // The desk's own manufactured stories wait for the round to finish: unlike a
   // filed column they carry no dateline, so mid-round they would claim the
@@ -178,11 +168,6 @@ export async function edition(mine: string | null): Promise<Edition> {
     snapshot: drafted?.snapshot ?? null,
     deals: business,
     dealsAt: feed.at,
-    // Your problems first: a manager scanning injury news on a Friday is
-    // looking for his own name before anybody else's.
-    availability: drafted
-      ? yoursFirst(availability(drafted.period.teams), (note) => note.teamId === mine)
-      : [],
     deadline: drafted?.info ? nextDeadline(drafted.info.rosterPeriods, kickoffs, at) : null,
     teams: drafted?.info?.teams ?? [],
     eleven: picked,
@@ -192,7 +177,7 @@ export async function edition(mine: string | null): Promise<Edition> {
     stories: told,
     // The clock is the app edge's to read (`football.ts`'s rule), which is why
     // the compose happens here rather than in `paper.ts`.
-    filed: composePaper(filed, at),
+    filed: frontPage(filed, at),
     board,
     mine,
   };
@@ -215,7 +200,6 @@ function silenceOf(squads: LeagueSquads, paper: Omit<Edition, "silence">): Silen
   const empty =
     paper.eleven === null &&
     paper.deals.length === 0 &&
-    paper.availability.length === 0 &&
     paper.deadline === null &&
     paper.filed.length === 0;
   if (!empty) return null;
@@ -229,9 +213,12 @@ function silenceOf(squads: LeagueSquads, paper: Omit<Edition, "silence">): Silen
  *
  *  Null rather than an empty side before a ball is kicked: a team of the week
  *  with nobody in it is not a shorter section, it is a wrong one. */
-function eleven(drafted: { period: { teams: RosteredTeam[] }; info: LeagueInfo | null } | null) {
+function eleven(
+  drafted: { period: { teams: RosteredTeam[] }; info: LeagueInfo | null } | null,
+  points: ReadonlyMap<string, number>,
+) {
   if (!drafted?.info) return null;
-  const picked = teamOfTheWeek(drafted.period.teams, drafted.info.roster);
+  const picked = teamOfTheWeek(drafted.period.teams, drafted.info.roster, points);
   return picked.picks.length === 0 ? null : picked;
 }
 

@@ -6,7 +6,6 @@ import Scoreboard from "../components/gazette/Scoreboard";
 import Drawing from "../components/gazette/Drawing";
 import Splash from "../components/gazette/Splash";
 import Deals from "../components/gazette/Deals";
-import Doubts from "../components/gazette/Doubts";
 import Lead from "../components/gazette/Stories";
 import Picture from "../components/gazette/Picture";
 import StoryFace, { hasPicture } from "../components/gazette/StoryFace";
@@ -20,23 +19,13 @@ import { edition } from "../edition";
 import { readerTeamId } from "../squads";
 import { draftRows, footballRows, scorerRows } from "../tables";
 
-// The Gazetta. What the league did this week, on the front page.
-//
-// A first edition rather than the full paper: the lead, the week's business, who
-// is injured, and when lineups lock. It ships early on purpose, so it is read on
-// real Saturdays while the stakes are four rehearsal teams rather than met for
-// the first time on 10 Oct.
-//
-// Sections that have nothing to say do not appear. An edition padded out with
-// "no transactions this week" is a worse paper than a shorter one.
-//
-// The `.paper` register, the serifs, the cream chrome and the poll cadence are
-// the group layout's — `(paper)/layout.tsx` — so this file is only the edition.
+// The Gazetta's front page: the stories, the eleven, the tables, the business and the lock.
+// A section with nothing to say does not appear; the register is `(paper)/layout.tsx`'s.
 
 export default async function GazettePage() {
   const mine = await readerTeamId();
   const paper = await edition(mine);
-  // The two tables, from reads the page already makes.
+  // The three tables, from reads the page already makes.
   const [draft, football, scorers] = await Promise.all([
     draftRows(mine),
     footballRows(),
@@ -172,16 +161,8 @@ export default async function GazettePage() {
 
         </div>
 
-        {/* The sidebar. Four short columns a manager scans rather than reads — the
-            week's best eleven, who is hurt, who signed whom, when the lock is —
-            so they are the four that come out of the lead's flow and stand
-            beside it. On a phone the grid is one column and this is simply what
-            follows, which is the order `docs/ui/gazetta.md` sets.
-
-            The eleven leads the sidebar because it is the one block here anybody
-            reads for pleasure; the other three are admin. It used to close the
-            lead column as a full-width pitch, which is the size a picture gets
-            and not the size a list of names earns. */}
+        {/* The sidebar: the week's eleven, the three tables, who signed whom and
+            when the lock is. On a phone it follows the lead, in `docs/ui/gazetta.md`'s order. */}
         <div className="flex flex-col gap-5 @3xl:border-l @3xl:border-line @3xl:pl-6">
           {paper.eleven ? (
             <TeamOfTheWeek
@@ -192,21 +173,13 @@ export default async function GazettePage() {
             />
           ) : null}
 
-          {/* The two tables, the way a back page carries them: the league we
-              are actually in first, the one it is played out of second. Rank ·
-              team · played · record or goal difference · points, and neither
-              is a link — the sortable, tappable, badged versions are on the
-              League and Players tabs, where a manager goes to USE them. */}
-          <PaperTable title="The season's scorers" aside="Fantrax FPts" rows={scorers} />
-          <PaperTable title="The draft table" aside="Fantrax" rows={draft} />
+          {/* Printed copies, not links: the sortable versions live on their own tabs. */}
+          <PaperTable title="Top scorers" rows={scorers} />
+          <PaperTable title="The draft table" rows={draft} />
           <PaperTable title="The Premier League" aside="P · GD · Pts" rows={football} />
 
           {paper.deals.length > 0 ? (
             <Deals deals={paper.deals} at={paper.dealsAt} who={who} />
-          ) : null}
-
-          {paper.availability.length > 0 ? (
-            <Doubts notes={paper.availability} mine={paper.mine} who={who} />
           ) : null}
 
           {paper.deadline ? (

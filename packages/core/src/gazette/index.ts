@@ -33,7 +33,7 @@ export { buildTieCallBrief } from "./briefs/tieCall";
 export { buildTieReportBrief } from "./briefs/tieReport";
 export { standingHeadlines } from "./briefs/standing";
 export { BANNED, banned } from "./banned";
-export { MAX_PAPER_STORIES, composePaper } from "./frontPage";
+export { MAX_PAPER_STORIES, composePaper, frontPage } from "./frontPage";
 export { isCovered, normalizeLedger, recordCoverage } from "./ledger";
 export { newsdesk, roundSlot } from "./newsdesk";
 export { predictedLineups } from "./predictedXi";

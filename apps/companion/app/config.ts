@@ -51,13 +51,8 @@ export const APP_SHORT_NAME = "Pro League";
  *  the web-app manifest and its icon. Change with the tokens. */
 export const TOKEN_SRGB = { bg: "#091227", league: "#c8102e", cream: "#f3eadd" } as const;
 
-/** How much of the paper prints on the front page.
- *
- *  A front page is a front page: the rest is a page of its own when there is
- *  enough to warrant one. Both sections say their true total in the heading, so
- *  a reader can see they are looking at a selection. */
+/** How many deals the front page prints; the heading says the true total. */
 export const DEALS_SHOWN = 6;
-export const DOUBTS_SHOWN = 8;
 
 /** How many men each of the Live tab's gameweek leaders lists. */
 export const LEADERS_SHOWN = 5;
