@@ -190,7 +190,7 @@ const STATS_LEAGUE = {
 const PLAIN_ROWS: Record<string, number> = {
   "Fetched but read by nobody": 31,
   "FPL bootstrap keys never typed": 11,
-  "Computed in the app, not core": 13,
+  "Computed in the app, not core": 14,
   "Stored history and live-only reads": 18,
   "Counted and refused": 30,
   "Where the record disagrees with the tree": 7,
