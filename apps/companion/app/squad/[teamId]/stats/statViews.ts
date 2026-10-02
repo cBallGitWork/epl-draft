@@ -1,10 +1,13 @@
-import { PLAYER_CATEGORIES, carries, type GroupKey, type PlayerStatLine } from "@epl/core";
+import { DEFCON, PLAYER_CATEGORIES, carries, type GroupKey, type PlayerStatLine } from "@epl/core";
 
 // The squad board's views and the columns in each: the league's categories off the served league's read, then the
 // counts beneath them that only the stats league carries. Pure, so heads, cells, key, cuts and sort read one list.
 
 /** One man's counts by column abbreviation, as a league's getPlayerStats files them. */
 export type Counts = Readonly<Record<string, number | null>>;
+
+/** What a row is read from beside the served league's line: his stats-league counts and our DefCon points. */
+export type Beside = { statsLeague?: Counts; defcon?: number | null };
 
 /** Every category the league scores, then each group with the counts beneath it. */
 export const VIEWS = [
@@ -37,13 +40,16 @@ export type Measure = {
   key: string;
   head: string;
   label: string;
-  read: (line: PlayerStatLine, statsLeague: Counts | undefined) => number | null;
+  read: (line: PlayerStatLine, beside: Beside) => number | null;
   /** A column whose top is the bad end, lit red rather than yellow and orange. */
   worse: boolean;
+  /** Ours rather than recorded, in the derived reading's ink. */
+  derived?: boolean;
 };
 
-/** A measure with what places it: its group, every name a read may file it under, and whether a league scores it. */
-type Column = { group: GroupKey; names: readonly string[]; scored: boolean; measure: Measure };
+/** A measure with what places it: its group, every name a read may file it under, and whose it is: a league's
+ *  category, a count beneath them off the stats league, or a figure of ours. */
+type Column = { group: GroupKey; names: readonly string[]; kind: "category" | "beneath" | "ours"; measure: Measure };
 
 /** His count under any of a column's names off one read; undefined when that read has no such column for him. */
 function held(counts: Counts | undefined, names: readonly string[]): number | null | undefined {
@@ -55,19 +61,38 @@ function held(counts: Counts | undefined, names: readonly string[]): number | nu
 /** The served league's figure where its read has the column, else the stats league's: one count, two leagues. */
 function column(
   entry: { key: string; group: GroupKey; label: string; lowIsGood?: boolean; also?: string },
-  scored: boolean,
+  kind: "category" | "beneath",
 ): Column {
   const names = entry.also ? [entry.key, entry.also] : [entry.key];
-  const read = (line: PlayerStatLine, statsLeague: Counts | undefined) => {
+  const read = (line: PlayerStatLine, beside: Beside) => {
     const served = held(line.stats, names);
-    return served === undefined ? (held(statsLeague, names) ?? null) : served;
+    return served === undefined ? (held(beside.statsLeague, names) ?? null) : served;
   };
-  return { group: entry.group, names, scored, measure: { key: entry.key, head: entry.key, label: entry.label, worse: entry.lowIsGood === true, read } };
+  return { group: entry.group, names, kind, measure: { key: entry.key, head: entry.key, label: entry.label, worse: entry.lowIsGood === true, read } };
 }
 
+/** DefCon points at his slot, ours; drawn after the last DefCon count. */
+const DEFCON_POINTS: Column = {
+  group: "defensive",
+  names: [],
+  kind: "ours",
+  measure: {
+    key: "DCP",
+    head: "DCP",
+    label: "DefCon points at the slot he fills, each match priced by the league's scoring. Ours, not Fantrax's",
+    worse: false,
+    derived: true,
+    read: (_line, beside) => beside.defcon ?? null,
+  },
+};
+
+const LAST_DEFCON = DEFCON[DEFCON.length - 1].short;
+
 const COLUMNS: readonly Column[] = [
-  ...PLAYER_CATEGORIES.map((category) => column(category, true)),
-  ...BENEATH.map((count) => column(count, false)),
+  ...PLAYER_CATEGORIES.flatMap((category) =>
+    category.key === LAST_DEFCON ? [column(category, "category"), DEFCON_POINTS] : [column(category, "category")],
+  ),
+  ...BENEATH.map((count) => column(count, "beneath")),
 ];
 
 /** Every column the board can read off the stats league, so its read keeps these and no more. */
@@ -75,11 +100,18 @@ export const STATS_LEAGUE_KEYS: readonly string[] = COLUMNS.flatMap((each) => ea
 
 /** A view's columns in order, with no total: the categories are raw counts, so a sum would add cards to goals.
  *  `served` is what the served league's read carries, and an empty one keeps every category. The stats league's
- *  columns fill a group but never the Scoring view, which is only what the league itself carries. */
-export function measuresFor(view: ViewKey, served: ReadonlySet<string>, statsLeague: ReadonlySet<string>): readonly Measure[] {
+ *  columns fill a group but never the Scoring view, which is only what the league itself carries, and our DefCon
+ *  points beside its counts when the league prices DefCon. */
+export function measuresFor(
+  view: ViewKey,
+  served: ReadonlySet<string>,
+  statsLeague: ReadonlySet<string>,
+  defconPriced: boolean,
+): readonly Measure[] {
   return COLUMNS.filter((each) => {
-    const inView = view === "scoring" ? each.scored : each.group === view;
-    const ownRead = each.scored ? carries(served, ...each.names) : each.names.some((name) => served.has(name));
+    if (each.kind === "ours") return view === "scoring" && defconPriced;
+    const inView = view === "scoring" ? each.kind === "category" : each.group === view;
+    const ownRead = each.kind === "category" ? carries(served, ...each.names) : each.names.some((name) => served.has(name));
     const statsRead = view !== "scoring" && each.names.some((name) => statsLeague.has(name));
     return inView && (ownRead || statsRead);
   }).map((each) => each.measure);
@@ -89,6 +121,6 @@ export function measuresFor(view: ViewKey, served: ReadonlySet<string>, statsLea
 const SORTABLE = new Map(COLUMNS.map((each) => [each.measure.key, each.measure]));
 
 /** One reading by column key: the sort's way in, and the same read the cell prints. */
-export function readingOf(line: PlayerStatLine, statsLeague: Counts | undefined, key: string): number | null {
-  return SORTABLE.get(key)?.read(line, statsLeague) ?? null;
+export function readingOf(line: PlayerStatLine, beside: Beside, key: string): number | null {
+  return SORTABLE.get(key)?.read(line, beside) ?? null;
 }

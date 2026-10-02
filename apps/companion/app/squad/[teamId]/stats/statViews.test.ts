@@ -27,8 +27,8 @@ const views = VIEWS.map((view) => view.key);
 describe("the squad board's total", () => {
   // The categories are raw counts, so a sum of them added goals conceded and cards as if they were points.
   it("draws no total in any view, and sorts by none", () => {
-    for (const view of views) expect(measuresFor(view, realKeys, statsKeys).map((measure) => measure.key)).not.toContain("pts");
-    expect(readingOf(realGross, statsGross, "pts")).toBeNull();
+    for (const view of views) expect(measuresFor(view, realKeys, statsKeys, true).map((measure) => measure.key)).not.toContain("pts");
+    expect(readingOf(realGross, { statsLeague: statsGross }, "pts")).toBeNull();
   });
 });
 
@@ -36,24 +36,24 @@ describe("the squad board's sources", () => {
   // Craig, 1 Oct 2026: "dont use the term fpl", "remove bps".
   it("names no view for FPL and draws no BPS", () => {
     expect(VIEWS.map((view) => view.label).join(" ")).not.toMatch(/fpl/i);
-    for (const view of views) expect(measuresFor(view, realKeys, statsKeys).map((measure) => measure.head)).not.toContain("BPS");
+    for (const view of views) expect(measuresFor(view, realKeys, statsKeys, true).map((measure) => measure.head)).not.toContain("BPS");
   });
 
   it("reads a count off the served league where its read has the column, and off the stats league where not", () => {
-    expect(readingOf(realGross, { ...statsGross, G: 99 }, "G")).toBe(3);
-    expect(readingOf(realGross, statsGross, "A")).toBe(3);
-    expect(readingOf(realGross, statsGross, "KP")).toBe(14);
+    expect(readingOf(realGross, { statsLeague: { ...statsGross, G: 99 } }, "G")).toBe(3);
+    expect(readingOf(realGross, { statsLeague: statsGross }, "A")).toBe(3);
+    expect(readingOf(realGross, { statsLeague: statsGross }, "KP")).toBe(14);
   });
 
   it("dashes a stats-league column for a man the stats league has no row for", () => {
-    expect(readingOf(realGross, undefined, "KP")).toBeNull();
-    expect(readingOf(realGross, undefined, "G")).toBe(3);
+    expect(readingOf(realGross, {}, "KP")).toBeNull();
+    expect(readingOf(realGross, {}, "G")).toBe(3);
   });
 });
 
 describe("the squad board's columns", () => {
-  const heads = (view: (typeof views)[number], served: ReadonlySet<string>, stats: ReadonlySet<string> = statsKeys) =>
-    measuresFor(view, served, stats).map((measure) => measure.head);
+  const heads = (view: (typeof views)[number], served: ReadonlySet<string>, stats: ReadonlySet<string> = statsKeys, priced = false) =>
+    measuresFor(view, served, stats, priced).map((measure) => measure.head);
 
   it("scores the real league's minutes, AT, DefCon and GKP, and not the A, AF and Sv it no longer scores", () => {
     expect(heads("scoring", realKeys)).toEqual(["Min", "G", "AT", "PKM", "CS", "DFP", "DFP3", "GKP", "PKS", "GA", "YC", "RC", "OG"]);
@@ -73,5 +73,25 @@ describe("the squad board's columns", () => {
   it("keeps the served league's own columns when the stats league did not answer", () => {
     expect(heads("attacking", realKeys, new Set())).toEqual(["G", "AT", "PKM"]);
     expect(heads("appearances", realKeys, new Set())).toEqual(["Min", "GP"]);
+  });
+});
+
+describe("the squad board's DefCon points", () => {
+  // Craig, 1 Oct 2026: "scoring missing our defcon stats".
+  it("draws ours after the DefCon counts in Scoring when the league prices DefCon, and nowhere else", () => {
+    expect(measuresFor("scoring", realKeys, statsKeys, true).map((measure) => measure.head)).toEqual(
+      ["Min", "G", "AT", "PKM", "CS", "DFP", "DFP3", "DCP", "GKP", "PKS", "GA", "YC", "RC", "OG"],
+    );
+    expect(measuresFor("scoring", realKeys, statsKeys, false).map((measure) => measure.head)).not.toContain("DCP");
+    expect(measuresFor("defensive", realKeys, statsKeys, true).map((measure) => measure.head)).not.toContain("DCP");
+  });
+
+  it("reads our figure, marks it ours, and never heads it FPts", () => {
+    const ours = measuresFor("scoring", realKeys, statsKeys, true).find((measure) => measure.key === "DCP");
+    expect(ours?.derived).toBe(true);
+    expect(ours?.head).not.toBe("FPts");
+    expect(ours?.label).toMatch(/ours/i);
+    expect(readingOf(realGross, { defcon: 3 }, "DCP")).toBe(3);
+    expect(readingOf(realGross, {}, "DCP")).toBeNull();
   });
 });

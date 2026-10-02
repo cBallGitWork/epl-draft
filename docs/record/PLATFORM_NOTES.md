@@ -56,6 +56,9 @@ the served league's rules: the rehearsal's in production and the dummy's, every 
 - **Not a rule exception.** The rules still come from `getLeagueInfo` (CODE_RULES §3); data says whose.
 - **What it prices:** only what we work out ourselves. Today that is the clean sheets Fantrax has not credited yet,
   on the head-to-head board and the squad sheet.
+- **DefCon points on a squad's Stats tab** (`DCP`, 1 Oct): DefCon pays per match, so each stats-league period begun
+  so far is read once (a finished one held a day) and its `DFP`/`DFP3` priced as one match at the man's roster slot
+  (`league/defcon.ts`). A period holding two of his matches prices nothing rather than guess the split.
 - **A range is read off the settings mirror, never the string.** `scoringCategorySettings` gives each band (`start`,
   `end`, `points`, `interval`), `rangeType` and `cumulative`; the string table has no `cumulative`. The real league's
   outfield minutes were `1|1` cumulative until 1 Oct (2 for 90) and are `1|2` non-cumulative now. Checked on the

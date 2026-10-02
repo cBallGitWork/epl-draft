@@ -121,6 +121,10 @@ export const CLUB_SEASON_REVALIDATE = 300;
  *  the kinds only settle what FPL's own counts already pay. */
 export const ASSIST_KINDS_REVALIDATE = 300;
 
+/** How stale a finished period's counts in the stats league may be, in seconds: they move only on a correction, and
+ *  a season's DefCon points ask for every period at once. */
+export const SETTLED_PERIOD_REVALIDATE = 60 * 60 * 24;
+
 /** Lifetime of the two reads a live score is drawn from, in seconds. Below `POLL.live` plus a
  *  fetch, or a stale-while-revalidate entry makes a lone reader see new scores every other poll. */
 export const LIVE_REVALIDATE = 20;
