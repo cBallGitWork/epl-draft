@@ -42,10 +42,10 @@ export default function Vidiprinter({ lines }: { lines: readonly WireRow[] }) {
   );
 }
 
-/** What the second man did: a goal's made it, a substitution's went off. */
+/** What the second man did; `As` so his manager fits at 390 (Craig, 2 Oct 2026: "Could just put 'As'"). */
 const SECOND_WORD: Partial<Record<MatchEventKind, string>> = {
-  goal: "Assist",
-  "penalty-goal": "Assist",
+  goal: "As",
+  "penalty-goal": "As",
   substitution: "Off",
 };
 

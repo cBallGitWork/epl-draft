@@ -57,7 +57,9 @@ football under it.
 
    **One face for the whole line** (1 Oct 2026): the chrome face for the word,
    the names, the minute and the managers, names a step up. The minute and the
-   manager are ink: a name is white, and yours is the accent.
+   manager are ink: a name is white, and yours is the accent. The assister is
+   marked `As`, not `Assist`, so his manager fits at 390 (Craig, 2 Oct 2026:
+   *"Could just put 'As'"*).
 
    **Half time was here for an evening and went** (Craig, 5 Sep 2026: *"ditch the
    HT"*). On a Saturday teatime it lands within an hour of full time with the
