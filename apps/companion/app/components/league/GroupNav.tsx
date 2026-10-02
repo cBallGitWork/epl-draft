@@ -45,7 +45,9 @@ export default function GroupNav({
           aria-current={entry.key === group ? "page" : undefined}
           className={`${TAB} min-h-11 px-2 text-2xs lg:min-h-9`}
         >
-          {entry.label}
+          {/* The short words keep five plates on one row at 390. */}
+          <span className="lg:hidden">{entry.short}</span>
+          <span className="max-lg:hidden">{entry.label}</span>
         </Link>
       ))}
     </nav>

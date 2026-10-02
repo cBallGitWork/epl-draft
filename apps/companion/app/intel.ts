@@ -132,6 +132,7 @@ export const intelDepthManifest = (depthFile as unknown as IntelDepth).manifest;
 
 /** The stats league's season counts by FPL code, for every man who has played (`npm run stats`). */
 export const intelStats: Map<number, StatsRow> = statIntel(statsFile as unknown as IntelStats);
+export const intelStatsManifest = (statsFile as unknown as IntelStats).manifest;
 /** Each man's league season in totals by FPL code, last season's and this one's: what the attribute grid rates. */
 export const intelLines: { last: Map<number, PlayerLine>; now: Map<number, PlayerLine> } = {
   last: lineIntel(linesLastFile as unknown as IntelLines),

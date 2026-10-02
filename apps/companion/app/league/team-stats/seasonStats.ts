@@ -8,24 +8,8 @@ import {
 import { leagueCache } from "../../leagueCache";
 import { orRefusal } from "../../refusals";
 
-// The season's category totals, cached like every other league read.
-//
-// One request answers all twelve categories at once — 52 KB for the whole board
-// — so the category the reader picks is a filter over what we already hold and
-// never a second trip to Fantrax. Changing the select re-renders; it does not
-// re-fetch.
-//
-// **An ARRAY across the cache boundary, and a Map only after it.**
-// `unstable_cache` round-trips its value through JSON, and a `Map` does not
-// survive that: it comes back as `{}` with no `.get`, and the page dies with
-// `D.get is not a function` at render — a failure the four gates cannot see,
-// because it needs a running server and a real read to happen at all. Every
-// other cached read in this app returns an array; this was the first to try
-// otherwise, and it did not work.
-//
-// Failure is an empty list rather than fatal: a board with no categories is a
-// screen that says so, and the rest of the section still works. That is the same
-// bargain `getSeasonResults` strikes one folder over.
+// The season's category totals, every category in one cached request; a failure is an empty board, not a dead page.
+// An ARRAY crosses the cache and a Map is built after it: `unstable_cache` round-trips JSON, and a Map comes back `{}`.
 
 /** One category's lines, in a shape that survives JSON. */
 export interface CategoryEntry {

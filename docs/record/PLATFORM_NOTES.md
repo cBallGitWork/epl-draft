@@ -4498,6 +4498,24 @@ category at no points, so `getPlayerStats` by position group answers **77 scorin
   Their counts are not stored until the bridge knows them; `intel-check` names the number.
 - The script is `scripts/stats.ts`; the ingestion refactor moves it to `scripts/ingest/`.
 
+## Team Stats' Squad view adds up the stats league's counts by squad (1 Oct 2026)
+
+Craig: *"update stats with stats league and real league"*. The served league's `SEASON_STATS`
+publishes only what it scores (the real league: 13 categories and a `Pen` priced nought), so
+the board's third plate, **Squad**, reads `data/intel/stats` instead: 18 counts, four a group
+at most, summed over every man each team holds now (`join/squadStats.ts`).
+
+- **A different question from FPts and Total, and the plate's title says so.** Those are
+  Fantrax's figures for what each LINEUP scored since the league began; Squad is what the men a
+  team holds NOW have done all SEASON, wherever they played it and whoever held them. A side
+  that drafted Haaland gets his August.
+- **Ranked as Total ranks**: raw counts, low-is-good on cards, own goals, errors and goals
+  conceded.
+- **A man the bridge cannot key adds nothing**, and a team none of whose men has a reading prints
+  `—`; a man who played and did none of it adds his nought.
+- It is the first screen to read the file, so the 30 Sep line above ("nothing on screen reads
+  it") no longer holds.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Answered for

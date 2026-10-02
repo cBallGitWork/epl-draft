@@ -5,8 +5,8 @@ import { ASSISTS_FANTASY, ASSISTS_OFFICIAL, ASSISTS_TOTAL, KEEPER_POINTS, SAVES,
 // The list is OURS, not Fantrax's, and the difference matters. Fantrax publishes
 // 22 leaderboards because it publishes each category twice, once per position
 // block; a reader does not think of "clean sheets kept by my goalkeeper" and
-// "clean sheets kept by my defenders" as two things. So this is the twelve
-// categories the game actually pays for, and `mapSeasonStats` does the adding.
+// "clean sheets kept by my defenders" as two things. So this is the categories
+// the game actually pays for, and `mapSeasonStats` does the adding.
 //
 // Craig, 1 Sep 2026, on why goals against is one entry and not two: "goals
 // against is a def and keeper stat, so we can combine that." Saves and penalty
@@ -34,7 +34,7 @@ export interface StatCategory {
   lowIsGood?: boolean;
 }
 
-/** The four kinds of thing a squad does, which is CM's second foot row.
+/** The kinds of thing a squad does, which is CM's second foot row.
  *
  *  Craig, 1 Sep 2026: "like CM, we could have another row of blue buttons under
  *  the table, could then separate the categories into defensive / attacking /
@@ -55,10 +55,12 @@ export interface StatCategory {
  *  for them here. A league with every category enabled would say what the full
  *  set is — deferred, and recorded in PLATFORM_NOTES. */
 export const GROUPS = [
-  { key: "attacking", label: "Attacking" },
-  { key: "defensive", label: "Defensive" },
-  { key: "appearances", label: "Appearances" },
-  { key: "discipline", label: "Discipline" },
+  { key: "attacking", label: "Attacking", short: "Attack" },
+  { key: "defensive", label: "Defensive", short: "Defence" },
+  // A keeper's own work, apart so DefCon's two counts fit a phone beside clean sheets.
+  { key: "keeping", label: "Keeping", short: "Keeping" },
+  { key: "appearances", label: "Appearances", short: "Apps" },
+  { key: "discipline", label: "Discipline", short: "Discipline" },
 ] as const;
 
 export type GroupKey = (typeof GROUPS)[number]["key"];
@@ -85,10 +87,13 @@ export const CATEGORIES: readonly StatCategory[] = [
   { key: ASSISTS_OFFICIAL.caption, group: "attacking", label: "Assists", short: ASSISTS_OFFICIAL.short },
   { key: ASSISTS_FANTASY.caption, group: "attacking", label: "Assists (fantasy)", short: ASSISTS_FANTASY.short },
   { key: "Clean Sheets On Field", group: "defensive", label: "Clean sheets", short: "CS" },
-  { key: SAVES.caption, group: "defensive", label: "Saves", short: SAVES.short },
-  { key: KEEPER_POINTS.caption, group: "defensive", label: "Keeper actions", short: KEEPER_POINTS.short },
-  { key: "Penalty Kick Saves", group: "defensive", label: "Penalties saved", short: "PKS" },
+  // DefCon's two counts: the real league pays a defender on the first and the men in front of him on the second.
+  { key: "Defensive Points", group: "defensive", label: "Tackles won, interceptions and blocks", short: "DFP" },
+  { key: "Defensive Points 3", group: "defensive", label: "Tackles won, interceptions, blocks, clearances and recoveries", short: "DFP3" },
   { key: "Goals Against", group: "defensive", label: "Goals against", short: "GA", lowIsGood: true },
+  { key: SAVES.caption, group: "keeping", label: "Saves", short: SAVES.short },
+  { key: KEEPER_POINTS.caption, group: "keeping", label: "Keeper actions", short: KEEPER_POINTS.short },
+  { key: "Penalty Kick Saves", group: "keeping", label: "Penalties saved", short: "PKS" },
   { key: "Yellow Cards", group: "discipline", label: "Yellow cards", short: "YC", lowIsGood: true },
   { key: "Red Cards", group: "discipline", label: "Red cards", short: "RC", lowIsGood: true },
   { key: "Penalty Kicks Missed", group: "attacking", label: "Penalties missed", short: "PKM", lowIsGood: true },

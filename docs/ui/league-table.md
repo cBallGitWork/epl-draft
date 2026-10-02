@@ -79,9 +79,10 @@ chip.
 
 Same shell, different question: not who is winning, but what each side is
 actually DOING. The blue foot row picks the group — Attacking · Defensive ·
-Appearances · Discipline — and **the whole group draws at once**, three or four
+Keeping · Appearances · Discipline — and **the whole group draws at once**, three or four
 categories across the top with every team down the side (Craig, 11 Sep 2026:
-*"for each section, we can get all the columns in one go"*).
+*"for each section, we can get all the columns in one go"*). Under `lg` the plates
+read Attack · Defence · Keeping · Apps · Discipline, which keeps five on one row at 390.
 
 **One grey toggle at the top, `FPts` · `Total`, and it governs every cell.** The
 same category is two numbers — what Fantrax paid for it and the raw figure behind
@@ -90,6 +91,14 @@ while it drew one category; at four categories that is eight columns of
 alternating meaning, and a reader compares a column against the one beside it.
 Fantasy points is the default, because 1,500 minutes is not better than 1,400
 unless those minutes were worth more.
+
+**A third plate, `Squad`, asks a different question** (1 Oct 2026): what the men each
+team holds now have done all season, added up off the stats league's counts
+(`squadColumns.ts`: goals, assists, shots and key passes; tackles won,
+interceptions, clearances and recoveries; saves, penalties saved and goals
+conceded in goal; appearances, starts and minutes; cards, own goals and errors
+leading to a goal). It fills in the day the draft ends, a week before Fantrax has
+scored a lineup, and a quiet `Season to …` line names the file's date.
 
 **The column heads sort**, as `/league`'s do — a link, so the server orders and
 the ordering survives being shared. The pressed plate is the only mark of the
@@ -110,6 +119,12 @@ columns and no sideways scroll.
 The categories are ours, not Fantrax's — their `SEASON_STATS` view publishes each
 one twice, split into a goalkeeper block and an outfielder block, and
 `mapSeasonStats` adds them back together.
+
+**DefCon is two columns, `DFP` and `DFP3`, and Keeping is its own group** (1 Oct
+2026). The real league pays a defender on `Defensive Points` and a midfielder or
+forward on `Defensive Points 3`, so their points are two halves of one bonus and
+their counts are two different sums; adding them would be neither. Saves, keeper
+actions and penalties saved moved to Keeping so Defensive stays at four.
 
 ## States
 
