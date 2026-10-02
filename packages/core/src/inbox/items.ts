@@ -1,6 +1,5 @@
-import { londonDate, londonTime } from "../time";
+import { instantOf, londonDate, londonTime } from "../time";
 import type { InboxItem } from "./types";
-import { whenKey } from "./when";
 
 // The round, and the merge that orders the whole inbox.
 //
@@ -47,7 +46,7 @@ export function roundNews({
     items.push({
       id: `deadline:${deadline.gameweek}`,
       category: "competition",
-      at: { iso: deadline.locksAt },
+      at: deadline.locksAt,
       gameweek: deadline.gameweek,
       headline: `Gameweek ${deadline.gameweek} lineups lock`,
       // The commissioner texting the group; the time is `locksAt`'s, in London, as the masthead prints it.
@@ -99,32 +98,11 @@ export function roundNews({
   return items;
 }
 
-/** The inbox, newest first.
- *
- *  **Dated items lead, in date order; undated ones follow in the order their
- *  builders gave them.**
- *
- *  That second half used to carry most of the screen: every doubt was undated,
- *  on a belief about FPL that turned out to be false, so the injuries arrived as
- *  a block at the foot in whatever order the paper had sorted them. They carry
- *  `news_added` now (`doubts.ts`), so they sort into the same calendar as the
- *  business and the screen is one feed, newest first — which is what an inbox is.
- *
- *  What is left undated is the round's own result, which is a standing fact
- *  about a finished tie rather than something filed at a moment.
- *
- *  Stable within each half, so a builder's own ordering survives. */
+/** The inbox: dated items newest first, then undated ones (the round's result) in their builders' order. */
 export function inboxItems(...groups: readonly InboxItem[][]): InboxItem[] {
-  const keyed = groups.flat().map((item) => ({ item, key: whenKey(item.at) }));
+  const keyed = groups.flat().map((item) => ({ item, key: item.at === null ? null : instantOf(item.at) }));
   const dated = keyed.filter((row) => row.key !== null);
   const undated = keyed.filter((row) => row.key === null);
-  // Newest first, on one calendar. This compared the two shapes as TEXT and said
-  // in as many words that the order where they met "says nothing false" — which
-  // was wrong twice over: `"2026-09-12T…"` sorts under `"Wed Sep 2…"` by first
-  // character, so the round's deadline appeared beneath ten days of older deals,
-  // and the two shapes met on every list this app has ever drawn. `whenKey` puts
-  // both into Fantrax's own calendar, which is the one comparison that converts
-  // neither of them.
   dated.sort((a, b) => (b.key ?? 0) - (a.key ?? 0));
   return [...dated, ...undated].map((row) => row.item);
 }

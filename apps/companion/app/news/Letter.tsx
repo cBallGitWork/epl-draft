@@ -1,5 +1,5 @@
 import type { InboxItem } from "@epl/core";
-import { fantraxMoment, londonDayAndDate, londonTime } from "@epl/core";
+import { londonMoment } from "@epl/core";
 import { LABEL } from "@/app/desk";
 
 // The item you are reading, as a letter.
@@ -17,7 +17,7 @@ import { LABEL } from "@/app/desk";
  *  screen sets both straight on the photograph, and that is the one thing in the
  *  shot we do not copy. */
 export default function Letter({ item }: { item: InboxItem }) {
-  const moment = itemMoment(item);
+  const moment = item.at === null ? null : londonMoment(item.at);
   return (
     <article className="cm-panel flex flex-col p-3 lg:min-h-[22rem] lg:p-5">
       {/* **A letter's own head, and it is three facts rather than a caption**
@@ -105,12 +105,4 @@ function Field({
       </Tag>
     </div>
   );
-}
-
-/** The same date with its clock, for the item being read. Fantrax's carries the
- *  zone on its face (`Wed 2 Sep, 6:11 AM ET`) because we did not convert it. */
-function itemMoment(item: InboxItem): string | null {
-  if (item.at === null) return null;
-  if ("iso" in item.at) return `${londonDayAndDate(item.at.iso)}, ${londonTime(item.at.iso)}`;
-  return fantraxMoment(item.at.fantrax);
 }

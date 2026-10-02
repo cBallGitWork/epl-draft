@@ -82,7 +82,7 @@ No fluid clamps except inside the masthead.
 | `shell/sections` | The sections as data, which one a path is in, which of them this round puts on the phone's rail (`sectionsFor`), and when the More tab is current (`moreOwns`). The rail prints it, on the paper as well as the desk. |
 | `shell/LeagueCrest` | Our crest. `mark` (no type, legible to ~24px) and `full`. |
 | `shell/AutoRefresh` | The app's **single** client poller, mounted by the layout. `POLL.live` during football, `POLL.idle` otherwise, waking at kickoff: it counts down the layout's `liveIn` (`cadence.ts`). Eight pages each mounted their own until 29 Aug, sized from whatever snapshot each happened to hold — so a page with no football read of its own simply froze. |
-| `core/inbox/when` | When an inbox item happened, and WHICH KIND of "when". Two sources date themselves differently — Fantrax's offsetless `"Wed Sep 2, 2026, 6:11AM"` and our ISO deadline — and one untagged string carrying both sorted the 12 Sep deadline under 2 Sep deals and drew a US stamp beside a British date. `fantraxDay`/`fantraxMoment` RE-SPELL their parts (`Sep 2` → `2 Sept`, and the zone named: `6:11 AM ET`); nothing converts them, because a converted transaction can move a day. `whenKey` puts both into Fantrax's own calendar for ordering only. |
+| `core/inbox/when` | Fantrax's offsetless US Eastern stamp, `"Wed Sep 2, 2026, 6:11AM"`, read as an instant: `fantraxInstant` takes the offset of the stamp's own date (EDT or EST), and `fantraxDay`/`fantraxTime` print it in London like every other time. Mail's deals carry the instant, so an inbox item has one kind of "when". |
 | `shell/liveTie` | Whether there is a live tie of the reader's, as one question with six guards, the football's asked before Fantrax is read. The layout starts it ONCE, un-awaited, and hands the promise to both wearers — so the desk's strip and the phone's plate are one Fantrax read, and neither blocks the shell. A provider failing is no strip; anything else still throws. |
 | `shell/LiveNow` · `shell/LiveStrip` | Your tie in the chrome while a ball is in the air, **on the desk**. Stands down on `/` and `/matchday`, which print the same tie larger, and below `lg` everywhere — 44px across the top of a phone for a number the thumb rail can carry in room it already has. |
 | `shell/LiveFigure` | The same tie as the Live tab's figure, in the glyph's slot below `lg`, stepping down the type scale by length (`scoreSize`); the match clock when there is no tie of yours. |
@@ -462,5 +462,6 @@ alternative for every animation. One focus treatment everywhere, never removed.
 
 Every time in the app is UK time wherever the reader is (core's `time.ts`), and
 "15:00" has to mean the same thing in Toronto as in Leeds. Fantrax's own
-timestamps carry a US Eastern offset and are shown **verbatim with their zone
-named**, never silently converted.
+timestamps are US Eastern; they are read with their date's offset and printed in
+London like the rest (`core/inbox/when`), with no zone named anywhere (Craig,
+2 Oct 2026: *"Times need to be local time"*).

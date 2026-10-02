@@ -172,9 +172,7 @@ export interface LeagueTransaction {
    *  dropped player goes to the pool rather than to another manager. */
   fromTeamId: string | null;
   toTeamId: string | null;
-  /** Fantrax's own string, verbatim and unparsed — "Wed Aug 12, 2026, 9:14AM".
-   *  It carries no offset, so making an instant of it would mean assuming a
-   *  timezone on data we do not control. */
+  /** Fantrax's own string, verbatim: "Wed Aug 12, 2026, 9:14AM", US Eastern with no offset in it. */
   processedAt: string | null;
   /** The period the move takes effect in, not when it was made. */
   period: number | null;
