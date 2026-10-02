@@ -90,7 +90,7 @@ own lines no longer overlap; until 1 Oct 2026 24 of its firings a week ran twice
 
 ## Cached reads
 
-Every provider read the app makes at request time sits in one of these 36, in 22 files.
+Every provider read the app makes at request time sits in one of these 39, in 23 files.
 `leagueCache` (`apps/companion/app/leagueCache.ts`) is `unstable_cache` keyed
 `[key, FANTRAX_LEAGUE_ID]` and tagged `key:leagueId`, 30 s unless given a window. A refusal Fantrax
 meant (`kind: "refused"`) is caught by `orRefusal` inside the cache and held for the window like an
@@ -132,6 +132,8 @@ All targets are `apps/companion/app/_reads/<provider>.ts`, one leaf read each.
 | `getPlayerStats` | `apps/companion/app/players/playerStats.ts` | `player-stats` | 30 | fxpa `getPlayerStats`, outfield and keepers | `_reads/fantrax.ts` |
 | `statsLeagueSeason` | `apps/companion/app/statsLeague.ts` | `stats-league-season` + columns | 30 | fxpa `getPlayerStats` in the league `recorded.json` names `stats`, outfield and keepers | `_reads/fantrax.ts` |
 | `periodsOf` | `apps/companion/app/statsLeague.ts` | `league-periods` + league | 300 | fxea `getLeagueInfo`, its scoring periods | `_reads/fantrax.ts` |
+| `settledPeriod` | `apps/companion/app/statsLeague.ts` | `stats-league-period` + league, period, columns | 86400 | fxpa `getPlayerStats` in the stats league, outfield, one finished period | `_reads/fantrax.ts` |
+| `openPeriod` | `apps/companion/app/statsLeague.ts` | `stats-league-period-open` + league, period, columns | 30 | the same, for the period under way | `_reads/fantrax.ts` |
 | `kindsOf` | `apps/companion/app/assistKinds.ts` | `assist-kinds` + league, period | 300 | fxpa `getPlayerStats`, outfield, one period | `_reads/fantrax.ts` |
 | `scoringDay` | `apps/companion/app/scoringDay.ts` | `scoring-day` + day | 300 | fxpa `getPlayerStats` of the league `recorded.json` names `scoring`: its `BY_DATE` code, then outfield and keepers for one London day, three reads in turn | `_reads/fantrax.ts` |
 | `readPool` | `apps/companion/app/players/pool.ts` | `league-pool` | 30 | fxea `getPlayerIds`, `getLeagueInfo`, `getTeamRosters` and fxpa `getPlayerStats`, four reads | `_reads/fantrax.ts` |
