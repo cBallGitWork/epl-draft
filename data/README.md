@@ -19,8 +19,28 @@ phone only through a deploy.
 | `data/editions/` | `scripts/write-edition.ts` through `scripts/edition/persist.ts`, from `.github/workflows/editions.yml` | whenever the newsdesk files a story | the app: `apps/companion/app/paper.ts` (`paper.json`). The writer re-reads `ledger.json` and `archive/<leagueId>/` | yes |
 | `data/intel/` | the sister repo `~/ai-carling-premiership` (`make export-epl-draft`, by hand): squads, matches, set-pieces, touches, shots, strength, projections. By hand on 25 Sep: careers, depth. `scripts/scout-xi.ts` from `.github/workflows/scout-xi.yml`: xi. `scripts/ingest-pressers.ts` by hand: pressers | exports when someone runs them; xi every two hours when an eleven changes; pressers Thursday and Friday | the app: `apps/companion/app/intel.ts`, ten static imports (not pressers). Scripts: `scripts/intel.ts` for `scripts/edition/xi.ts`, `scripts/edition/pressers.ts`, `scripts/edition/predictions.ts`, `scripts/scout-xi.ts`; `scripts/intel-check.ts` | yes |
 | `data/mappings/` | `scripts/build-bridge.ts` (`fantrax.json`, `fantrax-aliases.json`, `review/`) and `scripts/pl-bridge.ts` (`premierleague.json`), by hand, then audited | the bridge when the pool changes; pl-bridge after a round | the app: `apps/companion/app/squads.ts`, `apps/companion/app/plFeed.ts`. Scripts: `scripts/bridge-check.ts`, `scripts/edition/facts.ts`, `scripts/edition/predictions.ts`; `scripts/build-bridge.ts` re-reads its own two files | yes |
-| `data/leagues/` | by hand: `recorded.json`. `scripts/roster-limits.ts` with `FANTRAX_COOKIE`: `roster-limits.json` | when a recorded league changes; roster limits after the draft | `recorded.json`: scripts only, through `scripts/leagues.ts`, and `.github/workflows/verify.yml`. `roster-limits.json`: the app, `apps/companion/app/rosterMinimums.ts` | yes |
+| `data/leagues/` | by hand: `recorded.json`, `venues.json`. `scripts/roster-limits.ts` with `FANTRAX_COOKIE`: `roster-limits.json` | when a recorded league changes; roster limits after the draft; venues when a photograph lands | `recorded.json`: scripts only, through `scripts/leagues.ts`, and `.github/workflows/verify.yml`. `roster-limits.json`: the app, `apps/companion/app/rosterMinimums.ts`. `venues.json`: the app, `apps/companion/app/venues.ts` | yes |
 | `data/shape/` | by hand: `baseline.json`, the shape differences someone has read and accepted | when a difference is accepted | `scripts/shape-diff.ts` | yes |
+
+## Home venues
+
+`leagues/venues.json` gives each team in the real league a home ground, keyed by its Fantrax team
+id (`team` is a label for people; nothing reads it). A head-to-head is drawn over the home side's
+venue, home being the side Fantrax's schedule lists as home. Every entry points at the desk's own
+photograph, `/ground/crowd.jpg`, until a real one lands, and a team the file does not list gets the
+same. The real league had nine teams on 1 Oct; a team that joins later needs a line, and its id is
+in `getLeagueInfo`'s teams.
+
+To give a team its own ground:
+
+1. Put the photograph in `apps/companion/public/ground/venues/`: landscape, 1400px wide or more,
+   capped at 1920px on the long edge at JPEG quality 75, as the clubs' grounds are.
+2. Point the team's `src` at it: `"src": "/ground/venues/<file>.jpg"`.
+3. Optionally add `"blur"`, the same picture 16px wide as a `data:image/jpeg;base64,…` URL
+   (`sips -Z 16 <file>.jpg --out /tmp/b.jpg && base64 -i /tmp/b.jpg` on a Mac). It paints while the
+   photograph loads; without it the screen is dark for that moment.
+4. A photograph that is not your own needs its credit on `/credits` (author, licence, source), as
+   every ground there has: add it in `apps/companion/app/credits/page.tsx`.
 
 ## The snapshots
 

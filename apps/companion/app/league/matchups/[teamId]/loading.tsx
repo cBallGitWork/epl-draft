@@ -1,4 +1,5 @@
 import Skeleton from "../../../components/shell/Skeleton";
+import PhotoGround from "../../../components/football/PhotoGround";
 import { MATCHUP_VIEWS } from "./views";
 
 // One head-to-head, waiting on both elevens.
@@ -17,6 +18,8 @@ import { MATCHUP_VIEWS } from "./views";
 export default function Loading() {
   return (
     <div aria-busy className="flex flex-col gap-2">
+      {/* The desk's ground until the home team's arrives: this route draws its own. */}
+      <PhotoGround subject={null} />
       <div className="flex items-stretch gap-px">
         <Skeleton width="50%" height="4rem" />
         <Skeleton width="50%" height="4rem" />

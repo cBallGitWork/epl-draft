@@ -123,11 +123,17 @@ describe("headToHead", () => {
     expect(headToHead(schedule, leagueTeams, 1, "t1")).toEqual({
       team: leagueTeams[0],
       opponent: leagueTeams[1],
+      home: leagueTeams[0],
     });
     expect(headToHead(schedule, leagueTeams, 1, "t2")).toEqual({
       team: leagueTeams[1],
       opponent: leagueTeams[0],
+      home: leagueTeams[0],
     });
+  });
+
+  it("keeps the side Fantrax's schedule puts at home, whichever side is asked about", () => {
+    expect(headToHead(schedule, leagueTeams, 1, "t2")?.home.teamId).toBe("t1");
   });
 
   it("selects the period, not just the team", () => {

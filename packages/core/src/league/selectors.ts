@@ -119,8 +119,8 @@ export function leaguePool(
  *
  *  `periodPairings` reports Fantrax's home and away because that is what the
  *  schedule says, and every screen that shows a head-to-head to a particular
- *  manager immediately undoes it: there is no ground, so neither side is at
- *  home, and a manager reads his own team first. Three of them had written
+ *  manager reads his own team first; `home` is kept only for the ground the
+ *  tie is drawn over. Three of them had written
  *  `pairing.home.teamId === mine ? … : …` for themselves — his own matchup on
  *  the live tab, his squad screen naming Saturday's opponent, and the board —
  *  which is the third occurrence and the point at which it stops being a
@@ -132,6 +132,8 @@ export interface HeadToHead {
   /** The team asked about. */
   team: LeagueTeam;
   opponent: LeagueTeam;
+  /** Whichever of the two Fantrax's schedule puts at home: the tie is played at his venue. */
+  home: LeagueTeam;
 }
 
 export function headToHead(
@@ -146,6 +148,6 @@ export function headToHead(
   if (pairing === undefined) return undefined;
 
   return pairing.home.teamId === teamId
-    ? { team: pairing.home, opponent: pairing.away }
-    : { team: pairing.away, opponent: pairing.home };
+    ? { team: pairing.home, opponent: pairing.away, home: pairing.home }
+    : { team: pairing.away, opponent: pairing.home, home: pairing.home };
 }

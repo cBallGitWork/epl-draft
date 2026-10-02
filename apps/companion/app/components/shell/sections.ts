@@ -11,6 +11,7 @@
 // them having to care. Both modules it imports keep the same discipline, for
 // the same reason — see `prem/routes.ts`.
 
+import { MATCHUPS } from "../../league/routes";
 import { POOL } from "../../players/routes";
 import { CLUB, MATCH } from "../../prem/routes";
 import { MY_TEAM, SQUAD } from "../../squad/routes";
@@ -186,5 +187,6 @@ const SUBJECT_GROUND_ROUTES = [CLUB, MATCH];
  *  that DO know draw it, and this is how the shell knows to get out of the way.
  *  Same shape and same reason as `isPaperRoute`. */
 export function drawsOwnGround(pathname: string): boolean {
-  return owns(SUBJECT_GROUND_ROUTES, pathname);
+  // A head-to-head too, over its home team's venue; the list of them above it keeps the desk's.
+  return owns(SUBJECT_GROUND_ROUTES, pathname) || pathname.startsWith(`${MATCHUPS}/`);
 }

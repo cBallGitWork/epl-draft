@@ -6,6 +6,7 @@ import {
   type BarTab,
   barSections,
   barTabs,
+  drawsOwnGround,
   moreOwns,
   overflowSections,
   owns,
@@ -123,5 +124,15 @@ describe("the More tab", () => {
 
   it("takes My Team while football is on, since Team has no tab then", () => {
     expect(moreOwns(sectionsFor(true), MY_TEAM)).toBe(true);
+  });
+});
+
+describe("who draws the ground", () => {
+  it("leaves a head-to-head's to the page, which draws its home team's venue", () => {
+    expect(drawsOwnGround("/league/matchups/abc123")).toBe(true);
+  });
+
+  it("keeps the desk's behind the list of head-to-heads, which has no home side", () => {
+    expect(drawsOwnGround("/league/matchups")).toBe(false);
   });
 });

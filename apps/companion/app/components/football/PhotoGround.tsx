@@ -76,6 +76,7 @@ const DARKEN = 0.55;
 export default function PhotoGround({
   faces = [],
   subject,
+  photo,
 }: {
   faces?: readonly string[];
   /** The club this screen is ABOUT, when a subject's own shell is drawing the
@@ -88,11 +89,13 @@ export default function PhotoGround({
    *  stands down. A shell that guessed would load a second photograph behind the
    *  first and pay for a picture nobody sees. */
   subject?: string | null;
+  /** A picture the subject already chose in place of a club's: a head-to-head's home venue. */
+  photo?: { src: string; blur?: string } | null;
 }) {
   const pathname = usePathname();
   if (isPaperRoute(pathname)) return null;
   // Asked by the shell, on a route where a Shell below draws its own.
-  if (subject === undefined && drawsOwnGround(pathname)) return null;
+  if (subject === undefined && photo === undefined && drawsOwnGround(pathname)) return null;
 
   // A club with no photograph of its own falls back to the shared ground rather
   // than to nothing: `clubGroundPhoto` answers null for a promoted club, on
@@ -103,10 +106,10 @@ export default function PhotoGround({
   // lookup rather than two: a ground drawn with the wrong club's blur would show
   // the previous stadium for a frame and then cut, which is the very fault the
   // placeholder is here to fix.
-  const photo =
-    subject === undefined || subject === null ? null : clubGroundPhoto(subject);
-  const ground = photo?.src ?? DESK_GROUND;
-  const blur = photo === null ? DESK_GROUND_BLUR : photo.blur;
+  const chosen = photo ?? (subject === undefined || subject === null ? null : clubGroundPhoto(subject));
+  const ground = chosen?.src ?? DESK_GROUND;
+  // The desk's own picture keeps its own placeholder, whoever chose it.
+  const blur = chosen?.blur ?? (ground === DESK_GROUND ? DESK_GROUND_BLUR : null);
   if (ground === null && faces.length === 0) return null;
 
   return (

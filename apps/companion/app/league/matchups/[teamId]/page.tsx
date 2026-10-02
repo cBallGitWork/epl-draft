@@ -16,6 +16,8 @@ import { SquadLists, arrangeBoth, unplayedLists } from "./sides";
 import { SideTab, StatsTab, sharedSides, withheldNotice, type SharedSide } from "./tabs";
 import { FixturesTab, TableTab } from "./wider";
 import LeagueShell from "../../Shell";
+import PhotoGround from "../../../components/football/PhotoGround";
+import { venueOf } from "../../../venues";
 import { HEAD_TO_HEAD } from "../../../titles";
 import { getLeagueSquads, readableOr404, teamDisplay } from "../../../squads";
 import { roundOf } from "../../../round";
@@ -40,7 +42,7 @@ import { everyone, subMarks } from "./subs";
 //
 // The team in the URL is the side the board opens on, so tapping a name
 // anywhere in the app arrives on that name's eleven. Which side Fantrax calls
-// home is not used for anything: there is no ground.
+// home decides only the ground: the tie is drawn over the home team's venue.
 
 // Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
@@ -108,6 +110,7 @@ export default async function HeadToHeadPage({
   if (pairing === undefined) {
     return (
       <LeagueShell current="matchups" title={HEAD_TO_HEAD} sub={heading}>
+        <PhotoGround subject={null} />
         <Nothing title="Nobody this gameweek" code={`gameweek ${period}`}>
           {named.teamName} has no pairing in gameweek {period} — a bye, or a schedule that has not
           reached its first head-to-head. Nothing is being withheld; there is nothing to pair.
@@ -216,6 +219,7 @@ export default async function HeadToHeadPage({
         ) : undefined
       }
     >
+      <PhotoGround photo={venueOf(pairing.home.teamId)} />
       {/* Both sibling boards say when the scoreboard is down; this one used to
           render the outage as two silent dashes. */}
       {refused === null ? null : (

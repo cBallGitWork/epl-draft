@@ -102,6 +102,11 @@ one thing about the fixture the two crests on the bar do not already say.
 `football/grounds.ts` holds the twenty, keyed as the colours are, and a club with
 no picture falls back to `DESK_GROUND` rather than wearing somebody else's.
 
+**A head-to-head takes the HOME team's venue** (Craig, 1 Oct 2026: *"actual draft matches, home
+team uses their background"*). Home is the side Fantrax's schedule lists as home. Each team's
+picture is data, `data/leagues/venues.json` keyed by Fantrax team id, and a team it does not list
+keeps `DESK_GROUND`. Every entry points at `DESK_GROUND` until Craig drops in a real photograph.
+
 **The shell cannot pick it, so the subject's own Shell draws it.** `PhotoGround`
 renders above every route and a fixture id says nothing about who is at home, so
 `drawsOwnGround` is how the shell's standing photograph stands down — the same
