@@ -2,8 +2,8 @@
 // competition and this models one person's entry into a game played on top of it.
 
 export { fetchEntry, fetchPicks } from "./client";
-export { mapEntry, mapSquad } from "./map";
-export { FPL_LINES, FPL_STARTERS, isFplKeeper } from "./types";
+export { mapEntry, mapScoreLines, mapSquad } from "./map";
+export { FPL_LINES, FPL_STARTERS, fplScoreName, isFplKeeper } from "./types";
 export { fplLineup } from "./lineup";
 export type { FplLine } from "./lineup";
-export type { FplEntry, FplMiniLeague, FplPick, FplSquad } from "./types";
+export type { FplEntry, FplMiniLeague, FplPick, FplScoreLine, FplSquad } from "./types";

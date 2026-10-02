@@ -7,7 +7,6 @@ import {
   contributions,
   datedKickoffs,
   fixturesInOrder,
-  fplPointsByElement,
   hasGameweek,
   playerByCode,
   squadOf,
@@ -166,21 +165,5 @@ describe("squadOf", () => {
   it("keeps the injured, who are still at the club", () => {
     const hurt = { ...player(6, "Rice"), status: "i", news: "Hamstring", chanceOfPlaying: 0 };
     expect(squadOf(snap({ players: [hurt, departed] }), 1).map((p) => p.name)).toEqual(["Rice"]);
-  });
-});
-
-describe("fplPointsByElement", () => {
-  it("sums a double gameweek's two fixtures into the round's total", () => {
-    const points = fplPointsByElement([
-      stat({ playerId: 1, fixtureId: 1, fplPoints: 9 }),
-      stat({ playerId: 1, fixtureId: 2, fplPoints: 2 }),
-      stat({ playerId: 2, fixtureId: 1, fplPoints: 1 }),
-    ]);
-    expect(points.get(1)).toBe(11);
-    expect(points.get(2)).toBe(1);
-  });
-
-  it("holds nobody before the round's first kickoff", () => {
-    expect(fplPointsByElement([]).size).toBe(0);
   });
 });

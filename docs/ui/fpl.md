@@ -26,7 +26,19 @@ and this is not a second attempt at it.
   screen off the grass, so the XI and the bench share one screen: about 430px wide on a
   1440 desk, beside the mini-leagues, and full width but 392px tall at 390x844. A line
   under the strip totals what the bench left: "did my bench outscore my side" is the
-  question a benched hat-trick provokes.
+  question a benched hat-trick provokes. A bench kit and that total read `FplPick.scored`,
+  his own points: the pick's `points` are multiplied by FPL's nought for the bench, and
+  printed nought under every man on it until 1 Oct 2026.
+
+  A man who came on or went off in his real match carries the minute in `SubMarker`'s
+  corner, as the head-to-head pitch draws it (Craig, 1 Oct 2026: *"use sub off/on icons"*),
+  off the same cached match detail reads (`fpl/events.ts`).
+
+  **A tap on any man opens his FPL points** (Craig, 1 Oct 2026: *"click player needs to show
+  points"*): `PickPoints`, the live card's `Modal`, `DialogHead` and `Breakdown` table over his
+  FPL scoring lines, named in FPL's words, then the armband's share, so the rows add up to the
+  figure under his kit. A benched man's card is headed "On the bench · not counted" and totals
+  what he scored.
 
   The split rests on `FplPick.slot` — FPL's own 1–15 ordering, named `slot` and
   not `position` because `position` in this codebase means the letter a league
@@ -53,8 +65,8 @@ position: `element_type` is FPL's own fantasy classification, not a fact about a
 footballer, which is precisely why it was taken out (CLAUDE.md). So the FPL pitch
 takes FPL's classification from **this** layer — `fpl-entry`, the FPL league
 layer and the correct home for it — as `FplPick.line`, which FPL puts on the pick
-itself. The round's points come from the football layer's `gameweekLive`, summed
-per element by `fplPointsByElement` (23 Sep 2026).
+itself. The round's points are FPL's own scoring lines off the event live read
+(`mapScoreLines`, cached as `fpl-score-lines`), summed onto each pick (1 Oct 2026).
 
 `fplLineup` arranges the XI back to front, pure and tested — including three at
 the back with no forwards, and a pick FPL gave no line to, who stands in a row of

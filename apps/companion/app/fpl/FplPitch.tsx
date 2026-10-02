@@ -1,7 +1,9 @@
-import { isFplKeeper, DASH } from "@epl/core";
+import { fullFootballerName, isFplKeeper, kickedOff, DASH } from "@epl/core";
 import type { Club, FootballPlayer, FplLine, FplPick, Opposition } from "@epl/core";
 import PitchMarker from "../components/league/PitchMarker";
+import SubMarker, { type SubMark } from "../components/football/SubMarker";
 import PitchRows, { BENCH_KIT, FAR_INSET, GAP_CLASS, cardBasis, rowBudget, widestLine } from "../components/league/PitchRows";
+import PickPoints from "./PickPoints";
 
 // Your FPL XI on the grass — the same grass as everywhere else.
 //
@@ -26,8 +28,8 @@ import PitchRows, { BENCH_KIT, FAR_INSET, GAP_CLASS, cardBasis, rowBudget, wides
 // 1440, of which 622 was empty grass under the keeper. The ratio is on `.pitch`
 // and multiplies whatever width it is given, so the width is the only lever.
 //
-// **Every number here is FPL's, already multiplied.** A captain's 18 is what he
-// contributed, not what he scored, which is the number a manager is looking for.
+// **Every number here is FPL's.** The XI's are multiplied, so a captain's 18 is what he
+// contributed; the bench's are what each man scored, which FPL's nought would hide.
 
 export default function FplPitch({
   rows,
@@ -35,6 +37,7 @@ export default function FplPitch({
   players,
   clubs,
   opposition,
+  subs,
 }: {
   rows: FplLine[];
   /** The four who did not start, in the order FPL would bring them on. */
@@ -46,16 +49,32 @@ export default function FplPitch({
    *  club rather than a nought — `played.ts`'s predicate is still what the round
    *  total and the bench need, but the grass no longer asks it. */
   opposition: Map<number, Opposition[]>;
+  /** Who came on or went off in his real match, by FPL code. */
+  subs: Record<number, SubMark>;
 }) {
-  const marker = (pick: FplPick) => {
+  // A benched man shows what he scored; his pick's own points are multiplied by nought.
+  const marker = (pick: FplPick, benched = false) => {
     const player = players.get(pick.code) ?? null;
+    const club = player === null ? undefined : clubs.get(player.clubId);
+    const fixtures = player === null ? undefined : opposition.get(player.clubId);
+    const mark = subs[pick.code];
     return (
-      <Pick
-        pick={pick}
-        player={player}
-        club={player === null ? undefined : clubs.get(player.clubId)}
-        opposition={player === null ? undefined : opposition.get(player.clubId)}
-      />
+      <SubMarker minute={mark?.minute ?? null} off={mark?.off ?? false}>
+        <PickPoints
+          pick={pick}
+          name={player === null ? DASH : fullFootballerName(player)}
+          club={club?.shortName ?? null}
+          started={kickedOff(fixtures)}
+        >
+          <Pick
+            pick={pick}
+            points={benched ? pick.scored : pick.points}
+            player={player}
+            club={club}
+            opposition={fixtures}
+          />
+        </PickPoints>
+      </SubMarker>
     );
   };
   return (
@@ -76,7 +95,7 @@ export default function FplPitch({
               <p className="flex items-center justify-center pb-0.5 leading-none">
                 <span className="cm-index numeric px-1 text-3xs">{at + 1}</span>
               </p>
-              {marker(pick)}
+              {marker(pick, true)}
             </li>
           ))}
         </ul>
@@ -98,11 +117,13 @@ export default function FplPitch({
  *  rejected — the chrome default is what a pitch with no single team gets. */
 function Pick({
   pick,
+  points,
   player,
   club,
   opposition,
 }: {
   pick: FplPick;
+  points: number;
   player: FootballPlayer | null;
   club: Club | undefined;
   opposition: Opposition[] | undefined;
@@ -118,7 +139,7 @@ function Pick({
         keeper={isFplKeeper(pick.line)}
         club={club}
         opposition={opposition}
-        points={pick.points}
+        points={points}
       />
       {/* FPL names both a captain and a vice, and which one actually doubled is
           decided after the fact — so the vice is drawn whether or not there is a

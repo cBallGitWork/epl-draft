@@ -9,6 +9,7 @@ import EntryForm from "./EntryForm";
 import { forgetEntry } from "./actions";
 import { myEntryId, mySide } from "./entry";
 import type { Played } from "./played";
+import { squadSubs } from "./events";
 import { LABEL, PANEL, ROW_NAME, SMALL_CAPS } from "@/app/desk";
 import OutLink from "../components/shell/OutLink";
 import Absent from "@/app/components/shell/Absent";
@@ -82,6 +83,12 @@ export default async function FplPage() {
   const { entry, squad } = side;
   const arrangement = squad === null ? null : fplLineup(squad);
 
+  // His club's fixtures this round; undefined for a man the bootstrap does not name.
+  const fixturesOf = (code: number) => {
+    const player = players.get(code);
+    return player === undefined ? undefined : opposition.get(player.clubId);
+  };
+
   /** Whether this man's club has kicked off in the round on screen.
    *
    *  The football snapshot's own `status`, which is FPL's statement about its
@@ -89,15 +96,16 @@ export default async function FplPage() {
    *  live feed. CLAUDE.md counts that feed at 600 rows once a round starts, 569
    *  of them on no minutes, so a row says the ROUND has started and never that
    *  the MAN has appeared. */
-  const played: Played = (code) => {
-    const player = players.get(code);
-    return player === undefined ? false : kickedOff(opposition.get(player.clubId));
-  };
+  const played: Played = (code) => kickedOff(fixturesOf(code));
 
   // Any of his men kicked off is the round having started for HIM, which is what
   // a round total is about. A blank week — every one of his fifteen idle — is the
   // one case where nought and "nothing yet" genuinely differ.
   const anyPlayed = squad?.picks.some((pick) => played(pick.code)) ?? false;
+  const subs = await squadSubs(
+    (squad?.picks ?? []).map((pick) => ({ code: pick.code, opposition: fixturesOf(pick.code) })),
+    snapshot,
+  );
 
   return (
     <div className="flex flex-col gap-4">
@@ -137,6 +145,7 @@ export default async function FplPage() {
             players={players}
             clubs={clubs}
             opposition={opposition}
+            subs={subs}
           />
           <BenchTotal picks={arrangement.bench} played={played} />
         </Section>
@@ -218,7 +227,7 @@ function Figure({ label, value }: { label: string; value: number | null }) {
 function BenchTotal({ picks, played }: { picks: FplPick[]; played: Played }) {
   if (picks.length === 0) return null;
   const counted = picks.filter((pick) => played(pick.code));
-  const total = counted.reduce((sum, pick) => sum + pick.points, 0);
+  const total = counted.reduce((sum, pick) => sum + pick.scored, 0);
   return (
     <p className={`flex items-baseline justify-between gap-3 pt-1 ${LABEL}`}>
       Bench
