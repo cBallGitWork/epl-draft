@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fantraxDay, fantraxMoment, fantraxTime, whenKey } from "./when";
+import { fantraxClock, fantraxDay, fantraxMoment, fantraxTime, whenKey } from "./when";
 
 // Fantrax's real stamp, as `LeagueTransaction.processedAt` carries it.
 const STAMP = "Wed Sep 2, 2026, 6:11AM";
@@ -14,6 +14,19 @@ describe("fantraxDay", () => {
   it("gives null for anything that does not read", () => {
     expect(fantraxDay("Wed Sep 2")).toBeNull();
     expect(fantraxDay("")).toBeNull();
+  });
+});
+
+describe("fantraxClock", () => {
+  it("gives their clock alone, the part of fantraxTime that follows the day", () => {
+    expect(fantraxClock(STAMP)).toBe("6:11am");
+    expect(`${fantraxDay(STAMP)} ${fantraxClock(STAMP)}`).toBe(fantraxTime(STAMP));
+  });
+
+  it("says noon and midnight the way a clock does, and null for anything that does not read", () => {
+    expect(fantraxClock("Wed Sep 2, 2026, 12:00PM")).toBe("12:00pm");
+    expect(fantraxClock("Wed Sep 2, 2026, 12:30AM")).toBe("12:30am");
+    expect(fantraxClock("Wed Sep 2")).toBeNull();
   });
 });
 

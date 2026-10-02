@@ -1,5 +1,5 @@
 import type { InboxItem } from "@epl/core";
-import { FANTRAX_LEAGUE_PAGE, FANTRAX_PENDING_PATH, fantraxTime, londonDayAndDate, londonTime } from "@epl/core";
+import { FANTRAX_LEAGUE_PAGE, FANTRAX_PENDING_PATH, fantraxClock, fantraxDay, londonDayAndDate, londonTime } from "@epl/core";
 import Letter from "./Letter";
 import MailRow from "./MailRow";
 import Mailbox from "./Mailbox";
@@ -207,13 +207,5 @@ function itemDay(item: InboxItem): { day: string; time: string | null } {
   if ("iso" in item.at) {
     return { day: londonDayAndDate(item.at.iso), time: londonTime(item.at.iso) };
   }
-  const stamp = fantraxTime(item.at.fantrax);
-  if (stamp === null) return { day: "", time: null };
-  // **Their clock is the last token by construction**, not by luck: `fantraxTime`
-  // builds `"{weekday} {day} {month} {h}:{mm}{am|pm}"` and every part before the
-  // hour carries a space of its own. Split there rather than re-deriving the
-  // parts here — `fantraxParts` is private to `when.ts` and a second parser for
-  // one caller is the rule of 2/3 answered at one.
-  const at = stamp.lastIndexOf(" ");
-  return at === -1 ? { day: stamp, time: null } : { day: stamp.slice(0, at), time: stamp.slice(at + 1) };
+  return { day: fantraxDay(item.at.fantrax) ?? "", time: fantraxClock(item.at.fantrax) };
 }

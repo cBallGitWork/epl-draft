@@ -147,17 +147,29 @@ export function fantraxMoment(stamp: string): string | null {
  *  string. */
 export function fantraxTime(stamp: string): string | null {
   const parts = fantraxParts(stamp);
-  if (parts === null) return null;
-  const hour = parts.hours % 12 === 0 ? 12 : parts.hours % 12;
-  const meridiem = parts.hours < 12 ? "am" : "pm";
-  const minute = String(parts.minutes).padStart(2, "0");
-  return `${parts.weekday} ${parts.day} ${parts.month} ${hour}:${minute}${meridiem}`;
+  return parts === null ? null : `${dayOf(parts)} ${clockOf(parts)}`;
 }
 
 /** `"Wed 2 Sept"`: `fantraxTime`'s date without its clock, for a chip with room for the day alone. */
 export function fantraxDay(stamp: string): string | null {
   const parts = fantraxParts(stamp);
-  return parts === null ? null : `${parts.weekday} ${parts.day} ${parts.month}`;
+  return parts === null ? null : dayOf(parts);
+}
+
+/** `"6:11am"`: `fantraxTime`'s clock without its date, for a block that sets the two on separate lines. */
+export function fantraxClock(stamp: string): string | null {
+  const parts = fantraxParts(stamp);
+  return parts === null ? null : clockOf(parts);
+}
+
+function dayOf(parts: FantraxStamp): string {
+  return `${parts.weekday} ${parts.day} ${parts.month}`;
+}
+
+function clockOf(parts: FantraxStamp): string {
+  const hour = parts.hours % 12 === 0 ? 12 : parts.hours % 12;
+  const meridiem = parts.hours < 12 ? "am" : "pm";
+  return `${hour}:${String(parts.minutes).padStart(2, "0")}${meridiem}`;
 }
 
 /** One comparable number for both shapes, and nothing but ordering ever sees it.

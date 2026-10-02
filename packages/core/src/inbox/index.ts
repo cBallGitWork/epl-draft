@@ -4,4 +4,4 @@ export { availabilityNews } from "./doubts";
 export { inboxItems, roundNews } from "./items";
 export { dealNews } from "./messages";
 export { noteBesideChance } from "./notes";
-export { fantraxDay, fantraxMoment, fantraxTime, whenKey } from "./when";
+export { fantraxClock, fantraxDay, fantraxMoment, fantraxTime, whenKey } from "./when";
