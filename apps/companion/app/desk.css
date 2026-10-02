@@ -797,6 +797,16 @@
   color: var(--color-muted);
 }
 
+/* The same step for a quiet figure or a loss inside a washed row: faint read 3.73:1 and the red 3.60 on the
+   slight band (`sweep`, /players and /squad/me/stats). */
+:is(.cm-doubt-out, .cm-doubt-major, .cm-doubt-slight) .text-faint {
+  color: var(--color-muted);
+}
+
+:is(.cm-doubt-out, .cm-doubt-major, .cm-doubt-slight) :is(.text-bad, .cm-lit-bad) {
+  color: var(--color-bad-wash);
+}
+
 /* **And the outlined state box takes a ground of its own**, which is the same
    rule as below one step further: a FILLED box already owns its ink and passed,
    and the outlined one is `--color-bad` painted straight on the row — 3.6:1 on

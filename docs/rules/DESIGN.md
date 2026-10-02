@@ -384,6 +384,7 @@ is more specific than a palette; it is the reason the token names in
 | Peak | `--color-peak` | **the best figure in its column on a board** (a match's, the pool's), as ink — CM's orange, over the accent's yellow for the rest of the column's standouts; and a 16–20 on the attribute grid, as CM 01/02 sets it | — |
 | Cream | `--color-cream` | ink on a colour plate | — |
 | Quiet on a plate | `--color-faint-plate` | the same **quiet** as `--color-faint`, on the blue plate that will not carry it | — |
+| Red on a wash | `--color-bad-wash` | the same **loss** as `--color-bad`, on a doubt wash that will not carry it (3.6:1); a quiet figure there greys to `muted` | 4.9 on the palest wash |
 | Doubt | `--color-doubt-out` `-major` `-slight` | **how likely he is to MISS**, as a ramp of three. A ground, never ink | ink 5.5 · 7.1 · 9.5 |
 | Ease | `--color-ease-1` … `-10` | **how kind an opponent is, by OUR strength model**: the planner's 1–20 rank, two a step, green easiest to dark red hardest. A ground, never ink; FPL's difficulty keeps the FDR steps | black 4.8–11.7 · cream 4.9–8.6 |
 | Free | `--color-index-free` | **a man on no roster**, anybody's to claim: the index block's ground in place of its blue. A ground, never ink | ink 4.8 at the ramp's top · 8.4 on the face |

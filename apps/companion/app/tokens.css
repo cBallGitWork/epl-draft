@@ -314,6 +314,8 @@
   /* The best figure in its column on a board, as ink: CM's orange over the yellow of the other standouts. */
   --color-peak: oklch(0.74 0.17 55);
   --color-bad: oklch(0.66 0.17 25);
+  /* The same red on a doubt wash, which drops `--color-bad` to 3.6:1; this is 4.9 on the palest band. */
+  --color-bad-wash: oklch(0.74 0.15 25);
   --color-up: oklch(0.78 0.17 148);
 
   /* --- Type. Three faces, three jobs on the desk (31 Aug 2026): Oxanium for
