@@ -85,6 +85,9 @@ export { orphaned, unacknowledged } from "./fantrax/baseline";
 export type { AcknowledgedDifference } from "./fantrax/baseline";
 export { pointsFor } from "./scoring";
 export type { LeagueScoring } from "./scoring";
+export { defconPoints } from "./defcon";
+export type { DefconPeriod } from "./defcon";
+export { DEFCON } from "./categoryNames";
 export {
   mapBenchPlayerPoints,
   mapLivePlayerPoints,
