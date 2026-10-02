@@ -1,4 +1,5 @@
 import type { ScoringCategory } from "./scoring";
+import { wordsOf } from "./categoryWords";
 import type { LivePlayerCategory } from "./points";
 import type { StatColumn, StatLine } from "./stats";
 
@@ -22,7 +23,7 @@ import type { StatColumn, StatLine } from "./stats";
 export interface BreakdownLine {
   /** Fantrax's short label — "CS", "GAO", "Sv". */
   code: string;
-  /** Their name for the category. */
+  /** The category in plain words: "Assists", never their "Assists (Total)". */
   name: string;
   /** Their own definition of it, which is where this league's rules are
    *  published — what counts as a clean sheet is their sentence, not ours. Null
@@ -55,10 +56,10 @@ const DEFINITION = " -- ";
  *  nowhere else — not on `getLeagueInfo`. */
 export function columnLabel(column: StatColumn): { name: string; definition: string | null } {
   const at = column.name.indexOf(DEFINITION);
-  if (at < 0) return { name: column.name.trim() || column.code, definition: null };
+  const label = at < 0 ? column.name : column.name.slice(0, at);
   return {
-    name: column.name.slice(0, at).trim() || column.code,
-    definition: column.name.slice(at + DEFINITION.length).trim() || null,
+    name: wordsOf({ code: column.code, name: label, longCode: null }).name,
+    definition: at < 0 ? null : column.name.slice(at + DEFINITION.length).trim() || null,
   };
 }
 
@@ -111,7 +112,7 @@ export function liveBreakdown(
       return [
         {
           code: named.code,
-          name: named.name,
+          name: wordsOf(named).name,
           definition: null,
           points: category.points,
           value: category.value,

@@ -76,6 +76,16 @@ describe("the squad board's columns", () => {
   });
 });
 
+describe("the squad board's key", () => {
+  // Plain football words, never Fantrax's "Assists (Total)" nor "Ours, not Fantrax's".
+  it("says each of the real league's columns in plain words", () => {
+    const keys = measuresFor("scoring", realKeys, statsKeys, true).map((measure) => measure.label);
+    expect(keys.filter((key) => /\((total|fantasy|official)\)|not fantrax/i.test(key) || /Points/.test(key))).toEqual([]);
+    expect(keys).toContain("Assists, official and extra");
+    expect(keys).toContain("Keeper actions: saves, smothers, punches and high claims won");
+  });
+});
+
 describe("the squad board's DefCon points", () => {
   // Craig, 1 Oct 2026: "scoring missing our defcon stats".
   it("draws ours after the DefCon counts in Scoring when the league prices DefCon, and nowhere else", () => {
@@ -86,11 +96,11 @@ describe("the squad board's DefCon points", () => {
     expect(measuresFor("defensive", realKeys, statsKeys, true).map((measure) => measure.head)).not.toContain("DCP");
   });
 
-  it("reads our figure, marks it ours, and never heads it FPts", () => {
+  it("reads our figure, inks it as ours, keys it in plain words, and never heads it FPts", () => {
     const ours = measuresFor("scoring", realKeys, statsKeys, true).find((measure) => measure.key === "DCP");
     expect(ours?.derived).toBe(true);
     expect(ours?.head).not.toBe("FPts");
-    expect(ours?.label).toMatch(/ours/i);
+    expect(ours?.label).toBe("DefCon points, worked out per match");
     expect(readingOf(realGross, { defcon: 3 }, "DCP")).toBe(3);
     expect(readingOf(realGross, {}, "DCP")).toBeNull();
   });

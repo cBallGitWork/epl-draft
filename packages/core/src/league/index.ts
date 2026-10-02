@@ -138,7 +138,7 @@ export type { TeamBadge } from "./fantrax/badges";
 export { mapSeasonResults } from "./fantrax/results";
 export type { PeriodResult } from "./fantrax/results";
 export { mapSeasonStats } from "./fantrax/seasonStats";
-export { GROUPS, categoryFor, groupFor, isMeasure, offeredIn } from "./categories";
+export { GROUPS, categoryFor, groupFor, isMeasure, offeredIn, statCategory } from "./categories";
 export {
   ASSIST,
   ASSISTS_FANTASY,

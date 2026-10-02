@@ -33,14 +33,14 @@ describe("breakdownOf, over a whole recorded team", () => {
     }
   });
 
-  it("names each category as Fantrax names it", () => {
+  it("names each category in plain words, never Fantrax's caption", () => {
     // The keeper: 63 minutes + 28 clean sheets − 11 goals against + 23 saves
     // − 2 bookings + 5 penalty saves + 3 assists = 109.
     expect(breakdown.get("02lz0")).toEqual([
-      { code: "Min", name: "Minutes Played", definition: null, points: 63, value: null },
+      { code: "Min", name: "Minutes", definition: null, points: 63, value: null },
       {
         code: "CS",
-        name: "Clean Sheets On Field",
+        name: "Clean sheets",
         definition: expect.stringContaining("at least 60 minutes"),
         points: 28,
         value: null,
@@ -48,20 +48,20 @@ describe("breakdownOf, over a whole recorded team", () => {
       { code: "Sv", name: "Saves", definition: null, points: 23, value: null },
       {
         code: "PKS",
-        name: "Penalty Kick Saves",
+        name: "Penalties saved",
         definition: "Number of penalty kicks saved by the goalkeeper",
         points: 5,
         value: null,
       },
       {
         code: "A",
-        name: "Assists (Official)",
+        name: "Assists",
         definition: expect.stringContaining("official assist"),
         points: 3,
         value: null,
       },
-      { code: "YC", name: "Yellow Cards", definition: null, points: -2, value: null },
-      { code: "GA", name: "Goals Against", definition: expect.any(String), points: -11, value: null },
+      { code: "YC", name: "Yellow cards", definition: null, points: -2, value: null },
+      { code: "GA", name: "Goals conceded", definition: expect.any(String), points: -11, value: null },
     ]);
   });
 
@@ -117,15 +117,15 @@ describe("breakdownOf", () => {
     ).toEqual([{ code: "G", name: "Goals", definition: null, points: 6, value: null }]);
   });
 
-  it("falls back on the short code when Fantrax names nothing", () => {
+  it("falls back on the short code when neither we nor Fantrax name the category", () => {
     expect(
-      breakdownOf([{ code: "GAO", name: "" }], {
+      breakdownOf([{ code: "Pen", name: "" }], {
         fantraxId: "x",
         points: -3,
         perGame: null,
         values: [-3],
       }),
-    ).toEqual([{ code: "GAO", name: "GAO", definition: null, points: -3, value: null }]);
+    ).toEqual([{ code: "Pen", name: "Pen", definition: null, points: -3, value: null }]);
   });
 });
 
@@ -134,6 +134,8 @@ describe("liveBreakdown", () => {
     "5010#6090": { code: "G", name: "Goals", longCode: "INDIVIDUAL_GOALS" },
     "5010#6120": { code: "Min", name: "Minutes Played", longCode: "INDIVIDUAL_MINUTES_PLAYED" },
     "5010#6280": { code: "YC", name: "Yellow Cards", longCode: "INDIVIDUAL_YELLOW_CARDS" },
+    "5010#6362": { code: "AT", name: "Assists (Total)", longCode: "INDIVIDUAL_ASSISTS_TOTAL" },
+    "5020#6689": { code: "GKP", name: "Keeper Points", longCode: "INDIVIDUAL_KEEPER_POINTS" },
   };
 
   it("names the categories and sorts what he lost below what he earned", () => {
@@ -148,9 +150,20 @@ describe("liveBreakdown", () => {
       ),
     ).toEqual([
       { code: "G", name: "Goals", definition: null, points: 5, value: "1" },
-      { code: "Min", name: "Minutes Played", definition: null, points: 2, value: "90" },
-      { code: "YC", name: "Yellow Cards", definition: null, points: -1, value: "1" },
+      { code: "Min", name: "Minutes", definition: null, points: 2, value: "90" },
+      { code: "YC", name: "Yellow cards", definition: null, points: -1, value: "1" },
     ]);
+  });
+
+  it("names the real league's assists and keeper work in plain words, not Fantrax's captions", () => {
+    const lines = liveBreakdown(
+      [
+        { category: "5010#6362", points: 3, value: "1" },
+        { category: "5020#6689", points: 2, value: "7" },
+      ],
+      names,
+    );
+    expect(lines.map((line) => line.name)).toEqual(["Assists", "Keeper actions"]);
   });
 
   it("carries what he DID, which is the half the season table cannot state", () => {
@@ -210,7 +223,7 @@ describe("columnLabel, over the same recorded header", () => {
     // The rule this league scores a clean sheet by, published on a stat table's
     // header and nowhere else in the payload.
     const cs = columnLabel(column("CS"));
-    expect(cs.name).toBe("Clean Sheets On Field");
+    expect(cs.name).toBe("Clean sheets");
     expect(cs.definition).toMatch(/^Awarded to a player who played at least 60 minutes/);
   });
 
@@ -219,9 +232,9 @@ describe("columnLabel, over the same recorded header", () => {
   });
 
   it("falls back to the code rather than printing an empty head", () => {
-    expect(columnLabel({ code: "GAO", name: "" })).toEqual({ name: "GAO", definition: null });
-    expect(columnLabel({ code: "GAO", name: " -- only a rule" })).toEqual({
-      name: "GAO",
+    expect(columnLabel({ code: "Pen", name: "" })).toEqual({ name: "Pen", definition: null });
+    expect(columnLabel({ code: "Pen", name: " -- only a rule" })).toEqual({
+      name: "Pen",
       definition: "only a rule",
     });
   });

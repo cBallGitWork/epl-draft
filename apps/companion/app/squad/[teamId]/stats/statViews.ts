@@ -79,7 +79,7 @@ const DEFCON_POINTS: Column = {
   measure: {
     key: "DCP",
     head: "DCP",
-    label: "DefCon points at the slot he fills, each match priced by the league's scoring. Ours, not Fantrax's",
+    label: "DefCon points, worked out per match",
     worse: false,
     derived: true,
     read: (_line, beside) => beside.defcon ?? null,

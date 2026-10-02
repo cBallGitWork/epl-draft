@@ -1,4 +1,24 @@
-import { ASSISTS_FANTASY, ASSISTS_OFFICIAL, ASSISTS_TOTAL, KEEPER_POINTS, MINUTES, SAVES, carries } from "./categoryNames";
+import {
+  ASSISTS_FANTASY,
+  ASSISTS_OFFICIAL,
+  ASSISTS_TOTAL,
+  CLEAN_SHEETS,
+  DEFENSIVE_POINTS,
+  DEFENSIVE_POINTS_3,
+  GOALS,
+  GOALS_AGAINST,
+  KEEPER_POINTS,
+  MINUTES,
+  OWN_GOALS,
+  PENALTIES_MISSED,
+  PENALTY_SAVES,
+  RED_CARDS,
+  SAVES,
+  YELLOW_CARDS,
+  carries,
+  type FantraxCategory,
+} from "./categoryNames";
+import { wordsFor } from "./categoryWords";
 
 // What the Team Stats board can rank a league by.
 //
@@ -27,6 +47,8 @@ export interface StatCategory {
   /** Two or three letters for a column head. Fantrax's own abbreviations where
    *  it has one, because a reader who knows their scoring page knows these. */
   short: string;
+  /** The head's title, where it says more than the label. */
+  title?: string;
   /** True when a low figure is the better one. Cards, own goals and goals
    *  against are the categories where topping the table is bad news, and a board
    *  that ranked them descending would put the worst side first under a heading
@@ -76,28 +98,35 @@ export function groupFor(key: string | undefined): GroupKey {
   return GROUPS.find((group) => group.key === key)?.key ?? "attacking";
 }
 
+/** A category the board ranks by: filed under Fantrax's caption, headed by its abbreviation, named in plain words. */
+export function statCategory(of: FantraxCategory, group: GroupKey, lowIsGood?: true, title = wordsFor(of).key): StatCategory {
+  const label = wordsFor(of).name;
+  return { key: of.caption, group, label, short: of.short, ...(title === label ? {} : { title }), ...(lowIsGood ? { lowIsGood } : {}) };
+}
+
 /** Ordered as a reader would look for them: what a squad did going forward,
  *  then what it did at the back, then what it did wrong. Not alphabetical —
  *  `Assists (Fantasy)` first and `Yellow Cards` last is an accident of the
  *  alphabet, not an order anybody wants to read. */
 export const CATEGORIES: readonly StatCategory[] = [
-  { key: MINUTES.caption, group: "appearances", label: "Minutes", short: MINUTES.short },
-  { key: "Goals", group: "attacking", label: "Goals", short: "G" },
-  { key: ASSISTS_TOTAL.caption, group: "attacking", label: "Assists (total)", short: ASSISTS_TOTAL.short },
-  { key: ASSISTS_OFFICIAL.caption, group: "attacking", label: "Assists", short: ASSISTS_OFFICIAL.short },
-  { key: ASSISTS_FANTASY.caption, group: "attacking", label: "Assists (fantasy)", short: ASSISTS_FANTASY.short },
-  { key: "Clean Sheets On Field", group: "defensive", label: "Clean sheets", short: "CS" },
+  statCategory(MINUTES, "appearances"),
+  statCategory(GOALS, "attacking"),
+  statCategory(ASSISTS_TOTAL, "attacking"),
+  statCategory(ASSISTS_OFFICIAL, "attacking"),
+  statCategory(ASSISTS_FANTASY, "attacking"),
+  statCategory(CLEAN_SHEETS, "defensive"),
   // DefCon's two counts: the real league pays a defender on the first and the men in front of him on the second.
-  { key: "Defensive Points", group: "defensive", label: "Tackles won, interceptions and blocks", short: "DFP" },
-  { key: "Defensive Points 3", group: "defensive", label: "Tackles won, interceptions, blocks, clearances and recoveries", short: "DFP3" },
-  { key: "Goals Against", group: "defensive", label: "Goals against", short: "GA", lowIsGood: true },
-  { key: SAVES.caption, group: "keeping", label: "Saves", short: SAVES.short },
-  { key: KEEPER_POINTS.caption, group: "keeping", label: "Keeper actions", short: KEEPER_POINTS.short },
-  { key: "Penalty Kick Saves", group: "keeping", label: "Penalties saved", short: "PKS" },
-  { key: "Yellow Cards", group: "discipline", label: "Yellow cards", short: "YC", lowIsGood: true },
-  { key: "Red Cards", group: "discipline", label: "Red cards", short: "RC", lowIsGood: true },
-  { key: "Penalty Kicks Missed", group: "attacking", label: "Penalties missed", short: "PKM", lowIsGood: true },
-  { key: "Own Goals", group: "discipline", label: "Own goals", short: "OG", lowIsGood: true },
+  statCategory(DEFENSIVE_POINTS, "defensive"),
+  statCategory(DEFENSIVE_POINTS_3, "defensive"),
+  // One line for both halves: mapSeasonStats adds an outfielder's GAO to a keeper's GA, so it takes the name both share.
+  statCategory(GOALS_AGAINST, "defensive", true, wordsFor(GOALS_AGAINST).name),
+  statCategory(SAVES, "keeping"),
+  statCategory(KEEPER_POINTS, "keeping"),
+  statCategory(PENALTY_SAVES, "keeping"),
+  statCategory(YELLOW_CARDS, "discipline", true),
+  statCategory(RED_CARDS, "discipline", true),
+  statCategory(PENALTIES_MISSED, "attacking", true),
+  statCategory(OWN_GOALS, "discipline", true),
 ];
 
 export function categoryFor(key: string | undefined): StatCategory {
