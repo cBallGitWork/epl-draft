@@ -1,10 +1,19 @@
-import { type LineupDetail, type ScoringCategory, type SquadPlayerDetail, isGoalkeeper } from "@epl/core";
+import { type BreakdownLine, type LineupDetail, type ScoringCategory, type SquadPlayerDetail, MINUTES, idsOf, isGoalkeeper } from "@epl/core";
 import { everyone } from "./subs";
 import { byFigure } from "../../../components/league/order";
 import { DEFAULT_SIDE_SORT } from "./views";
 
 /** What each man did, by `fantraxId` then the league's category code, as Fantrax states it. */
 export type Counts = Readonly<Record<string, Readonly<Record<string, string>>>>;
+
+/** What Fantrax paid each man, by `fantraxId`, category by category. */
+export type Breakdowns = Readonly<Record<string, readonly BreakdownLine[]>>;
+
+/** The league's categories the Stats boards print: all but minutes played (Craig, 1 Oct 2026). */
+export function boardCategories(categories: Record<string, ScoringCategory>): Record<string, ScoringCategory> {
+  const minutes = idsOf(categories, [MINUTES]);
+  return Object.fromEntries(Object.entries(categories).filter(([id]) => !minutes.has(id)));
+}
 
 /** One man's counts in Fantrax's own row order, and whether he keeps goal (keepers have their own rows). */
 export interface ManCounts {
@@ -47,6 +56,12 @@ export function figureOf(player: SquadPlayerDetail, head: string, counts: Counts
   const value = counts[player.rostered.slot.fantraxId]?.[head];
   const number = value === undefined ? NaN : Number(value);
   return Number.isFinite(number) ? number : null;
+}
+
+/** What Fantrax paid him in one category this gameweek, signed: the figure's gain or loss. Nought where it paid nothing. */
+export function paidIn(breakdown: Breakdowns, player: SquadPlayerDetail, code: string): number {
+  if (code === DEFAULT_SIDE_SORT) return player.points ?? 0;
+  return breakdown[player.rostered.slot.fantraxId]?.find((line) => line.code === code)?.points ?? 0;
 }
 
 /** The eleven and the bench, each ordered by one column; ties keep the sheet's order, absences sink. */

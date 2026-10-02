@@ -41,3 +41,6 @@ export function idsOf(categories: Record<string, ScoringCategory>, wanted: reado
 export function carries(carried: ReadonlySet<string>, ...names: (string | undefined)[]): boolean {
   return carried.size === 0 || names.some((name) => name !== undefined && carried.has(name));
 }
+
+/** Minutes played: a count every league scores, and one a board may leave out. */
+export const MINUTES: FantraxCategory = { code: "INDIVIDUAL_MINUTES_PLAYED", short: "Min", caption: "Minutes Played" };

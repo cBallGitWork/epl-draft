@@ -26,7 +26,7 @@ import { myTeamId } from "../../../session";
 import { MATCHUPS } from "../../routes";
 import { sheetEvents } from "./events";
 import { STATS_OF, DEFAULT_SIDE_SORT, matchupTabs, matchupView, statsHref, statsOf } from "./views";
-import { boardColumns } from "./sideRows";
+import { boardCategories, boardColumns } from "./sideRows";
 import { FootFrame } from "../../../components/shell/FootFrame";
 import TabStrip from "../../../components/shell/TabStrip";
 import { everyone, subMarks } from "./subs";
@@ -157,13 +157,15 @@ export default async function HeadToHeadPage({
   const { arranged, widest } = arrangeBoth({ pairing, rostered, shows, scored, clubs, opposition });
   const listed = started ? null : unplayedLists({ pairing, rostered, clubs, opposition });
 
-  const boards = view === "lineups" || (view === "stats" && of !== "fantasy");
-  const events = boards ? await sheetEvents(arranged.values(), squads.snapshot) : new Map();
+  // Who came on and off, which only the pitch marks.
+  const events = view === "lineups" ? await sheetEvents(arranged.values(), squads.snapshot) : new Map();
 
   // The league's categories either side has a count in, so both boards carry the same columns.
-  const columns = boardColumns(categories, arranged.values(), { ...yours?.counts, ...theirs?.counts });
+  const printed = boardCategories(categories);
+  const columns = boardColumns(printed, arranged.values(), { ...yours?.counts, ...theirs?.counts });
   // Which of each eleven put the points on the board; a gated side arrives as `{}` and names nobody.
-  const bands = bandCategories(yours?.counted ?? {}, theirs?.counted ?? {});
+  const codes = new Set(Object.values(printed).map((category) => category.code));
+  const bands = bandCategories(yours?.counted ?? {}, theirs?.counted ?? {}).filter((band) => codes.has(band.code));
 
   // Joined on the server, and only once the gate has opened his eleven: what crosses is his men's own detail.
   const side = ({ team, detail, withheld }: SharedSide): MatchupSide => {
@@ -236,7 +238,7 @@ export default async function HeadToHeadPage({
                 side={stat}
                 columns={columns}
                 counts={(of === "team" ? yours : theirs)?.counts ?? {}}
-                subs={stat.detail === undefined ? {} : subMarks(everyone(stat.detail), events)}
+                breakdown={(of === "team" ? yours : theirs)?.breakdown ?? {}}
                 sort={sort}
                 hrefFor={(head: string) =>
                   statsHref(teamId, gameweek, of, { head, descending: head === sort.head ? !sort.descending : true })

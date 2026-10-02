@@ -1,7 +1,8 @@
-import type { CategoryBand, CategoryMan } from "@epl/core";
+import Image from "next/image";
+import type { CategoryBand, CategoryMan, Club } from "@epl/core";
 import Nothing from "../shell/Nothing";
-import { GROUP_PLATE, PANEL } from "@/app/desk";
-import { DASH } from "@epl/core";
+import { GROUP_PLATE, PANEL, gainOrLoss } from "@/app/desk";
+import { DASH, crestUrl } from "@epl/core";
 
 // Where the scoreline came from, and who put it there.
 //
@@ -25,13 +26,8 @@ import { DASH } from "@epl/core";
 // would invent an alignment the payload never claimed — `Isak` opposite `Haaland`
 // reads as a comparison of two men when it is a comparison of two sides.
 
-/** What to call a man, by the id core holds. Built by the caller from the roster,
- *  because core deals in `fantraxId` and never in names.
- *
- *  **Built behind the lineup gate**, which is the load-bearing half: a side whose
- *  eleven is not public contributes no bands and therefore no names, and building
- *  its map anyway would leave the leak one edit away rather than impossible. */
-export type Names = ReadonlyMap<string, string>;
+/** What to call a man and his club, by the id core holds; built by the caller behind the lineup gate. */
+export type Names = ReadonlyMap<string, { name: string; club: Club | undefined }>;
 
 export default function CategoryBands({
   bands,
@@ -85,7 +81,7 @@ export default function CategoryBands({
  *  A reader scanning a band wants the alphabet, not Fantrax's ids. */
 function Men({ men, names, end }: { men: readonly CategoryMan[]; names: Names; end: boolean }) {
   const named = [...men]
-    .map((man) => ({ ...man, name: names.get(man.fantraxId) ?? DASH }))
+    .map((man) => ({ ...man, ...(names.get(man.fantraxId) ?? { name: DASH, club: undefined }) }))
     .sort((a, b) => b.points - a.points || a.name.localeCompare(b.name));
 
   return (
@@ -93,10 +89,13 @@ function Men({ men, names, end }: { men: readonly CategoryMan[]; names: Names; e
       {named.map((man) => (
         <li
           key={man.fantraxId}
-          className={`flex min-w-0 items-baseline gap-1 px-2 py-0.5 text-sm ${end ? "justify-end text-right" : "justify-start text-left"}`}
+          className={`flex min-w-0 items-center gap-1 px-2 py-0.5 text-sm ${end ? "justify-end text-right" : "justify-start text-left"}`}
         >
+          {man.club === undefined ? null : (
+            <Image src={crestUrl(man.club)} alt="" width={16} height={16} className="size-4 shrink-0 object-contain" />
+          )}
           <span className="truncate font-chrome font-bold">{man.name}</span>
-          <span className="numeric shrink-0 text-muted">({man.points})</span>
+          <span className={`numeric shrink-0 ${gainOrLoss(man.points) || "text-muted"}`}>({man.points})</span>
         </li>
       ))}
     </ul>

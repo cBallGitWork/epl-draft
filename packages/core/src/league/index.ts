@@ -164,3 +164,4 @@ export {
   fetchStandingsPage,
   fetchTeamRosters,
 } from "./fantrax/client";
+export { MINUTES } from "./categoryNames";

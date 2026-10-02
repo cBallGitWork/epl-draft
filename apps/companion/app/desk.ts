@@ -45,6 +45,11 @@ export const BOARD_FIGURE = `numeric px-1.5 text-right ${ROW_FIGURE}`;
 /** A form result's ink: DESIGN §3's direction pair, with a draw quiet rather than a third colour. */
 export const TONE = { W: "text-up", D: "text-faint", L: "text-bad" } as const;
 
+/** A fantasy figure's ink by what it did to a score: the direction pair, and nought left to the caller. */
+export function gainOrLoss(points: number): string {
+  return points > 0 ? "text-up" : points < 0 ? "text-bad" : "";
+}
+
 /** Where a column's text sits; `TableHeads` has the `justify-*` twin. */
 export const TEXT = {
   left: "text-left",
