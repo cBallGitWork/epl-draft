@@ -122,7 +122,7 @@ export function SortHead({
   /** On for a column that names itself — see `MUTE` above. The plate, the
    *  pressed state and the arrow all stay; the word goes silent. */
   mute?: boolean;
-  /** 24px and nearly unpadded under a thumb, so a narrow column is set by its figures, not its head. */
+  /** Nearly unpadded under a thumb, so a narrow column is set by its figures, not its head. */
   compact?: boolean;
 } & ({ href: string; onSort?: never } | { onSort: () => void; href?: never })) {
   const plate = `flex items-center gap-0.5 whitespace-nowrap ${compact ? COMPACT : "h-7 px-1.5"} ${JUSTIFY[align]} ${
