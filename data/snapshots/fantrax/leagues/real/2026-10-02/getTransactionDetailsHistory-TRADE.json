@@ -1,0 +1,210 @@
+{
+  "paginatedResultSet": {
+    "totalNumPages": 0,
+    "pageNumber": 1,
+    "maxResultsPerPage": 100,
+    "totalNumResults": 0
+  },
+  "filterSettings": {
+    "positionOrGroup": "ALL",
+    "view": "TRADE",
+    "adminMode": false,
+    "includeDeleted": false,
+    "team": "ALL",
+    "executedOnly": true
+  },
+  "displayedSelections": {
+    "positionOrGroup": "ALL",
+    "view": "TRADE",
+    "adminMode": false,
+    "includeDeleted": false,
+    "team": "ALL",
+    "executedOnly": true
+  },
+  "miscData": {
+    "deleteTransactionExecutedDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "Yes"
+        },
+        {
+          "id": "option1",
+          "label": "No"
+        }
+      ],
+      "text": "This will only delete the transaction record - <b style=\"color:#8B0000\">it will not undo it - it will not move any players</b>. Are you sure you want to permanently delete this?"
+    },
+    "deleteTransactionNotExecutedDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "Yes"
+        },
+        {
+          "id": "option1",
+          "label": "No"
+        }
+      ],
+      "text": "Are you sure you want to permanently delete this?"
+    },
+    "heading": "2026 Tim Hortons Pro League 26/27",
+    "undoTransactionDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "Yes"
+        },
+        {
+          "id": "option1",
+          "label": "No"
+        }
+      ],
+      "text": "Are you sure you want to undo this transaction?"
+    },
+    "undoTooltip": "Undo transaction",
+    "executeTooltip": "Execute transaction if team was not updated with players",
+    "deleteTooltip": "Delete transaction from view",
+    "editTransactionDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "OK"
+        },
+        {
+          "id": "option1",
+          "label": "Cancel"
+        }
+      ],
+      "text": "# of periods to move transaction forward:"
+    },
+    "editTooltip": "Edit Transaction",
+    "editTransactionSuccessDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "OK"
+        }
+      ],
+      "text": "Transaction successfully edited and re-executed."
+    },
+    "executeTransactionSuccessDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "OK"
+        }
+      ],
+      "text": "Transaction successfully executed."
+    },
+    "executeTransactionDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "???word.Ok: en_US???"
+        },
+        {
+          "id": "option1",
+          "label": "Cancel"
+        }
+      ],
+      "text": "Please confirm that you want to executed the highlighted transaction since the system has detected that it was not executed."
+    },
+    "editTransactionMaximumForward": 200
+  },
+  "displayedLists": {
+    "teams": [
+      {
+        "name": "All Teams",
+        "id": "ALL"
+      },
+      {
+        "name": "AtleticoTimHortons",
+        "id": "uexqrijomu8l5asi"
+      },
+      {
+        "name": "Cowthenbeef",
+        "id": "7z8fy0pnmuogbtdw"
+      },
+      {
+        "name": "GlengarryHearts",
+        "id": "syjkob6cmuobagfu"
+      },
+      {
+        "name": "its_ohi",
+        "id": "qgucu9dgmufwva1x"
+      },
+      {
+        "name": "nickbtts",
+        "id": "kpj0z744muh1qwtd"
+      },
+      {
+        "name": "RichyN",
+        "id": "ipnp5y4mmu9j7kop"
+      },
+      {
+        "name": "The Raccoons",
+        "id": "l5kunst8msgbirdf"
+      },
+      {
+        "name": "The Truffle Pigs",
+        "id": "aekx2715mtzgcl3f"
+      },
+      {
+        "name": "traffordstephen",
+        "id": "7to6xosimu8hyyw5"
+      }
+    ],
+    "tabs": [
+      {
+        "name": "Claim/Drop",
+        "id": "CLAIM_DROP"
+      },
+      {
+        "name": "Trade",
+        "id": "TRADE"
+      },
+      {
+        "name": "Lineup",
+        "id": "LINEUP_CHANGE"
+      }
+    ],
+    "positions": [
+      {
+        "name": "All",
+        "id": "ALL"
+      },
+      {
+        "name": "Outfielders",
+        "id": "SOCCER_NON_GOALIE"
+      },
+      {
+        "name": "Defender",
+        "id": "POS_703"
+      },
+      {
+        "name": "Midfielder",
+        "id": "POS_702"
+      },
+      {
+        "name": "Forward",
+        "id": "POS_701"
+      },
+      {
+        "name": "Goalkeeper",
+        "id": "POS_704"
+      }
+    ]
+  },
+  "table": {
+    "rows": [],
+    "emptyTableMsg": "No trades."
+  }
+}
