@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { DASH, fixed, gameweekSpan } from "@epl/core";
 import PositionTile from "../../components/league/PositionTile";
-import { LeadHeads, sortedAs, SortHead } from "../../components/league/TableHeads";
+import { HeadRow, LeadHeads, sortedAs, SortHead } from "../../components/league/TableHeads";
 import { ROW_LINK } from "../../components/league/TableCells";
 import { BOARD, ROW_HOVER_ON_SURFACE } from "@/app/desk";
 import ScrollBoard from "../../components/league/ScrollBoard";
@@ -42,7 +42,7 @@ export default function ProjectionBoard({
     <ScrollBoard className="bg-surface">
       <table className={BOARD}>
         <thead>
-          <tr className="text-2xs">
+          <HeadRow>
             <LeadHeads tile={PIN_TILE} name={PIN_NAME} />
             {heads.map((head) => (
               <SortHead
@@ -54,7 +54,7 @@ export default function ProjectionBoard({
                 sorted={sortedAs(head.key === sort, descending)}
               />
             ))}
-          </tr>
+          </HeadRow>
         </thead>
         <tbody>
           {rows.map((row) => (

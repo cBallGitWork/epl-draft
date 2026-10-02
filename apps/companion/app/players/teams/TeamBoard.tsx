@@ -2,7 +2,7 @@ import Link from "next/link";
 import { DASH, fixed, toFantraxClubCode } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import { ROW_LINK } from "../../components/league/TableCells";
-import { MUTE, SortHead, sortedAs } from "../../components/league/TableHeads";
+import { HeadRow, MUTE, SortHead, sortedAs } from "../../components/league/TableHeads";
 import { SIDE_SHARES, standoutCuts, standoutInk, type StandoutCut } from "../../components/league/standout";
 import { BOARD, GROUP_PLATE, HEAD_CELL, INDEX_WIDTH, PINNED_BESIDE_INDEX, PINNED_TILE, ROW_FIGURE, ROW_RULE } from "@/app/desk";
 import ScrollBoard from "../../components/league/ScrollBoard";
@@ -47,7 +47,7 @@ export default function TeamBoard({
               </th>
             ))}
           </tr>
-          <tr className="text-2xs">
+          <HeadRow>
             <th scope="col" className={`${HEAD_CELL} ${PIN_INDEX} bg-surface`}>
               <span className={MUTE}>Place</span>
             </th>
@@ -64,7 +64,7 @@ export default function TeamBoard({
                 sorted={sortedAs(column.key === sort.key, descending)}
               />
             ))}
-          </tr>
+          </HeadRow>
         </thead>
         <tbody>
           {rows.map((row, at) => (

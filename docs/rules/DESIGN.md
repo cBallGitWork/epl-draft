@@ -780,8 +780,8 @@ apart silently.
 | **A tab** — one plate of a strip | **44**, painting 36 | **56** | `2xs`–`sm` | `.cm-tab` + `TAB` |
 | A thumb-rail tab | 56 + inset | — | `xs`/600 under a 24px glyph | `.cm-thumbrail` |
 | **A row of a list** | **44** | **28** | `sm`/`lg:base` name in the CHROME face, `sm` figures at both widths | `.cm-row` + `ROW_LINK` + `ROW_NAME` + `FIGURE` |
-| A column head over a table | 28 | 28 | `2xs` | `PLATE` (`h-7`) |
-| A column head over a stats board | 24 | 24 | `2xs` | `HEAD_PLATE` (`h-6`) |
+| A column head over any table or board | 28 | 28 | `3xs` caps (`HeadRow`) | `PLATE` (`h-7`), through `SortHead` or `PlateHead` |
+| A caption plate: a group of columns, a block, a card's strip | 24 | 24 | `2xs` | `HEAD_PLATE` (`h-6`) |
 | A figure in a row | — | — | `sm`, `.numeric` | `ROW_FIGURE`, worn by `FIGURE_CELL` and `FIGURE` (bold), centred on every table |
 | A label that is furniture | — | — | `2xs` bold caps | `LABEL` |
 
@@ -872,9 +872,9 @@ carrying an 11px figure is a row with 33px of nothing in it, and 11px of
 a name already set at `sm`. Measured after: a `/league` row at 390 is 44.5px with
 every figure in it at 14px, and the table still does not scroll sideways.
 
-*The head-plate pair — 28 over a table, 24 over a stats board — is a
-disagreement, not a rule. Both are now named, which is what makes settling it a
-single edit rather than fifteen.*
+*The head-plate pair — 28 over a table, 24 over a stats board — was a disagreement, and it is settled at 28*
+*(2 Oct 2026, Craig: "our tables are still all over the place, different settings"): every table's head row is*
+*`HeadRow` and every plate in it `PLATE`'s 28px, the pool's compact heads included. 24 is left to caption plates.*
 
 ## 7. Grammar that outranks the look
 

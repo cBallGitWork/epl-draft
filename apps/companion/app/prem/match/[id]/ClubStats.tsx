@@ -5,7 +5,7 @@ import { fantraxPositions, type LeagueOpinion } from "../../leagueOpinions";
 import Section from "../../../components/shell/Section";
 import PositionTile from "../../../components/league/PositionTile";
 import { ROW_LINK } from "../../../components/league/TableCells";
-import { LeadHeads, sortedAs, SortHead } from "../../../components/league/TableHeads";
+import { HeadRow, LeadHeads, sortedAs, SortHead } from "../../../components/league/TableHeads";
 import { BOARD, FIGURE_CELL, PINNED_BESIDE_TILE, PINNED_TILE, ROW_NAME, ROW_RULE } from "@/app/desk";
 import ScrollBoard from "../../../components/league/ScrollBoard";
 import { MaybeCard } from "./PlayerCardButton";
@@ -82,7 +82,7 @@ export default function ClubStats({
       <ScrollBoard className="cm-index-scoped bg-surface" style={clubIndex(club)}>
         <table className={BOARD}>
           <thead>
-            <tr>
+            <HeadRow>
               <LeadHeads tile={PINNED_TILE} name={`${PINNED_BESIDE_TILE} ${NAME_WIDTH}`} />
               {COLUMNS.map((column) => (
                 <SortHead
@@ -93,7 +93,7 @@ export default function ClubStats({
                   sorted={sortedAs(column.head === sort, descending)}
                 />
               ))}
-            </tr>
+            </HeadRow>
           </thead>
           <tbody>
             {rows.map((row, at) => (

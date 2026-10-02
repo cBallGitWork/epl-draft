@@ -2,7 +2,7 @@ import ScrollBoard from "../../components/league/ScrollBoard";
 import { DASH, fantraxDay } from "@epl/core";
 import Section from "../../components/shell/Section";
 import { IndexCell } from "../../components/league/TableCells";
-import { MUTE, PlateHead } from "../../components/league/TableHeads";
+import { HeadRow, MUTE, PlateHead } from "../../components/league/TableHeads";
 import { BOARD, HEAD_CELL, ROW_RULE } from "@/app/desk";
 import type { PlayerMove } from "./dossier";
 
@@ -24,14 +24,14 @@ export default function Moves({ moves }: { moves: readonly PlayerMove[] }) {
         <ScrollBoard>
           <table className={BOARD}>
             <thead>
-              <tr className="text-2xs">
+              <HeadRow>
                 <th scope="col" className={HEAD_CELL}>
                   <span className={MUTE}>Date</span>
                 </th>
                 {["Move", "From", "To"].map((head) => (
                   <PlateHead key={head}>{head}</PlateHead>
                 ))}
-              </tr>
+              </HeadRow>
             </thead>
             <tbody>
               {moves.map(({ transaction, fromName, toName }) => (

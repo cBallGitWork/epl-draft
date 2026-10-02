@@ -3,7 +3,7 @@ import type { SetPieceRank } from "@epl/core";
 import ScrollBoard from "../../components/league/ScrollBoard";
 import Section from "../../components/shell/Section";
 import { IndexCell } from "../../components/league/TableCells";
-import { MUTE, PlateHead } from "../../components/league/TableHeads";
+import { HeadRow, MUTE, PlateHead } from "../../components/league/TableHeads";
 import { BOARD, FIGURE_CELL, ROW_RULE } from "@/app/desk";
 
 // Where he stands in his club's penalty, free-kick and corner orders: first choice in CM's orange.
@@ -16,7 +16,7 @@ export default function SetPieces({ pieces, club }: { pieces: readonly SetPieceR
       <ScrollBoard>
         <table className={BOARD}>
           <thead>
-            <tr>
+            <HeadRow>
               <PlateHead>
                 <span className={MUTE}>Row</span>
               </PlateHead>
@@ -25,7 +25,7 @@ export default function SetPieces({ pieces, club }: { pieces: readonly SetPieceR
                   {p.label}
                 </PlateHead>
               ))}
-            </tr>
+            </HeadRow>
           </thead>
           <tbody>
             <tr className={ROW_RULE}>

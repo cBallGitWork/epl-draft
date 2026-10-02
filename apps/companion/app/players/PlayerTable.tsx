@@ -1,7 +1,7 @@
 import type { FootballPlayer } from "@epl/core";
 import type { PoolRow } from "./pool";
 import { type PoolColumn } from "./columns";
-import { LeadHeads, sortedAs, SortHead } from "../components/league/TableHeads";
+import { HeadRow, LeadHeads, sortedAs, SortHead } from "../components/league/TableHeads";
 import PositionTile from "../components/league/PositionTile";
 import type { StandoutCut } from "../components/league/standout";
 import { activeSort, sortHref } from "./query";
@@ -51,7 +51,7 @@ export default function PlayerTable({
     <ScrollBoard className="bg-surface">
       <table className={BOARD}>
         <thead>
-          <tr className="text-2xs">
+          <HeadRow>
             <LeadHeads tile={PIN_TILE} name={PIN_NAME} />
             {figures.map((column) => (
               <SortHead
@@ -63,7 +63,7 @@ export default function PlayerTable({
                 sorted={sortedAs(current.key === column.key, current.descending)}
               />
             ))}
-          </tr>
+          </HeadRow>
         </thead>
         <tbody>
           {rows.map((row) => {

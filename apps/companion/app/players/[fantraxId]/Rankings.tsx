@@ -3,7 +3,7 @@ import type { Ranked } from "@epl/core";
 import { DASH, fixed, ordinal } from "@epl/core";
 import Section from "../../components/shell/Section";
 import { IndexCell } from "../../components/league/TableCells";
-import { MUTE, PlateHead } from "../../components/league/TableHeads";
+import { HeadRow, MUTE, PlateHead } from "../../components/league/TableHeads";
 import { BOARD, FIGURE_CELL, ROW_RULE } from "@/app/desk";
 
 // Where his season totals rank among the men he is rated against (Craig, 25 Sep 2026:
@@ -18,7 +18,7 @@ export default function Rankings({ ranked, group }: { ranked: readonly Ranked[];
       <ScrollBoard>
         <table className={BOARD}>
           <thead>
-            <tr>
+            <HeadRow>
               <PlateHead>
                 <span className={MUTE}>Row</span>
               </PlateHead>
@@ -27,7 +27,7 @@ export default function Rankings({ ranked, group }: { ranked: readonly Ranked[];
                   {r.head}
                 </PlateHead>
               ))}
-            </tr>
+            </HeadRow>
           </thead>
           <tbody>
             <tr className={ROW_RULE}>

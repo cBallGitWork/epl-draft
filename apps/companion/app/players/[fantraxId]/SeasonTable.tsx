@@ -1,7 +1,7 @@
 import ScrollBoard from "../../components/league/ScrollBoard";
 import Section from "../../components/shell/Section";
 import { BOARD, FIGURE_CELL, ROW_RULE } from "@/app/desk";
-import { PlateHead } from "../../components/league/TableHeads";
+import { HeadRow, PlateHead } from "../../components/league/TableHeads";
 import type { MatchRow } from "./matchRows";
 import { totalsOf } from "./matchRows";
 import { IndexCell } from "../../components/league/TableCells";
@@ -57,14 +57,14 @@ export default function SeasonTable({
       <ScrollBoard>
         <table className={BOARD}>
           <thead>
-            <tr>
+            <HeadRow>
               <PlateHead>Competition</PlateHead>
               {COLUMNS.map((column) => (
                 <PlateHead key={column.head} at="centre" title={column.title} className={column.rule ? "border-l border-line" : undefined}>
                   {column.head}
                 </PlateHead>
               ))}
-            </tr>
+            </HeadRow>
           </thead>
           <tbody>
             <tr className={ROW_RULE}>

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { DASH, ordinal, toFantraxClubCode, type PlannerCell, type PlannerRow, type PlannerView } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import { easeGround } from "../../components/football/ease";
-import { MUTE, PlateHead, SortArrow } from "../../components/league/TableHeads";
+import { HeadRow, MUTE, PlateHead, PRESSED_PLATE, SortArrow } from "../../components/league/TableHeads";
 import { HEAD_CELL, PINNED_NAME, ROW_RULE } from "@/app/desk";
 
 /** The club column, frozen at the left edge. */
@@ -39,7 +39,7 @@ export default function PlannerBoard({
           <col className="w-10 lg:w-12" />
         </colgroup>
         <thead>
-          <tr className="text-2xs">
+          <HeadRow>
             <th scope="col" className={`${HEAD_CELL} ${PIN_CLUB}`}>
               <span className={MUTE}>Club</span>
             </th>
@@ -50,11 +50,11 @@ export default function PlannerBoard({
             ))}
             {/* The column the board is ordered by, drawn pressed, as a sorted head is. */}
             <th scope="col" aria-sort="ascending" className={HEAD_CELL}>
-              <span className="cm-bevel-pressed flex h-6 items-center justify-center gap-0.5" title={`The mean rank of the ${gameweeks.length}, 1 the easiest`}>
+              <span className={`${PRESSED_PLATE} gap-0.5`} title={`The mean rank of the ${gameweeks.length}, 1 the easiest`}>
                 Avg<SortArrow down={false} />
               </span>
             </th>
-          </tr>
+          </HeadRow>
         </thead>
         <tbody>
           {rows.map((row) => (

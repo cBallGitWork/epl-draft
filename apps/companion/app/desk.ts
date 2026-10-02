@@ -96,9 +96,9 @@ export const TAB =
 export const SECTION_BAR =
   "flex min-h-7 items-center justify-center bg-chrome px-3 font-chrome text-2xs font-bold uppercase text-ink lg:min-h-8 lg:text-xs";
 
-/** A stats board's column head, left over a name. */
+/** A 24px caption plate, left: a block's or a card's strip. A table's column head is `TableHeads.PLATE`, 28. */
 export const HEAD_PLATE = "cm-bevel flex h-6 items-center px-1.5";
-/** The same plate over a figure column or a group of them: centred, as every figure is. */
+/** The same plate centred, over a group of columns or a card's figure. */
 export const HEAD_PLATE_CENTRE = `${HEAD_PLATE} justify-center`;
 
 /** A plate naming a group of columns or a section of a match board. */

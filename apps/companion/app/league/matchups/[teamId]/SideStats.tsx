@@ -4,7 +4,7 @@ import { type LeagueTeam, type LineupDetail, type ScoringCategory, type SquadPla
 import Section from "../../../components/shell/Section";
 import PositionTile from "../../../components/league/PositionTile";
 import { ROW_LINK } from "../../../components/league/TableCells";
-import { LeadHeads, sortedAs, SortHead } from "../../../components/league/TableHeads";
+import { HeadRow, LeadHeads, sortedAs, SortHead } from "../../../components/league/TableHeads";
 import { BOARD, FIGURE_CELL, PINNED_BESIDE_TILE, PINNED_TILE, ROW_NAME, ROW_RULE, SMALL_CAPS, gainOrLoss } from "@/app/desk";
 import ScrollBoard from "../../../components/league/ScrollBoard";
 import { MaybeCard } from "../../../prem/match/[id]/PlayerCardButton";
@@ -51,7 +51,7 @@ export default function SideStats({
       <ScrollBoard className="cm-index-scoped bg-surface" style={managerIndex(team)}>
         <table className={BOARD}>
           <thead>
-            <tr>
+            <HeadRow>
               <LeadHeads tile={PINNED_TILE} name={`${PINNED_BESIDE_TILE} ${NAME_WIDTH}`} />
               {heads.map((head) => (
                 <SortHead
@@ -62,7 +62,7 @@ export default function SideStats({
                   sorted={sortedAs(head.code === sort.head, sort.descending)}
                 />
               ))}
-            </tr>
+            </HeadRow>
           </thead>
           <tbody>
             {eleven.map((player) => row(player, false))}

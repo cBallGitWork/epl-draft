@@ -3,7 +3,7 @@ import { DASH, type FigureKind, fixed } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import ScrollBoard from "../../components/league/ScrollBoard";
 import { IndexCell } from "../../components/league/TableCells";
-import { MUTE, PlateHead } from "../../components/league/TableHeads";
+import { HeadRow, MUTE, PlateHead } from "../../components/league/TableHeads";
 import { standoutCuts, standoutInk, type StandoutCut } from "../../components/league/standout";
 import Section from "../../components/shell/Section";
 import { BOARD, FIGURE, HEAD_CELL, PINNED_BESIDE_INDEX, PINNED_TILE, ROW_HOVER_ON_SURFACE } from "@/app/desk";
@@ -76,7 +76,7 @@ export default function MatchLog({ rows }: { rows: readonly MatchRow[] }) {
       <ScrollBoard className="bg-surface">
         <table className={BOARD}>
           <thead>
-            <tr className="text-2xs">
+            <HeadRow>
               <th scope="col" className={`${HEAD_CELL} ${PINNED_TILE} min-w-8 bg-surface lg:min-w-9`}>
                 <span className={MUTE}>Gameweek</span>
               </th>
@@ -91,7 +91,7 @@ export default function MatchLog({ rows }: { rows: readonly MatchRow[] }) {
                   {column.head}
                 </PlateHead>
               ))}
-            </tr>
+            </HeadRow>
           </thead>
           <tbody>
             {rows.map((row) => (

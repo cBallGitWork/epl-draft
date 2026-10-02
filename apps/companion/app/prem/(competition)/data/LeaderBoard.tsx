@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { crestUrl, ordinal, type Club } from "@epl/core";
-import { Head, HeadRow, NameHead } from "../../../components/league/TableHeads";
+import { Head, HeadRow, NameHead, PRESSED_PLATE } from "../../../components/league/TableHeads";
 import { IndexCell, ROW_LINK } from "../../../components/league/TableCells";
 import { ROW_CREST } from "../../../components/football/ClubLabel";
 import NameLink from "../../club/[code]/NameLink";
@@ -48,7 +48,7 @@ export default function LeaderBoard({
               </Head>
               <NameHead label="Player" />
               <Head width="w-16" title={list.explain}>
-                <span className="cm-bevel-pressed flex h-7 items-center justify-center px-1.5">{list.head}</span>
+                <span className={PRESSED_PLATE}>{list.head}</span>
               </Head>
             </HeadRow>
           </thead>
