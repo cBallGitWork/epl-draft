@@ -139,7 +139,25 @@ export { mapSeasonResults } from "./fantrax/results";
 export type { PeriodResult } from "./fantrax/results";
 export { mapSeasonStats } from "./fantrax/seasonStats";
 export { GROUPS, categoryFor, groupFor, isMeasure, offeredIn } from "./categories";
-export { ASSIST, KEEPER_WORK, carries, firstScored, idsOf } from "./categoryNames";
+export {
+  ASSIST,
+  ASSISTS_OFFICIAL,
+  ASSISTS_TOTAL,
+  GOALS,
+  KEEPER_POINTS,
+  KEEPER_WORK,
+  OWN_GOALS,
+  PENALTIES_MISSED,
+  PENALTY_SAVES,
+  RED_CARDS,
+  SAVES,
+  YELLOW_CARDS,
+  carries,
+  firstScored,
+  idsOf,
+} from "./categoryNames";
+export type { FantraxCategory } from "./categoryNames";
+export { defConAt } from "./defcon";
 export type { GroupKey, Measure, StatCategory } from "./categories";
 export { mapPlayerStats, KEEPER, OUTFIELD } from "./fantrax/playerStats";
 export { mapAssistKinds } from "./fantrax/assistKinds";

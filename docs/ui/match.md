@@ -97,9 +97,19 @@ report needs a full page, put it in stats"*, `/stats?view=fantasy`, the fourth p
 on the foot row) — FPL's own match details (`Goals scored ·
 Assists · …`) for our league: each category's men, home left and away right,
 `Name (n)`, one category after another at every width, plain text set close
-rather than a column of doors. **A scaffold** (*"il add the categories later"*): `fantasyCategories.ts`
-holds the event counts one match can give, keyed by Fantrax's own codes (`G`, `A`,
-`Sv`, `YC`…), so the league's scoring can decide which count once it is wired.
+rather than a column of doors. **Counted by the real league** (Craig, 1 Oct 2026: *"use the
+real league stats"*): `scoringDay.ts` reads the `scoring` league's `getPlayerStats` for the
+match's London day, and `fantasyCategories.ts` lists the categories it scores, each found by
+meaning (`AT` not `A`, `GKP` as *Keeper actions*, never `Sv`) and headed in plain football
+words by the same meaning (*Assists*, never Fantrax's *Assists (Total)*). Minutes, clean sheets
+and goals against are left off: every man has the first, and the score says the other two.
+
+**DefCon only when a man gets close** (*"defenders, only when they get 1, mids when they have 4
+or more, forwards 3 or more"*): half the first band of the league's own DefCon at the letter his
+points are priced at (`defConAt`: DFP from 3, DFP3 from 8 and 6), nearest the band first, nobody
+below it. **FPL DefCon is a box of its own** (*"show fpl defcon too"*): FPL's count, by the same
+half of FPL's threshold (5 of 10 for a man named in defence, 6 of 12 further up), and never on a
+line beside ours.
 
 **Stats is Player Stats and Match Stats merged** (Craig, 23 Sep 2026: *"player
 stats and match stats can be merged to stats"*). `/stats` opens on the two sides

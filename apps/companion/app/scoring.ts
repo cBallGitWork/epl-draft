@@ -6,7 +6,7 @@ import { orRefusal } from "./refusals";
 // The scoring every point the app works out for itself is priced by: the league recorded under the `scoring` role,
 // whichever league is served. Fantrax's own points stay the served league's.
 
-const SCORING_LEAGUE = recorded.leagues.find((league) => league.key === recorded.scoring)?.leagueId ?? null;
+export const SCORING_LEAGUE = recorded.leagues.find((league) => league.key === recorded.scoring)?.leagueId ?? null;
 
 /** Its rules and its names for them; null when the role names no league or Fantrax described no scoring. */
 export const leagueScoring = leagueCache("league-scoring",

@@ -71,6 +71,22 @@ the served league's rules: the rehearsal's in production and the dummy's, every 
   interceptions, blocks), 99.2% for `DFP3` (those, clearances and recoveries) and 85% for `GKP` (saves, punches,
   high claims).
 
+## The Fantasy Report counts by the real league, and prints FPL's DefCon apart — decided 1 Oct 2026
+
+Craig, 1 Oct, on `/prem/match/41/stats?view=fantasy`: *"use the real league stats"*, DefCon *"only when they get
+close"*, and *"show fpl defcon too"*.
+
+- **The counts are the scoring league's own**, not FPL's: `apps/companion/app/scoringDay.ts` reads its
+  `getPlayerStats` `BY_DATE` for the match's London day (outfield and keepers, cache `scoring-day`, 300 s). A club plays
+  once a day, so his day is his match. The real league's day sheet carries exactly its scored columns (`G AT YC RC
+  DFP DFP3 PKM OG GAO CS Min GP Pen`, keepers `GKP PKS GA`), each a count; 18 Sep 2026 read whole on 1 Oct.
+- **Close is half the first band, floored**, at `defaultPosition` (no slot on a match page): DFP 3 → 1, DFP3 8 → 4
+  and 6 → 3, read off the league's bands (`league/defcon.ts`), never written down.
+- **FPL's count prints in its own box, headed `FPL DefCon`, never on a line beside ours.** CLAUDE.md forbids FPL's
+  count beside a Fantrax figure; Craig asked for both, so the screen keeps them in two boxes. FPL's threshold is a
+  fixed rule (10 CBIT, 12 CBIRT) and lives in the football layer by the team sheet's named position, which stands
+  in for FPL's own filing (`football/defensiveContribution.ts`).
+
 ## The round-state probe is stopped: the league does not settle on FPL — decided 1 Oct 2026
 
 `round-state.yml` sampled FPL's event-status every hour to learn whether `bonus-settling` was a state a screen could

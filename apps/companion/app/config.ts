@@ -126,6 +126,9 @@ export const CLUB_SEASON_REVALIDATE = 300;
  *  the kinds only settle what FPL's own counts already pay. */
 export const ASSIST_KINDS_REVALIDATE = 300;
 
+/** How stale one day of the scoring league's counts may be, in seconds: three reads, two of them the whole pool. */
+export const SCORING_DAY_REVALIDATE = 300;
+
 /** Lifetime of the two reads a live score is drawn from, in seconds. Below `POLL.live` plus a
  *  fetch, or a stale-while-revalidate entry makes a lone reader see new scores every other poll. */
 export const LIVE_REVALIDATE = 20;
