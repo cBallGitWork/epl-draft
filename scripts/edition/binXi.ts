@@ -43,6 +43,7 @@ import {
 import limits from "../../data/leagues/roster-limits.json";
 import mapping from "../../data/mappings/fantrax.json";
 import { STATS_LEAGUE } from "../leagues";
+import { readScoring } from "../scoring";
 import type { DeskFacts } from "./facts";
 import { readArchive } from "./persist";
 
@@ -90,13 +91,14 @@ export async function binXiDesk(input: {
     const day = fixture.kickoff === null ? null : londonDayOf(fixture.kickoff);
     return fixture.status === "finished" && day !== null && day >= window.startDate && day <= window.endDate;
   });
-  const [pool, outfield, keepers, transactions, rows] = await Promise.all([
+  const [pool, outfield, keepers, transactions, rows, priced] = await Promise.all([
     fetchPoolWindow(FANTRAX_LEAGUE_ID, window, "ALL_AVAILABLE").then(mapPlayerStats),
     // The stats league costs the brief its shots and chances, never the column.
     fetchPoolWindow(STATS_LEAGUE.leagueId, window, "ALL", OUTFIELD).then(mapPlayerStats).catch(() => []),
     fetchPoolWindow(STATS_LEAGUE.leagueId, window, "ALL", KEEPER).then(mapPlayerStats).catch(() => []),
     fetchTransactions(FANTRAX_LEAGUE_ID, "CLAIM_DROP").then((raw) => mapTransactions(raw, "CLAIM_DROP")).catch(() => []),
     Promise.all(input.gameweeks.map((gw) => (gw === snapshot.gameweek ? Promise.resolve(snapshot.stats) : fetchLive(gw).then(mapLiveStats)))),
+    readScoring(),
   ]);
 
   const byCode = new Map(snapshot.players.map((player) => [player.code, player]));
@@ -113,8 +115,8 @@ export async function binXiDesk(input: {
   });
   if (unjoined.length > 0) say(`  Bin XI: ${unjoined.length} scorers could not be joined (npm run bridge): ${unjoined.slice(0, 5).join(", ")}`);
 
-  const rules = info.scoring;
-  const assistCategory = firstScored(info.scoringCategories, ASSIST);
+  const rules = priced?.rules ?? null;
+  const assistCategory = priced === null ? null : firstScored(priced.categories, ASSIST);
   const side = binXi(
     men,
     shapes,

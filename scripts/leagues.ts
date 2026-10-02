@@ -17,6 +17,9 @@ export const SHAPE_DIFF = recorded.shapeDiff;
 /** The league kept to track every category at no points, whose columns `npm run stats` reads. */
 export const STATS_LEAGUE: RecordedLeague = recordedLeague(recorded.stats);
 
+/** The league whose scoring prices every point we work out ourselves, whichever league is served. */
+export const SCORING_LEAGUE: RecordedLeague = recordedLeague(recorded.scoring);
+
 function recordedLeague(key: string): RecordedLeague {
   const found = RECORDED_LEAGUES.find((league) => league.key === key);
   if (found === undefined) throw new Error(`recorded.json names no league "${key}"`);
