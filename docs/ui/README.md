@@ -45,7 +45,7 @@ nothing.**
 | `/squad/[teamId]/transfers` | [squad.md](squad.md) | His business, in Championship Manager's ledger. |
 | `/squad/[teamId]/next` | [squad.md](squad.md) | Who he plays, both sides on their own colours. |
 | `/squad/[teamId]/fixtures` | [squad.md](squad.md) | His whole season, played and to come. |
-| `/squad/[teamId]/stats` | [squad.md](squad.md) | Every man he owns, by scoring category or FPL's underlying numbers. |
+| `/squad/[teamId]/stats` | [squad.md](squad.md) | Every man he owns, by scoring category, with the stats league's counts beneath each group. |
 | `/matchday` | [matchday.md](matchday.md) | Live: your head-to-head, then the real football. |
 | `/matchday/desk` | [desk.md](desk.md) | Every score in the league and the round, on one screen. |
 | `/gw/[gameweek]` | [gameweek.md](gameweek.md) | Any round of football, addressable. |

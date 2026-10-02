@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { PlayerStatLine } from "@epl/core";
-import { measuresFor, readingOf } from "./statViews";
+import { VIEWS, measuresFor, readingOf } from "./statViews";
 
 const line = (stats: Record<string, number | null>): PlayerStatLine => ({
   fantraxId: "x",
@@ -15,32 +15,63 @@ const line = (stats: Record<string, number | null>): PlayerStatLine => ({
 });
 
 // Pascal Gross's five gameweeks off getPlayerStats on 1 Oct 2026, in each league's own columns: AT is A plus AF.
-const realGross = line({ G: 3, AT: 4, YC: 2, RC: 0, Pen: 0, DFP: 10, DFP3: 24, PKM: 0, OG: 0, GAO: 5, CS: 3 });
-const rehearsalGross = line({ G: 3, A: 3, AF: 1, YC: 2, RC: 0, DFP: 10, PKM: 0, OG: 0, GAO: 5, CS: 3 });
+const realGross = line({ GP: 5, Min: 450, G: 3, AT: 4, YC: 2, RC: 0, Pen: 0, DFP: 10, DFP3: 24, PKM: 0, OG: 0, GAO: 5, CS: 3 });
+const rehearsalGross = line({ GP: 5, Min: 450, G: 3, A: 3, AF: 1, YC: 2, RC: 0, DFP: 10, DFP3: 24, PKM: 0, OG: 0, GAO: 5, CS: 3 });
 const realKeys = new Set([...Object.keys(realGross.stats), "GA", "PKS", "GKP"]);
 const rehearsalKeys = new Set([...Object.keys(rehearsalGross.stats), "GA", "PKS", "Sv"]);
+// The stats league's columns for him, which carry everything and score nothing.
+const statsGross = { GP: 5, GS: 5, Min: 450, G: 3, A: 3, AF: 1, AT: 4, S: 11, SOT: 4, KP: 14, BCC: 2, TkW: 6, Int: 3, CLR: 4, BR: 20, FC: 5, Sv: null };
+const statsKeys = new Set([...Object.keys(statsGross), "GA", "PKS"]);
+const views = VIEWS.map((view) => view.key);
 
 describe("the squad board's total", () => {
   // The categories are raw counts, so a sum of them added goals conceded and cards as if they were points.
   it("draws no total in any view, and sorts by none", () => {
-    for (const view of ["fantasy", "attacking", "defensive", "discipline", "underlying"] as const)
-      expect(measuresFor(view, realKeys).map((measure) => measure.key)).not.toContain("pts");
-    expect(readingOf(realGross, undefined, "pts")).toBeNull();
+    for (const view of views) expect(measuresFor(view, realKeys, statsKeys).map((measure) => measure.key)).not.toContain("pts");
+    expect(readingOf(realGross, statsGross, "pts")).toBeNull();
+  });
+});
+
+describe("the squad board's sources", () => {
+  // Craig, 1 Oct 2026: "dont use the term fpl", "remove bps".
+  it("names no view for FPL and draws no BPS", () => {
+    expect(VIEWS.map((view) => view.label).join(" ")).not.toMatch(/fpl/i);
+    for (const view of views) expect(measuresFor(view, realKeys, statsKeys).map((measure) => measure.head)).not.toContain("BPS");
+  });
+
+  it("reads a count off the served league where its read has the column, and off the stats league where not", () => {
+    expect(readingOf(realGross, { ...statsGross, G: 99 }, "G")).toBe(3);
+    expect(readingOf(realGross, statsGross, "A")).toBe(3);
+    expect(readingOf(realGross, statsGross, "KP")).toBe(14);
+  });
+
+  it("dashes a stats-league column for a man the stats league has no row for", () => {
+    expect(readingOf(realGross, undefined, "KP")).toBeNull();
+    expect(readingOf(realGross, undefined, "G")).toBe(3);
   });
 });
 
 describe("the squad board's columns", () => {
-  const heads = (scored: ReadonlySet<string>) => measuresFor("fantasy", scored).map((measure) => measure.head);
+  const heads = (view: (typeof views)[number], served: ReadonlySet<string>, stats: ReadonlySet<string> = statsKeys) =>
+    measuresFor(view, served, stats).map((measure) => measure.head);
 
-  it("draws the real league's AT and GKP, and not the A, AF and Sv it no longer scores", () => {
-    expect(heads(realKeys)).toEqual(["G", "AT", "PKM", "CS", "GKP", "PKS", "GA", "YC", "RC", "OG"]);
+  it("scores the real league's minutes, AT, DefCon and GKP, and not the A, AF and Sv it no longer scores", () => {
+    expect(heads("scoring", realKeys)).toEqual(["Min", "G", "AT", "PKM", "CS", "DFP", "DFP3", "GKP", "PKS", "GA", "YC", "RC", "OG"]);
   });
 
-  it("draws the rehearsal league's columns as it always has", () => {
-    expect(heads(rehearsalKeys)).toEqual(["G", "A", "AF", "PKM", "CS", "Sv", "PKS", "GA", "YC", "RC", "OG"]);
+  it("scores the rehearsal league's columns", () => {
+    expect(heads("scoring", rehearsalKeys)).toEqual(["Min", "G", "A", "AF", "PKM", "CS", "DFP", "DFP3", "Sv", "PKS", "GA", "YC", "RC", "OG"]);
   });
 
-  it("reads the AT column off the line", () => {
-    expect(readingOf(realGross, undefined, "AT")).toBe(4);
+  it("puts the stats league's counts beneath each group, and never in Scoring", () => {
+    expect(heads("attacking", realKeys)).toEqual(["G", "AT", "A", "AF", "PKM", "S", "SOT", "KP", "BCC"]);
+    expect(heads("defensive", realKeys)).toEqual(["CS", "DFP", "DFP3", "Sv", "GKP", "PKS", "GA", "OG", "TkW", "Int", "CLR", "BR"]);
+    expect(heads("discipline", realKeys)).toEqual(["YC", "RC", "FC"]);
+    expect(heads("appearances", realKeys)).toEqual(["Min", "GP", "GS"]);
+  });
+
+  it("keeps the served league's own columns when the stats league did not answer", () => {
+    expect(heads("attacking", realKeys, new Set())).toEqual(["G", "AT", "PKM"]);
+    expect(heads("appearances", realKeys, new Set())).toEqual(["Min", "GP"]);
   });
 });
