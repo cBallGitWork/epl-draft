@@ -1,8 +1,21 @@
 import { describe, expect, it } from "vitest";
-import { fantraxMoment, fantraxTime, whenKey } from "./when";
+import { fantraxDay, fantraxMoment, fantraxTime, whenKey } from "./when";
 
 // Fantrax's real stamp, as `LeagueTransaction.processedAt` carries it.
 const STAMP = "Wed Sep 2, 2026, 6:11AM";
+
+describe("fantraxDay", () => {
+  it("re-spells their date in British order, with no year and no clock", () => {
+    // THE BUG. The transfers chip read "Wed Sep 2", American, beside Mail's "Wed 2 Sept".
+    expect(fantraxDay(STAMP)).toBe("Wed 2 Sept");
+    expect(fantraxDay("Wed Sep 30, 2026, 11:59PM")).toBe("Wed 30 Sept");
+  });
+
+  it("gives null for anything that does not read", () => {
+    expect(fantraxDay("Wed Sep 2")).toBeNull();
+    expect(fantraxDay("")).toBeNull();
+  });
+});
 
 describe("fantraxTime", () => {
   // What the blue index block draws. It carries its own 12-hour conversion rather

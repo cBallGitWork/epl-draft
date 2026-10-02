@@ -154,6 +154,12 @@ export function fantraxTime(stamp: string): string | null {
   return `${parts.weekday} ${parts.day} ${parts.month} ${hour}:${minute}${meridiem}`;
 }
 
+/** `"Wed 2 Sept"`: `fantraxTime`'s date without its clock, for a chip with room for the day alone. */
+export function fantraxDay(stamp: string): string | null {
+  const parts = fantraxParts(stamp);
+  return parts === null ? null : `${parts.weekday} ${parts.day} ${parts.month}`;
+}
+
 /** One comparable number for both shapes, and nothing but ordering ever sees it.
  *
  *  **Both are read as a calendar in Fantrax's own zone**, which is what makes

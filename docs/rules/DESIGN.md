@@ -779,6 +779,10 @@ on the desk shares its width with four or more measures. A screen wanting this
 exception has to be able to say the same thing about itself, and `ROW_NAME` stays
 where it is — six boards wear it and none has the room.
 
+`squad/[teamId]/transfers/Ledger` says it and takes the same step for its names
+(Craig, 1 Oct 2026: *"lots of space, make text bigger"*): a row there is a date, a
+type and two names.
+
 `prem/match/[id]/Scoresheet` is the second and says exactly that about itself:
 its entire content is a few names and a few minutes. `lg:text-3xl` on the scorer
 and his minutes, from `lg:text-2xl`, on Craig's call of 11 Sep 2026 (*"can make
