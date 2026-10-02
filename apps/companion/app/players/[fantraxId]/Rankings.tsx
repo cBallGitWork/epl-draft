@@ -1,6 +1,6 @@
 import ScrollBoard from "../../components/league/ScrollBoard";
 import type { Ranked } from "@epl/core";
-import { DASH, ordinal } from "@epl/core";
+import { DASH, fixed, ordinal } from "@epl/core";
 import Section from "../../components/shell/Section";
 import { IndexCell } from "../../components/league/TableCells";
 import { MUTE, PlateHead } from "../../components/league/TableHeads";
@@ -34,7 +34,7 @@ export default function Rankings({ ranked, group }: { ranked: readonly Ranked[];
               <IndexCell>Total</IndexCell>
               {ranked.map((r) => (
                 <td key={r.head} className={`${BOARD_FIGURE} font-bold`}>
-                  {r.value === null ? DASH : r.value.toFixed(r.digits)}
+                  {r.value === null ? DASH : fixed(r.value, r.kind)}
                 </td>
               ))}
             </tr>

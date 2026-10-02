@@ -1,5 +1,5 @@
 import { byFigure } from "../../../components/league/order";
-import type { IntelMatchPlayer, MatchSheetLine, PlayerMatchStats } from "@epl/core";
+import type { FigureKind, IntelMatchPlayer, MatchSheetLine, PlayerMatchStats } from "@epl/core";
 
 // A club board's measures, declared as data so the head and the body cannot disagree.
 // `MatchSheetLine` is per-fixture; the expected family is the live endpoint's GAMEWEEK total (`docs/ui/match.md`).
@@ -16,7 +16,7 @@ interface Column {
   title: string;
   of: (r: StatLine) => number | null;
   /** Decimal places; whole numbers when absent. */
-  dp?: number;
+  kind?: FigureKind;
   /** A reading we or SofaScore derived, in cyan (DESIGN §3) and never lit. */
   derived?: boolean;
   /** Which end of the column is good: its standouts are lit yellow and orange, or red where high is bad. */
@@ -28,8 +28,8 @@ export const COLUMNS = [
   { head: "Min", title: "Minutes played", of: (r) => r.stats?.minutes ?? null },
   { head: "G", title: "Goals", of: (r) => r.line?.goals ?? null, rank: "high" },
   { head: "A", title: "Assists", of: (r) => r.line?.assists ?? null, rank: "high" },
-  { head: "xG", title: "Expected goals", of: (r) => r.stats?.expectedGoals ?? null, dp: 2, rank: "high" },
-  { head: "xA", title: "Expected assists", of: (r) => r.stats?.expectedAssists ?? null, dp: 2, rank: "high" },
+  { head: "xG", title: "Expected goals", of: (r) => r.stats?.expectedGoals ?? null, kind: "expected", rank: "high" },
+  { head: "xA", title: "Expected assists", of: (r) => r.stats?.expectedAssists ?? null, kind: "expected", rank: "high" },
   { head: "CS", title: "Clean sheet", of: (r) => (r.stats?.cleanSheet === true ? 1 : 0), rank: "high" },
   { head: "GC", title: "Goals conceded", of: (r) => r.stats?.goalsConceded ?? null, rank: "low" },
   { head: "Sv", title: "Saves", of: (r) => r.line?.saves ?? null, rank: "high" },
@@ -41,7 +41,7 @@ export const COLUMNS = [
   },
   { head: "B", title: "FPL bonus", of: (r) => r.line?.bonus ?? null, rank: "high" },
   { head: "YC", title: "Yellow cards", of: (r) => r.line?.yellowCards ?? null, rank: "low" },
-  { head: "Rtg", title: "SofaScore's rating out of ten", of: (r) => r.logged?.rating ?? null, dp: 1, derived: true },
+  { head: "Rtg", title: "SofaScore's rating out of ten", of: (r) => r.logged?.rating ?? null, kind: "rating", derived: true },
 ] as const satisfies readonly Column[];
 
 /** A column's head doubles as its query value. */

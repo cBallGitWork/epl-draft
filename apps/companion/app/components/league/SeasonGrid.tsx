@@ -1,5 +1,5 @@
 import ScrollBoard from "./ScrollBoard";
-import { columnLabel, DASH } from "@epl/core";
+import { columnLabel, DASH, fixed } from "@epl/core";
 import type { TeamStats } from "@epl/core";
 import {
   BOARD_FIGURE,
@@ -144,7 +144,7 @@ export default function SeasonGrid({
                         {line.points ?? DASH}
                       </td>
                       <td className={`${BOARD_FIGURE} py-1 text-muted`}>
-                        {line.perGame ?? DASH}
+                        {line.perGame === null ? DASH : fixed(line.perGame, "perGame")}
                       </td>
                     </tr>
                   ))}

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ordinal } from "@epl/core";
+import { type FigureKind, fixed, ordinal } from "@epl/core";
 import Section from "../components/shell/Section";
 import TabStrip from "../components/shell/TabStrip";
 import Absent from "../components/shell/Absent";
@@ -22,7 +22,7 @@ const TITLE: Record<LeaderStat, string> = {
 
 const TAB: Record<LeaderStat, string> = { points: "Points", rating: "Rating", xg: "xG", xa: "xA" };
 
-const DECIMALS: Partial<Record<LeaderStat, number>> = { rating: 1, xg: 2, xa: 2 };
+const KIND: Partial<Record<LeaderStat, FigureKind>> = { rating: "rating", xg: "expected", xa: "expected" };
 
 /** Our mark is a derived reading, so cyan; the rest are a board's one measure, so amber (DESIGN §3). */
 const INK: Record<LeaderStat, string> = { points: "text-mid", rating: "text-info", xg: "text-mid", xa: "text-mid" };
@@ -47,7 +47,7 @@ export default function TopStats({ boards, stat }: { boards: Record<LeaderStat, 
         {LEADER_STATS.map((key) => (
           <div key={key} className={phoneShows(key === stat)}>
             <Section title={TITLE[key]}>
-              <Board leaders={boards[key]} decimals={DECIMALS[key]} ink={INK[key]} />
+              <Board leaders={boards[key]} kind={KIND[key]} ink={INK[key]} />
             </Section>
           </div>
         ))}
@@ -56,7 +56,7 @@ export default function TopStats({ boards, stat }: { boards: Record<LeaderStat, 
   );
 }
 
-function Board({ leaders, decimals, ink }: { leaders: Leader[]; decimals?: number; ink: string }) {
+function Board({ leaders, kind, ink }: { leaders: Leader[]; kind?: FigureKind; ink: string }) {
   if (leaders.length === 0) return <Absent />;
   return (
     <table className={BOARD}>
@@ -80,7 +80,7 @@ function Board({ leaders, decimals, ink }: { leaders: Leader[]; decimals?: numbe
               </span>
             </td>
             <td className={`${FIGURE} w-14 lg:w-20 ${ink}`}>
-              {decimals === undefined ? leader.value : leader.value.toFixed(decimals)}
+              {kind === undefined ? leader.value : fixed(leader.value, kind)}
             </td>
           </tr>
         ))}

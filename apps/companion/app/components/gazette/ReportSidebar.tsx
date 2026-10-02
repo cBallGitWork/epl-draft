@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { FantasyMan, StoryLineup, StoryReport } from "@epl/core";
-import { DASH, plural } from "@epl/core";
+import { DASH, fixed, plural } from "@epl/core";
 import { STANDING_HEAD as HEAD } from "./heads";
 
 // The sidebar beside a match's report: the line-ups first as a paper prints them, each man with our mark, then the Star man,
@@ -40,7 +40,7 @@ function Men({ men, points }: { men: readonly FantasyMan[]; points: boolean }) {
 const MARKS = "Our rating out of ten: his league points, weighed by the opponent and by the chances missed, errors and extras the league does not score.";
 
 /** " 6.3", " —" for a man too brief to rate, nothing on a report filed before marks. */
-const markText = (mark: number | null | undefined) => (mark === undefined ? "" : ` ${mark === null ? DASH : mark.toFixed(1)}`);
+const markText = (mark: number | null | undefined) => (mark === undefined ? "" : ` ${mark === null ? DASH : fixed(mark, "rating")}`);
 
 const rated = (lineup: StoryLineup | null) => lineup?.lines.flat().some((m) => m.mark !== undefined) ?? false;
 
@@ -103,7 +103,7 @@ export default function ReportSidebar({ report, names, matchHref }: { report: St
       {report.star == null ? null : (
         <Panel title="Star man" hint={MARKS}>
           <p className="paper-display text-lg leading-tight font-semibold text-ink">
-            {report.star.name} <span className="numeric">{report.star.mark.toFixed(1)}</span>
+            {report.star.name} <span className="numeric">{fixed(report.star.mark, "rating")}</span>
           </p>
           <p className="text-xs text-muted">
             {report.star.club}, {report.star.holder ?? "free"}

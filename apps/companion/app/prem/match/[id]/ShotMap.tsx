@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { CSSProperties } from "react";
-import { DASH, type Shot } from "@epl/core";
+import { DASH, fixed, type Shot } from "@epl/core";
 import { PITCH_BOX, toBoxY } from "@/app/components/football/pitchBox";
 import { drawOrder } from "@/app/components/football/shotGeometry";
 import ShotMarks, { MarksKey } from "../../../components/football/ShotMarks";
@@ -232,7 +232,7 @@ export default function ShotMap({
                 </td>
                 {/* xG is a model's reading, so cyan (DESIGN §3). */}
                 <td className="numeric text-center text-sm text-info">
-                  {shot.xg === null ? DASH : shot.xg.toFixed(2)}
+                  {shot.xg === null ? DASH : fixed(shot.xg, "expected")}
                 </td>
               </tr>
             ))}

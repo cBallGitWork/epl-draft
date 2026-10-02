@@ -1,4 +1,4 @@
-import { loggedPlayers, DASH } from "@epl/core";
+import { fixed, loggedPlayers, DASH } from "@epl/core";
 import { clubIndex } from "../../../components/football/clubIndex";
 import type { Club, PlManMatch, PlTeamSheet, SquadPlayerDetail } from "@epl/core";
 import { fantraxPositions, type LeagueOpinion } from "../../leagueOpinions";
@@ -155,7 +155,7 @@ function StatRow({
       </td>
       {COLUMNS.map((column) => {
         const value = column.of(row);
-        const dp = "dp" in column ? column.dp : 0;
+        const kind = ("kind" in column ? column.kind : undefined) ?? "count";
         const ink =
           !played || value === null
             ? ""
@@ -166,7 +166,7 @@ function StatRow({
                 : "";
         return (
           <td key={column.head} className={`${FIGURE_CELL} ${ink}`}>
-            {value === null || !played ? <span className="text-faint">{DASH}</span> : value.toFixed(dp)}
+            {value === null || !played ? <span className="text-faint">{DASH}</span> : fixed(value, kind)}
           </td>
         );
       })}

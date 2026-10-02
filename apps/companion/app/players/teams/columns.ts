@@ -1,4 +1,4 @@
-import type { PlClubSeason, SeasonTotals } from "@epl/core";
+import type { FigureKind, PlClubSeason, SeasonTotals } from "@epl/core";
 import { byFigure } from "../../components/league/order";
 import type { TeamRow } from "./teamRows";
 
@@ -10,8 +10,8 @@ export interface TeamColumn {
   head: string;
   title: string;
   of: (row: TeamRow) => number | null;
-  /** Decimal places; whole numbers when absent. */
-  dp?: number;
+  /** The kind of figure, which sets its places; a count when absent. */
+  kind?: FigureKind;
   /** Which end is good: its standouts are lit, red where more is worse; that end also sorts first. */
   rank: "high" | "low";
 }
@@ -27,14 +27,14 @@ export const TEAM_COLUMNS: readonly TeamColumn[] = [
   { key: "sh", group: "Attack", head: "Sh", title: "Shots", of: opta("shots"), rank: "high" },
   { key: "sot", group: "Attack", head: "SoT", title: "Shots on target", of: opta("shotsOnTarget"), rank: "high" },
   { key: "bc", group: "Attack", head: "BC", title: "Big chances, scored or missed", of: opta("bigChances"), rank: "high" },
-  { key: "xg", group: "Attack", head: "xG", title: "Expected goals, the squad's", of: squad("expectedGoals"), dp: 1, rank: "high" },
+  { key: "xg", group: "Attack", head: "xG", title: "Expected goals, the squad's", of: squad("expectedGoals"), kind: "expected", rank: "high" },
   { key: "a", group: "Chances", head: "A", title: "Assists", of: opta("assists"), rank: "high" },
   { key: "kp", group: "Chances", head: "KP", title: "Chances created: passes that led to a shot", of: opta("chancesCreated"), rank: "high" },
   { key: "bcc", group: "Chances", head: "BCC", title: "Big chances created", of: opta("bigChancesCreated"), rank: "high" },
-  { key: "xa", group: "Chances", head: "xA", title: "Expected assists, the squad's", of: squad("expectedAssists"), dp: 1, rank: "high" },
+  { key: "xa", group: "Chances", head: "xA", title: "Expected assists, the squad's", of: squad("expectedAssists"), kind: "expected", rank: "high" },
   { key: "gc", group: "Defence", head: "GC", title: "Goals conceded", of: opta("goalsConceded"), rank: "low" },
   // FPL counts each chance against once per man on the pitch, so eleven share one.
-  { key: "xgc", group: "Defence", head: "xGC", title: "Expected goals conceded", of: squad("expectedGoalsConceded", 11), dp: 1, rank: "low" },
+  { key: "xgc", group: "Defence", head: "xGC", title: "Expected goals conceded", of: squad("expectedGoalsConceded", 11), kind: "expected", rank: "low" },
   { key: "cs", group: "Defence", head: "CS", title: "Clean sheets", of: opta("cleanSheets"), rank: "high" },
   { key: "sha", group: "Defence", head: "ShA", title: "Shots conceded", of: opta("shotsConceded"), rank: "low" },
   { key: "tk", group: "Defence", head: "Tk", title: "Tackles", of: opta("tackles"), rank: "high" },

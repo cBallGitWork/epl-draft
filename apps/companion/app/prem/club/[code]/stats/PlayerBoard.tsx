@@ -123,7 +123,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
                   const ink = standoutInk(value, cuts.get(measure.key), measure.worse ? "low" : "high");
                   return (
                     <td key={measure.key} className={`${BOARD_FIGURE} ${ink || (value === 0 ? "text-muted" : "text-ink")}`}>
-                      {reading(value)}
+                      {reading(measure, value)}
                     </td>
                   );
                 })}

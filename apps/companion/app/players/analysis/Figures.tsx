@@ -1,6 +1,6 @@
 import { rateRows } from "./rates";
 import type { Played, RateRow } from "./rates";
-import { DASH } from "@epl/core";
+import { DASH, fixed } from "@epl/core";
 
 // What the men have done, per ninety minutes.
 //
@@ -108,7 +108,7 @@ function label(row: RateRow): string {
 function show(row: RateRow, side: "a" | "b" = "a"): string {
   const value = row[side];
   if (value === null) return DASH;
-  return row.perNinety ? value.toFixed(2) : String(value);
+  return row.perNinety ? fixed(value, "perNinety") : String(value);
 }
 
 /** How loudly one side's figure is set, against the other's.

@@ -16,6 +16,7 @@ import {
   YELLOW_CARDS,
   wordsFor,
   type FantraxCategory,
+  type FigureKind,
 } from "@epl/core";
 import type { PoolRow } from "./pool";
 import type { PoolGroup } from "./groups";
@@ -91,6 +92,8 @@ export interface PoolColumn {
   value: (row: PoolRow, stats: RawStats) => number | string | null;
   /** The Fantrax column a count reads, so a board drops it where the league scores no such category. */
   stat?: string;
+  /** The kind of figure, where it prints at fixed places rather than as it arrives. */
+  places?: FigureKind;
 }
 
 /** A raw count read out of the grouped payload by its Fantrax abbreviation.
@@ -176,6 +179,7 @@ export const COLUMNS: PoolColumn[] = [
     label: "FP/G",
     title: "Fantasy points per game",
     kind: "number",
+    places: "perGame",
     group: "scoring",
     mark: "high",
     ascending: false,

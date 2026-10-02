@@ -5,7 +5,7 @@ import { PlateHead } from "../../components/league/TableHeads";
 import type { MatchRow } from "./matchRows";
 import { totalsOf } from "./matchRows";
 import { IndexCell } from "../../components/league/TableCells";
-import { DASH, thousands } from "@epl/core";
+import { DASH, fixed, thousands } from "@epl/core";
 import { RATING_TITLE } from "../../ratings";
 
 // What the season adds up to, above the matches that made it.
@@ -109,5 +109,5 @@ const COLUMNS: readonly Column[] = [
   // FPL's own points, and headed as FPL's. Never `FPts`, which is Fantrax's word
   // for Fantrax's scoring of a roster slot we chose.
   { head: "FPL", title: "FPL's own points", total: (t) => whole(t.fplPoints) },
-  { head: "Rtg", title: `${RATING_TITLE}; his average over the matches rated`, rule: true, derived: true, total: (t) => (t.rating === null ? DASH : t.rating.toFixed(1)) },
+  { head: "Rtg", title: `${RATING_TITLE}; his average over the matches rated`, rule: true, derived: true, total: (t) => (t.rating === null ? DASH : fixed(t.rating, "rating")) },
 ];

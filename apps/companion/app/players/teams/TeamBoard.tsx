@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { DASH, toFantraxClubCode } from "@epl/core";
+import { DASH, fixed, toFantraxClubCode } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import { ROW_LINK } from "../../components/league/TableCells";
 import { MUTE, SortHead, sortedAs } from "../../components/league/TableHeads";
@@ -91,7 +91,7 @@ function Figure({ column, row, cut, first }: { column: TeamColumn; row: TeamRow;
   const value = column.of(row);
   const edge = first ? "border-l border-line/60" : "";
   if (value === null) return <td className={`${FIGURE} ${edge} text-faint`}>{DASH}</td>;
-  return <td className={`${FIGURE} ${edge} ${standoutInk(value, cut, column.rank)}`}>{value.toFixed(column.dp ?? 0)}</td>;
+  return <td className={`${FIGURE} ${edge} ${standoutInk(value, cut, column.rank)}`}>{fixed(value, column.kind ?? "count")}</td>;
 }
 
 /** Centred under its head, the way CM sets a column. */

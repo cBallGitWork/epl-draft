@@ -1,4 +1,4 @@
-import type { SeasonTotals } from "@epl/core";
+import { type FigureKind, type SeasonTotals, PLACES, fixed } from "@epl/core";
 
 // The Data tab's lists: one season figure per man, best first, the top ten and the top fifty on asking.
 
@@ -27,29 +27,29 @@ export interface LeaderList {
   /** What the head means, on hover. */
   explain: string;
   source: Source;
-  /** Decimal places: a list ranks on the figure it prints, so two men who read alike share a place. */
-  digits: number;
+  /** The kind of figure, which sets its places: a list ranks on the figure it prints, so two who read alike share a place. */
+  kind: FigureKind;
 }
 
 export const LISTS: readonly LeaderList[] = [
-  { key: "goals", title: "Top scorers", head: "G", explain: "Goals", source: { fpl: (s) => s.goals }, digits: 0 },
-  { key: "xg", title: "Expected goals", head: "xG", explain: "FPL's expected goals", source: { fpl: (s) => s.expectedGoals }, digits: 2 },
-  { key: "rating", title: "Match ratings", head: "Rtg", explain: "His average mark", source: "rating", digits: 1 },
-  { key: "points", title: "Fantrax points", head: "FPts", explain: "Fantasy points, under this league's scoring", source: "points", digits: 0 },
-  { key: "assists", title: "Assists", head: "A", explain: "Assists", source: { fpl: (s) => s.assists }, digits: 0 },
-  { key: "xa", title: "Expected assists", head: "xA", explain: "FPL's expected assists", source: { fpl: (s) => s.expectedAssists }, digits: 2 },
-  { key: "cleanSheets", title: "Clean sheets", head: "CS", explain: "Clean sheets, as FPL counts them", source: { fpl: (s) => s.cleanSheets }, digits: 0 },
-  { key: "saves", title: "Saves", head: "Sv", explain: "Saves", source: { fpl: (s) => s.saves }, digits: 0 },
+  { key: "goals", title: "Top scorers", head: "G", explain: "Goals", source: { fpl: (s) => s.goals }, kind: "count" },
+  { key: "xg", title: "Expected goals", head: "xG", explain: "FPL's expected goals", source: { fpl: (s) => s.expectedGoals }, kind: "expected" },
+  { key: "rating", title: "Match ratings", head: "Rtg", explain: "His average mark", source: "rating", kind: "rating" },
+  { key: "points", title: "Fantrax points", head: "FPts", explain: "Fantasy points, under this league's scoring", source: "points", kind: "count" },
+  { key: "assists", title: "Assists", head: "A", explain: "Assists", source: { fpl: (s) => s.assists }, kind: "count" },
+  { key: "xa", title: "Expected assists", head: "xA", explain: "FPL's expected assists", source: { fpl: (s) => s.expectedAssists }, kind: "expected" },
+  { key: "cleanSheets", title: "Clean sheets", head: "CS", explain: "Clean sheets, as FPL counts them", source: { fpl: (s) => s.cleanSheets }, kind: "count" },
+  { key: "saves", title: "Saves", head: "Sv", explain: "Saves", source: { fpl: (s) => s.saves }, kind: "count" },
 ];
 
 /** A figure as its list prints it, the British way: `1,234`, `4.42`, `7.2`. */
 export function printed(list: LeaderList, figure: number): string {
-  return figure.toLocaleString("en-GB", { minimumFractionDigits: list.digits, maximumFractionDigits: list.digits });
+  return fixed(figure, list.kind);
 }
 
 /** A figure held to the places its list prints, so the ranking agrees with what the reader sees. */
 export function asPrinted(list: LeaderList, figure: number): number {
-  const scale = 10 ** list.digits;
+  const scale = 10 ** PLACES[list.kind];
   return Math.round(figure * scale) / scale;
 }
 

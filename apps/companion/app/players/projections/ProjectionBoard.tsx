@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { DASH, gameweekSpan } from "@epl/core";
+import { DASH, fixed, gameweekSpan } from "@epl/core";
 import PositionTile from "../../components/league/PositionTile";
 import { LeadHeads, sortedAs, SortHead } from "../../components/league/TableHeads";
 import { ROW_LINK } from "../../components/league/TableCells";
@@ -73,7 +73,7 @@ export default function ProjectionBoard({
                       : standoutInk(figure, cuts.get(head.key), "high");
                 return (
                   <td key={head.key} className={`${FIGURE} ${head.key === "tot" ? "font-bold" : ""} ${ink}`}>
-                    {figure === null ? DASH : head.key === "xmins" ? figure : figure.toFixed(1)}
+                    {figure === null ? DASH : head.key === "xmins" ? figure : fixed(figure, "projected")}
                   </td>
                 );
               })}
