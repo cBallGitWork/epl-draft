@@ -31,14 +31,16 @@ on the phone: *"remove the yellow title for space"*, *"Mobile needs more room fo
 position title on the left here. Put position elsewhere"*, *"Remove opponent as well"*, *"Tighten the column
 headers too?"*. Where the sections below disagree with this one, this one is current.
 
-- **Phone-first order**: `FPts FP/G Min GP G A AF CS GAO GA Sv PKS YC RC PKM OG Ros +/-`. Seven figures sit
-  beside a name at 390 (FPts to AF), six at 360. **Opp is gone** at both widths; the next fixture is the
-  planner's question.
+- **Phone-first order**: `FPts FP/G Min GP G AT A AF CS GAO GA Sv PKS YC RC PKM OG Ros +/-`. Six figures sit
+  beside a name at 390 (FPts to AT), five at 360, since the lead widened for the name on 1 Oct 2026 (it was
+  seven and six). **Opp is gone** at both widths; the next fixture is the planner's question.
 - **The lead** is pinned (`players/BoardRow`, shared with Projections): crest, then the name with **who holds
   him in brackets straight after it** (Craig, 24 Sep 2026: *"put the manager in brackets right after the
   player to allow more room for columns"*). On a phone the name is CM's list form (`Gross, P`, `listName` in
-  core) and line two is the position (`MID`, in `LABEL` ink). On a desk the name is whole, CM's position tile
-  runs down the left, and the lead is 256px.
+  core) and has line one to itself and its doubt box, and line two is the position (`MID`, in `LABEL` ink) with
+  the holder after it (Craig, 1 Oct 2026: *"needs more space for player name on mobile"*); the lead is 160px,
+  room for a fifteen-letter "Surname, I". On a desk the name is whole, CM's position tile
+  runs down the left, green for a man on no roster (`--color-index-free`, Craig 1 Oct 2026), and the lead is 256px.
 - **Who holds him**: `(Yours)` in the accent (the page reads the reader's team), `(a rival's team)` quiet, and
   Fantrax's own `(FA)` / `(WW)` loud, because that is the man a reader can act on; the word is its title. This
   reverses 10 Sep's "owner loud, status quiet".
@@ -52,7 +54,7 @@ headers too?"*. Where the sections below disagree with this one, this one is cur
   projection, a warning prints above the board instead.
 - **The filters are a sheet** docked over the thumb rail below `lg` (inline from `lg`), headed "Filter
   players": Position as CM's index tiles (chosen: an accent edge and a tick, the word stays white), Status
-  chips with counts, Club and **Sort by** selects side by side (`QuerySelect`, one component for every Data
+  chips between `lg` and `xl` (the row carries them at every other width), Club and **Sort by** selects side by side (`QuerySelect`, one component for every Data
   select), the stat groups (which a phone could not reach
   before: the old drawer never drew them), Per 90, then Reset and `Show N`. A tap outside closes it.
 
@@ -197,7 +199,8 @@ right for a ten-row table in `text-base` and wrong for twenty-four columns of
 been opaque since it was frozen, so the board was rendering one solid column and
 twenty-three translucent ones.
 
-**The controls are one row at every width.** Craig: *"when i said messy, i meant
+**The controls are one row at every width** but the narrowest phones, where the status chips and Filter take a
+second line together (320 today; under 390 once a league carries three statuses). Craig: *"when i said messy, i meant
 essentially three rows of column headers"* — the blue group strip, the grey chip
 field and the table's own grey head strip, the middle two wearing the same
 `cm-bevel`. A chip and a column head are the same object in this vocabulary, so
@@ -209,10 +212,14 @@ controls.
 we can get most things onto one row though"*, against Opta's desktop shot, which
 runs search, stat tabs and its two figure controls across a single line):
 
-- **below `lg`** — search, `Find`, `Filter`. Everything else in the drawer.
+- **below `lg`** — search, the status chips, `Filter` (Craig, 1 Oct 2026: *"mobile can have owned button show
+  by default"*, *"find a player bar super wide, theres space"*). Everything else in the drawer. The box grows
+  from 104px, what its placeholder needs; narrower than that, the chips and Filter take a second line together.
+  **`Find` is gone** at every width: the box searches as you type, and Enter submits it without a script.
 - **`lg`** — the stat-group strip joins them. It is the most frequent tap, and it
   is the one that most deserves to be one.
-- **`xl`** — the `Per 90` toggle joins them. It was `2xl` while the minutes
+- **`xl`** — the status chips and the `Per 90` toggle join them (Craig, 1 Oct 2026: *"on desktop have ww/fa
+  filter in view"*); between `lg` and `xl` the sheet carries status. Per 90 was `2xl` while the minutes
   chips existed, measured: the frame is max-width capped, so 1440 has only 36px
   more than 1280 and the full set wanted 1136 of 1100. One chip fits at 1280.
   PLATFORM_NOTES carries the measured widths and the way the first guess failed —
@@ -274,7 +281,9 @@ paragraph says it would be. The pressed bevel carries the state and the tick
 carries it again as a SHAPE, which is docs/rules/PRODUCT.md's accessibility rule.
 
 The status codes are Fantrax's (`FA`, `WW`, `T`); anything we have not seen
-renders as the raw code rather than as a guess.
+renders as the raw code rather than as a guess. A chip prints the code the rows
+print in brackets, and `Owned` for `T` (Craig's word), which the rows never print;
+the word and the count are its title (`STATUS_CHIP` beside `STATUS`).
 
 ## Provenance, which is load-bearing here
 

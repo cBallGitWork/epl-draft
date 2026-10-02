@@ -44,7 +44,8 @@ export function Lead({
   return (
     <td className={className}>
       <Link href={href} className={`${ROW_LINK} ${LEAD_WIDTH}`}>
-        {/* The holder in brackets straight after the name (Craig, 24 Sep 2026), so the lead needs no room of its own. */}
+        {/* The holder in brackets after the name on a desk (Craig, 24 Sep 2026), and after the position under a thumb,
+            so line one is the name's alone (Craig, 1 Oct 2026: "needs more space for player name on mobile"). */}
         <LeadFace
           club={toFplClubCode(player.clubCode ?? "")}
           name={listName(player.rawName) || player.displayName}
@@ -52,10 +53,11 @@ export function Lead({
           positions={row.entry.eligiblePositions}
           after={
             <>
-              <Holder row={row} teamNames={teamNames} reader={reader} />
+              <Holder row={row} teamNames={teamNames} reader={reader} className="max-lg:hidden" />
               <StateBox player={footballer} />
             </>
           }
+          under={<Holder row={row} teamNames={teamNames} reader={reader} className="lg:hidden" />}
         />
       </Link>
     </td>
@@ -63,8 +65,18 @@ export function Lead({
 }
 
 /** Who holds him, in brackets: "Yours" in the accent, a rival quiet, and Fantrax's own code for a man anybody can
- *  claim (FA, WW), loud. */
-function Holder({ row, teamNames, reader }: { row: PoolRow; teamNames: Map<string, string>; reader: string | null }) {
+ *  claim (FA, WW), loud. `className` is the width it shows at. */
+function Holder({
+  row,
+  teamNames,
+  reader,
+  className,
+}: {
+  row: PoolRow;
+  teamNames: Map<string, string>;
+  reader: string | null;
+  className: string;
+}) {
   const owner = row.entry.ownerTeamId;
   const [text, ink] =
     owner !== null && owner === reader
@@ -76,7 +88,7 @@ function Holder({ row, teamNames, reader }: { row: PoolRow; teamNames: Map<strin
           : [null, ""];
   if (text === null) return null;
   return (
-    <span className={`min-w-0 truncate text-2xs ${ink}`} title={STATUS[text] ?? text}>
+    <span className={`min-w-0 truncate text-2xs ${ink} ${className}`} title={STATUS[text] ?? text}>
       ({text})
     </span>
   );

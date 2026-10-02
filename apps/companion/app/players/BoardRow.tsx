@@ -12,26 +12,28 @@ export const PIN_TILE = `hidden lg:table-cell ${PINNED_TILE}`;
 /** The lead stays put while the figures scroll under it, starting where the desk's tile ends. */
 export const PIN_NAME = `${PINNED_NAME} left-0 p-0 lg:left-14`;
 
-/** The lead's width, for its link. */
-export const LEAD_WIDTH = "w-34 px-1.5 lg:w-64";
+/** The lead's width, for its link: room for a "Surname, I" of fifteen letters under a thumb (Craig, 1 Oct 2026). */
+export const LEAD_WIDTH = "w-40 px-1.5 lg:w-64";
 
 /** One figure, centred under its head, a little tighter under a thumb. */
 export const FIGURE = `numeric px-1 text-center lg:px-1.5 ${ROW_FIGURE}`;
 
 /** His club's crest and his name, as a list sets it on a phone and in full on a desk, with `after` straight after
- *  it and his position under it on a phone. `club` is FPL's short name. */
+ *  it, and on a phone his position under it with `under` beside that. `club` is FPL's short name. */
 export function LeadFace({
   club,
   name,
   fullName,
   positions,
   after,
+  under,
 }: {
   club: string;
   name: string;
   fullName: string;
   positions: readonly string[];
   after?: ReactNode;
+  under?: ReactNode;
 }) {
   const crest = crestForShortName(club);
   return (
@@ -48,7 +50,10 @@ export function LeadFace({
           </span>
           {after}
         </span>
-        <span className={`${LABEL} text-2xs leading-tight lg:hidden`}>{positionsLabel(positions) ?? DASH}</span>
+        <span className="flex min-w-0 items-baseline gap-1 lg:hidden">
+          <span className={`${LABEL} shrink-0 leading-tight`}>{positionsLabel(positions) ?? DASH}</span>
+          {under}
+        </span>
       </span>
     </>
   );

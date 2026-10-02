@@ -15,6 +15,9 @@ import { PIN_NAME, PIN_TILE } from "./BoardRow";
 // The pool as one sortable board: every column, phone-first, each sort a link so the server orders and the URL keeps it.
 // The lead is pinned while the figures scroll (DESIGN §9); the desk adds CM's position tile down the left.
 
+/** The tile of a man nobody holds, green where a held man's is blue (DESIGN §3, `--color-index-free`). */
+const FREE_TILE = "[--cm-index:var(--color-index-free)]";
+
 export default function PlayerTable({
   rows,
   columns,
@@ -68,7 +71,11 @@ export default function PlayerTable({
             const wash = doubtRow(footballer);
             return (
             <tr key={row.entry.player.fantraxId} className={`${ROW_RULE} hover:bg-raised ${wash}`}>
-              <PositionTile positions={row.entry.eligiblePositions} cell className={PIN_TILE} />
+              <PositionTile
+                positions={row.entry.eligiblePositions}
+                cell
+                className={row.entry.ownerTeamId === null ? `${PIN_TILE} ${FREE_TILE}` : PIN_TILE}
+              />
               <Lead row={row} query={query} teamNames={teamNames} reader={reader} footballer={footballer} className={`${PIN_NAME} ${wash}`} />
               {figures.map((column) => (
                 <Cell

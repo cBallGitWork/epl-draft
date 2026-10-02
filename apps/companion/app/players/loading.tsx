@@ -14,16 +14,13 @@ export default function Loading() {
     <ScoutShell rows={POOL_ROWS}>
       {/* The real control row at the real sizes; the search box works from the first frame. */}
       <div className="flex flex-wrap items-center gap-1.5">
-        <form aria-busy action={POOL} className="flex min-w-0 flex-1 gap-1.5 lg:w-44 lg:flex-none xl:w-64">
+        <form aria-busy action={POOL} className="flex min-w-0 grow basis-26 lg:w-36 lg:flex-none">
           <input
             name="q"
             placeholder="Find a player"
             aria-label="Find a player"
-            className="cm-panel min-h-11 min-w-0 flex-1 px-3 text-base lg:min-h-9"
+            className="cm-panel min-h-11 min-w-0 flex-1 px-2 text-base lg:min-h-9 lg:px-3"
           />
-          <button type="submit" className={PRESSABLE}>
-            Find
-          </button>
         </form>
 
         {/* **Real plates with real labels, and deliberately not links.** The
@@ -43,7 +40,7 @@ export default function Loading() {
           </span>
         </div>
 
-        <span className={PRESSABLE} aria-hidden>
+        <span className={`ml-auto ${PRESSABLE}`} aria-hidden>
           Filter
         </span>
       </div>

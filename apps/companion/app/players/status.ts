@@ -16,3 +16,11 @@ export const STATUS: Record<string, string> = {
   WW: "Waivers",
   T: "Rostered",
 };
+
+/** A status as its chip on the board's row says it: the code the rows print in brackets, and Craig's word for the
+ *  one they never print. Anything else is its raw code. */
+export const STATUS_CHIP: Record<string, string> = {
+  FA: "FA",
+  WW: "WW",
+  T: "Owned",
+};

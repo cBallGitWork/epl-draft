@@ -1,20 +1,14 @@
 import Link from "next/link";
 import { POOL_GROUPS, type PoolGroupKey } from "./groups";
-import { boardHref, chosen } from "./query";
+import { boardHref, chosen, filterHref, isChosen } from "./query";
 import type { QueryOption } from "./QuerySelect";
 import type { PlayersQuery } from "./query";
+import { STATUS, STATUS_CHIP } from "./status";
 import { SMALL_CAPS } from "@/app/desk";
 
-// The pieces `BoardBar` arranges: the stat-group strip, the figure chips, the
-// badge that counts what is on, and the two shapes they are drawn in.
-//
-// Split out of `BoardBar.tsx` when the one-row layout took that file past
-// CODE_RULES §4's 300-line hard ceiling. The seam is the one the layout already
-// implies: `BoardBar` decides WHERE a control goes at a given width, and every
-// control here decides what it looks like and what it links to. That is also why
-// `Plates` and `Figures` are components rather than fragments inlined twice —
-// the row and the drawer render the same element, and a copy in each would be
-// two controls that can disagree.
+// The pieces `BoardBar` arranges: the stat-group strip, the status chips, the figure chip, the badge that counts
+// what is on, and the shapes they are drawn in. `BoardBar` decides where a control goes at a width; each here decides
+// what it looks like and links to, so the row and the sheet render one element rather than two that can disagree.
 
 /** Every field the board's URL can carry: a GET form posts only its own fields, so each renders the rest hidden
  *  (`Carried`) or using it clears the board. One list, because two had drifted and dropped `compare`. */
@@ -53,29 +47,11 @@ export function Carried({
   );
 }
 
-/** **The geometry every control on this row shares.**
- *
- *  Craig, 10 Sep 2026: *"clean up this ui, all buttons different sizes, we can CM
- *  this now"*. He is right and the count says how badly — five kinds of control
- *  sat on one row at four heights and three type sizes: the search field at 44px
- *  and `text-base` with no desk step at all, `SUBMIT` and `BUTTON` at
- *  `text-sm font-medium` in sentence case, the chips at `text-2xs font-bold
- *  uppercase`, and the blue plates at a third height again.
- *
- *  Championship Manager's chrome is uniform — every plate on a screen is the
- *  same object at the same size, which is most of why the game reads as one
- *  machine — and `desk.css` already puts the chrome FACE on all four plate
- *  classes. What it could not do is the geometry, because that is layout and
- *  belongs to the caller (`desk.ts` sets out exactly this split). So the row now
- *  has one recipe and the plates differ only in colour: grey for a thing you
- *  press, blue for a view you are on.
- *
- *  Local to `players/` rather than in `desk.ts`: five sites, all of them here,
- *  and the app-wide `BUTTON`/`SUBMIT`/`SELECT` recipes are shared by nine other
- *  screens that were not asked to change. Promoting it is the day a second board
- *  wants the same row. */
+/** The geometry every control on this row shares (Craig, 10 Sep 2026: *"all buttons different sizes, we can CM
+ *  this now"*): one recipe, the plates differing only in colour. Two pixels tighter a side under a thumb, so the
+ *  status chips, Filter and the search share a 390 phone's row. Local to `players/`, where all its sites are. */
 export const PLATE_TYPE =
-  `min-h-11 px-2.5 ${SMALL_CAPS} lg:min-h-9`;
+  `min-h-11 px-2 ${SMALL_CAPS} lg:min-h-9 lg:px-2.5`;
 
 /** The same, plus the layout a plate with CONTENT in it needs.
  *
@@ -86,16 +62,8 @@ export const PLATE_TYPE =
 export const PLATE =
   `flex shrink-0 items-center justify-center gap-1 whitespace-nowrap ${PLATE_TYPE}`;
 
-/** A plate you press, in its resting state — the grey bevel plus the geometry.
- *
- *  **Three sites, counted 10 Sep 2026**: the `Find` button, the `Filter` link
- *  and an unpressed `Chip`. `QuerySelect`'s `<noscript>` button is a fourth and
- *  differs only in having no hover, which is an oversight rather than a
- *  decision — a plate you can press should light under the pointer whether or
- *  not a script is running. Folded in.
- *
- *  The pressed state is deliberately NOT here: `cm-bevel-pressed` is a different
- *  plate with no hover, because a thing already held down does not lift. */
+/** A plate you press, at rest: the `Filter` link, an unpressed `Chip`, `QuerySelect`'s `<noscript>` button and the
+ *  pick field's. Not the pressed state: `cm-bevel-pressed` is a plate with no hover, because a held thing does not lift. */
 export const PRESSABLE = `cm-bevel hover:brightness-110 ${PLATE}`;
 
 /** Which columns are on the board: the one strip that stays blue, at the control floor (`cm-tab-quiet`). */
@@ -131,6 +99,36 @@ export function Plates({
   );
 }
 
+/** Who he belongs to, one chip per Fantrax status the pool carries: its code on the chip, its word and count in the
+ *  title. */
+export function Statuses({
+  query,
+  counted,
+  className,
+}: {
+  query: PlayersQuery;
+  counted: ReadonlyMap<string, number>;
+  /** Where the group shows: the row and the drawer each carry it at the widths the other does not. */
+  className: string;
+}) {
+  return (
+    <div role="group" aria-label="Status" className={`gap-1.5 ${className}`}>
+      {[...counted.entries()]
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([code, tally]) => (
+          <Chip
+            key={code}
+            on={isChosen(query, "status", code)}
+            href={filterHref(query, "status", code)}
+            title={`${STATUS[code] ?? code}: ${tally}`}
+          >
+            {STATUS_CHIP[code] ?? code}
+          </Chip>
+        ))}
+    </div>
+  );
+}
+
 /** How the figures read: one toggle, and it is the only one.
  *
  *  **The minutes floors came off on 10 Sep 2026** (Craig: *"per 90 is just a
@@ -159,22 +157,9 @@ export function Figures({
   );
 }
 
-/** How many of the board's settings are away from their default, counting only
- *  what this width cannot already see.
- *
- *  Two numbers rather than one, and the difference is the whole point of the
- *  badge: it exists so a SHUT DRAWER cannot hide a filtered board. Above `lg`
- *  the strip and the figure chips are on the row wearing their own pressed
- *  bevels, so counting them again would be the screen saying the same thing
- *  twice — and worse, saying "3" beside three controls a reader can already see
- *  are on.
- *
- *  The SORT is in neither: the table draws its own arrow on its own head, and a
- *  reader who ordered by goals has not filtered anything.
- *
- *  Both counts render, one hidden at each width, for the reason the strip does —
- *  a server component cannot know the viewport, and guessing is worse than
- *  drawing both and letting the cascade choose. */
+/** How many of the board's settings are away from their default, counting only what this width cannot already see:
+ *  it exists so a shut drawer cannot hide a filtered board. The sort is never counted; the table's head says it.
+ *  One count per step of the row, each hidden at the others, because a server component cannot know the viewport. */
 export function Count({
   query,
   group,
@@ -184,17 +169,14 @@ export function Count({
   group: PoolGroupKey;
   rated: boolean;
 }) {
-  const who =
-    chosen(query.status).length + chosen(query.pos).length + (query.club ? 1 : 0);
+  const status = chosen(query.status).length;
+  const who = chosen(query.pos).length + (query.club ? 1 : 0);
   const figures = rated ? 1 : 0;
   const columns = group === "all" ? 0 : 1;
-
-  // Three counts, one per step of the row above. Only one is ever visible, and
-  // each totals exactly what the drawer still holds at that width.
   return (
     <>
       <Tally at="lg:hidden" total={who + figures + columns} />
-      <Tally at="hidden lg:inline xl:hidden" total={who + figures} />
+      <Tally at="hidden lg:inline xl:hidden" total={status + who + figures} />
       <Tally at="hidden xl:inline" total={who} />
     </>
   );
@@ -219,14 +201,25 @@ function Tally({ at, total }: { at: string; total: number }) {
  *  `min-h-11 lg:min-h-9` is the CONTROL floor and not a row's: a filter is aimed
  *  at rather than read, and DESIGN §6 is explicit that a control never relaxes
  *  below its floor under a thumb. */
-export function Chip({ on, href, children }: { on: boolean; href: string; children: React.ReactNode }) {
+export function Chip({
+  on,
+  href,
+  title,
+  children,
+}: {
+  on: boolean;
+  href: string;
+  title?: string;
+  children: React.ReactNode;
+}) {
   return (
     <Link
       href={href}
       // A chip changes the view in place; the page must not jump to the top under the thumb.
       scroll={false}
       aria-pressed={on}
-      className={on ? `cm-bevel-pressed ${PLATE}` : PRESSABLE}
+      title={title}
+      className={`min-w-11 ${on ? `cm-bevel-pressed ${PLATE}` : PRESSABLE}`}
     >
       {/* `aria-hidden` because `aria-pressed` on the link already says it, and a
           screen reader announcing "tick DEF pressed" says it twice. */}
