@@ -15,9 +15,14 @@ export const ASSISTS_OFFICIAL: FantraxCategory = { code: "INDIVIDUAL_ASSISTS", s
 export const ASSISTS_FANTASY: FantraxCategory = { code: "INDIVIDUAL_ASSISTS_FANTASY", short: "AF", caption: "Assists (Fantasy)" };
 export const SAVES: FantraxCategory = { code: "INDIVIDUAL_SAVES", short: "Sv", caption: "Saves" };
 export const KEEPER_POINTS: FantraxCategory = { code: "INDIVIDUAL_KEEPER_POINTS", short: "GKP", caption: "Keeper Points" };
+export const DEFENSIVE_POINTS: FantraxCategory = { code: "INDIVIDUAL_DEFENSIVE_POINTS", short: "DFP", caption: "Defensive Points" };
+export const DEFENSIVE_POINTS_3: FantraxCategory = { code: "INDIVIDUAL_DEFENSIVE_POINTS_3", short: "DFP3", caption: "Defensive Points 3" };
 
 /** Where a league pays an assist, best first. AT is A plus AF (455 of 455 outfielders, 1 Oct 2026), so it is never added to them. */
 export const ASSIST = [ASSISTS_TOTAL, ASSISTS_OFFICIAL] as const;
+
+/** What pays DefCon: tackles won, interceptions and blocks; and those with clearances and recoveries. A league prices each at its own slots. */
+export const DEFCON = [DEFENSIVE_POINTS, DEFENSIVE_POINTS_3] as const;
 
 /** What pays a keeper for his work. GKP counts saves, smothers, punches and high claims won, so it is not Sv and both are kept. */
 export const KEEPER_WORK = [KEEPER_POINTS, SAVES] as const;
