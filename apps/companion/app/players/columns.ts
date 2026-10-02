@@ -120,7 +120,7 @@ function count(category: FantraxCategory, group: PoolGroup, mark: Mark = "high")
 
 /** The football BEHIND the figures — how many matches, and how many minutes.
  *
- *  Identical to `count` but for the one field that matters: these are never
+ *  Built as a `count` is, but for the one field that matters: these are never
  *  rated. Ninety minutes' worth of minutes is ninety, on every row, which is a
  *  tautology drawn as a column; and games per ninety minutes is the same fact as
  *  minutes per game, upside down. The board shipped for an hour with both going

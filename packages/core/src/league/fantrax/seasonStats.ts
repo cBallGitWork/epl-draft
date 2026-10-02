@@ -1,4 +1,5 @@
 import { numeric } from "./stats";
+import { GOALS_AGAINST, GOALS_AGAINST_OUTFIELD } from "../categoryNames";
 
 // `getStandings` with `view: "SEASON_STATS"` — every team's season totals, per
 // category, in one anonymous request.
@@ -64,11 +65,8 @@ function caption(table: RawStatTable): string {
 /** Goals against is one category under two names — `Goals Against` for the
  *  keeper, `Goals Against Outfielders` for everyone in front of him. Craig,
  *  1 Sep: "goals against is a def and keeper stat, so we can combine that." */
-const GOALS_AGAINST = "Goals Against";
-const GOALS_AGAINST_OUTFIELD = "Goals Against Outfielders";
-
 function normalise(name: string): string {
-  return name === GOALS_AGAINST_OUTFIELD ? GOALS_AGAINST : name;
+  return name === GOALS_AGAINST_OUTFIELD.caption ? GOALS_AGAINST.caption : name;
 }
 
 /** Every category in the payload, with both halves read and combined.

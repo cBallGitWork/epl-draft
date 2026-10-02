@@ -38,7 +38,7 @@ const entry = (category: FantraxCategory, group: GroupKey, lowIsGood?: true, lab
   key: category.short,
   group,
   label,
-  ...(lowIsGood ? { lowIsGood } : {}),
+  lowIsGood,
 });
 
 /** Ordered as a reader looks for them: his time on the pitch, then going forward, at the back, and what he did wrong. */

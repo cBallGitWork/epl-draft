@@ -151,6 +151,7 @@ export {
   GOALS_AGAINST_OUTFIELD,
   KEEPER_POINTS,
   KEEPER_WORK,
+  MINUTES,
   OWN_GOALS,
   PENALTIES_MISSED,
   PENALTY_SAVES,
@@ -190,4 +191,3 @@ export {
   fetchStandingsPage,
   fetchTeamRosters,
 } from "./fantrax/client";
-export { MINUTES } from "./categoryNames";

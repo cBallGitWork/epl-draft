@@ -26,6 +26,7 @@ export const DEFENSIVE_POINTS_3: FantraxCategory = { code: "INDIVIDUAL_DEFENSIVE
 export const CLEAN_SHEETS: FantraxCategory = { code: "INDIVIDUAL_SHUTOUTS_ON_FIELD", short: "CS", caption: "Clean Sheets On Field" };
 export const GOALS_AGAINST: FantraxCategory = { code: "INDIVIDUAL_GOALS_AGAINST", short: "GA", caption: "Goals Against" };
 export const GOALS_AGAINST_OUTFIELD: FantraxCategory = { code: "INDIVIDUAL_GOALS_AGAINST_OUTFIELDERS", short: "GAO", caption: "Goals Against Outfielders" };
+export const MINUTES: FantraxCategory = { code: "INDIVIDUAL_MINUTES_PLAYED", short: "Min", caption: "Minutes Played" };
 
 /** Where a league pays an assist, best first. AT is A plus AF (455 of 455 outfielders, 1 Oct 2026), so it is never added to them. */
 export const ASSIST = [ASSISTS_TOTAL, ASSISTS_OFFICIAL] as const;
@@ -60,6 +61,3 @@ export function idsOf(categories: Record<string, ScoringCategory>, wanted: reado
 export function carries(carried: ReadonlySet<string>, ...names: (string | undefined)[]): boolean {
   return carried.size === 0 || names.some((name) => name !== undefined && carried.has(name));
 }
-
-/** Minutes played: a count every league scores, and one a board may leave out. */
-export const MINUTES: FantraxCategory = { code: "INDIVIDUAL_MINUTES_PLAYED", short: "Min", caption: "Minutes Played" };

@@ -100,8 +100,7 @@ export function groupFor(key: string | undefined): GroupKey {
 
 /** A category the board ranks by: filed under Fantrax's caption, headed by its abbreviation, named in plain words. */
 export function statCategory(of: FantraxCategory, group: GroupKey, lowIsGood?: true, title = wordsFor(of).key): StatCategory {
-  const label = wordsFor(of).name;
-  return { key: of.caption, group, label, short: of.short, ...(title === label ? {} : { title }), ...(lowIsGood ? { lowIsGood } : {}) };
+  return { key: of.caption, group, label: wordsFor(of).name, short: of.short, title, lowIsGood };
 }
 
 /** Ordered as a reader would look for them: what a squad did going forward,
