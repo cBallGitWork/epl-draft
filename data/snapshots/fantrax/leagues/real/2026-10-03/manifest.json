@@ -1,0 +1,41 @@
+{
+  "capturedAt": "2026-10-03T05:30:20.459Z",
+  "leagueId": "mqsjd23smsgbiqzr",
+  "reads": [
+    {
+      "method": "getLeagueInfo",
+      "ok": true,
+      "bytes": 112843
+    },
+    {
+      "method": "getTeamRosters",
+      "ok": true,
+      "bytes": 1201
+    },
+    {
+      "method": "getStandings",
+      "ok": true,
+      "bytes": 1828
+    },
+    {
+      "method": "getDraftResults",
+      "ok": true,
+      "bytes": 19659
+    },
+    {
+      "method": "getTransactionDetailsHistory-CLAIM_DROP",
+      "ok": true,
+      "bytes": 4787
+    },
+    {
+      "method": "getTransactionDetailsHistory-TRADE",
+      "ok": true,
+      "bytes": 13759
+    },
+    {
+      "method": "getTransactionDetailsHistory-LINEUP_CHANGE",
+      "ok": true,
+      "bytes": 4805
+    }
+  ]
+}
