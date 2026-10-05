@@ -20,23 +20,6 @@ import { type Club, initials, shirtUrl } from "@epl/core";
 // That is `crestForShortName`'s own rule — return nothing rather than something
 // that merely looks like an answer.
 
-/** The shape of the kit on the grass: the shape of the file it comes from.
- *
- *  FPL ships its shirts at 110x145 and `PitchRows.MAX_CARD` is 110px, so at its
- *  widest a card IS the kit at native size — nothing upscaled, nothing cropped.
- *
- *  **Set on this component's own root, not left to the caller.** `.pitch-figure`
- *  reads `--pitch-figure` and falls back to `1.32` — a LANDSCAPE box — so a
- *  caller that forgot to declare the shape letterboxed a portrait kit inside a
- *  wide one and drew it at 63px in a 110px card. `PitchMarker` did exactly that
- *  for one commit. The variable is set on the same element that reads it, which
- *  is legal and is the only arrangement in which no caller can get it wrong.
- *
- *  **No longer exported.** It was, so that the planner's unresolved slot could
- *  draw a dashed box of the same shape with no kit in it; that card went on
- *  21 Sep 2026 and `PitchMarker` draws its own empty slot, so the last reader
- *  outside this file went with it. A hole of the wrong shape in a row is still
- *  the defect the whole file is bounded by — it is just bounded here now. */
 /** How much of the kit is drawn, measured off the files rather than judged.
  *
  *  **The kit is LONG** (Craig, 10 Sep 2026: *"our shirts seem a little long"*),
@@ -79,7 +62,9 @@ const JERSEY = 193 / 284;
  *  named. */
 const CARD = JERSEY / KEPT;
 
-const KIT_RATIO = { "--pitch-figure": String(CARD) } as CSSProperties;
+/** The kit's shape, for `.pitch-figure` on the element that reads it: the class falls back to a landscape 1.32 and
+ *  letterboxes a kit. Exported for the planner's empty box, which stands beside the kits. */
+export const KIT_RATIO = { "--pitch-figure": String(CARD) } as CSSProperties;
 
 export default function PlayerShirt({
   club,
