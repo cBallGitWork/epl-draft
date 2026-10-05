@@ -1,6 +1,6 @@
 import ScrollBoard from "../../../components/league/ScrollBoard";
 import type { FootballPlayer } from "@epl/core";
-import { availabilityOf, positionDepth, DASH } from "@epl/core";
+import { availabilityOf, byPositionDepth, positionDepth, DASH } from "@epl/core";
 import { Head, HeadRow, NameHead, PLATE } from "../../../components/league/TableHeads";
 import PositionTile, { TILE_WIDTH } from "../../../components/league/PositionTile";
 import StateBox from "../../../components/football/StateBox";
@@ -132,9 +132,7 @@ function owner(opinion: LeagueOpinion | undefined): string | null {
  *  A man our league has no opinion about sorts after everybody it does, which is
  *  what `positionDepth` does with a letter it has never seen. */
 export function fantasyDepth(opinion: LeagueOpinion | undefined): number {
-  const first = [...(opinion?.positions ?? [])].sort(
-    (a, b) => positionDepth(a) - positionDepth(b),
-  )[0];
+  const first = [...(opinion?.positions ?? [])].sort(byPositionDepth)[0];
   return first === undefined ? Number.MAX_SAFE_INTEGER : positionDepth(first);
 }
 

@@ -1,3 +1,5 @@
+import { byPositionDepth } from "@epl/core";
+
 // Fantrax's position letters, in the words a manager says them in.
 //
 // `getLeagueInfo` publishes the vocabulary as single letters — `G`, `D`, `M`,
@@ -44,37 +46,16 @@ export function positionsFromList(positions: string | null | undefined): string[
   return positions.split(",").map((p) => p.trim());
 }
 
-/** Several eligible positions as one label: `MID` alone, `M/F` for two.
- *
- *  Fantrax lets a man hold more than one and 48 of 607 in this pool do. Which of
- *  them he is *scored* at is his manager's choice and lives on the roster slot,
- *  never here — this only says what he is allowed to be.
- *
- *  **One position spells out, two abbreviate** (Craig, 2 Sep: "if a player has
- *  two positions, make it M/F for space, then make the column shorter"). The
- *  reason is width and the reference backs it: `cm9900/12.jpg` sets a single
- *  position as `D C` and a double as `D/DM RC` — the game gets terser as a man
- *  gets more versatile, because the column is fixed and the string is not.
- *  `MID/FWD` at seven characters set the whole column's width for the eleven
- *  players in twelve who need three. */
-/** Back to front, which is the order every football list uses and the order the
- *  squad list itself is in. Fantrax sends eligibility in its own order — `"F,M"`
- *  for Saka — and printing that verbatim gave `F/M` where the man is a midfielder
- *  who can play up front (Craig, 2 Sep: "if a f/m, put M first").
- *
- *  A letter this table has never seen sorts last rather than being dropped, on
- *  `positionLabel`'s rule: an unknown position is still a position. */
-const DEPTH: Record<string, number> = { G: 0, D: 1, M: 2, F: 3 };
-
-/** Fantrax's letters back to front, blanks dropped — the order the tile and the card both print. */
+/** Fantrax's letters back to front, blanks dropped: Saka arrives as "F,M" and prints M/F (Craig, 2 Sep). */
 export function backToFront(positions: readonly string[]): string[] {
-  return [...positions].filter((p) => p).sort((a, b) => (DEPTH[a] ?? 99) - (DEPTH[b] ?? 99));
+  return positions.filter((p) => p).sort(byPositionDepth);
 }
 
+/** Several eligible positions as one label: `MID` alone, `M/F` for two (Craig, 2 Sep: "make it M/F for space"). */
 export function positionsLabel(positions: readonly string[]): string | null {
   const kept = backToFront(positions);
   if (kept.length === 0) return null;
-  if (kept.length === 1) return positionLabel(kept[0]) ?? null;
+  if (kept.length === 1) return leaguePositionLabel(kept[0]);
   // Fantrax's own letters, joined — which is what the short form IS.
   return kept.join("/");
 }

@@ -1,4 +1,4 @@
-import { isGoalkeeper, positionDepth } from "../../join/lineup";
+import { byPositionDepth, isGoalkeeper } from "../../join/lineup";
 import type { Formation } from "../../league/formations";
 
 // The best eleven nobody in the league has, in a shape the league allows, and the bench of men who
@@ -62,7 +62,7 @@ export function binXi(
   let best: { shape: Formation; xi: BinMan[]; rank: number; points: number } | null = null;
   for (const shape of shapes) {
     const xi = Object.keys(shape)
-      .sort((a, b) => positionDepth(a) - positionDepth(b))
+      .sort(byPositionDepth)
       .flatMap((position) => starters.filter((man) => man.position === position).slice(0, shape[position]));
     if (xi.length !== Object.values(shape).reduce((sum, count) => sum + count, 0)) continue;
     const ranked = xi.reduce((sum, man) => sum + rank(man), 0);
@@ -77,7 +77,7 @@ export function binXi(
     .sort((a, b) => owed(b, worth) - owed(a, worth) || involvement(b) - involvement(a) || a.name.localeCompare(b.name))
     .slice(0, reserves ?? 0);
 
-  const outfield = Object.keys(best.shape).filter((position) => !isGoalkeeper(position)).sort((a, b) => positionDepth(a) - positionDepth(b));
+  const outfield = Object.keys(best.shape).filter((position) => !isGoalkeeper(position)).sort(byPositionDepth);
   return { shape: outfield.map((position) => best.shape[position]).join("-"), xi: best.xi, bench, total: best.points };
 }
 

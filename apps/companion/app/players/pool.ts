@@ -14,7 +14,7 @@ import {
   fplCodeOf,
   onTheBooks,
   playerByCode,
-  positionDepth,
+  byPositionDepth,
 } from "@epl/core";
 import type { PoolStatRow, PoolPlayer, StatSeason } from "@epl/core";
 import { footballNow } from "../football";
@@ -157,9 +157,7 @@ async function readLeaguePool(): Promise<CachedPool> {
         fplCode: fplCodeOf(bridge, entry.player.fantraxId),
       };
     }),
-    positions: Object.keys(league.roster.maxActiveByPosition).sort(
-      (a, b) => positionDepth(a) - positionDepth(b),
-    ),
+    positions: Object.keys(league.roster.maxActiveByPosition).sort(byPositionDepth),
     teamNames: held.teams.map((team) => [team.teamId, team.teamName]),
     season: scored?.season ?? null,
     missing: Math.max(0, (scored?.total ?? 0) - (scored?.rows.length ?? 0)),

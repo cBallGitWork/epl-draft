@@ -1,5 +1,5 @@
 import type { Move } from "@epl/core";
-import { positionDepth } from "@epl/core";
+import { byPositionDepth } from "@epl/core";
 import type { PitchRow } from "./PitchRows";
 
 // The free places on the pitch a picked man can move into with nobody coming off.
@@ -17,7 +17,6 @@ export function withOpenings<T>(rows: readonly PitchRow<T>[], openings: readonly
     players: [...row.players, ...openings.filter((position) => position === row.label)],
   }));
   const fresh = openings.filter((position) => !rows.some((row) => row.label === position));
-  return [...lines, ...fresh.map((position) => ({ label: position, players: [position] }))].sort(
-    (a, b) => positionDepth(a.label) - positionDepth(b.label),
-  );
+  const all = [...lines, ...fresh.map((position) => ({ label: position, players: [position] }))];
+  return all.sort((a, b) => byPositionDepth(a.label, b.label));
 }

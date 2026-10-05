@@ -1,4 +1,4 @@
-import { positionDepth } from "../join/lineup";
+import { byPositionDepth } from "../join/lineup";
 import { isResolved } from "../join/roster";
 import type { RosteredPlayer, RosteredTeam } from "../join/roster";
 import type { PlayerMatchStats } from "../football/types";
@@ -131,7 +131,7 @@ function total(stats: readonly PlayerMatchStats[], pick: (stat: PlayerMatchStats
  *  has no line there, and a shape reading "1-4-0-5" is not one anybody says. */
 function linesOf(picks: readonly Pick[], limits: RosterLimits): TeamLine[] {
   return Object.keys(limits.maxActiveByPosition)
-    .sort((a, b) => positionDepth(a) - positionDepth(b))
+    .sort(byPositionDepth)
     .map((position) => ({ position, picks: picks.filter((pick) => pick.position === position) }))
     .filter((line) => line.picks.length > 0);
 }

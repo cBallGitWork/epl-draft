@@ -1,4 +1,4 @@
-import { clubById, isGoalkeeper, playerByCode, positionDepth, surname, type FootballSnapshot, type PublishedStory } from "@epl/core";
+import { byPositionDepth, clubById, isGoalkeeper, playerByCode, surname, type FootballSnapshot, type PublishedStory } from "@epl/core";
 import PitchMarker from "../league/PitchMarker";
 import PitchRows from "../league/PitchRows";
 
@@ -13,7 +13,7 @@ export default function BinXi({ story, snapshot }: { story: PublishedStory; snap
   const players = snapshot === null ? new Map() : playerByCode(snapshot);
   const clubs = snapshot === null ? new Map() : clubById(snapshot);
   const rows = [...new Set(bin.xi.map((man) => man.slot))]
-    .sort((a, b) => positionDepth(a) - positionDepth(b))
+    .sort(byPositionDepth)
     .map((slot) => ({ label: slot, players: bin.xi.filter((man) => man.slot === slot) }));
 
   return (
