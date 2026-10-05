@@ -42,9 +42,8 @@ export function usePlanner(
   // Two ways in, and they are different questions, reached by the same target on
   // the first and second tap. `picked` is the quick swap: one tap chooses a man,
   // and the pitch answers "who can come off for him" by dimming everyone who
-  // cannot. `opened` is the full list for one player, which is the only place a
-  // move with no second player — off to the bench, across to another position —
-  // can be offered.
+  // cannot, and "where is free" with an empty box. `opened` is the full list for
+  // one player.
   // Opens on the PITCH, which is the one thing this screen is for — `Sheet`
   // opens on the list because a rival's squad is a list of who he has, and this
   // is the arrangement you came to change.

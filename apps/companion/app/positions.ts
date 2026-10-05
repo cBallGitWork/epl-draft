@@ -35,6 +35,9 @@ export function positionLabel(position: string | null | undefined): string | nul
   return SHORT[position] ?? position;
 }
 
+/** A letter the league itself publishes, as a manager says it: never null, because the league named it. */
+export const leaguePositionLabel = (position: string): string => positionLabel(position) ?? position;
+
 /** Fantrax's comma-joined spelling of a man's positions (`"M,F"`) as the array everywhere else holds. */
 export function positionsFromList(positions: string | null | undefined): string[] {
   if (!positions) return [];

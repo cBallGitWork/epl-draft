@@ -8,7 +8,7 @@ import ProjectionBoard, { projectionHeads } from "./ProjectionBoard";
 import { Carried, Chip, clubOptions } from "../BoardControls";
 import { PAGE_ROWS, boardHref, chosen, filterHref, isChosen, playersQuery, type PlayersSearchParams } from "../query";
 import { getLeaguePool } from "../pool";
-import { positionLabel } from "../../positions";
+import { leaguePositionLabel } from "../../positions";
 import { footballNow, seasonFixtures } from "../../football";
 import { intelLeagueProjections } from "../../intel";
 import { PROJECTIONS } from "../routes";
@@ -81,7 +81,7 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
         </Chip>
         {leaguePositions.map((position) => (
           <Chip key={position} on={isChosen(query, "pos", position)} href={filterHref(query, "pos", position, PROJECTIONS)}>
-            {positionLabel(position) ?? position}
+            {leaguePositionLabel(position)}
           </Chip>
         ))}
       </div>

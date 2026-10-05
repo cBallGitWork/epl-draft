@@ -6,7 +6,7 @@ import SquadMarker from "./SquadMarker";
 import type { PitchRow } from "./PitchRows";
 import PitchRows, { widestLine } from "./PitchRows";
 import { withOpenings } from "./openings";
-import { positionLabel } from "../../positions";
+import { leaguePositionLabel } from "../../positions";
 
 // The XI on the grass and the bench under it, one target per player: tap him to
 // pick him, tap him again for everywhere else he can go.
@@ -79,7 +79,7 @@ function Player({
 
 /** A free place in a line the picked man can move into; a tap puts him there. */
 function Opening({ position, onPlace }: { position: string; onPlace: () => void }) {
-  const label = positionLabel(position) ?? position;
+  const label = leaguePositionLabel(position);
   return (
     <button type="button" onClick={onPlace} aria-label={`Move to ${label}`} className="block w-full px-1 pt-0.5">
       <EmptySlot label={label} />
