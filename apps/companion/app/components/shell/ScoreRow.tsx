@@ -57,7 +57,7 @@ export interface ScoreSide {
    *  short form, which is every Fantrax manager. */
   short?: string;
   /** A club's crest, beside the name. Undefined draws nothing: a Fantrax team has none. */
-  badge?: string;
+  crest?: string;
   /** Where he stands in his own competition — the ordinal that goes in CM's blue
    *  block. Null or undefined for a side with no position: a placeholder in a
    *  cup draw, or a club in a table nobody has played a game in. */
@@ -73,7 +73,7 @@ export interface ScoreSide {
 }
 
 /** The crest beside the name, 20px under a thumb and 26 on the desk; fetched at the larger so it is never soft. */
-const BADGE_PX = 26;
+const CREST_PX = 26;
 
 export default function ScoreRow({
   home,
@@ -235,12 +235,12 @@ function Name({ side, at }: { side: ScoreSide; at: "home" | "away" }) {
         side.mine === true ? "text-accent" : side.lost === true ? "text-muted" : "text-ink"
       }`}
     >
-      {side.badge === undefined ? null : (
+      {side.crest === undefined ? null : (
         <Image
-          src={side.badge}
+          src={side.crest}
           alt=""
-          width={BADGE_PX}
-          height={BADGE_PX}
+          width={CREST_PX}
+          height={CREST_PX}
           className="h-5 w-5 shrink-0 object-contain lg:h-[1.625rem] lg:w-[1.625rem]"
         />
       )}
