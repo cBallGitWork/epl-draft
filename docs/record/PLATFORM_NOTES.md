@@ -492,6 +492,37 @@ draft, and 15/11/5.
   (`DYNAMIC_SERVER_USAGE`). Production names the league when it builds; build with it set before shooting an
   article locally.
 
+## Lawro writes his season predictions once, from the draft, every call by code — decided 5 Oct 2026
+
+Craig, 5 Oct: *"can lawrenson do a season predictions based off the draft results?"*
+
+- **When**: `season-predictions`, keyed `season-predictions:gw{first}`, is due from the end of the draft
+  (`getDraftResults` reads `completed`, so `pedigree` is not empty) until the first head-to-head period locks
+  (`seasonOpening`). It touches no other assignment, so the weekly column keeps its Thursday. CI files it on the
+  first editions firing that finds it due, which for the real league is the first after the swap on 7 Oct.
+- **Every call is code's** (`gazette/season/`). Each squad's best eleven every period, in a shape the league allows
+  (`formations` off `getLeagueInfo` and the recorded minimums; a man at any slot he is eligible for, priced at that
+  slot by the draft pack), then the schedule as `getLeagueInfo` has it, the GW34 double header counting one period
+  score twice, 10,000 times off a fixed seed. The table is mean place, ordered by the league's rule each time
+  (`placeTable`: wins, then fantasy points for; two drawn totals are never equal, so what a win pays does not
+  change the order). The title is first, the regular season's prize. Fantrax's playoff places split at the
+  league's own lines (`tableLines`, #257, `playoffCut`): 1st to 3rd straight in, 4th and 5th playing in, 6th the
+  first out. The spoon is last. The knockout itself is not played: the column calls the table, not the bracket.
+- **The spread**: the sister model's band is a 5th-95th percentile, so one deviation is (high - points) / 1.645 of
+  a man's mean, applied to his league-priced mean. Independent men gave a side a weekly swing of about a seventh of
+  its mean, where draft sides swing by a third, so any two men of one eleven share a correlation of 0.5
+  (`SEASON_PREDICTIONS.together`; the second-team review's fantasy specialist). Past the pack's window (GW17) a
+  man's gameweek is his average inside it, and squads are frozen as drafted: no waivers, no trades.
+- **Per side, in words**: the man it is built round (its first pick), and its weak spot: that man, or its best,
+  when out or no better than an even chance, else the slot its elevens rank lowest at against the other nine.
+  The lines alternate which they open on. The bold call is the side holding the first pick missing the playoffs,
+  else the best man taken in the draft's second half and how many of the first men taken he outscores.
+- **The editor** (`checkSeason`) runs his weekly rules (`lawroProse`, `columnRules`) over every section, then
+  the season's own: a place written beside one side must be the desk's (hard), each paragraph names the sides it
+  is about and only those, a side's line names no other side and no other squad's man (hard), no FPL, simulation
+  or draft round, British spelling, two sentences a line, and no two lines opening alike. The desk assembles the
+  table in its own order, so the model never orders it.
+
 ## Which categories a league scores is data too: A, AF and Sv became AT and GKP — probed 1 Oct 2026
 
 The commissioner rebuilt the real league's scoring in pre-season. Public `getLeagueInfo` (no cookie), 14:20Z:

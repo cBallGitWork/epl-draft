@@ -4,6 +4,7 @@ import type { DeskContext } from "./dispatch";
 import { dodgersDesk } from "./dodgers";
 import type { DeskFacts } from "./facts";
 import { predictionsDesk } from "./predictions";
+import { seasonDesk } from "./season";
 import { draftsDesk } from "./drafts";
 import { reportsDesk } from "./reports";
 import { sheetsDesk } from "./sheets";
@@ -45,6 +46,8 @@ export async function deskContext(input: {
     period,
     // Lawro's reads are his own and made only when his column is due.
     predictions: await predictionsDesk({ assignments, info, snapshot, season, kickoffs, table: facts.table, business: facts.business, say }),
+    // His season column's reads too: every squad as drafted, played out over the schedule.
+    season: await seasonDesk({ assignments, info, snapshot, kickoffs, pedigree: facts.pedigree, say }),
     // The team sheets' reads are their own too, and every earlier period's rosters are among them.
     sheets: await sheetsDesk({ assignments, info, snapshot, facts, period, gameweeks, season, clubs, now, say }),
     // A match-day report's reads are its own, made only when one is assigned.

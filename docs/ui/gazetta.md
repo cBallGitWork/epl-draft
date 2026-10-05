@@ -353,6 +353,11 @@ the right. Each tie is a bold heading, then his words with the first man they
 name pictured beside them (`Face` at its `tie` rank, a 6rem square floated so the prose wraps), then
 "Lawro's prediction".
 
+**Lawro's season predictions** (`season-predictions`) file once, between the end of the draft and the season's
+first lock, under the desk's headline "Lawro's Season Predictions" and the same banner. His paragraphs come first
+(the opening, the title, the playoffs and the play-in, the wooden spoon, the bold call), then the predicted table through
+`Ranks`: the place, the side, his line, and no movement mark, since a preview has no last time.
+
 **The round-report was deleted on 3 Sep 2026.** It was the preview's twin — one
 article filed once the football stopped, about the whole round — and Craig's
 ruling killed it: *"the back page is a league summary, dont do that, not the

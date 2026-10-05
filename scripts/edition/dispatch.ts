@@ -17,6 +17,7 @@ import { presserEdition } from "./presserWeek";
 import { faceOf, type FaceContext } from "./faces";
 import type { DeskFacts } from "./facts";
 import type { PredictionsDesk } from "./predictions";
+import type { SeasonDesk } from "./season";
 import type { SheetsDesk } from "./sheets";
 import { storyOfColumn } from "./newsroom";
 import { COLUMNIST, STORY_BYLINE, editionName } from "./voice/bylines";
@@ -43,6 +44,8 @@ export interface DeskContext {
   period: number;
   /** The round ahead as Lawro may know it; null unless his column is due this firing. */
   predictions: PredictionsDesk | null;
+  /** The season as drafted and played out; null unless his season column is due this firing. */
+  season: SeasonDesk | null;
   /** The locked sheets, their history and their brief; null unless team news is due this firing. */
   sheets: SheetsDesk | null;
   /** Each match-day report this firing commissioned, by its London day. */

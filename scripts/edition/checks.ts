@@ -23,6 +23,7 @@ export const CARGO: Partial<Record<Assignment["kind"], "ranks" | "quiz" | "teamN
   "match-report": "reports",
   "draft-report": "draft",
   "power-ranking": "ranks",
+  "season-predictions": "ranks",
   // The Team Sheet IS its rows — the body is an introduction to them. One that
   // files without them is two sentences about a thread that is not there.
   presser: "teamNews",

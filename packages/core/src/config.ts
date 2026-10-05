@@ -365,6 +365,22 @@ export const PREDICTIONS = {
   factsPerTie: 11,
 } as const;
 
+/** Lawro's season predictions (Craig, 5 Oct 2026): the season played out from the draft, once, before the first lock. */
+export const SEASON_PREDICTIONS = {
+  /** Playings of the season, and the seed that makes them the same every time. */
+  runs: 10_000,
+  seed: 2026,
+  /** The sister model's band is a 5th-to-95th percentile: its half-width is this many deviations. */
+  band: 1.645,
+  /** The correlation between any two men of one eleven in one period: a clean sheet lifts a back line, a rout a
+   *  front line. Taken as independent, a side swung by a seventh of its mean, where draft sides swing by a third. */
+  together: 0.5,
+  /** A chaser is close when he finishes there at least this share as often as the side ahead of him. */
+  close: 0.6,
+  /** A side is clear at the top when the next is at least this many places behind it on average. */
+  clear: 1,
+} as const;
+
 /** The draft match-up desk's talking points (Craig, 29 Sep 2026). */
 export const DRAFT_DESK = {
   /** A man off before this many minutes, with his match done; and the hour a clean sheet needs. */
