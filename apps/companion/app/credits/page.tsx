@@ -2,6 +2,7 @@ import { clubGround, groundPhotoCredits } from "@epl/core";
 import PageHeader from "../components/shell/PageHeader";
 import { LABEL, PANEL, ROW_RULE } from "@/app/desk";
 import { COLUMNISTS, DESK_GROUND_CREDIT } from "../config";
+import { venueCredits } from "../venues";
 
 // Who took the photographs behind the desk.
 //
@@ -22,11 +23,12 @@ import { COLUMNISTS, DESK_GROUND_CREDIT } from "../config";
 const CREDIT_LINK = "flex min-h-11 items-center text-xs underline lg:min-h-9";
 
 export default function CreditsPage() {
-  // The desk's own ground first, then each club's, under the name of the place it shows.
+  // The desk's own ground first, then each team's home, then each club's, under the name of the place it shows.
   const credits = [
     ...(DESK_GROUND_CREDIT === null
       ? []
       : [{ place: "Anfield, behind every desk screen", photo: DESK_GROUND_CREDIT }]),
+    ...venueCredits().map(({ place, ...photo }) => ({ place, photo })),
     ...groundPhotoCredits().map(({ shortName, photo }) => ({
       place: clubGround(shortName) ?? shortName,
       photo,
@@ -43,9 +45,9 @@ export default function CreditsPage() {
       />
       <section className={PANEL}>
         <p className="text-sm text-muted">
-          The photographs behind the desk, behind each club&rsquo;s screens and beside
-          Lawro&rsquo;s column are somebody else&rsquo;s work, used under the licence named
-          beside each. Crests, kits and player portraits are the Premier League&rsquo;s own.
+          The photographs behind the desk, behind each club&rsquo;s screens, behind each
+          team&rsquo;s home head-to-heads and beside Lawro&rsquo;s column are somebody else&rsquo;s
+          work, used under the licence named beside each. Crests, kits and player portraits are the Premier League&rsquo;s own.
         </p>
         <ul className="flex flex-col">
           {credits.map(({ place, photo }) => (

@@ -58,10 +58,10 @@ we can ask later is limited by what we kept.
 `leagues/venues.json` gives each team in the real league a home ground, keyed by its Fantrax team
 id (`team` is a label for people; nothing reads it). It is written by hand and read by the app
 (`apps/companion/app/venues.ts`), so a change to it redeploys. A head-to-head is drawn over the
-home side's venue, home being the side Fantrax's schedule lists as home. Every entry points at the
-desk's own photograph, `/ground/crowd.jpg`, until a real one lands, and a team the file does not
-list gets the same. The real league had nine teams on 1 Oct; a team that joins later needs a line,
-and its id is in `getLeagueInfo`'s teams.
+home side's venue, home being the side Fantrax's schedule lists as home. A team with no photograph
+of its own points at the desk's, `/ground/crowd.jpg`, and a team the file does not list gets the
+same. The real league has ten teams, all listed; a team that joins later needs a line, and its id
+is in `getLeagueInfo`'s teams.
 
 To give a team its own ground:
 
@@ -71,5 +71,6 @@ To give a team its own ground:
 3. Optionally add `"blur"`, the same picture 16px wide as a `data:image/jpeg;base64,…` URL
    (`sips -Z 16 <file>.jpg --out /tmp/b.jpg && base64 -i /tmp/b.jpg` on a Mac). It paints while the
    photograph loads; without it the screen is dark for that moment.
-4. A photograph that is not your own needs its credit on `/credits` (author, licence, source), as
-   every ground there has: add it in `apps/companion/app/credits/page.tsx`.
+4. Give it a `credit`: `place` (what `/credits` calls it), and the Commons file's `title`, `author`,
+   `licence`, `licenceUrl` and `source`. `/credits` prints it, and a test fails a picture under
+   `ground/venues/` without one. A public-domain file's `licenceUrl` is the CC public domain mark.
