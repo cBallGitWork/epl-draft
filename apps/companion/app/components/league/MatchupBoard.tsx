@@ -7,7 +7,6 @@ import {
   inkOn,
   teamColours,
 } from "@epl/core";
-import TeamBadge from "./TeamBadge";
 import TabStrip, { type Tab } from "../shell/TabStrip";
 
 // The head-to-head at full size: both totals side by side, and one manager's
@@ -41,10 +40,6 @@ export interface MatchupSide {
   team: LeagueTeam;
   /** Fantrax's own total, or undefined when they had none for this team. */
   score: LiveTeamScore | undefined;
-  /** His badge's URL, or undefined for a manager who picked none. A single URL
-   *  and not the league's map: this crosses to the browser, and the other
-   *  fourteen badges are not this board's business. */
-  badge: string | undefined;
   mine: boolean;
   /** His eleven on the grass with his reserves under it — **the one view that
    *  belongs to a side**, and the only reason the two halves above are a control
@@ -182,25 +177,14 @@ function Side({
       }`}
       style={{ background: colours.primary }}
     >
-      <span className="flex min-w-0 flex-1 items-center gap-2 px-2">
-        {/* **The badge stands down under a thumb**, measured: at 390 the plate is
-            about 145px, and a badge plus a `w-14` score box left the name some
-            55 — both sides rendered as "TE…", which is worse than no name at
-            all. The plate's own colour is the identity at that width, which is
-            the whole reason the reference gives each side its club's colour;
-            the badge comes back where there is room for both. */}
-        <span className="hidden lg:flex">
-          <TeamBadge team={side.team} url={side.badge} />
-        </span>
-        {/* Accent ink is unavailable on a colour plate, so "yours" is the edge
-            and the position — `mine.ts`'s own mark, and why it exists as a
-            border as well as an ink. */}
-        <span
-          className="cm-title min-w-0 flex-1 truncate text-left font-chrome text-base font-bold uppercase lg:text-2xl"
-          style={{ color: ink }}
-        >
-          {side.team.name}
-        </span>
+      {/* Accent ink is unavailable on a colour plate, so "yours" is the edge
+          and the position — `mine.ts`'s own mark, and why it exists as a
+          border as well as an ink. */}
+      <span
+        className="cm-title min-w-0 flex-1 truncate px-2 text-left font-chrome text-base font-bold uppercase lg:text-2xl"
+        style={{ color: ink }}
+      >
+        {side.team.name}
       </span>
 
       <span className="cm-bevel numeric flex min-h-16 w-14 shrink-0 items-center justify-center text-xl font-bold lg:min-h-20 lg:w-24 lg:text-4xl">

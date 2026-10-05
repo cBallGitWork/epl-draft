@@ -28,6 +28,7 @@ export type StoryKind =
   | "tie-call"
   | "tie-report"
   | "predictions"
+  | "season-predictions"
   | "eleven"
   | "power-ranking"
   | "wire"
@@ -43,7 +44,7 @@ export type StoryKind =
  *  fails silently, with a green typecheck and a green build. */
 export const STORY_KINDS: readonly StoryKind[] = [
   "match-report", "draft-report", "fixture-preview",
-  "tie-call", "tie-report", "predictions", "eleven", "power-ranking",
+  "tie-call", "tie-report", "predictions", "season-predictions", "eleven", "power-ranking",
   "wire", "dodgers", "presser", "predicted-xi", "sheets", "news", "bin-xi",
 ];
 

@@ -52,19 +52,17 @@ import { matchupHref } from "@/app/league/routes";
 /** One head-to-head in our league — or a cup tie, which is why it takes a
  *  `CompetitionTie` rather than the pairing Fantrax hands over.
  *
- *  A side nobody has been drawn into yet has no badge, no id and no link; its
+ *  A side nobody has been drawn into yet has no id and no link; its
  *  label is printed as the name, which is what `TieSide` is for. */
 function DraftRow({
   tie,
   scores,
-  badges,
   places,
   mine,
   gameweek,
 }: {
   tie: CompetitionTie;
   scores: Map<string, LiveTeamScore>;
-  badges: Map<string, string>;
   /** Where each manager stands in our own table, by team id — CM's blue block
    *  (`cm9900/24.jpg`, whose index cell is `1st`, `2nd`, `3rd`), placed by the
    *  league's rule in `placeTable`. */
@@ -86,8 +84,8 @@ function DraftRow({
 
   return (
     <ScoreRow
-      home={side(tie, "home", badges, places, mine)}
-      away={side(tie, "away", badges, places, mine)}
+      home={side(tie, "home", places, mine)}
+      away={side(tie, "away", places, mine)}
       // A fantasy total is a number Fantrax either has or has not; there is no
       // "not kicked off yet" for it, and `ScoreFigure`'s dash is the answer when
       // it is missing. So the score is never null here and no `pending` is
@@ -107,7 +105,6 @@ function DraftRow({
 export function Scores({
   ties,
   scores,
-  badges,
   places,
   clubPlaces,
   mine,
@@ -118,7 +115,6 @@ export function Scores({
 }: {
   ties: readonly CompetitionTie[];
   scores: Map<string, LiveTeamScore>;
-  badges: Map<string, string>;
   /** Our league's table, by team id. */
   places: Map<string, number>;
   /** The real one, by club id. */
@@ -171,7 +167,6 @@ export function Scores({
                 <DraftRow
                   tie={tie}
                   scores={scores}
-                  badges={badges}
                   places={places}
                   mine={mine}
                   gameweek={gameweek}
@@ -187,19 +182,12 @@ export function Scores({
 }
 
 /** One side of a draft tie, in the row's own vocabulary. A seat nobody has been
- *  drawn into yet has no badge and no place — which is a fact about a cup draw
+ *  drawn into yet has no place — which is a fact about a cup draw
  *  and not a gap. */
-function side(
-  tie: CompetitionTie,
-  at: "home" | "away",
-  badges: Map<string, string>,
-  places: Map<string, number>,
-  mine: string | null,
-) {
+function side(tie: CompetitionTie, at: "home" | "away", places: Map<string, number>, mine: string | null) {
   const seat = tie[at];
   return {
     name: seat.label,
-    badge: seat.team === null ? undefined : badges.get(seat.team.teamId),
     place: seat.team === null ? null : (places.get(seat.team.teamId) ?? null),
     mine: seat.team !== null && seat.team.teamId === mine,
   };

@@ -22,6 +22,7 @@ import { leagueCache } from "../leagueCache";
 import { orRefusal, tell, unavailable } from "../refusals";
 import type { Unavailable } from "../refusals";
 import { bridge } from "../squads";
+import { shortName } from "../teamNames";
 
 // Three reads meet on this page: Fantrax's global EPL pool, our league's opinion
 // of every player in it, and who currently holds them. The join is core's
@@ -160,7 +161,7 @@ async function readLeaguePool(): Promise<CachedPool> {
     positions: Object.keys(league.roster.maxActiveByPosition).sort(
       (a, b) => positionDepth(a) - positionDepth(b),
     ),
-    teamNames: held.teams.map((team) => [team.teamId, team.teamName]),
+    teamNames: held.teams.map((team) => [team.teamId, shortName(team.teamId, team.teamName)]),
     season: scored?.season ?? null,
     missing: Math.max(0, (scored?.total ?? 0) - (scored?.rows.length ?? 0)),
     statsRefused: stats instanceof FantraxError ? tell(stats) : null,

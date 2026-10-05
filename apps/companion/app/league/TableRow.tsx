@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ordinal, type FormGame, type SortKey, type StandingsRow } from "@epl/core";
-import TeamBadge from "../components/league/TeamBadge";
 import { PointsCell, ROW_LINK } from "../components/league/TableCells";
 import { cellAlign, deskOnly } from "./Columns";
 import { yoursEdge, yoursInk } from "../mine";
@@ -69,14 +68,12 @@ import { teamHref } from "@/app/squad/routes";
 
 export default function TableRow({
   row,
-  badge,
   mine,
   form,
   sort,
   tint,
 }: {
   row: StandingsRow;
-  badge: string | undefined;
   mine: boolean;
   /** A colour to edge this row in, for a screen that is about two PARTICULAR
    *  teams — the head-to-head draws the table with both sides of the tie marked
@@ -137,7 +134,6 @@ export default function TableRow({
           // scan the table FOR and the figures are what you then read across.
           className={`${ROW_LINK} ${yoursInk(mine)}`}
         >
-          <TeamBadge team={{ teamId: row.teamId, name: row.teamName }} url={badge} />
           <span className={`min-w-0 truncate ${ROW_NAME}`}>{row.teamName}</span>
           {/* **No YOU chip** (Craig, 5 Sep 2026: "Remove 'you' from all rows
               where it appears. Just use yellow text for the team"). It was here

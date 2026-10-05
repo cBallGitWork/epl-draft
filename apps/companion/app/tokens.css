@@ -148,9 +148,9 @@
      round, `Skeleton` among them, which is on every loading screen in the app.
 
      `rounded-full` is untouched and untouchable: `full` is the static
-     `calc(infinity * 1px)` rather than a theme lookup, so the six things that
-     are round by nature — the team badge, the two portraits, the skeleton
-     circle, the live dot — stay round without being exempted by hand.
+     `calc(infinity * 1px)` rather than a theme lookup, so the things that
+     are round by nature — the two portraits, the skeleton circle, the live
+     dot — stay round without being exempted by hand.
 
      This block outlives the last `rounded-*` in the source, deliberately. It is
      a constraint and not a utility: its job is that the next `rounded-lg`

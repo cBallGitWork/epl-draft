@@ -136,10 +136,8 @@ Those two are deliberately distinct.
 
 ## Known gaps
 
-~~**No team badges.**~~ Drawn since 22 Aug. The read that was the objection now
-lives in `app/badges.ts` and is shared by the schedule, the matchups list and the
-head-to-head board, so it is one cache entry for four surfaces rather than a
-second read for one page.
+**No team badges**, on purpose. Drawn from 22 Aug and removed 5 Oct 2026 (Craig:
+*"remove the fantrax team logos from the site, doesnt look right"*); a team's name stands alone.
 
 ~~**The points column is headed `FP`, not `Points`.**~~ **Gone 31 Aug 2026.**
 It is `For` now — a league table calls what you scored `For`, and the Fantrax

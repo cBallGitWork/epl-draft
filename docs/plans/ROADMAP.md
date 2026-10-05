@@ -242,12 +242,11 @@ and GW6 locks Sat 10 Oct at 11:15 UTC. `/swap-day` is the runbook.
   league is `mqsjd23smsgbiqzr`, already "Tim Hortons Pro League 26/27" (#110).
 - The 3 review rows (`Fred Heath`, `Enzo Kana Biyik`, `Lucas Pitt`) — Craig's
   call; only a person writes `unmappedBy: "manual"`.
-- Issue team codes to the ten (`FANTRAX_LEAGUE_ID=mqsjd23smsgbiqzr npm run team-codes`,
-  with production's `SESSION_SECRET`).
-- After the draft: capture → roster-limits → bridge → unmapped gate → shape-diff, each a
-  data PR. On 7 Oct, one Vercel change (`FANTRAX_LEAGUE_ID=mqsjd23smsgbiqzr`, `TEAM_CODES`,
-  `LINEUP_SAVE` naming Craig's team with `FANTRAX_COOKIE`, `FANTRAX_DEMO_TEAM_ID` removed) →
-  redeploy → verify the deployed URL, not the commit → `warm.yml`.
+- ~~Issue team codes to the ten~~ — done 5 Oct, with a new `SESSION_SECRET`.
+- ~~After the draft: capture → roster-limits → bridge → unmapped gate → shape-diff~~ — done
+  5 Oct, the night the draft finished, in one data PR. ~~The Vercel change~~ was brought forward
+  to 5 Oct at Craig's call: production serves `mqsjd23smsgbiqzr` at `timproleague.vercel.app`,
+  smoke 42/42, Save on for The Raccoons only.
 - **And "verify the deployed URL" is now one command**, which it was not before
   27 Aug:
 

@@ -171,8 +171,7 @@ export function fetchPoolNews(leagueId: string): Promise<RawPoolNews> {
   return fxpaRead(leagueId, "getPlayerNews", { poolType: "ALL" }) as Promise<RawPoolNews>;
 }
 
-/** The standings page Fantrax draws for its own site: the table and the badges,
- *  in one request.
+/** The standings page Fantrax draws for its own site, in one request.
  *
  *  Public, and a different read from `fetchStandings` despite the shared method
  *  name: that one is fxea and answers an array of rows, this one is fxpa and
@@ -185,7 +184,7 @@ export function fetchStandingsPage(leagueId: string): Promise<RawStandingsPage> 
 
 /** The whole season's results, in one request.
  *
- *  The same method and the same surface as `fetchTeamBadges`, on the tab their
+ *  The same method and the same surface as `fetchStandingsPage`, on the tab their
  *  own page calls "Results" — `displayedLists.tabs` names it `SCHEDULE`, which
  *  is where the argument comes from rather than from a guess. Public, and it
  *  answers 38 tables, one per period, each with both sides and both totals.

@@ -114,8 +114,8 @@ check then that nothing about gameweek 5 filed.
 
 Then the canary: ten teams and five matchups a gameweek. The squad size and bench
 are read from `getLeagueInfo` after the draft (the bench was unsettled on 1 Oct),
-and the position totals differ already: real D 6 · M 6 · F 4 · G 3 against
-rehearsal's 5 · 5 · 3 · 2.
+and the position totals differ already: the real league has none (Craig turned them
+off on draft night, 5 Oct) against rehearsal's 5 · 5 · 3 · 2.
 
 ## 8. Also on the list, and they are Craig's
 

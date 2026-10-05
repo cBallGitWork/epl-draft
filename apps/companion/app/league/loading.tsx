@@ -42,7 +42,6 @@ export default function Loading() {
                       // rows land inside these boxes rather than pushing them
                       // down the screen.
                       <span className="cm-row flex min-h-11 items-center gap-2 pl-1">
-                        <Skeleton width="var(--row-badge)" height="var(--row-badge)" circle />
                         <Skeleton width="45%" height="0.875rem" />
                       </span>
                     ) : (

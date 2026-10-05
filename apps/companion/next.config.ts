@@ -1,6 +1,5 @@
 import type { NextConfig } from "next";
 import {
-  FANTRAX_BADGE_BASE,
   FPL_SHIRT_BASE,
   PL_ASSET_BASE,
   PL_PHOTO_BASE,
@@ -9,7 +8,7 @@ import {
 } from "../../packages/core/src/config";
 
 /** Every image host the app draws from, as core's config names them. */
-const IMAGE_BASES = [PL_ASSET_BASE, PL_PHOTO_BASE, FPL_SHIRT_BASE, FANTRAX_BADGE_BASE, YOUTUBE_THUMB_BASE];
+const IMAGE_BASES = [PL_ASSET_BASE, PL_PHOTO_BASE, FPL_SHIRT_BASE, YOUTUBE_THUMB_BASE];
 
 function under(base: string) {
   const url = new URL(base);

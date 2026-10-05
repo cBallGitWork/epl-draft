@@ -168,7 +168,7 @@ business, and when lineups lock.
    the tabular face; a column no row carries is not printed, so the scorers chart
    has no played column and the draft table is rank, name and points alone
    (Craig, 1 Oct 2026: *"remove the WLT and gp, just points and names fine"*).
-   None of the three is a link or a tap target — the sortable, tappable, badged
+   None of the three is a link or a tap target — the sortable, tappable
    versions are on the League and Players tabs, where a manager goes to USE
    them, and these are the printed copies.
 9. **The week's business** — trades and claims, grouped so both halves of a trade
@@ -352,6 +352,11 @@ dateline sits his banner: name, billing, and a square crop of his photograph on
 the right. Each tie is a bold heading, then his words with the first man they
 name pictured beside them (`Face` at its `tie` rank, a 6rem square floated so the prose wraps), then
 "Lawro's prediction".
+
+**Lawro's season predictions** (`season-predictions`) file once, between the end of the draft and the season's
+first lock, under the desk's headline "Lawro's Season Predictions" and the same banner. His paragraphs come first
+(the opening, the title, the playoffs and the play-in, the wooden spoon, the bold call), then the predicted table through
+`Ranks`: the place, the side, his line, and no movement mark, since a preview has no last time.
 
 **The round-report was deleted on 3 Sep 2026.** It was the preview's twin — one
 article filed once the football stopped, about the whole round — and Craig's

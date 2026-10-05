@@ -133,8 +133,7 @@ const COMPETITION = COMPETITION_NAME;
  *  belongs here (CODE_RULES §1: a recipe for one caller is not a recipe).
  *
  *  `_PX` is what `next/image` is told to FETCH and the class is what the page
- *  draws — `TeamBadge`'s own pair, for its reason: a source fetched smaller than
- *  it is drawn is a soft crest nobody thinks to blame the CSS for. */
+ *  draws: a source fetched smaller than it is drawn is a soft crest. */
 const CREST = "h-[1.375rem] w-[1.375rem] shrink-0";
 const CREST_PX = 22;
 

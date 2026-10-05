@@ -94,7 +94,5 @@ function Side({ club, score }: { club: Club | undefined; score: number | null })
   );
 }
 
-/** Fetched at the desk's size so the crest is not soft when it doubles.
- *  `TeamBadge`'s pair, for its reason: a source fetched smaller than it is drawn
- *  is a blur nobody thinks to blame the CSS for. */
+/** Fetched at the desk's size so the crest is not soft when it doubles. */
 const CREST_PX = 36;
