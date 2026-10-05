@@ -38,30 +38,6 @@
         "fplCode": 586268,
         "name": "Armin Pecsi",
         "score": 47
-      },
-      {
-        "fplCode": 500058,
-        "name": "Jayden Danns",
-        "score": 35
-      }
-    ],
-    "reason": "below-threshold"
-  },
-  {
-    "fantraxId": "06nbu",
-    "fantraxName": "Stephen Mfuni",
-    "clubCode": "COV",
-    "positionHint": "D",
-    "candidates": [
-      {
-        "fplCode": 684268,
-        "name": "George Shepherd",
-        "score": 52
-      },
-      {
-        "fplCode": 549653,
-        "name": "Norman Bassette",
-        "score": 35
       }
     ],
     "reason": "below-threshold"

@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-25T14:14:31.330Z",
+  "fetchedAt": "2026-10-05T21:14:40.260Z",
   "source": "https://www.fantrax.com/newui/fantasy/createLeague.go?goto=3 — scraped, because no Fantrax JSON endpoint carries a position minimum",
   "leagues": {
     "mqsjd23smsgbiqzr": {
@@ -11,28 +11,28 @@
           "name": "Defender",
           "minActive": 3,
           "maxActive": 5,
-          "maxTotal": 6
+          "maxTotal": null
         },
         {
           "shortName": "M",
           "name": "Midfielder",
           "minActive": 2,
           "maxActive": 5,
-          "maxTotal": 6
+          "maxTotal": null
         },
         {
           "shortName": "F",
           "name": "Forward",
           "minActive": 1,
           "maxActive": 3,
-          "maxTotal": 4
+          "maxTotal": null
         },
         {
           "shortName": "G",
           "name": "Goalkeeper",
           "minActive": 1,
           "maxActive": 1,
-          "maxTotal": 3
+          "maxTotal": null
         }
       ]
     },
