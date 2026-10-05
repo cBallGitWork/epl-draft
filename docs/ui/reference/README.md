@@ -202,7 +202,7 @@ session that built `components/shell/ScoreRow.tsx`.
 
 | Thing | Measured | What it means for us |
 |---|---|---|
-| Index block | `#02068d`, **x 27-76 (50px)** left and **860-910 (51px)** right | **One at EACH end of the row**, not just the left. This shot's block holds a NATION; ours holds the side's **league position**, which is what `24.jpg` puts in the same block (`1st`, `2nd`) and what Craig asked for on 5 Sep. The badge sits beside the name instead |
+| Index block | `#02068d`, **x 27-76 (50px)** left and **860-910 (51px)** right | **One at EACH end of the row**, not just the left. This shot's block holds a NATION; ours holds the side's **league position**, which is what `24.jpg` puts in the same block (`1st`, `2nd`) and what Craig asked for on 5 Sep. A club's crest sits beside the name instead; a Fantrax team has none |
 | The blue is **continuous** | unbroken from y=116 to y=290 at x=30 | Six rows, **no gap between one block and the next**. A column of them is a spine; 2px of row padding between them makes it a stack of chips |
 | Row pitch | **29.2px** of a 562px shot | |
 | Team name | `#f3f8fc` **white**, mixed case, LEFT in its own column | Not right-aligned against the score. Every home name starts at the same x, every away name starts at the same x — it is a GRID |

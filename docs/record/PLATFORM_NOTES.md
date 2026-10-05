@@ -76,6 +76,11 @@ and an `ET` in Mail, so the paper printed New York's 6:11am beside our London de
 - `LeagueTransaction.processedAt` stays their string verbatim; `orderKey` still orders it in their own calendar,
   which gives the same order.
 
+## A fantasy team is its name: no Fantrax logo is drawn — decided 5 Oct 2026
+
+Craig, 5 Oct: *"remove the fantrax team logos from the site, doesnt look right"*. The badge each manager picked
+(`logoUrl512`) and the initial disc that stood in for one are gone; club crests and `LeagueCrest` stay.
+
 ## The real league's schedule went in through Fantrax's own schedule editor — written 2 Oct 2026
 
 The 26/27 head-to-head schedule was written with the two fxpa calls the commissioner's schedule editor makes, on

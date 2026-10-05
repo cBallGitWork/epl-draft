@@ -7,7 +7,7 @@ export function scoreSide(club: Club | undefined, places: ReadonlyMap<number, nu
     : {
         name: club.name,
         short: club.shortName,
-        badge: crestUrl(club),
+        crest: crestUrl(club),
         place: places.get(club.id) ?? null,
       };
 }

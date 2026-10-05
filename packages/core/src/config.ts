@@ -302,18 +302,6 @@ export const PL_PHOTO_BASE = "https://resources.premierleague.com/premierleague2
  *  what was counted at each. */
 export const FPL_SHIRT_BASE = `${FPL_SITE}/dist/img/shirts/standard`;
 
-/** Where Fantrax serves the badge a manager picked for his fantasy team.
- *
- *  A prefix and not just a host, because it is a gate as well as an address:
- *  `next.config.ts` allow-lists exactly this path for the image optimizer, and a
- *  badge URL from anywhere else makes `next/image` throw — which takes down a
- *  whole page rather than losing one 26px icon. `getTeamRosterInfo` carries
- *  `logoUploaded`, so a custom upload served from some other path is a state
- *  this league can reach; `mapTeamBadges` drops any URL that is not under here
- *  and the team shows its initial instead. */
-export const FANTRAX_BADGE_BASE =
-  "https://fantraximg.com/assets/images/icons/fantasyteams";
-
 /** The league's clock. Every date a manager reads is in it, whatever their phone
  *  says, because a deadline is the same instant for all sixteen of them and a
  *  capture is filed under the day it happened here.

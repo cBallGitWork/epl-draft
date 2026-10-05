@@ -18,7 +18,7 @@ import {
   fplCodeOf,
   londonDayOf,
 } from "@epl/core";
-import { leagueTable, teamBadges } from "../standings";
+import { leagueTable } from "../standings";
 import { footballNow, gameweekLive, seasonFixtures, speaksForNow } from "../football";
 import { Scores } from "./Scores";
 import RoundWord from "../components/league/RoundWord";
@@ -104,9 +104,8 @@ export default async function MatchdayPage({
   // The draft's ties; no draft, no schedule or a silent Fantrax costs this half and nothing else.
   const drafted = "period" in squads ? squads : null;
   const period = drafted?.roundPeriod ?? null;
-  const [{ scores }, badges, table] = await Promise.all([
+  const [{ scores }, table] = await Promise.all([
     period === null ? { scores: new Map<string, LiveTeamScore>() } : liveScores(period),
-    teamBadges(),
     leagueTable(),
   ]);
 
@@ -175,7 +174,6 @@ export default async function MatchdayPage({
         <Scores
           ties={ties}
           scores={scores}
-          badges={badges}
           places={places}
           clubPlaces={clubPlaces}
           mine={mine}

@@ -34,18 +34,14 @@ import { ordinal } from "@epl/core";
 //
 // **The index block holds the side's LEAGUE POSITION** (Craig, 5 Sep 2026: *"The
 // blue box in CM is for league position… Put current league position there
-// instead. Keep the logos in the row."*). It held the badge for half a day, on a
+// instead."*). It held a logo for half a day, on a
 // reading of the Evening Results shot where the block carries a NATION — which
 // it does, and which is a fact about the team rather than a ranking. `24.jpg`
 // is the one to follow: CM's league table runs `1st` `2nd` `3rd` down the same
 // blue block, and a position is the thing that block means everywhere else in
 // the game and everywhere else in this app (`league/TableRow`, `prem/ClubRow`,
-// the wire's minute).
-//
-// So the badge moved one column right and sits beside the name, which is where
-// every other list in this app already draws it. Both are on the row and each is
-// in the slot it belongs in — which is also what pays for the extra width: see
-// `GRID`.
+// the wire's minute). A club's crest sits beside its name; a Fantrax team has
+// none (Craig, 5 Oct 2026: "remove the fantrax team logos from the site").
 //
 // **The position is the caller's to supply and may be absent.** A cup side
 // nobody has been drawn into has none, and neither does a club in a table with
@@ -60,10 +56,8 @@ export interface ScoreSide {
    *  desktop - full team name". Falls back to the full name when a side has no
    *  short form, which is every Fantrax manager. */
   short?: string;
-  /** His badge, beside the name. Undefined draws nothing rather than a stand-in
-   *  picture: a wrong image is worse than none, because only one of the two looks
-   *  like an answer. */
-  badge?: string;
+  /** A club's crest, beside the name. Undefined draws nothing: a Fantrax team has none. */
+  crest?: string;
   /** Where he stands in his own competition — the ordinal that goes in CM's blue
    *  block. Null or undefined for a side with no position: a placeholder in a
    *  cup draw, or a club in a table nobody has played a game in. */
@@ -78,15 +72,8 @@ export interface ScoreSide {
   lost?: boolean;
 }
 
-/** The badge beside the name: 16px under a thumb, 18 on the desk.
- *
- *  20px under a thumb, 26 on the desk — a step up on both, 21 Sep 2026, on
- *  Craig's word that the crest and the score are what a live row is read by. It
- *  costs the two name columns 5px each at 390, which `Name` truncates into.
- *  `_PX` is what `next/image` is told to fetch and is the LARGER of the two, on
- *  `TeamBadge`'s own rule — a source fetched smaller than it is drawn is a soft
- *  badge nobody thinks to blame the CSS for. */
-const BADGE_PX = 26;
+/** The crest beside the name, 20px under a thumb and 26 on the desk; fetched at the larger so it is never soft. */
+const CREST_PX = 26;
 
 export default function ScoreRow({
   home,
@@ -182,15 +169,14 @@ export default function ScoreRow({
  *  **What a 390 phone actually has, measured rather than budgeted.** The grid is
  *  282px inside the panel and the gaps take 10 of it. A row with a tail spends
  *  156 more on two blocks, the score and the tail, leaving **58px a name**; one
- *  without spends 128 and leaves 73. Take the badge and its gap off the first and
+ *  without spends 128 and leaves 73. Take the crest and its gap off the first and
  *  a club has about 40px of text — which is why the phone prints three letters
  *  and the desk prints Nottingham Forest. That is Craig's own "full desktop -
  *  full team name", and the arithmetic is what makes it the only available answer
  *  rather than a preference.
  *
  *  A Fantrax manager has no short form, so his name truncates on the phone; the
- *  badge beside it and the position block before it are what identify him at that
- *  width. **The tail is 28px and not 48**, which it was until the ownership count
+ *  position block before it is what identifies him at that width. **The tail is 28px and not 48**, which it was until the ownership count
  *  came off it: all that is left in there is a clock or `FT`, and the 20px went
  *  to the two names. */
 /** Five tracks when the row has no tail, six when it has.
@@ -203,16 +189,9 @@ export default function ScoreRow({
  *  neither. */
 const GRID = "grid-cols-[auto_1fr_auto_1fr_auto] gap-x-0.5 lg:gap-x-2";
 
-/** Which way a side reads. The home half runs badge-then-name outward from its
- *  block; the away half is that mirrored, so **both badges sit against their own
- *  block** and the two names meet in the middle either side of the score.
- *
- *  Craig, 5 Sep 2026: *"the right hand side fantrax team should have the logo on
- *  the right, not left."* It is the arrangement the app's own scoreline rows
- *  used before they were unified — `Result` and `Tie` each carried a
- *  `flex-row-reverse` for the away side — and the reason is the reference's:
- *  `craig/01-evening-results.jpg` puts its identity chip at each END of the row,
- *  and a badge is the second half of that chip. */
+/** Which way a side reads. The home half runs crest-then-name outward from its
+ *  block; the away half is that mirrored, so **both crests sit against their own
+ *  block** and the two names meet in the middle either side of the score. */
 const READS = { home: "", away: "flex-row-reverse" } as const;
 
 /** CM's blue block, at each end of the row and self-stretched to its full
@@ -256,16 +235,12 @@ function Name({ side, at }: { side: ScoreSide; at: "home" | "away" }) {
         side.mine === true ? "text-accent" : side.lost === true ? "text-muted" : "text-ink"
       }`}
     >
-      {/* **The logo stays in the row** (Craig, 5 Sep 2026), beside the name
-          rather than inside the blue block — which is where every other list in
-          this app already draws it, and where it has to be now that the block
-          carries a position. */}
-      {side.badge === undefined ? null : (
+      {side.crest === undefined ? null : (
         <Image
-          src={side.badge}
+          src={side.crest}
           alt=""
-          width={BADGE_PX}
-          height={BADGE_PX}
+          width={CREST_PX}
+          height={CREST_PX}
           className="h-5 w-5 shrink-0 object-contain lg:h-[1.625rem] lg:w-[1.625rem]"
         />
       )}

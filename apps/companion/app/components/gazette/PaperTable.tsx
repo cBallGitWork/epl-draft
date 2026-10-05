@@ -39,9 +39,8 @@ export default function PaperTable({
       {rows.map((row) => (
         <div
           key={row.key}
-          // Not a link and not a tap target: this is a printed table, and the
-          // real ones — sortable, tappable, with the badges — are on the
-          // League and Players tabs where a manager goes to use them.
+          // Not a link and not a tap target: this is a printed table, and the sortable,
+          // tappable ones are on the League and Players tabs.
           className="flex items-baseline gap-2 py-1 text-xs"
         >
           <span className="numeric w-5 shrink-0 text-center text-faint">{row.rank}</span>
