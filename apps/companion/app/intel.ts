@@ -72,7 +72,7 @@ export const intelSquads: Map<number, IntelPlayer> = squadIntel(
 /** The latest predicted elevens Scout has, as the export left them. Its round is `manifest.gameweek`. */
 export const intelXi = xiFile as unknown as IntelXi;
 
-/** Who takes each club's set pieces, by FPL club code. */
+/** Who takes each club's set pieces, by FPL short name. */
 export const intelSetPieces = piecesFile as unknown as IntelSetPieces;
 
 /** The three pieces the source ranks, penalties first; the key is the sister repo's spelling. */
