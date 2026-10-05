@@ -99,6 +99,19 @@
   break-inside: avoid;
 }
 
+/* Every story picture on the front page: one fixed ratio, so a picture is cropped to its frame and
+   never scaled to it. A frame whose height was fixed and width free ran 4:1 to 9:1 across widths. */
+.paper-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+/* Its full-bleed width, stated: WebKit took a stretched frame's height from its width before the
+   bleed margins, 390x206 at 390. */
+.paper-frame.bleed {
+  width: calc(100% + 2 * var(--page-gutter));
+}
+
 /* The splash picture, filtered and multiplied into the sheet's ink and stock so it cannot add a
    colour. Not a colour plate (DESIGN §5): it prints IN the sheet's colours, not on them. */
 .paper-photo {

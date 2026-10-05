@@ -169,7 +169,8 @@ export const DESK_GROUND_BLUR: string | null =
  *  beside him through the sheet's ink. Keyed by the story's `reporter`. */
 export interface Columnist {
   billing: string;
-  photo: PhotoCredit & { src: string; alt: string; blur: string };
+  /** `focus` is where the faces sit, as an object-position, so a crop to the paper's frame keeps them. */
+  photo: PhotoCredit & { src: string; alt: string; blur: string; focus: string };
   /** A square crop of the same photograph on him alone, for the banner over his column. */
   portrait: { src: string; blur: string };
 }
@@ -180,6 +181,8 @@ export const COLUMNISTS: Readonly<Record<string, Columnist>> = {
     billing: "Draft Expert",
     photo: {
       src: "/columnist/lawrenson.jpg",
+      // Both heads are in the top third of a 3:2 frame; a centred 16:9 crop takes Hovenkamp's hair.
+      focus: "50% 30%",
       alt: "Mark Lawrenson slides in on Hugo Hovenkamp, AZ '67 v Liverpool, Amsterdam, 21 October 1981",
       blur: "data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAALABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAwIF/8QAIRAAAQMDBAMAAAAAAAAAAAAAAQIDEQAEQQUSIWETMVH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AzRot6tKkLeZSZ7x3FRqNi9aOtBRSW3RCXBME55pSAhQKff0857pXnV3CEeY79ogTiOKD/9k=",
       title: "Hovenkamp in aktie, Bestanddeelnr 931-7563",

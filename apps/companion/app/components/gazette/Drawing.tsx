@@ -1,37 +1,20 @@
 import Image from "next/image";
 import type { PublishedStory } from "@epl/core";
 
-// The lead's picture, when CI drew one.
-//
-// It was `Splash.tsx` until 3 Sep 2026, which is the wrong word for it — a
-// paper's splash is its top STORY, and the front page now prints that as its
-// own component under that name. This is the drawing, and nothing else.
-//
-// **Printed in the sheet's own two colours, never as it arrived.** The
-// treatment is `.paper-photo` in `paper.css`: grayscale toward the ink,
-// multiplied against the rosa so the stock shows through the midtones, and a
-// halftone screen over it. A colour drawing dropped onto newsprint is the
-// single fastest way to make this page look like a website again.
-//
-// No text ever sits on the picture, so the contrast floor is untouched — the
-// headline and deck are below it, where a paper puts them.
-
-/** The band's printed height, in the same proportion `Picture` uses. */
-const BAND = "aspect-[16/9]";
+// The lead's picture, when CI drew one: in the paper's frame, printed through the sheet's own two
+// colours (`.paper-photo`), never as it arrived. No text ever sits on it.
 
 export default function Drawing({ story }: { story: PublishedStory }) {
   if (story.image === null) return null;
 
   return (
-    <figure className={`bleed paper-photo relative ${BAND} overflow-hidden`}>
+    <figure className="bleed paper-photo paper-frame">
       <Image
         src={story.image.src}
         alt={story.image.alt}
         fill
-        // The band is full-bleed at every width the paper is read at, so the
-        // browser may as well be told rather than left to guess from a layout
-        // it has not done yet.
-        sizes="100vw"
+        // Full-bleed on a phone, half the sheet on a desk: the browser is told rather than left to guess.
+        sizes="(min-width: 64rem) 50vw, 100vw"
         className="object-cover"
         priority
       />

@@ -40,15 +40,27 @@ export default async function GazettePage() {
   const byId = named(paper.teams);
   const who = (teamId: string | null) => (teamId === null ? "the wire" : byId(teamId));
 
-  // The sheet's three ranks under the splash: these are the second and the
-  // third, sliced here rather than in the markup so the two boundaries are one
-  // line apart and cannot drift.
+  // The ranks under the splash, sliced together so the two boundaries cannot drift.
   const shoulders = paper.filed.slice(1, SHOULDER_STORIES + 1);
-  // Pictures on the shoulders only when every shoulder has one. See `Teaser`:
-  // twin seconds that start their headlines at different heights read as a
-  // fault, not as a rank.
+  // Twin shoulders carry pictures together or not at all: headlines at two heights read as a fault.
   const shouldersPictured = shoulders.every(hasPicture);
   const briefs = paper.filed.slice(SHOULDER_STORIES + 1, HEADLINES_SHOWN + 1);
+  // The lead: the splash's picture (the drawing, the story's own, else the desk's) over its headline.
+  const splash = paper.filed[0];
+  const lead = splash ? (
+    <>
+      {splash.image !== null ? (
+        <Drawing story={splash} />
+      ) : hasPicture(splash) ? (
+        <StoryFace story={splash} clubs={clubs} rank="splash" />
+      ) : paper.stories[0] ? (
+        <Picture lead={paper.stories[0]} who={who} clubs={clubs} />
+      ) : null}
+      <Splash story={splash} />
+    </>
+  ) : paper.stories[0] ? (
+    <Lead lead={paper.stories[0]} who={who} clubs={clubs} />
+  ) : null;
 
   return (
     // The paper's second column is a SIDEBAR here and never a "rail". The desk
@@ -63,11 +75,7 @@ export default async function GazettePage() {
       <Masthead at={paper.snapshot?.fetchedAt ?? null} />
 
       <div className="grid gap-5 @3xl:grid-cols-[1fr_19rem] @3xl:gap-x-10">
-        {/* The lead column. `--page-gutter: 0` inside it once the sidebar exists:
-            the picture band and the pitch break out of the PAGE's gutters, and
-            in a two-column grid the page's gutter is no longer the edge they are
-            breaking out to — left as it was, the widest thing on the lead would
-            have run out under the sidebar. */}
+        {/* The lead column: no gutter beside the sidebar, so a full-bleed picture stops at its edge. */}
         <div className="flex flex-col gap-5 @3xl:[--page-gutter:0px]">
           {/* The scoreboard strip. `underway` and not `partial`: before the
           first kickoff every total is a legitimate nought, and a strip reading
@@ -81,78 +89,43 @@ export default async function GazettePage() {
             />
           ) : null}
 
-          {/* The lead — journalism, AT ALL TIMES. This reverses the recorded
-          rule that suppressed the written column while football was on:
-          "a headline is the one place a provisional claim cannot go" was a
-          rule about the PAGE, and it has moved to the PIPELINE — the writer
-          decides what is safe to file, and every column carries its filed
-          instant, so a Friday preview under Saturday's moving strip is an
-          honest dated opinion rather than a claim about now. The desk's own
-          fact-stories still wait for the round to finish; they carry no
-          dateline and would claim the week.
+          {/* The lead is journalism at all times, as a headline: the article is at `/paper/{slug}`.
+              A filed column leads over the desk's own story and keeps the desk's picture. */}
+          {lead !== null ? (
+            // A phone stacks the three ranks; from 28rem the stories are one grid of equal cards,
+            // the lead across two columns, and two rows too from 42rem, where the grid is three wide.
+            <div className="@container/stories">
+              <div className="flex flex-col gap-5 @md/stories:grid @md/stories:grid-cols-2 @md/stories:gap-x-5 @md/stories:gap-y-6 @2xl/stories:grid-cols-3">
+                <div
+                  className={`flex flex-col gap-5 @md/stories:gap-3 ${
+                    shoulders.length + briefs.length === 0
+                      ? "@md/stories:col-span-full"
+                      : "@md/stories:col-span-2 @2xl/stories:row-span-2"
+                  }`}
+                >
+                  {lead}
+                </div>
 
-          **When a columnist has filed, HIS headline is the lead and the desk's
-          is dropped.** Both would be about the same match — a fact-headline and
-          a written one, stacked, saying the same thing twice — and a paper runs
-          one splash. The picture stays: the story is the same story, and the
-          desk is what chose the photograph for it.
+                {/* The shoulders, abreast on a phone and the lead's own column on a desk. `grid-flow-col`
+                    so a lone one takes a phone's full measure rather than half of it. */}
+                {shoulders.length > 0 ? (
+                  <div className="grid auto-cols-fr grid-flow-col gap-x-5 @md/stories:contents">
+                    {shoulders.map((story) => (
+                      <Teaser key={story.slug} story={story} clubs={clubs} pictured={shouldersPictured} />
+                    ))}
+                  </div>
+                ) : null}
 
-          **And it is a HEADLINE, not the article.** This page printed the lead
-          column whole until 3 Sep 2026, which put the second story on the sheet
-          about nineteen hundred pixels down a phone — so the two ranks under it
-          were furniture nobody reached. A front page's job is to make a reader
-          choose what to read, and it cannot do that while the first choice is
-          being read to him. `Written` prints it whole at `/paper/{slug}`, which
-          is where an article goes. */}
-          {paper.filed[0] ? (
-            <>
-              {/* One picture over the splash, in order of how much we know: the drawing, the story's own
-                  picture, then the desk's typographic band. */}
-              {paper.filed[0].image !== null ? (
-                <Drawing story={paper.filed[0]} />
-              ) : hasPicture(paper.filed[0]) ? (
-                <StoryFace story={paper.filed[0]} clubs={clubs} rank="splash" />
-              ) : paper.stories[0] ? (
-                <Picture lead={paper.stories[0]} who={who} clubs={clubs} />
-              ) : null}
-              <Splash story={paper.filed[0]} />
-            </>
-          ) : paper.stories[0] ? (
-            <Lead lead={paper.stories[0]} who={who} clubs={clubs} />
-          ) : null}
-
-          {/* The shoulders: the two stories that rank behind the lead, side by
-              side under it, each with its deck and its dateline. Two columns at
-              every width and not just the wide one — a phone is where this page
-              is read, and a news site on a phone runs its two seconds abreast
-              for the same reason a broadsheet does: side by side is what says
-              "these two are equals, and both are below the splash".
-
-              `grid-flow-col auto-cols-fr` rather than `grid-cols-2`, because a
-              round that filed only two stories has ONE shoulder, and a lone
-              half-width story with dead paper beside it is a column that lost
-              its neighbour. Flowing by column gives it the full measure. */}
-          {shoulders.length > 0 ? (
-            <div className="grid auto-cols-fr grid-flow-col gap-x-5">
-              {shoulders.map((story) => (
-                <Teaser
-                  key={story.slug}
-                  story={story}
-                  clubs={clubs}
-                  pictured={shouldersPictured}
-                />
-              ))}
+                {/* The rest: rows on a phone, cards on a desk. */}
+                {briefs.length > 0 ? (
+                  <ul className="@md/stories:contents">
+                    {briefs.map((story) => (
+                      <Brief key={story.slug} story={story} clubs={clubs} />
+                    ))}
+                  </ul>
+                ) : null}
+              </div>
             </div>
-          ) : null}
-
-          {/* The rest, in briefs: thumbnail, standing head, headline. No deck
-              and no dateline, which is what keeps the third rank visibly third. */}
-          {briefs.length > 0 ? (
-            <ul>
-              {briefs.map((story) => (
-                <Brief key={story.slug} story={story} clubs={clubs} />
-              ))}
-            </ul>
           ) : null}
 
           {/* Which nothing it is decides the sentence, and `Silence` owns all

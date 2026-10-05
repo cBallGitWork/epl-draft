@@ -594,8 +594,12 @@ three under the masthead, and all three are headlines: the **splash**, two
 **shoulders** side by side beneath it with their decks, and the rest as
 **briefs** — a thumbnail, standing head, headline, nothing else.
 
-**Every rank carries a picture, and the size is the hierarchy.** A band over the
-splash, a card on each shoulder, a 56px thumbnail on a brief. *This reverses "a
+**Every rank carries a picture, and every picture is one shape.** Each prints in
+`.paper-frame` (`paper.css`): 16:9, cropped by `object-fit: cover` and never scaled
+to fit. The splash's runs full-bleed on a phone, a shoulder's is its card's width
+and a brief's is a 96px thumbnail in a phone's row. Until 5 Oct 2026 the bands had
+a fixed height and a free width, so one cut-out ran 4:1 on a phone and 9:1 on a desk
+(Craig: *"so the thumbnails dont stretch"*). *This reverses "a
 page that gave every story a photograph would be a page with no lead on it",
 which was recorded doctrine until 3 Sep 2026* — true only while every photograph
 is the same size, and falsified by the reference Craig handed over, a news site's
@@ -621,6 +625,15 @@ to rank the top three before reading a word of any of them. The tail was one fla
 column of eight identically-set teasers until 3 Sep 2026, which spends the
 scale ladder on the lead alone and leaves the second story indistinguishable from
 the eighth. `docs/ui/gazetta.md` carries the reading order.
+
+**On a desk the ranks are one grid of equal cards** (Craig, 5 Oct 2026, sending
+BBC Sport's desktop front page: *"copy this"*). The stories ask their own width
+(`@container/stories`), the way the sheet asks its frame: from 28rem a grid of
+two, the lead across both; from 42rem a grid of three, the lead across two columns
+and two rows, the shoulders down the third beside it, the briefs below as cards
+with their datelines. 1280 and 1440 both measure 774–776px there, because
+`--page-frame` caps the sheet at 72rem, so both get three. Below 28rem a phone
+keeps the three ranks as above.
 
 The paper's ink ladder is the same three rungs the desk's is, measured on this
 stock: **14.2 · 7.9 · 5.4** against the desk's 17.0 · 8.6 · 5.7. `--faint` was
