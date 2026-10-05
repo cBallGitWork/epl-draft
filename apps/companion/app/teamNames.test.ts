@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { shortName, shortTeamNames, shortTeams } from "./teamNames";
+import { shortName, shortTeamNames } from "./teamNames";
 
 describe("shortName", () => {
   it("prints the league's short name for a team that has one", () => {
@@ -10,10 +10,7 @@ describe("shortName", () => {
     expect(shortName("demo0100000000000", "Ctrl Alt Defeat")).toBe("Ctrl Alt Defeat");
   });
 
-  it("shortens lists by name and by teamName, leaving the id and the rest alone", () => {
-    expect(shortTeams([{ teamId: "l5kunst8msgbirdf", name: "The Raccoons", x: 1 }])).toEqual([
-      { teamId: "l5kunst8msgbirdf", name: "Raccoons", x: 1 },
-    ]);
+  it("shortens a list's teamName, leaving the id and the rest alone", () => {
     expect(shortTeamNames([{ teamId: "aekx2715mtzgcl3f", teamName: "The Truffle Pigs" }])).toEqual([
       { teamId: "aekx2715mtzgcl3f", teamName: "Truffles" },
     ]);

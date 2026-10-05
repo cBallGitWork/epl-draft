@@ -10,6 +10,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { LABEL, PANEL_FLUSH, SMALL_CAPS } from "@/app/desk";
 import { teamHref } from "@/app/squad/routes";
+import { shortName } from "../../../teamNames";
 
 // Who he plays, and the one screen in this app that is about a confrontation.
 //
@@ -76,10 +77,10 @@ export default async function NextMatchPage({
       ) : (
         <Fixture
           gameweek={squads.snapshot.gameweek}
-          home={{ teamId: tie.team.teamId, name: tie.team.name, rank: placing.get(tie.team.teamId) }}
+          home={{ teamId: tie.team.teamId, name: shortName(tie.team.teamId, tie.team.name), rank: placing.get(tie.team.teamId) }}
           away={{
             teamId: tie.opponent.teamId,
-            name: tie.opponent.name,
+            name: shortName(tie.opponent.teamId, tie.opponent.name),
             rank: placing.get(tie.opponent.teamId),
           }}
         />

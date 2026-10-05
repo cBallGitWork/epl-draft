@@ -19,7 +19,6 @@ import {
 import { leagueCache } from "../../leagueCache";
 import { leagueTable } from "../../standings";
 import { seasonFixtures } from "../../football";
-import { shortTeams } from "../../teamNames";
 import { orRefusal, unavailable } from "../../refusals";
 import type { Unavailable } from "../../refusals";
 
@@ -89,8 +88,7 @@ export const getSchedule = leagueCache("schedule-season",
     ]);
     if (raw instanceof FantraxError) return unavailable(raw);
 
-    const mapped = mapLeagueInfo(raw);
-    const info = { ...mapped, teams: shortTeams(mapped.teams) };
+    const info = mapLeagueInfo(raw);
     const kickoffs = datedKickoffs(season);
 
     // When each round starts and when its lineups lock, from the lineup calendar

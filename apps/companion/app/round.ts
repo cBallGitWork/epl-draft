@@ -13,7 +13,6 @@ import { now } from "./clock";
 import { leagueCache } from "./leagueCache";
 import { orRefusal } from "./refusals";
 import { seasonKickoffs } from "./football";
-import { shortTeams } from "./teamNames";
 
 // The competition's own description of itself, and which round of it a screen is
 // about.
@@ -44,9 +43,7 @@ import { shortTeams } from "./teamNames";
 export const leagueInfo = leagueCache("league-info",
   async (): Promise<LeagueInfo | null> => {
     const raw = await orRefusal(fetchLeagueInfo(FANTRAX_LEAGUE_ID));
-    if (raw instanceof FantraxError) return null;
-    const info = mapLeagueInfo(raw);
-    return { ...info, teams: shortTeams(info.teams) };
+    return raw instanceof FantraxError ? null : mapLeagueInfo(raw);
   },
   () => null,
 );

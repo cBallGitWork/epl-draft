@@ -9,7 +9,6 @@ import {
 import { leagueCache } from "./leagueCache";
 import { orRefusal, tell } from "./refusals";
 import type { Unavailable } from "./refusals";
-import { shortTeamNames } from "./teamNames";
 
 // The standings page Fantrax draws for its own site, read once for the two
 // things printed off it: the table and the badges.
@@ -59,7 +58,7 @@ const read = leagueCache("standings-page",
  *  is no stale copy to fall back on and the refusal has to be carried. */
 export async function leagueTable(): Promise<StandingsRow[] | Unavailable> {
   const { table, refused } = await read();
-  return refused === null ? shortTeamNames(table) : { unavailable: refused };
+  return refused === null ? table : { unavailable: refused };
 }
 
 /** Badge URLs by team id.

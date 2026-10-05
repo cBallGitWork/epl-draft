@@ -31,6 +31,7 @@ import { teamBadges } from "../../standings";
 import { BOARD, FIGURE_CELL, INDEX_WIDTH, MINOR_LABEL, ROW_NAME, ROW_RULE } from "@/app/desk";
 import { teamHref } from "@/app/squad/routes";
 import FantraxSilent from "../../components/shell/FantraxSilent";
+import { shortName } from "../../teamNames";
 
 // Every team against one group of scoring categories, ordered by the head pressed: CM's stat board on fantasy data.
 // FPts and Total are Fantrax's for each lineup; Squad adds up the stats league's counts for the men each team holds.
@@ -83,7 +84,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
   );
 
   const board = rankBy(columns, lines, category, measure);
-  const named = new Map(table.map((row) => [row.teamId, row.teamName]));
+  const named = new Map(table.map((row) => [row.teamId, shortName(row.teamId, row.teamName)]));
   const groupLabel = columns.map((entry) => entry.label).join(", ");
 
   return (
