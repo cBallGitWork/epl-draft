@@ -75,6 +75,8 @@ export default function LineupPlanner({
     setOpened,
     pickStateOf,
     pick,
+    openings,
+    place,
     reset,
     markSaved,
     plan,
@@ -182,6 +184,8 @@ export default function LineupPlanner({
             bench={bench}
             pickStateOf={pickStateOf}
             onPick={pick}
+            openings={openings}
+            onPlace={place}
           />
         }
       />
