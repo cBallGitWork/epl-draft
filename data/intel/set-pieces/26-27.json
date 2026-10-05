@@ -14,7 +14,7 @@
  },
  "source": "fpl_scout",
  "clubs": {
-  "ARSENAL": {
+  "ARS": {
    "penalties": [
     {
      "code": 223340,
@@ -66,7 +66,7 @@
     }
    ]
   },
-  "ASTON VILLA": {
+  "AVL": {
    "penalties": [
     {
      "code": 195546,
@@ -98,7 +98,7 @@
     }
    ]
   },
-  "BOURNEMOUTH": {
+  "BOU": {
    "penalties": [
     {
      "code": 222683,
@@ -154,7 +154,7 @@
     }
    ]
   },
-  "BRENTFORD": {
+  "BRE": {
    "penalties": [
     {
      "code": 502500,
@@ -202,7 +202,7 @@
     }
    ]
   },
-  "BRIGHTON AND HOVE ALBION": {
+  "BHA": {
    "penalties": [
     {
      "code": 60307,
@@ -242,7 +242,7 @@
     }
    ]
   },
-  "CHELSEA": {
+  "CHE": {
    "penalties": [
     {
      "code": 244851,
@@ -294,7 +294,7 @@
     }
    ]
   },
-  "COVENTRY CITY": {
+  "COV": {
    "penalties": [
     {
      "code": 176412,
@@ -342,7 +342,7 @@
     }
    ]
   },
-  "CRYSTAL PALACE": {
+  "CRY": {
    "penalties": [
     {
      "code": 231747,
@@ -390,7 +390,7 @@
     }
    ]
   },
-  "EVERTON": {
+  "EVE": {
    "penalties": [
     {
      "code": 232928,
@@ -430,7 +430,7 @@
     }
    ]
   },
-  "FULHAM": {
+  "FUL": {
    "penalties": [
     {
      "code": 244042,
@@ -466,7 +466,7 @@
     }
    ]
   },
-  "HULL CITY": {
+  "HUL": {
    "penalties": [
     {
      "code": 169432,
@@ -488,7 +488,7 @@
     }
    ]
   },
-  "IPSWICH TOWN": {
+  "IPS": {
    "penalties": [
     {
      "code": 443261,
@@ -520,7 +520,7 @@
     }
    ]
   },
-  "LEEDS UNITED": {
+  "LEE": {
    "penalties": [
     {
      "code": 177815,
@@ -560,7 +560,7 @@
     }
    ]
   },
-  "LIVERPOOL": {
+  "LIV": {
    "penalties": [
     {
      "code": 424876,
@@ -604,7 +604,7 @@
     }
    ]
   },
-  "MANCHESTER CITY": {
+  "MCI": {
    "penalties": [
     {
      "code": 223094,
@@ -644,7 +644,7 @@
     }
    ]
   },
-  "MANCHESTER UNITED": {
+  "MUN": {
    "penalties": [
     {
      "code": 141746,
@@ -680,7 +680,7 @@
     }
    ]
   },
-  "NEWCASTLE UNITED": {
+  "NEW": {
    "penalties": [
     {
      "code": 216646,
@@ -712,7 +712,7 @@
     }
    ]
   },
-  "NOTTINGHAM FOREST": {
+  "NFO": {
    "penalties": [
     {
      "code": 60689,
@@ -760,7 +760,7 @@
     }
    ]
   },
-  "TOTTENHAM HOTSPUR": {
+  "TOT": {
    "penalties": [
     {
      "code": 154566,
@@ -820,7 +820,7 @@
     }
    ]
   },
-  "SUNDERLAND": {
+  "SUN": {
    "penalties": [
     {
      "code": 547027,
