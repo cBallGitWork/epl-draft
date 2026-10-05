@@ -22,7 +22,6 @@ import { leagueCache } from "../leagueCache";
 import { orRefusal, tell, unavailable } from "../refusals";
 import type { Unavailable } from "../refusals";
 import { bridge } from "../squads";
-import { shortName } from "../teamNames";
 
 // Three reads meet on this page: Fantrax's global EPL pool, our league's opinion
 // of every player in it, and who currently holds them. The join is core's
