@@ -86,7 +86,7 @@ describe("normalizeStory", () => {
     expect(survived?.extras?.quiz).toHaveLength(2);
   });
 
-  it("keeps a rank with no movement, which a season's predicted table has none of, and refuses one that is not a number", () => {
+  it("keeps a rank with no movement, which a first power ranking has none of, and refuses one that is not a number", () => {
     const survived = normalizeStory(
       story({
         kind: "season-predictions",
@@ -94,6 +94,12 @@ describe("normalizeStory", () => {
       }),
     );
     expect(survived?.extras?.ranks).toEqual([{ teamId: "a", line: "Top." }, { teamId: "c", move: 0, line: "Third." }]);
+  });
+
+  it("keeps the editor's moves on the record, each with the place the code gave it", () => {
+    const moved = { teamId: "c", place: 2, by: "Craig", on: "2026-10-05", said: "put him 2nd", from: 3 };
+    const survived = normalizeStory(story({ kind: "season-predictions", extras: { moves: [moved, { teamId: "d", place: 1 } as typeof moved] } }));
+    expect(survived?.extras?.moves).toEqual([moved]);
   });
 });
 

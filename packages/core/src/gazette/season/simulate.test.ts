@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mulberry32, simulateSeason, within, type PeriodScore } from "./simulate";
+import { mulberry32, simulateSeason, type PeriodScore } from "./simulate";
 
 const teams = ["a", "b", "c", "d"].map((teamId) => ({ teamId, name: teamId.toUpperCase() }));
 /** A round robin played twice over periods 1 to 6. */
@@ -15,7 +15,7 @@ describe("simulateSeason", () => {
     expect(outcome.map((each) => each.teamId)).toEqual(["a", "b", "c", "d"]);
     expect(outcome.reduce((sum, each) => sum + each.placed[0], 0)).toBe(2000);
     expect(outcome.reduce((sum, each) => sum + each.placed[3], 0)).toBe(2000);
-    expect(outcome.reduce((sum, each) => sum + within(each, 2), 0)).toBe(4000);
+    expect(outcome.reduce((sum, each) => sum + each.placed[0] + each.placed[1], 0)).toBe(4000);
     expect(outcome[0].meanPlace).toBeLessThan(outcome[1].meanPlace);
   });
 

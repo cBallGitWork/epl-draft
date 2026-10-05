@@ -13,7 +13,7 @@ export interface SeasonSquad {
 }
 
 export interface PlayedSeason {
-  /** Best expected place first: the predicted table. */
+  /** Best expected place first: the code's order of the squads. */
   table: SeasonOutcome[];
   /** Each side's elevens over the season, the points they are expected to score at each slot. */
   lines: ReadonlyMap<string, Readonly<Record<string, number>>>;

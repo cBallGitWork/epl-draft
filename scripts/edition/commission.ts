@@ -49,11 +49,11 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
     return brief === null ? null : { system: LAWRO, brief, lawro: desk };
   }
 
-  // His season column likewise, with the table, the title, the four, the spoon and the bold call already made.
+  // His power rankings likewise, with the order and every side's facts already made.
   if (assignment.kind === "season-predictions") {
     const desk = ctx.season;
     if (desk === null) return null;
-    return { system: LAWRO_SEASON, brief: buildSeasonBrief({ calls: desk.calls, schedule: desk.schedule, lines: desk.lines, locksAt: desk.locksAt, slotName: desk.slotName }), season: desk };
+    return { system: LAWRO_SEASON, brief: buildSeasonBrief({ calls: desk.calls, locksAt: desk.locksAt, slotName: desk.slotName }), season: desk };
   }
 
   // A match-day report is written, checked and read back through its own newsroom, from the day's joined facts.

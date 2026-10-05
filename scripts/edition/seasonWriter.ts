@@ -17,10 +17,10 @@ import type { SeasonDesk } from "./season";
 import { lawroSendBack } from "./voice/lawro";
 import { LAWRO_SEASON } from "./voice/lawroSeason";
 
-// Lawro's season column through his newsroom: he writes, the editor reads him, he writes again once if he has to,
+// Lawro's power rankings through his newsroom: he writes, the editor reads him, he writes again once if he has to,
 // and the desk files his words in its own order under its own headline.
 
-const HEADLINE = "Lawro's Season Predictions";
+const HEADLINE = "Lawro's Power Rankings";
 
 /** The column ready to file. Throws only when the first call cannot be made at all, which leaves the key unspent. */
 export async function writeSeason(desk: SeasonDesk, brief: string, say: (message: string) => void): Promise<Record<string, unknown>> {
@@ -55,7 +55,7 @@ export async function writeSeason(desk: SeasonDesk, brief: string, say: (message
   return assembleSeason(draft, desk.calls, HEADLINE);
 }
 
-const EMPTY: SeasonDraft = { deck: "", opening: "", title: "", playoffs: "", spoon: "", bold: "", table: new Map() };
+const EMPTY: SeasonDraft = { deck: "", opening: "", table: new Map() };
 
 function serious(faults: readonly Fault[]): Fault[] {
   return faults.filter((fault) => fault.severity !== "warn");

@@ -484,9 +484,12 @@ draft, and 15/11/5.
   (`DYNAMIC_SERVER_USAGE`). Production names the league when it builds; build with it set before shooting an
   article locally.
 
-## Lawro writes his season predictions once, from the draft, every call by code — decided 5 Oct 2026
+## Lawro ranks the squads as drafted once, every place by code — decided 5 Oct 2026
 
-Craig, 5 Oct: *"can lawrenson do a season predictions based off the draft results?"*
+Craig, 5 Oct: *"can lawrenson do a season predictions based off the draft results?"*, then on the first draft:
+*"just talk like its a power rankings, dont mention playoffs places"*. So the column is "Lawro's Power Rankings":
+a short opening, then the ten squads strongest first, each with one line. It is a ranking of squads as they stand,
+in the present tense, never a forecast: no playoffs, play-in, prize, title, finishing place, wooden spoon or table.
 
 - **When**: `season-predictions`, keyed `season-predictions:gw{first}`, is due from the end of the draft
   (`getDraftResults` reads `completed`, so `pedigree` is not empty) until the first head-to-head period locks
@@ -495,11 +498,14 @@ Craig, 5 Oct: *"can lawrenson do a season predictions based off the draft result
 - **Every call is code's** (`gazette/season/`). Each squad's best eleven every period, in a shape the league allows
   (`formations` off `getLeagueInfo` and the recorded minimums; a man at any slot he is eligible for, priced at that
   slot by the draft pack), then the schedule as `getLeagueInfo` has it, the GW34 double header counting one period
-  score twice, 10,000 times off a fixed seed. The table is mean place, ordered by the league's rule each time
-  (`placeTable`: wins, then fantasy points for; two drawn totals are never equal, so what a win pays does not
-  change the order). The title is first, the regular season's prize. Fantrax's playoff places split at the
-  league's own lines (`tableLines`, #257, `playoffCut`): 1st to 3rd straight in, 4th and 5th playing in, 6th the
-  first out. The spoon is last. The knockout itself is not played: the column calls the table, not the bracket.
+  score twice, 10,000 times off a fixed seed, each playing ordered by the league's rule (`placeTable`: wins, then
+  fantasy points for). The rankings are mean place: the season played out is how the squads are ordered, and the
+  column never says so.
+- **The editor's calls are data** (Craig, 5 Oct: *"dont put dome 10th, put him 9th"*). `data/editions/editor.json`
+  holds, by league and story kind, each side put at a place, who called it, when and what he said
+  (`editorsOrder`: the sides between shift one place). The printed order is the code's with those moves; every
+  fact, lead and check reads the printed order, and the story files the moves with the place the code gave each
+  (`extras.moves`).
 - **The spread**: the sister model's band is a 5th-95th percentile, so one deviation is (high - points) / 1.645 of
   a man's mean, applied to his league-priced mean. Independent men gave a side a weekly swing of about a seventh of
   its mean, where draft sides swing by a third, so any two men of one eleven share a correlation of 0.5
@@ -507,13 +513,16 @@ Craig, 5 Oct: *"can lawrenson do a season predictions based off the draft result
   man's gameweek is his average inside it, and squads are frozen as drafted: no waivers, no trades.
 - **Per side, in words**: the man it is built round (its first pick), and its weak spot: that man, or its best,
   when out or no better than an even chance, else the slot its elevens rank lowest at against the other nine.
-  The lines alternate which they open on. The bold call is the side holding the first pick missing the playoffs,
-  else the best man taken in the draft's second half and how many of the first men taken he outscores.
-- **The editor** (`checkSeason`) runs his weekly rules (`lawroProse`, `columnRules`) over every section, then
-  the season's own: a place written beside one side must be the desk's (hard), each paragraph names the sides it
-  is about and only those, a side's line names no other side and no other squad's man (hard), no FPL, simulation
-  or draft round, British spelling, two sentences a line, and no two lines opening alike. The desk assembles the
-  table in its own order, so the model never orders it.
+  The lines alternate which they open on. The opening has his fall and one line on the squads: whether any is
+  clear, the strongest and the weakest. The bold call went with the playoffs: it was a forecast, and a ranking
+  has no end of the column to put an aside in.
+- **The editor** (`checkSeason`) runs his weekly rules (`lawroProse`, `columnRules`) over the deck, the opening and
+  every line, then the rankings' own: a place written beside one side ("ranked third", "fifth place", "top of the
+  pile", "the weakest squad") must be its printed place (hard); the opening runs two or three sentences and names
+  only the strongest and the weakest; a side's line names no other side and no other squad's man (hard); no FPL,
+  simulation, draft round, playoff, play-in, semi, straight through, £, prize, title, finish, table, wooden spoon
+  or predicted; British spelling; two sentences a line; no two lines opening alike. The desk assembles the
+  rankings in the printed order, so the model never orders them.
 
 ## Which categories a league scores is data too: A, AF and Sv became AT and GKP — probed 1 Oct 2026
 

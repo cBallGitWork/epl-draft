@@ -1,31 +1,27 @@
 import { describe, expect, it } from "vitest";
 import { buildSeasonBrief } from "./brief";
 import { seasonCalls, type SeasonCalls } from "./calls";
-import { CUT, PLAYED, SQUADS } from "./__fixtures__/season";
+import { PLAYED, SQUADS } from "./__fixtures__/season";
 
-const calls = seasonCalls(PLAYED, SQUADS, CUT) as SeasonCalls;
-const schedule = { from: 6, to: 34, empty: [21], doubles: [34] };
-const lines = [{ under: 1, label: "£30 · picks semi opponent" }, { under: 2, label: "Play-in" }];
+const calls = seasonCalls(PLAYED, SQUADS, []) as SeasonCalls;
 const slotName = (slot: string) => ({ G: "the goalkeeper", D: "the defenders", M: "the midfielders", F: "the forwards" })[slot] ?? slot;
-const brief = buildSeasonBrief({ calls, schedule, lines, locksAt: "2026-10-10T11:15:00.000Z", slotName });
+const brief = buildSeasonBrief({ calls, locksAt: "2026-10-10T11:15:00.000Z", slotName });
 
 describe("buildSeasonBrief", () => {
-  it("gives every call already made, the title, the playoff places, the spoon and the bold call", () => {
-    expect(brief).toContain("THE TITLE: Albion, top. Their strength: the defenders, the best in the league. The nearest to them: United, second, and it is not close.");
-    expect(brief).toContain("THE PLAYOFFS, straight in: Albion. Playing in for the last place: United. 3rd and missing out: City, and not by a little.");
-    expect(brief).toContain("THE LINES ACROSS THE TABLE, as the league drew them: under 1st, £30 · picks semi opponent; under 2nd, Play-in.");
-    expect(brief).toContain("THE WOODEN SPOON: Rovers, 4th.");
-    expect(brief).toContain("THE BOLD CALL: Bukayo Saka (Arsenal), taken by Albion as the 7th man of the draft, will outscore 4 of the first 4 men taken.");
-  });
-
-  it("states the season off the schedule, in gameweeks, and the first lock in London", () => {
-    expect(brief).toContain("Head to head from gameweek 6 to gameweek 34, none in gameweek 21, two each in gameweek 34, then the playoffs.");
+  it("frames the column as a ranking of squads as drafted, with the first lock in London", () => {
+    expect(brief).toContain("LAWRO'S POWER RANKINGS.");
     expect(brief).toContain("12:15 on Saturday 10 October");
-    expect(brief).not.toMatch(/\b(?:this|the|a|first|second|third|late|early) round\b|\brounds\b/iu);
+    expect(brief).toContain("You rank the 4 squads as drafted, strongest first, as they stand today.");
   });
 
-  it("lists the table in the desk's order, two facts a side and what to open on", () => {
-    const table = brief.slice(brief.indexOf("YOUR TABLE"));
+  it("gives the opening the strongest squad, the weakest and whether anybody is clear", () => {
+    expect(brief).toContain(
+      "THE SQUADS AS DRAFTED, for your opening: One squad is clear of the rest. The strongest squad: Albion. Its strength: the defenders, the best in the league. The weakest: Rovers. Its weak spot: the forwards, the weakest in the league.",
+    );
+  });
+
+  it("lists the rankings in the desk's order, two facts a side and what to open on", () => {
+    const table = brief.slice(brief.indexOf("YOUR RANKINGS"));
     expect(table.indexOf("1. Albion [a]")).toBeLessThan(table.indexOf("2. United [u]"));
     expect(table).toContain("- Built round: Erling Haaland (Manchester City), the first man they took, 2nd in the whole draft.");
     expect(table).toContain("- Weak spot: the goalkeeper, the weakest in the league.");
@@ -33,7 +29,9 @@ describe("buildSeasonBrief", () => {
     expect(table).toContain("- Open the line on the weak spot.");
   });
 
-  it("prints no figure of ours: no man's points and no count of playings", () => {
-    for (const figure of ["200", "210", "70", "98", "1.4"]) expect(brief).not.toContain(figure);
+  it("says nothing of how a season ends, prints no figure of ours and no draft round", () => {
+    for (const word of ["playoff", "title", "finish", "spoon", "prize", "£", "predict", "season"]) expect(brief.toLowerCase()).not.toContain(word);
+    for (const figure of ["200", "210", "70", "1.4"]) expect(brief).not.toContain(figure);
+    expect(brief).not.toMatch(/\b(?:this|the|a|first|second|third|late|early) round\b|\brounds\b/iu);
   });
 });

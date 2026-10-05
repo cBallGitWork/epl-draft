@@ -7,6 +7,7 @@ import type { StoryReport } from "./reports/cargo";
 import { normalizeReports } from "./reports/cargoRead";
 import { normalizeSheets, type StorySheet } from "./sheets/cargo";
 import { normalizeBin, type StoryBin } from "./binXi/cargo";
+import { normalizeApplied, type AppliedMove } from "./season/editor";
 
 // The structured cargo some story kinds carry beside their prose: a power
 // ranking's rows, and the wire's quiz. Its own file because it is its own
@@ -139,6 +140,8 @@ export interface StoryExtras {
   bin?: StoryBin;
   /** A draft report: the gameweek's match-ups at a cut-off, each with its verdict, writing and form strip. */
   draft?: StoryDraftReport;
+  /** Lawro's power rankings: the editor's moves over the code's order, each with the place it had. */
+  moves?: AppliedMove[];
 }
 
 /** A closed set, so the column cannot invent a fifth state. Anything else is a
@@ -284,6 +287,8 @@ export function normalizeExtras(raw: unknown): StoryExtras | undefined {
   if (bin !== undefined) out.bin = bin;
   const draft = normalizeDraftReport(extras.draft);
   if (draft !== undefined) out.draft = draft;
+  const moves = normalizeApplied(extras.moves);
+  if (moves !== undefined) out.moves = moves;
 
   return Object.keys(out).length > 0 ? out : undefined;
 }
