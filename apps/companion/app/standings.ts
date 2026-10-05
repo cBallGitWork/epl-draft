@@ -8,7 +8,6 @@ import {
 import { leagueCache } from "./leagueCache";
 import { orRefusal, tell } from "./refusals";
 import type { Unavailable } from "./refusals";
-import { shortTeamNames } from "./teamNames";
 
 // The standings page Fantrax draws for its own site, read for the table. The
 // fxea array has no points column, and three for a win lives here.
@@ -38,5 +37,5 @@ const read = leagueCache("standings-page",
  *  is no stale copy to fall back on and the refusal has to be carried. */
 export async function leagueTable(): Promise<StandingsRow[] | Unavailable> {
   const { table, refused } = await read();
-  return refused === null ? shortTeamNames(table) : { unavailable: refused };
+  return refused === null ? table : { unavailable: refused };
 }

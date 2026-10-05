@@ -44,21 +44,22 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
-## Screens print a team's short name, kept by us and not by Fantrax — decided 5 Oct 2026
+## Stats tables and squad pages print a team's short name, kept by us — decided 5 Oct 2026
 
 Craig, 5 Oct: *"use the fantrax short names for all over the site like tables etc, need the room"*, then
-*"try use logical short names"* once he saw Fantrax's. Fantrax sends a `shortName` only on `getLeagueInfo`'s
-matchups (never on `teamInfo`), and in the real league it is mostly an account handle cut to eight letters:
-`CB_fantr` for The Raccoons, `Mcdegle8`, `RichyN`, `Atheltic`, `domeital`.
+*"try use logical short names"* once he saw Fantrax's, then, once it shipped, full names back on the League table,
+Schedule, Results and the head-to-heads. Fantrax sends a `shortName` only on `getLeagueInfo`'s matchups (never on
+`teamInfo`), and in the real league it is mostly an account handle cut to eight letters: `CB_fantr` for The
+Raccoons, `Mcdegle8`, `RichyN`, `Atheltic`, `domeital`.
 
 - **Ours, by team id**: `data/leagues/short-names.json`; `team` there is for the reader. A team with no entry, a
   renamed one included, prints the name Fantrax sends. `app/teamNames.ts` reads it.
-- **Applied in the app's data layer, five places**: `round.ts` `leagueInfo`, `schedule.ts` `getSchedule`,
-  `squads.ts` rosters, `players/pool.ts` owner names, `standings.ts` `leagueTable` (after `placeTable`, whose
-  tiebreak sorts on the full name). The draft report shortens the sides an edition stored.
-- **The paper's prose keeps full names**: the scripts call core's mappers, never the app's data layer.
-- At 390px the League table showed only `PLD` before; with short names it shows every column, and no schedule
-  side truncates.
+- **Short**: anything named off the rosters (`squads.ts`) or the pool's owners (`players/pool.ts`), so squad and
+  player pages and every owner column (Players, the paper's scorers and team of the week, Matchday's stat lists, a
+  Prem match's owners); plus Team Stats and the squad pages' opponent lines, which shorten at the page.
+- **Full**: `leagueInfo`, `getSchedule` and `leagueTable` stay Fantrax's names, so the League table, Schedule,
+  Results, head-to-heads, the live strip and the paper's draft table and draft report print them whole.
+- The paper's prose keeps full names: the scripts call core's mappers, never the app's data layer.
 
 ## Every time is printed in London, Fantrax's included — decided 2 Oct 2026
 

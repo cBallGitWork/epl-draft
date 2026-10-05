@@ -9,11 +9,6 @@ export function shortName(teamId: string, full: string): string {
   return SHORT[teamId]?.short || full;
 }
 
-/** Every `name` in a list of teams, shortened. */
-export function shortTeams<T extends { teamId: string; name: string }>(teams: T[]): T[] {
-  return teams.map((team) => ({ ...team, name: shortName(team.teamId, team.name) }));
-}
-
 /** Every `teamName` in a list of rows, shortened. */
 export function shortTeamNames<T extends { teamId: string; teamName: string }>(rows: T[]): T[] {
   return rows.map((row) => ({ ...row, teamName: shortName(row.teamId, row.teamName) }));
