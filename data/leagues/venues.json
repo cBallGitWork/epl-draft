@@ -67,7 +67,16 @@
     },
     "ipnp5y4mmu9j7kop": {
       "team": "Hazza Maguazza's Redempshazza",
-      "src": "/ground/crowd.jpg"
+      "src": "/ground/venues/cusack-park.jpg",
+      "blur": "data:image/jpeg;base64,/9j//gAQTGF2YzYyLjI4LjEwMgD/2wBDAAgICAkICQsLCwsLCw0MDQ0NDQ0NDQ0NDQ0ODg4REREODg4NDQ4OEBARERITEhERERETExQUFBgYFxccHB0iIin/xABsAAEBAQAAAAAAAAAAAAAAAAAGBQcBAQEBAQEAAAAAAAAAAAAAAAUBAgMEEAACAQIEBwEBAAAAAAAAAAABAgMRAAVRBEEGFhKhsZGyMiERAAICAQUBAQAAAAAAAAAAAAECABEDFOGRcSFBUf/AABEIAAwAEAMBEgACEgADEgD/2gAMAwEAAhEDEQA/AKzccY20h6I9AEyYSkn0bDxyNRdqja/JrsH63G8OKKpIExYkU+RzzxjK/uHDmrkZxTveeamRwrEH+1X7A8WlrsA+txvDcONC4sX31LYnOf/Z",
+      "credit": {
+        "place": "Cusack Park, Ennis",
+        "title": "Hurling game, Cusack Park, Ennis",
+        "author": "Sheila1988",
+        "licence": "CC BY-SA 4.0",
+        "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Hurling_game,_Cusack_Park,_Ennis.jpg"
+      }
     },
     "uexqrijomu8l5asi": {
       "team": "AtleticoTimHortons",
