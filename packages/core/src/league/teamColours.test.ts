@@ -27,8 +27,7 @@ describe("teamColours", () => {
   });
 
   it("falls back for a team nobody has styled", () => {
-    // The state the real league is in on 10 Oct: ten ids nothing here knows.
-    expect(teamColours("a-real-league-id-nobody-has-added")).toEqual(
+        expect(teamColours("a-real-league-id-nobody-has-added")).toEqual(
       teamColours("another-unlisted-id"),
     );
   });
@@ -49,6 +48,8 @@ describe("teamColours", () => {
       "1b6gp5utmtj36y3g", "y6viv6jfmtj36y3g", "98yx3o50mtj36y3g", "hy0w28p5mtj36y3g",
       "deo9ljvtmtj36y3g", "fq5omv5kmtj36y3g", "dpdkp2bbmtj36y3g", "g80h3bf5mtj36y3g",
       "pzmd243ymtj36y3g", "kg18w2cvmtj36y3g",
+      "l5kunst8msgbirdf", "kpj0z744muh1qwtd", "7to6xosimu8hyyw5", "0g0j5mkomuqqwsbu",
+      "qgucu9dgmufwva1x",
       "nobody-has-styled-this-one",
     ];
 
