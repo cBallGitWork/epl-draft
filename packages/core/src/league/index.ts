@@ -40,6 +40,8 @@ export { captureStaleness } from "./staleness";
 export { seasonForm } from "./form";
 export type { FormGame, TeamForm } from "./form";
 export { defaultDescending, isSortKey, sortRows } from "./standingsOrder";
+export { tableLines } from "./tableLines";
+export type { TableLine } from "./tableLines";
 export type { SortKey } from "./standingsOrder";
 
 export { pedigreeOf } from "./pedigree";

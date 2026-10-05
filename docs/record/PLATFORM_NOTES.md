@@ -322,8 +322,12 @@ Craig set the formats on 27 Sep. The cups are declared in `packages/core/src/lea
   league's own GW20 fixtures are Fantrax's schedule, which Craig sets, and the app draws what it answers.
 - **The playoff is Fantrax's, read from `getLeagueInfo` and never declared.** Craig sets it in Fantrax:
   five teams, a one-leg 4 v 5 play-in, two-leg semi-finals, a one-leg final. `mapPlayoffs` carries the
-  places. On 27 Sep the real league (`mqsjd23smsgbiqzr`) still answered `playoffs: {used: false}`, so the
-  table's cut line draws nothing until he has.
+  places. On 5 Oct the real league (`mqsjd23smsgbiqzr`) answered `numPlayoffTeams: 4` from period 35: the
+  semis, with the play-in left out, so the play-in is ours.
+- **The table's lines** (Craig, 5 Oct: *"1st - £30 for regular season, gets to pick semi opponent; 2-3
+  playoffs; 4-5 playoffs play in; 5-8 Plate - winner gets 1st pick next season"*) are declared in
+  `league/tableLines.ts`: under 1st, under the place before Fantrax's last semi place, under the place after
+  it, and under 8th, the Plate being the play-in's loser and 6th to 8th. A league with no playoff draws none.
 - **A level knockout tie** is settled by points, then the starting eleven's goals, assists, clean sheets and
   minutes played in the tie. Level on all five is a coin toss, which Craig makes: `knockoutWinner` answers
   `"coin toss"`. Every cup tie is one leg.
@@ -4626,8 +4630,8 @@ at most, summed over every man each team holds now (`join/squadStats.ts`).
 - What should `apps/lab` look like for the 27/28 platform prototype?
 - **The cups, open since 27 Sep** (see *The cups are declared as ours*): where the starting eleven's
   goals, assists, clean sheets and minutes per team per gameweek are read from; how a group tie on points
-  and points for is placed (draw order assumed); and whether Fantrax can express the playoff's one-leg play-in before two-leg semis, which
-  a capture after Craig sets it will show.
+  and points for is placed (draw order assumed); and whether Fantrax can express the playoff's one-leg play-in before two-leg semis (on 5 Oct it
+  answered four teams, the semis alone).
 
 **Answered 22 Aug, on the first real matchday** (all in the section above):
 `remainingEventPercent` reaches literal zero. Fantrax's `totalFpts` does fill in

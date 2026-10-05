@@ -82,8 +82,8 @@ export default function TableRow({
    *  teams — the head-to-head draws the table with both sides of the tie marked
    *  in their own colours.
    *
-   *  **It cannot be `mine`.** That paints `bg-raised`, and the playoff line below
-   *  records why a tinted band is spent so carefully here: it "reads as *these
+   *  **It cannot be `mine`.** That paints `bg-raised`, and the table's lines in
+   *  `league/page.tsx` are rules for the same reason: a tinted band "reads as *these
    *  are yours*", which about a rival is a lie. An edge in the side's OWN colour
    *  says something else — this is one of the two on the plate above — and leaves
    *  `mine` its single meaning, which wins on a row that is both. */
