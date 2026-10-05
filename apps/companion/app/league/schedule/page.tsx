@@ -11,7 +11,6 @@ import Round, { EMPTY } from "./Round";
 import { getSchedule, type ScheduleRound } from "./schedule";
 import { liveScores } from "../../scoreboard";
 import { myTeamId } from "../../session";
-import { teamBadges } from "../../standings";
 import FantraxSilent from "../../components/shell/FantraxSilent";
 
 // The season ahead: every round the league still has to play, in gameweek order,
@@ -98,7 +97,7 @@ export default async function SchedulePage() {
     );
   }
 
-  const [mine, crests] = await Promise.all([myTeamId(info.teams), teamBadges()]);
+  const mine = await myTeamId(info.teams);
 
   // Fantrax's own rank, for CM's blue block.
   const places = new Map(table.map((row) => [row.teamId, row.rank] as const));
@@ -141,7 +140,6 @@ export default async function SchedulePage() {
             round={round}
             ties={tiesIn(round)}
             points={points.get(round.period) ?? EMPTY}
-            badges={crests}
             places={places}
             mine={mine}
             note={seeding(round.gameweek)}

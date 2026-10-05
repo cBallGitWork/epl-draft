@@ -72,8 +72,7 @@ export interface Schedule {
 }
 
 /** The three reads, cached together because none of them depends on which
- *  gameweek is being looked at. The badges moved to `app/badges.ts` when the
- *  table and the matchups board wanted them too. The scores do, and are fetched per round by
+ *  gameweek is being looked at. The scores do, and are fetched per round by
  *  `liveScores`, which has its own cache keyed on the period.
  *
  *  Only the league's own description of itself is fatal. A table we cannot read

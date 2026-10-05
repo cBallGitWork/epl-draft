@@ -168,7 +168,7 @@ business, and when lineups lock.
    the tabular face; a column no row carries is not printed, so the scorers chart
    has no played column and the draft table is rank, name and points alone
    (Craig, 1 Oct 2026: *"remove the WLT and gp, just points and names fine"*).
-   None of the three is a link or a tap target — the sortable, tappable, badged
+   None of the three is a link or a tap target — the sortable, tappable
    versions are on the League and Players tabs, where a manager goes to USE
    them, and these are the printed copies.
 9. **The week's business** — trades and claims, grouped so both halves of a trade

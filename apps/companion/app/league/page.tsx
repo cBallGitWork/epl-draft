@@ -5,7 +5,7 @@ import Columns, { COLUMNS } from "./Columns";
 
 import TableRow from "./TableRow";
 import { getSeasonResults } from "./schedule/schedule";
-import { leagueTable, teamBadges } from "../standings";
+import { leagueTable } from "../standings";
 import Nothing from "../components/shell/Nothing";
 import LeagueShell from "./Shell";
 import { readerTeamId } from "../squads";
@@ -34,10 +34,9 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
   const sort = isSortKey(query.sort) ? query.sort : "rank";
   const descending = query.dir === undefined ? defaultDescending(sort) : query.dir === "desc";
 
-  const [rows, mine, badges, info, results] = await Promise.all([
+  const [rows, mine, info, results] = await Promise.all([
     leagueTable(),
     readerTeamId(),
-    teamBadges(),
     leagueInfo(),
     // The whole season's results in one request, and the only thing on this page
     // that costs a read the table itself did not already make. It is what turns
@@ -110,7 +109,6 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
                 <TableRow
                   sort={sort}
                   row={row}
-                  badge={badges.get(row.teamId)}
                   mine={row.teamId === mine}
                   form={form.get(row.teamId) ?? []}
                 />

@@ -10,7 +10,7 @@ import { byKickoff, fixtureMen, type FixtureMan } from "./fixtureMen";
 import Columns from "../../Columns";
 import TableRow from "../../TableRow";
 import { getSeasonResults } from "../../schedule/schedule";
-import { leagueTable, teamBadges } from "../../../standings";
+import { leagueTable } from "../../../standings";
 import { leagueInfo } from "../../../round";
 import Nothing from "../../../components/shell/Nothing";
 import { BOARD, PANEL } from "@/app/desk";
@@ -33,9 +33,8 @@ import { matchHref } from "../../../prem/match/[id]/matchRoutes";
  *  the two objects are tied together rather than competing. `mine` still marks
  *  the reader's own row and keeps its one meaning. */
 export async function TableTab({ tie, mine }: { tie: readonly string[]; mine: string | null }) {
-  const [rows, badges, info, results] = await Promise.all([
+  const [rows, info, results] = await Promise.all([
     leagueTable(),
-    teamBadges(),
     leagueInfo(),
     getSeasonResults(),
   ]);
@@ -65,7 +64,6 @@ export async function TableTab({ tie, mine }: { tie: readonly string[]; mine: st
                 key={row.teamId}
                 sort="rank"
                 row={row}
-                badge={badges.get(row.teamId)}
                 mine={row.teamId === mine}
                 form={form.get(row.teamId) ?? []}
                 tint={tie.includes(row.teamId) ? teamColours(row.teamId).primary : undefined}

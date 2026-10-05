@@ -135,8 +135,6 @@ export { mapTeamRosters } from "./fantrax/rosters";
 export { mapDraftPicks } from "./fantrax/draft";
 export type { DraftPick } from "./fantrax/draft";
 export { mapStandings } from "./fantrax/standings";
-export { mapTeamBadges } from "./fantrax/badges";
-export type { TeamBadge } from "./fantrax/badges";
 export { mapSeasonResults } from "./fantrax/results";
 export type { PeriodResult } from "./fantrax/results";
 export { mapSeasonStats } from "./fantrax/seasonStats";

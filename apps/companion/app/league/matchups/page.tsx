@@ -7,7 +7,6 @@ import { getLeagueSquads } from "../../squads";
 import { myTeamId } from "../../session";
 import { liveScores, pendingByTeam } from "../../scoreboard";
 import { leagueScoring } from "../../scoring";
-import { teamBadges } from "../../standings";
 import { roundUnderway } from "../../football";
 import { yoursFirst } from "../../mine";
 import FantraxSilent from "../../components/shell/FantraxSilent";
@@ -80,7 +79,7 @@ export default async function MatchupPage() {
   // kickoffs — and printed "4 to play" on the other side of the same line anyway.
   const underway = roundUnderway(squads.snapshot);
 
-  const [mine, badges, scoring] = await Promise.all([myTeamId(squads.period.teams), teamBadges(), leagueScoring()]);
+  const [mine, scoring] = await Promise.all([myTeamId(squads.period.teams), leagueScoring()]);
   const { scores, refused } = await liveScores(period);
   const pending = pendingByTeam(squads.period.teams, scoring?.rules ?? null, squads.snapshot, squads.display);
   const owed = [...pending.values()].reduce((total, team) => total + team.players, 0);
@@ -131,7 +130,6 @@ export default async function MatchupPage() {
               pairing={pairing}
               scores={scores}
               pending={pending}
-              badges={badges}
               mine={mine}
               underway={underway}
             />

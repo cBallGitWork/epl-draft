@@ -23,7 +23,6 @@ import { getLeagueSquads, readableOr404, teamDisplay } from "../../../squads";
 import { roundOf } from "../../../round";
 import { liveScores, squadLivePoints } from "../../../scoreboard";
 import { newsFor, readPoolNews } from "../../../poolNews";
-import { teamBadges } from "../../../standings";
 import { myTeamId } from "../../../session";
 import { MATCHUPS } from "../../routes";
 import { sheetEvents } from "./events";
@@ -120,11 +119,7 @@ export default async function HeadToHeadPage({
   }
 
   // One cached read of the whole pool's news, narrowed per sheet below.
-  const [mine, badges, stories] = await Promise.all([
-    myTeamId(squads.period.teams),
-    teamBadges(),
-    readPoolNews(),
-  ]);
+  const [mine, stories] = await Promise.all([myTeamId(squads.period.teams), readPoolNews()]);
   const { scores, refused } = await liveScores(period);
   // What this league calls each scoring category. Its own vocabulary, off its
   // own payload — the two leagues do not share one.
@@ -176,7 +171,6 @@ export default async function HeadToHeadPage({
     return {
       team,
       score: scores.get(team.teamId),
-      badge: badges.get(team.teamId),
       mine: team.teamId === mine,
       lineup:
         detail === undefined ? (

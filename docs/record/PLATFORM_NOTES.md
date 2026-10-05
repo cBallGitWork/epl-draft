@@ -44,6 +44,11 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## A fantasy team is its name: no Fantrax logo is drawn — decided 5 Oct 2026
+
+Craig, 5 Oct: *"remove the fantrax team logos from the site, doesnt look right"*. The badge each manager picked
+(`logoUrl512`) and the initial disc that stood in for one are gone; club crests and `LeagueCrest` stay.
+
 ## Every time is printed in London, Fantrax's included — decided 2 Oct 2026
 
 Craig, 2 Oct: *"Times need to be local time"*. Until then Fantrax's transaction stamps (`"Wed Sep 2, 2026,

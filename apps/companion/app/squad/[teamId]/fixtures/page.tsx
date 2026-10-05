@@ -5,7 +5,6 @@ import { teamOr404 } from "../team";
 import Season from "../../../league/schedule/Season";
 import { getSchedule, getSeasonResults, type ScheduleRound } from "../../../league/schedule/schedule";
 import { seasonRows } from "../../../league/schedule/teamSeason";
-import { teamBadges } from "../../../standings";
 import { PANEL } from "@/app/desk";
 
 // Every gameweek this side plays, played and to come: the only view of one team's whole season.
@@ -39,10 +38,7 @@ export default async function FixturesPage({
   const tiesIn = (at: ScheduleRound): CompetitionTie[] =>
     leagueTies(periodPairings(info.matchups, info.teams, at.period));
 
-  const [rows, badges] = await Promise.all([
-    getSeasonResults().then((results) => seasonRows(read.rounds, tiesIn, results, teamId)),
-    teamBadges(),
-  ]);
+  const rows = seasonRows(read.rounds, tiesIn, await getSeasonResults(), teamId);
 
   return (
     <TeamShell
@@ -56,7 +52,7 @@ export default async function FixturesPage({
             Fantrax has paired {team.teamName} with nobody this season.
           </p>
         ) : (
-          <Season rows={rows} badges={badges} teamId={teamId} />
+          <Season rows={rows} teamId={teamId} />
         )}
       </section>
     </TeamShell>
