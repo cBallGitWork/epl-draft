@@ -337,6 +337,10 @@ export const PLANNER_RUN = 6;
  *  in a season. */
 export const TRANSACTION_PAGE_SIZE = 100;
 
+/** The predicted elevens: Friday from 16:00 London, an hour after the press conferences end; a lock
+ *  earlier than Tuesday's files the day before (Sunday = 0). Craig, 5 Oct 2026. */
+export const PREDICTED_XI = { filing: { weekday: 5, hour: 16, maxLeadDays: 3 } } as const;
+
 /** Lawro's predictions: when the column files and how a tie is called. Tuned against a league
  *  nobody has drafted yet, so retune after gameweek 9 by counting the gut calls in the archive. */
 export const PREDICTIONS = {
