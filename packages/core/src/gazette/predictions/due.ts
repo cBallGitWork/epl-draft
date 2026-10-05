@@ -6,24 +6,31 @@ import { MS_PER_DAY, instantOf, londonDayOf, londonTime, londonWeekday } from ".
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-/** The London day the column files for a round locking at `locksAt`, as `YYYY-MM-DD`. */
-export function filingDay(locksAt: string): string | null {
+/** A weekday and London hour a look-ahead files at, and how many days before the lock that weekday may fall. */
+export type Filing = { weekday: number; hour: number; maxLeadDays: number };
+
+/** The London day a column files for a round locking at `locksAt`, as `YYYY-MM-DD`. */
+export function filingDay(locksAt: string, filing: Filing = PREDICTIONS.filing): string | null {
   const lockDay = londonDayOf(locksAt);
   const weekday = WEEKDAYS.indexOf(londonWeekday(locksAt));
   if (lockDay === null || weekday < 0) return null;
-  const { weekday: filing, maxLeadDays } = PREDICTIONS.filing;
-  const back = ((weekday - filing + 6) % 7) + 1;
-  return dayBefore(lockDay, back <= maxLeadDays ? back : 1);
+  const back = ((weekday - filing.weekday + 6) % 7) + 1;
+  return dayBefore(lockDay, back <= filing.maxLeadDays ? back : 1);
 }
 
-/** Whether the column is due at `now` for a round locking at `locksAt`. */
-export function predictionsDue(locksAt: string, now: string): boolean {
+/** Whether a column filing on `filing` is due at `now` for a round locking at `locksAt`. */
+export function dueBeforeLock(locksAt: string, now: string, filing: Filing): boolean {
   const lock = instantOf(locksAt);
   const at = instantOf(now);
-  const day = filingDay(locksAt);
+  const day = filingDay(locksAt, filing);
   const today = londonDayOf(now);
   if (lock === null || at === null || at >= lock || day === null || today === null) return false;
-  return today > day || (today === day && Number(londonTime(now).slice(0, 2)) >= PREDICTIONS.filing.hour);
+  return today > day || (today === day && Number(londonTime(now).slice(0, 2)) >= filing.hour);
+}
+
+/** Whether Lawro's column is due at `now` for a round locking at `locksAt`. */
+export function predictionsDue(locksAt: string, now: string): boolean {
+  return dueBeforeLock(locksAt, now, PREDICTIONS.filing);
 }
 
 /** A calendar day `days` earlier, in plain date arithmetic: no clock and no zone. */

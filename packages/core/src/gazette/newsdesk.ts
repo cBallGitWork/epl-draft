@@ -1,5 +1,6 @@
 import { binXiDue } from "./binXi/due";
-import { predictionsDue } from "./predictions/due";
+import { PREDICTED_XI } from "../config";
+import { dueBeforeLock, predictionsDue } from "./predictions/due";
 import type { StoryKind } from "./story";
 import type { TieState } from "./tieState";
 
@@ -97,8 +98,8 @@ export function newsdesk(
     want({ kind: "presser", key: day.key, slug: day.slug, day: day.day, ...about });
   }
 
-  // The elevens predict the round ahead, so they sit outside the gates above for the Team Sheet's reason.
-  if (desk.lineups !== null) {
+  // The elevens predict the round ahead, so they sit outside the gates above, and wait for Friday's pressers.
+  if (desk.lineups !== null && desk.next !== null && dueBeforeLock(desk.next.locksAt, now, PREDICTED_XI.filing)) {
     want({ kind: "predicted-xi", key: desk.lineups.key, slug: desk.lineups.slug, ...about });
   }
 
