@@ -32,8 +32,8 @@ import { normalizeBin, type StoryBin } from "./binXi/cargo";
 /** One team's entry in a power ranking. */
 interface StoryRank {
   teamId: string;
-  /** Places moved since last time; 0 is held, negative is fell. */
-  move: number;
+  /** Places moved since last time; 0 is held, negative is fell, absent where there was no last time. */
+  move?: number;
   line: string;
 }
 
@@ -232,7 +232,7 @@ export function normalizeExtras(raw: unknown): StoryExtras | undefined {
     ? extras.ranks.filter(
         (r): r is StoryRank =>
           typeof r?.teamId === "string" && r.teamId !== "" &&
-          typeof r.move === "number" && typeof r.line === "string",
+          (r.move === undefined || typeof r.move === "number") && typeof r.line === "string",
       )
     : [];
   if (ranks.length > 0) out.ranks = once(ranks, (r) => r.teamId);

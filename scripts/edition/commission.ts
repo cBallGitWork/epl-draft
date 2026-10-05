@@ -1,4 +1,4 @@
-import { type Assignment, buildLawroBrief, buildPresserBrief } from "@epl/core";
+import { type Assignment, buildLawroBrief, buildPresserBrief, buildSeasonBrief } from "@epl/core";
 import { faceOf } from "./faces";
 import {
   fixturePreviewBrief,
@@ -10,7 +10,9 @@ import { newsBrief } from "./news";
 import { FIXTURE_PREVIEW, TIE_CALL, TIE_REPORT } from "./voice/matches";
 import { DODGERS, ELEVEN, POWER_RANKING, WIRE } from "./voice/columns";
 import { LAWRO } from "./voice/lawro";
+import { LAWRO_SEASON } from "./voice/lawroSeason";
 import type { PredictionsDesk } from "./predictions";
+import type { SeasonDesk } from "./season";
 import type { DraftJob } from "./draftWriter";
 import type { ReportsJob } from "./reports";
 import type { SheetsDesk } from "./sheets";
@@ -28,7 +30,7 @@ import { edition, faceCtx, type DeskContext } from "./dispatch";
 /** How a column comes to exist: a voice and a brief for a writer, or a set of
  *  facts the desk prints itself. */
 type Commission =
-  | { system: string; brief: string; lawro?: PredictionsDesk; sheets?: SheetsDesk; reports?: ReportsJob; draft?: DraftJob }
+  | { system: string; brief: string; lawro?: PredictionsDesk; season?: SeasonDesk; sheets?: SheetsDesk; reports?: ReportsJob; draft?: DraftJob }
   | { system: string; brief: string; bin: BinDesk }
   | { printed: Record<string, unknown> };
 
@@ -45,6 +47,13 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
     if (desk === null) return null;
     const brief = buildLawroBrief({ ...desk, teams: ctx.info.teams.map(({ teamId, name }) => ({ teamId, name })) });
     return brief === null ? null : { system: LAWRO, brief, lawro: desk };
+  }
+
+  // His season column likewise, with the table, the title, the four, the spoon and the bold call already made.
+  if (assignment.kind === "season-predictions") {
+    const desk = ctx.season;
+    if (desk === null) return null;
+    return { system: LAWRO_SEASON, brief: buildSeasonBrief({ calls: desk.calls, schedule: desk.schedule, locksAt: desk.locksAt, slotName: desk.slotName }), season: desk };
   }
 
   // A match-day report is written, checked and read back through its own newsroom, from the day's joined facts.

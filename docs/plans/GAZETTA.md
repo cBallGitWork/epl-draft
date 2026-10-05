@@ -227,6 +227,11 @@ column files on Thursday evening under Mark Lawrenson's own name, in his voice
 (`voice/lawro.ts`), with every call and score made by code and his record marked
 from the archive. PLATFORM_NOTES carries the decisions.
 
+**Lawro's season predictions** — SHIPPED 5 Oct 2026 (Craig: *"can lawrenson do a season predictions based off the
+draft results?"*): once, between the end of the draft and the first lock, the predicted table with a line a side,
+his title pick, the playoff places, the wooden spoon and one bold call, all made by code from the squads as
+drafted (`gazette/season/`).
+
 Between them they cost **one prompt paragraph**: Crooks's *"and finally, a word
 about…"* sign-off — a digression about a manager, a referee, a crowd, something
 not in the eleven at all. The 3 Sep ruling against per-man captions stands; that

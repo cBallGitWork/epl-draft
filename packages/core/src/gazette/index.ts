@@ -160,3 +160,15 @@ export type { BinMatch } from "./binXi/brief";
 export { binKeyStats } from "./binXi/keyStats";
 export { checkBin } from "./binXi/checks";
 export type { StoryBin } from "./binXi/cargo";
+
+// Lawro's season predictions: the season played out from the draft, every call made in code.
+export { seasonMan } from "./season/men";
+export { playSeason } from "./season/play";
+export { seasonCalls } from "./season/calls";
+export { buildSeasonBrief } from "./season/brief";
+export { checkSeason, lineKey } from "./season/checks";
+export { assembleSeason, mergeSeason, readSeasonDraft } from "./season/column";
+export type { CallMan, SeasonCalls } from "./season/calls";
+export type { SeasonSchedule } from "./season/brief";
+export type { SeasonDraft } from "./season/checks";
+export type { PlayedSeason, SeasonSquad } from "./season/play";

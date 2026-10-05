@@ -14,6 +14,7 @@ const desk = (over: Partial<DeskState> = {}): DeskState => ({
   lineups: null,
   ahead: null,
   next: null,
+  season: null,
   reportDays: [],
   draftReports: [],
   ...over,
@@ -203,5 +204,28 @@ describe("newsdesk", () => {
     // A round the calendar cannot place stamps nothing, and the story keeps today's.
     const unplaced = newsdesk(desk({ pressers: [thu], lineups }), none, NOW);
     expect(unplaced.some((a) => a.round !== undefined)).toBe(false);
+  });
+});
+
+describe("Lawro's season predictions", () => {
+  const season = { period: 6, gameweek: 6, locksAt: "2026-10-10T11:15:00.000Z" };
+
+  it("is due once the draft is done, on any day before the season's first lock, beside the week's own columns", () => {
+    const week = desk({ gameweek: 5, period: 5, finished: true, ties: [], next: { ...season }, season });
+    expect(newsdesk(week, none, "2026-10-07T17:00:00.000Z").find((a) => a.kind === "season-predictions")).toEqual({
+      kind: "season-predictions",
+      key: "season-predictions:gw6",
+      slug: "gw6-season-predictions",
+      round: { period: 6, gameweek: 6 },
+    });
+    // The weekly column keeps its own evening: Thursday's firing has both.
+    expect(newsdesk(week, none, "2026-10-08T17:30:00.000Z").map((a) => a.kind)).toEqual(["predictions", "season-predictions"]);
+  });
+
+  it("is not due before the draft is done, once filed, or from the first lock", () => {
+    const week = desk({ gameweek: 5, period: 5, ties: [] });
+    expect(newsdesk(week, none, "2026-10-07T17:00:00.000Z").map((a) => a.kind)).not.toContain("season-predictions");
+    expect(newsdesk({ ...week, season }, (key) => key === "season-predictions:gw6", "2026-10-07T17:00:00.000Z")).toEqual([]);
+    expect(newsdesk({ ...week, season }, none, "2026-10-10T11:15:00.000Z")).toEqual([]);
   });
 });
