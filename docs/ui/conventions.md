@@ -291,7 +291,7 @@ with its row here in the same commit.**
 | `PINNED_BESIDE_INDEX` | `PINNED_NAME` starting where a pinned index block ends, at `INDEX_WIDTH`'s offsets. | 3 sites in 2 boards: a player's match log, Teams (2 Oct 2026) |
 | `league/ScrollBoard` | A board that scrolls sideways, with drawn cues under a thumb: a fade while there is more, a gauge docked above the rail, a shadow on the pinned lead once scrolled (`.cm-board`, `desk.css`). A pinned board passes `bg-surface`. | 23 boards (27 Sep 2026) |
 | `TableHeads` `LeadHeads` · `sortedAs` · `SortArrow` | A pinned lead's two bare heads; a `SortHead`'s direction from "is this the column" and "descending"; the ▲/▼ beside a head. | 6 · 9 · 1 sites (30 Sep 2026; the club stats board joined) |
-| `gazette/StoryFace` · `hasPicture` | A story's own picture: its man, else its columnist's photograph. | 3 ranks (splash, shoulder, brief) |
+| `gazette/StoryFace` · `hasPicture` | A story's own picture: its man, else its columnist's photograph, in `.paper-frame`. | 3 sites at 2 ranks (splash; a shoulder's and a brief's card) |
 | `GAMEWEEK_HEAD` · `GAMEWEEK_TITLE` | A gameweek view's header row and title, shared with its loading skeleton so the page does not jump when it lands. | 5 files |
 | `DESK_ONLY` · `standDown()` | A column shown on the desk only; `standDown` keeps it when the table is sorted by it, or the sort arrow and `aria-sort` would hide with it. | 4 files |
 | `players/BoardRow` | The Data boards' shared row: `LeadFace` (crest, name, `after` slot, position under it on a phone), `PIN_TILE` · `PIN_NAME`, `LEAD_WIDTH`, `FIGURE`. Taken at two because Craig asked for it (24 Sep 2026: *"make sure we are using shared code"*) and the two boards must agree. | 2 boards (Players, Projections) |

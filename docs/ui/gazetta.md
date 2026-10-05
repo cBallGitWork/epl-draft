@@ -82,9 +82,19 @@ business, and when lineups lock.
    wrong word for a photograph — a paper's splash is its top story, and that
    name is now on the component that prints one.
 
+   **On a desk the three ranks are one grid of equal cards** (Craig, 5 Oct 2026,
+   with BBC Sport's desktop front page: *"copy this so the thumbnails dont
+   stretch"*). From 28rem of the stories' own width (`@container/stories`) the
+   lead spans two columns, picture over headline; from 42rem the grid is three
+   wide, the lead takes two rows as well, the shoulders run down the third column
+   beside it and the briefs follow as cards: picture, standing head, headline,
+   dateline. 1280 and 1440 both get three: the sheet is capped at 72rem, so the
+   stories measure 774 and 776px. The wrappers below are `display: contents`
+   there, so phone and desk are one markup.
+
    **The two shoulders** (`SHOULDER_STORIES`, `gazette/Teaser`) run side by side
    directly under the lead, each with its standing head, headline, deck and
-   dateline. Two columns at *every* width, phones included: the splash / two
+   dateline. Two columns on a phone too: the splash / two
    seconds / briefs shape is what a broadsheet does above the fold and what a
    news site does on a 390px screen, and it is the same problem solved twice —
    a reader has to be able to rank the top three stories before reading a word.
@@ -93,13 +103,16 @@ business, and when lineups lock.
    and a lone half-width column with dead paper beside it is worse than a wide
    one.
 
-   **The briefs** (`gazette/Brief`) take the rest: a thumbnail, standing head
-   and headline. No deck and no dateline —
-   dropping them is what keeps the third rank visibly third.
+   **The briefs** (`gazette/Brief`) take the rest: on a phone a row of
+   thumbnail, standing head and headline, with no deck and no dateline —
+   dropping them is what keeps the third rank visibly third. On a desk each is a
+   card and carries its dateline, the grid's meta line.
 
-   **Every rank carries a picture, and the SIZE is the hierarchy** — a band over
-   the splash, a card on each shoulder, a 56px thumbnail on a brief
-   (`gazette/Face`). *This reverses "a page that gave every story a photograph
+   **Every rank carries a picture, all in one frame** — `.paper-frame`, 16:9,
+   cropped and never scaled to fit: full-bleed over the splash on a phone, the
+   card's width on a shoulder, a 96px thumbnail in a brief's row (`gazette/Face`,
+   `ColumnistPhoto`, `Drawing`). A cut-out is sized off the frame's height, so his
+   head stays in it at any width. *This reverses "a page that gave every story a photograph
    would be a page with no lead on it", which stood here until 3 Sep 2026.* That
    is true only while every photograph is the same size, and the reference Craig
    handed over — a news site's front page on a phone — pictures the hero, both
