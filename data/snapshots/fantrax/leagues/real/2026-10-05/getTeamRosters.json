@@ -1,0 +1,530 @@
+{
+  "period": 6,
+  "rosters": {
+    "qgucu9dgmufwva1x": {
+      "teamName": "its_ohi",
+      "rosterItems": [
+        {
+          "id": "05gcr",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05akv",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "051kl",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "070hc",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "072wq",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "067yz",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06f8y",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "03frx",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "052ca",
+          "position": "D",
+          "status": "ACTIVE"
+        }
+      ],
+      "salaryCap": 200
+    },
+    "aekx2715mtzgcl3f": {
+      "teamName": "The Truffle Pigs",
+      "rosterItems": [
+        {
+          "id": "04sjt",
+          "position": "G",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "04agz",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06phe",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06mn0",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05tre",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06v0y",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "0784z",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06zbx",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06xzd",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "078i7",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05rb8",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06cm1",
+          "position": "F",
+          "status": "ACTIVE"
+        }
+      ],
+      "salaryCap": 200
+    },
+    "syjkob6cmuobagfu": {
+      "teamName": "GlengarryHearts",
+      "rosterItems": [
+        {
+          "id": "04lav",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05omu",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06v0p",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "04abn",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05opj",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "03vlj",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "076dq",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "067zv",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "0646f",
+          "position": "F",
+          "status": "ACTIVE"
+        }
+      ],
+      "salaryCap": 200
+    },
+    "7z8fy0pnmuogbtdw": {
+      "teamName": "Cowthenbeef",
+      "rosterItems": [
+        {
+          "id": "07848",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06jgi",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05r94",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "049tq",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06v07",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05g2o",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06cmu",
+          "position": "G",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05ylj",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06dmj",
+          "position": "D",
+          "status": "ACTIVE"
+        }
+      ],
+      "salaryCap": 200
+    },
+    "ipnp5y4mmu9j7kop": {
+      "teamName": "Hazza Maguazza's Redempshazza",
+      "rosterItems": [
+        {
+          "id": "05nzu",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "04e1c",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "067yv",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "068ym",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "032f9",
+          "position": "G",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "0427d",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05o8o",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05oig",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "04y92",
+          "position": "M",
+          "status": "ACTIVE"
+        }
+      ],
+      "salaryCap": 200
+    },
+    "uexqrijomu8l5asi": {
+      "teamName": "AtleticoTimHortons",
+      "rosterItems": [
+        {
+          "id": "06y9m",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05ogb",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05oz3",
+          "position": "G",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05l27",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "04fk1",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06pia",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "0639x",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "068y0",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06nu7",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06c6g",
+          "position": "F",
+          "status": "ACTIVE"
+        }
+      ],
+      "salaryCap": 200
+    },
+    "l5kunst8msgbirdf": {
+      "teamName": "The Raccoons",
+      "rosterItems": [
+        {
+          "id": "061vq",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "067ys",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05748",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05gcc",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "07898",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05l8q",
+          "position": "M",
+          "status": "ACTIVE"
+        }
+      ],
+      "salaryCap": 200
+    },
+    "kpj0z744muh1qwtd": {
+      "teamName": "Bayern Bru",
+      "rosterItems": [
+        {
+          "id": "03rzp",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "0784x",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05r9b",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "050jq",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "0793q",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06znb",
+          "position": "G",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "056iy",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "03gu4",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05trb",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "02lm7",
+          "position": "M",
+          "status": "ACTIVE"
+        }
+      ],
+      "salaryCap": 200
+    },
+    "7to6xosimu8hyyw5": {
+      "teamName": "If anyone can, Bannan can",
+      "rosterItems": [
+        {
+          "id": "06p6j",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06ex4",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05uor",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06jh3",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05tqx",
+          "position": "G",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05uht",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "0784y",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06uyc",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "04qr9",
+          "position": "M",
+          "status": "ACTIVE"
+        }
+      ],
+      "salaryCap": 200
+    },
+    "0g0j5mkomuqqwsbu": {
+      "teamName": "domeitalycoach",
+      "rosterItems": [
+        {
+          "id": "05o6h",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05a6e",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05y9n",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06cmm",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06fup",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "02m5b",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06cms",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06v21",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "070hs",
+          "position": "G",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05n07",
+          "position": "D",
+          "status": "ACTIVE"
+        }
+      ],
+      "salaryCap": 200
+    }
+  }
+}

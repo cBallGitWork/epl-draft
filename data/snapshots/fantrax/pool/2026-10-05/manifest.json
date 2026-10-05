@@ -1,0 +1,11 @@
+{
+  "capturedAt": "2026-10-05T05:28:23.361Z",
+  "leagueId": null,
+  "reads": [
+    {
+      "method": "getPlayerIds",
+      "ok": true,
+      "bytes": 104361
+    }
+  ]
+}
