@@ -19,7 +19,7 @@ team picker's one view moved to `/squad/[teamId]/fixtures`, which draws it with
 the same `Season` component off the same `seasonRows`.
 
 Under each round's head, the ties, boxed by competition. Each tie is **one row**:
-both sides with their badges and the score between them, the way a results page
+both sides by name and the score between them, the way a results page
 prints a football match.
 
 A round still to come shows **`test4 v test2`, never `0 – 0`**. Fantrax answers 0
@@ -106,13 +106,11 @@ points is scored by the week's points.
 ## States
 
 - Fantrax silent — `getLeagueInfo` refused, and only that read is fatal here. A
-  table we cannot read costs the blue place blocks; a badge we cannot read costs a picture.
+  table we cannot read costs the blue place blocks.
 - A calendar whose periods hold no gameweek at all.
 - A gameweek with nothing on: no league pairings (every day until 10 Oct) and no
   knockout round — or a competition filter that this gameweek does not play.
-- A team with no badge: its initial on a disc, never a stand-in picture.
-- A tie side nobody holds yet: a dashed disc and the place or the phrase, in
-  italic.
+- A tie side nobody holds yet: the place or the phrase, in italic.
 - A fixture list with no fixtures: that team is paired with nobody, or is not in
   the competition on screen.
 

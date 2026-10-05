@@ -29,9 +29,9 @@ interface RawStatTable {
 
 export interface RawSeasonStats {
   tableList?: RawStatTable[];
-  /** Every team's name and badge, keyed by `teamId`. Carried on this read, so a
+  /** Every team's name, keyed by `teamId`. Carried on this read, so a
    *  board built from it needs no second request to name a row. */
-  fantasyTeamInfo?: Record<string, { name?: string; logoUrl512?: string }>;
+  fantasyTeamInfo?: Record<string, { name?: string }>;
 }
 
 /** One team's standing in one category. */

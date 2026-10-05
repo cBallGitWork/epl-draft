@@ -132,6 +132,8 @@ export default function PlayerImage({
           width={110}
           height={145}
           sizes={sizes}
+          // A kit straight from FPL, as `PlayerShirt` draws it: the optimizer is refused it.
+          unoptimized={rung === "shirt"}
           // A LARGE portrait is the largest thing on its page by construction,
           // so it is the Largest Contentful Paint and Next asks for it to be
           // preloaded rather than discovered. Tied to `large` rather than given

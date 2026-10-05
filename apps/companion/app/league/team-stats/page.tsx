@@ -13,7 +13,6 @@ import {
   thousands,
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
-import TeamBadge from "../../components/league/TeamBadge";
 import { Head, HeadRow, NameHead, SortHead } from "../../components/league/TableHeads";
 import { IndexCell, ROW_LINK } from "../../components/league/TableCells";
 import GroupNav from "../../components/league/GroupNav";
@@ -27,10 +26,10 @@ import { intelStatsManifest } from "../../intel";
 import { getSchedule } from "../schedule/schedule";
 import { readerTeamId } from "../../squads";
 import { yoursInk } from "../../mine";
-import { teamBadges } from "../../standings";
 import { BOARD, FIGURE_CELL, INDEX_WIDTH, MINOR_LABEL, ROW_NAME, ROW_RULE } from "@/app/desk";
 import { teamHref } from "@/app/squad/routes";
 import FantraxSilent from "../../components/shell/FantraxSilent";
+import { shortName } from "../../teamNames";
 
 // Every team against one group of scoring categories, ordered by the head pressed: CM's stat board on fantasy data.
 // FPts and Total are Fantrax's for each lineup; Squad adds up the stats league's counts for the men each team holds.
@@ -52,10 +51,9 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
   // A squad's counts are raw figures, so they rank as Total does.
   const measure: Measure = squad ? "value" : view;
 
-  const [schedule, mine, badges, lines] = await Promise.all([
+  const [schedule, mine, lines] = await Promise.all([
     getSchedule(),
     readerTeamId(),
-    teamBadges(),
     squad ? getSquadStats() : getSeasonStats(),
   ]);
 
@@ -83,7 +81,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
   );
 
   const board = rankBy(columns, lines, category, measure);
-  const named = new Map(table.map((row) => [row.teamId, row.teamName]));
+  const named = new Map(table.map((row) => [row.teamId, shortName(row.teamId, row.teamName)]));
   const groupLabel = columns.map((entry) => entry.label).join(", ");
 
   return (
@@ -145,10 +143,6 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                         href={teamHref(row.teamId)}
                         className={`${ROW_LINK} ${yoursInk(yours)}`}
                       >
-                        <TeamBadge
-                          team={{ teamId: row.teamId, name: named.get(row.teamId) ?? row.teamId }}
-                          url={badges.get(row.teamId)}
-                        />
                         <span className={`min-w-0 truncate ${ROW_NAME}`}>
                           {named.get(row.teamId) ?? row.teamId}
                         </span>

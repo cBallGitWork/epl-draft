@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { LeagueTeam, LiveTeamScore, PeriodPairing, PendingCleanSheets } from "@epl/core";
 import { pairingInvolves } from "@epl/core";
 import ScoreFigure from "../../components/league/ScoreFigure";
-import TeamBadge from "../../components/league/TeamBadge";
 import { yoursBorder, yoursInk } from "../../mine";
 import Pending from "../../components/league/Pending";
 import { LABEL, ROW_NAME } from "@/app/desk";
@@ -26,16 +25,12 @@ export default function PairingCard({
   pairing,
   scores,
   pending,
-  badges,
   mine,
   underway,
 }: {
   pairing: PeriodPairing;
   scores: Map<string, LiveTeamScore>;
   pending: Map<string, PendingCleanSheets>;
-  /** Each manager's own badge, by team id. Empty is ordinary and draws his
-   *  initial instead — see `TeamBadge`. */
-  badges: Map<string, string>;
   /** The reader's own team, or null when nobody is signed in. */
   mine: string | null;
   /** Whether the round is under way — not whether a ball is in the air.
@@ -62,7 +57,6 @@ export default function PairingCard({
           team={pairing.home}
           score={home}
           against={away}
-          badges={badges}
           mine={pairing.home.teamId === mine}
         />
         <span className={`self-center px-1 ${LABEL}`}>
@@ -72,7 +66,6 @@ export default function PairingCard({
           team={pairing.away}
           score={away}
           against={home}
-          badges={badges}
           mine={pairing.away.teamId === mine}
           mirrored
         />
@@ -101,14 +94,12 @@ function Side({
   team,
   score,
   against,
-  badges,
   mine,
   mirrored = false,
 }: {
   team: LeagueTeam;
   score: LiveTeamScore | undefined;
   against: LiveTeamScore | undefined;
-  badges: Map<string, string>;
   mine: boolean;
   mirrored?: boolean;
 }) {
@@ -126,7 +117,6 @@ function Side({
         mirrored ? "flex-row-reverse" : ""
       }`}
     >
-      <TeamBadge team={team} url={badges.get(team.teamId)} />
       <span
         className={`min-w-0 flex-1 truncate ${ROW_NAME} ${
           mirrored ? "text-right" : "text-left"

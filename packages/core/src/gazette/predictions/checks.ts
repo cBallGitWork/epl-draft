@@ -66,11 +66,34 @@ const VERDICT = /\b(?:I|me|my)\b|\bI['’]/u;
 export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
   const faults: Fault[] = [];
   const fault = (section: string, check: string, severity: Severity, evidence: string) => faults.push({ section, check, severity, evidence });
+  const sides = new Set(ctx.calls.flatMap((call) => [ctx.name(call.homeTeamId), ctx.name(call.awayTeamId)]));
+  const rules = lawroProse(ctx, sides, fault);
+
+  rules.deck(draft.deck);
+  const prose: [section: string, text: string][] = [["intro", draft.intro]];
+  for (const call of ctx.calls) {
+    const key = tieKey(call.homeTeamId, call.awayTeamId);
+    const entry = draft.ties.get(key);
+    if (entry === undefined || entry.line.trim() === "") {
+      fault(key, "missing", "hard", "no line for this tie");
+      continue;
+    }
+    if (entry.backs !== call.callsTeamId) fault(key, "backs another side", "hard", String(entry.backs));
+    prose.push([key, entry.line]);
+    tieRules(key, entry.line, call, ctx, sides, fault);
+  }
+
+  for (const [section, text] of prose) rules.section(section, text);
+  columnRules(draft.intro, prose, ctx, fault);
+  return faults;
+}
+
+/** The rules every line of his answers to, wherever it prints: the deck's, and any section of his own prose. */
+export function lawroProse(ctx: CheckContext, sides: ReadonlySet<string>, fault: Report): { deck: (text: string) => void; section: (section: string, text: string) => void } {
   const offered = ctx.offered.map((line) => line.line).join(" ").toLowerCase();
   const exempt = (list: readonly string[]) => list.filter((phrase) => !offered.includes(phrase.toLowerCase()));
   const never = LAWRO_NEVER.filter((word) => !ctx.facts.toLowerCase().includes(word.toLowerCase()));
   const known = new Set(numbersIn(ctx.facts));
-  const sides = new Set(ctx.calls.flatMap((call) => [ctx.name(call.homeTeamId), ctx.name(call.awayTeamId)]));
 
   const everywhere = (section: string, text: string, words: readonly string[]) => {
     for (const pattern of LINEUP_CLAIMS) if (pattern.test(text)) fault(section, "line-up", "hard", text.match(pattern)?.[0] ?? "");
@@ -85,36 +108,23 @@ export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
     for (const word of [...banned(plain, BANNED), ...banned(plain, words)]) fault(section, "banned", "send-back", word);
   };
 
-  everywhere("deck", draft.deck, DESK_BANNED);
-  const prose: [section: string, text: string][] = [["intro", draft.intro]];
-  for (const call of ctx.calls) {
-    const key = tieKey(call.homeTeamId, call.awayTeamId);
-    const entry = draft.ties.get(key);
-    if (entry === undefined || entry.line.trim() === "") {
-      fault(key, "missing", "hard", "no line for this tie");
-      continue;
-    }
-    if (entry.backs !== call.callsTeamId) fault(key, "backs another side", "hard", String(entry.backs));
-    prose.push([key, entry.line]);
-    tieRules(key, entry.line, call, ctx, sides, fault);
-  }
-
-  for (const [section, text] of prose) {
-    everywhere(section, text, exempt([...LAWRO_BANNED, ...LAWRO_FAMOUS]));
-    for (const [check, pattern] of TICS) if (pattern.test(text)) fault(section, check, "send-back", text.match(pattern)?.[0] ?? "");
-    for (const side of sides) {
-      const hosting = text.match(new RegExp(`${escapeRegExp(side)}${AT_HOME}`, "iu"));
-      if (hosting !== null) fault(section, "a league side at home", "send-back", hosting[0]);
-    }
-    for (const sentence of sentences(text)) {
-      if (wordCount(sentence) > LIMITS.sentence) fault(section, "a sentence over 20 words", "send-back", sentence);
-      if (CAREER_CLAIM.test(sentence) && !CORE_MARK.test(sentence) && !ctx.offered.some((line) => line.mark.test(sentence))) {
-        fault(section, "a career claim nobody gave him", "hard", sentence);
+  return {
+    deck: (text) => everywhere("deck", text, DESK_BANNED),
+    section: (section, text) => {
+      everywhere(section, text, exempt([...LAWRO_BANNED, ...LAWRO_FAMOUS]));
+      for (const [check, pattern] of TICS) if (pattern.test(text)) fault(section, check, "send-back", text.match(pattern)?.[0] ?? "");
+      for (const side of sides) {
+        const hosting = text.match(new RegExp(`${escapeRegExp(side)}${AT_HOME}`, "iu"));
+        if (hosting !== null) fault(section, "a league side at home", "send-back", hosting[0]);
       }
-    }
-  }
-  columnRules(draft.intro, prose, ctx, fault);
-  return faults;
+      for (const sentence of sentences(text)) {
+        if (wordCount(sentence) > LIMITS.sentence) fault(section, "a sentence over 20 words", "send-back", sentence);
+        if (CAREER_CLAIM.test(sentence) && !CORE_MARK.test(sentence) && !ctx.offered.some((line) => line.mark.test(sentence))) {
+          fault(section, "a career claim nobody gave him", "hard", sentence);
+        }
+      }
+    },
+  };
 }
 
 /** Where a check files a fault: the section it is in, the rule, how hard, and the words that broke it. */
@@ -146,7 +156,7 @@ function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckCon
   }
 }
 
-function columnRules(intro: string, prose: readonly [string, string][], ctx: CheckContext, fault: Report): void {
+export function columnRules(intro: string, prose: readonly [string, string][], ctx: CheckContext, fault: Report): void {
   const [least, most, words] = LIMITS.intro;
   const count = sentences(intro).length;
   if (count < least || count > most || wordCount(intro) > words) fault("intro", "length", "send-back", `${count} sentences, ${wordCount(intro)} words`);

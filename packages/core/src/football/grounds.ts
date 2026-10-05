@@ -53,6 +53,9 @@ export interface GroundPhoto {
   blur: string;
 }
 
+/** What `/credits` prints for any photograph: who took it, under what terms, and where it came from. */
+export type PhotoCredit = Pick<GroundPhoto, "title" | "author" | "licence" | "licenceUrl" | "source">;
+
 const CLUB_GROUND_PHOTOS: Record<string, Omit<GroundPhoto, "src">> = {
   ARS: {
     title: "Arsenal Stadium - The Emirates 3",

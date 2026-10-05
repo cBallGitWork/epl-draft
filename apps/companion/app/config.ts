@@ -1,4 +1,4 @@
-import { MAX_PAPER_STORIES, type GroundPhoto } from "@epl/core";
+import { MAX_PAPER_STORIES, type PhotoCredit } from "@epl/core";
 
 // The app's own constants — the ones that are decisions about this companion
 // rather than about the league or the football.
@@ -152,10 +152,7 @@ export const DESK_GROUND: string | null = "/ground/crowd.jpg";
 
 /** Its credit, printed on `/credits`: CC BY-SA 4.0 requires the author, the source and the terms.
  *  Replace it with the photograph. */
-export const DESK_GROUND_CREDIT: Pick<
-  GroundPhoto,
-  "title" | "author" | "licence" | "licenceUrl" | "source"
-> | null = {
+export const DESK_GROUND_CREDIT: PhotoCredit | null = {
   title: "Crowd at Anfield before the match 1",
   author: "Rodhullandemu",
   licence: "CC BY-SA 4.0",

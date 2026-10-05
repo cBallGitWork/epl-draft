@@ -302,18 +302,6 @@ export const PL_PHOTO_BASE = "https://resources.premierleague.com/premierleague2
  *  what was counted at each. */
 export const FPL_SHIRT_BASE = `${FPL_SITE}/dist/img/shirts/standard`;
 
-/** Where Fantrax serves the badge a manager picked for his fantasy team.
- *
- *  A prefix and not just a host, because it is a gate as well as an address:
- *  `next.config.ts` allow-lists exactly this path for the image optimizer, and a
- *  badge URL from anywhere else makes `next/image` throw — which takes down a
- *  whole page rather than losing one 26px icon. `getTeamRosterInfo` carries
- *  `logoUploaded`, so a custom upload served from some other path is a state
- *  this league can reach; `mapTeamBadges` drops any URL that is not under here
- *  and the team shows its initial instead. */
-export const FANTRAX_BADGE_BASE =
-  "https://fantraximg.com/assets/images/icons/fantasyteams";
-
 /** The league's clock. Every date a manager reads is in it, whatever their phone
  *  says, because a deadline is the same instant for all sixteen of them and a
  *  capture is filed under the day it happened here.
@@ -375,6 +363,22 @@ export const PREDICTIONS = {
   kindFixtures: 5,
   recentGames: 2,
   factsPerTie: 11,
+} as const;
+
+/** Lawro's season predictions (Craig, 5 Oct 2026): the season played out from the draft, once, before the first lock. */
+export const SEASON_PREDICTIONS = {
+  /** Playings of the season, and the seed that makes them the same every time. */
+  runs: 10_000,
+  seed: 2026,
+  /** The sister model's band is a 5th-to-95th percentile: its half-width is this many deviations. */
+  band: 1.645,
+  /** The correlation between any two men of one eleven in one period: a clean sheet lifts a back line, a rout a
+   *  front line. Taken as independent, a side swung by a seventh of its mean, where draft sides swing by a third. */
+  together: 0.5,
+  /** A chaser is close when he finishes there at least this share as often as the side ahead of him. */
+  close: 0.6,
+  /** A side is clear at the top when the next is at least this many places behind it on average. */
+  clear: 1,
 } as const;
 
 /** The draft match-up desk's talking points (Craig, 29 Sep 2026). */

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { leads, londonDate, DASH } from "@epl/core";
-import TeamBadge from "../../components/league/TeamBadge";
 import type { SeasonRow } from "./teamSeason";
 import { ROW_NAME, SMALL_CAPS } from "@/app/desk";
 import { matchupHref } from "../routes";
@@ -11,11 +10,9 @@ import { teamHref } from "@/app/squad/routes";
 
 export default function Season({
   rows,
-  badges,
   teamId,
 }: {
   rows: SeasonRow[];
-  badges: Map<string, string>;
   /** Whose season this is; every score links to his matchup. */
   teamId: string;
 }) {
@@ -38,8 +35,6 @@ export default function Season({
                 </span>
               )}
             </span>
-
-            <TeamBadge team={row.opponent.team} url={row.opponent.team === null ? undefined : badges.get(row.opponent.team.teamId)} />
 
             <span className="min-w-0 flex-1 truncate">
               <Opponent opponent={row.opponent} gameweek={row.round.gameweek} />

@@ -44,6 +44,15 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## Kits load straight from FPL, not through Vercel's optimizer — decided 5 Oct 2026
+
+On production, `/_next/image` for an FPL kit not already in Vercel's cache answered **502
+`OPTIMIZED_EXTERNAL_IMAGE_REQUEST_UNAUTHORIZED`** for 7 of 9 kits tried on 5 Oct (Arsenal and Newcastle among them);
+every cached one was a 200. FPL's CDN refuses Vercel's fetch while serving the same file to a browser, our `Referer`
+included (200, 25–30 KB). Safari drew the failures as a blue "?" on a rival's pitch. So `PlayerShirt` and
+`PlayerImage`'s kit rung set `unoptimized`, and `img-src` already lists FPL's origin. Portraits stay optimized
+(~330 KB at source); if they start failing the same way, this is the first place to look.
+
 ## Every time is printed in London, Fantrax's included — decided 2 Oct 2026
 
 Craig, 2 Oct: *"Times need to be local time"*. Until then Fantrax's transaction stamps (`"Wed Sep 2, 2026,
@@ -59,6 +68,11 @@ and an `ET` in Mail, so the paper printed New York's 6:11am beside our London de
   read alike; the old stamps' `6:11am` was the only twelve-hour clock in the app.
 - `LeagueTransaction.processedAt` stays their string verbatim; `orderKey` still orders it in their own calendar,
   which gives the same order.
+
+## A fantasy team is its name: no Fantrax logo is drawn — decided 5 Oct 2026
+
+Craig, 5 Oct: *"remove the fantrax team logos from the site, doesnt look right"*. The badge each manager picked
+(`logoUrl512`) and the initial disc that stood in for one are gone; club crests and `LeagueCrest` stay.
 
 ## The real league's schedule went in through Fantrax's own schedule editor — written 2 Oct 2026
 
@@ -322,8 +336,12 @@ Craig set the formats on 27 Sep. The cups are declared in `packages/core/src/lea
   league's own GW20 fixtures are Fantrax's schedule, which Craig sets, and the app draws what it answers.
 - **The playoff is Fantrax's, read from `getLeagueInfo` and never declared.** Craig sets it in Fantrax:
   five teams, a one-leg 4 v 5 play-in, two-leg semi-finals, a one-leg final. `mapPlayoffs` carries the
-  places. On 27 Sep the real league (`mqsjd23smsgbiqzr`) still answered `playoffs: {used: false}`, so the
-  table's cut line draws nothing until he has.
+  places. On 5 Oct the real league (`mqsjd23smsgbiqzr`) answered `numPlayoffTeams: 4` from period 35: the
+  semis, with the play-in left out, so the play-in is ours.
+- **The table's lines** (Craig, 5 Oct: *"1st - £30 for regular season, gets to pick semi opponent; 2-3
+  playoffs; 4-5 playoffs play in; 5-8 Plate - winner gets 1st pick next season"*) are declared in
+  `league/tableLines.ts`: under 1st, under the place before Fantrax's last semi place, under the place after
+  it, and under 8th, the Plate being the play-in's loser and 6th to 8th. A league with no playoff draws none.
 - **A level knockout tie** is settled by points, then the starting eleven's goals, assists, clean sheets and
   minutes played in the tie. Level on all five is a coin toss, which Craig makes: `knockoutWinner` answers
   `"coin toss"`. Every cup tie is one leg.
@@ -357,6 +375,9 @@ draft, and 15/11/5.
   D 6 · M 6 · F 4 · G 3 against rehearsal's 5/5/3/2, with the same minimums (3/2/1/1). So the two
   still differ in a number a hardcoded limit would get wrong, and the demo league's 14/11/3
   differs in the starting size as well.
+- **The real league's squad totals were switched off on draft night** (5 Oct; Craig: *"there's no squad
+  limit now, in terms of positions"*). `roster-limits.json` reads `maxTotal: null` for every position; the
+  minimums and maximum starters (D 3–5 · M 2–5 · F 1–3 · G 1) are unchanged.
 
 ## The ingestion refactor's sweep exception — decided 25 Sep 2026
 
@@ -462,6 +483,37 @@ draft, and 15/11/5.
 - **A local build without `FANTRAX_LEAGUE_ID` 500s every `/paper/[slug]`** under `next start`
   (`DYNAMIC_SERVER_USAGE`). Production names the league when it builds; build with it set before shooting an
   article locally.
+
+## Lawro writes his season predictions once, from the draft, every call by code — decided 5 Oct 2026
+
+Craig, 5 Oct: *"can lawrenson do a season predictions based off the draft results?"*
+
+- **When**: `season-predictions`, keyed `season-predictions:gw{first}`, is due from the end of the draft
+  (`getDraftResults` reads `completed`, so `pedigree` is not empty) until the first head-to-head period locks
+  (`seasonOpening`). It touches no other assignment, so the weekly column keeps its Thursday. CI files it on the
+  first editions firing that finds it due, which for the real league is the first after the swap on 7 Oct.
+- **Every call is code's** (`gazette/season/`). Each squad's best eleven every period, in a shape the league allows
+  (`formations` off `getLeagueInfo` and the recorded minimums; a man at any slot he is eligible for, priced at that
+  slot by the draft pack), then the schedule as `getLeagueInfo` has it, the GW34 double header counting one period
+  score twice, 10,000 times off a fixed seed. The table is mean place, ordered by the league's rule each time
+  (`placeTable`: wins, then fantasy points for; two drawn totals are never equal, so what a win pays does not
+  change the order). The title is first, the regular season's prize. Fantrax's playoff places split at the
+  league's own lines (`tableLines`, #257, `playoffCut`): 1st to 3rd straight in, 4th and 5th playing in, 6th the
+  first out. The spoon is last. The knockout itself is not played: the column calls the table, not the bracket.
+- **The spread**: the sister model's band is a 5th-95th percentile, so one deviation is (high - points) / 1.645 of
+  a man's mean, applied to his league-priced mean. Independent men gave a side a weekly swing of about a seventh of
+  its mean, where draft sides swing by a third, so any two men of one eleven share a correlation of 0.5
+  (`SEASON_PREDICTIONS.together`; the second-team review's fantasy specialist). Past the pack's window (GW17) a
+  man's gameweek is his average inside it, and squads are frozen as drafted: no waivers, no trades.
+- **Per side, in words**: the man it is built round (its first pick), and its weak spot: that man, or its best,
+  when out or no better than an even chance, else the slot its elevens rank lowest at against the other nine.
+  The lines alternate which they open on. The bold call is the side holding the first pick missing the playoffs,
+  else the best man taken in the draft's second half and how many of the first men taken he outscores.
+- **The editor** (`checkSeason`) runs his weekly rules (`lawroProse`, `columnRules`) over every section, then
+  the season's own: a place written beside one side must be the desk's (hard), each paragraph names the sides it
+  is about and only those, a side's line names no other side and no other squad's man (hard), no FPL, simulation
+  or draft round, British spelling, two sentences a line, and no two lines opening alike. The desk assembles the
+  table in its own order, so the model never orders it.
 
 ## Which categories a league scores is data too: A, AF and Sv became AT and GKP — probed 1 Oct 2026
 
@@ -2605,6 +2657,8 @@ or above `PitchRows.MAX_CARD` (110px), so the argument would have one value at
 every call site. The `.webp` is deliberately not asked for — `next/image`
 re-encodes whatever it fetches, so a second URL shape buys one origin fetch per
 club per deploy and costs a second thing to keep in step.
+Since 5 Oct kits load unoptimized (see the decision above), so the browser takes the PNG
+as it is; the `.webp` would now save about two thirds of each kit's bytes and is not yet taken.
 
 Also present and not used: `shirt_0-220.png`, a grey blank with a white cross —
 FPL's own "unknown club". `resources.premierleague.com/…/kits/` is a 403 and
@@ -4626,8 +4680,8 @@ at most, summed over every man each team holds now (`join/squadStats.ts`).
 - What should `apps/lab` look like for the 27/28 platform prototype?
 - **The cups, open since 27 Sep** (see *The cups are declared as ours*): where the starting eleven's
   goals, assists, clean sheets and minutes per team per gameweek are read from; how a group tie on points
-  and points for is placed (draw order assumed); and whether Fantrax can express the playoff's one-leg play-in before two-leg semis, which
-  a capture after Craig sets it will show.
+  and points for is placed (draw order assumed); and whether Fantrax can express the playoff's one-leg play-in before two-leg semis (on 5 Oct it
+  answered four teams, the semis alone).
 
 **Answered 22 Aug, on the first real matchday** (all in the section above):
 `remainingEventPercent` reaches literal zero. Fantrax's `totalFpts` does fill in

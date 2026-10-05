@@ -305,7 +305,7 @@
         "scorer": {
           "teamName": "Hull City",
           "urlName": "ryan-giles",
-          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Hull_City_2.png",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Hull_City_3.png",
           "scorerId": "04sjv",
           "upcomingEventStatusId": "2",
           "teamLogo": true,
@@ -373,8 +373,12 @@
               "typeId": "32"
             },
             {
-              "tooltip": "Sep 21, 8:28 AM: Jacquet generated three tackles (one...",
-              "typeId": "8"
+              "tooltip": "Hamstring - Late fitness test (Game-time decision)",
+              "typeId": "1"
+            },
+            {
+              "tooltip": "Oct 5, 1:44 PM: Jacquet is out of France's lineup...",
+              "typeId": "14"
             }
           ],
           "rookie": false,
@@ -425,7 +429,7 @@
         "scorer": {
           "teamName": "Hull City",
           "urlName": "semi-ajayi",
-          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Hull_City_2.png",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Hull_City_3.png",
           "scorerId": "03ksl",
           "upcomingEventStatusId": "2",
           "teamLogo": true,

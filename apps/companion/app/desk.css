@@ -1109,7 +1109,7 @@ select.cm-bevel {
 
    The two marks are here rather than in their components because both were a JS
    constant applied as an inline `style`, which has no breakpoint at all: a 26px
-   badge with 4px round it cannot fit a 28px row, and no `lg:` utility can reach
+   crest with 4px round it cannot fit a 28px row, and no `lg:` utility can reach
    an attribute. Both components keep asking `next/image` for the LARGER of the
    two sizes, so a phone never gets a soft picture scaled up from the desk's. */
 :root {

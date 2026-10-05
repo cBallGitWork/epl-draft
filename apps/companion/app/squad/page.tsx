@@ -11,6 +11,7 @@ import { yoursBorder } from "../mine";
 import { MY_TEAM, SQUAD } from "./routes";
 import { PANEL, ROW_NAME, HEADING_PLATE } from "@/app/desk";
 import FantraxSilent from "../components/shell/FantraxSilent";
+import { shortName } from "../teamNames";
 
 // Your squad, and everyone else's. Until the draft this is the empty state,
 // which is the state our real league is actually in and therefore the one that
@@ -80,14 +81,17 @@ export default async function SquadsPage() {
   const opponentOf = (teamId: string) =>
     squads.info === null || period === null
       ? null
-      : (headToHead(squads.info.matchups, squads.info.teams, period, teamId)?.opponent.name ??
-        null);
+      : (headToHead(squads.info.matchups, squads.info.teams, period, teamId)?.opponent ?? null);
+  const opponentName = (teamId: string) => {
+    const opponent = opponentOf(teamId);
+    return opponent === null ? null : shortName(opponent.teamId, opponent.name);
+  };
 
   return (
     <div className="flex flex-col gap-3">
       <PageHeader title={yours ? "Your squad" : "Squads"} />
 
-      {yours ? <Squad team={yours} opponent={opponentOf(yours.teamId)} lead /> : null}
+      {yours ? <Squad team={yours} opponent={opponentName(yours.teamId)} lead /> : null}
 
       {/* **The sign-in follows the CODE, not the team on screen**, and it sits
           here rather than under the heading below: a reader being lent a squad is
@@ -119,7 +123,7 @@ export default async function SquadsPage() {
       <ul className="cm-rows flex flex-col">
         {others.map((team) => (
           <li key={team.teamId}>
-            <Squad team={team} opponent={opponentOf(team.teamId)} />
+            <Squad team={team} opponent={opponentName(team.teamId)} />
           </li>
         ))}
       </ul>

@@ -47,6 +47,8 @@ export interface DeskState {
   ahead: { period: number; gameweek: number } | null;
   /** The next round to lock, and when, which is when Lawro's column is due. */
   next: { period: number; gameweek: number; locksAt: string } | null;
+  /** The season's first head-to-head period and its lock, once the draft is complete; Lawro's season column is due until then. */
+  season: { period: number; gameweek: number; locksAt: string } | null;
   /** The London days whose every match has settled, each a match-day report (`reports/due.ts`). */
   reportDays: readonly { key: string; slug: string; day: string }[];
   /** The draft reports due: after Saturday, and at the end of the gameweek (`matchups/due.ts`). */
@@ -104,6 +106,12 @@ export function newsdesk(
   if (desk.next !== null && desk.finished && predictionsDue(desk.next.locksAt, now)) {
     const { period, gameweek } = desk.next;
     want({ kind: "predictions", ...roundSlot("predictions", gameweek), round: { period, gameweek } });
+  }
+
+  // Lawro's season predictions: once, from the end of the draft until the season's first lock (Craig, 5 Oct 2026).
+  if (desk.season !== null && Date.parse(now) < Date.parse(desk.season.locksAt)) {
+    const { period, gameweek } = desk.season;
+    want({ kind: "season-predictions", ...roundSlot("season-predictions", gameweek), round: { period, gameweek } });
   }
 
   return out;

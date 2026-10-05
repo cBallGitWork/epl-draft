@@ -1,7 +1,7 @@
 import type { PublishedStory } from "@epl/core";
 import { yoursInk } from "../../mine";
 
-// The power rankings' ten, printed as the column's own order.
+// A column's ten in its own order: the power rankings, and Lawro's predicted table.
 //
 // **It looks deliberately unlike the tables in the sidebar**, because it is a
 // different kind of claim: those are arithmetic and this is an argument. So no
@@ -43,8 +43,9 @@ export default function Ranks({
 }
 
 /** Movement since the last ranking. Held is a dash and not a nought — the
- *  paper's own absence rule, and a nought here would read as a score. */
-function Move({ places }: { places: number }) {
+ *  paper's own absence rule, and a nought here would read as a score. A table with no last time prints none. */
+function Move({ places }: { places: number | undefined }) {
+  if (places === undefined) return null;
   if (places === 0) {
     return <span className="numeric shrink-0 text-2xs text-faint">—</span>;
   }

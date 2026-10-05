@@ -31,6 +31,4 @@ Every row links to `/squad/[teamId]`.
 ## Known gaps
 
 **No form and no record.** Both would need `getStandings`, which this page does
-not read — a data-flow change rather than part of a visual pass. Team badges are
-the same question: `TeamBadge` exists and the schedule draws it, but the badges
-are a third read.
+not read — a data-flow change rather than part of a visual pass.

@@ -33,13 +33,14 @@ import { drawSplash } from "./edition/image";
 import { CARGO, headlineAndProse, prose } from "./edition/checks";
 import { writeSubedited } from "./edition/subedit";
 import { writeLawro } from "./edition/lawroWriter";
+import { writeSeason } from "./edition/seasonWriter";
 import { writeSheets } from "./edition/sheetsWriter";
 import { writeBin } from "./edition/binWriter";
 import { draftColumn } from "./edition/draftWriter";
 import { reportsColumn } from "./edition/reportsWriter";
 import { presserDesk } from "./edition/presserWeek";
 import { readXi } from "./edition/xi";
-import { deskState } from "./edition/desk";
+import { deskState, seasonOpening } from "./edition/desk";
 import { deskContext } from "./edition/context";
 import { fire, type Run } from "./edition/firing";
 import { printStory, readLedger, readPaperStories, saveFiling } from "./edition/persist";
@@ -139,6 +140,7 @@ async function main(): Promise<void> {
       xiGameweek: xi === null ? null : sheet.gameweek,
       ahead: ahead === undefined ? null : { period: ahead.period, gameweek: sheet.gameweek },
       next: deadline === null || nextRound === undefined ? null : { period: deadline.period, gameweek: nextRound, locksAt: deadline.locksAt },
+      season: seasonOpening(info, calendar, kickoffs, facts.pedigree.size > 0),
     }),
     (key) => isCovered(ledger, FANTRAX_LEAGUE_ID, key),
     now,
@@ -227,6 +229,8 @@ function commissioner(ctx: DeskContext, paper: readonly PublishedStory[], now: s
           ? await reportsColumn(desk.reports, say)
           : desk.sheets !== undefined
           ? await writeSheets(desk.sheets, brief, say)
+          : desk.season !== undefined
+          ? await writeSeason(desk.season, brief, say)
           : desk.lawro === undefined
             ? await writeSubedited(desk.system, brief, say, assignment.kind)
             : await writeLawro(desk.lawro, brief, desk.brief, say);
