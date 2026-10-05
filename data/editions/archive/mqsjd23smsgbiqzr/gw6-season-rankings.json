@@ -1,0 +1,75 @@
+{
+  "slug": "gw6-season-rankings",
+  "kind": "season-rankings",
+  "leagueId": "mqsjd23smsgbiqzr",
+  "period": 6,
+  "gameweek": 6,
+  "filedAt": "2026-10-05T21:47:02.922Z",
+  "expiresAt": null,
+  "edition": "The Form Guide",
+  "byline": "",
+  "reporter": "Mark Lawrenson",
+  "headline": "Lawro's Power Rankings",
+  "deck": "Lawro ranks the ten drafted squads, with GlengarryHearts the strongest and Hazza Maguazza's Redempshazza the weakest.",
+  "body": "Twenty-two years predicting scores on the BBC. Now I rank fantasy squads for a paper named after doughnuts. Nobody is clear, but GlengarryHearts have the toughest defenders and Hazza Maguazza's Redempshazza a midfield that wants a lie down.",
+  "subjects": [
+    "season-rankings:gw6"
+  ],
+  "image": null,
+  "face": null,
+  "ties": [],
+  "extras": {
+    "ranks": [
+      {
+        "teamId": "syjkob6cmuobagfu",
+        "line": "Isak was the first man drafted here, and the forwards around him couldn't trap a bag of cement. Strongest squad going, and I'm still not happy."
+      },
+      {
+        "teamId": "7to6xosimu8hyyw5",
+        "line": "Forwards? Thin. It all rests on Morgan Rogers, and the lad's only got two legs."
+      },
+      {
+        "teamId": "l5kunst8msgbirdf",
+        "line": "Haaland at one end, and at the other a goalkeeper who couldn't catch a cold. Lovely balance, that."
+      },
+      {
+        "teamId": "qgucu9dgmufwva1x",
+        "line": "Softest defenders in the league, and I've had firmer custard. Bruno Fernandes was the first name in the whole draft, and he doesn't defend."
+      },
+      {
+        "teamId": "uexqrijomu8l5asi",
+        "line": "Semenyo, a City man, is the cornerstone. The rest of the forwards wouldn't get a game in my local pub side."
+      },
+      {
+        "teamId": "7z8fy0pnmuogbtdw",
+        "line": "A midfield this flimsy would blow over in a stiff breeze. João Pedro went first for them, and there's precious little beef behind him."
+      },
+      {
+        "teamId": "aekx2715mtzgcl3f",
+        "line": "Kostoulas of Brighton was their opening choice, well down the menu. I've seen more going on in a bus queue than this midfield."
+      },
+      {
+        "teamId": "kpj0z744muh1qwtd",
+        "line": "No goalkeeper in the league is worse, and I've seen better ones in the park on a Sunday. They started with Ødegaard, and passing never stopped a shot yet."
+      },
+      {
+        "teamId": "0g0j5mkomuqqwsbu",
+        "line": "Wirtz is the man they built round, and a tidy one, which annoys me. The defenders would wave a milk float through."
+      },
+      {
+        "teamId": "ipnp5y4mmu9j7kop",
+        "line": "This midfield is a shambles and nobody need pretend otherwise. Saka was taken early, and one lad can't hold a whole house up."
+      }
+    ],
+    "moves": [
+      {
+        "teamId": "0g0j5mkomuqqwsbu",
+        "place": 9,
+        "by": "Craig",
+        "on": "2026-10-05",
+        "said": "dont put dome 10th, put him 9th",
+        "from": 10
+      }
+    ]
+  }
+}

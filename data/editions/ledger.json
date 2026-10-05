@@ -381,7 +381,9 @@
   },
   "mqsjd23smsgbiqzr": {
     "covered": [
-      "season-predictions:gw6"
+      "season-predictions:gw6",
+      "predicted-xi:gw6",
+      "season-rankings:gw6"
     ],
     "threads": []
   }
