@@ -383,6 +383,9 @@ draft, and 15/11/5.
   D 6 · M 6 · F 4 · G 3 against rehearsal's 5/5/3/2, with the same minimums (3/2/1/1). So the two
   still differ in a number a hardcoded limit would get wrong, and the demo league's 14/11/3
   differs in the starting size as well.
+- **The real league's squad totals were switched off on draft night** (5 Oct; Craig: *"there's no squad
+  limit now, in terms of positions"*). `roster-limits.json` reads `maxTotal: null` for every position; the
+  minimums and maximum starters (D 3–5 · M 2–5 · F 1–3 · G 1) are unchanged.
 
 ## The ingestion refactor's sweep exception — decided 25 Sep 2026
 
