@@ -252,7 +252,7 @@ and GW6 locks Sat 10 Oct at 11:15 UTC. `/swap-day` is the runbook.
   27 Aug:
 
   ```bash
-  SMOKE_BASE=https://epl-draft-companion.vercel.app   FANTRAX_LEAGUE_ID=mqsjd23smsgbiqzr npm run smoke
+  SMOKE_BASE=https://timproleague.vercel.app   FANTRAX_LEAGUE_ID=mqsjd23smsgbiqzr npm run smoke
   ```
 
   It prints `✓ served league  <name>`, a manager's team name found on `/league`, so it fails loudly if

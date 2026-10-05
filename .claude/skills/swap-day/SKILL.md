@@ -83,7 +83,7 @@ early goes live early:
 Setting a variable does not rebuild. Trigger a deploy and wait for it.
 
 ```bash
-curl -s https://epl-draft-companion.vercel.app/api/league   # {"leagueId":"mqsjd23smsgbiqzr"}
+curl -s https://timproleague.vercel.app/api/league   # {"leagueId":"mqsjd23smsgbiqzr"}
 ```
 
 Rehearsal sign-ins stop working here, by design.
