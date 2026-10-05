@@ -2,21 +2,8 @@ import type { Club, Story } from "@epl/core";
 import Picture from "./Picture";
 import { written } from "./sentences";
 
-// The paper's stories at their two sizes: the lead, and the headlines that run
-// under it.
-//
-// The lead is the only thing on the page set to be read from across a room. The
-// others are headlines and nothing else — a kicker and a line, no picture, no
-// standfirst — because a front page that gave every story a photograph would be
-// a page with no lead on it.
-//
-// Nothing here decides which story is the biggest. `gazette/stories.ts` ranks
-// them, `sentences.ts` writes the words, and this decides how loudly they are
-// set.
-//
-// Unmarked when it is about the reader's own team, and that is a choice: the
-// accent is a reading aid for scanning a list of sixteen, and there is nothing
-// to scan here. A manager knows his own name in a headline.
+// The desk's own lead, when nothing has been filed: its picture, kicker, headline and standfirst.
+// `gazette/stories.ts` ranks the stories and `sentences.ts` writes the words.
 
 export default function Lead({
   lead,
@@ -44,7 +31,7 @@ export default function Lead({
           {kicker}
         </span>
       </p>
-      <h2 className="paper-display text-balance pt-2.5 text-4xl font-black leading-[1.02] text-ink @3xl:text-6xl">
+      <h2 className="paper-display text-balance pt-2.5 text-4xl font-black leading-[1.02] text-ink @md/stories:text-6xl">
         {headline}
       </h2>
       <p className="pt-2 text-lg italic leading-snug text-muted">{standfirst}</p>

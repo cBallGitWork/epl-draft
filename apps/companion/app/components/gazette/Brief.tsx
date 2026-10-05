@@ -1,11 +1,12 @@
 import TurnLink from "./TurnLink";
-import StoryFace from "./StoryFace";
+import StoryFace, { hasPicture } from "./StoryFace";
+import Dateline from "./Dateline";
 import type { Club, PublishedStory } from "@epl/core";
 import { KICKER } from "./kickers";
 import { storyHref } from "./paperPages";
 
-// A story in the tail: a thumbnail, the standing head and the headline, the sheet's third rank.
-// No deck and no dateline, which is what a shoulder has and this does not: the hierarchy is the design.
+// A story in the tail, the sheet's third rank. On a phone, a row: thumbnail, standing head, headline.
+// On a desk, a card in the grid: the same picture full width over the headline, and its dateline.
 
 export default function Brief({
   story,
@@ -17,19 +18,25 @@ export default function Brief({
   const kicker = KICKER[story.kind];
 
   return (
-    <li id={story.slug} className="scroll-mt-4 border-t border-line">
-      {/* Thumbnail at the left, headline at the right — the shape a paper's
-          news-in-brief column has and the shape a news app's list has, for the
-          same reason: at this size a picture is an identifier, not a picture. */}
-      <TurnLink href={storyHref(story.slug)} className="flex min-h-11 items-center gap-3 py-2">
-        <StoryFace story={story} clubs={clubs} rank="brief" />
-        <span className="flex min-w-0 flex-1 flex-col justify-center gap-0.5">
+    <li id={story.slug} className="scroll-mt-4 border-t border-line @md/stories:pt-3">
+      <TurnLink
+        href={storyHref(story.slug)}
+        className="flex min-h-11 items-center gap-3 py-2 @md/stories:flex-col @md/stories:items-stretch @md/stories:gap-1 @md/stories:py-0"
+      >
+        {hasPicture(story) ? (
+          <span className="block w-24 shrink-0 @md/stories:-mt-3 @md/stories:mb-1 @md/stories:w-full">
+            <StoryFace story={story} clubs={clubs} rank="card" />
+          </span>
+        ) : null}
+        <span className="flex min-w-0 flex-1 flex-col justify-center gap-0.5 @md/stories:gap-1">
           {kicker !== undefined ? (
             <span className="font-sans text-3xs font-bold uppercase tracking-[0.16em] text-muted">{kicker}</span>
           ) : null}
-          <h3 className="paper-display text-pretty text-base font-bold leading-snug text-ink">
+          <h3 className="paper-display text-pretty text-base font-bold leading-snug text-ink @md/stories:text-lg">
             {story.headline}
           </h3>
+          {/* No dateline in a phone's row, which is what keeps the third rank visibly third there. */}
+          <Dateline story={story} as="span" byline={false} className="hidden @md/stories:block" />
         </span>
       </TurnLink>
     </li>

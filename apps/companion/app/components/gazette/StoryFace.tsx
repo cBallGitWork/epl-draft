@@ -5,7 +5,7 @@ import ColumnistPhoto from "./ColumnistPhoto";
 
 // A story's own picture: the man it is about, else its columnist's photograph, else nothing.
 
-type Rank = "splash" | "shoulder" | "brief";
+type Rank = "splash" | "card";
 
 /** Whether a story has a picture of its own to print. */
 export function hasPicture(story: PublishedStory): boolean {
