@@ -1,9 +1,13 @@
 import type { SquadPlayerDetail } from "@epl/core";
 import { playerName } from "@epl/core";
 import BenchStrip from "./BenchStrip";
+import EmptySlot from "./EmptySlot";
+import { KIT_RATIO } from "./PlayerShirt";
 import SquadMarker from "./SquadMarker";
 import type { PitchRow } from "./PitchRows";
 import PitchRows, { widestLine } from "./PitchRows";
+import { withOpenings } from "./openings";
+import { leaguePositionLabel } from "../../positions";
 
 // The XI on the grass and the bench under it, one target per player: tap him to
 // pick him, tap him again for everywhere else he can go.
@@ -74,11 +78,23 @@ function Player({
   );
 }
 
+/** A free place in a line the picked man can move into, the kit's shape; a tap puts him there. */
+function Opening({ position, onPlace }: { position: string; onPlace: () => void }) {
+  const label = leaguePositionLabel(position);
+  return (
+    <button type="button" onClick={onPlace} aria-label={`Move to ${label}`} style={KIT_RATIO} className="block min-h-11 w-full px-1 pt-0.5">
+      <EmptySlot label={label} />
+    </button>
+  );
+}
+
 export default function LineupPitch({
   rows,
   bench,
   pickStateOf,
   onPick,
+  openings,
+  onPlace,
   inColumn = false,
 }: {
   rows: PitchRow<SquadPlayerDetail>[];
@@ -88,9 +104,13 @@ export default function LineupPitch({
   inColumn?: boolean;
   pickStateOf: (player: SquadPlayerDetail) => PickState;
   onPick: (player: SquadPlayerDetail) => void;
+  /** The positions the picked man can move into with nobody coming off. */
+  openings: string[];
+  onPlace: (position: string) => void;
 }) {
+  const lines = withOpenings(rows, openings);
   // One number for the grass and the strip — see `TeamSheet`.
-  const widest = widestLine([...rows, { players: bench }]);
+  const widest = widestLine([...lines, { players: bench }]);
 
   const cell = (player: SquadPlayerDetail) => (
     <Player player={player} pick={pickStateOf(player)} onPick={() => onPick(player)} />
@@ -112,15 +132,15 @@ export default function LineupPitch({
           was the one nobody else had been maintaining. `SquadMarker` is the
           translation both now share. */}
       <PitchRows
-        rows={rows}
-        keyOf={(player) => player.rostered.slot.fantraxId}
+        rows={lines}
+        keyOf={(at) => (typeof at === "string" ? `open-${at}` : at.rostered.slot.fantraxId)}
         widest={widest}
         inColumn={inColumn}
       >
-        {cell}
+        {(at) => (typeof at === "string" ? <Opening position={at} onPlace={() => onPlace(at)} /> : cell(at))}
       </PitchRows>
 
-      <BenchStrip bench={bench} rows={rows.length} widest={widest} inColumn={inColumn}>
+      <BenchStrip bench={bench} rows={lines.length} widest={widest} inColumn={inColumn}>
         {cell}
       </BenchStrip>
     </div>

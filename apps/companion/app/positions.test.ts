@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { backToFront, positionLabel, positionsFromList, positionsLabel } from "./positions";
+import { backToFront, leaguePositionLabel, positionLabel, positionsFromList, positionsLabel } from "./positions";
 
 describe("position labels", () => {
   it("spells one position the way a manager says it", () => {
@@ -23,6 +23,11 @@ describe("position labels", () => {
   it("keeps a letter it has never seen, last", () => {
     expect(positionLabel("X")).toBe("X");
     expect(positionsLabel(["X", "M"])).toBe("M/X");
+    expect(leaguePositionLabel("X")).toBe("X");
+  });
+
+  it("always has a word for a letter the league publishes", () => {
+    expect(leaguePositionLabel("M")).toBe("MID");
   });
 });
 

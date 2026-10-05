@@ -318,6 +318,10 @@ unresolved when it is, and a way out to the full profile.
   question: fifteen permanent accent dots over the only thing on the screen worth
   looking at, to offer the move most taps are not after — while the second tap
   did nothing but put him back down, which closing the dialog already does.
+- **A free place is an empty box on the grass** (Craig, 5 Oct 2026: "say i have a 3-4-3, and i want to put a
+  forward (hes m/f) to mid, then there should be on the pitch view an empty box"). Picking a man draws a dashed
+  box at the end of each line he can move into with nobody coming off, and a tap on it moves him there. That line
+  then holds one more, so every card narrows while he is picked; the pitch is sized by its fullest line.
 - **Every rule is the commissioner's**, read from `getLeagueInfo` and applied by
   `moves.ts` in core: how many may start, how many may sit, the cap at each
   position, and which positions each player is eligible for. Nothing about the

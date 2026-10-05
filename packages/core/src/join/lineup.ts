@@ -64,6 +64,9 @@ export function positionDepth(position: string): number {
   return at === -1 ? PITCH_ORDER.length : at;
 }
 
+/** Position letters back to front, for `.sort`. */
+export const byPositionDepth = (a: string, b: string): number => positionDepth(a) - positionDepth(b);
+
 /** One row of the pitch with everybody in it, reserves included. */
 export interface SquadLine {
   position: string;
@@ -93,7 +96,7 @@ function linesOf(
 
   return [...byPosition.entries()]
     .map(([position, players]) => ({ position, players: [...players].sort(within) }))
-    .sort((a, b) => positionDepth(a.position) - positionDepth(b.position));
+    .sort((a, b) => byPositionDepth(a.position, b.position));
 }
 
 /** The whole squad in positional lines, with the arrangement stripped out.
@@ -128,7 +131,7 @@ export function lineup(team: RosteredTeam): Lineup {
 
   const lines = [...active.entries()]
     .map(([position, players]) => ({ position, players }))
-    .sort((a, b) => positionDepth(a.position) - positionDepth(b.position));
+    .sort((a, b) => byPositionDepth(a.position, b.position));
 
   const benchDepth = (player: RosteredPlayer) => positionDepth(player.slot.position ?? UNPLACED);
   bench.sort((a, b) => benchDepth(a) - benchDepth(b));

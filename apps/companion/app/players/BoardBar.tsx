@@ -4,7 +4,7 @@ import { activeSort, boardHref, filterHref, isChosen } from "./query";
 import { POOL } from "./routes";
 import Search from "./Search";
 import type { PlayersQuery } from "./query";
-import { positionLabel } from "../positions";
+import { leaguePositionLabel } from "../positions";
 import { LABEL, PANEL, SECTION_BAR, SMALL_CAPS } from "@/app/desk";
 import { Carried, clubOptions, Count, Figures, PRESSABLE, Plates, Statuses } from "./BoardControls";
 import QuerySelect from "../components/shell/QuerySelect";
@@ -171,7 +171,7 @@ function PositionChoice({ query, position }: { query: PlayersQuery; position: st
     >
       <span>
         {on ? <span aria-hidden>✓ </span> : null}
-        {positionLabel(position) ?? position}
+        {leaguePositionLabel(position)}
       </span>
     </Link>
   );

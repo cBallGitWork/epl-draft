@@ -19,6 +19,7 @@ import {
 } from "@epl/core";
 import type { PitchRow } from "./PitchRows";
 import { benchFrom, orderBench, swapInOrder } from "./benchOrder";
+import { freeMoves } from "./openings";
 
 // The lineup planner's state: the slots being arranged, the pick in progress, and every move the
 // league's rules allow from here. `LineupPlanner` draws it.
@@ -41,9 +42,8 @@ export function usePlanner(
   // Two ways in, and they are different questions, reached by the same target on
   // the first and second tap. `picked` is the quick swap: one tap chooses a man,
   // and the pitch answers "who can come off for him" by dimming everyone who
-  // cannot. `opened` is the full list for one player, which is the only place a
-  // move with no second player — off to the bench, across to another position —
-  // can be offered.
+  // cannot, and "where is free" with an empty box. `opened` is the full list for
+  // one player.
   // Opens on the PITCH, which is the one thing this screen is for — `Sheet`
   // opens on the list because a rival's squad is a list of who he has, and this
   // is the arrangement you came to change.
@@ -140,6 +140,14 @@ export function usePlanner(
   const partnerOf = (move: Move): string | null =>
     move.kind !== "swap" ? null : move.fantraxId === picked ? move.withId : move.fantraxId;
   const partners = new Set(pickedMoves.flatMap((move) => partnerOf(move) ?? []));
+  // Where he can go with nobody coming off, drawn on the pitch as empty boxes.
+  const free = freeMoves(pickedMoves);
+
+  /** A tap on an empty box: the picked man moves into it. */
+  function place(position: string) {
+    const move = free.find((m) => m.to === position);
+    if (move) play(move);
+  }
 
   /** Swapping with a man who occupies a position the picked player is eligible
    *  for means taking that position. Where he is not — a full XI lets him come
@@ -217,6 +225,8 @@ export function usePlanner(
     setOpened,
     pickStateOf,
     pick,
+    openings: free.map((move) => move.to),
+    place,
     reset,
     markSaved,
     plan: { slots, bench: benchIds },
