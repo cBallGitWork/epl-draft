@@ -180,7 +180,7 @@ export function isPaperRoute(pathname: string): boolean {
 const SUBJECT_GROUND_ROUTES = [CLUB, MATCH];
 
 /** Whether the page under this route draws its own ground, so the shell's standing one stands down: a club,
- *  a match, and a head-to-head over its home team's venue (not the list of them). Only the page knows whose. */
+ *  a match, a head-to-head over its home team's venue and a team's screens over its own (not the lists of them). */
 export function drawsOwnGround(pathname: string): boolean {
-  return owns(SUBJECT_GROUND_ROUTES, pathname) || pathname.startsWith(`${MATCHUPS}/`);
+  return owns(SUBJECT_GROUND_ROUTES, pathname) || pathname.startsWith(`${MATCHUPS}/`) || pathname.startsWith(`${SQUAD}/`);
 }

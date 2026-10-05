@@ -135,4 +135,13 @@ describe("who draws the ground", () => {
   it("keeps the desk's behind the list of head-to-heads, which has no home side", () => {
     expect(drawsOwnGround("/league/matchups")).toBe(false);
   });
+
+  it("leaves a team's screens to its own layout, which draws the team's venue", () => {
+    expect(drawsOwnGround(`${SQUAD}/${RIVAL}`)).toBe(true);
+    expect(drawsOwnGround(`${MY_TEAM}/fixtures`)).toBe(true);
+  });
+
+  it("keeps the desk's behind the squad index, which is nobody's", () => {
+    expect(drawsOwnGround(SQUAD)).toBe(false);
+  });
 });

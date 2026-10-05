@@ -154,6 +154,17 @@ export function headToHead(
     : { team: pairing.away, opponent: pairing.home, home: pairing.home };
 }
 
+/** The first period after `after` in which this team has a head-to-head; undefined when the schedule has none left. */
+export function nextPairedPeriod(
+  matchups: readonly LeagueMatchup[],
+  teams: readonly LeagueTeam[],
+  after: number,
+  teamId: string,
+): number | undefined {
+  const periods = [...new Set(matchups.map((m) => m.period))].filter((p) => p > after).sort((a, b) => a - b);
+  return periods.find((p) => headToHead(matchups, teams, p, teamId) !== undefined);
+}
+
 /** A league's rules and its names for them, as our own sums are priced; null when it described no scoring. */
 export function scoringOf(info: LeagueInfo): LeagueScoring | null {
   return info.scoring === null ? null : { rules: info.scoring, categories: info.scoringCategories };
