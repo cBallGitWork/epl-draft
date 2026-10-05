@@ -2,16 +2,16 @@
  "manifest": {
   "season": "26-27",
   "gameweek": null,
-  "exportedAt": "2026-10-01T14:21:04.580382+00:00",
+  "exportedAt": "2026-10-05T20:53:23.078780+00:00",
   "rows": 50,
   "sources": [
    {
     "path": "data/match_logs/player_match_log/season=26-27/player_match_log.parquet",
-    "mtime": "2026-09-26T16:25:06.354667+00:00"
+    "mtime": "2026-10-02T18:55:25.996599+00:00"
    },
    {
     "path": "data/match_logs/team_match_log/season=26-27/team_match_log.parquet",
-    "mtime": "2026-09-26T16:24:34.212404+00:00"
+    "mtime": "2026-10-02T18:55:26.286889+00:00"
    }
   ],
   "fpl": "https://fantasy.premierleague.com/api/bootstrap-static/"
@@ -23896,7 +23896,7 @@
      "code": 524180,
      "side": "away",
      "started": false,
-     "position": "DM",
+     "position": "CM",
      "minutes": null,
      "onAt": null,
      "offAt": null,
