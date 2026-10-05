@@ -1,11 +1,11 @@
 import ScrollBoard from "../components/league/ScrollBoard";
 import { Fragment } from "react";
-import { LEAGUE_NAME, defaultDescending, isSortKey, seasonForm, sortRows } from "@epl/core";
+import { LEAGUE_NAME, defaultDescending, isSortKey, seasonForm, sortRows, tableLines } from "@epl/core";
 import Columns, { COLUMNS } from "./Columns";
 
 import TableRow from "./TableRow";
 import { getSeasonResults } from "./schedule/schedule";
-import { leagueTable, teamBadges } from "../standings";
+import { leagueTable } from "../standings";
 import Nothing from "../components/shell/Nothing";
 import LeagueShell from "./Shell";
 import { readerTeamId } from "../squads";
@@ -34,10 +34,9 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
   const sort = isSortKey(query.sort) ? query.sort : "rank";
   const descending = query.dir === undefined ? defaultDescending(sort) : query.dir === "desc";
 
-  const [rows, mine, badges, info, results] = await Promise.all([
+  const [rows, mine, info, results] = await Promise.all([
     leagueTable(),
     readerTeamId(),
-    teamBadges(),
     leagueInfo(),
     // The whole season's results in one request, and the only thing on this page
     // that costs a read the table itself did not already make. It is what turns
@@ -46,15 +45,6 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
     // and then won five.
     getSeasonResults(),
   ]);
-  // Where the season's cut falls, and it is the league's answer rather than
-  // ours. Fantrax publishes it — our league is a top four from period 35 — and
-  // for as long as nothing read that field the table drew the placeholder
-  // bracket's invented top TWO instead.
-  //
-  // Null is a real answer and not a missing one: the rehearsal league runs no
-  // playoff at all, and a table with no cut has no line to draw rather than one
-  // at zero.
-  const qualify = info?.playoffs?.places ?? null;
 
   // Empty for every row until Fantrax has settled a round, and empty for a row
   // whose run does not reproduce the record Fantrax published — see
@@ -92,6 +82,9 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
     );
   }
 
+  // Fantrax's playoff count places the semis; the rest is declared in core. No playoff, no lines.
+  const lines = tableLines(info?.playoffs?.places ?? null, rows.length);
+
   return (
     <LeagueShell current="table" teams={info?.teams.length}>
       {/* The FP column is Fantrax's live total and moves all weekend. This was
@@ -116,31 +109,18 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
                 <TableRow
                   sort={sort}
                   row={row}
-                  badge={badges.get(row.teamId)}
                   mine={row.teamId === mine}
                   form={form.get(row.teamId) ?? []}
                 />
-                {sort === "rank" && !descending && cut(row.rank, qualify, rows.length) ? (
-                  /* The playoff line, drawn across the table under the last
-                     qualifying place rather than shaded over the rows above it:
-                     a tinted band reads as "these are yours" on the one row a
-                     manager is looking for.
-
-                     **Yellow, dashed** — Craig, 31 Aug, copying `cm9900/24.jpg`,
-                     which draws exactly this line in exactly this colour under
-                     1st place. It was the league's red on the argument that the
-                     accent is already spoken for on the row that carries it, by
-                     the edge and by the chip. That argument is not wrong; CM's
-                     palette simply is not slot-strict here, and a dashed rule
-                     fifteen rows from a chip is not the ambiguity DESIGN §3 is
-                     guarding against. Recorded rather than done quietly, because
-                     it is the accent taking a second meaning on one screen.
-
-                     Absent entirely for a league that declares no playoff, and
-                     for a table shorter than the cut — a line under the bottom
-                     row states a qualification nobody missed. */
-                  <CutRow span={COLUMNS.length} label="Playoffs" tone="border-accent/80" />
-                ) : null}
+                {/* Rules, not shaded bands, which would read as "these are yours". Yellow and dashed after
+                    `cm9900/24.jpg` (Craig, 31 Aug). Only in Fantrax's own order, where a place is a place. */}
+                {sort === "rank" && !descending
+                  ? lines
+                      .filter((line) => line.under === row.rank)
+                      .map((line) => (
+                        <CutRow key={line.label} span={COLUMNS.length} label={line.label} tone="border-accent/80" />
+                      ))
+                  : null}
               </Fragment>
             ))}
           </tbody>
@@ -148,14 +128,4 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
       </ScrollBoard>
     </LeagueShell>
   );
-}
-
-/** Whether the playoff line falls under this row.
- *
- *  Never under the last one: a line beneath the bottom of the table announces a
- *  cut nobody missed. A two-team league whose top two qualify is exactly the
- *  shape that would draw one, and no league we serve is anywhere near it — the
- *  smallest is ten. */
-function cut(rank: number, qualify: number | null, teams: number): boolean {
-  return qualify !== null && rank === qualify && rank < teams;
 }

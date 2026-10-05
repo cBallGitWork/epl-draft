@@ -163,7 +163,7 @@ function state(man: SquadMan): string {
 }
 
 /** FPL publishes 0, 25, 50, 75 or 100; the brief says what those mean. */
-function availabilityWord(availability: SquadMan["availability"]): string {
+export function availabilityWord(availability: SquadMan["availability"]): string {
   if (availability.state === "injured" || availability.state === "suspended" || availability.state === "unavailable") {
     return `is ${availability.state}`;
   }

@@ -105,7 +105,8 @@ no picture falls back to `DESK_GROUND` rather than wearing somebody else's.
 **A head-to-head takes the HOME team's venue** (Craig, 1 Oct 2026: *"actual draft matches, home
 team uses their background"*). Home is the side Fantrax's schedule lists as home. Each team's
 picture is data, `data/leagues/venues.json` keyed by Fantrax team id, and a team it does not list
-keeps `DESK_GROUND`. Every entry points at `DESK_GROUND` until Craig drops in a real photograph.
+keeps `DESK_GROUND`. All ten teams have their own (Craig, 5 Oct 2026); a team that joins later
+keeps `DESK_GROUND` until one lands.
 
 **The shell cannot pick it, so the subject's own Shell draws it.** `PhotoGround`
 renders above every route and a fixture id says nothing about who is at home, so

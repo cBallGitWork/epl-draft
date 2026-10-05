@@ -5,7 +5,6 @@ import Result from "./Result";
 import RoundHead from "../../components/shell/RoundHead";
 import { getSchedule, getSeasonResults } from "../schedule/schedule";
 import { readerTeamId } from "../../squads";
-import { teamBadges } from "../../standings";
 import FantraxSilent from "../../components/shell/FantraxSilent";
 
 // What has already happened: every played round, newest first, each round's
@@ -30,10 +29,9 @@ import FantraxSilent from "../../components/shell/FantraxSilent";
 export const revalidate = 30;
 
 export default async function ResultsPage() {
-  const [schedule, results, badges, mine] = await Promise.all([
+  const [schedule, results, mine] = await Promise.all([
     getSchedule(),
     getSeasonResults(),
-    teamBadges(),
     // `readerTeamId` and not `myTeamId`: this page has not narrowed the squads
     // itself, so it wants the cached lookup that validates a cookie against the
     // league we are actually serving.
@@ -105,7 +103,6 @@ export default async function ResultsPage() {
                   pairing={pairing}
                   points={byPeriod.get(round.period) ?? EMPTY}
                   gameweek={round.gameweek}
-                  badges={badges}
                   places={places}
                   mine={mine}
                 />

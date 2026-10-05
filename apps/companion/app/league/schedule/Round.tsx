@@ -9,7 +9,6 @@ export default function Round({
   round,
   ties,
   points,
-  badges,
   places,
   mine,
   note,
@@ -17,7 +16,6 @@ export default function Round({
   round: ScheduleRound;
   ties: CompetitionTie[];
   points: Map<string, number | null>;
-  badges: Map<string, string>;
   places: Map<string, number>;
   mine: string | null;
   /** A cup's line in a week it plays no tie, such as its seeding. */
@@ -43,7 +41,6 @@ export default function Round({
                 <Tie
                   tie={tie}
                   points={points}
-                  badges={badges}
                   places={places}
                   round={round}
                   mine={mine}

@@ -136,10 +136,8 @@ Those two are deliberately distinct.
 
 ## Known gaps
 
-~~**No team badges.**~~ Drawn since 22 Aug. The read that was the objection now
-lives in `app/badges.ts` and is shared by the schedule, the matchups list and the
-head-to-head board, so it is one cache entry for four surfaces rather than a
-second read for one page.
+**No team badges**, on purpose. Drawn from 22 Aug and removed 5 Oct 2026 (Craig:
+*"remove the fantrax team logos from the site, doesnt look right"*); a team's name stands alone.
 
 ~~**The points column is headed `FP`, not `Points`.**~~ **Gone 31 Aug 2026.**
 It is `For` now — a league table calls what you scored `For`, and the Fantrax
@@ -167,8 +165,10 @@ app inventing three-a-win is exactly what §3 forbids. Fantrax's own
 it does not answer the question either. The form strip is what carries the trend
 instead.
 
-**A line marks where the playoffs start**, read off the declared bracket by
-`playoffPlaces` rather than written down here: the placeholder's final between 1
-and 2 draws it under second, and the day it becomes Fantrax's published top four
-it moves on its own. Never under the last row — a line beneath the bottom of a
-table announces a cut nobody missed.
+**Four lines mark the season's cuts** (Craig, 5 Oct 2026), each naming what the
+places above it reach: `£30 · picks semi opponent` under 1st, `Playoffs` under
+3rd, `Play-in` under 5th and `Plate` under 8th. `tableLines` places the middle
+two either side of Fantrax's last semi place, so they move if `numPlayoffTeams`
+does; the prize, the play-in and the Plate are declared. A league with no
+playoff draws none, and none is drawn under the last row — a line beneath the
+bottom of a table announces a cut nobody missed.

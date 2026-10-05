@@ -85,6 +85,16 @@ describe("normalizeStory", () => {
     // quiz rows by position.
     expect(survived?.extras?.quiz).toHaveLength(2);
   });
+
+  it("keeps a rank with no movement, which a season's predicted table has none of, and refuses one that is not a number", () => {
+    const survived = normalizeStory(
+      story({
+        kind: "season-predictions",
+        extras: { ranks: [{ teamId: "a", line: "Top." }, { teamId: "b", move: "up" as unknown as number, line: "Second." }, { teamId: "c", move: 0, line: "Third." }] },
+      }),
+    );
+    expect(survived?.extras?.ranks).toEqual([{ teamId: "a", line: "Top." }, { teamId: "c", move: 0, line: "Third." }]);
+  });
 });
 
 describe("normalizePaper", () => {

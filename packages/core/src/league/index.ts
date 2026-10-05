@@ -40,13 +40,15 @@ export { captureStaleness } from "./staleness";
 export { seasonForm } from "./form";
 export type { FormGame, TeamForm } from "./form";
 export { defaultDescending, isSortKey, sortRows } from "./standingsOrder";
+export { tableLines } from "./tableLines";
+export type { TableLine } from "./tableLines";
 export type { SortKey } from "./standingsOrder";
 
 export { pedigreeOf } from "./pedigree";
 export type { Pedigree } from "./pedigree";
 
 export { firstKickoff, locksAt, openingGameweek, periodDays, periodGameweeks, saveOpen } from "./calendar";
-export type { GameweekKickoff } from "./calendar";
+export type { GameweekKickoff, PeriodGameweeks } from "./calendar";
 
 export { lastLockedPeriod, periodToRead, planningPeriod, rosterDisplay } from "./visibility";
 export type { RosterDisplay, SquadReason } from "./visibility";
@@ -133,8 +135,6 @@ export { mapTeamRosters } from "./fantrax/rosters";
 export { mapDraftPicks } from "./fantrax/draft";
 export type { DraftPick } from "./fantrax/draft";
 export { mapStandings } from "./fantrax/standings";
-export { mapTeamBadges } from "./fantrax/badges";
-export type { TeamBadge } from "./fantrax/badges";
 export { mapSeasonResults } from "./fantrax/results";
 export type { PeriodResult } from "./fantrax/results";
 export { mapSeasonStats } from "./fantrax/seasonStats";

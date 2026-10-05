@@ -1,16 +1,16 @@
 {
-  "capturedAt": "2026-10-05T05:28:23.361Z",
+  "capturedAt": "2026-10-05T21:12:55.721Z",
   "leagueId": "mqsjd23smsgbiqzr",
   "reads": [
     {
       "method": "getLeagueInfo",
       "ok": true,
-      "bytes": 113854
+      "bytes": 113760
     },
     {
       "method": "getTeamRosters",
       "ok": true,
-      "bytes": 10770
+      "bytes": 15594
     },
     {
       "method": "getStandings",
@@ -20,7 +20,7 @@
     {
       "method": "getDraftResults",
       "ok": true,
-      "bytes": 22215
+      "bytes": 23531
     },
     {
       "method": "getTransactionDetailsHistory-CLAIM_DROP",

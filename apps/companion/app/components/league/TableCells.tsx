@@ -38,7 +38,7 @@ export function IndexCell({ children, className = "" }: { children: ReactNode; c
 /** The name cell's link on a board row.
  *
  *  A class string rather than a component, on `TableHeads.PLATE`'s precedent:
- *  the three callers wrap different things — a fantasy badge, a club crest, a
+ *  the three callers wrap different things — a team name, a club crest, a
  *  portrait — and pass their own trailing classes, so a component here would
  *  own nothing but a string and would need a `className` prop to hand it back.
  *
