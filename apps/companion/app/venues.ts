@@ -14,9 +14,9 @@ export interface Venue {
   credit?: VenueCredit;
 }
 
-/** A team's venue in a table, or null for a team it does not list. */
+/** A team's venue in a table, or null for a team it does not list (`hasOwn`: the id may be a raw URL segment). */
 export function venueFor(venues: Readonly<Record<string, Venue>>, teamId: string): Venue | null {
-  return venues[teamId] ?? null;
+  return Object.hasOwn(venues, teamId) ? venues[teamId] : null;
 }
 
 /** The venue a team hosts at, from the committed table. */
