@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-01T14:40:57.237Z",
+  "updatedAt": "2026-10-05T21:30:15.079Z",
   "stories": [
     {
       "slug": "news-cmrr48zqz1jno",
@@ -2449,13 +2449,6 @@
               }
             ],
             "fantasy": {
-              "motm": {
-                "name": "Semenyo",
-                "club": "City",
-                "holder": "test1",
-                "points": 13,
-                "did": "2 goals, 1 assist"
-              },
               "top": [
                 {
                   "name": "Semenyo",
@@ -2864,13 +2857,6 @@
               }
             ],
             "fantasy": {
-              "motm": {
-                "name": "Wirtz",
-                "club": "Liverpool",
-                "holder": "test1",
-                "points": 6,
-                "did": ""
-              },
               "top": [
                 {
                   "name": "Wirtz",
@@ -3250,13 +3236,6 @@
               }
             ],
             "fantasy": {
-              "motm": {
-                "name": "Trafford",
-                "club": "Leeds",
-                "holder": "test2",
-                "points": 7,
-                "did": ""
-              },
               "top": [
                 {
                   "name": "Trafford",
@@ -3653,13 +3632,6 @@
               }
             ],
             "fantasy": {
-              "motm": {
-                "name": "Cunha",
-                "club": "United",
-                "holder": "test2",
-                "points": 6,
-                "did": "1 goal"
-              },
               "top": [
                 {
                   "name": "Cunha",
@@ -4113,13 +4085,6 @@
               }
             ],
             "fantasy": {
-              "motm": {
-                "name": "Buendía",
-                "club": "Villa",
-                "holder": "Notemail",
-                "points": 7,
-                "did": "1 goal"
-              },
               "top": [
                 {
                   "name": "Buendía",
@@ -4585,13 +4550,6 @@
               }
             ],
             "fantasy": {
-              "motm": {
-                "name": "Groß",
-                "club": "Brighton",
-                "holder": "123",
-                "points": 11,
-                "did": "1 goal, 1 assist"
-              },
               "top": [
                 {
                   "name": "Groß",
@@ -5025,13 +4983,6 @@
               }
             ],
             "fantasy": {
-              "motm": {
-                "name": "Tarkowski",
-                "club": "Everton",
-                "holder": "testf",
-                "points": 9,
-                "did": "1 assist"
-              },
               "top": [
                 {
                   "name": "Tarkowski",
@@ -5448,13 +5399,6 @@
               }
             ],
             "fantasy": {
-              "motm": {
-                "name": "Barnes",
-                "club": "Newcastle",
-                "holder": "testf",
-                "points": 8,
-                "did": "2 assists"
-              },
               "top": [
                 {
                   "name": "Barnes",
@@ -5872,13 +5816,6 @@
               }
             ],
             "fantasy": {
-              "motm": {
-                "name": "Thomas",
-                "club": "Coventry",
-                "holder": "test3331",
-                "points": 6,
-                "did": ""
-              },
               "top": [
                 {
                   "name": "Thomas",
@@ -6295,13 +6232,6 @@
               }
             ],
             "fantasy": {
-              "motm": {
-                "name": "Schade",
-                "club": "Brentford",
-                "holder": "123",
-                "points": 8,
-                "did": ""
-              },
               "top": [
                 {
                   "name": "Schade",
@@ -7831,6 +7761,71 @@
               ]
             },
             "kickoff": "2026-10-10T14:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "gw6-season-predictions",
+      "kind": "season-predictions",
+      "leagueId": "mqsjd23smsgbiqzr",
+      "period": 6,
+      "gameweek": 6,
+      "filedAt": "2026-10-05T21:30:15.079Z",
+      "expiresAt": null,
+      "edition": "The Form Guide",
+      "byline": "",
+      "reporter": "Mark Lawrenson",
+      "headline": "Lawro's Season Predictions",
+      "deck": "Lawro puts GlengarryHearts top of the table and says Caoimhín Kelleher will outscore four of the first ten men drafted.",
+      "body": "Twenty-two years predicting scores on the national telly, and now ten blokes read this, two of them properly. The draft is done and nobody is clear at the top. Another long season of watching it all happen again.\n\nGlengarryHearts go top because their defenders are among the best three in the league. That is how you win things. They take the thirty quid and the choice of semi-final opponent, which they will enjoy far too much. If anyone can, Bannan can run them close and still come second.\n\nGlengarryHearts, If anyone can, Bannan can and The Raccoons go straight in. its_ohi and AtleticoTimHortons play in for the last place, two sides who look better than they are. Cowthenbeef miss out by a whisker, which is the most annoying place there is.\n\ndomeitalycoach come last, and a defence that brittle was always heading there. The squad has nothing at the back to stop anybody. Hazza Maguazza's Redempshazza finish just above them, and the redemption can wait another year.\n\nKelleher of Brentford went 126th to GlengarryHearts, and he will outscore four of the first ten men taken. A goalkeeper, drafted that late, beating them. Write that down.",
+      "subjects": [
+        "season-predictions:gw6"
+      ],
+      "image": null,
+      "face": null,
+      "ties": [],
+      "extras": {
+        "ranks": [
+          {
+            "teamId": "syjkob6cmuobagfu",
+            "line": "Isak is what they built round. Behind him the forwards are flimsy, and I have seen sturdier deckchairs."
+          },
+          {
+            "teamId": "7to6xosimu8hyyw5",
+            "line": "Forwards are where this side runs dry, and a side that cannot score cannot score. Rogers is the first man they took. He needs help."
+          },
+          {
+            "teamId": "l5kunst8msgbirdf",
+            "line": "Haaland went second in the whole draft, so they had the bins rummaged early. Shame about the goalkeeper, one of the three dodgiest around."
+          },
+          {
+            "teamId": "qgucu9dgmufwva1x",
+            "line": "Defenders this feeble turn my stomach. Fernandes went first in the whole draft, and it will not save them."
+          },
+          {
+            "teamId": "uexqrijomu8l5asi",
+            "line": "Semenyo came first off their list, and Manchester City will work him hard. Up front it turns frail quickly, and frail forwards win you little."
+          },
+          {
+            "teamId": "7z8fy0pnmuogbtdw",
+            "line": "Midfield is the hole in this side, and holes in midfield only get wider. João Pedro went fourth, which is fine. Fine is not enough."
+          },
+          {
+            "teamId": "aekx2715mtzgcl3f",
+            "line": "Kostoulas of Brighton was the first name they called, eighteenth in the draft. The midfield is the poorest in the league, and it looks it."
+          },
+          {
+            "teamId": "kpj0z744muh1qwtd",
+            "line": "Between the sticks it's the feeblest in the league, which is no way to go about anything. Ødegaard headed their draft, and he doesn't do saves."
+          },
+          {
+            "teamId": "ipnp5y4mmu9j7kop",
+            "line": "Saka is the foundation, and Arsenal will run him into the ground. The midfield round him has all the bite of a wet flannel."
+          },
+          {
+            "teamId": "0g0j5mkomuqqwsbu",
+            "line": "The back line is a soft touch, down there with the very worst. Wirtz came tenth, and he is no defender."
           }
         ]
       }
