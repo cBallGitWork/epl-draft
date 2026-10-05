@@ -19,7 +19,7 @@ export { clubColours, clubColoursOf, clubGround, crestForShortName, crestUrl, in
 export type { ClubColours } from "./clubs";
 // The photograph behind a club's own screens, and the credit it must carry.
 export { clubGroundPhoto, groundPhotoCredits } from "./grounds";
-export type { GroundPhoto } from "./grounds";
+export type { GroundPhoto, PhotoCredit } from "./grounds";
 export { initials, portraitUrl } from "./portraits";
 export { getFootballSnapshot } from "./snapshot";
 // The two reads `getFootballSnapshot` does not serve, both wanted by scripts:

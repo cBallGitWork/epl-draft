@@ -10,8 +10,9 @@ import { venueCredits } from "../venues";
 // than a courtesy.** Every ground under `public/ground/clubs/` is somebody's
 // photograph under a Creative Commons licence that requires naming them and
 // linking the terms; a credit in a file nothing renders satisfies neither.
-// `football/grounds.ts` carries the table and this prints it, so a picture
-// added without an author is visible here rather than silently uncredited.
+// `football/grounds.ts` and `data/leagues/venues.json` carry the tables and this
+// prints them, so a picture added without an author is visible here rather than
+// silently uncredited.
 //
 // **A competition plate, not a club one.** It is the app talking about itself
 // rather than a screen about somebody, which is the distinction `PageHeader`'s

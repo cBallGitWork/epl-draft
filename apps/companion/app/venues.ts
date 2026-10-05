@@ -1,11 +1,11 @@
-import type { GroundPhoto } from "@epl/core";
+import type { PhotoCredit } from "@epl/core";
 import table from "../../../data/leagues/venues.json";
 
 // Each fantasy team's home ground, drawn behind the head-to-heads it hosts. Data, keyed by Fantrax team id:
 // `data/leagues/venues.json`, a photograph under `public/` per team. `PhotoGround` falls back to the desk's.
 
 /** Who took a venue's photograph and where it is, for `/credits`. */
-export type VenueCredit = Pick<GroundPhoto, "title" | "author" | "licence" | "licenceUrl" | "source"> & { place: string };
+export type VenueCredit = PhotoCredit & { place: string };
 
 /** A ground to draw, its 16px placeholder where the table carries one, and its credit unless it is the desk's own. */
 export interface Venue {

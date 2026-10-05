@@ -1,4 +1,4 @@
-import { MAX_PAPER_STORIES, type GroundPhoto } from "@epl/core";
+import { MAX_PAPER_STORIES, type PhotoCredit } from "@epl/core";
 
 // The app's own constants — the ones that are decisions about this companion
 // rather than about the league or the football.
@@ -152,10 +152,7 @@ export const DESK_GROUND: string | null = "/ground/crowd.jpg";
 
 /** Its credit, printed on `/credits`: CC BY-SA 4.0 requires the author, the source and the terms.
  *  Replace it with the photograph. */
-export const DESK_GROUND_CREDIT: Pick<
-  GroundPhoto,
-  "title" | "author" | "licence" | "licenceUrl" | "source"
-> | null = {
+export const DESK_GROUND_CREDIT: PhotoCredit | null = {
   title: "Crowd at Anfield before the match 1",
   author: "Rodhullandemu",
   licence: "CC BY-SA 4.0",
@@ -172,7 +169,7 @@ export const DESK_GROUND_BLUR: string | null =
  *  beside him through the sheet's ink. Keyed by the story's `reporter`. */
 export interface Columnist {
   billing: string;
-  photo: Pick<GroundPhoto, "title" | "author" | "licence" | "licenceUrl" | "source"> & { src: string; alt: string; blur: string };
+  photo: PhotoCredit & { src: string; alt: string; blur: string };
   /** A square crop of the same photograph on him alone, for the banner over his column. */
   portrait: { src: string; blur: string };
 }
