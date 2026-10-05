@@ -27,7 +27,7 @@ export default function Extras({
   /** The football the team sheets' pitches stand on. */
   snapshot?: FootballSnapshot | null;
 }) {
-  if (story.kind === "power-ranking" || story.kind === "season-predictions") return <Ranks story={story} named={named} mine={mine} />;
+  if (story.kind === "power-ranking" || story.kind === "season-rankings") return <Ranks story={story} named={named} mine={mine} />;
   if (story.kind === "wire") return <Quiz story={story} />;
   if (story.kind === "presser") return <TeamNews story={story} />;
   if (story.kind === "predicted-xi") return <Lineups story={story} named={named} mine={mine} />;

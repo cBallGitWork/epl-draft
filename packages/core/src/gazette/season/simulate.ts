@@ -27,11 +27,6 @@ export interface SeasonOutcome {
   placed: number[];
 }
 
-/** How many runs a side finished in the top `places`. */
-export function within(outcome: SeasonOutcome, places: number): number {
-  return outcome.placed.slice(0, places).reduce((sum, runs) => sum + runs, 0);
-}
-
 /** Every side's season over `runs` playings, best expected place first. */
 export function simulateSeason(input: SeasonInput): SeasonOutcome[] {
   const random = mulberry32(input.seed);

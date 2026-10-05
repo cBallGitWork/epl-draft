@@ -19,9 +19,6 @@ export const man = (fantraxId: string, name: string, club: string, season: numbe
 
 const row = (teamId: string, name: string, meanPlace: number, placed: number[]): SeasonOutcome => ({ teamId, name, meanPlace, placed });
 
-/** One goes straight into the playoffs and one plays in, as a four-side league's lines would have it. */
-export const CUT = { through: 1, playIn: 1 };
-
 /** Best expected place first, as `simulateSeason` returns it, out of 100 playings. */
 export const PLAYED: PlayedSeason = {
   table: [

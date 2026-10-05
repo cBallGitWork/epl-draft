@@ -111,7 +111,7 @@ export function newsdesk(
   // Lawro's season predictions: once, from the end of the draft until the season's first lock (Craig, 5 Oct 2026).
   if (desk.season !== null && Date.parse(now) < Date.parse(desk.season.locksAt)) {
     const { period, gameweek } = desk.season;
-    want({ kind: "season-predictions", ...roundSlot("season-predictions", gameweek), round: { period, gameweek } });
+    want({ kind: "season-rankings", ...roundSlot("season-rankings", gameweek), round: { period, gameweek } });
   }
 
   return out;

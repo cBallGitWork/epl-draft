@@ -1,0 +1,10 @@
+{
+  "about": "The editor's calls over the desk's order, by league and story kind: each side put at a place, who called it, when and what he said. Read by scripts/edition/season.ts; filed with the story as extras.moves.",
+  "leagues": {
+    "mqsjd23smsgbiqzr": {
+      "season-rankings": [
+        { "teamId": "0g0j5mkomuqqwsbu", "place": 9, "by": "Craig", "on": "2026-10-05", "said": "dont put dome 10th, put him 9th" }
+      ]
+    }
+  }
+}
