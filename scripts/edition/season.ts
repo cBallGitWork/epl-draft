@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
   FANTRAX_LEAGUE_ID,
-  SEASON_PREDICTIONS,
+  SEASON_RANKINGS,
   availabilityOf,
   fetchTeamRosters,
   firstKickoff,
@@ -41,7 +41,7 @@ import mapping from "../../data/mappings/fantrax.json";
 import { INTEL_SEASON, readIntel } from "../intel";
 import { EDITIONS_ROOT } from "../paths";
 
-const KIND: StoryKind = "season-predictions";
+const KIND: StoryKind = "season-rankings";
 
 // The squads as Lawro's power rankings may know them: every squad as drafted, ranked by playing it out over the league's
 // own schedule. Its reads are its own and made only when the column is assigned; each refusal files nothing.
@@ -71,14 +71,14 @@ export async function seasonDesk(input: {
   const round = input.assignments.find((each) => each.kind === KIND)?.round;
   if (round === undefined) return null;
   const { info, say } = input;
-  if (input.pedigree.size === 0) return say("Season predictions: the draft is not complete; nothing filed."), null;
+  if (input.pedigree.size === 0) return say("Power rankings: the draft is not complete; nothing filed."), null;
   const minimums = minimumsOf(limits, FANTRAX_LEAGUE_ID);
   const shapes = minimums === null ? [] : formations({ ...info.roster, minActiveByPosition: minimums });
-  if (shapes.length === 0) return say("Season predictions: no position minimums on record (npm run roster-limits); nothing filed."), null;
+  if (shapes.length === 0) return say("Power rankings: no position minimums on record (npm run roster-limits); nothing filed."), null;
   const pack = readIntel<LeagueProjectionFile>("league-projections", `${INTEL_SEASON}.json`);
-  if (pack === null) return say("Season predictions: no league projections held (npm run draft-pack); nothing filed."), null;
+  if (pack === null) return say("Power rankings: no league projections held (npm run draft-pack); nothing filed."), null;
   const rosters = await fetchTeamRosters(FANTRAX_LEAGUE_ID, round.period).catch(() => null);
-  if (rosters === null) return say(`Season predictions: Fantrax would not give period ${round.period}'s rosters.`), null;
+  if (rosters === null) return say(`Power rankings: Fantrax would not give period ${round.period}'s rosters.`), null;
 
   const played = new Set(info.matchups.map((each) => each.period));
   const calendar = periodGameweeks(info.scoringPeriods, [...input.kickoffs]);
@@ -95,7 +95,7 @@ export async function seasonDesk(input: {
     const men = team.players.filter(isResolved).flatMap(({ slot, player }) => {
       const row = rows.get(slot.fantraxId);
       if (row === undefined) return missing.push(player.name), [];
-      const man = seasonMan(row, bands.get(player.code), pack.gameweeks, periods, SEASON_PREDICTIONS.band);
+      const man = seasonMan(row, bands.get(player.code), pack.gameweeks, periods, SEASON_RANKINGS.band);
       const pick = input.pedigree.get(slot.fantraxId);
       const call: CallMan = { fantraxId: slot.fantraxId, name: ukSpelling(fullPrintName(player)), club: clubs.get(player.clubId) ?? "", season: man.season, availability: availabilityOf(player), overall: pick?.overall ?? null };
       return [{ man, call }];
@@ -103,18 +103,18 @@ export async function seasonDesk(input: {
     squads.push({ teamId: team.teamId, name: info.teams.find((each) => each.teamId === team.teamId)?.name ?? team.teamName, men: men.map((each) => each.man) });
     named.set(team.teamId, men.map((each) => each.call));
   }
-  if (missing.length > 0) say(`  Season predictions: ${missing.length} men have no league projection (npm run draft-pack): ${missing.slice(0, 5).join(", ")}`);
+  if (missing.length > 0) say(`  Power rankings: ${missing.length} men have no league projection (npm run draft-pack): ${missing.slice(0, 5).join(", ")}`);
 
-  const season = playSeason({ squads, shapes, together: SEASON_PREDICTIONS.together, matchups: info.matchups, runs: SEASON_PREDICTIONS.runs, seed: SEASON_PREDICTIONS.seed });
-  if (season.short.length > 0) say(`  Season predictions: ${season.short.length} periods a side could field no allowed shape.`);
+  const season = playSeason({ squads, shapes, together: SEASON_RANKINGS.together, matchups: info.matchups, runs: SEASON_RANKINGS.runs, seed: SEASON_RANKINGS.seed });
+  if (season.short.length > 0) say(`  Power rankings: ${season.short.length} periods a side could field no allowed shape.`);
   const calls = seasonCalls(season, named, editorMoves(FANTRAX_LEAGUE_ID));
-  if (calls === null) return say("Season predictions: too few sides to rank; nothing filed."), null;
-  for (const move of calls.moved) say(`  Season predictions: ${move.by} moved ${move.teamId} from ${move.from} to ${move.place} (${move.on}).`);
+  if (calls === null) return say("Power rankings: too few sides to rank; nothing filed."), null;
+  for (const move of calls.moved) say(`  Power rankings: ${move.by} moved ${move.teamId} from ${move.from} to ${move.place} (${move.on}).`);
 
   const roster = info.rosterPeriods.find((each) => each.number === round.period);
   const kickoff = roster === undefined ? null : firstKickoff(roster, input.kickoffs);
   const lock = kickoff === null ? null : locksAt(kickoff);
-  if (lock === null) return say(`Season predictions: no lock for period ${round.period}; nothing filed.`), null;
+  if (lock === null) return say(`Power rankings: no lock for period ${round.period}; nothing filed.`), null;
 
   const recorded = limits.leagues[FANTRAX_LEAGUE_ID as keyof typeof limits.leagues]?.positions ?? [];
   const single = new Set(Object.keys(info.roster.maxActiveByPosition).filter((slot) => info.roster.maxActiveByPosition[slot] === 1));

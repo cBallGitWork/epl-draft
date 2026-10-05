@@ -353,7 +353,7 @@ the right. Each tie is a bold heading, then his words with the first man they
 name pictured beside them (`Face` at its `tie` rank, a 6rem square floated so the prose wraps), then
 "Lawro's prediction".
 
-**Lawro's power rankings** (`season-predictions`) file once, between the end of the draft and the season's first
+**Lawro's power rankings** (`season-rankings`) file once, between the end of the draft and the season's first
 lock, under the desk's headline "Lawro's Power Rankings" and the same banner. His short opening comes first, then
 the ten squads through `Ranks`: the number, the side, his line, and no movement mark, since a first ranking has no
 last time.

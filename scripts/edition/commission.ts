@@ -50,7 +50,7 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
   }
 
   // His power rankings likewise, with the order and every side's facts already made.
-  if (assignment.kind === "season-predictions") {
+  if (assignment.kind === "season-rankings") {
     const desk = ctx.season;
     if (desk === null) return null;
     return { system: LAWRO_SEASON, brief: buildSeasonBrief({ calls: desk.calls, locksAt: desk.locksAt, slotName: desk.slotName }), season: desk };

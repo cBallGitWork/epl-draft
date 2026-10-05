@@ -366,7 +366,7 @@ export const PREDICTIONS = {
 } as const;
 
 /** Lawro's power rankings (Craig, 5 Oct 2026): the squads as drafted, ordered by the season played out, once, before the first lock. */
-export const SEASON_PREDICTIONS = {
+export const SEASON_RANKINGS = {
   /** Playings of the season, and the seed that makes them the same every time. */
   runs: 10_000,
   seed: 2026,

@@ -25,7 +25,7 @@ export const STORY_BYLINE: Partial<Record<StoryKind, string>> = {
  *  Lawro's is Mark Lawrenson's, by Craig's decision of 24 Sep 2026 (PLATFORM_NOTES). */
 export const COLUMNIST: Partial<Record<StoryKind, string>> = {
   predictions: "Mark Lawrenson",
-  "season-predictions": "Mark Lawrenson",
+  "season-rankings": "Mark Lawrenson",
 };
 
 /** The edition a filing goes out under — the paper's names for its own
@@ -37,7 +37,7 @@ export function editionName(kind: StoryKind, filedAt: string, playedOn?: string)
   // Saturday's matches are the "Saturday Prem Report" even when it files on Sunday morning.
   if (kind === "match-report") return `${londonWeekdayLong(playedOn ?? filedAt)} Prem Report`;
   if (kind === "draft-report") return `${londonWeekdayLong(playedOn ?? filedAt)} Draft Report`;
-  if (kind === "predictions" || kind === "season-predictions" || kind === "predicted-xi") return "The Form Guide";
+  if (kind === "predictions" || kind === "season-rankings" || kind === "predicted-xi") return "The Form Guide";
   if (kind === "fixture-preview" || kind === "news" || kind === "presser") return "The Team Sheet";
   if (kind === "wire" || kind === "dodgers") return "The Mercato Wire";
   if (kind === "eleven" || kind === "power-ranking") return "The Monday Club";

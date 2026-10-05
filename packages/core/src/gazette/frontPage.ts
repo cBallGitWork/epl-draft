@@ -60,7 +60,7 @@ const KIND_WEIGHT: Record<StoryKind, number> = {
   "fixture-preview": 65,
   predictions: 55,
   // Once a season, the week before the first lock: above the weekly column it comes before.
-  "season-predictions": 60,
+  "season-rankings": 60,
   eleven: 40,
   // Tuesday's one column, above the Monday set it follows and below anything that happened.
   "bin-xi": 45,

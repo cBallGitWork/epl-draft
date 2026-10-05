@@ -491,7 +491,7 @@ Craig, 5 Oct: *"can lawrenson do a season predictions based off the draft result
 a short opening, then the ten squads strongest first, each with one line. It is a ranking of squads as they stand,
 in the present tense, never a forecast: no playoffs, play-in, prize, title, finishing place, wooden spoon or table.
 
-- **When**: `season-predictions`, keyed `season-predictions:gw{first}`, is due from the end of the draft
+- **When**: `season-rankings`, keyed `season-rankings:gw{first}`, is due from the end of the draft
   (`getDraftResults` reads `completed`, so `pedigree` is not empty) until the first head-to-head period locks
   (`seasonOpening`). It touches no other assignment, so the weekly column keeps its Thursday. CI files it on the
   first editions firing that finds it due, which for the real league is the first after the swap on 7 Oct.
@@ -509,7 +509,7 @@ in the present tense, never a forecast: no playoffs, play-in, prize, title, fini
 - **The spread**: the sister model's band is a 5th-95th percentile, so one deviation is (high - points) / 1.645 of
   a man's mean, applied to his league-priced mean. Independent men gave a side a weekly swing of about a seventh of
   its mean, where draft sides swing by a third, so any two men of one eleven share a correlation of 0.5
-  (`SEASON_PREDICTIONS.together`; the second-team review's fantasy specialist). Past the pack's window (GW17) a
+  (`SEASON_RANKINGS.together`; the second-team review's fantasy specialist). Past the pack's window (GW17) a
   man's gameweek is his average inside it, and squads are frozen as drafted: no waivers, no trades.
 - **Per side, in words**: the man it is built round (its first pick), and its weak spot: that man, or its best,
   when out or no better than an even chance, else the slot its elevens rank lowest at against the other nine.

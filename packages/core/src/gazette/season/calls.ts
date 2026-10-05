@@ -1,4 +1,4 @@
-import { SEASON_PREDICTIONS } from "../../config";
+import { SEASON_RANKINGS } from "../../config";
 import type { Availability } from "../../football/playerState";
 import { editorsOrder, type AppliedMove, type EditorMove } from "./editor";
 import type { PlayedSeason } from "./play";
@@ -72,7 +72,7 @@ export function seasonCalls(played: PlayedSeason, squads: ReadonlyMap<string, re
     };
   });
   const [top, second, third] = table;
-  const gap = SEASON_PREDICTIONS.clear;
+  const gap = SEASON_RANKINGS.clear;
   return { sides, moved: applied, clear: second.meanPlace - top.meanPlace >= gap ? 1 : third.meanPlace - second.meanPlace >= gap ? 2 : 0 };
 }
 
