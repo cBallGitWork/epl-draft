@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { readerTeamId } from "../../../squads";
 import { edition } from "../../../edition";
 import { filed } from "../../../paper";
-import { sharePicture } from "../../../sharePicture";
 import { clubById } from "@epl/core";
 import Extras from "../../../components/gazette/Extras";
 import Folio from "../../../components/gazette/Folio";
@@ -50,13 +49,12 @@ export async function generateMetadata({
   if (story === null) return { title: "Not in this edition" };
   // The deck and never the headline: the headline is wordplay, and a pun with
   // no article under it is not a description.
-  const picture = sharePicture(story);
-  const images = picture ? [picture] : undefined;
+  // The picture is `opengraph-image.tsx` beside this page.
   return {
     title: story.headline,
     description: story.deck,
-    openGraph: { type: "article", title: story.headline, description: story.deck, images },
-    twitter: { card: picture ? "summary_large_image" : "summary", title: story.headline, description: story.deck, images },
+    openGraph: { type: "article", title: story.headline, description: story.deck },
+    twitter: { card: "summary_large_image", title: story.headline, description: story.deck },
   };
 }
 

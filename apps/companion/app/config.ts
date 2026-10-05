@@ -173,6 +173,8 @@ export interface Columnist {
   photo: PhotoCredit & { src: string; alt: string; blur: string; focus: string };
   /** A square crop of the same photograph on him alone, for the banner over his column. */
   portrait: { src: string; blur: string };
+  /** A 470x630 crop on him alone, cut from the original, for the card a shared link previews with. */
+  card: string;
 }
 
 /** Lawro's is the one freely licensed photograph of him on Commons (CC0): the tackle, 1981. */
@@ -195,6 +197,7 @@ export const COLUMNISTS: Readonly<Record<string, Columnist>> = {
       src: "/columnist/lawrenson-banner.jpg",
       blur: "data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAKAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABAID/8QAHxABAAEEAQUAAAAAAAAAAAAAAQIAAwQRUQUiMYHR/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AM+s49qdqE7UhveUgdqPyhktAONt9UticFRo4KD/2Q==",
     },
+    card: "/columnist/lawrenson-card.jpg",
   },
 };
 
