@@ -16,7 +16,7 @@ import { walkLeague, type WalkLeague } from "./smoke/league";
 //
 //   npm run build && npm run start &
 //   npm run smoke
-//   SMOKE_BASE=https://epl-draft-companion.vercel.app npm run smoke
+//   SMOKE_BASE=https://timproleague.vercel.app npm run smoke
 
 const BASE = process.env.SMOKE_BASE ?? "http://localhost:3000";
 
