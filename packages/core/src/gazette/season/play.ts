@@ -27,7 +27,6 @@ export function playSeason(input: {
   /** The correlation between any two men of one eleven in one period. */
   together: number;
   matchups: readonly { period: number; homeTeamId: string; awayTeamId: string }[];
-  places: number;
   runs: number;
   seed: number;
 }): PlayedSeason {
@@ -68,7 +67,6 @@ export function playSeason(input: {
     teams: input.squads.map(({ teamId, name }) => ({ teamId, name })),
     matchups: input.matchups,
     scores,
-    places: input.places,
     runs: input.runs,
     seed: input.seed,
   });

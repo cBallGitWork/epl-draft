@@ -480,8 +480,9 @@ Craig, 5 Oct: *"can lawrenson do a season predictions based off the draft result
   slot by the draft pack), then the schedule as `getLeagueInfo` has it, the GW34 double header counting one period
   score twice, 10,000 times off a fixed seed. The table is mean place, ordered by the league's rule each time
   (`placeTable`: wins, then fantasy points for; two drawn totals are never equal, so what a win pays does not
-  change the order). Title is first, the playoff places are `playoffs.places`, the spoon is last. The bracket's
-  shape is not on the wire, so the playoffs are not played.
+  change the order). The title is first, the regular season's prize. Fantrax's playoff places split at the
+  league's own lines (`tableLines`, #257, `playoffCut`): 1st to 3rd straight in, 4th and 5th playing in, 6th the
+  first out. The spoon is last. The knockout itself is not played: the column calls the table, not the bracket.
 - **The spread**: the sister model's band is a 5th-95th percentile, so one deviation is (high - points) / 1.645 of
   a man's mean, applied to his league-priced mean. Independent men gave a side a weekly swing of about a seventh of
   its mean, where draft sides swing by a third, so any two men of one eleven share a correlation of 0.5

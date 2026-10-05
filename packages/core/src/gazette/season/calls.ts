@@ -1,9 +1,9 @@
 import { SEASON_PREDICTIONS } from "../../config";
 import type { Availability } from "../../football/playerState";
 import type { PlayedSeason } from "./play";
-import type { SeasonOutcome } from "./simulate";
+import { within, type SeasonOutcome } from "./simulate";
 
-// Every call in Lawro's season column, made here: the table, the title, the four, the spoon, the bold call, and for
+// Every call in Lawro's season column, made here: the table, the title, the playoffs, the spoon, the bold call, and for
 // each side the man it is built round and its weakness. The writer only words them. Pure.
 
 /** One squad man as the column may name him. His season figure orders men and is never printed. */
@@ -44,22 +44,41 @@ export type BoldCall =
   | { kind: "first-misses"; teamId: string; man: CallMan; place: number }
   | { kind: "steal"; teamId: string; man: CallMan; outscores: number; of: number; among: "first" | "half" };
 
+/** The table's playoff cuts: how many go straight in, and how many play in for the last place after them. */
+export interface PlayoffCut {
+  through: number;
+  playIn: number;
+}
+
 export interface SeasonCalls {
   sides: SeasonSide[];
   /** How many sides are clear at the top: 0, 1 or 2. */
   clear: number;
   title: { teamId: string; runnerUp: string; close: boolean };
-  four: string[];
-  /** The side that misses the four, and whether it is close. */
-  fifth: { teamId: string; close: boolean } | null;
+  /** Straight into the playoffs, top first; then the sides that play in for the last place. */
+  through: string[];
+  playIn: string[];
+  /** The first side below the playoffs, and whether it is close. */
+  out: { teamId: string; close: boolean } | null;
   spoon: { teamId: string; ninth: string; close: boolean };
   bold: BoldCall | null;
 }
 
-/** Null for a table too short to call a title, a four and a spoon. */
-export function seasonCalls(played: PlayedSeason, squads: ReadonlyMap<string, readonly CallMan[]>, places: number): SeasonCalls | null {
+/** Fantrax's playoff places split at the league's own lines (`tableLines`): straight in down to the last line above
+ *  its last place, playing in down to the first line at or below it. No lines, and they all go straight in. */
+export function playoffCut(places: number, lines: readonly { under: number }[]): PlayoffCut {
+  const above = lines.map((line) => line.under).filter((under) => under < places);
+  const below = lines.map((line) => line.under).filter((under) => under >= places);
+  const through = above.length === 0 ? places : Math.max(...above);
+  const last = below.length === 0 ? places : Math.min(...below);
+  return { through, playIn: last - through };
+}
+
+/** Null for a table too short to call a title, the playoffs and a spoon. */
+export function seasonCalls(played: PlayedSeason, squads: ReadonlyMap<string, readonly CallMan[]>, cut: PlayoffCut): SeasonCalls | null {
   const table = played.table;
-  if (table.length < Math.max(places + 1, 3)) return null;
+  const playoffs = cut.through + cut.playIn;
+  if (table.length < Math.max(playoffs + 1, 3)) return null;
   const { close, clear: gap } = SEASON_PREDICTIONS;
   const near = (lead: number, chaser: number) => lead > 0 && chaser >= lead * close;
 
@@ -83,16 +102,17 @@ export function seasonCalls(played: PlayedSeason, squads: ReadonlyMap<string, re
   });
 
   const [top, second, third] = table;
-  const last = table[table.length - 1];
-  const ninth = table[table.length - 2];
+  const [last, ninth] = [table[table.length - 1], table[table.length - 2]];
+  const out = playoffs > 0 ? table[playoffs] : undefined;
   return {
     sides,
     clear: second.meanPlace - top.meanPlace >= gap ? 1 : third.meanPlace - second.meanPlace >= gap ? 2 : 0,
-    title: { teamId: top.teamId, runnerUp: second.teamId, close: near(top.firsts, second.firsts) },
-    four: table.slice(0, places).map((row) => row.teamId),
-    fifth: table[places] === undefined ? null : { teamId: table[places].teamId, close: near(table[places - 1].playoffs, table[places].playoffs) },
-    spoon: { teamId: last.teamId, ninth: ninth.teamId, close: near(last.lasts, ninth.lasts) },
-    bold: boldCall(table, sides, squads, places),
+    title: { teamId: top.teamId, runnerUp: second.teamId, close: near(top.placed[0], second.placed[0]) },
+    through: table.slice(0, cut.through).map((row) => row.teamId),
+    playIn: table.slice(cut.through, playoffs).map((row) => row.teamId),
+    out: out === undefined ? null : { teamId: out.teamId, close: near(within(table[playoffs - 1], playoffs), within(out, playoffs)) },
+    spoon: { teamId: last.teamId, ninth: ninth.teamId, close: near(last.placed[table.length - 1], ninth.placed[table.length - 1]) },
+    bold: boldCall(table, sides, squads, playoffs),
   };
 }
 
@@ -110,12 +130,12 @@ function lineRanks(lines: PlayedSeason["lines"], teamId: string): LineRank[] {
     .sort((a, b) => a.rank - b.rank);
 }
 
-/** The side that took the first man of the draft missing the four; else the best man taken in the draft's second half. */
-function boldCall(table: readonly SeasonOutcome[], sides: readonly SeasonSide[], squads: ReadonlyMap<string, readonly CallMan[]>, places: number): BoldCall | null {
+/** The side that took the first man of the draft missing the playoffs; else the best man taken in the draft's second half. */
+function boldCall(table: readonly SeasonOutcome[], sides: readonly SeasonSide[], squads: ReadonlyMap<string, readonly CallMan[]>, playoffs: number): BoldCall | null {
   const drafted = [...squads].flatMap(([teamId, men]) => men.filter((man) => man.overall !== null).map((man) => ({ teamId, man })));
   const opener = drafted.find(({ man }) => man.overall === 1);
   const side = opener === undefined ? undefined : sides.find((each) => each.teamId === opener.teamId);
-  if (opener !== undefined && side !== undefined && side.place > places) return { kind: "first-misses", teamId: opener.teamId, man: opener.man, place: side.place };
+  if (opener !== undefined && side !== undefined && side.place > playoffs) return { kind: "first-misses", teamId: opener.teamId, man: opener.man, place: side.place };
 
   const half = Math.ceil(drafted.length / 2);
   const steal = drafted

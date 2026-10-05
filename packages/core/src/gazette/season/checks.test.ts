@@ -4,11 +4,11 @@ import { LAWRO_CORE } from "../predictions/past";
 import { buildSeasonBrief } from "./brief";
 import { seasonCalls, type SeasonCalls } from "./calls";
 import { checkSeason, lineKey, type SeasonDraft } from "./checks";
-import { PLAYED, SQUADS } from "./__fixtures__/season";
+import { CUT, PLAYED, SQUADS } from "./__fixtures__/season";
 
-const calls = seasonCalls(PLAYED, SQUADS, 2) as SeasonCalls;
+const calls = seasonCalls(PLAYED, SQUADS, CUT) as SeasonCalls;
 const slotName = (slot: string) => ({ G: "the goalkeeper", D: "the defenders", M: "the midfielders", F: "the forwards" })[slot] ?? slot;
-const brief = buildSeasonBrief({ calls, schedule: { from: 6, to: 34, empty: [], doubles: [], places: 2 }, locksAt: "2026-10-10T11:15:00.000Z", slotName });
+const brief = buildSeasonBrief({ calls, schedule: { from: 6, to: 34, empty: [], doubles: [] }, lines: [], locksAt: "2026-10-10T11:15:00.000Z", slotName });
 const names = [...calls.sides.map((side) => side.name), ...[...SQUADS.values()].flat().flatMap((man) => [man.name, man.name.split(" ").at(-1) ?? man.name])];
 const ctx: CheckContext = { calls: [], name: (id) => id, facts: [brief, LAWRO_CORE, "Lawro"].join("\n"), offered: [], names, past: [] };
 const squads = new Map([...SQUADS].map(([teamId, men]) => [teamId, men.flatMap((man) => [man.name, man.name.split(" ").at(-1) ?? man.name])]));

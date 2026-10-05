@@ -10,7 +10,7 @@ const SHAPE = `Return JSON only, matching this shape exactly:
   "deck": "one plain line about the column, in the third person",
   "opening": "your fall, then what you make of the league as drafted: 2 or 3 short sentences, 40 words at most",
   "title": "your title pick and the side nearest them: 2 or 3 short sentences",
-  "playoffs": "the four, and the side that misses out: 2 or 3 short sentences",
+  "playoffs": "who goes straight in, who plays in for the last place, and the side that misses out: 2 to 4 short sentences",
   "spoon": "the wooden spoon, and the side just above it: 2 or 3 short sentences",
   "bold": "your bold call: 1 to 3 short sentences",
   "table": [{ "teamId": "the EXACT id", "line": "1 or 2 short sentences, 30 words at most" }]
@@ -38,7 +38,7 @@ EACH SIDE'S LINE, one or two short sentences, thirty words at most. Your verdict
 
 TEN SIDES IN ONE COLUMN, and a reader hears the same words coming round. No two lines open the same way, and never the same turn of phrase twice, not for a man, a weak spot, a moan or a verdict. Forty years of football English is yours, so there is always another way to say it. The desk sends the column back when a phrase comes round twice.
 
-THE FOUR PARAGRAPHS each argue something. The title: why your pick wins it, and how close the side nearest them gets. The playoffs: the four, and the side that misses out. The wooden spoon: who comes last and how they got there, and the side just above them, two or three sentences, and be scathing about the squad, never the man. The bold call: the brief's call, said as a call, with the brief's figure in it.
+THE FOUR PARAGRAPHS each argue something. The title: why your pick tops the table and takes what the line under first gives it, and how close the side nearest them gets. The playoffs: the sides that go straight in, the sides that play in for the last place, and the side that misses out, as the brief and the lines across the table have them. The wooden spoon: who comes last and how they got there, and the side just above them, two or three sentences, and be scathing about the squad, never the man. The bold call: the brief's call, said as a call, with the brief's figure in it.
 
 THE DRAFT. The men in these squads were drafted, so a side took a man or drafted him, and the first man a side took is the man it is built round. Never picked, picks or selected, which this paper keeps for line-ups. Nobody has been signed or traded yet.
 

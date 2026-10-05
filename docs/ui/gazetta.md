@@ -355,7 +355,7 @@ name pictured beside them (`Face` at its `tie` rank, a 6rem square floated so th
 
 **Lawro's season predictions** (`season-predictions`) file once, between the end of the draft and the season's
 first lock, under the desk's headline "Lawro's Season Predictions" and the same banner. His paragraphs come first
-(the opening, the title, the playoff places, the wooden spoon, the bold call), then the predicted table through
+(the opening, the title, the playoffs and the play-in, the wooden spoon, the bold call), then the predicted table through
 `Ranks`: the place, the side, his line, and no movement mark, since a preview has no last time.
 
 **The round-report was deleted on 3 Sep 2026.** It was the preview's twin — one

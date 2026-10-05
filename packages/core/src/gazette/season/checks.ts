@@ -26,8 +26,11 @@ export type SeasonSection = (typeof SEASON_SECTIONS)[number];
 /** A side's line is filed under this section. */
 export const lineKey = (teamId: string) => `table:${teamId}`;
 
-/** The machine, on top of his weekly lists. */
-const SEASON_BANNED: readonly string[] = ["simulation", "simulations", "simulated", "simulate", "predicted XI", "predicted eleven", "expected points"];
+/** The machine and FPL's own terms, on top of his weekly lists; the pound sign is the league's prize here, not a price. */
+const SEASON_BANNED: readonly string[] = [
+  "simulation", "simulations", "simulated", "simulate", "predicted XI", "predicted eleven", "expected points",
+  ...REPORT_FPL.filter((word) => word !== "£"),
+];
 const ORDINALS = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth"];
 /** A draft has rounds and the paper never prints one (a round is a gameweek here); "built round" is not one. */
 const DRAFT_ROUND = new RegExp(String.raw`\b(?:${ORDINALS.join("|")}|\d{1,2}(?:st|nd|rd|th)|this|the|a|next|late|early|later|earlier) round\b|\brounds\b`, "iu");
@@ -69,7 +72,7 @@ export function checkSeason(draft: SeasonDraft, calls: SeasonCalls, squads: Read
 
   function seasonRules(section: string, text: string, all: SeasonCalls, blanked: readonly string[], report: Report): void {
     const plain = masked(text, blanked);
-    for (const word of banned(plain, [...SEASON_BANNED, ...REPORT_FPL])) report(section, "banned", "send-back", word);
+    for (const word of banned(plain, SEASON_BANNED)) report(section, "banned", "send-back", word);
     if (DRAFT_ROUND.test(plain)) report(section, "banned", "send-back", plain.match(DRAFT_ROUND)?.[0] ?? "");
     for (const word of banned(plain, [...SHEETS_AMERICAN, ...REPORT_AMERICAN])) report(section, "not British football English", "send-back", word);
     if (AMERICAN_IZE.test(plain)) report(section, "not British football English", "send-back", plain.match(AMERICAN_IZE)?.[0] ?? "");
@@ -93,10 +96,7 @@ function lineRules(draft: SeasonDraft, calls: SeasonCalls, squads: ReadonlyMap<s
     const line = draft.table.get(side.teamId) ?? "";
     if (line.trim() === "") continue;
     const key = lineKey(side.teamId);
-    // Two sentences, and his kicker of three words at most on the end does not count as a third.
-    const said = sentences(line);
-    const count = said.length - (said.length > 1 && wordCount(said[said.length - 1]) <= 3 ? 1 : 0);
-    if (count > 2 || wordCount(line) > 30) fault(key, "length", "send-back", `${said.length} sentences, ${wordCount(line)} words`);
+    if (counted(line) > 2 || wordCount(line) > 30) fault(key, "length", "send-back", `${sentences(line).length} sentences, ${wordCount(line)} words`);
     const opening = (line.toLowerCase().match(/[\p{L}'’]+/gu) ?? []).slice(0, 2).join(" ");
     if (openings.has(opening)) fault(key, "opens like another side's line", "send-back", opening);
     else openings.set(opening, side.teamId);
@@ -109,22 +109,26 @@ function lineRules(draft: SeasonDraft, calls: SeasonCalls, squads: ReadonlyMap<s
   }
 }
 
+/** Sentences that count towards a length: his kicker, or a one-word answer to his own question, of three words at most does not. */
+function counted(text: string): number {
+  return sentences(text).filter((sentence) => wordCount(sentence) > 3).length;
+}
+
 /** Each paragraph names who it is about, and only the sides the desk put there. */
 function whoIsNamed(draft: SeasonDraft, calls: SeasonCalls, fault: Report): void {
   const name = (teamId: string) => calls.sides.find((side) => side.teamId === teamId)?.name ?? teamId;
-  const fifth = calls.fifth === null ? [] : [calls.fifth.teamId];
+  const out = calls.out === null ? [] : [calls.out.teamId];
   const bold = calls.bold === null ? [] : [calls.bold.teamId];
   const cast: [section: SeasonSection, must: string[], may: string[]][] = [
     ["title", [calls.title.teamId], [calls.title.runnerUp]],
-    ["playoffs", calls.four, fifth],
+    ["playoffs", [...calls.through, ...calls.playIn], out],
     ["spoon", [calls.spoon.teamId], [calls.spoon.ninth]],
     ["bold", bold, []],
   ];
   for (const [section, must, may] of cast) {
     const text = draft[section];
     if (text.trim() === "") continue;
-    // Four sentences, so a question and its one-word answer still fit a three-sentence paragraph.
-    if (sentences(text).length > 4 || wordCount(text) > 70) fault(section, "length", "send-back", `${sentences(text).length} sentences, ${wordCount(text)} words`);
+    if (counted(text) > 4 || wordCount(text) > 70) fault(section, "length", "send-back", `${sentences(text).length} sentences, ${wordCount(text)} words`);
     for (const teamId of must) if (mentionAt(text, name(teamId)) === -1) fault(section, "leaves out a side it is about", "send-back", name(teamId));
     for (const side of calls.sides) {
       if (![...must, ...may].includes(side.teamId) && mentionAt(text, side.name) !== -1) fault(section, "names a side the desk did not put here", "send-back", side.name);

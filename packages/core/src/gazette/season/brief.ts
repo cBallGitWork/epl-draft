@@ -1,4 +1,5 @@
 import { ordinal } from "../../league/ordinal";
+import type { TableLine } from "../../league/tableLines";
 import { londonDate, londonTime } from "../../time";
 import { availabilityWord } from "../briefs/predictionFacts";
 import type { BoldCall, CallMan, LineRank, SeasonCalls, SeasonSide } from "./calls";
@@ -12,24 +13,36 @@ export interface SeasonSchedule {
   to: number;
   empty: readonly number[];
   doubles: readonly number[];
-  places: number;
 }
 
-export function buildSeasonBrief(input: { calls: SeasonCalls; schedule: SeasonSchedule; locksAt: string; slotName: (slot: string) => string }): string {
+export function buildSeasonBrief(input: {
+  calls: SeasonCalls;
+  schedule: SeasonSchedule;
+  /** The lines across the table as the league drew them (`tableLines`): what each cut is for. */
+  lines: readonly TableLine[];
+  locksAt: string;
+  slotName: (slot: string) => string;
+}): string {
   const { calls, schedule, slotName } = input;
   const side = (teamId: string) => calls.sides.find((each) => each.teamId === teamId);
   const name = (teamId: string) => side(teamId)?.name ?? teamId;
+  // Semicolons between, because a side's name may hold a comma.
+  const list = (teamIds: readonly string[]) => teamIds.map(name).join("; ");
   const of = calls.sides.length;
   const strength = (each: SeasonSide | undefined) => (each?.strongest == null ? "" : ` Their strength: ${slotName(each.strongest.slot)}, ${rankWords(each.strongest, of, true)}.`);
-  const { title, fifth, spoon } = calls;
+  const { title, out, spoon } = calls;
+  const playoffs = calls.through.length + calls.playIn.length;
 
   return [
-    `LAWRO'S SEASON PREDICTIONS. The draft is done and nobody has kicked a ball: line-ups lock for the first time at ${londonTime(input.locksAt)} on ${londonDate(input.locksAt)}. ${season(schedule)} Every call below is made already. You write the reasons, never the order: never move a side, never hedge a call, and never make the case for a side to finish anywhere else.`,
+    `LAWRO'S SEASON PREDICTIONS. The draft is done and nobody has kicked a ball: line-ups lock for the first time at ${londonTime(input.locksAt)} on ${londonDate(input.locksAt)}. ${season(schedule, playoffs > 0)} Every call below is made already. You write the reasons, never the order: never move a side, never hedge a call, and never make the case for a side to finish anywhere else.`,
     `THE ${of} MANAGERS, named exactly as here; the id in brackets is what you return, never the name: ${calls.sides.map((each) => `${each.name} [${each.teamId}]`).join(", ")}.`,
     "WHAT YOU KNOW IS THE SQUADS AS DRAFTED, with no signing and no trade in them all season, which nobody in this league will manage. You do not know who starts or who is on anybody's bench, and no man has a figure you may print.",
+    input.lines.length === 0 ? null : `THE LINES ACROSS THE TABLE, as the league drew them: ${input.lines.map((line) => `under ${ordinal(line.under)}, ${line.label}`).join("; ")}.`,
     `THE LEAGUE AS DRAFTED: ${["Nobody is clear at the top.", "One side is clear at the top.", "Two sides are clear at the top."][calls.clear] ?? ""}`,
     `THE TITLE: ${name(title.teamId)}, top.${strength(side(title.teamId))} The nearest to them: ${name(title.runnerUp)}, second, ${title.close ? "and it is close" : "and it is not close"}.`,
-    `THE PLAYOFF ${calls.four.length}, top to bottom: ${calls.four.map(name).join(", ")}.${fifth === null ? "" : ` ${ordinal(calls.four.length + 1)} and missing out: ${name(fifth.teamId)}, ${fifth.close ? "and only just" : "and not by a little"}.`}`,
+    playoffs === 0
+      ? null
+      : `THE PLAYOFFS, straight in: ${list(calls.through)}.${calls.playIn.length === 0 ? "" : ` Playing in for the last place: ${list(calls.playIn)}.`}${out === null ? "" : ` ${ordinal(playoffs + 1)} and missing out: ${name(out.teamId)}, ${out.close ? "and only just" : "and not by a little"}.`}`,
     `THE WOODEN SPOON: ${name(spoon.teamId)}, ${ordinal(of)}.${weakWords(side(spoon.teamId), of, slotName)} ${ordinal(of - 1)}: ${name(spoon.ninth)}, ${spoon.close ? "and it is close between them" : "and well clear of them"}.`,
     calls.bold === null ? null : `THE BOLD CALL: ${bold(calls.bold, name)}`,
     [`YOUR TABLE, top to bottom, one line a side in "table" in this order. The page prints each side's place beside your line, so never write it there.`, ...calls.sides.map((each) => sideBlock(each, of, slotName))].join("\n"),
@@ -38,11 +51,10 @@ export function buildSeasonBrief(input: { calls: SeasonCalls; schedule: SeasonSc
     .join("\n\n");
 }
 
-function season(schedule: SeasonSchedule): string {
+function season(schedule: SeasonSchedule, playoffs: boolean): string {
   const gaps = schedule.empty.length === 0 ? "" : `, none in gameweek ${schedule.empty.join(" or ")}`;
   const doubles = schedule.doubles.length === 0 ? "" : `, two each in gameweek ${schedule.doubles.join(" and ")}`;
-  const playoffs = schedule.places > 0 ? `, then the top ${schedule.places} go into the playoffs` : "";
-  return `Head to head from gameweek ${schedule.from} to gameweek ${schedule.to}${gaps}${doubles}${playoffs}.`;
+  return `Head to head from gameweek ${schedule.from} to gameweek ${schedule.to}${gaps}${doubles}${playoffs ? ", then the playoffs" : ""}.`;
 }
 
 function sideBlock(side: SeasonSide, of: number, slotName: (slot: string) => string): string {

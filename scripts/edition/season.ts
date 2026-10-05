@@ -15,8 +15,10 @@ import {
   playSeason,
   projectionIntel,
   resolveRosters,
+  playoffCut,
   seasonCalls,
   seasonMan,
+  tableLines,
   ukSpelling,
   type Assignment,
   type Bridge,
@@ -32,6 +34,7 @@ import {
   type SeasonCalls,
   type SeasonSchedule,
   type SeasonSquad,
+  type TableLine,
 } from "@epl/core";
 import limits from "../../data/leagues/roster-limits.json";
 import mapping from "../../data/mappings/fantrax.json";
@@ -53,6 +56,8 @@ export interface SeasonDesk {
   names: string[];
   clubs: string[];
   schedule: SeasonSchedule;
+  /** The lines across the table as the league drew them. */
+  lines: TableLine[];
 }
 
 export async function seasonDesk(input: {
@@ -100,10 +105,10 @@ export async function seasonDesk(input: {
   }
   if (missing.length > 0) say(`  Season predictions: ${missing.length} men have no league projection (npm run draft-pack): ${missing.slice(0, 5).join(", ")}`);
 
-  const places = info.playoffs?.places ?? 0;
-  const season = playSeason({ squads, shapes, together: SEASON_PREDICTIONS.together, matchups: info.matchups, places, runs: SEASON_PREDICTIONS.runs, seed: SEASON_PREDICTIONS.seed });
+  const season = playSeason({ squads, shapes, together: SEASON_PREDICTIONS.together, matchups: info.matchups, runs: SEASON_PREDICTIONS.runs, seed: SEASON_PREDICTIONS.seed });
   if (season.short.length > 0) say(`  Season predictions: ${season.short.length} periods a side could field no allowed shape.`);
-  const calls = seasonCalls(season, named, places);
+  const lines = tableLines(info.playoffs?.places ?? null, info.teams.length);
+  const calls = seasonCalls(season, named, playoffCut(info.playoffs?.places ?? 0, lines));
   if (calls === null) return say("Season predictions: too few sides to call a season; nothing filed."), null;
 
   const roster = info.rosterPeriods.find((each) => each.number === round.period);
@@ -124,7 +129,8 @@ export async function seasonDesk(input: {
     squads: new Map([...named].map(([teamId, men]) => [teamId, men.flatMap(spoken)])),
     names: [...info.teams.map((team) => team.name), ...[...named.values()].flat().flatMap(spoken)],
     clubs: input.snapshot.clubs.map((club) => club.name),
-    schedule: schedule(info, calendar, places),
+    schedule: schedule(info, calendar),
+    lines,
   };
 }
 
@@ -134,7 +140,7 @@ function spoken(man: CallMan): string[] {
 }
 
 /** The head-to-head season in gameweeks: where it starts and ends, the gameweeks inside it with no fixtures, and those with two. */
-function schedule(info: LeagueInfo, calendar: readonly PeriodGameweeks[], places: number): SeasonSchedule {
+function schedule(info: LeagueInfo, calendar: readonly PeriodGameweeks[]): SeasonSchedule {
   const played = [...new Set(info.matchups.map((each) => each.period))].sort((a, b) => a - b);
   const [first, last] = [played[0] ?? 0, played.at(-1) ?? 0];
   const gameweeks = (period: number) => calendar.find((each) => each.period === period)?.gameweeks ?? [];
@@ -144,6 +150,5 @@ function schedule(info: LeagueInfo, calendar: readonly PeriodGameweeks[], places
     to: gameweeks(last).at(-1) ?? last,
     empty: info.rosterPeriods.filter((each) => each.number > first && each.number < last && !played.includes(each.number)).flatMap((each) => gameweeks(each.number)),
     doubles: played.filter((period) => count(period) > info.teams.length / 2).flatMap(gameweeks),
-    places,
   };
 }

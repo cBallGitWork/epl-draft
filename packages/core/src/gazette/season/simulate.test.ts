@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mulberry32, simulateSeason, type PeriodScore } from "./simulate";
+import { mulberry32, simulateSeason, within, type PeriodScore } from "./simulate";
 
 const teams = ["a", "b", "c", "d"].map((teamId) => ({ teamId, name: teamId.toUpperCase() }));
 /** A round robin played twice over periods 1 to 6. */
@@ -11,17 +11,17 @@ const flat = (mean: number, sd: number) => new Map([1, 2, 3, 4, 5, 6].map((perio
 describe("simulateSeason", () => {
   it("places the stronger sides higher and gives every run a first and a last", () => {
     const scores = new Map([["a", flat(60, 8)], ["b", flat(55, 8)], ["c", flat(50, 8)], ["d", flat(40, 8)]]);
-    const outcome = simulateSeason({ teams, matchups, scores, places: 2, runs: 2000, seed: 7 });
+    const outcome = simulateSeason({ teams, matchups, scores, runs: 2000, seed: 7 });
     expect(outcome.map((each) => each.teamId)).toEqual(["a", "b", "c", "d"]);
-    expect(outcome.reduce((sum, each) => sum + each.firsts, 0)).toBe(2000);
-    expect(outcome.reduce((sum, each) => sum + each.lasts, 0)).toBe(2000);
-    expect(outcome.reduce((sum, each) => sum + each.playoffs, 0)).toBe(4000);
+    expect(outcome.reduce((sum, each) => sum + each.placed[0], 0)).toBe(2000);
+    expect(outcome.reduce((sum, each) => sum + each.placed[3], 0)).toBe(2000);
+    expect(outcome.reduce((sum, each) => sum + within(each, 2), 0)).toBe(4000);
     expect(outcome[0].meanPlace).toBeLessThan(outcome[1].meanPlace);
   });
 
   it("plays the same season from the same seed", () => {
     const scores = new Map(teams.map((team): [string, Map<number, PeriodScore>] => [team.teamId, flat(50, 12)]));
-    const run = () => simulateSeason({ teams, matchups, scores, places: 2, runs: 500, seed: 2026 });
+    const run = () => simulateSeason({ teams, matchups, scores, runs: 500, seed: 2026 });
     expect(run()).toEqual(run());
   });
 
@@ -33,7 +33,7 @@ describe("simulateSeason", () => {
       ["b", new Map([[1, { mean: 50, sd: 0 }], [2, { mean: 20, sd: 0 }]])],
       ["c", new Map([[2, { mean: 10, sd: 0 }]])],
     ]);
-    const outcome = simulateSeason({ teams: teams.slice(0, 3), matchups: schedule, scores, places: 1, runs: 1, seed: 1 });
+    const outcome = simulateSeason({ teams: teams.slice(0, 3), matchups: schedule, scores, runs: 1, seed: 1 });
     expect(outcome.map((each) => each.teamId)).toEqual(["b", "a", "c"]);
   });
 
@@ -44,8 +44,8 @@ describe("simulateSeason", () => {
       ["a", new Map([[1, { mean: 40, sd: 0 }], [2, { mean: 60, sd: 0 }]])],
       ["b", new Map([[1, { mean: 45, sd: 0 }], [2, { mean: 50, sd: 0 }]])],
     ]);
-    const outcome = simulateSeason({ teams: teams.slice(0, 2), matchups: two, scores, places: 1, runs: 1, seed: 1 });
-    expect(outcome.map((each) => [each.teamId, each.firsts])).toEqual([["a", 1], ["b", 0]]);
+    const outcome = simulateSeason({ teams: teams.slice(0, 2), matchups: two, scores, runs: 1, seed: 1 });
+    expect(outcome.map((each) => [each.teamId, each.placed[0]])).toEqual([["a", 1], ["b", 0]]);
   });
 });
 

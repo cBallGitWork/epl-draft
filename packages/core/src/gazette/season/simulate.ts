@@ -15,8 +15,6 @@ export interface SeasonInput {
   matchups: readonly { period: number; homeTeamId: string; awayTeamId: string }[];
   /** Each side's score by period; a period with no reading scores nothing. */
   scores: ReadonlyMap<string, ReadonlyMap<number, PeriodScore>>;
-  /** How many places the playoffs take. */
-  places: number;
   runs: number;
   seed: number;
 }
@@ -25,18 +23,21 @@ export interface SeasonOutcome {
   teamId: string;
   name: string;
   meanPlace: number;
-  /** Runs finished first, in the playoff places, and last. */
-  firsts: number;
-  playoffs: number;
-  lasts: number;
+  /** How many runs it finished in each place, first place first. */
+  placed: number[];
+}
+
+/** How many runs a side finished in the top `places`. */
+export function within(outcome: SeasonOutcome, places: number): number {
+  return outcome.placed.slice(0, places).reduce((sum, runs) => sum + runs, 0);
 }
 
 /** Every side's season over `runs` playings, best expected place first. */
 export function simulateSeason(input: SeasonInput): SeasonOutcome[] {
   const random = mulberry32(input.seed);
   const periods = [...new Set(input.matchups.map((each) => each.period))].sort((a, b) => a - b).map((period) => ({ period, ties: input.matchups.filter((each) => each.period === period) }));
-  const tally = new Map(input.teams.map((team) => [team.teamId, { place: 0, firsts: 0, playoffs: 0, lasts: 0 }]));
   const size = input.teams.length;
+  const tally = new Map(input.teams.map((team) => [team.teamId, { place: 0, placed: new Array<number>(size).fill(0) }]));
 
   for (let run = 0; run < input.runs; run += 1) {
     const wins = new Map(input.teams.map((team) => [team.teamId, 0]));
@@ -67,19 +68,17 @@ export function simulateSeason(input: SeasonInput): SeasonOutcome[] {
       const each = tally.get(row.teamId);
       if (each === undefined) continue;
       each.place += row.rank;
-      each.firsts += row.rank === 1 ? 1 : 0;
-      each.playoffs += row.rank <= input.places ? 1 : 0;
-      each.lasts += row.rank === size ? 1 : 0;
+      each.placed[row.rank - 1] += 1;
     }
   }
 
   const runs = Math.max(input.runs, 1);
   return input.teams
     .map((team) => {
-      const each = tally.get(team.teamId) ?? { place: 0, firsts: 0, playoffs: 0, lasts: 0 };
-      return { teamId: team.teamId, name: team.name, meanPlace: each.place / runs, firsts: each.firsts, playoffs: each.playoffs, lasts: each.lasts };
+      const each = tally.get(team.teamId) ?? { place: 0, placed: new Array<number>(size).fill(0) };
+      return { teamId: team.teamId, name: team.name, meanPlace: each.place / runs, placed: each.placed };
     })
-    .sort((a, b) => a.meanPlace - b.meanPlace || b.firsts - a.firsts || a.name.localeCompare(b.name, "en"));
+    .sort((a, b) => a.meanPlace - b.meanPlace || b.placed[0] - a.placed[0] || a.name.localeCompare(b.name, "en"));
 }
 
 /** A seeded uniform on [0, 1): the same seed plays the same season. */

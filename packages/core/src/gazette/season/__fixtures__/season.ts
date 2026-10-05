@@ -17,18 +17,19 @@ export const man = (fantraxId: string, name: string, club: string, season: numbe
   overall,
 });
 
-const row = (teamId: string, name: string, meanPlace: number, firsts: number, playoffs: number, lasts: number): SeasonOutcome => ({
-  teamId,
-  name,
-  meanPlace,
-  firsts,
-  playoffs,
-  lasts,
-});
+const row = (teamId: string, name: string, meanPlace: number, placed: number[]): SeasonOutcome => ({ teamId, name, meanPlace, placed });
+
+/** One goes straight into the playoffs and one plays in, as a four-side league's lines would have it. */
+export const CUT = { through: 1, playIn: 1 };
 
 /** Best expected place first, as `simulateSeason` returns it, out of 100 playings. */
 export const PLAYED: PlayedSeason = {
-  table: [row("a", "Albion", 1.4, 70, 98, 0), row("u", "United", 2.6, 20, 80, 5), row("c", "City", 2.9, 10, 22, 30), row("r", "Rovers", 3.1, 0, 0, 65)],
+  table: [
+    row("a", "Albion", 1.4, [70, 20, 10, 0]),
+    row("u", "United", 2.6, [20, 50, 25, 5]),
+    row("c", "City", 2.9, [10, 20, 40, 30]),
+    row("r", "Rovers", 3.1, [0, 10, 25, 65]),
+  ],
   lines: new Map([
     ["a", { G: 90, D: 300, M: 400, F: 250 }],
     ["u", { G: 110, D: 280, M: 380, F: 200 }],

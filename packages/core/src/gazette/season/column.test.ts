@@ -3,9 +3,9 @@ import type { Fault } from "../predictions/checks";
 import { seasonCalls, type SeasonCalls } from "./calls";
 import { lineKey } from "./checks";
 import { assembleSeason, mergeSeason, readSeasonDraft } from "./column";
-import { PLAYED, SQUADS } from "./__fixtures__/season";
+import { CUT, PLAYED, SQUADS } from "./__fixtures__/season";
 
-const calls = seasonCalls(PLAYED, SQUADS, 2) as SeasonCalls;
+const calls = seasonCalls(PLAYED, SQUADS, CUT) as SeasonCalls;
 const raw = {
   deck: "Lawro picks Albion.",
   opening: "Opening.",

@@ -164,7 +164,7 @@ export type { StoryBin } from "./binXi/cargo";
 // Lawro's season predictions: the season played out from the draft, every call made in code.
 export { seasonMan } from "./season/men";
 export { playSeason } from "./season/play";
-export { seasonCalls } from "./season/calls";
+export { playoffCut, seasonCalls } from "./season/calls";
 export { buildSeasonBrief } from "./season/brief";
 export { checkSeason, lineKey } from "./season/checks";
 export { assembleSeason, mergeSeason, readSeasonDraft } from "./season/column";
