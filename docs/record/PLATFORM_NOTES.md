@@ -470,12 +470,12 @@ draft, and 15/11/5.
   a blank, a double, an opponent at an extreme). Withheld means absent from the brief, so naming him anyway is a
   hard fault. **Fixtures carry the sister repo's team strength** in words, at the extremes only: "one of the three
   leakiest defences in the league" for a forward, the attack for a defender; never a rank.
-- **His picture and billing**: "Draft Expert" (Craig), and the one freely licensed photograph of him, CC0 from
-  the Nationaal Archief: his tackle on Hugo Hovenkamp, AZ '67 v Liverpool, 21 Oct 1981. It is the app's
-  `COLUMNISTS` table keyed by `reporter`, printed through `.paper-photo` at every rank, and on his article as
-  the BBC ran him: a banner with his name, his billing and a square crop of the same photograph. Credited on
-  `/credits`. The writer never draws a cartoon over a columnist's column. The BBC's headshot
-  is AFP's and not ours to print. Beside each tie the man prints at `Face`'s `tie` rank, a 6rem square his
+- **His picture and billing**: "Draft Expert" (Craig), and BBC Sport's studio portrait of him, Craig's pick on
+  5 Oct 2026 over the CC0 tackle on Hugo Hovenkamp (1981), which never read as him at any crop. **It is not freely
+  licensed**: the one exception to the credits page's rule, credited "© BBC". It is the app's `COLUMNISTS` table
+  keyed by `reporter`, printed through `.paper-photo` at every rank, and on his article as the BBC ran him: a
+  banner with his name, his billing and a square crop. A shared link's card takes its own 470x630 crop. The
+  writer never draws a cartoon over a columnist's column. Beside each tie the man prints at `Face`'s `tie` rank, a 6rem square his
   prose wraps round (Craig: *"thumbnails can be bigger"*).
 - **A reply's JSON is read from its first brace to its last** (`newsroom.__objectIn`). The skit writer once
   reasoned aloud before its JSON, the parse threw, and the catch swallowed it without a word in the log. A
