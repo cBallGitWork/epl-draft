@@ -32,11 +32,8 @@
 // the dummy one file "test2" under different strings, which is the clearest
 // possible demonstration of why this is keyed on the id and not the name.
 //
-// The real league's ten are a third set that does not exist until the 10 Oct
-// draft, so on swap day every lookup here misses and every team takes
-// `FALLBACK` until somebody adds them. That is not a bug to fix later; it is the
-// reason there is a fallback at all, exactly as an unstyled promoted club takes
-// one.
+// The real league's ten are a third set; a team not yet listed takes `FALLBACK`,
+// exactly as an unstyled promoted club takes one.
 
 /** A team's plate and the trim on it. Same shape as the football layer's
  *  `ClubColours` and deliberately not the same type — see above. */
@@ -81,10 +78,20 @@ const TEAM_COLOURS: Record<string, TeamColours> = {
   g80h3bf5mtj36y3g: { primary: "#4a5568", secondary: "#FFFFFF" }, // test31121
   pzmd243ymtj36y3g: { primary: "#d9d2c5", secondary: "#1a1a1a" }, // testf
   kg18w2cvmtj36y3g: { primary: "#8b5a2b", secondary: "#FFFFFF" }, // test3331
+
+  // The REAL league, in each manager's own colours (Craig, 5 Oct 2026).
+  l5kunst8msgbirdf: { primary: "#0b5cd5", secondary: "#FFFFFF" }, // Ball: blue/white
+  kpj0z744muh1qwtd: { primary: "#c81e2b", secondary: "#FFFFFF" }, // Nick: red/white
+  "7to6xosimu8hyyw5": { primary: "#0b5cd5", secondary: "#FFFFFF" }, // Traf: blue/white
+  "0g0j5mkomuqqwsbu": { primary: "#009246", secondary: "#ce2b37" }, // Dome: Italy
+  qgucu9dgmufwva1x: { primary: "#008751", secondary: "#FFFFFF" }, // Ohi: Nigeria
+  uexqrijomu8l5asi: { primary: "#c81e2b", secondary: "#FFFFFF" }, // Ben: red/white
+  ipnp5y4mmu9j7kop: { primary: "#c81e2b", secondary: "#FFFFFF" }, // O'Shea: red
+  syjkob6cmuobagfu: { primary: "#008751", secondary: "#FFFFFF" }, // Algie: green/white
+  aekx2715mtzgcl3f: { primary: "#0b5cd5", secondary: "#FFFFFF" }, // Fellows: blue/white
 };
 
-/** The neutral, for a team nobody has styled yet — which on 10 Oct is all of
- *  them. Chrome blue rather than the clubs' grey: a fantasy team's bar is the
+/** The neutral, for a team nobody has styled yet. Chrome blue rather than the clubs' grey: a fantasy team's bar is the
  *  CM title bar, and an unstyled one should look like the title bar it already
  *  is rather than like a mistake. */
 const FALLBACK: TeamColours = { primary: "#1d3f9e", secondary: "#FFFFFF" };
