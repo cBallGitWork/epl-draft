@@ -80,15 +80,16 @@ const TEAM_COLOURS: Record<string, TeamColours> = {
   kg18w2cvmtj36y3g: { primary: "#8b5a2b", secondary: "#FFFFFF" }, // test3331
 
   // The REAL league, in each manager's own colours (Craig, 5 Oct 2026).
-  l5kunst8msgbirdf: { primary: "#0b5cd5", secondary: "#FFFFFF" }, // Ball: blue/white
+  l5kunst8msgbirdf: { primary: "#111111", secondary: "#FFFFFF" }, // Ball: black/white
   kpj0z744muh1qwtd: { primary: "#c81e2b", secondary: "#FFFFFF" }, // Nick: red/white
   "7to6xosimu8hyyw5": { primary: "#0b5cd5", secondary: "#FFFFFF" }, // Traf: blue/white
   "0g0j5mkomuqqwsbu": { primary: "#009246", secondary: "#ce2b37" }, // Dome: Italy
   qgucu9dgmufwva1x: { primary: "#008751", secondary: "#FFFFFF" }, // Ohi: Nigeria
   uexqrijomu8l5asi: { primary: "#c81e2b", secondary: "#FFFFFF" }, // Ben: red/white
-  ipnp5y4mmu9j7kop: { primary: "#c81e2b", secondary: "#FFFFFF" }, // O'Shea: red
-  syjkob6cmuobagfu: { primary: "#008751", secondary: "#FFFFFF" }, // Algie: green/white
-  aekx2715mtzgcl3f: { primary: "#0b5cd5", secondary: "#FFFFFF" }, // Fellows: blue/white
+  syjkob6cmuobagfu: { primary: "#c81e2b", secondary: "#FFFFFF" }, // O'Shea: red
+  aekx2715mtzgcl3f: { primary: "#008751", secondary: "#FFFFFF" }, // Algie: green/white
+  "7z8fy0pnmuogbtdw": { primary: "#0b5cd5", secondary: "#FFFFFF" }, // Fellows: blue/white
+  ipnp5y4mmu9j7kop: { primary: "#f2b705", secondary: "#0b5cd5" }, // Richy: Clare saffron/blue
 };
 
 /** The neutral, for a team nobody has styled yet. Chrome blue rather than the clubs' grey: a fantasy team's bar is the
