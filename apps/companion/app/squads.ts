@@ -19,6 +19,7 @@ import { now } from "./clock";
 import { leagueCache } from "./leagueCache";
 import { footballNow, gameweekSnapshot, seasonKickoffs } from "./football";
 import { myTeamId } from "./session";
+import { shortTeamNames } from "./teamNames";
 import { orRefusal, tell } from "./refusals";
 import type { Unavailable } from "./refusals";
 import mapping from "../../../data/mappings/fantrax.json";
@@ -198,7 +199,8 @@ export async function getLeagueSquads(round: Round | null = null): Promise<Leagu
     return said.code === "NO_TEAMS" ? { undrafted: said.tell } : { unavailable: said.tell };
   }
 
-  const period = resolveRosters(snapshot, mapTeamRosters(rosters), bridge);
+  const held = mapTeamRosters(rosters);
+  const period = resolveRosters(snapshot, { ...held, teams: shortTeamNames(held.teams) }, bridge);
 
   return {
     period,

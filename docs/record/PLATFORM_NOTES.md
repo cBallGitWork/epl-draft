@@ -44,6 +44,22 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## Screens print a team's short name, kept by us and not by Fantrax — decided 5 Oct 2026
+
+Craig, 5 Oct: *"use the fantrax short names for all over the site like tables etc, need the room"*, then
+*"try use logical short names"* once he saw Fantrax's. Fantrax sends a `shortName` only on `getLeagueInfo`'s
+matchups (never on `teamInfo`), and in the real league it is mostly an account handle cut to eight letters:
+`CB_fantr` for The Raccoons, `Mcdegle8`, `RichyN`, `Atheltic`, `domeital`.
+
+- **Ours, by team id**: `data/leagues/short-names.json`; `team` there is for the reader. A team with no entry, a
+  renamed one included, prints the name Fantrax sends. `app/teamNames.ts` reads it.
+- **Applied in the app's data layer, five places**: `round.ts` `leagueInfo`, `schedule.ts` `getSchedule`,
+  `squads.ts` rosters, `players/pool.ts` owner names, `standings.ts` `leagueTable` (after `placeTable`, whose
+  tiebreak sorts on the full name). The draft report shortens the sides an edition stored.
+- **The paper's prose keeps full names**: the scripts call core's mappers, never the app's data layer.
+- At 390px the League table showed only `PLD` before; with short names it shows every column, and no schedule
+  side truncates.
+
 ## Every time is printed in London, Fantrax's included — decided 2 Oct 2026
 
 Craig, 2 Oct: *"Times need to be local time"*. Until then Fantrax's transaction stamps (`"Wed Sep 2, 2026,
