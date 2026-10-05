@@ -145,11 +145,8 @@ export default function PlayerShirt({
           alt=""
           width={220}
           height={290}
-          // The card's own ceiling. `PitchRows.MAX_CARD` is 110px at every width
-          // this app is drawn at, so the optimizer is told that and serves twice
-          // it for a retina screen — which is the whole reason `shirtUrl` moved
-          // off the 110 file.
-          sizes="110px"
+          // Straight from FPL: Vercel's optimizer is refused the kit (OPTIMIZED_EXTERNAL_IMAGE_REQUEST_UNAUTHORIZED).
+          unoptimized
           // **Cover from the TOP, so the crop takes the hem.** `contain` was
           // right while the box was the file's shape and is wrong now that it is
           // the kit's: it would letterbox the jersey back inside the shorter box

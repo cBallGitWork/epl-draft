@@ -44,22 +44,14 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
-## Stats tables and squad pages print a team's short name, kept by us — decided 5 Oct 2026
+## Kits load straight from FPL, not through Vercel's optimizer — decided 5 Oct 2026
 
-Craig, 5 Oct: *"use the fantrax short names for all over the site like tables etc, need the room"*, then
-*"try use logical short names"* once he saw Fantrax's, then, once it shipped, full names back on the League table,
-Schedule, Results and the head-to-heads. Fantrax sends a `shortName` only on `getLeagueInfo`'s matchups (never on
-`teamInfo`), and in the real league it is mostly an account handle cut to eight letters: `CB_fantr` for The
-Raccoons, `Mcdegle8`, `RichyN`, `Atheltic`, `domeital`.
-
-- **Ours, by team id**: `data/leagues/short-names.json`; `team` there is for the reader. A team with no entry, a
-  renamed one included, prints the name Fantrax sends. `app/teamNames.ts` reads it.
-- **Short**: anything named off the rosters (`squads.ts`) or the pool's owners (`players/pool.ts`), so squad and
-  player pages and every owner column (Players, the paper's scorers and team of the week, Matchday's stat lists, a
-  Prem match's owners); plus Team Stats and the squad pages' opponent lines, which shorten at the page.
-- **Full**: `leagueInfo`, `getSchedule` and `leagueTable` stay Fantrax's names, so the League table, Schedule,
-  Results, head-to-heads, the live strip and the paper's draft table and draft report print them whole.
-- The paper's prose keeps full names: the scripts call core's mappers, never the app's data layer.
+On production, `/_next/image` for an FPL kit not already in Vercel's cache answered **502
+`OPTIMIZED_EXTERNAL_IMAGE_REQUEST_UNAUTHORIZED`** for 7 of 9 kits tried on 5 Oct (Arsenal and Newcastle among them);
+every cached one was a 200. FPL's CDN refuses Vercel's fetch while serving the same file to a browser, our `Referer`
+included (200, 25–30 KB). Safari drew the failures as a blue "?" on a rival's pitch. So `PlayerShirt` and
+`PlayerImage`'s kit rung set `unoptimized`, and `img-src` already lists FPL's origin. Portraits stay optimized
+(~330 KB at source); if they start failing the same way, this is the first place to look.
 
 ## Every time is printed in London, Fantrax's included — decided 2 Oct 2026
 
@@ -2665,6 +2657,8 @@ or above `PitchRows.MAX_CARD` (110px), so the argument would have one value at
 every call site. The `.webp` is deliberately not asked for — `next/image`
 re-encodes whatever it fetches, so a second URL shape buys one origin fetch per
 club per deploy and costs a second thing to keep in step.
+Since 5 Oct kits load unoptimized (see the decision above), so the browser takes the PNG
+as it is; the `.webp` would now save about two thirds of each kit's bytes and is not yet taken.
 
 Also present and not used: `shirt_0-220.png`, a grey blank with a white cross —
 FPL's own "unknown club". `resources.premierleague.com/…/kits/` is a 403 and
