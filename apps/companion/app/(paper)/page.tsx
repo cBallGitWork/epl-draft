@@ -75,11 +75,7 @@ export default async function GazettePage() {
       <Masthead at={paper.snapshot?.fetchedAt ?? null} />
 
       <div className="grid gap-5 @3xl:grid-cols-[1fr_19rem] @3xl:gap-x-10">
-        {/* The lead column. `--page-gutter: 0` inside it once the sidebar exists:
-            the picture band and the pitch break out of the PAGE's gutters, and
-            in a two-column grid the page's gutter is no longer the edge they are
-            breaking out to — left as it was, the widest thing on the lead would
-            have run out under the sidebar. */}
+        {/* The lead column: no gutter beside the sidebar, so a full-bleed picture stops at its edge. */}
         <div className="flex flex-col gap-5 @3xl:[--page-gutter:0px]">
           {/* The scoreboard strip. `underway` and not `partial`: before the
           first kickoff every total is a legitimate nought, and a strip reading
