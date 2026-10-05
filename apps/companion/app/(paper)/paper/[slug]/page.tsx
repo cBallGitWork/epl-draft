@@ -35,10 +35,7 @@ import { KICKER } from "../../../components/gazette/kickers";
 // statically, so it cannot be imported. The front page keeps the shorter window;
 // its scoreboard is the one thing here that moves in thirty seconds.
 export const revalidate = 300;
-
-export function generateStaticParams() {
-  return filed.map((story) => ({ slug: story.slug }));
-}
+// No `generateStaticParams`: the layout's live strip calls `connection()`, and a prebuilt article 500s at runtime.
 
 function find(slug: string) {
   return filed.find((story) => story.slug === slug) ?? null;
