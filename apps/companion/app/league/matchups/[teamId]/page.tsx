@@ -5,6 +5,8 @@ import {
   clubById,
   roundStarted,
   headToHead,
+  nextPairedPeriod,
+  openingGameweek,
   oppositionByClub,
   roundState,
   wasFielded,
@@ -20,11 +22,11 @@ import PhotoGround from "../../../components/football/PhotoGround";
 import { venueOf } from "../../../venues";
 import { HEAD_TO_HEAD } from "../../../titles";
 import { getLeagueSquads, readableOr404, teamDisplay } from "../../../squads";
-import { roundOf } from "../../../round";
+import { readCalendar, roundOf } from "../../../round";
 import { liveScores, squadLivePoints } from "../../../scoreboard";
 import { newsFor, readPoolNews } from "../../../poolNews";
 import { myTeamId } from "../../../session";
-import { MATCHUPS } from "../../routes";
+import { MATCHUPS, matchupHref } from "../../routes";
 import { sheetEvents } from "./events";
 import { STATS_OF, DEFAULT_SIDE_SORT, matchupTabs, matchupView, statsHref, statsOf } from "./views";
 import { boardCategories, boardColumns } from "./sideRows";
@@ -107,6 +109,11 @@ export default async function HeadToHeadPage({
   const heading = <>Gameweek {squads.snapshot.gameweek}</>;
 
   if (pairing === undefined) {
+    // Asked for no round, a team between fixtures opens on its next one: before the first, every tie stood empty.
+    const later = round === null ? nextPairedPeriod(squads.info.matchups, squads.info.teams, period, teamId) : undefined;
+    const gameweek = later === undefined ? undefined : openingGameweek(await readCalendar(), later);
+    if (gameweek !== undefined) redirect(matchupHref(teamId, gameweek, query.view));
+
     return (
       <LeagueShell current="matchups" title={HEAD_TO_HEAD} sub={heading}>
         <PhotoGround subject={null} />

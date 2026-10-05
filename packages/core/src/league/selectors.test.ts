@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { headToHead, leaguePool, pairingInvolves, periodPairings } from "./selectors";
+import { headToHead, leaguePool, nextPairedPeriod, pairingInvolves, periodPairings } from "./selectors";
 import type {
   LeagueMatchup,
   LeaguePlayer,
@@ -174,5 +174,22 @@ describe("pairingInvolves", () => {
     // Null is not a team that happens to match nothing — it is nobody, and the
     // list it produces is the broadcaster's rather than a manager's.
     expect(pairingInvolves(pairing, null)).toBe(false);
+  });
+});
+
+describe("nextPairedPeriod", () => {
+  it("finds the team's first pairing after the period asked about", () => {
+    // Before the real league's first head-to-head, the round on screen has none.
+    expect(nextPairedPeriod(schedule, leagueTeams, 0, "t1")).toBe(1);
+    expect(nextPairedPeriod(schedule, leagueTeams, 1, "t1")).toBe(2);
+  });
+
+  it("skips a period where only other teams play", () => {
+    expect(nextPairedPeriod(schedule, leagueTeams, 0, "t3")).toBe(1);
+    expect(nextPairedPeriod(schedule, leagueTeams, 1, "t4")).toBeUndefined();
+  });
+
+  it("has no answer once the schedule has run out", () => {
+    expect(nextPairedPeriod(schedule, leagueTeams, 2, "t1")).toBeUndefined();
   });
 });
