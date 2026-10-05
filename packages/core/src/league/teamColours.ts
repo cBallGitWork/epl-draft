@@ -85,6 +85,10 @@ const TEAM_COLOURS: Record<string, TeamColours> = {
   "7to6xosimu8hyyw5": { primary: "#0b5cd5", secondary: "#FFFFFF" }, // Traf: blue/white
   "0g0j5mkomuqqwsbu": { primary: "#009246", secondary: "#ce2b37" }, // Dome: Italy
   qgucu9dgmufwva1x: { primary: "#008751", secondary: "#FFFFFF" }, // Ohi: Nigeria
+  uexqrijomu8l5asi: { primary: "#c81e2b", secondary: "#FFFFFF" }, // Ben: red/white
+  ipnp5y4mmu9j7kop: { primary: "#c81e2b", secondary: "#FFFFFF" }, // O'Shea: red
+  syjkob6cmuobagfu: { primary: "#008751", secondary: "#FFFFFF" }, // Algie: green/white
+  aekx2715mtzgcl3f: { primary: "#0b5cd5", secondary: "#FFFFFF" }, // Fellows: blue/white
 };
 
 /** The neutral, for a team nobody has styled yet. Chrome blue rather than the clubs' grey: a fantasy team's bar is the

@@ -49,7 +49,8 @@ describe("teamColours", () => {
       "deo9ljvtmtj36y3g", "fq5omv5kmtj36y3g", "dpdkp2bbmtj36y3g", "g80h3bf5mtj36y3g",
       "pzmd243ymtj36y3g", "kg18w2cvmtj36y3g",
       "l5kunst8msgbirdf", "kpj0z744muh1qwtd", "7to6xosimu8hyyw5", "0g0j5mkomuqqwsbu",
-      "qgucu9dgmufwva1x",
+      "qgucu9dgmufwva1x", "uexqrijomu8l5asi", "ipnp5y4mmu9j7kop", "syjkob6cmuobagfu",
+      "aekx2715mtzgcl3f",
       "nobody-has-styled-this-one",
     ];
 
