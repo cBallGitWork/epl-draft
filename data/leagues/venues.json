@@ -93,7 +93,16 @@
     },
     "l5kunst8msgbirdf": {
       "team": "The Raccoons",
-      "src": "/ground/crowd.jpg"
+      "src": "/ground/venues/wing-eating.jpg",
+      "blur": "data:image/jpeg;base64,/9j//gAQTGF2YzYyLjI4LjEwMgD/2wBDAAgICAkICQsLCwsLCw0MDQ0NDQ0NDQ0NDQ0ODg4REREODg4NDQ4OEBARERITEhERERETExQUFBgYFxccHB0iIin/xABwAAEBAQAAAAAAAAAAAAAAAAAFBAYBAQEBAQAAAAAAAAAAAAAAAAMEAAIQAAICAQQCAgMBAAAAAAAAAAECAwQRIQUSADETBkJBUzIiEQACAQQBAgcBAAAAAAAAAAABAhEDAFEhMRIEIhPRobGBQWH/wAARCAAMABADARIAAhIAAxIA/9oADAMBAAIRAxEAPwCobzt1ylYvOXFvbo1jnE0MQjYyN/l4UYNrxBC5A4t40PSaWzVqsNpw80nu9tciVg4RFGQUyujDkQCc4z3VGeJAE4597m7xQHUDUTxr8FpTSl5kEt0Z4PHrdXag1KbSx3GMn+XmtymFk2bXriYs7nKcFk4jTLR4T1uPsCPOoyOr/D/jVLeoJJbT2GeWDLEOvlpXB/pG/UvnP5zp1AW6iGJONQBrNqw4vl1pmmGpqqxM+MszSdaOLjVj1H6+L//Z",
+      "credit": {
+        "place": "A wing-eating contest in Buffalo",
+        "title": "Joey Chestnut at the 2012 National Buffalo Wing Festival, Buffalo, New York",
+        "author": "LegendLarrys",
+        "licence": "CC BY 2.0",
+        "licenceUrl": "https://creativecommons.org/licenses/by/2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Joey_Chestnut_at_the_2012_National_Buffalo_Wing_Festival,_Buffalo,_New_York.jpg"
+      }
     },
     "kpj0z744muh1qwtd": {
       "team": "Bayern Bru",
