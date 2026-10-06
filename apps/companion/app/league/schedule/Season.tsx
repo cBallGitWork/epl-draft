@@ -21,11 +21,7 @@ export default function Season({
     <ul className="cm-rows cm-scroll cm-scroll-y flex flex-col lg:max-h-[34rem] lg:overflow-y-auto">
       {rows.map((row) => (
         <li key={`${row.round.period}-${row.tie.competition.id}-${row.tie.round ?? ""}`}>
-          <div
-            className={`cm-row flex min-h-11 items-center gap-2 px-1.5 ${
-              row.round.started ? "" : "text-muted"
-            }`}
-          >
+          <div className="cm-row flex min-h-11 items-center gap-2 px-1.5">
             {/* The gameweek always; its date only on a desk, where the opponent still has room. */}
             <span className="cm-index numeric flex shrink-0 items-baseline gap-1 px-1.5 py-0.5">
               <span>GW{row.round.gameweek}</span>
@@ -114,7 +110,8 @@ function Opponent({
     <Link
       href={teamHref(opponent.team.teamId, gameweek)}
       // `inline-flex` keeps the link in the line with its "v"; `.cm-row` gives a phone 44px, the desk 28.
-      className={`cm-row inline-flex min-h-11 items-center truncate hover:underline ${ROW_NAME}`}
+      // A name is white (DESIGN §3), in a gameweek to come as in one played.
+      className={`cm-row inline-flex min-h-11 items-center truncate text-ink hover:underline ${ROW_NAME}`}
     >
       {name}
     </Link>
