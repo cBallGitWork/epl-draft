@@ -30,6 +30,7 @@ const ROUTES = [
   "/league/results",
   "/league/team-stats",
   "/league/cups",
+  "/league/scoring",
   "/league/cups?cup=davy-propper",
   // A link from before the cups lost their views still answers.
   "/league/cups?cup=davy-propper&view=bracket",

@@ -10,7 +10,7 @@ import TabStrip from "../components/shell/TabStrip";
 // The plates themselves are `shell/TabStrip` now — this file is the list and the
 // argument for it, which is the half worth keeping in the section.
 
-/** Five blue buttons, in Craig's order (27 Sep 2026: *"Change table to league. Move cups to 2nd"*).
+/** The blue buttons, in Craig's order (27 Sep 2026: *"Change table to league. Move cups to 2nd"*); Scoring last (6 Oct).
  *  Matchups is a route here but not a tab; Player Stats left for its own section on 6 Sep. */
 const SECTIONS = [
   { href: "/league", label: "League", key: "table" },
@@ -18,6 +18,7 @@ const SECTIONS = [
   { href: "/league/schedule", label: "Schedule", key: "schedule" },
   { href: "/league/results", label: "Results", key: "results" },
   { href: "/league/team-stats", label: "Team Stats", key: "teamStats" },
+  { href: "/league/scoring", label: "Scoring", key: "scoring" },
 ] as const;
 
 /** The route that builds its own query strings, named once.
@@ -49,7 +50,7 @@ export function cupHref(cupId: string): string {
   return `${CUPS_PAGE}?${new URLSearchParams({ cup: cupId })}`;
 }
 
-/** The four tabs, plus the one section a route can BE on without being in the
+/** The tabs, plus the one section a route can BE on without being in the
  *  strip.
  *
  *  **Matchups is that one.** It has a board and a page per pairing, so it stays
