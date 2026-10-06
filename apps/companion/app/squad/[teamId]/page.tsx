@@ -5,7 +5,6 @@ import {
   playerDetail,
 } from "@epl/core";
 import LineupPlanner from "../../components/league/LineupPlanner";
-import SeasonGrid from "../../components/league/SeasonGrid";
 import SquadBoard from "../../components/league/SquadBoard";
 import Sheet from "./Sheet";
 import QuerySelect from "../../components/shell/QuerySelect";
@@ -41,7 +40,7 @@ export default async function TeamPage({
   // `teamId` is what the folder is called; `slug` is what the reader typed, and
   // on the front door those are not the same thing. See `squad/routes.ts`.
   const [{ teamId: slug }, { gw }] = await Promise.all([params, searchParams]);
-  const { team, mine, planning, open, standing, weeks, benchRanks, eligibility, clubs, opposition, live, news, season, points, board, names, pending, squadIds } = await squadView(slug, gw);
+  const { team, mine, planning, open, standing, weeks, benchRanks, eligibility, clubs, opposition, live, news, points, board, pending, squadIds } = await squadView(slug, gw);
   // Fantrax's period selector, on every branch: an earlier week shows its scores, a later one its opponents.
   const picker =
     weeks === null ? null : (
@@ -105,35 +104,15 @@ export default async function TeamPage({
            Branching on the board rather than on the display again: it exists
            exactly when the gate is closed, so there is no arrangement of the two
            that renders a board with nothing on it. */
-        /* Two panels, and above `lg` they stand beside each other. That is not a
-           preference: Championship Manager's own content area is 710px of an
-           800px canvas, and a 1440 screen less the rail is 1310 — so one panel
-           up here is not a CM screen scaled up, it is a CM screen with half of
-           it missing. Split in two, each panel is about the width the whole game
-           had. Below `lg` they stack, and never the other way round: a band
-           above the pitch comes out of the pitch's own screen budget.
-           `items-start` so the shorter panel does not stretch to the taller
-           one's height, and **`minmax(0,1fr)` on the single column below `lg` as
-           well as on the pair above it**: a grid item's default `min-width: auto`
-           is its content's min-content width, so the season grid's seventeen
-           columns widened the whole page rather than scrolling inside their own
-           panel — a 390 phone laid out at 627. The `overflow-x-auto` around the
-           table cannot help while the column it sits in is free to grow. */
+        /* The list alone: a pitch would draw the shape the gate withholds, and the season table is the Stats tab's. */
         <div className="flex flex-col gap-2">
-        {picker === null ? null : <div className="flex justify-end px-1">{picker}</div>}
-        <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
+          {picker === null ? null : <div className="flex justify-end px-1">{picker}</div>}
           <SquadBoard
             lines={board.lines}
             because={board.because}
             projected={board.projected}
             eligibility={eligibility}
           />
-          {/* The second panel, and it costs one cache hit. `squadSeason` already
-              reads this table to price the board; what it used to drop on the
-              floor is thirteen scoring columns, a per-game figure and Fantrax's
-              own name for the season. */}
-          {season !== null ? <SeasonGrid stats={season.stats} names={names} /> : null}
-        </div>
         </div>
       ) : (
         /* An XI nobody may change here: a rival's once his lineups have locked, or
