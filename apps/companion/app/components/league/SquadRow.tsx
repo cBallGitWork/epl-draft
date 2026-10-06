@@ -121,17 +121,9 @@ export default function SquadRow({
       </span>
 
       {/* Undefined is no table at all and takes the cell with it; null is a
-          table that does not name him, which is a dash.
-
-          `text-sm`, which is §6's figure-in-a-row at both widths. It went to
-          `text-base` on 11 Sep 2026 for "fonts could be bigger on list" and came
-          back: §6 gates that step behind a screen "able to say the same thing
-          about itself" — that its only content is names and their figures — and
-          this list is also the four-column gated board on `/squad/[teamId]`.
-          What DID move is the three cells that were BELOW the recipe: the head
-          strip, the position and the opponent. */}
+          table that does not name him, which is a dash. A step above §6's row figure (DESIGN §6 records why). */}
       {points === undefined ? null : (
-        <span className="numeric w-9 shrink-0 text-center text-sm font-bold text-accent">
+        <span className="numeric w-9 shrink-0 text-center text-base font-bold text-mid lg:text-lg">
           {points ?? DASH}
         </span>
       )}
