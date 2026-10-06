@@ -16,7 +16,7 @@
 // silent pass.
 
 import { connect, discover, parseArgs, teamCookie } from "./cdp.mjs";
-import { ALL_ROUTES, matchRoutes } from "./routes.mjs";
+import { ALL_ROUTES, FRONT_PAGE, matchRoutes } from "./routes.mjs";
 
 /** This run's routes: the shared list, plus whatever `discover` finds a real
  *  id for below. A COPY, because those appends are this process's own —
@@ -131,7 +131,7 @@ if (coming && coming !== match) ROUTES.push(coming);
 // one story in one round's edition, so it 404s the day that story's kind is
 // deleted — and a tap audit against a 404 reports a page with no controls on it
 // as a page that passes.
-await cdp.open("/", 2200);
+await cdp.open(FRONT_PAGE, 2200);
 const article = await cdp.js(
   `(document.querySelector('a[href^="/paper/"]')||{}).getAttribute
      ? document.querySelector('a[href^="/paper/"]').getAttribute("href") : ""`,

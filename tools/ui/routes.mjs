@@ -63,9 +63,12 @@ export const DESK_ROUTES = [
  *  own run. */
 export const PREM_ROUTE = "/prem";
 
+/** The front page as an instrument opens it: a signed-in cold open of a bare `/` lands on Mail or Live. */
+export const FRONT_PAGE = "/?paper";
+
 /** Newsprint. No photograph behind it — `isPaperRoute` stands the ground down —
  *  so `groundfit` has nothing to measure here, and the other two still do. */
-export const PAPER_ROUTES = ["/"];
+export const PAPER_ROUTES = [FRONT_PAGE];
 
 /** Every route worth measuring for contrast, overflow and tap targets.
  *
