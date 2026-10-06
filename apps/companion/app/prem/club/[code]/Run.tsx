@@ -81,9 +81,7 @@ export default function Run({
                 <td className="px-1 text-center text-2xs font-bold text-muted">
                   {home ? "H" : "A"}
                 </td>
-                {/* The competition. One value today and the column is the point:
-                    FPL publishes the league and nothing else, so a cup tie has
-                    nowhere to come from yet — see the note under the list. */}
+                {/* The competition: FPL publishes the league and nothing else. */}
                 <td className="hidden whitespace-nowrap px-1.5 text-2xs text-faint lg:table-cell">
                   {COMPETITION}
                 </td>

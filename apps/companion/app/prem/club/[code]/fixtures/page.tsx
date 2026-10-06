@@ -13,15 +13,6 @@ import { PANEL } from "@/app/desk";
 // arriving on a Monday wants the newest round at the top. This is one club's
 // campaign, which is read the way it was played: August at the top, May at the
 // bottom, with the line between done and to come falling wherever the season is.
-//
-// **The Premier League only, and the page says so.** FPL publishes one
-// competition — `/api/fixtures/` is the league and nothing else — so there is no
-// cup or European tie to show and no honest way to imply one. A club's real
-// fixture list has both, and the index block down the left is already the shape
-// that carries the answer: it prints `GW7` now and would print the competition
-// beside the round when a feed that knows about them arrives. Naming the limit
-// on screen is the difference between a list that is incomplete and a list that
-// is wrong.
 
 // Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (`scripts/revalidate.test.ts`
@@ -56,15 +47,7 @@ export default async function ClubFixturesPage({ params }: { params: Promise<{ c
         {run.length === 0 ? (
           <TabEmpty>FPL has published no match with {club.name} in it.</TabEmpty>
         ) : (
-          <>
-            <Run fixtures={run} club={club} clubs={clubById(snapshot)} />
-            <p className="text-2xs text-faint">
-              Premier League only — FPL publishes no cup or European tie. The other competitions
-              arrive with the sister repo&apos;s <span className="whitespace-nowrap">team
-              match log</span>, whose competition column is what the column on the right is
-              waiting for.
-            </p>
-          </>
+          <Run fixtures={run} club={club} clubs={clubById(snapshot)} />
         )}
       </section>
     </ClubShell>
