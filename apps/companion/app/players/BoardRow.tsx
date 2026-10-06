@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { DASH, crestForShortName } from "@epl/core";
 import { positionsLabel } from "../positions";
 import { LABEL, PINNED_NAME, PINNED_TILE, ROW_FIGURE, ROW_NAME } from "@/app/desk";
+import { holderOf, type Held, type Holder as HolderLine } from "./holder";
 
 // What every Data board's row shares: the pinned lead (tile, crest, name, position) and a figure's cell.
 
@@ -56,5 +57,33 @@ export function LeadFace({
         </span>
       </span>
     </>
+  );
+}
+
+const HOLDER_INK: Record<HolderLine["tone"], string> = {
+  yours: "font-bold text-accent",
+  rival: "text-muted",
+  free: "font-bold text-ink",
+};
+
+/** Who holds him, in brackets: "Yours" in the accent, a rival quiet, and Fantrax's own code for a man anybody can
+ *  claim (FA, WW), loud. `className` is the width it shows at. */
+export function Holder({
+  held,
+  teamNames,
+  reader,
+  className,
+}: {
+  held: Held;
+  teamNames: ReadonlyMap<string, string>;
+  reader: string | null;
+  className: string;
+}) {
+  const holder = holderOf(held, teamNames, reader);
+  if (holder === null) return null;
+  return (
+    <span className={`min-w-0 truncate text-2xs ${HOLDER_INK[holder.tone]} ${className}`} title={holder.title}>
+      ({holder.text})
+    </span>
   );
 }

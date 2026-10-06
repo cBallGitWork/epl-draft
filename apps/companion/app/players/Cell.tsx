@@ -5,11 +5,10 @@ import type { PoolRow } from "./pool";
 import type { PoolColumn, RawStats } from "./columns";
 import { figureOf } from "./figure";
 import { standoutInk, type StandoutCut } from "../components/league/standout";
-import { STATUS } from "./status";
 import { ANALYSIS, playerHref } from "./routes";
 import type { PlayersQuery } from "./query";
 import { ROW_LINK } from "../components/league/TableCells";
-import { FIGURE, LEAD_WIDTH, LeadFace } from "./BoardRow";
+import { FIGURE, Holder, LEAD_WIDTH, LeadFace } from "./BoardRow";
 import StateBox from "../components/football/StateBox";
 
 // One row of the pool board: the lead (crest, name, and who holds him) and the figures beside it.
@@ -53,44 +52,14 @@ export function Lead({
           positions={row.entry.eligiblePositions}
           after={
             <>
-              <Holder row={row} teamNames={teamNames} reader={reader} className="max-lg:hidden" />
+              <Holder held={row.entry} teamNames={teamNames} reader={reader} className="max-lg:hidden" />
               <StateBox player={footballer} />
             </>
           }
-          under={<Holder row={row} teamNames={teamNames} reader={reader} className="lg:hidden" />}
+          under={<Holder held={row.entry} teamNames={teamNames} reader={reader} className="lg:hidden" />}
         />
       </Link>
     </td>
-  );
-}
-
-/** Who holds him, in brackets: "Yours" in the accent, a rival quiet, and Fantrax's own code for a man anybody can
- *  claim (FA, WW), loud. `className` is the width it shows at. */
-function Holder({
-  row,
-  teamNames,
-  reader,
-  className,
-}: {
-  row: PoolRow;
-  teamNames: Map<string, string>;
-  reader: string | null;
-  className: string;
-}) {
-  const owner = row.entry.ownerTeamId;
-  const [text, ink] =
-    owner !== null && owner === reader
-      ? ["Yours", "font-bold text-accent"]
-      : owner !== null
-        ? [teamNames.get(owner) ?? owner, "text-muted"]
-        : row.entry.status
-          ? [row.entry.status, "font-bold text-ink"]
-          : [null, ""];
-  if (text === null) return null;
-  return (
-    <span className={`min-w-0 truncate text-2xs ${ink} ${className}`} title={STATUS[text] ?? text}>
-      ({text})
-    </span>
   );
 }
 
