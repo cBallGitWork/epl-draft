@@ -2,15 +2,14 @@ import Image from "next/image";
 import { crestUrl } from "@epl/core";
 import { ROW_NAME } from "@/app/desk";
 
-/** The crest in a table row's badge slot: `--row-badge` draws it, `px` is what the optimizer is told. `max-w-none`
- *  lifts preflight's `max-width: 100%`, under which WebKit sizes a table column as if the crest were not there. */
+/** The crest in a table row's badge slot. `max-w-none` lifts preflight's `max-width: 100%`, under which
+ *  WebKit sizes a table column as if the crest were not there. */
 export const ROW_CREST = {
   px: 26,
   className: "h-[var(--row-badge)] w-[var(--row-badge)] max-w-none shrink-0 object-contain",
 };
 
-/** A club in a row: its crest, then the three-letter label under a thumb, never cut, and the full name on the
- *  desk. Both names render and CSS picks, so the markup guesses no breakpoint. */
+/** A club in a row: its crest, the short name on a phone and the full name on the desk; CSS picks. */
 export default function ClubLabel({
   club,
   crest = ROW_CREST,

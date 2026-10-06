@@ -2,8 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-/** A phone's way back, the rail's `←` that only a desk has. A page opened cold from a shared link
- *  has no history, so it goes to `fallback` instead. */
+/** The phone's back button; a page opened cold from a shared link has no history, so it goes to `fallback`. */
 export default function BackPlate({ fallback }: { fallback: string }) {
   const router = useRouter();
   return (

@@ -15,11 +15,8 @@ import {
 } from "./sections";
 import { MY_TEAM, SQUAD } from "../../squad/routes";
 
-// The section table's one piece of logic is `owns`, and the plate it decides is
-// the only thing on the rail a reader can be standing in without the pathname
-// saying so. A rival's squad and the reader's own are the same five screens
-// under the same folder, told apart by one segment — so the test is that the
-// segment is doing the work, not the prefix.
+// A rival's squad and the reader's own share a folder and differ by one segment,
+// so these prove `owns` matches on that segment, not the prefix.
 
 /** A Fantrax team id, which is sixteen characters of base-36. */
 const RIVAL = "1b6gp5utmtj36y3g";
@@ -28,8 +25,7 @@ const myTeam = SECTIONS.find((section) => section.href === MY_TEAM);
 
 describe("the My Team plate", () => {
   it("is a section", () => {
-    // `Team`, because the plate at 320 has 49.3px of label room and `My Team`
-    // renders at 51. The section's NAME is longer than the word on its plate.
+    // `Team`: `My Team` overflows the plate's label room at 320.
     expect(myTeam?.label).toBe("Team");
   });
 
@@ -39,8 +35,7 @@ describe("the My Team plate", () => {
     }
   });
 
-  // The failure this exists for: `routes: ["/squad"]` would prefix-match every
-  // team in the league, so browsing a rival would light a plate reading My Team.
+  // `routes: ["/squad"]` would prefix-match every team and light My Team on a rival.
   it("stays dark on a rival, and on the index the sign-in lives on", () => {
     expect(owns(myTeam?.routes ?? [], `/squad/${RIVAL}`)).toBe(false);
     expect(owns(myTeam?.routes ?? [], `/squad/${RIVAL}/stats`)).toBe(false);

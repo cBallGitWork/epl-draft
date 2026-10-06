@@ -1,160 +1,39 @@
-/* ============================================================================
-   Tim Hortons Pro League — token layer
-
-   Two registers, never muddled (docs/rules/PRODUCT.md principle 3), and what follows is
-   the first of them:
-
-   · THE DESK — League, Squads, Live, Players, FPL. This is a management
-     terminal, so it is dressed as one: Championship Manager 99/00's blue-black
-     ground, yellow for what is yours or active, cyan for a derived reading, amber for a
-     figure, red for a loss and green for a gain. CM's own ground was a darkened
-     match photograph; we keep the darkness and the blueness and drop the
-     photograph, which no contrast ratio survives.
-   · THE PAPER — the front page and everything written on it. Ink on stock,
-     in `paper.css`, which re-points what is declared here. It was the second
-     half of this file until the two registers together crossed CODE_RULES'
-     300-line ceiling; the seam was already where the split had to fall.
-
-   Surfaces carry no colour of their own; colour is STATE almost everywhere,
-   which is the product-register floor.
-
-   The Premier League's palette has left the chrome. Green, cyan and pink were
-   the football register's, and the football register is now one tab of six. It
-   survives only where it is data rather than dress: the fixture-difficulty
-   scale below, and club colours, which belong to the clubs.
-   ============================================================================ */
+/* The desk's design tokens, in Championship Manager 99/00 dress; `paper.css` re-points them for the paper. */
 
 @theme {
-  /* --- Surfaces: a four-step ramp, chroma held low and tinted WARM ------------
-
-     **Grey, not navy** (Craig, 31 Aug: "the main table is still too dark, cm has
-     more of a grey look"). The ramp was hue 265 at chroma 0.046, which is a
-     visible blue: the panel came out `#0f182f`, a navy plate. Championship
-     Manager's row ground is `#4c4944` — measured off `cm9900/12.jpg` and `21.jpg`
-     and recorded in the reference README months ago — which is oklch L 0.407,
-     chroma 0.009, hue 81. A warm near-neutral, and half again as light.
-
-     **The hue was free and the lightness was not.** Moving 265 → 80 at chroma
-     0.012 changes every contrast ratio in this file by less than 0.05, because
-     WCAG luminance barely notices chroma this low. That alone is most of what
-     "grey look" means, and it cost nothing.
-
-     **CM's actual lightness is unreachable, and the reason is CM's own.** At
-     L 0.407 our tightest inks land at `--faint` 2.55:1, `--bad` 2.66 and
-     `--live` 2.59. The game ran exactly that way — the reference README records
-     its unavailable grey at **2.54:1** — and the same README records our refusal
-     to follow it there. Solving for a lift instead inverts the ladder: `--faint`
-     would need L 0.782 against a `--muted` of 0.76. So the ceiling is a
-     derivation and not a preference, and this ramp sits at it: surface climbed
-     0.215 → 0.245 (`#23201a`) and `--faint` lifted 0.63 → 0.65 to pay for it.
-     Every ink clears 4.5:1 on all three surfaces with margin. Re-derive with
-     `python3` before moving any of these; the whole set is one solution.
-
-     **The page stays NAVY and only the wells go grey**, which is also the game:
-     `cm9900/24.jpg` is a dark blue rail beside a warm grey table area, and the
-     first cut of this warmed the whole ramp and turned the rail brown. So `--bg`
-     keeps hue 265 and is the one step that does — it is the page and the rail,
-     the two things CM leaves blue — while every WELL cut into it is CM's grey.
-     Inks on it: 17.0 · 8.6 · 5.7, unchanged by the move. --- */
+  /* Surfaces: the page and the rail stay navy, every well is CM's warm grey.
+     One solved set: re-derive every ink's contrast before moving any step. */
   --color-bg: oklch(0.190 0.045 265);
   --color-surface: oklch(0.245 0.012 80);
   --color-raised: oklch(0.255 0.012 80);
   --color-line: oklch(0.40 0.012 80);
 
-  /* --- Ink: every step verified ≥4.5:1 on all three surfaces. On --color-bg
-     16.9 · 8.6 · 5.7; on --color-surface 14.9 · 7.6 · 5.0; on --color-raised
-     14.5 · 7.3 · 4.9, which is the tightest pair in the set and therefore the
-     one that fixes where --raised can sit. Measured 31 Aug 2026. --- */
+  /* Ink, loud to quiet: each clears 4.5:1 on all three surfaces; faint on raised is the tightest pair. */
   --color-ink: oklch(0.97 0.008 80);
   --color-muted: oklch(0.76 0.022 80);
   --color-faint: oklch(0.65 0.022 80);
 
-  /* --- The desk's signals -------------------------------------------------
-     CM's grammar is more specific than a palette: each colour is a SLOT with one
-     meaning, which is why every name here survived the change of value. Verified
-     from the game's own screenshots rather than from memory of it.
+  /* The desk's signals: each colour is a slot with one meaning. */
 
-     What these replaced was the Premier League's brand set, which had drifted
-     into doing league-register work — a PL green primary action, a PL pink LIVE.
-     Those are the football's colours and the football is one tab of six. */
-
-  /* Yours, selected, active, primary. CM yellow. 13.1:1 on --color-bg, and the
-     same pair inverted for a yellow chip with dark ink on it. */
+  /* Yours, selected, active, primary: CM yellow. */
   --color-accent: oklch(0.88 0.16 95);
-  /* A reading we derived rather than a fact somebody recorded — CM's own
-     use, which is the rating column, Position and condition, never a name.
-     11.2:1. Pulled back from
-     PL's #05f0ff, which is a neon and reads as the Premier League's rather than
-     as a colour in this room. */
+  /* A reading we derived rather than one somebody recorded; never a name. */
   --color-info: oklch(0.82 0.13 210);
-  /* LIVE only — a match in play — and reserved so it never means anything else.
-     The league's own red at hue 22, lifted until it carries text: #C8102E is
-     3.2:1 on this ground and this is 5.4:1. The brand red and the live red being
-     one hue is the point, since the league IS what is live. */
+  /* A match in play, and nothing else: the league's red lifted until it carries text (5.4:1). */
   --color-live: oklch(0.66 0.215 22);
-  /* Chrome, and only chrome: the royal-blue title bar every CM screen opens
-     with, and the bars that frame a panel. It carries a bold white title and
-     never a figure, a name or a state — it is the frame, not the content.
-
-     A ground rather than a depth step. The `bg → surface → raised → line`
-     ladder is one hue at chroma 0.045 by design, which is what keeps the desk
-     reading as one room; a title bar at that chroma is a grey bar, and CM's is
-     the most saturated thing on its screen. So this is the same hue taken out
-     to 0.13, which makes it chrome rather than another rung. Ink on it is
-     7.0:1 and cream 6.41:1, measured in the browser on 30 Aug 2026. */
+  /* Chrome only: the royal-blue title bar and the bars that frame a panel; never a figure, a name or a state. */
   --color-chrome: oklch(0.45 0.13 264);
 
-  /* CM's index cell, one step deeper than the chrome it sits under.
-     `docs/ui/reference/README.md` measures the pair off the game's own pixels:
-     the title bar and tab strip are `#0030a6` and the index block `#1f13a7`,
-     which is the same royal blue taken deeper and a shade more saturated. This
-     is that step in our hue: chroma out to 0.16 and lightness down to 0.40, so
-     the block reads as its own object beside the strip rather than as a patch of
-     it. White on it is 8.9:1. */
+  /* CM's index cell, one step deeper and more saturated than the chrome above it. */
   --color-index: oklch(0.40 0.16 266);
-  /* The same block for a man on NO roster, anybody's to claim (Craig, 1 Oct 2026: "non roster players with a green
-     chip"). `--color-up`'s hue at the blue's depth, so the ramp's ink holds: 4.8:1 at its light top, 8.4 on the face. */
+  /* The index block for a man on no roster: `--color-up`'s hue at the blue's depth (ink 4.8:1 at the ramp's top). */
   --color-index-free: oklch(0.39 0.11 148);
 
-  /* CM's grey button plate: a column head, a tab, a bevelled control. The second
-     colour that exists to be chrome and nothing else.
-
-     It is NOT a rung on the `bg → surface → raised → line` ladder and could not
-     be. That ladder is one hue at chroma 0.045 running L 0.185 to 0.36, and the
-     WHOLE of it sits inside 1.71:1 — `--color-line` on `--color-raised` is
-     1.47:1, and `--color-raised` on `--color-bg` is 1.16:1. A bevel cut from the
-     depth ramp has no edges and no face, which is precisely what the first
-     attempt at this screen drew, and why it read as a tidy dark list rather than
-     as the game. That was an arithmetic problem, not a taste one.
-
-     0.72 was chosen by matching CM's own, not by eye: its button plate measures
-     7.34:1 off its screen ground, and this is 7.52:1 off ours. Because the plate
-     is measured against `--color-bg` in both directions, the same 7.52:1 is what
-     dark ink on it scores — so a bevelled thing is exactly as legible as it is
-     distinct. `--color-ink` on it is 2.27:1 and `--color-accent` 1.73:1, which
-     is why a grey plate carries DARK ink and never a signal colour, and is also
-     how the game drew it. Measured 30 Aug 2026. */
+  /* CM's grey button plate, chrome only: it carries dark ink (7.52:1), never `--color-ink` (2.27:1) or a signal colour. */
   --color-face: oklch(0.72 0.02 265);
 
-  /* --- Radius: none ---------------------------------------------------------
-     Everything in Championship Manager is square, and a rounded corner is the
-     single loudest tell that a screen was drawn this decade rather than in 1999.
-
-     NINE keys, not the eight-step scale. The bare `rounded` utility resolves
-     against Tailwind's DEPRECATED `--radius` key (theme.css:502-508, an
-     `@theme default inline reference` block) and not against `--radius-sm` —
-     checked in the emitted CSS, where `.rounded` is an inlined `.25rem` while
-     `.rounded-lg` is a `var()`. Without the last line here, eighteen usages stay
-     round, `Skeleton` among them, which is on every loading screen in the app.
-
-     `rounded-full` is untouched and untouchable: `full` is the static
-     `calc(infinity * 1px)` rather than a theme lookup, so the things that
-     are round by nature — the two portraits, the skeleton circle, the live
-     dot — stay round without being exempted by hand.
-
-     This block outlives the last `rounded-*` in the source, deliberately. It is
-     a constraint and not a utility: its job is that the next `rounded-lg`
-     anybody types renders square. */
+  /* Radius: none, as CM is square, so any `rounded-*` renders square; `rounded-full` is not a lookup and stays round.
+     `--radius` is the deprecated key the bare `rounded` reads; without it that one stays round. */
   --radius-xs: 0px;
   --radius-sm: 0px;
   --radius-md: 0px;
@@ -165,102 +44,38 @@
   --radius-4xl: 0px;
   --radius: 0px;
 
-  /* --- League register (Tim Hortons) ---------------------------------------
-     #C8102E, read from timhortons.ca's own markup. Their palette since the 2017
-     rebrand is red and white only — the cream below is not theirs, it is the
-     1964–85 identity's warm register. 3.2:1 on --color-bg, so the red carries
-     chrome and never carries small text; it also inks the name plate under a
-     player, where it sits on the ground rather than on the page. Cream on it is
-     4.9:1, which is what a crest and a hoarding are drawn from. */
+  /* The league's red, #C8102E: chrome only, never small text (3.2:1 on `--color-bg`; cream on it 4.9:1). */
   --color-league: oklch(0.530 0.207 22);
-  /* The same red, taken down a step, for the one place it is a GROUND with a
-     scoreline on it rather than chrome. Contrast is a property of the pair and
-     this pair has two members: cream at full strength, and cream dimmed, which
-     is how every scoreline in the app says who is behind. On the brand red the
-     first is 4.94:1 and the second is 2.96:1 — there is no headroom to dim at
-     all. Here they are 6.8:1 and 4.3:1. Not the retired `--color-league-dark`,
-     which was a brown nothing ever read. */
+  /* The same red as a ground under a scoreline: cream 6.8:1, dimmed cream 4.3:1 (2.96:1 on the brand red). */
   --color-league-deep: oklch(0.45 0.17 22);
   --color-cream: oklch(0.94 0.02 75);
 
-  /* The quiet ink where the quiet ink cannot be read: on the blue plate.
-     `--color-league-deep` above is the same idea for the same reason — a slot
-     restated on a ground that will not carry it.
-
-     `--color-faint` is 5.30:1 on the page and **2.35:1 on `--color-chrome`**,
-     which nobody had checked because nothing had ever greyed a TAB. The match
-     screen's Players plate greys before a ball is kicked, `sweep` measured it at
-     2.36 and this is the answer: 4.65:1 on the plate, against `--color-ink`'s
-     6.97 on the same ground, so it still reads as the dimmer of the two.
-
-     Any dimmed thing on a blue plate takes this. On the page ground, keep
-     `--color-faint` — this one is 6.4:1 there and would not read as quiet. */
+  /* The quiet ink on a blue plate, where `--color-faint` is 2.35:1; on the page ground keep `--color-faint`. */
   --color-faint-plate: oklch(0.84 0.022 80);
 
-  /* --- Pitch ---------------------------------------------------------------
-     Deliberately darker than the sticker's studio green. The two greens used to
-     sit within 0.03 lightness of each other, so a card on the grass had nothing
-     but a 2.5px white edge holding it off the background. The turf now sits well
-     below the sticker's backdrop range (0.52–0.68) and the cards lift off it. --- */
-  /* **Championship Manager's pitch is DARK** (Craig, 2 Sep, comparing ours to
-     the AC Milan shot side by side). Measured off that image, the game's turf
-     sits around #1e4620 — a deep green that lets white-and-yellow type sit
-     straight on it with no plate. Ours was oklch 0.455, a bright studio green
-     that needed a black plate under every name, and the plates are what made
-     our pitch read as a diagram of cards rather than as a pitch.
-
-     The mow is one step down rather than two: CM's stripes are only just
-     visible, which is what a mown pitch actually looks like from a stand. */
+  /* Pitch: CM's dark turf, so white and yellow type sit on it with no plate; the mow is one step down. */
   --color-pitch-turf: oklch(0.335 0.085 148);
   --color-pitch-mow: oklch(0.315 0.080 148);
-  /* Thin, dark and complete, as the shot draws them: the markings are a
-     diagram's lines, not floodlit paint. */
+  /* The markings: thin dark lines, not floodlit paint. */
   --color-pitch-line: oklch(0.62 0.055 148);
-  /* How tall a band under a player on the grass is — his name plate, and the
-     score or fixture below it. Both bands, and they must agree: a line whose
-     cards stand at different heights stops reading as a line, which is the whole
-     reason the plate is a fixed band with the name centred in it rather than type
-     on its own line height. Both pitches read it, ours and the FPL tab's.
-
-     20px, because the type inside is now on the scale rather than on a container
-     clamp: an 11px name and a 12px figure. It was 1.15rem when the name bottomed
-     out at 7px — and the lower band was not reading this at all, it was a `h-3.5`
-     written out three times, which is exactly the drift the comment above
-     claimed the token prevented. */
+  /* The bands under a player on the grass; both pitches read it, so a line of cards stands level. */
   --pitch-band: 1.25rem;
 
-  /* How wide the sticker and the fixture chip are in a player dialog. Two cards
-     — `PlayerCard` asks who he is, `LivePlayerCard` asks what he is scoring —
-     and in both the chip below has to line up with the photograph above it. */
-  /* 88px, and `PlayerImage`'s `sizes` default is the same number in the one
-     language that cannot read a custom property. Move one, move both. */
+  /* The sticker and fixture chip width in a player dialog.
+     `PlayerImage`'s `sizes` default repeats it as 88px: move both. */
   --player-card-figure: 5.5rem;
 
-  /* --- The page's own side margin. `<main>` sets it, and the two things that
-     deliberately break out of it read it back. Three places had it written out
-     as `px-3 sm:px-4` and `-mx-3 sm:-mx-4`, which is a gutter that can drift
-     from the thing it is the negative of. --- */
+  /* The page's side margin: `<main>` sets it and the two break-outs read it back. */
   --page-gutter: 0.75rem;
 
-  /* --- Fixture difficulty ---------------------------------------------------
-     FPL's own five-step scale, in our palette rather than their hex. Theirs is
-     drawn on a white page — a #E7E7E7 middle step and a #01FC7A top step both
-     glare on a near-black one — so the scale is rebuilt at our lightness with
-     their reading intact: green is a kind fixture, grey is neutral, red is hard,
-     and 5 is darker than 4 rather than brighter. Hue-locked to the tokens
-     already in use so a fixture chip never introduces a sixth colour family.
-
-     Contrast is a property of the pair, and the pair is the chip's business:
-     four steps carry dark ink and the fifth is too dark to, so it carries cream.
-     `FixtureChip` holds both halves. --- */
+  /* FPL's five-step fixture difficulty, rebuilt at our lightness; `components/football/fdr.ts` pairs each step with its ink. */
   --color-fdr-1: oklch(0.84 0.20 152);
   --color-fdr-2: oklch(0.78 0.16 158);
   --color-fdr-3: oklch(0.80 0.02 265);
   --color-fdr-4: oklch(0.66 0.20 22);
   --color-fdr-5: oklch(0.50 0.18 18);
-  /* The planner's ease ramp, OURS (Craig, 24 Sep 2026: "Use a bigger range of colours"): two opponent ranks a
-     step, green easiest to dark red hardest, evenly spaced (OKLab 7 apart) with lightness falling so it reads
-     without hue. Black ink on 1-7 (at least 4.8:1), cream on 8-10 (at least 4.9:1). FPL's difficulty keeps fdr. */
+  /* The planner's ease ramp, ours and not FPL's: green easiest to dark red hardest,
+     lightness falling so it reads without hue. Black ink on 1-7, cream on 8-10. */
   --color-ease-1: oklch(0.87 0.19 150);
   --color-ease-2: oklch(0.833 0.165 132.4);
   --color-ease-3: oklch(0.796 0.159 111.4);
@@ -272,44 +87,14 @@
   --color-ease-9: oklch(0.467 0.161 27.3);
   --color-ease-10: oklch(0.4 0.145 22);
 
-  /* --- Doubt: how likely he is to miss --------------------------------------
-     Three steps, and a scale rather than three slots, for the reason the block
-     above gives: one ramp saying one thing. `Availability` already answers WHY a
-     man is doubtful and prints the letter in a box; this answers HOW MUCH, which
-     is the part a colour can carry and the part a manager reads across eleven
-     cards without stopping at any of them.
-
-     FPL draws the same three on its own team screen and the cut is theirs rather
-     than ours: `chance_of_playing_next_round` is published as 0, 25, 50, 75 or
-     100 and nothing between, so `doubtBand` has exactly these bands to name.
-
-     Hue-locked to the tokens already in use, the way the fixture scale is: `out`
-     is `--color-bad`'s red at its own chroma, `slight` is `--color-mid`'s amber,
-     and `major` is the step between them in hue and in lightness alike — derived,
-     not chosen. No new colour family enters the app for this.
-
-     These are GROUNDS and they carry the dark ink every bevelled plate carries:
-     5.45:1, 7.09:1 and 9.50:1 against `--color-bg`. The ramp is legible as a ramp
-     too — L 0.66, 0.72, 0.79 — so the three do not have to be told apart by hue
-     by a reader who cannot. --- */
+  /* Doubt bands, how likely he is to miss (`doubtBand`): grounds that carry dark ink,
+     hue-locked to `--color-bad` and `--color-mid`, and told apart by lightness alone. */
   --color-doubt-out: oklch(0.66 0.19 25);
   --color-doubt-major: oklch(0.72 0.17 55);
   --color-doubt-slight: oklch(0.79 0.14 85);
 
-  /* --- Data tints: deliberately duller than --accent so a form indicator never
-     competes with a primary action. Hue-paired with icons/labels, never alone.
-     The amber and the red were already where CM puts them — a figure in amber, a
-     loss in red — so the ground moved underneath them and they did not.
-     9.8:1 · 5.6:1 · 9.9:1.
-
-     The green is the DIRECTION slot's other half, and it is the only green left
-     in the app: the Premier League's went out of the chrome with the rest of
-     their brand set. It is spent only where which WAY a figure went is the point
-     of printing it — a form letter, a result, a trend, a value against a draft
-     pick — and never on a number that merely happens to be positive, which is
-     most of them. Deliberately no `.paper` remap, on the same reasoning as the
-     two below it: 1.6:1 on stock, and nothing on the paper prints a direction.
-     The day something does, it gets one, the way `--accent` did. --- */
+  /* Data tints, duller than the accent and never alone: amber a figure, red a loss, green a gain.
+     Green is spent only where a figure's direction is the point; no `.paper` remap, as it is 1.6:1 on stock. */
   --color-mid: oklch(0.79 0.14 85);
   /* The best figure in its column on a board, as ink: CM's orange over the yellow of the other standouts. */
   --color-peak: oklch(0.74 0.17 55);
@@ -318,55 +103,15 @@
   --color-bad-wash: oklch(0.74 0.15 25);
   --color-up: oklch(0.78 0.17 148);
 
-  /* --- Type. Three faces, three jobs on the desk (31 Aug 2026): Oxanium for
-     chrome, Jost for text and names, Archivo Narrow for every figure. The first
-     two stand in for Championship Manager's own Handel Gothic and Eras Demi,
-     both of which are licensed. Archivo is now the PAPER's alone, where §6 gives
-     it the letterspaced small capitals. --- */
+  /* Type: Oxanium for chrome, Jost for text and names, Archivo Narrow for every figure. */
   --font-sans: var(--font-jost-ext), var(--font-jost), ui-sans-serif, system-ui, sans-serif;
-  /* The chrome's own face: title bars, tab strips, the rail, column heads —
-     Handel Gothic's role in the game. `.paper` does not re-point it, because
-     newsprint has no chrome. */
+  /* The chrome's face: title bars, tab strips, the rail, column heads. `.paper` leaves it, as newsprint has no chrome. */
   --font-chrome: var(--font-oxanium-ext), var(--font-oxanium), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-archivo-narrow-ext), var(--font-archivo-narrow), "Arial Narrow", ui-sans-serif, sans-serif;
   --font-display--font-feature-settings: "tnum";
 
-  /* --- Fixed rem scale, ratio ~1.15, rounded to the sixteenth of a rem the
-     browser can actually draw. Product UI, so no fluid clamps — the masthead is
-     the one exception and it is a clamp on its own in `.paper-masthead`.
-
-     The top two steps and the bottom one were in use and undeclared until the
-     paper's font phase, so they silently took Tailwind's own numbers: a 60px
-     `text-6xl` where the ratio asks for 45, which is why the lead's scoreline
-     was set a third larger than the scale allows. All three consumers are on
-     the front page, so nothing on the desk moved when they were declared.
-
-     There is no `--text-5xl` because nothing sets one. The ratio still holds
-     across the gap: 6xl is two steps above 4xl. --- */
-  /* Each step carries its own LINE BOX, written as `calc(box / size)` the way
-     Tailwind writes its own — a ratio nobody can read against an absolute height
-     anybody can. Declared here on 31 Aug 2026, and the reason is measured rather
-     than felt.
-
-     v4 emits `.text-sm{font-size:…;line-height:var(--tw-leading,
-     var(--text-sm--line-height))}` for every step it ships, so the nine steps
-     whose names it already owns were quietly borrowing ITS ratios — computed
-     against ITS sizes, not ours. `--text-xl` is 21px here and 20px there, so our
-     xl was sitting in a 29.4px box built for a 20px face.
-
-     `--text-3xs` and `--text-2xs` are ours alone. v4 has no default to lend
-     them, so they emitted font-size and nothing else and fell through to
-     Preflight's `line-height: 1.5` — an 11px label in a 16.5px line box. **That
-     is 168 of the app's 306 type sites, and `text-2xs` alone is 141**: it is the
-     step the whole desk is built out of, which is why a Championship Manager row
-     kept coming out at 37px when the game drew it at 18. No `py-` was doing that;
-     the line box was.
-
-     The boxes sit on a 2px grid and tighten as the type grows, which is what a
-     scale is for: 9/12 · 11/14 · 12/16 · 14/18 · 16/22 · 18/24 · 21/26 · 24/28 ·
-     30/34 · 34/38 · 45/46. The prose that needs air asks for it at the point of
-     use and always did — the paper's columns carry `leading-relaxed` and its
-     decks `leading-snug`, which is where a medium's own leading belongs. */
+  /* A fixed rem scale, ratio about 1.15; no fluid clamps but the masthead's.
+     Each step declares its own line box on a 2px grid; without one, v4 lends its own ratio or Preflight's 1.5. */
   --text-3xs: 0.5625rem;
   --text-3xs--line-height: calc(0.75 / 0.5625);
   --text-2xs: 0.6875rem;
@@ -390,37 +135,14 @@
   --text-6xl: 2.8125rem;
   --text-6xl--line-height: calc(2.875 / 2.8125);
 
-  /* --- Stacking. One step, because one thing stacks: the stickers sit above
-     the pitch's own markings. The rest of the scale arrives with the thing that
-     needs it. --- */
+  /* Stacking: the stickers sit above the pitch's markings. */
   --z-base: 1;
 
-  /* --- Motion: 150–250ms, ease-out only. Users are in flow. --- */
+  /* Motion: 150–250ms, ease-out only. */
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* The three smallest steps, one pixel bigger on a desk.
- *
- * Craig, 5 Sep 2026: *"on desktop, the fonts on rows are quite small and hard to
- * read at times."*
- *
- * **A step is a size, and a size is not a density decision** — which is the part
- * the desk got wrong. `desk.css` relaxes a repeating ROW from 44px to 28 above
- * `lg`, on CM's own proportions, and it was right to; nothing in that argument
- * said the TYPE inside the row had to come down with it. The row is what got
- * denser and the label stayed at the phone's 11px, which on a 1440 screen at
- * arm's length is a smaller angular size than the same label under a thumb.
- * Championship Manager's own row is 18px of a 600px canvas and its type fills
- * most of it; ours was 11px of a 28px row.
- *
- * One pixel, on the three steps the desk is actually built out of —
- * `--text-2xs` alone is 141 of the app's 306 type sites. The ladder keeps its
- * order (10 · 12 · 13 · 14) and every line box stays on the 2px grid, so no
- * measured height in DESIGN §6's density table moves: these are all inside rows
- * and plates whose heights are set by `min-h-*`, not by their content.
- *
- * Below `lg` nothing changes. The phone was never the complaint and its 44px row
- * has the space anyway. */
+/* The three smallest steps, one pixel bigger on the desk; every line box stays on the 2px grid. */
 @media (min-width: 64rem) {
   :root {
     --text-3xs: 0.625rem;
@@ -432,18 +154,7 @@
   }
 }
 
-/* And one step further on a big monitor (Craig, 5 Sep 2026: "doesnt scale with a
-   bigger monitor well either"). At 1536 and up the page frame grows to 96rem
-   (`globals.css`), so the same row is drawn wider — and a figure that was small
-   at 1152px is smaller still against 1536 of content. The three small steps take
-   another pixel and `sm` joins them, because at this width it is body copy in a
-   wide column rather than a dense label.
-
-   Two steps and no more, and no fluid clamp. DESIGN §6 is explicit that this is
-   product UI on a fixed rem scale — the masthead is the one exception — and a
-   scale that interpolates is one nothing can be measured against. What this
-   buys is that the desk has THREE sizes for a reader to sit at rather than one:
-   a laptop, a monitor, and a phone. */
+/* From 96rem, where the page frame grows, the small steps and `sm` take another pixel; never a fluid clamp. */
 @media (min-width: 96rem) {
   :root {
     --text-3xs: 0.6875rem;

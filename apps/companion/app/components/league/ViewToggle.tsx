@@ -2,12 +2,8 @@
 
 import { TAB } from "@/app/desk";
 
-// Which view of a squad you are looking at: the pitch or the list, as a quiet second strip on the squad, club
-// and Team screens, which already carry a full-height one. The head-to-head's views are links (`views.ts`).
-//
-// `aria-current="page"` rather than `aria-pressed`, because `.cm-tab`'s yellow
-// label-and-border is keyed off it in `desk.css` and a strip that had to be
-// styled twice would be two strips.
+// Which view of a squad you are looking at: the pitch or the list. The head-to-head's views are links (`views.ts`).
+// `aria-current="page"`, not `aria-pressed`: `.cm-tab`'s yellow is keyed off it in `desk.css`.
 
 export type View = "pitch" | "list";
 

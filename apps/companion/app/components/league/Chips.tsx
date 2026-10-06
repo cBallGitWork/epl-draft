@@ -3,32 +3,24 @@ import { NOTABLE_SAVES } from "@epl/core";
 // What a player has done, ranked, as coloured tokens: one ranking and one palette for every sticker, row and
 // drop-down. How many to show is the caller's, since a sticker has about 56px and a list row a column.
 
-/** **Every tone carries `cm-chip` and its own ink as a variable**, which is what
- *  keeps a chip legible on a greyed row. `.cm-out *` is unlayered and beats a
- *  Tailwind utility, so `text-bg` alone loses the moment a row dims — see the
- *  `.cm-out .cm-chip` rule in `desk.css` for the measurement that found it. The
- *  variable exists because the four tones do not share one ink. */
+/** Each tone sets its ink as `--cm-chip-ink` too: `.cm-out *` beats a utility, so `text-bg` alone
+ *  vanishes on a greyed row (see `.cm-out .cm-chip` in `desk.css`). */
 const TONES = {
   goal: "cm-chip [--cm-chip-ink:var(--color-bg)] bg-accent text-bg",
   assist: "cm-chip [--cm-chip-ink:var(--color-bg)] bg-info text-bg",
-  // Both grounds these land on are dark now — the pitch band under a player who
-  // has played, and a row in the list — so the quiet chip can be quiet again.
-  // It was solid grey for a while, when the pitch band was cream and 15% white
-  // over cream turned a booking into a blank box.
+  // Translucent, so only on a dark ground: over cream a booking turns into a blank box.
   note: "cm-chip [--cm-chip-ink:var(--color-cream)] bg-cream/20 text-cream",
   bad: "cm-chip [--cm-chip-ink:var(--color-bg)] bg-bad text-bg",
 } as const;
 
-/** The countable events, and only what a chip is drawn from. Structural rather
- *  than nominal so both shapes fit without either learning about the other. */
+/** The events a chip is drawn from; structural, so both callers' shapes fit. */
 export interface Countable {
   goals: number;
   assists: number;
   saves: number;
   yellowCards: number;
   redCards: number;
-  /** Absent on a single match: a clean sheet is a statement about every match a
-   *  man played in the round, which one fixture's row cannot make. */
+  /** Absent on a single match: a clean sheet covers every match he played in the gameweek. */
   cleanSheet?: boolean;
 }
 

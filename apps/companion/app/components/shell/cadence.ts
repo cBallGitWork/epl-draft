@@ -1,6 +1,5 @@
-/** Seconds until the next poll: the live rate once football is live, the kickoff itself when it is
- *  nearer than the idle rate, the idle rate otherwise. `liveIn` is as the server gave it, `elapsed`
- *  the seconds since it arrived. */
+/** Seconds until the next poll: the live rate once football is live, the kickoff if nearer than the idle rate, else idle.
+ *  `liveIn` is as the server gave it; `elapsed` is the seconds since it arrived. */
 export function nextPoll(
   liveIn: number | null,
   elapsed: number,

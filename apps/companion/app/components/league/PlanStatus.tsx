@@ -2,11 +2,7 @@ import type { Violation } from "@epl/core";
 
 // Under the planner: every league rule the arrangement breaks.
 
-/** A broken rule, said out loud and with the number that broke it.
- *
- *  Most of these arrive already broken — the XI comes from Fantrax and the
- *  commissioner can narrow an eligibility or lower a cap underneath it — so the
- *  wording never implies the manager just did it. */
+/** A broken rule and the number that broke it, never worded as the manager's doing: most arrive from Fantrax broken. */
 function sentence(violation: Violation, nameOf: (id: string) => string): string {
   switch (violation.kind) {
     case "too-many-active":

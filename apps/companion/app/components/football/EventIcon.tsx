@@ -1,49 +1,7 @@
-// A glyph for the seven events that change a match.
-//
-// **The app's first icons, and they are a register decision rather than a
-// decoration** (Craig, 10 Sep 2026: *"maybe we add icons too where
-// appropiate"*). DESIGN §2 has a rule for them now; this is the implementation
-// and the rule is worth restating where it is used:
-//
-// **Inline monochrome SVG, never emoji.** An emoji carries its own colour and
-// its own house style — Apple's football is a different object from Google's —
-// so a screen built on a palette where every colour is a slot would be handing
-// that palette to the reader's operating system. These take `currentColor`, so
-// an icon in a `text-bad` row is red because the ROW is, and the seven tones the
-// report already assigns keep meaning exactly what they meant.
-//
-// **They stand beside the word, not instead of it.** `LOUD` gives each of these
-// a word already, and a glyph alone is a rebus — CM never drew one and a reader
-// who does not know the icon has nothing to fall back on. `aria-hidden`, because
-// the word beside it is the accessible name and two would be a screen reader
-// saying "goal goal".
-//
-// Sized in `em` so a glyph matches whatever type it sits in without a second
-// scale to keep in step.
+// A monochrome glyph per commentary row, in `currentColor` and never emoji, beside the word and never instead of it.
 
-/** Opta's own type strings → a glyph.
- *
- *  **Every type in the vocabulary has one now** (Craig, 11 Sep 2026: *"maybe we
- *  have symbols for all rows"*). It used to name the seven that change a match
- *  and leave the rest blank, on the argument that a report is mostly corners and
- *  blocked shots. That was true when the rest were also set three sizes smaller
- *  in grey; with every row at one size, a blank column is a ragged left edge
- *  rather than a restraint, and the glyph is the thing that now says at a glance
- *  which rows are the match and which are the play between.
- *
- *  **The sentence carries the detail, so the glyph need not.** `post` takes the
- *  same mark as `miss` because both are an attempt that stayed out and Opta's
- *  own line says which; `whistle` covers all six period marks.
- *
- *  **Two or three shapes each, and no more.** These render at about 14px on a
- *  phone. A drawn glove and a drawn whistle were the first attempt at `save` and
- *  the period marks and both were a smudge on the screen, which is the kind of
- *  thing only a screenshot tells you. A type this map
- *  does not name takes `note`, so no row is ever left without one.
- *
- *  **`cross` is not in this table**, and that is deliberate: an injury is not an
- *  Opta TYPE, it is a substitution whose sentence says why. `saysInjury` in core
- *  is the test and the caller picks the glyph — see `Commentary`. */
+/** Two or three shapes each, as they render at about 14px on a phone. `cross` is not in `GLYPHS`: an
+ *  injury is a substitution, so the caller picks it with core's `saysInjury` (see `Commentary`). */
 export type EventGlyph =
   | "ball"
   | "card"
@@ -81,8 +39,7 @@ const GLYPHS: Record<string, EventGlyph> = {
   "end 14": "whistle",
 };
 
-/** The glyph for a type, and `note` for one nothing has named — so a caller can
- *  mark every row without testing for undefined. */
+/** The glyph for an Opta type, or `note` for one `GLYPHS` does not name. */
 export function glyphFor(type: string): EventGlyph {
   return GLYPHS[type] ?? "note";
 }
@@ -103,18 +60,15 @@ export default function EventIcon({ glyph }: { glyph: EventGlyph }) {
       {glyph === "ball" ? (
         <>
           <circle cx="8" cy="8" r="6" />
-          {/* The panel, which is what makes a circle read as a football rather
-              than as a bullet. */}
+          {/* The panel, so the circle reads as a football. */}
           <path d="M8 4.6 5.3 6.6l1 3.2h3.4l1-3.2Z" />
         </>
       ) : glyph === "card" ? (
-        // A card is a rectangle standing up, drawn FILLED — a booking is a solid
-        // object in the referee's hand and an outline reads as a form field.
+        // A card, filled: an outline reads as a form field.
         <rect x="4.5" y="2.5" width="7" height="11" rx="1" fill="currentColor" stroke="none" />
       ) : glyph === "swap" ? (
         <>
-          {/* Two arrows passing, which is the one universal drawing of a
-              substitution — the man arriving above the man leaving. */}
+          {/* Two arrows passing: the man arriving above the man leaving. */}
           <path d="M2.5 5.5h8m0 0L8 3m2.5 2.5L8 8" />
           <path d="M13.5 10.5h-8m0 0L8 8m-2.5 2.5L8 13" />
         </>
@@ -126,18 +80,13 @@ export default function EventIcon({ glyph }: { glyph: EventGlyph }) {
         </>
       ) : glyph === "save" ? (
         <>
-          {/* The ball stopped dead against a flat hand. Two shapes, because a
-              drawn glove is mush at the size this actually renders — these
-              glyphs are about 14px on a phone and every one of them has to
-              survive that. */}
+          {/* The ball stopped dead against a flat hand. */}
           <circle cx="5.5" cy="8" r="3" />
           <path d="M11 3.5v9" />
         </>
       ) : glyph === "miss" ? (
         <>
-          {/* The ball going away, for a shot that stayed out — a miss or the
-              woodwork. The goal frame was in this drawing until it was looked at
-              on a phone: three shapes in 16px is a smudge. */}
+          {/* The ball going away: a miss or the woodwork. */}
           <circle cx="5" cy="11" r="2.5" />
           <path d="M9 7.5 13.5 3m0 0H9.7m3.8 0v3.8" />
         </>
@@ -152,29 +101,23 @@ export default function EventIcon({ glyph }: { glyph: EventGlyph }) {
         </>
       ) : glyph === "spot" ? (
         <>
-          {/* The penalty spot inside its arc — the mark itself, for the award
-              rather than the kick. */}
+          {/* The penalty spot inside its arc, for the award rather than the kick. */}
           <path d="M2.5 3.5h11v5a5.5 5.5 0 0 1-11 0Z" />
           <circle cx="8" cy="7" r="1.2" fill="currentColor" stroke="none" />
         </>
       ) : glyph === "cross" ? (
         <>
-          {/* A medical cross, for a change forced rather than chosen. Two bars
-              and nothing else — it has to read at the ~14px these render at,
-              which is the lesson `save` and `whistle` taught. */}
+          {/* A medical cross, for a change forced rather than chosen. */}
           <path d="M6.2 3h3.6v3.2H13v3.6H9.8V13H6.2V9.8H3V6.2h3.2Z" fill="currentColor" stroke="none" />
         </>
       ) : glyph === "whistle" ? (
         <>
-          {/* A clock, for every mark that opens or closes a period — which is
-              what all six of them are about. A drawn whistle was the first
-              attempt and is unreadable below about 20px. */}
+          {/* A clock, for every mark that opens or closes a period. */}
           <circle cx="8" cy="8" r="5.5" />
           <path d="M8 4.8V8l2.2 2.2" />
         </>
       ) : (
-        // The unremarkable row: a mark that says "this is a line of the report"
-        // and nothing more. Never blank, so no row has a ragged left edge.
+        // Every other row: a dot, so none is left blank.
         <circle cx="8" cy="8" r="2" fill="currentColor" stroke="none" />
       )}
     </svg>

@@ -4,39 +4,8 @@ import { plateOn } from "@epl/core";
 import BackPlate from "./BackPlate";
 import PageHeader from "./PageHeader";
 
-// The frame a screen about a SUBJECT wears: his own colour on the bar, his tabs
-// under it, and every table inside drawn in his colours rather than the
-// division's. No yellow caption: it only repeated the lit tab (Craig, 23 Sep 2026:
-// "Should we really have 'your squad' in yellow? Does it save a row we need?").
-//
-// **Extracted at the third plated subject, which is where the second one said it
-// would be.** `prem/club/[code]/Shell.tsx` declined the abstraction in writing:
-// *"Two spines are a coincidence (CODE_RULES §1), and a `PlateShell` today would
-// take two parameters, the nav and the colour source, so that a second caller
-// could exist. **The trigger is the third plated subject**: a player profile or a
-// manager drawn on his own colour. At that point the three callers say what
-// actually varies."* A player profile arrived. Counted: three (a fantasy team, a
-// club, a player).
-//
-// **What the three callers said varies** — and it is not what that note guessed:
-//
-//   · the COLOUR SOURCE (`teamColours` for a manager, `clubColours` for the
-//     other two), which is why this takes the colours already resolved rather
-//     than an id and a lookup;
-//   · the TITLE, which is a name for two of them and a construction for the
-//     third (`5. Harry Maguire (MUN)`);
-//   · the TAB STRIP, which is a different component per subject.
-//
-// The strip is passed as a NODE rather than as a list of tabs and a base href. A
-// config object would make this a nav framework three callers configure, which
-// is CODE_RULES §1's generic mechanism — and each caller's tab file is where its
-// own docblock lives, saying which tabs and why one is missing.
-//
-// **What does NOT vary is the whole point**: `plateOn` picking the ink that
-// survives the fill, the `--cm-index` re-point, and `gap-2` between the boxes.
-// Those were three copies of a decision, and a pale club being unreadable is the
-// failure they were each guarding against separately (`cm9900/16.jpg`'s white
-// Torquay).
+// The frame a screen about a subject wears (a team, a club, a player): his colour on the bar, his tabs
+// under it, and every table inside in his colours. `plateOn` picks the ink that survives the fill.
 
 export default function PlateShell({
   colours,
@@ -45,11 +14,9 @@ export default function PlateShell({
   tabs,
   children,
 }: {
-  /** Already resolved, because the three subjects resolve them from different
-   *  tables — a manager's from `teamColours`, a club's and a player's from
-   *  `clubColours`. Taking an id here would mean taking a discriminator too. */
+  /** Already resolved: a manager's come from `teamColours`, a club's and a player's from `clubColours`. */
   colours: ClubColours;
-  /** What goes on the bar. CM's title bars carry a title and nothing else. */
+  /** What goes on the bar, and nothing else. */
   title: string;
   /** Where the phone's back plate goes with no history; absent draws none. */
   back?: string;
@@ -60,18 +27,8 @@ export default function PlateShell({
   const header = <PageHeader title={title} plate={plate} />;
 
   return (
-    // `gap-2` because four boxes down the page need 12px between them or they
-    // read as one object.
-    //
-    // **The subject's colour, set once for all his tabs.** `--cm-index`
-    // re-points the block every CM table runs down its left — the ranks on a
-    // stats board, the rounds on a fixture list — so a manager's screens are his
-    // rather than the league's deep blue (Craig, 2 Sep). Scoped here rather than
-    // passed to each table: it is a property of whose screen this is, and every
-    // table inside inherits it without knowing.
-    // `cm-index-scoped`: the block's ground is this subject's colour rather than
-    // the app's deep blue, so its gradient runs away from its ink and it must not grey — see
-    // `desk.css`. Without it a greyed bench row read 3.89:1 on a purple chip.
+    // `--cm-index` re-points every table's index block at the subject's colour; `cm-index-scoped` stops
+    // that block greying, which on a purple chip read 3.89:1 (`desk.css`).
     <div
       className="cm-index-scoped flex flex-col gap-2"
       style={

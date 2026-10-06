@@ -11,47 +11,18 @@ import { MATCHUPS } from "../../league/routes";
 import BackPlate from "../shell/BackPlate";
 import TabStrip, { type Tab } from "../shell/TabStrip";
 
-// The head-to-head at full size: both totals side by side, and one manager's
-// team underneath them.
-//
-// **Two tabs rather than two pitches, and that is a decision about the PHONE.**
-// Thirty players at 390 is fifteen unreadable ones, and the tab a manager is not
-// looking at still carries the number he came for. So the scores live on the
-// tabs permanently and the team below belongs to whichever side is open.
-//
-// **On the desk the open side gets both arrangements at once** — the grass on
-// the left and the same eleven as rows on the right, which is the pair CM puts
-// on its own match screen (`cm3/06.jpg`, `cm9900/16.jpg`) and Craig's choice of
-// the two he offered on 5 Sep 2026. It costs nothing: both nodes were already
-// rendered and below `lg` one of them was thrown away.
-//
-// The leader is deliberately NOT accent-tinted. Accent means "your team" on five
-// other screens (`mine.ts`) and marks your name here too, so a second meaning
-// for it would break a reading aid rather than add one. Whoever is ahead reads
-// at full strength and the side behind is dimmed.
-//
-// How many of a side's players are still to come is on the pitch rather than on
-// the tab: everybody who has not kicked off is drawn back, which names them
-// instead of counting them.
+// The head-to-head: both totals side by side, each the control that opens his team.
+// A phone shows the open side's team; the desk shows both. The leader is never accent-tinted: accent is "yours".
 
 type Which = "team" | "opponent";
-
-/** Exactly one view belongs to a side, the grass; every other tab is both squads, drawn once by the caller. */
 
 export interface MatchupSide {
   team: LeagueTeam;
   /** Fantrax's own total, or undefined when they had none for this team. */
   score: LiveTeamScore | undefined;
   mine: boolean;
-  /** His eleven on the grass with his reserves under it — **the one view that
-   *  belongs to a side**, and the only reason the two halves above are a control
-   *  rather than a caption.
-   *
-   *  Drawn on the server and handed over as a node, so the clubs and fixtures it
-   *  is joined against never cross to the browser. When his lineup is not public
-   *  yet, this is the panel saying so.
-   *
-   *  The list went (Craig, 11 Sep 2026: *"just pitch i think"*). */
+  /** His eleven with his reserves under it, drawn on the server so its joins never cross to the browser;
+   *  when his lineup is not public yet, the panel saying so. */
   lineup: ReactNode;
 }
 
@@ -76,46 +47,17 @@ export default function MatchupBoard<K extends string>({
 
   return (
     <div className="flex flex-col gap-2">
-      {/* One row, read the way a scoreline is said out loud: two sides at once,
-          each on its own colour with its own total at its own right edge. Two
-          stacked cards made a reader compare two numbers in different places on
-          the screen, which is the one thing a scoreline exists not to make you
-          do.
-
-          **No `v` between them.** `MatchBar` carries one before a ball is
-          kicked, because "not played" is a fact about the fixture rather than
-          about either side; a period that has opened always has two figures, and
-          one that has not gives two dashes, which say it themselves. */}
+      {/* One row, read as a scoreline: each side on its own colour, its total at its own right edge. */}
       <div className="flex items-stretch">
         <BackPlate fallback={MATCHUPS} />
         <Side side={team} open={open === "team"} onOpen={() => setOpen("team")} />
         <Side side={opponent} open={open === "opponent"} onOpen={() => setOpen("opponent")} />
       </div>
 
-      {/* **The toggle, and nothing beside it** (Craig, 5 Sep 2026: "remove Live
-          / 1-3-4-3 row too"). It carried the round word and the open side's
-          formation, and both said something the screen says better elsewhere: a
-          round in play is already a red bar across the top of the app, and a
-          shape is eleven men arranged on grass six pixels below it. A strip that
-          repeats what is under it is furniture.
-
-          It switches BOTH sides now rather than one, so it is live at every
-          width — the `toggleClass` that used to hide it above `lg` went with the
-          pitch-and-list pairing it was written for. */}
       <TabStrip label="Match views" tabs={tabs} current={view} />
 
-      {/* **The desk shows BOTH SIDES; the phone shows the open one.** Craig,
-          5 Sep 2026: "live MATCH view on desktop, show both pitches at same
-          time". Thirty players at 390 is fifteen unreadable ones, so the phone
-          keeps one eleven and the halves above are how you change it.
-
-          Both nodes are already rendered either way, so this adds no request, no
-          join and no second copy of an eleven.
-
-          Each side keyed by the manager it belongs to: React reads two sibling
-          expressions in one container as a list and asks for keys — rightly,
-          because an unkeyed pair would let it reuse one side's DOM for the
-          other's when the open half changes. */}
+      {/* The desk shows both sides; the phone shows the open one. Each side is keyed by its
+          manager, or React could reuse one side's DOM for the other's. */}
       {lineups ? (
         <>
           <div className="lg:hidden">{(open === "team" ? team : opponent).lineup}</div>
@@ -131,31 +73,8 @@ export default function MatchupBoard<K extends string>({
   );
 }
 
-/** One half of the scoreline, doubling as the control that opens his team.
- *
- *  **Championship Manager's match header, with the managers where the clubs
- *  are.** `cm9900/21.jpg` sets Everton's blue against Arsenal's red and `16.jpg`
- *  sets the same blue against Torquay's WHITE, so a pale side is a case the
- *  reference has rather than an edge we invented — `inkOn` answers it. The draft
- *  tie is the same object as a Premier League match and now looks like one
- *  (Craig, 5 Sep 2026: *"share similar layout to real match"*).
- *
- *  **Neither plate is mirrored, and each score sits at ITS OWN right edge** —
- *  `prem/match/[id]/MatchBar` records that correction, made when the first build
- *  put the two boxes together in the middle and it read as one scoreline shared
- *  between the sides rather than as each side's own.
- *
- *  **The open half is marked by a bar and not by a hue.** Colour is spent on
- *  whose side it is, so which one you are reading is carried by a shape — which
- *  is also the rule that keeps it legible without hue (docs/rules/PRODUCT.md).
- *
- *  **`ScoreFigure` may not come inside the bevel**, and that is a contrast fact:
- *  DESIGN §2 puts dark ink on the grey plate at 7.52:1 and `--color-ink` at
- *  2.27, and `ScoreFigure`'s whole job is to dim the trailing figure, which is
- *  lower still. So the plate keeps its own ink and the dash for a total Fantrax
- *  did not give is kept by hand. The cost is real and is paid twice — this and
- *  `matchday/YourMatchup` — for the same reason: it is the price of putting a
- *  score in the box the reference puts it in. */
+/** One half of the scoreline, doubling as the control that opens his team; the open half is marked by a bar, not a hue.
+ *  `ScoreFigure` may not go inside the bevel: its dimmed ink fails contrast on the grey plate, so the dash is kept by hand. */
 function Side({
   side,
   open,
@@ -180,9 +99,7 @@ function Side({
       }`}
       style={{ background: colours.primary }}
     >
-      {/* Accent ink is unavailable on a colour plate, so "yours" is the edge
-          and the position — `mine.ts`'s own mark, and why it exists as a
-          border as well as an ink. */}
+      {/* Accent ink is unavailable on a colour plate, so "yours" is the left edge. */}
       <span
         className="cm-title min-w-0 flex-1 truncate px-2 text-left font-chrome text-base font-bold uppercase lg:text-2xl"
         style={{ color: ink }}
@@ -194,10 +111,7 @@ function Side({
         {points === null ? "\u2014" : points}
       </span>
 
-      {/* The open half owns what is below it, and says so with a bar rather than
-          colour alone. **Below `lg` only**: from there both sides are on screen
-          and neither is "the open one", so a bar under one of them would mark a
-          state that has stopped existing. */}
+      {/* The open half's bar, below `lg` only: on the desk both sides are on screen. */}
       {open ? (
         <span aria-hidden className="absolute inset-x-0 bottom-0 h-1 bg-accent lg:hidden" />
       ) : null}

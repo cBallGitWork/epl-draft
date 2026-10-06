@@ -1,14 +1,5 @@
-// A block standing in for a value that has not arrived yet.
-//
-// It paints in `currentColor` at a low alpha and names no colour of its own, so
-// it takes the register it is dropped into rather than being told which one it
-// is in. That is the whole design: one primitive serves the paper's ink on cream
-// and the desk's near-white on its own ground, and neither gets a prop about it.
-//
-// `prefers-reduced-motion` is answered by the blanket rule in globals.css, which
-// collapses the pulse and leaves the block at rest. That is a real alternative
-// rather than the absence of one: what this carries is the SHAPE of what is
-// coming, and the pulse only adds that it is still on its way.
+// A block standing in for a value not yet arrived, in `currentColor` so it suits the paper and the desk alike.
+// Reduced motion is answered by globals.css, which stops the pulse and leaves the shape.
 
 export default function Skeleton({
   width,

@@ -1,9 +1,8 @@
 import Caption from "./Caption";
 import { PANEL } from "@/app/desk";
 
-/** A desk section: its bar, its tabs, the caption (if any) on a box of its own, and the content's panel.
- *  The panel holds `rows` rows at the width's own `--table-row`, so a short list still draws the
- *  screen's shape rather than shrinking to its contents. */
+/** A desk section: its bar, its tabs, an optional caption and the content's panel.
+ *  The panel holds `rows` rows at `--table-row`, so a short list keeps the screen's shape. */
 export default function SectionShell({
   header,
   nav,

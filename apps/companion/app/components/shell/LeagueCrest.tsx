@@ -1,15 +1,8 @@
 import { LEAGUE_NAME, SEASON } from "@epl/core";
 
-// The league's crest. Ours, not Tim Hortons' — the shape language is borrowed
-// (a wide oval, red and cream, a maple leaf) because that is the joke the league
-// is named for, but nothing here reproduces their mark.
-//
-// The leaf is the Canadian flag's, which is a public-domain national symbol,
-// normalised out of the flag's own path into a 100x100 box.
-//
-// Two lockups on purpose. `mark` carries no type at all, so it survives a font
-// that has not loaded and stays legible down to about 24px; `full` is for the
-// places big enough to read a name.
+// The league's own crest: the shapes nod to Tim Hortons, but nothing here reproduces their mark.
+// The leaf is the Canadian flag's, a public-domain symbol, normalised into a 100x100 box.
+// `mark` carries no type, so it survives an unloaded font down to about 24px; `full` adds the name.
 
 export const LEAF =
   "m2490 4430-45-863a95 95 0 0 1 111-98l859 151-116-320a65 65 0 0 1 20-73l941-762-212-99a65 65 0 " +

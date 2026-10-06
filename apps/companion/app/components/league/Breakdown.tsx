@@ -3,24 +3,9 @@ import Note from "./Note";
 import { emptyBreakdownNote } from "./breakdownNote";
 import { FACT_LABEL, HEAD_PLATE, HEAD_PLATE_CENTRE, LABEL, gainOrLoss } from "@/app/desk";
 
-// The itemised table: one row per category that moved his total, then the total.
-//
-// Read from the provider, never computed — Fantrax on the live card, FPL on the FPL tab's —
-// which is why the rows sum to the footer without anything checking that they do.
-//
-// **Three columns and not two** (Craig, 21 Sep 2026: "points breakdown needs the
-// value and the points"). "Minutes Played +2" is a price with the thing it
-// priced left out; the count comes off the live payload — see `livescoring.ts`.
-//
-// **A gain is green** (same day: "pts should be in green when position"), which
-// is DESIGN §3's direction pair: a breakdown is the one table in the app where
-// every row is a gain or a loss.
-//
-// Split out of `LivePlayerCard` when that file crossed CODE_RULES §4's ceiling.
+// The itemised table: one row per category that moved his total, then the total, read from the provider.
 
-/** The points column's width, named because three cells must agree or the
- *  column steps: the head plate, each row's figure, and the total. Local to this
- *  file — it is one table's column, not a recipe anything else wants. */
+/** The head plate, each row's figure and the total share this width, or the column steps. */
 const PTS_COLUMN = "w-16";
 
 export default function Breakdown({
@@ -33,15 +18,12 @@ export default function Breakdown({
   breakdown: BreakdownLine[];
   points: number | null | undefined;
   reserve: boolean;
-  /** What FPL says he actually played. The one thing that can tell "Fantrax has
-   *  not named him yet" from "he did nothing". */
+  /** FPL's minutes: the one thing that tells "not named yet" from "did nothing". */
   minutes: number;
   /** Whether his match is finished, so an empty table reads as final rather than "yet". */
   over: boolean;
 }) {
-  // Three states and they are three different sentences. No table at all is
-  // Fantrax refusing; a table that does not name him is a dash; a table that
-  // gives him a number with no categories behind it is a real nought.
+  // No table at all is Fantrax refusing; `emptyBreakdownNote` tells a dash from a real nought.
   if (points === undefined) {
     return (
       <Note>
@@ -53,9 +35,7 @@ export default function Breakdown({
 
   return (
     <div className="flex flex-col">
-      {/* CM's column head: a bevelled strip, and the ruler is over the FIGURES.
-          The count column carries no head because there is no one word for it —
-          it is minutes on one row and goals on the next. */}
+      {/* The count column has no head: it is minutes on one row and goals on the next. */}
       <div className="flex items-stretch gap-px">
         {/* Fantrax prices a reserve like anyone else; only his manager's total leaves him out. */}
         <span className={`${HEAD_PLATE} min-w-0 flex-1 ${LABEL}`}>
@@ -73,15 +53,11 @@ export default function Breakdown({
           <ul className="cm-rows flex flex-col">
             {breakdown.map((line) => (
               <li key={line.code} className="flex min-h-8 items-center gap-2 px-2">
-                {/* Fantrax's own definition sits behind the label. It is where
-                    they publish the rules a manager would otherwise have to guess
-                    — what counts as a clean sheet is their sentence, not ours. */}
+                {/* Fantrax's own definition of the category sits behind the label. */}
                 <span className={FACT_LABEL} title={line.definition ?? undefined}>
                   {line.name}
                 </span>
-                {/* Quiet, because the column the reader is scanning is the one
-                    on the right. Absent rather than nought where the season
-                    table's FPTS view has spent the count (DESIGN §7). */}
+                {/* Quiet beside the points; a dash, not a nought, where there is no count (DESIGN §7). */}
                 <span className="numeric w-10 shrink-0 text-center text-sm text-muted">
                   {line.value ?? DASH}
                 </span>

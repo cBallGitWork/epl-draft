@@ -20,9 +20,7 @@ import { yoursBorder } from "../../mine";
 import { ROW_NAME } from "@/app/desk";
 import PlayerPortrait from "./PlayerPortrait";
 
-// The matchday list. Each fixture is a native <details> so the drop-down works
-// with no JavaScript, is keyboard operable and screen-reader announced for free —
-// reinventing a disclosure widget here would be the product-register mistake.
+// The matchday list: each fixture is a native <details>, so the drop-down needs no JavaScript.
 
 export default function MatchList({
   snapshot,
@@ -31,19 +29,12 @@ export default function MatchList({
   now,
 }: {
   snapshot: FootballSnapshot;
-  /** Whether this snapshot is fresh enough to be spoken about in the present
-   *  tense. A fixture's `status` carries no clock, so a cached snapshot taken
-   *  mid-match keeps reporting a ticking minute long after the whistle; when
-   *  this is false the scores still print and the live treatment does not. */
+  /** Whether the snapshot is fresh enough to show as live: `status` carries no clock, so a stale one
+   *  keeps a whistled match ticking. False still prints the scores. */
   now: boolean;
-  /** Which of the reader's players are in each fixture, by squad membership.
-   *  Absent for a reader who is signed out, holds nobody, or whose league
-   *  Fantrax would not describe — and the list then renders exactly as it did
-   *  before any of this existed. */
+  /** The reader's players in each fixture; absent when he is signed out or holds nobody. */
   mine?: Map<number, FootballPlayer[]>;
-  /** Every rostered footballer in the league, by FPL code, against the squad
-   *  holding him. Independent of `mine`: a signed-out reader still gets "whose
-   *  player is that", which is the half of the question that is not about him. */
+  /** Every rostered footballer by FPL code, against the squad holding him; independent of `mine`. */
   owners?: Map<number, PlayerOwner>;
 }) {
   const clubs = clubById(snapshot);
@@ -94,9 +85,7 @@ function MatchRow({
   const home = clubs.get(fixture.homeClubId);
   const away = clubs.get(fixture.awayClubId);
   const rows = contributions(snapshot, fixture.id);
-  // Both halves, here and in `ScoreBlock`: in play, and our copy recent enough
-  // to say so. `status` carries no clock, so a cached snapshot keeps a whistled
-  // match ticking for as long as the cache holds it.
+  // In play, and our copy recent enough to say so; `ScoreBlock` asks the same.
   const live = now && fixture.status === "live";
 
   return (
@@ -105,16 +94,12 @@ function MatchRow({
     >
       <summary
         className="flex cursor-pointer list-none items-center gap-3 px-3 py-2.5 transition-colors duration-150 hover:bg-raised [&::-webkit-details-marker]:hidden"
-        // Nothing to expand when nothing happened — say so rather than opening
-        // onto an empty panel.
         aria-label={`${home?.name ?? "Home"} versus ${away?.name ?? "Away"}`}
       >
         <ClubSide club={home} align="start" />
         <ScoreBlock fixture={fixture} now={now} />
         <ClubSide club={away} align="end" />
-        {/* Counted rather than tinted. A bare accent wash saturates once fifteen
-            players span ten fixtures — every row marked is no row marked — and
-            the number is what ranks one match above another at a glance. */}
+        {/* Counted rather than tinted: a wash on every row marks no row. */}
         {yours ? (
           <span className="numeric shrink-0 text-2xs font-semibold text-accent">
             {yours.length} yours
@@ -133,10 +118,7 @@ function MatchRow({
       </summary>
 
       <div className="border-t border-line bg-bg/40 px-3 py-2.5">
-        {/* Above the contributions, because it answers a different question.
-            `contributions` lists only the notable; "which of mine is in this
-            match" has to include the man who has done nothing, which on a
-            Saturday is most of them. */}
+        {/* All his men in the match, including those `contributions` leaves out for doing nothing. */}
         {yours ? (
           <p className="mb-2 truncate text-xs text-accent">
             <span className="font-semibold uppercase">Yours</span>
@@ -145,9 +127,7 @@ function MatchRow({
         ) : null}
         {rows.length === 0 ? (
           <p className="py-1 text-center text-xs text-faint">
-            {/* "Yet" is a promise that more is coming, and a finished goalless
-                match with no cards in it is not waiting on anything. The two
-                shared a sentence because they shared a branch. */}
+            {/* "Yet" only while the match can still change. */}
             {fixture.status === "finished"
               ? "Nothing to report."
               : live
@@ -164,11 +144,7 @@ function MatchRow({
                   <PlayerPortrait player={c.player} colours={clubColoursOf(club)} />
                   <span className="flex min-w-0 flex-1 flex-col lg:flex-row lg:items-baseline lg:gap-2">
                     <span className={`min-w-0 truncate ${ROW_NAME}`}>{c.player.name}</span>
-                    {/* Whose player that was. The one line of Soccer Saturday
-                        the app was missing: every goal in the round now answers
-                        it, and a footballer nobody in the league holds says
-                        nothing rather than "—", which would be a tag on 500 of
-                        the 697. */}
+                    {/* Whose player he is; a footballer nobody holds says nothing rather than a dash. */}
                     {owner ? (
                       <span
                         className={`block shrink-0 truncate text-2xs ${
@@ -233,12 +209,7 @@ function ScoreBlock({ fixture, now }: { fixture: Fixture; now: boolean }) {
       ) : fixture.status === "finished" ? (
         <span className="text-2xs font-semibold uppercase text-faint">FT</span>
       ) : fixture.kickoff !== null ? (
-        /* The day, in the line that says FT once the match is over — which is
-           empty for precisely the fixtures that need it. A round runs Friday to
-           Monday, so the list is sorted by instant and reads as scrambled: 17:30
-           sits above 14:00 because one is Saturday and the other Sunday. The day
-           goes here rather than into the time above it, because that slot is the
-           one the score lands in and "Sun 14:00" at score size is not a score. */
+        /* The day, in FT's line: a gameweek runs Friday to Monday, so the times alone read out of order. */
         <span className="text-2xs font-semibold uppercase text-faint">
           {londonWeekday(fixture.kickoff)}
         </span>
@@ -247,12 +218,7 @@ function ScoreBlock({ fixture, now }: { fixture: Fixture; now: boolean }) {
   );
 }
 
-/** What he did, in the app's one vocabulary for it.
- *
- *  Size and padding are this caller's; the ranking, the labels and the palette
- *  are `chipsFor`'s, and were three renderings of the same six events until they
- *  were not. Each chip still carries a letter as well as a colour, which is the
- *  AA commitment and is `chipsFor`'s to keep now. */
+/** What he did, as `chipsFor`'s chips; only the size and padding are this caller's. */
 function Events({ c }: { c: import("@epl/core").MatchContribution }) {
   return (
     <span className="flex shrink-0 items-center gap-1">
@@ -268,8 +234,7 @@ function Events({ c }: { c: import("@epl/core").MatchContribution }) {
   );
 }
 
-/** TV picks routinely have no time yet, and an undated match must say so rather
- *  than borrow a neighbour's kickoff. */
+/** An undated match says TBC rather than borrow a neighbour's kickoff. */
 function formatKickoff(iso: string | null): string {
   return iso === null ? "TBC" : londonTime(iso);
 }
