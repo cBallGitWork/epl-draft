@@ -1,15 +1,38 @@
 import { LEAGUE_PROJECTION_PARTS, nextGameweeks, type LeagueProjection, type LeagueProjectionPart } from "@epl/core";
 import { byFigure } from "../../components/league/order";
+import type { Held } from "../holder";
+import type { PoolRow } from "../pool";
 
 // The Projections board's rows: the sister model's projection in our league's points for each gameweek in the window,
 // a total and the minutes it expects, joined to our league's view of the man. A week with no reading is a dash.
 
-/** Who a projected man is on our side: his names, his Fantrax page and eligibility when the pool holds him. */
-export interface Known {
+/** Who a projected man is on our side: his names, his Fantrax page, eligibility and holder when the pool has him. */
+export interface Known extends Held {
   name: string;
   fullName: string;
   fantraxId: string | null;
   positions: readonly string[];
+}
+
+/** Every man FPL lists, by code: FPL's short name, and the pool's full name, page, eligibility and holder. */
+export function knownMen(players: readonly { code: number; name: string }[], pool: readonly PoolRow[]): Map<number, Known> {
+  const byCode = new Map(pool.flatMap((row) => (row.fplCode === null ? [] : [[row.fplCode, row] as const])));
+  return new Map(
+    players.map((player) => {
+      const entry = byCode.get(player.code)?.entry;
+      return [
+        player.code,
+        {
+          name: player.name,
+          fullName: entry?.player.displayName ?? player.name,
+          fantraxId: entry?.player.fantraxId ?? null,
+          positions: entry?.eligiblePositions ?? [],
+          ownerTeamId: entry?.ownerTeamId ?? null,
+          status: entry?.status ?? "",
+        },
+      ];
+    }),
+  );
 }
 
 export interface ProjectionRow extends Known {

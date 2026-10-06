@@ -8,17 +8,18 @@ import ProjectionBoard, { projectionHeads } from "./ProjectionBoard";
 import { Carried, Chip, clubOptions } from "../BoardControls";
 import { PAGE_ROWS, boardHref, chosen, filterHref, isChosen, playersQuery, type PlayersSearchParams } from "../query";
 import { getLeaguePool } from "../pool";
+import { readerTeamId } from "../../squads";
 import { leaguePositionLabel } from "../../positions";
 import { footballNow, seasonFixtures } from "../../football";
 import { intelLeagueProjections } from "../../intel";
 import { PROJECTIONS } from "../routes";
 import {
   PROJECTION_CATEGORIES,
+  knownMen,
   projectionCategory,
   projectionRows,
   projectionSort,
   sortedProjections,
-  type Known,
 } from "./rows";
 
 // Data › Projections: who the sister model tips over the next six, repriced in our league's points at each man's best
@@ -28,7 +29,7 @@ export const revalidate = 30;
 
 export default async function ProjectionsPage({ searchParams }: { searchParams: Promise<PlayersSearchParams> }) {
   const query = playersQuery(await searchParams);
-  const [pool, fixtures, snapshot] = await Promise.all([getLeaguePool(), seasonFixtures(), footballNow()]);
+  const [pool, fixtures, snapshot, reader] = await Promise.all([getLeaguePool(), seasonFixtures(), footballNow(), readerTeamId()]);
   const gameweeks = plannerGameweeks(fixtures, PLANNER_RUN);
 
   if (intelLeagueProjections.size === 0 || gameweeks.length === 0) {
@@ -39,19 +40,8 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
     );
   }
 
-  // Our side of each man: FPL's short name, and the pool's full name, page and eligibility when it holds him.
-  const rows = "unavailable" in pool ? [] : pool.rows;
-  const byCode = new Map(rows.flatMap((row) => (row.fplCode === null ? [] : [[row.fplCode, row] as const])));
-  const known = new Map<number, Known>();
-  for (const player of snapshot.players) {
-    const row = byCode.get(player.code);
-    known.set(player.code, {
-      name: player.name,
-      fullName: row?.entry.player.displayName ?? player.name,
-      fantraxId: row?.entry.player.fantraxId ?? null,
-      positions: row?.entry.eligiblePositions ?? [],
-    });
-  }
+  const pooled = "unavailable" in pool ? null : pool;
+  const known = knownMen(snapshot.players, pooled?.rows ?? []);
 
   const sort = projectionSort(query.sort, gameweeks);
   const descending = (query.dir ?? "desc") === "desc";
@@ -71,7 +61,7 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
   );
   const capped = query.all ? shown : shown.slice(0, PAGE_ROWS);
   const clubs = [...new Set([...intelLeagueProjections.values()].map((player) => player.club))].sort();
-  const leaguePositions = "unavailable" in pool ? [] : pool.positions;
+  const leaguePositions = pooled?.positions ?? [];
 
   return (
     <ScoutShell current="projections">
@@ -118,6 +108,8 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
           sort={sort}
           descending={descending}
           href={(key, down) => boardHref(query, { sort: key, dir: down ? "desc" : "asc" }, PROJECTIONS)}
+          teamNames={pooled?.teamNames ?? new Map()}
+          reader={reader}
         />
       )}
 

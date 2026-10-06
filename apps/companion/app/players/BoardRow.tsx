@@ -3,11 +3,15 @@ import type { ReactNode } from "react";
 import { DASH, crestForShortName } from "@epl/core";
 import { positionsLabel } from "../positions";
 import { LABEL, PINNED_NAME, PINNED_TILE, ROW_FIGURE, ROW_NAME } from "@/app/desk";
+import { holderOf, type Held, type Holder as HolderLine } from "./holder";
 
-// What every Data board's row shares: the pinned lead (tile, crest, name, position) and a figure's cell.
+// What every Data board's row shares: the pinned lead (tile, crest, name, position, holder) and a figure's cell.
 
 /** The tile is the desk's; the phone carries position on the name's second line. */
 export const PIN_TILE = `hidden lg:table-cell ${PINNED_TILE}`;
+
+/** The tile of a man nobody holds, green where a held man's is blue (DESIGN §3, `--color-index-free`). */
+export const FREE_TILE = "[--cm-index:var(--color-index-free)]";
 
 /** The lead stays put while the figures scroll under it, starting where the desk's tile ends. */
 export const PIN_NAME = `${PINNED_NAME} left-0 p-0 lg:left-14`;
@@ -56,5 +60,33 @@ export function LeadFace({
         </span>
       </span>
     </>
+  );
+}
+
+const HOLDER_INK: Record<HolderLine["tone"], string> = {
+  yours: "font-bold text-accent",
+  rival: "text-muted",
+  free: "font-bold text-ink",
+};
+
+/** Who holds him, in brackets: "Yours" in the accent, a rival quiet, and Fantrax's own code for a man anybody can
+ *  claim (FA, WW), loud. `className` is the width it shows at. */
+export function Holder({
+  held,
+  teamNames,
+  reader,
+  className,
+}: {
+  held: Held;
+  teamNames: ReadonlyMap<string, string>;
+  reader: string | null;
+  className: string;
+}) {
+  const holder = holderOf(held, teamNames, reader);
+  if (holder === null) return null;
+  return (
+    <span className={`min-w-0 truncate text-2xs ${HOLDER_INK[holder.tone]} ${className}`} title={holder.title}>
+      ({holder.text})
+    </span>
   );
 }
