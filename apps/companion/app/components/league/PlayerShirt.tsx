@@ -109,22 +109,11 @@ export default function PlayerShirt({
   return (
     <div
       style={KIT_RATIO}
-      className="pitch-figure flex w-full justify-center overflow-hidden"
+      className="pitch-figure flex w-full items-start justify-center overflow-hidden"
     >
-      {/* **An inner box that IS the kit.** `.pitch-figure` carries an
-          aspect-ratio AND a max-height, and on a short viewport the cap wins:
-          the box stops being the kit's shape and the shirt no longer fills it.
-          `h-full` takes whatever height the cap left and the aspect-ratio
-          derives the width, so the box and the jersey inside it are one
-          rectangle at every viewport. Bounding it the other way round
-          (`max-h-full max-w-full`) let the two disagree.
-
-          It mattered most while a numeral was pinned to this box: it sat on the
-          chest at one viewport and below the hem at another. The numeral is gone
-          (Craig, 10 Sep 2026: *"ditch the number actually"*) and the box stays,
-          because a jersey that is not the shape of its frame is still wrong —
-          the crop would simply stop being a crop. */}
-      <span style={{ aspectRatio: CARD }} className="relative block h-full overflow-hidden">
+      {/* The kit's own box, sized from its WIDTH against the figure's cap: WebKit reads `h-full` under an
+          aspect-ratio as auto, so the kit drew the card's full width and lost its foot. */}
+      <span style={{ aspectRatio: CARD, width: `min(100%, var(--pitch-cap) * ${CARD})` }} className="relative block overflow-hidden">
         <Image
           src={shirtUrl(club, keeper)}
           alt=""

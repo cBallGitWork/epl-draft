@@ -10,12 +10,7 @@ import { withOpenings } from "./openings";
 import { leaguePositionLabel } from "../../positions";
 
 // The XI on the grass and the bench under it, one target per player: tap him to
-// pick him, tap him again for everywhere else he can go.
-//
-// Each card used to carry a badge in its corner opening the full list. Fifteen
-// of them is fifteen permanent accent dots over the only thing on the screen
-// worth looking at, to offer a move most taps are not after — and the second tap
-// was already spare, because tapping the picked man again only deselected him.
+// pick him, tap him again to put him down.
 //
 // A bench and not fifteen on the pitch, which is what a rival's squad gets. The
 // difference is the whole point of this screen: on your own team the
@@ -58,7 +53,7 @@ function Player({
       // reader gets the sentence.
       aria-label={
         picked
-          ? `Everywhere ${name} can go`
+          ? `Deselect ${name}`
           : pick === "swappable"
             ? `Swap with ${name}`
             : name
