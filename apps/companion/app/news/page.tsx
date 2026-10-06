@@ -9,6 +9,7 @@ import OutLink from "../components/shell/OutLink";
 import { BUTTON } from "../components/shell/ButtonLink";
 import PageHeader from "../components/shell/PageHeader";
 import { readInbox } from "./inbox";
+import { ownerTag } from "./owner";
 import { NEWS } from "../titles";
 import { MAIL } from "../components/shell/sections";
 import { SMALL_CAPS, MINOR_CAPS } from "@/app/desk";
@@ -141,14 +142,7 @@ function Row({
   names: Map<string, string>;
   mine: string | null;
 }) {
-  // **"You" rather than your own team's name**, which is the row's half of
-  // Craig's "make it clear its their team too": a column reading `TEST2` on one
-  // row and `TEST3` on the next asks a manager to remember which of the two he
-  // is, and the page title above already says. The opponent keeps his name,
-  // because that is the fact being reported; the letter says why it is on the
-  // screen at all.
-  const who =
-    item.teamId === null ? null : item.teamId === mine ? "You" : names.get(item.teamId);
+  const who = ownerTag(item.teamId, mine, names);
   const when = itemDay(item);
   return (
     <MailRow
