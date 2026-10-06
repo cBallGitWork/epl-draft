@@ -1,4 +1,5 @@
 import Link from "next/link";
+import BackPlate from "../shell/BackPlate";
 import ButtonLink from "../shell/ButtonLink";
 import {
   LEAGUE_NAME,
@@ -12,6 +13,7 @@ import {
 } from "@epl/core";
 import { speaksForNow } from "../../football";
 import LeagueCrest from "../shell/LeagueCrest";
+import { LIVE } from "../shell/sections";
 import MatchList from "./MatchList";
 import { GAMEWEEK_HEAD, GAMEWEEK_TITLE } from "@/app/desk";
 import { SQUAD } from "../../squad/routes";
@@ -50,11 +52,17 @@ export default function GameweekView({
   return (
     <div className="flex flex-col gap-4">
       <header className={GAMEWEEK_HEAD}>
-        <div className="flex items-center gap-2.5">
-          <LeagueCrest height={26} />
-          <div>
-            <h1 className={GAMEWEEK_TITLE}>{LEAGUE_NAME}</h1>
-            <p className="text-sm text-muted">Gameweek {snapshot.gameweek}</p>
+        <div className="flex items-stretch gap-2.5">
+          <BackPlate fallback={LIVE} />
+          <div className="flex items-center gap-2.5">
+            {/* On a phone the plate takes the crest's place: plate, crest and title overflow a 390 row. */}
+            <span className="flex max-lg:hidden">
+              <LeagueCrest height={26} />
+            </span>
+            <div>
+              <h1 className={GAMEWEEK_TITLE}>{LEAGUE_NAME}</h1>
+              <p className="text-sm text-muted">Gameweek {snapshot.gameweek}</p>
+            </div>
           </div>
         </div>
         {live ? (

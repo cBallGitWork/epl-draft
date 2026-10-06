@@ -8,7 +8,8 @@ Shares `GameweekView` with `/matchday`, so the two never drift.
 ## On the page
 
 - Header: league crest, name, gameweek, and either a **LIVE** badge with the
-  pulsing dot or FPL's deadline.
+  pulsing dot or FPL's deadline. A phone gets the `←` back plate (to Live) in the
+  crest's place: plate, crest and title do not fit a 390 row.
 - **The day under the kickoff time** — `Sat`, `Sun`, `Mon`, in the small line
   that carries `FT` once the match is over and is empty until it starts. Without
   it the list is sorted by instant and reads as scrambled: 17:30 above 14:00
