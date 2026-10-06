@@ -129,7 +129,7 @@ No fluid clamps except inside the masthead.
 | `league/LineupPlanner` · `league/MoveSheet` | Picking an XI, and everywhere one player can go. |
 | `league/PlayerCard` · `league/LivePlayerCard` | One player, tapped open — settled and live. |
 | `league/Breakdown` | The itemised table on the live card: one row per league scoring category that moved his total, then the total. **Three columns, not two** (Craig, 21 Sep 2026: *"points breakdown needs the value and the points"*) — the label, the count Fantrax states, the points it paid. "Minutes Played +2" is a price with the thing it priced left out. Split out of `LivePlayerCard` when that file crossed CODE_RULES §4's ceiling. The FPL tab's pick card (`fpl/PickPoints`) draws it too, over FPL's own scoring lines (1 Oct 2026). |
-| `league/FplRecords` | The football half of the same card, as a native `<details>`. Closed it is the words "Full match stats" and a chevron, nothing else (Craig, 21 Sep 2026: *"Not fpl records, FULL MATCH STATS (ditch the number and labels)"*) — a summary that previews the panel under it is the panel twice. Open it is the whole FPL record: his minutes, what he did, bps, defensive contribution and the expected family. It is what the breakdown above it CANNOT say: that table holds this league's scoring categories, and nobody is paid for a measurement. |
+| `league/FullMatchStats` | What he did in the match or gameweek shown, on both player cards once his match has kicked off, as a native `<details>`. Closed it is the words "Full match stats" and a chevron, nothing else (Craig, 21 Sep 2026: *"Not fpl records, FULL MATCH STATS (ditch the number and labels)"*). Open it is two columns of label and figure, read downwards: FPL's minutes, goals, assists, clean sheets, goals conceded, saves, penalties, own goals and cards, and Opta's tackles won, interceptions, blocks, clearances, recoveries, penalties won and keeper actions, each only where the scoring league prices its category at his slot (`core:join/fullMatchStats.ts`; Craig, 6 Oct 2026: *"more relevant stats, like cards/tackles etc"*). Noughts print once he has played; before that it is his minutes alone. |
 | `football/StateBox` | The box beside a name saying why he is not playing. Silent for a fit player: a box reading "fit" on every row makes the one worth seeing harder to find. **It must survive a greyed row** — the whole point of it is to say why the row is grey. |
 | `football/doubtRow` | The wash across a row for how likely its man is to miss, red, orange or yellow, beside `StateBox`'s word; `doubtWash` for a row that holds a band, not a footballer (Mail). The Team page's rows, the club squad list and stats board, set pieces, the depth chart and the pool board. |
 | `football/MatchList` · `football/GameweekView` | The round in view, each fixture a native `<details>` that expands into who did what. |
@@ -157,7 +157,7 @@ names. `SortHead` takes the href as a prop for exactly that reason.
 **The chevron in a `<summary>`** — `list-none`,
 `[&::-webkit-details-marker]:hidden`, and an inline SVG taking
 `group-open:rotate-180` — is TWO, counted 21 Sep 2026: `football/MatchList`
-and `league/FplRecords`. Left duplicated under §1, and the count is here so
+and `league/FullMatchStats`. Left duplicated under §1, and the count is here so
 the third does not have to re-derive it.
 
 **Rows shrink, they never wrap — and every card is the same size.** A back five
@@ -441,10 +441,11 @@ whole card said it too, and took the fixture colour and the name with it.
 
 **Two player cards, and they are not one card with a flag.** `PlayerCard` answers
 *who is this and is he fit* — read midweek, going through somebody's fifteen: the
-fixture, the kickoff, FPL's fitness note, why a slot is unresolved.
+fixture, the kickoff, FPL's fitness note, why a slot is unresolved, and once his
+match has kicked off what he did in it (`league/FullMatchStats`).
 `LivePlayerCard` answers *what is he scoring and why* — read at ten past four:
-Fantrax's own category breakdown, summing to the total exactly, with FPL's record
-on a line of its own and labelled as FPL's. Same dialog skeleton, different
+Fantrax's own category breakdown, summing to the total exactly, with the same
+full match stats under it. Same dialog skeleton, different
 questions, opened on different days. A third card is a sign one of these two has
 lost its question.
 

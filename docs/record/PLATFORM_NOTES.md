@@ -44,6 +44,23 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## A player card's full match stats: FPL's counts, Opta's DefCon parts — decided 6 Oct 2026
+
+Craig: *"player card full match stats - more relevant stats, like cards/tackles etc"*. Counted over GW5's 302 men who
+played, against the stats league's day sheets (Fantrax's own counts):
+
+- **FPL agrees with Fantrax** on goals, cards, own goals, penalties missed and saved, goals conceded, clean sheets and
+  saves (302/302), minutes (298/302), and on assists as Fantrax's total `AT` (282/282 outfielders). So those stay FPL's.
+- **FPL cannot give our DefCon.** Its `tackles` is every tackle (302/302 against Opta's `total_tackle`), not tackles won
+  (83 differ), and `clearances_blocks_interceptions` is one figure. No penalties won, no keeper actions beyond saves.
+- **Opta's per-man match read** (`/stats/player/{id}?fixtures={matchId}`) matches Fantrax's tackles won,
+  interceptions, clearances, recoveries, penalties won and blocks (`DFP`−`TkW`−`Int`) on 282/282 outfielders, and
+  carries smothers, punches and high claims. Its minutes run a minute over Fantrax's for 78 of 302, so minutes stay FPL's.
+- The Premier League feed the app already read carries no per-man line: `/stats/match` is two sides of ~156 metrics.
+- **What shows**: a row only where the scoring league prices its category at his slot (`join/fullMatchStats.ts`), so
+  a defender sees tackles won, interceptions and blocks, a midfielder or forward clearances and recoveries too, and a
+  keeper saves, smothers, punches and high claims. FPL's bps, defensive contribution and expected goals left the card.
+
 ## Kits load straight from FPL, not through Vercel's optimizer — decided 5 Oct 2026
 
 On production, `/_next/image` for an FPL kit not already in Vercel's cache answered **502

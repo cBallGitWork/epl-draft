@@ -6,6 +6,7 @@ import {
   isDoubtful,
   isResolved,
   fullPlayerName,
+  kickedOff,
   londonDayAndDate,
   londonTime,
   noteBesideChance,
@@ -13,6 +14,7 @@ import {
 import DialogFoot from "../shell/DialogFoot";
 import DialogHead from "../shell/DialogHead";
 import Modal from "../shell/Modal";
+import FullMatchStats from "./FullMatchStats";
 import Note from "./Note";
 import PlayerIdentity from "./PlayerIdentity";
 import { unresolvedReason } from "../../unresolved";
@@ -21,24 +23,8 @@ import { latestNews } from "../../players/[fantraxId]/latestNews";
 import { filedAt, noteBody, type NewsItem } from "../../players/[fantraxId]/newsItems";
 import { LABEL, QUIET_FIGURE, SMALL_CAPS } from "@/app/desk";
 
-// One player, over the squad rather than instead of it.
-//
-// A dialog and not a route: the question a tap asks is "who is this, and is he
-// fit" while reading somebody else's fifteen, and navigating away to answer it
-// loses the squad the manager was reading. The way out to the full profile is
-// still offered, because that page knows things this one cannot fit.
-//
-// **It is `LivePlayerCard` with a different middle**, and that is the whole
-// design. Both are a dialog about one rostered man: the bar, the identity block
-// and the foot are the same object, and what differs is the question. This one
-// is read midweek and answers "is he fit"; that one is read with a score on the
-// screen and answers "why is he on that number".
-//
-// It was a web card until 21 Sep 2026 — no title bar, a hairline panel, the
-// opponent stretched across 88px, and his name printed twice because the sticker
-// carries a name plate of its own. Craig had already said all of that about the
-// live card ("its not very CM like", "the long fixture graphics looks crap");
-// this is the same screen one tab over and it kept every fault.
+// One player over the squad or match he was tapped from: who he is, whether he is fit, and what he did once his match
+// has kicked off. `LivePlayerCard` is the same dialog with Fantrax's breakdown in the middle.
 
 export default function PlayerCard({
   player: { rostered, club, opposition },
@@ -86,6 +72,15 @@ export default function PlayerCard({
               <p className="text-sm">{noteBesideChance(footballer.news, footballer.chanceOfPlaying)}</p>
             ) : null}
           </div>
+        ) : null}
+
+        {isResolved(rostered) && kickedOff(opposition) ? (
+          <FullMatchStats
+            stats={rostered.stats}
+            opta={rostered.player.optaCode}
+            position={rostered.slot.position}
+            opposition={opposition}
+          />
         ) : null}
 
         {story ? <Story story={story} /> : null}

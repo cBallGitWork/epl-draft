@@ -8,7 +8,7 @@ import type {
   RawPlStaff,
   RawPlTextstream,
 } from "./raw";
-import type { RawPlMatchStats, RawPlTeamPage, RawPlTeamStats } from "./rawStats";
+import type { RawPlMatchStats, RawPlPlayerStats, RawPlTeamPage, RawPlTeamStats } from "./rawStats";
 
 // All Premier League API I/O, and nowhere else. The mapping next door stays pure.
 //
@@ -87,6 +87,11 @@ export function fetchPlTextstream(id: number): Promise<RawPlTextstream> {
  *  **A metric worth nought is absent rather than zero** — see `RawPlMetric`. */
 export function fetchPlMatchStats(id: number): Promise<RawPlMatchStats> {
   return get<RawPlMatchStats>(`/stats/match/${id}`);
+}
+
+/** One man's Opta metrics in one match, by the Premier League's ids for both. */
+export function fetchPlPlayerMatchStats(playerId: number, fixtureId: number): Promise<RawPlPlayerStats> {
+  return get<RawPlPlayerStats>(`/stats/player/${playerId}?fixtures=${fixtureId}`);
 }
 
 /** The season's twenty clubs, with the Opta id that joins each to FPL's club `code`. */
