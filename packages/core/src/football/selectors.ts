@@ -55,7 +55,6 @@ export interface MatchContribution {
   yellowCards: number;
   redCards: number;
   saves: number;
-  bonus: number;
   minutes: number;
 }
 
@@ -84,7 +83,6 @@ export function contributions(
       yellowCards: s.yellowCards,
       redCards: s.redCards,
       saves: s.saves,
-      bonus: s.bonus,
       minutes: s.minutes,
     });
   }
@@ -98,7 +96,6 @@ function isNotable(s: PlayerMatchStats): boolean {
     s.assists > 0 ||
     s.redCards > 0 ||
     s.yellowCards > 0 ||
-    s.bonus > 0 ||
     s.saves >= NOTABLE_SAVES
   );
 }
@@ -107,7 +104,7 @@ function isNotable(s: PlayerMatchStats): boolean {
  *  ordering is stable rather than arbitrary. */
 function byImpact(a: MatchContribution, b: MatchContribution): number {
   const score = (c: MatchContribution) =>
-    c.goals * 100 + c.assists * 50 + c.redCards * 30 + c.bonus * 5 + c.yellowCards * 2;
+    c.goals * 100 + c.assists * 50 + c.redCards * 30 + c.yellowCards * 2;
   return score(b) - score(a) || b.minutes - a.minutes;
 }
 

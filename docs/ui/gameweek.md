@@ -17,7 +17,8 @@ Shares `GameweekView` with `/matchday`, so the two never drift.
 - **`MatchList`** — every fixture in kickoff order, undated TV picks last. Each
   fixture is a native `<details>`, so the drop-down works with no JavaScript, is
   keyboard operable and screen-reader announced for free. Open one and you get
-  who did what: goals, assists, cards, notable saves, bonus, ordered by impact.
+  who did what: goals, assists, cards, notable saves, ordered by impact (FPL's
+  bonus left it on 6 Oct 2026: the FPL tab's alone).
   Merely turning out does not qualify — the drop-down answers "what happened",
   not "who played".
 - **Your players marked.** A fixture with one of the reader's men in it carries

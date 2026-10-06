@@ -66,6 +66,12 @@ describe("contributions", () => {
     expect(contributions(s, 1).map((c) => c.player.name)).toEqual(["Rice", "Ødegaard", "Saka"]);
   });
 
+  it("does not list or rank a man on FPL's bonus, which belongs on the FPL tab alone", () => {
+    const s = snap({ stats: [stat({ playerId: 1, bonus: 3 }), stat({ playerId: 2, yellowCards: 1, bonus: 1, minutes: 60 }), stat({ playerId: 3, yellowCards: 1, bonus: 3, minutes: 50 })] });
+    expect(contributions(s, 1).map((c) => c.player.name)).toEqual(["Ødegaard", "Rice"]);
+    expect(contributions(s, 1)[0]).not.toHaveProperty("bonus");
+  });
+
   it("counts a busy keeper as notable but a quiet one as not", () => {
     const s = snap({ stats: [stat({ playerId: 1, saves: 4 }), stat({ playerId: 2, saves: 2 })] });
     expect(contributions(s, 1)).toHaveLength(1);
