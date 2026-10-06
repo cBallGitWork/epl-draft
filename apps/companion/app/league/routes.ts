@@ -1,5 +1,8 @@
 // Where the league's matchups live, so every link to one is built the same way.
 
+/** The league table, the section's front page. */
+export const LEAGUE = "/league";
+
 /** Every pairing this round. */
 export const MATCHUPS = "/league/matchups";
 

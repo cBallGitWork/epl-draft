@@ -3,6 +3,7 @@ import type { Club } from "@epl/core";
 import { clubColours } from "@epl/core";
 import PhotoGround from "../../../components/football/PhotoGround";
 import PlateShell from "../../../components/shell/PlateShell";
+import { PREM } from "../../routes";
 import ClubTabs from "./ClubTabs";
 import type { ClubTab } from "./ClubTabs";
 
@@ -32,7 +33,7 @@ export default function ClubShell({
   children: ReactNode;
 }) {
   return (
-    <PlateShell colours={clubColours(club.shortName)} title={club.name}
+    <PlateShell colours={clubColours(club.shortName)} title={club.name} back={PREM}
       tabs={<ClubTabs code={club.code} current={current} empty={empty} />}>
       {/* **This club's own ground, behind this club's own screen.** The shell's
           standing photograph stands down here (`drawsOwnGround`) because it

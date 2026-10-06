@@ -1,3 +1,5 @@
+import { LEAGUE } from "../league/routes";
+
 // A team's routes, named once and in one place.
 //
 // `prem/routes.ts`'s reason applies here unchanged, and the second half of it is
@@ -32,3 +34,8 @@ export const OWN = "me";
 
 /** The reader's own team. */
 export const MY_TEAM = `${SQUAD}/${OWN}`;
+
+/** Where a squad's back plate goes with no history: the league table for a rival, none on your own team's tab. */
+export function teamBack(slug: string): string | undefined {
+  return slug === OWN ? undefined : LEAGUE;
+}

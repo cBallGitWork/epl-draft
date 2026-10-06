@@ -352,7 +352,8 @@ rather than one invented here. Ours drops the finances, which a fantasy team
 does not have, and spends the slot on Stats.
 
 `squad/[teamId]/Shell.tsx` is the frame all five wear: the team's title bar in
-his own colour and the strip. No caption box since 23 Sep 2026: it repeated the
+his own colour and the strip, and on a rival's team a phone's `←` back plate at
+the bar's left (never on your own, which has its tab). No caption box since 23 Sep 2026: it repeated the
 lit tab. It also sets `--cm-index` once, so
 every index block on every tab runs in that manager's colour rather than the
 league's deep blue.
