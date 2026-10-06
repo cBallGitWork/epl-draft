@@ -11,9 +11,9 @@
 // them having to care. Both modules it imports keep the same discipline, for
 // the same reason — see `prem/routes.ts`.
 
-import { MATCHUPS } from "../../league/routes";
+import { LEAGUE, MATCHUPS } from "../../league/routes";
 import { POOL } from "../../players/routes";
-import { CLUB, MATCH } from "../../prem/routes";
+import { CLUB, MATCH, PREM } from "../../prem/routes";
 import { MY_TEAM, SQUAD } from "../../squad/routes";
 import type { GlyphName } from "./glyphs";
 
@@ -78,6 +78,12 @@ export const MAIL = "/news";
 /** The Live section, there only while a gameweek is on. */
 export const LIVE = "/matchday";
 
+/** A gameweek's own page, `/gw/[n]`: Live's, though it outlasts the round. */
+export const GAMEWEEK = "/gw";
+
+/** The FPL tab. */
+export const FPL = "/fpl";
+
 export const SECTIONS: Section[] = [
   { href: "/", label: "Gazetta", glyph: "gazetta", routes: PAPER_ROUTES },
   // One route, not a prefix, so it lights on the reader's own five tabs and stays dark on a rival's.
@@ -91,11 +97,11 @@ export const SECTIONS: Section[] = [
     overflowDuringGameweek: true,
   },
   // Live takes Team's slot while football is on, so the second tab is always yours.
-  { href: LIVE, label: "Live", glyph: "live", routes: [LIVE, "/gw"], onlyDuringGameweek: true },
+  { href: LIVE, label: "Live", glyph: "live", routes: [LIVE, GAMEWEEK], onlyDuringGameweek: true },
   // "Draft", not League (Craig, 24 Sep 2026: "Prem is real life, draft is draft"); the URL stays `/league`.
-  { href: "/league", label: "Draft", glyph: "league", routes: ["/league"], group: "comps" },
+  { href: LEAGUE, label: "Draft", glyph: "league", routes: [LEAGUE], group: "comps" },
   // "Prem" on the rail; the title bar says "FA Barclays Premiership" (`cm9900/24.jpg`). Beside Draft, the real one.
-  { href: "/prem", label: "Prem", glyph: "prem", routes: ["/prem"], group: "comps" },
+  { href: PREM, label: "Prem", glyph: "prem", routes: [PREM], group: "comps" },
   // The fantasy deep dive, on the bar since 24 Sep 2026 (Craig: "data needs to be at the bottom"). It was CM's
   // "Find"; the URL stays `/players`, because a shared URL outlives a label. `titles.ts` carries the same word.
   { href: POOL, label: "Data", glyph: "data", routes: [POOL] },
@@ -106,7 +112,7 @@ export const SECTIONS: Section[] = [
   // to the competition he plays in.
   // "Mail" since 23 Sep 2026 (Craig: "Use mail"); the route stays `/news`.
   { href: MAIL, label: "Mail", glyph: "mail", routes: [MAIL] },
-  { href: "/fpl", label: "FPL", routes: ["/fpl"], overflow: true },
+  { href: FPL, label: "FPL", routes: [FPL], overflow: true },
 ];
 
 /** The sections this round has: Live only while football is on, when My Team gives it its tab. Pure, so tested. */

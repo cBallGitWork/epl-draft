@@ -13,7 +13,7 @@ import {
 } from "@epl/core";
 import { speaksForNow } from "../../football";
 import LeagueCrest from "../shell/LeagueCrest";
-import { LIVE } from "../shell/sections";
+import { GAMEWEEK, LIVE } from "../shell/sections";
 import MatchList from "./MatchList";
 import { GAMEWEEK_HEAD, GAMEWEEK_TITLE } from "@/app/desk";
 import { SQUAD } from "../../squad/routes";
@@ -141,7 +141,7 @@ function GameweekLink({
   // because the plate was not there yet.
   return (
     <Link
-      href={`/gw/${gameweek}`}
+      href={`${GAMEWEEK}/${gameweek}`}
       className={`cm-bevel ${classes} font-medium hover:brightness-110`}
     >
       {label}

@@ -5,6 +5,7 @@ import type { LiveTie } from "./liveTie";
 import { usePathname } from "next/navigation";
 import { DASH } from "@epl/core";
 import { SMALL_CAPS } from "@/app/desk";
+import { LIVE, owns } from "./sections";
 
 // Your tie, in the chrome, while a ball is in the air.
 //
@@ -31,16 +32,10 @@ import { SMALL_CAPS } from "@/app/desk";
 // (`shell/LiveFigure`), in room the nav already occupies. The desk keeps the
 // strip — it has the width, and no tab to put a score in.
 
-const ANSWERED_IN_FULL = ["/", "/matchday"];
-
 export default function LiveStrip({ yours, theirs, opponent, href }: LiveTie) {
   const pathname = usePathname();
-  // Exact match, or a section of one — but "/" owns only itself, since every
-  // path starts with it.
-  const answered = ANSWERED_IN_FULL.some(
-    (route) => pathname === route || (route !== "/" && pathname.startsWith(`${route}/`)),
-  );
-  if (answered) return null;
+  // The front page owns only itself, since every path starts with "/".
+  if (pathname === "/" || owns([LIVE], pathname)) return null;
 
   const behind = yours !== null && theirs !== null && yours < theirs;
 

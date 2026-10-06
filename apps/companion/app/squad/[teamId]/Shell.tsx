@@ -11,21 +11,19 @@ import type { TeamTab } from "./TeamTabs";
 export default async function TeamShell({
   team,
   current,
-  sub,
   empty,
   children,
 }: {
   /** Whose screens: the slug builds the tabs, the id finds his colour and full name, the name is the fallback. */
   team: { teamId: string; teamName: string; slug: string };
   current: TeamTab;
-  sub?: React.ReactNode;
   empty?: readonly TeamTab[];
   children: React.ReactNode;
 }) {
   // The bar prints Fantrax's name in full; `team.teamName` is the short one every list uses.
   const full = (await leagueInfo())?.teams.find((t) => t.teamId === team.teamId)?.name || team.teamName;
   return (
-    <PlateShell colours={teamColours(team.teamId)} title={full} sub={sub}
+    <PlateShell colours={teamColours(team.teamId)} title={full}
       back={teamBack(team.slug)}
       tabs={<TeamTabs slug={team.slug} current={current} empty={empty} />}>
       {children}

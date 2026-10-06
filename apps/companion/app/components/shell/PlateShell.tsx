@@ -41,7 +41,6 @@ import PageHeader from "./PageHeader";
 export default function PlateShell({
   colours,
   title,
-  sub,
   back,
   tabs,
   children,
@@ -52,15 +51,13 @@ export default function PlateShell({
   colours: ClubColours;
   /** What goes on the bar. CM's title bars carry a title and nothing else. */
   title: string;
-  /** The line UNDER the bar, never inside it. One caller uses it. */
-  sub?: ReactNode;
   /** Where the phone's back plate goes with no history; absent draws none. */
   back?: string;
   tabs: ReactNode;
   children: ReactNode;
 }) {
   const plate = plateOn(colours);
-  const header = <PageHeader title={title} sub={sub} plate={plate} />;
+  const header = <PageHeader title={title} plate={plate} />;
 
   return (
     // `gap-2` because four boxes down the page need 12px between them or they
