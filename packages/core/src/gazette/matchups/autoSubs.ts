@@ -1,18 +1,14 @@
 import type { DraftMan, PositionLimits } from "./types";
 
-// Fantrax's end-of-period substitutions, worked out in advance (Craig, 29 Sep 2026: "Auto subs are processed at the end of
-// the gameweek automatically... Subs are ordered by number"; unnumbered, the deadline orders them by total points). A man
-// in the eleven whose matches are all done without a minute is replaced by the first reserve in that order who has
-// played, or may yet, and whose arrival keeps every position within the limits. One yet to play makes it provisional.
+// Fantrax's end-of-period auto subs, in advance: a starter with every match done and no minutes gives way to the first
+// reserve by bench number who has played or may yet and keeps every position within its limits.
 
 export interface AutoSub {
   out: DraftMan;
   in: DraftMan;
   /** True when the reserve has not played yet: he comes in only if he does. */
   provisional: boolean;
-  /** A man ahead of `out` in the eleven, still to play, whom this reserve replaces instead if he does not play: the
-   *  reserve's points count either way, only his man may change (GW5: Davis for Elanga after Saturday, for Rodon at the
-   *  end). Null when nobody can. */
+  /** A man ahead of `out`, still to play, whom this reserve replaces instead if he blanks; null when none. */
   ahead: DraftMan | null;
 }
 

@@ -91,10 +91,7 @@ describe("sortRows", () => {
 
   it("orders fewest conceded first, which is not the for column's order", () => {
     expect(order(sortRows(TABLE, "against", false))).toBe("acbd");
-    // Same result string as `for` descending above, and reached the other way
-    // round: a is best on both, but c beats b on against by conceding less and
-    // on for by scoring more. Read them apart on d, who is last on both, and on
-    // the reversed direction.
+    // The same order as `for` descending, reached the other way: c concedes less and scores more than b.
     expect(order(sortRows(TABLE, "against", true))).toBe("dbca");
   });
 

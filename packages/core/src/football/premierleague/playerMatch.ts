@@ -1,8 +1,7 @@
 import type { RawPlFixture } from "./raw";
 import type { RawPlPlayerStats } from "./rawStats";
 
-// One man's match in the Opta counts FPL's live feed does not split. Fantrax's own tackles won, interceptions,
-// blocks, clearances, recoveries and penalties won matched these on all 282 outfielders of GW5 (6 Oct 2026).
+// One man's match in the Opta counts FPL's live feed does not split, which are the counts Fantrax scores.
 
 /** What his DefCon, his keeping and his extra assists are made of, in one match or added over a gameweek. */
 export interface MatchParts {

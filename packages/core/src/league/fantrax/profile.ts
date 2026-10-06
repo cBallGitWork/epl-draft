@@ -1,62 +1,19 @@
-// `getPlayerProfile` → what Fantrax knows about one player. Pure.
-//
-// Public on fxpa, and asked one player at a time by a manager tapping a name —
-// never a sweep of the pool's 697. The politeness is the design, not a setting.
-//
-// Three things this payload teaches, all of them from the live probe on 12 Aug
-// and all of them load-bearing below:
-//
-//  1. **The parameter is `playerId`.** `scorerId` — the name Fantrax's own
-//     transaction rows give the identical id — and `fantraxId` both answer
-//     `INVALID_REQUEST`. Same id space, three names for it, one that works.
-//
-//  2. **The numbers are not this season's.** `displayedSelections.seasonId` was
-//     "925" while `season` said 2026-27 is "926": the profile serves the most
-//     recent season that has been played, which before GW1 is last season. Every
-//     points figure here therefore belongs to a season that must be named beside
-//     it, which is why the season is resolved rather than assumed and why no
-//     value is ever parsed out of its label.
-//
-//  3. **Provenance splits four ways** — this league's row, Fantrax's own scoring,
-//     the whole-of-Fantrax market, and the man himself. They arrive interleaved
-//     in one `miscData` object and are separated here, because "100% rostered"
-//     means every league on the site and reads exactly like a statement about
-//     ours.
-//
-// `sectionContent` carries the stats, splits and game-log TABLES, and they are
-// still refused: most of the payload's weight, columns keyed by numeric stat ids
-// (`6210` is shots), and — the reason that matters — a percentile needs the whole
-// division and this endpoint is one player at a time. Its one line of prose is
-// read, because that needs no population.
-//
-// **Two traps in that section, both confirmed live on 4 Sep 2026.**
-//
-//  · **Cells carry HTML.** `'Fri Aug 28 -<br/>Thu Sep 3'` and `'<b>D</b>: 2'`
-//    are real cell contents. Nothing here is ever rendered as markup.
-//
-//  · **The endpoint does not check the sport.** Asking an EPL league for a
-//    player id from another sport returns a complete, confident NFL profile —
-//    `Sk`, `FF`, `IntYd` — under our league id. So the stat ids are per-sport
-//    and a caller must never assume the table in front of it is football.
+// `getPlayerProfile` → what Fantrax knows about one player, asked a tap at a time, never a sweep of the pool. Pure.
+// Its figures are the most recent season PLAYED (last season before GW1), so the season is resolved, never assumed.
+// Table cells carry HTML, and the endpoint answers any sport's player id: never assume a table is football.
 
 import { recentGames, seasonStats } from "./profileTables";
 import type { PlayerMatch, RawTable } from "./profileTables";
 
 export type { PlayerMatch } from "./profileTables";
 
-/** One name-and-value pair, of which this payload is almost entirely made.
- *
- *  Shapes differ across the four blocks — some carry a short name and a long one,
- *  some a name and a description, some just a name — but they collapse to the
- *  same pair, so they get one type and one reader rather than four. */
+/** One name-and-value pair: the four blocks' differing shapes all collapse to it. */
 export interface LabelledValue {
   /** The short form Fantrax's own UI shows: "FPts", "ADP", "Birthplace". */
   label: string;
-  /** Their longer wording where there is one — and where the season hides:
-   *  "Fantasy Points (2025-26 - YTD)". Kept whole and never parsed. */
+  /** Their longer wording, where the season hides ("Fantasy Points (2025-26 - YTD)"); kept whole, never parsed. */
   description: string | null;
-  /** Verbatim, including the "%" and the "/": "3.55", "100%", "12/46". Fantrax
-   *  formats these for display and we are not going to re-derive them (§5). */
+  /** Verbatim as Fantrax formats it, "%" and "/" included: "3.55", "100%", "12/46". Never re-derived. */
   value: string;
 }
 
@@ -75,16 +32,14 @@ interface RawSeason {
 
 /** Only the keys we traverse. */
 export interface RawPlayerProfile {
-  /** Which season the response is actually describing. An id, resolved against
-   *  the two seasons the payload names. */
+  /** The season the response describes, as an id resolved against the two seasons the payload names. */
   displayedSelections?: { seasonId?: string };
   season?: RawSeason;
   currentOrRecentSeason?: RawSeason;
   miscData?: {
     name?: string;
     teamShortName?: string;
-    /** Fantrax's global position for him, "M,F" — not our league's eligibility,
-     *  which is a commissioner setting and arrives on `leagueData`. */
+    /** Fantrax's global position ("M,F"), not our league's eligibility, which arrives on `leagueData`. */
     defaultPosition?: string;
     uniformNumber?: string;
     /** Null for a free agent, and the fantasy team id when someone holds him. */
@@ -97,16 +52,9 @@ export interface RawPlayerProfile {
   };
   sectionContent?: {
     OVERVIEW?: {
-      /** One dated sentence about his last match. `analysisTitle` sits beside it
-       *  reading "Analysis available to registered users" — the sentence is open
-       *  and the analysis behind it is not, so only the sentence is read. */
+      /** One truncated sentence about his last match. Not read: `getPlayerNews` carries the whole story. */
       latestNews?: { title?: string; subTitle?: string; text?: string };
-      /** Five of them: his season, his recent games, his recent trends, what is
-       *  coming, and his games per position. Only the season row is read, and it
-       *  is read POSITIONALLY — header cell `i` against row cell `i` — because a
-       *  Fantrax table identifies its columns by a numeric stat id and its
-       *  `shortName` is a display label. The same rule `getStandings`' stat
-       *  tables already needed. */
+      /** Five tables; `profileTables.ts` reads the season row by position and the recent games by stat id. */
       tables?: RawTable[];
     };
   };
@@ -120,41 +68,21 @@ export interface PlayerIntel {
   squadNumber: string | null;
   /** Whose team he is on, or nobody's. */
   ownerTeamId: string | null;
-  /** The season every number below describes, when the payload named it. Null is
-   *  a real answer and the UI says so rather than letting figures stand undated. */
+  /** The season every number below describes; null is a real answer, and the UI says so. */
   season: string | null;
-  /** OUR league's row: his status or owning team, his points here, and what this
-   *  commissioner deems him eligible for. */
+  /** OUR league's row: his status or owner, his points here, and this commissioner's eligibility for him. */
   league: LabelledValue[];
-  /** Fantrax's own scoring and rankings. Points, and therefore never recomputed
-   *  from football facts — that decision is permanent (PLATFORM_NOTES). */
+  /** Fantrax's own scoring and rankings; points are never recomputed from football facts. */
   highlights: LabelledValue[];
-  /** Whole-of-Fantrax: every league on the site, not ours. Its own list rather
-   *  than fields beside the league's, because "100% rostered" sitting next to our
-   *  own ownership is the one number in this payload that invites being read as a
-   *  statement about our sixteen managers. */
+  /** Whole-of-Fantrax, every league on the site: kept apart so "100% rostered" never reads as ours. */
   market: LabelledValue[];
-  /** Birthplace, age, height. Football's, in the loosest sense, and only ever
-   *  decoration — the football layer is where facts about footballers live. */
+  /** Birthplace, age, height: decoration only, as facts about footballers live in the football layer. */
   personal: LabelledValue[];
-  /** His season as Fantrax counts it: games, goals, assists, and the five things
-   *  FPL does not publish at all — **shots, shots on target, fouls committed,
-   *  fouls suffered and offsides**.
-   *
-   *  Read for ONE player, on his own page, from a profile already fetched for the
-   *  tap that opened it. That is the whole difference from the attribute grid,
-   *  which needs the same numbers for the whole division and therefore cannot
-   *  have them: a percentile needs a population and this endpoint answers one man
-   *  at a time. */
+  /** His season as Fantrax counts it, with five FPL does not publish: shots, on target, fouls both ways, offsides.
+   *  One man at a time, so never a source for a percentile across the division. */
   stats: LabelledValue[];
-  /** His recent matches as Fantrax scored them — and the only per-match source of
-   *  OUR LEAGUE'S points anywhere. FPL's points are FPL's, under FPL's rules.
-   *
-   *  **Recent, and how recent is not knowable yet.** The table is captioned
-   *  "Recent Games" and returned two rows for a two-match season on 4 Sep 2026,
-   *  so its window could be five, ten or the season. FPL's history is the spine
-   *  of any match table and covers every match; these fill in where they reach
-   *  and the screen dashes the rest. */
+  /** His recent matches as Fantrax scored them: the only per-match source of OUR league's points.
+   *  The window is unknown, so a match table runs on FPL's history and dashes where these do not reach. */
   matches: PlayerMatch[];
 }
 
@@ -162,16 +90,11 @@ export function text(value: string | number | undefined): string | null {
   if (typeof value === "number") return String(value);
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
-  // Fantrax pads the personal block with empty rows ("College", "Drafted") for
-  // sports that have them. An empty value has nothing to say.
+  // Fantrax pads the personal block with other sports' empty rows ("College", "Drafted").
   return trimmed === "" ? null : trimmed;
 }
 
-/** A row, or nothing when there is no label or no value to put against it.
- *
- *  `shortName` wins the label because it is what Fantrax's own screens show, and
- *  the longer `name` then becomes the description — which is where the season
- *  lives, so it is kept rather than discarded as a duplicate. */
+/** A row, or null without a label or a value; `shortName` labels it and `name`, where the season lives, describes it. */
 function row(raw: RawLabelled): LabelledValue | null {
   const label = raw.shortName ?? raw.name;
   const value = text(raw.value);
@@ -188,11 +111,7 @@ function rows(list: RawLabelled[] | undefined): LabelledValue[] {
   return mapped;
 }
 
-/** The season being displayed, by name.
- *
- *  Resolved against the seasons the payload itself names rather than assumed to
- *  be the current one: before GW1 those are different seasons, and that is the
- *  whole trap. */
+/** The displayed season by name, resolved against the seasons the payload names: before GW1 it is not the current one. */
 function seasonName(raw: RawPlayerProfile): string | null {
   const shown = raw.displayedSelections?.seasonId;
   if (!shown) return null;
@@ -202,8 +121,7 @@ function seasonName(raw: RawPlayerProfile): string | null {
   return null;
 }
 
-/** A player id in Fantrax's shape: 687 of `getPlayerIds`' 747 are five base-36 characters
- *  (23 Sep 2026); the other 60 are club entities, which have no profile. Room left to grow. */
+/** A player id in Fantrax's shape: five base-36 characters, with room to grow. Club entities have no profile and fail it. */
 export function isFantraxPlayerId(id: string): boolean {
   return /^[0-9a-z]{4,8}$/.test(id);
 }
@@ -220,10 +138,7 @@ export function mapPlayerProfile(raw: RawPlayerProfile): PlayerIntel {
     season: seasonName(raw),
     league: rows(misc.leagueData),
     highlights: rows(misc.highlightStats),
-    // `percentOwned` and `percentActive` are deliberately not read. They arrive
-    // as three items labelled only "This Week", "Last Week" and "Next Week", so
-    // taking one means binding to an English name — and both numbers already
-    // arrive in `highlightStats` with their meaning spelled out.
+    // `percentOwned` and `percentActive` are unread: labelled only "This Week" and so on, and `highlightStats` has both.
     market: rows([misc.percentDrafted, misc.averageDraftPosition].filter((v) => v !== undefined)),
     personal: rows(misc.personalInfo),
     stats: seasonStats(raw),

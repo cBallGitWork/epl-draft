@@ -62,10 +62,7 @@ describe("fplLineup", () => {
   });
 
   it("stands a pick FPL gave no line to at the top rather than dropping him", () => {
-    // `line` is 0 when the payload omitted `element_type`. Losing a man from a
-    // fifteen is a worse answer than standing him in a row of his own, and the
-    // raw number is the label on the same rule the rest of the app follows for a
-    // vocabulary it has not seen.
+    // `line` is 0 when `element_type` was omitted: he stands in a row of his own, labelled by the raw number.
     const unlined = squad([pick({ slot: 1, line: 0 }), pick({ slot: 2, line: 2 })]);
     const { rows } = fplLineup(unlined);
     expect(rows.map((row) => row.label)).toEqual(["0", "DEF"]);

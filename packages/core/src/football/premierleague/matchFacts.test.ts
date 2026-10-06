@@ -2,8 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { RawPlFixture } from "./raw";
 import { plMatchFacts } from "./matchFacts";
 
-// The shapes are the ones counted on 5 Sep 2026: the detail read's own officials
-// list, and the round read's, which has none.
+// The detail read's own officials list, and the gameweek read's, which has none.
 
 const OFFICIALS = [
   { role: "MAIN", name: { display: "Darren England" } },
@@ -34,10 +33,7 @@ describe("plMatchFacts", () => {
     });
   });
 
-  // The point of taking `RawPlFixture` rather than a detail-only type: the round
-  // read the wire already makes carries the ground and the gate, and the referee
-  // and the interval score are the two the DETAIL read alone has —
-  // `matchOfficials` 0/10 on the round and `halfTimeScore` 0/10, counted.
+  // The gameweek read carries the ground and the gate; only the DETAIL read has the referee and the interval score.
   it("answers three of five off the round read, with no referee or interval", () => {
     const round = { ground: { name: "Anfield", city: "Liverpool" }, attendance: 60725 } as unknown as RawPlFixture;
     expect(plMatchFacts(round)).toEqual({

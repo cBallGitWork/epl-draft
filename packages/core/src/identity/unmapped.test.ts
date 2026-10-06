@@ -46,10 +46,7 @@ describe("assumeUnmapped", () => {
   });
 
   it("sends a near miss to a person rather than filing him as absent", () => {
-    // Fantrax's "Ehor Yarmolyuk" scores 72 against FPL's "Yehor Yarmoliuk" — the
-    // same Brentford midfielder, a transliteration the metric cannot bridge.
-    // Recorded as an absence he is a first-team starter nobody ever looks at
-    // again; the alias that fixes him only gets written if somebody is asked.
+    // "Ehor Yarmolyuk" scores 72 against "Yehor Yarmoliuk", the same man: an absence here is never looked at again.
     const split = assumeUnmapped([proposal("a1", "below-threshold", [72])]);
     expect(Object.keys(split.assumed)).toEqual([]);
     expect(split.forReview.map((entry) => entry.fantraxId)).toEqual(["a1"]);

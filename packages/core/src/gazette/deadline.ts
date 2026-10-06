@@ -3,13 +3,8 @@ import type { GameweekKickoff } from "../league/calendar";
 import type { LeaguePeriod } from "../league/types";
 import type { Deadline } from "./types";
 
-/** The next lock a manager has to beat.
- *
- *  The earliest lock still in the future, and deliberately not "the next period
- *  to open". Those differ for a whole day every time a period opens on the
- *  Friday for a round that starts on the Saturday: at Friday lunchtime the next
- *  period to open is next week's, while the deadline a manager actually has to
- *  beat is tomorrow afternoon's. */
+/** The next lock a manager has to beat: the earliest lock still ahead, never the next period to open,
+ *  which is a day later whenever a period opens on a Friday for a Saturday start. */
 export function nextDeadline(
   periods: readonly LeaguePeriod[],
   kickoffs: readonly GameweekKickoff[],

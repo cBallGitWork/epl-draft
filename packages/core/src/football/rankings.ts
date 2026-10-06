@@ -2,8 +2,7 @@ import type { ShotLine } from "./shotLine";
 import type { FootballPlayer } from "./types";
 import type { FigureKind } from "../format";
 
-// Where his season totals rank among the men he is rated against (Craig, 25 Sep 2026:
-// "rankings for data such as xg"). Totals, not rates: this is the league table of a figure.
+// Where his season totals rank among the men he is rated against: totals, not rates, so the league table of a figure.
 
 /** One figure and its place. `rank` is null when he has no figure; ties share a place. */
 export interface Ranked {

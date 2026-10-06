@@ -15,10 +15,7 @@ const BRIEF = [
 
 describe("strangers", () => {
   it("catches a man the brief never named", () => {
-    // Dedić stands in for the shape of the bug, not an instance of it: on
-    // 2 Sep he turned out to be a real rostered player the brief did name.
-    // What the check answers is narrow and useful — "is this name in this
-    // brief" — and a human reads the answer.
+    // The check answers only "is this name in this brief"; Dedić is simply not in this one.
     const prose = "At the back Tarkowski scored, while Dedić and Calafiori paired a clean sheet with an assist.";
     expect(strangers(prose, BRIEF)).toContain("Dedić");
   });
@@ -44,14 +41,12 @@ describe("strangers", () => {
   });
 
   it("forgives a forename the brief spelled as an initial", () => {
-    // The brief prints "B.Fernandes"; the paper writes "Bruno Fernandes". The
-    // same man, correctly named — not a stranger.
+    // The brief prints "B.Fernandes"; the paper writes "Bruno Fernandes".
     expect(strangers("Bruno Fernandes ran it.", BRIEF)).toEqual([]);
   });
 
   it("still reports a forename when the surname beside it is also unknown", () => {
-    // Two unknown words together is a whole man we were never given, which is
-    // exactly the case the forename rule must not swallow.
+    // Two unknown words together are a whole man the brief never gave.
     expect(strangers("Amar Dedić kept a clean sheet.", BRIEF)).toEqual(["Amar", "Dedić"]);
   });
 
@@ -65,9 +60,7 @@ describe("strangers", () => {
   });
 
   it("forgives an opener followed by a figure or a hyphen", () => {
-    // "Fifty-six to 45 over testf", "Sits 76 to 35", "Ninety-four scored" —
-    // all sentence openers the check reported as footballers, because the rule
-    // only forgave a following LOWERCASE word and a figure is neither.
+    // Openers followed by a figure or a hyphenated continuation, never a surname.
     const prose = [
       "Groß scored. Fifty-six to 45 over testf.",
       "The pair banked twelve. Sits 76 to 35 over test31121.",
@@ -77,19 +70,13 @@ describe("strangers", () => {
   });
 
   it("treats the start of a line as the start of a sentence", () => {
-    // A power ranking's rows arrive one per line. "Top of the table..." opens
-    // a line rather than following a full stop, and reported as a stranger
-    // until the check learned that a newline opens a sentence too.
+    // A power ranking's rows arrive one per line, so a newline opens a sentence too.
     const prose = "League-high 103 and third.\nTop of the table, 96 scored.";
     expect(strangers(prose, BRIEF)).toEqual([]);
   });
 
   it("forgives a capitalised word that only ever opens a sentence", () => {
-    // "Losing" tripped the check on its first live run. A stop-list of openers
-    // always lags the prose, so the shape decides: a word found only after a
-    // full stop and followed by lowercase is doing an opener's job. A man the
-    // brief never named turns up mid-sentence, because that is where a paper
-    // reports what he did.
+    // A word only ever found opening a sentence, with lowercase after it, is an opener.
     const prose = "Losing to test4 by 11 is no disgrace. Elsewhere the margins were tighter.";
     expect(strangers(prose, BRIEF)).toEqual([]);
   });

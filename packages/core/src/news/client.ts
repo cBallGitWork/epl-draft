@@ -1,7 +1,4 @@
-// The one I/O in the news layer: fetch a feed, hand back its text.
-//
-// Text and not a parsed feed, so the mapper stays pure and testable against a
-// captured fixture. Everything about what the bytes MEAN is `map.ts`.
+// The one I/O in the news layer: fetch a feed and hand back its text, so the mapper stays pure.
 
 import { statusError } from "../http/errors";
 import { politeFetch } from "../http/fetch";

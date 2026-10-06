@@ -2,23 +2,17 @@ import { fetchBootstrap, fetchFixtures, fetchLive } from "./fpl/client";
 import { buildSnapshot, focusGameweek } from "./fpl/map";
 import type { FootballSnapshot } from "./types";
 
-// The one entry point the app calls to learn what is happening in the Premier
-// League. Fetch here, map purely there — the split that keeps `map.ts` testable.
+// The app's one entry point to the Premier League: fetch here, map purely in `fpl/map.ts`.
 
-/** Assemble the current football snapshot. Pass `gameweek` to view a specific
- *  round; omit it to follow whatever is live (or next up between rounds). */
+/** The football snapshot for `gameweek`, or for the gameweek in focus (live, or next between rounds) when omitted. */
 export async function getFootballSnapshot(gameweek?: number): Promise<FootballSnapshot> {
   const bootstrap = await fetchBootstrap();
   const gw = gameweek ?? focusGameweek(bootstrap).gameweek;
 
-  // Fixtures and live stats are independent — fetch them together rather than
-  // paying two round trips in series on the live path.
+  // Independent reads, fetched together.
   const [fixtures, live] = await Promise.all([
     fetchFixtures(gw),
-    // Before a season starts FPL answers `{elements: []}`, which is not an error.
-    // A read that actually fails becomes null rather than that same empty shape:
-    // one gameweek in four hundred people are watching, "nobody has scored" and
-    // "we cannot see" are opposite claims, and the snapshot has to carry which.
+    // A failed read is null, never `{elements: []}`: "nobody has scored" and "we cannot see" are opposite claims.
     fetchLive(gw).catch(() => null),
   ]);
 

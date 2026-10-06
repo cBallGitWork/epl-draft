@@ -18,7 +18,7 @@ describe("roundNews", () => {
   });
 
   it("says when lineups lock the way the commissioner would, in London time", () => {
-    // Craig, 30 Sep 2026: "please write like a human". The time and day are the lock's own.
+    // The time and day are the lock's own.
     const [lock] = roundNews({ gameweek: 6, deadline: { gameweek: 6, locksAt: "2026-10-10T11:15:00Z" }, yours: null });
     expect(lock.body).toBe(
       "Lineups lock at 12:15 on Saturday 10 October. Anyone left on your bench won't score, so get your team sorted before then.",
@@ -69,10 +69,7 @@ describe("inboxItems", () => {
         deadline: { gameweek: 3, locksAt: "2026-09-04T18:45:00Z" },
         yours: null,
       }),
-      // Fantrax's own shape, which is what `Deal.processedAt` actually carries —
-      // an ISO here made the test agree with a merge that could not order the
-      // two. 9AM Eastern on the 5th is after the deadline's 14:45 Eastern on the
-      // 4th, which is the comparison the merge exists to make.
+      // Fantrax's own stamp, as `Deal.processedAt` carries it: 9AM Eastern on the 5th is after the 4th's deadline.
       dealNews(
         [
           {

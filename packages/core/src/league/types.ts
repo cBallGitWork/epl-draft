@@ -1,26 +1,12 @@
 import type { ScoringCategory, ScoringRules } from "./scoring";
 
-// The LEAGUE layer: our fantasy competition, sourced from Fantrax. Where the
-// football layer is the real Premier League and is permanent, this layer is an
-// adapter over whoever happens to be running our league — Fantrax now, our own
-// engine in 27/28.
-//
-// Nothing here is football truth. Two consequences run through every type below:
-//
-//  1. A player's club code and position here are FANTRAX's opinion. The
-//     commissioner can change a position at any time and Fantrax carries youth
-//     players FPL has never heard of. Positions are display hints, never join
-//     keys, and the club codes are not FPL's (they disagree on Brentford and
-//     Nott'm Forest).
-//  2. The join to the football layer goes through the identity bridge and
-//     nothing else. Never name-match at runtime.
+// The league layer's types, from Fantrax: positions and club codes are Fantrax's opinion and never join keys.
+// The join to the football layer is the identity bridge alone; never name-match at runtime.
 
 /** A player as Fantrax's global EPL pool knows them. */
 export interface LeaguePlayer {
   fantraxId: string;
-  /** Verbatim, as Fantrax gives it — usually "Surname, Firstname" but sometimes
-   *  a display form ("Gabriel Jesus"). Kept unmodified so a bridge audit can see
-   *  exactly what was matched against. */
+  /** Verbatim, usually "Surname, Firstname", kept so a bridge audit sees what was matched. */
   rawName: string;
   /** Reading order, comma form resolved. */
   displayName: string;
@@ -31,54 +17,30 @@ export interface LeaguePlayer {
   rotowireId: number | null;
 }
 
-/** Per-player state within OUR league, as distinct from the global pool: who is
- *  rostered, who is on waivers, and what the commissioner currently deems them
- *  eligible to play as. */
+/** Per-player state within our league: rostered or on waivers, and where he is eligible. */
 export interface LeaguePlayerState {
   fantraxId: string;
-  /** Fantrax supports multi-position eligibility, so this is a list — "F,M" is a
-   *  real and common value. Another reason position cannot be a join key. */
+  /** A list, since "F,M" is a real and common value. */
   eligiblePositions: string[];
-  /** Fantrax's own code, e.g. "WW" for waiver wire. Left as a raw string: the
-   *  vocabulary is theirs and undocumented, and inventing an enum would mean
-   *  guessing at values we have not seen. */
+  /** Fantrax's own undocumented code, e.g. "WW" for waiver wire; raw, never an enum. */
   status: string;
 }
 
 /** The roster shape the league enforces, as configured by the commissioner. */
 export interface RosterLimits {
-  /** **Null where the league has not published a cap**, and never zero.
-   *
-   *  `mapLeagueInfo` folded an absent limit to `0` with `?? 0`, which made every
-   *  squad of any size break a rule the commissioner had never stated — a
-   *  fifteen-man roster reported as three violations against caps of nought.
-   *  Absence is not zero, which CODE_RULES states as a rule and DESIGN states
-   *  again for the screen; this is the type saying it too, so a caller cannot
-   *  compare against a limit without deciding what to do when there is none. */
+  /** Null where the league has not published a cap, and never zero. */
   maxTotalPlayers: number | null;
   maxActivePlayers: number | null;
   maxReservePlayers: number | null;
   /** Position letter to maximum active count, e.g. `{ G: 1, D: 5, M: 5, F: 3 }`. */
   maxActiveByPosition: Record<string, number>;
-  /** Position letter to the FEWEST that may start there, e.g. `{ D: 3, M: 2 }`.
-   *
-   *  **Empty from `getLeagueInfo`, and that is the provider and not a default.**
-   *  `rosterInfo.positionConstraints` carries `maxActive` and nothing else — 0
-   *  matches for `minActive` across all three leagues, live and in every
-   *  snapshot — while Fantrax's commissioner setup page has a Min Active column
-   *  that is switched ON for our league (D 3 · M 2 · F 1 · G 1). So the fact is
-   *  real, is enforced by Fantrax, and reaches us only through a checked-in file
-   *  a script generates. PLATFORM_NOTES carries the probe.
-   *
-   *  A position absent from the map has no published minimum, which is not a
-   *  minimum of nought in any way that matters — nothing can go below nought —
-   *  but the distinction is kept because "we were not told" and "the
-   *  commissioner said none" are different claims. */
+  /** Position letter to the fewest that may start there, e.g. `{ D: 3, M: 2 }`.
+   *  Always empty from `getLeagueInfo`: it arrives from a checked-in file a script generates.
+   *  An absent position means "not told", which is a different claim from a minimum of nought. */
   minActiveByPosition: Record<string, number>;
 }
 
-/** One scoring or roster period. Fantrax numbers these 1–38 in step with FPL
- *  gameweeks, but the dates are its own and carry a US Eastern offset. */
+/** One scoring or roster period: numbered 1–38 with FPL gameweeks, its dates Fantrax's own in US Eastern. */
 export interface LeaguePeriod {
   number: number;
   /** ISO instants, as provided (offset preserved). */
@@ -92,12 +54,7 @@ export interface LeagueTeam {
   name: string;
 }
 
-/** One pairing in one period.
- *
- *  Ids, not embedded teams: Fantrax sends team names on `teamInfo` and again on
- *  every matchup, and a second copy is a copy that goes stale when someone renames
- *  their team. Flattened to one row per pairing per period so selecting a period
- *  is a filter. */
+/** One pairing in one period, by team id so a renamed team cannot go stale here. */
 export interface LeagueMatchup {
   period: number;
   homeTeamId: string;
@@ -107,12 +64,9 @@ export interface LeagueMatchup {
 /** One player in one team's roster for one period. */
 export interface RosterSlot {
   fantraxId: string;
-  /** The slot Fantrax has them filling. Fantrax's opinion, commissioner-mutable,
-   *  and never a join key. */
+  /** The slot Fantrax has him filling; commissioner-mutable and never a join key. */
   position: string | null;
-  /** ACTIVE or RESERVE, raw. The distinction is the whole point of a lineup, so
-   *  it is carried verbatim rather than reduced to a boolean we would have to
-   *  reinterpret when Fantrax adds a third value. */
+  /** ACTIVE or RESERVE, raw, so a third value from Fantrax is not misread as a boolean. */
   status: string;
 }
 
@@ -124,60 +78,41 @@ export interface TeamRoster {
 
 /** `getTeamRosters` for one period. */
 export interface PeriodRosters {
-  /** Which period this is, echoed back by Fantrax. Null when it did not say —
-   *  never 0, which would read as a real period. */
+  /** The period Fantrax echoed back; null when it did not say, never 0. */
   period: number | null;
   teams: TeamRoster[];
 }
 
-/** Which transaction log to read. These are Fantrax's own tab ids, and the legal
- *  set arrives in `displayedLists.tabs` on every response — server-driven, so a
- *  new tab appears in the data before it appears here (§3). */
+/** Fantrax's own transaction tab ids; the legal set arrives in `displayedLists.tabs` on every response. */
 export type TransactionView = "CLAIM_DROP" | "TRADE" | "LINEUP_CHANGE";
 
-/** What happened. `unknown` is retained rather than dropped: a transaction we
- *  cannot classify still moved a player, and silently discarding it would leave
- *  a squad changing for no recorded reason. */
+/** What happened; `unknown` is kept because an unclassified move still moved a player. */
 export type TransactionKind = "claim" | "drop" | "trade" | "lineup" | "unknown";
 
-/** One player moving, once.
- *
- *  A trade is two of these sharing a `setId`, as is a claim and the drop that
- *  paid for it. Kept flat rather than nested per transaction because every view
- *  we render — a team's history, a player's history, the week's activity — wants
- *  to filter rows, and the grouping is recoverable from `setId` whenever it is
- *  actually needed. */
+/** One player moving, once: a trade, or a claim and its drop, is several rows sharing a `setId`. */
 export interface LeagueTransaction {
   /** Groups the halves of one transaction. Empty when Fantrax omitted it. */
   setId: string;
   kind: TransactionKind;
   fantraxId: string;
-  /** As Fantrax renders it here ("Kevin Schade") — reading order already, unlike
-   *  the pool's "Schade, Kevin". Display only; the id is the join key. */
+  /** Reading order as Fantrax renders it here ("Kevin Schade"); display only. */
   playerName: string;
-  /** Fantrax's position letters for him, as they spell them here — "D", and
-   *  "F,M" for a man eligible at two. Their opinion and commissioner-mutable,
-   *  like every other position in this layer, so it is display only and never a
-   *  join key. Null when the row carried none. */
+  /** Fantrax's position letters ("D", "F,M"); display only, null when the row carried none. */
   position: string | null;
-  /** His real club's short name, as Fantrax spells it here — "ARS". Their
-   *  opinion of it, like the position beside it, and display only. Null when the
-   *  row carried none. */
+  /** His real club's short name as Fantrax spells it ("ARS"); display only, null when absent. */
   club: string | null;
   /** His club in full, "Sunderland"; null when the row carried none. */
   clubName: string | null;
   /** How a claim was made; null on a drop, a trade, or a claim Fantrax did not type. */
   via: "waivers" | "free agency" | null;
-  /** Null where there is no team on that side: nobody owns a free agent, and a
-   *  dropped player goes to the pool rather than to another manager. */
+  /** Null where there is no team on that side: a free agent's origin, a dropped man's destination. */
   fromTeamId: string | null;
   toTeamId: string | null;
   /** Fantrax's own string, verbatim: "Wed Aug 12, 2026, 9:14AM", US Eastern with no offset in it. */
   processedAt: string | null;
   /** The period the move takes effect in, not when it was made. */
   period: number | null;
-  /** Fantrax distinguishes executed from pending, and the default filter hides
-   *  the pending ones. Carried so a caller cannot mistake a proposal for a fact. */
+  /** False for a pending proposal, which Fantrax's default filter hides. */
   executed: boolean;
 }
 
@@ -187,94 +122,47 @@ export interface StandingsRow {
   /** The place, by the league's rule: points, then fantasy points for, then name where both are
    *  level (`placeTable`). Fantrax's own rank shuffles teams level on both between reads. */
   rank: number;
-  /** The record, in three columns rather than the one string the fxea read
-   *  squashes it into — and in Fantrax's own order, which their header names
-   *  Win, Draw, Loss. Football's order, not the win-loss-tie an American
-   *  product's table is usually read in; the app called it W-L-T for as long as
-   *  every sample was "0-0-0" and nothing could tell the two apart. */
+  /** The record in Fantrax's own order: Win, Draw, Loss. */
   won: number;
   drawn: number;
   lost: number;
-  /** Matches played, and the one column here that is OURS.
-   *
-   *  Fantrax's table has no such column — their header publishes `win`, `draw`,
-   *  `loss`, `points`, `winpc`, `wwOrder`, `pointsFor`, `pointsAgainst` and
-   *  `streak`, and nothing else. This is `won + drawn + lost`, which is a
-   *  tautology about their own three numbers rather than a rule of the
-   *  competition, and that is the whole test for what we may compute: what a win
-   *  is WORTH is a commissioner setting and is read (see `points`); how many
-   *  games a record adds up to is arithmetic. */
+  /** `won + drawn + lost`, ours: Fantrax's table has no played column. */
   played: number;
-  /** The league's points — three for a win here. Read off Fantrax's table and
-   *  never computed from the record: what a win is worth is a commissioner
-   *  setting (§3), and a league that pays two would get three from us. */
+  /** The league's points, read off Fantrax's table and never computed: a win's worth is a commissioner setting. */
   points: number;
-  /** Fantasy points scored — Fantrax's FPtsF, and the table's `For`. The first
-   *  tiebreak, not the column the table is ordered by, and the two are one
-   *  number apart on a Saturday. */
+  /** Fantasy points scored, Fantrax's FPtsF: the first tiebreak, not the order. */
   pointsFor: number;
-  /** Fantasy points conceded — Fantrax's FPtsA, and the table's `Ag`.
-   *
-   *  In a head-to-head league this is a real column and not a curiosity: it is
-   *  the whole of your luck. Two sides on the same points-for can be four places
-   *  apart on who they happened to be drawn against, and `Ag` is where that
-   *  shows. */
+  /** Fantasy points conceded, Fantrax's FPtsA: in head-to-head, the measure of a side's luck in the draw. */
   pointsAgainst: number;
 }
 
-/** Everything `getLeagueInfo` tells us about the competition's configuration.
- *
- *  Nearly all of it is custom. FPL's rules are fixed for everyone and can be
- *  constants; a Fantrax league's rules are the product being sold, so the shape of
- *  the competition is data we read — roster limits, the position vocabulary, the
- *  period calendar, the lineup deadline, the team count, the schedule. Never
- *  assumed, never inferred from the football layer (§3). */
+/** The competition's configuration from `getLeagueInfo`: custom rules are data read here, never assumed. */
 export interface LeagueInfo {
   name: string;
   seasonYear: number;
   /** Season bounds as plain YYYY-MM-DD dates, not instants. */
   startDate: string;
   endDate: string;
-  /** Absent in the rehearsal league and present in the real one — same provider,
-   *  same day. Null means Fantrax did not say. */
+  /** Present in some leagues and absent in others; null means Fantrax did not say. */
   draftType: string | null;
   roster: RosterLimits;
   scoringPeriods: LeaguePeriod[];
-  /** The lineup calendar, which is not the scoring calendar.
-   *
-   *  Fantrax ships both and they are nearly — but not quite — the same: across
-   *  all 38 periods the starts are identical and every end differs by one
-   *  second. Near-identical is not identical, and they answer different
-   *  questions: `scoringPeriods` says when points count, `rosterPeriods` says
-   *  when a lineup is locked. The deadline is a commissioner setting, so the
-   *  gate reads this one and never infers a lock from the scoring calendar. */
+  /** The lineup calendar, which is not the scoring calendar: every end differs by a second.
+   *  The lineup lock reads this one and never the scoring calendar. */
   rosterPeriods: LeaguePeriod[];
   players: LeaguePlayerState[];
   /** Empty until managers join. */
   teams: LeagueTeam[];
   matchups: LeagueMatchup[];
-  /** What each category is worth. Null when Fantrax described no scoring.
-   *
-   *  Present so one view can preview the clean sheets their live feed withholds
-   *  until full time; the scores themselves are always theirs. */
+  /** What each category is worth, to preview clean sheets Fantrax withholds until full time; null when undescribed. */
   scoring: ScoringRules | null;
-  /** What each scoring category is called, keyed as `getLiveScoringStats` keys
-   *  it — group and category, never the position. Empty when Fantrax described
-   *  no scoring, which shows as no breakdown rather than as a row of ids. */
+  /** Each scoring category's name, keyed as `getLiveScoringStats` keys it (group and category, never position). */
   scoringCategories: Record<string, ScoringCategory>;
-  /** The season's own cut, as the commissioner set it.
-   *
-   *  Null for a league that runs no playoff, which is a table with no line to
-   *  draw rather than one with the line at zero — and the rehearsal league is
-   *  exactly that, so both answers are live today. */
+  /** The season's cut as the commissioner set it; null for a league with no playoff, never a line at zero. */
   playoffs: LeaguePlayoffs | null;
 }
 
 export interface LeaguePlayoffs {
-  /** How many places qualify — the table's cut line, and the only thing anything
-   *  reads. `firstPlayoffPeriod` and `lastRegularSeasonPeriod` are on the wire
-   *  and deliberately not carried: nothing draws a playoff calendar yet, and
-   *  requiring them here made two unread numbers able to veto the one number
-   *  that is read. Later can add them. */
+  /** How many places qualify: the table's cut line. Fantrax's playoff period numbers are not carried. */
   places: number;
 }

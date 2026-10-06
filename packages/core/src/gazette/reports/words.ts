@@ -1,5 +1,4 @@
-// The match report's vocabulary. The voice is built from these arrays and the editor checks against them, so the rule the
-// writer is given and the rule it is marked on cannot drift. Reviewed 28 Sep 2026 by a sports editor and a draft-league writer.
+// The match report's vocabulary: the voice is built from these arrays and the editor checks against them.
 
 /** Match-report clichés a sports desk spikes on sight. */
 export const REPORT_CLICHES: readonly string[] = [
@@ -18,18 +17,18 @@ export const REPORT_CLICHES: readonly string[] = [
   "towering", "lung-busting", "pinpoint", "inch-perfect", "super-sub", "impact sub", "game-changer", "changed the game",
   "opened his account", "off the mark", "at the death", "last kick of the game", "languish", "languishing",
   "find themselves", "controversially", "VAR drama", "Spursy", "rose highest", "bullet header", "powered home",
-  // The sports desk's red pen on the first three filed days (28 Sep 2026).
+  // The sports desk's red pen.
   "very close range", "one shot", "tight afternoon", "tight game", "comfortable", "pressed without reward", "nothing separated",
   "dangerous attack", "tough defence", "weak attack", "soft defence", "kept two saves", "afternoon", "evening", "tonight",
   "leave it late", "leaves it late", "leaving it late",
-  // Play nobody saw: how a man moved, ran or led is not in the facts (second filing, 28 Sep 2026).
+  // Play nobody saw: how a man moved, ran or led is not in the facts.
   "marshalled", "set the tempo", "ran through him", "on the front foot", "stretched", "running in behind", "dropping in",
   "carved out", "pulled the strings", "drove forward", "offered little", "at the heart of", "tireless", "a menace",
   "a constant threat", "lifted a", "lifted the", "his introduction", "his work", "his running", "his movement",
   "finely poised", "a free man", "holds him", "hold him", "held by", "holder", "nobody holds", "nobody in the league holds", "picked him", "held him",
   "who held", "held and picked", "picked and",
   "in their eleven", "among their reserves", "profligacy", "chance after chance", "held firm", "still pressing",
-  // The first woven filing (28 Sep 2026): a flashback, a stake's idiom, and a judgement of a chance nobody saw.
+  // A flashback, a stake's idiom, and a judgement of a chance nobody saw.
   "had earlier", "had already", "available to anyone", "there for the taking", "whoever owns him", "scored for nobody",
   "among the reserves", "second time of asking", "to show for", "good enough sight", "gone begging", "went begging",
   "cut the arrears", "the pick of them", "announces himself", "fashioned", "mustered", "endeavours", "productive",
@@ -108,7 +107,7 @@ export const REPORT_ADVICE: readonly string[] = [
   "bench him", "start him", "must-have", "worth a look", "worth a punt", "one to watch", "on the radar", "keep an eye on",
 ];
 
-/** Football read like a depth chart (Craig, 28 Sep 2026): nobody inherits a place, and nothing forecasts selection. */
+/** Football read like a depth chart: nobody inherits a place, and nothing forecasts selection. */
 export const REPORT_DEPTH_CHART: readonly string[] = [
   "next man up", "depth chart", "backup", "back-up", "handcuff", "understudy", "in line to start", "set to start",
   "should start", "will start", "likely to start", "expected to start", "the obvious replacement", "the beneficiary",

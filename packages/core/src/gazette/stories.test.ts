@@ -4,10 +4,7 @@ import type { LiveTeamScore } from "../league/points";
 import { decided, stories } from "./stories";
 import type { Deal, Pick, TeamOfTheWeek } from "./types";
 
-// The numbers are period 1 of the rehearsal league, probed live on 28 Aug 2026:
-// test2 41 test4 19, and test3 45 against 123's 31. One of them is a rout under
-// the threshold below and the other is an ordinary win, which is the pair worth
-// testing against — invented data would have made both the same kind of thing.
+// A real period's numbers: test2 41 test4 19 is a rout, test3 45 against 123's 31 an ordinary win.
 
 const pairing = (home: string, away: string): PeriodPairing => ({
   home: { teamId: home, name: home },
@@ -52,8 +49,7 @@ const pick = (over: Partial<Pick> = {}): Pick => ({
   ...over,
 });
 
-/** The strongest story, which is what the front page leads on. Most of these
- *  cases are about the running order, so they read it off the top. */
+/** The strongest story, which the front page leads on. */
 const top = (...args: Parameters<typeof stories>) => stories(...args)[0] ?? null;
 
 const eleven = (...picks: Pick[]): TeamOfTheWeek => ({
@@ -151,28 +147,21 @@ describe("stories", () => {
   });
 
   it("leads on a trade when there is no football to lead on", () => {
-    // An international break: no pairings, no eleven, and two managers did
-    // business anyway.
+    // An international break: no pairings, no eleven, and a trade.
     expect(top([], new Map(), null, [trade()], 1)).toMatchObject({
       kind: "trade",
-      // Both managers, named here rather than worked out again by whatever
-      // prints the headline.
+      // Both managers, named here so the headline need not work them out again.
       sides: ["test2", "test3"],
     });
   });
 
-  // A trade is news for one week. `readDeals` asks Fantrax for a hundred rows of
-  // season history and hands the lot over, so without this an August trade is
-  // still a story in April — and becomes the LEAD in the first week with no
-  // squeaker, no bench and no rout, which is the international-break case this
-  // file names as the one a trade is here to cover.
+  // A trade is news for one period: the caller hands over a season of history.
   it("does not tell a trade from a period the paper is not about", () => {
     expect(top([], new Map(), null, [trade({ period: 3 })], 4)).toBeNull();
     expect(top([], new Map(), null, [trade({ period: 4 })], 4)).toMatchObject({ kind: "trade" });
   });
 
-  // A deal Fantrax did not date cannot be shown to be this week's, and a lead is
-  // the last place to guess.
+  // An undated deal cannot be shown to be this week's.
   it("does not tell an undated trade", () => {
     expect(top([], new Map(), null, [trade({ period: null })], 4)).toBeNull();
   });
@@ -197,8 +186,7 @@ describe("stories", () => {
   });
 
   it("does not read a missing total as a nought", () => {
-    // A dash beaten by 41 has beaten nothing, and calling it a rout would be the
-    // most confident wrong statement on the page.
+    // A dash beaten by 41 has beaten nothing.
     const dashed = board({ test2: [41, 0], test4: [null, 0] });
     expect(top([pairing("test2", "test4")], dashed, null, [], 1)).toBeNull();
   });
@@ -214,10 +202,7 @@ describe("stories", () => {
   });
 
   it("scales its thresholds to the league's own scoring rather than to a number of points", () => {
-    // The same match ten times over. A margin of 22 is a hammering at this
-    // league's scale and an ordinary afternoon at ten times it — which is the
-    // whole reason the thresholds are shares. A commissioner who pays for every
-    // touch must not get a paper that calls every week a thriller.
+    // A margin of 22 is a hammering at this league's scale and ordinary at ten times it.
     const tenfold = board({ test2: [410, 0], test4: [388, 0] });
     expect(top([pairing("test2", "test4")], tenfold, null, [], 1)).toBeNull();
   });
@@ -230,9 +215,7 @@ describe("stories", () => {
   });
 
   it("runs every story it can tell, strongest first", () => {
-    // A week with all four in it: test3 edged 123 by a point, test4 was taken
-    // apart, somebody's best man sat out, and two managers did business. A page,
-    // not a sentence.
+    // All four: test3 edged 123, test4 was taken apart, a best man sat out, and a trade.
     const scores = board({ test2: [41, 0], test4: [19, 0], test3: [45, 0], "123": [44.5, 0] });
     const told = stories(
       P1,
@@ -245,14 +228,11 @@ describe("stories", () => {
   });
 
   it("is empty rather than padded when the week produced nothing", () => {
-    // Not a lead nobody can stand behind, and not a deadline dressed as news.
     expect(stories(P1, new Map(), null, [], 1)).toEqual([]);
   });
 
   it("reports every decided tie, not just the ones the running order picked", () => {
-    // Marking a pundit reads this: he is marked on all his calls, and reading
-    // only the thriller and the thrashing would mark him on the two ties he was
-    // least likely to have got wrong.
+    // A pundit is marked on all his calls, not only the thriller and the thrashing.
     expect(decided(P1, SETTLED).map((result) => result.winner.name)).toEqual(["test2", "test3"]);
   });
 

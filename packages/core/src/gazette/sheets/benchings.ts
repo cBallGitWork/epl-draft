@@ -2,8 +2,8 @@ import { SHEETS } from "../../config";
 import type { RecentGame } from "../predictions/sides";
 import { isBack, sitsFor, startsFor, type Sheet, type SheetMan } from "./sheet";
 
-// A benched man whose form says he could be playing (Craig, 26 Sep 2026: "benched despite getting
-// a goal/assist last week"): a return last time out, or goals and assists over his last few gameweeks.
+// A benched man whose form says he could be playing: a return last time out, or goals and assists over his last few
+// gameweeks.
 
 export interface Benching {
   man: SheetMan;

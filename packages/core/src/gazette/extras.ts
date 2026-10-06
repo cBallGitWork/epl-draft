@@ -9,26 +9,7 @@ import { normalizeSheets, type StorySheet } from "./sheets/cargo";
 import { normalizeBin, type StoryBin } from "./binXi/cargo";
 import { normalizeApplied, type AppliedMove } from "./season/editor";
 
-// The structured cargo some story kinds carry beside their prose: a power
-// ranking's rows, and the wire's quiz. Its own file because it is its own
-// contract — the prose is paragraphs whatever the kind, and this is everything
-// that is not paragraphs.
-//
-// **QUOTES went on 3 Sep 2026 with the two sketches that were their only
-// consumers**, Craig on the press room and the studio: *"this is rubbish,
-// ditch."* They were the paper's one licensed invention — the doctrine was that
-// a sketch announced as a sketch may put words in a manager's mouth — and the
-// exception is gone with the columns that needed it. Nothing in this paper
-// invents a quote now, which is the plainer rule and the one `house` already
-// states without an asterisk.
-//
-// **The eleven's CAPTIONS were deleted on 3 Sep 2026**, Craig: *"the
-// descriptiosn are the same 'STAT + quippy bit', pure ai shite."* He is right
-// and it was structural: one sentence per man, asked for eleven at a time,
-// against a brief that gives each man a name, a slot and a stat line. There is
-// nothing else for that sentence to be. The eleven keeps its column — the
-// argument connecting the side is prose a pundit can actually write — and the
-// side itself is printed from the facts, unannotated.
+// The structured cargo a story carries beside its prose, and its normaliser: everything that is not paragraphs.
 
 /** One team's entry in a power ranking. */
 interface StoryRank {
@@ -38,18 +19,13 @@ interface StoryRank {
   line: string;
 }
 
-/** One man's line in a club's team news. A bullet, not a sentence in a
- *  paragraph — Craig, 18 Sep 2026: "maybe we bullet point each player?". Prose
- *  per club gave six rows of one sentence-shape and "knock" eight times; a
- *  bullet has nowhere to put filler. */
+/** One man's bullet in a club's team news. */
 interface StoryTeamNewsMan {
   /** As the paper prints him: first name and surname. */
   name: string;
-  /** Our manager who holds him, printed in brackets. Absent means unowned,
-   *  which is information — he is the one you can claim. */
+  /** Our manager who holds him, printed in brackets; absent means he can be claimed. */
   owner?: string;
-  /** OUT · Doubt · Suspended · FIT — the scannable word, and a closed set so
-   *  the column cannot invent a fifth. */
+  /** OUT · Doubt · Suspended · FIT: a closed set, so the column cannot invent a fifth. */
   status: string;
   /** The complaint and what was said, in a few words. */
   note: string;
@@ -59,24 +35,14 @@ interface StoryTeamNewsMan {
  *  thing its manager actually said. */
 interface StoryTeamNews {
   club: string;
-  /** FPL's club code, for the crest. The BRIEF gives it on the same line as the
-   *  club's name and the writer echoes it back — it is never looked up from the
-   *  name, which would be the runtime name-matching CODE_RULES §3 forbids. Null
-   *  when it did not come back as a number, and the row then prints without a
-   *  crest rather than with the wrong one. */
+  /** FPL's club code for the crest, echoed from the brief and never looked up by name; null prints no crest. */
   code: number | null;
   /** One sentence of context. Never a retelling of the bullets. */
   line: string;
   men?: StoryTeamNewsMan[];
-  /** Men whose absence is unchanged — out for weeks, nothing said today. A tail
-   *  line rather than bullets: 86% of a day's men are these, and bulleting them
-   *  buried the handful that were news. */
+  /** Men whose absence is unchanged, as one tail line so they do not bury the bullets that are news. */
   alsoOut?: string[];
-  /** Who they play this round, attached by the DESK from the fixture list and
-   *  never written by the column — both reviewers called its absence the worst
-   *  hole on the page, and one proved it: a manager's quote said the squad was
-   *  "coming to Brentford" while Brentford had its own section four inches
-   *  below, so the fixture was on the page twice and never joined up. */
+  /** Who they play this gameweek, attached by the desk from the fixture list, never written by the column. */
   fixture?: StoryFixture;
   /** Carried from the source article, never composed — see `voice/house.ts`. */
   quote?: { text: string; said: string };
@@ -93,11 +59,9 @@ export interface StoryFixture {
 export interface StoryLineupMan {
   /** As the paper prints him: first name and surname. */
   name: string;
-  /** His REAL football position — `RCB`, `AM` — and never FPL's fantasy letter.
-   *  Null where the export had only `element_type` to go on. */
+  /** His real football position, `RCB` or `AM`, never FPL's letter; null where the export had only `element_type`. */
   position: string | null;
-  /** The Fantrax team that holds him, joined to a name at render the way a rank
-   *  is. Absent is a free agent. */
+  /** The Fantrax team that holds him, named at render; absent is a free agent. */
   owner?: string;
 }
 
@@ -122,8 +86,7 @@ interface StoryQuizItem {
   a: string;
 }
 
-/** Optional per member: a power ranking carries rows and nothing else, a wire
- *  may carry a quiz. */
+/** Each member optional: a story carries only the cargo its kind has. */
 export interface StoryExtras {
   ranks?: StoryRank[];
   quiz?: StoryQuizItem[];
@@ -144,11 +107,7 @@ export interface StoryExtras {
   moves?: AppliedMove[];
 }
 
-/** A closed set, so the column cannot invent a fifth state. Anything else is a
- *  doubt, which is the reading that claims least. */
-// **"Back" was renamed to FIT on 18 Sep 2026.** It sat in the same list as
-// "Ilyas Ansah — OUT, back", where back is the injury, so one word carried two
-// opposite meanings three lines apart.
+/** A closed set, so the column cannot invent a fifth state; anything else reads as a doubt, the claim that says least. */
 const STATUS = ["OUT", "Doubt", "Suspended", "FIT"];
 
 function men(raw: unknown): StoryTeamNewsMan[] | undefined {
@@ -186,9 +145,7 @@ function quote(raw: unknown): { text: string; said: string } | undefined {
   return { text: said.text, said: said.said };
 }
 
-/** One starter, or nothing. A man the desk could not name is dropped here and
- *  his whole side is refused above — ten men under an eleven's formation is the
- *  failure `xiFault` exists to stop. */
+/** One starter, or nothing: a man with no name is dropped, and only a side left with no men is refused. */
 function lineupMan(raw: unknown): StoryLineupMan[] {
   const man = raw as Partial<StoryLineupMan> | null;
   if (man === null || typeof man !== "object") return [];
@@ -215,8 +172,7 @@ function lineupSide(raw: unknown): StoryLineupSide | null {
     : { club: side.club, code: side.code, formation: side.formation, men };
 }
 
-/** A tie prints both elevens or neither: one side under a heading naming two is
- *  a fixture half-reported. */
+/** A fixture prints both elevens or neither. */
 function lineupTie(raw: unknown): StoryLineup[] {
   const tie = raw as Partial<StoryLineup> | null;
   if (tie === null || typeof tie !== "object") return [];
@@ -256,13 +212,10 @@ export function normalizeExtras(raw: unknown): StoryExtras | undefined {
       )
     : [];
   if (teamNews.length > 0) {
-    // **Built field by field, never spread.** `...row` published whatever the
-    // writer invented alongside the shape — a `manager` and a `verdict` field
-    // reached `paper.json` — and a story is a contract, not a bag.
+    // Built field by field, never spread: a spread publishes whatever the writer invented beside the shape.
     out.teamNews = once(teamNews, (row) => row.club).map((row) => ({
       club: row.club,
-      // A club code must be a real FPL one: it draws the crest and joins the
-      // fixture, and `-1` and `1.5` both reached `crestUrl` unchallenged.
+      // A club code must be a real FPL one: it draws the crest and joins the fixture.
       code: typeof row.code === "number" && Number.isInteger(row.code) && row.code > 0 ? row.code : null,
       line: row.line,
       men: men(row.men),

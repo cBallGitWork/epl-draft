@@ -31,11 +31,11 @@ export const FINAL_HARD: ReadonlySet<string> = new Set(["an absence understated"
 const QUOTES = /["“”«»]/u;
 /** Where a fact came from stays off the page: a reporter does not cite his workings. */
 export const SOURCE = /%|\bper ?cent\b|\b(?:projected|projections?|predicted|predictions?|model|FPL|Fantrax|according to|The Athletic)\b|\bper (?!cent)\p{L}/iu;
-/** The game is still to come (Craig, 26 Sep 2026): "might have started" is a match already played. */
+/** The game is still to come: "might have started" is a match already played. */
 const PAST = /\b(?:might|could|would|should|may) have\b|\b(?:might|could|would|should|may)'ve\b/iu;
-/** Unchanged is the whole of it (Craig, 26 Sep 2026): never how many gameweeks, nor a season's count. */
+/** Unchanged is the whole of it: never how many gameweeks, nor a season's count. */
 export const COUNTED = /\b(?:(?:second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|\d+(?:st|nd|rd|th)) (?:week|round|game|gameweek)|(?:weeks?|rounds?) running|in a row|on the (?:trot|spin)|all (?:two|three|four|five|six|seven|eight|nine|ten|\d+) (?:\p{L}+ )?(?:matches|games|starts|appearances)|this season)\b/iu;
-/** A manager names a man; his club starts him (Craig, 26 Sep 2026). "might not start for" is the club's. */
+/** A manager names a man; his club starts him. "might not start for" is the club's. */
 const STARTS = /(?<!not |n't )\bstarts? (?:for|against)\b/iu;
 /** Said of a man who is out, a sentence names the absence and softens nothing. */
 const OUT_WORDS = /\b(?:out|ruled out|injured|sidelined|suspended|banned|serving a ban|unavailable|misses|miss|absent)\b/iu;

@@ -3,27 +3,20 @@ import { FIRM } from "../../football/intel/pressers";
 import { storylinesBlock } from "./storylines";
 import type { StoryThread } from "../ledger";
 
-// The Thursday round-up's facts pack. What was said about availability, about
-// men somebody in this league owns, and nothing else.
+// The team news brief: what managers said about availability, by club, owned or not.
 
-/** One signal, with the two things the brief must carry that the export cannot:
- *  the player's name, and whose problem he is. */
+/** One signal, plus what the export cannot carry: the player's name and whose problem he is. */
 export interface PresserLine extends PresserSignal {
   playerName: string;
   /** His Premier League club, for the row he belongs on and its crest. */
   clubName: string;
-  /** The manager in OUR league who owns him, or null when nobody does. Not a
-   *  filter: an unowned man with a fitness note is who you claim. */
+  /** The manager in our league who owns him, or null; never a filter, as an unowned man can be claimed. */
   ownerName: string | null;
-  /** Whether his availability CHANGED around this conference, from FPL's own
-   *  `newsAdded`. False is the ordinary case and the reason this exists: 86% of
-   *  a day's men are standing condition, not news. */
+  /** Whether his availability changed around this conference, from FPL's `newsAdded`; false is a standing absence. */
   fresh: boolean;
 }
 
-/** What each tag actually means, in the words the column may use. The exporter's
- *  vocabulary is not English and a model asked to render `managed_load` will
- *  invent a phrase for it. */
+/** Each tag in the words the column may use, so the model never invents one for `managed_load`. */
 const MEANS: Record<string, string> = {
   ruled_out: "OUT — he does not play",
   suspended: "SUSPENDED — banned, not injured",
@@ -37,8 +30,7 @@ export function buildPresserBrief(brief: {
   gameweek: number;
   /** Newest first, and every man mentioned — not only the ones we hold. */
   lines: readonly PresserLine[];
-  /** What the managers actually said, verbatim. Empty on an export written
-   *  before 18 Sep 2026, and the column then runs without them. */
+  /** What the managers said, verbatim; absent on an older export, and the column runs without them. */
   quotes?: readonly (PresserQuote & { clubName: string })[];
   /** The man the desk has chosen to print, so the prose and the picture agree. */
   lead?: string | null;
@@ -46,9 +38,7 @@ export function buildPresserBrief(brief: {
   spoke?: readonly { clubName: string; manager: string | null }[];
   threads: readonly StoryThread[];
 }): string {
-  // By CLUB, because that is the unit the news arrives in and the unit a reader
-  // scans. Grouping by OUR managers made it a column about the league's mood
-  // when what a draft manager opens it for is what was said about his players.
+  // By club: the unit the news arrives in and a reader scans.
   const byClub = new Map<string, { code: number; lines: PresserLine[] }>();
   for (const line of brief.lines) {
     const row = byClub.get(line.clubName) ?? { code: line.club, lines: [] };
@@ -60,18 +50,10 @@ export function buildPresserBrief(brief: {
     // The men whose availability CHANGED get bullets; the rest are a tail line.
     const standing = row.lines.filter((line) => !line.fresh);
     const men = row.lines.filter((line) => line.fresh).map((line) => {
-      // The owner in brackets after the name, which is how a team-news thread
-      // marks one — not a clause. Craig, 18 Sep: "dont need to keep saying
-      // owned by (just put manager name in brackets)".
+      // The owner in brackets after the name, never a clause.
       const who = line.ownerName === null ? "" : ` (${line.ownerName})`;
       const soft = line.confidence >= FIRM ? "" : " [HINT, not a fact]";
-      // **An absent complaint is STATED, never left blank.** A blank read as an
-      // invitation: João Pedro was filed "calf" on 18 Sep, which is Caicedo's
-      // calf three lines above, when the source says Alonso declined to name
-      // the injury at all.
-      // A man declared FIT has no complaint to state, so the marker that stops
-      // one being invented does not apply to him — it was printing "no
-      // complaint stated" as the note under every returning player.
+      // An absent complaint is stated, or the model borrows the one above; a man declared fit has none to state.
       const what =
         line.condition !== undefined && line.condition !== ""
           ? ` (${line.condition})`
@@ -89,9 +71,7 @@ export function buildPresserBrief(brief: {
 
   const owned = brief.lines.filter((line) => line.ownerName !== null).length;
 
-  // A club that spoke and produced no signal. Its row is "no fresh news", which
-  // is what a manager picking from that club wants to read — and its absence
-  // reads as an oversight rather than as calm.
+  // Clubs that spoke and produced no signal still get a row: "no fresh news", not an apparent oversight.
   const quiet = (brief.spoke ?? [])
     .filter((each) => !byClub.has(each.clubName))
     .map((each) => `- ${each.clubName}${each.manager === null ? "" : ` (${each.manager})`}`);

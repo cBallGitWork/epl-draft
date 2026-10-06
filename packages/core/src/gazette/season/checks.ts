@@ -19,8 +19,8 @@ export interface SeasonDraft {
 /** A side's line is filed under this section. */
 export const lineKey = (teamId: string) => `table:${teamId}`;
 
-/** The machine, FPL's own terms, and how a season ends (Craig, 5 Oct: "talk like its a power rankings, dont mention
- *  playoffs places"): a ranking of squads as drafted says how strong they are, never where they finish. */
+/** The machine, FPL's own terms, and how a season ends: a ranking of squads as drafted says how strong they are,
+ *  never where they finish. */
 const SEASON_BANNED: readonly string[] = [
   "simulation", "simulations", "simulated", "simulate", "predicted XI", "predicted eleven", "expected points", ...REPORT_FPL,
   "playoff", "playoffs", "play-off", "play-offs", "play-in", "semi", "semis", "semi-final", "semi-finals",

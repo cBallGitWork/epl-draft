@@ -1,36 +1,15 @@
 import { tokens } from "./normalize";
 
-// A faithful port of rapidfuzz's `token_set_ratio`, because the threshold below
-// is calibrated against that metric and a rough substitute would silently move
-// it. Jaccard or plain Levenshtein score these name pairs quite differently, so
-// "88" would stop meaning what the sibling project learned it means.
+// A faithful port of rapidfuzz's `token_set_ratio`: the thresholds below are calibrated against that metric alone.
 
-/** Accept a fuzzy match at or above this. Below it we would rather have a human
- *  look than have a confident wrong answer in a file we trust for a season. */
+/** Accept a fuzzy match at or above this; below it a person looks. */
 export const FUZZY_MIN_SCORE = 88;
 
-/** How far clear of the runner-up the winner must be. Two candidates scoring
- *  87 and 88 is not a match, it is a coin toss, and a coin toss belongs in the
- *  review pile. */
+/** How far clear of the runner-up the winner must be: 87 against 88 is a coin toss, for review. */
 export const AMBIGUITY_MARGIN = 3;
 
-/** At or below this, the best FPL name in the pool is a stranger's, and the
- *  script may record "no FPL counterpart" without a person reading the row.
- *
- *  Not the same question as `FUZZY_MIN_SCORE`, and the gap between them is
- *  deliberate rather than slack. 88 asks "is this him?"; this asks "is anyone
- *  here close enough that a person should look?" — and between 51 and 87 the
- *  honest answer to both is no and yes.
- *
- *  Set from the first residue, where the 92 scored rows ran 17–72 with an
- *  18-point hole between 53 and 72. The tempting ceiling is in the empty band
- *  just under 88, and it is a trap: the highest score in the file was 72, and it
- *  was Fantrax's "Ehor Yarmolyuk" against FPL's "Yehor Yarmoliuk" — the same
- *  Brentford midfielder, a Ukrainian transliteration the metric cannot bridge and
- *  `surnameAgrees` cannot rescue, since the surname tokens genuinely differ. A
- *  ceiling above him files a first-team starter as absent and nobody ever looks
- *  again. 50 sits below the hole with the 49–52 gap to spare, and costs one extra
- *  row of review. */
+/** At or below this the best FPL name in the pool is a stranger's, and the script may record "no FPL counterpart"
+ *  unread. Far under `FUZZY_MIN_SCORE` on purpose: "Ehor Yarmolyuk" against "Yehor Yarmoliuk" scores 72. */
 export const ABSENCE_MAX_SCORE = 50;
 
 /** Length of the longest common subsequence. */
@@ -62,24 +41,13 @@ function indelRatio(a: string, b: string): number {
   return (2 * lcsLength(a, b) * 100) / total;
 }
 
-/** rapidfuzz `token_set_ratio`, 0–100.
- *
- *  Splits both names into token sets and compares three constructed strings: the
- *  shared tokens alone, and the shared tokens joined to each side's leftovers.
- *  Word order stops mattering, which is the property we need — "Mudryk,
- *  Mykhailo" and "Mykhailo Mudryk" are the same footballer.
- *
- *  Note the consequence, which match.ts has to defend against: when one token set
- *  contains the other, the shared-tokens string equals one of the joined strings
- *  and the score is 100. "Gabriel" scores 100 against "Gabriel Jesus". That is
- *  the metric behaving correctly and is why containment needs a surname guard. */
+/** rapidfuzz `token_set_ratio`, 0–100: word order does not matter, and a contained name scores 100 ("Gabriel"
+ *  against "Gabriel Jesus"), which is why match.ts guards containment by surname. */
 export function tokenSetRatio(a: string, b: string): number {
   const left = new Set(tokens(a));
   const right = new Set(tokens(b));
 
-  // A name with no tokens compares to nothing. Without this, the shared and
-  // left-hand strings are both empty, their indel ratio is a perfect 100, and an
-  // unnamed player would match every candidate it was offered.
+  // A name with no tokens compares to nothing; otherwise two empty strings score 100 and match every candidate.
   if (left.size === 0 || right.size === 0) {
     return left.size === right.size ? 100 : 0;
   }
@@ -104,24 +72,13 @@ export function tokenSetRatio(a: string, b: string): number {
 /** Whether two names merely differ in length, or actually contradict each other. */
 export type NameAgreement = "identical" | "contained" | "conflicting";
 
-/** Classify how two names agree, which is what `tokenSetRatio` cannot tell you.
- *
- *  The ratio saturates at 100 whenever one token set contains the other, so
- *  "Bruno Fernandes" inside "Bruno Borges Fernandes" — safe, a middle name we do
- *  not carry — is indistinguishable from "Keith Andrews" against "Kaine
- *  Andrews", where the given names positively disagree and one of the two feeds
- *  is wrong about who this is. Both score 100 and both clear the surname guard,
- *  so neither `confidence` nor `surnameAgrees` can separate them.
- *
- *  Compare the two FULL names, never a name against one of FPL's variants: FPL
- *  publishes a bare surname as a variant, so "Keith Andrews" contains "Andrews"
- *  and every conflict would read as containment. */
+/** How two names agree, which `tokenSetRatio` cannot say: "Bruno Fernandes" in "Bruno Borges Fernandes" is
+ *  contained, "Keith Andrews" against "Kaine Andrews" conflicts. Compare FULL names, never an FPL variant. */
 export function nameAgreement(a: string, b: string): NameAgreement {
   const left = new Set(tokens(a));
   const right = new Set(tokens(b));
 
-  // Nothing to compare is not agreement. Saying so keeps an empty name out of
-  // the safe bucket, where it would be waved through unread.
+  // Nothing to compare is not agreement, so an empty name stays out of the safe bucket.
   if (left.size === 0 || right.size === 0) return "conflicting";
 
   const leftOnly = [...left].some((token) => !right.has(token));

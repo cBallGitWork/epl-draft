@@ -3,9 +3,7 @@ import type { RawPlFixture } from "./raw";
 import { mapRoundBreaks } from "./breaks";
 import { mapRoundGoals } from "./map";
 
-// The shapes are the ones counted live on GW3, 5 Sep 2026 — see `breaks.ts` for
-// the count. A fixture that has not started, one in its first half, one past it
-// and one complete are the four states this has to tell apart.
+// Four states to tell apart: not started, in the first half, past it, and complete.
 
 const KICKOFF = 1_788_616_800_000;
 
@@ -26,8 +24,7 @@ describe("mapRoundBreaks", () => {
     expect(mapRoundBreaks([fixture({})])).toEqual([]);
   });
 
-  // **Half time is not a break any more** (Craig, 5 Sep 2026: "ditch the HT").
-  // A match in play yields nothing at all, whichever half it is in.
+  // Half time is not drawn: a match in play yields nothing, whichever half it is in.
   it("gives nothing for a match still being played", () => {
     for (const phase of ["1", "H", "2"]) {
       const live = fixture({ status: "L", phase, clock: { secs: 3000, label: "50'00" } });
@@ -43,12 +40,7 @@ describe("mapRoundBreaks", () => {
     expect(breaks[0]?.absolute).toBe(KICKOFF + 5760 * 1000);
   });
 
-  // **Full time sorts after the goals, and this asserts it against the goals.**
-  // The version of this test written on 5 Sep put a goal in the fixture and then
-  // checked `seconds > 5700` — which passes with the goal deleted, because
-  // `mapRoundBreaks` never reads them. So it could not detect the regression it
-  // was named for. Taking both mappers over the SAME fixture is what makes the
-  // comparison real: `absolute` is what `wireLines` orders on.
+  // Full time sorts after the goals: both mappers over the SAME fixture, compared on `absolute`, as `wireLines` orders.
   it("sorts after every goal in its own match", () => {
     const done = fixture({
       status: "C",

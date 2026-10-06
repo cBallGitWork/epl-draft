@@ -23,9 +23,7 @@ const row = (over: Partial<IntelPressers["rows"][number]> = {}) => ({
 
 describe("pressers", () => {
   it("keeps every man, held or not", () => {
-    // Reversed 18 Sep 2026: a draft manager decides who to CLAIM as well as who
-    // to start, so a fit-again forward nobody owns is the most useful line in
-    // the column. Ownership is an annotation the caller adds, not a gate.
+    // A draft manager claims as well as picks: ownership is the caller's annotation, never a filter.
     const out = pressers(intel([row(), row({ code: 999 })]), LAST_WEEK);
     expect(out.map((r) => r.code).sort()).toEqual([999, 118748].sort());
   });
@@ -36,8 +34,7 @@ describe("pressers", () => {
   });
 
   it("keeps a signal whose instant cannot be read", () => {
-    // A signal that cannot say when it was said is still a signal; dropping it
-    // would hide a real absence on the strength of a formatting fault.
+    // A signal with an unreadable date is still a signal; dropping it would hide a real absence.
     const out = pressers(intel([row({ said: "not a date" })]), THURSDAY);
     expect(out).toHaveLength(1);
   });
@@ -49,8 +46,7 @@ describe("pressers", () => {
   });
 
   it("is empty when there is no file, rather than throwing", () => {
-    // The export lands when the sister repo writes it; until then the column
-    // must refuse quietly rather than break a firing.
+    // Until the sister repo writes the export, the column must refuse quietly, not break a firing.
     expect(pressers(null, THURSDAY)).toEqual([]);
   });
 

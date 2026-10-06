@@ -1,8 +1,5 @@
-// The newspaper's facts. Pure builders, each returning what it can honestly say
-// and nothing when it can say nothing — CODE_RULES §5 names gazette section
-// builders as a place purity is not negotiable.
-//
-// A type nested inside these is exported only once something outside core names it.
+// The newspaper's facts: pure builders that return nothing when there is nothing to say.
+// A nested type is exported only once something outside core names it.
 
 export { availability } from "./availability";
 export { nextDeadline } from "./deadline";
@@ -25,10 +22,6 @@ export { powerRows } from "./powerRanking";
 export { wireFacts } from "./wire";
 export type { PowerRow } from "./powerRanking";
 export type { WireFacts } from "./wire";
-// The two halves the report was missing: what happened and when, and the two or
-// three figures a report can carry. Exported because the edition script builds
-// them from the Premier League's own feed — the join is the script's, the shape
-// is the brief's.
 export { buildTieCallBrief } from "./briefs/tieCall";
 export { buildTieReportBrief } from "./briefs/tieReport";
 export { standingHeadlines } from "./briefs/standing";

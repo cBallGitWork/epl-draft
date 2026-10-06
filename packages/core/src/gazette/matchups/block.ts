@@ -15,8 +15,7 @@ import type { DraftMan } from "./types";
 
 const when = (beat: string | null | undefined) => (beat === undefined ? "" : ` (${beatLabel(beat)})`);
 
-/** A thread's facts in its beat, led by its side's name when they do not give it: GW5's writer gave test2's blanks to
- *  123 from a line that named neither. */
+/** A thread's facts in its beat, led by its side's name when they do not give it, or a writer gives them to the other. */
 function told(ctx: MatchupContext, t: Thread): string {
   const side = SIDES.map((w) => ctx.state[w].side).find((s) => s.teamId === t.teamId)?.name;
   const facts = t.facts.join("; ");
@@ -42,7 +41,7 @@ function castLine(ctx: MatchupContext, m: DraftMan): string {
   const parts = [
     points,
     sub === undefined ? null : sub.ahead !== null ? "comes on at the end of the gameweek for a man who did not play" : `${sub.out.name} did not play, so he ${sub.provisional ? "comes on if he plays" : "came on"}`,
-    // A reserve played his own match, on its own day, before the substitutions counted it: GW5 had him "yet to kick a ball".
+    // A reserve played his own match, on its own day, before the substitutions counted it.
     sub !== undefined && m.minutes > 0 && m.byDay[0] !== undefined ? `played for ${m.club} on ${beatLabel(m.byDay[0].day)}` : null,
     bench ? "on the bench, where his points count for nobody" : null,
     minutesLine(m),
@@ -50,7 +49,7 @@ function castLine(ctx: MatchupContext, m: DraftMan): string {
     fitnessLine(m),
     next,
   ];
-  // The day comes with the man, not after his figures: GW5's writer gave Groß's Saturday 11 to Friday's 11.
+  // The day comes with the man, not after his figures, or a writer moves them to another day.
   const beat = beatOf(ctx.state, m);
   const day = beat === undefined ? "" : beat === null ? ", in the automatic substitutions" : `, on ${beatLabel(beat)}`;
   // Introduced as the BBC introduces him, "Everton goalkeeper Jordan Pickford"; his side named, a reserve called one.
@@ -58,8 +57,7 @@ function castLine(ctx: MatchupContext, m: DraftMan): string {
   return `- ${m.club} ${POSITION[m.slot] ?? "player"} ${m.fullName}${whose}${day}: ${parts.filter((p) => p !== null).join("; ")}`;
 }
 
-/** What a beat did to the gap, said outright: GW5's writers had a gap that fell from 11 to 10 "widened", and "nearly
- *  levelled". */
+/** What a beat did to the gap, said outright, so a writer cannot call a narrowing a widening. */
 function moved(ctx: MatchupContext, before: { home: number; away: number }, b: Beat): string {
   const leader = (s: { home: number; away: number }) => (s.home > s.away ? ctx.state.home.side.name : s.home < s.away ? ctx.state.away.side.name : null);
   const [was, now] = [Math.abs(before.home - before.away), Math.abs(b.score.home - b.score.away)];
@@ -90,7 +88,7 @@ function beatLine(ctx: MatchupContext, b: Beat, before: { home: number; away: nu
 
 /** After Saturday, what is still to come, fixtures only: the story's men, any reserve waiting on his match and each
  *  side's likeliest man still to play (the projection picks him and never prints), each with his match and day, then how
- *  many each side has left. Nobody else by name, so the writer lists nobody (GW5's Saturday named every man). */
+ *  many each side has left. Nobody else by name, so the writer lists nobody. */
 function toCome(ctx: MatchupContext, cast: ReadonlySet<DraftMan>): string[] {
   const waiting = new Set([ctx.state.home, ctx.state.away].flatMap((s) => s.subs.filter((x) => x.provisional).map((x) => x.in)));
   const lines = [ctx.state.home, ctx.state.away].flatMap((s) =>
@@ -104,7 +102,7 @@ function toCome(ctx: MatchupContext, cast: ReadonlySet<DraftMan>): string[] {
 
 /** Where each side goes next, for a last line that looks out; nothing after Saturday, with the gameweek unfinished. */
 function nextLines(ctx: MatchupContext): string[] {
-  // The rank is the opponent's, said so: GW5's writer read "test3 play test2, 3rd" as test3's place.
+  // The rank is the opponent's, said so, or it reads as the side's own place.
   const line = (name: string, next: NextOpponent | null) => (next === null ? [] : [`- ${name} play ${next.name}${next.rank === null ? "" : `, who are ${ordinal(next.rank)} after this gameweek`}`]);
   return [...line(ctx.state.home.side.name, ctx.next.home), ...line(ctx.state.away.side.name, ctx.next.away)];
 }

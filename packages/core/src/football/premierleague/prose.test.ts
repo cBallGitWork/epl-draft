@@ -1,9 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { shortProse, proseSpans } from "./prose";
 
-// Every sentence here is Opta's own, taken verbatim off the live textstream on
-// 5 Sep 2026 (`data/probes/2026-09-05/`). Nothing is invented, because the whole
-// point of this wire is that the words are the game's.
+// Every sentence here is Opta's own, verbatim off the live textstream: the point of this wire is the game's words.
 const NAMES = new Map([
   ["Newcastle United", "Newcastle"],
   ["Bournemouth", "Bournemouth"],
@@ -131,9 +129,7 @@ describe("proseSpans", () => {
 });
 
 describe("shortProse and the ampersand", () => {
-  // The fixture payload writes `Brighton & Hove Albion`; Opta's prose writes
-  // `Brighton and Hove Albion`. One club in twenty carries an ampersand, which
-  // is why this went unseen in the other nineteen.
+  // The fixture payload writes `Brighton & Hove Albion`; Opta's prose writes `Brighton and Hove Albion`.
   const names = new Map([["Brighton & Hove Albion", "BHA"]]);
 
   it("shortens the AND spelling from an AMPERSAND key", () => {

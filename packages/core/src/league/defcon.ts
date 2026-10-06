@@ -12,7 +12,7 @@ export function defConScored(categories: Record<string, ScoringCategory>): Fantr
 interface DefConAt {
   short: string;
   mark: number;
-  /** Half the mark, floored (Craig, 1 Oct 2026: "only show when they get close"). */
+  /** Half the mark, floored: a man is shown only once he gets close. */
   close: number;
 }
 

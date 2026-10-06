@@ -6,13 +6,8 @@ import leagueInfo from "./__fixtures__/leagueInfo.json";
 import leagueInfoDrafted from "./__fixtures__/leagueInfoDrafted.json";
 import playerPool from "./__fixtures__/playerPool.json";
 
-// Fixtures are trimmed subsets of live recordings — real entries, fewer of them.
-// The pool subset was chosen to carry one of every shape the mapper has to
-// survive.
-//
-// Two leagueInfo fixtures, because the two leagues genuinely differ: the real
-// league (5 Aug) has `draftType` and no teams, the rehearsal league (6 Aug) has
-// four teams, a full matchup schedule, and no `draftType` at all.
+// Trimmed live recordings carrying every shape the mapper must survive. Two leagueInfo fixtures, as the leagues differ:
+// the real one has `draftType` and no teams, the rehearsal one four teams, a matchup schedule and no `draftType`.
 
 const pool = playerPool as RawPlayerPool;
 
@@ -22,8 +17,7 @@ describe("readingOrder", () => {
   });
 
   it("leaves names that already read correctly alone", () => {
-    // A large minority of the pool arrives like this. Flipping on word count
-    // instead of on the comma would mangle every one of them.
+    // A large minority of the pool arrives like this; flipping on word count would mangle them.
     expect(readingOrder("Gabriel Jesus")).toBe("Gabriel Jesus");
     expect(readingOrder("Dario Essugo")).toBe("Dario Essugo");
   });
@@ -60,8 +54,7 @@ describe("mapPlayerPool", () => {
   });
 
   it("carries Fantrax's own club code through unchanged", () => {
-    // NOT is Nott'm Forest to Fantrax and NFO to FPL. Translating is the identity
-    // bridge's job; the mapper must not quietly do it here.
+    // NOT is Nott'm Forest to Fantrax and NFO to FPL: the identity bridge translates, never the mapper.
     const forest = mapPlayerPool(pool).find((player) => player.fantraxId === "02m5b");
     expect(forest?.clubCode).toBe("NOT");
   });
@@ -109,9 +102,7 @@ describe("mapLeagueInfo", () => {
   });
 
   it("carries the roster calendar separately from the scoring one", () => {
-    // Two calendars, not one rounded to the other. They share every start and
-    // differ by a second on every end, and it is the roster one the lineup gate
-    // reads — a deadline is a commissioner setting, not a scoring artefact.
+    // Two calendars, never rounded together: the ends differ by a second, and the lineup gate reads the roster one.
     expect(info.rosterPeriods).toHaveLength(info.scoringPeriods.length);
     expect(info.rosterPeriods[0]?.start).toBe(info.scoringPeriods[0]?.start);
     expect(info.rosterPeriods[0]?.end).not.toBe(info.scoringPeriods[0]?.end);
@@ -133,9 +124,7 @@ describe("mapLeagueInfo, on a league that has drafted", () => {
   const info = mapLeagueInfo(leagueInfoDrafted as RawLeagueInfo);
 
   it("carries the scoring rules through from getLeagueInfo", () => {
-    // The only production path to `LeagueInfo.scoring`, and the one the clean
-    // sheet preview reads. `scoring.test.ts` proves the table parses; this
-    // proves it is reached from the payload a route actually fetches.
+    // The only production path to `LeagueInfo.scoring`, reached from the payload a route actually fetches.
     expect(info.scoring).not.toBeNull();
     expect(categoryPoints(info.scoring!, "CS", "D")).toBe(4);
   });
@@ -145,21 +134,13 @@ describe("mapLeagueInfo, on a league that has drafted", () => {
   });
 
   it("models an absent draftType as absent", () => {
-    // The rehearsal league carries no `draftType` key at all while the real one
-    // does. Defaulting to "" would report a draft type Fantrax never gave.
+    // The rehearsal league has no `draftType` key; "" would report a draft type Fantrax never gave.
     expect(info.draftType).toBeNull();
   });
 
   it("models an absent roster calendar as absent", () => {
-    // A shape the mapper must survive, and NOT a fact about this league — the
-    // fixture is a trimmed subset (see the head of this file) and the trim took
-    // `rosterPeriods` with it. The gate fails safe to squad-only on an empty
-    // calendar rather than falling back to the scoring periods and gating on the
-    // wrong deadline, and that is right because a key CAN be absent.
-    //
-    // Asserted here WITH a non-empty `scoringPeriods`, which is the whole point:
-    // it is the only thing proving the mapper does not fall back to the other
-    // calendar.
+    // The trim took `rosterPeriods`; with `scoringPeriods` present, this proves the mapper never falls back to them,
+    // so the gate fails safe to squad-only rather than gating on the wrong deadline.
     expect(info.rosterPeriods).toEqual([]);
     expect(info.scoringPeriods.length).toBeGreaterThan(0);
   });
@@ -171,8 +152,7 @@ describe("mapLeagueInfo, on a league that has drafted", () => {
   });
 
   it("flattens matchups to one row per pairing per period", () => {
-    // Two periods of two pairings each in the fixture. Flat means selecting a
-    // period is a filter.
+    // Two periods of two pairings each in the fixture.
     expect(info.matchups).toHaveLength(4);
     expect(info.matchups.filter((m) => m.period === 1)).toHaveLength(2);
   });
@@ -186,17 +166,14 @@ describe("mapLeagueInfo, on a league that has drafted", () => {
   });
 
   it("reads this league's own roster limits, which differ from the other's", () => {
-    // 15/11/5 here against 14/11/3 in the real league. Rendering both correctly
-    // is the whole 10 Oct swap, tested continuously rather than on the day.
+    // 15/11/5 here against 14/11/3 in the real league: both must render.
     expect(info.roster.maxTotalPlayers).toBe(15);
     expect(info.roster.maxReservePlayers).toBe(5);
   });
 });
 
 describe("mapLeagueInfo, the playoff", () => {
-  // Both shapes are live today, which is why neither is invented here: our
-  // league answers `used: true` with a top four from period 35, and the
-  // rehearsal league answers `used: false`.
+  // Both shapes are live: the real league answers `used: true` (top four, from period 35), the rehearsal `used: false`.
   it("reads the league's own cut", () => {
     const info = mapLeagueInfo({
       playoffs: {
@@ -211,16 +188,13 @@ describe("mapLeagueInfo, the playoff", () => {
   });
 
   it("treats a league that runs no playoff as having none", () => {
-    // `used: false` is an answer, and it is the rehearsal league's. A table with
-    // no cut has no line to draw rather than a line at zero.
+    // `used: false` is an answer: a table with no cut draws no line.
     expect(mapLeagueInfo({ playoffs: { used: false } }).playoffs).toBeNull();
     expect(mapLeagueInfo({}).playoffs).toBeNull();
   });
 
   it("needs the one number the table actually draws", () => {
-    // A playoff whose size Fantrax will not state is a cut we cannot size, and a
-    // cut we cannot size is not a line. The periods are on the wire and nothing
-    // reads them, so their absence must not veto a size that IS stated.
+    // A playoff of unstated size draws no line; the unread periods must not veto a size that IS stated.
     expect(
       mapLeagueInfo({ playoffs: { used: true, firstPlayoffPeriod: 35 } }).playoffs,
     ).toBeNull();

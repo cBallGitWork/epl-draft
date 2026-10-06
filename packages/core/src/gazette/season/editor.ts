@@ -1,5 +1,5 @@
-// The editor's calls over the desk's order (Craig, 5 Oct: "dont put dome 10th, put him 9th"): data, read from
-// `data/editions/editor.json` by the script and filed with the story, never a name in code. Pure.
+// The editor's calls over the desk's order: data, read from `data/editions/editor.json` by the script and filed with
+// the story, never a name in code. Pure.
 
 /** A side put at a place by an editor, who called it, when, and what he said. */
 export interface EditorMove {

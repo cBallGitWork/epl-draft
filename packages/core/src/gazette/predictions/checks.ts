@@ -138,13 +138,13 @@ function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckCon
   if (!VERDICT.test(line)) fault(key, "no verdict of his own", "send-back", line.slice(0, 60));
   const men = ctx.names.filter((name) => !sides.has(name) && mentionAt(line, name) !== -1);
   if (men.length > LIMITS.men) fault(key, "a roll call, more than four men", "send-back", men.join(", "));
-  // "Their Ballard" is not how anybody talks (Craig): Ballard, or test31's Ballard.
+  // "Their Ballard" is not how anybody talks: Ballard, or test31's Ballard.
   for (const name of men) {
     const owned = line.match(new RegExp(`\\b(?:their|his|our) ${escapeRegExp(name)}\\b`, "iu"));
     if (owned !== null) fault(key, "a possessive before a name", "send-back", owned[0]);
   }
   if (call.close) for (const word of banned(line, COMFORTABLE)) fault(key, "an easy win on a close tie", "send-back", word);
-  // He never admitted the bias (Craig): on a Liverpool call, their club is not the reason.
+  // He never admits the bias: on a Liverpool call, their club is not the reason.
   if (call.instinct === "liverpool") for (const word of banned(line, ADMISSION)) fault(key, "gives Liverpool as the reason", "send-back", word);
   if (call.callsTeamId === null) return;
   const other = ctx.name(call.callsTeamId === call.homeTeamId ? call.awayTeamId : call.homeTeamId);
@@ -167,7 +167,7 @@ export function columnRules(intro: string, prose: readonly [string, string][], c
     const used = (all.match(new RegExp(`(?<![\\p{L}])${escapeRegExp(phrase)}(?![\\p{L}])`, "giu")) ?? []).length;
     if (used > cap) fault("column", "a habit used too often", "send-back", `${phrase} ×${used}`);
   }
-  // Five ties in one column, and a reader hears the same words coming round (Craig).
+  // Five ties in one column, and a reader hears the same words coming round.
   const said = new Map<string, string>();
   for (const [section, text] of prose) {
     const echo = [...ngrams(text, LIMITS.echo, ctx.names)].find((gram) => said.has(gram) && said.get(gram) !== section);

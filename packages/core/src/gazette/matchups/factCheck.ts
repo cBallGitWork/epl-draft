@@ -10,7 +10,7 @@ import type { DraftPiece } from "./writing";
 
 // The last read before print: the fact checker quotes each claim its block does not bear and offers the sentence put
 // right. A correction is kept only if it passes the writer's own checks; otherwise the claim is cut, since a wrong fact
-// is worse than a shorter report (GW5's fires gave one side's reserves to the other and moved a haul to another day). Pure.
+// is worse than a shorter report. Pure.
 
 export interface FactFix {
   matchup: number;
@@ -30,8 +30,7 @@ const PLAIN: Record<string, string> = { G: "goalkeeper", D: "defender", M: "midf
 const WEEKDAYS = /\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/gu;
 
 /** The fixes the desk can make without a model: a position word that is not a man's is put right ("Everton defender
- *  Jordan Pickford"), and a sentence that puts a man on a day he did not play is cut (GW5: "Friday settled nothing beyond
- *  Gross, whose haul made it 11-0", his haul a Saturday's). */
+ *  Jordan Pickford"), and a sentence that puts a man on a day he did not play is cut. */
 export function knownFixes(pieces: ReadonlyMap<number, DraftPiece>, contexts: readonly MatchupContext[]): FactFix[] {
   const words = Object.values(POSITIONS).flat().join("|");
   return [...pieces].flatMap(([matchup, piece]) => {

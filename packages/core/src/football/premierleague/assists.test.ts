@@ -6,26 +6,14 @@ import { streamCredited, streamCredits } from "./assists";
 import { plGoals } from "./goals";
 import type { PlGoal } from "./goals";
 
-// Manchester United 5-2 Ipswich Town, gameweek 2, recorded 11 Sep 2026 and never
-// fetched (CODE_RULES §6). It is the fixture Craig found the defect in and it
-// carries all three of the assists Opta does not place, one each:
-//
-//   40'  Fernandes, assisted by Cunha            — Opta has it
-//   56'  Greaves OWN GOAL, forced by Maguire     — Opta has nobody
-//   61'  Fernandes PENALTY, won by Cunha         — Opta has nobody
-//   68'  Fernandes, rebound off Mbeumo's block   — Opta has nobody
-//   82'  Mbeumo, assisted by Fernandes           — Opta has it
-//
-// FPL pays exactly five for those five: Cunha 2, Maguire 1, Fernandes 1,
-// Mbeumo 1. That agreement across two sources is what `streamCredited` tests
-// for, and it is why this fixture is the one worth recording.
+// Manchester United 5-2 Ipswich Town (GW2): Opta places the 40' and 82' assists and none of the three FPL adds,
+// Maguire forcing Greaves's 56' own goal, Cunha winning the 61' penalty and Mbeumo's block before the 68' rebound.
+// FPL pays exactly five: Cunha 2, Maguire 1, Fernandes 1, Mbeumo 1.
 const STREAM = stream as unknown as RawPlTextstream;
 const DETAIL = fixture as unknown as RawPlFixture;
 const EVENTS = STREAM.events.content as RawPlEvent[];
 
-/** Opta person id → FPL code, as the app's own join makes it. Coded as the id
- *  plus a million so a wrong join is visible rather than coincidental — the
- *  idiom `map.test.ts` set. */
+/** Opta person id → FPL code, coded as the id plus a million so a wrong join shows. */
 const codes = new Map(
   (DETAIL.teamLists ?? []).flatMap((list) =>
     list === null
@@ -34,14 +22,8 @@ const codes = new Map(
   ),
 );
 
-/** The men this fixture is about, by the same +1,000,000 rule.
- *
- *  **These are the Premier League's own person ids, which are NOT FPL's
- *  `opta_code` digits** — Maguire is person 9566 and `p95658`, Mbeumo person
- *  66360 and `p446008`. The first draft of this file used the opta codes and two
- *  cases failed with a real id on the left of the assertion, which is exactly
- *  what the +1,000,000 idiom is for: a wrong join shows up as a wrong number
- *  rather than as a plausible one. */
+/** The men this fixture is about, by the same +1,000,000 rule: Premier League person ids, NOT `opta_code` digits
+ *  (Maguire is person 9566 and `p95658`). */
 const CUNHA = 51202 + 1_000_000;
 const MAGUIRE = 9566 + 1_000_000;
 const FERNANDES = 23396 + 1_000_000;

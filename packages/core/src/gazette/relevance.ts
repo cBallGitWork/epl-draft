@@ -4,14 +4,7 @@ import { isResolved, type RosteredTeam } from "../join/roster";
 import { isActive } from "../league/rosterStatus";
 import type { PeriodPairing } from "../league/selectors";
 
-// What makes a Premier League fixture OUR story: the rostered men inside it,
-// and the live ties it can still swing. A real paper covers the biggest game;
-// this paper's biggest game is the one carrying the most draft consequence,
-// which is a count, not an opinion.
-//
-// The join layer's rules apply — rostered men arrive already resolved through
-// the bridge, so nothing here matches a name — and the persisted key uses club
-// CODES, which are season-stable, never fixture ids, which are not.
+// What makes a Premier League fixture our story: the rostered men in it and the live ties it can still swing.
 
 /** One live pairing's presence in one fixture. */
 export interface TieStake {
@@ -23,11 +16,9 @@ export interface TieStake {
 }
 
 export interface FixtureStake {
-  /** `"{homeCode}v{awayCode}"`, club codes — the season-stable identity the
-   *  ledger persists. */
+  /** `"{homeCode}v{awayCode}"` in season-stable club codes: the key the ledger persists. */
   key: string;
-  /** FPL's per-season id, for joining back to the snapshot THIS session only.
-   *  Never persisted. */
+  /** FPL's per-season id, for joining back to this snapshot only; never persisted. */
   fixtureId: number;
   kickoff: string | null;
   finished: boolean;
@@ -37,10 +28,7 @@ export interface FixtureStake {
   ties: TieStake[];
 }
 
-/** Every fixture of the round, weighed. Sorted most-consequential first: a
- *  fixture with men on BOTH sides of a live tie outranks raw headcount,
- *  because it is the one whose ninety minutes can decide a head-to-head on
- *  its own; headcount breaks the tie, kickoff order breaks that. */
+/** Every fixture of the gameweek, weighed: men on both sides of a tie first, then headcount, then kickoff. */
 export function fixtureStakes(
   fixtures: readonly Fixture[],
   teams: readonly RosteredTeam[],
@@ -74,11 +62,7 @@ export function fixtureStakes(
       .sort((a, b) => Number(bothSides(b)) - Number(bothSides(a)));
 
     return {
-      // Club CODES, which are season-stable — never the fixture id, which is
-      // not (`layer-split.md`'s identity rule reaches persisted keys). A club
-      // the snapshot does not carry falls back to its per-season id rather
-      // than to a shared nought: two unknown fixtures keyed `0v0` would spend
-      // one covered-key between them and the second report would never file.
+      // Club codes, never the per-season fixture id; an unknown club keys `x{id}`, never a shared `0`.
       key: `${clubs.get(fixture.homeClubId)?.code ?? `x${fixture.homeClubId}`}v${clubs.get(fixture.awayClubId)?.code ?? `x${fixture.awayClubId}`}`,
       fixtureId: fixture.id,
       kickoff: fixture.kickoff,
@@ -96,8 +80,7 @@ export function fixtureStakes(
   );
 }
 
-/** Whether a live pairing has men on both of its sides in this fixture — the
- *  flag that makes tonight's game a preview piece. */
+/** Whether a live pairing has men on both its sides in this fixture. */
 export function bothSides(tie: TieStake): boolean {
   return tie.homeMen > 0 && tie.awayMen > 0;
 }

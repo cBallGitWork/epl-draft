@@ -74,7 +74,7 @@ describe("buildLawroBrief", () => {
     expect(text).toContain("YOUR CALL: Haaland Globetrotters. A GUT CALL");
     expect(text).toContain("Cold Palmer are the favourites");
     expect(text).toContain("T1-gut: Cold Palmer's best man, Palmer");
-    // In words, and FPL's note without its figure: Craig, "dont say percentages".
+    // In words, and FPL's note without its figure.
     expect(text).toContain("is a doubt. FPL's note: Groin injury.");
     expect(text).not.toMatch(/per cent|%|\b50\b/u);
   });

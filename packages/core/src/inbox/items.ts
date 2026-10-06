@@ -1,41 +1,16 @@
 import { instantOf, londonDate, londonTime } from "../time";
 import type { InboxItem } from "./types";
 
-// The round, and the merge that orders the whole inbox.
-//
-// The league's business is in `messages.ts` and the doubts are in `doubts.ts`;
-// both came out when this file hit CODE_RULES §4's ceiling. All three return
-// `InboxItem[]` and none of them knows about the others.
-//
-// Pure, and separately callable: each builder takes what its own source hands
-// over and nothing else. The app edge assembles.
-//
-// **Every headline is a fact in the fewest words that carry it**, which is the
-// game's own register (`Rushden appoint Mike Paul as manager`) and the Gazetta's
-// house voice. No adjective, no advice, and no verb tense games: an event that
-// happened is past, a state that holds is present.
+// The round, and the merge that orders the whole inbox. Each builder takes only its own source; the app edge assembles.
 
-/** One round of our own competition, as CM's Competitions tab.
- *
- *  Two kinds of item and no more: when the round locks, and how the reader's own
- *  tie finished. **Not every tie** — the game files what the club was told, and
- *  a manager was not told the score of a match he was not in. Those are on
- *  Results, which is a table and reads better as one. */
+/** One round of our competition, as CM's Competitions tab: when it locks, and how the reader's own tie finished. */
 export function roundNews({
   gameweek,
   deadline,
   yours,
 }: {
   gameweek: number | null;
-  /** The NEXT lock, and **the round it belongs to rather than the round in
-   *  view** — which are the same only on the two days between a round finishing
-   *  and the next deadline passing.
-   *
-   *  It was an ISO string alone, and the item took its round number from
-   *  `gameweek`: so from Friday teatime until the following Friday the row read
-   *  "Gameweek 3 lineups lock" over a block dated the 12th, which is GW4's lock.
-   *  A deadline is the one item on this screen that is about a round the reader
-   *  is not looking at, so it carries its own. */
+  /** The NEXT lock with the round it belongs to, which is often not the round in view. */
   deadline: { gameweek: number; locksAt: string } | null;
   /** The reader's own finished tie, or null while it is unplayed or he has none. */
   yours: { opponent: string; points: number | null; against: number | null } | null;
@@ -51,9 +26,7 @@ export function roundNews({
       headline: `Gameweek ${deadline.gameweek} lineups lock`,
       // The commissioner texting the group; the time is `locksAt`'s, in London, as the masthead prints it.
       body: `Lineups lock at ${londonTime(deadline.locksAt)} on ${londonDate(deadline.locksAt)}. Anyone left on your bench won't score, so get your team sorted before then.`,
-      // The one item on the screen that genuinely comes from a person, and the
-      // league's rules are his — see `nextDeadline` on why the lead is ours to
-      // derive rather than FPL's to publish.
+      // The one item that comes from a person: the league's rules are his.
       from: "The commissioner",
       about: null,
       teamId: null,
@@ -70,16 +43,13 @@ export function roundNews({
       category: "competition",
       at: null,
       gameweek,
-      // **A sentence rather than a log line.** It read `Gameweek 3: lost against
-      // testf`, which is a row out of a results table with a colon in it, and
-      // the body under it was the bare score. A message says what happened.
+      // A sentence, never a results-table row.
       headline: won
         ? `You beat ${yours.opponent} in gameweek ${gameweek}`
         : drawn
           ? `You drew with ${yours.opponent} in gameweek ${gameweek}`
           : `${yours.opponent} beat you in gameweek ${gameweek}`,
-      // **The score, said rather than logged.** It was `12 to 9.`, which is a
-      // cell out of a table; a letter reporting a result says who scored what.
+      // The score as a letter says it.
       body: won
         ? `You won it ${yours.points} to ${yours.against}.`
         : drawn
@@ -89,8 +59,7 @@ export function roundNews({
       about: null,
       teamId: null,
       mark: null,
-      // A defeat is bad news about you, which is exactly what CM's red ground
-      // is for — and a win is not, however much it is yours.
+      // A defeat is bad news about you, which is what CM's red ground is for.
       urgent: !won && !drawn,
     });
   }

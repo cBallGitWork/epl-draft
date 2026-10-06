@@ -93,10 +93,7 @@ describe("squadDetail", () => {
 
 describe("squadDetail, on the arrangement", () => {
   it("hands out no player's ACTIVE or RESERVE", () => {
-    // The board is a client component, so everything here is serialised into the
-    // page and readable from View Source. Before this, a rival's squad shipped
-    // eleven ACTIVE and four RESERVE while the screen withheld the lineup —
-    // which is the whole of what `visibility.ts` exists to prevent.
+    // The board is a client component, so a status left here is in View Source: a rival's XI would leak.
     const lines = squadDetail(
       [{ position: "M", players: [slot("a1", "ACTIVE"), slot("a2", "RESERVE")] }],
       new Map(),

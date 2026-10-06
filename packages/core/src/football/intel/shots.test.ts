@@ -30,8 +30,7 @@ describe("shotIntel", () => {
   });
 
   it("drops a shot plotted off the pitch", () => {
-    // A mark outside the touchline looks exactly like a real one, which is the
-    // confident wrong answer this app refuses.
+    // A mark outside the touchline looks exactly like a real one.
     expect(shotIntel(file([shot({ x: 140 })])).size).toBe(0);
     expect(shotIntel(file([shot({ y: -3 })])).size).toBe(0);
   });
@@ -42,7 +41,7 @@ describe("shotIntel", () => {
   });
 
   it("keeps a shot with no xG rather than losing the mark", () => {
-    // Five of 824 have no xG. The location is the thing the map is drawing.
+    // A shot with no xG is still a location for the map to draw.
     expect(shotIntel(file([shot({ xg: null, xgot: null })])).get(1)).toHaveLength(1);
   });
 

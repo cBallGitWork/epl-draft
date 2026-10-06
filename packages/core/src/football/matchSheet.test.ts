@@ -4,10 +4,7 @@ import type { RawFixture } from "./fpl/raw";
 import { mapMatchSheets, scoresheet, sheetSides } from "./matchSheet";
 import type { FootballPlayer, FootballSnapshot } from "./types";
 
-// Recorded from `/api/fixtures/` on 4 Sep 2026, never fetched (CODE_RULES §6).
-// Two rows and both are load-bearing: fixture 11 is Sunderland 1-4 at Everton,
-// the densest finished match in gameweek 2, and fixture 21 is the unstarted one
-// that proves an empty sheet parses rather than throwing.
+// Recorded from `/api/fixtures/`: fixture 11 finished 1-4 in gameweek 2, and fixture 21 has not started.
 const [PLAYED, UNSTARTED] = recorded as unknown as RawFixture[];
 
 const sheets = mapMatchSheets([PLAYED, UNSTARTED]);
@@ -21,25 +18,18 @@ describe("mapMatchSheets", () => {
   });
 
   it("reads a match nobody has played as empty rather than throwing", () => {
-    // `stats: []` is what FPL sends for all 360 unstarted fixtures. An empty
-    // sheet is the answer, not an error and not a fabricated goalless one.
+    // FPL sends `stats: []` for an unstarted fixture: an empty sheet, not an error.
     expect(UNSTARTED.stats).toEqual([]);
     expect(unstarted.lines).toEqual([]);
   });
 
   it("lists exactly the men who appeared, and no one else", () => {
-    // The bps block is the appearance list — 32 players over the two sides,
-    // counted against `/event/2/live/` on 4 Sep 2026 with no misses and no
-    // false positives. Nothing here counts to 32 by adding up other
-    // identifiers, so the count IS the claim.
+    // The bps block is the appearance list: 32 men, matching `/event/2/live/` exactly.
     expect(played.lines).toHaveLength(32);
     expect(played.lines.filter((l) => l.side === "home")).toHaveLength(16);
     expect(played.lines.filter((l) => l.side === "away")).toHaveLength(16);
 
-    // Presence in the bps block is the appearance, and the FIGURE is not the
-    // test: bps runs negative. 47 of the season's 616 entries were below nought
-    // on 4 Sep 2026, floor -14, and none was exactly nought. So a line always
-    // has a bps and `> 0` is not what that means.
+    // Presence in the bps block is the appearance, not the figure, which runs negative.
     const inBps = new Set(
       (PLAYED.stats ?? [])
         .filter((s) => s.identifier === "bps")
@@ -52,8 +42,7 @@ describe("mapMatchSheets", () => {
   });
 
   it("keeps a player on the side the fixture list put him, not his club's", () => {
-    // The side is stated by the payload. Deriving it from the player's club
-    // would need bootstrap, which is 1.3 MB this file deliberately does not read.
+    // The side is stated by the payload, never derived from bootstrap's club.
     const scorer = played.lines.find((l) => l.playerId === 399);
     expect(scorer?.side).toBe("away");
     expect(scorer?.goals).toBe(2);
@@ -74,8 +63,7 @@ describe("mapMatchSheets", () => {
   });
 
   it("ignores an identifier it does not declare", () => {
-    // A twelfth identifier must not land in a field nobody declared —
-    // `defensive_contribution` arrived mid-season once already.
+    // A new identifier must not land in a field nobody declared.
     const [sheet] = mapMatchSheets([
       { ...PLAYED, stats: [{ identifier: "invented_stat", h: [{ value: 9, element: 1 }], a: [] }] },
     ]);
@@ -95,8 +83,7 @@ describe("sheetSides", () => {
   });
 
   it("drops a man the snapshot does not carry rather than taking the screen down", () => {
-    // FPL has answered with an element bootstrap does not list before. A match
-    // page missing one substitute is better than a match page that 500s.
+    // FPL has sent an element bootstrap does not list: one man short beats a 500.
     const short = snapshotOf(played.lines.slice(1).map((l) => l.playerId));
     const { home, away } = sheetSides(played, short);
     expect(home.length + away.length).toBe(31);
@@ -107,8 +94,7 @@ describe("scoresheet", () => {
   const { home, away } = sheetSides(played, snapshotOf(played.lines.map((l) => l.playerId)));
 
   it("names only the men a scoresheet names", () => {
-    // Four away men did something named — two scorers, three assisters (one of
-    // whom also scored) and an own goal — against sixteen who merely turned out.
+    // Scorers, assisters and an own goal, against sixteen who merely turned out.
     const named = scoresheet(away).map((r) => r.line.playerId);
     expect(named).toContain(399);
     expect(named).toContain(398);
@@ -117,10 +103,7 @@ describe("scoresheet", () => {
   });
 
   it("does not name a man for a booking alone", () => {
-    // Craig, 10 Sep 2026: *"we probably dont need yellow cards to show."* The
-    // Overview is who scored and when; a yellow is carried in three other places
-    // now — the card block on the Team Sheet, the Report's grouped events, and
-    // Match Stats' per-side count.
+    // A yellow card is shown elsewhere; the scoresheet is who scored and when.
     const booked = away.filter(
       (r) => r.line.yellowCards > 0 && r.line.goals === 0 && r.line.assists === 0,
     );
@@ -130,8 +113,7 @@ describe("scoresheet", () => {
   });
 
   it("still names a man sent off", () => {
-    // A red card CHANGES a match rather than annotating it, so it stays on the
-    // sheet where a yellow does not.
+    // A red card changes a match, so it stays on the sheet where a yellow does not.
     const sent = { ...away[0].line, goals: 0, assists: 0, yellowCards: 0, redCards: 1 };
     expect(scoresheet([{ ...away[0], line: sent }])).toHaveLength(1);
   });
@@ -150,11 +132,7 @@ describe("scoresheet", () => {
   });
 });
 
-/** A snapshot carrying just enough of one to resolve ids to men.
- *
- *  Asserted rather than built whole: `sheetSides` reads `players` and nothing
- *  else, and spelling out twenty-odd unread fields would say this test depends
- *  on them. */
+/** A snapshot carrying only `players`, the one field `sheetSides` reads. */
 function snapshotOf(ids: readonly number[]): FootballSnapshot {
   const players = ids.map((id) => ({
     id,

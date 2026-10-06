@@ -2,16 +2,9 @@ import { describe, expect, it } from "vitest";
 import type { Fixture } from "./types";
 import { gameweekStarted, gameweekStatus, nextRound } from "./round";
 
-// The half of `round.ts` that is asked of the SEASON rather than of a snapshot.
-//
-// `round.ts` draws this line itself, in its signatures: `gameweekStatus`,
-// `gameweekStarted` and `nextRound` take `readonly Fixture[]` because the caller
-// labelling thirty-eight rounds at once holds the season and not one round of it.
-// The other four take a `FootballSnapshot` and live in `round.test.ts`. Splitting
-// on the seam the source already has beats splitting on line count.
+// The `round.ts` functions asked of the season's fixtures; those asked of a snapshot are in `round.test.ts`.
 
-/** One fixture, with the eleven fields written once. An upcoming, unsettled match
- *  at gameweek 1's first kickoff; what a test is about is the override beside it. */
+/** An upcoming, unsettled gameweek 1 fixture; what a test is about is the override beside it. */
 const fixture = (over: Partial<Fixture> & { id: number }): Fixture => ({
   code: 1, gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: "2026-08-21T19:00:00Z",
   homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0,
@@ -61,10 +54,7 @@ describe("gameweekStarted", () => {
     fixture({ id, gameweek, status });
 
   it("is true for a round part-played with nothing on", () => {
-    // Six o'clock on a Saturday, nine results in and a Monday night match to
-    // come. `gameweekStatus` calls this "upcoming" — correctly, because it is
-    // not full time — and reading that as "no football has happened" hid every
-    // one of the nine until Monday.
+    // Saturday evening with a Monday match to come: "upcoming" by status, yet started.
     const season = [at(1, 7, "finished"), at(2, 7, "finished"), at(3, 7, "upcoming")];
     expect(gameweekStatus(season, 7)).toBe("upcoming");
     expect(gameweekStarted(season, 7)).toBe(true);
@@ -86,9 +76,7 @@ describe("gameweekStarted", () => {
 });
 
 describe("nextRound", () => {
-  // GW1 ran 21-24 Aug 2026; GW2's deadline was 28 Aug 17:30Z and its first
-  // kickoff 28 Aug 19:00Z. Real instants, because the bug this function fixes
-  // was only ever visible at particular ones.
+  // Real instants: GW1 ran 21-24 Aug 2026; GW2's deadline was 28 Aug 17:30Z, its first kickoff 19:00Z.
   const season = [
     fixture({ id: 1, gameweek: 1, kickoff: "2026-08-21T19:00:00Z", status: "finished" }),
     fixture({ id: 2, gameweek: 1, kickoff: "2026-08-24T19:00:00Z", status: "finished" }),
@@ -98,9 +86,6 @@ describe("nextRound", () => {
   ];
 
   it("names the round coming up once every match in the current one is over", () => {
-    // The state the app sat in for four days after GW1 and could not describe:
-    // it held only the focused round's fixtures, so it said the next one would
-    // appear "once FPL names its fixtures" — which FPL had done weeks earlier.
     expect(nextRound(season, "2026-08-24T21:00:00Z")).toEqual({
       gameweek: 2,
       kickoff: "2026-08-28T19:00:00Z",
@@ -108,8 +93,7 @@ describe("nextRound", () => {
   });
 
   it("gives the same answer either side of FPL's deadline", () => {
-    // `focusGameweek` flips here and this must not: the round coming up is the
-    // same round ninety minutes before its first kickoff as it was a minute ago.
+    // `focusGameweek` flips at the deadline; this must not.
     const before = nextRound(season, "2026-08-28T17:29:59Z");
     const after = nextRound(season, "2026-08-28T17:30:00Z");
     expect(before).toEqual(after);
@@ -121,9 +105,7 @@ describe("nextRound", () => {
   });
 
   it("names the round after the one in play, and is not asked while it is", () => {
-    // Monday 20:45, GW2's last match running. This says 3 — correctly, because
-    // GW3 is the next round to start — which is why `/matchday` only asks it
-    // once `duringGameweek` is already false.
+    // GW2's last match is running, so this says 3; callers ask only once `duringGameweek` is false.
     expect(nextRound(season, "2026-08-31T20:45:00Z")?.gameweek).toBe(3);
   });
 
@@ -140,9 +122,7 @@ describe("nextRound", () => {
   });
 
   it("follows the kickoff and not the gameweek number, so a postponement cannot hold it", () => {
-    // FPL leaves a rearranged match in its original event. Reading "the lowest
-    // gameweek with an unfinished fixture" would answer 20 from December until
-    // February; the next ball to be kicked is 21.
+    // FPL leaves a rearranged match in its original event; the next ball to be kicked is in 21.
     const postponed = [
       fixture({ id: 1, gameweek: 20, kickoff: "2027-02-10T19:45:00Z" }),
       fixture({ id: 2, gameweek: 21, kickoff: "2026-12-26T15:00:00Z" }),

@@ -8,28 +8,13 @@ import type {
   IntelXi,
 } from "./types";
 
-// Reading the sister repo's export, and refusing the parts of it that are wrong.
-//
-// **Pure, and it parses rather than asserts.** The file is committed rather than
-// fetched, which changes nothing about who wrote it: a different repo on a
-// different schedule, so it is provider data and CODE_RULES §5 applies. Every
-// function here takes already-parsed JSON — `packages/core` reads no files, and
-// its tsconfig includes only `src/**/*.ts` so it physically cannot.
-//
-// The one rule worth restating because a breach would be invisible: a position
-// the exporter marked as coming from FPL's `element_type` arrives as null and
-// **must stay null**. Filling it from anywhere would put FPL's fantasy
-// classification on a football screen, which is the thing the layer split
-// exists to prevent.
+// Reads the sister repo's already-parsed export and refuses what is wrong. A null position must stay null:
+// filling it would put FPL's fantasy classification on a football screen.
 
 const STARTING_XI = 11;
 
 
-/** Every player the export carries, by FPL code.
- *
- *  Rows without a usable code are dropped rather than kept under a nonsense key:
- *  a squad list keyed on `NaN` collapses several men into one row, which is
- *  worse than the men being absent. */
+/** Every player the export carries by FPL code; a row without one is dropped, never kept under `NaN`. */
 export function squadIntel(squads: IntelSquads | null): Map<number, IntelPlayer> {
   const byCode = new Map<number, IntelPlayer>();
   if (squads === null) return byCode;
@@ -40,11 +25,7 @@ export function squadIntel(squads: IntelSquads | null): Map<number, IntelPlayer>
   return byCode;
 }
 
-/** What is wrong with a club's predicted eleven, or null when nothing is.
- *
- *  Reported rather than repaired. The sister asserts its formation table sums to
- *  eleven at import; we take the answer over a wire, and a board that quietly
- *  drew ten men would be the failure nobody notices. */
+/** What is wrong with a club's predicted eleven, or null when nothing is: reported, never repaired. */
 export function xiFault(club: IntelClubXi | undefined): string | null {
   if (club === undefined) return "no predicted eleven";
   const starters = club.starters ?? [];
@@ -56,22 +37,8 @@ export function xiFault(club: IntelClubXi | undefined): string | null {
   return null;
 }
 
-/** One club's predicted eleven, in the rows its formation draws.
- *
- *  **The source's own order IS the line-up, so it is chunked and never
- *  regrouped.** FFScout lists Arsenal's 4-2-3-1 as keeper, right-back across to
- *  left-back, the two, the three, the one — and Chelsea's 3-4-3 the same way. So
- *  the rows are the formation's numbers taken off that order in sequence. An
- *  earlier version grouped the men by their real positions instead, which drew a
- *  4-2-3-1 as seven rows of one or two, split a 3-4-3's wing-backs out of the
- *  four a reader counts them in, and needed a position for every man to do it.
- *  Mirroring the source needs none and is what the source meant.
- *
- *  **The keeper is not in the formation.** `4-2-3-1` is ten outfield players;
- *  the eleventh keeps goal and is drawn as his own row. A shape whose numbers do
- *  not add to ten is refused rather than guessed at.
- *
- *  Rows come back goal-first, which is the order a pitch is drawn in. */
+/** One club's predicted eleven in its formation's rows, goal first. The source's order is the line-up, so it is
+ *  chunked by the formation's numbers, never regrouped by position; the keeper is a row of his own. */
 export function predictedEleven(
   club: IntelClubXi | undefined,
 ): { line: string; players: IntelStarter[] }[] {
@@ -86,20 +53,14 @@ export function predictedEleven(
 
   let at = 0;
   for (const count of shape) {
-    // The source lists a line right-back first; the keeper stands at the top, so the team faces the
-    // reader and its right is the reader's left. Reversing this mirrored the pitch (Craig, 26 Sep 2026).
+    // Kept right-back first: the team faces the reader, so its right is the reader's left; reversing mirrors the pitch.
     rows.push({ line: String(count), players: outfield.slice(at, at + count) });
     at += count;
   }
   return rows.filter((row) => row.players.length > 0);
 }
 
-/** A formation as its outfield row sizes, or null when it cannot be read.
- *
- *  Ten and not eleven: the keeper is nobody's `4` and no formation counts him.
- *  A string that does not add up is refused — a shape we cannot read is one we
- *  must not guess at, and drawing ten men in a row called `4` would be the
- *  screen disagreeing with the label above it. */
+/** A formation as its outfield row sizes, or null unless they add to ten (no formation counts the keeper). */
 function outfieldShape(formation: string | null | undefined): number[] | null {
   if (!formation) return null;
   const parts = formation.split("-").map((part) => Number(part.trim()));
@@ -107,11 +68,7 @@ function outfieldShape(formation: string | null | undefined): number[] | null {
   return parts.reduce((total, n) => total + n, 0) === STARTING_XI - 1 ? parts : null;
 }
 
-/** One club's set-piece order, biggest share first.
- *
- *  Pieces come back in the order asked for, and one nobody takes comes back
- *  empty rather than missing — a caller that wants to say "nobody takes these"
- *  needs to be told, and a caller that does not can filter. */
+/** One club's set-piece orders, biggest share first, pieces in the order asked; one nobody takes comes back empty. */
 export function setPieceOrder(
   club: IntelClubPieces | undefined,
   pieces: readonly { key: keyof IntelClubPieces; label: string }[],
@@ -145,11 +102,7 @@ export function setPieceRanks(
   });
 }
 
-/** How old the prediction is, in whole hours, or null when it will not say.
- *
- *  Off `fetchedAt` and never the manifest's `exportedAt`: a prediction is stale
- *  when its SOURCE is stale, and re-running the export does not make FFScout's
- *  last look at a team sheet any newer. */
+/** How old the prediction is in whole hours, off `fetchedAt` and never `exportedAt`; null when it will not say. */
 export function predictionAge(xi: IntelXi | null, now: Date): number | null {
   if (xi?.fetchedAt == null) return null;
   const at = new Date(xi.fetchedAt).getTime();

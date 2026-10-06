@@ -53,7 +53,7 @@ export function checkDraft(writing: DraftWriting, contexts: readonly MatchupCont
     }
     const allowed = allowedFigures(ctx, block);
     for (const x of numbersIn(prose.replace(SCORE, " ").replace(SIDE_ELEVEN, " "))) if (!allowed.has(x)) fault(`${n}:matchup`, "a figure the brief does not give", "hard", String(x));
-    // A stage's own score is given too, as its two sides' points: GW5's writer lost a whole match-up for "Saturday 16-15".
+    // A stage's own score is given too, as its two sides' points.
     const stages = timeline(ctx.state).flatMap((b) => [`${b.points.home}-${b.points.away}`, `${b.points.away}-${b.points.home}`]);
     for (const [said, a, b] of prose.matchAll(SCORE)) if (!block.includes(said) && !block.includes(`${b}-${a}`) && !stages.includes(said)) fault(`${n}:matchup`, "a score the brief does not give", "hard", said);
     if (QUOTES.test(prose)) fault(`${n}:matchup`, "a quotation mark: the paper prints nobody's words", "hard", prose.match(QUOTES)?.[0] ?? "");

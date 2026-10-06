@@ -1,30 +1,6 @@
-// A photograph of each club's ground, for the desk to draw behind that club's
-// own screens.
-//
-// **Why this is a table and not a fetch.** Nobody we read publishes a stadium
-// photograph — FPL serves crests, kits and portraits and nothing else, and the
-// Premier League's asset host has no such path. So the pictures are chosen once,
-// by hand, and committed; `clubs.ts` makes the same argument for the colours and
-// the grounds' NAMES, and this is the third row of the same table.
-//
-// **The licence is data, not a footnote.** Every one of these is somebody's
-// photograph under a Creative Commons licence that requires naming them, so the
-// credit travels WITH the picture rather than living in a README nobody renders.
-// `/credits` is the page that prints them, and it reads this table — which is
-// why a row with no `author` is a bug rather than a tidy-up.
-//
-// **Twenty rows, one per club in `CLUB_COLOURS`, keyed the same way.** A promoted
-// club we have not photographed gets null and falls back to the app's `DESK_GROUND`, on
-// `portraits.ts`' rule: never a stand-in that looks like an answer.
-//
-// Hunted from Wikimedia Commons on 11 Sep 2026, filtered to free licences,
-// landscape, and 1400px or wider, then picked by eye. The files under
-// `public/ground/clubs/` are CAPPED at 1920px on the long edge at quality 75 —
-// they are drawn at `brightness(0.55)` behind opaque panels, so that is far more
-// than the screen can show. Capped and not resized TO it: Elland Road's original
-// is 1760 wide and is shipped at 1760, because an upscale is a bigger file with
-// no more picture in it. 6.8 MB of repo for the twenty, and none of page —
-// `next/image` re-encodes for delivery, so the master's weight is a git cost.
+// A hand-picked Wikimedia Commons photograph of each club's ground, keyed like `CLUB_COLOURS`, with its credit.
+// `/credits` prints the credits from this table, so a row with no `author` is a licence breach.
+// Files under `public/ground/clubs/` are capped at 1920px on the long edge, never upscaled.
 
 export interface GroundPhoto {
   /** Under `public/`, so `next/image` optimises it like any other asset. */
@@ -38,18 +14,7 @@ export interface GroundPhoto {
   licenceUrl: string;
   /** The file's page on Commons — the "source" half of an attribution. */
   source: string;
-  /** A 16px-wide JPEG of the same picture, inline. **This is what stops the
-   *  ground blinking black between two club screens** (Craig, 11 Sep 2026:
-   *  *"the screen go black when going between images"*).
-   *
-   *  The ground is drawn by the SUBJECT's own Shell rather than by the app
-   *  shell, because only the Shell knows whose screen it is — so it unmounts and
-   *  remounts on every navigation, and between the two there is a frame with no
-   *  photograph in it and `--color-bg` showing through. A placeholder paints in
-   *  that frame from the HTML itself, with no request to wait on, and the full
-   *  picture fades in over it.
-   *
-   *  Half a kilobyte each and twenty of them: a page pays for one. */
+  /** A 16px-wide inline JPEG placeholder: without it the ground blinks black as a club's Shell remounts. */
   blur: string;
 }
 
@@ -241,12 +206,7 @@ const CLUB_GROUND_PHOTOS: Record<string, Omit<GroundPhoto, "src">> = {
   },
 };
 
-/** The photograph behind a club's own screens, or null for one nobody has
- *  hunted a picture for.
- *
- *  Null and never a guess, exactly as `clubGround` is: a promoted club arrives
- *  every August, and the caller falls back to the shared ground rather than
- *  putting some other club's stadium under this club's name. */
+/** The photograph behind a club's own screens, or null (never a guess) for one with no picture yet. */
 export function clubGroundPhoto(shortName: string): GroundPhoto | null {
   const photo = CLUB_GROUND_PHOTOS[shortName];
   return photo === undefined
@@ -254,15 +214,7 @@ export function clubGroundPhoto(shortName: string): GroundPhoto | null {
     : { ...photo, src: `/ground/clubs/${shortName}.jpg` };
 }
 
-/** Every ground photograph with its credit, for the page that prints them.
- *
- *  Keyed rather than listed, because the page heads each credit with the club —
- *  and the club's NAME is `clubGround`'s job, not this table's. Two tables that
- *  each held a stadium name would be two places for it to go stale.
- *
- *  Back through `clubGroundPhoto` rather than spreading the row again: `src` has
- *  to agree with what is on disk under `public/ground/clubs/`, and one function
- *  building that path is one place for it to be wrong. */
+/** Every ground photograph with its club's short name, for `/credits`; `src` is built by `clubGroundPhoto` alone. */
 export function groundPhotoCredits(): readonly {
   shortName: string;
   photo: GroundPhoto;

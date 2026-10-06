@@ -1,7 +1,4 @@
-// The football layer's public surface. Import from here, not from the FPL
-// subfolder — that indirection is what lets the provider change without the app
-// noticing, and it is the same discipline that made swapping Draft Fantasy for
-// Fantrax an adapter change rather than a rewrite.
+// The football layer's public surface: import from here, never a provider subfolder, so a provider can change unnoticed.
 
 export type {
   Club,
@@ -22,21 +19,13 @@ export { clubGroundPhoto, groundPhotoCredits } from "./grounds";
 export type { GroundPhoto, PhotoCredit } from "./grounds";
 export { initials, portraitUrl } from "./portraits";
 export { getFootballSnapshot } from "./snapshot";
-// The two reads `getFootballSnapshot` does not serve, both wanted by scripts:
-// the whole-season fixture list (it fetches one gameweek) and the raw bootstrap
-// (it returns a mapped snapshot, and the bridge needs FPL's own field names).
+// The whole-season fixture list and the raw bootstrap, which scripts want and `getFootballSnapshot` does not serve.
 export { fetchBootstrap, fetchFixtures, fetchRegions } from "./fpl/client";
-// One round's live feed, and the mapper that turns it into per-FIXTURE figures.
-// `getFootballSnapshot` reads both for the round it is building; a match screen
-// wants an OLDER round, which is the whole reason these are reachable on their
-// own. `football.ts`'s `gameweekLive` says what it costs and what it buys.
+// One round's live feed and its per-fixture mapper, for a match screen on an older round.
 export { fetchLive } from "./fpl/client";
 export { mapLiveStats, roundPlayed } from "./fpl/map";
-// The Premier League's own feed — the football layer's SECOND provider, and the
-// only source of a goal's minute, a real match clock, a team sheet or a
-// substitution. FPL publishes none of them. It joins on ids neither provider
-// chose: `Fixture.code` against their `altIds.opta`, and FPL's `opta_code`
-// against a player's. Server-side only; their CORS admits their own site alone.
+// The Premier League's own feed: goal minutes, match clock, team sheets, substitutions. Server-side only (CORS).
+// Joins on `Fixture.code` against their `altIds.opta`, and FPL's `opta_code` against a player's.
 export {
   fetchPlFixture,
   fetchPlMatchStats,
@@ -98,30 +87,19 @@ export type {
 export type { RawPlMatchStats, RawPlMetric, RawPlTeamPage, RawPlTeamStats } from "./premierleague/rawStats";
 export { plClubSeason } from "./premierleague/clubSeason";
 export type { PlClubSeason } from "./premierleague/clubSeason";
-// One player's own season, match by match — the only read here keyed by FPL's
-// per-season element id, and the only one with the four measurements a live
-// snapshot cannot give per fixture. `gameLog.ts` says why.
+// One player's season match by match, keyed by FPL's per-season element id.
 export { fetchElementSummary } from "./fpl/client";
 export { mapGameLog, totalsOver } from "./gameLog";
 export type { GameLogEntry, RateTotals } from "./gameLog";
-// What happened in ONE MATCH, for every player in it, off the season fixture
-// list's own `stats` block — the read the app already makes and used to throw
-// away. `matchSheet.ts` sets it against the two neighbours above and says what
-// it cannot answer, which is minutes.
+// One match for every player in it, off the fixture list's `stats` block; it has no minutes.
 export { mapMatchSheets, scoresheet, sheetSides } from "./matchSheet";
 export { fplDefConAt } from "./defensiveContribution";
-// The other half of a match, from the sister repo: the minutes, the line-up
-// positions and the team figures FPL publishes nowhere. `intel/matches.ts` sets
-// it against the read above and says which one wins where both could answer.
+// The sister repo's match data: minutes, line-up positions and team figures FPL does not publish.
 export { goalMinutes, loggedPlayers, matchIntel, matchLine, subNote } from "./intel/matches";
-// Where a man played, as the points themselves rather than as a grid. The
-// argument for the raw cloud — smaller than the grid AND smoother, because the
-// busiest player in the league has 414 season touches — is in `intel/touches.ts`.
+// Where a man played, as the raw touch points rather than a grid.
 export { averageTouchPosition, touchFixtures, touchIntel, touchesOf } from "./intel/touches";
 export type { IntelTouches, Touch, TouchCentre, TouchPlayer } from "./intel/touches";
-// Every shot, already flipped onto the touch clouds' convention — SofaScore
-// publishes a shot as distance from the attacking goal and a touch the other way
-// round, and `intel/shots.ts` records how that was settled.
+// Every shot, flipped onto the touch clouds' orientation.
 export { assistsOf, shotIntel, shotsInFixture, shotsOf } from "./intel/shots";
 export { careerIntel, seasonKey } from "./intel/careers";
 export type { IntelCareers } from "./intel/careers";
@@ -144,12 +122,10 @@ export type { ClubStrength, IntelStrength, PlannerCell, PlannerRow, PlannerView,
 export { PROJECTION_PARTS, nextGameweeks, projectedPlace, projectedPoints, projectedTotal, projectionIntel } from "./intel/projections";
 export type { IntelProjections, ProjectedPlace, ProjectedPlayer, ProjectedGameweek, ProjectionPart } from "./intel/projections";
 export type { MatchSheet, MatchSheetLine, SheetRow } from "./matchSheet";
-// The same read at season scale — his career before this one. `seasons.ts` says
-// why it is a separate file and why its column set is as short as it is.
+// His completed seasons before this one.
 export { mapPastSeasons } from "./seasons";
 export type { PastSeason } from "./seasons";
-// Championship Manager's attribute grid, rated out of play we already measure.
-// Ours, never Sports Interactive's — `attributes.ts` says why there is no feed.
+// Championship Manager's attribute grid, our own ratings from play we already measure.
 export { ATTRIBUTE_ROWS, attributes, divisionAttributes, ratedLine, ratedRunning } from "./attributes";
 export type { Attribute, Floors, Scouted } from "./attributes";
 export { preferredFoot, shotLine } from "./shotLine";
@@ -176,9 +152,7 @@ export type { Availability, DoubtBand, PlayerState } from "./playerState";
 export { formByPlayer, playedRounds } from "./form";
 export type { PlayerForm, RoundStats } from "./form";
 
-// What a round is doing, as against what a snapshot contains — see `round.ts`
-// for why the two are separate questions and why asking one in place of the
-// other has bitten more than once.
+// Where a round stands in time, as against what a snapshot contains.
 export {
   duringGameweek,
   gameweekStarted,
@@ -189,14 +163,9 @@ export {
   roundStarted,
   roundState,
 } from "./round";
-// `roundFinished` is deliberately not here. It is half an answer — it cannot say
-// "live" — and `roundState` is the pairing every caller wants; publishing both
-// is publishing the one that has been asked in the other's place before. It
-// stays exported from its own module, where its tests reach it.
+// `roundFinished` is not exported: it cannot say "live", and `roundState` is the pairing callers want.
 export type { FinishedState, RoundState } from "./round";
-// A played round rewound to a moment inside it, so the Live tab can be worked
-// on when no football is on. A rehearsal instrument: `app/clock.ts` is the only
-// caller and the app says on screen when it is running on one.
+// A played round rewound to a moment inside it, for rehearsing the Live tab; `app/clock.ts` is the only caller.
 export { before, rewindRound, roundAt } from "./replay";
 export { fixtureLabel, kickedOff, matchesOver, nextFixtures, oppositionByClub } from "./opposition";
 export { leagueTable } from "./table";

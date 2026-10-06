@@ -1,8 +1,8 @@
 import { fxpaRead } from "./fxpa";
 import type { FieldMap } from "./lineupWrite";
 
-// The lineup save's three calls. `session` is the commissioner's cookie and `adminMode` is what lets
-// it write a team he does not own (PLATFORM_NOTES, 28 Sep 2026). Map the answers with `lineupWrite.ts`.
+// The lineup save's three calls; `lineupWrite.ts` maps the answers.
+// `session` is the commissioner's cookie: without `adminMode` Fantrax refuses a write to a team he does not own.
 
 /** One team's roster as Fantrax files it for a period; public without a session. */
 export function fetchLineupState(leagueId: string, teamId: string, period: number, session?: string): Promise<unknown> {

@@ -42,10 +42,7 @@ describe("playedRounds", () => {
   });
 
   it("keeps a round holding a postponed fixture, which never reads as finished", () => {
-    // FPL leaves a rearranged match in its ORIGINAL round, so gameweek 2 has
-    // nine finished fixtures and one still upcoming in February. `gameweekStatus`
-    // calls that round "upcoming" for months; dropping it here would shorten
-    // every player's denominator without saying so.
+    // FPL leaves a rearranged match in its original round; dropping the round would shorten every denominator.
     const rounds = playedRounds(
       [
         fixture({ id: 1, gameweek: 2, status: "finished" }),

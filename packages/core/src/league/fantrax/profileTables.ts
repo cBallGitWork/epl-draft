@@ -1,26 +1,8 @@
 import { text } from "./profile";
 import type { LabelledValue, RawLabelled, RawPlayerProfile } from "./profile";
 
-// The half of `getPlayerProfile` that arrives as TABLES, read apart from the half
-// that arrives as labelled pairs.
-//
-// Two files because `profile.ts` crossed CODE_RULES §4's 300-line ceiling and
-// because the two halves are read by different rules. `miscData` is name-and-value
-// pairs and is read BY NAME. `sectionContent` is tables whose columns are
-// identified by numeric stat ids and whose display labels are free to move, so it
-// is read BY KEY and, where there is no key, by POSITION.
-//
-// **Three things the payload does that nothing else in this adapter does.**
-//
-//  1. **Cells carry HTML.** `Fri Aug 28 -<br/>Thu Sep 3` and `<b>D</b>: 2` are
-//     real cell contents. Nothing leaves this file with a tag in it.
-//  2. **The endpoint does not check the sport.** An id belonging to another sport
-//     answers with a complete NFL profile under our league id — `Sk`, `FF`,
-//     `IntYd`. The ids below are football's and a wrong id renders wrong labels
-//     rather than wrong numbers under right ones.
-//  3. **The tables are found by shape and by key, never by caption.** A caption
-//     is a season string we would have to build to match, and this payload has
-//     already been caught serving a season other than the one asked for.
+// `getPlayerProfile`'s TABLES, found by shape or stat id and never by caption, which is a season string it has served wrong.
+// Cells carry HTML (`<b>D</b>: 2`), stripped here; another sport's id renders wrong labels, not wrong numbers.
 
 export interface RawTable {
   caption?: string;
@@ -28,21 +10,13 @@ export interface RawTable {
   rows?: { cells?: { content?: string }[] }[];
 }
 
-/** One match, as Fantrax scored it.
- *
- *  **Joined to FPL's own history on the opponent and the venue**, which is a safe
- *  key in a league season: a man plays each opponent once at home and once away,
- *  so the pair identifies the match without a date. Fantrax gives the venue by
- *  prefixing an away opponent with `@` — `IPS` at home, `@HUL` away — and gives
- *  its club codes in its own vocabulary, which disagrees with FPL's on two clubs
- *  (`BRF`/`NOT`). The join has to translate; `identity/clubCodes.ts` is where. */
+/** One match as Fantrax scored it, joined to FPL's history on opponent and venue, a pair unique in a league season.
+ *  Fantrax's club codes disagree with FPL's on two clubs (`BRF`/`NOT`); `identity/clubCodes.ts` translates. */
 export interface PlayerMatch {
-  /** FANTRAX's club code for the opponent, theirs and untranslated. Whoever
-   *  joins on it translates, because this file is the adapter and not the join. */
+  /** FANTRAX's club code for the opponent, untranslated: the join translates. */
   opponent: string;
   home: boolean;
-  /** Our league's points for the match. Null is a real answer: a cell Fantrax
-   *  left empty is not a nought. */
+  /** Our league's points for the match; null where Fantrax left the cell empty, never nought. */
   points: number | null;
   minutes: number | null;
   goals: number | null;
@@ -55,19 +29,7 @@ export interface PlayerMatch {
   offsides: number | null;
 }
 
-/** His season row, as label-and-value pairs.
- *
- *  **The table is found by shape, never by its caption.** The caption is
- *  `"2026-27 Stats"` — a season string we would have to build to match, and the
- *  payload has already been caught serving a season other than the one asked
- *  for. What identifies it instead is that it is the only table with exactly one
- *  row: `Recent Games`, `Recent Trends`, `Upcoming Games` and `Games per
- *  Position` all carry several.
- *
- *  **And never assume it is football.** `getPlayerProfile` does not check the
- *  sport: an id from another sport answers with a complete NFL profile under our
- *  league id, sacks and interceptions and all. Nothing here reads a stat by name,
- *  so a wrong id renders wrong labels rather than wrong numbers under right ones. */
+/** His season row as label-and-value pairs, read by position: the only table with exactly one row. */
 export function seasonStats(raw: RawPlayerProfile): LabelledValue[] {
   const table = (raw.sectionContent?.OVERVIEW?.tables ?? []).find((t) => t.rows?.length === 1);
   const heads = table?.header?.cells ?? [];
@@ -82,14 +44,7 @@ export function seasonStats(raw: RawPlayerProfile): LabelledValue[] {
   return out;
 }
 
-/** Fantrax's stat ids on a per-match row.
- *
- *  **Ids, not display labels.** The header carries both, and the ids are the
- *  stable half: `opponent` and `fpts` are named outright, and a statistic is
- *  `{statId}#-1`. Binding to `shortName` would bind to the word "Opp", which is
- *  a label Fantrax is free to change and which is `Opponent` on the very next
- *  table. `6210` is shots; `raw.ts`'s note on the sport applies — these ids are
- *  football's, and this endpoint will answer with another sport's if asked. */
+/** Fantrax's football stat ids on a per-match row (`{statId}#-1`); never `shortName`, which differs table to table. */
 const MATCH = {
   opponent: "opponent",
   points: "fpts",
@@ -103,12 +58,7 @@ const MATCH = {
   offsides: "6130#-1",
 } as const;
 
-/** His recent matches, most recent first, as Fantrax gives them.
- *
- *  The table is found by its KEYS rather than by its caption: "Recent Games" is
- *  a display string, and the payload has five tables of which only this one
- *  carries both `opponent` and `fpts`. `Upcoming Games` names its column `opp`
- *  and `Recent Trends` prefixes every id with `5010#`, so neither collides. */
+/** His recent matches, most recent first: the only table keyed with both `opponent` and `fpts`. */
 export function recentGames(raw: RawPlayerProfile): PlayerMatch[] {
   const heads = (raw.sectionContent?.OVERVIEW?.tables ?? [])
     .map((table) => ({ table, keys: (table.header?.cells ?? []).map((cell) => cell.key ?? "") }))
@@ -128,8 +78,7 @@ export function recentGames(raw: RawPlayerProfile): PlayerMatch[] {
     };
     const opponent = cell(MATCH.opponent);
     if (opponent === null) continue;
-    // `@HUL` away, `IPS` at home. The marker is Fantrax's and this is where it
-    // stops being a string.
+    // `@HUL` away, `IPS` at home.
     const away = opponent.startsWith("@");
     out.push({
       opponent: away ? opponent.slice(1) : opponent,
@@ -148,15 +97,7 @@ export function recentGames(raw: RawPlayerProfile): PlayerMatch[] {
   return out;
 }
 
-/** Provider text as text. Tags out, entities left alone — they are rendered as
- *  a string by React, which escapes them itself. */
+/** Provider text as text: tags out, entities left for React to escape. */
 function stripTags(value: string | undefined): string | null {
   return text(value?.replace(/<[^>]*>/g, " ").replace(/\s+/g, " "));
 }
-
-// **`latestNews` is deliberately not read, and it was for one commit.** This
-// section carries one truncated sentence — elided with an ellipsis by Fantrax —
-// beside `analysisTitle: "Analysis available to registered users"`. The SAME
-// story arrives on `getPlayerNews` with its full body, its full analysis and a
-// real timestamp, unauthenticated, for the whole pool in one read. A headline is
-// not worth a field when the report is free; `playerNews.ts` is where it lives.

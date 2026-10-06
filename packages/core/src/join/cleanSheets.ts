@@ -5,18 +5,7 @@ import type { ScoringRules } from "../league/scoring";
 import { isResolved } from "./roster";
 import type { RosteredTeam } from "./roster";
 
-// The one number Fantrax's live feed will not give us.
-//
-// Their totals move during a match — verified with Craig on 13 Aug — with a
-// single exception: a clean sheet is not credited until the final whistle, so a
-// defender who has kept one for eighty minutes is still showing nothing while
-// FPL has been showing the points since the hour mark. That gap is the whole
-// reason this file exists, and it is the only scoring the app does.
-//
-// It is a preview, not a score. Fantrax settles clean sheets on their own terms
-// at full time, and the moment they do, the points appear in their total and
-// disappear from here — which is why only fixtures actually in play are counted.
-// Counting a finished one would show it twice.
+// A preview of the clean sheets Fantrax credits only at full time. Fixtures in play only: a finished one is in their total.
 
 /** What a squad stands to gain when the whistles go, and from how many players. */
 export interface PendingCleanSheets {
@@ -27,8 +16,7 @@ export interface PendingCleanSheets {
 export function pendingCleanSheets(
   team: RosteredTeam,
   rules: ScoringRules,
-  /** Fixtures currently in play. A clean sheet in a finished match is Fantrax's
-   *  to award and is already in their total. */
+  /** Fixtures currently in play. */
   inPlay: ReadonlySet<number>,
 ): PendingCleanSheets {
   let points = 0;
@@ -40,8 +28,7 @@ export function pendingCleanSheets(
     if (rostered.slot.position === null) continue;
 
     const worth = categoryPoints(rules, CLEAN_SHEET, rostered.slot.position);
-    // Null is a position this league does not price, not a free one. Zero is a
-    // forward, who is correctly owed nothing and correctly not counted.
+    // Null is a position this league does not price; zero, a forward, is owed nothing.
     if (worth === null || worth === 0) continue;
 
     if (!keepingOne(rostered.stats, inPlay)) continue;
@@ -52,21 +39,8 @@ export function pendingCleanSheets(
   return { points, players };
 }
 
-/** Whether this player is, right now, on a clean sheet worth previewing.
- *
- *  FPL's own verdict, not our arithmetic. Asking `goalsConceded === 0` looks
- *  equivalent and is not: on a double gameweek the per-fixture numbers come from
- *  FPL's `explain` block, which carries a stat only when it scores something, so
- *  a defender who conceded exactly one — worth nought — has no goals-conceded
- *  line at all and reads back as zero. That is a clean sheet we would invent.
- *  `cleanSheet` is present precisely when FPL has awarded it.
- *
- *  The minutes floor is kept beside it because FPL's flag is provisional while a
- *  match runs, and the hour mark is the rule a manager is watching for — it is
- *  when FPL's own numbers move, which is the whole point of previewing this.
- *
- *  A double gameweek yields a row per fixture; any one of them in play with a
- *  clean sheet is a clean sheet being kept. */
+/** Whether he is keeping a clean sheet past the hour in any fixture in play, by FPL's own flag: never
+ *  `goalsConceded === 0`, which reads zero for a man who conceded one on a double. */
 function keepingOne(
   stats: readonly { fixtureId: number; minutes: number; cleanSheet: boolean }[],
   inPlay: ReadonlySet<number>,

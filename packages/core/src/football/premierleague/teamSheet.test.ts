@@ -4,17 +4,13 @@ import recordedStreams from "../__fixtures__/plTextstream.json";
 import type { RawPlFixture, RawPlTextstream } from "./raw";
 import { plPlayerCodes, plTeamSheets } from "./teamSheet";
 
-// Recorded from the Premier League's own API on 4 Sep 2026, never fetched
-// (CODE_RULES §6). Liverpool 2-2 Nottingham Forest, gameweek 2 — both sides
-// named, both carrying a formation, and nine substitutes a side.
+// Liverpool 2-2 Nottingham Forest (GW2): both sides named, both with a formation, nine substitutes a side.
 const DETAIL = recordedFixture as unknown as RawPlFixture;
 /** The textstream's own fixture header, which carries no team lists at all — a
  *  different absence from `[null, null]` and worth keeping both. */
 const [PLAYED] = recordedStreams as unknown as RawPlTextstream[];
 
-/** FPL's `opta_code` → `code`, which the app builds from a bootstrap it holds.
- *  Every player on both sheets, coded as his own id plus a million so a wrong
- *  join is visible rather than coincidental. */
+/** FPL's `opta_code` → `code` for both sheets, each man coded as his own id plus a million so a wrong join shows. */
 const optaToCode = new Map(
   [...(DETAIL.teamLists ?? [])].flatMap((list) =>
     list === null
@@ -47,10 +43,7 @@ describe("plTeamSheets", () => {
   const sheets = plTeamSheets(DETAIL, optaToCode);
 
   it("gives both sides their eleven, their bench and their shape", () => {
-    // The whole point: FPL's per-fixture stats carry a row for a man who
-    // accrued something and NOTHING for one who sat, so a ratings board built
-    // from them has no bench at all. This is the only source of an unused
-    // substitute anywhere in the app.
+    // FPL's per-fixture stats carry no row for a man who sat: this is our only source of an unused substitute.
     expect(sheets?.home.lineup).toHaveLength(11);
     expect(sheets?.home.substitutes).toHaveLength(9);
     expect(sheets?.away.lineup).toHaveLength(11);
@@ -60,9 +53,7 @@ describe("plTeamSheets", () => {
   });
 
   it("puts the HOME side first, off `teams` rather than off `teamLists`", () => {
-    // The two arrays are independently ordered and only the first says which
-    // side is at home. Matching them on `teamId` is what stops a sheet being
-    // drawn under the wrong crest — Liverpool are at home in this one.
+    // Only `teams` says which side is at home; matching on `teamId` keeps each sheet under its own crest.
     expect(sheets?.home.teamId).toBe(10);
     expect(sheets?.away.teamId).toBe(15);
   });
@@ -77,8 +68,6 @@ describe("plTeamSheets", () => {
 
   it("keeps a man FPL has no code for, with his name and a null code", () => {
     // A doubt about our bridge is not a doubt about whether he sat on the bench.
-    // The Premier League registers a squad before FPL lists everyone in it,
-    // which is the lag `scripts/pl-bridge.ts` exists for.
     const blind = plTeamSheets(DETAIL, new Map());
     expect(blind?.home.substitutes).toHaveLength(9);
     expect(blind?.home.substitutes.every((man) => man.code === null)).toBe(true);
@@ -86,9 +75,7 @@ describe("plTeamSheets", () => {
   });
 
   it("resolves the formation grid to men, keeper first", () => {
-    // `RawPlFormation.players` is rows of provider ids; a caller wants men. The
-    // row lengths ARE the formation read left to right with the keeper in front,
-    // which is the check that catches a grid transposed or flattened.
+    // The row lengths ARE the formation, keeper first: the check that catches a grid transposed or flattened.
     const sheet = plTeamSheets(DETAIL, optaToCode);
     const shape = sheet?.home.shape;
     expect(shape?.map((line) => line.length)).toEqual([
@@ -130,10 +117,8 @@ describe("plTeamSheets", () => {
 });
 
 describe("an unnamed fixture", () => {
-  // **`[null, null]`, and it is the shape every match more than an hour or two
-  // out answers with** — counted 5 Sep 2026 across GW4, seven days off: all ten
-  // fixtures. It is two entries and no sheets, so a `length === 0` test passes
-  // it through and the next line reads `.teamId` off null.
+  // `[null, null]` is what every match more than an hour or two out answers: two entries and no sheets,
+  // so a `length === 0` test lets it through and the next line reads `.teamId` off null.
   const unnamed = {
     ...DETAIL,
     teamLists: [null, null],
@@ -160,8 +145,7 @@ describe("an unnamed fixture", () => {
 
 describe("the position a man was named in", () => {
   it("carries the Premier League's own letter for every man on both sheets", () => {
-    // 40 of 40 on the recorded fixture, starters and bench alike — counted
-    // before anything was built on it.
+    // 40 of 40 on the recorded fixture, starters and bench alike.
     const sheets = plTeamSheets(DETAIL, optaToCode);
     const men = [
       ...(sheets?.home.lineup ?? []),
@@ -174,9 +158,7 @@ describe("the position a man was named in", () => {
   });
 
   it("gives G to the man the FORMATION names first, who is the keeper", () => {
-    // `lineup` is the payload's own order and its first man is a defender here;
-    // `shape` is the one that starts with the keeper. Asserting against the
-    // wrong one is how this test failed on its first run.
+    // `lineup` is the payload's own order and starts with a defender here; `shape` starts with the keeper.
     expect(plTeamSheets(DETAIL, optaToCode)?.home.shape?.[0][0].position).toBe("G");
   });
 

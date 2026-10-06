@@ -23,16 +23,13 @@ describe("unacknowledged", () => {
   });
 
   it("judges per read, so the same path under another read is still new", () => {
-    // `draftDate:string` is acknowledged for `getLeagueInfo` too, and that entry
-    // must not excuse it here — a path means a different thing in each payload.
+    // `draftDate:string` is acknowledged for `getLeagueInfo` too, which must not excuse it here.
     expect(unacknowledged("getStandings", ["draftDate:string"], judged).residue).toEqual([
       "draftDate:string",
     ]);
   });
 
   it("names an entry that has stopped differing, so the file can be pruned", () => {
-    // The day the real league answers one of these it becomes clutter, and
-    // clutter in this file is a blindfold rather than a note.
     expect(unacknowledged("getDraftResults", [], judged).settled).toEqual([
       "draftDate:string",
       "startDate:string",

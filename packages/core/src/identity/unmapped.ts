@@ -2,38 +2,18 @@ import type { UnmappedEntry } from "./bridge";
 import type { Proposal } from "./match";
 import { ABSENCE_MAX_SCORE } from "./similarity";
 
-// Which of a run's proposals the script may answer itself, and which are a
-// person's question. `match.ts` decides who claims whom; this file decides what
-// to do with everybody nobody claimed.
+// Which of a run's unclaimed proposals the script may answer itself, and which are a person's question.
 
 /** A run's leftovers, split by who can settle them. */
 export interface UnmappedSplit {
-  /** Recorded in the bridge: nothing in the FPL list this run read looked like
-   *  them. Re-derived next run, so it corrects itself. */
+  /** Recorded in the bridge: nothing in this run's FPL list looked like them. Re-derived next run. */
   assumed: Record<string, UnmappedEntry>;
-  /** Left in the review file: FPL has a plausible answer and the script cannot
-   *  tell which one it is. */
+  /** Left in the review file: FPL has a plausible answer the script cannot pick. */
   forReview: Proposal[];
 }
 
-/** Can the script answer this itself?
- *
- *  `no-candidates` and a low `below-threshold` say the same thing about the
- *  player: nothing in the FPL list this run read looked like him. They differ
- *  only in whether his club's unclaimed pool happened to be empty, which is a
- *  fact about the pool on the day — a pool that refills turns one label into the
- *  other with no player having changed — so persisting the distinction would
- *  persist an artefact.
- *
- *  `ambiguous` and `identity-taken` are the opposite: FPL holds a plausible
- *  answer and the evidence cannot pick it. Guessing there writes a whole season
- *  onto the wrong footballer, which is the one thing this layer exists to
- *  prevent.
- *
- *  `below-threshold` spans both, which is why it is the only reason that reads a
- *  score. Too low to match is not the same claim as nobody being there, and above
- *  `ABSENCE_MAX_SCORE` the near-miss is somebody — a transliteration the metric
- *  cannot bridge, and a person's question. */
+/** Whether the script may answer this itself: nobody looked like him. `ambiguous` and `identity-taken` never;
+ *  `below-threshold` only at or under `ABSENCE_MAX_SCORE`, since a nearer miss may be him. */
 function isAbsence(proposal: Proposal): boolean {
   switch (proposal.reason) {
     case "no-candidates":
@@ -48,11 +28,7 @@ function isAbsence(proposal: Proposal): boolean {
   }
 }
 
-/** Record the residue that has no FPL counterpart, and hand back the rest.
- *
- *  A proposal the script answers here stops being a proposal, which is the whole
- *  point: without it the same academy players are re-offered for review on every
- *  run, forever, and the review file is never empty enough to read. */
+/** Record the residue that has no FPL counterpart, so it is not re-offered for review every run; hand back the rest. */
 export function assumeUnmapped(proposals: Proposal[]): UnmappedSplit {
   const assumed: Record<string, UnmappedEntry> = {};
   const forReview: Proposal[] = [];

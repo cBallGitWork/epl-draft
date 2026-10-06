@@ -3,9 +3,7 @@ import { diffShapes, shapeOf } from "./shape";
 
 describe("shapeOf", () => {
   it("records a path for every leaf, with its type", () => {
-    // The type is part of the path on purpose: a field that turns from a number
-    // into a string is as silent a failure as one that disappears, and without
-    // the type it diffs as no change at all.
+    // The type is part of the path: a number turned string is as silent a failure as a field gone.
     expect(shapeOf({ period: 1, name: "test4" })).toEqual(
       new Set(["period:number", "name:string"]),
     );
@@ -18,8 +16,7 @@ describe("shapeOf", () => {
   });
 
   it("keeps a union of shapes when an array is not uniform", () => {
-    // Fantrax does this: a roster row with no player carries no `scorer`. Both
-    // shapes are real and both must survive the merge.
+    // A Fantrax roster row with no player carries no `scorer`; both shapes must survive the merge.
     const shape = shapeOf({ rows: [{ scorer: { id: "a" } }, { cells: [] }] });
     expect(shape).toEqual(new Set(["rows[].scorer.id:string", "rows[].cells[]:empty"]));
   });
@@ -35,8 +32,7 @@ describe("shapeOf", () => {
   });
 
   it("does not mistake a field name carrying a digit for an id", () => {
-    // `logoUrl256` and `totalFpts2` are both plainly fields and both carry
-    // digits. The uppercase is what tells them apart from `075zi`.
+    // `logoUrl256` and `totalFpts2` are fields with digits; the uppercase sets them apart from `075zi`.
     const shape = shapeOf({ team: { logoUrl256: "a", totalFpts2: 1 } });
     expect(shape).toEqual(new Set(["team.logoUrl256:string", "team.totalFpts2:number"]));
   });
@@ -46,11 +42,7 @@ describe("shapeOf", () => {
   });
 
   it("merges a dictionary of one, which is what an empty league answers with", () => {
-    // Fantrax's live scoring for a league with no teams carries a single
-    // sentinel id — `-3`, the league average. A rule that needed two keys to
-    // recognise a dictionary would read that one as a field name and diff every
-    // path beneath it twice, once as missing and once as added. This is the
-    // exact false positive the first run of `shape-diff` produced.
+    // A teamless league's live scoring carries a lone sentinel id, `-3`: a two-key rule would diff its paths twice.
     expect(shapeOf({ stats: { "-3": { total: 1 } } })).toEqual(new Set(["stats{}.total:number"]));
     expect(shapeOf({ stats: { LG_AVG: { total: 1 } } })).toEqual(
       new Set(["stats{}.total:number"]),
@@ -58,7 +50,7 @@ describe("shapeOf", () => {
   });
 
   it("merges a league's scoring categories and their positions, which are settings and not fields", () => {
-    // The real league swapped A, AF and Sv for AT and GKP on 1 Oct 2026; that is a league choosing, not a lost field.
+    // A league swapping its categories (A, AF, Sv for AT, GKP) is a choice, not a lost field.
     const rehearsal = { scoringSystem: { scoringCategories: { GOALIE: { A: { Default: "points3" }, Sv: { Default: "range1|99|1|3.0" } } } } };
     const real = { scoringSystem: { scoringCategories: { GOALIE: { AT: { Default: "points3" }, GKP: { G: "points0" } } } } };
     expect(shapeOf(real)).toEqual(new Set(["scoringSystem.scoringCategories.GOALIE{}{}:string"]));
@@ -70,15 +62,13 @@ describe("shapeOf", () => {
   });
 
   it("tells an empty array apart from a missing key", () => {
-    // The difference between "no teams yet" and "no such field", which is the
-    // whole reason this file exists. Our real league answers `[]` for months.
+    // "No teams yet" is not "no such field": a league answers `[]` until it drafts.
     expect(shapeOf({ teams: [] })).toEqual(new Set(["teams[]:empty"]));
     expect(shapeOf({})).toEqual(new Set([":empty-object"]));
   });
 
   it("records null as null rather than as absence", () => {
-    // A key present and null is a provider saying "nothing here". A key absent
-    // is a provider that has never heard of it. Different claims.
+    // Present and null says "nothing here"; absent says the provider never heard of it.
     expect(shapeOf({ points: null })).toEqual(new Set(["points:null"]));
   });
 });
@@ -87,8 +77,7 @@ describe("diffShapes", () => {
   const reference = shapeOf({ draftType: "s", teams: [{ id: "a", name: "n" }] });
 
   it("names what the subject is missing, which is the dangerous direction", () => {
-    // A mapper written against the reference reads `undefined` for every one of
-    // these, and the screen quietly shows nothing.
+    // A mapper written against the reference reads `undefined` for each of these.
     const subject = shapeOf({ teams: [{ id: "a" }] });
     expect(diffShapes(reference, subject).missing).toEqual([
       "draftType:string",
@@ -114,10 +103,7 @@ describe("diffShapes", () => {
   });
 
   it("does not call an empty collection a hundred missing fields", () => {
-    // Our real league answers every table with `[]` until draft night. Reporting
-    // that as one missing path per column is the loudest possible way to say "no
-    // teams yet": it buries a real difference and it reddens a gate that then
-    // gets switched off.
+    // An undrafted league answers every table with `[]`: a missing path per column would bury a real difference.
     const drafted = shapeOf({ tableList: [{ rows: [{ cells: [{ content: "x" }] }] }] });
     const undrafted = shapeOf({ tableList: [] });
     const diff = diffShapes(drafted, undrafted);
@@ -126,8 +112,7 @@ describe("diffShapes", () => {
   });
 
   it("still reports a field missing beside a collection that is merely empty", () => {
-    // The one that matters on ship day: the league has drafted, one table is
-    // legitimately empty, and a field has genuinely gone.
+    // After the draft: one table legitimately empty, and a field genuinely gone.
     const before = shapeOf({ draftType: "s", rows: [{ id: "a" }] });
     const after = shapeOf({ rows: [] });
     const diff = diffShapes(before, after);
@@ -138,8 +123,7 @@ describe("diffShapes", () => {
   it("does not let one empty field swallow a longer name beside it", () => {
     const before = shapeOf({ teamInfo: { a: 1 }, teamInfoExtra: { b: 2 } });
     const after = shapeOf({ teamInfo: {}, teamInfoExtra: {} });
-    // Both are empty objects here, so both are emptied — the point is that the
-    // stem match is a boundary match and not a bare prefix.
+    // Both are empty, so both are emptied; the stem match is a boundary, not a bare prefix.
     expect(diffShapes(before, after).missing).toEqual([]);
     expect(diffShapes(shapeOf({ teamInfoExtra: { b: 2 } }), shapeOf({ teamInfo: {} })).missing)
       .toEqual(["teamInfoExtra.b:number"]);
@@ -153,9 +137,7 @@ describe("diffShapes", () => {
 
 describe("emptiness sentinels", () => {
   it("never reports one as a lost or gained field", () => {
-    // `draftSettings:empty-object` on one side and not the other says the league
-    // acquired draft settings. Reported as MISSING it reads like a setting that
-    // vanished, and it was one of the 22 paths reddening the ship-day gate.
+    // `draftSettings:empty-object` gone says the league acquired draft settings; as MISSING it reads like one vanished.
     const before = shapeOf({ draftSettings: {}, teams: [] });
     const after = shapeOf({ draftSettings: { rounds: 15 }, teams: [{ id: "a" }] });
 
@@ -170,8 +152,7 @@ describe("emptiness sentinels", () => {
   });
 
   it("still uses them to attribute what is inside an empty collection", () => {
-    // The sentinel is not reported and is still doing its job: a column that is
-    // absent only because the table is empty is `emptied`, never `missing`.
+    // Unreported, the sentinel still files a column absent only because its table is empty as `emptied`.
     const populated = shapeOf({ table: { rows: [{ name: "a" }] } });
     const empty = shapeOf({ table: { rows: [] } });
     const diff = diffShapes(populated, empty);

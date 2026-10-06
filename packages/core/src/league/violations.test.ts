@@ -5,10 +5,8 @@ import { violations } from "./violations";
 import type { RosterLimits, RosterSlot } from "./types";
 import planning from "./__fixtures__/lineupPlanning.json";
 
-// The same captured team the move tests use: test3 in the rehearsal league on
-// 12 Aug, a full and legal XI with four reserves. Legal is the interesting
-// starting point here — every case below breaks it in a way no move of ours
-// could, which is precisely how these states arise in the real league.
+// The move tests' team, test3 in the rehearsal league on 12 Aug: a full, legal XI with four reserves, which each
+// case breaks in a way no move of ours could.
 
 const slots = planning.slots as RosterSlot[];
 const eligibility = eligibilityOf(planning.eligibility);
@@ -63,13 +61,8 @@ describe("violations", () => {
   });
 
   it("names a player the commissioner has since made ineligible where he stands", () => {
-    // Exactly what happened on 12 Aug: eligibility is a commissioner setting and
-    // it can be narrowed under an XI that was legal when it was set.
-    //
-    // He has to be a dual-eligible player, and that is not incidental: narrowing
-    // a single-position player leaves him with NO eligibility, which this module
-    // reads as data we do not hold rather than as a rule he is breaking. Losing
-    // one of two positions is the case where we still know enough to accuse him.
+    // A commissioner narrows a dual-eligible man's eligibility under a legal XI. A single-position man would be left
+    // with none, which reads as data we do not hold, not a rule broken.
     const playing = slots.find(
       (slot) =>
         slot.status === ACTIVE && (eligibility.get(slot.fantraxId)?.length ?? 0) > 1,

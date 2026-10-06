@@ -4,9 +4,8 @@ import { assistsBy, goalsBy, type ManCounts, type MatchEvent } from "./timeline"
 import type { ReportMan, ReportMatchInput, Side } from "./types";
 import { plural } from "../../format";
 
-// The key-stats box: desk-made lines with figures, never written by the model. xG and xA print here (Craig, 28 Sep 2026:
-// "for key stats, can use xg/xa etc, most shots, most chances created"); the prose stays in words. No line says what a man
-// failed to do: a stat box proves, it does not sneer.
+// The key-stats box: desk-made lines with figures, never written by the model. xG and xA print here and the prose stays
+// in words. No line says what a man failed to do.
 
 export interface KeyStat {
   label: string;

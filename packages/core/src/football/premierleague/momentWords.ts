@@ -1,5 +1,4 @@
 // Opta's fixed shot clauses → the words a report may use. First match wins; an unmatched clause is null, never guessed.
-// Counted over gameweeks 1-5 (PLATFORM_NOTES, 28 Sep 2026): foot on 1,383 of 1,389 shot lines, where from on 1,385.
 
 /** How a shot was struck, where from, where it went, how it was made, and from what. */
 export interface PlShot {

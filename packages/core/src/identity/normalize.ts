@@ -1,14 +1,6 @@
-// Turning two providers' spellings of the same footballer into something
-// comparable. Pure string work, no matching decisions — those live in match.ts.
+// Two providers' spellings of one footballer made comparable: string work only, the decisions are match.ts's.
 
-/** Letters NFKD cannot decompose, because the mark is part of the glyph rather
- *  than a combining character: a stroke (Ø, Đ, Ł), a ligature (ß, Æ, Œ), or a
- *  distinct letter (ı, ð, þ).
- *
- *  Without this table they are STRIPPED rather than folded — "Ødegaard"
- *  normalises to "degaard" and "Groß" to "gro", so a provider writing the ASCII
- *  spelling never matches the accented one. Learned the hard way in the sibling
- *  project; ported rather than rediscovered. */
+/** Letters NFKD cannot decompose (Ø, ß, ı): without this they are stripped, and "Ødegaard" becomes "degaard". */
 const LETTER_FOLD: Record<string, string> = {
   ø: "o",
   đ: "d",
@@ -21,12 +13,8 @@ const LETTER_FOLD: Record<string, string> = {
   þ: "th",
 };
 
-/** Casefold, strip diacritics, reduce to letters, digits and single spaces.
- *
- *  Apostrophes are DELETED rather than spaced. Fantrax writes "OBrien" and FPL
- *  writes "O'Brien"; spacing splits the second into two tokens that share none
- *  with the first, and the pair scores below threshold on a name that is not
- *  remotely ambiguous. Deleting makes both "obrien". Same for "N'Golo". */
+/** Casefold, strip diacritics, reduce to letters, digits and single spaces. Apostrophes are deleted, not spaced,
+ *  so Fantrax's "OBrien" and FPL's "O'Brien" both read "obrien". */
 export function normalizeName(name: string): string {
   const folded = name
     .toLowerCase()
@@ -46,21 +34,12 @@ export function tokens(name: string): string[] {
   return normalized === "" ? [] : normalized.split(" ");
 }
 
-/** The last token of a name — the surname, for every case we actually face.
- *
- *  Used as a guard, not as an identifier: a candidate that contains another
- *  name's tokens must at least share this one before we believe the match. */
+/** The last token of a name: a guard a containing candidate must share, never an identifier. */
 export function surname(name: string): string {
   return tokens(name).at(-1) ?? "";
 }
 
-/** Every spelling of an FPL player another provider might reasonably use.
- *
- *  FPL splits names inconsistently — "Gabriel Fernando" / "de Jesus" for a player
- *  everyone else calls Gabriel Jesus, and a `webName` that is sometimes a bare
- *  surname ("Raya") and sometimes an initialised form ("B.Fernandes"). Generating
- *  the variants is what lets an exact match succeed far more often than it
- *  otherwise would, which keeps fuzzy matching for the cases that need it. */
+/** Every spelling of an FPL player another provider might use, so more matches are exact and fewer fuzzy. */
 export function fplNameVariants(player: {
   firstName: string;
   secondName: string;

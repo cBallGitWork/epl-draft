@@ -109,7 +109,7 @@ function nominees(match: ReportMatchInput, events: readonly MatchEvent[], counts
   for (const m of men.filter((x) => x.injuredOff && x.holder !== null)) add(m, `${m.holder!.team} has him; went off injured${m.fitness === null ? "" : `; since: ${m.fitness}`}`);
   const held = men.filter((x) => x.holder?.fielded === true && x.points !== null).sort((a, b) => (b.points ?? 0) - (a.points ?? 0));
   for (const m of held.filter((x) => (x.points ?? 0) >= 5 || scored(x) + made(x) > 0)) add(m, `${m.holder!.team} has him, ${pts(m.points ?? 0)}${h2h(m)}`);
-  // A high pick who gave his manager little is the other side of the week (Craig: "and who didn't do well").
+  // A high pick who gave his manager little is the other side of the week.
   for (const m of men.filter((x) => x.started && x.holder?.fielded === true && (x.points ?? 99) <= 1 && (x.holder.round ?? 99) <= 3)) {
     add(m, `${m.holder!.team} has him, ${pts(m.points ?? 0)}${h2h(m)}`);
   }

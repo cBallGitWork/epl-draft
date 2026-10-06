@@ -49,9 +49,8 @@ export function tieFacts(index: number, home: PredictionSide, away: PredictionSi
   return facts.filter((fact): fact is string => fact !== null).slice(0, PREDICTIONS.factsPerTie);
 }
 
-/** What the tie is about, favourite first: a main man with an easy game (Craig: "focus on who has a
- *  very easy match up"), else one in form, else one gone quiet or back from a lay-off, else one with
- *  a difficult game, else one in doubt; null when none. */
+/** What the tie is about, favourite first: a main man with an easy game, else one in form, else one gone
+ *  quiet or back from a lay-off, else one with a difficult game, else one in doubt; null when none. */
 function storyOf(sides: readonly PredictionSide[]): { side: PredictionSide; man: SquadMan; text: string } | null {
   const main = (side: PredictionSide, man: SquadMan | null | undefined) => (man != null && side.keyMen.some((each) => each.name === man.name) ? man : null);
   const lead = (side: PredictionSide, who: string) => `${side.name}'s ${who}, one of their main men`;
@@ -103,8 +102,8 @@ function extra(sides: readonly { tag: string; side: PredictionSide }[], fresh: (
   return null;
 }
 
-/** Men who share a club on one side, and a man on each side whose clubs meet this round: the two
- *  coincidences worth a line (Craig). Only among the men who matter most, so it is never a roll call. */
+/** Men who share a club on one side, and a man on each side whose clubs meet this gameweek: the two
+ *  coincidences worth a line. Only among the men who matter most, so it is never a roll call. */
 function together(index: number, home: PredictionSide, away: PredictionSide): (string | null)[] {
   const clubmates = [home, away].map((side) => {
     const byClub = new Map<string, string[]>();
@@ -112,7 +111,7 @@ function together(index: number, home: PredictionSide, away: PredictionSide): (s
     const shared = [...byClub].find(([, names]) => names.length > 1);
     return shared === undefined ? null : `- T${index}-club: ${side.name}'s ${shared[1].join(" and ")} both play for ${shared[0]}.`;
   });
-  // A big game when each man's club is at an extreme in the other's view (Craig: "big match ups").
+  // A big game when each man's club is at an extreme in the other's view.
   const meeting = home.keyMen.flatMap((ours) =>
     away.keyMen.flatMap((theirs) => {
       const there = ours.fixtures.find((each) => each.opponent === theirs.club);
@@ -149,13 +148,13 @@ function fixture(man: SquadMan): string {
   return `two games, ${man.fixtures.map(one).join(" and ")}`;
 }
 
-/** Whose man he is, every time: a doubt read without its owner was once printed against the wrong side. */
+/** Whose man he is, every time, or a doubt is read against the wrong side. */
 function doubt(man: SquadMan, side: string): string {
   return `${side}'s ${man.name} (${man.club}) ${state(man)}.`;
 }
 
-/** How likely he is to play, in words and never FPL's figure (Craig: "dont say percentages"), and
- *  what is wrong with him, from FPL's note with its figure taken out. */
+/** How likely he is to play, in words and never FPL's figure, and what is wrong with him, from FPL's
+ *  note with its figure taken out. */
 function state(man: SquadMan): string {
   const { availability } = man;
   const note = availability.news.replace(/\s*-?\s*\d+\s*% chance of playing/giu, "").replace(/\s+-\s+/gu, ", ").trim();

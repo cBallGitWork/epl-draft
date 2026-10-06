@@ -5,7 +5,7 @@ import type { ReportPiece } from "./draft";
 import { surname } from "./keyStats";
 import { isDismissal, isGoal } from "./timeline";
 
-// Each part of a piece owns its facts (sports desk, 28 Sep 2026): the table is the standfirst's, the account tells what
+// Each part of a piece owns its facts: the table is the standfirst's, the account tells what
 // decided the match and not the bookings, a section says what the account did not, and a stake is about its own man.
 
 

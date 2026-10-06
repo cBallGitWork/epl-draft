@@ -75,13 +75,8 @@ describe("lineup", () => {
   });
 
   it("shows a letter it has never seen in front of every one it knows", () => {
-    // Position is commissioner-mutable league state, so a new letter is a real
-    // possibility. It goes to the front, where it looks wrong on purpose.
-    //
-    // The unknown letter is listed FIRST and a third line sits between the two
-    // known ones: with the unknown slot last, or with only two lines, a sort
-    // that filed it in goal would still produce the expected order out of
-    // insertion order alone, and the test would pass on the bug it is named for.
+    // A new letter goes to the front, where it looks wrong on purpose. It is listed FIRST with a line between the
+    // known two, or a sort that filed it in goal would pass on insertion order alone.
     const withWinger = team([
       slot("W", "ACTIVE", "W1"),
       slot("G", "ACTIVE", "G1"),

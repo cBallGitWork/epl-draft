@@ -1,6 +1,5 @@
-// FPL's availability note, read into what is wrong and what they expect, so a letter can say it
-// the way a physio would without adding anything. Five shapes cover all 204 notes counted on
-// 25 Sep 2026; anything else is carried whole as `other`.
+// FPL's availability note, read into what is wrong and what they expect, so a letter can say it as a physio
+// would without adding anything. A note in none of the five shapes is carried whole as `other`.
 
 /** What FPL expects of an injury: a return date, a chance of playing, or no date yet. */
 export type Outlook = { back: string } | { chance: number } | "unknown" | null;

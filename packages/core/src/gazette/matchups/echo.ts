@@ -1,4 +1,4 @@
-// Nothing told the same way twice running (Craig, 29 Sep 2026): a headline that turns on a word a recent one did.
+// Nothing told the same way twice running: a headline that turns on a word a recent one did.
 
 const COMMON = new Set(["the", "and", "for", "with", "from", "into", "over", "that", "this", "their", "them", "they", "have", "when", "after", "gets", "goes"]);
 const words = (text: string) => new Set((text.toLowerCase().match(/[\p{L}\p{N}'’]+/gu) ?? []).filter((w) => w.length >= 4 && !COMMON.has(w)));

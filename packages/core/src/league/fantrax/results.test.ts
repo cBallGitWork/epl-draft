@@ -3,9 +3,7 @@ import { mapSeasonResults } from "./results";
 import type { RawSchedulePage } from "./results";
 import seasonResults from "./__fixtures__/seasonResults.json";
 
-// Trimmed from a live anonymous `getStandings?view=SCHEDULE` on 20 Aug 2026,
-// with two edits that are the states the real one will reach: a scored row, and
-// a cell Fantrax left blank.
+// Trimmed from a live cookieless `getStandings?view=SCHEDULE`, edited to hold a scored row and a blank cell.
 
 describe("mapSeasonResults", () => {
   const results = mapSeasonResults(seasonResults as RawSchedulePage);
@@ -20,8 +18,7 @@ describe("mapSeasonResults", () => {
   });
 
   it("keeps a blank total absent rather than nought", () => {
-    // A fixture Fantrax has not scored has not been drawn 0-0, and the row
-    // beside it genuinely is on nought.
+    // An unscored fixture is not a 0-0; the row beside it genuinely is on nought.
     expect(results).toContainEqual({ period: 1, teamId: "8enbgqo5msgb375j", points: null });
     expect(results).toContainEqual({ period: 1, teamId: "j9zadacnmshcpazf", points: 0 });
   });
@@ -32,9 +29,7 @@ describe("mapSeasonResults", () => {
   });
 
   it("refuses to read a team's name as another team's score", () => {
-    // A column reordering Fantrax is free to make. Without the adjacency check
-    // the first team takes the second team's name as its total — and this
-    // league contains a team called "123", which parses cleanly as a number.
+    // A reordering Fantrax may make: unchecked, the first team would take team "123"'s name as its total.
     const reordered = mapSeasonResults({
       tableList: [
         {

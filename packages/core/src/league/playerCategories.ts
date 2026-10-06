@@ -62,6 +62,6 @@ export const PLAYER_CATEGORIES: readonly PlayerCategory[] = [
   { ...entry(GOALS_AGAINST, "defensive", true, wordsFor(GOALS_AGAINST).name), also: GOALS_AGAINST_OUTFIELD.short },
   entry(YELLOW_CARDS, "discipline", true),
   entry(RED_CARDS, "discipline", true),
-  // Defensive, not discipline (Craig, 2 Sep): on a player's row an own goal is what he did at the back.
+  // Defensive, not discipline: on a player's row an own goal is what he did at the back.
   entry(OWN_GOALS, "defensive", true),
 ];

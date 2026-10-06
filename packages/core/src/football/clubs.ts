@@ -1,18 +1,13 @@
 import { FPL_SHIRT_BASE, PL_ASSET_BASE } from "../config";
 import type { Club } from "./types";
 
-// Club visual identity. FPL serves crests but publishes no colours, so the palette
-// is hand-authored here — it's twenty rows that change once a season, which is far
-// cheaper than scraping and getting it subtly wrong.
-//
-// Keyed by FPL's `shortName` because that is what the API actually returns. Note
-// FPL and Fantrax disagree on some labels (Forest is "NFO" here, "NOT" on Fantrax) —
-// never join the two on short name, join on player identity.
+// Club colours, grounds, crests and kits, hand-authored and keyed by FPL's `shortName`, which FPL publishes no colours for.
+// FPL and Fantrax disagree on some short names (Forest is "NFO" here, "NOT" on Fantrax): never join the two on one.
 
 export interface ClubColours {
-  /** Shirt base — the colour a fan would name first. */
+  /** Shirt base: the colour a fan would name first. */
   primary: string;
-  /** Trim/secondary, used for the shirt's accent and contrast text. */
+  /** Trim, used for the shirt's accent and contrast text. */
   secondary: string;
 }
 
@@ -39,29 +34,12 @@ const CLUB_COLOURS: Record<string, ClubColours> = {
   SUN: { primary: "#EB172B", secondary: "#FFFFFF" },
 };
 
-/** Neutral fallback so a promoted club we haven't styled still renders sanely
- *  rather than crashing or showing a hole. */
+/** Neutral pair for a promoted club nobody has styled yet. */
 const FALLBACK: ClubColours = { primary: "#4b5563", secondary: "#FFFFFF" };
 
-/** Where each club plays. Twenty rows, on `CLUB_COLOURS`' own argument.
- *
- *  **No provider we hold publishes a venue.** FPL's fixture carries none;
- *  SofaScore's match payload carries `venue_lat`/`venue_lon` and both are null
- *  on every 26-27 row we have captured, and its event block has no venue object
- *  at all (checked 4 Sep 2026). So this is hand-authored, exactly as the colours
- *  are, and for the same reason: twenty rows that change about once a decade,
- *  against scraping something and getting it subtly wrong.
- *
- *  **Safe because FPL publishes one competition.** Every fixture in the football
- *  layer is a league match at the home club's own ground, so the home club names
- *  the venue and there is no neutral tie to get wrong. A cup semi-final at
- *  Wembley would break that, and there is no cup in the feed to break it with —
- *  `docs/ui/prem.md` records the same limit for the fixture list's competition
- *  column.
- *
- *  `gazette/banned.ts` forbids the PAPER from naming a ground, and that stands:
- *  it is a rule about a language model recalling one, not about a table somebody
- *  wrote down. This is the table, and the paper still may not reach for it. */
+/** Each club's ground, hand-authored: no provider we hold publishes a venue.
+ *  Safe only because FPL carries league matches alone, so the home club names the venue; a neutral cup tie would break it.
+ *  The paper is still barred from naming a ground (`gazette/banned.ts`). */
 const CLUB_GROUNDS: Record<string, string> = {
   ARS: "Emirates Stadium, London",
   AVL: "Villa Park, Birmingham",
@@ -85,11 +63,7 @@ const CLUB_GROUNDS: Record<string, string> = {
   SUN: "Stadium of Light, Sunderland",
 };
 
-/** The home club's ground, or null for one nobody has written down.
- *
- *  Null and never a guess: a promoted club arrives every August and a made-up
- *  ground under a real club's name is the confident wrong answer DESIGN §7
- *  refuses. The caption falls back to naming the round instead. */
+/** The home club's ground, or null (never a guess) for one nobody has written down. */
 export function clubGround(shortName: string): string | null {
   return CLUB_GROUNDS[shortName] ?? null;
 }
@@ -103,30 +77,8 @@ export function clubColoursOf(club: Pick<Club, "shortName"> | undefined): ClubCo
   return clubColours(club?.shortName ?? "");
 }
 
-/** Club crest. `code` is FPL's season-stable club code, so these URLs keep working
- *  across seasons. SVG scales to any size for free — prefer it over the PNGs. */
-/** FPL's season-stable club `code`, by the `shortName` the API returns.
- *
- *  **The crest needs a number and most of this app holds a name.** `crestUrl`
- *  takes `Pick<Club, "code">`, which every screen drawn from a football snapshot
- *  already has — but the pool board is Fantrax's, and what it holds is a
- *  three-letter club code. It deliberately does not join the football layer
- *  (`players/pool.ts`: a page that is entirely Fantrax's would gain a second
- *  provider it could fail on), so the twenty numbers have to be data rather than
- *  a read.
- *
- *  **Constants are allowed here and that is the layering, not a shortcut.**
- *  CLAUDE.md's rule is that the football layer models a game whose rules are
- *  fixed for everyone, so they can be constants; it is the LEAGUE layer where a
- *  number must be read from `getLeagueInfo`. A club's code is as fixed as its
- *  colours, which is why this sits beside `CLUB_COLOURS` and shares its
- *  twenty keys exactly.
- *
- *  Read off `bootstrap-static` on 10 Sep 2026 rather than written from memory,
- *  which is what `packages/core/src/football/` asks for and what the
- *  `CLUB_COLOURS` docblock above means by "changes once a season". Re-read them
- *  when the division changes; a promoted club that is missing here draws no
- *  crest rather than the wrong one. */
+/** FPL's season-stable club `code` by short name, for Fantrax screens that hold only the three letters.
+ *  Read off `bootstrap-static`; re-read when the division changes, since a missing club draws no crest. */
 const CLUB_FPL_CODES: Record<string, number> = {
   ARS: 3,
   AVL: 7,
@@ -150,60 +102,25 @@ const CLUB_FPL_CODES: Record<string, number> = {
   TOT: 6,
 };
 
-/** The crest for a club we know only by its short name, or null when we do not
- *  know it at all.
- *
- *  **Null rather than a fallback badge**, on `portraits.ts`'s own rule and for
- *  the same reason: a wrong crest is worse than none, because only one of the
- *  two looks like an answer. A caller draws its own absence. */
+/** The crest for a club known only by short name, or null (never a fallback badge) when unknown. */
 export function crestForShortName(shortName: string): string | null {
   const code = CLUB_FPL_CODES[shortName];
   return code === undefined ? null : crestUrl({ code });
 }
 
+/** The club's SVG crest, keyed on its season-stable `code`. */
 export function crestUrl(club: Pick<Club, "code">): string {
   return `${PL_ASSET_BASE}/badges/t${club.code}.svg`;
 }
 
-/** Some colours are near-white and a white label on them vanishes. Pick the
- *  readable ink for text sitting on one.
- *
- *  **Whichever of the two actually contrasts more, computed** — not a brightness
- *  guess. This asked Rec. 601 luma whether the ground was "light" and took white
- *  whenever it was not, which is a different question from the one that matters
- *  and gets a different answer on a saturated mid-tone: a #e08a00 orange scores
- *  0.58 luma, reads as "dark", and takes white ink at **2.69:1** — half the AA
- *  floor. `tools/ui/sweep.mjs` found three such pairs the day the fantasy teams
- *  got colours of their own, because a hand-authored palette of twenty clubs had
- *  happened not to contain one.
- *
- *  Every one of the twenty clubs gets the same ink it got before, so this is a
- *  fix rather than a restyle — checked against the whole table, and the two
- *  tightest (Arsenal 4.49, Sunderland 4.48) were already as good as their reds
- *  allow either way round.
- *
- *  It is still not a guarantee: a mid-grey has no readable ink at all and this
- *  returns the better of two bad answers rather than pretending. The palette is
- *  hand-authored and `sweep` measures it, which is where a real floor is kept. */
+/** White or near-black, whichever contrasts more with the club's primary; the better of two bad answers on a mid-grey. */
 export function inkOn(colours: ClubColours): string {
   return contrast(colours.primary, "#ffffff") >= contrast(colours.primary, INK)
     ? "#ffffff"
     : INK;
 }
 
-/** The filled plate a SUBJECT's title bar is drawn on, in its own colours.
- *
- *  `cm9900/25.jpg` is Everton and `21.jpg` is Everton against Arsenal: when a CM
- *  screen is about somebody rather than about the competition, the bar is filled
- *  with their colour and the title takes whichever ink survives it. The pair is
- *  always computed together — a background without its ink is the half of the
- *  decision that makes a pale club unreadable — so it is one call.
- *
- *  Extracted at three: `squad/[teamId]/Shell` for a fantasy side,
- *  `prem/club/[code]/Shell` for a club, and the club's own match header, which
- *  draws two of them against each other. It takes the colours rather than the
- *  subject because the two layers name their subjects differently — a team id
- *  and a club's short name — and only the colours are common. */
+/** A subject's title-bar plate: its primary colour with the ink that survives it, always computed as a pair. */
 export function plateOn(colours: ClubColours): { background: string; ink: string } {
   return { background: colours.primary, ink: inkOn(colours) };
 }
@@ -211,9 +128,7 @@ export function plateOn(colours: ClubColours): { background: string; ink: string
 /** The desk's near-black, for a plate that wants dark ink. */
 const INK = "#0b0c10";
 
-/** WCAG 2.1 relative luminance, which is what a contrast ratio is defined on —
- *  and is not luma. The sRGB channels are linearised first; skipping that step
- *  is the whole of the bug above. */
+/** WCAG 2.1 relative luminance, not luma: skipping the sRGB linearisation gives white ink on a mid-tone orange. */
 function luminance(hex: string): number {
   const h = hex.replace("#", "");
   const channels = [0, 2, 4].map((at) => parseInt(h.slice(at, at + 2), 16) / 255);
@@ -228,30 +143,7 @@ function contrast(a: string, b: string): number {
   return (hi + 0.05) / (lo + 0.05);
 }
 
-/** The club's kit, keyed on the same stable club code as the crest.
- *
- *  Forty of these — one outfield and one keeper per club — cover every player in
- *  the league, which is why they cache far better than a portrait per man and why
- *  they are never out of date: the shirt follows the club a player is at now, not
- *  the club he was at when someone last photographed him.
- *
- *  **220 and not 110**, counted 10 Sep 2026 across all twenty clubs in both kits:
- *  `-220` answers 40/40 and is a real 220x290 at 20-42 KB, where `-110` is a real
- *  110x145 at 7-12 KB. `-440` is a 404 on every one of the forty, so 220 is the
- *  ceiling this host publishes and not a number picked for headroom. The pitch
- *  draws a card at `PitchRows.MAX_CARD` — 110px — so the small file was exactly
- *  native on a desk and half of it on any phone made since 2014.
- *
- *  There is a `.webp` of each at a third the bytes and it is deliberately not
- *  asked for: `next/image` re-encodes whatever it fetches, so a second URL shape
- *  would buy one origin fetch per club per deploy and cost a second thing to keep
- *  in step.
- *
- *  **One size and no parameter.** Every caller draws a kit at or above the card,
- *  so a `size` argument would have one value at every call site — which is
- *  CODE_RULES §1's own example of an abstraction that earns nothing. `portraitUrl`
- *  takes one because the two portrait sets differ by 3x in bytes and one caller
- *  genuinely wants the big one. */
+/** The club's outfield or keeper kit by club code; `-220` is the largest size the host serves (`-440` is a 404). */
 export function shirtUrl(club: Club, keeper: boolean): string {
   return `${FPL_SHIRT_BASE}/shirt_${club.code}${keeper ? "_1" : ""}-220.png`;
 }

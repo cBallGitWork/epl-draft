@@ -14,8 +14,7 @@ describe("numeric", () => {
   });
 
   it("keeps every printing of nothing as nothing", () => {
-    // Three different blanks, none of them nought: an empty roster slot, the
-    // dash for a category a player never registered, and the fixture column.
+    // Three blanks, none of them nought: an empty slot, the dash for an unregistered category, the fixture column.
     expect(numeric("")).toBeNull();
     expect(numeric("-")).toBeNull();
     expect(numeric(undefined)).toBeNull();
@@ -34,8 +33,7 @@ describe("season", () => {
   });
 
   it("calls it a projection when Fantrax says nothing", () => {
-    // Failing toward the label that admits a doubt. Printing a projection under
-    // a season heading is the one mistake this field exists to prevent.
+    // Fails toward the label that admits a doubt: a projection must never print under a season heading.
     expect(season(undefined).projected).toBe(true);
     expect(season({ code: "SEASON_926_YEAR_TO_DATE" }).projected).toBe(true);
   });
@@ -45,8 +43,7 @@ describe("mapTeamStats", () => {
   const stats = mapTeamStats(teamStats);
 
   it("keeps the two scoring groups apart", () => {
-    // A keeper's saves and an outfielder's goals-against are different columns
-    // in different tables. Flattening would file one under the other.
+    // A keeper's saves and an outfielder's goals-against are columns in different tables; flattening would mix them.
     expect(stats.groups.map((group) => group.name)).toEqual(["Goalkeeper", "Outfielder"]);
     expect(stats.groups[0].columns.map((column) => column.code)).toEqual([
       "GP", "Min", "CS", "GA", "Sv", "YC", "RC", "PKS", "PKM", "G", "A", "AF", "OG",
@@ -57,9 +54,7 @@ describe("mapTeamStats", () => {
   });
 
   it("reads the categories as points, and they sum to the total", () => {
-    // The whole reason to read this endpoint: Fantrax explains its own number.
-    // Games played is a category on the same row and is a count, not points, so
-    // it is excluded from the sum exactly as their table excludes it.
+    // Fantrax explains its own number; games played is a count, not points, so it stays out of the sum.
     const [keeper] = stats.groups[0].lines;
     expect(keeper.points).toBe(109);
     const columns = stats.groups[0].columns;
@@ -77,8 +72,7 @@ describe("mapTeamStats", () => {
   });
 
   it("drops the empty roster slots and keeps the players", () => {
-    // An empty slot is a real row of real blank cells with no player in it. The
-    // keeper table here is one keeper and one vacant reserve spot.
+    // The keeper table here is one keeper and one vacant reserve spot, a row of blank cells.
     expect(stats.groups[0].lines).toHaveLength(1);
     expect(stats.groups[1].lines).toHaveLength(2);
     expect(stats.groups[0].lines[0].fantraxId).toBe("02lz0");
@@ -99,8 +93,7 @@ describe("mapPoolStats", () => {
   const pool = mapPoolStats(poolStats);
 
   it("reads every column the pool actually publishes", () => {
-    // Status sits between them and is not a number at all, and the last two are
-    // headed but not keyed, so they are found by label.
+    // Status sits between them and is no number; the last two are headed but not keyed, so found by label.
     expect(pool.rows[0]).toEqual({
       fantraxId: "061vq",
       rank: 1,
@@ -119,8 +112,7 @@ describe("mapPoolStats", () => {
   });
 
   it("turns Fantrax's literal <br/> into a space rather than shipping the tag", () => {
-    // Their opponent cell is pre-formatted markup, and it reaches a page that
-    // renders text. A `<br/>` printed verbatim is the tell that nobody looked.
+    // The opponent cell is pre-formatted markup, and it reaches a page that renders text.
     expect(pool.rows[0]?.opponent).not.toContain("<");
   });
 
@@ -133,8 +125,7 @@ describe("mapPoolStats", () => {
   });
 
   it("says these are projected numbers, because they are", () => {
-    // This endpoint refuses a year-to-date code and answers with a projection
-    // anyway, so the label has to come from the answer.
+    // This endpoint can answer a year-to-date code with a projection, so the label comes from the answer.
     expect(pool.season.projected).toBe(true);
   });
 

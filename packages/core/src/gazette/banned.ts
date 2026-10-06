@@ -1,43 +1,5 @@
-// The phrases the paper does not print, and the check that finds them.
-//
-// **A rule in a prompt is a hope, and this file is the second half of it.**
-// `strangers.ts` says it for names: a rule the model can obey to the letter
-// while still breaking it is not a guardrail. The same is true of register.
-// `house` has banned American sports-desk phrasing since Craig's ruling — *"its
-// pure american yank shite talk, its uk sport"* — and on 3 Sep 2026 a front page
-// still went out with five headlines built on "bank"; told in the same breath
-// never to write "off the bench", the next match report filed was headlined
-// "Isidor Off The Bench Wins It Short".
-//
-// **The list is the single source and the prompt is generated from it**
-// (`voice/house.ts` interpolates `BANNED`), so the rule the writer is given and
-// the rule the check enforces cannot drift apart — which is the whole reason it
-// is here rather than in the copy.
-//
-// A warning and never a refusal, for `strangers.ts`'s reason: an eager check a
-// human reads is useful, and an eager check that refuses would eventually throw
-// away a good story over a surname.
-//
-// Pure by construction: a string in, the hits out. No clock, no network.
+// The phrases the paper does not print, and the check that finds them: the prompt's list is generated from these.
 
-/** Why each group is banned, so the next addition has an argument to join.
- *
- *  - **Register** — Craig's own list. American sports-desk voice in a British
- *    football paper, plus "bank", which is not American so much as a tic the
- *    writer converges on when nothing stops it.
- *  - **Sequence** — claims about the shape of a match we cannot see. A minutes
- *    figure says how long he was on, never whether he started or came on, and
- *    we have no events at all: no order, no minute, no substitution. Lifts for
- *    the desks that get events when `data/intel/matches/` exists.
- *  - **Grounds** — recalled and never read. We are given no venue (the
- *    sibling's `matches.parquet` has it null for all twenty of this season's
- *    PL matches), so a ground is real-world knowledge, and it is banned on the
- *    occasions it would have been right as well as the ones it would not.
- *  - **Filler** — sentences that say nothing, which BE TIGHT already forbids in
- *    prose and which arrive anyway.
- *
- *  It is a floor rather than a fence: a phrase not listed here is not thereby
- *  approved, and the check misses everything nobody has thought of yet. */
 /** Register: Craig's own list of American sports-desk voice, and "bank". */
 export const REGISTER: readonly string[] = [
   "banked", "banks", "bank", "banking",
@@ -53,7 +15,7 @@ export const SEQUENCE: readonly string[] = [
   "opened the scoring", "levelled it", "put them ahead",
 ];
 
-/** Grounds: recalled, never read. */
+/** Grounds: recalled, never read, since the desk is given no venue. */
 export const GROUNDS: readonly string[] = [
   "Anfield", "Elland Road", "Stamford Bridge", "the Bridge", "Stadium of Light",
   "Old Trafford", "the Emirates", "the Etihad", "Villa Park", "Goodison",
@@ -62,8 +24,7 @@ export const GROUNDS: readonly string[] = [
   "King Power", "Turf Moor", "the Gtech", "Hill Dickinson",
 ];
 
-/** Filler. **"knock" is Craig's, and it is absolute**; the rest are weather reports on a column and sentences that
- *  survive their own deletion, each marked by a production editor on 18 Sep. */
+/** Filler: sentences that say nothing. "knock" is banned outright. */
 export const FILLER: readonly string[] = [
   "knock", "knocks",
   "heaviest load", "reads heaviest", "the picture is harder", "a mixed bag",
@@ -75,11 +36,7 @@ export const FILLER: readonly string[] = [
 
 export const BANNED: readonly string[] = [...REGISTER, ...SEQUENCE, ...GROUNDS, ...FILLER];
 
-/** Every banned phrase the prose actually uses, in the order they are listed
- *  and each named once however often it appears.
- *
- *  Whole words only: "bank" must not fire on "Bankole", and a check that cries
- *  wolf on a surname is a check a human stops reading. */
+/** Every listed phrase the prose uses, once each in list order; whole words only, so "bank" never fires on "Bankole". */
 export function banned(prose: string, list: readonly string[] = BANNED): string[] {
   return list.filter((phrase) =>
     new RegExp(`(?<![\\p{L}])${escapeRegExp(phrase)}(?![\\p{L}])`, "iu").test(prose),

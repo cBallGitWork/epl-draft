@@ -4,16 +4,9 @@ import { politeFetch } from "../http/fetch";
 import { readJson } from "../http/json";
 import type { RawEntry, RawPicks } from "./raw";
 
-// The two entry reads, and nothing else. Public: an FPL entry id is the number in
-// the URL a manager already shares, not a credential. FPL's authenticated
-// endpoints (/me/, /my-team/) stay out — a credential flow the Premier League
-// changes without warning, for a viewer that does not need it.
+// The two public entry reads, and nothing else: an entry id is not a credential, and FPL's authenticated reads stay out.
 
-/** A manager's entry, or null when FPL has never heard of the id.
- *
- *  A mistyped id is the ordinary case here — somebody reading a number off
- *  another website — so a 404 is an answer, not a fault. Anything else still
- *  throws. */
+/** A manager's entry, or null when FPL has never heard of the id: a mistyped id is ordinary. Anything else throws. */
 export async function fetchEntry(entryId: number): Promise<RawEntry | null> {
   const what = `entry ${entryId}`;
   const res = await politeFetch(`${FPL_API_BASE}/entry/${entryId}/`);
@@ -22,10 +15,7 @@ export async function fetchEntry(entryId: number): Promise<RawEntry | null> {
   return (await readJson(res, notJson("FPL", what))) as RawEntry;
 }
 
-/** One round's picks, or null before that round has been played.
- *
- *  FPL answers 404 for a gameweek an entry has no picks for, which is every
- *  gameweek until the season starts. Expected, and modelled rather than thrown. */
+/** One round's picks, or null for FPL's 404 on a gameweek the entry has no picks for, as before the season. */
 export async function fetchPicks(entryId: number, gameweek: number): Promise<RawPicks | null> {
   const what = `picks ${entryId}/${gameweek}`;
   const res = await politeFetch(`${FPL_API_BASE}/entry/${entryId}/event/${gameweek}/picks/`);

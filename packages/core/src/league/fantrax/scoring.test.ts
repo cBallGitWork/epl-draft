@@ -11,17 +11,14 @@ const rules = mapScoringRules(recorded as RawScoringSystem);
 
 describe("mapScoringRules", () => {
   it("prices a clean sheet by position, from the league's own table", () => {
-    // A defender's clean sheet is worth four and a midfielder's one. Nothing in
-    // the app may assume that — it is a commissioner setting, and this is the
-    // read that proves it comes from the payload.
+    // A commissioner setting, read from the payload: a defender's clean sheet four, a midfielder's one.
     expect(rules).not.toBeNull();
     expect(categoryPoints(rules!, "CS", "D")).toBe(4);
     expect(categoryPoints(rules!, "CS", "M")).toBe(1);
   });
 
   it("prices a keeper from the keeper's table, not the outfielders'", () => {
-    // "G" is absent from the outfield CS row, so reading the wrong table would
-    // fall through to Default and quietly price a keeper's clean sheet at zero.
+    // "G" is absent from the outfield CS row: the wrong table would price a keeper's clean sheet at Default's zero.
     expect(categoryPoints(rules!, "CS", "G")).toBe(4);
   });
 
@@ -51,8 +48,7 @@ describe("mapScoringRules", () => {
   });
 
   it("prices a keeper at nothing when Fantrax never named the keeper group", () => {
-    // Fails to the outfield table's Default rather than to a wrong table — and
-    // for a keeper that is null-or-Default, never four points we made up.
+    // With no keeper group named, a keeper prices at null, never at four points we made up.
     const nameless = mapScoringRules({
       scoringCategories: { GOALIE: { CS: { Default: "points4" } }, NON_GOALIE: { CS: { D: "points4" } } },
     });
@@ -144,9 +140,7 @@ describe("pointsFor on the real league's table", () => {
 });
 
 describe("mapScoringCategories", () => {
-  // Both leagues' real `scoringCategorySettings`, recorded 27 Aug 2026. Two
-  // fixtures because they answer different vocabularies, and a mapper written
-  // against one of them proves nothing about the other.
+  // Both leagues' real `scoringCategorySettings`: they answer different vocabularies, so one proves nothing of the other.
   const rehearsal = mapScoringCategories(rehearsalCategories);
   const real = mapScoringCategories(realCategories);
 
@@ -156,11 +150,8 @@ describe("mapScoringCategories", () => {
   });
 
   it("keys on group and category, never on the position", () => {
-    // The one that matters. `statsMap.object2` always says `#-1`, and this
-    // league lists outfield Goals only under 701/702/703 and outfield Clean
-    // Sheets only under 702/703. Keying on the whole `scipId` would resolve
-    // Minutes and Assists and lose exactly these two — which on screen looks
-    // like a man who did not score rather than like a bug.
+    // Live rows say `#-1`, but this league lists outfield Goals only under 701/702/703 and Clean Sheets under 702/703:
+    // keyed on the whole `scipId`, exactly these two would vanish.
     const outfield = rehearsalCategories.scoringCategorySettings.find((g) => g.group.id === "5010");
     const positions = (id: string) =>
       (outfield?.configs ?? []).filter((c) => c.scoringCategory.id === id).map((c) => c.position.id);
@@ -190,8 +181,7 @@ describe("mapScoringCategories", () => {
   });
 
   it("leaves a category Fantrax did not name unnamed, rather than printing its id", () => {
-    // `5010#6090` on a player card looks like a category called 6090. A missing
-    // row is absent from a list that never claimed to be complete.
+    // `5010#6090` on a player card looks like a category called 6090.
     expect(
       mapScoringCategories({
         scoringCategorySettings: [

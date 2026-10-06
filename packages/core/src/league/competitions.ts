@@ -17,19 +17,15 @@ export const LEAGUE_COMPETITION: Competition = { id: "league", name: "League" };
 export const COMPETITIONS: readonly Competition[] = [LEAGUE_COMPETITION, ...CUPS];
 
 export interface TieSide {
-  /** Null while the draw cannot name a team — an empty table, or a side that is
-   *  won rather than seeded. */
+  /** Null while the draw cannot name a team: an empty table, or a side won rather than seeded. */
   team: LeagueTeam | null;
-  /** What to print: the team's name once there is one, else the draw's own words
-   *  for this side. */
+  /** What to print: the team's name once there is one, else the draw's own words for this side. */
   label: string;
 }
 
 export interface CompetitionTie {
   competition: Competition;
-  /** Null for the league's own fixtures. A league week has no round name, and
-   *  inventing "Matchday 4" would be labelling Fantrax's schedule with a word
-   *  Fantrax does not use. */
+  /** Null for the league's own fixtures: a league week has no round name. */
   round: string | null;
   /** A cup tie's number ("M5"), which later rounds name it by. Null for the league's and a group's. */
   code: string | null;
@@ -37,8 +33,7 @@ export interface CompetitionTie {
   away: TieSide;
 }
 
-/** Fantrax's pairings, as ties. Both sides are already teams, so nothing is
- *  drawn and nothing can be missing. */
+/** Fantrax's pairings, as ties; both sides are already teams. */
 export function leagueTies(pairings: readonly PeriodPairing[]): CompetitionTie[] {
   return pairings.map((pairing) => ({
     competition: LEAGUE_COMPETITION,
@@ -72,13 +67,7 @@ export function seededIn(gameweek: number): Cup | undefined {
   return CUPS.find((cup) => cup.seeding.from === "gameweek" && cup.seeding.gameweek === gameweek);
 }
 
-/** One competition's ties in one gameweek, or one round of one competition's.
- *
- *  A gameweek can hold more than one competition at once — the whole reason the
- *  schedule stopped being a flat list of pairings — so what a reader needs is
- *  the ties boxed under the thing they are being played for. Ordered by
- *  `COMPETITIONS` rather than by whatever order the ties arrived in, so the
- *  league leads whether or not a cup happens to be on. */
+/** One competition's ties in one gameweek, or one round of one; grouped in `COMPETITIONS` order, the league first. */
 export interface CompetitionGroup {
   competition: Competition;
   round: string | null;

@@ -52,7 +52,7 @@ describe("wordsOf", () => {
 });
 
 describe("wordsFor", () => {
-  // Craig, 6 Oct 2026: "data page needs our dfp and dfp3 stats (and name them better site wide change)".
+  // DefCon's two counts carry our own names on every board.
   it("names and heads DefCon's two counts as ours, with what each counts in the key", () => {
     expect(wordsFor(DEFENSIVE_POINTS)).toEqual({ name: "DefCon", key: "DefCon: tackles won, interceptions and blocks", head: "DC" });
     expect(wordsFor(DEFENSIVE_POINTS_3)).toMatchObject({ name: "DefCon+", head: "DC+" });

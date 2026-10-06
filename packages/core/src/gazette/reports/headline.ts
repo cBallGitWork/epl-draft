@@ -4,8 +4,8 @@ import type { MatchDesk } from "./desk";
 import { REPORT_NEVER } from "./style";
 import { isGoal } from "./timeline";
 
-// The day's headline: the writer offers several, the desk strikes those that break a rule, and the fan picks one or none
-// (sports desk, 28 Sep 2026). A pun that needs the report to explain it, or is untrue, is worse than a plain line.
+// The day's headline: the writer offers several, the desk strikes those that break a rule, and the fan picks one or none.
+// A pun that needs the report to explain it, or is untrue, is worse than a plain line.
 
 const WORDS = 8;
 const TABLOID = /\b(?:sinks?|stuns?|rocks?|hammers?|thrash(?:es)?|crush(?:es)?|smash(?:es)?|stun|blitz(?:es)?|romp(?:s)?|sweep(?:s)? aside)\b/iu;

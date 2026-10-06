@@ -1,23 +1,12 @@
-// `getStandings` on the fxpa surface — the standings page Fantrax draws for its
-// own site, read by `mapStandings` for the table.
-//
-// Two methods share that name and they are not the same read. fxea's answers a
-// plain array of table rows; this one answers the page, and the page is where
-// the league's own POINTS live — three for a win here. The fxea array carries the
-// record as one unsplit string and no points column at all.
-//
-// It needs no cookie. Probed anonymously against both leagues on 29 Aug 2026,
-// mid-gameweek-2 with results in it, which is the state that proved the columns.
+// `getStandings` on fxpa: the cookieless standings page `mapStandings` reads, where the league's POINTS live.
+// fxea's method of the same name is a different read: a plain array with the record as one string and no points.
 
-/** One header cell. `key` is the column's name in Fantrax's own vocabulary —
- *  `win`, `draw`, `loss`, `points` — and reading by it rather than by position
- *  is what stops a reordered table being read as the wrong numbers. */
+/** One header cell; `key` (`win`, `draw`, `loss`, `points`) is read, never position, so a reordered table reads right. */
 export interface RawTableHeaderCell {
   key?: string;
 }
 
-/** One body cell. Only the ones naming a team carry a `teamId`, which is how a
- *  row says whose it is without the column order being known. */
+/** One body cell; only team cells carry a `teamId`, which says whose row it is. */
 export interface RawTableCell {
   content?: string;
   teamId?: string;
@@ -25,15 +14,12 @@ export interface RawTableCell {
 
 export interface RawTableRow {
   cells?: RawTableCell[];
-  /** The columns Fantrax pins to the left of its own scrolling table: rank, then
-   *  the team. Their header is `fixedHeader`, not `header`. */
+  /** The pinned left columns, rank then team, headed by `fixedHeader`, not `header`. */
   fixedCells?: RawTableCell[];
 }
 
 export interface RawStandingsTable {
-  /** "Standings" for the table, "Gameweek 2" for the results below it. Not what
-   *  the table is FOUND by — see `mapStandings` — because a caption is a
-   *  display string and the keys are not. */
+  /** "Standings", or "Gameweek 2" for the results below; never what a table is found by. */
   caption?: string;
   fixedHeader?: { cells?: RawTableHeaderCell[] };
   header?: { cells?: RawTableHeaderCell[] };
@@ -41,7 +27,6 @@ export interface RawStandingsTable {
 }
 
 export interface RawStandingsPage {
-  /** The standings table first, then one table per played round. A league with
-   *  no teams still answers the standings table, with no rows in it. */
+  /** The standings table, then one per played round; a teamless league still answers the first, empty. */
   tableList?: RawStandingsTable[];
 }

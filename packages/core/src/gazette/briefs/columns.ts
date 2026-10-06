@@ -4,15 +4,7 @@ import type { Pick } from "../types";
 import type { WireFacts } from "../wire";
 import { storylinesBlock } from "./storylines";
 
-// The opinion columns' briefs. One file because they share a shape — a facts
-// pack, one instruction about what the opinion may be about, and the memory
-// block — and splitting three twenty-line builders across three files would be
-// filing for its own sake. The Points Dodgers read football, not the league, and have their own.
-//
-// The rule they all obey: **the facts are ours and the opinion is the
-// model's.** Each of these columns exists to be argued with in the group chat,
-// so the writer is given room to be wrong about football and none at all to be
-// wrong about what happened.
+// The opinion columns' briefs: the facts are ours, the opinion is the model's.
 
 /** The power rankings: every manager ranked by opinion, expressly not by table. */
 export function buildPowerBrief(brief: {
@@ -67,13 +59,7 @@ export function buildWireBrief(brief: {
     .join("\n\n");
 }
 
-/** The column over the eleven the page already prints.
- *
- *  It asked for a caption per man until 3 Sep 2026 and Craig cut them: *"the
- *  descriptiosn are the same 'STAT + quippy bit', pure ai shite."* Eleven
- *  one-sentence verdicts, each written from a name, a slot and a stat line, have
- *  nowhere to go but the stat and a flourish. The argument survives; the
- *  annotation does not. */
+/** The column arguing for the eleven the page already prints, never a caption per man. */
 export function buildElevenBrief(brief: {
   gameweek: number;
   picks: readonly Pick[];
@@ -88,12 +74,7 @@ export function buildElevenBrief(brief: {
     `THE TEAM OF THE WEEK, gameweek ${brief.gameweek}, lining up ${brief.shape}. The eleven is already picked and printed — your job is the argument for it, the way a pundit talks you through a side he has chosen and dares anybody to disagree.`,
     ["THE ELEVEN:", ...men].join("\n"),
     "Have opinions about the FOOTBALL and never about facts you were not given. A man marked BENCHED is the best story in the side and should be treated as such.",
-    // **A column, and not a caption sheet.** It asked for two short paragraphs
-    // plus a sentence per man, and the sentences carried the whole piece — which
-    // made the team of the week a table with captions under it rather than the
-    // thing it is named for. The captions are gone; the shape of the argument is
-    // named here so the prose is an argument rather than eleven verdicts run
-    // together.
+    // The argument's shape is named so the prose argues rather than running eleven verdicts together.
     "The body is the whole column, four to six short paragraphs. Open on the man of the week and say plainly why he is it. Work through the side by line — the back, the middle, the front — and give the reasons, not the numbers again. Name at least one man who is unlucky to miss out and say who he would have replaced. Finish on the shape or on the week itself.",
     "Never write it as a list. No man gets his own sentence in turn: connect them, argue for the side, and leave out anybody you have nothing to say about.",
     storylinesBlock(brief.threads),
@@ -102,8 +83,7 @@ export function buildElevenBrief(brief: {
     .join("\n\n");
 }
 
-/** What a man actually did, in the vernacular. Shared by the two columns that
- *  print a player's round. */
+/** What a man did, in shorthand: "1G, 1A in 90 min". */
 function did(pick: Pick): string {
   const parts: string[] = [];
   if (pick.goals > 0) parts.push(`${pick.goals}G`);

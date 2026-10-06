@@ -1,6 +1,4 @@
-// The league layer's public surface. Import from here, not from the Fantrax
-// subfolder — that indirection is what lets our own 27/28 engine replace Fantrax
-// as an adapter change rather than a rewrite.
+// The league layer's public surface: import from here, never the Fantrax subfolder, so the adapter can be replaced.
 
 export type {
   LeagueInfo,
@@ -63,9 +61,7 @@ export type { Violation } from "./violations";
 
 export { isActive } from "./rosterStatus";
 
-// The shape differ, for the script that asks whether the real league answers in
-// the shape every mapper here was written against. Its one consumer is
-// `scripts/shape-diff.ts`, which is the 11:00 item on the ship-day runbook.
+// The shape differ, for `scripts/shape-diff.ts`: does the league still answer in the shape the mappers expect.
 export { diffShapes, shapeOf } from "./fantrax/shape";
 export type { ShapeDiff } from "./fantrax/shape";
 
@@ -104,13 +100,11 @@ export { mapBenchOrder } from "./fantrax/benchOrder";
 export { isFantraxPlayerId, mapPlayerProfile } from "./fantrax/profile";
 export type { LabelledValue, PlayerIntel, PlayerMatch } from "./fantrax/profile";
 export { mapTransactions, orderKey } from "./fantrax/transactions";
-// Everything written about one player. `playerNews.ts` records the `tab`
-// parameter that reaches it, and the eleven names that did not.
+// Everything written about one player.
 export { fetchPlayerProfile, fetchPlayerStories, fetchPoolNews, fetchPoolStats } from "./fantrax/playerClient";
 export { mapPlayerStories, mapPoolNews } from "./fantrax/playerNews";
 export type { PlayerStory } from "./fantrax/playerNews";
-// Exported so the app can hold a raw payload across a cache boundary before
-// mapping it — the mapper stays the only place raw meets clean.
+// So the app can cache a raw payload before mapping it; the mapper stays the only place raw meets clean.
 export type { RawTeamRosters } from "./fantrax/raw";
 export {
   fetchLiveScoring,

@@ -4,19 +4,9 @@ import { creditedGoals, goalGroups, plGoals } from "./goals";
 import type { RawPlFixture } from "./raw";
 import type { PlGoal } from "./goals";
 
-// The two readings a scoresheet makes of a side's goals: who FPL thinks laid
-// each one on, and how they fold into one row per scorer.
-//
-// **Split out of `sheetEvents.test.ts` on 11 Sep 2026**, following the source
-// split rather than a line count — §4 is explicit that cutting a suite at line
-// 300 means cutting it at whichever assertion happens to sit there. These cases
-// moved because the functions did.
-//
-// Neither describe needs a recorded fixture: both take plain data a caller
-// already holds, which is the whole point of them being pure.
+// A scoresheet's two readings of a side's goals, who FPL thinks laid each on and one row per scorer, on plain data.
 
-/** A goal with the fields a case cares about, and defaults for the rest. Shared
- *  by both goal describes below rather than declared inside one of them. */
+/** A goal with the fields a case cares about, and defaults for the rest. */
 const goal = (over: Partial<PlGoal>): PlGoal => ({
   minute: 10,
   teamId: 1,

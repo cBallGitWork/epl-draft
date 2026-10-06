@@ -6,13 +6,7 @@ export const MS_PER_DAY = 86_400_000;
 // Instants and the league's calendar: every date the app, the paper and the scripts print or file
 // by is read here, in London, whatever the reader's own zone.
 
-/** An ISO instant as milliseconds, or null when it cannot be read.
- *
- *  **Six sites were writing this guard by hand**, each slightly differently, and
- *  the difference mattered: one treated an unreadable instant as inside the
- *  window and another as outside. Provider data is untrusted (CODE_RULES §5),
- *  so "cannot be read" is an answer the caller has to see rather than a NaN
- *  that silently compares false against everything. */
+/** An ISO instant as milliseconds, or null when it cannot be read, never a NaN that compares false with everything. */
 export function instantOf(iso: string): number | null {
   const at = Date.parse(iso);
   return Number.isNaN(at) ? null : at;
@@ -29,13 +23,7 @@ export function onLondonDay(iso: string | null | undefined, day: string): boolea
   return londonDayOf(iso ?? "") === day;
 }
 
-/** A date as the league's own day, `YYYY-MM-DD`. `en-CA` because it is the
- *  sortable spelling; nothing formatted by it reaches a screen.
- *
- *  One formatter for three callers — the front page's running order, the Team
- *  Sheet's day key and the capture paths each built their own, and one of them
- *  rebuilt it on every call. A day key that disagreed between them would file a
- *  23:30 conference under the wrong date. */
+/** A date as the league's own day, `YYYY-MM-DD`: `en-CA` for the sortable spelling, never printed. */
 export function londonDay(at: Date): string {
   return DAY_KEY.format(at);
 }

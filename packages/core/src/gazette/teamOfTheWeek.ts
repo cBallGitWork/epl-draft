@@ -6,17 +6,7 @@ import { isActive } from "../league/rosterStatus";
 import type { RosterLimits } from "../league/types";
 import type { Pick, TeamLine, TeamOfTheWeek } from "./types";
 
-// The best eleven anyone owned this week, and who owns them.
-//
-// The joke the league actually tells is not "Haaland scored twice" — everyone
-// saw that. It is *whose* Haaland he was, and which manager left him out. So
-// every pick names its owner, and the section is worthless without that.
-//
-// The shape comes from the league's own position caps, not from a formation we
-// like: `getLeagueInfo` says one keeper, five defenders, five midfielders and
-// three forwards may be active, and a commissioner who changes that changes this
-// team's shape with it. The total is whatever the caps allow to take the field —
-// eleven under our settings, and read rather than assumed.
+// The best eleven anyone owned this week and who owns each man, shaped by the league's own active caps.
 
 /** Pick the week's eleven from every squad in the league, ranked by Fantrax's
  *  points for the period (`points`, by Fantrax id); the football breaks a tie and
@@ -26,13 +16,7 @@ export function teamOfTheWeek(
   limits: RosterLimits,
   points: ReadonlyMap<string, number>,
 ): TeamOfTheWeek {
-  // **No published total is no team**, and not a team of whatever the position
-  // caps happen to add up to. `RosterLimits.maxActivePlayers` is null where the
-  // league has not stated a cap, and its own docblock makes the decision the
-  // caller's: eleven is OUR league's answer, not the game's, and the caps sum to
-  // fourteen under our settings, so either number invented here is the exact
-  // hardcoding the position check below already refuses. The two other callers
-  // — `league/violations` and `league/moves` — both guard the same way.
+  // No stated active total is no team: the position caps sum past eleven, and any number here would be invented.
   if (limits.maxActivePlayers === null) return { picks: [], lines: [], shape: "" };
 
   const candidates = rosteredPicks(teams, points);
@@ -41,12 +25,10 @@ export function teamOfTheWeek(
   const perPosition = new Map<string, number>();
 
   for (const pick of candidates) {
-    // The total is not the sum of the caps: our league allows five defenders and
-    // five midfielders but only eleven on the field.
+    // The total is its own cap, not the sum of the position caps.
     if (taken.length >= limits.maxActivePlayers) break;
     const cap = limits.maxActiveByPosition[pick.position];
-    // A position the league sets no cap for cannot be filled from here: we would
-    // be inventing a rule about how many of them may play.
+    // A position with no cap is never filled: how many may play would be invented.
     if (cap === undefined) continue;
     const used = perPosition.get(pick.position) ?? 0;
     if (used >= cap) continue;
@@ -59,7 +41,7 @@ export function teamOfTheWeek(
   return { picks: taken, lines, shape: lines.map((line) => line.picks.length).join("-") };
 }
 
-/** Every rostered man who actually played this round, strongest first; the eleven is a selection from this. */
+/** Every rostered man who played this gameweek, strongest first. */
 function rosteredPicks(teams: readonly RosteredTeam[], points: ReadonlyMap<string, number>): Pick[] {
   const candidates: Pick[] = [];
   for (const team of teams) {
@@ -73,11 +55,7 @@ function rosteredPicks(teams: readonly RosteredTeam[], points: ReadonlyMap<strin
   );
 }
 
-/** A player worth considering, or null.
- *
- *  Only players who were actually on the field: a squad member who did not play
- *  cannot be in a team of the week, and a reserve who scored is somebody's
- *  misfortune rather than a selection. */
+/** A resolved, slotted player who was on the field, as a pick; otherwise null. */
 function considered(rostered: RosteredPlayer, team: RosteredTeam, points: ReadonlyMap<string, number>): Pick | null {
   if (!isResolved(rostered)) return null;
   if (rostered.slot.position === null) return null;
@@ -87,9 +65,7 @@ function considered(rostered: RosteredPlayer, team: RosteredTeam, points: Readon
 
   const goals = total(rostered.stats, (stat) => stat.goals);
   const assists = total(rostered.stats, (stat) => stat.assists);
-  // Over the matches he was on the pitch for, on the same rule as `contribution`:
-  // FPL carries a zero row for a fixture that has not kicked off, and on a double
-  // that row would take Saturday's clean sheet off him until Tuesday.
+  // Only matches he played: FPL's zero row for an unplayed fixture would take a double's clean sheet off him.
   const appearances = rostered.stats.filter((stat) => stat.minutes > 0);
   const cleanSheet = appearances.length > 0 && appearances.every((stat) => stat.cleanSheet);
   const saves = total(rostered.stats, (stat) => stat.saves);
@@ -111,8 +87,7 @@ function considered(rostered: RosteredPlayer, team: RosteredTeam, points: Readon
     cleanSheet,
     saves,
     points: points.get(rostered.slot.fantraxId) ?? null,
-    // How anybody would argue it: goals first, then assists, then keeping one
-    // out. A red card takes a player out of the argument entirely.
+    // Goals, then assists, then keeping one out; a red card takes him out of the argument.
     score: goals * 100 + assists * 60 + (cleanSheet ? 30 : 0) + saves * 5 - conceded * 8 - redCards * 200,
   };
 }
@@ -121,14 +96,7 @@ function total(stats: readonly PlayerMatchStats[], pick: (stat: PlayerMatchStats
   return stats.reduce((sum, stat) => sum + pick(stat), 0);
 }
 
-/** The selection in its lines, back to front.
- *
- *  Ordered by `positionDepth` rather than by the payload's key order, which is
- *  alphabetical — "D-F-G-M" is not a formation anybody has ever said aloud, and
- *  a pitch drawn in it would put the keeper third.
- *
- *  Empty lines are dropped: a league that allows a position nobody was picked at
- *  has no line there, and a shape reading "1-4-0-5" is not one anybody says. */
+/** The selection in its lines, keeper first by position depth (the payload's keys are alphabetical); empty lines dropped. */
 function linesOf(picks: readonly Pick[], limits: RosterLimits): TeamLine[] {
   return Object.keys(limits.maxActiveByPosition)
     .sort(byPositionDepth)

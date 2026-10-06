@@ -9,14 +9,7 @@ import teamStats from "./fantrax/__fixtures__/teamStats.json";
 
 const stats = mapTeamStats(teamStats);
 
-/** Every player in the recorded team, paired with his own group's header.
- *
- *  `pointsBreakdown` used to do this and had exactly one caller, which now reads
- *  the live scoreboard instead. The assertions below are about `breakdownOf` and
- *  were always about `breakdownOf`; only the loop over the two groups has moved
- *  out of the source and into the test that needed it. Keeper and outfielder
- *  stay separate right up to the lookup, which is what keeps a keeper's saves
- *  out from under an outfielder's goals against. */
+/** Every player in the recorded team, paired with his own group's header, so saves never sit under goals against. */
 const breakdown = new Map(
   stats.groups.flatMap((group) =>
     group.lines.map((line) => [line.fantraxId, breakdownOf(group.columns, line)] as const),
@@ -73,10 +66,7 @@ describe("breakdownOf, over a whole recorded team", () => {
   });
 
   it("drops the categories that scored him nothing", () => {
-    // Two printings of nothing and neither is a row: a bare dash for a category
-    // he never registered, and a real nought. Games played goes the same way —
-    // in this view it renders as 0, because a count of appearances is not a
-    // score, which is why their own table leaves it out of the sum.
+    // Neither a dash nor a real nought is a row, and games played renders as 0 in this view.
     const codes = (breakdown.get("05o4b") ?? []).map((line) => line.code);
     expect(codes).not.toContain("GP");
     expect(codes).not.toContain("RC");
@@ -89,10 +79,7 @@ describe("breakdownOf, over a whole recorded team", () => {
   });
 
   it("states that it does not know what he DID, rather than inventing a count", () => {
-    // The keeper is on 23 for saves and this view cannot say how many he made:
-    // the FPTS cells ARE the points, so the count is the thing that view spent.
-    // Null and never "23" — a figure repeated out of the points column would
-    // read as a count and be one only where a category pays exactly 1 apiece.
+    // 23 points for saves, and no count: the FPTS cells are the points, so `value` is null, never "23".
     const keeper = breakdown.get("02lz0") ?? [];
     expect(keeper.length).toBeGreaterThan(0);
     expect(keeper.map((line) => line.value)).toEqual(keeper.map(() => null));

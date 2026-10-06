@@ -29,9 +29,7 @@ describe("availabilityNews", () => {
   const squads = { mine: "t1", opponent: "t2", name: (id: string) => ({ t1: "Mine", t2: "Theirs" })[id] ?? null };
 
   it("files the reader's own squad and his next opponent, and nobody else", () => {
-    // Craig, 17 Sep 2026: "only show MY teams player news for injuries, and my
-    // next opponent". A third manager's doubt is somebody else's problem — see
-    // `doubts.ts` on why the pair is the list that is both short and complete.
+    // A third manager's doubt is somebody else's problem.
     const notes = [note(), note({ teamId: "t2" }), note({ teamId: "t3" })];
     expect(availabilityNews(notes, 5, squads).map((i) => i.teamId)).toEqual(["t1", "t2"]);
   });
@@ -48,10 +46,7 @@ describe("availabilityNews", () => {
   });
 
   it("comes from the desk that would know", () => {
-    // Craig, 17 Sep 2026: "lets have more fun, so an injury news, could be from
-    // the physio". A knock is the medical desk's letter, a ban is the governing
-    // body's, and a man who has joined Al Hilal is the transfer desk's — which
-    // is the case Craig himself was unsure of.
+    // A knock is the medical desk's letter, a ban the governing body's, a move abroad the transfer desk's.
     expect(availabilityNews([note()], 5, squads)[0].from).toBe("Your physio");
     expect(availabilityNews([banned()], 5, squads)[0].from).toBe("The FA");
     expect(
@@ -76,7 +71,7 @@ describe("availabilityNews", () => {
   });
 
   it("writes the subject as a short headline on his surname", () => {
-    // Craig, 30 Sep 2026: "reword these to look like a real sentence". A surname keeps it on one row at 390.
+    // A surname keeps it on one row at 390.
     const subject = (over: Partial<AvailabilityNote>, gameweek: number | null = 5) =>
       availabilityNews([note(over)], gameweek, squads)[0].headline;
     expect(subject({})).toBe("Isak a doubt for GW5");
@@ -160,14 +155,11 @@ describe("availabilityNews", () => {
   });
 
   it("carries FPL's own stamp rather than the round it was read in", () => {
-    // `news_added` is non-null on 198 of the 198 elements carrying a note,
-    // counted live 17 Sep 2026. This builder used to set `at: null` on the
-    // written belief that FPL publishes no "as of".
+    // FPL stamps every note it carries (`news_added`).
     const [item] = availabilityNews([note()], 5, squads);
     expect(item.at).toBe("2026-09-15T19:30:09Z");
     expect(item.gameweek).toBe(5);
-    // And a note with no stamp still falls back to its round, which is what the
-    // blue block drew for every doubt until today.
+    // A note with no stamp falls back to its round.
     expect(availabilityNews([note({ newsAt: null })], 5, squads)[0].at).toBeNull();
   });
 

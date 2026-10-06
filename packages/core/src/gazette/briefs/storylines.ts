@@ -1,12 +1,8 @@
 import { THREAD_MAX_BEATS, type StoryThread } from "../ledger";
 
-// The memory block every scoped brief carries: which sagas are live, and which
-// are worn out. The split is the 38-week season's brake — "withhold, don't
-// just forbid": a worn thread is listed by its subject alone, so the model can
-// avoid it without being handed the material to repeat it with.
+// The memory block every brief carries: live sagas with their last beat, worn ones by subject alone.
 
-/** How the wear rule reads a thread: over the beat cap, or retired, is worn
- *  whatever its status says. */
+/** Retired, or at the beat cap whatever its status says. */
 function isWorn(thread: StoryThread): boolean {
   return thread.status === "retired" || thread.beats >= THREAD_MAX_BEATS;
 }

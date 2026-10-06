@@ -1,6 +1,4 @@
-// When to try again, and when to stop: statuses, socket codes and Retry-After, and nothing about
-// football or fantasy. Pure, so the policy is testable; the sleeping and the randomness live in
-// `fetch.ts`. Outside both layers because both share it and neither may import the other.
+// When to try again and when to stop, shared by both layers; the sleeping and the randomness live in `fetch.ts`.
 
 import { HTTP_RETRY_AFTER_MAX_MS } from "../config";
 
@@ -33,17 +31,11 @@ export function retryDelay(
   return Math.round(exponential * (1 + jitter01));
 }
 
-/** `Retry-After` as milliseconds, or null when absent or unintelligible.
- *
- *  A header we cannot read is not an error and not a zero — it is simply no
- *  instruction, and the exponential schedule stands. */
+/** `Retry-After` as milliseconds, or null when absent or unreadable, so the exponential schedule stands. */
 function statedDelay(retryAfter: string | null, now: number): number | null {
   if (retryAfter === null) return null;
 
-  // `Number("")` is 0, and `Headers.get` returns "" for a header that is present
-  // but empty — so without this an empty Retry-After would read as "try again
-  // immediately", turning a rate limit into a tight loop against the provider
-  // that just asked us to stop.
+  // An empty header reads `Number("")`, 0: without this a rate limit becomes a tight retry loop.
   const stated = retryAfter.trim();
   if (stated === "") return null;
 

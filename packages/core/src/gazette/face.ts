@@ -1,25 +1,15 @@
-// The man a story prints a picture of, and the edge that refuses a partial one. Its own file so a
-// story and a tie can both carry one without `story.ts` and `published.ts` importing each other.
+// The man a story prints a picture of; its own file so `story.ts` and `published.ts` need not import each other.
 
-/** A player the page can print a picture of.
- *
- *  The FPL `code` and not the id: a portrait path keys off the season-stable
- *  code, and this is written to disk in `paper.json` — CODE_RULES §3 forbids
- *  persisting the per-season id. `clubId` is this season's, and is only ever
- *  used to reach a crest at render, never persisted as identity. */
+/** A player the page can print a picture of, by FPL's season-stable `code`; `clubId` is this season's, for the crest. */
 export interface StoryFace {
   code: number;
   name: string;
   clubId: number;
-  /** The roster slot he was filed in, for the one thing the picture needs it
-   *  for: a goalkeeper's kit is a different shirt, and the shirt is the rung
-   *  `PlayerImage` falls to when he has no photograph. Fantrax's own letter —
-   *  the SLOT and never a position off the player. */
+  /** Fantrax's letter for his roster slot, so a keeper with no photograph gets a keeper's shirt. */
   position: string | null;
 }
 
-/** Every field or none. A face with no code is a portrait we cannot fetch and a face with no name
- *  is a caption we cannot write, so a partial one prints as no picture rather than a broken one. */
+/** Every field or none: a partial face prints no picture rather than a broken one. */
 export function normalizeFace(value: unknown): StoryFace | null {
   const face = value as Partial<StoryFace> | null;
   if (face === null || typeof face !== "object") return null;

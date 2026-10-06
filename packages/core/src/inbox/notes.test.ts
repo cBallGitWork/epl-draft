@@ -49,7 +49,7 @@ describe("ailment", () => {
 
 describe("noteBesideChance", () => {
   it("drops the chance when the heading already says it", () => {
-    // Craig's card, 30 Sep 2026: "75% CHANCE OF PLAYING / Ankle injury - 75% chance of playing".
+    // The card's heading already reads "75% CHANCE OF PLAYING".
     expect(noteBesideChance("Ankle injury - 75% chance of playing", 75)).toBe("Ankle injury");
   });
 

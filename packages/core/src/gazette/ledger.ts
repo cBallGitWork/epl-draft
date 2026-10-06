@@ -1,40 +1,21 @@
-// The newsroom's memory: what has been covered, and which storylines are
-// running. Committed beside the paper and read back before every filing.
-//
-// Two jobs that share a file because they share a rhythm — both are written in
-// the same commit as the stories that change them:
-//
-// **Covered keys are the idempotence truth.** A cron that fires every half hour
-// must find "already filed" somewhere cheaper than an API call, and the key
-// grammar is ours: club codes, never per-season ids (`layer-split.md`'s
-// identity rule reaches persisted keys too), and a news item's key is its
-// article URL with the fragment stripped — the BBC feed re-lists the same
-// article under different `#n` positions, so the raw guid double-covers.
-//
-// **Threads carry wear.** The World Cup paper repeated its jokes daily because
-// nothing made it stop; a 38-week season needs the brake in the data. Every
-// thread counts its beats and remembers when it last ran, so the brief can
-// split storylines into "live, may advance" and "worn, may not reuse".
+// The newsroom's memory, committed beside the paper: covered keys (club codes, never per-season ids) stop a
+// story filing twice, and threads count their beats so a worn storyline is not reused.
 
 /** One running storyline, as the model reports it and the ledger wears it. */
 export interface StoryThread {
-  /** What the saga is about, in a few words. Doubles as the merge key once
-   *  slugged, so two phrasings of one saga stay one thread. */
+  /** What the saga is about, in a few words; slugged, it is the merge key. */
   subject: string;
   /** The latest development, one line. */
   beat: string;
   /** `open` runs; `retired` is finished or worn out and may not come back. */
   status: "open" | "retired";
-  /** How many editions have advanced it. Past `THREAD_MAX_BEATS` the brief
-   *  moves it to the worn list whatever its status says. */
+  /** How many editions have advanced it; past `THREAD_MAX_BEATS` it is worn whatever its status. */
   beats: number;
   /** ISO instant of the last edition that used it. */
   lastUsedAt: string;
 }
 
-/** One league's memory. Keyed by league for the same reason every persisted
- *  shape here carries a leagueId: the rehearsal league rehearses, and its
- *  memory must not leak onto the real league's paper. */
+/** One league's memory, keyed by league so a test league's never reaches the real paper. */
 export interface LedgerBook {
   covered: string[];
   threads: StoryThread[];
@@ -42,16 +23,13 @@ export interface LedgerBook {
 
 export type Ledger = Record<string, LedgerBook>;
 
-/** Covered keys kept per league. A key this old is a round long superseded —
- *  at the paper's own cap of two rounds in print, four hundred keys is months
- *  of margin, and the ledger stays a file a human can open. */
+/** Covered keys kept per league: months of margin over the two gameweeks in print. */
 export const MAX_COVERED = 400;
 
 /** Threads kept per league, open and retired together. */
 const MAX_THREADS = 24;
 
-/** Beats before a thread is worn out. Six editions on one joke is already one
- *  more than the World Cup paper's readers wanted. */
+/** Beats before a thread is worn out. */
 export const THREAD_MAX_BEATS = 6;
 
 export function normalizeLedger(parsed: unknown): Ledger {
@@ -70,16 +48,14 @@ export function normalizeLedger(parsed: unknown): Ledger {
   return ledger;
 }
 
-/** What the model reports back per story: the saga, the development, and
- *  whether it is done. Wear is ours to keep, not its to claim. */
+/** What the model reports back per story; wear is counted here, never claimed by it. */
 export interface ThreadUpdate {
   subject: string;
   beat: string;
   status?: "open" | "retired";
 }
 
-/** The ledger after a filing: keys spent, threads advanced, wear counted.
- *  Pure — returns a new ledger, clocks injected as the filing instant. */
+/** A new ledger after a filing: keys spent, threads advanced, wear counted at `filedAt`. */
 export function recordCoverage(
   ledger: Ledger,
   leagueId: string,
@@ -109,19 +85,17 @@ export function recordCoverage(
     } else {
       const thread = threads[known];
       threads[known] = {
-        // The first phrasing of the subject stays — it is the merge identity.
+        // The first phrasing of the subject stays.
         subject: thread.subject,
         beat: update.beat,
-        // Retirement is a one-way door: a worn joke does not reopen because
-        // the model liked it again.
+        // Retirement is one-way.
         status: thread.status === "retired" ? "retired" : (update.status ?? "open"),
         beats: thread.beats + 1,
         lastUsedAt: filedAt,
       };
     }
   }
-  // Oldest-used drop first when over the cap; retired before open at equal age,
-  // since a retired thread is only kept to stop its own resurrection.
+  // Over the cap, the least recently used go first, retired before open at equal age.
   const kept = [...threads]
     .sort(
       (a, b) =>
@@ -141,8 +115,7 @@ export function isCovered(ledger: Ledger, leagueId: string, key: string): boolea
   return (ledger[leagueId]?.covered ?? []).includes(key);
 }
 
-/** Two phrasings of one saga are one thread: case, punctuation and spacing do
- *  not multiply storylines. */
+/** A subject's merge key: case, punctuation and spacing ignored. */
 export function threadSlug(subject: string): string {
   return subject
     .toLowerCase()

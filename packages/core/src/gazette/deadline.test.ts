@@ -4,10 +4,7 @@ import type { LeaguePeriod } from "../league/types";
 import { LINEUP_LOCK_LEAD_MINUTES } from "../config";
 import { nextDeadline } from "./deadline";
 
-// The periods and kickoffs below are the real ones, because the bug this file
-// now guards against is invisible against invented data: a period that opens at
-// its own first kickoff behaves identically either way, and only period 4 — a
-// Friday-morning open for a Saturday round — tells the two rules apart.
+// Real periods and kickoffs: only period 4, a Friday-morning open for a Saturday start, tells boundary from kickoff.
 
 const period = (number: number, start: string, end: string): LeaguePeriod => ({
   number,
@@ -40,17 +37,14 @@ describe("nextDeadline", () => {
   });
 
   it("does not read the period boundary as the kickoff", () => {
-    // The bug this replaced. Period 4 opens Fri 11 Sep 10:00Z for a round whose
-    // first match is Sat 12 Sep 14:00Z — announcing the boundary put the
-    // deadline a day early, and it does that for most of the season.
+    // Period 4 opens Fri 11 Sep 10:00Z; its first match is Sat 12 Sep 14:00Z.
     const at = nextDeadline([P4], KICKOFFS, "2026-09-10T12:00:00Z");
     expect(at?.locksAt).not.toBe("2026-09-11T09:45:00.000Z");
     expect(at?.locksAt.slice(0, 10)).toBe("2026-09-12");
   });
 
   it("answers the lock a manager has to beat, not the next period to open", () => {
-    // Friday lunchtime, period 4 already open. The next period to OPEN is 5;
-    // the deadline he actually has to beat is tomorrow afternoon's.
+    // Friday lunchtime, period 4 already open: its lock tomorrow is still the one to beat.
     expect(nextDeadline([P3, P4], KICKOFFS, "2026-09-11T12:00:00Z")?.period).toBe(4);
   });
 

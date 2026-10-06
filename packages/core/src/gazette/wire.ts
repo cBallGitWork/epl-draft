@@ -1,16 +1,6 @@
 import type { Deal } from "./types";
 
-// The Bin: what the league has been doing on the wire, as trends rather than
-// as a list.
-//
-// **Trends over a window, never one afternoon's business.** The week's
-// business already prints every deal on the front page; a column that repeated
-// it would be the same facts twice. What a column can say that a list cannot
-// is who is churning, who is quietly rebuilding, and which man three managers
-// have now had and dropped.
-//
-// Nothing here is advice. "You report, you do not advise" is in the house
-// voice, and a waiver column is where a paper is most tempted to tip.
+// The Bin's facts: the wire over a window as trends (who churns, who is passed around), never a list or advice.
 
 /** One manager's activity over the window. */
 export interface WireTeam {
@@ -24,25 +14,22 @@ export interface WirePlayer {
   playerName: string;
   /** How many separate deals have moved him in the window. */
   moves: number;
-  /** Whether the last thing that happened to him was a drop — the obituary
-   *  case, and the funniest line the column has. */
+  /** Whether the last thing that happened to him was a drop. */
   dropped: boolean;
 }
 
 export interface WireFacts {
-  /** Deals in the window, most active manager first. */
+  /** Each manager's claims and drops in the window, busiest first. */
   teams: WireTeam[];
   /** Men who moved more than once, most-moved first. */
   passedAround: WirePlayer[];
-  /** Everyone dropped in the window and not since reclaimed — the obituaries. */
+  /** Everyone dropped in the window and not since reclaimed. */
   binned: string[];
-  /** How many deals the window covered, so the column can say "a quiet week"
-   *  honestly rather than inventing activity. */
+  /** How many deals the window covered, so a quiet week can say so. */
   deals: number;
 }
 
-/** A man moved this many times in the window is a story rather than a
- *  transaction. Two: once is a signing, twice is a pattern. */
+/** Moves in the window that make a man "passed around". */
 const PASSED_AROUND = 2;
 
 export function wireFacts(deals: readonly Deal[]): WireFacts {
@@ -57,8 +44,7 @@ export function wireFacts(deals: readonly Deal[]): WireFacts {
     teams.set(teamId, row);
   };
 
-  // Oldest first, so the LAST thing recorded about a man is what became of
-  // him. The feed arrives newest-first, which would answer the reverse.
+  // Oldest first, so the last thing recorded about a man is what became of him.
   for (const deal of [...deals].reverse()) {
     for (const player of deal.inbound) {
       bump(player.teamId, "claimed");
@@ -68,8 +54,7 @@ export function wireFacts(deals: readonly Deal[]): WireFacts {
     for (const player of deal.outbound) {
       bump(player.teamId, "dropped");
       moves.set(player.playerName, (moves.get(player.playerName) ?? 0) + 1);
-      // A trade moves a man BETWEEN managers: he was not binned, he was sold.
-      // Only a drop with nobody on the other side is an obituary.
+      // A traded man was not binned: only a claim's outbound side is a drop.
       lastWasDrop.set(player.playerName, deal.kind === "claim");
     }
   }

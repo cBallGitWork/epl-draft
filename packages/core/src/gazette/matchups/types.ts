@@ -101,7 +101,7 @@ export interface DraftMatchupInput {
 
 /** A return a man can still make in a match, and what the league pays for it at his slot. */
 export interface Worth {
-  /** A return in the game's own sense (Craig, 29 Sep 2026): a DefCon bonus or saves are points, never a return. */
+  /** A return in the game's own sense: a DefCon bonus or saves are points, never a return. */
   kind: "goal" | "assist" | "clean sheet";
   worth: number;
 }

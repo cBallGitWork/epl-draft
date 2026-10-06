@@ -16,7 +16,6 @@ describe("spotsOf", () => {
   });
 
   it("deals a pair like a snake: first in one, second and third in the other, fourth under the first", () => {
-    // Craig, 25 Sep 2026, in those words.
     expect(codes(spotsOf(slot("DM", 2, [1, 2, 3, 4, 5])))).toEqual([
       [1, 4],
       [2, 3],

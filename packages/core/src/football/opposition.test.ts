@@ -102,10 +102,7 @@ describe("kickedOff", () => {
   });
 
   it("is true for a substitute who never came on, because his match still went ahead", () => {
-    // The distinction the stat line cannot make: FPL carries a zero row for him
-    // and a zero row for a man whose fixture is on Monday, and only one of those
-    // noughts is final. Offering this one a fixture chip would promise football
-    // that has already been played.
+    // His zero row looks like a Monday man's, but only his nought is final.
     expect(kickedOff(against("finished"))).toBe(true);
   });
 

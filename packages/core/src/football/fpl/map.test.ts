@@ -17,9 +17,7 @@ const bootstrap = (over: Partial<RawBootstrap> = {}): RawBootstrap => ({
       id: 1, code: 154561, web_name: "Raya", first_name: "David", second_name: "Raya Martín",
       team: 1, element_type: 1, squad_number: 22, status: "a", news: "",
       chance_of_playing_next_round: null, opta_code: "p123", region: 199,
-      // Season totals as FPL sends them: the counts as numbers, the expected
-      // trio as strings. Real figures rather than zeros, so the mapper's
-      // string-to-number coercion is actually under test.
+      // Season totals as FPL sends them: counts as numbers, the expected trio as non-zero strings so the parse is tested.
       goals_scored: 0, assists: 1, clean_sheets: 2,
       minutes: 180, starts: 2, expected_goals: "0.12", expected_assists: "0.34",
       expected_goals_conceded: "1.53",
@@ -53,8 +51,7 @@ describe("focusGameweek", () => {
   });
 
   it("still returns a gameweek when the events list is empty", () => {
-    // Defensive: FPL wipes events briefly at season rollover, and a blank page is
-    // a worse failure than showing gameweek 1.
+    // FPL wipes events briefly at season rollover; gameweek 1 beats a blank page.
     expect(focusGameweek(bootstrap({ events: [] })).gameweek).toBe(1);
   });
 });
@@ -96,24 +93,18 @@ describe("mapPlayers", () => {
   });
 
   it("carries the three the competition itself counts", () => {
-    // Nought is a real reading here and not an absence: a keeper who has scored
-    // no goals has scored none. What is under test is that the three arrive at
-    // all — they were deliberately dropped until 2 Sep 2026.
+    // Nought is a reading, not an absence: a keeper who has scored none has scored none.
     const [p] = mapPlayers(bootstrap());
     expect(p.season.goals).toBe(0);
     expect(p.season.assists).toBe(1);
     expect(p.season.cleanSheets).toBe(2);
   });
 
-  // element_type is FPL's fantasy classification, not a property of the footballer.
-  // Fantrax files the same player differently and allows several positions at once,
-  // so it stays in raw.ts and never reaches a domain type.
   it("reads the season totals, with the expected trio parsed off strings", () => {
     const [p] = mapPlayers(bootstrap());
     expect(p.season.minutes).toBe(180);
     expect(p.season.starts).toBe(2);
-    // FPL serialises its decimals as strings and its counts as numbers; both
-    // arrive here as numbers or the columns built on them cannot be sorted.
+    // Decimals arrive as strings and leave as numbers, or their columns cannot be sorted.
     expect(p.season.expectedGoals).toBeCloseTo(0.12);
     expect(p.season.expectedAssists).toBeCloseTo(0.34);
     expect(p.season.expectedGoalsConceded).toBeCloseTo(1.53);
@@ -123,8 +114,7 @@ describe("mapPlayers", () => {
   });
 
   it("reads a missing total as nought rather than as absent", () => {
-    // Scraped data on a payload we do not control. A player FPL says nothing
-    // about has done nothing, which is a fact rather than a hole.
+    // A player FPL says nothing about has done nothing.
     const [p] = mapPlayers(
       bootstrap({
         elements: [
@@ -135,6 +125,7 @@ describe("mapPlayers", () => {
     expect(p.season.minutes).toBe(0);
   });
 
+  // `element_type` is FPL's fantasy classification; Fantrax files players its own way.
   it("does not carry a position", () => {
     const [p] = mapPlayers(bootstrap());
     expect(p).not.toHaveProperty("position");
@@ -169,10 +160,7 @@ describe("mapLiveStats", () => {
   });
 
   it("carries `starts` off the aggregate, and repeats it on a double", () => {
-    // `explain` covers point-scoring identifiers only and a start scores nothing
-    // by itself, so this can only come off the round aggregate — which means it
-    // is the ROUND's count written onto every fixture row. A caller summing the
-    // rows of one round would report two starts for one appearance.
+    // A start scores nothing, so `explain` lacks it: the gameweek's count lands on every row, never to be summed.
     const rows = mapLiveStats({
       elements: [
         {
@@ -189,9 +177,7 @@ describe("mapLiveStats", () => {
   });
 
   it("reads a substitute's nought rather than inferring one from minutes", () => {
-    // 45 minutes off the bench and 45 minutes of a start are the same number and
-    // different men, which is the whole reason this field is mapped instead of
-    // being derived from a minutes threshold.
+    // 45 minutes off the bench and 45 of a start are the same number and different men.
     const rows = mapLiveStats({
       elements: [{ id: 2, stats: { minutes: 45, starts: 0 }, explain: [{ fixture: 10, stats: [] }] }],
     });
@@ -212,10 +198,7 @@ describe("buildSnapshot", () => {
   });
 
   it("tells an empty live read apart from one that failed", () => {
-    // Both give no stats and on a Saturday they mean opposite things: FPL says
-    // `{elements: []}` before the first kickoff, and a read that fell over says
-    // nothing at all. Rendering every player on nought is only honest for one
-    // of them.
+    // Both give no stats: `{elements: []}` before kickoff is honest noughts, a failed read is not.
     const quiet = buildSnapshot({
       bootstrap: bootstrap(), fixtures: [fixture()], live: { elements: [] },
       gameweek: 2, fetchedAt: "2026-08-21T18:00:00Z",
@@ -231,9 +214,7 @@ describe("buildSnapshot", () => {
   });
 
   it("labels the snapshot with the round asked for, not the one in play", () => {
-    // Viewing GW1 while GW2 is next used to return GW1's fixtures under GW2's
-    // number and deadline. Invisible until something could request a round other
-    // than the current one, which is exactly what gameweek navigation does.
+    // GW1's fixtures must not arrive under GW2's number and deadline while GW2 is next.
     const snap = buildSnapshot({
       bootstrap: bootstrap(), fixtures: [fixture()], live: { elements: [] },
       gameweek: 1, fetchedAt: "2026-08-21T18:00:00Z",
@@ -261,8 +242,7 @@ describe("buildSnapshot", () => {
   });
 
   it("does not read a missing sign-off as a signed-off round", () => {
-    // Scraped data: the field going absent must not read as FPL saying yes, or
-    // an unlisted round prints "Final" over football nobody has played.
+    // An absent field is not FPL saying yes, or an unlisted gameweek prints "Final".
     const unsigned = buildSnapshot({
       bootstrap: bootstrap({ events: [] }), fixtures: [fixture()], live: { elements: [] },
       gameweek: 1, fetchedAt: "2026-08-24T09:00:00Z",
@@ -280,9 +260,7 @@ describe("buildSnapshot", () => {
 });
 
 describe("roundPlayed", () => {
-  // The three states one bootstrap holds at once, counted live on 5 Sep 2026
-  // with GW3 in play: a played round, the round being played, and the round
-  // whose deadline is next.
+  // The three states one bootstrap holds at once: played, being played, and deadline next.
   const events = {
     events: [
       { id: 1, is_current: false, is_next: false, finished: true },
@@ -293,16 +271,13 @@ describe("roundPlayed", () => {
 
   it("answers about the FOOTBALL, not about the deadline", () => {
     expect(roundPlayed(events, 1)).toBe(true);
-    // The one that matters: GW3's football is still being played while FPL has
-    // already moved `is_next` to 4, because its deadline has passed. A check
-    // reading `is_next` calls Saturday's own prediction wrong every week.
+    // GW3 is still being played though its deadline has passed and `is_next` has moved to 4.
     expect(roundPlayed(events, 3)).toBe(false);
     expect(roundPlayed(events, 4)).toBe(false);
   });
 
   it("is null for a round FPL does not list", () => {
-    // Not false: "we have no idea" and "it has not been played" are different
-    // answers, and only one of them should fail a freshness check.
+    // Not false: "no idea" must not fail a freshness check the way "not played" does.
     expect(roundPlayed(events, 39)).toBeNull();
     expect(roundPlayed({ events: [] } as unknown as RawBootstrap, 1)).toBeNull();
   });

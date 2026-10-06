@@ -1,16 +1,8 @@
 import { ProviderError, statusKind, type FailureKind } from "../../http/errors";
 import type { RawFantraxError } from "./raw";
 
-// Fantrax answers HTTP 200 whether or not it did what you asked. A missing
-// leagueId, a deleted league and a league with no teams yet all come back 200
-// with an error object in the body, so the FPL client's `if (!res.ok) throw`
-// catches none of them. Detecting those envelopes is the whole job of this file.
-//
-// There are three of them, and they are three functions rather than one that
-// learned to spot all three. Each surface keeps its own shape: a single detector
-// would leave no call site able to say which protocol it was talking to, and the
-// day fxea grows a `pageError` for some unrelated reason the confusion would
-// already be built in. The cross-detector tests exist to keep them apart.
+// Fantrax answers HTTP 200 whether or not it did what you asked, so these find the error in the body:
+// one detector per shape (fxea `error`, fxpa `pageError`, a message's `errors[]`), kept apart on purpose.
 
 /** `code` is Fantrax's own ("NO_TEAMS", "INVALID_LEAGUE_ID") or the HTTP status of a backstop. An
  *  envelope is a refusal, the default; a site that got no answer says which kind. */
@@ -26,60 +18,39 @@ export function statusFailure(method: string, res: Response): FantraxError {
   return new FantraxError(method, String(res.status), res.statusText, statusKind(res.status));
 }
 
-/** An untrusted value as an object, or null. Arrays pass, which is fine: every
- *  caller goes on to require a specific key an array will not have. */
+/** An untrusted value as an object, or null; arrays pass, as every caller then requires a key. */
 function asObject(value: unknown): Record<string, unknown> | null {
   return typeof value === "object" && value !== null ? (value as Record<string, unknown>) : null;
 }
 
-/** A nested object off an untrusted value. All three detectors start by
- *  reaching into a body like this, which is the third occurrence and so the
- *  point at which it stops being repeated (§1). */
+/** A nested object off an untrusted value, where all three detectors begin. */
 function objectAt(value: unknown, key: string): Record<string, unknown> | null {
   const parent = asObject(value);
   return parent ? asObject(parent[key]) : null;
 }
 
-/** Built rather than cast, so nothing untrusted is asserted into our own type
- *  (§5). `code` is what makes an envelope an envelope; the human text is
- *  optional and lives under a different key on each surface. */
+/** Built rather than cast; `code` makes an envelope, and the optional text's key differs per surface. */
 function envelope(error: Record<string, unknown>, textKey: string): RawFantraxError | null {
   if (typeof error.code !== "string") return null;
   const text = error[textKey];
   return { code: error.code, message: typeof text === "string" ? text : undefined };
 }
 
-/** The error carried by a 200 fxea response, or null when the body is healthy.
- *
- *  A healthy fxea body never has a top-level `error` key, so presence is the
- *  signal. The `code` check keeps a player legitimately named in some future
- *  `error` field from being mistaken for a failure. */
+/** The error in a 200 fxea body, or null: a healthy body has no top-level `error`, and a `code` is required. */
 export function errorEnvelope(body: unknown): RawFantraxError | null {
   const error = objectAt(body, "error");
   return error ? envelope(error, "message") : null;
 }
 
-/** Failure reported at the top of an fxpa response.
- *
- *  `WARNING_NOT_LOGGED_IN`, `NOT_MEMBER_OF_LEAGUE` and `ERROR_INVALID_REQUEST`
- *  all arrive this way, with HTTP 200.
- *
- *  Note the key is `pageError` and the human text is `text`, not `message`. A
- *  reader that found the object but reached for the fxea key would report every
- *  fxpa failure as "no message" — which reads like a bug in our own code rather
- *  than like Fantrax telling us something. */
+/** Failure at the top of an fxpa response (`WARNING_NOT_LOGGED_IN`, `NOT_MEMBER_OF_LEAGUE`, `ERROR_INVALID_REQUEST`).
+ *  The key is `pageError` and its text is under `text`, not `message`. */
 export function pageErrorEnvelope(body: unknown): RawFantraxError | null {
   const error = objectAt(body, "pageError");
   return error ? envelope(error, "text") : null;
 }
 
-/** Failure reported against the message inside the response.
- *
- *  The second fxpa shape: the response as a whole is fine and the message is
- *  not, so `pageError` is absent and the refusal sits in `errors[]`. A reader
- *  checking only the top level would treat a refused message as a successful one
- *  with missing data. Unlike the other two a code is not guaranteed here, so an
- *  entry without one still counts as a failure. */
+/** Failure against the message inside an fxpa response: no `pageError`, the refusal in `errors[]`, and an entry
+ *  without a code still fails. */
 export function responseErrorEnvelope(response: unknown): RawFantraxError | null {
   const errors = asObject(response)?.errors;
   if (!Array.isArray(errors) || errors.length === 0) return null;

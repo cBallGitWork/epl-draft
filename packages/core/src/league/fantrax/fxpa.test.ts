@@ -6,8 +6,7 @@ import pageError from "./__fixtures__/fxpaPageError.json";
 
 afterEach(() => vi.useRealTimers());
 
-// The fxpa envelope, recorded 12 Aug 2026 by asking the real league for its
-// commissioner hub without a session.
+// The fxpa envelope, recorded by asking the real league for its commissioner hub without a session.
 
 describe("pageErrorEnvelope", () => {
   it("reads a refusal Fantrax served with HTTP 200", () => {
@@ -16,10 +15,7 @@ describe("pageErrorEnvelope", () => {
     expect(error?.message).toContain("logged in");
   });
 
-  // Two surfaces, two shapes, two detectors — and this is why they are separate
-  // functions rather than one that got taught to look for both. Each call site
-  // knows which protocol it is on, and neither can quietly start accepting the
-  // other's failures.
+  // Two surfaces, two shapes, two detectors: neither may start accepting the other's failures.
   it("does NOT catch an fxea error, and fxea's does not catch this one", () => {
     const fxea = { error: { code: "NO_TEAMS", message: "no teams" } };
 
@@ -30,10 +26,7 @@ describe("pageErrorEnvelope", () => {
     expect(errorEnvelope(pageError)).toBeNull();
   });
 
-  // The subtler half of the same trap. Even having found the object, a reader
-  // that reached for `.message` — the key fxea uses — would report every fxpa
-  // failure as "no message", which reads like a bug in our own error handling
-  // rather than like Fantrax telling us something.
+  // Reaching for fxea's `.message` would report every fxpa failure as "no message".
   it("takes the human text from `text`, which is not what fxea calls it", () => {
     expect(pageError).not.toHaveProperty("pageError.message");
     expect(pageErrorEnvelope({ pageError: { code: "X", text: "the reason" } })?.message).toBe(
@@ -72,10 +65,7 @@ describe("unwrapFxpa", () => {
     expect(() => unwrapFxpa("getCommissionerHubInfo", pageError)).toThrow(expect.objectContaining({ kind: "refused" }));
   });
 
-  // The envelope is fine and the message inside it is not. Checking only the top
-  // level would hand back `null` and let a caller read a refusal as an empty
-  // result — which, for a transaction log, is the difference between "no trades
-  // happened" and "we were not allowed to look".
+  // The envelope is fine and the message is not: checking only the top level reads a refusal as an empty result.
   it("throws for a message that failed inside an otherwise healthy response", () => {
     const body = { responses: [{ errors: [{ code: "MISSING_PARAM", msg: "no" }] }] };
     expect(() => unwrapFxpa("read", body)).toThrow(/MISSING_PARAM/);

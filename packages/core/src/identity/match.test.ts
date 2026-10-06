@@ -53,10 +53,7 @@ describe("matchPlayers", () => {
   });
 
   it("guards on the surname, not on whichever token comes last in Fantrax's form", () => {
-    // Fantrax writes surname-first, so the raw form's last token is the GIVEN
-    // name. Guarding on that asks whether FPL's player is called "Danny" and
-    // rejects Daniel Ballard for saying Daniel. Every diminutive was failing
-    // this way — Josh/Joshua, Ben/Benjamin — while looking like a safe refusal.
+    // Fantrax's raw form ends on the GIVEN name: guarding on it rejects every diminutive, Danny for Daniel.
     const result = matchPlayers(
       [fantrax("a1", "Ballard, Danny", "SUN")],
       [fpl(1, "Daniel", "Ballard", "Ballard", "SUN")],

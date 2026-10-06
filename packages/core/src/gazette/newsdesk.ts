@@ -5,8 +5,8 @@ import type { StoryKind } from "./story";
 import type { TieState } from "./tieState";
 
 // What is due this firing: whatever is new since its covered-key was spent, so a re-fired cron files nothing.
-// The paper files seven weekly kinds (Craig, 1 Oct 2026): match and draft reports, Bin XI, the Team Sheet, the elevens,
-// the draft sheets at the deadline, and Lawro.
+// The paper files seven weekly kinds: match and draft reports, Bin XI, the Team Sheet, the elevens, the draft sheets at
+// the deadline, and Lawro.
 
 export interface Assignment {
   kind: StoryKind;
@@ -75,7 +75,7 @@ export function newsdesk(
   const fixtured = desk.ties.length > 0;
 
   if (fixtured) {
-    // A match-day report as each day's football settles, then one draft report once the gameweek ends (Craig, 1 Oct 2026).
+    // A match-day report as each day's football settles, then one draft report once the gameweek ends.
     for (const day of desk.reportDays) want({ kind: "match-report", ...day });
     for (const due of desk.draftReports) {
       if (due.cutoff === "gameweek") want({ kind: "draft-report", key: due.key, slug: due.slug, cutoff: due.cutoff, day: due.day });
@@ -103,13 +103,13 @@ export function newsdesk(
     want({ kind: "predicted-xi", key: desk.lineups.key, slug: desk.lineups.slug, ...about });
   }
 
-  // Lawro's predictions: the evening before the round, and only once the last round is done.
+  // Lawro's predictions: the evening before the gameweek, and only once the last one is done.
   if (desk.next !== null && desk.finished && predictionsDue(desk.next.locksAt, now)) {
     const { period, gameweek } = desk.next;
     want({ kind: "predictions", ...roundSlot("predictions", gameweek), round: { period, gameweek } });
   }
 
-  // Lawro's season predictions: once, from the end of the draft until the season's first lock (Craig, 5 Oct 2026).
+  // Lawro's season predictions: once, from the end of the draft until the season's first lock.
   if (desk.season !== null && Date.parse(now) < Date.parse(desk.season.locksAt)) {
     const { period, gameweek } = desk.season;
     want({ kind: "season-rankings", ...roundSlot("season-rankings", gameweek), round: { period, gameweek } });

@@ -4,8 +4,7 @@ import type { PublishedStory } from "./story";
 
 const NOW = "2026-08-31T12:00:00.000Z";
 
-// Its own factory rather than an import from story.test.ts: importing a test
-// file registers that file's tests a second time inside this suite.
+// Its own factory: importing story.test.ts would register that file's tests a second time here.
 const story = (over: Partial<PublishedStory> = {}): PublishedStory => ({
   slug: "p3-report-a-v-b",
   kind: "tie-report",
@@ -28,8 +27,7 @@ const story = (over: Partial<PublishedStory> = {}): PublishedStory => ({
 
 describe("composePaper", () => {
   it("drops an expired story and keeps one with no expiry", () => {
-    // A preview dies at its kickoff: printed after it, the paper forecasts a
-    // match that is already being played.
+    // A preview dies at its kickoff.
     const paper = composePaper(
       [
         story({ slug: "dead", kind: "fixture-preview", expiresAt: "2026-08-31T11:00:00.000Z" }),
@@ -41,8 +39,7 @@ describe("composePaper", () => {
   });
 
   it("keeps a story whose expiry cannot be read", () => {
-    // "Cannot be shown to be expired" reads as "stays": refusal at this edge
-    // costs a stale line, while a throw costs the paper.
+    // An unreadable expiry keeps the story.
     const paper = composePaper([story({ expiresAt: "not-a-date" })], NOW);
     expect(paper).toHaveLength(1);
   });
@@ -57,14 +54,12 @@ describe("composePaper", () => {
       ],
       NOW,
     );
-    // The report is the round's last word — but only ITS round's: next week's
-    // predictions stand, or the paper would eat its own future.
+    // The report retires only its own period's predictions.
     expect(paper.map((s) => s.slug)).toEqual(["next-lawro", "report"]);
   });
 
   it("lets a fresher telling of the same subject replace the earlier one", () => {
-    // The "Sunday's paper covers Sunday" mechanic: the second look at the same
-    // match supersedes the first rather than stacking beside it.
+    // The second look at the same match supersedes the first.
     const paper = composePaper(
       [
         story({ slug: "first", kind: "match-report", subjects: ["match:gw3:3v7"], filedAt: "2026-08-30T21:00:00.000Z" }),
@@ -86,18 +81,12 @@ describe("composePaper", () => {
       ],
       NOW,
     );
-    // A paper that leads with last week is not a paper, whatever last week's
-    // story weighed. Then TODAY'S paper, and within one day what happened
-    // outranks what we think — so the 31st's report leads the 31st's column,
-    // and both lead the 30th's report however heavy its kind.
+    // Period first, then day, then kind: the 31st's report, the 31st's column, then the 30th's.
     expect(paper.map((s) => s.slug)).toEqual(["later-match", "column", "match", "old-report"]);
   });
 
   it("puts a fresh column above a heavier story filed yesterday", () => {
-    // The change of 17 Sep 2026, and the reason a reader noticed nothing when
-    // the schedule landed without it: `eleven` is weight 40 against
-    // `tie-report`'s 90, so Tuesday's column sorted below Sunday's report and
-    // the reader opened Tuesday's paper to Sunday's splash.
+    // `eleven` weighs 40 against `tie-report`'s 90, but the day outranks the kind.
     const paper = composePaper(
       [
         story({ slug: "sunday-report", kind: "tie-report", period: 3, filedAt: "2026-08-30T18:00:00.000Z" }),
@@ -109,10 +98,7 @@ describe("composePaper", () => {
   });
 
   it("reads the day in London, not UTC", () => {
-    // 23:30 UTC on a summer Sunday is already Monday in London. A UTC day key
-    // would file both of these on the 30th and fall back to kind weight, which
-    // is the bug this comparator exists to avoid — and the same instant
-    // `bylines.ts` stamps the edition name from.
+    // 23:30 UTC on a summer Sunday is already Monday in London.
     const paper = composePaper(
       [
         story({ slug: "sunday-report", kind: "tie-report", period: 3, filedAt: "2026-08-30T18:00:00.000Z" }),
