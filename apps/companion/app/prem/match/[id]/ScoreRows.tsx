@@ -48,7 +48,8 @@ export function Goal({
           <MaybeCard
             key={code}
             player={cards.get(code)}
-            className="flex min-h-9 w-full items-center gap-1.5 pl-3 text-left hover:underline lg:pl-4"
+            // On its row's top edge, under the scorer; the rest of its 36px falls below, before the next goal.
+            className="flex min-h-9 w-full items-baseline gap-1.5 pl-3 text-left hover:underline lg:pl-4"
           >
             <span className={`${SMALL_CAPS} shrink-0 text-faint`}>A</span>
             <span className="min-w-0 flex-1 truncate font-chrome text-sm font-bold text-muted lg:text-xl">
