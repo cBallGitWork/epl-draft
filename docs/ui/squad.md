@@ -324,8 +324,10 @@ unresolved when it is, and a way out to the full profile.
   shape is assumed — a 1-5-2-3 is legal in this league and would be legal on
   screen.
 - **Save lineup writes it to Fantrax** (Craig, 30 Sep 2026: "needs a save button ... make the save button
-  obvious, and a 'do you want to save' if you leave the screen"). The royal-blue primary plate under the pitch,
-  with Reset beside it, appears once anything has moved and is disabled while a rule is broken. `saveLineup`
+  obvious, and a 'do you want to save' if you leave the screen"). The royal-blue primary plate, with Reset beside
+  it, is the planner's footer: docked above the thumb rail on a phone and at the window's foot on a desk, always
+  in view, and greyed until the lineup differs from Fantrax's or while a rule is broken (Craig, 6 Oct 2026: "save
+  your lineup button should just be greyed out when no changes, and it should act as a footer"). `saveLineup`
   (`squad/[teamId]/save.ts`) names the team from the signed code (never the lent demo team) and the week from
   `planningRound()`, refuses a page planned for another week and anything inside `SAVE_MARGIN_MINUTES` of the
   lock, re-checks the league's rules, then sends Fantrax's dry run and saves only on a clean `CONFIRM`. It runs
