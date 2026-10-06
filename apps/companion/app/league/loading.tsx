@@ -1,3 +1,4 @@
+import { TIGHT_ROW } from "../components/league/TableCells";
 import Columns, { COLUMNS, columnKey, shownAt } from "./Columns";
 import LeagueShell from "./Shell";
 import Skeleton from "../components/shell/Skeleton";
@@ -38,7 +39,7 @@ export default function Loading() {
                       // The one cell whose height sets the row's, so the real
                       // rows land inside these boxes rather than pushing them
                       // down the screen.
-                      <span className="cm-row flex min-h-11 items-center gap-2 pl-1">
+                      <span className={`${TIGHT_ROW} pl-1`}>
                         <Skeleton width="45%" height="0.875rem" />
                       </span>
                     ) : (

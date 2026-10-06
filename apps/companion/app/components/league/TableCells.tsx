@@ -50,6 +50,9 @@ export function IndexCell({ children, className = "" }: { children: ReactNode; c
  *  `tapfit` caught as 50 under-floor targets in one sweep. */
 export const ROW_LINK = "cm-row flex min-h-11 items-center gap-2 hover:underline";
 
+/** A Draft-tab table row: 36px under a thumb (PRODUCT.md), CM's 28 from `lg`. */
+export const TIGHT_ROW = "cm-row flex min-h-9 items-center gap-2";
+
 /** The points in a block of their own, the way CM ends its table: the eye runs down the column to find them. */
 export function PointsCell({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (

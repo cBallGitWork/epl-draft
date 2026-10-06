@@ -15,7 +15,7 @@ import {
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import { Head, HeadRow, NameHead, SortHead } from "../../components/league/TableHeads";
-import { IndexCell, ROW_LINK } from "../../components/league/TableCells";
+import { IndexCell, TIGHT_ROW } from "../../components/league/TableCells";
 import GroupNav from "../../components/league/GroupNav";
 import { TEAM_STATS } from "../SectionNav";
 import LeagueShell from "../Shell";
@@ -139,7 +139,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                     <td className="pl-2">
                       <Link
                         href={teamHref(row.teamId)}
-                        className={`${ROW_LINK} ${yoursInk(yours)}`}
+                        className={`${TIGHT_ROW} hover:underline ${yoursInk(yours)}`}
                       >
                         <span className={`min-w-0 truncate ${ROW_NAME}`}>
                           <TeamName teamId={row.teamId} name={named.get(row.teamId) ?? row.teamId} />
