@@ -48,25 +48,18 @@ export function identify(team: { teamId: string; teamName: string }, slug: strin
   return { teamId: team.teamId, teamName: team.teamName, slug };
 }
 
-/** Which team a URL segment means, and whether it is the reader's own.
- *
- *  Extracted at three: `leagueTeams` below, the squad tab and the match tab each
- *  read their own roster and each had to answer this for itself. The two that
- *  ask for `mine` want it against the same list they resolved from, which is why
- *  it comes back with the id rather than being asked for again.
- *
- *  Resolved against the ROSTERED teams, which is `myTeamId`'s own guarantee: a
- *  cookie signed for the rehearsal league simply stops naming anybody on swap
- *  day, and its holder is sent to the index to sign in again rather than 404ing
- *  on a team that does exist somewhere else. */
-export async function whoseTeam(
+/** The rostered team a URL segment means, and whether it is the reader's own: `me` with no
+ *  sign-in goes to the index, an id nobody holds is a 404. */
+export async function whoseTeam<T extends { teamId: string }>(
   slug: string,
-  teams: readonly { teamId: string }[],
-): Promise<{ teamId: string; mine: boolean }> {
+  teams: readonly T[],
+): Promise<{ team: T; mine: boolean }> {
   const own = await myTeamId(teams);
   const teamId = slug === OWN ? own : slug;
   if (teamId === null) redirect(SQUAD);
-  return { teamId, mine: own === teamId };
+  const team = teams.find((t) => t.teamId === teamId);
+  if (team === undefined) notFound();
+  return { team, mine: own === teamId };
 }
 
 /** The same read, plus every OTHER team's name by id.
@@ -79,10 +72,7 @@ export async function leagueTeams(
 ): Promise<{ team: TeamIdentity; names: Record<string, string>; squad: RosteredTeam }> {
   const squads = readableOr404(await getLeagueSquads(await planningRound()), SQUAD);
 
-  const { teamId } = await whoseTeam(slug, squads.period.teams);
-
-  const team = squads.period.teams.find((t) => t.teamId === teamId);
-  if (!team) notFound();
+  const { team } = await whoseTeam(slug, squads.period.teams);
 
   // A record rather than a `Map`: this crosses to a client component and the
   // boundary serialises through JSON, where a `Map` arrives as `{}`.

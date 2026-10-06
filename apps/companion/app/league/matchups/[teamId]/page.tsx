@@ -33,6 +33,7 @@ import { boardCategories, boardColumns } from "./sideRows";
 import { FootFrame } from "../../../components/shell/FootFrame";
 import TabStrip from "../../../components/shell/TabStrip";
 import { everyone, subMarks } from "./subs";
+import ScoreboardDown from "../../ScoreboardDown";
 
 // One head-to-head, at the size it deserves on a Saturday.
 //
@@ -223,14 +224,7 @@ export default async function HeadToHeadPage({
       }
     >
       <PhotoGround photo={venueOf(pairing.home.teamId)} />
-      {/* Both sibling boards say when the scoreboard is down; this one used to
-          render the outage as two silent dashes. */}
-      {refused === null ? null : (
-        <p className="px-3 text-2xs text-faint">
-          Fantrax&apos;s scoreboard is not answering, so there are no totals to show.{" "}
-          <span className="numeric">{refused}</span>
-        </p>
-      )}
+      {refused === null ? null : <ScoreboardDown refused={refused} />}
       {listed === null ? (
         <MatchupBoard
           team={side(both[0])}

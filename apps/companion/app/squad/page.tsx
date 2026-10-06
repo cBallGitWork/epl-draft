@@ -8,7 +8,7 @@ import { getLeagueSquads } from "../squads";
 import { planningRound } from "../round";
 import { myTeamId, signedIn } from "../session";
 import { yoursBorder } from "../mine";
-import { MY_TEAM, SQUAD } from "./routes";
+import { MY_TEAM, teamHref } from "./routes";
 import { PANEL, ROW_NAME, HEADING_PLATE } from "@/app/desk";
 import FantraxSilent from "../components/shell/FantraxSilent";
 import { shortName } from "../teamNames";
@@ -149,7 +149,7 @@ function Squad({
     <Link
       // Your own row goes through the front door, so the rail's plate stays lit
       // on the screens behind it. Everyone else is reached by id.
-      href={lead ? MY_TEAM : `${SQUAD}/${team.teamId}`}
+      href={lead ? MY_TEAM : teamHref(team.teamId)}
       className={`cm-row flex min-h-14 items-center gap-3 px-3 py-2.5 hover:bg-raised ${
         lead ? "bg-raised" : "bg-surface"
       } ${yoursBorder(lead)}`}

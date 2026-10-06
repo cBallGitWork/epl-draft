@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import {
   FANTRAX_LEAGUE_ID,
   clubById,
@@ -76,10 +75,8 @@ export async function squadView(slug: string, gw: string | undefined) {
   //
   // It is also what the front door resolves to: a reader who is not signed in
   // has no own team, and the index is where the code goes in.
-  const { teamId, mine } = await whoseTeam(slug, squads.period.teams);
-
-  const team = squads.period.teams.find((t) => t.teamId === teamId);
-  if (!team) notFound();
+  const { team, mine } = await whoseTeam(slug, squads.period.teams);
+  const teamId = team.teamId;
 
   const clubs = clubById(squads.snapshot);
   const opposition = oppositionByClub(squads.snapshot);

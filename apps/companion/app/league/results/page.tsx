@@ -6,6 +6,7 @@ import RoundHead from "../../components/shell/RoundHead";
 import { getSchedule, getSeasonResults } from "../schedule/schedule";
 import { readerTeamId } from "../../squads";
 import FantraxSilent from "../../components/shell/FantraxSilent";
+import { placings } from "../placings";
 
 // What has already happened: every played round, newest first, each round's
 // head-to-heads as scorelines.
@@ -50,11 +51,8 @@ export default async function ResultsPage() {
 
   const { info, rounds, table } = schedule;
 
-  // Fantrax's own rank, for CM's blue block. TODAY's standing rather than the
-  // one each side held on the week of the result — the table is a running order
-  // and this app keeps no history of it, so a row says where a manager is now
-  // and not where he was in September.
-  const places = new Map(table.map((row) => [row.teamId, row.rank] as const));
+  // Today's place, for CM's blue block: the app keeps no history of the table.
+  const places = placings(table);
 
   // Every team's total for a period, by period. Built once rather than filtered
   // per round: thirty-eight rounds each scanning the whole season is the shape

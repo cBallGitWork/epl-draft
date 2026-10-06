@@ -12,6 +12,8 @@ import { getSchedule, type ScheduleRound } from "./schedule";
 import { liveScores } from "../../scoreboard";
 import { myTeamId } from "../../session";
 import FantraxSilent from "../../components/shell/FantraxSilent";
+import { placings } from "../placings";
+import ScoreboardDown from "../ScoreboardDown";
 
 // The season ahead: every round the league still has to play, in gameweek order,
 // across every competition being played on it. Fantrax's schedule is the league;
@@ -99,8 +101,8 @@ export default async function SchedulePage() {
 
   const mine = await myTeamId(info.teams);
 
-  // Fantrax's own rank, for CM's blue block.
-  const places = new Map(table.map((row) => [row.teamId, row.rank] as const));
+  // Each side's place, for CM's blue block.
+  const places = placings(table);
 
   // **Only the rounds that have started, and there is at most one.** Fantrax
   // answers for any period asked, so a page showing the whole season forward
@@ -126,10 +128,7 @@ export default async function SchedulePage() {
   return (
     <LeagueShell current="schedule">
       {refused === null ? null : (
-        <p className="px-3 text-2xs text-faint">
-          Fantrax&apos;s scoreboard is not answering, so there are no points to show. The fixtures
-          below are still right. <span className="numeric">{refused}</span>
-        </p>
+        <ScoreboardDown refused={refused}>The fixtures below are still right.</ScoreboardDown>
       )}
 
       {/* The season in CM's scrolling box on a desk; a phone scrolls the page, or the box's foot sits under the rail. */}

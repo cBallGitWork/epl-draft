@@ -10,6 +10,7 @@ import { leagueScoring } from "../../scoring";
 import { roundUnderway } from "../../football";
 import { yoursFirst } from "../../mine";
 import FantraxSilent from "../../components/shell/FantraxSilent";
+import ScoreboardDown from "../ScoreboardDown";
 
 // Who each squad plays this period, and what they have scored.
 //
@@ -107,21 +108,16 @@ export default async function MatchupPage() {
 
       {/* Provenance at the point of use, per principle 4. These are Fantrax's
           points under Fantrax's scoring; we add nothing up. */}
-      <p className="px-3 text-2xs text-faint">
-        {refused === null ? (
-          <>
-            Fantrax&apos;s points, under Fantrax&apos;s scoring.
-            {owed > 0
-              ? " Green is clean sheets they credit at full time — ours to preview, theirs to settle."
-              : null}
-          </>
-        ) : (
-          <>
-            Fantrax&apos;s scoreboard is not answering, so there are no points to show. The
-            pairings below are still right. <span className="numeric">{refused}</span>
-          </>
-        )}
-      </p>
+      {refused === null ? (
+        <p className="px-3 text-2xs text-faint">
+          Fantrax&apos;s points, under Fantrax&apos;s scoring.
+          {owed > 0
+            ? " Green is clean sheets they credit at full time — ours to preview, theirs to settle."
+            : null}
+        </p>
+      ) : (
+        <ScoreboardDown refused={refused}>The pairings below are still right.</ScoreboardDown>
+      )}
 
       <ul className="cm-rows flex flex-col">
         {ordered.map((pairing) => (

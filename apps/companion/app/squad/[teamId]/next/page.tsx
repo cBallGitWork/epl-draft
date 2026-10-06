@@ -6,11 +6,11 @@ import { identify, whoseTeam } from "../team";
 import { getLeagueSquads, readableOr404 } from "../../../squads";
 import { planningRound } from "../../../round";
 import { leagueTable } from "../../../standings";
-import { notFound } from "next/navigation";
 import Link from "next/link";
 import { LABEL, PANEL_FLUSH, SMALL_CAPS } from "@/app/desk";
 import { teamHref } from "@/app/squad/routes";
 import { shortName } from "../../../teamNames";
+import { placings } from "../../../league/placings";
 
 // Who he plays, and the one screen in this app that is about a confrontation.
 //
@@ -44,22 +44,16 @@ export default async function NextMatchPage({
   ]);
   const squads = readableOr404(read, SQUAD);
 
-  const { teamId } = await whoseTeam(slug, squads.period.teams);
-  const team = squads.period.teams.find((t) => t.teamId === teamId);
-  if (!team) notFound();
+  const { team } = await whoseTeam(slug, squads.period.teams);
+  const teamId = team.teamId;
 
   const tie =
     squads.info !== null && squads.roundPeriod !== null
       ? headToHead(squads.info.matchups, squads.info.teams, squads.roundPeriod, teamId)
       : undefined;
 
-  // Where each side stands, for the bracket beside his name. Fantrax's own
-  // placing and never a sort of ours — where a points tie is broken is a rule of
-  // their competition. Empty when the table would not answer, and then the
-  // bracket is simply absent rather than showing a guess.
-  const placing = new Map(
-    "unavailable" in table ? [] : table.map((row) => [row.teamId, row.rank] as const),
-  );
+  // Where each side stands, for the bracket under his name; no bracket when the table would not answer.
+  const placing = placings(table);
 
   return (
     <TeamShell
