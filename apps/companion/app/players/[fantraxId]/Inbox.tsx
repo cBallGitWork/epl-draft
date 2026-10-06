@@ -10,10 +10,13 @@ import { filedAt, noteBody, type NewsItem } from "./newsItems";
 
 export default function Inbox({
   items,
+  list,
   href,
   openId,
 }: {
   items: readonly NewsItem[];
+  /** The tab's own URL, with no story open. */
+  list: string;
   /** Where a row points, given its id. */
   href: (id: string) => string;
   /** Which story is open, from the URL; the newest when none is. */
@@ -27,10 +30,14 @@ export default function Inbox({
     );
   }
 
-  const open = items.find((item) => item.id === openId) ?? items[0];
+  const chosen = items.find((item) => item.id === openId);
+  const open = chosen ?? items[0];
 
   return (
-    <Mailbox letter={<Letter item={letter(open)} />}>
+    <Mailbox
+      letter={<Letter item={letter(open)} />}
+      back={chosen === undefined ? null : { href: list, label: "All news" }}
+    >
       {items.map((item) => {
         const iso = filedAt(item);
         return (

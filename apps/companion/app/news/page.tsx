@@ -60,10 +60,9 @@ export default async function NewsPage({
 }) {
   const [{ item }, inbox] = await Promise.all([searchParams, readInbox()]);
 
-  // The one being read: what the URL asked for, or the top of the list. CM opens
-  // on the newest and so does this — an inbox with nothing selected is a list
-  // with a blank half under it.
-  const open = inbox.items.find((entry) => entry.id === item) ?? inbox.items[0] ?? null;
+  // The letter the URL chose; a desk opens the newest without one, a phone shows the list.
+  const chosen = inbox.items.find((entry) => entry.id === item) ?? null;
+  const open = chosen ?? inbox.items[0] ?? null;
   // Whose inbox this is. `readInbox` already resolves both halves — the id off
   // the signed cookie and the name off `getLeagueInfo` — so this costs no read.
   const mine = inbox.mine === null ? null : (inbox.names.get(inbox.mine) ?? null);
@@ -88,7 +87,10 @@ export default async function NewsPage({
       <PageHeader title={mine === null ? NEWS : `${mine} ${NEWS}`} />
 
       {/* Fantrax shows a manager's pending claims and trades only to his own session (PLATFORM_NOTES, 1 Oct 2026). */}
-      <OutLink href={`${FANTRAX_LEAGUE_PAGE}/${FANTRAX_PENDING_PATH}`} className={`${BUTTON} lg:self-start`}>
+      <OutLink
+        href={`${FANTRAX_LEAGUE_PAGE}/${FANTRAX_PENDING_PATH}`}
+        className={`${BUTTON} lg:self-start ${chosen === null ? "" : "max-lg:hidden"}`}
+      >
         Pending claims and trades on Fantrax
       </OutLink>
 
@@ -99,8 +101,10 @@ export default async function NewsPage({
           </Nothing>
         </section>
       ) : (
-        /* The list beside the letter on a desk and stacked under a thumb (Craig, 17 Sep 2026). */
-        <Mailbox letter={open === null ? null : <Letter item={open} />}>
+        <Mailbox
+          letter={open === null ? null : <Letter item={open} />}
+          back={chosen === null ? null : { href: MAIL, label: "All mail" }}
+        >
           {inbox.items.map((entry) => (
             <li key={entry.id}>
               <Row item={entry} open={entry.id === open?.id} names={inbox.names} mine={inbox.mine} />

@@ -47,10 +47,11 @@ export default async function PlayerNews({
       current="news"
     >
       {/* Championship Manager's news screen: a dated row per item, newest first,
-          and the newest opened underneath. Every story Fantrax's provider has
+          and the newest opened beside it on a desk. Every story Fantrax's provider has
           filed about him since 1 July. */}
       <Inbox
         items={inbox(await playerStories(fantraxId, now()))}
+        list={`${playerHref(fantraxId)}/news`}
         href={(id) => `${playerHref(fantraxId)}/news?story=${encodeURIComponent(id)}`}
         openId={story}
       />

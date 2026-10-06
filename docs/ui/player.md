@@ -135,7 +135,8 @@ manager actually arrives with.
 ## News
 
 **Mail's own shape** (Craig, 25 Sep 2026: "should match the Email/news section"): the
-dated list beside the letter on a desk and above it on a phone, the open row on CM's red
+dated list beside the letter on a desk; on a phone the whole list, and a tapped story on its own under
+`← All news` (6 Oct 2026, with Mail's "allow more rows"). The open row is on CM's red
 ground, and the story opened in Mail's `Letter`, from "Fantrax's news desk". Since 30 Sep 2026
 it is Mail's own code, not a copy: `news/Mailbox` and `news/MailRow`, and Mail's empty panel. **The preview
 is the whole first sentence** ("text on preview line cuts off too early"): Fantrax cuts its
