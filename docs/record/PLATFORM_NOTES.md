@@ -82,6 +82,16 @@ included (200, 25–30 KB). Safari drew the failures as a blue "?" on a rival's 
 `PlayerImage`'s kit rung set `unoptimized`, and `img-src` already lists FPL's origin. Portraits stay optimized
 (~330 KB at source); if they start failing the same way, this is the first place to look.
 
+## FPL's bonus and BPS live on the FPL tab alone — decided 6 Oct 2026
+
+Craig: *"Bonus point system, remove entirely from site except fpl section"*. Off the match log (BPS, B), the career
+table (Bon), Compare (BPS, Bonus), the club and competition boards, a match's board (B), the bar (`FT · bonus
+provisional` is `FT`), the rankings (BPS) and the attribute grid: **Determination** read FPL's BPS per 90 and is
+dropped rather than rebased, since no export count measures the same thing. The match sheet no longer orders by BPS:
+each side goes by name, and the scoresheet by what each man did.
+`PlayerMatchStats.bonus`/`.bps` and `MatchSheetLine.bonus`/`.bps` stay mapped: the last is the sheet's appearance
+list, and the others go when nothing at all reads them.
+
 ## Every time is printed in London, Fantrax's included — decided 2 Oct 2026
 
 Craig, 2 Oct: *"Times need to be local time"*. Until then Fantrax's transaction stamps (`"Wed Sep 2, 2026,

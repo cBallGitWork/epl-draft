@@ -147,12 +147,7 @@ export interface SheetRow {
   line: MatchSheetLine;
 }
 
-/** Both team sheets, each in bps order.
- *
- *  bps rather than goals: this is the list of everyone who played, and the
- *  question it answers first is who played well. A goalscorer sorts near the top
- *  on his own merits — FPL pays 24 bps for a forward's goal — without the order
- *  having to say so.
+/** Both team sheets, each by name; `scoresheet` ranks what they did, never FPL's bonus-points score.
  *
  *  Keyed on the per-season `id`, which is safe here for `contributions`' reason:
  *  the sheet and the snapshot are read in the same request, so nothing outlives
@@ -172,9 +167,8 @@ export function sheetSides(
     (line.side === "home" ? home : away).push({ player, line });
   }
 
-  const byBps = (a: SheetRow, b: SheetRow) =>
-    b.line.bps - a.line.bps || a.player.name.localeCompare(b.player.name);
-  return { home: home.sort(byBps), away: away.sort(byBps) };
+  const byName = (a: SheetRow, b: SheetRow) => a.player.name.localeCompare(b.player.name);
+  return { home: home.sort(byName), away: away.sort(byName) };
 }
 
 /** Only the men who did something the scoresheet names — a goal, an assist, an
@@ -210,8 +204,7 @@ function named(line: MatchSheetLine): boolean {
   );
 }
 
-/** Goals outrank assists outrank the rest, and bps breaks the tie — the same
- *  shape `contributions` sorts by, so the two lists read the same way round. */
+/** Goals outrank assists outrank the rest, the shape `contributions` sorts by; a tie keeps the sheet's order. */
 function rank(line: MatchSheetLine): number {
   return (
     line.goals * 1000 +
@@ -219,7 +212,6 @@ function rank(line: MatchSheetLine): number {
     line.ownGoals * 200 +
     line.penaltiesSaved * 150 +
     line.redCards * 100 +
-    line.penaltiesMissed * 50 +
-    line.bps / 1000
+    line.penaltiesMissed * 50
   );
 }

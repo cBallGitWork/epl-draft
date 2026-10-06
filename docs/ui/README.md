@@ -39,7 +39,7 @@ nothing.**
 | `/prem/club/[code]/fixtures` | [prem.md](prem.md) | That club's season, oldest first. Premier League only. |
 | `/prem/club/[code]/stats` | [prem.md](prem.md) | Every player, by one group of measures, sortable. |
 | `/prem/match/[id]` | [match.md](match.md) | One match: who scored, who assisted, who was booked, and whose they are. |
-| `/prem/match/[id]/players` | [match.md](match.md) | Both team sheets, by FPL's bonus-points index. |
+| `/prem/match/[id]/players` | [match.md](match.md) | Both team sheets. |
 | `/squad` | [squads.md](squads.md) | Yours, then everyone else's. |
 | `/squad/me` | [squad.md](squad.md) | **The front door.** The My Team section, which is the reader's own team under a URL rather than an id. |
 | `/squad/[teamId]` | [squad.md](squad.md) | **One squad: the list and the pitch. The reference page for the new look.** |

@@ -73,8 +73,6 @@ const RATES: readonly Rate[] = [
     perNinety: true,
     of: (s) => s.expectedGoalsConceded,
   },
-  { name: "BPS", from: "FPL's bonus points system score, per 90", perNinety: true, of: (s) => s.bps },
-  { name: "Bonus", from: "FPL, per 90", perNinety: true, of: (s) => s.bonus },
 ];
 
 /** One measure as both of them have it. */
@@ -84,10 +82,8 @@ export interface RateRow {
   /** Whether the two figures are RATES, which is what decides how they print.
    *
    *  It rides on the row rather than being inferred from the value, because
-   *  inferring it is wrong about a rate that lands on a whole number: Haaland
-   *  has no tackles and exactly two bonus points per ninety, and the first cut
-   *  printed those as `0` and `2` down a column of `0.82` and `35.33`. Found by
-   *  looking at the screen. */
+   *  inferring it is wrong about a rate that lands on a whole number: Haaland's
+   *  nought tackles per ninety printed as `0` down a column of `0.82`. */
   perNinety: boolean;
   a: number | null;
   b: number | null;

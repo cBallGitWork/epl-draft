@@ -67,10 +67,14 @@ describe("attributes", () => {
   });
 
   it("rates FPL's figures per 90 of the minutes FPL covered", () => {
-    const covered = man({ minutes: 900, fplMinutes: 450, bps: 200 });
-    const whole = man({ minutes: 900, fplMinutes: 900, bps: 300 });
+    const covered = man({ minutes: 900, fplMinutes: 450, influence: 200 });
+    const whole = man({ minutes: 900, fplMinutes: 900, influence: 300 });
     const cohort = [covered, whole];
-    expect(ratingOf(attributes(covered, cohort), "Determination")).toBeGreaterThan(ratingOf(attributes(whole, cohort), "Determination") ?? 0);
+    expect(ratingOf(attributes(covered, cohort), "Influence")).toBeGreaterThan(ratingOf(attributes(whole, cohort), "Influence") ?? 0);
+  });
+
+  it("rates nothing on FPL's bonus-points score, which belongs on the FPL tab alone", () => {
+    expect(attributes(man(), [man()]).map((attribute) => attribute.from).join(" ")).not.toMatch(/bonus/i);
   });
 
   it("rates finishing on expected goals on target, so the striker who hits the target most rates highest", () => {

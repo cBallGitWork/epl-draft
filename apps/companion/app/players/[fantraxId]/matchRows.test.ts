@@ -13,7 +13,7 @@ const CLUBS = new Map<number, Club>([
 const match = (over: Partial<GameLogEntry> = {}): GameLogEntry => ({
   gameweek: 1, fixtureId: 1, opponentClubId: 1, home: true, scored: 1, conceded: 0,
   minutes: 90, goals: 0, assists: 0, cleanSheet: true, yellowCards: 0, redCards: 0,
-  saves: 0, bonus: 0, bps: 20, fplPoints: 6, defensiveContribution: null,
+  saves: 0, fplPoints: 6, defensiveContribution: null,
   expectedGoals: 0.1, expectedAssists: 0.2, starts: 1, tackles: null, clearancesBlocksInterceptions: null,
   recoveries: null, expectedGoalsConceded: null, ...over,
 });
@@ -86,14 +86,14 @@ describe("joinMatches", () => {
 
 describe("totalsOf", () => {
   const rows: MatchRow[] = [
-    { fpl: { match: match({ goals: 1, minutes: 90, bps: 30 }), opponent: CLUBS.get(1) }, paid: paid({ points: 9, shots: 3 }), mark: null },
-    { fpl: { match: match({ gameweek: 2, minutes: 45, bps: 10 }), opponent: CLUBS.get(2) }, paid: null, mark: null },
+    { fpl: { match: match({ goals: 1, minutes: 90, expectedGoals: 0.3 }), opponent: CLUBS.get(1) }, paid: paid({ points: 9, shots: 3 }), mark: null },
+    { fpl: { match: match({ gameweek: 2, minutes: 45, expectedGoals: 0.1 }), opponent: CLUBS.get(2) }, paid: null, mark: null },
   ];
 
   it("sums FPL's columns over every match", () => {
     expect(totalsOf(rows).minutes).toBe(135);
     expect(totalsOf(rows).goals).toBe(1);
-    expect(totalsOf(rows).bps).toBe(40);
+    expect(totalsOf(rows).expectedGoals).toBeCloseTo(0.4);
   });
 
   it("sums Fantrax's only over the matches they reached", () => {

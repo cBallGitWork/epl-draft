@@ -24,7 +24,6 @@ export const LINE_COUNTS = [
   "passes",
   "passesAttempted",
   "xgBuildup",
-  "bps",
   "influence",
   "saves",
   "goalsPrevented",
@@ -47,7 +46,7 @@ export type PlayerLine = {
   code: number;
   minutes: number;
   starts: number;
-  /** Minutes of the matches FPL's columns cover; bps, influence, saves, xgc and conceded are per these. */
+  /** Minutes of the matches FPL's columns cover; influence, saves, xgc and conceded are per these. */
   fplMinutes: number;
   /** His match ratings in his starts. */
   ratings: number[];

@@ -135,11 +135,17 @@ describe("the export's three counts", () => {
 
 describe("how a row prints", () => {
   it("marks a rate as a rate even when it lands on a whole number", () => {
-    // Haaland has no tackles and exactly two bonus points per ninety. Inferring
-    // "is this a rate" from the VALUE printed those as `0` and `2` in a column
-    // of `0.82` and `35.33`, which reads as a column with something wrong in it.
-    const rows = rateRows(season({ minutes: 270, tackles: 0, bonus: 6 }), season({ minutes: 270, tackles: 4 }));
-    expect(rows.find((each) => each.name === "Bonus")?.perNinety).toBe(true);
+    // Inferring "is this a rate" from the VALUE printed Haaland's nought tackles as `0` in a column of `0.82`.
+    const rows = rateRows(season({ minutes: 270, tackles: 0 }), season({ minutes: 270, tackles: 4 }));
+    expect(rows.find((each) => each.name === "Tackles")?.perNinety).toBe(true);
     expect(rows.find((each) => each.name === "Min")?.perNinety).toBe(false);
+  });
+});
+
+describe("FPL's bonus", () => {
+  it("is never a row: it belongs on the FPL tab alone", () => {
+    const names = rateRows(season({ minutes: 900, tackles: 9 }), season({ minutes: 900, tackles: 4 })).map((each) => each.name);
+    expect(names).not.toContain("BPS");
+    expect(names).not.toContain("Bonus");
   });
 });

@@ -39,7 +39,6 @@ export const COLUMNS = [
     of: (r) => r.line?.defensiveContribution ?? null,
     rank: "high",
   },
-  { head: "B", title: "FPL bonus", of: (r) => r.line?.bonus ?? null, rank: "high" },
   { head: "YC", title: "Yellow cards", of: (r) => r.line?.yellowCards ?? null, rank: "low" },
   { head: "Rtg", title: "SofaScore's rating out of ten", of: (r) => r.logged?.rating ?? null, kind: "rating", derived: true },
 ] as const satisfies readonly Column[];

@@ -84,14 +84,13 @@ describe("mapMatchSheets", () => {
 });
 
 describe("sheetSides", () => {
-  it("splits the sheet and puts each side in bps order", () => {
+  it("splits the sheet and puts each side by name, never in FPL's bonus-points order", () => {
     const { home, away } = sheetSides(played, snapshotOf(played.lines.map((l) => l.playerId)));
     expect(home).toHaveLength(16);
     expect(away).toHaveLength(16);
-    expect(away[0].line.bps).toBe(60);
     for (const side of [home, away]) {
-      const bps = side.map((r) => r.line.bps);
-      expect([...bps].sort((a, b) => b - a)).toEqual(bps);
+      const names = side.map((r) => r.player.name);
+      expect([...names].sort((a, b) => a.localeCompare(b))).toEqual(names);
     }
   });
 

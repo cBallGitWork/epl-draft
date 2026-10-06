@@ -121,7 +121,6 @@ const COLUMNS: readonly Column[] = [
   { head: "Sv", title: "Saves", of: (s) => s.saves },
   { head: "Yel", title: "Yellow cards", of: (s) => s.yellowCards },
   { head: "Red", title: "Red cards", of: (s) => s.redCards },
-  { head: "Bon", title: "Bonus points", of: (s) => s.bonus },
   {
     head: "Pts",
     title: "FPL's points, under FPL's rules — not this league's",

@@ -142,8 +142,7 @@ one tap away on his Data tab.
   and up is good — which is why the ladder gains a direction here.
 - **The measure decides how a figure prints, not the value.** A rate landing on
   a whole number is still a rate: `Number.isInteger` set Haaland's nought tackles
-  and two bonus points as `0` and `2` in a column of `0.82` and `35.33`. Found by
-  looking at the screen.
+  as `0` in a column of `0.82`. Found by looking at the screen.
 
 ## The maps
 

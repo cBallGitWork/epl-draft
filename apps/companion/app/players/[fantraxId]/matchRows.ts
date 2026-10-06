@@ -5,7 +5,7 @@ import type { GameLogRow } from "./scouting";
 // One row per match, with both accounts of it on the same line.
 //
 // FPL's history is the SPINE: it covers every match of the season, always, and
-// carries the underlying play — expected goals, tackles, recoveries, bps — that
+// carries the underlying play — expected goals, tackles, recoveries — that
 // Fantrax publishes none of. Fantrax's own rows carry the one thing FPL cannot
 // give at all: **our league's points for that match**. FPL's points are FPL's,
 // under FPL's rules, and the two disagree by design.
@@ -67,8 +67,6 @@ export interface MatchTotals {
   assists: number;
   expectedGoals: number;
   expectedAssists: number;
-  bonus: number;
-  bps: number;
   fplPoints: number;
   /** Our league's points, over the matches Fantrax reached. Null when it reached
    *  none — a total of nought would say he scored nothing in matches nobody
@@ -108,8 +106,6 @@ export function totalsOf(rows: readonly MatchRow[]): MatchTotals {
     assists: sum((r) => r.fpl.match.assists),
     expectedGoals: sum((r) => r.fpl.match.expectedGoals),
     expectedAssists: sum((r) => r.fpl.match.expectedAssists),
-    bonus: sum((r) => r.fpl.match.bonus),
-    bps: sum((r) => r.fpl.match.bps),
     fplPoints: sum((r) => r.fpl.match.fplPoints),
     // Championship Manager's own columns, added 4 Sep 2026 when the profile's
     // table took `cm9900/11.jpg`'s shape: `Apps Gls Con Pens Asts Yel Red`.
