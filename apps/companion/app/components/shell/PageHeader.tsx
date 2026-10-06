@@ -118,8 +118,9 @@ export default function PageHeader({
         className="cm-titlebar flex min-h-11 items-center gap-2 px-2 py-1 lg:min-h-24"
         style={plate ? { background: plate.background } : undefined}
       >
+        {/* Wraps rather than clips: a fantasy team's name is printed whole (Craig, 6 Oct 2026). */}
         <h1
-          className="cm-title min-w-0 flex-1 truncate text-center font-chrome text-lg font-bold uppercase lg:text-3xl"
+          className="cm-title min-w-0 flex-1 text-balance text-center font-chrome text-lg font-bold uppercase lg:text-3xl"
           style={plate ? { color: plate.ink } : undefined}
         >
           {title}

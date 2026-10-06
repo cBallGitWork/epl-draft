@@ -5,7 +5,6 @@ import {
   fetchLineupState,
   mapLineupState,
   oppositionByClub,
-  playerName,
   squadDetail,
   squadUnarranged,
 } from "@epl/core";
@@ -171,10 +170,6 @@ export async function squadView(slug: string, gw: string | undefined) {
           lines: squadDetail(squadUnarranged(team), clubs, opposition, points),
         }
       : null;
-  // Fantrax's stat rows carry an id and no name, deliberately: the squad already
-  // names every one of them and a second copy is the one that disagrees when a
-  // commissioner renames somebody.
-  const names = new Map(team.players.map((rostered) => [rostered.slot.fantraxId, playerName(rostered)]));
 
   // The one number Fantrax's live feed withholds: a clean sheet is not credited
   // until the final whistle, so a squad's visible total understates it for the
@@ -197,7 +192,7 @@ export async function squadView(slug: string, gw: string | undefined) {
   )?.points;
   const pending = owed ? owed : null;
 
-  return { team, mine, planning, open, standing, weeks, benchRanks, eligibility, clubs, opposition, live, news, season, points, board, names, pending, squadIds };
+  return { team, mine, planning, open, standing, weeks, benchRanks, eligibility, clubs, opposition, live, news, points, board, pending, squadIds };
 }
 
 /** Fantrax's bench order for the planned week, `scorerId → rank`; none when the read fails or names another week. */

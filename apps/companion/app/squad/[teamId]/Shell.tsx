@@ -1,5 +1,6 @@
 import { teamColours } from "@epl/core";
 import PlateShell from "../../components/shell/PlateShell";
+import { leagueInfo } from "../../round";
 import TeamTabs from "./TeamTabs";
 import type { TeamTab } from "./TeamTabs";
 
@@ -22,7 +23,7 @@ import type { TeamTab } from "./TeamTabs";
 // predicted. What is left here is what is this subject's own: which colour table
 // he is looked up in, and which tabs he has.
 
-export default function TeamShell({
+export default async function TeamShell({
   team,
   current,
   sub,
@@ -30,7 +31,7 @@ export default function TeamShell({
   children,
 }: {
   /** Whose screens these are. The slug builds the tab hrefs, the id looks his
-   *  colour up and the name goes on the bar, so all three come from the same
+   *  colour and full name up and the name is the bar's fallback, so all three come from the same
    *  object rather than being passed separately and drifting. */
   team: { teamId: string; teamName: string; slug: string };
   current: TeamTab;
@@ -41,8 +42,10 @@ export default function TeamShell({
   // A manager's colour comes from `teamColours` and a club's from
   // `clubColours`. That difference is the reason `PlateShell` takes the colours
   // resolved rather than an id.
+  // The bar prints Fantrax's name in full; `team.teamName` is the short one every list uses.
+  const full = (await leagueInfo())?.teams.find((t) => t.teamId === team.teamId)?.name || team.teamName;
   return (
-    <PlateShell colours={teamColours(team.teamId)} title={team.teamName} sub={sub}
+    <PlateShell colours={teamColours(team.teamId)} title={full} sub={sub}
       tabs={<TeamTabs slug={team.slug} current={current} empty={empty} />}>
       {children}
     </PlateShell>

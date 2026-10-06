@@ -800,7 +800,7 @@ apart silently.
 | A figure in a row | — | — | `sm`, `.numeric` | `ROW_FIGURE`, worn by `FIGURE_CELL` and `FIGURE` (bold), centred on every table |
 | A label that is furniture | — | — | `2xs` bold caps | `LABEL` |
 
-**Three recorded exceptions, and what earns one.** `prem/match/[id]/TeamSheet` sets
+**Four recorded exceptions, and what earns one.** `prem/match/[id]/TeamSheet` sets
 its names and figures a step above the row default — `base`/`lg:text-lg` against
 `sm`/`lg:base` — on Craig's call of 10 Sep 2026 (*"the player text could be much
 bigger on this screen too like CM… data much bigger too"*). The argument is that
@@ -830,6 +830,12 @@ is spent out of.
 `players/[fantraxId]/Moves`, a player's Business board, is the third (Craig, 1 Oct 2026: *"make text bigger in
 business"*): its whole content is one man's handful of moves in four columns, so it takes TeamSheet's step,
 `base`/`lg:text-lg`, on the date's index block, the move and both sides.
+
+`components/league/SquadRow`'s points are the fourth (Craig, 6 Oct 2026: *"make fpts row bigger, harder to read"*),
+and the figure alone: `base`/`lg:text-lg` against a `ROW_NAME` that stays put. Every squad list a manager reads
+fifteen of carries one figure per man, and since the season grid came off a rival's squad (the same day) that list
+is the whole screen. The figure is the board's one value, so it is amber rather than the accent, which said
+"yours" on every rival's squad.
 
 **Three of these are rules and the rest are consequences.** 44 is docs/rules/PRODUCT.md's
 tap floor and is not negotiable under a thumb; 36 is a control on the desk; 28 is
@@ -992,8 +998,8 @@ are four fewer men and room for each.
 
 Two consequences. `/squad/[teamId]` is no longer the reference page for the
 pitch; the head-to-head is. And **the 390×844 no-scroll budget is now about the
-PITCH clearing the fold, not the page** — the page scrolls by design, because the
-season grid is a second panel under the board. `tools/ui/pitchfit.mjs` is what
+PITCH clearing the fold, not the page** — the page scrolls by design, because a
+squad is fifteen rows. `tools/ui/pitchfit.mjs` is what
 checks it. `docs/ui/squad.md` and `docs/ui/README.md` are still not retired.
 
 The consequence is the part worth writing down. §8 defers the 6–7px clamp floors

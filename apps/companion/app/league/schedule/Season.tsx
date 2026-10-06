@@ -4,6 +4,7 @@ import type { SeasonRow } from "./teamSeason";
 import { ROW_NAME, SMALL_CAPS } from "@/app/desk";
 import { matchupHref } from "../routes";
 import { teamHref } from "@/app/squad/routes";
+import { shortName } from "@/app/teamNames";
 
 // One team's season as CM's fixture list: a blue gameweek block, the opponent in white, the
 // competition in yellow, and the score on a plate at the right edge. `teamSeason.ts` builds the rows.
@@ -21,11 +22,7 @@ export default function Season({
     <ul className="cm-rows cm-scroll cm-scroll-y flex flex-col lg:max-h-[34rem] lg:overflow-y-auto">
       {rows.map((row) => (
         <li key={`${row.round.period}-${row.tie.competition.id}-${row.tie.round ?? ""}`}>
-          <div
-            className={`cm-row flex min-h-11 items-center gap-2 px-1.5 ${
-              row.round.started ? "" : "text-muted"
-            }`}
-          >
+          <div className="cm-row flex min-h-11 items-center gap-2 px-1.5">
             {/* The gameweek always; its date only on a desk, where the opponent still has room. */}
             <span className="cm-index numeric flex shrink-0 items-baseline gap-1 px-1.5 py-0.5">
               <span>GW{row.round.gameweek}</span>
@@ -36,7 +33,7 @@ export default function Season({
               )}
             </span>
 
-            <span className="min-w-0 flex-1 truncate">
+            <span className="flex min-w-0 flex-1">
               <Opponent opponent={row.opponent} gameweek={row.round.gameweek} />
             </span>
 
@@ -100,23 +97,24 @@ function Opponent({
   gameweek: number;
 }) {
   // The gap is a class: a flex parent collapses a trailing space in the markup.
-  const name = (
-    <>
-      <span className="pr-1 text-2xs font-normal uppercase text-faint">v</span>
-      {opponent.label}
-    </>
-  );
+  const v = <span className="shrink-0 pr-1 text-2xs font-normal uppercase text-faint">v</span>;
 
   return opponent.team === null ? (
     // Nobody drawn yet: the same name recipe, italic and faint.
-    <span className={`truncate italic text-faint ${ROW_NAME}`}>{name}</span>
+    <span className={`flex min-w-0 items-center italic text-faint ${ROW_NAME}`}>
+      {v}
+      <span className="truncate">{opponent.label}</span>
+    </span>
   ) : (
     <Link
       href={teamHref(opponent.team.teamId, gameweek)}
-      // `inline-flex` keeps the link in the line with its "v"; `.cm-row` gives a phone 44px, the desk 28.
-      className={`cm-row inline-flex min-h-11 items-center truncate hover:underline ${ROW_NAME}`}
+      // `.cm-row` gives a phone 44px, the desk 28. A name is white (DESIGN §3), in a week to come as in one played.
+      className={`cm-row flex min-h-11 min-w-0 items-center text-ink hover:underline ${ROW_NAME}`}
     >
-      {name}
+      {v}
+      {/* The short name on a phone and the full one on a desk; overflow ends in an ellipsis. */}
+      <span className="truncate lg:hidden">{shortName(opponent.team.teamId, opponent.label)}</span>
+      <span className="hidden truncate lg:block">{opponent.label}</span>
     </Link>
   );
 }
