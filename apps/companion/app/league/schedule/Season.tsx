@@ -4,7 +4,7 @@ import type { SeasonRow } from "./teamSeason";
 import { ROW_NAME, SMALL_CAPS } from "@/app/desk";
 import { matchupHref } from "../routes";
 import { teamHref } from "@/app/squad/routes";
-import { shortName } from "@/app/teamNames";
+import TeamName from "@/app/components/league/TeamName";
 
 // One team's season as CM's fixture list: a blue gameweek block, the opponent in white, the
 // competition in yellow, and the score on a plate at the right edge. `teamSeason.ts` builds the rows.
@@ -112,9 +112,9 @@ function Opponent({
       className={`cm-row flex min-h-11 min-w-0 items-center text-ink hover:underline ${ROW_NAME}`}
     >
       {v}
-      {/* The short name on a phone and the full one on a desk; overflow ends in an ellipsis. */}
-      <span className="truncate lg:hidden">{shortName(opponent.team.teamId, opponent.label)}</span>
-      <span className="hidden truncate lg:block">{opponent.label}</span>
+      <span className="truncate">
+        <TeamName teamId={opponent.team.teamId} name={opponent.label} />
+      </span>
     </Link>
   );
 }
