@@ -35,6 +35,13 @@ league's tiebreak, so it is a column a reader compares rather than one he audits
 The visibility rides in each column's `width` string, so the heads, the rows and
 the loading skeleton all read it from one place.
 
+**And the phone reads `Pts` straight after `Pld`, under the team's short name**
+(Craig, 6 Oct 2026: *"teams should use shortened names, and put PTS after PLD on
+mobile"*). Whole names had pushed the table 89px past a 390 screen and `Pts` was
+the column cut. `Pts` is printed twice, `COPY.phone` after `Pld` and `COPY.desk`
+at the end, because a table cell cannot be reordered by CSS; `league/TeamName`
+picks the name. The desk keeps the whole names and the order above.
+
 **And For and Ag are ink, not amber** (Craig, same day). DESIGN §3's amber slot
 now reads "a figure standing alone beside a name — never a column of a standings
 table". `cm9900/24.jpg` is white throughout with yellow for your own club.
@@ -172,3 +179,8 @@ two either side of Fantrax's last semi place, so they move if `numPlayoffTeams`
 does; the prize, the play-in and the Plate are declared. A league with no
 playoff draws none, and none is drawn under the last row — a line beneath the
 bottom of a table announces a cut nobody missed.
+
+**A cut is its label's height and a hair** (Craig, 6 Oct 2026: *"the dotted line is
+good, but the rows are too far apart"*): `CutRow` pads 2px a side, so a cut is
+16.5px at 390 and 17.5 at 1440. At 6px a side it was 24.5 and 25.5, nearly a desk
+row of air under every line, while the rows themselves were already 44.5 and 28.5.
