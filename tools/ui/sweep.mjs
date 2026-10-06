@@ -20,7 +20,7 @@
 // gap. The bucket is a work list — check those by eye — never a pass.
 
 import { BASE_URL, connect, discover, parseArgs, teamCookie } from "./cdp.mjs";
-import { ALL_ROUTES, matchRoutes } from "./routes.mjs";
+import { ALL_ROUTES, FRONT_PAGE, matchRoutes } from "./routes.mjs";
 
 /** This run's routes: the shared list, plus whatever `discover` finds a real
  *  id for below. A COPY, because those appends are this process's own —
@@ -106,7 +106,7 @@ if (team) ROUTES.push(team, ...["transfers", "next", "fixtures", "stats"].map((t
 // a failure. A slug names one story in one round's edition and is the last thing
 // that should be a constant here — every other per-record route in this list is
 // already derived for exactly that reason.
-await cdp.open("/", 2200);
+await cdp.open(FRONT_PAGE, 2200);
 const article = await cdp.js(
   `(document.querySelector('a[href^="/paper/"]')||{}).getAttribute
      ? document.querySelector('a[href^="/paper/"]').getAttribute("href") : ""`,
