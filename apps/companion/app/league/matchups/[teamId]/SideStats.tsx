@@ -58,7 +58,7 @@ export default function SideStats({
                   key={head.code}
                   title={wordsOf(head).key}
                   href={hrefFor(head.code)}
-                  label={head.code}
+                  label={wordsOf(head).head}
                   sorted={sortedAs(head.code === sort.head, sort.descending)}
                 />
               ))}

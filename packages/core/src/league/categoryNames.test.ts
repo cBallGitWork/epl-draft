@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ASSIST, KEEPER_WORK, carries, firstScored, idsOf } from "./categoryNames";
+import { ASSIST, DEFCON, DEFENSIVE_POINTS, DEFENSIVE_POINTS_3, KEEPER_WORK, carries, firstScored, idsOf, meaningOf } from "./categoryNames";
 import { mapLeagueInfo } from "./fantrax/map";
 import real from "./fantrax/__fixtures__/leagueInfoScoringReal.json";
 import rehearsal from "./fantrax/__fixtures__/leagueInfoScoringRehearsal.json";
@@ -41,6 +41,20 @@ describe("idsOf", () => {
 
   it("never names the orphan Pen, which the scoring table prices and the settings do not describe", () => {
     expect(Object.values(realInfo.scoringCategories).map((c) => c.code)).not.toContain("Pen");
+  });
+});
+
+describe("DefCon's lookups, whatever its heads print", () => {
+  // The heads say DC and DC+ (categoryWords); reads are still filed under Fantrax's DFP and DFP3.
+  it("finds both categories by Fantrax's short code where no long one was carried, and never by a head", () => {
+    expect(meaningOf({ code: "DFP", longCode: null }, DEFCON)).toBe(DEFENSIVE_POINTS);
+    expect(meaningOf({ code: "DFP3", longCode: null }, DEFCON)).toBe(DEFENSIVE_POINTS_3);
+    expect(meaningOf({ code: "DC", longCode: null }, DEFCON)).toBeNull();
+    expect([DEFENSIVE_POINTS.short, DEFENSIVE_POINTS_3.short]).toEqual(["DFP", "DFP3"]);
+  });
+
+  it("reads the real league's DefCon ids as it did", () => {
+    expect([...idsOf(realInfo.scoringCategories, DEFCON)].map((id) => realInfo.scoringCategories[id]?.code)).toEqual(["DFP", "DFP3"]);
   });
 });
 

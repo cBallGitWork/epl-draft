@@ -24,7 +24,7 @@ describe("COLUMNS", () => {
   it("runs phone-first, so the figures a thumb sees first are the ones worth seeing", () => {
     // Craig, 24 Sep 2026: seven figures fit beside a name at 390, and these are the seven.
     expect(COLUMNS.filter((column) => column.group !== "attributes").map((column) => column.label)).toEqual([
-      "Player", "FPts", "FP/G", "Min", "GP", "G", "AT", "A", "AF", "CS", "DFP", "DFP3", "GAO", "GA", "Sv", "GKP", "PKS", "YC", "RC", "PKM", "OG", "Ros", "+/-",
+      "Player", "FPts", "FP/G", "Min", "GP", "G", "AT", "A", "AF", "CS", "DC", "DC+", "GAO", "GA", "Sv", "GKP", "PKS", "YC", "RC", "PKM", "OG", "Ros", "+/-",
     ]);
   });
 
@@ -65,11 +65,11 @@ describe("the columns a league scores", () => {
   const counts = (scored: ReadonlySet<string>) => columnsIn("all", "fpts", scored).filter((column) => column.stat !== undefined).map((column) => column.label);
 
   it("draws the real league's AT, GKP and both DefCon counts, and not the A, AF and Sv it no longer scores", () => {
-    expect(counts(real)).toEqual(["Min", "GP", "G", "AT", "CS", "DFP", "DFP3", "GAO", "GA", "GKP", "PKS", "YC", "RC", "PKM", "OG"]);
+    expect(counts(real)).toEqual(["Min", "GP", "G", "AT", "CS", "DC", "DC+", "GAO", "GA", "GKP", "PKS", "YC", "RC", "PKM", "OG"]);
   });
 
   it("draws the rehearsal league's, with the one DefCon count it scores", () => {
-    expect(counts(rehearsal)).toEqual(["Min", "GP", "G", "A", "AF", "CS", "DFP", "GAO", "GA", "Sv", "PKS", "YC", "RC", "PKM", "OG"]);
+    expect(counts(rehearsal)).toEqual(["Min", "GP", "G", "A", "AF", "CS", "DC", "GAO", "GA", "Sv", "PKS", "YC", "RC", "PKM", "OG"]);
   });
 
   // Craig, 6 Oct 2026: "data page needs our dfp and dfp3 stats".
@@ -77,6 +77,8 @@ describe("the columns a league scores", () => {
     const [dfp, dfp3] = [columnFor("dfp"), columnFor("dfp3")];
     const gross = { Min: 450, DFP: 10, DFP3: 24 };
     expect([dfp?.value({} as never, gross), dfp3?.value({} as never, gross)]).toEqual([10, 24]);
+    // Headed DC and DC+, still read and keyed in the address bar by Fantrax's codes.
+    expect([dfp?.label, dfp3?.label]).toEqual(["DC", "DC+"]);
     expect([dfp?.stat, dfp3?.stat]).toEqual(["DFP", "DFP3"]);
     expect(dfp && figureOf(dfp, {} as never, gross, true)).toBe(2);
     expect(columnsIn("defensive", "fpts", real).map((column) => column.key)).toEqual(expect.arrayContaining(["dfp", "dfp3"]));

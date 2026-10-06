@@ -60,7 +60,7 @@ function held(counts: Counts | undefined, names: readonly string[]): number | nu
 
 /** The served league's figure where its read has the column, else the stats league's: one count, two leagues. */
 function column(
-  entry: { key: string; group: GroupKey; label: string; lowIsGood?: boolean; also?: string },
+  entry: { key: string; head?: string; group: GroupKey; label: string; lowIsGood?: boolean; also?: string },
   kind: "category" | "beneath",
 ): Column {
   const names = entry.also ? [entry.key, entry.also] : [entry.key];
@@ -68,7 +68,7 @@ function column(
     const served = held(line.stats, names);
     return served === undefined ? (held(beside.statsLeague, names) ?? null) : served;
   };
-  return { group: entry.group, names, kind, measure: { key: entry.key, head: entry.key, label: entry.label, worse: entry.lowIsGood === true, read } };
+  return { group: entry.group, names, kind, measure: { key: entry.key, head: entry.head ?? entry.key, label: entry.label, worse: entry.lowIsGood === true, read } };
 }
 
 /** DefCon points at his slot, ours; drawn after the last DefCon count. */
