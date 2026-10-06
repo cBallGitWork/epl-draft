@@ -44,8 +44,7 @@ export interface StatCategory {
   /** Which foot button this sits under. */
   group: GroupKey;
   label: string;
-  /** Two or three letters for a column head. Fantrax's own abbreviations where
-   *  it has one, because a reader who knows their scoring page knows these. */
+  /** Its column head (`wordsFor(...).head`): display only, never a lookup. */
   short: string;
   /** The head's title, where it says more than the label. */
   title?: string;
@@ -100,7 +99,8 @@ export function groupFor(key: string | undefined): GroupKey {
 
 /** A category the board ranks by: filed under Fantrax's caption, headed by its abbreviation, named in plain words. */
 export function statCategory(of: FantraxCategory, group: GroupKey, lowIsGood?: true, title = wordsFor(of).key): StatCategory {
-  return { key: of.caption, group, label: wordsFor(of).name, short: of.short, title, lowIsGood };
+  const words = wordsFor(of);
+  return { key: of.caption, group, label: words.name, short: words.head, title, lowIsGood };
 }
 
 /** Ordered as a reader would look for them: what a squad did going forward,

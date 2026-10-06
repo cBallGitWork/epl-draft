@@ -3,6 +3,7 @@ import {
   ASSISTS_OFFICIAL,
   ASSISTS_TOTAL,
   CLEAN_SHEETS,
+  DEFCON,
   GOALS,
   GOALS_AGAINST,
   GOALS_AGAINST_OUTFIELD,
@@ -116,9 +117,10 @@ function byAbbreviation(key: string, title: string, group: PoolGroup, mark: Mark
   };
 }
 
-/** A scoring category's count, with its plain words in the key. */
+/** A scoring category's count, read by Fantrax's code, headed and keyed in our words. */
 function count(category: FantraxCategory, group: PoolGroup, mark: Mark = "high"): PoolColumn {
-  return byAbbreviation(category.short, wordsFor(category).key, group, mark);
+  const words = wordsFor(category);
+  return { ...byAbbreviation(category.short, words.key, group, mark), label: words.head };
 }
 
 /** The football BEHIND the figures — how many matches, and how many minutes.
@@ -192,6 +194,7 @@ export const COLUMNS: PoolColumn[] = [
   count(ASSISTS_OFFICIAL, "attacking"),
   count(ASSISTS_FANTASY, "attacking"),
   count(CLEAN_SHEETS, "defensive"),
+  ...DEFCON.map((category) => count(category, "defensive")),
   count(GOALS_AGAINST_OUTFIELD, "defensive", "low"),
   count(GOALS_AGAINST, "defensive", "low"),
   count(SAVES, "defensive"),

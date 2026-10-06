@@ -127,8 +127,8 @@ The categories are ours, not Fantrax's — their `SEASON_STATS` view publishes e
 one twice, split into a goalkeeper block and an outfielder block, and
 `mapSeasonStats` adds them back together.
 
-**DefCon is two columns, `DFP` and `DFP3`, and Keeping is its own group** (1 Oct
-2026). The real league pays a defender on `Defensive Points` and a midfielder or
+**DefCon is two columns, headed `DC` and `DC+` (Fantrax's `DFP` and `DFP3`), and Keeping is its own group** (1 Oct
+2026; heads renamed 6 Oct in `core:league/categoryWords.ts`). The real league pays a defender on `Defensive Points` and a midfielder or
 forward on `Defensive Points 3`, so their points are two halves of one bonus and
 their counts are two different sums; adding them would be neither. Saves, keeper
 actions and penalties saved moved to Keeping so Defensive stays at four.

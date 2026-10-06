@@ -26,6 +26,8 @@ import { wordsFor } from "./categoryWords";
 /** A category the squad board can show, under Fantrax's own column abbreviation: `G`, `AF`, `CS`. */
 export interface PlayerCategory {
   key: string;
+  /** Its column head; display only, as reads are filed under `key`. */
+  head: string;
   group: GroupKey;
   label: string;
   /** True when a low count is the better one. */
@@ -36,6 +38,7 @@ export interface PlayerCategory {
 
 const entry = (category: FantraxCategory, group: GroupKey, lowIsGood?: true, label = wordsFor(category).key): PlayerCategory => ({
   key: category.short,
+  head: wordsFor(category).head,
   group,
   label,
   lowIsGood,

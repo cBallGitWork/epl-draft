@@ -28,11 +28,17 @@ describe("offeredIn", () => {
   it("names what it offers in plain words, never Fantrax's captions", () => {
     expect(offeredIn("attacking", board(REAL)).map((c) => c.label)).toEqual(["Goals", "Assists", "Penalties missed"]);
     expect(offeredIn("attacking", board(REHEARSAL)).map((c) => c.label)).toEqual(["Goals", "Assists", "Extra assists", "Penalties missed"]);
-    expect(offeredIn("defensive", board(REAL)).map((c) => c.label)).toEqual(["Clean sheets", "DefCon (DEF)", "DefCon (MID/FWD)", "Goals conceded"]);
+    expect(offeredIn("defensive", board(REAL)).map((c) => c.label)).toEqual(["Clean sheets", "DefCon", "DefCon+", "Goals conceded"]);
     expect(offeredIn("keeping", board(REAL)).map((c) => c.title ?? c.label)).toEqual([
       "Keeper actions: saves, smothers, punches and high claims won",
       "Penalties saved",
     ]);
+  });
+
+  it("heads DefCon DC and DC+, and still files it under Fantrax's captions", () => {
+    const defensive = offeredIn("defensive", board(REAL));
+    expect(defensive.map((c) => c.short)).toEqual(["CS", "DC", "DC+", "GA"]);
+    expect(defensive.map((c) => c.key)).toContain("Defensive Points 3");
   });
 
   it("offers the whole group when Fantrax answered nothing, so the empty board still says what it is for", () => {

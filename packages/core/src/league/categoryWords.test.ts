@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ASSIST, ASSISTS_TOTAL, DEFENSIVE_POINTS, DEFENSIVE_POINTS_3, KEEPER_POINTS, firstScored } from "./categoryNames";
+import { ASSIST, ASSISTS_TOTAL, DEFENSIVE_POINTS, DEFENSIVE_POINTS_3, GOALS, KEEPER_POINTS, firstScored } from "./categoryNames";
 import { wordsFor, wordsOf } from "./categoryWords";
 import { mapLeagueInfo } from "./fantrax/map";
 import real from "./fantrax/__fixtures__/leagueInfoScoringReal.json";
@@ -31,8 +31,8 @@ describe("wordsOf", () => {
   it("gives every category either league scores plain words, never Fantrax's caption", () => {
     for (const category of [...realCategories, ...rehearsalCategories]) {
       const { name, key } = wordsOf(category);
-      // Sentence case past the first word, but for the position letters: Fantrax's captions are Title Case.
-      expect(name.split(" ").slice(1).every((word) => word === word.toLowerCase() || /^\((DEF|MID\/FWD)\)$/.test(word)), category.code).toBe(true);
+      // Sentence case past the first word: Fantrax's captions are Title Case.
+      expect(name.split(" ").slice(1).every((word) => word === word.toLowerCase()), category.code).toBe(true);
       expect(`${name} ${key}`, category.code).not.toMatch(/\((Total|Official|Fantasy)\)|Points|On Field|Outfielders|Kick/);
     }
   });
@@ -52,9 +52,30 @@ describe("wordsOf", () => {
 });
 
 describe("wordsFor", () => {
-  it("names DefCon's two counts by whom FPL's DefCon pays on each, with what each counts in the key", () => {
-    expect(wordsFor(DEFENSIVE_POINTS)).toEqual({ name: "DefCon (DEF)", key: "DefCon (DEF): tackles won, interceptions and blocks" });
-    expect(wordsFor(DEFENSIVE_POINTS_3).name).toBe("DefCon (MID/FWD)");
-    expect(wordsFor(DEFENSIVE_POINTS_3).key).toMatch(/clearances and recoveries$/);
+  // Craig, 6 Oct 2026: "data page needs our dfp and dfp3 stats (and name them better site wide change)".
+  it("names and heads DefCon's two counts as ours, with what each counts in the key", () => {
+    expect(wordsFor(DEFENSIVE_POINTS)).toEqual({ name: "DefCon", key: "DefCon: tackles won, interceptions and blocks", head: "DC" });
+    expect(wordsFor(DEFENSIVE_POINTS_3)).toMatchObject({ name: "DefCon+", head: "DC+" });
+    expect(wordsFor(DEFENSIVE_POINTS_3).key).toMatch(/^DefCon\+: .*clearances and recoveries$/);
+  });
+
+  it("heads every other category by Fantrax's code", () => {
+    expect(wordsFor(GOALS).head).toBe("G");
+    expect(wordsFor(KEEPER_POINTS).head).toBe("GKP");
+  });
+});
+
+describe("heads", () => {
+  const both = [...realCategories, ...rehearsalCategories];
+  const heads = new Map(both.map((category) => [category.code, wordsOf(category).head]));
+
+  it("heads a league's DefCon by meaning, and a category it does not know by the league's own code", () => {
+    expect([named(realCategories, "DFP").head, named(realCategories, "DFP3").head]).toEqual(["DC", "DC+"]);
+    expect(wordsOf({ code: "Pen", name: "Penalty ", longCode: null }).head).toBe("Pen");
+  });
+
+  it("never gives two of either league's categories one head, nor one another's code", () => {
+    expect(new Set(heads.values()).size).toBe(heads.size);
+    for (const [code, head] of heads) if (head !== code) expect([...heads.keys()], head).not.toContain(head);
   });
 });

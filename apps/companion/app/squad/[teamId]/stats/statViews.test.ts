@@ -56,16 +56,18 @@ describe("the squad board's columns", () => {
     measuresFor(view, served, stats, priced).map((measure) => measure.head);
 
   it("scores the real league's minutes, AT, DefCon and GKP, and not the A, AF and Sv it no longer scores", () => {
-    expect(heads("scoring", realKeys)).toEqual(["Min", "G", "AT", "PKM", "CS", "DFP", "DFP3", "GKP", "PKS", "GA", "YC", "RC", "OG"]);
+    expect(heads("scoring", realKeys)).toEqual(["Min", "G", "AT", "PKM", "CS", "DC", "DC+", "GKP", "PKS", "GA", "YC", "RC", "OG"]);
+    // Headed DC and DC+, still read by Fantrax's codes.
+    expect([readingOf(realGross, {}, "DFP"), readingOf(realGross, {}, "DFP3")]).toEqual([10, 24]);
   });
 
   it("scores the rehearsal league's columns", () => {
-    expect(heads("scoring", rehearsalKeys)).toEqual(["Min", "G", "A", "AF", "PKM", "CS", "DFP", "DFP3", "Sv", "PKS", "GA", "YC", "RC", "OG"]);
+    expect(heads("scoring", rehearsalKeys)).toEqual(["Min", "G", "A", "AF", "PKM", "CS", "DC", "DC+", "Sv", "PKS", "GA", "YC", "RC", "OG"]);
   });
 
   it("puts the stats league's counts beneath each group, and never in Scoring", () => {
     expect(heads("attacking", realKeys)).toEqual(["G", "AT", "A", "AF", "PKM", "S", "SOT", "KP", "BCC"]);
-    expect(heads("defensive", realKeys)).toEqual(["CS", "DFP", "DFP3", "Sv", "GKP", "PKS", "GA", "OG", "TkW", "Int", "CLR", "BR"]);
+    expect(heads("defensive", realKeys)).toEqual(["CS", "DC", "DC+", "Sv", "GKP", "PKS", "GA", "OG", "TkW", "Int", "CLR", "BR"]);
     expect(heads("discipline", realKeys)).toEqual(["YC", "RC", "FC"]);
     expect(heads("appearances", realKeys)).toEqual(["Min", "GP", "GS"]);
   });
@@ -90,7 +92,7 @@ describe("the squad board's DefCon points", () => {
   // Craig, 1 Oct 2026: "scoring missing our defcon stats".
   it("draws ours after the DefCon counts in Scoring when the league prices DefCon, and nowhere else", () => {
     expect(measuresFor("scoring", realKeys, statsKeys, true).map((measure) => measure.head)).toEqual(
-      ["Min", "G", "AT", "PKM", "CS", "DFP", "DFP3", "DCP", "GKP", "PKS", "GA", "YC", "RC", "OG"],
+      ["Min", "G", "AT", "PKM", "CS", "DC", "DC+", "DCP", "GKP", "PKS", "GA", "YC", "RC", "OG"],
     );
     expect(measuresFor("scoring", realKeys, statsKeys, false).map((measure) => measure.head)).not.toContain("DCP");
     expect(measuresFor("defensive", realKeys, statsKeys, true).map((measure) => measure.head)).not.toContain("DCP");

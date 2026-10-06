@@ -1,5 +1,5 @@
 import ScrollBoard from "./ScrollBoard";
-import { columnLabel, DASH, fixed } from "@epl/core";
+import { columnLabel, DASH, fixed, wordsOf } from "@epl/core";
 import type { TeamStats } from "@epl/core";
 import {
   FIGURE_CELL,
@@ -107,7 +107,7 @@ export default function SeasonGrid({
                       return (
                         // Fantrax's own sentence is where this league's rules are published, so the title carries it.
                         <PlateHead key={column.code} at="centre" title={definition === null ? name : `${name} — ${definition}`}>
-                          {column.code}
+                          {wordsOf({ code: column.code, name, longCode: null }).head}
                         </PlateHead>
                       );
                     })}

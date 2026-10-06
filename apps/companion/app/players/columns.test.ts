@@ -3,6 +3,7 @@ import { ATTRIBUTE_ROWS } from "@epl/core";
 import { COLUMNS, DEFAULT_SORT, columnFor } from "./columns";
 import { attributeStats } from "./attributeColumns";
 import { columnsIn } from "./groups";
+import { figureOf } from "./figure";
 
 describe("COLUMNS", () => {
   it("gives every column a unique key", () => {
@@ -23,7 +24,7 @@ describe("COLUMNS", () => {
   it("runs phone-first, so the figures a thumb sees first are the ones worth seeing", () => {
     // Craig, 24 Sep 2026: seven figures fit beside a name at 390, and these are the seven.
     expect(COLUMNS.filter((column) => column.group !== "attributes").map((column) => column.label)).toEqual([
-      "Player", "FPts", "FP/G", "Min", "GP", "G", "AT", "A", "AF", "CS", "GAO", "GA", "Sv", "GKP", "PKS", "YC", "RC", "PKM", "OG", "Ros", "+/-",
+      "Player", "FPts", "FP/G", "Min", "GP", "G", "AT", "A", "AF", "CS", "DC", "DC+", "GAO", "GA", "Sv", "GKP", "PKS", "YC", "RC", "PKM", "OG", "Ros", "+/-",
     ]);
   });
 
@@ -63,12 +64,26 @@ describe("the columns a league scores", () => {
   const rehearsal = new Set(["GP", "Min", "G", "A", "AF", "YC", "RC", "DFP", "PKM", "OG", "GAO", "CS", "GA", "Sv", "PKS"]);
   const counts = (scored: ReadonlySet<string>) => columnsIn("all", "fpts", scored).filter((column) => column.stat !== undefined).map((column) => column.label);
 
-  it("draws the real league's AT and GKP, and not the A, AF and Sv it no longer scores", () => {
-    expect(counts(real)).toEqual(["Min", "GP", "G", "AT", "CS", "GAO", "GA", "GKP", "PKS", "YC", "RC", "PKM", "OG"]);
+  it("draws the real league's AT, GKP and both DefCon counts, and not the A, AF and Sv it no longer scores", () => {
+    expect(counts(real)).toEqual(["Min", "GP", "G", "AT", "CS", "DC", "DC+", "GAO", "GA", "GKP", "PKS", "YC", "RC", "PKM", "OG"]);
   });
 
-  it("draws the rehearsal league's as it always has", () => {
-    expect(counts(rehearsal)).toEqual(["Min", "GP", "G", "A", "AF", "CS", "GAO", "GA", "Sv", "PKS", "YC", "RC", "PKM", "OG"]);
+  it("draws the rehearsal league's, with the one DefCon count it scores", () => {
+    expect(counts(rehearsal)).toEqual(["Min", "GP", "G", "A", "AF", "CS", "DC", "GAO", "GA", "Sv", "PKS", "YC", "RC", "PKM", "OG"]);
+  });
+
+  // Craig, 6 Oct 2026: "data page needs our dfp and dfp3 stats".
+  it("reads both DefCon counts off the grouped payload under Fantrax's codes, under the Defensive plate, per 90 on the toggle", () => {
+    const [dfp, dfp3] = [columnFor("dfp"), columnFor("dfp3")];
+    const gross = { Min: 450, DFP: 10, DFP3: 24 };
+    expect([dfp?.value({} as never, gross), dfp3?.value({} as never, gross)]).toEqual([10, 24]);
+    // Headed DC and DC+, still read and keyed in the address bar by Fantrax's codes.
+    expect([dfp?.label, dfp3?.label]).toEqual(["DC", "DC+"]);
+    expect([dfp?.stat, dfp3?.stat]).toEqual(["DFP", "DFP3"]);
+    expect(dfp && figureOf(dfp, {} as never, gross, true)).toBe(2);
+    expect(columnsIn("defensive", "fpts", real).map((column) => column.key)).toEqual(expect.arrayContaining(["dfp", "dfp3"]));
+    // A keeper's half carries no DefCon: an absence, never a nought.
+    expect(dfp3?.value({} as never, { Min: 450, GA: 4 })).toBeNull();
   });
 
   it("keeps a column the board is sorted by, even where the league does not score it", () => {

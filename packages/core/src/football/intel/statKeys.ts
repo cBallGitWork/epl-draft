@@ -63,10 +63,10 @@ export const STAT_COLUMNS = [
   { key: "clearances", label: "Clr", kind: "count" },
   { key: "clearancesOffLine", label: "CLO", kind: "count" },
   { key: "recoveries", label: "BR", kind: "count" },
-  /** Fantrax's TkW + Int + blocks, their definition. */
-  { key: "defensivePoints", label: "DFP", kind: "count" },
-  /** DFP with clearances and recoveries added. */
-  { key: "defensivePoints3", label: "DFP3", kind: "count" },
+  /** Fantrax's DFP: TkW + Int + blocks. Headed as the league heads it (`join/statHeads.test.ts`). */
+  { key: "defensivePoints", label: "DC", kind: "count" },
+  /** Fantrax's DFP3: DFP with clearances and recoveries added. */
+  { key: "defensivePoints3", label: "DC+", kind: "count" },
   { key: "turnovers", label: "Tu", kind: "count" },
   { key: "dispossessed", label: "Dis", kind: "count" },
   { key: "foulsCommitted", label: "FC", kind: "count" },
