@@ -20,6 +20,7 @@ import {
 import type { PitchRow } from "./PitchRows";
 import { benchFrom, orderBench, swapInOrder } from "./benchOrder";
 import { freeMoves } from "./openings";
+import { pitchTap } from "./pitchTap";
 
 // The lineup planner's state: the slots being arranged, the pick in progress, and every move the
 // league's rules allow from here. `LineupPlanner` draws it.
@@ -186,13 +187,14 @@ export function usePlanner(
   /** A tap on a pitch card: pick him, open his moves on a second tap, or swap with the picked man. */
   function pick(player: SquadPlayerDetail) {
     const id = player.rostered.slot.fantraxId;
-    if (picked === null) setPicked(id);
-    else if (picked === id) {
+    const tap = pitchTap(picked, id, { swap: partners.has(id), reorder: benchSwap(id) });
+    if (tap === "pick") setPicked(id);
+    else if (tap === "open") {
       // A second tap opens the rest of what he can do; putting him back down is the dialog's job.
       setPicked(null);
       setOpened(id);
-    } else if (partners.has(id)) swapWith(id);
-    else if (benchSwap(id)) {
+    } else if (tap === "swap") swapWith(id);
+    else if (tap === "reorder" && picked !== null) {
       setOrder(swapInOrder(benchIds, picked, id));
       setPicked(null);
     }
