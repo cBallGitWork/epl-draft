@@ -1,113 +1,59 @@
+import type { ReactNode } from "react";
 import ScrollBoard from "../../../components/league/ScrollBoard";
 import Link from "next/link";
-import type { Club, Fixture } from "@epl/core";
-import { COMPETITION_NAME, londonDayAndDate, londonTime, DASH } from "@epl/core";
+import type { Club, CupTie, Fixture, RunEntry } from "@epl/core";
+import { COMPETITION_NAME, cupName, londonDayAndDate, londonTime, DASH } from "@epl/core";
 import { CLUB } from "../../routes";
-import { BOARD, ROW_HOVER } from "@/app/desk";
+import { BOARD, MINOR_CAPS, ROW_HOVER, ROW_NAME } from "@/app/desk";
 import Absent from "@/app/components/shell/Absent";
 import ClubLabel from "@/app/components/football/ClubLabel";
 import { matchHref } from "../../match/[id]/matchRoutes";
 
-// One club's season, played and to come, in the order it runs.
-//
-// **The opponent once, never the fixture twice.** `cm9900/24.jpg`'s club fixture
-// list is `Sat 5th Mar · Montpellier · H · French Cup 11th Rnd · 2-2` — a date,
-// who they played, whether it was home, which competition, and the score. It
-// does not print the club whose page you are on, because you are on it (Craig,
-// 3 Sep 2026: "we dont [want] to put the same team over and over"). That is the
-// whole difference from `prem/Match`, which draws BOTH sides because it lists a
-// round rather than a campaign, and it is why this does not reuse it.
-//
-// **A live match is marked here.** `Match` prints a score the moment FPL has
-// one, which is right on `/prem/results` and `/prem/fixtures` because both
-// exclude a round in play — a club's whole season does not, and a running score
-// with no tense reads as a final one.
+// One club's season, league and cups, in the order it runs: a date, the opponent once, H/A, the competition, the score.
+// A live score keeps its ink: a running score with no tense reads as a final one.
+
+interface Cells {
+  key: string;
+  kickoff: string | null;
+  opponent: ReactNode;
+  venue: "H" | "A" | "N";
+  competition: ReactNode;
+  score: ReactNode;
+}
 
 export default function Run({
-  fixtures,
+  entries,
   club,
   clubs,
+  byCode,
 }: {
-  fixtures: readonly Fixture[];
+  entries: readonly RunEntry[];
   /** Whose season this is — the side that is NOT named on each row. */
   club: Club;
   clubs: Map<number, Club>;
+  /** FPL's clubs by code, for a cup tie between two of them. */
+  byCode: Map<number, Club>;
 }) {
   return (
     <ScrollBoard>
       <table className={BOARD}>
         <caption className="sr-only">{club.name}&apos;s season, oldest first</caption>
         <tbody>
-          {fixtures.map((fixture) => {
-            const home = fixture.homeClubId === club.id;
-            const opponent = clubs.get(home ? fixture.awayClubId : fixture.homeClubId);
-            const played = fixture.homeScore !== null && fixture.awayScore !== null;
-            // The club's own goals first, whichever end it was at — a column of
-            // scores read down a season means nothing if half of them are the
-            // other way round.
-            const mine = home ? fixture.homeScore : fixture.awayScore;
-            const theirs = home ? fixture.awayScore : fixture.homeScore;
-
+          {entries.map((entry) => {
+            const row = entry.kind === "league" ? leagueCells(entry.fixture, club, clubs) : cupCells(entry.tie, byCode);
             return (
-              <tr key={fixture.id} className={`cm-row ${ROW_HOVER}`}>
-                {/* The date in the club's own colour (Craig, 3 Sep 2026:
-                    "fixtures, needs the team colours for the date box").
-                    `cm-index` is CM's index block and `ClubShell` has already
-                    scoped `--cm-index` to this club, so the block is the club's
-                    without this file knowing which club it is on — the same
-                    mechanism the gameweek column uses two cells along. */}
+              <tr key={row.key} className={`cm-row ${ROW_HOVER}`}>
+                {/* The date in the club's own colour: `ClubShell` scopes `--cm-index` to this club. */}
                 <td className="cm-index numeric whitespace-nowrap px-1.5 text-center">
-                  {fixture.kickoff === null ? "TBC" : londonDayAndDate(fixture.kickoff)}
+                  {row.kickoff === null ? "TBC" : londonDayAndDate(row.kickoff)}
                 </td>
                 <td className="numeric whitespace-nowrap px-1 text-3xs text-faint lg:text-2xs">
-                  {fixture.kickoff === null ? "" : londonTime(fixture.kickoff)}
+                  {row.kickoff === null ? "" : londonTime(row.kickoff)}
                 </td>
-                <td className="w-full max-w-0 px-1">
-                  {opponent === undefined ? (
-                    <span className="text-sm text-faint">{DASH}</span>
-                  ) : (
-                    <Link
-                      href={`${CLUB}/${opponent.code}`}
-                      className="cm-row flex min-h-11 items-center gap-2 hover:underline"
-                    >
-                      <ClubLabel
-                        club={opponent}
-                        crest={{ px: CREST_PX, className: `${CREST} object-contain` }}
-                      />
-                    </Link>
-                  )}
-                </td>
-                {/* Home or away, which is what lets the opponent be named once. */}
-                <td className="px-1 text-center text-2xs font-bold text-muted">
-                  {home ? "H" : "A"}
-                </td>
-                {/* The competition. One value today and the column is the point:
-                    FPL publishes the league and nothing else, so a cup tie has
-                    nowhere to come from yet — see the note under the list. */}
-                <td className="hidden whitespace-nowrap px-1.5 text-2xs text-faint lg:table-cell">
-                  {COMPETITION}
-                </td>
-                {/* **Every row is a link now, whatever state the match is in.**
-                    It used to be the played ones only, which was right while the
-                    match page said "this is what the fixture list knows" over a
-                    scoreline — a preview and a live sheet had nothing behind
-                    them. Both do now, and a fixture nobody can open is a fixture
-                    with no way to see who is in it. The live cell keeps its ink:
-                    a running score reads as a final one without it. */}
-                <td className="numeric w-14 whitespace-nowrap px-1.5 text-center text-sm font-bold">
-                  <Link
-                    href={matchHref(fixture.id, "overview")}
-                    className="cm-row flex min-h-11 items-center justify-center hover:underline"
-                  >
-                    {fixture.status === "live" ? (
-                      <span className="text-live">{mine}–{theirs}</span>
-                    ) : played ? (
-                      `${mine}–${theirs}`
-                    ) : (
-                      <Absent />
-                    )}
-                  </Link>
-                </td>
+                <td className="w-full max-w-0 px-1">{row.opponent}</td>
+                <td className="px-1 text-center text-2xs font-bold text-muted">{row.venue}</td>
+                <td className="hidden whitespace-nowrap px-1.5 text-2xs text-faint lg:table-cell">{row.competition}</td>
+                <td className="numeric w-14 whitespace-nowrap px-1.5 text-center text-sm font-bold">{row.score}</td>
               </tr>
             );
           })}
@@ -117,23 +63,78 @@ export default function Run({
   );
 }
 
-/** What FPL's fixture list is a list OF. Named rather than inlined so the day a
- *  second competition arrives, the literal is already in one place. */
-// The competition, said the one way this app says it. Craig, 5 Sep 2026:
-// "league is known as FA Barclays Premiership throughout, full change on that."
-// `config.ts` is where the name lives; a second spelling here is a second thing
-// to be wrong when the sponsor changes.
-const COMPETITION = COMPETITION_NAME;
+/** A league fixture: the opponent and the score both open a page. */
+function leagueCells(fixture: Fixture, club: Club, clubs: Map<number, Club>): Cells {
+  const home = fixture.homeClubId === club.id;
+  const opponent = clubs.get(home ? fixture.awayClubId : fixture.homeClubId);
+  const played = fixture.homeScore !== null && fixture.awayScore !== null;
+  // The club's own goals first, whichever end it was at.
+  const mine = home ? fixture.homeScore : fixture.awayScore;
+  const theirs = home ? fixture.awayScore : fixture.homeScore;
+  return {
+    key: `league-${fixture.id}`,
+    kickoff: fixture.kickoff,
+    opponent:
+      opponent === undefined ? (
+        <span className="text-sm text-faint">{DASH}</span>
+      ) : (
+        <Link href={`${CLUB}/${opponent.code}`} className="cm-row flex min-h-11 items-center gap-2 hover:underline">
+          <ClubLabel club={opponent} crest={{ px: CREST_PX, className: `${CREST} object-contain` }} />
+        </Link>
+      ),
+    venue: home ? "H" : "A",
+    competition: COMPETITION_NAME,
+    score: (
+      <Link
+        href={matchHref(fixture.id, "overview")}
+        className="cm-row flex min-h-11 items-center justify-center hover:underline"
+      >
+        {fixture.status === "live" ? (
+          <span className="text-live">{mine}–{theirs}</span>
+        ) : played ? (
+          `${mine}–${theirs}`
+        ) : (
+          <Absent />
+        )}
+      </Link>
+    ),
+  };
+}
 
-/** The crest beside a fixture in this run: 22px, at both widths.
- *
- *  Lived in `desk.ts` as `SCORE_CREST` while four scoreline rows shared it.
- *  `shell/ScoreRow` absorbed three and draws its own; this is a club's fixture
- *  RUN rather than a scoreline, so it is now the only caller and the number
- *  belongs here (CODE_RULES §1: a recipe for one caller is not a recipe).
- *
- *  `_PX` is what `next/image` is told to FETCH and the class is what the page
- *  draws: a source fetched smaller than it is drawn is a soft crest. */
+/** A cup or European tie: no match page behind it, and on a phone its competition under the opponent. */
+function cupCells(tie: CupTie, byCode: Map<number, Club>): Cells {
+  const competition = cupName(tie.competition);
+  const opponent = tie.opponentCode === null ? undefined : byCode.get(tie.opponentCode);
+  const marker = <span className={`${MINOR_CAPS} min-w-0 truncate text-faint lg:hidden`}>{competition ?? DASH}</span>;
+  return {
+    key: `cup-${tie.competition}-${tie.kickoff}-${tie.opponentCode ?? tie.opponentName}`,
+    kickoff: tie.kickoff,
+    opponent:
+      opponent === undefined ? (
+        // No crest to draw, so its room is kept and the names stay in one column.
+        <span className="cm-row flex min-h-11 items-center gap-2">
+          <span className={CREST} aria-hidden />
+          <span className="flex min-w-0 flex-col">
+            <span className={`min-w-0 truncate ${ROW_NAME}`}>{tie.opponentName ?? DASH}</span>
+            {marker}
+          </span>
+        </span>
+      ) : (
+        // On a phone the crest stands beside both lines, the name over the competition.
+        <Link
+          href={`${CLUB}/${opponent.code}`}
+          className="cm-row grid min-h-11 grid-cols-[auto_minmax(0,1fr)] content-center items-center gap-x-2 hover:underline lg:flex lg:gap-2"
+        >
+          <ClubLabel club={opponent} crest={{ px: CREST_PX, className: `${CREST} row-span-2 object-contain` }} />
+          {marker}
+        </Link>
+      ),
+    venue: tie.neutral ? "N" : tie.home ? "H" : "A",
+    competition: competition ?? <Absent />,
+    score: tie.score === null ? <Absent /> : `${tie.score.for}–${tie.score.against}`,
+  };
+}
+
+/** The crest beside a fixture in this run: 22px at both widths; `_PX` is what `next/image` fetches. */
 const CREST = "h-[1.375rem] w-[1.375rem] shrink-0";
 const CREST_PX = 22;
-

@@ -1,0 +1,1130 @@
+{
+ "manifest": {
+  "season": "26-27",
+  "gameweek": null,
+  "exportedAt": "2026-10-06T10:56:38.809Z",
+  "rows": 105,
+  "sources": [
+   {
+    "path": "data/match_logs/team_match_log/season=26-27/team_match_log.parquet",
+    "mtime": "2026-10-02T18:55:26.287Z"
+   }
+  ]
+ },
+ "clubs": {
+  "1": [
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-09-10T19:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Sabah FK",
+    "score": {
+     "for": 4,
+     "against": 0
+    }
+   },
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-09-16T19:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": 36,
+    "opponentName": "Brighton & Hove Albion",
+    "score": {
+     "for": 2,
+     "against": 3
+    }
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-10-13T19:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Atlético Madrid",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-10-21T16:45:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Como",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-11-03T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Roma",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-11-25T20:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Sporting CP",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-12-08T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "RB Leipzig",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2027-01-20T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Bayern München",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2027-01-27T20:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Villarreal",
+    "score": null
+   }
+  ],
+  "2": [
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-08-25T19:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": 17,
+    "opponentName": "Nottingham Forest",
+    "score": {
+     "for": 2,
+     "against": 0
+    }
+   },
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-09-09T19:15:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": 8,
+    "opponentName": "Chelsea",
+    "score": {
+     "for": 3,
+     "against": 6
+    }
+   }
+  ],
+  "3": [
+   {
+    "competition": "community_shield",
+    "kickoff": "2026-08-16T14:00:00Z",
+    "home": true,
+    "neutral": true,
+    "opponentCode": 43,
+    "opponentName": "Manchester City",
+    "score": {
+     "for": 3,
+     "against": 0
+    }
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-09-09T19:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Napoli",
+    "score": {
+     "for": 1,
+     "against": 0
+    }
+   },
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-09-15T19:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": 40,
+    "opponentName": "Ipswich Town",
+    "score": {
+     "for": 4,
+     "against": 2
+    }
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-10-13T19:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Lille",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-10-21T19:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Bayern München",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-11-04T20:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Slavia Prague",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-11-24T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Borussia Dortmund",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-12-09T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Real Madrid",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2027-01-20T20:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Real Betis",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2027-01-27T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Sabah FK",
+    "score": null
+   }
+  ],
+  "4": [
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-08-26T18:45:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "West Bromwich Albion",
+    "score": {
+     "for": 3,
+     "against": 2
+    }
+   },
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-09-08T19:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Millwall",
+    "score": {
+     "for": 1,
+     "against": 0
+    }
+   }
+  ],
+  "6": [
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-08-26T18:45:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Charlton Athletic",
+    "score": {
+     "for": 5,
+     "against": 1
+    }
+   },
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-09-15T19:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": 14,
+    "opponentName": "Liverpool",
+    "score": {
+     "for": 1,
+     "against": 3
+    }
+   }
+  ],
+  "7": [
+   {
+    "competition": "super_cup",
+    "kickoff": "2026-08-12T19:00:00Z",
+    "home": false,
+    "neutral": true,
+    "opponentCode": null,
+    "opponentName": "Paris Saint-Germain",
+    "score": {
+     "for": 1,
+     "against": 2
+    }
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-09-08T16:45:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Club Brugge",
+    "score": {
+     "for": 3,
+     "against": 2
+    }
+   },
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-09-16T19:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": 9,
+    "opponentName": "Coventry City",
+    "score": {
+     "for": 3,
+     "against": 1
+    }
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-10-14T19:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Fenerbahçe",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-10-21T19:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Viking",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-11-03T20:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Barcelona",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-11-24T17:45:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Galatasaray",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-12-08T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Paris Saint-Germain",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2027-01-19T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Borussia Dortmund",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2027-01-27T20:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Slavia Prague",
+    "score": null
+   }
+  ],
+  "8": [
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-08-27T18:30:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Luton Town",
+    "score": {
+     "for": 2,
+     "against": 0
+    }
+   },
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-09-09T19:15:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": 2,
+    "opponentName": "Leeds United",
+    "score": {
+     "for": 6,
+     "against": 3
+    }
+   }
+  ],
+  "9": [
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-08-25T18:45:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Plymouth Argyle",
+    "score": {
+     "for": 4,
+     "against": 2
+    }
+   },
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-09-16T19:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": 7,
+    "opponentName": "Aston Villa",
+    "score": {
+     "for": 1,
+     "against": 3
+    }
+   }
+  ],
+  "11": [
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-08-26T19:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Preston North End",
+    "score": {
+     "for": 4,
+     "against": 0
+    }
+   },
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-09-16T18:45:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Wolverhampton Wanderers",
+    "score": {
+     "for": 1,
+     "against": 0
+    }
+   }
+  ],
+  "14": [
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-09-09T19:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Atlético Madrid",
+    "score": {
+     "for": 2,
+     "against": 1
+    }
+   },
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-09-15T19:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": 6,
+    "opponentName": "Tottenham Hotspur",
+    "score": {
+     "for": 3,
+     "against": 1
+    }
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-10-14T16:45:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "LASK",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-10-20T19:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Villarreal",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-11-04T17:45:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Fenerbahçe",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-11-25T20:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Club Brugge",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-12-09T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "FC Porto",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2027-01-19T20:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Inter",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2027-01-27T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Lens",
+    "score": null
+   }
+  ],
+  "17": [
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-08-25T19:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": 2,
+    "opponentName": "Leeds United",
+    "score": {
+     "for": 0,
+     "against": 2
+    }
+   }
+  ],
+  "31": [
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-09-08T18:45:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Middlesbrough",
+    "score": {
+     "for": 3,
+     "against": 0
+    }
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2026-09-17T19:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Lech Poznań",
+    "score": {
+     "for": 4,
+     "against": 0
+    }
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2026-10-15T16:45:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Lyon",
+    "score": null
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2026-10-22T19:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Beşiktaş",
+    "score": null
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2026-11-05T17:45:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Hoffenheim",
+    "score": null
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2026-11-26T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Real Sociedad",
+    "score": null
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2026-12-10T17:45:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Jagiellonia Białystok",
+    "score": null
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2027-01-21T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Sparta Prague",
+    "score": null
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2027-01-28T20:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Salzburg",
+    "score": null
+   }
+  ],
+  "36": [
+   {
+    "competition": "conference_league",
+    "kickoff": "2026-08-20T17:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Tromsø IL",
+    "score": {
+     "for": 0,
+     "against": 0
+    }
+   },
+   {
+    "competition": "conference_league",
+    "kickoff": "2026-08-27T18:30:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Tromsø IL",
+    "score": {
+     "for": 4,
+     "against": 0
+    }
+   },
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-09-16T19:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": 1,
+    "opponentName": "Manchester United",
+    "score": {
+     "for": 3,
+     "against": 2
+    }
+   },
+   {
+    "competition": "conference_league",
+    "kickoff": "2026-10-15T19:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "FK Kauno Žalgiris",
+    "score": null
+   },
+   {
+    "competition": "conference_league",
+    "kickoff": "2026-10-22T16:45:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Jablonec",
+    "score": null
+   },
+   {
+    "competition": "conference_league",
+    "kickoff": "2026-11-05T20:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Getafe",
+    "score": null
+   },
+   {
+    "competition": "conference_league",
+    "kickoff": "2026-11-26T17:45:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Universitatea Craiova",
+    "score": null
+   },
+   {
+    "competition": "conference_league",
+    "kickoff": "2026-12-10T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Monaco",
+    "score": null
+   },
+   {
+    "competition": "conference_league",
+    "kickoff": "2026-12-17T20:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Panathinaikos",
+    "score": null
+   }
+  ],
+  "40": [
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-08-25T18:45:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Leicester City",
+    "score": {
+     "for": 3,
+     "against": 1
+    }
+   },
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-09-15T19:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": 3,
+    "opponentName": "Arsenal",
+    "score": {
+     "for": 2,
+     "against": 4
+    }
+   }
+  ],
+  "43": [
+   {
+    "competition": "community_shield",
+    "kickoff": "2026-08-16T14:00:00Z",
+    "home": false,
+    "neutral": true,
+    "opponentCode": 3,
+    "opponentName": "Arsenal",
+    "score": {
+     "for": 0,
+     "against": 3
+    }
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-09-08T19:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "FC Porto",
+    "score": {
+     "for": 2,
+     "against": 0
+    }
+   },
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-09-17T18:30:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Norwich City",
+    "score": {
+     "for": 5,
+     "against": 0
+    }
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-10-14T19:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Paris Saint-Germain",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-10-20T19:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "AEK Athens",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-11-04T20:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "RB Leipzig",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-11-24T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Napoli",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2026-12-08T20:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Barcelona",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2027-01-20T20:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Lens",
+    "score": null
+   },
+   {
+    "competition": "champions_league",
+    "kickoff": "2027-01-27T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Sporting CP",
+    "score": null
+   }
+  ],
+  "54": [
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-08-27T19:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "AFC Wimbledon",
+    "score": {
+     "for": 3,
+     "against": 0
+    }
+   },
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-09-15T18:45:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "West Ham United",
+    "score": {
+     "for": 3,
+     "against": 2
+    }
+   }
+  ],
+  "56": [
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-09-08T18:45:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": 88,
+    "opponentName": "Hull City",
+    "score": {
+     "for": 1,
+     "against": 0
+    }
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2026-09-16T19:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "AZ Alkmaar",
+    "score": {
+     "for": 1,
+     "against": 0
+    }
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2026-10-15T16:45:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Torreense",
+    "score": null
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2026-10-22T16:45:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Lech Poznań",
+    "score": null
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2026-11-05T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Dinamo Zagreb",
+    "score": null
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2026-11-26T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Jagiellonia Białystok",
+    "score": null
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2026-12-10T20:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Milan",
+    "score": null
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2027-01-21T20:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Anderlecht",
+    "score": null
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2027-01-28T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Levski Sofia",
+    "score": null
+   }
+  ],
+  "88": [
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-08-25T18:45:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Stoke City",
+    "score": {
+     "for": 1,
+     "against": 1
+    }
+   },
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-09-08T18:45:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": 56,
+    "opponentName": "Sunderland",
+    "score": {
+     "for": 0,
+     "against": 1
+    }
+   }
+  ],
+  "91": [
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-09-08T18:45:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Lincoln City",
+    "score": {
+     "for": 4,
+     "against": 0
+    }
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2026-09-17T19:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Real Sociedad",
+    "score": {
+     "for": 2,
+     "against": 1
+    }
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2026-10-15T19:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Sturm Graz",
+    "score": null
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2026-10-22T19:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Milan",
+    "score": null
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2026-11-05T17:45:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Sparta Prague",
+    "score": null
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2026-11-26T17:45:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Celta Vigo",
+    "score": null
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2026-12-10T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Viktoria Plzeň",
+    "score": null
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2027-01-21T17:45:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Lillestrøm",
+    "score": null
+   },
+   {
+    "competition": "europa_league",
+    "kickoff": "2027-01-28T20:00:00Z",
+    "home": true,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Hapoel Beer Sheva",
+    "score": null
+   }
+  ],
+  "94": [
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-08-25T19:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Birmingham City",
+    "score": {
+     "for": 6,
+     "against": 1
+    }
+   },
+   {
+    "competition": "efl_cup",
+    "kickoff": "2026-09-15T19:00:00Z",
+    "home": false,
+    "neutral": false,
+    "opponentCode": null,
+    "opponentName": "Reading",
+    "score": {
+     "for": 2,
+     "against": 1
+    }
+   }
+  ]
+ }
+}

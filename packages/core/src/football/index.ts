@@ -122,6 +122,8 @@ export type { IntelTouches, Touch, TouchCentre, TouchPlayer } from "./intel/touc
 export { assistsOf, shotIntel, shotsInFixture, shotsOf } from "./intel/shots";
 export { careerIntel, seasonKey } from "./intel/careers";
 export type { IntelCareers } from "./intel/careers";
+export { cupIntel, cupName, tmlCupTies, seasonRun } from "./intel/cups";
+export type { CupTie, IntelCups, RunEntry, TmlRow } from "./intel/cups";
 export { depthIntel, depthLines, spotsOf } from "./intel/depth";
 export type { ClubDepth, DepthHolder, DepthSlot, DepthSpot, IntelDepth } from "./intel/depth";
 // Season-to-date event counts off the stats league, in football terms and keyed on FPL code.

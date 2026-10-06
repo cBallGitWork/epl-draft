@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
   careerIntel,
+  cupIntel,
   depthIntel,
   fetchBootstrap,
   instantOf,
@@ -18,6 +19,7 @@ import {
 } from "@epl/core";
 import type {
   IntelCareers,
+  IntelCups,
   IntelDepth,
   IntelKind,
   IntelLines,
@@ -65,6 +67,7 @@ const CHECKS: Check[] = [
   check<IntelLines>("lines", (lines) => `${lineIntel(lines).size} players`),
   check<IntelLines>("lines", (lines) => `${lineIntel(lines).size} players`, LAST_SEASON),
   check<IntelCareers>("careers", (careers) => `${careerIntel(careers).size} players`),
+  check<IntelCups>("cups", cupsSummary),
   check<IntelPressers>("pressers", (said) => `GW${said.manifest.gameweek}, ${said.rows.length} signals, ${said.quotes?.length ?? 0} quotes`),
   check<IntelStats>("stats", statsSummary),
 ];
@@ -151,6 +154,13 @@ function shotsSummary(shots: IntelShots): string {
 function statsSummary(stats: IntelStats): string {
   const unbridged = stats.unbridgedWithMinutes > 0 ? `, ${stats.unbridgedWithMinutes} unbridged (run \`npm run bridge\`)` : "";
   return `${stats.players.length} men, ${stats.columns.length} columns${unbridged}`;
+}
+
+/** Played as well as to come: a log that stops being rebuilt stops adding scores. */
+function cupsSummary(cups: IntelCups): string {
+  const ties = [...cupIntel(cups).values()].flat();
+  const played = ties.filter((tie) => tie.score !== null).length;
+  return `${ties.length} ties, ${played} played, ${ties.length - played} to come`;
 }
 
 /** Whether FPL has finished the round, or null when it will not answer: the other checks stand without the network. */
