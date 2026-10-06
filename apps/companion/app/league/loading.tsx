@@ -33,7 +33,7 @@ export default function Loading() {
               <tr key={at} className={ROW_RULE}>
                 {COLUMNS.map((column) => (
                   // Width and visibility as the answer's, or the table jumps sideways when it lands.
-                  <td key={columnKey(column)} className={`px-1 py-1 ${column.width} ${shownAt(column, "rank")}`}>
+                  <td key={columnKey(column)} className={`px-1 ${column.width} ${shownAt(column, "rank")}`}>
                     {column.key === "team" ? (
                       // The one cell whose height sets the row's, so the real
                       // rows land inside these boxes rather than pushing them

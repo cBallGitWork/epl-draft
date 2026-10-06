@@ -64,7 +64,7 @@ export function CutRow({ span, label, tone }: { span: number; label: string; ton
   return (
     <tr aria-hidden>
       <td colSpan={span} className="p-0">
-        <span className={`flex items-center gap-2 py-1.5 ${MINOR_LABEL}`}>
+        <span className={`flex items-center gap-2 py-0.5 ${MINOR_LABEL}`}>
           <span className={`flex-1 border-t border-dashed ${tone}`} />
           {label}
           <span className={`flex-1 border-t border-dashed ${tone}`} />
