@@ -309,15 +309,11 @@ unresolved when it is, and a way out to the full profile.
   all fifteen on the grass because the active/reserve split is withheld there. On
   your own team that split is the decision being made, so it is the thing you are
   looking at.
-- **One target per player, and the second tap is the second question.** Tap him
-  once to pick him: he takes an accent ring and everyone he cannot legally change
-  places with goes dim, so "who can come off for him" is the set still lit rather
-  than a list to read. Tap him again for `MoveDialog` — everywhere else he can
-  go, including the moves with no second player in them (off to the bench, across
-  to another position). Every card used to carry a badge for that second
-  question: fifteen permanent accent dots over the only thing on the screen worth
-  looking at, to offer the move most taps are not after — while the second tap
-  did nothing but put him back down, which closing the dialog already does.
+- **One target per player, and a second tap puts him back down** (Craig, 6 Oct 2026: "click that player again.
+  expected - cancels the selection"). Tap him once to pick him: he takes an accent ring and everyone he cannot
+  legally change places with goes dim, so "who can come off for him" is the set still lit rather than a list to
+  read. The second tap used to open a move dialog listing the same swaps; it is gone, and with it the one move
+  the pitch cannot draw, a starter off to the bench with nobody coming on. His player card is the list's tap.
 - **A free place is an empty box on the grass** (Craig, 5 Oct 2026: "say i have a 3-4-3, and i want to put a
   forward (hes m/f) to mid, then there should be on the pitch view an empty box"). Picking a man draws a dashed
   box at the end of each line he can move into with nobody coming off, and a tap on it moves him there. That line
@@ -327,13 +323,6 @@ unresolved when it is, and a way out to the full profile.
   position, and which positions each player is eligible for. Nothing about the
   shape is assumed — a 1-5-2-3 is legal in this league and would be legal on
   screen.
-- **Swaps are grouped by destination.** A full XI makes every position reachable
-  only by a swap, which on a fifteen-man squad is fourteen buttons each repeating
-  "Start at M for" in front of a name. Grouped, you pick the position once and
-  read the names.
-- **A position is never listed as blocked when a move above reaches it.** A full
-  XI reports every position as `squad-full` while simultaneously offering swaps
-  into it; the sheet used to say both.
 - **Save lineup writes it to Fantrax** (Craig, 30 Sep 2026: "needs a save button ... make the save button
   obvious, and a 'do you want to save' if you leave the screen"). The royal-blue primary plate under the pitch,
   with Reset beside it, appears once anything has moved and is disabled while a rule is broken. `saveLineup`

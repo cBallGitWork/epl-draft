@@ -10,7 +10,6 @@ import type {
 import {
   applyMove,
   eligibilityOf,
-  eligibleSlots,
   isActive,
   legalMoves,
   lineup,
@@ -40,23 +39,9 @@ export function usePlanner(
     benchFrom(benchRanks, lineup(team).bench.map((p) => p.slot.fantraxId)),
   );
   const [order, setOrder] = useState<string[]>(savedOrder);
-  // Two ways in, and they are different questions, reached by the same target on
-  // the first and second tap. `picked` is the quick swap: one tap chooses a man,
-  // and the pitch answers "who can come off for him" by dimming everyone who
-  // cannot, and "where is free" with an empty box. `opened` is the full list for
-  // one player.
-  // Opens on the PITCH, which is the one thing this screen is for — `Sheet`
-  // opens on the list because a rival's squad is a list of who he has, and this
-  // is the arrangement you came to change.
+  // The man picked on the pitch: the rest light where he can swap or move, and a second tap puts him down.
   const [picked, setPicked] = useState<string | null>(null);
-  const [opened, setOpened] = useState<string | null>(null);
-  // **A tap on the LIST opens the man** (Craig, 21 Sep 2026: "list view, tap a
-  // player - brings up player card"). The two views ask different questions and
-  // the tap follows: the pitch is the arranging surface, where a tap picks him
-  // and a second tap offers everywhere he can go; the list is the reading one,
-  // where the question is "who is this, and is he fit". A rival's locked squad
-  // already opens a card from both, and this was the one list in the app whose
-  // rows looked like buttons and were not.
+  // The player card a tap on the LIST opens (Craig, 21 Sep 2026: "list view, tap a player - brings up player card").
   const [card, setCard] = useState<SquadPlayerDetail | null>(null);
 
   const eligibility = useMemo(() => eligibilityOf(players), [players]);
@@ -127,7 +112,6 @@ export function usePlanner(
   function play(move: Move) {
     setSlots((current) => applyMove(current, move));
     setPicked(null);
-    setOpened(null);
   }
 
   // Everything the picked man may do, and the men he may do it with.
@@ -184,16 +168,13 @@ export function usePlanner(
     return partners.has(id) || benchSwap(id) ? "swappable" : "blocked";
   }
 
-  /** A tap on a pitch card: pick him, open his moves on a second tap, or swap with the picked man. */
+  /** A tap on a pitch card: pick him, put him down on a second tap, or swap with the picked man. */
   function pick(player: SquadPlayerDetail) {
     const id = player.rostered.slot.fantraxId;
     const tap = pitchTap(picked, id, { swap: partners.has(id), reorder: benchSwap(id) });
     if (tap === "pick") setPicked(id);
-    else if (tap === "open") {
-      // A second tap opens the rest of what he can do; putting him back down is the dialog's job.
-      setPicked(null);
-      setOpened(id);
-    } else if (tap === "swap") swapWith(id);
+    else if (tap === "drop") setPicked(null);
+    else if (tap === "swap") swapWith(id);
     else if (tap === "reorder" && picked !== null) {
       setOrder(swapInOrder(benchIds, picked, id));
       setPicked(null);
@@ -220,11 +201,8 @@ export function usePlanner(
     dirty,
     broken,
     empty,
-    play,
     card,
     setCard,
-    opened,
-    setOpened,
     pickStateOf,
     pick,
     openings: free.map((move) => move.to),
@@ -232,7 +210,5 @@ export function usePlanner(
     reset,
     markSaved,
     plan: { slots, bench: benchIds },
-    movesFor: (id: string) => legalMoves(slots, eligibility, limits, id),
-    optionsFor: (id: string) => eligibleSlots(slots, eligibility, limits, id),
   };
 }

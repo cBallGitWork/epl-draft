@@ -4,7 +4,6 @@ import { type ReactNode, useState } from "react";
 import type { LeaguePlayerState, RosterLimits, RosteredTeam, SquadPlayerDetail } from "@epl/core";
 import LineupPitch from "./LineupPitch";
 import PlayerCard from "./PlayerCard";
-import MoveDialog from "./MoveDialog";
 import Pending from "./Pending";
 import SquadRows from "./SquadRows";
 import ViewToggle, { type View } from "./ViewToggle";
@@ -68,11 +67,8 @@ export default function LineupPlanner({
     dirty,
     broken,
     empty,
-    play,
     card,
     setCard,
-    opened,
-    setOpened,
     pickStateOf,
     pick,
     openings,
@@ -80,8 +76,6 @@ export default function LineupPlanner({
     reset,
     markSaved,
     plan,
-    movesFor,
-    optionsFor,
   } = usePlanner(team, details, players, limits, benchRanks);
   const { saving, answer, save, clear } = useSave(period, plan, markSaved);
   const [view, setView] = useState<View>("pitch");
@@ -196,23 +190,6 @@ export default function LineupPlanner({
           key={card.rostered.slot.fantraxId}
           player={card}
           onClose={() => setCard(null)}
-        />
-      ) : null}
-
-      {opened !== null ? (
-        <MoveDialog
-          key={opened}
-          subject={opened}
-          name={nameOf(opened)}
-          moves={movesFor(opened)}
-          options={optionsFor(opened)}
-          nameOf={nameOf}
-          onPlay={play}
-          onCard={() => {
-            setOpened(null);
-            setCard([...rows.flatMap((line) => line.players), ...bench].find((p) => p.rostered.slot.fantraxId === opened) ?? null);
-          }}
-          onClose={() => setOpened(null)}
         />
       ) : null}
 

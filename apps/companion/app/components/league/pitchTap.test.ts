@@ -8,8 +8,8 @@ describe("pitchTap", () => {
     expect(pitchTap(null, "saka", { swap: true, reorder: true })).toBe("pick");
   });
 
-  it("opens the picked man's moves on a second tap", () => {
-    expect(pitchTap("saka", "saka", neither)).toBe("open");
+  it("puts the picked man back down on a second tap, and opens nothing", () => {
+    expect(pitchTap("saka", "saka", neither)).toBe("drop");
   });
 
   it("swaps with a man the picked one can change places with, before reordering the bench", () => {
