@@ -75,6 +75,9 @@ export const GROUPS: Record<GroupKey, { label: string; fullLabel: string; glyph:
 /** The manager's inbox, labelled Mail. */
 export const MAIL = "/news";
 
+/** The Live section, there only while a gameweek is on. */
+export const LIVE = "/matchday";
+
 export const SECTIONS: Section[] = [
   { href: "/", label: "Gazetta", glyph: "gazetta", routes: PAPER_ROUTES },
   // One route, not a prefix, so it lights on the reader's own five tabs and stays dark on a rival's.
@@ -88,7 +91,7 @@ export const SECTIONS: Section[] = [
     overflowDuringGameweek: true,
   },
   // Live takes Team's slot while football is on, so the second tab is always yours.
-  { href: "/matchday", label: "Live", glyph: "live", routes: ["/matchday", "/gw"], onlyDuringGameweek: true },
+  { href: LIVE, label: "Live", glyph: "live", routes: [LIVE, "/gw"], onlyDuringGameweek: true },
   // "Draft", not League (Craig, 24 Sep 2026: "Prem is real life, draft is draft"); the URL stays `/league`.
   { href: "/league", label: "Draft", glyph: "league", routes: ["/league"], group: "comps" },
   // "Prem" on the rail; the title bar says "FA Barclays Premiership" (`cm9900/24.jpg`). Beside Draft, the real one.
