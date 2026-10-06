@@ -28,6 +28,12 @@ export function playerDataHref(fantraxId: string, season = ""): string {
   return season === "" ? `${playerHref(fantraxId)}/data` : `${playerHref(fantraxId)}/data?season=${season}`;
 }
 
+/** One player's news, with one story open when `story` names it. */
+export function playerNewsHref(fantraxId: string, story?: string): string {
+  const list = `${playerHref(fantraxId)}/news`;
+  return story === undefined ? list : `${list}?story=${encodeURIComponent(story)}`;
+}
+
 /** Two players side by side. The `?a=&b=` builder around it is deliberately not
  *  extracted: two sites, and one completes a pair being chosen while the other
  *  reverses a finished one. §1 leaves two alone. */

@@ -1,6 +1,6 @@
 import TabStrip from "../../components/shell/TabStrip";
 import type { Tab } from "../../components/shell/TabStrip";
-import { playerHref } from "../routes";
+import { playerDataHref, playerHref, playerNewsHref } from "../routes";
 
 // The four views of one player: Profile (the man), Data (his record, a season at a time), News
 // (CM's Injuries & Bans) and Transfer (CM's Contract and Transfer). History folded into Data on
@@ -10,8 +10,8 @@ export type PlayerTab = "profile" | "data" | "news" | "transfer";
 
 const TABS = (fantraxId: string): readonly (Tab & { key: PlayerTab })[] => [
   { key: "profile", href: playerHref(fantraxId), label: "Profile" },
-  { key: "data", href: `${playerHref(fantraxId)}/data`, label: "Data" },
-  { key: "news", href: `${playerHref(fantraxId)}/news`, label: "News" },
+  { key: "data", href: playerDataHref(fantraxId), label: "Data" },
+  { key: "news", href: playerNewsHref(fantraxId), label: "News" },
   { key: "transfer", href: `${playerHref(fantraxId)}/transfer`, label: "Transfer" },
 ];
 

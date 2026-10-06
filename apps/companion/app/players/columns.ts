@@ -136,8 +136,8 @@ function count(category: FantraxCategory, group: PoolGroup, mark: Mark = "high")
  *  They keep their `mark`: playing the most minutes in the pool is a real thing
  *  to be top of, even though the tie rule leaves the column dark until the
  *  ever-presents thin out. */
-function denominator(key: string, title: string): PoolColumn {
-  return { ...byAbbreviation(key, title, "scoring"), rate: undefined };
+function denominator(column: PoolColumn): PoolColumn {
+  return { ...column, rate: undefined };
 }
 
 /** **Position, club and status are not columns any more** (Craig, 10 Sep 2026:
@@ -187,8 +187,8 @@ export const COLUMNS: PoolColumn[] = [
     ascending: false,
     value: (row) => row.stats?.perGame ?? null,
   },
-  denominator(MINUTES.short, wordsFor(MINUTES).key),
-  denominator("GP", "Games played"),
+  denominator(count(MINUTES, "scoring")),
+  denominator(byAbbreviation("GP", "Games played", "scoring")),
   count(GOALS, "attacking"),
   count(ASSISTS_TOTAL, "attacking"),
   count(ASSISTS_OFFICIAL, "attacking"),
