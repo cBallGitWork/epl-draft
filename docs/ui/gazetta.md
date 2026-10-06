@@ -139,8 +139,9 @@ business, and when lineups lock.
    three sizes of the same object, which is what makes the ranking legible.
 
    **Each opens its article**, on a `<Link>`: the article prints whole at
-   `/paper/{slug}`, under `Folio` — THE GAZETTA and the date, then the story's
-   standing head, so a masthead is never displaced by a section name.
+   `/paper/{slug}`, under `Folio` — THE GAZETTA, a link back to the front page
+   (`← THE GAZETTA` on a phone), and the date, then the story's standing head, so
+   a masthead is never displaced by a section name.
 
    *The paper had numbered pages from 2 Sep to 30 Sep 2026*: a strip of ink
    chips (`Pages`), "turn to page 2" on every dateline, a page number on every

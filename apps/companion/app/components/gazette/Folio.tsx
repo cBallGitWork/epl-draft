@@ -19,9 +19,11 @@ export default function Folio({
       <div className="h-[3px] bg-current" />
 
       <div className="flex items-baseline justify-between gap-3 border-b border-line py-2 font-sans text-3xs font-semibold uppercase tracking-[0.16em]">
-        {/* The way back to the front page is the paper's own name, which is
-            where a reader already expects to press. */}
+        {/* The way back to the front page is the paper's own name; a phone has no rail arrows, so it points. */}
         <TurnLink href="/" className="flex min-h-11 items-center text-muted">
+          <span aria-hidden className="pr-1.5 lg:hidden">
+            ←
+          </span>
           {PAPER_NAME}
         </TurnLink>
         <span className="text-faint">{londonDate(at)}</span>
