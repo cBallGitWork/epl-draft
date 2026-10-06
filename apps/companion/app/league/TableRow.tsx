@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ordinal, type FormGame, type SortKey, type StandingsRow } from "@epl/core";
-import { PointsCell, ROW_LINK } from "../components/league/TableCells";
+import { PointsCell, TIGHT_ROW } from "../components/league/TableCells";
 import { COPY, cellAlign, deskOnly } from "./Columns";
 import { yoursEdge, yoursInk } from "../mine";
 import { FIGURE, FIGURE_CELL, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
@@ -18,7 +18,7 @@ import { teamHref } from "@/app/squad/routes";
 //
 // **Dense, and bold.** CM set its tables at about sixteen pixels a row in bold
 // white and nothing on them was quiet. A 44px tap target is binding on a phone
-// (DESIGN §7) and a mouse does not need one, so the row is `min-h-11` and comes
+// (DESIGN §7) and a mouse does not need one, so the row is `min-h-9` (36px, PRODUCT.md) and comes
 // down to **28px** from `lg` — `.cm-row` in `desk.css`, which is the number that
 // makes a division fit on a screen. The first attempt at this screen was airy at
 // every width and read as a tidy dark list rather than as the game.
@@ -128,7 +128,7 @@ export default function TableRow({
           // columns — `24.jpg` runs `Arsenal` at roughly half again the height
           // of the `6 5 0 1` on the same line — because the name is what you
           // scan the table FOR and the figures are what you then read across.
-          className={`${ROW_LINK} ${yoursInk(mine)}`}
+          className={`${TIGHT_ROW} hover:underline ${yoursInk(mine)}`}
         >
           <span className={`min-w-0 truncate ${ROW_NAME}`}>
             <TeamName teamId={row.teamId} name={row.teamName} />

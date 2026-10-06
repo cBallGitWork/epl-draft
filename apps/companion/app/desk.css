@@ -1146,6 +1146,17 @@ select.cm-bevel {
   }
 }
 
+/* The Draft tab's tables run 36px rows under a thumb (PRODUCT.md), so their panels reserve that. */
+.cm-tight {
+  --table-row: 2.3125rem;
+}
+
+@media (min-width: 64rem) {
+  .cm-tight {
+    --table-row: 1.8125rem;
+  }
+}
+
 @media (min-width: 64rem) {
   /* On `.cm-row` and not on `:root`. Declared at the root they shrank every mark
      on the desk above `lg`, including the two scoreline panels the paragraph

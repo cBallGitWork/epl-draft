@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { groupTable, ordinal, type GroupStage } from "@epl/core";
 import { Head, HeadRow, MUTE, NameHead, PLATE } from "../../components/league/TableHeads";
-import { CutRow, PointsCell } from "../../components/league/TableCells";
+import { CutRow, PointsCell, TIGHT_ROW } from "../../components/league/TableCells";
 import { BLOCK_PLATE, BOARD, DESK_ONLY, FIGURE, ROW_NAME, ROW_RULE } from "@/app/desk";
 
 /** Each group as a league table, its slots in draw order until there are results to place them. */
@@ -37,7 +37,7 @@ export default function Groups({ groups, stage }: { groups: readonly string[][];
                   <tr className={ROW_RULE}>
                     <td className="cm-index numeric px-1.5 text-center">{ordinal(place + 1)}</td>
                     <td className="pl-2">
-                      <span className={`cm-row flex min-h-11 items-center ${ROW_NAME}`}>{row.teamId}</span>
+                      <span className={`${TIGHT_ROW} ${ROW_NAME}`}>{row.teamId}</span>
                     </td>
                     <td className={`${FIGURE} text-ink`}>{row.played}</td>
                     <td className={`${FIGURE} text-ink`}>{row.won}</td>
