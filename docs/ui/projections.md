@@ -9,7 +9,9 @@ caption and no position tile down the left on a phone. His second look, the same
 ## On the page
 
 - **Who the sister model tips** over the next six gameweeks: one ranked list, total descending. Each row is the
-  Players board's lead (`players/BoardRow`: crest, name, position under it on a phone; CM's tile on a desk),
+  Players board's lead (`players/BoardRow`: crest, name, position under it on a phone; CM's tile on a desk), with
+  who holds him as the Players board prints it (Craig, 6 Oct 2026: *"this section needs the manager name in the
+  row too"*): `(Yours)`, a rival's short name, or `(FA)` / `(WW)` loud with the desk tile green,
   then **xMins · Tot · each gameweek**. Figures are ink, lit as the Players board lights a column (orange its
   best, yellow the rest of its top sixth, over the rows shown); xMins is never lit; Tot is bold. The crest is
   the club: no club text.
@@ -35,4 +37,4 @@ caption and no position tile down the left on a phone. His second look, the same
 
 ## Known gaps (left out of the scaffold)
 
-The per-fixture split, ownership, search, and the low/high band the export carries.
+The per-fixture split, search, and the low/high band the export carries.

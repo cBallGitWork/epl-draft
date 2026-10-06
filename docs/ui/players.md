@@ -41,9 +41,10 @@ headers too?"*. Where the sections below disagree with this one, this one is cur
   the holder after it (Craig, 1 Oct 2026: *"needs more space for player name on mobile"*); the lead is 160px,
   room for a fifteen-letter "Surname, I". On a desk the name is whole, CM's position tile
   runs down the left, green for a man on no roster (`--color-index-free`, Craig 1 Oct 2026), and the lead is 256px.
-- **Who holds him**: `(Yours)` in the accent (the page reads the reader's team), `(a rival's team)` quiet, and
-  Fantrax's own `(FA)` / `(WW)` loud, because that is the man a reader can act on; the word is its title. This
-  reverses 10 Sep's "owner loud, status quiet".
+- **Who holds him** (`players/holder.ts`): `(Yours)` in the accent (the page reads the reader's team), a rival
+  by the league's short name, quiet, with Fantrax's full name as its title (Craig, 6 Oct 2026: *"manager names
+  need short manager names"*), and Fantrax's own `(FA)` / `(WW)` loud, because that is the man a reader can act
+  on; the word is its title. This reverses 10 Sep's "owner loud, status quiet".
 - **Heads** are 24px with 2px padding under a thumb (`SortHead compact`), so a narrow column is as wide as its
   figures; the desk keeps 28px.
 - **Figures** are centred, in ink. Standouts are lit in ink, never on a ground: orange for a column's best
