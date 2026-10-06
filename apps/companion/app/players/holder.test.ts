@@ -4,12 +4,16 @@ import { holderOf } from "./holder";
 const names = new Map([["l5kunst8msgbirdf", "The Raccoons"]]);
 
 describe("holderOf", () => {
-  it("names a rival holder by Fantrax's name, then by its id", () => {
+  // Craig, 6 Oct 2026: "manager names need short manager names".
+  it("names a rival holder by the league's short name, and keeps the full one for the title", () => {
     expect(holderOf({ ownerTeamId: "l5kunst8msgbirdf", status: "T" }, names, null)).toEqual({
-      text: "The Raccoons",
+      text: "Raccoons",
       title: "The Raccoons",
       tone: "rival",
     });
+  });
+
+  it("falls back to Fantrax's name for a team with no short one, then to its id", () => {
     expect(holderOf({ ownerTeamId: "demo", status: "T" }, new Map([["demo", "Ctrl Alt Defeat"]]), null)?.text).toBe("Ctrl Alt Defeat");
     expect(holderOf({ ownerTeamId: "demo", status: "T" }, new Map(), null)?.text).toBe("demo");
   });
