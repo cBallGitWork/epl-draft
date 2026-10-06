@@ -58,7 +58,6 @@ export const CATEGORIES: readonly Category[] = [
   { key: "tackles", label: "Tackles", title: "Tackles made", descending: true, of: (c) => c.stats.squad.tackles },
   { key: "cbi", label: "Clearances etc.", title: "Clearances, blocks and interceptions — FPL publishes the three as one figure", descending: true, of: (c) => c.stats.squad.clearancesBlocksInterceptions },
   { key: "recoveries", label: "Recoveries", title: "Ball recoveries", descending: true, of: (c) => c.stats.squad.recoveries },
-  { key: "bonus", label: "Bonus points", title: "FPL's bonus points, the squad added up", descending: true, of: (c) => c.stats.squad.bonus },
 ];
 
 /** The category asked for, or the first.

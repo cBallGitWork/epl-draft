@@ -4,8 +4,8 @@ import type { SeasonTotals } from "./types";
 // What one footballer has actually done, match by match.
 //
 // The snapshot cannot answer this. It holds one round, and the four numbers a
-// scout wants most — bps, expected goals, expected assists, defensive
-// contribution — are the four FPL leaves out of its live `explain` block, so
+// scout wants most — expected goals, expected assists, defensive
+// contribution — are among those FPL leaves out of its live `explain` block, so
 // `mapLiveStats` takes them off the gameweek aggregate and writes the same
 // round total onto every fixture row a player has. On a double gameweek that
 // figure is not a per-match number at all.
@@ -35,8 +35,6 @@ export interface GameLogEntry {
   yellowCards: number;
   redCards: number;
   saves: number;
-  bonus: number;
-  bps: number;
   fplPoints: number;
   /** Null when FPL published no figure for this match, which is not the same as
    *  a nil: a nil is a measurement and this is its absence. */
@@ -89,8 +87,6 @@ function entry(h: RawHistoryEntry): GameLogEntry {
     yellowCards: h.yellow_cards,
     redCards: h.red_cards,
     saves: h.saves,
-    bonus: h.bonus,
-    bps: h.bps,
     fplPoints: h.total_points,
     defensiveContribution: h.defensive_contribution ?? null,
     expectedGoals: decimal(h.expected_goals),
@@ -115,8 +111,6 @@ export type RateTotals = Pick<
   | "recoveries"
   | "saves"
   | "expectedGoalsConceded"
-  | "bps"
-  | "bonus"
 >;
 
 /** His matches in the given gameweeks, added up. A measurement FPL did not publish adds nothing. */
@@ -131,8 +125,6 @@ export function totalsOver(log: readonly GameLogEntry[], gameweeks: ReadonlySet<
     recoveries: 0,
     saves: 0,
     expectedGoalsConceded: 0,
-    bps: 0,
-    bonus: 0,
   };
   for (const match of log) {
     if (!gameweeks.has(match.gameweek)) continue;

@@ -443,16 +443,13 @@ that is about a player rather than about a tally.
 |---|---|---|---|
 | Upcoming | `status === "upcoming"` | `Preview` — each side's **home record against the other's away**, its place, its last five, FPL's own difficulty | **both clubs' squads**, keeper to attack, to the team sheet's standards — the Fantrax tile, the name opening his card, the owner; one club at a time on a phone |
 | Live | `status === "live"` **and** `speaksForNow` | the scoresheet so far, `Live 45′` | who has appeared so far |
-| Finished, bonus settling | `finished && !settled` | `FT · bonus provisional` | as below |
-| Finished, settled | `settled` | `FT` | the appearance list, by bps |
+| Finished | `finished` | `FT` | the appearance list |
 | No round | `gameweek === null` | no sheet; the fixture still renders | `TabEmpty` |
 | Fantrax silent | `marks()` empty | the owner lines vanish; the football renders | same |
 | id is not an integer, or names no fixture | — | `notFound()` | `notFound()` |
 
-**Four rungs and not two.** `Fixture.settled` is FPL's own sign-off that the
-bonus has been added and stopped moving — a one-to-two-hour window after the
-whistle in which the `b` chips are still provisional, and nothing may print a
-flat `FT` over figures about to change. The sister repo's day-long lag is a
+**Full time is `FT`, whether or not FPL has settled its bonus** (Craig, 6 Oct
+2026: bonus is the FPL tab's alone, so nothing outside it waits on it). The sister repo's day-long lag is a
 different absence and belongs only to the tabs that do not exist yet.
 
 **No `loading.tsx`, deliberately.** `docs/record/PLATFORM_NOTES.md` records that adding one

@@ -29,7 +29,6 @@ export interface PastSeason {
   yellowCards: number;
   redCards: number;
   saves: number;
-  bonus: number;
   fplPoints: number;
 }
 
@@ -59,7 +58,6 @@ function season(raw: RawPastSeason): PastSeason {
     yellowCards: raw.yellow_cards,
     redCards: raw.red_cards,
     saves: raw.saves,
-    bonus: raw.bonus,
     fplPoints: raw.total_points,
   };
 }

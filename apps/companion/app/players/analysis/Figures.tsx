@@ -98,8 +98,7 @@ function label(row: RateRow): string {
  *
  *  **The MEASURE decides, not the value.** A rate that happens to land on a
  *  whole number is still a rate, and `Number.isInteger` set Haaland's nought
- *  tackles and two bonus points as `0` and `2` in a column of `0.82` and
- *  `35.33`. A column of figures that do not agree about their own precision
+ *  tackles as `0` in a column of `0.82`. A column of figures that do not agree about their own precision
  *  reads as a column with something wrong in it.
  *
  *  Absence is a dash and never a nought (DESIGN §7) — and it means one of two

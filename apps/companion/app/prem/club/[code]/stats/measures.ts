@@ -40,8 +40,6 @@ export const VIEWS: readonly View[] = [
       { key: "assists", head: "A", label: "Assists" },
       { key: "expectedGoals", head: "xG", label: "Expected goals", kind: "expected" },
       { key: "expectedAssists", head: "xA", label: "Expected assists", kind: "expected" },
-      { key: "bonus", head: "Bon", label: "Bonus points" },
-      { key: "bps", head: "BPS", label: "Bonus points system" },
     ],
   },
   {

@@ -41,7 +41,6 @@ export const OUTFIELD_RANKINGS: readonly Ranking[] = [
   { head: "Sh", title: "Shots, off the shot map", of: (m) => m.shots?.struck ?? null },
   { head: "Ch", title: "Shots he set up, off the shot map", of: (m) => m.shots?.created ?? null },
   { head: "Def", title: "Tackles, clearances, blocks, interceptions and recoveries", of: (m) => s(m).tackles + s(m).clearancesBlocksInterceptions + s(m).recoveries },
-  { head: "BPS", title: "FPL's bonus-points score", of: (m) => s(m).bps },
 ];
 
 export const KEEPER_RANKINGS: readonly Ranking[] = [
@@ -49,7 +48,6 @@ export const KEEPER_RANKINGS: readonly Ranking[] = [
   { head: "Sv", title: "Saves", of: (m) => s(m).saves },
   { head: "CS", title: "Clean sheets", of: (m) => s(m).cleanSheets },
   { head: "Prv", title: "Goals prevented: expected goals conceded less goals conceded", kind: "expected", of: (m) => s(m).expectedGoalsConceded - s(m).goalsConceded },
-  { head: "BPS", title: "FPL's bonus-points score", of: (m) => s(m).bps },
 ];
 
 /** His place on each figure among the cohort's men who have played. Pure. */

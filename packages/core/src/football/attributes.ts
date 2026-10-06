@@ -95,7 +95,6 @@ const MEASURES: readonly Measure[] = [
   { name: "Consistency", from: "his average match rating in his worst quarter of starts", for: "both", of: consistency },
   { name: "Creativity", from: "chances created per 90", for: "outfield", of: per90("chancesCreated") },
   { name: "Crossing", from: "accurate crosses per 90", for: "outfield", of: per90("crosses") },
-  { name: "Determination", from: "FPL's bonus-points score per 90", for: "both", of: fpl90("bps") },
   { name: "Dribbling", from: "successful dribbles per 90", for: "outfield", of: per90("dribbles") },
   { name: "Finishing", from: "expected goals on target per 90", for: "outfield", of: per90("xgot") },
   { name: "Handling", from: "share of the shots on target he faced that he saved", for: "keeper", of: saveShare },

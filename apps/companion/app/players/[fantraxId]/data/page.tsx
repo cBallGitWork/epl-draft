@@ -125,7 +125,6 @@ function thisSeason(rows: readonly MatchRow[], season: string): PastSeason | nul
     yellowCards: t.yellowCards,
     redCards: t.redCards,
     saves: t.saves,
-    bonus: t.bonus,
     fplPoints: t.fplPoints,
   };
 }

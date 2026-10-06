@@ -18,7 +18,7 @@ describe("mapGameLog", () => {
   it("keeps a match he played", () => {
     const log = mapGameLog(played);
     expect(log).toHaveLength(1);
-    expect(log[0]).toMatchObject({ gameweek: 1, minutes: 67, goals: 1, bps: 36, fplPoints: 9 });
+    expect(log[0]).toMatchObject({ gameweek: 1, minutes: 67, goals: 1, fplPoints: 9 });
   });
 
   it("drops the round FPL has already opened a row for but nobody has played", () => {
@@ -34,11 +34,10 @@ describe("mapGameLog", () => {
     expect(log[0]).toMatchObject({ gameweek: 1, minutes: 0, fplPoints: 0 });
   });
 
-  it("reads the four measurements per match rather than per round", () => {
+  it("reads the measurements per match rather than per round", () => {
     // The point of the endpoint. `mapLiveStats` can only take these off the
     // gameweek aggregate; here they belong to the fixture.
     expect(mapGameLog(played)[0]).toMatchObject({
-      bps: 36,
       defensiveContribution: 7,
       expectedGoals: 0.64,
       expectedAssists: 0.08,

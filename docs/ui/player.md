@@ -103,8 +103,8 @@ is gone as a tab** and `/history` redirects to `?season=all`; the strip is four 
   the league.
 
 **Two provenances on one row, with a rule between them.** Left of it is FPL's
-measurement of the play — minutes, goals, xG, xA, defensive contribution, BPS and
-bonus; FPL's own points came off on 30 Sep 2026 so they never sit beside `FPts`, and the
+measurement of the play — minutes, goals, xG, xA and defensive contribution (FPL's
+bonus and BPS came off on 6 Oct 2026, the FPL tab's alone); FPL's own points came off on 30 Sep 2026 so they never sit beside `FPts`, and the
 board carries no source caption ("FPL's own · Fantrax's own remove"). Right of it is Fantrax's scoring of the same match,
 including **`FPts`, the only per-match source of this league's points anywhere**,
 and the five things FPL does not publish at all: shots, shots on target, fouls
