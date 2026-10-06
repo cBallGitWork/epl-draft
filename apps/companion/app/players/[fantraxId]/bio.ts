@@ -2,14 +2,7 @@ import { londonDay } from "@epl/core";
 
 // Championship Manager's caption line: `Born 2.10.79 (Age 19). English.`, in CM's unpadded d.m.yy.
 
-/** `Born 5.3.93 (Age 33).`, or null when FPL has not filled his date in.
- *
- *  Null for 19 of 652 (probed 4 Sep 2026), and the caller draws the view's own
- *  name in the caption instead — a box that says "Profile" is a worse line than
- *  a birth date and a better one than "Born —".
- *
- *  `now` is injected because this is a pure function and the age is the only
- *  thing on the screen that changes without the data changing. */
+/** `Born 5.3.93 (Age 33). England.`, his country alone without a date, or null with neither. */
 export function bornLine(
   birthDate: string | null,
   now: Date,
@@ -31,12 +24,7 @@ interface BornOn {
   day: number;
 }
 
-/** `1995-09-15` and nothing else.
- *
- *  Parsed rather than handed to `new Date`, which reads a bare ISO date as
- *  midnight UTC and would put a man born on the first of a month into the
- *  previous one for any reader west of Greenwich. A birthday is a calendar fact
- *  and has no timezone. */
+/** `1995-09-15` and nothing else, parsed by hand: `new Date` reads it as UTC midnight and shifts it west of Greenwich. */
 function parseIsoDate(value: string | null): BornOn | null {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value ?? "");
   if (match === null) return null;
@@ -45,11 +33,7 @@ function parseIsoDate(value: string | null): BornOn | null {
   return { year, month, day };
 }
 
-/** Whole years, counting the birthday as the day he turns.
- *
- *  Null for a date in the future rather than a negative age: FPL has published
- *  worse, and a `(Age -1)` on screen is the confident wrong number this app
- *  spends its comments avoiding. */
+/** Whole years, counting the birthday as the day he turns; null for a date in the future. */
 function ageOn(born: BornOn, now: Date): number | null {
   // London's date, not the server's: Vercel's clock reads UTC, an hour behind all summer.
   const [year = 0, month = 0, day = 0] = londonDay(now).split("-").map(Number);

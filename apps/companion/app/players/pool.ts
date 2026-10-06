@@ -23,97 +23,49 @@ import { orRefusal, tell, unavailable } from "../refusals";
 import type { Unavailable } from "../refusals";
 import { bridge } from "../squads";
 
-// Three reads meet on this page: Fantrax's global EPL pool, our league's opinion
-// of every player in it, and who currently holds them. The join is core's
-// (`leaguePool`); what belongs here is which failures are fatal to the page and
-// which are ordinary states of a league that has not drafted.
+// Fantrax's pool, our league's view of each man and who holds him, joined by core's `leaguePool`; here is which
+// failures are fatal and which are ordinary states of a league.
 
 /** One player as the table shows him: who he is, what our league says about him,
  *  and Fantrax's own number against his name. */
 export interface PoolRow {
   entry: PoolPlayer;
-  /** Null for a player Fantrax's stats read did not carry — an ordinary state
-   *  for the academy names in the pool, and a dash on screen. */
+  /** Null for a player Fantrax's stats read did not carry: a dash on screen. */
   stats: PoolStatRow | null;
-  /** FPL's season-stable player code, for his photograph, or null when the
-   *  bridge has not settled him.
-   *
-   *  Read straight off the bridge rather than resolved through the snapshot: the
-   *  code is the only thing a portrait needs. Null is ordinary — 120 of the 688
-   *  are academy names FPL has never listed — and it costs the photograph,
-   *  nothing else.
-   *
-   *  It is also what `stillHere` filters on, which is the one football read this
-   *  page makes. That read is a hard dependency rather than a column that may
-   *  fail: a pool offering men who have left the division is wrong in a way a
-   *  missing photograph is not. */
+  /** FPL's season-stable code off the bridge, or null for a man FPL has never listed. */
   fplCode: number | null;
 }
 
-/** Everything the pool view needs, minus the one field a cache cannot hold.
- *
- *  Four reads can fail here rather than one, and "which one" is the first useful
- *  question — which is why the tell carries the method (see `refusals.ts`). */
+/** Everything the pool view needs, minus the one field a cache cannot hold. */
 interface Pool {
   rows: PoolRow[];
-  /** The league's own position vocabulary, in pitch order. Read from its caps
-   *  rather than written out here: the letters are a commissioner setting. */
+  /** The league's own position letters, in pitch order: a commissioner setting, read from its caps. */
   positions: string[];
-  /** Which numbers the points column holds, as Fantrax labelled them. Null when
-   *  the stats read failed, which costs the column and not the page. */
+  /** Which numbers the points column holds, as Fantrax labelled them; null when the stats read failed. */
   season: StatSeason | null;
-  /** How many players Fantrax has stats for that this read did not carry.
-   *  Nought in the ordinary case; anything else is printed rather than left to
-   *  look like a pool with missing numbers. */
+  /** How many players Fantrax has stats for that this read did not carry; printed when not nought. */
   missing: number;
-  /** Why there are no numbers, when there are none. Without it a failed stats
-   *  read renders seven hundred rows of dashes with nothing to say why, which
-   *  reads as a pool Fantrax has never scored rather than as a read that did
-   *  not answer. */
+  /** Why there are no numbers, when there are none, so a page of dashes says why. */
   statsRefused: string | null;
 }
 
-/** Team ids to names, for the one column that names an owner. Built from the
- *  rosters we already hold rather than from a second payload. */
+/** The pool with team ids to names, built from the rosters already held. */
 export type LeaguePool = (Pool & { teamNames: Map<string, string> }) | Unavailable;
 
-/** What the cache can hold. `unstable_cache` serialises and a Map does not
- *  survive the round trip — it comes back as `{}` and every owner column
- *  silently reads "unowned". Entries go in, the Map is built on the way out. */
+/** What the cache can hold: a Map comes back from it as `{}`, so the names go in as entries. */
 type CachedPool = (Pool & { teamNames: [string, string][] }) | Unavailable;
 
 const readPool = leagueCache("league-pool", readLeaguePool, unavailable);
 
-/** Cached, and that is not an optimisation.
- *
- *  Reading the session cookie in the layout makes every route dynamic, so
- *  without this the whole pool — a 533 KB stats payload among four reads — is
- *  fetched again for every view by every phone. The league is the same for
- *  everybody, so it is fetched once and rendered sixteen ways; nothing personal
- *  is inside the cache. */
+/** The pool, read once for everybody (every route is dynamic, so uncached it is four reads per view per phone). */
 export async function getLeaguePool(): Promise<LeaguePool> {
   const cached = await readPool();
   if ("unavailable" in cached) return cached;
   return { ...cached, rows: await stillHere(cached.rows), teamNames: new Map(cached.teamNames) };
 }
 
-/** The site rule applied to the pool, which is the one list on the site that
- *  says who you could pick up.
- *
- *  **Fantrax keeps the departed listed as free agents.** Woltemade was still in
- *  `getPlayerIds` and still `FA` in `playerInfo` on 11 Sep, after FPL had him at
- *  Juventus — so their pool offers a manager a man he cannot have, and only the
- *  football layer knows it.
- *
- *  **Outside the cache on purpose.** The pool is cached as Fantrax answered it
- *  and stays one provider's payload; the two reads have different lifetimes, and
- *  baking a football fact into a Fantrax cache is how a man who left in October
- *  goes on being offered until the entry expires. `footballNow` is the layout's
- *  own cached read, so asking for it here costs nothing.
- *
- *  A row with no `fplCode` is kept. That is the bridge saying FPL has never
- *  listed him — 120 academy names — which is a settled answer about identity and
- *  says nothing about whether he is at a club. */
+/** Drops men who have left the division, whom Fantrax keeps as free agents; outside the cache, so a departure shows
+ *  on the next football read. A man FPL never listed is kept. */
 async function stillHere(rows: PoolRow[]): Promise<PoolRow[]> {
   const football = playerByCode(await footballNow());
   return rows.filter((row) => {
@@ -127,19 +79,14 @@ async function readLeaguePool(): Promise<CachedPool> {
     orRefusal(fetchPlayerPool()),
     orRefusal(fetchLeagueInfo(FANTRAX_LEAGUE_ID)),
     orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID)),
-    // Failure-tolerant, unlike the three above: this read adds a column to a
-    // page that was worth showing without it.
+    // Failure-tolerant, unlike the three above: it adds columns to a page worth showing without them.
     orRefusal(fetchPoolStats(FANTRAX_LEAGUE_ID, POOL_PAGE_SIZE)),
   ]);
 
   if (pool instanceof FantraxError) return unavailable(pool);
   if (info instanceof FantraxError) return unavailable(info);
 
-  // A league with no teams owns nobody, and saying so is true rather than
-  // hedged — it is the state our real league is in until 10 Oct. Any OTHER
-  // failure here is different in kind: it would leave every row on the page
-  // quietly claiming a player is unowned, which is a confident wrong answer
-  // about 697 players at once.
+  // A league with no teams owns nobody; any other roster failure would call every man unowned, so it is fatal.
   if (rosters instanceof FantraxError && rosters.code !== "NO_TEAMS") {
     return unavailable(rosters);
   }

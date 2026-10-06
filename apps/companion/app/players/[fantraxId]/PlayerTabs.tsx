@@ -2,9 +2,7 @@ import TabStrip from "../../components/shell/TabStrip";
 import type { Tab } from "../../components/shell/TabStrip";
 import { playerDataHref, playerHref, playerNewsHref } from "../routes";
 
-// The four views of one player: Profile (the man), Data (his record, a season at a time), News
-// (CM's Injuries & Bans) and Transfer (CM's Contract and Transfer). History folded into Data on
-// 25 Sep 2026 (Craig: "maybe we merge data and history together").
+// The four views of one player: Profile, Data (his record, a season at a time), News and Transfer.
 
 export type PlayerTab = "profile" | "data" | "news" | "transfer";
 
@@ -22,14 +20,9 @@ export default function PlayerTabs({
 }: {
   fantraxId: string;
   current: PlayerTab;
-  /** Views with nothing behind them for this man — a free agent has no transfer
-   *  history in our league, and a player the bridge has never settled has no
-   *  profile to draw. Greyed and still a link, never removed: a strip that loses
-   *  a plate moves every plate after it. */
+  /** Views with nothing behind them for this man: greyed and still a link, so no plate moves. */
   empty?: readonly PlayerTab[];
 }) {
-  // `word`, not `phrase`: every label here is one word, which is the condition
-  // TabStrip's docblock names for the denser of its two sizes.
   return (
     <TabStrip
       label="Player views"

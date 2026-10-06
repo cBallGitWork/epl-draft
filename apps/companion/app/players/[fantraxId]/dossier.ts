@@ -7,25 +7,9 @@ import { readDeals } from "../../business";
 import { getLeagueSquads } from "../../squads";
 import { PAGE_REVALIDATE } from "../../config";
 
-// The two league-wide reads a player screen needs a slice of.
-//
-// **Both are read WHOLE and cached, then filtered here.** Neither endpoint
-// answers per player: `getPlayerNews` ignores `playerId` and hands back the whole
-// pool's stories, and the transaction feed is the league's business rather than
-// one man's. So one read serves every player screen, and the second tap on any
-// player costs nothing — which is the opposite of `getPlayerProfile`, where one
-// tap is one request and a sweep is forbidden.
+// What has been written about a man, and the business our league has done with him.
 
-/** Everything written about him this football year, newest first.
- *
- *  **A second read per tap, and it is worth one.** `getPlayerProfile` is already
- *  one request per tap and this is a second against the same endpoint — but it is
- *  the only route to a HISTORY. The pool-wide `getPlayerNews` files one story per
- *  player and the profile's own `latestNews` is a truncated sentence; this is
- *  every story with its full analysis. Cached on the player, so a reader moving
- *  between his tabs pays once.
- *
- *  A news read we cannot make costs the block and not the screen. */
+/** Everything written about him this football year: a second profile read per man, cached on him; a refusal is none. */
 export function playerStories(fantraxId: string, now: Date): Promise<PlayerStory[]> {
   const stories = unstable_cache(
     async () => {
@@ -40,14 +24,7 @@ export function playerStories(fantraxId: string, now: Date): Promise<PlayerStory
   return orDegraded(stories, () => []);
 }
 
-/** Midnight on 1 July of the football year `now` falls in (Craig, 4 Sep 2026:
- *  "Just show from 1 July this year").
- *
- *  **The year is derived, never written down.** A season runs July to June, so
- *  January to June belongs to the July before it — a constant `2026` here would
- *  be wrong from 1 January and silently show eighteen months of news. July is the
- *  constant because that is when a football year starts and when a summer
- *  signing's news begins to matter; the year it lands in is arithmetic. */
+/** Midnight on 1 July of the football year `now` falls in (Craig, 4 Sep 2026: "Just show from 1 July this year"). */
 function footballYearFrom(now: Date): number {
   const JULY = 6; // `getMonth` is zero-based, and this is the one place that bites.
   const year = now.getMonth() >= JULY ? now.getFullYear() : now.getFullYear() - 1;
@@ -61,18 +38,10 @@ export interface PlayerMove {
   toName: string | null;
 }
 
-/** Every claim, drop and trade this league has made involving him, newest first.
- *
- *  **This is what CM's Transfer tab is for** — the game lists a player's moves
- *  between clubs, and ours lists his moves between managers. The draft pick above
- *  it says how he arrived; this says what has happened since.
- *
- *  Lineup changes are not business anyone did with anyone and `business.ts`
- *  already refuses to read them, so they cannot appear here either. */
+/** Every claim, drop and trade this league has made involving him, newest first. */
 export async function playerMoves(fantraxId: string): Promise<PlayerMove[]> {
   const [deals, squads] = await Promise.all([readDeals(), getLeagueSquads()]);
-  // A league we cannot read costs the move its NAMES, not the move: the kind and
-  // the date are still true, and an id is a worse label than none.
+  // A league we cannot read costs the moves their names, not the moves.
   const names = new Map(
     "period" in squads
       ? squads.period.teams.map((team) => [team.teamId, team.teamName] as const)
@@ -81,12 +50,7 @@ export async function playerMoves(fantraxId: string): Promise<PlayerMove[]> {
   return movesOf(deals.rows, fantraxId, names);
 }
 
-/** The filter and the name join, apart from the reads that feed them.
- *
- *  Pure, and separate because the league this app serves has had no transactions
- *  at all — so the populated path cannot be seen on a screen here and has to be
- *  held up by a test instead. `fd9wrh0elyr9ytv6` has 88 claim-drop rows and the
- *  dummy league has none (counted 4 Sep 2026). */
+/** The filter and the name join, pure, so the populated path is held up by a test. */
 export function movesOf(
   rows: readonly LeagueTransaction[],
   fantraxId: string,
@@ -96,22 +60,13 @@ export function movesOf(
     .filter((row) => row.fantraxId === fantraxId)
     .map((transaction) => ({
       transaction,
-      // Null where there is no side: nobody owns a free agent, and a dropped
-      // player goes to the pool rather than to another manager. An id we cannot
-      // name is also null — a raw team id is a worse label than none.
+      // Null where there is no side, or one we cannot name: a raw id is a worse label than none.
       fromName: transaction.fromTeamId === null ? null : (names.get(transaction.fromTeamId) ?? null),
       toName: transaction.toTeamId === null ? null : (names.get(transaction.toTeamId) ?? null),
     }));
 
-  // **Newest first, and NOT by reversing the feed.** PLATFORM_NOTES records that
-  // each transaction view arrives newest-first ON ITS OWN, so a reverse gives
-  // oldest-first — the opposite of what was asked for — and concatenating two
-  // views leaves every claim before every trade, which is not a history either.
-  // `orderKey` is the same comparison the paper's week is built on.
-  //
-  // All-or-nothing, on that file's rule: one row we cannot date would sit where
-  // the comparator happened to put it, and the feed order it displaced was at
-  // least each view's own truth.
+  // Newest first by date, never by reversing the feed (each view arrives in its own order); one undated row keeps the
+  // feed's order for all.
   const keyed: { move: PlayerMove; key: number }[] = [];
   for (const move of moves) {
     const key = orderKey(move.transaction.processedAt);

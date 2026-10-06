@@ -1,9 +1,6 @@
 // Fantrax's own status vocabulary, in the manager's words: the board's chips and every holder's title.
 
-/** Fantrax's status codes in the manager's words. Theirs is the vocabulary, so
- *  anything we have not seen shows as the raw code rather than as a guess — an
- *  undrafted league marks all 697 "WW", and a fourth letter would appear here
- *  before it appeared in this file. */
+/** Fantrax's status codes in the manager's words; a code not here prints as itself, never a guess. */
 export const STATUS: Record<string, string> = {
   FA: "Free agent",
   WW: "Waivers",

@@ -4,22 +4,10 @@ import { COLUMNS, DEFAULT_SORT, columnFor } from "./columns";
 import { figureOf } from "./figure";
 import { byFigure } from "../components/league/order";
 
-// What the URL says the table should show. State lives in the address bar rather
-// than in browser state: a server component stays a server component, the whole
-// pool never crosses to the phone as data, and a manager can send someone a link
-// to exactly what he is looking at.
+// What the URL says a Data board shows. State lives in the address bar, so the board stays a server component, the
+// pool never crosses to the phone as data, and a link shares exactly what is on screen.
 
-/** What Next hands a page for `?a=b`, verbatim.
- *
- *  A repeated parameter arrives as an ARRAY — `?q=a&q=b` gives `["a","b"]` — and
- *  this used to be typed as `string` throughout, which is a lie the compiler
- *  then enforced downstream: `.trim()` on an array threw and the page answered
- *  500. Nobody types that by hand, but a crawler following two links, a
- *  double-submitted form or a shared URL somebody edited all produce it.
- *
- *  Mirrored as it really is and narrowed in one place, on the same rule `raw.ts`
- *  follows for a provider: types describe reality, and the narrowing happens
- *  where the two meet. */
+/** What Next hands a page for `?a=b`, verbatim: a repeated parameter arrives as an array. */
 export interface PlayersSearchParams {
   compare?: string | string[];
   /** Which plate of columns the board is on. */
@@ -30,9 +18,7 @@ export interface PlayersSearchParams {
   /** Whether the figures are per 90 minutes. */
   per?: string | string[];
   club?: string | string[];
-  /** Whether the filter drawer is open. URL state and not React state, so the
-   *  one control that reveals all the others is not the only one on this page
-   *  that needs a script — see `BoardBar`. */
+  /** Whether the filter drawer is open: URL state, so the board needs no script for it. */
   panel?: string | string[];
   sort?: string | string[];
   dir?: string | string[];
@@ -43,10 +29,7 @@ export interface PlayersSearchParams {
 
 /** The same query, narrowed. */
 export interface PlayersQuery {
-  /** The first man of a comparison, while one is being chosen. The board becomes
-   *  a picker: every row leads to `/players/analysis` with him on one side rather
-   *  than to the player's own screen. URL state, so the half-made comparison
-   *  survives a filter, a sort and being shared. */
+  /** The first man of a comparison, while the board is the picker for the second. */
   compare?: string;
   q?: string;
   pos?: string;
@@ -61,8 +44,7 @@ export interface PlayersQuery {
   cat?: string;
 }
 
-/** The last value wins, which is what a browser does with a repeated field and
- *  what a reader editing a URL by hand means. */
+/** The last value wins, as a browser does with a repeated field. */
 export function playersQuery(raw: PlayersSearchParams): PlayersQuery {
   return {
     compare: lastValue(raw.compare),
@@ -80,50 +62,23 @@ export function playersQuery(raw: PlayersSearchParams): PlayersQuery {
   };
 }
 
-
-/** Whether the counts are drawn per ninety minutes.
- *
- *  One value and not a number, because there is one rate anybody asks a football
- *  table for. `?per=90` reads as what it is in the address bar, and anything
- *  else is off — a toggle that a stray query string could put into a third state
- *  is a toggle with a bug in it. */
+/** Whether the counts are drawn per ninety minutes: `?per=90`, and anything else is off. */
 export function isPer90(query: PlayersQuery): boolean {
   return query.per === "90";
 }
 
-/** How many rows a page carries before it says so and offers the rest.
- *
- *  The pool is seven hundred names and all of them is a fifth of a megabyte
- *  gzipped — a real cost on a phone at a ground with no signal, spent on rows
- *  nobody scrolls to. A manager looking for a player searches or filters; a
- *  manager reading the table wants the top of it. Both are served by the first
- *  hundred, and the rest is one tap away and said out loud. */
+/** Rows a page carries before it offers the rest: the whole pool is a fifth of a megabyte on a phone. */
 export const PAGE_ROWS = 100;
 
-/** Which column the table is ordered by and which way, resolved once.
- *
- *  Three things need this answer — the ordering, the arrow drawn on the header,
- *  and the link that reverses it — and they must never disagree. They did: the
- *  default view sorted by rank ascending while drawing a descending arrow.
- *
- *  The column table itself is `columns.ts` now, because it grew from seven to
- *  twenty-four — twenty today — and carries a reader per column. */
+/** Which column the table is ordered by and which way, resolved once for the order, the arrow and the reverse link. */
 export function activeSort(query: PlayersQuery): { key: string; descending: boolean } {
   const chosen = columnFor(query.sort) ?? columnFor(DEFAULT_SORT) ?? COLUMNS[0];
   const fallback = chosen.ascending ? "asc" : "desc";
   return { key: chosen.key, descending: (query.dir ?? fallback) === "desc" };
 }
 
-/** The rows the URL asks for, filtered then ordered.
- *
- *  Rows Fantrax has no number for sort last whichever way the column runs. They
- *  are not bottom of the table — they are the academy names it has never scored
- *  — and floating them to the top of an ascending sort would read as nought.
- *
- *  **The raw stats come in as an argument**, because half the sortable columns
- *  now live in the grouped payload rather than on the row: a table that could
- *  show `Sv` and not order by it would be a column a reader taps and nothing
- *  happens. */
+/** The rows the URL asks for, filtered then ordered by the figure on screen; a man with no figure sorts last either
+ *  way. Filters are unions within themselves (defenders or midfielders) and an intersection between. */
 export function shownRows(
   rows: readonly PoolRow[],
   query: PlayersQuery,
@@ -136,18 +91,7 @@ export function shownRows(
   const rated = isPer90(query);
   const filtered = rows.filter(
     (row) =>
-      // **One club or all of them**, unlike the two filters below it. Those are
-      // unions within themselves because a reader wants defenders OR
-      // midfielders; nobody asks for "Arsenal or Chelsea", and twenty chips is
-      // the wall the club `QuerySelect` exists to avoid. A single value also means the
-      // control can be a `<select>`, which is the right object for a set of
-      // twenty.
       (club === "" || row.entry.player.clubCode === club) &&
-      // **Any of the chosen, not all of them** — the two filters are unions
-      // within themselves and an intersection between: "a defender or a
-      // midfielder, who is also a free agent". Requiring every chosen position
-      // at once would be a filter that empties itself on the second tap, since
-      // almost nobody is eligible at three.
       (status.length === 0 || status.includes(row.entry.status)) &&
       (positions.length === 0 ||
         positions.some((position) => row.entry.eligiblePositions.includes(position))) &&
@@ -158,11 +102,6 @@ export function shownRows(
   const read = columnFor(key) ?? columnFor(DEFAULT_SORT) ?? COLUMNS[0];
 
   return filtered.sort((left, right) => {
-    // **`figureOf` and not `read.value`**, so the order is the order of what is
-    // ON SCREEN. Under the per-90 toggle a column prints a rate and used to sort
-    // by the raw count behind it — a table whose arrow points at a column it is
-    // not actually ordered by, which is the one failure `activeSort`'s docblock
-    // already records this page making once.
     const a = figureOf(read, left, raw.get(left.entry.player.fantraxId), rated);
     const b = figureOf(read, right, raw.get(right.entry.player.fantraxId), rated);
     return byFigure(a, b, descending);
@@ -180,10 +119,7 @@ export function boardHref(query: PlayersQuery, changes: Partial<PlayersQuery>, r
   return search ? `${route}?${search}` : route;
 }
 
-/** The link that sorts by a column, or reverses it if it is already the one.
- *
- *  A column not currently sorted starts in the direction that answers the
- *  question being asked of it: points highest first, names from A. */
+/** The link that sorts by a column, or reverses it if it is already the one. */
 export function sortHref(query: PlayersQuery, key: string): string {
   const current = activeSort(query);
   const descending =
@@ -191,12 +127,7 @@ export function sortHref(query: PlayersQuery, key: string): string {
   return boardHref(query, { sort: key, dir: descending ? "desc" : "asc" });
 }
 
-/** The values chosen for one filter, in the order they were chosen.
- *
- *  A comma list in one parameter rather than a repeated one: `?pos=D,M` is
- *  readable in the address bar, survives being shared, and keeps the GET form's
- *  hidden fields as the plain strings they already were. Blanks are dropped so a
- *  trailing comma somebody typed is not a filter on the empty string. */
+/** The values chosen for one filter, a comma list in one parameter (`?pos=D,M`), blanks dropped. */
 export function chosen(value: string | undefined): string[] {
   return (value ?? "").split(",").filter(Boolean);
 }
@@ -206,14 +137,7 @@ export function isChosen(query: PlayersQuery, key: "status" | "pos", value: stri
   return chosen(query[key]).includes(value);
 }
 
-/** Add a filter, or take it away if it is already on.
- *
- *  **Several at once** (Craig, 6 Sep 2026: *"think we need the ability to select
- *  multiple filters as well"*). It set one value and cleared it on a second tap,
- *  so choosing defenders and midfielders together was impossible and the chips
- *  behaved like a tab strip — which is what they are drawn as, and was the tell.
- *  Every chip is still its own way back, and turning the last one off drops the
- *  parameter rather than leaving an empty one in the URL. */
+/** Add a filter, or take it away if it is already on; the last one off drops the parameter. */
 export function filterHref(query: PlayersQuery, key: "status" | "pos", value: string, route?: string): string {
   const on = chosen(query[key]);
   const next = on.includes(value) ? on.filter((entry) => entry !== value) : [...on, value];

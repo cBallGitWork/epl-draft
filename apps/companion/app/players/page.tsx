@@ -26,11 +26,9 @@ import { footballNow } from "../football";
 import OutLink from "../components/shell/OutLink";
 import FantraxSilent from "../components/shell/FantraxSilent";
 
-// Every player Fantrax knows, what our league has decided about him, and what Fantrax scores him under our
-// scoring; the heading says which season and whether played or projected, as the payload says.
+// Every player Fantrax knows, who holds him in our league, and what Fantrax scores him under our scoring.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
+// Must match `PAGE_REVALIDATE` in the app's config: Next reads it statically, so it cannot be imported.
 export const revalidate = 30;
 
 export default async function PlayersPage({
@@ -47,11 +45,7 @@ export default async function PlayersPage({
   ]);
   const query = playersQuery(asked);
 
-  // The raw counts, by Fantrax id. Two reads feed this table and neither is new:
-  // the plain `getPlayerStats` carries the seven fantasy columns on `PoolRow`,
-  // and the same endpoint asked by position group carries the eighteen or twenty
-  // raw ones. `mapPlayerStats` drops the fantasy seven from its bag, so the two
-  // do not overlap and each column reads from exactly one of them.
+  // The raw counts by Fantrax id; the fantasy figures ride on `PoolRow`, and the two never overlap.
   const raw = new Map(lines.map((line) => [line.fantraxId, line.stats]));
 
   if ("unavailable" in pool) {
@@ -79,14 +73,7 @@ export default async function PlayersPage({
   const scored = new Set(lines.flatMap((line) => Object.keys(line.stats)));
   const columns = columnsIn(group, activeSort(query).key, scored);
 
-  // **The cuts are taken over the rows actually DRAWN**, which is what makes a
-  // mark mean "the top of this column, among what is in front of you" — see
-  // `standout.ts`. Over all six hundred matching rows the top decile would be
-  // sixty-five men, and a board sorted by points would light nearly every cell
-  // on its first page.
-  //
-  // Only the columns that have a top worth marking are asked, so a rank, a
-  // fixture and a name never enter the arithmetic at all.
+  // Cut over the rows drawn, so a mark means the top of what is in front of you.
   const cuts = cutsFor(
     columns.filter((column) => column.mark !== undefined),
     (column) =>
@@ -96,27 +83,20 @@ export default async function PlayersPage({
       }),
   );
 
-  // **Every club with a man in the pool, from the pool itself.** Not the twenty
-  // Premier League clubs from the football layer: this is a filter over THIS
-  // list, and offering a club whose players are all missing from the read would
-  // be an option that empties the board. Sorted, because Fantrax's own order is
-  // whatever their query returned.
+  // Every club with a man in the pool, so no option empties the board.
   const clubs = [
     ...new Set(pool.rows.map((row) => row.entry.player.clubCode).filter(Boolean)),
   ].sort() as string[];
 
   const counted = new Map<string, number>();
   for (const row of pool.rows) {
-    // Skipped rather than counted under a blank label: a player our league has
-    // said nothing about is still listed, he simply has no status to filter by.
+    // A man with no status is still listed; he has no chip to count under.
     if (row.entry.status) counted.set(row.entry.status, (counted.get(row.entry.status) ?? 0) + 1);
   }
 
   return (
     <ScoutShell rows={POOL_ROWS}>
-      {/* Said out loud while the board is a picker, because a table whose rows
-          have quietly changed destination is a screen that lies about what a tap
-          does. It carries its own way out. */}
+      {/* While the board is a picker every row's link has changed, so it says so, with a way out. */}
       {query.compare ? (
         <p className="flex flex-wrap items-center gap-2 border border-accent bg-surface px-3 py-2 text-sm">
           <span className="font-bold text-accent">Pick the second player.</span>
@@ -171,9 +151,7 @@ export default async function PlayersPage({
       ) : null}
       {shown.length === 0 ? null : <BoardKey entries={columns.filter((column) => column.key !== "name")} />}
 
-      {/* Both say why a number is missing rather than leaving a dash to be read
-          as a nought. The first is a read that did not answer at all; the second
-          is one that answered short. */}
+      {/* Why a number is missing: a read that did not answer, then one that answered short. */}
       {pool.statsRefused ? (
         <p className="text-2xs text-faint">
           No points here — Fantrax would not give us its numbers ({pool.statsRefused}). Everything
@@ -187,12 +165,7 @@ export default async function PlayersPage({
         </p>
       ) : null}
 
-      {/* **The way out.** This screen is where a manager decides who to claim,
-          and Fantrax is where the claim happens — we read their league and never
-          write to it. Their own list rather than their home page, on the
-          matrix-parameter path taken off a real browser session; a deeper guess
-          would break silently the day they reorganise their routes, which is the
-          reason `FANTRAX_APP_BASE` has carried that warning since it was added. */}
+      {/* Claims happen on Fantrax: their players list, on the path taken off a real session. */}
       <OutLink href={`${FANTRAX_LEAGUE_PAGE}/${FANTRAX_PLAYERS_PATH}`}>
         Claim on Fantrax
       </OutLink>

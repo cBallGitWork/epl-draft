@@ -12,23 +12,8 @@ import {
 import { leagueCache } from "../leagueCache";
 import { orRefusal } from "../refusals";
 
-// The pool with RAW stats against every name — two reads, one per position
-// group, because that is the only way Fantrax answers them.
-//
-// Without `positionOrGroup` this endpoint returns seven fantasy columns and no
-// raw stat at all; with it, eighteen for the outfield and twenty for keepers
-// (PLATFORM_NOTES, 1 Sep 2026). The two halves do not overlap — 563 and 83 on
-// the day this was written, 646 with zero players in both — so the lists are
-// appended rather than merged, which is the difference from the TEAM board where
-// both halves describe one squad and their figures add.
-//
-// An array across the cache boundary, as everything here must be:
-// `unstable_cache` round-trips through JSON and a `Map` comes back as `{}` with
-// no `.get`, which killed the team board's first cut at render.
-//
-// Failure is an empty list rather than fatal. One half failing is still a board:
-// a screen with only outfielders on it is a worse answer than the full pool and
-// a much better one than an error page.
+// The pool's raw counts, read once per position group because only that way does Fantrax list them. The halves do not
+// overlap, so they are appended; an array, since a Map does not survive the cache. A half that refuses is left out.
 
 export const getPlayerStats = leagueCache("player-stats", async (): Promise<PlayerStatLine[]> => {
   const [outfield, keepers] = await Promise.all([
@@ -39,12 +24,7 @@ export const getPlayerStats = leagueCache("player-stats", async (): Promise<Play
   return [...lines(outfield), ...lines(keepers)];
 }, () => []);
 
-/** One half's response, mapped, or nothing if that half refused.
- *
- *  Typed rather than `unknown` with a cast. The first cut took `unknown` and
- *  cast to `RawPlayerStats` inside, which is exactly the unchecked cast on
- *  provider data that CODE_RULES forbids — and it buys nothing here, because
- *  `orRefusal` already returns the union this narrows. */
+/** One half's response, mapped, or nothing if that half refused. */
 function lines(raw: RawPlayerStats | FantraxError): PlayerStatLine[] {
   return raw instanceof FantraxError ? [] : mapPlayerStats(raw);
 }

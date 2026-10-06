@@ -8,10 +8,7 @@ import { StackWaiting } from "../[fantraxId]/Waiting";
 export default function Loading() {
   return (
     <ScoutShell current="analysis">
-      {/* The two search boxes, at the real sizes and in the real order, because
-          a frame whose controls move when the answer lands is a layout that
-          jumps. They are not real forms here — a skeleton that submits would
-          navigate to a page that is already loading. */}
+      {/* The two search boxes at their real sizes, inert: a skeleton that submits would reload a loading page. */}
       <div className="grid grid-cols-2 gap-1.5 lg:gap-3" aria-busy>
         {["a", "b"].map((side) => (
           <div key={side} className="flex min-w-0 gap-1.5">
@@ -21,9 +18,7 @@ export default function Loading() {
         ))}
       </div>
 
-      {/* The bar, at the height it will be — `CompareBar`'s own `min-h-20`
-          / `lg:min-h-28`, which is the tallest thing on the screen and so the
-          one worth holding open. */}
+      {/* The bar, at `CompareBar`'s own height. */}
       <div className="flex min-h-20 items-center gap-2.5 bg-surface px-2.5 lg:min-h-28" aria-busy>
         <Skeleton width="3.5rem" height="3.5rem" />
         <Skeleton width="45%" height="1.25rem" />

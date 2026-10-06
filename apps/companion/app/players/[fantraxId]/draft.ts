@@ -24,12 +24,7 @@ async function draftPicks(): Promise<DraftPick[]> {
   return held.length > 0 ? held : runningDraft();
 }
 
-/** His pedigree, and the name of the team that spent the pick.
- *
- *  The name is looked up here rather than in the component for the reason every
- *  other join is: the component should be about what appears on screen. Null
- *  when the pool read failed, which costs the block and nothing else — the rest
- *  of the profile is a different set of reads. */
+/** His pedigree, and the name of the team that spent the pick; unknown when the pool read failed. */
 export async function playerPedigree(
   fantraxId: string,
 ): Promise<{ pedigree: Pedigree; drafterName: string | null }> {

@@ -4,26 +4,10 @@ import { getLeagueSquads } from "./squads";
 import type { ReadableSquads } from "./squads";
 import { myTeamId } from "./session";
 
-// What our league has to say about a round of football: which of these matches
-// the reader has somebody in, who holds each footballer in them, and — kept
-// apart — which of his men are still to come.
-//
-// Three screens asked it and each discovered the reader for itself: read the
-// squads, verify the cookie, find his team, join. That is three places for the
-// same two mistakes — keying the markers off a lineup instead of a squad, and
-// forgetting that every one of the four ways this can come back empty is
-// ordinary rather than a fault.
-//
-// **Squad membership only, and nothing here reads a LINEUP.** `afternoon` did —
-// his active men per fixture, for the strip the Live tab carried — and it went
-// with that strip on 21 Sep 2026 along with `isActive`. So this file cannot say
-// anything about anybody's arrangement, his own included, which is a stronger
-// statement than the one it used to have to make carefully.
+// What our league says about a round of football: which matches the reader has a man in, and who holds each
+// footballer. Squad membership only; nothing here reads a lineup.
 
-/** Absent means "no answer to give", and the four ways to get there — signed
- *  out, no league, undrafted, Fantrax silent — are all ordinary. Every consumer
- *  renders the plain football when they are absent, which is what keeps "this
- *  works with no Fantrax at all" true. */
+/** Absent means no answer (signed out, no league, undrafted, Fantrax silent), and every consumer draws plain football. */
 export interface Marks {
   /** His whole squad, per fixture. What marks a row as his. */
   mine?: Map<number, FootballPlayer[]>;
@@ -43,10 +27,7 @@ export async function marksFor(
   return { mine: fixtureInvolvement(team, fixtures), owners: owners(squads.period.teams) };
 }
 
-/** For a page that does not, and would otherwise read the league twice.
- *
- *  A signed-out reader still gets `owners`: whose player that was is not a
- *  question about him. */
+/** For a page that does not; a signed-out reader still gets `owners`. */
 export async function marks(fixtures: readonly Fixture[]): Promise<Marks> {
   const squads = await getLeagueSquads();
   return "period" in squads ? marksFor(squads, fixtures) : {};

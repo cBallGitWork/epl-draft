@@ -1,22 +1,7 @@
 import { byPositionDepth } from "@epl/core";
 
-// Fantrax's position letters, in the words a manager says them in.
-//
-// `getLeagueInfo` publishes the vocabulary as single letters — `G`, `D`, `M`,
-// `F` — and publishes no long form anywhere in the payload (probed 19 Aug). So a
-// readable label can only come from us, and CLAUDE.md's "never translate
-// Fantrax's vocabulary" carries a documented exception for exactly this. It used
-// to be one map inside `SquadRows`; seven render sites later it is a rule rather
-// than a coincidence (CODE_RULES §1).
-//
-// **The rule survives in the fallback.** A letter this file has never seen is
-// printed verbatim, so a commissioner who files wingers under `W` gets `W` in the
-// place the pitch would put it, never a guess. The data is never translated —
-// only the label is, at the moment it is drawn.
-//
-// Display only. Nothing here may be compared, sorted or stored: `slot.position`
-// stays Fantrax's letter everywhere it is reasoned about, and `positionDepth` in
-// the join layer is what orders a pitch.
+// Fantrax's position letters in a manager's words; Fantrax publishes no long form. Display only: a letter not here
+// prints as itself, and nothing here is compared, sorted or stored.
 
 /** The letters this league actually uses, as a manager says them. */
 const SHORT: Record<string, string> = {
@@ -26,12 +11,7 @@ const SHORT: Record<string, string> = {
   F: "FWD",
 };
 
-/** What a manager reads on a shirt: `GK`, `DEF`, `MID`, `FWD`.
- *
- *  Null and empty both answer `null` rather than a dash or a blank string, so
- *  each caller decides what nothing looks like in its own row — a pitch sticker
- *  wants `?`, a table column wants `—`, and a joined line wants to drop the
- *  segment entirely. */
+/** What a manager reads on a shirt: `GK`, `DEF`, `MID`, `FWD`; null for none, so each caller draws its own nothing. */
 export function positionLabel(position: string | null | undefined): string | null {
   if (!position) return null;
   return SHORT[position] ?? position;

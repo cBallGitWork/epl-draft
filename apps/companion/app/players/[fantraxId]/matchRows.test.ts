@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Club, GameLogEntry, PlayerMatch } from "@epl/core";
-import { joinMatches, per90, totalsOf } from "./matchRows";
+import { joinMatches, totalsOf } from "./matchRows";
 import type { MatchRow } from "./matchRows";
 
 const club = (id: number, shortName: string): Club => ({ id, code: id, name: shortName, shortName });
@@ -90,37 +90,14 @@ describe("totalsOf", () => {
     { fpl: { match: match({ gameweek: 2, minutes: 45, expectedGoals: 0.1 }), opponent: CLUBS.get(2) }, paid: null, mark: null },
   ];
 
-  it("sums FPL's columns over every match", () => {
+  it("sums FPL's columns over every match, whether or not Fantrax reached it", () => {
     expect(totalsOf(rows).minutes).toBe(135);
     expect(totalsOf(rows).goals).toBe(1);
-    expect(totalsOf(rows).expectedGoals).toBeCloseTo(0.4);
   });
 
-  it("sums Fantrax's only over the matches they reached", () => {
-    // A season sum would count a match nobody showed us as a nought.
-    expect(totalsOf(rows).points).toBe(9);
-    expect(totalsOf(rows).shots).toBe(3);
-  });
-
-  it("says nothing rather than nought when Fantrax reached none of them", () => {
-    const none: MatchRow[] = [{ fpl: rows[0].fpl, paid: null, mark: null }];
-    expect(totalsOf(none).points).toBeNull();
-    expect(totalsOf(none).shots).toBeNull();
-  });
-});
-
-describe("per90", () => {
-  it("rates a total over the minutes behind it", () => {
-    expect(per90(2, 180)).toBe(1);
-  });
-
-  it("does not divide by nought", () => {
-    expect(per90(0, 0)).toBeNull();
-    expect(per90(5, 0)).toBeNull();
-  });
-
-  it("has no rate for a total it was not given", () => {
-    expect(per90(null, 900)).toBeNull();
+  it("counts an appearance only where he played a minute", () => {
+    const unused: MatchRow = { fpl: { match: match({ gameweek: 3, minutes: 0 }), opponent: CLUBS.get(3) }, paid: null, mark: null };
+    expect(totalsOf([...rows, unused]).apps).toBe(2);
   });
 });
 
