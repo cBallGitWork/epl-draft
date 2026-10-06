@@ -88,7 +88,7 @@ describe("fullMatchStats", () => {
   it("prints his noughts once he has played: zero is a stat", () => {
     const rows = fullMatchStats(done(), PARTS, keys(REAL, "D"));
     expect(rows.find((row) => row.key === "YC")).toEqual({ key: "YC", label: "Yellow cards", value: 0 });
-    expect(rows.find((row) => row.key === "DFP")).toMatchObject({ label: "DefCon (DEF)", value: 5 });
+    expect(rows.find((row) => row.key === "DFP")).toMatchObject({ label: "DefCon", value: 5 });
   });
 
   it("orders minutes first and the cards last", () => {
