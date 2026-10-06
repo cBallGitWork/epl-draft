@@ -44,6 +44,35 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## A club's fixtures list its cup and European ties, off the sister's match log — decided 6 Oct 2026
+
+Craig, 6 Oct: *"get champs league from sister repo TML, shows all games"*. FPL publishes the league and
+nothing else, so `/prem/club/[code]/fixtures` now lists every tie the sister repo's team match log holds
+beside the league's fixtures, from `data/intel/cups/26-27.json` (`npm run intel-cups`).
+
+- **Probed 6 Oct, on the log of 2 Oct** (954 rows, one per side of a match): `premier_league` 760,
+  `champions_league` 80, `europa_league` 48, `efl_cup` 46, `conference_league` 16, `community_shield` 2,
+  `super_cup` 2. Two statuses only: `completed` 170, `scheduled` 784. For FPL's twenty clubs outside the
+  league: **105 ties, 43 played and 62 to come** — Champions League 35 to come (five clubs, matchdays 2–8,
+  13 Oct to 27 Jan), Europa League 21, Conference League 6. No League Cup round 4 and no FA Cup: the log
+  carries a tie once it is drawn.
+- **The log names nobody in a tie to come**: `team_name` and `opponent_name` are null on all 62 scheduled
+  rows. The opponent is named from FotMob's raw `_meta.json`, reached through the sister's match identity
+  (`source_mappings.fotmob_id`): 102 of 105, every kickoff agreeing with the log's. The other three (the
+  Super Cup and two Conference ties, all played) carry the log's own name. 105 of 105 named.
+- **Clubs key on FPL's `code`**: the sister's team id, its identity's `source_mappings.fpl` (FPL's
+  per-season team id, 20 of 20), this season's bootstrap, the code. The per-season id is never written.
+- **The exporter is ours, and the sister repo stays read-only.** Its writer is `make export-epl-draft`, in
+  the sister repo; until that grows a `cups` file, `scripts/intel-cups.ts` reads the parquet with
+  `hyparquet` (MIT, no dependencies, a root dev dependency) and writes only here.
+- **On screen** a tie is a row like a league fixture: its competition in the desk's column and under the
+  opponent on a phone; an opponent FPL carries keeps his crest and link; a foreign club is a name with
+  the crest's room kept, so the names stay in one column; a neutral ground prints `N`; no match page
+  stands behind a tie, so its score is plain text. The note under the list that called the page
+  Premier League only is gone (Craig: *"remove that row"*).
+- **Known gap**: the log carries goals and no shoot-out, so a cup tie settled on penalties prints its
+  drawn score (Stoke 1–1 Hull in the League Cup's second round).
+
 ## Kits load straight from FPL, not through Vercel's optimizer — decided 5 Oct 2026
 
 On production, `/_next/image` for an FPL kit not already in Vercel's cache answered **502

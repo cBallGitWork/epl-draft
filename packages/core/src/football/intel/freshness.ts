@@ -15,6 +15,7 @@ export const INTEL_AGE_LIMIT_DAYS = {
   projections: 8,
   depth: 8,
   lines: 8,
+  cups: 8,
   // Rewritten only when what they hold changes, so they outlast a two-week international break.
   xi: 14,
   stats: 14,
