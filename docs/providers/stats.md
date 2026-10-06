@@ -95,7 +95,7 @@
 
 ## Fantrax, the served league
 
-Every read here names `FANTRAX_LEAGUE_ID`. fxea (`getLeagueInfo`, `getTeamRosters`, `getPlayerIds`) and fxpa (the rest) are both public for these methods; `core:league/fantrax/client.ts` holds the calls. Fantrax scores the roster SLOT a manager chose, so a man's points depend on where he stood.
+Every read here names `FANTRAX_LEAGUE_ID`. fxea (`getLeagueInfo`, `getTeamRosters`, `getPlayerIds`) and fxpa (the rest) are both public for these methods; `core:league/fantrax/client.ts` holds the league's calls and `core:league/fantrax/playerClient.ts` a player's. Fantrax scores the roster SLOT a manager chose, so a man's points depend on where he stood.
 
 | Stat | Provider field | Endpoint / file | Domain field (path:line) | Grain | Completeness | Derived from | Read by |
 |---|---|---|---|---|---|---|---|
@@ -330,8 +330,8 @@ Committed JSON under `data/intel/<kind>/`, keyed on FPL's `code` (the match log 
 | Fantrax pool `opponent` | mapped onto `PoolStatRow` (core:league/fantrax/stats.ts:197), read by nobody (`rank` is read by core:league/pedigree.ts:90) | 601/601 in the stats league, 25 Sep 2026, first-hand |
 | Fantrax profile tiles: his season, Fantrax's highlights and rankings, the whole-of-Fantrax market, birthplace and height | `PlayerIntel.stats`, `highlights`, `market` and `personal` (core:league/fantrax/profile.ts:222–229), read by nobody; `league` is read once, for Status/Team, by players/[fantraxId]/transfer/page.tsx:46 | uncounted |
 | Fantrax per-match minutes, goals and assists; season totals of Fantrax points, shots, on target and fouls committed | `PlayerMatch.minutes`, `goals` and `assists` reach `MatchRow.paid` and no column of players/[fantraxId]/MatchLog.tsx, whose Min, G and A are FPL's (:31–33); `MatchTotals.points`, `shots`, `shotsOnTarget` and `foulsCommitted` are summed by `totalsOf()` (players/[fantraxId]/matchRows.ts:115–118) and printed by no screen: SeasonTable.tsx and data/page.tsx read only FPL's totals | 32/32 men of fixture 11, 4 Sep 2026 |
-| Fantrax `leagueNotices` (the commissioner's lineup deadline in prose) | sent in the `getTeamRosterInfo` payload that `fetchTeamStats` reads (core:league/fantrax/client.ts:309), never typed | 2/2 drafted leagues, 21 Sep 2026 |
-| Fantrax `getPlayerProfile` tabs `GAME_LOG_FANTASY`, `SPLITS` and `STATS` | answer to `tab` (named at core:league/fantrax/client.ts:149), never called | 9,178, 12,156 and 6,073 bytes for one player, 4 Sep 2026 |
+| Fantrax `leagueNotices` (the commissioner's lineup deadline in prose) | sent in the `getTeamRosterInfo` payload that `fetchTeamStats` reads (core:league/fantrax/client.ts), never typed | 2/2 drafted leagues, 21 Sep 2026 |
+| Fantrax `getPlayerProfile` tabs `GAME_LOG_FANTASY`, `SPLITS` and `STATS` | answer to `tab` (sent by `fetchPlayerStories`, core:league/fantrax/playerClient.ts), never called | 9,178, 12,156 and 6,073 bytes for one player, 4 Sep 2026 |
 | The paper's draft picks | `pedigree` on the desk's facts (scripts/edition/facts.ts:137), built from `getDraftResults` and read by no brief | 150/150 picks in the rehearsal league, 25 Sep 2026, first-hand |
 | Premier League `phase` on each goal and each fixture | typed in core:football/premierleague/raw.ts (:132 on a goal, :216 on a fixture), no reader; `breaks.ts` keys off `status` | on every goal of GW3, and 10/10 fixtures of GW3, 5 Sep 2026 |
 | Premier League `attendance` and the referee | mapped into `PlMatchFacts` (core:football/premierleague/matchFacts.ts:64, :69), read by nobody; the match page reads only `ground`, `city` (prem/match/[id]/Shell.tsx:34) and `halfTime` (prem/match/[id]/page.tsx:115) | attendance 24/30, officials 28/30, GW1–3, 5 Sep 2026 (matchFacts.ts); attendance 48/50, a `MAIN` referee 50/50, GW1–5, 25 Sep 2026, first-hand |
