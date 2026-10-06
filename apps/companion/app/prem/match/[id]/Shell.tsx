@@ -4,7 +4,8 @@ import { matchFacts } from "../../../matchDetail";
 import PhotoGround from "../../../components/football/PhotoGround";
 import Caption from "../../../components/shell/Caption";
 import { FootFrame } from "../../../components/shell/FootFrame";
-import BackPlate from "./BackPlate";
+import BackPlate from "../../../components/shell/BackPlate";
+import { PREM } from "../../routes";
 import MatchBar from "./MatchBar";
 import MatchTabs from "./MatchTabs";
 import type { MatchTab } from "./matchRoutes";
@@ -43,7 +44,7 @@ export default async function MatchShell({
       {/* The HOME club's ground: a fixture id says nothing about who is at home, so this is where it is known. */}
       <PhotoGround subject={home?.shortName ?? null} />
       <div className="flex items-stretch">
-        <BackPlate />
+        <BackPlate fallback={PREM} />
         <div className="min-w-0 flex-1">
           {/* `v` until a ball is kicked; FPL writes a running score from the first goal. */}
           <MatchBar
