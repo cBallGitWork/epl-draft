@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import type { ClubColours } from "@epl/core";
 import { plateOn } from "@epl/core";
+import BackPlate from "./BackPlate";
 import PageHeader from "./PageHeader";
 
 // The frame a screen about a SUBJECT wears: his own colour on the bar, his tabs
@@ -41,6 +42,7 @@ export default function PlateShell({
   colours,
   title,
   sub,
+  back,
   tabs,
   children,
 }: {
@@ -52,10 +54,13 @@ export default function PlateShell({
   title: string;
   /** The line UNDER the bar, never inside it. One caller uses it. */
   sub?: ReactNode;
+  /** Where the phone's back plate goes with no history; absent draws none. */
+  back?: string;
   tabs: ReactNode;
   children: ReactNode;
 }) {
   const plate = plateOn(colours);
+  const header = <PageHeader title={title} sub={sub} plate={plate} />;
 
   return (
     // `gap-2` because four boxes down the page need 12px between them or they
@@ -79,7 +84,14 @@ export default function PlateShell({
         } as CSSProperties
       }
     >
-      <PageHeader title={title} sub={sub} plate={plate} />
+      {back === undefined ? (
+        header
+      ) : (
+        <div className="flex items-stretch">
+          <BackPlate fallback={back} />
+          <div className="min-w-0 flex-1">{header}</div>
+        </div>
+      )}
       {tabs}
       {children}
     </div>

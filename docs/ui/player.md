@@ -18,7 +18,9 @@ derived the same four from the same object.
   SHORT name, where CM writes the full one: `5. Harry Maguire (Man Utd)` measures
   306px into the 282 a 390 phone gives the bar, so it shipped truncated.
   Only the pool's longest names (~24 characters) truncate now, and `PageHeader`
-  truncating is shared behaviour rather than this screen's decision.
+  truncating is shared behaviour rather than this screen's decision. A phone's
+  `←` back plate (6 Oct 2026) leaves the title 302px at 390, where 6 of the 140
+  rostered men's bars now cut short and none did before.
 - **The born line** — `Born 21.7.00 (Age 26). Norway.`, from FPL's `birth_date` in CM's own
   unpadded `d.m.yy`, then his country: FPL's `region`, named by `/api/regions/`, never
   Fantrax's birthplace (which put Haaland, born in Leeds, down as England). **On the

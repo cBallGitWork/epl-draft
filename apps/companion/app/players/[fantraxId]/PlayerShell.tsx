@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { clubColoursOf } from "@epl/core";
 import PlateShell from "../../components/shell/PlateShell";
+import { POOL } from "../routes";
 import PlayerTabs from "./PlayerTabs";
 import type { PlayerTab } from "./PlayerTabs";
 import type { Subject } from "./subject";
@@ -49,6 +50,7 @@ export default function PlayerShell({
     <PlateShell
       colours={clubColoursOf(club)}
       title={heading(intel.name || fantraxId, ownerName)}
+      back={POOL}
       tabs={<PlayerTabs fantraxId={fantraxId} current={current} empty={hollow(subject)} />}
     >
       {children}
