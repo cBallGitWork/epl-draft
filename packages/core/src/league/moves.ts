@@ -44,9 +44,9 @@ export type Move =
  *  Separate reasons because they lead to different offers: `position-full` is
  *  answerable with a swap, `squad-full` is answerable by demoting anyone, and
  *  `not-eligible` is not answerable at all. */
-export type Blocker = "not-eligible" | "position-full" | "squad-full" | "unknown-eligibility";
+type Blocker = "not-eligible" | "position-full" | "squad-full" | "unknown-eligibility";
 
-export interface SlotOption {
+interface SlotOption {
   position: string;
   open: boolean;
   blockedBy?: Blocker;

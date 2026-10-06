@@ -53,8 +53,8 @@ export type { GameweekKickoff, PeriodGameweeks } from "./calendar";
 export { lastLockedPeriod, periodToRead, planningPeriod, rosterDisplay } from "./visibility";
 export type { RosterDisplay, SquadReason } from "./visibility";
 
-export { applyMove, eligibilityOf, eligibleSlots, legalMoves } from "./moves";
-export type { Blocker, Eligibility, Move, SlotOption } from "./moves";
+export { applyMove, eligibilityOf, legalMoves } from "./moves";
+export type { Eligibility, Move } from "./moves";
 
 export { violations } from "./violations";
 export { formations } from "./formations";
