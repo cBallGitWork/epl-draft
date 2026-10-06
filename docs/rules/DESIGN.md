@@ -992,8 +992,8 @@ are four fewer men and room for each.
 
 Two consequences. `/squad/[teamId]` is no longer the reference page for the
 pitch; the head-to-head is. And **the 390×844 no-scroll budget is now about the
-PITCH clearing the fold, not the page** — the page scrolls by design, because the
-season grid is a second panel under the board. `tools/ui/pitchfit.mjs` is what
+PITCH clearing the fold, not the page** — the page scrolls by design, because a
+squad is fifteen rows. `tools/ui/pitchfit.mjs` is what
 checks it. `docs/ui/squad.md` and `docs/ui/README.md` are still not retired.
 
 The consequence is the part worth writing down. §8 defers the 6–7px clamp floors
