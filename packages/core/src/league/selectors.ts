@@ -165,6 +165,23 @@ export function nextPairedPeriod(
   return periods.find((p) => headToHead(matchups, teams, p, teamId) !== undefined);
 }
 
+/** The league's own season: its first paired period, and the days Fantrax's date range covers from it to the end. */
+export interface LeagueSeason {
+  firstPeriod: number;
+  /** YYYY-MM-DD in Fantrax's own zone, as its BY_DATE range takes them. */
+  startDate: string;
+  endDate: string;
+}
+
+/** From the first period the schedule pairs anybody in, never the calendar's first; null before any pairing. */
+export function leagueSeason(info: Pick<LeagueInfo, "matchups" | "scoringPeriods" | "endDate">): LeagueSeason | null {
+  const firstPeriod = Math.min(...info.matchups.map((matchup) => matchup.period));
+  const opens = info.scoringPeriods.find((period) => period.number === firstPeriod);
+  // The period's start keeps Fantrax's offset, so its date part is Fantrax's day.
+  const startDate = opens === undefined ? undefined : /^\d{4}-\d{2}-\d{2}/.exec(opens.start)?.[0];
+  return startDate === undefined ? null : { firstPeriod, startDate, endDate: info.endDate };
+}
+
 /** A league's rules and its names for them, as our own sums are priced; null when it described no scoring. */
 export function scoringOf(info: LeagueInfo): LeagueScoring | null {
   return info.scoring === null ? null : { rules: info.scoring, categories: info.scoringCategories };

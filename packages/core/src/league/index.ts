@@ -69,9 +69,9 @@ export { isActive } from "./rosterStatus";
 export { diffShapes, shapeOf } from "./fantrax/shape";
 export type { ShapeDiff } from "./fantrax/shape";
 
-export { headToHead, leaguePool, nextPairedPeriod, pairingInvolves, periodPairings, scoringOf } from "./selectors";
+export { headToHead, leaguePool, leagueSeason, nextPairedPeriod, pairingInvolves, periodPairings, scoringOf } from "./selectors";
 export { leads, trails } from "./scoreline";
-export type { HeadToHead, PeriodPairing, PoolPlayer } from "./selectors";
+export type { HeadToHead, LeagueSeason, PeriodPairing, PoolPlayer } from "./selectors";
 
 export { COMPETITIONS, LEAGUE_COMPETITION, cupTies, groupTies, leagueTies, seededIn } from "./competitions";
 export type { CompetitionTie, TieSide } from "./competitions";

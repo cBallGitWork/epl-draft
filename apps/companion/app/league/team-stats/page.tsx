@@ -3,6 +3,7 @@ import Link from "next/link";
 import {
   categoryFor,
   groupFor,
+  leagueSeason,
   londonDayAndDate,
   offeredIn,
   ordinal,
@@ -32,7 +33,7 @@ import FantraxSilent from "../../components/shell/FantraxSilent";
 import { shortName } from "../../teamNames";
 
 // Every team against one group of scoring categories, ordered by the head pressed: CM's stat board on fantasy data.
-// FPts and Total are Fantrax's for each lineup; Squad adds up the stats league's counts for the men each team holds.
+// FPts and Total are Fantrax's for each lineup from the league's first pairing; Squad adds up the stats league's counts for the men each team holds.
 // No owner column: Fantrax's teamInfo is `{name, id}` and we hold no list of managers (Craig, 1 Sep: "ditch the manager name").
 
 // Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
@@ -51,15 +52,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
   // A squad's counts are raw figures, so they rank as Total does.
   const measure: Measure = squad ? "value" : view;
 
-  const [schedule, mine, lines] = await Promise.all([
-    getSchedule(),
-    readerTeamId(),
-    squad ? getSquadStats() : getSeasonStats(),
-  ]);
-
-  const columns = squad ? squadColumnsIn(group) : offeredIn(group, lines);
-  const category =
-    columns.find((entry) => entry.key === query.cat) ?? columns[0] ?? categoryFor(undefined);
+  const [schedule, mine] = await Promise.all([getSchedule(), readerTeamId()]);
 
   if ("unavailable" in schedule) {
     return (
@@ -73,12 +66,13 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
 
   const { info, rounds, table } = schedule;
 
-  // Finished rounds only, for the empty state's count.
-  const played = new Set(
-    rounds
-      .filter((round) => round.status === "finished")
-      .map((round) => round.period),
-  );
+  // The league's own gameweeks that have kicked off: the calendar's weeks before its first pairing are not its own.
+  const season = leagueSeason(info);
+  const begun = rounds.filter((round) => season !== null && round.period >= season.firstPeriod && round.started);
+  const opening = rounds.find((round) => round.period === season?.firstPeriod);
+  const lines = await (squad ? getSquadStats() : getSeasonStats(season));
+  const columns = squad ? squadColumnsIn(group) : offeredIn(group, lines);
+  const category = columns.find((entry) => entry.key === query.cat) ?? columns[0] ?? categoryFor(undefined);
 
   const board = rankBy(columns, lines, category, measure);
   const named = new Map(table.map((row) => [row.teamId, shortName(row.teamId, row.teamName)]));
@@ -91,13 +85,17 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
         {squad ? <p className={MINOR_LABEL}>Season to {londonDayAndDate(intelStatsManifest.exportedAt)}</p> : null}
       </div>
 
-      {board.length === 0 ? (
+      {!squad && begun.length === 0 ? (
+        <Nothing title="No gameweek played yet" code={`getLeagueInfo → first pairing in period ${season?.firstPeriod ?? DASH}`}>
+          Nothing counts until {opening === undefined ? "the league's first gameweek" : `Gameweek ${opening.gameweek}, the league's first`}.
+        </Nothing>
+      ) : board.length === 0 ? (
         squad ? (
           <Nothing title="No squads yet" code="getTeamRosters → no squads">
             Each squad&apos;s season adds up here once {info.name} has drafted.
           </Nothing>
         ) : (
-          <Nothing title="Nothing recorded yet" code={`${played.size} finished rounds scored`}>
+          <Nothing title="Nothing recorded yet" code={`${begun.length} gameweeks begun`}>
             {groupLabel} fill in as {info.name} plays.
           </Nothing>
         )
