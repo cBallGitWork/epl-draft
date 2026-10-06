@@ -1,34 +1,10 @@
-// Does the section rail still fit on the narrowest phone anybody owns.
+// Does the section rail still fit on the narrowest phone anybody owns?
 //
 //   node tools/ui/navfit.mjs [320 360 390 430] [--team-cookie <file>]
 //
-// The rail replaced the tab bar on 31 Aug 2026 and the fit question turned
-// ninety degrees with it. A bar fails by running out of WIDTH — six labels
-// sharing one screen, and the narrowest column clips first. A rail has one
-// column and fails two other ways instead, so this asks three things.
-//
-// **Does each label fit the rail's own width**, measured at the real rail font
-// against the rendered plate. Unchanged in spirit: a clipped label is named
-// rather than guessed at from a screenshot.
-//
-// **Does the rail fit the screen's height**, now and with one more section in
-// it. The Live section exists only while football is on, so the rail a session
-// sees on a Tuesday is one plate shorter than the rail sixteen phones see on a
-// Saturday — the same question the bar's `+1 tab` column asked, in the axis the
-// rail can actually run out of. A rail taller than the viewport scrolls inside
-// itself, which is a section you cannot see without knowing to drag furniture.
-//
-// **What the rail leaves the page.** This is the new failure and the bar never
-// had it: 64px off a 320px screen is a fifth of it, and the content column is
-// where every table in the app has to fit. Reported at every width, and the
-// document's own sideways scroll with it.
-//
-// Labels are read out of the rail rather than carried here. Its predecessor kept
-// its own list of the six and the list went stale the day "Matchday" was renamed
-// "Live" to buy the room.
-//
-// **A tab's label is its LAST `<span>`**: the first is its figure, a glyph or the Live tab's score, which is
-// measured on its own. The desk rail's entries have no span and fall back to the anchor.
+// Three questions: does each label fit its plate, does the rail fit the screen now and with one more section (Live
+// comes and goes), and what does it leave the page. Labels are read out of the rail, never carried here.
+// A tab's label is its LAST `<span>`; the first is its figure, a glyph or the Live tab's score, measured on its own.
 
 import { connect, parseArgs, teamCookie } from "./cdp.mjs";
 
@@ -43,8 +19,7 @@ const MEASURE = `(function(){
   // A group tab (Comps) is a button that opens its fly-out; the desk rail's steppers are buttons with no aria-expanded.
   var links=Array.prototype.slice.call(rail.querySelectorAll('a[href], button[aria-expanded]'));
   var items=links.filter(function(a){return a.textContent.trim()});
-  // Only the plates, and only the ones with a label: the Live plate's figure
-  // lives inside the same anchor, so counting spans would double that section.
+  // Only the labelled plates: the Live plate's figure sits in the same anchor, so counting spans doubles it.
   if(!items.length) throw new Error("rail has no labelled sections");
   var labelOf=function(a){return a.querySelector(":scope > span:last-child")||a};
   var cs=getComputedStyle(labelOf(items[0]));
@@ -64,27 +39,16 @@ const MEASURE = `(function(){
     return {t:label.textContent.trim(), box:Math.round(r.width), h:Math.round(r.height),
             pad:Math.ceil(parseFloat(ps.paddingLeft)+parseFloat(ps.paddingRight)),
             needs:Math.ceil(probe.getBoundingClientRect().width),
-            // **No tolerance term.** It was \`+1\` and that is exactly one pixel
-            // too generous: \`My Team\` renders at 51 in 49.3px of room, so
-            // scrollWidth 51 against ceil(49.3)+1 = 51 reported a fit while the
-            // screenshot showed \`My Te…\`. \`ceil\` alone already absorbs the
-            // sub-pixel case a tolerance was there for — a label 43.4 wide
-            // reporting scrollWidth 44 still passes.
+            // No tolerance term: ceil already absorbs the sub-pixel case, and a +1 passed a clipped label.
             clipped:label.scrollWidth>Math.ceil(lr.width)
               ||(score!==null&&score.getBoundingClientRect().width>r.width-4)};
   });
   probe.remove();
   var rr=rail.getBoundingClientRect();
-  // Which way the navigation runs, read off the plates rather than assumed.
-  // The app draws two shapes of it — a rail down the side of a desk screen and a
-  // thumb rail across the foot of a phone (shell/ThumbRail) — and they fail on
-  // different axes: down the side runs out of HEIGHT, across the foot runs out of WIDTH
-  // per tab. Two tabs on the same y is a row.
+  // Which way the navigation runs, read off the plates: a side rail runs out of HEIGHT, a foot row of WIDTH per tab.
   var across = items.length > 1
     && Math.abs(items[0].getBoundingClientRect().top - items[1].getBoundingClientRect().top) < 2;
-  // The plates' own run, not the rail's scrollHeight: the rail is a full-height
-  // frame with the stack inside it, so its scrollHeight reports the frame back
-  // whenever the stack is shorter than the screen — which is every passing case.
+  // The plates' own run, not the rail's scrollHeight, which reports the full-height frame whenever the stack fits.
   var list=rail.querySelector("ul")||items[0].parentElement;
   var main=document.getElementById("main");
   return JSON.stringify({
@@ -106,10 +70,7 @@ for (const width of widths) {
   const out = JSON.parse(await cdp.js(MEASURE));
 
   const clipped = out.rows.filter((row) => row.clipped).map((row) => `${row.t}(${row.needs}>${row.box})`);
-  // **What one more section would cost, on the axis this shape actually fails
-  // on.** A rail runs out of height and a foot row runs out of width per plate:
-  // the same question, asked of a different measurement, and asking the rail's
-  // question of a row answered "WOULD SCROLL" on a bar that cannot scroll.
+  // What one more section would cost, on the axis this shape fails on: height for a rail, width per plate for a row.
   const widest = Math.max(...out.rows.map((row) => row.needs));
   // A tab's own padding, read off its computed style: the room it keeps around a label however wide it is.
   const padding = Math.max(...out.rows.map((row) => row.pad));

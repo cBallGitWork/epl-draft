@@ -1,49 +1,23 @@
-// Does anything on the desk print text on the bare ground?
+// Does anything on the desk print text on the bare ground? Nothing may: every word sits on a plate or a panel.
 //
 //   node tools/ui/groundfit.mjs [--team-cookie <file>]
 //
-// Written on 31 Aug 2026, the day the photograph came back at full strength.
-// The old scrim was solved as a CONTRAST BOUND — a statement about the worst
-// pixel a photograph could contain, holding for ink sitting directly on it —
-// and at opacity 0.30 over brightness 0.25 that bound left about seven per cent
-// of a picture. Championship Manager does not pay that price because it never
-// takes the risk: every word in the game is on a plate or inside a translucent
-// panel, and the ground is only ever seen between them.
-//
-// So the desk swapped a bound for a rule — **nothing prints text on the bare
-// ground** — and this measures the rule. It is the one guarantee `sweep` cannot
-// give: the ground is `fixed` at `-z-10`, an ancestor of nothing, so sweep
-// composites straight past it and calls every route clean whatever is behind
-// it. A rule that no instrument checks is a hope, and the docblock on
-// `PhotoGround`'s constants points here rather than quoting a number.
-//
-// The paper is not swept. It is ink on stock with no photograph under it, and
-// `isPaperRoute` is what stands the ground down.
+// `sweep` cannot see this: the ground is `fixed -z-10`, so a contrast walk composites straight past it.
+// The paper is not walked; it has no photograph under it.
 
-import { connect, discover, parseArgs, teamCookie } from "./cdp.mjs";
-import { DESK_ROUTES, matchRoutes } from "./routes.mjs";
+import { connect, parseArgs, teamCookie } from "./cdp.mjs";
+import { DESK_ROUTES, playedMatchRoutes, playerRoutes } from "./routes.mjs";
 
-/** This run's routes: the shared list, plus whatever `discover` finds a real
- *  id for below. A COPY, because those appends are this process's own —
- *  `routes.mjs` exports a declaration and must not become a scratchpad. */
+/** This run's routes: the shared list plus the ids discovered below; a copy, so `routes.mjs` stays a declaration. */
 const ROUTES = [...DESK_ROUTES];
 
-
-/** Accumulated background alpha at which a thing counts as covered.
- *
- *  Half, and the number is not arbitrary: the loosest cover the desk uses on
- *  purpose is `.cm-panel`, which is `--color-surface` at 88%. Anything below a
- *  half is not a translucent panel, it is a gap — and a gap is where the
- *  photograph is meant to show. */
+/** Background alpha at which a thing counts as covered: `.cm-panel`, the loosest cover, is 88%; below a half is a gap. */
 const COVER = 0.5;
 
 const AUDIT = `(function(){
   var COVER = ${COVER};
   var out = [];
-  // Alpha via canvas, never a regex on the computed string. Tailwind v4
-  // computes its colours to oklch(), so matching /rgba?\\(/ reports every
-  // opaque plate in the app as transparent — which is how the first run of
-  // this called <span class="bg-accent"> bare ground, on all eight routes.
+  // Alpha via canvas, never a regex on the computed string: Tailwind v4 computes colours to oklch().
   var cvs=document.createElement("canvas");cvs.width=cvs.height=1;
   var ctx=cvs.getContext("2d",{willReadFrequently:true});
   var acache={};
@@ -71,22 +45,10 @@ const AUDIT = `(function(){
     if (r.width < 1 || r.height < 1) continue;
     var cs0 = getComputedStyle(el);
     if (cs0.visibility === "hidden" || cs0.opacity === "0") continue;
-    // The ground itself is aria-hidden, and a screen-reader-only label is not
-    // on the screen at all.
+    // The ground itself is aria-hidden, and a screen-reader-only label is not on the screen.
     if (el.closest("[aria-hidden='true']")) continue;
     if (el.closest(".sr-only")) continue;
-    // **Stop BEFORE <body>, and this is the whole instrument.** The walk used to
-    // run to <html>, which meant it counted body's own background — and
-    // globals.css gives body an opaque --color-bg. So cover reached 1.00 for
-    // every text node on every desk route and this audit could not fail; its
-    // "Zero bare, 31 Aug 2026" was vacuous, and DESIGN §2 rests the photograph
-    // reversal on that number.
-    //
-    // The render is the other way round: <html> is transparent, so body's
-    // background propagates to the CANVAS, and PhotoGround's fixed inset-0
-    // -z-10 paints above the canvas background. That is why the photograph is
-    // visible at all. Body's fill is therefore BEHIND the picture and covers
-    // nothing; only a background between the text and the photograph does.
+    // Stop BEFORE <body>: its opaque fill propagates to the canvas, BEHIND the photograph, so it covers nothing.
     var cover = 0, node = el;
     while (node && node !== document.body) {
       var cs = getComputedStyle(node);
@@ -114,35 +76,8 @@ const { flags } = parseArgs(process.argv.slice(2));
 const cdp = await connect();
 await cdp.setCookie(teamCookie(flags));
 
-// One player's four screens, DISCOVERED off the pool for the reason the team's
-// and the club's are: a `fantraxId` names one man in one league's pool, and a
-// written-down one is a 404 the day he leaves.
-// **`tbody`, and that is not decoration.** The bare selector took the first
-// `/players/` link on the page, which from 6 Sep 2026 is the second tab in
-// Find's own strip — so these instruments walked `/players/analysis/data` and
-// friends, which resolve to the PLAYER route with a `fantraxId` of "analysis",
-// and stopped covering a real player screen at all. A man is a row of the
-// directory, so the directory's body is where to look for one.
-//
-// The tab was called Compare and the route was `/players/compare` when this was
-// first written down; the trap is the same whatever the tab is called, which is
-// why the fix is the selector and not the name.
-const man = await discover(cdp, "/players", 'tbody a[href^="/players/"]');
-if (man) ROUTES.push(man, ...["data", "news", "transfer", "data?season=all"].map((tab) => `${man}/${tab}`));
-
-// One match's two screens, discovered off the results list — where the score
-// became a link on 4 Sep 2026 and had never been one before. A written-down
-// fixture id is a 404 the same season, because `Fixture.id` is per-season and so
-// is a fixture.
-//
-// Walked because the match bar prints two club names as DISPLAY type straight
-// onto a club colour, and the Players board prints two more over its column
-// heads. Four strings on four grounds none of which is a token this instrument
-// has already had checked.
-const match = await discover(cdp, "/prem/results", 'a[href^="/prem/match/"]');
-// Every tab the match has, read off the app's folders (`matchRoutes`), so none ships unmeasured.
-if (match) ROUTES.push(...matchRoutes(match));
-
+// Per-record routes are discovered, never written down: a fantraxId and a fixture id both move.
+ROUTES.push(...(await playerRoutes(cdp)), ...(await playedMatchRoutes(cdp)));
 
 let failures = 0;
 for (const width of [390, 1440]) {

@@ -1,24 +1,9 @@
-// Our screen and Championship Manager's, side by side, in one image.
+// Our screen and Championship Manager's side by side in one PNG: CM's 800x600 on the left, ours on the right at the
+// same height, each labelled. Rendered in the already-open browser, not an image library.
 //
 //   node tools/ui/compare.mjs <route> <cm9900/NN.jpg> [out.png] [--width 1440] [--team-cookie <file>]
 //
-// The acceptance test this whole conversion is judged by is a comparison — "put
-// a CM screenshot beside the same-shaped screen; if a stranger can tell which
-// decade each belongs to, it has not landed" — and until now it was taken by
-// opening two images one after the other, which is not a comparison, it is two
-// looks and a memory between them. Differences of a few pixels in a row height,
-// a plate's weight or a strip's alignment do not survive that gap.
-//
-// So this composes both into a single PNG: the reference on the left at its own
-// 800×600, ours on the right, scaled to the same height, each labelled. One
-// image, one look, and the differences are the things that are not lined up.
-//
-// It renders the pair in the browser that is already open rather than reaching
-// for an image library, because the drawer's rule is that these talk to a
-// running headless Chrome and nothing else.
-//
-// **Read the output.** A composite nobody opens is two screenshots in a
-// directory. `shot.mjs` says the same thing and means it just as much.
+// Read the output: a composite nobody opens is two screenshots in a directory.
 
 import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -34,21 +19,13 @@ if (!route || !reference) {
   process.exit(1);
 }
 
-/** CM's canvas, which every reference shot in the library is (README, measured).
- *  Ours is scaled to this height so a row in one is the same distance down the
- *  image as a row in the other — which is the whole point of putting them in a
- *  line. */
+/** CM's canvas, which every reference shot is; ours is scaled to its height so rows line up across the pair. */
 const CM = { width: 800, height: 600 };
 
 const width = Number(flags.width ?? 1440);
 const height = Number(flags.height ?? 900);
 
-/** How far to blow the pair up. Doubling CM's own 600 is what makes a 1999 row
- *  legible beside a 2026 one, but the composite is then two images wide and
- *  4.49 Mpx — past what the browser will hand back (`CAPTURE_CEILING`), which
- *  is why this instrument hung on its second capture and never wrote a file.
- *  So the zoom is derived from the ceiling rather than asserted: take the most
- *  we can get, which is the honest version of "as big as possible". */
+/** How far to blow the pair up: the most `CAPTURE_CEILING` allows, since a capture past it hangs. */
 const pairBox = (zoom) => ({
   width: Math.round(CM.width * zoom + (width / height) * CM.height * zoom) + 40,
   height: Math.round(CM.height * zoom) + 60,
@@ -84,9 +61,7 @@ writeFileSync(
 </figure>`,
 );
 
-// Wide enough that neither is cropped: the live shot is the wider of the two
-// once scaled, and a composite that clips the thing being judged is worse than
-// no composite.
+// Wide enough that neither is cropped: the live shot is the wider of the two once scaled.
 await cdp.setViewport(pair.width, pair.height);
 await cdp.send("Page.navigate", { url: `file://${page}` });
 await new Promise((resolve) => setTimeout(resolve, 900));
