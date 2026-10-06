@@ -5,7 +5,7 @@ import { HeadRow, LeadHeads, sortedAs, SortHead } from "../../components/league/
 import { ROW_LINK } from "../../components/league/TableCells";
 import { BOARD, ROW_HOVER_ON_SURFACE } from "@/app/desk";
 import ScrollBoard from "../../components/league/ScrollBoard";
-import { FIGURE, LEAD_WIDTH, LeadFace, PIN_NAME, PIN_TILE } from "../BoardRow";
+import { FIGURE, FREE_TILE, Holder, LEAD_WIDTH, LeadFace, PIN_NAME, PIN_TILE } from "../BoardRow";
 import { standoutInk } from "../../components/league/standout";
 import { cutsFor } from "../standout";
 import { playerHref } from "../routes";
@@ -21,6 +21,8 @@ export default function ProjectionBoard({
   sort,
   descending,
   href,
+  teamNames,
+  reader,
 }: {
   rows: readonly ProjectionRow[];
   gameweeks: readonly number[];
@@ -30,6 +32,9 @@ export default function ProjectionBoard({
   descending: boolean;
   /** Where a head's sort link points, given its key and the direction it would set. */
   href: (key: ProjectionSort, descending: boolean) => string;
+  teamNames: ReadonlyMap<string, string>;
+  /** The reader's own team, so his men read "Yours"; null for a reader with no team. */
+  reader: string | null;
 }) {
   const heads = projectionHeads(category, gameweeks);
   // Lit as the Players board lights a column: its best in orange, the rest of its top sixth in yellow.
@@ -59,9 +64,13 @@ export default function ProjectionBoard({
         <tbody>
           {rows.map((row) => (
             <tr key={row.code} className={ROW_HOVER_ON_SURFACE}>
-              <PositionTile positions={row.positions} cell className={PIN_TILE} />
+              <PositionTile
+                positions={row.positions}
+                cell
+                className={row.fantraxId !== null && row.ownerTeamId === null ? `${PIN_TILE} ${FREE_TILE}` : PIN_TILE}
+              />
               <td className={PIN_NAME}>
-                <Lead row={row} />
+                <Lead row={row} teamNames={teamNames} reader={reader} />
               </td>
               {heads.map((head) => {
                 const figure = projectionFigure(row, head.key, gameweeks);
@@ -85,9 +94,18 @@ export default function ProjectionBoard({
   );
 }
 
-/** His crest, name and position; a link when the pool holds him. */
-function Lead({ row }: { row: ProjectionRow }) {
-  const face = <LeadFace club={row.club} name={row.name} fullName={row.fullName} positions={row.positions} />;
+/** His crest, name, position and who holds him, as the Players board prints them; a link when the pool has him. */
+function Lead({ row, teamNames, reader }: { row: ProjectionRow; teamNames: ReadonlyMap<string, string>; reader: string | null }) {
+  const face = (
+    <LeadFace
+      club={row.club}
+      name={row.name}
+      fullName={row.fullName}
+      positions={row.positions}
+      after={<Holder held={row} teamNames={teamNames} reader={reader} className="max-lg:hidden" />}
+      under={<Holder held={row} teamNames={teamNames} reader={reader} className="lg:hidden" />}
+    />
+  );
   return row.fantraxId === null ? (
     <span className={`${ROW_LINK} ${LEAD_WIDTH} hover:no-underline`}>{face}</span>
   ) : (
