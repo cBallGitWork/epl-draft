@@ -9,7 +9,7 @@ import { leagueScoring } from "./scoring";
 // What a player card's "Full match stats" asks the server for: his Opta parts and the rows this league scores.
 
 /** One man and the matches the card shows, as the card holds them. */
-export interface MatchAsk {
+interface MatchAsk {
   /** FPL's `opta_code`, "p116535"; null for a man FPL gave none. */
   opta: string | null;
   fixtures: { gameweek: number; code: number }[];

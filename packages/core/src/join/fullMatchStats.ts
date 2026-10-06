@@ -28,7 +28,7 @@ import type { Contribution } from "./contribution";
 // A player card's "Full match stats": what he did, grouped by the category it counts toward, where this league scores it.
 
 /** One figure on the card: null where nobody measured it. */
-export interface StatRow {
+interface StatRow {
   key: string;
   label: string;
   value: number | null;
