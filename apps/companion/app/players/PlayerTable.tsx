@@ -10,13 +10,10 @@ import { BOARD, ROW_HOVER_ON_SURFACE } from "@/app/desk";
 import ScrollBoard from "../components/league/ScrollBoard";
 import Cell, { Lead } from "./Cell";
 import { doubtRow } from "../components/football/doubtRow";
-import { PIN_NAME, PIN_TILE } from "./BoardRow";
+import { FREE_TILE, PIN_NAME, PIN_TILE } from "./BoardRow";
 
 // The pool as one sortable board: every column, phone-first, each sort a link so the server orders and the URL keeps it.
 // The lead is pinned while the figures scroll (DESIGN §9); the desk adds CM's position tile down the left.
-
-/** The tile of a man nobody holds, green where a held man's is blue (DESIGN §3, `--color-index-free`). */
-const FREE_TILE = "[--cm-index:var(--color-index-free)]";
 
 export default function PlayerTable({
   rows,

@@ -10,6 +10,9 @@ import { holderOf, type Held, type Holder as HolderLine } from "./holder";
 /** The tile is the desk's; the phone carries position on the name's second line. */
 export const PIN_TILE = `hidden lg:table-cell ${PINNED_TILE}`;
 
+/** The tile of a man nobody holds, green where a held man's is blue (DESIGN §3, `--color-index-free`). */
+export const FREE_TILE = "[--cm-index:var(--color-index-free)]";
+
 /** The lead stays put while the figures scroll under it, starting where the desk's tile ends. */
 export const PIN_NAME = `${PINNED_NAME} left-0 p-0 lg:left-14`;
 
