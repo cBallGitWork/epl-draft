@@ -50,6 +50,7 @@ export const LEAGUE_CAPTION: Record<LeagueSection, string> = {
   results: "Results",
   teamStats: "Team Stats",
   cups: "Cups",
+  scoring: "Scoring",
   // Not a tab (`SectionNav` records why), but a section a route can BE on.
   matchups: "Matchups",
 };

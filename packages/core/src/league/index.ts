@@ -89,6 +89,8 @@ export { orphaned, unacknowledged } from "./fantrax/baseline";
 export type { AcknowledgedDifference } from "./fantrax/baseline";
 export { pointsFor } from "./scoring";
 export type { LeagueScoring } from "./scoring";
+export { rulesCard, scoredSlots } from "./rulesCard";
+export type { RuleLine } from "./rulesCard";
 export {
   mapBenchPlayerPoints,
   mapLivePlayerPoints,

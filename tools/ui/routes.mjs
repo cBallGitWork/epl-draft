@@ -27,6 +27,7 @@ export const DESK_ROUTES = [
   "/league/results",
   "/league/team-stats",
   "/league/cups",
+  "/league/scoring",
   "/league/cups?cup=davy-propper",
   "/league/matchups",
   "/squad",
