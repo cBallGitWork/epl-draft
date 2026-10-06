@@ -195,15 +195,12 @@ export function fetchSeasonResults(leagueId: string): Promise<RawSchedulePage> {
   return fxpaRead(leagueId, "getStandings", { view: "SCHEDULE" }) as Promise<RawSchedulePage>;
 }
 
-/** Every team's season totals per category, in one request.
- *
- *  Public, the third of `getStandings`' three views — `displayedLists.tabs`
- *  names them all, which is where the argument comes from rather than a guess.
- *  It answers 29 tables: a summary, four per-position roll-ups and 22
- *  single-category leaderboards split into a goalkeeper block and an outfielder
- *  block. `mapSeasonStats` carries the two traps that split creates. */
-export function fetchSeasonStats(leagueId: string): Promise<RawSeasonStats> {
-  return fxpaRead(leagueId, "getStandings", { view: "SEASON_STATS" }) as Promise<RawSeasonStats>;
+/** Every team's totals per category in one public read, `getStandings`' SEASON_STATS view: 29 tables whose traps
+ *  `mapSeasonStats` carries. Unasked it counts every period of the calendar; a `range` (BY_DATE, days in Fantrax's
+ *  zone, probed 6 Oct 2026) counts only its own days, which is how a league that began late counts its own. */
+export function fetchSeasonStats(leagueId: string, range?: { startDate: string; endDate: string }): Promise<RawSeasonStats> {
+  const timeframe = range === undefined ? {} : { timeframeType: "BY_DATE", ...range };
+  return fxpaRead(leagueId, "getStandings", { view: "SEASON_STATS", ...timeframe }) as Promise<RawSeasonStats>;
 }
 
 /** Every team's fantasy points for one period, as Fantrax scores them.

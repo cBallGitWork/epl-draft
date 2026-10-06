@@ -63,4 +63,19 @@ describe("mapSeasonStats", () => {
   it("survives an empty payload", () => {
     expect(mapSeasonStats({}).size).toBe(0);
   });
+
+  it("reads points and the figure by the header when a date range drops the change columns", () => {
+    // Probed 6 Oct 2026: BY_DATE answers rank, fpts, team, pos, with no diff1 or diff2 either side of the team.
+    const goals = mapSeasonStats({
+      tableList: [
+        { caption: "Standings By Category - Outfielder", rows: [] },
+        {
+          caption: "Goals",
+          header: { cells: [{ key: "rank" }, { key: "fpts" }, { key: "team" }, { key: "pos" }] },
+          rows: [{ cells: [{ content: "1" }, { content: "21" }, { content: "its_ohi", teamId: "t1" }, { content: "5" }] }],
+        },
+      ],
+    }).get("Goals");
+    expect(goals).toEqual([{ teamId: "t1", points: 21, value: 5 }]);
+  });
 });

@@ -1266,6 +1266,12 @@ Minutes Played. These tables have to be read positionally against their `name`,
 which is the inverse of the rule ten feet up the same file. Whoever builds this
 should put the reason in the mapper.
 
+**It takes a timeframe** (probed 6 Oct 2026, real league): `displayedLists.timeframeTypes` offers `YEAR_TO_DATE`,
+`BY_PERIOD` and `BY_DATE`. Unasked it is year to date over the whole calendar, so the real league's board counted
+GW1–5 before its first pairing (period 6). `timeframeType: "BY_DATE"` with `startDate`/`endDate` (days in Fantrax's
+zone) counts only those days, and drops the two `+/-` columns, so FPts sits one cell nearer the team: the mapper
+reads its offsets from each table's header. Team Stats asks from the league's first pairing (`leagueSeason`).
+
 ### `getPlayerStats` carries raw stats — but only when asked by POSITION GROUP
 
 Probed 1 Sep 2026, and it overturns a conclusion reached an hour earlier that

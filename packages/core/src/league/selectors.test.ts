@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { headToHead, leaguePool, nextPairedPeriod, pairingInvolves, periodPairings } from "./selectors";
+import { headToHead, leaguePool, leagueSeason, nextPairedPeriod, pairingInvolves, periodPairings } from "./selectors";
 import type {
   LeagueMatchup,
   LeaguePlayer,
@@ -191,5 +191,31 @@ describe("nextPairedPeriod", () => {
 
   it("has no answer once the schedule has run out", () => {
     expect(nextPairedPeriod(schedule, leagueTeams, 2, "t1")).toBeUndefined();
+  });
+});
+
+describe("leagueSeason", () => {
+  // The real league's calendar as getLeagueInfo sent it on 6 Oct 2026: periods from 21 Aug, pairings from period 6.
+  const periods = [
+    { number: 1, start: "2026-08-21T15:00:00.0-0400", end: "2026-08-28T14:59:59.0-0400" },
+    { number: 5, start: "2026-09-18T15:00:00.0-0400", end: "2026-10-09T05:59:59.0-0400" },
+    { number: 6, start: "2026-10-09T06:00:00.0-0400", end: "2026-10-16T05:59:59.0-0400" },
+    { number: 7, start: "2026-10-16T06:00:00.0-0400", end: "2026-10-23T14:59:59.0-0400" },
+  ];
+  const paired = [
+    { period: 7, homeTeamId: "t1", awayTeamId: "t2" },
+    { period: 6, homeTeamId: "t1", awayTeamId: "t3" },
+  ];
+
+  it("opens at the first period with a head-to-head, not the calendar's first", () => {
+    expect(leagueSeason({ matchups: paired, scoringPeriods: periods, endDate: "2027-05-30" })).toEqual({
+      firstPeriod: 6,
+      startDate: "2026-10-09",
+      endDate: "2027-05-30",
+    });
+  });
+
+  it("has no season of its own until the schedule pairs somebody", () => {
+    expect(leagueSeason({ matchups: [], scoringPeriods: periods, endDate: "2027-05-30" })).toBeNull();
   });
 });

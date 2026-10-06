@@ -24,6 +24,8 @@ interface RawStatTable {
    *  outfielder block publish the same caption for the same category, which is
    *  trap 1 below. */
   caption?: string;
+  /** Keys unique within one table: `rank fpts diff1 team pos diff2` for the season, `rank fpts team pos` by date. */
+  header?: { cells?: { key?: string }[] };
   rows?: { cells?: RawStatCell[] }[];
 }
 
@@ -78,14 +80,11 @@ function normalise(name: string): string {
  *  The zero-row section headings are the only marker of the boundary, so the
  *  block is tracked as the list is walked.
  *
- *  **Trap 2 — the columns must be read by POSITION.** The header publishes
- *  `['rank','fpts','diff1','team','pos','diff2']`, and the category's own figure
- *  sits under the generic key `pos`. `mapStandings` ten feet up this folder
- *  reads by key and never by index, precisely so a manager reordering their
- *  table cannot break it — here that rule does the opposite, because eleven
- *  stats share one key (PLATFORM_NOTES records the probe). The team cell is
- *  found by its `teamId` and the two figures are taken relative to it, so a
- *  reordering still cannot put a name where a number belongs.
+ *  **Trap 2 — the figure's key is generic.** Every category's own figure sits
+ *  under `pos`, eleven stats sharing one key (PLATFORM_NOTES records the probe).
+ *  The team cell is found by its `teamId` and the two figures are taken relative
+ *  to it, at the offsets the table's own header gives: a date range drops the
+ *  two change columns, which moved FPts one cell nearer the team.
  *
  *  Combining is a sum, and it is a sum of things Fantrax scored separately for
  *  one squad: `123` had 0 clean sheets in goal and 4 on the field, for 0 and 13
@@ -112,6 +111,7 @@ export function mapSeasonStats(raw: RawSeasonStats): Map<string, CategoryLine[]>
 
     const category = normalise(name);
     const lines = categories.get(category) ?? new Map<string, CategoryLine>();
+    const offset = offsets(table);
 
     for (const row of table.rows ?? []) {
       const cells = row.cells ?? [];
@@ -121,11 +121,8 @@ export function mapSeasonStats(raw: RawSeasonStats): Map<string, CategoryLine[]>
       const teamId = cells[at]?.teamId;
       if (teamId === undefined) continue;
 
-      // Points sit two before the team, the figure one after it. Relative to the
-      // team cell rather than at fixed indices, so the row survives a column
-      // being added at the front — which is what `rank` and `diff1` already are.
-      const points = numeric(cells[at - 2]?.content);
-      const value = numeric(cells[at + 1]?.content);
+      const points = numeric(cells[at + offset.points]?.content);
+      const value = numeric(cells[at + offset.value]?.content);
 
       const held = lines.get(teamId);
       lines.set(teamId, {
@@ -141,6 +138,19 @@ export function mapSeasonStats(raw: RawSeasonStats): Map<string, CategoryLine[]>
   const out = new Map<string, CategoryLine[]>();
   for (const [category, lines] of categories) out.set(category, [...lines.values()]);
   return out;
+}
+
+/** The season's layout, points two before the team and the figure one after; what a headerless table is read by. */
+const SEASON_OFFSETS = { points: -2, value: 1 };
+
+/** Where FPts and the figure sit relative to the team cell, by the table's own header. */
+function offsets(table: RawStatTable): { points: number; value: number } {
+  const keys = (table.header?.cells ?? []).map((cell) => cell.key);
+  const team = keys.indexOf("team");
+  const points = keys.indexOf("fpts");
+  const value = keys.indexOf("pos");
+  if (team === -1 || points === -1 || value === -1) return SEASON_OFFSETS;
+  return { points: points - team, value: value - team };
 }
 
 /** Absence plus a number is that number; absence plus absence stays absent. A
