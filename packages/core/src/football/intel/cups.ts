@@ -58,7 +58,7 @@ export interface TmlRow {
   goals_against: number | null;
 }
 
-export interface CupSources {
+interface CupSources {
   /** The sister repo's team id → FPL club code, for the season's twenty. */
   clubCodes: ReadonlyMap<string, number>;
   /** The sister repo's team id → FotMob's name for the club. */
