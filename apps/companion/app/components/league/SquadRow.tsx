@@ -139,17 +139,12 @@ export default function SquadRow({
   );
 
 
-  // `min-h-11` and not the `min-h-9` this carried until 31 Aug 2026: fifteen of
-  // these are buttons, and a list of fifteen tappable rows on a phone is exactly
-  // the case the 44px floor exists for. It was a second undocumented exception
-  // beside the view toggle's, found by `tools/ui/tapfit.mjs`. `.cm-row` takes it
-  // back to 28 above `lg`, where there is no thumb.
-  //
+  // 36px under a thumb, PRODUCT.md's squad-list exception to the 44 floor; `.cm-row` takes it to 28 above `lg`.
   // `cm-out` is the grey CM puts on everyone not in the side. It is a colour
   // rule and the wash is a ground, so a greyed reserve who is also injured keeps
   // both statements.
   const shell = [
-    "cm-row flex min-h-11 w-full items-center gap-1.5 px-1.5 text-left",
+    "cm-row flex min-h-9 w-full items-center gap-1.5 px-1.5 text-left",
     reserve ? "cm-out" : "",
     doubtRow(footballer),
   ]
