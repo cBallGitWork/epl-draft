@@ -79,15 +79,7 @@ export default function SquadRows({
   );
 
   return (
-    // **Scrolls sideways above `lg`, and it has to.** The eight stat columns
-    // appear there at 56px each, so the row's fixed width is about 670px before
-    // the name gets a pixel — and since 31 Aug the list shares the screen with
-    // the season grid, which leaves it 554. It fitted while it had the whole
-    // frame; halving the column is what found this. A dense table that does not
-    // fit scrolls inside its panel, which is what the season grid does and what
-    // CM's own tables did. `min-w-max` only above `lg`: on a phone the stat
-    // columns are hidden and the name truncates into whatever is left, which is
-    // right there and would become a sideways scroll if this applied.
+    // Above `lg` a row too wide for a half-width panel scrolls inside it; on a phone the name truncates instead.
     // **A panel, so the rows are on a ground rather than on the photograph**
     // (Craig, 2 Sep: "the list view on the left needs the darkened table behind
     // it, it's hard to read"). This is the desk's own rule stated in DESIGN §2 —
