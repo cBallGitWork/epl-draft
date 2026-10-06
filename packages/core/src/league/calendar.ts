@@ -1,4 +1,5 @@
 import { LINEUP_LOCK_LEAD_MINUTES, SAVE_MARGIN_MINUTES } from "../config";
+import { MS_PER_DAY } from "../time";
 import type { LeaguePeriod } from "./types";
 
 // Which FPL gameweek falls in which Fantrax period, by kickoff (FPL's deadline lands a period early); kickoffs are
@@ -84,7 +85,6 @@ export function firstKickoff(
 }
 
 const LAST_SECOND = "23:59:59";
-const MS_PER_DAY = 86_400_000;
 
 /** A period as whole days, `YYYY-MM-DD`, as Fantrax labels it ("4 (Sep 11 - Sep 17)"): one ending before
  *  a day's last second ends the day before, or the next gameweek's Friday night would count in it. */

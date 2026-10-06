@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import recordedFixture from "../__fixtures__/plFixture.json";
+import { OPTA_TO_CODE as optaToCode } from "../__fixtures__/plFixtureCodes";
 import recordedStreams from "../__fixtures__/plTextstream.json";
 import type { RawPlFixture, RawPlTextstream } from "./raw";
 import { plPlayerCodes, plTeamSheets } from "./teamSheet";
@@ -9,17 +10,6 @@ const DETAIL = recordedFixture as unknown as RawPlFixture;
 /** The textstream's own fixture header, which carries no team lists at all — a
  *  different absence from `[null, null]` and worth keeping both. */
 const [PLAYED] = recordedStreams as unknown as RawPlTextstream[];
-
-/** FPL's `opta_code` → `code` for both sheets, each man coded as his own id plus a million so a wrong join shows. */
-const optaToCode = new Map(
-  [...(DETAIL.teamLists ?? [])].flatMap((list) =>
-    list === null
-      ? []
-      : [...list.lineup, ...list.substitutes].flatMap((p) =>
-          p.altIds ? [[p.altIds.opta, p.id + 1_000_000] as [string, number]] : [],
-        ),
-  ),
-);
 
 const codes = plPlayerCodes(DETAIL, optaToCode);
 

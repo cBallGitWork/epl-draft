@@ -1,3 +1,5 @@
+import { escapeRegExp } from "../regExp";
+
 // Names in the prose the brief never gave: a warning a human reads, never a refusal, since an eager check can be wrong.
 
 /** Capitalised words that are never a person here; kept small, as a miss costs more than a spare warning. */
@@ -76,16 +78,14 @@ export function strangers(prose: string, brief: string): string[] {
 
 /** Whether every occurrence of `word` sits directly before a name the brief gave. */
 function nextTo(prose: string, word: string, known: Set<string>): boolean {
-  const escaped = word.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
-  const pattern = new RegExp(`${escaped}[\\s]+(\\p{Lu}[\\p{L}'’-]*)`, "gu");
+  const pattern = new RegExp(`${escapeRegExp(word)}[\\s]+(\\p{Lu}[\\p{L}'’-]*)`, "gu");
   const after = [...prose.matchAll(pattern)].map((match) => match[1].replace(/['’]s$/u, ""));
   return after.length > 0 && after.every((next) => known.has(next));
 }
 
 /** Whether every occurrence of `word` opens a sentence or a line and is followed by something no surname could be. */
 function alwaysOpensASentence(prose: string, word: string): boolean {
-  const escaped = word.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
-  const every = [...prose.matchAll(new RegExp(escaped, "gu"))];
+  const every = [...prose.matchAll(new RegExp(escapeRegExp(word), "gu"))];
   if (every.length === 0) return false;
   return every.every((match) => {
     const before = prose.slice(0, match.index).trimEnd();

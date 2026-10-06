@@ -1,5 +1,6 @@
 import { DRAFT_WRITING } from "../../config";
-import { banned, escapeRegExp } from "../banned";
+import { banned } from "../banned";
+import { escapeRegExp } from "../../regExp";
 import type { Fault } from "../predictions/checks";
 import { masked, mentionAt, ngrams, numbersIn, sentences } from "../predictions/prose";
 import { surname } from "../reports/keyStats";

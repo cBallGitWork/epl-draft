@@ -1,5 +1,5 @@
 import { banned } from "../banned";
-import { columnRules, lawroProse, type CheckContext, type Fault, type Report } from "../predictions/checks";
+import { columnRules, faultLog, lawroProse, type CheckContext, type Fault, type Report } from "../predictions/checks";
 import { masked, mentionAt, sentences, wordCount } from "../predictions/prose";
 import { REPORT_AMERICAN, REPORT_FPL } from "../reports/words";
 import { AMERICAN_IZE, SHEETS_AMERICAN } from "../sheets/words";
@@ -41,8 +41,7 @@ const PLACE = new RegExp(
 
 /** `squads` is each side's men by name, for the line that must name only its own. */
 export function checkSeason(draft: SeasonDraft, calls: SeasonCalls, squads: ReadonlyMap<string, readonly string[]>, ctx: CheckContext): Fault[] {
-  const faults: Fault[] = [];
-  const fault: Report = (section, check, severity, evidence) => faults.push({ section, check, severity, evidence });
+  const { faults, fault } = faultLog();
   const sides = new Map(calls.sides.map((side) => [side.teamId, side]));
   const rules = lawroProse(ctx, new Set(calls.sides.map((side) => side.name)), fault);
 

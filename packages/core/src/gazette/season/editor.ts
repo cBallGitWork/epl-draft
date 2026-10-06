@@ -1,3 +1,5 @@
+import { stringOrEmpty } from "../../untrusted";
+
 // The editor's calls over the desk's order: data, read from `data/editions/editor.json` by the script and filed with
 // the story, never a name in code. Pure.
 
@@ -33,10 +35,9 @@ export function editorsOrder<T extends { teamId: string }>(order: readonly T[], 
 /** An editor's moves read field by field from the file; anything malformed is dropped. */
 export function readMoves(raw: unknown): EditorMove[] {
   if (!Array.isArray(raw)) return [];
-  const text = (value: unknown) => (typeof value === "string" ? value : "");
   return raw.flatMap((each: Partial<EditorMove> | null) =>
     typeof each?.teamId === "string" && each.teamId !== "" && Number.isInteger(each.place)
-      ? [{ teamId: each.teamId, place: each.place as number, by: text(each.by), on: text(each.on), said: text(each.said) }]
+      ? [{ teamId: each.teamId, place: each.place as number, by: stringOrEmpty(each.by), on: stringOrEmpty(each.on), said: stringOrEmpty(each.said) }]
       : [],
   );
 }

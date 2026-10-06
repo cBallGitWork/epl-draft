@@ -86,7 +86,7 @@ export interface PlayerIntel {
   matches: PlayerMatch[];
 }
 
-export function text(value: string | number | undefined): string | null {
+function text(value: string | number | undefined): string | null {
   if (typeof value === "number") return String(value);
   if (typeof value !== "string") return null;
   const trimmed = value.trim();

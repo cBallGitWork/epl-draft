@@ -1,3 +1,5 @@
+import { escapeRegExp } from "../../regExp";
+
 // Opta's own sentence cut down to a wire line: long club names shortened, the club in brackets after a player
 // dropped, and nothing paraphrased.
 
@@ -10,7 +12,7 @@ export function shortProse(text: string, names: ReadonlyMap<string, string>): st
     for (const spelling of ampersandVariants(long)) spellings.set(spelling, short);
   }
   const longest = [...spellings.keys()].sort((a, b) => b.length - a.length);
-  const alternation = longest.map(escapeForRegExp).join("|");
+  const alternation = longest.map(escapeRegExp).join("|");
 
   return (
     text
@@ -29,10 +31,6 @@ function ampersandVariants(name: string): string[] {
       ? name.replaceAll(" and ", " & ")
       : null;
   return swapped === null ? [name] : [name, swapped];
-}
-
-function escapeForRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 /** One run of Opta's sentence: `event` its opening clause (`Goal!`, `Corner, MUN.`), `name` a man on either sheet,
@@ -58,7 +56,7 @@ export function proseSpans(text: string, names: Iterable<string>): ProseSpan[] {
     return spans;
   }
 
-  const finder = new RegExp(known.map(escapeForRegExp).join("|"), "g");
+  const finder = new RegExp(known.map(escapeRegExp).join("|"), "g");
   let at = 0;
   for (const found of rest.matchAll(finder)) {
     const start = found.index;

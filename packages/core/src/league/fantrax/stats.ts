@@ -7,6 +7,7 @@ import type {
   StatSeason,
   TeamStats,
 } from "../stats";
+import { plainText } from "./markup";
 
 // Fantrax's public stat tables, one squad (`getTeamRosterInfo`) and the whole pool (`getPlayerStats`), read, never scored.
 // Every stat endpoint defaults to a PROJECTION, so `StatSeason` travels with the numbers; the columns are the league's
@@ -159,7 +160,7 @@ export function mapPoolStats(raw: RawPoolStats): PoolStats {
         perGame: cell(perGameAt),
         rostered: cell(rosteredAt),
         trend: cell(trendAt),
-        opponent: opponentAt < 0 ? null : plain(cells[opponentAt]?.content),
+        opponent: opponentAt < 0 ? null : plainText(cells[opponentAt]?.content),
         position: row.scorer.posShortNames?.split(",").at(-1)?.trim() || null,
       },
     ];
@@ -189,11 +190,4 @@ function latestSeason(seasons: readonly RawSeason[], timeframe: string): string 
 /** A column Fantrax heads but does not key. */
 function labelled(header: readonly { shortName?: string }[], shortName: string): number {
   return header.findIndex((cell) => cell.shortName === shortName);
-}
-
-/** A pre-formatted cell as one line of text: tags (`"BOU<br/>Sun 9:00AM"`) become spaces, and nothing is parsed out. */
-function plain(content: string | undefined): string | null {
-  if (content === undefined) return null;
-  const text = content.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
-  return text === "" ? null : text;
 }

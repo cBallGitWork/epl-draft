@@ -1,6 +1,6 @@
 import { BIN_XI } from "../../config";
 import { BANNED, banned } from "../banned";
-import type { Fault, Severity } from "../predictions/checks";
+import { faultLog, type Fault } from "../predictions/checks";
 import { masked, numbersIn, wordCount } from "../predictions/prose";
 import { DESK_BANNED } from "../predictions/words";
 import { REPORT_ADVICE, REPORT_FPL } from "../reports/words";
@@ -20,8 +20,7 @@ export interface BinCheck {
 }
 
 export function checkBin(column: Record<string, unknown>, ctx: BinCheck): Fault[] {
-  const faults: Fault[] = [];
-  const fault = (section: string, check: string, severity: Severity, evidence: string) => faults.push({ section, check, severity, evidence });
+  const { faults, fault } = faultLog();
   const text = (key: string) => (typeof column[key] === "string" ? (column[key] as string) : "");
   const figures = new Set(numbersIn(masked(ctx.brief, ctx.names)));
 

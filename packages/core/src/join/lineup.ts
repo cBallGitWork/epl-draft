@@ -1,3 +1,4 @@
+import { groupedBy } from "../grouped";
 import { isActive } from "../league/rosterStatus";
 import { playerName, type RosteredPlayer, type RosteredTeam } from "./roster";
 
@@ -23,6 +24,9 @@ export interface Lineup {
 
 /** The bucket for a slot with no position, which Fantrax allows: carried, never dropped. */
 const UNPLACED = "";
+
+/** The position a manager filed him in, or `UNPLACED`. */
+const positionOf = (player: RosteredPlayer): string => player.slot.position ?? UNPLACED;
 
 /** Whether this position stands in goal: the letter at the back of `PITCH_ORDER`. */
 export function isGoalkeeper(position: string | null): boolean {
@@ -52,16 +56,7 @@ function linesOf(
   team: RosteredTeam,
   within: (a: RosteredPlayer, b: RosteredPlayer) => number,
 ): SquadLine[] {
-  const byPosition = new Map<string, RosteredPlayer[]>();
-
-  for (const player of team.players) {
-    const position = player.slot.position ?? UNPLACED;
-    const line = byPosition.get(position);
-    if (line) line.push(player);
-    else byPosition.set(position, [player]);
-  }
-
-  return [...byPosition.entries()]
+  return [...groupedBy(team.players, positionOf).entries()]
     .map(([position, players]) => ({ position, players: [...players].sort(within) }))
     .sort((a, b) => byPositionDepth(a.position, b.position));
 }
@@ -73,25 +68,14 @@ export function squadUnarranged(team: RosteredTeam): SquadLine[] {
 }
 
 export function lineup(team: RosteredTeam): Lineup {
-  const active = new Map<string, RosteredPlayer[]>();
-  const bench: RosteredPlayer[] = [];
-
-  for (const player of team.players) {
-    const position = player.slot.position ?? UNPLACED;
-    if (isActive(player.slot)) {
-      const line = active.get(position);
-      if (line) line.push(player);
-      else active.set(position, [player]);
-    } else {
-      bench.push(player);
-    }
-  }
+  const active = groupedBy(team.players.filter((player) => isActive(player.slot)), positionOf);
+  const bench = team.players.filter((player) => !isActive(player.slot));
 
   const lines = [...active.entries()]
     .map(([position, players]) => ({ position, players }))
     .sort((a, b) => byPositionDepth(a.position, b.position));
 
-  const benchDepth = (player: RosteredPlayer) => positionDepth(player.slot.position ?? UNPLACED);
+  const benchDepth = (player: RosteredPlayer) => positionDepth(positionOf(player));
   bench.sort((a, b) => benchDepth(a) - benchDepth(b));
 
   return { lines, bench, shape: lines.map((line) => line.players.length).join("-") };

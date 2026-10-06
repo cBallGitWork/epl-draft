@@ -1,3 +1,5 @@
+import { plainText } from "./markup";
+
 // `getPlayerProfile?tab=NEWS_NOTES` → every story filed about one player, each with its body, analysis and timestamp.
 
 /** Only the keys we traverse, every one optional. */
@@ -35,24 +37,17 @@ export function mapPlayerStories(raw: RawNewsSection): PlayerStory[] {
   const stories = raw.sectionContent?.NEWS_NOTES?.playerNews ?? [];
   const out: PlayerStory[] = [];
   for (const story of stories) {
-    const content = text(story.content) ?? text(story.headlineNoBrief);
+    const content = plainText(story.content) ?? plainText(story.headlineNoBrief);
     if (content === null) continue;
     out.push({
       id: story.id ?? content,
-      headline: text(story.headlineNoBrief) ?? content,
+      headline: plainText(story.headlineNoBrief) ?? content,
       content,
-      analysis: text(story.analysis),
+      analysis: plainText(story.analysis),
       at: typeof story.newsDate === "number" ? story.newsDate : null,
     });
   }
   return out.sort((a, b) => (b.at ?? -Infinity) - (a.at ?? -Infinity));
-}
-
-/** Provider text with tags out: Fantrax nests markup (`<b>test4</b>`) in its strings, and none may reach a template. */
-function text(value: string | undefined): string | null {
-  if (typeof value !== "string") return null;
-  const stripped = value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
-  return stripped === "" ? null : stripped;
 }
 
 // `getPlayerNews?poolType=ALL` → the pool's news: a WINDOW of about the last day, newest first, not a story per player.
@@ -82,13 +77,13 @@ export function mapPoolNews(raw: RawPoolNews): Record<string, PlayerStory> {
     const story = row.playerNews;
     if (typeof fantraxId !== "string" || fantraxId === "" || story === undefined) continue;
     if (latest[fantraxId] !== undefined) continue;
-    const content = text(story.content) ?? text(story.headlineNoBrief);
+    const content = plainText(story.content) ?? plainText(story.headlineNoBrief);
     if (content === null) continue;
     latest[fantraxId] = {
       id: story.id ?? content,
-      headline: text(story.headlineNoBrief) ?? content,
+      headline: plainText(story.headlineNoBrief) ?? content,
       content,
-      analysis: text(story.analysis),
+      analysis: plainText(story.analysis),
       at: typeof story.newsDate === "number" ? story.newsDate : null,
     };
   }

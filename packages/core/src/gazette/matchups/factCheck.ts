@@ -1,7 +1,9 @@
 import { DRAFT_WRITING } from "../../config";
-import { banned, escapeRegExp } from "../banned";
+import { banned } from "../banned";
+import { escapeRegExp } from "../../regExp";
 import { masked, numbersIn, sentences } from "../predictions/prose";
 import { londonWeekdayLong, weekdayLongOfDay } from "../../time";
+import { recordOrEmpty } from "../../untrusted";
 import type { MatchupContext } from "./brief";
 import { allowedFigures } from "./checks";
 import { menOf, named, unbriefedNames } from "./listChecks";
@@ -62,7 +64,7 @@ export function knownFixes(pieces: ReadonlyMap<number, DraftPiece>, contexts: re
 /** The fact checker's JSON as fixes; anything misshapen is dropped. */
 export function readFactFixes(raw: Record<string, unknown>): FactFix[] {
   return (Array.isArray(raw.fixes) ? raw.fixes : []).flatMap((f): FactFix[] => {
-    const r = typeof f === "object" && f !== null ? (f as Record<string, unknown>) : {};
+    const r = recordOrEmpty(f);
     const quote = typeof r.quote === "string" ? r.quote.trim() : "";
     const matchup = Number(r.number);
     return quote === "" || !Number.isInteger(matchup) ? [] : [{ matchup, quote, correction: typeof r.correction === "string" ? r.correction.trim() : "" }];

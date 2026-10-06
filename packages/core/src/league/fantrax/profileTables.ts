@@ -1,4 +1,4 @@
-import { text } from "./profile";
+import { plainText } from "./markup";
 import type { LabelledValue, RawLabelled, RawPlayerProfile } from "./profile";
 
 // `getPlayerProfile`'s TABLES, found by shape or stat id and never by caption, which is a season string it has served wrong.
@@ -37,7 +37,7 @@ export function seasonStats(raw: RawPlayerProfile): LabelledValue[] {
   const out: LabelledValue[] = [];
   for (let at = 0; at < heads.length; at++) {
     const label = heads[at]?.shortName ?? heads[at]?.name;
-    const value = stripTags(cells[at]?.content);
+    const value = plainText(cells[at]?.content);
     if (!label || value === null) continue;
     out.push({ label, description: heads[at]?.name ?? null, value });
   }
@@ -69,7 +69,7 @@ export function recentGames(raw: RawPlayerProfile): PlayerMatch[] {
   const out: PlayerMatch[] = [];
   for (const row of heads.table.rows ?? []) {
     const cells = row.cells ?? [];
-    const cell = (key: string) => (at(key) < 0 ? null : stripTags(cells[at(key)]?.content));
+    const cell = (key: string) => (at(key) < 0 ? null : plainText(cells[at(key)]?.content));
     const figure = (key: string) => {
       const value = cell(key);
       if (value === null) return null;
@@ -95,9 +95,4 @@ export function recentGames(raw: RawPlayerProfile): PlayerMatch[] {
     });
   }
   return out;
-}
-
-/** Provider text as text: tags out, entities left for React to escape. */
-function stripTags(value: string | undefined): string | null {
-  return text(value?.replace(/<[^>]*>/g, " ").replace(/\s+/g, " "));
 }

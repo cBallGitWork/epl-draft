@@ -1,6 +1,6 @@
 import { DRAFT_WRITING } from "../../config";
 import { banned } from "../banned";
-import type { Fault, Severity } from "../predictions/checks";
+import { faultLog, type Fault } from "../predictions/checks";
 import { masked, mentionAt, numbersIn, sentences, wordCount } from "../predictions/prose";
 import { repeatsIn } from "../reports/repeats";
 import { REPORT_AMERICAN, REPORT_FPL } from "../reports/words";
@@ -31,8 +31,7 @@ export function allowedFigures(ctx: MatchupContext, block: string): Set<number> 
 }
 
 export function checkDraft(writing: DraftWriting, contexts: readonly MatchupContext[], blocks: readonly string[], cutoff: Cutoff = "gameweek", past: readonly PastProse[] = []): Fault[] {
-  const faults: Fault[] = [];
-  const fault = (section: string, check: string, severity: Severity, evidence: string) => faults.push({ section, check, severity, evidence });
+  const { faults, fault } = faultLog();
   const everyone = contexts.map((ctx) => menOf(ctx).flatMap((m) => m.names));
   // Every side named on the page, next gameweek's opponents too: "test3" is a side, not a 3.
   const sides = [...new Set(contexts.flatMap((c) => [c.state.home.side.name, c.state.away.side.name, ...[c.next.home, c.next.away].flatMap((x) => x?.name ?? [])]))];

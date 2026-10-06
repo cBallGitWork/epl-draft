@@ -1,3 +1,4 @@
+import { groupedBy } from "../grouped";
 import type { LeaguePlayer } from "../league/types";
 import { type Bridge, type MappedEntry, claimedCodes, settledIds } from "./bridge";
 import {
@@ -47,12 +48,7 @@ export function matchPlayers(
 
   const settled = settledIds(existing);
   const pending = fantraxPlayers.filter((player) => !settled.has(player.fantraxId));
-  const byClub = new Map<string, FplCandidate[]>();
-  for (const candidate of fplPlayers) {
-    const club = byClub.get(candidate.clubCode) ?? [];
-    club.push(candidate);
-    byClub.set(candidate.clubCode, club);
-  }
+  const byClub = groupedBy(fplPlayers, (candidate) => candidate.clubCode);
 
   // Seeded from the bridge: codes won on an earlier run are not up for grabs.
   const taken = claimedCodes(existing);

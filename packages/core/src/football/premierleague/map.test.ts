@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import recordedFixture from "../__fixtures__/plFixture.json";
+import { OPTA_TO_CODE as optaToCode } from "../__fixtures__/plFixtureCodes";
 import recordedRound from "../__fixtures__/plRound.json";
 import recordedStats from "../__fixtures__/plMatchStats.json";
 import recordedStreams from "../__fixtures__/plTextstream.json";
@@ -24,17 +25,6 @@ import type { RawPlMatchStats } from "./rawStats";
 const [PLAYED, UNSTARTED] = recordedStreams as unknown as RawPlTextstream[];
 const DETAIL = recordedFixture as unknown as RawPlFixture;
 
-/** FPL's `opta_code` → `code` for both sheets, each man coded as his own id plus a million so a wrong join shows. */
-const optaToCode = new Map(
-  [...(DETAIL.teamLists ?? [])].flatMap((list) =>
-    list === null
-      ? []
-      : [...list.lineup, ...list.substitutes].flatMap((p) =>
-          p.altIds ? [[p.altIds.opta, p.id + 1_000_000] as [string, number]] : [],
-        ),
-  ),
-);
-
 const codes = plPlayerCodes(DETAIL, optaToCode);
 const events = mapMatchEvents(PLAYED.events.content, 2_645_211, codes);
 
@@ -48,7 +38,6 @@ describe("plFixtureCode", () => {
     expect(plFixtureCode(PLAYED.fixture)).toBeNull();
   });
 });
-
 
 describe("mapMatchEvents", () => {
   it("keeps the seven kinds that matter and drops the rest", () => {
@@ -146,7 +135,6 @@ describe("mapMatchEvents", () => {
   });
 });
 
-
 // Gameweek 2's ten fixtures, recorded WITH `altIds=true`, without which there is no join key.
 const ROUND = recordedRound as unknown as RawPlFixturePage;
 
@@ -237,7 +225,6 @@ describe("mapRoundGoals", () => {
     );
   });
 });
-
 
 // `/stats/match/128939`: the same Liverpool 2-2 Nottingham Forest, so the two files describe one match.
 const STATS = recordedStats as unknown as RawPlMatchStats;

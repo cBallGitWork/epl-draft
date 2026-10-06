@@ -1,4 +1,5 @@
-import { BANNED, banned, escapeRegExp } from "../banned";
+import { BANNED, banned } from "../banned";
+import { escapeRegExp } from "../../regExp";
 import { strangers } from "../strangers";
 import { CORE_MARK, type PastLine } from "./past";
 import type { PredictionCall } from "./pick";
@@ -64,8 +65,7 @@ const LIMITS = { sentence: 20, intro: [1, 4, 40], tie: [2, 8, 120], gut: [2, 9, 
 const VERDICT = /\b(?:I|me|my)\b|\bI['’]/u;
 
 export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
-  const faults: Fault[] = [];
-  const fault = (section: string, check: string, severity: Severity, evidence: string) => faults.push({ section, check, severity, evidence });
+  const { faults, fault } = faultLog();
   const sides = new Set(ctx.calls.flatMap((call) => [ctx.name(call.homeTeamId), ctx.name(call.awayTeamId)]));
   const rules = lawroProse(ctx, sides, fault);
 
@@ -129,6 +129,12 @@ export function lawroProse(ctx: CheckContext, sides: ReadonlySet<string>, fault:
 
 /** Where a check files a fault: the section it is in, the rule, how hard, and the words that broke it. */
 export type Report = (section: string, check: string, severity: Severity, evidence: string) => void;
+
+/** A fresh fault list and the `Report` that files into it. */
+export function faultLog(): { faults: Fault[]; fault: Report } {
+  const faults: Fault[] = [];
+  return { faults, fault: (section, check, severity, evidence) => { faults.push({ section, check, severity, evidence }); } };
+}
 
 function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckContext, sides: ReadonlySet<string>, fault: Report): void {
   const [least, most, words] = call.instinct === null ? LIMITS.tie : LIMITS.gut;

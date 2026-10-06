@@ -1,6 +1,7 @@
 import { SHEETS } from "../../config";
-import { BANNED, banned, escapeRegExp } from "../banned";
-import type { Fault, Report } from "../predictions/checks";
+import { BANNED, banned } from "../banned";
+import { escapeRegExp } from "../../regExp";
+import { faultLog, type Fault, type Report } from "../predictions/checks";
 import { masked, ngrams, numbersIn, sentences, wordCount } from "../predictions/prose";
 import { DESK_BANNED } from "../predictions/words";
 import { strangers } from "../strangers";
@@ -53,8 +54,7 @@ export interface SheetsCheck {
 
 
 export function checkSheets(draft: SheetsDraft, ctx: SheetsCheck): Fault[] {
-  const faults: Fault[] = [];
-  const fault: Report = (section, check, severity, evidence) => faults.push({ section, check, severity, evidence });
+  const { faults, fault } = faultLog();
   const teams = ctx.ties.flatMap((tie) => [tie.home, tie.away]);
   const men = teams.flatMap((team) => [...team.sheet.starters, ...team.sheet.bench]).flatMap((man) => [man.player.name, printName(man.player)]);
   const names = [...teams.map((team) => team.sheet.teamName), ...men];

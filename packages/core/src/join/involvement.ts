@@ -1,4 +1,5 @@
 import type { Fixture, FootballPlayer } from "../football/types";
+import { groupedBy } from "../grouped";
 import { type RosteredTeam, isResolved } from "./roster";
 
 // Which matches have one of mine in it, by SQUAD membership, never the lineup: who he holds is public, his XI is not.
@@ -9,13 +10,8 @@ export function fixtureInvolvement(
   team: RosteredTeam,
   fixtures: readonly Fixture[],
 ): Map<number, FootballPlayer[]> {
-  const byClub = new Map<number, FootballPlayer[]>();
-  for (const rostered of team.players) {
-    if (!isResolved(rostered)) continue;
-    const held = byClub.get(rostered.player.clubId);
-    if (held === undefined) byClub.set(rostered.player.clubId, [rostered.player]);
-    else held.push(rostered.player);
-  }
+  const held = team.players.filter(isResolved).map((rostered) => rostered.player);
+  const byClub = groupedBy(held, (player) => player.clubId);
 
   const involved = new Map<number, FootballPlayer[]>();
   for (const fixture of fixtures) {

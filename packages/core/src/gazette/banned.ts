@@ -1,3 +1,5 @@
+import { escapeRegExp } from "../regExp";
+
 // The phrases the paper does not print, and the check that finds them: the prompt's list is generated from these.
 
 /** Register: Craig's own list of American sports-desk voice, and "bank". */
@@ -41,9 +43,4 @@ export function banned(prose: string, list: readonly string[] = BANNED): string[
   return list.filter((phrase) =>
     new RegExp(`(?<![\\p{L}])${escapeRegExp(phrase)}(?![\\p{L}])`, "iu").test(prose),
   );
-}
-
-/** A phrase as a literal inside a RegExp. */
-export function escapeRegExp(phrase: string): string {
-  return phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

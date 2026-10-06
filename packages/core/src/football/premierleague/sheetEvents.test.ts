@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import recordedFixture from "../__fixtures__/plFixture.json";
+import { OPTA_TO_CODE as optaToCode } from "../__fixtures__/plFixtureCodes";
 import type { RawPlFixture, RawPlFixtureEvent } from "./raw";
 import { plManMatches, plSubstitutions } from "./sheetEvents";
 
@@ -7,19 +8,8 @@ import { plManMatches, plSubstitutions } from "./sheetEvents";
 // It has no own goal or red card, so those two are built by hand below.
 const DETAIL = recordedFixture as unknown as RawPlFixture;
 
-/** FPL's `opta_code` → `code` for both sheets, each man coded as his id plus a million so a wrong join shows. */
-const optaToCode = new Map(
-  (DETAIL.teamLists ?? []).flatMap((list) =>
-    list === null
-      ? []
-      : [...list.lineup, ...list.substitutes].flatMap((p) =>
-          p.altIds ? [[p.altIds.opta, p.id + 1_000_000] as [string, number]] : [],
-        ),
-  ),
-);
-
 const men = plManMatches(DETAIL, optaToCode);
-/** His FPL code under the fixture's own coding above. */
+/** His FPL code under `plFixtureCodes.ts`' coding. */
 const of = (plId: number) => men.get(plId + 1_000_000);
 
 const NDOYE = 50623;

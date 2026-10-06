@@ -1,5 +1,6 @@
 import type { Fault } from "../predictions/checks";
-import { escapeRegExp } from "../banned";
+import { escapeRegExp } from "../../regExp";
+import { recordOrEmpty } from "../../untrusted";
 import { pencil } from "../predictions/checks";
 import { numeral } from "./minutes";
 import { REPORT_PENCIL } from "./words";
@@ -65,7 +66,7 @@ export function readHeadlines(raw: Record<string, unknown>): { headlines: string
   const headlines: string[] = [];
   const meanings: Record<string, string> = {};
   for (const h of Array.isArray(raw.headlines) ? raw.headlines : []) {
-    const r = typeof h === "object" && h !== null ? (h as Record<string, unknown>) : {};
+    const r = recordOrEmpty(h);
     const line = typeof r.text === "string" ? correct(r.text.trim()) : "";
     const on = typeof r.playsOn === "string" ? r.playsOn.trim() : "";
     const two = typeof r.twoMeanings === "string" ? r.twoMeanings.trim() : "";

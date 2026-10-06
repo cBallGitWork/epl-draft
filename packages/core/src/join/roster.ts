@@ -1,4 +1,5 @@
 import { playerByCode } from "../football/selectors";
+import { groupedBy } from "../grouped";
 import type { FootballPlayer, FootballSnapshot, PlayerMatchStats } from "../football/types";
 import { type Bridge, type BridgeEntry, isUnmapped } from "../identity/bridge";
 import type { PeriodRosters, RosterSlot } from "../league/types";
@@ -58,7 +59,8 @@ export function resolveRosters(
   bridge: Bridge,
 ): RosteredPeriod {
   const players = playerByCode(snapshot);
-  const stats = statsByPlayer(snapshot);
+  // Built once per call rather than scanned per slot: it runs on every live poll.
+  const stats = groupedBy(snapshot.stats, (row) => row.playerId);
 
   return {
     period: rosters.period,
@@ -86,17 +88,6 @@ function resolveSlot(
 
   // Keyed by FPL's per-season id, safe only because both sides come from one snapshot; the bridge holds codes.
   return { slot, player, stats: stats.get(player.id) ?? [] };
-}
-
-/** Stats grouped by player, built once per call rather than scanned per slot; it runs on every live poll. */
-function statsByPlayer(snapshot: FootballSnapshot): Map<number, PlayerMatchStats[]> {
-  const byPlayer = new Map<number, PlayerMatchStats[]>();
-  for (const row of snapshot.stats) {
-    const rows = byPlayer.get(row.playerId);
-    if (rows) rows.push(row);
-    else byPlayer.set(row.playerId, [row]);
-  }
-  return byPlayer;
 }
 
 /** What to call a rostered slot on screen: the Fantrax id when we cannot name him, never a blank. */

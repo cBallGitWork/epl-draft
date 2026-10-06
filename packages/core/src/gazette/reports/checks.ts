@@ -1,5 +1,5 @@
 import { REPORTS } from "../../config";
-import type { Fault, Report, Severity } from "../predictions/checks";
+import { faultLog, type Fault, type Report } from "../predictions/checks";
 import { mentionAt as mentionExact, numbersIn, sentences, wordCount } from "../predictions/prose";
 import type { MatchDesk } from "./desk";
 import type { ReportPiece, ReportsDraft } from "./draft";
@@ -44,8 +44,7 @@ const SCORE = /\b(\d{1,2})-(\d{1,2})\b/gu;
 const proseOf = (piece: ReportPiece) => [piece.standfirst, piece.account, ...piece.sections.flatMap((s) => [s.head, s.pitch, s.stake])].join("\n");
 
 export function checkReports(draft: ReportsDraft, ctx: ReportsCheck): Fault[] {
-  const faults: Fault[] = [];
-  const fault = (section: string, check: string, severity: Severity, evidence: string) => faults.push({ section, check, severity, evidence });
+  const { faults, fault } = faultLog();
   const allNames = ctx.desks.flatMap(namesOf);
   // Other matches' men, never their clubs: a stake names a next opponent, and a club is no stranger to the page.
   const allMen = ctx.desks.flatMap((d) => d.match.men.map((m) => surname(m.name)));
