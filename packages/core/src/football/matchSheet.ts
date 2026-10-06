@@ -60,7 +60,6 @@ export interface MatchSheetLine {
   yellowCards: number;
   redCards: number;
   saves: number;
-  bonus: number;
   /** FPL's Bonus Points System score for this fixture. **Signed** — see the
    *  header: a bad afternoon runs to -14, and nothing may filter on `> 0`. */
   bps: number;
@@ -75,8 +74,8 @@ export interface MatchSheet {
 
 /** FPL's identifier vocabulary against ours.
  *
- *  Written out rather than camel-cased at runtime: these eleven strings are a
- *  fact about the provider, and a twelfth appearing should be ignored rather
+ *  Written out rather than camel-cased at runtime: these strings are a fact
+ *  about the provider, and one not listed here should be ignored rather
  *  than silently landing in a field nobody declared. `defensive_contribution`
  *  arrived in 25/26 and is the reason that sentence is here. */
 const FIELDS: Record<string, keyof Omit<MatchSheetLine, "playerId" | "side">> = {
@@ -88,7 +87,6 @@ const FIELDS: Record<string, keyof Omit<MatchSheetLine, "playerId" | "side">> = 
   yellow_cards: "yellowCards",
   red_cards: "redCards",
   saves: "saves",
-  bonus: "bonus",
   bps: "bps",
   defensive_contribution: "defensiveContribution",
 };
@@ -135,7 +133,6 @@ function blank(playerId: number, side: "home" | "away"): MatchSheetLine {
     yellowCards: 0,
     redCards: 0,
     saves: 0,
-    bonus: 0,
     bps: 0,
     defensiveContribution: 0,
   };

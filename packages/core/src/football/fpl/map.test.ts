@@ -120,7 +120,6 @@ describe("mapPlayers", () => {
     expect(p.season.tackles).toBe(3);
     expect(p.season.clearancesBlocksInterceptions).toBe(7);
     expect(p.season.recoveries).toBe(19);
-    expect(p.season.bps).toBe(45);
   });
 
   it("reads a missing total as nought rather than as absent", () => {

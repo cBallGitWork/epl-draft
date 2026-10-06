@@ -38,7 +38,7 @@ const snap = (over: Partial<FootballSnapshot> = {}): FootballSnapshot => ({
 const stat = (over: Partial<PlayerMatchStats> & { playerId: number }): PlayerMatchStats => ({
   fixtureId: 1, minutes: 90, goals: 0, assists: 0, cleanSheet: false, goalsConceded: 0,
   ownGoals: 0, penaltiesSaved: 0, penaltiesMissed: 0, yellowCards: 0, redCards: 0,
-  saves: 0, bonus: 0, bps: 0, defensiveContribution: 0, expectedGoals: 0,
+  saves: 0, expectedGoals: 0,
   expectedAssists: 0, fplPoints: 0, starts: 1, ...over,
 });
 

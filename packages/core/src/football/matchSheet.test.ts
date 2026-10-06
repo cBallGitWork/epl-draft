@@ -136,10 +136,8 @@ describe("scoresheet", () => {
     expect(scoresheet([{ ...away[0], line: sent }])).toHaveLength(1);
   });
 
-  it("leaves out a keeper's saves and a man's bonus", () => {
-    // Both belong in a column beside every name. `contributions` counts them as
-    // notable because its list is "what happened"; this list is "who is on the
-    // scoresheet", and four saves is not an entry on one.
+  it("leaves out a keeper's saves", () => {
+    // Saves belong in a column beside every name; four saves is not an entry on the scoresheet.
     const keeper = home.find((r) => r.line.saves >= 4);
     expect(keeper).toBeDefined();
     expect(scoresheet(home).map((r) => r.line.playerId)).not.toContain(keeper?.line.playerId);

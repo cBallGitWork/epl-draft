@@ -89,8 +89,8 @@ table (Bon), Compare (BPS, Bonus), the club and competition boards, a match's bo
 provisional` is `FT`), the rankings (BPS) and the attribute grid: **Determination** read FPL's BPS per 90 and is
 dropped rather than rebased, since no export count measures the same thing. The match sheet no longer orders by BPS:
 each side goes by name, and the scoresheet by what each man did.
-`PlayerMatchStats.bonus`/`.bps` and `MatchSheetLine.bonus`/`.bps` stay mapped: the last is the sheet's appearance
-list, and the others go when nothing at all reads them.
+`MatchSheetLine.bps` stays mapped as the sheet's appearance list; FPL's bonus, BPS and live defensive contribution
+left `PlayerMatchStats`, `MatchSheetLine` and `SeasonTotals` the same day, once nothing read them.
 
 ## Every time is printed in London, Fantrax's included — decided 2 Oct 2026
 

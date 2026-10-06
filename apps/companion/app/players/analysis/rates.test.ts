@@ -26,8 +26,6 @@ function season(over: Partial<Played & SeasonTotals> = {}): Played & SeasonTotal
     recoveries: 0,
     saves: 0,
     goalsConceded: 0,
-    bonus: 0,
-    bps: 0,
     ...over,
   };
 }

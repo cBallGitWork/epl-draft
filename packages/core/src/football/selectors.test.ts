@@ -20,7 +20,7 @@ const player = (id: number, name: string, clubId = 1) => ({
 const stat = (over: Partial<PlayerMatchStats> & { playerId: number }): PlayerMatchStats => ({
   fixtureId: 1, minutes: 90, goals: 0, assists: 0, cleanSheet: false, goalsConceded: 0,
   ownGoals: 0, penaltiesSaved: 0, penaltiesMissed: 0, yellowCards: 0, redCards: 0,
-  saves: 0, bonus: 0, bps: 0, defensiveContribution: 0, expectedGoals: 0,
+  saves: 0, expectedGoals: 0,
   expectedAssists: 0, fplPoints: 0, starts: 1, ...over,
 });
 
@@ -64,12 +64,6 @@ describe("contributions", () => {
       ],
     });
     expect(contributions(s, 1).map((c) => c.player.name)).toEqual(["Rice", "Ødegaard", "Saka"]);
-  });
-
-  it("does not list or rank a man on FPL's bonus, which belongs on the FPL tab alone", () => {
-    const s = snap({ stats: [stat({ playerId: 1, bonus: 3 }), stat({ playerId: 2, yellowCards: 1, bonus: 1, minutes: 60 }), stat({ playerId: 3, yellowCards: 1, bonus: 3, minutes: 50 })] });
-    expect(contributions(s, 1).map((c) => c.player.name)).toEqual(["Ødegaard", "Rice"]);
-    expect(contributions(s, 1)[0]).not.toHaveProperty("bonus");
   });
 
   it("counts a busy keeper as notable but a quiet one as not", () => {

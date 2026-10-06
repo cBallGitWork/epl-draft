@@ -57,8 +57,6 @@ export function mapPlayers(raw: RawBootstrap): FootballPlayer[] {
       recoveries: NUMERIC(e.recoveries),
       saves: NUMERIC(e.saves),
       goalsConceded: NUMERIC(e.goals_conceded),
-      bonus: NUMERIC(e.bonus),
-      bps: NUMERIC(e.bps),
     },
   }));
 }
@@ -144,7 +142,7 @@ const NUMERIC = (v: number | string | undefined): number => {
  *  FPL gives an aggregate `stats` block per player plus an `explain` array with one
  *  entry per fixture. On a double gameweek the aggregate cannot be split, so we
  *  read per-fixture values out of `explain` — the only breakdown FPL publishes.
- *  `explain` covers point-scoring identifiers only, so non-scoring extras (bps, xG)
+ *  `explain` covers point-scoring identifiers only, so non-scoring extras (xG)
  *  are taken from the aggregate and are therefore gameweek totals, not per-match,
  *  whenever a player features twice. That is flagged rather than silently wrong. */
 export function mapLiveStats(live: RawLive): PlayerMatchStats[] {
@@ -198,10 +196,7 @@ function statsFor(
     yellowCards: v("yellow_cards"),
     redCards: v("red_cards"),
     saves: v("saves"),
-    bonus: v("bonus"),
     // Not carried in `explain` — gameweek totals on a double.
-    bps: NUMERIC(agg.bps),
-    defensiveContribution: NUMERIC(agg.defensive_contribution),
     expectedGoals: NUMERIC(agg.expected_goals),
     expectedAssists: NUMERIC(agg.expected_assists),
     // **Counted live before it was mapped** (5 Sep 2026), on this app's own rule
