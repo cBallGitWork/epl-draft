@@ -40,7 +40,8 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
     );
   }
 
-  const known = knownMen(snapshot.players, "unavailable" in pool ? [] : pool.rows);
+  const pooled = "unavailable" in pool ? null : pool;
+  const known = knownMen(snapshot.players, pooled?.rows ?? []);
 
   const sort = projectionSort(query.sort, gameweeks);
   const descending = (query.dir ?? "desc") === "desc";
@@ -60,7 +61,7 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
   );
   const capped = query.all ? shown : shown.slice(0, PAGE_ROWS);
   const clubs = [...new Set([...intelLeagueProjections.values()].map((player) => player.club))].sort();
-  const leaguePositions = "unavailable" in pool ? [] : pool.positions;
+  const leaguePositions = pooled?.positions ?? [];
 
   return (
     <ScoutShell current="projections">
@@ -107,7 +108,7 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
           sort={sort}
           descending={descending}
           href={(key, down) => boardHref(query, { sort: key, dir: down ? "desc" : "asc" }, PROJECTIONS)}
-          teamNames={"unavailable" in pool ? new Map() : pool.teamNames}
+          teamNames={pooled?.teamNames ?? new Map()}
           reader={reader}
         />
       )}

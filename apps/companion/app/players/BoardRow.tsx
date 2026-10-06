@@ -5,7 +5,7 @@ import { positionsLabel } from "../positions";
 import { LABEL, PINNED_NAME, PINNED_TILE, ROW_FIGURE, ROW_NAME } from "@/app/desk";
 import { holderOf, type Held, type Holder as HolderLine } from "./holder";
 
-// What every Data board's row shares: the pinned lead (tile, crest, name, position) and a figure's cell.
+// What every Data board's row shares: the pinned lead (tile, crest, name, position, holder) and a figure's cell.
 
 /** The tile is the desk's; the phone carries position on the name's second line. */
 export const PIN_TILE = `hidden lg:table-cell ${PINNED_TILE}`;
