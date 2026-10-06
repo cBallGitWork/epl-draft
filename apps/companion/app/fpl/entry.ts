@@ -55,6 +55,11 @@ const roundScoring = unstable_cache(
   { revalidate: PAGE_REVALIDATE },
 );
 
+/** Whether FPL has a team with this id; the read fills the cache the page then renders from. */
+export async function knownEntry(entryId: number): Promise<boolean> {
+  return (await readEntry(entryId, (await footballNow()).gameweek)) !== null;
+}
+
 export async function mySide(): Promise<FplSide | null> {
   const entryId = await myEntryId();
   if (entryId === null) return null;
