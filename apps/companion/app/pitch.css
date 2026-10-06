@@ -151,6 +151,8 @@
      OWN width rather than a shared wrapper's, which is what keeps them equal
      through `.bleed` — the strip and the grass bleed together or not at all. */
   container-type: inline-size;
+  /* How much of its card a kit or face takes on the grass (Craig, 6 Oct 2026: "maybe 5%"); 1 off a pitch. */
+  --pitch-kit: 0.95;
 }
 
 .pitch {
@@ -213,8 +215,9 @@
      A multiplier on the ceiling rather than a second formula: the strip is still
      bounded by the same screen and the same grass, so the two cannot be changed
      apart. */
-  max-height: calc(
-    var(--pitch-card-scale, 1) *
+  /* Named so the kit inside can size itself from its width against the same ceiling (`PlayerShirt`). */
+  --pitch-cap: calc(
+    var(--pitch-kit, 1) * var(--pitch-card-scale, 1) *
       max(
     calc(2 * var(--pitch-band)),
     min(
@@ -229,4 +232,7 @@
     )
       )
   );
+  max-height: var(--pitch-cap);
+  max-width: calc(var(--pitch-kit, 1) * 100%);
+  margin-inline: auto;
 }
