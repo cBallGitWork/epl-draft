@@ -111,7 +111,7 @@ export function fetchLiveScoring(leagueId: string, period: number): Promise<RawL
   }) as Promise<RawLiveScoring>;
 }
 
-/** One London day of a period, as the live-scoring page's Timeframe → Date view asks for it (replayed 29 Sep 2026).
+/** One London day of a period, as the live-scoring page's Timeframe → Date view asks for it.
  *  A period's days sum to its total; a date after the period's last match day answers that last day again. */
 export function fetchLiveScoringDay(leagueId: string, period: number, date: string): Promise<RawLiveScoring> {
   return fxpaRead(leagueId, "getLiveScoringStats", {
