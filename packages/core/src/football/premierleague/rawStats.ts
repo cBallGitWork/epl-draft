@@ -44,6 +44,12 @@ export interface RawPlTeamStats {
   stats: RawPlMetric[];
 }
 
+/** `/stats/player/{id}?fixtures={matchId}` — one man's metrics in one match, 31–99 on GW5; `stats` is empty for a
+ *  match he was not on the pitch in. His profile rides along as `entity`, unread. */
+export interface RawPlPlayerStats {
+  stats?: RawPlMetric[];
+}
+
 /** `/teams?comps=&compSeasons=` — the season's twenty clubs. */
 export interface RawPlTeamPage {
   content: RawPlTeam[];

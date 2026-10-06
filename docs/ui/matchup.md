@@ -160,10 +160,11 @@ only question is *why* he is on the number he is on.
 - The category label carries **Fantrax's own definition** behind it (`title`),
   which is where the league's rules are published — what counts as a clean sheet
   is their sentence, not ours.
-- **FPL's record under a drop-down** (`league/FplRecords`): shut it is the words
-  "Full match stats" and a chevron, open it is his minutes, what he did, bps,
-  defensive contribution and the expected family. A different provider answering
-  a different question, so it is the panel under ours and never a column in it.
+- **What he did under a drop-down** (`league/FullMatchStats`): shut it is the words
+  "Full match stats" and a chevron, open it is his counts in the categories the
+  league prices at his slot, DefCon's parts and keeper actions from Opta. A
+  different provider answering a different question, so it is the panel under
+  ours and never a column in it.
 - **Before he kicks off** there is no table: the fixture line under his name says
   when, and an empty breakdown under a live score would read as a score of
   nought.

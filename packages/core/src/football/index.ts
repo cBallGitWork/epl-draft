@@ -40,6 +40,7 @@ export { mapLiveStats, roundPlayed } from "./fpl/map";
 export {
   fetchPlFixture,
   fetchPlMatchStats,
+  fetchPlPlayerMatchStats,
   fetchPlStaff,
   fetchPlTeamStats,
   fetchPlTeams,
@@ -72,6 +73,8 @@ export { fetchHighlightsFeed } from "./highlightsClient";
 export { highlightFor, parseHighlightFeed, parseHighlightTitle } from "./highlights";
 export type { HighlightVideo } from "./highlights";
 export { plMatchBoard } from "./premierleague/matchStats";
+export { plMatchParts, plPlayerId, sumParts } from "./premierleague/playerMatch";
+export type { MatchParts } from "./premierleague/playerMatch";
 export type { MatchStatRow } from "./premierleague/matchStats";
 export { mapRoundBreaks } from "./premierleague/breaks";
 export { plMatchFacts } from "./premierleague/matchFacts";

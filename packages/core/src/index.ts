@@ -23,6 +23,7 @@ export * from "./identity";
 export * from "./join/lineup";
 export * from "./join/cleanSheets";
 export * from "./join/contribution";
+export * from "./join/fullMatchStats";
 export * from "./join/involvement";
 export * from "./join/leagueProjection";
 export * from "./join/leagueProjectionFile";

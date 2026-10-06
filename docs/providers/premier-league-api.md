@@ -60,6 +60,7 @@ are **404 — probed, do not retry**.
 | `/fixtures?comps&compSeasons&gameweekNumbers&altIds=true` | ~25 KB | The round. Live `clock` (a real one — FPL has only `minutes`), `phase`, `halfTimeScore`, `ground`, `matchOfficials`, `attendance`, `altIds` — **and `goals`**: scorer, assister and minute for every goal in all ten matches |
 | `/fixtures/{id}` | ~30 KB | `teamLists` — lineup, substitutes, **formation as lines of player ids**, `matchShirtNumber`, `captain`; plus `matchOfficials`, `attendance`, `halfTimeScore` |
 | `/fixtures/{id}/textstream/EN?pageSize=300` | 4–19 KB | Opta's minute-stamped commentary. **`pageSize=100` truncates** — a full match runs to 107 events |
+| `/stats/player/{id}?fixtures={matchId}` | 7–9 KB | **One man's Opta metrics in one match**, 31–99 of them over GW5's 302 men who played; `stats: []` for a match he was not in. The player card's tackles won, interceptions, blocks, clearances, recoveries, penalties won and keeper actions, which Fantrax's own day sheets match on 282/282 outfielders (6 Oct 2026) |
 
 ### Available and unbuilt
 
