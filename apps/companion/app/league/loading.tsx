@@ -1,4 +1,4 @@
-import Columns, { COLUMNS, deskOnly } from "./Columns";
+import Columns, { COLUMNS, columnKey, shownAt } from "./Columns";
 import LeagueShell from "./Shell";
 import Skeleton from "../components/shell/Skeleton";
 import { BOARD, ROW_RULE } from "@/app/desk";
@@ -32,11 +32,8 @@ export default function Loading() {
             {Array.from({ length: ROWS }, (_, at) => (
               <tr key={at} className={ROW_RULE}>
                 {COLUMNS.map((column) => (
-                  // `column.width` and not just the padding: the width string
-                  // carries the column's VISIBILITY as well as its size, so a
-                  // skeleton that ignores it draws ten cells over the eight the
-                  // answer lands in and the table jumps sideways on arrival.
-                  <td key={column.key} className={`px-1 py-1 ${column.width} ${deskOnly(column.key, "rank")}`}>
+                  // Width and visibility as the answer's, or the table jumps sideways when it lands.
+                  <td key={columnKey(column)} className={`px-1 ${column.width} ${shownAt(column, "rank")}`}>
                     {column.key === "team" ? (
                       // The one cell whose height sets the row's, so the real
                       // rows land inside these boxes rather than pushing them

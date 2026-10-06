@@ -1,7 +1,7 @@
 import type { SortKey } from "@epl/core";
 import { sortHref } from "./sort";
 import { Head, HeadRow, NameHead, PLATE, SortHead, sortedAs } from "../components/league/TableHeads";
-import { TEXT, standDown } from "@/app/desk";
+import { DESK_ONLY, TEXT, standDown } from "@/app/desk";
 
 // The table's column heads, in one place because two files print them: the page
 // and the skeleton it waits behind. They were written out twice, and on 29 Aug
@@ -30,22 +30,22 @@ type Column = {
   title: string | undefined;
   align: "left" | "center";
   width: string;
-  /** A column the phone does without, so the last one — the column the table is
-   *  FOR — fits at 390 without a sideways scroll. */
+  /** A column the phone does without, so the table fits at 390 without a sideways scroll. */
   deskOnly?: true;
+  /** Which of Pts' two copies this is: a phone reads it straight after Pld, a desk at the end. */
+  copy?: keyof typeof COPY;
   /** A column whose head is blank because the column names itself. The label is
    *  still written, and still reaches a screen reader — `TableHeads.MUTE`
    *  carries the argument. */
   mute?: true;
 };
 
-/** One column, and the list is what `colSpan` counts — a rule drawn across the
- *  table needs to know how wide the table is, and a literal 8 here is a number
- *  that goes wrong the day a column is added. It went from eight to ten on
- *  31 Aug 2026, which is the day that mattered. Below `lg` two of the ten are
- *  `display: none` and the rule spans them at zero width, which is harmless and
- *  measured — a `colSpan` of the visible count would need the width the server
- *  does not have.
+const PTS_TITLE = "League points — the commissioner's own, never counted here";
+
+/** Where each copy of Pts shows. A table cell cannot be reordered by CSS, so Pts is printed twice. */
+export const COPY = { phone: "lg:hidden", desk: DESK_ONLY } as const;
+
+/** One column, and the list is what `colSpan` counts: cells hidden at a width are spanned at zero width.
  *
  *  **A football league table, which is what `cm9900/24.jpg` prints.** Its header
  *  reads `Pld Won Drn Lst For Ag Pts` and so does every table in an English
@@ -69,19 +69,20 @@ type Column = {
  *  And `FP` became `For`. It is the same number; a league table calls what you
  *  scored `For`, and the Fantrax abbreviation was the last of the vocabulary.
  *
- *  **Two of the ten heads print nothing** — the placing and the name, which are
+ *  **Two heads print nothing** — the placing and the name, which are
  *  the two columns that label themselves. `TableHeads.MUTE` carries Craig's call
  *  and the reason the words are still written down. */
 export const COLUMNS: readonly Column[] = [
   { key: "rank", label: "Placing", title: "Fantrax's own order", align: "center", width: "w-8 lg:w-14", mute: true },
   { key: "team", label: "Team", title: undefined, align: "left", width: "" },
   { key: "played", label: "Pld", title: "Played — won, drawn and lost added up", align: "center", width: "w-8 lg:w-20" },
+  { key: "pts", label: "Pts", title: PTS_TITLE, align: "center", width: "w-10", copy: "phone" },
   { key: "won", label: "W", title: "Won", align: "center", width: "w-7 lg:w-16" },
   { key: "drawn", label: "D", title: "Drawn", align: "center", width: "w-7 lg:w-16" },
   { key: "lost", label: "L", title: "Lost", align: "center", width: "w-7 lg:w-16" },
   { key: "for", label: "For", title: "Fantasy points scored — Fantrax's FPtsF", align: "center", width: "w-11 lg:w-24" },
   { key: "against", label: "Ag", title: "Fantasy points conceded — Fantrax's FPtsA", align: "center", width: "w-11 lg:w-24", deskOnly: true },
-  { key: "pts", label: "Pts", title: "League points — the commissioner's own, never counted here", align: "center", width: "w-10 lg:w-24" },
+  { key: "pts", label: "Pts", title: PTS_TITLE, align: "center", width: "w-10 lg:w-24", copy: "desk" },
   { key: "form", label: "Form", title: "The last five rounds, oldest first", align: "center", width: "w-14 lg:w-32", deskOnly: true },
 ];
 
@@ -118,6 +119,16 @@ export function deskOnly(key: Column["key"], sort: SortKey): string {
   return standDown(column?.deskOnly, key === sort);
 }
 
+/** The width class a column shows at: its copy's, else `deskOnly`'s. */
+export function shownAt(column: Column, sort: SortKey): string {
+  return column.copy === undefined ? deskOnly(column.key, sort) : COPY[column.copy];
+}
+
+/** A React key for a column, unique though Pts appears twice. */
+export function columnKey(column: Column): string {
+  return column.copy === undefined ? column.key : `${column.key}-${column.copy}`;
+}
+
 /** A column the reader can order by. `form` is a run of letters and `team` a
  *  name, and neither is a quantity. */
 function sortable(key: Column["key"]): key is SortKey {
@@ -140,8 +151,8 @@ export default function Columns({
           if (!sortable(column.key)) {
             return (
               <Head
-                key={column.key}
-                width={`${column.width} ${deskOnly(column.key, sort)}`}
+                key={columnKey(column)}
+                width={`${column.width} ${shownAt(column, sort)}`}
                 title={column.title}
               >
                 <span className={PLATE}>{column.label}</span>
@@ -151,8 +162,8 @@ export default function Columns({
           const here = column.key === sort;
           return (
             <SortHead
-              key={column.key}
-              width={`${column.width} ${deskOnly(column.key, sort)}`}
+              key={columnKey(column)}
+              width={`${column.width} ${shownAt(column, sort)}`}
               title={column.title}
               align={column.align}
               href={sortHref(column.key, sort, descending)}

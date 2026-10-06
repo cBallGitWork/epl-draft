@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { ordinal, type FormGame, type SortKey, type StandingsRow } from "@epl/core";
 import { PointsCell, ROW_LINK } from "../components/league/TableCells";
-import { cellAlign, deskOnly } from "./Columns";
+import { COPY, cellAlign, deskOnly } from "./Columns";
 import { yoursEdge, yoursInk } from "../mine";
 import { FIGURE, FIGURE_CELL, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
 import Absent from "@/app/components/shell/Absent";
+import TeamName from "@/app/components/league/TeamName";
 import { teamHref } from "@/app/squad/routes";
 
 // One team's line in the table.
@@ -50,13 +51,8 @@ import { teamHref } from "@/app/squad/routes";
 // your club alone. Two hues in one row is where a reader starts looking for a
 // meaning that is not there.
 //
-// **And the phone gets fewer columns than the desk.** Ag and Form stand down —
-// a table whose last column is what the table is FOR shows it at 390 without
-// scrolling, and this one is for Pts. For stays, because points-for is a
-// head-to-head league's tiebreak and the reader's own is the number he is here
-// to compare. The call is `Columns.deskOnly`, which the head, this row and the
-// loading skeleton all ask, and which keeps a column visible when the table is
-// ORDERED by it — a hidden cell takes the pressed plate and `aria-sort` with it.
+// **The phone reads Pts straight after Pld and the team's short name** (Craig, 6 Oct 2026), and stands Ag and
+// Form down unless the table is ordered by one (`Columns.deskOnly`). The desk keeps the whole name and CM's order.
 //
 // **Yours is said two ways: the accent edge and the accent NAME.** It was three
 // — edge, weight and a `YOU` chip — and it was four when the name's colour was
@@ -134,7 +130,9 @@ export default function TableRow({
           // scan the table FOR and the figures are what you then read across.
           className={`${ROW_LINK} ${yoursInk(mine)}`}
         >
-          <span className={`min-w-0 truncate ${ROW_NAME}`}>{row.teamName}</span>
+          <span className={`min-w-0 truncate ${ROW_NAME}`}>
+            <TeamName teamId={row.teamId} name={row.teamName} />
+          </span>
           {/* **No YOU chip** (Craig, 5 Sep 2026: "Remove 'you' from all rows
               where it appears. Just use yellow text for the team"). It was here
               on the argument that a label survives a reader who cannot see the
@@ -152,6 +150,7 @@ export default function TableRow({
           `Pld` quieter on the argument that it is the other three added up, and
           the game does not agree: its Pld reads exactly as loud as its Won. */}
       <td className={`${FIGURE} text-ink`}>{row.played}</td>
+      <PointsCell className={COPY.phone}>{row.points}</PointsCell>
       <td className={`${FIGURE} text-ink`}>{row.won}</td>
       <td className={`${FIGURE} text-ink`}>{row.drawn}</td>
       <td className={`${FIGURE} text-ink`}>{row.lost}</td>
@@ -159,7 +158,7 @@ export default function TableRow({
       <td className={`${FIGURE} text-ink`}>{row.pointsFor}</td>
       <td className={`${FIGURE} text-ink ${deskOnly("against", sort)}`}>{row.pointsAgainst}</td>
 
-      <PointsCell>{row.points}</PointsCell>
+      <PointsCell className={COPY.desk}>{row.points}</PointsCell>
 
       {/* After the points, where a modern table prints it — CM's own row ends at
           Pts and has no form guide at all. */}

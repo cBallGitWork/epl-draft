@@ -51,9 +51,9 @@ export function IndexCell({ children, className = "" }: { children: ReactNode; c
 export const ROW_LINK = "cm-row flex min-h-11 items-center gap-2 hover:underline";
 
 /** The points in a block of their own, the way CM ends its table: the eye runs down the column to find them. */
-export function PointsCell({ children }: { children: ReactNode }) {
+export function PointsCell({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <td className="p-0">
+    <td className={`p-0 ${className}`}>
       <span className="cm-index numeric flex min-h-7 items-center justify-center px-1.5">{children}</span>
     </td>
   );
@@ -64,7 +64,7 @@ export function CutRow({ span, label, tone }: { span: number; label: string; ton
   return (
     <tr aria-hidden>
       <td colSpan={span} className="p-0">
-        <span className={`flex items-center gap-2 py-1.5 ${MINOR_LABEL}`}>
+        <span className={`flex items-center gap-2 py-0.5 ${MINOR_LABEL}`}>
           <span className={`flex-1 border-t border-dashed ${tone}`} />
           {label}
           <span className={`flex-1 border-t border-dashed ${tone}`} />
