@@ -10,10 +10,12 @@ import type {
 } from "@epl/core";
 import { lineupDetail, squadDetail, squadUnarranged } from "@epl/core";
 import { widestLine } from "../../../components/league/PitchRows";
+import BackPlate from "../../../components/shell/BackPlate";
 import Caption from "../../../components/shell/Caption";
 import Nothing from "../../../components/shell/Nothing";
 import SquadRows from "../../../components/league/SquadRows";
 import { teamHref } from "@/app/squad/routes";
+import { MATCHUPS } from "../../routes";
 import { SMALL_CAPS } from "@/app/desk";
 
 // What the head-to-head route assembles before it draws anything.
@@ -102,11 +104,20 @@ export function SquadLists({
    *  and says so rather than drawing an empty table. */
   lists: Map<string, SquadDetailLine[]>;
 }) {
-  const half = (side: LeagueTeam) => {
+  // The top of the page on a phone, so the first side's caption carries the way back.
+  const half = (side: LeagueTeam, top: boolean) => {
     const lines = lists.get(side.teamId);
+    const caption = <Caption>{side.name}</Caption>;
     return (
       <section key={side.teamId} className="flex min-w-0 flex-1 flex-col gap-1">
-        <Caption>{side.name}</Caption>
+        {top ? (
+          <div className="flex min-h-11 items-stretch lg:min-h-0">
+            <BackPlate fallback={MATCHUPS} />
+            <div className="grid min-w-0 flex-1">{caption}</div>
+          </div>
+        ) : (
+          caption
+        )}
         {lines === undefined ? (
           <Nothing title="No roster" code={side.teamId}>
             Fantrax sent no roster for {side.name}.
@@ -123,8 +134,8 @@ export function SquadLists({
 
   return (
     <div className="flex flex-col gap-2 lg:flex-row lg:items-start">
-      {half(team)}
-      {half(opponent)}
+      {half(team, true)}
+      {half(opponent, false)}
     </div>
   );
 }

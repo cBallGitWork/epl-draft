@@ -15,7 +15,9 @@ decides only the ground: the page is drawn over the home team's venue
    middle either side of the `v`. Each half is the control that opens that
    side's team below; the open half is raised and carries a foot bar. Your own
    name reads in accent, the standard "this is yours" mark. **One number per
-   side and nothing beside it** — see the constraint below.
+   side and nothing beside it** — see the constraint below. A phone gets the
+   `←` back plate at its left, as a match does. Before a ball is kicked the board
+   is two squad lists, and the plate sits beside the first one's name.
 2. **A four-plate blue tab strip** — `Lineups · Stats · Fixtures · Table`, each a link
    (`?view=`, Lineups the default; `views.ts`), so a refresh or a shared link keeps
    the tab. One word per label: the strip has to fit 390.

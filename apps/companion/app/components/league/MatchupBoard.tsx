@@ -7,6 +7,8 @@ import {
   inkOn,
   teamColours,
 } from "@epl/core";
+import { MATCHUPS } from "../../league/routes";
+import BackPlate from "../shell/BackPlate";
 import TabStrip, { type Tab } from "../shell/TabStrip";
 
 // The head-to-head at full size: both totals side by side, and one manager's
@@ -85,6 +87,7 @@ export default function MatchupBoard<K extends string>({
           about either side; a period that has opened always has two figures, and
           one that has not gives two dashes, which say it themselves. */}
       <div className="flex items-stretch">
+        <BackPlate fallback={MATCHUPS} />
         <Side side={team} open={open === "team"} onOpen={() => setOpen("team")} />
         <Side side={opponent} open={open === "opponent"} onOpen={() => setOpen("opponent")} />
       </div>
