@@ -69,7 +69,7 @@ export interface PublishedStory {
 }
 
 /** The paper file as committed: every story currently in print. */
-export interface PublishedPaper {
+interface PublishedPaper {
   updatedAt: string;
   stories: PublishedStory[];
 }

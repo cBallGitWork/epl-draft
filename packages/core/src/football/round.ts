@@ -82,7 +82,7 @@ export function secondsToLive(snapshot: FootballSnapshot, fixtures: readonly Fix
 }
 
 /** How settled a finished round is: bonus still landing, bonus in, or signed off by FPL. */
-export type FinishedState = "bonus-settling" | "provisional" | "final";
+type FinishedState = "bonus-settling" | "provisional" | "final";
 
 /** A finished round's rung: `finished_provisional` is bonus-settling, bonus in is provisional, `data_checked` is final.
  *  Null while in play and before kickoff alike; `isMatchdayLive` tells them apart. Undated fixtures are ignored. */

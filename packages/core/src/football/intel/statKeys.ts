@@ -2,7 +2,7 @@
 // stats league by `npm run stats`; which Fantrax column fills each key is the script's business.
 
 /** A count a rate can be taken of, or what a rate is taken over. */
-export type StatKind = "count" | "denominator";
+type StatKind = "count" | "denominator";
 
 export const STAT_COLUMNS = [
   { key: "appearances", kind: "denominator" },

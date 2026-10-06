@@ -43,7 +43,7 @@ export function defaultDescendingTable(key: TableSortKey): boolean {
 }
 
 /** A club and its place in the table, fixed before any re-ordering and carried through it. */
-export interface PlacedRow {
+interface PlacedRow {
   row: TableRow;
   /** 1-based, and the table's own — never the position in the sorted list. */
   place: number;

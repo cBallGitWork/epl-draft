@@ -24,7 +24,7 @@ import { wordsFor } from "./categoryWords";
 // The categories a league can pay a player for, keyed by getPlayerStats' column abbreviation: a squad's Stats board.
 
 /** A category the squad board can show, under Fantrax's own column abbreviation: `G`, `AF`, `CS`. */
-export interface PlayerCategory {
+interface PlayerCategory {
   key: string;
   /** Its column head; display only, as reads are filed under `key`. */
   head: string;

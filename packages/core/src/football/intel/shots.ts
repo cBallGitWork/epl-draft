@@ -58,12 +58,6 @@ export function assistsOf(shots: ReadonlyMap<number, readonly Shot[]>, code: num
   return made;
 }
 
-/** One man's shots, across every fixture or just one. */
-export function shotsOf(shots: Shot[] | undefined, fixture: number | null): Shot[] {
-  if (shots === undefined) return [];
-  return fixture === null ? shots : shots.filter((shot) => shot.fplFixtureId === fixture);
-}
-
 function inside(value: number): boolean {
   return typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 100;
 }

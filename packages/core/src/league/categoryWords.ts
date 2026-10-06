@@ -24,7 +24,7 @@ import type { ScoringCategory } from "./scoring";
 // Fantrax's scoring categories in plain football words, by meaning: its captions say "Assists (Total)".
 
 /** A category's name on a box, a band or a menu, its line in a board's key or a head's title, and its column head. */
-export interface CategoryWords {
+interface CategoryWords {
   name: string;
   key: string;
   /** Display only: reads stay filed under Fantrax's code. */

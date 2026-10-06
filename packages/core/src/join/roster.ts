@@ -23,7 +23,7 @@ export interface ResolvedPlayer {
   stats: PlayerMatchStats[];
 }
 
-export interface UnresolvedPlayer {
+interface UnresolvedPlayer {
   slot: RosterSlot;
   unresolved: Unresolved;
 }

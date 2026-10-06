@@ -8,7 +8,7 @@ import { playerName, type RosteredPlayer, type RosteredTeam } from "./roster";
 const PITCH_ORDER = ["G", "D", "M", "F"];
 
 /** One row of the pitch: everyone the manager has playing in that position. */
-export interface LineupLine {
+interface LineupLine {
   /** Fantrax's letter, verbatim and never translated. */
   position: string;
   players: RosteredPlayer[];

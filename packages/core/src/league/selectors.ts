@@ -77,7 +77,7 @@ export function leaguePool(
 }
 
 /** One team's pairing this period, told from that team's side; undefined (a bye, an unscheduled period) is ordinary. */
-export interface HeadToHead {
+interface HeadToHead {
   /** The team asked about. */
   team: LeagueTeam;
   opponent: LeagueTeam;

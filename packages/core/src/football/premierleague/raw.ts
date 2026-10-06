@@ -64,7 +64,7 @@ export interface RawPlFormation {
   players: number[][];
 }
 
-export interface RawPlTeamList {
+interface RawPlTeamList {
   teamId: number;
   lineup: RawPlSquadPlayer[];
   substitutes: RawPlSquadPlayer[];
@@ -79,7 +79,7 @@ export interface RawPlOfficial {
 
 /** A goal on the gameweek's fixtures read, which answers every goal of all ten matches in one request.
  *  `personId` and `assistId` are Premier League player ids, the space of the commentary's `playerIds`. */
-export interface RawPlGoal {
+interface RawPlGoal {
   personId: number;
   /** Absent when nobody was credited with the assist. */
   assistId?: number;

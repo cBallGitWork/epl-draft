@@ -3,7 +3,7 @@ import { masked, sentences } from "../predictions/prose";
 // The sub-editor's ear for repetition: a phrase said twice in one match, a word leaned on across a match or the page,
 // and sentences that open the same way.
 
-export interface Repeat {
+interface Repeat {
   /** The match it is in, or null when it is across the page. */
   code: number | null;
   kind: "phrase" | "word" | "opener";

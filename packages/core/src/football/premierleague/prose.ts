@@ -35,7 +35,7 @@ function ampersandVariants(name: string): string[] {
 
 /** One run of Opta's sentence: `event` its opening clause (`Goal!`, `Corner, MUN.`), `name` a man on either sheet,
  *  and `plain` the rest. */
-export interface ProseSpan {
+interface ProseSpan {
   text: string;
   kind: "event" | "name" | "plain";
 }

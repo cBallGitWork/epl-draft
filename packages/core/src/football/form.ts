@@ -3,7 +3,7 @@ import type { Fixture, PlayerMatchStats } from "./types";
 // Has he been playing: minutes, starts and appearances off FPL's live rows, which score nothing under anybody's rules.
 
 /** One round's live rows, as `gameweekLive` hands them over. */
-export interface RoundStats {
+interface RoundStats {
   gameweek: number;
   stats: readonly PlayerMatchStats[];
 }

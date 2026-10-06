@@ -3,7 +3,7 @@
 
 // `isAssumed` travels with the bridge, so no caller re-derives which rows a person stands behind.
 export { fplCodeOf, isAssumed, isUnmapped, mergeBridge } from "./bridge";
-export type { Bridge, BridgeEntry, MappedEntry } from "./bridge";
+export type { Bridge, MappedEntry } from "./bridge";
 // Fantrax and FPL disagree on two club codes, so a club asset keyed off a Fantrax code translates first.
 export { toFantraxClubCode, toFplClubCode } from "./clubCodes";
 // The normaliser, for a script that matches names once into a checked-in file and must fold them as the bridge does.
@@ -13,5 +13,3 @@ export type { FplCandidate } from "./match";
 // The residue split travels with the matcher, to sort its proposals into assumed and for review.
 export { assumeUnmapped } from "./unmapped";
 export type { UnmappedSplit } from "./unmapped";
-// The classifier stays internal: callers read `MappedEntry.agreement`, never recompute it.
-export type { NameAgreement } from "./similarity";

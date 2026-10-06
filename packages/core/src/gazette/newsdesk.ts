@@ -25,7 +25,7 @@ export interface Assignment {
   round?: { period: number; gameweek: number };
 }
 
-export interface DeskTie {
+interface DeskTie {
   homeTeamId: string;
   awayTeamId: string;
   state: TieState;

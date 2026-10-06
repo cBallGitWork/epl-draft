@@ -2,7 +2,7 @@
 // `/credits` prints the credits from this table, so a row with no `author` is a licence breach.
 // Files under `public/ground/clubs/` are capped at 1920px on the long edge, never upscaled.
 
-export interface GroundPhoto {
+interface GroundPhoto {
   /** Under `public/`, so `next/image` optimises it like any other asset. */
   src: string;
   /** The file's own name on Commons, which is what the credit line calls it. */

@@ -5,7 +5,6 @@ import type {
   IntelSquads,
   IntelStarter,
   IntelTaker,
-  IntelXi,
 } from "./types";
 
 // Reads the sister repo's already-parsed export and refuses what is wrong. A null position must stay null:
@@ -100,12 +99,4 @@ export function setPieceRanks(
     const at = here.findIndex((taker) => taker.code === code);
     return { piece, label, rank: at === -1 ? null : at + 1, of: here.length };
   });
-}
-
-/** How old the prediction is in whole hours, off `fetchedAt` and never `exportedAt`; null when it will not say. */
-export function predictionAge(xi: IntelXi | null, now: Date): number | null {
-  if (xi?.fetchedAt == null) return null;
-  const at = new Date(xi.fetchedAt).getTime();
-  if (Number.isNaN(at)) return null;
-  return Math.floor((now.getTime() - at) / 3_600_000);
 }

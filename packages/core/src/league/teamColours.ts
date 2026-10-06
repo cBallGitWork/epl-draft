@@ -2,7 +2,7 @@
 // Spent only on the team's own title bar and each side of a head-to-head.
 
 /** A team's plate and its trim: `ClubColours`' shape, declared apart because the layers may not import each other. */
-export interface TeamColours {
+interface TeamColours {
   /** The plate the team's name is set on. */
   primary: string;
   /** Trim, for anything that needs a second colour off the same identity. */

@@ -5,7 +5,7 @@ import { storylinesBlock } from "./storylines";
 // The one brief carrying copy somebody else wrote, quarantined in its own block; the story is the manager it hits.
 
 /** One wire item, with the league's stake in it already worked out. */
-export interface NewsAngle {
+interface NewsAngle {
   item: NewsItem;
   /** The men in our league the item is about, with their owners; an item with none is not filed. */
   affected: { playerName: string; ownerName: string }[];

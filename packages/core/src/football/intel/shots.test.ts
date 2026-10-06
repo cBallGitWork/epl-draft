@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { IntelShots, Shot } from "./shots";
-import { assistsOf, shotIntel, shotsInFixture, shotsOf } from "./shots";
+import { assistsOf, shotIntel, shotsInFixture } from "./shots";
 
 const MANIFEST = { season: "26-27", gameweek: null, exportedAt: "", rows: 0, sources: [] };
 
@@ -47,22 +47,6 @@ describe("shotIntel", () => {
 
   it("survives a file that is not there", () => {
     expect(shotIntel(null).size).toBe(0);
-  });
-});
-
-describe("shotsOf", () => {
-  const map = shotIntel(file([shot(), shot({ fplFixtureId: 9 })]));
-
-  it("takes one fixture when asked", () => {
-    expect(shotsOf(map.get(1), 9)).toHaveLength(1);
-  });
-
-  it("takes the season when not", () => {
-    expect(shotsOf(map.get(1), null)).toHaveLength(2);
-  });
-
-  it("has nothing to say about a man who is not in the file", () => {
-    expect(shotsOf(undefined, null)).toEqual([]);
   });
 });
 

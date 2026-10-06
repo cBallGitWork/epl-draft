@@ -1,13 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
   predictedEleven,
-  predictionAge,
   setPieceOrder,
   setPieceRanks,
   squadIntel,
   xiFault,
 } from "./map";
-import type { IntelClubXi, IntelPlayer, IntelSquads, IntelXi } from "./types";
+import type { IntelClubXi, IntelPlayer, IntelSquads } from "./types";
 
 function player(code: number, over: Partial<IntelPlayer> = {}): IntelPlayer {
   return {
@@ -187,26 +186,5 @@ describe("setPieceRanks", () => {
     const [pens, corners] = setPieceRanks(city, PIECES, 9, everyone);
     expect(pens).toMatchObject({ rank: null, of: 3 });
     expect(corners).toMatchObject({ rank: null, of: 0 });
-  });
-});
-
-describe("predictionAge", () => {
-  const xi = (fetchedAt: string | null): IntelXi => ({
-    manifest: MANIFEST,
-    fetchedAt,
-    source: "ffscout",
-    clubs: {},
-  });
-
-  it("ages the SOURCE and not the export", () => {
-    // Re-running the export does not make FFScout's last look any newer: `exportedAt` is the wrong clock.
-    const age = predictionAge(xi("2026-09-03T12:00:00Z"), new Date("2026-09-03T18:00:00Z"));
-    expect(age).toBe(6);
-  });
-
-  it("says nothing rather than guessing when the source will not say", () => {
-    expect(predictionAge(xi(null), new Date())).toBeNull();
-    expect(predictionAge(xi("not a date"), new Date())).toBeNull();
-    expect(predictionAge(null, new Date())).toBeNull();
   });
 });

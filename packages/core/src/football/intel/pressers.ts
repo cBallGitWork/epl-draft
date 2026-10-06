@@ -34,7 +34,7 @@ export interface PresserQuote {
 }
 
 /** A club that held a press conference, signal or not: a clean bill of health is news too. */
-export interface PresserSpoke {
+interface PresserSpoke {
   club: number;
   manager: string | null;
   at: string;

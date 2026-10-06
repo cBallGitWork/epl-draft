@@ -5,14 +5,14 @@ import { numeric, season, type RawPoolStats } from "./stats";
 // is every category Fantrax has. Read by `scipId` (`5010#6120#-1`: group, stat, a constant), because
 // short names repeat (`CS` twice, `CF` twice) and the id does not. Fixed columns carry no `scipId`.
 
-export interface SheetColumn {
+interface SheetColumn {
   /** Fantrax's stat id, the `scipId`'s middle part: the same in both groups (`6120` is minutes). */
   stat: string;
   short: string;
   name: string;
 }
 
-export interface SheetLine {
+interface SheetLine {
   fantraxId: string;
   /** In `columns` order; null where the cell printed nothing. */
   values: (number | null)[];

@@ -16,7 +16,7 @@ export { clubColours, clubColoursOf, clubGround, crestForShortName, crestUrl, in
 export type { ClubColours } from "./clubs";
 // The photograph behind a club's own screens, and the credit it must carry.
 export { clubGroundPhoto, groundPhotoCredits } from "./grounds";
-export type { GroundPhoto, PhotoCredit } from "./grounds";
+export type { PhotoCredit } from "./grounds";
 export { initials, portraitUrl } from "./portraits";
 export { getFootballSnapshot } from "./snapshot";
 // The whole-season fixture list and the raw bootstrap, which scripts want and `getFootballSnapshot` does not serve.
@@ -42,7 +42,6 @@ export {
   plFixtureCode,
   plCommentary,
   worthReading,
-  plMatchMetrics,
 } from "./premierleague/map";
 export type { PlCommentaryLine } from "./premierleague/map";
 export { plPlayerCodes, plTeamSheets } from "./premierleague/teamSheet";
@@ -56,10 +55,10 @@ export { creditSide } from "./premierleague/assistKinds";
 export type { AssistKinds } from "./premierleague/assistKinds";
 export { creditRoundAssists, streamRedCards } from "./premierleague/wire";
 export type { FixtureStream } from "./premierleague/wire";
-export { injuredOff, injuryMinutes, saysInjury } from "./premierleague/injuries";
+export { injuryMinutes, saysInjury } from "./premierleague/injuries";
 export type { StreamCredit } from "./premierleague/assists";
 export { fetchHighlightsFeed } from "./highlightsClient";
-export { highlightFor, parseHighlightFeed, parseHighlightTitle } from "./highlights";
+export { highlightFor, parseHighlightFeed } from "./highlights";
 export type { HighlightVideo } from "./highlights";
 export { plMatchBoard } from "./premierleague/matchStats";
 export { plMatchParts, plPlayerId, sumParts } from "./premierleague/playerMatch";
@@ -69,22 +68,13 @@ export { mapRoundBreaks } from "./premierleague/breaks";
 export { plMatchFacts } from "./premierleague/matchFacts";
 export { plMoments } from "./premierleague/moments";
 export { plManager } from "./premierleague/staff";
-export type { MomentKind, PlMoment } from "./premierleague/moments";
-export type { PlShot } from "./premierleague/momentWords";
 export { proseSpans, shortProse } from "./premierleague/prose";
-export type { ProseSpan } from "./premierleague/prose";
 export type { PlMatchFacts } from "./premierleague/matchFacts";
 export type { RoundBreak } from "./premierleague/breaks";
 export type {
-  RawPlEvent,
   RawPlFixture,
-  RawPlFixturePage,
-  RawPlFixtureEvent,
-  RawPlGoal,
-  RawPlTeamList,
-  RawPlTextstream,
 } from "./premierleague/raw";
-export type { RawPlMatchStats, RawPlMetric, RawPlTeamPage, RawPlTeamStats } from "./premierleague/rawStats";
+export type { RawPlTeamStats } from "./premierleague/rawStats";
 export { plClubSeason } from "./premierleague/clubSeason";
 export type { PlClubSeason } from "./premierleague/clubSeason";
 // One player's season match by match, keyed by FPL's per-season element id.
@@ -100,27 +90,27 @@ export { goalMinutes, loggedPlayers, matchIntel, matchLine, subNote } from "./in
 export { averageTouchPosition, touchFixtures, touchIntel, touchesOf } from "./intel/touches";
 export type { IntelTouches, Touch, TouchCentre, TouchPlayer } from "./intel/touches";
 // Every shot, flipped onto the touch clouds' orientation.
-export { assistsOf, shotIntel, shotsInFixture, shotsOf } from "./intel/shots";
+export { assistsOf, shotIntel, shotsInFixture } from "./intel/shots";
 export { careerIntel, seasonKey } from "./intel/careers";
 export type { IntelCareers } from "./intel/careers";
 export { cupIntel, cupName, tmlCupTies, seasonRun } from "./intel/cups";
 export type { CupTie, IntelCups, RunEntry, TmlRow } from "./intel/cups";
-export { depthIntel, depthLines, spotsOf } from "./intel/depth";
+export { depthIntel, depthLines } from "./intel/depth";
 export type { ClubDepth, DepthHolder, DepthSlot, DepthSpot, IntelDepth } from "./intel/depth";
 // Season-to-date event counts off the stats league, in football terms and keyed on FPL code.
 export { STAT_COLUMNS } from "./intel/statKeys";
-export type { StatKey, StatKind } from "./intel/statKeys";
+export type { StatKey } from "./intel/statKeys";
 export { columnDrift, per90, stat, statIntel } from "./intel/stats";
 export type { IntelStats, StatsRow } from "./intel/stats";
 // A window of recent gameweeks, for narrowing the intel to recent form.
 export { fixtureGameweeks, gameweekSpan, inGameweeks, lastPlayed } from "./intel/window";
 export type { IntelShots, Shot } from "./intel/shots";
 // Each club's Dixon-Coles strength from the sister repo, ranked 1–20 as an opponent for the fixture planner.
-export { easeRanks, easeStep, plannerGameweeks, plannerRows, strengthIntel, strengthPlaces, strengthTable } from "./intel/strength";
+export { easeStep, plannerGameweeks, plannerRows, strengthIntel, strengthPlaces, strengthTable } from "./intel/strength";
 export type { ClubStrength, IntelStrength, PlannerCell, PlannerRow, PlannerView, StrengthRank } from "./intel/strength";
 // The sister model's projected FPL points per player per gameweek, for the Projections tab.
-export { PROJECTION_PARTS, nextGameweeks, projectedPlace, projectedPoints, projectedTotal, projectionIntel } from "./intel/projections";
-export type { IntelProjections, ProjectedPlace, ProjectedPlayer, ProjectedGameweek, ProjectionPart } from "./intel/projections";
+export { nextGameweeks, projectedPlace, projectedPoints, projectionIntel } from "./intel/projections";
+export type { IntelProjections, ProjectedPlace, ProjectedPlayer, ProjectedGameweek } from "./intel/projections";
 export type { MatchSheet, MatchSheetLine, SheetRow } from "./matchSheet";
 // His completed seasons before this one.
 export { mapPastSeasons } from "./seasons";
@@ -150,7 +140,7 @@ export type { MatchContribution } from "./selectors";
 export { availabilityOf, doubtBand, isDoubtful, onTheBooks } from "./playerState";
 export type { Availability, DoubtBand, PlayerState } from "./playerState";
 export { formByPlayer, playedRounds } from "./form";
-export type { PlayerForm, RoundStats } from "./form";
+export type { PlayerForm } from "./form";
 
 // Where a round stands in time, as against what a snapshot contains.
 export {
@@ -164,7 +154,7 @@ export {
   roundState,
 } from "./round";
 // `roundFinished` is not exported: it cannot say "live", and `roundState` is the pairing callers want.
-export type { FinishedState, RoundState } from "./round";
+export type { RoundState } from "./round";
 // A played round rewound to a moment inside it, for rehearsing the Live tab; `app/clock.ts` is the only caller.
 export { before, rewindRound, roundAt } from "./replay";
 export { fixtureLabel, kickedOff, matchesOver, nextFixtures, oppositionByClub } from "./opposition";
@@ -173,7 +163,6 @@ export type { TableRow } from "./table";
 export { clubStats } from "./clubStats";
 export {
   predictedEleven,
-  predictionAge,
   setPieceOrder,
   setPieceRanks,
   squadIntel,
@@ -187,7 +176,7 @@ export {
   placed,
   sortTable,
 } from "./tableOrder";
-export type { PlacedRow, TableSortKey } from "./tableOrder";
+export type { TableSortKey } from "./tableOrder";
 export type { ClubRecord, ClubStats, Result } from "./clubStats";
 export type {
   IntelClubPieces,
@@ -207,9 +196,9 @@ export type {
 } from "./intel/types";
 export type { Opposition } from "./opposition";
 export { FIRM, pressers } from "./intel/pressers";
-export type { IntelPressers, PresserQuote, PresserSignal, PresserSpoke } from "./intel/pressers";
+export type { IntelPressers, PresserQuote, PresserSignal } from "./intel/pressers";
 export { intelFreshness } from "./intel/freshness";
 export type { IntelKind } from "./intel/freshness";
 // A club's strength as the season has gone so far, for weighing a match by its opponent.
 export { clubResults, strengthBefore, STRENGTH_SO_FAR } from "./seasonStrength";
-export type { ClubResult, StrengthSoFar } from "./seasonStrength";
+export type { ClubResult } from "./seasonStrength";

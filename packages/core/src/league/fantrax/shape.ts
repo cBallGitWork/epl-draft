@@ -48,7 +48,7 @@ export function shapeOf(value: unknown, prefix = ""): Set<string> {
   return paths;
 }
 
-export interface ShapeDiff {
+interface ShapeDiff {
   /** In the reference and absent from the subject, unexplained: the dangerous list, each one read as `undefined`. */
   missing: string[];
   /** In the reference and absent only because its collection came back empty, as before a draft; counted, never listed. */

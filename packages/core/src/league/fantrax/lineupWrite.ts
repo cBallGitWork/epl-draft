@@ -24,7 +24,7 @@ export interface LineupState {
 export type FieldMap = Record<string, { posId: string; stId: string }>;
 
 /** Why a plan cannot be turned into a write. */
-export type PlanRefusal = "squad-changed" | "unknown-status" | "not-eligible";
+type PlanRefusal = "squad-changed" | "unknown-status" | "not-eligible";
 
 export type WriteAnswer = { ok: true } | { ok: false; messages: string[] };
 

@@ -7,7 +7,7 @@ import { roundRobin } from "./roundRobin";
 import { scheduleRounds } from "./schedule";
 
 /** One cup match before anyone is drawn into it. `code` is how a later round names it ("M5"). */
-export interface CupFixture {
+interface CupFixture {
   code: string | null;
   home: string;
   away: string;

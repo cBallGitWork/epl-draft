@@ -9,7 +9,7 @@ export interface CupResult {
   awayPoints: number | null;
 }
 
-export interface GroupRow {
+interface GroupRow {
   teamId: string;
   played: number;
   won: number;
