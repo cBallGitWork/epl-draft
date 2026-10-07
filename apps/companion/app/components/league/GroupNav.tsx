@@ -23,7 +23,7 @@ export default function GroupNav({
           key={entry.key}
           href={href(entry.key)}
           aria-current={entry.key === group ? "page" : undefined}
-          className={`${TAB} min-h-11 px-2 text-2xs lg:min-h-9`}
+          className={`${TAB} cm-tab-quiet px-2 text-2xs`}
         >
           {/* The short words keep five plates on one row at 390. */}
           <span className="lg:hidden">{entry.short}</span>
