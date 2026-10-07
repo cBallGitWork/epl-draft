@@ -71,3 +71,11 @@ export async function captureReads(dir: string): Promise<{ ok: number; failed: n
     failed: reads.filter((read) => read.ok !== true).length,
   };
 }
+
+/** Whether every one of `dirs` recorded at least one read: when the backup capture stands down. */
+export async function everyDayCaptured(dirs: readonly string[]): Promise<boolean> {
+  for (const dir of dirs) {
+    if (((await captureReads(dir))?.ok ?? 0) === 0) return false;
+  }
+  return true;
+}

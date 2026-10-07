@@ -44,6 +44,28 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## Alerts are issues assigned to the owner — decided 7 Oct 2026
+
+Craig, 7 Oct: "silent not acceptable". intel-check had been red 10 of 17 days, capture failed 26–28 Sep, the
+sister's Scout scrape stopped on 28 Sep for nine days, and `warm.yml` went red three times on 5 Oct, all unseen:
+GitHub mails a failed cron only to whoever last edited its line, and the Mac showed a banner at most.
+
+- **One issue per failing job, `alert: <source>`, labelled `alert` and assigned to cBallGitWork**, whom GitHub
+  emails. `scripts/ci/alert.sh` opens it on `fail`, comments only after 6 quiet hours (the 30-minute jobs would
+  flood the inbox), and closes it on the next `ok`. The repo is public, so a message is a run URL or a sentence.
+  No new secrets: `github.token` with `issues: write`.
+- **Every scheduled workflow's last steps** call it: `fail` on `failure() || cancelled()` (a timeout is a cancel),
+  `ok` on `success()`. The source is the workflow's file name.
+- **The Mac reaches it through `alert.yml`**, a dispatch whose run name is `alert <source> <state>`.
+  `scripts/sync-intel.sh` ends every run in one, `intel-<mode> ok` or `fail`, "nothing changed" included, from an
+  `EXIT` trap when it dies. Soft findings have their own sources, so the run's `ok` cannot close them:
+  `intel-<mode>-stale`, `intel-scout-scrape`, `intel-pressers-ingest`, `intel-cups`.
+- **The Mac exports what the GitHub sweep wrote.** `scripts/sister-export.py` holds the sister's sweep lock, restores
+  `derived,signals,match_logs,staging/understat,raw/fpl/live/bootstrap` from R2 (the bootstrap was 9 days old on the
+  Mac on 7 Oct, and the export reads its gameweek), judges the newest sweep report, then exports.
+- **A job that never ran** reports nothing; a watchdog follows in its own PR. The export moves into the sister's CI
+  after GW6.
+
 ## Functions run in London (lhr1) — decided 7 Oct 2026
 
 `x-vercel-id` read `lhr1::iad1`: every tap was served from London and rendered in Washington, and most of the league

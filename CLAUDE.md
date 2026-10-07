@@ -225,7 +225,8 @@ never in an issue.
 **Labels** live only in GitHub. Type, exactly one: `feat` `fix` `refactor` `docs` `chore`. Area,
 at most one: `paper` `desk` `league` `football` `ci` `intel`. State, only when true: `blocked`
 (name the blocker and who can clear it) and `swap-day`. No `parked` or `deferred` label, and no
-label for the commit-only prefixes `perf`, `test` and `probe`. One milestone: `7 Oct — go live`.
+label for the commit-only prefixes `perf`, `test` and `probe`. One milestone: `7 Oct — go live`. `alert` is the
+bot's: `scripts/ci/alert.sh` opens one issue per failing job and closes it when the job next goes green.
 
 **`@claude` on a PR** asks `.github/workflows/claude.yml` for a review. It answers only an owner,
 member or collaborator, and it reviews, never merges.

@@ -1,0 +1,50 @@
+name: Alert
+
+# The Mac's way into `scripts/ci/alert.sh`: `sync-intel.sh` dispatches this with its source and state, and the run's
+# name carries both, so the watchdog can tell a Mac job that ran from one that never did. A bad source fails the run,
+# and GitHub's own failure email is the second channel.
+
+run-name: alert ${{ inputs.source }} ${{ inputs.state }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      source:
+        description: "The job, lowercase letters, digits and dashes (intel-pressers)"
+        required: true
+        type: string
+      state:
+        required: true
+        type: choice
+        options: [fail, ok]
+      message:
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+  issues: write
+
+# One source at a time, so two quick fails cannot open two issues. Never cancelled: each run is a report.
+concurrency:
+  group: alert-${{ inputs.source }}
+  cancel-in-progress: false
+
+jobs:
+  alert:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          sparse-checkout: scripts/ci
+
+      - name: Open, update or close the issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE: ${{ inputs.source }}
+          STATE: ${{ inputs.state }}
+          MESSAGE: ${{ inputs.message }}
+        run: scripts/ci/alert.sh "$SOURCE" "$STATE" "$MESSAGE"

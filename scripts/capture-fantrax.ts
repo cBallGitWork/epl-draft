@@ -10,6 +10,7 @@ import {
 import { type CaptureTarget, captureDay } from "./capture/day";
 import { RECORDED_LEAGUES } from "./leagues";
 import { SNAPSHOT_ROOT, leagueCaptureDir, poolCaptureDir, todayInLondon } from "./paths";
+import { everyDayCaptured } from "./snapshots";
 
 // Records what Fantrax says about every recorded league and the pool today, verbatim, into dated
 // directories. Fantrax serves current state only, so a day not written down is gone.
@@ -43,6 +44,12 @@ async function main(): Promise<void> {
     leagueId: null,
     reads: [{ method: "getPlayerIds", run: fetchPlayerPool }],
   });
+
+  // The evening backup (`--unless-captured`) stands down when the morning's capture recorded every target.
+  if (process.argv.includes("--unless-captured") && (await everyDayCaptured(targets.map((target) => target.dir)))) {
+    console.log(`${date} is already captured; the backup stands down.`);
+    return;
+  }
 
   const outcomes = await captureDay(targets, new Date().toISOString());
   const failed = outcomes.filter((outcome) => !outcome.ok).length;

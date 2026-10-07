@@ -71,11 +71,13 @@ The fifteen JSON reads need no cookie; the setup page does.
 ## Schedule
 
 Every workflow in `.github/workflows/`, crons in UTC as written. Writers commit through
-`scripts/ci/push.sh` (rebase, five tries); no commit step runs with `if: always()` yet.
+`scripts/ci/push.sh` (rebase, five tries); capture's and editions' commit steps run with `if: always()`, so a
+partial day or a killed firing is kept. Every scheduled job ends in `scripts/ci/alert.sh`: a red or timed-out run
+opens the issue `alert: <workflow>`, assigned to the owner, and the next green run closes it.
 
 | Workflow | Cron (UTC) | Runs | Commits, with prefix | Concurrency | Target |
 |---|---|---|---|---|---|
-| `.github/workflows/capture.yml` | `10 5 * * *` | `npm run capture` | `data/snapshots`, "chore: capture Fantrax {date}" | `capture` | `ingest-snapshots.yml` |
+| `.github/workflows/capture.yml` | `10 5 * * *`<br>`10 17 * * *` | `npm run capture`; at 17:10 with `--unless-captured`, a backup that stands down when the morning recorded every target | `data/snapshots`, "chore: capture Fantrax {date}" | `capture` | `ingest-snapshots.yml` |
 | `.github/workflows/ingest-stats.yml` | `40 5 * * *` | `npm run stats` | `data/intel/stats`, "data: the stats league's counts, {time}" | `ingest-stats` | stays |
 | `.github/workflows/intel-check.yml` | `55 5 * * *` | `npm run intel-check` | nothing | none | `check-intel.yml` |
 | `.github/workflows/capture-status.yml` | `25 14 * * *` | `npm run capture:status` | nothing | none | `check-captures.yml` |
@@ -85,11 +87,14 @@ Every workflow in `.github/workflows/`, crons in UTC as written. Writers commit 
 | `.github/workflows/warm.yml` | `*/30 11-22 * * 6,0`<br>`*/30 17-22 * * 1,5` | curls `/` and `/matchday` | nothing | `warm`, cancels in progress | stays |
 | `.github/workflows/verify.yml` | none: push, pull_request | the four gates, smoke per recorded league, `npm run bridge:check` | nothing | none | stays |
 | `.github/workflows/claude.yml` | none: PR and issue comments | the `@claude` review | nothing | per PR | stays |
+| `.github/workflows/alert.yml` | none: dispatched by `scripts/sync-intel.sh` | `scripts/ci/alert.sh`, run named `alert <source> <state>` | nothing; opens or closes an issue | per source | stays |
 
 
 On Craig's Mac (launchd, London time; `scripts/install-intel-jobs.sh` installs both): `com.epl-draft.intel-weekly` Tue 08:00 runs
-`scripts/sync-intel.sh weekly`, `com.epl-draft.intel-pressers` Thu 16:00, Fri 12:30 and Fri 16:00 runs `pressers`. Each writes a
-`chore/intel-*` PR that merges itself once `verify` passes, and logs to `~/Library/Logs/epl-draft-intel.log`.
+`scripts/sync-intel.sh weekly`, `com.epl-draft.intel-pressers` Thu 16:00, Fri 12:30 and 16:00 (the conferences) and Fri 17:45
+(the sister's 16:30 sweep) runs `pressers`. Each restores the GitHub sweep's data from R2 through `scripts/sister-export.py`,
+writes a `chore/intel-<mode>-<date>-<time>` PR that merges itself once `verify` passes, logs to
+`~/Library/Logs/epl-draft-intel.log`, and ends in an `alert.yml` dispatch, `intel-<mode> ok` or `fail`.
 
 Slots shared today: warm shares every :00 and :30 with editions in the match windows. Editions'
 own lines no longer overlap; until 1 Oct 2026 24 of its firings a week ran twice.
@@ -194,8 +199,8 @@ Landed 1 Oct 2026: the three kinds on `ProviderError`, `orRefusal` catching `ref
   key.
 - Committed files are written atomically, a temp file then a rename. Only `ENOENT` means absent;
   a corrupt file throws.
-- Cron commit steps run with `if: always()` behind their parse guards; no two cron lines fire in
-  the same slot.
+- Cron commit steps run with `if: always()` behind their parse guards (capture and editions do
+  today); no two cron lines fire in the same slot.
 
 ## Add a source in five steps
 

@@ -17,6 +17,7 @@ concurrency:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   fetch:
@@ -41,3 +42,18 @@ jobs:
         run: |
           git add data/intel/stats
           scripts/ci/push.sh "data: the stats league's counts, $(date -u +%Y-%m-%dT%H:%MZ)" "The stats league's counts have not changed."
+
+      # Every red or timed-out run opens or updates the issue "alert: ingest-stats"; the next green one closes it.
+      - name: Alert the owner
+        if: ${{ failure() || cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/ci/alert.sh ingest-stats fail "$RUN_URL"
+
+      - name: Close the alert
+        if: ${{ success() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/ci/alert.sh ingest-stats ok "$RUN_URL"

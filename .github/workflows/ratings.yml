@@ -19,6 +19,7 @@ concurrency:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   rate:
@@ -44,3 +45,18 @@ jobs:
         run: |
           git add data/ratings
           scripts/ci/push.sh "data: ratings, $(date -u +%Y-%m-%dT%H:%MZ)" "No match day was due a rating."
+
+      # Every red or timed-out run opens or updates the issue "alert: ratings"; the next green one closes it.
+      - name: Alert the owner
+        if: ${{ failure() || cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/ci/alert.sh ratings fail "$RUN_URL"
+
+      - name: Close the alert
+        if: ${{ success() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/ci/alert.sh ratings ok "$RUN_URL"

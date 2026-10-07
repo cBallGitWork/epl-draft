@@ -15,11 +15,15 @@ on:
     # 05:10 UTC daily. After any overnight waiver processing, and off the hour
     # because everyone schedules on the hour and GitHub queues those runs.
     - cron: "10 5 * * *"
+    # 17:10 UTC, the backup: a missed morning cannot be backfilled, so the evening tries again. It
+    # stands down when the morning's capture on main recorded every league and the pool.
+    - cron: "10 17 * * *"
   workflow_dispatch:
 
 # Least privilege: this job writes commits and nothing else.
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: capture
@@ -41,15 +45,33 @@ jobs:
 
       - run: npm ci
 
-      - name: Capture both leagues and the pool
-        run: npm run capture
+      - name: Capture every recorded league and the pool
+        env:
+          BACKUP: ${{ github.event.schedule == '10 17 * * *' }}
+        run: |
+          if [ "$BACKUP" = true ]; then npm run capture -- --unless-captured; else npm run capture; fi
 
       - name: Commit the snapshots
         if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Nothing to commit is normal: re-running on the same London day
-          # overwrites that day's directory with identical bytes.
+          # Nothing to commit is normal when the backup stood down. A re-run on the same London
+          # day rewrites that day's files, and commits whatever Fantrax now says differently.
           git add data/snapshots
           scripts/ci/push.sh "chore: capture Fantrax $(date -u +%Y-%m-%d)" "No change in today's capture."
+
+      # Every red or timed-out run opens or updates the issue "alert: capture"; the next green one closes it.
+      - name: Alert the owner
+        if: ${{ failure() || cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/ci/alert.sh capture fail "$RUN_URL"
+
+      - name: Close the alert
+        if: ${{ success() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/ci/alert.sh capture ok "$RUN_URL"

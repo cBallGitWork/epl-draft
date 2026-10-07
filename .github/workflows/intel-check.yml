@@ -4,7 +4,7 @@ name: Intel staleness
 # which nothing in Verify checks. `npm run intel-check` exits 1 when a file is absent or will not
 # parse, when one is past its kind's age limit (`INTEL_AGE_LIMIT_DAYS` in
 # `packages/core/src/football/intel/freshness.ts`), when a predicted club is not an eleven, and
-# when the eleven is for a gameweek already played. A red run here is the notification.
+# when the eleven is for a gameweek already played. A red run opens the issue "alert: intel-check".
 #
 # Its own job, not the producers': `scout-xi.yml` and `make export-epl-draft` in the sister repo
 # fail most plausibly by not running, which would silence a check that lived inside them.
@@ -20,6 +20,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
 
 jobs:
   intel:
@@ -40,3 +41,18 @@ jobs:
       # Reads FPL's public bootstrap to learn whether the eleven's gameweek has been played.
       - name: Check the intel export
         run: npm run intel-check
+
+      # Every red or timed-out run opens or updates the issue "alert: intel-check"; the next green one closes it.
+      - name: Alert the owner
+        if: ${{ failure() || cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/ci/alert.sh intel-check fail "$RUN_URL"
+
+      - name: Close the alert
+        if: ${{ success() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/ci/alert.sh intel-check ok "$RUN_URL"
