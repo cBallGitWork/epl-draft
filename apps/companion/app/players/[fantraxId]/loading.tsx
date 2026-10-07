@@ -1,4 +1,6 @@
+import BackPlate from "../../components/shell/BackPlate";
 import Skeleton from "../../components/shell/Skeleton";
+import { POOL } from "../routes";
 
 // One player, waiting on Fantrax, for all four of his views: only the bar and the tab strip they share, at the
 // shell's own heights.
@@ -7,7 +9,12 @@ export default function Loading() {
   return (
     <div aria-busy className="flex flex-col gap-2">
       {/* The plated bar. */}
-      <Skeleton width="100%" height="2.75rem" />
+      <div className="flex items-stretch">
+        <BackPlate fallback={POOL} />
+        <div className="min-w-0 flex-1">
+          <Skeleton width="100%" height="2.75rem" />
+        </div>
+      </div>
 
       {/* Four tabs sharing the row, at the plate's own height. */}
       <div className="flex gap-px">
