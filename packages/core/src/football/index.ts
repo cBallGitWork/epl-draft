@@ -112,6 +112,8 @@ export type { ClubStrength, IntelStrength, PlannerCell, PlannerRow, PlannerView,
 export { nextGameweeks, projectedPlace, projectedPoints, projectionIntel } from "./intel/projections";
 export { minutesAhead, minutesIntel } from "./intel/minutes";
 export type { ExpectedMinutes } from "./intel/minutes";
+export { minuteMovesIntel, minutesUpdate } from "./intel/minuteMoves";
+export type { IntelMinuteMoves, MinutesMove, MinutesUpdate } from "./intel/minuteMoves";
 export type { IntelProjections, ProjectedPlace, ProjectedPlayer, ProjectedGameweek } from "./intel/projections";
 export type { MatchSheet, MatchSheetLine, SheetRow } from "./matchSheet";
 // His completed seasons before this one.

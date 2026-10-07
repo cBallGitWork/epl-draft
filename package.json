@@ -33,6 +33,7 @@
     "scout-xi": "tsx scripts/scout-xi.ts",
     "ratings": "tsx scripts/ratings.ts",
     "draft-pack": "tsx scripts/draft-pack.ts",
+    "xmins-moves": "tsx scripts/xmins-moves.ts",
     "stats": "tsx scripts/stats.ts",
     "pl-bridge": "tsx scripts/pl-bridge.ts",
     "draft:proof": "tsx scripts/draft-report-proof.ts"

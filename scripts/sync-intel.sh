@@ -1,7 +1,7 @@
 #!/bin/bash
 # The Mac's half of the week: the sister repo's exports into a PR that merges once CI passes.
 #   sync-intel.sh weekly    Tuesday, the round settled: every sister file, cups, careers and league projections
-#   sync-intel.sh pressers  Thursday 16:00, Friday 12:30, 16:00 and 17:45: the press conferences, squads and depth
+#   sync-intel.sh pressers  Thursday 16:00, Friday 12:30, 16:00 and 17:45: the press conferences, squads, depth and xMins
 # Every run ends in an alert.yml dispatch, intel-<mode> ok or fail, which the watchdog reads. DRY_RUN=1 stops before the push.
 # launchd starts with a bare PATH; node comes from the newest nvm install. Then the token, before anything can fail.
 NODE_BIN=$(ls -d "$HOME"/.nvm/versions/node/*/bin 2>/dev/null | sort -V | tail -1)
@@ -70,7 +70,7 @@ retry() {
 
 case "$MODE" in
   weekly) KINDS="squads set-pieces strength depth matches lines shots touches projections" ;;
-  pressers) KINDS="squads depth" ;;
+  pressers) KINDS="squads depth projections" ;;
   *) MODE=sync; FINISHED=1; log "usage: sync-intel.sh weekly|pressers"; exit 2 ;;
 esac
 [ -n "$GH_TOKEN" ] || fail "no cBallGitWork token from gh"
@@ -156,6 +156,9 @@ if [ "$MODE" = pressers ]; then
     fi
   done
 fi
+
+# What this run's xMins export moved against the one it replaces, for the scout's letter: any run, Tuesday's too.
+npm run -s xmins-moves >>"$LOG" 2>&1 || log "xmins-moves refused; no scout's letter this run"
 
 CHANGED=$(git status --porcelain data/intel | awk '{print $2}' | tr '\n' ' ')
 [ -n "$CHANGED" ] || finish "nothing changed"

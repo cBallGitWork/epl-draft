@@ -165,6 +165,9 @@ export const LEAGUE_TIMEZONE = "Europe/London";
 /** The zone Fantrax stamps its transactions in ("Date Processed (EDT)"), which is NOT ours. */
 export const FANTRAX_TIMEZONE = "America/New_York";
 
+/** How far a man's xMins must move, in whole minutes, before the scout writes it up: more than this (Craig, 7 Oct 2026). */
+export const XMINS_MOVE = 10;
+
 /** How many saves are worth mentioning; one or two says nothing. Every view that prints saves judges by this. */
 export const NOTABLE_SAVES = 4;
 

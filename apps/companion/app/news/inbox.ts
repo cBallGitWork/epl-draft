@@ -11,12 +11,16 @@ import {
   deals,
   headToHead,
   inboxItems,
+  isResolved,
+  minutesNews,
   nextDeadline,
   roundNews,
 } from "@epl/core";
 import { now } from "../clock";
 import { readBoard } from "../board";
 import { readDeals } from "../business";
+import { intelMinuteMoves } from "../intel";
+import { shortName } from "../teamNames";
 import { readTradeBlocks } from "../tradeBlock";
 import { seasonKickoffs } from "../football";
 import { readerTeamId, getLeagueSquads } from "../squads";
@@ -82,8 +86,27 @@ export async function readInbox(): Promise<Inbox> {
       : headToHead(drafted.info.matchups, drafted.info.teams, period, mine);
   const yours = tie === undefined || board === null ? null : finishedTie(board, tie);
 
+  // The scout's minutes: what each xMins export moved on his side and his next opponent's.
+  const sides = [mine, opponent].flatMap((teamId) => {
+    const team = drafted?.period.teams.find((each) => each.teamId === teamId);
+    if (team === undefined) return [];
+    const men = team.players.flatMap((man) => (isResolved(man) ? [{ code: man.player.code, name: man.player.name }] : []));
+    return [{ teamId: team.teamId, men }];
+  });
+  const scout = minutesNews(intelMinuteMoves, {
+    gameweek: next?.gameweek ?? null,
+    sides,
+    // The short name, which a sentence can open with: some full names are lower case.
+    name: (teamId) => {
+      const full = names.get(teamId);
+      return full === undefined ? null : shortName(teamId, full);
+    },
+    mine,
+  });
+
   return {
     items: inboxItems(
+      scout,
       // `deals()` pairs a claim with its drop and both halves of a trade.
       dealNews(deals(feed.rows), nameOf, mine),
       blockNews(blocks, { name: nameOf, mine, holder: (fantraxId) => holders.get(fantraxId) ?? null }),
