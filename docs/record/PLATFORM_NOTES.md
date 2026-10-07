@@ -62,8 +62,11 @@ GitHub mails a failed cron only to whoever last edited its line, and the Mac sho
   `EXIT` trap when it dies. Soft findings have their own sources, so the run's `ok` cannot close them:
   `intel-<mode>-stale`, `intel-scout-scrape`, `intel-pressers-ingest`, `intel-cups`.
 - **The Mac exports what the GitHub sweep wrote.** `scripts/sister-export.py` holds the sister's sweep lock, restores
-  `derived,signals,match_logs,staging/understat,raw/fpl/live/bootstrap` from R2 (the bootstrap was 9 days old on the
-  Mac on 7 Oct, and the export reads its gameweek), judges the newest sweep report, then exports.
+  `derived,signals,match_logs,staging/understat,raw/fpl/live/bootstrap,staging/fpl/<season>` from R2 (the bootstrap
+  was 9 days old on the Mac on 7 Oct, and the export reads its gameweek), judges the newest sweep report, then
+  exports. Weekly wants Tuesday's own sweep, finished after 05:00 UTC; pressers the sweep the sister's schedule says
+  was due (`gw_trigger.full_sweep_due`, through `digest._collect_full_sweep_due`), since sweeps stopped being daily
+  on 7 Oct (Mon and Tue 06:30, Thu and Fri 16:30 UK).
 - **A job that never ran** reports nothing; a watchdog follows in its own PR. The export moves into the sister's CI
   after GW6.
 
