@@ -8,8 +8,10 @@ name: Scout XI
 
 on:
   schedule:
-    # Every two hours, off the hour so it does not queue behind the other crons.
-    - cron: "40 */2 * * *"
+    # Every two hours Thursday to Saturday, while pressers and team news move the elevens; once a
+    # day otherwise (Craig, 7 Oct 2026: 84 runs a week had committed nothing in seven days).
+    - cron: "40 7-21/2 * * 4,5,6"
+    - cron: "40 6 * * 0,1,2,3"
   workflow_dispatch: {}
 
 # Its own group, on `editions.yml`'s reasoning: a shared group lets one workflow cancel
