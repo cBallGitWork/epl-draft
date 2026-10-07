@@ -7,8 +7,9 @@
   /* The pitch's shape, read by `.pitch` and by a caller bounding its width by its height (`fpl/FplPitch`).
      On `:root`, not `.pitch`: that wrapper cannot see a value set on the pitch inside it. */
   --pitch-ratio: 0.62;
-  /* The screen a pitch budgets against, floored so a short phone (SE, landscape) scrolls rather than clips. */
-  --pitch-screen: max(100svh, 52rem);
+  /* The screen a pitch budgets against, less the home bar the thumb rail sits over; floored so a short phone
+     (SE, landscape) scrolls rather than clips. 52rem kept a 759px iPhone app's bench under the fold (7 Oct 2026). */
+  --pitch-screen: max(calc(100svh - env(safe-area-inset-bottom)), 44rem);
 }
 
 @media (min-width: 64rem) {
@@ -26,6 +27,13 @@
 /* A pitch with a bench under it budgets for the bench; set by `TeamSheet` and `LineupPitch`. */
 .pitch-with-bench {
   --pitch-page: 26.5rem;
+}
+
+/* Your own planner on a phone draws no team bar above its tabs (`PlateShell phoneBar`), so the grass takes that 52px. */
+@media (width < 64rem) {
+  .pitch-with-bench.pitch-own {
+    --pitch-page: 23.25rem;
+  }
 }
 
 /* The match line-up: the bar, the tabs and the shape above the grass, the used subs and the phone's nav below.

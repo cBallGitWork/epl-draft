@@ -11,6 +11,7 @@ export default function PlateShell({
   colours,
   title,
   back,
+  phoneBar = true,
   tabs,
   children,
 }: {
@@ -20,6 +21,8 @@ export default function PlateShell({
   title: string;
   /** Where the phone's back plate goes with no history; absent draws none. */
   back?: string;
+  /** Whether a phone draws the bar: your own team's is the lit Team tab already, and its room goes to the pitch. */
+  phoneBar?: boolean;
   tabs: ReactNode;
   children: ReactNode;
 }) {
@@ -39,7 +42,7 @@ export default function PlateShell({
       }
     >
       {back === undefined ? (
-        header
+        phoneBar ? header : <div className="max-lg:hidden">{header}</div>
       ) : (
         <div className="flex items-stretch">
           <BackPlate fallback={back} />

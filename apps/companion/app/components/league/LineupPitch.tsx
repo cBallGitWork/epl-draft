@@ -92,7 +92,7 @@ export default function LineupPitch({
   return (
     // `pitch-with-bench`: the card's height budget allows for the strip below; see `pitch.css`.
     // Second copy of this expression (CODE_RULES §1); a third earns a recipe.
-    <div className="pitch-with-bench flex flex-col">
+    <div className="pitch-with-bench pitch-own flex flex-col">
       {/* The same `SquadMarker` card a rival's eleven draws. */}
       <PitchRows
         rows={lines}
