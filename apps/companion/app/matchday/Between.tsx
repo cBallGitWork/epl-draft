@@ -56,7 +56,7 @@ export function BetweenGameweeks({
           <p className="text-sm text-muted">
             FPL&apos;s deadline is{" "}
             <span className="numeric text-ink">{londonDayAndTime(snapshot.deadline)}</span>. Ours is
-            the commissioner&apos;s, and it is on the League tab.
+            the commissioner&apos;s, and it is on the Draft tab.
           </p>
         ) : null}
       </div>
