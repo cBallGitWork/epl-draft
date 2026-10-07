@@ -4,6 +4,7 @@ import PageHeader from "../components/shell/PageHeader";
 import Skeleton from "../components/shell/Skeleton";
 import { londonDayAndTime } from "@epl/core";
 import { MATCHUPS } from "@/app/league/routes";
+import { GAMEWEEK } from "../components/shell/sections";
 
 // The two things the Live tab draws when there is no live football: the card it
 // holds open while Fantrax's scoreboard is being read, and the screen a reader
@@ -87,11 +88,11 @@ export function BetweenGameweeks({
         {/* The finished round keeps its button. On a Tuesday the thing a reader
             wants is Monday night's result, and sending them only forwards would
             take it away to fix a sentence. */}
-        <ButtonLink href={`/gw/${snapshot.gameweek}`} fill>
+        <ButtonLink href={`${GAMEWEEK}/${snapshot.gameweek}`} fill>
           {over ? `GW${snapshot.gameweek} results` : "The fixtures"}
         </ButtonLink>
         {over && up !== null ? (
-          <ButtonLink href={`/gw/${up.gameweek}`} fill>
+          <ButtonLink href={`${GAMEWEEK}/${up.gameweek}`} fill>
             {`GW${up.gameweek} fixtures`}
           </ButtonLink>
         ) : (

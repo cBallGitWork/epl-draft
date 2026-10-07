@@ -17,6 +17,7 @@ import { getLeagueSquads, readerTeamId } from "../../squads";
 import { marksFor } from "../../involvement";
 import { yoursFirst } from "../../mine";
 import { GAMEWEEK_HEAD, GAMEWEEK_TITLE, LABEL, PANEL } from "@/app/desk";
+import { LIVE } from "../../components/shell/sections";
 
 // Every league score and every Premier League score on one screen, read at arm's length.
 // Nothing here is a link: each row is tappable elsewhere, and 44px rows would push it off one screen.
@@ -99,7 +100,7 @@ export default async function DeskPage() {
       <p className="pt-1 text-center text-2xs text-faint">
         Fantrax&apos;s points above, the Premier League&apos;s scores below, updated{" "}
         {londonTime(snapshot.fetchedAt)}. Tap through from{" "}
-        <Link href="/matchday" className="underline">
+        <Link href={LIVE} className="underline">
           Live
         </Link>{" "}
         for the elevens behind either.

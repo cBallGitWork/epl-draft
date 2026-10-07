@@ -9,7 +9,6 @@ import {
   clubById,
   duringGameweek,
   fixturesInOrder,
-  leagueTable as realTable,
   leagueTies,
   nextRound,
   periodPairings,
@@ -41,6 +40,8 @@ import { wireLines } from "./wireLines";
 import { now } from "../clock";
 import { BetweenGameweeks, MatchupWaiting } from "./Between";
 import OutLink from "../components/shell/OutLink";
+import { LIVE } from "../components/shell/sections";
+import { clubPlaces } from "../prem/places";
 
 // The live centre: your head-to-head first, the real football under it. The football half runs
 // off FPL's public API alone, so it works with no Fantrax, no draft and no credential.
@@ -90,10 +91,7 @@ export default async function MatchdayPage({
   const reds = roundRedCards(streams, snapshot.players);
   const scored = creditAssists(goals, snapshot, stats, streams, kinds);
 
-  // A club's place in the real table is its index in `leagueTable` (CM's blue block).
-  const clubPlaces = new Map(
-    realTable(season, snapshot.clubs).map((row, at) => [row.clubId, at + 1]),
-  );
+  const realPlaces = clubPlaces(season, snapshot.clubs);
 
   // Today's matches (Craig, 5 Sep 2026), and the whole round when today has none.
   const round = fixturesInOrder(snapshot);
@@ -158,8 +156,8 @@ export default async function MatchdayPage({
       <TabStrip
         label="Which view"
         tabs={[
-          { key: PRINTER, label: "Vidiprinter", href: `/matchday?view=${PRINTER}` },
-          { key: "scores", label: "Scores", href: "/matchday" },
+          { key: PRINTER, label: "Vidiprinter", href: `${LIVE}?view=${PRINTER}` },
+          { key: "scores", label: "Scores", href: LIVE },
           { key: STATS_VIEW, label: "Top stats", href: statsHref(LEADER_STATS[0]) },
         ]}
         current={printing ? PRINTER : leading ? STATS_VIEW : "scores"}
@@ -175,7 +173,7 @@ export default async function MatchdayPage({
           ties={ties}
           scores={scores}
           places={places}
-          clubPlaces={clubPlaces}
+          clubPlaces={realPlaces}
           mine={mine}
           fixtures={today}
           clubs={clubById(snapshot)}

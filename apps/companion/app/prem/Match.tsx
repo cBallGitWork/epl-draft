@@ -3,6 +3,7 @@ import ScoreRow from "../components/shell/ScoreRow";
 import { scoreSide } from "../components/football/scoreSide";
 import { SMALL_CAPS } from "@/app/desk";
 import { matchHref } from "./match/[id]/matchRoutes";
+import { hasScore } from "./score";
 
 // One Premier League match, as Championship Manager's results row.
 //
@@ -38,7 +39,7 @@ export default function Match({
 }) {
   const home = clubs.get(fixture.homeClubId);
   const away = clubs.get(fixture.awayClubId);
-  const played = fixture.homeScore !== null && fixture.awayScore !== null;
+  const played = hasScore(fixture);
 
   return (
     <ScoreRow

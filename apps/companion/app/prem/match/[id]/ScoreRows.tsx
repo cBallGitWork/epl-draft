@@ -1,6 +1,7 @@
 import { DASH } from "@epl/core";
 import type { FootballPlayer, PlGoalGroup, PlayerOwner, SquadPlayerDetail } from "@epl/core";
 import { MaybeCard } from "./PlayerCardButton";
+import { forCode } from "./sheetJoin";
 import OwnedBy from "./OwnedBy";
 import EventIcon from "../../../components/football/EventIcon";
 import type { EventGlyph } from "../../../components/football/EventIcon";
@@ -25,13 +26,13 @@ export function Goal({
   byCode: Map<number, FootballPlayer>;
   cards: ReadonlyMap<number, SquadPlayerDetail>;
 }) {
-  const scorer = group.scorer === null ? undefined : byCode.get(group.scorer);
+  const scorer = forCode(byCode, group.scorer);
 
   return (
     <li>
       <Man
         code={group.scorer}
-        card={group.scorer === null ? undefined : cards.get(group.scorer)}
+        card={forCode(cards, group.scorer)}
         name={scorer?.name ?? DASH}
         owners={owners}
         figure={minutes(group.minutes)}
@@ -87,7 +88,7 @@ export function Man({
   /** Its ink. A card is red because it IS a red card; the ball is the accent. */
   glyphTone?: string;
 }) {
-  const owner = code === null ? undefined : owners.get(code);
+  const owner = forCode(owners, code);
   return (
     <MaybeCard
       player={card}

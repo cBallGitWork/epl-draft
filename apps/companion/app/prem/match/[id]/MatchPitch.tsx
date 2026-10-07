@@ -19,7 +19,8 @@ import { PANEL_FLUSH, phoneShows } from "@/app/desk";
 import { MaybeCard } from "./PlayerCardButton";
 import { sheetName } from "./match";
 import type { Match } from "./match";
-import { joinOf, type Join } from "./sheetJoin";
+import { forCode, joinOf, type Join } from "./sheetJoin";
+import SideBySide from "./SideBySide";
 import SubMarker from "../../../components/football/SubMarker";
 
 // Both elevens in the shape their managers drew (`sheet.shape`), each man's face and score (Craig, 1 Oct 2026).
@@ -76,10 +77,10 @@ export default function MatchPitch({
   );
 
   return (
-    <div className="grid min-w-0 gap-2 lg:grid-cols-2">
+    <SideBySide>
       {side("home", match.home, match.away, sheets.home)}
       {side("away", match.away, match.home, sheets.away)}
-    </div>
+    </SideBySide>
   );
 }
 
@@ -111,7 +112,7 @@ function Side({
   );
   const marker = (man: PlSquadMan) => (
     <MaybeCard
-      player={man.code === null ? undefined : cards.get(man.code)}
+      player={forCode(cards, man.code)}
       className="block w-full text-left"
     >
       <PitchMarker
@@ -182,5 +183,5 @@ function did(
   man: PlSquadMan,
   events: Map<number, PlManMatch>,
 ): PlManMatch | undefined {
-  return man.code === null ? undefined : events.get(man.code);
+  return forCode(events, man.code);
 }

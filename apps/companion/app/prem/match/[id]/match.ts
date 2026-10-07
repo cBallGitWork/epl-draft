@@ -13,6 +13,7 @@ import { clubById } from "@epl/core";
 import { footballNow, gameweekLive, gameweekSheets, seasonFixtures, speaksForNow } from "../../../football";
 import { intelMatches } from "../../../intel";
 import { marks } from "../../../involvement";
+import { forCode } from "./sheetJoin";
 
 // The one read every match tab makes, so none assembles it twice and they cannot disagree about a field.
 
@@ -84,5 +85,5 @@ export function sheetName(
   man: { code: number | null; name: string },
   byCode: Map<number, FootballPlayer>,
 ): string {
-  return (man.code === null ? undefined : byCode.get(man.code)?.name) ?? man.name;
+  return forCode(byCode, man.code)?.name ?? man.name;
 }

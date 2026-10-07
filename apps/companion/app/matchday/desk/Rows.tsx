@@ -1,6 +1,7 @@
 import { Club, Fixture, FootballPlayer, LiveTeamScore, PeriodPairing, londonWeekday, londonTime, DASH } from "@epl/core";
 import ScoreFigure from "../../components/league/ScoreFigure";
 import { SMALL_CAPS } from "@/app/desk";
+import { hasScore } from "../../prem/score";
 
 // The desk's two kinds of line, at the density the desk is for.
 //
@@ -73,7 +74,7 @@ export function Match({
 }) {
   const home = clubs.get(fixture.homeClubId)?.shortName ?? DASH;
   const away = clubs.get(fixture.awayClubId)?.shortName ?? DASH;
-  const played = fixture.homeScore !== null && fixture.awayScore !== null;
+  const played = hasScore(fixture);
 
   return (
     <div className="flex items-baseline gap-2 py-1 text-xs">

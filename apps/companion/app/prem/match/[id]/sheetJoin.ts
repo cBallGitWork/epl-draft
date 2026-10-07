@@ -3,6 +3,11 @@ import type { Match } from "./match";
 
 // The team sheet's join: each man the Premier League named, his events, and FPL's line for him.
 
+/** A map's entry for a sheet man; none for a man the bridge gave no FPL code. */
+export function forCode<T>(map: ReadonlyMap<number, T>, code: number | null): T | undefined {
+  return code === null ? undefined : map.get(code);
+}
+
 /** FPL's side of a man, found by the `code` the team sheet carries — built once per board, kept out of `Match`. */
 export interface Join {
   /** FPL's per-fixture line for him, which the chips are drawn from; undefined for a man who accrued nothing. */
@@ -12,7 +17,7 @@ export interface Join {
 
 export function joinOf(match: Pick<Match, "sheet" | "byCode" | "figures">): Join {
   const byId = new Map((match.sheet?.lines ?? []).map((line) => [line.playerId, line]));
-  const player = (code: number | null) => (code === null ? undefined : match.byCode.get(code));
+  const player = (code: number | null) => forCode(match.byCode, code);
   return {
     line: (code) => {
       const id = player(code)?.id;
@@ -47,7 +52,7 @@ export function appeared(row: Named): boolean {
 /** The eleven keeper-to-attack, then the bench keeper-to-attack, each by the position he was named in.
  *  A man who came on stays on the bench, in its order (Craig, 11 Sep 2026). */
 export function ordered(sheet: PlTeamSheet, events: Map<number, PlManMatch>): Named[] {
-  const did = (man: PlSquadMan) => (man.code === null ? undefined : events.get(man.code));
+  const did = (man: PlSquadMan) => forCode(events, man.code);
   const byPosition = (a: PlSquadMan, b: PlSquadMan) =>
     DOWN_THE_PITCH.indexOf(a.position ?? "") - DOWN_THE_PITCH.indexOf(b.position ?? "");
 

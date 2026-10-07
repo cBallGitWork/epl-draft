@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { FootballPlayer, MatchSheetLine, PlManMatch, PlSquadMan, PlayerMatchStats } from "@epl/core";
-import { appeared, cameOn, joinOf, ordered } from "./sheetJoin";
+import { appeared, cameOn, forCode, joinOf, ordered } from "./sheetJoin";
 
 const man = (code: number, position: string | null): PlSquadMan => ({
   code,
@@ -68,5 +68,14 @@ describe("appeared", () => {
   it("reads coming on off the minute, not off the bench flag", () => {
     expect(cameOn({ man: man(19, "M"), did: on, bench: true })).toBe(true);
     expect(cameOn({ man: man(9, "F"), did: { offAt: 70 } as PlManMatch, bench: false })).toBe(false);
+  });
+});
+
+describe("forCode", () => {
+  it("looks a man up by his code, and finds nothing for a man with none", () => {
+    const owners = new Map([[7, "Raccoons"]]);
+    expect(forCode(owners, 7)).toBe("Raccoons");
+    expect(forCode(owners, 8)).toBeUndefined();
+    expect(forCode(owners, null)).toBeUndefined();
   });
 });

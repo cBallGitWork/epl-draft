@@ -5,7 +5,8 @@ import { BOARD, PANEL_FLUSH, phoneShows } from "@/app/desk";
 import { Head, HeadRow, MUTE, PLATE } from "../../../components/league/TableHeads";
 import type { Match } from "./match";
 import SheetRow from "./SheetRow";
-import { joinOf, ordered, type Join } from "./sheetJoin";
+import SideBySide from "./SideBySide";
+import { forCode, joinOf, ordered, type Join } from "./sheetJoin";
 import { fantraxPositions, type LeagueOpinion } from "../../leagueOpinions";
 
 // Championship Manager's team sheet, `cm9900/16.jpg`, both sides at once — stacked under a thumb, paired on a desk.
@@ -29,10 +30,10 @@ export default function TeamSheet({ match, sheets, phoneSide, ...rest }: SheetPr
   const join = joinOf(match);
   // `min-w-0` down the chain, or a nowrap plate sets a floor that overflows 390.
   return (
-    <div className="grid min-w-0 gap-2 lg:grid-cols-2">
+    <SideBySide>
       <Side club={match.home} sheet={sheets.home} join={join} phonePicked={phoneSide === "home"} {...rest} />
       <Side club={match.away} sheet={sheets.away} join={join} phonePicked={phoneSide === "away"} {...rest} />
-    </div>
+    </SideBySide>
   );
 }
 
@@ -89,10 +90,10 @@ function Side({
             <SheetRow
               key={`${row.man.code ?? row.man.name}-${row.man.shirt ?? at}`}
               row={row}
-              owner={row.man.code === null ? undefined : owners.get(row.man.code)}
+              owner={forCode(owners, row.man.code)}
               positions={fantraxPositions(league, row.man.code)}
               join={join}
-              card={row.man.code === null ? undefined : cards.get(row.man.code)}
+              card={forCode(cards, row.man.code)}
               hurt={row.man.code !== null && injured.has(row.man.code)}
               opensBench={at === bench}
             />

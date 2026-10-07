@@ -1,6 +1,7 @@
-import { clubById, leagueTable } from "@epl/core";
+import { clubById } from "@epl/core";
 import Nothing from "../../../components/shell/Nothing";
 import PremShell from "../../Shell";
+import { clubPlaces } from "../../places";
 import Rounds, { byRound, panelRows } from "../../Rounds";
 import { footballNow, seasonFixtures } from "../../../football";
 
@@ -22,12 +23,7 @@ export default async function ResultsPage() {
   const [snapshot, fixtures] = await Promise.all([footballNow(), seasonFixtures()]);
 
   const played = byRound(fixtures.filter((fixture) => fixture.status === "finished")).reverse();
-  // Each club's place, for the row's blue block. The ARRAY ORDER of
-  // `leagueTable` — a `TableRow` carries no rank of its own precisely because
-  // the list IS the ranking — and pure, off fixtures this page already holds.
-  const places = new Map(
-    leagueTable(fixtures, snapshot.clubs).map((row, at) => [row.clubId, at + 1]),
-  );
+  const places = clubPlaces(fixtures, snapshot.clubs);
 
 
   if (played.length === 0) {

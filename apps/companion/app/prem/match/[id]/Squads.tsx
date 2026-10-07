@@ -7,6 +7,7 @@ import { BOARD, PANEL_FLUSH, ROW_NAME, ROW_RULE, phoneShows, SMALL_CAPS } from "
 import { fantraxPositions, type LeagueOpinion } from "../../leagueOpinions";
 import { MaybeCard } from "./PlayerCardButton";
 import OwnedBy from "./OwnedBy";
+import SideBySide from "./SideBySide";
 import { MATCH_ROW } from "./matchRow";
 
 // Both clubs' books before a ball is kicked, to the team sheet's standards: the Fantrax tile in the club's colour,
@@ -38,10 +39,10 @@ export default function Squads({
     <Side club={club} players={players} owners={owners} league={league} cards={cards} phonePicked={picked} />
   );
   return (
-    <div className="grid min-w-0 gap-2 lg:grid-cols-2">
+    <SideBySide>
       {side(home, phoneSide === "home")}
       {side(away, phoneSide === "away")}
-    </div>
+    </SideBySide>
   );
 }
 
