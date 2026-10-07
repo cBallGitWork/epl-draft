@@ -1,7 +1,7 @@
 #!/bin/bash
 # The Mac's half of the week: the sister repo's exports into a PR that merges once CI passes.
 #   sync-intel.sh weekly    Tuesday, the round settled: every sister file and the cup fixtures
-#   sync-intel.sh pressers  Thursday and Friday: the press conferences, squads and depth
+#   sync-intel.sh pressers  Thursday 16:00, Friday 12:30 and 16:00: the press conferences, squads and depth
 # Works in its own worktree, never the main folder. DRY_RUN=1 stops before the push.
 set -euo pipefail
 
