@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { leads, londonDate, DASH } from "@epl/core";
 import type { SeasonRow } from "./teamSeason";
 import { ROW_NAME, SMALL_CAPS } from "@/app/desk";

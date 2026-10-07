@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { DASH, fixed, gameweekSpan } from "@epl/core";
 import PositionTile from "../../components/league/PositionTile";
 import { HeadRow, LeadHeads, sortedAs, SortHead } from "../../components/league/TableHeads";

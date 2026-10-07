@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { fixed, initialled, signed, toFplClubCode, DASH } from "@epl/core";
 import type { FootballPlayer } from "@epl/core";
 import type { PoolRow } from "./pool";

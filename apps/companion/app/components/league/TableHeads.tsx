@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { HEAD_CELL } from "@/app/desk";
 import { TILE_WIDTH } from "./PositionTile";
 

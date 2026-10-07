@@ -12,6 +12,7 @@ import Rail from "./components/shell/Rail";
 import ReplayStrip from "./components/shell/ReplayStrip";
 import UnreadBadge from "./components/shell/UnreadBadge";
 import { liveTie } from "./components/shell/liveTie";
+import { aheadOf, sectionsFor } from "./components/shell/sections";
 import { readInbox } from "./news/inbox";
 import { deskFontVariables } from "./deskFonts";
 import { APP_SHORT_NAME, TOKEN_SRGB } from "./config";
@@ -86,7 +87,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <div className="flex min-w-0 flex-1 flex-col">
           {/* One poller for the whole app. The server says how far off live football is and the client counts
               down (`cadence.ts`). Live means the round is under way, never only that a ball is in the air. */}
-          <AutoRefresh liveIn={live} />
+          <AutoRefresh liveIn={live} ahead={aheadOf(sectionsFor(matchday))} />
           {/* The same fresh render on demand, by pulling down from the top, in the home-screen app only. */}
           <PullToRefresh />
           <ReplayStrip />

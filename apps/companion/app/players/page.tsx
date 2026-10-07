@@ -1,5 +1,5 @@
 import BoardKey from "../components/league/BoardKey";
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import ScoutShell, { POOL_ROWS } from "./Shell";
 import PlayerTable from "./PlayerTable";
 import BoardBar from "./BoardBar";

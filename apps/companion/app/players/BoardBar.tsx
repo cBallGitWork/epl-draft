@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { sortableIn, type PoolGroupKey } from "./groups";
 import { activeSort, boardHref, filterHref, isChosen } from "./query";
 import { POOL } from "./routes";

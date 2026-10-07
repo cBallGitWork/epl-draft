@@ -1,5 +1,5 @@
 import ScrollBoard from "../../components/league/ScrollBoard";
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import {
   categoryFor,
   groupFor,

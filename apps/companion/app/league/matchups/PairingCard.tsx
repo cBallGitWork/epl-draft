@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import type { LeagueTeam, LiveTeamScore, PeriodPairing, PendingCleanSheets } from "@epl/core";
 import { pairingInvolves } from "@epl/core";
 import ScoreFigure from "../../components/league/ScoreFigure";

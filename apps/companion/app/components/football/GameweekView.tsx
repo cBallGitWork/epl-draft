@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import BackPlate from "../shell/BackPlate";
 import ButtonLink from "../shell/ButtonLink";
 import {

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { ordinal, type FormGame, type SortKey, type StandingsRow } from "@epl/core";
 import { PointsCell, TIGHT_ROW } from "../components/league/TableCells";
 import { COPY, cellAlign, deskOnly } from "./Columns";

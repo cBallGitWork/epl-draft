@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import Link from "@/app/components/shell/Link";
 import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import Glyph from "./glyphs";
 import Pending from "./Pending";
@@ -34,12 +33,6 @@ export default function ThumbRail({
   const trigger = useRef<HTMLButtonElement>(null);
   const flyout = useRef<HTMLElement>(null);
   const fromKeyboard = useRef(false);
-  const router = useRouter();
-
-  // A group's links draw only once its flyout opens, so Next never prefetched them and the tap waited on the server.
-  useEffect(() => {
-    for (const tab of barTabs(sections)) if (tab.kind === "group") for (const member of tab.members) router.prefetch(member.href);
-  }, [router, sections]);
 
   useEffect(() => {
     if (open === null) return;

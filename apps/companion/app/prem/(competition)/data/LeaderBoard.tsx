@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { crestUrl, ordinal, type Club } from "@epl/core";
 import { Head, HeadRow, NameHead, PRESSED_PLATE } from "../../../components/league/TableHeads";
 import { IndexCell, ROW_LINK } from "../../../components/league/TableCells";

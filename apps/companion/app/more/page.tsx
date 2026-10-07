@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import type { ReactNode } from "react";
 import { FANTRAX_HOME_PATH, FANTRAX_LEAGUE_PAGE } from "@epl/core";
 import { BUTTON } from "../components/shell/ButtonLink";

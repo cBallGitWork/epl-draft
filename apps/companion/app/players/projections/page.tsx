@@ -1,5 +1,5 @@
 import BoardKey from "../../components/league/BoardKey";
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { PLANNER_RUN, plannerGameweeks } from "@epl/core";
 import ScoutShell from "../Shell";
 import Nothing from "../../components/shell/Nothing";

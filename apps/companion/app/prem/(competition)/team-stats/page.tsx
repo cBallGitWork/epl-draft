@@ -1,5 +1,5 @@
 import ScrollBoard from "../../../components/league/ScrollBoard";
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { clubStats, leagueTable, ordinal } from "@epl/core";
 import Nothing from "../../../components/shell/Nothing";
 import { Head, HeadRow, NameHead, PRESSED_PLATE } from "../../../components/league/TableHeads";

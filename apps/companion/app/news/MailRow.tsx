@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import DateChip from "../components/shell/DateChip";
 import { ROW_NAME } from "@/app/desk";
 

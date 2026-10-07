@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { BUTTON } from "../components/shell/ButtonLink";
 import { PANEL_FLUSH } from "@/app/desk";
 
