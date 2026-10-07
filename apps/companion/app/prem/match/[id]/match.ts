@@ -38,8 +38,7 @@ export interface Match {
   finished: boolean;
 }
 
-/** Everything about one fixture, or a 404. The score comes from `seasonFixtures` and the sheet from
- *  `gameweekSheets`, never crossed, so two caches going stale apart cannot put a score beside the wrong scorers. */
+/** Everything about one fixture, or a 404; score and sheet each come from one cache, never crossed. */
 export async function readMatch(id: string): Promise<Match> {
   const wanted = Number(id);
   if (!Number.isInteger(wanted)) notFound();
@@ -72,15 +71,13 @@ export async function readMatch(id: string): Promise<Match> {
   };
 }
 
-/** Who in our league holds each man in this match — a Fantrax call, so its own read a page can stream, and
- *  empty rather than an error when Fantrax will not say. */
+/** Who in our league holds each man in this match; empty, not an error, when Fantrax will not say. */
 export async function matchOwners(fixture: Fixture): Promise<Map<number, PlayerOwner>> {
   const { owners } = await marks([fixture]);
   return owners ?? new Map();
 }
 
-/** A named man's name: FPL's short form where the bridge reaches him (`Gakpo`, not `Cody Mathès Gakpo`),
- *  the team sheet's where it does not. */
+/** A named man's name: FPL's short form where the bridge reaches him, else the team sheet's. */
 export function sheetName(
   man: { code: number | null; name: string },
   byCode: Map<number, FootballPlayer>,

@@ -11,20 +11,8 @@ import NameLink from "./NameLink";
 import type { LeagueOpinion } from "../../leagueOpinions";
 import { BOARD, DESK_ONLY, FIGURE, ROW_NAME, ROW_HOVER } from "@/app/desk";
 
-// Every man on the club's books, as Championship Manager files a squad.
-//
-// **Ordered by the position OUR league files him at** (Craig, 3 Sep 2026:
-// "needs to be ordered by fantasy position"). That is `positionDepth` in the
-// join layer — keeper, defence, midfield, attack — which is the order every
-// football list uses and the order `cm9900/25.jpg` runs down its slot strip. A
-// man our league has no opinion about sorts last rather than into goal, on
-// `positionDepth`'s own rule: an unknown position should look wrong, not wrong
-// in a way that reads as correct.
-//
-// **No owner FIGURE, ever.** `SeasonTotals` carries the bound with it
-// (`football/types.ts`): FPL's counts may not stand beside a Fantrax figure. The
-// owner column is a NAME, not a number — it says who holds him, which is a fact
-// about our league and not a second count of a Premier League goal.
+// Every man on the club's books, ordered by the position our league files him at (Craig, 3 Sep 2026).
+// The owner column is a name, never a figure: FPL's counts may not stand beside a Fantrax figure.
 
 export default function SquadTable({
   players,
@@ -34,7 +22,6 @@ export default function SquadTable({
   players: readonly FootballPlayer[];
   /** Our league's opinion by FPL code, empty when Fantrax would not say. */
   league: ReadonlyMap<number, LeagueOpinion>;
-  /** The sister repo's, by the same key. Empty when it has never exported. */
 }) {
   return (
     <ScrollBoard>
@@ -44,9 +31,7 @@ export default function SquadTable({
         </caption>
         <thead>
           <HeadRow>
-            {/* What our Fantrax league fields him as, in CM's index block (Craig, 23 Sep
-                2026: "Put the Fantrax position into those tiles, and then remove
-                the position columns"). It replaced the shirt number here. */}
+            {/* Our Fantrax position in CM's index block, in place of a position column (Craig, 23 Sep 2026). */}
             <Head width={TILE_WIDTH} title="What our Fantrax league will field him as — not a fact about the footballer">
               <span className={PLATE}>Pos</span>
             </Head>
@@ -83,19 +68,12 @@ export default function SquadTable({
                     href={poolHref(league, player.code)}
                     className="cm-row flex min-h-11 items-center gap-2 font-bold"
                   >
-                    {/* First name and surname (Craig, 3 Sep 2026). FPL's `name` is
-                        its own web short form — "Raya", "J.Timber" — which is
-                        right on a pitch card 46px wide and wrong in a column
-                        with room for a person. `fullName` is `first_name
-                        second_name` from the bootstrap. */}
+                    {/* Full name (Craig, 3 Sep 2026): FPL's `name` is its web short form, "J.Timber". */}
                     <span className={`min-w-0 truncate ${ROW_NAME}`}><PlayerName name={player.fullName} short={fullFootballerName(player)} /></span>
                     <StateBox player={player} />
                   </NameLink>
                 </td>
-                {/* The owner's name, or what our league says instead: "WW" on
-                    waivers, "FA" a free agent. Fantrax's own letters, carried
-                    rather than translated — the vocabulary is theirs, and an
-                    undrafted league marks everybody WW. */}
+                {/* The owner, or Fantrax's own letters: "WW" on waivers, "FA" a free agent. */}
                 <td className="px-1.5 text-center text-2xs text-ink">
                   <span className="block truncate">{owner(opinion) ?? DASH}</span>
                 </td>
@@ -124,14 +102,7 @@ function owner(opinion: LeagueOpinion | undefined): string | null {
   return opinion.owner ?? (opinion.status || null);
 }
 
-/** How our league would file a man, as a number the squad list sorts on.
- *
- *  Exported because the ORDER is the page's decision and the vocabulary is this
- *  file's neighbour: `positionsLabel` already sorts the letters back to front,
- *  so the first of them is the one he is filed under.
- *
- *  A man our league has no opinion about sorts after everybody it does, which is
- *  what `positionDepth` does with a letter it has never seen. */
+/** Our league's position for a man as a sort key; a man it has no opinion about sorts last. */
 export function fantasyDepth(opinion: LeagueOpinion | undefined): number {
   const first = [...(opinion?.positions ?? [])].sort(byPositionDepth)[0];
   return first === undefined ? Number.MAX_SAFE_INTEGER : positionDepth(first);

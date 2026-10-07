@@ -3,9 +3,8 @@ import CmGround from "../../../../components/league/CmGround";
 import { doubtRow } from "../../../../components/football/doubtRow";
 import NameLink from "../NameLink";
 
-// The depth chart on CM's pitch (Craig, 25 Sep 2026: "pitch view, CM graphics, no thumbnails or
-// shirts"): each place a plate with its shirt on top and the men in line under it, first choice
-// loudest, and a doubt's name washed in the doubt ramp.
+// The depth chart on CM's pitch (Craig, 25 Sep 2026): each place a plate with its shirt on top and
+// the men in line under it, first choice loudest, a doubt's name washed in the doubt ramp.
 
 export default function DepthPitch({
   lines,

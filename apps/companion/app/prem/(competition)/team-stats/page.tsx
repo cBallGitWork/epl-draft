@@ -13,22 +13,10 @@ import { footballNow, seasonFixtures } from "../../../football";
 import { BOARD, FIGURE, ROW_HOVER } from "@/app/desk";
 import ClubLabel from "@/app/components/football/ClubLabel";
 
-// Every club ranked by one measure — CM's stat board, on the real competition.
-//
-// **A leaderboard and not a spreadsheet**, which is the ruling
-// `league/team-stats` records from the same reference shot: one category at a
-// time, every side in order, the figure at the end. Seventeen categories as
-// seventeen columns is what a provider's own page does, and it is unreadable
-// under a thumb.
-//
-// **Every figure is FPL's and the caption says so.** Half of these are the
-// competition's own counting — goals, clean sheets — and half are FPL's model of
-// the underlying play. A reader one tab away is looking at Fantrax's numbers for
-// the same footballers under different rules, and DESIGN §7 wants provenance at
-// the point of use.
+// Every club ranked by one measure at a time: a leaderboard, not a spreadsheet.
+// Every figure is FPL's and the caption says so, as Fantrax counts the same men differently.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
+// Must equal PAGE_REVALIDATE in config.ts: Next reads it statically, so it cannot be imported.
 export const revalidate = 30;
 
 /** Next 16 hands these as a Promise, so it is awaited like `params`. */
@@ -63,9 +51,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
     );
   }
 
-  // Ranked by the category, then by the competition's own order — two clubs
-  // level on clean sheets should not swap places between refreshes, and the
-  // table is the tiebreak everybody already agrees on.
+  // Ties break on table place, so level clubs never swap between refreshes.
   const board = clubs
     .map((club, place) => ({ club, place: place + 1, figure: category.of(club) }))
     .sort((a, b) =>
@@ -74,9 +60,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
 
   return (
     <PremShell current="teamStats" rows={clubs.length}>
-      {/* The category picker on its own strip above the board, with the rule
-          under it — `cm9900`'s stat screen puts its two grey controls exactly
-          here, and `league/team-stats` follows the same shot. */}
+      {/* The picker on its own strip, with the figures' provenance beside it. */}
       <div className="flex items-center justify-between gap-2 border-b border-line px-2 py-1.5">
         <QuerySelect name="cat" label="Category" value={category.key} options={CATEGORY_OPTIONS} action={TEAM_STATS} />
         <p className="text-3xs uppercase text-faint">FPL&apos;s own figures</p>
@@ -89,11 +73,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
               <Head width="w-8 lg:w-14" />
               <NameHead label="Club" />
               <Head width="w-20 lg:w-32" title={category.title} sorted="descending">
-                {/* Not a link: this board has ONE ordered column and the picker
-                    beside it is how you change which. A plate drawn as a button
-                    that cannot be pressed is a control that lies, so the head is
-                    a plain plate — the same distinction `TableHeads.NameHead`
-                    makes for the name column. */}
+                {/* A plain plate, not a link: the picker is what changes the order. */}
                 <span className={PRESSED_PLATE}>
                   {category.label}
                 </span>
@@ -103,11 +83,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
           <tbody>
             {board.map(({ club, figure }, at) => (
               <tr key={club.table.clubId} className={ROW_HOVER}>
-                {/* The ordinal in CM's index block: `24.jpg` runs `1st 2nd 3rd`
-                    down the left of every table it draws, and a column of bare
-                    numbers is a list where a column of ordinals is a league.
-                    This one counts the BOARD rather than the table — it is the
-                    ranking the reader asked for. */}
+                {/* Counts the board, not the table: the ranking the reader asked for. */}
                 <IndexCell>{ordinal(at + 1)}</IndexCell>
                 <td className="pl-2">
                   <Link
@@ -117,10 +93,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                     <ClubLabel club={club.table} />
                   </Link>
                 </td>
-                {/* The accent, because this is the column the board is ordered
-                    by and there is only one of it. `league/team-stats` prints
-                    two figures and spends the accent on whichever is sorted;
-                    here every figure on screen is that column. */}
+                {/* The accent: this is the board's one ordered column. */}
                 <td className={`${FIGURE} text-accent`}>
                   {printed(category, figure)}
                 </td>

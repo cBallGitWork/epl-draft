@@ -1,17 +1,7 @@
 import { type FigureKind, type SeasonTotals, fixed } from "@epl/core";
 
-// Which of FPL's counts a club's stat board prints, and in which group.
-//
-// **Three views rather than one table**, on `squad/[teamId]/stats`' argument:
-// fifteen columns is wider than any phone, and the questions are genuinely
-// different — "who is scoring" is not "who is defending". The dropdown is CM's
-// own grey bevelled control, which `cm9900/21.jpg` and `25.jpg` both carry above
-// the table.
-//
-// **Every one is FPL's**, which is what makes this screen legal beside the
-// squad list: `SeasonTotals`' bound forbids these standing next to a Fantrax
-// FIGURE, and there is none here — the position column is a Fantrax LABEL and
-// the rest is one provider's arithmetic throughout.
+// Which of FPL's counts a club's stat board prints, in three views: one table is wider than any phone.
+// All FPL's: a Fantrax figure here would break `SeasonTotals`' bound.
 
 export interface Measure {
   key: keyof SeasonTotals;

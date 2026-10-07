@@ -10,10 +10,10 @@ import LeaderBoard, { type Row } from "./LeaderBoard";
 import QuerySelect from "../../../components/shell/QuerySelect";
 import { LISTS, MOST, TOP, asPrinted, listFor, ranked, seasonRatings, type Leader, type LeaderList } from "./leaders";
 
-// The season's leaders as plain lists (Craig, 1 Oct 2026: "simple list like top scorer, top xg, top fantasy ratings etc
-// ... with a top 50 for each"). A phone shows the list its picker names; the desk shows every list, the asked one to fifty.
+// The season's leaders as plain lists, each to fifty on asking (Craig, 1 Oct 2026).
+// A phone shows the list its picker names; the desk shows every list, the asked one to fifty.
 
-// Must match `PAGE_REVALIDATE` in the app's config; `scripts/revalidate.test.ts` holds the two together.
+// Must equal PAGE_REVALIDATE in config.ts: Next reads it statically, so it cannot be imported.
 export const revalidate = 30;
 
 type Search = Promise<{ list?: string; n?: string }>;

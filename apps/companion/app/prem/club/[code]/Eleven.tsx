@@ -3,24 +3,9 @@ import PitchMarker from "../../../components/league/PitchMarker";
 import PitchRows from "../../../components/league/PitchRows";
 import { DASH } from "@epl/core";
 
-// A club's predicted eleven, on the same grass the fantasy eleven stands on.
-//
-// **Literally the same components** (Craig, 3 Sep 2026: "make it the same as the
-// fantasy squad page — this is what i meant by sharing the same pitch"). An
-// earlier cut built its own cut-out cards on the photographed trapezoid, the
-// tab's photographed pitch, and it looked nothing like the rest of the app.
-// `CmGround` + `PitchRows` + `PitchMarker` is what `squad/[teamId]/Sheet` draws,
-// and it stopped taking a roster slot on 3 Sep so that a Premier League
-// eleven could use it without a Fantrax id going anywhere near a football page.
-//
-// **The keeper stands at the TOP** (Craig, 10 Sep 2026), which is this site's
-// arrangement as of that date and the reverse of the one this paragraph used to
-// record. `predictedEleven` hands the rows over goal-first and `PitchRows` draws
-// them in the order it is given, so they are passed straight through — reversing
-// them here would put the forward on the goal line, which is what it did once.
-//
-// **The one pitch that draws faces** (Craig, 26 Sep 2026); every other pitch draws kits, and a man
-// with no photograph falls back to his club's kit.
+// A club's predicted eleven on the fantasy pitch's own components (Craig, 3 Sep 2026).
+// Rows arrive goal-first and pass straight through, keeper at the top (Craig, 10 Sep 2026).
+// The one pitch that draws faces (Craig, 26 Sep 2026); a man with no photograph gets his club's kit.
 
 export interface ElevenLine {
   line: string;
@@ -48,34 +33,18 @@ export default function Eleven({
    *  no opinion, or would not answer. */
   positionOf: (code: number) => string | null;
 }) {
-  // **The first line IS the keeper's**, by construction: `predictedEleven` builds
-  // `[{line: "GK", players: [keeper]}, …]` off the shape, so this is the one
-  // ordering fact the arrangement asserts. Read here rather than inside the cell
-  // because `PitchRows` hands its children a player and not the line he stands
-  // in — which is right, and is why `Formation` reads its own the same way.
+  // `predictedEleven` puts the keeper's line first; `PitchRows` hands cells a player, not his line.
   const keeper = lines[0]?.players[0]?.code ?? null;
 
   return (
     <div className="flex flex-col gap-1">
-      {/* **What the eleven is and who it is against** (Craig, 3 Sep 2026: "real
-          team needs Predicted XI versus next opponent whoever that is, use
-          dates"). A pitch with no heading is eleven faces on grass; the reader
-          has to be told this is a PREDICTION and which match it is for, or it
-          reads as a team sheet. One line (Craig, 23 Sep 2026: "We don't need
-          three rows"), with when Scout last updated it in brackets. */}
+      {/* Without "Predicted" and the match it is for, the pitch reads as a team sheet (Craig, 3 Sep 2026). */}
       <p className="cm-title text-center font-chrome text-2xs font-bold text-accent lg:text-sm">
         Predicted XI{against === null ? "" : ` ${against}`}
         {updated === null ? "" : ` (last updated ${updated})`}
       </p>
-      {/* **`PitchRows` draws its own ground.** Wrapping this in a `CmGround` of
-          its own put one pitch inside the other and drew the furniture of the
-          wrong one over the right one (Craig, 3 Sep 2026: "still showing the fpl
-          pitch on top of the designed pitch"). There is one ground to pick from
-          now. `TeamSheet` passes the flags and nothing
-          else, so this does too.
-          `inColumn` because it stands beside the squad list: bleeding is right
-          for a pitch that is the widest thing on the screen, and full-bleed made
-          this one 1,132px wide and 1,192 tall — 556px past the fold at 1440. */}
+      {/* `PitchRows` draws its own ground: a `CmGround` around it nests two pitches.
+          `inColumn` because it stands beside the squad list; full bleed runs it past the fold. */}
       <PitchRows
         rows={lines.map((row) => ({ label: row.line, players: row.players }))}
         keyOf={(starter) => String(starter.code)}
@@ -86,30 +55,13 @@ export default function Eleven({
             return (
               <PitchMarker
                 player={player}
-                // Only reached for a man with no CLUB either, which cannot
-                // happen here — this whole pitch is one club. A man the
-                // prediction names and the bootstrap does not still gets his
-                // club's kit, because a kit is chosen by club code.
+                // Only for a man with no club, which one club's pitch cannot have.
                 label="?"
-                // **FPL's own short name**, which is what `web_name` is for: a
-                // 110px card needs "Gabriel", not "Gabriel dos Santos
-                // Magalhães". The fantasy pitch abbreviates instead
-                // (`pitchName`) because a Fantrax roster line has no short form
-                // to reach for — the same problem answered by the better
-                // source rather than the same rule applied twice.
+                // FPL's short name: a 110px card needs "Gabriel", not "Gabriel dos Santos Magalhães".
                 name={player?.name ?? DASH}
-                // Hardcoded `false` until 10 Sep 2026, which drew twenty keepers
-                // in outfield shirts — invisible while the kit was a fallback
-                // that fired for one man in eight, and the first thing you see
-                // now that it is the whole pitch.
                 keeper={starter.code === keeper}
                 club={club}
-                // **His Fantrax position** (Craig, 3 Sep 2026: "prediction just
-                // needs the name and their fantrax position"). A probability
-                // rode here first and answered the wrong question: a reader
-                // looking at a predicted eleven is a fantasy manager, and what
-                // he wants to know about a man about to start is what our
-                // league would field him as.
+                // His Fantrax position, not a probability (Craig, 3 Sep 2026).
                 band={positionOf(starter.code) ?? DASH}
                 face={player ?? undefined}
               />

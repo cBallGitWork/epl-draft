@@ -14,14 +14,8 @@ import StateBox from "../../../../components/football/StateBox";
 import PlayerName from "../../../../components/shell/PlayerName";
 import { doubtRow } from "../../../../components/football/doubtRow";
 
-// A club's season, player by player, on the house board: our position in the index tile, the
-// name pinned beside it, standouts lit, doubts washed. It replaced a leaders board: sorted by
-// goals, the first row IS the top scorer.
-//
-// Client only because sorting is a tap here rather than a link. That is the
-// difference from `/league` and `/prem`, whose sort survives being shared
-// because a whole page is one table; this is a tab inside a club, and a query
-// string on it would have to carry the club too.
+// A club's season, player by player: our position in the tile, standouts lit, doubts washed.
+// Client only because sorting is a tap here: a shared query string would have to carry the club too.
 
 export interface Row {
   player: FootballPlayer;
@@ -33,9 +27,7 @@ export interface Row {
 
 export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
   const [view, setView] = useState(VIEWS[0]?.key ?? "attack");
-  // **Null is the squad's own order** — the one the Squad tab prints, keeper
-  // first by the position our league files him at. A default sort would have the
-  // two tabs disagree from the first render.
+  // Null keeps the page's order, keeper first by our league's position, rather than a default sort.
   const [sort, setSort] = useState<{ key: keyof FootballPlayer["season"]; descending: boolean } | null>(
     null,
   );
@@ -58,12 +50,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
     });
   }, [rows, sort]);
 
-  /** Tapping a head sorts by it; tapping the sorted one turns it round.
-   *
-   *  Opens DESCENDING because every column is a count of something that
-   *  happened, and "most" is the question — even for goals conceded, where the
-   *  first tap answers "who is shipping them" before the second answers "who is
-   *  not". */
+  /** Tapping a head sorts by it, most first; tapping the sorted one turns it round. */
   const sortBy = (key: keyof FootballPlayer["season"]) =>
     setSort((current) =>
       current?.key === key ? { key, descending: !current.descending } : { key, descending: true },

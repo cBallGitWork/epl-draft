@@ -49,8 +49,7 @@ export function appeared(row: Named): boolean {
   return !row.bench || cameOn(row);
 }
 
-/** The eleven keeper-to-attack, then the bench keeper-to-attack, each by the position he was named in.
- *  A man who came on stays on the bench, in its order (Craig, 11 Sep 2026). */
+/** The eleven, then the bench, each keeper to attack; a sub stays in the bench's order (Craig, 11 Sep 2026). */
 export function ordered(sheet: PlTeamSheet, events: Map<number, PlManMatch>): Named[] {
   const did = (man: PlSquadMan) => forCode(events, man.code);
   const byPosition = (a: PlSquadMan, b: PlSquadMan) =>

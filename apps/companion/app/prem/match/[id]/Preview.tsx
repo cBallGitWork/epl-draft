@@ -3,32 +3,15 @@ import type { Club, ClubRecord, ClubStats, TableRow } from "@epl/core";
 import { LABEL, QUIET_FIGURE, TONE } from "@/app/desk";
 import type { Match } from "./match";
 
-// A match nobody has played yet.
-//
-// **Each side's record is the half that will actually apply** — the home club's
-// home record against the away club's away one. `docs/ui/prem.md` already ruled
-// this for the club page's Match tab: a whole-season figure either side compares
-// two numbers neither of which is about this fixture.
-//
-// **The difficulty is FPL's own and is labelled as theirs.** `Fixture` carries
-// their 1-5 rating for each side and its docblock says why we are willing to
-// print it at all — difficulty is an opinion, and the only defensible one is the
-// one the whole fantasy world is already reading. Null is a real answer and
-// prints a dash rather than a 3: "no opinion" and "average" are different claims.
-//
-// Nothing here is predicted and nothing is ours. A predicted eleven exists in
-// `data/intel/xi/`, is filed per round, and belongs to the tab that draws
-// elevens rather than to a summary — it arrives with the line-ups.
+// A match not yet played: the home side's home record against the away side's away one.
+// Difficulty is FPL's own rating; null prints a dash, as "no opinion" is not "average".
 
 const FORM = 5;
 
 export default function Preview({ match }: { match: Match }) {
   const { fixture, home, away, snapshot, season } = match;
   const table = leagueTable(season, snapshot.clubs);
-  // No players passed, on `/prem`'s own precedent: that argument exists to add
-  // up each club's SQUAD, and handing over six hundred men to have their seasons
-  // summed for a block that prints a record and a form guide is work with no
-  // reader.
+  // No players: they only feed squad totals, which this block never prints.
   const stats = clubStats(season, snapshot.clubs, []);
 
   return (
@@ -78,9 +61,7 @@ function SideBlock({
         {place === null ? "" : ` · ${ordinal(place)}`}
       </span>
 
-      {/* A club with no finished match yet has no record to state, and an
-          opening weekend is exactly when this screen is read. Dashes, never
-          nought: a nought here would say they played and drew a blank. */}
+      {/* Dashes, never nought, for a club with no finished match at this end. */}
       <span className="numeric text-sm font-bold">
         {record === null || record.played === 0
           ? DASH
@@ -92,9 +73,7 @@ function SideBlock({
           : `${record.goalsFor}–${record.goalsAgainst} in ${record.played}`}
       </span>
 
-      {/* Oldest first everywhere a form guide appears, which is `ClubStats`'
-          own rule — left to right is the direction the season ran. The last five
-          of a run that may be shorter. */}
+      {/* Oldest first, as the season ran: the last five at most. */}
       <span className={`flex gap-1 ${align === "end" ? "flex-row-reverse" : ""}`}>
         {form.length === 0 ? (
           <span className={QUIET_FIGURE}>—</span>
@@ -126,9 +105,7 @@ function formOf(stats: readonly ClubStats[], clubId: number) {
   return stats.find((row) => row.clubId === clubId)?.form.slice(-FORM) ?? [];
 }
 
-/** Where the table puts them — ours, computed off finished fixtures, which is
- *  what `/prem` does and FPL's own `position` field is not (it sits beside a
- *  `played` of nought on all twenty). Null before a ball is kicked. */
+/** Their place in our computed table, not FPL's unfilled `position`; null until they have played. */
 function placeOf(table: readonly TableRow[], clubId: number): number | null {
   const at = table.findIndex((row) => row.clubId === clubId);
   return at === -1 || table[at].played === 0 ? null : at + 1;

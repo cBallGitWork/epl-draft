@@ -1,11 +1,7 @@
 import Skeleton from "../../components/shell/Skeleton";
 import { GAMEWEEK_HEAD, GAMEWEEK_TITLE, LABEL, PANEL } from "@/app/desk";
 
-// The wall of scores, before any of them have come in.
-//
-// The desk's own furniture is a heading and two ruled blocks, and all of it is
-// ours: the titles say which half of the screen is the league and which is the
-// football, and neither needs a provider to be true.
+// The wall of scores before any have come in; its headings need no provider.
 
 export default function Loading() {
   return (

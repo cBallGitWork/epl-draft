@@ -4,8 +4,7 @@ import { bridge, getLeagueSquads } from "../squads";
 
 // Our league's view of the footballers on the Premiership screens — a club's squad and a match's two sides.
 
-/** What OUR league says about a footballer, by FPL code — Fantrax's letters, read through the bridge and shown
- *  beside his real position, never instead of it. Empty, not an error, when Fantrax will not answer. */
+/** What our league says about a footballer, shown beside his real position, never instead of it. */
 export interface LeagueOpinion {
   /** Fantrax's own id for him — what the player card's "Full profile" links to. */
   fantraxId: string;

@@ -17,9 +17,7 @@ export default function FootballRow({
 }: {
   fixture: Fixture;
   clubs: Map<number, Club>;
-  /** Where each club stands in the real table, by club id — CM's blue block
-   *  (`cm9900/24.jpg`). Empty while no football has been played, which is a
-   *  table with no ranking in it rather than twenty sides in 1st. */
+  /** Each club's place in the real table, by club id; empty before a ball is kicked, not twenty sides in 1st. */
   places: Map<number, number>;
   /** Whether the snapshot is fresh enough to speak in the present tense. */
   now: boolean;
@@ -35,10 +33,7 @@ export default function FootballRow({
       away={scoreSide(away, places)}
       score={played ? { home: fixture.homeScore, away: fixture.awayScore } : null}
       pending={fixture.kickoff === null ? "TBC" : londonTime(fixture.kickoff)}
-      // The state, in the vidiprinter's own place — inside the score cell, right
-      // of the figures (Craig, 5 Sep 2026). `--color-live` is a match in play
-      // and nothing else (DESIGN §3), so it is the one thing on the row that
-      // moves and the only thing wearing that red.
+      // Right of the figures (Craig, 5 Sep 2026); `--color-live` means a match in play and nothing else (DESIGN §3).
       clock={
         // A step up with the score it sits beside (Craig, 21 Sep 2026): the
         // minute is the other half of what a live row says.

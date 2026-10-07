@@ -14,7 +14,7 @@ import { MATCH_ROW } from "../matchRow";
 import type { Match } from "../match";
 
 // Both elevens and what the afternoon was worth — CM's team sheet (`cm9900/16.jpg`), or the pitch.
-// The figure is FPL's per-fixture points: Fantrax answers for 6 of 32 men, with a period total (counted 4 Sep 2026).
+// The figure is FPL's per-fixture points: Fantrax gives a period total, and for few of these men.
 
 export const revalidate = 30;
 

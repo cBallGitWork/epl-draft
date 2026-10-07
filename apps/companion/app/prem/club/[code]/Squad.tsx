@@ -10,23 +10,8 @@ import SquadTable from "./SquadTable";
 import type { LeagueOpinion } from "../../leagueOpinions";
 import ListAndPitch from "@/app/components/league/ListAndPitch";
 
-// A club's squad, as a list and as the eleven it is predicted to field.
-//
-// **Both at once on a desk, the list first under a thumb** (Craig, 3 Sep 2026:
-// "on desktop, both like fantasy page, list for mobile toggle"). `cm9900/19.jpg`
-// is the reference for the pair: Championship Manager sets its tactics list and
-// its pitch side by side because a desk has the width for it, and a phone does
-// not — so below `lg` the toggle chooses and the list is what opens.
-//
-// **The list opens rather than the grass**, and that is DESIGN §9's caution
-// applied honestly: the squad is a fact and the eleven is a prediction, so a
-// club page's first answer should not be a guess. §9's own sentence — "the
-// eleven that IS a shape keeps its pitch" — is why the pitch exists at all here:
-// this is eleven men somebody has picked, in a stated formation, rather than
-// thirty in position lines nobody chose.
-//
-// Client only because the toggle is state. Everything it draws was arranged on
-// the server.
+// A club's squad and its predicted eleven: side by side on a desk, a toggle below `lg` (Craig, 3 Sep 2026).
+// The list opens first: the squad is a fact and the eleven a prediction (DESIGN §9).
 
 export default function Squad({
   players,
@@ -81,11 +66,7 @@ export default function Squad({
       {grass === null ? (
         list
       ) : (
-        // Two equal columns above `lg`, the list left and the eleven right —
-        // `squad/[teamId]/Sheet`'s own grid, down to the gap: two columns butted
-        // three pixels apart read as one wide object split down the middle, and
-        // the air is what makes them two readings of the same club standing side
-        // by side. Below `lg` the toggle chooses and only one is drawn.
+        // Two columns above `lg`, `squad/[teamId]/Sheet`'s own grid; below it the toggle draws one.
         <ListAndPitch view={view} list={list} pitch={grass} />
       )}
     </div>

@@ -6,17 +6,7 @@ import SkeletonRows from "../components/shell/SkeletonRows";
 import { GAMEWEEK_HEAD, GAMEWEEK_TITLE } from "@/app/desk";
 import { SQUAD } from "../squad/routes";
 
-// The live centre, before either provider has answered.
-//
-// The head-to-head card is drawn and nothing under it is: every signed-in
-// manager has a pairing during a round, and which of the two plates below it is
-// open is a query this cannot read. A block that vanishes is worse than one that
-// was never drawn.
-//
-// The same card is `YourMatchup`'s Suspense fallback in `page.tsx`. Copied
-// rather than shared: two occurrences (CODE_RULES §1), and they answer different
-// questions — this one is the whole page waiting, that one is the head-to-head
-// waiting under football that has already landed.
+// The live centre before either provider answers. The card copies `MatchupWaiting`: two occurrences (CODE_RULES §1).
 
 export default function Loading() {
   return (

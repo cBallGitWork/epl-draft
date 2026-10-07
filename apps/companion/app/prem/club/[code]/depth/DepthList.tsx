@@ -5,9 +5,8 @@ import { doubtRow } from "../../../../components/football/doubtRow";
 import { BOARD, ROW_NAME, ROW_RULE } from "@/app/desk";
 import NameLink from "../NameLink";
 
-// The same chart as a list, for a phone (Craig, 25 Sep 2026: "depth chart prob needs a list
-// review for mobile too"): a row per place, its shirt in the index block and the men in line
-// across it, each washed by his doubt and boxed by why.
+// The same chart as a list, for a phone (Craig, 25 Sep 2026): a row per place, its shirt in the
+// index block and the men in line across it, each washed by his doubt and boxed by why.
 
 export default function DepthList({
   lines,

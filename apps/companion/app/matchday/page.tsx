@@ -23,12 +23,10 @@ import { Scores } from "./Scores";
 import RoundWord from "../components/league/RoundWord";
 import PageHeader from "../components/shell/PageHeader";
 import TabStrip from "../components/shell/TabStrip";
-import { bridge, getLeagueSquads } from "../squads";
+import { bridge, getLeagueSquads, readerTeamId } from "../squads";
 import { liveScores, periodPoints } from "../scoreboard";
 import YourMatchup from "./YourMatchup";
 import { marks } from "../involvement";
-
-import { readerTeamId } from "../squads";
 import { creditAssists, roundBreaks, roundGoals, roundRedCards, roundStreams } from "../commentary";
 import { roundAssistKinds } from "../assistKinds";
 import { LEADERS_SHOWN } from "../config";
@@ -46,8 +44,7 @@ import { clubPlaces } from "../prem/places";
 // The live centre: your head-to-head first, the real football under it. The football half runs
 // off FPL's public API alone, so it works with no Fantrax, no draft and no credential.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
+// Must equal PAGE_REVALIDATE in config.ts: Next reads it statically, so it cannot be imported.
 export const revalidate = 30;
 
 /** The snapshot and whether there is football on; the clock is read here so a render reproduces. */

@@ -22,8 +22,7 @@ import { LIVE } from "../../components/shell/sections";
 // Every league score and every Premier League score on one screen, read at arm's length.
 // Nothing here is a link: each row is tappable elsewhere, and 44px rows would push it off one screen.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
+// Must equal PAGE_REVALIDATE in config.ts: Next reads it statically, so it cannot be imported.
 export const revalidate = 30;
 
 export default async function DeskPage() {

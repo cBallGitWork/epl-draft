@@ -6,6 +6,7 @@ import {
   xiFault,
   londonDayAndDate,
   londonMoment,
+  ordinal,
 } from "@epl/core";
 import TabEmpty from "../../../components/league/TabEmpty";
 import ButtonLink from "../../../components/shell/ButtonLink";
@@ -17,20 +18,11 @@ import { intelSquads, intelXi } from "../../../intel";
 import { PANEL } from "@/app/desk";
 import { clubOr404, standing } from "./club";
 import { leagueOpinions } from "../../leagueOpinions";
-import { ordinal } from "@epl/core";
 
-// One club's squad — the screen every club name in this section links to.
-//
-// **Ordered by minutes, and it says so on the page.** FPL gives no position and
-// no shirt number (`squad_number` is a key on every element and null on all of
-// them, counted 29 Aug), so minutes is the only depth signal there is. It is not
-// the alphabetical order the fantasy squad board uses: that one is a GATE, it
-// withholds an arrangement somebody actually picked, and there is nothing to
-// withhold about a real club.
+// One club's squad, the screen every club name in this section links to.
+// FPL's `squad_number` is null on every element, so there is no shirt number to sort by.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — change both together. (`scripts/revalidate.test.ts`
-// holds the two together.)
+// Must equal PAGE_REVALIDATE in config.ts: Next reads it statically, so it cannot be imported.
 export const revalidate = 30;
 
 export default async function ClubSquadPage({ params }: { params: Promise<{ code: string }> }) {
@@ -40,33 +32,21 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
 
   const place = standing(fixtures, snapshot.clubs, club);
 
-  // The third caller arrived — Set Pieces — so the filter pair moved to
-  // `football/selectors.ts` as this note said it would. `squadOf` drops the
-  // departed (`onTheBooks`) and leaves the order to whoever asked, which is what
-  // varies between the three tabs.
+  // `squadOf` drops the departed and leaves the order to the caller.
   const squad = squadOf(snapshot, club.id)
     // Our league's position first, then what he has actually done inside it —
     // so each block reads as a depth chart rather than an alphabet.
     .sort(
       (a, b) =>
         fantasyDepth(league.get(a.code)) - fantasyDepth(league.get(b.code)) ||
-        // **Depth before minutes.** The sister's chart says who is first choice
-        // within his club and position, which is the question a squad list
-        // answers; minutes only approximates it and gets a returning first
-        // choice wrong all season. A man it has no tier for sorts after the men
-        // it does, rather than into the first-choice block.
+        // The sister's depth chart before minutes, which get a returning first choice wrong.
         depth(intelSquads.get(a.code)?.depthTier) - depth(intelSquads.get(b.code)?.depthTier) ||
         b.season.minutes - a.season.minutes ||
         b.season.starts - a.season.starts ||
         a.name.localeCompare(b.name),
     );
 
-  // The predicted eleven, and only when it is a real one. `xiFault` is the same
-  // check `intel-check` runs: a club that is not eleven, or a formation whose
-  // places do not add up, is NAMED rather than drawn short — a pitch with ten
-  // men on it is the failure nobody notices.
-  // Who the eleven is against. The season's fixtures rather than the round in
-  // view: a club's next match may be weeks off if its gameweek is blank.
+  // The season's fixtures, not the round in view: a blank gameweek can put the next match weeks off.
   const [next] = nextFixtures(fixtures, clubById(snapshot), club.id, 1);
   const against =
     next === undefined
@@ -74,9 +54,8 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
       : `v ${next.club.shortName}` +
         (next.fixture.kickoff === null ? "" : ` · ${londonDayAndDate(next.fixture.kickoff)}`);
 
-  // The latest eleven Scout has, always drawn, with when Scout last updated it
-  // (Craig, 23 Sep 2026: "Some data better than no data", "Just have a last
-  // updated date"). Only a broken eleven (`xiFault`) is refused.
+  // Scout's latest eleven, always drawn with when it was updated (Craig, 23 Sep 2026).
+  // `xiFault` refuses only a broken one: a pitch with ten men on it is the failure nobody notices.
   const predicted = intelXi.clubs[club.shortName];
   const eleven = xiFault(predicted) === null ? predictedEleven(predicted) : [];
   const updated = intelXi.fetchedAt === null ? null : londonMoment(intelXi.fetchedAt);
@@ -97,21 +76,12 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
               against={against}
               updated={updated}
             />
-            {/* **The paragraph explaining the ordering is gone** (Craig, 5 Sep
-                2026). It was here on the argument that a column of dashes with
-                no explanation reads as broken — true of a column of dashes, and
-                this board has none: the sort is the column headings' own job,
-                and two sentences of prose under a table is the thing
-                `strip-unneeded-info` names. The reasoning survives where it
-                belongs, in `SquadTable`'s docblock. */}
+            {/* No paragraph explaining the order (Craig, 5 Sep 2026). */}
           </>
         )}
       </section>
 
-      {/* `cm9900/25.jpg` puts the club's standing in its foot row — `6th in
-          PRM`, a button rather than a caption. The row proper arrives with its
-          second entry; until then this is the one way out, and it says where
-          the club is on the way. */}
+      {/* The club's standing as a button, as `cm9900/25.jpg`'s foot row draws it. */}
       <ButtonLink href={TABLE}>
         {place === null ? "Back to the table" : `${ordinal(place.place)} in the Premiership`}
       </ButtonLink>
@@ -119,12 +89,7 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
   );
 }
 
-/** Where a man sits in his club's depth chart, as a number to sort on.
- *
- *  Tier 0 is *unavailable* in the sister's vocabulary — out of the competition
- *  rather than injured — and those men are already dropped above, so it should
- *  never arrive. A man with no tier at all sorts after everyone who has one:
- *  absent is not first choice. */
+/** A man's depth-chart tier to sort on; no tier, or tier 0 (unavailable), sorts last. */
 function depth(tier: number | null | undefined): number {
   return tier === null || tier === undefined || tier === 0 ? Number.MAX_SAFE_INTEGER : tier;
 }

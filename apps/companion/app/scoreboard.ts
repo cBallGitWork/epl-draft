@@ -20,22 +20,10 @@ import {
 import { leagueCache } from "./leagueCache";
 import { orRefusal, tell } from "./refusals";
 
-// What the head-to-head board is made of, kept out of the page for the same
-// reason `squad/league.ts` and `players/pool.ts` are: the reads and the joins
-// have their own reasons to be the way they are, and a route file should be
-// about what appears on screen.
+// The head-to-head board's reads and joins, kept out of the page.
 
-/** Fantrax's totals for this period, and the refusal if there was one.
- *
- *  Failure-tolerant on purpose: a scoreboard we cannot read costs the numbers,
- *  not the page. Who plays whom comes from a different read and is still worth
- *  showing on its own.
- *
- *  The refusal is carried rather than swallowed. A missing total already renders
- *  as a dash in healthy reads — a team Fantrax has no number for — so dashes
- *  alone cannot say "the scoreboard is down", and a page claiming to show
- *  Fantrax's points while showing none of them is the confident wrong answer
- *  principle 4 forbids. */
+/** Fantrax's totals for this period, with the refusal carried: a dash alone cannot say the
+ *  scoreboard is down. */
 const readScores = leagueCache("live-scores",
   async (period: number): Promise<{
     scores: [string, LiveTeamScore][];
@@ -63,10 +51,7 @@ const readScores = leagueCache("live-scores",
 export async function liveScores(
   period: number,
 ): Promise<{ scores: Map<string, LiveTeamScore>; refused: string | null }> {
-  // Cached because this is the read sixteen phones poll every thirty seconds on
-  // a Saturday — by some distance the most frequent request the app makes. A Map
-  // does not survive the cache round trip, so entries go in and the Map is built
-  // out here.
+  // A Map does not survive the cache, so entries cross it and the Map is built out here.
   const { scores, refused } = await readScores(period);
   return { scores: new Map(scores), refused };
 }
@@ -77,19 +62,9 @@ export async function periodPoints(period: number): Promise<Map<string, number>>
   return new Map([...players, ...bench].flatMap(([, squad]) => squad.map((man) => [man.fantraxId, man.points])));
 }
 
-/** One squad's points this period, priced at the slot each man is filling.
- *
- *  **Filtered to one team out here, never inside the cache.** The cached read is
- *  the whole league's and is keyed only by league and period — nothing about who
- *  is asking may cross into it, which is the rule `leagueCache` exists to keep.
- *
- *  **And it is only ever called for a side whose eleven is already on screen.**
- *  Which section a man is priced in says whether he is in the eleven, the exact
- *  fact the gate withholds before a deadline, so this is asked behind the gate.
- *
- *  `points` and `breakdown` hold every man Fantrax priced, reserves included, for
- *  drawing; `counted` is the eleven alone, and is what adds up to the scoreline.
- *  Null when Fantrax refused; a man with no entry has not played. */
+/** One squad's points at each man's slot, filtered outside the shared cache and asked only behind
+ *  the lineup gate, since the section a man is priced in reveals the eleven. `counted` is the
+ *  eleven alone and makes the scoreline; the rest include reserves. Null when Fantrax refused. */
 export async function squadLivePoints(
   period: number,
   teamId: string,
@@ -131,17 +106,8 @@ export async function squadLivePoints(
   };
 }
 
-/** The clean sheets Fantrax has not credited yet, per team.
- *
- *  Empty when the league did not describe its scoring: a preview we cannot price
- *  is one we do not show, rather than one we guess at.
- *
- *  Empty too while the lineup gate is shut, and that is the load-bearing one.
- *  Only active players are owed a clean sheet, so a green `+4` beside a squad
- *  says a defender is in the eleven — the exact fact the gate exists to withhold
- *  before a deadline. The gate is normally open whenever a fixture is in play,
- *  but not when Fantrax has failed to say which period it is, and a leak in the
- *  case where we are least sure is the one that cannot be taken back. */
+/** The clean sheets Fantrax has not credited yet, per team. Empty without the league's scoring, and
+ *  while the lineup gate is shut: a `+4` beside a squad says a defender is in the eleven. */
 export function pendingByTeam(
   teams: readonly RosteredTeam[],
   rules: ScoringRules | null,

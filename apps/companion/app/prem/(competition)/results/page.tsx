@@ -5,18 +5,9 @@ import { clubPlaces } from "../../places";
 import Rounds, { byRound, panelRows } from "../../Rounds";
 import { footballNow, seasonFixtures } from "../../../football";
 
-// What has already happened: every finished round, newest first.
-//
-// **Finished, and not merely started.** FPL writes a running score onto a match
-// in play, and a round still being played belongs on Live, where a number that
-// moves is meant to move. This page is the archive and everything on it is
-// final — the same line `league/results` draws for the same reason.
-//
-// No provider call of its own: `seasonFixtures` is the whole season in one read
-// and is already cached for the league schedule and the table.
+// Every finished match by round, newest first; FPL scores a match in play, and that belongs on Live.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
+// Must equal PAGE_REVALIDATE in config.ts: Next reads it statically, so it cannot be imported.
 export const revalidate = 30;
 
 export default async function ResultsPage() {
