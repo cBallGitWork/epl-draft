@@ -6,8 +6,8 @@ name: Intel staleness
 # `packages/core/src/football/intel/freshness.ts`), when a predicted club is not an eleven, and
 # when the eleven is for a gameweek already played. A red run opens the issue "alert: intel-check".
 #
-# Its own job, not the producers': `scout-xi.yml` and `make export-epl-draft` in the sister repo
-# fail most plausibly by not running, which would silence a check that lived inside them.
+# Its own job, not the producers': `scout-xi.yml` and the Mac's `scripts/sync-intel.sh` fail most
+# plausibly by not running, which would silence a check that lived inside them.
 #
 # Not on `pull_request`: a stale export is a fact about the data, not the branch, and would turn
 # every PR red with nothing in it to fix.
