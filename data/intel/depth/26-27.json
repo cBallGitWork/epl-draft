@@ -2,14 +2,39 @@
  "manifest": {
   "season": "26-27",
   "gameweek": 6,
-  "exportedAt": "2026-09-25T13:45:10.701893+00:00",
+  "exportedAt": "2026-10-07T13:23:42.588237+00:00",
   "rows": 20,
   "sources": [
    {
-    "path": "hub:/roster/chart",
-    "mtime": null
+    "path": "data/derived/team_squad/season=26-27/team_squad.parquet",
+    "mtime": "2026-10-07T12:41:50.158451+00:00"
+   },
+   {
+    "path": "data/match_logs/player_match_log/season=26-27/player_match_log.parquet",
+    "mtime": "2026-10-07T07:18:54.520117+00:00"
+   },
+   {
+    "path": "data/match_logs/player_match_log/season=25-26/player_match_log.parquet",
+    "mtime": "2026-09-25T08:16:45.308569+00:00"
+   },
+   {
+    "path": "data/match_logs/player_match_log/season=24-25/player_match_log.parquet",
+    "mtime": "2026-09-23T12:38:15.851603+00:00"
+   },
+   {
+    "path": "data/match_logs/player_match_log/season=23-24/player_match_log.parquet",
+    "mtime": "2026-09-23T12:38:15.662621+00:00"
+   },
+   {
+    "path": "data/match_logs/player_match_log/season=22-23/player_match_log.parquet",
+    "mtime": "2026-09-23T12:38:15.459906+00:00"
+   },
+   {
+    "path": "data/match_logs/player_match_log/season=21-22/player_match_log.parquet",
+    "mtime": "2026-09-23T12:38:15.267749+00:00"
    }
-  ]
+  ],
+  "fpl": "https://fantasy.premierleague.com/api/bootstrap-static/"
  },
  "clubs": {
   "ARS": {
@@ -60,11 +85,19 @@
       },
       {
        "code": 199798,
-       "share": 0.758
+       "share": 0.638
       },
       {
        "code": 500040,
-       "share": 0.242
+       "share": 0.222
+      },
+      {
+       "code": 445122,
+       "share": 0.087
+      },
+      {
+       "code": 198869,
+       "share": 0.052
       }
      ]
     },
@@ -113,11 +146,11 @@
      "holders": [
       {
        "code": 204480,
-       "share": 0.75
+       "share": 0.682
       },
       {
        "code": 499169,
-       "share": 0.575
+       "share": 0.642
       },
       {
        "code": 208706,
@@ -125,10 +158,6 @@
       },
       {
        "code": 481655,
-       "share": 0.0
-      },
-      {
-       "code": 219847,
        "share": 0.128
       }
      ]
@@ -140,11 +169,19 @@
      "holders": [
       {
        "code": 439509,
-       "share": 1.0
+       "share": 0.75
       },
       {
        "code": 232413,
-       "share": 0.0
+       "share": 0.149
+      },
+      {
+       "code": 248857,
+       "share": 0.051
+      },
+      {
+       "code": 223340,
+       "share": 0.051
       }
      ]
     },
@@ -155,7 +192,7 @@
      "holders": [
       {
        "code": 184029,
-       "share": 0.697
+       "share": 0.725
       },
       {
        "code": 232413,
@@ -163,11 +200,11 @@
       },
       {
        "code": 616077,
-       "share": 0.067
+       "share": 0.051
       },
       {
        "code": 219847,
-       "share": 0.048
+       "share": 0.036
       },
       {
        "code": 223340,
@@ -197,7 +234,7 @@
      "holders": [
       {
        "code": 219847,
-       "share": 0.8
+       "share": 0.665
       },
       {
        "code": 224117,
@@ -205,7 +242,15 @@
       },
       {
        "code": 195384,
-       "share": 0.0
+       "share": 0.052
+      },
+      {
+       "code": 232413,
+       "share": 0.03
+      },
+      {
+       "code": 248857,
+       "share": 0.03
       }
      ]
     }
@@ -235,24 +280,24 @@
      "shirts": 1,
      "holders": [
       {
-       "code": 149484,
-       "share": 0.895
-      },
-      {
        "code": 244954,
        "share": 0.0
       },
       {
+       "code": 149484,
+       "share": 0.863
+      },
+      {
+       "code": 184667,
+       "share": 0.036
+      },
+      {
        "code": 245719,
-       "share": 0.038
+       "share": 0.036
       },
       {
        "code": 487992,
-       "share": 0.023
-      },
-      {
-       "code": 199796,
-       "share": 0.023
+       "share": 0.022
       }
      ]
     },
@@ -263,11 +308,23 @@
      "holders": [
       {
        "code": 184667,
-       "share": 0.757
+       "share": 0.783
       },
       {
        "code": 245719,
-       "share": 0.19
+       "share": 0.139
+      },
+      {
+       "code": 214590,
+       "share": 0.026
+      },
+      {
+       "code": 199796,
+       "share": 0.026
+      },
+      {
+       "code": 606798,
+       "share": 0.026
       }
      ]
     },
@@ -282,15 +339,15 @@
       },
       {
        "code": 487992,
-       "share": 0.851
+       "share": 0.861
       },
       {
        "code": 184667,
-       "share": 0.074
+       "share": 0.069
       },
       {
        "code": 214590,
-       "share": 0.074
+       "share": 0.069
       }
      ]
     },
@@ -346,12 +403,12 @@
      "shirts": 1,
      "holders": [
       {
-       "code": 577285,
-       "share": 0.526
+       "code": 195546,
+       "share": 0.492
       },
       {
-       "code": 195546,
-       "share": 0.333
+       "code": 577285,
+       "share": 0.421
       },
       {
        "code": 493105,
@@ -359,11 +416,7 @@
       },
       {
        "code": 122806,
-       "share": 0.048
-      },
-      {
-       "code": 614071,
-       "share": 0.029
+       "share": 0.051
       }
      ]
     },
@@ -373,12 +426,12 @@
      "shirts": 1,
      "holders": [
       {
-       "code": 195546,
-       "share": 0.457
+       "code": 614071,
+       "share": 0.722
       },
       {
-       "code": 614071,
-       "share": 0.543
+       "code": 195546,
+       "share": 0.278
       },
       {
        "code": 88894,
@@ -397,7 +450,7 @@
       },
       {
        "code": 638987,
-       "share": 0.146
+       "share": 0.139
       }
      ]
     },
@@ -421,6 +474,241 @@
       {
        "code": 195546,
        "share": 0.0
+      }
+     ]
+    }
+   ]
+  },
+  "BHA": {
+   "formation": "4-2-3-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 489639,
+       "share": 1.0
+      },
+      {
+       "code": 49262,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 83299,
+       "share": 0.566
+      },
+      {
+       "code": 222694,
+       "share": 0.305
+      },
+      {
+       "code": 204120,
+       "share": 0.0
+      },
+      {
+       "code": 512123,
+       "share": 0.13
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 610799,
+       "share": 0.94
+      },
+      {
+       "code": 550090,
+       "share": 0.06
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 204120,
+       "share": 0.571
+      },
+      {
+       "code": 512123,
+       "share": 0.105
+      },
+      {
+       "code": 231416,
+       "share": 0.324
+      },
+      {
+       "code": 465730,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 467779,
+       "share": 0.0
+      },
+      {
+       "code": 231416,
+       "share": 0.625
+      },
+      {
+       "code": 451490,
+       "share": 0.308
+      },
+      {
+       "code": 610799,
+       "share": 0.039
+      },
+      {
+       "code": 60307,
+       "share": 0.027
+      }
+     ]
+    },
+    {
+     "slot": "DM",
+     "label": "Defensive mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 60307,
+       "share": 0.973
+      },
+      {
+       "code": 592984,
+       "share": 0.586
+      },
+      {
+       "code": 509416,
+       "share": 0.347
+      },
+      {
+       "code": 204120,
+       "share": 0.08
+      }
+     ]
+    },
+    {
+     "slot": "LW",
+     "label": "Left wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 465730,
+       "share": 0.709
+      },
+      {
+       "code": 451340,
+       "share": 0.0
+      },
+      {
+       "code": 592031,
+       "share": 0.0
+      },
+      {
+       "code": 612855,
+       "share": 0.097
+      },
+      {
+       "code": 514254,
+       "share": 0.088
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 532529,
+       "share": 0.0
+      },
+      {
+       "code": 611695,
+       "share": 0.588
+      },
+      {
+       "code": 509416,
+       "share": 0.293
+      },
+      {
+       "code": 463067,
+       "share": 0.037
+      },
+      {
+       "code": 514254,
+       "share": 0.028
+      }
+     ]
+    },
+    {
+     "slot": "RW",
+     "label": "Right wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 514254,
+       "share": 0.868
+      },
+      {
+       "code": 592031,
+       "share": 0.0
+      },
+      {
+       "code": 219249,
+       "share": 0.074
+      },
+      {
+       "code": 231416,
+       "share": 0.051
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 647850,
+       "share": 0.704
+      },
+      {
+       "code": 463067,
+       "share": 0.23
+      },
+      {
+       "code": 608181,
+       "share": 0.0
+      },
+      {
+       "code": 219249,
+       "share": 0.033
+      },
+      {
+       "code": 612855,
+       "share": 0.033
       }
      ]
     }
@@ -466,11 +754,11 @@
      "holders": [
       {
        "code": 463981,
-       "share": 0.989
+       "share": 0.995
       },
       {
        "code": 242882,
-       "share": 0.011
+       "share": 0.005
       }
      ]
     },
@@ -496,7 +784,7 @@
      "holders": [
       {
        "code": 54469,
-       "share": 0.947
+       "share": 0.953
       },
       {
        "code": 436893,
@@ -515,23 +803,23 @@
      "holders": [
       {
        "code": 503139,
-       "share": 0.929
+       "share": 0.477
       },
       {
        "code": 200785,
-       "share": 0.731
+       "share": 1.0
       },
       {
        "code": 155408,
-       "share": 0.298
+       "share": 0.309
       },
       {
        "code": 158499,
-       "share": 0.042
+       "share": 0.103
       },
       {
-       "code": 614574,
-       "share": 0.0
+       "code": 201658,
+       "share": 0.046
       }
      ]
     },
@@ -542,11 +830,11 @@
      "holders": [
       {
        "code": 201658,
-       "share": 0.91
+       "share": 0.954
       },
       {
        "code": 496208,
-       "share": 0.09
+       "share": 0.046
       },
       {
        "code": 489888,
@@ -569,15 +857,15 @@
       },
       {
        "code": 158499,
-       "share": 0.836
-      },
-      {
-       "code": 201658,
-       "share": 0.043
+       "share": 0.897
       },
       {
        "code": 503139,
-       "share": 0.043
+       "share": 0.023
+      },
+      {
+       "code": 575901,
+       "share": 0.028
       }
      ]
     },
@@ -588,11 +876,11 @@
      "holders": [
       {
        "code": 499604,
-       "share": 0.952
+       "share": 0.976
       },
       {
        "code": 111317,
-       "share": 0.048
+       "share": 0.024
       },
       {
        "code": 496208,
@@ -607,11 +895,11 @@
      "holders": [
       {
        "code": 444102,
-       "share": 0.987
+       "share": 0.993
       },
       {
        "code": 561245,
-       "share": 0.013
+       "share": 0.007
       }
      ]
     }
@@ -673,11 +961,11 @@
       },
       {
        "code": 513086,
-       "share": 1.0
+       "share": 0.85
       },
       {
        "code": 191866,
-       "share": 0.0
+       "share": 0.15
       }
      ]
     },
@@ -726,11 +1014,11 @@
       },
       {
        "code": 513545,
-       "share": 0.793
+       "share": 0.725
       },
       {
        "code": 508395,
-       "share": 0.312
+       "share": 0.379
       },
       {
        "code": 207283,
@@ -763,24 +1051,24 @@
      "shirts": 1,
      "holders": [
       {
-       "code": 207283,
-       "share": 0.0
+       "code": 440089,
+       "share": 0.595
       },
       {
-       "code": 440089,
-       "share": 0.457
+       "code": 207283,
+       "share": 0.0
       },
       {
        "code": 244858,
        "share": 0.164
       },
       {
-       "code": 508395,
-       "share": 0.272
-      },
-      {
        "code": 543295,
        "share": 0.0
+      },
+      {
+       "code": 508395,
+       "share": 0.113
       }
      ]
     },
@@ -828,245 +1116,6 @@
     }
    ]
   },
-  "BHA": {
-   "formation": "4-2-3-1",
-   "slots": [
-    {
-     "slot": "GK",
-     "label": "Goalkeeper",
-     "shirts": 1,
-     "holders": [
-      {
-       "code": 489639,
-       "share": 1.0
-      },
-      {
-       "code": 49262,
-       "share": 0.0
-      }
-     ]
-    },
-    {
-     "slot": "LCB",
-     "label": "Left centre-back",
-     "shirts": 1,
-     "holders": [
-      {
-       "code": 83299,
-       "share": 0.75
-      },
-      {
-       "code": 222694,
-       "share": 0.25
-      },
-      {
-       "code": 204120,
-       "share": 0.0
-      }
-     ]
-    },
-    {
-     "slot": "RCB",
-     "label": "Right centre-back",
-     "shirts": 1,
-     "holders": [
-      {
-       "code": 610799,
-       "share": 0.94
-      },
-      {
-       "code": 550090,
-       "share": 0.06
-      }
-     ]
-    },
-    {
-     "slot": "LB",
-     "label": "Left-back",
-     "shirts": 1,
-     "holders": [
-      {
-       "code": 204120,
-       "share": 0.755
-      },
-      {
-       "code": 512123,
-       "share": 0.19
-      },
-      {
-       "code": 231416,
-       "share": 0.0
-      },
-      {
-       "code": 465730,
-       "share": 0.0
-      },
-      {
-       "code": 222694,
-       "share": 0.055
-      }
-     ]
-    },
-    {
-     "slot": "RB",
-     "label": "Right-back",
-     "shirts": 1,
-     "holders": [
-      {
-       "code": 467779,
-       "share": 0.0
-      },
-      {
-       "code": 231416,
-       "share": 0.821
-      },
-      {
-       "code": 451490,
-       "share": 0.137
-      },
-      {
-       "code": 610799,
-       "share": 0.042
-      }
-     ]
-    },
-    {
-     "slot": "DM",
-     "label": "Defensive mid",
-     "shirts": 2,
-     "holders": [
-      {
-       "code": 60307,
-       "share": 0.973
-      },
-      {
-       "code": 509416,
-       "share": 0.506
-      },
-      {
-       "code": 592984,
-       "share": 0.392
-      },
-      {
-       "code": 204120,
-       "share": 0.08
-      },
-      {
-       "code": 219249,
-       "share": 0.047
-      }
-     ]
-    },
-    {
-     "slot": "LW",
-     "label": "Left wing",
-     "shirts": 1,
-     "holders": [
-      {
-       "code": 465730,
-       "share": 0.794
-      },
-      {
-       "code": 451340,
-       "share": 0.0
-      },
-      {
-       "code": 592031,
-       "share": 0.0
-      },
-      {
-       "code": 612855,
-       "share": 0.097
-      },
-      {
-       "code": 611695,
-       "share": 0.055
-      }
-     ]
-    },
-    {
-     "slot": "AM",
-     "label": "Attacking mid",
-     "shirts": 1,
-     "holders": [
-      {
-       "code": 532529,
-       "share": 0.0
-      },
-      {
-       "code": 611695,
-       "share": 0.725
-      },
-      {
-       "code": 509416,
-       "share": 0.134
-      },
-      {
-       "code": 463067,
-       "share": 0.039
-      },
-      {
-       "code": 514254,
-       "share": 0.039
-      }
-     ]
-    },
-    {
-     "slot": "RW",
-     "label": "Right wing",
-     "shirts": 1,
-     "holders": [
-      {
-       "code": 514254,
-       "share": 0.868
-      },
-      {
-       "code": 592031,
-       "share": 0.0
-      },
-      {
-       "code": 219249,
-       "share": 0.074
-      },
-      {
-       "code": 231416,
-       "share": 0.0
-      },
-      {
-       "code": 463067,
-       "share": 0.057
-      }
-     ]
-    },
-    {
-     "slot": "ST",
-     "label": "Centre-forward",
-     "shirts": 1,
-     "holders": [
-      {
-       "code": 647850,
-       "share": 0.705
-      },
-      {
-       "code": 463067,
-       "share": 0.23
-      },
-      {
-       "code": 608181,
-       "share": 0.0
-      },
-      {
-       "code": 219249,
-       "share": 0.033
-      },
-      {
-       "code": 612855,
-       "share": 0.033
-      }
-     ]
-    }
-   ]
-  },
   "CHE": {
    "formation": "3-4-2-1",
    "slots": [
@@ -1092,15 +1141,15 @@
      "holders": [
       {
        "code": 460028,
-       "share": 0.708
-      },
-      {
-       "code": 551210,
-       "share": 0.195
+       "share": 0.769
       },
       {
        "code": 444463,
-       "share": 0.097
+       "share": 0.128
+      },
+      {
+       "code": 551210,
+       "share": 0.103
       }
      ]
     },
@@ -1111,11 +1160,7 @@
      "holders": [
       {
        "code": 437499,
-       "share": 0.936
-      },
-      {
-       "code": 460028,
-       "share": 0.064
+       "share": 1.0
       }
      ]
     },
@@ -1126,11 +1171,11 @@
      "holders": [
       {
        "code": 444463,
-       "share": 0.826
+       "share": 0.831
       },
       {
        "code": 577016,
-       "share": 0.174
+       "share": 0.169
       }
      ]
     },
@@ -1141,11 +1186,11 @@
      "holders": [
       {
        "code": 551210,
-       "share": 0.534
+       "share": 0.623
       },
       {
        "code": 498444,
-       "share": 0.453
+       "share": 0.377
       }
      ]
     },
@@ -1156,19 +1201,15 @@
      "holders": [
       {
        "code": 247632,
-       "share": 0.467
+       "share": 0.593
       },
       {
        "code": 482609,
-       "share": 0.395
+       "share": 0.407
       },
       {
        "code": 225796,
-       "share": 0.098
-      },
-      {
-       "code": 577016,
-       "share": 0.039
+       "share": 0.0
       }
      ]
     },
@@ -1179,23 +1220,23 @@
      "holders": [
       {
        "code": 514356,
-       "share": 0.565
-      },
-      {
-       "code": 56979,
-       "share": 0.499
-      },
-      {
-       "code": 543158,
-       "share": 0.262
+       "share": 0.568
       },
       {
        "code": 225796,
-       "share": 0.434
+       "share": 0.41
+      },
+      {
+       "code": 56979,
+       "share": 0.663
+      },
+      {
+       "code": 543158,
+       "share": 0.275
       },
       {
        "code": 486672,
-       "share": 0.24
+       "share": 0.0
       }
      ]
     },
@@ -1206,19 +1247,23 @@
      "holders": [
       {
        "code": 244851,
-       "share": 0.75
+       "share": 0.683
       },
       {
        "code": 244850,
        "share": 0.857
       },
       {
-       "code": 247632,
-       "share": 0.236
+       "code": 475168,
+       "share": 0.04
       },
       {
-       "code": 624773,
-       "share": 0.149
+       "code": 247632,
+       "share": 0.151
+      },
+      {
+       "code": 463936,
+       "share": 0.105
       }
      ]
     },
@@ -1229,15 +1274,11 @@
      "holders": [
       {
        "code": 475168,
-       "share": 0.75
+       "share": 0.71
       },
       {
        "code": 50175,
-       "share": 0.25
-      },
-      {
-       "code": 247632,
-       "share": 0.0
+       "share": 0.29
       }
      ]
     }
@@ -1268,15 +1309,19 @@
      "holders": [
       {
        "code": 231065,
-       "share": 0.909
+       "share": 0.715
       },
       {
        "code": 539142,
        "share": 0.0
       },
       {
+       "code": 461102,
+       "share": 0.148
+      },
+      {
        "code": 80178,
-       "share": 0.091
+       "share": 0.137
       }
      ]
     },
@@ -1287,7 +1332,11 @@
      "holders": [
       {
        "code": 461102,
-       "share": 1.0
+       "share": 0.715
+      },
+      {
+       "code": 231065,
+       "share": 0.285
       }
      ]
     },
@@ -1297,16 +1346,20 @@
      "shirts": 1,
      "holders": [
       {
-       "code": 461102,
-       "share": 0.0
-      },
-      {
        "code": 539142,
        "share": 0.0
       },
       {
        "code": 566213,
-       "share": 1.0
+       "share": 0.84
+      },
+      {
+       "code": 461102,
+       "share": 0.137
+      },
+      {
+       "code": 451284,
+       "share": 0.023
       }
      ]
     },
@@ -1331,16 +1384,20 @@
      "shirts": 1,
      "holders": [
       {
-       "code": 451284,
-       "share": 0.75
+       "code": 204813,
+       "share": 0.203
       },
       {
-       "code": 204813,
-       "share": 0.25
+       "code": 451284,
+       "share": 0.56
       },
       {
        "code": 661888,
-       "share": 0.0
+       "share": 0.207
+      },
+      {
+       "code": 566213,
+       "share": 0.03
       }
      ]
     },
@@ -1350,12 +1407,16 @@
      "shirts": 2,
      "holders": [
       {
+       "code": 428580,
+       "share": 0.72
+      },
+      {
        "code": 168144,
        "share": 0.943
       },
       {
-       "code": 428580,
-       "share": 0.72
+       "code": 226965,
+       "share": 0.0
       },
       {
        "code": 661888,
@@ -1377,12 +1438,12 @@
        "share": 0.0
       },
       {
-       "code": 230730,
-       "share": 0.0
-      },
-      {
        "code": 241293,
        "share": 0.703
+      },
+      {
+       "code": 230730,
+       "share": 0.0
       },
       {
        "code": 480457,
@@ -1423,12 +1484,12 @@
        "share": 0.0
       },
       {
-       "code": 627221,
-       "share": 0.19
+       "code": 230730,
+       "share": 0.564
       },
       {
-       "code": 230730,
-       "share": 0.532
+       "code": 627221,
+       "share": 0.139
       },
       {
        "code": 218997,
@@ -1436,7 +1497,7 @@
       },
       {
        "code": 469272,
-       "share": 0.07
+       "share": 0.08
       }
      ]
     }
@@ -1471,18 +1532,18 @@
       },
       {
        "code": 651426,
-       "share": 0.563
+       "share": 0.572
       },
       {
        "code": 605972,
        "share": 0.33
       },
       {
-       "code": 220362,
-       "share": 0.0
+       "code": 223723,
+       "share": 0.023
       },
       {
-       "code": 223723,
+       "code": 220362,
        "share": 0.0
       }
      ]
@@ -1498,15 +1559,11 @@
       },
       {
        "code": 223723,
-       "share": 0.75
+       "share": 0.727
       },
       {
        "code": 427623,
-       "share": 0.183
-      },
-      {
-       "code": 152551,
-       "share": 0.067
+       "share": 0.273
       }
      ]
     },
@@ -1517,11 +1574,11 @@
      "holders": [
       {
        "code": 427623,
-       "share": 0.681
+       "share": 0.727
       },
       {
        "code": 651426,
-       "share": 0.249
+       "share": 0.238
       },
       {
        "code": 220362,
@@ -1529,7 +1586,7 @@
       },
       {
        "code": 152551,
-       "share": 0.069
+       "share": 0.035
       }
      ]
     },
@@ -1540,11 +1597,11 @@
      "holders": [
       {
        "code": 244723,
-       "share": 0.916
+       "share": 0.957
       },
       {
        "code": 172850,
-       "share": 0.084
+       "share": 0.043
       }
      ]
     },
@@ -1555,11 +1612,11 @@
      "holders": [
       {
        "code": 570794,
-       "share": 0.897
+       "share": 0.75
       },
       {
        "code": 242313,
-       "share": 0.103
+       "share": 0.234
       }
      ]
     },
@@ -1570,7 +1627,7 @@
      "holders": [
       {
        "code": 496221,
-       "share": 0.839
+       "share": 0.918
       },
       {
        "code": 450063,
@@ -1578,7 +1635,7 @@
       },
       {
        "code": 209400,
-       "share": 0.161
+       "share": 0.082
       },
       {
        "code": 108413,
@@ -1596,20 +1653,20 @@
      "shirts": 2,
      "holders": [
       {
+       "code": 209400,
+       "share": 0.639
+      },
+      {
        "code": 488024,
-       "share": 0.746
+       "share": 0.769
       },
       {
        "code": 232185,
-       "share": 0.555
-      },
-      {
-       "code": 209400,
-       "share": 0.509
+       "share": 0.448
       },
       {
        "code": 205533,
-       "share": 0.191
+       "share": 0.144
       },
       {
        "code": 433154,
@@ -1624,7 +1681,7 @@
      "holders": [
       {
        "code": 247412,
-       "share": 0.881
+       "share": 0.845
       },
       {
        "code": 231747,
@@ -1632,7 +1689,7 @@
       },
       {
        "code": 205533,
-       "share": 0.119
+       "share": 0.155
       }
      ]
     }
@@ -1689,7 +1746,11 @@
      "holders": [
       {
        "code": 224967,
-       "share": 0.992
+       "share": 0.75
+      },
+      {
+       "code": 480455,
+       "share": 0.113
       }
      ]
     },
@@ -1726,12 +1787,12 @@
        "share": 0.621
       },
       {
-       "code": 128295,
-       "share": 0.0
-      },
-      {
        "code": 244860,
        "share": 0.137
+      },
+      {
+       "code": 128295,
+       "share": 0.0
       },
       {
        "code": 215413,
@@ -1795,7 +1856,7 @@
        "share": 0.0
       },
       {
-       "code": 550615,
+       "code": 232928,
        "share": 0.02
       }
      ]
@@ -1807,7 +1868,7 @@
      "holders": [
       {
        "code": 586309,
-       "share": 0.906
+       "share": 0.91
       },
       {
        "code": 502697,
@@ -1854,11 +1915,11 @@
      "holders": [
       {
        "code": 232892,
-       "share": 0.903
+       "share": 0.9
       },
       {
        "code": 246301,
-       "share": 0.097
+       "share": 0.1
       }
      ]
     },
@@ -1888,11 +1949,11 @@
      "holders": [
       {
        "code": 169528,
-       "share": 0.918
+       "share": 0.958
       },
       {
        "code": 184349,
-       "share": 0.082
+       "share": 0.042
       }
      ]
     },
@@ -1903,11 +1964,11 @@
      "holders": [
       {
        "code": 166477,
-       "share": 0.937
+       "share": 0.968
       },
       {
        "code": 167074,
-       "share": 0.063
+       "share": 0.032
       }
      ]
     },
@@ -1918,7 +1979,7 @@
      "holders": [
       {
        "code": 207189,
-       "share": 0.803
+       "share": 0.828
       },
       {
        "code": 153366,
@@ -1934,7 +1995,7 @@
       },
       {
        "code": 153133,
-       "share": 0.424
+       "share": 0.399
       }
      ]
     },
@@ -1945,18 +2006,14 @@
      "holders": [
       {
        "code": 153133,
-       "share": 0.517
+       "share": 0.571
       },
       {
        "code": 571779,
-       "share": 0.483
+       "share": 0.429
       },
       {
        "code": 560552,
-       "share": 0.0
-      },
-      {
-       "code": 477555,
        "share": 0.0
       }
      ]
@@ -1968,11 +2025,11 @@
      "holders": [
       {
        "code": 577725,
-       "share": 0.715
+       "share": 0.855
       },
       {
        "code": 209289,
-       "share": 0.285
+       "share": 0.145
       }
      ]
     },
@@ -1983,19 +2040,19 @@
      "holders": [
       {
        "code": 477555,
-       "share": 0.908
+       "share": 0.906
       },
       {
        "code": 184349,
-       "share": 0.031
+       "share": 0.032
       },
       {
        "code": 166477,
-       "share": 0.031
+       "share": 0.032
       },
       {
        "code": 153133,
-       "share": 0.031
+       "share": 0.03
       }
      ]
     },
@@ -2048,11 +2105,11 @@
        "share": 1.0
       },
       {
-       "code": 597462,
+       "code": 160817,
        "share": 0.0
       },
       {
-       "code": 160817,
+       "code": 597462,
        "share": 0.0
       }
      ]
@@ -2064,7 +2121,11 @@
      "holders": [
       {
        "code": 108416,
-       "share": 1.0
+       "share": 0.852
+      },
+      {
+       "code": 597462,
+       "share": 0.148
       }
      ]
     },
@@ -2120,15 +2181,15 @@
       },
       {
        "code": 552946,
-       "share": 0.16
+       "share": 0.0
       },
       {
        "code": 445028,
        "share": 0.0
       },
       {
-       "code": 171270,
-       "share": 0.11
+       "code": 469266,
+       "share": 0.146
       }
      ]
     },
@@ -2139,11 +2200,11 @@
      "holders": [
       {
        "code": 608227,
-       "share": 0.793
+       "share": 0.725
       },
       {
        "code": 243951,
-       "share": 0.207
+       "share": 0.275
       }
      ]
     },
@@ -2253,11 +2314,11 @@
       },
       {
        "code": 176420,
-       "share": 0.207
+       "share": 0.0
       },
       {
        "code": 572584,
-       "share": 0.0
+       "share": 0.207
       }
      ]
     },
@@ -2333,19 +2394,19 @@
       },
       {
        "code": 461587,
-       "share": 0.862
-      },
-      {
-       "code": 481624,
-       "share": 0.041
-      },
-      {
-       "code": 232457,
-       "share": 0.024
+       "share": 0.203
       },
       {
        "code": 572584,
-       "share": 0.024
+       "share": 0.678
+      },
+      {
+       "code": 481624,
+       "share": 0.043
+      },
+      {
+       "code": 232457,
+       "share": 0.026
       }
      ]
     },
@@ -2429,11 +2490,11 @@
       },
       {
        "code": 220627,
-       "share": 0.852
+       "share": 0.833
       },
       {
        "code": 173774,
-       "share": 0.148
+       "share": 0.167
       }
      ]
     },
@@ -2448,11 +2509,11 @@
       },
       {
        "code": 437497,
-       "share": 0.132
+       "share": 0.0
       },
       {
        "code": 220627,
-       "share": 0.0
+       "share": 0.132
       }
      ]
     },
@@ -2517,7 +2578,7 @@
       },
       {
        "code": 435997,
-       "share": 0.664
+       "share": 0.655
       },
       {
        "code": 153682,
@@ -2564,15 +2625,11 @@
      "holders": [
       {
        "code": 116535,
-       "share": 0.913
+       "share": 0.956
       },
       {
        "code": 449027,
-       "share": 0.087
-      },
-      {
-       "code": 155503,
-       "share": 0.0
+       "share": 0.044
       }
      ]
     },
@@ -2594,7 +2651,7 @@
      "holders": [
       {
        "code": 606702,
-       "share": 1.0
+       "share": 0.75
       },
       {
        "code": 647681,
@@ -2602,7 +2659,15 @@
       },
       {
        "code": 171287,
-       "share": 0.0
+       "share": 0.204
+      },
+      {
+       "code": 214285,
+       "share": 0.023
+      },
+      {
+       "code": 445087,
+       "share": 0.023
       }
      ]
     },
@@ -2613,15 +2678,11 @@
      "holders": [
       {
        "code": 544877,
-       "share": 0.701
+       "share": 0.763
       },
       {
        "code": 214285,
        "share": 0.231
-      },
-      {
-       "code": 171287,
-       "share": 0.068
       }
      ]
     },
@@ -2645,10 +2706,6 @@
       {
        "code": 171287,
        "share": 0.0
-      },
-      {
-       "code": 158983,
-       "share": 0.0
       }
      ]
     },
@@ -2658,19 +2715,23 @@
      "shirts": 2,
      "holders": [
       {
-       "code": 243016,
-       "share": 0.748
+       "code": 424876,
+       "share": 0.86
       },
       {
-       "code": 424876,
-       "share": 0.723
+       "code": 243016,
+       "share": 0.735
       },
       {
        "code": 441266,
-       "share": 0.528
+       "share": 0.405
       },
       {
        "code": 591386,
+       "share": 0.0
+      },
+      {
+       "code": 158983,
        "share": 0.0
       }
      ]
@@ -2686,14 +2747,14 @@
       },
       {
        "code": 243298,
-       "share": 0.189
-      },
-      {
-       "code": 611922,
-       "share": 0.0
+       "share": 0.026
       },
       {
        "code": 551499,
+       "share": 0.163
+      },
+      {
+       "code": 611922,
        "share": 0.0
       }
      ]
@@ -2705,15 +2766,15 @@
      "holders": [
       {
        "code": 494595,
-       "share": 0.78
+       "share": 0.889
       },
       {
        "code": 491501,
-       "share": 0.041
+       "share": 0.111
       },
       {
        "code": 424876,
-       "share": 0.179
+       "share": 0.0
       }
      ]
     },
@@ -2723,24 +2784,24 @@
      "shirts": 1,
      "holders": [
       {
-       "code": 551499,
-       "share": 0.533
+       "code": 243298,
+       "share": 0.355
       },
       {
-       "code": 243298,
-       "share": 0.213
+       "code": 551499,
+       "share": 0.425
       },
       {
        "code": 611922,
-       "share": 0.08
-      },
-      {
-       "code": 216094,
-       "share": 0.077
+       "share": 0.106
       },
       {
        "code": 223541,
        "share": 0.0
+      },
+      {
+       "code": 216094,
+       "share": 0.032
       }
      ]
     },
@@ -2751,7 +2812,7 @@
      "holders": [
       {
        "code": 219168,
-       "share": 0.746
+       "share": 0.654
       },
       {
        "code": 510663,
@@ -2759,15 +2820,15 @@
       },
       {
        "code": 514514,
-       "share": 0.053
-      },
-      {
-       "code": 243298,
-       "share": 0.201
+       "share": 0.139
       },
       {
        "code": 223541,
        "share": 0.0
+      },
+      {
+       "code": 243298,
+       "share": 0.076
       }
      ]
     }
@@ -2783,11 +2844,11 @@
      "holders": [
       {
        "code": 204936,
-       "share": 0.944
+       "share": 0.971
       },
       {
        "code": 106921,
-       "share": 0.056
+       "share": 0.029
       }
      ]
     },
@@ -2798,7 +2859,7 @@
      "holders": [
       {
        "code": 209036,
-       "share": 0.726
+       "share": 0.725
       },
       {
        "code": 616222,
@@ -2806,11 +2867,11 @@
       },
       {
        "code": 171314,
-       "share": 0.238
+       "share": 0.258
       },
       {
        "code": 477424,
-       "share": 0.036
+       "share": 0.0
       }
      ]
     },
@@ -2821,15 +2882,15 @@
      "holders": [
       {
        "code": 171314,
-       "share": 0.6
+       "share": 0.661
       },
       {
        "code": 578153,
-       "share": 0.331
+       "share": 0.241
       },
       {
        "code": 209036,
-       "share": 0.069
+       "share": 0.099
       }
      ]
     },
@@ -2840,15 +2901,15 @@
      "holders": [
       {
        "code": 477424,
-       "share": 0.699
+       "share": 0.848
       },
       {
        "code": 472769,
-       "share": 0.199
+       "share": 0.08
       },
       {
        "code": 448514,
-       "share": 0.102
+       "share": 0.055
       }
      ]
     },
@@ -2859,15 +2920,15 @@
      "holders": [
       {
        "code": 465351,
-       "share": 0.702
+       "share": 0.665
       },
       {
        "code": 578153,
-       "share": 0.209
+       "share": 0.278
       },
       {
        "code": 477064,
-       "share": 0.09
+       "share": 0.057
       }
      ]
     },
@@ -2881,19 +2942,19 @@
        "share": 0.959
       },
       {
-       "code": 637238,
-       "share": 0.304
-      },
-      {
        "code": 448047,
        "share": 0.737
       },
       {
-       "code": 472769,
-       "share": 0.0
+       "code": 637238,
+       "share": 0.203
       },
       {
-       "code": 209036,
+       "code": 91651,
+       "share": 0.101
+      },
+      {
+       "code": 472769,
        "share": 0.0
       }
      ]
@@ -2905,15 +2966,15 @@
      "holders": [
       {
        "code": 437730,
-       "share": 0.576
+       "share": 0.535
       },
       {
        "code": 248875,
-       "share": 0.424
+       "share": 0.366
       },
       {
        "code": 440993,
-       "share": 0.0
+       "share": 0.099
       }
      ]
     },
@@ -2924,23 +2985,19 @@
      "holders": [
       {
        "code": 466052,
-       "share": 0.717
-      },
-      {
-       "code": 448047,
-       "share": 0.085
+       "share": 0.802
       },
       {
        "code": 472769,
        "share": 0.08
       },
       {
-       "code": 437730,
-       "share": 0.031
+       "code": 448047,
+       "share": 0.085
       },
       {
        "code": 465351,
-       "share": 0.025
+       "share": 0.024
       }
      ]
     },
@@ -2950,20 +3007,24 @@
      "shirts": 1,
      "holders": [
       {
+       "code": 209244,
+       "share": 0.0
+      },
+      {
        "code": 440993,
        "share": 0.518
       },
       {
        "code": 624777,
-       "share": 0.19
-      },
-      {
-       "code": 209244,
-       "share": 0.0
+       "share": 0.139
       },
       {
        "code": 437730,
-       "share": 0.282
+       "share": 0.161
+      },
+      {
+       "code": 91651,
+       "share": 0.019
       }
      ]
     },
@@ -2974,15 +3035,11 @@
      "holders": [
       {
        "code": 223094,
-       "share": 0.938
-      },
-      {
-       "code": 209244,
-       "share": 0.0
+       "share": 0.961
       },
       {
        "code": 437730,
-       "share": 0.062
+       "share": 0.039
       }
      ]
     }
@@ -2998,11 +3055,11 @@
      "holders": [
       {
        "code": 465247,
-       "share": 0.999
+       "share": 1.0
       },
       {
        "code": 59735,
-       "share": 0.001
+       "share": 0.0
       }
      ]
     },
@@ -3013,11 +3070,11 @@
      "holders": [
       {
        "code": 221820,
-       "share": 0.908
+       "share": 0.919
       },
       {
        "code": 606745,
-       "share": 0.092
+       "share": 0.081
       },
       {
        "code": 95658,
@@ -3032,7 +3089,7 @@
      "holders": [
       {
        "code": 95658,
-       "share": 0.891
+       "share": 0.903
       },
       {
        "code": 209365,
@@ -3040,7 +3097,7 @@
       },
       {
        "code": 550864,
-       "share": 0.109
+       "share": 0.097
       }
      ]
     },
@@ -3051,11 +3108,11 @@
      "holders": [
       {
        "code": 106760,
-       "share": 0.856
+       "share": 0.883
       },
       {
        "code": 596777,
-       "share": 0.144
+       "share": 0.116
       }
      ]
     },
@@ -3066,11 +3123,15 @@
      "holders": [
       {
        "code": 216051,
-       "share": 0.798
+       "share": 0.8
       },
       {
        "code": 230001,
-       "share": 0.202
+       "share": 0.179
+      },
+      {
+       "code": 606745,
+       "share": 0.02
       }
      ]
     },
@@ -3081,7 +3142,7 @@
      "holders": [
       {
        "code": 516895,
-       "share": 0.75
+       "share": 0.693
       },
       {
        "code": 166989,
@@ -3089,11 +3150,11 @@
       },
       {
        "code": 535301,
-       "share": 0.301
+       "share": 0.332
       },
       {
        "code": 532605,
-       "share": 0.0
+       "share": 0.026
       },
       {
        "code": 184341,
@@ -3108,15 +3169,15 @@
      "holders": [
       {
        "code": 176297,
-       "share": 0.75
+       "share": 0.647
       },
       {
        "code": 430871,
-       "share": 0.0
+       "share": 0.255
       },
       {
        "code": 596777,
-       "share": 0.233
+       "share": 0.098
       },
       {
        "code": 493250,
@@ -3131,7 +3192,7 @@
      "holders": [
       {
        "code": 141746,
-       "share": 0.985
+       "share": 0.994
       }
      ]
     },
@@ -3142,7 +3203,7 @@
      "holders": [
       {
        "code": 446008,
-       "share": 0.783
+       "share": 0.762
       },
       {
        "code": 493250,
@@ -3150,15 +3211,15 @@
       },
       {
        "code": 576628,
-       "share": 0.111
-      },
-      {
-       "code": 458249,
-       "share": 0.023
+       "share": 0.126
       },
       {
        "code": 184341,
-       "share": 0.038
+       "share": 0.037
+      },
+      {
+       "code": 176297,
+       "share": 0.028
       }
      ]
     },
@@ -3169,23 +3230,15 @@
      "holders": [
       {
        "code": 430871,
-       "share": 0.719
+       "share": 0.703
       },
       {
        "code": 485711,
-       "share": 0.168
+       "share": 0.058
       },
       {
        "code": 446008,
-       "share": 0.0
-      },
-      {
-       "code": 458249,
-       "share": 0.051
-      },
-      {
-       "code": 166989,
-       "share": 0.024
+       "share": 0.157
       }
      ]
     }
@@ -3220,7 +3273,7 @@
      "holders": [
       {
        "code": 220237,
-       "share": 0.877
+       "share": 0.938
       },
       {
        "code": 78916,
@@ -3228,7 +3281,7 @@
       },
       {
        "code": 119471,
-       "share": 0.123
+       "share": 0.062
       }
      ]
     },
@@ -3239,7 +3292,7 @@
      "holders": [
       {
        "code": 465642,
-       "share": 0.982
+       "share": 0.991
       }
      ]
     },
@@ -3250,11 +3303,15 @@
      "holders": [
       {
        "code": 487838,
-       "share": 1.0
+       "share": 0.943
       },
       {
        "code": 78916,
        "share": 0.0
+      },
+      {
+       "code": 441191,
+       "share": 0.057
       }
      ]
     },
@@ -3268,16 +3325,16 @@
        "share": 0.0
       },
       {
-       "code": 441191,
-       "share": 0.722
+       "code": 547719,
+       "share": 0.438
       },
       {
-       "code": 547719,
-       "share": 0.221
+       "code": 441191,
+       "share": 0.425
       },
       {
        "code": 114243,
-       "share": 0.056
+       "share": 0.137
       }
      ]
     },
@@ -3296,11 +3353,11 @@
       },
       {
        "code": 547719,
-       "share": 0.56
+       "share": 0.312
       },
       {
        "code": 200089,
-       "share": 0.174
+       "share": 0.422
       },
       {
        "code": 180974,
@@ -3315,11 +3372,11 @@
      "holders": [
       {
        "code": 201666,
-       "share": 0.821
+       "share": 0.865
       },
       {
        "code": 611665,
-       "share": 0.16
+       "share": 0.127
       },
       {
        "code": 180974,
@@ -3341,12 +3398,12 @@
        "share": 0.722
       },
       {
-       "code": 200089,
-       "share": 0.278
+       "code": 216646,
+       "share": 0.069
       },
       {
-       "code": 216646,
-       "share": 0.0
+       "code": 200089,
+       "share": 0.209
       }
      ]
     },
@@ -3357,7 +3414,7 @@
      "holders": [
       {
        "code": 114243,
-       "share": 0.894
+       "share": 0.84
       },
       {
        "code": 449434,
@@ -3365,15 +3422,7 @@
       },
       {
        "code": 201666,
-       "share": 0.06
-      },
-      {
-       "code": 200089,
-       "share": 0.023
-      },
-      {
-       "code": 613221,
-       "share": 0.023
+       "share": 0.112
       }
      ]
     },
@@ -3388,11 +3437,19 @@
       },
       {
        "code": 216646,
-       "share": 0.974
+       "share": 0.931
+      },
+      {
+       "code": 114243,
+       "share": 0.023
+      },
+      {
+       "code": 201666,
+       "share": 0.023
       },
       {
        "code": 611665,
-       "share": 0.026
+       "share": 0.023
       }
      ]
     }
@@ -3408,11 +3465,11 @@
      "holders": [
       {
        "code": 85633,
-       "share": 0.987
+       "share": 0.993
       },
       {
        "code": 221389,
-       "share": 0.013
+       "share": 0.007
       }
      ]
     },
@@ -3423,15 +3480,11 @@
      "holders": [
       {
        "code": 575476,
-       "share": 0.806
+       "share": 0.902
       },
       {
-       "code": 575458,
-       "share": 0.068
-      },
-      {
-       "code": 470315,
-       "share": 0.126
+       "code": 568420,
+       "share": 0.098
       }
      ]
     },
@@ -3446,15 +3499,11 @@
       },
       {
        "code": 568420,
-       "share": 0.798
+       "share": 0.902
       },
       {
        "code": 575476,
-       "share": 0.107
-      },
-      {
-       "code": 575458,
-       "share": 0.096
+       "share": 0.098
       }
      ]
     },
@@ -3465,7 +3514,7 @@
      "holders": [
       {
        "code": 575458,
-       "share": 0.726
+       "share": 0.82
       },
       {
        "code": 227444,
@@ -3473,7 +3522,7 @@
       },
       {
        "code": 159506,
-       "share": 0.274
+       "share": 0.18
       }
      ]
     },
@@ -3484,11 +3533,11 @@
      "holders": [
       {
        "code": 215136,
-       "share": 0.876
+       "share": 0.937
       },
       {
        "code": 470315,
-       "share": 0.124
+       "share": 0.063
       }
      ]
     },
@@ -3508,14 +3557,6 @@
       {
        "code": 500151,
        "share": 0.0
-      },
-      {
-       "code": 215136,
-       "share": 0.0
-      },
-      {
-       "code": 575458,
-       "share": 0.0
       }
      ]
     },
@@ -3525,16 +3566,16 @@
      "shirts": 2,
      "holders": [
       {
+       "code": 432714,
+       "share": 0.821
+      },
+      {
        "code": 204561,
        "share": 0.897
       },
       {
-       "code": 432714,
-       "share": 0.647
-      },
-      {
        "code": 210462,
-       "share": 0.431
+       "share": 0.283
       },
       {
        "code": 204968,
@@ -3542,7 +3583,7 @@
       },
       {
        "code": 250199,
-       "share": 0.025
+       "share": 0.0
       }
      ]
     },
@@ -3553,23 +3594,23 @@
      "holders": [
       {
        "code": 222531,
-       "share": 0.875
+       "share": 0.937
       },
       {
        "code": 456512,
-       "share": 0.613
+       "share": 0.773
       },
       {
-       "code": 250199,
-       "share": 0.039
+       "code": 465680,
+       "share": 0.141
       },
       {
        "code": 432714,
-       "share": 0.067
+       "share": 0.04
       },
       {
        "code": 209046,
-       "share": 0.271
+       "share": 0.109
       }
      ]
     },
@@ -3593,221 +3634,6 @@
       {
        "code": 60689,
        "share": 0.0
-      }
-     ]
-    }
-   ]
-  },
-  "TOT": {
-   "formation": "4-2-3-1",
-   "slots": [
-    {
-     "slot": "GK",
-     "label": "Goalkeeper",
-     "shirts": 1,
-     "holders": [
-      {
-       "code": 485055,
-       "share": 0.895
-      },
-      {
-       "code": 67089,
-       "share": 0.105
-      }
-     ]
-    },
-    {
-     "slot": "LCB",
-     "label": "Left centre-back",
-     "shirts": 1,
-     "holders": [
-      {
-       "code": 491279,
-       "share": 0.909
-      },
-      {
-       "code": 221466,
-       "share": 0.091
-      },
-      {
-       "code": 109646,
-       "share": 0.0
-      }
-     ]
-    },
-    {
-     "slot": "RCB",
-     "label": "Right centre-back",
-     "shirts": 1,
-     "holders": [
-      {
-       "code": 469142,
-       "share": 0.999
-      },
-      {
-       "code": 109646,
-       "share": 0.001
-      }
-     ]
-    },
-    {
-     "slot": "LB",
-     "label": "Left-back",
-     "shirts": 1,
-     "holders": [
-      {
-       "code": 122798,
-       "share": 0.795
-      },
-      {
-       "code": 487053,
-       "share": 0.205
-      },
-      {
-       "code": 115556,
-       "share": 0.0
-      }
-     ]
-    },
-    {
-     "slot": "RB",
-     "label": "Right-back",
-     "shirts": 1,
-     "holders": [
-      {
-       "code": 441164,
-       "share": 0.711
-      },
-      {
-       "code": 547701,
-       "share": 0.289
-      }
-     ]
-    },
-    {
-     "slot": "DM",
-     "label": "Defensive mid",
-     "shirts": 2,
-     "holders": [
-      {
-       "code": 202993,
-       "share": 0.878
-      },
-      {
-       "code": 432422,
-       "share": 0.901
-      },
-      {
-       "code": 570526,
-       "share": 0.08
-      },
-      {
-       "code": 551226,
-       "share": 0.106
-      },
-      {
-       "code": 547701,
-       "share": 0.035
-      }
-     ]
-    },
-    {
-     "slot": "LW",
-     "label": "Left wing",
-     "shirts": 1,
-     "holders": [
-      {
-       "code": 511499,
-       "share": 0.454
-      },
-      {
-       "code": 438234,
-       "share": 0.546
-      },
-      {
-       "code": 493362,
-       "share": 0.0
-      },
-      {
-       "code": 550839,
-       "share": 0.0
-      }
-     ]
-    },
-    {
-     "slot": "AM",
-     "label": "Attacking mid",
-     "shirts": 1,
-     "holders": [
-      {
-       "code": 551226,
-       "share": 0.618
-      },
-      {
-       "code": 232787,
-       "share": 0.382
-      },
-      {
-       "code": 550839,
-       "share": 0.0
-      },
-      {
-       "code": 493362,
-       "share": 0.0
-      },
-      {
-       "code": 460842,
-       "share": 0.0
-      }
-     ]
-    },
-    {
-     "slot": "RW",
-     "label": "Right wing",
-     "shirts": 1,
-     "holders": [
-      {
-       "code": 510281,
-       "share": 0.671
-      },
-      {
-       "code": 550839,
-       "share": 0.0
-      },
-      {
-       "code": 460842,
-       "share": 0.322
-      },
-      {
-       "code": 441164,
-       "share": 0.008
-      }
-     ]
-    },
-    {
-     "slot": "ST",
-     "label": "Centre-forward",
-     "shirts": 1,
-     "holders": [
-      {
-       "code": 154566,
-       "share": 0.671
-      },
-      {
-       "code": 438234,
-       "share": 0.274
-      },
-      {
-       "code": 493362,
-       "share": 0.0
-      },
-      {
-       "code": 511499,
-       "share": 0.021
-      },
-      {
-       "code": 460842,
-       "share": 0.021
       }
      ]
     }
@@ -3838,15 +3664,23 @@
      "holders": [
       {
        "code": 223827,
-       "share": 0.584
+       "share": 0.319
       },
       {
        "code": 201895,
-       "share": 0.352
+       "share": 0.424
       },
       {
        "code": 167512,
-       "share": 0.064
+       "share": 0.147
+      },
+      {
+       "code": 135720,
+       "share": 0.069
+      },
+      {
+       "code": 638411,
+       "share": 0.042
       }
      ]
     },
@@ -3861,11 +3695,11 @@
       },
       {
        "code": 200834,
-       "share": 0.0
+       "share": 0.127
       },
       {
        "code": 223827,
-       "share": 0.127
+       "share": 0.0
       },
       {
        "code": 167512,
@@ -3952,11 +3786,11 @@
        "share": 0.0
       },
       {
-       "code": 484420,
+       "code": 461199,
        "share": 0.0
       },
       {
-       "code": 461199,
+       "code": 484420,
        "share": 0.0
       }
      ]
@@ -3968,7 +3802,7 @@
      "holders": [
       {
        "code": 484420,
-       "share": 0.905
+       "share": 0.907
       },
       {
        "code": 547027,
@@ -4006,11 +3840,218 @@
      "holders": [
       {
        "code": 441264,
-       "share": 0.993
+       "share": 0.745
       },
       {
        "code": 437505,
-       "share": 0.007
+       "share": 0.246
+      }
+     ]
+    }
+   ]
+  },
+  "TOT": {
+   "formation": "4-2-3-1",
+   "slots": [
+    {
+     "slot": "GK",
+     "label": "Goalkeeper",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 485055,
+       "share": 0.955
+      },
+      {
+       "code": 67089,
+       "share": 0.045
+      }
+     ]
+    },
+    {
+     "slot": "LCB",
+     "label": "Left centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 491279,
+       "share": 0.918
+      },
+      {
+       "code": 221466,
+       "share": 0.082
+      },
+      {
+       "code": 109646,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RCB",
+     "label": "Right centre-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 469142,
+       "share": 0.749
+      },
+      {
+       "code": 109646,
+       "share": 0.136
+      },
+      {
+       "code": 221466,
+       "share": 0.031
+      }
+     ]
+    },
+    {
+     "slot": "LB",
+     "label": "Left-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 122798,
+       "share": 0.795
+      },
+      {
+       "code": 487053,
+       "share": 0.205
+      },
+      {
+       "code": 115556,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RB",
+     "label": "Right-back",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 441164,
+       "share": 0.647
+      },
+      {
+       "code": 547701,
+       "share": 0.353
+      }
+     ]
+    },
+    {
+     "slot": "DM",
+     "label": "Defensive mid",
+     "shirts": 2,
+     "holders": [
+      {
+       "code": 432422,
+       "share": 0.901
+      },
+      {
+       "code": 202993,
+       "share": 0.888
+      },
+      {
+       "code": 570526,
+       "share": 0.086
+      },
+      {
+       "code": 551226,
+       "share": 0.106
+      }
+     ]
+    },
+    {
+     "slot": "LW",
+     "label": "Left wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 511499,
+       "share": 0.558
+      },
+      {
+       "code": 493362,
+       "share": 0.0
+      },
+      {
+       "code": 438234,
+       "share": 0.333
+      },
+      {
+       "code": 550839,
+       "share": 0.0
+      },
+      {
+       "code": 510281,
+       "share": 0.034
+      }
+     ]
+    },
+    {
+     "slot": "AM",
+     "label": "Attacking mid",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 551226,
+       "share": 0.618
+      },
+      {
+       "code": 232787,
+       "share": 0.382
+      },
+      {
+       "code": 550839,
+       "share": 0.0
+      },
+      {
+       "code": 493362,
+       "share": 0.0
+      },
+      {
+       "code": 510281,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "RW",
+     "label": "Right wing",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 510281,
+       "share": 0.671
+      },
+      {
+       "code": 550839,
+       "share": 0.0
+      },
+      {
+       "code": 460842,
+       "share": 0.329
+      },
+      {
+       "code": 441164,
+       "share": 0.0
+      }
+     ]
+    },
+    {
+     "slot": "ST",
+     "label": "Centre-forward",
+     "shirts": 1,
+     "holders": [
+      {
+       "code": 154566,
+       "share": 0.573
+      },
+      {
+       "code": 438234,
+       "share": 0.427
       }
      ]
     }

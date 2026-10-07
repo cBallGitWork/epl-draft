@@ -437,10 +437,10 @@ label: the formation, and every shirt with the men in line for it, the chart's o
 ] } } }
 ```
 
-Read from the hub's `GET /roster/chart?team=<label>` (`weeks[0].slots`), each holder's
-`player_id` keyed to an FPL code through the 26-27 identity store. 59 KB. **Exported by hand
-on 25 Sep 2026**, like §7 and for the same reason; `export-epl-draft` should take it over,
-and until then the chart is as fresh as that run (the club page says when).
+Written by `export-epl-draft` since 7 Oct 2026 (`export_depth` in the sister's `epl_draft_intel.py`): the
+same engine calls as the hub's `GET /roster/chart` (`club_claims`, `week_availability`,
+`chart_for_week`) at the next round, each holder's `player_id` keyed to an FPL code through the
+squad's `fpl_element_id`. 61 KB. Hand-exported from the hub until then (25 Sep 2026).
 
 ## 9. `lines/{season}.json` — a man's league season in totals
 
