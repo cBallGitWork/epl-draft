@@ -59,6 +59,8 @@ node --env-file=apps/companion/.env.local -e '
 node tools/ui/shot.mjs /squad/<teamId> out.png --team-cookie "$TMPDIR/team.cookie"
 ```
 
+Signed in, a bare `/` redirects to Mail or Live (`proxy.ts`), so shoot the paper as `/?paper`.
+
 A team id comes off any squad or matchup link. Delete the file when done.
 
 ## 5. Read the PNG
