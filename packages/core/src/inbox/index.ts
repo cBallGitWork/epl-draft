@@ -6,4 +6,5 @@ export { dealNews } from "./messages";
 export { minutesNews } from "./minutes";
 export type { MinutesSide } from "./minutes";
 export { noteBesideChance } from "./notes";
+export { offerNews } from "./offers";
 export { fantraxDay, fantraxTime } from "./when";

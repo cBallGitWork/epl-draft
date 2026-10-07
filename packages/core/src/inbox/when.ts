@@ -1,17 +1,17 @@
 import { FANTRAX_TIMEZONE } from "../config";
 import { londonDayAndDate, londonTime } from "../time";
 
-// Fantrax stamps its business `"Wed Sep 2, 2026, 6:11AM"`, in US Eastern with no offset. Read as an
-// instant, it prints in London like every other time.
+// Fantrax stamps its business `"Wed Sep 2, 2026, 6:11AM"` with no offset: US Eastern anonymously, a session's own
+// zone with a cookie. Read as an instant, it prints in London like every other time.
 
 /** Fantrax's stamp as the ISO instant it names, or null when it does not read. Their clock is
- *  US Eastern, EDT or EST by the stamp's own date, and the offset is read for that date. */
-export function fantraxInstant(stamp: string): string | null {
+ *  US Eastern, EDT or EST by the stamp's own date, unless a session's log names another zone. */
+export function fantraxInstant(stamp: string, timeZone: string = FANTRAX_TIMEZONE): string | null {
   const wall = fantraxWall(stamp);
   if (wall === null) return null;
   // The offset at the wall reading is right but for the hours around a change; read again where it lands.
-  const guess = wall - (easternWall(wall) - wall);
-  return new Date(wall - (easternWall(guess) - guess)).toISOString();
+  const guess = wall - (wallIn(timeZone, wall) - wall);
+  return new Date(wall - (wallIn(timeZone, guess) - guess)).toISOString();
 }
 
 /** `"Wed 2 Sept 11:11"`: Fantrax's stamp in London time. */
@@ -45,19 +45,25 @@ function fantraxWall(stamp: string): number | null {
 
 const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 
-/** Eastern's wall clock at an instant, read back as if it were UTC. */
-function easternWall(at: number): number {
-  const field = new Map(EASTERN.formatToParts(at).map((part) => [part.type, Number(part.value)] as const));
+/** One formatter per zone: a whole inbox of stamps reads through the same one or two. */
+const FORMATS = new Map<string, Intl.DateTimeFormat>();
+
+/** A zone's wall clock at an instant, read back as if it were UTC. */
+function wallIn(timeZone: string, at: number): number {
+  let format = FORMATS.get(timeZone);
+  if (format === undefined) {
+    format = new Intl.DateTimeFormat("en-US", {
+      timeZone,
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hourCycle: "h23",
+    });
+    FORMATS.set(timeZone, format);
+  }
+  const field = new Map(format.formatToParts(at).map((part) => [part.type, Number(part.value)] as const));
   const read = (type: Intl.DateTimeFormatPartTypes): number => field.get(type) ?? 0;
   return Date.UTC(read("year"), read("month") - 1, read("day"), read("hour"), read("minute"));
 }
-
-const EASTERN = new Intl.DateTimeFormat("en-US", {
-  timeZone: FANTRAX_TIMEZONE,
-  year: "numeric",
-  month: "numeric",
-  day: "numeric",
-  hour: "numeric",
-  minute: "numeric",
-  hourCycle: "h23",
-});

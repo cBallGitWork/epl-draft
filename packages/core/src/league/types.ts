@@ -114,6 +114,8 @@ export interface LeagueTransaction {
   period: number | null;
   /** False for a pending proposal, which Fantrax's default filter hides. */
   executed: boolean;
+  /** Fantrax's verdict on the set, verbatim, or null where the row carried none. */
+  resultCode: string | null;
 }
 
 export interface StandingsRow {

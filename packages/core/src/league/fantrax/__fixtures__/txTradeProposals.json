@@ -1,0 +1,698 @@
+{
+  "table": {
+    "caption": "Trades",
+    "header": {
+      "cells": [
+        {
+          "align": "LEFT",
+          "sortDirection": 1,
+          "name": "From",
+          "shortName": "From",
+          "key": "from"
+        },
+        {
+          "align": "LEFT",
+          "sortDirection": 1,
+          "name": "To",
+          "shortName": "To",
+          "key": "to"
+        },
+        {
+          "align": "LEFT",
+          "sortDirection": 1,
+          "name": "Date Processed (BST)",
+          "shortName": "Date (BST)",
+          "key": "date"
+        },
+        {
+          "sortDirection": 1,
+          "name": "{0} on which this transaction takes effect",
+          "shortName": "Gameweek",
+          "key": "week"
+        }
+      ]
+    },
+    "rows": [
+      {
+        "scorer": {
+          "teamName": "Bournemouth",
+          "urlName": "james-hill",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Bournemouth.png",
+          "scorerId": "061vb",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "703"
+          ],
+          "defaultPosId": "703",
+          "posShortNames": "D",
+          "team": false,
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "703"
+          ],
+          "teamId": "110034",
+          "name": "James Hill",
+          "teamShortName": "BOU",
+          "shortName": "J. Hill"
+        },
+        "resultCode": "TRADE_CANCELLED",
+        "executed": false,
+        "result": {
+          "content": "Cancelled - Trade was cancelled by the proposer or commissioner."
+        },
+        "numInGroup": 6,
+        "txSetId": "cefz126hmuybnp1p",
+        "feesUsed": false,
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "GlengarryHearts",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "from",
+            "teamId": "syjkob6cmuobagfu"
+          },
+          {
+            "align": "LEFT",
+            "content": "The Raccoons",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "to",
+            "teamId": "l5kunst8msgbirdf"
+          },
+          {
+            "align": "LEFT",
+            "content": "Wed Oct 7, 2026, 5:29PM",
+            "rowspan": 6,
+            "key": "date"
+          },
+          {
+            "content": "",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Newcastle United",
+          "urlName": "harvey-barnes",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Newcastle_United.png",
+          "scorerId": "04abn",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "702",
+            "701"
+          ],
+          "defaultPosId": "702",
+          "posShortNames": "M,F",
+          "team": false,
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "702",
+            "701"
+          ],
+          "teamId": "110101",
+          "name": "Harvey Barnes",
+          "teamShortName": "NEW",
+          "shortName": "H. Barnes"
+        },
+        "resultCode": "TRADE_CANCELLED",
+        "executed": false,
+        "result": {
+          "content": "Cancelled - Trade was cancelled by the proposer or commissioner."
+        },
+        "txSetId": "cefz126hmuybnp1p",
+        "feesUsed": false,
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "GlengarryHearts",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "from",
+            "teamId": "syjkob6cmuobagfu"
+          },
+          {
+            "align": "LEFT",
+            "content": "The Raccoons",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "to",
+            "teamId": "l5kunst8msgbirdf"
+          },
+          {
+            "content": "",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Fulham",
+          "urlName": "alex-iwobi",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Fulham.png",
+          "scorerId": "038ze",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "702",
+            "701"
+          ],
+          "defaultPosId": "701",
+          "posShortNames": "M,F",
+          "team": false,
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "702",
+            "701"
+          ],
+          "teamId": "110063",
+          "name": "Alex Iwobi",
+          "teamShortName": "FUL",
+          "shortName": "A. Iwobi"
+        },
+        "resultCode": "TRADE_CANCELLED",
+        "executed": false,
+        "result": {
+          "content": "Cancelled - Trade was cancelled by the proposer or commissioner."
+        },
+        "txSetId": "cefz126hmuybnp1p",
+        "feesUsed": false,
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "GlengarryHearts",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "from",
+            "teamId": "syjkob6cmuobagfu"
+          },
+          {
+            "align": "LEFT",
+            "content": "The Raccoons",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "to",
+            "teamId": "l5kunst8msgbirdf"
+          },
+          {
+            "content": "",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Manchester City",
+          "urlName": "matheus-luiz-nunes",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Manchester_City.png",
+          "scorerId": "063zi",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "703"
+          ],
+          "defaultPosId": "702",
+          "posShortNames": "D",
+          "team": false,
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "703"
+          ],
+          "teamId": "110080",
+          "name": "Matheus Nunes",
+          "teamShortName": "MCI",
+          "shortName": "Matheus Nunes"
+        },
+        "resultCode": "TRADE_CANCELLED",
+        "executed": false,
+        "result": {
+          "content": "Cancelled - Trade was cancelled by the proposer or commissioner."
+        },
+        "txSetId": "cefz126hmuybnp1p",
+        "feesUsed": false,
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "The Raccoons",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "from",
+            "teamId": "l5kunst8msgbirdf"
+          },
+          {
+            "align": "LEFT",
+            "content": "GlengarryHearts",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "to",
+            "teamId": "syjkob6cmuobagfu"
+          },
+          {
+            "content": "",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Everton",
+          "urlName": "kiernan-dewsbury-hall",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Everton.png",
+          "scorerId": "05gcc",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "702"
+          ],
+          "defaultPosId": "702",
+          "posShortNames": "M",
+          "team": false,
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "702"
+          ],
+          "teamId": "110050",
+          "name": "Kiernan Dewsbury-Hall",
+          "teamShortName": "EVE",
+          "shortName": "K. Dewsbury-Hall"
+        },
+        "resultCode": "TRADE_CANCELLED",
+        "executed": false,
+        "result": {
+          "content": "Cancelled - Trade was cancelled by the proposer or commissioner."
+        },
+        "txSetId": "cefz126hmuybnp1p",
+        "feesUsed": false,
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "The Raccoons",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "from",
+            "teamId": "l5kunst8msgbirdf"
+          },
+          {
+            "align": "LEFT",
+            "content": "GlengarryHearts",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "to",
+            "teamId": "syjkob6cmuobagfu"
+          },
+          {
+            "content": "",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Tottenham Hotspur",
+          "urlName": "mohammed-kudus",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Tottenham_Hotspur.png",
+          "scorerId": "06fv8",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "702",
+            "701"
+          ],
+          "defaultPosId": "702",
+          "posShortNames": "M,F",
+          "team": false,
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "702",
+            "701"
+          ],
+          "teamId": "110160",
+          "name": "Mohammed Kudus",
+          "teamShortName": "TOT",
+          "shortName": "M. Kudus"
+        },
+        "resultCode": "TRADE_CANCELLED",
+        "executed": false,
+        "result": {
+          "content": "Cancelled - Trade was cancelled by the proposer or commissioner."
+        },
+        "txSetId": "cefz126hmuybnp1p",
+        "feesUsed": false,
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "The Raccoons",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "from",
+            "teamId": "l5kunst8msgbirdf"
+          },
+          {
+            "align": "LEFT",
+            "content": "GlengarryHearts",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "to",
+            "teamId": "syjkob6cmuobagfu"
+          },
+          {
+            "content": "",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Brentford",
+          "urlName": "caoimhin-kelleher",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Brentford.png",
+          "scorerId": "045ob",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "704"
+          ],
+          "defaultPosId": "704",
+          "posShortNames": "G",
+          "team": false,
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "704"
+          ],
+          "teamId": "110237",
+          "name": "Caoimhin Kelleher",
+          "teamShortName": "BRF",
+          "shortName": "C. Kelleher"
+        },
+        "resultCode": "TRADE_REJECTED",
+        "executed": false,
+        "result": {
+          "content": "Trade Declined - The transaction was declined by one of the managers involved."
+        },
+        "disabled": true,
+        "numInGroup": 6,
+        "txSetId": "zt8hu9mzmuvuszg3",
+        "feesUsed": false,
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "GlengarryHearts",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "from",
+            "teamId": "syjkob6cmuobagfu"
+          },
+          {
+            "align": "LEFT",
+            "content": "The Raccoons",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "to",
+            "teamId": "l5kunst8msgbirdf"
+          },
+          {
+            "align": "LEFT",
+            "content": "Tue Oct 6, 2026, 2:41PM",
+            "rowspan": 6,
+            "key": "date"
+          },
+          {
+            "content": "",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Newcastle United",
+          "urlName": "harvey-barnes",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Newcastle_United.png",
+          "scorerId": "04abn",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "702",
+            "701"
+          ],
+          "defaultPosId": "702",
+          "posShortNames": "M,F",
+          "team": false,
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "702",
+            "701"
+          ],
+          "teamId": "110101",
+          "name": "Harvey Barnes",
+          "teamShortName": "NEW",
+          "shortName": "H. Barnes"
+        },
+        "resultCode": "TRADE_REJECTED",
+        "executed": false,
+        "result": {
+          "content": "Trade Declined - The transaction was declined by one of the managers involved."
+        },
+        "disabled": true,
+        "txSetId": "zt8hu9mzmuvuszg3",
+        "feesUsed": false,
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "GlengarryHearts",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "from",
+            "teamId": "syjkob6cmuobagfu"
+          },
+          {
+            "align": "LEFT",
+            "content": "The Raccoons",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "to",
+            "teamId": "l5kunst8msgbirdf"
+          },
+          {
+            "content": "",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Bournemouth",
+          "urlName": "james-hill",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Bournemouth.png",
+          "scorerId": "061vb",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "703"
+          ],
+          "defaultPosId": "703",
+          "posShortNames": "D",
+          "team": false,
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "703"
+          ],
+          "teamId": "110034",
+          "name": "James Hill",
+          "teamShortName": "BOU",
+          "shortName": "J. Hill"
+        },
+        "resultCode": "TRADE_REJECTED",
+        "executed": false,
+        "result": {
+          "content": "Trade Declined - The transaction was declined by one of the managers involved."
+        },
+        "disabled": true,
+        "txSetId": "zt8hu9mzmuvuszg3",
+        "feesUsed": false,
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "GlengarryHearts",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "from",
+            "teamId": "syjkob6cmuobagfu"
+          },
+          {
+            "align": "LEFT",
+            "content": "The Raccoons",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "to",
+            "teamId": "l5kunst8msgbirdf"
+          },
+          {
+            "content": "",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Liverpool",
+          "urlName": "milos-kerkez",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Liverpool.png",
+          "scorerId": "06do9",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "703"
+          ],
+          "defaultPosId": "703",
+          "posShortNames": "D",
+          "team": false,
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "703"
+          ],
+          "teamId": "110070",
+          "name": "Milos Kerkez",
+          "teamShortName": "LIV",
+          "shortName": "M. Kerkez"
+        },
+        "resultCode": "TRADE_REJECTED",
+        "executed": false,
+        "result": {
+          "content": "Trade Declined - The transaction was declined by one of the managers involved."
+        },
+        "disabled": true,
+        "txSetId": "zt8hu9mzmuvuszg3",
+        "feesUsed": false,
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "The Raccoons",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "from",
+            "teamId": "l5kunst8msgbirdf"
+          },
+          {
+            "align": "LEFT",
+            "content": "GlengarryHearts",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "to",
+            "teamId": "syjkob6cmuobagfu"
+          },
+          {
+            "content": "",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Manchester United",
+          "urlName": "senne-lammens",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Manchester_United.png",
+          "scorerId": "070hl",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "704"
+          ],
+          "defaultPosId": "704",
+          "posShortNames": "G",
+          "team": false,
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "704"
+          ],
+          "teamId": "110090",
+          "name": "Senne Lammens",
+          "teamShortName": "MUN",
+          "shortName": "S. Lammens"
+        },
+        "resultCode": "TRADE_REJECTED",
+        "executed": false,
+        "result": {
+          "content": "Trade Declined - The transaction was declined by one of the managers involved."
+        },
+        "disabled": true,
+        "txSetId": "zt8hu9mzmuvuszg3",
+        "feesUsed": false,
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "The Raccoons",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "from",
+            "teamId": "l5kunst8msgbirdf"
+          },
+          {
+            "align": "LEFT",
+            "content": "GlengarryHearts",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "to",
+            "teamId": "syjkob6cmuobagfu"
+          },
+          {
+            "content": "",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Manchester City",
+          "urlName": "matheus-luiz-nunes",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Manchester_City.png",
+          "scorerId": "063zi",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "703"
+          ],
+          "defaultPosId": "702",
+          "posShortNames": "D",
+          "team": false,
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "703"
+          ],
+          "teamId": "110080",
+          "name": "Matheus Nunes",
+          "teamShortName": "MCI",
+          "shortName": "Matheus Nunes"
+        },
+        "resultCode": "TRADE_REJECTED",
+        "executed": false,
+        "result": {
+          "content": "Trade Declined - The transaction was declined by one of the managers involved."
+        },
+        "disabled": true,
+        "txSetId": "zt8hu9mzmuvuszg3",
+        "feesUsed": false,
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "The Raccoons",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "from",
+            "teamId": "l5kunst8msgbirdf"
+          },
+          {
+            "align": "LEFT",
+            "content": "GlengarryHearts",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "key": "to",
+            "teamId": "syjkob6cmuobagfu"
+          },
+          {
+            "content": "",
+            "key": "week"
+          }
+        ]
+      }
+    ]
+  }
+}

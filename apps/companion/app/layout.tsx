@@ -6,6 +6,7 @@ import AutoRefresh from "./components/shell/AutoRefresh";
 import Glyph from "./components/shell/glyphs";
 import LiveFigure from "./components/shell/LiveFigure";
 import LiveNow from "./components/shell/LiveNow";
+import OfferNow from "./components/shell/OfferNow";
 import PhotoGround from "./components/football/PhotoGround";
 import PullToRefresh from "./components/shell/PullToRefresh";
 import Rail from "./components/shell/Rail";
@@ -13,7 +14,7 @@ import ReplayStrip from "./components/shell/ReplayStrip";
 import UnreadBadge from "./components/shell/UnreadBadge";
 import { liveTie } from "./components/shell/liveTie";
 import { aheadOf, sectionsFor } from "./components/shell/sections";
-import { readInbox } from "./news/inbox";
+import { bannerOffer, readInbox } from "./news/inbox";
 import { deskFontVariables } from "./deskFonts";
 import { APP_SHORT_NAME, TOKEN_SRGB } from "./config";
 import "./globals.css";
@@ -53,10 +54,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // Started, not awaited: one read for the desk strip and the Live plate's score, each behind its own
   // boundary, so Fantrax never holds up every page.
   const tie = liveTie();
-  // The inbox's ids for the Mail tab's badge, started like the tie; a failed read is no badge.
-  const mail = readInbox()
-    .then((inbox) => inbox.items.map((item) => item.id))
-    .catch(() => []);
+  // The inbox, started like the tie, for the Mail tab's badge and the offer banner; a failed read is neither.
+  const inbox = readInbox();
+  const mail = inbox.then((read) => read.items.map((item) => item.id)).catch(() => []);
+  const offer = inbox.then(bannerOffer).catch(() => null);
 
   return (
     <html lang="en-GB" className={deskFontVariables}>
@@ -97,6 +98,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               league read holds up no page, and drawn as nothing while it waits. */}
           <Suspense fallback={null}>
             <LiveNow tie={tie} />
+          </Suspense>
+          <Suspense fallback={null}>
+            <OfferNow offer={offer} />
           </Suspense>
           {/* The bottom padding is a token because the front page runs its stock out through it. */}
           <main
