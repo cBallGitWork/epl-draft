@@ -32,6 +32,8 @@ export default function SquadRows({
   const scored = lines.some((line) =>
     line.players.some((p) => p.points !== undefined),
   );
+  // Every man on a screen carries a run of one length, so the first says whether the column is drawn.
+  const xMins = lines.some((line) => line.players.some((p) => p.minutes.length > 0));
 
   return (
     // Above `lg` a row too wide for a half-width panel scrolls inside it; on a phone the name truncates instead.
@@ -49,6 +51,11 @@ export default function SquadRows({
 
           {/* Who his CLUB plays this week — the football fixture, not ours. */}
           <span className="w-[5.5rem] shrink-0">Opponent</span>
+          {xMins ? (
+            <span className="w-9 shrink-0 text-center" title="Expected minutes this gameweek, by our model">
+              xMins
+            </span>
+          ) : null}
           {scored ? (
             <span className="w-9 shrink-0 text-center">
               {projected ? "Proj" : "FPts"}

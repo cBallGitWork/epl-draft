@@ -10,6 +10,7 @@ const man = (fantraxId: string, points: number | null, ...fixtures: Fixture[]): 
   club: undefined,
   opposition: fixtures.map((f) => ({ club: { id: 2, code: 2, name: "B", shortName: "B" }, home: true, difficulty: null, fixture: f })),
   points,
+  minutes: [],
 });
 
 const sat = fixture(1, "2026-09-19T14:00:00Z");

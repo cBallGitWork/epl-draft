@@ -110,6 +110,8 @@ export { easeStep, plannerGameweeks, plannerRows, strengthIntel, strengthPlaces,
 export type { ClubStrength, IntelStrength, PlannerCell, PlannerRow, PlannerView, StrengthRank } from "./intel/strength";
 // The sister model's projected FPL points per player per gameweek, for the Projections tab.
 export { nextGameweeks, projectedPlace, projectedPoints, projectionIntel } from "./intel/projections";
+export { minutesAhead, minutesIntel } from "./intel/minutes";
+export type { ExpectedMinutes } from "./intel/minutes";
 export type { IntelProjections, ProjectedPlace, ProjectedPlayer, ProjectedGameweek } from "./intel/projections";
 export type { MatchSheet, MatchSheetLine, SheetRow } from "./matchSheet";
 // His completed seasons before this one.

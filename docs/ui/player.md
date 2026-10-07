@@ -70,8 +70,9 @@ derived the same four from the same object.
 3. **The real position**, in cyan — the first thing in the app entitled to that
    slot (see below).
 4. **The run to come**, the next eight across the row, in FPL's difficulty, and under each
-   gameweek the sister model's projection in our league's points and his place among his group's (Craig,
-   30 Sep 2026: "maybe add projections here (and a ranking?)"), lit on the pool board's
+   gameweek the sister model's xMins in cyan (Craig, 7 Oct 2026: *"we have confidence of our xmins more"*). Only
+   while `PROJECTIONS_SHOWN` is on, also its projection in our league's points and his place among his group's
+   (Craig, 30 Sep 2026: "maybe add projections here (and a ranking?)"), lit on the pool board's
    standout rule; a week the model has not read is a dash. No source caption on the panel
    ("FPL's own · Fantrax's own remove"); each figure's title names the model and the group. *Fantrax's projection for the
    round was here and is gone* (25 Sep: "remove row"): it covered one period and only the men

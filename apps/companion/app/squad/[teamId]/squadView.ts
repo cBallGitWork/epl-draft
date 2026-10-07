@@ -18,6 +18,7 @@ import { OWN, SQUAD } from "../routes";
 import { plannable } from "./plannable";
 import { gameweekPicker, weekStanding } from "./weeks";
 import { whoseTeam } from "./team";
+import { minutesFrom } from "../../xmins";
 
 // Everything a team's squad page shows, read and joined: which round, whose team, what the reader
 // may see of it, and the points, news and season beside it. The page draws it.
@@ -74,6 +75,8 @@ export async function squadView(slug: string, gw: string | undefined) {
     sheet ? readPoolNews() : null,
     leagueScoring(),
   ]);
+  // xMins from the week on screen, so a future week's list reads that week's minutes.
+  const minutes = minutesFrom(round?.gameweek ?? null);
   // Fifteen men's news, not the pool's 74 — this crosses to the browser.
   const news = stories === null ? undefined : newsFor(stories, [...squadIds]);
   // The season table for the branch that labels it a season, and for the planner (Craig, 30 Sep 2026).
@@ -87,7 +90,7 @@ export async function squadView(slug: string, gw: string | undefined) {
       ? {
           because: display.because,
           projected: season?.stats.season.projected ?? false,
-          lines: squadDetail(squadUnarranged(team), clubs, opposition, points),
+          lines: squadDetail(squadUnarranged(team), clubs, opposition, points, minutes),
         }
       : null;
 
@@ -98,7 +101,7 @@ export async function squadView(slug: string, gw: string | undefined) {
   )?.points;
   const pending = owed ? owed : null;
 
-  return { team, mine, planning, open, standing, weeks, benchRanks, eligibility, clubs, opposition, live, news, points, board, pending, squadIds };
+  return { team, mine, planning, open, standing, weeks, benchRanks, eligibility, clubs, opposition, live, news, points, board, pending, squadIds, minutes };
 }
 
 /** Fantrax's bench order for the planned week, `scorerId → rank`; none when the read fails or names another week. */

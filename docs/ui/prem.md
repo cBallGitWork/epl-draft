@@ -257,6 +257,9 @@ column (Craig, 23 Sep 2026: "Put the Fantrax position into those tiles, and then
 remove the position columns"). It replaced the shirt number, which the match
 squads and team sheet still carry.
 
+`xMins`, after `Min`, is the sister model's expected minutes in the club's NEXT match week, in cyan beside
+FPL's minutes in ink; the head's title names the gameweek. No column when the export does not cover that week.
+
 `Owner` is who holds him in our league, or Fantrax's own letter instead — `WW`
 on waivers, `FA` a free agent. A NAME and never a figure, which is what keeps it
 clear of `SeasonTotals`' bound: the bound forbids FPL's counts standing beside a

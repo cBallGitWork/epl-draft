@@ -123,7 +123,11 @@ no longer describes this one.
    pitch of fifteen would draw the shape the gate withholds. The list takes the full width at both sizes.
 5. **A player card** (`PlayerCard`) over the top, when one is tapped — the "who
    is this" card, not the live one. There is no score to explain on a squad whose
-   period has not opened.
+   period has not opened. It carries his **xMins** for the week on screen and the four after (`MinutesRun`).
+
+Every list of the squad carries an **xMins** column for the gameweek the picker shows, in cyan, between the
+opponent and FPts (Craig, 7 Oct 2026: *"assign the xmins by gameweek"*). A week the export starts after (the
+gameweeks already played) has no column at all rather than a column of dashes; the head-to-head board has none.
 
 ### The pitch
 

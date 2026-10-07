@@ -2,6 +2,7 @@ import type { Opposition, PlTeamSheet, SquadPlayerDetail } from "@epl/core";
 import type { LeagueOpinion } from "../../leagueOpinions";
 import { backToFront } from "../../../positions";
 import type { Match } from "./match";
+import { minutesFrom } from "../../../xmins";
 
 // Each man in the match as the app's player card takes him, so a match opens the same card every squad does.
 
@@ -32,6 +33,8 @@ export function matchCards(
   league: ReadonlyMap<number, LeagueOpinion>,
 ): Map<number, SquadPlayerDetail> {
   const cards = new Map<number, SquadPlayerDetail>();
+  // From the match's own gameweek: a played match's week is before the export and draws none.
+  const minutes = minutesFrom(match.fixture.gameweek);
   const both = [
     { codes: sides.home, club: match.home, other: match.away, home: true },
     { codes: sides.away, club: match.away, other: match.home, home: false },
@@ -54,6 +57,7 @@ export function matchCards(
         club,
         opposition,
         points: undefined,
+        minutes: minutes(code),
       });
     }
   }

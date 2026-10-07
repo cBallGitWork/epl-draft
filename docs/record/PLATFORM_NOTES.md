@@ -4272,6 +4272,20 @@ SPA's own bundle.
   Raccoons, Craig's team, so whether a proposal between two other teams shows is unproven; Craig says the
   commissioner's page shows it. A pending proposal's code is not yet seen.
 
+### xMins back in the app, points still off (7 Oct 2026)
+
+Craig, 7 Oct: *"we have confidence of our xmins more. So let's put it back into the app"*: club squad pages, the
+draft squads' list "by gameweek", and the player card "for future weeks too". The minutes come from
+`data/intel/projections` (`players[].gameweeks[].minutes`, FPL code, GW6–17, all 666 men; the export contract's
+`xMins` is called `minutes`), a football reading, so not from the league join's `minutesPerGw` (537 men). Only the
+minutes cross: `minutesIntel` drops the points, which stay behind `PROJECTIONS_SHOWN` (off). The player page's
+"Next up" had kept printing projected points through the switch; it now prints xMins and the points only when on.
+
+- **Flat after next week**: GW7–17 are one repeated figure for 289 of 537 men (Haaland 85, then 85.7 to GW17).
+  The card prints them as they are; it is the model saying it knows nothing new, not a fault.
+- **Freshness**: only Tuesday's weekly run takes the projections export; the Thursday and Friday pressers runs take
+  squads and depth. So the figures after a press conference are Tuesday's until a pressers run takes it too.
+
 ## A Fantrax points figure per man per MATCH is a capture, not a read (4 Sep 2026)
 
 Asked because a match screen wanted one. Counted against FPL fixture 11's **32**

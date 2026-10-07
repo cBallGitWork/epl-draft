@@ -7,6 +7,7 @@ const man = (fantraxId: string, points: number | null): SquadPlayerDetail => ({
   club: undefined,
   opposition: [],
   points,
+  minutes: [],
 });
 
 const counts = { a: { Min: "90", G: "1" }, b: { Min: "90", G: "0" }, c: { Min: "20" } };

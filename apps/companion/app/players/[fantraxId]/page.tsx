@@ -6,7 +6,8 @@ import { playerMarks } from "../../ratings";
 import Nothing from "../../components/shell/Nothing";
 import { PANEL } from "@/app/desk";
 import ButtonLink from "../../components/shell/ButtonLink";
-import { POOL } from "../routes";
+import { POOL, PROJECTIONS_SHOWN } from "../routes";
+import { intelMinutes } from "../../intel";
 import AttributeGrid from "./AttributeGrid";
 import BornLine from "./BornLine";
 import type { GridWord } from "./AttributeGrid";
@@ -45,10 +46,14 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
   const position = football === null ? null : realPosition(football.player.code);
   // His run to come, off the snapshot and calendar every screen holds, so outside any boundary.
   const run = football === null ? null : await scouting(football.player);
+  // Projected points only while Craig trusts them; xMins always.
   const weeks =
-    football === null || run === null
+    football === null || run === null || !PROJECTIONS_SHOWN
       ? null
       : await projectedWeeks(football.player, run.flatMap((against) => against.fixture.gameweek ?? []));
+  const minutes = new Map(
+    (football === null ? [] : (intelMinutes.get(football.player.code) ?? [])).map((week) => [week.gameweek, week.minutes]),
+  );
 
   return (
     <PlayerShell
@@ -103,7 +108,7 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
       )}
 
       {/* The run to come, not the round just gone (Craig, 4 Sep 2026). */}
-      {run === null || weeks === null ? null : <FixtureRun run={run} weeks={weeks} group={standing?.group ?? null} />}
+      {run === null ? null : <FixtureRun run={run} minutes={minutes} weeks={weeks} group={standing?.group ?? null} />}
 
       {/* What he actually plays, last and loudest, where CM puts it (Craig, 4 Sep 2026). */}
       <RealPosition position={position} />

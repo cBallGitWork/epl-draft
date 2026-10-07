@@ -17,6 +17,7 @@ const man = (fantraxId: string, code: number, ...fixtures: Fixture[]): SquadPlay
   club: undefined,
   opposition: fixtures.map((f) => ({ club: { id: 2, code: 2, name: "B", shortName: "B" }, home: true, difficulty: null, fixture: f })),
   points: null,
+  minutes: [],
 });
 
 const did = (onAt: number | null, offAt: number | null): PlManMatch =>

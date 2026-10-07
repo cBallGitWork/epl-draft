@@ -30,6 +30,9 @@ export const DEALS_SHOWN = 6;
 /** How many men each of the Live tab's gameweek leaders lists. */
 export const LEADERS_SHOWN = 5;
 
+/** How many gameweeks of xMins a player card prints, the screen's own first. */
+export const XMINS_WEEKS = 5;
+
 
 /** How many filed stories run beside the lead, at the second rank. */
 export const SHOULDER_STORIES = 2;

@@ -5,18 +5,21 @@ import { standoutInk } from "../../components/league/standout";
 import { DASH, fixed, ordinal } from "@epl/core";
 import type { ProjectedWeek } from "./grid";
 
-// What is coming, as a run: FPL's difficulty on each block, and under it the sister model's projection in our league's
-// points for that gameweek and his place in his group, lit on the pool board's standout rule. No source caption
-// (Craig, 30 Sep 2026); each figure's title says whose it is.
+// What is coming, as a run: FPL's difficulty on each block, under it the sister model's xMins for that gameweek, and,
+// while projections are on, its points in our league's scoring and his place in his group, lit on the pool board's
+// standout rule. No source caption (Craig, 30 Sep 2026); each figure's title says whose it is.
 
 export default function FixtureRun({
   run,
+  minutes,
   weeks,
   group,
 }: {
   run: Opposition[];
-  /** The model's projection by gameweek. */
-  weeks: ReadonlyMap<number, ProjectedWeek>;
+  /** His xMins by gameweek. */
+  minutes: ReadonlyMap<number, number | null>;
+  /** The model's projection by gameweek, or null while projections are off (`PROJECTIONS_SHOWN`). */
+  weeks: ReadonlyMap<number, ProjectedWeek> | null;
   /** Who he is ranked among, for the rank's title. */
   group: string | null;
 }) {
@@ -44,7 +47,17 @@ export default function FixtureRun({
                 <span className="truncate">{against.club.shortName}</span>
                 <span className="text-2xs font-normal opacity-80">{against.home ? "H" : "A"}</span>
               </span>
-              {repeat ? null : <Projected week={gw === null ? undefined : weeks.get(gw)} group={group} />}
+              {repeat || gw === null ? null : (
+                <>
+                  <span
+                    className="numeric text-center text-xs font-bold text-info"
+                    title={`Expected minutes in gameweek ${gw}, by our model`}
+                  >
+                    {minutes.get(gw) ?? DASH}
+                  </span>
+                  {weeks === null ? null : <Projected week={weeks.get(gw)} group={group} />}
+                </>
+              )}
             </li>
           );
         })}

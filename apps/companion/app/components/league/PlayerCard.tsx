@@ -15,6 +15,7 @@ import DialogFoot from "../shell/DialogFoot";
 import DialogHead from "../shell/DialogHead";
 import Modal from "../shell/Modal";
 import FullMatchStats from "./FullMatchStats";
+import MinutesRun from "./MinutesRun";
 import Note from "./Note";
 import PlayerIdentity from "./PlayerIdentity";
 import { unresolvedReason } from "../../unresolved";
@@ -27,7 +28,7 @@ import { LABEL, QUIET_FIGURE, SMALL_CAPS } from "@/app/desk";
 // has kicked off. `LivePlayerCard` is the same dialog with Fantrax's breakdown in the middle.
 
 export default function PlayerCard({
-  player: { rostered, club, opposition },
+  player: { rostered, club, opposition, minutes },
   onClose,
 }: {
   player: SquadPlayerDetail;
@@ -81,6 +82,8 @@ export default function PlayerCard({
             opposition={opposition}
           />
         ) : null}
+
+        <MinutesRun weeks={minutes} />
 
         {story ? <Story story={story} /> : null}
 
