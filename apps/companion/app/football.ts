@@ -218,10 +218,15 @@ export async function groundFaces(): Promise<string[]> {
  *  and that exemption are gone.
  */
 export async function offerLive(): Promise<boolean> {
+  return (await roundLive()) ?? true;
+}
+
+/** Whether a round is under way; null when FPL could not be read, so each caller picks its own failure. */
+export async function roundLive(): Promise<boolean | null> {
   try {
     return roundUnderway(await footballNow());
   } catch {
-    return true;
+    return null;
   }
 }
 

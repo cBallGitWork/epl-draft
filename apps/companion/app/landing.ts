@@ -8,8 +8,8 @@ export function openedCold(headers: Pick<Headers, "get">): boolean {
   return headers.get("sec-fetch-site") === "none" && headers.get("sec-fetch-mode") === "navigate";
 }
 
-/** Where a reader opening the site lands: Live while a gameweek is on, else Mail; the paper until they sign in. */
-export function landing(reader: { signedIn: boolean; live: boolean }): string {
+/** Where a reader opening the site lands: Live while a gameweek is on, else Mail (unknown included); the paper until they sign in. */
+export function landing(reader: { signedIn: boolean; live: boolean | null }): string {
   if (!reader.signedIn) return "/";
-  return reader.live ? LIVE : MAIL;
+  return reader.live === true ? LIVE : MAIL;
 }
