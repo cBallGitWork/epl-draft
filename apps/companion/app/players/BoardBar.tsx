@@ -45,9 +45,7 @@ export default function BoardBar({
     <>
       {/* The row grows with the width in measured steps (PLATFORM_NOTES): a row that fits by folding a child does not fit. */}
       <div className="flex flex-wrap items-center gap-1.5">
-        {/* The hidden fields are rendered HERE, on the server, and handed to
-            the client box as children — `panel` among them, so finding a player
-            does not slam a drawer the reader deliberately left open. */}
+        {/* The rest of the query rides as hidden fields, the drawer's `panel` among them. */}
         <Search query={(query.q ?? "").trim()} action={POOL}>
           <Carried query={query} except={["q"]} />
         </Search>

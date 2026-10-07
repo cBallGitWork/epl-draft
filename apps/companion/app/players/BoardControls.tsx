@@ -27,10 +27,7 @@ const FIELDS = [
   "cat",
 ] as const;
 
-/** The rest of the query, as hidden inputs, for a GET form to carry.
- *
- *  `except` is the form's OWN field — the one it posts itself, which must not be
- *  rendered twice. */
+/** The rest of the query as hidden inputs for a GET form; `except` is the form's own field. */
 export function Carried({
   query,
   except,
@@ -69,12 +66,7 @@ export function Plates({
   className?: string;
 }) {
   return (
-    // **The `<nav>` is the point of the wrapper, not the flex.** It was lost for
-    // one build when this became a component and the layout container stayed
-    // behind in `BoardBar` — six bare links with no landmark and no label, where
-    // "All" and "Scoring" say nothing on their own out of context. It travels
-    // with the strip now, so a future move cannot leave it behind again. Found by
-    // an instrument looking for the element and getting null.
+    // The `<nav>` is the landmark that names the strip; it travels with it.
     <nav aria-label="Stat groups" className={className}>
       {POOL_GROUPS.map((entry) => (
         <Link
@@ -120,20 +112,7 @@ export function Statuses({
   );
 }
 
-/** How the figures read: one toggle, and it is the only one.
- *
- *  **The minutes floors came off on 10 Sep 2026** (Craig: *"per 90 is just a
- *  toggle, remove the minutes thing"*). They shipped that morning as `90+ mins`
- *  and `135+ mins`, derived from the football played so far, and they were the
- *  most machinery on the board for the least question — two chips, a derivation,
- *  a narrowing and a filter clause, to answer "hide men who barely play" that a
- *  reader answers by looking at the `Min` column. `per90` keeps its own floor of
- *  one match, which is the guard that actually mattered: it is what stops four
- *  minutes and a goal reading as 22.5 per 90, and it is arithmetic rather than a
- *  control.
- *
- *  One chip rather than a component taking a list, now that there is nothing to
- *  list. */
+/** The per-90 toggle (Craig, 10 Sep 2026: "per 90 is just a toggle"); `per90` keeps its own one-match floor. */
 export function Figures({
   query,
   rated,
@@ -178,20 +157,7 @@ function Tally({ at, total }: { at: string; total: number }) {
   return <span className={`numeric font-bold ${at}`}>{total}</span>;
 }
 
-/** One grey plate, with its state said twice.
- *
- *  **A tick and not the accent, and that is `desk.css`'s rule rather than a
- *  taste.** A plate owns its ink: dark on the grey plate is 7.52:1 and
- *  `--color-ink` on it is 2.27:1, so a component bringing its own colour would
- *  silently land under the floor. An ancestor of this file set `text-accent` on
- *  the pressed plate for one build and `probe.mjs` read the same dark ink off a
- *  pressed chip and an unpressed one. So the pressed bevel carries the state and
- *  a tick carries it again in a SHAPE, which is what docs/rules/PRODUCT.md's accessibility
- *  section asks for.
- *
- *  `min-h-11 lg:min-h-9` is the CONTROL floor and not a row's: a filter is aimed
- *  at rather than read, and DESIGN §6 is explicit that a control never relaxes
- *  below its floor under a thumb. */
+/** One grey plate, its state said by the pressed bevel and a tick: the plate owns its ink, so never the accent. */
 export function Chip({
   on,
   href,
@@ -212,8 +178,7 @@ export function Chip({
       title={title}
       className={`min-w-11 ${on ? `cm-bevel-pressed ${PLATE}` : PRESSABLE}`}
     >
-      {/* `aria-hidden` because `aria-pressed` on the link already says it, and a
-          screen reader announcing "tick DEF pressed" says it twice. */}
+      {/* `aria-pressed` already says it to a screen reader. */}
       {on ? (
         <span aria-hidden className="text-[0.625rem] leading-none">
           ✓

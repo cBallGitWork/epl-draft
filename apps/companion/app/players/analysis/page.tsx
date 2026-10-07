@@ -32,25 +32,8 @@ import { ANALYSIS, lastValue } from "../routes";
 import { intelShots, intelTouches } from "../../intel";
 import { seasonFixtures } from "../../football";
 
-// Two players, side by side.
-//
-// Craig, 6 Sep 2026: *"we need the player comparison tool too — I attached the
-// scout page a while back. Would need tables and probably a pitch (which would
-// plot the end points such as heat map/shot map etc)"*. The references are
-// Fantasy Football Scout's Player Maps and Understat's player compare.
-//
-// **Two profile reads and never more.** `subject()` is one live, uncached
-// `getPlayerProfile` each, and Fantrax throttles that endpoint at about
-// twenty-seven calls — `docs/ui/player.md` states the policy as "one profile per
-// tap, never a sweep of the 697". Two per view is within it. **The search boxes
-// cost nothing on top**: they read the pool, which is one `leagueCache` entry the
-// board already keeps warm, so a keystroke is never a Fantrax call. That is what
-// makes an on-screen picker possible at all, and `pick.ts` carries the argument.
-//
-// **Both halves are read in parallel and neither blocks the other's frame.** The
-// bar needs both men, so it waits; the grids are streamed, because each is a
-// percentile over every man of his role and the screen is worth showing before
-// they land.
+// Two players side by side (Craig, 6 Sep 2026). Two profile reads a view and never more; the search boxes read the
+// cached pool, so a keystroke is never a Fantrax call. The grids stream, each a percentile over every man of his role.
 
 export const revalidate = 30;
 

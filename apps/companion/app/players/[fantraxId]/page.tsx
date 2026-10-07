@@ -25,22 +25,10 @@ import { gameLog } from "./scouting";
 import { scouting } from "./scouting";
 import { subject } from "./subject";
 
-// One player, on Championship Manager's own profile screen (`cm9900/11.jpg`):
-// a plated bar carrying `5. Harry Maguire (Man Utd)`, four tabs, the yellow
-// caption with his birth date in it, the attribute grid, and one cyan line at
-// the foot saying what he actually is.
-//
-// **This screen used to be ten blocks in a column, 1795px tall on a phone**, and
-// `docs/ui/player.md` named the fault before this rework began: *"nothing
-// decides which of them a reader came for."* The tabs decide. What was one
-// scroll is now four views, and each one answers a question a manager actually
-// arrives with — who is he, is he fit, can I have him, what has he done.
-//
-// Reached by tapping a name in the pool, and that is the whole politeness
-// policy: one profile per tap, never a sweep of the 697.
+// One player on Championship Manager's profile screen (`cm9900/11.jpg`): the bar, four tabs, his birth line, the
+// attribute grid, and the cyan line at the foot saying what he plays. One Fantrax profile per tap, never a sweep.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
+// Must match `PAGE_REVALIDATE` in the app's config: Next reads it statically, so it cannot be imported.
 export const revalidate = 30;
 
 export default async function PlayerProfile({ params }: { params: Promise<{ fantraxId: string }> }) {
@@ -55,10 +43,7 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
       ? [null, null, null]
       : await Promise.all([playerGrid(football.player), playerStanding(football.player), playerPieces(football.player)]);
   const position = football === null ? null : realPosition(football.player.code);
-  // What he has done in the round on screen and what is coming. Both read the
-  // snapshot and the calendar every other screen already holds, so they cost FPL
-  // nothing and do not go behind a boundary. This is the half of the screen that
-  // answers docs/rules/PRODUCT.md's third-most-frequent job — "should I start this player".
+  // His run to come, off the snapshot and calendar every screen holds, so outside any boundary.
   const run = football === null ? null : await scouting(football.player);
   const weeks =
     football === null || run === null
@@ -72,22 +57,9 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
       current="profile"
     >
       {football === null ? null : <BornLine player={football.player} />}
-      {/* Portrait beside the grid on the desk, above it on a phone. The desk
-          layout is drawn first and the phone is a second design of the same data
-          (docs/rules/PRODUCT.md, 31 Aug) — at 1440 a single column left 900px of empty row
-          between every label and its value, which is a phone layout stretched. */}
-      {/* **`items-stretch`, so the portrait is as tall as the grid beside it**
-          (Craig, 4 Sep 2026: *"portarit has awkward sapce under it"*). It was
-          `items-start`, which sized the portrait to its own image and left a
-          band of club colour under it wherever the attribute grid ran longer —
-          a keeper's grid is eight rows and an outfielder's twenty-two, so the gap
-          changed size per man. `cm9900/11.jpg` has no such gap: its picture is
-          the ground the whole panel is drawn on. */}
+      {/* Portrait above the grid on a phone, beside it on a desk and as tall as it (Craig, 4 Sep 2026). */}
       <div className="flex flex-col gap-2 lg:flex-row lg:items-stretch">
-        {/* No portrait for a man FPL has never listed, and nothing standing in
-            for one: he has no code, so there is no photograph, no kit and no
-            crest to draw. That is 88 of the 694 in the pool and it is a settled
-            answer, not a gap. */}
+        {/* No portrait, and nothing in its place, for a man FPL has never listed. */}
         {football ? (
           <Portrait
             player={football.player}
@@ -123,54 +95,26 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
 
       {pieces === null ? null : <SetPieces pieces={pieces} club={football?.club?.name ?? null} />}
 
-      {/* **CM puts the appearances table on the profile** (`cm9900/11.jpg`), and
-          so does this (Craig, 4 Sep 2026: "the season totals are on the main
-          page (like cm has)"). It is the same two rows Data opens with — a
-          summary belongs on the overview AND above the detail, which is not the
-          duplication that moved the match LOG off History: that was twenty rows
-          of detail rendering twice. */}
+      {/* CM's appearances table, as Data opens with it (Craig, 4 Sep 2026). */}
       {football === null ? null : (
         <Suspense fallback={null}>
           <Season player={football.player} paid={intel.matches} season={intel.season} />
         </Suspense>
       )}
 
-      {/* The run to come, and NOT the round just gone (Craig, 4 Sep 2026:
-          "Remove gameweek so far"). One round of one man's figures is a Data
-          question; what a Profile owes is who he is and what is in front of him.
-          The card that drew the round is deleted rather than moved — no consumer
-          means delete (CODE_RULES §2), and `contribution()` in core is still
-          there if Data ever wants a round view. */}
+      {/* The run to come, not the round just gone (Craig, 4 Sep 2026). */}
       {run === null || weeks === null ? null : <FixtureRun run={run} weeks={weeks} group={standing?.group ?? null} />}
 
-      {/* **What he actually is, last and loudest** (Craig, 4 Sep 2026), which is
-          where `cm9900/11.jpg` puts it: `Defender/Defensive Midfielder
-          (Left/Centre)` in cyan across the foot of the panel, under the
-          appearances table and above the buttons. It had been sitting inside the
-          grid column, where it read as a caption on the attributes.
-
-          The Player block of birthplace, height and weight is gone with it: the
-          country is in the caption under the tabs now, and height and weight are
-          two figures no screen in this app has ever asked a question about.
-
-          So are the two foot buttons (Craig: *"remove - his squad/back to pool
-          for now"*). CM's foot is Back/Next and ours were named destinations;
-          the rail reaches both at every width. */}
+      {/* What he actually plays, last and loudest, where CM puts it (Craig, 4 Sep 2026). */}
       <RealPosition position={position} />
 
-      {/* **An action, not a sixth tab.** `PlayerTabs` is five because CM is five
-          (`cm9900/11.jpg`), and `player.md` records the foot buttons coming off
-          every tab because they were named destinations the rail already
-          reaches. This is neither: it is a thing you DO to the man on screen,
-          and it leaves with him — the board becomes a picker for the second. */}
+      {/* An action on the man on screen, not a tab: the board becomes the picker for the second. */}
       <ButtonLink href={`${POOL}?compare=${fantraxId}`}>Compare with…</ButtonLink>
     </PlayerShell>
   );
 }
 
-/** His season's two rows, read behind the boundary above. `element-summary` is
- *  cached on his season-stable code, so Data's copy of this costs nothing after
- *  the first of the two is drawn. */
+/** His season's row, read behind the boundary above; the game log is cached on his code, so Data's costs nothing. */
 async function Season({
   player,
   paid,

@@ -11,12 +11,8 @@ import { matchHref } from "../../prem/match/[id]/matchRoutes";
 import { RATING_TITLE } from "../../ratings";
 import type { MatchRow } from "./matchRows";
 
-// Every match of his season on the house board (Craig, 25 Sep 2026: "this table is not like our
-// normal CM standards, use the shared code"): bevelled plates over the figures, the round in CM's
-// blue index block, the opponent pinned beside it, and each column's standouts lit as a board lights
-// them. Left of the rule is FPL's account of the match; right of it Fantrax's, including `FPts`, and
-// FPL's own points are left off so neither side's points sit beside the other's. Our mark closes the
-// row behind its own rule, in the derived reading's cyan.
+// Every match of his season on the house board (Craig, 25 Sep 2026). FPL's account left of the rule, Fantrax's right of
+// it with `FPts` (FPL's points left off so the two never sit together), our mark last in the derived cyan.
 
 interface Column {
   head: string;

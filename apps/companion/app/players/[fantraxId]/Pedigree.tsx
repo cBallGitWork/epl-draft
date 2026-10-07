@@ -5,13 +5,7 @@ import { MINOR_LABEL } from "@/app/desk";
 // What the draft paid for him: the cyan line across the foot of Transfer, and the figure beside
 // his pick in the status panel. Nothing for a league whose draft has not run.
 
-/** Where he came from, across the foot of the tab in cyan.
- *
- *  **Its own export so the page can put it LAST** (Craig, 4 Sep 2026: *"put it
- *  in cyan at the bottom like profile picture"*). Rendered inside `Pedigree` it
- *  landed above the Business list, which is neither the bottom nor beside the
- *  figure it belongs to. The Profile's position line is the shape: one cyan
- *  sentence closing the screen, saying what the screen was about. */
+/** Where he came from, across the foot of the tab in cyan, as the Profile closes (Craig, 4 Sep 2026). */
 export function DraftLine({
   pedigree,
   drafterName,
@@ -27,11 +21,7 @@ export function DraftLine({
   );
 }
 
-/** Where he came from, written out.
- *
- *  `Taken by 123 with pick 1 of round 1.` — the drafter first, because on this
- *  tab the manager is the subject and the pick is what he spent. A pick nobody
- *  can be named for loses the clause rather than the sentence. */
+/** `Taken by Raccoons with pick 2 of round 1.`; a drafter nobody can name loses the clause. */
 function sentence(
   pedigree: Extract<Pedigree, { origin: "draft" }>,
   drafterName: string | null,
@@ -42,13 +32,7 @@ function sentence(
     : `Taken by ${drafterName} with ${pick}.`;
 }
 
-/** Picks better than he cost, signed.
- *
- *  **Red for a pick that has not repaid itself, and the loud ink for one that
- *  has.** The red slot means "a loss, a doubt, a negative" (DESIGN §3) and this
- *  is the third of those; there is no green because there is no green token
- *  yet (§8), and the accent is not it. A dash when Fantrax has no ranking for
- *  him — nought is a real answer here and means he is exactly what he cost. */
+/** Picks better than he cost, signed: red below, green above, a dash where Fantrax has no ranking for him. */
 export function Value({ against }: { against: number | null }) {
   if (against === null)
     return <span className="numeric text-sm text-faint">—</span>;

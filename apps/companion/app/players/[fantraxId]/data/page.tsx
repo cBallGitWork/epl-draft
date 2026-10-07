@@ -20,10 +20,8 @@ import type { MatchRow } from "../matchRows";
 import { gameLog } from "../scouting";
 import { subject } from "../subject";
 
-// His record, one season at a time (Craig, 25 Sep 2026: "maybe we merge data and history together,
-// shows current season by default with other seasons on a dropdown"): this season's appearances
-// and every match by default, a past season's line from FPL's history, or every season with the
-// club he was at. History folded in here and its route sends a reader to "All seasons".
+// His record a season at a time (Craig, 25 Sep 2026): this season's table and every match by default, a past
+// season's line, or every season with his club. The old History route sends a reader to "All seasons".
 
 export const revalidate = 30;
 

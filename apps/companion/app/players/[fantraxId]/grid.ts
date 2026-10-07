@@ -51,7 +51,7 @@ const GROUP: Readonly<Record<string, string>> = {
   CF: "forwards",
 };
 
-/** His position group, or null where the sister has no line for him (23 of 296 regulars, 25 Sep 2026). */
+/** His position group, or null where the sister has no line for him. */
 function groupOf(code: number): string | null {
   const line = intelSquads.get(code)?.line;
   return line ? (GROUP[line] ?? null) : null;
@@ -178,28 +178,12 @@ export async function playerPieces(player: FootballPlayer) {
   return setPieceRanks(intelSetPieces.clubs[club?.shortName ?? ""], SET_PIECES, player.code, present);
 }
 
-/** What he actually plays, as the sister repo settled it.
- *
- *  This is the cyan line at the foot of a Championship Manager profile, and it
- *  is the first thing in this app entitled to that colour. DESIGN §3 retired
- *  "cyan means a person" on 3 Sep and left the slot for "a derived reading —
- *  ours rather than recorded", which is exactly what a role weighted out of four
- *  providers is.
- *
- *  **Null is a real answer and a common one** — 146 of 651. Those are the men
- *  whose position came from FPL's `element_type`, which is a fantasy
- *  classification and not a fact about the footballer, and the exporter nulls
- *  them rather than passing it off. The screen says so rather than guessing. */
+/** What he actually plays, as the sister repo settled it; null where it has no row for him. */
 export function realPosition(code: number): IntelPlayer | null {
   return intelSquads.get(code) ?? null;
 }
 
-/** His completed seasons, most recent first.
- *
- *  Cached on the season-stable `code` rather than the per-season element id,
- *  even though the request needs the id: a career does not change between
- *  rounds, and the key that survives August is the one a cache should hold.
- *  `scouting.ts` keys its game log the same way and for the same reason. */
+/** His completed seasons, most recent first: read by FPL's `id`, cached by the `code` that survives August. */
 export function pastSeasons(player: FootballPlayer): Promise<PastSeason[]> {
   return unstable_cache(
     async () => mapPastSeasons(await fetchElementSummary(player.id)),

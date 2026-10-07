@@ -1,12 +1,6 @@
 import Skeleton from "../../components/shell/Skeleton";
 
-// The shapes the streamed blocks leave behind while their reads are in flight.
-//
-// Both were local functions in the 286-line page this rework replaced; the tabs
-// split their callers into separate route files, which is what moved them here.
-// They stay a pair rather than one parameterised skeleton: a table and a stack
-// of rows are different shapes, and a `variant` prop on a placeholder is the
-// generic mechanism CODE_RULES §1 forbids.
+// The shapes the streamed blocks hold while their reads are in flight: a table, and a stack of rows.
 
 /** A ruled head, then rows the height the table's are. */
 export function TableWaiting() {

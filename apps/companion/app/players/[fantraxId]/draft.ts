@@ -3,6 +3,7 @@ import type { DraftPick, Pedigree } from "@epl/core";
 import { leagueCache } from "../../leagueCache";
 import { orRefusal } from "../../refusals";
 import { getLeaguePool } from "../pool";
+import { shortName } from "../../teamNames";
 
 // What his draft pick cost: the draft read, joined to the pool `/players` already keeps warm.
 
@@ -24,12 +25,7 @@ async function draftPicks(): Promise<DraftPick[]> {
   return held.length > 0 ? held : runningDraft();
 }
 
-/** His pedigree, and the name of the team that spent the pick.
- *
- *  The name is looked up here rather than in the component for the reason every
- *  other join is: the component should be about what appears on screen. Null
- *  when the pool read failed, which costs the block and nothing else — the rest
- *  of the profile is a different set of reads. */
+/** His pedigree, and the short name of the team that spent the pick; unknown when the pool read failed. */
 export async function playerPedigree(
   fantraxId: string,
 ): Promise<{ pedigree: Pedigree; drafterName: string | null }> {
@@ -39,9 +35,9 @@ export async function playerPedigree(
   const scored = pool.rows.flatMap((row) => (row.stats === null ? [] : [row.stats]));
   const pedigree = pedigreeOf(fantraxId, picks, scored);
 
+  const drafter = pedigree.origin === "draft" ? pool.teamNames.get(pedigree.teamId) : undefined;
   return {
     pedigree,
-    drafterName:
-      pedigree.origin === "draft" ? (pool.teamNames.get(pedigree.teamId) ?? null) : null,
+    drafterName: pedigree.origin === "draft" && drafter !== undefined ? shortName(pedigree.teamId, drafter) : null,
   };
 }

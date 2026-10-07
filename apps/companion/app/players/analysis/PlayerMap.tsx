@@ -5,79 +5,23 @@ import { CELL, heatCells, shade } from "./heat";
 import { PITCH_BOX } from "@/app/components/football/pitchBox";
 import { SMALL_CAPS } from "@/app/desk";
 
-// One man's pitch, shaded where he played.
-//
-// **A pitch each, and not two halves of one.** The old map put both men on one
-// pitch attacking opposite ways, which was right when each had a single dot —
-// two dots on one pitch cannot collide if they are kept to their own halves. It
-// is wrong for a density field: halving the axis squeezes a striker's whole map
-// into the space between the halfway line and one goal, and what comes out is a
-// smear rather than a shape. The reference does both and its per-player maps are
-// the ones you can read. So: one pitch each, both running the same way, side by
-// side on a desk and stacked under a thumb.
-//
-// **The smoothing is a Gaussian blur over small cells**, which is the whole
-// answer to Craig's *"heatmaps are rough squares"*. `heat.ts` carries why a
-// finer grid would not have worked. Done as an SVG filter rather than a canvas
-// so the map is server-rendered like everything else on the desk — no client
-// component, no hydration, and it survives being printed.
-//
-// **A warm ramp, and NOT the club's colour.** The first cut shaded each map in
-// its man's club colour, on the reasoning that the bar above already codes them
-// that way. Two things were wrong with it and both were visible the moment it
-// was drawn. Manchester City's sky blue on green turf is very nearly nothing —
-// the map was legible for Chelsea and blank for City, which is a picture whose
-// readability depends on who is in it. And the colour was doing no work anyway:
-// these are SEPARATE pitches with the man's name over each, so identity is
-// carried by the caption and the club colour was spending the one visual channel
-// a density map has on a fact already stated.
-//
-// So density gets the channel, through a ramp that reads on grass at every
-// intensity — which is what the reference uses and for the same reason.
-//
-// It is a scale where every other colour in §3 is a slot, so it stays local to the pitch: it shades a colour
-// PLATE (DESIGN §5, beside the pitch and the crest) and never ink, a cell or a control.
+// One man's pitch, shaded where he played: a pitch each, the same way round, a Gaussian blur over `heat.ts`'s cells as
+// an SVG filter so it is server-rendered. A warm ramp rather than his club's colour, which vanishes on grass for some.
+// The ramp is a scale, not a slot, so it stays a plate on the pitch (DESIGN §5) and never ink, a cell or a control.
 
-/** The attacking arrow: how far along, how high, and how heavy.
- *
- *  Craig, 10 Sep 2026: *"have a very feint thick arrow on the pitch to indicate
- *  thats the attack"*. It replaces a line of prose under the maps that said the
- *  same thing in words — a picture of the direction, drawn on the thing it is
- *  about, beats a sentence two inches below it.
- *
- *  **Top centre, which is the one part of the pitch no map fills.** A shot map
- *  lives in the attacking third and a touch map spreads along the middle; the
- *  strip above the centre circle is empty for everyone, so the arrow never sits
- *  on a reader's data. Faint enough to be furniture — it is the same claim for
- *  every map on the screen, so it must not compete with the one thing that
- *  differs. */
+/** The faint attacking arrow (Craig, 10 Sep 2026), top centre, where no map is drawn. */
 const ARROW = { from: 41, to: 59, y: 5.5, head: 2.6, weight: 1.6, ink: 0.22 };
 
-/** How far the blur reaches, in pitch units.
- *
- *  A little under half a cell (`heat.ts` draws them 4.17 x 4.00), so one touch
- *  spreads to about the area a player actually controls and two touches a cell
- *  apart merge into one shape. Larger and every map becomes the same fog AND
- *  loses intensity, which is what made the first maps faint; smaller and the
- *  cell edges come back, which is the fault the blur exists to fix. */
+/** How far the blur reaches, in pitch units: a little under half a cell, so neighbouring touches merge. */
 const BLUR = 1.7;
 
-/** The ramp, coldest first, as it is laid over grass.
- *
- *  Yellow through orange to red: the order reads as intensity without a key,
- *  which is the only reason a ramp is allowed to carry meaning at all here.
- *  Written out literally rather than composed, because Tailwind v4 drops a theme
- *  variable whose name never appears in scanned source — and because these are
- *  SVG `fill` values, which never pass through Tailwind at all. */
+/** The ramp, coldest first: yellow through orange to red reads as intensity without a key. SVG fills, so literals. */
 const RAMP = ["#f2e05a", "#f0a93c", "#e2622c", "#c8281c"] as const;
 
 /** Red for his densest cells only, orange and yellow for the rest: without it a map scaled to his crowded cells
  *  (heat.ts) reddens a quarter of the pitch. */
 const RAMP_CURVE = 2;
 
-/** How far the density curve and the blur are tuned against each other lives in
- *  `heat.ts` beside `shade`, because it is arithmetic with a test rather than a
- *  drawing decision. Change one of the two and re-read a map. */
 
 export default function PlayerMap({
   name,

@@ -16,9 +16,7 @@ export default function Portrait({
 }: {
   player: FootballPlayer;
   club: Club | undefined;
-  /** The league's letter for him, only to pick which of the two kits the
-   *  fallback draws. A keeper in an outfield shirt is the kind of quiet
-   *  wrongness that survives review. */
+  /** The league's letter for him, only to pick the fallback's kit: a keeper's or an outfielder's. */
   position: string | null;
 }) {
   const colours = clubColoursOf(club);

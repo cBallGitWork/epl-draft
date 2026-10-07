@@ -5,13 +5,13 @@ import ClubLabel from "../../components/football/ClubLabel";
 import { easeGround } from "../../components/football/ease";
 import { HeadRow, MUTE, PlateHead, PRESSED_PLATE, SortArrow } from "../../components/league/TableHeads";
 import { HEAD_CELL, PINNED_NAME, ROW_RULE } from "@/app/desk";
-
-/** The club column, frozen at the left edge. */
-const PIN_CLUB = `${PINNED_NAME} left-0`;
 import { POOL } from "../routes";
 
 // Every club's next six opponents, a cell each on the ease ramp, easiest run first. Each names the venue, (H) or (A):
 // under the code on a phone, beside it on a desk (Craig, 30 Sep 2026).
+
+/** The club column, frozen at the left edge. */
+const PIN_CLUB = `${PINNED_NAME} left-0`;
 
 /** Where a club's name leads: its men on the Players board, the positions this view is about. */
 const POSITIONS: Record<PlannerView, string> = { attack: "F,M", defence: "D,G" };

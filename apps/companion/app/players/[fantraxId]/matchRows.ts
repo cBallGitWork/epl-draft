@@ -2,29 +2,12 @@ import { toFplClubCode } from "@epl/core";
 import type { Club, PlayerMatch } from "@epl/core";
 import type { GameLogRow } from "./scouting";
 
-// One row per match, with both accounts of it on the same line.
-//
-// FPL's history is the SPINE: it covers every match of the season, always, and
-// carries the underlying play — expected goals, tackles, recoveries — that
-// Fantrax publishes none of. Fantrax's own rows carry the one thing FPL cannot
-// give at all: **our league's points for that match**. FPL's points are FPL's,
-// under FPL's rules, and the two disagree by design.
-//
-// **Joined on the opponent and the venue**, which is safe in a league season: a
-// man plays each opponent once at home and once away, so the pair names the
-// match without needing a date. Fantrax gives its own club codes and disagrees
-// with FPL on two of them (`BRF`/`NOT`), so the key is translated before it is
-// compared — never joined on a short name raw.
-//
-// **Fantrax's half is "recent" and how recent is not knowable yet.** Their table
-// returned two rows for a two-match season, so its window could be five, ten or
-// the lot. A match it does not reach gets `paid: null` and the screen dashes
-// those columns rather than printing a nought for points nobody scored.
+// One row per match with both accounts on it: FPL's game log is the spine, every match of the season; Fantrax's
+// recent rows add our league's points. Joined on opponent and venue, Fantrax's club codes translated to FPL's first.
 
 export interface MatchRow {
   fpl: GameLogRow;
-  /** What our league paid for it, or null when Fantrax's window does not reach
-   *  back this far. Null is "we were not told", never "he scored nothing". */
+  /** What our league paid for it; null where Fantrax's window does not reach, never "he scored nothing". */
   paid: PlayerMatch | null;
   /** Our mark out of ten; null when the match was not rated or he was too brief to rate. */
   mark: number | null;
@@ -52,35 +35,13 @@ export function joinMatches(
 
 const key = (opponent: string, home: boolean) => `${opponent}|${home ? "H" : "A"}`;
 
-/** The foot of the table: what the season adds up to, and what that is per
- *  ninety minutes.
- *
- *  Championship Manager closes its appearances table with a total, and FPL's own
- *  player page closes with `Totals` and `Per 90` — both references say the same
- *  thing, which is that a column of matches is not read without its sum.
- *
- *  **A per-ninety of nothing is nothing, not a division by nought.** A man with
- *  no minutes gets null and the screen dashes it. */
-export interface MatchTotals {
+/** What his season adds up to, FPL's account: CM's appearances columns (`cm9900/11.jpg`) and FPL's points. */
+interface MatchTotals {
   minutes: number;
   goals: number;
   assists: number;
-  expectedGoals: number;
-  expectedAssists: number;
   fplPoints: number;
-  /** Our league's points, over the matches Fantrax reached. Null when it reached
-   *  none — a total of nought would say he scored nothing in matches nobody
-   *  showed us. */
-  points: number | null;
-  shots: number | null;
-  shotsOnTarget: number | null;
-  foulsCommitted: number | null;
-  /** Championship Manager's own columns — `Con`, `Yel`, `Red` in `cm9900/11.jpg`,
-   *  plus the two its keeper rows want. All FPL's, all per match, all summed
-   *  over the season the game log covers. */
-  /** How many matches he actually turned out in — CM's first column. Counted
-   *  off the rows FPL wrote a minute against, never `rows.length`: the game log
-   *  carries a row per fixture whether or not he appeared. */
+  /** The matches he turned out in: rows with a minute against them, never `rows.length`. */
   apps: number;
   conceded: number;
   cleanSheets: number;
@@ -94,21 +55,12 @@ export interface MatchTotals {
 export function totalsOf(rows: readonly MatchRow[]): MatchTotals {
   const sum = (of: (row: MatchRow) => number | null | undefined) =>
     rows.reduce((run, row) => run + (of(row) ?? 0), 0);
-  // Only over the matches Fantrax actually gave, so a partial window sums to what
-  // it covers rather than to the season.
-  const covered = rows.filter((row) => row.paid !== null);
-  const theirs = (of: (match: PlayerMatch) => number | null) =>
-    covered.length === 0 ? null : covered.reduce((run, row) => run + (of(row.paid!) ?? 0), 0);
 
   return {
     minutes: sum((r) => r.fpl.match.minutes),
     goals: sum((r) => r.fpl.match.goals),
     assists: sum((r) => r.fpl.match.assists),
-    expectedGoals: sum((r) => r.fpl.match.expectedGoals),
-    expectedAssists: sum((r) => r.fpl.match.expectedAssists),
     fplPoints: sum((r) => r.fpl.match.fplPoints),
-    // Championship Manager's own columns, added 4 Sep 2026 when the profile's
-    // table took `cm9900/11.jpg`'s shape: `Apps Gls Con Pens Asts Yel Red`.
     apps: rows.filter((row) => row.fpl.match.minutes > 0).length,
     conceded: sum((r) => r.fpl.match.conceded),
     cleanSheets: rows.filter((row) => row.fpl.match.cleanSheet).length,
@@ -116,17 +68,7 @@ export function totalsOf(rows: readonly MatchRow[]): MatchTotals {
     redCards: sum((r) => r.fpl.match.redCards),
     saves: sum((r) => r.fpl.match.saves),
     rating: average(rows.flatMap((r) => (r.mark === null ? [] : [r.mark]))),
-    points: theirs((m) => m.points),
-    shots: theirs((m) => m.shots),
-    shotsOnTarget: theirs((m) => m.shotsOnTarget),
-    foulsCommitted: theirs((m) => m.foulsCommitted),
   };
-}
-
-/** A total over ninety minutes, or null when there are no minutes to divide. */
-export function per90(total: number | null, minutes: number): number | null {
-  if (total === null || minutes <= 0) return null;
-  return (total * 90) / minutes;
 }
 
 const average = (marks: readonly number[]) => (marks.length === 0 ? null : marks.reduce((a, b) => a + b, 0) / marks.length);

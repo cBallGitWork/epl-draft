@@ -1,55 +1,25 @@
 import type { RateTotals } from "@epl/core";
 import { per90 } from "../standout";
 
-// What the two men have DONE, as rates — the other half of the attribute grid.
-//
-// **The grid says where he RANKS; this says what he DOES.** `Measures` renders
-// the same underlying quantities as a percentile out of twenty, which answers
-// "is he good at this" and cannot answer "how often". A scout reading two
-// forwards wants 0.62 against 0.41 as well as 19 against 14, and Understat's own
-// comparison — the reference Craig sent — prints exactly this table beside
-// exactly that normalised picture. Without the rates the screen ranks men
-// against a division it never shows; without the ranks the rates have no scale.
-//
-// **FPL's numbers only, and deliberately none of the three the competition
-// counts.** `SeasonTotals` carries goals, assists and clean sheets with a bound
-// written onto the field: they may not appear on a fantasy screen beside a
-// Fantrax figure, and its docblock names `/players` as one of the screens that
-// is not `/prem`. This route carries no Fantrax figure today, so the collision
-// is not live — but the underlying play is both the safer read and the better
-// one, it is what Fantrax publishes none of, and a man's own goal count is one
-// tap away on his Data tab. Printing it here would be a total in two places,
-// which is a reader checking whether they agree.
-//
-// A rate needs ninety minutes behind it (`per90`'s floor), and under that the
-// answer is a dash rather than a nought: he has not played enough football to
-// have a rate, which is a different statement from being bad at it.
+// What the two men have done, as rates: the attribute grid says where he ranks, this how often. The underlying play
+// only, never the goals, assists and clean sheets the league counts. Under ninety minutes a rate is a dash.
 
 /** What a ledger reads for one man over the window: FPL's totals, and the export's counts, which are null for a
  *  man the export never bridged (a dash) and nought for one it covers who did nothing. */
 export type Played = RateTotals & { touches: number | null; shots: number | null; keyPasses: number | null };
 
-/** One measure, and how to read it off a season. Not a component's business —
- *  this file is pure so the set can be tested without rendering anything. */
+/** One measure, and how to read it off a season. */
 export interface Rate {
   /** The label between the two figures. */
   name: string;
-  /** Where it came from, for the `title`. DESIGN §7's provenance rule as a
-   *  tooltip rather than a printed byline — a screen captioned at every row
-   *  reads as a spreadsheet's footnotes rather than as Championship Manager. */
+  /** Where it came from, for the `title` (DESIGN §7's provenance, as a tooltip). */
   from: string;
-  /** Whether it is a COUNT, and so worth dividing by ninety. Minutes and starts
-   *  are the denominators themselves; the board learned that the hard way when
-   *  `Min` read 90.00 down the whole column. */
+  /** Whether it is a count, so divided by ninety; minutes and starts are the denominators. */
   perNinety: boolean;
   of: (played: Played) => number | null;
 }
 
-/** The measures, in the order a scout reads them: how much football, then what
- *  he did with the ball, then what he did without it, then what FPL paid him.
- *
- *  Saves rides along for the keepers and removes itself for everybody else —
- *  see `rateRows`. */
+/** The measures in the order a scout reads them: how much football, with the ball, without it. */
 const RATES: readonly Rate[] = [
   { name: "Min", from: "FPL, season total", perNinety: false, of: (s) => s.minutes },
   { name: "Starts", from: "FPL, season total", perNinety: false, of: (s) => s.starts },
@@ -79,28 +49,14 @@ const RATES: readonly Rate[] = [
 export interface RateRow {
   name: string;
   from: string;
-  /** Whether the two figures are RATES, which is what decides how they print.
-   *
-   *  It rides on the row rather than being inferred from the value, because
-   *  inferring it is wrong about a rate that lands on a whole number: Haaland's
-   *  nought tackles per ninety printed as `0` down a column of `0.82`. */
+  /** Whether the two figures are rates, which decides how they print: a rate on a whole number is still a rate. */
   perNinety: boolean;
   a: number | null;
   b: number | null;
 }
 
-/** Every measure worth printing about these two, in `RATES`' order.
- *
- *  **A row neither of them has anything to say about is dropped**, which is what
- *  keeps Saves off a comparison of two forwards and keeps it on a comparison of
- *  two keepers. Nought is a true answer about a striker's saves and a useless
- *  one: two columns of `0.00` under a label buries the nine rows that separate
- *  them. This is `PlayerStats`' own rule — *"a column of noughts against thirty
- *  names buries the two figures that are not one"* — applied to a table two
- *  wide, where the whole ROW can go rather than each cell.
- *
- *  A man with no football half (the 88 in the pool the bridge has never settled)
- *  arrives as `null` and every figure on his side is a dash. */
+/** Every measure worth printing about these two, in `RATES`' order: a row neither has anything to say about (two
+ *  forwards' saves) is dropped. A man with no football half is all dashes. */
 export function rateRows(a: Played | null, b: Played | null): RateRow[] {
   const rows: RateRow[] = [];
   for (const rate of RATES) {
@@ -112,9 +68,7 @@ export function rateRows(a: Played | null, b: Played | null): RateRow[] {
   return rows;
 }
 
-/** One side of one row. Null both for a man we have no season for and for a
- *  rate with too little football under it — the screen says both with a dash,
- *  because in both cases the honest answer is that we cannot state one. */
+/** One side of one row; null for a man with no season or a rate with too little football under it. */
 function read(rate: Rate, played: Played | null): number | null {
   if (played === null) return null;
   const total = rate.of(played);
@@ -122,8 +76,7 @@ function read(rate: Rate, played: Played | null): number | null {
   return rate.perNinety ? per90(total, played.minutes) : total;
 }
 
-/** Whether a figure has nothing to say — absent, or a nought that is true and
- *  uninteresting. */
+/** Whether a figure has nothing to say: absent, or nought. */
 function silent(value: number | null): boolean {
   return value === null || value === 0;
 }

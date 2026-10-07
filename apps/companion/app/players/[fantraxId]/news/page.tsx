@@ -5,23 +5,9 @@ import { playerStories } from "../dossier";
 import NoProfile from "../NoProfile";
 import PlayerShell from "../PlayerShell";
 import { subject } from "../subject";
-import { playerHref } from "../../routes";
+import { playerNewsHref } from "../../routes";
 
-// Championship Manager's `Injuries & Bans`, under a name a manager would look
-// for. CM's word is right in a game that suspends you for a fifth booking; ours
-// answers the same question — can he play — and then says what is being said
-// about him.
-//
-// **Fantrax's stories and nothing else** (Craig, 4 Sep 2026: "Remove the FPL
-// part"). FPL publishes one availability line, and that is a STATE rather than a
-// story — whether he can play, which the badge and the pitch already answer
-// through `availabilityOf`. Putting it in a list of dated reports made the newest
-// item a sentence saying nothing had happened.
-//
-// The history comes from `getPlayerProfile?tab=NEWS_NOTES` — every story with its
-// full body and its full analysis. Still not read: `miscData.icons[]`, which
-// carries the same lines truncated with an ellipsis, and the profile's own
-// `latestNews`, which is one sentence of the newest with the analysis gated.
+// CM's `Injuries & Bans` under a manager's word: every story Fantrax has filed about him, in Mail's frame.
 
 export const revalidate = 30;
 
@@ -30,10 +16,7 @@ export default async function PlayerNews({
   searchParams,
 }: {
   params: Promise<{ fantraxId: string }>;
-  /** Which story is open. **In the URL and not in state**, so a story can be
-   *  linked, and so the page stays a server component — the whole inbox is one
-   *  read and a client boundary here would ship the list twice. `?story=` for
-   *  the same reason every other query on the desk is spelled out. */
+  /** Which story is open, in the URL, so a story can be linked and the page stays a server component. */
   searchParams: Promise<{ story?: string }>;
 }) {
   const [{ fantraxId }, { story }] = await Promise.all([params, searchParams]);
@@ -46,13 +29,11 @@ export default async function PlayerNews({
       fantraxId={fantraxId}
       current="news"
     >
-      {/* Championship Manager's news screen: a dated row per item, newest first,
-          and the newest opened beside it on a desk. Every story Fantrax's provider has
-          filed about him since 1 July. */}
+      {/* A dated row per story, newest first and open beside the list on a desk. */}
       <Inbox
         items={inbox(await playerStories(fantraxId, now()))}
-        list={`${playerHref(fantraxId)}/news`}
-        href={(id) => `${playerHref(fantraxId)}/news?story=${encodeURIComponent(id)}`}
+        list={playerNewsHref(fantraxId)}
+        href={(id) => playerNewsHref(fantraxId, id)}
         openId={story}
       />
     </PlayerShell>

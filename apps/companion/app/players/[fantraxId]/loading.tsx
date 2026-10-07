@@ -1,25 +1,12 @@
 import Skeleton from "../../components/shell/Skeleton";
 
-// One player, waiting on Fantrax — and it covers all four of his views, because
-// a `loading.tsx` serves its segment and everything under it.
-//
-// So what it reserves is the CHROME the four share and nothing below it: the
-// plated bar and the tab strip. Those two are the same height on
-// every tab, which is what makes reserving them honest — the block under them is
-// a different shape on each, and a skeleton that guessed at one would settle the
-// page and then move it again.
-//
-// **The heights are the shell's, not invented.** `PageHeader`'s bar is
-// `min-h-11` on a phone and `min-h-24` above `lg`; `.cm-tab` is 2.75rem and
-// 3.5rem; `Caption` is its text plus `py-1.5`. This file used to describe the
-// screen before the tabs — a 112px portrait beside a heading, then three blocks
-// of name-and-value rows — which had stopped being true of anything.
+// One player, waiting on Fantrax, for all four of his views: only the bar and the tab strip they share, at the
+// shell's own heights.
 
 export default function Loading() {
   return (
     <div aria-busy className="flex flex-col gap-2">
-      {/* The plated bar. Full width, because it is a plate rather than a title
-          sitting on the page. */}
+      {/* The plated bar. */}
       <Skeleton width="100%" height="2.75rem" />
 
       {/* Four tabs sharing the row, at the plate's own height. */}
@@ -31,8 +18,7 @@ export default function Loading() {
         ))}
       </div>
 
-      {/* One block under it, no taller than the shortest view's, so nothing
-          reserves room a tab will not fill. */}
+      {/* One block, no taller than the shortest view's. */}
       <Skeleton width="100%" height="9rem" />
     </div>
   );
