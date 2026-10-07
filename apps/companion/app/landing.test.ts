@@ -38,6 +38,10 @@ describe("landing", () => {
     expect(landing({ signedIn: true, live: true })).toBe(LIVE);
   });
 
+  it("opens Mail when it cannot tell whether a gameweek is on", () => {
+    expect(landing({ signedIn: true, live: null })).toBe(MAIL);
+  });
+
   it("keeps the paper for a reader who has not signed in, live or not", () => {
     expect(landing({ signedIn: false, live: false })).toBe("/");
     expect(landing({ signedIn: false, live: true })).toBe("/");
