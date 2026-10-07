@@ -49,7 +49,7 @@ export default function Ledger({
                 <span className="cm-index numeric w-24 shrink-0 whitespace-nowrap px-1.5 py-0.5">
                   {fantraxDay(deal.processedAt ?? "") ?? DASH}
                 </span>
-                <span className={`w-24 shrink-0 ${SMALL_CAPS} text-accent lg:text-sm`}>
+                <span className={`w-24 shrink-0 ${SMALL_CAPS} text-info lg:text-sm`}>
                   {kindOf(deal, arrived.length, left.length)}
                 </span>
                 {/* Who he traded with: under the type on a phone, the last column on a desk. */}

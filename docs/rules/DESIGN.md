@@ -381,7 +381,7 @@ is more specific than a palette; it is the reason the token names in
 | Ground | `--color-bg` `surface` `raised` `line` | depth, never meaning | — |
 | Ink | `--color-ink` `muted` `faint` | how loud | 17.0 · 8.6 · 5.7 |
 | Yellow | `--color-accent` | **yours · selected · active · primary** | 13.1 |
-| Cyan | `--color-info` | **a derived reading** — ours rather than recorded | 11.2 |
+| Cyan | `--color-info` | **a derived reading** — ours rather than recorded; and a row's kind on a ledger: the competition on a team's Fixtures, the deal on its Transfers (Craig, 7 Oct 2026, over the accent) | 11.2 |
 | Amber | `--color-mid` | **a figure standing alone beside a name** — never a column of a standings table | 9.8 |
 | Red | `--color-bad` | **a loss, a doubt, a negative** | 5.6 |
 | Green | `--color-up` | **a gain** — the other half of the direction pair | 9.9 |
