@@ -1,5 +1,5 @@
 import TabStrip from "../components/shell/TabStrip";
-import { ANALYSIS, PLANNER, POOL, PROJECTIONS, TEAMS } from "./routes";
+import { ANALYSIS, PLANNER, POOL, PROJECTIONS, PROJECTIONS_SHOWN, TEAMS } from "./routes";
 
 // The Data section's own views (Craig, 24 Sep 2026: Players and Compare, with more to come), each page passing
 // its own. The keys are the URL's business and outlive the labels: `analysis` is Compare's route.
@@ -14,6 +14,8 @@ const VIEWS = [
 
 export type ScoutView = (typeof VIEWS)[number]["key"];
 
+const SHOWN = VIEWS.filter((view) => PROJECTIONS_SHOWN || view.key !== "projections");
+
 export default function PoolNav({ current }: { current: ScoutView }) {
-  return <TabStrip label="Data views" tabs={VIEWS} current={current} labels="word" />;
+  return <TabStrip label="Data views" tabs={SHOWN} current={current} labels="word" />;
 }
