@@ -1,3 +1,4 @@
+import type { IntelManifest } from "../football/intel/types";
 import { finiteOrNull } from "../untrusted";
 import { eachPart, type LeagueProjectionPart, type SlotRates } from "./leagueProjection";
 
@@ -46,6 +47,8 @@ export interface LeagueProjectionRow {
 }
 
 export interface LeagueProjectionFile {
+  /** What intel-check ages it by; absent on a file written before 7 Oct 2026. */
+  manifest?: IntelManifest;
   generatedAt: string;
   method: string;
   /** The recorded league whose rules priced it. */

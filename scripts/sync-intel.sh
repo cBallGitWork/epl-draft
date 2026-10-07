@@ -1,6 +1,6 @@
 #!/bin/bash
 # The Mac's half of the week: the sister repo's exports into a PR that merges once CI passes.
-#   sync-intel.sh weekly    Tuesday, the round settled: every sister file and the cup fixtures
+#   sync-intel.sh weekly    Tuesday, the round settled: every sister file, cups, careers and league projections
 #   sync-intel.sh pressers  Thursday 16:00, Friday 12:30, 16:00 and 17:45: the press conferences, squads and depth
 # Every run ends in an alert.yml dispatch, intel-<mode> ok or fail, which the watchdog reads. DRY_RUN=1 stops before the push.
 # launchd starts with a bare PATH; node comes from the newest nvm install. Then the token, before anything can fail.
@@ -69,7 +69,7 @@ retry() {
 }
 
 case "$MODE" in
-  weekly) KINDS="squads set-pieces strength depth matches lines shots touches" ;;
+  weekly) KINDS="squads set-pieces strength depth matches lines shots touches projections" ;;
   pressers) KINDS="squads depth" ;;
   *) MODE=sync; FINISHED=1; log "usage: sync-intel.sh weekly|pressers"; exit 2 ;;
 esac
@@ -99,9 +99,6 @@ if [ ! -f node_modules/.lock-hash ] || [ "$(cat node_modules/.lock-hash)" != "$H
   echo "$HASH" > node_modules/.lock-hash
 fi
 
-# Projections only while the Data tab shows them (PROJECTIONS_SHOWN in players/routes.ts).
-grep -q "PROJECTIONS_SHOWN = true" apps/companion/app/players/routes.ts && KINDS="$KINDS projections"
-
 # The GitHub sweep's data from R2, judged for age, then exported; it writes every kind and this mode takes its own.
 status=0
 (cd "$SISTER" && ./.venv/bin/python "$WT/scripts/sister-export.py" "$SISTER" "$OUT" "$MODE" >"$OUT/fresh.log" 2>&1) || status=$?
@@ -124,6 +121,18 @@ done
 if [ "$MODE" = weekly ]; then
   if SISTER_REPO="$SISTER" npm run -s intel-cups >>"$LOG" 2>&1; then soft intel-cups ok "cups read"
   else soft intel-cups fail "intel-cups refused; cups left as they were"; fi
+  if SISTER_REPO="$SISTER" npm run -s intel-careers >>"$LOG" 2>&1; then soft intel-careers ok "careers read"
+  else soft intel-careers fail "intel-careers refused; careers left as they were"; fi
+  # Our league's points off the fresh projections, and a dated copy: a trade is judged by a man's worth that week.
+  if npm run -s draft-pack >>"$LOG" 2>&1; then
+    for file in data/intel/league-projections/*.json; do
+      mkdir -p data/intel/league-projections/weekly
+      cp "$file" "data/intel/league-projections/weekly/$(basename "$file" .json)-$(date +%F).json"
+    done
+    soft intel-league-projections ok "league projections priced"
+  else
+    soft intel-league-projections fail "draft-pack refused; league projections left as they were"
+  fi
 else
   # Scout's day archives around the next deadline, then yesterday's and today's conferences (a day re-run replaces itself).
   if (cd "$SISTER" && ./.venv/bin/python scripts/ingest/ingest_ffscout_daily.py >"$OUT/ffscout.log" 2>&1); then
@@ -139,12 +148,14 @@ else
   fi
 fi
 
-# A file whose only change is its manifest (a new exportedAt) is not a change.
-for file in $(git status --porcelain data/intel | awk '$1 == "M" {print $2}'); do
-  if [ "$(git show "HEAD:$file" | /usr/bin/jq -S -c 'del(.manifest)' | shasum)" = "$(/usr/bin/jq -S -c 'del(.manifest)' "$file" | shasum)" ]; then
-    git checkout -q -- "$file"
-  fi
-done
+# Between Tuesdays a file whose only change is its manifest is not a change; Tuesday's stamp is what intel-check ages.
+if [ "$MODE" = pressers ]; then
+  for file in $(git status --porcelain data/intel | awk '$1 == "M" {print $2}'); do
+    if [ "$(git show "HEAD:$file" | /usr/bin/jq -S -c 'del(.manifest)' | shasum)" = "$(/usr/bin/jq -S -c 'del(.manifest)' "$file" | shasum)" ]; then
+      git checkout -q -- "$file"
+    fi
+  done
+fi
 
 CHANGED=$(git status --porcelain data/intel | awk '{print $2}' | tr '\n' ' ')
 [ -n "$CHANGED" ] || finish "nothing changed"

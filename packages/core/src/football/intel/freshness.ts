@@ -20,8 +20,9 @@ export const INTEL_AGE_LIMIT_DAYS = {
   xi: 14,
   stats: 14,
   pressers: 14,
-  // Past seasons' clubs, which a new gameweek does not change.
-  careers: null,
+  // Written by the weekly run, which stamps every kind it exports whether or not it changed.
+  careers: 8,
+  "league-projections": 8,
 } as const satisfies Record<string, number | null>;
 
 export type IntelKind = keyof typeof INTEL_AGE_LIMIT_DAYS;
