@@ -1,5 +1,5 @@
 import Image from "next/image";
-import ScrollBoard from "../../../components/league/ScrollBoard";
+import ScrollBoard from "./ScrollBoard";
 import type { Deal, DealSide } from "@epl/core";
 import { crestForShortName, fantraxDay, inkOn, kindOf, movement, teamColours, toFplClubCode, DASH } from "@epl/core";
 import { LABEL, PANEL_FLUSH, SMALL_CAPS } from "@/app/desk";

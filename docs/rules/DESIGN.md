@@ -817,7 +817,7 @@ on the desk shares its width with four or more measures. A screen wanting this
 exception has to be able to say the same thing about itself, and `ROW_NAME` stays
 where it is — six boards wear it and none has the room.
 
-`squad/[teamId]/transfers/Ledger` says it and takes the same step for its names
+`components/league/Ledger` says it and takes the same step for its names
 (Craig, 1 Oct 2026: *"lots of space, make text bigger"*): a row there is a date, a
 type and two names.
 
