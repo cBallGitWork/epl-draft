@@ -1,4 +1,4 @@
-import type { IntelClubXi } from "./types";
+import type { IntelClubXi, IntelXi } from "./types";
 
 // Scout's predicted elevens off https://www.fantasyfootballscout.co.uk/team-news, passed in as a string.
 // Each photo's filename is the man's FPL `code`, so nothing is matched by name.
@@ -37,4 +37,16 @@ export function sameElevens(a: Record<string, IntelClubXi>, b: Record<string, In
         .map((club) => [club, clubs[club].formation, clubs[club].starters.map((man) => man.code)]),
     );
   return key(a) === key(b);
+}
+
+/** Whether to rewrite the held file, and the moment the elevens were first seen: now for a change, or the held moment
+ *  when unchanged elevens move to the next gameweek. A file left on a played gameweek reads as stale. */
+export function xiToWrite(
+  held: IntelXi | null,
+  clubs: Record<string, IntelClubXi>,
+  gameweek: number | null,
+  now: string,
+): { fetchedAt: string } | null {
+  if (held === null || !sameElevens(held.clubs, clubs)) return { fetchedAt: now };
+  return held.manifest.gameweek === gameweek ? null : { fetchedAt: held.fetchedAt ?? now };
 }

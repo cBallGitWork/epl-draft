@@ -169,7 +169,7 @@ export {
   xiFault,
 } from "./intel/map";
 export type { SetPieceRank } from "./intel/map";
-export { parseScoutXi, sameElevens } from "./intel/scout";
+export { parseScoutXi, sameElevens, xiToWrite } from "./intel/scout";
 export {
   defaultDescendingTable,
   isTableSortKey,
