@@ -1,0 +1,70 @@
+name: Watchdog
+
+# Notices a job that never ran, which no job can report about itself: each scheduled workflow owes a success
+# within its cadence plus grace, and each of the Mac's launchd jobs an alert.yml report by its slot's deadline
+# (`scripts/watchdog/decide.ts`). A finding is filed through `scripts/ci/alert.sh` under the late job's own source.
+#
+# No shared setup action on purpose: a broken alert path turns this run red, and GitHub's own failure email
+# is the second channel. `capture-status.yml` alerts when this has not succeeded for 3 hours.
+
+on:
+  schedule:
+    # Hourly through the London day, at a minute no other cron uses.
+    - cron: "50 6-23 * * *"
+  workflow_dispatch:
+    inputs:
+      now:
+        description: "Stand at this instant, for a test: ISO (2026-10-08T17:05:00Z) or +<hours>h"
+        required: false
+        type: string
+        default: ""
+      only:
+        description: "File only this source's finding (intel-pressers)"
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  actions: read
+  contents: read
+  issues: write
+
+concurrency:
+  group: watchdog
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: Look for what never ran
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NOW: ${{ inputs.now }}
+          ONLY: ${{ inputs.only }}
+        run: npx tsx scripts/watchdog.ts
+
+      # Its own failures file as "alert: watchdog"; the next green run closes it.
+      - name: Alert the owner
+        if: ${{ failure() || cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/ci/alert.sh watchdog fail "$RUN_URL"
+
+      - name: Close the alert
+        if: ${{ success() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/ci/alert.sh watchdog ok "$RUN_URL"

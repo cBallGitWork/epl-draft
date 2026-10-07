@@ -356,6 +356,11 @@ items still parked — unequal column widths and the tables side by side.
 scoring engine (dead — Fantrax's numbers are public and authoritative). Custom
 competitions beyond the two cups, which are on screen with a placeholder draw (27 Sep).
 
+After GW6 (7 Oct plan, *automatic fetching: no silent failures*): move the Mac's export into the sister's
+`sweep.yml` after a green full sweep, pushed with a fine-grained PAT, and retire the launchd jobs; run pressers
+and scout-xi on "a deadline within 48h" rather than weekdays, for midweek gameweeks; and, optionally, a free
+healthchecks.io ping from the watchdog and the Mac, the only thing that notices Actions itself stopping.
+
 ## Verification
 
 - Four green before every commit: `npm test`, `npm run typecheck`,
