@@ -28,3 +28,23 @@ export function fixed(value: number, kind: FigureKind): string {
   const places = PLACES[kind];
   return value.toLocaleString("en-GB", { minimumFractionDigits: places, maximumFractionDigits: places });
 }
+
+/** A player's name for a list on a phone: the forename as an initial, `K. Dewsbury-Hall`; reads Fantrax's `Gross, Pascal` too. */
+export function initialled(name: string): string {
+  const trimmed = name.trim();
+  const comma = trimmed.indexOf(",");
+  if (comma !== -1) {
+    const surname = trimmed.slice(0, comma).trim();
+    const first = Array.from(trimmed.slice(comma + 1).trim())[0];
+    return first ? `${first}. ${surname}` : surname;
+  }
+  // FPL's own initial ("J.Timber") gets the same space as ours.
+  if (/^\p{L}\.\S/u.test(trimmed) && !trimmed.includes(" ")) return trimmed.replace(".", ". ");
+  const at = trimmed.indexOf(" ");
+  if (at <= 0) return trimmed;
+  const first = trimmed.slice(0, at);
+  const rest = trimmed.slice(at + 1).trim();
+  // Already short: an initial in it already ("Bruno G.").
+  if (first.includes(".") || /^\p{L}\.$/u.test(rest)) return trimmed;
+  return `${Array.from(first)[0]}. ${rest}`;
+}

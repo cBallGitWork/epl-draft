@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { categoryPoints } from "../scoring";
-import { listName, mapLeagueInfo, mapPlayerPool, readingOrder } from "./map";
+import { mapLeagueInfo, mapPlayerPool, readingOrder } from "./map";
 import type { RawLeagueInfo, RawPlayerPool } from "./raw";
 import leagueInfo from "./__fixtures__/leagueInfo.json";
 import leagueInfoDrafted from "./__fixtures__/leagueInfoDrafted.json";
@@ -31,22 +31,6 @@ describe("readingOrder", () => {
   it("survives a name with no first name at all", () => {
     expect(readingOrder("Ronaldo")).toBe("Ronaldo");
     expect(readingOrder("")).toBe("");
-  });
-});
-
-describe("listName", () => {
-  it("sets the surname-first form as a list does, first name to its initial", () => {
-    expect(listName("Gross, Pascal")).toBe("Gross, P");
-    expect(listName("De Cuyper, Maxim")).toBe("De Cuyper, M");
-  });
-
-  it("leaves a name with no comma as Fantrax gave it", () => {
-    expect(listName("Gabriel Jesus")).toBe("Gabriel Jesus");
-    expect(listName("Ronaldo")).toBe("Ronaldo");
-  });
-
-  it("keeps the surname when the first name is empty", () => {
-    expect(listName("Rodri, ")).toBe("Rodri");
   });
 });
 

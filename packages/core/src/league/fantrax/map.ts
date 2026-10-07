@@ -43,15 +43,6 @@ export function readingOrder(name: string): string {
   return `${name.slice(comma + 2).trim()} ${name.slice(0, comma).trim()}`.trim();
 }
 
-/** A list's form of a name, as CM sets one: "Gross, P". A name Fantrax gives without a comma stays whole. */
-export function listName(name: string): string {
-  const comma = name.indexOf(",");
-  if (comma === -1) return name.trim();
-  const surname = name.slice(0, comma).trim();
-  const initial = name.slice(comma + 1).trim().charAt(0);
-  return initial ? `${surname}, ${initial}` : surname;
-}
-
 /** The real footballers in Fantrax's global pool, team entities removed. */
 export function mapPlayerPool(pool: RawPlayerPool): LeaguePlayer[] {
   const players: LeaguePlayer[] = [];

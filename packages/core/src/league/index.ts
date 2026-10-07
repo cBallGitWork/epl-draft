@@ -121,7 +121,7 @@ export {
   fetchTeamStats,
   fetchTransactions,
 } from "./fantrax/client";
-export { listName, mapLeagueInfo, mapPlayerPool } from "./fantrax/map";
+export { mapLeagueInfo, mapPlayerPool } from "./fantrax/map";
 export { fetchLineupState, sendBenchOrder, sendLineup } from "./fantrax/lineupClient";
 export {
   benchOrderMap,

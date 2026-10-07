@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import NameLink from "../NameLink";
-import type { FootballPlayer } from "@epl/core";
+import { fullFootballerName, type FootballPlayer } from "@epl/core";
 import { SELECT } from "../../../../components/shell/ButtonLink";
 import { VIEWS, reading } from "./measures";
 import { FIGURE_CELL, MINOR_LABEL, PANEL_FLUSH, PINNED_BESIDE_TILE, PINNED_TILE, ROW_HOVER, ROW_NAME } from "@/app/desk";
@@ -11,6 +11,7 @@ import PositionTile from "../../../../components/league/PositionTile";
 import ScrollBoard from "../../../../components/league/ScrollBoard";
 import { SIDE_SHARES, standoutCuts, standoutInk } from "../../../../components/league/standout";
 import StateBox from "../../../../components/football/StateBox";
+import PlayerName from "../../../../components/shell/PlayerName";
 import { doubtRow } from "../../../../components/football/doubtRow";
 
 // A club's season, player by player, on the house board: our position in the index tile, the
@@ -113,7 +114,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
                 <PositionTile positions={positions} cell className={PINNED_TILE} />
                 <td className={`px-1.5 ${ROW_NAME} ${PINNED_BESIDE_TILE} text-ink ${doubtRow(player)}`}>
                   <NameLink href={href} className="cm-row flex min-h-11 w-36 items-center gap-2 lg:w-auto">
-                    <span className="truncate">{player.fullName}</span>
+                    <span className="truncate"><PlayerName name={player.fullName} short={fullFootballerName(player)} /></span>
                     <StateBox player={player} />
                   </NameLink>
                 </td>

@@ -10,6 +10,7 @@ import {
 import StateBox from "../football/StateBox";
 import { doubtRow } from "../football/doubtRow";
 import PositionTile from "./PositionTile";
+import PlayerName from "../shell/PlayerName";
 import { ROW_NAME } from "@/app/desk";
 
 // One man's row in a squad list: our position, his club's crest, his name, his fixture and his figure.
@@ -104,7 +105,7 @@ export default function SquadRow({
           decision and not the recipe's. */}
       {/* Why he is not playing, right after his name (Craig, 30 Sep 2026); silent for a fit man. */}
       <span className="flex min-w-0 flex-[1_1_5rem] items-center gap-1.5">
-        <span className={`min-w-0 truncate ${ROW_NAME}`}>{fullPlayerName(player.rostered)}</span>
+        <span className={`min-w-0 truncate ${ROW_NAME}`}><PlayerName name={fullPlayerName(player.rostered)} /></span>
         <StateBox player={footballer} />
       </span>
 

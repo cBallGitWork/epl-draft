@@ -1,6 +1,7 @@
 import ScrollBoard from "../../../components/league/ScrollBoard";
 import type { FootballPlayer } from "@epl/core";
-import { availabilityOf, byPositionDepth, positionDepth, DASH } from "@epl/core";
+import { availabilityOf, byPositionDepth, fullFootballerName, positionDepth, DASH } from "@epl/core";
+import PlayerName from "../../../components/shell/PlayerName";
 import { Head, HeadRow, NameHead, PLATE } from "../../../components/league/TableHeads";
 import PositionTile, { TILE_WIDTH } from "../../../components/league/PositionTile";
 import StateBox from "../../../components/football/StateBox";
@@ -87,7 +88,7 @@ export default function SquadTable({
                         right on a pitch card 46px wide and wrong in a column
                         with room for a person. `fullName` is `first_name
                         second_name` from the bootstrap. */}
-                    <span className={`min-w-0 truncate ${ROW_NAME}`}>{player.fullName}</span>
+                    <span className={`min-w-0 truncate ${ROW_NAME}`}><PlayerName name={player.fullName} short={fullFootballerName(player)} /></span>
                     <StateBox player={player} />
                   </NameLink>
                 </td>
