@@ -4271,6 +4271,15 @@ SPA's own bundle.
   `resultCode` and `result.content`: `TRADE_CANCELLED` 22, `TRADE_REJECTED` 6, `EXECUTED` 8. Every set involves The
   Raccoons, Craig's team, so whether a proposal between two other teams shows is unproven; Craig says the
   commissioner's page shows it. A pending proposal's code is not yet seen.
+- **A session's log is stamped in that account's zone.** The same executed trade reads `Fri Oct 2, 2026, 4:45PM`
+  under "Date Processed (EDT)" anonymously and `9:45PM` under "(BST)" with Craig's cookie. `stampZone` reads the
+  head, and `fantraxInstant` takes the zone; read as Eastern, the first offer letter was dated five hours late.
+- **The log names no proposer**: no `creatorTeamId` on any row (only `getPendingTransactions`, own team only, has
+  one). So a proposal is written to BOTH its managers in words true for either ("A deal with GlengarryHearts is on
+  the table. You'd get … and give up …"), and the banner shows to both.
+- **A proposal reaches only its two managers.** The commissioner reads every one; `offerNews` writes a letter only
+  for a reader on the deal, keyed on `signedTeamId`, so neither a reader signed out nor the lent demo team sees one.
+  Claims stay behind Mail's link out: they are still unreadable.
 
 ## A Fantrax points figure per man per MATCH is a capture, not a read (4 Sep 2026)
 

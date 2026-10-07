@@ -12,14 +12,16 @@ import {
   headToHead,
   inboxItems,
   nextDeadline,
+  offerNews,
   roundNews,
 } from "@epl/core";
 import { now } from "../clock";
 import { readBoard } from "../board";
 import { readDeals } from "../business";
-import { readTradeBlocks } from "../tradeBlock";
+import { readProposals, readTradeBlocks } from "../market";
 import { seasonKickoffs } from "../football";
 import { readerTeamId, getLeagueSquads } from "../squads";
+import { signedTeamId } from "../session";
 
 // What the manager's inbox is made of, from reads the paper and the head-to-head already cache.
 // The football and league layers meet here, at the app edge, because neither may import the other.
@@ -30,6 +32,8 @@ export interface Inbox {
   names: Map<string, string>;
   /** The reader's own team, or null signed out, when nothing goes red. */
   mine: string | null;
+  /** The trades on the table he is party to, also in `items`: the banner's. */
+  offers: InboxItem[];
 }
 
 /** Who he plays in the period the NEXT deadline locks: his doubts and that opponent's are the inbox's. */
@@ -44,12 +48,13 @@ function nextOpponent(
 }
 
 export async function readInbox(): Promise<Inbox> {
-  const [squads, feed, mine, kickoffs, blocks] = await Promise.all([
+  const [squads, feed, mine, kickoffs, blocks, proposals] = await Promise.all([
     getLeagueSquads(),
     readDeals(),
     readerTeamId(),
     seasonKickoffs(),
     readTradeBlocks(),
+    readProposals(),
   ]);
 
   const drafted = "period" in squads ? squads : null;
@@ -82,8 +87,13 @@ export async function readInbox(): Promise<Inbox> {
       : headToHead(drafted.info.matchups, drafted.info.teams, period, mine);
   const yours = tie === undefined || board === null ? null : finishedTie(board, tie);
 
+  // A proposal is private to its two managers, so only a code reads one: never the lent demo team.
+  const signed = drafted === null ? null : await signedTeamId(drafted.period.teams);
+  const offers = offerNews(proposals.proposals, { name: nameOf, mine: signed, zone: proposals.zone });
+
   return {
     items: inboxItems(
+      offers,
       // `deals()` pairs a claim with its drop and both halves of a trade.
       dealNews(deals(feed.rows), nameOf, mine),
       blockNews(blocks, { name: nameOf, mine, holder: (fantraxId) => holders.get(fantraxId) ?? null }),
@@ -98,6 +108,7 @@ export async function readInbox(): Promise<Inbox> {
     ),
     names,
     mine,
+    offers,
   };
 }
 
@@ -131,4 +142,11 @@ function lock(
   return gameweek === undefined
     ? null
     : { period: next.period, gameweek, locksAt: next.locksAt };
+}
+
+/** The offer the banner names: the newest the reader is party to, and the manager across the table from him. */
+export function bannerOffer(inbox: Inbox): { id: string; with: string | null } | null {
+  const [first] = inbox.offers;
+  if (first === undefined) return null;
+  return { id: first.id, with: first.teamId === null ? null : (inbox.names.get(first.teamId) ?? null) };
 }

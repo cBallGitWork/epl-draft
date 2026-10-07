@@ -4,7 +4,7 @@ import { deals } from "./deals";
 
 const tx = (over: Partial<LeagueTransaction> & { fantraxId: string }): LeagueTransaction => ({
   setId: "s1", kind: "claim", playerName: "A Player", position: null, club: null, clubName: null, via: null, fromTeamId: null,
-  toTeamId: null, processedAt: "Wed Aug 12, 2026, 9:14AM", period: 1, executed: true, ...over,
+  toTeamId: null, processedAt: "Wed Aug 12, 2026, 9:14AM", period: 1, executed: true, resultCode: null, ...over,
 });
 
 describe("deals", () => {

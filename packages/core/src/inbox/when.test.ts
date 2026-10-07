@@ -9,6 +9,12 @@ describe("fantraxInstant", () => {
     expect(fantraxInstant(STAMP)).toBe("2026-09-02T10:11:00.000Z");
   });
 
+  // The commissioner's session prints the log in his own zone: the same trade read 4:45PM (EDT) and 9:45PM (BST).
+  it("reads a stamp in the zone a session's log names", () => {
+    expect(fantraxInstant("Fri Oct 2, 2026, 9:45PM", "Europe/London")).toBe(fantraxInstant("Fri Oct 2, 2026, 4:45PM"));
+    expect(fantraxInstant("Fri Oct 2, 2026, 9:45PM", "Europe/London")).toBe("2026-10-02T20:45:00.000Z");
+  });
+
   it("reads their winter clock as EST, five hours behind", () => {
     expect(fantraxInstant("Tue Nov 3, 2026, 6:11AM")).toBe("2026-11-03T11:11:00.000Z");
   });

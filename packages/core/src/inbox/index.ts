@@ -4,4 +4,5 @@ export { blockNews } from "./block";
 export { inboxItems, roundNews } from "./items";
 export { dealNews } from "./messages";
 export { noteBesideChance } from "./notes";
+export { offerNews } from "./offers";
 export { fantraxDay, fantraxTime } from "./when";

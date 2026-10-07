@@ -37,6 +37,7 @@ export function unwrapFxpa(method: string, body: unknown): unknown {
 const SESSION_METHODS: ReadonlySet<string> = new Set([
   "getTeamRosterInfo",
   "getTradeBlocks",
+  "getTransactionDetailsHistory",
   "confirmOrExecuteTeamRosterChanges",
   "setAutoSubsOrder",
 ]);
