@@ -64,6 +64,8 @@ body {
   font-family: var(--font-sans);
   /* Keeps the foot of the page clear of the thumb rail's inset; the rail carries its own, being fixed. */
   padding-bottom: env(safe-area-inset-bottom);
+  /* The installed iPhone app draws under the status bar (`black-translucent`); the page starts below it. Zero elsewhere. */
+  padding-top: env(safe-area-inset-top);
   -webkit-tap-highlight-color: transparent;
 }
 

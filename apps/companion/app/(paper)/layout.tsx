@@ -12,11 +12,15 @@ export const viewport: Viewport = { themeColor: "#f6ddd2" };
 
 export default function PaperLayout({ children }: { children: ReactNode }) {
   return (
-    // The serifs mount here only; `@container` sizes the page by its frame; `min-h-dvh` keeps stock to the foot.
-    <div
-      className={`paper @container ${paperFontVariables} -mx-[var(--page-gutter)] -mb-[var(--page-foot)] -mt-3 flex min-h-dvh flex-col gap-5 px-[var(--page-gutter)] pb-[calc(2rem+var(--page-foot))] pt-4`}
-    >
-      {children}
-    </div>
+    <>
+      {/* Outside the page: `@container` would hold a fixed band to the page, and it would scroll away with it. */}
+      <div aria-hidden className="paper paper-statusbar" />
+      {/* The serifs mount here only; `@container` sizes the page by its frame; `min-h-dvh` keeps stock to the foot. */}
+      <div
+        className={`paper @container ${paperFontVariables} -mx-[var(--page-gutter)] -mb-[var(--page-foot)] -mt-3 flex min-h-dvh flex-col gap-5 px-[var(--page-gutter)] pb-[calc(2rem+var(--page-foot))] pt-4`}
+      >
+        {children}
+      </div>
+    </>
   );
 }
