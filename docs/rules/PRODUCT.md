@@ -35,10 +35,15 @@ identity and they are never conflated.
 Success is that on a Saturday at 3pm, everyone in the league has this open instead of
 Fantrax.
 
-Longer term this is also a rehearsal. The 2027/28 goal is our own draft platform —
-a draft/EPL/Football Manager hybrid with real tactics, contract and morale narratives,
-and a soft salary cap. The football layer and the whole UI survive that transition
-intact; only the league adapter is replaced. Design decisions here should not assume
+Longer term this may be a rehearsal. Our own draft platform is **not being built this
+season** (Craig, 7 Oct 2026): it would be a year of database, settlement and waiver work
+to chase Sleeper, which already ships a polished Premier League draft for free. The one
+idea in it nobody has built is **a player who remembers how a manager treated him** —
+claimed and binned inside a week, he comes back to that manager dearer, or not at all.
+That is tested this season inside this app, computed off Fantrax's transactions and
+told in the paper. Whether to build the platform is asked again in spring 2027
+(`docs/plans/ROADMAP.md`, *27/28: the decision*). The football layer and the whole UI
+would survive that transition intact, so design decisions here still should not assume
 Fantrax is forever.
 
 ## Brand Personality

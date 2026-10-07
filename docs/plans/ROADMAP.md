@@ -20,7 +20,7 @@ sequences it against the dated season work and un-parks two ideas Craig chose:
 | Custom competitions (H2H groups, cups, points leagues over Fantrax points) | docs/rules/PRODUCT.md | **Shape landed 20 Aug** — a declared cup and playoff, labelled a placeholder, on `/league/schedule`. **On screen 27 Sep** — the Timbeibs Cup (double elimination, GW9–17) and the Davy Propper Cup (groups then knockout, GW22–30) in `league/cups/`, shown on `/league/cups` (brackets, the Davy Propper groups as tables; the fixtures moved to Schedule on 1 Oct), Schedule and Live with a placeholder draw; the playoff stays Fantrax's. Next: put teams into the slots once GW9 is scored and the groups drawn. |
 | Per-player intelligence store via `setPlayerNote` | CLAUDE.md fxpa methods | **In scope** (this session) |
 | Commissioner cookie + `adminMode` as the only viable write path | PLATFORM_NOTES "extension plan is dead" | **Probed 28 Sep: it writes.** **Save landed 30 Sep** (#179): the planner saves a lineup and the bench order, behind `LINEUP_SAVE` and `FANTRAX_COOKIE` |
-| 27/28 draft/FM hybrid, `apps/lab` | docs/rules/PRODUCT.md | Parked, empty on purpose |
+| 27/28 draft/FM hybrid, `apps/lab` | docs/rules/PRODUCT.md | **Not this season** (7 Oct 2026); the refusal is tested in the paper, and the platform asked again in spring. See *27/28: the decision* below |
 | FPL as one small tab | memory, 6 Aug | Done — keep it small |
 
 Design calls that bind the refactor (all Craig's, all recorded): stale photo =
@@ -349,6 +349,33 @@ of a drawing); sign off the persona copy in `scripts/edition/voice/bylines.ts`
 and `personas.ts` (the studio pair, the press-room traits, the edition names);
 fill `data/derbies.json` if derbies are wanted; and decide the §2b layout
 items still parked — unequal column widths and the tables side by side.
+
+## 27/28: the decision — 7 Oct 2026
+
+Craig asked on go-live day whether our own platform is viable. The answer, after five
+outside readers (a league member, an app developer, an investor, a product designer and
+an AI engineer) went at it: **not this season.** Sideband takes the build slot after
+GW6; this app is maintained; the sister repo is frozen to an engine. Three things carry
+the idea forward without a platform, each only if Craig still wants the platform when
+it comes up:
+
+- **E0, shadow settlement.** Price every team's week from FPL and the PL API alone and
+  diff it against Fantrax's total. The bar is per man, because the backtest's figures
+  are per man: outfield exact on ≥98% of man-matches, the keeper rule named and its
+  misses counted apart, auto-subs applied, every remaining miss explained by a rule.
+  One unexplained miss fails it. **Nobody is asked to leave Fantrax until this passes**:
+  scores right from week one or there is no trial.
+- **E1, "worth to you".** A player's projected league points over your weakest starter
+  at his slot. Waits for Craig to turn the projections back on (`players/routes.ts`,
+  off as bad data on 7 Oct); the sister exports a dated weekly snapshot meanwhile.
+- **E2, the refusal ledger.** Off Fantrax's transactions and those snapshots: a man
+  claimed and dropped inside *n* weeks comes back to that manager dearer. The paper is
+  its only outlet. No wages, contracts or cap in the shadow year.
+
+**Spring 2027**: build only if Craig wants another year of football infrastructure,
+E0 passed, the refusal rule is written, Sideband's proof is in and Craig gives the slot
+away from it, and 6 of 10 put their names down. Otherwise this app stays the Fantrax
+companion for the ten.
 
 ## Explicitly parked
 

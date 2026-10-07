@@ -44,6 +44,25 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## No own platform this season; the refusal is tested in the paper — decided 7 Oct 2026
+
+Craig, on go-live day. Counted the same day:
+
+- **What carries over**: ~65,400 source lines, nearly all of it ours. The Fantrax-shaped part is
+  `league/fantrax/`, the identity bridge and the files that call them. The cups, the slot pricer, the roster
+  rules, the planner, the calendar, the team-code sign-in and the paper are ours.
+- **What a platform would add from nothing**: a database (state today is a signed cookie and JSON that CI
+  commits), a settlement engine (ROADMAP parks "scoring engine (dead…)"; what exists is the FPL live read,
+  `football/round.ts`'s settled ladder, `join/cleanSheets.ts` and the paper's `autoSubs.ts`), waivers,
+  trades and a draft (no logic, only reads), and the `fantraxId` rekey (~196 files).
+- **The market**: Sleeper runs Premier League draft leagues with custom scoring, live drafts, waivers and
+  trades, free. A nicer Fantrax is taken. Caps, wages and contracts exist (Ottoneu; Fantrax's own contract
+  years). A player who remembers a manager's conduct does not exist anywhere in fantasy.
+
+So `apps/lab` stays empty, and the three experiments in ROADMAP's *27/28: the decision* carry the idea.
+Craig's touches, not his hours, are the limit (12–15 a week on 7 Oct, two-thirds in the sister repo's
+upkeep), which is why Sideband takes the build slot and the sister repo stops its research.
+
 ## Functions run in London (lhr1) — decided 7 Oct 2026
 
 `x-vercel-id` read `lhr1::iad1`: every tap was served from London and rendered in Washington, and most of the league
@@ -4771,7 +4790,8 @@ at most, summed over every man each team holds now (`join/squadStats.ts`).
 - **Does `playerGameInfo[1]` count players in a match in progress?** Inferred
   from the other four positions, never seen non-zero. First witnessable during
   any live match.
-- What should `apps/lab` look like for the 27/28 platform prototype?
+- ~~What should `apps/lab` look like for the 27/28 platform prototype?~~ Not built this season (7 Oct 2026,
+  *No own platform this season*); asked again in spring.
 - **The cups, open since 27 Sep** (see *The cups are declared as ours*): where the starting eleven's
   goals, assists, clean sheets and minutes per team per gameweek are read from; how a group tie on points
   and points for is placed (draw order assumed); and whether Fantrax can express the playoff's one-leg play-in before two-leg semis (on 5 Oct it
