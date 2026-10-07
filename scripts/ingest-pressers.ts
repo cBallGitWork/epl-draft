@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { FIRM, LEAGUE_TIMEZONE, getFootballSnapshot, type FootballSnapshot } from "@epl/core";
 import { articleGameweek, clubKey, conferenceArticle, conferenceTimes, isLeagueArticle, manager, quotes, sections, text } from "./ingest/presserArticle";
 import { troubles } from "./ingest/presserSignals";
-import { INTEL_SEASON, intelManifest } from "./intel";
+import { INTEL_SEASON, intelManifest, sameApartFromManifest } from "./intel";
 import { INTEL_ROOT } from "./paths";
 import { fullClubName } from "@epl/core";
 
@@ -191,20 +191,23 @@ async function main(): Promise<void> {
   const fresh = harvest(day, article, snapshot);
   const all = mergeDay(day, fresh);
 
-  mkdirSync(join(OUT, ".."), { recursive: true });
-  writeFileSync(
-    OUT,
-    exportJson({
-      manifest: intelManifest({
-        // The ARTICLE's round, not the snapshot's — they differ between rounds,
-        // and the consumer refuses an export for the wrong one.
-        gameweek: article.gameweek,
-        rows: all.rows.length,
-        sources: [{ path: join(day, article.file), mtime: null }],
-      }),
-      ...all,
+  const doc = {
+    manifest: intelManifest({
+      // The ARTICLE's round, not the snapshot's — they differ between rounds,
+      // and the consumer refuses an export for the wrong one.
+      gameweek: article.gameweek,
+      rows: all.rows.length,
+      sources: [{ path: join(day, article.file), mtime: null }],
     }),
-  );
+    ...all,
+  };
+  const held = existsSync(OUT) ? (JSON.parse(readFileSync(OUT, "utf8")) as typeof doc) : null;
+  if (held !== null && sameApartFromManifest(held, doc)) {
+    console.log(`${day}: nothing new; ${OUT} left as it was.`);
+    return;
+  }
+  mkdirSync(join(OUT, ".."), { recursive: true });
+  writeFileSync(OUT, exportJson(doc));
 
   console.log(
     `${fresh.rows.length} signals, ${fresh.quotes.length} quotes across ${fresh.spoke.length} clubs on ${day} (${all.rows.length} in the export → ${OUT})`,
