@@ -29,6 +29,9 @@ export const EDITIONS_ROOT = join(REPO_ROOT, "data", "editions");
  *  Outside `data/snapshots` and `data/probes`, which `vercel.json` keeps from redeploying: the app bakes this in. */
 export const INTEL_ROOT = join(REPO_ROOT, "data", "intel");
 
+/** The sister repo, checked out beside this one unless `SISTER_REPO` says where; read, never written. */
+export const SISTER_ROOT = process.env.SISTER_REPO || join(REPO_ROOT, "..", "ai-carling-premiership");
+
 /** Our marks for every man in every match, which `npm run ratings` files and the player pages read. */
 export const RATINGS_ROOT = join(REPO_ROOT, "data", "ratings");
 

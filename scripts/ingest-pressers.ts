@@ -1,11 +1,10 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 import { FIRM, LEAGUE_TIMEZONE, getFootballSnapshot, type FootballSnapshot } from "@epl/core";
 import { articleGameweek, clubKey, conferenceArticle, conferenceTimes, isLeagueArticle, manager, quotes, sections, text } from "./ingest/presserArticle";
 import { troubles } from "./ingest/presserSignals";
 import { INTEL_SEASON, intelManifest, sameApartFromManifest } from "./intel";
-import { INTEL_ROOT } from "./paths";
+import { INTEL_ROOT, SISTER_ROOT } from "./paths";
 import { fullClubName } from "@epl/core";
 
 // Thursday's and Friday's press conferences, from Fantasy Football Scout's own
@@ -14,13 +13,8 @@ import { fullClubName } from "@epl/core";
 // Belongs in the sister repo (`intel-export.md` §5) and lives here until that
 // repo grows the exporter. Name-matching happens HERE and never at runtime.
 
-const ROOT = fileURLToPath(new URL("..", import.meta.url));
-
-/** Where the sister repo keeps its scrape. `FFS_SCRAPE_DIR` first; the default
- *  assumes the two repos are checked out side by side. */
-const SCRAPE =
-  process.env.FFS_SCRAPE_DIR ??
-  join(ROOT, "..", "ai-carling-premiership", "data", "raw", "fantasy_football_scout", "daily");
+/** Where the sister repo keeps its scrape. `FFS_SCRAPE_DIR` first, then the sister repo's own folder. */
+const SCRAPE = process.env.FFS_SCRAPE_DIR ?? join(SISTER_ROOT, "data", "raw", "fantasy_football_scout", "daily");
 const OUT = join(INTEL_ROOT, "pressers", `${INTEL_SEASON}.json`);
 
 /** How many of a club's quotes the brief is offered. The column prints ONE, and
