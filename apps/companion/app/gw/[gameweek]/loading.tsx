@@ -8,12 +8,7 @@ import { LIVE } from "../../components/shell/sections";
 import { GAMEWEEK_HEAD, GAMEWEEK_TITLE } from "@/app/desk";
 import { SQUAD } from "../../squad/routes";
 
-// A round of football before FPL has answered — `GameweekView`'s own frame.
-//
-// The crest and the league's name are ours and need nobody, so they paint at
-// once; the round number and the fixtures are all that is waiting. The way out
-// to the squads is a real link from the first frame, because a reader who
-// arrived here by mistake should not have to wait for a round to leave it.
+// A round before FPL answers, in `GameweekView`'s frame; the crest, name and Squads link need no provider.
 
 export default function Loading() {
   return (
@@ -33,9 +28,7 @@ export default function Loading() {
         </div>
       </header>
 
-      {/* Ten. Unlike a team count this is the football layer, whose rules are
-          fixed for everyone: twenty clubs make ten fixtures, and a blank or a
-          double moves it by one or two rather than by a league setting. */}
+      {/* Ten: twenty clubs make ten fixtures, a football rule rather than a league setting. */}
       <SkeletonRows count={10} height="3.5rem" />
 
       {/* The previous/next pair at its own height, so the button under it does

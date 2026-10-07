@@ -9,7 +9,6 @@ import {
   clubById,
   duringGameweek,
   fixturesInOrder,
-  leagueTable as realTable,
   leagueTies,
   nextRound,
   periodPairings,
@@ -24,12 +23,10 @@ import { Scores } from "./Scores";
 import RoundWord from "../components/league/RoundWord";
 import PageHeader from "../components/shell/PageHeader";
 import TabStrip from "../components/shell/TabStrip";
-import { bridge, getLeagueSquads } from "../squads";
+import { bridge, getLeagueSquads, readerTeamId } from "../squads";
 import { liveScores, periodPoints } from "../scoreboard";
 import YourMatchup from "./YourMatchup";
 import { marks } from "../involvement";
-
-import { readerTeamId } from "../squads";
 import { creditAssists, roundBreaks, roundGoals, roundRedCards, roundStreams } from "../commentary";
 import { roundAssistKinds } from "../assistKinds";
 import { LEADERS_SHOWN } from "../config";
@@ -41,12 +38,14 @@ import { wireLines } from "./wireLines";
 import { now } from "../clock";
 import { BetweenGameweeks, MatchupWaiting } from "./Between";
 import OutLink from "../components/shell/OutLink";
+import { LIVE } from "../components/shell/sections";
+import { clubPlaces } from "../prem/places";
+import { placings } from "../league/placings";
 
 // The live centre: your head-to-head first, the real football under it. The football half runs
 // off FPL's public API alone, so it works with no Fantrax, no draft and no credential.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
+// Must equal PAGE_REVALIDATE in config.ts: Next reads it statically, so it cannot be imported.
 export const revalidate = 30;
 
 /** The snapshot and whether there is football on; the clock is read here so a render reproduces. */
@@ -90,10 +89,7 @@ export default async function MatchdayPage({
   const reds = roundRedCards(streams, snapshot.players);
   const scored = creditAssists(goals, snapshot, stats, streams, kinds);
 
-  // A club's place in the real table is its index in `leagueTable` (CM's blue block).
-  const clubPlaces = new Map(
-    realTable(season, snapshot.clubs).map((row, at) => [row.clubId, at + 1]),
-  );
+  const realPlaces = clubPlaces(season, snapshot.clubs);
 
   // Today's matches (Craig, 5 Sep 2026), and the whole round when today has none.
   const round = fixturesInOrder(snapshot);
@@ -109,10 +105,7 @@ export default async function MatchdayPage({
     leagueTable(),
   ]);
 
-  // Fantrax's own rank, by team id; empty blocks rather than a made-up order when it is silent.
-  const places = new Map(
-    "unavailable" in table ? [] : table.map((row) => [row.teamId, row.rank] as const),
-  );
+  const places = placings(table);
 
   // Every tie this week: the league's pairings and our cups (Craig, 5 Sep 2026).
   const ties: CompetitionTie[] =
@@ -158,8 +151,8 @@ export default async function MatchdayPage({
       <TabStrip
         label="Which view"
         tabs={[
-          { key: PRINTER, label: "Vidiprinter", href: `/matchday?view=${PRINTER}` },
-          { key: "scores", label: "Scores", href: "/matchday" },
+          { key: PRINTER, label: "Vidiprinter", href: `${LIVE}?view=${PRINTER}` },
+          { key: "scores", label: "Scores", href: LIVE },
           { key: STATS_VIEW, label: "Top stats", href: statsHref(LEADER_STATS[0]) },
         ]}
         current={printing ? PRINTER : leading ? STATS_VIEW : "scores"}
@@ -175,7 +168,7 @@ export default async function MatchdayPage({
           ties={ties}
           scores={scores}
           places={places}
-          clubPlaces={clubPlaces}
+          clubPlaces={realPlaces}
           mine={mine}
           fixtures={today}
           clubs={clubById(snapshot)}

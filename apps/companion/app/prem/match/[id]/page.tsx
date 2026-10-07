@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { goalMinutes, sheetSides, londonDayAndDate, londonTime } from "@epl/core";
-import type { PlMatchFacts, SheetRow } from "@epl/core";
+import { goalMinutes, sheetSides, londonDayAndDate } from "@epl/core";
+import type { SheetRow } from "@epl/core";
 import Skeleton from "../../../components/shell/Skeleton";
 import { PANEL } from "@/app/desk";
 import MatchShell from "./Shell";
@@ -10,6 +10,7 @@ import MatchReport from "./MatchReport";
 import { matchOwners, readMatch } from "./match";
 import { matchCards, namedOn } from "./matchCards";
 import { side } from "./scoreLines";
+import { stateLine } from "./matchState";
 import type { Match } from "./match";
 import { leagueOpinions } from "../../leagueOpinions";
 import { roundAssistKinds } from "../../../assistKinds";
@@ -36,7 +37,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
           <span className="numeric text-sm font-bold uppercase text-info lg:text-xl">
             {fixture.kickoff === null ? "Date TBC" : londonDayAndDate(fixture.kickoff)}
           </span>
-          <span className="numeric text-sm font-bold text-info lg:text-xl">{state(match, facts)}</span>
+          <span className="numeric text-sm font-bold text-info lg:text-xl">{stateLine(match, facts)}</span>
         </div>
 
         {fixture.status === "upcoming" ? (
@@ -108,18 +109,4 @@ function SheetWaiting() {
 /** Both team sheets, or two empty ones for a match FPL has filed nothing for. */
 function sides(match: Match): { home: SheetRow[]; away: SheetRow[] } {
   return match.sheet === null ? { home: [], away: [] } : sheetSides(match.sheet, match.snapshot);
-}
-
-/** The round, the tense and the half-time score. */
-function state(match: Match, facts: PlMatchFacts | null): string {
-  const { fixture, live, finished } = match;
-  const round = fixture.gameweek === null ? "Gameweek TBC" : `Gameweek ${fixture.gameweek}`;
-  const half = facts?.halfTime == null ? null : `HT ${facts.halfTime.home}–${facts.halfTime.away}`;
-  const parts = [round];
-  if (live) parts.push(`Live ${fixture.minutes}′`);
-  else if (finished) parts.push("FT");
-  else if (fixture.kickoff !== null) parts.push(londonTime(fixture.kickoff));
-  else parts.push("Kick-off TBC");
-  if (half !== null) parts.push(half);
-  return parts.join(" · ");
 }

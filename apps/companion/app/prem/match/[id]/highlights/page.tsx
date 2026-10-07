@@ -5,21 +5,8 @@ import { readMatch } from "../match";
 import { matchHighlight } from "../../../../matchFeed";
 import { PANEL } from "@/app/desk";
 
-// The match, as the rights holder cut it.
-//
-// Craig, 11 Sep 2026: *"in the real match tab, replace match report tab with
-// highlights"*. The commentary the Report tab held is not lost — it sits under
-// the goals on the Overview, which is where it went when the two were put on one
-// screen, so this takes a tab that had become a second door to the same room.
-//
-// **Sky Sports Premier League hold the UK rights and publish on YouTube**, and
-// their playlist is the only place this looks. `highlights.ts` carries why a
-// title is a JOIN rather than a search, and `docs/providers/premier-league-api.md`
-// carries the counts — the short version is that a video is accepted only when
-// both clubs and the score agree with this fixture.
-//
-// **Embedded, never fetched.** YouTube's own iframe plays the video from their
-// servers; we read a list of titles and ids and nothing else.
+// The match's highlights, from Sky Sports Premier League's YouTube playlist (Craig, 11 Sep 2026).
+// Embedded, never fetched: YouTube's iframe plays it, and we read only titles and ids.
 
 export const revalidate = 30;
 
@@ -44,14 +31,7 @@ export default async function MatchHighlightsPage({
 
   return (
     <MatchShell match={match} current="highlights">
-      {/* **Wrapped, so the panel is the size of the video** (Craig, 11 Sep 2026:
-          *"on mobile, the transparent table goes all the way down the page, just
-          fll up the video space"*). `MatchShell` grows any direct `<section>`
-          child to fill the screen — `[&>section]:flex-1`, which is right for a
-          board that should reach the foot line and wrong for a 16:9 box: it left
-          a phone's worth of empty translucent panel under the player. A `<div>`
-          in between is not a `section`, so the selector does not reach it and
-          the panel sizes to what is in it. */}
+      {/* Wrapped so `MatchShell`'s `[&>section]:flex-1` misses it and the panel fits the video. */}
       <div>
         <section className={PANEL}>
           {video === null ? (
@@ -69,9 +49,7 @@ export default async function MatchHighlightsPage({
             </Nothing>
           ) : (
             <figure className="flex flex-col gap-2">
-              {/* **16:9 and `max-w-full`**, which is DESIGN's own rule for an
-                `aspect-ratio` box: the player fills the panel at any width and
-                the page never scrolls sideways to hold it. */}
+              {/* `max-w-full` on the 16:9 box, or the page scrolls sideways to hold it. */}
               <div className="aspect-video w-full max-w-full overflow-hidden border border-line">
                 <iframe
                   src={`${YOUTUBE_EMBED_BASE}/${video.id}`}

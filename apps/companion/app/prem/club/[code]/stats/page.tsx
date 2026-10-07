@@ -8,21 +8,10 @@ import { fantasyDepth } from "../SquadTable";
 import PlayerBoard from "./PlayerBoard";
 import type { Row } from "./PlayerBoard";
 
-// The club's season, player by player.
-//
-// **The section's own idiom, which this screen did not have** (Craig, 3 Sep
-// 2026: "stats is nothing like other sections, revamp, is for the players"). It
-// was a club summary — a home-and-away comparison, four season figures and a
-// leaders strip — while every other Stats tab in the app is a dense sortable
-// table of PLAYERS. The club-level view it used to carry is `/prem` and
-// `/prem/team-stats`, which rank all twenty and are better at it.
-//
-// The board's order matches the Squad tab's until a reader taps a head, which is
-// the same promise `squad/[teamId]/stats` makes: two tabs about one squad should
-// not disagree about who is first.
+// The club's season, player by player, as a sortable table like every other Stats tab (Craig, 3 Sep 2026).
+// Meant to open in the Squad tab's order: two tabs about one squad should not disagree about who is first.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
+// Must equal PAGE_REVALIDATE in config.ts: Next reads it statically, so it cannot be imported.
 export const revalidate = 30;
 
 export default async function ClubStatsPage({ params }: { params: Promise<{ code: string }> }) {

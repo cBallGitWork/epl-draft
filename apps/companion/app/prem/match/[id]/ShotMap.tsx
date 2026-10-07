@@ -16,9 +16,8 @@ import {
 } from "../../../components/league/TableHeads";
 import { MATCH_ROW } from "./matchRow";
 
-// Both sides' shots on one pitch, each at its own end, and every shot in one list under it
-// (Craig, 23 Sep 2026: *"one big column for both teams under the shot map"*), beside the pitch on a desk.
-// Tapping either picks a shot; every key pass is drawn from where it started.
+// Both sides' shots on one pitch, each at its own end, and every shot in one list under it, or beside it
+// on a desk (Craig, 23 Sep 2026). Tapping either picks a shot; every key pass is drawn from where it started.
 
 /** A shot placed on the shared pitch: home attacks the left box, away the right. */
 export interface PlottedShot extends Shot {

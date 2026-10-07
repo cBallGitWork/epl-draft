@@ -22,17 +22,8 @@ import { now, replayAt } from "./clock";
 import { roundGoals } from "./commentary";
 import { LIVE_REVALIDATE, PAGE_REVALIDATE, POLL, SEASON_CODE_LIFE } from "./config";
 
-// One football snapshot per window, shared by everything that needs it.
-//
-// It is the app's largest read by far — FPL's bootstrap is 1.3 MB — and the
-// layout wants it on every single page view to decide whether the Live tab
-// exists. Uncached that is a megabyte per request per phone, and the routes are
-// dynamic now because they read a session cookie, so nothing else was going to
-// stop it. Cached, sixteen managers refreshing all weekend cost FPL one request
-// per window between them.
-//
-// Nothing about who is asking may cross into here: the real Premier League is
-// the same for everybody, which is exactly why it is cacheable.
+// One football snapshot per window, shared by every reader: FPL's bootstrap is 1.3 MB and the
+// layout reads it on every page view. Nothing about who is asking may cross into this cache.
 
 const currentRound: () => Promise<FootballSnapshot> = unstable_cache(
   async () => getFootballSnapshot(),
@@ -45,15 +36,8 @@ export async function footballNow(): Promise<FootballSnapshot> {
   return at === null ? currentRound() : rewoundRound(at);
 }
 
-/** The round `REPLAY_AT` falls in, as it stood at that instant.
- *
- *  Outside the cache above rather than inside it: the rewind needs the Premier
- *  League's goal feed, which is its own `unstable_cache`, and nesting the two is
- *  not something Next promises anything about. Both reads underneath are cached,
- *  so this costs a rewind and no request.
- *
- *  Falls through to the live round when the instant is before the season, which
- *  is the honest answer: there is no played football to rewind to. */
+/** The round `REPLAY_AT` falls in as it stood then, or the live round before the season starts.
+ *  Outside `currentRound`: `roundGoals` has its own cache, and a nested `unstable_cache` bypasses it. */
 async function rewoundRound(at: string): Promise<FootballSnapshot> {
   const gameweek = roundAt(await seasonFixtures(), at);
   if (gameweek === null) return currentRound();
@@ -61,28 +45,14 @@ async function rewoundRound(at: string): Promise<FootballSnapshot> {
   return rewindRound(snapshot, await roundGoals(gameweek, snapshot.players), at);
 }
 
-/** One named round of football, cached per round.
- *
- *  `footballNow` is the same read with the gameweek left to FPL. Kept apart
- *  rather than folded into one optional argument because the two have different
- *  lifetimes: the current round changes all afternoon, and a round in February
- *  is the same bytes every time anyone asks for it. */
+/** One named round of football, cached per round apart from the current one in `footballNow`. */
 export const gameweekSnapshot: (gameweek: number) => Promise<FootballSnapshot> = unstable_cache(
   async (gameweek: number) => getFootballSnapshot(gameweek),
   ["football-gameweek"],
   { revalidate: PAGE_REVALIDATE },
 );
 
-/** Every fixture in the season, dated as FPL has them.
- *
- *  A different read from the snapshot, which holds one gameweek: two things need
- *  the whole calendar and neither can get it from a snapshot — the schedule
- *  labels all thirty-eight rounds, and the deadline is measured back from a
- *  period's first kickoff, which may be in a round nobody is looking at.
- *
- *  Small beside the bootstrap (380 fixtures against 564 players and 20 clubs)
- *  and it moves only when a match is rearranged, but it is cached for the same
- *  reason everything else here is: it is the same for all sixteen of them. */
+/** Every fixture in the season, as FPL dates them (a snapshot holds one gameweek). */
 export const seasonFixtures: () => Promise<Fixture[]> = unstable_cache(
   async () => mapFixtures(await fetchFixtures()),
   ["season-fixtures"],
@@ -94,62 +64,22 @@ export const regions = unstable_cache(async () => fetchRegions(), ["fpl-regions"
   revalidate: SEASON_CODE_LIFE,
 });
 
-/** One round's match sheets — who did what in each of its ten fixtures.
- *
- *  **A per-round read and deliberately not a slice of `seasonFixtures`.** Three
- *  measurements, all taken 4 Sep 2026, and each of them rules out the obvious
- *  alternative:
- *
- *  `?event=N` is **26 KB**. The whole season is 183 KB today and rising fast —
- *  an unstarted fixture is 342 bytes and a finished one 2,938, so all 380
- *  finished is about **1.1 MB by May**. `seasonFixtures` is read on the paper's
- *  front page and on `/matchday`; fattening it would put a megabyte and a
- *  `JSON.parse` of it on both.
- *
- *  A second cached read of the SAME whole-season URL would not be free either.
- *  Next treats every fetch inside `unstable_cache` as `force-no-store`, so the
- *  Data Cache does not dedupe it, and React's memoization is per render pass
- *  while these two entries go stale independently.
- *
- *  And a played round never changes again, which is `gameweekSnapshot`'s own
- *  argument for staying out of `footballNow` one function above.
- *
- *  The score, the status and `settled` are **not** taken from here. They come
- *  from `seasonFixtures` and nowhere else: two independently cached reads of one
- *  URL can disagree, and a page showing one read's score beside the other's
- *  scorers is a page arguing with itself. */
+/** One round's match sheets, read per round: the whole season's list nears 1 MB by May. The score,
+ *  status and `settled` come from `seasonFixtures` only, as two caches of one URL can disagree. */
 export const gameweekSheets: (gameweek: number) => Promise<MatchSheet[]> = unstable_cache(
   async (gameweek: number) => mapMatchSheets(await fetchFixtures(gameweek)),
   ["football-sheets"],
   { revalidate: PAGE_REVALIDATE },
 );
 
-/** One round's per-player figures, per fixture.
- *
- *  **What it is for, when `gameweekSheets` above already exists.** That read is
- *  26 KB and gives the scoresheet — who scored, who assisted, cards, bonus, and
- *  a bps that is genuinely this fixture's. It carries no MINUTES and no points,
- *  because the fixture list publishes neither. This one is 437 KB and carries
- *  both, per fixture, for every player in every match of the season.
- *
- *  **Why the points are worth 437 KB.** They are the only per-fixture fantasy
- *  figure that exists for everybody. Counted 4 Sep 2026 against fixture 11's 32
- *  participants: Fantrax's live scoring gives a figure for **6**, and what it
- *  gives is a PERIOD total rather than a match one; Fantrax's per-player profile
- *  gives a true match figure for all 32 and costs one rate-limited request each.
- *  FPL's `explain` block gives all 32, exactly, in one read.
- *
- *  Cached per round like its two neighbours, and for their reason: a played
- *  round never changes again, so this is paid once per gameweek for the season. */
+/** One round's per-player minutes and points, per fixture, which the match sheets do not carry. */
 export const gameweekLive: (gameweek: number) => Promise<PlayerMatchStats[]> = unstable_cache(
   async (gameweek: number) => mapLiveStats(await fetchLive(gameweek)),
   ["football-live"],
   { revalidate: PAGE_REVALIDATE },
 );
 
-/** The season's kickoffs as the league layer wants to be told them: plain data,
- *  one way, never a `Fixture`. The rule for which fixtures have one is
- *  `datedKickoffs`; what this adds is the cache in front of it. */
+/** The season's kickoffs as plain data for the league layer, never as a `Fixture`. */
 export async function seasonKickoffs() {
   return datedKickoffs(await seasonFixtures());
 }
@@ -160,14 +90,7 @@ export async function liveIn(snapshot: FootballSnapshot): Promise<number | null>
   return secondsToLive(snapshot, await seasonFixtures(), now().toISOString());
 }
 
-/** Whether the round in view is under way — first kickoff to last whistle,
- *  including every gap in between.
- *
- *  Asked by the head-to-head card too, for a different reason: it says
- *  "all played" for a side with nobody left, and that is worth saying whenever
- *  the round is running rather than only while a ball is in the air. On a
- *  Wednesday every side has nobody left and none of them needs telling, which is
- *  the case this window excludes and `isMatchdayLive` was being used to. */
+/** Whether the round in view is under way: first kickoff to last whistle, gaps included. */
 export function roundUnderway(snapshot: FootballSnapshot): boolean {
   return duringGameweek(snapshot, now().toISOString());
 }
@@ -176,22 +99,8 @@ export function roundUnderway(snapshot: FootballSnapshot): boolean {
  *  keep the composite legible. */
 const GROUND_FACES = 6;
 
-/** A few real faces for the desk's ground, as portrait URLs.
- *
- *  The placeholder behind every desk screen until a match photograph is
- *  configured — `DESK_GROUND` in the app's config. Real players rather than stock
- *  photography, because these are the men actually in the round and a stadium
- *  nobody in the league plays in would be set dressing.
- *
- *  **Spread across the pool rather than taken off the front of it.** FPL orders
- *  its elements by club, so the first six are six of the same club — which reads
- *  as a team photograph and not as a crowd. Evenly spaced instead, which lands
- *  six different shirts, and DETERMINISTIC rather than sampled so the crowd does
- *  not reshuffle on every poll.
- *
- *  Fails to nothing rather than throwing: a ground is decoration, and a football
- *  provider being down is not a reason for the whole shell to fall over.
- */
+/** Portrait URLs for the desk's ground, spaced evenly because FPL orders players by club, and fixed
+ *  so the crowd holds still between polls. Empty rather than a throw: a ground is decoration. */
 export async function groundFaces(): Promise<string[]> {
   try {
     const { players } = await footballNow();
@@ -203,20 +112,8 @@ export async function groundFaces(): Promise<string[]> {
   }
 }
 
-/** Whether the app offers its Live section: is a round of football under way.
- *
- *  Fails **open**. If FPL cannot be reached the section is offered rather than
- *  hidden — navigation must not lie by omission during the one window it
- *  matters, and the page behind it says honestly that nothing could be read. The
- *  reverse failure, a section silently missing mid-match, is the one nobody
- *  could diagnose from a phone. A stated policy rather than a swallowed default,
- *  which is the distinction CODE_RULES §2 draws.
- *
- *  One caller: the shell, which decides from it whether the rail and the foot
- *  row carry a Live plate. Two asked until 16 Sep 2026 — the paper's own index
- *  was the second, on the one route the rail stood down on, and both the index
- *  and that exemption are gone.
- */
+/** Whether the shell offers its Live section: a round is under way. Fails open, so an FPL outage
+ *  never hides Live mid-match. */
 export async function offerLive(): Promise<boolean> {
   return (await roundLive()) ?? true;
 }
@@ -230,28 +127,12 @@ export async function roundLive(): Promise<boolean | null> {
   }
 }
 
-/** How stale a snapshot may be and still be spoken about in the present tense,
- *  as a multiple of the live poll window.
- *
- *  Three rather than one, so ordinary jitter — a slow FPL round trip, a render
- *  that lands between revalidations — never trips it. What it is there to catch
- *  is the order of magnitude beyond that: `unstable_cache` serves a stale entry
- *  while it revalidates and puts no upper bound on its age at all, and on 22 Aug
- *  a round was measured being served fifty-three hours old. */
+/** How stale a snapshot may be and still speak in the present tense, in live poll windows: three
+ *  absorbs jitter, and `unstable_cache` sets no upper bound on a stale entry's age. */
 const PRESENT_TENSE_WINDOW = 3;
 
-/** Whether this snapshot is recent enough to make a claim about *now*.
- *
- *  The live treatment — the dot, the ticking minute, the word Live — is the one
- *  thing on a football screen that is a statement about the present rather than
- *  about a result, and it is derived purely from `fixture.status`, which has no
- *  clock in it. So a cached snapshot taken mid-match keeps saying "Live 45'" for
- *  as long as the cache holds it: /gw/1 rendered "BRE 2–0 Live 45′" while
- *  /matchday, in the same second, rendered "BRE 3–0 FT".
- *
- *  A page may be stale. It may not be stale in the present tense — so when this
- *  is false the scores still render and the tense does not. The clock is read
- *  here at the app edge, like every clock read in this file. */
+/** Whether this snapshot is recent enough to speak of *now*: `fixture.status` has no clock, so a
+ *  stale mid-match snapshot keeps saying "Live 45'". When false, scores render without the tense. */
 export function speaksForNow(snapshot: FootballSnapshot): boolean {
   const taken = Date.parse(snapshot.fetchedAt);
   if (Number.isNaN(taken)) return false;

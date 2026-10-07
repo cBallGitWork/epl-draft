@@ -18,7 +18,7 @@ import MatchList from "./MatchList";
 import { GAMEWEEK_HEAD, GAMEWEEK_TITLE } from "@/app/desk";
 import { SQUAD } from "../../squad/routes";
 
-// One round of football, drawn by Live while football is on and by `/gw/[gameweek]`.
+// One round of football: the /gw/[gameweek] page.
 
 export default function GameweekView({
   snapshot,

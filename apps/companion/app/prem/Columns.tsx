@@ -3,20 +3,7 @@ import { tableHref } from "./sort";
 import { Head, HeadRow, NameHead, PLATE, SortHead, sortedAs } from "../components/league/TableHeads";
 import { TEXT, standDown } from "@/app/desk";
 
-// The table's column heads, in one place because two files print them: the page
-// and the skeleton it waits behind. `league/Columns.tsx` records the bug that
-// rule exists to stop — its heads were written out twice and only one copy was
-// corrected, so a reader saw the old heading over the new numbers.
-//
-// **A football league table, which is what `cm9900/24.jpg` prints.** Its header
-// reads `Pld Won Drn Lst For Ag Pts` and so does every table in an English
-// newspaper. This is that row plus GD, which the game leaves out and which the
-// Premier League orders on — a table whose second tiebreak is invisible is a
-// table a reader cannot check.
-//
-// The mechanics are `components/league/TableHeads`: the strip, the cell and the
-// plate are shared with the draft table, and the column LIST is not, because the
-// two tables have different columns and therefore different widths.
+// The table's column heads, shared by the page and its skeleton so the two cannot drift.
 
 type Column = {
   key: TableSortKey | "club" | "form";
@@ -32,9 +19,7 @@ type Column = {
   mute?: true;
 };
 
-/** One column, and the list is what `colSpan` counts — a rule drawn across the
- *  table has to know how wide the table is, and a literal here is a number that
- *  goes wrong the day a column is added. */
+/** Every column, in order; a cut line's `colSpan` counts this list rather than a literal. */
 export const COLUMNS: readonly Column[] = [
   { key: "place", label: "Place", title: "Where the competition puts them", align: "center", width: "w-8 lg:w-14", mute: true },
   { key: "club", label: "Club", title: undefined, align: "left", width: "" },
@@ -49,18 +34,12 @@ export const COLUMNS: readonly Column[] = [
   { key: "form", label: "Form", title: "The last five, oldest first", align: "center", width: "w-14 lg:w-32", deskOnly: true },
 ];
 
-/** The cell class for a column, so the row prints the same alignment the head
- *  does. Exported because `ClubRow` is the other half of this table, and the two
- *  drifting apart is what the shared `COLUMNS` list exists to stop. */
+/** The cell class for a column, so `ClubRow` aligns each cell as its head does. */
 export function cellAlign(key: Column["key"]): string {
   return TEXT[COLUMNS.find((column) => column.key === key)?.align ?? "center"];
 }
 
-/** Whether this column stands down under a thumb — unless the table is ORDERED
- *  by it. `league/Columns` carries the long form of the argument; the short one
- *  is that `display: none` takes the pressed plate, the arrow and `aria-sort`
- *  out with the column, so a phone on a shared `?sort=for` link would show an
- *  order with no visible author. */
+/** Hides a desk-only column on a phone, unless the table is sorted by it and needs its head. */
 export function deskOnly(key: Column["key"], sort: TableSortKey): string {
   const column = COLUMNS.find((entry) => entry.key === key);
   return standDown(column?.deskOnly, key === sort);

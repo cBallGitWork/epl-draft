@@ -1,18 +1,7 @@
 import { type ClubStats, type FigureKind, type TableRow, fixed } from "@epl/core";
 
-// What the board can rank the twenty by.
-//
-// **In the app and not in core, deliberately.** `clubStats` and `leagueTable`
-// are the domain — they say what a club has done, and they are tested on that.
-// WHICH dozen of their fields are worth a screen is a product decision about
-// this board, and it changes when Craig looks at it rather than when the
-// competition changes. `league/team-stats` reads its categories from core
-// because Fantrax defines those; nobody defines these but us.
-//
-// **Every category says which way is good.** Goals conceded and matches without
-// scoring are the two nobody wants to lead, and a board that opened them
-// biggest-first would head the table with the worst side in the division under
-// a heading that reads like a ranking of the best.
+// What the board can rank the twenty by: a product choice, so it lives in the app, not core.
+// Every category says which way is good, or a board would open on the worst side.
 
 export interface Category {
   key: string;
@@ -26,8 +15,7 @@ export interface Category {
   of: (club: Club) => number;
 }
 
-/** Both halves of a club, which is what every category reads from: the table
- *  row carries the record, `clubStats` carries the rest. */
+/** Both halves of a club: the table row carries the record, `clubStats` the rest. */
 export interface Club {
   table: TableRow;
   stats: ClubStats;
@@ -60,11 +48,7 @@ export const CATEGORIES: readonly Category[] = [
   { key: "recoveries", label: "Recoveries", title: "Ball recoveries", descending: true, of: (c) => c.stats.squad.recoveries },
 ];
 
-/** The category asked for, or the first.
- *
- *  A stale name falls back rather than throwing: the choice arrives in a URL,
- *  and a shared link naming a category we have since renamed should still show
- *  a board. */
+/** The category asked for, or the first, so a stale name in a shared link still shows a board. */
 export function categoryFor(key: string | undefined): Category {
   return CATEGORIES.find((entry) => entry.key === key) ?? CATEGORIES[0];
 }

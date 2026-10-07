@@ -12,12 +12,8 @@ export interface Board {
   scores: Map<string, LiveTeamScore>;
 }
 
-/** This period's ties and their totals, from the cache the head-to-head board
- *  already fills — so on a Saturday this is a hit rather than a request.
- *
- *  `getLiveScoringStats` and not the season results table, for two reasons that
- *  both matter: it honours the period, and it carries `toPlay`, which is how the
- *  paper knows a match is over rather than merely quiet. */
+/** This period's ties and totals, off the head-to-head board's cache. Live scoring, not the results
+ *  table: it honours the period, and its `toPlay` says a match is over. */
 export async function readBoard(drafted: ReadableSquads): Promise<Board | null> {
   const period = drafted.roundPeriod;
   if (period === null || drafted.info === null) return null;

@@ -87,3 +87,15 @@ describe("wireLines breaks", () => {
     ]);
   });
 });
+
+describe("wireLines minutes", () => {
+  it("prints a minute as football does, without the clock's leading nought", () => {
+    const events = [
+      goal({ minute: "90", code: 10, absolute: 3 }),
+      goal({ minute: "45+2", code: 10, absolute: 2 }),
+      goal({ minute: "09", code: 10, absolute: 1 }),
+    ];
+    const rows = wireLines(events, [], snapshot([player(10, HOME)]), undefined, null).lines;
+    expect(rows.map((row) => (isBreak(row) ? row.kind : row.minute))).toEqual(["90", "45+2", "9"]);
+  });
+});

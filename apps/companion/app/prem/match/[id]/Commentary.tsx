@@ -22,7 +22,7 @@ export default function Line({
     <li className="flex min-h-9 items-stretch gap-2 lg:min-h-8">
       {/* `w-11` holds stoppage time, `90+7`. */}
       <span className="cm-index numeric flex w-11 shrink-0 items-center justify-center">
-        {line.minute}&prime;
+        {line.minute.replace(/^0(?=\d)/, "")}&prime;
       </span>
       {/* Every row is marked; the glyph wears the row's tone, and a word stands beside it only where the sentence does not say it. */}
       <span className={`flex shrink-0 items-center gap-1 ${SMALL_CAPS} ${tone}`}>

@@ -2,13 +2,7 @@ import type { Club, Fixture } from "@epl/core";
 import Match from "./Match";
 import RoundHead from "../components/shell/RoundHead";
 
-// The season as rounds, each under its own head.
-//
-// Both lists in this section are this shape — Results is the finished rounds
-// newest first, Fixtures is the rest soonest first — so the grouping is written
-// once and each page decides which rounds and in what order. What differs
-// between them is a filter and a `reverse`, which is not enough to be two
-// components.
+// The season as rounds, each under its own head; Results and Fixtures pick the rounds and the order.
 
 export interface Round {
   gameweek: number;
@@ -42,11 +36,7 @@ export default function Rounds({
   );
 }
 
-/** Group a flat fixture list into rounds, ascending.
- *
- *  A fixture FPL has not assigned to a gameweek is left out rather than filed
- *  under nought: `Fixture.gameweek` is null exactly when the round is not yet
- *  decided, and a round headed "Gameweek 0" is a round that does not exist. */
+/** Groups fixtures into ascending rounds; one with no gameweek yet is left out, not filed under nought. */
 export function byRound(fixtures: readonly Fixture[]): Round[] {
   const rounds = new Map<number, Fixture[]>();
   for (const fixture of fixtures) {
@@ -60,19 +50,12 @@ export function byRound(fixtures: readonly Fixture[]): Round[] {
     .sort(([a], [b]) => a - b)
     .map(([gameweek, list]) => ({
       gameweek,
-      // Within a round, the order the matches were played — which is the order
-      // a reader watched them in. An undated fixture sorts last rather than
-      // first, where an empty string would put it.
+      // Kick-off order; an undated fixture sorts last, not first as an empty string would.
       fixtures: list.sort((a, b) => (a.kickoff ?? "￿").localeCompare(b.kickoff ?? "￿")),
     }));
 }
 
-/** How many rows a list of rounds draws — every match, plus a head apiece.
- *
- *  Here rather than on the two pages that ask, because it is a fact about what
- *  a `Round` renders as and this is the module that knows. Capped: a
- *  thirty-eight round season would otherwise have the shell draw a panel tall
- *  enough for four hundred rows before a single one has arrived. */
+/** Rows the rounds draw, a match each plus a head apiece; capped, or a season's skeleton is 400 rows tall. */
 export function panelRows(rounds: readonly Round[]): number {
   const rows = rounds.reduce((total, round) => total + round.fixtures.length + 1, 0);
   return Math.min(rows, PANEL_CAP);

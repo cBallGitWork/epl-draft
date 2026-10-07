@@ -2,6 +2,7 @@ import { goalGroups } from "@epl/core";
 import type { FootballPlayer, PlGoal, PlManMatch, PlayerOwner, SheetRow, SquadPlayerDetail } from "@epl/core";
 import { Goal, Man } from "./ScoreRows";
 import { MATCH_ROW } from "./matchRow";
+import { forCode } from "./sheetJoin";
 
 // Who scored, when and who made it — CM's `cm0102/02.jpg`, home down the left and away down the right.
 // One line per SCORER with all his minutes (`goalGroups`), his assisters quieter under him; an assister carries a
@@ -80,7 +81,7 @@ function Column({
       {rest.map(({ player, line }) => {
         // A sending off outranks an injury, an injury a missed penalty. The fixture feed times the injury, so this
         // sheet and Line Ups agree; the commentary only says he was hurt.
-        const man = player.code === null ? undefined : did.get(player.code);
+        const man = forCode(did, player.code);
         const hurtAt =
           player.code === null || !injured.has(player.code)
             ? undefined
@@ -89,7 +90,7 @@ function Column({
           <li key={player.id}>
             <Man
               code={player.code}
-              card={player.code === null ? undefined : cards.get(player.code)}
+              card={forCode(cards, player.code)}
               name={player.name}
               owners={owners}
               figure={marks(line, man, hurtAt)}

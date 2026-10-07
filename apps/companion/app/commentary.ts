@@ -17,40 +17,18 @@ import { replayAt } from "./clock";
 import { plRound, plStream, playerCodes } from "./plFeed";
 import { orDegraded } from "./refusals";
 
-// The ROUND's questions, from the Premier League's own feed. One match's are next
-// door in `matchFeed.ts`; the reads and the identity join both use are in
-// `plFeed.ts`.
-//
-// **One request for ten matches.** Their round-level fixtures read carries a
-// `goals` array per match — scorer, assister, minute — so the question the Live
-// tab exists to answer costs a single upstream call however many matches are on
-// and however many phones are open. Counted across gameweeks 1-3, that array
-// reconciles with the scoreline on 21 of 21 played fixtures.
-//
-// FPL cannot answer this at any price: it publishes no minute for a goal
-// anywhere, and the sister repo's export runs about a day behind full time.
+// The round's questions, from the Premier League's own feed, whose round read carries every goal
+// in one request; FPL publishes no minute for a goal. One match's questions are in `matchFeed.ts`,
+// and the reads and identity join in `plFeed.ts`.
 
-/** What a replay is allowed to have seen. Live this is every event, because
- *  nothing in a feed has happened in the future; under `REPLAY_AT` it is the
- *  wire as it stood at that minute. An undated event cannot be placed in time
- *  and a replay therefore cannot show it. */
+/** Every event when live; under `REPLAY_AT`, those before it, so an undated event is dropped. */
 function asOf<T extends { absolute: number | null }>(events: readonly T[]): T[] {
   const at = replayAt();
   return at === null ? [...events] : before(events, at);
 }
 
-/** Every goal in the round, joined to FPL players and ordered as they happened.
- *
- *  Ordered on `absolute` — kick-off plus elapsed — and NOT on the match clock: a
- *  12:30 match and a 17:30 one both start their own clock at nought, so a round
- *  sorted on `seconds` puts the afternoon in the wrong sequence. A goal whose
- *  match carries no kick-off time has no place in that order and sorts last
- *  rather than into 1970.
- *
- *  Newest first, because the question this answers is "what just happened".
- *
- *  `[]` when their API fails, which is not the swallow §2 forbids: an empty wire under a live
- *  scoreline is a panel with nothing in it, and `Wire` says which from `speaksForNow`. */
+/** Every goal in the round joined to FPL players, newest first by `absolute` (kickoff plus elapsed),
+ *  not the match clock, which starts at nought in every match. `[]` when their API fails. */
 export async function roundGoals(
   gameweek: number,
   players: readonly FootballPlayer[],
@@ -61,25 +39,14 @@ export async function roundGoals(
   return goals.sort((a, b) => (b.absolute ?? 0) - (a.absolute ?? 0));
 }
 
-/** Every interval reached in the round — half time and full time, oldest first.
- *
- *  Off the SAME cached round read the goals come from, so the wire's whole cost
- *  is still one upstream request for ten matches. Empty rather than a throw: a
- *  wire with no full-time lines is a wire with fewer lines, not a claim that
- *  nothing has finished. */
+/** Every half time and full time reached in the round, oldest first; empty rather than a throw. */
 export async function roundBreaks(gameweek: number): Promise<RoundBreak[]> {
   const round = await orDegraded(plRound(gameweek), () => null);
   return round === null ? [] : asOf(mapRoundBreaks(round.content));
 }
 
-/** Each kicked-off fixture's commentary this round, filed under FPL's fixture code.
- *
- *  **The one thing on this wire that is not free**: goals and breaks come off the round read,
- *  one request for ten matches, but a red card and a rebound assist are published only in the
- *  per-fixture textstream — up to ten reads a window. Fetched once here for both.
- *
- *  Keyed by CODE, because FPL and the Premier League number fixtures differently: looked up by
- *  FPL's id, all fifty GW1-5 streams were 1992 matches. Empty, never a throw, at every step. */
+/** Each kicked-off fixture's commentary this round, keyed by FPL's fixture code, never its id, which
+ *  the Premier League numbers differently. Up to ten reads a window; empty, never a throw. */
 export async function roundStreams(gameweek: number): Promise<Map<number, FixtureStream>> {
   const round = await plRound(gameweek).catch(() => null);
   if (round === null) return new Map();

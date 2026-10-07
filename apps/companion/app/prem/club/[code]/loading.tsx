@@ -5,30 +5,11 @@ import Skeleton from "../../../components/shell/Skeleton";
 import { PANEL } from "@/app/desk";
 import { PREM } from "../../routes";
 
-// What a club screen looks like before FPL answers.
-//
-// **The only boundary a club route has, and that took two goes.** Next applies a
-// segment's loading file to everything beneath it, so `prem/loading.tsx` — a
-// twenty-row LEAGUE TABLE — covered every club page, and a club page cold-loaded
-// streamed the division's table before its own skeleton: a picture of a
-// different screen, which is worse than none because it promises the wrong
-// thing. Adding this file made it two skeletons rather than one, not none. The
-// fix was moving the four competition routes into `prem/(competition)/` so their
-// boundary stops where their subtree does; this is now the only fallback under
-// `/prem/club`.
-//
-// No plate and no club name: the colour and the name are both in the read that
-// has not come back. `squad/[teamId]/loading.tsx` stands the same ground for the
-// same reason.
+// What a club screen looks like before FPL answers; the only loading boundary under `/prem/club`.
+// The competition routes sit in `prem/(competition)/` so their table skeleton never covers a club page.
+// No plate and no club name: both are in the read that has not come back.
 
-/** How many rows to hold the frame open with.
- *
- *  **A frame hint and never a fact**, which is the rule `SkeletonRows` states
- *  about its own `count`: a squad is about thirty men and a fixture run is
- *  thirty-eight, so this is neither of them — it is enough rows that the real
- *  ones land inside the boxes rather than pushing them down the screen.
- *  Deliberately not `prem/Shell`'s `PANEL_ROWS`, which means "the Premier League
- *  is twenty clubs" and is a claim about the division, not about this list. */
+/** A frame hint, not a fact: enough rows for the real ones to land in, unrelated to `PANEL_ROWS`. */
 const SKELETON_ROWS = 20;
 
 export default function LoadingClub() {

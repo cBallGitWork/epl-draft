@@ -3,7 +3,7 @@
 Any round of the season, addressable. Last week's results on Monday morning is
 the second thing anyone wants after this week's score.
 
-Shares `GameweekView` with `/matchday`, so the two never drift.
+Drawn by `GameweekView`, which only this route uses; Live's between-rounds panel links here.
 
 ## On the page
 

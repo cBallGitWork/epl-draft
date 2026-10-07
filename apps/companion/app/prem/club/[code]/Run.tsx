@@ -8,6 +8,7 @@ import { BOARD, MINOR_CAPS, ROW_HOVER, ROW_NAME } from "@/app/desk";
 import Absent from "@/app/components/shell/Absent";
 import ClubLabel from "@/app/components/football/ClubLabel";
 import { matchHref } from "../../match/[id]/matchRoutes";
+import { hasScore } from "../../score";
 
 // One club's season, league and cups, in the order it runs: a date, the opponent once, H/A, the competition, the score.
 // A live score keeps its ink: a running score with no tense reads as a final one.
@@ -67,7 +68,7 @@ export default function Run({
 function leagueCells(fixture: Fixture, club: Club, clubs: Map<number, Club>): Cells {
   const home = fixture.homeClubId === club.id;
   const opponent = clubs.get(home ? fixture.awayClubId : fixture.homeClubId);
-  const played = fixture.homeScore !== null && fixture.awayScore !== null;
+  const played = hasScore(fixture);
   // The club's own goals first, whichever end it was at.
   const mine = home ? fixture.homeScore : fixture.awayScore;
   const theirs = home ? fixture.awayScore : fixture.homeScore;

@@ -5,9 +5,8 @@ import { placeLabels } from "./labels";
 import type { Placed } from "./labels";
 import { SECTION_BAR, SMALL_CAPS } from "@/app/desk";
 
-// Where each eleven actually played: every starter at the average of his own touches (SofaScore's own average
-// position, 30/30 fixtures, PLATFORM_NOTES), one pitch per side so the shapes do not interleave. Starters only —
-// a substitute's centre can come off two touches. The names are HTML over the grass so they do not scale with it.
+// Where each eleven played: every starter at SofaScore's average position, one pitch per side.
+// Starters only, as a substitute's centre can come off two touches; names are HTML so they do not scale.
 
 // `ShotMap`'s markings, copied: two occurrences, declined until a third (CODE_RULES §1).
 

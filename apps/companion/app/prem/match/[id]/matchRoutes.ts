@@ -14,8 +14,7 @@ export const MATCH_TABS = [
 
 export type MatchTab = (typeof MATCH_TABS)[number]["key"];
 
-/** A tab of one match with its query. A value left undefined is that view's default and stays out of the URL,
- *  so each view has one address and not two. */
+/** A tab of one match with its query; an undefined value is the view's default and stays out of the URL. */
 export function matchHref(id: number, tab: MatchTab, query: Record<string, string | undefined> = {}): string {
   const segment = MATCH_TABS.find((entry) => entry.key === tab)?.segment ?? "";
   const set = Object.entries(query).filter((entry): entry is [string, string] => entry[1] !== undefined);

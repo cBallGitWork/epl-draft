@@ -9,9 +9,7 @@ import { PANEL } from "@/app/desk";
 
 // The club's season on one screen, league and cups, played and to come: oldest first, the way it was played.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — change both together. (`scripts/revalidate.test.ts`
-// holds the two together.)
+// Must equal PAGE_REVALIDATE in config.ts: Next reads it statically, so it cannot be imported.
 export const revalidate = 30;
 
 export default async function ClubFixturesPage({ params }: { params: Promise<{ code: string }> }) {

@@ -3,23 +3,10 @@ import PremShell from "../Shell";
 import Skeleton from "../../components/shell/Skeleton";
 import { BOARD, ROW_RULE, SCROLL } from "@/app/desk";
 
-// What the table looks like while FPL is answering.
-//
-// The REAL shell and the REAL column heads, with only the figures standing in.
-// A skeleton that draws its own approximation of the chrome is a second copy of
-// the screen to keep in step, and `league/loading.tsx` sets the same rule: the
-// strip, the caption and the head plates are the ones the page itself uses, so
-// the wait and the arrival are the same object with the numbers filled in.
+// The table while FPL answers: the real shell and column heads, with only the figures standing in.
+// `Skeleton` sizes go into an inline style, so they are CSS lengths; a Tailwind class draws nothing.
 
-// **The blocks are CSS lengths, not Tailwind classes.** `Skeleton` puts what it
-// is given into an inline `style`, so `width="w-4"` is an invalid declaration the
-// browser drops — every block on this screen has been rendering at zero size and
-// the Premier League table's loading state was twenty empty rows with an index
-// spine down the left. The sibling skeleton (`league/loading`) has always passed
-// lengths; this one never did, and nothing failed to say so.
-
-/** Twenty, because that is the division and because a panel drawn to hold six
- *  rows and then filled with twenty jumps under the reader's thumb. */
+/** The division's size, so the panel does not jump when the table arrives. */
 const ROWS = 20;
 
 export default function Loading() {
@@ -40,14 +27,7 @@ export default function Loading() {
                     <Skeleton width="6rem" height="1rem" />
                   </span>
                 </td>
-                {/* Read off `COLUMNS` rather than written out: the place and
-                    the club are drawn above, and the rest is whatever the table
-                    declares. A literal here is the exact bug `Columns.tsx` says
-                    it exists to prevent — the heads and the skeleton drifting
-                    apart the day a column is added. It takes each column's
-                    `width` too, which carries VISIBILITY as well as size: a
-                    count alone drew eleven cells on a phone the answer fills
-                    with eight, and the table jumped sideways on arrival. */}
+                {/* The rest off `COLUMNS`, with each `width` and phone visibility, so nothing jumps. */}
                 {COLUMNS.slice(2).map((column) => (
                   <td key={column.key} className={`px-1.5 ${column.width} ${deskOnly(column.key, "place")}`}>
                     <Skeleton width="100%" height="0.75rem" />

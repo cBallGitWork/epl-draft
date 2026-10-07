@@ -4,8 +4,7 @@ import { useState, type ReactNode } from "react";
 import type { SquadPlayerDetail } from "@epl/core";
 import PlayerCard from "../../../components/league/PlayerCard";
 
-// A name on a match screen, opening the app's one player card — the squad board's own (Craig, 23 Sep 2026:
-// *"should be the same pop up as elsewhere, that needs to be a repo standard"*).
+// A name on a match screen, opening the app's one player card, the squad board's own (Craig, 23 Sep 2026).
 
 export default function PlayerCardButton({
   player,

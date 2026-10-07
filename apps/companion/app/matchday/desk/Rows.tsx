@@ -1,19 +1,9 @@
 import { Club, Fixture, FootballPlayer, LiveTeamScore, PeriodPairing, londonWeekday, londonTime, DASH } from "@epl/core";
 import ScoreFigure from "../../components/league/ScoreFigure";
 import { SMALL_CAPS } from "@/app/desk";
+import { hasScore } from "../../prem/score";
 
-// The desk's two kinds of line, at the density the desk is for.
-//
-// Split from the page when it crossed the file ceiling, and they were the half
-// worth moving: the page is orchestration — which reads, which league, which
-// round — and these are the typography.
-//
-// The FIGURE is shared with every other scoreline in the app — `ScoreFigure`
-// holds the dash-not-nought and trailing-dims rule, and this note used to say a
-// third occurrence would earn it. The front page's scoreboard was the third, so it
-// was earned and taken. The row AROUND the figure is still deliberately its own:
-// that card is a tap target with a labelled second line, and these are wall rows
-// with no chrome and nothing to tap.
+// The desk's two kinds of line: wall rows with no chrome and nothing to tap.
 
 /** One head-to-head, one line. Denser than `PairingCard` — no card, no padding,
  *  no tap target — so the row is its own even though the figure in it is not. */
@@ -73,7 +63,7 @@ export function Match({
 }) {
   const home = clubs.get(fixture.homeClubId)?.shortName ?? DASH;
   const away = clubs.get(fixture.awayClubId)?.shortName ?? DASH;
-  const played = fixture.homeScore !== null && fixture.awayScore !== null;
+  const played = hasScore(fixture);
 
   return (
     <div className="flex items-baseline gap-2 py-1 text-xs">
@@ -93,18 +83,14 @@ export function Match({
           </span>
         )}
       </span>
-      {/* The tick where the kickoff time used to be. No HT: FPL publishes a
-          minute and a finished flag, and a clock stopped on 45 is not a claim
-          they have made — a match genuinely in its 45th minute reads the same. */}
+      {/* No HT: FPL gives a minute and a finished flag, and a clock on 45 may still be running. */}
       <span className={`w-9 shrink-0 text-right ${SMALL_CAPS}`}>
         {fixture.status === "live" ? (
           <span className="text-live">{fixture.minutes}′</span>
         ) : fixture.status === "finished" ? (
           <span className="text-faint">FT</span>
         ) : fixture.kickoff !== null ? (
-          /* The day, in the tick's slot, which is empty until a match starts.
-             Eighteen rows spanning Friday to Monday otherwise print 17:30 above
-             14:00 with nothing to say they are different days. */
+          /* The day, so a round spanning Friday to Monday does not read as one day's times. */
           <span className="text-faint">{londonWeekday(fixture.kickoff)}</span>
         ) : null}
       </span>

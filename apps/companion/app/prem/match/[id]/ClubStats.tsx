@@ -13,7 +13,7 @@ import SubNote from "./SubNote";
 import { COLUMNS, sorted, type StatLine, type StatSort } from "./statColumns";
 import { SIDE_SHARES, standoutCuts, standoutInk, type StandoutCut } from "../../../components/league/standout";
 import { statsHref } from "./statsSort";
-import { appeared, cameOn, ordered, type Named } from "./sheetJoin";
+import { appeared, cameOn, forCode, ordered, type Named } from "./sheetJoin";
 import { sheetName, type Match } from "./match";
 import { MATCH_ROW } from "./matchRow";
 
@@ -60,12 +60,12 @@ export default function ClubStats({
     ...onSheet.filter((row) => row.bench && cameOn(row)),
     ...onSheet.filter((row) => row.bench && !cameOn(row)),
   ].map((row): Row => {
-    const id = row.man.code === null ? undefined : match.byCode.get(row.man.code)?.id;
+    const id = forCode(match.byCode, row.man.code)?.id;
     return {
       named: row,
       line: id === undefined ? undefined : lines.get(id),
       stats: id === undefined ? undefined : match.figures.get(id),
-      logged: row.man.code === null ? undefined : logged.get(row.man.code),
+      logged: forCode(logged, row.man.code),
     };
   });
   const rows = sorted(inSheetOrder, sort, descending);
@@ -101,7 +101,7 @@ export default function ClubStats({
                 key={`${row.named.man.code ?? row.named.man.name}-${at}`}
                 row={row}
                 match={match}
-                card={row.named.man.code === null ? undefined : cards.get(row.named.man.code)}
+                card={forCode(cards, row.named.man.code)}
                 cuts={cuts}
                 positions={fantraxPositions(league, row.named.man.code)}
                 hurt={row.named.man.code !== null && injured.has(row.named.man.code)}

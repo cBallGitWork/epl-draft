@@ -6,6 +6,7 @@ import Absent from "../components/shell/Absent";
 import { IndexCell } from "../components/league/TableCells";
 import { BOARD, FIGURE, ROW_NAME, ROW_RULE, phoneShows } from "@/app/desk";
 import { LEADER_STATS, type Leader, type LeaderStat } from "./leaders";
+import { LIVE } from "../components/shell/sections";
 
 // This gameweek's leaders (Craig, 1 Oct 2026: "match day have 3rd tab, that shows top stats for just
 // this gameweek"). A phone picks one list from a strip; a desk shows them all.
@@ -29,7 +30,7 @@ const INK: Record<LeaderStat, string> = { points: "text-mid", rating: "text-info
 
 /** One list's own address; the first is the view's plain one. */
 export function statsHref(stat: LeaderStat): string {
-  return stat === LEADER_STATS[0] ? `/matchday?view=${STATS_VIEW}` : `/matchday?view=${STATS_VIEW}&stat=${stat}`;
+  return stat === LEADER_STATS[0] ? `${LIVE}?view=${STATS_VIEW}` : `${LIVE}?view=${STATS_VIEW}&stat=${stat}`;
 }
 
 export default function TopStats({ boards, stat }: { boards: Record<LeaderStat, Leader[]>; stat: LeaderStat }) {

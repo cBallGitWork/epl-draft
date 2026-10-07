@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Club } from "@epl/core";
 import { clubColoursOf, crestUrl, inkOn } from "@epl/core";
 import { CLUB } from "../../routes";
+import { hasScore } from "../../score";
 
 // CM's match header (`cm9900/21.jpg`): both clubs at once in their own colours, each with its own score at its own
 // right edge — never mirrored, or the two boxes read as one shared scoreline — and one `v` between them before kick-off.
@@ -19,7 +20,7 @@ export default function MatchBar({
   homeScore: number | null;
   awayScore: number | null;
 }) {
-  const played = homeScore !== null && awayScore !== null;
+  const played = hasScore({ homeScore, awayScore });
 
   return (
     <header className="flex items-stretch">
