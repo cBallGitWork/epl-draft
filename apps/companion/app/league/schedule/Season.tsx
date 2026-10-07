@@ -7,7 +7,7 @@ import { teamHref } from "@/app/squad/routes";
 import TeamName from "@/app/components/league/TeamName";
 
 // One team's season as CM's fixture list: a blue gameweek block, the opponent in white, the
-// competition in yellow, and the score on a plate at the right edge. `teamSeason.ts` builds the rows.
+// competition in cyan, and the score on a plate at the right edge. `teamSeason.ts` builds the rows.
 
 export default function Season({
   rows,
@@ -39,9 +39,9 @@ export default function Season({
 
             {/* No H/A column: a fantasy fixture has no ground. */}
 
-            {/* The competition, in yellow, at every width (Craig, 30 Sep): a cup tie must
+            {/* The competition, in cyan (Craig, 7 Oct), at every width (30 Sep): a cup tie must
                 stand apart from a league one. A knockout's round sits under its name. */}
-            <span className={`flex w-24 shrink-0 flex-col ${SMALL_CAPS} text-accent lg:w-40 lg:text-sm`}>
+            <span className={`flex w-24 shrink-0 flex-col ${SMALL_CAPS} text-info lg:w-40 lg:text-sm`}>
               <span className="truncate">{row.tie.competition.name}</span>
               {row.tie.round === null ? null : (
                 <span className="truncate font-normal">{row.tie.round}</span>
