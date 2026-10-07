@@ -1,7 +1,8 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { xiFault } from "./map";
-import { parseScoutXi, sameElevens } from "./scout";
+import { parseScoutXi, sameElevens, xiToWrite } from "./scout";
+import type { IntelXi } from "./types";
 
 // Arsenal and Chelsea as Scout's team-news page drew them on 23 Sep 2026.
 const HTML = readFileSync(new URL("../__fixtures__/scoutTeamNews.html", import.meta.url), "utf8");
@@ -42,5 +43,33 @@ describe("sameElevens", () => {
 
   it("is false when a club is missing", () => {
     expect(sameElevens(clubs, { ARS: clubs.ARS })).toBe(false);
+  });
+});
+
+describe("xiToWrite", () => {
+  const SEEN = "2026-10-01T08:40:00.000Z";
+  const NOW = "2026-10-07T12:40:00.000Z";
+  const held = (gameweek: number | null): IntelXi => ({
+    manifest: { season: "26-27", gameweek, exportedAt: SEEN, rows: 2, sources: [] },
+    fetchedAt: SEEN,
+    source: "ffscout",
+    clubs,
+  });
+
+  it("writes a first file, seen now", () => {
+    expect(xiToWrite(null, clubs, 6, NOW)).toEqual({ fetchedAt: NOW });
+  });
+
+  it("leaves the same elevens for the same gameweek alone", () => {
+    expect(xiToWrite(held(6), parseScoutXi(HTML), 6, NOW)).toBeNull();
+  });
+
+  it("relabels unchanged elevens once their gameweek has been played, keeping when they were first seen", () => {
+    expect(xiToWrite(held(5), parseScoutXi(HTML), 6, NOW)).toEqual({ fetchedAt: SEEN });
+  });
+
+  it("writes a changed eleven, seen now", () => {
+    const changed = { ...clubs, ARS: { ...clubs.ARS, starters: [{ code: 1, prob: 0.9 }, ...clubs.ARS.starters.slice(1)] } };
+    expect(xiToWrite(held(6), changed, 6, NOW)).toEqual({ fetchedAt: NOW });
   });
 });

@@ -5,7 +5,7 @@ import { asyncBufferFromFile, parquetReadObjects } from "hyparquet";
 import { cupName, tmlCupTies, fetchBootstrap } from "@epl/core";
 import type { IntelCups, TmlRow } from "@epl/core";
 import { INTEL_ROOT } from "./paths";
-import { INTEL_SEASON } from "./intel";
+import { INTEL_SEASON, intelManifest, readIntel, sameApartFromManifest } from "./intel";
 
 // Each club's cup and European ties off the sister repo's team match log, into `data/intel/cups/`.
 // Reads the sister repo and never writes to it; run after the sister rebuilds its log (`npm run intel-cups`).
@@ -27,17 +27,20 @@ async function main(): Promise<void> {
   if (ties.length === 0) throw new Error(`no ties for any FPL club in ${TML}; nothing written`);
 
   const file: IntelCups = {
-    manifest: {
-      season: INTEL_SEASON,
+    manifest: intelManifest({
       gameweek: null,
-      exportedAt: new Date().toISOString(),
       rows: ties.length,
       sources: [{ path: TML, mtime: statSync(at(TML)).mtime.toISOString() }],
-    },
+    }),
     clubs,
   };
-  mkdirSync(join(INTEL_ROOT, "cups"), { recursive: true });
-  writeFileSync(join(INTEL_ROOT, "cups", `${INTEL_SEASON}.json`), `${JSON.stringify(file, null, 1)}\n`);
+  const held = readIntel<IntelCups>("cups", `${INTEL_SEASON}.json`);
+  if (held !== null && sameApartFromManifest(held, file)) {
+    console.log(`cups: unchanged since ${held.manifest.exportedAt}.`);
+  } else {
+    mkdirSync(join(INTEL_ROOT, "cups"), { recursive: true });
+    writeFileSync(join(INTEL_ROOT, "cups", `${INTEL_SEASON}.json`), `${JSON.stringify(file, null, 1)}\n`);
+  }
 
   console.log(`${ties.length} ties for ${Object.keys(clubs).length} clubs, ${rows.length - ties.length} log rows left aside`);
   for (const [label, count] of tally(ties.map((tie) => `${cupName(tie.competition) ?? tie.competition} ${tie.score === null ? "to come" : "played"}`))) {

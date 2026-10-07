@@ -61,11 +61,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      # The alert steps' script and nothing else.
+      # The alert action and its script, nothing else.
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
-          sparse-checkout: scripts/ci
+          sparse-checkout: |
+            scripts/ci
+            .github/actions
 
       - name: Warm the pages a phone lands on
         env:
@@ -86,17 +88,9 @@ jobs:
             case "$code" in 2*|3*) ;; *) exit 1 ;; esac
           done
 
-      # Every red or timed-out run opens or updates the issue "alert: warm"; the next green one closes it.
-      - name: Alert the owner
-        if: ${{ failure() || cancelled() }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: scripts/ci/alert.sh warm fail "$RUN_URL"
-
-      - name: Close the alert
-        if: ${{ success() }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: scripts/ci/alert.sh warm ok "$RUN_URL"
+      # A red or timed-out run opens or updates the issue "alert: warm"; the next green one closes it.
+      - uses: ./.github/actions/alert
+        if: ${{ always() }}
+        with:
+          source: warm
+          status: ${{ job.status }}

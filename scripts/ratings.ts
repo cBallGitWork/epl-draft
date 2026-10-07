@@ -5,20 +5,21 @@ import {
   fetchFixtures,
   fetchLive,
   getFootballSnapshot,
+  londonDay,
   londonDayOf,
   mapFixtures,
   mapLiveStats,
   isUnmapped,
   readRatingStore,
-  type Bridge,
   type Fixture,
   type PlayerMatchStats,
   type RatingStore,
 } from "@epl/core";
 import { dayFigures, markOf, playedOn } from "./edition/matchdayRatings";
+import { dayDone, menOwed } from "./ratings/day";
 import { SCORING_LEAGUE } from "./leagues";
-import { INTEL_SEASON } from "./intel";
-import { MAPPINGS_ROOT, RATINGS_ROOT } from "./paths";
+import { INTEL_SEASON, readBridge } from "./intel";
+import { RATINGS_ROOT } from "./paths";
 import { readScoring } from "./scoring";
 
 // Our mark for every man in every settled match day not yet rated, into `data/ratings/26-27.json`, which the player pages
@@ -58,12 +59,14 @@ async function main(): Promise<void> {
   const rounds = new Map<number, PlayerMatchStats[]>();
   for (const gw of gameweeks) rounds.set(gw, mapLiveStats(await fetchLive(gw)));
   const results = clubResults(fixtures, [...rounds.values()], new Map(snapshot.players.map((p) => [p.id, p.clubId])));
-  const bridge = JSON.parse(readFileSync(join(MAPPINGS_ROOT, "fantrax.json"), "utf8")) as Bridge;
+  const bridge = readBridge();
   const idOfCode = new Map(snapshot.players.map((p) => [p.code, p.id]));
+  const bridged = new Set(Object.values(bridge).flatMap((entry) => (isUnmapped(entry) || entry.fplCode == null ? [] : [entry.fplCode])));
+  const today = londonDay(new Date());
 
   for (const [day, on] of due) {
     const figures = await dayFigures(day);
-    let rated = 0;
+    const rated = new Set<number>();
     for (const fantraxId of playedOn(figures)) {
       const entry = bridge[fantraxId];
       const code = entry === undefined || isUnmapped(entry) ? undefined : entry.fplCode;
@@ -81,10 +84,16 @@ async function main(): Promise<void> {
         results,
       });
       (store.marks[String(code)] ??= {})[String(fixture.code)] = mark;
-      rated++;
+      rated.add(code);
     }
-    store.manifest.days.push(day);
-    console.log(`ratings: ${day}, ${rated} men rated across ${on.length} matches.`);
+    // A day Fantrax answered short is asked again next run, until every man FPL says played it has his mark.
+    const owed = menOwed(on, [...rounds.values()].flat(), snapshot.players, bridged);
+    if (dayDone(rated, owed, day, today)) {
+      store.manifest.days.push(day);
+      console.log(`ratings: ${day}, ${rated.size} men rated across ${on.length} matches.`);
+    } else {
+      console.log(`ratings: ${day}, ${rated.size} of the ${owed.size} men owed a mark; asked again next run.`);
+    }
   }
   store.manifest.updatedAt = new Date().toISOString();
   mkdirSync(RATINGS_ROOT, { recursive: true });

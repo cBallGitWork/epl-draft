@@ -6,8 +6,8 @@ name: Intel staleness
 # `packages/core/src/football/intel/freshness.ts`), when a predicted club is not an eleven, and
 # when the eleven is for a gameweek already played. A red run opens the issue "alert: intel-check".
 #
-# Its own job, not the producers': `scout-xi.yml` and `make export-epl-draft` in the sister repo
-# fail most plausibly by not running, which would silence a check that lived inside them.
+# Its own job, not the producers': `scout-xi.yml` and the Mac's `scripts/sync-intel.sh` fail most
+# plausibly by not running, which would silence a check that lived inside them.
 #
 # Not on `pull_request`: a stale export is a fact about the data, not the branch, and would turn
 # every PR red with nothing in it to fix.
@@ -31,28 +31,15 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - run: npm ci
+      - uses: ./.github/actions/node
 
       # Reads FPL's public bootstrap to learn whether the eleven's gameweek has been played.
       - name: Check the intel export
         run: npm run intel-check
 
-      # Every red or timed-out run opens or updates the issue "alert: intel-check"; the next green one closes it.
-      - name: Alert the owner
-        if: ${{ failure() || cancelled() }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: scripts/ci/alert.sh intel-check fail "$RUN_URL"
-
-      - name: Close the alert
-        if: ${{ success() }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: scripts/ci/alert.sh intel-check ok "$RUN_URL"
+      # A red or timed-out run opens or updates the issue "alert: intel-check"; the next green one closes it.
+      - uses: ./.github/actions/alert
+        if: ${{ always() }}
+        with:
+          source: intel-check
+          status: ${{ job.status }}

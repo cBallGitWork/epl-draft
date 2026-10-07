@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import {
   KEEPER,
@@ -10,15 +10,14 @@ import {
   mapPlayerStats,
   projectionIntel,
   scoringOf,
-  type Bridge,
   type IntelProjections,
   type LeagueMatch,
   type LeagueProjectionFile,
   type PlayerStatLine,
 } from "@epl/core";
-import { INTEL_SEASON, readIntel } from "./intel";
+import { INTEL_SEASON, readBridge, readIntel } from "./intel";
 import { SCORING_LEAGUE } from "./leagues";
-import { INTEL_ROOT, MAPPINGS_ROOT } from "./paths";
+import { INTEL_ROOT } from "./paths";
 import { buildPack, type FplSide, type PoolSide } from "./draftPack/build";
 
 // The draft pack (Craig, 2 Oct 2026: "projections for all players using real league's points"): the sister model's
@@ -76,7 +75,7 @@ async function main(): Promise<void> {
       adp: line?.stats.ADP ?? null,
     };
   });
-  const bridge = JSON.parse(readFileSync(join(MAPPINGS_ROOT, "fantrax.json"), "utf8")) as Bridge;
+  const bridge = readBridge();
   const gameweeks = [...new Set([...projections.values()].flatMap((player) => player.gameweeks.map((week) => week.gw)))].sort((a, b) => a - b);
   const { rows, priors } = buildPack({ scoring, pool, matches, bridge, projections, fpl, gameweeks, weight: SHRINK_MINUTES });
 

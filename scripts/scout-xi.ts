@@ -7,20 +7,21 @@ import {
   nextRound,
   parseScoutXi,
   politeFetch,
-  sameElevens,
   xiFault,
+  xiToWrite,
   type IntelXi,
 } from "@epl/core";
-import { INTEL_SEASON, readIntel } from "./intel";
+import { INTEL_SEASON, intelManifest, readIntel } from "./intel";
 import { INTEL_ROOT } from "./paths";
 
 // Scout's predicted elevens, straight from their team-news page into `data/intel/xi/`
 // (Craig, 23 Sep 2026: "It should just always be live, and it's updated when scout
 // updates it"). Run on a schedule by `scout-xi.yml`.
 //
-// The file is rewritten only when an eleven changes, and `fetchedAt` is that moment: the
-// page carries no time of its own for the elevens (`FFS.currentDate` is when it was
-// rendered), so "last updated" is when we first saw this prediction.
+// The file is rewritten when an eleven changes, and `fetchedAt` is that moment: the page
+// carries no time of its own for the elevens (`FFS.currentDate` is when it was rendered),
+// so "last updated" is when we first saw this prediction. Unchanged elevens are relabelled
+// for the next gameweek once theirs is played, keeping that moment.
 //
 //   npm run scout-xi
 //
@@ -49,20 +50,19 @@ async function main(): Promise<void> {
 
   const file = `${INTEL_SEASON}.json`;
   const held = readIntel<IntelXi>("xi", file);
-  if (held !== null && sameElevens(held.clubs, clubs)) {
-    console.log(`scout-xi: unchanged since ${held.fetchedAt ?? "an unrecorded time"}.`);
+  const gameweek = nextRound(fixtures, now)?.gameweek ?? null;
+  const write = xiToWrite(held, clubs, gameweek, now);
+  if (write === null) {
+    console.log(`scout-xi: unchanged since ${held?.fetchedAt ?? "an unrecorded time"}.`);
     return;
   }
 
   const xi: IntelXi = {
-    manifest: {
-      season: INTEL_SEASON,
-      gameweek: nextRound(fixtures, now)?.gameweek ?? null,
-      exportedAt: now,
-      rows: Object.keys(clubs).length,
-      sources: [{ path: SCOUT_TEAM_NEWS_URL, mtime: null }],
-    },
-    fetchedAt: now,
+    manifest: intelManifest(
+      { gameweek, rows: Object.keys(clubs).length, sources: [{ path: SCOUT_TEAM_NEWS_URL, mtime: null }] },
+      now,
+    ),
+    fetchedAt: write.fetchedAt,
     source: "ffscout",
     clubs,
   };

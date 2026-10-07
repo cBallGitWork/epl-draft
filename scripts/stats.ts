@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import {
   KEEPER,
@@ -6,13 +6,12 @@ import {
   columnDrift,
   fetchPoolStats,
   mapStatSheet,
-  type Bridge,
   type IntelStats,
   type StatSheet,
 } from "@epl/core";
-import { INTEL_SEASON, readIntel } from "./intel";
+import { INTEL_SEASON, intelManifest, readBridge, readIntel, sameApartFromManifest } from "./intel";
 import { STATS_LEAGUE } from "./leagues";
-import { INTEL_ROOT, MAPPINGS_ROOT } from "./paths";
+import { INTEL_ROOT } from "./paths";
 import { buildStats } from "./stats/build";
 
 // The stats league's season-to-date counts for every man who has played, into `data/intel/stats/`
@@ -38,7 +37,7 @@ async function main(): Promise<void> {
     return refuse(`Fantrax answered "${projected.season.name}", a projection`);
   }
 
-  const bridge = JSON.parse(readFileSync(join(MAPPINGS_ROOT, "fantrax.json"), "utf8")) as Bridge;
+  const bridge = readBridge();
   const { stats, unknown, missing } = buildStats(sheets, bridge);
   const file = `${INTEL_SEASON}.json`;
   const held = readIntel<IntelStats>("stats", file);
@@ -53,22 +52,22 @@ async function main(): Promise<void> {
     return refuse("the stats league's columns changed", drifted);
   }
 
-  if (held !== null && figures(held) === figures(stats)) {
+  const now = new Date().toISOString();
+  const out: IntelStats = {
+    manifest: intelManifest(
+      {
+        gameweek: null,
+        rows: stats.players.length,
+        sources: [{ path: `Fantrax getPlayerStats, the "${STATS_LEAGUE.key}" league`, mtime: null }],
+      },
+      now,
+    ),
+    ...stats,
+  };
+  if (held !== null && sameApartFromManifest(held, out)) {
     console.log(`stats: unchanged since ${held.manifest.exportedAt}.`);
     return;
   }
-
-  const now = new Date().toISOString();
-  const out: IntelStats = {
-    manifest: {
-      season: INTEL_SEASON,
-      gameweek: null,
-      exportedAt: now,
-      rows: stats.players.length,
-      sources: [{ path: `Fantrax getPlayerStats, the "${STATS_LEAGUE.key}" league`, mtime: null }],
-    },
-    ...stats,
-  };
   mkdirSync(join(INTEL_ROOT, "stats"), { recursive: true });
   writeFileSync(join(INTEL_ROOT, "stats", file), dense(out));
   console.log(
@@ -87,11 +86,6 @@ function refuse(why: string, lines: readonly string[] = []): void {
 function named(sheets: readonly StatSheet[], stat: string): string {
   const column = sheets.flatMap((sheet) => sheet.columns).find((entry) => entry.stat === stat);
   return column === undefined ? stat : `${stat} (${column.short}, "${column.name}")`;
-}
-
-/** Everything but the manifest, in one order whichever way the object was built. */
-function figures(stats: Omit<IntelStats, "manifest">): string {
-  return JSON.stringify([stats.season, stats.columns, stats.players, stats.unbridged, stats.unbridgedWithMinutes]);
 }
 
 /** The file with each man on one line: a value per line would be most of it whitespace. */
