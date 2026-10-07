@@ -80,6 +80,23 @@ save already calls `updateTag`.
   `/10`) answered 500 once on the cold cache and was fine on a retry. **Open question:** a match page should degrade
   when an upstream fetch fails rather than 500.
 
+## A job that never ran is the watchdog's — decided 7 Oct 2026
+
+A failing job can report itself; one that never starts cannot. `watchdog.yml` runs `scripts/watchdog.ts` hourly
+06–23 UTC against the rules in `scripts/watchdog/decide.ts`, whose test holds them to every scheduled workflow.
+
+- **Crons owe a success** within their cadence plus grace: 30h for the dailies and editions (crons have run 6h
+  late), 26h for scout-xi, 96h for warm (Monday night to Friday), and ratings one between 07:00 and 10:00 UTC.
+  A latest run that ended `startup_failure` is a finding too.
+- **The Mac's jobs owe a report**: an `alert.yml` run named `alert intel-<mode> ok|fail`, created after the slot
+  opened. Deadlines, London: weekly Tue 12:00; pressers Thu 18:00, Fri 14:00 and Fri 18:30. A fail counts as ran,
+  because it has been reported.
+- **A finding files under the late job's own source**, so the job's next green run closes it. A `gh` error turns
+  the watchdog red rather than skipping, and no shared setup action stands between it and its own alert.
+- **`capture-status.yml` checks the watchdog** succeeded in the last 3h (`--watchdog`).
+- **Testing by hand**: `gh workflow run watchdog.yml -f now=2026-10-08T17:05:00Z -f only=intel-pressers`, or
+  `-f now=+31h`; runs after `now` are ignored.
+
 ## A signed-in cold open of `/` lands on Mail or Live, so shoot the paper as `/?paper` — decided 6 Oct 2026
 
 Since #285 `proxy.ts` sends a signed-in reader who types, bookmarks or launches `/` (`Sec-Fetch-Site: none`) to
