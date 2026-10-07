@@ -1,0 +1,19 @@
+name: Alert
+description: 'Opens or updates the issue "alert: <source>" when the job failed or timed out, and closes it when it passed.'
+inputs:
+  source:
+    description: The alert's source, the workflow's file name (capture)
+    required: true
+  status:
+    description: The caller's job.status
+    required: true
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        SOURCE: ${{ inputs.source }}
+        STATE: ${{ inputs.status == 'success' && 'ok' || 'fail' }}
+        RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      run: scripts/ci/alert.sh "$SOURCE" "$STATE" "$RUN_URL"

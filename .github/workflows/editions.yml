@@ -88,11 +88,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
+      - uses: ./.github/actions/node
 
       # Vercel's FANTRAX_LEAGUE_ID is the only place a league is set, so the column
       # asks production which one it serves and can never file about another.
@@ -137,17 +133,9 @@ jobs:
           done
           scripts/ci/push.sh "data: the paper for $(date -u +%Y-%m-%d)" "No column due."
 
-      # Every red or timed-out run opens or updates the issue "alert: editions"; the next green one closes it.
-      - name: Alert the owner
-        if: ${{ failure() || cancelled() }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: scripts/ci/alert.sh editions fail "$RUN_URL"
-
-      - name: Close the alert
-        if: ${{ success() }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: scripts/ci/alert.sh editions ok "$RUN_URL"
+      # A red or timed-out run opens or updates the issue "alert: editions"; the next green one closes it.
+      - uses: ./.github/actions/alert
+        if: ${{ always() }}
+        with:
+          source: editions
+          status: ${{ job.status }}

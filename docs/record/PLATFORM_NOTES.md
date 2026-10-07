@@ -54,8 +54,9 @@ GitHub mails a failed cron only to whoever last edited its line, and the Mac sho
   emails. `scripts/ci/alert.sh` opens it on `fail`, comments only after 6 quiet hours (the 30-minute jobs would
   flood the inbox), and closes it on the next `ok`. The repo is public, so a message is a run URL or a sentence.
   No new secrets: `github.token` with `issues: write`.
-- **Every scheduled workflow's last steps** call it: `fail` on `failure() || cancelled()` (a timeout is a cancel),
-  `ok` on `success()`. The source is the workflow's file name.
+- **Every scheduled workflow's last step** is `.github/actions/alert`, run `if: always()` with the job's status:
+  `fail` for a failure or a cancel (a timeout is a cancel), `ok` for a success. The source is the workflow's file
+  name. The watchdog keeps its own inline steps, so a broken action cannot silence the thing that watches.
 - **The Mac reaches it through `alert.yml`**, a dispatch whose run name is `alert <source> <state>`.
   `scripts/sync-intel.sh` ends every run in one, `intel-<mode> ok` or `fail`, "nothing changed" included, from an
   `EXIT` trap when it dies. Soft findings have their own sources, so the run's `ok` cannot close them:
@@ -906,7 +907,7 @@ anyway.
   gets `GITHUB_TOKEN`.
 - **Actions are pinned to commit SHAs**, with the tag in a trailing comment. To
   move one, resolve the tag again (`gh api repos/<owner>/<repo>/git/ref/tags/<tag>`,
-  dereferencing an annotated tag) and replace the SHA in every workflow.
+  dereferencing an annotated tag) and replace the SHA in every workflow and in `.github/actions/`.
 - **Every job has a `timeout-minutes`**, and `verify.yml` is `contents: read`.
 - **`claude.yml` answers only a mention from the repo's owner, members or
   collaborators**, because it spends the Anthropic key. Review comments now reach

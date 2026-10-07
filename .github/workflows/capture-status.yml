@@ -64,12 +64,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - run: npm ci
+      - uses: ./.github/actions/node
 
       # Per league: the two draft nine weeks apart, so the rehearsal league is
       # already on the daily cadence while the real one is still weekly. One
@@ -77,17 +72,9 @@ jobs:
       - name: Check both leagues
         run: npm run capture:status
 
-      # Every red or timed-out run opens or updates the issue "alert: capture-status"; the next green one closes it.
-      - name: Alert the owner
-        if: ${{ failure() || cancelled() }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: scripts/ci/alert.sh capture-status fail "$RUN_URL"
-
-      - name: Close the alert
-        if: ${{ success() }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: scripts/ci/alert.sh capture-status ok "$RUN_URL"
+      # A red or timed-out run opens or updates the issue "alert: capture-status"; the next green one closes it.
+      - uses: ./.github/actions/alert
+        if: ${{ always() }}
+        with:
+          source: capture-status
+          status: ${{ job.status }}

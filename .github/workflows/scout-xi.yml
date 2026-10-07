@@ -32,11 +32,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
+      - uses: ./.github/actions/node
 
       - name: Read Scout's elevens
         run: npm run scout-xi
@@ -48,17 +44,9 @@ jobs:
           git add data/intel/xi
           scripts/ci/push.sh "data: Scout's predicted elevens, $(date -u +%Y-%m-%dT%H:%MZ)" "Scout's elevens have not changed."
 
-      # Every red or timed-out run opens or updates the issue "alert: scout-xi"; the next green one closes it.
-      - name: Alert the owner
-        if: ${{ failure() || cancelled() }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: scripts/ci/alert.sh scout-xi fail "$RUN_URL"
-
-      - name: Close the alert
-        if: ${{ success() }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: scripts/ci/alert.sh scout-xi ok "$RUN_URL"
+      # A red or timed-out run opens or updates the issue "alert: scout-xi"; the next green one closes it.
+      - uses: ./.github/actions/alert
+        if: ${{ always() }}
+        with:
+          source: scout-xi
+          status: ${{ job.status }}
