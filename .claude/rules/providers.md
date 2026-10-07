@@ -120,6 +120,14 @@ Methods that matter:
   owns every team. So another team's pending claims are not readable. Claims arrive
   in `tables[].txSets[]` (`tablesPerTeam` for all teams), trades in
   `tradeInfoList[]`. PLATFORM_NOTES, 1 Oct 2026.
+- **But trade PROPOSALS are readable**: `getTransactionDetailsHistory {view: "TRADE", executedOnly: false}` with
+  the cookie adds unexecuted rows, each with `resultCode` (`TRADE_CANCELLED`, `TRADE_REJECTED`, `EXECUTED`; pending
+  unseen) and `result.content`. Every set seen involved Craig's team, so one between two others is unproven.
+  PLATFORM_NOTES, 7 Oct 2026.
+- `getTradeBlocks` (plural, cookie) is the league's trade block: `tradeBlocks[]{teamId, lastUpdated.date (epoch
+  ms), comment.body, scorersOffered/Wanted.scorers{posId: [scorer]}, positionsOffered/Wanted.positions[posId]}`.
+  `getTradeBlock` (singular) is the caller's EDITOR, every man he could list. Position ids are named by the public
+  `getRefObject {type: "Position"}` (703 Defender, 704 Goalkeeper). PLATFORM_NOTES, 7 Oct 2026.
 - `getLeagueSetup {action: "schedules"}` reads the head-to-head schedule (commissioner cookie):
   `matchupMap` is `[{key: period, value: ["awayId_homeId", …]}]`, beside `numMatchupsPerPeriod`, bye `"-1"`
   and TBD `"-2"`. `saveLeagueSetup {action: "scheduleMatchups", matchups: ["<period>|<away>_<home>|…"],

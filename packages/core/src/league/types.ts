@@ -166,3 +166,28 @@ export interface LeaguePlayoffs {
   /** How many places qualify: the table's cut line. Fantrax's playoff period numbers are not carried. */
   places: number;
 }
+
+/** A footballer on a trade block, as Fantrax names him; `fantraxId` joins the bridge. */
+export interface BlockPlayer {
+  fantraxId: string;
+  playerName: string;
+  /** Fantrax's letters, "D" or "F,M". */
+  position: string | null;
+  /** His real club, "MCI", and in full, "Manchester City". */
+  club: string | null;
+  clubName: string | null;
+}
+
+/** One team's trade block: who it will let go, and who and what it is after. */
+export interface TradeBlock {
+  teamId: string;
+  /** When the manager last saved it, an ISO instant. */
+  updatedAt: string | null;
+  offered: BlockPlayer[];
+  wanted: BlockPlayer[];
+  /** Positions in Fantrax's words, "Defender". */
+  positionsOffered: string[];
+  positionsWanted: string[];
+  /** The manager's own note, verbatim. */
+  comment: string | null;
+}
