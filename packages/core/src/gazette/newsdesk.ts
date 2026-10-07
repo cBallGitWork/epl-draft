@@ -1,5 +1,5 @@
 import { binXiDue } from "./binXi/due";
-import { PREDICTED_XI } from "../config";
+import { PREDICTED_XI, TEAM_SHEET } from "../config";
 import { dueBeforeLock, predictionsDue } from "./predictions/due";
 import type { StoryKind } from "./story";
 import type { TieState } from "./tieState";
@@ -17,7 +17,7 @@ export interface Assignment {
   /** Join handle back to the round's fixtures, this session only. */
   fixtureId?: number;
   tie?: { homeTeamId: string; awayTeamId: string };
-  /** The press-conference day, London, for the Team Sheet: Thursday's and Friday's are two editions of one kind. */
+  /** The London day a match-day or draft report is about. */
   day?: string;
   /** A draft report's cut-off: after Saturday's matches, or the end of the gameweek. */
   cutoff?: "saturday" | "gameweek";
@@ -40,8 +40,8 @@ export interface DeskState {
   locked: boolean;
   /** The period's pairings; none is a period the league has no fixtures in, which has no round to write up. */
   ties: readonly DeskTie[];
-  /** A round-up per press-conference day, keyed by the caller; empty until the export lands. */
-  pressers: readonly { key: string; slug: string; day: string }[];
+  /** The round ahead's press conferences are in the export, so the Team Sheet has something to say. */
+  pressers: boolean;
   /** The predicted elevens, when the export holds the round ahead; keyed by the caller. */
   lineups: { key: string; slug: string } | null;
   /** The round the Team Sheet and the elevens preview, when the calendar places it. */
@@ -92,10 +92,10 @@ export function newsdesk(
     want({ kind: "sheets", ...roundSlot("sheets", desk.gameweek) });
   }
 
-  // The Team Sheet, outside the finished and lock gates: the caller offers only days said after the last lock.
+  // The Team Sheet, outside the finished and lock gates: one column for the round's conferences, Friday's included.
   const about = desk.ahead === null ? {} : { round: desk.ahead };
-  for (const day of desk.pressers) {
-    want({ kind: "presser", key: day.key, slug: day.slug, day: day.day, ...about });
+  if (desk.pressers && desk.next !== null && dueBeforeLock(desk.next.locksAt, now, TEAM_SHEET.filing)) {
+    want({ kind: "presser", ...roundSlot("presser", desk.next.gameweek), ...about });
   }
 
   // The elevens predict the round ahead, so they sit outside the gates above, and wait for Friday's pressers.

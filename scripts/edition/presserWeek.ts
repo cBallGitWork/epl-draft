@@ -1,4 +1,4 @@
-import { MS_PER_DAY, londonDayOf, onLondonDay, type Club, type Fixture, type PresserLine, type RosteredTeam } from "@epl/core";
+import { MS_PER_DAY, type Club, type Fixture, type PresserLine, type RosteredTeam } from "@epl/core";
 import {
   presserFixtures,
   presserGameweek,
@@ -8,11 +8,10 @@ import {
   type PresserSquadMan,
 } from "./pressers";
 
-// WHICH round and WHICH day the Team Sheet is about.
+// WHICH round the Team Sheet is about, and the conferences it carries.
 //
 // Split from `pressers.ts` when it passed the 300-line ceiling: that reads the
-// export, this decides the window, the round it previews, and the day each
-// edition carries.
+// export, this decides the window and the round it previews.
 
 /** No round is longer than one, so a presser older than this is about a round
  *  already played. */
@@ -68,50 +67,4 @@ export function presserDesk(input: {
     ties: lines.length === 0 ? new Map() : presserFixtures(gameweek, byCode, input.season),
     gameweek,
   };
-}
-
-
-
-/** ONE EDITION of the Team Sheet: everything said on one London day.
- *
- *  The presser is a single kind with two editions a week, and this is where that
- *  is expressed once. The window the desk reads is the ROUND's, so without this
- *  both editions carried the whole week — Friday's column printed all eighteen
- *  clubs and led on a man whose conference was Thursday. */
-export function presserEdition<
-  L extends { said?: string },
-  Q extends { at?: string },
-  S extends { at?: string },
->(day: string, all: { lines: readonly L[]; quotes: readonly Q[]; spoke: readonly S[] }): {
-  lines: L[];
-  quotes: Q[];
-  spoke: S[];
-} {
-  return {
-    lines: onDay(all.lines, day, (row) => row.said),
-    // A quote's `said` is the speaker's name; its day is `at`.
-    quotes: onDay(all.quotes, day, (row) => row.at),
-    spoke: onDay(all.spoke, day, (row) => row.at),
-  };
-}
-
-/** Only what was said on one London day; `when` names the row's instant. */
-function onDay<T>(rows: readonly T[], day: string, when: (row: T) => string | undefined): T[] {
-  return rows.filter((row) => onLondonDay(when(row), day));
-}
-
-/** One assignment per press-conference DAY. Craig's week runs pressers Thursday
- *  and Friday, so a single key for the week would suppress the second column. */
-export function presserDays(
-  lines: readonly PresserLine[],
-  gameweek: number,
-): { key: string; slug: string; day: string }[] {
-  const days = new Set<string>();
-  for (const line of lines) {
-    const on = londonDayOf(line.said);
-    if (on !== null) days.add(on);
-  }
-  return [...days]
-    .sort()
-    .map((day) => ({ key: `presser:gw${gameweek}:${day}`, slug: `gw${gameweek}-presser-${day}`, day }));
 }

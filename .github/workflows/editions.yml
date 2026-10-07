@@ -25,7 +25,7 @@ name: Editions
 # Cost when it DOES write: at most GAZETTA_STORY_CAP (10, set below) stories
 # per firing, and one Anthropic call each. A desk that refuses spends nothing,
 # so a firing costs what it FILES rather than what it considers. The
-# Actions-minutes budget is still the real spend — 136 runs a
+# Actions-minutes budget is still the real spend — 130 runs a
 # week at a minute or two each against the 2000 free monthly minutes shared
 # with capture and scout-xi — and this cron block is the data to trim if
 # that ever bites.
@@ -59,12 +59,10 @@ on:
     # after the last Wednesday firing.
     - cron: "0,30 17-22 * * 3"
     - cron: "15 6-9 * * 4"
-    # **Thursday afternoon and evening, for the Team Sheet and Lawro.** The morning
-    # sweep above is a waiver net; a 15:00 column cannot publish on a Thursday at
-    # all against it and waited for Friday evening (#33). Same 14:00 UTC start.
-    # Lawro is due from 18:00 London: 17:00 UTC in summer, 18:00 in winter, so
-    # the band runs to 20:30 UTC and Friday's band catches a skipped evening.
-    - cron: "0,30 14-20 * * 4"
+    # **Thursday evening, for Lawro**, due from 18:00 London: 17:00 UTC in summer, 18:00 in
+    # winter, so the band runs to 20:30 UTC and Friday's band catches a skipped evening. It
+    # opened at 14:00 for a Thursday Team Sheet until 7 Oct 2026, when that moved to Friday.
+    - cron: "0,30 17-20 * * 4"
   workflow_dispatch: {}
 
 # Its own group, deliberately NOT shared with the capture or scout-xi jobs:

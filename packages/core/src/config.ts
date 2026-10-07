@@ -185,6 +185,10 @@ export const TRANSACTION_PAGE_SIZE = 100;
  *  earlier than Tuesday's files the day before (Sunday = 0). */
 export const PREDICTED_XI = { filing: { weekday: 5, hour: 16, maxLeadDays: 3 } } as const;
 
+/** The Team Sheet: Thursday's and Friday's press conferences in one column, Friday from 17:00 London, once the Mac's
+ *  16:00 import has merged (Craig, 7 Oct 2026); a lock earlier than Tuesday's files the day before (Sunday = 0). */
+export const TEAM_SHEET = { filing: { weekday: 5, hour: 17, maxLeadDays: 3 } } as const;
+
 /** Lawro's predictions: when the column files and how a tie is called. Set before any league was drafted, so
  *  retune after gameweek 9 by counting the gut calls in the archive. */
 export const PREDICTIONS = {

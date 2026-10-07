@@ -10,7 +10,7 @@ const desk = (over: Partial<DeskState> = {}): DeskState => ({
   locked: false,
   // An ordinary round has fixtures; an open tie files nothing of its own.
   ties: [{ homeTeamId: "x", awayTeamId: "y", state: "open" }],
-  pressers: [],
+  pressers: false,
   lineups: null,
   ahead: null,
   next: null,
@@ -31,7 +31,7 @@ describe("newsdesk", () => {
       ties: [{ homeTeamId: "a", awayTeamId: "b", state: "settled" }],
       reportDays: [{ key: "match-report:gw3:2026-09-26", slug: "gw3-prem-report-2026-09-26", day: "2026-09-26" }],
       draftReports: [{ key: "draft-report:gw3:gameweek", slug: "gw3-draft-report-gameweek", cutoff: "gameweek", day: "2026-09-28" }],
-      pressers: [{ key: "presser:gw3:2026-10-01", slug: "gw3-presser-2026-10-01", day: "2026-10-01" }],
+      pressers: true,
       lineups: { key: "predicted-xi:gw4", slug: "gw4-predicted-xi" },
       ahead,
       next: { ...ahead, locksAt: "2026-10-03T11:15:00.000Z" },
@@ -39,7 +39,7 @@ describe("newsdesk", () => {
     const kinds = new Set([
       ...newsdesk(full, none, "2026-09-29T08:15:00.000Z").map((a) => a.kind),
       ...newsdesk(full, none, "2026-10-01T17:00:00.000Z").map((a) => a.kind),
-      ...newsdesk(full, none, "2026-10-02T15:00:00.000Z").map((a) => a.kind),
+      ...newsdesk(full, none, "2026-10-02T16:00:00.000Z").map((a) => a.kind),
     ]);
     for (const a of newsdesk({ ...full, finished: false, locked: true }, none, NOW)) kinds.add(a.kind);
     expect([...kinds].sort()).toEqual(["bin-xi", "draft-report", "match-report", "predicted-xi", "predictions", "presser", "sheets"]);
@@ -99,28 +99,41 @@ describe("newsdesk", () => {
     expect(newsdesk(desk({ draftReports: [gameweek] }), (key) => key === gameweek.key, NOW).some((a) => a.kind === "draft-report")).toBe(false);
   });
 
-  it("files the team sheet on a day with pressers", () => {
-    const thu = { key: "presser:gw3:2026-09-17", slug: "gw3-presser-2026-09-17", day: "2026-09-17" };
-    const fri = { key: "presser:gw3:2026-09-18", slug: "gw3-presser-2026-09-18", day: "2026-09-18" };
-    // Thursday's and Friday's pressers are each their own column; one key for the week would suppress the second.
-    const filed = newsdesk(desk({ pressers: [thu, fri] }), none, NOW);
-    expect(filed.filter((a) => a.kind === "presser").map((a) => a.key)).toEqual([thu.key, fri.key]);
-    // The DAY travels with the assignment: one kind, two editions, and every
-    // consumer narrows to it rather than parsing the key.
-    expect(filed.filter((a) => a.kind === "presser").map((a) => a.day)).toEqual([thu.day, fri.day]);
-  });
+  describe("the Team Sheet", () => {
+    // GW6 locks Sat 10 Oct at 12:15 London. Thursday's and Friday's conferences are one column, filed on Friday
+    // from 17:00 London, once the Mac's 16:00 import has merged (Craig, 7 Oct 2026).
+    const next = { period: 6, gameweek: 6, locksAt: "2026-10-10T11:15:00.000Z" };
+    const sheet = (over: Partial<DeskState>, now: string, covered: (key: string) => boolean = none) =>
+      newsdesk(desk({ pressers: true, next, ...over }), covered, now).filter((a) => a.kind === "presser");
 
-  it("files the team sheet even while the last round is still 'finished'", () => {
-    // `desk.finished` stays true for four or five days of seven, so a Thursday
-    // column gated on the round being unfinished would never fire at all.
-    const thu = { key: "presser:gw3:2026-09-17", slug: "gw3-presser-2026-09-17", day: "2026-09-17" };
-    const filed = newsdesk(desk({ finished: true, pressers: [thu] }), none, NOW);
-    expect(filed.map((a) => a.kind)).toContain("presser");
-  });
+    it("waits for Friday 17:00 London, not Thursday's conferences", () => {
+      expect(sheet({}, "2026-10-08T17:00:00.000Z")).toEqual([]);
+      expect(sheet({}, "2026-10-09T15:59:00.000Z")).toEqual([]);
+      expect(sheet({}, "2026-10-09T16:00:00.000Z").map((a) => a.key)).toEqual(["presser:gw6"]);
+    });
 
-  it("files no team sheet on a day with no pressers", () => {
-    // The window is the gate, not a flag: the caller offers only days said after the last lock.
-    expect(newsdesk(desk({ pressers: [] }), none, NOW).map((a) => a.kind)).not.toContain("presser");
+    it("files once a round, catching up after a missed Friday and closing at the lock", () => {
+      expect(sheet({}, "2026-10-10T08:15:00.000Z").map((a) => a.slug)).toEqual(["gw6-presser"]);
+      expect(sheet({}, next.locksAt)).toEqual([]);
+      expect(sheet({}, "2026-10-09T16:30:00.000Z", (key) => key === "presser:gw6")).toEqual([]);
+    });
+
+    it("files even while the last round is still 'finished'", () => {
+      // `desk.finished` stays true for four or five days of seven, so a column gated on it would never fire.
+      expect(sheet({ finished: true }, "2026-10-09T16:00:00.000Z")).toHaveLength(1);
+    });
+
+    it("files the day before a midweek lock", () => {
+      // GW13 locks Tue 1 Dec: Monday at 17:00, which in winter is 17:00 UTC.
+      const midweek = { period: 13, gameweek: 13, locksAt: "2026-12-01T19:15:00.000Z" };
+      expect(sheet({ next: midweek }, "2026-11-27T17:00:00.000Z")).toEqual([]);
+      expect(sheet({ next: midweek }, "2026-11-30T17:00:00.000Z").map((a) => a.key)).toEqual(["presser:gw13"]);
+    });
+
+    it("files nothing without the round's press conferences or its lock", () => {
+      expect(sheet({ pressers: false }, "2026-10-09T16:00:00.000Z")).toEqual([]);
+      expect(sheet({ next: null }, "2026-10-09T16:00:00.000Z")).toEqual([]);
+    });
   });
 
   it("files Lawro on the Thursday evening before the round, about the round ahead", () => {
@@ -194,34 +207,32 @@ describe("newsdesk", () => {
       ties: [],
       reportDays: [{ key: "match-report:gw5:2026-10-03", slug: "gw5-prem-report-2026-10-03", day: "2026-10-03" }],
       draftReports: [{ key: "draft-report:gw5:gameweek", slug: "gw5-draft-report-gameweek", cutoff: "gameweek", day: "2026-10-05" }],
-      pressers: [{ key: "presser:gw5:2026-10-08", slug: "gw5-presser-2026-10-08", day: "2026-10-08" }],
+      pressers: true,
       lineups: { key: "predicted-xi:gw6", slug: "gw6-predicted-xi" },
       ahead,
       next: { ...ahead, locksAt: "2026-10-10T11:15:00.000Z" },
     });
-    expect(newsdesk(unplayed, none, "2026-10-08T17:00:00.000Z").map((a) => a.key)).toEqual([
-      "presser:gw5:2026-10-08",
-      "predictions:gw6",
-    ]);
-    expect(newsdesk(unplayed, none, "2026-10-09T15:00:00.000Z").map((a) => a.key)).toContain("predicted-xi:gw6");
+    expect(newsdesk(unplayed, none, "2026-10-08T17:00:00.000Z").map((a) => a.key)).toEqual(["predictions:gw6"]);
+    expect(newsdesk(unplayed, none, "2026-10-09T16:00:00.000Z").map((a) => a.key)).toEqual(
+      expect.arrayContaining(["presser:gw6", "predicted-xi:gw6"]),
+    );
     // No Bin XI on the Tuesday for a round nobody played.
     expect(newsdesk(unplayed, none, "2026-10-06T08:15:00.000Z").map((a) => a.kind)).not.toContain("bin-xi");
   });
 
   it("stamps the Team Sheet and the elevens with the round they preview", () => {
     // Between gameweeks FPL's current one is the one just played, not the one previewed.
-    const thu = { key: "presser:gw5:2026-10-08", slug: "gw5-presser-2026-10-08", day: "2026-10-08" };
     const lineups = { key: "predicted-xi:gw6", slug: "gw6-predicted-xi" };
     const ahead = { period: 6, gameweek: 6 };
     const next = { ...ahead, locksAt: "2026-10-10T11:15:00.000Z" };
-    const friday = "2026-10-09T15:00:00.000Z";
-    const filed = newsdesk(desk({ gameweek: 5, period: 5, pressers: [thu], lineups, ahead, next }), none, friday);
+    const friday = "2026-10-09T16:00:00.000Z";
+    const filed = newsdesk(desk({ gameweek: 5, period: 5, pressers: true, lineups, ahead, next }), none, friday);
     expect(filed.filter((a) => a.kind === "presser" || a.kind === "predicted-xi").map((a) => a.round)).toEqual([
       ahead,
       ahead,
     ]);
     // A round the calendar cannot place stamps nothing, and the story keeps today's.
-    const unplaced = newsdesk(desk({ pressers: [thu], lineups, next }), none, friday);
+    const unplaced = newsdesk(desk({ pressers: true, lineups, next }), none, friday);
     expect(unplaced.some((a) => a.round !== undefined)).toBe(false);
   });
 });
