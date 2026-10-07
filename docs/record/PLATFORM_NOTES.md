@@ -4272,6 +4272,28 @@ SPA's own bundle.
   Raccoons, Craig's team, so whether a proposal between two other teams shows is unproven; Craig says the
   commissioner's page shows it. A pending proposal's code is not yet seen.
 
+### xMins back in the app, points still off (7 Oct 2026)
+
+Craig, 7 Oct: *"we have confidence of our xmins more. So let's put it back into the app"*: club squad pages, the
+draft squads' list "by gameweek", and the player card "for future weeks too". The minutes come from
+`data/intel/projections` (`players[].gameweeks[].minutes`, FPL code, GW6–17, all 666 men; the export contract's
+`xMins` is called `minutes`), a football reading, so not from the league join's `minutesPerGw` (537 men). Only the
+minutes cross: `minutesIntel` drops the points, which stay behind `PROJECTIONS_SHOWN` (off). The player page's
+"Next up" had kept printing projected points through the switch; it now prints xMins and the points only when on.
+
+- **Flat after next week**: GW7–17 are one repeated figure for 289 of 537 men (Haaland 85, then 85.7 to GW17).
+  The card prints them as they are; it is the model saying it knows nothing new, not a fault.
+- **Freshness**: the pressers runs (Thu 16:00, Fri 12:30, 16:00, 17:45) take projections too since 7 Oct, from the
+  sister's Thu and Fri 16:30 full sweeps ("after the pressers"): the 17:45 Friday run carries Friday's conferences.
+- **The scout's letter** (Craig: *"the xmins up/down mail when it's more than 10"*, *"just report the mins"*,
+  *"could run at anytime as they can update on a Tuesday"*). Every intel run, Tuesday's or a pressers one, ends in
+  `scripts/xmins-moves.ts`: it compares the run's xMins export with the one committed before it (`git show HEAD:`) for
+  the new export's coming gameweek and appends one update, the men moved by more than `XMINS_MOVE` (10), to
+  `data/intel/xmins-moves/`. Mail writes one letter per update for the coming gameweek, from "Your scout", naming
+  only the reader's men and his next opponent's; a past gameweek's letters drop off as the deadline item does. A
+  pressers run that only restamps the export records nothing (its manifest-only change is dropped first). The
+  inbox's own rule ("makes no read of its own") is set aside for it on Craig's say-so.
+
 ## A Fantrax points figure per man per MATCH is a capture, not a read (4 Sep 2026)
 
 Asked because a match screen wanted one. Counted against FPL fixture 11's **32**

@@ -74,6 +74,13 @@ export default function SquadRow({
         {fixture ?? <span className="text-faint">unmapped</span>}
       </span>
 
+      {/* The model's xMins for the gameweek on screen, in the derived reading's cyan; no run, no cell. */}
+      {player.minutes.length === 0 ? null : (
+        <span className="numeric w-9 shrink-0 text-center text-sm font-bold text-info">
+          {player.minutes[0]?.minutes ?? DASH}
+        </span>
+      )}
+
       {/* Undefined is no table and drops the cell; null, a table that omits him, is a dash.
           A step above §6's row figure (DESIGN §6 records why). */}
       {points === undefined ? null : (

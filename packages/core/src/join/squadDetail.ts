@@ -1,3 +1,4 @@
+import type { ExpectedMinutes } from "../football/intel/minutes";
 import type { Opposition } from "../football/opposition";
 import type { Club } from "../football/types";
 import { lineup, type SquadLine } from "./lineup";
@@ -15,7 +16,16 @@ export interface SquadPlayerDetail {
   opposition: Opposition[] | undefined;
   /** Fantasy points: `undefined` no table, so no column; `null` a table with no number for him; else his. */
   points: number | null | undefined;
+  /** His xMins from the gameweek on screen on, that gameweek first; the same length for every man on a screen, and
+   *  empty on one that shows none. */
+  minutes: ExpectedMinutes[];
 }
+
+/** A screen's xMins run for a man by FPL code, from its own gameweek; null is a slot the bridge has not settled. */
+export type MinutesRun = (code: number | null) => ExpectedMinutes[];
+
+/** For a screen that shows no xMins. */
+export const NO_MINUTES: MinutesRun = () => [];
 
 export interface SquadDetailLine {
   position: string;
@@ -31,10 +41,11 @@ export function squadDetail(
   opposition: Map<number, Opposition[]>,
   /** Null when the provider would not answer; an empty map answered and names nobody. */
   points: Map<string, number | null> | null,
+  minutes: MinutesRun,
 ): SquadDetailLine[] {
   return lines.map((line) => ({
     position: line.position,
-    players: line.players.map((rostered) => playerDetail(rostered, clubs, opposition, points)),
+    players: line.players.map((rostered) => playerDetail(rostered, clubs, opposition, points, minutes)),
   }));
 }
 
@@ -53,9 +64,10 @@ export function lineupDetail(
   clubs: Map<number, Club>,
   opposition: Map<number, Opposition[]>,
   points: Map<string, number | null> | null,
+  minutes: MinutesRun,
 ): LineupDetail {
   const { lines, bench, shape } = lineup(team);
-  const detail = (rostered: RosteredPlayer) => playerDetail(rostered, clubs, opposition, points);
+  const detail = (rostered: RosteredPlayer) => playerDetail(rostered, clubs, opposition, points, minutes);
   return {
     rows: lines.map((line) => ({ position: line.position, players: line.players.map(detail) })),
     bench: bench.map(detail),
@@ -69,6 +81,7 @@ export function playerDetail(
   clubs: Map<number, Club>,
   opposition: Map<number, Opposition[]>,
   points: Map<string, number | null> | null,
+  minutes: MinutesRun,
 ): SquadPlayerDetail {
   const clubId = isResolved(rostered) ? rostered.player.clubId : null;
   return {
@@ -77,5 +90,6 @@ export function playerDetail(
     opposition: clubId === null ? undefined : opposition.get(clubId),
     // `?? null`, not `undefined`: a table that does not name him has still answered, so he gets a dash.
     points: points === null ? undefined : (points.get(rostered.slot.fantraxId) ?? null),
+    minutes: minutes(isResolved(rostered) ? rostered.player.code : null),
   };
 }

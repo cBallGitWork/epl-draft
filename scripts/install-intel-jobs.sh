@@ -1,6 +1,6 @@
 #!/bin/bash
 # Installs the launchd jobs that run sync-intel.sh, London time: Tuesday 08:00 weekly; pressers Thursday 16:00 and
-# Friday 12:30, 16:00 for the conferences and 17:45 for the squads and depth the sister's 16:30 sweep leaves.
+# Friday 12:30, 16:00 for the conferences and 17:45 for the squads, depth and xMins the sister's 16:30 sweep leaves.
 # Each run executes origin/main's copy, so an update lands without reinstalling; a copy it cannot read is a banner.
 set -euo pipefail
 MAIN=${EPL_DRAFT:-$HOME/epl-draft-1}

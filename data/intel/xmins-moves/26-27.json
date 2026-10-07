@@ -1,0 +1,10 @@
+{
+  "manifest": {
+    "season": "26-27",
+    "gameweek": 6,
+    "exportedAt": "2026-10-07T17:10:26.900Z",
+    "rows": 0,
+    "sources": [{ "path": "data/intel/projections/26-27.json", "mtime": "2026-10-07T17:10:26.900960+00:00" }]
+  },
+  "updates": []
+}

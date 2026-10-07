@@ -6,7 +6,7 @@ import ViewToggle, { type View } from "../../../components/league/ViewToggle";
 import { positionsLabel } from "../../../positions";
 import Eleven from "./Eleven";
 import type { ElevenLine } from "./Eleven";
-import SquadTable from "./SquadTable";
+import SquadTable, { type SquadMinutes } from "./SquadTable";
 import type { LeagueOpinion } from "../../leagueOpinions";
 import ListAndPitch from "@/app/components/league/ListAndPitch";
 
@@ -16,6 +16,7 @@ import ListAndPitch from "@/app/components/league/ListAndPitch";
 export default function Squad({
   players,
   league,
+  minutes,
   club,
   eleven,
   formation,
@@ -24,6 +25,8 @@ export default function Squad({
 }: {
   players: readonly FootballPlayer[];
   league: ReadonlyMap<number, LeagueOpinion>;
+  /** One gameweek's xMins by FPL code, or null when the export does not cover the club's next week. */
+  minutes: SquadMinutes | null;
   club: Club;
   /** The predicted eleven in its lines, or empty when there is no prediction —
    *  which is an ordinary state, not a fault: the export runs by hand. */
@@ -50,7 +53,7 @@ export default function Squad({
   ) : null;
 
   const list = (
-    <SquadTable players={players} league={league} />
+    <SquadTable players={players} league={league} minutes={minutes} />
   );
 
   return (

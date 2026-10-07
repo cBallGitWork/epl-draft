@@ -16,6 +16,7 @@ import DialogHead from "../shell/DialogHead";
 import Modal from "../shell/Modal";
 import Breakdown from "./Breakdown";
 import FullMatchStats from "./FullMatchStats";
+import MinutesRun from "./MinutesRun";
 import PlayerIdentity from "./PlayerIdentity";
 import Note from "./Note";
 import { playerHref } from "../../players/routes";
@@ -25,7 +26,7 @@ import { LABEL, QUIET_FIGURE } from "@/app/desk";
 // What a player is scoring, and why: Fantrax's breakdown at his slot, then what he did under its own heading.
 
 export default function LivePlayerCard({
-  player: { rostered, club, opposition, points },
+  player: { rostered, club, opposition, points, minutes },
   breakdown,
   reserve,
   story,
@@ -76,6 +77,8 @@ export default function LivePlayerCard({
             ) : null}
           </>
         ) : null}
+
+        <MinutesRun weeks={minutes} />
 
         {story ? <Story story={story} /> : null}
 

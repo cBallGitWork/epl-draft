@@ -8,7 +8,7 @@ import type {
   RosteredTeam,
   SquadDetailLine,
 } from "@epl/core";
-import { lineupDetail, squadDetail, squadUnarranged } from "@epl/core";
+import { NO_MINUTES, lineupDetail, squadDetail, squadUnarranged } from "@epl/core";
 import { widestLine } from "../../../components/league/PitchRows";
 import BackPlate from "../../../components/shell/BackPlate";
 import Caption from "../../../components/shell/Caption";
@@ -122,7 +122,7 @@ export function arrangeBoth({
       const roster = rostered.get(team.teamId);
       if (roster === undefined || !shows(team)) return [];
       const points = scored.get(team.teamId)?.points ?? null;
-      return [[team.teamId, lineupDetail(roster, clubs, opposition, points)] as const];
+      return [[team.teamId, lineupDetail(roster, clubs, opposition, points, NO_MINUTES)] as const];
     }),
   );
   const widest = Math.max(
@@ -148,7 +148,7 @@ export function unplayedLists({
     [pairing.team, pairing.opponent].flatMap((team) => {
       const roster = rostered.get(team.teamId);
       if (roster === undefined) return [];
-      return [[team.teamId, squadDetail(squadUnarranged(roster), clubs, opposition, null)] as const];
+      return [[team.teamId, squadDetail(squadUnarranged(roster), clubs, opposition, null, NO_MINUTES)] as const];
     }),
   );
 }

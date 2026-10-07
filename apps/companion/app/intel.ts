@@ -14,6 +14,10 @@ import type {
   IntelStrength,
   IntelTouches,
   IntelXi,
+  IntelProjections,
+  IntelMinuteMoves,
+  ExpectedMinutes,
+  MinutesUpdate,
   ClubDepth,
   ClubStrength,
   Floors,
@@ -25,7 +29,7 @@ import type {
   Shot,
   TouchPlayer,
 } from "@epl/core";
-import { careerIntel, cupIntel, depthIntel, leagueProjectionIntel, lineIntel, matchIntel, playedFloor, shotIntel, squadIntel, statIntel, strengthIntel, touchIntel } from "@epl/core";
+import { careerIntel, cupIntel, depthIntel, leagueProjectionIntel, lineIntel, matchIntel, minuteMovesIntel, minutesIntel, playedFloor, shotIntel, squadIntel, statIntel, strengthIntel, touchIntel } from "@epl/core";
 import squadsFile from "../../../data/intel/squads/26-27.json";
 import xiFile from "../../../data/intel/xi/26-27.json";
 import piecesFile from "../../../data/intel/set-pieces/26-27.json";
@@ -34,6 +38,8 @@ import touchesFile from "../../../data/intel/touches/26-27.json";
 import shotsFile from "../../../data/intel/shots/26-27.json";
 import strengthFile from "../../../data/intel/strength/26-27.json";
 import leagueProjectionsFile from "../../../data/intel/league-projections/26-27.json";
+import projectionsFile from "../../../data/intel/projections/26-27.json";
+import minuteMovesFile from "../../../data/intel/xmins-moves/26-27.json";
 import careersFile from "../../../data/intel/careers/26-27.json";
 import cupsFile from "../../../data/intel/cups/26-27.json";
 import depthFile from "../../../data/intel/depth/26-27.json";
@@ -83,6 +89,12 @@ export const intelStrength: Map<number, ClubStrength> = strengthIntel(strengthFi
 export const intelLeagueProjections: Map<number, LeagueProjection> = leagueProjectionIntel(
   leagueProjectionsFile as unknown as LeagueProjectionFile,
 );
+
+/** The sister model's xMins by FPL code and gameweek, its minutes only (`minutesIntel`); the manifest names its first week. */
+export const intelMinutes: Map<number, ExpectedMinutes[]> = minutesIntel(projectionsFile as unknown as IntelProjections);
+export const intelMinutesManifest = (projectionsFile as unknown as IntelProjections).manifest;
+/** What each xMins export moved past the bar, oldest first (`npm run xmins-moves`): the scout's letters. */
+export const intelMinuteMoves: MinutesUpdate[] = minuteMovesIntel(minuteMovesFile as unknown as IntelMinuteMoves);
 
 /** The club each man was at in each season the sister's identity store holds, by FPL code. */
 export const intelCareers: Map<number, Map<string, string>> = careerIntel(careersFile as unknown as IntelCareers);

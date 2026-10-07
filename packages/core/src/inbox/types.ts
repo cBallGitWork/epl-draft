@@ -1,7 +1,7 @@
 import type { DoubtBand } from "../football/playerState";
 
-// The manager's inbox, CM's news screen: what happened in our league, newest first. It reports, never advises,
-// and makes no read of its own. Not `news/`, which is the BBC wire with its own `NewsItem`.
+// The manager's inbox, CM's news screen: what happened in our league, newest first. It reports, never advises; its one
+// read of its own is the scout's xMins (Craig, 7 Oct 2026). Not `news/`, which is the BBC wire with its own `NewsItem`.
 
 /** CM's own tabs in the game's words, less "All", which is no filter rather than a category. */
 export type InboxCategory = "message" | "competition" | "injury";

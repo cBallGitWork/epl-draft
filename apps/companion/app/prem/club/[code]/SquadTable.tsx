@@ -14,14 +14,23 @@ import { BOARD, DESK_ONLY, FIGURE, ROW_NAME, ROW_HOVER } from "@/app/desk";
 // Every man on the club's books, ordered by the position our league files him at (Craig, 3 Sep 2026).
 // The owner column is a name, never a figure: FPL's counts may not stand beside a Fantrax figure.
 
+/** The model's xMins for one gameweek, by FPL code. */
+export interface SquadMinutes {
+  gameweek: number;
+  byCode: ReadonlyMap<number, number | null>;
+}
+
 export default function SquadTable({
   players,
   league,
+  minutes,
 }: {
   /** Already ordered by the page. This draws; it does not rank. */
   players: readonly FootballPlayer[];
   /** Our league's opinion by FPL code, empty when Fantrax would not say. */
   league: ReadonlyMap<number, LeagueOpinion>;
+  /** Null drops the column. */
+  minutes: SquadMinutes | null;
 }) {
   return (
     <ScrollBoard>
@@ -42,6 +51,11 @@ export default function SquadTable({
             <Head width="w-12 lg:w-20" title="Minutes played">
               <span className={PLATE}>Min</span>
             </Head>
+            {minutes === null ? null : (
+              <Head width="w-12 lg:w-20" title={`Expected minutes in gameweek ${minutes.gameweek}, by our model`}>
+                <span className={PLATE}>xMins</span>
+              </Head>
+            )}
             <Head width="hidden w-9 lg:table-cell lg:w-16" title="Starts">
               <span className={PLATE}>St</span>
             </Head>
@@ -78,6 +92,10 @@ export default function SquadTable({
                   <span className="block truncate">{owner(opinion) ?? DASH}</span>
                 </td>
                 <td className={`${FIGURE} text-ink`}>{player.season.minutes}</td>
+                {/* Ours, so the derived reading's cyan beside FPL's minutes in ink. */}
+                {minutes === null ? null : (
+                  <td className={`${FIGURE} text-info`}>{minutes.byCode.get(player.code) ?? DASH}</td>
+                )}
                 <td className={`${FIGURE} ${DESK_ONLY} text-ink`}>
                   {player.season.starts}
                 </td>

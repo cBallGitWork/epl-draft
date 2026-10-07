@@ -3,5 +3,7 @@ export { availabilityNews } from "./doubts";
 export { blockNews } from "./block";
 export { inboxItems, roundNews } from "./items";
 export { dealNews } from "./messages";
+export { minutesNews } from "./minutes";
+export type { MinutesSide } from "./minutes";
 export { noteBesideChance } from "./notes";
 export { fantraxDay, fantraxTime } from "./when";

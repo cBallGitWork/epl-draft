@@ -32,7 +32,7 @@ export default async function TeamPage({
 }) {
   // `slug` is what the URL says: `me` on the front door (`squad/routes.ts`).
   const [{ teamId: slug }, { gw }] = await Promise.all([params, searchParams]);
-  const { team, mine, planning, open, standing, weeks, benchRanks, eligibility, clubs, opposition, live, news, points, board, pending, squadIds } = await squadView(slug, gw);
+  const { team, mine, planning, open, standing, weeks, benchRanks, eligibility, clubs, opposition, live, news, points, board, pending, squadIds, minutes } = await squadView(slug, gw);
   // Fantrax's period selector, on every branch: an earlier week shows its scores, a later one its opponents.
   const picker =
     weeks === null ? null : (
@@ -55,7 +55,7 @@ export default async function TeamPage({
           team={team}
           // The whole squad's detail, flat and with points: the planner rearranges it in the browser.
           details={team.players.map((rostered) =>
-            playerDetail(rostered, clubs, opposition, points),
+            playerDetail(rostered, clubs, opposition, points, minutes),
           )}
           // His fifteen's eligibility, not the pool's: this crosses to the browser.
           players={planning.players.filter((p) => squadIds.has(p.fantraxId))}
@@ -84,7 +84,7 @@ export default async function TeamPage({
       ) : (
         /* An eleven nobody may change here: a rival's once locked, or your own in any week but the open one. */
         <Sheet
-          {...lineupDetail(team, clubs, opposition, points)}
+          {...lineupDetail(team, clubs, opposition, points, minutes)}
           breakdown={live?.breakdown ?? {}}
           news={news}
           pending={pending}

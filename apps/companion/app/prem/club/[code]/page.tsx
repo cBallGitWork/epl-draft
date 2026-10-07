@@ -18,6 +18,7 @@ import { intelSquads, intelXi } from "../../../intel";
 import { PANEL } from "@/app/desk";
 import { clubOr404, standing } from "./club";
 import { leagueOpinions } from "../../leagueOpinions";
+import { weekMinutes } from "../../../xmins";
 
 // One club's squad, the screen every club name in this section links to.
 // FPL's `squad_number` is null on every element, so there is no shirt number to sort by.
@@ -54,6 +55,10 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
       : `v ${next.club.shortName}` +
         (next.fixture.kickoff === null ? "" : ` · ${londonDayAndDate(next.fixture.kickoff)}`);
 
+  // xMins for the club's next match week, not the round in view.
+  const gameweek = next?.fixture.gameweek ?? null;
+  const minutes = weekMinutes(gameweek, squad.map((player) => player.code));
+
   // Scout's latest eleven, always drawn with when it was updated (Craig, 23 Sep 2026).
   // `xiFault` refuses only a broken one: a pitch with ten men on it is the failure nobody notices.
   const predicted = intelXi.clubs[club.shortName];
@@ -70,6 +75,7 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
             <Squad
               players={squad}
               league={league}
+              minutes={gameweek === null || minutes === null ? null : { gameweek, byCode: minutes }}
               club={club}
               eleven={eleven}
               formation={predicted?.formation ?? null}
