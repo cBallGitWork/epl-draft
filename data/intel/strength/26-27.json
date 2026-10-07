@@ -2,12 +2,12 @@
  "manifest": {
   "season": "26-27",
   "gameweek": null,
-  "exportedAt": "2026-10-05T20:53:23.479945+00:00",
+  "exportedAt": "2026-10-07T13:03:21.036889+00:00",
   "rows": 20,
   "sources": [
    {
     "path": "data/derived/team_strength/season=26-27/team_strength.parquet",
-    "mtime": "2026-09-27T17:20:25.065579+00:00"
+    "mtime": "2026-10-07T07:18:27.260370+00:00"
    }
   ],
   "fpl": "https://fantasy.premierleague.com/api/bootstrap-static/"
@@ -33,12 +33,12 @@
    "code": 7,
    "shortName": "AVL",
    "attack": {
-    "home": 0.9363,
-    "away": 0.938
+    "home": 0.9646,
+    "away": 0.9663
    },
    "defence": {
-    "home": 0.9141,
-    "away": 0.9127
+    "home": 0.9353,
+    "away": 0.9339
    },
    "games": {
     "home": 2,
@@ -49,12 +49,12 @@
    "code": 36,
    "shortName": "BHA",
    "attack": {
-    "home": 1.2396,
-    "away": 1.2347
+    "home": 1.2537,
+    "away": 1.2488
    },
    "defence": {
-    "home": 1.0751,
-    "away": 1.0731
+    "home": 1.0854,
+    "away": 1.0834
    },
    "games": {
     "home": 3,
@@ -81,12 +81,12 @@
    "code": 94,
    "shortName": "BRE",
    "attack": {
-    "home": 1.1416,
-    "away": 1.1376
+    "home": 1.1557,
+    "away": 1.1517
    },
    "defence": {
-    "home": 1.0847,
-    "away": 1.0779
+    "home": 1.0969,
+    "away": 1.0899
    },
    "games": {
     "home": 3,
@@ -97,12 +97,12 @@
    "code": 8,
    "shortName": "CHE",
    "attack": {
-    "home": 1.2569,
-    "away": 1.2498
+    "home": 1.271,
+    "away": 1.2639
    },
    "defence": {
-    "home": 1.0223,
-    "away": 1.0196
+    "home": 1.0309,
+    "away": 1.0282
    },
    "games": {
     "home": 2,
@@ -209,12 +209,12 @@
    "code": 2,
    "shortName": "LEE",
    "attack": {
-    "home": 1.0429,
-    "away": 1.0414
+    "home": 1.057,
+    "away": 1.0555
    },
    "defence": {
-    "home": 1.061,
-    "away": 1.0606
+    "home": 1.0735,
+    "away": 1.0731
    },
    "games": {
     "home": 3,
@@ -241,12 +241,12 @@
    "code": 43,
    "shortName": "MCI",
    "attack": {
-    "home": 1.4095,
-    "away": 1.4063
+    "home": 1.2683,
+    "away": 1.2651
    },
    "defence": {
-    "home": 1.1498,
-    "away": 1.1595
+    "home": 1.0208,
+    "away": 1.0284
    },
    "games": {
     "home": 3,
@@ -257,12 +257,12 @@
    "code": 1,
    "shortName": "MUN",
    "attack": {
-    "home": 1.2716,
-    "away": 1.2614
+    "home": 1.2857,
+    "away": 1.2755
    },
    "defence": {
-    "home": 1.1303,
-    "away": 1.1311
+    "home": 1.1426,
+    "away": 1.1434
    },
    "games": {
     "home": 2,
@@ -273,12 +273,12 @@
    "code": 4,
    "shortName": "NEW",
    "attack": {
-    "home": 0.9359,
-    "away": 0.9346
+    "home": 0.9641,
+    "away": 0.9629
    },
    "defence": {
-    "home": 0.949,
-    "away": 0.949
+    "home": 0.9765,
+    "away": 0.9764
    },
    "games": {
     "home": 3,
