@@ -5,7 +5,7 @@ import ColumnistPhoto from "./ColumnistPhoto";
 import { columnistOf } from "@/app/config";
 import Paragraphs from "./Paragraphs";
 import Dateline from "./Dateline";
-import { DASH } from "@epl/core";
+import { named } from "./named";
 
 // The written lead, as filed.
 //
@@ -37,7 +37,7 @@ export default function Written({
    *  picture rather than a wrong one. */
   clubs?: Map<number, Club>;
 }) {
-  const named = new Map(teams.map((team) => [team.teamId, team.name]));
+  const nameOf = named(teams);
   const columnist = columnistOf(story);
 
   // **A standfirst is not columnised.** `paper-columns` takes a measure rather
@@ -127,7 +127,7 @@ export default function Written({
 
       {story.kind === "predictions" && story.ties !== undefined && story.ties.length > 0 ? (
         <div className="pt-4">
-          <Calls ties={story.ties} record={story.extras?.record} named={(teamId) => named.get(teamId) ?? DASH} clubs={clubs} />
+          <Calls ties={story.ties} record={story.extras?.record} named={nameOf} clubs={clubs} />
         </div>
       ) : null}
     </section>

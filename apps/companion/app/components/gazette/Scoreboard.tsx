@@ -4,6 +4,7 @@ import { yoursFirst, yoursInk } from "../../mine";
 import Changed from "../shell/Changed";
 import ScoreFigure from "../league/ScoreFigure";
 import { matchupHref } from "@/app/league/routes";
+import { LIVE } from "../shell/sections";
 
 // The round, reduced to a band — except for the one number docs/rules/PRODUCT.md will not
 // let shrink.
@@ -184,7 +185,7 @@ function Tie({
 
   return (
     <Link
-      href={involved && mine !== null ? matchupHref(mine) : "/matchday"}
+      href={involved && mine !== null ? matchupHref(mine) : LIVE}
       className="flex min-h-11 shrink-0 snap-start flex-col justify-center gap-0.5 border-l border-line px-3 py-1.5 text-xs"
     >
       <SideLine name={pairing.home.name} yours={pairing.home.teamId === mine} points={home} other={away} />
