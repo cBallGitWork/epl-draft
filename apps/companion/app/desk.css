@@ -201,6 +201,32 @@ select.cm-bevel {
   }
 }
 
+/* Pull to refresh (shell/PullToRefresh): a plate that comes down from the top with the finger, its arrow turning,
+   and turning on its own until the reloaded page replaces it. Over both registers, below the safe area. */
+.cm-pull {
+  position: fixed;
+  z-index: 60;
+  top: env(safe-area-inset-top, 0px);
+  left: 50%;
+  translate: -50% calc(var(--pull) - 100%);
+  pointer-events: none;
+}
+.cm-pull svg {
+  rotate: var(--turn);
+}
+.cm-pull[data-refreshing] svg {
+  animation: pull-turn 800ms linear infinite;
+}
+@keyframes pull-turn {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cm-pull[data-refreshing] svg {
+    animation: none;
+  }
+}
+
 /* A square in the fly-out: the rail's navy as a bevelled plate, and the accent on the one you are in. */
 .cm-bevel.cm-rail-plate {
   --cm-face: color-mix(in oklch, var(--color-chrome), var(--color-bg) 62%);

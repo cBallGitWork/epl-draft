@@ -348,7 +348,9 @@ They arrive for two jobs: the seven events that change a match, on the Match
 Report (Craig, 10 Sep 2026: *"maybe we add icons too where appropiate"*), and the
 thumb rail's tabs (Craig, 23 Sep 2026: *"Icons are normally standard"*), because a
 phone is not an 800×600 artefact and its navigation follows the phone's convention.
-The desk rail stays words only. The rules are what keep them from becoming a set:
+The desk rail stays words only. Pull to refresh, in the installed app only (Craig, 7 Oct 2026), is the third:
+the glyph and its words on a plate that comes down from the top raised, and is pressed once letting go reloads.
+The rules are what keep them from becoming a set:
 
 - **Inline monochrome SVG, and never emoji.** An emoji carries its own colour and
   the reader's operating system's house style, which hands a palette where every

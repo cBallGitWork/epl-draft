@@ -7,6 +7,7 @@ import Glyph from "./components/shell/glyphs";
 import LiveFigure from "./components/shell/LiveFigure";
 import LiveNow from "./components/shell/LiveNow";
 import PhotoGround from "./components/football/PhotoGround";
+import PullToRefresh from "./components/shell/PullToRefresh";
 import Rail from "./components/shell/Rail";
 import ReplayStrip from "./components/shell/ReplayStrip";
 import UnreadBadge from "./components/shell/UnreadBadge";
@@ -86,6 +87,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {/* One poller for the whole app. The server says how far off live football is and the client counts
               down (`cadence.ts`). Live means the round is under way, never only that a ball is in the air. */}
           <AutoRefresh liveIn={live} />
+          {/* The same fresh render on demand, by pulling down from the top, in the home-screen app only. */}
+          <PullToRefresh />
           <ReplayStrip />
           {/* In the content column, so the strip does not start under the rail; suspended so a slow
               league read holds up no page, and drawn as nothing while it waits. */}

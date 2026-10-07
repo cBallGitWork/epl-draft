@@ -82,6 +82,16 @@ export const POLL = {
   idle: 300,
 } as const;
 
+/** Pull to refresh in the installed app (`shell/PullToRefresh`), in CSS px: the plate refreshes on letting go from
+ *  `arm` (144px of finger at half speed), and a drag is a pull once 10px in and at least 1.5 times steeper than wide. */
+export const PULL = {
+  arm: 72,
+  max: 112,
+  damp: 0.5,
+  intent: 10,
+  steep: 1.5,
+} as const;
+
 /** How long the season's Fantrax code stays good, in seconds: it changes once a year. */
 export const SEASON_CODE_LIFE = 60 * 60 * 6;
 
