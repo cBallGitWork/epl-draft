@@ -4828,6 +4828,10 @@ at most, summed over every man each team holds now (`join/squadStats.ts`).
 
 ## Questions
 
+- **Does `router.refresh()` ever land on the front page?** Measured 7 Oct 2026, production and a local build alike: a
+  refresh of `/` gets its 200 at ~0.1s, then the stream is aborted at ~0.3s and the transition never settles, while
+  `/league` and `/players` settle in 0.05–0.11s. `AutoRefresh` is that same call every 30s live, so the front page's
+  live facts may not be updating in place. Pull to refresh reloads instead, so it does not depend on the answer.
 - **Should a match page degrade rather than 500 when an upstream fetch fails?** The first cold fetch of an old
   match in London 500'd once on 7 Oct (the lhr1 section above).
 - **Does `?period=N` serve history once a period has completed?** Answered for

@@ -71,6 +71,12 @@ const GLYPHS = {
       <path d="M3 5L12 12L21 5" />
     </>
   ),
+  refresh: (
+    <>
+      <path d="M20 12A8 8 0 1 1 17.66 6.34" />
+      <path d="M20 3V8H15" />
+    </>
+  ),
   more: (
     <>
       <Cell x={3} y={10} />
