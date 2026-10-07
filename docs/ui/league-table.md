@@ -32,8 +32,8 @@ screen without a sideways scroll — the rule being that a table whose last colu
 is what the table is FOR shows it under a thumb, and a many-measure stats board
 is the shape that scrolls instead. `For` stays: points-for is a head-to-head
 league's tiebreak, so it is a column a reader compares rather than one he audits.
-The visibility rides in each column's `width` string, so the heads, the rows and
-the loading skeleton all read it from one place.
+The visibility rides in each column's `width` string, so the heads and the rows
+read it from one place.
 
 **And the phone reads `Pts` straight after `Pld`, under the team's short name**
 (Craig, 6 Oct 2026: *"teams should use shortened names, and put PTS after PLD on

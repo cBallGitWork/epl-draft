@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { GROUPS, type GroupKey } from "@epl/core";
 import { TAB } from "@/app/desk";
+import Pending from "../shell/Pending";
 
 // CM's second foot row: the stat groups, as a row of blue plates under a board.
 // Navigation, so `TAB` blue rather than a grey button plate; it wraps rather than run off a narrow phone.
@@ -28,6 +29,7 @@ export default function GroupNav({
           {/* The short words keep five plates on one row at 390. */}
           <span className="lg:hidden">{entry.short}</span>
           <span className="max-lg:hidden">{entry.label}</span>
+          <Pending />
         </Link>
       ))}
     </nav>

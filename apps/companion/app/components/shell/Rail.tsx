@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import Pending from "./Pending";
 import ThumbRail from "./ThumbRail";
 import { CREDITS, owns, sectionsFor } from "./sections";
 import { SMALL_CAPS } from "@/app/desk";
@@ -70,11 +71,15 @@ export default function Rail({
                   href={section.href}
                   aria-current={here ? "page" : undefined}
                   // No letterspacing: the rail's labels have no room to spare.
+                  // A tapped section is marked as the one you are on while its page is on the way (`Pending`).
                   className={`flex min-h-14 items-center justify-center border px-1 text-center font-chrome ${SMALL_CAPS} hover:bg-surface ${
-                    here ? "border-accent border-l-2 text-accent" : "border-chrome text-ink"
+                    here
+                      ? "border-accent border-l-2 text-accent"
+                      : "border-chrome text-ink has-[>[data-pending]]:border-l-2 has-[>[data-pending]]:border-accent has-[>[data-pending]]:text-accent"
                   }`}
                 >
                   {section.label}
+                  <Pending />
                 </Link>
               </li>
             );

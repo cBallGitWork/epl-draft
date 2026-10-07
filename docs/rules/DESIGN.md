@@ -147,6 +147,11 @@ safe for exactly as long as that one is the whole of the list.
 | **Pressed** | `cm-bevel-pressed` | the same thing, held down: the sorted column, the view you are on |
 | **Sunken** | `cm-panel` | a well cut into the chrome — a panel, and a text field, which is a panel one line tall |
 
+**A tapped plate is held down until its page lands, and no route draws a loading frame** (Craig, 7 Oct 2026:
+*"loading empty tables first … looks terrible"*). The old page stays up meanwhile; `shell/Pending` marks the
+tap, a bevelled plate draws it Pressed, and a thumb-rail tab takes the accent at once while the one being left
+lets go. A slow block inside a page still streams behind its own `<Suspense>`.
+
 **A fourth surface, and it is the one a reader counts down: the INDEX BLOCK.**
 `cm-index`, the filled blue chip down the left of every table CM draws, carrying
 the rank, the shirt number, or on a squad list our league's position
@@ -215,8 +220,8 @@ is copied to the top of the screen once the real one scrolls away (`stickyHead.t
 scroller can only stick to the scroller, and "which column was G again?" is the question at 15:50.
 
 The columns that stand down are named in each table's own `COLUMNS` list, in the
-same `width` string that sizes them, so the heads, the rows and the loading
-skeleton read one source. **A column the table is ORDERED by is never hidden**:
+same `width` string that sizes them, so the heads and the rows read one
+source. **A column the table is ORDERED by is never hidden**:
 `display: none` takes the pressed plate, the sort arrow and `aria-sort` out with
 it, so a phone arriving on a shared `?sort=` link would show an order with no
 visible author and nothing in the accessibility tree to say what it was.
@@ -231,7 +236,7 @@ strip is a ruler over the FIGURES. The cells stay, because they hold the columns
 open, and so does the word: `TableHeads.MUTE` takes it to `sr-only` rather than
 deleting it, because an empty `<th scope="col">` announces every cell under it
 with no header, and on a sortable placing that same word is the accessible name
-of a link. **Ten tables and one loading skeleton, one rule**, counted 10 Sep
+of a link. **Ten tables, one rule**, counted 10 Sep
 2026 — `/league`, `/prem`, both Team Stats boards, the club squad list, the club
 and squad stat boards, the season grid, a match's player stats and the pool. A
 plate drawn empty on a stat board is this decision, not an oversight.
@@ -319,7 +324,7 @@ his signings, his doubts, his round — and a bar reading the competition made i
 the league's noticeboard rather than his post. So `/news` heads the bar
 `123 News` and draws no caption, because "News" under a bar that already ends in
 the word is the two boxes saying one thing twice. A reader with no team gets the
-plain word, which is also what the loading frame shows.
+plain word.
 
 **And a caption is never a literal at a call site.** `app/titles.ts` holds them
 all, keyed on the section a shell already knows it is, so `LeagueShell` and

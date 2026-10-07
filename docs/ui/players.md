@@ -428,4 +428,4 @@ where six named plates go, no `Filter` at all, and a round portrait where the
 crest now sits. It reads off `POOL_GROUPS` and the shared recipes now, so it
 cannot drift again. Its plates are deliberately inert: `loading.tsx` is given no
 search params, and a link built from an empty query would drop a reader's filters
-if he tapped one while waiting.
+if he tapped one while waiting. *It went on 7 Oct 2026 with every loading frame (DESIGN §2).*

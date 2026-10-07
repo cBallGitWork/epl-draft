@@ -3,7 +3,7 @@ import { tableHref } from "./sort";
 import { Head, HeadRow, NameHead, PLATE, SortHead, sortedAs } from "../components/league/TableHeads";
 import { TEXT, standDown } from "@/app/desk";
 
-// The table's column heads, shared by the page and its skeleton so the two cannot drift.
+// The table's column heads, shared by the page and its rows (`ClubRow`) so the two cannot drift.
 
 type Column = {
   key: TableSortKey | "club" | "form";

@@ -54,8 +54,8 @@ reproduction in the app and sets most of its decisions:
   in a 346px wrapper was clipping `PTS`, which is the column the table is FOR.
   `GD` stays — it is the competition's own first tiebreak, and the two numbers it
   is made of are the pair a phone can spare. The visibility rides in each
-  column's `width` string in `prem/Columns.tsx`, so the heads, the rows and the
-  loading skeleton read it from one place.
+  column's `width` string in `prem/Columns.tsx`, so the heads and the rows read it
+  from one place.
 - **`For` and `Ag` are ink**, not amber: DESIGN §3's slot means a figure standing
   alone beside a name, never a column of a standings table.
 - **A dashed rule under the cut**, in yellow.
@@ -339,7 +339,7 @@ the same export that will fill the Pos column — one crossing, not two.
 | Fixtures | no match with this club | `TabEmpty`, and the tab greys |
 | Stats | FPL lists nobody | `TabEmpty`, and the tab greys |
 | `/prem/match/[id]` | id is not an integer, or names no fixture | `notFound()` — its own states are in [match.md](match.md) |
-| Any club tab | still loading | its own skeleton — **not** `/prem`'s league table |
+| Any club tab | still loading | the tab held pressed over the page you were on (DESIGN §2) |
 
 Keyed on FPL's **season-stable club code**, never `clubId`: a URL is persisted
 the moment somebody shares it, and FPL's per-season ids are recycled
@@ -353,7 +353,8 @@ router — and the reason is `loading.tsx`: Next applies a segment's loading fil
 to everything beneath it, so a league-table skeleton at `/prem` was streamed in
 front of every club page. Measured on 3 Sep 2026 before the move: the wrong
 skeleton at byte 7,980 of `/prem/club/3/stats`, the club's own at 8,655. A group
-is the only way to scope a loading boundary to the routes it describes.
+is the only way to scope a loading boundary to the routes it describes. No route
+has one since 7 Oct 2026, so the group now only groups.
 
 ## What is deliberately absent
 

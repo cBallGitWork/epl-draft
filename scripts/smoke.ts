@@ -9,6 +9,7 @@ import {
   mapTeamRosters,
 } from "@epl/core";
 import { walkLeague, type WalkLeague } from "./smoke/league";
+import { PROJECTIONS, PROJECTIONS_SHOWN } from "../apps/companion/app/players/routes";
 
 // Walks every route against the league the server is serving, asserting the empty states for a
 // league with no teams and their absence once somebody holds a player (a drafted league once rendered
@@ -41,7 +42,8 @@ const ROUTES = [
   "/players/teams",
   "/players/planner",
   "/players/planner?view=defence",
-  "/players/projections",
+  // Walked only while shown: switched off, it is a true 404.
+  ...(PROJECTIONS_SHOWN ? [PROJECTIONS] : []),
   "/matchday",
   "/matchday/desk",
   "/prem",

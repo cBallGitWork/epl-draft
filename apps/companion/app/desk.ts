@@ -78,7 +78,7 @@ export const PINNED_BESIDE_TILE = `${PINNED_NAME} left-10 lg:left-14`;
 /** `PINNED_NAME` starting where a pinned index block ends; the offsets are `INDEX_WIDTH`'s widths. */
 export const PINNED_BESIDE_INDEX = `${PINNED_NAME} left-8 lg:left-9`;
 
-/** A gameweek view's header row and title; its loading skeletons share them, or the page jumps when it lands. */
+/** A gameweek view's header row and title. */
 export const GAMEWEEK_HEAD = "flex items-baseline justify-between gap-3 pt-1";
 export const GAMEWEEK_TITLE = "text-xl font-bold tracking-tight";
 

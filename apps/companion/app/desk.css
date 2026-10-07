@@ -62,7 +62,7 @@ select.cm-bevel {
   text-shadow: 0.06em 0.06em 0.07em rgb(0 0 0 / 0.45);
 }
 
-/* A tab is 44px under a thumb; set on the plate so a strip's tabs, and the loading skeleton, agree. */
+/* A tab is 44px under a thumb; set on the plate so every strip's tabs agree. */
 .cm-tab {
   min-height: 2.75rem;
 }
@@ -111,6 +111,18 @@ select.cm-bevel {
   border-color: var(--color-accent);
 }
 
+/* A tapped plate whose page is still on its way (shell/Pending), held down until it lands: no route draws a
+   loading frame, so the old page stays up meanwhile. Pressed, as `.cm-bevel-pressed` swaps the edges. */
+.cm-tab:not([aria-current="page"]):has(> [data-pending]),
+.cm-rail-plate:not([aria-current="page"]):has(> [data-pending]) {
+  border-color: var(--cm-dark) var(--cm-light) var(--cm-light) var(--cm-dark);
+}
+@media (width < 64rem) {
+  .cm-tab:not([aria-current="page"], .cm-tab-compact):has(> [data-pending]) {
+    box-shadow: inset 2px 2px 0 var(--cm-dark), inset -2px -2px 0 var(--cm-light);
+  }
+}
+
 /* The phone's thumb rail: CM's rail laid along the foot (DESIGN §2). Opaque navy lit one step at its
    edge, the rail's boundary rule turned to the top, and the safe-area inset inside the same ground. */
 .cm-thumbrail {
@@ -129,11 +141,18 @@ select.cm-bevel {
   --cm-rail-edge: color-mix(in oklch, var(--color-chrome), white 20%);
 }
 
-/* The tab you are on: glyph and word in the accent, and the rail's accent edge, 32px, on its top. */
-.cm-thumbrail > [aria-current="page"] {
+/* The tab you are on: glyph and word in the accent, and the rail's accent edge, 32px, on its top. A tapped tab
+   whose page is on its way (shell/Pending) is drawn so at once, and the tab being left lets go. */
+.cm-thumbrail > :is([aria-current="page"], :has(> [data-pending])) {
   color: var(--color-accent);
 }
-.cm-thumbrail > [aria-current="page"]::before {
+.cm-thumbrail:has([data-pending]) > [aria-current="page"]:not(:has(> [data-pending])) {
+  color: inherit;
+}
+.cm-thumbrail:has([data-pending]) > [aria-current="page"]:not(:has(> [data-pending]))::before {
+  display: none;
+}
+.cm-thumbrail > :is([aria-current="page"], :has(> [data-pending]))::before {
   content: "";
   position: absolute;
   top: 0;

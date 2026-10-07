@@ -3,7 +3,7 @@ import { sortHref } from "./sort";
 import { Head, HeadRow, NameHead, PLATE, SortHead, sortedAs } from "../components/league/TableHeads";
 import { DESK_ONLY, TEXT, standDown } from "@/app/desk";
 
-// The table's column heads, shared by the page, its skeleton and the head-to-head: bevelled plates, the sorted one
+// The table's column heads, shared by the page and the head-to-head: bevelled plates, the sorted one
 // pressed, and no plate over the names (`cm9900/24.jpg`), which are not sortable.
 
 type Column = {
@@ -52,12 +52,12 @@ export function deskOnly(key: Column["key"], sort: SortKey): string {
 }
 
 /** The width class a column shows at: its copy's, else `deskOnly`'s. */
-export function shownAt(column: Column, sort: SortKey): string {
+function shownAt(column: Column, sort: SortKey): string {
   return column.copy === undefined ? deskOnly(column.key, sort) : COPY[column.copy];
 }
 
 /** A React key for a column, unique though Pts appears twice. */
-export function columnKey(column: Column): string {
+function columnKey(column: Column): string {
   return column.copy === undefined ? column.key : `${column.key}-${column.copy}`;
 }
 
