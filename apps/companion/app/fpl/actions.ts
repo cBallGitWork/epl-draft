@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { ENTRY_COOKIE, SEASON_IN_SECONDS } from "../config";
 import { claim } from "./claim";
 import { knownEntry } from "./entry";
@@ -16,10 +17,12 @@ export async function rememberEntry(_previous: string | null, form: FormData): P
     path: "/",
     maxAge: SEASON_IN_SECONDS,
   });
+  revalidatePath("/fpl");
   redirect("/fpl");
 }
 
 export async function forgetEntry(): Promise<void> {
   (await cookies()).delete(ENTRY_COOKIE);
+  revalidatePath("/fpl");
   redirect("/fpl");
 }

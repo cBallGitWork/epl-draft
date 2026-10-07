@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { SEASON_IN_SECONDS, TEAM_COOKIE, WRONG_CODE_DELAY_MS } from "../config";
 import { sign, teamForCode } from "../session";
 import { SQUAD } from "./routes";
@@ -35,10 +36,12 @@ export async function claimTeam(_previous: string | null, form: FormData): Promi
     maxAge: SEASON_IN_SECONDS,
   });
 
+  revalidatePath("/", "layout");
   redirect(SQUAD);
 }
 
 export async function forgetTeam(): Promise<void> {
   (await cookies()).delete(TEAM_COOKIE);
+  revalidatePath("/", "layout");
   redirect(SQUAD);
 }

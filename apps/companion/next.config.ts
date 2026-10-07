@@ -65,6 +65,11 @@ const nextConfig: NextConfig = {
 
   poweredByHeader: false,
 
+  // Keep a visited page on the phone for 30s, the server's own revalidate, so switching back is instant; live pages refresh themselves.
+  experimental: {
+    staleTimes: { dynamic: 30 },
+  },
+
   async headers() {
     return [
       {
