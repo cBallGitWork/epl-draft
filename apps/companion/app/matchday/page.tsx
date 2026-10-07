@@ -40,6 +40,7 @@ import { BetweenGameweeks, MatchupWaiting } from "./Between";
 import OutLink from "../components/shell/OutLink";
 import { LIVE } from "../components/shell/sections";
 import { clubPlaces } from "../prem/places";
+import { placings } from "../league/placings";
 
 // The live centre: your head-to-head first, the real football under it. The football half runs
 // off FPL's public API alone, so it works with no Fantrax, no draft and no credential.
@@ -104,10 +105,7 @@ export default async function MatchdayPage({
     leagueTable(),
   ]);
 
-  // Fantrax's own rank, by team id; empty blocks rather than a made-up order when it is silent.
-  const places = new Map(
-    "unavailable" in table ? [] : table.map((row) => [row.teamId, row.rank] as const),
-  );
+  const places = placings(table);
 
   // Every tie this week: the league's pairings and our cups (Craig, 5 Sep 2026).
   const ties: CompetitionTie[] =
