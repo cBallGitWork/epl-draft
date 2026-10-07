@@ -1,5 +1,5 @@
 #!/bin/bash
-# Installs the launchd jobs that run sync-intel.sh: Tuesday 08:00 weekly; Thursday 16:00 and Friday 12:30 pressers.
+# Installs the launchd jobs that run sync-intel.sh: Tuesday 08:00 weekly; Thursday 16:00, Friday 12:30 and 16:00 pressers.
 # Each run executes origin/main's copy of the script, so an update lands without reinstalling. London time.
 set -euo pipefail
 MAIN=${EPL_DRAFT:-$HOME/epl-draft-1}
@@ -34,4 +34,4 @@ PLIST
 at() { printf '<dict><key>Weekday</key><integer>%s</integer><key>Hour</key><integer>%s</integer><key>Minute</key><integer>%s</integer></dict>' "$1" "$2" "$3"; }
 
 job com.epl-draft.intel-weekly weekly "$(at 2 8 0)"
-job com.epl-draft.intel-pressers pressers "$(at 4 16 0)$(at 5 12 30)"
+job com.epl-draft.intel-pressers pressers "$(at 4 16 0)$(at 5 12 30)$(at 5 16 0)"
