@@ -4,19 +4,8 @@ import { LABEL, PANEL, ROW_RULE } from "@/app/desk";
 import { COLUMNISTS, DESK_GROUND_CREDIT } from "../config";
 import { venueCredits } from "../venues";
 
-// Who took the photographs behind the desk.
-//
-// **A page and not a README, because the licence is a condition of use rather
-// than a courtesy.** Every ground under `public/ground/clubs/` is somebody's
-// photograph under a Creative Commons licence that requires naming them and
-// linking the terms; a credit in a file nothing renders satisfies neither.
-// `football/grounds.ts` and `data/leagues/venues.json` carry the tables and this
-// prints them, so a picture added without an author is visible here rather than
-// silently uncredited.
-//
-// **A competition plate, not a club one.** It is the app talking about itself
-// rather than a screen about somebody, which is the distinction `PageHeader`'s
-// two bars draw — `cm9900/24.jpg` against `25.jpg`.
+// Who took the photographs: each Creative Commons licence requires the author and a link to the terms.
+// Prints `football/grounds.ts` and `data/leagues/venues.json`, so an uncredited picture shows here.
 
 /** A credit's outbound link. Twice in one row and nowhere else, so it is named
  *  here rather than in `desk.ts` — CODE_RULES §1 wants three call sites before a
@@ -59,14 +48,7 @@ export default function CreditsPage() {
               <span className="font-chrome text-sm font-bold text-ink">{place}</span>
               <span className={LABEL}>{photo.title}</span>
               <span className="text-xs text-muted">{photo.author}</span>
-              {/* **Two links, both required, and both laid out as controls.** CC
-                  BY and CC BY-SA each ask for a link to the material AND a link
-                  to the terms, so neither is decoration. They were inline words
-                  inside the credit line until `tapfit` measured them: forty
-                  `text-xs` anchors on one page, every one under the floor at
-                  both widths, which was the worst tap failure in the app. The
-                  heights are the desk's own — 44 under a thumb, 36 where it
-                  keeps its own proportions. */}
+              {/* Both links the licence requires, as controls at the tap floor. */}
               <div className="flex flex-wrap items-center gap-x-4">
                 <a
                   className={CREDIT_LINK}

@@ -2,11 +2,7 @@ import Link from "next/link";
 import { PAPER_NAME } from "../config";
 import { STANDING_HEAD } from "../components/gazette/heads";
 
-// A 404 inside the paper, set in the paper.
-//
-// It lives in the route group so it inherits `.paper` and the serifs: a story
-// whose slug has gone must not answer in desk chrome, which would tell a reader
-// the app broke rather than that the edition moved on.
+// A 404 inside the paper, set in the paper: a story whose slug has gone answers in newsprint, not desk chrome.
 
 export default function NotFound() {
   return (

@@ -52,11 +52,7 @@ export default function Picture({
   return <Scoreline result={lead.result} />;
 }
 
-/** A result, as the picture. Winner's total in the stock and the loser's dimmed
- *  to 3.9:1 — the same grammar the head-to-head boards use, at the size a front
- *  page gives the one score that mattered. Large text, so the 3:1 floor is the
- *  one that applies to the dimmed half; the names beside them are small and sit
- *  at 5.9:1. */
+/** A result as the picture: the loser's total dimmed to 3.9:1 (large text, so the 3:1 floor applies). */
 function Scoreline({ result }: { result: StoryResult }) {
   return (
     <Band>

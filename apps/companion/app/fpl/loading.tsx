@@ -3,16 +3,9 @@ import Section from "../components/shell/Section";
 import Skeleton from "../components/shell/Skeleton";
 import { LABEL } from "@/app/desk";
 
-// The other game, waiting on FPL.
-//
-// Drawn as the signed-in tab rather than as the entry form: reading the cookie
-// costs nothing and the form paints with it, so the only arrival this frame is
-// ever on screen for is the one that has an entry id and is fetching a side.
+// The FPL tab waiting on FPL, drawn as the side: the entry form never waits, so only a saved id sees this.
 
-/** The figures across the top, in their printed order. Their labels are this
- *  page's own chrome, not FPL's answer, so they are here rather than standing in
- *  as blocks — and they must match `page.tsx`'s own two, or the frame shows one
- *  more panel than the answer fills. */
+/** The figures across the top; must match `page.tsx`'s two, or the frame shows a panel the answer does not fill. */
 const FIGURES = ["This week", "Rank"];
 
 export default function Loading() {

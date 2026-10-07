@@ -13,12 +13,7 @@ import {
 import { ENTRY_COOKIE, PAGE_REVALIDATE } from "../config";
 import { footballNow } from "../football";
 
-// The other game. A manager's FPL side, read from the id in the URL they already
-// share — not a credential, so no sign-in and no secret.
-//
-// Stored in a plain unsigned cookie, unlike the team session: an entry id is
-// public, claiming somebody else's shows you their team on your own phone and
-// nothing more, and there is nothing here to authorize.
+// A manager's FPL side, from the public entry id in a plain unsigned cookie: claiming another's authorises nothing.
 
 export async function myEntryId(): Promise<number | null> {
   const raw = (await cookies()).get(ENTRY_COOKIE)?.value;

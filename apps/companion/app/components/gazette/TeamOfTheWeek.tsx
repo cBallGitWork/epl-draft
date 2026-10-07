@@ -12,17 +12,9 @@ export default function TeamOfTheWeek({
 }: {
   eleven: Eleven;
   mine: string | null;
-  /** Whether the round is still being played. Said in the heading rather than
-   *  left to the reader: an eleven picked from four fixtures of ten is not the
-   *  week's, and on a Saturday tea-time it fills its forward line with men who
-   *  have done nothing simply because every good forward is still to kick off. */
+  /** The gameweek is still being played, which the heading says: an eleven from four fixtures is not the week's. */
   partial: boolean;
-  /** Whether the arrangement these picks were read from is the one that was
-   *  actually fielded in the round they report on. False between rounds, once
-   *  Fantrax has rolled `getTeamRosters` forward to the period managers are now
-   *  editing — at which point who was STARTED is a fact about next week's plan
-   *  and this section may not print it. What the players did is football and
-   *  stands either way, so the eleven itself is unaffected. */
+  /** The lineup these picks came from was the one fielded; false withholds who started, never the eleven. */
   fielded: boolean;
 }) {
   return (

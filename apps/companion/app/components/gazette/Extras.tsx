@@ -8,12 +8,7 @@ import Lineups from "./Lineups";
 import Sheets from "./Sheets";
 import TeamNews from "./TeamNews";
 
-// What a column filed BESIDE its prose, by kind.
-//
-// Lifted out of `Teaser` when the article page arrived: the same switch now has
-// two parents, which is a relocation rather than a new abstraction. A kind that
-// carries none of it renders none of it — every one of these returns null on an
-// empty list, so a story is never followed by an empty heading.
+// What a column filed beside its prose, by kind; each returns null on an empty list, so no heading prints empty.
 
 export default function Extras({
   story,

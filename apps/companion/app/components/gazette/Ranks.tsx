@@ -1,12 +1,7 @@
 import type { PublishedStory } from "@epl/core";
 import { yoursInk } from "../../mine";
 
-// A column's ten in its own order: the power rankings, and Lawro's predicted table.
-//
-// **It looks deliberately unlike the tables in the sidebar**, because it is a
-// different kind of claim: those are arithmetic and this is an argument. So no
-// aligned figure columns — a place, a name, a movement mark, and a line of
-// opinion running the full width under it.
+// A column's ten in its own order (the power rankings, Lawro's predicted table): an argument, not a table of figures.
 
 export default function Ranks({
   story,

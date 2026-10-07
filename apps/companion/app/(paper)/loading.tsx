@@ -2,13 +2,7 @@ import Column from "../components/gazette/Column";
 import Masthead from "../components/gazette/Masthead";
 import Skeleton from "../components/shell/Skeleton";
 
-// The front page, printed before the news has come in.
-//
-// The masthead is the real one: nothing on it is read from Fantrax, so the paper
-// carries its own name, its rule and its standing line from the first paint and
-// only the stories are waiting. The wrapper — and with it the `.paper`
-// register and the serifs — is the group layout's, so the edition lands into
-// these blocks rather than re-colouring the screen under the reader.
+// The front page before the news is in: the real masthead (it reads nothing from Fantrax) over blocks for the stories.
 
 export default function Loading() {
   return (

@@ -1,9 +1,6 @@
 import { emphasise } from "./emphasise";
 
-// Paragraphs, split on blank lines. The writer is told to file them that way
-// and a model that files one block instead costs the reader nothing but the
-// breaks — so this splits rather than validates. Extracted at its third
-// consumer: the written lead, an article below it, and the columns to come.
+// Paragraphs, split on blank lines; one block filed whole costs the reader only the breaks.
 
 export default function Paragraphs({
   text,
