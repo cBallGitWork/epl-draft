@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { conferenceTimes } from "./presserArticle";
+import { conferenceArticle, conferenceTimes } from "./presserArticle";
 import { classify, clauses } from "./presserSignals";
 
 // The parser decides whether a real footballer is reported as out. Every case
@@ -88,5 +88,33 @@ describe("classify — a man declared fit", () => {
 
   it("reads 'is fine' the same way", () => {
     expect(classify("Luka Vuskovic is also fine after suffering merely from cramp.")).toBe("available");
+  });
+});
+
+describe("conferenceArticle", () => {
+  it("takes the live conferences article over a predicted line-ups page that sorts first", () => {
+    // 18 Sep 2026's folder after the 7 Oct scrape filed GW6's line-ups pages into it.
+    const names = [
+      "bournemouth-v-liverpool-predicted-line-ups-fpl-team-news-2.html",
+      "cash-bizot-gomes-aston-villa-injury-latest-for-fpl-gameweek-5.html",
+      "fpl-gameweek-5-team-news-fridays-live-injury-updates-3.html",
+      "fulham-v-man-united-predicted-line-ups-fpl-team-news-2.html",
+      "index.html",
+    ];
+    expect(conferenceArticle(names)).toBe("fpl-gameweek-5-team-news-fridays-live-injury-updates-3.html");
+  });
+
+  it("reads every weekday's spelling", () => {
+    expect(conferenceArticle(["fpl-gameweek-8-team-news-thursdays-injury-updates-alderete-latest.html"])).toBeDefined();
+    expect(conferenceArticle(["fpl-gameweek-1-team-news-wednesdays-injury-updates.html"])).toBeDefined();
+  });
+
+  it("refuses a day with only line-ups, early team news or a match's team sheet", () => {
+    const names = [
+      "aston-villa-v-arsenal-predicted-line-ups-fpl-team-news-2.html",
+      "early-fpl-gameweek-1-team-news-for-all-20-premier-league-clubs.html",
+      "3pm-team-news-ndiaye-garner-start-awoniyi-in-for-simms.html",
+    ];
+    expect(conferenceArticle(names)).toBeUndefined();
   });
 });
