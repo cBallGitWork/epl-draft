@@ -103,7 +103,8 @@ export function wireLines(
     const man = manAt(event, 0);
     return {
       key: String(event.id),
-      minute: event.minute,
+      // The feed's clock pads the minute ("09"); football prints it bare.
+      minute: event.minute.replace(/^0(?=\d)/, ""),
       kind: event.kind,
       club: man === null ? clubOf(undefined) : clubOf(clubs.get(man.player.clubId)),
       man,
