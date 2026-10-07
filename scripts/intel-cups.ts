@@ -1,16 +1,14 @@
 import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { asyncBufferFromFile, parquetReadObjects } from "hyparquet";
 import { cupName, tmlCupTies, fetchBootstrap } from "@epl/core";
 import type { IntelCups, TmlRow } from "@epl/core";
-import { INTEL_ROOT } from "./paths";
+import { INTEL_ROOT, SISTER_ROOT } from "./paths";
 import { INTEL_SEASON, intelManifest } from "./intel";
 
 // Each club's cup and European ties off the sister repo's team match log, into `data/intel/cups/`.
 // Reads the sister repo and never writes to it; run after the sister rebuilds its log (`npm run intel-cups`).
 
-const SISTER = process.env.SISTER_REPO || join(fileURLToPath(new URL("..", import.meta.url)), "..", "ai-carling-premiership");
 const TML = `data/match_logs/team_match_log/season=${INTEL_SEASON}/team_match_log.parquet`;
 const TEAMS = `data/identity/teams/seasons/${INTEL_SEASON}`;
 const MATCHES = `data/identity/matches/seasons/${INTEL_SEASON}`;
@@ -115,7 +113,7 @@ function tmlRow(raw: Record<string, unknown>): TmlRow | null {
 }
 
 function at(...parts: string[]): string {
-  return join(SISTER, ...parts);
+  return join(SISTER_ROOT, ...parts);
 }
 
 /** The competitions a folder files, leaving out the league. */
