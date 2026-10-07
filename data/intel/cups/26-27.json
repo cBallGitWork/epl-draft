@@ -2,12 +2,12 @@
  "manifest": {
   "season": "26-27",
   "gameweek": null,
-  "exportedAt": "2026-10-06T10:56:38.809Z",
+  "exportedAt": "2026-10-07T17:10:28.366Z",
   "rows": 105,
   "sources": [
    {
     "path": "data/match_logs/team_match_log/season=26-27/team_match_log.parquet",
-    "mtime": "2026-10-02T18:55:26.287Z"
+    "mtime": "2026-10-07T12:41:57.374Z"
    }
   ]
  },
