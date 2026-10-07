@@ -12,7 +12,8 @@ import { readerTeamId } from "../../squads";
 import { leaguePositionLabel } from "../../positions";
 import { footballNow, seasonFixtures } from "../../football";
 import { intelLeagueProjections } from "../../intel";
-import { PROJECTIONS } from "../routes";
+import { PROJECTIONS, PROJECTIONS_SHOWN } from "../routes";
+import { notFound } from "next/navigation";
 import {
   PROJECTION_CATEGORIES,
   knownMen,
@@ -28,6 +29,7 @@ import {
 export const revalidate = 30;
 
 export default async function ProjectionsPage({ searchParams }: { searchParams: Promise<PlayersSearchParams> }) {
+  if (!PROJECTIONS_SHOWN) notFound();
   const query = playersQuery(await searchParams);
   const [pool, fixtures, snapshot, reader] = await Promise.all([getLeaguePool(), seasonFixtures(), footballNow(), readerTeamId()]);
   const gameweeks = plannerGameweeks(fixtures, PLANNER_RUN);
