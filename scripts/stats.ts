@@ -9,7 +9,7 @@ import {
   type IntelStats,
   type StatSheet,
 } from "@epl/core";
-import { INTEL_SEASON, intelManifest, readBridge, readIntel } from "./intel";
+import { INTEL_SEASON, intelManifest, readBridge, readIntel, sameApartFromManifest } from "./intel";
 import { STATS_LEAGUE } from "./leagues";
 import { INTEL_ROOT } from "./paths";
 import { buildStats } from "./stats/build";
@@ -52,11 +52,6 @@ async function main(): Promise<void> {
     return refuse("the stats league's columns changed", drifted);
   }
 
-  if (held !== null && figures(held) === figures(stats)) {
-    console.log(`stats: unchanged since ${held.manifest.exportedAt}.`);
-    return;
-  }
-
   const now = new Date().toISOString();
   const out: IntelStats = {
     manifest: intelManifest(
@@ -69,6 +64,10 @@ async function main(): Promise<void> {
     ),
     ...stats,
   };
+  if (held !== null && sameApartFromManifest(held, out)) {
+    console.log(`stats: unchanged since ${held.manifest.exportedAt}.`);
+    return;
+  }
   mkdirSync(join(INTEL_ROOT, "stats"), { recursive: true });
   writeFileSync(join(INTEL_ROOT, "stats", file), dense(out));
   console.log(
@@ -87,11 +86,6 @@ function refuse(why: string, lines: readonly string[] = []): void {
 function named(sheets: readonly StatSheet[], stat: string): string {
   const column = sheets.flatMap((sheet) => sheet.columns).find((entry) => entry.stat === stat);
   return column === undefined ? stat : `${stat} (${column.short}, "${column.name}")`;
-}
-
-/** Everything but the manifest, in one order whichever way the object was built. */
-function figures(stats: Omit<IntelStats, "manifest">): string {
-  return JSON.stringify([stats.season, stats.columns, stats.players, stats.unbridged, stats.unbridgedWithMinutes]);
 }
 
 /** The file with each man on one line: a value per line would be most of it whitespace. */

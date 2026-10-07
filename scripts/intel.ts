@@ -34,3 +34,17 @@ export function intelManifest(
 export function readBridge(): Bridge {
   return JSON.parse(readFileSync(join(MAPPINGS_ROOT, "fantrax.json"), "utf8")) as Bridge;
 }
+
+/** Whether a held export says what a fresh one does, its manifest aside: a new `exportedAt` alone is not a change. */
+export function sameApartFromManifest<T extends { manifest: IntelManifest }>(held: T, fresh: T): boolean {
+  return canonical({ ...held, manifest: null }) === canonical({ ...fresh, manifest: null });
+}
+
+/** JSON with every object's keys sorted, so one value built two ways compares equal. */
+function canonical(value: unknown): string {
+  return JSON.stringify(value, (_key, inner: unknown) =>
+    inner !== null && typeof inner === "object" && !Array.isArray(inner)
+      ? Object.fromEntries(Object.entries(inner).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)))
+      : inner,
+  );
+}
