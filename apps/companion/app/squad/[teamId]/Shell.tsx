@@ -1,7 +1,7 @@
 import { teamColours } from "@epl/core";
 import PlateShell from "../../components/shell/PlateShell";
 import { leagueInfo } from "../../round";
-import { teamBack } from "../routes";
+import { OWN, teamBack } from "../routes";
 import TeamTabs from "./TeamTabs";
 import type { TeamTab } from "./TeamTabs";
 
@@ -25,6 +25,7 @@ export default async function TeamShell({
   return (
     <PlateShell colours={teamColours(team.teamId)} title={full}
       back={teamBack(team.slug)}
+      phoneBar={team.slug !== OWN}
       tabs={<TeamTabs slug={team.slug} current={current} empty={empty} />}>
       {children}
     </PlateShell>
