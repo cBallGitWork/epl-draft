@@ -32,15 +32,11 @@ export default function LivePlayerCard({
   onClose,
 }: {
   player: SquadPlayerDetail;
-  /** His categories, largest contribution first. Empty for a player the table
-   *  names on nought, and for one it does not name at all — the difference is
-   *  in `points`, which is the number the table actually gave. */
+  /** His categories, largest first; empty both on nought and where the table omits him, which `points` tells apart. */
   breakdown: BreakdownLine[];
   /** Whether he is on the bench this gameweek: priced, but not counted. */
   reserve: boolean;
-  /** Fantrax's latest on him, or null for the great majority. The pool feed is
-   *  a day wide (`poolNews.ts`), so an absent story means nothing was filed
-   *  today — never that there is none. */
+  /** Fantrax's latest on him, or null; the pool feed is a day wide (`poolNews.ts`), so null means none filed today. */
   story?: PlayerStory | null;
   onClose: () => void;
 }) {
@@ -60,8 +56,7 @@ export default function LivePlayerCard({
           </Note>
         )}
 
-        {/* Nothing to explain before he has been on. An empty table under a live
-            score reads as a score of nought, which is a different claim. */}
+        {/* Nothing before he has been on: an empty table under a live score reads as a nought. */}
         {started ? (
           <>
             <Breakdown
@@ -93,11 +88,7 @@ export default function LivePlayerCard({
   );
 }
 
-/** Fantrax's own words about him, when there are any from today.
- *
- *  The body and not the headline: `headlineNoBrief` is the same sentence
- *  truncated, so printing both prints one of them twice. The analysis is a
- *  paragraph and stays on the profile — this card is read with a match on. */
+/** Fantrax's words about him from today: the body only, as `headlineNoBrief` is the same sentence cut short. */
 function Story({ story }: { story: PlayerStory }) {
   return (
     <div className="cm-panel flex flex-col gap-1 px-2 py-1.5">

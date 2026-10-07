@@ -13,13 +13,12 @@ import {
 } from "@epl/core";
 import { speaksForNow } from "../../football";
 import LeagueCrest from "../shell/LeagueCrest";
-import { LIVE } from "../shell/sections";
+import { GAMEWEEK, LIVE } from "../shell/sections";
 import MatchList from "./MatchList";
 import { GAMEWEEK_HEAD, GAMEWEEK_TITLE } from "@/app/desk";
 import { SQUAD } from "../../squad/routes";
 
-// One round of football. Shared by /matchday, while there is football on, and
-// the /gw/[gameweek] route, so both stay identical rather than drifting.
+// One round of football, drawn by Live while football is on and by `/gw/[gameweek]`.
 
 export default function GameweekView({
   snapshot,
@@ -27,25 +26,15 @@ export default function GameweekView({
   owners,
 }: {
   snapshot: FootballSnapshot;
-  /** Which of the reader's players are in each fixture. Optional throughout: a
-   *  caller with no league to ask simply does not pass it, and the round renders
-   *  as it always did. */
+  /** Which of the reader's players are in each fixture; absent with no league to ask. */
   mine?: Map<number, FootballPlayer[]>;
-  /** Who holds each rostered footballer. Passed independently of `mine` — the
-   *  tags are useful to a reader who owns nobody. */
+  /** Who holds each rostered footballer, independent of `mine`: a reader who owns nobody still reads them. */
   owners?: Map<number, PlayerOwner>;
 }) {
-  // Both halves: a match is in play AND our copy is fresh enough to say so. A
-  // snapshot served from cache long after it was taken still has a fixture
-  // marked live, because `status` carries no clock.
+  // A match in play AND a copy fresh enough to say so: a cached snapshot keeps a fixture marked live.
   const live = isMatchdayLive(snapshot) && speaksForNow(snapshot);
   const { previous, next } = adjacentGameweeks(snapshot);
-  // A deadline is only news while it is ahead of you. The header shows LIVE or
-  // the deadline, and between kickoffs mid-round it is neither: `duringGameweek`
-  // keeps this view on screen all weekend while `isMatchdayLive` goes false in
-  // every gap, so the slot fell through to a Friday instant printed as "Fri
-  // 18:30" with a Saturday's football under it. Read off the snapshot's own
-  // instant rather than a clock, so the render stays reproducible.
+  // The deadline prints only while ahead, by the snapshot's own instant; between kickoffs the slot is empty.
   const ahead =
     snapshot.deadline !== null && Date.parse(snapshot.deadline) > Date.parse(snapshot.fetchedAt);
 
@@ -71,14 +60,7 @@ export default function GameweekView({
             Live
           </span>
         ) : ahead && snapshot.deadline ? (
-          /* FPL's, and it says so. This is `deadline_time` off the football
-             layer — FPL's house rule, ninety minutes before the first kickoff —
-             and ours is the commissioner's, fifteen minutes before it. For GW1
-             they are 18:30 and 19:45. Under the bare word "Deadline" this told a
-             manager on the Live tab that he had seventy-five minutes less than
-             he had, while the front page and the League tab said otherwise.
-             Named rather than replaced: this is a football component and the
-             league's lock lives on the other side of the seam. */
+          /* FPL's `deadline_time`, named as FPL's: the league's own lock is later and lives in the league layer. */
           <span className="text-right text-xs text-faint">
             FPL deadline
             <br />
@@ -98,9 +80,7 @@ export default function GameweekView({
 
       <ButtonLink href={SQUAD}>Squads</ButtonLink>
 
-      {/* Honesty about provenance, per docs/rules/PRODUCT.md principle 4. Saying the stats
-          are missing matters more than saying when: a scoreline with no scorers
-          under it reads as nobody having done anything. */}
+      {/* Missing stats are said, or a scoreline with no scorers reads as nobody having done anything. */}
       <p className="pt-1 text-center text-2xs text-faint">
         {snapshot.statsUnavailable
           ? "The Premier League is not serving player stats right now, so the goals and assists below are missing rather than nil."
@@ -110,8 +90,7 @@ export default function GameweekView({
   );
 }
 
-/** Renders an inert placeholder at each end of the season so the other link
- *  keeps its position instead of sliding across the screen. */
+/** A round's link, or an inert placeholder at either end of the season so the other keeps its place. */
 function GameweekLink({
   gameweek,
   label,
@@ -125,23 +104,17 @@ function GameweekLink({
     align === "end" ? "text-right" : ""
   }`;
 
-  // Not a plate, deliberately. Championship Manager fills the gap in a foot row
-  // with a greyed "Unused" tab (`cm9900/12.jpg`), and a plate that does nothing
-  // is the one thing worse than a gap — so a round that is not there keeps its
-  // place with a flat outline, and only a round you can reach is a button.
+  // A flat outline, not a plate: only a round you can reach looks pressable.
   if (gameweek === null) {
     return (
       <span className={`${classes} border border-line text-faint opacity-40`}>{label}</span>
     );
   }
 
-  // CM's foot pair — its own Back and Next. A bevel because it is a control, and
-  // the plate owns its ink: no `text-*` here, and the round loses its `--muted`
-  // for the same reason, which on the grey plate is 1.5:1 and was legible only
-  // because the plate was not there yet.
+  // The bevel owns its ink, so no `text-*` here: `--muted` on the grey plate is 1.5:1.
   return (
     <Link
-      href={`/gw/${gameweek}`}
+      href={`${GAMEWEEK}/${gameweek}`}
       className={`cm-bevel ${classes} font-medium hover:brightness-110`}
     >
       {label}

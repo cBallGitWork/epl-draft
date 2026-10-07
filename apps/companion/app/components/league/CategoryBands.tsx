@@ -4,27 +4,8 @@ import Nothing from "../shell/Nothing";
 import { GROUP_PLATE, PANEL, gainOrLoss } from "@/app/desk";
 import { DASH, crestUrl } from "@epl/core";
 
-// Where the scoreline came from, and who put it there.
-//
-// The hole this fills is the one the board was opened with: a manager could see
-// 29 against 18 and eleven faces, and nothing said which categories the points
-// came out of — and then, once `CategoryCompare` answered that, nothing said
-// which of his eleven had registered them. This is that board with its workings.
-//
-// **It absorbed `CategoryCompare` rather than sitting beside it.** That board was
-// this one's head row and nothing else: the two side totals on their plates with
-// the category name between them, which is Championship Manager's Match Stats
-// layout (`cm9900/22.jpg`). A totals board and a men board as two tabs would be
-// one object printed twice, and the second would be the first with more rows.
-//
-// **The label is the axis and the figures are its ends**, which is why the head
-// is a three-column grid and not a table: a table would make one side the subject
-// and the other a column, and a head-to-head has no subject.
-//
-// **The men are two INDEPENDENT columns, not paired rows.** Three of my scorers
-// against one of his is the honest shape of a band, and pairing them by index
-// would invent an alignment the payload never claimed — `Isak` opposite `Haaland`
-// reads as a comparison of two men when it is a comparison of two sides.
+// Where the scoreline came from, and who put it there, category by category.
+// Each side's men are an independent column, never paired by index: a pairing would read as man against man.
 
 /** What to call a man and his club, by the id core holds; built by the caller behind the lineup gate. */
 export type Names = ReadonlyMap<string, { name: string; club: Club | undefined }>;
@@ -38,13 +19,11 @@ export default function CategoryBands({
   bands: readonly CategoryBand[];
   names: Names;
   theirNames: Names;
-  /** The panel saying a side's lineup is not public yet, or null: drawn once and full width, because an
-   *  empty column would read as "he registered nothing". */
+  /** The panel saying a side's lineup is not public yet, or null; full width, as an empty column reads as no score. */
   withheld: React.ReactNode;
 }) {
   return (
-    // The match page's Fantasy report (`prem/match/[id]/Fantasy`): one category after another, each side's
-    // total at its end of the plate, the URL's side on the left as on the scoreline.
+    // Each side's total at its end of the plate, the URL's side on the left as on the scoreline.
     <section className={PANEL}>
       <h2 className="sr-only">Where the points came from</h2>
       {withheld}
@@ -73,12 +52,7 @@ export default function CategoryBands({
   );
 }
 
-/** One side's men in one band, most first.
- *
- *  **Equal points are re-sorted by NAME here**, and that is this layer's job
- *  rather than core's: core ties on `fantraxId`, which is stable and meaningless,
- *  and ties are the common case — every scorer of one goal is on the same figure.
- *  A reader scanning a band wants the alphabet, not Fantrax's ids. */
+/** One side's men in one band, most first, ties by name (core ties on `fantraxId`). */
 function Men({ men, names, end }: { men: readonly CategoryMan[]; names: Names; end: boolean }) {
   const named = [...men]
     .map((man) => ({ ...man, ...(names.get(man.fantraxId) ?? { name: DASH, club: undefined }) }))

@@ -11,8 +11,7 @@ import { matchupHref } from "@/app/league/routes";
 // the phone's Live plate. `YourMatchup` composes the same tie: two, so copied (CODE_RULES §1).
 
 export type LiveTie = {
-  /** Null is a total Fantrax did not give, and it prints as a dash. A live
-   *  scoreline is the last place to invent a nought. */
+  /** Null when Fantrax gave no total; it prints as a dash, never a nought. */
   yours: number | null;
   theirs: number | null;
   opponent: string;
@@ -32,8 +31,7 @@ export async function liveTie(): Promise<LiveTie | null> {
 }
 
 async function askedWhileLive(): Promise<LiveTie | null> {
-  // `isMatchdayLive` and not `roundUnderway`: the strip claims right now. Asked of the football
-  // first, so Fantrax is not read at all for the six days a week it has nothing to say here.
+  // `isMatchdayLive`, not `roundUnderway`: the strip claims right now. Football is asked first, so Fantrax is read only then.
   const snapshot = await footballNow();
   if (!isMatchdayLive(snapshot) || !speaksForNow(snapshot)) return null;
 

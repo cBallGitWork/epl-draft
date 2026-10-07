@@ -5,14 +5,8 @@ import { useRouter } from "next/navigation";
 import { nextPoll } from "./cadence";
 import { POLL } from "../../config";
 
-// The page is server-rendered and `revalidate` only bounds how stale the cache
-// may get — it does not push anything to a phone already showing the score. Left
-// alone, a device open on the sofa displays a frozen scoreline under a pulsing
-// LIVE dot for the whole second half.
-//
-// This asks the server for a fresh render on a timer, and adds no data-fetching
-// library to do what one timer does. The rate is decided here from `liveIn`, not
-// on the server, so a tab opened before kickoff wakes at kickoff.
+// Asks the server for a fresh render on a timer; `revalidate` never pushes to an open page.
+// The rate is set here from `liveIn`, not on the server, so a tab opened before kickoff wakes at kickoff.
 
 export default function AutoRefresh({ liveIn }: { liveIn: number | null }) {
   const router = useRouter();
@@ -21,8 +15,7 @@ export default function AutoRefresh({ liveIn }: { liveIn: number | null }) {
     const arrived = performance.now();
     let timer: ReturnType<typeof setTimeout>;
 
-    // A backgrounded tab is nobody watching. Refreshing it burns the phone's
-    // battery and our upstream quota to redraw pixels no one can see.
+    // A hidden tab is skipped: refreshing it costs battery and upstream quota.
     const refresh = () => {
       if (document.visibilityState === "visible") router.refresh();
     };
@@ -36,8 +29,7 @@ export default function AutoRefresh({ liveIn }: { liveIn: number | null }) {
     };
     schedule();
 
-    // Coming back to the tab should show the current score immediately rather
-    // than whatever it froze on, and then up to a full interval of nothing.
+    // Returning to the tab refreshes at once rather than waiting out the interval.
     document.addEventListener("visibilitychange", refresh);
 
     return () => {

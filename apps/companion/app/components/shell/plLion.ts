@@ -1,5 +1,5 @@
-// The Premier League's lion, crown and head, as FPL serves it (fetched 23 Sep 2026):
-// https://fantasy.premierleague.com/img/favicons/safari-pinned-tab.svg — potrace paths in a 400×400 box, unchanged.
+// The Premier League's lion, crown and head: potrace paths in a 400×400 box, unchanged from
+// https://fantasy.premierleague.com/img/favicons/safari-pinned-tab.svg
 
 export const PL_LION_CROWN =
   "M1761 3488 c-24 -73 -50 -148 -57 -166 l-13 -33 -53 39 c-29 21 -104 73 -165 116 -86 58 -113 72 -113 59 0 -10 9 -72 20 -138 11 -66 20 -128 20 -137 0 -13 -19 -4 -77 36 -75 51 -135 86 -148 86 -4 0 3 -15 14 -32 34 -52 89 -163 112 -226 12 -31 25 -61 30 -66 4 -5 41 7 84 28 306 147 623 177 985 94 11 -2 16 7 18 32 5 64 34 194 57 258 12 34 21 62 18 62 -13 0 -92 -73 -139 -128 -32 -38 -56 -58 -58 -50 -3 7 -8 72 -11 143 -4 72 -10 136 -14 143 -5 8 -31 -15 -80 -70 -138 -155 -193 -211 -200 -201 -3 5 -44 71 -91 146 -47 75 -87 137 -90 137 -3 0 -25 -60 -49 -132z";

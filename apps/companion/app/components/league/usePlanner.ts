@@ -41,14 +41,11 @@ export function usePlanner(
   const [order, setOrder] = useState<string[]>(savedOrder);
   // The man picked on the pitch: the rest light where he can swap or move, and a second tap puts him down.
   const [picked, setPicked] = useState<string | null>(null);
-  // The player card a tap on the LIST opens (Craig, 21 Sep 2026: "list view, tap a player - brings up player card").
+  // The player card a tap on the list opens.
   const [card, setCard] = useState<SquadPlayerDetail | null>(null);
 
   const eligibility = useMemo(() => eligibilityOf(players), [players]);
-  // The same fact in the shape the list wants. `SquadRows` takes a record
-  // because its other callers hand it one across the server boundary, where a
-  // `Map` arrives as `{}`; here it is already a map and the conversion is this
-  // one line rather than a second prop threaded through the page.
+  // The same fact as the record `SquadRows` takes: a `Map` crosses the server boundary as `{}`.
   const eligibleBy = useMemo(() => Object.fromEntries(eligibility), [eligibility]);
   const detailOf = useMemo(
     () => new Map(details.map((d) => [d.rostered.slot.fantraxId, d])),
@@ -59,22 +56,15 @@ export function usePlanner(
     return (id: string) => names.get(id) ?? id;
   }, [details]);
 
-  // The pitch renders the EDITED slots, so what is on screen is the thing being
-  // planned. Rebuilt from the real team so `lineup()` is reused exactly as it is
-  // — the planner changes assignments, not players.
+  // The pitch draws the edited slots, through the same `lineup()` as the real team.
   const { rows, bench } = useMemo(() => {
     const bySlot = new Map(slots.map((slot) => [slot.fantraxId, slot]));
     const arranged = lineup({
       ...team,
       players: team.players.map((p) => ({ ...p, slot: bySlot.get(p.slot.fantraxId) ?? p.slot })),
     });
-    // The detail was joined once from the roster as it arrived, so its slot is
-    // the PRE-MOVE one. Everything drawn from `arranged` is post-move, so the
-    // edited slot is spliced back in — otherwise the bench prints a man's old
-    // position under him while standing him in his new place, and the label and
-    // the order contradict each other on screen. The join's other halves — his
-    // club, his fixtures, his points — are facts about the man and do not move
-    // when his manager rearranges the team.
+    // The joined detail carries the pre-move slot, so the edited one is spliced back in,
+    // or a man would print his old position while standing in his new place.
     const detail = (slot: RosterSlot): SquadPlayerDetail[] => {
       const joined = detailOf.get(slot.fantraxId);
       return joined === undefined ? [] : [{ ...joined, rostered: { ...joined.rostered, slot } }];
@@ -96,14 +86,9 @@ export function usePlanner(
   const reordered = orderBench(savedOrder, benchIds).some((id, i) => benchIds[i] !== id);
   const dirty = moved || reordered;
 
-  // What is wrong with the XI as it stands. No move offered can create any of
-  // it, so an empty list is the ordinary case and anything in it came from
-  // Fantrax — which is exactly why it has to be said rather than assumed away.
+  // What is wrong with the XI as it stands; no offered move creates any, so anything here came from Fantrax.
   const broken = violations(slots, eligibility, limits);
-  // **Null where the league has published no cap**, which is not nought free
-  // places but no such thing as a free place: without a stated XI size there is
-  // nothing for a shortfall to be measured against
-  // (`RosterLimits.maxActivePlayers`). The notice below simply does not appear.
+  // Null where the league publishes no XI size (`RosterLimits.maxActivePlayers`): no shortfall to measure.
   const empty =
     limits.maxActivePlayers === null
       ? null
@@ -114,13 +99,8 @@ export function usePlanner(
     setPicked(null);
   }
 
-  // Everything the picked man may do, and the men he may do it with.
-  //
-  // **The other end of the swap, whichever end it was read from.** `legalMoves`
-  // answers for a reserve with `fantraxId` as the man coming on, and for a man
-  // already in the side with `withId` as himself — so a partner is "the id that
-  // is not his", and reading only `withId` lit nothing at all when a manager
-  // tapped one of his own eleven.
+  // Everything the picked man may do. A swap's partner is the id that is not his: `legalMoves`
+  // puts a reserve in `fantraxId` and a man already in the side in `withId`.
   const pickedMoves = picked === null ? [] : legalMoves(slots, eligibility, limits, picked);
   const partnerOf = (move: Move): string | null =>
     move.kind !== "swap" ? null : move.fantraxId === picked ? move.withId : move.fantraxId;
@@ -134,26 +114,18 @@ export function usePlanner(
     if (move) play(move);
   }
 
-  /** Swapping with a man who occupies a position the picked player is eligible
-   *  for means taking that position. Where he is not — a full XI lets him come
-   *  in anywhere, so the partner need not be in a position he can fill — the
-   *  first legal destination stands, because any of them is one man in and one
-   *  man out. */
+  /** A swap takes the outgoing man's position where that is legal; otherwise the first legal destination stands. */
   function swapWith(partnerId: string) {
     const candidates = pickedMoves.flatMap((move) =>
       partnerOf(move) === partnerId ? [move] : [],
     );
-    // Where the man COMING ON ends up, which is the picked player only when he
-    // is the reserve. Tapping a defender in the side and then a reserve midfield
-    // puts the midfielder in the defender's place, so the position that matters
-    // is the one being vacated.
+    // The man coming on is the picked one only when he is the reserve; the position that matters is the one vacated.
     const incoming = candidates[0]?.kind === "swap" ? candidates[0].fantraxId : null;
     const vacated = slots.find(
       (slot) => slot.fantraxId === (incoming === partnerId ? picked : partnerId),
     )?.position;
     const move = candidates.find((swap) => swap.kind === "swap" && swap.to === vacated) ?? candidates[0];
-    // Only offered for a partner the pitch has lit, and it lit him from this
-    // same list — so an empty one is unreachable rather than unhandled.
+    // Only offered for a partner the pitch lit from this same list, so an empty one is unreachable.
     if (move) play(move);
   }
 

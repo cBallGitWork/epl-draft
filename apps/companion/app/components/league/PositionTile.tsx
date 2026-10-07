@@ -1,9 +1,8 @@
 import { positionsLabel } from "../../positions";
 import { DASH } from "@epl/core";
 
-// What our Fantrax league fields a man as — `D`, `M/F` — in the index block down a squad list's
-// left (Craig, 21 Sep and 23 Sep 2026). Fantrax's letters, never his real position. Letters, not
-// an ordinal, so smaller than the block's own size and truncated where `D/M/F` will not fit.
+// What our Fantrax league fields a man as — `D`, `M/F` — in the index block down a squad list's left:
+// Fantrax's letters, never his real position, set small and truncated where `D/M/F` will not fit.
 
 const TITLE = "What our Fantrax league will field him as";
 

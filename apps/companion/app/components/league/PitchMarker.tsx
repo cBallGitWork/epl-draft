@@ -60,7 +60,7 @@ export default function PitchMarker({
   // Nobody at all: no man AND no club. A named man the bootstrap lacks still has his club's kit.
   const nobody = player === null && club === undefined;
 
-  // `v` before an opponent, or three letters under a shirt read as his own club (Craig, 21 Sep 2026).
+  // `v` before an opponent, or three letters under a shirt read as his own club.
   const against = fixtureLabel(opposition);
   const line =
     band ??

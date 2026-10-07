@@ -2,16 +2,8 @@ import { replayAt } from "../../clock";
 import { londonDayAndDate, londonTime } from "@epl/core";
 import { SMALL_CAPS } from "@/app/desk";
 
-/** What the app is pretending it is, whenever `REPLAY_AT` is set.
- *
- *  DESIGN §7's provenance rule, applied to a whole screen rather than to a
- *  figure: under a replay every number on every tab is a reconstruction, and a
- *  LIVE dot on a Tuesday is the one claim nobody could check from a screenshot.
- *
- *  Red as INK and no colour plate, deliberately: `--color-bad` is the doubt slot
- *  and this is a doubt about everything below it, while a plated bar would read
- *  as chrome the product owns. Nothing draws when the app is simply running
- *  today, which is every deployed build. */
+/** Says what time the app is pretending it is whenever `REPLAY_AT` is set, and draws nothing otherwise.
+ *  Red ink with no plate: `--color-bad` is the doubt slot, and a plated bar would read as chrome. */
 export default function ReplayStrip() {
   const at = replayAt();
   if (at === null) return null;

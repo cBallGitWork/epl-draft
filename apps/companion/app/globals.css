@@ -1,16 +1,11 @@
 @import "tailwindcss";
-/* The token layer — every colour, size and easing this app names. Split out
-   when this file crossed CODE_RULES' 300-line ceiling; it is one
-   responsibility and it is the larger half. */
+/* The token layer: every colour, size and easing this app names. */
 @import "./tokens.css";
 /* The desk faces' metric-matched Arial, named in each face's stack by deskFonts.ts. */
 @import "./fonts/fallbacks.css";
-/* The paper's own register, which re-points those tokens at ink on stock for
-   the front page. After `tokens.css`, because it answers it. */
+/* The paper's register, re-pointing those tokens at ink on stock; after `tokens.css`, which it answers. */
 @import "./paper.css";
-/* The desk's Championship Manager furniture — the bevel, the title bar, the
-   index cell. The desk has no class of its own (DESIGN §1), so these are named
-   classes rather than a scope. */
+/* The desk's Championship Manager furniture, as named classes, since the desk has no scope of its own. */
 @import "./desk.css";
 /* The pitch and its screen budget. After `tokens.css`, which it reads. */
 @import "./pitch.css";
@@ -26,61 +21,24 @@
   }
 }
 
-/* How wide the page is allowed to get. It framed two things and now frames one:
-   the tab bar read it too, and a bar that was a broadsheet over a page still in
-   a column is what the token was written to stop. The rail took the bar's job
-   and is not inside the frame — it is beside it — so `<main>` is the only reader
-   left. Kept as a token rather than inlined, because it is a decision about the
-   page and not a number `<main>` happens to carry. */
+/* How wide the page may get; `<main>` reads it. */
 :root {
   --page-frame: 72rem;
 }
 
-/* **And it grows on a big monitor** (Craig, 5 Sep 2026: "desktop letters/numbers
-   can be hard to read, and doesnt scale with a bigger monitor well either").
-   72rem is 1152px, so on a 2560 screen the app sat in a 1152px column with 700px
-   of photograph either side and every figure at the same size it is on a laptop
-   — the page got no bigger and the type got relatively smaller, which is the
-   second half of what he is describing.
-
-   96rem at `2xl` and no further. Championship Manager's own canvas is 800x600
-   and its proportions are what the density table is built on; a table allowed to
-   run 2000px wide stops being a table and becomes a spreadsheet, and a row whose
-   name column is 900px is one the eye cannot track across. This is one step, and
-   it is the step that stops the frame looking like a mistake on a large screen.
-   The TYPE's own step is in `tokens.css`, at the same breakpoint. */
+/* From `2xl` the frame grows to 96rem and no further; the type steps up at the same breakpoint in `tokens.css`. */
 @media (min-width: 96rem) {
   :root {
     --page-frame: 96rem;
   }
 }
 
-/* The air above the page's first object, and it is a token because two things
-   have to agree about it: `<main>` sets it, and a screen that fills the viewport
-   has to subtract it. `prem/match/[id]/Shell` is the second reader — its foot
-   row sits at the bottom of a short match and after the content on a long one,
-   which is a `min-h` computed from the two pieces of chrome the page did not
-   draw itself.
-
-   0.5rem rather than the 0.75 it was. The phone's chrome budget is measured from
-   the top of the viewport to the first row of data, and four pixels of it were
-   being spent on air between two objects that are already separated by a border
-   — CM leaves none at all there. */
+/* The air above the page's first object; `<main>` sets it and `prem/match/[id]/Shell` subtracts it. */
 :root {
   --page-top: 0.5rem;
 }
 
-/* The room `<main>` leaves under the page. It was the tab bar's own height plus
-   the phone's safe area, dropping to bare room above `md` where the bar went
-   overhead; with the rail down the side there is no bar at any width and no
-   height to leave for one. One value, and the breakpoint went with the bar.
-
-   The phone's inset is not gone, it moved: `body` carries it below, which is
-   where it belongs now that nothing is fixed across the foot of the screen.
-
-   Named for the same reason `--page-gutter` is — the front page runs its stock
-   out through it, and a page whose ground stops short of the foot of the screen
-   has a seam across the bottom of it. */
+/* The room `<main>` leaves under the page; the front page runs its stock out through it to the foot. */
 :root {
   /* The thumb rail's 56px tab plus 1rem of air under the last panel, below `lg`. The rail's inset is inside
      the fixed nav, and `body` pads the page by the same inset, so neither is added here. */
@@ -95,8 +53,7 @@
   }
 }
 
-/* Out through the page's own gutters, for the two things wide enough to earn
-   it: the pitch, and the bench strip under it. */
+/* Out through the page's gutters, for the pitch and the bench strip under it. */
 .bleed {
   margin-inline: calc(var(--page-gutter) * -1);
 }
@@ -110,17 +67,14 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Scores, minutes, countdowns. Tabular so digits don't jitter as they tick —
-   the single most important typographic decision in a live view. */
+/* Scores, minutes, countdowns: tabular so digits don't jitter as they tick. */
 .numeric {
   font-family: var(--font-display);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
 }
 
-/* ---- LIVE indicator -------------------------------------------------------
-   The one place motion carries meaning: a match is in play right now. Paired
-   with the text "LIVE" so it never relies on colour or motion alone. */
+/* The live dot, the one place motion carries meaning; always beside the word LIVE. */
 .live-dot {
   position: relative;
   display: inline-block;
@@ -143,24 +97,14 @@ body {
   100% { opacity: 0; transform: scale(2.6); }
 }
 
-/* ---- Focus: one visible treatment everywhere, never removed ----------------
-   The ring is `--accent` rather than a token of its own, because "this is where
-   you are" is the same statement as "this is what is selected" and the accent
-   slot already carries it in both registers: CM yellow on the desk at 13:1, and
-   the league's red on the paper at 5:1, without this rule knowing which page it
-   is on. It was `--info`, a slot that means "a person" on the desk and nothing
-   at all on the paper. */
+/* Focus: one ring everywhere, never removed, in the accent, since where you are is what is selected. */
 :where(a, button, [role="button"], input, select, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
   border-radius: 0;
 }
 
-/* ---- A figure that just moved ---------------------------------------------
-   Colour only, and deliberately: a transform or a weight change on a scoreline
-   shifts the digits beside it, and the whole point of `.numeric` being tabular
-   is that they do not move. It settles back to the token the figure already
-   carries, so a trailing number stays dimmed after the flash. */
+/* A figure that just moved: colour only, as a transform would shift the tabular digits beside it. */
 .value-changed {
   animation: value-changed 700ms var(--ease-out-quart);
 }
@@ -171,9 +115,7 @@ body {
   }
 }
 
-/* ---- Reduced motion: every animation gets a real alternative --------------
-   The live dot keeps a static presence, so "a match is on" survives without
-   movement. */
+/* Reduced motion: every animation gets an alternative; the live dot stays, static. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -185,11 +127,7 @@ body {
   .live-dot::after {
     display: none;
   }
-  /* A crossfade rather than nothing, which docs/rules/PRODUCT.md requires by name: this is
-     the one signal whose whole content is "it changed", so removing the motion
-     removes the information. `!important` because the blanket rule above is
-     itself `!important` and would otherwise collapse this to nothing — the same
-     carve-out the live dot needs. */
+  /* A crossfade, not nothing (PRODUCT.md): the change is the whole signal. `!important` to beat the blanket rule above. */
   .value-changed {
     animation: value-crossfade 400ms linear !important;
   }

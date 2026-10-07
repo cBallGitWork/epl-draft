@@ -4,7 +4,6 @@ import { toBoxY } from "./pitchBox";
 import { DRAWN, HALO, TIER, drawOrder, markRadius } from "./shotGeometry";
 
 // Shots as marks on the grass: size is the chance (by area), fill and weight the outcome, never a new hue.
-// Three tiers, not five: a block and a miss differ by a number in the table, not a ring nobody can measure.
 
 const HALO_OPACITY = 0.75;
 
@@ -20,7 +19,7 @@ export default function Marks({
   ink = "var(--color-cream)",
 }: {
   shots: readonly Shot[];
-  /** Cream by default; a map with two sets of marks gives each its club colour, which changes the hue, never the grammar. */
+  /** Cream by default; a map with two sets of marks gives each its club colour. */
   ink?: string;
 }) {
   return (
@@ -32,8 +31,7 @@ export default function Marks({
         // The index is the key: a rebound can share a man, a minute and a spot.
         return (
           <g key={at}>
-            {/* A cream halo (14 of 20 club colours are under 3:1 on the mow band, cream 10.5:1) round
-                a disc of turf that hides whatever this mark overlaps. */}
+            {/* A cream halo, so a club colour reads on the grass, round a disc of turf that hides what it overlaps. */}
             <circle
               cx={shot.x}
               cy={toBoxY(shot.y)}
@@ -79,7 +77,6 @@ export function MarksKey({ children }: { children?: ReactNode }) {
       ))}
       {/* A map's own entries, such as the match map's key pass. */}
       {children}
-      {/* The other half of the encoding, and the half a ring cannot show. */}
       <li className="text-faint">Size is the chance behind it</li>
     </ul>
   );

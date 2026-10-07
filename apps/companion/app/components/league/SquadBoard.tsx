@@ -5,36 +5,10 @@ import type { SquadDetailLine, SquadPlayerDetail, SquadReason } from "@epl/core"
 import PlayerCard from "./PlayerCard";
 import SquadRows from "./SquadRows";
 
-// A squad with no gameweek to report: the state every squad is in most of the
-// week, and the only state a rival's squad is ever in before its lineups lock.
-//
-// **A list, and no pitch** (Craig, 31 Aug: "maybe the squad page doesn't need a
-// pitch, and we save that for the live match h2h, gives us more space too since
-// it's eleven"). This is the branch that draws FIFTEEN — every man a manager
-// holds, with no arrangement, because the arrangement is the thing the gate
-// withholds. A pitch is a drawing of a shape, and this view has no shape to
-// draw: fifteen men in position lines is a diagram of something nobody picked.
-// Championship Manager's own squad screen is a table for the same reason. The
-// eleven that IS a shape keeps its pitch, on the head-to-head and the planner,
-// where there are four fewer men and room for each of them.
-//
-// The client boundary is here rather than lower down because the list and the
-// card share one selection.
-//
-// It is handed the squad already joined to its clubs, fixtures and points
-// (`squadDetail`). That join is a server job: it is pure, it is tested, and
-// doing it here would mean shipping every club in the league and every fixture
-// in the round to a phone so fifteen players could look two of them up.
+// A squad with no gameweek to report: all fifteen as a list, no pitch, since the gate withholds the shape.
+// It arrives joined on the server (`squadDetail`); the client boundary is here for the list and card's one selection.
 
-/** Why the lineup is being withheld — and only for the reasons a reader could
- *  not otherwise work out.
- *
- *  `not-locked` is deliberately absent. It is the ordinary state of every squad
- *  for most of every week, the header already says "squad", and a paragraph
- *  explaining the normal case cost the pitch a screenful of height on a phone.
- *  The rest are our side failing to read something, and a squad that silently
- *  withheld a lineup because our calendar was missing would look like the rule
- *  when it is a fault. */
+/** Why the lineup is withheld, only where our side failed to read something; `not-locked` is the ordinary state. */
 const EXPLANATION: Partial<Record<SquadReason, string>> = {
   "unknown-period":
     "Fantrax did not say which gameweek this squad is for, so the lineup stays hidden.",
@@ -53,15 +27,9 @@ export default function SquadBoard({
 }: {
   lines: SquadDetailLine[];
   because: SquadReason;
-  /** Whether the points on those lines are Fantrax's projection rather than a
-   *  season played. Never dropped, only moved: Fantrax answers a PROJECTION
-   *  unless the year-to-date code is both known and honoured, so the list heads
-   *  its column "Proj" instead of "FPts". A points column that silently switched
-   *  between a projection and a season total is the confident wrong answer, and
-   *  a heading costs no height where a sentence cost a screenful. */
+  /** Whether the points are Fantrax's projection, not a season played; the list then heads its column "Proj". */
   projected: boolean;
-  /** Eligible positions by Fantrax id, passed straight to the list. A record
-   *  rather than a `Map` because this crosses to the browser — see `SquadRows`. */
+  /** Eligible positions by Fantrax id; a record, not a `Map`, as it crosses to the browser. */
   eligibility?: Record<string, string[]>;
 
 }) {
@@ -71,9 +39,6 @@ export default function SquadBoard({
 
   return (
     <div className="flex flex-col gap-2">
-      {/* The count came off (Craig, 2 Sep: "remove 15 players"). It said the
-          same thing the list says by being fifteen rows long, and CM heads its
-          squad with the club's name rather than with an inventory. */}
       {explanation ? (
         <p className=" border border-line bg-surface px-3 py-2 text-2xs text-muted">
           {explanation}
@@ -84,8 +49,7 @@ export default function SquadBoard({
 
       {open ? (
         <PlayerCard
-          // Remounts per player, so the dialog opens from a clean state rather
-          // than needing an effect to keep `showModal` in step with the choice.
+          // Remounts per player, so the dialog opens clean with no effect keeping `showModal` in step.
           key={open.rostered.slot.fantraxId}
           player={open}
           onClose={() => setOpen(null)}

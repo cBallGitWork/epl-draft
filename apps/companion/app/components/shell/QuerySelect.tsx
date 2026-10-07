@@ -5,7 +5,7 @@ import { type FormEvent, type ReactNode, useState } from "react";
 import { SELECT } from "./ButtonLink";
 import { SUBMIT } from "@/app/desk";
 
-// One URL parameter chosen from a list, as CM's `Sort By ▾` plate (`cm9900/25.jpg`): every GET-form select in the app.
+// One URL parameter chosen from a list: every GET-form select in the app.
 // It works with no script; with one, a change navigates at once, holds the page still and shows the pick while it loads.
 
 export interface QueryOption {

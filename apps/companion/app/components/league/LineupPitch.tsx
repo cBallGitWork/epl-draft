@@ -11,22 +11,8 @@ import { leaguePositionLabel } from "../../positions";
 
 // The XI on the grass and the bench under it, one target per player: tap him to
 // pick him, tap him again to put him down.
-//
-// A bench and not fifteen on the pitch, which is what a rival's squad gets. The
-// difference is the whole point of this screen: on your own team the
-// active/reserve split is the decision being made, so it has to be the thing you
-// are looking at.
 
-/** How a player may be tapped right now.
- *
- *  `blocked` is the state that makes a quick swap legible: with somebody picked,
- *  everyone he cannot legally change places with goes dim, so the answer to "who
- *  can come off for him" is the set of players still lit rather than a list to
- *  read.
- *
- *  **Named for the tap and not for the man.** It was `Availability`, which is
- *  what `@epl/core` calls a footballer's fitness — two types one import apart,
- *  one about whether he is injured and one about whether you may press him. */
+/** How a player may be tapped right now; `blocked` dims everyone the picked man cannot swap with. */
 export type PickState = "picked" | "swappable" | "blocked" | "idle";
 
 function Player({
@@ -48,9 +34,7 @@ function Player({
       onClick={onPick}
       disabled={dim}
       aria-pressed={picked}
-      // What the tap will do, which is three different things depending on where
-      // the screen already is. A ring is legible to everybody else; a screen
-      // reader gets the sentence.
+      // What the tap will do; the ring shows it, a screen reader gets the sentence.
       aria-label={
         picked
           ? `Deselect ${name}`
@@ -62,12 +46,7 @@ function Player({
         picked ? "ring-2 ring-accent" : ""
       } ${pick === "swappable" ? "ring-1 ring-accent/60" : ""} ${dim ? "opacity-30" : ""}`}
     >
-      {/* **The fixture, not his own club.** A planner is a pre-deadline screen by
-          construction — it is the round you can still change — so the line under
-          the name is who his club plays, in that opponent's own colour, which is
-          what `squad/[teamId]`'s locked eleven already asks for. `show="points"`
-          falls back to his OWN short name before kickoff, and eleven cards each
-          naming the club printed on the shirt above them say nothing. */}
+      {/* His fixture, not his club: before kickoff `show="points"` would repeat the club on his shirt. */}
       <SquadMarker player={player} show="fixture" />
     </button>
   );
@@ -94,8 +73,7 @@ export default function LineupPitch({
 }: {
   rows: PitchRow<SquadPlayerDetail>[];
   bench: SquadPlayerDetail[];
-  /** Fill a column rather than bleeding through the page's gutters — what the
-   *  desk does, where the list stands beside the grass inside one panel. */
+  /** Fill a column rather than bleed through the page's gutters, as beside the list on the desk. */
   inColumn?: boolean;
   pickStateOf: (player: SquadPlayerDetail) => PickState;
   onPick: (player: SquadPlayerDetail) => void;
@@ -112,20 +90,10 @@ export default function LineupPitch({
   );
 
   return (
-    // `pitch-with-bench`: the strip below the grass is this page's, so the
-    // card's height budget has to know about it. See `pitch.css`.
-    //
-    // Second occurrence of this expression, so it is copied rather than named
-    // (CODE_RULES §1). A third pitch with nothing beside it earns a recipe.
+    // `pitch-with-bench`: the card's height budget allows for the strip below; see `pitch.css`.
+    // Second copy of this expression (CODE_RULES §1); a third earns a recipe.
     <div className="pitch-with-bench flex flex-col">
-      {/* **The same card a rival's eleven draws** (Craig, 21 Sep 2026: "pitch
-          view using old crap UI ... USE THIS code for pitch view ui (and get it
-          shared)"). The planner had a sticker of its own — a cream name plate, a
-          fixture chip in FPL's difficulty colours and two contribution chips
-          beside the score — against `PitchMarker`'s bevelled plate and the
-          opponent's own colour. Two cards for the same man on two tabs, and this
-          was the one nobody else had been maintaining. `SquadMarker` is the
-          translation both now share. */}
+      {/* The same `SquadMarker` card a rival's eleven draws. */}
       <PitchRows
         rows={lines}
         keyOf={(at) => (typeof at === "string" ? `open-${at}` : at.rostered.slot.fantraxId)}

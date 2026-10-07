@@ -1,6 +1,5 @@
-// The desk's recipes: class strings composed at three or more sites. A pure look (fill, border,
-// bevel) is a class in `desk.css`; a recipe with no per-caller variation becomes a component.
-// docs/ui/conventions.md lists each recipe with its count, and the ones declined.
+// The desk's recipes: class strings composed at three or more sites. A pure look (fill, border, bevel) is a
+// class in `desk.css`; a recipe with no per-caller variation becomes a component. docs/ui/conventions.md counts them.
 
 /* ---- Labels and figures --------------------------------------------------- */
 
@@ -17,23 +16,19 @@ export const LABEL = `${SMALL_CAPS} text-faint`;
 /** `MINOR_CAPS` in furniture ink: `LABEL` a step down. */
 export const MINOR_LABEL = `${MINOR_CAPS} text-faint`;
 
-/** A name you scan a row for: chrome face, `sm` under a thumb, `base` on the desk. Truncation is
- *  the caller's. */
+/** A name you scan a row for; truncation is the caller's. */
 export const ROW_NAME = "font-chrome text-sm font-bold lg:text-base";
 
-/** How big a figure in a row is: one `text-sm` at both widths, keeping the name and its figures in
- *  proportion. */
+/** A figure in a row: one size at both widths, in proportion with the name. */
 export const ROW_FIGURE = "text-sm";
 
-/** A row's figure cell, on every table and board: tabular and centred under a centred head. `.numeric` already
- *  tracks, so never add `tracking-*`. */
+/** A row's figure cell, centred under a centred head. `.numeric` already tracks: never add `tracking-*`. */
 export const FIGURE_CELL = `numeric px-1.5 text-center ${ROW_FIGURE}`;
 
 /** A standings figure: `FIGURE_CELL`, bold. */
 export const FIGURE = `${FIGURE_CELL} font-bold`;
 
-/** CM's index block width, fixed so a column of blocks is one shape whatever each holds. Here and
- *  not in `league/`, so `shell/` can use it without importing upward. */
+/** CM's index block width, fixed so a column of blocks is one shape; here so `shell/` need not import upward. */
 export const INDEX_WIDTH = "w-8 lg:w-9";
 
 /** A figure to scan past: a club's letters beside a name, a record under a heading. */
@@ -83,8 +78,7 @@ export const PINNED_BESIDE_TILE = `${PINNED_NAME} left-10 lg:left-14`;
 /** `PINNED_NAME` starting where a pinned index block ends; the offsets are `INDEX_WIDTH`'s widths. */
 export const PINNED_BESIDE_INDEX = `${PINNED_NAME} left-8 lg:left-9`;
 
-/** A gameweek view's header row and title. Its loading skeletons use them too, or the page jumps
- *  when it lands. */
+/** A gameweek view's header row and title; its loading skeletons share them, or the page jumps when it lands. */
 export const GAMEWEEK_HEAD = "flex items-baseline justify-between gap-3 pt-1";
 export const GAMEWEEK_TITLE = "text-xl font-bold tracking-tight";
 
@@ -135,8 +129,7 @@ export const SUBMIT = "cm-bevel min-h-11 px-3 text-sm font-medium lg:min-h-9";
 /** A column shown on the desk only. */
 export const DESK_ONLY = "hidden lg:table-cell";
 
-/** `DESK_ONLY`, unless the table is sorted by this column: hiding it would hide the sort arrow and
- *  its `aria-sort`. */
+/** `DESK_ONLY`, unless the table is sorted by this column, whose arrow and `aria-sort` must show. */
 export function standDown(deskOnly: boolean | undefined, sorted: boolean): string {
   return deskOnly && !sorted ? DESK_ONLY : "";
 }

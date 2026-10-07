@@ -5,8 +5,8 @@ import { type Opposition, type PlayerMatchStats, DASH, contribution, fullMatchSt
 import { readMatchParts, type MatchRead } from "../../matchParts";
 import { FACT_LABEL, LABEL } from "@/app/desk";
 
-// What he did in the match or gameweek shown, under a drop-down (Craig, 21 Sep 2026: "dropdown arrow for the full
-// match stats"): FPL's counts, Opta's for what FPL does not split, and only what this league scores at his slot.
+// What he did in the match or gameweek shown, under a drop-down: FPL's counts, Opta's for what FPL does not
+// split, and only what this league scores at his slot.
 
 const UNREAD: MatchRead = { parts: null, scored: null };
 

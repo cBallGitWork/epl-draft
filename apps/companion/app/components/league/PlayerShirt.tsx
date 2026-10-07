@@ -2,64 +2,15 @@ import type { CSSProperties } from "react";
 import Image from "next/image";
 import { type Club, initials, shirtUrl } from "@epl/core";
 
-// A player on the grass, as his club's kit.
-//
-// **A shirt and not a photograph** (Craig, 10 Sep 2026: "portraits dont work —
-// lets go back to classic shirts for the pitch view that all sites work"). The
-// photographs are not missing: counted the same day, the Premier League's
-// `110x140` set answers for 51 of 60 random players and `500x500` for 49. What
-// they cannot do is agree. `PlayerImage`'s ladder falls from a photograph to one
-// of ours to the kit to initials, so a line of eleven reliably contains nine
-// faces, a shirt and a set of letters — three different objects standing in one
-// row, which is what reads as broken. A kit is keyed on club code, answers 40/40
-// (`shirtUrl` carries the count), and is right the day a man signs.
-//
-// So this is a picture with no fallback ladder and it does not need one. There is
-// no `useState`, no `onError`, no `"use client"`: the only absence it can meet is
-// a club we cannot name, and it answers that before asking for an image at all.
-// That is `crestForShortName`'s own rule — return nothing rather than something
-// that merely looks like an answer.
+// A player on the grass as his club's kit; a club we cannot name falls to his initials.
 
-/** How much of the kit is drawn, measured off the files rather than judged.
- *
- *  **The kit is LONG** (Craig, 10 Sep 2026: *"our shirts seem a little long"*),
- *  and it is the asset and not the box. Counted that day by walking the alpha
- *  channel of nine of the forty: the shirt inside the 220x290 canvas is
- *  **193x284** for an outfield kit and **207x283** for a keeper's, identical
- *  across every club — so the padding is 2-4px and the visible jersey is
- *  **0.680** wide-to-tall. The sites Craig put beside it draw a shirt at about
- *  0.88. Ours is a photographed full-length jersey; theirs is a stubbier
- *  illustration, and no box arithmetic turns one into the other.
- *
- *  So the hem is cropped. `KEPT` is the fraction of the jersey drawn and the
- *  card's shape is `0.680 / KEPT`, derived rather than typed beside it.
- *
- *  **0.62, which draws the kit slightly WIDER than tall** — 0.680/0.62 = 1.10.
- *  Craig has taken it down twice: 0.80 first (110/129, still visibly upright),
- *  then 0.70 (*"cut them off to make them more square"*), then 0.62 on 11 Sep
- *  2026 (*"the shirt does not need to be that long, we can cut it a lottle"*).
- *
- *  **0.62 is close to the floor and the floor is the sponsor.** These forty files
- *  are shot to one template — collar at 5%, crest at 22%, sponsor band 38-50%,
- *  hem at 97% — so anything above ~0.55 keeps every mark a reader identifies a
- *  club by. Below that the crop starts eating the sponsor, and a kit with half a
- *  sponsor on it looks like a rendering fault rather than a crop.
- *
- *  Cropping the FOOT and not the shoulders is the whole point: the collar, the
- *  crest and the sponsor are the top two thirds, and the hem is the part a
- *  reader identifies nothing by. */
+/** The fraction of the jersey drawn, cropped at the hem; below ~0.55 the crop eats the sponsor. */
 const KEPT = 0.62;
 
-/** The jersey's own shape, off the alpha channel: 193x284 for an outfield kit
- *  inside a 220x290 canvas. The keeper's is 207x283 and the difference is two
- *  hundredths, which is less than the crop moves it. */
+/** The jersey's shape inside its 220x290 canvas, off the alpha channel (an outfield kit). */
 const JERSEY = 193 / 284;
 
-/** What the card is therefore shaped like — and it is COMPUTED, because it has to
- *  be true in two places at once: the token `.pitch-figure` reads for the card,
- *  and the inner box that holds the jersey. Written out as `110 / 113` in both,
- *  they were two literals that had to agree about a third number neither of them
- *  named. */
+/** The card's shape, computed: `.pitch-figure` and the jersey's inner box must agree on it. */
 const CARD = JERSEY / KEPT;
 
 /** The kit's shape, for `.pitch-figure` on the element that reads it: the class falls back to a landscape 1.32 and
@@ -73,22 +24,14 @@ export default function PlayerShirt({
   name,
 }: {
   club: Club | undefined;
-  /** Which of the club's two kits. The keeper's is the `_1` variant and a
-   *  genuinely different shirt — long sleeves, its own colours — rather than a
-   *  tint, so a keeper drawn in an outfield shirt is wrong in a way a reader
-   *  sees before he can say why. */
+  /** Which of the club's two kits; the keeper's is the `_1` variant. */
   keeper: boolean;
-  /** Whether his match has kicked off. A man still to play is drawn back — and
-   *  it is the shirt that is drawn back, never the card: the name and the
-   *  fixture under him are what a waiting player is waiting on. */
+  /** Whether his match has kicked off; if not, the shirt dims and the card does not. */
   kickedOff: boolean;
   /** Only for the initials a club we cannot name falls to. */
   name: string;
 }) {
-  // **An early return and not a ternary in the JSX**, because the branch is what
-  // decides whether there are colours at all — and a `club!` inside the other
-  // half to prove it to the compiler is exactly the non-null assertion the
-  // domain rules forbid on provider data.
+  // An early return, so the other branch needs no `club!` assertion on provider data.
   if (club === undefined) {
     return (
       <div
@@ -121,11 +64,7 @@ export default function PlayerShirt({
           height={290}
           // Straight from FPL: Vercel's optimizer is refused the kit (OPTIMIZED_EXTERNAL_IMAGE_REQUEST_UNAUTHORIZED).
           unoptimized
-          // **Cover from the TOP, so the crop takes the hem.** `contain` was
-          // right while the box was the file's shape and is wrong now that it is
-          // the kit's: it would letterbox the jersey back inside the shorter box
-          // and undo the crop, which is the same class of mistake as the
-          // landscape default this file already records.
+          // Cover from the top, so the crop takes the hem; `contain` would letterbox it back.
           className={`h-full w-full object-cover object-top drop-shadow-[0_2px_3px_oklch(0_0_0/0.45)] ${
             kickedOff ? "" : "opacity-80 grayscale-[35%]"
           }`}

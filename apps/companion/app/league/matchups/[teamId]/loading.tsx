@@ -1,6 +1,8 @@
+import BackPlate from "../../../components/shell/BackPlate";
 import Skeleton from "../../../components/shell/Skeleton";
 import PhotoGround from "../../../components/football/PhotoGround";
 import { MATCHUP_VIEWS } from "./views";
+import { MATCHUPS } from "../../routes";
 
 // One head-to-head waiting on both elevens, in the board's shapes: the scoreline, a plate per view, the grass. No
 // `LeagueShell`, because the page has none.
@@ -11,6 +13,7 @@ export default function Loading() {
       {/* The desk's ground until the home team's arrives: this route draws its own. */}
       <PhotoGround subject={null} />
       <div className="flex items-stretch gap-px">
+        <BackPlate fallback={MATCHUPS} />
         <Skeleton width="50%" height="4rem" />
         <Skeleton width="50%" height="4rem" />
       </div>

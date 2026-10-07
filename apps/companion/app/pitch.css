@@ -1,55 +1,11 @@
-/* The pitch, and the budget the page gives it.
-   Split out of `globals.css`, which was 309 lines against CODE_RULES' 300-line
-   hard ceiling. This is one responsibility — how a pitch is drawn and how much
-   screen it is allowed — and it was the larger half.
+/* The pitch and the screen budget the page gives it; imported after `tokens.css`, which it reads. */
 
-   Imported after `tokens.css`, which it depends on: the ground draws its
-   markings in `--color-pitch-line`, and its furniture in
-   `--color-league`.
-
-   `--page-foot` stays in `globals.css`. It is room every page pays for and this
-   is only the pitch's half. The two used to move together at `md`; neither moves
-   at any width now, and the reason is below. */
-
-/* How much of the screen a pitch's page spends on everything that is not grass.
-   `.pitch-figure` caps a card's height against what is left of `--pitch-screen` after
-   it, so the budget and the cap are one number rather than two that drift.
-
-   **One value at every width, and the breakpoint went with the tab bar.** It
-   used to rise at `md` on two premises and the rail killed both. The bar no
-   longer goes overhead, so nothing it stops costing at the foot starts costing
-   at the head. And "the bands above a pitch stand further apart up there" was
-   simply not true: measured on 31 Aug 2026, immediately before this changed,
-   `/squad/[teamId]` with a bench spent **290px on furniture at 390, 768, 1024
-   and 1440 alike**. Two numbers were carrying one fact.
-
-   The 2rem off each value is the tab bar's room, which `--page-foot` stopped
-   asking for on the same day.
-
-   **Do not write the measurements down here.** Three of the four numbers that
-   used to sit in this paragraph were stale within the day — a formation line
-   landed above the grass and took 20px out of every one of them — and a budget
-   whose evidence rots is a budget nobody re-checks. `node tools/ui/pitchfit.mjs`
-   walks every squad the served league has at 390, 768, 1024 and 1440 and prints
-   where the grass ends against the fold. **The invariant it guards is that the
-   PITCH clears the fold, not that the page does**: the page scrolls on a phone
-   by design, because the season grid is a second panel under the board. On
-   31 Aug 2026 the tightest of the sixteen readings was 100px clear. */
+/* What a pitch's page spends on everything but grass; `.pitch-figure` caps a card against what is left.
+   The invariant is that the pitch clears the fold, not the page: `node tools/ui/pitchfit.mjs` checks it. */
 :root {
   --pitch-page: 16rem;
-  /* **The shape, as a number two rules read.** `.pitch`'s own `aspect-ratio` is
-     the first; the second is a caller that has to bound its own WIDTH by the
-     height it has, because the ratio turns any width it is given into a height —
-     see `fpl/FplPitch`, where a full-column pitch came out 1,132 wide and 1,192
-     tall at 1440, 552px past the fold.
-
-     **On `:root` and not on `.pitch`**, which is where it was for one commit: a
-     custom property inherits DOWN, so the wrapper that has to do the bounding is
-     the one element that cannot see a value set on the pitch inside it. That
-     read the fallback instead and drew a pitch 987px tall at 768.
-
-     0.62 under a thumb and 0.95 from `lg`; the long argument for both numbers is
-     on `.pitch` below. */
+  /* The pitch's shape, read by `.pitch` and by a caller bounding its width by its height (`fpl/FplPitch`).
+     On `:root`, not `.pitch`: that wrapper cannot see a value set on the pitch inside it. */
   --pitch-ratio: 0.62;
   /* The screen a pitch budgets against, floored so a short phone (SE, landscape) scrolls rather than clips. */
   --pitch-screen: max(100svh, 52rem);
@@ -62,28 +18,12 @@
   }
 }
 
-/* What the FPL tab keeps off its grass: the chrome above (260px, `pitchfit`) and the bench strip
-   under it, plus room, so the pitch is small enough to read in one look (Craig, 25 Sep 2026: "pitch
-   view still too big on desktop and mobile, make much smaller and show bench"). */
+/* The FPL tab's budget: the chrome above and the bench strip under it, so the pitch reads in one look. */
 .pitch-fpl {
   --pitch-page: 28rem;
 }
 
-/* A pitch with a bench under it is a different budget, and one number for both
-   made the quiet page pay for the busy one.
-
-   **The gated squad pitch this was written against no longer exists** — that
-   branch is a table since 31 Aug 2026 (DESIGN §9, reversed), so the only reader
-   of the base `--pitch-page` left is the FPL tab's own pitch, and both squad
-   pitches set the class below. Kept as two numbers rather than collapsed to one:
-   the FPL pitch has no bench and no way out under it, and giving it the busy
-   page's budget would take a third of its photograph to pay for furniture it
-   does not carry — which is the mistake this split was made to undo.
-
-   A class rather than an inline style: it belongs beside the budget it
-   overrides, and a `style` attribute would put the number in a component that
-   knows there is a bench but nothing about what a pitch costs. Set by the two
-   that do know there is one — `TeamSheet` and `LineupPitch`. */
+/* A pitch with a bench under it budgets for the bench; set by `TeamSheet` and `LineupPitch`. */
 .pitch-with-bench {
   --pitch-page: 26.5rem;
 }
@@ -120,38 +60,14 @@
   }
 }
 
-/* ---- Pitch ----------------------------------------------------------------
-   The box a ground is drawn in: its ratio, its ceiling and the budget it leaves
-   the rows. `CmGround` draws what goes inside it.
-
-   This section used to describe a pitch seen from behind the far goal, with
-   touchlines splaying toward the reader and mow bands growing as they came. That
-   was the photographed trapezoid, and it was deleted on 21 Sep 2026 when the
-   lineup planner — its last caller — moved to the flat diagram every other
-   eleven in the app already stood on. */
+/* The box a ground is drawn in, its ratio and its ceiling; `CmGround` draws inside it. */
 .pitch,
 .pitch-strip {
-  /* **So a card can be bounded by the GRASS as well as by the screen.** The two
-     constraints on this box have now failed to agree twice — once at 390 in
-     Sep 2026, where the ratio was the binding one and the cap could not see it,
-     and again at `lg` beside the list, where the cap is the binding one and is
-     the larger: a 1024 column is 401 wide, so the ratio gives 422px of grass
-     while a 1000px viewport hands four rows 576. The forwards were drawn under
-     the bench.
-
-     `100cqw` on a descendant reads this element's own width, which is the one
-     term the screen budget lacks. **Not `min-height: 122cqw` on this element**,
-     which is the attempt recorded below: that fed the container's own width back
-     into its own height and made a 554px pitch 1,757 tall. A descendant reading
-     its ancestor's width does not compound.
-
-     The bench strip is a container too, and for the same reason it takes the
-     grass's row count: a reserve is the same card as the man he would replace,
-     so the two have to bound themselves against the same number. Each reads its
-     OWN width rather than a shared wrapper's, which is what keeps them equal
-     through `.bleed` — the strip and the grass bleed together or not at all. */
+  /* A container, so a card can be bounded by the grass's width (`100cqw` below) as well as the screen. Never a
+     `cqw` height on this element: it feeds its own width back into its height. The bench strip is one
+     too, so a reserve is bounded like the man he would replace. */
   container-type: inline-size;
-  /* How much of its card a kit or face takes on the grass (Craig, 6 Oct 2026: "maybe 5%"); 1 off a pitch. */
+  /* How much of its card a kit or face takes on the grass; 1 off a pitch. */
   --pitch-kit: 0.95;
 }
 
@@ -162,8 +78,7 @@
   aspect-ratio: var(--pitch-ratio);
   /* A ceiling, because a ratio alone grows the pitch with every width up to `lg` (1,239px tall at 768). */
   max-height: calc(var(--pitch-screen) - var(--pitch-page));
-  /* A width of its own, or WebKit keeps the ratio under that ceiling by narrowing the pitch (260px of a 390
-     iPhone) where Chrome squats it. With one, every engine draws what Chrome does. */
+  /* A width of its own, or WebKit keeps the ratio under the ceiling by narrowing the pitch where Chrome squats it. */
   width: 100%;
 }
 
@@ -172,50 +87,13 @@
   width: calc(100% + 2 * var(--page-gutter));
 }
 
-/* The photograph on a player card, and the only thing on it with two bounds.
-
-   Width is the caller's: `PitchRows` gives every card the fullest line's share,
-   capped at the portrait file's own 110px. Height would then follow from the
-   shape — and that is the trap this rule exists to close. Card width is a
-   function of the FULLEST LINE, so a formation with few men in a line draws a
-   WIDER card, and once the figure carries the portrait's own upright shape a
-   wider card is a taller one. A 1-3-4-3 with a bench under it drew an 82px card
-   104px tall and pushed the lineup planner 199px past the screen, while the
-   seven-across squad that looks like the hard case sat comfortably inside it.
-
-   So the height is capped by the room one row actually has: the screen, less
-   what the page spends on everything that is not grass, divided by the number of
-   rows the FORMATION has — never a constant, because the formation is the
-   commissioner's and a 1-5-2-3 is legal here. `--pitch-rows` is set by
-   `PitchRows` and by the bench strips, so a reserve is the same card as the man
-   he would replace in height as well as width.
-
-   Past the cap the picture crops from the top again, which is what
-   `object-top` was always for. Anything drawing a player outside a pitch — the
-   dialogs, the profile, the paper's team of the week — sets no `--pitch-rows`,
-   takes the 1 below, and is bounded by nothing. */
+/* The photograph on a player card. Width is the caller's (`PitchRows`); height is capped by one row's
+   share of the screen and the grass (`--pitch-rows`), as a wider card is a taller one. */
 .pitch-figure {
   aspect-ratio: var(--pitch-figure, 1.32);
-  /* The floor is two bands, and it is not decoration: a short viewport takes the
-     calc below zero, and a negative `max-height` is clamped to nought — which
-     would not shorten the picture, it would delete it, on every page that sets
-     no row count and is bounded by this only incidentally. */
-  /* Two ceilings and the tighter one wins, because a card has to fit BOTH the
-     screen and the grass. The first term is what the page has left; the second
-     is the ground's own height, which is its width over the ratio — `.pitch`
-     caps itself at the first, so this is `min` of exactly the pair that decides
-     the box above. Written as one `min` rather than as a second rule, so the two
-     cannot be changed apart. */
-  /* **`--pitch-card-scale` shrinks the PICTURE and nothing else** (Craig, 21 Sep
-     2026: "bench icons can be smaller"). The bench strip sets it. The name plate
-     and the fixture band are siblings of this box and keep their own fixed
-     height, so a reserve's kit comes down and the two things a manager reads off
-     him do not — and the strip gives the grass above it the difference back.
-
-     A multiplier on the ceiling rather than a second formula: the strip is still
-     bounded by the same screen and the same grass, so the two cannot be changed
-     apart. */
-  /* Named so the kit inside can size itself from its width against the same ceiling (`PlayerShirt`). */
+  /* Named so `PlayerShirt` sizes the kit against it: the tighter of the screen's and the grass's ceilings, in one
+     `min` so they cannot change apart, floored at two bands, as a negative `max-height` deletes the picture.
+     `--pitch-card-scale` (the bench strip) shrinks the picture only; the name plate and fixture band keep theirs. */
   --pitch-cap: calc(
     var(--pitch-kit, 1) * var(--pitch-card-scale, 1) *
       max(

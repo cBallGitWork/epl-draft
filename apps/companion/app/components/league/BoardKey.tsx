@@ -1,7 +1,6 @@
 import { LABEL } from "@/app/desk";
 
-/** What a board's column heads stand for, shut under the board on a phone. A head's `title` is hover-only, and a
- *  thumb never hovers; the desk keeps the titles and draws no key. */
+/** A board's column key, shut under it on a phone, where a head's hover-only `title` never shows. */
 export default function BoardKey({
   entries,
 }: {
