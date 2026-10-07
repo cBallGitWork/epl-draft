@@ -29,6 +29,33 @@ permissions:
   issues: write
 
 jobs:
+  # The watchdog's own witness, a job apart so that neither check can skip the other.
+  watchdog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      # "alert: watchdog" when it has not succeeded for 3 hours; the watchdog's next green run closes it.
+      - name: Check the watchdog ran
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: npx tsx scripts/watchdog.ts --watchdog
+
+      - name: Alert the owner, if this check could not look
+        if: ${{ failure() || cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/ci/alert.sh watchdog fail "$RUN_URL"
+
   status:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -43,12 +70,6 @@ jobs:
           cache: npm
 
       - run: npm ci
-
-      # The watchdog's own witness: "alert: watchdog" when it has not succeeded for 3 hours.
-      - name: Check the watchdog ran
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: npx tsx scripts/watchdog.ts --watchdog
 
       # Per league: the two draft nine weeks apart, so the rehearsal league is
       # already on the daily cadence while the real one is still weekly. One
