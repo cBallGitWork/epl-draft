@@ -95,6 +95,9 @@ careers and league projections with an age check, and a dated weekly snapshot of
 - **Careers** come from `scripts/intel-careers.ts`, the sister's identity store read-only; it reproduced the hand
   export of 25 Sep row for row. Careers and league projections age at 8 days.
 - **intel-cups stamps every run again**: PR B had it skip an unchanged file, which this rule would read as stale.
+- **When the sister retires SofaScore** (its `library/RUNBOOK.md`, "The retirement rule": league-match pages more than
+  four days late), this side goes first: drop `shots` and `touches` from `sync-intel.sh`'s weekly kinds and their
+  8-day limits, or "the export wrote no shots" fails every Tuesday.
 
 ## A job that never ran is the watchdog's — decided 7 Oct 2026
 
