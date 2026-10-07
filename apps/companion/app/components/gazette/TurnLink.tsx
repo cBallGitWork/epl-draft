@@ -5,8 +5,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { startTransition, useEffect, useRef, type ReactNode } from "react";
 
 // A link that turns the page with the browser's View Transitions API (React's <ViewTransition> is experimental-only).
-// The push runs in `startTransition` and the snapshot waits for the pathname to change, so the turn never lands on
-// `(paper)/loading.tsx`; without the API, or under reduced motion, it is a plain `<Link>`.
+// The push runs in `startTransition` and the snapshot waits for the pathname to change, so the turn lands on the new
+// page; without the API, or under reduced motion, it is a plain `<Link>`.
 
 /** How long the turn waits for the new page before animating anyway, so a navigation that never commits cannot freeze it. */
 const SETTLE_MS = 500;
@@ -59,7 +59,7 @@ export default function TurnLink({
             };
             const timer = setTimeout(done, SETTLE_MS);
             settle.current = done;
-            // Holds the old tree on screen rather than dropping to the loading skeleton.
+            // Holds the old tree on screen until the new page commits.
             startTransition(() => {
               router.push(href);
             });

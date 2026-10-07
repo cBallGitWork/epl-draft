@@ -3,7 +3,6 @@ import SectionShell from "../components/shell/SectionShell";
 import PoolNav from "./PoolNav";
 import type { ScoutView } from "./PoolNav";
 import { SCOUT } from "../titles";
-import { StackWaiting } from "./[fantraxId]/Waiting";
 
 // The frame Data's screens wear: its own section on the royal-blue bar, and no yellow caption (Craig, 24 Sep
 // 2026: "remove the yellow rows"); the tab strip names the view.
@@ -28,14 +27,5 @@ export default function ScoutShell({
     >
       {children}
     </SectionShell>
-  );
-}
-
-/** A Data view's frame while it reads: its own shell over the waiting stack. */
-export function ScoutWaiting({ current }: { current: ScoutView }) {
-  return (
-    <ScoutShell current={current}>
-      <StackWaiting />
-    </ScoutShell>
   );
 }
