@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Pending from "./Pending";
 import { TAB } from "@/app/desk";
 
 // Championship Manager's blue tab strip: one row of plates, edge to edge under a title bar, picking one of a set.
@@ -46,6 +47,7 @@ export default function TabStrip<K extends string>({
             }`}
           >
             {tab.label}
+            <Pending />
           </Link>
         );
       })}

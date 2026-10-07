@@ -4411,6 +4411,13 @@ these are not pages "crawlers and link checkers believe"; they are pages crawler
 are explicitly told to ignore. What is left seeing a 200 is `curl -I` and
 analytics, which is a real but small cost.
 
+**7 Oct 2026: no route has a `loading.tsx`** (Craig: *"loading empty tables first … looks terrible"*), so every
+malformed URL now answers a true 404 and the table above is history. Measured before, on production in a 4G,
+4×-CPU phone: each first tap on Draft, Data, Mail and Squad drew empty tables for about 0.3s. Without them the old
+page holds for the same wait and `shell/Pending` presses the tapped tab; the request count is unchanged.
+**Prefetching every tab's full page was measured and refused**: it made first taps instant, but every 30s live
+refresh re-fetches the visible links, and full pages are ~150KB a round, about 36MB in two hours per phone.
+
 **The documented fix is one we should not take.** Next says to check existence in
 `proxy` before the body streams, and in the same breath says to keep proxy checks
 fast and avoid fetching content there. Our checks are `footballNow()`,

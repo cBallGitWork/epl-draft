@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import Glyph from "./glyphs";
+import Pending from "./Pending";
 import { MORE, barTabs, moreOwns, owns, tabOwns, type GroupKey, type Section } from "./sections";
 
 // The phone's navigation: CM's rail laid along the foot, a glyph over each word, and More opening a page.
@@ -93,11 +94,13 @@ export default function ThumbRail({
                 badge={tab.section.glyph === "mail" ? mail : null}
                 dot={tab.section.onlyDuringGameweek}
               />
+              <Pending />
             </Link>
           ),
         )}
         <Link href={MORE} aria-current={moreOwns(sections, pathname) ? "page" : undefined} className={TAB}>
           <Face label="More" figure={<Glyph name="more" />} />
+          <Pending />
         </Link>
       </nav>
 
@@ -112,18 +115,23 @@ export default function ThumbRail({
             className="cm-flyout lg:hidden"
             style={{ left: `${((index + 0.5) / count) * 100}%` }}
           >
-            {tab.members.map((member) => (
-              <Link
-                key={member.href}
-                href={member.href}
-                aria-current={owns(member.routes, pathname) ? "page" : undefined}
-                onClick={close}
-                className="cm-bevel cm-rail-plate grid size-16 content-center justify-items-center gap-y-1"
-              >
-                {member.glyph ? <Glyph name={member.glyph} /> : null}
-                <span className="text-xs font-semibold leading-4">{member.label}</span>
-              </Link>
-            ))}
+            {tab.members.map((member) => {
+              const here = owns(member.routes, pathname);
+              return (
+                <Link
+                  key={member.href}
+                  href={member.href}
+                  aria-current={here ? "page" : undefined}
+                  // Another page's square holds the flyout open, pressed, until the page lands and closes it.
+                  onClick={here ? close : undefined}
+                  className="cm-bevel cm-rail-plate grid size-16 content-center justify-items-center gap-y-1"
+                >
+                  {member.glyph ? <Glyph name={member.glyph} /> : null}
+                  <span className="text-xs font-semibold leading-4">{member.label}</span>
+                  <Pending />
+                </Link>
+              );
+            })}
           </nav>
         ) : null,
       )}

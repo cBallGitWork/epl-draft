@@ -453,9 +453,9 @@ that is about a player rather than about a tally.
 2026: bonus is the FPL tab's alone, so nothing outside it waits on it). The sister repo's day-long lag is a
 different absence and belongs only to the tabs that do not exist yet.
 
-**No `loading.tsx`, deliberately.** `docs/record/PLATFORM_NOTES.md` records that adding one
-converts a true 404 into a soft 200, and this was one of only two routes still
-answering honestly. The one slow read is Fantrax, so it streams behind
+**No `loading.tsx`**, like every route since 7 Oct 2026. `docs/record/PLATFORM_NOTES.md` records
+that one converts a true 404 into a soft 200, and this was one of only two routes that
+answered honestly before they all went. The one slow read is Fantrax, so it streams behind
 `<Suspense>` instead, as the player screen does.
 
 ## The files
