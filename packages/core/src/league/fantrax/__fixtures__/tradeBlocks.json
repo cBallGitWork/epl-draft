@@ -1,0 +1,50 @@
+{
+  "tradeBlockEmptyText": "The trade block is currently empty",
+  "editTeamText": "Edit my team",
+  "positions": [
+    "703",
+    "702",
+    "701",
+    "704"
+  ],
+  "commissioner": true,
+  "tradeBlocks": [
+    {
+      "lastUpdated": {
+        "date": 1791391356251,
+        "title": "Last Updated"
+      },
+      "scorersOffered": {
+        "title": "Players Offered",
+        "scorers": {
+          "701": [
+            {
+              "teamName": "Manchester City",
+              "urlName": "erling-haaland",
+              "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Manchester_City.png",
+              "scorerId": "061vq",
+              "teamLogo": true,
+              "posIdsNoFlex": [
+                "701"
+              ],
+              "defaultPosId": "701",
+              "posShortNames": "F",
+              "team": false,
+              "rookie": false,
+              "minorsEligible": false,
+              "posIds": [
+                "701"
+              ],
+              "teamId": "110080",
+              "name": "Erling Haaland",
+              "teamShortName": "MCI",
+              "shortName": "E. Haaland"
+            }
+          ]
+        }
+      },
+      "teamId": "l5kunst8msgbirdf"
+    }
+  ],
+  "tradeBlockEmptyFilterText": "The trade block is empty with selected filter"
+}

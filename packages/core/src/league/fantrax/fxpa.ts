@@ -36,6 +36,7 @@ export function unwrapFxpa(method: string, body: unknown): unknown {
 /** The only methods a session may carry: the same cookie reaches `deleteLeague`. */
 const SESSION_METHODS: ReadonlySet<string> = new Set([
   "getTeamRosterInfo",
+  "getTradeBlocks",
   "confirmOrExecuteTeamRosterChanges",
   "setAutoSubsOrder",
 ]);

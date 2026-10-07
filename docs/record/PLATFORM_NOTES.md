@@ -1250,7 +1250,10 @@ shape is unknown** and must be read from a league that has posts before anything
 renders it. `LEAGUE_ARTICLE` is worth a second look for its own reason: the paper
 could file into Fantrax rather than only onto our own front page.
 
-### The trade block is real data, not a stub
+### ~~The trade block is real data, not a stub~~ — this is the editor's picker (corrected 7 Oct 2026)
+
+**Wrong read:** these lists are who a manager COULD offer or want, not who is on the block. The block is
+`getTradeBlocks`; see *The trade block, and trade proposals* (7 Oct 2026).
 
 `scorerListForWanted` **150**, `scorerListForOffered` **15** in dummy. Each entry
 is a full scorer — name, club, `posShortNames`, `scorerId`, `headshotUrl`, and
@@ -4243,6 +4246,31 @@ The populated shapes, which the 21 Sep note could not see:
 - `getLeagueHomeInfo.pendingTransactions.pendingTransactionSets[]` carries the same sets more thinly
   (`statusDisplay`, `typeCode`, `transactions[]{type.code, scorerId, sourceTeamId, destinationTeamId}`), and is
   cookie-only too.
+
+### The trade block, and trade proposals, read as the commissioner (7 Oct 2026)
+
+Craig asked for the trade block in everyone's Mail and a banner for an offer. Reads only, with his cookie, off the
+SPA's own bundle.
+
+- **`getTradeBlock` (singular) is the editor, not the block.** It answers the caller's own picker: `scorerListForOffered`
+  is his 14 men, `scorerListForWanted` the other 140 rostered, with no owner and no flag. The dummy probe of 21 Sep
+  read it as "who is on offer"; it is who COULD be. Its save is `saveTradeBlock {func: "saveAll", …}`, which sends
+  Fantrax's own alert to the league.
+- **`getTradeBlocks` (plural) is the league's block**, the call `/transactions/trade-block` makes
+  (`chunk-IJUVPJCK.js`). Cookie only (`WARNING_NOT_LOGGED_IN` without). `tradeBlocks[]` per team: `teamId`,
+  `lastUpdated {date: epoch ms}`, `comment {body}`, and up to six lists, `scorersOffered`/`scorersWanted`
+  (`{title, scorers: {posId: [scorer]}}`), `positionsOffered`/`positionsWanted` (`{title, positions: [posId]}`) and
+  `statsOffered`/`statsWanted` (scoring categories, not read). Empty in all three leagues until Craig put Haaland on
+  The Raccoons' block in the real league at 17:42 BST, which is the fixture.
+- **Position names are `getRefObject {type: "Position"}`**, public: 14 ids, 701 Forward, 702 Midfielder, 703
+  Defender, 704 Goalkeeper. `getLeagueInfo`'s scoring configs name only the three outfield ids.
+- **Trade proposals ARE readable**, which the 1 Oct section above did not find:
+  `getTransactionDetailsHistory {view: "TRADE", executedOnly: false}` with the cookie answers 36 rows in the real
+  league where the anonymous read answers the 8 executed ones (Craig's link:
+  `…/transactions/history;view=TRADE;adminMode=true;executedOnly=false`; `adminMode` changes nothing). Each row adds
+  `resultCode` and `result.content`: `TRADE_CANCELLED` 22, `TRADE_REJECTED` 6, `EXECUTED` 8. Every set involves The
+  Raccoons, Craig's team, so whether a proposal between two other teams shows is unproven; Craig says the
+  commissioner's page shows it. A pending proposal's code is not yet seen.
 
 ## A Fantrax points figure per man per MATCH is a capture, not a read (4 Sep 2026)
 

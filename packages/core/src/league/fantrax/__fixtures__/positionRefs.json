@@ -1,0 +1,106 @@
+{
+  "allObjs": {
+    "700": {
+      "id": "700",
+      "name": "Outfielder",
+      "shortName": "OF",
+      "sortOrder": 40,
+      "colorKey": "--color-purple--softer"
+    },
+    "701": {
+      "id": "701",
+      "name": "Forward",
+      "shortName": "F",
+      "sortOrder": 30,
+      "colorKey": "--color-green--softer"
+    },
+    "702": {
+      "id": "702",
+      "name": "Midfielder",
+      "shortName": "M",
+      "sortOrder": 20,
+      "colorKey": "--color-primary--softer"
+    },
+    "703": {
+      "id": "703",
+      "name": "Defender",
+      "shortName": "D",
+      "sortOrder": 10,
+      "colorKey": "--color-amber--softer"
+    },
+    "704": {
+      "id": "704",
+      "name": "Goalkeeper",
+      "shortName": "G",
+      "sortOrder": 50,
+      "colorKey": "--color-red--softer"
+    },
+    "707": {
+      "id": "707",
+      "name": "Team Outfielder",
+      "shortName": "TmOF",
+      "sortOrder": 90,
+      "colorKey": "--color-purple"
+    },
+    "708": {
+      "id": "708",
+      "name": "Team Goalkeepers",
+      "shortName": "TmG",
+      "sortOrder": 100,
+      "colorKey": "--color-red"
+    },
+    "709": {
+      "id": "709",
+      "name": "Team",
+      "shortName": "Tm",
+      "sortOrder": 110,
+      "colorKey": "--color-teal"
+    },
+    "710": {
+      "id": "710",
+      "name": "Midfielder/Forward",
+      "shortName": "M/F",
+      "sortOrder": 60,
+      "colorKey": "--color-primary",
+      "labelParts": "M=702|F=701"
+    },
+    "711": {
+      "id": "711",
+      "name": "Defender/Midfielder",
+      "shortName": "D/M",
+      "sortOrder": 70,
+      "colorKey": "--color-amber--light",
+      "labelParts": "D=703|M=702"
+    },
+    "712": {
+      "id": "712",
+      "name": "Defender 2",
+      "shortName": "D2",
+      "sortOrder": 11,
+      "colorKey": "PRIMARY"
+    },
+    "713": {
+      "id": "713",
+      "name": "Midfielder 2",
+      "shortName": "M2",
+      "sortOrder": 11,
+      "colorKey": "PRIMARY"
+    },
+    "714": {
+      "id": "714",
+      "name": "Outfielder 2",
+      "shortName": "OF2",
+      "sortOrder": 40,
+      "colorKey": "PRIMARY"
+    },
+    "715": {
+      "id": "715",
+      "name": "Defender/Forward",
+      "shortName": "D/F",
+      "sortOrder": 70,
+      "colorKey": "PRIMARY",
+      "labelParts": "D=703|F=701"
+    }
+  },
+  "lastModified": 1353544627000
+}

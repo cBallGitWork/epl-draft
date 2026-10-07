@@ -6,6 +6,7 @@ import {
   periodGameweeks,
   availabilityNews,
   availability,
+  blockNews,
   dealNews,
   deals,
   headToHead,
@@ -16,6 +17,7 @@ import {
 import { now } from "../clock";
 import { readBoard } from "../board";
 import { readDeals } from "../business";
+import { readTradeBlocks } from "../tradeBlock";
 import { seasonKickoffs } from "../football";
 import { readerTeamId, getLeagueSquads } from "../squads";
 
@@ -42,11 +44,12 @@ function nextOpponent(
 }
 
 export async function readInbox(): Promise<Inbox> {
-  const [squads, feed, mine, kickoffs] = await Promise.all([
+  const [squads, feed, mine, kickoffs, blocks] = await Promise.all([
     getLeagueSquads(),
     readDeals(),
     readerTeamId(),
     seasonKickoffs(),
+    readTradeBlocks(),
   ]);
 
   const drafted = "period" in squads ? squads : null;
@@ -54,6 +57,9 @@ export async function readInbox(): Promise<Inbox> {
     (drafted?.info?.teams ?? []).map((team) => [team.teamId, team.name] as const),
   );
   const nameOf = (teamId: string) => names.get(teamId) ?? null;
+  const holders = new Map(
+    (drafted?.period.teams ?? []).flatMap((team) => team.players.map((man) => [man.slot.fantraxId, team.teamId] as const)),
+  );
   const gameweek = drafted?.snapshot.gameweek ?? null;
 
   // Unsorted: `inboxItems` files every doubt by its `news_added` date.
@@ -80,6 +86,7 @@ export async function readInbox(): Promise<Inbox> {
     items: inboxItems(
       // `deals()` pairs a claim with its drop and both halves of a trade.
       dealNews(deals(feed.rows), nameOf, mine),
+      blockNews(blocks, { name: nameOf, mine, holder: (fantraxId) => holders.get(fantraxId) ?? null }),
       roundNews({
         gameweek,
         // The paper's own `nextDeadline`, so the inbox and the paper print one time.

@@ -7,6 +7,8 @@ export type {
   LeaguePlayerState,
   LeagueTeam,
   LeagueTransaction,
+  BlockPlayer,
+  TradeBlock,
   PeriodRosters,
   RosterLimits,
   RosterSlot,
@@ -94,6 +96,8 @@ export { mapBenchOrder } from "./fantrax/benchOrder";
 export { isFantraxPlayerId, mapPlayerProfile } from "./fantrax/profile";
 export type { PlayerIntel, PlayerMatch } from "./fantrax/profile";
 export { mapTransactions, orderKey } from "./fantrax/transactions";
+export { mapPositionNames, mapTradeBlocks } from "./fantrax/tradeBlock";
+export { fetchPositionRefs, fetchTradeBlocks } from "./fantrax/tradeClient";
 // Everything written about one player.
 export { fetchPlayerProfile, fetchPlayerStories, fetchPoolNews, fetchPoolStats } from "./fantrax/playerClient";
 export { mapPlayerStories, mapPoolNews } from "./fantrax/playerNews";
