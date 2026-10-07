@@ -1,8 +1,9 @@
-import { availabilityOf, clubColours, setPieceOrder, squadOf } from "@epl/core";
+import { availabilityOf, clubColours, fullFootballerName, setPieceOrder, squadOf } from "@epl/core";
 import TabEmpty from "../../../../components/league/TabEmpty";
 import Section from "../../../../components/shell/Section";
 import PlayerPortrait from "../../../../components/football/PlayerPortrait";
 import StateBox from "../../../../components/football/StateBox";
+import PlayerName from "../../../../components/shell/PlayerName";
 import { doubtRow } from "../../../../components/football/doubtRow";
 import { SET_PIECES, intelSetPieces } from "../../../../intel";
 import { leagueOpinions } from "../../../leagueOpinions";
@@ -90,7 +91,7 @@ export default async function SetPiecesPage({ params }: { params: Promise<{ code
                         // written out and matches the `<li>` above it exactly.
                         className={`flex min-h-11 min-w-0 flex-1 items-center truncate text-ink lg:min-h-9 ${ROW_NAME}`}
                       >
-                        {player.fullName}
+                        <PlayerName name={player.fullName} short={fullFootballerName(player)} />
                       </NameLink>
                       <StateBox player={player} />
                     </li>

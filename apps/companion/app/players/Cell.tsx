@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { fixed, listName, signed, toFplClubCode, DASH } from "@epl/core";
+import { fixed, initialled, signed, toFplClubCode, DASH } from "@epl/core";
 import type { FootballPlayer } from "@epl/core";
 import type { PoolRow } from "./pool";
 import type { PoolColumn, RawStats } from "./columns";
@@ -47,7 +47,7 @@ export function Lead({
             so line one is the name's alone (Craig, 1 Oct 2026: "needs more space for player name on mobile"). */}
         <LeadFace
           club={toFplClubCode(player.clubCode ?? "")}
-          name={listName(player.rawName) || player.displayName}
+          name={initialled(player.rawName) || player.displayName}
           fullName={player.displayName}
           positions={row.entry.eligiblePositions}
           after={
