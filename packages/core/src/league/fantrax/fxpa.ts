@@ -4,21 +4,11 @@ import { politeFetch } from "../../http/fetch";
 import { readJson } from "../../http/json";
 import { FantraxError, pageErrorEnvelope, responseErrorEnvelope, statusFailure } from "./errors";
 
-// Fantrax's SPA API. A separate file from `client.ts` on purpose: different
-// protocol, different failure envelope. Folding it into the fxea client would
-// leave one module where a reader cannot tell which surface a call is on.
-//
-// This is the surface the live scoreboard polls every thirty seconds on a
-// Saturday, so it backs off when told to, exactly as the fxea reads do.
-//
-// The wire format carries a BATCH — `{"msgs":[…]}` answered by `responses[]` —
-// and this asks exactly one question per request, because one question is all
-// anything needs. Batching arrives when a second caller wants it, not before.
-// Most reads need no auth; the lineup save passes the commissioner's session.
+// Fantrax's SPA API, apart from `client.ts`: a different protocol and failure envelope. It backs off when told to and
+// asks one question per request, though the wire takes a batch. Most reads need no auth; the lineup save carries a session.
 
-/** The one message's payload, or a `FantraxError`: for a `pageError` (the whole request), for
- *  `responses[0].errors[]` (the message), or for an answer with no payload in it. Pure, so every
- *  shape is testable without a server. */
+/** The one message's payload, or a `FantraxError` for a `pageError` (the request), `responses[0].errors[]` (the message)
+ *  or no payload at all. Pure. */
 export function unwrapFxpa(method: string, body: unknown): unknown {
   const page = pageErrorEnvelope(body);
   if (page) {

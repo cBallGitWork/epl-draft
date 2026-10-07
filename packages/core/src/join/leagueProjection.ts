@@ -26,7 +26,7 @@ export function eachPart<T>(value: (part: LeagueProjectionPart) => T): Record<Le
   return Object.fromEntries(LEAGUE_PROJECTION_PARTS.map((part) => [part, value(part)])) as Record<LeagueProjectionPart, T>;
 }
 
-export interface LeagueWeek {
+interface LeagueWeek {
   gw: number;
   points: number;
   /** `conceded` is every deduction: goals conceded, cards, own goals and missed penalties. */
@@ -34,7 +34,7 @@ export interface LeagueWeek {
 }
 
 /** The league's short codes for what each part is paid under, found by meaning; null or empty where it scores none. */
-export interface ProjectionCodes {
+interface ProjectionCodes {
   goals: string | null;
   assists: string | null;
   cleanSheets: string | null;
@@ -140,7 +140,7 @@ export interface LeagueMatch {
 }
 
 /** Points and minutes, summed. */
-export interface Observed {
+interface Observed {
   points: number;
   minutes: number;
 }

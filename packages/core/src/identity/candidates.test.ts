@@ -69,10 +69,8 @@ describe("surnameAgrees", () => {
   });
 
   it("rejects Fantrax's raw surname-first form, which callers must flip first", () => {
-    // Pinned, not aspirational. In "Ballard, Danny" the last token is the GIVEN
-    // name, so the guard asks whether FPL calls him Danny and refuses — every
-    // diminutive fails this way. Loosening it to "any token agrees" would fix
-    // this case and let "Jesus, Gabriel" walk off with Arsenal's Gabriel.
+    // Pinned: surname-first, the guard asks for "Danny" and refuses. "Any token agrees" would hand "Jesus, Gabriel"
+    // Arsenal's Gabriel.
     expect(surnameAgrees("Ballard, Danny", ballard)).toBe(false);
   });
 

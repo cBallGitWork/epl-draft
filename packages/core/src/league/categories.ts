@@ -20,25 +20,9 @@ import {
 } from "./categoryNames";
 import { wordsFor } from "./categoryWords";
 
-// What the Team Stats board can rank a league by.
-//
-// The list is OURS, not Fantrax's, and the difference matters. Fantrax publishes
-// 22 leaderboards because it publishes each category twice, once per position
-// block; a reader does not think of "clean sheets kept by my goalkeeper" and
-// "clean sheets kept by my defenders" as two things. So this is the categories
-// the game actually pays for, and `mapSeasonStats` does the adding.
-//
-// Craig, 1 Sep 2026, on why goals against is one entry and not two: "goals
-// against is a def and keeper stat, so we can combine that." Saves and penalty
-// saves stay keeper-only because only a keeper can record one — they are not
-// combined, they simply have one half.
+// What the Team Stats board can rank a league by: our list, each category once, not Fantrax's one per position block.
 
-/** A category the board can rank by.
- *
- *  `key` is Fantrax's own caption, because that is what `mapSeasonStats` files
- *  the lines under; matching on a label we invented would break the moment we
- *  reworded one. `label` is what the menu says, and it is shorter than Fantrax's
- *  caption on purpose — a select on a 390px phone has about twenty characters.*/
+/** A category the board can rank by: `key` is Fantrax's caption, which `mapSeasonStats` files lines under. */
 export interface StatCategory {
   key: string;
   /** Which foot button this sits under. */
@@ -48,33 +32,12 @@ export interface StatCategory {
   short: string;
   /** The head's title, where it says more than the label. */
   title?: string;
-  /** True when a low figure is the better one. Cards, own goals and goals
-   *  against are the categories where topping the table is bad news, and a board
-   *  that ranked them descending would put the worst side first under a heading
-   *  that reads like a leaderboard. */
+  /** True when a low figure is the better one: cards, own goals, goals against. */
   lowIsGood?: boolean;
 }
 
-/** The kinds of thing a squad does, which is CM's second foot row.
- *
- *  Craig, 1 Sep 2026: "like CM, we could have another row of blue buttons under
- *  the table, could then separate the categories into defensive / attacking /
- *  appearance / discipline". That row is the one thing every screen in the
- *  reference library has and this app had none of — related destinations under
- *  the panel, above the Back/Next pair (`docs/ui/reference/README.md`). Twelve
- *  entries in one dropdown was a list; four buttons over three or four each is
- *  a screen.
- *
- *  **Where the two awkward ones went.** A missed penalty is a failed SHOT and
- *  files under attacking; an own goal is a blunder against your own side and
- *  files under discipline (Craig chose the split). Neither is obvious, which is
- *  why it is written down.
- *
- *  **Appearances has one entry today and that is a fact about our league, not
- *  about Fantrax.** `SEASON_STATS` publishes what THIS league scores, so
- *  sub-on, sub-off and points off the bench are absent because nobody is paid
- *  for them here. A league with every category enabled would say what the full
- *  set is — deferred, and recorded in PLATFORM_NOTES. */
+/** The kinds of thing a squad does, the board's second foot row. A missed penalty files under attacking and an
+ *  own goal under discipline. */
 export const GROUPS = [
   { key: "attacking", label: "Attacking", short: "Attack" },
   { key: "defensive", label: "Defensive", short: "Defence" },
@@ -86,8 +49,7 @@ export const GROUPS = [
 
 export type GroupKey = (typeof GROUPS)[number]["key"];
 
-/** A group's categories the league publishes, by caption, in the order they are declared; the whole group when
- *  Fantrax answered nothing. */
+/** A group's categories the league publishes, by caption, in declared order; the whole group when Fantrax answered nothing. */
 export function offeredIn(group: GroupKey, lines: ReadonlyMap<string, unknown>): StatCategory[] {
   const carried = new Set(lines.keys());
   return CATEGORIES.filter((category) => category.group === group && carries(carried, category.key));
@@ -103,10 +65,7 @@ export function statCategory(of: FantraxCategory, group: GroupKey, lowIsGood?: t
   return { key: of.caption, group, label: words.name, short: words.head, title, lowIsGood };
 }
 
-/** Ordered as a reader would look for them: what a squad did going forward,
- *  then what it did at the back, then what it did wrong. Not alphabetical —
- *  `Assists (Fantasy)` first and `Yellow Cards` last is an accident of the
- *  alphabet, not an order anybody wants to read. */
+/** Every category, in the order each group lists them; never alphabetical. */
 export const CATEGORIES: readonly StatCategory[] = [
   statCategory(MINUTES, "appearances"),
   statCategory(GOALS, "attacking"),
@@ -132,9 +91,7 @@ export function categoryFor(key: string | undefined): StatCategory {
   return CATEGORIES.find((category) => category.key === key) ?? CATEGORIES[0]!;
 }
 
-/** Which number the board ranks by. Fantasy points is the default because this
- *  is a fantasy league: a squad that played 1,500 minutes is not doing better
- *  than one that played 1,400 unless those minutes were worth more. */
+/** Which number the board ranks by: the category's fantasy points (the default) or its count. */
 export type Measure = "points" | "value";
 
 export function isMeasure(value: string | undefined): value is Measure {

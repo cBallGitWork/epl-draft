@@ -1,4 +1,5 @@
-import { FILLER, GROUNDS, REGISTER, banned, escapeRegExp } from "../banned";
+import { FILLER, GROUNDS, REGISTER, banned } from "../banned";
+import { escapeRegExp } from "../../regExp";
 import type { Report } from "../predictions/checks";
 import { masked, ngrams, sentences, wordCount } from "../predictions/prose";
 import { DESK_BANNED } from "../predictions/words";

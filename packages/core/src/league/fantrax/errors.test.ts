@@ -7,8 +7,7 @@ import errorNoTeams from "./__fixtures__/errorEnvelope.json";
 import leagueInfo from "./__fixtures__/leagueInfo.json";
 import standings from "./__fixtures__/standings.json";
 
-// Every fixture here is a verbatim recording of a real fxea response, including
-// both failures — which arrived with HTTP 200, the reason this file exists.
+// Verbatim recordings of real fxea responses, both failures included, which arrived with HTTP 200.
 
 describe("errorEnvelope", () => {
   it("detects the NO_TEAMS refusal our own league returns before the draft", () => {
@@ -29,8 +28,7 @@ describe("errorEnvelope", () => {
   });
 
   it("ignores an `error` that is not an envelope", () => {
-    // Guards against a future payload with an unrelated `error` field being read
-    // as a refusal. Only an object carrying a string `code` counts.
+    // Only an object carrying a string `code` counts, so an unrelated `error` field is no refusal.
     expect(errorEnvelope({ error: "not an object" })).toBeNull();
     expect(errorEnvelope({ error: {} })).toBeNull();
     expect(errorEnvelope({ error: { message: "no code" } })).toBeNull();

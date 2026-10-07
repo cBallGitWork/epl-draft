@@ -3,8 +3,7 @@ import recordedStats from "../__fixtures__/plMatchStats.json";
 import { plMatchBoard } from "./matchStats";
 import type { RawPlMatchStats } from "./rawStats";
 
-// Liverpool 2-2 Nottingham Forest, gameweek 2, recorded 4 Sep 2026 (CODE_RULES
-// §6). Their own team ids: Liverpool 10, Forest 15.
+// Liverpool 2-2 Nottingham Forest (GW2), by their own team ids: Liverpool 10, Forest 15.
 const STATS = recordedStats as unknown as RawPlMatchStats;
 const LIVERPOOL = 10;
 const FOREST = 15;

@@ -20,23 +20,14 @@ import type {
   RawTeamInfo,
 } from "./raw";
 
-// Pure raw→domain transforms. No clocks, no network, no environment — everything
-// this needs arrives as an argument, which is what makes it testable against
-// recorded JSON instead of a live league.
+// Pure raw→domain transforms: no clocks, no network, no environment.
 
-/** Synthetic per-club entries ("Team Outfielder", "Team Goalie") that Fantrax
- *  mixes into the player pool for team-level scoring. Their ids carry a "#" and
- *  their positions are Tm/TmOF/TmG. They are not footballers and must never
- *  reach the identity bridge, where they would match a club name by accident. */
+/** Fantrax's per-club pool entries (id with "#", Tm/TmOF/TmG): not footballers, and kept off the identity bridge. */
 function isTeamEntity(entry: RawPoolEntry): boolean {
   return entry.fantraxId.includes("#");
 }
 
-/** "Cresswell, Alfie" → "Alfie Cresswell". Most pool names are in this surname-
- *  first form, but a sizeable minority arrive already in reading order
- *  ("Gabriel Jesus", "Bruno Fernandes"), and those must pass through untouched.
- *  Splitting on the comma is what distinguishes the two — not a heuristic about
- *  how many words a name has. */
+/** "Cresswell, Alfie" → "Alfie Cresswell"; a name without the comma ("Gabriel Jesus") passes through untouched. */
 export function readingOrder(name: string): string {
   const comma = name.indexOf(", ");
   if (comma === -1) return name.trim();
@@ -63,9 +54,7 @@ export function mapPlayerPool(pool: RawPlayerPool): LeaguePlayer[] {
   return players;
 }
 
-/** Fantrax joins multiple eligible positions with a comma ("F,M"). Absent or
- *  empty means the commissioner has not assigned one, which is a real state and
- *  maps to an empty list rather than a guess. */
+/** Fantrax's comma-joined eligibility ("F,M") as a list; empty when the commissioner has assigned none. */
 function eligiblePositions(value: string | undefined): string[] {
   if (!value) return [];
   return value
@@ -92,17 +81,12 @@ function mapRosterLimits(info: RawRosterInfo | undefined): RosterLimits {
   }
 
   return {
-    // `?? null` and never `?? 0`: a cap Fantrax did not publish is one nobody
-    // can break, and folding it to nought made every squad break it.
+    // `?? null`, never `?? 0`: an unpublished cap is one nobody can break.
     maxTotalPlayers: info?.maxTotalPlayers ?? null,
     maxActivePlayers: info?.maxTotalActivePlayers ?? null,
     maxReservePlayers: info?.maxTotalReservePlayers ?? null,
     maxActiveByPosition,
-    // **Always empty here, because this endpoint does not carry it.** The
-    // minimum is a real commissioner setting that Fantrax enforces and publishes
-    // only on its own setup page; `scripts/roster-limits.ts` reads it and the
-    // planner merges it in. Mapping it to `{}` rather than omitting the field
-    // means no caller can forget the question exists.
+    // Always empty: minimums are on Fantrax's setup page only, read by `scripts/roster-limits.ts` and merged in later.
     minActiveByPosition: {},
   };
 }
@@ -122,16 +106,13 @@ function mapTeams(teamInfo: Record<string, RawTeamInfo> | undefined): LeagueTeam
   if (!teamInfo) return [];
   const teams: LeagueTeam[] = [];
   for (const [teamId, team] of Object.entries(teamInfo)) {
-    // The key is the id and the value repeats it. The key wins: it is what every
-    // other payload — rosters, standings, matchups — is keyed by.
+    // The key wins over the value's repeated id: every other payload is keyed by it.
     teams.push({ teamId, name: team.name ?? "" });
   }
   return teams;
 }
 
-/** Flattened to one row per pairing per period. Fantrax nests them by period; a
- *  view wants "this period's matchups", which a flat list answers with a filter
- *  and a nested one answers with a lookup that can miss. */
+/** Fantrax's per-period matchups flattened to one row per pairing per period. */
 function mapMatchups(matchups: RawPeriodMatchups[] | undefined): LeagueMatchup[] {
   if (!matchups) return [];
   const flat: LeagueMatchup[] = [];
@@ -151,8 +132,7 @@ export function mapLeagueInfo(raw: RawLeagueInfo): LeagueInfo {
     seasonYear: raw.seasonYear ?? 0,
     startDate: raw.startDate ?? "",
     endDate: raw.endDate ?? "",
-    // Null, not "": the rehearsal league genuinely omits this key, and an empty
-    // string would claim Fantrax told us the draft type was nothing (§5).
+    // Null, not "": some leagues omit this key.
     draftType: raw.draftType ?? null,
     roster: mapRosterLimits(raw.rosterInfo),
     scoringPeriods: mapPeriods(raw.scoringPeriods),
@@ -166,12 +146,7 @@ export function mapLeagueInfo(raw: RawLeagueInfo): LeagueInfo {
   };
 }
 
-/** The league's playoff, or none.
- *
- *  `used: false` is a real answer and maps to null: a league with no playoff has
- *  no line to draw rather than a line at zero. So does a league that says it has
- *  one and will not say how many places qualify — that is the one number the
- *  table needs, and a cut we cannot size is not a cut we can draw. */
+/** The league's playoff places, or null when `used` is not true or the number of places is unpublished. */
 function mapPlayoffs(raw: RawPlayoffs | undefined): LeaguePlayoffs | null {
   if (raw?.used !== true || typeof raw.numPlayoffTeams !== "number") return null;
   return { places: raw.numPlayoffTeams };

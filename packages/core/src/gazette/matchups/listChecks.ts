@@ -1,5 +1,6 @@
 import { DRAFT_WRITING } from "../../config";
-import { banned, escapeRegExp } from "../banned";
+import { banned } from "../banned";
+import { escapeRegExp } from "../../regExp";
 import type { Fault } from "../predictions/checks";
 import { masked, mentionAt, ngrams, numbersIn, sentences } from "../predictions/prose";
 import { surname } from "../reports/keyStats";
@@ -10,9 +11,8 @@ import { DRAFT_FORECAST } from "./words";
 import type { DraftMan } from "./types";
 import type { DraftPiece } from "./writing";
 
-// The editor's eye for a list (Craig, 30 Sep 2026: "a bot reading a list"): a roll-call of men and their points, a
-// report that goes back on itself, a lede that tells nobody's story, a forecast after Saturday, an echo of last time.
-// Each is sent back, never failed, so a match-up is never dropped for its shape; two only warn. Pure.
+// The editor's eye for a list: a roll-call of men and their points, a report that goes back on itself, a lede that tells
+// nobody's story, a forecast after Saturday, an echo of last time. Each is sent back, never failed; two only warn.
 
 /** A filed match-up's words, for the echo. */
 export interface PastProse {
@@ -93,7 +93,7 @@ export function listFaults(piece: DraftPiece, ctx: MatchupContext, at: number, c
     const lines = sentences(p);
     if (lines.length >= DRAFT_WRITING.rollCallParagraph && lines.every((s) => named(s.split(/\s+/u).slice(0, 2).join(" "), men).length > 0)) flag("a paragraph of men, one a sentence", p.slice(0, 80));
   }
-  // A man's own points, where a sentence gives them: GW5's writer gave Gray "a single point" for his two.
+  // A man's own points, where a sentence names him alone and gives them, must be his.
   for (const s of all) {
     const who = named(s, men);
     if (who.length !== 1 || who[0].man.points === null) continue;
@@ -103,23 +103,22 @@ export function listFaults(piece: DraftPiece, ctx: MatchupContext, at: number, c
       if (n !== undefined && n !== who[0].man.points && !GAP.test(s.slice(0, hit.index))) flag("a man's points misstated", `${who[0].man.name}: ${hit[0]}, not ${who[0].man.points}`);
     }
   }
-  // A man keeps other clubs out, never his own: GW5 had "Pickford kept Everton out" twice and "Justin of Leeds keeping
-  // Leeds out".
+  // A man keeps other clubs out, never his own.
   for (const m of men) {
     const own = new RegExp(`(?:kept|keeping|keeps|keep|shut|shutting|shuts)\\s+(?:the\\s+)?${escapeRegExp(m.man.club)}\\s+out|shut(?:ting|s)?\\s+out\\s+(?:the\\s+)?${escapeRegExp(m.man.club)}\\b`, "iu");
     if (m.names.some((n) => mentionAt(prose, n) >= 0) && own.test(prose)) flag("a man keeping his own club out", `${m.man.name} of ${m.man.club}`, "hard");
   }
-  // A first name the brief never gave is memory, and memory was wrong: GW5's "Anthony Hall" is Lewis.
+  // A first name the brief never gave is memory, and memory is wrong.
   for (const name of unbriefedNames(prose, ctx, block)) flag("a name the brief does not give", name, "hard");
   const most = at === 0 ? DRAFT_WRITING.leadMen : DRAFT_WRITING.men;
   const everyone = named(prose, men);
   if (everyone.length > most) flag(`more than ${most} men in one match-up`, everyone.map((m) => m.man.name).join(", "));
-  // A haul is more than one return (Craig, 29 Sep 2026): GW5's writer called Lewis Hall's one goal "an eight-point haul".
+  // A haul is more than one return.
   for (const s of all.filter((x) => /\bhaul/iu.test(x))) {
     const who = named(s, men);
     if (who.length === 1 && who[0].man.goals + who[0].man.assists + who[0].man.cleanSheets < 2) flag("a haul is more than one return", s);
   }
-  // Each fact once (Craig, 30 Sep 2026: "youre just saying the same thing over and over"): a score told twice is the tell.
+  // Each fact once: a score told twice is the tell.
   const scores = [...prose.matchAll(SCORE)].map((m) => m[0]);
   const twice = scores.find((x, i) => scores.indexOf(x) !== i);
   if (twice !== undefined) flag("the same score told twice", twice);
@@ -163,7 +162,7 @@ export function listFaults(piece: DraftPiece, ctx: MatchupContext, at: number, c
   const echo = [...ngrams(prose, DRAFT_WRITING.echo, names)].find((g) => before.has(g) && !handed.has(g));
   if (echo !== undefined) flag("a phrase from these sides' last report", echo);
 
-  // Automatic substitutions that changed the score are part of the story: GW5's 38-37 never told how 38-34 became it.
+  // Automatic substitutions that changed the score are part of the story.
   const subs = timeline(ctx.state).find((b) => b.day === null && b.points.home !== b.points.away);
   const reserves = SIDES.flatMap((w) => ctx.state[w].subs.filter((s) => !s.provisional).map((s) => s.in.name));
   if (cutoff === "gameweek" && subs !== undefined && !/substitut|reserve/iu.test(prose) && !reserves.some((r) => mentionAt(prose, r) >= 0)) flag("the automatic substitutions go untold", `${subs.points.home}-${subs.points.away}`);

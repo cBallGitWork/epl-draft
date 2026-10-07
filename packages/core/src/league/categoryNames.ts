@@ -1,7 +1,7 @@
 import type { ScoringCategory } from "./scoring";
 
 // Fantrax's scoring categories by meaning, under each name its reads give them.
-// Which ones a league scores is data: the real league moved from A, AF and Sv to AT and GKP on 1 Oct 2026.
+// Which ones a league scores is data, read and never assumed.
 
 /** One Fantrax category: settings' long code, getPlayerStats' column, and SEASON_STATS' caption. */
 export interface FantraxCategory {
@@ -28,7 +28,7 @@ export const GOALS_AGAINST: FantraxCategory = { code: "INDIVIDUAL_GOALS_AGAINST"
 export const GOALS_AGAINST_OUTFIELD: FantraxCategory = { code: "INDIVIDUAL_GOALS_AGAINST_OUTFIELDERS", short: "GAO", caption: "Goals Against Outfielders" };
 export const MINUTES: FantraxCategory = { code: "INDIVIDUAL_MINUTES_PLAYED", short: "Min", caption: "Minutes Played" };
 
-/** Where a league pays an assist, best first. AT is A plus AF (455 of 455 outfielders, 1 Oct 2026), so it is never added to them. */
+/** Where a league pays an assist, best first. AT is A plus AF, so it is never added to them. */
 export const ASSIST = [ASSISTS_TOTAL, ASSISTS_OFFICIAL] as const;
 
 /** What pays a keeper for his work. GKP counts saves, smothers, punches and high claims won, so it is not Sv and both are kept. */

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { mapBenchOrder, type RawTeamRosterInfo } from "./benchOrder";
 
-// The shape of the rehearsal league's roster page, 29 Sep 2026: a keeper table then an outfield table, each with an FPts
-// column, and empty slots scorerless.
+// The rehearsal league's roster page shape: a keeper table then an outfield table, each with an FPts column,
+// and empty slots scorerless.
 const header = { cells: [{ key: "opponent" }, { key: "fpts" }] };
 const row = (id: string, status: string, fpts: string) => ({ statusId: status, scorer: { scorerId: id }, cells: [{ content: "EVE" }, { content: fpts }] });
 const raw = (order: Record<string, number> = {}): RawTeamRosterInfo => ({

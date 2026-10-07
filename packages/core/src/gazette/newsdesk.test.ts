@@ -24,7 +24,7 @@ const none = () => false;
 
 describe("newsdesk", () => {
   it("files only the seven weekly kinds, whatever the desk holds", () => {
-    // Craig, 1 Oct 2026: match and draft reports, Bin XI, the Team Sheet, the elevens, the sheets and Lawro; nothing else.
+    // Match and draft reports, Bin XI, the Team Sheet, the elevens, the sheets and Lawro; nothing else.
     const ahead = { period: 4, gameweek: 4 };
     const full = desk({
       finished: true,
@@ -78,7 +78,7 @@ describe("newsdesk", () => {
   });
 
   it("reports each settled Premier League day, first", () => {
-    // Revived 28 Sep 2026 as one woven report per London match-day (GAZETTA); a stake alone still earns nothing.
+    // One woven report per London match-day; a stake alone earns nothing.
     const sat = { key: "match-report:gw3:2026-08-29", slug: "gw3-prem-report-2026-08-29", day: "2026-08-29" };
     expect(newsdesk(desk(), none, NOW).map((a) => a.kind)).not.toContain("match-report");
     const filed = newsdesk(desk({ finished: true, reportDays: [sat] }), none, NOW);
@@ -91,7 +91,7 @@ describe("newsdesk", () => {
   });
 
   it("commissions the draft report once the gameweek ends, never after Saturday, and once", () => {
-    // Craig, 1 Oct 2026: one draft report a week, at the end of the gameweek.
+    // One draft report a week, at the end of the gameweek.
     const saturday = { key: "draft-report:gw3:saturday", slug: "gw3-draft-report-saturday", cutoff: "saturday" as const, day: "2026-08-29" };
     const gameweek = { key: "draft-report:gw3:gameweek", slug: "gw3-draft-report", cutoff: "gameweek" as const, day: "2026-08-31" };
     const filed = newsdesk(desk({ draftReports: [saturday, gameweek] }), none, NOW).filter((a) => a.kind === "draft-report");
@@ -102,8 +102,7 @@ describe("newsdesk", () => {
   it("files the team sheet on a day with pressers", () => {
     const thu = { key: "presser:gw3:2026-09-17", slug: "gw3-presser-2026-09-17", day: "2026-09-17" };
     const fri = { key: "presser:gw3:2026-09-18", slug: "gw3-presser-2026-09-18", day: "2026-09-18" };
-    // Both days are their own column — Craig's week runs pressers Thursday AND
-    // Friday, and one key for the week would suppress the second.
+    // Thursday's and Friday's pressers are each their own column; one key for the week would suppress the second.
     const filed = newsdesk(desk({ pressers: [thu, fri] }), none, NOW);
     expect(filed.filter((a) => a.kind === "presser").map((a) => a.key)).toEqual([thu.key, fri.key]);
     // The DAY travels with the assignment: one kind, two editions, and every
@@ -120,9 +119,7 @@ describe("newsdesk", () => {
   });
 
   it("files no team sheet on a day with no pressers", () => {
-    // The WINDOW is the gate, not a flag: the caller offers only days whose
-    // signals were said after the last lock. The current period's lock has long
-    // passed by Thursday — gating on it meant the column never fired at all.
+    // The window is the gate, not a flag: the caller offers only days said after the last lock.
     expect(newsdesk(desk({ pressers: [] }), none, NOW).map((a) => a.kind)).not.toContain("presser");
   });
 
@@ -212,8 +209,7 @@ describe("newsdesk", () => {
   });
 
   it("stamps the Team Sheet and the elevens with the round they preview", () => {
-    // Between rounds FPL's current gameweek is the one just played: gw6's
-    // elevens filed as period 5 and sorted under last week's reports.
+    // Between gameweeks FPL's current one is the one just played, not the one previewed.
     const thu = { key: "presser:gw5:2026-10-08", slug: "gw5-presser-2026-10-08", day: "2026-10-08" };
     const lineups = { key: "predicted-xi:gw6", slug: "gw6-predicted-xi" };
     const ahead = { period: 6, gameweek: 6 };

@@ -1,10 +1,7 @@
 import type { IntelClubXi } from "./types";
 
-// Scout's predicted elevens, read off their free team-news page
-// (https://www.fantasyfootballscout.co.uk/team-news). Ported from the sister repo's
-// `parse_ffscout`: every club is one block with `data-team-code`, a `formation-4-2-3-1`
-// class and `row-N` lists, and each player's photo filename is his FPL `code`, so no
-// name matching is needed. Pure: the page arrives as a string.
+// Scout's predicted elevens off https://www.fantasyfootballscout.co.uk/team-news, passed in as a string.
+// Each photo's filename is the man's FPL `code`, so nothing is matched by name.
 
 const CLUB = /<li class="team-news-item" data-team-code="([a-z]+)"([\s\S]*?)(?=<li class="team-news-item"|$)/gi;
 const FORMATION = /\bformation-([\d-]+)\b/;

@@ -1,28 +1,16 @@
 import { numeric } from "./stats";
 import { GOALS_AGAINST, GOALS_AGAINST_OUTFIELD } from "../categoryNames";
 
-// `getStandings` with `view: "SEASON_STATS"` — every team's season totals, per
-// category, in one anonymous request.
-//
-// Probed 1 Sep 2026: 29 tables, 52 KB, no cookie. A summary, four per-position
-// roll-ups, 22 single-category leaderboards, and two zero-row section headings.
-// Craig asked for the CM "Average Rating" board on this data (1 Sep): one
-// category at a time, every team ranked, by fantasy points or by the raw figure.
-//
-// **Two traps live in this payload and both would ship as plausible wrong
-// numbers.** They are the whole reason this file is not ten lines.
+// `getStandings` with `view: "SEASON_STATS"` → every team's season totals per category, in one cookieless request.
 
-/** A cell. Only the one naming a team carries `teamId`, which is how a row is
- *  read without trusting the column order — the same tell `results.ts` uses. */
+/** A cell; only the team cell carries `teamId`, so a row is read without trusting column order. */
 interface RawStatCell {
   content?: string;
   teamId?: string;
 }
 
 interface RawStatTable {
-  /** "Clean Sheets On Field". **Not unique**: the goalkeeper block and the
-   *  outfielder block publish the same caption for the same category, which is
-   *  trap 1 below. */
+  /** "Clean Sheets On Field". Not unique: the keeper and outfield blocks share captions. */
   caption?: string;
   /** Keys unique within one table: `rank fpts diff1 team pos diff2` for the season, `rank fpts team pos` by date. */
   header?: { cells?: { key?: string }[] };
@@ -31,8 +19,7 @@ interface RawStatTable {
 
 export interface RawSeasonStats {
   tableList?: RawStatTable[];
-  /** Every team's name, keyed by `teamId`. Carried on this read, so a
-   *  board built from it needs no second request to name a row. */
+  /** Every team's name, keyed by `teamId`, so a board needs no second request. */
   fantasyTeamInfo?: Record<string, { name?: string }>;
 }
 
@@ -45,50 +32,25 @@ export interface CategoryLine {
   value: number | null;
 }
 
-/** Which half of the payload a table came from.
- *
- *  Fantrax splits every category by position, and the two blocks are the only
- *  place that split is stated. */
+/** Which half of the payload a table came from: Fantrax splits every category by position. */
 export type Half = "keeper" | "outfield";
 
-/** The section headings that open each block. Zero rows, and their only job is
- *  to say what follows — which makes them load-bearing rather than noise. */
+/** The zero-row headings that open each block: the only marker of the keeper/outfield boundary. */
 const KEEPER_HEADING = "Standings By Category - Goalkeeper";
 const OUTFIELD_HEADING = "Standings By Category - Outfielder";
 
-/** Fantrax's caption for the outfield goals-against table carries a TRAILING
- *  SPACE ("Goals Against Outfielders "). Trimmed on read rather than matched
- *  with the space in a literal, because a space nobody can see is not a thing to
- *  build a comparison on. */
+/** A table's caption, trimmed: the outfield goals-against one ends in a space ("Goals Against Outfielders "). */
 function caption(table: RawStatTable): string {
   return (table.caption ?? "").trim();
 }
 
-/** Goals against is one category under two names — `Goals Against` for the
- *  keeper, `Goals Against Outfielders` for everyone in front of him. Craig,
- *  1 Sep: "goals against is a def and keeper stat, so we can combine that." */
+/** Goals against is one category under two names, the keeper's and the outfielders'; combined under the keeper's. */
 function normalise(name: string): string {
   return name === GOALS_AGAINST_OUTFIELD.caption ? GOALS_AGAINST.caption : name;
 }
 
-/** Every category in the payload, with both halves read and combined.
- *
- *  **Trap 1 — the caption does not identify the table.** Tables 6-17 are the
- *  goalkeeper's and 19-28 are the outfielder's, and `Clean Sheets On Field`
- *  appears in both with the same caption and different numbers. Matching by
- *  caption alone silently reads whichever came first and throws the other away.
- *  The zero-row section headings are the only marker of the boundary, so the
- *  block is tracked as the list is walked.
- *
- *  **Trap 2 — the figure's key is generic.** Every category's own figure sits
- *  under `pos`, eleven stats sharing one key (PLATFORM_NOTES records the probe).
- *  The team cell is found by its `teamId` and the two figures are taken relative
- *  to it, at the offsets the table's own header gives: a date range drops the
- *  two change columns, which moved FPts one cell nearer the team.
- *
- *  Combining is a sum, and it is a sum of things Fantrax scored separately for
- *  one squad: `123` had 0 clean sheets in goal and 4 on the field, for 0 and 13
- *  points. Verified against the live payload rather than assumed. */
+/** Every category, both halves summed per team. Captions repeat across blocks, so the block is tracked by its heading;
+ *  every figure is keyed `pos`, so it and FPts are read at offsets from the `teamId` cell, per the table's own header. */
 export function mapSeasonStats(raw: RawSeasonStats): Map<string, CategoryLine[]> {
   const categories = new Map<string, Map<string, CategoryLine>>();
   let half: Half | null = null;
@@ -105,8 +67,7 @@ export function mapSeasonStats(raw: RawSeasonStats): Map<string, CategoryLine[]>
       half = "outfield";
       continue;
     }
-    // Everything before the first heading is the summary and the roll-ups, which
-    // are a different shape and a different question.
+    // Before the first heading come the summary and the roll-ups, a different shape.
     if (half === null) continue;
 
     const category = normalise(name);
@@ -153,9 +114,7 @@ function offsets(table: RawStatTable): { points: number; value: number } {
   return { points: points - team, value: value - team };
 }
 
-/** Absence plus a number is that number; absence plus absence stays absent. A
- *  keeper-only category has no outfield half to add, and reading that as nought
- *  would be indistinguishable from a squad that genuinely recorded none. */
+/** Absence plus a number is that number; absence plus absence stays absent, never nought. */
 function add(held: number | null | undefined, next: number | null): number | null {
   if (held === undefined || held === null) return next;
   if (next === null) return held;

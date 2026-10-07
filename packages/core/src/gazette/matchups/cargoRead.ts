@@ -6,14 +6,12 @@ import type { Family, ThreadKind } from "./thread";
 import type { StoryDraftStep } from "./days";
 import type { StoryDraftReturn, StoryDraftReturns, StoryDraftRow } from "./elevens";
 import type { NextMatch } from "./types";
+import { finiteOrNull as num, recordOrEmpty as obj, stringOrEmpty as str } from "../../untrusted";
 
 // A filed draft report read back field by field: a match-up prints with both sides and its result, or not at all; a
 // return, a row or a step that does not read is dropped, and a report filed before them reads with none.
 
 type Raw = Record<string, unknown>;
-const obj = (v: unknown): Raw => (v !== null && typeof v === "object" ? (v as Raw) : {});
-const str = (v: unknown) => (typeof v === "string" ? v : "");
-const num = (v: unknown) => (typeof v === "number" && Number.isFinite(v) ? v : null);
 const list = <T>(v: unknown, read: (r: Raw) => T | null): T[] => (Array.isArray(v) ? v.flatMap((x) => read(obj(x)) ?? []) : []);
 
 function scorer(r: Raw): StoryDraftReturn | null {

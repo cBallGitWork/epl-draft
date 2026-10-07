@@ -1,29 +1,14 @@
 import type { RawNewsItem } from "./raw";
 
-// RSS into something typed, by hand.
-//
-// **No XML dependency, on CODE_RULES §2.** A feed item is five fields inside
-// one repeated tag, and the whole reader is forty lines — a parser library
-// would be a dependency, a supply chain and a version to keep, bought to save
-// a regular expression. If a feed ever needs real XML this is the file that
-// says so by failing honestly: an item it cannot read is one it drops.
-//
-// Tolerant by design. Feeds change shape without telling anybody, and a wire
-// we cannot parse must cost the paper a section rather than the run.
+// RSS into something typed, by hand and without an XML dependency. An item it cannot read is dropped, never the run.
 
 export interface NewsItem {
-  /** The article's own address, fragment stripped — the ledger's key.
-   *
-   *  **Not the raw guid.** The BBC re-lists one article under positional
-   *  fragments (`…/cn5d7k4nkyvo#0`, then `#1` when it moves up the feed), so
-   *  the raw guid double-covers: five of one 77-item sample were the same
-   *  articles twice. Probed 31 Aug, recorded in PLATFORM_NOTES. */
+  /** The article's address, the ledger's key: never the raw guid, whose `#0`, `#1` fragment is the feed position. */
   key: string;
   title: string;
   summary: string;
   link: string;
-  /** ISO, or null where the feed gave nothing readable. Null is not "now": a
-   *  wire item we cannot date is one the desk cannot call fresh. */
+  /** ISO, or null where the feed gave nothing readable; never "now", as an undated item cannot be called fresh. */
   publishedAt: string | null;
 }
 
@@ -35,8 +20,7 @@ export function mapNews(xml: string): NewsItem[] {
     const item = fields(match[1]);
     const link = item.link ?? item.guid;
     const title = item.title;
-    // An item with no title or no address is not an article we can cover or
-    // cite, and there is nothing to be gained by carrying half of one.
+    // An item with no title or no address is not an article we can cover.
     if (title === undefined || title === "" || link === undefined || link === "") continue;
 
     items.push({
@@ -50,14 +34,12 @@ export function mapNews(xml: string): NewsItem[] {
   return dedupe(items);
 }
 
-/** The fragment carries the feed POSITION, not the article, so it is stripped
- *  before the key is taken. */
+/** The guid less its fragment, which carries the feed POSITION, not the article. */
 function keyOf(guid: string): string {
   return guid.split("#")[0];
 }
 
-/** First occurrence wins: the feed lists the same article again as it moves,
- *  and the earlier entry is the one already reasoned about. */
+/** First occurrence wins: the feed lists an article again as it moves. */
 function dedupe(items: readonly NewsItem[]): NewsItem[] {
   const seen = new Set<string>();
   return items.filter((item) => {

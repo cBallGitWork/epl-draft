@@ -1,9 +1,7 @@
 // What the commissioner set a category to be worth, read from `getLeagueInfo` and never assumed.
 // Fantrax's own points are what the app prints; these price only what the app works out itself.
 
-/** What a scoring category is called, in the league's own words. Two leagues
- *  answer different vocabularies — ours scores Key Passes and Midfielder Points,
- *  the rehearsal league neither — so this is read and never written down. */
+/** What a scoring category is called, in the league's own words: read, never written down, since leagues differ. */
 export interface ScoringCategory {
   /** Their short label: "G", "CS", "MP". */
   code: string;
@@ -17,9 +15,7 @@ export interface ScoringCategory {
 export interface ScoringRules {
   goalie: CategoryTable;
   outfield: CategoryTable;
-  /** Which position letter the goalie table is for, as the payload's own group
-   *  short name gives it. Null when Fantrax did not say, in which case a keeper
-   *  scores nothing rather than an outfielder's points. */
+  /** The goalie table's position letter, from the payload's group short name; when null a keeper scores nothing. */
   goaliePosition: string | null;
 }
 
@@ -40,12 +36,8 @@ export interface Tiers {
 /** Points per unit, or bands. */
 export type Price = number | Tiers;
 
-/** Category short name → position letter → price, or null where the wire priced
- *  the position with an expression we decline to read.
- *
- *  Null and absent mean different things: a position not listed falls through to
- *  `Default`, while one listed but unreadable must not, because `Default` is a
- *  different rule that happens to be readable. */
+/** Category short name → position letter → price, or null where the wire priced it with an expression we do not read.
+ *  An absent position falls through to `Default`; a null one must not. */
 export type CategoryTable = Record<string, Record<string, Price | null>>;
 
 /** The scoring the app prices its own points by: one league's rules and its names for them. */
@@ -84,9 +76,7 @@ export function priceOf(rules: ScoringRules, category: string, position: string)
 }
 
 /** What one unit of a category is worth to a player in one position, where the price is flat.
- *
- *  Null when the rules do not cover it: a banded price, an unread expression, a category this league does not
- *  score, or a keeper in a league that never named its keeper position. Null is not nought. */
+ *  Null, never nought, for a banded price, an unread expression, an unscored category or an unnamed keeper position. */
 export function categoryPoints(rules: ScoringRules, category: string, position: string): number | null {
   const price = priceOf(rules, category, position);
   return typeof price === "number" ? price : null;

@@ -8,16 +8,13 @@ const ink = (shortName: string) => inkOn(clubColours(shortName));
 
 describe("clubColours", () => {
   it("is keyed on FPL's short name, not Fantrax's", () => {
-    // Forest is "NFO" to FPL and "NOT" to Fantrax. A league-layer label arriving
-    // here does not throw — it quietly takes the neutral and the club loses its
-    // colours, which is why the two layers never join on short name.
+    // Forest is "NFO" to FPL and "NOT" to Fantrax: a Fantrax label quietly takes the neutral.
     expect(clubColours("NFO").primary).toBe("#DD0000");
     expect(clubColours("NOT")).toEqual(clubColours("WBA"));
   });
 
   it("gives a club we have not styled a neutral that still carries a label", () => {
-    // Three clubs come up every May and reach the API before the palette does.
-    // A hole where a crest should be is a worse answer than a grey one.
+    // A promoted club reaches the API before the palette does; grey beats a hole.
     expect(clubColours("WBA")).toEqual({ primary: "#4b5563", secondary: "#FFFFFF" });
     expect(ink("WBA")).toBe(WHITE_INK);
   });
@@ -32,8 +29,7 @@ describe("clubColoursOf", () => {
 
 describe("crestUrl", () => {
   it("keys the crest on the season-stable club code", () => {
-    // `code` survives relegation and return; `id` is renumbered each August, so a
-    // URL built from it would start pointing at a different club.
+    // `id` is renumbered each August, so a URL built from it would point at another club.
     expect(crestUrl({ code: 3 })).toBe(
       "https://resources.premierleague.com/premierleague/badges/t3.svg",
     );
@@ -42,9 +38,7 @@ describe("crestUrl", () => {
 
 describe("inkOn", () => {
   it("puts dark ink on the near-white shirts", () => {
-    // The whole reason the function exists: white initials on Fulham, Leeds or
-    // Spurs are invisible, and the portrait fallback underneath is all a January
-    // signing has for weeks.
+    // White initials on Fulham, Leeds or Spurs are invisible.
     expect(ink("FUL")).toBe(DARK_INK);
     expect(ink("LEE")).toBe(DARK_INK);
     expect(ink("TOT")).toBe(DARK_INK);
@@ -61,9 +55,7 @@ describe("inkOn", () => {
   });
 
   it("calls both sky blues light", () => {
-    // The close calls: Rec. 601 luma is 0.62 for City and 0.73 for Coventry
-    // against a 0.6 cut. City clears it by a whisker, so any nudge to the
-    // threshold or to that hex flips its label from black to white.
+    // The close calls: dark ink must out-contrast white on both, so a nudge to either hex can flip it.
     expect(ink("MCI")).toBe(DARK_INK);
     expect(ink("COV")).toBe(DARK_INK);
   });
@@ -91,11 +83,7 @@ describe("crestForShortName", () => {
   });
 
   it("knows every club this division has, and knows it has colours too", () => {
-    // The two hand-authored tables in `clubs.ts` are the same twenty clubs and
-    // must not drift apart: a club with colours and no code draws a coloured
-    // nothing, and a club with a code and no colours draws a grey badge. The
-    // list is spelled out because it is what changes on promotion day — the same
-    // maintenance moment as the two tables it checks.
+    // The colour and code tables must hold the same twenty clubs; update this list on promotion day.
     const division = [
       "ARS", "AVL", "BHA", "BOU", "BRE", "CHE", "COV", "CRY", "EVE", "FUL",
       "HUL", "IPS", "LEE", "LIV", "MCI", "MUN", "NEW", "NFO", "SUN", "TOT",
@@ -107,8 +95,7 @@ describe("crestForShortName", () => {
   });
 
   it("answers null for a club it has never seen, rather than a wrong badge", () => {
-    // A promoted side before the tables are updated. A wrong crest is worse than
-    // none, because only one of the two looks like an answer.
+    // A promoted side before the tables are updated: a wrong crest is worse than none.
     expect(crestForShortName("XYZ")).toBeNull();
   });
 });

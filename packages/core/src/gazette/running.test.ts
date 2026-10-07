@@ -1,10 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { hasRoom } from "./running";
 
-/** The writer's loop, exactly as `write-edition.ts` runs it: walk the running
- *  order, skip what refuses, stop when the cap is FILLED. Written out here
- *  rather than exported from core, because the loop belongs to the script and
- *  a helper existing only to be tested is a helper with no consumer. */
+/** The writer's loop as `write-edition.ts` runs it: skip what refuses, stop when the cap is filled. */
 function filed(order: readonly string[], cap: number, refuses: (kind: string) => boolean): string[] {
   const out: string[] = [];
   for (const kind of order) {
@@ -15,7 +12,7 @@ function filed(order: readonly string[], cap: number, refuses: (kind: string) =>
   return out;
 }
 
-/** A finished round, in the order the newsdesk emits it. */
+/** A finished gameweek, in the order the newsdesk emits it. */
 const ROUND = [
   "tie-report:avb",
   "eleven",
@@ -25,15 +22,12 @@ const ROUND = [
   "match-report:LIVvEVE",
 ];
 
-/** The two kinds that refused every firing from 2 Sep. */
+/** Two kinds that refuse every firing. */
 const wedged = (kind: string) => kind === "eleven" || kind === "dodgers";
 
 describe("the running order", () => {
   it("fills the cap with stories rather than with refusals", () => {
-    // THE BUG. The order was sliced to the cap before any desk was asked for a
-    // brief, so a firing of two got [the round's report, eleven]: one story and
-    // one refusal. The next got [eleven, power-ranking], and every firing after
-    // that got [eleven, dodgers] — two refusals, "nothing to file", forever.
+    // Slicing the order to the cap first would give [report, eleven], then [eleven, dodgers] for ever.
     expect(filed(ROUND, 2, wedged)).toEqual(["tie-report:avb", "power-ranking"]);
   });
 
@@ -42,8 +36,7 @@ describe("the running order", () => {
     expect(got).toContain("match-report:MUNvARS");
     expect(got).toContain("match-report:LIVvEVE");
     expect(got).not.toContain("eleven");
-    // Everything in the order except the two wedged kinds. It was six until
-    // 3 Sep 2026, when the two sketches were cut from the Monday set.
+    // Everything in the order except the two wedged kinds.
     expect(got).toHaveLength(ROUND.length - 2);
   });
 
@@ -53,8 +46,7 @@ describe("the running order", () => {
   });
 
   it("files nothing when every desk refuses, however long the order", () => {
-    // Not an error: the facts moved between the newsdesk's look and the
-    // brief's. The writer exits quietly on this rather than red.
+    // Not an error: the facts moved between the newsdesk's look and the brief's.
     expect(filed(ROUND, 10, () => true)).toEqual([]);
   });
 

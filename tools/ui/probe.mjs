@@ -1,14 +1,8 @@
-// Evaluate a JS expression in a rendered page and print the result.
+// Evaluate a JS expression in a rendered page and print the result; settle geometry by the rendered value, not the CSS.
 //
 //   node tools/ui/probe.mjs <route> '<expression>' [--width 390] [--team-cookie <file>]
 //
-// The expression runs after hydration with promises awaited, and an exception
-// in it THROWS here rather than printing undefined — an empty `{}` from a
-// swallowed page error once sent a session down a wrong path for half an hour.
-//
-// This is how a claim about geometry gets settled: measure the rendered value
-// (`getComputedStyle(...).fontSize`, `scrollHeight - clientHeight`), never the
-// CSS that was written.
+// It runs after hydration with promises awaited, and an exception in it throws here rather than printing undefined.
 
 import { connect, parseArgs, teamCookie } from "./cdp.mjs";
 

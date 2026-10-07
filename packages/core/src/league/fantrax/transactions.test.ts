@@ -5,10 +5,7 @@ import claimDrop from "./__fixtures__/txClaimDrop.json";
 import trade from "./__fixtures__/txTrade.json";
 import lineupChange from "./__fixtures__/txLineupChange.json";
 
-// Recorded 12 Aug 2026 from the rehearsal league, minutes after the first real
-// transactions the league has ever had: a trade at 9:13AM and a free-agent claim
-// with its drop at 9:14AM. Both were also visible by diffing captures either
-// side of them, which is how we know these rows describe what actually happened.
+// Recorded from the rehearsal league's first transactions: a trade, and a free-agent claim with its drop.
 
 describe("mapTransactions, on a claim and the drop that paid for it", () => {
   const rows = mapTransactions(claimDrop as RawTransactionHistory, "CLAIM_DROP");
@@ -20,7 +17,7 @@ describe("mapTransactions, on a claim and the drop that paid for it", () => {
   });
 
   it("says how he was signed, and names his club in full", () => {
-    // `claimType` is FA on 44 captured claims and WW on 3; a drop carries "".
+    // `claimType` is FA or WW on a claim, and "" on a drop.
     expect(rows.map((r) => r.via)).toEqual(["free agency", null]);
     expect(rows.map((r) => r.clubName)).toEqual(["Brentford", "Nottingham Forest"]);
   });
@@ -30,18 +27,13 @@ describe("mapTransactions, on a claim and the drop that paid for it", () => {
     expect(rows[0]?.setId).toBeTruthy();
   });
 
-  // THE TRAP that costs half of every transaction. The team and the date cells
-  // carry `rowspan: 2`, so the DROP row arrives with ONE cell — its gameweek —
-  // and inherits the rest. A reader that takes each row's cells at face value
-  // gets a drop with no team and no timestamp, and it looks like Fantrax sent
-  // partial data rather than like we misread a table.
+  // The team and date cells carry `rowspan: 2`, so the DROP row arrives with only its gameweek and inherits the rest.
   it("carries spanned cells forward — the drop row states only its gameweek", () => {
     const table = (claimDrop as RawTransactionHistory).table;
     const dropRow = table?.rows?.[1];
     expect(dropRow?.cells?.map((c) => c.key)).toEqual(["week"]);
 
-    // The date the drop ends up with is the one the CLAIM row spanned, read back
-    // off the recording rather than restated here.
+    // The date the CLAIM row spanned, read back off the recording.
     const spannedDate = table?.rows?.[0]?.cells?.find((c) => c.key === "date");
     expect(spannedDate?.rowspan).toBe(2);
     expect(rows[1]?.processedAt).toBe(spannedDate?.content);
@@ -49,8 +41,7 @@ describe("mapTransactions, on a claim and the drop that paid for it", () => {
   });
 
   it("points a claim in from the pool and a drop back out to it", () => {
-    // Null is the answer on the pool side. The free-agent pool is not a team,
-    // and giving it an id would put a team in the feed that does not exist.
+    // The pool side is null: the free-agent pool is not a team.
     expect(rows[0]).toMatchObject({ kind: "claim", fromTeamId: null });
     expect(rows[0]?.toTeamId).toBeTruthy();
     expect(rows[1]).toMatchObject({ kind: "drop", toTeamId: null });
@@ -58,13 +49,7 @@ describe("mapTransactions, on a claim and the drop that paid for it", () => {
   });
 
   it("carries the player id we already join on", () => {
-    // Fantrax's `scorerId` is the same id space as the rosters and the pool, so
-    // the bridge takes this straight. Never name-match at runtime.
-    //
-    // Compared against the recording rather than against a copied-out literal:
-    // the claim is that the mapper carries the id through, not that the id is
-    // any particular string, and a re-recorded fixture should not need this
-    // edited to stay true.
+    // `scorerId` is the roster and pool id, so the bridge takes it straight; compared to the recording, not a literal.
     const scorers = (claimDrop as RawTransactionHistory).table?.rows?.map(
       (row) => row.scorer?.scorerId,
     );
@@ -81,9 +66,7 @@ describe("mapTransactions, on a claim and the drop that paid for it", () => {
 describe("mapTransactions, on a trade", () => {
   const rows = mapTransactions(trade as RawTransactionHistory, "TRADE");
 
-  // Trade rows carry no `transactionCode` at all — on this view the tab IS the
-  // transaction type, which is why the view is a parameter rather than something
-  // inferred from the payload.
+  // Trade rows carry no `transactionCode`: on this view the tab is the type, so the view is a parameter.
   it("takes its type from the view, because the rows do not state one", () => {
     expect((trade as RawTransactionHistory).table?.rows?.[0]?.transactionCode).toBeUndefined();
     expect(rows.map((r) => r.kind)).toEqual(["trade", "trade"]);
@@ -99,16 +82,13 @@ describe("mapTransactions, on a trade", () => {
   });
 
   it("keeps each row's own from and to over the inherited date", () => {
-    // Both rows state `from` and `to` themselves while sharing one date cell, so
-    // a row's own value has to win over anything carried.
+    // Both rows state `from` and `to` while sharing a date cell, so a row's own value wins over a carried one.
     expect(rows[0]?.fromTeamId).not.toBe(rows[1]?.fromTeamId);
     expect(rows[0]?.processedAt).toBe(rows[1]?.processedAt);
     expect(rows[0]?.processedAt).toBeTruthy();
   });
 
-  // A status diff over captures sees the claim above and is blind to this: both
-  // traded players stay rostered, so only their OWNER changes. That blindness is
-  // why the native feed is the source and the diff is corroboration.
+  // A status diff over captures cannot see a trade: both men stay rostered and only their OWNER changes.
   it("is the case a status diff cannot see", () => {
     expect(rows.every((r) => r.fromTeamId !== null && r.toTeamId !== null)).toBe(true);
   });
@@ -116,9 +96,7 @@ describe("mapTransactions, on a trade", () => {
 
 describe("mapTransactions, on views and shapes with nothing in them", () => {
   it("returns nothing for a league that has not changed a lineup yet", () => {
-    // Recorded genuinely empty: no period has started, so no lineup has been
-    // set. When rows appear after 21 Aug this fixture gets re-recorded and this
-    // test tightens rather than being deleted.
+    // Recorded empty, before any period started; re-record it once rows appear.
     expect(mapTransactions(lineupChange as RawTransactionHistory, "LINEUP_CHANGE")).toEqual([]);
   });
 
@@ -129,8 +107,7 @@ describe("mapTransactions, on views and shapes with nothing in them", () => {
   });
 
   it("skips a row it cannot attribute to a player, without losing the row's span", () => {
-    // A skipped row still consumes a span from the row above it. Dropping it
-    // before resolving cells would shift every later row's date by one.
+    // A skipped row still consumes a span; dropping it before resolving cells shifts every later date by one.
     const raw: RawTransactionHistory = {
       table: {
         rows: [

@@ -1,11 +1,8 @@
-// The league layer's public surface. Import from here, not from the Fantrax
-// subfolder — that indirection is what lets our own 27/28 engine replace Fantrax
-// as an adapter change rather than a rewrite.
+// The league layer's public surface: import from here, never the Fantrax subfolder, so the adapter can be replaced.
 
 export type {
   LeagueInfo,
   LeaguePeriod,
-  LeaguePlayoffs,
   LeaguePlayer,
   LeaguePlayerState,
   LeagueTeam,
@@ -25,12 +22,11 @@ export type {
   TeamProjection,
 } from "./points";
 
-export type { PoolStatRow, StatColumn, StatSeason, TeamStats } from "./stats";
+export type { PoolStatRow, StatSeason, TeamStats } from "./stats";
 
 export {
   bandCategories,
   breakdownOf,
-  columnLabel,
   liveBreakdown,
 } from "./breakdown";
 export type { BreakdownLine, CategoryBand, CategoryMan } from "./breakdown";
@@ -38,10 +34,9 @@ export type { BreakdownLine, CategoryBand, CategoryMan } from "./breakdown";
 export { captureStaleness } from "./staleness";
 
 export { seasonForm } from "./form";
-export type { FormGame, TeamForm } from "./form";
+export type { FormGame } from "./form";
 export { defaultDescending, isSortKey, sortRows } from "./standingsOrder";
 export { tableLines } from "./tableLines";
-export type { TableLine } from "./tableLines";
 export type { SortKey } from "./standingsOrder";
 
 export { pedigreeOf } from "./pedigree";
@@ -53,8 +48,8 @@ export type { GameweekKickoff, PeriodGameweeks } from "./calendar";
 export { lastLockedPeriod, periodToRead, planningPeriod, rosterDisplay } from "./visibility";
 export type { RosterDisplay, SquadReason } from "./visibility";
 
-export { applyMove, eligibilityOf, eligibleSlots, legalMoves } from "./moves";
-export type { Blocker, Eligibility, Move, SlotOption } from "./moves";
+export { applyMove, eligibilityOf, legalMoves } from "./moves";
+export type { Eligibility, Move } from "./moves";
 
 export { violations } from "./violations";
 export { formations } from "./formations";
@@ -63,24 +58,20 @@ export type { Violation } from "./violations";
 
 export { isActive } from "./rosterStatus";
 
-// The shape differ, for the script that asks whether the real league answers in
-// the shape every mapper here was written against. Its one consumer is
-// `scripts/shape-diff.ts`, which is the 11:00 item on the ship-day runbook.
+// The shape differ, for `scripts/shape-diff.ts`: does the league still answer in the shape the mappers expect.
 export { diffShapes, shapeOf } from "./fantrax/shape";
-export type { ShapeDiff } from "./fantrax/shape";
 
 export { headToHead, leaguePool, leagueSeason, nextPairedPeriod, pairingInvolves, periodPairings, scoringOf } from "./selectors";
 export { leads, trails } from "./scoreline";
-export type { HeadToHead, LeagueSeason, PeriodPairing, PoolPlayer } from "./selectors";
+export type { LeagueSeason, PeriodPairing, PoolPlayer } from "./selectors";
 
-export { COMPETITIONS, LEAGUE_COMPETITION, cupTies, groupTies, leagueTies, seededIn } from "./competitions";
+export { LEAGUE_COMPETITION, cupTies, groupTies, leagueTies, seededIn } from "./competitions";
 export type { CompetitionTie, TieSide } from "./competitions";
 export { CUPS } from "./cups/declared";
 export type { Cup, GroupStage } from "./cups/declared";
 export { groupTable } from "./cups/groupTable";
-export type { GroupRow } from "./cups/groupTable";
 export { cupGroups, cupPlan } from "./cups/plan";
-export type { CupFixture, CupStage } from "./cups/plan";
+export type { CupStage } from "./cups/plan";
 
 export { FantraxError } from "./fantrax/errors";
 export { categoryPoints, returnPoints } from "./scoring";
@@ -90,7 +81,6 @@ export type { AcknowledgedDifference } from "./fantrax/baseline";
 export { pointsFor } from "./scoring";
 export type { LeagueScoring } from "./scoring";
 export { rulesCard, scoredSlots } from "./rulesCard";
-export type { RuleLine } from "./rulesCard";
 export {
   mapBenchPlayerPoints,
   mapLivePlayerPoints,
@@ -99,25 +89,21 @@ export {
 } from "./fantrax/livescoring";
 export { mapPoolStats, mapTeamStats } from "./fantrax/stats";
 export { mapStatSheet } from "./fantrax/statSheet";
-export type { SheetColumn, SheetLine, StatSheet } from "./fantrax/statSheet";
+export type { StatSheet } from "./fantrax/statSheet";
 export { mapBenchOrder } from "./fantrax/benchOrder";
 export { isFantraxPlayerId, mapPlayerProfile } from "./fantrax/profile";
-export type { LabelledValue, PlayerIntel, PlayerMatch } from "./fantrax/profile";
+export type { PlayerIntel, PlayerMatch } from "./fantrax/profile";
 export { mapTransactions, orderKey } from "./fantrax/transactions";
-// Everything written about one player. `playerNews.ts` records the `tab`
-// parameter that reaches it, and the eleven names that did not.
-export { fetchPlayerStories, fetchPoolNews } from "./fantrax/client";
+// Everything written about one player.
+export { fetchPlayerProfile, fetchPlayerStories, fetchPoolNews, fetchPoolStats } from "./fantrax/playerClient";
 export { mapPlayerStories, mapPoolNews } from "./fantrax/playerNews";
 export type { PlayerStory } from "./fantrax/playerNews";
-// Exported so the app can hold a raw payload across a cache boundary before
-// mapping it — the mapper stays the only place raw meets clean.
+// So the app can cache a raw payload before mapping it; the mapper stays the only place raw meets clean.
 export type { RawTeamRosters } from "./fantrax/raw";
 export {
   fetchLiveScoring,
   fetchLiveScoringDay,
   fetchTeamRosterInfo,
-  fetchPlayerProfile,
-  fetchPoolStats,
   fetchTeamStats,
   fetchTransactions,
 } from "./fantrax/client";
@@ -132,7 +118,7 @@ export {
   readBenchAnswer,
   readLineupAnswer,
 } from "./fantrax/lineupWrite";
-export type { FieldMap, LineupState, PlanRefusal, WriteAnswer } from "./fantrax/lineupWrite";
+export type { WriteAnswer } from "./fantrax/lineupWrite";
 export { mapTeamRosters } from "./fantrax/rosters";
 export { mapDraftPicks } from "./fantrax/draft";
 export type { DraftPick } from "./fantrax/draft";
@@ -166,23 +152,20 @@ export {
 } from "./categoryNames";
 export type { FantraxCategory } from "./categoryNames";
 export { wordsFor, wordsOf } from "./categoryWords";
-export type { CategoryWords } from "./categoryWords";
 export { defConAt, defConPoints, defConScored } from "./defcon";
 export type { DefConPeriod } from "./defcon";
 export type { GroupKey, Measure, StatCategory } from "./categories";
 export { mapPlayerStats, KEEPER, OUTFIELD } from "./fantrax/playerStats";
 export { mapAssistKinds } from "./fantrax/assistKinds";
 export { fetchPoolWindow } from "./fantrax/windowClient";
-export type { PlayerStatLine, PositionGroup, RawPlayerStats } from "./fantrax/playerStats";
+export type { PlayerStatLine, RawPlayerStats } from "./fantrax/playerStats";
 export { PLAYER_CATEGORIES } from "./playerCategories";
-export type { PlayerCategory } from "./playerCategories";
 export { ordinal } from "./ordinal";
 export { signed } from "./signed";
 export { teamColours } from "./teamColours";
-export type { TeamColours } from "./teamColours";
 export { rankBy } from "./categoryBoard";
 export type { BoardRow } from "./categoryBoard";
-export type { CategoryLine, RawSeasonStats } from "./fantrax/seasonStats";
+export type { CategoryLine } from "./fantrax/seasonStats";
 export {
   fetchDraftResults,
   fetchLeagueInfo,

@@ -1,9 +1,6 @@
-// Screenshot one route.
+// Screenshot one route at device scale 2, so text can be judged; then open the PNG and look at it.
 //
 //   node tools/ui/shot.mjs <route> <out.png> [--width 390] [--height 844] [--team-cookie <file>]
-//
-// Device scale 2, so text is judgeable when the PNG is read back. A screenshot
-// nobody looks at is not verification — the caller's next step is to open it.
 
 import { writeFileSync } from "node:fs";
 import { connect, parseArgs, teamCookie } from "./cdp.mjs";

@@ -43,11 +43,7 @@ describe("dealNews", () => {
     expect(items[0].teamId).toBeNull();
   });
 
-  // The bug this shape was written against: Fantrax filed a 1-for-1 as two
-  // INBOUND sides and no outbound, so a body built from "what came in" and "what
-  // went out" said "A and B changes hands" — plural subject, singular verb, and
-  // neither destination named. Reading each side's own `teamId` cannot get that
-  // wrong however the rows are split.
+  // Fantrax may file a 1-for-1 as two INBOUND sides: each side's own `teamId` names its destination however split.
   it("names each man's destination in a trade", () => {
     const [item] = dealNews([trade], name, null);
     expect(item.body).toBe("The trade has gone through: Declan Rice joins Craig's XI.");
@@ -80,7 +76,6 @@ describe("dealNews", () => {
   });
 
   it("writes the reader's own business as his assistant would", () => {
-    // Craig, 25 Sep 2026: "same for a waiver or free agent".
     const waiver: Deal = {
       ...claim,
       via: "waivers",

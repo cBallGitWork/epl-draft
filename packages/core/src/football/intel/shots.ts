@@ -1,22 +1,8 @@
 import type { IntelManifest } from "./types";
 
-// Every shot, and where it was struck from.
-//
-// **The second map kind, and the one that makes a picker worth drawing.** The
-// control is built from the kinds actually present (`intel-export.md`), so one
-// kind is a control with nothing to choose.
-//
-// **The coordinates are already normalised and must not be touched again.**
-// SofaScore publishes a shot as DISTANCE FROM THE ATTACKING GOAL — x from 0.8 to
-// 52.6, penalties at exactly 11.5 — which is a different convention from the
-// same provider's touch clouds, where x already runs from a man's own goal to
-// the one he attacks. The exporter flips it so both arrive on one convention;
-// the app must not learn two. Verified on the way through: penalties land at
-// 88.5, goals average x=89.8 against a miss's 84.7.
+// Every shot and where it was struck from. The exporter already flips x to the touch clouds' convention: never again.
 
-/** One shot. Every vocabulary here is a closed set the exporter enforces — a
- *  value it has not heard of is dropped and named in the manifest, because a
- *  screen colouring by outcome cannot render a word it has never heard. */
+/** One shot. Each vocabulary is a closed set: the exporter drops an unknown value and names it in the manifest. */
 export interface Shot {
   /** FPL's season-stable code. */
   code: number;
@@ -26,9 +12,7 @@ export interface Shot {
   x: number;
   y: number;
   xg: number | null;
-  /** Expected goals ON TARGET — what the strike was worth once it had left his
-   *  foot, which is a different question from what the chance was worth. Null on
-   *  a shot that never troubled the frame. */
+  /** Expected goals on target: what the strike was worth, not the chance. Null on a shot off target. */
   xgot: number | null;
   outcome: "goal" | "save" | "miss" | "block" | "post";
   situation: string | null;
@@ -44,11 +28,7 @@ export interface IntelShots {
   shots: Shot[];
 }
 
-/** Every man's shots, by code, with the unusable rows left out.
- *
- *  Dropped rather than repaired, on `touchIntel`'s precedent: a shot keyed on
- *  `NaN` or plotted off the pitch is a mark that looks exactly like a real one,
- *  which is the confident wrong answer the app refuses. */
+/** Every man's shots by code; a row keyed on `NaN` or off the pitch is dropped, since it would look real. */
 export function shotIntel(shots: IntelShots | null): Map<number, Shot[]> {
   const byCode = new Map<number, Shot[]>();
   if (shots === null) return byCode;
@@ -78,25 +58,12 @@ export function assistsOf(shots: ReadonlyMap<number, readonly Shot[]>, code: num
   return made;
 }
 
-/** One man's shots, across every fixture or just one. */
-export function shotsOf(shots: Shot[] | undefined, fixture: number | null): Shot[] {
-  if (shots === undefined) return [];
-  return fixture === null ? shots : shots.filter((shot) => shot.fplFixtureId === fixture);
-}
-
 function inside(value: number): boolean {
   return typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 100;
 }
 
-/** Every shot in one fixture, by the FPL code of the man who took it.
- *
- *  The inverse of `shotsOf`, and a match wants it: that answers "where does this
- *  man shoot from" across a season, this answers "what did this match look
- *  like". Keyed rather than flat because a match map draws the two sides
- *  differently and the caller decides which side a code is on — the export
- *  carries no team.
- *
- *  Oldest first within a man, which is the order they were taken. */
+/** Every shot in one fixture by the taker's code, earliest first; keyed because the export carries no team and the
+ *  caller decides each code's side. */
 export function shotsInFixture(shots: Map<number, Shot[]>, fixture: number): Map<number, Shot[]> {
   const here = new Map<number, Shot[]>();
   for (const [code, his] of shots) {

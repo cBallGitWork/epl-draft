@@ -1,3 +1,4 @@
+import { groupedBy } from "../grouped";
 import type { LeaguePlayer } from "../league/types";
 import { type Bridge, type MappedEntry, claimedCodes, settledIds } from "./bridge";
 import {
@@ -12,23 +13,16 @@ import { toFplClubCode } from "./clubCodes";
 import { normalizeName } from "./normalize";
 import { AMBIGUITY_MARGIN, FUZZY_MIN_SCORE, nameAgreement } from "./similarity";
 
-// Deciding which FPL player a Fantrax player is. The one rule that matters: when
-// it is not sure, it says so. A wrong row here is a player's whole season
-// attributed to someone else, and nothing downstream would ever question it.
-//
-// Whether two names are the same name is `candidates.ts`. This file is only about
-// who ends up claiming whom.
+// Which FPL player a Fantrax player is, and when it is not sure, it says so: a wrong row gives a season to another man.
 
 export type { FplCandidate };
 
-/** A Fantrax player we could not settle, with what we considered, so a human can
- *  decide in one sitting instead of re-deriving the problem. */
+/** A Fantrax player we could not settle, with what we considered, so a person can decide in one sitting. */
 export interface Proposal {
   fantraxId: string;
   fantraxName: string;
   clubCode: string | null;
-  /** Fantrax's position. Shown because it helps a human, never used to decide —
-   *  the commissioner can change it whenever they like. */
+  /** Fantrax's position: shown to a person, never used to decide, since the commissioner can change it. */
   positionHint: string | null;
   candidates: { fplCode: number; name: string; score: number }[];
   reason: "no-candidates" | "below-threshold" | "ambiguous" | "identity-taken";
@@ -41,18 +35,8 @@ export interface MatchResult {
 
 type Aliases = Record<string, string>;
 
-/**
- * Match Fantrax players to FPL players, club by club.
- *
- * Two passes per club, and the order is the point. Every exact match is assigned
- * first and its FPL player removed from the pool, and only then does fuzzy
- * matching run over what is left. Without that, a fuzzy near-miss can claim an
- * identity that an exact match was about to take — the sibling project had
- * Ipswich's "Harry Clarke" steal Jack Clarke's id this exact way.
- *
- * Players Fantrax gives no club for are matched against the whole league and
- * accepted only on a unique exact hit; anything less is a proposal.
- */
+/** Match Fantrax players to FPL players, club by club: every exact match claims its man before fuzzy matching runs
+ *  over the rest. A man with no club is accepted only on a unique exact hit. */
 export function matchPlayers(
   fantraxPlayers: LeaguePlayer[],
   fplPlayers: FplCandidate[],
@@ -64,15 +48,9 @@ export function matchPlayers(
 
   const settled = settledIds(existing);
   const pending = fantraxPlayers.filter((player) => !settled.has(player.fantraxId));
-  const byClub = new Map<string, FplCandidate[]>();
-  for (const candidate of fplPlayers) {
-    const club = byClub.get(candidate.clubCode) ?? [];
-    club.push(candidate);
-    byClub.set(candidate.clubCode, club);
-  }
+  const byClub = groupedBy(fplPlayers, (candidate) => candidate.clubCode);
 
-  // Seeded from the bridge, not empty: codes won on an earlier run are not up
-  // for grabs on this one.
+  // Seeded from the bridge: codes won on an earlier run are not up for grabs.
   const taken = claimedCodes(existing);
 
   const clubOf = (player: LeaguePlayer) =>
@@ -86,8 +64,7 @@ export function matchPlayers(
 
   const deferred: LeaguePlayer[] = [];
 
-  // Pass A — exact and alias. Certain matches claim their identity before
-  // anything approximate is allowed to compete for it.
+  // Pass A: exact and alias, claiming their man before anything approximate competes.
   for (const player of pending) {
     const forms = fantraxForms(player);
     const alias = aliases[forms[0] ?? ""];
@@ -132,8 +109,7 @@ export function matchPlayers(
       continue;
     }
 
-    // A club-less player has the whole league to be confused with, so a fuzzy
-    // win there is not evidence of anything.
+    // A club-less player has the whole league to be confused with, so a fuzzy win proves nothing.
     if (clubOf(player) === null || best.score < FUZZY_MIN_SCORE) {
       proposals.push(proposalFor(player, scored, "below-threshold"));
       continue;

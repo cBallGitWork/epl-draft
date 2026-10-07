@@ -36,10 +36,7 @@ describe("portraitUrl", () => {
   });
 
   it("builds the path the Premier League actually serves today", () => {
-    // Asserted whole, because the old path still answers 200 with two-year-old
-    // photographs. A partial match would have passed against it, which is
-    // exactly how a season of stale portraits went unnoticed: nothing 404s, the
-    // players are simply in the wrong shirts.
+    // Asserted whole: the old path still answers 200 with two-year-old photographs.
     expect(portraitUrl({ code: 223094 })).toBe(
       "https://resources.premierleague.com/premierleague25/photos/players/110x140/223094.png",
     );
@@ -54,8 +51,7 @@ describe("portraitUrl", () => {
   });
 
   it("builds the large path the Premier League also serves", () => {
-    // Whole again, and for the same reason: 250x250 and 330x330 both 403 under
-    // this prefix, so a partial match would not tell 500x500 from a guess.
+    // Whole again: 250x250 and 330x330 both 403 under this prefix.
     expect(portraitUrl({ code: 223094 }, "large")).toBe(
       "https://resources.premierleague.com/premierleague25/photos/players/500x500/223094.png",
     );

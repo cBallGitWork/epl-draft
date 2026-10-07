@@ -60,9 +60,6 @@ export interface SeasonTotals {
   recoveries: number;
   saves: number;
   goalsConceded: number;
-  bonus: number;
-  /** FPL's bonus-points score, the number the bonus is derived from. */
-  bps: number;
 }
 
 export type FixtureStatus = "upcoming" | "live" | "finished";
@@ -137,13 +134,9 @@ export interface PlayerMatchStats {
   yellowCards: number;
   redCards: number;
   saves: number;
-  bonus: number;
-  /** FPL's bonus-points score: a neutral "who played well" under anyone's rules. */
-  bps: number;
-  defensiveContribution: number;
   expectedGoals: number;
   expectedAssists: number;
-  /** A round total, like the four above it: never sum it across one round's rows. */
+  /** A round total, like the two above it: never sum it across one round's rows. */
   starts: number;
   /** FPL's own points for THIS fixture. Never in a column headed `FPts`, which is Fantrax's. */
   fplPoints: number;

@@ -2,8 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { IntelTouches } from "./touches";
 import { averageTouchPosition, touchFixtures, touchIntel, touchesOf } from "./touches";
 
-/** The manifest every intel file carries. Nothing here reads it; it is present
- *  because the parser must survive a real payload rather than a trimmed one. */
+/** The manifest every intel file carries: read by nothing here, present so the parser sees a real payload. */
 const MANIFEST = {
   season: "26-27",
   gameweek: null,
@@ -23,15 +22,13 @@ describe("touchIntel", () => {
   });
 
   it("drops a row with an odd number of coordinates", () => {
-    // A lost coordinate does not shorten the map by one touch — every pair after
-    // it is x and y swapped, so the map is wrong everywhere. Better absent.
+    // A lost coordinate swaps x and y in every pair after it, so the whole row goes.
     const map = touchIntel(file([{ code: 1, fixtures: [{ fplFixtureId: 8, p: [14, 62, 52] }] }]));
     expect(map.has(1)).toBe(false);
   });
 
   it("drops a man with no usable code rather than keying him on NaN", () => {
-    // Several men collapsing into one heat map is worse than a man being
-    // absent: one of the two looks like an answer.
+    // Several men collapsing into one heat map is worse than a man being absent.
     const map = touchIntel(
       file([{ code: Number.NaN, fixtures: [{ fplFixtureId: 8, p: [1, 2] }] }]),
     );
@@ -79,8 +76,7 @@ describe("touchesOf", () => {
   });
 
   it("takes the whole season when no fixture is asked for", () => {
-    // What the screen opens on: five rounds in, one match is 46 touches and a
-    // shape nobody can read.
+    // What the screen opens on: one match is too few touches to read.
     expect(touchesOf(map.get(1), null)).toHaveLength(3);
   });
 
@@ -108,16 +104,14 @@ describe("averageTouchPosition", () => {
   });
 
   it("averages a side's touches rather than its men's averages", () => {
-    // A substitute's two touches must not weigh what a centre-half's hundred
-    // do — which is the whole reason this takes points and not centres.
+    // A substitute's two touches must not weigh what a centre-half's hundred do: points, not centres.
     const heavy = Array.from({ length: 9 }, () => ({ x: 40, y: 50 }));
     const light = [{ x: 85, y: 50 }];
     expect(averageTouchPosition([...heavy, ...light])?.x).toBeCloseTo(44.5, 5);
   });
 
   it("answers null for an empty cloud rather than the corner flag", () => {
-    // (0, 0) is a real place on this pitch, so a centre of nothing would draw
-    // a man at the corner and look like an answer.
+    // (0, 0) is a real corner of this pitch, so a centre of nothing must not land there.
     expect(averageTouchPosition([])).toBeNull();
   });
 

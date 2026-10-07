@@ -17,7 +17,7 @@ export function saturdayThreads(ctx: MatchupContext, worth: SlotWorth): Thread[]
   const m = Math.abs(margin);
   const out: Thread[] = [];
   const left = home.toPlay.length + away.toPlay.length;
-  // The sums of what the side behind needs only once three or fewer are left (Craig, 29 Sep 2026).
+  // The sums of what the side behind needs, only once three or fewer are left.
   if (left > 0 && left <= DRAFT_DESK.chaseWhenLeft && margin !== 0) out.push(thread("chase", { teamId: behind.side.teamId, men: behind.toPlay, facts: chaseLines(behind, ahead, m, worth) }));
   for (const s of [home, away]) {
     const waiting = s.subs.filter((x) => x.provisional);
@@ -25,7 +25,7 @@ export function saturdayThreads(ctx: MatchupContext, worth: SlotWorth): Thread[]
     const doubles = s.toPlay.filter((x) => x.played + x.left > 1);
     if (doubles.length > 0) out.push(thread("double-to-come", { teamId: s.side.teamId, men: doubles, facts: doubles.map((x) => `${x.name} has two matches this gameweek, ${x.left === 1 ? "one" : "both"} still to come`) }));
   }
-  // How the lead was built, stage by stage, so the writer need not invent a cause (GW5: "most of it through their keeper").
+  // How the lead was built, stage by stage, so the writer need not invent a cause.
   const leader: "home" | "away" = margin >= 0 ? "home" : "away";
   const trailer: "home" | "away" = leader === "home" ? "away" : "home";
   const built = timeline(ctx.state).map((b) => `${b.points[leader]}-${b.points[trailer]} ${b.day === null ? "in" : "on"} ${beatLabel(b.day)}`);

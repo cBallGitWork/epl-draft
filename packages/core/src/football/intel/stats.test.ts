@@ -50,8 +50,7 @@ describe("columnDrift", () => {
 });
 
 describe("STAT_COLUMNS", () => {
-  it("names each key and label once", () => {
+  it("names each key once", () => {
     expect(new Set(STAT_COLUMNS.map((column) => column.key)).size).toBe(STAT_COLUMNS.length);
-    expect(new Set(STAT_COLUMNS.map((column) => column.label)).size).toBe(STAT_COLUMNS.length);
   });
 });

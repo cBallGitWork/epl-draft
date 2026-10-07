@@ -21,7 +21,6 @@ const CODE = {
   martinez: 221820,
   tzolakis: 473284,
   wissa: 216646,
-  buendia: 195546,
   arrizabalaga: 109745,
 } as const;
 
@@ -65,8 +64,6 @@ describe("mapPlayers on a recorded bootstrap", () => {
         clearancesBlocksInterceptions: 10,
         recoveries: 10,
         goalsConceded: 5,
-        bonus: 9,
-        bps: 167,
       },
     });
   });
@@ -115,8 +112,6 @@ describe("mapLiveStats on recorded GW5", () => {
       assists: 0,
       cleanSheet: false,
       goalsConceded: 3,
-      bps: 25,
-      defensiveContribution: 2,
       expectedGoals: 1.09,
       expectedAssists: 0.02,
       starts: 1,
@@ -136,7 +131,6 @@ describe("mapLiveStats on recorded GW5", () => {
     expect(lineOf(CODE.martinez)).toMatchObject({ ownGoals: 1 });
     expect(lineOf(CODE.tzolakis)).toMatchObject({ penaltiesSaved: 1, yellowCards: 1, saves: 3 });
     expect(lineOf(CODE.wissa)).toMatchObject({ penaltiesMissed: 1 });
-    expect(lineOf(CODE.buendia)).toMatchObject({ goals: 1, bonus: 3, defensiveContribution: 15 });
   });
 
   it("gives an unused substitute his noughts", () => {

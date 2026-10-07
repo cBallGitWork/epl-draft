@@ -1,33 +1,15 @@
 import { describe, expect, it } from "vitest";
 import recordedFixture from "../__fixtures__/plFixture.json";
+import { OPTA_TO_CODE as optaToCode } from "../__fixtures__/plFixtureCodes";
 import type { RawPlFixture, RawPlFixtureEvent } from "./raw";
 import { plManMatches, plSubstitutions } from "./sheetEvents";
 
-// Liverpool 2-2 Nottingham Forest, gameweek 2, recorded 4 Sep 2026 and never
-// fetched (CODE_RULES §6). The same match `map.test.ts` uses, and it carries the
-// four cases worth having: a scorer who was then substituted, a substitute who
-// was then booked, a penalty, and a substitution in added time.
-//
-// It carries neither an own goal nor a red card — 5 and 1 respectively across
-// the whole of gameweeks 1-3 — so those two are built by hand below rather than
-// left untested because the recording happened not to contain them.
+// Liverpool 2-2 Nottingham Forest (GW2): a scorer then substituted, a sub then booked, a penalty, an added-time change.
+// It has no own goal or red card, so those two are built by hand below.
 const DETAIL = recordedFixture as unknown as RawPlFixture;
 
-/** FPL's `opta_code` → `code`, the app's own join. Every player on both sheets,
- *  coded as his id plus a million so a wrong join is visible rather than
- *  coincidental — the idiom `map.test.ts` set. */
-const optaToCode = new Map(
-  (DETAIL.teamLists ?? []).flatMap((list) =>
-    list === null
-      ? []
-      : [...list.lineup, ...list.substitutes].flatMap((p) =>
-          p.altIds ? [[p.altIds.opta, p.id + 1_000_000] as [string, number]] : [],
-        ),
-  ),
-);
-
 const men = plManMatches(DETAIL, optaToCode);
-/** His FPL code under the fixture's own coding above. */
+/** His FPL code under `plFixtureCodes.ts`' coding. */
 const of = (plId: number) => men.get(plId + 1_000_000);
 
 const NDOYE = 50623;
@@ -115,9 +97,7 @@ describe("plManMatches", () => {
   });
 
   it("skips a card shown to nobody", () => {
-    // One of the 118 bookings in gameweeks 1-3 carries a teamId and no
-    // personId — a bench or staff card. It belongs to a side and has no name to
-    // sit beside, so it is dropped rather than guessed at.
+    // A bench or staff card carries a teamId and no personId: no name to sit beside, so it is dropped.
     const map = synthetic([
       { type: "B", description: "Y", teamId: 10, clock: { secs: 4260, label: "71'00" } },
     ]);
@@ -125,9 +105,7 @@ describe("plManMatches", () => {
   });
 
   it("skips a man the bridge cannot place", () => {
-    // An empty join is the lag `scripts/pl-bridge.ts` exists for. He keeps his
-    // name on the sheet and gains no marks, which beats a row keyed on a
-    // provider id nothing else in the app speaks.
+    // Unjoined, he keeps his name on the sheet and gains no marks, never a row keyed on a provider id.
     expect(plManMatches(DETAIL, new Map()).size).toBe(0);
   });
 
@@ -143,10 +121,8 @@ describe("plSubstitutions", () => {
   const named = (code: number | null) => (code === null ? "?" : String(code - 1_000_000));
 
   it("pairs each man with the man he actually replaced", () => {
-    // Liverpool made three changes at 71' at once. Pairing on the MINUTE alone
-    // cannot tell them apart and the report drew Flemming coming on for Maeda
-    // when he came on for Emersonn — two true men and one false sentence. The
-    // feed's own order is the join: `ON` then its own `OFF`, 269 of 269.
+    // Liverpool made three changes at 71': pairing on the minute alone puts the wrong man on for the wrong man.
+    // The feed's own order is the join: `ON` then its own `OFF`.
     const at71 = swaps.filter((swap) => swap.minute === 71).map((s) => `${named(s.on)}>${named(s.off)}`);
     expect(at71).toEqual(["134796>32894", "49909>19919", "16006>116665"]);
   });
@@ -199,9 +175,7 @@ describe("plManMatches — assists", () => {
   });
 
   it("credits nobody for an own goal or a penalty", () => {
-    // Counted across gameweeks 1-3: `assistId` is on 56 of 76 `G` events and on
-    // none of the 5 own goals or 4 penalties. Nobody assists an own goal, and a
-    // penalty is won rather than laid on.
+    // Opta never puts `assistId` on an own goal or a penalty: nobody assists the one, and the other is won.
     const map = synthetic([
       { type: "O", description: "O", personId: NDOYE, clock: { secs: 600, label: "10'00" } },
       { type: "P", description: "P", personId: ARAUJO, clock: { secs: 1200, label: "20'00" } },

@@ -3,9 +3,7 @@ import { isFantraxPlayerId, mapPlayerProfile } from "./profile";
 import type { RawPlayerProfile } from "./profile";
 import fixture from "./__fixtures__/playerProfile.json";
 
-// Two real profiles, probed 12 Aug 2026: a rostered dual-eligible player and a
-// free agent nobody in the league wants. The pair is the point — every field that
-// distinguishes an owned player from an unowned one is only visible across both.
+// Two real profiles, a rostered dual-eligible player and an unwanted free agent: ownership shows only across both.
 
 const rostered = mapPlayerProfile(fixture.rostered as RawPlayerProfile);
 const freeAgent = mapPlayerProfile(fixture.freeAgent as RawPlayerProfile);
@@ -15,10 +13,7 @@ const labelled = (rows: { label: string; value: string }[], label: string) =>
 
 describe("mapPlayerProfile", () => {
   it("names the season the numbers belong to, which is not the current one", () => {
-    // The trap this whole module is shaped around. `season` says 2026-27 and the
-    // response is serving 2025-26, because no gameweek of the new season has been
-    // played — so a page showing "110 points" without the year would be claiming
-    // a return from a season that has not started.
+    // Before the new season's first gameweek, `season` says 2026-27 and the numbers are 2025-26's.
     expect(rostered.season).toBe("2025-26");
     expect(fixture.rostered.season.displayName).toBe("2026-27");
   });
@@ -30,9 +25,7 @@ describe("mapPlayerProfile", () => {
   });
 
   it("separates our league's row from the whole of Fantrax", () => {
-    // "100%" here means every league on the site, and it sits one field away from
-    // ownership in ours. Different lists, so no render can put them side by side
-    // without saying which is which.
+    // "100%" here means every league on the site, so it lives in a different list from ownership in ours.
     expect(labelled(rostered.league, "Status/Team")).toBe("test3");
     expect(labelled(rostered.league, "Eligible")).toBe("M,F");
     expect(labelled(rostered.market, "Drafted")).toBe("100%");
@@ -48,8 +41,7 @@ describe("mapPlayerProfile", () => {
   });
 
   it("drops rows with nothing in them and keeps numeric ones", () => {
-    // Fantrax pads the personal block with empty rows for fields other sports
-    // use, and files age as a number while everything else is a string.
+    // Fantrax pads the personal block with other sports' empty rows, and files age as a number.
     expect(rostered.personal.every((row) => row.value !== "")).toBe(true);
     expect(labelled(rostered.personal, "Age")).toBe("24");
     expect(rostered.personal.map((row) => row.label)).not.toContain("College");
@@ -60,8 +52,7 @@ describe("mapPlayerProfile", () => {
       sectionContent: {
         OVERVIEW: {
           tables: [
-            // Several rows: not the season table. Listed first on purpose — the
-            // real payload puts Recent Games straight after it.
+            // Several rows, so not the season table; listed first, though the real payload puts it after.
             {
               caption: "Recent Games",
               header: { cells: [{ shortName: "Date" }, { shortName: "FPts" }] },
@@ -91,8 +82,7 @@ describe("mapPlayerProfile", () => {
   });
 
   it("drops a column whose cell is missing rather than sliding the rest up", () => {
-    // Positional reading's one hazard: a short row must not pair Shots with
-    // Fouls. A pair that cannot be made is dropped, never shifted.
+    // A short row must not pair Shots with Fouls: a pair that cannot be made is dropped, never shifted.
     const ragged = mapPlayerProfile({
       sectionContent: {
         OVERVIEW: {
@@ -139,14 +129,12 @@ describe("mapPlayerProfile", () => {
     });
     expect(withGames.matches).toHaveLength(2);
     expect(withGames.matches[0]).toMatchObject({ opponent: "IPS", home: true, points: 3, shots: 1 });
-    // `@` is Fantrax's away marker and this is where it stops being a string.
+    // `@` is Fantrax's away marker.
     expect(withGames.matches[1]).toMatchObject({ opponent: "HUL", home: false, points: 0 });
   });
 
   it("does not mistake the other four tables for the match one", () => {
-    // `Upcoming Games` names its column `opp`, `Recent Trends` prefixes every id
-    // with `5010#`, and the season table has no opponent at all. Only the match
-    // table carries both `opponent` and `fpts`.
+    // `Upcoming Games` says `opp`, `Recent Trends` prefixes ids with `5010#`, the season table has no opponent.
     const decoys = mapPlayerProfile({
       sectionContent: {
         OVERVIEW: {
@@ -177,8 +165,7 @@ describe("mapPlayerProfile", () => {
   });
 
   it("survives a payload with nothing in it", () => {
-    // Every field on the wire is optional here as on fxea, and a profile we
-    // cannot read must render as an empty page rather than throw one.
+    // A profile we cannot read renders as an empty page, never a throw.
     const empty = mapPlayerProfile({});
     expect(empty).toMatchObject({ name: "", season: null, ownerTeamId: null });
     expect(empty.matches).toEqual([]);

@@ -1,6 +1,5 @@
-// The reserves Fantrax may bring on at the end of a period, in order, from the roster page (probed 29 Sep 2026). The
-// manager's own numbers in `autoSubOrderMap` when he set them; otherwise the order the deadline sets for him, by total
-// fantasy points, highest first (Craig, 29 Sep: "The auto sub order is by total fpts").
+// The reserves Fantrax may bring on at the end of a period, in order, off the roster page: the manager's own numbers in
+// `autoSubOrderMap` when he set them, else the deadline's order, by total fantasy points, highest first.
 
 export interface RawTeamRosterInfo {
   miscData?: {

@@ -20,7 +20,7 @@ export interface ProjectedGameweek {
 
 /** The categories a week's points split into, in the order a reader picks them. */
 export const PROJECTION_PARTS = ["goals", "assists", "cleanSheets", "bonus", "saves", "defcon", "appearance"] as const;
-export type ProjectionPart = (typeof PROJECTION_PARTS)[number];
+type ProjectionPart = (typeof PROJECTION_PARTS)[number];
 
 export interface ProjectedPlayer {
   /** FPL's season-stable player code. */

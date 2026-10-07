@@ -5,48 +5,28 @@ import type { Club, FootballPlayer, FootballSnapshot, Fixture, PlayerMatchStats 
 /** Earliest kickoff first; an unscheduled match sorts first. */
 export const byKickoff = (a: { kickoff: string | null }, b: { kickoff: string | null }) => (a.kickoff ?? "").localeCompare(b.kickoff ?? "");
 
-// Pure read-side selectors over a snapshot. Kept here rather than in components
-// so they stay unit-testable — the same rule that let the World Cup app's
-// competition logic survive a change of provider intact.
+// Pure read-side selectors over a snapshot.
 
 export function clubById(snapshot: FootballSnapshot): Map<number, Club> {
   return new Map(snapshot.clubs.map((c) => [c.id, c]));
 }
 
-/** Keyed by FPL's per-season `id`. Deliberately not exported: `id` is recycled
- *  every summer, so this is safe only within a single snapshot — which is the
- *  only place it is used, joining live stats back to the players in the same
- *  payload. Anything that outlives a snapshot uses `playerByCode`. */
+/** Keyed by FPL's per-season `id`, so safe only within one snapshot; anything persisted uses `playerByCode`. */
 function playerById(snapshot: FootballSnapshot): Map<number, FootballPlayer> {
   return new Map(snapshot.players.map((p) => [p.id, p]));
 }
 
-/** Keyed by FPL's season-stable `code` rather than its per-season `id`.
- *
- *  This is the lookup anything persisted has to use. The identity bridge stores
- *  `code` because `id` is recycled every summer (CODE_RULES §3), so a mapping
- *  built last August resolves through here and would resolve to the wrong
- *  footballer through `playerById`. */
+/** Keyed by FPL's season-stable `code`: the lookup anything persisted must use, since `id` is recycled every summer. */
 export function playerByCode(snapshot: FootballSnapshot): Map<number, FootballPlayer> {
   return new Map(snapshot.players.map((p) => [p.code, p]));
 }
 
-/** One club's players, as the club actually stands — the departed dropped by
- *  `onTheBooks`.
- *
- *  Three tabs ask the same question and used to answer it with the same two
- *  filters written out three times: Squad, Stats and Set Pieces. The Squad
- *  tab's own note said this is where the third one goes.
- *
- *  Unsorted on purpose. What varies between the three is the ORDER — a depth
- *  chart, a stats board, a set-piece rank — and none of them wants another
- *  page's. */
+/** One club's players as it stands, the departed dropped by `onTheBooks`; unsorted, since each caller orders its own. */
 export function squadOf(snapshot: FootballSnapshot, clubId: number): FootballPlayer[] {
   return snapshot.players.filter((player) => player.clubId === clubId && onTheBooks(player));
 }
 
-/** One notable thing a player did in a match. The drop-down under a fixture is
- *  built from these, so the ordering here is the reading order on screen. */
+/** One notable thing a player did in a match; the order here is the reading order under a fixture. */
 export interface MatchContribution {
   player: FootballPlayer;
   clubId: number;
@@ -58,11 +38,7 @@ export interface MatchContribution {
   minutes: number;
 }
 
-/** Everyone who did something worth showing in a fixture, best first.
- *
- *  "Worth showing" deliberately excludes merely turning out: a list of 22 players
- *  who each did nothing is noise, and the drop-down exists to answer "what
- *  happened in this match", not "who played". */
+/** Everyone who did something worth showing in a fixture, best first; merely turning out is not enough. */
 export function contributions(
   snapshot: FootballSnapshot,
   fixtureId: number,
@@ -100,16 +76,14 @@ function isNotable(s: PlayerMatchStats): boolean {
   );
 }
 
-/** Goals outrank assists outrank cards. Within a tie, more minutes first so the
- *  ordering is stable rather than arbitrary. */
+/** Goals outrank assists outrank cards; a tie goes to more minutes. */
 function byImpact(a: MatchContribution, b: MatchContribution): number {
   const score = (c: MatchContribution) =>
     c.goals * 100 + c.assists * 50 + c.redCards * 30 + c.yellowCards * 2;
   return score(b) - score(a) || b.minutes - a.minutes;
 }
 
-/** Fixtures for a gameweek, in kickoff order with undated matches last — TV picks
- *  routinely have no time yet and must not sort to the top of the list. */
+/** Fixtures for a gameweek in kickoff order, undated last: a TV pick with no time must not sort to the top. */
 export function fixturesInOrder(snapshot: FootballSnapshot) {
   return [...snapshot.fixtures].sort((a, b) => {
     if (a.kickoff === b.kickoff) return a.id - b.id;
@@ -120,11 +94,7 @@ export function fixturesInOrder(snapshot: FootballSnapshot) {
 }
 
 
-/** The rounds either side of the one in view, or null at each end of the season.
- *
- *  Bounds come from the snapshot's own gameweek list rather than a constant 38 —
- *  FPL decides how long a season is, and a season that gains a round to a
- *  postponement should not need a code change. */
+/** The gameweeks either side of the one in view, null at each end; bounded by the snapshot's own list, not 38. */
 export function adjacentGameweeks(snapshot: FootballSnapshot): {
   previous: number | null;
   next: number | null;
@@ -137,23 +107,13 @@ export function adjacentGameweeks(snapshot: FootballSnapshot): {
   };
 }
 
-/** Whether a round exists in this season at all — what a route needs before it
- *  renders a gameweek someone typed into the URL. */
+/** Whether a gameweek exists this season, before a route renders one typed into the URL. */
 export function hasGameweek(snapshot: FootballSnapshot, gameweek: number): boolean {
   return snapshot.gameweeks.includes(gameweek);
 }
 
-/** The season's dated kickoffs, one per fixture that has one.
- *
- *  Undated matches — TV picks with no time yet — are dropped rather than carried
- *  as a null nobody downstream can use, so a caller never has to ask twice.
- *
- *  The return type is written out structurally and NOT imported from
- *  `league/calendar.ts`, whose `GameweekKickoff` is the same shape. That import
- *  would make the football layer depend on the league layer, which is the one
- *  direction CLAUDE.md forbids outright: football is permanent and league is an
- *  adapter. The league layer declares its own copy for exactly this reason, and
- *  a script does the wiring. */
+/** The season's dated kickoffs, undated fixtures dropped.
+ *  Typed structurally: importing `league/calendar.ts`'s `GameweekKickoff` would make football depend on league. */
 export function datedKickoffs(
   fixtures: readonly Fixture[],
 ): { gameweek: number; kickoff: string }[] {

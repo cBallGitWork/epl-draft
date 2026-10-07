@@ -3,10 +3,7 @@ import { mapPastSeasons } from "./seasons";
 import type { RawElementSummary } from "./fpl/raw";
 import saka from "./__fixtures__/elementSummary.json";
 
-// The same recorded `element-summary` response the game log is tested against —
-// Saka, element 12, 29 Aug 2026 — read at the other end. It carries eight
-// completed seasons, 2018/19 to 2025/26, which is enough to catch both things
-// that can go wrong here: the order, and a column that did not exist yet.
+// Saka's recorded `element-summary`, as in the game log's tests: eight completed seasons, 2018/19 to 2025/26.
 
 const summary = saka as RawElementSummary;
 

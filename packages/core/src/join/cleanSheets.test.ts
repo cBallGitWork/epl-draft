@@ -12,7 +12,7 @@ const rules = mapScoringRules(recorded as RawScoringSystem)!;
 const stat = (over: Partial<PlayerMatchStats> = {}): PlayerMatchStats => ({
   playerId: 1, fixtureId: 100, minutes: 90, goals: 0, assists: 0, cleanSheet: true,
   goalsConceded: 0, ownGoals: 0, penaltiesSaved: 0, penaltiesMissed: 0, yellowCards: 0,
-  redCards: 0, saves: 0, bonus: 0, bps: 0, defensiveContribution: 0, expectedGoals: 0,
+  redCards: 0, saves: 0, expectedGoals: 0,
   expectedAssists: 0, fplPoints: 0, starts: 1, ...over,
 });
 
@@ -57,10 +57,7 @@ describe("pendingCleanSheets", () => {
   });
 
   it("trusts FPL's verdict over a goals-conceded count of zero", () => {
-    // The double-gameweek trap. Per-fixture stats come from FPL's `explain`,
-    // which carries a stat only when it scores — so a defender who conceded
-    // exactly one, worth nought, has no goals-conceded line and reads back as
-    // zero. Counting that as a clean sheet would invent four points.
+    // On a double, `explain` omits a goals-conceded line worth nought, so one conceded reads as zero.
     const squad = team([player("D", [stat({ cleanSheet: false, goalsConceded: 0 })])]);
     expect(pendingCleanSheets(squad, rules, IN_PLAY)).toEqual({ points: 0, players: 0 });
   });

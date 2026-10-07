@@ -4,8 +4,8 @@ import { counted, type SideState } from "./state";
 import { byClock } from "./stories";
 import type { DraftMan, GoalTime, NextMatch } from "./types";
 
-// Each side as the page sets it out: its returns under its name, as BBC Sport sets a match's scorers (Craig, 30 Sep 2026:
-// "goals/assists at the top... and clean sheets too"), and its eleven with each man's points, or his match to come.
+// Each side as the page sets it out: its returns under its name, as BBC Sport sets a match's scorers, and its eleven with
+// each man's points, or his match to come.
 
 export interface StoryDraftReturn {
   name: string;
@@ -82,8 +82,8 @@ function man(r: StoryDraftRow): string {
   return `${r.name} ${r.points}`;
 }
 
-/** A side's line-up as a match report prints one (Craig, 30 Sep 2026: "put the bench under the line up like a real match
- *  report"): the lines of the eleven split by semicolons, a reserve in brackets after the man he replaces. */
+/** A side's line-up as a match report prints one: the lines of the eleven split by semicolons, a reserve in brackets
+ *  after the man he replaces. */
 export function lineupText(rows: readonly StoryDraftRow[]): string {
   const lines: { slot: string; men: string[] }[] = [];
   rows.forEach((r, i) => {

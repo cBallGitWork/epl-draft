@@ -6,7 +6,7 @@ import { signed } from "./signed";
 // The league's scoring as a card a manager reads: a line per category in plain words, priced per roster slot.
 
 /** One category on the card: its words, and its price at each slot as lines of text. */
-export interface RuleLine {
+interface RuleLine {
   name: string;
   key: string;
   /** One entry per slot asked for; a banded price is several lines. */

@@ -9,7 +9,7 @@ import type { StarMan } from "./star";
 import { isGoal, type MatchEvent } from "./timeline";
 import type { Side } from "./types";
 
-// What a match-day report carries beside its prose, per match, laid out as BBC Sport sets a match (Craig, 28 Sep 2026): the
+// What a match-day report carries beside its prose, per match, laid out as BBC Sport sets a match: the
 // header (crests, score, FT and HT, goals and assists by side, venue and attendance), the pieces, and a sidebar of the line-ups
 // with our marks, the Star man, the top league scorers, key stats and the timeline. Codes only; names of clubs at render.
 

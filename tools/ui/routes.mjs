@@ -1,26 +1,9 @@
-// The routes the instruments walk, in one place.
-//
-// **Written out three times until 11 Sep 2026** — `sweep` and `tapfit` carried
-// byte-identical seventeen-entry lists, `groundfit` the desk subset, and the two
-// explanatory comments (Scout's query-string view, the inbox) appeared verbatim
-// in all three. Adding `/credits` would have been a fourth spelling of a route
-// that already had nowhere to live, which is what made the count worth acting
-// on: three is the bar, and this was three.
-//
-// It is the same argument `components/shell/sections.ts` makes for the app's own
-// nav — one table, because more than one register reads it — and the reason it
-// belongs here rather than there is that `sections.ts` lists SECTIONS, which is
-// a product idea, and this lists everything an instrument should measure,
-// which is not the same set. `/credits` is on this list and is deliberately not
-// a section.
-//
-// Their own rule, kept: *a route this list does not name is a route that ships
-// unmeasured.*
+// The routes the instruments walk, in one place: a route this list does not name ships unmeasured.
 
 import { existsSync, readdirSync } from "node:fs";
+import { discover } from "./cdp.mjs";
 
-/** Everything the desk draws, and therefore everything that has a photographic
- *  ground behind it. */
+/** Everything the desk draws, and so everything with the photographic ground behind it. */
 export const DESK_ROUTES = [
   "/league",
   "/league/schedule",
@@ -32,12 +15,9 @@ export const DESK_ROUTES = [
   "/league/matchups",
   "/squad",
   "/players",
-  // Scout's second view. Its two ids are in the QUERY rather than the path, so
-  // `discover` cannot reach it by following a link off the board — the board
-  // only links here once a first man has been chosen. Two real ids, like every
-  // other fixed entry in this list.
+  // Scout's second view: its ids are in the query, so nothing on the board links a crawler here.
   "/players/analysis?a=05gcr&b=03ksl",
-  // Data's fixture planner (24 Sep 2026); its phone view is a query, so the defence board is named too.
+  // The fixture planner's phone view is a query, so the defence board is named too.
   "/players/teams",
   "/players/planner",
   "/players/planner?view=defence",
@@ -48,40 +28,24 @@ export const DESK_ROUTES = [
   "/matchday?view=stats",
   "/matchday/desk",
   "/fpl",
-  // The manager's inbox, added with the section on 5 Sep 2026. A route this
-  // list does not name is a route that ships unmeasured.
   "/news",
-  // Who took the photographs behind the desk, added with the grounds on 11 Sep
-  // 2026. Not a section and reachable only from the rail's foot and the phone's
-  // drawer, which is exactly the kind of route that goes unmeasured by accident.
+  // Not a section: reachable only from the rail's foot and the phone's drawer.
   "/credits",
 ];
 
-/** The competition's own front page. On `sweep` and `tapfit` since they were
- *  written and NOT on `groundfit`, which is a gap rather than a decision — it
- *  is a desk route with a ground like any other. Kept out here so the extraction
- *  preserves behaviour exactly; widening the gate is its own change, with its
- *  own run. */
+/** The competition's front page: on `sweep` and `tapfit`, not yet on `groundfit`. */
 export const PREM_ROUTE = "/prem";
 
 /** The front page as an instrument opens it: a signed-in cold open of a bare `/` lands on Mail or Live. */
 export const FRONT_PAGE = "/?paper";
 
-/** Newsprint. No photograph behind it — `isPaperRoute` stands the ground down —
- *  so `groundfit` has nothing to measure here, and the other two still do. */
+/** Newsprint, with no photograph under it, so `groundfit` has nothing to measure here. */
 export const PAPER_ROUTES = [FRONT_PAGE];
 
-/** Every route worth measuring for contrast, overflow and tap targets.
- *
- *  Composed rather than written out again, and in whatever order the pieces fall
- *  — the instruments loop over this and report per route, so the order is
- *  cosmetic. An earlier draft rebuilt the original ordering with two `slice`
- *  calls, which is a way of making an insertion into `DESK_ROUTES` silently move
- *  `/prem` for no reader-visible gain. */
+/** Every route worth measuring for contrast, overflow and tap targets. */
 export const ALL_ROUTES = [...PAPER_ROUTES, ...DESK_ROUTES, PREM_ROUTE];
 
-/** A match's tabs, read off the app's own `prem/match/[id]/` folders so the list cannot drift:
- *  a hand-kept one measured a deleted Report tab as `ok` (a 404) and never saw Highlights. */
+/** A match's tabs, read off the app's own `prem/match/[id]/` folders so the list cannot drift. */
 const MATCH_DIR = new URL("../../apps/companion/app/prem/match/[id]/", import.meta.url);
 export const MATCH_TABS = readdirSync(MATCH_DIR, { withFileTypes: true })
   .filter((entry) => entry.isDirectory() && existsSync(new URL(`${entry.name}/page.tsx`, MATCH_DIR)))
@@ -94,4 +58,16 @@ const MATCH_VIEWS = ["stats?view=home", "stats?view=fantasy", "players?view=pitc
 /** One match's overview, every tab under it, and the views its foot rows switch to. */
 export function matchRoutes(match) {
   return [match, ...[...MATCH_TABS, ...MATCH_VIEWS].map((tab) => `${match}/${tab}`)];
+}
+
+/** A played match's screens, discovered off the results list: a fixture id is per-season, so none is written down. */
+export async function playedMatchRoutes(cdp) {
+  const match = await discover(cdp, "/prem/results", 'a[href^="/prem/match/"]');
+  return match ? matchRoutes(match) : [];
+}
+
+/** One player's screens, discovered off the directory's BODY: a bare selector finds Find's own tab strip first. */
+export async function playerRoutes(cdp) {
+  const man = await discover(cdp, "/players", 'tbody a[href^="/players/"]');
+  return man ? [man, ...["data", "news", "transfer", "data?season=all"].map((tab) => `${man}/${tab}`)] : [];
 }

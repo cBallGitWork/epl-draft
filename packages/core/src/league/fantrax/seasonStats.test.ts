@@ -2,9 +2,8 @@ import { describe, expect, it } from "vitest";
 import { mapSeasonStats, type RawSeasonStats } from "./seasonStats";
 import fixture from "../__fixtures__/seasonStats.json";
 
-// The fixture is a cut of the live rehearsal payload (1 Sep 2026), kept to the
-// tables that carry the traps: both section headings, a category in both halves,
-// the trailing-space caption and a keeper-only category.
+// A cut of the live rehearsal payload: both headings, a category in both halves, the trailing-space caption and a
+// keeper-only category.
 
 const raw = fixture as RawSeasonStats;
 
@@ -16,8 +15,7 @@ describe("mapSeasonStats", () => {
     const minutes = mapSeasonStats(raw).get("Minutes Played") ?? [];
     const test3 = minutes.find((line) => line.teamId === TEST3);
 
-    // 180 in goal + 1,382 on the field. Reading by caption alone would answer
-    // one of the two, and which one depends only on table order.
+    // 180 in goal + 1,382 on the field; by caption alone, table order would pick one.
     expect(test3?.value).toBe(1562);
     expect(test3?.points).toBe(38);
   });
@@ -31,8 +29,7 @@ describe("mapSeasonStats", () => {
   it("files the outfield goals-against table under the keeper's category name", () => {
     const stats = mapSeasonStats(raw);
 
-    // Fantrax's caption has a trailing space and a different name for the same
-    // defensive fact. One category, both halves.
+    // A trailing space and another name for the same fact: one category, both halves.
     expect(stats.has("Goals Against Outfielders")).toBe(false);
     expect(stats.has("Goals Against")).toBe(true);
   });
@@ -46,15 +43,13 @@ describe("mapSeasonStats", () => {
     const sheets = mapSeasonStats(raw).get("Clean Sheets On Field") ?? [];
     const own = sheets.find((line) => line.teamId === OWN);
 
-    // 0 in goal and 4 on the field, for 0 and 13 points — checked against the
-    // live payload, so this is the arithmetic and not a guess.
+    // 0 in goal and 4 on the field, for 0 and 13 points, as the live payload has it.
     expect(own?.value).toBe(4);
     expect(own?.points).toBe(13);
   });
 
   it("ignores the summary and roll-up tables above the first heading", () => {
-    // Everything before `Standings By Category - Goalkeeper` is a different
-    // shape. A category named for one of them means the walk started too early.
+    // Before `Standings By Category - Goalkeeper` is another shape; a category named for one started the walk too early.
     const stats = mapSeasonStats(raw);
     expect(stats.has("Standings")).toBe(false);
     expect(stats.has("Standings By Category - Goalkeeper")).toBe(false);
@@ -65,7 +60,7 @@ describe("mapSeasonStats", () => {
   });
 
   it("reads points and the figure by the header when a date range drops the change columns", () => {
-    // Probed 6 Oct 2026: BY_DATE answers rank, fpts, team, pos, with no diff1 or diff2 either side of the team.
+    // BY_DATE answers rank, fpts, team, pos, with no diff1 or diff2 either side of the team.
     const goals = mapSeasonStats({
       tableList: [
         { caption: "Standings By Category - Outfielder", rows: [] },

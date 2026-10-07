@@ -2,25 +2,9 @@ import { type StoryExtras, normalizeExtras } from "./extras";
 import { type StoryFace, normalizeFace } from "./face";
 import { type EditionTie, normalizeTie, once } from "./published";
 
-// The rolling paper: prose as a stack of stories rather than one column a round.
-//
-// `published.ts` records the original contract — facts are live, prose is
-// published — and this file is its successor's shape: published prose now
-// ACCUMULATES. A story is filed when something happened, joins the stack in
-// `data/editions/paper.json`, and leaves it by expiry, supersession or the cap
-// (`frontPage.ts` owns all three). Still commit-based, still validated at this
-// edge from both directions, still never reaching a clock or the network.
+// The rolling paper's stories as committed in `data/editions/paper.json`, validated at this edge.
 
-/** What kind of story this is. The kind decides its voice, its brief and its
- *  place in the running order, so the list is ours — and every member here is
- *  one the newsdesk can assign and the page can print.
- *
- *  `table` and `numbers` were drafted as a Statto column over the sidebar
- *  charts and are deliberately NOT here: nothing files them, and a kind in
- *  this union that no desk writes reads as supported when it is not
- *  (CODE_RULES §2 — if it is not used this phase it is not committed this
- *  phase). The charts print as facts and need no prose to stand up. The idea
- *  is kept in the plan, not in the type. */
+/** What kind of story this is: it decides the voice, the brief and the place in the running order. */
 export type StoryKind =
   | "match-report"
   | "draft-report"
@@ -39,9 +23,7 @@ export type StoryKind =
   | "news"
   | "bin-xi";
 
-/** Every kind, as data. `normalizeStory` refuses a story whose kind is not here,
- *  and the paper's page table is checked against it — a kind missing from either
- *  fails silently, with a green typecheck and a green build. */
+/** Every kind, as data: `normalizeStory` refuses any other, and a kind missing here fails silently. */
 export const STORY_KINDS: readonly StoryKind[] = [
   "match-report", "draft-report", "fixture-preview",
   "tie-call", "tie-report", "predictions", "season-rankings", "eleven", "power-ranking",
@@ -52,27 +34,18 @@ export type { StoryExtras } from "./extras";
 export type { StoryFace } from "./face";
 
 
-/** One filed story, as committed.
- *
- *  Every field is optional-shaped at the edge (`normalizeStory`) because this
- *  arrives as JSON a model helped write: the schema is a request, not a
- *  guarantee, and the page renders whatever survives rather than throw. */
+/** One filed story, as committed; a model helped write it, so `normalizeStory` keeps what survives. */
 export interface PublishedStory {
-  /** Ours, computed by the writer, never the model's — it is the dedupe key,
-   *  the archive filename and the anchor the front page links to. */
+  /** The writer's, never the model's: the dedupe key, the archive filename and the page anchor. */
   slug: string;
   kind: StoryKind;
-  /** CI files with its environment's league and the app serves its own, and
-   *  both number periods from the same Friday — this is the whole rehearsal gate. */
+  /** The league it was filed for; the app prints only its own league's stories. */
   leagueId: string;
   period: number;
   gameweek: number;
-  /** ISO instant filed. Shown — a reader is entitled to know how old an
-   *  opinion is — and the recency half of the running order. */
+  /** ISO instant filed: printed, and the recency half of the running order. */
   filedAt: string;
-  /** ISO instant after which the story is not printed, stamped by the writer
-   *  from facts (a preview dies at its kickoff). Null means it leaves by
-   *  supersession or the cap instead. */
+  /** ISO instant after which it is not printed (a preview dies at its kickoff); null leaves by supersession or the cap. */
   expiresAt: string | null;
   /** Which named edition it went out under — "The Pink 'Un" — display copy. */
   edition: string;
@@ -85,44 +58,28 @@ export interface PublishedStory {
   deck: string;
   /** Paragraphs, split on blank lines by whatever prints it. */
   body: string;
-  /** The covered-keys this story spends — the ledger's join for dedupe and the
-   *  subject half of supersession. */
+  /** The covered keys this story spends: the ledger's dedupe join and the subject half of supersession. */
   subjects: string[];
-  /** The splash picture, when CI generated one. A committed file under the
-   *  app's public/, referenced here and rendered only through the newsprint
-   *  treatment. */
+  /** The splash picture when CI drew one: a committed file under the app's public/. */
   image: { src: string; alt: string } | null;
-  /** The man the story is about, so the page has a face to print beside it.
-   *
-   *  **Chosen by the DESK from the facts, never by the writer.** It is stamped
-   *  in `dispatch.file()` from the same numbers the brief was built out of — the
-   *  highest-scoring man in a tie, in a fixture, or in the eleven — so it cannot
-   *  disagree with the prose and a model cannot invent a footballer into the
-   *  picture slot. Null for a story with no man in it, which is ordinary: a
-   *  power ranking is about ten managers and a wire column about a market. */
+  /** The man the story is about, chosen by the desk from the brief's facts, never by the writer; null when none. */
   face: StoryFace | null;
   ties?: EditionTie[];
   extras?: StoryExtras;
 }
 
 /** The paper file as committed: every story currently in print. */
-export interface PublishedPaper {
+interface PublishedPaper {
   updatedAt: string;
   stories: PublishedStory[];
 }
 
-/** Coerce one story or refuse it. Refusal is ordinary — a malformed story is
- *  "there is no such story", never a thrown page. */
+/** Coerce one story or refuse it: a malformed story is no story, never a thrown page. */
 export function normalizeStory(parsed: unknown): PublishedStory | null {
   if (parsed === null || typeof parsed !== "object") return null;
   const raw = parsed as Partial<PublishedStory>;
 
-  // The six that decide whether this is a story at all: unmatchable to a
-  // round, unattributable to a league, unaddressable, undated, or with nothing
-  // to print — each reads as "no story". The dateline is REQUIRED, not
-  // coerced: journalism leads at all times now, and the filed instant is the
-  // whole honesty of an opinion printed under moving scores — a story that
-  // cannot say when it was filed is not printable in a rolling paper.
+  // Without any of these six it is no story; the filed instant is required, never coerced.
   if (typeof raw.slug !== "string" || raw.slug === "") return null;
   if (!STORY_KINDS.includes(raw.kind as StoryKind)) return null;
   if (typeof raw.leagueId !== "string" || raw.leagueId === "") return null;
@@ -165,9 +122,7 @@ export function normalizeStory(parsed: unknown): PublishedStory | null {
   };
 }
 
-/** The paper as the app (and the writer, re-reading its own output) sees it:
- *  parsed, story-by-story survivable, and about ONE league — a story filed
- *  about any other league is not this paper, whatever else it claims. */
+/** The paper as the app and the writer read it: each story normalised, and only those about `leagueId`. */
 export function normalizePaper(parsed: unknown, leagueId: string): PublishedStory[] {
   if (parsed === null || typeof parsed !== "object") return [];
   const raw = parsed as Partial<PublishedPaper>;
@@ -176,8 +131,6 @@ export function normalizePaper(parsed: unknown, leagueId: string): PublishedStor
   const stories = raw.stories
     .map(normalizeStory)
     .filter((story): story is PublishedStory => story !== null && story.leagueId === leagueId);
-  // One slug, one story: the slug is the archive name and the page anchor, and
-  // a repeated one is a retry that got committed twice. Newest filing wins,
-  // which is the opposite of `once` — a rewrite supersedes its draft.
+  // One slug, one story: a repeat is a retry committed twice, and the later entry wins.
   return once([...stories].reverse(), (story) => story.slug).reverse();
 }

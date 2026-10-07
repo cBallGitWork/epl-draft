@@ -8,9 +8,7 @@ import type {
 } from "../types";
 import type { RawBootstrap, RawFixture, RawLive, RawLiveElement, RawRegion } from "./raw";
 
-// Pure raw → domain transformation. No I/O, no dates from the clock, no network:
-// everything this needs arrives as an argument, so it is fully unit-testable and
-// the same inputs always give the same snapshot.
+// Pure raw → domain mapping: no I/O and no clock, so the same inputs always give the same snapshot.
 
 function mapClubs(raw: RawBootstrap): Club[] {
   return raw.teams.map((t) => ({
@@ -36,11 +34,7 @@ export function mapPlayers(raw: RawBootstrap): FootballPlayer[] {
     birthDate: e.birth_date ?? null,
     region: e.region ?? null,
     season: {
-      // `NUMERIC` throughout, not just on the expected trio: these are scraped
-      // fields on a payload we do not control, and the counts arriving as
-      // numbers today is an observation rather than a guarantee. It coerces a
-      // missing or unparseable value to nought, which is the right reading for
-      // a season total — a player FPL says nothing about has done nothing.
+      // `NUMERIC` throughout: a missing or unparseable season total reads as nought.
       goals: NUMERIC(e.goals_scored),
       assists: NUMERIC(e.assists),
       cleanSheets: NUMERIC(e.clean_sheets),
@@ -57,8 +51,6 @@ export function mapPlayers(raw: RawBootstrap): FootballPlayer[] {
       recoveries: NUMERIC(e.recoveries),
       saves: NUMERIC(e.saves),
       goalsConceded: NUMERIC(e.goals_conceded),
-      bonus: NUMERIC(e.bonus),
-      bps: NUMERIC(e.bps),
     },
   }));
 }
@@ -79,8 +71,7 @@ export function mapFixtures(raw: RawFixture[]): Fixture[] {
     homeScore: f.team_h_score,
     awayScore: f.team_a_score,
     status: fixtureStatus(f),
-    // Raw `finished`, on its own: this is the one place the distinction
-    // `fixtureStatus` deliberately throws away is kept.
+    // Raw `finished`: the one place the distinction `fixtureStatus` throws away is kept.
     settled: f.finished ?? false,
     minutes: f.minutes ?? 0,
     homeDifficulty: f.team_h_difficulty ?? null,
@@ -89,17 +80,13 @@ export function mapFixtures(raw: RawFixture[]): Fixture[] {
 }
 
 function fixtureStatus(f: RawFixture): FixtureStatus {
-  // `finished_provisional` flips as soon as the referee blows up; `finished` waits
-  // for FPL to confirm bonus. Treat either as done — a user watching the score does
-  // not care that bonus points are still settling.
+  // `finished_provisional` flips at the whistle and `finished` once bonus is confirmed: either is done.
   if (f.finished || f.finished_provisional) return "finished";
   if (f.started) return "live";
   return "upcoming";
 }
 
-/** The gameweek to show. `is_current` is the one in play; before the season and
- *  between gameweeks nothing is current, so fall back to `is_next`, then to the
- *  first event so the UI always has something to render. */
+/** The gameweek to show: `is_current`, else `is_next` (before the season and between gameweeks), else the first. */
 export function focusGameweek(raw: RawBootstrap): { gameweek: number; deadline: string | null } {
   const events = raw.events ?? [];
   const chosen =
@@ -107,29 +94,8 @@ export function focusGameweek(raw: RawBootstrap): { gameweek: number; deadline: 
   return { gameweek: chosen?.id ?? 1, deadline: chosen?.deadline_time ?? null };
 }
 
-/** Whether a round's football has been PLAYED. Null for a round FPL does not
- *  list, which is the honest answer for a number out of the season's range.
- *
- *  **Not `roundFinished`, which is already taken and asks a different question.**
- *  `round.ts` has one of that name — "which finished state is this round in",
- *  answering `final`/`provisional`/null off a snapshot's own fixtures — and
- *  `football/index.ts` records in writing that it is deliberately NOT exported,
- *  because it is half an answer that `roundState` completes. Exporting a second
- *  `roundFinished` made `import { roundFinished } from "@epl/core"` resolve to
- *  this one, past a comment saying the name is absent on purpose.
- *
- *  **The question a freshness check actually wants, and not `is_next`.** FPL
- *  flips `is_next` to the following round the moment a deadline passes, so from
- *  Friday teatime it names GW4 while GW3's ten matches are still being played —
- *  and a check reading it calls Saturday's own prediction "wrong" every week.
- *  `is_current` is no better in the other direction: `round.ts` records that FPL
- *  keeps it on a FINISHED round until the next deadline, so a Thursday check
- *  would call a spent prediction current.
- *
- *  `finished` is neither: it is a statement about the football, which is what
- *  "has this already been played" means. Counted live on 5 Sep 2026 with GW3 in
- *  play — GW1 and GW2 `finished: true`, GW3 `is_current: true, finished: false`,
- *  GW4 `is_next: true, finished: false`. */
+/** Whether a gameweek's football has been played; null for one FPL does not list. Reads `finished`, since
+ *  `is_next` flips at the deadline with matches to play and `is_current` stays on a finished gameweek. */
 export function roundPlayed(raw: RawBootstrap, gameweek: number): boolean | null {
   return (raw.events ?? []).find((event) => event.id === gameweek)?.finished ?? null;
 }
@@ -139,22 +105,14 @@ const NUMERIC = (v: number | string | undefined): number => {
   return Number.isFinite(n) ? (n as number) : 0;
 };
 
-/** Per-fixture stat lines from the live endpoint.
- *
- *  FPL gives an aggregate `stats` block per player plus an `explain` array with one
- *  entry per fixture. On a double gameweek the aggregate cannot be split, so we
- *  read per-fixture values out of `explain` — the only breakdown FPL publishes.
- *  `explain` covers point-scoring identifiers only, so non-scoring extras (bps, xG)
- *  are taken from the aggregate and are therefore gameweek totals, not per-match,
- *  whenever a player features twice. That is flagged rather than silently wrong. */
+/** Per-fixture stat lines from the live endpoint's `explain`, which splits a double. It carries scoring
+ *  identifiers only, so xG and starts come from the aggregate and are gameweek totals on a double. */
 export function mapLiveStats(live: RawLive): PlayerMatchStats[] {
   const out: PlayerMatchStats[] = [];
   for (const el of live.elements ?? []) {
     const single = (el.explain ?? []).length === 1;
     for (const block of el.explain ?? []) {
-      // Summed here rather than read off `el.stats.total_points`, which is the
-      // GAMEWEEK's: on a double that figure belongs to two fixtures at once and
-      // would be printed whole against each of them.
+      // Summed per block: `el.stats.total_points` is the gameweek's and would print whole against both of a double.
       const points = (block.stats ?? []).reduce((total, stat) => total + (stat.points ?? 0), 0);
       out.push(statsFor(el, block.fixture, valuesOf(block.stats), single, points));
     }
@@ -173,14 +131,11 @@ function statsFor(
   fixtureId: number,
   perFixture: Record<string, number>,
   single: boolean,
-  /** The same block's `points`, already summed. Passed in rather than re-walked
-   *  here because `perFixture` has thrown the points away by the time it
-   *  arrives — it is keyed on identifier and holds only the VALUE. */
+  /** The block's `points`, already summed: `perFixture` holds values only. */
   points: number,
 ): PlayerMatchStats {
   const agg = el.stats ?? {};
-  // Prefer the per-fixture value; fall back to the aggregate only when the player
-  // featured in exactly one fixture, where the two are by definition equal.
+  // The per-fixture value, else the aggregate only when he featured in one fixture, where the two are equal.
   const v = (key: string): number =>
     key in perFixture ? perFixture[key] : single ? NUMERIC(agg[key]) : 0;
 
@@ -198,41 +153,21 @@ function statsFor(
     yellowCards: v("yellow_cards"),
     redCards: v("red_cards"),
     saves: v("saves"),
-    bonus: v("bonus"),
     // Not carried in `explain` — gameweek totals on a double.
-    bps: NUMERIC(agg.bps),
-    defensiveContribution: NUMERIC(agg.defensive_contribution),
     expectedGoals: NUMERIC(agg.expected_goals),
     expectedAssists: NUMERIC(agg.expected_assists),
-    // **Counted live before it was mapped** (5 Sep 2026), on this app's own rule
-    // that a field present as a key and absent as a value is not a field —
-    // `squad_number` cost a whole shirt-number fallback that way. `starts` is
-    // real: the key and a non-null value on all 653 elements of GW3 and all of
-    // GW1 and GW2; 176 of 653 above nought in a round still being played,
-    // against 246 with minutes, which is the right shape because the difference
-    // is substitutes. Never a start recorded against nought minutes.
-    //
-    // It joins this group rather than `v()` because `explain` carries
-    // point-scoring identifiers only and a start scores nothing by itself. So it
-    // is the ROUND's count on a double, written onto both rows — `starts > 1` is
-    // unobserved rather than impossible, since no double has been played yet.
+    // A start scores nothing, so `explain` lacks it: the gameweek's count, written onto both rows of a double.
     starts: NUMERIC(agg.starts),
     fplPoints: points,
   };
 }
 
-/** Assemble the whole football snapshot. `fetchedAt` is injected rather than read
- *  from the clock so this stays pure and testable.
- *
- *  `gameweek` is the round these fixtures belong to and must be passed in: taking
- *  it from `focusGameweek` instead would label a snapshot of GW3 with whatever
- *  round happens to be current, which is only invisible while nobody can ask for
- *  a round other than the current one. */
+/** Assemble the football snapshot. `gameweek` is the one these fixtures belong to, passed in: `focusGameweek`
+ *  would label a past gameweek's snapshot with the current one. */
 export function buildSnapshot(input: {
   bootstrap: RawBootstrap;
   fixtures: RawFixture[];
-  /** Null when the live read failed, which is not the same as it returning
-   *  nothing — see `FootballSnapshot.statsUnavailable`. */
+  /** Null when the live read failed, not when it returned nothing (`statsUnavailable`). */
   live: RawLive | null;
   gameweek: number;
   fetchedAt: string;

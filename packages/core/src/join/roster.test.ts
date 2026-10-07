@@ -10,12 +10,7 @@ import bridgeFixture from "./__fixtures__/bridge.json";
 import footballPlayers from "./__fixtures__/footballPlayers.json";
 import rehearsalRosters from "./__fixtures__/rehearsalRosters.json";
 
-// The fixtures are the real thing, not a sketch: the rehearsal league's rosters
-// as Fantrax returned them on 6 Aug 2026 (four teams, fifteen slots each, the
-// whole draft), the sixty rows of `data/mappings/fantrax.json` those slots need,
-// and the sixty FPL players they map to. A join that works on invented ids proves
-// nothing — the failure this is guarding against is a real name that does not
-// match.
+// Real fixtures, not a sketch: a rehearsal league's rosters as Fantrax returned them, their bridge rows and FPL players.
 
 const bridge = bridgeFixture as Bridge;
 const players = footballPlayers as FootballPlayer[];
@@ -38,7 +33,7 @@ const snap = (over: Partial<FootballSnapshot> = {}): FootballSnapshot => ({
 const stat = (over: Partial<PlayerMatchStats> & { playerId: number }): PlayerMatchStats => ({
   fixtureId: 1, minutes: 90, goals: 0, assists: 0, cleanSheet: false, goalsConceded: 0,
   ownGoals: 0, penaltiesSaved: 0, penaltiesMissed: 0, yellowCards: 0, redCards: 0,
-  saves: 0, bonus: 0, bps: 0, defensiveContribution: 0, expectedGoals: 0,
+  saves: 0, expectedGoals: 0,
   expectedAssists: 0, fplPoints: 0, starts: 1, ...over,
 });
 
@@ -164,7 +159,7 @@ describe("resolveRosters, when a slot will not resolve", () => {
 
 describe("resolveRosters, before the league exists", () => {
   it("degrades to an empty period rather than throwing", () => {
-    // What the real league returns until 10 Oct, and what every view must survive.
+    // A league with no rosters yet, which every view must survive.
     expect(resolveRosters(snap(), { period: null, teams: [] }, bridge)).toEqual({
       period: null,
       teams: [],
@@ -225,10 +220,7 @@ describe("fullPlayerName", () => {
   });
 
   it("does not double a name when the accents differ", () => {
-    // Yéremy Pino Santos, web_name "Yeremy" — FPL strips the accent from the
-    // shirt name and the guard below compared the two exactly, so the forename
-    // and the surname were the same word and the column read "Yéremy Yeremy".
-    // One real case in the current pool, found by comparing every element.
+    // Yéremy Pino Santos, web_name "Yeremy": FPL strips the shirt name's accent, and an exact compare read "Yéremy Yeremy".
     expect(fullPlayerName(man("Yéremy Pino Santos", "Yeremy"))).toBe("Yeremy");
   });
 

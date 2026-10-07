@@ -570,8 +570,8 @@ Counted over all 824 shots in `shots/26-27.json`:
 | `penalty` | 5 |
 
 **`open-play` and `throw-in` never appear**, and four values are undocumented.
-`shots.ts:17` asserts "every vocabulary here is a closed set the exporter
-enforces" while typing the field as a loose `string | null`, so nothing caught
+`shots.ts:5` asserts "each vocabulary is a closed set" while typing the
+field as a loose `string | null`, so nothing caught
 it. Nothing in the app reads `situation` yet; a screen that does must be written
 against the counted list, not the specified one.
 

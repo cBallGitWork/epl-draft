@@ -4,12 +4,7 @@ import type { GameweekKickoff } from "./calendar";
 import type { LeaguePeriod } from "./types";
 
 // Verbatim from data/snapshots/fantrax/leagues/ayyoh-abandoned/2026-08-27/getLeagueInfo.json.
-//
-// **The old fixture held periods 1 and 2 only, and that is why this survived.**
-// Both open at their own Friday-night kickoff, which are two of the four weeks
-// where the boundary and the lock happen to agree. A fixture built from those
-// cannot tell the two rules apart. Period 4 and period 6 open on the Friday
-// MORNING for a Saturday round, which is the other 33.
+// Periods 4 and 6 open on a Friday morning for a Saturday round, the weeks where boundary and lock differ.
 const periods: LeaguePeriod[] = [
   { number: 1, start: "2026-08-21T15:00:00.0-0400", end: "2026-08-28T14:59:58.0-0400" },
   { number: 2, start: "2026-08-28T15:00:00.0-0400", end: "2026-09-04T14:59:58.0-0400" },
@@ -18,10 +13,7 @@ const periods: LeaguePeriod[] = [
   { number: 6, start: "2026-10-09T06:00:00.0-0400", end: "2026-10-16T05:59:58.0-0400" },
 ];
 
-// Declared here and never read from FPL: this file tests the RULE, and FPL moves
-// a round for television. Gameweek 8's first kickoff has already moved onto a
-// Friday since the season alignment fixture was recorded, which flipped period 8
-// from unsafe to safe — so which weeks are which is not a fact to hard-code.
+// Declared here, never read from FPL: this tests the rule, and FPL moves rounds for television.
 const kickoffs: GameweekKickoff[] = [
   { gameweek: 1, kickoff: "2026-08-21T19:00:00Z" },
   { gameweek: 2, kickoff: "2026-08-28T19:00:00Z" },
@@ -59,12 +51,7 @@ describe("rosterDisplay", () => {
     expect(rosterDisplay(1, periods, kickoffs, justBefore(P1_LOCKS), false).show).toBe("squad");
   });
 
-  // THE TRAP, and it did not go away when the anchor moved — it moved inside
-  // `firstKickoff`, which compares FPL's `Z` kickoffs against the period's
-  // `-0400` bounds. Lexically "…T15:00:00.0-0400" sorts BELOW "…T18:00:00.000Z"
-  // while the instants run the other way: 19:00Z against 18:00Z. A string
-  // comparison would agree with the right answer at every other moment of the
-  // week, which is what lets it survive a careless test.
+  // As strings, a 15:00-0400 start (19:00Z) sorts before 18:00Z; `firstKickoff` must compare instants.
   it("compares instants, not strings — 18:00Z is BEFORE a 15:00-0400 start", () => {
     const anHourBefore = "2026-08-21T18:00:00.000Z";
 
@@ -91,16 +78,8 @@ describe("rosterDisplay", () => {
     });
   });
 
-  // The state behind the screenshot Craig sent: gameweek 1's football is
-  // complete, Fantrax has rolled its own label to period 2, and period 2's lock
-  // is still six hours away. The gate is right to withhold — period 2 is the
-  // arrangement it is holding and nobody may see a rival's yet.
-  //
-  // What was wrong was the sentence. The route printed the round the READER was
-  // looking at, so a page about gameweek 1 explained itself with "until lineups
-  // lock for period 1" — a deadline that had passed a week earlier. The one
-  // number a withheld panel prints has to be the one the decision was made
-  // about, and that is knowable only here.
+  // Gameweek 1 done, Fantrax's label rolled to period 2 and its lock six hours off: the withheld panel must name
+  // period 2, the period judged, never the round the reader is looking at.
   it("names the period it judged, not the round the reader is looking at", () => {
     expect(rosterDisplay(2, periods, kickoffs, "2026-08-28T12:30:00.000Z", false)).toEqual({
       show: "squad",
@@ -167,10 +146,7 @@ describe("the lock, and not the period boundary", () => {
     );
   });
 
-  // The other direction, and the one somebody will "fix" back. On a Friday-night
-  // week the lock falls fifteen minutes BEFORE the period's own boundary, and the
-  // arrangement is public then — because it is locked, which is the only question
-  // this gate asks.
+  // On a Friday-night week the lock falls before the period's own boundary, and the lineup is public from the lock.
   it("opens fifteen minutes before a Friday-night period begins", () => {
     expect(rosterDisplay(3, periods, kickoffs, "2026-09-04T18:45:00.000Z", false)).toEqual({
       show: "lineup",
@@ -214,10 +190,8 @@ describe("your own roster", () => {
     });
   });
 
-  // THE PLANNER'S GUARANTEE. Friday morning, period 4 open, the lock a day away,
-  // a full calendar in hand: a rival is shut and the reader is not. If this ever
-  // fails, the short-circuit has been moved below the calendar checks and the one
-  // thing the app can do with a lineup before a deadline has gone with it.
+  // Friday morning, the lock a day away: a rival is shut and the reader is not. A failure here means the reader's
+  // short-circuit has moved below the calendar checks.
   it("is his own all week, at the very instant a rival's is withheld", () => {
     const friday = "2026-09-11T10:00:00.000Z";
     expect(rosterDisplay(4, periods, kickoffs, friday, true)).toEqual({
@@ -237,9 +211,7 @@ describe("planningPeriod", () => {
     expect(planningPeriod(periods, kickoffs, BEFORE_THE_SEASON)).toBe(1);
   });
 
-  // THE ONE THIS EXISTS FOR. Craig, mid-gameweek 2: Fantrax was still serving
-  // period 2 to a no-parameter read and the squad screens were drawing an
-  // arrangement nobody could change, under a score that was already running.
+  // Mid-round Fantrax still serves the live period, which nobody can change; planning moves on at the lock.
   it("moves on the moment this week locks, not when the round ends", () => {
     expect(planningPeriod(periods, kickoffs, justBefore(P2_LOCKS))).toBe(2);
     expect(planningPeriod(periods, kickoffs, P2_LOCKS)).toBe(3);
@@ -300,8 +272,7 @@ describe("lastLockedPeriod", () => {
 // this decides which one to fetch, and it is the same safety question one step
 // earlier.
 describe("periodToRead", () => {
-  // The round Craig was looking at: gameweek 1 played out, Fantrax's label
-  // already on 2, period 1 locked a week earlier.
+  // Gameweek 1 played out, Fantrax's label already on 2, period 1 locked a week earlier.
   it("names a past period once the label has moved past it and its lock has gone", () => {
     expect(periodToRead(1, 2, periods, kickoffs, "2026-08-28T12:30:00.000Z")).toBe(1);
   });
@@ -322,10 +293,7 @@ describe("periodToRead", () => {
     });
   });
 
-  // THE ONE THAT MATTERS. Fantrax rolls its label on its own schedule, and on
-  // the live calendar it can do so before the period it is leaving has locked.
-  // The label says period 4 is behind it; our calendar says period 4's lineups
-  // are still open. Sixteen managers can still change them, so we do not look.
+  // Fantrax's label can leave period 4 before period 4 has locked; our calendar says open, so we do not read it.
   it("refuses a period the label has left but our own calendar has not locked", () => {
     expect(periodToRead(4, 5, periods, kickoffs, "2026-09-11T10:00:00.000Z")).toBeNull();
     // And takes it the moment the lock actually lands.

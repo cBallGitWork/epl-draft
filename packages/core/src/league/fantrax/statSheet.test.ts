@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 import { mapStatSheet } from "./statSheet";
 import type { RawPoolStats } from "./stats";
 
-// Trimmed from the stats league's `getPlayerStats`, 26 Sep 2026: two fixed columns, the two `CS`
-// that share a short name, and OUTP, the league's own points.
+// Trimmed from the stats league's `getPlayerStats`: two fixed columns, the two `CS` that share a short name,
+// and OUTP, the league's own points.
 const RAW: RawPoolStats = {
   tableHeader: {
     cells: [

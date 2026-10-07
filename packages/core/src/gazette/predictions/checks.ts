@@ -1,4 +1,5 @@
-import { BANNED, banned, escapeRegExp } from "../banned";
+import { BANNED, banned } from "../banned";
+import { escapeRegExp } from "../../regExp";
 import { strangers } from "../strangers";
 import { CORE_MARK, type PastLine } from "./past";
 import type { PredictionCall } from "./pick";
@@ -64,8 +65,7 @@ const LIMITS = { sentence: 20, intro: [1, 4, 40], tie: [2, 8, 120], gut: [2, 9, 
 const VERDICT = /\b(?:I|me|my)\b|\bI['’]/u;
 
 export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
-  const faults: Fault[] = [];
-  const fault = (section: string, check: string, severity: Severity, evidence: string) => faults.push({ section, check, severity, evidence });
+  const { faults, fault } = faultLog();
   const sides = new Set(ctx.calls.flatMap((call) => [ctx.name(call.homeTeamId), ctx.name(call.awayTeamId)]));
   const rules = lawroProse(ctx, sides, fault);
 
@@ -130,6 +130,12 @@ export function lawroProse(ctx: CheckContext, sides: ReadonlySet<string>, fault:
 /** Where a check files a fault: the section it is in, the rule, how hard, and the words that broke it. */
 export type Report = (section: string, check: string, severity: Severity, evidence: string) => void;
 
+/** A fresh fault list and the `Report` that files into it. */
+export function faultLog(): { faults: Fault[]; fault: Report } {
+  const faults: Fault[] = [];
+  return { faults, fault: (section, check, severity, evidence) => { faults.push({ section, check, severity, evidence }); } };
+}
+
 function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckContext, sides: ReadonlySet<string>, fault: Report): void {
   const [least, most, words] = call.instinct === null ? LIMITS.tie : LIMITS.gut;
   const count = sentences(line).length;
@@ -138,13 +144,13 @@ function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckCon
   if (!VERDICT.test(line)) fault(key, "no verdict of his own", "send-back", line.slice(0, 60));
   const men = ctx.names.filter((name) => !sides.has(name) && mentionAt(line, name) !== -1);
   if (men.length > LIMITS.men) fault(key, "a roll call, more than four men", "send-back", men.join(", "));
-  // "Their Ballard" is not how anybody talks (Craig): Ballard, or test31's Ballard.
+  // "Their Ballard" is not how anybody talks: Ballard, or test31's Ballard.
   for (const name of men) {
     const owned = line.match(new RegExp(`\\b(?:their|his|our) ${escapeRegExp(name)}\\b`, "iu"));
     if (owned !== null) fault(key, "a possessive before a name", "send-back", owned[0]);
   }
   if (call.close) for (const word of banned(line, COMFORTABLE)) fault(key, "an easy win on a close tie", "send-back", word);
-  // He never admitted the bias (Craig): on a Liverpool call, their club is not the reason.
+  // He never admits the bias: on a Liverpool call, their club is not the reason.
   if (call.instinct === "liverpool") for (const word of banned(line, ADMISSION)) fault(key, "gives Liverpool as the reason", "send-back", word);
   if (call.callsTeamId === null) return;
   const other = ctx.name(call.callsTeamId === call.homeTeamId ? call.awayTeamId : call.homeTeamId);
@@ -167,7 +173,7 @@ export function columnRules(intro: string, prose: readonly [string, string][], c
     const used = (all.match(new RegExp(`(?<![\\p{L}])${escapeRegExp(phrase)}(?![\\p{L}])`, "giu")) ?? []).length;
     if (used > cap) fault("column", "a habit used too often", "send-back", `${phrase} ×${used}`);
   }
-  // Five ties in one column, and a reader hears the same words coming round (Craig).
+  // Five ties in one column, and a reader hears the same words coming round.
   const said = new Map<string, string>();
   for (const [section, text] of prose) {
     const echo = [...ngrams(text, LIMITS.echo, ctx.names)].find((gram) => said.has(gram) && said.get(gram) !== section);

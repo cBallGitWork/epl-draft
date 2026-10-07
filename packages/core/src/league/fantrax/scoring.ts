@@ -1,12 +1,8 @@
 import { finiteOrNull } from "../../untrusted";
 import type { Band, CategoryTable, Price, ScoringCategory, ScoringRules, Tiers } from "../scoring";
 
-// Fantrax's scoring system as it arrives, and what we read of it.
-//
-// The payload states the rules twice: `scoringCategories` is the complete table as strings, and
-// `scoringCategorySettings` a structured mirror carrying names, group identities and each range's bands.
-// Flat prices come from the table; a range comes from the mirror, because only the mirror says whether its
-// bands stack (`"range1|59|1|NULL$60|90|1|NULL"` pays 2 for 90 minutes when cumulative and 1 when not).
+// Fantrax's scoring system: flat prices from `scoringCategories`, ranges from the `scoringCategorySettings` mirror,
+// the only one that says whether bands stack (`"range1|59|1|NULL$60|90|1|NULL"` pays 2 for 90 minutes cumulative, else 1).
 
 export interface RawScoringSystem {
   /** group key → category short name → position letter → expression. */
@@ -19,9 +15,7 @@ export interface RawScoringGroup {
   configs?: RawScoringConfig[];
 }
 
-/** One category priced for one position. The same category appears once per
- *  position the league prices it for, which is why the names table collapses
- *  them. */
+/** One category priced for one position; a category repeats once per position the league prices it for. */
 export interface RawScoringConfig {
   scoringCategory?: { id?: string; name?: string; shortName?: string; code?: string };
   /** "Default", "D", "M"…: the table's position key. */
@@ -40,9 +34,7 @@ export interface RawScoringRange {
   interval?: number;
 }
 
-/** Fantrax's own keys for the two tables. Platform constants, interpreted in the
- *  adapter exactly as `ACTIVE`/`RESERVE` are — the domain type that comes out
- *  the other side names positions, not Fantrax's group vocabulary. */
+/** Fantrax's platform keys for the two tables, read only here: the domain type names positions instead. */
 const GOALIE_GROUP = "GOALIE";
 const OUTFIELD_GROUP = "NON_GOALIE";
 const GOALIE_GROUP_CODE = "SOCCER_GOALIE";
@@ -100,32 +92,16 @@ function band(raw: RawScoringRange): Band | null {
   return { from, to, points, every };
 }
 
-/** The keeper's position letter, from the goalie group's own short name.
- *
- *  Nothing in the payload states outright that "G" means goalkeeper — this is
- *  Fantrax naming its group and us reading the name. It is still better than a
- *  literal here, and it fails to null rather than to a wrong table. */
+/** The keeper's position letter, read off the goalie group's short name; null rather than a wrong table. */
 function goaliePosition(groups: RawScoringGroup[] | undefined): string | null {
   const goalie = groups?.find((group) => group.group?.code === GOALIE_GROUP_CODE);
   return goalie?.group?.shortName ?? null;
 }
 
 
-/** What each category is called, keyed as `getLiveScoringStats` keys it.
- *
- *  **The position segment is deliberately not in the key.** `statsMap.object2`
- *  always says `#-1`, while this payload lists a category once per position it
- *  prices it for — and outfield Goals and Clean Sheets have no `-1` row at all
- *  in the rehearsal league. Keying on the whole `scipId` would resolve Minutes
- *  and Assists and silently drop exactly the two categories a reader is looking
- *  for, which reads as "he did not score" rather than as a bug.
- *
- *  Collapsed to one entry per category: the four rows Goals arrives on all name
- *  the same thing. A Record and not a Map because this crosses a cache.
- *
- *  Empty rather than null for a league that described nothing. A caller with no
- *  names shows no breakdown, which is the same thing it does for a category it
- *  cannot find — and a raw `scipId` is never put on screen. */
+/** Each category's name, one entry per category, keyed `{groupId}#{categoryId}` as live scoring keys it.
+ *  No position segment: live rows always say `#-1`, a row outfield Goals and Clean Sheets lack here.
+ *  Empty, never null, for a league that described nothing; a Record because it crosses a cache. */
 export function mapScoringCategories(
   raw: RawScoringSystem | undefined,
 ): Record<string, ScoringCategory> {
@@ -136,10 +112,7 @@ export function mapScoringCategories(
     for (const config of group.configs ?? []) {
       const category = config.scoringCategory;
       if (typeof category?.id !== "string" || category.id === "") continue;
-      // A category Fantrax did not name is left unnamed rather than labelled with
-      // its own identifier. `5010#6090` on a player card is worse than a missing
-      // row: the row is absent from a list that never claimed to be complete,
-      // while the identifier looks like a category called 6090.
+      // An unnamed category stays unnamed: `5010#6090` on a card reads as a category called 6090.
       if (typeof category.shortName !== "string" || category.shortName === "") continue;
       names[`${groupId}#${category.id}`] = {
         code: category.shortName,

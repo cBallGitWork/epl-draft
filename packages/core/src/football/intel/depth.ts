@@ -49,11 +49,10 @@ export interface DepthSpot {
   holders: DepthHolder[];
 }
 
-/** How deep a spot is drawn: three for a lone shirt, two each for a pair (Craig, 25 Sep 2026). */
+/** How deep a spot is drawn: three for a lone shirt, two each for a pair. */
 const SHOWN = { single: 3, shared: 2 };
 
-/** A shirt dealt into its spots. A pair is dealt like a snake draft (Craig, 25 Sep 2026: "first
- *  choice 1, second and third choice in other, then 4th choice under first"). */
+/** A shirt dealt into its spots; a pair snakes: first choice in one, second and third in the other, fourth under first. */
 export function spotsOf(slot: DepthSlot): DepthSpot[] {
   if (slot.shirts === 1) {
     return [{ slot: slot.slot, label: slot.label, holders: slot.holders.slice(0, SHOWN.single) }];

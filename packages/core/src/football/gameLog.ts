@@ -1,31 +1,17 @@
 import type { RawElementSummary, RawHistoryEntry } from "./fpl/raw";
 import type { SeasonTotals } from "./types";
 
-// What one footballer has actually done, match by match.
-//
-// The snapshot cannot answer this. It holds one round, and the four numbers a
-// scout wants most — expected goals, expected assists, defensive
-// contribution — are among those FPL leaves out of its live `explain` block, so
-// `mapLiveStats` takes them off the gameweek aggregate and writes the same
-// round total onto every fixture row a player has. On a double gameweek that
-// figure is not a per-match number at all.
-//
-// `element-summary` publishes them per fixture, correctly, for every match of
-// the season. This is the only read in the football layer that does.
+// One footballer's season match by match, off `element-summary`: the only read with expected stats and
+// defensive contribution per fixture (the live feed writes the round's total onto both rows of a double).
 
-/** One match he has been through, as FPL scores and measures it.
- *
- *  Points are FPL's own, under FPL's rules. They are not our league's and must
- *  never be printed in a column headed FPts, which is Fantrax's word for
- *  Fantrax's scoring of a slot we chose. */
+/** One match he has played, as FPL scores it; `fplPoints` is FPL's and never goes under a column headed FPts. */
 export interface GameLogEntry {
   gameweek: number;
   /** Keys the row: a double gameweek puts two matches under one number. */
   fixtureId: number;
   opponentClubId: number;
   home: boolean;
-  /** Goals for and against HIS club, turned round from FPL's home/away pair so
-   *  a reader never has to work out which end he was at. */
+  /** Goals for and against his club, turned round from FPL's home/away pair. */
   scored: number;
   conceded: number;
   minutes: number;
@@ -36,8 +22,7 @@ export interface GameLogEntry {
   redCards: number;
   saves: number;
   fplPoints: number;
-  /** Null when FPL published no figure for this match, which is not the same as
-   *  a nil: a nil is a measurement and this is its absence. */
+  /** Null when FPL published no figure for this match; a nil is a measurement. */
   defensiveContribution: number | null;
   expectedGoals: number | null;
   expectedAssists: number | null;
@@ -48,14 +33,7 @@ export interface GameLogEntry {
   expectedGoalsConceded: number | null;
 }
 
-/** His season so far, most recent first — the order a log is read in.
- *
- *  Matches nobody has played are dropped. FPL carries a row for them from the
- *  moment a round opens, all zeroes, and it is indistinguishable from an unused
- *  substitute's row except that the fixture has no score yet. Keeping them would
- *  put a line reading "0 minutes, 0 points" under a match that kicks off on
- *  Sunday, which is the confident wrong number in its purest form. What is
- *  coming is a fixture question and `nextFixtures` answers it. */
+/** His season so far, most recent first; FPL's all-zero rows for unplayed matches are dropped. */
 export function mapGameLog(summary: RawElementSummary): GameLogEntry[] {
   return (summary.history ?? [])
     .filter(played)
@@ -63,9 +41,7 @@ export function mapGameLog(summary: RawElementSummary): GameLogEntry[] {
     .sort((a, b) => b.gameweek - a.gameweek || b.fixtureId - a.fixtureId);
 }
 
-/** A match with a score is a match that has been played, including one still
- *  being played — FPL scores those 0-0 from the first whistle. A match with none
- *  has not kicked off, whatever the rest of the row says. */
+/** A match with a score has kicked off (FPL scores a live one 0-0 from the first whistle); one without has not. */
 function played(h: RawHistoryEntry): boolean {
   return h.team_h_score !== null && h.team_a_score !== null;
 }
@@ -81,8 +57,7 @@ function entry(h: RawHistoryEntry): GameLogEntry {
     minutes: h.minutes,
     goals: h.goals_scored,
     assists: h.assists,
-    // FPL counts clean sheets rather than flagging them, because its aggregate
-    // rows add several matches up. One match kept one or it did not.
+    // FPL counts clean sheets rather than flagging them; one match kept one or did not.
     cleanSheet: h.clean_sheets > 0,
     yellowCards: h.yellow_cards,
     redCards: h.red_cards,
@@ -133,9 +108,7 @@ export function totalsOver(log: readonly GameLogEntry[], gameweeks: ReadonlySet<
   return totals;
 }
 
-/** FPL sends the expected-goals family as decimal strings. An absent field is
- *  null rather than nought; so is one that will not parse, because a string FPL
- *  changed the shape of is news, not a zero. */
+/** FPL's expected-goals decimal strings as numbers; absent or unparseable is null, never nought. */
 function decimal(value: string | undefined): number | null {
   if (value === undefined) return null;
   const n = Number.parseFloat(value);

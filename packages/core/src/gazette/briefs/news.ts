@@ -2,22 +2,12 @@ import type { NewsItem } from "../../news/map";
 import type { StoryThread } from "../ledger";
 import { storylinesBlock } from "./storylines";
 
-// The one brief that carries copy somebody else wrote.
-//
-// **External copy is quarantined, and the block says so in the block.** Every
-// other brief in this directory hands the writer facts we read from an API and
-// stand behind. This one hands him a stranger's headline, and the difference
-// has to be stated where he meets it — otherwise a wire summary gets rewritten
-// as though the paper reported it, which is both a lie and a plagiarism.
-//
-// The story is never the news. A sacking or an injury is a Premier League
-// event; what makes it OUR story is the manager whose squad it just wrecked.
+// The one brief carrying copy somebody else wrote, quarantined in its own block; the story is the manager it hits.
 
 /** One wire item, with the league's stake in it already worked out. */
-export interface NewsAngle {
+interface NewsAngle {
   item: NewsItem;
-  /** The men in our league the item is about, with their owners. Empty means
-   *  nobody holds anybody involved — which is why such items are not filed. */
+  /** The men in our league the item is about, with their owners; an item with none is not filed. */
   affected: { playerName: string; ownerName: string }[];
 }
 

@@ -2,8 +2,8 @@ import { POOL_PAGE_SIZE } from "../../config";
 import { fxpaRead } from "./fxpa";
 import type { PositionGroup, RawPlayerStats } from "./playerStats";
 
-/** The pool's points over one date range, `YYYY-MM-DD` both ends: a period's own dates answer that
- *  period's points exactly (PLATFORM_NOTES, 30 Sep 2026). A group adds its raw stats. */
+/** The pool's points over one date range, `YYYY-MM-DD` both ends: a period's own dates give its points exactly.
+ *  A group adds its raw stats. */
 export function fetchPoolWindow(
   leagueId: string,
   window: { startDate: string; endDate: string },

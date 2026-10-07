@@ -37,10 +37,7 @@ describe("teamColours", () => {
   });
 
   it("gives every team's plate an ink that clears the AA floor", () => {
-    // The whole point of the table, and the check `sweep` had to make on the
-    // rendered page before anyone thought to make it here. Three of the ten
-    // colours failed when `inkOn` picked by brightness rather than by contrast
-    // — the orange was at 2.69:1, well under half the floor.
+    // Every plate's ink must clear AA contrast, which an ink picked by brightness fails.
     const ids = [
       "pbxm9fgimshcpazf", "j9zadacnmshcpazf", "8enbgqo5msgb375j", "jtsmt5jxmtj31znh",
       "sezrgvl2mshcpazf", "dq2yk3zxmtj31znh", "v6bxgqm5mtj31znh", "yf96763gmtj31zni",

@@ -4,8 +4,8 @@ import { REPORT_NEVER } from "../reports/style";
 /** "Dons'", "Notemail's". */
 export const possessive = (name: string) => (name.endsWith("s") ? `${name}'` : `${name}'s`);
 
-/** Football Manager's words a draft report may frame a fact with (Craig, 29 Sep 2026: "FM register as framing"): each
- *  only in a sentence that states the fact it frames, about a side, never a quote or a named person's feeling. */
+/** Football Manager's words a draft report may frame a fact with: each only in a sentence that states the fact it
+ *  frames, about a side, never a quote or a named person's feeling. */
 export const DRAFT_FRAMES: readonly string[] = [
   "the terraces", "the boardroom", "the board", "the dugout", "pressure", "under pressure", "the hot seat",
   "top of the pile", "bottom of the pile", "pressure mounts",
@@ -17,8 +17,7 @@ export const DRAFT_SPEECH: readonly string[] = [
   "held him", "holds him", "held and",
 ];
 
-/** Who is still to play is the fixture list, never a manager's choice (Craig, 30 Sep 2026: "makes it sound like the
- *  manager made a choice"). */
+/** Who is still to play is the fixture list, never a manager's choice. */
 export const DRAFT_CHOICE: readonly string[] = [
   "keep back", "keeps back", "kept back", "held back", "holding back", "saving", "saved for", "in reserve", "waiting for", "waiting in",
   "chose", "chosen", "choose", "picked", "selected", "opted",
@@ -27,11 +26,10 @@ export const DRAFT_CHOICE: readonly string[] = [
 /** Why a man did not play is not in the facts: the brief says he did not, and nothing more. */
 export const DRAFT_REASONS: readonly string[] = ["left out", "absent", "missing", "dropped", "rested", "benched", "omitted", "sidelined", "unavailable", "missed out"];
 
-/** The brief's own labels, which a writer copies into print (GW5: "the twist is the fixture list"), and titles the league
- *  has not given (GW5 called test3, top after five gameweeks, "the champions"). */
+/** The brief's own labels, which a writer copies into print, and titles the league has not given ("the champions"). */
 export const DRAFT_LABELS: readonly string[] = ["the twist", "the cast", "may be left out", "beats", "champion", "champions", "title holders", "the holders"];
 
-/** A minute belongs to its own match: GW5 set Haaland's 81st "eight minutes before" Cunha's 89th in another. */
+/** A minute belongs to its own match, never measured against another's. */
 export const DRAFT_CLOCK: readonly string[] = [
   "minutes earlier", "minutes later", "minutes before", "minutes after", "minute earlier", "minute later",
   "minutes-earlier", "minutes-later", "minute-earlier", "minute-later",

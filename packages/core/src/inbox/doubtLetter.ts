@@ -1,9 +1,8 @@
 import type { AvailabilityNote } from "../gazette/types";
 import { ailment, readNote } from "./notes";
 
-// A doubt, written as the person sending it would write it (Craig, 25 Sep 2026: "if a player
-// is out, write like a person"): your physio about your man, your scout about the opponent's,
-// the club's own desk when nobody is signed in. Every fact is FPL's; only the sentence is ours.
+// A doubt, written as its sender would: your physio about your man, your scout about the opponent's, the club's
+// desk when nobody is signed in. Every fact is FPL's; only the sentence is ours.
 
 /** Whose man he is: the reader's, his next opponent's, or the league's for a signed-out reader. */
 export type Side = "mine" | "opponent" | "league";

@@ -4,7 +4,7 @@ import { side } from "./scoreLines";
 
 const line = (code: number, over: Partial<MatchSheetLine> = {}): MatchSheetLine => ({
   playerId: code, side: "home", goals: 0, assists: 0, ownGoals: 0, penaltiesSaved: 0,
-  penaltiesMissed: 0, yellowCards: 0, redCards: 0, saves: 0, bonus: 0, bps: 0,
+  penaltiesMissed: 0, yellowCards: 0, redCards: 0, saves: 0, bps: 0,
   defensiveContribution: 0, ...over,
 });
 const row = (code: number, over: Partial<MatchSheetLine> = {}): SheetRow => ({

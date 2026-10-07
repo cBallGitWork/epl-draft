@@ -1,55 +1,13 @@
 import type { RawFixture, RawFixtureStat } from "./fpl/raw";
 import type { FootballPlayer, FootballSnapshot } from "./types";
 
-// What happened in one match, off the season's own fixture list.
-//
-// **The read this is built from is one the app already makes.** `/fixtures/`
-// carries a `stats` block on every fixture and `raw.ts` did not model it, so
-// three quarters of a match screen was arriving on the wire and being discarded.
-// Counted 4 Sep 2026 across all 380 fixtures: the 20 finished ones carry eleven
-// identifiers each, and the 360 that had not started carry `[]`. So an empty
-// sheet has two causes that look identical and are the same answer — nobody has
-// done anything in this match — and there is no third shape to guard against.
-//
-// **What it is for, against the two things that already exist.**
-//
-//   `selectors.contributions` answers the same question for THE ROUND IN VIEW,
-//   off `snapshot.stats` — one live feed, not thirty-eight. It is why
-//   `prem/Match` refuses to open a row onto "Nothing to report." over a 3-0 win.
-//
-//   `gameLog.mapGameLog` answers it per fixture for ONE PLAYER, off
-//   `element-summary`. Correct and complete, and thirty requests for a match.
-//
-// This is the third corner: every player, any fixture, one 26 KB read. What it
-// pays for that is `minutes`, which the fixture list does not publish at all.
-//
-// **The bps list is the appearance list.** Fixture 11 of gameweek 2, counted 4
-// Sep 2026: 32 distinct elements under `bps`, 32 players with minutes above nought
-// in `/event/2/live/`, no misses and no false positives. So a man's presence in
-// this sheet is evidence he played, which is the one thing `minutes` would
-// otherwise be needed for.
-//
-// **His PRESENCE, and never the sign of the figure.** bps runs negative — 47 of
-// the season's 616 entries were below nought on 4 Sep 2026, floor -14, and not
-// one was exactly nought. A screen printing the column owes it
-// `--color-bad`, whose one meaning is a negative; a filter written as `bps > 0`
-// would quietly drop the five worst players in a match.
+// What happened in one match, for every player, off the `stats` block on `/fixtures/`; it carries no `minutes`.
+// The bps list is the appearance list, so presence in a sheet means he played.
+// bps runs negative: a filter on `bps > 0` drops the worst men in a match.
 
-/** One player's line in a match, as the fixture list records it.
- *
- *  **Not `PlayerMatchStats`, and the difference is what it cannot say.** That one
- *  comes from the live feed and carries `minutes`, `cleanSheet`, `goalsConceded`
- *  and the expected family; the fixture list carries none of them, and a nought
- *  in their place would be a measurement where there is an absence.
- *
- *  What it has that the live feed does not is a `bps` that belongs to THIS
- *  FIXTURE — `map.ts` takes that one off the gameweek aggregate and writes the
- *  same round total onto every row of a double — and a side that is stated
- *  rather than derived from the player's club. */
+/** One player's line in a match, from the fixture list: no minutes, clean sheet or expected stats, and a per-fixture bps. */
 export interface MatchSheetLine {
-  /** FPL's per-season `id`, which is what the fixture list keys on. Never
-   *  persisted (CODE_RULES §3): a fixture belongs to one season, and so does
-   *  everything this file says about it. */
+  /** FPL's per-season `id`, which the fixture list keys on; never persisted. */
   playerId: number;
   side: "home" | "away";
   goals: number;
@@ -60,9 +18,7 @@ export interface MatchSheetLine {
   yellowCards: number;
   redCards: number;
   saves: number;
-  bonus: number;
-  /** FPL's Bonus Points System score for this fixture. **Signed** — see the
-   *  header: a bad afternoon runs to -14, and nothing may filter on `> 0`. */
+  /** FPL's Bonus Points System score for this fixture; signed, so never filter on `> 0`. */
   bps: number;
   defensiveContribution: number;
 }
@@ -73,12 +29,7 @@ export interface MatchSheet {
   lines: MatchSheetLine[];
 }
 
-/** FPL's identifier vocabulary against ours.
- *
- *  Written out rather than camel-cased at runtime: these eleven strings are a
- *  fact about the provider, and a twelfth appearing should be ignored rather
- *  than silently landing in a field nobody declared. `defensive_contribution`
- *  arrived in 25/26 and is the reason that sentence is here. */
+/** FPL's stat identifiers against our fields; an identifier not listed here is ignored. */
 const FIELDS: Record<string, keyof Omit<MatchSheetLine, "playerId" | "side">> = {
   goals_scored: "goals",
   assists: "assists",
@@ -88,16 +39,11 @@ const FIELDS: Record<string, keyof Omit<MatchSheetLine, "playerId" | "side">> = 
   yellow_cards: "yellowCards",
   red_cards: "redCards",
   saves: "saves",
-  bonus: "bonus",
   bps: "bps",
   defensive_contribution: "defensiveContribution",
 };
 
-/** The season's fixtures as sheets, one per match, keyed by fixture id.
- *
- *  A fixture with no `stats` key and one with eleven empty identifiers both come
- *  back with no lines, and they are the same answer to the only question a
- *  caller asks: nobody has done anything in this match yet. */
+/** The season's fixtures as sheets, one per match; a fixture with no `stats` or only empty ones has no lines. */
 export function mapMatchSheets(fixtures: readonly RawFixture[]): MatchSheet[] {
   return fixtures.map((fixture) => ({
     fixtureId: fixture.id,
@@ -135,7 +81,6 @@ function blank(playerId: number, side: "home" | "away"): MatchSheetLine {
     yellowCards: 0,
     redCards: 0,
     saves: 0,
-    bonus: 0,
     bps: 0,
     defensiveContribution: 0,
   };
@@ -148,11 +93,7 @@ export interface SheetRow {
 }
 
 /** Both team sheets, each by name; `scoresheet` ranks what they did, never FPL's bonus-points score.
- *
- *  Keyed on the per-season `id`, which is safe here for `contributions`' reason:
- *  the sheet and the snapshot are read in the same request, so nothing outlives
- *  the season the ids belong to. A man in the sheet whom bootstrap does not carry
- *  is dropped rather than crashing the screen. */
+ *  Joined on the per-season `id` within one request; a man bootstrap does not carry is dropped. */
 export function sheetSides(
   sheet: MatchSheet,
   snapshot: FootballSnapshot,
@@ -171,28 +112,15 @@ export function sheetSides(
   return { home: home.sort(byName), away: away.sort(byName) };
 }
 
-/** Only the men who did something the scoresheet names — a goal, an assist, an
- *  own goal, a penalty either way, a card.
- *
- *  Deliberately NOT `contributions`' notion of notable, which counts bonus and a
- *  keeper's saves. Those belong in a column beside every name; this is the list a
- *  match report is written from, and a goalkeeper with four saves did not appear
- *  on the scoresheet. */
+/** Only the men the scoresheet names (a goal, an assist, an own goal, a penalty either way, a red card), ranked.
+ *  Not `contributions`' notable: bonus and a keeper's saves do not put a man on the scoresheet. */
 export function scoresheet(rows: readonly SheetRow[]): SheetRow[] {
   return rows
     .filter(({ line }) => named(line))
     .sort((a, b) => rank(b.line) - rank(a.line));
 }
 
-/** **A booking does not name a man on this sheet** (Craig, 10 Sep 2026: *"we
- *  probably dont need yellow cards to show"*), and a sending off still does.
- *
- *  The Overview is CM's own — who scored and when — and a yellow card is not
- *  that. It was also the only mark on this sheet carried in three places at
- *  once: the Team Sheet now draws CM's card block beside the man's number, the
- *  Match Report groups the round's cards, and Match Stats counts them per side.
- *  A red card stays because it CHANGES the match rather than annotating it — one
- *  in the whole of gameweeks 1-3, and on the day it happens it is the story. */
+/** A booking does not name a man on this sheet; a sending off does. */
 function named(line: MatchSheetLine): boolean {
   return (
     line.goals > 0 ||

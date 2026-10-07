@@ -3,26 +3,10 @@ import type { Deal, DealSide } from "../gazette/types";
 import type { InboxItem } from "./types";
 import { fantraxInstant } from "./when";
 
-// The league's business, as CM's Messages: who signed, who released, who traded.
-//
-// Its own file because `items.ts` reached CODE_RULES §4's hard ceiling and this
-// is the responsibility that comes off cleanly — a transaction feed turned into
-// prose, sharing nothing with a doubt or a round but the type they all return.
-//
-// Pure, and separately callable: a Fantrax outage that costs the transaction
-// feed costs this tab and no other. The app edge assembles.
-//
-// **Every headline is a fact in the fewest words that carry it**, the game's own
-// register (`Rushden appoint Mike Paul as manager`). The body is a letter from a
-// person (Craig, 25 Sep 2026: "same for a waiver or free agent"): your assistant
-// about your business, the commissioner about everybody else's. Still no advice.
+// The league's business, as CM's Messages: who signed, who released, who traded. A headline is a bare fact; the
+// body a letter from your assistant about your business, the commissioner about anyone else's. Never advice.
 
-/** How many names a headline will carry before it counts instead.
- *
- *  Two, and the reason is the width rather than the taste: a headline is one
- *  line on a 390 phone at 14px, which is about forty characters, and two
- *  footballers' names spend thirty of them. The third goes in the body, where
- *  there is room for all of them. */
+/** How many names a headline carries: two fill one line on a 390 phone; the rest go in the body. */
 const NAMES_IN_HEADLINE = 2;
 
 
@@ -36,22 +20,11 @@ function spoken(side: DealSide): string {
   return side.clubName ? `${side.clubName}'s ${side.playerName}` : named(side);
 }
 
-/** The league's business, as messages.
- *
- *  **A trade is one item and a claim is one item**, which is `Deal`'s own
- *  argument: Fantrax files both halves as separate rows sharing a `setId`, and
- *  reading them apart produces a feed saying a manager signed a player and,
- *  separately and mysteriously, lost one.
- *
- *  Three shapes, because three things happen: somebody signed and somebody
- *  released (a trade), somebody signed off the wire (a claim, often paid for by
- *  a drop), or somebody released and nobody signed. The headline names whichever
- *  of the two is the news. */
+/** The league's business, as messages: one item per trade or claim, whose halves Fantrax files as rows sharing a
+ *  `setId`. A trade, a signing (often paid for by a drop) or a bare release. */
 export function dealNews(
   deals: readonly Deal[],
-  /** A team's name, or null for an id the league no longer describes. Injected
-   *  rather than looked up, because the deal carries an id and this module may
-   *  not hold the league. */
+  /** A team's name, or null for an id the league no longer describes; injected, as this module may not hold the league. */
   teamName: (teamId: string) => string | null,
   /** The reader's own team, whose business is written to him as his; null when signed out. */
   mine: string | null,
@@ -61,9 +34,7 @@ export function dealNews(
     const lost = deal.outbound.map(named);
     if (gained.length === 0 && lost.length === 0) return [];
 
-    // Whose item it is. A trade has two sides and belongs to neither more than
-    // the other, so it is the league's — which is also what stops it going red
-    // for one of the two managers in it.
+    // Whose item it is: a trade has two sides, so it is the league's.
     const sides = new Set(
       [...deal.inbound, ...deal.outbound].map((side) => side.teamId).filter((id) => id !== null),
     );
@@ -92,11 +63,9 @@ export function dealNews(
         from: yours || party ? "Your assistant" : "The commissioner",
         about: null,
         teamId,
-        // No box: business is about a transaction, not about whether a man is
-        // fit. The one a deal WOULD carry is on his own player page.
+        // No box: business is about a transaction, not a man's fitness.
         mark: null,
-        // Business is never red. A manager who made a deal already knows he made
-        // it, and a rival's is not bad news — it is news.
+        // Business is never red: your own deal you know of, and a rival's is news, not bad news.
         urgent: false,
       },
     ];

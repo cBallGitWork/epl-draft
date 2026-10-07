@@ -29,12 +29,7 @@ describe("periodGameweeks", () => {
     expect(new Set(counted).size).toBe(38);
   });
 
-  // THE TRAP, and the reason this test exists at all: `deadline_time` is the
-  // first field anyone reaches for, because it is the one that reads like
-  // "the gameweek starts here". Measured that way the same data says the two
-  // calendars disagree everywhere. Fantrax's boundary sits in the 90-minute gap
-  // between FPL's deadline and the gameweek's first kickoff, so each deadline
-  // lands one period early.
+  // Fantrax's boundary sits between FPL's deadline and the first kickoff, so `deadline_time` lands a period early.
   it("does NOT align when measured by FPL's deadline, which is why kickoff is the key", () => {
     const byDeadline = periodGameweeks(periods, deadlines);
 
@@ -70,11 +65,7 @@ describe("periodGameweeks", () => {
   });
 });
 
-// Moved here with `firstKickoff` itself, assertions unchanged. The periods and
-// kickoffs are the real ones, because the rule this guards is invisible against
-// invented data: a period that opens at its own first kickoff behaves identically
-// under either reading, and only a Friday-morning open for a Saturday round —
-// period 4 — tells the two apart.
+// Real periods and kickoffs: only a Friday-morning open for a Saturday round (period 4) tells kickoff from boundary.
 
 const period = (number: number, start: string, end: string): LeaguePeriod => ({
   number,

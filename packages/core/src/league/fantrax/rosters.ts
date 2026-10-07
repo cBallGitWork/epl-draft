@@ -1,20 +1,13 @@
 import type { PeriodRosters, RosterSlot, TeamRoster } from "../types";
 import type { RawRosterItem, RawTeamRosters } from "./raw";
 
-// `getTeamRosters` → who each manager holds this period, and who is actually
-// playing. Pure, like every mapper here.
-//
-// `?period=N` returns a past roster and not a projection — settled 28 Aug (see
-// `client.ts`). Nothing below assumes either: the period is carried through
-// verbatim, which is what let the question stay open safely while it was open.
+// `getTeamRosters` → who each manager holds and who plays; `?period=N` is a past roster, carried through verbatim. Pure.
 
 function mapSlots(items: RawRosterItem[] | undefined): RosterSlot[] {
   if (!items) return [];
   const slots: RosterSlot[] = [];
   for (const item of items) {
-    // A slot with no id names no player and cannot be joined to anything. Fantrax
-    // has been observed returning exactly that, so it is dropped rather than
-    // carried as an empty string that would later fail a bridge lookup.
+    // A slot with no id (Fantrax has sent one) names no player, so it is dropped before any bridge lookup.
     if (!item.id) continue;
     slots.push({
       fantraxId: item.id,

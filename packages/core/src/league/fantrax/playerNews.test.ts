@@ -22,8 +22,7 @@ describe("mapPlayerStories", () => {
   ]);
 
   it("returns every story, not just the latest", () => {
-    // The difference from the pool feed, which files one per player, and from the
-    // profile's own `latestNews`, which is one truncated sentence.
+    // Unlike the pool feed (one per player) and the profile's `latestNews` (one truncated sentence).
     expect(mapPlayerStories(suzuki)).toHaveLength(2);
   });
 
@@ -44,7 +43,7 @@ describe("mapPlayerStories", () => {
   });
 
   it("sinks a story with no date rather than floating it", () => {
-    // It cannot be shown to be recent, and putting it on top would claim it is.
+    // An undated story cannot be shown to be recent, so it never tops the list.
     const mixed = section([{ id: "undated", content: "No date" }, { id: "dated", content: "Dated", newsDate: 1 }]);
     expect(mapPlayerStories(mixed).map((s) => s.id)).toEqual(["dated", "undated"]);
   });
@@ -64,8 +63,7 @@ describe("mapPlayerStories", () => {
   });
 
   it("strips markup Fantrax puts inside its own strings", () => {
-    // `<b>test4</b>` is a real cell value on the transactions section of this
-    // same payload.
+    // `<b>test4</b>` is a real cell value on this payload's transactions section.
     expect(mapPlayerStories(section([{ content: "He <b>scored</b><br/>twice." }]))[0].content).toBe(
       "He scored twice.",
     );
@@ -114,8 +112,7 @@ describe("mapPoolNews", () => {
   });
 
   it("keeps the FIRST story about a man, which is the newest", () => {
-    // The feed arrives newest-first, so a second story about the same man is the
-    // older one. Last-wins would quietly age every player who had two.
+    // The feed is newest first, so a second story about the same man is the older one.
     const twice = pool([
       story("05g2o", { id: "today", content: "Back in training.", newsDate: 2 }),
       story("05g2o", { id: "yesterday", content: "Limped off.", newsDate: 1 }),
@@ -124,8 +121,7 @@ describe("mapPoolNews", () => {
   });
 
   it("drops a story it cannot put a name to", () => {
-    // Nothing can join it, and a story about nobody on a player's card is worse
-    // than the card carrying no story.
+    // A story about nobody joins nothing.
     expect(mapPoolNews(pool([{ playerNews: { content: "Somebody is injured." } }]))).toEqual({});
     expect(mapPoolNews(pool([story("", { content: "Somebody is injured." })]))).toEqual({});
   });
@@ -158,7 +154,6 @@ describe("mapPoolNews", () => {
   });
 
   it("survives a payload with no stories in it", () => {
-    // A quiet seventeen hours, which is all this window ever covers.
     expect(mapPoolNews({})).toEqual({});
     expect(mapPoolNews(pool([]))).toEqual({});
   });

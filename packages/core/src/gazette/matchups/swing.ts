@@ -3,8 +3,7 @@ import type { DraftMan, SlotWorth, Worth } from "./types";
 import { listed } from "../../format";
 
 // What the side behind needs from the men it has left, once both sides' minutes are paid: the man whose goal, assist or
-// clean sheet would level or win it, how many returns it takes when no one does, and when they cannot catch up (Craig,
-// 29 Sep 2026: "work out how many points are needed, or when a lead has got too far").
+// clean sheet would level or win it, how many returns it takes when no one does, and when they cannot catch up.
 
 export interface Return extends Worth {
   man: DraftMan;

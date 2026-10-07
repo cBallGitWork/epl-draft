@@ -2,9 +2,7 @@ import { describe, expect, it } from "vitest";
 import { injuredOff, injuryMinutes, saysInjury } from "./injuries";
 import type { RawPlEvent } from "./raw";
 
-// The one fact on these screens that lives in Opta's prose. `injuries.ts`
-// carries the counts and why reading a sentence is allowed here; these are the
-// cases that keep it honest.
+// The one fact on these screens read from Opta's prose: the test is a sentence, the answer an id.
 
 describe("injuredOff", () => {
   /** Opta's own sentence, with the two men as `[on, off]` — the order checked

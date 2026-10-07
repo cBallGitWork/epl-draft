@@ -6,8 +6,8 @@ import type { DraftMan, DraftSide, GoalTime, SlotWorth } from "./types";
 import { listed } from "../../format";
 import { priceOf } from "./worth";
 
-// Each fact about a draft man in the game's own words (Craig, 29 Sep 2026), for the threads and the brief: a return is a
-// goal, an assist or a clean sheet, a blank is none, a haul is more than one. Pure.
+// Each fact about a draft man in the game's own words, for the threads and the brief: a return is a goal, an assist or a
+// clean sheet, a blank is none, a haul is more than one. Pure.
 
 /** "1 point", "6 points". */
 export const pts = (n: number) => `${n} point${n === 1 ? "" : "s"}`;
@@ -50,8 +50,8 @@ export function lostCleanLine(m: DraftMan, worth: SlotWorth): string | null {
   return told ? `lost a clean sheet worth ${pts(clean)} to a goal ${whenScored(lost)}` : null;
 }
 
-/** His minutes when they are the story: off the bench for the lesser appearance point (Craig, 30 Sep 2026), or off
- *  before the hour; null otherwise. */
+/** His minutes when they are the story: off the bench for the lesser appearance point, or off before the hour; null
+ *  otherwise. */
 export function minutesLine(m: DraftMan): string | null {
   if (m.started === false && m.minutes > 0) return `did not start and played ${m.minutes} minutes off the bench${returnCount(m) === 0 ? `, ${pts(m.points ?? 0)} for the appearance` : ""}`;
   if (m.minutes > 0 && m.minutes < DRAFT_DESK.earlyOff && m.left === 0) return m.started === true ? `went off after ${m.minutes} minutes` : `played ${m.minutes} minutes`;
@@ -67,12 +67,11 @@ export function newLine(m: DraftMan, side: DraftSide): string | null {
 /** Fantrax's word after his match. */
 export const fitnessLine = (m: DraftMan) => (m.fitness === null ? null : `${m.minutes === 0 ? "did not play; " : ""}since: ${m.fitness}`);
 
-/** The automatic substitution as a league member says it (Craig, 30 Sep 2026: "just say millar did not play, so
- *  meunier will sub on"), with what the man coming on did. */
+/** The automatic substitution as a league member says it ("Millar did not play, so Meunier will come on"), with what
+ *  the man coming on did. */
 export function subLine(s: AutoSub, cutoff: Cutoff): string {
   if (s.provisional) return `${s.out.name} did not play, so ${s.in.name} comes on if he plays`;
-  // Whom he replaces is not settled until the man ahead has played, so it is never named: GW5's Saturday said Elanga, the
-  // gameweek Rodon.
+  // Whom he replaces is not settled until the man ahead has played, so it is never named.
   if (s.ahead !== null) return `${s.in.name} comes on at the end of the gameweek for a man who did not play, and his ${pts(s.in.points ?? 0)} count either way`;
   const got = gotLine(s.in);
   if (cutoff === "gameweek") return `${s.out.name} did not play, so ${s.in.name} came on and ${got ?? `got ${pts(s.in.points ?? 0)}`}`;

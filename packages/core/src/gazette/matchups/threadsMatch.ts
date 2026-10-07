@@ -80,7 +80,7 @@ export function matchThreads(ctx: MatchupContext, beats: readonly Beat[], worth:
   if (behind !== null && -lead(behind, l) >= DRAFT_NEWS.fightbackFrom && m <= DRAFT_NEWS.fightbackWithin) {
     out.push(thread("fightback-short", { teamId: L.side.teamId, beat: behind.day, facts: [`${L.side.name} were ${-lead(behind, l)} behind after ${beatLabel(behind.day)} and lost by ${m}`] }));
   }
-  // The irony the reviewer found in GW5: test2 won three of its four stages and still lost by a point.
+  // The irony of a side that won more of the gameweek's stages and still lost.
   const won = (w: Which) => beats.filter((b) => b.points[w] > b.points[other(w)]);
   if (won(l).length > won(w).length) {
     out.push(thread("days-won", { teamId: L.side.teamId, facts: [`${L.side.name} won ${listed(won(l).map((b) => beatLabel(b.day)), "and")}, ${won(l).length} of the gameweek's ${beats.length} stages, and still lost by ${m}`] }));

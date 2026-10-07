@@ -1,41 +1,15 @@
-// Every cross-cutting constant, in one place — CODE_RULES §3 forbids league ids,
-// season dates, endpoint bases and cache TTLs living inline in a mapper or a
-// component.
-//
-// Deliberately plain constants with no imports. The one environment read is
-// `FANTRAX_LEAGUE_ID` below: §5 bans environment reads in mappers, scoring and
-// engines, which is where an unseen `process.env` does damage — a config module
-// is the one place it is legible. Anything genuinely secret (the Fantrax session
-// cookie, when the write surface lands) is read at the edges — a route handler or
-// a script — and never from here. Nothing below is secret: the fxea reads are
-// unauthenticated and the league id appears in the public league URL.
+// Every cross-cutting constant (CODE_RULES §3). No imports; the one environment read is `FANTRAX_LEAGUE_ID`.
 
-// Core's tsconfig deliberately omits node types so nothing in here can reach for
-// `fs`. Declaring the one global we do read keeps that door shut rather than
-// opening it for a single string.
+// Core has no node types, so nothing here can reach for `fs`; this declares the one global it reads.
 declare const process: { env: Record<string, string | undefined> };
 
 /** The competition, as our members know it. */
 export const LEAGUE_NAME = "Tim Hortons Pro League";
 
-/** The competition the football layer describes, as it is headed on the desk.
- *
- *  Ours to state rather than FPL's to publish: the bootstrap names 20 clubs and
- *  38 events and nowhere says what the thing they are playing in is called.
- *  Deliberately the period name Championship Manager 99/00 heads its own table
- *  screen with — this section is a reproduction of `cm9900/24.jpg`, and a
- *  reproduction that says "Premier League" is a modern app in CM's clothes. */
+/** The football competition as the desk heads it: CM 99/00's own name, since FPL publishes none. */
 export const COMPETITION_NAME = "FA Barclays Premiership";
 
-/** Where the season's cuts fall, counted from each end of the table.
- *
- *  A rule of the competition and not of ours, which is the whole test the layer
- *  split applies — the football layer may hold a constant precisely because
- *  nobody in our league can change this one, exactly as `table.ts` holds three
- *  for a win. FPL publishes neither number.
- *
- *  `relegate` counts UP from the bottom rather than naming a place, so a
- *  division of any size draws its line where the division actually ends. */
+/** The season's cuts from each end of the table; `relegate` counts up from the bottom. FPL publishes neither. */
 export const PREMIERSHIP_CUTS = { qualify: 4, relegate: 3 };
 
 /** Premier League season this build targets, in FPL's own notation. */
@@ -45,76 +19,31 @@ export const SEASON = "2026/27";
 export const FPL_SITE = "https://fantasy.premierleague.com";
 export const FPL_API_BASE = `${FPL_SITE}/api`;
 
-/** The Premier League's own football API, which is what `premierleague.com`
- *  itself is a shell over. Public and unauthenticated: probed 4 Sep 2026 with
- *  every header removed in turn, and a bare request answers 200.
- *
- *  It is the FOOTBALL layer's second provider, not a third layer. FPL publishes
- *  what a player scored; this publishes what happened — a minute-stamped event
- *  feed, a real match clock, half-time, lineups, formations, shirt numbers,
- *  the referee and the attendance. Both describe the same Premier League, and
- *  they join on ids neither of them chose: FPL's `fixture.code` is this API's
- *  `altIds.opta` less its `g`, and FPL's `opta_code` is a player's `altIds.opta`
- *  exactly.
- *
- *  **Server-side only.** It answers
- *  `access-control-allow-origin: https://www.premierleague.com`, so a browser
- *  may not read it; nothing here may move into a `"use client"` component.
- *  Its own `cache-control` is `max-age=30`, which is the app's `PAGE_REVALIDATE` — asking
- *  faster than that returns the same bytes from their CDN. */
+/** The Premier League's football API. Server-side only: its CORS answers premierleague.com alone. Its CDN
+ *  caches for 30 s, the app's `PAGE_REVALIDATE`, so asking faster returns the same bytes. */
 export const PL_FOOTBALL_API_BASE = "https://footballapi.pulselive.com/football";
 
-/** The Premier League's id for the season in `SEASON`.
- *
- *  Their own, opaque, and published only through
- *  `/football/competitions/1/compseasons` — 841 for 2026/27, read there on
- *  4 Sep 2026. It changes every summer and there is no way to compute it, which
- *  is why it is a constant beside `SEASON` rather than anything derived. */
+/** The Premier League's own id for `SEASON`, from `/football/competitions/1/compseasons`: it changes every
+ *  summer and cannot be computed. */
 export const PL_COMP_SEASON = 841;
 
-/** Premier League competition id. 1 is the Premier League itself; the same API
- *  serves the EFL and the women's game under other numbers. */
+/** Premier League competition id; the same API serves other competitions under other numbers. */
 export const PL_COMPETITION = 1;
 
-/** How many commentary lines to ask for at once.
- *
- *  A whole match is 107 on the busiest of the thirty in gameweeks 1-3, so this
- *  is a ceiling with room rather than a page size anybody has to turn. Asking
- *  for one page and getting all of it is what keeps the client free of paging
- *  logic for a resource that is never long enough to need it. */
+/** Commentary lines asked for at once: above any whole match, so the client never pages. */
 export const PL_TEXTSTREAM_PAGE = 300;
 
-/** The rights holder's own highlights playlist, and the public feed that lists
- *  it.
- *
- *  Sky Sports Premier League hold the UK rights and publish official highlights
- *  on YouTube — channel `UCTU_wC79Dgi9rh4e9-baTqA`, playlist
- *  `PLUY_YSABhemI` ("Premier League Highlights 26/27"). Craig supplied both on
- *  11 Sep 2026 and `docs/providers/premier-league-api.md` carries the counts.
- *
- *  **`videos.xml` and not the Data API**, which is what makes this free of a
- *  key: the feed is public, needs no credential, and carries the latest 15
- *  entries — about a round and a half, which is what a match screen for a
- *  recent fixture asks for. A season's back catalogue would need
- *  `playlistItems.list` and a key; nothing wants one yet.
- *
- *  **The playlist id changes every summer**, the way `PL_COMP_SEASON` does, and
- *  for the same reason it sits here rather than anywhere it could be computed. */
+/** The rights holder's highlights playlist and its public feed: no key, the latest 15 entries. The id changes every summer. */
 export const HIGHLIGHTS_PLAYLIST = "PLUY_YSABhemI";
 export const YOUTUBE_FEED_BASE = "https://www.youtube.com/feeds/videos.xml";
 
-/** Where an embedded highlights video is played from.
- *
- *  The `-nocookie` host is YouTube's own privacy-preserving player and is the
- *  only surface we take: the video is embedded, never fetched and never
- *  re-hosted. */
+/** Where a highlights video is embedded from, YouTube's privacy host: never fetched, never re-hosted. */
 export const YOUTUBE_EMBED_BASE = "https://www.youtube-nocookie.com/embed";
 
 /** A video's still, drawn as the click-to-play thumbnail a match report opens on. */
 export const YOUTUBE_THUMB_BASE = "https://i.ytimg.com/vi";
 
-/** Scout's free team-news page: every club's predicted eleven on one page. No trailing
- *  slash — with one, the site 301s. */
+/** Scout's team-news page, every club's predicted eleven. No trailing slash: with one, the site 301s. */
 export const SCOUT_TEAM_NEWS_URL = "https://www.fantasyfootballscout.co.uk/team-news";
 
 /** The BBC's football wire, which the paper's writer reads for angles. */
@@ -124,19 +53,12 @@ export const BBC_FOOTBALL = "https://feeds.bbci.co.uk/sport/football/rss.xml";
 export const ANTHROPIC_MESSAGES_URL = "https://api.anthropic.com/v1/messages";
 export const OPENAI_IMAGES_URL = "https://api.openai.com/v1/images/generations";
 
-/** How a provider sees us.
- *
- *  A real browser string rather than a bot's. Both providers front their APIs
- *  with a WAF that treats unfamiliar agents as worth challenging, and neither
- *  publishes what it wants to see; the sibling project's season-long sweep
- *  survived on exactly this. Not a disguise — every read here is public data
- *  their own website serves to anyone. */
+/** A real browser's user agent: both providers' WAFs challenge an unfamiliar one. */
 export const HTTP_USER_AGENT =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 " +
   "(KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36";
 
-/** Attempts after the first, when a provider says it is busy. Two is the point
- *  where a blip is covered and a real outage is not being argued with. */
+/** Attempts after the first when a provider is busy: enough for a blip, not an outage. */
 export const HTTP_RETRIES = 2;
 
 /** First backoff step in milliseconds; doubles per attempt, plus jitter. */
@@ -157,70 +79,45 @@ export const MODEL_TIMEOUT_MS = 300_000;
 /** How long a firing may commission stories: half the Editions job's 20 minutes, so the story in flight and the commit still fit. */
 export const EDITION_BUDGET_MS = 600_000;
 
-/** Fantrax's public read surface. Unauthenticated, and — unlike FPL — it answers
- *  HTTP 200 even when it is refusing you (see league/fantrax/errors.ts). */
+/** Fantrax's public read surface: unauthenticated, and it answers HTTP 200 even when it is refusing you. */
 export const FANTRAX_FXEA_BASE = "https://www.fantrax.com/fxea/general";
 
 /** The commissioner's setup wizard, which `roster-limits` scrapes. Needs the cookie. */
 export const FANTRAX_SETUP_PAGE = "https://www.fantrax.com/newui/fantasy/createLeague.go";
 
-/** Fantrax's own SPA API, the surface their website talks to.
- *
- *  A different protocol from fxea, not a different path on it: one POST carrying
- *  a batch of `msgs`, and failures reported in a different envelope again (see
- *  league/fantrax/errors.ts). Several useful reads are public here — the
- *  transaction history among them — so this is not the authenticated surface.
- *  Anything needing a session cookie takes it as an argument. */
+/** Fantrax's SPA API: one POST carrying a batch of `msgs`. Some reads are public; a session cookie is an argument. */
 export const FANTRAX_FXPA_BASE = "https://www.fantrax.com/fxpa/req";
 
 /** Fantrax's website, for handing a manager back to it. Deeper paths are only ones seen in a real browser. */
 const FANTRAX_APP_BASE = "https://www.fantrax.com/fantasy/league";
 
-/** The signed-in manager's own roster for one period, off Craig's browser URL (30 Sep 2026); appends to
- *  `FANTRAX_LEAGUE_PAGE/` and takes `;period={n}`. */
+/** The signed-in manager's own roster for one period; appends to `FANTRAX_LEAGUE_PAGE/` and takes `;period={n}`. */
 export const FANTRAX_ROSTER_PATH = "team/roster";
 
-/** The league's pending claims and trades, off Craig's URL (1 Oct 2026); only a member's own session reads them. */
+/** The league's pending claims and trades; only a member's own session reads them. */
 export const FANTRAX_PENDING_PATH = "transactions/pending";
 
-/** One player on Fantrax, which is where a claim is actually made.
- *
- *  Append `/{scorerId}/{leagueId}`: `/{scorerId}` alone draws a blank page since their bundle changed,
- *  and the slug and team id after the league are optional (PLATFORM_NOTES, 1 Oct 2026). */
+/** One player on Fantrax. Append `/{scorerId}/{leagueId}`: `/{scorerId}` alone draws a blank page. */
 export const FANTRAX_PLAYER_BASE = "https://www.fantrax.com/player";
 
-/** The league's own player list on Fantrax, which is where a claim is made.
- *
- *  Their matrix-parameter path, taken off Craig's own browser URL rather than
- *  constructed — the same session that gave up `positionOrGroup`, which is a
- *  parameter no amount of reading their payload would have found
- *  (PLATFORM_NOTES). It hangs off `FANTRAX_LEAGUE_PAGE/`. */
+/** The league's player list, where a claim is made, as a real browser URL has it; appends to `FANTRAX_LEAGUE_PAGE/`. */
 export const FANTRAX_PLAYERS_PATH = "players;statusOrTeamFilter=ALL;pageNumber=1";
 
-/** The league's home page, off Craig's browser URL (1 Oct 2026); appends to `FANTRAX_LEAGUE_PAGE/`. */
+/** The league's home page; appends to `FANTRAX_LEAGUE_PAGE/`. */
 export const FANTRAX_HOME_PATH = "home";
 
-/** Fantrax's sport code for the Premier League. `SOCCER` is a different sport to
- *  them and returns the wrong player pool. */
+/** Fantrax's sport code for the Premier League. `SOCCER` is a different sport to them and returns the wrong pool. */
 export const FANTRAX_SPORT = "EPL";
 
-/** Minutes on the pitch before a clean sheet is worth previewing.
- *
- *  FPL's threshold, used deliberately for a Fantrax preview. Fantrax credits
- *  clean sheets only at full time and publishes no threshold of its own — it
- *  says "on field" and no more — so this is the moment a manager watching the
- *  match already expects the points to appear, because it is when FPL's own
- *  numbers move. Fantrax settles it their way at the whistle and their answer
- *  replaces ours (see join/cleanSheets.ts). */
+/** Minutes on the pitch before a clean sheet is previewed, FPL's threshold: Fantrax publishes none and settles at
+ *  full time, when its answer replaces ours. */
 export const CLEAN_SHEET_MINUTES = 60;
 
 /** Minutes in a half: the clock's first half reads this or less, added time aside. */
 export const HALF_MINUTES = 45;
 
-/** The league this process serves: the environment's `FANTRAX_LEAGUE_ID`, set in Vercel for the
- *  app, and nothing in the code names one. The 10 Oct swap is that one value; CI asks production
- *  for it (`/api/league`) rather than keeping a copy. Empty when unset, and `requireLeague` is
- *  how an edge refuses to run on nothing. The ids are public: they are in the league URLs. */
+/** The league this process serves, from the environment; nothing in the code names one. Empty when unset, so an
+ *  edge calls `requireLeague`. The ids are public: they are in the league URLs. */
 export const FANTRAX_LEAGUE_ID = process.env.FANTRAX_LEAGUE_ID ?? "";
 
 /** The served league on Fantrax's website; a deeper page appends `/{path}`. */
@@ -237,112 +134,56 @@ export function requireLeague(leagueId: string): string {
   return leagueId;
 }
 
-/** The league's Matchups for one period: the route read out of Fantrax's bundle and opened in a
- *  browser (1 Oct 2026); appends to `FANTRAX_LEAGUE_PAGE/` and takes `;period={n}`. */
+/** The league's Matchups for one period; appends to `FANTRAX_LEAGUE_PAGE/` and takes `;period={n}`. */
 export const FANTRAX_MATCHUPS_PATH = "livescoring";
 
-/** How many players to ask Fantrax's stats read for in one page.
- *
- *  Their own site asks for twenty and paginates thirty-six times; the parameter
- *  is honoured well past that, so the whole pool arrives in one request. Set
- *  comfortably above the ~708 they carry, and the read reports the total back so
- *  a page that ever does overflow this says so rather than showing a prefix. */
+/** Players per page from Fantrax's stats read: above the whole pool, so it arrives in one request. The read
+ *  reports the total, so an overflow says so rather than showing a prefix. */
 export const POOL_PAGE_SIZE = 2000;
 
-/** How far before a round's FIRST KICKOFF lineups lock, in minutes.
- *
- *  **A commissioner setting Fantrax states on its settings page and through no
- *  API we can read, written down here because it has to live somewhere (§3).**
- *  Confirmed on `createLeague.go?goto=5` on 20 Aug 2026: `lineupLockType` is
- *  `TIME_BEFORE_FIRST_GAME` — "Set amount of time before 1st game of period" —
- *  and `lineupLockTimeBeforeGame` is `00:15`.
- *
- *  Measured back from the first kickoff and **not from the period boundary**,
- *  which is what an earlier version of this comment said. The two coincide only
- *  when the gameweek has a Friday night match; see `gazette/deadline.ts`.
- *
- *  Fantrax's other option is `TIME_BEFORE_FIRST_GAME_OF_SCORER`, a per-player
- *  rolling lock. This league does not use it, which is why there is one deadline
- *  a week and it is a real thing to print.
- *
- *  **If the commissioner moves the lock, this number is the only place that
- *  knows.** Nothing will fail; the app will simply print the wrong time to
- *  sixteen people, which is the failure mode a deadline can least afford. */
+/** Minutes before a period's first kickoff (not its boundary) that lineups lock: a commissioner setting no API we
+ *  read exposes. If he moves it, only this knows, and the app prints the wrong deadline. */
 export const LINEUP_LOCK_LEAD_MINUTES = 15;
 
-/** How long before the lock a save to Fantrax stops being taken: the commissioner's write can override a
- *  locked team, so a clock or a lock a few minutes out must fail short of it (Craig, 30 Sep 2026). */
+/** Minutes before the lock that a save to Fantrax stops being taken: the commissioner's write can override a
+ *  locked team, so a save must fail short of the lock. */
 export const SAVE_MARGIN_MINUTES = 10;
 
-/** Where the Premier League serves its crests.
- *
- *  `next.config.ts` builds the image allow-list from this and the three below. */
+/** Where the Premier League serves its crests. `next.config.ts` builds its image allow-list from the image bases here. */
 export const PL_ASSET_BASE = "https://resources.premierleague.com/premierleague";
 
-/** Where the Premier League serves its player portraits, which is NOT where it
- *  serves its crests any more.
- *
- *  `premierleague25` is theirs, verbatim, read out of FPL's own production
- *  bundle on 19 Aug 2026. It is not a season number and must never be computed
- *  from one: we are in 26/27 and it says 25, `premierleague26` answers 502, and
- *  the assets under 25 are current — dated Aug and Sep 2025 against Aug 2024 on
- *  the old path, with photographs for players the old path had none for.
- *
- *  Two constants and not one interpolated base, because the two paths have now
- *  diverged twice: the prefix differs, and so does the filename (`p{code}.png`
- *  for a crest-era portrait, `{code}.png` here). */
+/** Where the Premier League serves player portraits, as `{code}.png`. `premierleague25` is theirs verbatim and not a
+ *  season: never compute it (`premierleague26` answers 502). */
 export const PL_PHOTO_BASE = "https://resources.premierleague.com/premierleague25";
 
-/** Where FPL serves club kits — its own host, not the Premier League's CDN.
- *
- *  Twenty outfield shirts and twenty keeper shirts serve the whole league, and
- *  they are selected by club code rather than by a photograph of a man, so a
- *  transfer changes the shirt the same day. That is the whole reason they are
- *  here: a portrait cannot be that current. `shirtUrl` carries the sizes and
- *  what was counted at each. */
+/** Where FPL serves club kits, chosen by club code, so a transfer changes the shirt the same day. */
 export const FPL_SHIRT_BASE = `${FPL_SITE}/dist/img/shirts/standard`;
 
-/** The league's clock. Every date a manager reads is in it, whatever their phone
- *  says, because a deadline is the same instant for all sixteen of them and a
- *  capture is filed under the day it happened here.
- *
- *  Deliberately not the football calendar's timezone even though they agree
- *  today: this is our league's, and the two are separate questions. */
+/** The league's clock: every date a manager reads, whatever his phone says, and the day a capture is filed under. */
 export const LEAGUE_TIMEZONE = "Europe/London";
 
-/** The zone Fantrax stamps its transactions in ("Date Processed (EDT)"), which is NOT ours.
- *  `inbox/when.ts` reads a stamp's offset from it by date, to print the stamp in London. */
+/** The zone Fantrax stamps its transactions in ("Date Processed (EDT)"), which is NOT ours. */
 export const FANTRAX_TIMEZONE = "America/New_York";
 
-/** How many saves are worth mentioning.
- *
- *  A keeper makes one or two most weeks and it says nothing; a number worth
- *  printing is one that made a difference. Named here because four views judge
- *  it — the gazette's team of the week, the match list, the player sticker and
- *  `contributions` — and until now the sticker disagreed with the other three. */
+/** How many saves are worth mentioning; one or two says nothing. Every view that prints saves judges by this. */
 export const NOTABLE_SAVES = 4;
 
 /** How many matches ahead a player's fixture run reads: eight fills a phone's row and a desk's. */
 export const FIXTURE_RUN = 8;
 
-/** How many gameweeks Data's planner, club board and projections look ahead (Craig, 24 Sep 2026: "next 6
- *  gameweeks"): a little past a player's own run, because a manager plans a squad further out than one man. */
+/** How many gameweeks Data's planner, club board and projections look ahead: past a player's own run, because a
+ *  manager plans a squad further out than one man. */
 export const PLANNER_RUN = 6;
 
-/** How many transaction rows to ask for in one page.
- *
- *  Their own client sends 100 and the response reports `totalNumPages` back, so
- *  a league busy enough to overflow a page says so rather than quietly serving
- *  the first hundred as if they were all of it. Sixteen teams will not reach it
- *  in a season. */
+/** Transaction rows per page, as their own client asks; the response reports `totalNumPages`, so an overflow says so. */
 export const TRANSACTION_PAGE_SIZE = 100;
 
 /** The predicted elevens: Friday from 16:00 London, an hour after the press conferences end; a lock
- *  earlier than Tuesday's files the day before (Sunday = 0). Craig, 5 Oct 2026. */
+ *  earlier than Tuesday's files the day before (Sunday = 0). */
 export const PREDICTED_XI = { filing: { weekday: 5, hour: 16, maxLeadDays: 3 } } as const;
 
-/** Lawro's predictions: when the column files and how a tie is called. Tuned against a league
- *  nobody has drafted yet, so retune after gameweek 9 by counting the gut calls in the archive. */
+/** Lawro's predictions: when the column files and how a tie is called. Set before any league was drafted, so
+ *  retune after gameweek 9 by counting the gut calls in the archive. */
 export const PREDICTIONS = {
   /** Thursday from 18:00 London; a lock earlier in the week files the evening before (Sunday = 0). */
   filing: { weekday: 4, hour: 18, maxLeadDays: 4 },
@@ -355,7 +196,7 @@ export const PREDICTIONS = {
   /** How many more Liverpool men the underdog must hold, and whose they are (FPL's club code). */
   liverpoolLead: 1,
   liverpoolCode: 14,
-  /** Liverpool reaches further than the football does: 159 BBC games without having them lose. */
+  /** The widest gap, as a share of the favourite's total, that a Liverpool gut call may overturn. */
   liverpoolShare: 0.15,
   /** The brief's caps: key men a side, how deep it looks for doubts, what counts as a hard fixture. */
   keyMen: 3,
@@ -369,7 +210,7 @@ export const PREDICTIONS = {
   factsPerTie: 11,
 } as const;
 
-/** Lawro's power rankings (Craig, 5 Oct 2026): the squads as drafted, ordered by the season played out, once, before the first lock. */
+/** Lawro's power rankings: the squads as drafted, ordered by the season played out, once, before the first lock. */
 export const SEASON_RANKINGS = {
   /** Playings of the season, and the seed that makes them the same every time. */
   runs: 10_000,
@@ -377,26 +218,24 @@ export const SEASON_RANKINGS = {
   /** The sister model's band is a 5th-to-95th percentile: its half-width is this many deviations. */
   band: 1.645,
   /** The correlation between any two men of one eleven in one period: a clean sheet lifts a back line, a rout a
-   *  front line. Taken as independent, a side swung by a seventh of its mean, where draft sides swing by a third. */
+   *  front line. */
   together: 0.5,
   /** A squad is clear at the top when the next is at least this many places behind it on average. */
   clear: 1,
 } as const;
 
-/** The draft match-up desk's talking points (Craig, 29 Sep 2026). */
+/** The draft match-up desk's talking points. */
 export const DRAFT_DESK = {
   /** A man off before this many minutes, with his match done; and the hour a clean sheet needs. */
   earlyOff: 60,
-  /** A clean sheet is told, won or lost late, only where the slot pays at least this for one: a midfielder's 1 is not
-   *  (Craig, 30 Sep 2026: "dont reference midfielder clean sheet points"). */
+  /** A clean sheet is told, won or lost late, only where the slot pays at least this for one: a midfielder's 1 is not. */
   cleanSheetStory: 4,
   /** A keeper's score that is a haul, clean sheet and saves together. */
   keeperHaul: 8,
-  /** A reserve's score that is a talking point though it counts for nobody (Craig, 29 Sep 2026: "a bench player getting
-   *  a good score (6+)"). */
+  /** A reserve's score that is a talking point though it counts for nobody. */
   benchScore: 6,
   /** The sums of what the side behind needs are worked only when this few men are left across both sides; with more,
-   *  half the gameweek is unplayed and the report tells what happened (Craig, 29 Sep 2026). */
+   *  half the gameweek is unplayed and the report tells what happened. */
   chaseWhenLeft: 3,
   /** A goal from this minute is late: a scorer's late goal, or the one that took a clean sheet. */
   lateGoal: 80,
@@ -413,8 +252,8 @@ export const DRAFT_DESK = {
   sweepFrom: 2,
 } as const;
 
-/** The draft desk's news judgement (Craig, 30 Sep 2026: "i told you to create a narrative"): what each thread of a
- *  match-up is worth to its story, the bigger version second where there is one, and the thresholds that make one. */
+/** The draft desk's news judgement: what each thread of a match-up is worth to its story, the bigger version second
+ *  where there is one, and the thresholds that make one. */
 export const DRAFT_NEWS = {
   weight: {
     // The match's shape, at the end of the gameweek.
@@ -428,8 +267,7 @@ export const DRAFT_NEWS = {
     // The season's, each tagged for a Football Manager frame.
     top: [55], record: [50], "streak-ended": [45], "return-to-form": [45], bottom: [45], streak: [40], "season-high": [35],
     "season-low": [35], "stayed-top": [35], climb: [30], fall: [30], "meetings-won": [30],
-    // After Saturday, with the gameweek to finish.
-    // A reserve waiting on his match is a twist, never the lede with half the gameweek to play (GW5's proof).
+    // After Saturday, with the gameweek to finish; a reserve waiting on his match is a twist, never the lede.
     chase: [80], "subs-waiting": [50], "to-play-gap": [55], "saturday-lead": [45, 60], "both-to-come": [45],
     "double-to-come": [40], "going-in": [35],
   },
@@ -477,7 +315,7 @@ export const DRAFT_NEWS = {
   varietyWithin: 15,
 } as const;
 
-/** How long a draft report's paragraphs run after each match-up's verdict (the UK desk's review, 29 Sep 2026). */
+/** How long a draft report's paragraphs run after each match-up's verdict. */
 export const DRAFT_WRITING = {
   /** Words a match-up runs to, lede included; the lead match-up may run to `leadWords`. */
   matchupWords: [50, 120],
@@ -532,10 +370,10 @@ export const SHEETS = {
   openers: 2,
 } as const;
 
-/** The Points Dodgers: men who came close to points and got none (Craig, 30 Sep 2026). */
+/** The Points Dodgers: men who came close to points and got none. */
 export const DODGERS = {
-  /** Men the column names, and how near a man must come: expected goals, or expected assists (Craig: "players with
-   *  high xa and no assist points"), plus the weights below. An assist side is scaled to the goal bar. */
+  /** Men the column names, and how near a man must come: expected goals, or expected assists, plus the weights
+   *  below. An assist side is scaled to the goal bar. */
   shown: 5,
   from: { goal: 0.6, assist: 0.4 },
   /** A goal against from this minute is the one that took a clean sheet late. */
@@ -544,14 +382,14 @@ export const DODGERS = {
   weight: { "ruled-out": 1, "penalty-missed": 0.5, "penalty-saved": 0.5, woodwork: 0.5, "set-up-woodwork": 0.3, "clean-sheet-lost": 1 },
 } as const;
 
-/** The match-day report's editorial thresholds (docs/plans/GAZETTA.md, "Match reports, woven"). */
+/** The match-day report's editorial thresholds. */
 export const REPORTS = {
   budget: {
     lead: { account: [180, 260], sections: 3, stats: 9 },
     ordinary: { account: [120, 190], sections: 2, stats: 8 },
     dead: { account: [60, 110], sections: 1, stats: 6 },
   },
-  /** Words a standfirst and a section may run to (sports desk, 28 Sep 2026). */
+  /** Words a standfirst and a section may run to. */
   standfirstWords: 25,
   sectionWords: [20, 45],
   /** A burst is two goals by one side this close; late is from this minute. */

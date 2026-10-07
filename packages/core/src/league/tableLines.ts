@@ -1,7 +1,7 @@
-// The lines across the league table, as Craig set them on 5 Oct 2026. Fantrax's playoff says how many reach
+// The lines across the league table. Fantrax's playoff says how many reach
 // the semis; the prize, the play-in for the last semi place and the Plate are ours, so they are declared here.
 
-export interface TableLine {
+interface TableLine {
   /** The place the line is drawn under; it is the cut for what it names. */
   under: number;
   label: string;

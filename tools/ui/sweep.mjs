@@ -1,32 +1,16 @@
-// Contrast and overflow across every route, at both widths.
+// Contrast and overflow across every route at both widths: does any text fail WCAG AA against the ground it is
+// painted on, and does the document scroll sideways.
 //
 //   node tools/ui/sweep.mjs [--base http://localhost:3000] [--team-cookie <file>]
 //
-// Nine routes × 390 and 1440. Two questions per page: does any text fail WCAG AA
-// against the ground it is actually painted on, and does the document scroll
-// sideways.
-//
-// The colour arithmetic is the part worth keeping. This app authors in oklch, and
-// `getComputedStyle` hands oklch() straight back — so the ratio cannot be done in
-// JS on the string. Painting the colour once over white and once over black lets
-// the browser do the conversion and recovers both the alpha and the sRGB, whatever
-// space it was written in. Backgrounds are composited up the real ancestor chain
-// for the same reason: a token at 60% over a card over the navy ground is three
-// layers, and reading only the nearest one flatters every figure on the page.
-//
-// Text on an SVG ground is bucketed as "not auditable here" rather than failed.
-// The pitch draws its own ground in SVG, which no ancestor walk can see; calling
-// that a failure trains the reader to ignore the output, which is worse than the
-// gap. The bucket is a work list — check those by eye — never a pass.
+// Colours are painted over white and over black so the browser converts oklch(), and composited up the real
+// ancestor chain. Text on an SVG ground is counted as "not auditable here", a work list to check by eye, never a pass.
 
 import { BASE_URL, connect, discover, parseArgs, teamCookie } from "./cdp.mjs";
-import { ALL_ROUTES, FRONT_PAGE, matchRoutes } from "./routes.mjs";
+import { ALL_ROUTES, FRONT_PAGE, playedMatchRoutes, playerRoutes } from "./routes.mjs";
 
-/** This run's routes: the shared list, plus whatever `discover` finds a real
- *  id for below. A COPY, because those appends are this process's own —
- *  `routes.mjs` exports a declaration and must not become a scratchpad. */
+/** This run's routes: the shared list plus the ids discovered below; a copy, so `routes.mjs` stays a declaration. */
 const ROUTES = [...ALL_ROUTES];
-
 
 const WIDTHS = [390, 1440];
 
@@ -86,26 +70,12 @@ const base = flags.base ?? BASE_URL;
 const cdp = await connect();
 await cdp.setCookie(teamCookie(flags));
 
-// A team's own five screens, discovered rather than written down — the ids are
-// the league's and change with `FANTRAX_LEAGUE_ID`, so a static list would name
-// a 404 the day the app is pointed at the real league. `tapfit` discovers its
-// team page the same way and for the same reason.
-//
-// They are swept because they are where the app's only per-team COLOUR is: a
-// title bar and a match header drawn in a team's own hex rather than in a token
-// the palette has already had checked. That is exactly the kind of pair this
-// instrument exists to measure, and no other route in the list has one.
+// Per-record routes are discovered, never written down: their ids are the league's, FPL's or a story's, and move.
+// The team, club and match bars are the app's only per-team and per-club colours, the pairs this exists to measure.
 await cdp.setViewport(390, 900);
 const team = await discover(cdp, "/squad", 'a[href^="/squad/"]');
 if (team) ROUTES.push(team, ...["transfers", "next", "fixtures", "stats"].map((tab) => `${team}/${tab}`));
 
-// One article, DISCOVERED off the front page rather than written down. It was
-// `/paper/gw2-round-report` until 3 Sep 2026, which broke the sweep outright the
-// day the round-report kind was deleted: the slug still parses, the story no
-// longer normalizes, the route 404s, and the audit crashed rather than reporting
-// a failure. A slug names one story in one round's edition and is the last thing
-// that should be a constant here — every other per-record route in this list is
-// already derived for exactly that reason.
 await cdp.open(FRONT_PAGE, 2200);
 const article = await cdp.js(
   `(document.querySelector('a[href^="/paper/"]')||{}).getAttribute
@@ -113,54 +83,17 @@ const article = await cdp.js(
 );
 if (article) ROUTES.push(article);
 
-// A club's own screens, discovered off the table for the same reason the team's
-// are discovered off `/squad`: the codes are FPL's and a written-down one names
-// a 404 the season a club goes down. They are swept because the club bar is the
-// app's only per-CLUB colour — twenty hexes from `clubColours`, none of them a
-// token the palette has already had checked, and `inkOn` picking the ink for
-// each. Point it at a pale side (Fulham, Leeds, Spurs) by hand at least once.
 const club = await discover(cdp, "/prem", 'a[href^="/prem/club/"]');
 if (club) ROUTES.push(club, ...["depth", "set-pieces", "fixtures", "stats"].map((tab) => `${club}/${tab}`));
 
-// One player's four screens, DISCOVERED off the pool rather than written down,
-// for the reason the team's and the club's are: a `fantraxId` names one man in
-// one league's pool, and a written-down one is a 404 the day he leaves. They are
-// swept because the player bar is a per-CLUB colour like the club's, and
-// because the attribute grid is the densest type on the desk — `xs` labels
-// against `--color-muted`, which is the pair a contrast sweep exists for.
-// **`tbody`, and that is not decoration.** The bare selector took the first
-// `/players/` link on the page, which from 6 Sep 2026 is the second tab in
-// Find's own strip — so these instruments walked `/players/analysis/data` and
-// friends, which resolve to the PLAYER route with a `fantraxId` of "analysis",
-// and stopped covering a real player screen at all. A man is a row of the
-// directory, so the directory's body is where to look for one.
-//
-// The tab was called Compare and the route was `/players/compare` when this was
-// first written down; the trap is the same whatever the tab is called, which is
-// why the fix is the selector and not the name.
-const man = await discover(cdp, "/players", 'tbody a[href^="/players/"]');
-if (man) ROUTES.push(man, ...["data", "news", "transfer", "data?season=all"].map((tab) => `${man}/${tab}`));
+ROUTES.push(...(await playerRoutes(cdp)));
 
-// One match's two screens, discovered off the results list — where the score
-// became a link on 4 Sep 2026 and had never been one before. A written-down
-// fixture id is a 404 next August, and unlike a club code it is a 404 the same
-// season: `Fixture.id` is per-season and so is the fixture.
-//
-// Swept because the match bar is the app's only place TWO club colours meet, and
-// `inkOn` has to answer for both of them at once — the pale-side case
-// (`cm9900/16.jpg` runs Everton against a white Torquay) is a real pairing and
-// not an edge. The Players board carries the same pair over two column heads.
-const match = await discover(cdp, "/prem/results", 'a[href^="/prem/match/"]');
-// Every tab the match has, read off the app's folders (`matchRoutes`), so none ships unmeasured.
-if (match) ROUTES.push(...matchRoutes(match));
+const played = await playedMatchRoutes(cdp);
+ROUTES.push(...played);
 
-// And a match nobody has played, which is a different screen under the same
-// two bars: no scoresheet, a `v` where the score goes, and the Players tab
-// greyed. The results list cannot produce one, so it takes its own read.
+// A match nobody has played is a different screen under the same two bars; the results list cannot produce one.
 const coming = await discover(cdp, "/prem/fixtures", 'a[href^="/prem/match/"]');
-if (coming && coming !== match) ROUTES.push(coming);
-
-
+if (coming && coming !== played[0]) ROUTES.push(coming);
 
 let failures = 0;
 for (const width of WIDTHS) {
@@ -169,10 +102,7 @@ for (const width of WIDTHS) {
     await cdp.send("Page.navigate", { url: base + route });
     await new Promise((resolve) => setTimeout(resolve, 2200));
     const { fail, blind } = JSON.parse(await cdp.js(AUDIT));
-    // `document.documentElement` is null for the instant a navigation is
-    // between documents, and reading `.scrollWidth` off it threw the whole
-    // sweep away — one unsettled route and no report at all, for the routes
-    // before it as well as after. Answered as "not measurable" instead.
+    // `documentElement` is null between documents; reading it threw the whole sweep away.
     const sideways = await cdp.js(
       `document.documentElement ? document.documentElement.scrollWidth > window.innerWidth : false`,
     );

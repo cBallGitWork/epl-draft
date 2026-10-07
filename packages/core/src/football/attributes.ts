@@ -1,13 +1,8 @@
 import type { LineCount, Running, PlayerLine } from "./intel/lines";
 
-// Championship Manager's attribute grid, for a real footballer.
-//
-// CM's attributes are Sports Interactive's, hand-authored and licensed, so every rating here is
-// OURS: a 1–20 percentile of something we measure, per 90. A keeper is rated against keepers and
-// an outfielder against every outfielder who plays (Craig, 30 Sep 2026), so a centre-half's
-// Finishing is low, as CM's is. The sample is last season's when he played enough of it, else
-// this season's; running exists only this season. Agility, Balance, Bravery, Flair and Technique
-// get no row.
+// Championship Manager's attribute grid with our own ratings: a 1–20 percentile of a measure, mostly per 90.
+// Keepers are rated against keepers, outfielders against every outfielder; last season's sample when he played
+// enough of it, else this one's. Agility, Balance, Bravery, Flair and Technique get no row.
 
 /** One attribute, as the grid draws it. */
 export interface Attribute {

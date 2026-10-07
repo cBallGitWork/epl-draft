@@ -6,7 +6,7 @@ import type { DraftMan } from "./types";
 
 // A match-up's story, chosen from its threads by weight: THE STORY, a TWIST from the turn family in another beat, a few
 // supporting threads and a small cast. A side's last story and last cast are worth less, so a story is not told the same
-// way twice running (Craig, 29 Sep 2026); two match-ups on a page tell different kinds of story when it is close. Pure.
+// way twice running; two match-ups on a page tell different kinds of story when it is close. Pure.
 
 export interface Angle {
   story: Thread;

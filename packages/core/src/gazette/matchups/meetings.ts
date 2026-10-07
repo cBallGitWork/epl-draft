@@ -1,8 +1,7 @@
 import { DRAFT_DESK } from "../../config";
 import type { SeasonFact } from "./form";
 
-// Two sides' history, and the men who once belonged to the other: a clean sweep of their meetings, and the old boy
-// (FM's one true transfer story, 29 Sep 2026 panel). Pure.
+// Two sides' history, and the men who once belonged to the other: a clean sweep of their meetings, and the old boy.
 
 /** One earlier meeting, from the first side's point of view. */
 export interface Meeting {

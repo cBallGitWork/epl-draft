@@ -13,9 +13,7 @@ import type { RawLiveScoring } from "./livescoring";
 
 describe("mapLiveScores", () => {
   it("reads every team's total from one recorded response", () => {
-    // Trimmed from a real 13 Aug read. Every total is zero because no football
-    // has been played yet — which is the point: zero is what Fantrax said, and a
-    // scoreboard that showed anything else would be inventing it.
+    // Trimmed from a real read before kickoff: every total is a nought Fantrax stated.
     const scores = mapLiveScores(recorded as RawLiveScoring);
     expect(scores).toHaveLength(2);
     expect(scores.map((s) => s.points)).toEqual([0, 0]);
@@ -40,8 +38,6 @@ describe("mapLiveScores", () => {
   });
 
   it("reports a missing total as unknown rather than nought", () => {
-    // A team on nought and a team we have no number for are different things,
-    // and only one of them is worth putting on a screen as a score.
     const scores = mapLiveScores({
       statsPerTeam: { allTeamsStats: { a: { ACTIVE: { remainingEventPercent: { p1: 1 } } } } },
     });
@@ -49,8 +45,7 @@ describe("mapLiveScores", () => {
   });
 
   it("skips a team with no active section rather than inventing one", () => {
-    // Only ACTIVE scores, and only ACTIVE is public. A team without it is a team
-    // we cannot speak for.
+    // Only ACTIVE scores; a team without it is one we cannot speak for.
     expect(mapLiveScores({ statsPerTeam: { allTeamsStats: { a: {}, b: undefined } } })).toEqual([]);
   });
 
@@ -68,14 +63,8 @@ describe("mapLiveScores", () => {
 });
 
 describe("mapLivePlayerPoints", () => {
-  // Both fixtures were recorded on 27 Aug 2026, from the same league on the same
-  // afternoon: period 1 with gameweek 1 played out, period 2 with none of
-  // gameweek 2 kicked off. Two teams each, values untouched.
-  //
-  // The pair is the point. Asked for periods 1, 2 and 3, `getTeamRosterInfo`
-  // answers byte-identical payloads — which is why a card headed "This period"
-  // was showing a season total. `getLiveScoringStats` honours the period, and
-  // these two fixtures are the proof.
+  // One league's period 1, played, and period 2, not yet kicked off, two teams each: live scoring honours the period,
+  // where `getTeamRosterInfo` answers every period alike.
   const first = (raw: unknown) => mapLivePlayerPoints(raw as RawLiveScoring)[0];
 
   it("reads each player's slot-priced total", () => {
@@ -86,10 +75,7 @@ describe("mapLivePlayerPoints", () => {
   });
 
   it("sums to the total Fantrax puts on the scoreboard", () => {
-    // The whole reason for reading this map rather than the stat tables: these
-    // are priced at the roster slot, so the eleven adds up to the header above
-    // it. The season table does not — it prices a dual-eligible man at his
-    // default position, which is how a board showed 16 over an eleven of 14.
+    // Priced at the roster slot, so the eleven sums to the header; the stat tables price a man at his default position.
     for (const raw of [played, unplayed]) {
       const scores = new Map(mapLiveScores(raw as RawLiveScoring).map((s) => [s.teamId, s.points]));
       for (const squad of mapLivePlayerPoints(raw as RawLiveScoring)) {
@@ -100,18 +86,14 @@ describe("mapLivePlayerPoints", () => {
   });
 
   it("leaves out the group subtotals, which are not men", () => {
-    // `_5010` and `_5020` are the outfield and goalie totals and sum to the
-    // team's. Read as players they double every score.
+    // `_5010` and `_5020` are the outfield and goalie totals; read as players they double every score.
     const ids = first(played).players.map((p) => p.fantraxId);
     expect(ids.some((id) => id.startsWith("_"))).toBe(false);
   });
 
   it("leaves out a man who has not played, rather than putting him on nought", () => {
-    // The load-bearing one. Fantrax names eleven active players in
-    // `remainingEventPercent` and prices ten of them: the eleventh was in the
-    // eleven and never appeared. A nought for him would be a claim about a man
-    // who did not kick a ball, and this test is what stops the dash being
-    // "fixed" back into a zero.
+    // Fantrax names eleven in `remainingEventPercent` and prices eight: the three who never appeared stay absent,
+    // and this test stops the dash being "fixed" back into a nought.
     const active = (played as RawLiveScoring).statsPerTeam?.allTeamsStats?.[
       "8enbgqo5msgb375j"
     ]?.ACTIVE;
@@ -144,9 +126,7 @@ describe("mapLivePlayerPoints", () => {
   });
 
   it("prices period 2 differently from period 1", () => {
-    // Under `getTeamRosterInfo` these two reads were byte-identical. Here the
-    // played period names eight men and the unplayed one names nobody at all —
-    // its only `statsMap` keys are the two group subtotals.
+    // The unplayed period's only `statsMap` keys are the two group subtotals.
     expect(first(played).players).toHaveLength(8);
     expect(first(unplayed).players).toHaveLength(0);
   });
@@ -166,10 +146,7 @@ describe("mapLivePlayerPoints", () => {
   });
 
   it("drops the position segment from Fantrax's category key", () => {
-    // `object2` always says `#-1`, while `getLeagueInfo` lists outfield Goals
-    // and Clean Sheets only under the positions it prices them for. Keying on
-    // the whole id resolves Minutes and Assists and silently loses exactly the
-    // two categories worth reading — which looks like "he did not score".
+    // `object2` always says `#-1`, a row `getLeagueInfo` lacks for outfield Goals and Clean Sheets: kept, they vanish.
     const squad = first({
       statsPerTeam: {
         allTeamsStats: {
@@ -220,9 +197,7 @@ describe("mapLivePlayerPoints", () => {
   });
 
   it("carries what he DID beside what it paid him", () => {
-    // Off the recorded payload: 90 minutes for 2, one goal for 4. "Minutes
-    // Played +2" is a price with the thing it priced left out, and the count is
-    // the half a breakdown could not say before.
+    // Off the recorded payload: 90 minutes for 2, one goal for 4.
     const scorer = first(played).players.find((p) => p.fantraxId === "05g2o");
     if (scorer === undefined) throw new Error("fixture lost its scorer");
     expect(scorer.categories).toEqual(
@@ -234,8 +209,7 @@ describe("mapLivePlayerPoints", () => {
   });
 
   it("reads the rendered string and not the number beside it", () => {
-    // `sv` and `av` are the same fact twice, and this one is read back to a
-    // person — so it stays the string Fantrax already chose to render it with.
+    // `sv` and `av` are the same fact; a person reads the string Fantrax rendered.
     const squad = first({
       statsPerTeam: {
         allTeamsStats: {
@@ -249,8 +223,7 @@ describe("mapLivePlayerPoints", () => {
   });
 
   it("says nothing for a category Fantrax priced without a count", () => {
-    // Null and not "0", and not "": a nought is a count Fantrax stated, and an
-    // empty string is a count that fits in the gap where one should be.
+    // Null, not "0" or "": a nought is a count Fantrax stated.
     const squad = first({
       statsPerTeam: {
         allTeamsStats: {
@@ -266,9 +239,7 @@ describe("mapLivePlayerPoints", () => {
   });
 
   it("keeps a count of nought that Fantrax did state, where the row still paid", () => {
-    // What drops a row is the points, never the count. A category that pays for
-    // what a man did NOT do — none conceded — earns on a stated nought, and
-    // "+4" with the nought thrown away is the price without the reason.
+    // Points drop a row, never the count: "none conceded" earns on a stated nought.
     const squad = first({
       statsPerTeam: {
         allTeamsStats: {
@@ -294,14 +265,12 @@ describe("mapProjectedTotals", () => {
   });
 
   it("sums Fantrax's per-player guesses, because there is no team field to read", () => {
-    // `totalFpts` is what a squad has ACTUALLY scored and reads a truthful nought
-    // all week. A preview built on it says nought against nought for every tie.
+    // `totalFpts` is what a squad has ACTUALLY scored, a truthful nought all week.
     expect(mapProjectedTotals(projected({ a: 5.5, b: 4.5 }))).toEqual([{ teamId: "t1", points: 10 }]);
   });
 
   it("skips the group subtotals, which would roughly double every projection", () => {
-    // `_5010` and `_5020` are the outfield and goalie groups and sum to the team
-    // total on their own — the same two phantoms `mapLivePlayerPoints` drops.
+    // `_5010` and `_5020` are the outfield and goalie groups, which on their own sum to the team total.
     expect(mapProjectedTotals(projected({ a: 5.5, b: 4.5, _5010: 5.5, _5020: 4.5 }))).toEqual([
       { teamId: "t1", points: 10 },
     ]);
@@ -319,8 +288,7 @@ describe("mapProjectedTotals", () => {
 });
 
 describe("mapBenchPlayerPoints", () => {
-  // Rehearsal period 5, read 24 Sep 2026 with `playerViewType: "2"`: TEST2's
-  // eleven made 34 and two of his four reserves were priced, at 1 and 3.
+  // Rehearsal period 5 with `playerViewType: "2"`: TEST2's eleven made 34, and two of four reserves were priced, at 1 and 3.
   const squad = () => mapBenchPlayerPoints(bench as RawLiveScoring)[0];
 
   it("prices the reserves who played, and only them", () => {

@@ -19,10 +19,10 @@ export interface SeasonStrengthConfig {
   settleGames: number;
 }
 
-/** The reading the backtest settled on (PLATFORM_NOTES, "Our player rating…"). */
+/** The weighting the backtest settled on. */
 export const STRENGTH_SO_FAR: SeasonStrengthConfig = { goalsShare: 0.5, settleGames: 6 };
 
-export interface StrengthSoFar {
+interface StrengthSoFar {
   attack: number;
   defence: number;
 }

@@ -2,8 +2,8 @@ import type { StoryFace } from "../face";
 import type { MatchupContext } from "./brief";
 import { counted } from "./state";
 
-// The draft report's cover: one photograph for the article, of the lead match-up's key man, printed through the ink by
-// the page (Craig, 30 Sep 2026: "remove those thumbnails, i mean as a cover photo for an article"). The desk's choice.
+// The draft report's cover: one photograph for the article, of the lead match-up's key man, chosen by the desk and
+// printed through the ink by the page.
 
 /** The lead match-up's key man: the first man of its story's cast; without one, the winner's top scorer, both sides'
  *  when level; null when nobody has points. */

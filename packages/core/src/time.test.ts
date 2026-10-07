@@ -23,11 +23,7 @@ describe("London time", () => {
   });
 
   it("hands back an unreadable date rather than throwing", () => {
-    // Every one of these takes an ISO string from a provider we do not control.
-    // `Intl.format` throws on an invalid date, and these are called during
-    // render — so a malformed string is a page that fails to render over a date
-    // it only mentions in passing. `londonDate` guarded this and its three
-    // siblings did not, which is the asymmetry this test exists to hold.
+    // A provider's malformed date must not throw in render, where `Intl.format` would take the page down.
     for (const bad of ["", "not a date", "2026-13-45T99:99:99Z"]) {
       expect(londonDate(bad)).toBe(bad);
       expect(londonTime(bad)).toBe(bad);

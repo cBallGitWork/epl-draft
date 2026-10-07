@@ -1,5 +1,5 @@
 import { banned } from "../banned";
-import { columnRules, lawroProse, type CheckContext, type Fault, type Report } from "../predictions/checks";
+import { columnRules, faultLog, lawroProse, type CheckContext, type Fault, type Report } from "../predictions/checks";
 import { masked, mentionAt, sentences, wordCount } from "../predictions/prose";
 import { REPORT_AMERICAN, REPORT_FPL } from "../reports/words";
 import { AMERICAN_IZE, SHEETS_AMERICAN } from "../sheets/words";
@@ -19,8 +19,8 @@ export interface SeasonDraft {
 /** A side's line is filed under this section. */
 export const lineKey = (teamId: string) => `table:${teamId}`;
 
-/** The machine, FPL's own terms, and how a season ends (Craig, 5 Oct: "talk like its a power rankings, dont mention
- *  playoffs places"): a ranking of squads as drafted says how strong they are, never where they finish. */
+/** The machine, FPL's own terms, and how a season ends: a ranking of squads as drafted says how strong they are,
+ *  never where they finish. */
 const SEASON_BANNED: readonly string[] = [
   "simulation", "simulations", "simulated", "simulate", "predicted XI", "predicted eleven", "expected points", ...REPORT_FPL,
   "playoff", "playoffs", "play-off", "play-offs", "play-in", "semi", "semis", "semi-final", "semi-finals",
@@ -41,8 +41,7 @@ const PLACE = new RegExp(
 
 /** `squads` is each side's men by name, for the line that must name only its own. */
 export function checkSeason(draft: SeasonDraft, calls: SeasonCalls, squads: ReadonlyMap<string, readonly string[]>, ctx: CheckContext): Fault[] {
-  const faults: Fault[] = [];
-  const fault: Report = (section, check, severity, evidence) => faults.push({ section, check, severity, evidence });
+  const { faults, fault } = faultLog();
   const sides = new Map(calls.sides.map((side) => [side.teamId, side]));
   const rules = lawroProse(ctx, new Set(calls.sides.map((side) => side.name)), fault);
 

@@ -1,6 +1,4 @@
-// The team-news desk's vocabulary. The prompt is built from these arrays and the editor checks
-// against them, so the rule the writer is given and the rule it is marked on cannot drift.
-// Reviewed 26 Sep 2026 by an editor and a UK team-news reporter; their reasons are in the commit.
+// The team-news desk's vocabulary: the prompt is built from these arrays and the editor checks against them.
 
 /** British team-news phrases, each allowed this many times in one article so none becomes a tic. */
 export const SHEETS_LEXICON: readonly (readonly [phrase: string, most: number])[] = [
@@ -21,12 +19,10 @@ export const SHEETS_CAPPED: readonly (readonly [phrase: string, most: number])[]
   ["while", 1], ["both", 1], ["also", 1], ["meanwhile", 0],
 ];
 
-/** The house's own word for a thing, sent back when another is used (Craig, 26 Sep 2026:
- *  "Gameweeks, not rounds"). */
+/** The house's own word for a thing, sent back when another is used. */
 export const SHEETS_HOUSE: readonly (readonly [not: string, say: string])[] = [["rounds", "gameweeks"], ["round", "gameweek"]];
 
-/** Stock phrases a model reaches for and a reporter does not (Craig, 26 Sep 2026: "don't say to
- *  his name, that's ai shite"), sent back wherever they appear. */
+/** Stock phrases a model reaches for and a reporter does not, sent back wherever they appear. */
 export const SHEETS_STOCK: readonly string[] = [
   "to his name", "of late", "the same span", "the same stretch", "the same run", "his recent run", "recent weeks",
   "arrives with", "across his last", "over his last", "in his last", "so far this season", "brings with him",
@@ -52,8 +48,8 @@ export const SHEETS_ELSEWHERE: readonly string[] = [
   "Argentina", "Belgium", "Nations League", "international", "internationals", "camp", "call-up", "national team",
 ];
 
-/** American, or no football reporter's word, sent back wherever it appears (Craig, 26 Sep 2026:
- *  "Don't say sits, that's an American term. Benched"). "field" is not here: to field a side is British. */
+/** American, or no football reporter's word, sent back wherever it appears. "field" is not here: to field a side is
+ *  British. */
 export const SHEETS_AMERICAN: readonly string[] = [
   "sits", "sit", "sitting", "sat", "roster", "rosters", "lineup", "lineups", "center", "defense", "offense",
   "matchup", "matchups", "game-time", "questionable", "day-to-day", "slated", "tallied", "notched", "tapped",

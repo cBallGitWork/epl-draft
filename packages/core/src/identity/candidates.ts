@@ -2,9 +2,7 @@ import type { LeaguePlayer } from "../league/types";
 import { fplNameVariants, normalizeName, surname, tokens } from "./normalize";
 import { tokenSetRatio } from "./similarity";
 
-// What counts as the same footballer written two ways. Kept apart from match.ts,
-// which decides who gets assigned to whom: one file answers "are these the same
-// name", the other "given that, who claims whom".
+// Whether two spellings are the same footballer; match.ts decides who claims whom.
 
 /** The FPL side of the match, reduced to what matching needs. */
 export interface FplCandidate {
@@ -19,18 +17,8 @@ export function candidateName(candidate: FplCandidate): string {
   return `${candidate.firstName} ${candidate.secondName}`.trim();
 }
 
-/** Does `candidate` plausibly contain `name`, or is it a different player who
- *  merely shares a given name?
- *
- *  token_set_ratio scores containment at 100, so "Gabriel" ties perfectly with
- *  Arsenal's "Gabriel" AND with "Gabriel Jesus". Requiring the surname token to
- *  appear rejects the wrong one while accepting every genuine case — FPL's bare
- *  "Raya" still matches "David Raya Martín".
- *
- *  `name` must be in reading order. Fantrax's raw form is surname-first, where
- *  the last token is the GIVEN name — guarding on that asks whether the
- *  candidate contains "Danny", and rejects Daniel Ballard for not being called
- *  Danny. */
+/** Whether `candidate` carries `name`'s surname, since containment scores 100 ("Gabriel" in "Gabriel Jesus").
+ *  `name` must be in reading order: Fantrax's surname-first form ends on the given name. */
 export function surnameAgrees(name: string, candidate: FplCandidate): boolean {
   const target = surname(name);
   if (target === "") return false;

@@ -1,24 +1,7 @@
 import type { Club, Fixture } from "./types";
 
-// The Premier League table, computed from finished fixtures.
-//
-// **Computed, and it has to be.** FPL's bootstrap carries `played`, `win`,
-// `draw`, `loss` and `points` on every club and every one of them is nought on
-// all twenty with two gameweeks finished and signed off (re-counted 2 Sep 2026)
-// — the same shape of dead field as `squad_number`. A field that is always
-// nought is not a field, so the table is built from results rather than read.
-//
-// `position` is the exception and is still not a way out: it is non-zero and
-// distinct on all twenty, but it sits beside a `played` of nought on every club,
-// so whatever it is ordering it is not a record anybody has played. This file
-// used to say it was nought too, which was wrong about the field and right about
-// the conclusion.
-//
-// This belongs in the FOOTBALL layer precisely because its rules are fixed for
-// everyone: three for a win, goal difference, then goals scored, is the
-// Premier League's own arrangement and not a setting anybody can change. That
-// is the layer split's whole test — a league layer may hold no such constant,
-// and this one may.
+// The Premier League table, computed from finished fixtures: bootstrap's `played`, `win`, `draw`, `loss` and `points`
+// are nought on every club, and its `position` orders no record anybody has played.
 
 /** Three for a win, one for a draw. A rule of the competition, not of ours. */
 const WIN = 3;
@@ -26,10 +9,7 @@ const DRAW = 1;
 
 export interface TableRow {
   clubId: number;
-  /** FPL's season-stable club code — what the crest URL is keyed on, and the
-   *  only one of the two identifiers that may be persisted. `clubId` is
-   *  per-season and must never reach a URL, a mapping file or disk
-   *  (CODE_RULES §3). */
+  /** FPL's season-stable club code, which keys the crest; `clubId` is per-season and never reaches a URL or disk. */
   code: number;
   name: string;
   shortName: string;
@@ -43,8 +23,7 @@ export interface TableRow {
   points: number;
 }
 
-/** The table as it stands after every finished fixture. Provisional by nature
- *  while a round is being played, which is what a league table is. */
+/** The table after every finished fixture: points, goal difference, goals scored, then name. */
 export function leagueTable(fixtures: readonly Fixture[], clubs: readonly Club[]): TableRow[] {
   const rows = new Map<number, TableRow>(
     clubs.map((club) => [
@@ -61,15 +40,12 @@ export function leagueTable(fixtures: readonly Fixture[], clubs: readonly Club[]
   );
 
   for (const fixture of fixtures) {
-    // A score is only a result once the match is over: FPL writes running
-    // scores onto a fixture in play, and a table that counted those would move
-    // a club up the order for being ahead at half time.
+    // A score is a result only once the match is over: FPL writes running scores onto a match in play.
     if (fixture.status !== "finished") continue;
     if (fixture.homeScore === null || fixture.awayScore === null) continue;
     const home = rows.get(fixture.homeClubId);
     const away = rows.get(fixture.awayClubId);
-    // A fixture naming a club this snapshot does not carry is not half a
-    // result: it counts for neither side rather than for one.
+    // A fixture naming a club this snapshot does not carry counts for neither side.
     if (home === undefined || away === undefined) continue;
 
     score(home, fixture.homeScore, fixture.awayScore);

@@ -4,11 +4,7 @@ import type { StandingsRow } from "../types";
 import type { RawStandingsPage } from "./standingsPage";
 import standingsPage from "./__fixtures__/standingsPage.json";
 
-// The rehearsal league mid-gameweek 2, captured 29 Aug 2026 — the first read
-// with anything but zeroes in it, and therefore the first that could tell wins
-// from draws from losses at all. The page the table is drawn from, which since
-// 31 Aug is the whole of it: the fxea array was read alongside for `gamesBack`
-// and that column went when the table became a football one.
+// The rehearsal league's standings page mid-gameweek 2, with wins, draws and losses in it.
 
 describe("mapStandings", () => {
   const rows = mapStandings(standingsPage as RawStandingsPage);
@@ -29,16 +25,13 @@ describe("mapStandings", () => {
   });
 
   it("keeps points and fantasy points apart", () => {
-    // The table that made the old one wrong: third place scored more than
-    // fourth AND more than the leader's beaten opponent, and still has nought.
+    // Third place scored more than fourth and than the leader's beaten opponent, and still has nought.
     const third = rows[2];
     expect(third?.pointsFor).toBe(47);
     expect(third?.points).toBe(0);
   });
 
-  // The page carries the standings AND one table per played round, and the
-  // round tables name teams too. Picking by position or by counting tables would
-  // read gameweek 2's results as a league table.
+  // The round tables beside the standings name teams too; picked by position, gameweek 2 would read as the table.
   it("takes the standings table and not the round tables beside it", () => {
     expect((standingsPage as RawStandingsPage).tableList).toHaveLength(2);
     expect(rows.every((row) => row.teamId.length > 0)).toBe(true);
@@ -49,16 +42,14 @@ describe("mapStandings", () => {
     const table = page.tableList?.[0];
     const cells = table?.header?.cells ?? [];
     const rowCells = table?.rows?.[0]?.cells ?? [];
-    // Swap wins with losses, header and body together, as their own site would
-    // if a manager reordered the columns.
+    // Swap wins with losses, header and body together, as a manager reordering columns would.
     [cells[0], cells[2]] = [cells[2]!, cells[0]!];
     [rowCells[0], rowCells[2]] = [rowCells[2]!, rowCells[0]!];
     expect(mapStandings(page)[0]).toMatchObject({ won: 1, lost: 0 });
   });
 
   it("returns nothing for a league nobody has joined", () => {
-    // What the real league answers every day until 10 Oct: the table is there,
-    // with no rows in it.
+    // What an undrafted league answers: the table, with no rows in it.
     const empty: RawStandingsPage = {
       tableList: [{ caption: "Standings", fixedHeader: { cells: [{ key: "team" }] }, rows: [] }],
     };
@@ -66,9 +57,7 @@ describe("mapStandings", () => {
     expect(mapStandings({})).toEqual([]);
   });
 
-  // Fantrax publishes no played column — their header is win, draw, loss,
-  // points, winpc, wwOrder, pointsFor, pointsAgainst, streak. This one is ours,
-  // and it is the only number on the table that is.
+  // Fantrax publishes no played column; ours is the only number on the table we work out.
   it("adds up a played column Fantrax does not publish", () => {
     expect((standingsPage as RawStandingsPage).tableList?.[0]?.header?.cells
       ?.some((cell) => cell.key === "played")).toBe(false);
@@ -85,9 +74,7 @@ describe("mapStandings", () => {
     expect(mapStandings(page)[0]?.played).toBe(6);
   });
 
-  // The column that replaced games-back, and the one a head-to-head league most
-  // needs: `123` outscored test3 over the round and sits below them on nought,
-  // because they were drawn against someone who put 63 past them.
+  // Points against is where a head-to-head draw shows: third place conceded 63 and sits on nought.
   it("reads points against, which is where a head-to-head draw shows", () => {
     expect(rows.map((row) => row.pointsAgainst)).toEqual([35, 37, 63, 45]);
     expect(rows[2]).toMatchObject({ pointsFor: 47, pointsAgainst: 63, points: 0 });

@@ -5,7 +5,7 @@ import type { Fixture, PlayerMatchStats } from "./types";
 const row = (over: Partial<PlayerMatchStats>): PlayerMatchStats => ({
   playerId: 1, fixtureId: 1, minutes: 0, goals: 0, assists: 0, cleanSheet: false,
   goalsConceded: 0, ownGoals: 0, penaltiesSaved: 0, penaltiesMissed: 0, yellowCards: 0,
-  redCards: 0, saves: 0, bonus: 0, bps: 0, defensiveContribution: 0, expectedGoals: 0,
+  redCards: 0, saves: 0, expectedGoals: 0,
   expectedAssists: 0, fplPoints: 0, starts: 0, ...over,
 });
 
@@ -42,10 +42,7 @@ describe("playedRounds", () => {
   });
 
   it("keeps a round holding a postponed fixture, which never reads as finished", () => {
-    // FPL leaves a rearranged match in its ORIGINAL round, so gameweek 2 has
-    // nine finished fixtures and one still upcoming in February. `gameweekStatus`
-    // calls that round "upcoming" for months; dropping it here would shorten
-    // every player's denominator without saying so.
+    // FPL leaves a rearranged match in its original round; dropping the round would shorten every denominator.
     const rounds = playedRounds(
       [
         fixture({ id: 1, gameweek: 2, status: "finished" }),

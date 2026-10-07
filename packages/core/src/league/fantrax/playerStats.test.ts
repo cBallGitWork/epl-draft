@@ -3,8 +3,8 @@ import pool from "./__fixtures__/poolWindow.json";
 import sheet from "./__fixtures__/statsWindow.json";
 import { mapPlayerStats } from "./playerStats";
 
-// Two date-window reads, 18 Sep to 8 Oct 2026: the rehearsal league's free agents with its points, and the
-// stats league's outfield sheet with every category it tracks.
+// Two date-window reads: the rehearsal league's free agents with its points, and the stats league's outfield
+// sheet with every category it tracks.
 
 describe("mapPlayerStats over a date window", () => {
   const men = new Map(mapPlayerStats(pool).map((man) => [man.name, man]));

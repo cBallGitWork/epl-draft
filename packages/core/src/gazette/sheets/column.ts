@@ -37,7 +37,7 @@ export function assembleSheets(input: {
   };
 }
 
-/** What the piece is, plainly (Craig, 26 Sep 2026: "'Every side as it stood' — what does that mean"). */
+/** What the piece is, said plainly. */
 export function standfirst(): string {
   return "The deadline has passed. The line-ups, by head-to-head.";
 }
@@ -58,7 +58,7 @@ export function plainLine(team: TeamFacts): string {
   const name = team.sheet.teamName;
   const shape = team.formation === null ? "" : ` in a ${team.formation}`;
   const out = team.flags.flatMap((flag) => (flag.kind === "out" ? [printName(flag.man.player)] : []));
-  // Who cannot play leads the desk's line as it leads the writer's (the editor's rule, 26 Sep 2026).
+  // Who cannot play leads the desk's line as it leads the writer's.
   const absent = out.length === 0 ? "" : ` ${listed(out)} ${out.length === 1 ? "is" : "are"} named but out this weekend.`;
   const changes = team.changes;
   if (changes === null) return `${name} name their first sheet${shape}.${absent}`;

@@ -5,7 +5,7 @@ import { isResolved, type ResolvedPlayer, type RosteredTeam } from "../join/rost
 import { CLEAN_SHEET, categoryPoints, type ScoringRules } from "../league/scoring";
 
 // The Points Dodgers: the league's men who came closest to points in the real football and did not get them.
-// Goals, assists and clean sheets are dodged one by one, so a scorer can still dodge an assist (Craig, 30 Sep 2026).
+// Goals, assists and clean sheets are dodged one by one, so a scorer can still dodge an assist.
 
 /** A moment he nearly returned, at the clock as printed. */
 export interface NearMiss {

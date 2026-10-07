@@ -3,20 +3,9 @@ import type { RawPlEvent, RawPlFixture } from "./raw";
 import type { RawPlMatchStats } from "./rawStats";
 import { codeOf } from "./teamSheet";
 
-// Pure raw → domain. No clock, no network, no environment (CODE_RULES §5).
-//
-// The join to everything else in the app is done here and only here, and it is
-// done on ids rather than on names: this provider's `altIds.opta` is FPL's
-// `opta_code` for a player and FPL's `fixture.code` with a `g` in front for a
-// match. Both were verified rather than assumed on 4 Sep 2026 — `opta_code` is
-// non-null on all 652 elements, and a full match's lineup and bench joined 40 of
-// 40. Nothing here matches a name, which CODE_RULES §3 forbids at runtime.
+// Pure raw → domain, joined to FPL on ids only: `altIds.opta` is FPL's `opta_code`, or `g` + its `fixture.code`.
 
-/** Opta's vocabulary, reduced to the seven that matter.
- *
- *  Written out rather than derived: the strings are theirs, the names are ours,
- *  and a mapping table is the only honest place for a translation. Types absent
- *  from this table are dropped — 981 of a round's 1,083 events. */
+/** Opta's vocabulary reduced to our seven kinds; a type missing here is dropped. */
 const KINDS: Record<string, MatchEventKind> = {
   goal: "goal",
   "penalty goal": "penalty-goal",
@@ -24,20 +13,12 @@ const KINDS: Record<string, MatchEventKind> = {
   "VAR cancelled goal": "disallowed-goal",
   "yellow card": "yellow-card",
   "red card": "red-card",
-  // **Opta spells it with no space, and it is a SENDING-OFF.** Counted 21 Sep
-  // 2026 over the 50 fixtures of gameweeks 1-5: `red card` 4 and
-  // `secondyellow card` 2, so a table without this line drops a third of the
-  // men sent off and the wire prints eleven against ten with nothing to say
-  // why. The consequence is one red card, whatever the referee reached for.
+  // Opta's spelling, no space, and a sending-off: without this line a third of the reds vanish.
   "secondyellow card": "red-card",
   substitution: "substitution",
 };
 
-/** The fixture's FPL code, from the provider's own id for it.
- *
- *  `{opta: "g2645221"}` against FPL's `code: 2645221`. Null when the fixture
- *  carries no `altIds`, which only a read made with `altIds=true` does — the
- *  round read and the detail read both do (50 of 50, GW1-5, 23 Sep 2026). */
+/** The fixture's FPL code from `{opta: "g2645221"}`; null without `altIds`, which needs `altIds=true` on the read. */
 export function plFixtureCode(fixture: RawPlFixture): number | null {
   const opta = fixture.altIds?.opta;
   if (opta === undefined || !opta.startsWith("g")) return null;
@@ -48,81 +29,29 @@ export function plFixtureCode(fixture: RawPlFixture): number | null {
 /** One line of Opta's commentary, as a report prints it. */
 export interface PlCommentaryLine {
   id: number;
-  /** Opta's own type, verbatim — `goal`, `attempt saved`, `corner`, `lineup`.
-   *  Not mapped to our seven kinds: a REPORT wants the whole vocabulary, and
-   *  `mapMatchEvents` exists precisely to reduce it. */
+  /** Opta's own type verbatim (`goal`, `attempt saved`, `corner`): a report wants the whole vocabulary. */
   type: string;
   /** `"26"`, `"45+2"` — for reading, never for sorting. */
   minute: string;
-  /** Elapsed IN THIS FIXTURE. Orders one match and runs BACKWARDS across the
-   *  interval (`end 1` 2910, second-half `start` 2700), which is survivable here
-   *  only because a report is one match. It may never order a round. */
+  /** Elapsed in THIS fixture, and runs backwards across the interval: it orders one match, never a gameweek. */
   seconds: number;
   text: string;
 }
 
-/** Opta's minute-stamped commentary for one match, newest first.
- *
- *  **The whole vocabulary, which is the difference from `mapMatchEvents`.** That
- *  one keeps seven kinds because the Live tab prints a wire and 1,083 events a
- *  round is a firehose; a match report is the opposite question — one match, and
- *  everything that happened in it. Measured across GW1-3: 2,215 events over 30
- *  fixtures, 99 in a complete one.
- *
- *  **Newest first**, which is a live decision rather than a literary one: the
- *  tab is open while the match is on, and the thing a reader wants is the last
- *  thing that happened. It reads as a report afterwards either way, the way a
- *  live blog does.
- *
- *  An event with no time or no text is dropped — one we cannot place in the
- *  match is not one we can put in a timeline, and `end 14` carries a junk label
- *  of `"01"` which is exactly the case that rule catches. */
-/** Opta's two names for a foul.
- *
- *  They are the two halves of one event: `free kick lost` is literally *"Foul by
- *  Florian Wirtz (Liverpool)"* and `free kick won` is *"Julio Enciso (Ipswich
- *  Town) wins a free kick on the left wing"*. There is no `foul` type at all —
- *  which is why this is a table and not a guess.
- *
- *  **Counted, 11 Sep 2026, across all ten fixtures of gameweek 3**: 1,141 events,
- *  of which `free kick lost` 246 and `free kick won` 243 — **489, or 42.9% of the
- *  whole feed**. Nothing else comes near: the next biggest type is `miss` at 8.9%.
- *  So this is not a tidy-up at the margin; it is nearly half the rows. */
+/** Opta's two halves of a foul, `free kick lost` and `free kick won`: nearly half the feed's rows. */
 const SKIPPED_TYPES: ReadonlySet<string> = new Set([
   "free kick won",
   "free kick lost",
-  // **And the offside** (Craig, 11 Sep 2026: *"and no offides either"*). 48 of
-  // the same 1,141, or 4.2% — small beside the fouls and the same kind of row:
-  // a whistle that stopped play and changed nothing about the match. With the
-  // fouls it is 47.1% of the feed.
+  // The offside too: a whistle that stopped play and changed nothing.
   "offside",
 ]);
 
-/** The commentary with the rows a reader does not want taken out — the fouls
- *  and the offsides.
- *
- *  Craig, 11 Sep 2026: *"to remove clutter, we could hide all fouls/free kicks
- *  won"*, then *"and no offides either"*.
- *
- *  **Named for the judgement rather than the set**, because the set has already
- *  grown once. `withoutFouls` was the name until the offside joined it, and a
- *  caller reading `worthReading(whole)` does not have to be updated the next
- *  time a type earns its way out.
- *
- *  **This reverses a principle, and the principle was written before anyone
- *  counted.** `plCommentary`'s own docblock argues the whole vocabulary belongs
- *  in a report — *"one match, and everything in it"* — against `mapMatchEvents`'
- *  seven kinds. That holds for everything except this pair, and the reason is
- *  the denominator above: a feed where two types are 43% of the rows is not a
- *  record of a match, it is a record of its fouls with a match between them.
- *
- *  A function rather than a filter inside `plCommentary`, because the mapper's
- *  job is to mirror the payload (CLAUDE.md) and this is a judgement about what a
- *  reader wants. A caller that genuinely wants every line still has one. */
+/** The commentary without the fouls and offsides; a caller wanting every line skips this. */
 export function worthReading(lines: readonly PlCommentaryLine[]): PlCommentaryLine[] {
   return lines.filter((line) => !SKIPPED_TYPES.has(line.type));
 }
 
+/** Opta's whole commentary for one match, newest first; an event with no time or no text is dropped. */
 export function plCommentary(events: readonly RawPlEvent[]): PlCommentaryLine[] {
   const lines: PlCommentaryLine[] = [];
   for (const event of events) {
@@ -135,36 +64,19 @@ export function plCommentary(events: readonly RawPlEvent[]): PlCommentaryLine[] 
   return lines.sort((a, b) => b.seconds - a.seconds);
 }
 
-/** The commentary, reduced to what a fantasy league reads and joined to FPL.
- *
- *  **`fixtureCode` is a parameter and not read off the payload**, because the
- *  textstream's own fixture header carries no `altIds` at all — only the detail
- *  read does. A mapper that went looking for it there would answer with an empty
- *  round and no error.
- *
- *  `codes` comes from `plPlayerCodes` on the same fixture's detail. It is
- *  injected rather than fetched so this stays pure and testable (CODE_RULES §5),
- *  and because the football layer has no business knowing how the app caches.
- *
- *  Events arrive oldest-first and are returned that way. A wire wants the newest
- *  first and a scoresheet wants the oldest first, so neither ordering is imposed
- *  here. */
+/** The commentary reduced to our seven kinds and joined to FPL, oldest first as it arrived.
+ *  `fixtureCode` is passed in because the textstream's header carries no `altIds`; `codes` is `plPlayerCodes`. */
 export function mapMatchEvents(
   events: readonly RawPlEvent[],
   fixtureCode: number,
   codes: Map<number, number>,
-  /** This fixture's kick-off in epoch milliseconds, from the round read. Null
-   *  when the match is dated but not timed, in which case its events carry no
-   *  `absolute` and a round-wide sort leaves them out rather than placing them
-   *  in 1970. */
+  /** Kick-off in epoch ms, from the gameweek read; null leaves `absolute` null so a gameweek sort skips them. */
   kickoffMillis: number | null = null,
 ): MatchEvent[] {
   const mapped: MatchEvent[] = [];
   for (const event of events) {
     const kind = KINDS[event.type];
-    // Every one of the seven carried a `time` across gameweeks 1-3, but the
-    // field is optional on the wire — and an event we cannot place in the match
-    // is not one we can put in a timeline.
+    // An event we cannot place in the match cannot go in a timeline.
     const minute = event.time?.label;
     const seconds = event.time?.secs;
     if (kind === undefined || minute === undefined || seconds === undefined) continue;
@@ -183,22 +95,8 @@ export function mapMatchEvents(
   return mapped;
 }
 
-/** Every goal in a round, from the one read that carries them all.
- *
- *  The round's fixtures answer with a `goals` array per match — scorer,
- *  assister, minute — so the round's goals cost one request rather than one per
- *  live fixture. Counted across gameweeks 1-3, the array reconciles with the
- *  scoreline on 21 of 21 played fixtures.
- *
- *  Returned as `MatchEvent` so a wire draws goals from this and cards from the
- *  commentary stream without knowing which read each came from. The `id` is
- *  synthesised — this payload publishes none — from the fixture and the goal's
- *  own clock, which is stable across polls because both halves are.
- *
- *  **Ordered by `kickoff + clock`, and that is the whole reason `absolute` is
- *  here.** A goal's clock is elapsed time from its own kick-off, so a 12:30
- *  match and a 17:30 one both start at nought; a round interleaved on the clock
- *  alone puts the afternoon in the wrong order. */
+/** Every goal in a gameweek from the one read that carries them all, as `MatchEvent` with a synthesised id.
+ *  `absolute` is `kickoff + clock`: the clock alone restarts at nought in every match and misorders the day. */
 export function mapRoundGoals(
   fixtures: readonly RawPlFixture[],
   codes: Map<number, number>,
@@ -222,8 +120,7 @@ export function mapRoundGoals(
         minute: minute.split("'")[0],
         seconds: secs,
         absolute: kickoff === undefined ? null : kickoff + secs * 1000,
-        // The assist is a real absence on 10 of 32, so the key is present and
-        // the value is null rather than the array being one long.
+        // The assist slot is always present, null when nobody assisted.
         players: [
           codes.get(goal.personId) ?? null,
           codeOf(codes, goal.assistId),
@@ -235,36 +132,18 @@ export function mapRoundGoals(
   return goals;
 }
 
-/** The stride that keeps a synthesised goal id inside its own fixture.
- *
- *  This payload publishes no id for a goal, so one is made from the fixture and
- *  the goal's own clock — stable across polls because both halves are. The
- *  stride only has to exceed the longest match anyone will ever play: ninety
- *  minutes is 5,400 seconds, extra time takes it to 7,200, and this is an order
- *  of magnitude clear of both. It was written inline as `100_000` and said none
- *  of that. */
+/** Stride that keeps a synthesised goal id inside its fixture: must exceed any match's seconds (7,200 with extra time). */
 const SECONDS_PER_MATCH = 100_000;
 
-/** The round read's own one-letter vocabulary, which is not the commentary's. */
+/** The gameweek read's own one-letter vocabulary, which is not the commentary's. */
 const GOAL_KINDS: Record<string, MatchEventKind> = {
   G: "goal",
   P: "penalty-goal",
   O: "own-goal",
 };
 
-/** One side's Opta metrics, by name, with nought for the ones they omitted.
- *
- *  **The defaulting is the whole function.** `/stats/match` leaves out a metric
- *  whose value is nought — red cards appear on 1 of 40 team-sides — so a caller
- *  reading the array directly gets `undefined` for "no red cards" and, following
- *  the app's usual grammar, prints a dash for a fact we hold. `docs/rules/DESIGN.md` §7's
- *  "Absence is `—`, never `0`" is about a figure the provider could not give;
- *  this is a provider saying nought by saying nothing, and it is the one place
- *  in the app where defaulting to zero is the honest answer.
- *
- *  Keyed by the provider's team id as it keys them. Returns null for a fixture
- *  they have no stats for at all — which IS an absence, and a caller may not
- *  turn that into a board of noughts. */
+/** One side's Opta metrics by name, nought for any omitted: `/stats/match` says nought by leaving the metric out.
+ *  Null when the fixture has no stats for that side at all, which IS an absence and never a board of noughts. */
 export function plMatchMetrics(
   stats: RawPlMatchStats,
   teamId: number,

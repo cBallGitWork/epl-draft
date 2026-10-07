@@ -4,8 +4,7 @@ import type { StoryBinStat } from "./cargo";
 import type { BinMan, BinXi } from "./select";
 
 // The desk's key stats for the Bin XI, over the men printed on the page and nobody else. xG and xA
-// print here as figures and never in the prose (Craig, 28 Sep 2026). A line whose leader has nought
-// is left out: a stat box proves, it does not sneer.
+// print here as figures and never in the prose; a line whose leader has nought is left out.
 
 const { topMen: TOP_MEN, expectedGoals: TOP_XG, expectedAssists: TOP_XA } = BIN_XI.stats;
 

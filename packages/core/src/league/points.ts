@@ -1,54 +1,25 @@
-// What a squad and its men are worth in one period: what they have scored, and
-// what Fantrax reckons they will.
-//
-// Split out of `types.ts` when it crossed CODE_RULES' 300-line ceiling, and this
-// is the half that came away whole — every type below is a number Fantrax puts
-// on a team or on one of its players for a single period, and they share the one
-// rule the app never breaks about those: **their numbers are authoritative and
-// ours are labelled**. Nothing here may be computed by us and nothing here may
-// be printed as anything but Fantrax's.
+// What a squad and its men are worth in one period, by Fantrax: read, never computed, printed only as theirs.
 
-/** What one squad has scored in one period, according to Fantrax.
- *
- *  Theirs, and that is the whole point: they run the competition, their scoring
- *  system is a commissioner setting, and the real league scores five categories
- *  FPL does not publish at all. We read this number and never compute one — an
- *  engine of our own could only have produced a systematically wrong total for
- *  defenders, midfielders and keepers, and would have had to say so on screen. */
+/** What one squad has scored in one period, according to Fantrax. */
 export interface LiveTeamScore {
   teamId: string;
   /** Null when Fantrax did not give a total. Absence is not nought. */
   points: number | null;
-  /** Active players whose fixture has not finished, or null when unknown. Names
-   *  nobody, so it is publishable even while the lineup gate is closed. */
+  /** Active players whose fixture has not finished, or null; names nobody, so it passes a closed lineup gate. */
   toPlay: number | null;
 }
 
-/** What Fantrax reckons a squad will score in a period nobody has played.
- *
- *  A separate type from `LiveTeamScore` and not a field on it, because a
- *  projection is a different claim from a score and the app has one rule it
- *  never breaks about those: their numbers are authoritative and ours are
- *  labelled. Nothing may print one of these as a total. */
+/** What Fantrax reckons a squad will score in an unplayed period; never printed as a total. */
 export interface TeamProjection {
   teamId: string;
-  /** Null when Fantrax projected nothing for this squad. Not nought: "they have
-   *  not guessed" and "they guess nothing" are different claims. */
+  /** Null when Fantrax projected nothing for this squad, never nought. */
   points: number | null;
 }
 
-/** What one player scored in one period, priced at the ROSTER SLOT his manager
- *  chose — the only per-player number that agrees with the team total beside it.
- *
- *  Fantrax's stat tables price the same man at his default position instead, and
- *  48 of the pool's 622 players are eligible at two. Because the deeper slot pays
- *  strictly more, an optimal lineup always files those men off their default, so
- *  the disagreement is the normal case for the players who matter rather than an
- *  edge one. */
+/** What one player scored in one period, priced at the roster slot his manager chose, not his default position. */
 export interface LivePlayerPoints {
   fantraxId: string;
-  /** His total. Nought is a real nought; a man with no football behind him is
-   *  absent from the list instead. */
+  /** His total; a man with no football behind him is absent from the list, never nought. */
   points: number;
   /** The categories that moved his total, for a breakdown. */
   categories: LivePlayerCategory[];
@@ -56,24 +27,17 @@ export interface LivePlayerPoints {
   counts: LivePlayerCategory[];
 }
 
-/** One category's contribution, in Fantrax's own identifiers.
- *
- *  Unnamed on purpose: what these ids are called is a league setting, published
- *  by `getLeagueInfo`, and the two leagues answer different vocabularies. The
- *  adapter that reads the scoring system names them; this one only carries them.
- */
+/** One category's contribution, by Fantrax's own ids; the names are a league setting from `getLeagueInfo`. */
 export interface LivePlayerCategory {
   /** `"{groupId}#{categoryId}"`. */
   category: string;
   /** Points, theirs. Signed: cards and goals against arrive negative. */
   points: number;
-  /** What he DID, as Fantrax renders it — "90" minutes, "1" goal. Null for a
-   *  category they priced without stating a count. */
+  /** What he did, as Fantrax renders it ("90" minutes); null where they priced it without a count. */
   value: string | null;
 }
 
-/** One squad's priced players for one period. Entries and not a Map: this
- *  crosses a cache boundary, and a Map does not survive serialisation. */
+/** One squad's priced players for one period; an array, since a Map does not survive the cache. */
 export interface LiveSquadPoints {
   teamId: string;
   players: LivePlayerPoints[];

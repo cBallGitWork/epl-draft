@@ -1,16 +1,8 @@
-// Open a dialog, measure it, and prove Escape closes it.
+// Open a dialog, measure it, and prove Escape closes it: none open, tap, one open at a measured width, Escape, none.
 //
 //   node tools/ui/dialog.mjs <route> [--selector '.pitch button'] [--width 390] [--team-cookie <file>]
 //
-// A dialog is the one piece of furniture a screenshot cannot check: it is absent
-// from the page until something is tapped, and the failure that matters — it opens
-// and will not close — leaves no trace in a still image. So the sequence is the
-// test: none open, tap, one open at a measured width, Escape, none open.
-//
-// The width is printed rather than asserted. What counts as too wide is a design
-// judgement per dialog, and a number in the output is what a reader can hold
-// against docs/rules/DESIGN.md; a threshold invented here would only be this file's opinion.
-//
+// The width is printed, not asserted: too wide is a judgement per dialog against docs/rules/DESIGN.md.
 // Exits non-zero when the dialog never opens, or opens and survives Escape.
 
 import { connect, parseArgs, teamCookie } from "./cdp.mjs";
@@ -29,8 +21,7 @@ const openCount = `document.querySelectorAll("dialog[open]").length`;
 const cdp = await connect();
 await cdp.setCookie(teamCookie(flags));
 await cdp.setViewport(width, 844);
-// Longer than the drawer's default: an authenticated squad page is the slowest
-// render in the app, and a tap dispatched before hydration hits a dead button.
+// Longer than the default: a signed-in squad page is the slowest render, and a tap before hydration hits a dead button.
 await cdp.open(route, 6000);
 
 const before = await cdp.js(openCount);

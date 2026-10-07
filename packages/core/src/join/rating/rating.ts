@@ -22,7 +22,7 @@ export interface RatedPart {
   points: number | null;
 }
 
-export interface MatchRating {
+interface MatchRating {
   /** Out of ten to one decimal; null for a cameo with nothing in it or a man the league did not score. */
   rating: number | null;
   /** His points after the opponent and the parts, which the mark is read from. */

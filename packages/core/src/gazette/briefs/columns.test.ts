@@ -74,9 +74,7 @@ describe("buildElevenBrief", () => {
     });
     expect(brief).toContain("BENCHED by his own manager");
     expect(brief).toContain("lining up 1-4-4-2");
-    // It asked for "ONE caption per man" until 3 Sep 2026 and Craig cut them:
-    // eleven one-sentence verdicts written from a name, a slot and a stat line
-    // have nowhere to go but the stat and a flourish.
+    // An argument for the side, never a caption per man.
     expect(brief).not.toContain("caption per man");
     expect(brief).toContain("No man gets his own sentence in turn");
   });

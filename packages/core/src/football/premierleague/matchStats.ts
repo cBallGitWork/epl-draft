@@ -1,44 +1,21 @@
 import { plMatchMetrics } from "./map";
 import type { RawPlMatchStats } from "./rawStats";
 
-// Championship Manager's Match Stats board, against Opta's own metric names.
-//
-// **`cm9900/22.jpg`'s thirteen rows, plus five simple ones** (Craig, 23 Sep 2026:
-// *"use more stats… possession etc"*, *"simple stats fine"*): possession, blocked
-// shots, interceptions, clearances and saves. All eighteen come off one
-// `/stats/match` call — 187 metrics a side, probed that day on Brentford 3-0
-// Chelsea. `docs/ui/reference/README.md` binds the citation — a CM claim names a
-// numbered shot and never a memory.
-//
-// **Opta's names are not English and the table is the only honest place to say
-// so.** `fk_foul_lost` is fouls COMMITTED and `fk_foul_won` is fouls WON, which
-// is the pair most likely to be wired up backwards; `total_throws` includes the
-// keeper's, which CM's "Throw-Ins" did not.
-//
-// **A metric worth nought is absent from the payload**, which inverts DESIGN §7's
-// "absence is —, never 0". `plMatchMetrics` already implements that defaulting
-// and this file inherits it: red cards appear on 1 of 40 team-sides because there
-// was exactly one red card.
+// Championship Manager's Match Stats board against Opta's own metric names, all off one `/stats/match` call.
+// Opta omits a metric worth nought, so `plMatchMetrics` reads a missing one as 0.
 
 /** One row of the board: a label and the two sides' figures. */
 export interface MatchStatRow {
-  /** Stable and ours, so a caller can single a row out without matching prose.
-   *  The two card rows are the reason it exists — CM prints their LABELS in
-   *  yellow and red, and a component testing `label === "Yellow Cards"` would
-   *  break on a word. */
+  /** Stable and ours, so a caller singles out a row (the two card rows) without matching its label. */
   key: string;
   label: string;
   home: number;
   away: number;
-  /** A percentage rather than a count. **This is a reading we derived**, which
-   *  is DESIGN §3's cyan slot exactly — and CM's own board agrees: its three
-   *  percentage rows are the three it prints in cyan. */
+  /** A percentage rather than a count: a reading we derived. */
   percent: boolean;
 }
 
-/** A metric name, or a numerator over a denominator that may take more than one
- *  metric to build. `over` is SUMMED, which is what lets aerials — published as
- *  won and lost with no total — use the same shape as passes. */
+/** A metric name, or a numerator over a SUMMED denominator, since aerials come as won and lost with no total. */
 type Source = string | { of: string; over: string[] };
 
 const ROWS: { key: string; label: string; source: Source; percent?: true }[] = [
@@ -62,8 +39,7 @@ const ROWS: { key: string; label: string; source: Source; percent?: true }[] = [
     source: { of: "accurate_pass", over: ["total_pass"] },
   },
   { key: "tackles", label: "Tackles Won", source: { of: "won_tackle", over: ["total_tackle"] } },
-  // Opta publishes aerials won and lost rather than a total, so the denominator
-  // is their sum. There is no `total_aerial`.
+  // There is no `total_aerial`: the denominator is won plus lost.
   { key: "headers", label: "Headers Won", source: { of: "aerial_won", over: ["aerial_won", "aerial_lost"] } },
   { key: "interceptions", label: "Interceptions", source: "interception" },
   { key: "clearances", label: "Clearances", source: "total_clearance" },
@@ -72,12 +48,7 @@ const ROWS: { key: string; label: string; source: Source; percent?: true }[] = [
   { key: "redCards", label: "Red Cards", source: "total_red_card" },
 ];
 
-/** A whole percentage, or nought when the side did none of the thing.
- *
- *  **Nought and not a dash**, which is the one place this file departs from the
- *  app's grammar and does it deliberately: a side with no tackles attempted won
- *  none, and the row is about a proportion of a real denominator rather than a
- *  figure the provider withheld. A dash here would read as "we do not know". */
+/** A whole percentage, nought when the side did none of the thing: a real proportion, never a withheld figure. */
 function share(of: number, over: number): number {
   return over === 0 ? 0 : Math.round((of / over) * 100);
 }
@@ -88,16 +59,7 @@ function figure(metric: (name: string) => number, source: Source): number {
   return share(metric(source.of), over);
 }
 
-/** The board for one match, home side first.
- *
- *  Null when the payload carries no stats for either side — which IS an absence
- *  and may not be drawn as thirteen noughts. `plMatchMetrics` answers null for a
- *  side they have nothing on, and one side missing is as unusable as both: a
- *  board is a comparison.
- *
- *  The team ids are the Premier League's own, which is what `/stats/match` keys
- *  its `data` on — `RawPlTeamScore.team.id`, and the same ids `PlTeamSheet`
- *  carries. Pure: no clock, no network (CODE_RULES §5). */
+/** The board for one match, home first, keyed on the Premier League's team ids; null unless both sides have stats. */
 export function plMatchBoard(
   stats: RawPlMatchStats,
   homeTeamId: number,

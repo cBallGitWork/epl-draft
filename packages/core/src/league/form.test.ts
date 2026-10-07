@@ -11,10 +11,8 @@ import leagueInfoDrafted from "./fantrax/__fixtures__/leagueInfoDrafted.json";
 import seasonResultsLive from "./fantrax/__fixtures__/seasonResultsLive.json";
 import standingsPage from "./fantrax/__fixtures__/standingsPage.json";
 
-// The rehearsal league on 29 Aug 2026, from the three payloads that meet here:
-// the standings page, the season results, and the pairings on `getLeagueInfo`. Gameweek 1 is settled, gameweek 2 was in play as they were
-// recorded, and gameweek 3 reads 0-0 for everybody because Fantrax's results
-// table numbers rounds nobody has played.
+// The rehearsal league on 29 Aug 2026 (standings, season results, `getLeagueInfo` pairings): gameweek 1 settled,
+// gameweek 2 in play, and gameweek 3 reading 0-0 for everybody though nobody has played it.
 
 const table = mapStandings(standingsPage as RawStandingsPage);
 const { matchups } = mapLeagueInfo(leagueInfoDrafted as RawLeagueInfo);

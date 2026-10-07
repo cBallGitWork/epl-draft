@@ -8,42 +8,21 @@ import type {
   PeriodRosters,
 } from "./types";
 
-// Pure read-side selectors over league state, kept out of the components so they
-// stay unit-testable — the same rule the football layer's selectors follow.
+// Pure read-side selectors over league state.
 
-/** A footballer in Fantrax's global EPL pool, seen through our competition.
- *
- *  Three sources meet here and they are three different things, which is why the
- *  pool entry stays nested rather than being flattened into one row: `player` is
- *  whole-of-Fantrax and identical in every league on the site, `eligiblePositions`
- *  and `status` are what OUR commissioner has decided, and `ownerTeamId` is this
- *  week's roster. Flattening them would put the commissioner's opinion and
- *  Fantrax's global one in adjacent fields with nothing left to say which is
- *  which. */
+/** A footballer in Fantrax's global pool, seen through our competition: `player` is Fantrax-wide and stays nested,
+ *  apart from our commissioner's `eligiblePositions` and `status` and this week's `ownerTeamId`. */
 export interface PoolPlayer {
   player: LeaguePlayer;
-  /** What this league deems him eligible to play as. Empty when it has not said
-   *  — never a guess taken from `player.position`, which is Fantrax's global
-   *  default and not our commissioner's setting. */
+  /** What this league deems him eligible to play as; empty when unsaid, never a guess from `player.position`. */
   eligiblePositions: string[];
-  /** Fantrax's own code — "FA", "WW", "T". Raw, because the vocabulary is theirs:
-   *  an undrafted league marks all 697 players "WW" while a drafted one splits
-   *  them across all three, so anything keying off a particular letter would be
-   *  reading a league state as a player fact. */
+  /** Fantrax's own code ("FA", "WW", "T"), raw: a letter describes the league's state, not the player. */
   status: string;
-  /** Null when nobody holds him — which is every player in a league that has not
-   *  drafted, and is not the same statement as `status`. */
+  /** Null when nobody holds him, which is not the same statement as `status`. */
   ownerTeamId: string | null;
 }
 
-/** Whether a manager has a stake in this pairing.
- *
- *  A null team id — a reader who has not signed in — has a stake in none of
- *  them, which is the neutral list rather than a special case to branch on.
- *
- *  Here rather than in a component because two screens both order by it and
- *  mark by it, and two spellings of "is this one mine" is how a list comes to
- *  put a card first and then not mark it. */
+/** Whether a manager has a stake in this pairing; a reader not signed in (null) has a stake in none. */
 export function pairingInvolves(pairing: PeriodPairing, teamId: string | null): boolean {
   return teamId !== null && (pairing.home.teamId === teamId || pairing.away.teamId === teamId);
 }
@@ -54,21 +33,8 @@ export interface PeriodPairing {
   away: LeagueTeam;
 }
 
-/** This period's pairings, resolved. The consumer `LeagueMatchup` was flattened
- *  for: one row per pairing per period makes selecting a period a filter, and
- *  resolving the ids here rather than in a component keeps the second copy of a
- *  team name out of the view — the same reason the matchup carries ids at all.
- *
- *  Empty is a real answer, not a failure, and it happens two ways we have seen:
- *  a league with no teams yet (the real league, every day until 10 Oct), and a
- *  period the schedule does not cover — a bye, or a schedule that starts at
- *  period 6 while Fantrax serves period 1. Both render as "no pairings", never
- *  as a crash.
- *
- *  A pairing naming a team id `teams` does not carry is dropped whole rather
- *  than half-rendered: a matchup with one side is not a matchup, and inventing
- *  a placeholder team would put a name we made up beside fifteen names Fantrax
- *  gave us. */
+/** This period's pairings, ids resolved to teams; empty for a league with no teams or a period unscheduled.
+ *  A pairing naming a team `teams` does not carry is dropped whole, never half-drawn. */
 export function periodPairings(
   matchups: readonly LeagueMatchup[],
   teams: readonly LeagueTeam[],
@@ -84,13 +50,7 @@ export function periodPairings(
     });
 }
 
-/** The pool, ordered as a person reads it and answering "whose is he".
- *
- *  Ownership is computed from the rosters rather than taken from `status`, and
- *  the two are not interchangeable: `status` says what may be done with a player
- *  under the league's transaction rules, the rosters say who has him. A league
- *  with no teams answers "nobody owns anybody" while still calling all 697
- *  waiver-wire, and both statements are true. */
+/** The pool by name, answering "whose is he" from the rosters, never from `status`. */
 export function leaguePool(
   pool: readonly LeaguePlayer[],
   states: readonly LeaguePlayerState[],
@@ -104,8 +64,7 @@ export function leaguePool(
 
   return pool
     .map((player) => {
-      // A pool entry our league has no state for is still a real footballer, so
-      // he is listed with nothing claimed about him rather than dropped.
+      // A pool entry with no league state is listed with nothing claimed about him, never dropped.
       const state = byId.get(player.fantraxId);
       return {
         player,
@@ -117,20 +76,8 @@ export function leaguePool(
     .sort((a, b) => a.player.displayName.localeCompare(b.player.displayName));
 }
 
-/** One team's pairing this period, told from that team's side.
- *
- *  `periodPairings` reports Fantrax's home and away because that is what the
- *  schedule says, and every screen that shows a head-to-head to a particular
- *  manager reads his own team first; `home` is kept only for the ground the
- *  tie is drawn over. Three of them had written
- *  `pairing.home.teamId === mine ? … : …` for themselves — his own matchup on
- *  the live tab, his squad screen naming Saturday's opponent, and the board —
- *  which is the third occurrence and the point at which it stops being a
- *  coincidence.
- *
- *  Undefined is ordinary rather than a fault: a bye, a period the schedule does
- *  not cover, a league that has not drafted, or a team id from another league. */
-export interface HeadToHead {
+/** One team's pairing this period, told from that team's side; undefined (a bye, an unscheduled period) is ordinary. */
+interface HeadToHead {
   /** The team asked about. */
   team: LeagueTeam;
   opponent: LeagueTeam;
