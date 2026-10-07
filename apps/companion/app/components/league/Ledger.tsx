@@ -1,11 +1,13 @@
 import Image from "next/image";
 import ScrollBoard from "./ScrollBoard";
 import type { Deal, DealSide } from "@epl/core";
-import { crestForShortName, fantraxDay, inkOn, kindOf, movement, teamColours, toFplClubCode, DASH } from "@epl/core";
+import { crestForShortName, fantraxDay, inkOn, kindOf, moverOf, movement, teamColours, toFplClubCode, DASH } from "@epl/core";
 import { LABEL, PANEL_FLUSH, SMALL_CAPS } from "@/app/desk";
+import { shortName } from "@/app/teamNames";
 
 // One manager's business as CM's Transfers screen (`cm0102/23.jpg`): a blue date block, the type in
-// yellow, who came in white, who went out faint, and a trade's partner on his own colour.
+// yellow, who came in white, who went out faint, and a trade's partner on his own colour. With no team, the
+// league's: each row from the side of the team whose move it was, named on its own colour.
 
 /** A name a step above `ROW_NAME`: a date, a type and two names are this screen's whole content (DESIGN §6). */
 const NAME = "font-chrome text-base font-bold lg:text-lg";
@@ -19,17 +21,23 @@ export default function Ledger({
   names,
 }: {
   deals: readonly Deal[];
-  teamId: string;
+  /** Whose business; none is the whole league's, every row naming its mover. */
+  teamId?: string;
   /** Every team's name by id; the transaction row's own copy goes stale when a manager renames. */
   names: Record<string, string>;
 }) {
-  const rows = deals.map((deal) => ({ deal, ...movement(deal, teamId) }));
+  const everyone = teamId === undefined;
+  const rows = deals.map((deal) => {
+    const mover = teamId ?? moverOf(deal);
+    return { deal, mover, ...movement(deal, mover ?? "") };
+  });
   // A claim is with nobody, so the With column is drawn only when a trade is listed.
   const traded = rows.some((row) => row.partners.length > 0);
   return (
     <section className={PANEL_FLUSH}>
       <div className={`cm-bevel hidden min-h-7 items-center gap-2 px-1.5 ${SMALL_CAPS} lg:flex`}>
         <span className="w-24 shrink-0">Date</span>
+        {everyone ? <span className="w-32 shrink-0">Team</span> : null}
         <span className="w-24 shrink-0">Type</span>
         <span className="min-w-0 flex-1">In</span>
         <span className="min-w-0 flex-1">Out</span>
@@ -38,7 +46,7 @@ export default function Ledger({
 
       <ScrollBoard>
         <ul className="cm-rows flex flex-col">
-          {rows.map(({ deal, in: arrived, out: left, partners }) => (
+          {rows.map(({ deal, mover, in: arrived, out: left, partners }) => (
             // One row at both widths: a phone stacks date over type and In over Out inside it.
             <li
               key={deal.setId || `${deal.processedAt}-${deal.period}`}
@@ -49,6 +57,12 @@ export default function Ledger({
                 <span className="cm-index numeric w-24 shrink-0 whitespace-nowrap px-1.5 py-0.5">
                   {fantraxDay(deal.processedAt ?? "") ?? DASH}
                 </span>
+                {/* Whose move, on the league's list: under the date on a phone, its own column on a desk. */}
+                {everyone ? (
+                  <span className="shrink-0 lg:w-32">
+                    {mover === null ? DASH : <TeamPlate teamId={mover} name={names[mover]} />}
+                  </span>
+                ) : null}
                 <span className={`w-24 shrink-0 ${SMALL_CAPS} text-info lg:text-sm`}>
                   {kindOf(deal, arrived.length, left.length)}
                 </span>
@@ -57,7 +71,7 @@ export default function Ledger({
                   <span className={`shrink-0 lg:order-last lg:w-32 ${partners.length === 0 ? "hidden lg:block" : ""}`}>
                     {partners.length === 0 ? null : (
                       <span className="flex flex-col items-stretch gap-0.5">
-                        <Partner teamId={partners[0]} name={names[partners[0]]} />
+                        <TeamPlate teamId={partners[0]} name={names[partners[0]]} />
                         {partners.length > 1 ? (
                           <span className="text-center text-2xs text-faint">+{partners.length - 1}</span>
                         ) : null}
@@ -124,16 +138,24 @@ function Side({
   );
 }
 
-/** The other side of a trade, as a plate in his own colour, keyed on the id the deal carries. */
-function Partner({ teamId, name }: { teamId: string; name: string | undefined }) {
+/** A team as a plate in its own colour, keyed on the id the deal carries: a trade's other side, or the league's mover. */
+function TeamPlate({ teamId, name }: { teamId: string; name: string | undefined }) {
   const colours = teamColours(teamId);
   return (
     <span
       className={`block truncate px-1.5 py-0.5 text-center ${SMALL_CAPS}`}
       style={{ background: colours.primary, color: inkOn(colours) }}
     >
-      {/* A manager who has left the league still has an id on the row. */}
-      {name ?? "Unknown"}
+      {/* A manager who has left the league still has an id on the row. The league's short name under a thumb, where
+          the full one ran out of plate ("DOMEITALYC…"); the desk has the room. */}
+      {name === undefined ? (
+        "Unknown"
+      ) : (
+        <>
+          <span className="lg:hidden">{shortName(teamId, name)}</span>
+          <span className="max-lg:hidden">{name}</span>
+        </>
+      )}
     </span>
   );
 }

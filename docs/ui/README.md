@@ -57,6 +57,7 @@ nothing.**
 | `/players/projections` | [projections.md](projections.md) | Projections: the sister model's projection in our league's points for the next six gameweeks. |
 | `/players/planner` | [planner.md](planner.md) | The fixture planner: every club's next six opponents, ranked by our strength model. |
 | `/players/[fantraxId]` | [player.md](player.md) | One player's profile. |
+| `/news/transfers` | [mail-transfers.md](mail-transfers.md) | Every claim, drop and trade in the league, newest first, beside Mail's inbox. |
 | `/fpl` | [fpl.md](fpl.md) | The other game, kept small on purpose. |
 
 Shared: [conventions.md](conventions.md) — tokens, components, the rules a

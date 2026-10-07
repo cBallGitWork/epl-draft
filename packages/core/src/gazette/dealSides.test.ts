@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Deal, DealSide } from "./types";
-import { kindOf, movement } from "./dealSides";
+import { kindOf, moverOf, movement } from "./dealSides";
 
 const side = (playerName: string, teamId: string | null): DealSide => ({
   playerName,
@@ -80,5 +80,24 @@ describe("kindOf", () => {
   it("keeps Fantrax's other kinds distinguishable", () => {
     expect(kindOf(deal({ kind: "lineup" }), 0, 0)).toBe("Lineup");
     expect(kindOf(deal({ kind: "unknown" }), 0, 0)).toBe("Move");
+  });
+});
+
+describe("moverOf", () => {
+  // Whose move a deal is, for the league's list of everyone's.
+  it("is the team that gained, on a claim and its drop", () => {
+    expect(moverOf(deal({ inbound: [side("In", "A")], outbound: [side("Out", "A")] }))).toBe("A");
+  });
+
+  it("is the team that let go, on a bare drop", () => {
+    expect(moverOf(deal({ outbound: [side("Out", "B")] }))).toBe("B");
+  });
+
+  it("is the first side of a trade, whose partner the row names", () => {
+    expect(moverOf(deal({ kind: "trade", inbound: [side("P1", "A"), side("P2", "B")] }))).toBe("A");
+  });
+
+  it("is nobody when no side names a team", () => {
+    expect(moverOf(deal({ inbound: [side("In", null)] }))).toBeNull();
   });
 });

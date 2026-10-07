@@ -54,6 +54,8 @@ const ROUTES = [
   "/gw/1",
   "/fpl",
   "/more",
+  // Mail's league-wide ledger; the inbox itself is the reader's own and is not walked.
+  "/news/transfers",
 ] as const;
 
 /** What each league view says with no teams. One sentence per route, naming WHICH nothing it is, so

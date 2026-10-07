@@ -18,6 +18,13 @@ export function movement(deal: Deal, teamId: string) {
   };
 }
 
+/** Whose move a deal is, for the league's list of everyone's: the team that gained, or on a bare drop the one that
+ *  let go; a trade's first side, whose partner `movement` names. */
+export function moverOf(deal: Deal): string | null {
+  const named = (side: DealSide) => side.teamId !== null;
+  return deal.inbound.find(named)?.teamId ?? deal.outbound.find(named)?.teamId ?? null;
+}
+
 /** What a deal is called in this league's words. Fantrax's one "claim" is three: Waiver (both sides),
  *  Bin Pick Up (only an arrival) and To The Bin (only a departure). */
 export function kindOf(deal: Deal, arrived: number, left: number): string {
