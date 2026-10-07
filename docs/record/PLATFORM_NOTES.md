@@ -98,9 +98,9 @@ careers and league projections with an age check, and a dated weekly snapshot of
 - **Careers** come from `scripts/intel-careers.ts`, the sister's identity store read-only; it reproduced the hand
   export of 25 Sep row for row. Careers and league projections age at 8 days.
 - **intel-cups stamps every run again**: PR B had it skip an unchanged file, which this rule would read as stale.
-- **When the sister retires SofaScore** (its `library/RUNBOOK.md`, "The retirement rule": league-match pages more than
-  four days late), this side goes first: drop `shots` and `touches` from `sync-intel.sh`'s weekly kinds and their
-  8-day limits, or "the export wrote no shots" fails every Tuesday.
+- **SofaScore is kept** (Craig, 7 Oct: "We still use sofa for player positions etc", "Just keep it"). It feeds 31 of
+  666 squad positions (`sofascore_band`), the goal and card minutes in `matches`, `touches`, `shots` and the form
+  column. A SofaScore break is fixed, never answered by retiring the heat and shot maps.
 
 ## A job that never ran is the watchdog's — decided 7 Oct 2026
 
