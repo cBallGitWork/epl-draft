@@ -1,15 +1,9 @@
 import Image from "next/image";
 import { crestUrl, type PublishedStory, londonDayAndTime } from "@epl/core";
 
-// The team-news thread: a club, its crest, a line of context, one bullet per
-// man, and at most one thing the manager actually said.
-//
-// Prose per club read as one sentence six times over; a bullet has nowhere to
-// put filler, and a name in its own field can be set in bold without guessing.
+// The team-news thread: a club, its crest, a line of context, one bullet per man, and at most one quote.
 
-/** The four states, ranked in SCALE and never in hue (DESIGN §4). The accent is
- *  the sheet's one print red and §3 gives it one meaning — "yours". OUT is the
- *  loud one because it is what a reader scans for. */
+/** The four states, ranked in scale, never in hue (DESIGN §4); OUT is the loud one. */
 const STATUS: Record<string, string> = {
   OUT: "font-semibold text-ink",
   Suspended: "font-semibold text-ink",
@@ -27,24 +21,15 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
       {rows.map((row) => (
         <section key={row.club} className="py-4">
           <h3 className="flex items-center gap-2.5">
-            {/* **Not `.crest`, though it is a club badge.** That selector
-                restores the desk's tokens for an object that READS them — an
-                inline SVG filled with `fill-league` — and `paper.css` fences it
-                because it hands back the league's BRAND red inside whatever
-                wears it. A raster badge reads none of those tokens and would
-                only leave the brand red loose in this heading. DESIGN §5.
-                No code means no crest, never a wrong one. */}
+            {/* Not `.crest`: a raster badge reads no desk token, and `.crest` would let the brand red loose here. */}
             {row.code === null ? null : (
               <span className="shrink-0">
                 <Image src={crestUrl({ code: row.code })} alt="" width={28} height={28} />
               </span>
             )}
-            {/* `paper-display`, not `font-display`: Archivo Narrow is the FIGURE
-                face in both registers (DESIGN §6), and a club set in it is a
-                name wearing a number's clothes. */}
+            {/* `paper-display`, not `font-display`: Archivo Narrow is the figure face. */}
             <span className="paper-display text-xl leading-none font-semibold text-ink">{row.club}</span>
-            {/* Who they play, and when. Attached by the desk from the fixture
-                list, so it cannot disagree with the prose. */}
+            {/* Who they play, and when, off the fixture list. */}
             {row.fixture === undefined ? null : (
               <span className="font-sans text-2xs tracking-widest text-muted uppercase">
                 vs {row.fixture.opponent} ({row.fixture.home ? "H" : "A"}) · {londonDayAndTime(row.fixture.kickoff)}
@@ -63,13 +48,7 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
                   </span>
                   <p className="min-w-0 flex-1 text-ink">
                     <strong className="font-bold">{man.name}</strong>
-                    {/* **Unowned is marked, not left blank.** An absence
-                        cannot be scanned for, and it read identically to a name
-                        the bridge had failed to match. Safe to state:
-                        `bridge:check` resolves all 300 rostered slots. In the
-                        owner's own brackets, and in ink — `--color-info` is not
-                        re-pointed by `.paper`, so cyan landed on cream as a
-                        third colour and an unreadable one. */}
+                    {/* Unowned is marked, not left blank, in ink: `.paper` does not re-point `--color-info`. */}
                     <span className="text-muted">
                       {" "}
                       ({man.owner ?? "FA"})
@@ -84,8 +63,7 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
             </ul>
           )}
 
-          {/* The standing absences, as one line. They are what a reader already
-              knows, so they get a line and not a list. */}
+          {/* The standing absences, as one line. */}
           {row.alsoOut === undefined ? null : (
             <p className="pt-2 text-base leading-snug text-muted">
               <span className="font-sans text-2xs tracking-widest uppercase">Still out</span>{" "}
@@ -93,8 +71,7 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
             </p>
           )}
 
-          {/* Carried from the source article and never composed. `house.ts`
-              still forbids inventing one; this prints what the export holds. */}
+          {/* Carried from the source article, never composed. */}
           {row.quote === undefined ? null : (
             <blockquote
               className="mt-3 border-l-2 pl-3 text-base leading-snug"

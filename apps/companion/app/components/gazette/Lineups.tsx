@@ -2,10 +2,7 @@ import Image from "next/image";
 import { crestUrl, type PublishedStory, type StoryLineupSide, londonDayAndTime, DASH } from "@epl/core";
 import { yoursInk } from "../../mine";
 
-// The round's predicted elevens, grouped by the match they are for.
-//
-// A listing and not a column: every word of it is a name, a position or a
-// count, so the desk prints it from the export and no writer sees it.
+// The gameweek's predicted elevens by match: a listing printed from the export, which no writer sees.
 
 export default function Lineups({
   story,
@@ -50,10 +47,7 @@ function Side({
   return (
     <div>
       <h3 className="flex items-center gap-2">
-        {/* A raster badge reads none of the desk's tokens, so it is not `.crest`
-            — the selector that restores them (DESIGN §5). Boxed square because
-            the badges are not: Liverpool's is tall and pushed its eleven a line
-            below Ipswich's beside it. */}
+        {/* Not `.crest` (a raster reads no desk token); boxed square, since a tall badge pushed its eleven down a line. */}
         <Image
           src={crestUrl({ code: side.code })}
           alt=""

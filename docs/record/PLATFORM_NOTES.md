@@ -44,6 +44,27 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## Functions run in London (lhr1) — decided 7 Oct 2026
+
+`x-vercel-id` read `lhr1::iad1`: every tap was served from London and rendered in Washington, and most of the league
+is in Europe (Craig). #303 set `regions: ["lhr1"]` in `apps/companion/vercel.json`, and
+`experimental.staleTimes.dynamic: 30` in `next.config.ts`, matching the server's revalidate. AutoRefresh's
+`router.refresh` bypasses that client cache; sign-in, sign-out and the FPL entry call `revalidatePath`, and the lineup
+save already calls `updateTag`.
+
+- **Measured, RSC medians before → after**: `/prem` 222 → 166ms, `/prem/club/43` 225 → 134, `/prem/match/41`
+  303 → 205, `/players` 430 → 261, `/matchday` 279 → 183. Returning to a tab on a throttled phone: 316–1258ms → 13–116ms.
+- **The data cache is per region.** Straight after the move, the first fetch of an old match (`/prem/match/1`, `/2`,
+  `/10`) answered 500 once on the cold cache and was fine on a retry. **Open question:** a match page should degrade
+  when an upstream fetch fails rather than 500.
+
+## A signed-in cold open of `/` lands on Mail or Live, so shoot the paper as `/?paper` — decided 6 Oct 2026
+
+Since #285 `proxy.ts` sends a signed-in reader who types, bookmarks or launches `/` (`Sec-Fetch-Site: none`) to
+`/start`, which redirects to Live while a gameweek is on and Mail otherwise. A headless browser navigating to `/`
+is exactly that, so a shot or a DOM snapshot of a signed-in `/` shows Mail; `/?paper` is the paper for anybody, and
+`tools/ui/routes.mjs`' `FRONT_PAGE` uses it.
+
 ## A club's fixtures list its cup and European ties, off the sister's match log — decided 6 Oct 2026
 
 Craig, 6 Oct: *"get champs league from sister repo TML, shows all games"*. FPL publishes the league and
@@ -4718,6 +4739,8 @@ at most, summed over every man each team holds now (`join/squadStats.ts`).
 
 ## Questions
 
+- **Should a match page degrade rather than 500 when an upstream fetch fails?** The first cold fetch of an old
+  match in London 500'd once on 7 Oct (the lhr1 section above).
 - **Does `?period=N` serve history once a period has completed?** Answered for
   `getTeamRosterInfo` on 27 Aug and the answer is **no**: periods 1, 2 and 3
   return byte-identical POINTS, and only the opponent column moves. Answered the

@@ -14,40 +14,10 @@ import { LABEL, PANEL, ROW_NAME, SMALL_CAPS } from "@/app/desk";
 import OutLink from "../components/shell/OutLink";
 import Absent from "@/app/components/shell/Absent";
 
-// The other game, kept small on purpose.
-//
-// Most of our league also runs an FPL side at weekends, and this is that one
-// tab: your points, your fifteen, your mini-leagues. No history, no
-// projections — the football layer already models the real competition properly
-// and this is not a second attempt at it.
-//
-// Every number here is FPL's, under FPL's scoring, and the page says so. The
-// same footballer is worth different amounts in the two games, and a reader on
-// an adjacent tab has to be told which game they are looking at.
-//
-// **The relic pass** (Craig, 5 Sep 2026: *"Its a relic, needs to use CM UI for
-// all data on this pitch, rows, titles, pitch etc, forwards at top etc. and a
-// link to the proper fpl page. and it needs a bench. round always showing as
-// zero, and players as zero when not played a game yet"*). Four of those five
-// are answered here and the fifth is `PitchRows`:
-//
-// **A nought is not an absence, and this page printed nought for both.** A man
-// whose club has not kicked off has not scored nothing — there is no number yet,
-// and DESIGN §7 has one mark for that. It came from `mapSquad` being handed
-// `live.get(element) ?? 0`, and the fallback is right where FPL omits a man from
-// a round it IS scoring; it is wrong before a ball is kicked. So the CLOCK
-// decides, not the payload: `played.ts` asks the football snapshot whether his
-// club's fixture has started. The round total takes the same rule for the same
-// reason — "Round 0" on a Friday is a claim about a round nobody has played.
-//
-// **The bench is kits under the grass** (25 Sep 2026), numbered in the order they come on;
-// it was four `.cm-rows` rows under the pitch.
-//
-// **A way out to FPL's own page**, which a tab about somebody else's game should
-// always have had: this shows a side and cannot change one.
+// The reader's FPL side, under FPL's scoring: this week's points, the fifteen, the mini-leagues and a way out to FPL.
+// A man whose club has not kicked off prints a dash, not a nought: `played.ts` asks the snapshot, not the live feed.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
+// Must match `PAGE_REVALIDATE` in the app's config: Next reads this statically, so it cannot be imported.
 export const revalidate = 30;
 
 export default async function FplPage() {
@@ -89,18 +59,10 @@ export default async function FplPage() {
     return player === undefined ? undefined : opposition.get(player.clubId);
   };
 
-  /** Whether this man's club has kicked off in the round on screen.
-   *
-   *  The football snapshot's own `status`, which is FPL's statement about its
-   *  own fixtures — not a clock of ours and not the presence of a row in the
-   *  live feed. CLAUDE.md counts that feed at 600 rows once a round starts, 569
-   *  of them on no minutes, so a row says the ROUND has started and never that
-   *  the MAN has appeared. */
+  /** Whether his club has kicked off, by the snapshot's fixture status; a live-feed row says only that the gameweek began. */
   const played: Played = (code) => kickedOff(fixturesOf(code));
 
-  // Any of his men kicked off is the round having started for HIM, which is what
-  // a round total is about. A blank week — every one of his fifteen idle — is the
-  // one case where nought and "nothing yet" genuinely differ.
+  // The week's total is a dash until one of his fifteen has kicked off.
   const anyPlayed = squad?.picks.some((pick) => played(pick.code)) ?? false;
   const subs = await squadSubs(
     (squad?.picks ?? []).map((pick) => ({ code: pick.code, opposition: fixturesOf(pick.code) })),
@@ -111,20 +73,7 @@ export default async function FplPage() {
     <div className="flex flex-col gap-4">
       <PageHeader title={entry.teamName || "FPL"} sub={entry.managerName} />
 
-      {/* **Two figures, and the first is this WEEK's** (Craig, 5 Sep 2026:
-          "remove overall points score, just use weekly", "round - 0 still, just
-          remove that box").
-          The Round box was the reason: it preferred `squad.total` over
-          `entry.gameweekPoints`, and `squad.total` is FPL's own stored round
-          total, which lags its live one — measured at 19:44 on 5 Sep it printed
-          3 while the eleven on the grass that minute summed to 27. A figure
-          contradicted by the pitch six pixels under it is worse than no figure.
-          So the box goes and the WEEKLY number takes the first slot, off
-          `summary_event_points`, which is the same read the rank comes from.
-
-          The season total goes with it: this tab answers "how did I do this
-          week", and the pitch below it is a week. A running total belongs on a
-          screen about a season and there is not one. */}
+      {/* This week's points off `summary_event_points`, not `squad.total`, which lags the live figure. */}
       <dl className="grid grid-cols-2 gap-1.5">
         <Figure label="This week" value={anyPlayed ? entry.gameweekPoints : null} />
         <Figure label="Rank" value={entry.overallRank} />
@@ -137,8 +86,7 @@ export default async function FplPage() {
           title={`Gameweek ${squad.gameweek}`}
           aside={<>{squad.hit ? `${squad.hit} pt hit · ` : null}FPL&apos;s scoring</>}
         >
-          {/* The XI on the grass and the bench as kits under it. The lines are FPL's own `element_type`,
-              which lives in FPL's layer; `fplLineup` arranges them, pure and tested in core. */}
+          {/* The XI on the grass and the bench as kits under it, arranged by `fplLineup`. */}
           <FplPitch
             rows={arrangement.rows}
             bench={arrangement.bench}
@@ -150,10 +98,7 @@ export default async function FplPage() {
           <BenchTotal picks={arrangement.bench} played={played} />
         </Section>
       ) : (
-        // Keeps the section rather than dropping to a bare sentence between the
-        // figures and the mini-leagues: the heading is what tells a reader this
-        // is the round's squad and it is empty, and without it the page reads as
-        // one that failed to finish rendering.
+        // The heading stays, so an empty week does not read as a page that failed to render.
         <Section title={`Gameweek ${snapshot.gameweek}`} aside={<>FPL&apos;s scoring</>}>
           <p className="text-sm text-muted">
             No squad to show yet — FPL publishes a side once its first gameweek has been played.
@@ -169,9 +114,7 @@ export default async function FplPage() {
                 <span className={`min-w-0 flex-1 truncate ${ROW_NAME}`}>
                   {league.name}
                 </span>
-                {/* CYAN, and the slot agrees: a rank is a reading DERIVED from
-                    everybody's totals rather than a fact anybody recorded, which
-                    is what `--color-info` means (DESIGN §3). */}
+                {/* Cyan: a rank is a derived reading (DESIGN §3). */}
                 <span className="numeric shrink-0 text-sm font-bold text-info">
                   {league.rank === null ? <Absent /> : thousands(league.rank)}
                 </span>
@@ -183,10 +126,7 @@ export default async function FplPage() {
 
       </div>
 
-      {/* **Their game, their page.** This tab shows a side and can never change
-          one: transfers, captaincy and chips are all on FPL's own site, and a
-          screen that reads somebody else's game without saying where to act on
-          it is a dead end. On the round the page is about, so the two agree. */}
+      {/* Transfers, captaincy and chips are FPL's: the way out opens the gameweek on screen. */}
       <div className="flex flex-wrap items-center gap-2">
         <OutLink
           href={`${FPL_SITE}/entry/${entryId}/event/${squad?.gameweek ?? snapshot.gameweek}`}
@@ -194,10 +134,7 @@ export default async function FplPage() {
         >
           Open on FPL
         </OutLink>
-        {/* On a plate too, and for the same reason as the link beside it: a
-            control on the bare photograph is DESIGN §2's one prohibition, and
-            `groundfit` had this button open. Quieter than the way OUT — this is
-            the thing you press once — so it takes the plate without the caps. */}
+        {/* On a plate, since nothing prints on the bare ground; no caps, as it is pressed once. */}
         <form action={forgetEntry}>
           <button
             type="submit"
@@ -211,8 +148,7 @@ export default async function FplPage() {
   );
 }
 
-/** A headline number, or an honest dash. FPL sends null before a ball is kicked
- *  and nought would be a different claim. */
+/** A headline number, or a dash where FPL sends null before a ball is kicked. */
 function Figure({ label, value }: { label: string; value: number | null }) {
   return (
     <div className="cm-panel px-3 py-2">

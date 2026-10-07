@@ -3,18 +3,7 @@ import Nothing from "../shell/Nothing";
 import type { Silence as SilenceState } from "../../edition";
 import FantraxSilent from "../shell/FantraxSilent";
 
-// Nothing to print is a real state, not an empty page — our own league is in it
-// every day until draft night, and this is the first thing sixteen people open.
-//
-// **Which nothing it is decides the sentence.** Only one of the three is about
-// the league not existing yet, and telling a drafted league it has not drafted
-// is the confident wrong statement `squads.ts` keeps these apart to prevent. The
-// three must never be collapsed into one panel for that reason, which is what
-// `docs/ui/gazetta.md` records about them.
-//
-// Its own file since 16 Sep 2026, when `(paper)/page.tsx` crossed CODE_RULES §4's
-// hard 300-line ceiling. It is a `switch` and not three ternaries because the
-// state is a discriminated union and exhaustiveness is then the compiler's job.
+// The paper with nothing to print: which nothing it is decides the sentence, so the three never share a panel.
 
 export default function Silence({ silence }: { silence: SilenceState }) {
   switch (silence.kind) {

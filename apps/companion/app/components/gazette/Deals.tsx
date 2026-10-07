@@ -21,10 +21,7 @@ export default function Deals({
             className="py-2"
           >
             <p className="text-sm">
-              {/* A trade is two players moving in opposite directions, and
-                  without this label its two halves read as two unrelated
-                  signings — the very thing grouping them by `setId` was for. A
-                  claim needs no label: its second half already says "out". */}
+              {/* Without the label a trade's two halves read as two signings; a claim's second half says "out". */}
               {deal.kind === "trade" ? (
                 <span className="font-sans text-2xs font-bold uppercase tracking-wide text-faint">
                   Trade{" "}

@@ -31,12 +31,9 @@ export default async function GazettePage() {
     footballRows(),
     scorerRows(),
   ]);
-  // One lookup for the whole paper: the lead's cut-out and the eleven's eleven
-  // all want the same clubs, keyed the way a snapshot keys them.
+  // One club lookup for the whole page.
   const clubs = paper.snapshot ? clubById(paper.snapshot) : new Map();
-  // The same join the article page makes, plus the one case only this page has:
-  // a deal whose other side is nobody — a waiver claim comes from the wire, not
-  // from a manager.
+  // A deal with no other side came off the wire.
   const byId = named(paper.teams);
   const who = (teamId: string | null) => (teamId === null ? "the wire" : byId(teamId));
 
@@ -63,23 +60,14 @@ export default async function GazettePage() {
   ) : null;
 
   return (
-    // The paper's second column is a SIDEBAR here and never a "rail". The desk
-    // has a rail now — `shell/Rail`, the six sections down the left — and one
-    // word for two different columns in one codebase is how a reader ends up
-    // reading the wrong file.
+    // The second column is the SIDEBAR; "rail" is the desk's nav.
     <>
-      {/* Publisher, title, dateline. The masthead carried a plate and a
-          standing service line as well until 3 Sep 2026; `Masthead.tsx` records
-          why both went, which is that the page below already says what they
-          said. */}
       <Masthead at={paper.snapshot?.fetchedAt ?? null} />
 
       <div className="grid gap-5 @3xl:grid-cols-[1fr_19rem] @3xl:gap-x-10">
         {/* The lead column: no gutter beside the sidebar, so a full-bleed picture stops at its edge. */}
         <div className="flex flex-col gap-5 @3xl:[--page-gutter:0px]">
-          {/* The scoreboard strip. `underway` and not `partial`: before the
-          first kickoff every total is a legitimate nought, and a strip reading
-          0–0 across eight ties would be reporting a round nobody has played. */}
+          {/* `underway`, not `partial`: before the first kickoff every total is a nought. */}
           {paper.board && paper.underway ? (
             <Scoreboard
               pairings={paper.board.pairings}
@@ -128,8 +116,7 @@ export default async function GazettePage() {
             </div>
           ) : null}
 
-          {/* Which nothing it is decides the sentence, and `Silence` owns all
-              three — see its docblock on why they must not collapse. */}
+          {/* Which kind of nothing decides the sentence. */}
           {paper.silence ? <Silence silence={paper.silence} /> : null}
 
         </div>
@@ -157,10 +144,6 @@ export default async function GazettePage() {
 
           {paper.deadline ? (
             <Column title="Next deadline">
-              {/* Terse, per the voice: the lock is the fact a manager needs, the
-              kickoff is context, and neither needs a paragraph explaining where
-              we got it. The masthead states the same instant, so the two can no
-              longer disagree. */}
               <p className="text-sm text-muted">
                 Lineups lock{" "}
                 <span className="numeric font-semibold text-ink">

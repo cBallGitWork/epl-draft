@@ -10,29 +10,10 @@ import { named } from "../../../components/gazette/named";
 import Written from "../../../components/gazette/Written";
 import { KICKER } from "../../../components/gazette/kickers";
 
-// One story, printed whole.
-//
-// **The page a headline turns to.** Every teaser on the front page links here,
-// which is what a paper does and what the front page could not do while the
-// Gazetta was a single route.
-//
-// It reads the UNCOMPOSED `filed`, deliberately: `composePaper` decides what
-// leads the front page today, and a story it has dropped is still a story at
-// its own address. An article keeps printing under its own filed date long
-// after the front page has moved on, which is the whole difference between a
-// page and a feed.
-//
-// The archive is not read here. `paper.json` keeps the most recent stories and
-// nothing has ever fallen off it; when one does, its slug 404s until an archive
-// reader exists. Recorded rather than built, because the app has no runtime
-// filesystem reads at all and adding one for a case that has not happened is
-// machinery for nothing.
+// One story, printed whole, off the uncomposed `filed`: a story the front page has dropped keeps its address.
+// The archive is not read, so a slug that falls off `paper.json` 404s.
 
-// Must match `ARTICLE_REVALIDATE` in the app's config, NOT `PAGE_REVALIDATE` — an
-// article is published by a deploy rather than by a revalidation, because the
-// prose is static-imported and baked into the bundle. Next analyses this
-// statically, so it cannot be imported. The front page keeps the shorter window;
-// its scoreboard is the one thing here that moves in thirty seconds.
+// Must match `ARTICLE_REVALIDATE` (not `PAGE_REVALIDATE`) in the app's config: Next reads this statically.
 export const revalidate = 300;
 // No `generateStaticParams`: the layout's live strip calls `connection()`, and a prebuilt article 500s at runtime.
 
@@ -47,9 +28,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const story = find((await params).slug);
   if (story === null) return { title: "Not in this edition" };
-  // The deck and never the headline: the headline is wordplay, and a pun with
-  // no article under it is not a description.
-  // The picture is `opengraph-image.tsx` beside this page.
+  // The deck, never the punning headline; the picture is `opengraph-image.tsx`.
   return {
     title: story.headline,
     description: story.deck,
@@ -62,9 +41,7 @@ export default async function StoryPage({ params }: { params: Promise<{ slug: st
   const story = find((await params).slug);
   if (story === null) notFound();
 
-  // The same read the front page makes, for the same reason: a column returns
-  // team IDS and the names are joined at render, because a name typed by a
-  // model goes stale the day somebody renames their team.
+  // A column returns team ids; names are joined at render.
   const mine = await readerTeamId();
   const paper = await edition(mine);
   const who = named(paper.teams);

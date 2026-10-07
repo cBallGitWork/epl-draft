@@ -5,31 +5,8 @@ import SubMarker, { type SubMark } from "../components/football/SubMarker";
 import PitchRows, { BENCH_KIT, FAR_INSET, GAP_CLASS, cardBasis, rowBudget, widestLine } from "../components/league/PitchRows";
 import PickPoints from "./PickPoints";
 
-// Your FPL XI on the grass — the same grass as everywhere else.
-//
-// **It was on the wrong ground and it had its own cell** (Craig, 5 Sep 2026:
-// "using the wrong pitch, we use a different pitch elsewhere"). `PitchRows` drew
-// two grounds then: `CmGround`, the flat 68x105m diagram, and a photographed
-// trapezoid with hoardings and a goal. This file passed neither flag, so it fell
-// through to the trapezoid and drew a `Sticker` of its own beside it. The same
-// complaint reached the last trapezoid on 21 Sep 2026 and that ground is gone;
-// `CmGround` is the only one, and there is no flag left to forget.
-//
-// The planner's own sticker justified the copy on the grounds that it "takes a
-// `RosteredPlayer`, which is a Fantrax roster slot joined to a footballer, and an
-// FPL pick is neither". That stopped being true on 3 Sep, when the disc was
-// changed to take a plain `FootballPlayer` for exactly this reason
-// (`PitchMarker`'s own docblock records it); the sticker itself went on 21 Sep
-// and every eleven in the app is one card.
-//
-// **`inColumn` as well as `flat`**, which `prem/club/[code]/Eleven` records the
-// cost of: bleeding is right for a pitch that is the widest thing on a screen,
-// and full-bleed made this one 1,132 wide and 1,192 tall — 552px past the fold at
-// 1440, of which 622 was empty grass under the keeper. The ratio is on `.pitch`
-// and multiplies whatever width it is given, so the width is the only lever.
-//
-// **Every number here is FPL's.** The XI's are multiplied, so a captain's 18 is what he
-// contributed; the bench's are what each man scored, which FPL's nought would hide.
+// Your FPL XI on the app's one pitch, the bench as kits under it. Every number is FPL's:
+// the XI's are multiplied (a captain's 18 is what he contributed), the bench's are what each man scored.
 
 export default function FplPitch({
   rows,
@@ -44,10 +21,7 @@ export default function FplPitch({
   bench: FplPick[];
   players: Map<number, FootballPlayer>;
   clubs: Map<number, Club>;
-  /** Each club's fixtures this round, so the disc can tell for itself whether a
-   *  man's club has kicked off. It draws him back until it has, and prints his
-   *  club rather than a nought — `played.ts`'s predicate is still what the round
-   *  total and the bench need, but the grass no longer asks it. */
+  /** Each club's fixtures this gameweek: until his club kicks off, the disc prints the club, not a nought. */
   opposition: Map<number, Opposition[]>;
   /** Who came on or went off in his real match, by FPL code. */
   subs: Record<number, SubMark>;
@@ -105,17 +79,7 @@ export default function FplPitch({
   );
 }
 
-/** One pick: the shared disc, with the armband over it.
- *
- *  **The armband is drawn HERE and not by `PitchMarker`.** It is the one fact on
- *  this pitch that no other pitch has — our league has no captain — so a prop for
- *  it would be a mechanism with one caller, which CODE_RULES §1 forbids by name.
- *  The disc's own root is already `relative`, and this wrapper is the caller's,
- *  so the badge sits over the head without either side knowing about the other.
- *
- *  No club colours on the fill. Eleven picks are eleven different clubs, and
- *  `PitchMarker` records eleven palettes on one pitch as already tried and
- *  rejected — the chrome default is what a pitch with no single team gets. */
+/** One pick: the shared disc with the armband drawn over it here, since only FPL has a captain. */
 function Pick({
   pick,
   points,
@@ -142,9 +106,7 @@ function Pick({
         opposition={opposition}
         points={points}
       />
-      {/* FPL names both a captain and a vice, and which one actually doubled is
-          decided after the fact — so the vice is drawn whether or not there is a
-          captain to outrank him. */}
+      {/* Which of captain and vice doubled is decided after the fact, so both are drawn. */}
       {pick.isCaptain || pick.isViceCaptain ? (
         <span
           aria-hidden

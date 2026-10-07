@@ -1,12 +1,6 @@
 import type { PublishedStory } from "@epl/core";
 
-// The week's quiz, with the answers printed upside down.
-//
-// A newsprint gag that costs nothing and only works on paper: a rotation and a
-// faint ink, so the answers are there, on the page, and mildly annoying to
-// read — which is the entire joke. Nothing is hidden and nothing is
-// interactive; a screen reader gets the answers in the ordinary reading order
-// because upside down is a visual joke and not a puzzle to be enforced.
+// The week's quiz, the answers printed upside down: a visual joke, so a screen reader reads them in order.
 
 export default function Quiz({ story }: { story: PublishedStory }) {
   const quiz = story.extras?.quiz ?? [];

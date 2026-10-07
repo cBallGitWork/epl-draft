@@ -21,11 +21,7 @@ export default function Lead({
   return (
     <section className="flex flex-col">
       <Picture lead={lead} who={who} clubs={clubs} />
-      {/* The kicker is a tag, printed the way a paper prints one: the page's own
-          ink as a ground and the page's own stock as the letters, 14.2:1 either
-          way round. Deliberately not a colour plate — it is drawn in the two
-          colours the sheet already has, so nothing inside it needs the desk's
-          tokens back. */}
+      {/* The kicker: stock on an ink ground, 14.2:1, in the sheet's own two colours. */}
       <p className="mt-3">
         <span className="inline-block bg-ink px-2 py-1 font-sans text-2xs font-bold uppercase tracking-[0.15em] text-bg">
           {kicker}
@@ -35,11 +31,7 @@ export default function Lead({
         {headline}
       </h2>
       <p className="pt-2 text-lg italic leading-snug text-muted">{standfirst}</p>
-      {/* The ornament: a 24px hairline closing the display block before the
-          prose or the next column starts. A paper's smallest piece of furniture
-          and the one that says "this heading is finished". Ranged left with the
-          block it closes — a centred rule under a ranged-left lead is a rule
-          belonging to nothing. */}
+      {/* A 24px hairline closing the display block, ranged left with it. */}
       <span className="mt-3 block h-px w-6 bg-ink" />
     </section>
   );

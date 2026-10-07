@@ -98,6 +98,7 @@ const NAMED = [
   "IntelClubXi.formation",
   "IntelClubXi.starters",
   "IntelCareers.players",
+  "CupTie.score",
   "Shot.pass",
   "TouchPlayer.fixtures",
   "LiveSquadPoints.players",
