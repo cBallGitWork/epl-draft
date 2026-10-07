@@ -11,28 +11,14 @@ import { leagueCache } from "./leagueCache";
 import { orRefusal } from "./refusals";
 import { SEASON_CODE_LIFE } from "./config";
 
-// One team's season table, read once and shared.
-//
-// Here rather than beside either of its readers because both of them cache, and
-// two `unstable_cache` calls with the same key are two definitions of one cache
-// — the kind of duplication that stays invisible until the day their revalidate
-// windows disagree. The player page reads one row out of this table; the squad
-// board reads the points column out of the same one.
+// One team's season table, read once for its two readers: two caches on one key would be two definitions of it.
 
-/** The season code to ask for.
- *
- *  Fantrax defaults every stat read to a projection, so the code has to be sent,
- *  and it is published by exactly one endpoint. Asked for a single row — the
- *  list comes with any page size — and cached hard: it changes once a year. */
+/** The season code: Fantrax defaults every stat read to a projection, and one endpoint publishes it. Cached hard. */
 export const yearToDate = leagueCache(
   "fantrax-season-code",
   async (): Promise<string | undefined> => {
     const raw = await orRefusal(fetchPoolStats(FANTRAX_LEAGUE_ID, 1));
-    // A code we could not look up is not a reason to compose one. Sending
-    // nothing means Fantrax picks, and whatever it picks is read back and
-    // labelled — which is what the callers do with the answer anyway.
-    //
-    // Only their refusal is caught. A mapper throwing is our bug.
+    // No code is no reason to compose one: Fantrax picks, and the callers label it. Only a refusal is caught.
     if (raw instanceof FantraxError) return undefined;
     return mapPoolStats(raw).yearToDate ?? undefined;
   },
@@ -50,23 +36,7 @@ const readTeamStats = leagueCache("fantrax-team-stats",
   () => null,
 );
 
-/** One squad's season table, in the two shapes the squad page draws it in.
- *
- *  It used to return the index alone and throw the table away, which is how a
- *  page that had already paid for thirteen scoring columns came to print one
- *  number per player. Both shapes come off one read: the index is a derived view
- *  of the same lines, so returning it beside them cannot disagree with them.
- *
- *  The season travels with the numbers and is never dropped, because Fantrax
- *  answers a *projection* unless the year-to-date code is both known and
- *  honoured — and a column headed with points that silently switches between a
- *  projection and a season total is the confident wrong answer this app exists
- *  to avoid.
- *
- *  **A season total, and it takes no period, because the endpoint behind it does
- *  not honour one** — periods 1, 2 and 3 answer byte-identical payloads. It used
- *  to take one, which is how a card came to be headed "This period" over a
- *  running season. The caller that needs a period reads the live scoreboard. */
+/** One squad's season table and its points by player, off one read. A season total: the endpoint ignores a period. */
 export async function squadSeason(teamId: string): Promise<SquadSeason | null> {
   const stats = await readTeamStats(teamId, await yearToDate());
   if (stats === null) return null;
@@ -80,12 +50,8 @@ export async function squadSeason(teamId: string): Promise<SquadSeason | null> {
 }
 
 export interface SquadSeason {
-  /** Fantrax's own table, whole: which season these are, and one group per
-   *  scoring vocabulary — a keeper is tabled apart from an outfielder because
-   *  they score differently, and their columns differ thirteen against eleven. */
+  /** Fantrax's own table: the season, and a group per scoring vocabulary, keepers apart. */
   stats: TeamStats;
-  /** The same lines indexed by player, which is how a pitch and a list want them:
-   *  a figure against a face. Null points is null, never nought — Fantrax prints
-   *  a dash for a category a player has not registered. */
+  /** The same lines by player; null is null, never nought. */
   points: Map<string, number | null>;
 }

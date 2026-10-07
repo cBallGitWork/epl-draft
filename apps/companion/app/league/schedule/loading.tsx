@@ -5,10 +5,6 @@ import Skeleton from "../../components/shell/Skeleton";
 import SkeletonRows from "../../components/shell/SkeletonRows";
 
 // The season, waiting on the league's description of itself.
-//
-// The controls are three selects whose options are the league's — which
-// gameweeks it covers, which teams are in it — so they are blocks here rather
-// than an empty form that would look broken while it filled.
 
 export default function Loading() {
   return (

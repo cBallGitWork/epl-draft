@@ -1,11 +1,7 @@
 import LeagueShell from "../Shell";
 import SkeletonRows from "../../components/shell/SkeletonRows";
 
-// The season's played rounds, waiting on Fantrax.
-//
-// Row-height blocks, unlike the matchups board's: a result is one scoreline and
-// not a scoreline over a labelled line, so the list it settles into is the
-// table's height rather than half again.
+// The played rounds waiting on Fantrax: one scoreline a row.
 
 export default function Loading() {
   return (

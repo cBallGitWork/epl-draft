@@ -7,19 +7,8 @@ import Pending from "../../components/league/Pending";
 import { LABEL, ROW_NAME } from "@/app/desk";
 import { matchupHref } from "../routes";
 
-// One head-to-head on the list of eight.
-//
-// It was two stacked rows, which made eight identical cards: a reader looking
-// for "who is having a good week" had to compare two numbers in different places
-// on the screen, eight times over, and that is the one thing a scoreline exists
-// not to make you do. Now it is the board's grammar — name, score, v, score,
-// name — so the margin between two adjacent numbers *is* the answer, and no
-// invented threshold decides what counts as close.
-//
-// The second line carries the labelled extras a scoreline may not: how many each
-// side has still to play, and the clean sheets Fantrax has not credited yet. A
-// scoreline is one row and takes one number per side (Craig, 19 Aug); anything
-// else has to be beneath it, wearing its label.
+// One head-to-head on the board: name, score, v, score, name, so the margin is the answer. The labelled second line
+// carries what each side has left to play and the clean sheets Fantrax has not credited (Craig, 19 Aug).
 
 export default function PairingCard({
   pairing,
@@ -33,14 +22,7 @@ export default function PairingCard({
   pending: Map<string, PendingCleanSheets>;
   /** The reader's own team, or null when nobody is signed in. */
   mine: string | null;
-  /** Whether the round is under way — not whether a ball is in the air.
-   *
-   *  Only then does a side with nobody left have said anything: on a Wednesday
-   *  every side has nobody left and "all played" would be sixteen statements of
-   *  the obvious. But this was `isMatchdayLive`, which is false in every gap
-   *  between kickoffs — and in those gaps the other half of the same line, "4 to
-   *  play", printed anyway. One side spoke and the other was silent, which reads
-   *  as missing data rather than as the fact it is. */
+  /** Whether the round is under way, gaps between kickoffs included: only then does "all played" say anything. */
   underway: boolean;
 }) {
   const home = scores.get(pairing.home.teamId);
@@ -84,12 +66,7 @@ export default function PairingCard({
   );
 }
 
-/** One half of the scoreline, and the link into that side of the board.
- *
- *  `mirrored` turns it round for the away half, so both numbers meet in the
- *  middle either side of the "v" and both names sit at the outside edges — the
- *  same arrangement as `MatchupBoard`, because it is the same scoreline read at
- *  a different size. */
+/** One half of the scoreline and the way into that side's board; `mirrored` puts the away name on the outside edge. */
 function Side({
   team,
   score,
@@ -107,10 +84,7 @@ function Side({
   const other = against?.points ?? null;
 
   return (
-    // Into the pairing's own board, opened on the side that was tapped — not
-    // into the squad. Both halves lead to the same head-to-head and it arrives
-    // showing whichever name the thumb landed on, which is the whole of what
-    // "tap a team" means here. Each squad is one further tap, from there.
+    // Into the pairing's board, opened on the tapped side; each squad is a tap further.
     <Link
       href={matchupHref(team.teamId)}
       className={`cm-row flex min-h-11 min-w-0 flex-1 items-center gap-2 px-3 py-2 hover:bg-raised ${
@@ -124,9 +98,7 @@ function Side({
       >
         {team.name}
       </span>
-      {/* Only the number dims, and only when both sides have one. The name keeps
-          its own register — accent means "yours" on six screens and would stop
-          meaning it if a name could also dim for losing. A dash dims nobody. */}
+      {/* Only the number dims, and only when both sides have one: a name keeps the accent's meaning. */}
       <ScoreFigure
         points={points}
         other={other}
@@ -149,16 +121,8 @@ function Extras({
   underway: boolean;
   align?: "start" | "end";
 }) {
-  // Per side, not per league: once football is on, one manager has three players
-  // left and the other has none, and that difference is most of what a
-  // head-to-head screen is for. Literal zero is a statement, not an absence —
-  // which is why this reads the number rather than its truthiness.
-  //
-  // Deliberately a copy of `YourMatchup`'s line and not an extraction: second
-  // occurrence (CODE_RULES §1), and the two must agree, which is the whole
-  // reason this comment names the other one. The pending mark that used to be
-  // the other half of the copy reached four screens on 31 Aug and is
-  // `league/Pending` now.
+  // Per side; zero is a statement, so the number is read, not its truthiness. A copy of `YourMatchup`'s line: two
+  // (CODE_RULES §1), and the two must agree.
   const left =
     score?.toPlay == null
       ? null
@@ -168,10 +132,7 @@ function Extras({
           ? "all played"
           : null;
 
-  // The same truthiness `league/Pending` applies, spelled the same way: nought,
-  // null and no-table-at-all all mean nothing is owed. It was
-  // `!(pending && pending.points > 0)`, which is a third way of writing a rule
-  // that only needs one.
+  // Nought, null and no table all mean nothing is owed, as `league/Pending` reads it.
   if (left === null && !pending?.points) return <span />;
 
   return (

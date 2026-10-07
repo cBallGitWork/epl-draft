@@ -19,19 +19,8 @@ import { matchHref } from "../../../prem/match/[id]/matchRoutes";
 // The two boards that place this tie rather than explain it: the league it sits in, and the football it is
 // being played out in.
 
-/** The league table, with the two sides of this tie marked.
- *
- *  **The table itself, not a door to it** (Craig, 11 Sep 2026: *"goes to a page
- *  with just the league table (not the league table page itself)"*). What it
- *  answers here that `/league` does not is what THIS result does to both
- *  positions, which is why both rows are marked rather than only the reader's.
- *
- *  **The mark cannot be `TableRow`'s `mine`.** That paints `bg-raised`, and its
- *  own docblock says a tinted band "reads as *these are yours*" — which would be
- *  a lie about a rival. Each tie row takes a left border in its own
- *  `teamColours` instead, the same colour as its half of the scoreline above, so
- *  the two objects are tied together rather than competing. `mine` still marks
- *  the reader's own row and keeps its one meaning. */
+/** The league table itself (Craig, 11 Sep 2026), both sides of the tie edged in their own colours, as on the scoreline;
+ *  `mine` keeps its one meaning. */
 export async function TableTab({ tie, mine }: { tie: readonly string[]; mine: string | null }) {
   const [rows, info, results] = await Promise.all([
     leagueTable(),

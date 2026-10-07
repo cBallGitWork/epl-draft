@@ -6,25 +6,14 @@ import { identify, whoseTeam } from "../team";
 import { getLeagueSquads, readableOr404 } from "../../../squads";
 import { planningRound } from "../../../round";
 import { leagueTable } from "../../../standings";
-import { notFound } from "next/navigation";
 import Link from "next/link";
 import { LABEL, PANEL_FLUSH, SMALL_CAPS } from "@/app/desk";
 import { teamHref } from "@/app/squad/routes";
 import { shortName } from "../../../teamNames";
+import { placings } from "../../../league/placings";
 
-// Who he plays, and the one screen in this app that is about a confrontation.
-//
-// **This is where a team's colour earns itself.** Championship Manager sets the
-// two sides' own colours against each other in a match header — Everton's blue
-// against Arsenal's red in `cm9900/21.jpg`, against Torquay's WHITE in `16.jpg`
-// — and that is the whole of what club colour does in the game. It does not
-// theme a page. So the squad's bar carries the team's plate because the screen
-// is about him, and this screen carries two plates because it is about a
-// fixture, and nothing else in the app carries one at all.
-//
-// The pairing costs no request: `LeagueInfo.matchups` is already in the payload
-// every squad screen reads, and `headToHead` is the same selector the squad tab
-// uses for the "v opponent" line in its subheading.
+// Who he plays: both sides on their own colours, as CM sets a match header (`cm9900/21.jpg`); the pairing is already
+// in the squads payload.
 
 // Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
@@ -36,30 +25,23 @@ export default async function NextMatchPage({
   params: Promise<{ teamId: string }>;
 }) {
   const { teamId: slug } = await params;
-  // The whole read rather than `teamOr404`, because this screen needs the
-  // matchups and the period as well as the name — one read either way.
+  // The whole read, not `teamOr404`: this screen needs the matchups and the period too.
   const [read, table] = await Promise.all([
     getLeagueSquads(await planningRound()),
     leagueTable(),
   ]);
   const squads = readableOr404(read, SQUAD);
 
-  const { teamId } = await whoseTeam(slug, squads.period.teams);
-  const team = squads.period.teams.find((t) => t.teamId === teamId);
-  if (!team) notFound();
+  const { team } = await whoseTeam(slug, squads.period.teams);
+  const teamId = team.teamId;
 
   const tie =
     squads.info !== null && squads.roundPeriod !== null
       ? headToHead(squads.info.matchups, squads.info.teams, squads.roundPeriod, teamId)
       : undefined;
 
-  // Where each side stands, for the bracket beside his name. Fantrax's own
-  // placing and never a sort of ours — where a points tie is broken is a rule of
-  // their competition. Empty when the table would not answer, and then the
-  // bracket is simply absent rather than showing a guess.
-  const placing = new Map(
-    "unavailable" in table ? [] : table.map((row) => [row.teamId, row.rank] as const),
-  );
+  // Where each side stands, for the bracket under his name; no bracket when the table would not answer.
+  const placing = placings(table);
 
   return (
     <TeamShell
@@ -68,9 +50,7 @@ export default async function NextMatchPage({
       empty={tie === undefined ? ["next"] : []}
     >
       {tie === undefined ? (
-        <TabEmpty>{/* Two different absences and only one of them is a fault. Fantrax
-                not describing the league at all is an outage; the league simply
-                not pairing this side this gameweek is an ordinary bye. */}
+        <TabEmpty>{/* An outage and an ordinary bye are different absences. */}
             {squads.info === null
               ? "We cannot read the league's own description of itself right now."
               : `${team.teamName} has no fixture this gameweek.`}</TabEmpty>
@@ -89,11 +69,7 @@ export default async function NextMatchPage({
   );
 }
 
-/** The two sides, each on its own colour.
- *
- *  Neither is at home — a fantasy fixture has no ground — so the team whose
- *  screen this is reads first, which is the rule every head-to-head surface in
- *  this app already follows. */
+/** The two sides, each on its own colour; no ground, so the team whose screen this is reads first. */
 function Fixture({
   gameweek,
   home,
@@ -105,24 +81,7 @@ function Fixture({
 }) {
   return (
     <section className={PANEL_FLUSH}>
-      {/* **The round gets a row of its own** (Craig, 2 Sep: "have a row for the
-          gameweek"). It was in the subheading above the tabs, which is where a
-          reader looks last — and on a screen about ONE match, which round it is
-          belongs with the match rather than with the page. `cm9900/21.jpg` puts
-          the ground on a strip under its match header for the same reason: the
-          circumstances of the fixture sit with the fixture. */}
-      {/* An ordinary strip, not a masthead (Craig, 2 Sep: "huge row for the
-          gameweek, make it normal size — remove Period 3 text"). It was
-          inheriting the plated title bar's `min-h-16 lg:min-h-24`, which is the
-          size a screen's SUBJECT is set at; the round is a caption on this one.
-          The period goes with it: it is how the league counts a week and the
-          gameweek is how a reader dates one, and printing both put one number
-          under two names. */}
-      {/* `cm-tab` and not `cm-titlebar`: the title bar carries a `min-height` of
-          6rem above `lg` because it is a screen's masthead, and a `min-h-0`
-          beside it loses on specificity — which is the right outcome, since
-          fighting a plate's own height means the wrong plate was chosen. A tab
-          plate is the same chrome at a strip's height. */}
+      {/* The gameweek on an ordinary strip of its own (Craig, 2 Sep 2026); `cm-tab`, as the title bar carries a masthead's height. */}
       <div className="cm-tab flex items-center justify-center px-2 py-1">
         <span className={`numeric ${SMALL_CAPS} text-ink`}>Gameweek {gameweek}</span>
       </div>
@@ -153,19 +112,14 @@ function Side({ team, linked = false }: { team: SideTeam; linked?: boolean }) {
       style={{ background: colours.primary, color: inkOn(colours) }}
     >
       <span className="text-sm font-bold uppercase">{team.name}</span>
-      {/* His placing, in brackets under the name (Craig, 2 Sep). `cm9900/25.jpg`
-          runs "6th in PRM" in its foot row — a club's standing is part of how
-          the game introduces it, and on a match header it is the one fact that
-          says whether this is a hard fixture. On his own plate rather than
-          beside it, so the ink stays the plate's own readable pair. */}
+      {/* His placing under his name, on his own plate (Craig, 2 Sep; `cm9900/25.jpg`). */}
       {team.rank === undefined ? null : (
         <span className="numeric text-3xs font-bold opacity-80">({ordinal(team.rank)})</span>
       )}
     </span>
   );
 
-  // Only the opponent is a link: a link to the page you are on is a dead control
-  // that still looks like a live one.
+  // Only the opponent links: a link to this page would be a dead control.
   return linked ? (
     <Link href={teamHref(team.teamId)} className="flex min-w-0 flex-1">
       {label}

@@ -60,7 +60,5 @@ export default function Round({
   );
 }
 
-/** Hoisted rather than written inline: a `new Map()` in the render would be a
- *  fresh object per round, and every round but the one in play wants the same
- *  empty one. */
+/** One empty map for every round but the one in play. */
 export const EMPTY: Map<string, number | null> = new Map();

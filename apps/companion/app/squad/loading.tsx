@@ -1,11 +1,7 @@
 import PageHeader from "../components/shell/PageHeader";
 import SkeletonRows from "../components/shell/SkeletonRows";
 
-// The squads, waiting on Fantrax.
-//
-// Headed "Squads" rather than "Your squad": which of the two it is depends on
-// whether the cookie names a team in this league, and a heading that guessed
-// would be a claim about the reader made before anything was read.
+// The squads waiting on Fantrax, headed "Squads": whose they are is not known yet.
 
 export default function Loading() {
   return (

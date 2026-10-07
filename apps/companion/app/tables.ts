@@ -5,15 +5,8 @@ import { leagueTable as draftTable } from "./standings";
 import { getLeaguePool } from "./players/pool";
 import { getLeagueSquads } from "./squads";
 
-// The paper's two tables, as rows. Both come off reads the page already makes,
-// so a back page costs no new request: the draft table is the standings page
-// `/league` reads, and the football table is computed from the season fixtures
-// the deadline already needs.
-//
-// The two are kept apart all the way to the component, because they are the
-// two layers and their epistemics differ: Fantrax's table is authority we
-// quote, and the Premier League's is arithmetic we do under rules that are
-// fixed for everyone. Only the second could ever be ours to compute.
+// The paper's two tables as rows, off reads the page already makes, kept apart: Fantrax's we quote, the Premier
+// League's we compute under fixed rules.
 
 /** The draft league, in Fantrax's own order: names and points (Craig, 1 Oct 2026). */
 export async function draftRows(mine: string | null): Promise<PaperTableRow[]> {
@@ -37,10 +30,7 @@ const SCORERS_SHOWN = 10;
 /** What the chart calls a man nobody holds. */
 const UNOWNED = "free agent";
 
-/** The season's top scorers, in Fantrax's own season totals off the pool table.
- *
- *  The player's season, not his owner's return: it counts points from the bench and
- *  prices a dual-eligible man at his default position. Never head it as his owner's. */
+/** The season's top scorers by Fantrax's season totals: the player's season, bench points included, never his owner's. */
 export async function scorerRows(): Promise<PaperTableRow[]> {
   const pool = await getLeaguePool();
   if ("unavailable" in pool) return [];
@@ -76,8 +66,7 @@ export async function footballRows(): Promise<PaperTableRow[]> {
 
   return footballTable(await seasonFixtures(), clubs).map((row, at) => ({
     key: String(row.clubId),
-    // The rank is this table's own, because this table IS the authority for
-    // it: nobody else's placing is being quoted.
+    // This table's own rank: it is the authority.
     rank: at + 1,
     name: row.name,
     played: row.played,

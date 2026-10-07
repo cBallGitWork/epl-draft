@@ -10,16 +10,12 @@ import { leagueScoring } from "../../scoring";
 import { roundUnderway } from "../../football";
 import { yoursFirst } from "../../mine";
 import FantraxSilent from "../../components/shell/FantraxSilent";
+import ScoreboardDown from "../ScoreboardDown";
 
-// Who each squad plays this period, and what they have scored.
-//
-// The score is Fantrax's own. `getLiveScoringStats` answers without a cookie and
-// returns typed totals for every team in one call (PLATFORM_NOTES, 13 Aug), so
-// this page reports the competition's real numbers rather than an estimate of
-// them — and we still compute no scoring, which was always the doctrine.
+// Who each squad plays this gameweek and what they have scored: Fantrax's own totals, one call for every team.
 
 // Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
+// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function MatchupPage() {
@@ -70,13 +66,8 @@ export default async function MatchupPage() {
     );
   }
 
-  // The same pair of questions the head-to-head board asks, spelled the same way
-  // and rendered by the same component.
   const state = roundState(squads.snapshot);
-  // The card wants a different question from the state word: "all played" is
-  // worth saying whenever the round is running, not only while a ball is in the
-  // air. It used to ask `isMatchdayLive`, which is false in every gap between
-  // kickoffs — and printed "4 to play" on the other side of the same line anyway.
+  // Under way, gaps between kickoffs included: "all played" is worth saying whenever the round is running.
   const underway = roundUnderway(squads.snapshot);
 
   const [mine, scoring] = await Promise.all([myTeamId(squads.period.teams), leagueScoring()]);
@@ -84,15 +75,12 @@ export default async function MatchupPage() {
   const pending = pendingByTeam(squads.period.teams, scoring?.rules ?? null, squads.snapshot, squads.display);
   const owed = [...pending.values()].reduce((total, team) => total + team.players, 0);
 
-  // Yours first. Sixteen pairings is a scroll, and the one a manager came for is
-  // his own — a neutral list is for broadcasters.
+  // Yours first.
   const ordered = yoursFirst(pairings, (pairing) => pairingInvolves(pairing, mine));
 
   return (
     <LeagueShell current="matchups"
-      // Gameweek, not "Period 1 · Gameweek 1". They are the same number every
-      // week this season, and printing one number under two names asks a reader
-      // to work out whether they are the same thing.
+      // Gameweek, never period: one number under two names.
       sub={
         <>
           Gameweek {squads.snapshot.gameweek}
@@ -100,28 +88,17 @@ export default async function MatchupPage() {
         </>
       }
     >
-      {/* The one live board that was not refreshing itself. `revalidate` bounds
-          how stale the cache may get and pushes nothing to a phone already
-          showing the score, so a device open on the sofa held a frozen scoreline
-          for the whole afternoon while /matchday moved. */}
-
-      {/* Provenance at the point of use, per principle 4. These are Fantrax's
-          points under Fantrax's scoring; we add nothing up. */}
-      <p className="px-3 text-2xs text-faint">
-        {refused === null ? (
-          <>
-            Fantrax&apos;s points, under Fantrax&apos;s scoring.
-            {owed > 0
-              ? " Green is clean sheets they credit at full time — ours to preview, theirs to settle."
-              : null}
-          </>
-        ) : (
-          <>
-            Fantrax&apos;s scoreboard is not answering, so there are no points to show. The
-            pairings below are still right. <span className="numeric">{refused}</span>
-          </>
-        )}
-      </p>
+      {/* Provenance where the figures are: Fantrax's points under Fantrax's scoring. */}
+      {refused === null ? (
+        <p className="px-3 text-2xs text-faint">
+          Fantrax&apos;s points, under Fantrax&apos;s scoring.
+          {owed > 0
+            ? " Green is clean sheets they credit at full time — ours to preview, theirs to settle."
+            : null}
+        </p>
+      ) : (
+        <ScoreboardDown refused={refused}>The pairings below are still right.</ScoreboardDown>
+      )}
 
       <ul className="cm-rows flex flex-col">
         {ordered.map((pairing) => (

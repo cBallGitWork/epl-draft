@@ -10,10 +10,7 @@ import { SQUAD } from "./routes";
 // Signing in and out. The only two writes in the app, and neither of them
 // touches Fantrax.
 
-/** Claim a team with the code the commissioner handed out.
- *
- *  Returns a message on failure rather than throwing: a mistyped code is the
- *  ordinary case, not an exception, and the form needs something to say. */
+/** Claim a team with the commissioner's code; a mistyped code is ordinary, so it answers a message rather than throwing. */
 export async function claimTeam(_previous: string | null, form: FormData): Promise<string | null> {
   const code = String(form.get("code") ?? "");
   const teamId = await teamForCode(code);

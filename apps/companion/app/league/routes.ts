@@ -1,10 +1,10 @@
-// Where the league's matchups live, so every link to one is built the same way.
+// The League section's routes, named once; every link to one is built from these.
 
 /** The league table, the section's front page. */
 export const LEAGUE = "/league";
 
 /** Every pairing this round. */
-export const MATCHUPS = "/league/matchups";
+export const MATCHUPS = `${LEAGUE}/matchups`;
 
 /** One team's matchup, at a named round and on a named view when there are ones. */
 export function matchupHref(teamId: string, gameweek?: number, view?: string): string {
