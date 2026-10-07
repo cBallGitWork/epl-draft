@@ -10,15 +10,14 @@ import {
   mapLiveStats,
   isUnmapped,
   readRatingStore,
-  type Bridge,
   type Fixture,
   type PlayerMatchStats,
   type RatingStore,
 } from "@epl/core";
 import { dayFigures, markOf, playedOn } from "./edition/matchdayRatings";
 import { SCORING_LEAGUE } from "./leagues";
-import { INTEL_SEASON } from "./intel";
-import { MAPPINGS_ROOT, RATINGS_ROOT } from "./paths";
+import { INTEL_SEASON, readBridge } from "./intel";
+import { RATINGS_ROOT } from "./paths";
 import { readScoring } from "./scoring";
 
 // Our mark for every man in every settled match day not yet rated, into `data/ratings/26-27.json`, which the player pages
@@ -58,7 +57,7 @@ async function main(): Promise<void> {
   const rounds = new Map<number, PlayerMatchStats[]>();
   for (const gw of gameweeks) rounds.set(gw, mapLiveStats(await fetchLive(gw)));
   const results = clubResults(fixtures, [...rounds.values()], new Map(snapshot.players.map((p) => [p.id, p.clubId])));
-  const bridge = JSON.parse(readFileSync(join(MAPPINGS_ROOT, "fantrax.json"), "utf8")) as Bridge;
+  const bridge = readBridge();
   const idOfCode = new Map(snapshot.players.map((p) => [p.code, p.id]));
 
   for (const [day, on] of due) {

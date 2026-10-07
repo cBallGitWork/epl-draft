@@ -1,9 +1,9 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { SEASON, type IntelManifest } from "@epl/core";
-import { INTEL_ROOT } from "./paths";
+import { SEASON, type Bridge, type IntelManifest } from "@epl/core";
+import { INTEL_ROOT, MAPPINGS_ROOT } from "./paths";
 
-// Reading the sister repo's export off disk, and the manifest every export written here carries.
+// Reading the sister repo's export and the bridge off disk, and the manifest every export written here carries.
 //
 // Absent is the ordinary state and every caller treats it as one. A file that
 // will not PARSE is not absent and throws: a corrupt export is a broken
@@ -28,4 +28,9 @@ export function intelManifest(
   exportedAt = new Date().toISOString(),
 ): IntelManifest {
   return { season: INTEL_SEASON, gameweek: fields.gameweek, exportedAt, rows: fields.rows, sources: fields.sources };
+}
+
+/** The committed Fantrax→FPL bridge (`npm run bridge`), which every export keyed on a Fantrax id joins through. */
+export function readBridge(): Bridge {
+  return JSON.parse(readFileSync(join(MAPPINGS_ROOT, "fantrax.json"), "utf8")) as Bridge;
 }

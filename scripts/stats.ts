@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import {
   KEEPER,
@@ -6,13 +6,12 @@ import {
   columnDrift,
   fetchPoolStats,
   mapStatSheet,
-  type Bridge,
   type IntelStats,
   type StatSheet,
 } from "@epl/core";
-import { INTEL_SEASON, intelManifest, readIntel } from "./intel";
+import { INTEL_SEASON, intelManifest, readBridge, readIntel } from "./intel";
 import { STATS_LEAGUE } from "./leagues";
-import { INTEL_ROOT, MAPPINGS_ROOT } from "./paths";
+import { INTEL_ROOT } from "./paths";
 import { buildStats } from "./stats/build";
 
 // The stats league's season-to-date counts for every man who has played, into `data/intel/stats/`
@@ -38,7 +37,7 @@ async function main(): Promise<void> {
     return refuse(`Fantrax answered "${projected.season.name}", a projection`);
   }
 
-  const bridge = JSON.parse(readFileSync(join(MAPPINGS_ROOT, "fantrax.json"), "utf8")) as Bridge;
+  const bridge = readBridge();
   const { stats, unknown, missing } = buildStats(sheets, bridge);
   const file = `${INTEL_SEASON}.json`;
   const held = readIntel<IntelStats>("stats", file);
