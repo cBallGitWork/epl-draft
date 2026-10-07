@@ -14,6 +14,12 @@ export interface Quote {
   about?: string;
 }
 
+/** The day's live conferences article, `fpl-gameweek-6-team-news-thursdays-live-injury-updates.html`, never a
+ *  predicted line-ups page whose name also says team-news. The last when Scout republished it as `-2`, `-3`. */
+export function conferenceArticle(names: readonly string[]): string | undefined {
+  return names.filter((name) => /^fpl-gameweek-\d+-team-news-[a-z]+days-/.test(name)).sort().at(-1);
+}
+
 /** The round the ARTICLE says it is about, from its own title: "FPL Gameweek 5
  *  team news". Null when it does not say, which is a reason to refuse it. */
 export function articleGameweek(body: string): number | null {

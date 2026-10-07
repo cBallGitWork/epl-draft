@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 import { FIRM, LEAGUE_TIMEZONE, getFootballSnapshot, type FootballSnapshot } from "@epl/core";
-import { articleGameweek, clubKey, conferenceTimes, isLeagueArticle, manager, quotes, sections, text } from "./ingest/presserArticle";
+import { articleGameweek, clubKey, conferenceArticle, conferenceTimes, isLeagueArticle, manager, quotes, sections, text } from "./ingest/presserArticle";
 import { troubles } from "./ingest/presserSignals";
 import { fullClubName } from "@epl/core";
 
@@ -70,8 +70,8 @@ async function articleFor(day: string): Promise<{ file: string; html: string; pr
   const dir = join(SCRAPE, day);
   if (!existsSync(dir)) throw new Error(`No scrape for ${day}. The sister repo writes ${dir}.`);
 
-  const file = readdirSync(dir).find((name) => /team-news/.test(name));
-  if (file === undefined) throw new Error(`No team-news article in ${dir}.`);
+  const file = conferenceArticle(readdirSync(dir));
+  if (file === undefined) throw new Error(`No conferences article in ${dir}.`);
 
   // Cut the reader comments: the last club's section runs into them and they
   // carry hundreds of player names. Not the `hc-comment` class — the sidebar
