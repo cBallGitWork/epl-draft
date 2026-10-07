@@ -91,8 +91,10 @@ opens the issue `alert: <workflow>`, assigned to the owner, and the next green r
 
 
 On Craig's Mac (launchd, London time; `scripts/install-intel-jobs.sh` installs both): `com.epl-draft.intel-weekly` Tue 08:00 runs
-`scripts/sync-intel.sh weekly`, `com.epl-draft.intel-pressers` Thu 16:00, Fri 12:30 and Fri 16:00 runs `pressers`. Each writes a
-`chore/intel-*` PR that merges itself once `verify` passes, and logs to `~/Library/Logs/epl-draft-intel.log`.
+`scripts/sync-intel.sh weekly`, `com.epl-draft.intel-pressers` Thu 16:00, Fri 12:30 and 16:00 (the conferences) and Fri 17:45
+(the sister's 16:30 sweep) runs `pressers`. Each restores the GitHub sweep's data from R2 through `scripts/sister-export.py`,
+writes a `chore/intel-<mode>-<date>-<time>` PR that merges itself once `verify` passes, logs to
+`~/Library/Logs/epl-draft-intel.log`, and ends in an `alert.yml` dispatch, `intel-<mode> ok` or `fail`.
 
 Slots shared today: warm shares every :00 and :30 with editions in the match windows. Editions'
 own lines no longer overlap; until 1 Oct 2026 24 of its firings a week ran twice.
