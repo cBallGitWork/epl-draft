@@ -1,12 +1,7 @@
 import PageHeader from "../../components/shell/PageHeader";
 import Skeleton from "../../components/shell/Skeleton";
 
-// One squad, waiting on the roster and the round's points.
-//
-// The title is the section's word and not the manager's name: whose squad this
-// is comes out of the same read that is still in flight, and a header that
-// guessed would be the one thing on the page that could be wrong rather than
-// merely absent.
+// One squad waiting on the roster and the round's points, headed with the section's word: whose it is is not known yet.
 
 export default function Loading() {
   return (

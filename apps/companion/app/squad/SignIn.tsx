@@ -4,9 +4,7 @@ import { useActionState } from "react";
 import { claimTeam } from "./actions";
 import { LABEL } from "@/app/desk";
 
-// One box: your code. Client only because the wrong-code message has to come
-// back without losing the page, which is what `useActionState` is for — the form
-// itself posts and works before any JavaScript arrives.
+// One box: your code. A client component so a wrong code answers in place; the form posts before any JavaScript.
 
 export default function SignIn() {
   const [message, submit, pending] = useActionState(claimTeam, null);
@@ -31,14 +29,7 @@ export default function SignIn() {
           autoCapitalize="characters"
           spellCheck={false}
           placeholder="ABCD2345"
-          // `text-base` deliberately: anything smaller and iOS zooms the page in
-          // when the field takes focus.
-          //
-          // The app's one surviving `tracking-widest` on a `.numeric`, and the
-          // only one that is not letterspacing a figure against the class that
-          // exists to tighten it: this is a code being TRANSCRIBED off a message
-          // one character at a time, and the space between the characters is
-          // what a reader checks his typing against.
+          // `text-base`, or iOS zooms on focus; `tracking-widest` because a code is transcribed a character at a time.
           className="cm-panel numeric min-h-11 min-w-0 flex-1 px-3 text-base uppercase tracking-widest text-ink placeholder:text-faint"
         />
         <button

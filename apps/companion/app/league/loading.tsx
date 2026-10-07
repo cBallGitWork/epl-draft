@@ -4,23 +4,9 @@ import LeagueShell from "./Shell";
 import Skeleton from "../components/shell/Skeleton";
 import { BOARD, ROW_RULE } from "@/app/desk";
 
-// The table, waiting on Fantrax.
-//
-// `LeagueShell` is the real one, so the header and the section nav are on screen
-// and working before a row exists — a reader who wanted Schedule or Matchups can
-// go there without waiting for the standings he did not come for. The column
-// heads are the page's own words about what the columns mean and not part of the
-// answer, so they print too — and they come from `Columns`, so there is one
-// place to change them rather than two that can disagree.
-//
-// **Not `SkeletonRows`.** That primitive draws the app's standard stack of cards
-// and four other screens still open on it; the table stopped being cards, and a
-// loading state whose shape the answer does not land in is the one thing a
-// skeleton must not be.
+// The table waiting on Fantrax: the real shell and heads, and rows in the shape the answer lands in.
 
-/** A frame hint, never a fact about the league: how many teams are in it is read
- *  from `getLeagueInfo` (CLAUDE.md), so a skeleton asserting one would be
- *  writing down one of the few things this app has promised never to assume. */
+/** A frame hint, never the league's size, which is read from `getLeagueInfo`. */
 const ROWS = 6;
 
 export default function Loading() {
@@ -36,9 +22,7 @@ export default function Loading() {
                   // Width and visibility as the answer's, or the table jumps sideways when it lands.
                   <td key={columnKey(column)} className={`px-1 ${column.width} ${shownAt(column, "rank")}`}>
                     {column.key === "team" ? (
-                      // The one cell whose height sets the row's, so the real
-                      // rows land inside these boxes rather than pushing them
-                      // down the screen.
+                      // The cell whose height sets the row's, so the real rows land in these boxes.
                       <span className={`${TIGHT_ROW} pl-1`}>
                         <Skeleton width="45%" height="0.875rem" />
                       </span>

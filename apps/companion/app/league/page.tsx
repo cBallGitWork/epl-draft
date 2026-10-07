@@ -14,13 +14,10 @@ import { CutRow } from "../components/league/TableCells";
 import { BOARD } from "@/app/desk";
 import FantraxSilent from "../components/shell/FantraxSilent";
 
-// The table. Fantrax computes it — the record, the points and the order are
-// theirs, and this page never adds them up itself. Three for a win is a
-// commissioner setting, so a table that worked it out here would be right until
-// somebody's league paid two.
+// The table, Fantrax's: the record, the points and the order are theirs, never added up here.
 
 // Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
+// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 /** Next 16 hands these as a Promise, so it is awaited like `params`. */
@@ -28,9 +25,7 @@ type Search = Promise<{ sort?: string; dir?: string }>;
 
 export default async function StandingsPage({ searchParams }: { searchParams: Search }) {
   const query = await searchParams;
-  // An unknown column falls back to Fantrax's own order rather than throwing:
-  // the sort arrives in a URL, and a shared link with a stale column name should
-  // still show the table.
+  // An unknown column falls back to Fantrax's order, so a stale shared link still shows the table.
   const sort = isSortKey(query.sort) ? query.sort : "rank";
   const descending = query.dir === undefined ? defaultDescending(sort) : query.dir === "desc";
 
@@ -38,17 +33,11 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
     leagueTable(),
     readerTeamId(),
     leagueInfo(),
-    // The whole season's results in one request, and the only thing on this page
-    // that costs a read the table itself did not already make. It is what turns
-    // a record into a run: `won-drawn-lost` is a total, and a side on 5-2-3 that
-    // won five and then lost three is not the same team as one that lost three
-    // and then won five.
+    // The season's results, for the form guide: a record is a total, a run is an order.
     getSeasonResults(),
   ]);
 
-  // Empty for every row until Fantrax has settled a round, and empty for a row
-  // whose run does not reproduce the record Fantrax published — see
-  // `league/form.ts`. Both are a dash rather than a wrong string.
+  // Empty until Fantrax settles a round, and for a run that does not reproduce its record (`league/form.ts`).
   const form = new Map(
     ("unavailable" in rows ? [] : seasonForm(rows, info?.matchups ?? [], results)).map((team) => [
       team.teamId,
@@ -56,10 +45,6 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
     ]),
   );
 
-  // An empty state keeps the header and the section nav. Without them a reader
-  // who lands here during an outage has no way to reach Schedule or Matchups —
-  // the page is a dead end rather than a section with nothing in it. Schedule
-  // already did this; the table and the matchups board did not.
   if ("unavailable" in rows) {
     return (
       <LeagueShell current="table" teams={info?.teams.length}>
@@ -87,19 +72,7 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
 
   return (
     <LeagueShell current="table" teams={info?.teams.length}>
-      {/* The FP column is Fantrax's live total and moves all weekend. This was
-          the last points surface with no refresh on it at all: `revalidate`
-          bounds how stale the cache may get and pushes nothing to a phone left
-          open on the sofa, so the table sat still through a whole afternoon. */}
-
-      {/* Out to the page's edges and back in again, so a table wider than the
-          phone scrolls sideways inside its own box instead of scrolling the
-          page. The gutter is a variable precisely so the things that break out
-          of it cannot drift from it (globals.css). `/players` set this pattern
-          and DESIGN §9 signed it off: on a phone the columns Fantrax publishes
-          stay reachable rather than being dropped behind a breakpoint. */}
-      {/* The panel is `LeagueShell`'s now — every view under this tab strip gets
-          the same block, rather than the table carrying a ground of its own. */}
+      {/* A table wider than the phone scrolls sideways inside its own box. */}
       <ScrollBoard>
         <table className={BOARD}>
           <Columns sort={sort} descending={descending} />
@@ -112,8 +85,7 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
                   mine={row.teamId === mine}
                   form={form.get(row.teamId) ?? []}
                 />
-                {/* Rules, not shaded bands, which would read as "these are yours". Yellow and dashed after
-                    `cm9900/24.jpg` (Craig, 31 Aug). Only in Fantrax's own order, where a place is a place. */}
+                {/* Dashed yellow rules after `cm9900/24.jpg` (Craig, 31 Aug), only in Fantrax's order. */}
                 {sort === "rank" && !descending
                   ? lines
                       .filter((line) => line.under === row.rank)

@@ -22,17 +22,7 @@ export interface SharedSide {
   withheld: ReactNode;
 }
 
-/** Where the scoreline came from, and who put it there.
- *
- *  **Provenance in the aside rather than across the top of the screen** (Craig,
- *  11 Sep 2026: *"remove A round already played… row"*). It was 44px of prose
- *  over a scoreline nobody was asking it of. The claim is still owed — these are
- *  Fantrax's figures, and on a round already played the elevens may be the
- *  arrangement it stored or may be today's squads — so it is said where a reader
- *  is actually asking where a number came from.
- *
- *  The scores are deliberately not called final either way: `played` is true at
- *  all three finished rungs and only `data_checked` earns that word. */
+/** Where the scoreline came from, by category; whose figures and which eleven go in the aside (Craig, 11 Sep 2026). */
 export function StatsTab({
   bands,
   names,
@@ -86,14 +76,8 @@ function namesOf(roster: RosteredTeam | undefined, detail: LineupDetail | undefi
   return names;
 }
 
-  /** What the shared boards need of each side, in the URL's order.
-   *
-   *  **Everything here is behind the gate that `shows` already applied.** A side
-   *  whose eleven is not public has no `detail`, no priced breakdown and — the
-   *  one that matters most — no NAME MAP: a category figure names a man in the
-   *  eleven, and so does a list of the men he holds in a fixture. Building the
-   *  map only for a side the gate has opened makes the leak impossible rather
-   *  than merely unexercised. */
+/** What the shared boards need of each side, in the URL's order: a gated side has no detail and no name map, so
+ *  nothing on a board can name his eleven. */
 export function sharedSides({
   pairing,
   rostered,
@@ -131,10 +115,7 @@ export function sharedSides({
   return [one(pairing.team), one(pairing.opponent)];
 }
 
-/** The withholding said ONCE and full width, because with both sides in one
- *  object there is no per-side slot for it — and a silently empty column reads as
- *  "he registered nothing", which is false and the opposite of what the gate is
- *  for. Null when both elevens are open. */
+/** The withholding, said once and full width: an empty column would read as "registered nothing". Null when both are open. */
 export function withheldNotice(sides: readonly SharedSide[]): ReactNode {
   const gated = sides.filter((side) => !side.shown);
   return gated.length === 0 ? null : <>{gated.map((side) => side.withheld)}</>;

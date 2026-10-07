@@ -15,43 +15,12 @@ import FantraxSilent from "../../components/shell/FantraxSilent";
 import { placings } from "../placings";
 import ScoreboardDown from "../ScoreboardDown";
 
-// The season ahead: every round the league still has to play, in gameweek order,
-// across every competition being played on it. Fantrax's schedule is the league;
-// the cups are ours (`league/cups/declared.ts`), and every cup side is a placeholder until drawn.
-//
-// **No controls, and that is the change** — Craig, 5 Sep 2026: *"Dont show all
-// the grey arrows here, just show all fixtures for the league itself. CM rows
-// etc."* The three dropdowns were a round picker, a competition filter and a team
-// picker, and they made a fixture list into something you navigate. A schedule is
-// a thing you scroll: `cm9900/24.jpg`'s own Schedule tab is one list with a
-// scrollbar down the side, and the reference has no filter control anywhere in
-// it.
-//
-// What each control cost to remove, so the trade is on the record rather than in
-// a commit message:
-//
-//   the ROUND picker    nothing. Every round is on the page now, in order, and
-//                       the one being played is at the top of it.
-//   the COMPETITION     nothing. `groupTies` already gives each competition its
-//                       own headed block, so filtering to one was hiding the
-//                       other rather than finding it.
-//   the TEAM picker     one view, which moved rather than went. A team's whole
-//                       season is on that team's own Fixtures tab
-//                       (`/squad/[teamId]/fixtures`), which is where a reader
-//                       looking for one team already is, and which draws it with
-//                       the same `Season` component off the same `seasonRows`.
-//
-// **Current and future, and nothing finished** (Craig, 31 Aug). Results is the
-// archive; a fixture list that also holds last month is a fixture list you have
-// to navigate rather than read. The round in play stays here, because it is not
-// finished and because its scores are the reason anyone opens this on a Saturday.
-//
-// The page speaks gameweeks and never periods. Both were on screen, they are the
-// same number all season, and printing one number under two names asks a reader
-// to work out whether they are the same thing.
+// Every gameweek not yet finished (Craig, 31 Aug: finished ones are Results'), every competition on it; the cups are
+// ours (`league/cups/declared.ts`). No controls (Craig, 5 Sep 2026): a schedule is scrolled, and one team's season
+// is its Fixtures tab. Gameweeks, never periods.
 
 // Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
+// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function SchedulePage() {
@@ -69,10 +38,7 @@ export default async function SchedulePage() {
   }
 
   const { info, table } = read;
-  // Finished rounds are Results' now. `status`, which is the round's LABEL and
-  // is the right question here — "has this round's football finished" — rather
-  // than `started`, which asks whether a ball has been kicked and would drop the
-  // round in play, the one round this page most exists for.
+  // `status`, not `started`: the round in play stays, the finished ones are Results'.
   const rounds = read.rounds.filter((round) => round.status !== "finished");
 
   if (read.rounds.length > 0 && rounds.length === 0) {
@@ -104,11 +70,7 @@ export default async function SchedulePage() {
   // Each side's place, for CM's blue block.
   const places = placings(table);
 
-  // **Only the rounds that have started, and there is at most one.** Fantrax
-  // answers for any period asked, so a page showing the whole season forward
-  // would otherwise spend thirty-odd requests on totals that are all nought.
-  // `started` and not `status`: the round in play is exactly the one whose
-  // scores are worth a request.
+  // Scores only for a round that has started, at most one: Fantrax answers every period, the rest with noughts.
   const scoring = rounds.filter((round) => round.started);
   const boards = await Promise.all(scoring.map((round) => liveScores(round.period)));
   const points = new Map<number, Map<string, number | null>>(

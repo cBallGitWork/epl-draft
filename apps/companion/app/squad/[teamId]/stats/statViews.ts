@@ -98,10 +98,9 @@ const COLUMNS: readonly Column[] = [
 /** Every column the board can read off the stats league, so its read keeps these and no more. */
 export const STATS_LEAGUE_KEYS: readonly string[] = COLUMNS.flatMap((each) => each.names);
 
-/** A view's columns in order, with no total: the categories are raw counts, so a sum would add cards to goals.
- *  `served` is what the served league's read carries, and an empty one keeps every category. The stats league's
- *  columns fill a group but never the Scoring view, which is only what the league itself carries, and our DefCon
- *  points beside its counts when the league prices DefCon. */
+/** A view's columns in order, with no total (a sum would add cards to goals). `served` is what the served league's read
+ *  carries, an empty one keeping every category; the stats league fills a group but never Scoring, which carries our
+ *  DefCon points when the league prices DefCon. */
 export function measuresFor(
   view: ViewKey,
   served: ReadonlySet<string>,

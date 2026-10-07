@@ -13,33 +13,17 @@ import { PANEL, ROW_NAME, HEADING_PLATE } from "@/app/desk";
 import FantraxSilent from "../components/shell/FantraxSilent";
 import { shortName } from "../teamNames";
 
-// Your squad, and everyone else's. Until the draft this is the empty state,
-// which is the state our real league is actually in and therefore the one that
-// has to be designed rather than defaulted.
-//
-// Reading the session cookie makes this route dynamic, which is the price of the
-// app knowing whose team you are. The provider reads underneath it are cached
-// (see `league.ts`), so the page rendering per request does not mean Fantrax and
-// FPL being asked per request.
+// Your squad, then everyone else's. The cookie makes the route dynamic; the reads under it are cached.
 
 // Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
+// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function SquadsPage() {
-  // The week a manager can still change, which from Friday teatime is next week
-  // and not the one being played. Fantrax hands over the live period to a read
-  // that does not ask, so this page spent every weekend showing an arrangement
-  // nobody could alter; the running score belongs to Live.
+  // The week a manager can still change: from Friday teatime that is next week, not the one in play.
   const squads = await getLeagueSquads(await planningRound());
 
-  // Both empty states keep the sign-in form under them, and that is not a
-  // decoration. This route is the ONLY place a manager can enter his code, and
-  // the two states below are exactly the ones our real league is in every day
-  // until 10 Oct — so without it nobody could sign in during the whole run-up,
-  // or at any moment Fantrax was unreachable on the day. Signing in needs no
-  // Fantrax at all: the code is checked against `TEAM_CODES` and the cookie is
-  // signed with `SESSION_SECRET`, both ours (see `squad/actions.ts`).
+  // Both empty states keep the sign-in form: this is the only place a code goes in, and signing in needs no Fantrax.
   if ("unavailable" in squads) {
     return (
       <div className="flex flex-col gap-3">
@@ -72,11 +56,7 @@ export default async function SquadsPage() {
   const others = squads.period.teams.filter((team) => team.teamId !== mine);
   const yours = squads.period.teams.find((team) => team.teamId === mine);
 
-  // Who each of them plays this week. Free — the schedule is already in the
-  // payload this page has fetched — and it is the fact that turns a directory of
-  // sixteen names into the week's fixtures. Undefined is ordinary: no schedule
-  // for this period, or Fantrax would not describe the league, and it renders as
-  // no line rather than as a guess.
+  // Who each plays this week, off the schedule already in the payload; no line when it does not say.
   const period = squads.roundPeriod;
   const opponentOf = (teamId: string) =>
     squads.info === null || period === null
@@ -93,20 +73,7 @@ export default async function SquadsPage() {
 
       {yours ? <Squad team={yours} opponent={opponentName(yours.teamId)} lead /> : null}
 
-      {/* **The sign-in follows the CODE, not the team on screen**, and it sits
-          here rather than under the heading below: a reader being lent a squad is
-          being asked who he is, and that question belongs beside his squad and
-          not in the middle of the league's.
-
-          It used to be the `else` of the branch above, which was the same
-          question while the only way to have a team was to have signed in for
-          one. The demo team broke that — the form left with the empty state, and
-          `/squad` is the ONE place in the app a manager can enter his code, on
-          the league this app serves by default all the way to 10 Oct.
-
-          Signing OUT is the other half: offered only to a real code, because a
-          button that drops you back onto the team the league lent you does
-          nothing a reader can see. */}
+      {/* The sign-in follows the code, not the team on screen; signing out is offered only to a real code. */}
       {holder ? (
         <form action={forgetTeam} className="cm-panel px-3">
           <button type="submit" className="min-h-11 text-2xs text-faint hover:text-muted">
@@ -147,8 +114,7 @@ function Squad({
 
   return (
     <Link
-      // Your own row goes through the front door, so the rail's plate stays lit
-      // on the screens behind it. Everyone else is reached by id.
+      // Your own row goes through the front door, so the rail's plate stays lit.
       href={lead ? MY_TEAM : teamHref(team.teamId)}
       className={`cm-row flex min-h-14 items-center gap-3 px-3 py-2.5 hover:bg-raised ${
         lead ? "bg-raised" : "bg-surface"
@@ -156,25 +122,16 @@ function Squad({
     >
       <span className="flex min-w-0 flex-1 flex-col lg:flex-row lg:items-baseline lg:gap-2">
         <span className={`min-w-0 truncate ${ROW_NAME}`}>{team.teamName}</span>
-        {/* The row was a name and a number, sixteen times. Who he plays this
-            week is the thing that makes it a fixture list rather than a
-            directory, and it costs nothing: the schedule is already in the
-            payload this page fetched. */}
+        {/* Who he plays this week. */}
         {opponent ? (
           <span className="shrink-0 truncate text-2xs text-faint">
             <span className="uppercase">v</span> {opponent}
           </span>
         ) : null}
       </span>
-      {/* **No YOU chip** (Craig, 5 Sep 2026: "Remove 'you' from all rows where it
-          appears. Just use yellow text for the team"). It was here because a
-          border alone carries nothing to a reader who cannot see it — and the
-          pairing docs/rules/PRODUCT.md asks for is still there without the chip: the accent
-          EDGE is a position, and this row is sorted to the top of the list,
-          which is a second one. */}
+      {/* No YOU chip (Craig, 5 Sep 2026): the accent edge and the top place pair with the colour. */}
       <span className="numeric shrink-0 text-sm text-muted">{team.players.length}</span>
-      {/* Never silently short. A squad we cannot fully identify says so here
-          rather than rendering fourteen of fifteen on the pitch. */}
+      {/* Never silently short: a squad we cannot fully identify says so. */}
       {unresolved > 0 ? (
         <span className="numeric shrink-0 bg-bg px-1.5 py-0.5 text-2xs font-bold text-mid">
           {unresolved} unmapped

@@ -8,34 +8,18 @@ import { readerTeamId } from "../../squads";
 import FantraxSilent from "../../components/shell/FantraxSilent";
 import { placings } from "../placings";
 
-// What has already happened: every played round, newest first, each round's
-// head-to-heads as scorelines.
-//
-// **CM's second tab** (`cm9900/24.jpg` runs `Table · Results · Fixtures ·
-// Schedule`) and the fourth blue button Craig asked for on 31 Aug. It is a view
-// of the season rather than a new read of it: `getSchedule` already numbers the
-// rounds and says which have started, and `getSeasonResults` is already cached
-// because the table's form guide is built from it. This page adds no provider
-// call at all.
-//
-// **Why it is not just the schedule scrolled back.** `/league/schedule` answers
-// "what is on this week" — one round at a time, with the competitions we invent
-// layered over Fantrax's fixture, and a control to move between them. This
-// answers "what has happened", which is a different question and a different
-// shape: no round picker, no cup, newest first, and nothing on it that has not
-// been played. Both are the same two payloads and neither is the other's filter.
+// What has happened: every finished gameweek's head-to-heads, newest first (`cm9900/24.jpg`'s Results tab, Craig, 31 Aug).
+// A view of the schedule's two cached reads; it makes no provider call of its own.
 
 // Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
+// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function ResultsPage() {
   const [schedule, results, mine] = await Promise.all([
     getSchedule(),
     getSeasonResults(),
-    // `readerTeamId` and not `myTeamId`: this page has not narrowed the squads
-    // itself, so it wants the cached lookup that validates a cookie against the
-    // league we are actually serving.
+    // `readerTeamId`: this page has not narrowed the squads itself.
     readerTeamId(),
   ]);
 
@@ -54,9 +38,7 @@ export default async function ResultsPage() {
   // Today's place, for CM's blue block: the app keeps no history of the table.
   const places = placings(table);
 
-  // Every team's total for a period, by period. Built once rather than filtered
-  // per round: thirty-eight rounds each scanning the whole season is the shape
-  // of a list that gets slow the week it gets long.
+  // Every team's total, by period, built once.
   const byPeriod = new Map<number, Map<string, number | null>>();
   for (const result of results) {
     const period = byPeriod.get(result.period) ?? new Map<string, number | null>();
@@ -64,15 +46,7 @@ export default async function ResultsPage() {
     byPeriod.set(result.period, period);
   }
 
-  // **Finished, and not merely started** — see `gameweekStatus` in core. The
-  // first cut filtered on `started` and the round in play came out top of the
-  // list with its half-time scores presented as results. A round still running
-  // is on Matchups and on Live, which is where a number that moves belongs; this
-  // page is the archive and everything on it is final.
-  //
-  // `byPeriod.has` as well, because a finished round Fantrax has not scored is
-  // not a round of 0-0 draws — `PeriodResult.points` is null exactly when the
-  // cell could not be read, and absence is never a nought.
+  // Finished, not merely started (`gameweekStatus`), and scored: an unscored round is not a round of 0-0 draws.
   const played = rounds
     .filter((round) => round.status === "finished" && byPeriod.has(round.period))
     .reverse();
@@ -113,7 +87,5 @@ export default async function ResultsPage() {
   );
 }
 
-/** Hoisted rather than written inline: a `new Map()` in the render would be a
- *  fresh object per pairing per round, and the filter above already guarantees
- *  the lookup succeeds — this exists to satisfy the type, not to be reached. */
+/** Satisfies the type: the filter above means it is never reached. */
 const EMPTY: Map<string, number | null> = new Map();

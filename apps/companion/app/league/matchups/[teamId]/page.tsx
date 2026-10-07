@@ -35,19 +35,11 @@ import TabStrip from "../../../components/shell/TabStrip";
 import { everyone, subMarks } from "./subs";
 import ScoreboardDown from "../../ScoreboardDown";
 
-// One head-to-head, at the size it deserves on a Saturday.
-//
-// The hole this fills was named in `docs/ui/matchday.md`: the live view could
-// say a manager was on 47 points and could show him Arsenal against Coventry,
-// and never once said which of his own players had done it. The score was a
-// number with no players behind it.
-//
-// The team in the URL is the side the board opens on, so tapping a name
-// anywhere in the app arrives on that name's eleven. Which side Fantrax calls
-// home decides only the ground: the tie is drawn over the home team's venue.
+// One head-to-head: the scoreline and the elevens behind it. The URL's team is the side the board opens on; the side
+// Fantrax calls home decides only the ground, its venue.
 
 // Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
+// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function HeadToHeadPage({
@@ -55,9 +47,7 @@ export default async function HeadToHeadPage({
   searchParams,
 }: {
   params: Promise<{ teamId: string }>;
-  /** Which round. Absent means the one Fantrax is currently pointing at, which
-   *  is every arrival from the live board; the schedule sends a gameweek so a
-   *  round that has been played opens on its own week rather than on this one. */
+  /** No `gw` is the round Fantrax points at; the schedule sends one, so a played round opens on its own week. */
   searchParams: Promise<{ gw?: string; view?: string; of?: string; sort?: string; dir?: string }>;
 }) {
   const [{ teamId }, query] = await Promise.all([params, searchParams]);
@@ -66,40 +56,23 @@ export default async function HeadToHeadPage({
   const of = statsOf(query.of);
   const sort = { head: query.sort ?? DEFAULT_SIDE_SORT, descending: query.dir !== "asc" };
 
-  // Resolved through the calendar seam rather than assumed equal: the period is
-  // what Fantrax is asked for and the gameweek is what FPL is asked for, and
-  // nothing here may take one for the other.
+  // Through the calendar seam: the period is Fantrax's question, the gameweek FPL's.
   const asked = Number(gw);
   const round = Number.isInteger(asked) ? await roundOf(asked) : null;
   const squads = readableOr404(await getLeagueSquads(round), MATCHUPS);
 
-  // A league nobody has drafted genuinely has no such matchup. The other two are
-  // states of ours rather than 404s, and the list page already describes both —
-  // so the reader goes there rather than this route growing a second copy of
-  // panels that would then drift from the originals.
-
+  // Undrafted is a 404; the other two states go to the board, which describes them.
   const period = squads.roundPeriod;
   if (squads.info === null || period === null) redirect(MATCHUPS);
 
   const state = roundState(squads.snapshot);
 
-  // Whether the round on screen has been played, which decides what the Stats
-  // board says its figures are OF. `wasFielded` below tells the two apart: the
-  // arrangement Fantrax stored for the period, or today's squad standing in for
-  // it — two different claims, so two sentences and not one hedged one.
-  //
-  // Asked of the round on screen, never of whether the URL carried a gameweek:
-  // arriving from the live board leaves `round` null, and a finished round is no
-  // less finished for having been reached without a query string.
-  // `played`, not `settled`. It is true at all three finished rungs, and only
-  // the top one — `data_checked` — licenses the word "final".
+  // Whether the round on screen has been played, which decides what Stats says its figures are of. `played`, not
+  // `settled`: true at all three finished rungs, and only `data_checked` licenses "final".
   const played = state !== null && state !== "live";
 
-  // A round nobody has kicked off is two squad lists and nothing else (Craig, 11 Sep 2026): every tab is empty.
-  //
-  // `roundStarted` and not `roundState`, and the distinction is load-bearing:
-  // that one answers null both before the first kickoff AND between two Saturday
-  // kickoffs, and tea-time is not "not played".
+  // A round nobody has kicked off is two squad lists (Craig, 11 Sep 2026). `roundStarted`, not `roundState`, which is
+  // null between two Saturday kickoffs too.
   const started = roundStarted(squads.snapshot, squads.snapshot.gameweek);
 
   const rostered = new Map(squads.period.teams.map((team) => [team.teamId, team]));
@@ -129,28 +102,17 @@ export default async function HeadToHeadPage({
   // One cached read of the whole pool's news, narrowed per sheet below.
   const [mine, stories] = await Promise.all([myTeamId(squads.period.teams), readPoolNews()]);
   const { scores, refused } = await liveScores(period);
-  // What this league calls each scoring category. Its own vocabulary, off its
-  // own payload — the two leagues do not share one.
+  // The league's own names for its categories.
   const categories = squads.info.scoringCategories;
   const clubs = clubById(squads.snapshot);
   const opposition = oppositionByClub(squads.snapshot);
-  /** Whether a side's eleven is going on screen at all. Asked before the fetch
-   *  below, because the answer decides whether that fetch is worth making. */
+  /** Whether a side's eleven goes on screen, asked before the fetch it decides. */
   const shows = (team: LeagueTeam) =>
     rostered.get(team.teamId) !== undefined &&
     teamDisplay(squads, team.teamId === mine).show === "lineup";
 
-  // What our league scores each player this period, from the same live payload
-  // the scoreboard above is read from — so the eleven adds up to the header over
-  // it. `getTeamRosterInfo` cannot do that twice over: its `period` is inert for
-  // points, so it answered a season total under a card headed "This period", and
-  // it prices a man at his default position rather than at the slot his manager
-  // filed him in. Both were invisible while the season was one gameweek old.
-  //
-  // Costs no request at all now — one `getLiveScoringStats` already fetched for
-  // the scoreboard, mapped a second time — where this used to be one
-  // `getTeamRosterInfo` per side. Only asked for a side whose eleven is on
-  // screen, because which section a man is priced in says who is in the eleven.
+  // Each man's points off the scoreboard's own live payload, priced at his slot, so an eleven adds up to its header.
+  // Only for a side whose eleven shows: where a man is priced says who is in it.
   const [yours, theirs] = await Promise.all([
     shows(pairing.team) ? squadLivePoints(period, pairing.team.teamId, categories) : null,
     shows(pairing.opponent) ? squadLivePoints(period, pairing.opponent.teamId, categories) : null,
