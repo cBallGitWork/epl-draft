@@ -22,6 +22,7 @@ concurrency:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   fetch:
@@ -46,3 +47,18 @@ jobs:
         run: |
           git add data/intel/xi
           scripts/ci/push.sh "data: Scout's predicted elevens, $(date -u +%Y-%m-%dT%H:%MZ)" "Scout's elevens have not changed."
+
+      # Every red or timed-out run opens or updates the issue "alert: scout-xi"; the next green one closes it.
+      - name: Alert the owner
+        if: ${{ failure() || cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/ci/alert.sh scout-xi fail "$RUN_URL"
+
+      - name: Close the alert
+        if: ${{ success() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/ci/alert.sh scout-xi ok "$RUN_URL"

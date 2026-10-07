@@ -77,6 +77,7 @@ concurrency:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   write:
@@ -135,3 +136,18 @@ jobs:
             node -e 'JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"))' "$f"
           done
           scripts/ci/push.sh "data: the paper for $(date -u +%Y-%m-%d)" "No column due."
+
+      # Every red or timed-out run opens or updates the issue "alert: editions"; the next green one closes it.
+      - name: Alert the owner
+        if: ${{ failure() || cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/ci/alert.sh editions fail "$RUN_URL"
+
+      - name: Close the alert
+        if: ${{ success() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/ci/alert.sh editions ok "$RUN_URL"

@@ -12,9 +12,9 @@ name: Capture staleness
 # noticing lives in its own workflow that would still fire if the other never ran
 # again.
 #
-# `npm run capture:status` exits non-zero when overdue, which fails the job, which
-# is what reaches a human. No issue-filing machinery: a red workflow already
-# notifies, and a mechanism with one caller is a mechanism we do not need.
+# `npm run capture:status` exits non-zero when overdue, which fails the job, and the
+# last step opens the issue "alert: capture-status" for the owner (`scripts/ci/alert.sh`).
+# A red run alone reached nobody: GitHub mails only whoever last edited the cron.
 
 on:
   schedule:
@@ -25,6 +25,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
 
 jobs:
   status:
@@ -47,3 +48,18 @@ jobs:
       # combined answer would hide whichever of them stopped.
       - name: Check both leagues
         run: npm run capture:status
+
+      # Every red or timed-out run opens or updates the issue "alert: capture-status"; the next green one closes it.
+      - name: Alert the owner
+        if: ${{ failure() || cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/ci/alert.sh capture-status fail "$RUN_URL"
+
+      - name: Close the alert
+        if: ${{ success() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/ci/alert.sh capture-status ok "$RUN_URL"

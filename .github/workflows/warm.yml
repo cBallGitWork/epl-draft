@@ -45,8 +45,10 @@ on:
     - cron: "*/30 17-22 * * 1,5"
   workflow_dispatch:
 
-# It reads. Nothing here writes anything, so it is granted nothing.
-permissions: {}
+# It reads, and writes only its alert issue.
+permissions:
+  contents: read
+  issues: write
 
 # Warming is only useful now. A run queued behind another has already missed the
 # window it was for, so the newer one replaces it.
@@ -59,6 +61,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      # The alert steps' script and nothing else.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          sparse-checkout: scripts/ci
+
       - name: Warm the pages a phone lands on
         env:
           BASE: ${{ vars.WARM_BASE_URL }}
@@ -77,3 +85,18 @@ jobs:
             # the one running while the round is on.
             case "$code" in 2*|3*) ;; *) exit 1 ;; esac
           done
+
+      # Every red or timed-out run opens or updates the issue "alert: warm"; the next green one closes it.
+      - name: Alert the owner
+        if: ${{ failure() || cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/ci/alert.sh warm fail "$RUN_URL"
+
+      - name: Close the alert
+        if: ${{ success() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: scripts/ci/alert.sh warm ok "$RUN_URL"
