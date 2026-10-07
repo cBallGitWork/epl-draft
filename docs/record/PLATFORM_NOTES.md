@@ -81,6 +81,21 @@ save already calls `updateTag`.
   `/10`) answered 500 once on the cold cache and was fine on a retry. **Open question:** a match page should degrade
   when an upstream fetch fails rather than 500.
 
+## The weekly run stamps every kind, projections and careers included — decided 7 Oct 2026
+
+The sister repo's engine-mode plan (Craig, 7 Oct), fix 2: export projections whatever the app's tab says, plus
+careers and league projections with an age check, and a dated weekly snapshot of league projections.
+
+- **Tuesday's run keeps every new stamp**, so an 8-day limit means "the weekly export ran", not "the content
+  changed". Pressers runs still drop a manifest-only change. intel-check had gone red on files nothing had changed:
+  cups over an international break.
+- **Projections every week**, no longer only while `PROJECTIONS_SHOWN`; `npm run draft-pack` reprices them in the
+  real league's points (`league-projections`, now with a manifest), and a copy is kept as
+  `data/intel/league-projections/weekly/<season>-<date>.json`: a trade is judged by a man's worth that week.
+- **Careers** come from `scripts/intel-careers.ts`, the sister's identity store read-only; it reproduced the hand
+  export of 25 Sep row for row. Careers and league projections age at 8 days.
+- **intel-cups stamps every run again**: PR B had it skip an unchanged file, which this rule would read as stale.
+
 ## A job that never ran is the watchdog's — decided 7 Oct 2026
 
 A failing job can report itself; one that never starts cannot. `watchdog.yml` runs `scripts/watchdog.ts` hourly

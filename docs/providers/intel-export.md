@@ -420,9 +420,9 @@ Joined `root_id` across `data/identity/persons/players/seasons/*`, the season's
 seasons a man was not in the league** (Haaland at City in 21-22), so the app prints a club
 only against a season FPL's own history lists. Written compact; 108 KB.
 
-**Exported by hand on 25 Sep 2026**, from a scratch script reading the sister repo
-read-only, because a session was committing there that day. `export-epl-draft` should
-take it over; until then the file is as fresh as that run.
+**Written weekly since 7 Oct 2026** by `scripts/intel-careers.ts` here, reading the sister
+repo read-only, from `scripts/sync-intel.sh weekly`; it reproduced the hand export of 25 Sep
+row for row. The sister's exporter may take it over; until then it lives here.
 
 ---
 

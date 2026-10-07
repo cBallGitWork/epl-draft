@@ -27,8 +27,11 @@ describe("intelFreshness", () => {
     expect(last).toEqual({ ageDays: 200, limitDays: null, stale: false });
   });
 
-  it("gives a kind with no limit none", () => {
-    expect(intelFreshness("careers", { season: "26-27", exportedAt: daysAgo(200) }, "26-27", NOW).stale).toBe(false);
+  it("ages careers and league projections by the weekly run, like the rest of the export", () => {
+    for (const kind of ["careers", "league-projections"] as const) {
+      expect(intelFreshness(kind, { season: "26-27", exportedAt: daysAgo(7) }, "26-27", NOW).stale).toBe(false);
+      expect(intelFreshness(kind, { season: "26-27", exportedAt: daysAgo(9) }, "26-27", NOW).stale).toBe(true);
+    }
   });
 
   it("calls an export that cannot say when it ran stale, since nothing vouches for it", () => {

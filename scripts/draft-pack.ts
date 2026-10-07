@@ -15,7 +15,7 @@ import {
   type LeagueProjectionFile,
   type PlayerStatLine,
 } from "@epl/core";
-import { INTEL_SEASON, readBridge, readIntel } from "./intel";
+import { INTEL_SEASON, intelManifest, readBridge, readIntel } from "./intel";
 import { SCORING_LEAGUE } from "./leagues";
 import { INTEL_ROOT } from "./paths";
 import { buildPack, type FplSide, type PoolSide } from "./draftPack/build";
@@ -80,6 +80,17 @@ async function main(): Promise<void> {
   const { rows, priors } = buildPack({ scoring, pool, matches, bridge, projections, fpl, gameweeks, weight: SHRINK_MINUTES });
 
   const pack: LeagueProjectionFile = {
+    manifest: intelManifest(
+      {
+        gameweek: null,
+        rows: rows.length,
+        sources: [
+          { path: `data/intel/projections/${INTEL_SEASON}.json`, mtime: exported?.manifest.exportedAt ?? null },
+          { path: `Fantrax getPlayerStats, the "${SCORING_LEAGUE.key}" league`, mtime: null },
+        ],
+      },
+      new Date(now).toISOString(),
+    ),
     generatedAt: new Date(now).toISOString(),
     method: METHOD,
     league: SCORING_LEAGUE.key,

@@ -34,6 +34,7 @@ import type {
   IntelStrength,
   IntelTouches,
   IntelXi,
+  LeagueProjectionFile,
 } from "@epl/core";
 import { INTEL_ROOT } from "./paths";
 import { INTEL_SEASON } from "./intel";
@@ -67,6 +68,7 @@ const CHECKS: Check[] = [
   check<IntelLines>("lines", (lines) => `${lineIntel(lines).size} players`),
   check<IntelLines>("lines", (lines) => `${lineIntel(lines).size} players`, LAST_SEASON),
   check<IntelCareers>("careers", (careers) => `${careerIntel(careers).size} players`),
+  check<LeagueProjectionFile>("league-projections", (pack) => `${pack.players.length} men over GW${pack.gameweeks[0]}–${pack.gameweeks.at(-1)}`),
   check<IntelCups>("cups", cupsSummary),
   check<IntelPressers>("pressers", (said) => `GW${said.manifest.gameweek}, ${said.rows.length} signals, ${said.quotes?.length ?? 0} quotes`),
   check<IntelStats>("stats", statsSummary),
@@ -83,6 +85,11 @@ async function main(): Promise<void> {
     if (file === null) {
       console.error(`\n✗ ${label}: absent, or will not parse.`);
       broken.push(`${label} absent`);
+      continue;
+    }
+    if (file.manifest === undefined) {
+      console.error(`\n✗ ${label}: no manifest, so no age.`);
+      broken.push(`${label} has no manifest`);
       continue;
     }
     console.log(`\n${label}: ${summary(file as never)}, exported ${age(file.manifest.exportedAt)}`);
