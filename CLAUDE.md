@@ -82,11 +82,11 @@ npm run intel-check     # is the intel export fresh and whole
 ## Environment
 
 - **No league is named in code.** `FANTRAX_LEAGUE_ID` names the one league served, with no
-  default: Vercel for the app (the rehearsal league, `zbn1z3ukmsgb36sz`, until 7 Oct),
+  default: Vercel for the app (the real league, `mqsjd23smsgbiqzr`, since 5 Oct),
   `apps/companion/.env.local` for `next dev`, the shell for a script. The server, the writer,
   smoke and team-codes refuse to run without it. CI keeps no copy: it asks production
-  (`GET /api/league`). **Go-live is one Vercel change on 7 Oct**: set it to `mqsjd23smsgbiqzr`
-  with the codes and save switches, and redeploy (`/swap-day`).
+  (`GET /api/league`). Go-live (7 Oct) adds the team codes and save switches in Vercel and
+  redeploys (`/swap-day`).
 - The leagues the archive records are data, in `data/leagues/recorded.json`, each named by a
   word (`real`, `dummy`, `rehearsal`). Scripts read it; the app reads two roles from it: `stats`,
   the league whose scoring lists every column at no points, read only for columns the served
@@ -157,8 +157,10 @@ The binding set is `docs/rules/CODE_RULES.md`. The ones that bite most here:
 
 - A piped instrument reports the pipe's exit code (`| tail` is tail's). Grep the verdict line.
 - `next start` renames itself `next-server`, so `pkill -f "next start"` leaves it running and the
-  next smoke tests the old build. Stop it with `pkill -f next-server`, and check the listener
-  started after the build.
+  next smoke tests the old build. Stop yours by port, `kill $(lsof -ti tcp:<port> -sTCP:LISTEN)`;
+  never `pkill -f next-server`, which kills every session's and worktree's server. Check the
+  listener started after the build, and leave none running: `guard_bash.sh` asks before every
+  build while any `next-server` is up on the Mac.
 - Next 16 locks per directory: never start a second dev server. Turbopack in a long-lived
   `next dev` never sees a new file; restart it.
 - `.next/types` from another branch's build makes typecheck name routes that are not there. Delete
