@@ -10,7 +10,7 @@ import {
   type IntelStats,
   type StatSheet,
 } from "@epl/core";
-import { INTEL_SEASON, readIntel } from "./intel";
+import { INTEL_SEASON, intelManifest, readIntel } from "./intel";
 import { STATS_LEAGUE } from "./leagues";
 import { INTEL_ROOT, MAPPINGS_ROOT } from "./paths";
 import { buildStats } from "./stats/build";
@@ -60,13 +60,14 @@ async function main(): Promise<void> {
 
   const now = new Date().toISOString();
   const out: IntelStats = {
-    manifest: {
-      season: INTEL_SEASON,
-      gameweek: null,
-      exportedAt: now,
-      rows: stats.players.length,
-      sources: [{ path: `Fantrax getPlayerStats, the "${STATS_LEAGUE.key}" league`, mtime: null }],
-    },
+    manifest: intelManifest(
+      {
+        gameweek: null,
+        rows: stats.players.length,
+        sources: [{ path: `Fantrax getPlayerStats, the "${STATS_LEAGUE.key}" league`, mtime: null }],
+      },
+      now,
+    ),
     ...stats,
   };
   mkdirSync(join(INTEL_ROOT, "stats"), { recursive: true });

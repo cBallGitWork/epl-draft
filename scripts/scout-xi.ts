@@ -11,7 +11,7 @@ import {
   xiFault,
   type IntelXi,
 } from "@epl/core";
-import { INTEL_SEASON, readIntel } from "./intel";
+import { INTEL_SEASON, intelManifest, readIntel } from "./intel";
 import { INTEL_ROOT } from "./paths";
 
 // Scout's predicted elevens, straight from their team-news page into `data/intel/xi/`
@@ -55,13 +55,14 @@ async function main(): Promise<void> {
   }
 
   const xi: IntelXi = {
-    manifest: {
-      season: INTEL_SEASON,
-      gameweek: nextRound(fixtures, now)?.gameweek ?? null,
-      exportedAt: now,
-      rows: Object.keys(clubs).length,
-      sources: [{ path: SCOUT_TEAM_NEWS_URL, mtime: null }],
-    },
+    manifest: intelManifest(
+      {
+        gameweek: nextRound(fixtures, now)?.gameweek ?? null,
+        rows: Object.keys(clubs).length,
+        sources: [{ path: SCOUT_TEAM_NEWS_URL, mtime: null }],
+      },
+      now,
+    ),
     fetchedAt: now,
     source: "ffscout",
     clubs,

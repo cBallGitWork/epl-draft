@@ -4,10 +4,12 @@ import { join } from "node:path";
 import { FIRM, LEAGUE_TIMEZONE, getFootballSnapshot, type FootballSnapshot } from "@epl/core";
 import { articleGameweek, clubKey, conferenceArticle, conferenceTimes, isLeagueArticle, manager, quotes, sections, text } from "./ingest/presserArticle";
 import { troubles } from "./ingest/presserSignals";
+import { INTEL_SEASON, intelManifest } from "./intel";
+import { INTEL_ROOT } from "./paths";
 import { fullClubName } from "@epl/core";
 
 // Thursday's and Friday's press conferences, from Fantasy Football Scout's own
-// team-news article into `data/intel/pressers/26-27.json`.
+// team-news article into `data/intel/pressers/<season>.json`.
 //
 // Belongs in the sister repo (`intel-export.md` §5) and lives here until that
 // repo grows the exporter. Name-matching happens HERE and never at runtime.
@@ -19,7 +21,7 @@ const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const SCRAPE =
   process.env.FFS_SCRAPE_DIR ??
   join(ROOT, "..", "ai-carling-premiership", "data", "raw", "fantasy_football_scout", "daily");
-const OUT = join(ROOT, "data", "intel", "pressers", "26-27.json");
+const OUT = join(INTEL_ROOT, "pressers", `${INTEL_SEASON}.json`);
 
 /** How many of a club's quotes the brief is offered. The column prints ONE, and
  *  a whole press conference in the brief is the writer's budget spent on
@@ -193,21 +195,19 @@ async function main(): Promise<void> {
   writeFileSync(
     OUT,
     exportJson({
-      manifest: {
-        season: "26-27",
+      manifest: intelManifest({
         // The ARTICLE's round, not the snapshot's — they differ between rounds,
         // and the consumer refuses an export for the wrong one.
         gameweek: article.gameweek,
-        exportedAt: new Date().toISOString(),
         rows: all.rows.length,
         sources: [{ path: join(day, article.file), mtime: null }],
-      },
+      }),
       ...all,
     }),
   );
 
   console.log(
-    `${fresh.rows.length} signals, ${fresh.quotes.length} quotes across ${fresh.spoke.length} clubs on ${day} (${all.rows.length} in the export → data/intel/pressers/26-27.json)`,
+    `${fresh.rows.length} signals, ${fresh.quotes.length} quotes across ${fresh.spoke.length} clubs on ${day} (${all.rows.length} in the export → ${OUT})`,
   );
   if (fresh.unmatched.length > 0) {
     console.log(`\n${fresh.unmatched.length} not matched, and NOT guessed:`);

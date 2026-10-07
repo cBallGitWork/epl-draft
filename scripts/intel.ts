@@ -1,9 +1,9 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { SEASON } from "@epl/core";
+import { SEASON, type IntelManifest } from "@epl/core";
 import { INTEL_ROOT } from "./paths";
 
-// Reading the sister repo's export off disk.
+// Reading the sister repo's export off disk, and the manifest every export written here carries.
 //
 // Absent is the ordinary state and every caller treats it as one. A file that
 // will not PARSE is not absent and throws: a corrupt export is a broken
@@ -20,4 +20,12 @@ export function readIntel<T>(...segments: string[]): T | null {
   const path = join(INTEL_ROOT, ...segments);
   if (!existsSync(path)) return null;
   return JSON.parse(readFileSync(path, "utf8")) as T;
+}
+
+/** The manifest of an export written here: this season, stamped now unless told when. Fields in the files' order. */
+export function intelManifest(
+  fields: Pick<IntelManifest, "gameweek" | "rows" | "sources">,
+  exportedAt = new Date().toISOString(),
+): IntelManifest {
+  return { season: INTEL_SEASON, gameweek: fields.gameweek, exportedAt, rows: fields.rows, sources: fields.sources };
 }
