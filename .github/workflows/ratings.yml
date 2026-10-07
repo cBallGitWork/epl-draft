@@ -7,7 +7,7 @@ name: Ratings
 on:
   schedule:
     # Match evenings, when FPL settles a day an hour or two after its last whistle (UTC; the league's clock is London).
-    - cron: "20 17,19,21,23 * * 5,6,0,1,2"
+    - cron: "20 21,23 * * 5,6,0,1"
     # And a morning sweep, for a day that settled overnight.
     - cron: "20 7 * * *"
   workflow_dispatch: {}
