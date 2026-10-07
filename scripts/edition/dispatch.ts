@@ -13,7 +13,6 @@ import {
   type StoryThread,
   type ThreadUpdate,
 } from "@epl/core";
-import { presserEdition } from "./presserWeek";
 import { faceOf, type FaceContext } from "./faces";
 import type { DeskFacts } from "./facts";
 import type { PredictionsDesk } from "./predictions";
@@ -21,7 +20,7 @@ import type { SeasonDesk } from "./season";
 import type { SheetsDesk } from "./sheets";
 import { storyOfColumn } from "./newsroom";
 import { COLUMNIST, STORY_BYLINE, editionName } from "./voice/bylines";
-import { presserHeadline } from "./voice/pressers";
+import { PRESSER_HEADLINE } from "./voice/pressers";
 import type { DraftJob } from "./draftWriter";
 import type { ReportsJob } from "./reports";
 import type { BinDesk } from "./binXi";
@@ -75,23 +74,12 @@ export interface DeskContext {
   dodgers: readonly Dodger[] | null;
 }
 
-/** One edition of the Team Sheet — the day's conferences, and nothing else.
- *  Every consumer reads the same narrowing: the brief, the picture and the lead. */
-export function edition(ctx: DeskContext, assignment: Assignment) {
-  return presserEdition(assignment.day ?? "", {
-    lines: ctx.presserLines,
-    quotes: ctx.presserQuotes,
-    spoke: ctx.presserSpoke,
-  });
-}
-
-/** What `faceOf` reads. The presser's men are narrowed to the assignment's own
- *  DAY, or the picture and the lead are chosen from the whole week. */
-export function faceCtx(ctx: DeskContext, assignment: Assignment): FaceContext {
+/** What `faceOf` reads. The Team Sheet's men are the round's, Thursday's and Friday's conferences in one column. */
+export function faceCtx(ctx: DeskContext): FaceContext {
   return {
     facts: ctx.facts,
     fixtures: ctx.snapshot.fixtures,
-    presserLines: assignment.kind === "presser" ? edition(ctx, assignment).lines : ctx.presserLines,
+    presserLines: ctx.presserLines,
     players: ctx.snapshot.players,
     drafts: ctx.drafts,
   };
@@ -107,12 +95,11 @@ export function file(
   // looking for team news should find the words, not a pun he has to decode —
   // and a thread that runs every week under a different name reads as a
   // different article each time. Craig, 18 Sep 2026.
-  // The day is the last segment of the key — `presser:gw4:2026-09-17`.
   const copy =
     assignment.kind === "presser"
       ? {
           ...column,
-          headline: presserHeadline(assignment.day ?? ""),
+          headline: PRESSER_HEADLINE,
           // The fixture is the DESK's, joined on the club code the writer echoed
           // back. Asking the column for it would be asking a model to recall a
           // fixture list, which is the one thing `strangers()` exists to stop.
@@ -148,7 +135,7 @@ export function file(
     // The picture, chosen HERE from the facts and not from the prose. A model
     // that named the man would be a model choosing the photograph, which is the
     // one thing `strangers()` exists to catch it doing.
-    face: assignment.kind === "bin-xi" ? (ctx.bin?.face ?? null) : faceOf(assignment, faceCtx(ctx, assignment)),
+    face: assignment.kind === "bin-xi" ? (ctx.bin?.face ?? null) : faceOf(assignment, faceCtx(ctx)),
   });
 }
 

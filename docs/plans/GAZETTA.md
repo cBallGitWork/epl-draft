@@ -149,16 +149,14 @@ this and not on a guess about when things happen:
 | **Sun/Mon** | the round ends, either night | The Monday Club | `eleven` (Crooks), `power-ranking`, `dodgers` |
 | **Tue** | **nothing at all** | Bins Out | `bin-xi`, "Top Bins": the best eleven nobody has — SHIPPED 30 Sep, see below |
 | **Wed 17:00** | waivers process, free agency opens | The Mercato Wire | `wire`, on **detection** of a claim batch |
-| **Thu 14:00** | press conferences end | The Team Sheet | `presser` — the round-up **publishes 15:00** |
 | **Thu 18:00** | the evening before the round | The Form Guide | `predictions`, Lawro's calls on every tie — SHIPPED 24 Sep (the evening before an earlier lock) |
-| **Fri 14:00 / 16:00** | pressers end; predicted elevens out | The Form Guide | `presser` **15:00**, `predicted-xi` **16:00** — both SHIPPED |
+| **Fri 16:00 / 17:00** | predicted elevens out; the week's pressers in | The Form Guide | `predicted-xi` **16:00**, then `presser` **17:00**: Thursday's and Friday's conferences in one Team Sheet (Craig, 7 Oct 2026) |
 | **Fri night / Sat noon** | deadline closes, gameweek begins | The Pink 'Un | `sheets` at the lock (every side as locked, SHIPPED 26 Sep), `tie-call`, `fixture-preview`, the Classified |
 | **Sat/Sun** | matches | The Sunday Edition | `tie-report` as the football stops |
 
-**Thursday's column is the press conference, and Craig's own week answers the
-question rather than a preference doing it.** He had asked for a Friday presser
-article; the pressers run Thursday *and* Friday this season, both ending at 2pm,
-so Thursday has a real event of its own and does not need one invented for it.
+**The Team Sheet is Friday's (Craig, 7 Oct 2026: *"team sheet Friday"*).** One column a round carries Thursday's and
+Friday's conferences, from 17:00 once the Mac's 16:00 import has merged (`TEAM_SHEET` in core config). It had been two,
+one per conference day, on the reading that Thursday had an event of its own; Craig's first ask had been Friday.
 
 **Tuesday is the only day with no league event, which is what makes it the right
 day for the evergreen piece** — the form table, `player` articles, the
@@ -486,7 +484,8 @@ below are what survived that did not land in the same session.
 headline stays *"Thursday Pressers"* — the editor called it *"a column slug, not
 a headline"* and wanted the day's news in it, and Craig had already ruled for a
 static day headline a reader recognises every week. `Back` became `FIT` because
-it collided with "back" the injury three lines away.
+it collided with "back" the injury three lines away. *Since 7 Oct 2026 the Team Sheet is one
+Friday column carrying Thursday's conferences too, so the static headline is "Team News", not a day.*
 
 ---
 

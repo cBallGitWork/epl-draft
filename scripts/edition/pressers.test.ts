@@ -1,7 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { PresserQuote } from "@epl/core";
 import { display } from "./pressers";
-import { presserEdition } from "./presserWeek";
 
 // Every row is a real 26/27 player, read out of the FPL snapshot on 18 Sep 2026.
 // The column prints these names in prose, so a wrong one is a wrong fact.
@@ -39,58 +37,5 @@ describe("display", () => {
   it("falls back to the web name when there is nothing to add", () => {
     expect(display({ name: "Sels", fullName: "" })).toBe("Sels");
     expect(display({ name: "Sels" })).toBe("Sels");
-  });
-});
-
-describe("presserEdition", () => {
-  // A round holds TWO conferences — Thursday's covers the clubs playing first,
-  // Friday's the rest — and the desk's window is the ROUND's. Without this,
-  // Friday's column carried all eighteen clubs and led on a Thursday man.
-  const all = {
-    lines: [
-      { said: "2026-09-17T12:30:00.000Z", club: "Chelsea" },
-      { said: "2026-09-18T08:00:00.000Z", club: "Arsenal" },
-      { said: "2026-09-18T12:30:00.000Z", club: "Spurs" },
-    ],
-    // A real quote's shape (data/intel/pressers/26-27.json): `said` is the SPEAKER, `at` the conference.
-    quotes: [
-      {
-        club: 3,
-        text: "In form, in the opponent, in the relationship that we have within that unit, there are a lot of factors.",
-        said: "Mikel Arteta",
-        about: "Eberechi Eze on the left wing",
-        at: "2026-09-18T08:00:00.000Z",
-      },
-    ],
-    spoke: [{ at: "2026-09-17T12:30:00.000Z", club: "Chelsea" }],
-  };
-
-  it("carries one day's conferences and no others", () => {
-    const friday = presserEdition("2026-09-18", all);
-    expect(friday.lines.map((r) => r.club)).toEqual(["Arsenal", "Spurs"]);
-    expect(friday.quotes).toHaveLength(1);
-    expect(friday.spoke).toHaveLength(0);
-  });
-
-  it("narrows every member the same way", () => {
-    const thursday = presserEdition("2026-09-17", all);
-    expect(thursday.lines.map((r) => r.club)).toEqual(["Chelsea"]);
-    expect(thursday.quotes).toHaveLength(0);
-    expect(thursday.spoke).toHaveLength(1);
-  });
-
-  it("reads the day in London, not UTC", () => {
-    // 23:30 London on the 17th is 22:30Z; a UTC key would file it a day early.
-    const late = { lines: [{ said: "2026-09-17T23:30:00.000Z" }], quotes: [], spoke: [] };
-    expect(presserEdition("2026-09-18", late).lines).toHaveLength(1);
-  });
-
-  it("files an undated quote on no day", () => {
-    const quote: PresserQuote = { club: 3, said: "Mikel Arteta", text: "We will see." };
-    expect(presserEdition("2026-09-18", { lines: [], quotes: [quote], spoke: [] }).quotes).toHaveLength(0);
-  });
-
-  it("drops a row whose instant cannot be read", () => {
-    expect(presserEdition("2026-09-18", { lines: [{ said: "nope" }], quotes: [], spoke: [] }).lines).toHaveLength(0);
   });
 });
