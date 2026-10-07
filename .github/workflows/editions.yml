@@ -87,6 +87,9 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
+          # The branch's tip when the job starts, not the commit the schedule fired on: a queued run
+          # otherwise starts behind the other writers' pushes and rebases over them.
+          ref: ${{ github.ref }}
           persist-credentials: false
       - uses: ./.github/actions/node
 
