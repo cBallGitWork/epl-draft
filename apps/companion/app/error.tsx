@@ -22,7 +22,7 @@ export default function SectionError({
   return (
     <div className="cm-panel flex flex-col items-center gap-4 px-6 py-10 text-center">
       <div className="flex flex-col gap-1.5">
-        <h1 className="font-display text-2xl font-bold tracking-tight">This section broke</h1>
+        <h1 className="font-chrome text-2xl font-bold tracking-tight">This section broke</h1>
         <p className="mx-auto max-w-xs text-sm text-muted">
           Not something the app expected, so it is not pretending otherwise. The other tabs are
           still there, and the football half needs no league at all.
