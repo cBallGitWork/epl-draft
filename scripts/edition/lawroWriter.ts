@@ -35,6 +35,13 @@ export async function writeLawro(desk: PredictionsDesk, brief: string, facts: st
     offered: desk.past,
     names: desk.names,
     past: desk.archive.prose,
+    // Whose each man is, so a line naming him without his side goes back.
+    holders: new Map(
+      desk.ties.map((tie) => [
+        tieKey(tie.call.homeTeamId, tie.call.awayTeamId),
+        new Map([...tie.home.squad.map((man) => [man.name, tie.home.name] as const), ...tie.away.squad.map((man) => [man.name, tie.away.name] as const)]),
+      ]),
+    ),
   };
   const label = (section: string) => {
     const call = calls.find((each) => tieKey(each.homeTeamId, each.awayTeamId) === section);

@@ -90,6 +90,48 @@ describe("checkLawro", () => {
   });
 });
 
+describe("checkLawro, the column's shape", () => {
+  const checks = (ties: [string, string][], over = {}) => checkLawro(draft([...ties, ...SAMPLE.slice(ties.length)]), ctx(over));
+  const found = (faults: ReturnType<typeof checkLawro>, check: string) => faults.filter((each) => each.check === check).map((each) => each.section);
+
+  it("sends back the same ending in a second tie: the side, and then a quip", () => {
+    const faults = checks([
+      ["rs-bn", "I've no argument with Real Sociable.\n\nReal Sociable edge it, and I'll be asleep by half-time."],
+      ["im-bt", "Inter Mittent have a doubt.\n\nBorussia Teeth, and nobody will thank me for it."],
+    ]);
+    expect(found(faults, "the same ending as another tie")).toEqual(["im-bt"]);
+  });
+
+  it("sends back the same opening in a second tie: the side, a verdict, and then him", () => {
+    const faults = checks([
+      ["rs-bn", "Real Sociable are flaky, and I'm backing them anyway.\n\nThey have won three."],
+      ["im-bt", "Inter Mittent are soft, but I'm going against them.\n\nBorussia Teeth."],
+    ]);
+    expect(found(faults, "the same opening as another tie")).toEqual(["im-bt"]);
+  });
+
+  it("allows the dull-game moan once in a column, and sends back the second", () => {
+    const faults = checks([
+      ["rs-bn", "I've no argument with Real Sociable.\n\nIt'll be a slog to sit through."],
+      ["im-bt", "On paper it's Inter Mittent.\n\nBorussia Teeth, and I'll be asleep by the second half."],
+    ]);
+    expect(found(faults, "the dull-game moan twice")).toEqual(["im-bt"]);
+  });
+
+  it("sends back a man named without the side that holds him, and passes him named with it", () => {
+    const holders = new Map([["rs-bn", new Map([["Oduya", "Real Sociable"]])]]);
+    const plain = checks([["rs-bn", "I've no argument with Real Sociable.\n\nOduya has Leeds. Real Sociable win it."]], { holders });
+    expect(plain.filter((each) => each.check === "a man without his side").map((each) => each.evidence)).toEqual(["Oduya"]);
+    const owned = checks([["rs-bn", "I've no argument with Real Sociable.\n\nReal Sociable's Oduya has Leeds. They win it."]], { holders });
+    expect(found(owned, "a man without his side")).toEqual([]);
+  });
+
+  it("sends back a tie of three sentences or more filed as one block", () => {
+    const faults = checks([["rs-bn", "I've no argument with Real Sociable. They have won all three. Oduya has Leeds. They'll need more than two."]]);
+    expect(found(faults, "a tie in one block")).toEqual(["rs-bn"]);
+  });
+});
+
 describe("pencil", () => {
   it("fixes the trivial slips and leaves a hyphenated name alone", () => {
     expect(pencil("So, they win! Gibbs-White — again. 49–41.")).toBe("They win. Gibbs-White, again. 49-41.");

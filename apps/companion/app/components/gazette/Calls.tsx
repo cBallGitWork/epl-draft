@@ -3,6 +3,7 @@ import { DASH } from "@epl/core";
 import { derbyBetween } from "@/app/derbies";
 import Column from "./Column";
 import Face from "./Face";
+import Paragraphs from "./Paragraphs";
 import { STANDING_HEAD } from "./heads";
 
 // Lawro's calls as the page prints them, the way the BBC ran them: each tie, the man his line names
@@ -38,7 +39,7 @@ export default function Calls({
       {/* The paper's own measure: one column on a phone, newspaper columns on a desk. */}
       <ul className="paper-columns">
         {ties.map((tie) => (
-          <li key={`${tie.homeTeamId}-${tie.awayTeamId}`} className="flow-root break-inside-avoid py-3">
+          <li key={`${tie.homeTeamId}-${tie.awayTeamId}`} className="flow-root break-inside-avoid border-b border-line py-5 last:border-b-0">
             <Derby home={tie.homeTeamId} away={tie.awayTeamId} />
             <p className="font-sans text-xs font-bold uppercase tracking-widest text-ink">
               {named(tie.homeTeamId)} v {named(tie.awayTeamId)}
@@ -48,7 +49,7 @@ export default function Calls({
                 <Face face={tie.face} clubs={clubs} rank="tie" />
               </div>
             ) : null}
-            {tie.line !== "" ? <p className="pt-1 text-base leading-relaxed text-ink">{tie.line}</p> : null}
+            {tie.line !== "" ? <Paragraphs text={tie.line} className="pt-1 text-base leading-relaxed text-ink" /> : null}
             <p className="clear-left pt-1.5 font-sans text-2xs uppercase tracking-widest text-muted">
               Lawro&apos;s prediction: <span className="font-bold text-ink">{prediction(tie, named)}</span>
             </p>

@@ -54,6 +54,10 @@ export const LAWRO_LIMITS = {
   /** Men a tie names, and question marks a column carries, at most. */
   men: 4,
   questions: 2,
+  /** Ties that may share an opening or an ending frame, or carry the dull-game moan; a tie of this many sentences is two paragraphs. */
+  sameFrame: 1,
+  dullMoan: 1,
+  paragraphFrom: 3,
   /** The skit writer's rewrite: words at most, words longer than the sentence it replaces, and a kicker's words. */
   skit: { words: 20, longer: 6, kicker: 3 },
 } as const;
