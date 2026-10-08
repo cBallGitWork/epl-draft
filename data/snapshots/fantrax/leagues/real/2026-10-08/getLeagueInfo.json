@@ -1,0 +1,5230 @@
+{
+  "matchups": [
+    {
+      "period": 1,
+      "matchupList": []
+    },
+    {
+      "period": 2,
+      "matchupList": []
+    },
+    {
+      "period": 3,
+      "matchupList": []
+    },
+    {
+      "period": 4,
+      "matchupList": []
+    },
+    {
+      "period": 5,
+      "matchupList": []
+    },
+    {
+      "period": 6,
+      "matchupList": [
+        {
+          "away": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          },
+          "home": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          }
+        },
+        {
+          "away": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          },
+          "home": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          }
+        },
+        {
+          "away": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          },
+          "home": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          }
+        },
+        {
+          "away": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          },
+          "home": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          }
+        },
+        {
+          "away": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          },
+          "home": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          }
+        }
+      ]
+    },
+    {
+      "period": 7,
+      "matchupList": [
+        {
+          "away": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          },
+          "home": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          }
+        },
+        {
+          "away": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          },
+          "home": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          }
+        },
+        {
+          "away": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          },
+          "home": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          }
+        },
+        {
+          "away": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          },
+          "home": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          }
+        },
+        {
+          "away": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          },
+          "home": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          }
+        }
+      ]
+    },
+    {
+      "period": 8,
+      "matchupList": [
+        {
+          "away": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          },
+          "home": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          }
+        },
+        {
+          "away": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          },
+          "home": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          }
+        },
+        {
+          "away": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          },
+          "home": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          }
+        },
+        {
+          "away": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          },
+          "home": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          }
+        },
+        {
+          "away": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          },
+          "home": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          }
+        }
+      ]
+    },
+    {
+      "period": 9,
+      "matchupList": [
+        {
+          "away": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          },
+          "home": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          }
+        },
+        {
+          "away": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          },
+          "home": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          }
+        },
+        {
+          "away": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          },
+          "home": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          }
+        },
+        {
+          "away": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          },
+          "home": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          }
+        },
+        {
+          "away": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          },
+          "home": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          }
+        }
+      ]
+    },
+    {
+      "period": 10,
+      "matchupList": [
+        {
+          "away": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          },
+          "home": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          }
+        },
+        {
+          "away": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          },
+          "home": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          }
+        },
+        {
+          "away": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          },
+          "home": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          }
+        },
+        {
+          "away": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          },
+          "home": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          }
+        },
+        {
+          "away": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          },
+          "home": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          }
+        }
+      ]
+    },
+    {
+      "period": 11,
+      "matchupList": [
+        {
+          "away": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          },
+          "home": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          }
+        },
+        {
+          "away": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          },
+          "home": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          }
+        },
+        {
+          "away": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          },
+          "home": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          }
+        },
+        {
+          "away": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          },
+          "home": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          }
+        },
+        {
+          "away": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          },
+          "home": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          }
+        }
+      ]
+    },
+    {
+      "period": 12,
+      "matchupList": [
+        {
+          "away": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          },
+          "home": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          }
+        },
+        {
+          "away": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          },
+          "home": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          }
+        },
+        {
+          "away": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          },
+          "home": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          }
+        },
+        {
+          "away": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          },
+          "home": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          }
+        },
+        {
+          "away": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          },
+          "home": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          }
+        }
+      ]
+    },
+    {
+      "period": 13,
+      "matchupList": [
+        {
+          "away": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          },
+          "home": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          }
+        },
+        {
+          "away": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          },
+          "home": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          }
+        },
+        {
+          "away": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          },
+          "home": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          }
+        },
+        {
+          "away": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          },
+          "home": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          }
+        },
+        {
+          "away": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          },
+          "home": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          }
+        }
+      ]
+    },
+    {
+      "period": 14,
+      "matchupList": [
+        {
+          "away": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          },
+          "home": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          }
+        },
+        {
+          "away": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          },
+          "home": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          }
+        },
+        {
+          "away": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          },
+          "home": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          }
+        },
+        {
+          "away": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          },
+          "home": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          }
+        },
+        {
+          "away": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          },
+          "home": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          }
+        }
+      ]
+    },
+    {
+      "period": 15,
+      "matchupList": [
+        {
+          "away": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          },
+          "home": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          }
+        },
+        {
+          "away": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          },
+          "home": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          }
+        },
+        {
+          "away": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          },
+          "home": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          }
+        },
+        {
+          "away": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          },
+          "home": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          }
+        },
+        {
+          "away": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          },
+          "home": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          }
+        }
+      ]
+    },
+    {
+      "period": 16,
+      "matchupList": [
+        {
+          "away": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          },
+          "home": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          }
+        },
+        {
+          "away": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          },
+          "home": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          }
+        },
+        {
+          "away": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          },
+          "home": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          }
+        },
+        {
+          "away": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          },
+          "home": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          }
+        },
+        {
+          "away": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          },
+          "home": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          }
+        }
+      ]
+    },
+    {
+      "period": 17,
+      "matchupList": [
+        {
+          "away": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          },
+          "home": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          }
+        },
+        {
+          "away": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          },
+          "home": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          }
+        },
+        {
+          "away": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          },
+          "home": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          }
+        },
+        {
+          "away": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          },
+          "home": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          }
+        },
+        {
+          "away": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          },
+          "home": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          }
+        }
+      ]
+    },
+    {
+      "period": 18,
+      "matchupList": [
+        {
+          "away": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          },
+          "home": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          }
+        },
+        {
+          "away": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          },
+          "home": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          }
+        },
+        {
+          "away": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          },
+          "home": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          }
+        },
+        {
+          "away": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          },
+          "home": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          }
+        },
+        {
+          "away": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          },
+          "home": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          }
+        }
+      ]
+    },
+    {
+      "period": 19,
+      "matchupList": [
+        {
+          "away": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          },
+          "home": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          }
+        },
+        {
+          "away": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          },
+          "home": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          }
+        },
+        {
+          "away": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          },
+          "home": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          }
+        },
+        {
+          "away": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          },
+          "home": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          }
+        },
+        {
+          "away": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          },
+          "home": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          }
+        }
+      ]
+    },
+    {
+      "period": 20,
+      "matchupList": [
+        {
+          "away": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          },
+          "home": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          }
+        },
+        {
+          "away": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          },
+          "home": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          }
+        },
+        {
+          "away": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          },
+          "home": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          }
+        },
+        {
+          "away": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          },
+          "home": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          }
+        },
+        {
+          "away": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          },
+          "home": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          }
+        }
+      ]
+    },
+    {
+      "period": 21,
+      "matchupList": []
+    },
+    {
+      "period": 22,
+      "matchupList": [
+        {
+          "away": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          },
+          "home": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          }
+        },
+        {
+          "away": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          },
+          "home": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          }
+        },
+        {
+          "away": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          },
+          "home": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          }
+        },
+        {
+          "away": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          },
+          "home": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          }
+        },
+        {
+          "away": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          },
+          "home": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          }
+        }
+      ]
+    },
+    {
+      "period": 23,
+      "matchupList": [
+        {
+          "away": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          },
+          "home": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          }
+        },
+        {
+          "away": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          },
+          "home": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          }
+        },
+        {
+          "away": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          },
+          "home": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          }
+        },
+        {
+          "away": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          },
+          "home": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          }
+        },
+        {
+          "away": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          },
+          "home": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          }
+        }
+      ]
+    },
+    {
+      "period": 24,
+      "matchupList": [
+        {
+          "away": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          },
+          "home": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          }
+        },
+        {
+          "away": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          },
+          "home": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          }
+        },
+        {
+          "away": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          },
+          "home": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          }
+        },
+        {
+          "away": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          },
+          "home": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          }
+        },
+        {
+          "away": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          },
+          "home": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          }
+        }
+      ]
+    },
+    {
+      "period": 25,
+      "matchupList": [
+        {
+          "away": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          },
+          "home": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          }
+        },
+        {
+          "away": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          },
+          "home": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          }
+        },
+        {
+          "away": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          },
+          "home": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          }
+        },
+        {
+          "away": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          },
+          "home": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          }
+        },
+        {
+          "away": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          },
+          "home": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          }
+        }
+      ]
+    },
+    {
+      "period": 26,
+      "matchupList": [
+        {
+          "away": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          },
+          "home": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          }
+        },
+        {
+          "away": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          },
+          "home": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          }
+        },
+        {
+          "away": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          },
+          "home": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          }
+        },
+        {
+          "away": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          },
+          "home": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          }
+        },
+        {
+          "away": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          },
+          "home": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          }
+        }
+      ]
+    },
+    {
+      "period": 27,
+      "matchupList": [
+        {
+          "away": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          },
+          "home": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          }
+        },
+        {
+          "away": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          },
+          "home": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          }
+        },
+        {
+          "away": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          },
+          "home": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          }
+        },
+        {
+          "away": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          },
+          "home": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          }
+        },
+        {
+          "away": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          },
+          "home": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          }
+        }
+      ]
+    },
+    {
+      "period": 28,
+      "matchupList": [
+        {
+          "away": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          },
+          "home": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          }
+        },
+        {
+          "away": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          },
+          "home": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          }
+        },
+        {
+          "away": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          },
+          "home": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          }
+        },
+        {
+          "away": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          },
+          "home": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          }
+        },
+        {
+          "away": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          },
+          "home": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          }
+        }
+      ]
+    },
+    {
+      "period": 29,
+      "matchupList": [
+        {
+          "away": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          },
+          "home": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          }
+        },
+        {
+          "away": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          },
+          "home": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          }
+        },
+        {
+          "away": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          },
+          "home": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          }
+        },
+        {
+          "away": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          },
+          "home": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          }
+        },
+        {
+          "away": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          },
+          "home": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          }
+        }
+      ]
+    },
+    {
+      "period": 30,
+      "matchupList": [
+        {
+          "away": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          },
+          "home": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          }
+        },
+        {
+          "away": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          },
+          "home": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          }
+        },
+        {
+          "away": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          },
+          "home": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          }
+        },
+        {
+          "away": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          },
+          "home": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          }
+        },
+        {
+          "away": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          },
+          "home": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          }
+        }
+      ]
+    },
+    {
+      "period": 31,
+      "matchupList": [
+        {
+          "away": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          },
+          "home": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          }
+        },
+        {
+          "away": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          },
+          "home": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          }
+        },
+        {
+          "away": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          },
+          "home": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          }
+        },
+        {
+          "away": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          },
+          "home": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          }
+        },
+        {
+          "away": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          },
+          "home": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          }
+        }
+      ]
+    },
+    {
+      "period": 32,
+      "matchupList": [
+        {
+          "away": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          },
+          "home": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          }
+        },
+        {
+          "away": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          },
+          "home": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          }
+        },
+        {
+          "away": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          },
+          "home": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          }
+        },
+        {
+          "away": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          },
+          "home": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          }
+        },
+        {
+          "away": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          },
+          "home": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          }
+        }
+      ]
+    },
+    {
+      "period": 33,
+      "matchupList": [
+        {
+          "away": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          },
+          "home": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          }
+        },
+        {
+          "away": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          },
+          "home": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          }
+        },
+        {
+          "away": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          },
+          "home": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          }
+        },
+        {
+          "away": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          },
+          "home": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          }
+        },
+        {
+          "away": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          },
+          "home": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          }
+        }
+      ]
+    },
+    {
+      "period": 34,
+      "matchupList": [
+        {
+          "away": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          },
+          "home": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          }
+        },
+        {
+          "away": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          },
+          "home": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          }
+        },
+        {
+          "away": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          },
+          "home": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          }
+        },
+        {
+          "away": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          },
+          "home": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          }
+        },
+        {
+          "away": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          },
+          "home": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          }
+        },
+        {
+          "away": {
+            "name": "If anyone can, Bannan can",
+            "id": "7to6xosimu8hyyw5",
+            "shortName": "IACBC"
+          },
+          "home": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "RACC"
+          }
+        },
+        {
+          "away": {
+            "name": "Cowthenbeef",
+            "id": "7z8fy0pnmuogbtdw",
+            "shortName": "Beef"
+          },
+          "home": {
+            "name": "GlengarryHearts",
+            "id": "syjkob6cmuobagfu",
+            "shortName": "Atheltic"
+          }
+        },
+        {
+          "away": {
+            "name": "The Truffle Pigs",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          },
+          "home": {
+            "name": "Bayern Bru",
+            "id": "kpj0z744muh1qwtd",
+            "shortName": "BRU"
+          }
+        },
+        {
+          "away": {
+            "name": "its_ohi",
+            "id": "qgucu9dgmufwva1x",
+            "shortName": "its_ohi"
+          },
+          "home": {
+            "name": "AtleticoTimHortons",
+            "id": "uexqrijomu8l5asi",
+            "shortName": "Atletico"
+          }
+        },
+        {
+          "away": {
+            "name": "domeitalycoach",
+            "id": "0g0j5mkomuqqwsbu",
+            "shortName": "domeital"
+          },
+          "home": {
+            "name": "Hazza Maguazza's Redempshazza",
+            "id": "ipnp5y4mmu9j7kop",
+            "shortName": "RichyN"
+          }
+        }
+      ]
+    }
+  ],
+  "rosterInfo": {
+    "positionConstraints": {
+      "D": {
+        "maxActive": 5
+      },
+      "F": {
+        "maxActive": 3
+      },
+      "G": {
+        "maxActive": 1
+      },
+      "M": {
+        "maxActive": 5
+      }
+    },
+    "maxTotalPlayers": 14,
+    "maxTotalActivePlayers": 11,
+    "maxTotalReservePlayers": 3
+  },
+  "endDate": "2027-05-30",
+  "playerInfo": {
+    "075zi": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "02m5b": {
+      "eligiblePos": "F",
+      "status": "WW"
+    },
+    "07app": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "07apq": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "07apn": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "07apo": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06onv": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06uzy": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "02ltw": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "05os8": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06uzw": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "04lnu": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "06uzu": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05os4": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06uzv": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "04mr4": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "062x7": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06uzt": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06uzo": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "04rzl": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "06r2g": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "04ge6": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "04ge9": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "03jlw": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05nns": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06zbz": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "06yb9": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06zbx": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "063y7": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06yb7": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06zbw": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "05ye7": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "05opl": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06ezb": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05opj": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "06zbp": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "0635j": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05r4h": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06r5b": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "05gcs": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06mn7": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05gcr": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "06pry": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "03p9y": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06jh3": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "06prt": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "032aa": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06mn1": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "03fgl": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "03m3q": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "03fgo": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "05a6e": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "05r94": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "06mn0": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "061vp": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "061vq": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "05gcc": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "061vk": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "06jfe": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "061vn": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "063zi": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "061ve": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "061vb": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "061va": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06zef": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05n09": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "05n07": {
+      "eligiblePos": "D",
+      "status": "WW"
+    },
+    "06c6g": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "0722t": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "06ybq": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "057cr": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "02m5l": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06ybp": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "072pc": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06mfy": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06ews": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "0427d": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "06ewn": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05omu": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "05r34": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "03r93": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "0414o": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "04tzt": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "02lpf": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "04p0d": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06fxu": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06ex4": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "06crm": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06mg2": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05244": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "0558w": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "06fxe": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "0328q": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "03rxs": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "06fwz": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "0788g": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "0522h": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "06zbm": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "02lsa": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06uyc": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "06on5": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "068a0": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05ybq": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "068a1": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06f8y": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "0646f": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "072py": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05t6z": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06qq9": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05t6x": {
+      "eligiblePos": "F",
+      "status": "WW"
+    },
+    "03r8x": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "02ls8": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06exa": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "03rzp": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "06mgd": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "078i7": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "06msb": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05uel": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06msc": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "04fjz": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "03rec": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "078gc": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "078fy": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "076d9": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "078fz": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "076d7": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05udw": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "05ylx": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "076d6": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "076d3": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06p6j": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "05ylw": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "076d4": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "05uds": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "076d0": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "03vlj": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "05ylj": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "06lox": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "04fk8": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05l27": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "06nu7": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "06r9w": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "04fk1": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "06r9x": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "072zs": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "05ue7": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "072zr": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05oz3": {
+      "eligiblePos": "G",
+      "status": "T"
+    },
+    "072zp": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06mul": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "068n8": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "068lx": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "049tq": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "052cb": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "052ce": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "052cd": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "04abn": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "06znb": {
+      "eligiblePos": "G",
+      "status": "T"
+    },
+    "052ca": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "062a9": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06zna": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "076dw": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05rb8": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "076dx": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "076du": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "076dv": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "04abb": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "033l8": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "063c2": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "076dq": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "078j4": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "076dn": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06nvb": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "076dg": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "078hi": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "076dh": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "076de": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "05l2z": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "076da": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "076db": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "06fg0": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "076cx": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "056iy": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "05o8o": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "06r7f": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05o4b": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "060wh": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "037mt": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05o4c": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "061ya": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "0701y": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06r6s": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "072wq": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "061xs": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "02lz0": {
+      "eligiblePos": "G",
+      "status": "T"
+    },
+    "03ksl": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06mnc": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "03m5i": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "05r9b": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "06avm": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06jgs": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "04hk9": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "0700u": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "0639x": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "0700t": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "078az": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "05nt6": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "061y6": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05o2p": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "0700p": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06jgi": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "05r8o": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "06r5m": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "078g4": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "078g5": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "03yqz": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05o6h": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "06r9h": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05o6g": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "078ei": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05n3v": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05n3u": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "06mpp": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06p4l": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "032f9": {
+      "eligiblePos": "G",
+      "status": "T"
+    },
+    "06p4j": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "04sat": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06p4k": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "04yo7": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "065ao": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "0703h": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "0703c": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "06ygm": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "04ug0": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "044ei": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "05ubh": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "03yr0": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "06mow": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "06195": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "06r7l": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "06kwp": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06rf9": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "06y29": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "052k6": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "062h7": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06y27": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "063hu": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "07918": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06y26": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05y55": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "066nn": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "076ki": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "076kf": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "066ng": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "03am7": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "076kg": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "076kd": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "03pif": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "076ke": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "076kc": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "048xg": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "04agz": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "05rff": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "04ai5": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "038ze": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "04qfz": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05l8q": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "05rey": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05g2o": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "0477b": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "051k8": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "051k7": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "05uox": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "04e1e": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "051k3": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "066r9": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "051k0": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05uor": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "07934": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "04e1c": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "0791n": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06zvn": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "078qh": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "078qg": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "04h87": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05unu": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05748": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "05xtr": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "04y92": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "0790i": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "04rh9": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "03yww": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06fhy": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "04adp": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06mvz": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "04gpx": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06l2r": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "03gu5": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "03gu4": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "06mx0": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "063e7": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05uht": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "06ymt": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "05uhs": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06ymu": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05rbn": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "0372y": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05uhq": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06mve": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "05uhj": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "04tig": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06kqy": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05nzu": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "06mw0": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "072at": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "04sjt": {
+      "eligiblePos": "G",
+      "status": "T"
+    },
+    "04qfq": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "04sjv": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "04qfm": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "078ml": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "078mm": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06ab3": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "04rha": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06j20": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05m9r": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "062ct": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06l4i": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "06zqq": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "062ci": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "03frx": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "078le": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05mzz": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06nyw": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "045ob": {
+      "eligiblePos": "G",
+      "status": "T"
+    },
+    "05mzt": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06fup": {
+      "eligiblePos": "F,M",
+      "status": "WW"
+    },
+    "06phw": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "070gt": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "04qr9": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "062p5": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "07877": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "062p1": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "062p3": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "06rlj": {
+      "eligiblePos": "D",
+      "status": "WW"
+    },
+    "05oig": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "078wn": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "078wo": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "0785j": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "078wl": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06phe": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "078wm": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "078wj": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "0410j": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "06dpw": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "078wk": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "06fv8": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "0785g": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "0785d": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "03ybi": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "0785a": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "070h9": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "02lm7": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "05s08": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06rm7": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "0784y": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "04mi4": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "063q8": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06rm8": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "0784z": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "0784w": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "0784x": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "04qos": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "04qor": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "0784s": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "05s00": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "068yt": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "0784r": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05u40": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "0784o": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "0784p": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "0554i": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "0784i": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "070fa": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06cmt": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06cmu": {
+      "eligiblePos": "G",
+      "status": "T"
+    },
+    "068ym": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "05tre": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "06cms": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "0554g": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "06fy7": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06ew2": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "03yeg": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "02lnx": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "06fwn": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "0521z": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "072o9": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "06fwi": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "0787y": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "07898": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "067zv": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "072mp": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "06442": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "07897": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "072mq": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "06rnn": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "05nil": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "02lp5": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "062pl": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05w9r": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "0327r": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "0666p": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "06xzn": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05vyj": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "075sh": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "078yh": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06xzi": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06xzg": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06xzd": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "06xze": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06xzc": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "06xza": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "070hs": {
+      "eligiblePos": "G",
+      "status": "T"
+    },
+    "06y9z": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06rmv": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "070hq": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "062ot": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "070hr": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "0689w": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "0326x": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "02lo6": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "067yz": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "06v51": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "067yv": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "06hze": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "070hl": {
+      "eligiblePos": "G",
+      "status": "T"
+    },
+    "070hi": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "070hj": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "05220": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "067ys": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "06y9n": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "06pig": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06y9o": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "05ojf": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "062oh": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06y9m": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "062og": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "070hc": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "0435m": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "06fuw": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06pia": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "070ha": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "070hb": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06pib": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "0794a": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "04tsb": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "06dmj": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "0793w": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "06v07": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "04spw": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "06v05": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06zxy": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "070cj": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "0793q": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "06v01": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "04u40": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "051kl": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "070ci": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "0793p": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "04u41": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "04gyd": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "05oeh": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "0793n": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "051kg": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06y4g": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "03mga": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "0793h": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05y7c": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "04lav": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "0792z": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06pe1": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "07948": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06y59": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "07949": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "043qy": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "078t8": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "03v6t": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "0792s": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "07942": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "06rgg": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "02oo1": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "03mfe": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06zwj": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "06kyw": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "068yd": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "0784a": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05trb": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "068yc": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "0784b": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "06fso": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06cmm": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "0687c": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "070g8": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05tqz": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06v0y": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "05tqx": {
+      "eligiblePos": "G",
+      "status": "T"
+    },
+    "06v0t": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "07859": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "067x8": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06v0p": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "06v21": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "05u1m": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06v0l": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06v0m": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05ogg": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06clz": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06v0k": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05y9n": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "03dwz": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06v0g": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "05akv": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "05ogb": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "06clt": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "076qg": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "06v0c": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "06yxe": {
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "078ud": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06v0a": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "070f9": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "04f6o": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05tr9": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "07849": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "02lk5": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "04f6h": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "072j3": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "05tr8": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "07848": {
+      "eligiblePos": "M",
+      "status": "T"
+    },
+    "05oh0": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "02oq6": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "050jq": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "05tr1": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "04vy4": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
+    "0794n": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "064oo": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "068y0": {
+      "eligiblePos": "F,M",
+      "status": "T"
+    },
+    "0794m": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06do9": {
+      "eligiblePos": "D",
+      "status": "T"
+    },
+    "0794h": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "0794f": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06do3": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "066sd": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06do4": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "0794e": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06cm1": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "0794c": {
+      "eligiblePos": "D",
+      "status": "FA"
+    }
+  },
+  "poolSettings": {
+    "duplicatePlayerType": "NONE",
+    "playerSourceType": "ALL_TEAMS"
+  },
+  "rosterPeriods": [
+    {
+      "number": 1,
+      "endDate": "2026-08-28T14:59:58.0-0400",
+      "startDate": "2026-08-21T15:00:00.0-0400"
+    },
+    {
+      "number": 2,
+      "endDate": "2026-09-04T14:59:58.0-0400",
+      "startDate": "2026-08-28T15:00:00.0-0400"
+    },
+    {
+      "number": 3,
+      "endDate": "2026-09-11T05:59:58.0-0400",
+      "startDate": "2026-09-04T15:00:00.0-0400"
+    },
+    {
+      "number": 4,
+      "endDate": "2026-09-18T14:59:58.0-0400",
+      "startDate": "2026-09-11T06:00:00.0-0400"
+    },
+    {
+      "number": 5,
+      "endDate": "2026-10-09T05:59:58.0-0400",
+      "startDate": "2026-09-18T15:00:00.0-0400"
+    },
+    {
+      "number": 6,
+      "endDate": "2026-10-16T05:59:58.0-0400",
+      "startDate": "2026-10-09T06:00:00.0-0400"
+    },
+    {
+      "number": 7,
+      "endDate": "2026-10-23T14:59:58.0-0400",
+      "startDate": "2026-10-16T06:00:00.0-0400"
+    },
+    {
+      "number": 8,
+      "endDate": "2026-10-30T05:59:58.0-0400",
+      "startDate": "2026-10-23T15:00:00.0-0400"
+    },
+    {
+      "number": 9,
+      "endDate": "2026-11-06T14:59:58.0-0500",
+      "startDate": "2026-10-30T06:00:00.0-0400"
+    },
+    {
+      "number": 10,
+      "endDate": "2026-11-20T05:59:58.0-0500",
+      "startDate": "2026-11-06T15:00:00.0-0500"
+    },
+    {
+      "number": 11,
+      "endDate": "2026-11-27T14:59:58.0-0500",
+      "startDate": "2026-11-20T06:00:00.0-0500"
+    },
+    {
+      "number": 12,
+      "endDate": "2026-12-01T05:59:58.0-0500",
+      "startDate": "2026-11-27T15:00:00.0-0500"
+    },
+    {
+      "number": 13,
+      "endDate": "2026-12-04T05:59:58.0-0500",
+      "startDate": "2026-12-01T06:00:00.0-0500"
+    },
+    {
+      "number": 14,
+      "endDate": "2026-12-11T05:59:58.0-0500",
+      "startDate": "2026-12-04T06:00:00.0-0500"
+    },
+    {
+      "number": 15,
+      "endDate": "2026-12-18T05:59:58.0-0500",
+      "startDate": "2026-12-11T06:00:00.0-0500"
+    },
+    {
+      "number": 16,
+      "endDate": "2026-12-25T05:59:58.0-0500",
+      "startDate": "2026-12-18T06:00:00.0-0500"
+    },
+    {
+      "number": 17,
+      "endDate": "2026-12-29T14:29:58.0-0500",
+      "startDate": "2026-12-25T06:00:00.0-0500"
+    },
+    {
+      "number": 18,
+      "endDate": "2027-01-01T14:59:58.0-0500",
+      "startDate": "2026-12-29T14:30:00.0-0500"
+    },
+    {
+      "number": 19,
+      "endDate": "2027-01-05T14:29:58.0-0500",
+      "startDate": "2027-01-01T15:00:00.0-0500"
+    },
+    {
+      "number": 20,
+      "endDate": "2027-01-15T05:59:58.0-0500",
+      "startDate": "2027-01-05T14:30:00.0-0500"
+    },
+    {
+      "number": 21,
+      "endDate": "2027-01-22T05:59:58.0-0500",
+      "startDate": "2027-01-15T06:00:00.0-0500"
+    },
+    {
+      "number": 22,
+      "endDate": "2027-01-29T05:59:58.0-0500",
+      "startDate": "2027-01-22T06:00:00.0-0500"
+    },
+    {
+      "number": 23,
+      "endDate": "2027-02-05T05:59:58.0-0500",
+      "startDate": "2027-01-29T06:00:00.0-0500"
+    },
+    {
+      "number": 24,
+      "endDate": "2027-02-09T05:59:58.0-0500",
+      "startDate": "2027-02-05T06:00:00.0-0500"
+    },
+    {
+      "number": 25,
+      "endDate": "2027-02-19T05:59:58.0-0500",
+      "startDate": "2027-02-09T06:00:00.0-0500"
+    },
+    {
+      "number": 26,
+      "endDate": "2027-02-26T05:59:58.0-0500",
+      "startDate": "2027-02-19T06:00:00.0-0500"
+    },
+    {
+      "number": 27,
+      "endDate": "2027-03-02T05:59:58.0-0500",
+      "startDate": "2027-02-26T06:00:00.0-0500"
+    },
+    {
+      "number": 28,
+      "endDate": "2027-03-12T05:59:58.0-0500",
+      "startDate": "2027-03-02T06:00:00.0-0500"
+    },
+    {
+      "number": 29,
+      "endDate": "2027-03-19T05:59:58.0-0400",
+      "startDate": "2027-03-12T06:00:00.0-0500"
+    },
+    {
+      "number": 30,
+      "endDate": "2027-04-09T05:59:58.0-0400",
+      "startDate": "2027-03-19T06:00:00.0-0400"
+    },
+    {
+      "number": 31,
+      "endDate": "2027-04-16T05:59:58.0-0400",
+      "startDate": "2027-04-09T06:00:00.0-0400"
+    },
+    {
+      "number": 32,
+      "endDate": "2027-04-23T05:59:58.0-0400",
+      "startDate": "2027-04-16T06:00:00.0-0400"
+    },
+    {
+      "number": 33,
+      "endDate": "2027-04-30T05:59:58.0-0400",
+      "startDate": "2027-04-23T06:00:00.0-0400"
+    },
+    {
+      "number": 34,
+      "endDate": "2027-05-07T05:59:58.0-0400",
+      "startDate": "2027-04-30T06:00:00.0-0400"
+    },
+    {
+      "number": 35,
+      "endDate": "2027-05-14T05:59:58.0-0400",
+      "startDate": "2027-05-07T06:00:00.0-0400"
+    },
+    {
+      "number": 36,
+      "endDate": "2027-05-21T05:59:58.0-0400",
+      "startDate": "2027-05-14T06:00:00.0-0400"
+    },
+    {
+      "number": 37,
+      "endDate": "2027-05-28T05:59:58.0-0400",
+      "startDate": "2027-05-21T06:00:00.0-0400"
+    },
+    {
+      "number": 38,
+      "endDate": "2027-05-31T05:59:58.0-0400",
+      "startDate": "2027-05-28T06:00:00.0-0400"
+    }
+  ],
+  "scoringPeriods": [
+    {
+      "number": 1,
+      "endDate": "2026-08-28T14:59:59.0-0400",
+      "startDate": "2026-08-21T15:00:00.0-0400"
+    },
+    {
+      "number": 2,
+      "endDate": "2026-09-04T14:59:59.0-0400",
+      "startDate": "2026-08-28T15:00:00.0-0400"
+    },
+    {
+      "number": 3,
+      "endDate": "2026-09-11T05:59:59.0-0400",
+      "startDate": "2026-09-04T15:00:00.0-0400"
+    },
+    {
+      "number": 4,
+      "endDate": "2026-09-18T14:59:59.0-0400",
+      "startDate": "2026-09-11T06:00:00.0-0400"
+    },
+    {
+      "number": 5,
+      "endDate": "2026-10-09T05:59:59.0-0400",
+      "startDate": "2026-09-18T15:00:00.0-0400"
+    },
+    {
+      "number": 6,
+      "endDate": "2026-10-16T05:59:59.0-0400",
+      "startDate": "2026-10-09T06:00:00.0-0400"
+    },
+    {
+      "number": 7,
+      "endDate": "2026-10-23T14:59:59.0-0400",
+      "startDate": "2026-10-16T06:00:00.0-0400"
+    },
+    {
+      "number": 8,
+      "endDate": "2026-10-30T05:59:59.0-0400",
+      "startDate": "2026-10-23T15:00:00.0-0400"
+    },
+    {
+      "number": 9,
+      "endDate": "2026-11-06T14:59:59.0-0500",
+      "startDate": "2026-10-30T06:00:00.0-0400"
+    },
+    {
+      "number": 10,
+      "endDate": "2026-11-20T05:59:59.0-0500",
+      "startDate": "2026-11-06T15:00:00.0-0500"
+    },
+    {
+      "number": 11,
+      "endDate": "2026-11-27T14:59:59.0-0500",
+      "startDate": "2026-11-20T06:00:00.0-0500"
+    },
+    {
+      "number": 12,
+      "endDate": "2026-12-01T05:59:59.0-0500",
+      "startDate": "2026-11-27T15:00:00.0-0500"
+    },
+    {
+      "number": 13,
+      "endDate": "2026-12-04T05:59:59.0-0500",
+      "startDate": "2026-12-01T06:00:00.0-0500"
+    },
+    {
+      "number": 14,
+      "endDate": "2026-12-11T05:59:59.0-0500",
+      "startDate": "2026-12-04T06:00:00.0-0500"
+    },
+    {
+      "number": 15,
+      "endDate": "2026-12-18T05:59:59.0-0500",
+      "startDate": "2026-12-11T06:00:00.0-0500"
+    },
+    {
+      "number": 16,
+      "endDate": "2026-12-25T05:59:59.0-0500",
+      "startDate": "2026-12-18T06:00:00.0-0500"
+    },
+    {
+      "number": 17,
+      "endDate": "2026-12-29T14:29:59.0-0500",
+      "startDate": "2026-12-25T06:00:00.0-0500"
+    },
+    {
+      "number": 18,
+      "endDate": "2027-01-01T14:59:59.0-0500",
+      "startDate": "2026-12-29T14:30:00.0-0500"
+    },
+    {
+      "number": 19,
+      "endDate": "2027-01-05T14:29:59.0-0500",
+      "startDate": "2027-01-01T15:00:00.0-0500"
+    },
+    {
+      "number": 20,
+      "endDate": "2027-01-15T05:59:59.0-0500",
+      "startDate": "2027-01-05T14:30:00.0-0500"
+    },
+    {
+      "number": 21,
+      "endDate": "2027-01-22T05:59:59.0-0500",
+      "startDate": "2027-01-15T06:00:00.0-0500"
+    },
+    {
+      "number": 22,
+      "endDate": "2027-01-29T05:59:59.0-0500",
+      "startDate": "2027-01-22T06:00:00.0-0500"
+    },
+    {
+      "number": 23,
+      "endDate": "2027-02-05T05:59:59.0-0500",
+      "startDate": "2027-01-29T06:00:00.0-0500"
+    },
+    {
+      "number": 24,
+      "endDate": "2027-02-09T05:59:59.0-0500",
+      "startDate": "2027-02-05T06:00:00.0-0500"
+    },
+    {
+      "number": 25,
+      "endDate": "2027-02-19T05:59:59.0-0500",
+      "startDate": "2027-02-09T06:00:00.0-0500"
+    },
+    {
+      "number": 26,
+      "endDate": "2027-02-26T05:59:59.0-0500",
+      "startDate": "2027-02-19T06:00:00.0-0500"
+    },
+    {
+      "number": 27,
+      "endDate": "2027-03-02T05:59:59.0-0500",
+      "startDate": "2027-02-26T06:00:00.0-0500"
+    },
+    {
+      "number": 28,
+      "endDate": "2027-03-12T05:59:59.0-0500",
+      "startDate": "2027-03-02T06:00:00.0-0500"
+    },
+    {
+      "number": 29,
+      "endDate": "2027-03-19T05:59:59.0-0400",
+      "startDate": "2027-03-12T06:00:00.0-0500"
+    },
+    {
+      "number": 30,
+      "endDate": "2027-04-09T05:59:59.0-0400",
+      "startDate": "2027-03-19T06:00:00.0-0400"
+    },
+    {
+      "number": 31,
+      "endDate": "2027-04-16T05:59:59.0-0400",
+      "startDate": "2027-04-09T06:00:00.0-0400"
+    },
+    {
+      "number": 32,
+      "endDate": "2027-04-23T05:59:59.0-0400",
+      "startDate": "2027-04-16T06:00:00.0-0400"
+    },
+    {
+      "number": 33,
+      "endDate": "2027-04-30T05:59:59.0-0400",
+      "startDate": "2027-04-23T06:00:00.0-0400"
+    },
+    {
+      "number": 34,
+      "endDate": "2027-05-07T05:59:59.0-0400",
+      "startDate": "2027-04-30T06:00:00.0-0400"
+    },
+    {
+      "number": 35,
+      "endDate": "2027-05-14T05:59:59.0-0400",
+      "startDate": "2027-05-07T06:00:00.0-0400"
+    },
+    {
+      "number": 36,
+      "endDate": "2027-05-21T05:59:59.0-0400",
+      "startDate": "2027-05-14T06:00:00.0-0400"
+    },
+    {
+      "number": 37,
+      "endDate": "2027-05-28T05:59:59.0-0400",
+      "startDate": "2027-05-21T06:00:00.0-0400"
+    },
+    {
+      "number": 38,
+      "endDate": "2027-05-31T05:59:59.0-0400",
+      "startDate": "2027-05-28T06:00:00.0-0400"
+    }
+  ],
+  "teamInfo": {
+    "qgucu9dgmufwva1x": {
+      "name": "its_ohi",
+      "id": "qgucu9dgmufwva1x"
+    },
+    "aekx2715mtzgcl3f": {
+      "name": "The Truffle Pigs",
+      "id": "aekx2715mtzgcl3f"
+    },
+    "syjkob6cmuobagfu": {
+      "name": "GlengarryHearts",
+      "id": "syjkob6cmuobagfu"
+    },
+    "7z8fy0pnmuogbtdw": {
+      "name": "Cowthenbeef",
+      "id": "7z8fy0pnmuogbtdw"
+    },
+    "ipnp5y4mmu9j7kop": {
+      "name": "Hazza Maguazza's Redempshazza",
+      "id": "ipnp5y4mmu9j7kop"
+    },
+    "uexqrijomu8l5asi": {
+      "name": "AtleticoTimHortons",
+      "id": "uexqrijomu8l5asi"
+    },
+    "l5kunst8msgbirdf": {
+      "name": "The Raccoons",
+      "id": "l5kunst8msgbirdf"
+    },
+    "kpj0z744muh1qwtd": {
+      "name": "Bayern Bru",
+      "id": "kpj0z744muh1qwtd"
+    },
+    "7to6xosimu8hyyw5": {
+      "name": "If anyone can, Bannan can",
+      "id": "7to6xosimu8hyyw5"
+    },
+    "0g0j5mkomuqqwsbu": {
+      "name": "domeitalycoach",
+      "id": "0g0j5mkomuqqwsbu"
+    }
+  },
+  "draftType": "snake",
+  "draftSettings": {
+    "draftType": "snake"
+  },
+  "leagueName": "Tim Hortons Pro League 26/27",
+  "scoringSystem": {
+    "scoringCategories": {
+      "NON_GOALIE": {
+        "CS": {
+          "D": "points4",
+          "Default": "points0",
+          "M": "points1"
+        },
+        "RC": {
+          "Default": "points-3"
+        },
+        "Min": {
+          "Default": "range1|59|1|NULL$60|90|2|NULL"
+        },
+        "PKM": {
+          "Default": "points-2"
+        },
+        "AT": {
+          "Default": "points3"
+        },
+        "GAO": {
+          "D": "range1|99|-1|2.0",
+          "Default": "points0"
+        },
+        "G": {
+          "D": "points6",
+          "F": "points4",
+          "Default": "points0",
+          "M": "points5"
+        },
+        "OG": {
+          "Default": "points-2"
+        },
+        "YC": {
+          "Default": "points-1"
+        },
+        "DFP3": {
+          "F": "range6|8|1|NULL$9|99|2|NULL",
+          "Default": "points0",
+          "M": "range7|10|1|NULL$11|99|2|NULL"
+        },
+        "DFP": {
+          "D": "range3|4|1|NULL$5|99|2|NULL",
+          "Default": "points0"
+        }
+      },
+      "GOALIE": {
+        "CS": {
+          "Default": "points4"
+        },
+        "RC": {
+          "Default": "points-3"
+        },
+        "Min": {
+          "Default": "range1|59|1|NULL$60|90|2|NULL"
+        },
+        "PKM": {
+          "Default": "points-2"
+        },
+        "AT": {
+          "Default": "points3"
+        },
+        "G": {
+          "Default": "points10"
+        },
+        "OG": {
+          "Default": "points-2"
+        },
+        "PKS": {
+          "Default": "points5"
+        },
+        "GA": {
+          "Default": "range1|99|-1|2.0"
+        },
+        "YC": {
+          "Default": "points-1"
+        },
+        "GKP": {
+          "Default": "range1|99|1|3.0"
+        }
+      }
+    },
+    "scoringCategorySettings": [
+      {
+        "configs": [
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_GOALS",
+              "name": "Goals",
+              "id": "6090",
+              "shortName": "G"
+            },
+            "points": 10
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_GOALS_ON_OWN_NET",
+              "name": "Own Goals",
+              "id": "6105",
+              "shortName": "OG"
+            },
+            "points": -2
+          },
+          {
+            "ranges": [
+              {
+                "range": {
+                  "start": 1,
+                  "end": 99
+                },
+                "points": -1,
+                "interval": 2
+              }
+            ],
+            "rangeType": "PER_GAME",
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_GOALS_AGAINST",
+              "name": "Goals Against",
+              "id": "6112",
+              "shortName": "GA"
+            },
+            "points": 0
+          },
+          {
+            "ranges": [
+              {
+                "range": {
+                  "start": 1,
+                  "end": 59
+                },
+                "points": 1
+              },
+              {
+                "range": {
+                  "start": 60,
+                  "end": 90
+                },
+                "points": 2
+              }
+            ],
+            "rangeType": "PER_GAME",
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": false,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_MINUTES_PLAYED",
+              "name": "Minutes Played",
+              "id": "6120",
+              "shortName": "Min"
+            },
+            "points": 0
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_PENALTY_KICK_SAVES",
+              "name": "Penalty Kick Saves",
+              "id": "6170",
+              "shortName": "PKS"
+            },
+            "points": 5
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_RED_CARDS",
+              "name": "Red Cards",
+              "id": "6190",
+              "shortName": "RC"
+            },
+            "points": -3
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_SHUTOUTS_ON_FIELD",
+              "name": "Clean Sheets On Field",
+              "id": "6249",
+              "shortName": "CS"
+            },
+            "points": 4
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_YELLOW_CARDS",
+              "name": "Yellow Cards",
+              "id": "6280",
+              "shortName": "YC"
+            },
+            "points": -1
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_PENALTY_KICKS_MISSED",
+              "name": "Penalty Kicks Missed",
+              "id": "6332",
+              "shortName": "PKM"
+            },
+            "points": -2
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_ASSISTS_TOTAL",
+              "name": "Assists (Total)",
+              "id": "6362",
+              "shortName": "AT"
+            },
+            "points": 3
+          },
+          {
+            "ranges": [
+              {
+                "range": {
+                  "start": 1,
+                  "end": 99
+                },
+                "points": 1,
+                "interval": 3
+              }
+            ],
+            "rangeType": "PER_GAME",
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_KEEPER_POINTS",
+              "name": "Keeper Points",
+              "id": "6689",
+              "shortName": "GKP"
+            },
+            "points": 0
+          }
+        ],
+        "group": {
+          "code": "SOCCER_GOALIE",
+          "name": "Goalkeeper",
+          "id": "5020",
+          "shortName": "G"
+        }
+      },
+      {
+        "configs": [
+          {
+            "position": {
+              "code": "FORWARD",
+              "name": "Forward",
+              "id": "701",
+              "shortName": "F"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_GOALS",
+              "name": "Goals",
+              "id": "6090",
+              "shortName": "G"
+            },
+            "points": 4
+          },
+          {
+            "position": {
+              "code": "MIDFIELDER",
+              "name": "Midfielder",
+              "id": "702",
+              "shortName": "M"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_GOALS",
+              "name": "Goals",
+              "id": "6090",
+              "shortName": "G"
+            },
+            "points": 5
+          },
+          {
+            "position": {
+              "code": "DEFENDER",
+              "name": "Defender",
+              "id": "703",
+              "shortName": "D"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_GOALS",
+              "name": "Goals",
+              "id": "6090",
+              "shortName": "G"
+            },
+            "points": 6
+          },
+          {
+            "ranges": [
+              {
+                "range": {
+                  "start": 1,
+                  "end": 99
+                },
+                "points": -1,
+                "interval": 2
+              }
+            ],
+            "rangeType": "PER_GAME",
+            "position": {
+              "code": "DEFENDER",
+              "name": "Defender",
+              "id": "703",
+              "shortName": "D"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_GOALS_AGAINST_OUTFIELDERS",
+              "name": "Goals Against Outfielders ",
+              "id": "6101",
+              "shortName": "GAO"
+            },
+            "points": 0
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_GOALS_ON_OWN_NET",
+              "name": "Own Goals",
+              "id": "6105",
+              "shortName": "OG"
+            },
+            "points": -2
+          },
+          {
+            "ranges": [
+              {
+                "range": {
+                  "start": 1,
+                  "end": 59
+                },
+                "points": 1
+              },
+              {
+                "range": {
+                  "start": 60,
+                  "end": 90
+                },
+                "points": 2
+              }
+            ],
+            "rangeType": "PER_GAME",
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": false,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_MINUTES_PLAYED",
+              "name": "Minutes Played",
+              "id": "6120",
+              "shortName": "Min"
+            },
+            "points": 0
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_RED_CARDS",
+              "name": "Red Cards",
+              "id": "6190",
+              "shortName": "RC"
+            },
+            "points": -3
+          },
+          {
+            "position": {
+              "code": "MIDFIELDER",
+              "name": "Midfielder",
+              "id": "702",
+              "shortName": "M"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_SHUTOUTS_ON_FIELD",
+              "name": "Clean Sheets On Field",
+              "id": "6249",
+              "shortName": "CS"
+            },
+            "points": 1
+          },
+          {
+            "position": {
+              "code": "DEFENDER",
+              "name": "Defender",
+              "id": "703",
+              "shortName": "D"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_SHUTOUTS_ON_FIELD",
+              "name": "Clean Sheets On Field",
+              "id": "6249",
+              "shortName": "CS"
+            },
+            "points": 4
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_YELLOW_CARDS",
+              "name": "Yellow Cards",
+              "id": "6280",
+              "shortName": "YC"
+            },
+            "points": -1
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_PENALTY_KICKS_MISSED",
+              "name": "Penalty Kicks Missed",
+              "id": "6332",
+              "shortName": "PKM"
+            },
+            "points": -2
+          },
+          {
+            "position": {
+              "code": "DEFAULT",
+              "name": "Default",
+              "id": "-1",
+              "shortName": "Default"
+            },
+            "cumulative": true,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_ASSISTS_TOTAL",
+              "name": "Assists (Total)",
+              "id": "6362",
+              "shortName": "AT"
+            },
+            "points": 3
+          },
+          {
+            "ranges": [
+              {
+                "range": {
+                  "start": 3,
+                  "end": 4
+                },
+                "points": 1
+              },
+              {
+                "range": {
+                  "start": 5,
+                  "end": 99
+                },
+                "points": 2
+              }
+            ],
+            "rangeType": "PER_GAME",
+            "position": {
+              "code": "DEFENDER",
+              "name": "Defender",
+              "id": "703",
+              "shortName": "D"
+            },
+            "cumulative": false,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_DEFENSIVE_POINTS",
+              "name": "Defensive Points",
+              "id": "6696",
+              "shortName": "DFP"
+            },
+            "points": 0
+          },
+          {
+            "ranges": [
+              {
+                "range": {
+                  "start": 6,
+                  "end": 8
+                },
+                "points": 1
+              },
+              {
+                "range": {
+                  "start": 9,
+                  "end": 99
+                },
+                "points": 2
+              }
+            ],
+            "rangeType": "PER_GAME",
+            "position": {
+              "code": "FORWARD",
+              "name": "Forward",
+              "id": "701",
+              "shortName": "F"
+            },
+            "cumulative": false,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_DEFENSIVE_POINTS_3",
+              "name": "Defensive Points 3",
+              "id": "6700",
+              "shortName": "DFP3"
+            },
+            "points": 0
+          },
+          {
+            "ranges": [
+              {
+                "range": {
+                  "start": 7,
+                  "end": 10
+                },
+                "points": 1
+              },
+              {
+                "range": {
+                  "start": 11,
+                  "end": 99
+                },
+                "points": 2
+              }
+            ],
+            "rangeType": "PER_GAME",
+            "position": {
+              "code": "MIDFIELDER",
+              "name": "Midfielder",
+              "id": "702",
+              "shortName": "M"
+            },
+            "cumulative": false,
+            "scoringCategory": {
+              "code": "INDIVIDUAL_DEFENSIVE_POINTS_3",
+              "name": "Defensive Points 3",
+              "id": "6700",
+              "shortName": "DFP3"
+            },
+            "points": 0
+          }
+        ],
+        "group": {
+          "code": "SOCCER_NON_GOALIE",
+          "name": "Outfielder",
+          "id": "5010",
+          "shortName": "OF"
+        }
+      }
+    ],
+    "type": "HEAD_TO_HEAD_POINTS_BASED"
+  },
+  "seasonYear": 2026,
+  "startDate": "2026-08-21",
+  "playoffs": {
+    "lastRegularSeasonPeriod": 34,
+    "numPlayoffTeams": 4,
+    "firstPlayoffPeriod": 35,
+    "mergePlayoffPeriods": false,
+    "used": true
+  }
+}

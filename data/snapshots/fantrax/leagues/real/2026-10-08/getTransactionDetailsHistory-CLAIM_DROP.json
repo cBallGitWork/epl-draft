@@ -1,0 +1,823 @@
+{
+  "paginatedResultSet": {
+    "totalNumPages": 1,
+    "pageNumber": 1,
+    "maxResultsPerPage": 100,
+    "totalNumResults": 5
+  },
+  "filterSettings": {
+    "positionOrGroup": "ALL",
+    "view": "CLAIM_DROP",
+    "adminMode": false,
+    "includeDeleted": false,
+    "team": "ALL",
+    "executedOnly": true
+  },
+  "displayedSelections": {
+    "positionOrGroup": "ALL",
+    "view": "CLAIM_DROP",
+    "adminMode": false,
+    "includeDeleted": false,
+    "team": "ALL",
+    "executedOnly": true
+  },
+  "miscData": {
+    "deleteTransactionExecutedDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "Yes"
+        },
+        {
+          "id": "option1",
+          "label": "No"
+        }
+      ],
+      "text": "This will only delete the transaction record - <b style=\"color:#8B0000\">it will not undo it - it will not move any players</b>. Are you sure you want to permanently delete this?"
+    },
+    "deleteTransactionNotExecutedDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "Yes"
+        },
+        {
+          "id": "option1",
+          "label": "No"
+        }
+      ],
+      "text": "Are you sure you want to permanently delete this?"
+    },
+    "heading": "2026 Tim Hortons Pro League 26/27",
+    "undoTransactionDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "Yes"
+        },
+        {
+          "id": "option1",
+          "label": "No"
+        }
+      ],
+      "text": "Are you sure you want to undo this transaction?"
+    },
+    "undoTooltip": "Undo transaction",
+    "executeTooltip": "Execute transaction if team was not updated with players",
+    "deleteTooltip": "Delete transaction from view",
+    "editTransactionDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "OK"
+        },
+        {
+          "id": "option1",
+          "label": "Cancel"
+        }
+      ],
+      "text": "# of periods to move transaction forward:"
+    },
+    "editTooltip": "Edit Transaction",
+    "editTransactionSuccessDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "OK"
+        }
+      ],
+      "text": "Transaction successfully edited and re-executed."
+    },
+    "executeTransactionSuccessDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "OK"
+        }
+      ],
+      "text": "Transaction successfully executed."
+    },
+    "executeTransactionDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "???word.Ok: en_US???"
+        },
+        {
+          "id": "option1",
+          "label": "Cancel"
+        }
+      ],
+      "text": "Please confirm that you want to executed the highlighted transaction since the system has detected that it was not executed."
+    },
+    "editTransactionMaximumForward": 200
+  },
+  "displayedLists": {
+    "teams": [
+      {
+        "name": "All Teams",
+        "id": "ALL"
+      },
+      {
+        "name": "AtleticoTimHortons",
+        "id": "uexqrijomu8l5asi"
+      },
+      {
+        "name": "Bayern Bru",
+        "id": "kpj0z744muh1qwtd"
+      },
+      {
+        "name": "Cowthenbeef",
+        "id": "7z8fy0pnmuogbtdw"
+      },
+      {
+        "name": "domeitalycoach",
+        "id": "0g0j5mkomuqqwsbu"
+      },
+      {
+        "name": "GlengarryHearts",
+        "id": "syjkob6cmuobagfu"
+      },
+      {
+        "name": "Hazza Maguazza's Redempshazza",
+        "id": "ipnp5y4mmu9j7kop"
+      },
+      {
+        "name": "If anyone can, Bannan can",
+        "id": "7to6xosimu8hyyw5"
+      },
+      {
+        "name": "its_ohi",
+        "id": "qgucu9dgmufwva1x"
+      },
+      {
+        "name": "The Raccoons",
+        "id": "l5kunst8msgbirdf"
+      },
+      {
+        "name": "The Truffle Pigs",
+        "id": "aekx2715mtzgcl3f"
+      }
+    ],
+    "tabs": [
+      {
+        "name": "Claim/Drop",
+        "id": "CLAIM_DROP"
+      },
+      {
+        "name": "Trade",
+        "id": "TRADE"
+      },
+      {
+        "name": "Lineup",
+        "id": "LINEUP_CHANGE"
+      }
+    ],
+    "positions": [
+      {
+        "name": "All",
+        "id": "ALL"
+      },
+      {
+        "name": "Outfielders",
+        "id": "SOCCER_NON_GOALIE"
+      },
+      {
+        "name": "Defender",
+        "id": "POS_703"
+      },
+      {
+        "name": "Midfielder",
+        "id": "POS_702"
+      },
+      {
+        "name": "Forward",
+        "id": "POS_701"
+      },
+      {
+        "name": "Goalkeeper",
+        "id": "POS_704"
+      }
+    ]
+  },
+  "table": {
+    "caption": "Claims / Drops",
+    "header": {
+      "cells": [
+        {
+          "align": "LEFT",
+          "sortDirection": 1,
+          "name": "Team",
+          "shortName": "Team",
+          "key": "team"
+        },
+        {
+          "align": "LEFT",
+          "sortDirection": 1,
+          "name": "Date Processed (EDT)",
+          "shortName": "Date (EDT)",
+          "key": "date"
+        },
+        {
+          "sortDirection": 1,
+          "name": "Gameweek",
+          "shortName": "Gameweek",
+          "key": "week"
+        }
+      ]
+    },
+    "rows": [
+      {
+        "scorer": {
+          "teamName": "Aston Villa",
+          "urlName": "matteo-ruggeri",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Aston_Villa.png",
+          "scorerId": "078wm",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "703"
+          ],
+          "defaultPosId": "703",
+          "posShortNames": "D",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Expected to play in upcoming/current game",
+              "typeId": "32"
+            },
+            {
+              "tooltip": "Sep 22, 2:06 PM: Ruggeri has made just one start so far...",
+              "typeId": "8"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "703"
+          ],
+          "teamId": "110011",
+          "name": "Matteo Ruggeri",
+          "teamShortName": "AVL",
+          "shortName": "M. Ruggeri"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "FA",
+        "numInGroup": 2,
+        "txSetId": "5sgkobkamuykiclt",
+        "feesUsed": false,
+        "transactionCode": "CLAIM",
+        "transactionType": "Claim",
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "domeitalycoach",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "rowspan": 2,
+            "key": "team",
+            "teamId": "0g0j5mkomuqqwsbu"
+          },
+          {
+            "align": "LEFT",
+            "content": "Wed Oct 7, 2026, 4:36PM",
+            "rowspan": 2,
+            "key": "date"
+          },
+          {
+            "content": "6",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Tottenham Hotspur",
+          "urlName": "pedro-porro",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Tottenham_Hotspur.png",
+          "scorerId": "05n07",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "703"
+          ],
+          "defaultPosId": "703",
+          "posShortNames": "D",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Hamstring - Out for next game",
+              "typeId": "30"
+            },
+            {
+              "tooltip": "Sep 23, 9:57 AM: Porro is expected to be sidelined for...",
+              "typeId": "8"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "703"
+          ],
+          "teamId": "110160",
+          "name": "Pedro Porro",
+          "teamShortName": "TOT",
+          "shortName": "P. Porro"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "",
+        "txSetId": "5sgkobkamuykiclt",
+        "feesUsed": false,
+        "transactionCode": "DROP",
+        "transactionType": "Drop",
+        "deleted": false,
+        "cells": [
+          {
+            "content": "6",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Everton",
+          "urlName": "ainsley-maitland-niles",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Everton.png",
+          "scorerId": "03m3q",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "702"
+          ],
+          "defaultPosId": "702",
+          "posShortNames": "M",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Expected to play in upcoming/current game",
+              "typeId": "32"
+            },
+            {
+              "tooltip": "Sep 20, 3:17 AM: Maitland-Niles registered two crosses...",
+              "typeId": "8"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "702"
+          ],
+          "teamId": "110050",
+          "name": "Ainsley Maitland-Niles",
+          "teamShortName": "EVE",
+          "shortName": "A. Maitland-Niles"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "FA",
+        "disabled": true,
+        "numInGroup": 2,
+        "txSetId": "vsb6aesmmuykhrxy",
+        "feesUsed": false,
+        "transactionCode": "CLAIM",
+        "transactionType": "Claim",
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "domeitalycoach",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "rowspan": 2,
+            "key": "team",
+            "teamId": "0g0j5mkomuqqwsbu"
+          },
+          {
+            "align": "LEFT",
+            "content": "Wed Oct 7, 2026, 4:35PM",
+            "rowspan": 2,
+            "key": "date"
+          },
+          {
+            "content": "6",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Manchester City",
+          "urlName": "jeremy-doku",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Manchester_City.png",
+          "scorerId": "06fup",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "702",
+            "701"
+          ],
+          "defaultPosId": "701",
+          "posShortNames": "M,F",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Sep 20, 7:33 PM: Doku recorded one shot (zero on goal),...",
+              "typeId": "8"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "702",
+            "701"
+          ],
+          "teamId": "110080",
+          "name": "Jeremy Doku",
+          "teamShortName": "MCI",
+          "shortName": "J. Doku"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "",
+        "disabled": true,
+        "txSetId": "vsb6aesmmuykhrxy",
+        "feesUsed": false,
+        "transactionCode": "DROP",
+        "transactionType": "Drop",
+        "deleted": false,
+        "cells": [
+          {
+            "content": "6",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Ipswich",
+          "urlName": "zian-flemming",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Ipswich_Town.png",
+          "scorerId": "06uzo",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "701"
+          ],
+          "defaultPosId": "701",
+          "posShortNames": "F",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Sep 20, 11:23 AM: Flemming generated one shot (zero on...",
+              "typeId": "8"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "701"
+          ],
+          "teamId": "110271",
+          "name": "Zian Flemming",
+          "teamShortName": "IPS",
+          "shortName": "Z. Flemming"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "FA",
+        "numInGroup": 2,
+        "txSetId": "f2xv4fu8muykgqgj",
+        "feesUsed": false,
+        "transactionCode": "CLAIM",
+        "transactionType": "Claim",
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "domeitalycoach",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "rowspan": 2,
+            "key": "team",
+            "teamId": "0g0j5mkomuqqwsbu"
+          },
+          {
+            "align": "LEFT",
+            "content": "Wed Oct 7, 2026, 4:35PM",
+            "rowspan": 2,
+            "key": "date"
+          },
+          {
+            "content": "6",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Newcastle United",
+          "urlName": "william-osula",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Newcastle_United.png",
+          "scorerId": "05t6x",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "701"
+          ],
+          "defaultPosId": "701",
+          "posShortNames": "F",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Foot - Late fitness test (Game-time decision)",
+              "typeId": "1"
+            },
+            {
+              "tooltip": "Sep 29, 6:29 AM: Osula (foot) was not spotted in team...",
+              "typeId": "8"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "701"
+          ],
+          "teamId": "110101",
+          "name": "William Osula",
+          "teamShortName": "NEW",
+          "shortName": "W. Osula"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "",
+        "txSetId": "f2xv4fu8muykgqgj",
+        "feesUsed": false,
+        "transactionCode": "DROP",
+        "transactionType": "Drop",
+        "deleted": false,
+        "cells": [
+          {
+            "content": "6",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Brentford",
+          "urlName": "jaidon-anthony",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Brentford.png",
+          "scorerId": "061vk",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "702",
+            "701"
+          ],
+          "defaultPosId": "701",
+          "posShortNames": "M,F",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Expected to play in upcoming/current game",
+              "typeId": "32"
+            },
+            {
+              "tooltip": "Sep 19, 9:42 AM: Anthony scored one goal to go with one...",
+              "typeId": "8"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "702",
+            "701"
+          ],
+          "teamId": "110237",
+          "name": "Jaidon Anthony",
+          "teamShortName": "BRF",
+          "shortName": "J. Anthony"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "FA",
+        "disabled": true,
+        "numInGroup": 2,
+        "txSetId": "rgdjun8qmuyiai32",
+        "feesUsed": false,
+        "transactionCode": "CLAIM",
+        "transactionType": "Claim",
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "domeitalycoach",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "rowspan": 2,
+            "key": "team",
+            "teamId": "0g0j5mkomuqqwsbu"
+          },
+          {
+            "align": "LEFT",
+            "content": "Wed Oct 7, 2026, 3:34PM",
+            "rowspan": 2,
+            "key": "date"
+          },
+          {
+            "content": "6",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Nottingham Forest",
+          "urlName": "chris-wood",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Nottingham_Forest.png",
+          "scorerId": "02m5b",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "701"
+          ],
+          "defaultPosId": "701",
+          "posShortNames": "F",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Sep 24, 5:16 AM: Wood has come off the bench in four of...",
+              "typeId": "8"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "701"
+          ],
+          "teamId": "110105",
+          "name": "Chris Wood",
+          "teamShortName": "NOT",
+          "shortName": "C. Wood"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "",
+        "disabled": true,
+        "txSetId": "rgdjun8qmuyiai32",
+        "feesUsed": false,
+        "transactionCode": "DROP",
+        "transactionType": "Drop",
+        "deleted": false,
+        "cells": [
+          {
+            "content": "6",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Chelsea",
+          "urlName": "marco-palestra",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Chelsea.png",
+          "scorerId": "0784b",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "703"
+          ],
+          "defaultPosId": "703",
+          "posShortNames": "D",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Thigh - Late fitness test (Game-time decision)",
+              "typeId": "1"
+            },
+            {
+              "tooltip": "Oct 7, 3:08 PM: Palestra (thigh) was pictured training...",
+              "typeId": "14"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "703"
+          ],
+          "teamId": "110040",
+          "name": "Marco Palestra",
+          "teamShortName": "CHE",
+          "shortName": "M. Palestra"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "FA",
+        "numInGroup": 2,
+        "txSetId": "w4p75wlpmuyhytci",
+        "feesUsed": false,
+        "transactionCode": "CLAIM",
+        "transactionType": "Claim",
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "domeitalycoach",
+            "leagueId": "mqsjd23smsgbiqzr",
+            "rowspan": 2,
+            "key": "team",
+            "teamId": "0g0j5mkomuqqwsbu"
+          },
+          {
+            "align": "LEFT",
+            "content": "Wed Oct 7, 2026, 3:25PM",
+            "rowspan": 2,
+            "key": "date"
+          },
+          {
+            "content": "6",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Manchester United",
+          "urlName": "patrick-dorgu",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Manchester_United.png",
+          "scorerId": "06rlj",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "703"
+          ],
+          "defaultPosId": "703",
+          "posShortNames": "D",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Hamstring - Late fitness test (Game-time decision)",
+              "typeId": "1"
+            },
+            {
+              "tooltip": "Sep 28, 12:43 PM: Dorgu (hamstring) has returned to...",
+              "typeId": "8"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "703"
+          ],
+          "teamId": "110090",
+          "name": "Patrick Dorgu",
+          "teamShortName": "MUN",
+          "shortName": "P. Dorgu"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "",
+        "txSetId": "w4p75wlpmuyhytci",
+        "feesUsed": false,
+        "transactionCode": "DROP",
+        "transactionType": "Drop",
+        "deleted": false,
+        "cells": [
+          {
+            "content": "6",
+            "key": "week"
+          }
+        ]
+      }
+    ]
+  }
+}
