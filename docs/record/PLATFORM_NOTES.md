@@ -1926,8 +1926,8 @@ team sheets.
 - **A substitution pairs on the feed's ORDER, not on the minute.** 269/269 adjacent pairs
   are an `ON` followed by its own `OFF`. This is load-bearing: a side can make three changes
   in one minute, and pairing on the clock drew *"Flemming for Maeda"* when he came on for
-  Emersonn — two true men and one false sentence. `plSubstitutions` owns this join because
-  `plManMatches` is per-man and has already lost the order.
+  Emersonn — two true men and one false sentence. Nothing pairs them now; a reader that does
+  must pair on order, since `plManMatches` is per-man and has already lost it.
 
 **Highlights are not available and this is settled.** No `highlights`/`video`/`media` key on
 any endpoint; `content.pulselive.com` no longer resolves; the match page names
@@ -3944,7 +3944,7 @@ Shape notes that the mapper depends on:
   (`opponent`, `fpts`, `fptsPerGame`) carry a `key` and the categories carry
   both; matching on "CS" would break the day Fantrax translates a header.
 - **`header.cells[].name` publishes Fantrax's own definition** after a ` -- `.
-  This is where their rules live, and the player card shows it on hover.
+  This is where their rules live; no screen shows it.
 - **Empty roster slots are real rows** with real blank cells and no `scorer`.
 - Cells are formatted strings: `"2,835"` for minutes, a bare `"-"` for a category
   a player never registered — which is absence, not nought.

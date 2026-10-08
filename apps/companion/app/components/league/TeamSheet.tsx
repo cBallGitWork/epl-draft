@@ -58,7 +58,7 @@ export default function TeamSheet({
 
   // `projected` is always false here: these are the live scoreboard's figures, which never project.
   return (
-    // `pitch-with-bench` budgets the height of the grass and the strip under it (`globals.css`);
+    // `pitch-with-bench` budgets the height of the grass and the strip under it (`pitch.css`);
     // on the list it would shrink `SquadRows`' own `cm-panel`.
     <div className={`flex flex-col ${mode === "pitch" ? "pitch-with-bench" : ""}`}>
       {mode === "pitch" ? (

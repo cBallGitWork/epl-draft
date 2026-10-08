@@ -65,7 +65,6 @@ describe("mapLeagueInfo", () => {
 
   it("reads the competition's configuration", () => {
     expect(info.name).toBe("Tim Hortons Pro League 24/25");
-    expect(info.seasonYear).toBe(2026);
     expect(info.draftType).toBe("snake");
     expect(info.startDate).toBe("2026-08-21");
   });

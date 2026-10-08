@@ -24,7 +24,7 @@ export function cardBasis(widest: number): string {
   return `min(${MAX_CARD}, calc((100% - ${widest - 1} * ${GAP}) / ${widest}))`;
 }
 
-/** The row count `.pitch-figure` in `globals.css` bounds a card's height by; the bench strip passes the same. */
+/** The row count `.pitch-figure` in `pitch.css` bounds a card's height by; the bench strip passes the same. */
 export function rowBudget(rows: number): CSSProperties {
   return { "--pitch-rows": rows } as CSSProperties;
 }

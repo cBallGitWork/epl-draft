@@ -27,7 +27,7 @@ import { STORY_BYLINE, editionName } from "./edition/voice/bylines";
 // GAZETTA_GAMEWEEK=5 with GAZETTA_FIXTURES=48 (FPL fixture ids) or GAZETTA_DAY=2026-09-19; DRY_RUN=1 prints the brief only.
 // Test mode unless GAZETTA_FULL=1: the first match alone and no send-back, since Opus bills every call (8 Oct 2026).
 
-const say = (message: string) => console.log(message);
+const say: (message: string) => void = console.log;
 
 async function main(): Promise<void> {
   if (process.env.CI) throw new Error("report:proof is a local proof and never runs in CI.");

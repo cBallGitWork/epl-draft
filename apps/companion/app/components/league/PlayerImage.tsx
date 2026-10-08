@@ -5,20 +5,15 @@ import { useState } from "react";
 import { type Club, type FootballPlayer, initials, portraitUrl, shirtUrl } from "@epl/core";
 
 // A player as a cut-out on the grass. A client component: only a failed load proves an asset is missing.
-// Five rungs: the large photograph, the small one, ours (`public/portraits/{code}.png`), his kit, his initials.
+// Four rungs: the large photograph, the small one, his kit, his initials.
 
-type Rung = "large" | "photo" | "ours" | "shirt" | "initials";
+type Rung = "large" | "photo" | "shirt" | "initials";
 
 const NEXT: Record<Exclude<Rung, "initials">, Rung> = {
   large: "photo",
-  photo: "ours",
-  ours: "shirt",
+  photo: "shirt",
   shirt: "initials",
 };
-
-/** One of ours, if somebody has put one there. Never under `/players/`: a miss there
- *  matches `app/players/[fantraxId]` and fires a live Fantrax profile POST instead of a 404. */
-const ourPortrait = (code: number) => `/portraits/${code}.png`;
 
 export default function PlayerImage({
   player,
@@ -47,14 +42,12 @@ export default function PlayerImage({
       ? portraitUrl(player, "large")
       : rung === "photo"
         ? portraitUrl(player)
-        : rung === "ours"
-        ? ourPortrait(player.code)
         : rung === "shirt"
           ? club && shirtUrl(club, keeper)
           : undefined;
 
   return (
-    // The caller sets the shape and height bound: `.pitch-figure` in `globals.css` reads
+    // The caller sets the shape and height bound: `.pitch-figure` in `pitch.css` reads
     // `--pitch-figure` for the shape and `--pitch-rows` for the ceiling.
     <div className="pitch-figure relative w-full overflow-hidden">
       {source ? (

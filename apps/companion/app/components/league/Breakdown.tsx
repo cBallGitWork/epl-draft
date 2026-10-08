@@ -53,8 +53,7 @@ export default function Breakdown({
           <ul className="cm-rows flex flex-col">
             {breakdown.map((line) => (
               <li key={line.code} className="flex min-h-8 items-center gap-2 px-2">
-                {/* Fantrax's own definition of the category sits behind the label. */}
-                <span className={FACT_LABEL} title={line.definition ?? undefined}>
+                <span className={FACT_LABEL}>
                   {line.name}
                 </span>
                 {/* Quiet beside the points; a dash, not a nought, where there is no count (DESIGN §7). */}

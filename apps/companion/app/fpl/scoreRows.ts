@@ -11,7 +11,6 @@ export function scoreRows(pick: FplPick): BreakdownLine[] {
     .map((line) => ({
       code: line.identifier,
       name: fplScoreName(line.identifier),
-      definition: null,
       points: line.points,
       value: String(line.value),
     }));
@@ -19,7 +18,6 @@ export function scoreRows(pick: FplPick): BreakdownLine[] {
     rows.push({
       code: "captain",
       name: "Captain",
-      definition: null,
       points: pick.points - pick.scored,
       value: `×${pick.multiplier}`,
     });

@@ -28,7 +28,6 @@ export type { PoolStatRow, StatSeason, TeamStats } from "./stats";
 
 export {
   bandCategories,
-  breakdownOf,
   liveBreakdown,
 } from "./breakdown";
 export type { BreakdownLine, CategoryBand, CategoryMan } from "./breakdown";
@@ -158,7 +157,7 @@ export {
 } from "./categoryNames";
 export type { FantraxCategory } from "./categoryNames";
 export { wordsFor, wordsOf } from "./categoryWords";
-export { bestDefConPoints, defConAt, defConPoints, defConScored } from "./defcon";
+export { bestDefConPoints, defConAt, defConScored } from "./defcon";
 export type { DefConPeriod } from "./defcon";
 export type { GroupKey, Measure, StatCategory } from "./categories";
 export { mapPlayerStats, KEEPER, OUTFIELD } from "./fantrax/playerStats";
@@ -170,7 +169,6 @@ export { ordinal } from "./ordinal";
 export { signed } from "./signed";
 export { teamColours } from "./teamColours";
 export { rankBy } from "./categoryBoard";
-export type { BoardRow } from "./categoryBoard";
 export type { CategoryLine } from "./fantrax/seasonStats";
 export {
   fetchDraftResults,

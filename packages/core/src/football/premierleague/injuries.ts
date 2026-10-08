@@ -14,22 +14,6 @@ export function saysInjury(line: { type: string; text: string }): boolean {
   return line.type === SUBSTITUTION && INJURY.test(line.text);
 }
 
-/** The men taken off injured, by FPL code; a substitution with no second id credits nobody. */
-export function injuredOff(
-  events: readonly RawPlEvent[],
-  codes: ReadonlyMap<number, number>,
-): Set<number> {
-  const hurt = new Set<number>();
-  for (const event of events) {
-    if (!saysInjury(event)) continue;
-    const off = event.playerIds?.[1];
-    if (off === undefined) continue;
-    const code = codes.get(off);
-    if (code !== undefined) hurt.add(code);
-  }
-  return hurt;
-}
-
 /** The minute each man went off hurt, by FPL code, added time dropped. */
 export function injuryMinutes(
   events: readonly RawPlEvent[],

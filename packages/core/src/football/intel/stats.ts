@@ -38,14 +38,6 @@ export function stat(row: StatsRow | undefined, key: StatKey): number | null {
   return row?.[key] ?? null;
 }
 
-/** A count per ninety minutes; null for a denominator, or with no minutes to divide by. */
-export function per90(row: StatsRow | undefined, key: StatKey): number | null {
-  if (KIND.get(key) !== "count") return null;
-  const count = stat(row, key);
-  const minutes = stat(row, "minutes");
-  return count === null || minutes === null || minutes <= 0 ? null : (count * 90) / minutes;
-}
-
 /** The keys one list of columns has that the other has not: a changed scoring in the stats league. */
 export function columnDrift(
   held: readonly string[],

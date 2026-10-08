@@ -13,7 +13,7 @@ import { MATCH_ROW } from "./matchRow";
 // Both clubs' books before a ball is kicked, to the team sheet's standards: the Fantrax tile in the club's colour,
 // the name opening his card, who holds him, and his real position.
 
-/** Keeper to attack, in the squad export's own lines (`CB`, `FB`, `WF`) — not the match log's, which `matchLine` orders. */
+/** Keeper to attack, in the squad export's own lines (`CB`, `FB`, `WF`), not the match log's. */
 const LINES = ["GK", "CB", "FB", "DM", "CM", "AM", "WF", "CF"] as const;
 
 export default function Squads({
