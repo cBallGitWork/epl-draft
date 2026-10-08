@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BANNED, banned } from "./banned";
+import { BANNED, americanisms, banned, overused } from "./banned";
 
 // The two failures this exists for, both printed: five headlines on "bank" in
 // one edition, and "Isidor Off The Bench Wins It Short" filed by a writer that
@@ -40,5 +40,19 @@ describe("banned", () => {
       (phrase) => phrase !== phrase.toLowerCase() && !/^(the )?[A-Z]/.test(phrase),
     );
     expect(odd).toEqual([]);
+  });
+});
+
+describe("americanisms", () => {
+  it("names the listed American words in list order, then the first -ize, and spares size and prize", () => {
+    expect(americanisms("The defense realized it and organized a lineup.")).toEqual(["lineup", "defense", "realized"]);
+    expect(americanisms("A prize for the size of the squad.")).toEqual([]);
+    expect(americanisms("The defense realized it.", [])).toEqual(["realized"]);
+  });
+});
+
+describe("overused", () => {
+  it("files each phrase past its cap with the times it was used, whole words only", () => {
+    expect(overused("On paper, on paper, on paper. Paperwork.", [["on paper", 2], ["paper", 3]])).toEqual(["on paper ×3"]);
   });
 });

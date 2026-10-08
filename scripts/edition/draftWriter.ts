@@ -2,8 +2,7 @@ import {
   DRAFT_FORECAST,
   DRAFT_NEVER,
   DRAFT_WRITING,
-  REPORT_AMERICAN,
-  SHEETS_AMERICAN,
+  AMERICAN,
   applyDraftFixes,
   applyFactFixes,
   knownFixes,
@@ -116,7 +115,7 @@ export async function draftColumn(job: DraftJob, say: (message: string) => void,
   // The sub-editor's last pass, on the cheap model: a sentence still carrying a banned phrase goes back alone.
   // American words go back too, a first name the brief never gave, and after Saturday a forecast.
   const invented = job.contexts.flatMap((ctx, at) => unbriefedNames((merged.get(at + 1)?.paragraphs ?? []).join("\n"), ctx, blocks[at] ?? ""));
-  const never = [...DRAFT_NEVER, ...REPORT_AMERICAN, ...SHEETS_AMERICAN, ...invented, ...(job.cutoff === "saturday" ? DRAFT_FORECAST : [])];
+  const never = [...DRAFT_NEVER, ...AMERICAN, ...invented, ...(job.cutoff === "saturday" ? DRAFT_FORECAST : [])];
   const fixes = faultyDraftSentences(merged, never, names);
   const edited = fixes.length === 0 ? null : await writeColumn(LINE_EDIT_VOICE, fixes.map((f, i) => `${i + 1}. ${f.sentence} [${f.words.join(", ")}]`).join("\n"), count, "helper").catch(() => null);
   const pieces = edited === null ? merged : applyDraftFixes(merged, fixes, Array.isArray(edited.lines) ? edited.lines.map(String) : [], never, names);

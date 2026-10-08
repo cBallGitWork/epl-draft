@@ -1,4 +1,4 @@
-import { BANNED, banned } from "../banned";
+import { BANNED, americanisms, banned, overused } from "../banned";
 import { escapeRegExp } from "../../regExp";
 import { strangers } from "../strangers";
 import { CORE_MARK, type PastLine } from "./past";
@@ -84,6 +84,10 @@ export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
   }
 
   for (const [section, text] of prose) rules.section(section, text);
+  // The -ize spelling alone: the American word lists are the other desks'.
+  for (const [section, text] of [["deck", draft.deck] as const, ...prose]) {
+    for (const word of americanisms(masked(text, ctx.names), [])) fault(section, "not British football English", "send-back", word);
+  }
   columnRules(draft.intro, prose, ctx, fault);
   return faults;
 }
@@ -169,10 +173,7 @@ export function columnRules(intro: string, prose: readonly [string, string][], c
   const all = prose.map(([, text]) => text).join(" ");
   if (wordCount(all) > LIMITS.column) fault("column", "length", "send-back", `${wordCount(all)} words`);
   if ((all.match(/\?/gu) ?? []).length > LIMITS.questions) fault("column", "more than two questions", "send-back", "?");
-  for (const [phrase, cap] of LAWRO_CAPPED) {
-    const used = (all.match(new RegExp(`(?<![\\p{L}])${escapeRegExp(phrase)}(?![\\p{L}])`, "giu")) ?? []).length;
-    if (used > cap) fault("column", "a habit used too often", "send-back", `${phrase} ×${used}`);
-  }
+  for (const over of overused(all, LAWRO_CAPPED)) fault("column", "a habit used too often", "send-back", over);
   // Five ties in one column, and a reader hears the same words coming round.
   const said = new Map<string, string>();
   for (const [section, text] of prose) {

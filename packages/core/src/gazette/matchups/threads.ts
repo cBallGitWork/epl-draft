@@ -71,7 +71,7 @@ export function threadsOf(ctx: MatchupContext, cutoff: Cutoff, worth: SlotWorth,
   const place = (man: DraftMan) => beatOf(ctx.state, man);
   const own = [...manThreads(ctx, cutoff, worth, gameweek, place), ...seasonThreads(ctx, cutoff)];
   if (cutoff === "saturday") return builderAfterSaturday(ctx, [...saturdayThreads(ctx, worth), ...own]);
-  const all = [...matchThreads(ctx, beats, worth, gameweek), ...own];
+  const all = [...matchThreads(ctx, beats, worth), ...own];
   // The goal that decided it is told once, as the decider.
   const decider = all.find((t) => t.kind === "late-decider")?.men[0];
   return decisiveAtEnd(ctx, all.filter((t) => !(t.kind === "late-goal" && t.men[0] === decider)), beats);

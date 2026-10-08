@@ -1,4 +1,6 @@
 import { escapeRegExp } from "../regExp";
+import { REPORT_AMERICAN } from "./reports/words";
+import { AMERICAN_IZE, SHEETS_AMERICAN } from "./sheets/words";
 
 // The phrases the paper does not print, and the check that finds them: the prompt's list is generated from these.
 
@@ -12,7 +14,7 @@ export const REGISTER: readonly string[] = [
 ];
 
 /** Sequence: claims about a match the desk cannot see. Lifted for the match report, which is handed the sequence. */
-export const SEQUENCE: readonly string[] = [
+const SEQUENCE: readonly string[] = [
   "off the bench", "came on", "brought on", "withdrawn", "substituted",
   "opened the scoring", "levelled it", "put them ahead",
 ];
@@ -38,9 +40,32 @@ export const FILLER: readonly string[] = [
 
 export const BANNED: readonly string[] = [...REGISTER, ...SEQUENCE, ...GROUNDS, ...FILLER];
 
-/** Every listed phrase the prose uses, once each in list order; whole words only, so "bank" never fires on "Bankole". */
+/** How often the prose uses a phrase, whole words only, so "bank" never counts "Bankole". */
+function timesUsed(prose: string, phrase: string): number {
+  return (prose.match(new RegExp(`(?<![\\p{L}])${escapeRegExp(phrase)}(?![\\p{L}])`, "giu")) ?? []).length;
+}
+
+/** Every listed phrase the prose uses, once each in list order. */
 export function banned(prose: string, list: readonly string[] = BANNED): string[] {
-  return list.filter((phrase) =>
-    new RegExp(`(?<![\\p{L}])${escapeRegExp(phrase)}(?![\\p{L}])`, "iu").test(prose),
-  );
+  return list.filter((phrase) => timesUsed(prose, phrase) > 0);
+}
+
+/** Each capped phrase the prose uses more often than its cap, as "phrase ×times". */
+export function overused(prose: string, caps: readonly (readonly [phrase: string, most: number])[]): string[] {
+  return caps.flatMap(([phrase, most]) => {
+    const used = timesUsed(prose, phrase);
+    return used > most ? [`${phrase} ×${used}`] : [];
+  });
+}
+
+/** A quotation mark, where the paper prints nobody's words. */
+export const QUOTE_MARKS = /["“”«»]/u;
+
+/** Not British English: the team sheets' American words, then the match report's. */
+export const AMERICAN: readonly string[] = [...SHEETS_AMERICAN, ...REPORT_AMERICAN];
+
+/** The words on `list` the prose uses, then its first American -ize spelling. */
+export function americanisms(prose: string, list: readonly string[] = AMERICAN): string[] {
+  const ize = prose.match(AMERICAN_IZE)?.[0];
+  return ize === undefined ? banned(prose, list) : [...banned(prose, list), ize];
 }

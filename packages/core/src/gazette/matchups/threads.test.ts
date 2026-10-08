@@ -68,6 +68,13 @@ describe("threadsOf", () => {
     expect(kinds(ctx, "gameweek", 6).find((t) => t.kind === "star-blank")?.men[0]?.name).toBe("Salah");
   });
 
+  it("calls a win from four places lower an upset only from the league's fourth gameweek, whatever the Premier League's", () => {
+    const place = (rank: number, played: number) => ({ rank, won: 0, drawn: 0, lost: played, run: "" });
+    const upset = (played: number) => kinds(contextOf(draftSide("A", 40, eleven("h")), draftSide("B", 30, eleven("a")), { places: { home: place(9, played), away: place(3, played) } }), "gameweek", 7).find((t) => t.kind === "upset");
+    expect(upset(1)).toBeUndefined();
+    expect(upset(3)?.facts).toEqual(["A were 9th going into the gameweek and B 3rd"]);
+  });
+
   it("keeps the club's word on a man a reserve replaced, and no old boy who never played", () => {
     const out = draftMan("Reinildo", "D", null, 0, 0, { club: "Sunderland", fitness: "Reinildo is available again after his suspension" });
     const ctx = contextOf(draftSide("A", 40, eleven("h", { 1: out }), [draftMan("Mukiele", "D", 0, 90, 0, { club: "Sunderland" })]), draftSide("B", 30, eleven("a")), { oldBoys: [{ fantraxId: "Reinildo", line: "Reinildo faced B, who drafted him" }] });
