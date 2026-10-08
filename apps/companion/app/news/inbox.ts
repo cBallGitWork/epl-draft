@@ -14,6 +14,7 @@ import {
   isResolved,
   minutesNews,
   nextDeadline,
+  offerNews,
   roundNews,
 } from "@epl/core";
 import { now } from "../clock";
@@ -21,9 +22,10 @@ import { readBoard } from "../board";
 import { readDeals } from "../business";
 import { intelMinuteMoves } from "../intel";
 import { shortName } from "../teamNames";
-import { readTradeBlocks } from "../tradeBlock";
+import { readProposals, readTradeBlocks } from "../market";
 import { seasonKickoffs } from "../football";
 import { readerTeamId, getLeagueSquads } from "../squads";
+import { signedTeamId } from "../session";
 
 // What the manager's inbox is made of, from reads the paper and the head-to-head already cache.
 // The football and league layers meet here, at the app edge, because neither may import the other.
@@ -48,12 +50,13 @@ function nextOpponent(
 }
 
 export async function readInbox(): Promise<Inbox> {
-  const [squads, feed, mine, kickoffs, blocks] = await Promise.all([
+  const [squads, feed, mine, kickoffs, blocks, proposals] = await Promise.all([
     getLeagueSquads(),
     readDeals(),
     readerTeamId(),
     seasonKickoffs(),
     readTradeBlocks(),
+    readProposals(),
   ]);
 
   const drafted = "period" in squads ? squads : null;
@@ -104,8 +107,13 @@ export async function readInbox(): Promise<Inbox> {
     mine,
   });
 
+  // A proposal is private to its two managers, so only a code reads one: never the lent demo team.
+  const signed = drafted === null ? null : await signedTeamId(drafted.period.teams);
+  const offers = offerNews(proposals, { name: nameOf, mine: signed, now: now().toISOString() });
+
   return {
     items: inboxItems(
+      offers,
       scout,
       // `deals()` pairs a claim with its drop and both halves of a trade.
       dealNews(deals(feed.rows), nameOf, mine),

@@ -1,0 +1,448 @@
+{
+  "myTeamIds": [
+    "yf96763gmtj31zni",
+    "8enbgqo5msgb375j",
+    "sezrgvl2mshcpazf",
+    "pbxm9fgimshcpazf",
+    "j9zadacnmshcpazf",
+    "mxet9tt7mtj31zni",
+    "vzqubu25mtj31zni",
+    "jtsmt5jxmtj31znh",
+    "dq2yk3zxmtj31znh"
+  ],
+  "selectedTxType": "TRADE",
+  "timeZoneLabel": "Times in BST",
+  "selectedTeamId": "8enbgqo5msgb375j",
+  "tradeInfoList": [
+    {
+      "creatorTeamId": "8enbgqo5msgb375j",
+      "txSetId": "ybtx3ctxmuzf4bgu",
+      "allowEditSalaryTraded": true,
+      "leagueId": "zbn1z3ukmsgb36sz",
+      "moves": [
+        {
+          "eligibleStatusesIds": [
+            "1",
+            "2"
+          ],
+          "eligiblePositionIds": [
+            "704"
+          ],
+          "toStatus": {
+            "code": "ACTIVE",
+            "sortOrder": 1,
+            "name": "Active",
+            "description": "On this fantasy team's Active section (starting), thus accumulating stats.",
+            "id": "1",
+            "shortName": "Act"
+          },
+          "scorer": {
+            "teamName": "Newcastle United",
+            "urlName": "lukas-hornicek",
+            "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Newcastle_United.png",
+            "scorerId": "0788g",
+            "upcomingEventStatusId": "2",
+            "teamLogo": true,
+            "posIdsNoFlex": [
+              "704"
+            ],
+            "defaultPosId": "704",
+            "posShortNames": "G",
+            "team": false,
+            "icons": [
+              {
+                "tooltip": "Expected to play in upcoming/current game",
+                "typeId": "32"
+              },
+              {
+                "tooltip": "Sep 20, 9:17 PM: Hornicek registered three saves and...",
+                "typeId": "8"
+              }
+            ],
+            "rookie": false,
+            "minorsEligible": false,
+            "posIds": [
+              "704"
+            ],
+            "teamId": "110101",
+            "name": "Lukas Hornícek",
+            "teamShortName": "NEW",
+            "shortName": "L. Hornícek"
+          },
+          "toPosition": {
+            "id": "704",
+            "name": "Goalkeeper",
+            "shortName": "G",
+            "description": ""
+          },
+          "scorePerGame": 2.8,
+          "txId": "5mh11plamuzf4bgu",
+          "type": "TRADE",
+          "toStatusId": "1",
+          "score": 14,
+          "toPositionId": "704",
+          "from": {
+            "teamId": "8enbgqo5msgb375j",
+            "team": {
+              "logoUrl256": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/gloves/blue_green2_128.webp",
+              "name": "123",
+              "id": "8enbgqo5msgb375j",
+              "logoUrl128": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/gloves/blue_green2_128.webp",
+              "shortName": "CB_fantr",
+              "commissioner": true
+            }
+          },
+          "to": {
+            "teamId": "v6bxgqm5mtj31znh",
+            "team": {
+              "logoUrl256": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/shoe/yellow_teal_128.webp",
+              "name": "Notemail",
+              "id": "v6bxgqm5mtj31znh",
+              "logoUrl128": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/shoe/yellow_teal_128.webp",
+              "shortName": "notemail",
+              "commissioner": false
+            }
+          }
+        },
+        {
+          "eligibleStatusesIds": [
+            "1",
+            "2"
+          ],
+          "eligiblePositionIds": [
+            "704"
+          ],
+          "toStatus": {
+            "code": "RESERVE",
+            "sortOrder": 2,
+            "name": "Reserve",
+            "description": "On this fantasy team's Reserve section (bench), thus not accumulating stats.",
+            "id": "2",
+            "shortName": "Res"
+          },
+          "scorer": {
+            "teamName": "Manchester City",
+            "urlName": "gianluigi-donnarumma",
+            "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Manchester_City.png",
+            "scorerId": "070hs",
+            "upcomingEventStatusId": "2",
+            "teamLogo": true,
+            "posIdsNoFlex": [
+              "704"
+            ],
+            "defaultPosId": "704",
+            "posShortNames": "G",
+            "team": false,
+            "icons": [
+              {
+                "tooltip": "Expected to play in upcoming/current game",
+                "typeId": "32"
+              },
+              {
+                "tooltip": "Oct 6, 4:23 PM: Donnarumma made four saves in Monday's...",
+                "typeId": "9"
+              }
+            ],
+            "rookie": false,
+            "minorsEligible": false,
+            "posIds": [
+              "704"
+            ],
+            "teamId": "110080",
+            "name": "Gianluigi Donnarumma",
+            "teamShortName": "MCI",
+            "shortName": "G. Donnarumma"
+          },
+          "toPosition": {
+            "id": "704",
+            "name": "Goalkeeper",
+            "shortName": "G",
+            "description": ""
+          },
+          "scorePerGame": 3.8,
+          "txId": "e30ma4ubmuzf4bgu",
+          "type": "TRADE",
+          "toStatusId": "2",
+          "score": 19,
+          "toPositionId": "704",
+          "from": {
+            "teamId": "8enbgqo5msgb375j",
+            "team": {
+              "logoUrl256": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/gloves/blue_green2_128.webp",
+              "name": "123",
+              "id": "8enbgqo5msgb375j",
+              "logoUrl128": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/gloves/blue_green2_128.webp",
+              "shortName": "CB_fantr",
+              "commissioner": true
+            }
+          },
+          "to": {
+            "teamId": "v6bxgqm5mtj31znh",
+            "team": {
+              "logoUrl256": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/shoe/yellow_teal_128.webp",
+              "name": "Notemail",
+              "id": "v6bxgqm5mtj31znh",
+              "logoUrl128": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/shoe/yellow_teal_128.webp",
+              "shortName": "notemail",
+              "commissioner": false
+            }
+          }
+        },
+        {
+          "eligibleStatusesIds": [
+            "1",
+            "2"
+          ],
+          "eligiblePositionIds": [
+            "704"
+          ],
+          "toStatus": {
+            "code": "RESERVE",
+            "sortOrder": 2,
+            "name": "Reserve",
+            "description": "On this fantasy team's Reserve section (bench), thus not accumulating stats.",
+            "id": "2",
+            "shortName": "Res"
+          },
+          "scorer": {
+            "teamName": "Brighton",
+            "urlName": "bart-verbruggen",
+            "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Brighton_and_Hove_Albion.png",
+            "scorerId": "06cmu",
+            "upcomingEventStatusId": "2",
+            "teamLogo": true,
+            "posIdsNoFlex": [
+              "704"
+            ],
+            "defaultPosId": "704",
+            "posShortNames": "G",
+            "team": false,
+            "icons": [
+              {
+                "tooltip": "Expected to play in upcoming/current game",
+                "typeId": "32"
+              },
+              {
+                "tooltip": "Sep 20, 9:56 AM: Verbruggen recorded two saves and...",
+                "typeId": "8"
+              }
+            ],
+            "rookie": false,
+            "minorsEligible": false,
+            "posIds": [
+              "704"
+            ],
+            "teamId": "110240",
+            "name": "Bart Verbruggen",
+            "teamShortName": "BHA",
+            "shortName": "B. Verbruggen"
+          },
+          "toPosition": {
+            "id": "704",
+            "name": "Goalkeeper",
+            "shortName": "G",
+            "description": ""
+          },
+          "scorePerGame": 4.6,
+          "txId": "m4x2hxglmuzf4bgu",
+          "type": "TRADE",
+          "toStatusId": "2",
+          "score": 23,
+          "toPositionId": "704",
+          "from": {
+            "teamId": "v6bxgqm5mtj31znh",
+            "team": {
+              "logoUrl256": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/shoe/yellow_teal_128.webp",
+              "name": "Notemail",
+              "id": "v6bxgqm5mtj31znh",
+              "logoUrl128": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/shoe/yellow_teal_128.webp",
+              "shortName": "notemail",
+              "commissioner": false
+            }
+          },
+          "to": {
+            "teamId": "8enbgqo5msgb375j",
+            "team": {
+              "logoUrl256": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/gloves/blue_green2_128.webp",
+              "name": "123",
+              "id": "8enbgqo5msgb375j",
+              "logoUrl128": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/gloves/blue_green2_128.webp",
+              "shortName": "CB_fantr",
+              "commissioner": true
+            }
+          }
+        },
+        {
+          "eligibleStatusesIds": [
+            "1",
+            "2"
+          ],
+          "eligiblePositionIds": [
+            "704"
+          ],
+          "toStatus": {
+            "code": "ACTIVE",
+            "sortOrder": 1,
+            "name": "Active",
+            "description": "On this fantasy team's Active section (starting), thus accumulating stats.",
+            "id": "1",
+            "shortName": "Act"
+          },
+          "scorer": {
+            "teamName": "Nottingham Forest",
+            "urlName": "matz-sels",
+            "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Nottingham_Forest.png",
+            "scorerId": "04f6h",
+            "upcomingEventStatusId": "2",
+            "teamLogo": true,
+            "posIdsNoFlex": [
+              "704"
+            ],
+            "defaultPosId": "704",
+            "posShortNames": "G",
+            "team": false,
+            "icons": [
+              {
+                "tooltip": "Expected to play in upcoming/current game",
+                "typeId": "32"
+              },
+              {
+                "tooltip": "Sep 20, 11:46 PM: Sels made two saves and allowed one...",
+                "typeId": "8"
+              }
+            ],
+            "rookie": false,
+            "minorsEligible": false,
+            "posIds": [
+              "704"
+            ],
+            "teamId": "110105",
+            "name": "Matz Sels",
+            "teamShortName": "NOT",
+            "shortName": "M. Sels"
+          },
+          "toPosition": {
+            "id": "704",
+            "name": "Goalkeeper",
+            "shortName": "G",
+            "description": ""
+          },
+          "scorePerGame": 2.8,
+          "txId": "u0iysi2qmuzf4bgu",
+          "type": "TRADE",
+          "toStatusId": "1",
+          "score": 14,
+          "toPositionId": "704",
+          "from": {
+            "teamId": "v6bxgqm5mtj31znh",
+            "team": {
+              "logoUrl256": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/shoe/yellow_teal_128.webp",
+              "name": "Notemail",
+              "id": "v6bxgqm5mtj31znh",
+              "logoUrl128": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/shoe/yellow_teal_128.webp",
+              "shortName": "notemail",
+              "commissioner": false
+            }
+          },
+          "to": {
+            "teamId": "8enbgqo5msgb375j",
+            "team": {
+              "logoUrl256": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/gloves/blue_green2_128.webp",
+              "name": "123",
+              "id": "8enbgqo5msgb375j",
+              "logoUrl128": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/gloves/blue_green2_128.webp",
+              "shortName": "CB_fantr",
+              "commissioner": true
+            }
+          }
+        }
+      ],
+      "pending": true,
+      "allowEditBudgetTraded": true,
+      "usefulInfo": [
+        {
+          "name": "Proposed",
+          "value": "Oct 8, 11:53 AM BST"
+        },
+        {
+          "name": "Proposed by",
+          "value": "123"
+        },
+        {
+          "name": "To be executed",
+          "value": "Pending"
+        },
+        {
+          "name": "Awaiting acceptance from",
+          "value": "Notemail"
+        }
+      ],
+      "headings": {
+        "score": {
+          "name": "Fantasy Points",
+          "shortName": "FPts"
+        },
+        "toStatus": {
+          "name": "To Status",
+          "shortName": "To Sta"
+        },
+        "toPosition": {
+          "name": "To Position",
+          "shortName": "To Pos"
+        },
+        "scorePerGame": {
+          "name": "Fantasy Points per Game",
+          "shortName": "FPts/G"
+        },
+        "from": {
+          "name": "From"
+        },
+        "to": {
+          "name": "To"
+        },
+        "player": {
+          "name": "Player"
+        }
+      },
+      "otherLeagueTrade": false,
+      "actions": [
+        {
+          "actionMethod": "addDrops",
+          "color": "red",
+          "actionLabel": "Add Drop(s)"
+        },
+        {
+          "actionMethod": "cancelTrade",
+          "actionMessage": "Are you sure you want to cancel this trade now?",
+          "actionLabel": "Cancel"
+        },
+        {
+          "actionMethod": "editTrade",
+          "actionLabel": "Edit"
+        }
+      ],
+      "status": "Pending Acceptance"
+    }
+  ],
+  "teamId": "8enbgqo5msgb375j",
+  "miscData": {
+    "showAllTeamsChoice": false,
+    "salaryInfo": {
+      "name": "Remaining"
+    },
+    "allTeamsSelected": false,
+    "showTeamDropdown": true
+  },
+  "commissioner": true,
+  "teamIds": [
+    "yf96763gmtj31zni",
+    "8enbgqo5msgb375j",
+    "sezrgvl2mshcpazf",
+    "pbxm9fgimshcpazf",
+    "j9zadacnmshcpazf",
+    "mxet9tt7mtj31zni",
+    "vzqubu25mtj31zni",
+    "jtsmt5jxmtj31znh",
+    "dq2yk3zxmtj31znh"
+  ]
+}

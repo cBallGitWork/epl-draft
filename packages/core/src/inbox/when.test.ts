@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fantraxDay, fantraxInstant, fantraxTime } from "./when";
+import { fantraxDay, fantraxInstant, fantraxTime, proposedInstant } from "./when";
 
 // Fantrax's real stamp, as `LeagueTransaction.processedAt` carries it: US Eastern, with no offset in it.
 const STAMP = "Wed Sep 2, 2026, 6:11AM";
@@ -78,5 +78,28 @@ describe("fantraxDay", () => {
 
   it("gives null for anything that does not read", () => {
     expect(fantraxDay("Wed Sep 2")).toBeNull();
+  });
+});
+
+describe("proposedInstant", () => {
+  // The pending page prints the session's zone and no year: "Oct 8, 11:53 AM BST" (recorded 8 Oct 2026).
+  const NOW = "2026-10-08T14:00:00.000Z";
+
+  it("reads the recorded stamp in the zone it names", () => {
+    expect(proposedInstant("Oct 8, 11:53 AM BST", NOW)).toBe("2026-10-08T10:53:00.000Z");
+  });
+
+  it("reads Greenwich and Eastern stamps", () => {
+    expect(proposedInstant("Dec 1, 9:05 PM GMT", "2026-12-02T00:00:00.000Z")).toBe("2026-12-01T21:05:00.000Z");
+    expect(proposedInstant("Oct 8, 6:53 AM EDT", NOW)).toBe("2026-10-08T10:53:00.000Z");
+  });
+
+  it("takes a stamp past now as last year's", () => {
+    expect(proposedInstant("Dec 30, 10:00 AM GMT", "2027-01-02T12:00:00.000Z")).toBe("2026-12-30T10:00:00.000Z");
+  });
+
+  it("refuses what it cannot read, and a zone it does not know", () => {
+    expect(proposedInstant("yesterday", NOW)).toBeNull();
+    expect(proposedInstant("Oct 8, 11:53 AM CEST", NOW)).toBeNull();
   });
 });

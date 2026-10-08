@@ -97,7 +97,9 @@ export { isFantraxPlayerId, mapPlayerProfile } from "./fantrax/profile";
 export type { PlayerIntel, PlayerMatch } from "./fantrax/profile";
 export { mapTransactions, orderKey } from "./fantrax/transactions";
 export { mapPositionNames, mapTradeBlocks } from "./fantrax/tradeBlock";
-export { fetchPositionRefs, fetchTradeBlocks } from "./fantrax/tradeClient";
+export { fetchPendingTrades, fetchPositionRefs, fetchTradeBlocks } from "./fantrax/tradeClient";
+export { mapPendingTrades } from "./fantrax/pendingTrades";
+export type { ProposedMove, TradeProposal } from "./proposals";
 // Everything written about one player.
 export { fetchPlayerProfile, fetchPlayerStories, fetchPoolNews, fetchPoolStats } from "./fantrax/playerClient";
 export { mapPlayerStories, mapPoolNews } from "./fantrax/playerNews";

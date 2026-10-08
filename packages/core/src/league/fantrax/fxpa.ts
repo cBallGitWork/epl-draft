@@ -37,6 +37,8 @@ export function unwrapFxpa(method: string, body: unknown): unknown {
 const SESSION_METHODS: ReadonlySet<string> = new Set([
   "getTeamRosterInfo",
   "getTradeBlocks",
+  // A read: the session's own teams' pending claims and trades, which no other read lists.
+  "getPendingTransactions",
   "confirmOrExecuteTeamRosterChanges",
   "setAutoSubsOrder",
 ]);

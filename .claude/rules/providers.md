@@ -120,10 +120,11 @@ Methods that matter:
   owns every team. So another team's pending claims are not readable. Claims arrive
   in `tables[].txSets[]` (`tablesPerTeam` for all teams), trades in
   `tradeInfoList[]`. PLATFORM_NOTES, 1 Oct 2026.
-- **But trade PROPOSALS are readable**: `getTransactionDetailsHistory {view: "TRADE", executedOnly: false}` with
-  the cookie adds unexecuted rows, each with `resultCode` (`TRADE_CANCELLED`, `TRADE_REJECTED`, `EXECUTED`; pending
-  unseen) and `result.content`. Every set seen involved Craig's team, so one between two others is unproven.
-  PLATFORM_NOTES, 7 Oct 2026.
+- **Trade PROPOSALS**: `getTransactionDetailsHistory {view: "TRADE", executedOnly: false}` with the cookie adds the
+  closed ones (`resultCode` `TRADE_CANCELLED`, `TRADE_REJECTED`) but **never a pending one**. That is only in
+  `getPendingTransactions {txType: "TRADE"}`: `tradeInfoList[]` with `pending: true`, `creatorTeamId`, every move's
+  man and teams, and "Proposed: Oct 8, 11:53 AM BST" (the session's zone, no year), for the session's own teams one
+  at a time (`myTeamIds` names them). So only offers a commissioner's team is in are readable. PLATFORM_NOTES, 8 Oct 2026.
 - `getTradeBlocks` (plural, cookie) is the league's trade block: `tradeBlocks[]{teamId, lastUpdated.date (epoch
   ms), comment.body, scorersOffered/Wanted.scorers{posId: [scorer]}, positionsOffered/Wanted.positions[posId]}`.
   `getTradeBlock` (singular) is the caller's EDITOR, every man he could list. Position ids are named by the public
