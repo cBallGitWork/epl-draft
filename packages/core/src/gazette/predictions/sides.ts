@@ -1,6 +1,6 @@
 import { PREDICTIONS } from "../../config";
-import { mean } from "../../mean";
 import type { StoryFace } from "../face";
+import { mean } from "../../mean";
 import type { Availability } from "../../football/playerState";
 import type { PickSide } from "./pick";
 
