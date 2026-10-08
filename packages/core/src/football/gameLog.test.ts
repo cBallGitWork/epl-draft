@@ -3,6 +3,7 @@ import { mapGameLog, totalsOver } from "./gameLog";
 import type { RawElementSummary } from "./fpl/raw";
 import saka from "./__fixtures__/elementSummary.json";
 import unusedSub from "./__fixtures__/elementSummaryUnused.json";
+import timber from "./__fixtures__/elementSummaryTimber.json";
 
 // Recorded `element-summary` responses: Saka, who played GW1 and has an unplayed GW2 row, and Arrizabalaga,
 // an unused GW1 substitute. Their zero rows look identical and mean opposite things.
@@ -105,5 +106,19 @@ describe("totalsOver", () => {
 
   it("is a season of nought over a window he did not play in", () => {
     expect(totalsOver(log, new Set([7])).minutes).toBe(0);
+  });
+});
+
+describe("goals conceded while he was on", () => {
+  // Recorded 8 Oct 2026: J. Timber sat out GW3, which Arsenal lost a goal in, and played 59 minutes of GW5's three.
+  const log = mapGameLog(timber as RawElementSummary);
+  const week = (gameweek: number) => log.find((row) => row.gameweek === gameweek);
+
+  it("reads FPL's own count, not his club's score", () => {
+    expect(week(5)).toMatchObject({ conceded: 3, goalsConceded: 3 });
+  });
+
+  it("has no figure for a match he did not play, though his club conceded in it", () => {
+    expect(week(3)).toMatchObject({ minutes: 0, conceded: 1, goalsConceded: null });
   });
 });
