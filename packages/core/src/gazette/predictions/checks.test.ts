@@ -83,6 +83,11 @@ describe("checkLawro", () => {
     const habit = draft([["rs-bn", "On paper it's Real Sociable. On paper it's easy. They'll need more than two."], ...SAMPLE.slice(1)]);
     expect(checkLawro(habit, ctx()).map((each) => each.evidence)).toContain("on paper ×3");
   });
+
+  it("sends back an American -ize, in his deck as in his ties", () => {
+    const faults = checkLawro(draft([["rs-bn", `${SAMPLE[0][1]} I realized that on Wednesday.`], ...SAMPLE.slice(1)], { deck: "Lawro has organized his calls." }), ctx());
+    expect(faults.filter((each) => each.check === "not British football English").map((each) => `${each.section}: ${each.evidence}`)).toEqual(["deck: organized", "rs-bn: realized"]);
+  });
 });
 
 describe("pencil", () => {

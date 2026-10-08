@@ -1,10 +1,9 @@
 import { DRAFT_WRITING } from "../../config";
-import { QUOTE_MARKS, banned } from "../banned";
+import { QUOTE_MARKS, americanisms, banned } from "../banned";
 import { faultLog, type Fault } from "../predictions/checks";
 import { masked, mentionAt, numbersIn, sentences, wordCount } from "../predictions/prose";
 import { repeatsIn } from "../reports/repeats";
-import { REPORT_AMERICAN, REPORT_FPL } from "../reports/words";
-import { SHEETS_AMERICAN } from "../sheets/words";
+import { REPORT_FPL } from "../reports/words";
 import type { Cutoff, MatchupContext } from "./brief";
 import { listFaults, menOf, type PastProse } from "./listChecks";
 import { timeline } from "./timeline";
@@ -59,7 +58,7 @@ export function checkDraft(writing: DraftWriting, contexts: readonly MatchupCont
     const plain = masked(prose, [...everyone.flat(), ctx.state.home.side.name, ctx.state.away.side.name]).replace(/\u0000/gu, " ");
     for (const phrase of banned(plain, REPORT_FPL)) fault(`${n}:matchup`, "names a source", "hard", phrase);
     for (const phrase of banned(plain, DRAFT_NEVER)) fault(`${n}:matchup`, "a phrase this paper does not print", "send-back", phrase);
-    for (const phrase of banned(plain, [...REPORT_AMERICAN, ...SHEETS_AMERICAN])) fault(`${n}:matchup`, "American, not British", "send-back", phrase);
+    for (const phrase of americanisms(plain)) fault(`${n}:matchup`, "American, not British", "send-back", phrase);
     if (MARKS.test(prose)) fault(`${n}:matchup`, "a colon, a question or an exclamation mark", "send-back", prose.match(MARKS)?.[0] ?? "");
     if (FEELING.test(prose)) fault(`${n}:matchup`, "a named person's feeling", "send-back", prose.match(FEELING)?.[0] ?? "");
     // The score prints above the lede, so the lede never gives it again.

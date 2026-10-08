@@ -65,4 +65,8 @@ describe("checkDraft", () => {
     expect(checks(`${clean} test2 held him.`)).toEqual(expect.arrayContaining([expect.stringMatching(/held him/)]));
     expect(checks(`${clean} The pressure is on test2 in the boardroom.`)).toEqual([]);
   });
+
+  it("sends back an American -ize, as every other desk does", () => {
+    expect(checks(`${clean} test2 never organized a reply.`)).toEqual(["send-back: American, not British (organized)"]);
+  });
 });
