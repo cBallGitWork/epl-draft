@@ -42,6 +42,14 @@ describe("normalizeExtras — teamNews", () => {
     expect(normalizeExtras({ teamNews: [{ ...row, quote }] })?.teamNews?.[0].quote).toEqual(quote);
   });
 
+  it("keeps who holds each man still out, and drops a nameless one", () => {
+    const stillOut = [{ name: "Joe Rodon", owner: "Craig" }, { name: "Mateo Joseph", owner: " " }, { name: "" }];
+    expect(normalizeExtras({ teamNews: [{ ...row, stillOut }] })?.teamNews?.[0].stillOut).toEqual([
+      { name: "Joe Rodon", owner: "Craig" },
+      { name: "Mateo Joseph" },
+    ]);
+  });
+
   it("files one row per club", () => {
     const out = normalizeExtras({ teamNews: [row, { ...row, line: "Again." }] });
     expect(out?.teamNews).toHaveLength(1);
@@ -53,7 +61,7 @@ describe("normalizeExtras — what the writer may not smuggle through", () => {
 
   it("publishes the contract's fields and nothing else", () => {
     const out = normalizeExtras({ teamNews: [{ ...row, manager: "Alonso", verdict: "start him" }] });
-    expect(Object.keys(out?.teamNews?.[0] ?? {}).sort()).toEqual(["alsoOut", "club", "code", "fixture", "line", "men", "quote"]);
+    expect(Object.keys(out?.teamNews?.[0] ?? {}).sort()).toEqual(["alsoOut", "club", "code", "fixture", "line", "men", "quote", "stillOut"]);
   });
 
   it("refuses a club code that is not a real one", () => {

@@ -63,13 +63,11 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
             </ul>
           )}
 
-          {/* The standing absences, as one line. */}
-          {row.alsoOut === undefined ? null : (
-            <p className="pt-2 text-base leading-snug text-muted">
-              <span className="font-sans text-2xs tracking-widest uppercase">Still out</span>{" "}
-              {row.alsoOut.join(", ")}
-            </p>
-          )}
+          {row.stillOut !== undefined ? (
+            <StillOut men={row.stillOut} owned />
+          ) : row.alsoOut !== undefined ? (
+            <StillOut men={row.alsoOut.map((name) => ({ name }))} owned={false} />
+          ) : null}
 
           {/* Carried from the source article, never composed. */}
           {row.quote === undefined ? null : (
@@ -85,6 +83,23 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
           )}
         </section>
       ))}
+    </div>
+  );
+}
+
+/** The standing absences, a man a line; `owned` is false for a column filed before the desk said who held them. */
+function StillOut({ men, owned }: { men: readonly { name: string; owner?: string }[]; owned: boolean }) {
+  return (
+    <div className="pt-2.5">
+      <p className="font-sans text-2xs tracking-widest text-muted uppercase">Still out</p>
+      <ul className="flex flex-col gap-0.5 pt-1">
+        {men.map((man) => (
+          <li key={man.name} className="text-base leading-snug text-muted">
+            {man.name}
+            {owned ? ` (${man.owner ?? "FA"})` : null}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

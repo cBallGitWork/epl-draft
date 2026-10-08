@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { PresserLine, PresserQuote } from "@epl/core";
-import { display } from "./pressers";
-import { presserDays, presserEdition } from "./presserWeek";
+import { display, isNews } from "./pressers";
+import { presserDays, presserEdition, withStillOut } from "./presserWeek";
 
 // Every row is a real 26/27 player, read out of the FPL snapshot on 18 Sep 2026.
 // The column prints these names in prose, so a wrong one is a wrong fact.
@@ -34,6 +34,8 @@ describe("display", () => {
 
   it("takes the token after the match when the match is his first name", () => {
     expect(display({ name: "O.Dango", fullName: "Dango Ouattara" })).toBe("Dango Ouattara");
+    // A suffix after the dot, which printed "Kroupi.Jr" in the Team Sheet of 8 Oct.
+    expect(display({ name: "Kroupi.Jr", fullName: "Junior Kroupi" })).toBe("Junior Kroupi");
   });
 
   it("falls back to the web name when there is nothing to add", () => {
@@ -101,5 +103,44 @@ describe("presserDays", () => {
     // 23:30Z on the 8th is half past midnight on the 9th in London.
     const lines = [line("2026-10-09T12:30:00.000Z"), line("2026-10-08T23:30:00.000Z"), line("2026-10-08T13:30:00.000Z")];
     expect(presserDays(lines)).toEqual(["2026-10-08", "2026-10-09"]);
+  });
+});
+
+describe("isNews", () => {
+  const said = "2026-10-08T12:30:00.000Z";
+
+  it("makes a man declared fit news, however old his FPL note", () => {
+    // Harry Wilson, back in training on 8 Oct under a note from 18 Sep, was printed as still out.
+    expect(isNews("available", "2026-09-18T13:30:09.626Z", said)).toBe(true);
+  });
+
+  it("leaves an old absence standing, and a fresh one news", () => {
+    expect(isNews("injury_scare", "2026-08-30T16:00:08.564Z", said)).toBe(false);
+    expect(isNews("injury_scare", "2026-10-08T14:00:11.803Z", said)).toBe(true);
+  });
+});
+
+describe("withStillOut", () => {
+  // Leeds on 8 Oct: James is news, Rodon and Joseph are standing absences, one held and one not.
+  const line = (playerName: string, ownerName: string | null, fresh: boolean) =>
+    ({ playerName, ownerName, fresh, club: 2 }) as PresserLine;
+  const lines = [line("Daniel James", null, true), line("Joe Rodon", "Craig", false), line("Mateo Joseph", null, false)];
+
+  it("lists the club's standing absences with who holds each, in place of the column's", () => {
+    const rows = [{ club: "Leeds United", code: 2, men: [{ name: "Daniel James" }], alsoOut: ["Daniel James"], stillOut: [{ name: "Pope" }] }];
+    expect(withStillOut(rows, lines)).toEqual([
+      {
+        club: "Leeds United",
+        code: 2,
+        men: [{ name: "Daniel James" }],
+        stillOut: [{ name: "Joe Rodon", owner: "Craig" }, { name: "Mateo Joseph" }],
+      },
+    ]);
+  });
+
+  it("leaves off a man the column bulleted, and a row whose code was refused", () => {
+    const bulleted = withStillOut([{ club: "Leeds United", code: 2, men: [{ name: "Joe Rodon" }] }], lines) as { stillOut: unknown }[];
+    expect(bulleted[0].stillOut).toEqual([{ name: "Mateo Joseph" }]);
+    expect(withStillOut([{ club: "Leeds United", code: null }], lines)).toEqual([{ club: "Leeds United", code: null }]);
   });
 });
