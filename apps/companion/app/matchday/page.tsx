@@ -8,7 +8,6 @@ import {
   MS_PER_MINUTE,
   clubById,
   datedKickoffs,
-  duringGameweek,
   fixturesInOrder,
   leagueTies,
   nextRound,
@@ -22,7 +21,7 @@ import {
   onLondonDay,
 } from "@epl/core";
 import { leagueTable } from "../standings";
-import { footballNow, gameweekLive, seasonFixtures, speaksForNow } from "../football";
+import { footballNow, gameweekLive, liveOpen, seasonFixtures, speaksForNow } from "../football";
 import { Scores } from "./Scores";
 import RoundWord from "../components/league/RoundWord";
 import PageHeader from "../components/shell/PageHeader";
@@ -33,7 +32,7 @@ import YourMatchup from "./YourMatchup";
 import { marks } from "../involvement";
 import { creditAssists, roundBreaks, roundGoals, roundRedCards, roundStreams } from "../commentary";
 import { roundAssistKinds } from "../assistKinds";
-import { LEADERS_SHOWN, LIVE_LEAD_MINUTES } from "../config";
+import { LEADERS_SHOWN } from "../config";
 import { filedMarks } from "../ratings";
 import Vidiprinter from "./Vidiprinter";
 import TopStats, { STATS_VIEW, statsHref } from "./TopStats";
@@ -65,8 +64,7 @@ async function matchday(): Promise<{
 }> {
   // The season, because the snapshot holds one round and cannot name the next.
   const [snapshot, season] = await Promise.all([footballNow(), seasonFixtures()]);
-  const at = now().toISOString();
-  return { snapshot, season, during: duringGameweek(snapshot, at, LIVE_LEAD_MINUTES), up: nextRound(season, at) };
+  return { snapshot, season, during: liveOpen(snapshot), up: nextRound(season, now().toISOString()) };
 }
 
 export default async function MatchdayPage({
