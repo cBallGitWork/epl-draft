@@ -3944,7 +3944,7 @@ Shape notes that the mapper depends on:
   (`opponent`, `fpts`, `fptsPerGame`) carry a `key` and the categories carry
   both; matching on "CS" would break the day Fantrax translates a header.
 - **`header.cells[].name` publishes Fantrax's own definition** after a ` -- `.
-  This is where their rules live, and the player card shows it on hover.
+  This is where their rules live; no screen shows it.
 - **Empty roster slots are real rows** with real blank cells and no `scorer`.
 - Cells are formatted strings: `"2,835"` for minutes, a bare `"-"` for a category
   a player never registered — which is absence, not nought.

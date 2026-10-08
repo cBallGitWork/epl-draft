@@ -139,7 +139,6 @@ export interface StandingsRow {
 /** The competition's configuration from `getLeagueInfo`: custom rules are data read here, never assumed. */
 export interface LeagueInfo {
   name: string;
-  seasonYear: number;
   /** Season bounds as plain YYYY-MM-DD dates, not instants. */
   startDate: string;
   endDate: string;

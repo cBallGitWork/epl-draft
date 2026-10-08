@@ -129,7 +129,6 @@ function mapMatchups(matchups: RawPeriodMatchups[] | undefined): LeagueMatchup[]
 export function mapLeagueInfo(raw: RawLeagueInfo): LeagueInfo {
   return {
     name: raw.leagueName ?? "",
-    seasonYear: raw.seasonYear ?? 0,
     startDate: raw.startDate ?? "",
     endDate: raw.endDate ?? "",
     // Null, not "": some leagues omit this key.

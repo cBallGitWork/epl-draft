@@ -85,7 +85,7 @@ describe("sideRows", () => {
 });
 
 describe("paidIn", () => {
-  const line = (code: string, points: number) => ({ code, name: code, definition: null, points, value: "1" });
+  const line = (code: string, points: number) => ({ code, name: code, points, value: "1" });
   const paid = { a: [line("G", 4), line("YC", -1)] };
 
   it("reads what Fantrax paid him in a column, a deduction signed, and his total under Pts", () => {

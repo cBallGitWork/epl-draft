@@ -159,9 +159,6 @@ only question is *why* he is on the number he is on.
   to caveat every line.
 - Categories that scored him nothing are dropped, and so is games played, which
   in this view renders as 0 because a count of appearances is not a score.
-- The category label carries **Fantrax's own definition** behind it (`title`),
-  which is where the league's rules are published — what counts as a clean sheet
-  is their sentence, not ours.
 - **What he did under a drop-down** (`league/FullMatchStats`): shut it is the words
   "Full match stats" and a chevron, open it is his counts in the categories the
   league prices at his slot, DefCon's parts and keeper actions from Opta. A
