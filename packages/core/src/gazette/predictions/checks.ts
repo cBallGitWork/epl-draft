@@ -1,4 +1,4 @@
-import { BANNED, banned, overused } from "../banned";
+import { BANNED, americanisms, banned, overused } from "../banned";
 import { escapeRegExp } from "../../regExp";
 import { strangers } from "../strangers";
 import { CORE_MARK, type PastLine } from "./past";
@@ -84,6 +84,10 @@ export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
   }
 
   for (const [section, text] of prose) rules.section(section, text);
+  // The -ize spelling alone: the American word lists are the other desks'.
+  for (const [section, text] of [["deck", draft.deck] as const, ...prose]) {
+    for (const word of americanisms(masked(text, ctx.names), [])) fault(section, "not British football English", "send-back", word);
+  }
   columnRules(draft.intro, prose, ctx, fault);
   return faults;
 }
