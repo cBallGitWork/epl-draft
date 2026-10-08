@@ -11,9 +11,11 @@ export interface GameLogEntry {
   fixtureId: number;
   opponentClubId: number;
   home: boolean;
-  /** Goals for and against his club, turned round from FPL's home/away pair. */
+  /** Goals for and against his club, turned round from FPL's home/away pair: the result, not his. */
   scored: number;
   conceded: number;
+  /** FPL's own count of goals conceded while he was on; null for a match he did not play. */
+  goalsConceded: number | null;
   minutes: number;
   goals: number;
   assists: number;
@@ -54,6 +56,7 @@ function entry(h: RawHistoryEntry): GameLogEntry {
     home: h.was_home,
     scored: (h.was_home ? h.team_h_score : h.team_a_score) ?? 0,
     conceded: (h.was_home ? h.team_a_score : h.team_h_score) ?? 0,
+    goalsConceded: h.minutes > 0 ? h.goals_conceded : null,
     minutes: h.minutes,
     goals: h.goals_scored,
     assists: h.assists,

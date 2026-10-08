@@ -15,7 +15,7 @@ const match = (over: Partial<GameLogEntry> = {}): GameLogEntry => ({
   minutes: 90, goals: 0, assists: 0, cleanSheet: true, yellowCards: 0, redCards: 0,
   saves: 0, fplPoints: 6, defensiveContribution: null,
   expectedGoals: 0.1, expectedAssists: 0.2, starts: 1, tackles: null, clearancesBlocksInterceptions: null,
-  recoveries: null, expectedGoalsConceded: null, ...over,
+  recoveries: null, expectedGoalsConceded: null, goalsConceded: 0, ...over,
 });
 
 const paid = (over: Partial<PlayerMatch> = {}): PlayerMatch => ({
@@ -110,5 +110,16 @@ describe("totalsOf's rating", () => {
 
   it("has no rating when no match was rated", () => {
     expect(totalsOf([row(null)]).rating).toBeNull();
+  });
+});
+
+describe("totalsOf: goals conceded", () => {
+  // Saliba, 8 Oct 2026: not a minute played, Arsenal four down, and the column said 4 where FPL says 0.
+  it("adds his own goals conceded, never the club's in a match he sat out", () => {
+    const rows = [
+      { fpl: { match: match({ minutes: 0, conceded: 1, goalsConceded: null }) } },
+      { fpl: { match: match({ minutes: 59, conceded: 3, goalsConceded: 2 }) } },
+    ] as unknown as MatchRow[];
+    expect(totalsOf(rows).conceded).toBe(2);
   });
 });

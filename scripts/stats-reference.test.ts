@@ -189,12 +189,12 @@ const STATS_LEAGUE = {
 
 /** The rows of each section's tables with no Domain field column: only a count notices one go. */
 const PLAIN_ROWS: Record<string, number> = {
-  "Fetched but read by nobody": 32,
+  "Fetched but read by nobody": 31,
   "FPL bootstrap keys never typed": 11,
   "Computed in the app, not core": 14,
   "Stored history and live-only reads": 18,
   "Counted and refused": 30,
-  "Where the record disagrees with the tree": 7,
+  "Where the record disagrees with the tree": 6,
 };
 
 const STATS_LEAGUE_SECTION = "Fantrax, the stats league";

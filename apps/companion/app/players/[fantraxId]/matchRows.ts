@@ -62,7 +62,8 @@ export function totalsOf(rows: readonly MatchRow[]): MatchTotals {
     assists: sum((r) => r.fpl.match.assists),
     fplPoints: sum((r) => r.fpl.match.fplPoints),
     apps: rows.filter((row) => row.fpl.match.minutes > 0).length,
-    conceded: sum((r) => r.fpl.match.conceded),
+    // FPL's count while he was on, never the club's score: a match he sat out adds nothing.
+    conceded: sum((r) => r.fpl.match.goalsConceded),
     cleanSheets: rows.filter((row) => row.fpl.match.cleanSheet).length,
     yellowCards: sum((r) => r.fpl.match.yellowCards),
     redCards: sum((r) => r.fpl.match.redCards),
