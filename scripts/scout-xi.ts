@@ -12,19 +12,9 @@ import {
 } from "@epl/core";
 import { intelManifest, intelPath, readIntel } from "./intel";
 
-// Scout's predicted elevens, straight from their team-news page into `data/intel/xi/`
-// (Craig, 23 Sep 2026: "It should just always be live, and it's updated when scout
-// updates it"). Run on a schedule by `scout-xi.yml`.
-//
-// The file is rewritten when an eleven changes, and `fetchedAt` is that moment: the page
-// carries no time of its own for the elevens (`FFS.currentDate` is when it was rendered),
-// so "last updated" is when we first saw this prediction. Unchanged elevens are relabelled
-// for the next gameweek once theirs is played, keeping that moment.
-//
-//   npm run scout-xi
-//
-// Exits 1 without writing when the page will not parse into every club's eleven: a broken
-// fetch must never replace a good file.
+// Scout's predicted elevens from their team-news page into `data/intel/xi/`, on `scout-xi.yml`'s schedule. Rewritten only
+// when an eleven changes, `fetchedAt` that moment (the page dates no eleven); exits 1 without writing unless every club
+// parses, so a broken fetch never replaces a good file.
 
 /** How long Scout's page may take to arrive: twice a provider read's FETCH_TIMEOUT_MS. */
 const SCOUT_PAGE_TIMEOUT_MS = 30_000;

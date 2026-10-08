@@ -20,11 +20,8 @@ import { INTEL_SEASON, intelManifest, intelPath, readBridge, readIntel } from ".
 import { SCORING_LEAGUE } from "./leagues";
 import { buildPack, type FplSide, type PoolSide } from "./draftPack/build";
 
-// The draft pack (Craig, 2 Oct 2026: "projections for all players using real league's points"): the sister model's
-// projection repriced at each man's slots by the scoring league's rules, its DefCon and keeper work off his own matches.
-//
-//   npm run draft-pack                      # data/intel/league-projections/26-27.json
-//   npm run draft-pack -- --out pack.json   # anywhere else
+// The draft pack: the sister model's projection repriced at each man's slots by the scoring league's rules, his DefCon
+// and keeper work off his own matches. Into `data/intel/league-projections/`, or `npm run draft-pack -- --out <file>`.
 
 /** Minutes at his slot's average each man's own DefCon and keeper rates are drawn toward: three full matches. */
 const SHRINK_MINUTES = 270;
