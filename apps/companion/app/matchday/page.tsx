@@ -4,7 +4,6 @@ import {
   type Fixture,
   type FootballSnapshot,
   type LiveTeamScore,
-  FANTRAX_LEAGUE_PAGE,
   FANTRAX_MATCHUPS_PATH,
   clubById,
   duringGameweek,
@@ -39,6 +38,7 @@ import { wireLines } from "./wireLines";
 import { now } from "../clock";
 import { BetweenGameweeks, MatchupWaiting } from "./Between";
 import OutLink from "../components/shell/OutLink";
+import { fantraxPage } from "../fantraxPages";
 import { LIVE } from "../components/shell/sections";
 import { clubPlaces } from "../prem/places";
 import { placings } from "../league/placings";
@@ -180,9 +180,7 @@ export default async function MatchdayPage({
         <BetweenGameweeks snapshot={snapshot} up={up} />
       )}
       {/* Fantrax's Matchups for this gameweek's period; its current one when we could not read it. */}
-      <OutLink
-        href={`${FANTRAX_LEAGUE_PAGE}/${FANTRAX_MATCHUPS_PATH}${period === null ? "" : `;period=${period}`}`}
-      >
+      <OutLink href={fantraxPage(FANTRAX_MATCHUPS_PATH, period)}>
         Matchups on Fantrax
       </OutLink>
     </div>

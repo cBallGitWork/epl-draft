@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "@/app/components/shell/Link";
 import type { Club } from "@epl/core";
 import { clubColoursOf, crestUrl, inkOn, DASH } from "@epl/core";
-import { CLUB } from "../../routes";
+import { clubHref } from "../../routes";
 import { hasScore } from "../../score";
 import { BAR_TITLE } from "@/app/desk";
 
@@ -53,7 +53,7 @@ function Side({ club, score }: { club: Club | undefined; score: number | null })
       ) : (
         // The whole coloured half is the target, not the 24px the words occupy.
         <Link
-          href={`${CLUB}/${club.code}`}
+          href={clubHref(club.code)}
           className="flex min-w-0 flex-1 items-center gap-2 self-stretch px-2"
         >
           <Image
