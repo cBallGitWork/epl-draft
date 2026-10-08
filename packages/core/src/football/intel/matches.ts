@@ -14,15 +14,6 @@ export function matchIntel(matches: IntelMatches | null): Map<number, IntelMatch
   return byFixture;
 }
 
-/** How a man's afternoon ended in Championship Manager's words, `on 7` and `sub 71`, both when both happened.
- *  Null for a man who played the whole match. */
-export function subNote(player: IntelMatchPlayer): string | null {
-  const notes: string[] = [];
-  if (player.onAt !== null) notes.push(`on ${player.onAt}`);
-  if (player.offAt !== null) notes.push(`sub ${player.offAt}`);
-  return notes.length === 0 ? null : notes.join(" · ");
-}
-
 /** The minute each goal went in, by scorer. Own goals arrive as plain goals: the caller reconciles them against
  *  FPL's `own_goals`. */
 export function goalMinutes(match: IntelMatch | undefined): Map<number, number[]> {
@@ -39,23 +30,3 @@ export function goalMinutes(match: IntelMatch | undefined): Map<number, number[]
 export function loggedPlayers(match: IntelMatch | undefined): Map<number, IntelMatchPlayer> {
   return new Map((match?.players ?? []).map((player) => [player.code, player]));
 }
-
-/** Where a SofaScore match position (`DC`, `DMC`, `FWL`; not the squad export's `CB`) sits, keeper to attack.
- *  Read off the prefix, so an unseen code still finds its line; no position, or an unknown one, sorts last. */
-export function matchLine(position: string | null): number {
-  if (position === null) return BENCH;
-  return LINES.find(([prefix]) => position.startsWith(prefix))?.[1] ?? BENCH;
-}
-
-/** Prefixes in test order, longest first so `DMC` is not read as `D`, each with its own rank down the pitch. */
-const LINES: readonly (readonly [string, number])[] = [
-  ["GK", 0],
-  ["DM", 2],
-  ["D", 1],
-  ["AM", 4],
-  ["M", 3],
-  ["FW", 5],
-];
-
-/** A man with no position did not start, so he sorts under the eleven. */
-const BENCH = 6;

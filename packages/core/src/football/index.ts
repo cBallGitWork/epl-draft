@@ -46,8 +46,8 @@ export {
 export type { PlCommentaryLine } from "./premierleague/map";
 export { plPlayerCodes, plTeamSheets } from "./premierleague/teamSheet";
 export type { PlSquadMan, PlTeamSheet } from "./premierleague/teamSheet";
-export { plManMatches, plSubstitutions } from "./premierleague/sheetEvents";
-export type { PlManMatch, PlSubstitution } from "./premierleague/sheetEvents";
+export { plManMatches } from "./premierleague/sheetEvents";
+export type { PlManMatch } from "./premierleague/sheetEvents";
 export { goalGroups, plGoals } from "./premierleague/goals";
 export type { PlGoal, PlGoalGroup } from "./premierleague/goals";
 export { streamCredits } from "./premierleague/assists";
@@ -85,10 +85,10 @@ export type { GameLogEntry, RateTotals } from "./gameLog";
 export { mapMatchSheets, scoresheet, sheetSides } from "./matchSheet";
 export { fplDefConAt } from "./defensiveContribution";
 // The sister repo's match data: minutes, line-up positions and team figures FPL does not publish.
-export { goalMinutes, loggedPlayers, matchIntel, matchLine, subNote } from "./intel/matches";
+export { goalMinutes, loggedPlayers, matchIntel } from "./intel/matches";
 // Where a man played, as the raw touch points rather than a grid.
 export { averageTouchPosition, touchFixtures, touchIntel, touchesOf } from "./intel/touches";
-export type { IntelTouches, Touch, TouchCentre, TouchPlayer } from "./intel/touches";
+export type { IntelTouches, Touch, TouchPlayer } from "./intel/touches";
 // Every shot, flipped onto the touch clouds' orientation.
 export { assistsOf, shotIntel, shotsInFixture } from "./intel/shots";
 export { careerIntel, seasonKey } from "./intel/careers";
@@ -96,11 +96,11 @@ export type { IntelCareers } from "./intel/careers";
 export { cupIntel, cupName, tmlCupTies, seasonRun } from "./intel/cups";
 export type { CupTie, IntelCups, RunEntry, TmlRow } from "./intel/cups";
 export { depthIntel, depthLines } from "./intel/depth";
-export type { ClubDepth, DepthHolder, DepthSlot, DepthSpot, IntelDepth } from "./intel/depth";
+export type { ClubDepth, DepthSpot, IntelDepth } from "./intel/depth";
 // Season-to-date event counts off the stats league, in football terms and keyed on FPL code.
 export { STAT_COLUMNS } from "./intel/statKeys";
 export type { StatKey } from "./intel/statKeys";
-export { columnDrift, per90, stat, statIntel } from "./intel/stats";
+export { columnDrift, stat, statIntel } from "./intel/stats";
 export type { IntelStats, StatsRow } from "./intel/stats";
 // A window of recent gameweeks, for narrowing the intel to recent form.
 export { fixtureGameweeks, gameweekSpan, inGameweeks, lastPlayed } from "./intel/window";
@@ -145,8 +145,6 @@ export {
 export type { MatchContribution } from "./selectors";
 export { availabilityOf, doubtBand, isDoubtful, onTheBooks } from "./playerState";
 export type { Availability, DoubtBand, PlayerState } from "./playerState";
-export { formByPlayer, playedRounds } from "./form";
-export type { PlayerForm } from "./form";
 
 // Where a round stands in time, as against what a snapshot contains.
 export {
@@ -175,7 +173,7 @@ export {
   xiFault,
 } from "./intel/map";
 export type { SetPieceRank } from "./intel/map";
-export { parseScoutXi, sameElevens, xiToWrite } from "./intel/scout";
+export { parseScoutXi, xiToWrite } from "./intel/scout";
 export {
   defaultDescendingTable,
   isTableSortKey,
@@ -189,9 +187,7 @@ export type {
   IntelClubXi,
   IntelManifest,
   IntelMatch,
-  IntelMatchEvent,
   IntelMatchPlayer,
-  IntelMatchSide,
   IntelMatches,
   IntelPlayer,
   IntelSquads,

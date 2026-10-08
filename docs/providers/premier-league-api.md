@@ -154,8 +154,8 @@ Four things about it, all measured, none obvious:
    every pair agreeing on both minute and `teamId`, no fixture with an odd number
    of rows. This matters because a side can make three changes in the same minute
    — Liverpool at 71' in the recorded fixture — and pairing on the clock then
-   pairs arbitrarily. `plSubstitutions` is the only thing that may do this join;
-   `plManMatches` is per-man and has already lost the order.
+   pairs arbitrarily. Nothing pairs them now; a reader that does must pair on
+   order, since `plManMatches` is per-man and has already lost it.
 4. **`MP` is a missed penalty and is real**, carrying a man. Read and dropped
    deliberately — CM's ratings board has no such mark and FPL's own sheet
    publishes `penaltiesMissed` — and named here so it is not re-found.
@@ -167,8 +167,7 @@ Four things about it, all measured, none obvious:
 
 Typed as `RawPlFixtureEvent`. The vocabulary and the clock reader are in
 `premierleague/fixtureEvents.ts`; `sheetEvents.ts` maps it into `PlManMatch`
-(per man) and `PlSubstitution` (per change), and `goals.ts` into `PlGoal`
-(per goal).
+(per man), and `goals.ts` into `PlGoal` (per goal).
 
 ## The three assists FPL pays that `assistId` cannot give you
 

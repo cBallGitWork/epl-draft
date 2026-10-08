@@ -314,9 +314,8 @@ quietly changed destination is a screen that lies about what a tap does.
 Still no sense of **who is worth looking at** beyond what Fantrax counts. The
 football-layer signals the pool has always wanted — form, fitness, the fixture
 run, and the positions your own roster is short of — are specified in
-`~/.claude/plans/the-player-search-when-fuzzy-cupcake.md` and their core half is
-built (`football/form.ts`, `playedRounds`, `formByPlayer`, `availabilityOf`).
-They are not on the board yet.
+`~/.claude/plans/the-player-search-when-fuzzy-cupcake.md`; of their core half
+only `availabilityOf` is built. They are not on the board yet.
 
 ## What came off on 10 Sep 2026, and what replaced it
 
