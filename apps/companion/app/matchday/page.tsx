@@ -5,7 +5,9 @@ import {
   type FootballSnapshot,
   type LiveTeamScore,
   FANTRAX_MATCHUPS_PATH,
+  MS_PER_MINUTE,
   clubById,
+  datedKickoffs,
   duringGameweek,
   fixturesInOrder,
   leagueTies,
@@ -15,6 +17,8 @@ import {
   cupTies,
   fplCodeOf,
   londonDay,
+  londonTime,
+  nextDeadline,
   onLondonDay,
 } from "@epl/core";
 import { leagueTable } from "../standings";
@@ -29,7 +33,7 @@ import YourMatchup from "./YourMatchup";
 import { marks } from "../involvement";
 import { creditAssists, roundBreaks, roundGoals, roundRedCards, roundStreams } from "../commentary";
 import { roundAssistKinds } from "../assistKinds";
-import { LEADERS_SHOWN } from "../config";
+import { LEADERS_SHOWN, LIVE_LEAD_MINUTES } from "../config";
 import { filedMarks } from "../ratings";
 import Vidiprinter from "./Vidiprinter";
 import TopStats, { STATS_VIEW, statsHref } from "./TopStats";
@@ -39,7 +43,9 @@ import { now } from "../clock";
 import { BetweenGameweeks, MatchupWaiting } from "./Between";
 import OutLink from "../components/shell/OutLink";
 import { fantraxPage } from "../fantraxPages";
+import Link from "@/app/components/shell/Link";
 import { LIVE } from "../components/shell/sections";
+import { MY_TEAM } from "../squad/routes";
 import { clubPlaces } from "../prem/places";
 import { placings } from "../league/placings";
 
@@ -60,7 +66,7 @@ async function matchday(): Promise<{
   // The season, because the snapshot holds one round and cannot name the next.
   const [snapshot, season] = await Promise.all([footballNow(), seasonFixtures()]);
   const at = now().toISOString();
-  return { snapshot, season, during: duringGameweek(snapshot, at), up: nextRound(season, at) };
+  return { snapshot, season, during: duringGameweek(snapshot, at, LIVE_LEAD_MINUTES), up: nextRound(season, at) };
 }
 
 export default async function MatchdayPage({
@@ -108,6 +114,13 @@ export default async function MatchdayPage({
 
   const places = placings(table);
 
+  // The hour before the first kickoff (Craig, 8 Oct 2026: "build the hype"): the minutes to go, and the lock if ahead.
+  const first = fixturesInOrder(snapshot).find((fixture) => fixture.kickoff !== null)?.kickoff ?? null;
+  const toGo = during && first !== null ? Date.parse(first) - now().getTime() : 0;
+  const lock = drafted?.info == null ? null : nextDeadline(drafted.info.rosterPeriods, datedKickoffs(season), now().toISOString());
+  const locksAt = lock !== null && first !== null && Date.parse(lock.locksAt) < Date.parse(first) ? lock.locksAt : null;
+  const buildUp = toGo > 0 ? <BuildUp ms={toGo} locksAt={locksAt} /> : null;
+
   // Every tie this week: the league's pairings and our cups (Craig, 5 Sep 2026).
   const ties: CompetitionTie[] =
     drafted?.info != null && period !== null
@@ -139,9 +152,10 @@ export default async function MatchdayPage({
       <PageHeader
         title={`Draft Gameweek ${snapshot.gameweek}${roundState(snapshot) === "live" ? " LIVE" : ""}`}
         sub={
-          roundState(snapshot) === null || roundState(snapshot) === "live" ? undefined : (
+          buildUp ??
+          (roundState(snapshot) === null || roundState(snapshot) === "live" ? undefined : (
             <RoundWord state={roundState(snapshot)} />
-          )
+          ))
         }
         competition
       />
@@ -189,3 +203,19 @@ export default async function MatchdayPage({
 
 /** Which plate is open: a query rather than a route, so one page keeps its panels in step. */
 const PRINTER = "vidiprinter";
+
+/** The build-up's line: whole minutes to the first kickoff, rounded up, then the lineup lock while it is ahead, as a
+ *  way to his team, whose tab Live has taken on a phone. */
+function BuildUp({ ms, locksAt }: { ms: number; locksAt: string | null }) {
+  const kickoff = `Kick-off in ${Math.ceil(ms / MS_PER_MINUTE)} min`;
+  if (locksAt === null) return kickoff;
+  // One span: the sub line is a flex row, which drops the space between bare text and a link.
+  return (
+    <span>
+      {kickoff} ·{" "}
+      <Link href={MY_TEAM} className="underline">
+        lineups lock {londonTime(locksAt)}
+      </Link>
+    </span>
+  );
+}

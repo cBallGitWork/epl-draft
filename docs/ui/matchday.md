@@ -1,8 +1,16 @@
 # `/matchday` — the live centre
 
-The tab is called **Live**, and it only exists while a gameweek is running. The
-order is the order a manager cares about: your head-to-head first, the real
-football under it.
+The tab is called **Live**, and it exists from an hour before a gameweek's first
+kickoff until its last whistle (`LIVE_LEAD_MINUTES`; Craig, 8 Oct 2026: *"build
+the hype"*). The order is the order a manager cares about: your head-to-head
+first, the real football under it.
+
+**The hour before kickoff is the build-up**, not "No football today": the same
+board, every tie at nought, today's fixtures at their kickoffs, and under the title
+the minutes to go and, while it is ahead, the lineup lock as a link to your team,
+whose phone tab Live has taken. Opening the app in that hour lands on Live, and the
+page polls at the live rate. Replay reads the round ahead from the same hour, as FPL
+turns its round 90 minutes before the first kickoff.
 
 ## On the page
 

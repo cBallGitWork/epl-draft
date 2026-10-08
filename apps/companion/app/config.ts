@@ -98,6 +98,9 @@ export const POLL = {
   idle: 300,
 } as const;
 
+/** Minutes before a gameweek's first kickoff that the Live tab opens, to build to it (Craig, 8 Oct 2026). */
+export const LIVE_LEAD_MINUTES = 60;
+
 /** Pull to refresh in the installed app (`shell/PullToRefresh`), in CSS px: the plate refreshes on letting go from
  *  `arm` (144px of finger at half speed), and a drag is a pull once 10px in and at least 1.5 times steeper than wide. */
 export const PULL = {
