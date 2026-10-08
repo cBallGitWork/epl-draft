@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { SPURS, VILLA, codeOf, fixture, spursVilla } from "./__fixtures__/spursVilla";
 import { buildReportsBrief } from "./brief";
 import { deskDay } from "./desk";
+import type { MenExtras } from "./men";
 import type { ReportDayInput } from "./types";
 
 const places = new Map([[6, 18], [7, 9]]);
@@ -67,5 +68,20 @@ describe("buildReportsBrief on Tottenham 2-3 Aston Villa", () => {
 
   it("says what VAR decided", () => {
     expect(brief).toContain("GOAL RULED OUT after a video review: Mohammed Kudus (Tottenham Hotspur) had scored");
+  });
+
+  it("tells a man's season only when every past gameweek was read", () => {
+    const manzambi = (season: MenExtras["season"]) => {
+      const match = spursVilla({ season });
+      // The script counts each man's club matches once the men are read.
+      for (const man of match.men) man.matchesBefore = 4;
+      return buildReportsBrief("2026-09-19", 5, deskDay(input({ matches: [match] }))).split("\n").find((line) => line.startsWith("- Johan Manzambi")) ?? "";
+    };
+    const read = manzambi(new Map([[codeOf("Manzambi"), { startsBefore: 0, matchesBefore: 0, yellowsBefore: 0, goalsSeason: 9 }]]));
+    expect(read).toContain("his first league start this season; was taken off; one goal, nine in the league this season");
+    expect(read).toContain("STAKE: a free agent; 9 league goals this season.");
+    const unread = manzambi(null);
+    expect(unread).toContain("Johan Manzambi (Aston Villa): started; was taken off; one goal; made one");
+    expect(unread).toContain("STAKE: a free agent.");
   });
 });
