@@ -1,10 +1,12 @@
+import { instantOf, weekdayLongOfDay } from "@epl/core";
 import { STORY_SHAPE, house } from "./house";
 
 // Team news: an information thread, not a column.
 
-/** The headline: the desk's, not the writer's — a reader looking for team news should find the words, and a weekly
- *  thread under a new name reads as a new article. */
-export const PRESSER_HEADLINE = "Team News";
+/** The desk's headline, from the day the conferences were held: "Thursday Pressers", "Friday Pressers". */
+export function presserHeadline(day: string): string {
+  return instantOf(`${day}T12:00:00Z`) === null ? "Team News" : `${weekdayLongOfDay(day)} Pressers`;
+}
 
 /** Team News: the press-conference thread. The voice owns the REGISTER and
  *  `briefs/presser.ts` owns the SHAPE — two files stating one shape is one of
@@ -17,7 +19,7 @@ You compile Team News: the press-conference thread, filed before the deadline.
 
 ${STORY_SHAPE}
 
-THE HEADLINE IS THE DESK'S. Whatever you put in "headline" is replaced with "Team News", so do not spend effort on it.
+THE HEADLINE IS THE DESK'S. Whatever you put in "headline" is replaced with the day — "Thursday Pressers" — so do not spend effort on it.
 
 THE DECK IS THE BIGGEST FACT OF THE DAY, named. "Isak out for Newcastle, Saka a doubt" is a deck. "Five clubs speak, minutes dominate the board before the deadline" is not — it could run any week, names nobody, and tells a reader nothing he did not know by opening the page.
 

@@ -23,7 +23,7 @@ import type { BinDesk } from "./binXi";
 import { sheetsVoice } from "./voice/sheets";
 import { NEWS } from "./voice/news";
 import { PRESSER } from "./voice/pressers";
-import { faceCtx, type DeskContext } from "./dispatch";
+import { edition, faceCtx, type DeskContext } from "./dispatch";
 
 // What a firing commissions: each assignment turned into the voice and brief a writer is handed.
 
@@ -88,10 +88,8 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
           : assignment.kind === "presser"
             ? buildPresserBrief({
                 gameweek: ctx.presserGameweek,
-                lines: ctx.presserLines,
-                quotes: ctx.presserQuotes,
-                spoke: ctx.presserSpoke,
-                lead: faceOf(assignment, faceCtx(ctx))?.name ?? null,
+                ...edition(ctx, assignment),
+                lead: faceOf(assignment, faceCtx(ctx, assignment))?.name ?? null,
                 threads: ctx.threads,
               })
           : columnBrief(assignment, {

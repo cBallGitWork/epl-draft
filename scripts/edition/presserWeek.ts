@@ -1,4 +1,4 @@
-import { MS_PER_DAY, type Club, type Fixture, type PresserLine, type RosteredTeam } from "@epl/core";
+import { MS_PER_DAY, londonDayOf, onLondonDay, type Club, type Fixture, type PresserLine, type RosteredTeam } from "@epl/core";
 import type { Say } from "./newsroom";
 import {
   presserFixtures,
@@ -9,8 +9,8 @@ import {
   type PresserSquadMan,
 } from "./pressers";
 
-// WHICH round the Team Sheet is about, and the conferences it carries: `pressers.ts` reads the export, this decides
-// the window and the round it previews.
+// WHICH round and WHICH day the Team Sheet is about: `pressers.ts` reads the export, this decides the window, the
+// round it previews, and the day each edition carries.
 
 /** No round is longer than one, so a presser older than this is about a round
  *  already played. */
@@ -62,4 +62,33 @@ export function presserDesk(input: {
     ties: lines.length === 0 ? new Map() : presserFixtures(gameweek, byCode, input.season),
     gameweek,
   };
+}
+
+
+/** One edition of the Team Sheet: everything said on one London day, so Friday's column carries none of Thursday's. */
+export function presserEdition<
+  L extends { said?: string },
+  Q extends { at?: string },
+  S extends { at?: string },
+>(day: string, all: { lines: readonly L[]; quotes: readonly Q[]; spoke: readonly S[] }): {
+  lines: L[];
+  quotes: Q[];
+  spoke: S[];
+} {
+  return {
+    lines: onDay(all.lines, day, (row) => row.said),
+    // A quote's `said` is the speaker's name; its day is `at`.
+    quotes: onDay(all.quotes, day, (row) => row.at),
+    spoke: onDay(all.spoke, day, (row) => row.at),
+  };
+}
+
+/** Only what was said on one London day; `when` names the row's instant. */
+function onDay<T>(rows: readonly T[], day: string, when: (row: T) => string | undefined): T[] {
+  return rows.filter((row) => onLondonDay(when(row), day));
+}
+
+/** The London days the round's conferences were held, one Team Sheet each. */
+export function presserDays(lines: readonly PresserLine[]): string[] {
+  return [...new Set(lines.flatMap((line) => londonDayOf(line.said) ?? []))].sort();
 }

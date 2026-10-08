@@ -1,6 +1,6 @@
 import { binXiDue } from "./binXi/due";
 import { PREDICTED_XI, TEAM_SHEET } from "../config";
-import { dueBeforeLock, predictionsDue } from "./predictions/due";
+import { dueBeforeLock, dueFrom, predictionsDue } from "./predictions/due";
 import type { StoryKind } from "./story";
 import type { TieState } from "./tieState";
 
@@ -17,7 +17,7 @@ export interface Assignment {
   /** Join handle back to the round's fixtures, this session only. */
   fixtureId?: number;
   tie?: { homeTeamId: string; awayTeamId: string };
-  /** The London day a match-day or draft report is about. */
+  /** The London day a match-day report, a draft report or a Team Sheet is about. */
   day?: string;
   /** A draft report's cut-off: after Saturday's matches, or the end of the gameweek. */
   cutoff?: "saturday" | "gameweek";
@@ -40,8 +40,8 @@ export interface DeskState {
   locked: boolean;
   /** The period's pairings; none is a period the league has no fixtures in, which has no round to write up. */
   ties: readonly DeskTie[];
-  /** The round ahead's press conferences are in the export, so the Team Sheet has something to say. */
-  pressers: boolean;
+  /** The London days of the round ahead's press conferences; empty until the export lands. */
+  pressers: readonly string[];
   /** The predicted elevens, when the export holds the round ahead; keyed by the caller. */
   lineups: { key: string; slug: string } | null;
   /** The round the Team Sheet and the elevens preview, when the calendar places it. */
@@ -92,10 +92,16 @@ export function newsdesk(
     want({ kind: "sheets", ...roundSlot("sheets", desk.gameweek) });
   }
 
-  // The Team Sheet, outside the finished and lock gates: one column for the round's conferences, Friday's included.
+  // The Team Sheet, outside the finished and lock gates: one column per press-conference day, Thursday's and Friday's.
   const about = desk.ahead === null ? {} : { round: desk.ahead };
-  if (desk.pressers && desk.next !== null && dueBeforeLock(desk.next.locksAt, now, TEAM_SHEET.filing)) {
-    want({ kind: "presser", ...roundSlot("presser", desk.next.gameweek), ...about });
+  const next = desk.next;
+  if (next !== null) {
+    const slot = roundSlot("presser", next.gameweek);
+    for (const day of desk.pressers) {
+      if (dueFrom(day, TEAM_SHEET.hour, next.locksAt, now)) {
+        want({ kind: "presser", key: `${slot.key}:${day}`, slug: `${slot.slug}-${day}`, day, ...about });
+      }
+    }
   }
 
   // The elevens predict the round ahead, so they sit outside the gates above, and wait for Friday's pressers.

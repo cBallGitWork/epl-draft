@@ -12,6 +12,7 @@ import {
   type PeriodGameweeks,
   type PresserLine,
 } from "@epl/core";
+import { presserDays } from "./presserWeek";
 import type { DeskFacts } from "./facts";
 
 // What state the desk is in, as one answer.
@@ -40,7 +41,7 @@ export function deskState(input: {
     period: input.period,
     finished: input.finished,
     locked: input.locked,
-    pressers: input.lines.length > 0,
+    pressers: presserDays(input.lines),
     lineups:
       input.xiGameweek === null
         ? null
