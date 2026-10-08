@@ -1,9 +1,10 @@
 import Image from "next/image";
 import ScrollBoard from "./ScrollBoard";
 import type { Deal, DealSide } from "@epl/core";
-import { crestForShortName, fantraxDay, inkOn, kindOf, moverOf, movement, teamColours, toFplClubCode, DASH } from "@epl/core";
+import { crestForShortName, fantraxDay, inkOn, kindOf, moverOf, movement, toFplClubCode, DASH } from "@epl/core";
 import { LABEL, PANEL_FLUSH, SMALL_CAPS } from "@/app/desk";
 import { shortName } from "@/app/teamNames";
+import { teamColours } from "@/app/teamColours";
 
 // One manager's business as CM's Transfers screen (`cm0102/23.jpg`): a blue date block, the type in
 // yellow, who came in white, who went out faint, and a trade's partner on his own colour. With no team, the

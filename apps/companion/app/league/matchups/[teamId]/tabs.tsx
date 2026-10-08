@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Withheld } from "./sides";
 import { teamDisplay } from "../../../squads";
-import type { CategoryBand, Club, LeagueTeam, RosteredTeam } from "@epl/core";
+import type { CategoryBand, Club, LeagueTeam, PeriodGameweeks, RosteredTeam } from "@epl/core";
 import { isResolved, playerName } from "@epl/core";
 import type { LineupDetail } from "@epl/core";
 import Section from "../../../components/shell/Section";
@@ -85,6 +85,7 @@ export function sharedSides({
   arranged,
   squads,
   mine,
+  calendar,
 }: {
   pairing: { team: LeagueTeam; opponent: LeagueTeam };
   rostered: Map<string, RosteredTeam>;
@@ -92,6 +93,8 @@ export function sharedSides({
   arranged: Map<string, LineupDetail>;
   squads: Parameters<typeof teamDisplay>[0];
   mine: string | null;
+  /** Fantrax's periods with their gameweeks, so a withheld side's lock is named by gameweek. */
+  calendar: readonly PeriodGameweeks[];
 }): [SharedSide, SharedSide] {
   const one = (team: LeagueTeam): SharedSide => {
     const roster = rostered.get(team.teamId);
@@ -108,6 +111,7 @@ export function sharedSides({
           team={team}
           known={roster !== undefined}
           because={teamDisplay(squads, team.teamId === mine)}
+          calendar={calendar}
         />
       ),
     };

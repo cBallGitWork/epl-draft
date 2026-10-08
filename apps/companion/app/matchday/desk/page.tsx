@@ -13,7 +13,7 @@ import { headToHeadQuiet } from "./headToHead";
 import RoundWord from "../../components/league/RoundWord";
 import { footballNow } from "../../football";
 import { liveScores } from "../../scoreboard";
-import { getLeagueSquads, readerTeamId } from "../../squads";
+import { getLeagueSquads, readable, readerTeamId } from "../../squads";
 import { marksFor } from "../../involvement";
 import { yoursFirst } from "../../mine";
 import { GAMEWEEK_HEAD, GAMEWEEK_TITLE, LABEL, PANEL } from "@/app/desk";
@@ -34,7 +34,7 @@ export default async function DeskPage() {
   const state = roundState(snapshot);
 
   // The football half needs no Fantrax: an undrafted or silent league costs the top section only.
-  const league = "period" in squads ? squads : null;
+  const league = readable(squads);
   const period = league?.roundPeriod ?? null;
   const pairings =
     league?.info != null && period !== null

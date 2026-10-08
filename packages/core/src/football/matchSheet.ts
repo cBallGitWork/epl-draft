@@ -1,4 +1,5 @@
 import type { RawFixture, RawFixtureStat } from "./fpl/raw";
+import { playerById } from "./selectors";
 import type { FootballPlayer, FootballSnapshot } from "./types";
 
 // What happened in one match, for every player, off the `stats` block on `/fixtures/`; it carries no `minutes`.
@@ -98,7 +99,7 @@ export function sheetSides(
   sheet: MatchSheet,
   snapshot: FootballSnapshot,
 ): { home: SheetRow[]; away: SheetRow[] } {
-  const players = new Map(snapshot.players.map((p) => [p.id, p]));
+  const players = playerById(snapshot);
   const home: SheetRow[] = [];
   const away: SheetRow[] = [];
 

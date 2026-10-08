@@ -1,20 +1,21 @@
-import { DRAFT_DESK } from "../../config";
+import { CLEAN_SHEET_MINUTES, DRAFT_DESK, LATE_GOAL_MINUTE } from "../../config";
 import { ordinal } from "../../league/ordinal";
+import { groupedBy } from "../../grouped";
 import type { AutoSub } from "./autoSubs";
 import type { Cutoff } from "./brief";
 import type { DraftMan, DraftSide, GoalTime, SlotWorth } from "./types";
-import { listed } from "../../format";
+import { howMany, listed } from "../../format";
 import { priceOf } from "./worth";
 
 // Each fact about a draft man in the game's own words, for the threads and the brief: a return is a goal, an assist or a
 // clean sheet, a blank is none, a haul is more than one. Pure.
 
 /** "1 point", "6 points". */
-export const pts = (n: number) => `${n} point${n === 1 ? "" : "s"}`;
+export const pts = (n: number) => howMany(n, "point");
 /** His returns: goals, assists and clean sheets. */
 export const returnCount = (m: DraftMan) => m.goals + m.assists + m.cleanSheets;
 const done = (m: DraftMan) => m.left === 0 && m.minutes > 0;
-const late = (t: GoalTime) => t.minute >= DRAFT_DESK.lateGoal;
+const late = (t: GoalTime) => t.minute >= LATE_GOAL_MINUTE;
 
 /** Goals in the order they went in: by their match's kickoff, then the clock. */
 export const byClock = (a: GoalTime, b: GoalTime) => a.kickoff.localeCompare(b.kickoff) || a.minute - b.minute || (a.added ?? 0) - (b.added ?? 0);
@@ -46,7 +47,7 @@ export const scoredLine = (m: DraftMan, worth: SlotWorth) => (keeperHauled(m, wo
 export function lostCleanLine(m: DraftMan, worth: SlotWorth): string | null {
   const clean = priceOf(worth, m.slot, "clean sheet");
   const lost = m.concededFirstAt[0];
-  const told = lost !== undefined && late(lost) && m.cleanSheets === 0 && m.minutes >= DRAFT_DESK.earlyOff && clean >= DRAFT_DESK.cleanSheetStory;
+  const told = lost !== undefined && late(lost) && m.cleanSheets === 0 && m.minutes >= CLEAN_SHEET_MINUTES && clean >= DRAFT_DESK.cleanSheetStory;
   return told ? `lost a clean sheet worth ${pts(clean)} to a goal ${whenScored(lost)}` : null;
 }
 
@@ -94,9 +95,7 @@ export function benchLines(side: DraftSide, subs: readonly AutoSub[], margin: nu
 
 /** Men from one club in the eleven, their matches done, who all blanked, all kept clean sheets or all returned. */
 export function clubLines(side: DraftSide): { men: DraftMan[]; line: string }[] {
-  const byClub = new Map<string, DraftMan[]>();
-  for (const m of side.eleven.filter(done)) byClub.set(m.club, [...(byClub.get(m.club) ?? []), m]);
-  return [...byClub].flatMap(([club, men]) => {
+  return [...groupedBy(side.eleven.filter(done), (m) => m.club)].flatMap(([club, men]) => {
     if (men.length < 2) return [];
     const every = men.length === 2 ? "both" : "all";
     const who = `${men.length === 2 ? "two" : men.length} ${club} men, ${listed(men.map((m) => m.name), "and")},`;

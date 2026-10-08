@@ -1,4 +1,6 @@
 import type { FootballPlayer } from "../../football/types";
+import { withoutAccents } from "../../format";
+import { PITCH_ORDER, byPositionDepth, isGoalkeeper } from "../../join/lineup";
 import { isResolved, type RosteredTeam } from "../../join/roster";
 import { isActive } from "../../league/rosterStatus";
 
@@ -18,15 +20,12 @@ export interface Sheet {
   bench: SheetMan[];
 }
 
-/** The order a team sheet reads in; a slot Fantrax adds sorts last. */
-const SLOT_ORDER = ["G", "D", "M", "F"];
-
+/** A side back to front, as a team sheet reads; a slot Fantrax adds sorts last. */
 export function sheetOf(team: RosteredTeam): Sheet {
-  const rank = (slot: string) => (SLOT_ORDER.includes(slot) ? SLOT_ORDER.indexOf(slot) : SLOT_ORDER.length);
   const men = team.players
     .filter(isResolved)
     .map((man) => ({ active: isActive(man.slot), man: { fantraxId: man.slot.fantraxId, slot: man.slot.position ?? "", player: man.player } }))
-    .sort((a, b) => rank(a.man.slot) - rank(b.man.slot));
+    .sort((a, b) => byPositionDepth(a.man.slot, b.man.slot));
   return {
     teamId: team.teamId,
     teamName: team.teamName,
@@ -38,7 +37,7 @@ export function sheetOf(team: RosteredTeam): Sheet {
 /** Defenders, midfielders and forwards started, "3-4-3"; null for a side with nobody out there. */
 export function formation(sheet: Sheet): string | null {
   const count = (slot: string) => sheet.starters.filter((man) => man.slot === slot).length;
-  const outfield = ["D", "M", "F"].map(count);
+  const outfield = PITCH_ORDER.filter((slot) => !isGoalkeeper(slot)).map(count);
   return outfield.every((n) => n === 0) ? null : outfield.join("-");
 }
 
@@ -59,7 +58,7 @@ export const ukSpelling = (name: string) => name.replace(/ß/gu, "ss");
  *  "Gabriel" as they are known, since their surname is not in their full name or is their first. */
 export function fullPrintName(player: FootballPlayer): string {
   const known = printName(player);
-  const plain = (s: string) => s.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+  const plain = (s: string) => withoutAccents(s).toLowerCase();
   const words = player.fullName.split(/\s+/u).filter((w) => w !== "");
   const last = plain(known.split(/\s+/u).at(-1) ?? known);
   if (known === player.name && known.includes(" ")) return known;

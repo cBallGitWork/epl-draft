@@ -6,12 +6,10 @@ import type {
   IntelStarter,
   IntelTaker,
 } from "./types";
+import { ON_THE_PITCH } from "../types";
 
 // Reads the sister repo's already-parsed export and refuses what is wrong. A null position must stay null:
 // filling it would put FPL's fantasy classification on a football screen.
-
-const STARTING_XI = 11;
-
 
 /** Every player the export carries by FPL code; a row without one is dropped, never kept under `NaN`. */
 export function squadIntel(squads: IntelSquads | null): Map<number, IntelPlayer> {
@@ -28,11 +26,11 @@ export function squadIntel(squads: IntelSquads | null): Map<number, IntelPlayer>
 export function xiFault(club: IntelClubXi | undefined): string | null {
   if (club === undefined) return "no predicted eleven";
   const starters = club.starters ?? [];
-  if (starters.length !== STARTING_XI) return `${starters.length} starters, not ${STARTING_XI}`;
+  if (starters.length !== ON_THE_PITCH) return `${starters.length} starters, not ${ON_THE_PITCH}`;
   if (!club.formation) return "no formation";
   if (club.slots === null) return `unknown formation ${club.formation}`;
   const slots = Object.values(club.slots).reduce((total, n) => total + n, 0);
-  if (slots !== STARTING_XI) return `${club.formation} fills ${slots} places, not ${STARTING_XI}`;
+  if (slots !== ON_THE_PITCH) return `${club.formation} fills ${slots} places, not ${ON_THE_PITCH}`;
   return null;
 }
 
@@ -45,7 +43,7 @@ export function predictedEleven(
 
   const shape = outfieldShape(club.formation);
   const starters = club.starters ?? [];
-  if (shape === null || starters.length !== STARTING_XI) return [];
+  if (shape === null || starters.length !== ON_THE_PITCH) return [];
 
   const [keeper, ...outfield] = starters;
   const rows = [{ line: "GK", players: [keeper] }];
@@ -64,7 +62,7 @@ function outfieldShape(formation: string | null | undefined): number[] | null {
   if (!formation) return null;
   const parts = formation.split("-").map((part) => Number(part.trim()));
   if (parts.length < 2 || parts.some((n) => !Number.isInteger(n) || n < 1)) return null;
-  return parts.reduce((total, n) => total + n, 0) === STARTING_XI - 1 ? parts : null;
+  return parts.reduce((total, n) => total + n, 0) === ON_THE_PITCH - 1 ? parts : null;
 }
 
 /** One club's set-piece orders, biggest share first, pieces in the order asked; one nobody takes comes back empty. */

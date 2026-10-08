@@ -9,25 +9,20 @@ import {
   fullClubName,
   fullPrintName,
   isResolved,
-  mapTeamRosters,
-  minimumsOf,
+  leagueLimits,
   periodGameweeks,
   periodLock,
   playSeason,
-  projectionIntel,
   readMoves,
-  resolveRosters,
   seasonCalls,
   seasonMan,
   ukSpelling,
   type Assignment,
-  type Bridge,
   type CallMan,
   type DraftPick,
   type EditorMove,
   type FootballSnapshot,
   type GameweekKickoff,
-  type IntelProjections,
   type LeagueInfo,
   type LeagueProjectionFile,
   type PlayedSeason,
@@ -36,9 +31,10 @@ import {
   type StoryKind,
 } from "@epl/core";
 import limits from "../../data/leagues/roster-limits.json";
-import mapping from "../../data/mappings/fantrax.json";
-import { INTEL_SEASON, readIntel } from "../intel";
+import { readIntel, readProjections } from "../intel";
 import { EDITIONS_ROOT } from "../paths";
+import { rosteredPeriod } from "./bridge";
+import type { Say } from "./newsroom";
 
 const KIND: StoryKind = "season-rankings";
 
@@ -65,16 +61,15 @@ export async function seasonDesk(input: {
   snapshot: FootballSnapshot;
   kickoffs: readonly GameweekKickoff[];
   pedigree: ReadonlyMap<string, DraftPick>;
-  say: (message: string) => void;
+  say: Say;
 }): Promise<SeasonDesk | null> {
   const round = input.assignments.find((each) => each.kind === KIND)?.round;
   if (round === undefined) return null;
   const { info, say } = input;
   if (input.pedigree.size === 0) return say("Power rankings: the draft is not complete; nothing filed."), null;
-  const minimums = minimumsOf(limits, FANTRAX_LEAGUE_ID);
-  const shapes = minimums === null ? [] : formations({ ...info.roster, minActiveByPosition: minimums });
+  const shapes = formations(leagueLimits(info.roster, limits, FANTRAX_LEAGUE_ID));
   if (shapes.length === 0) return say("Power rankings: no position minimums on record (npm run roster-limits); nothing filed."), null;
-  const pack = readIntel<LeagueProjectionFile>("league-projections", `${INTEL_SEASON}.json`);
+  const pack = readIntel<LeagueProjectionFile>("league-projections");
   if (pack === null) return say("Power rankings: no league projections held (npm run draft-pack); nothing filed."), null;
   const rosters = await fetchTeamRosters(FANTRAX_LEAGUE_ID, round.period).catch(() => null);
   if (rosters === null) return say(`Power rankings: Fantrax would not give period ${round.period}'s rosters.`), null;
@@ -82,10 +77,10 @@ export async function seasonDesk(input: {
   const played = new Set(info.matchups.map((each) => each.period));
   const calendar = periodGameweeks(info.scoringPeriods, [...input.kickoffs]);
   const periods = new Map(calendar.filter((each) => played.has(each.period)).map((each) => [each.period, each.gameweeks]));
-  const bands = projectionIntel(readIntel<IntelProjections>("projections", `${INTEL_SEASON}.json`));
+  const bands = readProjections();
   const rows = new Map(pack.players.map((row) => [row.fantraxId, row]));
   const clubs = new Map(input.snapshot.clubs.map((club) => [club.id, fullClubName(club.name)]));
-  const teams = resolveRosters(input.snapshot, mapTeamRosters(rosters), mapping as Bridge).teams;
+  const teams = rosteredPeriod(input.snapshot, rosters).teams;
 
   const missing: string[] = [];
   const squads: SeasonSquad[] = [];

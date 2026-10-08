@@ -66,9 +66,7 @@ export default function Season({
 function Score({ row }: { row: SeasonRow }) {
   if (!row.round.started) {
     return (
-      <span className="cm-index numeric flex h-6 w-12 shrink-0 items-center justify-center opacity-60">
-        —
-      </span>
+      <span className="cm-index numeric flex h-6 w-12 shrink-0 items-center justify-center">{DASH}</span>
     );
   }
 

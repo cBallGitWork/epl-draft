@@ -38,8 +38,6 @@ import ScoreboardDown from "../../ScoreboardDown";
 // One head-to-head: the scoreline and the elevens behind it. The URL's team is the side the board opens on; the side
 // Fantrax calls home decides only the ground, its venue.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function HeadToHeadPage({
@@ -91,16 +89,16 @@ export default async function HeadToHeadPage({
     return (
       <LeagueShell current="matchups" title={HEAD_TO_HEAD} sub={heading}>
         <PhotoGround subject={null} />
-        <Nothing title="Nobody this gameweek" code={`gameweek ${period}`}>
-          {named.teamName} has no pairing in gameweek {period} — a bye, or a schedule that has not
+        <Nothing title="Nobody this gameweek" code={`gameweek ${squads.snapshot.gameweek}`}>
+          {named.teamName} has no pairing in gameweek {squads.snapshot.gameweek} — a bye, or a schedule that has not
           reached its first head-to-head. Nothing is being withheld; there is nothing to pair.
         </Nothing>
       </LeagueShell>
     );
   }
 
-  // One cached read of the whole pool's news, narrowed per sheet below.
-  const [mine, stories] = await Promise.all([myTeamId(squads.period.teams), readPoolNews()]);
+  // One cached read of the whole pool's news, narrowed per sheet below; the calendar names a withheld side's lock.
+  const [mine, stories, calendar] = await Promise.all([myTeamId(squads.period.teams), readPoolNews(), readCalendar()]);
   const { scores, refused } = await liveScores(period);
   // The league's own names for its categories.
   const categories = squads.info.scoringCategories;
@@ -163,7 +161,7 @@ export default async function HeadToHeadPage({
     };
   };
 
-  const both = sharedSides({ pairing, rostered, shows, arranged, squads, mine });
+  const both = sharedSides({ pairing, rostered, shows, arranged, squads, mine, calendar });
   const withheld = withheldNotice(both);
   const gameweek = Number.isInteger(asked) ? asked : undefined;
   const stat = both[of === "opponent" ? 1 : 0];

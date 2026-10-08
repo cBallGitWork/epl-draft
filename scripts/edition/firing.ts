@@ -1,4 +1,5 @@
 import { hasRoom, type Assignment, type Ledger } from "@epl/core";
+import type { Say } from "./newsroom";
 import type { Filing } from "./persist";
 
 // One firing's loop: the newsdesk's running order, commissioned one assignment at a time and each
@@ -16,7 +17,7 @@ export interface Run {
   commission: (assignment: Assignment, earlier: readonly Filing[]) => Promise<Outcome>;
   /** Saves the newest of `filings` and answers the ledger with its keys spent. */
   save: (filings: readonly Filing[], ledger: Ledger) => Ledger;
-  say: (message: string) => void;
+  say: Say;
 }
 
 export async function fire(

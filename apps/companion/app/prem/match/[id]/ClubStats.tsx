@@ -1,4 +1,4 @@
-import { fixed, loggedPlayers, DASH } from "@epl/core";
+import { fixed, loggedPlayers } from "@epl/core";
 import { clubIndex } from "../../../components/football/clubIndex";
 import type { Club, PlManMatch, PlTeamSheet, SquadPlayerDetail } from "@epl/core";
 import { fantraxPositions, type LeagueOpinion } from "../../leagueOpinions";
@@ -16,6 +16,7 @@ import { statsHref } from "./statsSort";
 import { appeared, cameOn, forCode, ordered, type Named } from "./sheetJoin";
 import { sheetName, type Match } from "./match";
 import { MATCH_ROW } from "./matchRow";
+import Absent from "@/app/components/shell/Absent";
 
 // One club's men and what each did — CM 01/02's `Roma Stats` foot screen, ranked by fantasy points.
 
@@ -166,7 +167,7 @@ function StatRow({
                 : "";
         return (
           <td key={column.head} className={`${FIGURE_CELL} ${ink}`}>
-            {value === null || !played ? <span className="text-faint">{DASH}</span> : fixed(value, kind)}
+            {value === null || !played ? <Absent /> : fixed(value, kind)}
           </td>
         );
       })}

@@ -1,9 +1,11 @@
-import { REPORTS } from "../../config";
+import { LATE_GOAL_MINUTE, REPORTS } from "../../config";
+import { ordinal } from "../../league/ordinal";
 import { nextThree, type NextMatch } from "./ahead";
 import { derivedFacts } from "./derived";
 import { fantasyPanel, type FantasyPanel } from "./fantasy";
 import { starMan, type StarMan } from "./star";
 import { keyStats, type KeyStat } from "./keyStats";
+import { pts } from "../matchups/stories";
 import { played } from "./men";
 import { clubStandings, type ClubStanding } from "./standing";
 import { assistsBy, goalsBy, isGoal, manCounts, matchEvents, type ManCounts, type MatchEvent } from "./timeline";
@@ -41,16 +43,15 @@ export interface MatchDesk {
   lead: boolean;
 }
 
-const LATE = REPORTS.lateMinute;
 const BUDGET = REPORTS.budget;
 const DECISIONS = ["sent-off", "second-yellow", "ruled-out", "penalty-saved", "penalty-missed"];
 
 /** The moment that decided the match, from the timeline and the worked-out facts, in order of weight. */
 function opening(match: ReportMatchInput, events: readonly MatchEvent[], facts: readonly string[]): string {
   const goals = events.filter(isGoal);
-  const late = goals.filter((g) => g.at >= LATE);
+  const late = goals.filter((g) => g.at >= LATE_GOAL_MINUTE);
   const collapse = facts.find((f) => / were \d+-\d+ up /u.test(f));
-  if (collapse !== undefined && late.length > 0) return `${collapse}, and the other side scored ${late.length === 1 ? "once" : `${late.length} times`} from the 80th minute on`;
+  if (collapse !== undefined && late.length > 0) return `${collapse}, and the other side scored ${late.length === 1 ? "once" : `${late.length} times`} from the ${ordinal(LATE_GOAL_MINUTE)} minute on`;
   const winner = facts.find((f) => f.startsWith("the winner came"));
   if (winner !== undefined) return winner;
   const hat = match.men.find((m) => goalsBy(goals, m.code) >= 3);
@@ -83,8 +84,6 @@ function misses(events: readonly MatchEvent[]): MatchEvent[] {
   const chosen = new Set([...close, ...made].slice(0, REPORTS.missed.most));
   return shots.filter((e) => chosen.has(e));
 }
-
-const pts = (n: number) => `${n} ${plural(n, "point")}`;
 
 /** The men a section could be about, each with the league stake that earns it, most newsworthy first. */
 function nominees(match: ReportMatchInput, events: readonly MatchEvent[], counts: ReadonlyMap<number, ManCounts>): Nominee[] {
@@ -131,7 +130,7 @@ export function deskDay(input: ReportDayInput): MatchDesk[] {
     const standing = { home: standings.get(match.home.code) ?? null, away: standings.get(match.away.code) ?? null };
     const moved = standing.home?.moved === true || standing.away?.moved === true;
     const decided = events.some((e) => DECISIONS.includes(e.kind));
-    const late = events.filter((e) => isGoal(e) && e.at >= LATE).length;
+    const late = events.filter((e) => isGoal(e) && e.at >= LATE_GOAL_MINUTE).length;
     const held = match.men.reduce((sum, m) => sum + (m.holder !== null ? (m.points ?? 0) : 0), 0);
     const score = (moved ? 100 : 0) + (decided ? 40 : 0) + late * 15 + events.filter(isGoal).length * 5 + held / 10;
     return { match, events, facts: derivedFacts(match, events), standing, score };

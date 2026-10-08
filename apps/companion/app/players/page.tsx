@@ -23,10 +23,12 @@ import { defconPricing, poolPositions } from "../defcon";
 import { attributeStats } from "./attributeColumns";
 import { divisionGrids } from "./[fantraxId]/grid";
 import { cutsFor } from "./standout";
-import { FANTRAX_LEAGUE_PAGE, FANTRAX_PLAYERS_PATH, playerByCode } from "@epl/core";
+import { FANTRAX_PLAYERS_PATH, playerByCode } from "@epl/core";
 import { footballNow } from "../football";
 import OutLink from "../components/shell/OutLink";
 import FantraxSilent from "../components/shell/FantraxSilent";
+import { QUIET_NOTE } from "@/app/desk";
+import { fantraxPage } from "../fantraxPages";
 
 // Every player Fantrax knows, who holds him in our league, and what Fantrax scores him under our scoring.
 
@@ -149,7 +151,7 @@ export default async function PlayersPage({
       )}
 
       {capped.length < shown.length ? (
-        <p className="text-2xs text-faint">
+        <p className={QUIET_NOTE}>
           Showing the first {capped.length}. Search or filter to narrow it, or{" "}
           <Link href={boardHref(query, { all: "1" })} className="font-bold text-accent underline">
             show all {shown.length}
@@ -161,20 +163,20 @@ export default async function PlayersPage({
 
       {/* Why a number is missing: a read that did not answer, then one that answered short. */}
       {pool.statsRefused ? (
-        <p className="text-2xs text-faint">
+        <p className={QUIET_NOTE}>
           No points here — Fantrax would not give us its numbers ({pool.statsRefused}). Everything
           else on this page is current.
         </p>
       ) : null}
 
       {pool.missing > 0 ? (
-        <p className="text-2xs text-faint">
+        <p className={QUIET_NOTE}>
           Fantrax has numbers for {pool.missing} more than this read carried; those rows show a dash.
         </p>
       ) : null}
 
       {/* Claims happen on Fantrax: their players list, on the path taken off a real session. */}
-      <OutLink href={`${FANTRAX_LEAGUE_PAGE}/${FANTRAX_PLAYERS_PATH}`}>
+      <OutLink href={fantraxPage(FANTRAX_PLAYERS_PATH)}>
         Claim on Fantrax
       </OutLink>
     </ScoutShell>

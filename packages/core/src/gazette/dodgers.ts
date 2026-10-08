@@ -1,4 +1,4 @@
-import { DODGERS } from "../config";
+import { DODGERS, LATE_GOAL_MINUTE } from "../config";
 import type { MomentKind, PlMoment } from "../football/premierleague/moments";
 import type { Fixture, PlayerMatchStats } from "../football/types";
 import { isResolved, type ResolvedPlayer, type RosteredTeam } from "../join/roster";
@@ -159,7 +159,7 @@ function lateGoalAgainst(
   if (against.length !== 1) return null;
   const at = Number.parseInt(against[0].minute, 10);
   // On the pitch at least as long as the clock read: a starter still on, never a late substitute.
-  if (Number.isNaN(at) || at < DODGERS.lateGoal || stat.minutes < at) return null;
+  if (Number.isNaN(at) || at < LATE_GOAL_MINUTE || stat.minutes < at) return null;
   return against[0].minute;
 }
 

@@ -4,7 +4,7 @@ import { candidates } from "./pick";
 import type { Candidate } from "./pick";
 import type { PoolRow } from "../pool";
 import { ANALYSIS } from "../routes";
-import { ROW_NAME } from "../../desk";
+import { QUIET_NOTE, ROW_NAME } from "../../desk";
 import { ROW_LINK } from "../../components/league/TableCells";
 
 // Choosing both men without leaving the screen (Craig, 10 Sep 2026): a box over each half, naming the man it would
@@ -87,7 +87,7 @@ function Found({
   if (mine.typed.trim() === "") return null;
 
   if (found.length === 0) {
-    return <p className="text-2xs text-faint">No player of that name in the pool.</p>;
+    return <p className={QUIET_NOTE}>No player of that name in the pool.</p>;
   }
 
   return (

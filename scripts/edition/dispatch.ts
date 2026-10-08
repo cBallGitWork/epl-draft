@@ -1,5 +1,6 @@
 import {
   fullClubName,
+  textOrNull,
   type Assignment,
   type Club,
   type Dodger,
@@ -25,10 +26,8 @@ import type { DraftJob } from "./draftWriter";
 import type { ReportsJob } from "./reports";
 import type { BinDesk } from "./binXi";
 
-// One assignment in, one prepared desk out: which voice writes it, from which
-// brief, and how the words come back as a story. A kind with no desk yet
-// returns null and spends nothing — the newsdesk may know about a kind before
-// the paper can write it.
+// One assignment in, one prepared desk out: which voice writes it, from which brief, and how the words come back as a
+// story. A kind with no desk yet returns null and spends nothing.
 
 export interface DeskContext {
   leagueId: string;
@@ -91,23 +90,14 @@ export function file(
   ctx: DeskContext,
   filedAt: string,
 ): { story: PublishedStory; threads: ThreadUpdate[] } {
-  // **The Team Sheet's headline is the desk's, not the writer's.** A reader
-  // looking for team news should find the words, not a pun he has to decode —
-  // and a thread that runs every week under a different name reads as a
-  // different article each time. Craig, 18 Sep 2026.
+  // The Team Sheet's headline is the desk's, so a reader finds team news under one name every week (Craig, 18 Sep 2026).
   const copy =
     assignment.kind === "presser"
       ? {
           ...column,
           headline: PRESSER_HEADLINE,
-          // The fixture is the DESK's, joined on the club code the writer echoed
-          // back. Asking the column for it would be asking a model to recall a
-          // fixture list, which is the one thing `strangers()` exists to stop.
-          //
-          // `teamNews` sits at the column's TOP LEVEL — `storyOfColumn` folds it
-          // into `extras` afterwards — so this joins there and not on `extras`,
-          // which is undefined at this point and silently kept the fixture off
-          // every row.
+          // The fixture is the desk's, joined on the club code the writer echoed, never recalled by a model. It joins at the
+          // column's top level: `storyOfColumn` folds `teamNews` into `extras` only afterwards.
           teamNews: withTies(column.teamNews, ctx.presserTies, ctx.presserClubs),
         }
       : column;
@@ -139,21 +129,8 @@ export function file(
   });
 }
 
-/** Each team-news row given the fixture its club plays — and stripped of
- *  anything about that fixture the COLUMN wrote.
- *
- *  Two things the model may not be trusted with, both of which it can produce
- *  in a shape `normalizeExtras` accepts:
- *
- *  **A fixture.** The row was returned untouched when the desk had no tie for
- *  it, so a fixture the writer invented survived and printed. That path is
- *  reachable whenever `fetchFixtures` fails or FPL has not published the round.
- *
- *  **A club code that does not belong to the club it named.** The code draws
- *  the crest and joins the fixture, and `{club: "Chelsea", code: 4}` printed
- *  Newcastle's crest and Newcastle's opponent under a Chelsea heading. This is
- *  the check `presserLines` already makes one layer down, where a signal whose
- *  player-club and export-club disagree is refused. */
+/** Each team-news row given its club's fixture from the desk and stripped of any the column wrote; a club code that is
+ *  not the named club's draws neither crest nor fixture, as `{club: "Chelsea", code: 4}` once printed Newcastle's. */
 function withTies(
   rows: unknown,
   ties: Map<number, StoryFixture>,
@@ -185,5 +162,5 @@ function withTies(
 function firstKickoff(lineups: unknown): string | null {
   if (!Array.isArray(lineups)) return null;
   const kickoff = (lineups[0] as { kickoff?: unknown } | undefined)?.kickoff;
-  return typeof kickoff === "string" && kickoff !== "" ? kickoff : null;
+  return textOrNull(kickoff);
 }

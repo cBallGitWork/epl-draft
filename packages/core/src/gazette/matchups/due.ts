@@ -19,7 +19,7 @@ export const isSaturday = (day: string) => new Date(`${day}T12:00:00Z`).getUTCDa
 export function draftReportsDue(fixtures: readonly Fixture[], gameweek: number): DraftReportDue[] {
   const played = fixtures.filter((f) => f.gameweek === gameweek && f.kickoff !== null);
   if (played.length === 0) return [];
-  const day = (f: Fixture) => londonDayOf(f.kickoff!) ?? "";
+  const day = (f: Fixture) => londonDayOf(f.kickoff) ?? "";
   const saturday = played.filter((f) => isSaturday(day(f)));
   const later = played.some((f) => day(f) > (saturday[0] === undefined ? "" : day(saturday[0])));
   const last = played.map(day).sort().at(-1) ?? "";

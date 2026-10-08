@@ -1,4 +1,4 @@
-import type { Fixture, LineupDetail, SquadPlayerDetail } from "@epl/core";
+import { kickoffOrder, type Fixture, type LineupDetail, type SquadPlayerDetail } from "@epl/core";
 
 /** One of a manager's men in one real match, and whether his period's points print here. */
 export interface FixtureMan {
@@ -21,7 +21,5 @@ export function fixtureMen(sheet: LineupDetail | undefined, fixtureId: number): 
 
 /** The round's fixtures in kick-off order, an undated one last. */
 export function byKickoff(fixtures: readonly Fixture[]): Fixture[] {
-  return [...fixtures].sort(
-    (a, b) => (a.kickoff ?? "￿").localeCompare(b.kickoff ?? "￿") || a.id - b.id,
-  );
+  return [...fixtures].sort(kickoffOrder);
 }

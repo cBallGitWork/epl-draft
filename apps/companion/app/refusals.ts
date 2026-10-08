@@ -31,6 +31,12 @@ export async function orRefusal<T>(read: Promise<T>): Promise<T | FantraxError> 
   }
 }
 
+/** The read through `map`, or `refused`'s answer when Fantrax said no; an outage still throws, as `orRefusal` says. */
+export async function refusedAs<T, R, E>(read: Promise<T>, refused: (error: FantraxError) => E, map: (raw: T) => R): Promise<R | E> {
+  const raw = await orRefusal(read);
+  return raw instanceof FantraxError ? refused(raw) : map(raw);
+}
+
 /** The read, or `degrade`'s answer when a provider failed it. A bug of ours still throws. */
 export async function orDegraded<T, D>(read: Promise<T>, degrade: (error: ProviderError) => D): Promise<T | D> {
   try {

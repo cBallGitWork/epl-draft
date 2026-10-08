@@ -1,4 +1,4 @@
-import { toFplClubCode } from "@epl/core";
+import { mean, toFplClubCode } from "@epl/core";
 import type { Club, PlayerMatch } from "@epl/core";
 import type { GameLogRow } from "./scouting";
 
@@ -68,8 +68,6 @@ export function totalsOf(rows: readonly MatchRow[]): MatchTotals {
     yellowCards: sum((r) => r.fpl.match.yellowCards),
     redCards: sum((r) => r.fpl.match.redCards),
     saves: sum((r) => r.fpl.match.saves),
-    rating: average(rows.flatMap((r) => (r.mark === null ? [] : [r.mark]))),
+    rating: mean(rows.flatMap((r) => (r.mark === null ? [] : [r.mark]))),
   };
 }
-
-const average = (marks: readonly number[]) => (marks.length === 0 ? null : marks.reduce((a, b) => a + b, 0) / marks.length);

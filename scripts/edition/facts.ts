@@ -1,7 +1,6 @@
 import {
   FANTRAX_LEAGUE_ID,
   type AvailabilityNote,
-  type Bridge,
   type Deal,
   type DraftPick,
   type FootballSnapshot,
@@ -22,15 +21,13 @@ import {
   mapLivePlayerPoints,
   mapLiveScores,
   mapStandings,
-  mapTeamRosters,
   mapTransactions,
   periodPairings,
-  resolveRosters,
   teamOfTheWeek,
   wasFielded,
 } from "@epl/core";
 import { BBC_FOOTBALL, affectedBy, fetchFeed, mapNews, type Affected, type NewsItem } from "@epl/core";
-import mapping from "../../data/mappings/fantrax.json";
+import { rosteredPeriod } from "./bridge";
 
 // Everything the writer is allowed to know, read here at the edge so the brief
 // builders stay pure. One read per surface, each caught on its own: a feed we
@@ -70,25 +67,13 @@ export async function gatherRoundFacts(
   const [live, rosters, claims, trades, draft, standingsPage, wire] = await Promise.all([
     // Refused for a period the league never played; the scores go empty and Lawro and the Team Sheet still file.
     fetchLiveScoring(FANTRAX_LEAGUE_ID, period).catch(() => null),
-    // **The ROUND's period, not today's.** Asked without one, Fantrax answers
-    // with whatever it currently labels the rosters — and it rolls that label
-    // the moment a round's last fixture ends, so for about four days in seven
-    // it names next week. Every other read here already asks for the round's
-    // period; this one did not, which made `wasFielded` false for every column
-    // that fires AFTER a round finishes, which is all of them. `eleven` and
-    // `dodgers` could therefore never file at all.
-    //
-    // Probed 2 Sep 2026 (rehearsal league): the period asked for is echoed back
-    // verbatim, and 3 of 10 teams field a genuinely different side in period 2
-    // than in period 3 — so this is a different answer, not a different label.
+    // The ROUND's period, not today's: unasked, Fantrax rolls its label the moment a round's last fixture ends, and
+    // `wasFielded` read false for every column filed after a round (probed 2 Sep: a different answer, not a label).
     fetchTeamRosters(FANTRAX_LEAGUE_ID, period).catch(() => null),
     fetchTransactions(FANTRAX_LEAGUE_ID, "CLAIM_DROP").catch(() => null),
     fetchTransactions(FANTRAX_LEAGUE_ID, "TRADE").catch(() => null),
     fetchDraftResults(FANTRAX_LEAGUE_ID).catch(() => null),
-    // The page and not the fxea array: the page carries every column the table
-    // is drawn from. The array was read alongside it for `gamesBack` alone, and
-    // that column went when the table became a football one on 31 Aug — the
-    // same single read `/league` now makes, for the same reason.
+    // The page, not the fxea array: it carries every column the table is drawn from, as `/league` reads it.
     fetchStandingsPage(FANTRAX_LEAGUE_ID).catch(() => null),
     // The wire is the one read that is nobody's provider: a feed we cannot
     // fetch costs the paper its news section and nothing else.
@@ -98,12 +83,7 @@ export async function gatherRoundFacts(
   // The squads, and with them the two things only a join can say: who was in the
   // week's eleven, and whether the arrangement we hold is the one that was
   // actually fielded.
-  // `as Bridge` and not a looser cast: a JSON import widens `matchedBy` to
-  // `string` and the compiler cannot see that the writer only emits four
-  // literals. Asserted exactly as `apps/companion/app/squads.ts` asserts it, and
-  // for the same reason.
-  const squads =
-    rosters === null ? null : resolveRosters(snapshot, mapTeamRosters(rosters), mapping as Bridge);
+  const squads = rosters === null ? null : rosteredPeriod(snapshot, rosters);
   const eleven = squads === null ? null : teamOfTheWeek(squads.teams, info.roster, new Map());
 
   return {

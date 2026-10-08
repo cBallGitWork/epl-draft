@@ -1,5 +1,6 @@
 import type { PresserQuote, PresserSignal } from "../../football/intel/pressers";
 import { FIRM } from "../../football/intel/pressers";
+import { groupedBy } from "../../grouped";
 import { storylinesBlock } from "./storylines";
 import type { StoryThread } from "../ledger";
 
@@ -77,12 +78,8 @@ export function buildPresserBrief(brief: {
     .map((each) => `- ${each.clubName}${each.manager === null ? "" : ` (${each.manager})`}`);
 
   // Grouped by club so the writer sees a club's words beside its players.
-  const spoken = new Map<string, string[]>();
-  for (const quote of brief.quotes ?? []) {
-    const about = quote.about === undefined ? "" : ` on ${quote.about}`;
-    spoken.set(quote.clubName, [...(spoken.get(quote.clubName) ?? []), `  "${quote.text}" — ${quote.said}${about}`]);
-  }
-  const said = [...spoken.entries()].map(([club, lines]) => [`- ${club}:`, ...lines].join("\n"));
+  const line = (quote: PresserQuote) => `  "${quote.text}" — ${quote.said}${quote.about === undefined ? "" : ` on ${quote.about}`}`;
+  const said = [...groupedBy(brief.quotes ?? [], (quote) => quote.clubName)].map(([club, quotes]) => [`- ${club}:`, ...quotes.map(line)].join("\n"));
 
   return [
     `TEAM NEWS, gameweek ${brief.gameweek}. What the managers said before the deadline. A draft manager reads this to decide who to start AND who to claim, so it covers every man mentioned, not only the ones somebody owns.`,

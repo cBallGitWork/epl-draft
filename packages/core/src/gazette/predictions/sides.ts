@@ -1,7 +1,9 @@
 import { PREDICTIONS } from "../../config";
 import type { StoryFace } from "../face";
+import { mean } from "../../mean";
 import type { Availability } from "../../football/playerState";
 import type { PickSide } from "./pick";
+import { isBack } from "../sheets/sheet";
 
 // One side of a tie as Lawro may know it: the squad, never the line-up. Nothing here reads a
 // roster slot, so the brief says the same whatever the manager has arranged before the lock.
@@ -81,7 +83,7 @@ export function predictionSide(input: {
   const ranked = [...input.men].sort(byMatter);
   const fresh = ranked.filter((man) => !input.worn.has(man.name) || news(man));
   const best = ranked[0]?.horizon == null ? null : ranked[0];
-  const backLine = ranked.filter((man) => man.positions.some((position) => position === "G" || position === "D"));
+  const backLine = ranked.filter((man) => man.positions.some(isBack));
   const rated = backLine.flatMap((man) => (man.ease === null ? [] : [man.ease]));
   return {
     teamId: input.teamId,
@@ -90,7 +92,7 @@ export function predictionSide(input: {
     projected: input.projected,
     bestManDoubt: best !== null && isDoubt(best.availability),
     liverpool: ranked.filter((man) => man.liverpool).length,
-    backLineEase: rated.length === 0 ? null : rated.reduce((sum, ease) => sum + ease, 0) / rated.length,
+    backLineEase: mean(rated),
     keyMen: fresh.slice(0, PREDICTIONS.keyMen),
     best,
     doubts: ranked.slice(0, PREDICTIONS.doubtDepth).filter((man) => man.availability.state !== "fit"),

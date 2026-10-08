@@ -1,4 +1,4 @@
-import { REPORTS } from "../../config";
+import { LATE_GOAL_MINUTE, REPORTS } from "../../config";
 import { minutesLeft, numeral } from "./minutes";
 import { finalScore, goalsBy, isGoal, type MatchEvent } from "./timeline";
 import type { ReportMatchInput, Side } from "./types";
@@ -6,7 +6,7 @@ import { plural } from "../../format";
 
 // Facts worked out from the timeline so the writer never does sums: a lead, a burst, a late winner, a conversion rate.
 
-const { burstMinutes: BURST, lateMinute: LATE, cleanSheetLostFrom: CLEAN_SHEET_LOST } = REPORTS;
+const { burstMinutes: BURST, cleanSheetLostFrom: CLEAN_SHEET_LOST } = REPORTS;
 const { most: MOST, more: MORE } = REPORTS.ball;
 
 const other = (side: Side): Side => (side === "home" ? "away" : "home");
@@ -54,7 +54,7 @@ export function derivedFacts(match: ReportMatchInput, events: readonly MatchEven
   const winner: Side | null = final.home > final.away ? "home" : final.away > final.home ? "away" : null;
   if (winner !== null) {
     const decider = goals.find((g) => g.side === winner && (g.score?.[winner] ?? 0) === final[other(winner)] + 1);
-    if (decider !== undefined && decider.at >= LATE) facts.push(`the winner came ${when(decider)}`);
+    if (decider !== undefined && decider.at >= LATE_GOAL_MINUTE) facts.push(`the winner came ${when(decider)}`);
   }
 
   // The first goal a side let in, if it came late.

@@ -1,10 +1,10 @@
-import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { asyncBufferFromFile, parquetReadObjects } from "hyparquet";
 import { cupName, tmlCupTies, fetchBootstrap } from "@epl/core";
 import type { IntelCups, TmlRow } from "@epl/core";
-import { INTEL_ROOT, SISTER_ROOT } from "./paths";
-import { INTEL_SEASON, intelManifest } from "./intel";
+import { SISTER_ROOT } from "./paths";
+import { INTEL_SEASON, intelManifest, writeIntel } from "./intel";
 
 // Each club's cup and European ties off the sister repo's team match log, into `data/intel/cups/`.
 // Reads the sister repo and never writes to it; run after the sister rebuilds its log (`npm run intel-cups`).
@@ -33,8 +33,7 @@ async function main(): Promise<void> {
     clubs,
   };
   // Written every run, unchanged or not: the weekly stamp is what intel-check ages.
-  mkdirSync(join(INTEL_ROOT, "cups"), { recursive: true });
-  writeFileSync(join(INTEL_ROOT, "cups", `${INTEL_SEASON}.json`), `${JSON.stringify(file, null, 1)}\n`);
+  writeIntel("cups", `${JSON.stringify(file, null, 1)}\n`);
 
   console.log(`${ties.length} ties for ${Object.keys(clubs).length} clubs, ${rows.length - ties.length} log rows left aside`);
   for (const [label, count] of tally(ties.map((tie) => `${cupName(tie.competition) ?? tie.competition} ${tie.score === null ? "to come" : "played"}`))) {

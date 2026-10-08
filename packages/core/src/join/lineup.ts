@@ -5,7 +5,7 @@ import { playerName, type RosteredPlayer, type RosteredTeam } from "./roster";
 // A roster arranged the way a team lines up. Fantrax has no formation field, so the shape is counted, never read.
 
 /** Back to front: the one football fact the league's letters do not carry. Declared once, never at a render site. */
-const PITCH_ORDER = ["G", "D", "M", "F"];
+export const PITCH_ORDER: readonly string[] = ["G", "D", "M", "F"];
 
 /** One row of the pitch: everyone the manager has playing in that position. */
 interface LineupLine {

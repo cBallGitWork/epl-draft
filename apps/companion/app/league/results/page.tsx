@@ -11,8 +11,6 @@ import { placings } from "../placings";
 // What has happened: every finished gameweek's head-to-heads, newest first (`cm9900/24.jpg`'s Results tab, Craig, 31 Aug).
 // A view of the schedule's two cached reads; it makes no provider call of its own.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function ResultsPage() {

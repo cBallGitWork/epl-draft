@@ -14,8 +14,6 @@ import ScoreboardDown from "../ScoreboardDown";
 
 // Who each squad plays this gameweek and what they have scored: Fantrax's own totals, one call for every team.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function MatchupPage() {
@@ -58,7 +56,7 @@ export default async function MatchupPage() {
   if (pairings.length === 0) {
     return (
       <LeagueShell current="matchups">
-        <Nothing title="No pairings this gameweek" code={`gameweek ${period}`}>
+        <Nothing title="No pairings this gameweek" code={`gameweek ${squads.snapshot.gameweek}`}>
         The schedule does not cover this gameweek — a bye week, or a season that has not reached its
         first head-to-head yet. Nobody is hiding anything; there is nothing to pair.
         </Nothing>

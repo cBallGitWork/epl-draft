@@ -1,12 +1,11 @@
 import {
   FANTRAX_LEAGUE_ID,
-  FantraxError,
   type TransactionView,
   fetchTransactions,
   mapTransactions,
 } from "@epl/core";
 import { leagueCache } from "./leagueCache";
-import { orRefusal } from "./refusals";
+import { refusedAs } from "./refusals";
 
 // The week's business: the transaction feed, read once and cached.
 
@@ -17,10 +16,7 @@ const DEAL_VIEWS: readonly TransactionView[] = ["CLAIM_DROP", "TRADE"];
 export const readDeals = leagueCache("gazette-deals",
   async () => {
     const feeds = await Promise.all(
-      DEAL_VIEWS.map(async (view) => {
-        const raw = await orRefusal(fetchTransactions(FANTRAX_LEAGUE_ID, view));
-        return raw instanceof FantraxError ? null : mapTransactions(raw, view);
-      }),
+      DEAL_VIEWS.map((view) => refusedAs(fetchTransactions(FANTRAX_LEAGUE_ID, view), () => null, (raw) => mapTransactions(raw, view))),
     );
     return { rows: feeds.flatMap((feed) => feed ?? []), whole: feeds.every((feed) => feed !== null) };
   },

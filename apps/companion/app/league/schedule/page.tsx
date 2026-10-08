@@ -19,8 +19,6 @@ import ScoreboardDown from "../ScoreboardDown";
 // ours (`league/cups/declared.ts`). No controls (Craig, 5 Sep 2026): a schedule is scrolled, and one team's season
 // is its Fixtures tab. Gameweeks, never periods.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function SchedulePage() {

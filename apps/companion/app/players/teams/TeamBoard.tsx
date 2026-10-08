@@ -4,7 +4,7 @@ import ClubLabel from "../../components/football/ClubLabel";
 import { ROW_LINK } from "../../components/league/TableCells";
 import { HeadRow, MUTE, SortHead, sortedAs } from "../../components/league/TableHeads";
 import { SIDE_SHARES, standoutCuts, standoutInk, type StandoutCut } from "../../components/league/standout";
-import { BOARD, GROUP_PLATE, HEAD_CELL, INDEX_WIDTH, PINNED_BESIDE_INDEX, PINNED_TILE, ROW_FIGURE, ROW_RULE } from "@/app/desk";
+import { BOARD, FIGURE_CELL, GROUP_PLATE, HEAD_CELL, INDEX_WIDTH, PINNED_BESIDE_INDEX, PINNED_TILE, ROW_HEAD_CELL, ROW_RULE } from "@/app/desk";
 import ScrollBoard from "../../components/league/ScrollBoard";
 import { POOL, TEAMS } from "../routes";
 import { TEAM_COLUMNS, columnGroups, type TeamColumn } from "./columns";
@@ -71,7 +71,7 @@ export default function TeamBoard({
             <tr key={row.club.code} className={ROW_RULE}>
               {/* `IndexCell`'s block, pinned: it takes no class, and this board scrolls sideways. */}
               <td className={`cm-index numeric px-1.5 text-center ${PIN_INDEX}`}>{at + 1}</td>
-              <th scope="row" className={`p-0 text-left font-normal ${PINNED_BESIDE_INDEX}`}>
+              <th scope="row" className={`${ROW_HEAD_CELL} ${PINNED_BESIDE_INDEX}`}>
                 <Link href={`${POOL}?club=${toFantraxClubCode(row.club.shortName)}`} className={`${ROW_LINK} gap-1.5 px-1.5`}>
                   <ClubLabel club={row.club} />
                 </Link>
@@ -90,12 +90,12 @@ export default function TeamBoard({
 function Figure({ column, row, cut, first }: { column: TeamColumn; row: TeamRow; cut: StandoutCut | undefined; first: boolean }) {
   const value = column.of(row);
   const edge = first ? "border-l border-line/60" : "";
-  if (value === null) return <td className={`${FIGURE} ${edge} text-faint`}>{DASH}</td>;
-  return <td className={`${FIGURE} ${edge} ${standoutInk(value, cut, column.rank)}`}>{fixed(value, column.kind ?? "count")}</td>;
+  if (value === null) return <td className={`${MEASURE_CELL} ${edge} text-faint`}>{DASH}</td>;
+  return <td className={`${MEASURE_CELL} ${edge} ${standoutInk(value, cut, column.rank)}`}>{fixed(value, column.kind ?? "count")}</td>;
 }
 
-/** Centred under its head, the way CM sets a column. */
-const FIGURE = `numeric w-12 px-1.5 text-center lg:w-10 ${ROW_FIGURE}`;
+/** A measure's cell: `FIGURE_CELL` at the board's fixed width. */
+const MEASURE_CELL = `${FIGURE_CELL} w-12 lg:w-10`;
 
 /** The place and the club stay put while the measures scroll under them. */
 const PIN_INDEX = `${PINNED_TILE} ${INDEX_WIDTH}`;

@@ -1,6 +1,5 @@
 import {
   FANTRAX_LEAGUE_ID,
-  FantraxError,
   type LeagueInfo,
   fetchLeagueInfo,
   mapLeagueInfo,
@@ -12,7 +11,7 @@ import {
 } from "@epl/core";
 import { now } from "./clock";
 import { leagueCache } from "./leagueCache";
-import { orRefusal } from "./refusals";
+import { refusedAs } from "./refusals";
 import { seasonKickoffs } from "./football";
 
 // The competition's own description of itself, and which round of it a screen is about.
@@ -21,10 +20,7 @@ import { seasonKickoffs } from "./football";
 /** The competition's own description of itself, or null when Fantrax refuses: no calendar then,
  *  so squads only, never an XI we cannot prove may be shown. */
 export const leagueInfo = leagueCache("league-info",
-  async (): Promise<LeagueInfo | null> => {
-    const raw = await orRefusal(fetchLeagueInfo(FANTRAX_LEAGUE_ID));
-    return raw instanceof FantraxError ? null : mapLeagueInfo(raw);
-  },
+  (): Promise<LeagueInfo | null> => refusedAs(fetchLeagueInfo(FANTRAX_LEAGUE_ID), () => null, mapLeagueInfo),
   () => null,
 );
 

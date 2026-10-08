@@ -5,7 +5,12 @@
 export const PREM = "/prem";
 
 /** The route the club pages hang off. */
-export const CLUB = "/prem/club";
+export const CLUB = `${PREM}/club`;
+
+/** One club's page, keyed on FPL's season-stable club code and never its `id`, which FPL recycles. */
+export function clubHref(code: number): string {
+  return `${CLUB}/${code}`;
+}
 
 /** One match, keyed on the fixture id. */
-export const MATCH = "/prem/match";
+export const MATCH = `${PREM}/match`;

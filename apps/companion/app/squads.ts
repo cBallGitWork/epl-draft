@@ -31,7 +31,7 @@ export const bridge = mapping as Bridge;
 
 /** Everything a squad view needs. */
 export interface ReadableSquads {
-  /** The season's kickoffs, for the gate: lineups lock fifteen minutes before a period's first ball. */
+  /** The season's kickoffs, for the gate: lineups lock `LINEUP_LOCK_LEAD_MINUTES` before a period's first ball. */
   kickoffs: GameweekKickoff[];
   period: RosteredPeriod;
   snapshot: FootballSnapshot;
@@ -46,6 +46,11 @@ export interface ReadableSquads {
 
 /** The squads, an undrafted league (`NO_TEAMS`, a state) or Fantrax not answering (a fault): never one. */
 export type LeagueSquads = ReadableSquads | { undrafted: string } | Unavailable;
+
+/** The squads when Fantrax served them; null for an undrafted league or a silent one, which these readers treat alike. */
+export function readable(squads: LeagueSquads): ReadableSquads | null {
+  return "period" in squads ? squads : null;
+}
 
 /** The squads read's cache key, which a lineup save expires. */
 export const SQUADS_KEY = "league-squads";

@@ -11,6 +11,8 @@ import {
   fetchPlTextstream,
   fullClubName,
   highlightFor,
+  isDated,
+  clubById,
   londonDayOf,
   mapFixtures,
   mapLiveStats,
@@ -36,10 +38,11 @@ import {
   type ReportMatchInput,
   type SeasonLine,
 } from "@epl/core";
-import { INTEL_SEASON, readIntel } from "../intel";
+import { readIntel } from "../intel";
 import type { DeskFacts } from "./facts";
 import { fitnessAfter, leagueJoin } from "./matchdayLeague";
 import { dayMarks } from "./matchdayRatings";
+import type { Say } from "./newsroom";
 
 // The reads behind one match-day report: the Premier League's own account of each match, FPL's per-man figures, the league's,
 // and our marks. Script-side: about four requests a match, one per past gameweek and six for the marks, made only when a
@@ -88,20 +91,20 @@ export async function matchdayInput(opts: {
   facts: DeskFacts;
   periodGameweeks: readonly number[];
   pick: (fixture: Fixture) => boolean;
-  say: (message: string) => void;
+  say: Say;
 }): Promise<ReportDayInput | null> {
   const { snapshot, facts, say } = opts;
   const gameweek = snapshot.gameweek;
   const season = await fetchFixtures().then(mapFixtures).catch(() => null);
   if (season === null) return say("FPL would not give the season's fixtures, which the table is read from."), null;
-  const fixtures = snapshot.fixtures.filter((f) => f.status === "finished" && f.kickoff !== null && opts.pick(f));
+  const fixtures = snapshot.fixtures.filter(isDated).filter((f) => f.status === "finished" && opts.pick(f));
   if (fixtures.length === 0) return null;
-  const day = londonDayOf(fixtures[0].kickoff!) ?? "";
+  const day = londonDayOf(fixtures[0].kickoff) ?? "";
 
   const round = await fetchPlRound(gameweek).catch(() => null);
   if (round === null) return say("The Premier League's round would not load."), null;
 
-  const clubs = new Map(snapshot.clubs.map((c) => [c.id, c]));
+  const clubs = clubById(snapshot);
   const clubOfCode = new Map(snapshot.players.map((p) => [p.code, p.clubId]));
   const optaToCode = new Map(snapshot.players.flatMap((p) => (p.optaCode === null ? [] : [[p.optaCode, p.code] as const])));
   const league = leagueJoin(facts, season.filter((f) => f.gameweek !== null && opts.periodGameweeks.includes(f.gameweek)), clubOfCode);
@@ -136,12 +139,12 @@ export async function matchdayInput(opts: {
     const [homeStaff, awayStaff] = await Promise.all([fetchPlStaff(sheets.home.teamId).catch(() => ({})), fetchPlStaff(sheets.away.teamId).catch(() => ({}))]);
     const moments = plMoments(stream.events.content, plPlayerCodes(detail, optaToCode));
     const injured = [...moments].flatMap((m) => (m.injury ? [m.kind === "substitution" ? m.men[1] : m.men[0]] : [])).filter((c): c is number => c !== null);
-    const fitness = await fitnessAfter(injured, fixture.kickoff!, league.fantraxIds);
+    const fitness = await fitnessAfter(injured, fixture.kickoff, league.fantraxIds);
     const home = stats === null ? null : sideFigures(stats, sheets.home.teamId);
     const away = stats === null ? null : sideFigures(stats, sheets.away.teamId);
     const men = reportMen(sheets, moments, { live: liveLines, season: seasons, holders: league.holders, points: league.points, fitness });
     const opponentOf = (side: "home" | "away") => (side === "home" ? fixture.awayClubId : fixture.homeClubId);
-    const marks = new Map(markFor === null ? [] : men.filter((m) => m.minutes > 0).map((m) => [m.code, markFor(m.code, opponentOf(m.side), fixture.kickoff!)] as const));
+    const marks = new Map(markFor === null ? [] : men.filter((m) => m.minutes > 0).map((m) => [m.code, markFor(m.code, opponentOf(m.side), fixture.kickoff)] as const));
     matches.push({
       fixture,
       home: reportClub(clubs.get(fixture.homeClubId), plManager(homeStaff)),
@@ -163,11 +166,11 @@ export async function matchdayInput(opts: {
   for (const match of matches) {
     for (const man of match.men) {
       const clubId = clubOfCode.get(man.code);
-      man.matchesBefore = season.filter((f) => f.status === "finished" && (f.homeClubId === clubId || f.awayClubId === clubId) && (londonDayOf(f.kickoff ?? "") ?? "") < day).length;
+      man.matchesBefore = season.filter((f) => f.status === "finished" && (f.homeClubId === clubId || f.awayClubId === clubId) && (londonDayOf(f.kickoff) ?? "") < day).length;
     }
   }
 
-  const strengths = strengthIntel(readIntel<IntelStrength>("strength", `${INTEL_SEASON}.json`));
+  const strengths = strengthIntel(readIntel<IntelStrength>("strength"));
   return {
     day,
     gameweek,

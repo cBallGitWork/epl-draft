@@ -1,4 +1,4 @@
-import { listed } from "../../format";
+import { capital, listed, plural, spelled } from "../../format";
 import type { StorySheet, StorySheetMan, StorySheetSide } from "./cargo";
 import type { TeamFacts, TieFacts } from "./facts";
 import { printName, type SheetMan } from "./sheet";
@@ -49,8 +49,7 @@ export function sheetsDeck(ties: readonly TieFacts[]): string {
   const changes = teams.reduce((sum, team) => sum + (team.changes?.count ?? 0), 0);
   const debuts = teams.reduce((sum, team) => sum + (team.debuts?.length ?? 0), 0);
   if (changes === 0) return "Every side unchanged.";
-  const made = `${inWords(changes)} ${changes === 1 ? "change" : "changes"}`;
-  return `${capital(made)}${debuts === 0 ? "" : ` and ${inWords(debuts)} ${debuts === 1 ? "debut" : "debuts"}`}.`;
+  return `${capital(counted(changes, "change"))}${debuts === 0 ? "" : ` and ${counted(debuts, "debut")}`}.`;
 }
 
 /** The fallback, and it says only what the facts say: "test31 make two changes: Saka and Isak come in." */
@@ -59,24 +58,18 @@ export function plainLine(team: TeamFacts): string {
   const shape = team.formation === null ? "" : ` in a ${team.formation}`;
   const out = team.flags.flatMap((flag) => (flag.kind === "out" ? [printName(flag.man.player)] : []));
   // Who cannot play leads the desk's line as it leads the writer's.
-  const absent = out.length === 0 ? "" : ` ${listed(out)} ${out.length === 1 ? "is" : "are"} named but out this weekend.`;
+  const absent = out.length === 0 ? "" : ` ${listed(out)} ${plural(out.length, "is", "are")} named but out this weekend.`;
   const changes = team.changes;
   if (changes === null) return `${name} name their first sheet${shape}.${absent}`;
   if (changes.count === 0) return absent === "" ? `${name} name the same eleven as last gameweek${shape}.` : `${name} are unchanged.${absent}`;
   const came = changes.in.map((each) => printName(each.man.player));
-  return `${name} make ${inWords(changes.count)} ${changes.count === 1 ? "change" : "changes"}: ${listed(came)} ${came.length === 1 ? "comes" : "come"} in.${absent}`;
+  return `${name} make ${counted(changes.count, "change")}: ${listed(came)} ${plural(came.length, "comes", "come")} in.${absent}`;
 }
-
-
-
-
-const WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
 
 /** Newspaper style: words to ten, figures after. */
 function inWords(n: number): string {
-  return WORDS[n] ?? String(n);
+  return n === 0 ? "no" : n <= 10 ? spelled(n) : String(n);
 }
 
-function capital(text: string): string {
-  return text.charAt(0).toUpperCase() + text.slice(1);
-}
+/** "two changes", "one debut". */
+const counted = (n: number, word: string) => `${inWords(n)} ${plural(n, word)}`;

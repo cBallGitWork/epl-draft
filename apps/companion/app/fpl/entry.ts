@@ -9,6 +9,7 @@ import {
   mapEntry,
   mapScoreLines,
   mapSquad,
+  playerById,
 } from "@epl/core";
 import { ENTRY_COOKIE, PAGE_REVALIDATE } from "../config";
 import { footballNow } from "../football";
@@ -64,7 +65,7 @@ export async function mySide(): Promise<FplSide | null> {
   if (read.picks === null) return { entry: read.entry, squad: null };
 
   // Element ids are per-season, so this join lives inside one snapshot and is never persisted.
-  const byId = new Map(snapshot.players.map((player) => [player.id, player]));
+  const byId = playerById(snapshot);
   const lines = await roundScoring(read.gameweek);
   return {
     entry: read.entry,

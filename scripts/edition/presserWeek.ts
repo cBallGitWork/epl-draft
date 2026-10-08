@@ -1,4 +1,5 @@
 import { MS_PER_DAY, type Club, type Fixture, type PresserLine, type RosteredTeam } from "@epl/core";
+import type { Say } from "./newsroom";
 import {
   presserFixtures,
   presserGameweek,
@@ -8,21 +9,15 @@ import {
   type PresserSquadMan,
 } from "./pressers";
 
-// WHICH round the Team Sheet is about, and the conferences it carries.
-//
-// Split from `pressers.ts` when it passed the 300-line ceiling: that reads the
-// export, this decides the window and the round it previews.
+// WHICH round the Team Sheet is about, and the conferences it carries: `pressers.ts` reads the export, this decides
+// the window and the round it previews.
 
 /** No round is longer than one, so a presser older than this is about a round
  *  already played. */
 const WEEK = 7 * MS_PER_DAY;
 
-/** Everything the Team Sheet needs, assembled in one place.
- *
- *  Six reads that only make sense together — the window, the round they preview,
- *  the guard that the export is about that round, and the three files keyed on
- *  it. The same seam `deskState` was extracted along, for the same reason: the
- *  caller had passed the ceiling. */
+/** Everything the Team Sheet needs, in one place: the window, the round it previews, the guard that the export is
+ *  about that round, and the three files keyed on it. */
 export function presserDesk(input: {
   facts: { teams: readonly RosteredTeam[] };
   snapshot: { gameweek: number; players: readonly PresserSquadMan[] };
@@ -32,7 +27,7 @@ export function presserDesk(input: {
   locked: boolean;
   /** The season's fixtures, which the writer already holds. */
   season: readonly Fixture[];
-  say: (message: string) => void;
+  say: Say;
 }): {
   lines: PresserLine[];
   quotes: ReturnType<typeof presserQuotes>;

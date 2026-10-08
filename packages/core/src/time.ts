@@ -16,8 +16,8 @@ export function instantOf(iso: string): number | null {
 }
 
 /** An ISO instant as the league's own day, or null when it cannot be read. */
-export function londonDayOf(iso: string): string | null {
-  const at = instantOf(iso);
+export function londonDayOf(iso: string | null | undefined): string | null {
+  const at = instantOf(iso ?? "");
   return at === null ? null : londonDay(new Date(at));
 }
 

@@ -1,4 +1,6 @@
 import { REPORTS } from "../../config";
+import { capital, withoutAccents } from "../../format";
+import { ON_THE_PITCH } from "../../football/types";
 import { faultLog, type Fault, type Report } from "../predictions/checks";
 import { mentionAt as mentionExact, numbersIn, sentences, wordCount } from "../predictions/prose";
 import type { MatchDesk } from "./desk";
@@ -26,12 +28,11 @@ export interface ReportsCheck {
 /** Where a name stands whole at or after `from`, allowing the capital a particle takes at a sentence's start ("Van Hecke"). */
 function mentionAt(text: string, name: string, from = 0): number {
   const tail = text.slice(from);
-  const at = [mentionExact(tail, name), mentionExact(tail, name.charAt(0).toUpperCase() + name.slice(1))].filter((n) => n >= 0);
+  const at = [mentionExact(tail, name), mentionExact(tail, capital(name))].filter((n) => n >= 0);
   return at.length === 0 ? -1 : from + Math.min(...at);
 }
 
 const CAME_ON = /\b(?:off the bench|from the bench|as a substitute|came on|coming on|introduced)\b/iu;
-const strip = (text: string) => text.normalize("NFD").replace(/\p{M}/gu, "");
 
 /** A length is a target, not a guillotine: a little under or over is not worth a rewrite. */
 const SLACK_UNDER = 0.85;
@@ -111,7 +112,7 @@ function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx:
   // Besides the block's own figures: the goal total ("an eight-goal match"), and ten or nine men after a red card.
   const total = (desk.match.fixture.homeScore ?? 0) + (desk.match.fixture.awayScore ?? 0);
   const reds = desk.events.filter((e) => isDismissal(e.kind)).length;
-  const allowed = new Set([...numbersIn(block), 0, 90, 45, ctx.gameweek, total, ...(reds > 0 ? [10, 11 - reds] : [])]);
+  const allowed = new Set([...numbersIn(block), 0, 90, 45, ctx.gameweek, total, ...(reds > 0 ? [ON_THE_PITCH - 1, ON_THE_PITCH - reds] : [])]);
   for (const n of numbersIn(prose.replace(SCORE, " "))) if (!allowed.has(n)) fault(section, "a figure the facts do not give", "hard", String(n));
 
   const events = desk.events.filter(isGoal);
@@ -143,7 +144,7 @@ function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx:
   }
   for (const man of desk.match.men) {
     const name = surname(man.name);
-    if (strip(name) !== name && mentionAt(prose, strip(name)) >= 0) fault(section, "a name spelt without its accents", "send-back", strip(name));
+    if (withoutAccents(name) !== name && mentionAt(prose, withoutAccents(name)) >= 0) fault(section, "a name spelt without its accents", "send-back", withoutAccents(name));
   }
 
   // Everything that decided or changed the match is named somewhere in its piece.

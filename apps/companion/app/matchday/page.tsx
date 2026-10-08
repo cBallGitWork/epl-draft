@@ -4,7 +4,6 @@ import {
   type Fixture,
   type FootballSnapshot,
   type LiveTeamScore,
-  FANTRAX_LEAGUE_PAGE,
   FANTRAX_MATCHUPS_PATH,
   clubById,
   duringGameweek,
@@ -15,7 +14,8 @@ import {
   roundState,
   cupTies,
   fplCodeOf,
-  londonDayOf,
+  londonDay,
+  onLondonDay,
 } from "@epl/core";
 import { leagueTable } from "../standings";
 import { footballNow, gameweekLive, seasonFixtures, speaksForNow } from "../football";
@@ -23,7 +23,7 @@ import { Scores } from "./Scores";
 import RoundWord from "../components/league/RoundWord";
 import PageHeader from "../components/shell/PageHeader";
 import TabStrip from "../components/shell/TabStrip";
-import { bridge, getLeagueSquads, readerTeamId } from "../squads";
+import { bridge, getLeagueSquads, readable, readerTeamId } from "../squads";
 import { liveScores, periodPoints } from "../scoreboard";
 import YourMatchup from "./YourMatchup";
 import { marks } from "../involvement";
@@ -38,6 +38,7 @@ import { wireLines } from "./wireLines";
 import { now } from "../clock";
 import { BetweenGameweeks, MatchupWaiting } from "./Between";
 import OutLink from "../components/shell/OutLink";
+import { fantraxPage } from "../fantraxPages";
 import { LIVE } from "../components/shell/sections";
 import { clubPlaces } from "../prem/places";
 import { placings } from "../league/placings";
@@ -93,12 +94,12 @@ export default async function MatchdayPage({
 
   // Today's matches (Craig, 5 Sep 2026), and the whole round when today has none.
   const round = fixturesInOrder(snapshot);
-  const day = londonDayOf(now().toISOString());
-  const onToday = round.filter((f) => f.kickoff !== null && londonDayOf(f.kickoff) === day);
+  const day = londonDay(now());
+  const onToday = round.filter((f) => onLondonDay(f.kickoff, day));
   const today: readonly Fixture[] = onToday.length > 0 ? onToday : round;
 
   // The draft's ties; no draft, no schedule or a silent Fantrax costs this half and nothing else.
-  const drafted = "period" in squads ? squads : null;
+  const drafted = readable(squads);
   const period = drafted?.roundPeriod ?? null;
   const [{ scores }, table] = await Promise.all([
     period === null ? { scores: new Map<string, LiveTeamScore>() } : liveScores(period),
@@ -179,9 +180,7 @@ export default async function MatchdayPage({
         <BetweenGameweeks snapshot={snapshot} up={up} />
       )}
       {/* Fantrax's Matchups for this gameweek's period; its current one when we could not read it. */}
-      <OutLink
-        href={`${FANTRAX_LEAGUE_PAGE}/${FANTRAX_MATCHUPS_PATH}${period === null ? "" : `;period=${period}`}`}
-      >
+      <OutLink href={fantraxPage(FANTRAX_MATCHUPS_PATH, period)}>
         Matchups on Fantrax
       </OutLink>
     </div>

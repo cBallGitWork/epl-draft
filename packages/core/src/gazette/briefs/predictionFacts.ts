@@ -1,7 +1,9 @@
 import { PREDICTIONS } from "../../config";
 import { ordinal } from "../../league/ordinal";
+import { groupedBy } from "../../grouped";
 import type { PredictionCall } from "../predictions/pick";
 import type { PredictionSide, SquadMan } from "../predictions/sides";
+import { isBack } from "../sheets/sheet";
 
 // One tie's facts for Lawro, worded and ranked. Squad-level only, and no figure of ours: the
 // order of a side's men is our model's reading and is never printed.
@@ -79,7 +81,7 @@ function streak(man: SquadMan): string | null {
   if (games.every((game) => game.minutes === 0)) return man.availability.state === "fit" ? "is fit again after missing his last two games" : null;
   if (last.minutes === 0 && man.availability.state === "fit") return "missed last week and is fit again";
   if (games.every((game) => game.goals > 0)) return "scored in each of his last two games";
-  const back = man.positions.some((position) => position === "G" || position === "D");
+  const back = man.positions.some(isBack);
   if (back && games.every((game) => game.cleanSheets > 0)) return "kept a clean sheet in each of his last two games";
   if (sum("goals") + sum("assists") >= 2) return `has ${count(sum("goals"), "goal")} and ${count(sum("assists"), "assist")} in his last two games`;
   if (played && !back && sum("goals") + sum("assists") === 0) return "has gone quiet, no goal and no assist in his last two games";
@@ -106,10 +108,9 @@ function extra(sides: readonly { tag: string; side: PredictionSide }[], fresh: (
  *  coincidences worth a line. Only among the men who matter most, so it is never a roll call. */
 function together(index: number, home: PredictionSide, away: PredictionSide): (string | null)[] {
   const clubmates = [home, away].map((side) => {
-    const byClub = new Map<string, string[]>();
-    for (const man of side.keyMen) if (man.club !== "") byClub.set(man.club, [...(byClub.get(man.club) ?? []), man.name]);
-    const shared = [...byClub].find(([, names]) => names.length > 1);
-    return shared === undefined ? null : `- T${index}-club: ${side.name}'s ${shared[1].join(" and ")} both play for ${shared[0]}.`;
+    const byClub = groupedBy(side.keyMen.filter((man) => man.club !== ""), (man) => man.club);
+    const shared = [...byClub].find(([, men]) => men.length > 1);
+    return shared === undefined ? null : `- T${index}-club: ${side.name}'s ${shared[1].map((man) => man.name).join(" and ")} both play for ${shared[0]}.`;
   });
   // A big game when each man's club is at an extreme in the other's view.
   const meeting = home.keyMen.flatMap((ours) =>

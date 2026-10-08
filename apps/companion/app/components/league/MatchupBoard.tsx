@@ -2,14 +2,17 @@
 
 import { useState, type ReactNode } from "react";
 import {
+  DASH,
   type LeagueTeam,
   type LiveTeamScore,
   inkOn,
-  teamColours,
 } from "@epl/core";
+import { teamColours } from "@/app/teamColours";
 import { MATCHUPS } from "../../league/routes";
 import BackPlate from "../shell/BackPlate";
 import TabStrip, { type Tab } from "../shell/TabStrip";
+import { BAR_TITLE } from "@/app/desk";
+import { yoursMark } from "@/app/mine";
 
 // The head-to-head: both totals side by side, each the control that opens his team.
 // A phone shows the open side's team; the desk shows both. The leader is never accent-tinted: accent is "yours".
@@ -94,21 +97,19 @@ function Side({
       onClick={onOpen}
       aria-pressed={open}
       aria-label={`Show ${side.team.name}`}
-      className={`relative flex min-h-16 min-w-0 flex-1 items-center lg:min-h-20 ${
-        side.mine ? "border-l-4 border-l-accent" : ""
-      }`}
+      className={`relative flex min-h-16 min-w-0 flex-1 items-center lg:min-h-20 ${yoursMark(side.mine)}`}
       style={{ background: colours.primary }}
     >
       {/* Accent ink is unavailable on a colour plate, so "yours" is the left edge. */}
       <span
-        className="cm-title min-w-0 flex-1 truncate px-2 text-left font-chrome text-base font-bold uppercase lg:text-2xl"
+        className={`${BAR_TITLE} px-2 text-left text-base lg:text-2xl`}
         style={{ color: ink }}
       >
         {side.team.name}
       </span>
 
       <span className="cm-bevel numeric flex min-h-16 w-14 shrink-0 items-center justify-center text-xl font-bold lg:min-h-20 lg:w-24 lg:text-4xl">
-        {points === null ? "\u2014" : points}
+        {points === null ? DASH : points}
       </span>
 
       {/* The open half's bar, below `lg` only: on the desk both sides are on screen. */}

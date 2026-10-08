@@ -8,6 +8,34 @@ export function plural(n: number, word: string, many = `${word}s`): string {
   return n === 1 ? word : many;
 }
 
+/** A count and its noun: `howMany(1, "point")` is "1 point", `howMany(6, "point")` "6 points". */
+export function howMany(n: number, word: string, many = `${word}s`): string {
+  return `${n} ${plural(n, word, many)}`;
+}
+
+const ONES = ["nought", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve",
+  "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
+const TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+
+/** A whole count in words, as a prompt spells a limit: "six", "twenty", "a hundred and twenty"; figures past 999. */
+export function spelled(n: number): string {
+  if (!Number.isInteger(n) || n < 0 || n > 999) return String(n);
+  if (n < 20) return ONES[n];
+  if (n < 100) return `${TENS[Math.floor(n / 10)]}${n % 10 === 0 ? "" : `-${ONES[n % 10]}`}`;
+  const rest = n % 100;
+  return `${n < 200 ? "a" : ONES[Math.floor(n / 100)]} hundred${rest === 0 ? "" : ` and ${spelled(rest)}`}`;
+}
+
+/** The first letter a capital, for text that opens a sentence: "two changes" is "Two changes". */
+export function capital(text: string): string {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+/** A name with its accents taken off, for comparing two spellings of one man: "Sávio" is "Savio". */
+export function withoutAccents(text: string): string {
+  return text.normalize("NFD").replace(/\p{M}/gu, "");
+}
+
 /** "A", "A and B", "A, B and C": a list as a sentence says it, with "or" where it offers a choice. */
 export function listed(list: readonly string[], word: "and" | "or" = "and"): string {
   return list.length <= 1 ? (list[0] ?? "") : `${list.slice(0, -1).join(", ")} ${word} ${list.at(-1)}`;
@@ -27,6 +55,12 @@ export type FigureKind = keyof typeof PLACES;
 export function fixed(value: number, kind: FigureKind): string {
   const places = PLACES[kind];
   return value.toLocaleString("en-GB", { minimumFractionDigits: places, maximumFractionDigits: places });
+}
+
+/** A figure held to `places` decimals, so it orders as it prints: `rounded(7.25, 1)` is 7.3. */
+export function rounded(value: number, places: number): number {
+  const scale = 10 ** places;
+  return Math.round(value * scale) / scale;
 }
 
 /** A player's name for a list on a phone: the forename as an initial, `K. Dewsbury-Hall`; reads Fantrax's `Gross, Pascal` too. */

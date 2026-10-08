@@ -11,6 +11,7 @@ export type {
   MatchEvent,
   MatchEventKind,
 } from "./types";
+export { ON_THE_PITCH } from "./types";
 
 export { clubColours, clubColoursOf, clubGround, crestForShortName, crestUrl, inkOn, plateOn, shirtUrl } from "./clubs";
 export type { ClubColours } from "./clubs";
@@ -138,11 +139,13 @@ export {
   datedKickoffs,
   fixturesInOrder,
   hasGameweek,
+  isDated,
+  kickoffOrder,
   playerByCode,
+  playerById,
   squadOf,
-  byKickoff,
 } from "./selectors";
-export type { MatchContribution } from "./selectors";
+export type { DatedFixture, MatchContribution } from "./selectors";
 export { availabilityOf, doubtBand, isDoubtful, onTheBooks } from "./playerState";
 export type { Availability, DoubtBand, PlayerState } from "./playerState";
 

@@ -1,3 +1,4 @@
+import { rounded } from "../format";
 import { leads } from "../league/scoreline";
 import type { PeriodPairing } from "../league/selectors";
 import type { LeagueTeam } from "../league/types";
@@ -64,7 +65,7 @@ export function decided(
       ? [side(pairing.home, home.points), side(pairing.away, away.points)]
       : [side(pairing.away, away.points), side(pairing.home, home.points)];
 
-    results.push({ winner, loser, margin: hundredths(winner.points - loser.points) });
+    results.push({ winner, loser, margin: rounded(winner.points - loser.points, 2) });
   }
 
   return results;
@@ -107,8 +108,4 @@ function traded(deals: readonly Deal[], period: number | null): { deal: Deal; si
     if (sides.length >= 2) return { deal, sides };
   }
   return null;
-}
-
-function hundredths(points: number): number {
-  return Math.round(points * 100) / 100;
 }

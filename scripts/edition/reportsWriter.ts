@@ -25,7 +25,8 @@ import {
   type ReportsDraft,
 } from "@epl/core";
 import { FANTRAX_LEAGUE_ID, plainStandfirst, reportsCargo } from "@epl/core";
-import { writeColumn } from "./newsroom";
+import { writeColumn, type Say } from "./newsroom";
+import { serious } from "./sendBack";
 import { readArchive } from "./persist";
 import type { ReportsJob } from "./reports";
 import { FAN_VOICE, LINE_EDIT_VOICE, PUN_VOICE, REPORTS_VOICE, WEAVE_VOICE, reportsSendBack } from "./voice/reports";
@@ -45,7 +46,7 @@ export async function writeReports(
   gameweek: number,
   desks: readonly MatchDesk[],
   past: readonly string[],
-  say: (message: string) => void,
+  say: Say,
   /** `sendBack: false` is a proof's test mode: the first attempt stands with its faults logged, and calls are saved. */
   options: { sendBack?: boolean } = {},
 ): Promise<{ draft: ReportsDraft; brief: string; log: ReportsLog }> {
@@ -88,7 +89,7 @@ export async function writeReports(
   const chosen = fanRaw === null ? null : fanHeadline(fanRaw, candidates);
   if (fanRaw === null) say("  ⚠ reports: the fan's read-back failed; the mechanical checks stand alone.");
 
-  const sendable = [...faults1, ...fan].filter((f) => f.severity !== "warn");
+  const sendable = serious([...faults1, ...fan]);
   const attempts = [{ draft: first, faults: [...faults1, ...fan] }];
   if (sendable.length > 0 && options.sendBack !== false) {
     say(`  ↩ reports: ${sendable.length} faults, sent back once`);
@@ -144,7 +145,7 @@ async function weave(
   codes: readonly number[],
   surnames: readonly string[],
   count: (u: { input_tokens?: number; output_tokens?: number }) => void,
-  say: (message: string) => void,
+  say: Say,
 ): Promise<{ draft: ReportsDraft; codes: Set<number> }> {
   const present = codes.filter((code) => checked.matches.has(code));
   const woven: ReportsDraft = { headline: "", headlines: [], matches: new Map() };
@@ -164,8 +165,8 @@ async function weave(
   const after = checkReports(woven, ctx).filter((f) => f.section === "day" || woven.matches.has(matchOf(f.section)));
   const draft = { ...checked, matches: mergeReports([{ draft: woven, faults: after }, { draft: checked, faults: before }], present).matches };
   const kept = new Set(present.filter((code) => draft.matches.get(code) === woven.matches.get(code)));
-  say(`  reports: woven ${kept.size} of ${present.length}; faults ${before.filter((f) => f.severity !== "warn").length} before, ${after.filter((f) => f.severity !== "warn").length} woven`);
-  for (const f of after.filter((x) => x.severity !== "warn")) say(`    woven fault ${f.section}: ${f.check} [${f.evidence}]`);
+  say(`  reports: woven ${kept.size} of ${present.length}; faults ${serious(before).length} before, ${serious(after).length} woven`);
+  for (const f of serious(after)) say(`    woven fault ${f.section}: ${f.check} [${f.evidence}]`);
   return { draft, codes: kept };
 }
 
@@ -178,7 +179,7 @@ function pastReports(): string[] {
 }
 
 /** A match-day report as a column the dispatch files: the day's headline, the lead's result as the deck, and the cargo. */
-export async function reportsColumn(job: ReportsJob, say: (message: string) => void): Promise<Record<string, unknown>> {
+export async function reportsColumn(job: ReportsJob, say: Say): Promise<Record<string, unknown>> {
   const { draft, log } = await writeReports(job.day, job.gameweek, job.desks, pastReports(), say);
   say(`  reports ${job.day}: kept ${JSON.stringify(log.kept)}; ${log.usage.input} tokens in, ${log.usage.output} out`);
   const lead = plainStandfirst(job.desks[0]).replace(/\.$/u, "");

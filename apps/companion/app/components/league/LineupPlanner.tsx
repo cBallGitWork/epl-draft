@@ -14,7 +14,7 @@ import { useSave } from "./useSave";
 import { usePlanner } from "./usePlanner";
 import { PANEL, HEADING_PLATE } from "@/app/desk";
 import OutLink from "../shell/OutLink";
-import ListAndPitch from "./ListAndPitch";
+import BothReadings from "./BothReadings";
 
 // Planning a lineup and saving it: the shape lives in browser state until Save sends it to Fantrax
 // (`squad/[teamId]/save.ts`); where saving is off, the link at the bottom hands the manager over.
@@ -93,7 +93,7 @@ export default function LineupPlanner({
 
       {/* One panel round list and pitch, as on a rival's squad. */}
       <section className={PANEL}>
-      <ListAndPitch
+      <BothReadings
         view={view}
         list={
           <div className="flex flex-col gap-2">

@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "@/app/components/shell/Link";
 import type { Club } from "@epl/core";
-import { clubColoursOf, crestUrl, inkOn } from "@epl/core";
-import { CLUB } from "../../routes";
+import { clubColoursOf, crestUrl, inkOn, DASH } from "@epl/core";
+import { clubHref } from "../../routes";
 import { hasScore } from "../../score";
+import { BAR_TITLE } from "@/app/desk";
 
 // CM's match header (`cm9900/21.jpg`): both clubs at once in their own colours, each with its own score at its own
 // right edge — never mirrored, or the two boxes read as one shared scoreline — and one `v` between them before kick-off.
@@ -47,12 +48,12 @@ function Side({ club, score }: { club: Club | undefined; score: number | null })
     >
       {club === undefined ? (
         <span className="min-w-0 flex-1 px-2 text-center text-sm font-bold" style={{ color: ink }}>
-          —
+          {DASH}
         </span>
       ) : (
         // The whole coloured half is the target, not the 24px the words occupy.
         <Link
-          href={`${CLUB}/${club.code}`}
+          href={clubHref(club.code)}
           className="flex min-w-0 flex-1 items-center gap-2 self-stretch px-2"
         >
           <Image
@@ -68,13 +69,13 @@ function Side({ club, score }: { club: Club | undefined; score: number | null })
               boxes do not fit 326px, which is the trade `prem/Match` makes one
               row down. */}
           <span
-            className="cm-title min-w-0 flex-1 truncate font-chrome text-lg font-bold uppercase lg:hidden"
+            className={`${BAR_TITLE} text-lg lg:hidden`}
             style={{ color: ink }}
           >
             {club.shortName}
           </span>
           <span
-            className="cm-title hidden min-w-0 flex-1 truncate font-chrome text-3xl font-bold uppercase lg:block"
+            className={`${BAR_TITLE} hidden text-3xl lg:block`}
             style={{ color: ink }}
           >
             {club.name}

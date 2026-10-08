@@ -1,4 +1,6 @@
+import { LAWRO_LIMITS } from "../../config";
 import { strangers } from "../strangers";
+import { textOrNull } from "../../untrusted";
 import { checkLawro, tieKey, type CheckContext, type Fault, type LawroDraft } from "./checks";
 import { CORE_MARK, PAST } from "./past";
 import { ngrams, numbersIn, sentences, wordCount } from "./prose";
@@ -57,7 +59,7 @@ function read(raw: unknown): SkitEdit | null {
   const edit = raw as Partial<SkitEdit> | null;
   if (typeof edit?.where !== "string" || typeof edit.before !== "string" || typeof edit.after !== "string") return null;
   if (!SHAPES.includes(edit.shape as (typeof SHAPES)[number])) return null;
-  return { where: edit.where, shape: edit.shape as string, target: typeof edit.target === "string" && edit.target !== "" ? edit.target : null, before: edit.before.trim(), after: edit.after.trim() };
+  return { where: edit.where, shape: edit.shape as string, target: textOrNull(edit.target), before: edit.before.trim(), after: edit.after.trim() };
 }
 
 /** Why an edit may not land, or null when it may. */
@@ -73,9 +75,10 @@ function refusal(edit: SkitEdit, draft: LawroDraft, ctx: SkitContext): string | 
   if (CORE_MARK.test(edit.before) || PAST.some((line) => line.mark.test(edit.before))) return "his career is not a joke";
   const words = wordCount(edit.after);
   const said = sentences(edit.after);
+  const { words: most, longer, kicker } = LAWRO_LIMITS.skit;
   // One sentence, a question and its one-word answer, or a sentence and a kicker: "Old habits."
-  const oneLine = said.length === 1 || (said.length === 2 && wordCount(said[1]) <= (said[0].endsWith("?") ? 1 : 3));
-  if (!oneLine || words > 20 || words > wordCount(edit.before) + 6) return "not one short sentence";
+  const oneLine = said.length === 1 || (said.length === 2 && wordCount(said[1]) <= (said[0].endsWith("?") ? 1 : kicker));
+  if (!oneLine || words > most || words > wordCount(edit.before) + longer) return "not one short sentence";
   if (strangers(edit.after, edit.before).length > 0 || strangers(edit.before, edit.after).length > 0) return "the names changed";
   if (!sameFigures(edit.before, edit.after)) return "the figures changed";
   if ((edit.before.match(NEGATIONS) ?? []).length !== (edit.after.match(NEGATIONS) ?? []).length) return "the meaning turned";

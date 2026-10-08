@@ -1,5 +1,6 @@
 import type { Fault } from "../predictions/checks";
 import { correct, particles, readHeadlines } from "../reports/draft";
+import { stringOrEmpty } from "../../untrusted";
 
 // What the writer files for a draft report, read field by field: the headline candidates, and each match-up's
 // paragraphs, keyed by its number in the brief. A match-up that fails twice prints the desk's result alone.
@@ -21,7 +22,7 @@ export interface DraftWriting {
 
 /** The model's JSON as writing; anything missing or misshapen is empty for the checks to find. */
 export function readDraftWriting(raw: Record<string, unknown>, surnames: readonly string[] = []): DraftWriting {
-  const text = (value: unknown) => (typeof value === "string" ? particles(correct(value.trim()), surnames) : "");
+  const text = (value: unknown) => particles(correct(stringOrEmpty(value).trim()), surnames);
   const matchups = new Map<number, DraftPiece>();
   for (const entry of Array.isArray(raw.pieces) ? raw.pieces : []) {
     if (typeof entry !== "object" || entry === null) continue;

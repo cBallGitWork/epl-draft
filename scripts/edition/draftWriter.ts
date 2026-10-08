@@ -19,7 +19,9 @@ import {
   mergeDraft,
   readDraftWriting,
   readHeadlines,
+  recordOrEmpty,
   strike,
+  stringOrEmpty,
   surname,
   unbriefedNames,
   type Cutoff,
@@ -27,7 +29,8 @@ import {
   type MatchupContext,
   type PastProse,
 } from "@epl/core";
-import { writeColumn, type Usage } from "./newsroom";
+import { writeColumn, type Say, type Usage } from "./newsroom";
+import { serious } from "./sendBack";
 import { DRAFT_FACTS_VOICE, DRAFT_JUDGE_VOICE, DRAFT_VOICE, draftSendBack } from "./voice/draft";
 import { LINE_EDIT_VOICE, PUN_VOICE } from "./voice/reports";
 
@@ -56,17 +59,17 @@ function judgeFlags(raw: Record<string, unknown>, prose: ReadonlyMap<number, str
   const flags = Array.isArray(raw.flags) ? raw.flags : [];
   const kept = new Map<number, number>();
   return flags.flatMap((f): Fault[] => {
-    const r = typeof f === "object" && f !== null ? (f as Record<string, unknown>) : {};
+    const r = recordOrEmpty(f);
     const n = Number(r.number);
-    const quote = typeof r.quote === "string" ? r.quote.trim() : "";
+    const quote = stringOrEmpty(r.quote).trim();
     if (quote === "" || !(prose.get(n) ?? "").includes(quote) || (kept.get(n) ?? 0) >= 3) return [];
     kept.set(n, (kept.get(n) ?? 0) + 1);
-    return [{ section: `${n}:matchup`, check: "a manager in the league would not say this", severity: "send-back", evidence: `${quote} (${typeof r.why === "string" ? r.why : ""})` }];
+    return [{ section: `${n}:matchup`, check: "a manager in the league would not say this", severity: "send-back", evidence: `${quote} (${stringOrEmpty(r.why)})` }];
   });
 }
 
 /** `sendBack: false` is test mode's: the first attempt files with its faults logged, and one call is saved. */
-export async function draftColumn(job: DraftJob, say: (message: string) => void, options: { sendBack?: boolean } = {}): Promise<Record<string, unknown>> {
+export async function draftColumn(job: DraftJob, say: Say, options: { sendBack?: boolean } = {}): Promise<Record<string, unknown>> {
   const usage = { input: 0, cached: 0, output: 0 };
   const count = (u: Usage) => {
     usage.input += (u.input_tokens ?? 0) + (u.cache_creation_input_tokens ?? 0);
@@ -88,7 +91,7 @@ export async function draftColumn(job: DraftJob, say: (message: string) => void,
   const story = angle === null ? first.headlineStory : angle.story.facts.join("; ");
   const cast = angle === null ? "" : `\nTHE CAST: ${angle.cast.map((m) => surname(m.name)).join(", ")}`;
   const puns = await writeColumn(PUN_VOICE, `THE STORY: ${story}${cast}\n\n${blocks[0] ?? ""}`, count, "helper").then(readHeadlines).catch(() => ({ headlines: [], meanings: {} }));
-  const offered = [...first.headlines, ...puns.headlines.filter((h) => !first.headlines.includes(h))].slice(0, DRAFT_WRITING.puns + 6);
+  const offered = [...first.headlines, ...puns.headlines.filter((h) => !first.headlines.includes(h))].slice(0, DRAFT_WRITING.headlines + DRAFT_WRITING.puns);
   const meanings = { ...first.meanings, ...puns.meanings };
   // A pun on a word a recent headline used is the same joke twice.
   const why = (h: string) => strike(h, names) ?? (headlineEcho(h, job.pastHeadlines) === null ? null : `"${headlineEcho(h, job.pastHeadlines)}" again`);
@@ -101,7 +104,7 @@ export async function draftColumn(job: DraftJob, say: (message: string) => void,
   const chosen = judgeRaw === null ? null : fanHeadline(judgeRaw, candidates);
   const flags = judgeRaw === null ? [] : judgeFlags(judgeRaw, prose);
 
-  const sendable = [...faults1, ...flags].filter((f) => f.severity !== "warn");
+  const sendable = serious([...faults1, ...flags]);
   const attempts = [{ writing: first, faults: [...faults1, ...flags] }];
   if (sendable.length > 0 && options.sendBack !== false) {
     say(`  ↩ draft report: ${sendable.length} faults, sent back once`);
@@ -129,7 +132,7 @@ export async function draftColumn(job: DraftJob, say: (message: string) => void,
   const checked = await writeColumn(DRAFT_FACTS_VOICE, printed, count, "helper", DRAFT_WRITING.factTokens).catch(() => null);
   const factual = checked === null ? known : applyFactFixes(known.pieces, readFactFixes(checked), job.contexts, blocks);
   say(`  draft report: fact check ${checked === null ? "unavailable" : `made ${factual.made} fixes`}`);
-  for (const f of attempts.at(-1)!.faults.filter((x) => x.severity !== "warn")) say(`    fault ${f.section}: ${f.check} [${f.evidence}]`);
+  for (const f of serious(attempts.at(-1)!.faults)) say(`    fault ${f.section}: ${f.check} [${f.evidence}]`);
   const lead = job.contexts[0]?.state.score ?? "";
   say(`  draft report: ${pieces.size} of ${job.contexts.length} match-ups written; headline ${chosen === null ? "none chosen, the lead result prints" : `"${chosen}"`}; ${usage.input} tokens in, ${usage.cached} from cache, ${usage.output} out`);
   // A pun's deck is the lead result; a plain headline already is it, so its deck carries the gameweek's other results.

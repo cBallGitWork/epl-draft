@@ -1,3 +1,4 @@
+import { groupedBy } from "../../grouped";
 import type { IntelMatch, IntelMatchPlayer, IntelMatches } from "./types";
 
 // The sister repo's match log: minutes, line-ups, positions and team figures FPL's scoresheet lacks. Where both
@@ -17,13 +18,8 @@ export function matchIntel(matches: IntelMatches | null): Map<number, IntelMatch
 /** The minute each goal went in, by scorer. Own goals arrive as plain goals: the caller reconciles them against
  *  FPL's `own_goals`. */
 export function goalMinutes(match: IntelMatch | undefined): Map<number, number[]> {
-  const byCode = new Map<number, number[]>();
-  for (const event of match?.events ?? []) {
-    if (event.kind !== "goal") continue;
-    byCode.set(event.code, [...(byCode.get(event.code) ?? []), event.minute]);
-  }
-  for (const minutes of byCode.values()) minutes.sort((a, b) => a - b);
-  return byCode;
+  const goals = groupedBy((match?.events ?? []).filter((event) => event.kind === "goal"), (event) => event.code);
+  return new Map([...goals].map(([code, scored]) => [code, scored.map((event) => event.minute).sort((a, b) => a - b)]));
 }
 
 /** What each man did in the match, by FPL code. Not `matchPlayers`, which `identity/match.ts` owns. */

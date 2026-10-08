@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 import type { Pedigree } from "@epl/core";
-import { DASH, fantraxDay } from "@epl/core";
+import { fantraxDay } from "@epl/core";
 import Section from "../../components/shell/Section";
+import Absent from "@/app/components/shell/Absent";
 import { Value } from "./Pedigree";
 import type { PlayerMove } from "./dossier";
 
@@ -57,7 +58,7 @@ function Fact({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="flex min-h-9 items-baseline justify-between gap-3 border-b border-bg py-1 lg:flex-col lg:justify-start lg:gap-0.5 lg:border-b-0">
       <dt className="text-sm text-muted">{label}</dt>
-      <dd className="font-chrome text-base font-bold text-ink lg:text-lg">{children ?? <span className="text-faint">{DASH}</span>}</dd>
+      <dd className="font-chrome text-base font-bold text-ink lg:text-lg">{children ?? <Absent />}</dd>
     </div>
   );
 }

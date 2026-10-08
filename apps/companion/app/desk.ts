@@ -34,6 +34,9 @@ export const INDEX_WIDTH = "w-8 lg:w-9";
 /** A figure to scan past: a club's letters beside a name, a record under a heading. */
 export const QUIET_FIGURE = "numeric text-2xs text-faint";
 
+/** A line to read past: a note under a board, an aside beside a heading, a caption. `QUIET_FIGURE` is its figure. */
+export const QUIET_NOTE = "text-2xs text-faint";
+
 /** A form result's ink: DESIGN §3's direction pair, with a draw quiet rather than a third colour. */
 export const TONE = { W: "text-up", D: "text-faint", L: "text-bad" } as const;
 
@@ -86,6 +89,13 @@ export const GAMEWEEK_TITLE = "text-xl font-bold tracking-tight";
 export const TAB =
   "cm-tab flex flex-1 items-center justify-center font-bold uppercase lg:text-sm";
 
+/** A name across a colour plate's bar (a side of a scoreline, a man in Compare): the title's shadow, cut short rather
+ *  than wrapped. Size is the caller's, and so is ink, which the plate's colour decides. */
+export const BAR_TITLE = "cm-title min-w-0 flex-1 truncate font-chrome font-bold uppercase";
+
+/** The yellow line over a pitch naming the eleven on it, after `cm-title` and any spacing the caller needs. */
+export const PITCH_CAPTION = "text-center font-chrome text-2xs font-bold text-accent lg:text-sm";
+
 /** CM's blue title row across a panel, naming the section under it. */
 export const SECTION_BAR =
   "flex min-h-7 items-center justify-center bg-chrome px-3 font-chrome text-2xs font-bold uppercase text-ink lg:min-h-8 lg:text-xs";
@@ -115,11 +125,19 @@ export const HEADING_PLATE = `cm-panel px-2 py-1 text-center ${LABEL}`;
 /** The `<th>` a stats board's head plate sits in; the plate carries padding and alignment. */
 export const HEAD_CELL = "p-0 text-left font-bold";
 
+/** A row's own `<th scope="row">`: unpadded and unbolded, so the link or name inside it sets both. */
+export const ROW_HEAD_CELL = "p-0 text-left font-normal";
+
 /** A fact row's label: takes the spare room and truncates, because a Fantrax label can be a sentence. */
 export const FACT_LABEL = "min-w-0 flex-1 truncate text-sm text-muted";
 
 /** A form's submit button: `BUTTON`'s height without its flex centring. */
 export const SUBMIT = "cm-bevel min-h-11 px-3 text-sm font-medium lg:min-h-9";
+
+/** A plate held down while its choice stands, else raised and lifting under a pointer. Geometry is the caller's. */
+export function heldPlate(held: boolean): string {
+  return held ? "cm-bevel-pressed" : "cm-bevel hover:brightness-110";
+}
 
 // Components own their elements and live with them: BUTTON and SELECT in `shell/ButtonLink`, PLATE
 // and SortHead in `league/TableHeads`, ROW_LINK in `league/TableCells`.

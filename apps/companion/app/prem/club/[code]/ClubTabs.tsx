@@ -1,5 +1,5 @@
 import TabStrip from "../../../components/shell/TabStrip";
-import { CLUB } from "../../routes";
+import { clubHref } from "../../routes";
 
 // One club's screens, as Championship Manager's club strip (`cm9900/25.jpg`).
 // No Transfers: FPL publishes no transfer feed for a real club, so one would be invented.
@@ -30,7 +30,7 @@ export default function ClubTabs({
   return (
     <TabStrip
       label="Club views"
-      tabs={TABS.map((tab) => ({ ...tab, href: `${CLUB}/${code}${tab.segment}` }))}
+      tabs={TABS.map((tab) => ({ ...tab, href: `${clubHref(code)}${tab.segment}` }))}
       current={current}
       dim={empty}
       labels="word"

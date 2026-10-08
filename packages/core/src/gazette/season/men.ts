@@ -1,5 +1,6 @@
 import type { ProjectedPlayer } from "../../football/intel/projections";
 import type { LeagueProjectionRow } from "../../join/leagueProjectionFile";
+import { mean } from "../../mean";
 
 // One squad man's season as the simulation reads it: his expected points per period at every slot he may fill, in the
 // league's own scoring (the draft pack), and how far a week may stray from that (the sister model's band). Pure.
@@ -30,7 +31,7 @@ export function seasonMan(
     const at = window.indexOf(gameweek);
     if (at !== -1) return run[at] ?? 0;
     const read = run.filter((points): points is number => points !== null);
-    return read.length === 0 ? 0 : read.reduce((sum, points) => sum + points, 0) / read.length;
+    return mean(read) ?? 0;
   };
   const slots = row.eligible.filter((slot) => row.positions[slot] !== undefined);
   const byPeriod = new Map(
@@ -45,5 +46,5 @@ function spreadOf(band: ProjectedPlayer | undefined, z: number): number {
   const shares = (band?.gameweeks ?? []).flatMap((week) =>
     week.points !== null && week.high !== null && week.points > 0 ? [(week.high - week.points) / week.points / z] : [],
   );
-  return shares.length === 0 ? 0 : shares.reduce((sum, share) => sum + share, 0) / shares.length;
+  return mean(shares) ?? 0;
 }

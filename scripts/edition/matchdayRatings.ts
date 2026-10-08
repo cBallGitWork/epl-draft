@@ -1,9 +1,11 @@
 import {
   KEEPER,
   OUTFIELD,
+  POOL_PAGE_SIZE,
   RATING_WEIGHTS,
   STRENGTH_SO_FAR,
   fetchPoolStats,
+  fetchSeasonCodes,
   mapPoolStats,
   mapStatSheet,
   rateMatch,
@@ -17,12 +19,11 @@ import {
 import { SCORING_LEAGUE, STATS_LEAGUE } from "../leagues";
 import { readScoring } from "../scoring";
 import { FANTRAX_STAT } from "../stats/columns";
+import type { Say } from "./newsroom";
 
 // Our mark for each man who played on one London day: the scoring league's points for that day, split by its rules,
 // the stats league's Opta counts for the mistakes and extras, and the opponent as the season has gone. Six reads a day,
 // one after another (Fantrax throttles a burst). The match report and `npm run ratings` both read through here.
-
-const PAGE = 1000;
 
 type Counts = Record<string, number | null>;
 
@@ -37,11 +38,11 @@ export interface DayFigures {
 
 /** Every man's line from one league for one day. */
 async function dayRead(leagueId: string, day: string) {
-  const code = mapPoolStats(await fetchPoolStats(leagueId, 1)).byDate;
+  const code = mapPoolStats(await fetchSeasonCodes(leagueId)).byDate;
   if (code === null) throw new Error(`no per-date season from ${leagueId}`);
   const reads = [];
   for (const group of [OUTFIELD, KEEPER]) {
-    const raw = await fetchPoolStats(leagueId, PAGE, code, group, undefined, day);
+    const raw = await fetchPoolStats(leagueId, POOL_PAGE_SIZE, code, group, undefined, day);
     reads.push({ pool: mapPoolStats(raw), sheet: mapStatSheet(raw) });
   }
   return reads;
@@ -95,7 +96,7 @@ export async function dayMarks(opts: {
   results: readonly ClubResult[];
   fantraxIds: ReadonlyMap<number, string>;
   minutesOf: (code: number) => number;
-  say: (message: string) => void;
+  say: Say;
 }): Promise<MarkFor | null> {
   const { results, fantraxIds } = opts;
   const rules = (await readScoring())?.rules ?? null;

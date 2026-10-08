@@ -34,7 +34,7 @@ capture season-specific tradeoffs.
   left alone: a log that gets edited to agree with the present is not a log.)
   Nothing in the CODE reads the number — team count is `getLeagueInfo.teamInfo`
   (§3), which answers an empty object for the real league until managers join.
-  The one place ten appears is `PANEL_ROWS` in `app/league/Shell.tsx`, and that
+  The one place ten appears is `PANEL_FLOOR` in `app/league/Shell.tsx`, and that
   is a floor on how tall a panel is drawn, not a claim about the competition:
   the league's own count wins whenever it is larger.
 - A dummy league carries GW1–GW5. It is drafted early and deliberately small, so
@@ -398,7 +398,7 @@ the match-report and team-sheet prompts.
 - **Each kind of points is dodged on its own** (Craig: *"players with high xa and no assist points"*): a man
   with no goal who came near one (a goal ruled out, a penalty missed or saved, the woodwork, expected goals), with
   no assist who came near one (expected assists, a shot he set up hitting the woodwork), or with no clean sheet his
-  slot pays for whose side's only goal against came from `DODGERS.lateGoal`. A scorer can dodge an assist, and the
+  slot pays for whose side's only goal against came from `LATE_GOAL_MINUTE`. A scorer can dodge an assist, and the
   brief says what he did get so the column never denies it. An assist side is scaled to the goal bar
   (`DODGERS.from`: 0.6 goals, 0.4 assists). Benched or not is never said.
 - **Expected goals and assists order the column and never print**; the brief carries Opta's countable facts, the
@@ -3008,21 +3008,12 @@ for whoever next wonders why the plates will not shrink.
 
 ## Recorded rule exceptions
 
-### `packages/core/src/config.ts` (recorded 5 Sep 2026)
+### `packages/core/src/config.ts` (recorded 5 Sep 2026, closed 8 Oct 2026)
 
-Past §4's 300-line hard ceiling, and it is the one file where §3 outranks §4:
-**"zero magic values in logic or UI — all live in one config module"**. Splitting
-it means a second config module, and the day there are two of those is the day a
-value is added to the wrong one. About 40% of the file is docblock, and every
-constant in it carries the count or the probe it came from — which is the point
-of the file rather than padding.
-
-**The condition for revisiting**: a second RESPONSIBILITY arriving, not growth. A
-provider adapter's own constants, a build-time table, anything that is not "a
-value this app must not repeat".
-
-Recorded on the commit that added `FANTRAX_TIMEZONE`, which is what CODE_RULES
-asks for and what nobody had done for this file.
+Was past §4's ceiling as the one config module §3 asks for, until its condition for revisiting, a second
+responsibility, arrived: the paper's tuning (when each column files, how long it runs, what is news). That now lives
+in `gazette/editorial.ts` and `gazette/matchups/judgement.ts`, and `config.ts` re-exports both, so a value is still
+imported from one place. A value only the paper reads goes in those; anything else stays in `config.ts`.
 
 ### Files over the ceiling with NO entry: none (counted 23 Sep 2026)
 

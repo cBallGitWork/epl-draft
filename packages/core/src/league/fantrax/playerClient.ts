@@ -48,3 +48,8 @@ export function fetchPoolStats(
     ...(date === undefined ? {} : { timeframeTypeCode: "BY_DATE", startDate: date, endDate: date }),
   }) as Promise<RawPoolStats>;
 }
+
+/** One row of the pool, asked for the season codes the read publishes (`mapPoolStats`), never for a player. */
+export function fetchSeasonCodes(leagueId: string): Promise<RawPoolStats> {
+  return fetchPoolStats(leagueId, 1);
+}

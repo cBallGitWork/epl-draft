@@ -48,6 +48,11 @@ export const LIVE = "/matchday";
 /** A gameweek's own page, `/gw/[n]`: Live's, though it outlasts the round. */
 export const GAMEWEEK = "/gw";
 
+/** One gameweek's page. */
+export function gameweekHref(gameweek: number): string {
+  return `${GAMEWEEK}/${gameweek}`;
+}
+
 /** The FPL tab. */
 export const FPL = "/fpl";
 

@@ -8,8 +8,6 @@ import { BOARD, FIGURE, ROW_NAME, ROW_RULE } from "@/app/desk";
 
 // What every category pays each roster slot, read from getLeagueInfo: a line once where every slot is paid alike.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function ScoringPage() {

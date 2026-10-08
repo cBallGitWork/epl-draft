@@ -10,8 +10,6 @@ import TabStrip from "../../components/shell/TabStrip";
 
 // Each cup's draw; its fixtures are on the schedule. Every side is a placeholder until the draws are made.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function CupsPage({

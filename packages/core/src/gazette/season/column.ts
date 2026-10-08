@@ -1,6 +1,7 @@
 import { pencil, type Fault } from "../predictions/checks";
 import type { SeasonCalls } from "./calls";
 import { lineKey, type SeasonDraft } from "./checks";
+import { stringOrEmpty } from "../../untrusted";
 
 // From what the model returned to what the desk files: the draft read on the desk's own keys, two attempts merged
 // section by section, and the rankings put in the desk's order.
@@ -12,9 +13,9 @@ export function readSeasonDraft(raw: unknown, calls: SeasonCalls): SeasonDraft |
   const table = new Map<string, string>();
   for (const row of column.table as { teamId?: unknown; line?: unknown }[]) {
     const side = calls.sides.find((each) => each.teamId === row?.teamId);
-    if (side !== undefined && !table.has(side.teamId)) table.set(side.teamId, pencil(text(row.line)));
+    if (side !== undefined && !table.has(side.teamId)) table.set(side.teamId, pencil(stringOrEmpty(row.line).trim()));
   }
-  return { deck: text(column.deck), opening: pencil(text(column.opening)), table };
+  return { deck: stringOrEmpty(column.deck).trim(), opening: pencil(stringOrEmpty(column.opening).trim()), table };
 }
 
 /** Each section from the attempt with no hard fault in it and the fewest sent back, the later on a tie; a section
@@ -43,8 +44,4 @@ export function assembleSeason(draft: SeasonDraft, calls: SeasonCalls, headline:
     ranks: calls.sides.map((side) => ({ teamId: side.teamId, line: draft.table.get(side.teamId) ?? "" })),
     ...(calls.moved.length === 0 ? {} : { moves: calls.moved }),
   };
-}
-
-function text(value: unknown): string {
-  return typeof value === "string" ? value.trim() : "";
 }

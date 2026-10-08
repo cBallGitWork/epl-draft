@@ -8,8 +8,6 @@ import Ledger from "../../../components/league/Ledger";
 // What one manager has done all season: the paper's transaction feed, grouped by `deals()` so a
 // claim and the drop that paid for it are one row.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function TransfersPage({

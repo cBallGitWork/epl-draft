@@ -5,7 +5,7 @@ import {
   fetchFixtures,
   fetchLive,
   getFootballSnapshot,
-  londonDay,
+  groupedBy,
   londonDayOf,
   mapFixtures,
   mapLiveStats,
@@ -19,7 +19,7 @@ import { dayFigures, markOf, playedOn } from "./edition/matchdayRatings";
 import { dayDone, menOwed } from "./ratings/day";
 import { SCORING_LEAGUE } from "./leagues";
 import { INTEL_SEASON, readBridge } from "./intel";
-import { RATINGS_ROOT } from "./paths";
+import { RATINGS_ROOT, todayInLondon } from "./paths";
 import { readScoring } from "./scoring";
 
 // Our mark for every man in every settled match day not yet rated, into `data/ratings/26-27.json`, which the player pages
@@ -38,12 +38,10 @@ function held(): RatingStore | null {
 
 /** London days on which every match has finished and FPL has settled it, oldest first. */
 function settledDays(fixtures: readonly Fixture[]): Map<string, Fixture[]> {
-  const days = new Map<string, Fixture[]>();
-  for (const f of fixtures) {
-    const day = f.kickoff === null ? null : londonDayOf(f.kickoff);
-    if (day !== null) days.set(day, [...(days.get(day) ?? []), f]);
-  }
-  return new Map([...days].filter(([, on]) => on.every((f) => f.status === "finished" && f.settled)).sort(([a], [b]) => a.localeCompare(b)));
+  const settled = [...groupedBy(fixtures, (f) => londonDayOf(f.kickoff))].filter(
+    (day): day is [string, Fixture[]] => day[0] !== null && day[1].every((f) => f.status === "finished" && f.settled),
+  );
+  return new Map(settled.sort(([a], [b]) => a.localeCompare(b)));
 }
 
 async function main(): Promise<void> {
@@ -62,7 +60,7 @@ async function main(): Promise<void> {
   const bridge = readBridge();
   const idOfCode = new Map(snapshot.players.map((p) => [p.code, p.id]));
   const bridged = new Set(Object.values(bridge).flatMap((entry) => (isUnmapped(entry) || entry.fplCode == null ? [] : [entry.fplCode])));
-  const today = londonDay(new Date());
+  const today = todayInLondon();
 
   for (const [day, on] of due) {
     const figures = await dayFigures(day);

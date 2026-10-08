@@ -1,3 +1,4 @@
+import { groupedBy } from "../../grouped";
 import type { IntelManifest } from "./types";
 
 // Every shot and where it was struck from. The exporter already flips x to the touch clouds' convention: never again.
@@ -30,23 +31,20 @@ export interface IntelShots {
 
 /** Every man's shots by code; a row keyed on `NaN` or off the pitch is dropped, since it would look real. */
 export function shotIntel(shots: IntelShots | null): Map<number, Shot[]> {
-  const byCode = new Map<number, Shot[]>();
-  if (shots === null) return byCode;
+  if (shots === null) return new Map();
+  const read: Shot[] = [];
   for (const shot of shots.shots ?? []) {
     if (!Number.isInteger(shot?.code)) continue;
     if (!Number.isInteger(shot.fplFixtureId)) continue;
     if (!inside(shot.x) || !inside(shot.y)) continue;
     // An older export has neither field; a pass off the pitch is a mark that looks real, so it goes.
-    const read: Shot = {
+    read.push({
       ...shot,
       assistCode: Number.isInteger(shot.assistCode) ? shot.assistCode : null,
       pass: shot.pass != null && inside(shot.pass.x) && inside(shot.pass.y) ? shot.pass : null,
-    };
-    const mine = byCode.get(shot.code);
-    if (mine === undefined) byCode.set(shot.code, [read]);
-    else mine.push(read);
+    });
   }
-  return byCode;
+  return groupedBy(read, (shot) => shot.code);
 }
 
 /** The shots a man set up, whoever struck them: his key passes, each carrying where it started. */

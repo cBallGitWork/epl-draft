@@ -33,7 +33,7 @@ export default function Figures({
       <tbody>
         {rows.map((row) => (
           <tr key={row.name} className="border-b border-line/60 last:border-b-0">
-            <td className={`${FIGURE} pr-3 text-right ${loudness(row.a, row.b, row.name)}`}>{show(row)}</td>
+            <td className={`${LEDGER_FIGURE} pr-3 text-right ${loudness(row.a, row.b, row.name)}`}>{show(row)}</td>
             {/* The measure's name, its derivation in the `title` (DESIGN §7's provenance as a tooltip). */}
             <td
               title={row.from}
@@ -42,7 +42,7 @@ export default function Figures({
               {label(row)}
             </td>
             {alone ? null : (
-              <td className={`${FIGURE} pl-3 text-left ${loudness(row.b, row.a, row.name)}`}>{show(row, "b")}</td>
+              <td className={`${LEDGER_FIGURE} pl-3 text-left ${loudness(row.b, row.a, row.name)}`}>{show(row, "b")}</td>
             )}
           </tr>
         ))}
@@ -52,7 +52,7 @@ export default function Figures({
 }
 
 /** A step above the row default: DESIGN §6's fifth recorded exception, a ledger of two men's figures and nothing else. */
-const FIGURE = "numeric cm-row py-1 text-base lg:text-lg";
+const LEDGER_FIGURE = "numeric cm-row py-1 text-base lg:text-lg";
 
 /** The measures where the lower figure is the better one: a defender wants his xGC low. */
 const LOWER_IS_BETTER = new Set(["xGC"]);

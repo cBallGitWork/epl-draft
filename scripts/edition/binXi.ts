@@ -24,13 +24,13 @@ import {
   mapLiveStats,
   mapPlayerStats,
   mapTransactions,
-  minimumsOf,
+  leagueLimits,
   openingGameweek,
   periodDays,
   periodGameweeks,
+  playerByCode,
   type Assignment,
   type BinMatch,
-  type Bridge,
   type Club,
   type Fixture,
   type FootballSnapshot,
@@ -42,10 +42,11 @@ import {
   undrafted,
 } from "@epl/core";
 import limits from "../../data/leagues/roster-limits.json";
-import mapping from "../../data/mappings/fantrax.json";
 import { STATS_LEAGUE } from "../leagues";
 import { readScoring } from "../scoring";
+import { BRIDGE } from "./bridge";
 import type { DeskFacts } from "./facts";
+import type { Say } from "./newsroom";
 import { readArchive } from "./persist";
 
 // The reads behind the Bin XI, made only when it is assigned: the league's free agents and their
@@ -75,21 +76,20 @@ export async function binXiDesk(input: {
   kickoffs: readonly GameweekKickoff[];
   clubs: ReadonlyMap<number, Club>;
   threads: readonly StoryThread[];
-  say: (message: string) => void;
+  say: Say;
 }): Promise<BinDesk | null> {
   const { info, snapshot, facts, period, clubs, say } = input;
   if (!input.assignments.some((each) => each.kind === "bin-xi")) return null;
   // Before a draft every man is in nobody's squad, and an eleven of the whole pool is not the bin.
   if (!facts.teams.some((team) => team.players.length > 0)) return say("Bin XI: no squads yet; nothing filed."), null;
-  const minimums = minimumsOf(limits, FANTRAX_LEAGUE_ID);
-  const shapes = minimums === null ? [] : formations({ ...info.roster, minActiveByPosition: minimums });
+  const shapes = formations(leagueLimits(info.roster, limits, FANTRAX_LEAGUE_ID));
   if (shapes.length === 0) return say("Bin XI: no position minimums on record for this league (npm run roster-limits); nothing filed."), null;
   const scoring = info.scoringPeriods.find((each) => each.number === period);
   if (scoring === undefined) return say(`Bin XI: Fantrax has no period ${period}; nothing filed.`), null;
 
   const window = periodDays(scoring);
   const played = input.season.filter((fixture) => {
-    const day = fixture.kickoff === null ? null : londonDayOf(fixture.kickoff);
+    const day = londonDayOf(fixture.kickoff);
     return fixture.status === "finished" && day !== null && day >= window.startDate && day <= window.endDate;
   });
   const [pool, outfield, keepers, transactions, rows, priced] = await Promise.all([
@@ -102,14 +102,13 @@ export async function binXiDesk(input: {
     readScoring(),
   ]);
 
-  const byCode = new Map(snapshot.players.map((player) => [player.code, player]));
-  const bridge = mapping as Bridge;
+  const byCode = playerByCode(snapshot);
   const inWindow = new Set(played.map((fixture) => fixture.id));
   const { men, extras, unjoined } = binMen({
     pool,
     sheet: new Map([...outfield, ...keepers].map((line) => [line.fantraxId, line])),
     player: (fantraxId) => {
-      const entry = bridge[fantraxId];
+      const entry = BRIDGE[fantraxId];
       return entry === undefined || isUnmapped(entry) ? null : (byCode.get(entry.fplCode) ?? null);
     },
     weeks: fplWeeks(rows.flat(), (fixtureId) => inWindow.has(fixtureId)),

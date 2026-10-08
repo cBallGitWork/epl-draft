@@ -1,10 +1,10 @@
 import Link from "@/app/components/shell/Link";
 import { isMeasure, type Measure } from "@epl/core";
-import { SMALL_CAPS } from "@/app/desk";
+import { SMALL_CAPS, heldPlate } from "@/app/desk";
 
 // Which figure every cell on the board holds: one grey toggle over the board (Craig, 11 Sep 2026: "at the top, allow a
 // toggle between fantasy points and actual raw values"). Grey, as DESIGN §2's pressable plate; the blue is navigation.
-// A link, so the server orders and the choice survives a share. The plate recipe is `players/BoardControls`' too (2 of 3).
+// A link, so the server orders and the choice survives a share.
 
 /** Fantrax's two figures for what each lineup scored, or the stats league's counts for each squad's season. */
 export type View = Measure | "squad";
@@ -42,7 +42,7 @@ export default function Measures({
             title={entry.title}
             aria-pressed={on}
             // The plate owns its ink; a pressed plate takes no hover.
-            className={on ? `cm-bevel-pressed ${PLATE}` : `cm-bevel hover:brightness-110 ${PLATE}`}
+            className={`${heldPlate(on)} ${PLATE}`}
           >
             {/* The tick says the pressed state in a shape: the grey plate cannot carry the accent. */}
             {on ? (

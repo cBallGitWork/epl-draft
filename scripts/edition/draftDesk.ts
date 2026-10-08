@@ -1,5 +1,6 @@
 import {
   FANTRAX_LEAGUE_ID,
+  byPositionDepth,
   datedKickoffs,
   fetchFixtures,
   fetchLeagueInfo,
@@ -9,6 +10,9 @@ import {
   draftReportsDue,
   headToHead,
   isSaturday,
+  isDated,
+  clubById,
+  minimumsOf,
   judgePage,
   getFootballSnapshot,
   londonDayOf,
@@ -21,21 +25,20 @@ import {
   oldBoys,
   periodGameweeks,
   periodOfGameweek,
-  projectionIntel,
   sheetOf,
   threadsOf,
   type Cutoff,
   type DayPoints,
   type DraftMan,
   type DraftSide,
-  type IntelProjections,
   type MatchupContext,
   type NextOpponent,
   type PastProse,
   type Sheet,
   type SheetMan,
 } from "@epl/core";
-import { INTEL_SEASON, readIntel } from "../intel";
+import recordedLimits from "../../data/leagues/roster-limits.json";
+import { readProjections } from "../intel";
 import { readScoring } from "../scoring";
 import { gatherRoundFacts } from "./facts";
 import { categoryIds, matchReads, slotWorth, tallies } from "./draftReads";
@@ -43,13 +46,11 @@ import { withFitness, type StoryCache } from "./draftFitness";
 import { draftManOf, type ManReads } from "./draftMen";
 import { draftPast, pastAngles, pastProse } from "./draftPast";
 import { draftSeason, gameweekFacts, placeOf, ranksAfter, sweepOf } from "./draftSeason";
-import { minimums } from "./rosterMinimums";
 import { earlierSheets } from "./sheets";
 
-// The draft match-up desk's reads for one gameweek, turned into each match-up's facts and story at both cut-offs:
-// points, minutes and returns by London day from Fantrax, the bench order, signings and fitness news, matches played and
-// left and each goal's minute and kickoff from the football layer, the table, runs and meetings, the next opponent, the
-// stories told before, and a projection that weighs a star's blank and never prints.
+// The draft match-up desk's reads for one gameweek, made into each match-up's facts and story at both cut-offs: Fantrax's
+// points by London day, bench orders and fitness news, the football layer's goals and minutes, the table, runs, meetings
+// and stories told before, and a projection that weighs a star's blank and never prints.
 
 export interface DraftDesk {
   gameweek: number;
@@ -65,8 +66,6 @@ export interface DraftDesk {
   notes: string[];
 }
 
-const SLOTS = ["G", "D", "M", "F"];
-
 export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const [snapshot, info, schedule] = await Promise.all([getFootballSnapshot(gameweek), fetchLeagueInfo(FANTRAX_LEAGUE_ID).then(mapLeagueInfo), fetchFixtures().then(mapFixtures)]);
   const covering = periodOfGameweek(periodGameweeks(info.scoringPeriods, datedKickoffs(schedule)), gameweek);
@@ -76,8 +75,8 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const results = rawResults === null ? null : mapSeasonResults(rawResults);
   const season = await draftSeason(info, facts.table, results, facts.pedigree, period);
 
-  const fixtures = schedule.filter((f) => f.gameweek === gameweek && f.kickoff !== null);
-  const days = [...new Set(fixtures.map((f) => londonDayOf(f.kickoff!)!))].sort();
+  const fixtures = schedule.filter(isDated).filter((f) => f.gameweek === gameweek);
+  const days = [...new Set(fixtures.map((f) => londonDayOf(f.kickoff)!))].sort();
   const saturday = days.find(isSaturday) ?? days[0];
   const dayReads = await Promise.all(days.map((date) => fetchLiveScoringDay(FANTRAX_LEAGUE_ID, period, date).then((raw) => ({ date, raw })).catch(() => null)));
   const benchReads = await Promise.all(facts.teams.map((t) => fetchTeamRosterInfo(FANTRAX_LEAGUE_ID, t.teamId, period).then((raw) => ({ teamId: t.teamId, raw })).catch(() => null)));
@@ -92,11 +91,12 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const { goals, starters } = await matchReads(gameweek, fixtures, snapshot.players);
 
   const ids = categoryIds(info);
-  const worth = slotWorth(scoring, ids, reads.map((r) => r.raw), facts.teams, SLOTS);
-  const min = minimums(FANTRAX_LEAGUE_ID);
+  const slots = Object.keys(info.roster.maxActiveByPosition).sort(byPositionDepth);
+  const worth = slotWorth(scoring, ids, reads.map((r) => r.raw), facts.teams, slots);
+  const min = minimumsOf(recordedLimits, FANTRAX_LEAGUE_ID);
   const limits = { min: min ?? {}, max: info.roster.maxActiveByPosition };
-  const projections = projectionIntel(readIntel<IntelProjections>("projections", `${INTEL_SEASON}.json`));
-  const clubs = new Map(snapshot.clubs.map((c) => [c.id, c]));
+  const projections = readProjections();
+  const clubs = clubById(snapshot);
 
   const dayTallies = reads.map((r) => ({ day: r.date, byMan: tallies([r.raw], ids) }));
   const cutoffs = new Map<Cutoff, MatchupContext[]>();
@@ -133,7 +133,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
       };
     };
     // Fitness news up to the next day's first kickoff after Saturday; within its few days at the end of the gameweek.
-    const after = fixtures.map((f) => f.kickoff!).filter((k) => londonDayOf(k)! > last).sort()[0];
+    const after = fixtures.map((f) => f.kickoff).filter((k) => londonDayOf(k)! > last).sort()[0];
     const until = after === undefined ? Infinity : Date.parse(after);
     const fit = (s: DraftSide | null) => (s === null ? null : withFitness(s, fixtures, stories, until));
     // Every match-up first: the gameweek's form and table facts need all of their results at once.
@@ -161,7 +161,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
     cutoffs.set(cutoff, judgePage(contexts.map((ctx) => ({ ctx, threads: threadsOf(ctx, cutoff, worth, gameweek) })), pastAngles(past)));
   }
   const notes = [
-    `Returns by slot: ${SLOTS.map((s) => `${s} ${worth.returns[s].map((w) => `${w.kind} ${w.worth}`).join(", ")}`).join("; ")}; a full match's minutes ${worth.appearance}.`,
+    `Returns by slot: ${slots.map((s) => `${s} ${worth.returns[s].map((w) => `${w.kind} ${w.worth}`).join(", ")}`).join("; ")}; a full match's minutes ${worth.appearance}.`,
     `Eleven limits: most ${JSON.stringify(limits.max)}; fewest ${min === null ? "not recorded for this league" : JSON.stringify(min)}.`,
     `Bench orders: ${[...orders.values()].filter((o) => o.by === "manager").length} of ${orders.size} set by the manager, the rest by total points.`,
     `Goal times read for ${goals.size} of ${fixtures.length} matches.`,

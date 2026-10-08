@@ -76,3 +76,14 @@ describe("every route segment's revalidate", () => {
     expect(values).toEqual(new Set([PAGE_REVALIDATE, ARTICLE_REVALIDATE]));
   });
 });
+
+/** Read as text: importing `next.config.ts` would bring Next's own `ProcessEnv` typing into every script. */
+const STALE = /staleTimes: \{ dynamic: (\d+) \}/;
+
+describe("the router's own cache", () => {
+  it("keeps a visited page on the phone as long as the server keeps it", () => {
+    const config = readFileSync(join(APP, "..", "next.config.ts"), "utf8");
+    // A regex that stops matching reads NaN, which fails rather than passing on nothing.
+    expect(Number(STALE.exec(config)?.[1])).toBe(PAGE_REVALIDATE);
+  });
+});

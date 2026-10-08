@@ -4,11 +4,12 @@ import type {
   LeagueTeam,
   LineupDetail,
   Opposition,
+  PeriodGameweeks,
   RosterDisplay,
   RosteredTeam,
   SquadDetailLine,
 } from "@epl/core";
-import { NO_MINUTES, lineupDetail, squadDetail, squadUnarranged } from "@epl/core";
+import { NO_MINUTES, lineupDetail, openingGameweek, squadDetail, squadUnarranged } from "@epl/core";
 import { widestLine } from "../../../components/league/PitchRows";
 import BackPlate from "../../../components/shell/BackPlate";
 import Caption from "../../../components/shell/Caption";
@@ -26,18 +27,20 @@ export function Withheld({
   team,
   known,
   because: display,
+  calendar,
 }: {
   team: LeagueTeam;
   /** Whether Fantrax gave us a roster for him at all. */
   known: boolean;
   because: RosterDisplay;
+  calendar: readonly PeriodGameweeks[];
 }) {
   // The period comes off the decision, never the round in view: between rounds they differ, and a reason may not
-  // name a deadline that has passed.
+  // name a deadline that has passed. It is printed as the gameweek it opens, or as no number where that is unknown.
   const because = !known
     ? `Fantrax sent no roster for ${team.name}.`
     : display.show === "squad" && display.because === "not-locked"
-      ? `${team.name}'s eleven is not public until gameweek ${display.period}'s lineups lock.`
+      ? `${team.name}'s eleven is not public until ${lockOf(openingGameweek(calendar, display.period))} lock.`
       : `${team.name}'s eleven is not showing.`;
 
   return (
@@ -51,6 +54,11 @@ export function Withheld({
       </Link>
     </div>
   );
+}
+
+/** Whose lineups: a gameweek's, or "its" where the calendar cannot name one. */
+function lockOf(gameweek: number | undefined): string {
+  return gameweek === undefined ? "its lineups" : `gameweek ${gameweek}'s lineups`;
 }
 
 /** A tie before a ball is kicked: the two squads and nothing else, scoreline included (Craig, 11 Sep 2026: *"just show

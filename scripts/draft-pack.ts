@@ -1,8 +1,9 @@
 import { mkdirSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname } from "node:path";
 import {
   KEEPER,
   OUTFIELD,
+  POOL_PAGE_SIZE,
   fetchBootstrap,
   fetchLeagueInfo,
   fetchPoolStats,
@@ -15,20 +16,15 @@ import {
   type LeagueProjectionFile,
   type PlayerStatLine,
 } from "@epl/core";
-import { INTEL_SEASON, intelManifest, readBridge, readIntel } from "./intel";
+import { INTEL_SEASON, intelManifest, intelPath, readBridge, readIntel } from "./intel";
 import { SCORING_LEAGUE } from "./leagues";
-import { INTEL_ROOT } from "./paths";
 import { buildPack, type FplSide, type PoolSide } from "./draftPack/build";
 
-// The draft pack (Craig, 2 Oct 2026: "projections for all players using real league's points"): the sister model's
-// projection repriced at each man's slots by the scoring league's rules, its DefCon and keeper work off his own matches.
-//
-//   npm run draft-pack                      # data/intel/league-projections/26-27.json
-//   npm run draft-pack -- --out pack.json   # anywhere else
+// The draft pack: the sister model's projection repriced at each man's slots by the scoring league's rules, his DefCon
+// and keeper work off his own matches. Into `data/intel/league-projections/`, or `npm run draft-pack -- --out <file>`.
 
 /** Minutes at his slot's average each man's own DefCon and keeper rates are drawn toward: three full matches. */
 const SHRINK_MINUTES = 270;
-const PAGE = 1000;
 
 const METHOD =
   "FPL's projected parts turned back into counts at FPL's prices for his FPL position, then priced at each Fantrax slot " +
@@ -39,11 +35,11 @@ const METHOD =
   "own, with goals conceded re-costed where his Fantrax slot charges them and FPL's position did not, or the reverse.";
 
 async function main(): Promise<void> {
-  const out = argument("--out") ?? join(INTEL_ROOT, "league-projections", `${INTEL_SEASON}.json`);
+  const out = argument("--out") ?? intelPath("league-projections");
   const info = mapLeagueInfo(await fetchLeagueInfo(SCORING_LEAGUE.leagueId));
   const scoring = scoringOf(info);
   if (scoring === null) throw new Error(`the "${SCORING_LEAGUE.key}" league described no scoring`);
-  const exported = readIntel<IntelProjections>("projections", `${INTEL_SEASON}.json`);
+  const exported = readIntel<IntelProjections>("projections");
   const projections = projectionIntel(exported);
   if (projections.size === 0) throw new Error("no projections export held");
 
@@ -54,7 +50,7 @@ async function main(): Promise<void> {
   const who = new Map<string, PlayerStatLine>();
   for (const period of begun) {
     for (const group of [OUTFIELD, KEEPER]) {
-      for (const line of mapPlayerStats(await fetchPoolStats(SCORING_LEAGUE.leagueId, PAGE, undefined, group, period))) {
+      for (const line of mapPlayerStats(await fetchPoolStats(SCORING_LEAGUE.leagueId, POOL_PAGE_SIZE, undefined, group, period))) {
         if (!who.has(line.fantraxId)) who.set(line.fantraxId, line);
         if (line.stats.GP !== 1) continue;
         matches.set(line.fantraxId, [...(matches.get(line.fantraxId) ?? []), { minutes: line.stats.Min ?? 0, counts: line.stats }]);

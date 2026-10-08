@@ -1,6 +1,7 @@
 // Our match rating out of ten: his league points, weighed by whom he earned them against and by
 // what the league does not score, then read off one table. Pure; the scale lives in `weights.ts`.
 
+import { rounded } from "../../format";
 import type { PartName, RatingWeights } from "./weights";
 
 /** One man's match. League figures arrive as plain numbers so neither layer is imported here. */
@@ -31,8 +32,6 @@ interface MatchRating {
   /** Goal, assist and clean-sheet points he got less those expected of him. */
   vsExpected: number | null;
 }
-
-const oneDecimal = (n: number) => Math.round(n * 10) / 10;
 
 /** Straight lines between the table's points; flat beyond either end. */
 function markFor(points: number, marks: RatingWeights["marks"]): number {
@@ -72,7 +71,7 @@ export function rateMatch(match: RatedMatch, w: RatingWeights): MatchRating {
   const adjusted = rated ? parts.reduce((sum, p) => sum + (p.points ?? 0), 0) : null;
   const e = match.expected;
   return {
-    rating: adjusted == null ? null : oneDecimal(markFor(adjusted, w.marks)),
+    rating: adjusted == null ? null : rounded(markFor(adjusted, w.marks), 1),
     adjusted,
     parts,
     vsExpected: points && e ? points.attacking + points.cleanSheet - e.attacking - e.cleanSheet : null,

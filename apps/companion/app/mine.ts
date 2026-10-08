@@ -16,6 +16,11 @@ export function yoursEdge(yours: boolean): string {
   return yours ? EDGE : "border-l-4 border-l-transparent";
 }
 
+/** The edge alone on a colour plate, where the accent cannot be ink; nothing on the others. */
+export function yoursMark(yours: boolean): string {
+  return yours ? EDGE : "";
+}
+
 /** The same mark in ink, for the team's own name: the accent, which means yours. */
 export function yoursInk(yours: boolean): string {
   return yours ? "text-accent" : "text-ink";

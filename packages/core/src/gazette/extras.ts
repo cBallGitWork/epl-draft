@@ -8,6 +8,7 @@ import { normalizeReports } from "./reports/cargoRead";
 import { normalizeSheets, type StorySheet } from "./sheets/cargo";
 import { normalizeBin, type StoryBin } from "./binXi/cargo";
 import { normalizeApplied, type AppliedMove } from "./season/editor";
+import { stringOrEmpty, textOrNull } from "../untrusted";
 
 // The structured cargo a story carries beside its prose, and its normaliser: everything that is not paragraphs.
 
@@ -118,7 +119,7 @@ function men(raw: unknown): StoryTeamNewsMan[] | undefined {
       name: man.name,
       ...(typeof man.owner === "string" && man.owner.trim() !== "" ? { owner: man.owner } : {}),
       status: STATUS.includes(man.status) ? man.status : "Doubt",
-      note: typeof man.note === "string" ? man.note : "",
+      note: stringOrEmpty(man.note),
     }));
   return rows.length > 0 ? once(rows, (man) => man.name) : undefined;
 }
@@ -153,7 +154,7 @@ function lineupMan(raw: unknown): StoryLineupMan[] {
   return [
     {
       name: man.name,
-      position: typeof man.position === "string" && man.position !== "" ? man.position : null,
+      position: textOrNull(man.position),
       ...(typeof man.owner === "string" && man.owner !== "" ? { owner: man.owner } : {}),
     },
   ];

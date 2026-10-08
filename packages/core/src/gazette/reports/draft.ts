@@ -1,6 +1,7 @@
 import type { Fault } from "../predictions/checks";
+import { capital } from "../../format";
 import { escapeRegExp } from "../../regExp";
-import { recordOrEmpty } from "../../untrusted";
+import { recordOrEmpty, stringOrEmpty } from "../../untrusted";
 import { pencil } from "../predictions/checks";
 import { numeral } from "./minutes";
 import { REPORT_PENCIL } from "./words";
@@ -54,10 +55,7 @@ export function plainHead(head: string, pitch: string, surnames: readonly string
 export function particles(prose: string, surnames: readonly string[]): string {
   return surnames
     .filter((name) => /^\p{Ll}/u.test(name))
-    .reduce((out, name) => {
-      const capital = name.charAt(0).toUpperCase() + name.slice(1);
-      return out.replace(new RegExp(`(?<![.!?]\\s)(?<=\\s)${escapeRegExp(capital)}`, "gu"), name);
-    }, prose);
+    .reduce((out, name) => out.replace(new RegExp(`(?<![.!?]\\s)(?<=\\s)${escapeRegExp(capital(name))}`, "gu"), name), prose);
 }
 
 /** Headline candidates from either writer. A pun names the word it turns on and the two meanings that word carries; a
@@ -67,9 +65,9 @@ export function readHeadlines(raw: Record<string, unknown>): { headlines: string
   const meanings: Record<string, string> = {};
   for (const h of Array.isArray(raw.headlines) ? raw.headlines : []) {
     const r = recordOrEmpty(h);
-    const line = typeof r.text === "string" ? correct(r.text.trim()) : "";
-    const on = typeof r.playsOn === "string" ? r.playsOn.trim() : "";
-    const two = typeof r.twoMeanings === "string" ? r.twoMeanings.trim() : "";
+    const line = correct(stringOrEmpty(r.text).trim());
+    const on = stringOrEmpty(r.playsOn).trim();
+    const two = stringOrEmpty(r.twoMeanings).trim();
     if (line === "" || on === "" || two === "" || !line.toLowerCase().includes(on.toLowerCase())) continue;
     headlines.push(line);
     meanings[line] = two;
@@ -79,7 +77,7 @@ export function readHeadlines(raw: Record<string, unknown>): { headlines: string
 
 /** The model's JSON as a draft; anything missing or misshapen is an empty string for the checks to find. */
 export function readReportsDraft(raw: Record<string, unknown>, surnames: readonly string[] = []): ReportsDraft {
-  const text = (value: unknown) => (typeof value === "string" ? particles(correct(value.trim()), surnames) : "");
+  const text = (value: unknown) => particles(correct(stringOrEmpty(value).trim()), surnames);
   const matches = new Map<number, ReportPiece>();
   for (const entry of Array.isArray(raw.matches) ? raw.matches : []) {
     if (typeof entry !== "object" || entry === null) continue;

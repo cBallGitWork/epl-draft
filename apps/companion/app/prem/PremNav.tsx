@@ -1,15 +1,16 @@
 import TabStrip from "../components/shell/TabStrip";
+import { PREM } from "./routes";
 
 // The Premiership section's own views.
 // A server component: each page names its view, so the strip ships no script to work it out.
 
 const TABS = [
-  { href: "/prem", label: "Table", key: "table" },
+  { href: PREM, label: "Table", key: "table" },
   // Results before Fixtures: the commoner reader arrives on a Monday, wanting what happened.
-  { href: "/prem/results", label: "Results", key: "results" },
-  { href: "/prem/fixtures", label: "Fixtures", key: "fixtures" },
-  { href: "/prem/team-stats", label: "Team Stats", key: "teamStats" },
-  { href: "/prem/data", label: "Data", key: "data" },
+  { href: `${PREM}/results`, label: "Results", key: "results" },
+  { href: `${PREM}/fixtures`, label: "Fixtures", key: "fixtures" },
+  { href: `${PREM}/team-stats`, label: "Team Stats", key: "teamStats" },
+  { href: `${PREM}/data`, label: "Data", key: "data" },
 ] as const;
 
 /** Which tab a page IS. */

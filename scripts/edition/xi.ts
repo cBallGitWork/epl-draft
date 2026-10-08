@@ -9,20 +9,17 @@ import {
   type RosteredTeam,
   type StoryLineupMan,
 } from "@epl/core";
-import { INTEL_SEASON, readIntel } from "../intel";
+import { readIntel } from "../intel";
 import { roundTies } from "./round";
 import { display } from "./pressers";
 
-// The predicted elevens, printed from the export rather than written from it.
-//
-// **No model call.** Every word of this column is a name, a position or a
-// count, and a writer handed two hundred and twenty footballers can only
-// mis-transcribe them — the same argument that deleted the eleven's captions.
+// The predicted elevens, printed from the export and never written from it: no model call, since every word is a name,
+// a position or a count, and a writer handed two hundred and twenty footballers can only mis-transcribe them.
 
 /** Scout's latest elevens when they were made for this round, else null: the column is filed as
  *  that round's predictions, so an older eleven would print a wrong fact. The app draws it anyway. */
 export function readXi(gameweek: number): IntelXi | null {
-  const xi = readIntel<IntelXi>("xi", `${INTEL_SEASON}.json`);
+  const xi = readIntel<IntelXi>("xi");
   return xi?.manifest?.gameweek === gameweek ? xi : null;
 }
 
@@ -55,11 +52,8 @@ export function xiColumn(input: {
   };
 }
 
-/** How to print one starter: his name, his real position, and who holds him.
- *
- *  The position comes off the SQUADS export and is null wherever that export
- *  had only FPL's `element_type` — a fantasy letter is not a fact about a
- *  footballer, so it prints as nothing rather than as a position. */
+/** One starter as printed: his name, who holds him, and his real position off the SQUADS export, nothing where that
+ *  had only FPL's `element_type`, which is a fantasy letter, not a fact about a footballer. */
 function man(
   players: readonly { code: number; name: string; fullName: string }[],
   teams: readonly RosteredTeam[],
@@ -96,6 +90,6 @@ function owners(teams: readonly RosteredTeam[]): Map<number, string> {
 /** The squads for the season the XI itself names, so the two exports cannot be
  *  read from different years. */
 function readSquads(season: string): IntelSquads | null {
-  return readIntel<IntelSquads>("squads", `${season}.json`);
+  return readIntel<IntelSquads>("squads", season);
 }
 

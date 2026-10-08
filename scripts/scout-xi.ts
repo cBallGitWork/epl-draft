@@ -1,5 +1,4 @@
 import { writeFileSync } from "node:fs";
-import { join } from "node:path";
 import {
   SCOUT_TEAM_NEWS_URL,
   fetchFixtures,
@@ -11,27 +10,19 @@ import {
   xiToWrite,
   type IntelXi,
 } from "@epl/core";
-import { INTEL_SEASON, intelManifest, readIntel } from "./intel";
-import { INTEL_ROOT } from "./paths";
+import { intelManifest, intelPath, readIntel } from "./intel";
 
-// Scout's predicted elevens, straight from their team-news page into `data/intel/xi/`
-// (Craig, 23 Sep 2026: "It should just always be live, and it's updated when scout
-// updates it"). Run on a schedule by `scout-xi.yml`.
-//
-// The file is rewritten when an eleven changes, and `fetchedAt` is that moment: the page
-// carries no time of its own for the elevens (`FFS.currentDate` is when it was rendered),
-// so "last updated" is when we first saw this prediction. Unchanged elevens are relabelled
-// for the next gameweek once theirs is played, keeping that moment.
-//
-//   npm run scout-xi
-//
-// Exits 1 without writing when the page will not parse into every club's eleven: a broken
-// fetch must never replace a good file.
+// Scout's predicted elevens from their team-news page into `data/intel/xi/`, on `scout-xi.yml`'s schedule. Rewritten only
+// when an eleven changes, `fetchedAt` that moment (the page dates no eleven); exits 1 without writing unless every club
+// parses, so a broken fetch never replaces a good file.
+
+/** How long Scout's page may take to arrive: twice a provider read's FETCH_TIMEOUT_MS. */
+const SCOUT_PAGE_TIMEOUT_MS = 30_000;
 
 async function main(): Promise<void> {
   const now = new Date().toISOString();
   const [page, fixtures] = await Promise.all([
-    politeFetch(SCOUT_TEAM_NEWS_URL, { signal: AbortSignal.timeout(30_000) }),
+    politeFetch(SCOUT_TEAM_NEWS_URL, { signal: AbortSignal.timeout(SCOUT_PAGE_TIMEOUT_MS) }),
     fetchFixtures().then(mapFixtures),
   ]);
   if (!page.ok) throw new Error(`Scout's team news answered ${page.status}`);
@@ -48,8 +39,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  const file = `${INTEL_SEASON}.json`;
-  const held = readIntel<IntelXi>("xi", file);
+  const held = readIntel<IntelXi>("xi");
   const gameweek = nextRound(fixtures, now)?.gameweek ?? null;
   const write = xiToWrite(held, clubs, gameweek, now);
   if (write === null) {
@@ -66,7 +56,7 @@ async function main(): Promise<void> {
     source: "ffscout",
     clubs,
   };
-  writeFileSync(join(INTEL_ROOT, "xi", file), `${JSON.stringify(xi, null, 2)}\n`);
+  writeFileSync(intelPath("xi"), `${JSON.stringify(xi, null, 2)}\n`);
   console.log(`scout-xi: ${xi.manifest.rows} elevens for GW${xi.manifest.gameweek ?? "?"} written.`);
 }
 

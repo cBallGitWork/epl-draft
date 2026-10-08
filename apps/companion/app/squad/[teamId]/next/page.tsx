@@ -1,5 +1,5 @@
 import TabEmpty from "../../../components/league/TabEmpty";
-import { headToHead, inkOn, ordinal, teamColours } from "@epl/core";
+import { headToHead, inkOn, ordinal } from "@epl/core";
 import TeamShell from "../Shell";
 import { SQUAD } from "../../routes";
 import { identify, whoseTeam } from "../team";
@@ -10,13 +10,12 @@ import Link from "@/app/components/shell/Link";
 import { LABEL, PANEL_FLUSH, SMALL_CAPS } from "@/app/desk";
 import { teamHref } from "@/app/squad/routes";
 import { shortName } from "../../../teamNames";
+import { teamColours } from "@/app/teamColours";
 import { placings } from "../../../league/placings";
 
 // Who he plays: both sides on their own colours, as CM sets a match header (`cm9900/21.jpg`); the pairing is already
 // in the squads payload.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function NextMatchPage({

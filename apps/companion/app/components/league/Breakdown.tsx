@@ -1,7 +1,7 @@
 import { type BreakdownLine, signed, DASH } from "@epl/core";
 import Note from "./Note";
 import { emptyBreakdownNote } from "./breakdownNote";
-import { FACT_LABEL, HEAD_PLATE, HEAD_PLATE_CENTRE, LABEL, SMALL_CAPS, gainOrLoss } from "@/app/desk";
+import { FACT_LABEL, HEAD_PLATE, HEAD_PLATE_CENTRE, LABEL, PANEL_FLUSH, SMALL_CAPS, gainOrLoss } from "@/app/desk";
 
 // The itemised table: one row per category that moved his total, then the total, read from the provider.
 
@@ -44,7 +44,7 @@ export default function Breakdown({
         <span className={`${HEAD_PLATE_CENTRE} ${PTS_COLUMN} ${SMALL_CAPS}`}>Pts</span>
       </div>
 
-      <div className="cm-panel flex flex-col">
+      <div className={PANEL_FLUSH}>
         {breakdown.length === 0 ? (
           <p className="px-3 py-2 text-2xs text-muted">
             {emptyBreakdownNote(points, minutes, over)}

@@ -1,11 +1,12 @@
 import Link from "@/app/components/shell/Link";
 import { type Result, type TableRow, type TableSortKey, ordinal, signed } from "@epl/core";
 import { cellAlign, deskOnly } from "./Columns";
-import { CLUB } from "./routes";
+import { clubHref } from "./routes";
 import { PointsCell, ROW_LINK } from "../components/league/TableCells";
 import { FIGURE, FIGURE_CELL, ROW_HOVER, TONE } from "@/app/desk";
 import Absent from "@/app/components/shell/Absent";
 import ClubLabel from "@/app/components/football/ClubLabel";
+import { FORM_GAMES } from "../config";
 
 // One club's line in the Premier League table; no "yours" marks, as nobody owns a real club.
 
@@ -35,7 +36,7 @@ export default function ClubRow({
       <td className="pl-2">
         <Link
           // The season-stable code, never `clubId`: a shared URL persists and FPL recycles ids.
-          href={`${CLUB}/${row.code}`}
+          href={clubHref(row.code)}
           className={ROW_LINK}
         >
           <ClubLabel club={row} title={row.name} />
@@ -69,7 +70,7 @@ function SWING(difference: number): string {
   return "text-faint";
 }
 
-/** The last five results, newest last, as a form guide reads. */
+/** The last `FORM_GAMES` results, newest last, as a form guide reads. */
 function Form({ run }: { run: readonly Result[] }) {
   if (run.length === 0) return <Absent />;
 
@@ -88,6 +89,4 @@ function Form({ run }: { run: readonly Result[] }) {
     </span>
   );
 }
-
-const FORM_GAMES = 5;
 
