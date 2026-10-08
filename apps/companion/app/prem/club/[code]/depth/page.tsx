@@ -36,7 +36,7 @@ export default async function DepthPage({ params }: { params: Promise<{ code: st
           </p>
           <DepthViews
             list={<DepthList lines={lines} playerOf={playerOf} hrefOf={hrefOf} />}
-            pitch={<DepthPitch lines={lines} playerOf={playerOf} hrefOf={hrefOf} />}
+            pitch={<DepthPitch lines={lines} playerOf={playerOf} />}
           />
         </section>
       )}
