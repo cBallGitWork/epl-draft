@@ -1,4 +1,5 @@
 import type { Marked } from "./record";
+import { textOrNull } from "../../untrusted";
 
 // What a predictions story carries beyond its prose, refused field by field at the edge like
 // every other story's cargo.
@@ -22,7 +23,7 @@ export function normalizeSkit(raw: unknown): StorySkit[] | undefined {
   if (!Array.isArray(raw)) return undefined;
   const skit = raw.flatMap((edit: Partial<StorySkit> | null) =>
     typeof edit?.shape === "string" && edit.shape !== ""
-      ? [{ shape: edit.shape, target: typeof edit.target === "string" && edit.target !== "" ? edit.target : null }]
+      ? [{ shape: edit.shape, target: textOrNull(edit.target) }]
       : [],
   );
   return skit.length === 0 ? undefined : skit;

@@ -1,5 +1,6 @@
 import { type StoryFace, normalizeFace } from "./face";
 import { INSTINCTS, type Instinct } from "./predictions/pick";
+import { stringOrEmpty } from "../untrusted";
 
 // The tie a columnist files, and the edge that refuses a malformed or repeated one before the page reads it.
 
@@ -38,7 +39,7 @@ export function once<T>(items: T[], keyOf: (item: T) => string): T[] {
 export function normalizeTie(value: unknown): EditionTie[] {
   const tie = value as Partial<EditionTie> | null;
   if (typeof tie?.homeTeamId !== "string" || typeof tie.awayTeamId !== "string") return [];
-  const line = typeof tie.line === "string" ? tie.line : "";
+  const line = stringOrEmpty(tie.line);
   const callsTeamId =
     tie.callsTeamId === null || (typeof tie.callsTeamId === "string" && tie.callsTeamId !== "")
       ? tie.callsTeamId

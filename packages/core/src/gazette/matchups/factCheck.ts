@@ -3,7 +3,7 @@ import { banned } from "../banned";
 import { escapeRegExp } from "../../regExp";
 import { masked, numbersIn, sentences } from "../predictions/prose";
 import { londonWeekdayLong, weekdayLongOfDay } from "../../time";
-import { recordOrEmpty } from "../../untrusted";
+import { recordOrEmpty, stringOrEmpty } from "../../untrusted";
 import type { MatchupContext } from "./brief";
 import { allowedFigures } from "./checks";
 import { menOf, named, unbriefedNames } from "./listChecks";
@@ -65,9 +65,9 @@ export function knownFixes(pieces: ReadonlyMap<number, DraftPiece>, contexts: re
 export function readFactFixes(raw: Record<string, unknown>): FactFix[] {
   return (Array.isArray(raw.fixes) ? raw.fixes : []).flatMap((f): FactFix[] => {
     const r = recordOrEmpty(f);
-    const quote = typeof r.quote === "string" ? r.quote.trim() : "";
+    const quote = stringOrEmpty(r.quote).trim();
     const matchup = Number(r.number);
-    return quote === "" || !Number.isInteger(matchup) ? [] : [{ matchup, quote, correction: typeof r.correction === "string" ? r.correction.trim() : "" }];
+    return quote === "" || !Number.isInteger(matchup) ? [] : [{ matchup, quote, correction: stringOrEmpty(r.correction).trim() }];
   });
 }
 

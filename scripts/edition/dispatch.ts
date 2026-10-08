@@ -1,5 +1,6 @@
 import {
   fullClubName,
+  textOrNull,
   type Assignment,
   type Club,
   type Dodger,
@@ -185,5 +186,5 @@ function withTies(
 function firstKickoff(lineups: unknown): string | null {
   if (!Array.isArray(lineups)) return null;
   const kickoff = (lineups[0] as { kickoff?: unknown } | undefined)?.kickoff;
-  return typeof kickoff === "string" && kickoff !== "" ? kickoff : null;
+  return textOrNull(kickoff);
 }

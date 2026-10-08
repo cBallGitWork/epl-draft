@@ -1,6 +1,7 @@
 import { type StoryExtras, normalizeExtras } from "./extras";
 import { type StoryFace, normalizeFace } from "./face";
 import { type EditionTie, normalizeTie, once } from "./published";
+import { stringOrEmpty, stringsOrEmpty, textOrNull } from "../untrusted";
 
 // The rolling paper's stories as committed in `data/editions/paper.json`, validated at this edge.
 
@@ -105,16 +106,14 @@ export function normalizeStory(parsed: unknown): PublishedStory | null {
     period: raw.period,
     gameweek: raw.gameweek,
     filedAt: raw.filedAt,
-    expiresAt: typeof raw.expiresAt === "string" && raw.expiresAt !== "" ? raw.expiresAt : null,
-    edition: typeof raw.edition === "string" ? raw.edition : "",
-    byline: typeof raw.byline === "string" ? raw.byline : "",
+    expiresAt: textOrNull(raw.expiresAt),
+    edition: stringOrEmpty(raw.edition),
+    byline: stringOrEmpty(raw.byline),
     ...(typeof raw.reporter === "string" && raw.reporter !== "" ? { reporter: raw.reporter } : {}),
     headline: raw.headline,
-    deck: typeof raw.deck === "string" ? raw.deck : "",
-    body: typeof raw.body === "string" ? raw.body : "",
-    subjects: Array.isArray(raw.subjects)
-      ? raw.subjects.filter((s): s is string => typeof s === "string" && s !== "")
-      : [],
+    deck: stringOrEmpty(raw.deck),
+    body: stringOrEmpty(raw.body),
+    subjects: stringsOrEmpty(raw.subjects),
     image,
     face,
     ties: once(Array.isArray(raw.ties) ? raw.ties.flatMap(normalizeTie) : [], (t) => `${t.homeTeamId}-${t.awayTeamId}`),

@@ -6,7 +6,7 @@ import type { Family, ThreadKind } from "./thread";
 import type { StoryDraftStep } from "./days";
 import type { StoryDraftReturn, StoryDraftReturns, StoryDraftRow } from "./elevens";
 import type { NextMatch } from "./types";
-import { finiteOrNull as num, recordOrEmpty as obj, stringOrEmpty as str } from "../../untrusted";
+import { finiteOrNull as num, recordOrEmpty as obj, stringOrEmpty as str, stringsOrEmpty as strings, textOrNull } from "../../untrusted";
 
 // A filed draft report read back field by field: a match-up prints with both sides and its result, or not at all; a
 // return, a row or a step that does not read is dropped, and a report filed before them reads with none.
@@ -45,7 +45,6 @@ function step(r: Raw): StoryDraftStep | null {
 }
 
 const FAMILIES: readonly Family[] = ["turn", "decider", "margin", "star", "setback", "people", "season", "upset", "chase"];
-const strings = (v: unknown) => (Array.isArray(v) ? v.filter((x): x is string => typeof x === "string" && x !== "") : []);
 
 function angle(v: unknown): AngleRecord | null {
   const r = obj(v);
@@ -57,7 +56,7 @@ function angle(v: unknown): AngleRecord | null {
 function face(v: unknown): StoryFace | null {
   const r = obj(v);
   const [code, clubId] = [num(r.code), num(r.clubId)];
-  return code === null || clubId === null || str(r.name) === "" ? null : { code, name: str(r.name), clubId, position: r.position === null ? null : str(r.position) || null };
+  return code === null || clubId === null || str(r.name) === "" ? null : { code, name: str(r.name), clubId, position: textOrNull(r.position) };
 }
 
 function side(v: unknown): StoryDraftSide | null {
@@ -84,8 +83,7 @@ export function normalizeDraftReport(raw: unknown): StoryDraftReport | undefined
   const matchups = list(r.matchups, (m): StoryDraftMatchup | null => {
     const [home, away] = [side(m.home), side(m.away)];
     if (home === null || away === null || str(m.verdict) === "") return null;
-    const paragraphs = Array.isArray(m.paragraphs) ? m.paragraphs.filter((p): p is string => typeof p === "string" && p !== "") : [];
-    return { home, away, verdict: str(m.verdict), standfirst: str(m.standfirst), paragraphs, byDay: list(m.byDay, step), story: angle(m.story), face: face(m.face) };
+    return { home, away, verdict: str(m.verdict), standfirst: str(m.standfirst), paragraphs: strings(m.paragraphs), byDay: list(m.byDay, step), story: angle(m.story), face: face(m.face) };
   });
   return matchups.length === 0 ? undefined : { cutoff: r.cutoff, gameweek, matchups };
 }

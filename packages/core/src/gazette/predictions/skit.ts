@@ -1,5 +1,6 @@
 import { LAWRO_LIMITS } from "../../config";
 import { strangers } from "../strangers";
+import { textOrNull } from "../../untrusted";
 import { checkLawro, tieKey, type CheckContext, type Fault, type LawroDraft } from "./checks";
 import { CORE_MARK, PAST } from "./past";
 import { ngrams, numbersIn, sentences, wordCount } from "./prose";
@@ -58,7 +59,7 @@ function read(raw: unknown): SkitEdit | null {
   const edit = raw as Partial<SkitEdit> | null;
   if (typeof edit?.where !== "string" || typeof edit.before !== "string" || typeof edit.after !== "string") return null;
   if (!SHAPES.includes(edit.shape as (typeof SHAPES)[number])) return null;
-  return { where: edit.where, shape: edit.shape as string, target: typeof edit.target === "string" && edit.target !== "" ? edit.target : null, before: edit.before.trim(), after: edit.after.trim() };
+  return { where: edit.where, shape: edit.shape as string, target: textOrNull(edit.target), before: edit.before.trim(), after: edit.after.trim() };
 }
 
 /** Why an edit may not land, or null when it may. */

@@ -1,4 +1,4 @@
-import { finiteOrNull, stringOrEmpty as str } from "../../untrusted";
+import { finiteOrNull, recordOrEmpty as obj, stringOrEmpty as str } from "../../untrusted";
 
 // The season's marks as `npm run ratings` files them: one per man per match, keyed by FPL's season-stable codes, with the
 // league whose points they were read from. Read back field by field: a mark that is not a number in range is dropped.
@@ -9,8 +9,6 @@ export interface RatingStore {
   marks: Record<string, Record<string, number | null>>;
 }
 
-type Raw = Record<string, unknown>;
-const obj = (v: unknown): Raw => (v !== null && typeof v === "object" && !Array.isArray(v) ? (v as Raw) : {});
 const mark = (v: unknown) => {
   const n = finiteOrNull(v);
   return n !== null && n >= 1 && n <= 10 ? n : null;
