@@ -48,10 +48,9 @@ import { draftPast, pastAngles, pastProse } from "./draftPast";
 import { draftSeason, gameweekFacts, placeOf, ranksAfter, sweepOf } from "./draftSeason";
 import { earlierSheets } from "./sheets";
 
-// The draft match-up desk's reads for one gameweek, turned into each match-up's facts and story at both cut-offs:
-// points, minutes and returns by London day from Fantrax, the bench order, signings and fitness news, matches played and
-// left and each goal's minute and kickoff from the football layer, the table, runs and meetings, the next opponent, the
-// stories told before, and a projection that weighs a star's blank and never prints.
+// The draft match-up desk's reads for one gameweek, made into each match-up's facts and story at both cut-offs: Fantrax's
+// points by London day, bench orders and fitness news, the football layer's goals and minutes, the table, runs, meetings
+// and stories told before, and a projection that weighs a star's blank and never prints.
 
 export interface DraftDesk {
   gameweek: number;
