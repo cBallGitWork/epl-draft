@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { filingDay, predictionsDue } from "./due";
+import { dueFrom, filingDay, predictionsDue } from "./due";
 
 // GW6 locks Sat 10 Oct 2026 at 12:15 London (BST), 11:15 UTC.
 const GW6_LOCK = "2026-10-10T11:15:00.000Z";
@@ -54,5 +54,14 @@ describe("predictionsDue", () => {
   it("refuses an instant it cannot read", () => {
     expect(predictionsDue("soon", "2026-10-08T17:00:00.000Z")).toBe(false);
     expect(predictionsDue(GW6_LOCK, "tonight")).toBe(false);
+  });
+});
+
+describe("dueFrom", () => {
+  it("reads the minute as well as the hour, in London", () => {
+    // 16:30 London on Thursday 8 Oct is 15:30 UTC.
+    expect(dueFrom("2026-10-08", { hour: 16, minute: 30 }, GW6_LOCK, "2026-10-08T15:29:00.000Z")).toBe(false);
+    expect(dueFrom("2026-10-08", { hour: 16, minute: 30 }, GW6_LOCK, "2026-10-08T15:30:00.000Z")).toBe(true);
+    expect(dueFrom("2026-10-08", { hour: 16 }, GW6_LOCK, "2026-10-08T15:00:00.000Z")).toBe(true);
   });
 });

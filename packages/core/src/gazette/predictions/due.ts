@@ -21,16 +21,18 @@ export function filingDay(locksAt: string, filing: Filing = PREDICTIONS.filing):
 /** Whether a column filing on `filing` is due at `now` for a round locking at `locksAt`. */
 export function dueBeforeLock(locksAt: string, now: string, filing: Filing): boolean {
   const day = filingDay(locksAt, filing);
-  return day !== null && dueFrom(day, filing.hour, locksAt, now);
+  return day !== null && dueFrom(day, filing, locksAt, now);
 }
 
-/** Whether a column filing on London `day` from `hour` is due at `now`, until the lock at `locksAt`. */
-export function dueFrom(day: string, hour: number, locksAt: string, now: string): boolean {
+/** Whether a column filing on London `day` from `from` (London) is due at `now`, until the lock at `locksAt`. */
+export function dueFrom(day: string, from: { hour: number; minute?: number }, locksAt: string, now: string): boolean {
   const lock = instantOf(locksAt);
   const at = instantOf(now);
   const today = londonDayOf(now);
   if (lock === null || at === null || at >= lock || today === null) return false;
-  return today > day || (today === day && Number(londonTime(now).slice(0, 2)) >= hour);
+  const clock = londonTime(now);
+  const minutes = Number(clock.slice(0, 2)) * 60 + Number(clock.slice(3, 5));
+  return today > day || (today === day && minutes >= from.hour * 60 + (from.minute ?? 0));
 }
 
 /** Whether Lawro's column is due at `now` for a round locking at `locksAt`. */

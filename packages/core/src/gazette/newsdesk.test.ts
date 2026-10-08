@@ -100,21 +100,21 @@ describe("newsdesk", () => {
   });
 
   describe("the Team Sheet", () => {
-    // GW6 locks Sat 10 Oct at 12:15 London. Each conference day is its own column, from 17:00 London that day, once
+    // GW6 locks Sat 10 Oct at 12:15 London. Each conference day is its own column, from 16:30 London that day, once
     // the Mac's 16:00 import has merged (Craig, 8 Oct 2026).
     const next = { period: 6, gameweek: 6, locksAt: "2026-10-10T11:15:00.000Z" };
     const thursday = (key: string) => key === "presser:gw6:2026-10-08";
     const sheet = (over: Partial<DeskState>, now: string, covered: (key: string) => boolean = none) =>
       newsdesk(desk({ pressers: ["2026-10-08", "2026-10-09"], next, ...over }), covered, now).filter((a) => a.kind === "presser");
 
-    it("files Thursday's conferences on Thursday and Friday's on Friday, each from 17:00 London", () => {
-      expect(sheet({}, "2026-10-08T15:59:00.000Z")).toEqual([]);
-      expect(sheet({}, "2026-10-08T16:00:00.000Z").map((a) => [a.key, a.slug, a.day])).toEqual([
+    it("files Thursday's conferences on Thursday and Friday's on Friday, each from 16:30 London", () => {
+      expect(sheet({}, "2026-10-08T15:29:00.000Z")).toEqual([]);
+      expect(sheet({}, "2026-10-08T15:30:00.000Z").map((a) => [a.key, a.slug, a.day])).toEqual([
         ["presser:gw6:2026-10-08", "gw6-presser-2026-10-08", "2026-10-08"],
       ]);
       // Friday's waits for the 16:00 import, not the 12:30 one.
-      expect(sheet({}, "2026-10-09T15:59:00.000Z", thursday)).toEqual([]);
-      expect(sheet({}, "2026-10-09T16:00:00.000Z", thursday).map((a) => a.key)).toEqual(["presser:gw6:2026-10-09"]);
+      expect(sheet({}, "2026-10-09T15:29:00.000Z", thursday)).toEqual([]);
+      expect(sheet({}, "2026-10-09T15:30:00.000Z", thursday).map((a) => a.key)).toEqual(["presser:gw6:2026-10-09"]);
     });
 
     it("catches up a missed day, and closes at the lock", () => {
@@ -123,15 +123,15 @@ describe("newsdesk", () => {
     });
 
     it("files a midweek round's conferences the day they are held", () => {
-      // GW13 locks Tue 1 Dec; Monday's conferences file from 17:00, which in winter is 17:00 UTC.
+      // GW13 locks Tue 1 Dec; Monday's conferences file from 16:30, which in winter is 16:30 UTC.
       const midweek = { period: 13, gameweek: 13, locksAt: "2026-12-01T19:15:00.000Z" };
-      expect(sheet({ next: midweek, pressers: ["2026-11-30"] }, "2026-11-30T16:59:00.000Z")).toEqual([]);
-      expect(sheet({ next: midweek, pressers: ["2026-11-30"] }, "2026-11-30T17:00:00.000Z").map((a) => a.key)).toEqual(["presser:gw13:2026-11-30"]);
+      expect(sheet({ next: midweek, pressers: ["2026-11-30"] }, "2026-11-30T16:29:00.000Z")).toEqual([]);
+      expect(sheet({ next: midweek, pressers: ["2026-11-30"] }, "2026-11-30T16:30:00.000Z").map((a) => a.key)).toEqual(["presser:gw13:2026-11-30"]);
     });
 
     it("files even while the last round is still 'finished'", () => {
       // `desk.finished` stays true for four or five days of seven, so a column gated on it would never fire.
-      expect(sheet({ finished: true }, "2026-10-08T16:00:00.000Z")).toHaveLength(1);
+      expect(sheet({ finished: true }, "2026-10-08T15:30:00.000Z")).toHaveLength(1);
     });
 
     it("files nothing without the round's press conferences or its lock", () => {
