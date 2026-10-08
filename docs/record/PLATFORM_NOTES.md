@@ -3008,21 +3008,12 @@ for whoever next wonders why the plates will not shrink.
 
 ## Recorded rule exceptions
 
-### `packages/core/src/config.ts` (recorded 5 Sep 2026)
+### `packages/core/src/config.ts` (recorded 5 Sep 2026, closed 8 Oct 2026)
 
-Past §4's 300-line hard ceiling, and it is the one file where §3 outranks §4:
-**"zero magic values in logic or UI — all live in one config module"**. Splitting
-it means a second config module, and the day there are two of those is the day a
-value is added to the wrong one. About 40% of the file is docblock, and every
-constant in it carries the count or the probe it came from — which is the point
-of the file rather than padding.
-
-**The condition for revisiting**: a second RESPONSIBILITY arriving, not growth. A
-provider adapter's own constants, a build-time table, anything that is not "a
-value this app must not repeat".
-
-Recorded on the commit that added `FANTRAX_TIMEZONE`, which is what CODE_RULES
-asks for and what nobody had done for this file.
+Was past §4's ceiling as the one config module §3 asks for, until its condition for revisiting, a second
+responsibility, arrived: the paper's tuning (when each column files, how long it runs, what is news). That now lives
+in `gazette/editorial.ts` and `gazette/matchups/judgement.ts`, and `config.ts` re-exports both, so a value is still
+imported from one place. A value only the paper reads goes in those; anything else stays in `config.ts`.
 
 ### Files over the ceiling with NO entry: none (counted 23 Sep 2026)
 

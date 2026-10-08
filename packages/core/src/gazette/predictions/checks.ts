@@ -1,4 +1,5 @@
 import { BANNED, americanisms, banned, overused } from "../banned";
+import { LAWRO_LIMITS as LIMITS } from "../../config";
 import { escapeRegExp } from "../../regExp";
 import { strangers } from "../strangers";
 import { CORE_MARK, type PastLine } from "./past";
@@ -60,7 +61,6 @@ const BACKING = /\b(?:I fancy|I'm backing|I'll go with|I'm going with|I'll have|
 const NEGATION = /\b(?:not|never|no)\b|n't/iu;
 const SCORELINE = /\b(?!50-50\b)\d{1,3}\s*[-–]\s*\d{1,3}\b/u;
 const ADMISSION = ["Liverpool man", "Liverpool men", "Liverpool player", "Liverpool players", "Liverpool lad", "Liverpool lads", "Anfield man", "in red"];
-const LIMITS = { sentence: 20, intro: [1, 4, 40], tie: [2, 8, 120], gut: [2, 9, 130], column: 680, repeat: 5, echo: 4, men: 4, questions: 2 } as const;
 /** His verdict is his: a tie with no "I", "me" or "my" in it is a list of facts, not an opinion. */
 const VERDICT = /\b(?:I|me|my)\b|\bI['’]/u;
 

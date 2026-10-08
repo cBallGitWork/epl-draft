@@ -1,4 +1,4 @@
-import { REPORTS } from "../../config";
+import { KEY_STATS, REPORTS } from "../../config";
 import { played } from "./men";
 import { assistsBy, goalsBy, type ManCounts, type MatchEvent } from "./timeline";
 import type { ReportMan, ReportMatchInput, Side } from "./types";
@@ -22,10 +22,7 @@ export function surname(name: string): string {
 }
 
 const { mostShots: MOST_SHOTS, chances: CHANCES, expectedAssists: EXPECTED_ASSISTS, saves: SAVES } = REPORTS.stats;
-/** How many men a top-xG or top-xA line names, and the least that earns a place in it. */
-const TOP_MEN = 3;
-const TOP_XG = 0.2;
-const TOP_XA = 0.15;
+const { topMen: TOP_MEN, expectedGoals: TOP_XG, expectedAssists: TOP_XA } = KEY_STATS;
 
 /** The men who lead one count, and the count, or null when nobody reaches `least`. */
 function leaders(men: readonly ReportMan[], value: (m: ReportMan) => number, least: number): { men: ReportMan[]; value: number } | null {
