@@ -1,20 +1,40 @@
-import type { View } from "./ViewToggle";
+"use client";
 
-/** Two readings of one squad: the list left and the pitch right above `lg`, with air between so
- *  they read as two; below `lg` the toggle's `view` draws one. */
+import { type ReactNode, useState } from "react";
+import { PANEL } from "@/app/desk";
+import BothReadings from "./BothReadings";
+import ViewToggle, { type View } from "./ViewToggle";
+
+/** A squad's list and pitch: both above `lg`, one at a time behind the toggle below it, `opens` first. Given `beside`,
+ *  the toggle shares its row and one panel frames the two, as a squad's sheet sets them. */
 export default function ListAndPitch({
-  view,
+  opens,
+  beside,
   list,
   pitch,
 }: {
-  view: View;
-  list: React.ReactNode;
-  pitch: React.ReactNode;
+  opens: View;
+  /** Beside the toggle on a phone and alone at the right on a desk: a squad's pending points and its week. */
+  beside?: ReactNode;
+  list: ReactNode;
+  pitch: ReactNode;
 }) {
+  // Phone only — above `lg` both are drawn and the control is hidden.
+  const [view, setView] = useState<View>(opens);
+  const toggle = <ViewToggle view={view} onPick={setView} />;
+  const both = <BothReadings view={view} list={list} pitch={pitch} />;
+
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start lg:gap-10">
-      <div className={view === "list" ? "" : "hidden lg:block"}>{list}</div>
-      <div className={view === "pitch" ? "" : "hidden lg:block"}>{pitch}</div>
+    <div className="flex flex-col gap-2">
+      {beside === undefined ? (
+        <div className="lg:hidden">{toggle}</div>
+      ) : (
+        <div className="flex items-center gap-2 px-1 lg:justify-end">
+          <div className="flex flex-1 lg:hidden">{toggle}</div>
+          {beside}
+        </div>
+      )}
+      {beside === undefined ? both : <section className={PANEL}>{both}</section>}
     </div>
   );
 }
