@@ -6,7 +6,7 @@ import { plural } from "../../format";
 
 // Facts worked out from the timeline so the writer never does sums: a lead, a burst, a late winner, a conversion rate.
 
-const { burstMinutes: BURST, cleanSheetLostFrom: CLEAN_SHEET_LOST } = REPORTS;
+const { burstMinutes: BURST } = REPORTS;
 const { most: MOST, more: MORE } = REPORTS.ball;
 
 const other = (side: Side): Side => (side === "home" ? "away" : "home");
@@ -61,7 +61,7 @@ export function derivedFacts(match: ReportMatchInput, events: readonly MatchEven
   for (const side of ["home", "away"] as const) {
     const first = goals.find((g) => g.side === other(side));
     const late = first?.phrases.find((phrase) => phrase.endsWith("from time")) ?? first?.phrases[0];
-    if (first !== undefined && first.at >= CLEAN_SHEET_LOST && late !== undefined) facts.push(`${name(side)}'s clean sheet went ${late}`);
+    if (first !== undefined && first.at >= LATE_GOAL_MINUTE && late !== undefined) facts.push(`${name(side)}'s clean sheet went ${late}`);
   }
 
   // A man whose chances added up to a goal and more, with none scored, in words (the paper never prints the figure).

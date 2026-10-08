@@ -128,9 +128,8 @@ export const REPORTS = {
   standfirstWords: 25,
   sectionWords: [20, 45],
   sentenceWords: 35,
-  /** A burst is two goals by one side this close; a clean sheet let go from this minute went late. */
+  /** A burst is two goals by one side this close. */
   burstMinutes: 15,
-  cleanSheetLostFrom: 75,
   /** The ball in words: "most of" from, "more of" from. Never printed as a figure. */
   ball: { most: 60, more: 55 },
   /** A key-stats line earns its place past these. xA only chooses; it never prints. */
