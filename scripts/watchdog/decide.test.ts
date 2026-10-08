@@ -101,6 +101,14 @@ describe("the Mac's jobs, by their alert.yml reports", () => {
     expect(mac([four, quarterPast, run("2026-10-06T07:10:00Z", "success", "alert intel-weekly ok")], "2026-10-08T17:20:00Z")).toEqual([]);
   });
 
+  it("owes Friday's 15:45 run its own report, before the 16:30 Team Sheet", () => {
+    // 16:40 London is 15:40 UTC; the 12:30 run's report does not cover the 15:45 slot.
+    const lunch = run("2026-10-09T11:35:00Z", "success", "alert intel-pressers ok");
+    expect(mac([lunch], "2026-10-09T15:40:00Z").map((one) => one.source)).toContain("intel-pressers");
+    const quarterTo = run("2026-10-09T14:55:00Z", "success", "alert intel-pressers ok");
+    expect(mac([lunch, quarterTo, run("2026-10-06T07:10:00Z", "success", "alert intel-weekly ok")], "2026-10-09T15:40:00Z")).toEqual([]);
+  });
+
   it("reads London in winter as GMT", () => {
     // Friday 11 December: the 12:30 slot is 12:30 UTC and due at 14:00 UTC.
     const before = run("2026-12-11T12:20:00Z", "success", "alert intel-pressers ok");

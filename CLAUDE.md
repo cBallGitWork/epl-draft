@@ -54,7 +54,9 @@ npm run lint      # ESLint; next build stopped running it at Next 16
 npm run build     # Next production build
 ```
 
-Before a push, three more, against a running app:
+Before a push that changes what the app serves (`apps/companion`, `packages/core`), three more, against a running app.
+A push of scripts, data or docs alone leaves smoke and the bridge to CI's `verify`, which runs both; `shape-diff`
+runs before any push that touches a Fantrax reader (Craig, 8 Oct 2026: "coding is so slow"):
 
 ```bash
 FANTRAX_LEAGUE_ID=<id> npm run start &                                   # refuses without a league
@@ -216,7 +218,7 @@ never in an issue.
 9. Squash-merge, always (see Pitfalls).
 10. Stage named paths; another session may be committing in the same tree.
 11. Push before the pile grows. Unpushed work is the repo's most-repeated failure.
-12. The four gates before any commit; the push three before any push.
+12. The four gates before any commit; the push three before a push that changes what the app serves (see Commands).
 13. Every PR carries a two-pass refactor before it opens. **Pass one counts** the duplication:
     extract at three, and at two write down the count you declined at. **Pass two reads what pass
     one left**: orphaned imports, dead bindings, dated comments. A pass that finds nothing says so.
