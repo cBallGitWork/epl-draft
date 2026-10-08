@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { firstKickoff, openingGameweek, periodDays, periodGameweeks, saveOpen } from "./calendar";
+import { firstKickoff, openingGameweek, periodDays, periodGameweeks, periodLock, periodOfGameweek, saveOpen } from "./calendar";
 import type { GameweekKickoff } from "./calendar";
 import type { LeaguePeriod } from "./types";
 import alignment from "./__fixtures__/periodAlignment.json";
@@ -102,6 +102,17 @@ describe("firstKickoff", () => {
   });
 });
 
+describe("periodLock", () => {
+  it("locks fifteen minutes before the period's first ball", () => {
+    expect(periodLock(P4, KICKOFFS)).toBe("2026-09-12T13:45:00.000Z");
+  });
+
+  it("has no lock for a period it was not given, or one with no football in it", () => {
+    expect(periodLock(undefined, KICKOFFS)).toBeNull();
+    expect(periodLock(P3, [])).toBeNull();
+  });
+});
+
 describe("saveOpen", () => {
   const locks = "2026-10-10T11:15:00.000Z";
 
@@ -158,6 +169,13 @@ describe("openingGameweek", () => {
       { gameweek: 6, kickoff: "2026-10-14T19:00:00Z" },
     ];
     expect(opening(level)).toBe(7);
+  });
+
+  it("finds a gameweek's period, the first holding it when a replay puts it in two", () => {
+    const calendar = periodGameweeks([P3, P6], [{ gameweek: 3, kickoff: "2026-09-05T14:00:00Z" }, ...GW6, { gameweek: 3, kickoff: "2026-10-14T18:30:00Z" }]);
+    expect(periodOfGameweek(calendar, 3)?.period).toBe(3);
+    expect(periodOfGameweek(calendar, 6)?.period).toBe(6);
+    expect(periodOfGameweek(calendar, 7)).toBeUndefined();
   });
 
   it("has none for a blank, or a period the calendar lacks", () => {

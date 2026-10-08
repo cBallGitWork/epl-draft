@@ -20,6 +20,7 @@ import {
   matchupState,
   oldBoys,
   periodGameweeks,
+  periodOfGameweek,
   projectionIntel,
   sheetOf,
   threadsOf,
@@ -68,7 +69,7 @@ const SLOTS = ["G", "D", "M", "F"];
 
 export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const [snapshot, info, schedule] = await Promise.all([getFootballSnapshot(gameweek), fetchLeagueInfo(FANTRAX_LEAGUE_ID).then(mapLeagueInfo), fetchFixtures().then(mapFixtures)]);
-  const covering = periodGameweeks(info.scoringPeriods, datedKickoffs(schedule)).find((p) => p.gameweeks.includes(gameweek));
+  const covering = periodOfGameweek(periodGameweeks(info.scoringPeriods, datedKickoffs(schedule)), gameweek);
   if (covering === undefined) throw new Error(`No Fantrax period covers gameweek ${gameweek}.`);
   const period = covering.period;
   const [facts, history, rawResults, scoring] = await Promise.all([gatherRoundFacts(info, snapshot, period), earlierSheets(info, snapshot, period), fetchSeasonResults(FANTRAX_LEAGUE_ID).catch(() => null), readScoring()]);

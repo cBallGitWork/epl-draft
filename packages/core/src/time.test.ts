@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { londonDate, londonDayAndTime, londonDayOf, londonMoment, londonTime, londonWeekday, onLondonDay } from "./time";
+import { londonDate, londonDayAndTime, londonDayOf, londonMoment, londonTime, londonWeekday, onLondonDay, wallClockInstant } from "./time";
 
 // A real kickoff: 14:00Z in October is 15:00 in London, which is the whole
 // reason this module exists rather than a call to `toLocaleString`.
@@ -52,5 +52,25 @@ describe("London time", () => {
   it("puts a missing or unreadable instant on no day", () => {
     expect(onLondonDay("2026-07-04T23:30:00Z", "2026-07-05")).toBe(true);
     for (const bad of [null, undefined, "", "Mikel Arteta"]) expect(onLondonDay(bad, "2026-07-05")).toBe(false);
+  });
+});
+
+describe("wallClockInstant", () => {
+  const wall = (iso: string) => Date.parse(iso);
+  const at = (ms: number) => new Date(ms).toISOString();
+
+  it("reads a London wall clock in summer and in winter", () => {
+    expect(at(wallClockInstant(wall("2026-09-25T13:30:00Z"), "Europe/London"))).toBe("2026-09-25T12:30:00.000Z");
+    expect(at(wallClockInstant(wall("2026-12-04T13:30:00Z"), "Europe/London"))).toBe("2026-12-04T13:30:00.000Z");
+  });
+
+  it("is right either side of a change, where one read of the offset is an hour out", () => {
+    // New York goes forward at 07:00 UTC on 14 Mar 2027: 03:30 that morning is EDT, which the offset at 03:30Z is not.
+    expect(at(wallClockInstant(wall("2027-03-14T03:30:00Z"), "America/New_York"))).toBe("2027-03-14T07:30:00.000Z");
+    expect(at(wallClockInstant(wall("2027-03-14T01:30:00Z"), "America/New_York"))).toBe("2027-03-14T06:30:00.000Z");
+  });
+
+  it("leaves a UTC wall clock where it is", () => {
+    expect(at(wallClockInstant(wall("2026-10-25T01:30:00Z"), "UTC"))).toBe("2026-10-25T01:30:00.000Z");
   });
 });

@@ -44,7 +44,7 @@ export type { SortKey } from "./standingsOrder";
 export { pedigreeOf } from "./pedigree";
 export type { Pedigree } from "./pedigree";
 
-export { firstKickoff, locksAt, openingGameweek, periodDays, periodGameweeks, saveOpen } from "./calendar";
+export { firstKickoff, locksAt, openingGameweek, periodDays, periodGameweeks, periodLock, periodOfGameweek, saveOpen } from "./calendar";
 export type { GameweekKickoff, PeriodGameweeks } from "./calendar";
 
 export { lastLockedPeriod, periodToRead, planningPeriod, rosterDisplay } from "./visibility";

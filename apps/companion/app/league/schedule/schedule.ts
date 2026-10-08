@@ -11,10 +11,10 @@ import {
   firstKickoff,
   gameweekStarted,
   gameweekStatus,
-  locksAt,
   mapLeagueInfo,
   mapSeasonResults,
   periodGameweeks,
+  periodLock,
 } from "@epl/core";
 import { leagueCache } from "../../leagueCache";
 import { leagueTable } from "../../standings";
@@ -29,7 +29,7 @@ export interface ScheduleRound {
   gameweek: number;
   /** The Fantrax period the gameweek is scored in: read, never assumed, as a postponement parts the two. */
   period: number;
-  /** When lineups lock (`locksAt`, off the roster period's first kickoff); null with no roster period or no dated football. */
+  /** When lineups lock (`periodLock`, off the roster period's first kickoff); null with no roster period or no dated football. */
   deadline: string | null;
   /** The round's first kickoff, or null; it dates a round the league has no roster period for. */
   kickoff: string | null;
@@ -62,10 +62,7 @@ export const getSchedule = leagueCache("schedule-season",
 
     // When each round's lineups lock: off the roster period's first kickoff, never its boundary (`gazette/deadline.ts`).
     const opens = new Map(
-      info.rosterPeriods.map((period) => {
-        const kickoff = firstKickoff(period, kickoffs);
-        return [period.number, { kickoff, deadline: kickoff === null ? null : locksAt(kickoff) }];
-      }),
+      info.rosterPeriods.map((period) => [period.number, { kickoff: firstKickoff(period, kickoffs), deadline: periodLock(period, kickoffs) }]),
     );
 
     const rounds = periodGameweeks(info.scoringPeriods, kickoffs)

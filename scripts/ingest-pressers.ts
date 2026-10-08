@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { FIRM, LEAGUE_TIMEZONE, getFootballSnapshot, type FootballSnapshot } from "@epl/core";
+import { FIRM, LEAGUE_TIMEZONE, getFootballSnapshot, wallClockInstant, type FootballSnapshot } from "@epl/core";
 import { articleGameweek, clubKey, conferenceArticle, conferenceTimes, isLeagueArticle, manager, quotes, sections, text } from "./ingest/presserArticle";
 import { troubles } from "./ingest/presserSignals";
 import { INTEL_SEASON, intelManifest, sameApartFromManifest } from "./intel";
@@ -26,15 +26,10 @@ const QUOTES_PER_CLUB = 3;
  *  in this file nobody printed, and it is named so it reads as the guess it is. */
 const MIDDAY = { hour: 12, minute: 0 };
 
-/** A London wall-clock time as an instant. The article prints "1.30pm", which is
- *  12:30Z in September and 13:30Z in December — the offset is read rather than
- *  assumed. */
+/** A London wall-clock time as an instant: "1.30pm" is 12:30Z in September and 13:30Z in December. */
 function londonInstant(day: string, hour: number, minute: number): string {
-  const pad = (n: number): string => String(n).padStart(2, "0");
-  const asUtc = new Date(`${day}T${pad(hour)}:${pad(minute)}:00Z`);
-  const shown = new Date(asUtc.toLocaleString("en-US", { timeZone: LEAGUE_TIMEZONE }));
-  const utc = new Date(asUtc.toLocaleString("en-US", { timeZone: "UTC" }));
-  return new Date(asUtc.getTime() - (shown.getTime() - utc.getTime())).toISOString();
+  const [year, month, date] = day.split("-").map(Number);
+  return new Date(wallClockInstant(Date.UTC(year, month - 1, date, hour, minute), LEAGUE_TIMEZONE)).toISOString();
 }
 
 /** The export, with ONE ROW PER LINE.

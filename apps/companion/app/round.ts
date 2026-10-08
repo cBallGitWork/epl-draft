@@ -6,6 +6,7 @@ import {
   mapLeagueInfo,
   openingGameweek,
   periodGameweeks,
+  periodOfGameweek,
   lastLockedPeriod,
   planningPeriod,
 } from "@epl/core";
@@ -80,6 +81,6 @@ export async function lastLockedRound(): Promise<Round | null> {
 }
 
 export async function roundOf(gameweek: number): Promise<Round | null> {
-  const found = (await readCalendar()).find((period) => period.gameweeks.includes(gameweek));
+  const found = periodOfGameweek(await readCalendar(), gameweek);
   return found === undefined ? null : { gameweek, period: found.period };
 }
