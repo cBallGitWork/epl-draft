@@ -5,7 +5,7 @@ import type { MatchDesk } from "./desk";
 import { played } from "./men";
 import { isGoal } from "./timeline";
 import type { Side } from "./types";
-import { plural } from "../../format";
+import { howMany } from "../../format";
 
 // The facts one match-day report may use and nothing else, one block per match keyed by its fixture code. Each fact is
 // handed once and marked with the part it belongs to, so the standfirst, the account and the sections cannot repeat each other.
@@ -28,7 +28,7 @@ export function matchBlock(desk: MatchDesk): string {
     `The clubs: ${club("home")}; ${club("away")}.`,
     [`THE TABLE, for the standfirst and nowhere else in this match:`, ...table].join("\n"),
     `OPEN THE ACCOUNT ON: ${opening}.`,
-    `LENGTH: standfirst ${REPORTS.standfirstWords} words at most; account ${least} to ${most} words; ${budget.sections} ${plural(budget.sections, "section")} of ${sectionLeast} to ${sectionMost} words each.`,
+    `LENGTH: standfirst ${REPORTS.standfirstWords} words at most; account ${least} to ${most} words; ${howMany(budget.sections, "section")} of ${sectionLeast} to ${sectionMost} words each.`,
     [
       "WHAT HAPPENED, in order. Each line gives the minute phrases you may use in brackets; use one or none, never a figure of your own:",
       ...events.flatMap((event) => {
@@ -50,5 +50,5 @@ export function matchBlock(desk: MatchDesk): string {
 export function buildReportsBrief(day: string, gameweek: number, desks: readonly MatchDesk[]): string {
   const first = desks[0]?.match.fixture.kickoff;
   const when = first === null || first === undefined ? day : londonDayAndDate(first);
-  return [`MATCH-DAY REPORT, ${when}, gameweek ${gameweek}. ${desks.length} ${plural(desks.length, "match", "matches")}, the lead first.`, ...desks.map(matchBlock)].join("\n\n=====\n\n");
+  return [`MATCH-DAY REPORT, ${when}, gameweek ${gameweek}. ${howMany(desks.length, "match", "matches")}, the lead first.`, ...desks.map(matchBlock)].join("\n\n=====\n\n");
 }

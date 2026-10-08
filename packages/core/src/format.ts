@@ -8,6 +8,21 @@ export function plural(n: number, word: string, many = `${word}s`): string {
   return n === 1 ? word : many;
 }
 
+/** A count and its noun: `howMany(1, "point")` is "1 point", `howMany(6, "point")` "6 points". */
+export function howMany(n: number, word: string, many = `${word}s`): string {
+  return `${n} ${plural(n, word, many)}`;
+}
+
+/** The first letter a capital, for text that opens a sentence: "two changes" is "Two changes". */
+export function capital(text: string): string {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+/** A name with its accents taken off, for comparing two spellings of one man: "Sávio" is "Savio". */
+export function withoutAccents(text: string): string {
+  return text.normalize("NFD").replace(/\p{M}/gu, "");
+}
+
 /** "A", "A and B", "A, B and C": a list as a sentence says it, with "or" where it offers a choice. */
 export function listed(list: readonly string[], word: "and" | "or" = "and"): string {
   return list.length <= 1 ? (list[0] ?? "") : `${list.slice(0, -1).join(", ")} ${word} ${list.at(-1)}`;

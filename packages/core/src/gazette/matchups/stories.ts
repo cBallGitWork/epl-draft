@@ -4,14 +4,14 @@ import { groupedBy } from "../../grouped";
 import type { AutoSub } from "./autoSubs";
 import type { Cutoff } from "./brief";
 import type { DraftMan, DraftSide, GoalTime, SlotWorth } from "./types";
-import { listed } from "../../format";
+import { howMany, listed } from "../../format";
 import { priceOf } from "./worth";
 
 // Each fact about a draft man in the game's own words, for the threads and the brief: a return is a goal, an assist or a
 // clean sheet, a blank is none, a haul is more than one. Pure.
 
 /** "1 point", "6 points". */
-export const pts = (n: number) => `${n} point${n === 1 ? "" : "s"}`;
+export const pts = (n: number) => howMany(n, "point");
 /** His returns: goals, assists and clean sheets. */
 export const returnCount = (m: DraftMan) => m.goals + m.assists + m.cleanSheets;
 const done = (m: DraftMan) => m.left === 0 && m.minutes > 0;

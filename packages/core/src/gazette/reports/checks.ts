@@ -1,4 +1,5 @@
 import { REPORTS } from "../../config";
+import { capital, withoutAccents } from "../../format";
 import { faultLog, type Fault, type Report } from "../predictions/checks";
 import { mentionAt as mentionExact, numbersIn, sentences, wordCount } from "../predictions/prose";
 import type { MatchDesk } from "./desk";
@@ -26,12 +27,11 @@ export interface ReportsCheck {
 /** Where a name stands whole at or after `from`, allowing the capital a particle takes at a sentence's start ("Van Hecke"). */
 function mentionAt(text: string, name: string, from = 0): number {
   const tail = text.slice(from);
-  const at = [mentionExact(tail, name), mentionExact(tail, name.charAt(0).toUpperCase() + name.slice(1))].filter((n) => n >= 0);
+  const at = [mentionExact(tail, name), mentionExact(tail, capital(name))].filter((n) => n >= 0);
   return at.length === 0 ? -1 : from + Math.min(...at);
 }
 
 const CAME_ON = /\b(?:off the bench|from the bench|as a substitute|came on|coming on|introduced)\b/iu;
-const strip = (text: string) => text.normalize("NFD").replace(/\p{M}/gu, "");
 
 /** A length is a target, not a guillotine: a little under or over is not worth a rewrite. */
 const SLACK_UNDER = 0.85;
@@ -143,7 +143,7 @@ function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx:
   }
   for (const man of desk.match.men) {
     const name = surname(man.name);
-    if (strip(name) !== name && mentionAt(prose, strip(name)) >= 0) fault(section, "a name spelt without its accents", "send-back", strip(name));
+    if (withoutAccents(name) !== name && mentionAt(prose, withoutAccents(name)) >= 0) fault(section, "a name spelt without its accents", "send-back", withoutAccents(name));
   }
 
   // Everything that decided or changed the match is named somewhere in its piece.

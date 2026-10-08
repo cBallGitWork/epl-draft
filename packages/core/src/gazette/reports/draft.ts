@@ -1,4 +1,5 @@
 import type { Fault } from "../predictions/checks";
+import { capital } from "../../format";
 import { escapeRegExp } from "../../regExp";
 import { recordOrEmpty } from "../../untrusted";
 import { pencil } from "../predictions/checks";
@@ -54,10 +55,7 @@ export function plainHead(head: string, pitch: string, surnames: readonly string
 export function particles(prose: string, surnames: readonly string[]): string {
   return surnames
     .filter((name) => /^\p{Ll}/u.test(name))
-    .reduce((out, name) => {
-      const capital = name.charAt(0).toUpperCase() + name.slice(1);
-      return out.replace(new RegExp(`(?<![.!?]\\s)(?<=\\s)${escapeRegExp(capital)}`, "gu"), name);
-    }, prose);
+    .reduce((out, name) => out.replace(new RegExp(`(?<![.!?]\\s)(?<=\\s)${escapeRegExp(capital(name))}`, "gu"), name), prose);
 }
 
 /** Headline candidates from either writer. A pun names the word it turns on and the two meanings that word carries; a

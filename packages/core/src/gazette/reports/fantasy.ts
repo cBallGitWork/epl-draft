@@ -2,7 +2,7 @@ import { surname } from "./keyStats";
 import { played } from "./men";
 import { assistsBy, goalsBy, isGoal, type MatchEvent } from "./timeline";
 import type { ReportMan, ReportMatchInput } from "./types";
-import { plural } from "../../format";
+import { howMany } from "../../format";
 
 // The league's side of one match, desk-made for the sidebar: the top league scorers, and the men
 // nobody holds who scored or made one (the only unheld men worth a line: somebody could still pick them up). A chance not
@@ -28,7 +28,7 @@ const WIRE = 4;
 /** "2 goals, 1 assist"; empty when he did neither. */
 export function didOf(goals: readonly MatchEvent[], code: number): string {
   const [scored, made] = [goalsBy(goals, code), assistsBy(goals, code)];
-  return [scored > 0 ? `${scored} ${plural(scored, "goal")}` : null, made > 0 ? `${made} ${plural(made, "assist")}` : null].filter(Boolean).join(", ");
+  return [scored > 0 ? howMany(scored, "goal") : null, made > 0 ? howMany(made, "assist") : null].filter(Boolean).join(", ");
 }
 
 /** His club as the sidebar names it: the short name, else the full one. */

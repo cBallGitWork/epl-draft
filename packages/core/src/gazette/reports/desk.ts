@@ -5,6 +5,7 @@ import { derivedFacts } from "./derived";
 import { fantasyPanel, type FantasyPanel } from "./fantasy";
 import { starMan, type StarMan } from "./star";
 import { keyStats, type KeyStat } from "./keyStats";
+import { pts } from "../matchups/stories";
 import { played } from "./men";
 import { clubStandings, type ClubStanding } from "./standing";
 import { assistsBy, goalsBy, isGoal, manCounts, matchEvents, type ManCounts, type MatchEvent } from "./timeline";
@@ -83,8 +84,6 @@ function misses(events: readonly MatchEvent[]): MatchEvent[] {
   const chosen = new Set([...close, ...made].slice(0, REPORTS.missed.most));
   return shots.filter((e) => chosen.has(e));
 }
-
-const pts = (n: number) => `${n} ${plural(n, "point")}`;
 
 /** The men a section could be about, each with the league stake that earns it, most newsworthy first. */
 function nominees(match: ReportMatchInput, events: readonly MatchEvent[], counts: ReadonlyMap<number, ManCounts>): Nominee[] {

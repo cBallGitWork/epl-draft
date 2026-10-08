@@ -1,4 +1,5 @@
 import type { FootballPlayer } from "../../football/types";
+import { withoutAccents } from "../../format";
 import { isResolved, type RosteredTeam } from "../../join/roster";
 import { isActive } from "../../league/rosterStatus";
 
@@ -59,7 +60,7 @@ export const ukSpelling = (name: string) => name.replace(/ß/gu, "ss");
  *  "Gabriel" as they are known, since their surname is not in their full name or is their first. */
 export function fullPrintName(player: FootballPlayer): string {
   const known = printName(player);
-  const plain = (s: string) => s.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+  const plain = (s: string) => withoutAccents(s).toLowerCase();
   const words = player.fullName.split(/\s+/u).filter((w) => w !== "");
   const last = plain(known.split(/\s+/u).at(-1) ?? known);
   if (known === player.name && known.includes(" ")) return known;
