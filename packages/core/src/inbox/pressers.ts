@@ -19,6 +19,6 @@ export function presserNews(stories: readonly PublishedStory[], href: (slug: str
       teamId: null,
       mark: null,
       urgent: false,
-      link: { href: href(story.slug), label: "Read the Team Sheet" },
+      link: { href: href(story.slug), label: "Read the article" },
     }));
 }

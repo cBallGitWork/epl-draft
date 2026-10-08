@@ -111,7 +111,7 @@ A failing job can report itself; one that never starts cannot. `watchdog.yml` ru
   late), 26h for scout-xi, 96h for warm (Monday night to Friday), and ratings one between 07:00 and 10:00 UTC.
   A latest run that ended `startup_failure` is a finding too.
 - **The Mac's jobs owe a report**: an `alert.yml` run named `alert intel-<mode> ok|fail`, created after the slot
-  opened. Deadlines, London: weekly Tue 12:00; pressers Thu 18:00, Fri 14:00 and Fri 18:30. A fail counts as ran,
+  opened. Deadlines, London: weekly Tue 12:00; pressers Thu 18:00 and 18:15, Fri 14:00 and Fri 18:30. A fail counts as ran,
   because it has been reported.
 - **A finding files under the late job's own source**, so the job's next green run closes it. A `gh` error turns
   the watchdog red rather than skipping, and no shared setup action stands between it and its own alert.
@@ -4307,8 +4307,9 @@ minutes cross: `minutesIntel` drops the points, which stay behind `PROJECTIONS_S
 
 - **Flat after next week**: GW7–17 are one repeated figure for 289 of 537 men (Haaland 85, then 85.7 to GW17).
   The card prints them as they are; it is the model saying it knows nothing new, not a fault.
-- **Freshness**: the pressers runs (Thu 16:00, Fri 12:30, 15:45, 17:45) take projections too since 7 Oct, from the
-  sister's Thu and Fri 16:30 full sweeps ("after the pressers"): the 17:45 Friday run carries Friday's conferences.
+- **Freshness**: the pressers runs (Thu 16:00 and 17:15, Fri 12:30, 15:45, 17:45) take projections too since 7 Oct,
+  from the sister's Thu and Fri 16:30 full sweeps ("after the pressers"): the 17:15 Thursday run (from 8 Oct) carries
+  Thursday's to Lawro at 20:00, and the 17:45 Friday run Friday's.
 - **The scout's letter** (Craig: *"the xmins up/down mail when it's more than 10"*, *"just report the mins"*,
   *"could run at anytime as they can update on a Tuesday"*). Every intel run, Tuesday's or a pressers one, ends in
   `scripts/xmins-moves.ts`: it compares the run's xMins export with the one committed before it (`git show HEAD:`) for

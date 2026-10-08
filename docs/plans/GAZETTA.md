@@ -151,7 +151,7 @@ this and not on a guess about when things happen:
 | **Tue** | **nothing at all** | Bins Out | `bin-xi`, "Top Bins": the best eleven nobody has — SHIPPED 30 Sep, see below |
 | **Wed 17:00** | waivers process, free agency opens | The Mercato Wire | `wire`, on **detection** of a claim batch |
 | **Thu 18:00** | Thursday's press conferences in | The Team Sheet | `presser`: Thursday's conferences, from the Mac's 16:00 import |
-| **Thu 20:00** | the evening before the round | The Form Guide | `predictions`, Lawro's calls on every tie — SHIPPED 24 Sep (the evening before an earlier lock) |
+| **Thu 20:00** | the evening before the round | The Form Guide | `predictions`, Lawro's calls on every tie, off the Mac's 17:15 import (the sister's 16:30 sweep) — SHIPPED 24 Sep (the evening before an earlier lock) |
 | **Fri 16:30 / 17:00** | Friday's pressers in; predicted elevens out | The Form Guide | `presser` **16:30**: Friday's conferences, off the Mac's 15:45 import; then `predicted-xi` **17:00** (Craig, 8 Oct 2026: *"pressers first, team sheet later"*) |
 | **Fri night / Sat noon** | deadline closes, gameweek begins | The Pink 'Un | `sheets` at the lock (every side as locked, SHIPPED 26 Sep), `tie-call`, `fixture-preview`, the Classified |
 | **Sat/Sun** | matches | The Sunday Edition | `tie-report` as the football stops |
@@ -162,6 +162,11 @@ has merged (Thursday 16:00, Friday 15:45; `TEAM_SHEET` in `gazette/editorial.ts`
 *"team sheet Friday"*; the next evening Craig wanted Thursday's back, at 16:30, and then at 18:00 with Lawro moved to
 20:00 (*"put the presser article for 6pm thursdays, lawro 8pm thursdays"*). Thursday's cron band, 17:00 to 20:30 UTC,
 reaches both in either clock.
+
+**Each column files after the newest data that lands before it** (Craig, 8 Oct 2026: *"basically the articles need
+the newest info possible"*). The Pressers read the conference import before them (every Thursday conference was in by
+14:30 on 8 Oct); Lawro reads the Thursday 17:15 import, which carries the sister's 16:30 sweep and its xMins; the
+elevens read Scout's 16:40 refresh.
 
 **Tuesday is the only day with no league event, which is what makes it the right
 day for the evergreen piece** — the form table, `player` articles, the
