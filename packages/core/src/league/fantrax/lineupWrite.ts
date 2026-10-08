@@ -115,6 +115,13 @@ export function changesBenchOrder(bench: readonly string[], previous: Readonly<R
   return bench.some((id, i) => previous[id] !== i + 1);
 }
 
+/** The bench order a save sends, or null to leave Fantrax's: an unnumbered bench comes on by points at the deadline,
+ *  so it is numbered only when the manager reordered it. */
+export function benchToWrite(bench: readonly string[], reordered: boolean, previous: Readonly<Record<string, number>>): Record<string, number> | null {
+  const numbered = Object.values(previous).some((n) => n > 0);
+  return (reordered || numbered) && changesBenchOrder(bench, previous) ? benchOrderMap(bench, previous) : null;
+}
+
 const plain = (text: string): string => text.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 
 /** A lineup write's answer: legal and done (or legal on a dry run), or the messages that refused it. */

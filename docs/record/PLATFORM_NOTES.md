@@ -5058,7 +5058,9 @@ Craig asked for a Save button on the planner and chose a real write over a save 
   Fantrax has open, so after a lock it names the week just gone and would refuse every save until the period
   rolls. Our lock (first kickoff less `LINEUP_LOCK_LEAD_MINUTES`) matched its 7:15 AM EDT on 10 Oct.
 - **Every write is a dry run first**; only a `CONFIRM` with no illegal message is executed. The bench order is
-  a second write, `setAutoSubsOrder`, sent only when it changed.
+  a second write, `setAutoSubsOrder`, sent only when the manager reordered the bench or Fantrax already numbers
+  it (`benchToWrite`): an unnumbered bench is left to the deadline's points order, which the planner shows.
+- **No save while `REPLAY_AT` is set**: the replayed clock plans a week long locked, and `adminMode` would write it.
 - **A session may carry three methods and no others** (`fxpa.ts`), because the same cookie reaches
   `deleteLeague`.
 - **Switched on per team**: `FANTRAX_COOKIE` plus `LINEUP_SAVE`, `on` for every team or comma-separated Fantrax

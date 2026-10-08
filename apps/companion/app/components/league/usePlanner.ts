@@ -29,7 +29,7 @@ export function usePlanner(
   details: SquadPlayerDetail[],
   players: LeaguePlayerState[],
   limits: RosterLimits,
-  /** Fantrax's bench order, `scorerId → rank`; empty when none is set. */
+  /** The order Fantrax will bring the bench on, `scorerId → rank`; empty when it could not be read. */
   benchRanks: Readonly<Record<string, number>>,
 ) {
   const [slots, setSlots] = useState<RosterSlot[]>(() => team.players.map((p) => p.slot));
@@ -181,6 +181,6 @@ export function usePlanner(
     place,
     reset,
     markSaved,
-    plan: { slots, bench: benchIds },
+    plan: { slots, bench: benchIds, reordered },
   };
 }
