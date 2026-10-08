@@ -4308,6 +4308,27 @@ minutes cross: `minutesIntel` drops the points, which stay behind `PROJECTIONS_S
   pressers run that only restamps the export records nothing (its manifest-only change is dropped first). The
   inbox's own rule ("makes no read of its own") is set aside for it on Craig's say-so.
 
+### FPL refuses Vercel under a burst, and a 200 page can still be broken (8 Oct 2026)
+
+Craig: *"/players/04fk1 — pages are broke"*. 19 of 20 player pages answered 200 and showed the error screen.
+
+- **FPL answers Vercel 403** (`FPL /bootstrap-static/ → 403`, `/fixtures/`, every `/element-summary/`) in bursts, not
+  always: 53 in Wed 7 Oct's 18:00 UTC hour, **213 in Thu 8 Oct's 11:00**, the hour a contrast sweep crawled
+  production (~200 browser page loads). From a laptop the same URLs answer 200. Fantrax reads also timed out from
+  Vercel in the same hours. **Never crawl production with `tools/ui`**: sweep a local build.
+- **A warm cache hides it, a cold one breaks.** `leagueCache` and raw `unstable_cache` serve the last good answer when
+  a refresh throws, so most pages looked fine; a player whose game log had no entry met the 403 with no fallback, and
+  the throw ended in the error screen. `gameLog` and `pastSeasons` now degrade to null and the page says "FPL is not
+  answering" (`FPL_SILENT`).
+- **A 200 is not a page.** Next streams a server component's throw into the payload as its own row
+  (`47:E{"digest":"578425273"}`); smoke checked status codes, so it passed. `scripts/smoke/broken.ts` (`serverError`)
+  now fails a walk on that row, and `.github/workflows/health.yml` walks production every two hours, 06:25 to 22:25
+  UTC, opening "alert: health" on a break. Proved against the unfixed build with every element-summary forced to 403:
+  the walk failed on the player page and his Data tab. On a server's very first visit one profile rendered before its
+  failure showed; the repeated walk is what catches a lasting break, not any single request.
+- Production's runtime logs are readable from this Mac: `npx vercel@latest logs --project
+  prj_KdNA8KG6xpLprVm0HISzLUXhjpC4 --environment production --level error --since 2h --expand`.
+
 ## A Fantrax points figure per man per MATCH is a capture, not a read (4 Sep 2026)
 
 Asked because a match screen wanted one. Counted against FPL fixture 11's **32**

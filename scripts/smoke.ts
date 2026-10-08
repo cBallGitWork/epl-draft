@@ -9,6 +9,7 @@ import {
   mapTeamRosters,
 } from "@epl/core";
 import { walkLeague, type WalkLeague } from "./smoke/league";
+import { serverError } from "./smoke/broken";
 import { PROJECTIONS, PROJECTIONS_SHOWN } from "../apps/companion/app/players/routes";
 
 // Walks every route against the league the server is serving, asserting the empty states for a
@@ -141,7 +142,8 @@ async function main() {
       `/league/matchups/${id}`,
     );
   }
-  if (playerId !== null) paths.push(`/players/${playerId}`);
+  // His page and his Data tab: each reads his FPL game log, which no other route walked here does.
+  if (playerId !== null) paths.push(`/players/${playerId}`, `/players/${playerId}/data`);
   if (club !== null) {
     paths.push(
       `/prem/club/${club}`,
@@ -218,6 +220,10 @@ async function main() {
     }
 
     const problems: string[] = [];
+
+    // A 200 is not a page: a server component that threw streams its error in and the browser shows the error screen.
+    const thrown = serverError(body);
+    if (thrown !== null) problems.push(`a server component threw (digest ${thrown}); the reader saw the error screen`);
 
     const named = UNDRAFTED[path];
     if (state === "no teams" && named !== undefined && !body.includes(named)) {

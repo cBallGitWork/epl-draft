@@ -49,6 +49,8 @@ export const WORKFLOW_RULES: readonly WorkflowRule[] = [
   { workflow: "ratings.yml", slot: { weekdays: EVERY_DAY, start: "07:00", due: "10:00", zone: "UTC" } },
   // Friday to Monday only: Monday 22:30 to Friday 17:00 UTC is its longest gap.
   { workflow: "warm.yml", within: 96 },
+  // Every two hours from 06:25 UTC; its longest gap is 22:25 to 06:25.
+  { workflow: "health.yml", within: 9 },
 ];
 
 /** The watchdog itself, checked from capture-status.yml so it is not its own only witness. */

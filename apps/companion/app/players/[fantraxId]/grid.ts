@@ -19,6 +19,7 @@ import {
 } from "@epl/core";
 import type { Attribute, FootballPlayer, IntelPlayer, PastSeason, ProjectedPlace, Ranked, Scouted, Tallied } from "@epl/core";
 import { unstable_cache } from "next/cache";
+import { orDegraded } from "../../refusals";
 import { cache } from "react";
 import { footballNow } from "../../football";
 import {
@@ -183,11 +184,13 @@ export function realPosition(code: number): IntelPlayer | null {
   return intelSquads.get(code) ?? null;
 }
 
-/** His completed seasons, most recent first: read by FPL's `id`, cached by the `code` that survives August. */
-export function pastSeasons(player: FootballPlayer): Promise<PastSeason[]> {
-  return unstable_cache(
+/** His completed seasons, most recent first: read by FPL's `id`, cached by the `code` that survives August. Null when
+ *  FPL would not answer and nothing is held for him. */
+export function pastSeasons(player: FootballPlayer): Promise<PastSeason[] | null> {
+  const read = unstable_cache(
     async () => mapPastSeasons(await fetchElementSummary(player.id)),
     ["past-seasons", String(player.code)],
     { revalidate: PAGE_REVALIDATE },
-  )();
+  );
+  return orDegraded(read(), () => null);
 }

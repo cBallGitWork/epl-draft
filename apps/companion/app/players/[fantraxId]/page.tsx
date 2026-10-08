@@ -8,6 +8,7 @@ import { PANEL } from "@/app/desk";
 import ButtonLink from "../../components/shell/ButtonLink";
 import { POOL, PROJECTIONS_SHOWN } from "../routes";
 import { intelMinutes } from "../../intel";
+import { FPL_SILENT } from "../../config";
 import AttributeGrid from "./AttributeGrid";
 import BornLine from "./BornLine";
 import type { GridWord } from "./AttributeGrid";
@@ -130,6 +131,7 @@ async function Season({
   season: string | null;
 }) {
   const [rows, snapshot, fixtures] = await Promise.all([gameLog(player), footballNow(), seasonFixtures()]);
+  if (rows === null) return <Nothing title={FPL_SILENT} code="element-summary">His season will be back when FPL answers.</Nothing>;
   return <SeasonTable rows={joinMatches(rows, paid, clubById(snapshot), playerMarks(player.code, fixtures))} season={season} />;
 }
 
