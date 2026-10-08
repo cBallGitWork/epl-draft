@@ -40,6 +40,8 @@ export interface CheckContext {
   names: readonly string[];
   /** The prose of his earlier columns, newest first. */
   past: readonly string[];
+  /** Who holds each man a tie may name, by tie key: his name to his side's. Absent skips the check. */
+  holders?: ReadonlyMap<string, ReadonlyMap<string, string>>;
 }
 
 const CAREER_CLAIM = /\bI (?:played|scored|managed|won(?!['’]t)|signed|coached|captained|commentated|covered)\b|\bwhen I was at\b|\bin my day\b|\bmy (?:playing days|career|debut|caps|medals)\b/iu;
@@ -64,6 +66,8 @@ const SCORELINE = /\b(?!50-50\b)\d{1,3}\s*[-–]\s*\d{1,3}\b/u;
 const ADMISSION = ["Liverpool man", "Liverpool men", "Liverpool player", "Liverpool players", "Liverpool lad", "Liverpool lads", "Anfield man", "in red"];
 /** His verdict is his: a tie with no "I", "me" or "my" in it is a list of facts, not an opinion. */
 const VERDICT = /\b(?:I|me|my)\b|\bI['’]/u;
+/** The joke about sitting through it, which is a joke once a column and a tic after that. */
+const DULL = /\b(?:asleep|slog|dull|dreary|tedious|yawn|bor(?:e|ed|ing)|kip|nod(?:ding)? off|sit(?:ting)? through|enjoy watching)\b/iu;
 
 export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
   const { faults, fault } = faultLog();
@@ -90,7 +94,26 @@ export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
     for (const word of americanisms(masked(text, ctx.names), [])) fault(section, "not British football English", "send-back", word);
   }
   columnRules(draft.intro, prose, ctx, fault);
+  frameRules(prose.slice(1), sides, fault);
   return faults;
+}
+
+/** Five ties in one shape read as a form filled in: the side and a verdict first, the side and a quip last, the dull
+ *  game every time. Each frame is allowed `sameFrame` ties, and the moan `dullMoan`. */
+function frameRules(ties: readonly [string, string][], sides: ReadonlySet<string>, fault: Report): void {
+  const side = [...sides].map(escapeRegExp).sort((a, b) => b.length - a.length).join("|");
+  if (side === "") return;
+  const opening = new RegExp(`^(?:The\\s+)?(?:${side})\\s+(?:are|is|sit|sits|have|has|look|looks)\\b[^.?]*,\\s*(?:and|but)\\b`, "iu");
+  const ending = new RegExp(`^(?:The\\s+)?(?:${side})\\b[^.?,]{0,30},\\s*(?:and|but)\\b`, "iu");
+  const frames: [check: string, max: number, hit: (text: string) => boolean][] = [
+    ["the same opening as another tie", LIMITS.sameFrame, (text) => opening.test(sentences(text)[0] ?? "")],
+    ["the same ending as another tie", LIMITS.sameFrame, (text) => ending.test(sentences(text).at(-1) ?? "")],
+    ["the dull-game moan twice", LIMITS.dullMoan, (text) => DULL.test(text)],
+  ];
+  for (const [check, max, hit] of frames) {
+    const hits = ties.filter(([, text]) => hit(text));
+    for (const [section, text] of hits.slice(max)) fault(section, check, "send-back", sentences(text).at(-1) ?? text.slice(0, 60));
+  }
 }
 
 /** The rules every line of his answers to, wherever it prints: the deck's, and any section of his own prose. */
@@ -147,6 +170,12 @@ function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckCon
   if (count < least || count > most || wordCount(line) > words) fault(key, "length", "send-back", `${count} sentences, ${wordCount(line)} words`);
   if (SCORELINE.test(line)) fault(key, "a score in the prose", "hard", line.match(SCORELINE)?.[0] ?? "");
   if (!VERDICT.test(line)) fault(key, "no verdict of his own", "send-back", line.slice(0, 60));
+  if (count >= LIMITS.paragraphFrom && !/\n\s*\n/u.test(line)) fault(key, "a tie in one block", "send-back", line.slice(0, 60));
+  // Whose man he is, in the sentence that first names him: a reader never has to guess.
+  for (const [man, holder] of ctx.holders?.get(key) ?? []) {
+    const first = sentences(line).find((sentence) => mentionAt(sentence, man) !== -1);
+    if (first !== undefined && mentionAt(first, holder) === -1) fault(key, "a man without his side", "send-back", man);
+  }
   const men = ctx.names.filter((name) => !sides.has(name) && mentionAt(line, name) !== -1);
   if (men.length > LIMITS.men) fault(key, "a roll call, more than four men", "send-back", men.join(", "));
   // "Their Ballard" is not how anybody talks: Ballard, or test31's Ballard.
