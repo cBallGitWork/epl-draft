@@ -152,7 +152,7 @@ this and not on a guess about when things happen:
 | **Wed 17:00** | waivers process, free agency opens | The Mercato Wire | `wire`, on **detection** of a claim batch |
 | **Thu 16:30** | Thursday's press conferences in | The Team Sheet | `presser`: Thursday's conferences, once the Mac's 16:00 import has merged |
 | **Thu 18:00** | the evening before the round | The Form Guide | `predictions`, Lawro's calls on every tie — SHIPPED 24 Sep (the evening before an earlier lock) |
-| **Fri 16:00 / 16:30** | predicted elevens out; Friday's pressers in | The Form Guide | `predicted-xi` **16:00**, then `presser` **16:30**: Friday's conferences, off the Mac's 15:45 import |
+| **Fri 16:30 / 17:00** | Friday's pressers in; predicted elevens out | The Form Guide | `presser` **16:30**: Friday's conferences, off the Mac's 15:45 import; then `predicted-xi` **17:00** (Craig, 8 Oct 2026: *"pressers first, team sheet later"*) |
 | **Fri night / Sat noon** | deadline closes, gameweek begins | The Pink 'Un | `sheets` at the lock (every side as locked, SHIPPED 26 Sep), `tie-call`, `fixture-preview`, the Classified |
 | **Sat/Sun** | matches | The Sunday Edition | `tie-report` as the football stops |
 
