@@ -49,10 +49,16 @@ describe("joinOf", () => {
     expect(join.points(7)).toBe(9);
   });
 
-  it("gives no line and nought points for a man FPL does not know", () => {
+  it("gives no line and no points, never a nought, for a man FPL does not know", () => {
     const join = joinOf(match);
     expect(join.line(8)).toBeUndefined();
-    expect(join.points(null)).toBe(0);
+    expect(join.points(8)).toBeNull();
+    expect(join.points(null)).toBeNull();
+  });
+
+  it("gives no points where FPL has no line for him in this match, and his nought where it has", () => {
+    expect(joinOf({ ...match, figures: new Map() }).points(7)).toBeNull();
+    expect(joinOf({ ...match, figures: new Map([[70, { fplPoints: 0 } as PlayerMatchStats]]) }).points(7)).toBe(0);
   });
 });
 

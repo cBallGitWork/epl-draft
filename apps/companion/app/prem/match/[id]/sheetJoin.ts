@@ -12,7 +12,8 @@ export function forCode<T>(map: ReadonlyMap<number, T>, code: number | null): T 
 export interface Join {
   /** FPL's per-fixture line for him, which the chips are drawn from; undefined for a man who accrued nothing. */
   line: (code: number | null) => MatchSheetLine | undefined;
-  points: (code: number | null) => number;
+  /** FPL's points for him in this match; null where FPL has no line for him, which prints a dash, never a nought. */
+  points: (code: number | null) => number | null;
 }
 
 export function joinOf(match: Pick<Match, "sheet" | "byCode" | "figures">): Join {
@@ -25,7 +26,7 @@ export function joinOf(match: Pick<Match, "sheet" | "byCode" | "figures">): Join
     },
     points: (code) => {
       const id = player(code)?.id;
-      return id === undefined ? 0 : (match.figures.get(id)?.fplPoints ?? 0);
+      return id === undefined ? null : (match.figures.get(id)?.fplPoints ?? null);
     },
   };
 }
