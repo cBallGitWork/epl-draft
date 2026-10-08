@@ -126,6 +126,30 @@ describe("checkLawro, the column's shape", () => {
     expect(found(owned, "a man without his side")).toEqual([]);
   });
 
+  it("passes a man whose side the sentence before names alone, and not when it names both sides", () => {
+    const holders = new Map([["rs-bn", new Map([["Oduya", "Real Sociable"]])]]);
+    const before = checks([["rs-bn", "Real Sociable have won all three. Oduya has Leeds.\n\nThey win it."]], { holders });
+    expect(found(before, "a man without his side")).toEqual([]);
+    const both = checks([["rs-bn", "Real Sociable beat Bayer Neverlusen last time. Oduya has Leeds.\n\nThey win it."]], { holders });
+    expect(found(both, "a man without his side")).toEqual(["rs-bn"]);
+  });
+
+  it("sends back an apostrophe on a side's name that ends in s, is a phrase or has one already", () => {
+    const named: Record<string, string> = { ...TEAMS, rs: "If anyone can, Bannan can" };
+    const awkward = (key: string, line: string) =>
+      checkLawro(draft(SAMPLE.map(([k, l]): [string, string] => [k, k === key ? line : l])), ctx({ name: (id) => named[id] ?? id }))
+        .filter((each) => each.check === "an apostrophe on a side's name")
+        .map((each) => each.evidence);
+    expect(awkward("av-pa", "Plymouth Argos's Crabtree goes to Arsenal.\n\nPlymouth Argos win this.")).toEqual(["Plymouth Argos's"]);
+    expect(awkward("rs-bn", "If anyone can, Bannan can's Oduya has Leeds.\n\nThey win it.")).toEqual(["If anyone can, Bannan can's"]);
+    expect(awkward("av-pa", "Aston Vanilla's Agyeman gets Hull.\n\nPlymouth Argos win this.")).toEqual([]);
+  });
+
+  it("sends back a side named more than three times in one tie", () => {
+    const faults = checks([["rs-bn", "Real Sociable are top. Real Sociable have Oduya.\n\nReal Sociable have won three. Real Sociable win it."]]);
+    expect(found(faults, "a side's name over and over")).toEqual(["rs-bn"]);
+  });
+
   it("sends back a tie of three sentences or more filed as one block", () => {
     const faults = checks([["rs-bn", "I've no argument with Real Sociable. They have won all three. Oduya has Leeds. They'll need more than two."]]);
     expect(found(faults, "a tie in one block")).toEqual(["rs-bn"]);

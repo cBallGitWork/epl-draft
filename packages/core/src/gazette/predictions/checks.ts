@@ -98,6 +98,16 @@ export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
   return faults;
 }
 
+/** How many times a name stands whole in the text. */
+function mentionsOf(text: string, name: string): number {
+  let count = 0;
+  for (let rest = text, at = mentionAt(rest, name); at !== -1; at = mentionAt(rest, name)) {
+    count += 1;
+    rest = rest.slice(at + name.length);
+  }
+  return count;
+}
+
 /** Five ties in one shape read as a form filled in: the side and a verdict first, the side and a quip last, the dull
  *  game every time. Each frame is allowed `sameFrame` ties, and the moan `dullMoan`. */
 function frameRules(ties: readonly [string, string][], sides: ReadonlySet<string>, fault: Report): void {
@@ -171,10 +181,21 @@ function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckCon
   if (SCORELINE.test(line)) fault(key, "a score in the prose", "hard", line.match(SCORELINE)?.[0] ?? "");
   if (!VERDICT.test(line)) fault(key, "no verdict of his own", "send-back", line.slice(0, 60));
   if (count >= LIMITS.paragraphFrom && !/\n\s*\n/u.test(line)) fault(key, "a tie in one block", "send-back", line.slice(0, 60));
-  // Whose man he is, in the sentence that first names him: a reader never has to guess.
+  // Whose man he is, said where he is first named or in the sentence before it about his side alone.
+  const said = line.split(/\n\s*\n/u).flatMap((paragraph, at) => sentences(paragraph).map((sentence) => ({ sentence, at })));
+  const names = (sentence: string, side: string) => mentionAt(sentence, side) !== -1;
   for (const [man, holder] of ctx.holders?.get(key) ?? []) {
-    const first = sentences(line).find((sentence) => mentionAt(sentence, man) !== -1);
-    if (first !== undefined && mentionAt(first, holder) === -1) fault(key, "a man without his side", "send-back", man);
+    const first = said.findIndex(({ sentence }) => mentionAt(sentence, man) !== -1);
+    if (first === -1) continue;
+    const before = said[first - 1];
+    const aboutHim = before !== undefined && before.at === said[first].at && names(before.sentence, holder) && ![...sides].some((side) => side !== holder && names(before.sentence, side));
+    if (!names(said[first].sentence, holder) && !aboutHim) fault(key, "a man without his side", "send-back", man);
+  }
+  for (const side of sides) {
+    // "AtleticoTimHortons's", "If anyone can, Bannan can's": such a side takes "for", or the sentence.
+    const awkward = /s$|['’,]/iu.test(side) ? line.match(new RegExp(`${escapeRegExp(side)}['’]s\\b`, "u")) : null;
+    if (awkward !== null) fault(key, "an apostrophe on a side's name", "send-back", awkward[0]);
+    if (mentionsOf(line, side) > LIMITS.sideNamed) fault(key, "a side's name over and over", "send-back", side);
   }
   const men = ctx.names.filter((name) => !sides.has(name) && mentionAt(line, name) !== -1);
   if (men.length > LIMITS.men) fault(key, "a roll call, more than four men", "send-back", men.join(", "));
