@@ -1,3 +1,5 @@
+import { numeric } from "./stats";
+
 // `getStandings` with `view: "SCHEDULE"` → the whole season's results in one cookieless request, a table per period.
 // Not a substitute for live scoring, which carries a moving total and who is still to play.
 
@@ -45,7 +47,7 @@ export function mapSeasonResults(raw: RawSchedulePage): PeriodResult[] {
         const next = cells[at + 1];
         if (next?.teamId !== undefined) continue;
 
-        results.push({ period, teamId, points: number(next?.content) });
+        results.push({ period, teamId, points: numeric(next?.content) });
       }
     }
   }
@@ -58,10 +60,4 @@ const CAPTION = /(\d+)\s*$/;
 function periodOf(caption: string | undefined): number | null {
   const found = caption?.match(CAPTION);
   return found ? Number(found[1]) : null;
-}
-
-function number(content: string | undefined): number | null {
-  if (content === undefined || content.trim() === "") return null;
-  const value = Number(content);
-  return Number.isFinite(value) ? value : null;
 }

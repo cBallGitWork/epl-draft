@@ -51,6 +51,11 @@ describe("mapSeasonResults", () => {
     expect(reordered.find((row) => row.teamId === "b")?.points).toBe(51.5);
   });
 
+  it("reads a total as Fantrax formats one, thousands comma and all", () => {
+    const formatted = mapSeasonResults({ tableList: [{ caption: "Gameweek 1", rows: [{ cells: [{ content: "test4", teamId: "a" }, { content: "1,024.5" }] }] }] });
+    expect(formatted).toEqual([{ period: 1, teamId: "a", points: 1024.5 }]);
+  });
+
   it("answers nothing for a league with no schedule", () => {
     expect(mapSeasonResults({})).toEqual([]);
     expect(mapSeasonResults({ tableList: [] })).toEqual([]);

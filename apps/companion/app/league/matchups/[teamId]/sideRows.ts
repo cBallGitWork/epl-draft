@@ -1,4 +1,4 @@
-import { type BreakdownLine, type LineupDetail, type ScoringCategory, type SquadPlayerDetail, MINUTES, idsOf, isGoalkeeper } from "@epl/core";
+import { type BreakdownLine, type LineupDetail, type ScoringCategory, type SquadPlayerDetail, MINUTES, idsOf, isGoalkeeper, numeric } from "@epl/core";
 import { everyone } from "./subs";
 import { byFigure } from "../../../components/league/order";
 import { DEFAULT_SIDE_SORT } from "./views";
@@ -53,9 +53,7 @@ export function boardColumns(
 /** One man's figure in a column: Fantrax's total under `Pts`, else his count; null where there is no reading. */
 export function figureOf(player: SquadPlayerDetail, head: string, counts: Counts): number | null {
   if (head === DEFAULT_SIDE_SORT) return player.points ?? null;
-  const value = counts[player.rostered.slot.fantraxId]?.[head];
-  const number = value === undefined ? NaN : Number(value);
-  return Number.isFinite(number) ? number : null;
+  return numeric(counts[player.rostered.slot.fantraxId]?.[head]);
 }
 
 /** What Fantrax paid him in one category this gameweek, signed: the figure's gain or loss. Nought where it paid nothing. */
