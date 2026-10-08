@@ -1,5 +1,6 @@
 import { plainText } from "./markup";
 import type { LabelledValue, RawLabelled, RawPlayerProfile } from "./profile";
+import { numeric } from "./stats";
 
 // `getPlayerProfile`'s TABLES, found by shape or stat id and never by caption, which is a season string it has served wrong.
 // Cells carry HTML (`<b>D</b>: 2`), stripped here; another sport's id renders wrong labels, not wrong numbers.
@@ -70,12 +71,7 @@ export function recentGames(raw: RawPlayerProfile): PlayerMatch[] {
   for (const row of heads.table.rows ?? []) {
     const cells = row.cells ?? [];
     const cell = (key: string) => (at(key) < 0 ? null : plainText(cells[at(key)]?.content));
-    const figure = (key: string) => {
-      const value = cell(key);
-      if (value === null) return null;
-      const parsed = Number(value);
-      return Number.isFinite(parsed) ? parsed : null;
-    };
+    const figure = (key: string) => numeric(cell(key) ?? undefined);
     const opponent = cell(MATCH.opponent);
     if (opponent === null) continue;
     // `@HUL` away, `IPS` at home.

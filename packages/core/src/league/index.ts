@@ -90,6 +90,7 @@ export {
   mapProjectedTotals,
 } from "./fantrax/livescoring";
 export { mapPoolStats, mapTeamStats } from "./fantrax/stats";
+export { numeric } from "./fantrax/stats";
 export { mapStatSheet } from "./fantrax/statSheet";
 export type { StatSheet } from "./fantrax/statSheet";
 export { mapBenchOrder } from "./fantrax/benchOrder";
