@@ -1,6 +1,6 @@
 import type { WriteAnswer } from "@epl/core";
 import { LABEL } from "@/app/desk";
-import { BUTTON } from "../shell/ButtonLink";
+import { BUTTON, STRONG_BUTTON } from "../shell/ButtonLink";
 
 // The planner's footer, always in view: docked above the thumb rail under a thumb and at the window's foot on a
 // desk. Save stays greyed until the lineup differs from the one Fantrax holds; where saving is off it shows once
@@ -47,12 +47,12 @@ export default function SaveBar({
             type="button"
             onClick={onSave}
             disabled={!ready}
-            className={`${BUTTON} flex-1 text-base font-bold uppercase tracking-wide ${ready ? "cm-primary" : "opacity-60"}`}
+            className={`${STRONG_BUTTON} flex-1 uppercase ${ready ? "cm-primary" : "opacity-60"}`}
           >
             {saving ? "Saving…" : "Save lineup"}
           </button>
         ) : (
-          <h2 className={`flex flex-1 items-center px-1 font-display ${LABEL}`}>Planned, not saved</h2>
+          <h2 className={`flex flex-1 items-center px-1 font-chrome ${LABEL}`}>Planned, not saved</h2>
         )}
         <button type="button" onClick={onReset} disabled={!dirty || saving} className={`${BUTTON} disabled:opacity-60`}>
           Reset

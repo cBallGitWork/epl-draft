@@ -1,3 +1,4 @@
+import { DASH } from "@epl/core";
 import type { InboxItem } from "@epl/core";
 import { FANTRAX_LEAGUE_PAGE, FANTRAX_PENDING_PATH, londonDayAndDate, londonTime } from "@epl/core";
 import Letter from "./Letter";
@@ -114,10 +115,10 @@ function Row({
   );
 }
 
-/** What the blue block says: the London day and clock it happened, or the round it belongs to. */
+/** What the blue block says: the London day and clock it happened, the round it belongs to, or the dash for neither. */
 function itemDay(item: InboxItem): { day: string; time: string | null } {
   if (item.at === null) {
-    return { day: item.gameweek === null ? "" : `GW${item.gameweek}`, time: null };
+    return { day: item.gameweek === null ? DASH : `GW${item.gameweek}`, time: null };
   }
   return { day: londonDayAndDate(item.at), time: londonTime(item.at) };
 }

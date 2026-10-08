@@ -46,6 +46,8 @@ export function pinHead(board: HTMLElement, box: HTMLElement, strip: HTMLElement
 
   clone();
   place();
+  const press = forwardTaps(copy, head);
+  strip.addEventListener("click", press);
   const edits = new MutationObserver(clone);
   edits.observe(head, { subtree: true, childList: true, attributes: true, characterData: true });
   const sizes = new ResizeObserver(() => {
@@ -61,7 +63,22 @@ export function pinHead(board: HTMLElement, box: HTMLElement, strip: HTMLElement
     sizes.disconnect();
     window.removeEventListener("scroll", queue);
     box.removeEventListener("scroll", queue);
+    strip.removeEventListener("click", press);
     cancelAnimationFrame(queued);
     strip.replaceChildren();
+  };
+}
+
+/** A tap on the copy presses the same plate on the real head: a clone has none of React's handlers, so its link
+ *  would load the whole page and its button do nothing. A modified tap is left to open the link in a new tab. */
+export function forwardTaps(copy: ParentNode, real: ParentNode): (event: MouseEvent) => void {
+  return (event) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const plate = (event.target as Element | null)?.closest?.("a, button") ?? null;
+    const at = plate === null ? -1 : [...copy.querySelectorAll("a, button")].indexOf(plate);
+    const twin = real.querySelectorAll<HTMLElement>("a, button")[at];
+    if (twin === undefined) return;
+    event.preventDefault();
+    twin.click();
   };
 }

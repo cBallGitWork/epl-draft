@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { rememberEntry } from "./actions";
-import { BUTTON } from "../components/shell/ButtonLink";
+import { STRONG_BUTTON } from "../components/shell/ButtonLink";
 import { LABEL } from "@/app/desk";
 
 // Your FPL team id — the number in the URL when you look at your own points on
@@ -39,14 +39,14 @@ export default function EntryForm() {
         <button
           type="submit"
           disabled={pending}
-          className={`${BUTTON} shrink-0 font-bold disabled:opacity-50`}
+          className={`${STRONG_BUTTON} shrink-0 disabled:opacity-50`}
         >
           {pending ? "…" : "Save"}
         </button>
       </div>
 
       {message ? (
-        <p role="alert" className="text-sm text-live">
+        <p role="alert" className="text-sm text-bad">
           {message}
         </p>
       ) : null}
