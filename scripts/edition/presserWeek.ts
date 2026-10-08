@@ -1,4 +1,5 @@
 import { MS_PER_DAY, type Club, type Fixture, type PresserLine, type RosteredTeam } from "@epl/core";
+import type { Say } from "./newsroom";
 import {
   presserFixtures,
   presserGameweek,
@@ -32,7 +33,7 @@ export function presserDesk(input: {
   locked: boolean;
   /** The season's fixtures, which the writer already holds. */
   season: readonly Fixture[];
-  say: (message: string) => void;
+  say: Say;
 }): {
   lines: PresserLine[];
   quotes: ReturnType<typeof presserQuotes>;

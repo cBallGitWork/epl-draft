@@ -10,8 +10,9 @@ import {
   type Fault,
   type LawroDraft,
 } from "@epl/core";
-import { writeColumn } from "./newsroom";
+import { writeColumn, type Say } from "./newsroom";
 import type { PredictionsDesk } from "./predictions";
+import { faultSummary, sendBackOnce, serious } from "./sendBack";
 import { LAWRO, SKIT, lawroSendBack } from "./voice/lawro";
 
 // The newsroom behind Lawro's column: he writes, the editor reads him, he writes again once if he
@@ -21,7 +22,7 @@ const EMPTY: LawroDraft = { deck: "", intro: "", ties: new Map() };
 
 /** The column ready to file. Throws only when the first call cannot be made at all, which leaves
  *  the key unspent for the next firing; every later failure files what was checked. */
-export async function writeLawro(desk: PredictionsDesk, brief: string, facts: string, say: (message: string) => void): Promise<Record<string, unknown>> {
+export async function writeLawro(desk: PredictionsDesk, brief: string, facts: string, say: Say): Promise<Record<string, unknown>> {
   const calls = desk.ties.map((tie) => tie.call);
   const named = new Map(desk.ties.flatMap((tie) => [[tie.home.teamId, tie.home.name], [tie.away.teamId, tie.away.name]] as const));
   const name = (teamId: string) => named.get(teamId) ?? teamId;
@@ -39,17 +40,10 @@ export async function writeLawro(desk: PredictionsDesk, brief: string, facts: st
     return call === undefined ? `the ${section}` : `the tie ${name(call.homeTeamId)} v ${name(call.awayTeamId)}`;
   };
 
-  const first = await writeColumn(LAWRO, brief);
-  const attempts = [attempt(first, ctx)];
-  const faults = attempts[0].faults.filter((fault) => fault.severity !== "warn");
-  if (faults.length > 0) {
-    say(`  ↩ lawro: ${faults.length} faults, sent back once: ${summary(faults)}`);
-    const second = await writeColumn(LAWRO, `${brief}\n\n${lawroSendBack(faults, label)}`).catch(() => null);
-    if (second !== null) attempts.push(attempt(second, ctx));
-  }
+  const attempts = await sendBackOnce({ desk: "lawro", voice: LAWRO, brief, read: (raw) => attempt(raw, ctx), sendBack: (faults) => lawroSendBack(faults, label) }, say);
   let draft = mergeAttempts(attempts, calls);
-  const left = checkLawro(draft, ctx).filter((fault) => fault.severity !== "warn");
-  if (left.length > 0) say(`  ⚠ lawro files with ${left.length} faults the rewrite kept: ${summary(left)}`);
+  const left = serious(checkLawro(draft, ctx));
+  if (left.length > 0) say(`  ⚠ lawro files with ${left.length} faults the rewrite kept: ${faultSummary(left)}`);
   const empty = calls.filter((call) => draft.ties.get(tieKey(call.homeTeamId, call.awayTeamId))?.line === "");
   if (empty.length > 0) say(`  ⚠ lawro: ${empty.length} ties print their call alone; their prose failed twice.`);
 
@@ -78,10 +72,6 @@ function attempt(raw: Record<string, unknown>, ctx: CheckContext): { draft: Lawr
   const draft = readDraft(raw, ctx.calls);
   if (draft === null) return { draft: EMPTY, faults: [{ section: "column", check: "not the JSON shape", severity: "hard", evidence: "" }], raw };
   return { draft, faults: checkLawro(draft, ctx), raw };
-}
-
-function summary(faults: readonly Fault[]): string {
-  return faults.slice(0, 6).map((fault) => `${fault.check} (${fault.evidence})`).join(", ");
 }
 
 /** The column as filed, and nothing else: the skit writer never sees the brief. */

@@ -46,6 +46,7 @@ import { STATS_LEAGUE } from "../leagues";
 import { readScoring } from "../scoring";
 import { BRIDGE } from "./bridge";
 import type { DeskFacts } from "./facts";
+import type { Say } from "./newsroom";
 import { readArchive } from "./persist";
 
 // The reads behind the Bin XI, made only when it is assigned: the league's free agents and their
@@ -75,7 +76,7 @@ export async function binXiDesk(input: {
   kickoffs: readonly GameweekKickoff[];
   clubs: ReadonlyMap<number, Club>;
   threads: readonly StoryThread[];
-  say: (message: string) => void;
+  say: Say;
 }): Promise<BinDesk | null> {
   const { info, snapshot, facts, period, clubs, say } = input;
   if (!input.assignments.some((each) => each.kind === "bin-xi")) return null;

@@ -28,6 +28,7 @@ import {
 } from "@epl/core";
 import { rosteredPeriod } from "./bridge";
 import type { DeskFacts } from "./facts";
+import type { Say } from "./newsroom";
 import { readArchive } from "./persist";
 import { recentGames } from "./recent";
 import { readXi } from "./xi";
@@ -60,7 +61,7 @@ export async function sheetsDesk(input: {
   season: readonly Fixture[];
   clubs: ReadonlyMap<number, Club>;
   now: string;
-  say: (message: string) => void;
+  say: Say;
 }): Promise<SheetsDesk | null> {
   const { info, snapshot, facts, period, gameweeks, clubs, now, say } = input;
   if (!input.assignments.some((each) => each.kind === "sheets")) return null;

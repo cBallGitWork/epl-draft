@@ -42,6 +42,7 @@ import { readIntel } from "../intel";
 import type { DeskFacts } from "./facts";
 import { fitnessAfter, leagueJoin } from "./matchdayLeague";
 import { dayMarks } from "./matchdayRatings";
+import type { Say } from "./newsroom";
 
 // The reads behind one match-day report: the Premier League's own account of each match, FPL's per-man figures, the league's,
 // and our marks. Script-side: about four requests a match, one per past gameweek and six for the marks, made only when a
@@ -90,7 +91,7 @@ export async function matchdayInput(opts: {
   facts: DeskFacts;
   periodGameweeks: readonly number[];
   pick: (fixture: Fixture) => boolean;
-  say: (message: string) => void;
+  say: Say;
 }): Promise<ReportDayInput | null> {
   const { snapshot, facts, say } = opts;
   const gameweek = snapshot.gameweek;

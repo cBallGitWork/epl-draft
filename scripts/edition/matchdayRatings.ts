@@ -19,6 +19,7 @@ import {
 import { SCORING_LEAGUE, STATS_LEAGUE } from "../leagues";
 import { readScoring } from "../scoring";
 import { FANTRAX_STAT } from "../stats/columns";
+import type { Say } from "./newsroom";
 
 // Our mark for each man who played on one London day: the scoring league's points for that day, split by its rules,
 // the stats league's Opta counts for the mistakes and extras, and the opponent as the season has gone. Six reads a day,
@@ -95,7 +96,7 @@ export async function dayMarks(opts: {
   results: readonly ClubResult[];
   fantraxIds: ReadonlyMap<number, string>;
   minutesOf: (code: number) => number;
-  say: (message: string) => void;
+  say: Say;
 }): Promise<MarkFor | null> {
   const { results, fantraxIds } = opts;
   const rules = (await readScoring())?.rules ?? null;
