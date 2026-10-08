@@ -4,7 +4,7 @@ import type { PastLine } from "../predictions/past";
 import type { PredictionCall } from "../predictions/pick";
 import type { PredictionRecord } from "../predictions/record";
 import type { PredictionSide } from "../predictions/sides";
-import { tieFacts } from "./predictionFacts";
+import { played, tieFacts } from "./predictionFacts";
 
 // Lawro's brief: the round ahead, tie by tie, with every call already made. Withheld: the totals,
 // the scores, any man's figure, anybody's line-up, and the paper's storylines, which carry last
@@ -18,6 +18,12 @@ export interface PredictionsTie {
   derby?: DerbyName | null;
 }
 
+/** Who won the league, and when: `data/leagues/champions.json`, newest first. */
+export interface Champion {
+  season: string;
+  team: string;
+}
+
 /** Null when no tie can be called, which files nothing and spends nothing. */
 export function buildLawroBrief(brief: {
   gameweek: number;
@@ -26,17 +32,23 @@ export function buildLawroBrief(brief: {
   ties: readonly PredictionsTie[];
   record: PredictionRecord;
   past: readonly PastLine[];
+  champions?: readonly Champion[];
 }): string | null {
   if (!brief.ties.some((tie) => tie.call.callsTeamId !== null)) return null;
   const named = new Map(brief.teams.map((team) => [team.teamId, team.name]));
   const name = (teamId: string) => named.get(teamId) ?? teamId;
+  const holders = brief.champions?.find((each) => named.has(each.team)) ?? null;
 
   return [
     `LAWRO'S PREDICTIONS, gameweek ${brief.gameweek}. Filed before line-ups lock at ${londonTime(brief.locksAt)} on ${londonDate(brief.locksAt)}, and nobody has kicked a ball. Every call below is already made: you write the reasoning, never the call. Never change a call, hedge it or predict a draw.`,
     `THE ${brief.teams.length} MANAGERS, named exactly as here; the id in brackets is what you return, never the name: ${brief.teams.map((team) => `${team.name} [${team.teamId}]`).join(", ")}.`,
     recordBlock(brief.record, name),
+    brief.ties.some((tie) => played(tie.home) || played(tie.away))
+      ? null
+      : "THE SEASON HAS NOT STARTED: nobody has played a game, so nobody is top, second or bottom. Never mention the table or a side's position in it.",
+    holders === null ? null : `THE CHAMPIONS: ${name(holders.team)} won this league in ${holders.season}, and are the champions until somebody takes it off them.`,
     "WHAT YOU KNOW IS THE SQUADS: who each manager holds, the men signed for this round, the table and the results. Nobody's line-up is public until the lock, so you do not know who starts, who is picked, who is left out or who is on anybody's bench, and you never write as though you do. The order of a side's men is our own reading, and no man has a figure you may print.",
-    ...brief.ties.map((tie, at) => tieBlock(at + 1, brief.ties.length, tie, name)),
+    ...brief.ties.map((tie, at) => tieBlock(at + 1, brief.ties.length, tie, name, holders?.team ?? null)),
     brief.past.length === 0
       ? null
       : ["WHO YOU ARE, beyond the opening of your instructions. Every line is true. Use one at most, in your own words, only inside a tie it bears on, and never to introduce yourself:", ...brief.past.map((line) => `- ${line.line}`)].join("\n"),
@@ -45,9 +57,13 @@ export function buildLawroBrief(brief: {
     .join("\n\n");
 }
 
-function tieBlock(index: number, count: number, tie: PredictionsTie, name: (teamId: string) => string): string {
+function tieBlock(index: number, count: number, tie: PredictionsTie, name: (teamId: string) => string, champions: string | null): string {
   const { home, away, call } = tie;
-  const heading = [`TIE ${index} of ${count}: ${home.name} [${home.teamId}] v ${away.name} [${away.teamId}]`, ...(tie.derby ? [derbyBrief(tie.derby)] : [])].join("\n");
+  const heading = [
+    `TIE ${index} of ${count}: ${home.name} [${home.teamId}] v ${away.name} [${away.teamId}]`,
+    ...(tie.derby ? [derbyBrief(tie.derby), "Name the derby in this tie's first paragraph, once, exactly as written."] : []),
+    ...([home, away].some((side) => side.teamId === champions) ? [`${name(champions as string)} are the champions.`] : []),
+  ].join("\n");
   const shape = `Write it in "ties" with homeTeamId "${home.teamId}" and awayTeamId "${away.teamId}"`;
   if (call.callsTeamId === null) {
     return [heading, "NO CALL: the desk cannot call this tie. Write two or three sentences and back nobody.", ...tieFacts(index, home, away, call), `${shape}, and "backs" null.`].join("\n");
@@ -60,7 +76,7 @@ function tieBlock(index: number, count: number, tie: PredictionsTie, name: (team
       : call.close
         ? "It is close."
         : `${backing} are clear favourites.`;
-  const order = `Your verdict on a side first, then ${call.instinct === null ? `T${index}-story if there is one` : `T${index}-gut`}, then the moan and the call. Four men at most.`;
+  const order = `Three paragraphs: one side and its men, then the other side and its men, then the call in one sentence with its reason. ${call.instinct === null ? `T${index}-story leads if there is one` : `T${index}-gut is the reason`}, and the moan goes where it fits. Four men at most, every one named.`;
   return [heading, `YOUR CALL: ${backing}. ${why} ${order}`, ...tieFacts(index, home, away, call), `${shape}, and "backs" "${call.callsTeamId}". The page prints your prediction and the score under your words, so write neither.`].join("\n");
 }
 

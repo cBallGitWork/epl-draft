@@ -42,6 +42,8 @@ export interface CheckContext {
   past: readonly string[];
   /** Who holds each man a tie may name, by tie key: his name to his side's. Absent skips the check. */
   holders?: ReadonlyMap<string, ReadonlyMap<string, string>>;
+  /** Every name a tie's derby goes by, by tie key; a derby tie names one of them. */
+  derbies?: ReadonlyMap<string, readonly string[]>;
 }
 
 const CAREER_CLAIM = /\bI (?:played|scored|managed|won(?!['’]t)|signed|coached|captained|commentated|covered)\b|\bwhen I was at\b|\bin my day\b|\bmy (?:playing days|career|debut|caps|medals)\b/iu;
@@ -66,6 +68,8 @@ const SCORELINE = /\b(?!50-50\b)\d{1,3}\s*[-–]\s*\d{1,3}\b/u;
 const ADMISSION = ["Liverpool man", "Liverpool men", "Liverpool player", "Liverpool players", "Liverpool lad", "Liverpool lads", "Anfield man", "in red"];
 /** His verdict is his: a tie with no "I", "me" or "my" in it is a list of facts, not an opinion. */
 const VERDICT = /\b(?:I|me|my)\b|\bI['’]/u;
+/** "Both of theirs": men he never names, which a reader without the brief cannot place. */
+const UNNAMED = /\btheirs\b/iu;
 /** The joke about sitting through it, which is a joke once a column and a tic after that. */
 const DULL = /\b(?:asleep|slog|dull|dreary|tedious|yawn|bor(?:e|ed|ing)|kip|nod(?:ding)? off|sit(?:ting)? through|enjoy watching)\b/iu;
 
@@ -180,7 +184,10 @@ function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckCon
   if (count < least || count > most || wordCount(line) > words) fault(key, "length", "send-back", `${count} sentences, ${wordCount(line)} words`);
   if (SCORELINE.test(line)) fault(key, "a score in the prose", "hard", line.match(SCORELINE)?.[0] ?? "");
   if (!VERDICT.test(line)) fault(key, "no verdict of his own", "send-back", line.slice(0, 60));
-  if (count >= LIMITS.paragraphFrom && !/\n\s*\n/u.test(line)) fault(key, "a tie in one block", "send-back", line.slice(0, 60));
+  if (UNNAMED.test(line)) fault(key, "men he never names", "send-back", sentences(line).find((sentence) => UNNAMED.test(sentence)) ?? "theirs");
+  const derby = ctx.derbies?.get(key) ?? [];
+  if (derby.length > 0 && !derby.some((name) => mentionAt(line, name) !== -1)) fault(key, "the derby not named", "send-back", derby[0]);
+  if (call.callsTeamId !== null) shapeRules(key, line, sides, fault);
   // Whose man he is, said where he is first named or in the sentence before it about his side alone.
   const said = line.split(/\n\s*\n/u).flatMap((paragraph, at) => sentences(paragraph).map((sentence) => ({ sentence, at })));
   const names = (sentence: string, side: string) => mentionAt(sentence, side) !== -1;
@@ -215,6 +222,20 @@ function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckCon
       fault(key, "argues for the other side", "hard", sentence);
     }
   }
+}
+
+/** A called tie is one side, the other side, then the call: a sentence with its reason, never a name alone. */
+function shapeRules(key: string, line: string, sides: ReadonlySet<string>, fault: Report): void {
+  const paragraphs = line.split(/\n\s*\n/u).map((paragraph) => paragraph.trim()).filter((paragraph) => paragraph !== "");
+  if (paragraphs.length !== LIMITS.paragraphs) {
+    fault(key, "not one side, the other, then the call", "send-back", `${paragraphs.length} paragraphs`);
+    return;
+  }
+  const opensOn = (paragraph: string) =>
+    [...sides].map((side) => ({ side, at: mentionAt(paragraph, side) })).filter(({ at }) => at !== -1).sort((a, b) => a.at - b.at)[0]?.side ?? null;
+  const [first, second, verdict] = paragraphs;
+  if (opensOn(first) === null || opensOn(first) === opensOn(second)) fault(key, "the second paragraph not on the other side", "send-back", second.slice(0, 60));
+  if (wordCount(verdict) < LIMITS.callWords) fault(key, "a call with no reason", "send-back", verdict);
 }
 
 export function columnRules(intro: string, prose: readonly [string, string][], ctx: CheckContext, fault: Report): void {

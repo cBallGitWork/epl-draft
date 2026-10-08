@@ -7,6 +7,7 @@ import {
   mergeAttempts,
   readDraft,
   tieKey,
+  derbyNames,
   type CheckContext,
   type Fault,
   type LawroDraft,
@@ -42,6 +43,7 @@ export async function writeLawro(desk: PredictionsDesk, brief: string, facts: st
         new Map([...tie.home.squad.map((man) => [man.name, tie.home.name] as const), ...tie.away.squad.map((man) => [man.name, tie.away.name] as const)]),
       ]),
     ),
+    derbies: new Map(desk.ties.map((tie) => [tieKey(tie.call.homeTeamId, tie.call.awayTeamId), derbyNames(tie.derby)])),
   };
   const label = (section: string) => {
     const call = calls.find((each) => tieKey(each.homeTeamId, each.awayTeamId) === section);

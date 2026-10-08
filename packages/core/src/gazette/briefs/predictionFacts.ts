@@ -42,7 +42,8 @@ export function tieFacts(index: number, home: PredictionSide, away: PredictionSi
       const man = take(fresh(side.keyMen.filter((each) => streak(each) !== null)));
       return man === null ? null : `- ${tag}-run: ${side.name}'s ${man.name} (${man.club}) ${streak(man)}.`;
     }),
-    ...sides.map(({ tag, side }) => (side.form === null ? null : `- ${tag}-form: ${form(side)}`)),
+    // Before a game is played every side is level, and a rank would only be the table's sort order.
+    ...sides.map(({ tag, side }) => (played(side) ? `- ${tag}-form: ${form(side)}` : null)),
     // On a gut call the reason is the story: only the men who meet on the pitch get another line.
     ...(call.instinct === null ? together(index, home, away) : together(index, home, away).slice(-1)),
     // Liverpool men are the whole story of a Liverpool call: nobody else gets a line.
@@ -170,6 +171,11 @@ export function availabilityWord(availability: SquadMan["availability"]): string
   if (availability.out) return "is out";
   if (availability.chance === null || availability.chance === 50) return "is a doubt";
   return availability.chance > 50 ? "is a slight doubt" : "is a big doubt";
+}
+
+/** Whether the side has a game behind it, which a table position needs. */
+export function played(side: PredictionSide): boolean {
+  return side.form !== null && side.form.won + side.form.drawn + side.form.lost > 0;
 }
 
 function form(side: PredictionSide): string {
