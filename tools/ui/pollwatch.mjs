@@ -1,11 +1,8 @@
-// Watch an open page poll: how often it refetches, and how often a refetch changes what is on screen.
-//
+// Watch an open page poll: how often it refetches, and how often a refetch changes the screen. `--via` opens that
+// route first and clicks through to <route>, so the layout's poll rate carries across a navigation as for a reader.
 //   node tools/ui/pollwatch.mjs <route> [--minutes 5] [--selector main] [--via <route>] [--team-cookie <file>]
-//
-// `--via` opens that route first and reaches <route> by clicking its rail link, so the layout's
-// poll rate carries across a client navigation as it does for a reader.
 
-import { connect, parseArgs, teamCookie } from "./cdp.mjs";
+import { PHONE, connect, parseArgs, teamCookie } from "./cdp.mjs";
 
 const { flags, positional } = parseArgs(process.argv.slice(2));
 const [route] = positional;
@@ -39,7 +36,7 @@ const install = `(() => {
 
 const cdp = await connect();
 await cdp.setCookie(teamCookie(flags));
-await cdp.setViewport(390, 844);
+await cdp.setViewport(PHONE.width, PHONE.height);
 await cdp.open(flags.via ?? route, 3500);
 await cdp.js(install);
 if (flags.via) {

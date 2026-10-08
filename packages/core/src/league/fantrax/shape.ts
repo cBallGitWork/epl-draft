@@ -51,7 +51,8 @@ export function shapeOf(value: unknown, prefix = ""): Set<string> {
 interface ShapeDiff {
   /** In the reference and absent from the subject, unexplained: the dangerous list, each one read as `undefined`. */
   missing: string[];
-  /** In the reference and absent only because its collection came back empty, as before a draft; counted, never listed. */
+  /** In the reference and absent only because its collection came back empty in every instance, as before a draft;
+   *  counted, never listed. */
   emptied: string[];
   /** In the subject only: ordinarily harmless, and reported so a person judges. */
   added: string[];
@@ -71,9 +72,12 @@ function isSentinel(path: string): boolean {
 
 /** What the subject has that the reference does not, and the reverse, sorted so a person can scan it. */
 export function diffShapes(reference: Set<string>, subject: Set<string>): ShapeDiff {
+  const filled = [...subject].filter((path) => !isSentinel(path));
+  // Empty only where nothing filled sits under it: a goalie subtotal's `[]` beside ten full rows hides no lost field.
   const empties = [...subject]
     .filter(isSentinel)
-    .map((path) => path.slice(0, path.lastIndexOf(":")));
+    .map((path) => path.slice(0, path.lastIndexOf(":")))
+    .filter((stem) => !filled.some((path) => inside(path, stem)));
 
   const absent = [...reference].filter((path) => !subject.has(path) && !isSentinel(path));
   const emptied = absent.filter((path) => empties.some((stem) => inside(path, stem)));

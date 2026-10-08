@@ -1,13 +1,6 @@
-// The shared CDP client every instrument in this drawer stands on: only what they all need lives here.
-//
-// It talks to an ALREADY-RUNNING headless Chrome and never launches one, since killing a launched browser is where
-// two agents on one machine tread on each other. Start one with:
-//
-//   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
-//     --headless=new --disable-gpu --remote-debugging-port=$CDP_PORT \
-//     --no-first-run --user-data-dir=<fresh dir> about:blank &
-//
-// Environment: CDP_PORT (default 9261), BASE_URL (default http://localhost:3000), TEAM_COOKIE (a signed team cookie).
+// The CDP client every instrument stands on. It drives an ALREADY-RUNNING headless Chrome on CDP_PORT and never
+// launches one, since killing a launched browser is how two agents on one machine tread on each other: start one as
+// .claude/skills/shoot/SKILL.md does. BASE_URL and TEAM_COOKIE are read from the environment too.
 
 import { readFileSync } from "node:fs";
 
@@ -26,6 +19,13 @@ function fittedScale(width, height, scale) {
   while (fitted > 1 && width * fitted * height * fitted > CAPTURE_CEILING) fitted -= 1;
   return fitted;
 }
+
+/** The reference phone and desk the instruments measure at: viewports, not devices. */
+export const PHONE = { width: 390, height: 844 };
+export const DESK = { width: 1440, height: 900 };
+
+/** The widths an audit walks every route at, both at the desk's height. */
+export const AUDIT_WIDTHS = [PHONE.width, DESK.width];
 
 /** `--flag value` pairs pulled out of argv; positionals returned in order. */
 export function parseArgs(argv) {
@@ -63,6 +63,11 @@ export async function discover(cdp, route, selector, settle = 2200) {
     );
   }
   return href;
+}
+
+/** The team cookie on the host the instruments open: one set on localhost is never sent to 127.0.0.1. */
+export function teamCookieFor(value, base) {
+  return { name: "team", value, domain: new URL(base).hostname, path: "/" };
 }
 
 export async function connect() {
@@ -107,7 +112,7 @@ export async function connect() {
     setCookie: async (value) => {
       if (value === null) return;
       await send("Network.enable", {});
-      await send("Network.setCookie", { name: "team", value, domain: "localhost", path: "/" });
+      await send("Network.setCookie", teamCookieFor(value, process.env.BASE_URL ?? BASE_URL));
     },
 
     /** Viewport, with the scale stepped down if the surface would not survive capture (CAPTURE_CEILING). */

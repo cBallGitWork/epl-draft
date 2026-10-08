@@ -1,12 +1,8 @@
-// Does the section rail still fit on the narrowest phone anybody owns?
-//
+// Does the section rail fit the narrowest phones: each label its plate, the rail the screen now and with one more
+// section (Live comes and goes), and what is left for the page. A label is its tab's LAST `<span>`, read off the rail.
 //   node tools/ui/navfit.mjs [320 360 390 430] [--team-cookie <file>]
-//
-// Three questions: does each label fit its plate, does the rail fit the screen now and with one more section (Live
-// comes and goes), and what does it leave the page. Labels are read out of the rail, never carried here.
-// A tab's label is its LAST `<span>`; the first is its figure, a glyph or the Live tab's score, measured on its own.
 
-import { connect, parseArgs, teamCookie } from "./cdp.mjs";
+import { PHONE, connect, parseArgs, teamCookie } from "./cdp.mjs";
 
 const { flags, positional } = parseArgs(process.argv.slice(2));
 const widths = positional.length ? positional.map(Number) : [320, 360, 390, 430];
@@ -65,7 +61,7 @@ await cdp.setCookie(teamCookie(flags));
 
 let failures = 0;
 for (const width of widths) {
-  await cdp.setViewport(width, 844);
+  await cdp.setViewport(width, PHONE.height);
   await cdp.open("/league", 2500);
   const out = JSON.parse(await cdp.js(MEASURE));
 

@@ -1,21 +1,19 @@
-// Every tappable thing on every route, against the floor its width has (docs/rules/PRODUCT.md).
-//
+// Every tappable thing on every route, against the floor its width has (docs/rules/PRODUCT.md). It names what is under
+// the floor and never decides: the exceptions below are read out on every run, not hidden.
 //   node tools/ui/tapfit.mjs [--team-cookie <file>]
-//
-// It names what is under the floor and never decides: the exceptions below are read out on every run, not hidden.
 
-import { connect, discover, parseArgs, teamCookie } from "./cdp.mjs";
+import { AUDIT_WIDTHS, DESK, PHONE, connect, discover, parseArgs, teamCookie } from "./cdp.mjs";
 import { ALL_ROUTES, FRONT_PAGE, playedMatchRoutes, playerRoutes } from "./routes.mjs";
 
 /** This run's routes: the shared list plus the ids discovered below; a copy, so `routes.mjs` stays a declaration. */
 const ROUTES = [...ALL_ROUTES];
 
 /** Under a thumb everything is 44; above `lg` a `.cm-row` row relaxes to 28 and a control to 36. */
-const PHONE = 44;
+const THUMB = 44;
 const DESK_ROW = 28;
 const DESK_CONTROL = 36;
 /** PRODUCT.md's rows at 36 under a thumb: the match screens, `SquadRow` and the Draft tab's tables (`TIGHT_ROW`). */
-const PHONE_TIGHT = 36;
+const THUMB_TIGHT = 36;
 
 // Recorded exceptions, detected by structure and never by label (a label prefix once exempted "FPL" as "FP"):
 // a column head is whatever sits inside a `<th>`; an inline link inside a sentence is a link in a `<p>` with text beside it.
@@ -49,7 +47,7 @@ const cdp = await connect();
 await cdp.setCookie(teamCookie(flags));
 
 // Per-record routes are discovered, never written down: their ids are the league's, FPL's or a story's, and move.
-await cdp.setViewport(390, 900);
+await cdp.setViewport(PHONE.width, DESK.height);
 const team = await discover(cdp, "/squad", 'a[href^="/squad/"]');
 if (team) ROUTES.push(team, ...["transfers", "next", "fixtures", "stats"].map((tab) => `${team}/${tab}`));
 
@@ -73,18 +71,18 @@ if (article) ROUTES.push(article);
 ROUTES.push(...(await playerRoutes(cdp)));
 
 let failures = 0;
-for (const width of [390, 1440]) {
+for (const width of AUDIT_WIDTHS) {
   for (const route of ROUTES) {
-    await cdp.setViewport(width, 900);
+    await cdp.setViewport(width, DESK.height);
     await cdp.open(route, 2200);
     const all = JSON.parse(await cdp.js(MEASURE));
     const phone = width < 1024;
     const floor = (item) =>
-      phone ? (item.tight ? PHONE_TIGHT : PHONE) : item.row ? DESK_ROW : DESK_CONTROL;
+      phone ? (item.tight ? THUMB_TIGHT : THUMB) : item.row ? DESK_ROW : DESK_CONTROL;
     const under = all.filter((item) => item.h < floor(item));
     const known = under.filter((item) => item.known);
     const news = under.filter((item) => !item.known);
-    const tight = phone ? all.filter((item) => item.tight && !item.known && item.h >= PHONE_TIGHT && item.h < PHONE) : [];
+    const tight = phone ? all.filter((item) => item.tight && !item.known && item.h >= THUMB_TIGHT && item.h < THUMB) : [];
     failures += news.length;
 
     const note = news.length ? `${news.length} UNDER FLOOR` : "ok";

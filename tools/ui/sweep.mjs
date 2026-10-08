@@ -1,19 +1,14 @@
-// Contrast and overflow across every route at both widths: does any text fail WCAG AA against the ground it is
-// painted on, and does the document scroll sideways.
-//
+// Contrast and overflow on every route at both audit widths: text under WCAG AA on its ground, and a sideways scroll.
+// Text on an SVG ground is "not auditable here", a work list to check by eye and never a pass.
 //   node tools/ui/sweep.mjs [--base http://localhost:3000] [--team-cookie <file>]
-//
-// Colours are painted over white and over black so the browser converts oklch(), and composited up the real
-// ancestor chain. Text on an SVG ground is counted as "not auditable here", a work list to check by eye, never a pass.
 
-import { BASE_URL, connect, discover, parseArgs, teamCookie } from "./cdp.mjs";
+import { AUDIT_WIDTHS, BASE_URL, DESK, PHONE, connect, discover, parseArgs, teamCookie } from "./cdp.mjs";
 import { ALL_ROUTES, FRONT_PAGE, playedMatchRoutes, playerRoutes } from "./routes.mjs";
 
 /** This run's routes: the shared list plus the ids discovered below; a copy, so `routes.mjs` stays a declaration. */
 const ROUTES = [...ALL_ROUTES];
 
-const WIDTHS = [390, 1440];
-
+// Each colour is painted over white and over black so the browser converts oklch(), then composited up the real ancestors.
 const AUDIT = `(function(){
   var cvs=document.createElement("canvas");cvs.width=cvs.height=1;
   var ctx=cvs.getContext("2d",{willReadFrequently:true});
@@ -72,7 +67,7 @@ await cdp.setCookie(teamCookie(flags));
 
 // Per-record routes are discovered, never written down: their ids are the league's, FPL's or a story's, and move.
 // The team, club and match bars are the app's only per-team and per-club colours, the pairs this exists to measure.
-await cdp.setViewport(390, 900);
+await cdp.setViewport(PHONE.width, DESK.height);
 const team = await discover(cdp, "/squad", 'a[href^="/squad/"]');
 if (team) ROUTES.push(team, ...["transfers", "next", "fixtures", "stats"].map((tab) => `${team}/${tab}`));
 
@@ -96,8 +91,8 @@ const coming = await discover(cdp, "/prem/fixtures", 'a[href^="/prem/match/"]');
 if (coming && coming !== played[0]) ROUTES.push(coming);
 
 let failures = 0;
-for (const width of WIDTHS) {
-  await cdp.setViewport(width, 900);
+for (const width of AUDIT_WIDTHS) {
+  await cdp.setViewport(width, DESK.height);
   for (const route of ROUTES) {
     await cdp.send("Page.navigate", { url: base + route });
     await new Promise((resolve) => setTimeout(resolve, 2200));

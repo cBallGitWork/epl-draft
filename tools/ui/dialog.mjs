@@ -1,26 +1,25 @@
-// Open a dialog, measure it, and prove Escape closes it: none open, tap, one open at a measured width, Escape, none.
-//
+// Open a dialog, measure it, and prove Escape closes it; non-zero when it never opens or survives Escape. The width
+// is printed, not asserted: too wide is a judgement per dialog against docs/rules/DESIGN.md.
 //   node tools/ui/dialog.mjs <route> [--selector '.pitch button'] [--width 390] [--team-cookie <file>]
-//
-// The width is printed, not asserted: too wide is a judgement per dialog against docs/rules/DESIGN.md.
-// Exits non-zero when the dialog never opens, or opens and survives Escape.
 
-import { connect, parseArgs, teamCookie } from "./cdp.mjs";
+import { PHONE, connect, parseArgs, teamCookie } from "./cdp.mjs";
 
 const { flags, positional } = parseArgs(process.argv.slice(2));
 const [route] = positional;
 if (!route) {
-  console.error("usage: node tools/ui/dialog.mjs <route> [--selector '.pitch button'] [--width 390] [--team-cookie <file>]");
+  console.error(
+    `usage: node tools/ui/dialog.mjs <route> [--selector '.pitch button'] [--width ${PHONE.width}] [--team-cookie <file>]`,
+  );
   process.exit(1);
 }
 
 const selector = flags.selector ?? ".pitch button";
-const width = Number(flags.width ?? 390);
+const width = Number(flags.width ?? PHONE.width);
 const openCount = `document.querySelectorAll("dialog[open]").length`;
 
 const cdp = await connect();
 await cdp.setCookie(teamCookie(flags));
-await cdp.setViewport(width, 844);
+await cdp.setViewport(width, PHONE.height);
 // Longer than the default: a signed-in squad page is the slowest render, and a tap before hydration hits a dead button.
 await cdp.open(route, 6000);
 
