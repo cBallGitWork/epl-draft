@@ -2,9 +2,192 @@
   "manifest": {
     "season": "26-27",
     "gameweek": 6,
-    "exportedAt": "2026-10-07T17:10:26.900Z",
-    "rows": 0,
-    "sources": [{ "path": "data/intel/projections/26-27.json", "mtime": "2026-10-07T17:10:26.900960+00:00" }]
+    "exportedAt": "2026-10-08T19:30:23.066Z",
+    "rows": 1,
+    "sources": [
+      {
+        "path": "data/intel/projections/26-27.json",
+        "mtime": "2026-10-08T19:29:16.174314+00:00"
+      }
+    ]
   },
-  "updates": []
+  "updates": [
+    {
+      "at": "2026-10-08T19:29:16.174Z",
+      "since": "2026-10-07T17:10:26.900Z",
+      "gameweek": 6,
+      "moves": [
+        {
+          "code": 223827,
+          "before": 85,
+          "after": 0
+        },
+        {
+          "code": 441264,
+          "before": 64,
+          "after": 0
+        },
+        {
+          "code": 466525,
+          "before": 87,
+          "after": 41
+        },
+        {
+          "code": 180974,
+          "before": 0,
+          "after": 41
+        },
+        {
+          "code": 427637,
+          "before": 33,
+          "after": 73
+        },
+        {
+          "code": 153682,
+          "before": 0,
+          "after": 35
+        },
+        {
+          "code": 503139,
+          "before": 35,
+          "after": 0
+        },
+        {
+          "code": 482973,
+          "before": 52,
+          "after": 21
+        },
+        {
+          "code": 232413,
+          "before": 22,
+          "after": 48
+        },
+        {
+          "code": 434752,
+          "before": 22,
+          "after": 47
+        },
+        {
+          "code": 437505,
+          "before": 16,
+          "after": 40
+        },
+        {
+          "code": 661888,
+          "before": 68,
+          "after": 44
+        },
+        {
+          "code": 566213,
+          "before": 55,
+          "after": 78
+        },
+        {
+          "code": 50175,
+          "before": 47,
+          "after": 68
+        },
+        {
+          "code": 230730,
+          "before": 78,
+          "after": 57
+        },
+        {
+          "code": 155408,
+          "before": 32,
+          "after": 51
+        },
+        {
+          "code": 241293,
+          "before": 39,
+          "after": 58
+        },
+        {
+          "code": 638411,
+          "before": 22,
+          "after": 41
+        },
+        {
+          "code": 226182,
+          "before": 53,
+          "after": 71
+        },
+        {
+          "code": 83299,
+          "before": 33,
+          "after": 16
+        },
+        {
+          "code": 80178,
+          "before": 1,
+          "after": 17
+        },
+        {
+          "code": 173774,
+          "before": 87,
+          "after": 71
+        },
+        {
+          "code": 174594,
+          "before": 22,
+          "after": 6
+        },
+        {
+          "code": 200617,
+          "before": 16,
+          "after": 0
+        },
+        {
+          "code": 549940,
+          "before": 17,
+          "after": 33
+        },
+        {
+          "code": 218997,
+          "before": 31,
+          "after": 17
+        },
+        {
+          "code": 486520,
+          "before": 24,
+          "after": 10
+        },
+        {
+          "code": 155465,
+          "before": 1,
+          "after": 14
+        },
+        {
+          "code": 549912,
+          "before": 15,
+          "after": 28
+        },
+        {
+          "code": 627221,
+          "before": 3,
+          "after": 16
+        },
+        {
+          "code": 226965,
+          "before": 16,
+          "after": 4
+        },
+        {
+          "code": 428580,
+          "before": 75,
+          "after": 63
+        },
+        {
+          "code": 432720,
+          "before": 88,
+          "after": 77
+        },
+        {
+          "code": 543968,
+          "before": 35,
+          "after": 46
+        }
+      ]
+    }
+  ]
 }

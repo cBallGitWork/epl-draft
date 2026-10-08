@@ -2,12 +2,12 @@
  "manifest": {
   "season": "26-27",
   "gameweek": null,
-  "exportedAt": "2026-10-07T17:10:23.180104+00:00",
+  "exportedAt": "2026-10-08T19:29:14.627041+00:00",
   "rows": 666,
   "sources": [
    {
     "path": "data/derived/team_squad/season=26-27/team_squad.parquet",
-    "mtime": "2026-10-07T12:41:50.158451+00:00"
+    "mtime": "2026-10-08T15:49:18.263654+00:00"
    }
   ],
   "fpl": "https://fantasy.premierleague.com/api/bootstrap-static/",
@@ -193,8 +193,8 @@
    ],
    "depthTier": 1,
    "squadNumber": 29,
-   "status": "doubtful",
-   "expectedReturnGw": 6
+   "status": "injured",
+   "expectedReturnGw": 8
   },
   {
    "code": 223340,
@@ -335,7 +335,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
-   "status": "doubtful",
+   "status": "injured",
    "expectedReturnGw": 8
   },
   {
@@ -1109,7 +1109,7 @@
    "depthTier": 0,
    "squadNumber": null,
    "status": "injured",
-   "expectedReturnGw": 6
+   "expectedReturnGw": null
   },
   {
    "code": 49262,
@@ -1784,7 +1784,7 @@
    "depthTier": 2,
    "squadNumber": 7,
    "status": "available",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 155408,
@@ -1797,7 +1797,7 @@
     "CB",
     "CM"
    ],
-   "depthTier": 3,
+   "depthTier": 2,
    "squadNumber": 4,
    "status": "available",
    "expectedReturnGw": null
@@ -1848,7 +1848,7 @@
     "CB",
     "CM"
    ],
-   "depthTier": 2,
+   "depthTier": 1,
    "squadNumber": 4,
    "status": "available",
    "expectedReturnGw": null
@@ -1887,7 +1887,7 @@
    "depthTier": 0,
    "squadNumber": 19,
    "status": "injured",
-   "expectedReturnGw": 8
+   "expectedReturnGw": 7
   },
   {
    "code": 230650,
@@ -2118,9 +2118,9 @@
     "CB",
     "CM"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 8,
-   "status": "doubtful",
+   "status": "injured",
    "expectedReturnGw": 11
   },
   {
@@ -6024,7 +6024,7 @@
    "depthTier": 2,
    "squadNumber": null,
    "status": "available",
-   "expectedReturnGw": 6
+   "expectedReturnGw": null
   },
   {
    "code": 608227,
@@ -6734,9 +6734,9 @@
     "LW",
     "RW"
    ],
-   "depthTier": 0,
+   "depthTier": 2,
    "squadNumber": 8,
-   "status": "injured",
+   "status": "doubtful",
    "expectedReturnGw": 6
   },
   {
@@ -6860,10 +6860,10 @@
     "RM",
     "ST"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 20,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "injured",
+   "expectedReturnGw": 7
   },
   {
    "code": 201595,
@@ -7206,8 +7206,8 @@
    ],
    "depthTier": 4,
    "squadNumber": null,
-   "status": "available",
-   "expectedReturnGw": null
+   "status": "doubtful",
+   "expectedReturnGw": 6
   },
   {
    "code": 592740,
@@ -7444,7 +7444,7 @@
    "depthTier": 1,
    "squadNumber": 18,
    "status": "doubtful",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 424876,
@@ -10124,7 +10124,7 @@
     "LB",
     "RB"
    ],
-   "depthTier": 2,
+   "depthTier": 1,
    "squadNumber": 4,
    "status": "available",
    "expectedReturnGw": null
@@ -10141,7 +10141,7 @@
     "LB",
     "RB"
    ],
-   "depthTier": 3,
+   "depthTier": 2,
    "squadNumber": 13,
    "status": "available",
    "expectedReturnGw": null
@@ -10188,10 +10188,10 @@
     "LB",
     "RB"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 5,
-   "status": "doubtful",
-   "expectedReturnGw": 6
+   "status": "injured",
+   "expectedReturnGw": 11
   },
   {
    "code": 232571,
@@ -10234,7 +10234,7 @@
     "CF",
     "SS"
    ],
-   "depthTier": 2,
+   "depthTier": 1,
    "squadNumber": 18,
    "status": "available",
    "expectedReturnGw": null
@@ -10252,10 +10252,10 @@
     "CF",
     "SS"
    ],
-   "depthTier": 1,
+   "depthTier": 0,
    "squadNumber": 9,
-   "status": "doubtful",
-   "expectedReturnGw": 6
+   "status": "injured",
+   "expectedReturnGw": 8
   },
   {
    "code": 461199,
@@ -10425,7 +10425,7 @@
    "depthTier": 0,
    "squadNumber": 19,
    "status": "injured",
-   "expectedReturnGw": 8
+   "expectedReturnGw": 7
   },
   {
    "code": 549912,
@@ -10530,7 +10530,7 @@
     "CF",
     "SS"
    ],
-   "depthTier": 2,
+   "depthTier": 1,
    "squadNumber": null,
    "status": "available",
    "expectedReturnGw": null
