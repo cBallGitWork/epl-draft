@@ -294,7 +294,6 @@ with its row here in the same commit.**
 | `ROW_HEAD_CELL` | A row's own `<th scope="row">`: no padding and no weight, so the link or name inside sets both. `HEAD_CELL`'s twin down the side. | 3 boards: the planner, its rankings, Teams (8 Oct 2026) |
 | `FACT_LABEL` | The label half of a fact row — takes the room the figure does not, and truncates rather than wrapping. The truncation is the part worth naming: a Fantrax label is a full sentence on some rows, and a row that wraps to three lines stops being a row. | 1 file, `league/Breakdown` (26 Sep 2026) |
 | `SUBMIT` | The button that submits a form it sits inside. | 3 sites |
-| `heldPlate()` | A grey plate held down while what it stands for is chosen (`cm-bevel-pressed`), else raised and lifting under a pointer. Geometry is the caller's. | a sortable column head, Team Stats' measure, the Data board's chips and `PRESSABLE` (8 Oct 2026) |
 | `ROW_HOVER` | `ROW_RULE` plus the surface under a pointer: a board row nobody owns. | 5 Prem boards (23 Sep 2026) |
 | `ROW_HOVER_ON_SURFACE` | `ROW_HOVER` on a board that already sits on the surface, so the hover steps up to raised. | 3 boards: Players, Projections, a player's match log (2 Oct 2026) |
 | `PINNED_TILE` · `PINNED_NAME` | A board's frozen tile (or index block) and its frozen name column; the caller adds where the name starts. `bg-surface` is load-bearing: a transparent one lets the scrolled figures slide under the name. Were `STICKY_LEAD` plus four hand-written copies until 24 Sep 2026. | 6 files |
@@ -302,6 +301,7 @@ with its row here in the same commit.**
 | `PINNED_BESIDE_INDEX` | `PINNED_NAME` starting where a pinned index block ends, at `INDEX_WIDTH`'s offsets. | 3 sites in 2 boards: a player's match log, Teams (2 Oct 2026) |
 | `league/ScrollBoard` | A board that scrolls sideways, with drawn cues under a thumb: a fade while there is more, a gauge docked above the rail, a shadow on the pinned lead once scrolled (`.cm-board`, `desk.css`). A pinned board passes `bg-surface`. | 23 boards (27 Sep 2026) |
 | `TableHeads` `LeadHeads` · `sortedAs` · `SortArrow` | A pinned lead's two bare heads; a `SortHead`'s direction from "is this the column" and "descending"; the ▲/▼ beside a head. | 6 · 9 · 1 sites (30 Sep 2026; the club stats board joined) |
+| `heldPlate()` | A grey plate held down while what it stands for is chosen (`cm-bevel-pressed`), else raised and lifting under a pointer. Geometry is the caller's. | a sortable column head, Team Stats' measure, the Data board's chips and `PRESSABLE` (8 Oct 2026) |
 | `gazette/StoryFace` · `hasPicture` | A story's own picture: its man, else its columnist's photograph, in `.paper-frame`. | 3 sites at 2 ranks (splash; a shoulder's and a brief's card) |
 | `GAMEWEEK_HEAD` · `GAMEWEEK_TITLE` | A gameweek view's header row and title. | 3 files (7 Oct 2026; its loading skeleton went) |
 | `DESK_ONLY` · `standDown()` | A column shown on the desk only; `standDown` keeps it when the table is sorted by it, or the sort arrow and `aria-sort` would hide with it. | 4 files |

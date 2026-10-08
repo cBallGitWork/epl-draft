@@ -81,8 +81,8 @@ export function SortHead({
   /** Nearly unpadded under a thumb, so a narrow column is set by its figures, not its head. */
   compact?: boolean;
 } & ({ href: string; onSort?: never } | { onSort: () => void; href?: never })) {
-  const held = heldPlate(sorted !== undefined);
-  const plate = `flex items-center gap-0.5 whitespace-nowrap ${compact ? COMPACT : "h-7 px-1.5"} ${JUSTIFY[align]} ${held}`;
+  const size = compact ? COMPACT : "h-7 px-1.5";
+  const plate = `flex items-center gap-0.5 whitespace-nowrap ${size} ${JUSTIFY[align]} ${heldPlate(sorted !== undefined)}`;
   const face = (
     <>
       {mute ? <span className={MUTE}>{label}</span> : label}

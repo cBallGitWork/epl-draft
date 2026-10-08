@@ -134,7 +134,7 @@ export const FACT_LABEL = "min-w-0 flex-1 truncate text-sm text-muted";
 /** A form's submit button: `BUTTON`'s height without its flex centring. */
 export const SUBMIT = "cm-bevel min-h-11 px-3 text-sm font-medium lg:min-h-9";
 
-/** A plate that stays down while what it stands for is chosen; up, it lifts under a pointer. Geometry is the caller's. */
+/** A plate held down while its choice stands, else raised and lifting under a pointer. Geometry is the caller's. */
 export function heldPlate(held: boolean): string {
   return held ? "cm-bevel-pressed" : "cm-bevel hover:brightness-110";
 }
