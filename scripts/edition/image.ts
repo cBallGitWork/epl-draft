@@ -3,19 +3,9 @@ import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 import { MODEL_TIMEOUT_MS, OPENAI_IMAGES_URL, type PublishedStory } from "@epl/core";
 
-// The splash picture: one image for the paper's lead, drawn in CI.
-//
-// **An editorial cartoon, never a photograph and never a likeness.** A drawing
-// sits on newsprint the way a photograph does not, and it sidesteps the whole
-// question of putting a generated face on a real footballer — which is the one
-// thing this paper must not do. DESIGN's own rule already says a wrong
-// photograph is worse than none.
-//
-// **Every failure here is silent and costs the picture, never the paper.** The
-// prose is already written and validated by the time this runs; a paper with a
-// headline and no drawing is a paper, and a run that failed after filing would
-// throw away a column that cost a model call. So this returns null on anything
-// going wrong — no key, a refusal, a bad payload — and the caller carries on.
+// The splash picture for the paper's lead, drawn in CI: an editorial cartoon, never a photograph and never a likeness
+// of a real footballer. Any failure (no key, a refusal, a bad payload) returns null and costs the picture, never the
+// paper: the column is already written and paid for.
 
 const MODEL = process.env.GAZETTA_IMAGE_MODEL ?? "gpt-image-1";
 

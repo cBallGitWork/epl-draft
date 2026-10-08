@@ -122,9 +122,6 @@ export async function gatherRoundFacts(
       ...(trades === null ? [] : mapTransactions(trades, "TRADE")),
     ]),
     doubts: squads === null ? [] : availability(squads.teams),
-    // Where each man was taken. Empty until a draft completes, which is the real
-    // league's state until 10 Oct — and an empty map means the brief says
-    // nothing about pedigree rather than calling every squad undrafted.
     table: standingsPage === null ? [] : mapStandings(standingsPage),
     news:
       wire === null || squads === null
@@ -134,6 +131,7 @@ export async function gatherRoundFacts(
             // An item about nobody we hold is not our story, and filing it
             // would be the paper reprinting the BBC.
             .filter((story) => story.affected.length > 0),
+    // Where each man was taken; empty before a draft, so no brief calls every squad undrafted.
     pedigree: new Map(
       (draft === null ? [] : mapDraftPicks(draft)).map((taken) => [taken.fantraxId, taken]),
     ),

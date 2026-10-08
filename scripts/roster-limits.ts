@@ -76,7 +76,7 @@ function minimumsInForce(html: string): boolean {
   return /id="chkMinActivePerPositionUsed"[^>]*checked="checked"/.test(html);
 }
 
-/** All three, keyed by league id, so the 10 Oct swap is a config change and not
+/** All three, keyed by league id, so a league swap is a config change and not
  *  another run of this. The real league answers even with no teams in it: this
  *  is the commissioner's settings page, and settings exist before members do. */
 async function main(): Promise<void> {

@@ -1,16 +1,9 @@
 import { createHmac, randomBytes } from "node:crypto";
 import { FANTRAX_LEAGUE_ID, fetchLeagueInfo, mapLeagueInfo, requireLeague } from "@epl/core";
 
-// Hands the commissioner one code per team, and the environment variable that
-// lets the app check them.
-//
-// Run it once per league, print the codes, distribute them, then throw this
-// output away. The codes are not stored anywhere: the deployment holds an HMAC of
-// each, so a leaked TEAM_CODES gives nobody a code. A leaked SESSION_SECRET does
-// sign in as anyone: rotate it and reissue every code. A lost code is reissued.
-//
-// Deliberately not automated into capture or CI. It writes a secret to a
-// terminal, which is a thing a person should be present for.
+// One code per team for the commissioner, and TEAM_CODES (an HMAC of each) for the app. The codes are kept nowhere:
+// a leaked TEAM_CODES gives nobody a code, but a leaked SESSION_SECRET signs in as anyone, so rotate it and reissue.
+// Run by hand, never in capture or CI: it prints secrets to a terminal.
 
 /** Crockford-ish base32, without the letters that get misread aloud or in a
  *  handwritten note: no I, L, O, U. */
@@ -18,7 +11,7 @@ const ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 
 /** Eight characters of this alphabet is forty bits. There is no rate limiter in
  *  front of the sign-in, so length is most of the defence — at one guess per
- *  round trip, sixteen targets in a trillion is a long afternoon. */
+ *  round trip, ten targets in a trillion is a long afternoon. */
 const CODE_LENGTH = 8;
 
 function code(): string {
@@ -31,11 +24,8 @@ async function main(): Promise<void> {
   requireLeague(FANTRAX_LEAGUE_ID);
   const secret = process.env.SESSION_SECRET;
   if (!secret) {
-    // Names the file, because there are two and only one of them is the one the
-    // app verifies against. The last line is the constraint the code cannot
-    // state, and its absence is what made the old message dangerous: it read as
-    // "generate a secret", which against a file that already has one silently
-    // invalidates every code already issued under it.
+    // Names the file, since only one of the two is the one the app verifies against; the last line stops a
+    // new secret going over one that already signs every code issued.
     console.error(
       "SESSION_SECRET is not in apps/companion/.env.local, which is the file the app\n" +
         "verifies codes against. Add it there, and the same value in the deployment:\n" +

@@ -24,7 +24,7 @@ export interface Subject {
   ownerName: string | null;
 }
 
-/** One profile per player for everybody: four tabs and sixteen phones ask Fantrax once. The
+/** One profile per player for everybody: four tabs and every phone ask Fantrax once. The
  *  refusal is caught inside, because a `FantraxError` thrown through the cache need not arrive as one. */
 const readProfile = leagueCache("player-profile", async (fantraxId: string) => {
   const raw = await orRefusal(fetchPlayerProfile(FANTRAX_LEAGUE_ID, fantraxId));
