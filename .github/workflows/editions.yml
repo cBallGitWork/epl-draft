@@ -41,7 +41,7 @@ on:
     # 24 times a week, until 1 Oct 2026). Locks land Friday evening or Saturday lunchtime; match
     # reports and tie calls file as games finish, Friday and Monday evenings included.
     #
-    # **Friday opens at 14:00 UTC**, for the Line-Ups column at 16:00 London (#33): 15:00 London is
+    # **Friday opens at 14:00 UTC**, early for the Team Sheet at 16:30 London and the Line-Ups at 17:00: 15:00 London is
     # 14:00 UTC in summer and 15:00 in winter.
     - cron: "0,30 14-23 * * 5"
     - cron: "0,30 10-22 * * 6"
@@ -59,10 +59,10 @@ on:
     # after the last Wednesday firing.
     - cron: "0,30 17-22 * * 3"
     - cron: "15 6-9 * * 4"
-    # **Thursday afternoon and evening**: the Team Sheet from 16:30 London (15:30 UTC in summer,
-    # 16:30 in winter) and Lawro from 18:00, so the band opens at 15:00 UTC and runs to 20:30;
-    # Friday's band catches a skipped evening.
-    - cron: "0,30 15-20 * * 4"
+    # **Thursday evening**: the Team Sheet from 18:00 London and Lawro from 20:00 (17:00 and 19:00
+    # UTC in summer, 18:00 and 20:00 in winter), so the band runs 17:00 to 20:30 UTC; Friday's
+    # band catches a skipped evening.
+    - cron: "0,30 17-20 * * 4"
   workflow_dispatch: {}
 
 # Its own group, deliberately NOT shared with the capture or scout-xi jobs:
