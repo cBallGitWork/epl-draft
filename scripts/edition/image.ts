@@ -40,7 +40,7 @@ export interface Splash {
 export async function drawSplash(story: PublishedStory): Promise<Splash | null> {
   const key = process.env.OPENAI_API_KEY;
   if (!key) {
-    say("No OPENAI_API_KEY; filing without a picture.");
+    console.log("No OPENAI_API_KEY; filing without a picture.");
     return null;
   }
 
@@ -60,14 +60,14 @@ export async function drawSplash(story: PublishedStory): Promise<Splash | null> 
       signal: AbortSignal.timeout(MODEL_TIMEOUT_MS),
     });
     if (!response.ok) {
-      say(`Image API answered ${response.status}; filing without a picture.`);
+      console.log(`Image API answered ${response.status}; filing without a picture.`);
       return null;
     }
 
     const body = (await response.json()) as { data?: { b64_json?: string }[] };
     const encoded = body.data?.[0]?.b64_json;
     if (typeof encoded !== "string" || encoded === "") {
-      say("Image API returned no picture; filing without one.");
+      console.log("Image API returned no picture; filing without one.");
       return null;
     }
 
@@ -80,11 +80,7 @@ export async function drawSplash(story: PublishedStory): Promise<Splash | null> 
       alt: subject,
     };
   } catch (error) {
-    say(`Could not draw the splash (${String(error)}); filing without a picture.`);
+    console.log(`Could not draw the splash (${String(error)}); filing without a picture.`);
     return null;
   }
-}
-
-function say(message: string): void {
-  console.log(message);
 }

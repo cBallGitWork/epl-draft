@@ -12,25 +12,25 @@ export const DRAFT_FRAMES: readonly string[] = [
 ];
 
 /** What a draft report never prints: invented speech, a press conference, and the league's own banned words. */
-export const DRAFT_SPEECH: readonly string[] = [
+const DRAFT_SPEECH: readonly string[] = [
   "said", "says", "told", "admitted", "insisted", "claimed", "revealed", "press conference", "presser", "asked about",
   "held him", "holds him", "held and",
 ];
 
 /** Who is still to play is the fixture list, never a manager's choice. */
-export const DRAFT_CHOICE: readonly string[] = [
+const DRAFT_CHOICE: readonly string[] = [
   "keep back", "keeps back", "kept back", "held back", "holding back", "saving", "saved for", "in reserve", "waiting for", "waiting in",
   "chose", "chosen", "choose", "picked", "selected", "opted",
 ];
 
 /** Why a man did not play is not in the facts: the brief says he did not, and nothing more. */
-export const DRAFT_REASONS: readonly string[] = ["left out", "absent", "missing", "dropped", "rested", "benched", "omitted", "sidelined", "unavailable", "missed out"];
+const DRAFT_REASONS: readonly string[] = ["left out", "absent", "missing", "dropped", "rested", "benched", "omitted", "sidelined", "unavailable", "missed out"];
 
 /** The brief's own labels, which a writer copies into print, and titles the league has not given ("the champions"). */
 export const DRAFT_LABELS: readonly string[] = ["the twist", "the cast", "may be left out", "beats", "champion", "champions", "title holders", "the holders"];
 
 /** A minute belongs to its own match, never measured against another's. */
-export const DRAFT_CLOCK: readonly string[] = [
+const DRAFT_CLOCK: readonly string[] = [
   "minutes earlier", "minutes later", "minutes before", "minutes after", "minute earlier", "minute later",
   "minutes-earlier", "minutes-later", "minute-earlier", "minute-later",
 ];

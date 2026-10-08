@@ -70,7 +70,7 @@ function storyOf(sides: readonly PredictionSide[]): { side: PredictionSide; man:
 }
 
 /** A man's last games in a sentence, when they say something: form, a quiet spell, or a return. */
-export function streak(man: SquadMan): string | null {
+function streak(man: SquadMan): string | null {
   const games = man.recent;
   if (games.length < PREDICTIONS.recentGames) return null;
   const last = games[games.length - 1];

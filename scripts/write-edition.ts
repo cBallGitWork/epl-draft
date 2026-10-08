@@ -261,9 +261,7 @@ function commissioner(ctx: DeskContext, paper: readonly PublishedStory[], now: s
 }
 
 
-function say(message: string): void {
-  console.log(message);
-}
+const say: (message: string) => void = console.log;
 
 main().catch((error: unknown) => {
   console.error(error instanceof FantraxError ? `${error.code}: ${error.message}` : error);

@@ -69,7 +69,7 @@ export function sendBack(phrases: readonly string[]): string {
 /** The headline rule, and the paper's one indulgence: the Football Italia paper review, James
  *  Richardson reading out a Gazzetta pun over a coffee, entirely deadpan. The joke is in the
  *  wordplay and never in the delivery: a headline that winks at you has already failed. */
-export const HEADLINE = `THE HEADLINE, in two steps, and this is the paper's one indulgence. FIRST decide the story in plain words and put THAT in "deck", for example "test2 beat test3331 49-40, Cunha's eight the top score". THEN write "headline" as wordplay on the story you just wrote down. Never pun first and find the story afterwards. That is how a headline ends up about nothing that happened.
+const HEADLINE = `THE HEADLINE, in two steps, and this is the paper's one indulgence. FIRST decide the story in plain words and put THAT in "deck", for example "test2 beat test3331 49-40, Cunha's eight the top score". THEN write "headline" as wordplay on the story you just wrote down. Never pun first and find the story afterwards. That is how a headline ends up about nothing that happened.
 
 The register is James Richardson reading out a Gazzetta headline on Football Italia. It is a deadpan, football-literate pun on a manager's team name, a player's surname or the scoreline, delivered with an absolutely straight face and never explained. Playful and clever, never cheesy and never forced. It should make a reader smile. It must never announce that it is trying to. The groan is earned, not signalled. No exclamation marks, no nudging, no "so to speak", no winking at your own joke. It must never simply restate the deck in other words.
 

@@ -14,7 +14,7 @@ import { SEASON_CODE_LIFE } from "./config";
 // One team's season table, read once for its two readers: two caches on one key would be two definitions of it.
 
 /** The season code: Fantrax defaults every stat read to a projection, and one endpoint publishes it. Cached hard. */
-export const yearToDate = leagueCache(
+const yearToDate = leagueCache(
   "fantrax-season-code",
   async (): Promise<string | undefined> => {
     const raw = await orRefusal(fetchPoolStats(FANTRAX_LEAGUE_ID, 1));

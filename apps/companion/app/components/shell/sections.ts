@@ -35,7 +35,7 @@ export interface Section {
 export type GroupKey = "comps";
 
 /** A phone tab that stands for several sections. */
-export const GROUPS: Record<GroupKey, { label: string; fullLabel: string; glyph: GlyphName }> = {
+const GROUPS: Record<GroupKey, { label: string; fullLabel: string; glyph: GlyphName }> = {
   comps: { label: "Comps", fullLabel: "Competitions", glyph: "comps" },
 };
 
