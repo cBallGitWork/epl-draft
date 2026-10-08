@@ -1,0 +1,104 @@
+{
+  "slug": "gw6-predictions",
+  "kind": "predictions",
+  "leagueId": "mqsjd23smsgbiqzr",
+  "period": 6,
+  "gameweek": 6,
+  "filedAt": "2026-10-08T18:53:07.618Z",
+  "expiresAt": null,
+  "edition": "The Form Guide",
+  "byline": "",
+  "reporter": "Mark Lawrenson",
+  "headline": "Lawro's Predictions: GW6",
+  "deck": "Lawro backs the outsiders twice this week, Cowthenbeef over The Truffle Pigs and GlengarryHearts over Bayern Bru.",
+  "body": "Five ties, ten managers, and not a point among any of them. Twenty-two years of predictions on the BBC, and now it's a draft league's paper. Next stop is the parish newsletter.",
+  "subjects": [
+    "predictions:gw6"
+  ],
+  "image": null,
+  "face": null,
+  "ties": [
+    {
+      "homeTeamId": "qgucu9dgmufwva1x",
+      "awayTeamId": "7to6xosimu8hyyw5",
+      "line": "its_ohi are flaky, and I don't trust them an inch. If anyone can, Bannan can's Gibbs-White has a gentle trip to Crystal Palace, and he'll waste it. Kind fixtures always go begging, I've watched it for years.\n\nits_ohi's B.Fernandes has dried up, with Tottenham coming to Manchester United. its_ohi's Brobbey is injured. its_ohi.",
+      "callsTeamId": "qgucu9dgmufwva1x",
+      "score": {
+        "home": 31,
+        "away": 30
+      },
+      "face": {
+        "code": 222531,
+        "name": "Gibbs-White",
+        "clubId": 18,
+        "position": null
+      }
+    },
+    {
+      "homeTeamId": "l5kunst8msgbirdf",
+      "awayTeamId": "0g0j5mkomuqqwsbu",
+      "line": "I'd doubt The Raccoons most weeks, but not this one. The Raccoons' Gonzalo goes to Ipswich Town, who defend like a garden gate. The Raccoons have Haaland as well, and he's found the net twice running for Manchester City.\n\ndomeitalycoach went to the waiver list and came back with five men. Somebody else's cast-offs, every one. The Raccoons, and nobody needs telling why.",
+      "callsTeamId": "l5kunst8msgbirdf",
+      "score": {
+        "home": 33,
+        "away": 27
+      },
+      "face": {
+        "code": 551466,
+        "name": "Gonzalo",
+        "clubId": 10,
+        "position": null
+      }
+    },
+    {
+      "homeTeamId": "uexqrijomu8l5asi",
+      "awayTeamId": "ipnp5y4mmu9j7kop",
+      "line": "AtleticoTimHortons strike me as reliable, and I don't say that lightly. Hazza Maguazza's Redempshazza's Tarkowski has Hull City away, and they couldn't score in an empty net. One defender never won anybody anything.\n\nAtleticoTimHortons's Semenyo is a slight doubt. AtleticoTimHortons's Groß has scored in each of Brighton & Hove Albion's past two games. Runs like that end, every one of them. AtleticoTimHortons, while Groß lasts.",
+      "callsTeamId": "uexqrijomu8l5asi",
+      "score": {
+        "home": 33,
+        "away": 27
+      },
+      "face": {
+        "code": 17761,
+        "name": "Tarkowski",
+        "clubId": 9,
+        "position": null
+      }
+    },
+    {
+      "homeTeamId": "aekx2715mtzgcl3f",
+      "awayTeamId": "7z8fy0pnmuogbtdw",
+      "line": "The Truffle Pigs are tenth and somehow favourites. I'm going against them, because the back lines point the other way. Bassey for Cowthenbeef goes to Ipswich Town, who don't score. Verbruggen, also of Cowthenbeef, has Sunderland. The Truffle Pigs send both their men at the back to Sunderland too. Three of them stuck watching Sunderland, and I'd not wish that on anybody. Rice of The Truffle Pigs is a slight doubt. They call this the War of Cowdenbeath. I've seen fiercer queues at the post office.\n\nCowthenbeef.",
+      "callsTeamId": "7z8fy0pnmuogbtdw",
+      "instinct": "defence",
+      "score": {
+        "home": 34,
+        "away": 35
+      },
+      "face": {
+        "code": 232892,
+        "name": "Bassey",
+        "clubId": 10,
+        "position": null
+      }
+    },
+    {
+      "homeTeamId": "kpj0z744muh1qwtd",
+      "awayTeamId": "syjkob6cmuobagfu",
+      "line": "I've never rated Bayern Bru, and I'm not starting now. They're expected to win, and I don't agree. GlengarryHearts have Isak and Virgil, and Manchester City coming to Liverpool won't bother either of them. Isak has a good game in him, anybody can see that.\n\nBayern Bru's Mbeumo has gone two games without a goal or an assist, and nobody at Manchester United will notice. GlengarryHearts's Schade has two goals and two assists from his past couple for Brentford. GlengarryHearts.",
+      "callsTeamId": "syjkob6cmuobagfu",
+      "instinct": "liverpool",
+      "score": {
+        "home": 35,
+        "away": 36
+      },
+      "face": {
+        "code": 219168,
+        "name": "Isak",
+        "clubId": 14,
+        "position": null
+      }
+    }
+  ]
+}

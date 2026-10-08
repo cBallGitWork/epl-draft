@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T18:36:36.501Z",
+  "updatedAt": "2026-10-08T18:53:07.618Z",
   "stories": [
     {
       "slug": "news-cmrr48zqz1jno",
@@ -7915,14 +7915,14 @@
       "leagueId": "mqsjd23smsgbiqzr",
       "period": 6,
       "gameweek": 6,
-      "filedAt": "2026-10-08T17:08:20.389Z",
+      "filedAt": "2026-10-08T18:53:07.618Z",
       "expiresAt": null,
       "edition": "The Form Guide",
       "byline": "",
       "reporter": "Mark Lawrenson",
       "headline": "Lawro's Predictions: GW6",
-      "deck": "Lawro's first column in the Gazetta sides with Cowthenbeef and GlengarryHearts against the fancied teams.",
-      "body": "Five ties, nobody has kicked a ball, and I've already seen enough. Twenty-two years predicting scores on the BBC, and now I'm scraping the bottom of a fantasy draft league's paper.",
+      "deck": "Lawro backs the outsiders twice this week, Cowthenbeef over The Truffle Pigs and GlengarryHearts over Bayern Bru.",
+      "body": "Five ties, ten managers, and not a point among any of them. Twenty-two years of predictions on the BBC, and now it's a draft league's paper. Next stop is the parish newsletter.",
       "subjects": [
         "predictions:gw6"
       ],
@@ -7932,7 +7932,7 @@
         {
           "homeTeamId": "qgucu9dgmufwva1x",
           "awayTeamId": "7to6xosimu8hyyw5",
-          "line": "its_ohi are flaky, and I'm backing them anyway. Gibbs-White has Crystal Palace away, a fixture handed to him on a plate. He'll waste it, they always do. B.Fernandes and Cunha both play for Manchester United, who have Tottenham Hotspur at home. B.Fernandes has gone quiet, no goal and no assist in two games. Two men from one club is twice the misery when United have one of their days. its_ohi edge it, and nobody will enjoy watching.",
+          "line": "its_ohi are flaky, and I don't trust them an inch. If anyone can, Bannan can's Gibbs-White has a gentle trip to Crystal Palace, and he'll waste it. Kind fixtures always go begging, I've watched it for years.\n\nits_ohi's B.Fernandes has dried up, with Tottenham coming to Manchester United. its_ohi's Brobbey is injured. its_ohi.",
           "callsTeamId": "qgucu9dgmufwva1x",
           "score": {
             "home": 31,
@@ -7948,7 +7948,7 @@
         {
           "homeTeamId": "l5kunst8msgbirdf",
           "awayTeamId": "0g0j5mkomuqqwsbu",
-          "line": "The Raccoons are a side I don't trust, but they're the better lot here. Gonzalo is away at Ipswich Town, and that defence is softer than a wet loaf. Haaland has scored in each of his last two for Manchester City. domeitalycoach went to the waiver list five times this week. Five men nobody else wanted. Havertz, of Arsenal, gets Leeds United and hasn't done a thing in a fortnight. The Raccoons, and I'll be asleep by the second half.",
+          "line": "I'd doubt The Raccoons most weeks, but not this one. The Raccoons' Gonzalo goes to Ipswich Town, who defend like a garden gate. The Raccoons have Haaland as well, and he's found the net twice running for Manchester City.\n\ndomeitalycoach went to the waiver list and came back with five men. Somebody else's cast-offs, every one. The Raccoons, and nobody needs telling why.",
           "callsTeamId": "l5kunst8msgbirdf",
           "score": {
             "home": 33,
@@ -7964,7 +7964,7 @@
         {
           "homeTeamId": "uexqrijomu8l5asi",
           "awayTeamId": "ipnp5y4mmu9j7kop",
-          "line": "AtleticoTimHortons sit top, and I've never trusted anybody top in October. Tarkowski has a trip to Hull City, whose attack couldn't score in a raffle. He'll keep them quiet and it still won't be enough. Groß has scored in back-to-back games for Brighton & Hove Albion. He'll stop the minute I trust him. Semenyo is a slight doubt. AtleticoTimHortons win it, and it'll be a slog to sit through.",
+          "line": "AtleticoTimHortons strike me as reliable, and I don't say that lightly. Hazza Maguazza's Redempshazza's Tarkowski has Hull City away, and they couldn't score in an empty net. One defender never won anybody anything.\n\nAtleticoTimHortons's Semenyo is a slight doubt. AtleticoTimHortons's Groß has scored in each of Brighton & Hove Albion's past two games. Runs like that end, every one of them. AtleticoTimHortons, while Groß lasts.",
           "callsTeamId": "uexqrijomu8l5asi",
           "score": {
             "home": 33,
@@ -7980,7 +7980,7 @@
         {
           "homeTeamId": "aekx2715mtzgcl3f",
           "awayTeamId": "7z8fy0pnmuogbtdw",
-          "line": "Cowthenbeef are the steadier side, and I'm going against the favourites here. It's all about the back line. Bassey is away at Ipswich Town, who couldn't hit a barn door. Verbruggen has Sunderland away. The Truffle Pigs send Vuskovic and F.Kadıoğlu to Sunderland as well. I played centre-half, and I'd take a trip to Ipswich Town every week. None of it will be pretty, a clean sheet never is. Cowthenbeef.",
+          "line": "The Truffle Pigs are tenth and somehow favourites. I'm going against them, because the back lines point the other way. Bassey for Cowthenbeef goes to Ipswich Town, who don't score. Verbruggen, also of Cowthenbeef, has Sunderland. The Truffle Pigs send both their men at the back to Sunderland too. Three of them stuck watching Sunderland, and I'd not wish that on anybody. Rice of The Truffle Pigs is a slight doubt. They call this the War of Cowdenbeath. I've seen fiercer queues at the post office.\n\nCowthenbeef.",
           "callsTeamId": "7z8fy0pnmuogbtdw",
           "instinct": "defence",
           "score": {
@@ -7997,7 +7997,7 @@
         {
           "homeTeamId": "kpj0z744muh1qwtd",
           "awayTeamId": "syjkob6cmuobagfu",
-          "line": "GlengarryHearts have the better footballers where it matters. Bayern Bru are fancied, and I'm siding against them. Isak is the finest finisher in this tie, and that's plain to anybody. Virgil defends like it's still worth doing properly. Liverpool have Manchester City coming, and neither man will be bothered by it. It's the big game of the weekend, and it'll be cagey. They always are. GlengarryHearts, and I'll sit through every dull minute of it.",
+          "line": "I've never rated Bayern Bru, and I'm not starting now. They're expected to win, and I don't agree. GlengarryHearts have Isak and Virgil, and Manchester City coming to Liverpool won't bother either of them. Isak has a good game in him, anybody can see that.\n\nBayern Bru's Mbeumo has gone two games without a goal or an assist, and nobody at Manchester United will notice. GlengarryHearts's Schade has two goals and two assists from his past couple for Brentford. GlengarryHearts.",
           "callsTeamId": "syjkob6cmuobagfu",
           "instinct": "liverpool",
           "score": {
