@@ -588,7 +588,10 @@ print red for exactly that reason, and `.crest` restores it.
 
 **Sections with nothing to say do not appear.** An edition padded out with "no
 transactions this week" is a worse paper than a shorter one. When there is
-nothing at all, one of three `Nothing` panels renders, and which one matters:
+nothing at all, one of three silences renders (`gazette/Silence`), set as the
+sheet sets a story: the provider's tell as a standing head, then a headline and
+its deck in the paper's faces, never the desk's `shell/Nothing` (8 Oct 2026).
+Which one matters:
 
 - `unavailable` — Fantrax is not answering. The league is fine.
 - `undrafted` — no teams yet. **Our real league is in this state until 10 Oct.**
@@ -650,10 +653,10 @@ CODE_RULES §4 names. It stays duplicated until the roles it serves are split.
 
 **The display block is one component across three renderers** (8 Oct 2026). `Splash`, the desk's own lead
 (`Stories`) and `Written` each set the same headline, standfirst and 24px rule under the same inverted chip;
-`gazette/StoryHead` draws the three and exports the chip as `KICKER`. Two things are the caller's: the chip's
-paragraph, because the lead's follows its picture and takes a margin the others do not, and the headline's step
-at width (`rank`, the front page's or an article's). The paper's own 404 sets an `h1` a step tighter, unbalanced,
-and keeps its standfirst and rule written out: two of each.
+`gazette/StoryHead` draws the three, and the front page's silences under their tell (`Silence`), and exports the
+chip as `KICKER`. Two things are the caller's: the chip's paragraph, because the lead's follows its picture and takes
+a margin the others do not, and the headline's step at width (`rank`, the front page's or an article's). The paper's
+own 404 sets an `h1` a step tighter, unbalanced, and keeps its standfirst and rule written out: two of each.
 
 **The page turn** is `document.startViewTransition`, driven by `TurnLink` — the
 paper's only client component. Not React's `<ViewTransition>`, which ships only
