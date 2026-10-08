@@ -3,7 +3,7 @@
 import Link from "@/app/components/shell/Link";
 import type { LiveTie } from "./liveTie";
 import { usePathname } from "next/navigation";
-import { DASH } from "@epl/core";
+import { DASH, trails } from "@epl/core";
 import { SMALL_CAPS } from "@/app/desk";
 import { LIVE, owns } from "./sections";
 
@@ -14,8 +14,6 @@ export default function LiveStrip({ yours, theirs, opponent, href }: LiveTie) {
   const pathname = usePathname();
   // The front page owns only itself, since every path starts with "/".
   if (pathname === "/" || owns([LIVE], pathname)) return null;
-
-  const behind = yours !== null && theirs !== null && yours < theirs;
 
   return (
     <Link
@@ -29,9 +27,9 @@ export default function LiveStrip({ yours, theirs, opponent, href }: LiveTie) {
       </span>
       <span className="numeric flex items-baseline gap-1.5 text-base font-bold">
         {/* The trailing side dims, so the ground is league-deep: on full league red a dimmed cream is 2.96:1. */}
-        <span className={behind ? "opacity-70" : undefined}>{yours ?? DASH}</span>
+        <span className={trails(yours, theirs) ? "opacity-70" : undefined}>{yours ?? DASH}</span>
         <span className="text-2xs opacity-60">v</span>
-        <span className={behind ? undefined : "opacity-70"}>{theirs ?? DASH}</span>
+        <span className={trails(theirs, yours) ? "opacity-70" : undefined}>{theirs ?? DASH}</span>
       </span>
       <span className="min-w-0 truncate text-2xs opacity-80">{opponent}</span>
     </Link>
