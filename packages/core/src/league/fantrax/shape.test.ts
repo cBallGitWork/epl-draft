@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import played from "./__fixtures__/liveScoringPlayed.json";
 import { diffShapes, shapeOf } from "./shape";
 
 describe("shapeOf", () => {
@@ -118,6 +119,30 @@ describe("diffShapes", () => {
     const diff = diffShapes(before, after);
     expect(diff.missing).toEqual(["draftType:string"]);
     expect(diff.emptied).toEqual(["rows[].id:string"]);
+  });
+
+  it("does not let one empty instance hide a field its filled siblings lost", () => {
+    // A goalie subtotal's `object2` is `[]` beside ten men's full ones: the collection is not empty, the field is gone.
+    const reference = shapeOf({ statsMap: { "05g2o": { object2: [{ fpts: 2 }] }, _5020: { object2: [] } } });
+    const subject = shapeOf({ statsMap: { "05g2o": { object2: [{ points: 2 }] }, _5020: { object2: [] } } });
+    const diff = diffShapes(reference, subject);
+    expect(diff.missing).toEqual(["statsMap{}.object2[].fpts:number"]);
+    expect(diff.emptied).toEqual([]);
+  });
+
+  it("catches a per-category field renamed in a recorded live-scoring payload", () => {
+    const renamed = JSON.parse(JSON.stringify(played)) as typeof played;
+    for (const team of Object.values(renamed.statsPerTeam.allTeamsStats)) {
+      for (const man of Object.values(team.ACTIVE.statsMap) as { object2: Record<string, unknown>[] }[]) {
+        for (const row of man.object2) {
+          row.points = row.fpts;
+          delete row.fpts;
+        }
+      }
+    }
+    expect(diffShapes(shapeOf(played), shapeOf(renamed)).missing).toEqual([
+      "statsPerTeam.allTeamsStats{}.ACTIVE.statsMap{}.object2[].fpts:number",
+    ]);
   });
 
   it("does not let one empty field swallow a longer name beside it", () => {
