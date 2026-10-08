@@ -31,9 +31,10 @@ on the phone: *"remove the yellow title for space"*, *"Mobile needs more room fo
 position title on the left here. Put position elsewhere"*, *"Remove opponent as well"*, *"Tighten the column
 headers too?"*. Where the sections below disagree with this one, this one is current.
 
-- **Phone-first order**: `FPts FP/G Min GP G AT A AF CS DC DC+ GAO GA Sv PKS YC RC PKM OG Ros +/-`. `DC` and `DC+`
+- **Phone-first order**: `FPts FP/G Min GP G AT A AF CS DC DC+ DCP GAO GA Sv PKS YC RC PKM OG Ros +/-`. `DC` and `DC+`
   are the league's DefCon counts, Fantrax's `DFP` and `DFP3` (Craig, 6 Oct 2026: *"data page needs our dfp and dfp3
-  stats"*). Six figures sit
+  stats"*); `DCP` is our DefCon points beside them, in cyan and never marked, drawn only where the league prices DefCon
+  (Craig, 8 Oct 2026). Six figures sit
   beside a name at 390 (FPts to AT), five at 360, since the lead widened for the name on 1 Oct 2026 (it was
   seven and six). **Opp is gone** at both widths; the next fixture is the planner's question.
 - **The lead** is pinned (`players/BoardRow`, shared with Projections): crest, then the name with **who holds

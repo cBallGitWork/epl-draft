@@ -18,6 +18,8 @@ import {
 import { POOL } from "./routes";
 import { columnsIn, groupFor } from "./groups";
 import { figureOf } from "./figure";
+import { DEFCON_POINTS } from "./columns";
+import { defconPricing, poolPositions } from "../defcon";
 import { attributeStats } from "./attributeColumns";
 import { divisionGrids } from "./[fantraxId]/grid";
 import { cutsFor } from "./standout";
@@ -36,12 +38,13 @@ export default async function PlayersPage({
 }: {
   searchParams: Promise<PlayersSearchParams>;
 }) {
-  const [pool, asked, lines, reader, grids] = await Promise.all([
+  const [pool, asked, lines, reader, grids, pricing] = await Promise.all([
     getLeaguePool(),
     searchParams,
     getPlayerStats(),
     readerTeamId(),
     divisionGrids(),
+    defconPricing(),
   ]);
   const query = playersQuery(asked);
 
@@ -59,10 +62,13 @@ export default async function PlayersPage({
     );
   }
 
-  // Our attribute ratings ride in the same bag, so the Attributes plate sorts and marks like any count.
+  // Our attribute ratings and DefCon points ride in the same bag, so they sort and filter like any count.
+  const defcon = pricing?.(poolPositions(pool.rows));
   for (const row of pool.rows) {
+    const id = row.entry.player.fantraxId;
     const grid = row.fplCode === null ? undefined : grids.get(row.fplCode);
-    if (grid !== undefined) raw.set(row.entry.player.fantraxId, { ...raw.get(row.entry.player.fantraxId), ...attributeStats(grid) });
+    const ours = { ...(grid === undefined ? {} : attributeStats(grid)), ...(defcon === undefined ? {} : { [DEFCON_POINTS]: defcon[id] }) };
+    if (Object.keys(ours).length > 0) raw.set(id, { ...raw.get(id), ...ours });
   }
 
   const shown = shownRows(pool.rows, query, raw);
@@ -71,6 +77,8 @@ export default async function PlayersPage({
   const group = groupFor(query.group);
   const rated = isPer90(query);
   const scored = new Set(lines.flatMap((line) => Object.keys(line.stats)));
+  // An empty set keeps every column, so ours joins only one the read filled.
+  if (defcon !== undefined && scored.size > 0) scored.add(DEFCON_POINTS);
   const columns = columnsIn(group, activeSort(query).key, scored);
 
   // Cut over the rows drawn, so a mark means the top of what is in front of you.

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { defConAt, defConPoints, defConScored, type DefConPeriod } from "./defcon";
+import { bestDefConPoints, defConAt, defConPoints, defConScored, type DefConPeriod } from "./defcon";
 import { mapLeagueInfo } from "./fantrax/map";
 import real from "./fantrax/__fixtures__/leagueInfoScoringReal.json";
 import rehearsal from "./fantrax/__fixtures__/leagueInfoScoringRehearsal.json";
@@ -74,5 +74,21 @@ describe("defConPoints", () => {
   it("refuses a period that held two of his matches, or lacks a count", () => {
     expect(defConPoints(rules, codes, "D", [once(3, 9), { played: 2, counts: { DFP: 8, DFP3: 20 } }])).toBeNull();
     expect(defConPoints(rules, codes, "D", [{ played: 1, counts: { DFP3: 9 } }])).toBeNull();
+  });
+});
+
+describe("bestDefConPoints", () => {
+  const rules = realScoring.rules;
+  const codes = defConScored(realScoring.categories).map((category) => category.short);
+  const once = (DFP: number, DFP3: number): DefConPeriod => ({ played: 1, counts: { DFP, DFP3 } });
+
+  it("pays a forward-midfielder at whichever position his counts earn more", () => {
+    expect(bestDefConPoints(rules, codes, ["F", "M"], [once(0, 6), once(0, 9)])).toBe(3);
+    expect(bestDefConPoints(rules, codes, ["M"], [once(0, 6), once(0, 9)])).toBe(1);
+  });
+
+  it("says nothing where no position prices DefCon or none is given", () => {
+    expect(bestDefConPoints(rules, codes, ["G"], [once(5, 11)])).toBeNull();
+    expect(bestDefConPoints(rules, codes, [], [once(5, 11)])).toBeNull();
   });
 });

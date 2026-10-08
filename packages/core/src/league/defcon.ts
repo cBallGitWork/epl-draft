@@ -57,3 +57,15 @@ export function defConPoints(
   }
   return played ? total : null;
 }
+
+/** His DefCon points at whichever of `slots` pays most: a free agent's eligible positions, or the one slot he fills.
+ *  Null when none of them prices any. */
+export function bestDefConPoints(
+  rules: ScoringRules,
+  categories: readonly string[],
+  slots: readonly string[],
+  periods: readonly DefConPeriod[],
+): number | null {
+  const priced = slots.flatMap((slot) => defConPoints(rules, categories, slot, periods) ?? []);
+  return priced.length === 0 ? null : Math.max(...priced);
+}

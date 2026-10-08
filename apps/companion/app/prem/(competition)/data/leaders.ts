@@ -1,8 +1,8 @@
 import { type FigureKind, type SeasonTotals, PLACES, fixed } from "@epl/core";
 
-// The Data tab's lists: one season figure per man, best first, the top ten and the top fifty on asking.
+// The Data tab's lists: one season figure per man, best first, the top twenty and the top fifty on asking.
 
-export const TOP = 10;
+export const TOP = 20;
 export const MOST = 50;
 
 /** One man's claim to a place on a list. */
@@ -16,8 +16,16 @@ export interface Ranked extends Leader {
   rank: number;
 }
 
-/** Where a list's figure comes from: FPL's season counts, our marks, or the served league's Fantrax points. */
-export type Source = { fpl: (season: SeasonTotals) => number } | "rating" | "points";
+/** Where a list's figure comes from: FPL's season counts, our marks, the served league's Fantrax points, or our
+ *  DefCon points. */
+export type Source = { fpl: (season: SeasonTotals) => number } | "rating" | "points" | "defcon";
+
+/** The desk's rows of lists, each under its own plate. */
+export const SECTIONS = [
+  { key: "attacking", title: "Attacking" },
+  { key: "fantasy", title: "Fantasy" },
+  { key: "defending", title: "Defending" },
+] as const;
 
 export interface LeaderList {
   key: string;
@@ -29,17 +37,18 @@ export interface LeaderList {
   source: Source;
   /** The kind of figure, which sets its places: a list ranks on the figure it prints, so two who read alike share a place. */
   kind: FigureKind;
+  section: (typeof SECTIONS)[number]["key"];
 }
 
 export const LISTS: readonly LeaderList[] = [
-  { key: "goals", title: "Top scorers", head: "G", explain: "Goals", source: { fpl: (s) => s.goals }, kind: "count" },
-  { key: "xg", title: "Expected goals", head: "xG", explain: "FPL's expected goals", source: { fpl: (s) => s.expectedGoals }, kind: "expected" },
-  { key: "rating", title: "Match ratings", head: "Rtg", explain: "His average mark", source: "rating", kind: "rating" },
-  { key: "points", title: "Fantrax points", head: "FPts", explain: "Fantasy points, under this league's scoring", source: "points", kind: "count" },
-  { key: "assists", title: "Assists", head: "A", explain: "Assists", source: { fpl: (s) => s.assists }, kind: "count" },
-  { key: "xa", title: "Expected assists", head: "xA", explain: "FPL's expected assists", source: { fpl: (s) => s.expectedAssists }, kind: "expected" },
-  { key: "cleanSheets", title: "Clean sheets", head: "CS", explain: "Clean sheets, as FPL counts them", source: { fpl: (s) => s.cleanSheets }, kind: "count" },
-  { key: "saves", title: "Saves", head: "Sv", explain: "Saves", source: { fpl: (s) => s.saves }, kind: "count" },
+  { key: "goals", title: "Top scorers", head: "G", explain: "Goals", source: { fpl: (s) => s.goals }, kind: "count", section: "attacking" },
+  { key: "assists", title: "Assists", head: "A", explain: "Assists", source: { fpl: (s) => s.assists }, kind: "count", section: "attacking" },
+  { key: "xg", title: "Expected goals", head: "xG", explain: "FPL's expected goals", source: { fpl: (s) => s.expectedGoals }, kind: "expected", section: "attacking" },
+  { key: "xa", title: "Expected assists", head: "xA", explain: "FPL's expected assists", source: { fpl: (s) => s.expectedAssists }, kind: "expected", section: "attacking" },
+  { key: "points", title: "Fantrax points", head: "FPts", explain: "Fantasy points, under this league's scoring", source: "points", kind: "count", section: "fantasy" },
+  { key: "rating", title: "Match ratings", head: "Rtg", explain: "His average mark", source: "rating", kind: "rating", section: "fantasy" },
+  { key: "defcon", title: "DefCon points", head: "DCP", explain: "DefCon points, worked out per match, at his slot or a free agent's best position", source: "defcon", kind: "count", section: "defending" },
+  { key: "saves", title: "Saves", head: "Sv", explain: "Saves", source: { fpl: (s) => s.saves }, kind: "count", section: "defending" },
 ];
 
 /** A figure as its list prints it, the British way: `1,234`, `4.42`, `7.2`. */
@@ -53,9 +62,9 @@ export function asPrinted(list: LeaderList, figure: number): number {
   return Math.round(figure * scale) / scale;
 }
 
-/** The list asked for, or the first: a stale key in a shared link still shows a list. */
-export function listFor(key: string | undefined): LeaderList {
-  return LISTS.find((list) => list.key === key) ?? LISTS[0];
+/** The list asked for among those offered, or the first: a stale key in a shared link still shows a list. */
+export function listFor(key: string | undefined, lists: readonly LeaderList[] = LISTS): LeaderList {
+  return lists.find((list) => list.key === key) ?? lists[0];
 }
 
 /** The best `n`, biggest first and then by name; a nought earns no place, and level figures share one. */

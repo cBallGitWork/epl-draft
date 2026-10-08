@@ -158,7 +158,7 @@ export {
 } from "./categoryNames";
 export type { FantraxCategory } from "./categoryNames";
 export { wordsFor, wordsOf } from "./categoryWords";
-export { defConAt, defConPoints, defConScored } from "./defcon";
+export { bestDefConPoints, defConAt, defConPoints, defConScored } from "./defcon";
 export type { DefConPeriod } from "./defcon";
 export type { GroupKey, Measure, StatCategory } from "./categories";
 export { mapPlayerStats, KEEPER, OUTFIELD } from "./fantrax/playerStats";

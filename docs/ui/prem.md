@@ -177,15 +177,20 @@ places, as FPL publishes them.
 
 Craig, 1 Oct 2026: *"simple list like top scorer, top xg, top fantasy ratings etc
 in a list, not a link to data section, with a top 50 for each"*. Eight lists,
-each the top ten with a `Top 50` plate under it (`?list=…&n=50`): top scorers,
-expected goals, match ratings, Fantrax points, assists, expected assists,
-clean sheets, saves. On the desk all eight stand four across, and the one asked for
-runs to fifty. A phone gets a picker and one list at a time.
+each the top twenty with a `Top 50` plate under it (`?list=…&n=50`), in three sections
+(Craig, 8 Oct 2026: *"show a top 20 as default, and organise it better"*): Attacking
+(top scorers, assists, expected goals, expected assists), Fantasy (Fantrax points,
+match ratings) and Defending (DefCon points, saves). Clean sheets went the same day:
+too many men share a place. On the desk Attacking stands four across and the other
+two share the row beneath, and the one asked for runs to fifty. A phone gets a picker
+and one list at a time.
 
 - **One figure per list, and a list that is not FPL's says whose it is**: *Match
   ratings* in cyan, the derived slot (the average of his marks
-  once he is rated in half as many matches as the most-rated man), and *Fantrax
-  points* in its bar (the served league's own, never beside FPL's count of anything).
+  once he is rated in half as many matches as the most-rated man), *DefCon points*
+  in cyan too (ours, as on a squad's Stats tab; absent where the league prices no
+  DefCon), and *Fantrax points* in its bar (the served league's own, never beside
+  FPL's count of anything).
 - **A list ranks on the figure it prints**, so two marks that both read 6.3
   share a place, and a nought earns none.
 - A man who has left the division is off every list (`onTheBooks`).

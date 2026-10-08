@@ -243,7 +243,9 @@ the served league's rules: the rehearsal's in production and the dummy's, every 
   (`scripts/scoring.ts`, `readScoring()`). The draft desk's DefCon and keeper bonus stay what Fantrax paid this week.
 - **DefCon points on a squad's Stats tab** (`DCP`, 1 Oct): DefCon pays per match, so each stats-league period begun
   so far is read once (a finished one held a day) and its `DFP`/`DFP3` priced as one match at the man's roster slot
-  (`league/defcon.ts`). A period holding two of his matches prices nothing rather than guess the split.
+  (`league/defcon.ts`). A period holding two of his matches prices nothing rather than guess the split. Since 8 Oct
+  the same figure is on Prem › Data and the Players board (`app/defcon.ts`): an owned man at his roster slot, a free
+  agent at whichever eligible position pays more (only the 71 `F,M` men have two, and a forward's band never pays less).
 - **A range is read off the settings mirror, never the string.** `scoringCategorySettings` gives each band (`start`,
   `end`, `points`, `interval`), `rangeType` and `cumulative`; the string table has no `cumulative`. The real league's
   outfield minutes were `1|1` cumulative until 1 Oct (2 for 90) and are `1|2` non-cumulative now. Checked on the

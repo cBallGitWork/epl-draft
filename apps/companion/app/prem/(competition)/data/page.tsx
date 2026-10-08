@@ -8,35 +8,49 @@ import { getLeaguePool } from "../../../players/pool";
 import { seasonMarks } from "../../../ratings";
 import LeaderBoard, { type Row } from "./LeaderBoard";
 import QuerySelect from "../../../components/shell/QuerySelect";
-import { LISTS, MOST, TOP, asPrinted, listFor, ranked, seasonRatings, type Leader, type LeaderList } from "./leaders";
+import { defconPricing, poolPositions } from "../../../defcon";
+import { HEADING_PLATE } from "@/app/desk";
+import { LISTS, MOST, SECTIONS, TOP, asPrinted, listFor, ranked, seasonRatings, type Leader, type LeaderList } from "./leaders";
 
 // The season's leaders as plain lists, each to fifty on asking (Craig, 1 Oct 2026).
-// A phone shows the list its picker names; the desk shows every list, the asked one to fifty.
+// A phone shows the list its picker names; the desk shows every list by section, the asked one to fifty.
 
 // Must equal PAGE_REVALIDATE in config.ts: Next reads it statically, so it cannot be imported.
 export const revalidate = 30;
 
 type Search = Promise<{ list?: string; n?: string }>;
 
-/** The phone's picker, one entry a list. */
-const PICKS = LISTS.map((list) => ({ value: list.key, label: list.title }));
+/** A section's span and columns on the desk, by how many lists it holds; written out for Tailwind. */
+const SPAN: Record<number, string> = {
+  1: "lg:col-span-1 lg:grid-cols-1",
+  2: "lg:col-span-2 lg:grid-cols-2",
+  3: "lg:col-span-3 lg:grid-cols-3",
+  4: "lg:col-span-4 lg:grid-cols-4",
+};
 
 export default async function DataPage({ searchParams }: { searchParams: Search }) {
   const query = await searchParams;
-  const asked = listFor(query.list);
   const longest = query.n === String(MOST);
 
-  const [snapshot, league, pool] = await Promise.all([footballNow(), leagueOpinions(), getLeaguePool()]);
+  const [snapshot, league, pool, pricing] = await Promise.all([footballNow(), leagueOpinions(), getLeaguePool(), defconPricing()]);
+  // A league that prices no DefCon has no DefCon list.
+  const lists = LISTS.filter((list) => list.source !== "defcon" || pricing !== null);
+  const asked = listFor(query.list, lists);
   const players = snapshot.players.filter(onTheBooks);
   const byCode = playerByCode(snapshot);
   const clubs = clubById(snapshot);
 
-  // Fantrax's points by FPL code, and only for a season played rather than projected.
+  // Fantrax's points by FPL code, and only for a season played rather than projected; our DefCon points beside them.
   const points = new Map<number, number>();
-  if (!("unavailable" in pool) && pool.season?.projected !== true) {
+  const defcon = new Map<number, number>();
+  if (!("unavailable" in pool)) {
+    const priced = pricing?.(poolPositions(pool.rows));
     for (const row of pool.rows) {
-      const figure = row.stats?.points ?? null;
-      if (row.fplCode !== null && figure !== null) points.set(row.fplCode, figure);
+      if (row.fplCode === null) continue;
+      const figure = pool.season?.projected === true ? null : (row.stats?.points ?? null);
+      if (figure !== null) points.set(row.fplCode, figure);
+      const ours = priced?.[row.entry.player.fantraxId] ?? null;
+      if (ours !== null) defcon.set(row.fplCode, ours);
     }
   }
   const ratings = seasonRatings(seasonMarks());
@@ -46,7 +60,7 @@ export default async function DataPage({ searchParams }: { searchParams: Search 
     if (typeof source === "object") {
       return players.map((p) => ({ code: p.code, name: p.name, figure: asPrinted(list, source.fpl(p.season)) }));
     }
-    const figures = source === "rating" ? ratings : points;
+    const figures = source === "rating" ? ratings : source === "points" ? points : defcon;
     return [...figures].flatMap(([code, figure]) => {
       const player = byCode.get(code);
       return player === undefined || !onTheBooks(player) ? [] : [{ code, name: player.name, figure: asPrinted(list, figure) }];
@@ -59,22 +73,40 @@ export default async function DataPage({ searchParams }: { searchParams: Search 
       return { ...leader, club: player === undefined ? undefined : clubs.get(player.clubId), href: poolHref(league, leader.code) };
     });
 
+  const picks = lists.map((list) => ({ value: list.key, label: list.title }));
+
   return (
     <PremShell current="data">
       <div className="flex items-center gap-2 border-b border-line px-2 py-1.5 lg:hidden">
-        <QuerySelect name="list" label="List" value={asked.key} options={PICKS} action={DATA} />
+        <QuerySelect name="list" label="List" value={asked.key} options={picks} action={DATA} />
       </div>
       <div className="grid items-start gap-2 lg:grid-cols-4">
-        {LISTS.map((list) => {
-          const open = list.key === asked.key && longest;
+        {SECTIONS.map((section) => {
+          const held = lists.filter((list) => list.section === section.key);
+          if (held.length === 0) return null;
           return (
-            <LeaderBoard
-              key={list.key}
-              list={list}
-              rows={rowsOf(list, open ? MOST : TOP)}
-              more={{ href: open ? `${DATA}?list=${list.key}` : `${DATA}?list=${list.key}&n=${MOST}`, label: open ? `Top ${TOP}` : `Top ${MOST}` }}
-              className={list.key === asked.key ? "" : "max-lg:hidden"}
-            />
+            <section
+              key={section.key}
+              aria-labelledby={`data-${section.key}`}
+              className={`grid items-start gap-2 ${SPAN[held.length]} ${held.includes(asked) ? "" : "max-lg:hidden"}`}
+            >
+              {/* On a phone the picker above already names the one list it shows. */}
+              <h2 id={`data-${section.key}`} className={`${HEADING_PLATE} col-span-full max-lg:sr-only`}>
+                {section.title}
+              </h2>
+              {held.map((list) => {
+                const open = list.key === asked.key && longest;
+                return (
+                  <LeaderBoard
+                    key={list.key}
+                    list={list}
+                    rows={rowsOf(list, open ? MOST : TOP)}
+                    more={{ href: open ? `${DATA}?list=${list.key}` : `${DATA}?list=${list.key}&n=${MOST}`, label: open ? `Top ${TOP}` : `Top ${MOST}` }}
+                    className={list.key === asked.key ? "" : "max-lg:hidden"}
+                  />
+                );
+              })}
+            </section>
           );
         })}
       </div>

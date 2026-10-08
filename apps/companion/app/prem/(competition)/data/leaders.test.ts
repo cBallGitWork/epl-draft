@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { asPrinted, listFor, printed, ranked, seasonRatings } from "./leaders";
+import { LISTS, asPrinted, listFor, printed, ranked, seasonRatings } from "./leaders";
 
 const man = (code: number, name: string, figure: number) => ({ code, name, figure });
 
@@ -45,5 +45,13 @@ describe("the lists' figures", () => {
 
   it("falls back to the top scorers for a key it does not know", () => {
     expect(listFor("nonsense").key).toBe("goals");
+  });
+});
+
+describe("listFor", () => {
+  it("falls back to the first list offered when the asked one is not", () => {
+    const offered = LISTS.filter((list) => list.key !== "defcon");
+    expect(listFor("defcon", offered).key).toBe("goals");
+    expect(listFor("defcon").key).toBe("defcon");
   });
 });
