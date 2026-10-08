@@ -4306,7 +4306,7 @@ minutes cross: `minutesIntel` drops the points, which stay behind `PROJECTIONS_S
 
 - **Flat after next week**: GW7–17 are one repeated figure for 289 of 537 men (Haaland 85, then 85.7 to GW17).
   The card prints them as they are; it is the model saying it knows nothing new, not a fault.
-- **Freshness**: the pressers runs (Thu 16:00, Fri 12:30, 16:00, 17:45) take projections too since 7 Oct, from the
+- **Freshness**: the pressers runs (Thu 16:00, Fri 12:30, 15:45, 17:45) take projections too since 7 Oct, from the
   sister's Thu and Fri 16:30 full sweeps ("after the pressers"): the 17:45 Friday run carries Friday's conferences.
 - **The scout's letter** (Craig: *"the xmins up/down mail when it's more than 10"*, *"just report the mins"*,
   *"could run at anytime as they can update on a Tuesday"*). Every intel run, Tuesday's or a pressers one, ends in
