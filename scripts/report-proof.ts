@@ -21,14 +21,14 @@ import { gatherRoundFacts } from "./edition/facts";
 import { matchdayInput } from "./edition/matchday";
 import { writeReports } from "./edition/reportsWriter";
 import { proofText } from "./edition/reportsProofText";
-import { storyOfColumn } from "./edition/newsroom";
+import { storyOfColumn, type Say } from "./edition/newsroom";
 import { STORY_BYLINE, editionName } from "./edition/voice/bylines";
 
 // A match-day report for a past gameweek, written to scratch and never to the paper, so Craig can read it before anything files.
 // GAZETTA_GAMEWEEK=5 with GAZETTA_FIXTURES=48 (FPL fixture ids) or GAZETTA_DAY=2026-09-19; DRY_RUN=1 prints the brief only.
 // Test mode unless GAZETTA_FULL=1: the first match alone and no send-back, since Opus bills every call (8 Oct 2026).
 
-const say: (message: string) => void = console.log;
+const say: Say = console.log;
 
 async function main(): Promise<void> {
   if (process.env.CI) throw new Error("report:proof is a local proof and never runs in CI.");

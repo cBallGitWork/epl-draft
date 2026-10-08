@@ -1,6 +1,6 @@
 import { DASH } from "@epl/core";
 import type { InboxItem } from "@epl/core";
-import { FANTRAX_LEAGUE_PAGE, FANTRAX_PENDING_PATH, londonDayAndDate, londonTime } from "@epl/core";
+import { FANTRAX_PENDING_PATH, londonDayAndDate, londonTime } from "@epl/core";
 import Letter from "./Letter";
 import MailRow from "./MailRow";
 import Mailbox from "./Mailbox";
@@ -10,6 +10,7 @@ import Nothing from "../components/shell/Nothing";
 import OutLink from "../components/shell/OutLink";
 import { BUTTON } from "../components/shell/ButtonLink";
 import PageHeader from "../components/shell/PageHeader";
+import { fantraxPage } from "../fantraxPages";
 import { readInbox } from "./inbox";
 import { ownerTag } from "./owner";
 import { NEWS } from "../titles";
@@ -43,7 +44,7 @@ export default async function NewsPage({
 
       {/* Fantrax shows a manager's pending claims and trades only to his own session (PLATFORM_NOTES, 1 Oct 2026). */}
       <OutLink
-        href={`${FANTRAX_LEAGUE_PAGE}/${FANTRAX_PENDING_PATH}`}
+        href={fantraxPage(FANTRAX_PENDING_PATH)}
         className={`${BUTTON} lg:self-start ${chosen === null ? "" : "max-lg:hidden"}`}
       >
         Pending claims and trades on Fantrax

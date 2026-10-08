@@ -29,13 +29,7 @@ function londonInstant(day: string, hour: number, minute: number): string {
   return new Date(wallClockInstant(Date.UTC(year, month - 1, date, hour, minute), LEAGUE_TIMEZONE)).toISOString();
 }
 
-/** The export, with ONE ROW PER LINE.
- *
- *  Pretty-printing every field put 144 objects across 1,129 lines — eight lines
- *  of braces each — so a single changed signal read as an eight-line diff. The
- *  sister repo's `shots` and `touches` go the other way and are one line for the
- *  whole file, which cannot be reviewed at all. This is the middle: the shape is
- *  readable and each row is one greppable, diffable line. */
+/** The export with one row per line: the shape stays readable and a changed signal is a one-line diff. */
 function exportJson(doc: { manifest: unknown; spoke: unknown[]; quotes: unknown[]; rows: unknown[] }): string {
   const list = (name: string, rows: unknown[]): string =>
     rows.length === 0

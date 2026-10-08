@@ -70,6 +70,9 @@ export const SEASON_RANKINGS = {
   together: 0.5,
   /** A squad is clear at the top when the next is at least this many places behind it on average. */
   clear: 1,
+  /** Each side's line: sentences at least and at most, and words at most; the opening's sentences, at least and at most. */
+  line: [1, 2, 30],
+  opening: [2, 3],
 } as const;
 
 /** The team sheets at the lock: when a benched man is news, and how much the article carries. */
@@ -115,9 +118,10 @@ export const REPORTS = {
     ordinary: { account: [120, 190], sections: 2, stats: 8 },
     dead: { account: [60, 110], sections: 1, stats: 6 },
   },
-  /** Words a standfirst and a section may run to. */
+  /** Words a standfirst and a section may run to, and a sentence before the editor warns. */
   standfirstWords: 25,
   sectionWords: [20, 45],
+  sentenceWords: 35,
   /** A burst is two goals by one side this close; a clean sheet let go from this minute went late. */
   burstMinutes: 15,
   cleanSheetLostFrom: 75,

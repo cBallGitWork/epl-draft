@@ -34,7 +34,7 @@ capture season-specific tradeoffs.
   left alone: a log that gets edited to agree with the present is not a log.)
   Nothing in the CODE reads the number — team count is `getLeagueInfo.teamInfo`
   (§3), which answers an empty object for the real league until managers join.
-  The one place ten appears is `PANEL_ROWS` in `app/league/Shell.tsx`, and that
+  The one place ten appears is `PANEL_FLOOR` in `app/league/Shell.tsx`, and that
   is a floor on how tall a panel is drawn, not a claim about the competition:
   the league's own count wins whenever it is larger.
 - A dummy league carries GW1–GW5. It is drafted early and deliberately small, so

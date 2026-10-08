@@ -44,6 +44,7 @@ import { deskState, seasonOpening } from "./edition/desk";
 import { deskContext } from "./edition/context";
 import { fire, type Run } from "./edition/firing";
 import { printStory, readLedger, readPaperStories, saveFiling } from "./edition/persist";
+import type { Say } from "./edition/newsroom";
 
 // The newsroom's orchestrator, run from CI on a wide cron net: each firing files the top of the running order up to the
 // cap, saving each story before the next, and CI commits them. Those commits run no CI, so the shape checks in
@@ -237,8 +238,7 @@ function commissioner(ctx: DeskContext, paper: readonly PublishedStory[], now: s
   };
 }
 
-
-const say: (message: string) => void = console.log;
+const say: Say = console.log;
 
 main().catch((error: unknown) => {
   console.error(error instanceof FantraxError ? `${error.code}: ${error.message}` : error);
