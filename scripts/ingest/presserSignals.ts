@@ -36,8 +36,8 @@ const SAYS: { tag: string; re: RegExp }[] = [
   { tag: "suspended", re: /\b(suspended|suspension|red card|(?:three|two|four|match|domestic)[- ]match ban|(?:match|domestic)[- ]ban|serves? [^.]{0,40}\bban\b)/i },
   // "is out OF CONTRACT" is not an absence, and neither is out of favour or
   // out of sorts. The preposition is the whole difference.
-  { tag: "ruled_out", re: /\b(ruled out|will miss|set to miss|miss out|miss the|sit out(?! on)|remain out|are out|is out)(?! of (?:contract|favour|favor|form|sorts|the running))\b|\b(sidelined|unavailable|not travel)\b/i },
-  { tag: "available", re: /\b(returns|is back|back in|available again|has trained|in contention|is fit|fit to play|able to play|(?:is|are)(?: also)? fine|no problem|cleared)\b/i },
+  { tag: "ruled_out", re: /\b(ruled out|will miss|set to miss|miss out|miss the|sit out(?! on)|remain out|are out|is out|(?:will|set to|expected to|going to) be out)(?! of (?:contract|favour|favor|form|sorts|the running))\b|\b(sidelined|unavailable|not travel)\b/i },
+  { tag: "available", re: /\b(returns|returned to (?:\w+ )?training|back training|is back|back in|available again|has trained|in contention|is fit|fit to play|able to play|(?:is|are)(?: also)? fine|no problem|cleared)\b/i },
   { tag: "injury_scare", re: /\b(doubt|assess|scan|wait|cautious|final decision|late|fitness|injur|knock|struggl|closer|not clarify|didn.t clarify|possible|pulled out)\b/i },
   // Managing a man's load, never the word "minutes" alone — "has played the
   // most minutes of any Chelsea midfielder" is praise, not a rotation warning.
@@ -50,10 +50,14 @@ const SAYS: { tag: string; re: RegExp }[] = [
 const DENIED =
   /\b(no one|nobody|none of|neither)\b[^.]{0,40}\b(ruled out|out|suspended|missing|miss)\b|\bnot (?:been )?(?:ruled out|out|suspended|missing)\b|\b(?:will|would|does|do|did|is|are|wo)n[o']?t? (?:not )?miss\b|\b(?:will|would|does|do|did) not miss\b|\bno (?:new|fresh|further|known) (?:concerns|issues|injuries|problems)\b/i;
 
+/** "Reinildo is back, having served a one-match ban": a ban that is over leaves a man available. */
+const SERVED = /\b(?:is|are) back\b|\bback from (?:a |his |their )?(?:ban|suspension)\b|\bban is over\b/i;
+
 export function classify(sentence: string): string | null {
   for (const each of SAYS) {
     if (!each.re.test(sentence)) continue;
     if (each.tag === "ruled_out" && DENIED.test(sentence)) return "injury_scare";
+    if (each.tag === "suspended" && SERVED.test(sentence)) return "available";
     return each.tag;
   }
   return null;
@@ -71,6 +75,12 @@ function condition(sentence: string, name: string): string | undefined {
     return UNNAMED.test(what) ? undefined : what;
   }
   return undefined;
+}
+
+/** The complaint a sentence states in words rather than brackets: "with a hamstring injury". */
+function stated(sentence: string): string | undefined {
+  const what = sentence.match(/\bwith an? ([a-z]{3,20}) (?:injury|problem|issue|strain)\b/i)?.[1].toLowerCase();
+  return what === undefined || UNNAMED.test(what) ? undefined : what;
 }
 
 /** A sentence's clauses: a tag belongs to the clause a man stands in, not to
@@ -139,7 +149,8 @@ export function troubles(
         found.set(player.name, {
           player,
           tag,
-          condition: already?.condition ?? condition(sentence, printed(sentence, player)),
+          // "with a hamstring injury" names his complaint only where the sentence names nobody else.
+          condition: already?.condition ?? condition(sentence, printed(sentence, player)) ?? (mentioned.length === 1 ? stated(sentence) : undefined),
         });
       }
     }
