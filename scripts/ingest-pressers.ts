@@ -1,10 +1,10 @@
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { FIRM, LEAGUE_TIMEZONE, getFootballSnapshot, wallClockInstant, type FootballSnapshot } from "@epl/core";
 import { articleGameweek, clubKey, conferenceArticle, conferenceTimes, isLeagueArticle, manager, quotes, sections, text } from "./ingest/presserArticle";
 import { troubles } from "./ingest/presserSignals";
-import { INTEL_SEASON, intelManifest, sameApartFromManifest } from "./intel";
-import { INTEL_ROOT, SISTER_ROOT } from "./paths";
+import { intelManifest, intelPath, readIntel, sameApartFromManifest, writeIntel } from "./intel";
+import { SISTER_ROOT } from "./paths";
 import { fullClubName } from "@epl/core";
 
 // Thursday's and Friday's press conferences, from Fantasy Football Scout's own
@@ -15,7 +15,7 @@ import { fullClubName } from "@epl/core";
 
 /** Where the sister repo keeps its scrape. `FFS_SCRAPE_DIR` first, then the sister repo's own folder. */
 const SCRAPE = process.env.FFS_SCRAPE_DIR ?? join(SISTER_ROOT, "data", "raw", "fantasy_football_scout", "daily");
-const OUT = join(INTEL_ROOT, "pressers", `${INTEL_SEASON}.json`);
+const OUT = intelPath("pressers");
 
 /** How many of a club's quotes the brief is offered. The column prints ONE, and
  *  a whole press conference in the brief is the writer's budget spent on
@@ -155,13 +155,12 @@ function harvest(
 /** This day's rows on top of the other days' — a week is TWO articles, so
  *  ingesting Friday must not wipe Thursday. */
 function mergeDay(day: string, fresh: { rows: unknown[]; spoke: unknown[]; quotes: unknown[] }) {
-  const kept = existsSync(OUT)
-    ? (JSON.parse(readFileSync(OUT, "utf8")) as {
-        spoke?: { at?: string }[];
-        quotes?: { at?: string }[];
-        rows?: { said?: string }[];
-      })
-    : {};
+  const kept =
+    readIntel<{
+      spoke?: { at?: string }[];
+      quotes?: { at?: string }[];
+      rows?: { said?: string }[];
+    }>("pressers") ?? {};
   // An undated row belongs to no day and no edition; keeping it duplicated the re-ingested day.
   const elsewhere = (at: unknown): boolean => typeof at === "string" && !at.startsWith(day);
   return {
@@ -190,13 +189,12 @@ async function main(): Promise<void> {
     }),
     ...all,
   };
-  const held = existsSync(OUT) ? (JSON.parse(readFileSync(OUT, "utf8")) as typeof doc) : null;
+  const held = readIntel<typeof doc>("pressers");
   if (held !== null && sameApartFromManifest(held, doc)) {
     console.log(`${day}: nothing new; ${OUT} left as it was.`);
     return;
   }
-  mkdirSync(join(OUT, ".."), { recursive: true });
-  writeFileSync(OUT, exportJson(doc));
+  writeIntel("pressers", exportJson(doc));
 
   console.log(
     `${fresh.rows.length} signals, ${fresh.quotes.length} quotes across ${fresh.spoke.length} clubs on ${day} (${all.rows.length} in the export → ${OUT})`,

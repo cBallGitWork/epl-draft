@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { minimumsOf } from "./minimums";
+import { leagueLimits, minimumsOf } from "./minimums";
 
 const file = {
   leagues: {
@@ -18,5 +18,17 @@ describe("minimumsOf", () => {
     expect(minimumsOf(file, "off")).toBeNull();
     expect(minimumsOf(file, "unread")).toBeNull();
     expect(minimumsOf(file, "missing")).toBeNull();
+  });
+});
+
+describe("leagueLimits", () => {
+  const roster = { maxTotalPlayers: 15, maxActivePlayers: 11, maxReservePlayers: 4, maxActiveByPosition: { G: 1, D: 5, M: 5, F: 3 }, minActiveByPosition: {} };
+
+  it("sets the recorded floors on the league's own caps", () => {
+    expect(leagueLimits(roster, file, "read")).toEqual({ ...roster, minActiveByPosition: { D: 3, M: 2, G: 1 } });
+  });
+
+  it("sets no floor for a league with none recorded", () => {
+    expect(leagueLimits(roster, file, "off").minActiveByPosition).toEqual({});
   });
 });

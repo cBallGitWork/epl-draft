@@ -1,15 +1,14 @@
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, join, relative } from "node:path";
+import { readFileSync } from "node:fs";
+import { join, relative } from "node:path";
 import { XMINS_MOVE, type IntelMinuteMoves, type IntelProjections, minutesUpdate } from "@epl/core";
-import { INTEL_SEASON, intelManifest } from "./intel";
+import { intelManifest, intelPath, readIntel, writeIntel } from "./intel";
 import { INTEL_ROOT } from "./paths";
 
 // What a run's xMins export moved against the one committed before it, kept as one update per export. Run by
 // `scripts/sync-intel.sh` after every run takes its files, so a Tuesday export writes the scout's letter as a Friday one does.
 
-const PROJECTIONS = join(INTEL_ROOT, "projections", `${INTEL_SEASON}.json`);
-const MOVES = join(INTEL_ROOT, "xmins-moves", `${INTEL_SEASON}.json`);
+const PROJECTIONS = intelPath("projections");
 
 const repo = join(INTEL_ROOT, "..", "..");
 const path = relative(repo, PROJECTIONS);
@@ -23,13 +22,12 @@ if (update === null) {
   process.exit(0);
 }
 
-const held: IntelMinuteMoves | null = existsSync(MOVES) ? JSON.parse(readFileSync(MOVES, "utf8")) : null;
+const held = readIntel<IntelMinuteMoves>("xmins-moves");
 const updates = (held?.updates ?? []).filter((each) => each.at !== update.at);
 updates.push(update);
 const file: IntelMinuteMoves = {
   manifest: intelManifest({ gameweek: update.gameweek, rows: updates.length, sources: [{ path, mtime: next.manifest.exportedAt }] }),
   updates,
 };
-mkdirSync(dirname(MOVES), { recursive: true });
-writeFileSync(MOVES, `${JSON.stringify(file, null, 2)}\n`);
+writeIntel("xmins-moves", `${JSON.stringify(file, null, 2)}\n`);
 console.log(`xmins-moves: ${update.moves.length} men's xMins moved for gameweek ${update.gameweek}`);

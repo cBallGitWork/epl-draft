@@ -38,7 +38,7 @@ import {
   type ReportMatchInput,
   type SeasonLine,
 } from "@epl/core";
-import { INTEL_SEASON, readIntel } from "../intel";
+import { readIntel } from "../intel";
 import type { DeskFacts } from "./facts";
 import { fitnessAfter, leagueJoin } from "./matchdayLeague";
 import { dayMarks } from "./matchdayRatings";
@@ -169,7 +169,7 @@ export async function matchdayInput(opts: {
     }
   }
 
-  const strengths = strengthIntel(readIntel<IntelStrength>("strength", `${INTEL_SEASON}.json`));
+  const strengths = strengthIntel(readIntel<IntelStrength>("strength"));
   return {
     day,
     gameweek,

@@ -11,15 +11,12 @@ import {
   groupedBy,
   mapLiveStats,
   mapPlayerStories,
-  mapTeamRosters,
   openingGameweek,
   periodGameweeks,
-  resolveRosters,
   sheetOf,
   sheetsFacts,
   xiFault,
   type Assignment,
-  type Bridge,
   type Club,
   type Fixture,
   type FootballSnapshot,
@@ -29,7 +26,7 @@ import {
   type Sheet,
   type TieFacts,
 } from "@epl/core";
-import mapping from "../../data/mappings/fantrax.json";
+import { rosteredPeriod } from "./bridge";
 import type { DeskFacts } from "./facts";
 import { readArchive } from "./persist";
 import { recentGames } from "./recent";
@@ -139,7 +136,7 @@ export async function earlierSheets(info: LeagueInfo, snapshot: FootballSnapshot
   for (let at = 0; at < periods.length; at += HISTORY_BATCH) {
     const batch = periods.slice(at, at + HISTORY_BATCH);
     const rosters = await Promise.all(batch.map((number) => fetchTeamRosters(FANTRAX_LEAGUE_ID, number)));
-    read.push(...rosters.map((raw) => resolveRosters(snapshot, mapTeamRosters(raw), mapping as Bridge).teams.map(sheetOf)));
+    read.push(...rosters.map((raw) => rosteredPeriod(snapshot, raw).teams.map(sheetOf)));
   }
   return groupedBy(read.flat(), (sheet) => sheet.teamId);
 }

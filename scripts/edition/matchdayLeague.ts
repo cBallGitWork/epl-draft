@@ -1,5 +1,5 @@
-import { FANTRAX_LEAGUE_ID, MS_PER_DAY, fetchPlayerStories, isActive, isResolved, mapPlayerStories, type Fixture, type PlayerStory, type ReportMan } from "@epl/core";
-import mapping from "../../data/mappings/fantrax.json";
+import { FANTRAX_LEAGUE_ID, MS_PER_DAY, fetchPlayerStories, fplCodeOf, isActive, isResolved, mapPlayerStories, type Fixture, type PlayerStory, type ReportMan } from "@epl/core";
+import { BRIDGE } from "./bridge";
 import type { DeskFacts } from "./facts";
 
 // The league's side of a match report: who holds each footballer at the match's period, his points, and the club's word on him.
@@ -22,8 +22,9 @@ export function leagueJoin(facts: DeskFacts, periodFixtures: readonly Fixture[],
   }
   const points = new Map<number, number>();
   const fantraxIds = new Map<number, string>();
-  for (const [fantraxId, entry] of Object.entries(mapping as unknown as Record<string, { fplCode: number | null }>)) {
-    if (entry.fplCode !== null) fantraxIds.set(entry.fplCode, fantraxId);
+  for (const fantraxId of Object.keys(BRIDGE)) {
+    const code = fplCodeOf(BRIDGE, fantraxId);
+    if (code !== null) fantraxIds.set(code, fantraxId);
   }
   const matchesOf = (clubId: number) => periodFixtures.filter((f) => f.homeClubId === clubId || f.awayClubId === clubId).length;
   for (const team of facts.teams) {

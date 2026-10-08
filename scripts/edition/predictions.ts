@@ -11,7 +11,6 @@ import {
   mapLiveStats,
   mapProjectedTotals,
   mapSeasonResults,
-  mapTeamRosters,
   movement,
   pastOffered,
   periodLock,
@@ -19,21 +18,17 @@ import {
   plannerRows,
   predictionRecord,
   predictionSide,
-  projectionIntel,
-  resolveRosters,
   seasonForm,
   squadMen,
   strengthIntel,
   strengthPlaces,
   type Assignment,
-  type Bridge,
   type Club,
   type Deal,
   type DealSide,
   type Fixture,
   type FootballSnapshot,
   type GameweekKickoff,
-  type IntelProjections,
   type IntelStrength,
   type LeagueInfo,
   type PredictionsTie,
@@ -41,8 +36,8 @@ import {
   type SideForm,
   type StandingsRow,
 } from "@epl/core";
-import mapping from "../../data/mappings/fantrax.json";
-import { INTEL_SEASON, readIntel } from "../intel";
+import { readIntel, readProjections } from "../intel";
+import { rosteredPeriod } from "./bridge";
 import { readArchive } from "./persist";
 import { recentGames } from "./recent";
 
@@ -92,8 +87,8 @@ export async function predictionsDesk(input: {
     input.say(`Predictions: Fantrax would not give period ${round.period}'s ${live === null ? "projections" : "rosters"}.`);
     return null;
   }
-  const projections = projectionIntel(readIntel<IntelProjections>("projections", `${INTEL_SEASON}.json`));
-  const strengths = strengthIntel(readIntel<IntelStrength>("strength", `${INTEL_SEASON}.json`));
+  const projections = readProjections();
+  const strengths = strengthIntel(readIntel<IntelStrength>("strength"));
   if (![...projections.values()].some((player) => player.gameweeks.some((week) => week.gw === round.gameweek))) {
     input.say(`Predictions: the projections export does not reach gameweek ${round.gameweek}; key men and doubts are thin.`);
   }
@@ -113,7 +108,7 @@ export async function predictionsDesk(input: {
     standing: { attack: strengthPlaces(strengths, "attack"), defence: strengthPlaces(strengths, "defence") },
     recent: recentGames(played, lives.map((each) => (each === null ? [] : mapLiveStats(each)))),
   };
-  const squads = resolveRosters(snapshot, mapTeamRosters(rosters), mapping as Bridge).teams;
+  const squads = rosteredPeriod(snapshot, rosters).teams;
   const projected = new Map(mapProjectedTotals(live).map((guess) => [guess.teamId, guess.points]));
   const form = seasonForm(input.table, info.matchups, results === null ? [] : mapSeasonResults(results));
   const named = new Map(info.teams.map((team) => [team.teamId, team.name]));
