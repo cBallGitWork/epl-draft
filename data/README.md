@@ -74,3 +74,11 @@ To give a team its own ground:
 4. Give it a `credit`: `place` (what `/credits` calls it), and the Commons file's `title`, `author`,
    `licence`, `licenceUrl` and `source`. `/credits` prints it, and a test fails a picture under
    `ground/venues/` without one. A public-domain file's `licenceUrl` is the CC public domain mark.
+
+## Team colours
+
+`leagues/team-colours.json` gives each fantasy team its plate colour and trim, keyed by Fantrax team id (`team` is a
+label for people; nothing reads it): the real league's ten in each manager's own colours, and the rehearsal and dummy
+leagues' ten. It is written by hand and read by the app (`apps/companion/app/teamColours.ts`), so a change to it
+redeploys. A team it does not list wears the title bar's chrome blue; `inkOn` picks each plate's ink, and a test holds
+every plate in the file to AA.

@@ -1,5 +1,6 @@
 import Link from "@/app/components/shell/Link";
-import { DASH, headToHead, type LeagueTeam, type LiveTeamScore, inkOn, teamColours } from "@epl/core";
+import { DASH, headToHead, type LeagueTeam, type LiveTeamScore, inkOn } from "@epl/core";
+import { teamColours } from "@/app/teamColours";
 import { liveScores } from "../scoreboard";
 import { getLeagueSquads } from "../squads";
 import { myTeamId } from "../session";

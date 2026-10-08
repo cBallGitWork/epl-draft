@@ -1,4 +1,4 @@
-import { teamColours } from "@epl/core";
+import { teamColours } from "@/app/teamColours";
 import PlateShell from "../../components/shell/PlateShell";
 import { leagueInfo } from "../../round";
 import { OWN, teamBack } from "../routes";
