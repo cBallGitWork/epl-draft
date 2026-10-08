@@ -273,7 +273,8 @@ width**: "53px against 44" once read as headroom that did not exist, and `My Tea
 49.3 and printed `My Te…` (21 Sep 2026). `navfit` fails one pixel early, not one late, and it measures the
 Live score as well as the labels.
 
-**The second tab is always yours.** Team all week; Live while football is on, when Team yields its slot
+**The second tab is always yours.** Team all week; Live while football is on (from an hour before the first
+kickoff), when Team yields its slot
 (`overflowDuringGameweek` beside `onlyDuringGameweek`, both applied by `sectionsFor()`). The Live tab puts
 your score where the glyph sits, a rung smaller per extra figure so `112–108` fits (`scoreSize`), and the
 match clock when there is no tie of yours to count.

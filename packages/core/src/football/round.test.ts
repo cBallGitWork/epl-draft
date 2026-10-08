@@ -47,6 +47,13 @@ describe("duringGameweek", () => {
     expect(duringGameweek(s, "2026-08-21T19:00:00Z")).toBe(true);
   });
 
+  it("opens a lead's minutes before the first kickoff when given one, and closes at the same last whistle", () => {
+    const s = snap({ fixtures: [fixture({ id: 1 })] });
+    expect(duringGameweek(s, "2026-08-21T17:59:00Z", 60)).toBe(false);
+    expect(duringGameweek(s, "2026-08-21T18:00:00Z", 60)).toBe(true);
+    expect(duringGameweek(snap({ fixtures: [played({ id: 1 })] }), "2026-08-22T13:30:00Z", 60)).toBe(false);
+  });
+
   it("stays open between matches, when nothing is in play", () => {
     // The gap `isMatchdayLive` cannot see: Saturday teatime, one match done and
     // the next not started, which is still matchday to whoever is watching.
@@ -230,6 +237,12 @@ describe("secondsToLive", () => {
   it("is nought at the kickoff instant itself", () => {
     const s = snap({ fixtures: [played({ id: 1 })] });
     expect(secondsToLive(s, nextWeek, "2026-08-28T19:00:00Z")).toBe(0);
+  });
+
+  it("counts to the lead's opening, not the kickoff, when given one", () => {
+    const s = snap({ fixtures: [played({ id: 1 })] });
+    expect(secondsToLive(s, nextWeek, "2026-08-28T17:59:15Z", 60)).toBe(45);
+    expect(secondsToLive(s, nextWeek, "2026-08-28T18:30:00Z", 60)).toBe(0);
   });
 
   it("is null with no football ahead", () => {

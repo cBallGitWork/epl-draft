@@ -16,7 +16,7 @@ export interface Section {
   href: string;
   label: string;
   routes: string[];
-  /** Only while football is on. The Live section and nothing else. */
+  /** Only while football is on, from an hour before the first kickoff. The Live section and nothing else. */
   onlyDuringGameweek?: boolean;
   /** The glyph over its word on the phone's rail; a section that is always behind More has none. */
   glyph?: GlyphName;
@@ -42,7 +42,7 @@ const GROUPS: Record<GroupKey, { label: string; fullLabel: string; glyph: GlyphN
 /** The manager's inbox, labelled Mail. */
 export const MAIL = "/news";
 
-/** The Live section, there only while a gameweek is on. */
+/** The Live section, there from an hour before a gameweek's first kickoff to its last whistle. */
 export const LIVE = "/matchday";
 
 /** A gameweek's own page, `/gw/[n]`: Live's, though it outlasts the round. */

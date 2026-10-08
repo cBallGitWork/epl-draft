@@ -10,6 +10,7 @@ import {
   type PlayerMatchStats,
   fetchLive,
   fetchRegions,
+  MS_PER_MINUTE,
   mapFixtures,
   mapLiveStats,
   mapMatchSheets,
@@ -20,7 +21,7 @@ import {
 } from "@epl/core";
 import { now, replayAt } from "./clock";
 import { roundGoals } from "./commentary";
-import { LIVE_REVALIDATE, PAGE_REVALIDATE, POLL, SEASON_CODE_LIFE } from "./config";
+import { LIVE_LEAD_MINUTES, LIVE_REVALIDATE, PAGE_REVALIDATE, POLL, SEASON_CODE_LIFE } from "./config";
 
 // One football snapshot per window, shared by every reader: FPL's bootstrap is 1.3 MB and the
 // layout reads it on every page view. Nothing about who is asking may cross into this cache.
@@ -36,10 +37,12 @@ export async function footballNow(): Promise<FootballSnapshot> {
   return at === null ? currentRound() : rewoundRound(at);
 }
 
-/** The round `REPLAY_AT` falls in as it stood then, or the live round before the season starts.
+/** The round `REPLAY_AT` falls in as it stood then, the next from Live's opening, or the live round before the season.
  *  Outside `currentRound`: `roundGoals` has its own cache, and a nested `unstable_cache` bypasses it. */
 async function rewoundRound(at: string): Promise<FootballSnapshot> {
-  const gameweek = roundAt(await seasonFixtures(), at);
+  // FPL's round turns 90 minutes before its first kickoff, so a replay of Live's opening hour reads the round ahead.
+  const ahead = new Date(Date.parse(at) + LIVE_LEAD_MINUTES * MS_PER_MINUTE).toISOString();
+  const gameweek = roundAt(await seasonFixtures(), ahead);
   if (gameweek === null) return currentRound();
   const snapshot = await gameweekSnapshot(gameweek);
   return rewindRound(snapshot, await roundGoals(gameweek, snapshot.players), at);
@@ -87,7 +90,7 @@ export async function seasonKickoffs() {
 /** Seconds until football is live as this render sees it, for the shell's poller to count down
  *  (`components/shell/cadence.ts`). Nought for the whole round, gaps between kickoffs included. */
 export async function liveIn(snapshot: FootballSnapshot): Promise<number | null> {
-  return secondsToLive(snapshot, await seasonFixtures(), now().toISOString());
+  return secondsToLive(snapshot, await seasonFixtures(), now().toISOString(), LIVE_LEAD_MINUTES);
 }
 
 /** Whether the round in view is under way: first kickoff to last whistle, gaps included. */
@@ -112,16 +115,20 @@ export async function groundFaces(): Promise<string[]> {
   }
 }
 
-/** Whether the shell offers its Live section: a round is under way. Fails open, so an FPL outage
- *  never hides Live mid-match. */
+/** Whether Live is open: from `LIVE_LEAD_MINUTES` before the round's first kickoff to its last whistle. */
+export function liveOpen(snapshot: FootballSnapshot): boolean {
+  return duringGameweek(snapshot, now().toISOString(), LIVE_LEAD_MINUTES);
+}
+
+/** Whether the shell offers its Live section. Fails open, so an FPL outage never hides Live mid-match. */
 export async function offerLive(): Promise<boolean> {
   return (await roundLive()) ?? true;
 }
 
-/** Whether a round is under way; null when FPL could not be read, so each caller picks its own failure. */
+/** Whether Live is open; null when FPL could not be read, so each caller picks its own failure. */
 export async function roundLive(): Promise<boolean | null> {
   try {
-    return roundUnderway(await footballNow());
+    return liveOpen(await footballNow());
   } catch {
     return null;
   }

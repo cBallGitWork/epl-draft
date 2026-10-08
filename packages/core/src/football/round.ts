@@ -10,10 +10,10 @@ export function isMatchdayLive(snapshot: FootballSnapshot): boolean {
   return snapshot.fixtures.some((f) => f.status === "live");
 }
 
-/** From the round's first dated kickoff until its last dated match finishes: whether Matchday shows, and the poll rate.
+/** From the round's first dated kickoff, or `lead` minutes before it, until its last dated match finishes.
  *  Wider than `isMatchdayLive`, since the gap between kickoffs counts; closes on `finished`, not `data_checked`.
  *  Undated fixtures are ignored at both ends, and so is one unstarted `POSTPONED_AFTER_MINUTES` past its kickoff. */
-export function duringGameweek(snapshot: FootballSnapshot, at: string): boolean {
+export function duringGameweek(snapshot: FootballSnapshot, at: string, lead = 0): boolean {
   const now = Date.parse(at);
   if (Number.isNaN(now)) return false;
 
@@ -31,7 +31,7 @@ export function duringGameweek(snapshot: FootballSnapshot, at: string): boolean 
     if (fixture.status !== "finished") everythingFinished = false;
   }
 
-  return anyDated && now >= firstKickoff && !everythingFinished;
+  return anyDated && now >= firstKickoff - lead * MS_PER_MINUTE && !everythingFinished;
 }
 /** Whether any match in this gameweek has kicked off; `gameweekStatus` reads "upcoming" with nine results in. */
 export function gameweekStarted(fixtures: readonly Fixture[], gameweek: number): boolean {
@@ -75,13 +75,13 @@ export function nextRound(
   return soonest === null ? null : { gameweek: soonest.gameweek, kickoff: soonest.kickoff };
 }
 
-/** Seconds until football is live: nought during the round, the wait to the next kickoff otherwise,
- *  null with nothing ahead. Relative, so a client can count it down without trusting its own clock. */
-export function secondsToLive(snapshot: FootballSnapshot, fixtures: readonly Fixture[], at: string): number | null {
-  if (duringGameweek(snapshot, at)) return 0;
+/** Seconds until football is live: nought during the round, the wait to the next kickoff (less `lead` minutes)
+ *  otherwise, null with nothing ahead. Relative, so a client can count it down without trusting its own clock. */
+export function secondsToLive(snapshot: FootballSnapshot, fixtures: readonly Fixture[], at: string, lead = 0): number | null {
+  if (duringGameweek(snapshot, at, lead)) return 0;
   const next = nextRound(fixtures, at);
   if (next === null) return null;
-  return Math.max(0, Math.ceil((Date.parse(next.kickoff) - Date.parse(at)) / 1000));
+  return Math.max(0, Math.ceil((Date.parse(next.kickoff) - lead * MS_PER_MINUTE - Date.parse(at)) / 1000));
 }
 
 /** How settled a finished round is: bonus still landing, bonus in, or signed off by FPL. */
