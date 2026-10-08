@@ -114,8 +114,8 @@ export default async function FplPage() {
                 <span className={`min-w-0 flex-1 truncate ${ROW_NAME}`}>
                   {league.name}
                 </span>
-                {/* Cyan: a rank is a derived reading (DESIGN §3). */}
-                <span className="numeric shrink-0 text-sm font-bold text-info">
+                {/* FPL's rank, in ink: not a reading of ours (DESIGN §3). */}
+                <span className="numeric shrink-0 text-sm font-bold text-ink">
                   {league.rank === null ? <Absent /> : thousands(league.rank)}
                 </span>
               </li>
