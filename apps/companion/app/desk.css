@@ -201,6 +201,23 @@ select.cm-bevel {
   }
 }
 
+/* Under the installed iPhone app's status bar: the ground runs on beneath, blurred and darkened as iOS's own bars are,
+   so the white clock reads over the photograph and over a page scrolled under it. As tall as the status bar, which is
+   nothing anywhere else. */
+.cm-statusbar {
+  position: fixed;
+  z-index: 60;
+  inset-inline: 0;
+  top: 0;
+  height: env(safe-area-inset-top, 0px);
+  pointer-events: none;
+  background: color-mix(in oklch, var(--color-bg) 45%, transparent);
+  -webkit-backdrop-filter: blur(12px) brightness(0.4);
+  backdrop-filter: blur(12px) brightness(0.4);
+  /* Full under the clock, fading out below it, so the band has no hard edge against the photograph. */
+  mask-image: linear-gradient(to bottom, black 65%, transparent);
+}
+
 /* Pull to refresh (shell/PullToRefresh): a plate that comes down from the top with the finger, its arrow turning,
    and turning on its own until the reloaded page replaces it. Over both registers, below the safe area. */
 .cm-pull {

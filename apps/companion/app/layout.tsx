@@ -21,8 +21,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: LEAGUE_NAME,
   description: `Live scores, head-to-head and the week's news for the ${LEAGUE_NAME}.`,
-  // An iPhone names a home-screen icon after the page's title, which on `/more` is "More".
-  appleWebApp: { title: APP_SHORT_NAME },
+  // An iPhone names a home-screen icon after the page's title, which on `/more` is "More". Black-translucent lets
+  // the installed app draw under the status bar, so the ground runs to the top; `.cm-statusbar` keeps the clock legible.
+  appleWebApp: { title: APP_SHORT_NAME, statusBarStyle: "black-translucent" },
 };
 
 export const viewport: Viewport = {
@@ -62,6 +63,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       {/* A row: the rail, then the content. `min-w-0` on the content column stops its `truncate` and
           `overflow-x-auto` children pushing it wider than the screen. */}
       <body className="flex min-h-dvh antialiased">
+        <div aria-hidden className="cm-statusbar" />
         {/* CM's darkened match photograph under every desk screen. `sweep` cannot see it, so nothing prints
             on the bare ground, and `tools/ui/groundfit.mjs` checks that. */}
         <PhotoGround faces={await groundFaces()} />

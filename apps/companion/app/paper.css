@@ -46,6 +46,18 @@
   font-optical-sizing: auto;
 }
 
+/* Under the installed iPhone app's status bar, a band of the paper's ink for its white clock, over the desk's fade.
+   It wears `.paper` for the ink, which is defined there. */
+.paper-statusbar {
+  position: fixed;
+  z-index: 61;
+  inset-inline: 0;
+  top: 0;
+  height: env(safe-area-inset-top, 0px);
+  pointer-events: none;
+  background: var(--paper-ink);
+}
+
 /* A colour plate printed on the sheet: the pitch and the league crest keep the desk's tokens.
    Re-pointing `--color-cream` at ink made eleven name plates invisible. */
 .paper :is(.pitch, .crest) {

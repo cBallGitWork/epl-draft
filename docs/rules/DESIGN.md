@@ -93,6 +93,12 @@ colour. `components/football/PhotoGround` carries both; `DESK_GROUND` in the
 app's config is where the picture goes, and until one lands the ground is drawn from
 the round's own portraits.
 
+**In the installed iPhone app the ground runs under the status bar** (Craig, 7 Oct 2026: *"can the background extend
+over on iPhone"*). `black-translucent` gives the app the clock's strip, and `.cm-statusbar` blurs and darkens what
+passes under it, as iOS's own bars do, so the white clock reads over the photograph and over a page scrolled beneath.
+The paper takes a band of its own ink there. A browser tab and Android show no change: the strip is the status bar's
+height, which only the installed iPhone app has.
+
 **A club's own screens take a photograph of its own ground** (Craig, 11 Sep
 2026). One shared crowd shot behind every screen in the app is the desk's
 wallpaper; a club screen is about SOMEBODY, and `PlateShell` already says so in
