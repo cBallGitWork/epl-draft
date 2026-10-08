@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { LeagueScoring, PlTeamSheet } from "@epl/core";
-import { GROUP_PLATE, PANEL } from "@/app/desk";
+import { GROUP_PLATE, LABEL, PANEL } from "@/app/desk";
+import { positionLabel } from "@/app/positions";
 import { FANTRAX_SILENT } from "@/app/config";
 import type { LeagueDayLine } from "@/app/scoringDay";
 import { fantasyBoxes, type Counted, type FantasyMan } from "./fantasyCategories";
@@ -50,10 +51,17 @@ export default function Fantasy({
         {boxes.map((box) => (
           <div key={box.key} className="flex flex-col">
             <h3 className={`${GROUP_PLATE} lg:text-xs`}>{box.label}</h3>
-            <div className="grid grid-cols-2 divide-x divide-line bg-surface">
-              <Names men={box.home} end />
-              <Names men={box.away} end={false} />
-            </div>
+            {box.parts.map((part, at) => (
+              <div key={part.position ?? "all"} className={`bg-surface ${at > 0 ? "border-t border-line" : ""}`}>
+                {part.position === null ? null : (
+                  <h4 className={`${LABEL} pt-1 text-center`}>{positionLabel(part.position)}</h4>
+                )}
+                <div className="grid grid-cols-2 divide-x divide-line">
+                  <Names men={part.home} end />
+                  <Names men={part.away} end={false} />
+                </div>
+              </div>
+            ))}
           </div>
         ))}
       </div>

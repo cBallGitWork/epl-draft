@@ -19,6 +19,9 @@ function man(named: string, position: string, counts: Record<string, number>, fp
 const boxOf = (men: FantasyMan[], key: string, by: LeagueScoring | null = scoring) =>
   fantasyBoxes({ home: men, away: [] }, by).find((box) => box.key === key);
 
+/** Every home man in a box, part after part. */
+const homeOf = (box: ReturnType<typeof boxOf>) => box?.parts.flatMap((part) => part.home);
+
 describe("fantasyBoxes on the real league", () => {
   it("counts assists under AT and a keeper's work under GKP, never the rehearsal's A and Sv", () => {
     const keeper = man("G", "G", { GKP: 4, AT: 1 });
@@ -46,27 +49,39 @@ describe("fantasyBoxes on the real league", () => {
     ];
     const below = [man("D", "D", { DFP: 0, DFP3: 9 }), man("M", "M", { DFP3: 3 }), man("F", "F", { DFP3: 2 })];
     const box = boxOf([...listed, ...below], "defcon");
-    expect(box?.home.map((m) => m.code).sort()).toEqual(listed.map((m) => m.code).sort());
-    expect(box?.home.some((m) => m.count === 0)).toBe(false);
+    expect(homeOf(box)?.map((m) => m.code).sort()).toEqual(listed.map((m) => m.code).sort());
+    expect(homeOf(box)?.some((m) => m.count === 0)).toBe(false);
   });
 
   it("reads our DefCon at the letter his points are priced at, not where the team sheet named him", () => {
     // Named at the back, priced as a midfielder: his 5 DFP is nothing to the league, his 4 DFP3 is close.
     const wingBack = man("D", "M", { DFP: 5, DFP3: 4 });
-    expect(boxOf([wingBack], "defcon")?.home).toEqual([{ code: wingBack.code, name: wingBack.name, count: 4 }]);
+    expect(homeOf(boxOf([wingBack], "defcon"))).toEqual([{ code: wingBack.code, name: wingBack.name, count: 4 }]);
   });
 
-  it("puts the man nearest his mark first, across positions", () => {
-    const mid = man("M", "M", { DFP3: 7 });
-    const back = man("D", "D", { DFP: 3 });
-    expect(boxOf([mid, back], "defcon")?.home.map((m) => m.code)).toEqual([back.code, mid.code]);
+  it("separates DefCon by the letter he is priced at, defenders first, each the highest count first", () => {
+    const [mid, fwd, back, bigMid] = [man("M", "M", { DFP3: 7 }), man("F", "F", { DFP3: 6 }), man("D", "D", { DFP: 3 }), man("M", "M", { DFP3: 9 })];
+    const box = boxOf([mid, fwd, back, bigMid], "defcon");
+    expect(box?.parts.map((part) => [part.position, part.home.map((m) => m.code)])).toEqual([
+      ["D", [back.code]],
+      ["M", [bigMid.code, mid.code]],
+      ["F", [fwd.code]],
+    ]);
+  });
+
+  it("draws every other category as one undivided part", () => {
+    const box = boxOf([man("D", "D", { G: 1 }), man("F", "F", { G: 2 })], "INDIVIDUAL_GOALS");
+    expect(box?.parts.map((part) => part.position)).toEqual([null]);
   });
 
   it("keeps FPL's DefCon in a box of its own, from half FPL's threshold by where he was named", () => {
     const men = [man("D", "M", {}, 5), man("M", "M", {}, 6), man("F", "F", {}, 5), man("G", "G", {}, 12)];
     const box = boxOf(men, "fpl-defcon");
     expect(box?.label).toBe("FPL DefCon");
-    expect(box?.home.map((m) => m.count)).toEqual([6, 5]);
+    expect(box?.parts.map((part) => [part.position, part.home.map((m) => m.count)])).toEqual([
+      ["D", [5]],
+      ["M", [6]],
+    ]);
   });
 });
 
