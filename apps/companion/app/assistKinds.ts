@@ -1,7 +1,6 @@
 import { unstable_cache } from "next/cache";
 import {
   type AssistKinds,
-  FantraxError,
   OUTFIELD,
   POOL_PAGE_SIZE,
   fetchPoolStats,
@@ -13,7 +12,7 @@ import {
 } from "@epl/core";
 import { ASSIST_KINDS_REVALIDATE } from "./config";
 import { seasonKickoffs } from "./football";
-import { orRefusal } from "./refusals";
+import { refusedAs } from "./refusals";
 import { bridge } from "./squads";
 import { STATS_LEAGUE, periodsOf } from "./statsLeague";
 
@@ -22,14 +21,13 @@ import { STATS_LEAGUE, periodsOf } from "./statsLeague";
 
 /** One period's kinds in a league, as entries, since a Map does not survive the cache. */
 const kindsOf = unstable_cache(
-  async (league: string, period: number): Promise<[number, AssistKinds][]> => {
-    const raw = await orRefusal(fetchPoolStats(league, POOL_PAGE_SIZE, undefined, OUTFIELD, period));
-    if (raw instanceof FantraxError) return [];
-    return mapAssistKinds(mapPlayerStats(raw)).flatMap(({ fantraxId, kinds }) => {
-      const code = fplCodeOf(bridge, fantraxId);
-      return code === null ? [] : [[code, kinds]];
-    });
-  },
+  (league: string, period: number): Promise<[number, AssistKinds][]> =>
+    refusedAs(fetchPoolStats(league, POOL_PAGE_SIZE, undefined, OUTFIELD, period), () => [], (raw) =>
+      mapAssistKinds(mapPlayerStats(raw)).flatMap(({ fantraxId, kinds }): [number, AssistKinds][] => {
+        const code = fplCodeOf(bridge, fantraxId);
+        return code === null ? [] : [[code, kinds]];
+      }),
+    ),
   ["assist-kinds"],
   { revalidate: ASSIST_KINDS_REVALIDATE },
 );

@@ -1,14 +1,13 @@
 import { notFound } from "next/navigation";
 import {
   FANTRAX_LEAGUE_ID,
-  FantraxError,
   fetchPlayerProfile,
   isFantraxPlayerId,
   mapPlayerProfile,
 } from "@epl/core";
 import { leagueCache } from "../../leagueCache";
 import type { Club, FootballPlayer, PlayerIntel } from "@epl/core";
-import { orRefusal, unavailable } from "../../refusals";
+import { refusedAs, unavailable } from "../../refusals";
 import type { Unavailable } from "../../refusals";
 import { getLeagueSquads } from "../../squads";
 import { footballSelf } from "./footballSelf";
@@ -26,10 +25,8 @@ export interface Subject {
 
 /** One profile per player for everybody: four tabs and every phone ask Fantrax once. The
  *  refusal is caught inside, because a `FantraxError` thrown through the cache need not arrive as one. */
-const readProfile = leagueCache("player-profile", async (fantraxId: string) => {
-  const raw = await orRefusal(fetchPlayerProfile(FANTRAX_LEAGUE_ID, fantraxId));
-  return raw instanceof FantraxError ? unavailable(raw) : raw;
-}, unavailable);
+const readProfile = leagueCache("player-profile", (fantraxId: string) =>
+  refusedAs(fetchPlayerProfile(FANTRAX_LEAGUE_ID, fantraxId), unavailable, (raw) => raw), unavailable);
 
 /** An id not in Fantrax's shape is a 404. A well-formed id Fantrax does not know and a Fantrax
  *  that is not answering arrive as the same refusal, with the tell on screen. */

@@ -1,14 +1,13 @@
 import {
   FANTRAX_LEAGUE_ID,
-  FantraxError,
-  fetchPoolStats,
+  fetchSeasonCodes,
   fetchTeamStats,
   mapPoolStats,
   mapTeamStats,
 } from "@epl/core";
 import type { TeamStats } from "@epl/core";
 import { leagueCache } from "./leagueCache";
-import { orRefusal } from "./refusals";
+import { refusedAs } from "./refusals";
 import { SEASON_CODE_LIFE } from "./config";
 
 // One team's season table, read once for its two readers: two caches on one key would be two definitions of it.
@@ -16,12 +15,8 @@ import { SEASON_CODE_LIFE } from "./config";
 /** The season code: Fantrax defaults every stat read to a projection, and one endpoint publishes it. Cached hard. */
 const yearToDate = leagueCache(
   "fantrax-season-code",
-  async (): Promise<string | undefined> => {
-    const raw = await orRefusal(fetchPoolStats(FANTRAX_LEAGUE_ID, 1));
-    // No code is no reason to compose one: Fantrax picks, and the callers label it. Only a refusal is caught.
-    if (raw instanceof FantraxError) return undefined;
-    return mapPoolStats(raw).yearToDate ?? undefined;
-  },
+  // No code is no reason to compose one: Fantrax picks, and the callers label it. Only a refusal is caught.
+  (): Promise<string | undefined> => refusedAs(fetchSeasonCodes(FANTRAX_LEAGUE_ID), () => undefined, (raw) => mapPoolStats(raw).yearToDate ?? undefined),
   () => undefined,
   SEASON_CODE_LIFE,
 );
@@ -29,10 +24,8 @@ const yearToDate = leagueCache(
 /** One team's table, or nothing: a refusal (an undrafted league's `WARNING`) and an outage both
  *  mean there are no numbers to show, and both say so by not appearing. */
 const readTeamStats = leagueCache("fantrax-team-stats",
-  async (teamId: string, season: string | undefined): Promise<TeamStats | null> => {
-    const raw = await orRefusal(fetchTeamStats(FANTRAX_LEAGUE_ID, teamId, season));
-    return raw instanceof FantraxError ? null : mapTeamStats(raw);
-  },
+  (teamId: string, season: string | undefined): Promise<TeamStats | null> =>
+    refusedAs(fetchTeamStats(FANTRAX_LEAGUE_ID, teamId, season), () => null, mapTeamStats),
   () => null,
 );
 

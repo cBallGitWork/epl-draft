@@ -3,6 +3,7 @@ import { join } from "node:path";
 import {
   KEEPER,
   OUTFIELD,
+  POOL_PAGE_SIZE,
   columnDrift,
   fetchPoolStats,
   mapStatSheet,
@@ -24,13 +25,11 @@ import { buildStats } from "./stats/build";
 // Exits 1 without writing on a projection, or when the league's columns changed: a changed scoring
 // must never quietly reshape the file.
 
-const PAGE = 1000;
-
 async function main(): Promise<void> {
   // One group after the other, never both at once: Fantrax throttles a burst.
   const sheets: StatSheet[] = [];
   for (const group of [OUTFIELD, KEEPER]) {
-    sheets.push(mapStatSheet(await fetchPoolStats(STATS_LEAGUE.leagueId, PAGE, undefined, group)));
+    sheets.push(mapStatSheet(await fetchPoolStats(STATS_LEAGUE.leagueId, POOL_PAGE_SIZE, undefined, group)));
   }
   const projected = sheets.find((sheet) => sheet.season.projected);
   if (projected !== undefined) {

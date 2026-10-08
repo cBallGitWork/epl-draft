@@ -1,3 +1,4 @@
+import { recordedRole } from "@epl/core";
 import recorded from "../data/leagues/recorded.json";
 
 // The leagues the archive records: data, read by scripts. The app serves one league, the
@@ -15,13 +16,13 @@ export const RECORDED_LEAGUES: readonly RecordedLeague[] = recorded.leagues;
 export const SHAPE_DIFF = recorded.shapeDiff;
 
 /** The league kept to track every category at no points, whose columns `npm run stats` reads. */
-export const STATS_LEAGUE: RecordedLeague = recordedLeague(recorded.stats);
+export const STATS_LEAGUE: RecordedLeague = recordedLeague("stats");
 
 /** The league whose scoring prices every point we work out ourselves, whichever league is served. */
-export const SCORING_LEAGUE: RecordedLeague = recordedLeague(recorded.scoring);
+export const SCORING_LEAGUE: RecordedLeague = recordedLeague("scoring");
 
-function recordedLeague(key: string): RecordedLeague {
-  const found = RECORDED_LEAGUES.find((league) => league.key === key);
-  if (found === undefined) throw new Error(`recorded.json names no league "${key}"`);
-  return found;
+function recordedLeague(role: "stats" | "scoring"): RecordedLeague {
+  const leagueId = recordedRole(recorded, role);
+  if (leagueId === null) throw new Error(`recorded.json names no league "${recorded[role]}"`);
+  return { key: recorded[role], leagueId };
 }
