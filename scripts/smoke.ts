@@ -10,7 +10,7 @@ import {
 } from "@epl/core";
 import { walkLeague, type WalkLeague } from "./smoke/league";
 import { serverError } from "./smoke/broken";
-import { PROJECTIONS, PROJECTIONS_SHOWN } from "../apps/companion/app/players/routes";
+import { walkPaths } from "./smoke/routes";
 
 // Walks every route against the league the server is serving, asserting the empty states for a
 // league with no teams and their absence once somebody holds a player (a drafted league once rendered
@@ -21,43 +21,6 @@ import { PROJECTIONS, PROJECTIONS_SHOWN } from "../apps/companion/app/players/ro
 //   SMOKE_BASE=https://timproleague.vercel.app npm run smoke
 
 const BASE = process.env.SMOKE_BASE ?? "http://localhost:3000";
-
-/** Every route that needs no id. Keep it against `next build`'s route table: a route missing here is
- *  never walked. `/paper/[slug]` is left out because a slug exists only once a story is filed. */
-const ROUTES = [
-  "/",
-  "/league",
-  "/league/schedule",
-  "/league/matchups",
-  "/league/results",
-  "/league/team-stats",
-  "/league/cups",
-  "/league/scoring",
-  "/league/cups?cup=davy-propper",
-  // A link from before the cups lost their views still answers.
-  "/league/cups?cup=davy-propper&view=bracket",
-  "/squad",
-  "/players",
-  // Data's Compare: its ids are in the query, so no link off the board reaches it.
-  "/players/analysis?a=05gcr&b=03ksl",
-  "/players/teams",
-  "/players/planner",
-  "/players/planner?view=defence",
-  // Walked only while shown: switched off, it is a true 404.
-  ...(PROJECTIONS_SHOWN ? [PROJECTIONS] : []),
-  "/matchday",
-  "/matchday/desk",
-  "/prem",
-  "/prem/results",
-  "/prem/fixtures",
-  "/prem/team-stats",
-  "/prem/data",
-  "/gw/1",
-  "/fpl",
-  "/more",
-  // Mail's league-wide ledger; the inbox itself is the reader's own and is not walked.
-  "/news/transfers",
-] as const;
 
 /** What each league view says with no teams. One sentence per route, naming WHICH nothing it is, so
  *  silence, undrafted and a quiet week never collapse into one. Edit with the copy. */
@@ -127,42 +90,10 @@ async function matchId(): Promise<number | null> {
 
 async function main() {
   requireLeague(FANTRAX_LEAGUE_ID);
-  const { state, teamId: id, teamName, playerId } = await league();
+  const { state, teamId, teamName, playerId } = await league();
   const club = await clubCode();
   const match = await matchId();
-  const paths: string[] = [...ROUTES];
-  // The id-scoped screens: the squad board and its tabs, and the head-to-head.
-  if (id !== null) {
-    paths.push(
-      `/squad/${id}`,
-      `/squad/${id}/fixtures`,
-      `/squad/${id}/next`,
-      `/squad/${id}/stats`,
-      `/squad/${id}/transfers`,
-      `/league/matchups/${id}`,
-    );
-  }
-  // His page and his Data tab: each reads his FPL game log, which no other route walked here does.
-  if (playerId !== null) paths.push(`/players/${playerId}`, `/players/${playerId}/data`);
-  if (club !== null) {
-    paths.push(
-      `/prem/club/${club}`,
-      `/prem/club/${club}/depth`,
-      `/prem/club/${club}/set-pieces`,
-      `/prem/club/${club}/fixtures`,
-      `/prem/club/${club}/stats`,
-    );
-  }
-  // Line Ups is where an empty sheet lands before kickoff; Stats proves the Premier League's `/stats/match`
-  // still answers, and its Fantasy view that our league's read does.
-  if (match !== null) {
-    paths.push(
-      `/prem/match/${match}`,
-      `/prem/match/${match}/players`,
-      `/prem/match/${match}/stats`,
-      `/prem/match/${match}/stats?view=fantasy`,
-    );
-  }
+  const paths = walkPaths({ teamId, playerId, club, match });
 
   console.log(
     `smoke — ${BASE}, league ${FANTRAX_LEAGUE_ID} (${state})\n`,
