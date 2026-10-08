@@ -1,5 +1,5 @@
 import { FANTRAX_TIMEZONE } from "../config";
-import { MS_PER_DAY, londonDayAndDate, londonTime } from "../time";
+import { MS_PER_DAY, MS_PER_MINUTE, londonDayAndDate, londonTime } from "../time";
 
 // Fantrax stamps its business `"Wed Sep 2, 2026, 6:11AM"`, in US Eastern with no offset, and a pending trade
 // `"Oct 8, 11:53 AM BST"`, in the session's zone and named. Read as instants, they print in London like every other time.
@@ -11,26 +11,22 @@ export function fantraxInstant(stamp: string): string | null {
   return wall === null ? null : new Date(instantOfWall(wall, FANTRAX_TIMEZONE)).toISOString();
 }
 
-/** The zones Fantrax names after a stamp, which follow the account that read it. */
-const STAMP_ZONES: Readonly<Record<string, string>> = {
-  EDT: "America/New_York",
-  EST: "America/New_York",
-  BST: "Europe/London",
-  GMT: "Europe/London",
-};
+/** The zones Fantrax names after a stamp (they follow the account that read it), as minutes ahead of UTC: the name
+ *  fixes the offset, so a wall time the clocks repeat is still one instant. */
+const STAMP_OFFSETS: Readonly<Record<string, number>> = { EDT: -240, EST: -300, BST: 60, GMT: 0 };
 
 /** The pending page's stamp, `"Oct 8, 11:53 AM BST"`, as the ISO instant it names: it prints the zone and not the year,
- *  so it is the latest such day not after `now`. Null when it does not read or names a zone `STAMP_ZONES` lacks. */
+ *  so it is the latest such day not after `now`. Null when it does not read or names a zone `STAMP_OFFSETS` lacks. */
 export function proposedInstant(stamp: string, now: string): string | null {
   const parts = /^\s*([a-z]{3})[a-z]*\s+(\d{1,2}),\s*(\d{1,2}):(\d{2})\s*([ap])m\s+([a-z]{2,5})\s*$/i.exec(stamp);
   if (!parts) return null;
   const [, month = "", day = "", hour = "", minute = "", meridiem = "", zone = ""] = parts;
   const monthIndex = MONTHS.indexOf(month.toLowerCase());
-  const timeZone = STAMP_ZONES[zone.toUpperCase()];
+  const offset = STAMP_OFFSETS[zone.toUpperCase()];
   const at = Date.parse(now);
-  if (monthIndex < 0 || timeZone === undefined || Number.isNaN(at)) return null;
+  if (monthIndex < 0 || offset === undefined || Number.isNaN(at)) return null;
   const hours = (Number(hour) % 12) + (meridiem.toLowerCase() === "p" ? 12 : 0);
-  const inYear = (year: number) => instantOfWall(Date.UTC(year, monthIndex, Number(day), hours, Number(minute)), timeZone);
+  const inYear = (year: number) => Date.UTC(year, monthIndex, Number(day), hours, Number(minute)) - offset * MS_PER_MINUTE;
   const year = new Date(at).getUTCFullYear();
   // A proposal is never in the future: a stamp past `now`, a day's slack for the zones, is last year's.
   const thisYear = inYear(year);
