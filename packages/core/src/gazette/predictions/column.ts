@@ -5,6 +5,7 @@ import type { PredictionCall } from "./pick";
 import { mentionAt } from "./prose";
 import type { Marked } from "./record";
 import type { SquadMan } from "./sides";
+import { stringOrEmpty, textOrNull } from "../../untrusted";
 
 // From what the model returned to what the desk files: the draft read on the desk's own keys,
 // the two attempts merged section by section, and the calls, scores and pictures put back by code.
@@ -24,9 +25,9 @@ export function readDraft(raw: unknown, calls: readonly PredictionCall[]): Lawro
     if (call === undefined) continue;
     const key = tieKey(call.homeTeamId, call.awayTeamId);
     if (ties.has(key)) continue;
-    ties.set(key, { line: pencil(text(tie.line)), backs: typeof tie.backs === "string" && tie.backs !== "" ? tie.backs : null });
+    ties.set(key, { line: pencil(stringOrEmpty(tie.line).trim()), backs: textOrNull(tie.backs) });
   }
-  return { deck: text(column.deck), intro: pencil(text(column.body)), ties };
+  return { deck: stringOrEmpty(column.deck).trim(), intro: pencil(stringOrEmpty(column.body).trim()), ties };
 }
 
 /** Each section from the latest attempt with no hard fault in it; a section hard in every
@@ -92,8 +93,4 @@ export function featured(line: string, men: readonly SquadMan[]): StoryFace | nu
     .filter(({ at }) => at !== -1)
     .sort((a, b) => a.at - b.at || b.man.name.length - a.man.name.length);
   return named[0]?.man.face ?? null;
-}
-
-function text(value: unknown): string {
-  return typeof value === "string" ? value.trim() : "";
 }

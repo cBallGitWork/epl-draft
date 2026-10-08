@@ -19,7 +19,9 @@ import {
   mergeDraft,
   readDraftWriting,
   readHeadlines,
+  recordOrEmpty,
   strike,
+  stringOrEmpty,
   surname,
   unbriefedNames,
   type Cutoff,
@@ -57,12 +59,12 @@ function judgeFlags(raw: Record<string, unknown>, prose: ReadonlyMap<number, str
   const flags = Array.isArray(raw.flags) ? raw.flags : [];
   const kept = new Map<number, number>();
   return flags.flatMap((f): Fault[] => {
-    const r = typeof f === "object" && f !== null ? (f as Record<string, unknown>) : {};
+    const r = recordOrEmpty(f);
     const n = Number(r.number);
-    const quote = typeof r.quote === "string" ? r.quote.trim() : "";
+    const quote = stringOrEmpty(r.quote).trim();
     if (quote === "" || !(prose.get(n) ?? "").includes(quote) || (kept.get(n) ?? 0) >= 3) return [];
     kept.set(n, (kept.get(n) ?? 0) + 1);
-    return [{ section: `${n}:matchup`, check: "a manager in the league would not say this", severity: "send-back", evidence: `${quote} (${typeof r.why === "string" ? r.why : ""})` }];
+    return [{ section: `${n}:matchup`, check: "a manager in the league would not say this", severity: "send-back", evidence: `${quote} (${stringOrEmpty(r.why)})` }];
   });
 }
 

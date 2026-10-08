@@ -1,3 +1,5 @@
+import { stringOrEmpty, textOrNull } from "../../untrusted";
+
 // What a team-news story carries beside its prose: each head-to-head's two sides as printed, refused
 // field by field at the edge like every other story's cargo.
 
@@ -44,8 +46,8 @@ function side(raw: unknown): StorySheetSide | null {
   if (xi.length === 0) return null;
   return {
     teamId: each.teamId,
-    formation: typeof each.formation === "string" && each.formation !== "" ? each.formation : null,
-    line: typeof each.line === "string" ? each.line : "",
+    formation: textOrNull(each.formation),
+    line: stringOrEmpty(each.line),
     xi,
     bench: men(each.bench),
   };
@@ -55,7 +57,7 @@ function men(raw: unknown): StorySheetMan[] {
   if (!Array.isArray(raw)) return [];
   return raw.flatMap((man: Partial<StorySheetMan> | null) =>
     typeof man?.name === "string" && man.name.trim() !== "" && Number.isInteger(man.code) && (man.code as number) > 0 && typeof man.slot === "string"
-      ? [{ name: man.name, code: man.code as number, slot: man.slot, against: typeof man.against === "string" && man.against !== "" ? man.against : null }]
+      ? [{ name: man.name, code: man.code as number, slot: man.slot, against: textOrNull(man.against) }]
       : [],
   );
 }

@@ -1,6 +1,7 @@
 import type { Fault } from "../predictions/checks";
 import type { MatchDesk } from "./desk";
 import type { ReportsDraft } from "./draft";
+import { stringOrEmpty } from "../../untrusted";
 
 // The fan's read-back: a supporter who goes to every match on the page and plays in this league quotes what he would never
 // say or believe. He never rewrites; his words would become next week's tics. His flags go back once and never print.
@@ -41,8 +42,8 @@ export function fanFaults(raw: Record<string, unknown>, draft: ReportsDraft, cap
     if (typeof flag !== "object" || flag === null) continue;
     const f = flag as Record<string, unknown>;
     const code = Number(f.fixture);
-    const part = typeof f.part === "string" ? f.part : "";
-    const quote = typeof f.quote === "string" ? f.quote : "";
+    const part = stringOrEmpty(f.part);
+    const quote = stringOrEmpty(f.quote);
     const tag = FAN_TAGS.find((t) => t === f.tag) ?? "not said";
     const piece = draft.matches.get(code) ?? { standfirst: "", account: "", sections: [] };
     if (quote.trim() === "" || (part !== "headline" && !draft.matches.has(code))) continue;
