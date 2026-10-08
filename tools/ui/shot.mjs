@@ -3,17 +3,19 @@
 //   node tools/ui/shot.mjs <route> <out.png> [--width 390] [--height 844] [--team-cookie <file>]
 
 import { writeFileSync } from "node:fs";
-import { connect, parseArgs, teamCookie } from "./cdp.mjs";
+import { PHONE, connect, parseArgs, teamCookie } from "./cdp.mjs";
 
 const { flags, positional } = parseArgs(process.argv.slice(2));
 const [route, out] = positional;
 if (!route || !out) {
-  console.error("usage: node tools/ui/shot.mjs <route> <out.png> [--width 390] [--height 844] [--team-cookie <file>]");
+  console.error(
+    `usage: node tools/ui/shot.mjs <route> <out.png> [--width ${PHONE.width}] [--height ${PHONE.height}] [--team-cookie <file>]`,
+  );
   process.exit(1);
 }
 
-const width = Number(flags.width ?? 390);
-const height = Number(flags.height ?? 844);
+const width = Number(flags.width ?? PHONE.width);
+const height = Number(flags.height ?? PHONE.height);
 
 const cdp = await connect();
 await cdp.setCookie(teamCookie(flags));

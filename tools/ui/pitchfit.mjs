@@ -1,18 +1,15 @@
-// Does a pitch, and its bench where it has one, still fit the first screen, and how much room is left.
-//
+// Does a pitch, and its bench where it has one, still fit the first screen, and with how much room: the page may
+// scroll on a phone, the grass and the bench may not. A withheld squad draws no pitch, and the run says so.
 //   node tools/ui/pitchfit.mjs [--team-cookie <file>]
-//
-// The page may scroll on a phone; the grass and the bench must not run past the fold. A withheld squad draws no
-// pitch, and the run says so rather than inventing one.
 
-import { connect, parseArgs, teamCookie } from "./cdp.mjs";
+import { DESK, PHONE, connect, parseArgs, teamCookie } from "./cdp.mjs";
 
 /** The reference phone, and the two desk sizes either side of the `lg` where the season grid moves beside the board. */
 const SIZES = [
-  [390, 844],
-  [768, 900],
-  [1024, 900],
-  [1440, 900],
+  [PHONE.width, PHONE.height],
+  [768, DESK.height],
+  [1024, DESK.height],
+  [DESK.width, DESK.height],
 ];
 
 const MEASURE = `(function(){
@@ -45,7 +42,7 @@ const cdp = await connect();
 await cdp.setCookie(teamCookie(flags));
 
 /** Every squad the served league has; which one is the reader's own is a fact about the cookie, not the route. */
-await cdp.setViewport(390, 900);
+await cdp.setViewport(PHONE.width, DESK.height);
 await cdp.open("/squad", 2500);
 const teams = JSON.parse(
   await cdp.js(

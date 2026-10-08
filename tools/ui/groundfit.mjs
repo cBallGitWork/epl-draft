@@ -1,11 +1,8 @@
-// Does anything on the desk print text on the bare ground? Nothing may: every word sits on a plate or a panel.
-//
+// Does anything on the desk print text on the bare ground? Nothing may. `sweep` cannot see it, as the ground is
+// `fixed -z-10` and a contrast walk composites past it; the paper is not walked, having no photograph under it.
 //   node tools/ui/groundfit.mjs [--team-cookie <file>]
-//
-// `sweep` cannot see this: the ground is `fixed -z-10`, so a contrast walk composites straight past it.
-// The paper is not walked; it has no photograph under it.
 
-import { connect, parseArgs, teamCookie } from "./cdp.mjs";
+import { AUDIT_WIDTHS, DESK, connect, parseArgs, teamCookie } from "./cdp.mjs";
 import { DESK_ROUTES, playedMatchRoutes, playerRoutes } from "./routes.mjs";
 
 /** This run's routes: the shared list plus the ids discovered below; a copy, so `routes.mjs` stays a declaration. */
@@ -80,9 +77,9 @@ await cdp.setCookie(teamCookie(flags));
 ROUTES.push(...(await playerRoutes(cdp)), ...(await playedMatchRoutes(cdp)));
 
 let failures = 0;
-for (const width of [390, 1440]) {
+for (const width of AUDIT_WIDTHS) {
   for (const route of ROUTES) {
-    await cdp.setViewport(width, 900);
+    await cdp.setViewport(width, DESK.height);
     await cdp.open(route, 2200);
     const bare = JSON.parse(await cdp.js(AUDIT));
     failures += bare.length;

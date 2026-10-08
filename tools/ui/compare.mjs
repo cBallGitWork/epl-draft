@@ -1,20 +1,17 @@
-// Our screen and Championship Manager's side by side in one PNG: CM's 800x600 on the left, ours on the right at the
-// same height, each labelled. Rendered in the already-open browser, not an image library.
-//
+// Our screen beside Championship Manager's in one PNG, CM's 800x600 left and ours at the same height right, drawn in
+// the open browser. Read the output: a composite nobody opens is two screenshots in a directory.
 //   node tools/ui/compare.mjs <route> <cm9900/NN.jpg> [out.png] [--width 1440] [--team-cookie <file>]
-//
-// Read the output: a composite nobody opens is two screenshots in a directory.
 
 import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { CAPTURE_CEILING, connect, parseArgs, teamCookie } from "./cdp.mjs";
+import { CAPTURE_CEILING, DESK, connect, parseArgs, teamCookie } from "./cdp.mjs";
 
 const { flags, positional } = parseArgs(process.argv.slice(2));
 const [route, reference, out = "compare.png"] = positional;
 if (!route || !reference) {
   console.error(
-    "usage: node tools/ui/compare.mjs <route> <docs/ui/reference/cm9900/NN.jpg> [out.png] [--width 1440]",
+    `usage: node tools/ui/compare.mjs <route> <docs/ui/reference/cm9900/NN.jpg> [out.png] [--width ${DESK.width}]`,
   );
   process.exit(1);
 }
@@ -22,8 +19,8 @@ if (!route || !reference) {
 /** CM's canvas, which every reference shot is; ours is scaled to its height so rows line up across the pair. */
 const CM = { width: 800, height: 600 };
 
-const width = Number(flags.width ?? 1440);
-const height = Number(flags.height ?? 900);
+const width = Number(flags.width ?? DESK.width);
+const height = Number(flags.height ?? DESK.height);
 
 /** How far to blow the pair up: the most `CAPTURE_CEILING` allows, since a capture past it hangs. */
 const pairBox = (zoom) => ({
