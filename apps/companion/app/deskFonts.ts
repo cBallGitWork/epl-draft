@@ -4,25 +4,6 @@ import localFont from "next/font/local";
 // `*Ext` face leads its stack in tokens.css/paper.css; its unicode-range (a literal: next/font reads
 // no other) keeps it unfetched until a ć or an š. The Arial fallbacks are in fonts/fallbacks.css.
 
-// Archivo sets the paper's letterspaced small capitals; the desk no longer wears it.
-const archivo = localFont({
-  src: "./fonts/archivo/latin.woff2",
-  weight: "400 700",
-  variable: "--font-archivo",
-  display: "swap",
-  adjustFontFallback: false,
-  fallback: ["Archivo Fallback"],
-});
-const archivoExt = localFont({
-  src: "./fonts/archivo/latin-ext.woff2",
-  weight: "400 700",
-  variable: "--font-archivo-ext",
-  display: "swap",
-  preload: false,
-  adjustFontFallback: false,
-  declarations: [{ prop: "unicode-range", value: "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF" }],
-});
-
 // Oxanium is the chrome (Handel Gothic's role in CM); 800 is `.cm-index`'s alone.
 const oxanium = localFont({
   src: "./fonts/oxanium/latin.woff2",
@@ -81,6 +62,6 @@ const archivoNarrowExt = localFont({
 });
 
 /** Every desk face's variable, for the root layout's <html>. */
-export const deskFontVariables = [archivo, archivoExt, oxanium, oxaniumExt, jost, jostExt, archivoNarrow, archivoNarrowExt]
+export const deskFontVariables = [oxanium, oxaniumExt, jost, jostExt, archivoNarrow, archivoNarrowExt]
   .map((face) => face.variable)
   .join(" ");
