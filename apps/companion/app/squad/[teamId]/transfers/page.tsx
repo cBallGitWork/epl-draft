@@ -3,7 +3,7 @@ import { deals } from "@epl/core";
 import TeamShell from "../Shell";
 import { leagueTeams } from "../team";
 import { readDeals } from "../../../business";
-import Ledger from "./Ledger";
+import Ledger from "../../../components/league/Ledger";
 
 // What one manager has done all season: the paper's transaction feed, grouped by `deals()` so a
 // claim and the drop that paid for it are one row.

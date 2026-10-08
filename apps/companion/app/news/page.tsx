@@ -3,6 +3,7 @@ import { FANTRAX_LEAGUE_PAGE, FANTRAX_PENDING_PATH, londonDayAndDate, londonTime
 import Letter from "./Letter";
 import MailRow from "./MailRow";
 import Mailbox from "./Mailbox";
+import MailViews from "./MailViews";
 import { doubtWash } from "../components/football/doubtRow";
 import Nothing from "../components/shell/Nothing";
 import OutLink from "../components/shell/OutLink";
@@ -34,6 +35,10 @@ export default async function NewsPage({
     <div className="flex flex-col gap-2">
       {/* The bar is the manager's ("123 News"), with no caption: DESIGN §2's one exception. */}
       <PageHeader title={mine === null ? NEWS : `${mine} ${NEWS}`} />
+      {/* The league's moves beside the inbox; on a phone an open letter has the screen, as the link below stands down. */}
+      <div className={chosen === null ? "" : "max-lg:hidden"}>
+        <MailViews current="inbox" />
+      </div>
 
       {/* Fantrax shows a manager's pending claims and trades only to his own session (PLATFORM_NOTES, 1 Oct 2026). */}
       <OutLink
