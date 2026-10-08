@@ -14,6 +14,8 @@ import UnreadBadge from "./components/shell/UnreadBadge";
 import { liveTie } from "./components/shell/liveTie";
 import { aheadOf, sectionsFor } from "./components/shell/sections";
 import { readInbox } from "./news/inbox";
+import { readerTeamId } from "./squads";
+import { venueOf } from "./venues";
 import { deskFontVariables } from "./deskFonts";
 import { APP_SHORT_NAME, TOKEN_SRGB } from "./config";
 import "./globals.css";
@@ -58,6 +60,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     .then((inbox) => inbox.items.map((item) => item.id))
     .catch(() => []);
 
+  const [faces, reader] = await Promise.all([groundFaces(), readerTeamId()]);
+
   return (
     <html lang="en-GB" className={deskFontVariables}>
       {/* A row: the rail, then the content. `min-w-0` on the content column stops its `truncate` and
@@ -66,7 +70,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <div aria-hidden className="cm-statusbar" />
         {/* CM's darkened match photograph under every desk screen. `sweep` cannot see it, so nothing prints
             on the bare ground, and `tools/ui/groundfit.mjs` checks that. */}
-        <PhotoGround faces={await groundFaces()} />
+        {/* Over the reader's own team's ground once signed in (Craig, 8 Oct 2026), Anfield's crowd before. */}
+        <PhotoGround faces={faces} home={reader === null ? null : venueOf(reader)} />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[60] focus:bg-raised focus:px-3 focus:py-2 focus:text-sm"

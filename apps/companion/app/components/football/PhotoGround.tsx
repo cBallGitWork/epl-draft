@@ -18,6 +18,7 @@ export default function PhotoGround({
   faces = [],
   subject,
   photo,
+  home = null,
 }: {
   faces?: readonly string[];
   /** The short name of the club this screen is about, or null for a subject with none. Left off (not
@@ -25,6 +26,8 @@ export default function PhotoGround({
   subject?: string | null;
   /** A picture the subject already chose in place of a club's: a head-to-head's home venue. */
   photo?: { src: string; blur?: string } | null;
+  /** The signed-in reader's own team's ground, the shell's in the desk's place; null signed out, who keep Anfield. */
+  home?: { src: string; blur?: string } | null;
 }) {
   const pathname = usePathname();
   if (isPaperRoute(pathname)) return null;
@@ -34,9 +37,10 @@ export default function PhotoGround({
   // A club with no photograph (`clubGroundPhoto` is null for a promoted club) falls back to the desk's.
   // One lookup, so a picture never travels with another stadium's blur.
   const chosen = photo ?? (subject === undefined || subject === null ? null : clubGroundPhoto(subject));
-  const ground = chosen?.src ?? DESK_GROUND;
+  const standing = chosen ?? home;
+  const ground = standing?.src ?? DESK_GROUND;
   // The desk's own picture keeps its own placeholder, whoever chose it.
-  const blur = chosen?.blur ?? (ground === DESK_GROUND ? DESK_GROUND_BLUR : null);
+  const blur = standing?.blur ?? (ground === DESK_GROUND ? DESK_GROUND_BLUR : null);
   if (ground === null && faces.length === 0) return null;
 
   return (
