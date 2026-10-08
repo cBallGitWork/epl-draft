@@ -11,6 +11,7 @@ import {
   isSaturday,
   isDated,
   clubById,
+  minimumsOf,
   judgePage,
   getFootballSnapshot,
   londonDayOf,
@@ -23,21 +24,20 @@ import {
   oldBoys,
   periodGameweeks,
   periodOfGameweek,
-  projectionIntel,
   sheetOf,
   threadsOf,
   type Cutoff,
   type DayPoints,
   type DraftMan,
   type DraftSide,
-  type IntelProjections,
   type MatchupContext,
   type NextOpponent,
   type PastProse,
   type Sheet,
   type SheetMan,
 } from "@epl/core";
-import { INTEL_SEASON, readIntel } from "../intel";
+import recordedLimits from "../../data/leagues/roster-limits.json";
+import { readProjections } from "../intel";
 import { readScoring } from "../scoring";
 import { gatherRoundFacts } from "./facts";
 import { categoryIds, matchReads, slotWorth, tallies } from "./draftReads";
@@ -45,7 +45,6 @@ import { withFitness, type StoryCache } from "./draftFitness";
 import { draftManOf, type ManReads } from "./draftMen";
 import { draftPast, pastAngles, pastProse } from "./draftPast";
 import { draftSeason, gameweekFacts, placeOf, ranksAfter, sweepOf } from "./draftSeason";
-import { minimums } from "./rosterMinimums";
 import { earlierSheets } from "./sheets";
 
 // The draft match-up desk's reads for one gameweek, turned into each match-up's facts and story at both cut-offs:
@@ -95,9 +94,9 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
 
   const ids = categoryIds(info);
   const worth = slotWorth(scoring, ids, reads.map((r) => r.raw), facts.teams, SLOTS);
-  const min = minimums(FANTRAX_LEAGUE_ID);
+  const min = minimumsOf(recordedLimits, FANTRAX_LEAGUE_ID);
   const limits = { min: min ?? {}, max: info.roster.maxActiveByPosition };
-  const projections = projectionIntel(readIntel<IntelProjections>("projections", `${INTEL_SEASON}.json`));
+  const projections = readProjections();
   const clubs = clubById(snapshot);
 
   const dayTallies = reads.map((r) => ({ day: r.date, byMan: tallies([r.raw], ids) }));

@@ -24,14 +24,13 @@ import {
   mapLiveStats,
   mapPlayerStats,
   mapTransactions,
-  minimumsOf,
+  leagueLimits,
   openingGameweek,
   periodDays,
   periodGameweeks,
   playerByCode,
   type Assignment,
   type BinMatch,
-  type Bridge,
   type Club,
   type Fixture,
   type FootballSnapshot,
@@ -43,9 +42,9 @@ import {
   undrafted,
 } from "@epl/core";
 import limits from "../../data/leagues/roster-limits.json";
-import mapping from "../../data/mappings/fantrax.json";
 import { STATS_LEAGUE } from "../leagues";
 import { readScoring } from "../scoring";
+import { BRIDGE } from "./bridge";
 import type { DeskFacts } from "./facts";
 import { readArchive } from "./persist";
 
@@ -82,8 +81,7 @@ export async function binXiDesk(input: {
   if (!input.assignments.some((each) => each.kind === "bin-xi")) return null;
   // Before a draft every man is in nobody's squad, and an eleven of the whole pool is not the bin.
   if (!facts.teams.some((team) => team.players.length > 0)) return say("Bin XI: no squads yet; nothing filed."), null;
-  const minimums = minimumsOf(limits, FANTRAX_LEAGUE_ID);
-  const shapes = minimums === null ? [] : formations({ ...info.roster, minActiveByPosition: minimums });
+  const shapes = formations(leagueLimits(info.roster, limits, FANTRAX_LEAGUE_ID));
   if (shapes.length === 0) return say("Bin XI: no position minimums on record for this league (npm run roster-limits); nothing filed."), null;
   const scoring = info.scoringPeriods.find((each) => each.number === period);
   if (scoring === undefined) return say(`Bin XI: Fantrax has no period ${period}; nothing filed.`), null;
@@ -104,13 +102,12 @@ export async function binXiDesk(input: {
   ]);
 
   const byCode = playerByCode(snapshot);
-  const bridge = mapping as Bridge;
   const inWindow = new Set(played.map((fixture) => fixture.id));
   const { men, extras, unjoined } = binMen({
     pool,
     sheet: new Map([...outfield, ...keepers].map((line) => [line.fantraxId, line])),
     player: (fantraxId) => {
-      const entry = bridge[fantraxId];
+      const entry = BRIDGE[fantraxId];
       return entry === undefined || isUnmapped(entry) ? null : (byCode.get(entry.fplCode) ?? null);
     },
     weeks: fplWeeks(rows.flat(), (fixtureId) => inWindow.has(fixtureId)),

@@ -1,3 +1,5 @@
+import type { RosterLimits } from "./types";
+
 // The fewest a league may start at each position, from `data/leagues/roster-limits.json`: no Fantrax
 // endpoint publishes a minimum, so `scripts/roster-limits.ts` scrapes the commissioner's setup page.
 
@@ -15,4 +17,9 @@ export function minimumsOf(file: { leagues: Record<string, RecordedLimits> }, le
   return Object.fromEntries(
     league.positions.filter((position) => position.minActive > 0).map((position) => [position.shortName, position.minActive]),
   );
+}
+
+/** A league's roster limits with the minimums the file records for it; none recorded is no floor, and no shapes. */
+export function leagueLimits(roster: RosterLimits, file: { leagues: Record<string, RecordedLimits> }, leagueId: string): RosterLimits {
+  return { ...roster, minActiveByPosition: minimumsOf(file, leagueId) ?? {} };
 }

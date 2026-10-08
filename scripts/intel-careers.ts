@@ -1,8 +1,8 @@
-import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { fetchBootstrap, type IntelCareers } from "@epl/core";
-import { INTEL_SEASON, intelManifest } from "./intel";
-import { INTEL_ROOT, SISTER_ROOT } from "./paths";
+import { INTEL_SEASON, intelManifest, writeIntel } from "./intel";
+import { SISTER_ROOT } from "./paths";
 
 // Each man's club in every season the sister's identity store holds, keyed on FPL's code, into `data/intel/careers/`
 // (`intel-export.md` §7). Reads the sister repo and never writes to it; `scripts/sync-intel.sh weekly` runs it.
@@ -57,8 +57,7 @@ async function main(): Promise<void> {
     manifest: intelManifest({ gameweek: null, rows: players.length, sources: [{ path: PLAYERS, mtime: null }] }),
     players,
   };
-  mkdirSync(join(INTEL_ROOT, "careers"), { recursive: true });
-  writeFileSync(join(INTEL_ROOT, "careers", `${INTEL_SEASON}.json`), `${JSON.stringify(file)}\n`);
+  writeIntel("careers", `${JSON.stringify(file)}\n`);
   console.log(`careers: ${players.length} men across ${seasons.length} seasons written.`);
 }
 

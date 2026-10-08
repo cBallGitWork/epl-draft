@@ -1,5 +1,5 @@
 import { mkdirSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname } from "node:path";
 import {
   KEEPER,
   OUTFIELD,
@@ -16,9 +16,8 @@ import {
   type LeagueProjectionFile,
   type PlayerStatLine,
 } from "@epl/core";
-import { INTEL_SEASON, intelManifest, readBridge, readIntel } from "./intel";
+import { INTEL_SEASON, intelManifest, intelPath, readBridge, readIntel } from "./intel";
 import { SCORING_LEAGUE } from "./leagues";
-import { INTEL_ROOT } from "./paths";
 import { buildPack, type FplSide, type PoolSide } from "./draftPack/build";
 
 // The draft pack (Craig, 2 Oct 2026: "projections for all players using real league's points"): the sister model's
@@ -39,11 +38,11 @@ const METHOD =
   "own, with goals conceded re-costed where his Fantrax slot charges them and FPL's position did not, or the reverse.";
 
 async function main(): Promise<void> {
-  const out = argument("--out") ?? join(INTEL_ROOT, "league-projections", `${INTEL_SEASON}.json`);
+  const out = argument("--out") ?? intelPath("league-projections");
   const info = mapLeagueInfo(await fetchLeagueInfo(SCORING_LEAGUE.leagueId));
   const scoring = scoringOf(info);
   if (scoring === null) throw new Error(`the "${SCORING_LEAGUE.key}" league described no scoring`);
-  const exported = readIntel<IntelProjections>("projections", `${INTEL_SEASON}.json`);
+  const exported = readIntel<IntelProjections>("projections");
   const projections = projectionIntel(exported);
   if (projections.size === 0) throw new Error("no projections export held");
 

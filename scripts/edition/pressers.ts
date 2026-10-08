@@ -1,7 +1,7 @@
 import { MS_PER_DAY, fullClubName, instantOf, normalizeName, pressers, type Club, type Fixture, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
 import type { ResolvedPlayer, RosteredPlayer, RosteredTeam, StoryFixture } from "@epl/core";
 import { roundTies } from "./round";
-import { INTEL_SEASON, readIntel } from "../intel";
+import { readIntel } from "../intel";
 
 // The Team Sheet's facts, read off the intel export the sister repo writes.
 //
@@ -12,7 +12,7 @@ import { INTEL_SEASON, readIntel } from "../intel";
  *  under Friday's column. */
 
 function read(): IntelPressers | null {
-  return readIntel<IntelPressers>("pressers", `${INTEL_SEASON}.json`);
+  return readIntel<IntelPressers>("pressers");
 }
 
 /** The same clubs re-keyed by the PER-SEASON id, which is what a player carries.

@@ -9,7 +9,7 @@ import {
   type RosteredTeam,
   type StoryLineupMan,
 } from "@epl/core";
-import { INTEL_SEASON, readIntel } from "../intel";
+import { readIntel } from "../intel";
 import { roundTies } from "./round";
 import { display } from "./pressers";
 
@@ -22,7 +22,7 @@ import { display } from "./pressers";
 /** Scout's latest elevens when they were made for this round, else null: the column is filed as
  *  that round's predictions, so an older eleven would print a wrong fact. The app draws it anyway. */
 export function readXi(gameweek: number): IntelXi | null {
-  const xi = readIntel<IntelXi>("xi", `${INTEL_SEASON}.json`);
+  const xi = readIntel<IntelXi>("xi");
   return xi?.manifest?.gameweek === gameweek ? xi : null;
 }
 
@@ -96,6 +96,6 @@ function owners(teams: readonly RosteredTeam[]): Map<number, string> {
 /** The squads for the season the XI itself names, so the two exports cannot be
  *  read from different years. */
 function readSquads(season: string): IntelSquads | null {
-  return readIntel<IntelSquads>("squads", `${season}.json`);
+  return readIntel<IntelSquads>("squads", season);
 }
 

@@ -1,5 +1,3 @@
-import { mkdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
 import {
   KEEPER,
   OUTFIELD,
@@ -10,9 +8,8 @@ import {
   type IntelStats,
   type StatSheet,
 } from "@epl/core";
-import { INTEL_SEASON, intelManifest, readBridge, readIntel, sameApartFromManifest } from "./intel";
+import { intelManifest, readBridge, readIntel, sameApartFromManifest, writeIntel } from "./intel";
 import { STATS_LEAGUE } from "./leagues";
-import { INTEL_ROOT } from "./paths";
 import { buildStats } from "./stats/build";
 
 // The stats league's season-to-date counts for every man who has played, into `data/intel/stats/`
@@ -38,8 +35,7 @@ async function main(): Promise<void> {
 
   const bridge = readBridge();
   const { stats, unknown, missing } = buildStats(sheets, bridge);
-  const file = `${INTEL_SEASON}.json`;
-  const held = readIntel<IntelStats>("stats", file);
+  const held = readIntel<IntelStats>("stats");
   const drift = columnDrift(held?.columns ?? stats.columns, stats.columns);
   const drifted = [
     ...unknown.map((stat) => `a column we have no key for: ${named(sheets, stat)}`),
@@ -67,8 +63,7 @@ async function main(): Promise<void> {
     console.log(`stats: unchanged since ${held.manifest.exportedAt}.`);
     return;
   }
-  mkdirSync(join(INTEL_ROOT, "stats"), { recursive: true });
-  writeFileSync(join(INTEL_ROOT, "stats", file), dense(out));
+  writeIntel("stats", dense(out));
   console.log(
     `stats: ${out.players.length} men, ${out.columns.length} columns written` +
       ` (${out.unbridgedWithMinutes} who have played the bridge cannot key).`,

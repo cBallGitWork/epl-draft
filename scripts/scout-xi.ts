@@ -1,5 +1,4 @@
 import { writeFileSync } from "node:fs";
-import { join } from "node:path";
 import {
   SCOUT_TEAM_NEWS_URL,
   fetchFixtures,
@@ -11,8 +10,7 @@ import {
   xiToWrite,
   type IntelXi,
 } from "@epl/core";
-import { INTEL_SEASON, intelManifest, readIntel } from "./intel";
-import { INTEL_ROOT } from "./paths";
+import { intelManifest, intelPath, readIntel } from "./intel";
 
 // Scout's predicted elevens, straight from their team-news page into `data/intel/xi/`
 // (Craig, 23 Sep 2026: "It should just always be live, and it's updated when scout
@@ -48,8 +46,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  const file = `${INTEL_SEASON}.json`;
-  const held = readIntel<IntelXi>("xi", file);
+  const held = readIntel<IntelXi>("xi");
   const gameweek = nextRound(fixtures, now)?.gameweek ?? null;
   const write = xiToWrite(held, clubs, gameweek, now);
   if (write === null) {
@@ -66,7 +63,7 @@ async function main(): Promise<void> {
     source: "ffscout",
     clubs,
   };
-  writeFileSync(join(INTEL_ROOT, "xi", file), `${JSON.stringify(xi, null, 2)}\n`);
+  writeFileSync(intelPath("xi"), `${JSON.stringify(xi, null, 2)}\n`);
   console.log(`scout-xi: ${xi.manifest.rows} elevens for GW${xi.manifest.gameweek ?? "?"} written.`);
 }
 

@@ -1,5 +1,4 @@
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import {
   careerIntel,
   cupIntel,
@@ -36,8 +35,7 @@ import type {
   IntelXi,
   LeagueProjectionFile,
 } from "@epl/core";
-import { INTEL_ROOT } from "./paths";
-import { INTEL_SEASON } from "./intel";
+import { INTEL_SEASON, intelPath } from "./intel";
 
 // Whether every intel file is present, parses, and is inside its kind's age limit
 // (`INTEL_AGE_LIMIT_DAYS`), and whether the predicted eleven is for a round still to come.
@@ -81,7 +79,7 @@ async function main(): Promise<void> {
 
   for (const { kind, season, summary } of CHECKS) {
     const label = season === INTEL_SEASON ? kind : `${kind} ${season}`;
-    const file = read<{ manifest: IntelManifest }>(join(INTEL_ROOT, kind, `${season}.json`));
+    const file = read<{ manifest: IntelManifest }>(intelPath(kind, season));
     if (file === null) {
       console.error(`\n✗ ${label}: absent, or will not parse.`);
       broken.push(`${label} absent`);
@@ -109,7 +107,7 @@ async function main(): Promise<void> {
 
 /** What is wrong with the predicted eleven beyond its age: a club that is not eleven, or a round already played. */
 async function xiFaults(): Promise<string[]> {
-  const xi = read<IntelXi>(join(INTEL_ROOT, "xi", `${INTEL_SEASON}.json`));
+  const xi = read<IntelXi>(intelPath("xi"));
   if (xi === null) return [];
   const round = xi.manifest?.gameweek;
   if (typeof round !== "number") {

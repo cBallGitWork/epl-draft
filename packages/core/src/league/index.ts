@@ -54,7 +54,7 @@ export type { Eligibility, Move } from "./moves";
 
 export { violations } from "./violations";
 export { formations } from "./formations";
-export { minimumsOf } from "./minimums";
+export { leagueLimits, minimumsOf } from "./minimums";
 export type { Violation } from "./violations";
 
 export { isActive } from "./rosterStatus";

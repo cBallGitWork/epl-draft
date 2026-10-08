@@ -1,7 +1,6 @@
 import {
   FANTRAX_LEAGUE_ID,
   type AvailabilityNote,
-  type Bridge,
   type Deal,
   type DraftPick,
   type FootballSnapshot,
@@ -22,15 +21,13 @@ import {
   mapLivePlayerPoints,
   mapLiveScores,
   mapStandings,
-  mapTeamRosters,
   mapTransactions,
   periodPairings,
-  resolveRosters,
   teamOfTheWeek,
   wasFielded,
 } from "@epl/core";
 import { BBC_FOOTBALL, affectedBy, fetchFeed, mapNews, type Affected, type NewsItem } from "@epl/core";
-import mapping from "../../data/mappings/fantrax.json";
+import { rosteredPeriod } from "./bridge";
 
 // Everything the writer is allowed to know, read here at the edge so the brief
 // builders stay pure. One read per surface, each caught on its own: a feed we
@@ -98,12 +95,7 @@ export async function gatherRoundFacts(
   // The squads, and with them the two things only a join can say: who was in the
   // week's eleven, and whether the arrangement we hold is the one that was
   // actually fielded.
-  // `as Bridge` and not a looser cast: a JSON import widens `matchedBy` to
-  // `string` and the compiler cannot see that the writer only emits four
-  // literals. Asserted exactly as `apps/companion/app/squads.ts` asserts it, and
-  // for the same reason.
-  const squads =
-    rosters === null ? null : resolveRosters(snapshot, mapTeamRosters(rosters), mapping as Bridge);
+  const squads = rosters === null ? null : rosteredPeriod(snapshot, rosters);
   const eleven = squads === null ? null : teamOfTheWeek(squads.teams, info.roster, new Map());
 
   return {
