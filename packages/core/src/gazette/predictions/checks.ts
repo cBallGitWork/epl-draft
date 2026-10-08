@@ -70,6 +70,8 @@ const ADMISSION = ["Liverpool man", "Liverpool men", "Liverpool player", "Liverp
 const VERDICT = /\b(?:I|me|my)\b|\bI['’]/u;
 /** "Both of theirs": men he never names, which a reader without the brief cannot place. */
 const UNNAMED = /\btheirs\b/iu;
+/** A back line is four or five men: a sentence about one names at least one of them. */
+const BACK_LINE = /\bback (?:line|four|five)\b|\bdefenders\b/iu;
 /** The joke about sitting through it, which is a joke once a column and a tic after that. */
 const DULL = /\b(?:asleep|slog|dull|dreary|tedious|yawn|bor(?:e|ed|ing)|kip|nod(?:ding)? off|sit(?:ting)? through|enjoy watching)\b/iu;
 
@@ -205,6 +207,9 @@ function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckCon
     if (mentionsOf(line, side) > LIMITS.sideNamed) fault(key, "a side's name over and over", "send-back", side);
   }
   const men = ctx.names.filter((name) => !sides.has(name) && mentionAt(line, name) !== -1);
+  for (const sentence of sentences(line).filter((each) => BACK_LINE.test(each))) {
+    if (!ctx.names.some((name) => !sides.has(name) && mentionAt(sentence, name) !== -1)) fault(key, "a back line with nobody in it", "send-back", sentence);
+  }
   if (men.length > LIMITS.men) fault(key, "a roll call, more than four men", "send-back", men.join(", "));
   // "Their Ballard" is not how anybody talks: Ballard, or test31's Ballard.
   for (const name of men) {
