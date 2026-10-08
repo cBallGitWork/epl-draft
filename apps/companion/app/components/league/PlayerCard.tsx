@@ -59,9 +59,7 @@ export default function PlayerCard({
         {/* Silent for a fit player: a "no news" panel on every card is noise. */}
         {footballer && isDoubtful(footballer) ? (
           <div
-            className={`cm-panel flex flex-col gap-0.5 px-3 py-2 ${
-              footballer.chanceOfPlaying === 0 ? "cm-edge-bad" : "cm-edge-mid"
-            }`}
+            className="cm-panel flex flex-col gap-0.5 px-3 py-2"
           >
             <span className={`${SMALL_CAPS} text-muted`}>
               {footballer.chanceOfPlaying === null

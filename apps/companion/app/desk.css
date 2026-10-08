@@ -629,15 +629,6 @@ select.cm-bevel {
   border-color: var(--cm-dark);
 }
 
-/* The player card's doubt note: red when he is out, amber when he might be. `border-*` loses to the edge above. */
-.cm-panel.cm-edge-bad {
-  border-color: var(--color-bad);
-}
-
-.cm-panel.cm-edge-mid {
-  border-color: var(--color-mid);
-}
-
 /* A list's rows are ruled in the dark step, the same rule tables use. */
 .cm-rows > * {
   border-bottom: 1px solid var(--color-bg);
