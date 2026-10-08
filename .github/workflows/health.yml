@@ -1,0 +1,47 @@
+name: Health
+
+# Walks every route of the LIVE app with `npm run smoke`, as Verify walks a build. A page that answers an error, or
+# answers 200 with a server error streamed into it (every player page on 8 Oct 2026, when FPL refused Vercel with a
+# 403 and the season block had no fallback), fails the run, which opens the issue "alert: health"; the next green
+# run closes it. Plain requests, one page at a time: never a browser crawl, which is what provoked FPL's 403s.
+
+on:
+  schedule:
+    # Every two hours, 06:25 to 22:25 UTC: clear of capture (05:10), intel-check (05:55) and the editions' :00/:30.
+    - cron: "25 6-22/2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/node
+
+      # Vercel's FANTRAX_LEAGUE_ID is the only place a league is set, so the walk asks production which one it serves.
+      - name: Ask production which league it serves
+        id: league
+        run: |
+          league=$(curl -sf --max-time 30 "${{ vars.WARM_BASE_URL }}/api/league" | jq -r '.leagueId // empty')
+          if [ -z "$league" ]; then echo "::error::production did not say which league it serves"; exit 1; fi
+          echo "id=$league" >> "$GITHUB_OUTPUT"
+
+      - name: Walk every route of the live app
+        env:
+          SMOKE_BASE: ${{ vars.WARM_BASE_URL }}
+          FANTRAX_LEAGUE_ID: ${{ steps.league.outputs.id }}
+        run: npm run smoke
+
+      - uses: ./.github/actions/alert
+        if: ${{ always() }}
+        with:
+          source: health
+          status: ${{ job.status }}
