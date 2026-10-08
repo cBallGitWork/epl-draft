@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { SHAPE_BASELINE_PATH, leagueCaptureRoot } from "./paths";
 import { RECORDED_LEAGUES, type RecordedLeague, SHAPE_DIFF } from "./leagues";
-import { lastScored } from "./shape/scored";
+import { comparableLive } from "./shape/scored";
 import { drafted, excused } from "./snapshots";
 import {
   type AcknowledgedDifference,
@@ -22,8 +22,8 @@ import {
 } from "@epl/core";
 
 // Does the real league answer in the shape the mappers were written for, the rehearsal league's? A path only the
-// reference has is a mapper reading `undefined`: exit 1. So is a read either league failed, bar NO_TEAMS before that
-// league's draft. Exit 2 is a run that could not answer at all.   npm run shape-diff
+// reference has is a mapper reading `undefined`: exit 1. So is a read either league failed, bar NO_TEAMS before its
+// draft and live scoring before its first game. Exit 2 is a run that could not answer.   npm run shape-diff
 
 const REFERENCE = RECORDED_LEAGUES.find((league) => league.key === SHAPE_DIFF.reference);
 const SUBJECT = RECORDED_LEAGUES.find((league) => league.key === SHAPE_DIFF.subject);
@@ -41,22 +41,33 @@ const READS: { method: string; run: (leagueId: string) => Promise<unknown> }[] =
   { method: "getLiveScoringStats", run: liveScoring },
 ];
 
-/** Live scoring at the league's last period with a scored man, read back from the one Fantrax has open. A league
- *  nobody has scored in yet is a failed read, not a pass: it would compare nothing inside a man's row. */
+/** A league that has played no game yet, so has nothing of this read to compare: said aloud, and not a failure. */
+class Unplayed {
+  constructor(readonly why: string) {}
+}
+
+/** Live scoring at the league's last period with a scored man, read back from the one Fantrax has open. None is a
+ *  failed read once any game is on the standings, as it would compare nothing inside a man's row. */
 async function liveScoring(leagueId: string): Promise<unknown> {
   const open = mapTeamRosters(await fetchTeamRosters(leagueId)).period;
   if (open === null) throw new ProviderError("NO_PERIOD", "getTeamRosters named no open period to read back from");
-  const scored = await lastScored(open, (period) => fetchLiveScoring(leagueId, period));
-  if (scored === null) throw new ProviderError("NO_SCORES", `no period up to ${open} has a scored man to compare`);
-  return scored;
+  const live = await comparableLive(
+    open,
+    (period) => fetchLiveScoring(leagueId, period),
+    () => fetchStandings(leagueId),
+  );
+  if (live === "unplayed") return new Unplayed("nothing scored yet — compared from its first played period");
+  if (live === null) throw new ProviderError("NO_SCORES", `no period up to ${open} has a scored man to compare`);
+  return live;
 }
 
-/** A payload, or the provider's reason for not giving one. */
-type Answer = { payload: unknown } | { refused: ProviderError };
+/** A payload, the provider's reason for not giving one, or a league with nothing to compare yet. */
+type Answer = { payload: unknown } | { refused: ProviderError } | { unplayed: string };
 
 async function read(run: (leagueId: string) => Promise<unknown>, leagueId: string): Promise<Answer> {
   try {
-    return { payload: await run(leagueId) };
+    const payload = await run(leagueId);
+    return payload instanceof Unplayed ? { unplayed: payload.why } : { payload };
   } catch (error) {
     if (error instanceof ProviderError) return { refused: error };
     throw error;
@@ -118,10 +129,11 @@ async function main() {
       read(run, SUBJECT.leagueId),
     ]);
 
-    if ("refused" in reference || "refused" in subject) {
+    if (!("payload" in reference) || !("payload" in subject)) {
       uncompared += 1;
       for (const [league, answer] of [[REFERENCE, reference], [SUBJECT, subject]] as const) {
-        if ("refused" in answer && !(await stands(method, league, answer.refused))) {
+        if ("unplayed" in answer) console.log(`~ ${method}  ${league.key}: ${answer.unplayed}`);
+        else if ("refused" in answer && !(await stands(method, league, answer.refused))) {
           failed.push(`${method} (${league.key} ${answer.refused.code})`);
         }
       }
