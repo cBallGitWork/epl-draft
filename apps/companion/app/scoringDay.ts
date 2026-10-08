@@ -4,6 +4,7 @@ import {
   OUTFIELD,
   POOL_PAGE_SIZE,
   fetchPoolStats,
+  fetchSeasonCodes,
   fplCodeOf,
   mapPlayerStats,
   mapPoolStats,
@@ -11,7 +12,7 @@ import {
 } from "@epl/core";
 import { SCORING_DAY_REVALIDATE } from "./config";
 import { leagueCache } from "./leagueCache";
-import { orRefusal } from "./refusals";
+import { orRefusal, refusedAs } from "./refusals";
 import { SCORING_LEAGUE } from "./scoring";
 import { bridge } from "./squads";
 
@@ -28,8 +29,7 @@ export const scoringDay = leagueCache(
   "scoring-day",
   async (day: string): Promise<[number, LeagueDayLine][] | null> => {
     if (SCORING_LEAGUE === null) return null;
-    const season = await orRefusal(fetchPoolStats(SCORING_LEAGUE, 1));
-    const byDate = season instanceof FantraxError ? null : mapPoolStats(season).byDate;
+    const byDate = await refusedAs(fetchSeasonCodes(SCORING_LEAGUE), () => null, (season) => mapPoolStats(season).byDate);
     if (byDate === null) return null;
     const lines: [number, LeagueDayLine][] = [];
     // One half after the other: Fantrax throttles a burst.

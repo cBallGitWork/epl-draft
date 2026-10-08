@@ -25,7 +25,7 @@ import { intelMinuteMoves } from "../intel";
 import { shortName } from "../teamNames";
 import { readProposals, readTradeBlocks } from "../market";
 import { seasonKickoffs } from "../football";
-import { readerTeamId, getLeagueSquads } from "../squads";
+import { readerTeamId, getLeagueSquads, readable } from "../squads";
 import { signedTeamId } from "../session";
 
 // What the manager's inbox is made of, from reads the paper and the head-to-head already cache.
@@ -60,7 +60,7 @@ export async function readInbox(): Promise<Inbox> {
     readProposals(),
   ]);
 
-  const drafted = "period" in squads ? squads : null;
+  const drafted = readable(squads);
   const names = new Map(
     (drafted?.info?.teams ?? []).map((team) => [team.teamId, team.name] as const),
   );

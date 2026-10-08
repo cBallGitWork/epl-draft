@@ -24,7 +24,7 @@ import { Scores } from "./Scores";
 import RoundWord from "../components/league/RoundWord";
 import PageHeader from "../components/shell/PageHeader";
 import TabStrip from "../components/shell/TabStrip";
-import { bridge, getLeagueSquads, readerTeamId } from "../squads";
+import { bridge, getLeagueSquads, readable, readerTeamId } from "../squads";
 import { liveScores, periodPoints } from "../scoreboard";
 import YourMatchup from "./YourMatchup";
 import { marks } from "../involvement";
@@ -99,7 +99,7 @@ export default async function MatchdayPage({
   const today: readonly Fixture[] = onToday.length > 0 ? onToday : round;
 
   // The draft's ties; no draft, no schedule or a silent Fantrax costs this half and nothing else.
-  const drafted = "period" in squads ? squads : null;
+  const drafted = readable(squads);
   const period = drafted?.roundPeriod ?? null;
   const [{ scores }, table] = await Promise.all([
     period === null ? { scores: new Map<string, LiveTeamScore>() } : liveScores(period),

@@ -19,7 +19,7 @@ import {
 import { leagueCache } from "../../leagueCache";
 import { leagueTable } from "../../standings";
 import { seasonFixtures } from "../../football";
-import { orRefusal, unavailable } from "../../refusals";
+import { orRefusal, refusedAs, unavailable } from "../../refusals";
 import type { Unavailable } from "../../refusals";
 
 // The schedule's reads, out of the route; Fantrax's periods become gameweeks here (`periodGameweeks`, the one-way seam).
@@ -92,10 +92,7 @@ export const getSchedule = leagueCache("schedule-season",
 
 /** Every team's total in every period, one request for the season; empty on failure, which prints dashes. */
 export const getSeasonResults = leagueCache("schedule-results",
-  async (): Promise<PeriodResult[]> => {
-    const raw = await orRefusal(fetchSeasonResults(FANTRAX_LEAGUE_ID));
-    return raw instanceof FantraxError ? [] : mapSeasonResults(raw);
-  },
+  (): Promise<PeriodResult[]> => refusedAs(fetchSeasonResults(FANTRAX_LEAGUE_ID), () => [], mapSeasonResults),
   () => [],
 );
 

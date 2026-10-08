@@ -22,7 +22,7 @@ import { readDeals } from "./business";
 import { periodPoints } from "./scoreboard";
 import { roundUnderway, seasonKickoffs } from "./football";
 import { filed } from "./paper";
-import { type LeagueSquads, getLeagueSquads } from "./squads";
+import { type LeagueSquads, getLeagueSquads, readable } from "./squads";
 
 // What today's paper is made of: core's builders decide what is true, this decides what runs.
 
@@ -65,7 +65,7 @@ export async function edition(mine: string | null): Promise<Edition> {
     readDeals(),
     seasonKickoffs(),
   ]);
-  const drafted = "period" in squads ? squads : null;
+  const drafted = readable(squads);
   const at = now().toISOString();
 
   // Any dated fixture still to finish; an undated one cannot hold a gameweek open.

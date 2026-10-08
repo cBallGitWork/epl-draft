@@ -1,9 +1,11 @@
 import {
   KEEPER,
   OUTFIELD,
+  POOL_PAGE_SIZE,
   RATING_WEIGHTS,
   STRENGTH_SO_FAR,
   fetchPoolStats,
+  fetchSeasonCodes,
   mapPoolStats,
   mapStatSheet,
   rateMatch,
@@ -22,8 +24,6 @@ import { FANTRAX_STAT } from "../stats/columns";
 // the stats league's Opta counts for the mistakes and extras, and the opponent as the season has gone. Six reads a day,
 // one after another (Fantrax throttles a burst). The match report and `npm run ratings` both read through here.
 
-const PAGE = 1000;
-
 type Counts = Record<string, number | null>;
 
 /** One day's figures from both leagues, by Fantrax id. */
@@ -37,11 +37,11 @@ export interface DayFigures {
 
 /** Every man's line from one league for one day. */
 async function dayRead(leagueId: string, day: string) {
-  const code = mapPoolStats(await fetchPoolStats(leagueId, 1)).byDate;
+  const code = mapPoolStats(await fetchSeasonCodes(leagueId)).byDate;
   if (code === null) throw new Error(`no per-date season from ${leagueId}`);
   const reads = [];
   for (const group of [OUTFIELD, KEEPER]) {
-    const raw = await fetchPoolStats(leagueId, PAGE, code, group, undefined, day);
+    const raw = await fetchPoolStats(leagueId, POOL_PAGE_SIZE, code, group, undefined, day);
     reads.push({ pool: mapPoolStats(raw), sheet: mapStatSheet(raw) });
   }
   return reads;

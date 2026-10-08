@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { FantraxError, ProviderError } from "@epl/core";
-import { orRefusal, tell } from "./refusals";
+import { orRefusal, refusedAs, tell } from "./refusals";
 
 describe("orRefusal", () => {
   it("returns a refusal Fantrax meant, to be modelled and cached", async () => {
@@ -22,6 +22,19 @@ describe("orRefusal", () => {
     const dropped = new ProviderError("ECONNRESET", "www.fantrax.com /fxea → ECONNRESET", "unreachable");
     await expect(orRefusal(Promise.reject(dropped))).rejects.toBe(dropped);
     await expect(orRefusal(Promise.reject(new TypeError("x")))).rejects.toThrow(TypeError);
+  });
+});
+
+describe("refusedAs", () => {
+  it("maps an answer, and answers a refusal Fantrax meant with the fallback", async () => {
+    expect(await refusedAs(Promise.resolve(2), () => 0, (n) => n * 10)).toBe(20);
+    const refused = new FantraxError("getTeamRosters", "NO_TEAMS", "no teams");
+    expect(await refusedAs(Promise.reject(refused), (error) => error.code, () => "read")).toBe("NO_TEAMS");
+  });
+
+  it("still throws an outage", async () => {
+    const down = new FantraxError("getTeamRosters", "503", "Service Unavailable", "unreachable");
+    await expect(refusedAs(Promise.reject(down), () => null, () => "read")).rejects.toBe(down);
   });
 });
 

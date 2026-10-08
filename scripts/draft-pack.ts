@@ -3,6 +3,7 @@ import { dirname, join } from "node:path";
 import {
   KEEPER,
   OUTFIELD,
+  POOL_PAGE_SIZE,
   fetchBootstrap,
   fetchLeagueInfo,
   fetchPoolStats,
@@ -28,7 +29,6 @@ import { buildPack, type FplSide, type PoolSide } from "./draftPack/build";
 
 /** Minutes at his slot's average each man's own DefCon and keeper rates are drawn toward: three full matches. */
 const SHRINK_MINUTES = 270;
-const PAGE = 1000;
 
 const METHOD =
   "FPL's projected parts turned back into counts at FPL's prices for his FPL position, then priced at each Fantrax slot " +
@@ -54,7 +54,7 @@ async function main(): Promise<void> {
   const who = new Map<string, PlayerStatLine>();
   for (const period of begun) {
     for (const group of [OUTFIELD, KEEPER]) {
-      for (const line of mapPlayerStats(await fetchPoolStats(SCORING_LEAGUE.leagueId, PAGE, undefined, group, period))) {
+      for (const line of mapPlayerStats(await fetchPoolStats(SCORING_LEAGUE.leagueId, POOL_PAGE_SIZE, undefined, group, period))) {
         if (!who.has(line.fantraxId)) who.set(line.fantraxId, line);
         if (line.stats.GP !== 1) continue;
         matches.set(line.fantraxId, [...(matches.get(line.fantraxId) ?? []), { minutes: line.stats.Min ?? 0, counts: line.stats }]);

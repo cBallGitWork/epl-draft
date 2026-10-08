@@ -1,8 +1,8 @@
-import { FANTRAX_LEAGUE_ID, FantraxError, fetchPlayerStories, mapPlayerStories } from "@epl/core";
+import { FANTRAX_LEAGUE_ID, fetchPlayerStories, mapPlayerStories } from "@epl/core";
 import { orderKey } from "@epl/core";
 import type { LeagueTransaction, PlayerStory } from "@epl/core";
 import { unstable_cache } from "next/cache";
-import { orDegraded, orRefusal } from "../../refusals";
+import { orDegraded, refusedAs } from "../../refusals";
 import { readDeals } from "../../business";
 import { getLeagueSquads } from "../../squads";
 import { PAGE_REVALIDATE } from "../../config";
@@ -12,12 +12,11 @@ import { PAGE_REVALIDATE } from "../../config";
 /** Everything written about him this football year: a second profile read per man, cached on him; a refusal is none. */
 export function playerStories(fantraxId: string, now: Date): Promise<PlayerStory[]> {
   const stories = unstable_cache(
-    async () => {
-      const raw = await orRefusal(fetchPlayerStories(FANTRAX_LEAGUE_ID, fantraxId));
-      if (raw instanceof FantraxError) return [];
-      const from = footballYearFrom(now);
-      return mapPlayerStories(raw).filter((story) => story.at === null || story.at >= from);
-    },
+    () =>
+      refusedAs(fetchPlayerStories(FANTRAX_LEAGUE_ID, fantraxId), () => [], (raw) => {
+        const from = footballYearFrom(now);
+        return mapPlayerStories(raw).filter((story) => story.at === null || story.at >= from);
+      }),
     ["player-stories", fantraxId],
     { revalidate: PAGE_REVALIDATE },
   )();
