@@ -7,8 +7,8 @@ export const PAPER_TITLE = "Gazetta";
  *  earlier than Tuesday's files the day before (Sunday = 0). */
 export const PREDICTED_XI = { filing: { weekday: 5, hour: 16, maxLeadDays: 3 } } as const;
 
-/** The Team Sheet: a column per press-conference day until the lock, from 16:30 London that day once the Mac's 16:00
- *  import has merged, and Thursday's from 18:00 (Craig, 8 Oct 2026). */
+/** The Team Sheet: a column per press-conference day until the lock, from 16:30 London that day once the Mac's import
+ *  has merged (Thursday 16:00, Friday 15:45), and Thursday's from 18:00 (Craig, 8 Oct 2026). */
 export const TEAM_SHEET = { from: { hour: 16, minute: 30 }, thursday: { weekday: "Thu", hour: 18 } } as const;
 
 /** Lawro's predictions: when the column files and how a tie is called. Set before any league was drafted, so
