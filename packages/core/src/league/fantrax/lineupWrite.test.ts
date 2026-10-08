@@ -4,6 +4,7 @@ import roster from "./__fixtures__/lineupState.json";
 import saved from "./__fixtures__/lineupSaved.json";
 import {
   benchOrderMap,
+  benchToWrite,
   changesBenchOrder,
   changesLineup,
   fieldMapFor,
@@ -87,6 +88,25 @@ describe("the bench order", () => {
     expect(changesBenchOrder(["a", "b"], { a: 1, b: 2 })).toBe(false);
     expect(changesBenchOrder(["b", "a"], { a: 1, b: 2 })).toBe(true);
     expect(changesBenchOrder(["a"], {})).toBe(true);
+  });
+});
+
+describe("benchToWrite", () => {
+  it("leaves an unnumbered bench to Fantrax's points order when the manager only moved his eleven", () => {
+    expect(benchToWrite(["gk2", "d5", "m5", "f3"], false, {})).toBeNull();
+  });
+
+  it("numbers an unnumbered bench the manager reordered", () => {
+    expect(benchToWrite(["m5", "d5"], true, {})).toEqual({ m5: 1, d5: 2 });
+  });
+
+  it("keeps a numbered bench's numbers true when who is on it changes", () => {
+    expect(benchToWrite(["a", "d"], false, { a: 1, c: 2 })).toEqual({ a: 1, c: 0, d: 2 });
+    expect(benchToWrite(["a", "c"], false, { a: 1, c: 2 })).toBeNull();
+  });
+
+  it("treats a bench numbered only with noughts as unnumbered", () => {
+    expect(benchToWrite(["a", "b"], false, { a: 0, c: 0 })).toBeNull();
   });
 });
 

@@ -34,7 +34,7 @@ export function mapBenchOrder(raw: RawTeamRosterInfo): BenchOrder {
   });
   const numbers = Object.entries(raw.miscData?.autoSubOrderMap ?? {})
     .map(([id, n]) => ({ id, n: Number(n) }))
-    .filter((x) => Number.isFinite(x.n) && reserves.some((r) => r.id === x.id));
+    .filter((x) => x.n > 0 && reserves.some((r) => r.id === x.id));
   if (numbers.length > 0) return { order: numbers.sort((a, b) => a.n - b.n).map((x) => x.id), by: "manager" };
   return { order: [...reserves].sort((a, b) => b.fpts - a.fpts).map((r) => r.id), by: "points" };
 }

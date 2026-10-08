@@ -2,10 +2,12 @@ import {
   FANTRAX_LEAGUE_ID,
   clubById,
   fetchLineupState,
+  mapBenchOrder,
   mapLineupState,
   oppositionByClub,
   squadDetail,
   squadUnarranged,
+  type RawTeamRosterInfo,
 } from "@epl/core";
 import { getLeagueSquads, readableOr404, teamDisplay } from "../../squads";
 import { lastLockedRound, leagueInfo, planningRound, readCalendar, roundOf } from "../../round";
@@ -104,11 +106,13 @@ export async function squadView(slug: string, gw: string | undefined) {
   return { team, mine, planning, open, standing, weeks, benchRanks, eligibility, clubs, opposition, live, news, points, board, pending, squadIds, minutes };
 }
 
-/** Fantrax's bench order for the planned week, `scorerId → rank`; none when the read fails or names another week. */
+/** The order Fantrax will bring the bench on in the planned week, `scorerId → rank`: the manager's numbers, else
+ *  its points order; none when the read fails or names another week. */
 async function benchOrderOf(teamId: string, period: number): Promise<Record<string, number>> {
   try {
-    const state = mapLineupState(await fetchLineupState(FANTRAX_LEAGUE_ID, teamId, period));
-    return state?.period === period ? { ...state.autoSubOrder } : {};
+    const raw = await fetchLineupState(FANTRAX_LEAGUE_ID, teamId, period);
+    if (mapLineupState(raw)?.period !== period) return {};
+    return Object.fromEntries(mapBenchOrder(raw as RawTeamRosterInfo).order.map((id, i) => [id, i + 1]));
   } catch {
     return {};
   }

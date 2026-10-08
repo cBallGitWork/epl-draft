@@ -21,4 +21,9 @@ describe("mapBenchOrder", () => {
   it("follows the manager's numbers when he set them, and leaves out a reserve he did not number", () => {
     expect(mapBenchOrder(raw({ m2: 1, d2: 2, ghost: 3 }))).toEqual({ order: ["m2", "d2"], by: "manager" });
   });
+
+  it("reads a nought as unnumbered, as the save writes it for a man taken off the bench", () => {
+    expect(mapBenchOrder(raw({ m2: 1, d2: 2, f2: 0 }))).toEqual({ order: ["m2", "d2"], by: "manager" });
+    expect(mapBenchOrder(raw({ f2: 0 }))).toEqual({ order: ["d2", "f2", "gk2", "m2"], by: "points" });
+  });
 });

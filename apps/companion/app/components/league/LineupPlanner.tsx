@@ -43,7 +43,7 @@ export default function LineupPlanner({
   pending: number | null;
   /** The period being planned, which a save must still find open. */
   period: number;
-  /** Fantrax's bench order, `scorerId → rank`. */
+  /** The order Fantrax will bring the bench on, `scorerId → rank`. */
   benchRanks: Record<string, number>;
   /** Whether this deployment saves to Fantrax. */
   canSave: boolean;

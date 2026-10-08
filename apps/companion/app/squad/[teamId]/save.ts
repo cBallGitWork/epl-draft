@@ -3,8 +3,7 @@
 import { updateTag } from "next/cache";
 import {
   FANTRAX_LEAGUE_ID,
-  benchOrderMap,
-  changesBenchOrder,
+  benchToWrite,
   changesLineup,
   eligibilityOf,
   fetchLineupState,
@@ -21,7 +20,7 @@ import {
   type RosterSlot,
   type WriteAnswer,
 } from "@epl/core";
-import { now } from "../../clock";
+import { now, replayAt } from "../../clock";
 import { leagueTag } from "../../leagueCache";
 import { planningRound } from "../../round";
 import { rosterMinimums } from "../../rosterMinimums";
@@ -38,6 +37,8 @@ export interface Plan {
   slots: RosterSlot[];
   /** Reserves' ids in the order they come on. */
   bench: string[];
+  /** Whether the manager reordered the bench; an unnumbered one is otherwise left to Fantrax. */
+  reordered: boolean;
 }
 
 const SWITCHED_OFF = "Saving to Fantrax is switched off. Set this lineup in Fantrax instead.";
@@ -55,12 +56,16 @@ function isPlan(value: unknown): value is Plan {
       (s) => typeof s?.fantraxId === "string" && typeof s.status === "string" && (s.position === null || typeof s.position === "string"),
     ) &&
     Array.isArray(plan.bench) &&
-    plan.bench.every((id) => typeof id === "string")
+    plan.bench.every((id) => typeof id === "string") &&
+    new Set(plan.bench).size === plan.bench.length &&
+    typeof plan.reordered === "boolean"
   );
 }
 
 export async function saveLineup(input: unknown): Promise<WriteAnswer> {
   if (!isPlan(input)) return refuse(RELOAD);
+  // A replayed clock would plan a week that locked long ago, and the commissioner's write overrides a lock.
+  if (replayAt() !== null) return refuse(SWITCHED_OFF);
 
   const round = await planningRound();
   const squads = await getLeagueSquads(round);
@@ -99,9 +104,9 @@ async function write(teamId: string, period: number, plan: Plan, session: string
   if (typeof fieldMap === "string") return refuse(RELOAD);
 
   const lineup = changesLineup(state, fieldMap);
-  const bench = changesBenchOrder(plan.bench, state.autoSubOrder);
+  const bench = benchToWrite(plan.bench, plan.reordered, state.autoSubOrder);
   const audit = (ok: boolean, step: string) =>
-    console.info(JSON.stringify({ event: "lineup-save", teamId, period, lineup, bench, step, ok }));
+    console.info(JSON.stringify({ event: "lineup-save", teamId, period, lineup, bench: bench !== null, step, ok }));
 
   if (lineup) {
     const send = (dryRun: boolean) =>
@@ -115,11 +120,14 @@ async function write(teamId: string, period: number, plan: Plan, session: string
     audit(done.ok, "lineup");
     if (!done.ok) return done;
   }
-  if (bench) {
-    const order = benchOrderMap(plan.bench, state.autoSubOrder);
-    const done = readBenchAnswer(await sendBenchOrder(FANTRAX_LEAGUE_ID, { teamId, period, order }, session));
+  if (bench !== null) {
+    const done = readBenchAnswer(await sendBenchOrder(FANTRAX_LEAGUE_ID, { teamId, period, order: bench }, session));
     audit(done.ok, "bench");
-    if (!done.ok) return done;
+    if (!done.ok) {
+      // The lineup above may have gone through, and the page must show it.
+      if (lineup) updateTag(leagueTag(SQUADS_KEY));
+      return done;
+    }
   }
   updateTag(leagueTag(SQUADS_KEY));
   return { ok: true };

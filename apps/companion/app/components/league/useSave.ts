@@ -4,7 +4,7 @@ import { saveLineup } from "@/app/squad/[teamId]/save";
 
 // Sending the plan to Fantrax: one save in flight at a time, and what Fantrax said last.
 
-export function useSave(period: number, plan: { slots: RosterSlot[]; bench: string[] }, onSaved: () => void) {
+export function useSave(period: number, plan: { slots: RosterSlot[]; bench: string[]; reordered: boolean }, onSaved: () => void) {
   const [saving, setSaving] = useState(false);
   const [answer, setAnswer] = useState<WriteAnswer | null>(null);
 

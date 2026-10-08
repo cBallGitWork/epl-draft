@@ -93,6 +93,7 @@ export { mapPoolStats, mapTeamStats } from "./fantrax/stats";
 export { mapStatSheet } from "./fantrax/statSheet";
 export type { StatSheet } from "./fantrax/statSheet";
 export { mapBenchOrder } from "./fantrax/benchOrder";
+export type { RawTeamRosterInfo } from "./fantrax/benchOrder";
 export { isFantraxPlayerId, mapPlayerProfile } from "./fantrax/profile";
 export type { PlayerIntel, PlayerMatch } from "./fantrax/profile";
 export { mapTransactions, orderKey } from "./fantrax/transactions";
@@ -116,8 +117,7 @@ export {
 export { mapLeagueInfo, mapPlayerPool } from "./fantrax/map";
 export { fetchLineupState, sendBenchOrder, sendLineup } from "./fantrax/lineupClient";
 export {
-  benchOrderMap,
-  changesBenchOrder,
+  benchToWrite,
   changesLineup,
   fieldMapFor,
   mapLineupState,
