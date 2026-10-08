@@ -56,11 +56,9 @@ export default function PlayerCard({
       <div className="flex flex-col gap-2 p-3">
         <PlayerIdentity rostered={rostered} club={club} opposition={opposition} />
 
-        {/* Silent for a fit player: a "no news" panel on every card is noise. */}
+        {/* Silent for a fit player: a "no news" panel on every card is noise. One red edge for every doubt. */}
         {footballer && isDoubtful(footballer) ? (
-          <div
-            className="cm-panel flex flex-col gap-0.5 px-3 py-2"
-          >
+          <div className="cm-panel cm-edge-bad flex flex-col gap-0.5 px-3 py-2">
             <span className={`${SMALL_CAPS} text-muted`}>
               {footballer.chanceOfPlaying === null
                 ? "Doubt"
