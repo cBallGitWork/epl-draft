@@ -41,7 +41,7 @@ on:
     # 24 times a week, until 1 Oct 2026). Locks land Friday evening or Saturday lunchtime; match
     # reports and tie calls file as games finish, Friday and Monday evenings included.
     #
-    # **Friday opens at 14:00 UTC**, for the Line-Ups column at 16:00 London (#33): 15:00 London is
+    # **Friday opens at 14:00 UTC**, early for the Team Sheet at 16:30 London and the Line-Ups at 17:00: 15:00 London is
     # 14:00 UTC in summer and 15:00 in winter.
     - cron: "0,30 14-23 * * 5"
     - cron: "0,30 10-22 * * 6"

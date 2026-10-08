@@ -3,9 +3,9 @@
 /** The paper's name, printed after the league's on its masthead. */
 export const PAPER_TITLE = "Gazetta";
 
-/** The predicted elevens: Friday from 16:00 London, an hour after the press conferences end; a lock
- *  earlier than Tuesday's files the day before (Sunday = 0). */
-export const PREDICTED_XI = { filing: { weekday: 5, hour: 16, maxLeadDays: 3 } } as const;
+/** The predicted elevens: Friday from 17:00 London, after that day's Team Sheet at 16:30 (Craig, 8 Oct 2026: "pressers
+ *  first, team sheet later"); a lock earlier than Tuesday's files the day before (Sunday = 0). */
+export const PREDICTED_XI = { filing: { weekday: 5, hour: 17, maxLeadDays: 3 } } as const;
 
 /** The Team Sheet: a column per press-conference day until the lock, from 16:30 London that day once the Mac's import
  *  has merged (Thursday 16:00, Friday 15:45), and Thursday's from 18:00 (Craig, 8 Oct 2026). */
