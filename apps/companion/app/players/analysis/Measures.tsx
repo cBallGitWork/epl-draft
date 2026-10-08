@@ -50,6 +50,7 @@ export default function Measures({
   );
 }
 
+/** A step above the row default: DESIGN §6's fifth recorded exception, a ledger of two men's figures and nothing else. */
 const FIGURE = "numeric cm-row py-1 text-base lg:text-lg";
 
 /** One measure, as both of them have it. */
