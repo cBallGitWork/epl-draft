@@ -1,0 +1,104 @@
+{
+  "slug": "gw6-predictions",
+  "kind": "predictions",
+  "leagueId": "mqsjd23smsgbiqzr",
+  "period": 6,
+  "gameweek": 6,
+  "filedAt": "2026-10-08T20:24:33.059Z",
+  "expiresAt": null,
+  "edition": "The Form Guide",
+  "byline": "",
+  "reporter": "Mark Lawrenson",
+  "headline": "Lawro's Predictions: GW6",
+  "deck": "In his first column for the league, Lawro backs Cowthenbeef in the War of Cowdenbeath and GlengarryHearts over Bayern Bru, both against the favourites.",
+  "body": "Five ties, not a ball kicked, and I've seen enough already. Twenty-two years doing this on the BBC, and now it's a draft league's paper named after a doughnut shop.",
+  "subjects": [
+    "predictions:gw6"
+  ],
+  "image": null,
+  "face": null,
+  "ties": [
+    {
+      "homeTeamId": "qgucu9dgmufwva1x",
+      "awayTeamId": "7to6xosimu8hyyw5",
+      "line": "If anyone can, Bannan can is a team name with a comma in it, and I don't trust that. Gibbs-White is the one who matters, and he goes to Crystal Palace. Will he make it count? No. Every gentle fixture gets wasted in the end.\n\nits_ohi are steadier, which isn't saying much. B.Fernandes and Cunha both play for Manchester United, who have Tottenham at home. B.Fernandes has gone two games without a goal or an assist, and I'm meant to be impressed.\n\nits_ohi, because two Manchester United men beat one man at Crystal Palace.",
+      "callsTeamId": "qgucu9dgmufwva1x",
+      "score": {
+        "home": 31,
+        "away": 30
+      },
+      "face": {
+        "code": 222531,
+        "name": "Gibbs-White",
+        "clubId": 18,
+        "position": null
+      }
+    },
+    {
+      "homeTeamId": "l5kunst8msgbirdf",
+      "awayTeamId": "0g0j5mkomuqqwsbu",
+      "line": "Ipswich Town defend like a garden gate in the wind, and Gonzalo goes there for The Raccoons. The champions are reliable, which is the most annoying thing a side can be. They have Haaland too, and he has scored twice running for Manchester City.\n\ndomeitalycoach look like a side still unpacking. Zian Flemming came in off the waiver list, which means somebody else didn't want him. domeitalycoach also have N.Williams, who goes to Crystal Palace with Nottingham Forest.\n\nThe Raccoons win it, because Gonzalo gets Ipswich Town to aim at.",
+      "callsTeamId": "l5kunst8msgbirdf",
+      "score": {
+        "home": 33,
+        "away": 27
+      },
+      "face": {
+        "code": 551466,
+        "name": "Gonzalo",
+        "clubId": 10,
+        "position": null
+      }
+    },
+    {
+      "homeTeamId": "uexqrijomu8l5asi",
+      "awayTeamId": "ipnp5y4mmu9j7kop",
+      "line": "Tarkowski is the one hard man Hazza Maguazza's Redempshazza have, and he goes to Hull City. Hull City don't score many, and I'll be the poor soul sat watching them not score. A defender should enjoy that.\n\nAtleticoTimHortons are the better side, and it pains me to say so. Groß has found the net in both his recent outings for Brighton & Hove Albion. Semenyo is a slight doubt for AtleticoTimHortons with an ankle injury.\n\nAtleticoTimHortons, because goals beat clean sheets.",
+      "callsTeamId": "uexqrijomu8l5asi",
+      "score": {
+        "home": 33,
+        "away": 27
+      },
+      "face": {
+        "code": 17761,
+        "name": "Tarkowski",
+        "clubId": 9,
+        "position": null
+      }
+    },
+    {
+      "homeTeamId": "aekx2715mtzgcl3f",
+      "awayTeamId": "7z8fy0pnmuogbtdw",
+      "line": "Rice is touch and go for The Truffle Pigs. This is the War of Cowdenbeath, which sounds grander than anything either side will produce. Vuskovic and F.Kadıoğlu both go to Sunderland for The Truffle Pigs, and I've got to sit through it.\n\nI played centre-half, so the back line is where I look first. Cowthenbeef have Bassey away at Ipswich Town, and Ipswich have nothing up front.\n\nI'm going against the favourites, because Ipswich Town can't score.",
+      "callsTeamId": "7z8fy0pnmuogbtdw",
+      "instinct": "defence",
+      "score": {
+        "home": 34,
+        "away": 35
+      },
+      "face": {
+        "code": 204480,
+        "name": "Rice",
+        "clubId": 1,
+        "position": null
+      }
+    },
+    {
+      "homeTeamId": "kpj0z744muh1qwtd",
+      "awayTeamId": "syjkob6cmuobagfu",
+      "line": "I've never trusted Bayern Bru, and Mbeumo won't change my mind. He's done nothing for a couple of matches for Manchester United, and big names going quiet bore me stiff. It's a side with no leaders.\n\nBayern Bru are favoured, and I'm with the other lot. GlengarryHearts have Isak and Virgil, and Manchester City coming bothers neither of them. Isak finishes properly and Virgil defends like a grown-up. Schade has two goals and two assists in his previous two for GlengarryHearts, so that'll stop soon.\n\nGlengarryHearts, because proper finishing and proper defending never go out of fashion.",
+      "callsTeamId": "syjkob6cmuobagfu",
+      "instinct": "liverpool",
+      "score": {
+        "home": 35,
+        "away": 36
+      },
+      "face": {
+        "code": 446008,
+        "name": "Mbeumo",
+        "clubId": 16,
+        "position": null
+      }
+    }
+  ]
+}
