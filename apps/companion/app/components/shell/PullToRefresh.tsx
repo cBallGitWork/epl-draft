@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Glyph from "./glyphs";
 import { armed, intent, pullDistance } from "./pull";
+import { reloadsHeld } from "./unsaved";
 import { PULL } from "../../config";
 
 // Pull down from the top of a page to reload it, as a browser's own pull does, in the installed app only: a browser
@@ -37,7 +38,7 @@ export default function PullToRefresh() {
     };
     const begin = (event: TouchEvent) => {
       const touch = event.touches[0];
-      const free = event.touches.length === 1 && window.scrollY <= 0 && !ownScroll(event.target);
+      const free = event.touches.length === 1 && window.scrollY <= 0 && !ownScroll(event.target) && !reloadsHeld();
       start = free ? { x: touch.clientX, y: touch.clientY } : null;
       read = null;
     };

@@ -52,6 +52,8 @@ export default async function TeamPage({
     >
       {planning !== null ? (
         <LineupPlanner
+          // A new week remounts it on that week's lineup: edits made for a week that has since locked do not carry over.
+          key={open?.period ?? "none"}
           team={team}
           // The whole squad's detail, flat and with points: the planner rearranges it in the browser.
           details={team.players.map((rostered) =>

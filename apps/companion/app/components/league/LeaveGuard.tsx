@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { holdReloads } from "../shell/unsaved";
 import Modal from "../shell/Modal";
 import { BUTTON } from "../shell/ButtonLink";
 
 // Asks before an unsaved lineup is left behind: the browser's own prompt on a reload or close, ours on a
-// tap to another screen of the app. The back button is not caught.
+// tap to another screen of the app. The pull to refresh holds off, as iOS reloads without asking; the back
+// button is not caught.
 
 export default function LeaveGuard({
   dirty,
@@ -35,9 +37,11 @@ export default function LeaveGuard({
     };
     window.addEventListener("beforeunload", unload);
     document.addEventListener("click", click, true);
+    holdReloads(true);
     return () => {
       window.removeEventListener("beforeunload", unload);
       document.removeEventListener("click", click, true);
+      holdReloads(false);
     };
   }, [dirty]);
 
