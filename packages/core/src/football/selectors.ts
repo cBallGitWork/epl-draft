@@ -123,3 +123,11 @@ export function datedKickoffs(
       : [{ gameweek: fixture.gameweek, kickoff: fixture.kickoff }],
   );
 }
+
+/** A fixture FPL has put a time on; a TV pick it has not yet dated has none. */
+export type DatedFixture = Fixture & { kickoff: string };
+
+/** Whether FPL has dated a fixture: a guard, so its kickoff reads as a string after it. */
+export function isDated(fixture: Fixture): fixture is DatedFixture {
+  return fixture.kickoff !== null;
+}

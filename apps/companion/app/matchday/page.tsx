@@ -15,7 +15,8 @@ import {
   roundState,
   cupTies,
   fplCodeOf,
-  londonDayOf,
+  londonDay,
+  onLondonDay,
 } from "@epl/core";
 import { leagueTable } from "../standings";
 import { footballNow, gameweekLive, seasonFixtures, speaksForNow } from "../football";
@@ -93,8 +94,8 @@ export default async function MatchdayPage({
 
   // Today's matches (Craig, 5 Sep 2026), and the whole round when today has none.
   const round = fixturesInOrder(snapshot);
-  const day = londonDayOf(now().toISOString());
-  const onToday = round.filter((f) => f.kickoff !== null && londonDayOf(f.kickoff) === day);
+  const day = londonDay(now());
+  const onToday = round.filter((f) => onLondonDay(f.kickoff, day));
   const today: readonly Fixture[] = onToday.length > 0 ? onToday : round;
 
   // The draft's ties; no draft, no schedule or a silent Fantrax costs this half and nothing else.

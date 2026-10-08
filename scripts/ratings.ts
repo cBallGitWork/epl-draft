@@ -40,7 +40,7 @@ function held(): RatingStore | null {
 function settledDays(fixtures: readonly Fixture[]): Map<string, Fixture[]> {
   const days = new Map<string, Fixture[]>();
   for (const f of fixtures) {
-    const day = f.kickoff === null ? null : londonDayOf(f.kickoff);
+    const day = londonDayOf(f.kickoff);
     if (day !== null) days.set(day, [...(days.get(day) ?? []), f]);
   }
   return new Map([...days].filter(([, on]) => on.every((f) => f.status === "finished" && f.settled)).sort(([a], [b]) => a.localeCompare(b)));

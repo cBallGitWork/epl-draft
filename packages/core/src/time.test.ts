@@ -51,7 +51,10 @@ describe("London time", () => {
 
   it("puts a missing or unreadable instant on no day", () => {
     expect(onLondonDay("2026-07-04T23:30:00Z", "2026-07-05")).toBe(true);
-    for (const bad of [null, undefined, "", "Mikel Arteta"]) expect(onLondonDay(bad, "2026-07-05")).toBe(false);
+    for (const bad of [null, undefined, "", "Mikel Arteta"]) {
+      expect(onLondonDay(bad, "2026-07-05")).toBe(false);
+      expect(londonDayOf(bad)).toBeNull();
+    }
   });
 });
 

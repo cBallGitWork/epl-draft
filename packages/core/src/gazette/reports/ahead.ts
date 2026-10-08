@@ -27,7 +27,7 @@ export function nextThree(
   if (club === undefined) return [];
   const byId = new Map(clubs.map((c) => [c.id, c]));
   return season
-    .filter((f) => (f.homeClubId === club.id || f.awayClubId === club.id) && f.kickoff !== null && (londonDayOf(f.kickoff) ?? "") > day)
+    .filter((f) => (f.homeClubId === club.id || f.awayClubId === club.id) && (londonDayOf(f.kickoff) ?? "") > day)
     .sort(byKickoff)
     .slice(0, COUNT)
     .flatMap((f) => {

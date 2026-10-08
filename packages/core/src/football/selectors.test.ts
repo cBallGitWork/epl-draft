@@ -1,15 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { NO_SEASON } from "./noSeason";
 import { NOTABLE_SAVES } from "../config";
-import type { FootballSnapshot, PlayerMatchStats } from "./types";
+import type { Fixture, FootballSnapshot, PlayerMatchStats } from "./types";
 import {
   adjacentGameweeks,
   contributions,
   datedKickoffs,
   fixturesInOrder,
   hasGameweek,
+  isDated,
   playerByCode,
   squadOf,
+  type DatedFixture,
 } from "./selectors";
 
 const player = (id: number, name: string, clubId = 1) => ({
@@ -121,6 +123,14 @@ describe("datedKickoffs", () => {
   // gameweek to answer for.
   it("drops a fixture with no gameweek, dated or not", () => {
     expect(datedKickoffs([{ id: 4, code: 4, gameweek: null, homeClubId: 1, awayClubId: 2, kickoff: "2026-08-21T19:00:00Z", homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null }])).toEqual([]);
+  });
+});
+
+describe("isDated", () => {
+  it("keeps a fixture with a kickoff and drops an undated TV pick", () => {
+    const undated: Fixture = { id: 1, code: 1, gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: null, homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null };
+    const dated: DatedFixture = { ...undated, id: 2, kickoff: "2026-08-21T19:00:00Z" };
+    expect([undated, dated].filter(isDated)).toEqual([dated]);
   });
 });
 

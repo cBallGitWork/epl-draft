@@ -69,7 +69,7 @@ function Foot({ match, view }: { match: Match; view: StatsView }) {
 
 /** What the match meant in our league's categories, a page of its own (Craig, 23 Sep 2026), counted by the real league. */
 async function FantasyReport({ match }: { match: Match }) {
-  const day = match.fixture.kickoff === null ? null : londonDayOf(match.fixture.kickoff);
+  const day = londonDayOf(match.fixture.kickoff);
   const [sheets, scoring, counts] = await Promise.all([
     teamSheets(match.fixture.gameweek, match.fixture.code, match.snapshot.players),
     leagueScoring(),
