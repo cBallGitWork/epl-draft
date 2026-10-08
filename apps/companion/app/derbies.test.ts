@@ -13,8 +13,12 @@ describe("the league's derbies", () => {
     }
   });
 
-  it("calls Ohi v Fellows the Arteta match before the Milan Derby", () => {
-    expect(derbyBetween("qgucu9dgmufwva1x", "7z8fy0pnmuogbtdw")?.name).toBe("Mikel Arteta Appreciation Match");
-    expect(derbyBetween("0g0j5mkomuqqwsbu", "7z8fy0pnmuogbtdw")?.name).toBe("Milan Derby");
+  // Craig, 8 Oct 2026: "ohi, dome and algie is milan derby"; Fellows is not in it.
+  it("plays the Milan Derby between any two of Ohi, Dome and Algie, and Ohi v Fellows as the Arteta match alone", () => {
+    for (const [a, b] of [["qgucu9dgmufwva1x", "0g0j5mkomuqqwsbu"], ["0g0j5mkomuqqwsbu", "aekx2715mtzgcl3f"], ["aekx2715mtzgcl3f", "qgucu9dgmufwva1x"]]) {
+      expect(derbyBetween(a, b)?.name).toBe("Milan Derby");
+    }
+    expect(derbyBetween("qgucu9dgmufwva1x", "7z8fy0pnmuogbtdw")).toEqual({ name: "Mikel Arteta Appreciation Match", also: [], why: [] });
+    expect(derbyBetween("0g0j5mkomuqqwsbu", "7z8fy0pnmuogbtdw")).toBeNull();
   });
 });

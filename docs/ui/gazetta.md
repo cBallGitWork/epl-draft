@@ -371,9 +371,9 @@ name pictured beside them (`Face` at its `tie` rank, a 6rem square floated so th
 `data/leagues/derbies.json` (`derbyOf`). The page prints the name in small caps over the tie's
 heading here and after "Full time" on a draft report's match-up, off the stored team ids, so a
 column never depends on the writer naming it. Each brief also states it (`derbyBrief`), and the
-checks pass over its words as they pass over a side's name: "Battle of York" is not hype. A pair
-with its own name outranks a wider one, so Ohi v Fellows is the Mikel Arteta Appreciation Match
-before the Milan Derby.
+checks pass over its words as they pass over a side's name: "Battle of York" is not hype. A derby
+may hold more than two teams (the Milan Derby is any two of Ohi, Dome and Algie), and a pair with a
+name of its own outranks the group's.
 
 **Lawro's power rankings** (`season-rankings`) file once, between the end of the draft and the season's first
 lock, under the desk's headline "Lawro's Power Rankings" and the same banner. His short opening comes first, then
