@@ -345,7 +345,7 @@ A recipe is named at its third occurrence (CODE_RULES §1); these were not.
 | `Array.isArray(v) ? v[v.length - 1] : v` | 2 (`players/query`, `players/analysis/page`) | A shared query helper. |
 | Tab label `px-2 text-2xs` | 1 (`league/GroupNav`, since 6 Sep) | Below the bar. |
 | `MONTHS` · `SETTLE = 250` · `FORM_GAMES = 5` | 2 each (11 Sep) | Left. |
-| The gazette's story furniture (kicker, headline, standfirst, rule) | 3-4 files each | A `paper.ts`: it belongs to the paper, not the desk. |
+| ~~The gazette's story furniture (kicker, headline, standfirst, rule)~~ | 3-4 files each | **Named 8 Oct 2026**, in the paper's own furniture rather than a `paper.ts`: `gazette/StoryHead` and its `KICKER` ([gazetta.md](gazetta.md)). |
 | Crest `<Image>` outside a row | 14, in 11 sizes and 9 class strings (23 Sep) | Left: a wrapper would rename props. Rows use `ClubLabel`. |
 | Pitch markings | 2 identical (`ShotMap`, `AveragePosition`); `PlayerMap` draws its own (23 Sep) | A shared markings group, at a third map that draws these. |
 | `?gw=` on a route builder | 2 (`matchupHref`, `teamHref`) | A `withRound` helper. |

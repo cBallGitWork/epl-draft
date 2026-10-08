@@ -67,8 +67,8 @@ business, and when lineups lock.
    `Written` still prints the article whole, at `/paper/{slug}` — a reader who
    tapped through has already chosen. `Splash` is `Written`'s opening block minus
    the prose plus the link; two components rather than one variant, because what
-   they share is five lines of markup and what differs is whether the reader has
-   chosen yet.
+   they share is `gazette/StoryHead` and its chip, and what differs is whether the
+   reader has chosen yet.
 5. **The shoulders and the briefs** — everything else filed, at two ranks under
    the splash rather than one. `HEADLINES_SHOWN` caps the whole tail at eight so
    a busy round does not turn the front page into an index of itself.
@@ -639,6 +639,13 @@ weights — 8 `font-semibold`, 5 bare, 2 `font-bold` — and the weights are not
 noise: bare is a dateline, bold is a standing head. One constant would be
 followed by eight sites and overridden by seven, which is the DASH failure
 CODE_RULES §4 names. It stays duplicated until the roles it serves are split.
+
+**The display block is one component across three renderers** (8 Oct 2026). `Splash`, the desk's own lead
+(`Stories`) and `Written` each set the same headline, standfirst and 24px rule under the same inverted chip;
+`gazette/StoryHead` draws the three and exports the chip as `KICKER`. Two things are the caller's: the chip's
+paragraph, because the lead's follows its picture and takes a margin the others do not, and the headline's step
+at width (`rank`, the front page's or an article's). The paper's own 404 sets an `h1` a step tighter, unbalanced,
+and keeps its standfirst and rule written out: two of each.
 
 **The page turn** is `document.startViewTransition`, driven by `TurnLink` — the
 paper's only client component. Not React's `<ViewTransition>`, which ships only
