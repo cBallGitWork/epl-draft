@@ -65,6 +65,11 @@ export async function discover(cdp, route, selector, settle = 2200) {
   return href;
 }
 
+/** The team cookie on the host the instruments open: one set on localhost is never sent to 127.0.0.1. */
+export function teamCookieFor(value, base) {
+  return { name: "team", value, domain: new URL(base).hostname, path: "/" };
+}
+
 export async function connect() {
   const targets = await (await fetch(`http://localhost:${CDP_PORT}/json`)).json();
   const page = targets.find((t) => t.type === "page");
@@ -107,7 +112,7 @@ export async function connect() {
     setCookie: async (value) => {
       if (value === null) return;
       await send("Network.enable", {});
-      await send("Network.setCookie", { name: "team", value, domain: "localhost", path: "/" });
+      await send("Network.setCookie", teamCookieFor(value, process.env.BASE_URL ?? BASE_URL));
     },
 
     /** Viewport, with the scale stepped down if the surface would not survive capture (CAPTURE_CEILING). */
