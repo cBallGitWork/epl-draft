@@ -95,7 +95,7 @@ export async function FixturesTab({
   if (ours.length === 0) {
     return (
       <section className={PANEL}>
-        <Nothing title="No matches yet">Neither squad holds a player in this round&rsquo;s fixtures.</Nothing>
+        <Nothing title="No matches yet">Neither squad holds a player in this gameweek&rsquo;s fixtures.</Nothing>
       </section>
     );
   }

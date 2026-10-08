@@ -43,7 +43,7 @@ export default async function SchedulePage() {
     return (
       <LeagueShell current="schedule" teams={info.teams.length}>
         <Nothing title="Season complete" code={`${read.rounds.length} gameweeks, all finished`}>
-          Every round {info.name} plays has been played. They are all on Results.
+          Every gameweek {info.name} plays has been played. They are all on Results.
         </Nothing>
       </LeagueShell>
     );
@@ -54,10 +54,10 @@ export default async function SchedulePage() {
       <LeagueShell current="schedule">
         <Nothing
           title="No calendar to read"
-          code={`${info.scoringPeriods.length} rounds, 0 gameweeks`}
+          code={`${info.scoringPeriods.length} scoring periods, 0 gameweeks`}
         >
-          Fantrax describes the league&apos;s rounds but none of them holds a gameweek, so there is
-          no round to show its fixtures against.
+          Fantrax describes the league&apos;s scoring periods but none of them holds a gameweek, so
+          there is no gameweek to show its fixtures against.
         </Nothing>
       </LeagueShell>
     );

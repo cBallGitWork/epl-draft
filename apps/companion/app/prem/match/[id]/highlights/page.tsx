@@ -45,7 +45,7 @@ export default async function MatchHighlightsPage({
             >
               {fixture.status === "upcoming"
                 ? "Sky post a match's highlights after the final whistle. They will be here."
-                : "Their playlist carries the last round and a half; this match is either older than that or not up yet. Nothing else on this screen is affected."}
+                : "Their playlist carries the last gameweek and a half; this match is either older than that or not up yet. Nothing else on this screen is affected."}
             </Nothing>
           ) : (
             <figure className="flex flex-col gap-2">

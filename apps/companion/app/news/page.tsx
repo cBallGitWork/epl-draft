@@ -53,7 +53,7 @@ export default async function NewsPage({
       {inbox.items.length === 0 ? (
         <section className="cm-panel p-3">
           <Nothing title="Nothing filed" code="0 items">
-            The club has been told nothing yet — no business, no doubts, and no round to report.
+            The club has been told nothing yet — no business, no doubts, and no gameweek to report.
           </Nothing>
         </section>
       ) : (
