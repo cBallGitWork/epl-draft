@@ -23,7 +23,7 @@ type Result = "W" | "D" | "L";
 
 const playedBy = (season: readonly Fixture[], day: string, inclusive: boolean) =>
   season.filter((fixture) => {
-    const on = fixture.kickoff === null ? null : londonDayOf(fixture.kickoff);
+    const on = londonDayOf(fixture.kickoff);
     return fixture.status === "finished" && on !== null && (inclusive ? on <= day : on < day);
   });
 

@@ -138,11 +138,12 @@ export {
   datedKickoffs,
   fixturesInOrder,
   hasGameweek,
+  isDated,
   playerByCode,
   squadOf,
   byKickoff,
 } from "./selectors";
-export type { MatchContribution } from "./selectors";
+export type { DatedFixture, MatchContribution } from "./selectors";
 export { availabilityOf, doubtBand, isDoubtful, onTheBooks } from "./playerState";
 export type { Availability, DoubtBand, PlayerState } from "./playerState";
 

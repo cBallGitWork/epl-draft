@@ -1,4 +1,4 @@
-import { DRAFT_DESK, debuts, fullPrintName, ukSpelling, londonDayOf, priceOf, type Club, type DraftMan, type Fixture, type ProjectedPlayer, type Sheet, type SheetMan, type SlotWorth } from "@epl/core";
+import { DRAFT_DESK, debuts, fullPrintName, ukSpelling, londonDayOf, priceOf, type Club, type DatedFixture, type DraftMan, type ProjectedPlayer, type Sheet, type SheetMan, type SlotWorth } from "@epl/core";
 import { startedOf, timeOf, type ClubGoal, type Tally } from "./draftReads";
 
 // One man as the draft desk sees him at a cut-off: his points, minutes and returns from Fantrax's day reads, his matches
@@ -8,7 +8,7 @@ export interface ManReads {
   gameweek: number;
   /** The cut-off's London day. */
   last: string;
-  fixtures: readonly Fixture[];
+  fixtures: readonly DatedFixture[];
   clubs: ReadonlyMap<number, Club>;
   byMan: ReadonlyMap<string, Tally>;
   /** Each London day's tallies to the cut-off, in order. */
@@ -24,7 +24,7 @@ export interface ManReads {
 export function draftManOf(m: SheetMan, sheet: Sheet, r: ManReads): DraftMan {
   const club = m.player.clubId;
   const games = r.fixtures.filter((f) => f.homeClubId === club || f.awayClubId === club);
-  const done = games.filter((f) => londonDayOf(f.kickoff!)! <= r.last);
+  const done = games.filter((f) => londonDayOf(f.kickoff)! <= r.last);
   const coming = games.find((f) => !done.includes(f));
   const home = coming?.homeClubId === club;
   const opponent = coming === undefined ? undefined : r.clubs.get(home ? coming.awayClubId : coming.homeClubId);
@@ -50,7 +50,7 @@ export function draftManOf(m: SheetMan, sheet: Sheet, r: ManReads): DraftMan {
     debut: (debuts(sheet, r.history.get(sheet.teamId) ?? []) ?? []).some((d) => d.fantraxId === m.fantraxId),
     arrived: arrival?.teamId === sheet.teamId ? arrival.how : null,
     projected: r.projections.get(m.player.code)?.gameweeks.find((g) => g.gw === r.gameweek)?.points ?? null,
-    next: opponent === undefined || coming === undefined ? null : { opponent: opponent.name, home, kickoff: coming.kickoff! },
+    next: opponent === undefined || coming === undefined ? null : { opponent: opponent.name, home, kickoff: coming.kickoff },
     started: appeared ? startedOf(m.player.code, done.map((f) => f.code), r.starters) : null,
     matches: games.map((f) => ({ code: f.code, label: `${r.clubs.get(f.homeClubId)?.name ?? "?"} v ${r.clubs.get(f.awayClubId)?.name ?? "?"}` })),
     // Read after the men are built, for the few who need it (draftFitness.ts).

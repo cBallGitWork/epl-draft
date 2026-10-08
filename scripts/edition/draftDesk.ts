@@ -9,6 +9,7 @@ import {
   draftReportsDue,
   headToHead,
   isSaturday,
+  isDated,
   judgePage,
   getFootballSnapshot,
   londonDayOf,
@@ -76,8 +77,8 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const results = rawResults === null ? null : mapSeasonResults(rawResults);
   const season = await draftSeason(info, facts.table, results, facts.pedigree, period);
 
-  const fixtures = schedule.filter((f) => f.gameweek === gameweek && f.kickoff !== null);
-  const days = [...new Set(fixtures.map((f) => londonDayOf(f.kickoff!)!))].sort();
+  const fixtures = schedule.filter(isDated).filter((f) => f.gameweek === gameweek);
+  const days = [...new Set(fixtures.map((f) => londonDayOf(f.kickoff)!))].sort();
   const saturday = days.find(isSaturday) ?? days[0];
   const dayReads = await Promise.all(days.map((date) => fetchLiveScoringDay(FANTRAX_LEAGUE_ID, period, date).then((raw) => ({ date, raw })).catch(() => null)));
   const benchReads = await Promise.all(facts.teams.map((t) => fetchTeamRosterInfo(FANTRAX_LEAGUE_ID, t.teamId, period).then((raw) => ({ teamId: t.teamId, raw })).catch(() => null)));
@@ -133,7 +134,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
       };
     };
     // Fitness news up to the next day's first kickoff after Saturday; within its few days at the end of the gameweek.
-    const after = fixtures.map((f) => f.kickoff!).filter((k) => londonDayOf(k)! > last).sort()[0];
+    const after = fixtures.map((f) => f.kickoff).filter((k) => londonDayOf(k)! > last).sort()[0];
     const until = after === undefined ? Infinity : Date.parse(after);
     const fit = (s: DraftSide | null) => (s === null ? null : withFitness(s, fixtures, stories, until));
     // Every match-up first: the gameweek's form and table facts need all of their results at once.

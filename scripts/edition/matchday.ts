@@ -11,6 +11,7 @@ import {
   fetchPlTextstream,
   fullClubName,
   highlightFor,
+  isDated,
   londonDayOf,
   mapFixtures,
   mapLiveStats,
@@ -94,9 +95,9 @@ export async function matchdayInput(opts: {
   const gameweek = snapshot.gameweek;
   const season = await fetchFixtures().then(mapFixtures).catch(() => null);
   if (season === null) return say("FPL would not give the season's fixtures, which the table is read from."), null;
-  const fixtures = snapshot.fixtures.filter((f) => f.status === "finished" && f.kickoff !== null && opts.pick(f));
+  const fixtures = snapshot.fixtures.filter(isDated).filter((f) => f.status === "finished" && opts.pick(f));
   if (fixtures.length === 0) return null;
-  const day = londonDayOf(fixtures[0].kickoff!) ?? "";
+  const day = londonDayOf(fixtures[0].kickoff) ?? "";
 
   const round = await fetchPlRound(gameweek).catch(() => null);
   if (round === null) return say("The Premier League's round would not load."), null;
@@ -136,12 +137,12 @@ export async function matchdayInput(opts: {
     const [homeStaff, awayStaff] = await Promise.all([fetchPlStaff(sheets.home.teamId).catch(() => ({})), fetchPlStaff(sheets.away.teamId).catch(() => ({}))]);
     const moments = plMoments(stream.events.content, plPlayerCodes(detail, optaToCode));
     const injured = [...moments].flatMap((m) => (m.injury ? [m.kind === "substitution" ? m.men[1] : m.men[0]] : [])).filter((c): c is number => c !== null);
-    const fitness = await fitnessAfter(injured, fixture.kickoff!, league.fantraxIds);
+    const fitness = await fitnessAfter(injured, fixture.kickoff, league.fantraxIds);
     const home = stats === null ? null : sideFigures(stats, sheets.home.teamId);
     const away = stats === null ? null : sideFigures(stats, sheets.away.teamId);
     const men = reportMen(sheets, moments, { live: liveLines, season: seasons, holders: league.holders, points: league.points, fitness });
     const opponentOf = (side: "home" | "away") => (side === "home" ? fixture.awayClubId : fixture.homeClubId);
-    const marks = new Map(markFor === null ? [] : men.filter((m) => m.minutes > 0).map((m) => [m.code, markFor(m.code, opponentOf(m.side), fixture.kickoff!)] as const));
+    const marks = new Map(markFor === null ? [] : men.filter((m) => m.minutes > 0).map((m) => [m.code, markFor(m.code, opponentOf(m.side), fixture.kickoff)] as const));
     matches.push({
       fixture,
       home: reportClub(clubs.get(fixture.homeClubId), plManager(homeStaff)),
@@ -163,7 +164,7 @@ export async function matchdayInput(opts: {
   for (const match of matches) {
     for (const man of match.men) {
       const clubId = clubOfCode.get(man.code);
-      man.matchesBefore = season.filter((f) => f.status === "finished" && (f.homeClubId === clubId || f.awayClubId === clubId) && (londonDayOf(f.kickoff ?? "") ?? "") < day).length;
+      man.matchesBefore = season.filter((f) => f.status === "finished" && (f.homeClubId === clubId || f.awayClubId === clubId) && (londonDayOf(f.kickoff) ?? "") < day).length;
     }
   }
 

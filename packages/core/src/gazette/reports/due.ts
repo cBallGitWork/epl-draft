@@ -14,7 +14,7 @@ export interface ReportDay {
 export function reportDays(fixtures: readonly Fixture[], gameweek: number): ReportDay[] {
   const days = new Map<string, Fixture[]>();
   for (const fixture of fixtures) {
-    const day = fixture.gameweek === gameweek && fixture.kickoff !== null ? londonDayOf(fixture.kickoff) : null;
+    const day = fixture.gameweek === gameweek ? londonDayOf(fixture.kickoff) : null;
     if (day !== null) days.set(day, [...(days.get(day) ?? []), fixture]);
   }
   return [...days]

@@ -89,7 +89,7 @@ export async function binXiDesk(input: {
 
   const window = periodDays(scoring);
   const played = input.season.filter((fixture) => {
-    const day = fixture.kickoff === null ? null : londonDayOf(fixture.kickoff);
+    const day = londonDayOf(fixture.kickoff);
     return fixture.status === "finished" && day !== null && day >= window.startDate && day <= window.endDate;
   });
   const [pool, outfield, keepers, transactions, rows, priced] = await Promise.all([
