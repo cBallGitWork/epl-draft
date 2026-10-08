@@ -42,6 +42,10 @@ async function fxeaGet<T>(method: string, params: Record<string, string>): Promi
   if (error) {
     throw new FantraxError(method, error.code ?? "UNKNOWN", error.message ?? "no message");
   }
+  // Every fxea answer is an object or an array: a JSON null would reach a mapper as a TypeError.
+  if (typeof body !== "object" || body === null) {
+    throw new FantraxError(method, "NO_DATA", "fxea answered with neither an object nor an error", "malformed");
+  }
   return body as T;
 }
 
@@ -73,15 +77,32 @@ export function fetchPlayerPool(): Promise<RawPlayerPool> {
   return fxeaGet<RawPlayerPool>("getPlayerIds", { sport: FANTRAX_SPORT });
 }
 
-/** One log of transactions. fxea has none; this fxpa read needs no cookie and reports `totalNumPages`. */
-export function fetchTransactions(
+/** One log of transactions, every page of it as one table: fxea has none, and this fxpa read needs no cookie. A page
+ *  Fantrax will not turn (its echo names another) is a malformed answer, never a log cut short in silence. */
+export async function fetchTransactions(
   leagueId: string,
   view: TransactionView,
 ): Promise<RawTransactionHistory> {
-  return fxpaRead(leagueId, "getTransactionDetailsHistory", {
-    view,
-    maxResultsPerPage: String(TRANSACTION_PAGE_SIZE),
-  }) as Promise<RawTransactionHistory>;
+  const method = "getTransactionDetailsHistory";
+  const page = (number: number) =>
+    fxpaRead(leagueId, method, {
+      view,
+      maxResultsPerPage: String(TRANSACTION_PAGE_SIZE),
+      pageNumber: String(number),
+    }) as Promise<RawTransactionHistory>;
+
+  const first = await page(1);
+  const pages = first.paginatedResultSet?.totalNumPages ?? 1;
+  const rows = [...(first.table?.rows ?? [])];
+  for (let number = 2; number <= pages; number++) {
+    const next = await page(number);
+    const turned = next.paginatedResultSet?.pageNumber;
+    if (turned !== number) {
+      throw new FantraxError(method, "PAGE_NOT_TURNED", `asked for page ${number} of ${pages}, answered ${turned ?? "none"}`, "malformed");
+    }
+    rows.push(...(next.table?.rows ?? []));
+  }
+  return { ...first, table: { ...first.table, rows } };
 }
 
 /** The standings page Fantrax draws for itself: the league's points and the record split into W-D-L, which the

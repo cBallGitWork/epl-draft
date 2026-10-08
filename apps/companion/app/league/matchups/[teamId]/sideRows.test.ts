@@ -60,6 +60,10 @@ describe("figureOf", () => {
     expect(figureOf(man("b", 2), "G", counts)).toBe(0);
   });
 
+  it("reads a count as Fantrax formats one, thousands comma and all", () => {
+    expect(figureOf(man("e", 1), "Min", { e: { Min: "1,080" } })).toBe(1080);
+  });
+
   it("says nothing where there is no reading", () => {
     expect(figureOf(man("c", 1), "G", counts)).toBeNull();
     expect(figureOf(man("d", null), "Pts", counts)).toBeNull();

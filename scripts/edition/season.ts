@@ -5,15 +5,14 @@ import {
   SEASON_RANKINGS,
   availabilityOf,
   fetchTeamRosters,
-  firstKickoff,
   formations,
   fullClubName,
   fullPrintName,
   isResolved,
-  locksAt,
   mapTeamRosters,
   minimumsOf,
   periodGameweeks,
+  periodLock,
   playSeason,
   projectionIntel,
   readMoves,
@@ -111,9 +110,7 @@ export async function seasonDesk(input: {
   if (calls === null) return say("Power rankings: too few sides to rank; nothing filed."), null;
   for (const move of calls.moved) say(`  Power rankings: ${move.by} moved ${move.teamId} from ${move.from} to ${move.place} (${move.on}).`);
 
-  const roster = info.rosterPeriods.find((each) => each.number === round.period);
-  const kickoff = roster === undefined ? null : firstKickoff(roster, input.kickoffs);
-  const lock = kickoff === null ? null : locksAt(kickoff);
+  const lock = periodLock(info.rosterPeriods.find((each) => each.number === round.period), input.kickoffs);
   if (lock === null) return say(`Power rankings: no lock for period ${round.period}; nothing filed.`), null;
 
   const recorded = limits.leagues[FANTRAX_LEAGUE_ID as keyof typeof limits.leagues]?.positions ?? [];

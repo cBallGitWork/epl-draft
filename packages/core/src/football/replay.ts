@@ -1,5 +1,5 @@
 import { HALF_MINUTES } from "../config";
-import { instantOf } from "../time";
+import { MS_PER_MINUTE, instantOf } from "../time";
 import type { Fixture, FootballPlayer, FootballSnapshot, MatchEvent } from "./types";
 
 // A played round rewound to an injected instant inside it: a rehearsal instrument, never a source of truth.
@@ -68,7 +68,7 @@ function rewindFixture(
 ): Fixture {
   const kickoff = fixture.kickoff === null ? null : instantOf(fixture.kickoff);
   // An undated fixture, or one already over at `at`, keeps what the provider said.
-  if (kickoff === null || now >= kickoff + MATCH_MINUTES * 60_000) return fixture;
+  if (kickoff === null || now >= kickoff + MATCH_MINUTES * MS_PER_MINUTE) return fixture;
 
   if (now < kickoff) {
     return { ...fixture, status: "upcoming", homeScore: null, awayScore: null, minutes: 0, settled: false };
@@ -80,7 +80,7 @@ function rewindFixture(
     status: "live",
     homeScore: score?.home ?? null,
     awayScore: score?.away ?? null,
-    minutes: matchClock(Math.floor((now - kickoff) / 60_000)),
+    minutes: matchClock(Math.floor((now - kickoff) / MS_PER_MINUTE)),
     settled: false,
   };
 }

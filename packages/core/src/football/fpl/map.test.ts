@@ -159,6 +159,13 @@ describe("mapLiveStats", () => {
     expect(mapLiveStats({ elements: [] })).toEqual([]);
   });
 
+  it("reads a value FPL sends as null as no value: the aggregate on a single fixture, nought on a double, never null", () => {
+    const unset = { identifier: "minutes", points: 0, value: null as unknown as number };
+    expect(mapLiveStats(live([{ fixture: 10, stats: [unset] }]))[0]?.minutes).toBe(135);
+    const double = mapLiveStats(live([{ fixture: 10, stats: [unset] }, { fixture: 11, stats: [] }]));
+    expect(double.map((row) => row.minutes)).toEqual([0, 0]);
+  });
+
   it("carries `starts` off the aggregate, and repeats it on a double", () => {
     // A start scores nothing, so `explain` lacks it: the gameweek's count lands on every row, never to be summed.
     const rows = mapLiveStats({

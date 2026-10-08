@@ -1,5 +1,5 @@
 import { LINEUP_LOCK_LEAD_MINUTES, SAVE_MARGIN_MINUTES } from "../config";
-import { MS_PER_DAY } from "../time";
+import { MS_PER_DAY, MS_PER_MINUTE } from "../time";
 import type { LeaguePeriod } from "./types";
 
 // Which FPL gameweek falls in which Fantrax period, by kickoff (FPL's deadline lands a period early); kickoffs are
@@ -13,15 +13,23 @@ export interface GameweekKickoff {
   kickoff: string;
 }
 
-/** A period's gameweeks: none for a blank, two for a double. */
+/** A period's gameweeks, ascending: none for a blank, two for a double. */
 export interface PeriodGameweeks {
   period: number;
   gameweeks: number[];
+  /** The gameweek the period is for: the most matches, the earliest first kickoff on a tie; null for a blank. */
+  own: number | null;
 }
 
-/** A period's first gameweek, the one that opens a double; undefined for a period the calendar lacks or a blank. */
+/** The gameweek a period is for (`own`), never a replayed postponement's; undefined for a blank or a period the
+ *  calendar lacks. */
 export function openingGameweek(calendar: readonly PeriodGameweeks[], period: number | undefined): number | undefined {
-  return calendar.find((entry) => entry.period === period)?.gameweeks[0];
+  return calendar.find((entry) => entry.period === period)?.own ?? undefined;
+}
+
+/** The period that scores a gameweek: the first holding it, as a replayed postponement's period holds it too. */
+export function periodOfGameweek(calendar: readonly PeriodGameweeks[], gameweek: number): PeriodGameweeks | undefined {
+  return calendar.find((entry) => entry.gameweeks.includes(gameweek));
 }
 
 export function periodGameweeks(
@@ -36,14 +44,17 @@ export function periodGameweeks(
   return periods.map((period) => {
     const start = Date.parse(period.start);
     const end = Date.parse(period.end);
-    const gameweeks = new Set<number>();
+    const held = new Map<number, { matches: number; first: number }>();
 
     // Inclusive at both ends: consecutive periods end at :59 and start at the next :00.
     for (const { gameweek, at } of instants) {
-      if (at >= start && at <= end) gameweeks.add(gameweek);
+      if (at < start || at > end) continue;
+      const seen = held.get(gameweek);
+      held.set(gameweek, { matches: (seen?.matches ?? 0) + 1, first: Math.min(seen?.first ?? at, at) });
     }
 
-    return { period: period.number, gameweeks: [...gameweeks].sort((a, b) => a - b) };
+    const own = [...held].sort(([gwA, a], [gwB, b]) => b.matches - a.matches || a.first - b.first || gwA - gwB)[0];
+    return { period: period.number, gameweeks: [...held.keys()].sort((a, b) => a - b), own: own?.[0] ?? null };
   });
 }
 
@@ -55,14 +66,14 @@ export function locksAt(firstKickoffIso: string): string | null {
   const kickoff = Date.parse(firstKickoffIso);
   return Number.isNaN(kickoff)
     ? null
-    : new Date(kickoff - LINEUP_LOCK_LEAD_MINUTES * 60_000).toISOString();
+    : new Date(kickoff - LINEUP_LOCK_LEAD_MINUTES * MS_PER_MINUTE).toISOString();
 }
 
 /** Whether a lineup save may still be sent: until `SAVE_MARGIN_MINUTES` before the lock, never without one. */
 export function saveOpen(locksAtIso: string | null, nowIso: string): boolean {
   const locks = locksAtIso === null ? NaN : Date.parse(locksAtIso);
   const now = Date.parse(nowIso);
-  return !Number.isNaN(locks) && !Number.isNaN(now) && now < locks - SAVE_MARGIN_MINUTES * 60_000;
+  return !Number.isNaN(locks) && !Number.isNaN(now) && now < locks - SAVE_MARGIN_MINUTES * MS_PER_MINUTE;
 }
 
 /** The first ball kicked inside a period, or null for an international break or a period FPL has not dated. */
@@ -82,6 +93,12 @@ export function firstKickoff(
     if (earliest === null || at < earliest.at) earliest = { iso: kickoff.kickoff, at };
   }
   return earliest?.iso ?? null;
+}
+
+/** A period's lineup lock, `locksAt` its first kickoff; null with no period, no dated football in it, or no lock. */
+export function periodLock(period: LeaguePeriod | undefined, kickoffs: readonly GameweekKickoff[]): string | null {
+  const kickoff = period === undefined ? null : firstKickoff(period, kickoffs);
+  return kickoff === null ? null : locksAt(kickoff);
 }
 
 const LAST_SECOND = "23:59:59";

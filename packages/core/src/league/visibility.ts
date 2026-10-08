@@ -1,7 +1,8 @@
 // Whether a lineup may be shown yet: a rival's arrangement hides until lineups lock, the squad never does.
 // The reader's own lineup is always his. Pure: the instant is injected, never read from a clock.
 
-import { firstKickoff, locksAt } from "./calendar";
+import { instantOf } from "../time";
+import { periodLock } from "./calendar";
 import type { GameweekKickoff } from "./calendar";
 import type { LeaguePeriod } from "./types";
 
@@ -25,12 +26,6 @@ export type SquadReason =
   /** The roster names a period the calendar does not contain. */
   | "period-not-in-calendar";
 
-/** Epoch ms, since Fantrax's `-0400` offsets and our `Z` stamps compare wrongly as strings; null when unreadable. */
-function instant(iso: string): number | null {
-  const parsed = Date.parse(iso);
-  return Number.isNaN(parsed) ? null : parsed;
-}
-
 /** Have this period's lineups locked at `at` (inclusive)? Null when there is no lock: read it as "not yet".
  *  The lock is `locksAt` the first kickoff, never the period boundary, which opens hours before the first ball. */
 function lineupsLocked(
@@ -38,11 +33,8 @@ function lineupsLocked(
   kickoffs: readonly GameweekKickoff[],
   at: string,
 ): boolean | null {
-  const kickoff = firstKickoff(period, kickoffs);
-  if (kickoff === null) return null;
-
-  const locks = locksAt(kickoff);
-  const now = instant(at);
+  const locks = periodLock(period, kickoffs);
+  const now = instantOf(at);
   if (locks === null || now === null) return null;
   return now >= Date.parse(locks);
 }

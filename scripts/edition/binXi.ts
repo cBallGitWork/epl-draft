@@ -25,6 +25,7 @@ import {
   mapPlayerStats,
   mapTransactions,
   minimumsOf,
+  openingGameweek,
   periodDays,
   periodGameweeks,
   type Assignment,
@@ -130,10 +131,10 @@ export async function binXiDesk(input: {
   );
   if (side === null) return say("Bin XI: no allowed shape could be filled from men who started; nothing filed."), null;
 
-  const gameweek = input.gameweeks[0] ?? snapshot.gameweek;
+  const calendar = periodGameweeks(info.scoringPeriods, [...input.kickoffs]);
+  const gameweek = openingGameweek(calendar, period) ?? snapshot.gameweek;
   const club = (clubId: number) => fullClubName(clubs.get(clubId)?.name ?? "an unknown club");
   const teamName = (teamId: string) => info.teams.find((team) => team.teamId === teamId)?.name ?? teamId;
-  const calendar = periodGameweeks(info.scoringPeriods, [...input.kickoffs]);
   const lastWeek = readArchive(FANTRAX_LEAGUE_ID, "bin-xi").find((story) => story.gameweek === gameweek - 1)?.extras?.bin?.xi ?? [];
   const sides = [...facts.scores.values()].map((score) => score.points);
   const brief = buildBinBrief({
@@ -151,7 +152,7 @@ export async function binXiDesk(input: {
     extras: (man) => extras.get(man.fantraxId) ?? { cleanSheet: false, saves: null, tacklesWon: null, interceptions: null, clearances: null },
     history: binHistory({
       gameweek, teams: facts.teams, fielded: facts.fielded, transactions, pedigree: facts.pedigree, teamName,
-      gameweekOf: (each) => calendar.find((entry) => entry.period === each)?.gameweeks[0] ?? null,
+      gameweekOf: (each) => openingGameweek(calendar, each) ?? null,
     }),
     undrafted: undrafted(facts.pedigree),
     status: (man) => STATUS[availabilityOf(byCode.get(man.code) ?? null).state] ?? null,

@@ -3,6 +3,7 @@ import {
   type InboxItem,
   type LeaguePeriod,
   type LeagueTeam,
+  openingGameweek,
   periodGameweeks,
   availabilityNews,
   availability,
@@ -154,11 +155,7 @@ function lock(
 ): { period: number; gameweek: number; locksAt: string } | null {
   const next = nextDeadline(periods, kickoffs, now().toISOString());
   if (next === null) return null;
-  const rounds = periodGameweeks([...periods], [...kickoffs]).find(
-    (entry) => entry.period === next.period,
-  );
-  // A period spanning two gameweeks locks before the first.
-  const gameweek = rounds?.gameweeks[0];
+  const gameweek = openingGameweek(periodGameweeks([...periods], [...kickoffs]), next.period);
   return gameweek === undefined
     ? null
     : { period: next.period, gameweek, locksAt: next.locksAt };

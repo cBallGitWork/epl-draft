@@ -86,12 +86,18 @@ describe("joinedBy", () => {
       "03gu4",
       NAMES,
     );
-    expect(joinedBy(moves, "t1")?.transaction.setId).toBe("new");
+    expect(joinedBy(moves, "t1", true)).toMatchObject({ transaction: { setId: "new" } });
   });
 
   it("has none for a free agent, or a holder no move names", () => {
     const moves = movesOf([move({ toTeamId: "t1" })], "03gu4", NAMES);
-    expect(joinedBy(moves, null)).toBeNull();
-    expect(joinedBy(moves, "t2")).toBeNull();
+    expect(joinedBy(moves, null, true)).toBeNull();
+    expect(joinedBy(moves, "t2", true)).toBeNull();
+  });
+
+  it("does not know when the log was not read whole, so a claim it lacks cannot read as the draft", () => {
+    const moves = movesOf([move({ toTeamId: "t1" })], "03gu4", NAMES);
+    expect(joinedBy(moves, "t1", false)).toBe("unknown");
+    expect(joinedBy([], "t2", false)).toBe("unknown");
   });
 });

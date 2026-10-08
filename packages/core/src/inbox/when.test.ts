@@ -94,6 +94,15 @@ describe("proposedInstant", () => {
     expect(proposedInstant("Oct 8, 6:53 AM EDT", NOW)).toBe("2026-10-08T10:53:00.000Z");
   });
 
+  it("keeps the zone a stamp names in the hour the clocks go back, when one wall time comes twice", () => {
+    // Britain's clocks go back at 01:00 UTC on Sun 25 Oct, America's at 06:00 UTC on Sun 1 Nov.
+    const after = "2026-11-02T12:00:00.000Z";
+    expect(proposedInstant("Oct 25, 1:30 AM BST", after)).toBe("2026-10-25T00:30:00.000Z");
+    expect(proposedInstant("Oct 25, 1:30 AM GMT", after)).toBe("2026-10-25T01:30:00.000Z");
+    expect(proposedInstant("Nov 1, 1:30 AM EDT", after)).toBe("2026-11-01T05:30:00.000Z");
+    expect(proposedInstant("Nov 1, 1:30 AM EST", after)).toBe("2026-11-01T06:30:00.000Z");
+  });
+
   it("takes a stamp past now as last year's", () => {
     expect(proposedInstant("Dec 30, 10:00 AM GMT", "2027-01-02T12:00:00.000Z")).toBe("2026-12-30T10:00:00.000Z");
   });

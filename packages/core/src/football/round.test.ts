@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { POSTPONED_AFTER_MINUTES } from "../config";
 import type { Fixture, FootballSnapshot } from "./types";
 import { duringGameweek, isMatchdayLive, roundFinished, roundStarted, roundState, secondsToLive } from "./round";
 
@@ -74,6 +75,23 @@ describe("duringGameweek", () => {
       fixtures: [fixture({ id: 1, status: "finished" }), fixture({ id: 2, kickoff: null })],
     });
     expect(duringGameweek(restFinished, "2026-08-21T21:00:00Z")).toBe(false);
+  });
+
+  it("lets go of a match still unstarted past the window after its kickoff: called off, whatever date FPL leaves", () => {
+    // The rest played on the Saturday; one called off at 16:30 never starts, and FPL keeps its date.
+    const calledOff = snap({ fixtures: [played({ id: 1 }), fixture({ id: 2, kickoff: "2026-08-22T16:30:00Z" })] });
+    const after = (minutes: number) => new Date(Date.parse("2026-08-22T16:30:00Z") + minutes * 60_000).toISOString();
+    expect(duringGameweek(calledOff, after(POSTPONED_AFTER_MINUTES))).toBe(true);
+    expect(duringGameweek(calledOff, after(POSTPONED_AFTER_MINUTES + 1))).toBe(false);
+    expect(duringGameweek(calledOff, "2026-08-25T12:00:00Z")).toBe(false);
+  });
+
+  it("does not open on an opener that was called off", () => {
+    const s = snap({
+      fixtures: [fixture({ id: 1, kickoff: "2026-08-21T19:00:00Z" }), fixture({ id: 2, kickoff: "2026-08-22T11:30:00Z" })],
+    });
+    expect(duringGameweek(s, "2026-08-22T09:00:00Z")).toBe(false);
+    expect(duringGameweek(s, "2026-08-22T11:30:00Z")).toBe(true);
   });
 
   it("compares instants, so an offset kickoff is not read as a later one", () => {
@@ -223,5 +241,10 @@ describe("secondsToLive", () => {
     const s = snap({ fixtures: [played({ id: 1 })] });
     const undated = [fixture({ id: 12, gameweek: 2, kickoff: null })];
     expect(secondsToLive(s, undated, "2026-08-28T18:00:00Z")).toBeNull();
+  });
+
+  it("counts to the next kickoff past a match called off, rather than polling at the live rate for days", () => {
+    const s = snap({ fixtures: [played({ id: 1 }), fixture({ id: 2, kickoff: "2026-08-22T16:30:00Z" })] });
+    expect(secondsToLive(s, nextWeek, "2026-08-28T18:59:15Z")).toBe(45);
   });
 });

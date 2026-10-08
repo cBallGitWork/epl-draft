@@ -3,6 +3,9 @@ import { LEAGUE_TIMEZONE } from "./config";
 /** A calendar day in milliseconds, for spans between UTC instants. */
 export const MS_PER_DAY = 86_400_000;
 
+/** A minute in milliseconds. */
+export const MS_PER_MINUTE = 60_000;
+
 // Instants and the league's calendar: every date the app, the paper and the scripts print or file
 // by is read here, in London, whatever the reader's own zone.
 
@@ -119,4 +122,34 @@ export function weekdayOfDay(day: string): string {
 /** `Saturday` for a London day, `2026-10-10`. */
 export function weekdayLongOfDay(day: string): string {
   return londonWeekdayLong(`${day}T12:00:00Z`);
+}
+
+/** A wall clock in a zone, given as if it were UTC (ms), as the instant it names. The offset at the wall reading is
+ *  right but for the hours around a change, so it is read again where it lands. */
+export function wallClockInstant(wall: number, timeZone: string): number {
+  const guess = wall - (wallIn(timeZone, wall) - wall);
+  return wall - (wallIn(timeZone, guess) - guess);
+}
+
+/** One formatter per zone: a whole inbox of stamps reads through the same one or two. */
+const WALL_FORMATS = new Map<string, Intl.DateTimeFormat>();
+
+/** A zone's wall clock at an instant, read back as if it were UTC. */
+function wallIn(timeZone: string, at: number): number {
+  let format = WALL_FORMATS.get(timeZone);
+  if (format === undefined) {
+    format = new Intl.DateTimeFormat("en-US", {
+      timeZone,
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hourCycle: "h23",
+    });
+    WALL_FORMATS.set(timeZone, format);
+  }
+  const field = new Map(format.formatToParts(at).map((part) => [part.type, Number(part.value)] as const));
+  const read = (type: Intl.DateTimeFormatPartTypes): number => field.get(type) ?? 0;
+  return Date.UTC(read("year"), read("month") - 1, read("day"), read("hour"), read("minute"));
 }

@@ -3925,6 +3925,11 @@ pagination and the 37-call FPL season sweep are both deleted. `POOL_PAGE_SIZE`
 sits comfortably above the pool and the read reports `totalNumResults` back, so a
 pool that ever outgrows it says so rather than showing a prefix.
 
+**`getTransactionDetailsHistory` honours `pageNumber`** (probed 8 Oct 2026, real league, `CLAIM_DROP`,
+`maxResultsPerPage: "2"`): page 1 and page 2 answer different transactions, each echoing its own `pageNumber`
+as a number, with `totalNumPages: 3` over 5 results. A page counts transactions, not rows (a claim and its drop
+are two rows of one). `fetchTransactions` reads every page and refuses a page that does not echo its number.
+
 **`getTeamRosterInfo` is the real find, and it is public.** It *does* honour
 `seasonOrProjection` — `SEASON_926_YEAR_TO_DATE` comes back correctly labelled
 "2026-27 - YTD" — and `teamId` and `period` are honoured too. With `view: "FPTS"`

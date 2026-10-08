@@ -1,5 +1,6 @@
 import type { StandingsRow } from "../types";
 import type { RawStandingsPage, RawStandingsTable, RawTableCell } from "./standingsPage";
+import { numeric } from "./stats";
 
 // The league table, off the page Fantrax draws for its own site: the only read carrying league points. Pure.
 // Points are READ, never computed, as what a win is worth is a commissioner setting.
@@ -82,6 +83,5 @@ function at(cells: RawTableCell[] | undefined, index: number | undefined): RawTa
 
 /** Nought for a cell we cannot read; a column Fantrax stops publishing is for `npm run shape-diff` to report. */
 function number(content: string | undefined): number {
-  const value = Number(content);
-  return Number.isFinite(value) ? value : 0;
+  return numeric(content) ?? 0;
 }

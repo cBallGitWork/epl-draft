@@ -74,6 +74,15 @@ describe("mapStandings", () => {
     expect(mapStandings(page)[0]?.played).toBe(6);
   });
 
+  // Fantasy points for pass 1,000 around gameweek 18: read as NaN they were nought, and so was the tie-break.
+  it("reads a total Fantrax prints with a thousands comma, and places the table on it", () => {
+    const page = structuredClone(standingsPage) as RawStandingsPage;
+    const cells = page.tableList?.[0]?.rows?.[3]?.cells ?? [];
+    cells[6]!.content = "1,024.5";
+    cells[7]!.content = "1,002";
+    expect(mapStandings(page).find((row) => row.teamName === "test4")).toMatchObject({ rank: 3, pointsFor: 1024.5, pointsAgainst: 1002 });
+  });
+
   // Points against is where a head-to-head draw shows: third place conceded 63 and sits on nought.
   it("reads points against, which is where a head-to-head draw shows", () => {
     expect(rows.map((row) => row.pointsAgainst)).toEqual([35, 37, 63, 45]);
