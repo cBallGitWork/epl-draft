@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { claimTeam } from "./actions";
+import { STRONG_BUTTON } from "../components/shell/ButtonLink";
 import { LABEL } from "@/app/desk";
 
 // One box: your code. A client component so a wrong code answers in place; the form posts before any JavaScript.
@@ -35,14 +36,14 @@ export default function SignIn() {
         <button
           type="submit"
           disabled={pending}
-          className="min-h-11 bg-league px-4 text-sm font-bold text-cream disabled:opacity-50"
+          className={`${STRONG_BUTTON} shrink-0 disabled:opacity-50`}
         >
           {pending ? "…" : "Sign in"}
         </button>
       </div>
 
       {message ? (
-        <p role="alert" className="text-sm text-live">
+        <p role="alert" className="text-sm text-bad">
           {message}
         </p>
       ) : null}

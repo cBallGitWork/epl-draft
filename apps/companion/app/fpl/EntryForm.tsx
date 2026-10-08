@@ -46,7 +46,7 @@ export default function EntryForm() {
       </div>
 
       {message ? (
-        <p role="alert" className="text-sm text-live">
+        <p role="alert" className="text-sm text-bad">
           {message}
         </p>
       ) : null}
