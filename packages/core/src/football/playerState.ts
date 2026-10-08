@@ -19,7 +19,7 @@ export interface Availability {
 const FIT: Availability = { state: "fit", label: "", out: false, chance: null, news: "" };
 
 /** The one rule for "is he fine": 100% with no news is fit, and so is no letter, news or chance at all. */
-export function availabilityOf(player: FootballPlayer | null): Availability {
+export function availabilityOf(player: Pick<FootballPlayer, "status" | "news" | "chanceOfPlaying"> | null): Availability {
   // Null is a man the bridge has not settled, which is ordinary: silence, not a doubt.
   if (player === null) return FIT;
   if (player.news === "" && player.chanceOfPlaying === 100) return FIT;
