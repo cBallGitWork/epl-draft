@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Modal from "../shell/Modal";
-import { BUTTON } from "../shell/ButtonLink";
+import { BUTTON, STRONG_BUTTON } from "../shell/ButtonLink";
 
 // Asks before an unsaved lineup is left behind: the browser's own prompt on a reload or close, ours on a
 // tap to another screen of the app. The back button is not caught.
@@ -54,7 +54,7 @@ export default function LeaveGuard({
         <p className="px-1 text-sm text-muted">You have changed your lineup and not saved it.</p>
         <div className="flex flex-col gap-2">
           {canSave ? (
-            <button type="button" onClick={async () => ((await onSave()) ? go() : setLeaving(null))} className={`${BUTTON} cm-primary font-bold`}>
+            <button type="button" onClick={async () => ((await onSave()) ? go() : setLeaving(null))} className={`${STRONG_BUTTON} cm-primary`}>
               Save and leave
             </button>
           ) : null}
