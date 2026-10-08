@@ -34,7 +34,7 @@ import {
 } from "../../intel";
 import type { StandoutCut } from "../../components/league/standout";
 import { poolCut } from "../standout";
-import { PAGE_REVALIDATE } from "../../config";
+import { PAST_SEASONS_REVALIDATE } from "../../config";
 
 // The Championship Manager half of the player screen: the attribute grid, his rankings, the real
 // position under them, and the seasons behind them. Every rating is a percentile, so this needs
@@ -190,7 +190,7 @@ export function pastSeasons(player: FootballPlayer): Promise<PastSeason[] | null
   const read = unstable_cache(
     async () => mapPastSeasons(await fetchElementSummary(player.id)),
     ["past-seasons", String(player.code)],
-    { revalidate: PAGE_REVALIDATE },
+    { revalidate: PAST_SEASONS_REVALIDATE },
   );
   return orDegraded(read(), () => null);
 }

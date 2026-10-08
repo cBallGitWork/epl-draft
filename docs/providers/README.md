@@ -129,8 +129,8 @@ All targets are `apps/companion/app/_reads/<provider>.ts`, one leaf read each.
 | `gameweekLive` | `apps/companion/app/football.ts` | `football-live` | 30 | FPL event live | `_reads/fpl.ts` |
 | `readEntry` | `apps/companion/app/fpl/entry.ts` | `fpl-entry` | 30 | FPL entry, then picks | `_reads/fpl.ts` |
 | `roundScoring` | `apps/companion/app/fpl/entry.ts` | `fpl-score-lines` | 30 | FPL event live, the same URL as `gameweekLive`, kept as each man's scoring lines | `_reads/fpl.ts` |
-| `gameLog` | `apps/companion/app/players/[fantraxId]/scouting.ts` | `player-game-log` + code | 30 | FPL element-summary | `_reads/fpl.ts`, one cache with `pastSeasons` |
-| `pastSeasons` | `apps/companion/app/players/[fantraxId]/grid.ts` | `past-seasons` + code | 30 | FPL element-summary (same URL) | `_reads/fpl.ts` |
+| `gameLog` | `apps/companion/app/players/[fantraxId]/scouting.ts` | `player-game-log` + code | 3600 | FPL element-summary | `_reads/fpl.ts`, one cache with `pastSeasons` |
+| `pastSeasons` | `apps/companion/app/players/[fantraxId]/grid.ts` | `past-seasons` + code | 86400 | FPL element-summary (same URL) | `_reads/fpl.ts` |
 | `plRound` | `apps/companion/app/plFeed.ts` | `pl-round` | 20 | PL fixtures by round | `_reads/premierleague.ts` |
 | `plFixture` | `apps/companion/app/plFeed.ts` | `pl-fixture` | 30 | PL fixture detail | `_reads/premierleague.ts` |
 | `plStream` | `apps/companion/app/plFeed.ts` | `pl-textstream` | 300 | PL textstream | `_reads/premierleague.ts` |
