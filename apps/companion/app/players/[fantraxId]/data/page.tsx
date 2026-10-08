@@ -6,6 +6,7 @@ import { LABEL, PANEL } from "@/app/desk";
 import { footballNow, seasonFixtures } from "../../../football";
 import { playerMarks } from "../../../ratings";
 import { intelCareers } from "../../../intel";
+import { FPL_SILENT } from "../../../config";
 import QuerySelect from "../../../components/shell/QuerySelect";
 import { ALL_SEASONS, playerDataHref } from "../../routes";
 import MatchLog from "../MatchLog";
@@ -76,6 +77,10 @@ async function Record({
   season: string | null;
 }) {
   const [past, log, snapshot, fixtures] = await Promise.all([pastSeasons(player), gameLog(player), footballNow(), seasonFixtures()]);
+  // One FPL read feeds both; when it will not answer, say so rather than print half a career.
+  if (past === null || log === null) {
+    return <Nothing title={FPL_SILENT} code="element-summary">His seasons will be back when FPL answers.</Nothing>;
+  }
   const joined = joinMatches(log, paid, clubById(snapshot), playerMarks(player.code, fixtures));
   const clubs = intelCareers.get(player.code) ?? new Map<string, string>();
   const label = season ?? "This season";

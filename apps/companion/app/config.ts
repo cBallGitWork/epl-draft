@@ -48,6 +48,9 @@ export const DEMO_TEAM_ID = process.env.FANTRAX_DEMO_TEAM_ID || null;
 /** What a page says when the league's own provider will not answer; each page writes its own sentence under it. */
 export const FANTRAX_SILENT = "Fantrax is not answering";
 
+/** The same for FPL, which refuses Vercel with a 403 under a burst of reads (PLATFORM_NOTES, 8 Oct 2026). */
+export const FPL_SILENT = "FPL is not answering";
+
 /** How stale a rendered page may be, in seconds. Next reads `revalidate` statically, so every
  *  route segment repeats it as a literal; `scripts/revalidate.test.ts` holds them together. */
 export const PAGE_REVALIDATE = 30;

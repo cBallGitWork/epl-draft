@@ -267,11 +267,13 @@ async function man(
   const touches = all === undefined ? undefined : { ...all, fixtures: keep(all.fixtures) };
   const shots = keep(intelShots.get(code) ?? []);
   const keyPasses = keep(assistsOf(intelShots, code));
+  // The window is his game log: with FPL not answering it has no figures, rather than a window of noughts.
+  const log = player !== undefined && recent ? await gameLog(player) : null;
   const totals =
     player === undefined
       ? null
       : recent
-        ? totalsOver((await gameLog(player)).map((row) => row.match), inWindow)
+        ? log === null ? null : totalsOver(log.map((row) => row.match), inWindow)
         : player.season;
   const played: Played | null =
     totals === null
