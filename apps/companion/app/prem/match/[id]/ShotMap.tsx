@@ -229,8 +229,8 @@ export default function ShotMap({
                 >
                   {OUTCOME[shot.outcome]}
                 </td>
-                {/* xG is a model's reading, so cyan (DESIGN §3). */}
-                <td className="numeric text-center text-sm text-info">
+                {/* The provider's xG, in amber as every board prints it: not a reading of ours (DESIGN §3). */}
+                <td className="numeric text-center text-sm text-mid">
                   {shot.xg === null ? DASH : fixed(shot.xg, "expected")}
                 </td>
               </tr>

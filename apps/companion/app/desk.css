@@ -629,6 +629,11 @@ select.cm-bevel {
   border-color: var(--cm-dark);
 }
 
+/* A panel about a doubt, edged in the doubt's red; here, as `border-bad` loses to the edge above. */
+.cm-panel.cm-edge-bad {
+  border-color: var(--color-bad);
+}
+
 /* A list's rows are ruled in the dark step, the same rule tables use. */
 .cm-rows > * {
   border-bottom: 1px solid var(--color-bg);

@@ -119,8 +119,8 @@ export interface LeagueTransaction {
 export interface StandingsRow {
   teamId: string;
   teamName: string;
-  /** The place, by the league's rule: points, then fantasy points for, then name where both are
-   *  level (`placeTable`). Fantrax's own rank shuffles teams level on both between reads. */
+  /** The place, by the league's rule: points, then fantasy points for, and shared by teams level on both
+   *  (`placeTable`), where Fantrax's own rank shuffles them between reads. */
   rank: number;
   /** The record in Fantrax's own order: Win, Draw, Loss. */
   won: number;

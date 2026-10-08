@@ -1,4 +1,4 @@
-import { depthLines, londonDayAndDate, squadOf } from "@epl/core";
+import { depthLines, londonMoment, squadOf } from "@epl/core";
 import TabEmpty from "../../../../components/league/TabEmpty";
 import { intelDepth, intelDepthManifest } from "../../../../intel";
 import ClubShell from "../Shell";
@@ -33,7 +33,7 @@ export default async function DepthPage({ params }: { params: Promise<{ code: st
         <section className={PANEL}>
           <p className={`cm-title ${PITCH_CAPTION}`}>
             Depth chart{intelDepthManifest.gameweek === null ? "" : ` for GW${intelDepthManifest.gameweek}`} · {chart.formation}{" "}
-            (last updated {londonDayAndDate(intelDepthManifest.exportedAt)})
+            (last updated {londonMoment(intelDepthManifest.exportedAt)})
           </p>
           <ListAndPitch
             opens="pitch"

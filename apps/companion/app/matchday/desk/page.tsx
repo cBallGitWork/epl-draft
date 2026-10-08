@@ -83,7 +83,7 @@ export default async function DeskPage() {
 
       <Section title="The football">
         {fixtures.length === 0 ? (
-          <Quiet>FPL has not named the fixtures for this round.</Quiet>
+          <Quiet>FPL has not named the fixtures for this gameweek.</Quiet>
         ) : (
           fixtures.map((fixture) => (
             <Match

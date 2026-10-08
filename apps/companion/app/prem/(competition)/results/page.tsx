@@ -21,7 +21,7 @@ export default async function ResultsPage() {
     return (
       <PremShell current="results">
         <Nothing title="Nothing played yet" code="no finished fixture">
-          Results appear here as soon as a round finishes. A round being played is on Live,
+          Results appear here as soon as a gameweek finishes. A gameweek being played is on Live,
           where its score is meant to move.
         </Nothing>
       </PremShell>

@@ -19,7 +19,7 @@ export default function Tie({
   /** Each side's Fantrax total for the gameweek, by team id. */
   points: Map<string, number | null>;
   /** Each team's place in the table, for CM's blue block. Fantrax's own rank. */
-  places: Map<string, number>;
+  places: Map<string, string>;
   round: ScheduleRound;
   mine: string | null;
 }) {
@@ -58,7 +58,7 @@ function figure(value: number | null) {
   return value === null ? <Absent /> : value;
 }
 
-function side(seat: TieSide, places: Map<string, number>, mine: string | null, lost: boolean) {
+function side(seat: TieSide, places: Map<string, string>, mine: string | null, lost: boolean) {
   return {
     name: seat.label,
     place: seat.team === null ? null : (places.get(seat.team.teamId) ?? null),

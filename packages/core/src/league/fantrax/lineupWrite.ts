@@ -102,6 +102,15 @@ export function changesLineup(roster: LineupState, map: FieldMap): boolean {
   return roster.rows.some((row) => map[row.scorerId]?.posId !== row.posId || map[row.scorerId]?.stId !== row.statusId);
 }
 
+/** Each man the plan moves, from where Fantrax has him to where the plan puts him: what a save's audit line records. */
+export function lineupChanges(roster: LineupState, map: FieldMap): { scorerId: string; from: FieldMap[string]; to: FieldMap[string] }[] {
+  return roster.rows.flatMap((row) => {
+    const to = map[row.scorerId];
+    const moved = to !== undefined && (to.posId !== row.posId || to.stId !== row.statusId);
+    return moved ? [{ scorerId: row.scorerId, from: { posId: row.posId, stId: row.statusId }, to }] : [];
+  });
+}
+
 /** The bench in order, ranked from 1; a man Fantrax had ranked who is no longer on it goes to 0. */
 export function benchOrderMap(bench: readonly string[], previous: Readonly<Record<string, number>>): Record<string, number> {
   const map: Record<string, number> = {};

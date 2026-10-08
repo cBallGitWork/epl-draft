@@ -1,5 +1,5 @@
 import Link from "@/app/components/shell/Link";
-import { openingGameweek, ordinal, type FormGame, type PeriodGameweeks, type SortKey, type StandingsRow } from "@epl/core";
+import { openingGameweek, type FormGame, type PeriodGameweeks, type SortKey, type StandingsRow } from "@epl/core";
 import { PointsCell, TIGHT_ROW } from "../components/league/TableCells";
 import { COPY, cellAlign, deskOnly } from "./Columns";
 import { yoursEdge, yoursInk } from "../mine";
@@ -15,6 +15,7 @@ import { teamHref } from "@/app/squad/routes";
 
 export default function TableRow({
   row,
+  place,
   mine,
   form,
   sort,
@@ -22,6 +23,8 @@ export default function TableRow({
   calendar,
 }: {
   row: StandingsRow;
+  /** His place as the table prints it, `=1st` where it is shared (`printedPlaces`). */
+  place: string;
   mine: boolean;
   /** An edge in a side's own colour, for the head-to-head's two teams; `mine` wins on a row that is both. */
   tint?: string | undefined;
@@ -42,7 +45,7 @@ export default function TableRow({
         // On the cell, not the row: a `<tr>` border never paints through the index ground.
         style={mine || tint === undefined ? undefined : { borderLeftColor: tint }}
       >
-        {ordinal(row.rank)}
+        {place}
       </td>
 
       <td className="pl-2">

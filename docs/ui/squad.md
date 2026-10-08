@@ -320,7 +320,8 @@ unresolved when it is, and a way out to the full profile.
   `planningRound()`, refuses a page planned for another week and anything inside `SAVE_MARGIN_MINUTES` of the
   lock, re-checks the league's rules, then sends Fantrax's dry run and saves only on a clean `CONFIRM`. It runs
   only for a team `LINEUP_SAVE` allows (`on`, or a list of team ids) with `FANTRAX_COOKIE` set; elsewhere the bar reads
-  "Planned, not saved" and the Fantrax link is the way to submit. Each write logs one `lineup-save` line.
+  "Planned, not saved" and the Fantrax link is the way to submit. Each write logs one `lineup-save` line: who moved,
+  from and to (`lineupChanges`), the bench order sent or null, and Fantrax's words when it refuses.
 - **The bench order is yours to set on the pitch.** Tap one sub, then another, and they swap places; the
   numbers 1–4 are the order they come on. It starts from Fantrax's `autoSubOrderMap` and saves with
   `setAutoSubsOrder`.

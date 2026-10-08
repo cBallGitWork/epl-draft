@@ -9,6 +9,7 @@ import {
   fetchLineupState,
   fieldMapFor,
   firstKickoff,
+  lineupChanges,
   locksAt,
   mapLineupState,
   readBenchAnswer,
@@ -119,24 +120,28 @@ async function write(teamId: string, period: number, plan: Plan, session: string
 
   const lineup = changesLineup(state, fieldMap);
   const bench = benchToWrite(plan.bench, plan.reordered, state.autoSubOrder);
-  const audit = (ok: boolean, step: string) =>
-    console.info(JSON.stringify({ event: "lineup-save", teamId, period, lineup, bench: bench !== null, step, ok }));
+  // Who moved where and the bench order sent (null: Fantrax's left alone), with Fantrax's words when it refuses.
+  const moved = lineupChanges(state, fieldMap);
+  const audit = (answer: WriteAnswer, step: string) => {
+    const refused = answer.ok ? {} : { refused: answer.messages };
+    console.info(JSON.stringify({ event: "lineup-save", teamId, period, step, ok: answer.ok, lineup, moved, bench, ...refused }));
+  };
 
   if (lineup) {
     const send = (dryRun: boolean) =>
       sendLineup(FANTRAX_LEAGUE_ID, { teamId, period, fieldMap, applyToFuturePeriods: state.applyToFuturePeriods, dryRun }, session);
     const dry = readLineupAnswer(await send(true));
     if (!dry.ok) {
-      audit(false, "dry-run");
+      audit(dry, "dry-run");
       return dry;
     }
     const done = readLineupAnswer(await send(false));
-    audit(done.ok, "lineup");
+    audit(done, "lineup");
     if (!done.ok) return done;
   }
   if (bench !== null) {
     const done = readBenchAnswer(await sendBenchOrder(FANTRAX_LEAGUE_ID, { teamId, period, order: bench }, session));
-    audit(done.ok, "bench");
+    audit(done, "bench");
     if (!done.ok) {
       // The lineup above may have gone through, and the page must show it.
       if (lineup) updateTag(leagueTag(SQUADS_KEY));

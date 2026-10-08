@@ -16,7 +16,7 @@ export default function Round({
   round: ScheduleRound;
   ties: CompetitionTie[];
   points: Map<string, number | null>;
-  places: Map<string, number>;
+  places: Map<string, string>;
   mine: string | null;
   /** A cup's line in a week it plays no tie, such as its seeding. */
   note?: { title: string; text: string } | undefined;

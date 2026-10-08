@@ -22,3 +22,15 @@ export function tableLines(semis: number | null, teams: number): TableLine[] {
     (line, at) => line.under < teams && lines.slice(0, at).every((above) => above.under < line.under),
   );
 }
+
+/** The lines by the team each is drawn under, rows in the table's order: the last team at or above its cut, so a line
+ *  never parts teams level on the table; one that would fall under the bottom row is dropped, as `tableLines` drops it. */
+export function linesAfter(lines: readonly TableLine[], rows: readonly { teamId: string; rank: number }[]): Map<string, TableLine[]> {
+  const after = new Map<string, TableLine[]>();
+  for (const line of lines) {
+    const holder = rows.findLast((row) => row.rank <= line.under);
+    if (holder === undefined || holder === rows[rows.length - 1]) continue;
+    after.set(holder.teamId, [...(after.get(holder.teamId) ?? []), line]);
+  }
+  return after;
+}

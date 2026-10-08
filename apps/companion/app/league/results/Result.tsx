@@ -19,7 +19,7 @@ export default function Result({
   /** Each side's settled total for the period, by team id. */
   points: Map<string, number | null>;
   /** Each team's place today, for CM's blue block: the app keeps no history of the table. */
-  places: Map<string, number>;
+  places: Map<string, string>;
   /** The reader's own team, or null when nobody is signed in. */
   mine: string | null;
 }) {
@@ -44,7 +44,7 @@ function figure(value: number | null) {
   return value === null ? <Absent /> : value;
 }
 
-function side(team: LeagueTeam, places: Map<string, number>, mine: string | null, lost: boolean) {
+function side(team: LeagueTeam, places: Map<string, string>, mine: string | null, lost: boolean) {
   return {
     name: team.name,
     place: places.get(team.teamId) ?? null,

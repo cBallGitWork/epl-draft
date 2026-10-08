@@ -16,8 +16,12 @@ const row = (teamId: string, rank: number): StandingsRow => ({
 });
 
 describe("placings", () => {
-  it("places each team by its rank in the table", () => {
-    expect(placings([row("a", 2), row("b", 1)])).toEqual(new Map([["a", 2], ["b", 1]]));
+  it("places each team by its rank in the table, as the blue block prints it", () => {
+    expect(placings([row("a", 2), row("b", 1)])).toEqual(new Map([["a", "2nd"], ["b", "1st"]]));
+  });
+
+  it("marks a place two teams share", () => {
+    expect(placings([row("a", 1), row("b", 1), row("c", 3)])).toEqual(new Map([["a", "=1st"], ["b", "=1st"], ["c", "3rd"]]));
   });
 
   it("places nobody when the table could not be read", () => {

@@ -1,6 +1,6 @@
 import ScrollBoard from "../components/league/ScrollBoard";
 import { Fragment } from "react";
-import { LEAGUE_NAME, defaultDescending, isSortKey, seasonForm, sortRows, tableLines } from "@epl/core";
+import { LEAGUE_NAME, defaultDescending, isSortKey, linesAfter, ordinal, printedPlaces, seasonForm, sortRows, tableLines } from "@epl/core";
 import Columns, { COLUMNS } from "./Columns";
 
 import TableRow from "./TableRow";
@@ -66,8 +66,9 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
     );
   }
 
-  // Fantrax's playoff count places the semis; the rest is declared in core. No playoff, no lines.
-  const lines = tableLines(info?.playoffs?.places ?? null, rows.length);
+  // Fantrax's playoff count places the semis; the rest is declared in core. No playoff, no lines, and none parts a tie.
+  const lines = linesAfter(tableLines(info?.playoffs?.places ?? null, rows.length), rows);
+  const places = printedPlaces(rows);
 
   return (
     <LeagueShell current="table" teams={info?.teams.length}>
@@ -81,17 +82,16 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
                 <TableRow
                   sort={sort}
                   row={row}
+                  place={places.get(row.teamId) ?? ordinal(row.rank)}
                   mine={row.teamId === mine}
                   form={form.get(row.teamId) ?? []}
                   calendar={calendar}
                 />
                 {/* Dashed yellow rules after `cm9900/24.jpg` (Craig, 31 Aug), only in Fantrax's order. */}
                 {sort === "rank" && !descending
-                  ? lines
-                      .filter((line) => line.under === row.rank)
-                      .map((line) => (
-                        <CutRow key={line.label} span={COLUMNS.length} label={line.label} tone="border-accent/80" />
-                      ))
+                  ? (lines.get(row.teamId) ?? []).map((line) => (
+                      <CutRow key={line.label} span={COLUMNS.length} label={line.label} tone="border-accent/80" />
+                    ))
                   : null}
               </Fragment>
             ))}

@@ -1,4 +1,4 @@
-import type { TableSortKey } from "@epl/core";
+import { spelled, type TableSortKey } from "@epl/core";
 import { tableHref } from "./sort";
 import { Head, HeadRow, NameHead, PLATE, SortHead, sortedAs } from "../components/league/TableHeads";
 import { TEXT, standDown } from "@/app/desk";
@@ -32,7 +32,7 @@ export const COLUMNS: readonly Column[] = [
   { key: "against", label: "Ag", title: "Goals conceded", align: "center", width: "w-9 lg:w-20", deskOnly: true },
   { key: "gd", label: "GD", title: "Goal difference — the competition's first tiebreak", align: "center", width: "w-10 lg:w-20" },
   { key: "pts", label: "Pts", title: "Three for a win, one for a draw", align: "center", width: "w-10 lg:w-24" },
-  { key: "form", label: "Form", title: `The last ${FORM_GAMES} matches, oldest first`, align: "center", width: "w-14 lg:w-32", deskOnly: true },
+  { key: "form", label: "Form", title: `The last ${spelled(FORM_GAMES)} matches, oldest first`, align: "center", width: "w-14 lg:w-32", deskOnly: true },
 ];
 
 /** The cell class for a column, so `ClubRow` aligns each cell as its head does. */

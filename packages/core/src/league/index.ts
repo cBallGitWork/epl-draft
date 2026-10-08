@@ -37,7 +37,7 @@ export { captureStaleness } from "./staleness";
 export { seasonForm } from "./form";
 export type { FormGame } from "./form";
 export { defaultDescending, isSortKey, sortRows } from "./standingsOrder";
-export { tableLines } from "./tableLines";
+export { linesAfter, tableLines } from "./tableLines";
 export type { SortKey } from "./standingsOrder";
 
 export { pedigreeOf } from "./pedigree";
@@ -125,6 +125,7 @@ export {
   benchToWrite,
   changesLineup,
   fieldMapFor,
+  lineupChanges,
   mapLineupState,
   readBenchAnswer,
   readLineupAnswer,
@@ -172,7 +173,7 @@ export { mapAssistKinds } from "./fantrax/assistKinds";
 export { fetchPoolWindow } from "./fantrax/windowClient";
 export type { PlayerStatLine, RawPlayerStats } from "./fantrax/playerStats";
 export { PLAYER_CATEGORIES } from "./playerCategories";
-export { ordinal } from "./ordinal";
+export { ordinal, printedPlaces } from "./ordinal";
 export { signed } from "./signed";
 export { coloursOf, type TeamColours } from "./teamColours";
 export { rankBy } from "./categoryBoard";

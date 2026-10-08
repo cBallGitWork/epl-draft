@@ -956,6 +956,10 @@ Points, then fantasy points for (Craig: *"tie breaker is fantasy points FOR"*), 
 read to teams level on both, and the table reordered itself on refresh. The rule is not in
 `getLeagueInfo`; if the commissioner's setup ever carries one, read it from there instead.
 
+**Amended 8 Oct 2026:** the name only lists teams level on both; they share the place (1, 1, 3), the
+blue block prints it `=1st` (`printedPlaces`), and a cut line goes under the whole tie (`linesAfter`).
+At 0-0-0 the app had put one co-leader alone over the £30 line.
+
 ## What the pre-swap cleanup declined, and why — decided 23 Sep 2026
 
 - **Loaders stay where they are.** Regrouping the app's reads into `app/read/*`

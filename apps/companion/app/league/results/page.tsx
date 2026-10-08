@@ -52,8 +52,8 @@ export default async function ResultsPage() {
   if (played.length === 0) {
     return (
       <LeagueShell current="results" teams={info.teams.length}>
-        <Nothing title="Nothing played yet" code="no started round has a result">
-          {info.name} has results here as soon as a round finishes. A round still being
+        <Nothing title="Nothing played yet" code="no started gameweek has a result">
+          {info.name} has results here as soon as a gameweek finishes. A gameweek still being
           played is on Matchups, where its score is meant to move.
         </Nothing>
       </LeagueShell>

@@ -1,6 +1,6 @@
 import ScrollBoard from "../../../components/league/ScrollBoard";
 import type { ReactNode } from "react";
-import { seasonForm, sortRows, londonDayAndTime, playerName, DASH } from "@epl/core";
+import { seasonForm, sortRows, londonDayAndTime, ordinal, playerName, printedPlaces, DASH } from "@epl/core";
 import type { Club, Fixture, LineupDetail, RosteredTeam } from "@epl/core";
 import { fixtureInvolvement, leagueTable as realTable } from "@epl/core";
 import { teamColours } from "@/app/teamColours";
@@ -43,6 +43,7 @@ export async function TableTab({ tie, mine }: { tie: readonly string[]; mine: st
   const form = new Map(
     seasonForm(rows, info?.matchups ?? [], results).map((team) => [team.teamId, team.run]),
   );
+  const places = printedPlaces(rows);
 
   return (
     <section className={PANEL}>
@@ -55,6 +56,7 @@ export async function TableTab({ tie, mine }: { tie: readonly string[]; mine: st
                 key={row.teamId}
                 sort="rank"
                 row={row}
+                place={places.get(row.teamId) ?? ordinal(row.rank)}
                 mine={row.teamId === mine}
                 form={form.get(row.teamId) ?? []}
                 tint={tie.includes(row.teamId) ? teamColours(row.teamId).primary : undefined}
@@ -93,7 +95,7 @@ export async function FixturesTab({
   if (ours.length === 0) {
     return (
       <section className={PANEL}>
-        <Nothing title="No matches yet">Neither squad holds a player in this round&rsquo;s fixtures.</Nothing>
+        <Nothing title="No matches yet">Neither squad holds a player in this gameweek&rsquo;s fixtures.</Nothing>
       </section>
     );
   }

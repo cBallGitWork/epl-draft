@@ -107,6 +107,21 @@ describe("placeTable", () => {
     const first = placeTable([row("test4", 0, 0, 5), row("test1", 0, 0, 6), row("test31", 0, 0, 7)]);
     const second = placeTable([row("test31", 0, 0, 5), row("test4", 0, 0, 6), row("test1", 0, 0, 7)]);
     expect(first).toEqual(second);
-    expect(first.map((r) => r.rank)).toEqual([1, 2, 3]);
+    expect(first.map((r) => r.teamName)).toEqual(["test1", "test31", "test4"]);
+  });
+
+  it("gives teams level on points and points for one place, and the next team its own count", () => {
+    const placed = placeTable([row("c", 3, 40, 1), row("b", 6, 90, 2), row("a", 6, 90, 3), row("d", 0, 10, 4)]);
+    expect(placed.map((r) => [r.teamName, r.rank])).toEqual([["a", 1], ["b", 1], ["c", 3], ["d", 4]]);
+  });
+
+  it("shares a place only on both counts: level on points alone is two places", () => {
+    const placed = placeTable([row("a", 6, 80, 1), row("b", 6, 90, 2), row("c", 6, 90, 3)]);
+    expect(placed.map((r) => [r.teamName, r.rank])).toEqual([["b", 1], ["c", 1], ["a", 3]]);
+  });
+
+  it("puts every team in first before a ball is kicked", () => {
+    const placed = placeTable([row("x", 0, 0, 2), row("y", 0, 0, 1), row("z", 0, 0, 3)]);
+    expect(placed.map((r) => r.rank)).toEqual([1, 1, 1]);
   });
 });

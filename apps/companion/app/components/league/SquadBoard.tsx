@@ -16,7 +16,7 @@ const EXPLANATION: Partial<Record<SquadReason, string>> = {
   "period-not-in-calendar":
     "This squad names a gameweek the calendar does not have, so the lineup stays hidden.",
   "unknown-lock":
-    "We cannot work out when this round's lineups lock, so the lineup stays hidden.",
+    "We cannot work out when this gameweek's lineups lock, so the lineup stays hidden.",
 };
 
 export default function SquadBoard({

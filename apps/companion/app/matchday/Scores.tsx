@@ -27,7 +27,7 @@ function DraftRow({
   tie: CompetitionTie;
   scores: Map<string, LiveTeamScore>;
   /** Each manager's place in our table, by team id: CM's blue block. */
-  places: Map<string, number>;
+  places: Map<string, string>;
   mine: string | null;
   gameweek: number;
 }) {
@@ -65,7 +65,7 @@ export function Scores({
   ties: readonly CompetitionTie[];
   scores: Map<string, LiveTeamScore>;
   /** Our league's table, by team id. */
-  places: Map<string, number>;
+  places: Map<string, string>;
   /** The real one, by club id. */
   clubPlaces: Map<number, number>;
   mine: string | null;
@@ -120,7 +120,7 @@ export function Scores({
 }
 
 /** One side of a tie in the row's vocabulary; a seat not yet drawn has no place. */
-function side(tie: CompetitionTie, at: "home" | "away", places: Map<string, number>, mine: string | null) {
+function side(tie: CompetitionTie, at: "home" | "away", places: Map<string, string>, mine: string | null) {
   const seat = tie[at];
   return {
     name: seat.label,
