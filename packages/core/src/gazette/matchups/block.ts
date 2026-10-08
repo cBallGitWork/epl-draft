@@ -1,4 +1,5 @@
 import { capital, listed } from "../../format";
+import { derbyBrief } from "../../league/derbies";
 import { ordinal } from "../../league/ordinal";
 import { londonDayOf, londonWeekdayLong } from "../../time";
 import type { Cutoff, MatchupContext, NextOpponent } from "./brief";
@@ -124,6 +125,7 @@ export function matchupBlock(ctx: MatchupContext, cutoff: Cutoff, n: number): st
   const line = (t: Thread) => `- ${told(ctx, t)}`;
   return [
     `MATCH-UP ${n}: ${ctx.state.home.side.name} v ${ctx.state.away.side.name}${n === 1 ? ", THE LEAD" : ""}`,
+    ctx.derby ? derbyBrief(ctx.derby) : null,
     `${saturday ? "THE SCORE after Saturday's matches" : "THE RESULT"}, printed above your words, never in them: ${ctx.state.score}.`,
     angle === null ? "THE STORY: the result alone." : `THE STORY, which your first sentence tells: ${told(ctx, angle.story)}`,
     angle?.twist == null ? null : `THE TWIST, told in its beat: ${told(ctx, angle.twist)}`,

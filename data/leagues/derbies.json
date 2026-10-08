@@ -1,0 +1,19 @@
+{
+  "derbies": [
+    { "between": "Algie v Fellows", "teams": ["aekx2715mtzgcl3f", "7z8fy0pnmuogbtdw"], "names": ["War of Cowdenbeath"] },
+    { "between": "Ohi v Dome v Algie", "teams": ["qgucu9dgmufwva1x", "0g0j5mkomuqqwsbu", "aekx2715mtzgcl3f"], "names": ["Milan Derby"], "why": "all of them live in Milan" },
+    { "between": "Richy v Fellows", "teams": ["ipnp5y4mmu9j7kop", "7z8fy0pnmuogbtdw"], "names": ["Subway Sandwich Siesta"] },
+    { "between": "Algie v Richy", "teams": ["aekx2715mtzgcl3f", "ipnp5y4mmu9j7kop"], "names": ["Irish Wilderness Derby"] },
+    { "between": "Ball v Richy", "teams": ["l5kunst8msgbirdf", "ipnp5y4mmu9j7kop"], "names": ["Hydration Classico"], "why": "the two most successful managers in Prem draft" },
+    { "between": "O'Shea v Ben", "teams": ["syjkob6cmuobagfu", "uexqrijomu8l5asi"], "names": ["Battle of Ontario"] },
+    { "between": "Ohi v Fellows", "teams": ["qgucu9dgmufwva1x", "7z8fy0pnmuogbtdw"], "names": ["Mikel Arteta Appreciation Match"] },
+    { "between": "Ball v Fellows", "teams": ["l5kunst8msgbirdf", "7z8fy0pnmuogbtdw"], "names": ["The Paul Bunyan Axe"] },
+    { "between": "Algie v Traf", "teams": ["aekx2715mtzgcl3f", "7to6xosimu8hyyw5"], "names": ["Battle of York", "Sacking of York"] },
+    { "between": "Traf v Ben", "teams": ["7to6xosimu8hyyw5", "uexqrijomu8l5asi"], "names": ["Tim Hortons Derby"] },
+    { "between": "Ben v Fellows", "teams": ["uexqrijomu8l5asi", "7z8fy0pnmuogbtdw"], "names": ["Teachers' Classic"] },
+    { "between": "Traf v Fellows", "teams": ["7to6xosimu8hyyw5", "7z8fy0pnmuogbtdw"], "names": ["Teachers' Classic"] },
+    { "between": "Ball v Ben", "teams": ["l5kunst8msgbirdf", "uexqrijomu8l5asi"], "names": ["Cold Tea Classic"] },
+    { "between": "Nick v Algie", "teams": ["kpj0z744muh1qwtd", "aekx2715mtzgcl3f"], "names": ["Steve Clarke Classic"] },
+    { "between": "Traf v Ball", "teams": ["7to6xosimu8hyyw5", "l5kunst8msgbirdf"], "names": ["Big Man Bakar Derby"] }
+  ]
+}

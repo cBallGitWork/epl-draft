@@ -367,6 +367,14 @@ the right. Each tie is a bold heading, then his words with the first man they
 name pictured beside them (`Face` at its `tie` rank, a 6rem square floated so the prose wraps), then
 "Lawro's prediction".
 
+**Derbies** (Craig, 8 Oct 2026): fifteen meetings carry names the managers gave them, by team id in
+`data/leagues/derbies.json` (`derbyOf`). The page prints the name in small caps over the tie's
+heading here and after "Full time" on a draft report's match-up, off the stored team ids, so a
+column never depends on the writer naming it. Each brief also states it (`derbyBrief`), and the
+checks pass over its words as they pass over a side's name: "Battle of York" is not hype. A derby
+may hold more than two teams (the Milan Derby is any two of Ohi, Dome and Algie), and a pair with a
+name of its own outranks the group's.
+
 **Lawro's power rankings** (`season-rankings`) file once, between the end of the draft and the season's first
 lock, under the desk's headline "Lawro's Power Rankings" and the same banner. His short opening comes first, then
 the ten squads through `Ranks`: the number, the side, his line, and no movement mark, since a first ranking has no
@@ -397,7 +405,7 @@ the substitutions' step when they changed it; then the story, with its own sepia
 photograph set into the text (never the article's cover again), and the line-ups
 as a report prints them, each side's bench under its eleven (`lineupText`,
 `benchText`), after the story on a phone and beside it on a desk. No form strip:
-Craig had it removed.
+Craig had it removed. A derby's name follows "Full time" (see Derbies, above).
 
 **The two sketches were deleted on 3 Sep 2026** — the press room and the studio,
 Craig: *"this is rubbish, ditch."* They were the paper's only invented-quote
