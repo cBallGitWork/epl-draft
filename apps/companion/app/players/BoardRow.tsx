@@ -20,7 +20,7 @@ export const PIN_NAME = `${PINNED_NAME} left-0 p-0 lg:left-14`;
 export const LEAD_WIDTH = "w-40 px-1.5 lg:w-64";
 
 /** One figure, centred under its head, a little tighter under a thumb. */
-export const FIGURE = `numeric px-1 text-center lg:px-1.5 ${ROW_FIGURE}`;
+export const TIGHT_FIGURE = `numeric px-1 text-center lg:px-1.5 ${ROW_FIGURE}`;
 
 /** His club's crest and his name, as a list sets it on a phone and in full on a desk, with `after` straight after
  *  it, and on a phone his position under it with `under` beside that. `club` is FPL's short name. */

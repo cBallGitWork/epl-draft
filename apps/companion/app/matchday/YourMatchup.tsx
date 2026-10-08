@@ -3,7 +3,9 @@ import { headToHead, type LeagueTeam, type LiveTeamScore, inkOn, teamColours } f
 import { liveScores } from "../scoreboard";
 import { getLeagueSquads } from "../squads";
 import { myTeamId } from "../session";
+import { yoursMark } from "../mine";
 import { matchupHref } from "@/app/league/routes";
+import { BAR_TITLE, PANEL } from "@/app/desk";
 
 // Your head-to-head in CM's match header; renders nothing when signed out or before the draft.
 
@@ -24,7 +26,7 @@ export default async function YourMatchup() {
   const theirs = scores.get(pairing.opponent.teamId);
 
   return (
-    <section className="cm-panel flex flex-col gap-2 p-2">
+    <section className={PANEL}>
       <div className="flex items-stretch">
         <Half team={pairing.team} score={yours} mine />
         <Half team={pairing.opponent} score={theirs} />
@@ -51,9 +53,7 @@ function Half({
     // Managers on club plates (`inkOn` handles a pale one); neither is mirrored, and each
     // score sits at its own plate's right edge (Craig, 4 Sep 2026).
     <div
-      className={`flex min-h-16 min-w-0 flex-1 items-center lg:min-h-20 ${
-        mine ? "border-l-4 border-l-accent" : ""
-      }`}
+      className={`flex min-h-16 min-w-0 flex-1 items-center lg:min-h-20 ${yoursMark(mine)}`}
       style={{ background: colours.primary }}
     >
       <Link
@@ -62,7 +62,7 @@ function Half({
       >
         {/* No accent ink on a colour plate, so the left edge marks yours. */}
         <span
-          className="cm-title min-w-0 flex-1 truncate font-chrome text-base font-bold uppercase lg:text-2xl"
+          className={`${BAR_TITLE} text-base lg:text-2xl`}
           style={{ color: ink }}
         >
           {team.name}

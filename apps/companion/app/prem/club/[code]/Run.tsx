@@ -4,7 +4,8 @@ import Link from "@/app/components/shell/Link";
 import type { Club, CupTie, Fixture, RunEntry } from "@epl/core";
 import { COMPETITION_NAME, cupName, londonDayAndDate, londonTime, DASH } from "@epl/core";
 import { CLUB } from "../../routes";
-import { BOARD, MINOR_CAPS, ROW_HOVER, ROW_NAME } from "@/app/desk";
+import { BOARD, DESK_ONLY, FIGURE, MINOR_CAPS, ROW_HOVER, ROW_NAME } from "@/app/desk";
+import { ROW_LINK } from "../../../components/league/TableCells";
 import Absent from "@/app/components/shell/Absent";
 import ClubLabel from "@/app/components/football/ClubLabel";
 import { matchHref } from "../../match/[id]/matchRoutes";
@@ -53,8 +54,8 @@ export default function Run({
                 </td>
                 <td className="w-full max-w-0 px-1">{row.opponent}</td>
                 <td className="px-1 text-center text-2xs font-bold text-muted">{row.venue}</td>
-                <td className="hidden whitespace-nowrap px-1.5 text-2xs text-faint lg:table-cell">{row.competition}</td>
-                <td className="numeric w-14 whitespace-nowrap px-1.5 text-center text-sm font-bold">{row.score}</td>
+                <td className={`${DESK_ONLY} whitespace-nowrap px-1.5 text-2xs text-faint`}>{row.competition}</td>
+                <td className={`${FIGURE} w-14 whitespace-nowrap`}>{row.score}</td>
               </tr>
             );
           })}
@@ -79,7 +80,7 @@ function leagueCells(fixture: Fixture, club: Club, clubs: Map<number, Club>): Ce
       opponent === undefined ? (
         <span className="text-sm text-faint">{DASH}</span>
       ) : (
-        <Link href={`${CLUB}/${opponent.code}`} className="cm-row flex min-h-11 items-center gap-2 hover:underline">
+        <Link href={`${CLUB}/${opponent.code}`} className={ROW_LINK}>
           <ClubLabel club={opponent} crest={{ px: CREST_PX, className: `${CREST} object-contain` }} />
         </Link>
       ),

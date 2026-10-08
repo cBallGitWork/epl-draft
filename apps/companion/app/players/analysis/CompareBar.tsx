@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import type { Club } from "@epl/core";
 import { clubColoursOf, inkOn } from "@epl/core";
 import PlayerPortrait from "../../components/football/PlayerPortrait";
+import { BAR_TITLE } from "@/app/desk";
 
 // Two men at once, each on his own club's colour, neither half mirrored. `MatchBar`'s shape, copied: the second.
 
@@ -46,7 +47,7 @@ function Half({ side }: { side: Side }) {
     >
       <PlayerPortrait player={{ code: side.code, name: side.name }} colours={colours} chrome large />
       <span
-        className="cm-title min-w-0 flex-1 truncate font-chrome text-sm font-bold uppercase lg:text-2xl"
+        className={`${BAR_TITLE} text-sm lg:text-2xl`}
         style={{ color: ink }}
       >
         {side.name}

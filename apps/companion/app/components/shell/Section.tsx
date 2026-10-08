@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { PANEL, SMALL_CAPS } from "@/app/desk";
+import { PANEL, QUIET_NOTE, SMALL_CAPS } from "@/app/desk";
 
 // A headed block on a plate, with a rule under the head: the shape every tab uses for "this part is about that".
 // The plate wraps the head too, so neither title nor aside prints bare on the photograph.
@@ -26,7 +26,7 @@ export default function Section({
         ) : (
           <h2 className={`font-chrome ${SMALL_CAPS} text-muted`}>{title}</h2>
         )}
-        {aside ? <span className="text-2xs text-faint">{aside}</span> : null}
+        {aside ? <span className={QUIET_NOTE}>{aside}</span> : null}
       </div>
       )}
       {children}

@@ -3,7 +3,7 @@ import Nothing from "../../../../components/shell/Nothing";
 import MatchShell from "../Shell";
 import { readMatch } from "../match";
 import { matchHighlight } from "../../../../matchFeed";
-import { PANEL } from "@/app/desk";
+import { PANEL, QUIET_NOTE } from "@/app/desk";
 
 // The match's highlights, from Sky Sports Premier League's YouTube playlist (Craig, 11 Sep 2026).
 // Embedded, never fetched: YouTube's iframe plays it, and we read only titles and ids.
@@ -62,7 +62,7 @@ export default async function MatchHighlightsPage({
               </div>
               {/* Their title, verbatim and credited. It is their cut and their
                 words; we are pointing at it, not republishing it. */}
-              <figcaption className="text-2xs text-faint">
+              <figcaption className={QUIET_NOTE}>
                 {video.title} &middot; Sky Sports Premier League
               </figcaption>
             </figure>

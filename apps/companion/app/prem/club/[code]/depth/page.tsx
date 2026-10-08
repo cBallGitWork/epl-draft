@@ -8,6 +8,7 @@ import { clubOr404 } from "../club";
 import DepthList from "./DepthList";
 import DepthPitch from "./DepthPitch";
 import ListAndPitch from "../../../../components/league/ListAndPitch";
+import { PANEL, PITCH_CAPTION } from "@/app/desk";
 
 // Who is in line for each shirt at a club: the sister repo's depth chart (Craig, 25 Sep 2026),
 // dealt for the round it names.
@@ -29,8 +30,8 @@ export default async function DepthPage({ params }: { params: Promise<{ code: st
       {chart === undefined || lines.length === 0 ? (
         <TabEmpty>There is no depth chart for {club.name} yet.</TabEmpty>
       ) : (
-        <section className="cm-panel flex flex-col gap-2 p-2">
-          <p className="cm-title text-center font-chrome text-2xs font-bold text-accent lg:text-sm">
+        <section className={PANEL}>
+          <p className={`cm-title ${PITCH_CAPTION}`}>
             Depth chart{intelDepthManifest.gameweek === null ? "" : ` for GW${intelDepthManifest.gameweek}`} · {chart.formation}{" "}
             (last updated {londonDayAndDate(intelDepthManifest.exportedAt)})
           </p>

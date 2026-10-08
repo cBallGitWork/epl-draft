@@ -2,7 +2,7 @@ import { ordinal, type Club, type StrengthRank } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import { easeGround } from "../../components/football/ease";
 import { HeadRow, MUTE, PlateHead } from "../../components/league/TableHeads";
-import { HEAD_CELL, ROW_RULE } from "@/app/desk";
+import { BOARD, HEAD_CELL, ROW_HEAD_CELL, ROW_RULE } from "@/app/desk";
 
 // The planner's rankings: every club's own attack or defence at home and away, the weakest first, so 1 is the
 // easiest to face and green means easy, as on the Attack and Defence boards (Craig, 30 Sep 2026).
@@ -16,7 +16,7 @@ export default function StrengthRanks({
   clubs: ReadonlyMap<number, Club>;
 }) {
   return (
-    <table className="w-full table-fixed border-collapse bg-surface text-sm">
+    <table className={`${BOARD} table-fixed bg-surface`}>
       <colgroup>
         <col className="w-8" />
         <col />
@@ -41,7 +41,7 @@ export default function StrengthRanks({
           return (
             <tr key={row.code} className={ROW_RULE}>
               <td className="cm-index numeric text-center text-2xs">{ordinal(at + 1)}</td>
-              <th scope="row" className="p-0 text-left font-normal">
+              <th scope="row" className={ROW_HEAD_CELL}>
                 <span className="cm-row flex min-h-9 items-center gap-1.5 px-1.5 lg:min-h-7">
                   {club ? <ClubLabel club={club} /> : row.club}
                 </span>

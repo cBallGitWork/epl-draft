@@ -4,6 +4,7 @@ import TeamSheet from "../../components/league/TeamSheet";
 import type { View } from "../../components/league/ViewToggle";
 import Pending from "../../components/league/Pending";
 import ListAndPitch from "@/app/components/league/ListAndPitch";
+import { PITCH_CAPTION } from "@/app/desk";
 
 // A read-only eleven, a rival's once his lineups lock or your own in any week but the open one, with the
 // Pitch/List control and the gameweek picker.
@@ -61,7 +62,7 @@ export default function Sheet({
       pitch={
         <>
           {/* A heading over the grass (Craig, 3 Sep 2026): this is the side as it stands. */}
-          <p className="cm-title pb-1 text-center font-chrome text-2xs font-bold text-accent lg:text-sm">
+          <p className={`cm-title pb-1 ${PITCH_CAPTION}`}>
             First-choice XI
           </p>
           <TeamSheet
