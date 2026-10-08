@@ -34,7 +34,7 @@ export function slimSummary(raw: RawElementSummary): RawElementSummary {
 
 /** A man's summary by FPL code, or null where the export holds none. */
 export function historyOf(file: IntelHistory | null, code: number): RawElementSummary | null {
-  return file?.players[String(code)] ?? null;
+  return file?.players?.[String(code)] ?? null;
 }
 
 /** The row with only `keys`; one the row lacks stays absent, as FPL sent it. */

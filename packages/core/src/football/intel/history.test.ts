@@ -4,7 +4,7 @@ import { mapPastSeasons } from "../seasons";
 import type { RawElementSummary } from "../fpl/raw";
 import saka from "../__fixtures__/elementSummary.json";
 import timber from "../__fixtures__/elementSummaryTimber.json";
-import { historyOf, slimSummary } from "./history";
+import { historyOf, slimSummary, type IntelHistory } from "./history";
 
 const RECORDED = [saka, timber] as unknown as RawElementSummary[];
 
@@ -31,5 +31,10 @@ describe("historyOf", () => {
     expect(historyOf(file, 445122)?.history.length).toBe(5);
     expect(historyOf(file, 1)).toBeNull();
     expect(historyOf(null, 445122)).toBeNull();
+  });
+
+  it("reads a file with no players as holding nobody, rather than throwing", () => {
+    const manifest = { season: "26-27", gameweek: 5, exportedAt: "2026-09-28T15:40:00Z", rows: 0, sources: [] };
+    expect(historyOf({ manifest } as unknown as IntelHistory, 445122)).toBeNull();
   });
 });
