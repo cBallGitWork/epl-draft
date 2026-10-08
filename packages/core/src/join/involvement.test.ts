@@ -99,9 +99,7 @@ describe("owners", () => {
   });
 
   it("keeps the first team listed when a player somehow appears on two", () => {
-    // Not a state Fantrax's rosters can hold; a half-completed trade could show
-    // it for a moment. One answer either way, and an arbitrary one said out loud
-    // beats a silent last-write-wins.
+    // Never seen: 0 of 95 captures, one of them 13 minutes after a trade. Every caller gives this one answer.
     const owned = owners([
       { teamId: "t1", teamName: "test1", players: holds(saka) },
       { teamId: "t2", teamName: "test2", players: holds(saka) },

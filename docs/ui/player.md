@@ -168,7 +168,8 @@ like"), in four blocks:
 1. **Transfer status** — CM's label-and-value lines: who holds him (a team, or "Free
    agent" / "Waivers" in Fantrax's words), how and when he joined that team (the latest
    executed move that put him there, or "In the draft"), and his draft pick with what it
-   is worth against Fantrax's ranking (`+15 on his pick`).
+   is worth against Fantrax's ranking (`+15 on his pick`). A man nobody holds has joined
+   nobody: his line is "Dropped by" the team that let him go, and when, or no line at all.
 2. **Business** — every claim, drop and trade with him, newest first, on the house table:
    the date in the index block, then the move, from and to ("The pool" for no team), a step
    above a row's type (Craig, 1 Oct 2026: "make text bigger in business"). Neither panel says

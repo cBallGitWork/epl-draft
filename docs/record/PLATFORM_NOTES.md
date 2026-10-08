@@ -483,8 +483,7 @@ Craig set the formats on 27 Sep. The cups are declared in `packages/core/src/lea
   `league/tableLines.ts`: under 1st, under the place before Fantrax's last semi place, under the place after
   it, and under 8th, the Plate being the play-in's loser and 6th to 8th. A league with no playoff draws none.
 - **A level knockout tie** is settled by points, then the starting eleven's goals, assists, clean sheets and
-  minutes played in the tie. Level on all five is a coin toss, which Craig makes: `knockoutWinner` answers
-  `"coin toss"`. Every cup tie is one leg.
+  minutes played in the tie. Level on all five is a coin toss, which Craig makes. Every cup tie is one leg.
 - **Group points are 3 for a win and 1 for a draw** (Craig, 27 Sep). A group is placed on points, then
   points for, then draw order; the order after points for is assumed.
 - **On screen with a placeholder draw** (Craig, 27 Sep: *"Placeholder brackets are fine for now"*):
@@ -494,7 +493,10 @@ Craig set the formats on 27 Sep. The cups are declared in `packages/core/src/lea
   until the draws are made; nothing yet puts a team into a slot. The screen no longer says "Placeholder
   draw" (Craig, 30 Sep: *"remove placeholder draw sentence"*). The Davy Propper groups are drawn as
   `groupTable` league tables (Craig, 1 Oct: *"propper cup should be a table view"*), every figure 0 until
-  results are wired in. `knockoutWinner` and `seedByPoints` are tested but still read by no screen.
+  results are wired in.
+- **The seeding and the tie-break are Craig's, by hand** (8 Oct 2026). GW9's points only split the six byes
+  from the four in round 1, and both rounds are drawn off the app, so no screen ever prints a seed; no tie is
+  decided here either. The code for both went unread and was deleted; git has it.
 
 ## The real league is `mqsjd23smsgbiqzr`, not `ayyoh3n2mr326v2o` — settled 25 Sep 2026
 

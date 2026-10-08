@@ -36,7 +36,7 @@ export interface PlayerOwner {
 }
 
 /** Every rostered footballer by FPL's season-stable `code` (never the per-season `id`) against the squad holding
- *  him, by membership, never lineup. A man on two rosters mid-trade goes to the first team listed. */
+ *  him, by membership, never lineup. Fantrax lists a man on one roster, mid-trade too; on two, the first has him. */
 export function owners(teams: readonly RosteredTeam[]): Map<number, PlayerOwner> {
   const owned = new Map<number, PlayerOwner>();
   for (const team of teams) {

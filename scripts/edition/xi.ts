@@ -1,5 +1,5 @@
 import {
-  isResolved,
+  owners,
   predictedLineups,
   squadIntel,
   type Club,
@@ -66,25 +66,14 @@ function man(
   return (code) => {
     const player = byCode.get(code);
     if (player === undefined) return null;
-    const owner = held.get(code);
+    // The id, never the name, which goes stale the day a manager renames.
+    const owner = held.get(code)?.teamId;
     return {
       name: display(player),
       position: squads.get(code)?.position ?? null,
       ...(owner === undefined ? {} : { owner }),
     };
   };
-}
-
-/** Every code somebody in the league holds, and the team id that holds him —
- *  the id and not the name, which goes stale the day a manager renames. */
-function owners(teams: readonly RosteredTeam[]): Map<number, string> {
-  const out = new Map<number, string>();
-  for (const team of teams) {
-    for (const player of team.players.filter(isResolved)) {
-      out.set(player.player.code, team.teamId);
-    }
-  }
-  return out;
 }
 
 /** The squads for the season the XI itself names, so the two exports cannot be

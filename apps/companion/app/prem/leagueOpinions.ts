@@ -1,4 +1,4 @@
-import { fplCodeOf, isResolved } from "@epl/core";
+import { fplCodeOf, owners, type PlayerOwner } from "@epl/core";
 import { leagueInfo } from "../round";
 import { bridge, getLeagueSquads } from "../squads";
 
@@ -25,15 +25,8 @@ export async function leagueOpinions(): Promise<Map<number, LeagueOpinion>> {
   const [info, squads] = await Promise.all([leagueInfo(), getLeagueSquads()]);
   if (info === null) return new Map();
 
-  // Who holds whom, off the already-resolved slots; an undrafted or unreadable league answers nobody.
-  const owners = new Map<number, string>();
-  if (!("undrafted" in squads) && !("unavailable" in squads)) {
-    for (const team of squads.period.teams) {
-      for (const held of team.players) {
-        if (isResolved(held)) owners.set(held.player.code, team.teamName);
-      }
-    }
-  }
+  // An undrafted or unreadable league answers nobody.
+  const held = "period" in squads ? owners(squads.period.teams) : new Map<number, PlayerOwner>();
 
   const opinions = new Map<number, LeagueOpinion>();
   for (const player of info.players) {
@@ -43,7 +36,7 @@ export async function leagueOpinions(): Promise<Map<number, LeagueOpinion>> {
       fantraxId: player.fantraxId,
       positions: player.eligiblePositions,
       status: player.status,
-      owner: owners.get(code) ?? null,
+      owner: held.get(code)?.teamName ?? null,
     });
   }
   return opinions;
