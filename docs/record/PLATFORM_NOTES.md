@@ -4316,6 +4316,10 @@ minutes cross: `minutesIntel` drops the points, which stay behind `PROJECTIONS_S
   only the reader's men and his next opponent's; a past gameweek's letters drop off as the deadline item does. A
   pressers run that only restamps the export records nothing (its manifest-only change is dropped first). The
   inbox's own rule ("makes no read of its own") is set aside for it on Craig's say-so.
+- **The Team Sheet's letter** (Craig, 8 Oct: *"a pressers mail box entry too… which just links to article"*). Each
+  filed `presser` column in the served league's `paper.json` is one letter to every reader, from its byline: the
+  column's headline, its deck, and a button to `/paper/<slug>` (`InboxItem.link`, `inbox/pressers.ts`). A column that
+  rolls off the paper takes its letter with it, so the button never 404s.
 
 ### FPL refuses Vercel under a burst, and a 200 page can still be broken (8 Oct 2026)
 

@@ -32,4 +32,6 @@ export interface InboxItem {
   mark: { label: string; out: boolean; band: DoubtBand | null } | null;
   /** Drawn on CM's red ground: about you AND bad news, never merely yours. */
   urgent: boolean;
+  /** Where the whole of it is, for a letter that only points there (a paper column); absent for most. */
+  link?: { href: string; label: string };
 }

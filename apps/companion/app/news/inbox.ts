@@ -16,12 +16,15 @@ import {
   minutesNews,
   nextDeadline,
   offerNews,
+  presserNews,
   roundNews,
 } from "@epl/core";
 import { now } from "../clock";
 import { readBoard } from "../board";
 import { readDeals } from "../business";
+import { storyHref } from "../components/gazette/paperPages";
 import { intelMinuteMoves } from "../intel";
+import { filed } from "../paper";
 import { shortName } from "../teamNames";
 import { readProposals, readTradeBlocks } from "../market";
 import { seasonKickoffs } from "../football";
@@ -116,6 +119,8 @@ export async function readInbox(): Promise<Inbox> {
     items: inboxItems(
       offers,
       scout,
+      // The Team Sheet's columns, each a letter that sends him to the paper.
+      presserNews(filed, storyHref),
       // `deals()` pairs a claim with its drop and both halves of a trade.
       dealNews(deals(feed.rows), nameOf, mine),
       blockNews(blocks, { name: nameOf, mine, holder: (fantraxId) => holders.get(fantraxId) ?? null }),

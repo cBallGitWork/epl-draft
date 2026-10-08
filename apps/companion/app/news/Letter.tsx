@@ -1,6 +1,7 @@
 import type { InboxItem } from "@epl/core";
 import { londonMoment } from "@epl/core";
 import { LABEL } from "@/app/desk";
+import ButtonLink from "../components/shell/ButtonLink";
 
 /** The item you are reading, as a letter in a panel: From, Subject in CM's yellow, Date, then the body. */
 export default function Letter({ item }: { item: InboxItem }) {
@@ -19,6 +20,11 @@ export default function Letter({ item }: { item: InboxItem }) {
         {item.about === null ? null : <Field label="Squad">{item.about}</Field>}
       </header>
       <p className="pt-3 text-sm leading-relaxed text-ink lg:pt-4 lg:text-base">{item.body}</p>
+      {item.link === undefined ? null : (
+        <div className="flex pt-3 lg:pt-4">
+          <ButtonLink href={item.link.href}>{item.link.label}</ButtonLink>
+        </div>
+      )}
     </article>
   );
 }
