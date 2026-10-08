@@ -47,7 +47,7 @@ export default function PlayerImage({
           : undefined;
 
   return (
-    // The caller sets the shape and height bound: `.pitch-figure` in `globals.css` reads
+    // The caller sets the shape and height bound: `.pitch-figure` in `pitch.css` reads
     // `--pitch-figure` for the shape and `--pitch-rows` for the ceiling.
     <div className="pitch-figure relative w-full overflow-hidden">
       {source ? (

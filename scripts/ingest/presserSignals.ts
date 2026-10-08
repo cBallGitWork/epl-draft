@@ -1,10 +1,7 @@
 import { normalizeName } from "@epl/core";
 import { sentences } from "./presserArticle";
 
-// What the article says about whether a man is available.
-//
-// Split from `presserArticle.ts` when it passed the 300-line ceiling: that
-// reads the ARTICLE's shape and what was said, this reads what it MEANS.
+// What the article says about whether a man is available; `presserArticle.ts` reads its shape and what was said.
 
 /** One man the article discusses, and what it says about him. */
 export interface Trouble {
@@ -12,9 +9,6 @@ export interface Trouble {
   tag: string;
   condition?: string;
 }
-
-/** A club heading, comparable: "&" spelled out and punctuation dropped, so
- *  FFS's "BRIGHTON AND HOVE ALBION" meets FPL's "Brighton & Hove Albion". */
 
 /** Every name one man answers to: FPL's two, and each whole-token run of his
  *  full name — which is what catches "Berg" for Sepp van den Berg and "Moises

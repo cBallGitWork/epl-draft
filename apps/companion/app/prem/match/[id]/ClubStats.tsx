@@ -174,8 +174,6 @@ function StatRow({
   );
 }
 
-/** Centred under its head, the way CM sets a column. */
-
 /** 36px under a thumb, not 44 — PRODUCT's recorded exception for the match screens. */
 const PHONE_ROW = "max-lg:min-h-9";
 

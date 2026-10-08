@@ -7,7 +7,7 @@ import { paperFontVariables } from "../paperFonts";
 // Must match `PAGE_REVALIDATE` in the app's config: Next reads this statically, so it cannot be imported.
 export const revalidate = 30;
 
-// `--paper` in tokens.css, as a literal because it is serialised into a <meta> tag: change both together.
+// `--paper` in paper.css, as a literal because it is serialised into a <meta> tag: change both together.
 export const viewport: Viewport = { themeColor: "#f6ddd2" };
 
 export default function PaperLayout({ children }: { children: ReactNode }) {

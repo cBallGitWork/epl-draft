@@ -7,8 +7,7 @@ import { SEASON_IN_SECONDS, TEAM_COOKIE, WRONG_CODE_DELAY_MS } from "../config";
 import { sign, teamForCode } from "../session";
 import { SQUAD } from "./routes";
 
-// Signing in and out. The only two writes in the app, and neither of them
-// touches Fantrax.
+// Signing in and out, neither of which touches Fantrax.
 
 /** Claim a team with the commissioner's code; a mistyped code is ordinary, so it answers a message rather than throwing. */
 export async function claimTeam(_previous: string | null, form: FormData): Promise<string | null> {
@@ -16,7 +15,7 @@ export async function claimTeam(_previous: string | null, form: FormData): Promi
   const teamId = await teamForCode(code);
 
   if (teamId === null) {
-    // Slow, because there is no rate limiter in front of this and sixteen teams
+    // Slow, because there is no rate limiter in front of this and ten teams
     // is a small haystack. Not slow enough to be felt by someone typing it right.
     await new Promise((resolve) => setTimeout(resolve, WRONG_CODE_DELAY_MS));
     return "That code does not match a team. Ask the commissioner for yours.";
