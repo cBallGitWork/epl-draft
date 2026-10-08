@@ -1,4 +1,5 @@
 import { DRAFT_WRITING } from "../../config";
+import { derbyNames } from "../../league/derbies";
 import { QUOTE_MARKS, americanisms, banned } from "../banned";
 import { faultLog, type Fault } from "../predictions/checks";
 import { masked, mentionAt, numbersIn, sentences, wordCount } from "../predictions/prose";
@@ -55,7 +56,7 @@ export function checkDraft(writing: DraftWriting, contexts: readonly MatchupCont
     for (const [said, a, b] of prose.matchAll(SCORE)) if (!block.includes(said) && !block.includes(`${b}-${a}`) && !stages.includes(said)) fault(`${n}:matchup`, "a score the brief does not give", "hard", said);
     if (QUOTE_MARKS.test(prose)) fault(`${n}:matchup`, "a quotation mark: the paper prints nobody's words", "hard", prose.match(QUOTE_MARKS)?.[0] ?? "");
     // A man's name is never a banned word: Archie Gray is not American spelling.
-    const plain = masked(prose, [...everyone.flat(), ctx.state.home.side.name, ctx.state.away.side.name]).replace(/\u0000/gu, " ");
+    const plain = masked(prose, [...everyone.flat(), ctx.state.home.side.name, ctx.state.away.side.name, ...derbyNames(ctx.derby)]).replace(/\u0000/gu, " ");
     for (const phrase of banned(plain, REPORT_FPL)) fault(`${n}:matchup`, "names a source", "hard", phrase);
     for (const phrase of banned(plain, DRAFT_NEVER)) fault(`${n}:matchup`, "a phrase this paper does not print", "send-back", phrase);
     for (const phrase of americanisms(plain)) fault(`${n}:matchup`, "American, not British", "send-back", phrase);
@@ -70,7 +71,7 @@ export function checkDraft(writing: DraftWriting, contexts: readonly MatchupCont
     if (words < least || words > most) fault(`${n}:matchup`, `a match-up of ${least} to ${most} words`, "send-back", `${words} words`);
   });
   // A side's name is no more a leaned-on word than a man's is.
-  for (const r of repeatsIn(pieces, [...everyone.flat(), ...sides])) {
+  for (const r of repeatsIn(pieces, [...everyone.flat(), ...sides, ...contexts.flatMap((c) => derbyNames(c.derby))])) {
     const what = r.kind === "phrase" ? "a phrase said twice" : r.kind === "opener" ? "sentences that open the same way" : "a word leaned on";
     fault(r.code === null ? "page" : `${r.code}:matchup`, what, "send-back", `${r.said} ×${r.count}`);
   }

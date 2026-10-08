@@ -1,4 +1,5 @@
 import {
+  derbyOf,
   FANTRAX_LEAGUE_ID,
   byPositionDepth,
   datedKickoffs,
@@ -37,6 +38,7 @@ import {
   type Sheet,
   type SheetMan,
 } from "@epl/core";
+import derbies from "../../data/leagues/derbies.json";
 import recordedLimits from "../../data/leagues/roster-limits.json";
 import { readProjections } from "../intel";
 import { readScoring } from "../scoring";
@@ -153,6 +155,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
       oldBoys: [...boys(state.home.side, state.away.side), ...boys(state.away.side, state.home.side)],
       next: { home: nextOf(state.home.side.teamId), away: nextOf(state.away.side.teamId) },
       angle: null,
+      derby: derbyOf(derbies.derbies, state.home.side.teamId, state.away.side.teamId),
     }));
     // The desk decides each match-up's story and the page's order; the writer tells them.
     const past = draftPast(gameweek, cutoff);

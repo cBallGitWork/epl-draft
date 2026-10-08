@@ -3,6 +3,8 @@ import {
   PLANNER_RUN,
   PREDICTIONS,
   callTie,
+  derbyNames,
+  derbyOf,
   fetchLive,
   fetchLiveScoring,
   fetchSeasonResults,
@@ -36,6 +38,7 @@ import {
   type SideForm,
   type StandingsRow,
 } from "@epl/core";
+import derbies from "../../data/leagues/derbies.json";
 import { readIntel, readProjections } from "../intel";
 import { rosteredPeriod } from "./bridge";
 import type { Say } from "./newsroom";
@@ -137,7 +140,7 @@ export async function predictionsDesk(input: {
     });
   const ties = pairings.map(({ home, away }) => {
     const [h, a] = [side(home.teamId, home.name), side(away.teamId, away.name)];
-    return { home: h, away: a, call: callTie(h, a) };
+    return { home: h, away: a, call: callTie(h, a), derby: derbyOf(derbies.derbies, home.teamId, away.teamId) };
   });
 
   const men = ties.flatMap((tie) => [...tie.home.keyMen, ...tie.away.keyMen, ...tie.home.doubts, ...tie.away.doubts]);
@@ -153,7 +156,7 @@ export async function predictionsDesk(input: {
       shapes: (columns[0]?.extras?.skit ?? []).map((edit) => edit.shape),
       targets: columns.slice(0, 10).flatMap((story) => (story.extras?.skit ?? []).flatMap((edit) => (edit.target === null ? [] : [edit.target]))),
     },
-    names: [...new Set([...named.values(), ...squads.flatMap((team) => team.players.flatMap((man) => ("player" in man ? [man.player.name] : [])))])],
+    names: [...new Set([...named.values(), ...ties.flatMap((tie) => derbyNames(tie.derby)), ...squads.flatMap((team) => team.players.flatMap((man) => ("player" in man ? [man.player.name] : [])))])],
     clubs: clubs.map((club) => club.name),
     doubts: [...new Set(men.filter((man) => man.availability.state !== "fit").map((man) => man.name))],
   };

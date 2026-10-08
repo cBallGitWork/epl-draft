@@ -188,3 +188,14 @@ describe("buildLawroBrief", () => {
     expect(brief([uncalled])).toBeNull();
   });
 });
+
+describe("a derby in Lawro's brief", () => {
+  it("names the derby straight under its tie's heading, and says nothing for a tie that is not one", () => {
+    const [home, away] = [side("cp", "Cold Palmer", 60, [man("Saka", 9)]), side("hg", "Haaland Globetrotters", 50, [man("Rice", 8)])];
+    const derby = { name: "Tim Hortons Derby", also: [], why: [] };
+    const lines = brief([{ ...tie(home, away), derby }])?.split("\n") ?? [];
+    const heading = lines.findIndex((line) => line.startsWith("TIE 1 of 1"));
+    expect(lines[heading + 1]).toMatch(/^THE DERBY: this meeting is the Tim Hortons Derby\./u);
+    expect(brief([tie(home, away)])).not.toContain("THE DERBY");
+  });
+});

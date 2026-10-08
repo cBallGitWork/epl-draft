@@ -1,4 +1,5 @@
 import { benchText, lineupText, returnText, stepLabel, type Club, type StoryDraftMatchup, type StoryDraftReturn, type StoryDraftSide, type StoryDraftStep } from "@epl/core";
+import { derbyBetween } from "@/app/derbies";
 import Face from "./Face";
 import { STANDING_HEAD as SMALL } from "./heads";
 
@@ -50,10 +51,14 @@ function ByDay({ steps }: { steps: StoryDraftStep[] }) {
 
 export default function DraftMatchup({ matchup, n, saturday, clubs }: { matchup: StoryDraftMatchup; n: number; saturday: boolean; clubs?: Map<number, Club> }) {
   const { home, away } = matchup;
+  const derby = derbyBetween(home.teamId, away.teamId);
   return (
     <section id={`d-${n}`} className="flex scroll-mt-4 flex-col gap-3 py-5">
       <header className="flex flex-col gap-2 border-y py-3" style={RULE}>
-        <p className={SMALL}>{saturday ? "After Saturday" : "Full time"}</p>
+        <p className={SMALL}>
+          {saturday ? "After Saturday" : "Full time"}
+          {derby === null ? null : ` · ${derby.name}`}
+        </p>
         <div className="grid grid-cols-[1fr_auto_1fr] items-start gap-3">
           <span className="paper-display text-base leading-tight font-semibold text-ink sm:text-lg">{home.name}</span>
           <span className="numeric paper-display text-4xl leading-none font-semibold text-ink">

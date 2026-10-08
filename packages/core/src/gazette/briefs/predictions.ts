@@ -1,3 +1,4 @@
+import { derbyBrief, type DerbyName } from "../../league/derbies";
 import { londonDate, londonTime } from "../../time";
 import type { PastLine } from "../predictions/past";
 import type { PredictionCall } from "../predictions/pick";
@@ -13,6 +14,8 @@ export interface PredictionsTie {
   home: PredictionSide;
   away: PredictionSide;
   call: PredictionCall;
+  /** The derby these two play, when they have one. */
+  derby?: DerbyName | null;
 }
 
 /** Null when no tie can be called, which files nothing and spends nothing. */
@@ -44,7 +47,7 @@ export function buildLawroBrief(brief: {
 
 function tieBlock(index: number, count: number, tie: PredictionsTie, name: (teamId: string) => string): string {
   const { home, away, call } = tie;
-  const heading = `TIE ${index} of ${count}: ${home.name} [${home.teamId}] v ${away.name} [${away.teamId}]`;
+  const heading = [`TIE ${index} of ${count}: ${home.name} [${home.teamId}] v ${away.name} [${away.teamId}]`, ...(tie.derby ? [derbyBrief(tie.derby)] : [])].join("\n");
   const shape = `Write it in "ties" with homeTeamId "${home.teamId}" and awayTeamId "${away.teamId}"`;
   if (call.callsTeamId === null) {
     return [heading, "NO CALL: the desk cannot call this tie. Write two or three sentences and back nobody.", ...tieFacts(index, home, away, call), `${shape}, and "backs" null.`].join("\n");

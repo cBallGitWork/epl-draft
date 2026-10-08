@@ -70,3 +70,20 @@ describe("checkDraft", () => {
     expect(checks(`${clean} test2 never organized a reply.`)).toEqual(["send-back: American, not British (organized)"]);
   });
 });
+
+describe("a derby in the draft report", () => {
+  const derby = { name: "Battle of York", also: ["Sacking of York"], why: [] };
+  const derbies = contexts.map((ctx, at) => (at === 0 ? { ...ctx, derby } : ctx));
+  const said = (one: string) => checkDraft(writing(one), derbies, draftBlocks("gameweek", derbies)).filter((f) => f.section.startsWith("1:")).map((f) => `${f.severity}: ${f.check} (${f.evidence})`);
+
+  it("lets the match-up use its derby's names as it would a side's", () => {
+    expect(said(`${clean} The Battle of York went to 123, a Sacking of York in all but the margin.`)).toEqual([]);
+  });
+
+  it("is told to the writer straight under the match-up's heading", () => {
+    expect(draftBlocks("gameweek", derbies)[0]?.split("\n\n")[1]).toBe(
+      "THE DERBY: this meeting is the Battle of York, also called the Sacking of York. The page prints its name above your words; name it once at most, exactly as written.",
+    );
+    expect(blocks[0]).not.toContain("THE DERBY");
+  });
+});

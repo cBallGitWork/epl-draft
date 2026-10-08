@@ -1,4 +1,5 @@
 import {
+  derbyNames,
   DRAFT_FORECAST,
   DRAFT_NEVER,
   DRAFT_WRITING,
@@ -81,7 +82,7 @@ export async function draftColumn(job: DraftJob, say: Say, options: { sendBack?:
   const men = job.contexts.flatMap((c) => everyMan(c.state));
   const surnames = men.map((m) => surname(m.name));
   // A headline may name a side, a man, his club or a day; anything else capitalised is a name the facts do not carry.
-  const names = [...job.contexts.flatMap((c) => [c.state.home.side.name, c.state.away.side.name]), ...men.flatMap((m) => [m.name, m.club]), ...WEEKDAYS];
+  const names = [...job.contexts.flatMap((c) => [c.state.home.side.name, c.state.away.side.name, ...derbyNames(c.derby)]), ...men.flatMap((m) => [m.name, m.club]), ...WEEKDAYS];
 
   const first = readDraftWriting(await writeColumn(DRAFT_VOICE, brief, count), surnames);
   const faults1 = checkDraft(first, job.contexts, blocks, job.cutoff, job.pastProse);
