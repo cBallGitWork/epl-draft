@@ -4325,8 +4325,12 @@ Craig: *"/players/04fk1 — pages are broke"*. 19 of 20 player pages answered 20
   Vercel in the same hours. **Never crawl production with `tools/ui`**: sweep a local build.
 - **A warm cache hides it, a cold one breaks.** `leagueCache` and raw `unstable_cache` serve the last good answer when
   a refresh throws, so most pages looked fine; a player whose game log had no entry met the 403 with no fallback, and
-  the throw ended in the error screen. `gameLog` and `pastSeasons` now degrade to null and the page says "FPL is not
-  answering" (`FPL_SILENT`).
+  the throw ended in the error screen. `gameLog` and `pastSeasons` now read FPL, then its cache, then the
+  sister repo's copy of FPL's own element-summaries (`data/intel/history`, by code, `npm run intel-history` off
+  `raw/fpl/live/element_summaries`, which every intel run restores from R2), and say "his season as of …" when the
+  copy is used; only a man none of the three holds gets "FPL is not answering" (`FPL_SILENT`). The copy is ~1.9 MB at
+  GW5, loaded only on that path; the mappers read it unchanged (`slimSummary` keeps the typed fields, a test holds
+  the equivalence). Craig: *"we dont need it every 30s on that screen"*, so the game log is held an hour, past seasons a day.
 - **A 200 is not a page.** Next streams a server component's throw into the payload as its own row
   (`47:E{"digest":"578425273"}`); smoke checked status codes, so it passed. `scripts/smoke/broken.ts` (`serverError`)
   now fails a walk on that row, and `.github/workflows/health.yml` walks production every two hours, 06:25 to 22:25

@@ -30,6 +30,7 @@
     "intel-check": "tsx scripts/intel-check.ts",
     "intel-cups": "tsx scripts/intel-cups.ts",
     "intel-careers": "tsx scripts/intel-careers.ts",
+    "intel-history": "tsx scripts/intel-history.ts",
     "scout-xi": "tsx scripts/scout-xi.ts",
     "ratings": "tsx scripts/ratings.ts",
     "draft-pack": "tsx scripts/draft-pack.ts",

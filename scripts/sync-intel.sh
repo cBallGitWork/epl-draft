@@ -118,6 +118,10 @@ for kind in $KINDS; do
   [ "$found" = 1 ] || { tail -20 "$OUT/export.log" >>"$LOG" 2>/dev/null; fail "the export wrote no $kind; its tail is in the log"; }
 done
 
+# Every run: each player's FPL history by code, the page's season when FPL will not answer Vercel.
+if SISTER_REPO="$SISTER" npm run -s intel-history >>"$LOG" 2>&1; then soft intel-history ok "player histories read"
+else soft intel-history fail "intel-history refused; histories left as they were"; fi
+
 if [ "$MODE" = weekly ]; then
   if SISTER_REPO="$SISTER" npm run -s intel-cups >>"$LOG" 2>&1; then soft intel-cups ok "cups read"
   else soft intel-cups fail "intel-cups refused; cups left as they were"; fi
