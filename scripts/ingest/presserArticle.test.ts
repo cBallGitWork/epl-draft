@@ -127,8 +127,13 @@ describe("classify — 8 Oct's misses", () => {
       "Milan van Ewijk (hamstring) has returned to training and should feature, while Kaine Kesler-Hayden (hamstring) is also back on the grass – although he’s been unavailable for a longer period.";
     const parts = clauses(said);
     expect(classify(parts[0])).toBe("available");
-    // Back on the grass is rehab, not fit: the bracket's doubt stands.
-    expect(classify(parts[1])).toBeNull();
+    // Lampard: "Kaine is back training with us". Scout put it as back on the grass.
+    expect(classify(parts[1])).toBe("available");
+  });
+
+  it("leaves men back on the grass a doubt when they are not yet back", () => {
+    const said = "Justin Kluivert (muscle), Amine Adli (calf) and Julian Araujo (thigh) are all back on the grass and could return in the next week or two.";
+    expect(classify(said)).toBeNull();
   });
 
   it("reads 'will be out' as out, and not 'out of contract'", () => {
