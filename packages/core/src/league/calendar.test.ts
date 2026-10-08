@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { firstKickoff, periodDays, periodGameweeks, saveOpen } from "./calendar";
+import { firstKickoff, openingGameweek, periodDays, periodGameweeks, saveOpen } from "./calendar";
 import type { GameweekKickoff } from "./calendar";
 import type { LeaguePeriod } from "./types";
 import alignment from "./__fixtures__/periodAlignment.json";
@@ -55,7 +55,7 @@ describe("periodGameweeks", () => {
       { number: 1, start: "2026-08-21T15:00:00.0-0400", end: "2026-08-28T14:59:59.0-0400" },
     ];
     const atTheBound: GameweekKickoff[] = [{ gameweek: 1, kickoff: "2026-08-21T19:00:00Z" }];
-    expect(periodGameweeks(period, atTheBound)).toEqual([{ period: 1, gameweeks: [1] }]);
+    expect(periodGameweeks(period, atTheBound)).toEqual([{ period: 1, gameweeks: [1], own: 1 }]);
   });
 
   it("degrades to nothing rather than throwing", () => {
@@ -131,5 +131,38 @@ describe("periodDays", () => {
   it("keeps the end day when the period runs to its last second, and crosses a month", () => {
     expect(days("2026-10-25T00:00:00-0400", "2026-10-31T23:59:59-0400")).toEqual({ startDate: "2026-10-25", endDate: "2026-10-31" });
     expect(days("2026-11-27T06:00:00.0-0500", "2026-12-01T05:59:59.0-0500").endDate).toBe("2026-11-30");
+  });
+});
+
+describe("openingGameweek", () => {
+  // Period 6 as the real league states it. FPL keeps a postponed match in its own event, so a replay lands in a later period.
+  const P6 = period(6, "2026-10-09T06:00:00.0-0400", "2026-10-16T05:59:59.0-0400");
+  const GW6: GameweekKickoff[] = ["2026-10-10T11:30:00Z", "2026-10-10T14:00:00Z", "2026-10-11T15:30:00Z"].map((kickoff) => ({ gameweek: 6, kickoff }));
+  const opening = (kickoffs: GameweekKickoff[]) => openingGameweek(periodGameweeks([P6], kickoffs), 6);
+
+  it("names a period by the gameweek most of its matches belong to, never a replayed one", () => {
+    const replayed = [...GW6, { gameweek: 3, kickoff: "2026-10-14T18:30:00Z" }];
+    expect(periodGameweeks([P6], replayed)).toEqual([{ period: 6, gameweeks: [3, 6], own: 6 }]);
+    expect(opening(replayed)).toBe(6);
+  });
+
+  it("does so when the replay kicks off first", () => {
+    expect(opening([{ gameweek: 3, kickoff: "2026-10-09T19:00:00Z" }, ...GW6])).toBe(6);
+  });
+
+  it("takes the gameweek that kicks off first when two have as many matches", () => {
+    const level = [
+      { gameweek: 7, kickoff: "2026-10-11T14:00:00Z" },
+      { gameweek: 6, kickoff: "2026-10-12T19:00:00Z" },
+      { gameweek: 7, kickoff: "2026-10-13T19:00:00Z" },
+      { gameweek: 6, kickoff: "2026-10-14T19:00:00Z" },
+    ];
+    expect(opening(level)).toBe(7);
+  });
+
+  it("has none for a blank, or a period the calendar lacks", () => {
+    expect(periodGameweeks([P6], [])).toEqual([{ period: 6, gameweeks: [], own: null }]);
+    expect(opening([])).toBeUndefined();
+    expect(openingGameweek(periodGameweeks([P6], GW6), 7)).toBeUndefined();
   });
 });

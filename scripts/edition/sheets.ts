@@ -3,6 +3,7 @@ import {
   FANTRAX_LEAGUE_ID,
   SHEETS,
   buildSheetsBrief,
+  datedKickoffs,
   fetchLive,
   fetchPlayerStories,
   fetchTeamRosters,
@@ -10,6 +11,8 @@ import {
   mapLiveStats,
   mapPlayerStories,
   mapTeamRosters,
+  openingGameweek,
+  periodGameweeks,
   resolveRosters,
   sheetOf,
   sheetsFacts,
@@ -79,8 +82,9 @@ export async function sheetsDesk(input: {
   const fixtures = input.season
     .filter((fixture) => fixture.gameweek !== null && gameweeks.includes(fixture.gameweek))
     .map((fixture) => ({ homeClubId: fixture.homeClubId, awayClubId: fixture.awayClubId }));
-  const xi = readXi(gameweeks[0]);
-  const [recent, news] = await Promise.all([formRounds(gameweeks[0] ?? snapshot.gameweek), newsFor(facts, now)]);
+  const gameweek = openingGameweek(periodGameweeks(info.scoringPeriods, datedKickoffs(input.season)), period) ?? snapshot.gameweek;
+  const xi = readXi(gameweek);
+  const [recent, news] = await Promise.all([formRounds(gameweek), newsFor(facts, now)]);
 
   const ties = sheetsFacts({
     pairings: facts.pairings,
@@ -107,7 +111,6 @@ export async function sheetsDesk(input: {
     const club = clubs.get(clubId);
     return club === undefined ? "an unknown club" : fullClubName(club.name);
   };
-  const gameweek = gameweeks[0] ?? snapshot.gameweek;
   // His club's matches this period, off the same list the meetings are read from, so the two agree.
   const matches = (clubId: number) =>
     fixtures.flatMap((match) =>
