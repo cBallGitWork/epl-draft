@@ -1,6 +1,7 @@
 import type { Club, Fixture } from "@epl/core";
 import Match from "./Match";
 import RoundHead from "../components/shell/RoundHead";
+import { PANEL_ROWS } from "./Shell";
 
 // The season as rounds, each under its own head; Results and Fixtures pick the rounds and the order.
 
@@ -55,12 +56,9 @@ export function byRound(fixtures: readonly Fixture[]): Round[] {
     }));
 }
 
-/** Rows the rounds draw, a match each plus a head apiece; capped, or a season's skeleton is 400 rows tall. */
+/** Rows the rounds draw, a match each plus a head apiece; capped at the table's panel, so the section's screens open
+ *  at one height and a season is not 400 rows tall. */
 export function panelRows(rounds: readonly Round[]): number {
   const rows = rounds.reduce((total, round) => total + round.fixtures.length + 1, 0);
-  return Math.min(rows, PANEL_CAP);
+  return Math.min(rows, PANEL_ROWS);
 }
-
-/** Twenty, matching the table's own panel: the two screens in this section
- *  should not open at different heights. */
-const PANEL_CAP = 20;
