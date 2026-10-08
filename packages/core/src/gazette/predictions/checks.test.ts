@@ -178,6 +178,10 @@ describe("checkLawro, the column's shape", () => {
     expect(found(checks([], { derbies }), "the derby not named")).toEqual(["rs-bn"]);
     const named = SAMPLE[0][1].replace("I've no argument with Real Sociable.", "It's the Steve Clarke Classic, and I've no argument with Real Sociable.");
     expect(found(checks([["rs-bn", named]], { derbies }), "the derby not named")).toEqual([]);
+    // 8 Oct: the War of Cowdenbeath was counted as a fifth man.
+    const counted = checks([["rs-bn", named]], { derbies, names: [...Object.values(TEAMS), "Steve Clarke Classic"] });
+    expect(found(counted, "a back line with nobody in it")).toEqual([]);
+    expect(counted.filter((each) => each.check === "a roll call, more than four men").map((each) => each.evidence).join()).not.toContain("Steve Clarke");
     // 8 Oct: "The Truffle Pigs have both of theirs off to Sunderland", and both of what?
     const theirs = SAMPLE[0][1].replace("Bayer Neverlusen signed Pym and Kettle on Wednesday.", "Bayer Neverlusen have both of theirs away.");
     expect(found(checks([["rs-bn", theirs]]), "men he never names")).toEqual(["rs-bn"]);

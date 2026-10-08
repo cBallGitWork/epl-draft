@@ -206,9 +206,11 @@ function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckCon
     if (awkward !== null) fault(key, "an apostrophe on a side's name", "send-back", awkward[0]);
     if (mentionsOf(line, side) > LIMITS.sideNamed) fault(key, "a side's name over and over", "send-back", side);
   }
-  const men = ctx.names.filter((name) => !sides.has(name) && mentionAt(line, name) !== -1);
+  // The names list blanks derbies too, and a derby is not a man.
+  const players = ctx.names.filter((name) => !sides.has(name) && !derby.includes(name));
+  const men = players.filter((name) => mentionAt(line, name) !== -1);
   for (const sentence of sentences(line).filter((each) => BACK_LINE.test(each))) {
-    if (!ctx.names.some((name) => !sides.has(name) && mentionAt(sentence, name) !== -1)) fault(key, "a back line with nobody in it", "send-back", sentence);
+    if (!players.some((name) => mentionAt(sentence, name) !== -1)) fault(key, "a back line with nobody in it", "send-back", sentence);
   }
   if (men.length > LIMITS.men) fault(key, "a roll call, more than four men", "send-back", men.join(", "));
   // "Their Ballard" is not how anybody talks: Ballard, or test31's Ballard.
