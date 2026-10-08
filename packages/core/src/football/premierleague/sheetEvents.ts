@@ -1,4 +1,4 @@
-import { codeOf, plPlayerCodes } from "./teamSheet";
+import { plPlayerCodes } from "./teamSheet";
 import { BOOKING, GOAL, OWN_GOAL, PENALTY, SUBSTITUTION, minuteOf } from "./fixtureEvents";
 import type { RawPlFixture } from "./raw";
 
@@ -87,37 +87,4 @@ export function plManMatches(
   }
 
   return men;
-}
-
-/** One change: who came on, who came off, and when. */
-export interface PlSubstitution {
-  minute: number;
-  /** FPL codes, or null for a man the bridge could not place; the pair is kept either way. */
-  on: number | null;
-  off: number | null;
-}
-
-/** Every substitution, oldest first, paired by the feed's ORDER: each `ON` row is followed by its own `OFF`.
- *  `plManMatches` loses that order, and three changes at one minute would pair wrongly. A pair that disagrees is dropped. */
-export function plSubstitutions(
-  fixture: RawPlFixture,
-  optaToCode: Map<string, number>,
-): PlSubstitution[] {
-  const codes = plPlayerCodes(fixture, optaToCode);
-  const rows = (fixture.events ?? []).filter((event) => event.type === SUBSTITUTION);
-  const swaps: PlSubstitution[] = [];
-
-  for (let n = 0; n + 1 < rows.length; n += 2) {
-    const [on, off] = [rows[n], rows[n + 1]];
-    if (on.description !== "ON" || off.description !== "OFF") continue;
-    const minute = minuteOf(on);
-    if (minute === null || minuteOf(off) !== minute) continue;
-    swaps.push({
-      minute,
-      on: codeOf(codes, on.personId),
-      off: codeOf(codes, off.personId),
-    });
-  }
-
-  return swaps.sort((a, b) => a.minute - b.minute);
 }

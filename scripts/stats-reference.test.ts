@@ -20,7 +20,6 @@ const STAT_TYPES: readonly { file: string; types: readonly string[] }[] = [
   { file: "packages/core/src/football/matchSheet.ts", types: ["MatchSheetLine"] },
   { file: "packages/core/src/football/clubStats.ts", types: ["ClubRecord", "ClubStats"] },
   { file: "packages/core/src/football/table.ts", types: ["TableRow"] },
-  { file: "packages/core/src/football/form.ts", types: ["PlayerForm"] },
   { file: "packages/core/src/football/attributes.ts", types: ["Scouted"] },
   { file: "packages/core/src/football/shotLine.ts", types: ["ShotLine"] },
   { file: "packages/core/src/football/selectors.ts", types: ["MatchContribution"] },
@@ -29,7 +28,7 @@ const STAT_TYPES: readonly { file: string; types: readonly string[] }[] = [
   { file: "packages/core/src/football/premierleague/matchStats.ts", types: ["MatchStatRow"] },
   { file: "packages/core/src/football/premierleague/playerMatch.ts", types: ["MatchParts"] },
   { file: "packages/core/src/football/premierleague/teamSheet.ts", types: ["PlSquadMan"] },
-  { file: "packages/core/src/football/premierleague/sheetEvents.ts", types: ["PlManMatch", "PlSubstitution"] },
+  { file: "packages/core/src/football/premierleague/sheetEvents.ts", types: ["PlManMatch"] },
   { file: "packages/core/src/football/premierleague/goals.ts", types: ["PlGoal"] },
   { file: "packages/core/src/football/premierleague/assists.ts", types: ["StreamCredit"] },
   { file: "packages/core/src/football/premierleague/breaks.ts", types: ["RoundBreak"] },
@@ -189,7 +188,7 @@ const STATS_LEAGUE = {
 
 /** The rows of each section's tables with no Domain field column: only a count notices one go. */
 const PLAIN_ROWS: Record<string, number> = {
-  "Fetched but read by nobody": 31,
+  "Fetched but read by nobody": 30,
   "FPL bootstrap keys never typed": 11,
   "Computed in the app, not core": 14,
   "Stored history and live-only reads": 18,

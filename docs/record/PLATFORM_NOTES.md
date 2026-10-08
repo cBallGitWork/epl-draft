@@ -1926,8 +1926,8 @@ team sheets.
 - **A substitution pairs on the feed's ORDER, not on the minute.** 269/269 adjacent pairs
   are an `ON` followed by its own `OFF`. This is load-bearing: a side can make three changes
   in one minute, and pairing on the clock drew *"Flemming for Maeda"* when he came on for
-  Emersonn — two true men and one false sentence. `plSubstitutions` owns this join because
-  `plManMatches` is per-man and has already lost the order.
+  Emersonn — two true men and one false sentence. Nothing pairs them now; a reader that does
+  must pair on order, since `plManMatches` is per-man and has already lost it.
 
 **Highlights are not available and this is settled.** No `highlights`/`video`/`media` key on
 any endpoint; `content.pulselive.com` no longer resolves; the match page names
