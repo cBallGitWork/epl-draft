@@ -88,7 +88,7 @@ export async function draftColumn(job: DraftJob, say: (message: string) => void,
   const angle = job.contexts[0]?.angle ?? null;
   const story = angle === null ? first.headlineStory : angle.story.facts.join("; ");
   const cast = angle === null ? "" : `\nTHE CAST: ${angle.cast.map((m) => surname(m.name)).join(", ")}`;
-  const puns = await writeColumn(PUN_VOICE, `THE STORY: ${story}${cast}\n\n${blocks[0] ?? ""}`, count).then(readHeadlines).catch(() => ({ headlines: [], meanings: {} }));
+  const puns = await writeColumn(PUN_VOICE, `THE STORY: ${story}${cast}\n\n${blocks[0] ?? ""}`, count, "helper").then(readHeadlines).catch(() => ({ headlines: [], meanings: {} }));
   const offered = [...first.headlines, ...puns.headlines.filter((h) => !first.headlines.includes(h))].slice(0, DRAFT_WRITING.puns + 6);
   const meanings = { ...first.meanings, ...puns.meanings };
   // A pun on a word a recent headline used is the same joke twice.

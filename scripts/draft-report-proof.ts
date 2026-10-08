@@ -24,8 +24,8 @@ import { STORY_BYLINE, editionName } from "./edition/voice/bylines";
 
 // The draft report for a past gameweek, never filed to the paper. With no GAZETTA_PROOF_OUT it prints the brief and calls no
 // model. With one it writes each due cut-off (or GAZETTA_CUTOFF's) to that folder: the brief, a plain read and a story
-// file a preview can splice in. GAZETTA_TEST=1 is test mode: the lead match-up only (GAZETTA_TEST_MATCHUPS for more)
-// and no send-back, the cheapest honest read of the writing.
+// file a preview can splice in. Test mode is the default: the lead match-up only (GAZETTA_TEST_MATCHUPS for more) and
+// no send-back, the cheapest honest read of the writing; GAZETTA_FULL=1 writes it whole.
 
 const say = (line: string) => process.stdout.write(`${line}\n`);
 
@@ -62,7 +62,7 @@ async function main(): Promise<void> {
   say([`League ${FANTRAX_LEAGUE_ID}, period ${desk.period}, gameweek ${gameweek}; played on ${desk.days.join(", ")}.`, ...desk.notes].join("\n"));
   const out = process.env.GAZETTA_PROOF_OUT ?? "";
   const only = process.env.GAZETTA_CUTOFF as Cutoff | undefined;
-  const test = process.env.GAZETTA_TEST === "1";
+  const test = process.env.GAZETTA_FULL !== "1";
   for (const [cutoff, all] of desk.cutoffs) {
     if (only !== undefined && only !== cutoff) continue;
     const contexts = test ? all.slice(0, Number(process.env.GAZETTA_TEST_MATCHUPS ?? 1)) : all;

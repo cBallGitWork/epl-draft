@@ -46,6 +46,8 @@ export async function writeReports(
   desks: readonly MatchDesk[],
   past: readonly string[],
   say: (message: string) => void,
+  /** `sendBack: false` is a proof's test mode: the first attempt stands with its faults logged, and calls are saved. */
+  options: { sendBack?: boolean } = {},
 ): Promise<{ draft: ReportsDraft; brief: string; log: ReportsLog }> {
   const usage = { input: 0, output: 0 };
   const count = (u: { input_tokens?: number; output_tokens?: number }) => {
@@ -76,7 +78,7 @@ export async function writeReports(
   // The desk strikes headlines that break a rule; the fan picks one of the rest, or none and a plain line prints.
   const names = desks.flatMap((d) => [d.match.home.name, d.match.away.name, ...d.match.home.shorts, ...d.match.away.shorts, ...d.match.men.map((m) => m.name)]);
   // The pun writer's go, on the lead match alone; its candidates join the reporter's before the strike and the judge.
-  const puns = await writeColumn(PUN_VOICE, punBrief(desks[0], first.headlineStory ?? ""), count).then(readHeadlines).catch(() => ({ headlines: [], meanings: {} }));
+  const puns = await writeColumn(PUN_VOICE, punBrief(desks[0], first.headlineStory ?? ""), count, "helper").then(readHeadlines).catch(() => ({ headlines: [], meanings: {} }));
   first.headlines.push(...puns.headlines.filter((h) => !first.headlines.includes(h)));
   first.meanings = { ...first.meanings, ...puns.meanings };
   const candidates = survivors(first.headlines, names);
@@ -88,7 +90,7 @@ export async function writeReports(
 
   const sendable = [...faults1, ...fan].filter((f) => f.severity !== "warn");
   const attempts = [{ draft: first, faults: [...faults1, ...fan] }];
-  if (sendable.length > 0) {
+  if (sendable.length > 0 && options.sendBack !== false) {
     say(`  ↩ reports: ${sendable.length} faults, sent back once`);
     const again = await writeColumn(REPORTS_VOICE, `${brief}\n\n${reportsSendBack(sendable)}`, count).catch(() => null);
     if (again !== null) {
