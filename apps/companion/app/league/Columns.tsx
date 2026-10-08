@@ -1,4 +1,4 @@
-import type { SortKey } from "@epl/core";
+import { spelled, type SortKey } from "@epl/core";
 import { sortHref } from "./sort";
 import { Head, HeadRow, NameHead, PLATE, SortHead, sortedAs } from "../components/league/TableHeads";
 import { DESK_ONLY, TEXT, standDown } from "@/app/desk";
@@ -38,7 +38,7 @@ export const COLUMNS: readonly Column[] = [
   { key: "for", label: "For", title: "Fantasy points scored — Fantrax's FPtsF", align: "center", width: "w-11 lg:w-24" },
   { key: "against", label: "Ag", title: "Fantasy points conceded — Fantrax's FPtsA", align: "center", width: "w-11 lg:w-24", deskOnly: true },
   { key: "pts", label: "Pts", title: PTS_TITLE, align: "center", width: "w-10 lg:w-24", copy: "desk" },
-  { key: "form", label: "Form", title: `The last ${FORM_GAMES} gameweeks, oldest first`, align: "center", width: "w-14 lg:w-32", deskOnly: true },
+  { key: "form", label: "Form", title: `The last ${spelled(FORM_GAMES)} gameweeks, oldest first`, align: "center", width: "w-14 lg:w-32", deskOnly: true },
 ];
 
 /** A column's cell alignment, so a row sits as its head: figures centred (`cm9900/24.jpg`, Craig, 31 Aug), a name left. */
