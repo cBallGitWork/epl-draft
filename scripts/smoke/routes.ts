@@ -34,6 +34,7 @@ export const ROUTES = [
   "/gw/1",
   "/fpl",
   "/more",
+  "/credits",
   // Mail's league-wide ledger; the inbox itself is the reader's own and is not walked.
   "/news/transfers",
 ] as const;
@@ -46,40 +47,71 @@ export interface WalkIds {
   match: number | null;
 }
 
+/** Routes no walk visits, and why. */
+export const NEVER_WALKED: Readonly<Record<string, string>> = {
+  "/paper/[slug]": "a slug exists only once a story is filed",
+  "/news": "the inbox is the reader's own",
+  ...(PROJECTIONS_SHOWN ? {} : { [PROJECTIONS]: "switched off, it is a true 404" }),
+};
+
+/** The routes one id opens, and what to say when no read named it. */
+interface Family {
+  id: keyof WalkIds;
+  route: string;
+  unnamed: string;
+  paths: (id: string) => string[];
+}
+
+const FAMILIES: readonly Family[] = [
+  {
+    // The squad board and its tabs, and the head-to-head.
+    id: "teamId",
+    route: "/squad/[teamId]",
+    unnamed: "the league names no team yet",
+    paths: (id) => [`/squad/${id}`, `/squad/${id}/fixtures`, `/squad/${id}/next`, `/squad/${id}/stats`, `/squad/${id}/transfers`, `/league/matchups/${id}`],
+  },
+  {
+    // His page and its tabs; History redirects to Data, which reads his FPL game log as no other route walked here does.
+    id: "playerId",
+    route: "/players/[fantraxId]",
+    unnamed: "nobody holds a player yet",
+    paths: (id) => [`/players/${id}`, `/players/${id}/data`, `/players/${id}/history`, `/players/${id}/news`, `/players/${id}/transfer`],
+  },
+  {
+    id: "club",
+    route: "/prem/club/[code]",
+    unnamed: "FPL would not name a club",
+    paths: (id) => [`/prem/club/${id}`, `/prem/club/${id}/depth`, `/prem/club/${id}/set-pieces`, `/prem/club/${id}/fixtures`, `/prem/club/${id}/stats`],
+  },
+  {
+    // Line Ups is where an empty sheet lands before kickoff; Stats proves the Premier League's `/stats/match`
+    // still answers, and its Fantasy view that our league's read does.
+    id: "match",
+    route: "/prem/match/[id]",
+    unnamed: "FPL would not name a fixture",
+    paths: (id) => [
+      `/prem/match/${id}`,
+      `/prem/match/${id}/players`,
+      `/prem/match/${id}/stats`,
+      `/prem/match/${id}/stats?view=fantasy`,
+      `/prem/match/${id}/zones`,
+      `/prem/match/${id}/highlights`,
+    ],
+  },
+];
+
 /** Every route a walk visits with these ids. */
-export function walkPaths({ teamId, playerId, club, match }: WalkIds): string[] {
-  const paths: string[] = [...ROUTES];
-  // The id-scoped screens: the squad board and its tabs, and the head-to-head.
-  if (teamId !== null) {
-    paths.push(
-      `/squad/${teamId}`,
-      `/squad/${teamId}/fixtures`,
-      `/squad/${teamId}/next`,
-      `/squad/${teamId}/stats`,
-      `/squad/${teamId}/transfers`,
-      `/league/matchups/${teamId}`,
-    );
-  }
-  // His page and his Data tab: each reads his FPL game log, which no other route walked here does.
-  if (playerId !== null) paths.push(`/players/${playerId}`, `/players/${playerId}/data`);
-  if (club !== null) {
-    paths.push(
-      `/prem/club/${club}`,
-      `/prem/club/${club}/depth`,
-      `/prem/club/${club}/set-pieces`,
-      `/prem/club/${club}/fixtures`,
-      `/prem/club/${club}/stats`,
-    );
-  }
-  // Line Ups is where an empty sheet lands before kickoff; Stats proves the Premier League's `/stats/match`
-  // still answers, and its Fantasy view that our league's read does.
-  if (match !== null) {
-    paths.push(
-      `/prem/match/${match}`,
-      `/prem/match/${match}/players`,
-      `/prem/match/${match}/stats`,
-      `/prem/match/${match}/stats?view=fantasy`,
-    );
-  }
-  return paths;
+export function walkPaths(ids: WalkIds): string[] {
+  return [
+    ...ROUTES,
+    ...FAMILIES.flatMap((family) => {
+      const id = ids[family.id];
+      return id === null ? [] : family.paths(String(id));
+    }),
+  ];
+}
+
+/** One line per id-scoped family the walk could not visit: a walk that quietly drops a route still prints a full count. */
+export function skipped(ids: WalkIds): string[] {
+  return FAMILIES.filter((family) => ids[family.id] === null).map((family) => `${family.route}  ${family.unnamed}, so it was not walked`);
 }

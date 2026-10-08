@@ -10,7 +10,7 @@ import {
 } from "@epl/core";
 import { walkLeague, type WalkLeague } from "./smoke/league";
 import { serverError } from "./smoke/broken";
-import { walkPaths } from "./smoke/routes";
+import { skipped, walkPaths } from "./smoke/routes";
 
 // Walks every route against the league the server is serving, asserting the empty states for a
 // league with no teams and their absence once somebody holds a player (a drafted league once rendered
@@ -93,16 +93,14 @@ async function main() {
   const { state, teamId, teamName, playerId } = await league();
   const club = await clubCode();
   const match = await matchId();
-  const paths = walkPaths({ teamId, playerId, club, match });
+  const ids = { teamId, playerId, club, match };
+  const paths = walkPaths(ids);
 
   console.log(
     `smoke — ${BASE}, league ${FANTRAX_LEAGUE_ID} (${state})\n`,
   );
 
-  // Skipped, and SAID so: a walk that quietly drops a route still prints a full count.
-  if (club === null) {
-    console.log("~ /prem/club  FPL would not name a club, so this route was not walked\n");
-  }
+  for (const line of skipped(ids)) console.log(`~ ${line}\n`);
 
   // Is this server serving the league these expectations came from? Checked by a manager's own team
   // name on `/league`: unique to the league, and `/league` cannot render without it. (It used to look
