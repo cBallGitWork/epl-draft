@@ -5,7 +5,7 @@ import { joinedBy, movesOf } from "./dossier";
 const move = (over: Partial<LeagueTransaction> = {}): LeagueTransaction => ({
   setId: "s1", kind: "claim", fantraxId: "03gu4", playerName: "Harry Maguire",
   position: "D", club: "MUN", clubName: null, via: null, fromTeamId: null, toTeamId: "t1",
-  processedAt: "Wed Aug 12, 2026, 9:14AM", period: 2, executed: true, resultCode: null, ...over,
+  processedAt: "Wed Aug 12, 2026, 9:14AM", period: 2, executed: true, ...over,
 });
 
 const NAMES = new Map([["t1", "test3"], ["t2", "test211"]]);

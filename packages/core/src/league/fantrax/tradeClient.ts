@@ -1,7 +1,6 @@
-import { TRANSACTION_PAGE_SIZE } from "../../config";
 import { fxpaRead } from "./fxpa";
 import type { RawPositionRefs, RawTradeBlocks } from "./tradeBlock";
-import type { RawTransactionHistory } from "./transactions";
+import type { RawPendingTrades } from "./pendingTrades";
 
 // The trade market's reads. Fantrax shows it to members only, so the blocks and proposals carry the commissioner's session.
 
@@ -15,12 +14,13 @@ export function fetchPositionRefs(leagueId: string): Promise<RawPositionRefs> {
   return fxpaRead(leagueId, "getRefObject", { type: "Position" }) as Promise<RawPositionRefs>;
 }
 
-/** Every trade in the log, proposals still unanswered included: Fantrax's page with "executed only" off. */
-export function fetchTradeProposals(leagueId: string, session: string): Promise<RawTransactionHistory> {
+/** The trades waiting on an answer that one of the session's own teams is in, as Fantrax's pending page asks; with no
+ *  `teamId` Fantrax picks one of them and names the rest in `myTeamIds`. Nobody else's are readable. */
+export function fetchPendingTrades(leagueId: string, session: string, teamId?: string): Promise<RawPendingTrades> {
   return fxpaRead(
     leagueId,
-    "getTransactionDetailsHistory",
-    { view: "TRADE", executedOnly: false, maxResultsPerPage: String(TRANSACTION_PAGE_SIZE) },
+    "getPendingTransactions",
+    { txType: "TRADE", ...(teamId === undefined ? {} : { teamId }) },
     session,
-  ) as Promise<RawTransactionHistory>;
+  ) as Promise<RawPendingTrades>;
 }

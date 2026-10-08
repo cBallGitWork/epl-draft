@@ -36,8 +36,6 @@ export interface Inbox {
   names: Map<string, string>;
   /** The reader's own team, or null signed out, when nothing goes red. */
   mine: string | null;
-  /** The trades on the table he is party to, also in `items`: the banner's. */
-  offers: InboxItem[];
 }
 
 /** Who he plays in the period the NEXT deadline locks: his doubts and that opponent's are the inbox's. */
@@ -111,7 +109,7 @@ export async function readInbox(): Promise<Inbox> {
 
   // A proposal is private to its two managers, so only a code reads one: never the lent demo team.
   const signed = drafted === null ? null : await signedTeamId(drafted.period.teams);
-  const offers = offerNews(proposals.proposals, { name: nameOf, mine: signed, zone: proposals.zone });
+  const offers = offerNews(proposals, { name: nameOf, mine: signed, now: now().toISOString() });
 
   return {
     items: inboxItems(
@@ -131,7 +129,6 @@ export async function readInbox(): Promise<Inbox> {
     ),
     names,
     mine,
-    offers,
   };
 }
 
@@ -165,11 +162,4 @@ function lock(
   return gameweek === undefined
     ? null
     : { period: next.period, gameweek, locksAt: next.locksAt };
-}
-
-/** The offer the banner names: the newest the reader is party to, and the manager across the table from him. */
-export function bannerOffer(inbox: Inbox): { id: string; with: string | null } | null {
-  const [first] = inbox.offers;
-  if (first === undefined) return null;
-  return { id: first.id, with: first.teamId === null ? null : (inbox.names.get(first.teamId) ?? null) };
 }

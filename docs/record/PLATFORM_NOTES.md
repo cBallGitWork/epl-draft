@@ -4271,15 +4271,20 @@ SPA's own bundle.
   `resultCode` and `result.content`: `TRADE_CANCELLED` 22, `TRADE_REJECTED` 6, `EXECUTED` 8. Every set involves The
   Raccoons, Craig's team, so whether a proposal between two other teams shows is unproven; Craig says the
   commissioner's page shows it. A pending proposal's code is not yet seen.
-- **A session's log is stamped in that account's zone.** The same executed trade reads `Fri Oct 2, 2026, 4:45PM`
-  under "Date Processed (EDT)" anonymously and `9:45PM` under "(BST)" with Craig's cookie. `stampZone` reads the
-  head, and `fantraxInstant` takes the zone; read as Eastern, the first offer letter was dated five hours late.
-- **The log names no proposer**: no `creatorTeamId` on any row (only `getPendingTransactions`, own team only, has
-  one). So a proposal is written to BOTH its managers in words true for either ("A deal with GlengarryHearts is on
-  the table. You'd get … and give up …"), and the banner shows to both.
-- **A proposal reaches only its two managers.** The commissioner reads every one; `offerNews` writes a letter only
-  for a reader on the deal, keyed on `signedTeamId`, so neither a reader signed out nor the lent demo team sees one.
-  Claims stay behind Mail's link out: they are still unreadable.
+- **A pending proposal never reaches the log** (8 Oct 2026, rehearsal). With 123's offer to Notemail pending,
+  `getTransactionDetailsHistory {view: "TRADE", executedOnly: false}` answered no rows at all, with `adminMode` and
+  with `includeDeleted`. The log holds a proposal only once it is executed, rejected or cancelled: there is no pending
+  code to wait for, and #338's `OPEN_CODES` went with the log read.
+- **`getPendingTransactions {txType: "TRADE"}` holds it**: `tradeInfoList[]` with `pending: true`, `creatorTeamId`,
+  each move's man and `from`/`to` team, and `usefulInfo` "Proposed: Oct 8, 11:53 AM BST" (the session's zone, no
+  year; `proposedInstant` reads it). It answers for one of the session's own teams at a time and names them all in
+  `myTeamIds`: Craig's account owns nine of rehearsal's ten, and the offer came back for 123 alone. So only offers the
+  commissioner's teams are in can be read, in the real league Craig's own; `readProposals` asks each of `myTeamIds`.
+  Fixture: `league/fantrax/__fixtures__/pendingTrades.json`.
+- **An offer reaches only its two managers, as a letter** (Craig, 8 Oct 2026: *"a mail would be fine"*; #338's
+  banner went). `offerNews` writes one only for a reader on the deal, keyed on `signedTeamId`, never signed out or the
+  lent demo team: "An offer from …", urgent, to the one it waits on, and "Your offer to …" to its maker. Claims stay
+  behind Mail's link out: they are still unreadable.
 
 ### xMins back in the app, points still off (7 Oct 2026)
 

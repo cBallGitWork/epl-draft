@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mapTransactions, stampZone } from "./transactions";
+import { mapTransactions } from "./transactions";
 import type { RawTransactionHistory } from "./transactions";
 import claimDrop from "./__fixtures__/txClaimDrop.json";
 import trade from "./__fixtures__/txTrade.json";
@@ -155,19 +155,5 @@ describe("mapTransactions, on a waiver claim", () => {
       table: { rows: [{ scorer: { scorerId: "070hc", name: "Brian Brobbey" }, transactionCode: "CLAIM", claimType: "WW", executed: true }] },
     };
     expect(mapTransactions(raw, "CLAIM_DROP")[0]?.via).toBe("waivers");
-  });
-});
-
-describe("stampZone", () => {
-  // Anonymously the log is US Eastern; read with a session it is that account's zone.
-  it("reads the zone off the date column's head", () => {
-    expect(stampZone(trade as RawTransactionHistory)).toBe("America/New_York");
-    const session = { table: { header: { cells: [{ key: "date", name: "Date Processed (BST)" }] } } };
-    expect(stampZone(session)).toBe("Europe/London");
-  });
-
-  it("is null for a zone it does not know, or no head", () => {
-    expect(stampZone({ table: { header: { cells: [{ key: "date", name: "Date Processed (CEST)" }] } } })).toBeNull();
-    expect(stampZone({})).toBeNull();
   });
 });

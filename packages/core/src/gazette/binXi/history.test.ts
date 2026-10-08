@@ -10,7 +10,7 @@ const names: Record<string, string> = { t1: "Timbeibs", t2: "Notemail" };
 function drop(fromTeamId: string | null, period: number | null, executed = true): LeagueTransaction {
   return {
     setId: "s", kind: "drop", fantraxId: "a", playerName: "A", position: "D", club: null, clubName: null, via: null,
-    fromTeamId, toTeamId: null, processedAt: null, period, executed, resultCode: null,
+    fromTeamId, toTeamId: null, processedAt: null, period, executed,
   };
 }
 

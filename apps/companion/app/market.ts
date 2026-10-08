@@ -3,14 +3,12 @@ import {
   FantraxError,
   type TradeBlock,
   type TradeProposal,
+  fetchPendingTrades,
   fetchPositionRefs,
   fetchTradeBlocks,
-  fetchTradeProposals,
+  mapPendingTrades,
   mapPositionNames,
   mapTradeBlocks,
-  mapTransactions,
-  openProposals,
-  stampZone,
 } from "@epl/core";
 import { leagueCache } from "./leagueCache";
 import { orRefusal } from "./refusals";
@@ -36,17 +34,23 @@ export const readTradeBlocks = leagueCache("trade-blocks",
   () => [],
 );
 
-/** Every trade proposal still unanswered, league-wide, and the zone the session's log stamps them in: a page shows
- *  one only to the two managers in it. */
+/** Every trade waiting on an answer that the commissioner's own teams are in. Fantrax shows a proposal only to the
+ *  teams in it and answers for one of the session's teams at a time, so each is asked; nobody else's can be read. */
 export const readProposals = leagueCache("trade-proposals",
-  async (): Promise<{ proposals: TradeProposal[]; zone: string | null }> => {
+  async (): Promise<TradeProposal[]> => {
     const cookie = session();
-    if (cookie === null) return NONE;
-    const raw = await orRefusal(fetchTradeProposals(FANTRAX_LEAGUE_ID, cookie));
-    if (raw instanceof FantraxError) return NONE;
-    return { proposals: openProposals(mapTransactions(raw, "TRADE")), zone: stampZone(raw) };
+    if (cookie === null) return [];
+    const first = await orRefusal(fetchPendingTrades(FANTRAX_LEAGUE_ID, cookie));
+    if (first instanceof FantraxError) return [];
+    const others = (first.myTeamIds ?? []).filter((teamId) => teamId !== first.teamId);
+    const rest = await Promise.all(others.map((teamId) => orRefusal(fetchPendingTrades(FANTRAX_LEAGUE_ID, cookie, teamId))));
+    // A trade between two of his teams is in both answers: one letter, not two.
+    const bySet = new Map<string, TradeProposal>();
+    for (const raw of [first, ...rest]) {
+      if (raw instanceof FantraxError) continue;
+      for (const proposal of mapPendingTrades(raw)) bySet.set(proposal.setId, proposal);
+    }
+    return [...bySet.values()];
   },
-  () => NONE,
+  () => [],
 );
-
-const NONE = { proposals: [], zone: null };

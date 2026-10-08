@@ -32,15 +32,11 @@ interface RawTxRow {
   /** How a claim was made: `WW` off waivers, `FA` a free agent, "" on a drop. */
   claimType?: string;
   executed?: boolean;
-  /** `EXECUTED`, `TRADE_CANCELLED`, `TRADE_REJECTED`: how a proposal ended, read with `executedOnly: false`. */
-  resultCode?: string;
 }
 
 export interface RawTransactionHistory {
   table?: {
     caption?: string;
-    /** The date column's `name` carries the zone its stamps are in: "Date Processed (EDT)". */
-    header?: { cells?: { key?: string; name?: string }[] };
     rows?: RawTxRow[];
   };
   paginatedResultSet?: { totalNumResults?: number; totalNumPages?: number };
@@ -142,7 +138,6 @@ export function mapTransactions(
       processedAt: cells.get("date")?.content ?? null,
       period: periodOf(cells),
       executed: row.executed === true,
-      resultCode: row.resultCode ?? null,
     });
   }
 
@@ -168,19 +163,4 @@ export function orderKey(processedAt: string | null): number | null {
   const hours = (Number(hour) % 12) + (meridiem.toLowerCase() === "p" ? 12 : 0);
   const days = (Number(year) * 12 + monthIndex) * 32 + Number(day);
   return (days * 24 + hours) * 60 + Number(minute);
-}
-
-/** The zones Fantrax names in a date column's head, which follow the reader's account. */
-const STAMP_ZONES: Readonly<Record<string, string>> = {
-  EDT: "America/New_York",
-  EST: "America/New_York",
-  BST: "Europe/London",
-  GMT: "Europe/London",
-};
-
-/** The zone a log's stamps are in, off its date column's head; null for one this table does not know. */
-export function stampZone(raw: RawTransactionHistory): string | null {
-  const head = raw.table?.header?.cells?.find((cell) => cell.key === "date")?.name ?? "";
-  const abbreviation = /\(([A-Z]{2,5})\)/.exec(head)?.[1];
-  return abbreviation === undefined ? null : (STAMP_ZONES[abbreviation] ?? null);
 }
