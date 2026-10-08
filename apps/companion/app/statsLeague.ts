@@ -11,7 +11,7 @@ import {
   mapPlayerStats,
   recordedRole,
 } from "@epl/core";
-import { ASSIST_KINDS_REVALIDATE, SETTLED_PERIOD_REVALIDATE } from "./config";
+import { FINAL_REVALIDATE, STATS_PERIODS_REVALIDATE } from "./config";
 import { leagueCache } from "./leagueCache";
 import { orRefusal, refusedAs } from "./refusals";
 import recorded from "../../../data/leagues/recorded.json";
@@ -25,7 +25,7 @@ export const STATS_LEAGUE = recordedRole(recorded, "stats");
 export const periodsOf = unstable_cache(
   (league: string) => refusedAs(fetchLeagueInfo(league), () => [], (raw) => mapLeagueInfo(raw).scoringPeriods),
   ["league-periods"],
-  { revalidate: ASSIST_KINDS_REVALIDATE },
+  { revalidate: STATS_PERIODS_REVALIDATE },
 );
 
 /** One man's season counts in the stats league: his Fantrax id and the columns asked for, as entries for the cache. */
@@ -71,7 +71,7 @@ function readPeriod(league: string, period: number, keys: readonly string[]): Pr
   );
 }
 
-const settledPeriod = leagueCache("stats-league-period", readPeriod, () => null, SETTLED_PERIOD_REVALIDATE);
+const settledPeriod = leagueCache("stats-league-period", readPeriod, () => null, FINAL_REVALIDATE);
 const openPeriod = leagueCache("stats-league-period-open", readPeriod, () => null);
 
 /** Every stats-league period begun by `now`, each its outfielders' lines; null when the league is unnamed or a
