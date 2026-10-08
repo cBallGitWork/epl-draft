@@ -92,7 +92,8 @@ export async function matchdayInput(opts: {
 }): Promise<ReportDayInput | null> {
   const { snapshot, facts, say } = opts;
   const gameweek = snapshot.gameweek;
-  const season = await fetchFixtures().then(mapFixtures).catch(() => snapshot.fixtures);
+  const season = await fetchFixtures().then(mapFixtures).catch(() => null);
+  if (season === null) return say("FPL would not give the season's fixtures, which the table is read from."), null;
   const fixtures = snapshot.fixtures.filter((f) => f.status === "finished" && f.kickoff !== null && opts.pick(f));
   if (fixtures.length === 0) return null;
   const day = londonDayOf(fixtures[0].kickoff!) ?? "";
