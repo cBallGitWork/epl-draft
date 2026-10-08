@@ -8,9 +8,9 @@ import { LEAGUE_CAPTION } from "../titles";
 // The frame every league section wears, empty states included: without the bar and the tabs, a
 // reader who lands here during a Fantrax outage has no way on to Schedule or Matchups.
 
-/** The panel's floor in rows: ten, because the league is ten. `teams` from `getLeagueInfo` wins
- *  when bigger, and the real league reports none until managers join. */
-const PANEL_ROWS = 10;
+/** The fewest rows a league panel opens at, so a page with little on it does not open short: a layout floor, not the
+ *  league's size, which `teams` (from `getLeagueInfo`) passes and which wins when bigger. */
+const PANEL_FLOOR = 10;
 
 export default function LeagueShell({
   title,
@@ -32,7 +32,7 @@ export default function LeagueShell({
       nav={<SectionNav current={current} />}
       caption={title ?? LEAGUE_CAPTION[current]}
       captionOnPhone={current === "matchups"}
-      rows={Math.max(teams ?? 0, PANEL_ROWS)}
+      rows={Math.max(teams ?? 0, PANEL_FLOOR)}
       tight
     >
       {children}
