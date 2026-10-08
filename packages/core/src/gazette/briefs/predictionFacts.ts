@@ -1,5 +1,6 @@
 import { PREDICTIONS } from "../../config";
 import { ordinal } from "../../league/ordinal";
+import { groupedBy } from "../../grouped";
 import type { PredictionCall } from "../predictions/pick";
 import type { PredictionSide, SquadMan } from "../predictions/sides";
 
@@ -106,10 +107,9 @@ function extra(sides: readonly { tag: string; side: PredictionSide }[], fresh: (
  *  coincidences worth a line. Only among the men who matter most, so it is never a roll call. */
 function together(index: number, home: PredictionSide, away: PredictionSide): (string | null)[] {
   const clubmates = [home, away].map((side) => {
-    const byClub = new Map<string, string[]>();
-    for (const man of side.keyMen) if (man.club !== "") byClub.set(man.club, [...(byClub.get(man.club) ?? []), man.name]);
-    const shared = [...byClub].find(([, names]) => names.length > 1);
-    return shared === undefined ? null : `- T${index}-club: ${side.name}'s ${shared[1].join(" and ")} both play for ${shared[0]}.`;
+    const byClub = groupedBy(side.keyMen.filter((man) => man.club !== ""), (man) => man.club);
+    const shared = [...byClub].find(([, men]) => men.length > 1);
+    return shared === undefined ? null : `- T${index}-club: ${side.name}'s ${shared[1].map((man) => man.name).join(" and ")} both play for ${shared[0]}.`;
   });
   // A big game when each man's club is at an extreme in the other's view.
   const meeting = home.keyMen.flatMap((ours) =>

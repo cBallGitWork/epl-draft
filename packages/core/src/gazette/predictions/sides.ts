@@ -1,4 +1,5 @@
 import { PREDICTIONS } from "../../config";
+import { mean } from "../../mean";
 import type { StoryFace } from "../face";
 import type { Availability } from "../../football/playerState";
 import type { PickSide } from "./pick";
@@ -90,7 +91,7 @@ export function predictionSide(input: {
     projected: input.projected,
     bestManDoubt: best !== null && isDoubt(best.availability),
     liverpool: ranked.filter((man) => man.liverpool).length,
-    backLineEase: rated.length === 0 ? null : rated.reduce((sum, ease) => sum + ease, 0) / rated.length,
+    backLineEase: mean(rated),
     keyMen: fresh.slice(0, PREDICTIONS.keyMen),
     best,
     doubts: ranked.slice(0, PREDICTIONS.doubtDepth).filter((man) => man.availability.state !== "fit"),

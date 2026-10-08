@@ -1,4 +1,4 @@
-import { LEAGUE_PROJECTION_PARTS, nextGameweeks, type LeagueProjection, type LeagueProjectionPart } from "@epl/core";
+import { LEAGUE_PROJECTION_PARTS, mean, nextGameweeks, type LeagueProjection, type LeagueProjectionPart } from "@epl/core";
 import { byFigure } from "../../components/league/order";
 import type { Held } from "../holder";
 import type { PoolRow } from "../pool";
@@ -77,14 +77,14 @@ export function projectionRows(
     const weeks = nextGameweeks(player, gameweeks);
     const figures = weeks.map((week) => (week === null ? null : category === "points" ? week.points : week.parts[category]));
     const read = figures.filter((figure): figure is number => figure !== null);
-    const minutes = weeks.flatMap((week) => (week?.minutes == null ? [] : [week.minutes]));
+    const minutes = mean(weeks.flatMap((week) => (week?.minutes == null ? [] : [week.minutes])));
     rows.push({
       ...who,
       code: player.code,
       club: player.club,
       weeks: figures,
       total: read.length === 0 ? null : read.reduce((a, b) => a + b, 0),
-      minutes: minutes.length === 0 ? null : Math.round(minutes.reduce((a, b) => a + b, 0) / minutes.length),
+      minutes: minutes === null ? null : Math.round(minutes),
     });
   }
   return rows;

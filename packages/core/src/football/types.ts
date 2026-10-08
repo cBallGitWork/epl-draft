@@ -163,3 +163,6 @@ export interface FootballSnapshot {
    *  this a failed read shows every player on nought as fact. */
   statsUnavailable: boolean;
 }
+
+/** Men a side has on the pitch: football's rule, not a game's, so a constant. */
+export const ON_THE_PITCH = 11;

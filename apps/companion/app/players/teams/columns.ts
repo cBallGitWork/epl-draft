@@ -1,4 +1,4 @@
-import type { FigureKind, PlClubSeason, SeasonTotals } from "@epl/core";
+import { ON_THE_PITCH, type FigureKind, type PlClubSeason, type SeasonTotals } from "@epl/core";
 import { byFigure } from "../../components/league/order";
 import type { TeamRow } from "./teamRows";
 
@@ -34,7 +34,7 @@ export const TEAM_COLUMNS: readonly TeamColumn[] = [
   { key: "xa", group: "Chances", head: "xA", title: "Expected assists, the squad's", of: squad("expectedAssists"), kind: "expected", rank: "high" },
   { key: "gc", group: "Defence", head: "GC", title: "Goals conceded", of: opta("goalsConceded"), rank: "low" },
   // FPL counts each chance against once per man on the pitch, so eleven share one.
-  { key: "xgc", group: "Defence", head: "xGC", title: "Expected goals conceded", of: squad("expectedGoalsConceded", 11), kind: "expected", rank: "low" },
+  { key: "xgc", group: "Defence", head: "xGC", title: "Expected goals conceded", of: squad("expectedGoalsConceded", ON_THE_PITCH), kind: "expected", rank: "low" },
   { key: "cs", group: "Defence", head: "CS", title: "Clean sheets", of: opta("cleanSheets"), rank: "high" },
   { key: "sha", group: "Defence", head: "ShA", title: "Shots conceded", of: opta("shotsConceded"), rank: "low" },
   { key: "tk", group: "Defence", head: "Tk", title: "Tackles", of: opta("tackles"), rank: "high" },

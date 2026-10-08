@@ -29,6 +29,12 @@ export function fixed(value: number, kind: FigureKind): string {
   return value.toLocaleString("en-GB", { minimumFractionDigits: places, maximumFractionDigits: places });
 }
 
+/** A figure held to `places` decimals, so it orders as it prints: `rounded(7.25, 1)` is 7.3. */
+export function rounded(value: number, places: number): number {
+  const scale = 10 ** places;
+  return Math.round(value * scale) / scale;
+}
+
 /** A player's name for a list on a phone: the forename as an initial, `K. Dewsbury-Hall`; reads Fantrax's `Gross, Pascal` too. */
 export function initialled(name: string): string {
   const trimmed = name.trim();

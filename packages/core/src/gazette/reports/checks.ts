@@ -1,4 +1,5 @@
 import { REPORTS } from "../../config";
+import { ON_THE_PITCH } from "../../football/types";
 import { faultLog, type Fault, type Report } from "../predictions/checks";
 import { mentionAt as mentionExact, numbersIn, sentences, wordCount } from "../predictions/prose";
 import type { MatchDesk } from "./desk";
@@ -111,7 +112,7 @@ function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx:
   // Besides the block's own figures: the goal total ("an eight-goal match"), and ten or nine men after a red card.
   const total = (desk.match.fixture.homeScore ?? 0) + (desk.match.fixture.awayScore ?? 0);
   const reds = desk.events.filter((e) => isDismissal(e.kind)).length;
-  const allowed = new Set([...numbersIn(block), 0, 90, 45, ctx.gameweek, total, ...(reds > 0 ? [10, 11 - reds] : [])]);
+  const allowed = new Set([...numbersIn(block), 0, 90, 45, ctx.gameweek, total, ...(reds > 0 ? [ON_THE_PITCH - 1, ON_THE_PITCH - reds] : [])]);
   for (const n of numbersIn(prose.replace(SCORE, " "))) if (!allowed.has(n)) fault(section, "a figure the facts do not give", "hard", String(n));
 
   const events = desk.events.filter(isGoal);

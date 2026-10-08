@@ -1,3 +1,4 @@
+import { rounded } from "../../format";
 import type { LivePlayerPoints, LiveSquadPoints, LiveTeamScore, TeamProjection } from "../points";
 
 // Fantrax's live scoring: cookieless, typed, every team in one call (`matchupId` filters nothing); their points, not ours.
@@ -104,7 +105,7 @@ export function mapProjectedTotals(raw: RawLiveScoring): TeamProjection[] {
       any = true;
     }
     // Rounded to a tenth to drop floating-point noise.
-    return [{ teamId, points: any ? Math.round(total * 10) / 10 : null }];
+    return [{ teamId, points: any ? rounded(total, 1) : null }];
   });
 }
 

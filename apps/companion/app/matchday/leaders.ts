@@ -1,5 +1,5 @@
 import type { FootballPlayer, FootballSnapshot, PlayerMatchStats, PlayerOwner, RatingStore } from "@epl/core";
-import { crestUrl } from "@epl/core";
+import { crestUrl, mean, rounded } from "@epl/core";
 
 // This gameweek's leaders: Fantrax's points for the men it priced, our marks as filed, and FPL's
 // per-match measures for everyone who played, each joined to whoever holds him. Pure; the page reads.
@@ -15,8 +15,6 @@ export interface Leader {
   mine: boolean;
   value: number;
 }
-
-const oneDecimal = (n: number) => Math.round(n * 10) / 10;
 
 export function gameweekLeaders(opts: {
   snapshot: Pick<FootballSnapshot, "clubs" | "players" | "fixtures">;
@@ -69,8 +67,8 @@ export function gameweekLeaders(opts: {
   const rating = new Map<FootballPlayer, number>();
   for (const [code, matches] of Object.entries(opts.marks)) {
     const player = byCode.get(Number(code));
-    const given = Object.entries(matches).flatMap(([fixture, mark]) => (thisRound.has(fixture) && mark !== null ? [mark] : []));
-    if (player !== undefined && given.length > 0) rating.set(player, oneDecimal(given.reduce((a, b) => a + b, 0) / given.length));
+    const average = mean(Object.entries(matches).flatMap(([fixture, mark]) => (thisRound.has(fixture) && mark !== null ? [mark] : [])));
+    if (player !== undefined && average !== null) rating.set(player, rounded(average, 1));
   }
 
   return {
