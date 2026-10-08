@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { type FormEvent, type ReactNode, useState } from "react";
 import { SELECT } from "./ButtonLink";
+import { formHref } from "./formHref";
 import { SUBMIT } from "@/app/desk";
 
 // One URL parameter chosen from a list: every GET-form select in the app.
@@ -40,12 +41,7 @@ export default function QuerySelect({
   function pick(event: FormEvent<HTMLSelectElement>) {
     const select = event.currentTarget;
     if (select.form === null) return;
-    const next = new URLSearchParams();
-    for (const [field, entry] of new FormData(select.form)) {
-      if (typeof entry === "string" && entry.trim() !== "") next.set(field, entry.trim());
-    }
-    const search = next.toString();
-    const href = search === "" ? action : `${action}?${search}`;
+    const href = formHref(action, new FormData(select.form));
     if (!follow(href)) return;
     setAsked({ from: value, to: select.value });
     router.push(href, { scroll: false });
