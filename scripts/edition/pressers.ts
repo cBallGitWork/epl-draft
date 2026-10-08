@@ -1,4 +1,4 @@
-import { MS_PER_DAY, fullClubName, instantOf, normalizeName, owners, pressers, type Club, type Fixture, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
+import { MS_PER_DAY, availabilityOf, type FootballPlayer, fullClubName, instantOf, normalizeName, owners, pressers, type Club, type Fixture, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
 import type { RosteredTeam, StoryFixture } from "@epl/core";
 import { roundTies } from "./round";
 import { readIntel } from "../intel";
@@ -19,7 +19,7 @@ function byClubId(clubs: ReadonlyMap<number, Club>): Map<number, Club> {
 
 /** What the Team Sheet needs of a footballer: to name him, to place him at a
  *  club, and to know when his availability last moved. */
-export interface PresserSquadMan {
+export interface PresserSquadMan extends Pick<FootballPlayer, "status" | "news" | "chanceOfPlaying"> {
   code: number;
   name: string;
   fullName: string;
@@ -98,6 +98,7 @@ export function presserLines(
 
     return [{
       ...signal,
+      tag: tagOf(signal.tag, player),
       playerName: display(player),
       clubName: fullClubName(club.name),
       // Null when nobody in the league holds him, which is no longer a reason
@@ -165,6 +166,12 @@ export function presserQuotes(clubs: ReadonlyMap<number, Club>): (PresserQuote &
  *  days: a note from the day before is the same story, one from last week is the
  *  standing condition a reader already knows. */
 const FRESH_DAYS = 2;
+
+/** The article's doubt, unless FPL already has him out: "Daniel James will miss the Arsenal game" was a quote the
+ *  import does not read, and FPL had him injured until 18 Oct. */
+export function tagOf(tag: string, player: PresserSquadMan): string {
+  return tag === "injury_scare" && availabilityOf(player).out ? "ruled_out" : tag;
+}
 
 /** Whether a man is news at this conference: declared fit, which no standing absence can be, or his note moved. */
 export function isNews(tag: string, newsAdded: string | null, said: string): boolean {

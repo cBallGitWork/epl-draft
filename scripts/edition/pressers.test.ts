@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { PresserLine, PresserQuote } from "@epl/core";
-import { display, isNews } from "./pressers";
+import { display, isNews, tagOf, type PresserSquadMan } from "./pressers";
 import { presserDays, presserEdition, withStillOut } from "./presserWeek";
 
 // Every row is a real 26/27 player, read out of the FPL snapshot on 18 Sep 2026.
@@ -142,5 +142,20 @@ describe("withStillOut", () => {
     const bulleted = withStillOut([{ club: "Leeds United", code: 2, men: [{ name: "Joe Rodon" }] }], lines) as { stillOut: unknown }[];
     expect(bulleted[0].stillOut).toEqual([{ name: "Mateo Joseph" }]);
     expect(withStillOut([{ club: "Leeds United", code: null }], lines)).toEqual([{ club: "Leeds United", code: null }]);
+  });
+});
+
+describe("tagOf", () => {
+  const man = (status: string, chanceOfPlaying: number | null): PresserSquadMan =>
+    ({ code: 200617, name: "James", fullName: "Daniel James", clubId: 11, newsAdded: null, status, news: "Back injury - Expected back 18 Oct", chanceOfPlaying });
+
+  it("prints a doubt FPL has out as out", () => {
+    // Daniel James, 8 Oct: the article's bracket made him a doubt; Farke said he would miss the game.
+    expect(tagOf("injury_scare", man("i", 0))).toBe("ruled_out");
+  });
+
+  it("leaves a real doubt, and every other reading, as the article had it", () => {
+    expect(tagOf("injury_scare", man("d", 75))).toBe("injury_scare");
+    expect(tagOf("available", man("i", 0))).toBe("available");
   });
 });
