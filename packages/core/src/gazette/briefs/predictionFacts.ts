@@ -3,6 +3,7 @@ import { ordinal } from "../../league/ordinal";
 import { groupedBy } from "../../grouped";
 import type { PredictionCall } from "../predictions/pick";
 import type { PredictionSide, SquadMan } from "../predictions/sides";
+import { isBack } from "../sheets/sheet";
 
 // One tie's facts for Lawro, worded and ranked. Squad-level only, and no figure of ours: the
 // order of a side's men is our model's reading and is never printed.
@@ -80,7 +81,7 @@ function streak(man: SquadMan): string | null {
   if (games.every((game) => game.minutes === 0)) return man.availability.state === "fit" ? "is fit again after missing his last two games" : null;
   if (last.minutes === 0 && man.availability.state === "fit") return "missed last week and is fit again";
   if (games.every((game) => game.goals > 0)) return "scored in each of his last two games";
-  const back = man.positions.some((position) => position === "G" || position === "D");
+  const back = man.positions.some(isBack);
   if (back && games.every((game) => game.cleanSheets > 0)) return "kept a clean sheet in each of his last two games";
   if (sum("goals") + sum("assists") >= 2) return `has ${count(sum("goals"), "goal")} and ${count(sum("assists"), "assist")} in his last two games`;
   if (played && !back && sum("goals") + sum("assists") === 0) return "has gone quiet, no goal and no assist in his last two games";

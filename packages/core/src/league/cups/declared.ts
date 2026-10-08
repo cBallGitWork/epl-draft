@@ -1,5 +1,5 @@
-// The league's two cups, as Craig set them on 27 Sep. Fantrax runs no cups; it runs the playoff, which is
-// read from `getLeagueInfo` and never declared here.
+// The league's own competitions, as Craig set them: two cups (27 Sep) and the lines on its table. Fantrax runs none of
+// them; it runs the playoff, which is read from `getLeagueInfo` and never declared here.
 
 export interface GroupStage {
   groups: number;
@@ -53,3 +53,7 @@ export const CUPS: readonly Cup[] = [
     knockout: { elimination: "single", finalGameweek: 30 },
   },
 ];
+
+/** The table's lines that are the league's own: first place's prize, how many play for the last semi place (the last to
+ *  qualify and the first below), and the Plate's last place, which the play-in's loser joins. */
+export const TABLE_RULES = { top: "£30 · picks semi opponent", playIn: 2, plateThrough: 8 } as const;

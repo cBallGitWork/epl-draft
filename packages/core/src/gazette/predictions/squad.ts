@@ -4,6 +4,7 @@ import type { PlannerRow, StrengthPlaces } from "../../football/intel/strength";
 import { availabilityOf } from "../../football/playerState";
 import type { Club } from "../../football/types";
 import { isResolved, type RosteredTeam } from "../../join/roster";
+import { isBack } from "../sheets/sheet";
 import type { RecentGame, SquadMan } from "./sides";
 
 // A manager's squad joined for Lawro: every man he holds, whatever slot he fills. The slot is the
@@ -32,7 +33,7 @@ const EXTREME = 3;
 export function squadMen(team: RosteredTeam, join: SquadJoin): SquadMan[] {
   return team.players.filter(isResolved).map(({ slot, player }) => {
     const positions = join.eligible.get(slot.fantraxId) ?? [];
-    const back = positions.some((position) => position === "G" || position === "D");
+    const back = positions.some(isBack);
     const row = (back ? join.defence : join.attack).get(player.clubId);
     const club = join.clubs.get(player.clubId);
     const projection = join.projections.get(player.code);
