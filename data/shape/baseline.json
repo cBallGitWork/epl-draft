@@ -33,5 +33,20 @@
     "read": "getTransactionDetailsHistory-TRADE",
     "path": "table.emptyTableMsg:string",
     "why": "The real league made 8 trades during its draft, so its table has rows and Fantrax drops the empty-table message the rehearsal's empty table carries. Nothing reads `emptyTableMsg`. Audited 5 Oct 2026."
+  },
+  {
+    "read": "fxpa getStandings (page)",
+    "path": "tableList[].rows[].cells[].id:string",
+    "why": "The page's round tables (\"Gameweek 5\", \"Gameweek 4\") hold the matchups' team cells, and the real league's are empty until it has played a period (0 rows each, 8 Oct 2026), while the rehearsal league's are full. Paths pool across every table on the page, so the standings table's rows, which never carry these cells, make them read as missing. mapStandings reads the team from the pinned cells of the standings table only. Settles once GW6 is played."
+  },
+  {
+    "read": "fxpa getStandings (page)",
+    "path": "tableList[].rows[].cells[].leagueId:string",
+    "why": "The page's round tables (\"Gameweek 5\", \"Gameweek 4\") hold the matchups' team cells, and the real league's are empty until it has played a period (0 rows each, 8 Oct 2026), while the rehearsal league's are full. Paths pool across every table on the page, so the standings table's rows, which never carry these cells, make them read as missing. mapStandings reads the team from the pinned cells of the standings table only. Settles once GW6 is played."
+  },
+  {
+    "read": "fxpa getStandings (page)",
+    "path": "tableList[].rows[].cells[].teamId:string",
+    "why": "The page's round tables (\"Gameweek 5\", \"Gameweek 4\") hold the matchups' team cells, and the real league's are empty until it has played a period (0 rows each, 8 Oct 2026), while the rehearsal league's are full. Paths pool across every table on the page, so the standings table's rows, which never carry these cells, make them read as missing. mapStandings reads the team from the pinned cells of the standings table only. Settles once GW6 is played."
   }
 ]
