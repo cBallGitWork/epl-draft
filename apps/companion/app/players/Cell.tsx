@@ -8,7 +8,7 @@ import { standoutInk, type StandoutCut } from "../components/league/standout";
 import { ANALYSIS, playerHref } from "./routes";
 import type { PlayersQuery } from "./query";
 import { ROW_LINK } from "../components/league/TableCells";
-import { FIGURE, Holder, LEAD_WIDTH, LeadFace } from "./BoardRow";
+import { Holder, LEAD_WIDTH, LeadFace, TIGHT_FIGURE } from "./BoardRow";
 import StateBox from "../components/football/StateBox";
 
 // One row of the pool board: the lead (crest, name, and who holds him) and the figures beside it.
@@ -78,10 +78,10 @@ export default function Cell({
   cut: StandoutCut | undefined;
 }) {
   const value = figureOf(column, row, stats, rated);
-  if (value === null) return <td className={`${FIGURE} text-faint`}>{DASH}</td>;
+  if (value === null) return <td className={`${TIGHT_FIGURE} text-faint`}>{DASH}</td>;
   if (column.kind === "signed") {
     return (
-      <td className={FIGURE}>
+      <td className={TIGHT_FIGURE}>
         <Trend value={Number(value)} />
       </td>
     );
@@ -90,9 +90,9 @@ export default function Cell({
   const printed = rated && column.rate === true ? fixed(figure, "perNinety") : column.places ? fixed(figure, column.places) : String(value);
   const text = column.kind === "percent" ? `${printed}%` : printed;
   // Zero is a stat, and a quiet one.
-  if (figure === 0) return <td className={`${FIGURE} text-faint`}>{text}</td>;
+  if (figure === 0) return <td className={`${TIGHT_FIGURE} text-faint`}>{text}</td>;
   const ink = column.derived ? "text-info" : column.mark ? standoutInk(figure, cut, column.mark) : "";
-  return <td className={`${FIGURE} ${ink}`}>{text}</td>;
+  return <td className={`${TIGHT_FIGURE} ${ink}`}>{text}</td>;
 }
 
 /** Which way ownership moved, said in the sign as well as the colour. Nought is drawn quiet. */

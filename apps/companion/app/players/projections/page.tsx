@@ -13,6 +13,7 @@ import { leaguePositionLabel } from "../../positions";
 import { footballNow, seasonFixtures } from "../../football";
 import { intelLeagueProjections } from "../../intel";
 import { PROJECTIONS, PROJECTIONS_SHOWN } from "../routes";
+import { QUIET_NOTE } from "@/app/desk";
 import { notFound } from "next/navigation";
 import {
   PROJECTION_CATEGORIES,
@@ -116,7 +117,7 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
       )}
 
       {capped.length < shown.length ? (
-        <p className="text-2xs text-faint">
+        <p className={QUIET_NOTE}>
           Showing the first {capped.length}.{" "}
           <Link href={boardHref(query, { all: "1" }, PROJECTIONS)} className="font-bold text-accent underline">
             Show all {shown.length}

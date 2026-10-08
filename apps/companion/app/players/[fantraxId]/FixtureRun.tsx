@@ -4,6 +4,7 @@ import { fdrStep } from "../../components/football/fdr";
 import { standoutInk } from "../../components/league/standout";
 import { DASH, fixed, ordinal } from "@epl/core";
 import type { ProjectedWeek } from "./grid";
+import { QUIET_FIGURE } from "@/app/desk";
 
 // What is coming, as a run: FPL's difficulty on each block, under it the sister model's xMins for that gameweek, and,
 // while projections are on, its points in our league's scoring and his place in his group, lit on the pool board's
@@ -36,7 +37,7 @@ export default function FixtureRun({
           const step = fdrStep(against.difficulty);
           return (
             <li key={against.fixture.id} className="flex min-w-0 flex-1 flex-col gap-1">
-              <span className="numeric text-center text-2xs text-faint">
+              <span className={`${QUIET_FIGURE} text-center`}>
                 {/* A rearranged match can lose its round; it keeps its place in the run and says so. */}
                 {gw === null ? DASH : `GW${gw}`}
               </span>

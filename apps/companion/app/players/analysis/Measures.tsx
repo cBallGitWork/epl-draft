@@ -31,7 +31,7 @@ export default function Measures({
         <tbody>
           {rows.map((row) => (
             <tr key={`${row.name}|${row.from}`} className="border-b border-line/60 last:border-b-0">
-              <td className={`${FIGURE} pr-3 text-right ${loudness(row.a, row.b)}`}>{row.a ?? DASH}</td>
+              <td className={`${LEDGER_FIGURE} pr-3 text-right ${loudness(row.a, row.b)}`}>{row.a ?? DASH}</td>
               {/* The measure's name, its derivation in the `title` (DESIGN §7's provenance as a tooltip). */}
               <td
                 title={row.from}
@@ -40,7 +40,7 @@ export default function Measures({
                 {row.name}
               </td>
               {alone ? null : (
-                <td className={`${FIGURE} pl-3 text-left ${loudness(row.b, row.a)}`}>{row.b ?? DASH}</td>
+                <td className={`${LEDGER_FIGURE} pl-3 text-left ${loudness(row.b, row.a)}`}>{row.b ?? DASH}</td>
               )}
             </tr>
           ))}
@@ -51,7 +51,7 @@ export default function Measures({
 }
 
 /** A step above the row default: DESIGN §6's fifth recorded exception, a ledger of two men's figures and nothing else. */
-const FIGURE = "numeric cm-row py-1 text-base lg:text-lg";
+const LEDGER_FIGURE = "numeric cm-row py-1 text-base lg:text-lg";
 
 /** One measure, as both of them have it. */
 interface Row {

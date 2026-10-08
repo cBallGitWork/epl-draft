@@ -4,7 +4,7 @@ import { DASH, ordinal, toFantraxClubCode, type PlannerCell, type PlannerRow, ty
 import ClubLabel from "../../components/football/ClubLabel";
 import { easeGround } from "../../components/football/ease";
 import { HeadRow, MUTE, PlateHead, PRESSED_PLATE, SortArrow } from "../../components/league/TableHeads";
-import { HEAD_CELL, PINNED_NAME, ROW_RULE } from "@/app/desk";
+import { BOARD, HEAD_CELL, PINNED_NAME, ROW_HEAD_CELL, ROW_RULE } from "@/app/desk";
 import { POOL } from "../routes";
 
 // Every club's next six opponents, a cell each on the ease ramp, easiest run first. Each names the venue, (H) or (A):
@@ -30,7 +30,7 @@ export default function PlannerBoard({
 }) {
   return (
     <ScrollBoard className="bg-surface">
-      <table className="w-full min-w-[21.5rem] table-fixed border-collapse text-sm">
+      <table className={`${BOARD} min-w-[21.5rem] table-fixed`}>
         <colgroup>
           <col className="w-20" />
           {gameweeks.map((gameweek) => (
@@ -59,7 +59,7 @@ export default function PlannerBoard({
         <tbody>
           {rows.map((row) => (
             <tr key={row.club.code} className={ROW_RULE}>
-              <th scope="row" className={`p-0 text-left font-normal ${PIN_CLUB}`}>
+              <th scope="row" className={`${ROW_HEAD_CELL} ${PIN_CLUB}`}>
                 <Link
                   href={`${POOL}?club=${toFantraxClubCode(row.club.shortName)}&pos=${POSITIONS[view]}`}
                   title={`${row.club.name}: its ${view === "attack" ? "forwards and midfielders" : "defenders and keepers"} on the board`}

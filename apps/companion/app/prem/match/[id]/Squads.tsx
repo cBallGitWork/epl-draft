@@ -3,7 +3,7 @@ import { clubColoursOf, inkOn, DASH } from "@epl/core";
 import PositionTile from "../../../components/league/PositionTile";
 import { clubIndex } from "../../../components/football/clubIndex";
 import { intelSquads } from "../../../intel";
-import { BOARD, PANEL_FLUSH, ROW_NAME, ROW_RULE, phoneShows, SMALL_CAPS } from "@/app/desk";
+import { BOARD, PANEL_FLUSH, QUIET_FIGURE, ROW_NAME, ROW_RULE, phoneShows, SMALL_CAPS } from "@/app/desk";
 import { fantraxPositions, type LeagueOpinion } from "../../leagueOpinions";
 import { MaybeCard } from "./PlayerCardButton";
 import OwnedBy from "./OwnedBy";
@@ -98,7 +98,7 @@ function Side({
                   </MaybeCard>
                 </td>
                 {/* His real position; a dash for the men the exporter sends as null rather than take FPL's. */}
-                <td className="numeric w-10 px-1.5 text-right text-2xs text-faint">{intel?.position ?? DASH}</td>
+                <td className={`${QUIET_FIGURE} w-10 px-1.5 text-right`}>{intel?.position ?? DASH}</td>
               </tr>
             );
           })}

@@ -4,7 +4,7 @@ import { boardHref, chosen, filterHref, isChosen } from "./query";
 import type { QueryOption } from "../components/shell/QuerySelect";
 import type { PlayersQuery } from "./query";
 import { STATUS, STATUS_CHIP } from "./status";
-import { SMALL_CAPS } from "@/app/desk";
+import { SMALL_CAPS, heldPlate } from "@/app/desk";
 
 // The pieces `BoardBar` arranges: the stat-group strip, the status chips, the figure chip, the badge that counts
 // what is on, and the shapes they are drawn in. `BoardBar` decides where a control goes at a width; each here decides
@@ -50,9 +50,8 @@ export function Carried({
 const PLATE =
   `flex shrink-0 items-center justify-center gap-1 whitespace-nowrap min-h-11 px-2 ${SMALL_CAPS} lg:min-h-9 lg:px-2.5`;
 
-/** A plate you press, at rest: the `Filter` link, an unpressed `Chip` and the pick field's button. Not the pressed
- *  state: `cm-bevel-pressed` is a plate with no hover, because a held thing does not lift. */
-export const PRESSABLE = `cm-bevel hover:brightness-110 ${PLATE}`;
+/** A plate you press, at rest: the `Filter` link, an unpressed `Chip` and the pick field's button. */
+export const PRESSABLE = `${heldPlate(false)} ${PLATE}`;
 
 /** Which columns are on the board: the one strip that stays blue, at the control floor (`cm-tab-quiet`). */
 export function Plates({
@@ -176,7 +175,7 @@ export function Chip({
       scroll={false}
       aria-pressed={on}
       title={title}
-      className={`min-w-11 ${on ? `cm-bevel-pressed ${PLATE}` : PRESSABLE}`}
+      className={`min-w-11 ${heldPlate(on)} ${PLATE}`}
     >
       {/* `aria-pressed` already says it to a screen reader. */}
       {on ? (

@@ -1,4 +1,5 @@
 import LeagueCrest from "./LeagueCrest";
+import { QUIET_FIGURE } from "@/app/desk";
 
 // A page that cannot show what it exists to show, saying why; most are ordinary states, like a league not yet drafted.
 // `code` is the provider's tell, kept on screen so a screenshot says which read failed.
@@ -20,7 +21,7 @@ export default function Nothing({
         <p className="mx-auto max-w-xs text-sm text-muted">{children}</p>
       </div>
       {code ? (
-        <span className="numeric border border-line px-2 py-1 text-2xs text-faint">
+        <span className={`${QUIET_FIGURE} border border-line px-2 py-1`}>
           {code}
         </span>
       ) : null}

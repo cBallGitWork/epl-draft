@@ -2,6 +2,7 @@ import type { Club, FootballPlayer, IntelStarter } from "@epl/core";
 import PitchMarker from "../../../components/league/PitchMarker";
 import PitchRows from "../../../components/league/PitchRows";
 import { DASH } from "@epl/core";
+import { PITCH_CAPTION } from "@/app/desk";
 
 // A club's predicted eleven on the fantasy pitch's own components (Craig, 3 Sep 2026).
 // Rows arrive goal-first and pass straight through, keeper at the top (Craig, 10 Sep 2026).
@@ -39,7 +40,7 @@ export default function Eleven({
   return (
     <div className="flex flex-col gap-1">
       {/* Without "Predicted" and the match it is for, the pitch reads as a team sheet (Craig, 3 Sep 2026). */}
-      <p className="cm-title text-center font-chrome text-2xs font-bold text-accent lg:text-sm">
+      <p className={`cm-title ${PITCH_CAPTION}`}>
         Predicted XI{against === null ? "" : ` ${against}`}
         {updated === null ? "" : ` (last updated ${updated})`}
       </p>

@@ -10,7 +10,7 @@ import { SMALL_CAPS } from "@/app/desk";
 // One scorer's line and one other man's line on the scoresheet, set at CM's size (see `Scoresheet`).
 
 const NAME = "font-chrome text-lg font-bold lg:text-3xl";
-const FIGURE = "numeric shrink-0 font-bold text-accent text-lg lg:text-3xl";
+const SCORER_FIGURE = "numeric shrink-0 font-bold text-accent text-lg lg:text-3xl";
 /** The assister's minutes: the scorer's ink and column, at the assister's size. */
 const ASSIST_FIGURE = "numeric shrink-0 font-bold text-accent text-sm lg:text-xl";
 
@@ -106,7 +106,7 @@ export function Man({
         {note === null ? null : <span className={`${SMALL_CAPS} ml-1.5 text-bad`}>{note}</span>}
         <OwnedBy owner={owner} size="scoresheet" className="ml-1.5" />
       </span>
-      <span className={FIGURE}>{figure}</span>
+      <span className={SCORER_FIGURE}>{figure}</span>
     </MaybeCard>
   );
 }

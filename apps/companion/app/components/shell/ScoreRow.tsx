@@ -3,6 +3,7 @@ import Link from "@/app/components/shell/Link";
 import type { ReactNode } from "react";
 import { INDEX_WIDTH, ROW_NAME } from "@/app/desk";
 import { ordinal } from "@epl/core";
+import { yoursMark } from "@/app/mine";
 
 // Championship Manager's results row: an index block at each end holding the side's league position, and the
 // names and score in fixed columns so every name and colon lines up down a panel. `matchday/desk/Rows` stays
@@ -46,11 +47,10 @@ export default function ScoreRow({
   /** Where the whole row leads; a row without one is not a control and takes no tap floor. */
   href?: string;
 }) {
+  const yours = home.mine === true || away.mine === true;
   const row = (
     <div
-      className={`grid min-h-11 items-stretch lg:min-h-7 ${GRID} ${
-        home.mine === true || away.mine === true ? "border-l-4 border-l-accent" : ""
-      }`}
+      className={`grid min-h-11 items-stretch lg:min-h-7 ${GRID} ${yoursMark(yours)}`}
     >
       <Block side={home} />
       <Name side={home} at="home" />

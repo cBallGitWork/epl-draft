@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "@/app/components/shell/Link";
-import { HEAD_CELL } from "@/app/desk";
+import { HEAD_CELL, heldPlate } from "@/app/desk";
 import { TILE_WIDTH } from "./PositionTile";
 
 // The one head strip every table in the app prints: `HeadRow`'s type, 28px bevelled plates, a centred word over
@@ -81,9 +81,8 @@ export function SortHead({
   /** Nearly unpadded under a thumb, so a narrow column is set by its figures, not its head. */
   compact?: boolean;
 } & ({ href: string; onSort?: never } | { onSort: () => void; href?: never })) {
-  const plate = `flex items-center gap-0.5 whitespace-nowrap ${compact ? COMPACT : "h-7 px-1.5"} ${JUSTIFY[align]} ${
-    sorted === undefined ? "cm-bevel hover:brightness-110" : "cm-bevel-pressed"
-  }`;
+  const held = heldPlate(sorted !== undefined);
+  const plate = `flex items-center gap-0.5 whitespace-nowrap ${compact ? COMPACT : "h-7 px-1.5"} ${JUSTIFY[align]} ${held}`;
   const face = (
     <>
       {mute ? <span className={MUTE}>{label}</span> : label}
