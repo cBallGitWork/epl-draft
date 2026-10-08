@@ -165,6 +165,14 @@ describe("checkLawro, the column's shape", () => {
     expect(found(checks([]), "a call with no reason")).toEqual([]);
   });
 
+  it("sends back a back line with nobody in it, and passes one with a man named", () => {
+    // 8 Oct: "their back line goes to Sunderland", and a back line is four or five men.
+    const nobody = SAMPLE[0][1].replace("Bayer Neverlusen signed Pym and Kettle on Wednesday.", "Bayer Neverlusen have a back line that goes to Arsenal.");
+    expect(found(checks([["rs-bn", nobody]]), "a back line with nobody in it")).toEqual(["rs-bn"]);
+    const named = SAMPLE[0][1].replace("Bayer Neverlusen signed Pym and Kettle on Wednesday.", "Bayer Neverlusen have Pym in a back line that goes to Arsenal.");
+    expect(found(checks([["rs-bn", named]], { names: [...Object.values(TEAMS), "Pym"] }), "a back line with nobody in it")).toEqual([]);
+  });
+
   it("sends back a derby tie that never names its derby, and men he never names", () => {
     const derbies = new Map([["rs-bn", ["Steve Clarke Classic"]]]);
     expect(found(checks([], { derbies }), "the derby not named")).toEqual(["rs-bn"]);
