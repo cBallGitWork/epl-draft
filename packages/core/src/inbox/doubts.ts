@@ -35,6 +35,8 @@ export function availabilityNews(
     /** A team's name by id, injected because this module may not hold the league. */
     name: (teamId: string) => string | null;
   },
+  /** The last lock passed, when that gameweek became the next; null before the first. */
+  opened: string | null = null,
 ): InboxItem[] {
   return notes.flatMap((note) => {
     // A signed-out reader keeps the whole league's: he has no team to filter to, and the list is public news.
@@ -54,6 +56,8 @@ export function availabilityNews(
     if (note.teamId === null) return [];
 
     const who = squads.name(note.teamId) ?? "Another manager";
+    // A note filed before the last lock was written for an earlier gameweek, so its letter names none.
+    const filedFor = note.newsAt !== null && opened !== null && Date.parse(note.newsAt) < Date.parse(opened) ? null : gameweek;
 
     return [
       {
@@ -63,8 +67,8 @@ export function availabilityNews(
         // FPL's stamp for the line; null falls back to the round.
         at: note.newsAt,
         gameweek,
-        headline: headline(note, gameweek),
-        body: doubtLetter(note, gameweek, side, who),
+        headline: headline(note, filedFor),
+        body: doubtLetter(note, filedFor, side, who),
         from: doubtFrom(note, side, who),
         about: doubtAbout(side, who, gameweek),
         teamId: note.teamId,

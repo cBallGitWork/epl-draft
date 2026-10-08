@@ -5,6 +5,7 @@ import {
   type LeagueTeam,
   openingGameweek,
   periodGameweeks,
+  periodLock,
   availabilityNews,
   availability,
   blockNews,
@@ -13,6 +14,7 @@ import {
   headToHead,
   inboxItems,
   isResolved,
+  lastLockedPeriod,
   minutesNews,
   nextDeadline,
   offerNews,
@@ -131,7 +133,12 @@ export async function readInbox(): Promise<Inbox> {
         yours,
       }),
       // The gameweek he can still pick for; never `?? gameweek`, which is the one already played.
-      availabilityNews(doubts, next?.gameweek ?? null, { mine, opponent, name: nameOf }),
+      availabilityNews(
+        doubts,
+        next?.gameweek ?? null,
+        { mine, opponent, name: nameOf },
+        drafted?.info == null ? null : lastLock(drafted.info.rosterPeriods, kickoffs),
+      ),
     ),
     names,
     mine,
@@ -164,4 +171,10 @@ function lock(
   return gameweek === undefined
     ? null
     : { period: next.period, gameweek, locksAt: next.locksAt };
+}
+
+/** The last lock passed, when the next gameweek became the next; null before the first. */
+function lastLock(periods: readonly LeaguePeriod[], kickoffs: readonly GameweekKickoff[]): string | null {
+  const period = lastLockedPeriod([...periods], kickoffs, now().toISOString());
+  return periodLock(periods.find((each) => each.number === period), kickoffs);
 }
