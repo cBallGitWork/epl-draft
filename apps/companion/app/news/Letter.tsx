@@ -40,8 +40,8 @@ function Field({
     <div className="flex items-baseline gap-2">
       <span className={`${LABEL} w-12 shrink-0 lg:w-16`}>{label}</span>
       <Tag
-        className={`min-w-0 flex-1 text-sm lg:text-base ${
-          accent ? "cm-title font-chrome font-bold text-accent lg:text-lg" : "text-ink"
+        className={`min-w-0 flex-1 ${
+          accent ? "cm-title font-chrome text-sm font-bold text-accent lg:text-lg" : "text-sm text-ink lg:text-base"
         }`}
       >
         {children}
