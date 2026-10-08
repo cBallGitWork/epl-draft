@@ -20,12 +20,21 @@ const BAND: Record<Rank, string> = {
   tie: "h-24 w-24 shrink-0 rounded-none",
 };
 
+/** Where he stands in the band: on its floor, filling a portrait, or a tie's head and shoulders from the top. */
+const ALIGN: Record<Rank, string> = {
+  splash: "items-end",
+  card: "items-end",
+  portrait: "items-stretch",
+  tie: "items-start",
+};
+
 /** How much of the band he stands in. In a frame, a share of its height, so his head stays in it. */
 const MAN: Record<Rank, string> = {
   splash: "h-[92%] aspect-[1.32]",
   card: "h-[92%] aspect-[1.32]",
   portrait: "w-full",
-  tie: "w-[5.5rem] pt-2",
+  // Wider than the square, so his head and shoulders fill it (Craig, 8 Oct: "player needs to take up more of the space").
+  tie: "w-[8.5rem]",
 };
 
 /** The crest watermark's pixel size, half out of frame; a tie has no room for one. */
@@ -54,7 +63,7 @@ export default function Face({
 
   return (
     <div
-      className={`paper-face flex justify-center overflow-hidden ${rank === "portrait" ? "items-stretch" : "items-end"} ${BAND[rank]}`}
+      className={`paper-face flex justify-center overflow-hidden ${ALIGN[rank]} ${BAND[rank]}`}
       style={{
         background: `linear-gradient(150deg, ${colours.primary} 0%, ${colours.secondary} 100%)`,
       }}
@@ -80,8 +89,8 @@ export default function Face({
           club={club}
           keeper={isGoalkeeper(face.position)}
           kickedOff
-          // The splash stands him half a sheet tall: the 220px source would print soft.
-          large={rank === "splash"}
+          // The splash stands him half a sheet tall and a tie zooms in on him: the 220px source would print soft.
+          large={rank === "splash" || rank === "tie"}
           sizes={rank === "splash" ? "352px" : "224px"}
         />
       </div>

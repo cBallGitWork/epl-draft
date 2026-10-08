@@ -92,5 +92,6 @@ export default function Written({
 /** Whether the article's substance is the block below its prose, so the prose above is an introduction. */
 function hasBlockBelow(story: PublishedStory): boolean {
   const extras = story.extras;
-  return extras?.teamNews !== undefined || extras?.ranks !== undefined || extras?.reports !== undefined || extras?.draft !== undefined;
+  const ties = story.kind === "predictions" && (story.ties?.length ?? 0) > 0;
+  return ties || extras?.teamNews !== undefined || extras?.ranks !== undefined || extras?.reports !== undefined || extras?.draft !== undefined;
 }
