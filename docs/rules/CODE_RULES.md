@@ -141,7 +141,9 @@ npm run lint      # ESLint. `next build` stopped running it at Next 16, so it is
 npm run build     # Next production build
 ```
 
-All four green. No skipped tests, no `eslint-disable` without a reason on the same
+All four green. While working, `npx vitest related <files>` is enough; the four run once, before the commit. A
+commit of scripts, data or docs alone may leave `build` to CI's `verify`, which runs it (Craig, 8 Oct 2026).
+No skipped tests, no `eslint-disable` without a reason on the same
 line, no `@ts-expect-error` without a linked note.
 
 ---

@@ -30,8 +30,9 @@ greens as four.
 
 ## `--push`
 
-Before anything leaves the machine, three more. These are about the world, not
-the code, which is why they are not in the four:
+Before anything that changes what the app serves (`apps/companion`, `packages/core`) leaves the machine, three
+more. These are about the world, not the code, which is why they are not in the four. Scripts, data and docs alone
+leave smoke and the bridge to CI's `verify`; `shape-diff` runs whenever a Fantrax reader changed:
 
 ```bash
 FANTRAX_LEAGUE_ID=<id> npm run smoke   # the running app answers on its real routes
