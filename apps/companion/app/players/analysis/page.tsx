@@ -273,7 +273,7 @@ async function man(
     player === undefined
       ? null
       : recent
-        ? log === null ? null : totalsOver(log.map((row) => row.match), inWindow)
+        ? log === null ? null : totalsOver(log.rows.map((row) => row.match), inWindow)
         : player.season;
   const played: Played | null =
     totals === null

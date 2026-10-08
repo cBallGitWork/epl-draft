@@ -20,6 +20,7 @@ import Portrait from "./Portrait";
 import Rankings from "./Rankings";
 import RealPosition from "./RealPosition";
 import SeasonTable from "./SeasonTable";
+import HeldNote from "./HeldNote";
 import SetPieces from "./SetPieces";
 import { playerGrid, playerPieces, playerStanding, projectedWeeks, realPosition } from "./grid";
 import { joinMatches } from "./matchRows";
@@ -130,9 +131,14 @@ async function Season({
   paid: PlayerMatch[];
   season: string | null;
 }) {
-  const [rows, snapshot, fixtures] = await Promise.all([gameLog(player), footballNow(), seasonFixtures()]);
-  if (rows === null) return <Nothing title={FPL_SILENT} code="element-summary">His season will be back when FPL answers.</Nothing>;
-  return <SeasonTable rows={joinMatches(rows, paid, clubById(snapshot), playerMarks(player.code, fixtures))} season={season} />;
+  const [log, snapshot, fixtures] = await Promise.all([gameLog(player), footballNow(), seasonFixtures()]);
+  if (log === null) return <Nothing title={FPL_SILENT} code="element-summary">His season will be back when FPL answers.</Nothing>;
+  return (
+    <>
+      <SeasonTable rows={joinMatches(log.rows, paid, clubById(snapshot), playerMarks(player.code, fixtures))} season={season} />
+      {log.heldAt === null ? null : <HeldNote at={log.heldAt} />}
+    </>
+  );
 }
 
 /** CM's worded row under the ratings: the foot he shoots with, never a keeper's. Condition is Fitness's. */

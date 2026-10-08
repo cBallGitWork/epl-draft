@@ -15,7 +15,7 @@ from pathlib import Path
 
 # What the export reads that the GitHub sweep writes, and the staged FPL calendar the sweep schedule is read off.
 # Never a curated zone: a restore overwrites hand edits.
-ZONES = "derived,signals,match_logs,staging/understat,raw/fpl/live/bootstrap,staging/fpl/{season}"
+ZONES = "derived,signals,match_logs,staging/understat,raw/fpl/live/bootstrap,raw/fpl/live/element_summaries,staging/fpl/{season}"
 LOCK_WAIT_S = 900
 STALE = 3
 

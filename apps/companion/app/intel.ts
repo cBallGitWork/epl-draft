@@ -39,6 +39,7 @@ import shotsFile from "../../../data/intel/shots/26-27.json";
 import strengthFile from "../../../data/intel/strength/26-27.json";
 import leagueProjectionsFile from "../../../data/intel/league-projections/26-27.json";
 import projectionsFile from "../../../data/intel/projections/26-27.json";
+import type { IntelHistory } from "@epl/core";
 import minuteMovesFile from "../../../data/intel/xmins-moves/26-27.json";
 import careersFile from "../../../data/intel/careers/26-27.json";
 import cupsFile from "../../../data/intel/cups/26-27.json";
@@ -119,3 +120,8 @@ export const lineSeasons = {
 };
 /** The minutes a man needs in each season to count as playing it. */
 export const lineFloors: Floors = { last: playedFloor(intelLines.last.values()), now: playedFloor(intelLines.now.values()) };
+
+/** Each player's FPL history by code (`npm run intel-history`), loaded only when FPL will not answer: it runs to MBs. */
+export async function intelHistory(): Promise<IntelHistory> {
+  return (await import("../../../data/intel/history/26-27.json")).default as unknown as IntelHistory;
+}

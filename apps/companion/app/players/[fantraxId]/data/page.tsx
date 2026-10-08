@@ -12,6 +12,7 @@ import { ALL_SEASONS, playerDataHref } from "../../routes";
 import MatchLog from "../MatchLog";
 import PastSeasons from "../PastSeasons";
 import SeasonTable from "../SeasonTable";
+import HeldNote from "../HeldNote";
 import NoProfile from "../NoProfile";
 import PlayerShell from "../PlayerShell";
 import { TableWaiting } from "../Waiting";
@@ -81,7 +82,7 @@ async function Record({
   if (past === null || log === null) {
     return <Nothing title={FPL_SILENT} code="element-summary">His seasons will be back when FPL answers.</Nothing>;
   }
-  const joined = joinMatches(log, paid, clubById(snapshot), playerMarks(player.code, fixtures));
+  const joined = joinMatches(log.rows, paid, clubById(snapshot), playerMarks(player.code, fixtures));
   const clubs = intelCareers.get(player.code) ?? new Map<string, string>();
   const label = season ?? "This season";
   const options = [
@@ -107,6 +108,7 @@ async function Record({
       ) : (
         <>
           <SeasonTable rows={joined} season={season} club={clubs.get(seasonKey(label) ?? "") ?? null} />
+          {log.heldAt === null ? null : <HeldNote at={log.heldAt} />}
           <MatchLog rows={joined} />
         </>
       )}
