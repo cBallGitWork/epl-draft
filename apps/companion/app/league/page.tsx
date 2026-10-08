@@ -16,8 +16,6 @@ import FantraxSilent from "../components/shell/FantraxSilent";
 
 // The table, Fantrax's: the record, the points and the order are theirs, never added up here.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 /** Next 16 hands these as a Promise, so it is awaited like `params`. */

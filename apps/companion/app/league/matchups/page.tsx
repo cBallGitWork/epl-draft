@@ -14,8 +14,6 @@ import ScoreboardDown from "../ScoreboardDown";
 
 // Who each squad plays this gameweek and what they have scored: Fantrax's own totals, one call for every team.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function MatchupPage() {

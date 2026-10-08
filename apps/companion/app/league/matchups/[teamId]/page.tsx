@@ -38,8 +38,6 @@ import ScoreboardDown from "../../ScoreboardDown";
 // One head-to-head: the scoreline and the elevens behind it. The URL's team is the side the board opens on; the side
 // Fantrax calls home decides only the ground, its venue.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function HeadToHeadPage({
