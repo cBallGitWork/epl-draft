@@ -23,11 +23,15 @@ export default function FullMatchStats({
   opposition: readonly Opposition[] | undefined;
 }) {
   const [read, setRead] = useState<MatchRead | null>(null);
+  // Read again when a match starts, not on every poll that hands over the same fixtures afresh.
+  const startedKey = JSON.stringify(
+    (opposition ?? []).flatMap(({ fixture }) =>
+      fixture.status === "upcoming" || fixture.gameweek === null ? [] : [{ gameweek: fixture.gameweek, code: fixture.code }],
+    ),
+  );
   useEffect(() => {
     let open = true;
-    const fixtures = (opposition ?? []).flatMap(({ fixture }) =>
-      fixture.status === "upcoming" || fixture.gameweek === null ? [] : [{ gameweek: fixture.gameweek, code: fixture.code }],
-    );
+    const fixtures = JSON.parse(startedKey) as { gameweek: number; code: number }[];
     readMatchParts({ opta, fixtures, position }).then(
       (answer) => open && setRead(answer),
       () => open && setRead(UNREAD),
@@ -35,7 +39,7 @@ export default function FullMatchStats({
     return () => {
       open = false;
     };
-  }, [opta, position, opposition]);
+  }, [opta, position, startedKey]);
 
   const rows = read === null ? [] : fullMatchStats(contribution(stats), read.parts, read.scored);
   return (
