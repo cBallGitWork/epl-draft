@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T17:08:20.389Z",
+  "updatedAt": "2026-10-08T18:36:36.501Z",
   "stories": [
     {
       "slug": "news-cmrr48zqz1jno",
@@ -7761,6 +7761,150 @@
               ]
             },
             "kickoff": "2026-10-10T14:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "gw6-presser-2026-10-08",
+      "kind": "presser",
+      "leagueId": "mqsjd23smsgbiqzr",
+      "period": 6,
+      "gameweek": 6,
+      "filedAt": "2026-10-08T18:36:36.501Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Team Sheet",
+      "headline": "Thursday Pressers",
+      "deck": "Daniel James a doubt for Leeds United with a back problem",
+      "body": "Daniel James is a doubt for Leeds United with a back problem, according to Daniel Farke. No timescale came with it, so he is neither ruled in nor ruled out.",
+      "subjects": [
+        "presser:gw6:2026-10-08"
+      ],
+      "image": null,
+      "face": {
+        "code": 200617,
+        "name": "Daniel James",
+        "clubId": 13,
+        "position": null
+      },
+      "ties": [],
+      "extras": {
+        "teamNews": [
+          {
+            "club": "Leeds United",
+            "code": 2,
+            "line": "Harry Wilson has returned to team training after a muscle injury, though he stays on the absentee list for now.",
+            "men": [
+              {
+                "name": "Daniel James",
+                "status": "Doubt",
+                "note": "back; no timescale given"
+              }
+            ],
+            "alsoOut": [
+              "Harry Wilson",
+              "Joe Rodon",
+              "Mateo Joseph"
+            ],
+            "quote": {
+              "text": "Some good news with Harry Wilson after his muscle injury. He’s back in team training since Tuesday.",
+              "said": "Daniel Farke"
+            },
+            "fixture": {
+              "opponent": "Arsenal",
+              "home": false,
+              "kickoff": "2026-10-10T11:30:00Z"
+            }
+          },
+          {
+            "club": "Newcastle United",
+            "code": 4,
+            "line": "The international break produced one new casualty, Ewen, and the rest of the travellers came back unscathed.",
+            "alsoOut": [
+              "Joelinton",
+              "Jacob Ramsey",
+              "Amar Dedic",
+              "Anthony Elanga",
+              "Dan Burn",
+              "William Osula",
+              "Tino Livramento"
+            ],
+            "quote": {
+              "text": "Ewen was a difficult one, with a hamstring. He will be out for a couple of months, but the rest should be okay.",
+              "said": "Matthias Jaissle"
+            },
+            "fixture": {
+              "opponent": "Coventry City",
+              "home": false,
+              "kickoff": "2026-10-12T19:00:00Z"
+            }
+          },
+          {
+            "club": "AFC Bournemouth",
+            "code": 91,
+            "line": "Alex Scott is the one man not back on the pitch, with a further scan due on his muscle injury.",
+            "alsoOut": [
+              "Alex Scott",
+              "Justin Kluivert",
+              "Veljko Milosavljevic",
+              "Amine Adli",
+              "Kroupi.Jr",
+              "Julián Araujo"
+            ],
+            "quote": {
+              "text": "It’s a muscle injury and we do [a scan] in some days again, but we are going to miss him, for sure, for four or five weeks.",
+              "said": "Marco Rose"
+            },
+            "fixture": {
+              "opponent": "Chelsea",
+              "home": false,
+              "kickoff": "2026-10-10T14:00:00Z"
+            }
+          },
+          {
+            "club": "Sunderland",
+            "code": 56,
+            "line": "Brian Brobbey's absence is expected to be brief, though the club will not take risks with him.",
+            "alsoOut": [
+              "Brian Brobbey",
+              "Habib Diarra",
+              "Romaine Mundle",
+              "Daniel Ballard",
+              "Reinildo"
+            ],
+            "quote": {
+              "text": "It’s going to be short-term [for Brobbey, as well].",
+              "said": "Regis Le Bris"
+            },
+            "fixture": {
+              "opponent": "Brighton & Hove Albion",
+              "home": true,
+              "kickoff": "2026-10-10T14:00:00Z"
+            }
+          },
+          {
+            "club": "Coventry City",
+            "code": 9,
+            "line": "Kaine Kesler-Hayden is back training with the group after a longer spell out.",
+            "alsoOut": [
+              "Milan van Ewijk",
+              "Kaine Kesler-Hayden",
+              "Haji Wright",
+              "Luke Woolfenden",
+              "Josh Eccles",
+              "Aurèle Amenda",
+              "Taiwo Awoniyi"
+            ],
+            "quote": {
+              "text": "Aurele is working away. It’s a 2-3 month injury, so we’re working through that.",
+              "said": "Frank Lampard"
+            },
+            "fixture": {
+              "opponent": "Newcastle United",
+              "home": true,
+              "kickoff": "2026-10-12T19:00:00Z"
+            }
           }
         ]
       }
