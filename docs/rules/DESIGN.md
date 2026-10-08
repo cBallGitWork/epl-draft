@@ -99,6 +99,11 @@ passes under it, as iOS's own bars do, so the white clock reads over the photogr
 The paper takes a band of its own ink there. A browser tab and Android show no change: the strip is the status bar's
 height, which only the installed iPhone app has.
 
+**A signed-in manager stands on his own team's ground** (Craig, 8 Oct 2026: *"use the home team background for
+whoever is logged in"*): the shell's photograph is his venue (`data/leagues/venues.json`, Bannan's Hillsborough), and a
+reader with no code keeps Anfield's crowd. A screen that draws its own still does: a club or a match its club's, a
+head-to-head its home team's, a squad its team's.
+
 **A club's own screens take a photograph of its own ground** (Craig, 11 Sep
 2026). One shared crowd shot behind every screen in the app is the desk's
 wallpaper; a club screen is about SOMEBODY, and `PlateShell` already says so in
