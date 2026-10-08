@@ -163,7 +163,7 @@ export const BIN_XI = {
   weekday: "Tue",
   /** How far the chances a man made or missed move his points when picking: a 9 still beats a 5. */
   luck: 0.5,
-  /** The column's length, in words, and its paragraphs. */
+  /** The column's length, in words, and its paragraphs; the check's most is past the prompt's 200, so a near-miss is not sent back. */
   words: [150, 220],
   paragraphs: 3,
 } as const;
