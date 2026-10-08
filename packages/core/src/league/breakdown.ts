@@ -1,7 +1,6 @@
 import type { ScoringCategory } from "./scoring";
 import { wordsOf } from "./categoryWords";
 import type { LivePlayerCategory } from "./points";
-import type { StatColumn, StatLine } from "./stats";
 
 // Why a player is on his number, by the league's own scoring categories: read from Fantrax, never computed.
 
@@ -11,44 +10,15 @@ export interface BreakdownLine {
   code: string;
   /** The category in plain words: "Assists", never their "Assists (Total)". */
   name: string;
-  /** Fantrax's own definition of it; null for a category defined by its name alone. */
-  definition: string | null;
   /** Points, theirs. Signed: goals against and cards arrive negative. */
   points: number;
-  /** What he did to earn them, as Fantrax renders it ("90" against Minutes Played).
-   *  Null from the season table, whose FPTS view renders every column as points; the live card carries both. */
+  /** What he did to earn them, as Fantrax renders it ("90" against Minutes Played); null where it stated none. */
   value: string | null;
 }
 
-/** Where Fantrax's prose definition starts inside a column's long name: "Clean Sheets On Field -- Awarded to…". */
-const DEFINITION = " -- ";
-
-/** A column's label and the rule behind it, cut apart; the stat table's header is the rules' only prose. */
-export function columnLabel(column: StatColumn): { name: string; definition: string | null } {
-  const at = column.name.indexOf(DEFINITION);
-  const label = at < 0 ? column.name : column.name.slice(0, at);
-  return {
-    name: wordsOf({ code: column.code, name: label, longCode: null }).name,
-    definition: at < 0 ? null : column.name.slice(at + DEFINITION.length).trim() || null,
-  };
-}
-
-/** One player's categories, largest contribution first; null and 0 are both dropped (games played renders as 0). */
-export function breakdownOf(columns: readonly StatColumn[], line: StatLine): BreakdownLine[] {
-  return line.values
-    .flatMap((points, index) => {
-      const column = columns[index];
-      if (points === null || points === 0 || column === undefined) return [];
-      // No count here: this view's cells are the points.
-      return [{ code: column.code, ...columnLabel(column), points, value: null }];
-    })
-    .sort((a, b) => b.points - a.points);
-}
-
-
-/** The live scoreboard's breakdown, priced at the roster slot; no definitions, since `getLeagueInfo` has none.
- *  A category the league did not describe is dropped, never shown as `5010#6090`, and a missing table
- *  (a cached `LeagueInfo` from an older deploy) names nothing rather than throwing. */
+/** The live scoreboard's breakdown, priced at the roster slot. A category the league did not describe is
+ *  dropped, never shown as `5010#6090`, and a missing table (a cached `LeagueInfo` from an older deploy) names
+ *  nothing rather than throwing. */
 export function liveBreakdown(
   categories: readonly LivePlayerCategory[],
   names: Record<string, ScoringCategory> | undefined,
@@ -61,7 +31,6 @@ export function liveBreakdown(
         {
           code: named.code,
           name: wordsOf(named).name,
-          definition: null,
           points: category.points,
           value: category.value,
         },

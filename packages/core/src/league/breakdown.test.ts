@@ -1,120 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { breakdownOf, columnLabel, liveBreakdown, bandCategories } from "./breakdown";
-import { mapTeamStats } from "./fantrax/stats";
-import teamStats from "./fantrax/__fixtures__/teamStats.json";
-
-// Against the recorded payload rather than a hand-built one: the claim worth
-// testing is that Fantrax's own categories add up to Fantrax's own total, and a
-// fixture we invented would only prove our arithmetic.
-
-const stats = mapTeamStats(teamStats);
-
-/** Every player in the recorded team, paired with his own group's header, so saves never sit under goals against. */
-const breakdown = new Map(
-  stats.groups.flatMap((group) =>
-    group.lines.map((line) => [line.fantraxId, breakdownOf(group.columns, line)] as const),
-  ),
-);
-
-describe("breakdownOf, over a whole recorded team", () => {
-  it("explains every total exactly", () => {
-    for (const group of stats.groups) {
-      for (const line of group.lines) {
-        const sum = (breakdown.get(line.fantraxId) ?? []).reduce((total, l) => total + l.points, 0);
-        expect(sum).toBe(line.points);
-      }
-    }
-  });
-
-  it("names each category in plain words, never Fantrax's caption", () => {
-    // The keeper: 63 minutes + 28 clean sheets − 11 goals against + 23 saves
-    // − 2 bookings + 5 penalty saves + 3 assists = 109.
-    expect(breakdown.get("02lz0")).toEqual([
-      { code: "Min", name: "Minutes", definition: null, points: 63, value: null },
-      {
-        code: "CS",
-        name: "Clean sheets",
-        definition: expect.stringContaining("at least 60 minutes"),
-        points: 28,
-        value: null,
-      },
-      { code: "Sv", name: "Saves", definition: null, points: 23, value: null },
-      {
-        code: "PKS",
-        name: "Penalties saved",
-        definition: "Number of penalty kicks saved by the goalkeeper",
-        points: 5,
-        value: null,
-      },
-      {
-        code: "A",
-        name: "Assists",
-        definition: expect.stringContaining("official assist"),
-        points: 3,
-        value: null,
-      },
-      { code: "YC", name: "Yellow cards", definition: null, points: -2, value: null },
-      { code: "GA", name: "Goals conceded", definition: expect.any(String), points: -11, value: null },
-    ]);
-  });
-
-  it("puts what a category cost him at the bottom", () => {
-    // Largest first, so the deductions sort below the earnings and read as the
-    // deductions they are.
-    const outfielder = breakdown.get("05o4b") ?? [];
-    expect(outfielder.map((line) => line.code)).toEqual(["Min", "CS", "G", "A", "YC", "GAO"]);
-  });
-
-  it("drops the categories that scored him nothing", () => {
-    // Neither a dash nor a real nought is a row, and games played renders as 0 in this view.
-    const codes = (breakdown.get("05o4b") ?? []).map((line) => line.code);
-    expect(codes).not.toContain("GP");
-    expect(codes).not.toContain("RC");
-  });
-
-  it("keeps a keeper's columns off an outfielder's line", () => {
-    // The two groups have different headers, and the pairing is per group. A
-    // flat header would file saves under goals against.
-    expect((breakdown.get("05nzu") ?? []).map((line) => line.code)).not.toContain("Sv");
-  });
-
-  it("states that it does not know what he DID, rather than inventing a count", () => {
-    // 23 points for saves, and no count: the FPTS cells are the points, so `value` is null, never "23".
-    const keeper = breakdown.get("02lz0") ?? [];
-    expect(keeper.length).toBeGreaterThan(0);
-    expect(keeper.map((line) => line.value)).toEqual(keeper.map(() => null));
-  });
-
-  it("has nothing to say about a player nobody rosters", () => {
-    expect(breakdown.get("nobody")).toBeUndefined();
-  });
-});
-
-describe("breakdownOf", () => {
-  it("survives a row shorter than its header", () => {
-    // Provider data: a row that arrives short lines up with the header it has
-    // rather than pairing a value with a column that is not there.
-    expect(
-      breakdownOf([{ code: "G", name: "Goals" }], {
-        fantraxId: "x",
-        points: 6,
-        perGame: null,
-        values: [6, 4],
-      }),
-    ).toEqual([{ code: "G", name: "Goals", definition: null, points: 6, value: null }]);
-  });
-
-  it("falls back on the short code when neither we nor Fantrax name the category", () => {
-    expect(
-      breakdownOf([{ code: "Pen", name: "" }], {
-        fantraxId: "x",
-        points: -3,
-        perGame: null,
-        values: [-3],
-      }),
-    ).toEqual([{ code: "Pen", name: "Pen", definition: null, points: -3, value: null }]);
-  });
-});
+import { liveBreakdown, bandCategories } from "./breakdown";
 
 describe("liveBreakdown", () => {
   const names = {
@@ -136,9 +21,9 @@ describe("liveBreakdown", () => {
         names,
       ),
     ).toEqual([
-      { code: "G", name: "Goals", definition: null, points: 5, value: "1" },
-      { code: "Min", name: "Minutes", definition: null, points: 2, value: "90" },
-      { code: "YC", name: "Yellow cards", definition: null, points: -1, value: "1" },
+      { code: "G", name: "Goals", points: 5, value: "1" },
+      { code: "Min", name: "Minutes", points: 2, value: "90" },
+      { code: "YC", name: "Yellow cards", points: -1, value: "1" },
     ]);
   });
 
@@ -172,14 +57,6 @@ describe("liveBreakdown", () => {
     expect(line.value).toBeNull();
   });
 
-  it("carries no definition, because the live feed publishes none", () => {
-    // Fantrax's prose — "Awarded to a player who played at least 60 minutes…" —
-    // is on the stat table's header and not on `getLeagueInfo`. A reader still
-    // gets it, on the player's own page. Null rather than an invented sentence.
-    const [line] = liveBreakdown([{ category: "5010#6090", points: 5, value: "1" }], names);
-    expect(line.definition).toBeNull();
-  });
-
   it("drops a category this league never described, rather than printing its id", () => {
     // The two leagues score different things. An identifier on screen is worse
     // than a line missing from a list that never claimed to be complete.
@@ -194,42 +71,9 @@ describe("liveBreakdown", () => {
   });
 });
 
-/** A column of the recorded header, by its code. Throws rather than asserting
- *  non-null, so a fixture that stops carrying the column fails as a missing
- *  column and not as a confusing `undefined`. */
-function column(code: string) {
-  for (const group of stats.groups) {
-    const found = group.columns.find((c) => c.code === code);
-    if (found) return found;
-  }
-  throw new Error(`no ${code} column in the recorded header`);
-}
-
-describe("columnLabel, over the same recorded header", () => {
-  it("cuts Fantrax's prose definition off the label a column head prints", () => {
-    // The rule this league scores a clean sheet by, published on a stat table's
-    // header and nowhere else in the payload.
-    const cs = columnLabel(column("CS"));
-    expect(cs.name).toBe("Clean sheets");
-    expect(cs.definition).toMatch(/^Awarded to a player who played at least 60 minutes/);
-  });
-
-  it("gives a column Fantrax defines by its name alone a null definition", () => {
-    expect(columnLabel(column("Sv"))).toEqual({ name: "Saves", definition: null });
-  });
-
-  it("falls back to the code rather than printing an empty head", () => {
-    expect(columnLabel({ code: "Pen", name: "" })).toEqual({ name: "Pen", definition: null });
-    expect(columnLabel({ code: "Pen", name: " -- only a rule" })).toEqual({
-      name: "Pen",
-      definition: "only a rule",
-    });
-  });
-});
-
 describe("bandCategories", () => {
   const line = (code: string, points: number) =>
-    ({ code, name: code, definition: null, points, value: null });
+    ({ code, name: code, points, value: null });
 
   it("names the men behind a category, largest contribution first", () => {
     const bands = bandCategories(
@@ -289,8 +133,8 @@ describe("bandCategories", () => {
   });
 
   it("names a category as the reader's own side spells it, then his opponent's", () => {
-    const mine = { a: [{ code: "G", name: "Goals", definition: null, points: 6, value: "1" }] };
-    const theirs = { b: [{ code: "G", name: "GOALS", definition: null, points: 6, value: "1" }] };
+    const mine = { a: [{ code: "G", name: "Goals", points: 6, value: "1" }] };
+    const theirs = { b: [{ code: "G", name: "GOALS", points: 6, value: "1" }] };
     expect(bandCategories(mine, theirs)[0].name).toBe("Goals");
     expect(bandCategories({}, theirs)[0].name).toBe("GOALS");
   });

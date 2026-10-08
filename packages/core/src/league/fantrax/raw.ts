@@ -12,10 +12,6 @@ export interface RawFantraxError {
   message?: string;
 }
 
-export interface RawErrorBody {
-  error: RawFantraxError;
-}
-
 /** One `getPlayerIds?sport=EPL` entry, keyed by fantraxId. Sixty are per-club entities, not players: an id with "#",
  *  position Tm/TmOF/TmG. */
 export interface RawPoolEntry {

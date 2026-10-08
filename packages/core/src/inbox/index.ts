@@ -1,10 +1,9 @@
-export type { InboxCategory, InboxItem } from "./types";
+export type { InboxItem } from "./types";
 export { availabilityNews } from "./doubts";
 export { blockNews } from "./block";
 export { inboxItems, roundNews } from "./items";
 export { dealNews } from "./messages";
 export { minutesNews } from "./minutes";
-export type { MinutesSide } from "./minutes";
 export { noteBesideChance } from "./notes";
 export { offerNews } from "./offers";
 export { fantraxDay, fantraxTime } from "./when";
