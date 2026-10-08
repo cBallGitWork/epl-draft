@@ -1,17 +1,12 @@
 import { FPL_API_BASE } from "../../config";
-import { notJson, statusError } from "../../http/errors";
-import { politeFetch } from "../../http/fetch";
-import { readJson } from "../../http/json";
+import { fetchJson } from "../../http/get";
 import type { RawBootstrap, RawElementSummary, RawFixture, RawLive, RawRegion } from "./raw";
 
 // All FPL network I/O, public and unauthenticated; manners live in the shared `http/fetch.ts`.
 
 /** No freshness here: a Next segment's `revalidate` owns it, and core must not know about Next. */
 async function get<T>(path: string): Promise<T> {
-  const res = await politeFetch(`${FPL_API_BASE}${path}`);
-  // Throw rather than degrade to a default, so the caller can say so on screen.
-  if (!res.ok) throw statusError("FPL", path, res.status);
-  return (await readJson(res, notJson("FPL", path))) as T;
+  return (await fetchJson(`${FPL_API_BASE}${path}`, "FPL", path)) as T;
 }
 
 /** Players, clubs and gameweeks; ~1.3 MB. */
