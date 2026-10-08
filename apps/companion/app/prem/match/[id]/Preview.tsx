@@ -76,7 +76,7 @@ function SideBlock({
       {/* Oldest first, as the season ran: the last five at most. */}
       <span className={`flex gap-1 ${align === "end" ? "flex-row-reverse" : ""}`}>
         {form.length === 0 ? (
-          <span className={QUIET_FIGURE}>—</span>
+          <span className={QUIET_FIGURE}>{DASH}</span>
         ) : (
           form.map((result, at) => (
             <span key={at} className={`numeric text-2xs font-bold ${TONE[result]}`}>

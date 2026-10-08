@@ -1,4 +1,4 @@
-import type { PublishedStory } from "@epl/core";
+import { DASH, type PublishedStory } from "@epl/core";
 import { yoursInk } from "../../mine";
 
 // A column's ten in its own order (the power rankings, Lawro's predicted table): an argument, not a table of figures.
@@ -42,7 +42,7 @@ export default function Ranks({
 function Move({ places }: { places: number | undefined }) {
   if (places === undefined) return null;
   if (places === 0) {
-    return <span className="numeric shrink-0 text-2xs text-faint">—</span>;
+    return <span className="numeric shrink-0 text-2xs text-faint">{DASH}</span>;
   }
   // Direction in the mark rather than in colour: green up and red down would
   // spend the sheet's one red on an opinion about a fantasy team.

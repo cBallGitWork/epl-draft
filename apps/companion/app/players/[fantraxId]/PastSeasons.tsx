@@ -5,6 +5,7 @@ import { BOARD, FIGURE, ROW_NAME, ROW_RULE, TEXT } from "@/app/desk";
 import { HeadRow, MUTE, PlateHead } from "../../components/league/TableHeads";
 import { IndexCell } from "../../components/league/TableCells";
 import { seasonKey, thousands } from "@epl/core";
+import Absent from "@/app/components/shell/Absent";
 
 // CM's appearances table at season scale (`cm9900/11.jpg`). Only figures FPL kept every season back to 2014/15: one it
 // did not collect that year arrives as a nought. Points are FPL's own, never headed FPts.
@@ -53,7 +54,7 @@ export default function PastSeasons({
                 {/* `IndexCell` is the `<td>`: wrapped in one it breaks hydration. */}
                 <IndexCell>{season.season}</IndexCell>
                 <td className={`${ROW_NAME} whitespace-nowrap px-1.5`}>
-                  {clubs.get(seasonKey(season.season) ?? "") ?? <span className="text-faint">—</span>}
+                  {clubs.get(seasonKey(season.season) ?? "") ?? <Absent />}
                 </td>
                 {COLUMNS.map((column) => (
                   <td key={column.head} className={`${FIGURE} ${TEXT.center}`}>

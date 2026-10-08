@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { MatchEventKind } from "@epl/core";
+import { DASH, type MatchEventKind } from "@epl/core";
 import Section from "../components/shell/Section";
 import { isBreak, type WireBreak, type WireLine, type WireRow } from "./wireLines";
 import Absent from "@/app/components/shell/Absent";
@@ -120,7 +120,7 @@ function Man({
       {label ? <span className={`${WIRE_WORD} shrink-0 text-muted`}>{label}</span> : null}
       {/* The name never shrinks; the manager truncates instead. */}
       <span className={`min-w-0 shrink-0 truncate text-ink ${WIRE_NAME}`}>
-        {man?.player.name ?? "—"}
+        {man?.player.name ?? DASH}
       </span>
       {/* Ink, as loud as the name it brackets (Craig, 1 Oct 2026: "minutes hard to see"). */}
       {minute === undefined ? null : (

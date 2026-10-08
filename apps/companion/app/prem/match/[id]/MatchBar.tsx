@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "@/app/components/shell/Link";
 import type { Club } from "@epl/core";
-import { clubColoursOf, crestUrl, inkOn } from "@epl/core";
+import { clubColoursOf, crestUrl, inkOn, DASH } from "@epl/core";
 import { CLUB } from "../../routes";
 import { hasScore } from "../../score";
 import { BAR_TITLE } from "@/app/desk";
@@ -48,7 +48,7 @@ function Side({ club, score }: { club: Club | undefined; score: number | null })
     >
       {club === undefined ? (
         <span className="min-w-0 flex-1 px-2 text-center text-sm font-bold" style={{ color: ink }}>
-          —
+          {DASH}
         </span>
       ) : (
         // The whole coloured half is the target, not the 24px the words occupy.
