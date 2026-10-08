@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { SHAPE_BASELINE_PATH, leagueCaptureRoot } from "./paths";
 import { RECORDED_LEAGUES, type RecordedLeague, SHAPE_DIFF } from "./leagues";
+import { lastScored } from "./shape/scored";
 import { drafted, excused } from "./snapshots";
 import {
   type AcknowledgedDifference,
@@ -14,6 +15,7 @@ import {
   fetchStandingsPage,
   fetchTeamRosters,
   fetchTransactions,
+  mapTeamRosters,
   orphaned,
   shapeOf,
   unacknowledged,
@@ -26,11 +28,6 @@ import {
 const REFERENCE = RECORDED_LEAGUES.find((league) => league.key === SHAPE_DIFF.reference);
 const SUBJECT = RECORDED_LEAGUES.find((league) => league.key === SHAPE_DIFF.subject);
 
-/** The period to ask period-scoped reads for. Period 1 rather than "now": this
- *  script compares shapes, and the shape of a period Fantrax has data for is the
- *  one worth comparing. */
-const PERIOD = 1;
-
 const READS: { method: string; run: (leagueId: string) => Promise<unknown> }[] = [
   { method: "getLeagueInfo", run: fetchLeagueInfo },
   { method: "getTeamRosters", run: (id) => fetchTeamRosters(id) },
@@ -41,8 +38,18 @@ const READS: { method: string; run: (leagueId: string) => Promise<unknown> }[] =
   // The three fxpa reads the app cannot render a live Saturday without.
   { method: "fxpa getStandings (page)", run: fetchStandingsPage },
   { method: "fxpa getStandings?view=SCHEDULE", run: fetchSeasonResults },
-  { method: "getLiveScoringStats", run: (id) => fetchLiveScoring(id, PERIOD) },
+  { method: "getLiveScoringStats", run: liveScoring },
 ];
+
+/** Live scoring at the league's last period with a scored man, read back from the one Fantrax has open. A league
+ *  nobody has scored in yet is a failed read, not a pass: it would compare nothing inside a man's row. */
+async function liveScoring(leagueId: string): Promise<unknown> {
+  const open = mapTeamRosters(await fetchTeamRosters(leagueId)).period;
+  if (open === null) throw new ProviderError("NO_PERIOD", "getTeamRosters named no open period to read back from");
+  const scored = await lastScored(open, (period) => fetchLiveScoring(leagueId, period));
+  if (scored === null) throw new ProviderError("NO_SCORES", `no period up to ${open} has a scored man to compare`);
+  return scored;
+}
 
 /** A payload, or the provider's reason for not giving one. */
 type Answer = { payload: unknown } | { refused: ProviderError };
