@@ -125,6 +125,7 @@ export {
   benchToWrite,
   changesLineup,
   fieldMapFor,
+  lineupChanges,
   mapLineupState,
   readBenchAnswer,
   readLineupAnswer,

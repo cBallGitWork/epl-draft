@@ -8,6 +8,7 @@ import {
   changesBenchOrder,
   changesLineup,
   fieldMapFor,
+  lineupChanges,
   mapLineupState,
   readBenchAnswer,
   readLineupAnswer,
@@ -77,6 +78,24 @@ describe("fieldMapFor", () => {
 
   it("refuses a status Fantrax does not list", () => {
     expect(fieldMapFor(read, move(asIs(), "045ob", { status: "INJURED_RESERVE" }))).toBe("unknown-status");
+  });
+});
+
+describe("lineupChanges", () => {
+  it("lists nobody when nothing moved", () => {
+    expect(lineupChanges(read, fieldMapFor(read, asIs()) as never)).toEqual([]);
+  });
+
+  it("lists each man the plan moves, from where Fantrax has him to where the plan puts him", () => {
+    const plan = move(move(move(asIs(), "04qfz", { status: "RESERVE" }), "05l27", { status: "ACTIVE" }), "04y92", { position: "M" });
+    expect(lineupChanges(read, fieldMapFor(read, plan) as never)).toEqual(
+      expect.arrayContaining([
+        { scorerId: "04qfz", from: { posId: "703", stId: "1" }, to: { posId: "703", stId: "2" } },
+        { scorerId: "05l27", from: { posId: "703", stId: "2" }, to: { posId: "703", stId: "1" } },
+        { scorerId: "04y92", from: { posId: "701", stId: "1" }, to: { posId: "702", stId: "1" } },
+      ]),
+    );
+    expect(lineupChanges(read, fieldMapFor(read, plan) as never)).toHaveLength(3);
   });
 });
 
