@@ -1,4 +1,4 @@
-import { clubById, isGoalkeeper, playerByCode, DASH, type FootballSnapshot, type PublishedStory, type StorySheetSide } from "@epl/core";
+import { PITCH_ORDER, clubById, isGoalkeeper, playerByCode, DASH, type FootballSnapshot, type PublishedStory, type StorySheetSide } from "@epl/core";
 import PitchMarker from "../league/PitchMarker";
 import PitchRows from "../league/PitchRows";
 import { yoursInk } from "../../mine";
@@ -6,9 +6,6 @@ import { yoursInk } from "../../mine";
 // Team news at the lock, a head-to-head at a time: each side's paragraph, then its eleven on the
 // grass and its bench, as the BBC prints a side before kickoff. The names are printed, not written;
 // where the two sides meet on the pitch is woven into the paragraphs.
-
-/** The order a sheet reads down the grass, keeper first; the slot is Fantrax's, never his position. */
-const LINES = ["G", "D", "M", "F"];
 
 export default function Sheets({
   story,
@@ -61,7 +58,8 @@ function Side({
   players: ReturnType<typeof playerByCode>;
   clubs: ReturnType<typeof clubById>;
 }) {
-  const rows = LINES.map((slot) => ({ label: slot, players: side.xi.filter((man) => man.slot === slot) })).filter((row) => row.players.length > 0);
+  // Down the grass, keeper first; the slot is Fantrax's, never his position.
+  const rows = PITCH_ORDER.map((slot) => ({ label: slot, players: side.xi.filter((man) => man.slot === slot) })).filter((row) => row.players.length > 0);
   return (
     <div className="flex flex-col gap-2 pt-3">
       <p className="text-base leading-snug text-ink">{side.line}</p>

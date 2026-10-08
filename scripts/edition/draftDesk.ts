@@ -1,5 +1,6 @@
 import {
   FANTRAX_LEAGUE_ID,
+  byPositionDepth,
   datedKickoffs,
   fetchFixtures,
   fetchLeagueInfo,
@@ -66,8 +67,6 @@ export interface DraftDesk {
   notes: string[];
 }
 
-const SLOTS = ["G", "D", "M", "F"];
-
 export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const [snapshot, info, schedule] = await Promise.all([getFootballSnapshot(gameweek), fetchLeagueInfo(FANTRAX_LEAGUE_ID).then(mapLeagueInfo), fetchFixtures().then(mapFixtures)]);
   const covering = periodOfGameweek(periodGameweeks(info.scoringPeriods, datedKickoffs(schedule)), gameweek);
@@ -93,7 +92,8 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const { goals, starters } = await matchReads(gameweek, fixtures, snapshot.players);
 
   const ids = categoryIds(info);
-  const worth = slotWorth(scoring, ids, reads.map((r) => r.raw), facts.teams, SLOTS);
+  const slots = Object.keys(info.roster.maxActiveByPosition).sort(byPositionDepth);
+  const worth = slotWorth(scoring, ids, reads.map((r) => r.raw), facts.teams, slots);
   const min = minimumsOf(recordedLimits, FANTRAX_LEAGUE_ID);
   const limits = { min: min ?? {}, max: info.roster.maxActiveByPosition };
   const projections = readProjections();
@@ -162,7 +162,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
     cutoffs.set(cutoff, judgePage(contexts.map((ctx) => ({ ctx, threads: threadsOf(ctx, cutoff, worth, gameweek) })), pastAngles(past)));
   }
   const notes = [
-    `Returns by slot: ${SLOTS.map((s) => `${s} ${worth.returns[s].map((w) => `${w.kind} ${w.worth}`).join(", ")}`).join("; ")}; a full match's minutes ${worth.appearance}.`,
+    `Returns by slot: ${slots.map((s) => `${s} ${worth.returns[s].map((w) => `${w.kind} ${w.worth}`).join(", ")}`).join("; ")}; a full match's minutes ${worth.appearance}.`,
     `Eleven limits: most ${JSON.stringify(limits.max)}; fewest ${min === null ? "not recorded for this league" : JSON.stringify(min)}.`,
     `Bench orders: ${[...orders.values()].filter((o) => o.by === "manager").length} of ${orders.size} set by the manager, the rest by total points.`,
     `Goal times read for ${goals.size} of ${fixtures.length} matches.`,
