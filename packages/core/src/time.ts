@@ -3,6 +3,9 @@ import { LEAGUE_TIMEZONE } from "./config";
 /** A calendar day in milliseconds, for spans between UTC instants. */
 export const MS_PER_DAY = 86_400_000;
 
+/** A minute in milliseconds. */
+export const MS_PER_MINUTE = 60_000;
+
 // Instants and the league's calendar: every date the app, the paper and the scripts print or file
 // by is read here, in London, whatever the reader's own zone.
 

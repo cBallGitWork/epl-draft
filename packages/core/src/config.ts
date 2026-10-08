@@ -116,6 +116,10 @@ export const CLEAN_SHEET_MINUTES = 60;
 /** Minutes in a half: the clock's first half reads this or less, added time aside. */
 export const HALF_MINUTES = 45;
 
+/** Minutes past its kickoff that a match FPL still has as not started counts as called off: FPL leaves a postponed
+ *  fixture dated, which held the round under way, and the live poll rate, for days. */
+export const POSTPONED_AFTER_MINUTES = 180;
+
 /** The league this process serves, from the environment; nothing in the code names one. Empty when unset, so an
  *  edge calls `requireLeague`. The ids are public: they are in the league URLs. */
 export const FANTRAX_LEAGUE_ID = process.env.FANTRAX_LEAGUE_ID ?? "";
