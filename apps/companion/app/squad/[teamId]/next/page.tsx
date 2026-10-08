@@ -16,8 +16,6 @@ import { placings } from "../../../league/placings";
 // Who he plays: both sides on their own colours, as CM sets a match header (`cm9900/21.jpg`); the pairing is already
 // in the squads payload.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function NextMatchPage({

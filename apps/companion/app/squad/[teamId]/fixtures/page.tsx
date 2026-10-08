@@ -10,8 +10,6 @@ import { PANEL } from "@/app/desk";
 // Every gameweek this side plays, played and to come: the only view of one team's whole season.
 // Cup ties are not here: nobody is drawn into one yet, so no cup fixture can name this team.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function FixturesPage({

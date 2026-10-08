@@ -11,8 +11,6 @@ import { STATS_LEAGUE_KEYS } from "./statViews";
 // Every man this manager owns and what each has done: the served league's counts off the Player Stats board's warm
 // read, filtered on owner, and the stats league's beneath them. One figure of ours: DefCon points at his slot.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function StatsPage({

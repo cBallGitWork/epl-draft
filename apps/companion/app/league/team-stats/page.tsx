@@ -36,8 +36,6 @@ import TeamName from "../../components/league/TeamName";
 // FPts and Total are Fantrax's for each lineup from the league's first pairing; Squad adds up the stats league's counts for the men each team holds.
 // No owner column: Fantrax's teamInfo is `{name, id}` and we hold no list of managers (Craig, 1 Sep: "ditch the manager name").
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 /** Next 16 hands these as a Promise, so it is awaited like `params`. */

@@ -15,8 +15,6 @@ import { shortName } from "../teamNames";
 
 // Your squad, then everyone else's. The cookie makes the route dynamic; the reads under it are cached.
 
-// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
-// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function SquadsPage() {
