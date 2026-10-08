@@ -2,7 +2,7 @@ import { DRAFT_NEWS } from "../../config";
 import { listed } from "../../format";
 import { ordinal } from "../../league/ordinal";
 import { londonDayOf } from "../../time";
-import type { MatchupContext } from "./brief";
+import type { MatchupContext, TablePlace } from "./brief";
 import { counted, lateDecider } from "./state";
 import { returnCount, returnWords, whenScored } from "./stories";
 import { thread, type Thread } from "./thread";
@@ -52,7 +52,10 @@ function sameMatch(ctx: MatchupContext): Thread[] {
   });
 }
 
-export function matchThreads(ctx: MatchupContext, beats: readonly Beat[], worth: SlotWorth, gameweek: number): Thread[] {
+/** The league's own gameweek, counted from the side's settled results going in. */
+const leagueWeek = (p: TablePlace) => p.won + p.drawn + p.lost + 1;
+
+export function matchThreads(ctx: MatchupContext, beats: readonly Beat[], worth: SlotWorth): Thread[] {
   const { margin } = ctx.state;
   if (margin === 0) return [...levelThreads(ctx, beats), ...oneManShows(ctx), ...sameMatch(ctx)];
   const [w, l]: [Which, Which] = margin > 0 ? ["home", "away"] : ["away", "home"];
@@ -87,7 +90,7 @@ export function matchThreads(ctx: MatchupContext, beats: readonly Beat[], worth:
   }
   if (m <= DRAFT_NEWS.closeWithin) out.push(thread("close", { teamId: W.side.teamId, bigger: m === 1, facts: [`${W.side.name} won by ${m}`] }));
   const [pw, pl] = [ctx.places[w], ctx.places[l]];
-  if (gameweek >= DRAFT_NEWS.upsetFrom && pw !== null && pl !== null && pw.rank - pl.rank >= DRAFT_NEWS.upsetPlaces) {
+  if (pw !== null && pl !== null && leagueWeek(pw) >= DRAFT_NEWS.upsetFrom && pw.rank - pl.rank >= DRAFT_NEWS.upsetPlaces) {
     out.push(thread("upset", { teamId: W.side.teamId, bigger: pl.rank === 1, facts: [`${W.side.name} were ${ordinal(pw.rank)} going into the gameweek and ${L.side.name} ${ordinal(pl.rank)}`] }));
   }
   if (m >= DRAFT_NEWS.routFrom) out.push(thread("rout", { teamId: W.side.teamId, bigger: m >= DRAFT_NEWS.bigRoutFrom, facts: [`${W.side.name} won by ${m}`] }));

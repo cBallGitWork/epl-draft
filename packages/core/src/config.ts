@@ -303,7 +303,7 @@ export const DRAFT_NEWS = {
   /** The winner this many places lower is an upset, from this gameweek of the league's on. */
   upsetPlaces: 4,
   upsetFrom: 4,
-  /** A blank by one of the match-up's top few projected men is news, from this gameweek on; the projection never prints. */
+  /** A blank by one of the match-up's top few projected men is news, from this Premier League gameweek on; the projection never prints. */
   starBlankTop: 3,
   starBlankFrom: 6,
   /** After Saturday, one side with this many more men to play than the other. */
