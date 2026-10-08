@@ -12,6 +12,7 @@ import {
   onLondonDay,
   mapLeagueInfo,
   periodGameweeks,
+  periodOfGameweek,
   requireLeague,
 } from "@epl/core";
 import { mkdirSync, writeFileSync } from "node:fs";
@@ -43,7 +44,7 @@ async function main(): Promise<void> {
     fetchLeagueInfo(FANTRAX_LEAGUE_ID).then(mapLeagueInfo),
     fetchFixtures().then(mapFixtures),
   ]);
-  const round = periodGameweeks(info.scoringPeriods, datedKickoffs(season)).find((p) => p.gameweeks.includes(gameweek));
+  const round = periodOfGameweek(periodGameweeks(info.scoringPeriods, datedKickoffs(season)), gameweek);
   if (round === undefined) throw new Error(`No Fantrax period covers gameweek ${gameweek}.`);
   say(`League ${FANTRAX_LEAGUE_ID}, gameweek ${gameweek}, period ${round.period} (gameweeks ${round.gameweeks.join(", ")}).`);
   const facts = await gatherRoundFacts(info, snapshot, round.period);

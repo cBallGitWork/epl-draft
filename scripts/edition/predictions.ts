@@ -7,15 +7,14 @@ import {
   fetchLiveScoring,
   fetchSeasonResults,
   fetchTeamRosters,
-  firstKickoff,
   fullClubName,
-  locksAt,
   mapLiveStats,
   mapProjectedTotals,
   mapSeasonResults,
   mapTeamRosters,
   movement,
   pastOffered,
+  periodLock,
   periodPairings,
   plannerRows,
   predictionRecord,
@@ -79,9 +78,7 @@ export async function predictionsDesk(input: {
   if (round === undefined) return null;
   const { info, snapshot } = input;
   const pairings = periodPairings(info.matchups, info.teams, round.period);
-  const rosterPeriod = info.rosterPeriods.find((each) => each.number === round.period);
-  const kickoff = rosterPeriod === undefined ? null : firstKickoff(rosterPeriod, input.kickoffs);
-  const lock = kickoff === null ? null : locksAt(kickoff);
+  const lock = periodLock(info.rosterPeriods.find((each) => each.number === round.period), input.kickoffs);
   if (pairings.length === 0 || lock === null) return null;
 
   const played = Array.from({ length: PREDICTIONS.recentGames }, (_, at) => round.gameweek - PREDICTIONS.recentGames + at).filter((gw) => gw >= 1);

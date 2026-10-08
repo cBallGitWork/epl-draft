@@ -8,16 +8,16 @@ import {
   datedKickoffs,
   fetchFixtures,
   fetchLeagueInfo,
-  firstKickoff,
   getFootballSnapshot,
   isCovered,
-  locksAt,
   mapFixtures,
   mapLeagueInfo,
   newsdesk,
   nextDeadline,
   openingGameweek,
   periodGameweeks,
+  periodLock,
+  periodOfGameweek,
   banned,
   REPORT_NEVER,
   DRAFT_NEVER,
@@ -45,31 +45,12 @@ import { deskContext } from "./edition/context";
 import { fire, type Run } from "./edition/firing";
 import { printStory, readLedger, readPaperStories, saveFiling } from "./edition/persist";
 
-// The newsroom's orchestrator, run from CI on a wide cron net.
-//
-// **Facts are live and prose is published — and published prose accumulates.**
-// Every firing asks the newsdesk what is new since the covered-keys were last
-// spent, takes the top of the running order up to the cap, writes each story
-// from its own scoped brief and saves it before the next, and CI commits the
-// lot — which bakes it into the page. The common case is a firing that finds
-// nothing and exits.
-//
-// **It never commits anything it has not validated.** These commits ride
-// `GITHUB_TOKEN` and so run no CI beside them, while changing what the app
-// renders — so the shape checks in `edition/newsroom.ts` and
-// `edition/persist.ts` are the only gate there is, and a model returning
-// something unrenderable must cost us a red workflow rather than a broken
-// front page.
+// The newsroom's orchestrator, run from CI on a wide cron net: each firing files the top of the running order up to the
+// cap, saving each story before the next, and CI commits them. Those commits run no CI, so the shape checks in
+// `edition/newsroom.ts` and `edition/persist.ts` are the only gate between a model's output and the front page.
 
-/** Stories one firing may FILE — not model calls it may consider, and not
- *  assignments it may look at. A desk that refuses costs nothing and the next
- *  assignment takes its place (`hasRoom`, in `edition/firing.ts`).
- *
- *  The default stays two for a local run; CI passes ten, because the newsdesk
- *  offers a dozen assignments for a finished round and a cap of two took four
- *  firings to reach the first match report. The ledger is what makes a big cap
- *  safe: an already-covered key is never queued, so no cap can file the same
- *  story twice. */
+/** Stories one firing may FILE, not assignments it may consider (`hasRoom`, `edition/firing.ts`): two locally, ten
+ *  from CI. The ledger never queues a covered key, so no cap files a story twice. */
 const STORY_CAP = Number(process.env.GAZETTA_STORY_CAP ?? 2);
 
 /** Prints the assignments and their briefs instead of writing anything. */
@@ -78,10 +59,8 @@ const DRY_RUN = process.env.DRY_RUN === "1";
 async function main(): Promise<void> {
   requireLeague(FANTRAX_LEAGUE_ID);
 
-  // One instant for the whole firing. Read five times, it drifted across the
-  // model call — the desk commissioning under Sunday while the byline printed
-  // Monday.
-  // `GAZETTA_NOW` rehearses a dated column (Friday's, on a Monday); CI never sets it, and an unreadable value is ignored.
+  // One instant for the whole firing, or the desk and the byline straddle midnight. `GAZETTA_NOW` rehearses a dated
+  // column; CI never sets it, and an unreadable value is ignored.
   const wanted = process.env.GAZETTA_NOW ?? "";
   const now = Number.isNaN(Date.parse(wanted)) ? new Date().toISOString() : new Date(wanted).toISOString();
 
@@ -104,15 +83,13 @@ async function main(): Promise<void> {
   const season = await fetchFixtures().then(mapFixtures).catch(() => snapshot.fixtures);
   const kickoffs = datedKickoffs(season);
   const calendar = periodGameweeks(info.scoringPeriods, kickoffs);
-  const round = calendar.find((period) => period.gameweeks.includes(snapshot.gameweek));
+  const round = periodOfGameweek(calendar, snapshot.gameweek);
   const deadline = nextDeadline(info.rosterPeriods, kickoffs, now);
   const nextRound = openingGameweek(calendar, deadline?.period);
   if (round === undefined) return say(`No Fantrax period covers gameweek ${snapshot.gameweek}.`);
 
   // When this round locks, and whether it has: the pressers' desk reads both.
-  const period = info.rosterPeriods.find((each) => each.number === round.period);
-  const kickoff = period ? firstKickoff(period, kickoffs) : null;
-  const lock = kickoff === null ? null : locksAt(kickoff);
+  const lock = periodLock(info.rosterPeriods.find((each) => each.number === round.period), kickoffs);
   const locked = lock !== null && Date.parse(now) >= Date.parse(lock);
 
   const ledger = readLedger();
@@ -126,7 +103,7 @@ async function main(): Promise<void> {
   const sheet = presserDesk({ facts, snapshot, byCode, now, lock, locked, season, say });
   // The elevens predict the round the pressers preview, so one clock serves both.
   const xi = readXi(sheet.gameweek);
-  const ahead = calendar.find((each) => each.gameweeks.includes(sheet.gameweek));
+  const ahead = periodOfGameweek(calendar, sheet.gameweek);
 
   const only = process.env.GAZETTA_ONLY ?? "";
   const assignments = newsdesk(

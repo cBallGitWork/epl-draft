@@ -1,3 +1,5 @@
+import { LEAGUE_TIMEZONE, MS_PER_DAY, wallClockInstant } from "@epl/core";
+
 // What should have run by now and has not: the watchdog's verdict, pure, so a test can stand at any hour.
 
 /** A run as `gh run list --json displayTitle,status,conclusion,createdAt` lists it. */
@@ -32,8 +34,6 @@ export interface MacRule {
 }
 
 const HOUR = 3_600_000;
-const DAY = 24 * HOUR;
-const LONDON = "Europe/London";
 const EVERY_DAY = [0, 1, 2, 3, 4, 5, 6];
 
 /** Every scheduled workflow but this one; a test holds the list to `.github/workflows`. Dailies get 30h: crons run late. */
@@ -58,13 +58,13 @@ export const WATCHDOG_RULE: WorkflowRule = { workflow: "watchdog.yml", within: 3
 
 /** `scripts/install-intel-jobs.sh`'s slots, London time; a fail counts as ran, because it has been reported. */
 export const MAC_RULES: readonly MacRule[] = [
-  { source: "intel-weekly", slots: [{ weekdays: [2], start: "08:00", due: "12:00", zone: LONDON }] },
+  { source: "intel-weekly", slots: [{ weekdays: [2], start: "08:00", due: "12:00", zone: LEAGUE_TIMEZONE }] },
   {
     source: "intel-pressers",
     slots: [
-      { weekdays: [4], start: "16:00", due: "18:00", zone: LONDON },
-      { weekdays: [5], start: "12:30", due: "14:00", zone: LONDON },
-      { weekdays: [5], start: "17:45", due: "18:30", zone: LONDON },
+      { weekdays: [4], start: "16:00", due: "18:00", zone: LEAGUE_TIMEZONE },
+      { weekdays: [5], start: "12:30", due: "14:00", zone: LEAGUE_TIMEZONE },
+      { weekdays: [5], start: "17:45", due: "18:30", zone: LEAGUE_TIMEZONE },
     ],
   },
 ];
@@ -82,10 +82,7 @@ export function standAt(input: string, real: number): number {
 
 /** A wall-clock time on a calendar day in `zone`, as an instant. */
 function wallClock(day: string, time: string, zone: string): number {
-  const asUtc = new Date(`${day}T${time}:00Z`);
-  const shown = new Date(asUtc.toLocaleString("en-US", { timeZone: zone }));
-  const utc = new Date(asUtc.toLocaleString("en-US", { timeZone: "UTC" }));
-  return asUtc.getTime() - (shown.getTime() - utc.getTime());
+  return wallClockInstant(Date.parse(`${day}T${time}:00Z`), zone);
 }
 
 function dayIn(at: number, zone: string): string {
@@ -97,7 +94,7 @@ function lastDue(slots: readonly Slot[], now: number): { start: number; due: num
   let last: { start: number; due: number; slot: Slot } | null = null;
   for (let back = 0; back <= 7; back++) {
     for (const slot of slots) {
-      const day = dayIn(now - back * DAY, slot.zone);
+      const day = dayIn(now - back * MS_PER_DAY, slot.zone);
       if (!slot.weekdays.includes(new Date(`${day}T12:00:00Z`).getUTCDay())) continue;
       const due = wallClock(day, slot.due, slot.zone);
       if (due <= now && (last === null || due > last.due)) last = { start: wallClock(day, slot.start, slot.zone), due, slot };
