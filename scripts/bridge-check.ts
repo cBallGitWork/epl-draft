@@ -1,8 +1,8 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
-  FantraxError,
   type Bridge,
+  ProviderError,
   fetchPlayerPool,
   fetchTeamRosters,
   isAssumed,
@@ -11,32 +11,12 @@ import {
   mapTeamRosters,
 } from "@epl/core";
 import { RECORDED_LEAGUES } from "./leagues";
-import { MAPPINGS_ROOT } from "./paths";
+import { MAPPINGS_ROOT, leagueCaptureRoot } from "./paths";
+import { drafted, excused } from "./snapshots";
 
-// Is anybody's actual squad missing a footballer?
-//
-// The bridge covers 688 Fantrax players and about 120 of them have no FPL
-// counterpart, which is a correct answer rather than a failure — Fantrax carries
-// academy names FPL has never listed. That 78% is not the number that matters.
-// **The number that matters is how many of the players somebody actually holds
-// we cannot resolve**, because each one is a hole in a squad view.
-//
-// ROADMAP §6 asks for a gate on it, and this is it. `npm run bridge` reports
-// totals and has never answered this question.
-//
-// What fails, and what does not:
-//
-// - **Unbridged** — the bridge has never seen this id. Somebody joined the pool
-//   since the last `npm run bridge`. Always a fault, always fixable by running it.
-// - **Assumed unmapped** — the script looked and found nobody. Revisable by
-//   construction (`isAssumed`), and FPL adds players all window: three of the
-//   first residue recorded were in FPL a week later. On a rostered player this
-//   fails, because a manager is looking at the hole.
-// - **A person's verdict** — `unmappedBy: "manual"`, or any row carrying
-//   `auditedAt`. Passes. A person looked and the script did not, and this gate
-//   has no standing to reopen that.
-//
-//   npm run bridge:check
+// Is anybody's actual squad missing a footballer? Each rostered man we cannot resolve is a hole in a squad view.
+// Unbridged (the bridge is stale) and assumed-unmapped (the matcher's guess) fail; a person's verdict stands. A league
+// whose squads do not arrive fails too, unless it refused NO_TEAMS before its draft.   npm run bridge:check
 
 interface Hole {
   league: string;
@@ -54,6 +34,7 @@ async function main() {
   const names = new Map(pool.map((player) => [player.fantraxId, player.displayName]));
 
   const holes: Hole[] = [];
+  const unread: string[] = [];
   let rostered = 0;
   let audited = 0;
 
@@ -62,10 +43,13 @@ async function main() {
     try {
       teams = mapTeamRosters(await fetchTeamRosters(league.leagueId)).teams;
     } catch (error) {
-      if (!(error instanceof FantraxError)) throw error;
-      // Our real league answers NO_TEAMS until draft night. A league with nobody
-      // in it has nobody unresolved, which is a pass and not a skip.
-      console.log(`~ ${league.key}: ${error.code} — no squads to check`);
+      if (!(error instanceof ProviderError)) throw error;
+      if (excused(error.code, await drafted(leagueCaptureRoot(league.key)))) {
+        console.log(`~ ${league.key}: ${error.code} before its draft — nobody holds anybody yet`);
+      } else {
+        console.error(`✗ ${league.key}: ${error.message}`);
+        unread.push(`${league.key} (${error.code})`);
+      }
       continue;
     }
 
@@ -84,8 +68,7 @@ async function main() {
           holes.push({ league: league.key, teamName: team.teamName, fantraxId: slot.fantraxId, name, why: "assumed-unmapped" });
           continue;
         }
-        // A person's absence, standing. Counted so the number is visible rather
-        // than silently passing.
+        // A person's absence, standing: counted so the number is seen rather than silently passed.
         audited += 1;
       }
     }
@@ -97,31 +80,36 @@ async function main() {
     console.log(`${audited} of them are absences a person confirmed, which stand.`);
   }
 
-  // Nobody checked is not everybody clear. Both leagues answering `NO_TEAMS` is
-  // the real league's state every day until 10 Oct, and on the morning of the
-  // draft this gate would otherwise have reported all-clear having looked at
-  // nobody — in CI, on the one push where somebody might believe it.
-  if (rostered === 0) {
+  if (holes.length > 0) {
+    console.log(`\n${holes.length} rostered player${holes.length === 1 ? "" : "s"} unresolved:\n`);
+    for (const hole of holes) {
+      console.log(`  ${hole.why.padEnd(17)} ${hole.name.padEnd(24)} ${hole.teamName} (${hole.league}) [${hole.fantraxId}]`);
+    }
+    console.log(
+      `\nUnbridged means the bridge is stale — run \`npm run bridge\`. Assumed-unmapped` +
+        ` means the matcher found nobody; look, and if it is right, say so in the file.`,
+    );
+    process.exitCode = 1;
+  } else if (rostered > 0) {
+    console.log(
+      unread.length === 0
+        ? "No holes: every player anybody holds resolves to a footballer."
+        : "No holes in the squads that arrived.",
+    );
+  } else if (unread.length === 0) {
+    // Nobody checked is not everybody clear, so this never claims "no holes".
     console.log("Nothing to check: no league has a rostered player yet.");
-    return;
   }
 
-  if (holes.length === 0) {
-    console.log("No holes: every player anybody holds resolves to a footballer.");
-    return;
+  if (unread.length > 0) {
+    console.error(`\nFAILED: squads not read for ${unread.join(", ")}; only NO_TEAMS before a league's draft may stand.`);
+    process.exitCode = 1;
   }
-
-  console.log(`\n${holes.length} rostered player${holes.length === 1 ? "" : "s"} unresolved:\n`);
-  for (const hole of holes) {
-    console.log(`  ${hole.why.padEnd(17)} ${hole.name.padEnd(24)} ${hole.teamName} (${hole.league}) [${hole.fantraxId}]`);
-  }
-  console.log(
-    `\nUnbridged means the bridge is stale — run \`npm run bridge\`. Assumed-unmapped` +
-      ` means the matcher found nobody; look, and if it is right, say so in the file.`,
-  );
-  process.exitCode = 1;
 }
 
-// Not awaited at the top level: these scripts transpile to CJS, and a rejection
-// here should crash the run loudly rather than be caught and softened.
-void main();
+// A provider's failure is one line and exit 1; a fault of our own still crashes loudly.
+void main().catch((error: unknown) => {
+  if (!(error instanceof ProviderError)) throw error;
+  console.error(`✗ bridge:check could not read: ${error.message}`);
+  process.exitCode = 1;
+});

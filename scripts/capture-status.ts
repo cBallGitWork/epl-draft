@@ -1,32 +1,19 @@
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 import { captureStaleness } from "@epl/core";
 import { RECORDED_LEAGUES } from "./leagues";
 import { leagueCaptureDir, leagueCaptureRoot, todayInLondon } from "./paths";
-import { captureDates, captureReads } from "./snapshots";
+import { captureDates, captureReads, drafted, excused } from "./snapshots";
 
-// Makes capture health something a human sees rather than something we assume.
-// Exits non-zero when overdue so it can gate other work later.
-//
-// Per league, because each drafts on its own day: a drafted league is captured
-// daily, one still waiting on the weekly cadence. One combined answer would hide
-// whichever of them stopped.
-
-/** Whether Fantrax said this league had drafted, in the newest capture that recorded its draft. */
-async function drafted(key: string, dates: readonly string[]): Promise<boolean> {
-  for (const date of [...dates].sort().reverse()) {
-    const raw = await readFile(join(leagueCaptureDir(key, date), "getDraftResults.json"), "utf8").catch(() => null);
-    if (raw !== null) return (JSON.parse(raw) as { draftState?: string }).draftState === "completed";
-  }
-  return false;
-}
+// Whether each recorded league is still being captured, and whether its newest day recorded every read; non-zero when
+// not. Per league, because each drafts on its own day and one combined answer would hide whichever stopped.
 
 async function main(): Promise<void> {
   const today = todayInLondon();
 
   for (const league of RECORDED_LEAGUES) {
-    const dates = await captureDates(leagueCaptureRoot(league.key));
-    const status = captureStaleness(dates, today, await drafted(league.key, dates));
+    const root = leagueCaptureRoot(league.key);
+    const dates = await captureDates(root);
+    const isDrafted = await drafted(root);
+    const status = captureStaleness(dates, today, isDrafted);
 
     if (status.lastCapture === null) {
       console.log(`${league.key}: no captures yet. Run \`npm run capture\`.`);
@@ -37,11 +24,7 @@ async function main(): Promise<void> {
       );
     }
 
-    // A date is not a capture. `capture-fantrax` makes the directory before the
-    // first read and writes a manifest whatever happens, so a day Fantrax
-    // refused end to end looks exactly like a day it answered — and this
-    // watchdog, which counts directories, called it `0d ago`. The manifest says
-    // which it was.
+    // A dated directory is not a capture: it is made before the first read, so only the manifest says what landed.
     if (status.lastCapture !== null) {
       const reads = await captureReads(leagueCaptureDir(league.key, status.lastCapture));
       if (reads === null) {
@@ -49,14 +32,20 @@ async function main(): Promise<void> {
         process.exitCode = 1;
       } else if (reads.ok === 0) {
         console.error(
-          `${league.key}: ${status.lastCapture} recorded NOTHING — all ${reads.failed} reads ` +
+          `${league.key}: ${status.lastCapture} recorded NOTHING — all ${reads.failed.length} reads ` +
             "failed. The day is on disk and the league state is not.",
         );
         process.exitCode = 1;
-      } else if (reads.failed > 0) {
-        // Not a failure: the real league refuses `getTeamRosters` with NO_TEAMS
-        // every day until 10 Oct, and that is a true answer about the league.
-        console.log(`  ${reads.ok} reads recorded, ${reads.failed} refused.`);
+      } else {
+        const lost = reads.failed.filter((read) => !excused(read.code, isDrafted));
+        if (lost.length > 0) {
+          const named = lost.map((read) => `${read.method} (${read.code ?? "no code"})`).join(", ");
+          console.error(`${league.key}: ${status.lastCapture} failed ${named}, and a missed read cannot be backfilled.`);
+          process.exitCode = 1;
+        } else if (reads.failed.length > 0) {
+          const refused = reads.failed.map((read) => read.method).join(", ");
+          console.log(`  ${reads.ok} reads recorded; ${refused} refused NO_TEAMS, as before the draft.`);
+        }
       }
     }
 
