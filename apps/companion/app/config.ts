@@ -71,6 +71,13 @@ export const ASSIST_KINDS_REVALIDATE = 300;
 /** How stale one day of the scoring league's counts may be, in seconds: three reads, two of them the whole pool. */
 export const SCORING_DAY_REVALIDATE = 300;
 
+/** How stale one footballer's FPL match history may be, in seconds: it moves only when he plays, and asking FPL
+ *  for every player viewed every 30s helped it refuse Vercel (PLATFORM_NOTES, 8 Oct 2026). */
+export const PLAYER_LOG_REVALIDATE = 60 * 60;
+
+/** How stale his completed seasons may be, in seconds: nothing moves them until the summer. */
+export const PAST_SEASONS_REVALIDATE = 60 * 60 * 24;
+
 /** How stale a finished period's counts in the stats league may be, in seconds: they move only on a correction, and
  *  a season's DefCon points ask for every period at once. */
 export const SETTLED_PERIOD_REVALIDATE = 60 * 60 * 24;

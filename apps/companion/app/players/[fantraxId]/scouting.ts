@@ -8,7 +8,7 @@ import {
 } from "@epl/core";
 import type { Club, FootballPlayer, GameLogEntry, Opposition } from "@epl/core";
 import { footballNow, seasonFixtures } from "../../football";
-import { PAGE_REVALIDATE } from "../../config";
+import { PLAYER_LOG_REVALIDATE } from "../../config";
 import { orDegraded } from "../../refusals";
 
 // The football layer on one footballer: what is coming, off the warm snapshot and calendar, and what he has done,
@@ -32,7 +32,7 @@ export async function gameLog(player: FootballPlayer): Promise<GameLogRow[] | nu
   const read = unstable_cache(
     async () => mapGameLog(await fetchElementSummary(player.id)),
     ["player-game-log", String(player.code)],
-    { revalidate: PAGE_REVALIDATE },
+    { revalidate: PLAYER_LOG_REVALIDATE },
   );
   const [log, snapshot] = await Promise.all([orDegraded(read(), () => null), footballNow()]);
   if (log === null) return null;
