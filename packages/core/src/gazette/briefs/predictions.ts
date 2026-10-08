@@ -4,7 +4,7 @@ import type { PastLine } from "../predictions/past";
 import type { PredictionCall } from "../predictions/pick";
 import type { PredictionRecord } from "../predictions/record";
 import type { PredictionSide } from "../predictions/sides";
-import { tieFacts } from "./predictionFacts";
+import { played, tieFacts } from "./predictionFacts";
 
 // Lawro's brief: the round ahead, tie by tie, with every call already made. Withheld: the totals,
 // the scores, any man's figure, anybody's line-up, and the paper's storylines, which carry last
@@ -43,6 +43,9 @@ export function buildLawroBrief(brief: {
     `LAWRO'S PREDICTIONS, gameweek ${brief.gameweek}. Filed before line-ups lock at ${londonTime(brief.locksAt)} on ${londonDate(brief.locksAt)}, and nobody has kicked a ball. Every call below is already made: you write the reasoning, never the call. Never change a call, hedge it or predict a draw.`,
     `THE ${brief.teams.length} MANAGERS, named exactly as here; the id in brackets is what you return, never the name: ${brief.teams.map((team) => `${team.name} [${team.teamId}]`).join(", ")}.`,
     recordBlock(brief.record, name),
+    brief.ties.some((tie) => played(tie.home) || played(tie.away))
+      ? null
+      : "THE SEASON HAS NOT STARTED: nobody has played a game, so nobody is top, second or bottom. Never mention the table or a side's position in it.",
     holders === null ? null : `THE CHAMPIONS: ${name(holders.team)} won this league in ${holders.season}, and are the champions until somebody takes it off them.`,
     "WHAT YOU KNOW IS THE SQUADS: who each manager holds, the men signed for this round, the table and the results. Nobody's line-up is public until the lock, so you do not know who starts, who is picked, who is left out or who is on anybody's bench, and you never write as though you do. The order of a side's men is our own reading, and no man has a figure you may print.",
     ...brief.ties.map((tie, at) => tieBlock(at + 1, brief.ties.length, tie, name, holders?.team ?? null)),

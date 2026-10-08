@@ -228,3 +228,15 @@ describe("the champions in Lawro's brief", () => {
     expect(withChampions("elsewhere")).not.toContain("champions");
   });
 });
+
+describe("the table before a game is played", () => {
+  it("gives no positions, and says the season has not started", () => {
+    // Craig, 8 Oct 2026: Lawro had sides third and top before GW6, the league's first.
+    const level = { rank: 1, won: 0, drawn: 0, lost: 0, points: 0, last: null, run: "" };
+    const fresh = (teamId: string, name: string) => ({ ...side(teamId, name, 50, [man("Saka", 9)]), form: level });
+    const text = brief([tie(fresh("cp", "Cold Palmer"), fresh("hg", "Haaland Globetrotters"))]) ?? "";
+    expect(text).not.toMatch(/-form:/u);
+    expect(text).toContain("THE SEASON HAS NOT STARTED");
+    expect(brief([tie(side("cp", "Cold Palmer", 52, [man("Saka", 9)]), side("hg", "Haaland Globetrotters", 41, [man("Rice", 8)]))])).not.toContain("NOT STARTED");
+  });
+});
