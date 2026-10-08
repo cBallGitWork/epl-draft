@@ -28,7 +28,8 @@ export default function DepthPitch({
   );
 }
 
-/** One place on the pitch: the shirt in the club's index block, then the men in line for it. */
+/** One place on the pitch: the shirt in the club's index block, then the men in line for it. The plate is one 44px
+ *  target, opening its first choice's page; the list links every man. */
 function Plate({
   spot,
   playerOf,
@@ -42,8 +43,12 @@ function Plate({
     const player = playerOf(holder.code);
     return player === null ? [] : [player];
   });
+  const first = men[0];
   return (
-    <div className="flex w-0 min-w-0 max-w-32 flex-1 flex-col overflow-hidden border border-bg bg-surface/90 shadow-[0_2px_4px_oklch(0_0_0/0.45)]">
+    <NameLink
+      href={first === undefined ? null : hrefOf(first.code)}
+      className="flex min-h-11 w-0 min-w-0 max-w-32 flex-1 flex-col overflow-hidden border border-bg bg-surface/90 shadow-[0_2px_4px_oklch(0_0_0/0.45)]"
+    >
       <span className="cm-index flex h-5 items-center justify-center text-3xs" title={spot.label}>
         {spot.slot}
       </span>
@@ -51,17 +56,16 @@ function Plate({
         <span className="px-1 py-0.5 text-center text-2xs text-faint">{DASH}</span>
       ) : (
         men.map((player, rank) => (
-          <NameLink
+          <span
             key={player.code}
-            href={hrefOf(player.code)}
             className={`truncate border-t border-bg px-1 py-0.5 text-center font-chrome lg:text-xs ${
               rank === 0 ? "text-2xs font-bold text-ink" : "text-2xs text-muted"
             } ${doubtRow(player)}`}
           >
             {player.name}
-          </NameLink>
+          </span>
         ))
       )}
-    </div>
+    </NameLink>
   );
 }
