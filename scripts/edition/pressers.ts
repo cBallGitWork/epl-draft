@@ -1,15 +1,11 @@
-import { MS_PER_DAY, fullClubName, instantOf, normalizeName, pressers, type Club, type Fixture, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
-import type { ResolvedPlayer, RosteredPlayer, RosteredTeam, StoryFixture } from "@epl/core";
+import { MS_PER_DAY, fullClubName, instantOf, normalizeName, owners, pressers, type Club, type Fixture, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
+import type { RosteredTeam, StoryFixture } from "@epl/core";
 import { roundTies } from "./round";
 import { readIntel } from "../intel";
 
 // The Team Sheet's facts, read off the intel export the sister repo writes.
 //
 // Absent is the ordinary state and files nothing.
-
-/** A day key in London, which is the league's clock — `bylines.ts` stamps the
- *  edition from the same zone, and a UTC key would put a 23:30 Thursday presser
- *  under Friday's column. */
 
 function read(): IntelPressers | null {
   return readIntel<IntelPressers>("pressers");
@@ -29,23 +25,6 @@ export interface PresserSquadMan {
   fullName: string;
   clubId: number;
   newsAdded: string | null;
-}
-
-/** Every code somebody in the league holds, and who holds him. */
-// A slot the bridge could not resolve carries no footballer, so it carries no
-// code to match a signal against.
-function resolved(player: RosteredPlayer): player is ResolvedPlayer {
-  return "player" in player;
-}
-
-function owners(teams: readonly RosteredTeam[]): Map<number, string> {
-  const out = new Map<number, string>();
-  for (const team of teams) {
-    for (const player of team.players.filter(resolved)) {
-      out.set(player.player.code, team.teamName);
-    }
-  }
-  return out;
 }
 
 /** First name and surname, as print names a person. FPL's web name is a squad
@@ -123,7 +102,7 @@ export function presserLines(
       clubName: fullClubName(club.name),
       // Null when nobody in the league holds him, which is no longer a reason
       // to drop him — it is the difference between "start him" and "claim him".
-      ownerName: held.get(signal.code) ?? null,
+      ownerName: held.get(signal.code)?.teamName ?? null,
       fresh: isNews(signal.tag, player.newsAdded, signal.said),
     }];
   });
