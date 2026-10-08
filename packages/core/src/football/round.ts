@@ -1,3 +1,5 @@
+import { POSTPONED_AFTER_MINUTES } from "../config";
+import { MS_PER_MINUTE } from "../time";
 import type { Fixture, FixtureStatus, FootballSnapshot } from "./types";
 
 // Where a round stands in time as a Saturday runs; `selectors.ts` answers what a snapshot contains.
@@ -10,7 +12,7 @@ export function isMatchdayLive(snapshot: FootballSnapshot): boolean {
 
 /** From the round's first dated kickoff until its last dated match finishes: whether Matchday shows, and the poll rate.
  *  Wider than `isMatchdayLive`, since the gap between kickoffs counts; closes on `finished`, not `data_checked`.
- *  Undated fixtures are ignored at both ends; a postponement FPL leaves dated holds the window open. */
+ *  Undated fixtures are ignored at both ends, and so is one unstarted `POSTPONED_AFTER_MINUTES` past its kickoff. */
 export function duringGameweek(snapshot: FootballSnapshot, at: string): boolean {
   const now = Date.parse(at);
   if (Number.isNaN(now)) return false;
@@ -23,6 +25,7 @@ export function duringGameweek(snapshot: FootballSnapshot, at: string): boolean 
     if (fixture.kickoff === null) continue;
     const kickoff = Date.parse(fixture.kickoff);
     if (Number.isNaN(kickoff)) continue;
+    if (fixture.status === "upcoming" && now - kickoff > POSTPONED_AFTER_MINUTES * MS_PER_MINUTE) continue;
     anyDated = true;
     if (kickoff < firstKickoff) firstKickoff = kickoff;
     if (fixture.status !== "finished") everythingFinished = false;
