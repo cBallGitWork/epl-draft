@@ -3,7 +3,6 @@ import { headToHead, type LeagueTeam, type LiveTeamScore, inkOn, teamColours } f
 import { liveScores } from "../scoreboard";
 import { getLeagueSquads } from "../squads";
 import { myTeamId } from "../session";
-import { yoursBorder } from "../mine";
 import { matchupHref } from "@/app/league/routes";
 
 // Your head-to-head in CM's match header; renders nothing when signed out or before the draft.
@@ -25,7 +24,7 @@ export default async function YourMatchup() {
   const theirs = scores.get(pairing.opponent.teamId);
 
   return (
-    <section className={`cm-panel flex flex-col gap-2 p-2 ${yoursBorder(true)}`}>
+    <section className="cm-panel flex flex-col gap-2 p-2">
       <div className="flex items-stretch">
         <Half team={pairing.team} score={yours} mine />
         <Half team={pairing.opponent} score={theirs} />

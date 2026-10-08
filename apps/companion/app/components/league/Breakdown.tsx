@@ -1,7 +1,7 @@
 import { type BreakdownLine, signed, DASH } from "@epl/core";
 import Note from "./Note";
 import { emptyBreakdownNote } from "./breakdownNote";
-import { FACT_LABEL, HEAD_PLATE, HEAD_PLATE_CENTRE, LABEL, gainOrLoss } from "@/app/desk";
+import { FACT_LABEL, HEAD_PLATE, HEAD_PLATE_CENTRE, LABEL, SMALL_CAPS, gainOrLoss } from "@/app/desk";
 
 // The itemised table: one row per category that moved his total, then the total, read from the provider.
 
@@ -38,10 +38,10 @@ export default function Breakdown({
       {/* The count column has no head: it is minutes on one row and goals on the next. */}
       <div className="flex items-stretch gap-px">
         {/* Fantrax prices a reserve like anyone else; only his manager's total leaves him out. */}
-        <span className={`${HEAD_PLATE} min-w-0 flex-1 ${LABEL}`}>
+        <span className={`${HEAD_PLATE} min-w-0 flex-1 ${SMALL_CAPS}`}>
           {reserve ? "On the bench · not counted" : "This gameweek"}
         </span>
-        <span className={`${HEAD_PLATE_CENTRE} ${PTS_COLUMN} ${LABEL}`}>Pts</span>
+        <span className={`${HEAD_PLATE_CENTRE} ${PTS_COLUMN} ${SMALL_CAPS}`}>Pts</span>
       </div>
 
       <div className="cm-panel flex flex-col">

@@ -60,7 +60,7 @@ export default function PlayerCard({
         {footballer && isDoubtful(footballer) ? (
           <div
             className={`cm-panel flex flex-col gap-0.5 px-3 py-2 ${
-              footballer.chanceOfPlaying === 0 ? "border-bad" : "border-mid"
+              footballer.chanceOfPlaying === 0 ? "cm-edge-bad" : "cm-edge-mid"
             }`}
           >
             <span className={`${SMALL_CAPS} text-muted`}>

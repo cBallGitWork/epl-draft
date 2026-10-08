@@ -93,7 +93,7 @@ function Figure({ value, percent, colour }: { value: number; percent: boolean; c
   return (
     <span
       style={colour}
-      className="cm-index numeric flex h-6 items-center justify-center text-sm font-bold lg:h-7 lg:text-base"
+      className="cm-index numeric flex h-6 items-center justify-center text-sm lg:h-7 lg:text-base"
     >
       {value}
       {percent ? "%" : ""}

@@ -8,6 +8,9 @@ import NameLink from "../NameLink";
 // The same chart as a list, for a phone (Craig, 25 Sep 2026): a row per place, its shirt in the
 // index block and the men in line across it, each washed by his doubt and boxed by why.
 
+/** A man behind the first choice: `ROW_NAME`'s face and size, unbolded and quiet. */
+const BEHIND = "font-chrome text-sm font-normal text-muted lg:text-base";
+
 export default function DepthList({
   lines,
   playerOf,
@@ -42,8 +45,8 @@ export default function DepthList({
                     ) : (
                       <NameLink
                         href={hrefOf(player.code)}
-                        className={`cm-row flex min-h-11 items-center gap-1 ${ROW_NAME} ${
-                          rank === 0 ? "text-ink" : "font-normal text-muted"
+                        className={`cm-row flex min-h-11 items-center gap-1 ${
+                          rank === 0 ? `${ROW_NAME} text-ink` : BEHIND
                         }`}
                       >
                         <span className="truncate">{player.name}</span>

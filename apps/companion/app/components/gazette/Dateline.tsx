@@ -26,7 +26,7 @@ export default function Dateline({
   if (story.filedAt === "") return null;
 
   return (
-    <Tag className={`font-sans text-3xs uppercase tracking-[0.16em] text-faint${className === "" ? "" : ` ${className}`}`}>
+    <Tag className={`font-sans text-3xs uppercase tracking-[0.16em] text-faint ${className}`}>
       {byline ? `by ${writerOf(story)} · ` : ""}
       {story.edition !== "" ? `${story.edition} · ` : ""}
       Filed {londonDayAndTime(story.filedAt)}

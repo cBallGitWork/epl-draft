@@ -1,7 +1,7 @@
 import Link from "@/app/components/shell/Link";
 import type { FantasyMan, StoryLineup, StoryReport } from "@epl/core";
 import { DASH, fixed, plural } from "@epl/core";
-import { STANDING_HEAD as HEAD } from "./heads";
+import { STANDING_CAPS, STANDING_HEAD as HEAD } from "./heads";
 
 // The sidebar beside a match's report: the line-ups first as a paper prints them, each man with our mark, then the Star man,
 // the league's side (top scorers, free agents who scored) and the key stats. A phone reads it after the report.
@@ -134,7 +134,7 @@ export default function ReportSidebar({ report, names, matchHref }: { report: St
         </Panel>
       )}
       {matchHref === null ? null : (
-        <Link href={matchHref} className={`${HEAD} flex min-h-11 items-center text-ink underline`}>
+        <Link href={matchHref} className={`${STANDING_CAPS} flex min-h-11 items-center text-ink underline`}>
           Full stats and line-ups
         </Link>
       )}
