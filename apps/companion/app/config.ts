@@ -68,6 +68,9 @@ export const CLUB_SEASON_REVALIDATE = 300;
  *  the kinds only settle what FPL's own counts already pay. */
 export const ASSIST_KINDS_REVALIDATE = 300;
 
+/** How stale the stats league's period calendar may be, in seconds: read to know which periods have begun. */
+export const STATS_PERIODS_REVALIDATE = 300;
+
 /** How stale one day of the scoring league's counts may be, in seconds: three reads, two of them the whole pool. */
 export const SCORING_DAY_REVALIDATE = 300;
 
@@ -75,12 +78,12 @@ export const SCORING_DAY_REVALIDATE = 300;
  *  for every player viewed every 30s helped it refuse Vercel (PLATFORM_NOTES, 8 Oct 2026). */
 export const PLAYER_LOG_REVALIDATE = 60 * 60;
 
-/** How stale his completed seasons may be, in seconds: nothing moves them until the summer. */
-export const PAST_SEASONS_REVALIDATE = 60 * 60 * 24;
+/** How stale a read that can no longer move may be, in seconds — a finished period's counts, a completed draft board,
+ *  a man's past seasons: only a correction touches them, and a season's DefCon points ask for every period at once. */
+export const FINAL_REVALIDATE = 60 * 60 * 24;
 
-/** How stale a finished period's counts in the stats league may be, in seconds: they move only on a correction, and
- *  a season's DefCon points ask for every period at once. */
-export const SETTLED_PERIOD_REVALIDATE = 60 * 60 * 24;
+/** His completed seasons, which nothing moves until the summer: `FINAL_REVALIDATE` under `grid.ts`'s name. */
+export const PAST_SEASONS_REVALIDATE = FINAL_REVALIDATE;
 
 /** Lifetime of the two reads a live score is drawn from, in seconds. Below `POLL.live` plus a
  *  fetch, or a stale-while-revalidate entry makes a lone reader see new scores every other poll. */

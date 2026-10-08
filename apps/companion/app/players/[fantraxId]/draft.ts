@@ -4,17 +4,16 @@ import { leagueCache } from "../../leagueCache";
 import { refusedAs } from "../../refusals";
 import { getLeaguePool } from "../pool";
 import { shortName } from "../../teamNames";
+import { FINAL_REVALIDATE } from "../../config";
 
 // What his draft pick cost: the draft read, joined to the pool `/players` already keeps warm.
-
-/** A final board is held a day; a draft still running, or a refusal, is asked on the page window. */
-const DRAFT_HELD = 60 * 60 * 24;
 
 function readPicks(): Promise<DraftPick[]> {
   return refusedAs(fetchDraftResults(FANTRAX_LEAGUE_ID), () => [], mapDraftPicks);
 }
 
-const heldDraft = leagueCache("draft-results", readPicks, () => [], DRAFT_HELD);
+// A final board is held as anything final is; a draft still running, or a refusal, is asked on the page window.
+const heldDraft = leagueCache("draft-results", readPicks, () => [], FINAL_REVALIDATE);
 const runningDraft = leagueCache("draft-running", readPicks, () => []);
 
 /** The held board once it has picks (`mapDraftPicks` gives none until the draft completes);
