@@ -59,10 +59,10 @@ on:
     # after the last Wednesday firing.
     - cron: "0,30 17-22 * * 3"
     - cron: "15 6-9 * * 4"
-    # **Thursday evening, for Lawro**, due from 18:00 London: 17:00 UTC in summer, 18:00 in
-    # winter, so the band runs to 20:30 UTC and Friday's band catches a skipped evening. It
-    # opened at 14:00 for a Thursday Team Sheet until 7 Oct 2026, when that moved to Friday.
-    - cron: "0,30 17-20 * * 4"
+    # **Thursday afternoon and evening**: the Team Sheet from 16:30 London (15:30 UTC in summer,
+    # 16:30 in winter) and Lawro from 18:00, so the band opens at 15:00 UTC and runs to 20:30;
+    # Friday's band catches a skipped evening.
+    - cron: "0,30 15-20 * * 4"
   workflow_dispatch: {}
 
 # Its own group, deliberately NOT shared with the capture or scout-xi jobs:

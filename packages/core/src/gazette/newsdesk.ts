@@ -98,7 +98,7 @@ export function newsdesk(
   if (next !== null) {
     const slot = roundSlot("presser", next.gameweek);
     for (const day of desk.pressers) {
-      if (dueFrom(day, TEAM_SHEET.hour, next.locksAt, now)) {
+      if (dueFrom(day, TEAM_SHEET, next.locksAt, now)) {
         want({ kind: "presser", key: `${slot.key}:${day}`, slug: `${slot.slug}-${day}`, day, ...about });
       }
     }
