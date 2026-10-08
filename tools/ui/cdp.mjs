@@ -127,9 +127,10 @@ export async function connect() {
       });
     },
 
-    /** Navigate and wait out hydration: a constant, since every readiness signal fires before hydration ends. */
+    /** Navigate and wait out hydration: a constant, since every readiness signal fires before hydration ends.
+     *  The base is read now, not at import, so an instrument's `--base` reaches the routes it discovers. */
     open: async (route, settle = 3500) => {
-      await send("Page.navigate", { url: BASE_URL + route });
+      await send("Page.navigate", { url: (process.env.BASE_URL ?? BASE_URL) + route });
       await new Promise((resolve) => setTimeout(resolve, settle));
     },
   };
