@@ -4458,6 +4458,12 @@ other way** (Craig: *"all screens slow when going between pages"*): no `Link` pr
 0.15–0.5s to 0.05–0.16s with no fetch, even straight after a refresh; requests from 57 to 12 opening `/league` and from
 29 to 6 per live refresh, about 50KB a tick.
 
+**`router.refresh()` does land on the front page** (8 Oct 2026; the 7 Oct question saying otherwise was wrong). In a
+local build a hidden server timestamp on `/`, and one in the layout, both changed after `AutoRefresh`'s refresh. Chrome
+logs `ERR_ABORTED` on every refresh and prefetch request, on every route and in production alike, because Next stops
+reading a stream once it holds what it needs: not a failure. What does stay set on `/` is a transition's pending
+flag, which is why pull to refresh reloads rather than spin on it.
+
 **The documented fix is one we should not take.** Next says to check existence in
 `proxy` before the body streams, and in the same breath says to keep proxy checks
 fast and avoid fetching content there. Our checks are `footballNow()`,
@@ -4875,10 +4881,6 @@ at most, summed over every man each team holds now (`join/squadStats.ts`).
 
 ## Questions
 
-- **Does `router.refresh()` ever land on the front page?** Measured 7 Oct 2026, production and a local build alike: a
-  refresh of `/` gets its 200 at ~0.1s, then the stream is aborted at ~0.3s and the transition never settles, while
-  `/league` and `/players` settle in 0.05–0.11s. `AutoRefresh` is that same call every 30s live, so the front page's
-  live facts may not be updating in place. Pull to refresh reloads instead, so it does not depend on the answer.
 - **Should a match page degrade rather than 500 when an upstream fetch fails?** The first cold fetch of an old
   match in London 500'd once on 7 Oct (the lhr1 section above).
 - **Does `?period=N` serve history once a period has completed?** Answered for
