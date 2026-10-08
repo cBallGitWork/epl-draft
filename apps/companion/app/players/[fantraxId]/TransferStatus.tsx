@@ -17,17 +17,20 @@ export default function TransferStatus({
 }: {
   /** The team holding him, or his status in words ("Free agent", "Waivers"). */
   holder: string | null;
-  joined: PlayerMove | null;
+  /** "unknown" when the log was not read whole: a dash, never "In the draft". */
+  joined: PlayerMove | null | "unknown";
   pedigree: Pedigree;
 }) {
   const drafted = pedigree.origin === "draft" ? pedigree : null;
-  const arrival = joined
-    ? [HOW[joined.transaction.kind] ?? joined.transaction.kind, fantraxDay(joined.transaction.processedAt ?? "")]
-        .filter(Boolean)
-        .join(", ")
-    : drafted
-      ? "In the draft"
-      : null;
+  const arrival = joined === "unknown"
+    ? null
+    : joined
+      ? [HOW[joined.transaction.kind] ?? joined.transaction.kind, fantraxDay(joined.transaction.processedAt ?? "")]
+          .filter(Boolean)
+          .join(", ")
+      : drafted
+        ? "In the draft"
+        : null;
 
   return (
     <Section title="Transfer status">

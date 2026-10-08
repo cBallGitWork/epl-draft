@@ -1,9 +1,28 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, onTestFinished, vi } from "vitest";
 import { htmlPage, serve, statusOnly } from "../../http/fakeFetch";
-import { fetchLeagueInfo, fetchStandings, fetchTeamRosters } from "./client";
+import { fetchLeagueInfo, fetchStandings, fetchTeamRosters, fetchTransactions } from "./client";
 import { FantraxError } from "./errors";
 
 const LEAGUE = "league-under-test";
+
+/** fxpa's transaction log over pages of transaction ids, answering the page each request names (1 when it names
+ *  none); `turns` false answers page 1 whatever is asked, as a read that ignores the page would. */
+function serveLog(pages: string[][], turns = true): { asked: number[] } {
+  const asked: number[] = [];
+  onTestFinished(() => {
+    vi.unstubAllGlobals();
+  });
+  vi.stubGlobal("fetch", async (_url: string, init?: RequestInit) => {
+    const body = JSON.parse(String(init?.body)) as { msgs: { data: { pageNumber?: string } }[] };
+    const page = Number(body.msgs[0]?.data.pageNumber ?? 1);
+    asked.push(page);
+    const number = turns ? page : 1;
+    const rows = (pages[number - 1] ?? []).map((id) => ({ txSetId: id, scorer: { scorerId: id } }));
+    const paginatedResultSet = { pageNumber: number, totalNumPages: pages.length };
+    return Response.json({ responses: [{ data: { table: { rows }, paginatedResultSet } }] });
+  });
+  return { asked };
+}
 
 describe("fxea reads", () => {
   // A WAF page served with a 200 is Fantrax failing, exactly as the same wall's 403 is.
@@ -47,5 +66,29 @@ describe("fxea reads", () => {
   it("passes an array, which is how getStandings answers", async () => {
     serve(() => Response.json([]));
     await expect(fetchStandings(LEAGUE)).resolves.toEqual([]);
+  });
+});
+
+describe("fetchTransactions", () => {
+  it("reads every page of the log as one table, asking for each by number", async () => {
+    const served = serveLog([["a", "b"], ["c", "d"], ["e"]]);
+    const log = await fetchTransactions(LEAGUE, "CLAIM_DROP");
+    expect(log.table?.rows?.map((row) => row.txSetId)).toEqual(["a", "b", "c", "d", "e"]);
+    expect(served.asked).toEqual([1, 2, 3]);
+  });
+
+  it("asks once for a log that fits a page", async () => {
+    const served = serveLog([["a"]]);
+    expect((await fetchTransactions(LEAGUE, "TRADE")).table?.rows).toHaveLength(1);
+    expect(served.asked).toEqual([1]);
+  });
+
+  it("refuses a log whose next page Fantrax will not turn, rather than pass its first page off as the whole", async () => {
+    serveLog([["a"], ["b"]], false);
+    await expect(fetchTransactions(LEAGUE, "CLAIM_DROP")).rejects.toMatchObject({
+      method: "getTransactionDetailsHistory",
+      code: "PAGE_NOT_TURNED",
+      kind: "malformed",
+    });
   });
 });

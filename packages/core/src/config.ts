@@ -178,7 +178,7 @@ export const FIXTURE_RUN = 8;
  *  manager plans a squad further out than one man. */
 export const PLANNER_RUN = 6;
 
-/** Transaction rows per page, as their own client asks; the response reports `totalNumPages`, so an overflow says so. */
+/** Transactions per page of the log (a claim and its drop are one); `fetchTransactions` reads every page. */
 export const TRANSACTION_PAGE_SIZE = 100;
 
 /** The predicted elevens: Friday from 16:00 London, an hour after the press conferences end; a lock
