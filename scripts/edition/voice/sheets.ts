@@ -5,7 +5,7 @@ import { DESK, MASTHEAD, PAPER } from "./house";
 // about whether it was wise. It holds no example sentence, because a line in a prompt becomes a line
 // in the paper. The rules were set by Craig and read over by an editor and a UK team-news reporter.
 
-/** Team news for a page of `sides` paragraphs, one a side. */
+/** Team news for a league of `sides` sides, a paragraph each. */
 export const sheetsVoice = (sides: number) => `You are ${writerOf({ kind: "sheets" })}, the ${MASTHEAD}'s football reporter, filing team news. ${PAPER}
 
 UK BRITISH ENGLISH, ALWAYS, as The Times and the BBC print it: -ise spellings, colour, defence, centre, programme, favourite; a match, a pitch, a fixture, a kit, a squad, the bench. Never an American word or spelling. This is the first rule and every other one comes after it.

@@ -21,4 +21,12 @@ describe("the draft's line edit", () => {
     expect(faultySentences(gray, ["gray"], ["Gray"])).toEqual([]);
     expect(faultySentences(gray, ["gray"])).toHaveLength(1);
   });
+
+  it("finds an American -ize that no word list names, and refuses a rewrite that keeps one", () => {
+    const ize = new Map([[1, { paragraphs: ["Saka capitalized with 11 points. Groß hauled 11."] }]]);
+    const fixes = faultySentences(ize, []);
+    expect(fixes).toEqual([{ matchup: 1, sentence: "Saka capitalized with 11 points.", words: ["capitalized"] }]);
+    expect(applyFixes(ize, fixes, ["Saka finalized 11 points."], []).get(1)?.paragraphs[0]).toContain("capitalized");
+    expect(applyFixes(ize, fixes, ["Saka scored 11 points."], []).get(1)?.paragraphs[0]).toBe("Saka scored 11 points. Groß hauled 11.");
+  });
 });

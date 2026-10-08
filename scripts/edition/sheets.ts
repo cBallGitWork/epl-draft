@@ -12,6 +12,7 @@ import {
   mapLiveStats,
   mapPlayerStories,
   openingGameweek,
+  periodFixtures,
   periodGameweeks,
   sheetOf,
   sheetsFacts,
@@ -21,6 +22,7 @@ import {
   type Fixture,
   type FootballSnapshot,
   type LeagueInfo,
+  type LeaguePeriod,
   type PlayerStory,
   type RecentGame,
   type Sheet,
@@ -45,6 +47,8 @@ export interface SheetsDesk {
   clubs: string[];
   /** His club's match this gameweek, "EVE (H)", stamped into the filed sheet. */
   against: (clubId: number) => string | null;
+  /** The league's sides, which the voice counts: a tie left off for a side that fielded nobody shortens only the page. */
+  sides: number;
 }
 
 /** Earlier periods read at a time: a late-season round asks Fantrax for thirty-odd. */
@@ -56,18 +60,22 @@ export async function sheetsDesk(input: {
   snapshot: FootballSnapshot;
   facts: DeskFacts;
   period: number;
-  /** The gameweeks this period scores. */
-  gameweeks: readonly number[];
+  /** The period's dates, which choose its matches. */
+  scoring: LeaguePeriod | undefined;
   season: readonly Fixture[];
   clubs: ReadonlyMap<number, Club>;
   now: string;
   say: Say;
 }): Promise<SheetsDesk | null> {
-  const { info, snapshot, facts, period, gameweeks, clubs, now, say } = input;
+  const { info, snapshot, facts, period, scoring, clubs, now, say } = input;
   if (!input.assignments.some((each) => each.kind === "sheets")) return null;
   // The rosters must be this period's as locked, or the article reports a side nobody fielded.
   if (!facts.fielded) {
     say(`Sheets: Fantrax's rosters are not period ${period}'s; nothing filed.`);
+    return null;
+  }
+  if (scoring === undefined) {
+    say(`Sheets: Fantrax has no period ${period}; nothing filed.`);
     return null;
   }
 
@@ -78,9 +86,7 @@ export async function sheetsDesk(input: {
   });
   if (history === null) return null;
 
-  const fixtures = input.season
-    .filter((fixture) => fixture.gameweek !== null && gameweeks.includes(fixture.gameweek))
-    .map((fixture) => ({ homeClubId: fixture.homeClubId, awayClubId: fixture.awayClubId }));
+  const fixtures = periodFixtures(scoring, input.season).map((fixture) => ({ homeClubId: fixture.homeClubId, awayClubId: fixture.awayClubId }));
   const gameweek = openingGameweek(periodGameweeks(info.scoringPeriods, datedKickoffs(input.season)), period) ?? snapshot.gameweek;
   const xi = readXi(gameweek);
   const [recent, news] = await Promise.all([formRounds(gameweek), newsFor(facts, now)]);
@@ -127,6 +133,7 @@ export async function sheetsDesk(input: {
     brief: buildSheetsBrief({ gameweek, ties, clubName, fixture: (clubId) => described(clubId, (match) => `${match.home ? "at home to" : "away to"} ${clubName(match.other)}`, " and ") }),
     // "EVE (H)", as every pitch in the app labels a match.
     against: (clubId) => described(clubId, (match) => `${clubs.get(match.other)?.shortName ?? "?"} (${match.home ? "H" : "A"})`, " · "),
+    sides: info.teams.length,
   };
 }
 

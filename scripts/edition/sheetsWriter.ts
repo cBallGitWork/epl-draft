@@ -17,7 +17,7 @@ export async function writeSheets(desk: SheetsDesk, brief: string, say: Say): Pr
   };
   const names = new Map(desk.ties.flatMap((tie) => [tie.home.sheet, tie.away.sheet]).map((sheet) => [sheet.teamId, sheet.teamName]));
   const label = (section: string) => names.get(section) ?? `the meeting line ${section}`;
-  const voice = sheetsVoice(desk.ties.length * 2);
+  const voice = sheetsVoice(desk.sides);
 
   const attempts = await sendBackOnce({ desk: "sheets", voice, brief, read: attempt, sendBack: (faults) => sheetsSendBack(faults, label) }, say);
 

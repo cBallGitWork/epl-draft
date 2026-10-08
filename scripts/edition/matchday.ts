@@ -17,6 +17,7 @@ import {
   mapFixtures,
   mapLiveStats,
   parseHighlightFeed,
+  periodFixtures,
   plFixtureCode,
   plManager,
   plMatchFacts,
@@ -33,6 +34,7 @@ import {
   type FootballSnapshot,
   type Fixture,
   type IntelStrength,
+  type LeaguePeriod,
   type PlayerMatchStats,
   type ReportDayInput,
   type ReportMatchInput,
@@ -89,7 +91,8 @@ function reportClub(club: Club | undefined, manager: string | null) {
 export async function matchdayInput(opts: {
   snapshot: FootballSnapshot;
   facts: DeskFacts;
-  periodGameweeks: readonly number[];
+  /** The period the day scores in: its matches say whose points are one match's alone. */
+  scoring: LeaguePeriod | undefined;
   pick: (fixture: Fixture) => boolean;
   say: Say;
 }): Promise<ReportDayInput | null> {
@@ -107,7 +110,7 @@ export async function matchdayInput(opts: {
   const clubs = clubById(snapshot);
   const clubOfCode = new Map(snapshot.players.map((p) => [p.code, p.clubId]));
   const optaToCode = new Map(snapshot.players.flatMap((p) => (p.optaCode === null ? [] : [[p.optaCode, p.code] as const])));
-  const league = leagueJoin(facts, season.filter((f) => f.gameweek !== null && opts.periodGameweeks.includes(f.gameweek)), clubOfCode);
+  const league = leagueJoin(facts, periodFixtures(opts.scoring, season), clubOfCode);
   const past = await pastRounds(gameweek);
   const seasons = seasonLines(past, snapshot);
   if (seasons === null) say("  FPL would not give every past gameweek: no man's starts or goals this season are told.");

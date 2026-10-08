@@ -1,4 +1,4 @@
-import { banned } from "../banned";
+import { americanisms, banned } from "../banned";
 import { masked, numbersIn, sentences } from "../predictions/prose";
 import type { DraftPiece } from "./writing";
 
@@ -14,11 +14,17 @@ export interface SentenceFix {
 /** A sentence with its men and sides blanked: Archie Gray is no American spelling. */
 const plain = (text: string, names: readonly string[]) => masked(text, names).replace(/\u0000/gu, " ");
 
-/** Every sentence of the writing that still uses a phrase on `never`, `names` read as names. */
+/** The phrases on `never` a sentence uses, then its American -ize: no list can name every one. */
+function broken(text: string, never: readonly string[], names: readonly string[]): string[] {
+  const blank = plain(text, names);
+  return [...banned(blank, never), ...americanisms(blank, [])];
+}
+
+/** Every sentence of the writing that still uses a phrase on `never` or an -ize, `names` read as names. */
 export function faultySentences(pieces: ReadonlyMap<number, DraftPiece>, never: readonly string[], names: readonly string[] = []): SentenceFix[] {
   return [...pieces].flatMap(([matchup, piece]) =>
     piece.paragraphs.flatMap(sentences).flatMap((sentence) => {
-      const words = banned(plain(sentence, names), never);
+      const words = broken(sentence, never, names);
       return words.length === 0 ? [] : [{ matchup, sentence, words }];
     }),
   );
@@ -30,7 +36,7 @@ export function applyFixes(pieces: ReadonlyMap<number, DraftPiece>, fixes: reado
   fixes.forEach((fix, i) => {
     const line = rewritten[i]?.trim() ?? "";
     const figures = (text: string) => numbersIn(text).sort().join(",");
-    if (line === "" || banned(plain(line, names), never).length > 0 || figures(line) !== figures(fix.sentence)) return;
+    if (line === "" || broken(line, never, names).length > 0 || figures(line) !== figures(fix.sentence)) return;
     const piece = out.get(fix.matchup);
     if (piece !== undefined) piece.paragraphs = piece.paragraphs.map((p) => p.replace(fix.sentence, line));
   });

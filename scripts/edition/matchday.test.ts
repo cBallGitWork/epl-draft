@@ -34,7 +34,7 @@ describe("matchdayInput", () => {
       fetchedAt: "2026-09-20T09:00:00Z", dataChecked: true, statsUnavailable: false,
     };
     // Facts are read only after the season and the round.
-    expect(await matchdayInput({ snapshot: day, facts: {} as DeskFacts, periodGameweeks: [5], pick: () => true, say: (m) => said.push(m) })).toBeNull();
+    expect(await matchdayInput({ snapshot: day, facts: {} as DeskFacts, scoring: undefined, pick: () => true, say: (m) => said.push(m) })).toBeNull();
     expect(said).toEqual(["FPL would not give the season's fixtures, which the table is read from."]);
   });
 });

@@ -128,9 +128,8 @@ export const REPORTS = {
   standfirstWords: 25,
   sectionWords: [20, 45],
   sentenceWords: 35,
-  /** A burst is two goals by one side this close; a clean sheet let go from this minute went late. */
+  /** A burst is two goals by one side this close. */
   burstMinutes: 15,
-  cleanSheetLostFrom: 75,
   /** The ball in words: "most of" from, "more of" from. Never printed as a figure. */
   ball: { most: 60, more: 55 },
   /** A key-stats line earns its place past these. xA only chooses; it never prints. */
@@ -163,7 +162,7 @@ export const BIN_XI = {
   weekday: "Tue",
   /** How far the chances a man made or missed move his points when picking: a 9 still beats a 5. */
   luck: 0.5,
-  /** The column's length, in words, and its paragraphs. */
+  /** The column's length, in words, and its paragraphs; the check's most is past the prompt's 200, so a near-miss is not sent back. */
   words: [150, 220],
   paragraphs: 3,
 } as const;
