@@ -8,6 +8,7 @@ import {
   fetchPlayerStories,
   fetchTeamRosters,
   fullClubName,
+  groupedBy,
   mapLiveStats,
   mapPlayerStories,
   mapTeamRosters,
@@ -140,9 +141,7 @@ export async function earlierSheets(info: LeagueInfo, snapshot: FootballSnapshot
     const rosters = await Promise.all(batch.map((number) => fetchTeamRosters(FANTRAX_LEAGUE_ID, number)));
     read.push(...rosters.map((raw) => resolveRosters(snapshot, mapTeamRosters(raw), mapping as Bridge).teams.map(sheetOf)));
   }
-  const out = new Map<string, Sheet[]>();
-  for (const sheet of read.flat()) out.set(sheet.teamId, [...(out.get(sheet.teamId) ?? []), sheet]);
-  return out;
+  return groupedBy(read.flat(), (sheet) => sheet.teamId);
 }
 
 /** Each man's last few rounds before this one, a round he missed read as nought, so a row is

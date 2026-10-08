@@ -1,3 +1,4 @@
+import { mean } from "../mean";
 import type { LineCount, Running, PlayerLine } from "./intel/lines";
 
 // Championship Manager's attribute grid with our own ratings: a 1–20 percentile of a measure, mostly per 90.
@@ -171,7 +172,7 @@ function consistency(man: Scouted): number | null {
   const ratings = [...(man.line?.ratings ?? [])].sort((a, b) => a - b);
   if (ratings.length < QUARTER) return null;
   const worst = ratings.slice(0, Math.floor(ratings.length / QUARTER));
-  return worst.reduce((a, b) => a + b, 0) / worst.length;
+  return mean(worst);
 }
 
 function saveShare(man: Scouted): number | null {

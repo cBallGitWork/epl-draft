@@ -1,5 +1,6 @@
 import { DRAFT_DESK } from "../../config";
 import { ordinal } from "../../league/ordinal";
+import { groupedBy } from "../../grouped";
 import type { AutoSub } from "./autoSubs";
 import type { Cutoff } from "./brief";
 import type { DraftMan, DraftSide, GoalTime, SlotWorth } from "./types";
@@ -94,9 +95,7 @@ export function benchLines(side: DraftSide, subs: readonly AutoSub[], margin: nu
 
 /** Men from one club in the eleven, their matches done, who all blanked, all kept clean sheets or all returned. */
 export function clubLines(side: DraftSide): { men: DraftMan[]; line: string }[] {
-  const byClub = new Map<string, DraftMan[]>();
-  for (const m of side.eleven.filter(done)) byClub.set(m.club, [...(byClub.get(m.club) ?? []), m]);
-  return [...byClub].flatMap(([club, men]) => {
+  return [...groupedBy(side.eleven.filter(done), (m) => m.club)].flatMap(([club, men]) => {
     if (men.length < 2) return [];
     const every = men.length === 2 ? "both" : "all";
     const who = `${men.length === 2 ? "two" : men.length} ${club} men, ${listed(men.map((m) => m.name), "and")},`;

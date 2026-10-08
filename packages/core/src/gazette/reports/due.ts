@@ -1,4 +1,5 @@
 import type { Fixture } from "../../football/types";
+import { groupedBy } from "../../grouped";
 import { londonDayOf } from "../../time";
 
 // When a match-day report is due: once every match that London day has settled (FPL has added the bonus, so the figures
@@ -12,13 +13,9 @@ export interface ReportDay {
 }
 
 export function reportDays(fixtures: readonly Fixture[], gameweek: number): ReportDay[] {
-  const days = new Map<string, Fixture[]>();
-  for (const fixture of fixtures) {
-    const day = fixture.gameweek === gameweek ? londonDayOf(fixture.kickoff) : null;
-    if (day !== null) days.set(day, [...(days.get(day) ?? []), fixture]);
-  }
+  const days = groupedBy(fixtures.filter((fixture) => fixture.gameweek === gameweek), (fixture) => londonDayOf(fixture.kickoff));
   return [...days]
-    .filter(([, matches]) => matches.every((f) => f.settled))
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([day]) => ({ key: `match-report:gw${gameweek}:${day}`, slug: `gw${gameweek}-prem-report-${day}`, day }));
+    .flatMap(([day, matches]) => (day !== null && matches.every((f) => f.settled) ? [day] : []))
+    .sort((a, b) => a.localeCompare(b))
+    .map((day) => ({ key: `match-report:gw${gameweek}:${day}`, slug: `gw${gameweek}-prem-report-${day}`, day }));
 }

@@ -11,6 +11,7 @@ export type {
   MatchEvent,
   MatchEventKind,
 } from "./types";
+export { ON_THE_PITCH } from "./types";
 
 export { clubColours, clubColoursOf, clubGround, crestForShortName, crestUrl, inkOn, plateOn, shirtUrl } from "./clubs";
 export type { ClubColours } from "./clubs";

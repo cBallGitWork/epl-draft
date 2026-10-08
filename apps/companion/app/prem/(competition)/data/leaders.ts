@@ -1,4 +1,4 @@
-import { type FigureKind, type SeasonTotals, PLACES, fixed } from "@epl/core";
+import { type FigureKind, type SeasonTotals, PLACES, fixed, mean, rounded } from "@epl/core";
 
 // The Data tab's lists: one season figure per man, best first, the top twenty and the top fifty on asking.
 
@@ -58,8 +58,7 @@ export function printed(list: LeaderList, figure: number): string {
 
 /** A figure held to the places its list prints, so the ranking agrees with what the reader sees. */
 export function asPrinted(list: LeaderList, figure: number): number {
-  const scale = 10 ** PLACES[list.kind];
-  return Math.round(figure * scale) / scale;
+  return rounded(figure, PLACES[list.kind]);
 }
 
 /** The list asked for among those offered, or the first: a stale key in a shared link still shows a list. */
@@ -86,8 +85,9 @@ export function seasonRatings(marks: ReadonlyMap<number, readonly number[]>): Ma
   const most = Math.max(0, ...[...marks.values()].map((held) => held.length));
   const floor = Math.max(1, Math.ceil(most / 2));
   return new Map(
-    [...marks]
-      .filter(([, held]) => held.length >= floor)
-      .map(([code, held]) => [code, held.reduce((sum, mark) => sum + mark, 0) / held.length]),
+    [...marks].flatMap(([code, held]) => {
+      const average = held.length >= floor ? mean(held) : null;
+      return average === null ? [] : [[code, average] as const];
+    }),
   );
 }

@@ -5,6 +5,7 @@ import {
   fetchFixtures,
   fetchLive,
   getFootballSnapshot,
+  groupedBy,
   londonDay,
   londonDayOf,
   mapFixtures,
@@ -38,12 +39,10 @@ function held(): RatingStore | null {
 
 /** London days on which every match has finished and FPL has settled it, oldest first. */
 function settledDays(fixtures: readonly Fixture[]): Map<string, Fixture[]> {
-  const days = new Map<string, Fixture[]>();
-  for (const f of fixtures) {
-    const day = londonDayOf(f.kickoff);
-    if (day !== null) days.set(day, [...(days.get(day) ?? []), f]);
-  }
-  return new Map([...days].filter(([, on]) => on.every((f) => f.status === "finished" && f.settled)).sort(([a], [b]) => a.localeCompare(b)));
+  const settled = [...groupedBy(fixtures, (f) => londonDayOf(f.kickoff))].filter(
+    (day): day is [string, Fixture[]] => day[0] !== null && day[1].every((f) => f.status === "finished" && f.settled),
+  );
+  return new Map(settled.sort(([a], [b]) => a.localeCompare(b)));
 }
 
 async function main(): Promise<void> {

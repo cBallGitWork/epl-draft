@@ -4,8 +4,10 @@ import {
   eachPart,
   fplCodeOf,
   leagueWeek,
+  mean,
   observedAt,
   projectionCodes,
+  rounded,
   shrunkRate,
   type Bridge,
   type LeagueMatch,
@@ -111,8 +113,8 @@ export function buildPack(inputs: PackInputs): { rows: LeagueProjectionRow[]; pr
       perMatch: best.perMatch,
       parts: best.parts,
       positions,
-      start: mean(read.map((week) => week.start)),
-      minutes: mean(read.map((week) => week.minutes)),
+      start: averaged(read.map((week) => week.start)),
+      minutes: averaged(read.map((week) => week.minutes)),
       minutesPerGw: weeks.map((week) => week?.minutes ?? null),
       appearances: round(appearances),
       status: STATUS[side.status] ?? "out",
@@ -121,8 +123,8 @@ export function buildPack(inputs: PackInputs): { rows: LeagueProjectionRow[]; pr
       owned: false,
     });
   }
-  const rounded = Object.fromEntries(Object.entries(priors).map(([slot, rates]) => [slot, { defcon: round(rates.defcon), keeper: round(rates.keeper) }]));
-  return { rows: rows.sort((a, b) => b.total - a.total || a.name.localeCompare(b.name)), priors: rounded };
+  const held = Object.fromEntries(Object.entries(priors).map(([slot, rates]) => [slot, { defcon: round(rates.defcon), keeper: round(rates.keeper) }]));
+  return { rows: rows.sort((a, b) => b.total - a.total || a.name.localeCompare(b.name)), priors: held };
 }
 
 /** A week's expected appearances: starts, which mostly run past an hour, then what the appearance points leave over. */
@@ -131,11 +133,13 @@ function appeared(points: number, start: number, fixtures: number): number {
   return Math.max(0, points - full);
 }
 
-function mean(values: readonly (number | null)[]): number | null {
-  const read = values.filter((value): value is number => value !== null);
-  return read.length === 0 ? null : round(read.reduce((a, b) => a + b, 0) / read.length);
+/** The weeks that carry a figure, averaged; null when none does. */
+function averaged(values: readonly (number | null)[]): number | null {
+  const average = mean(values.filter((value): value is number => value !== null));
+  return average === null ? null : round(average);
 }
 
+/** The pack holds every figure to the hundredth. */
 function round(value: number): number {
-  return Math.round(value * 100) / 100;
+  return rounded(value, 2);
 }

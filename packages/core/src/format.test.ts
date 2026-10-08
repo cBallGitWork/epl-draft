@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fixed, initialled, PLACES } from "./format";
+import { fixed, initialled, PLACES, rounded } from "./format";
 
 describe("fixed", () => {
   it("prints a column of points per game at one precision", () => {
@@ -27,6 +27,15 @@ describe("fixed", () => {
 
   it("names every kind's places", () => {
     expect(PLACES).toEqual({ count: 0, expected: 2, perGame: 2, perNinety: 2, rating: 1, projected: 1 });
+  });
+});
+
+describe("rounded", () => {
+  it("holds a figure to its places, a half rounding up", () => {
+    expect(rounded(7.25, 1)).toBe(7.3);
+    expect(rounded(0.1 + 0.2, 2)).toBe(0.3);
+    expect(rounded(4.42499, 2)).toBe(4.42);
+    expect(rounded(1234.5, 0)).toBe(1235);
   });
 });
 

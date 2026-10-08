@@ -1,3 +1,4 @@
+import { rounded } from "../format";
 import type { StandingsRow } from "../league/types";
 import type { StoryResult } from "./types";
 
@@ -43,5 +44,5 @@ function roundLine(teamId: string, results: readonly StoryResult[]): string | nu
 
 /** A margin to one decimal place. */
 function round(margin: number): string {
-  return String(Math.round(margin * 10) / 10);
+  return String(rounded(margin, 1));
 }

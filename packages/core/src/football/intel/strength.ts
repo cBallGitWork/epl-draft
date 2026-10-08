@@ -1,3 +1,4 @@
+import { mean } from "../../mean";
 import type { Club, Fixture } from "../types";
 import type { IntelManifest } from "./types";
 
@@ -149,10 +150,10 @@ export function plannerRows(
       );
       const perRound = cells.map((round) => {
         const rated = round.flatMap((cell) => (cell.rank === null ? [] : [cell.rank]));
-        return rated.length === 0 ? (round.length === 0 ? hardest : null) : average(rated);
+        return mean(rated) ?? (round.length === 0 ? hardest : null);
       });
       const counted = perRound.filter((value): value is number => value !== null);
-      return { club, cells, mean: counted.length === 0 ? hardest : average(counted), rounds: perRound };
+      return { club, cells, mean: mean(counted) ?? hardest, rounds: perRound };
     })
     .sort((a, b) => a.mean - b.mean || nearer(a.rounds, b.rounds) || a.club.shortName.localeCompare(b.club.shortName))
     .map(({ rounds: _rounds, ...row }) => row);
@@ -165,10 +166,6 @@ function nearer(a: readonly (number | null)[], b: readonly (number | null)[]): n
     if (difference !== 0 && Number.isFinite(difference)) return difference;
   }
   return 0;
-}
-
-function average(values: number[]): number {
-  return values.reduce((sum, value) => sum + value, 0) / values.length;
 }
 
 function rated(value: unknown): value is number {
