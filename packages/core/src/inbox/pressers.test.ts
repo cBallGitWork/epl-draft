@@ -40,7 +40,7 @@ describe("presserNews", () => {
         teamId: null,
         mark: null,
         urgent: false,
-        link: { href: "/paper/gw6-presser-2026-10-08", label: "Read the Team Sheet" },
+        link: { href: "/paper/gw6-presser-2026-10-08", label: "Read the article" },
       },
     ]);
   });

@@ -63,6 +63,7 @@ export const MAC_RULES: readonly MacRule[] = [
     source: "intel-pressers",
     slots: [
       { weekdays: [4], start: "16:00", due: "18:00", zone: LEAGUE_TIMEZONE },
+      { weekdays: [4], start: "17:15", due: "18:15", zone: LEAGUE_TIMEZONE },
       { weekdays: [5], start: "12:30", due: "14:00", zone: LEAGUE_TIMEZONE },
       { weekdays: [5], start: "17:45", due: "18:30", zone: LEAGUE_TIMEZONE },
     ],
