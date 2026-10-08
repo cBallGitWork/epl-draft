@@ -31,9 +31,10 @@ export interface DraftSeason {
   period: number;
   /** Each side's settled results before this gameweek, oldest first. */
   runs: Map<string, FormGame[]>;
-  /** The table before this gameweek, or null when what a result is worth cannot be read. */
+  /** The table before this gameweek, or null when the results or what a result is worth cannot be read. */
   table: StandingsRow[] | null;
-  results: readonly PeriodResult[];
+  /** Null when Fantrax would not give them: no place, form, table or meeting is told. */
+  results: readonly PeriodResult[] | null;
   info: LeagueInfo;
   /** Where each man has been: the side that drafted him, traded him or released him. */
   formerly: Map<string, FormerSide[]>;
@@ -41,9 +42,9 @@ export interface DraftSeason {
   arrivals: Map<string, { teamId: string; how: "claim" | "trade" }>;
 }
 
-export async function draftSeason(info: LeagueInfo, table: readonly StandingsRow[], results: readonly PeriodResult[], pedigree: ReadonlyMap<string, DraftPick>, period: number): Promise<DraftSeason> {
-  const runs = new Map(seasonForm(table, info.matchups, results).map((f) => [f.teamId, f.run.filter((g) => g.period < period)]));
-  const pay = tablePoints(table);
+export async function draftSeason(info: LeagueInfo, table: readonly StandingsRow[], results: readonly PeriodResult[] | null, pedigree: ReadonlyMap<string, DraftPick>, period: number): Promise<DraftSeason> {
+  const runs = new Map(seasonForm(table, info.matchups, results ?? []).map((f) => [f.teamId, f.run.filter((g) => g.period < period)]));
+  const pay = results === null ? null : tablePoints(table);
   const formerly = new Map<string, FormerSide[]>();
   const add = (id: string, side: FormerSide) => formerly.set(id, [...(formerly.get(id) ?? []), side]);
   for (const [id, pick] of pedigree) add(id, { teamId: pick.teamId, how: "drafted", when: pick.round });
@@ -69,7 +70,9 @@ export function placeOf(season: DraftSeason, teamId: string): TablePlace | null 
 /** Two sides' meetings, from the home side's view, as a clean sweep's season fact when one side won them all; `now` is
  *  this gameweek's result once it is settled. */
 export function sweepOf(season: DraftSeason, home: { teamId: string; name: string }, away: { teamId: string; name: string }, now: { for: number; against: number } | null): SeasonFact | null {
-  const scored = (p: number, teamId: string) => season.results.find((r) => r.period === p && r.teamId === teamId)?.points;
+  const results = season.results;
+  if (results === null) return null;
+  const scored = (p: number, teamId: string) => results.find((r) => r.period === p && r.teamId === teamId)?.points;
   const met = [];
   for (let p = 1; p < season.period; p++) {
     const pairing = periodPairings(season.info.matchups, season.info.teams, p).find((x) => [x.home.teamId, x.away.teamId].sort().join() === [home.teamId, away.teamId].sort().join());
@@ -97,6 +100,7 @@ export function ranksAfter(season: DraftSeason, states: readonly MatchupState[])
  *  (with the substitutions) against the season, and the table after them. */
 export function gameweekFacts(season: DraftSeason, states: readonly MatchupState[], cutoff: Cutoff): Map<string, SeasonFact[]> {
   const out = new Map<string, SeasonFact[]>();
+  if (season.results === null) return out;
   const add = (teamId: string, fact: SeasonFact) => out.set(teamId, [...(out.get(teamId) ?? []), fact]);
   const sides = states.flatMap((s) => [s.home, s.away]);
   if (cutoff === "saturday") {
