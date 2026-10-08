@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { PAPER_NAME } from "../config";
 import { STANDING_HEAD } from "../components/gazette/heads";
 

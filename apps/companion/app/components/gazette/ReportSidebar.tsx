@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import type { FantasyMan, StoryLineup, StoryReport } from "@epl/core";
 import { DASH, fixed, plural } from "@epl/core";
 import { STANDING_HEAD as HEAD } from "./heads";

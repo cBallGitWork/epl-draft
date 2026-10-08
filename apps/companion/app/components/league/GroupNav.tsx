@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { GROUPS, type GroupKey } from "@epl/core";
 import { TAB } from "@/app/desk";
 import Pending from "../shell/Pending";

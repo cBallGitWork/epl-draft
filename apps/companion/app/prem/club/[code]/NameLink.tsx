@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import type { ReactNode } from "react";
 
 /** A man's name linking to his own page, or the same box unlinked when our league does not list him. */

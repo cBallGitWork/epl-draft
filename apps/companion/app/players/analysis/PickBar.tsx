@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import PickField from "./PickField";
 import { candidates } from "./pick";
 import type { Candidate } from "./pick";

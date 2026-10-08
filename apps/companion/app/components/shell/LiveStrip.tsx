@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import type { LiveTie } from "./liveTie";
 import { usePathname } from "next/navigation";
 import { DASH } from "@epl/core";

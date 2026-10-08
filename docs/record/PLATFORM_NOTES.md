@@ -4437,8 +4437,12 @@ analytics, which is a real but small cost.
 malformed URL now answers a true 404 and the table above is history. Measured before, on production in a 4G,
 4×-CPU phone: each first tap on Draft, Data, Mail and Squad drew empty tables for about 0.3s. Without them the old
 page holds for the same wait and `shell/Pending` presses the tapped tab; the request count is unchanged.
-**Prefetching every tab's full page was measured and refused**: it made first taps instant, but every 30s live
-refresh re-fetches the visible links, and full pages are ~150KB a round, about 36MB in two hours per phone.
+**Prefetching every tab's full page was measured and refused** as a `<Link prefetch>`: every 30s live refresh
+re-fetches each visible link, full pages are ~150KB a round, about 36MB in two hours per phone. **Same day, done the
+other way** (Craig: *"all screens slow when going between pages"*): no `Link` prefetches (`shell/Link`), and
+`AutoRefresh` fetches the rail's tabs on its own tick, Data's ~90KB board once per open. Rail taps went from
+0.15–0.5s to 0.05–0.16s with no fetch, even straight after a refresh; requests from 57 to 12 opening `/league` and from
+29 to 6 per live refresh, about 50KB a tick.
 
 **The documented fix is one we should not take.** Next says to check existence in
 `proxy` before the body streams, and in the same breath says to keep proxy checks

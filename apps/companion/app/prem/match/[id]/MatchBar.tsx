@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import type { Club } from "@epl/core";
 import { clubColoursOf, crestUrl, inkOn } from "@epl/core";
 import { CLUB } from "../../routes";

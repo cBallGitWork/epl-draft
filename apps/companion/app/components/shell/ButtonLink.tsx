@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import type { ReactNode } from "react";
 
 // A link drawn as the `cm-bevel` button plate, with the `min-h-11` thumb floor built in.

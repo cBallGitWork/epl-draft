@@ -4,6 +4,7 @@ import {
   MORE,
   SECTIONS,
   type BarTab,
+  aheadOf,
   barSections,
   barTabs,
   drawsOwnGround,
@@ -138,5 +139,16 @@ describe("who draws the ground", () => {
 
   it("keeps the desk's behind the squad index, which is nobody's", () => {
     expect(drawsOwnGround(SQUAD)).toBe(false);
+  });
+});
+
+describe("the tabs fetched ahead", () => {
+  // AutoRefresh fetches these pages, so a tap on a tab draws at once.
+  it("are the bar's tabs and More on every tick, and Data's ~100KB board once, never a section behind More", () => {
+    expect(aheadOf(sectionsFor(false))).toEqual({ each: ["/", MY_TEAM, "/league", "/prem", "/news", MORE], once: ["/players"] });
+  });
+
+  it("swap My Team for Live while football is on, as the bar does", () => {
+    expect(aheadOf(sectionsFor(true)).each).toEqual(["/", "/matchday", "/league", "/prem", "/news", MORE]);
   });
 });

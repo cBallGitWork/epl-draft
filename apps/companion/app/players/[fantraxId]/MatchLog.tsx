@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { DASH, type FigureKind, fixed } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import ScrollBoard from "../../components/league/ScrollBoard";

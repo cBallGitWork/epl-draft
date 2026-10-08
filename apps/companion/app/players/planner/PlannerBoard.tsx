@@ -1,5 +1,5 @@
 import ScrollBoard from "../../components/league/ScrollBoard";
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { DASH, ordinal, toFantraxClubCode, type PlannerCell, type PlannerRow, type PlannerView } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import { easeGround } from "../../components/football/ease";

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import Pending from "./Pending";
 import { TAB } from "@/app/desk";
 

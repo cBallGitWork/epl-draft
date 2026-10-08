@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { DASH, fixed, toFantraxClubCode } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import { ROW_LINK } from "../../components/league/TableCells";

@@ -28,6 +28,8 @@ export interface Section {
   overflowDuringGameweek?: boolean;
   /** Folded with its fellow members into one phone tab that pops a square for each. */
   group?: GroupKey;
+  /** Too big a page to fetch ahead on every poll, so it is fetched once (`aheadOf`): Data's board is ~90KB, the rest ~50KB. */
+  heavy?: boolean;
 }
 
 export type GroupKey = "comps";
@@ -67,7 +69,7 @@ export const SECTIONS: Section[] = [
   { href: LEAGUE, label: "Draft", glyph: "league", routes: [LEAGUE], group: "comps" },
   { href: PREM, label: "Prem", glyph: "prem", routes: [PREM], group: "comps" },
   // "Data" on the bar; the URL stays `/players`, because a shared URL outlives a label.
-  { href: POOL, label: "Data", glyph: "data", routes: [POOL] },
+  { href: POOL, label: "Data", glyph: "data", routes: [POOL], heavy: true },
   // "Mail" on the bar; the route stays `/news`.
   { href: MAIL, label: "Mail", glyph: "mail", routes: [MAIL] },
   { href: FPL, label: "FPL", routes: [FPL], overflow: true },
@@ -105,6 +107,16 @@ export function barTabs(sections: readonly Section[]): BarTab[] {
 export function tabOwns(tab: BarTab, pathname: string): boolean {
   const members = tab.kind === "group" ? tab.members : [tab.section];
   return members.some((section) => owns(section.routes, pathname));
+}
+
+/** The pages `AutoRefresh` fetches ahead so a tap on a tab draws at once: the bar's and More's on each tick, a heavy
+ *  one only when the app opens. */
+export function aheadOf(sections: readonly Section[]): { each: string[]; once: string[] } {
+  const bar = barSections(sections);
+  return {
+    each: [...bar.filter((section) => !section.heavy).map((section) => section.href), MORE],
+    once: bar.filter((section) => section.heavy).map((section) => section.href),
+  };
 }
 
 /** What is behind `More`, listed on its page before the squads and the credits. */

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { type LiveTeamScore, type PeriodPairing, pairingInvolves } from "@epl/core";
 import { yoursFirst, yoursInk } from "../../mine";
 import Changed from "../shell/Changed";

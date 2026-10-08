@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { BUTTON } from "./ButtonLink";
 
 // The foot of a player dialog: the full profile beside Close.

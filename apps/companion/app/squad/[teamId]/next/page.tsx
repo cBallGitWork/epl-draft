@@ -6,7 +6,7 @@ import { identify, whoseTeam } from "../team";
 import { getLeagueSquads, readableOr404 } from "../../../squads";
 import { planningRound } from "../../../round";
 import { leagueTable } from "../../../standings";
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { LABEL, PANEL_FLUSH, SMALL_CAPS } from "@/app/desk";
 import { teamHref } from "@/app/squad/routes";
 import { shortName } from "../../../teamNames";

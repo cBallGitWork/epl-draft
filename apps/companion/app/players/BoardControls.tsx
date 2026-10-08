@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { POOL_GROUPS, type PoolGroupKey } from "./groups";
 import { boardHref, chosen, filterHref, isChosen } from "./query";
 import type { QueryOption } from "../components/shell/QuerySelect";

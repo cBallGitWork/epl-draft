@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { useMemo, useState } from "react";
 import { type FootballPlayer, type PlayerStatLine, DASH, crestForShortName, toFplClubCode } from "@epl/core";
 import { type Beside, type Counts, VIEWS, type ViewKey, measuresFor, readingOf } from "./statViews";

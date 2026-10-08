@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import ScrollBoard from "../../../components/league/ScrollBoard";
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import type { Club, CupTie, Fixture, RunEntry } from "@epl/core";
 import { COMPETITION_NAME, cupName, londonDayAndDate, londonTime, DASH } from "@epl/core";
 import { CLUB } from "../../routes";

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/components/shell/Link";
 import { type Result, type TableRow, type TableSortKey, ordinal, signed } from "@epl/core";
 import { cellAlign, deskOnly } from "./Columns";
 import { CLUB } from "./routes";
