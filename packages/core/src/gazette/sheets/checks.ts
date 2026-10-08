@@ -1,5 +1,5 @@
 import { SHEETS } from "../../config";
-import { BANNED, americanisms, banned } from "../banned";
+import { BANNED, QUOTE_MARKS, americanisms, banned, overused } from "../banned";
 import { escapeRegExp } from "../../regExp";
 import { faultLog, type Fault, type Report } from "../predictions/checks";
 import { masked, ngrams, numbersIn, sentences, wordCount } from "../predictions/prose";
@@ -29,7 +29,6 @@ export const SHEETS_OPINION: readonly string[] = [
 /** The send-backs that are facts, not style: surviving the rewrite, the side prints the desk's line. */
 export const FINAL_HARD: ReadonlySet<string> = new Set(["an absence understated", "a manager names, a club starts", "a man owns no club"]);
 
-const QUOTES = /["“”«»]/u;
 /** Where a fact came from stays off the page: a reporter does not cite his workings. */
 export const SOURCE = /%|\bper ?cent\b|\b(?:projected|projections?|predicted|predictions?|model|FPL|Fantrax|according to|The Athletic)\b|\bper (?!cent)\p{L}/iu;
 /** The game is still to come: "might have started" is a match already played. */
@@ -64,7 +63,7 @@ export function checkSheets(draft: SheetsDraft, ctx: SheetsCheck): Fault[] {
 
   const common = (section: string, text: string) => {
     const plain = masked(text, names);
-    if (QUOTES.test(text)) fault(section, "quotation marks", "hard", text.match(QUOTES)?.[0] ?? "");
+    if (QUOTE_MARKS.test(text)) fault(section, "quotation marks", "hard", text.match(QUOTE_MARKS)?.[0] ?? "");
     if (SOURCE.test(text)) fault(section, "names a source or a percentage", "hard", text.match(SOURCE)?.[0] ?? "");
     if (PAST.test(text)) fault(section, "the wrong tense: the match is still to come", "send-back", text.match(PAST)?.[0] ?? "");
     if (COUNTED.test(text)) fault(section, "counts the gameweeks", "send-back", text.match(COUNTED)?.[0] ?? "");
@@ -111,10 +110,7 @@ export function checkSheets(draft: SheetsDraft, ctx: SheetsCheck): Fault[] {
   }
 
   const all = masked([...draft.values()].join(" "), names);
-  for (const [phrase, most] of [...SHEETS_LEXICON, ...SHEETS_CAPPED]) {
-    const used = (all.match(new RegExp(`(?<![\\p{L}])${escapeRegExp(phrase)}(?![\\p{L}])`, "giu")) ?? []).length;
-    if (used > most) fault("article", "a phrase used too often", "send-back", `${phrase} ×${used}`);
-  }
+  for (const over of overused(all, [...SHEETS_LEXICON, ...SHEETS_CAPPED])) fault("article", "a phrase used too often", "send-back", over);
   return faults;
 }
 

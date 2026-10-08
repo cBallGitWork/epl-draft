@@ -1,5 +1,4 @@
-import { FILLER, GROUNDS, REGISTER, americanisms, banned } from "../banned";
-import { escapeRegExp } from "../../regExp";
+import { FILLER, GROUNDS, QUOTE_MARKS, REGISTER, americanisms, banned, overused } from "../banned";
 import type { Report } from "../predictions/checks";
 import { masked, ngrams, sentences, wordCount } from "../predictions/prose";
 import { DESK_BANNED } from "../predictions/words";
@@ -20,7 +19,6 @@ export const REPORT_NEVER: readonly string[] = [
   ...REPORT_TELLS, ...REPORT_DEPTH_CHART,
 ];
 
-const QUOTES = /["“”«»]/u;
 const SOURCE = /%|\bper ?cent\b|\b(?:projected|projections?|predicted|predictions?|model|Fantrax|according to)\b/iu;
 const CLOCK = /\b\d{1,3}(?:\+\d{1,2})?['’](?!s\b)|\b\d{2}\+\d{1,2}\b/u;
 const NOT_BUT = /\bnot (?:just |only |merely )?[^.;]{1,40}?,? but\b/iu;
@@ -29,7 +27,7 @@ const FORECAST = /\b(?:will|should|is (?:likely|expected|set) to|could|may|might
 /** One piece of prose, marked by the part of the piece it is: football parts carry no draft words. */
 export function wordFaults(section: string, text: string, football: boolean, names: readonly string[], fault: Report): void {
   const plain = masked(text, names).replace(/\u0000/gu, "X");
-  if (QUOTES.test(text)) fault(section, "quotation marks: no quotes were given", "hard", text.match(QUOTES)?.[0] ?? "");
+  if (QUOTE_MARKS.test(text)) fault(section, "quotation marks: no quotes were given", "hard", text.match(QUOTE_MARKS)?.[0] ?? "");
   if (SOURCE.test(plain)) fault(section, "names a source or a percentage", "hard", plain.match(SOURCE)?.[0] ?? "");
   for (const word of banned(plain, REPORT_FPL)) fault(section, "a fantasy game's term", "hard", word);
   for (const word of banned(plain, REPORT_NEVER)) fault(section, "a phrase this paper does not print", "send-back", word);
@@ -45,24 +43,14 @@ export function wordFaults(section: string, text: string, football: boolean, nam
   for (const sentence of sentences(text)) if (wordCount(sentence) > 35) fault(section, "a sentence over 35 words", "warn", sentence.slice(0, 60));
 }
 
-function count(text: string, phrase: string): number {
-  return (text.match(new RegExp(`(?<![\\p{L}])${escapeRegExp(phrase)}(?![\\p{L}])`, "giu")) ?? []).length;
-}
-
-/** Caps per match and per day, openers that repeat, and phrases shared between matches or with past reports. */
-/** `brief` is the day's facts: a phrase the writer was handed (a shot's words, a minute) is his to reuse, never an echo. */
+/** Caps per match and per day, openers that repeat, and phrases shared between matches or with past reports. `brief` is
+ *  the day's facts: a phrase the writer was handed (a shot's words, a minute) is his to reuse, never an echo. */
 export function dayFaults(pieces: readonly { code: number; prose: string; account: string; standfirst: string }[], names: readonly string[], brief: string, past: readonly string[], echo: number, fault: Report): void {
   for (const piece of pieces) {
-    for (const [phrase, most] of REPORT_CAPPED_MATCH) {
-      const used = count(masked(piece.prose, names), phrase);
-      if (used > most) fault(`${piece.code}:match`, "a phrase used too often in one match", "send-back", `${phrase} ×${used}`);
-    }
+    for (const over of overused(masked(piece.prose, names), REPORT_CAPPED_MATCH)) fault(`${piece.code}:match`, "a phrase used too often in one match", "send-back", over);
   }
   const all = masked(pieces.map((p) => p.prose).join(" "), names);
-  for (const [phrase, most] of REPORT_CAPPED_DAY) {
-    const used = count(all, phrase);
-    if (used > most) fault("day", "a phrase used too often on the page", "send-back", `${phrase} ×${used}`);
-  }
+  for (const over of overused(all, REPORT_CAPPED_DAY)) fault("day", "a phrase used too often on the page", "send-back", over);
   const opener = (text: string, n: number) => text.toLowerCase().match(/[\p{L}\p{N}'’]+/gu)?.slice(0, n).join(" ") ?? "";
   const seen = new Map<string, number>();
   for (const piece of pieces) {
