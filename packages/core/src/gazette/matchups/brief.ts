@@ -1,3 +1,4 @@
+import type { DerbyName } from "../../league/derbies";
 import type { Angle } from "./angle";
 import { matchupBlock } from "./block";
 import type { SeasonFact } from "./form";
@@ -35,6 +36,8 @@ export interface MatchupContext {
   next: { home: NextOpponent | null; away: NextOpponent | null };
   /** The story the desk chose (`angle.ts`); null for a match-up with nothing to tell but its result. */
   angle: Angle | null;
+  /** The derby these two play, when they have one. */
+  derby?: DerbyName | null;
 }
 
 /** Each match-up's block, numbered from 1 in the order given: the lead first. */

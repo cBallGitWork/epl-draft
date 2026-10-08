@@ -1,7 +1,9 @@
 import type { Club, PublishedStory } from "@epl/core";
 import { DASH } from "@epl/core";
+import { derbyBetween } from "@/app/derbies";
 import Column from "./Column";
 import Face from "./Face";
+import { STANDING_HEAD } from "./heads";
 
 // Lawro's calls as the page prints them, the way the BBC ran them: each tie, the man his line names
 // first beside his words, and under them the desk's prediction. Figures sit in their own span
@@ -37,6 +39,7 @@ export default function Calls({
       <ul className="paper-columns">
         {ties.map((tie) => (
           <li key={`${tie.homeTeamId}-${tie.awayTeamId}`} className="flow-root break-inside-avoid py-3">
+            <Derby home={tie.homeTeamId} away={tie.awayTeamId} />
             <p className="font-sans text-xs font-bold uppercase tracking-widest text-ink">
               {named(tie.homeTeamId)} v {named(tie.awayTeamId)}
             </p>
@@ -54,6 +57,12 @@ export default function Calls({
       </ul>
     </Column>
   );
+}
+
+/** The derby a tie is, over its teams; nothing for a tie that is not one. */
+function Derby({ home, away }: { home: string; away: string }) {
+  const derby = derbyBetween(home, away);
+  return derby === null ? null : <p className={`${STANDING_HEAD} pb-0.5`}>{derby.name}</p>;
 }
 
 /** The side he backs and his score, that side's figure first; a tie he could not call prints a dash. */
