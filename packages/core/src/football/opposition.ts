@@ -1,4 +1,4 @@
-import { clubById, fixturesInOrder } from "./selectors";
+import { clubById, fixturesInOrder, kickoffOrder } from "./selectors";
 import type { Club, Fixture, FootballSnapshot } from "./types";
 
 // Who each club plays in the round a snapshot describes: a football fact, never inferred from the league layer.
@@ -67,12 +67,7 @@ export function nextFixtures(
       f.status === "upcoming" && (f.homeClubId === clubId || f.awayClubId === clubId),
   );
 
-  mine.sort((a, b) => {
-    if (a.kickoff === b.kickoff) return a.id - b.id;
-    if (!a.kickoff) return 1;
-    if (!b.kickoff) return -1;
-    return a.kickoff.localeCompare(b.kickoff);
-  });
+  mine.sort(kickoffOrder);
 
   const run: Opposition[] = [];
   for (const fixture of mine) {

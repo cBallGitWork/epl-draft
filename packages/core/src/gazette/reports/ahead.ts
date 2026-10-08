@@ -1,5 +1,5 @@
 import type { StrengthPlaces } from "../../football/intel/strength";
-import { byKickoff } from "../../football/selectors";
+import { byKickoffUndatedFirst } from "../../football/selectors";
 import type { Club, Fixture } from "../../football/types";
 import { londonDayOf } from "../../time";
 import { fullClubName } from "../clubNames";
@@ -28,7 +28,7 @@ export function nextThree(
   const byId = new Map(clubs.map((c) => [c.id, c]));
   return season
     .filter((f) => (f.homeClubId === club.id || f.awayClubId === club.id) && (londonDayOf(f.kickoff) ?? "") > day)
-    .sort(byKickoff)
+    .sort(byKickoffUndatedFirst)
     .slice(0, COUNT)
     .flatMap((f) => {
       const home = f.homeClubId === club.id;

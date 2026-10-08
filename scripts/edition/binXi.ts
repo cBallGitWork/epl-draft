@@ -28,6 +28,7 @@ import {
   openingGameweek,
   periodDays,
   periodGameweeks,
+  playerByCode,
   type Assignment,
   type BinMatch,
   type Bridge,
@@ -102,7 +103,7 @@ export async function binXiDesk(input: {
     readScoring(),
   ]);
 
-  const byCode = new Map(snapshot.players.map((player) => [player.code, player]));
+  const byCode = playerByCode(snapshot);
   const bridge = mapping as Bridge;
   const inWindow = new Set(played.map((fixture) => fixture.id));
   const { men, extras, unjoined } = binMen({

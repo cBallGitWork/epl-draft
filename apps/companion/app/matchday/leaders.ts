@@ -1,5 +1,5 @@
 import type { FootballPlayer, FootballSnapshot, PlayerMatchStats, PlayerOwner, RatingStore } from "@epl/core";
-import { crestUrl, mean, rounded } from "@epl/core";
+import { clubById, crestUrl, mean, playerByCode, playerById, rounded } from "@epl/core";
 
 // This gameweek's leaders: Fantrax's points for the men it priced, our marks as filed, and FPL's
 // per-match measures for everyone who played, each joined to whoever holds him. Pure; the page reads.
@@ -29,9 +29,9 @@ export function gameweekLeaders(opts: {
   mine: string | null;
   shown: number;
 }): Record<LeaderStat, Leader[]> {
-  const byId = new Map(opts.snapshot.players.map((p) => [p.id, p]));
-  const byCode = new Map(opts.snapshot.players.map((p) => [p.code, p]));
-  const clubs = new Map(opts.snapshot.clubs.map((c) => [c.id, c]));
+  const byId = playerById(opts.snapshot);
+  const byCode = playerByCode(opts.snapshot);
+  const clubs = clubById(opts.snapshot);
 
   // Highest first, then by name so a tie holds its order between refreshes; a nought leads nothing.
   const top = (totals: Map<FootballPlayer, number>): Leader[] =>
