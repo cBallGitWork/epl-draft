@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { formHref } from "../components/shell/formHref";
 
 // The board's search box, narrowing as you type (Craig, 10 Sep 2026). A GET form first: without a script Enter submits
 // it; with one, a settled keystroke becomes a URL and the server answers, so the pool never ships to the phone.
@@ -37,16 +38,9 @@ export default function Search({
     const timer = setTimeout(() => {
       const target = form.current;
       if (target === null) return;
-
-      // Built from the form, so the hidden fields keep the rest of the query.
-      const next = new URLSearchParams();
-      for (const [name, value] of new FormData(target)) {
-        if (typeof value === "string" && value.trim() !== "") next.set(name, value.trim());
-      }
-      const search = next.toString();
-
-      // `replace`, so a search is one history entry; `scroll: false`, so the board under the box stays put.
-      router.replace(search === "" ? action : `${action}?${search}`, { scroll: false });
+      // From the form, so the hidden fields keep the rest of the query; `replace`, so a search is one history entry;
+      // `scroll: false`, so the board under the box stays put.
+      router.replace(formHref(action, new FormData(target)), { scroll: false });
     }, SETTLE);
     return () => clearTimeout(timer);
   }, [text, query, router, action]);
