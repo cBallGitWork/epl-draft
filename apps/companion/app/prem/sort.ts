@@ -12,5 +12,7 @@ export function tableHref(
 ): string {
   const next = key === current ? !descending : defaultDescendingTable(key);
   if (key === "place" && next === false) return TABLE;
-  return `${TABLE}?sort=${key}${next ? "&dir=desc" : ""}`;
+  // A bare query reads as the column's own way, so a flip against it has to say so.
+  const dir = next ? "&dir=desc" : defaultDescendingTable(key) ? "&dir=asc" : "";
+  return `${TABLE}?sort=${key}${dir}`;
 }
