@@ -1,5 +1,6 @@
 import { BANNED, americanisms, banned, overused } from "../banned";
 import { LAWRO_LIMITS as LIMITS } from "../../config";
+import { mean } from "../../mean";
 import { escapeRegExp } from "../../regExp";
 import { strangers } from "../strangers";
 import { CORE_MARK, type PastLine } from "./past";
@@ -187,8 +188,8 @@ export function columnRules(intro: string, prose: readonly [string, string][], c
     if (repeated !== undefined) fault(section, "a phrase from a recent column", "send-back", repeated);
   }
   const lengths = sentences(all).map(wordCount);
-  const mean = lengths.length === 0 ? 0 : lengths.reduce((sum, n) => sum + n, 0) / lengths.length;
-  if (mean > 12) fault("column", "long sentences on average", "warn", `${mean.toFixed(1)} words`);
+  const average = mean(lengths) ?? 0;
+  if (average > 12) fault("column", "long sentences on average", "warn", `${average.toFixed(1)} words`);
 }
 
 /** The sub-editor's pencil: the trivial slips fixed rather than sent back. */

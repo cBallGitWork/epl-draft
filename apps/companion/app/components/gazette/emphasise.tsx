@@ -1,4 +1,5 @@
 import { Fragment, type ReactNode } from "react";
+import { escapeRegExp } from "@epl/core";
 
 // The footballers' names in bold in filed prose, from the story's own rows, never from the writer's markup.
 // Longest first, so "João Pedro" wins the span "Pedro" would also match.
@@ -8,7 +9,7 @@ export function emphasise(text: string, names: readonly string[]): ReactNode {
   if (wanted.length === 0) return text;
 
   // Whole words by Unicode letter class, since `\b` misses "Milenković"; deliberately not accent-insensitive.
-  const pattern = new RegExp(`(?<!\\p{L})(${wanted.map(escape).join("|")})(?!\\p{L})`, "gu");
+  const pattern = new RegExp(`(?<!\\p{L})(${wanted.map(escapeRegExp).join("|")})(?!\\p{L})`, "gu");
   const parts = text.split(pattern);
   if (parts.length === 1) return text;
 
@@ -22,8 +23,4 @@ export function emphasise(text: string, names: readonly string[]): ReactNode {
       <Fragment key={at}>{part}</Fragment>
     ),
   );
-}
-
-function escape(name: string): string {
-  return name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

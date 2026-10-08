@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { claimTeam } from "./actions";
 import { STRONG_BUTTON } from "../components/shell/ButtonLink";
-import { LABEL } from "@/app/desk";
+import { LABEL, QUIET_NOTE } from "@/app/desk";
 
 // One box: your code. A client component so a wrong code answers in place; the form posts before any JavaScript.
 
@@ -48,7 +48,7 @@ export default function SignIn() {
         </p>
       ) : null}
 
-      <p className="text-2xs text-faint">
+      <p className={QUIET_NOTE}>
         Everything here is readable without a code. Signing in only tells the app which side to
         take.
       </p>

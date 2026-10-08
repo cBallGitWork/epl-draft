@@ -1,4 +1,4 @@
-import type { DepthSpot, FootballPlayer } from "@epl/core";
+import { DASH, type DepthSpot, type FootballPlayer } from "@epl/core";
 import CmGround from "../../../../components/league/CmGround";
 import { doubtRow } from "../../../../components/football/doubtRow";
 import NameLink from "../NameLink";
@@ -48,7 +48,7 @@ function Plate({
         {spot.slot}
       </span>
       {men.length === 0 ? (
-        <span className="px-1 py-0.5 text-center text-2xs text-faint">—</span>
+        <span className="px-1 py-0.5 text-center text-2xs text-faint">{DASH}</span>
       ) : (
         men.map((player, rank) => (
           <NameLink

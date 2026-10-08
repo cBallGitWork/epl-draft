@@ -4,7 +4,7 @@ import type { Club, Fixture } from "../../football/types";
 import { londonDayOf } from "../../time";
 import { ordinal } from "../../league/ordinal";
 import { numeral } from "./minutes";
-import { plural } from "../../format";
+import { howMany } from "../../format";
 
 // Where a day's football leaves each club: its place before and after, the run it is on, and a season first.
 // Reads only fixtures played on or before the report's day, so a report filed later still says what was true then.
@@ -88,7 +88,7 @@ export function clubStandings(season: readonly Fixture[], clubs: readonly Club[]
     const place = now + 1;
     const wasZone = was < 0 ? null : zone(was + 1, before.length);
     const nowZone = zone(place, after.length);
-    const lines = [`${ordinal(place)} with ${row.points} ${plural(row.points, "point")} from ${row.played}`];
+    const lines = [`${ordinal(place)} with ${howMany(row.points, "point")} from ${row.played}`];
     if (nowZone !== null) lines.push(wasZone === nowZone ? `still ${nowZone === "top" ? "top" : "in the bottom three"}` : `now ${nowZone === "top" ? "top" : "in the bottom three"}`);
     if (wasZone !== null && nowZone !== wasZone) lines.push(`out of ${wasZone === "top" ? "top place" : "the bottom three"}`);
     const f = firsts(record);

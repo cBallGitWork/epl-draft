@@ -1,3 +1,4 @@
+import { REPORTS } from "../../config";
 import { FILLER, GROUNDS, QUOTE_MARKS, REGISTER, americanisms, banned, overused } from "../banned";
 import type { Report } from "../predictions/checks";
 import { masked, ngrams, sentences, wordCount } from "../predictions/prose";
@@ -40,7 +41,8 @@ export function wordFaults(section: string, text: string, football: boolean, nam
   if (text.includes(":")) fault(section, "a colon in prose", "send-back", ":");
   if (NOT_BUT.test(text)) fault(section, "not this but that", "send-back", text.match(NOT_BUT)?.[0] ?? "");
   if (FORECAST.test(text)) fault(section, "a forecast of selection", "send-back", text.match(FORECAST)?.[0] ?? "");
-  for (const sentence of sentences(text)) if (wordCount(sentence) > 35) fault(section, "a sentence over 35 words", "warn", sentence.slice(0, 60));
+  const longest = REPORTS.sentenceWords;
+  for (const sentence of sentences(text)) if (wordCount(sentence) > longest) fault(section, `a sentence over ${longest} words`, "warn", sentence.slice(0, 60));
 }
 
 /** Caps per match and per day, openers that repeat, and phrases shared between matches or with past reports. `brief` is
