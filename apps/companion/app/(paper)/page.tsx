@@ -37,7 +37,8 @@ export default async function GazettePage() {
   const clubs = paper.snapshot ? clubById(paper.snapshot) : new Map();
   // Fantrax's lock is by period: the reader gets the gameweek it opens, or no number where the calendar cannot say.
   const lockGameweek = paper.deadline ? openingGameweek(calendar, paper.deadline.period) : undefined;
-  const beforeIt = `, ${inWords(LINEUP_LOCK_LEAD_MINUTES)} before ${lockGameweek === undefined ? "the gameweek" : "gameweek "}`;
+  const whichWeek = lockGameweek === undefined ? "the gameweek" : "gameweek ";
+  const beforeIt = `, ${inWords(LINEUP_LOCK_LEAD_MINUTES)} before ${whichWeek}`;
   // A deal with no other side came off the wire.
   const byId = named(paper.teams);
   const who = (teamId: string | null) => (teamId === null ? "the wire" : byId(teamId));

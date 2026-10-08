@@ -1,5 +1,5 @@
-// A fantasy team's own colours, looked up in a table keyed on `teamId` and never the renamable name; the table is the
-// app's data, and an unlisted team takes `FALLBACK`. Spent only on the team's own title bar and each side of a head-to-head.
+// A fantasy team's own colours, looked up in the app's table keyed on `teamId`, never the renamable name; an unlisted
+// team takes `FALLBACK`. Spent only on the team's own title bar and each side of a head-to-head.
 
 /** A team's plate and its trim: `ClubColours`' shape, declared apart because the layers may not import each other. */
 export interface TeamColours {

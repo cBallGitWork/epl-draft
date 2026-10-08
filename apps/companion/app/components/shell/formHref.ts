@@ -1,4 +1,4 @@
-/** Where a GET form goes: `action` with its filled fields, trimmed, as a submit would send them minus the empty ones. */
+/** Where a GET form goes: `action` and its filled fields, trimmed, as a submit sends them less the empty ones. */
 export function formHref(action: string, fields: Iterable<[string, FormDataEntryValue]>): string {
   const query = new URLSearchParams();
   for (const [name, value] of fields) {
