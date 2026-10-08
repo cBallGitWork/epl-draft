@@ -1,7 +1,15 @@
 // The routes the instruments walk, in one place: a route this list does not name ships unmeasured.
 
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { discover } from "./cdp.mjs";
+
+/** Data's projections board, walked only while the app shows it: switched off it is a true 404 (`PROJECTIONS_SHOWN`). */
+const PROJECTIONS_SHOWN = (() => {
+  const routes = readFileSync(new URL("../../apps/companion/app/players/routes.ts", import.meta.url), "utf8");
+  const flag = /export const PROJECTIONS_SHOWN = (true|false);/.exec(routes);
+  if (flag === null) throw new Error("tools/ui/routes.mjs: cannot read PROJECTIONS_SHOWN from players/routes.ts");
+  return flag[1] === "true";
+})();
 
 /** Everything the desk draws, and so everything with the photographic ground behind it. */
 export const DESK_ROUTES = [
@@ -21,7 +29,7 @@ export const DESK_ROUTES = [
   "/players/teams",
   "/players/planner",
   "/players/planner?view=defence",
-  "/players/projections",
+  ...(PROJECTIONS_SHOWN ? ["/players/projections"] : []),
   "/matchday",
   // The Live tab's other two views are queries, so nothing links a crawler to them.
   "/matchday?view=vidiprinter",
