@@ -17,7 +17,7 @@ export default function Nothing({
     <div className="flex flex-col items-center gap-4 py-10 text-center">
       <LeagueCrest variant="full" height={104} />
       <div className="flex flex-col gap-1.5">
-        <h1 className="font-display text-2xl font-bold tracking-tight">{title}</h1>
+        <h1 className="font-chrome text-2xl font-bold tracking-tight">{title}</h1>
         <p className="mx-auto max-w-xs text-sm text-muted">{children}</p>
       </div>
       {code ? (
