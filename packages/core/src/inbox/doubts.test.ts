@@ -163,6 +163,20 @@ describe("availabilityNews", () => {
     expect(availabilityNews([note({ newsAt: null })], 5, squads)[0].at).toBeNull();
   });
 
+  it("names the gameweek only on a note filed since the last lock", () => {
+    // Osula's 25 Aug note still stood at GW6, and a letter dated August cannot speak of GW6.
+    const opened = "2026-09-18T15:30:00.000Z";
+    const old = note({ ...injured, news: "Foot injury - Unknown return date", chance: null, newsAt: "2026-08-25T19:00:08Z" });
+    const [item] = availabilityNews([old], 6, squads, opened);
+    expect(item.headline).toBe("Isak out");
+    expect(item.body).not.toMatch(/gameweek 6/);
+    expect(item.at).toBe("2026-08-25T19:00:08Z");
+    expect(availabilityNews([note({ newsAt: "2026-09-25T10:00:00Z" })], 6, squads, opened)[0].headline).toBe("Isak a doubt for GW6");
+    // No stamp, or no lock yet, is read as this gameweek's.
+    expect(availabilityNews([note({ newsAt: null })], 6, squads, opened)[0].headline).toBe("Isak a doubt for GW6");
+    expect(availabilityNews([old], 6, squads, null)[0].headline).toBe("Isak out for GW6");
+  });
+
   it("carries the football layer's own box, filled only for an absence", () => {
     expect(availabilityNews([banned()], 5, squads)[0].mark).toEqual({ label: "Sus", out: true, band: "out" });
     expect(availabilityNews([note()], 5, squads)[0].mark).toEqual({ label: "Dbt", out: false, band: "slight" });
