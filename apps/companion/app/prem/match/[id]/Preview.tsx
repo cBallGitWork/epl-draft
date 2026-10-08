@@ -2,11 +2,10 @@ import { clubStats, leagueTable, ordinal, DASH } from "@epl/core";
 import type { Club, ClubRecord, ClubStats, TableRow } from "@epl/core";
 import { LABEL, QUIET_FIGURE, TONE } from "@/app/desk";
 import type { Match } from "./match";
+import { FORM_GAMES } from "@/app/config";
 
 // A match not yet played: the home side's home record against the away side's away one.
 // Difficulty is FPL's own rating; null prints a dash, as "no opinion" is not "average".
-
-const FORM = 5;
 
 export default function Preview({ match }: { match: Match }) {
   const { fixture, home, away, snapshot, season } = match;
@@ -73,7 +72,7 @@ function SideBlock({
           : `${record.goalsFor}–${record.goalsAgainst} in ${record.played}`}
       </span>
 
-      {/* Oldest first, as the season ran: the last five at most. */}
+      {/* Oldest first, as the season ran: the last `FORM_GAMES` at most. */}
       <span className={`flex gap-1 ${align === "end" ? "flex-row-reverse" : ""}`}>
         {form.length === 0 ? (
           <span className={QUIET_FIGURE}>{DASH}</span>
@@ -100,9 +99,9 @@ function recordOf(stats: readonly ClubStats[], clubId: number, end: "home" | "aw
   return stats.find((row) => row.clubId === clubId)?.[end] ?? null;
 }
 
-/** The last five, taken off the END of a run that runs oldest first. */
+/** The last `FORM_GAMES`, taken off the END of a run that runs oldest first. */
 function formOf(stats: readonly ClubStats[], clubId: number) {
-  return stats.find((row) => row.clubId === clubId)?.form.slice(-FORM) ?? [];
+  return stats.find((row) => row.clubId === clubId)?.form.slice(-FORM_GAMES) ?? [];
 }
 
 /** Their place in our computed table, not FPL's unfilled `position`; null until they have played. */
