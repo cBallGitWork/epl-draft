@@ -398,7 +398,7 @@ the match-report and team-sheet prompts.
 - **Each kind of points is dodged on its own** (Craig: *"players with high xa and no assist points"*): a man
   with no goal who came near one (a goal ruled out, a penalty missed or saved, the woodwork, expected goals), with
   no assist who came near one (expected assists, a shot he set up hitting the woodwork), or with no clean sheet his
-  slot pays for whose side's only goal against came from `DODGERS.lateGoal`. A scorer can dodge an assist, and the
+  slot pays for whose side's only goal against came from `LATE_GOAL_MINUTE`. A scorer can dodge an assist, and the
   brief says what he did get so the column never denies it. An assist side is scaled to the goal bar
   (`DODGERS.from`: 0.6 goals, 0.4 assists). Benched or not is never said.
 - **Expected goals and assists order the column and never print**; the brief carries Opta's countable facts, the

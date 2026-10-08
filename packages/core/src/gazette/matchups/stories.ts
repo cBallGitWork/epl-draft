@@ -1,4 +1,4 @@
-import { DRAFT_DESK } from "../../config";
+import { CLEAN_SHEET_MINUTES, DRAFT_DESK, LATE_GOAL_MINUTE } from "../../config";
 import { ordinal } from "../../league/ordinal";
 import { groupedBy } from "../../grouped";
 import type { AutoSub } from "./autoSubs";
@@ -15,7 +15,7 @@ export const pts = (n: number) => `${n} point${n === 1 ? "" : "s"}`;
 /** His returns: goals, assists and clean sheets. */
 export const returnCount = (m: DraftMan) => m.goals + m.assists + m.cleanSheets;
 const done = (m: DraftMan) => m.left === 0 && m.minutes > 0;
-const late = (t: GoalTime) => t.minute >= DRAFT_DESK.lateGoal;
+const late = (t: GoalTime) => t.minute >= LATE_GOAL_MINUTE;
 
 /** Goals in the order they went in: by their match's kickoff, then the clock. */
 export const byClock = (a: GoalTime, b: GoalTime) => a.kickoff.localeCompare(b.kickoff) || a.minute - b.minute || (a.added ?? 0) - (b.added ?? 0);
@@ -47,7 +47,7 @@ export const scoredLine = (m: DraftMan, worth: SlotWorth) => (keeperHauled(m, wo
 export function lostCleanLine(m: DraftMan, worth: SlotWorth): string | null {
   const clean = priceOf(worth, m.slot, "clean sheet");
   const lost = m.concededFirstAt[0];
-  const told = lost !== undefined && late(lost) && m.cleanSheets === 0 && m.minutes >= DRAFT_DESK.earlyOff && clean >= DRAFT_DESK.cleanSheetStory;
+  const told = lost !== undefined && late(lost) && m.cleanSheets === 0 && m.minutes >= CLEAN_SHEET_MINUTES && clean >= DRAFT_DESK.cleanSheetStory;
   return told ? `lost a clean sheet worth ${pts(clean)} to a goal ${whenScored(lost)}` : null;
 }
 

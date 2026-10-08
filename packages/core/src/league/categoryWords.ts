@@ -20,6 +20,7 @@ import {
   type FantraxCategory,
 } from "./categoryNames";
 import type { ScoringCategory } from "./scoring";
+import { CLEAN_SHEET_MINUTES } from "../config";
 
 // Fantrax's scoring categories in plain football words, by meaning: its captions say "Assists (Total)".
 
@@ -41,7 +42,7 @@ const WORDS: ReadonlyMap<FantraxCategory, ReturnType<typeof words>> = new Map([
   [ASSISTS_TOTAL, words("Assists", "Assists, official and extra")],
   [ASSISTS_OFFICIAL, words("Assists", "Official assists")],
   [ASSISTS_FANTASY, words("Extra assists", "Extra assists: rebounds, penalties won, own goals forced")],
-  [CLEAN_SHEETS, words("Clean sheets", "Clean sheets, playing 60 minutes or more")],
+  [CLEAN_SHEETS, words("Clean sheets", `Clean sheets, playing ${CLEAN_SHEET_MINUTES} minutes or more`)],
   [GOALS_AGAINST, words("Goals conceded", "Goals conceded in goal")],
   [GOALS_AGAINST_OUTFIELD, words("Goals conceded", "Goals conceded while on the pitch")],
   [DEFENSIVE_POINTS, words("DefCon", "DefCon: tackles won, interceptions and blocks", "DC")],

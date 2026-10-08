@@ -87,8 +87,6 @@ export const DODGERS = {
    *  below. An assist side is scaled to the goal bar. */
   shown: 5,
   from: { goal: 0.6, assist: 0.4 },
-  /** A goal against from this minute is the one that took a clean sheet late. */
-  lateGoal: 80,
   /** What each moment adds to his nearness; a shot's own expected goals already counts once. */
   weight: { "ruled-out": 1, "penalty-missed": 0.5, "penalty-saved": 0.5, woodwork: 0.5, "set-up-woodwork": 0.3, "clean-sheet-lost": 1 },
 } as const;
@@ -103,9 +101,8 @@ export const REPORTS = {
   /** Words a standfirst and a section may run to. */
   standfirstWords: 25,
   sectionWords: [20, 45],
-  /** A burst is two goals by one side this close; late is from this minute. */
+  /** A burst is two goals by one side this close; a clean sheet let go from this minute went late. */
   burstMinutes: 15,
-  lateMinute: 80,
   cleanSheetLostFrom: 75,
   /** The ball in words: "most of" from, "more of" from. Never printed as a figure. */
   ball: { most: 60, more: 55 },
@@ -125,6 +122,9 @@ export const REPORTS = {
   /** Matches written in one call; a longer day is split, the later call shown what is already on the page. */
   perCall: 5,
 } as const;
+
+/** A goal from this minute is late: a late winner, a scorer's late goal, the one that took a clean sheet. */
+export const LATE_GOAL_MINUTE = 80;
 
 /** A match report's key stats and the Bin XI's: how many men a top-xG or top-xA line names, and the least that earns
  *  a place in it. */

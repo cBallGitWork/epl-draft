@@ -1,12 +1,9 @@
-import { KEY_STATS } from "../../config";
-import { surname } from "../reports/keyStats";
+import { surname, topLines } from "../reports/keyStats";
 import type { StoryBinStat } from "./cargo";
 import type { BinMan, BinXi } from "./select";
 
 // The desk's key stats for the Bin XI, over the men printed on the page and nobody else. xG and xA
 // print here as figures and never in the prose; a line whose leader has nought is left out.
-
-const { topMen: TOP_MEN, expectedGoals: TOP_XG, expectedAssists: TOP_XA } = KEY_STATS;
 
 export function binKeyStats(side: BinXi): StoryBinStat[] {
   const men = [...side.xi, ...side.bench];
@@ -19,14 +16,7 @@ export function binKeyStats(side: BinXi): StoryBinStat[] {
   }
   const chances = leaders(men, (man) => man.chancesCreated ?? 0);
   if (chances !== null) out.push({ label: "Chances created", value: `${names(chances.men)} ${chances.value}` });
-
-  const top = (value: (man: BinMan) => number, least: number) =>
-    [...men].filter((man) => value(man) >= least).sort((a, b) => value(b) - value(a)).slice(0, TOP_MEN)
-      .map((man) => `${surname(man.name)} ${value(man).toFixed(2)}`).join(", ");
-  const xg = top((man) => man.expectedGoals, TOP_XG);
-  if (xg !== "") out.push({ label: "Top xG", value: xg });
-  const xa = top((man) => man.expectedAssists, TOP_XA);
-  if (xa !== "") out.push({ label: "Top xA", value: xa });
+  out.push(...topLines(men));
   return out;
 }
 

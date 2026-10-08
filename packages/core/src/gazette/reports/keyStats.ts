@@ -2,7 +2,7 @@ import { KEY_STATS, REPORTS } from "../../config";
 import { played } from "./men";
 import { assistsBy, goalsBy, type ManCounts, type MatchEvent } from "./timeline";
 import type { ReportMan, ReportMatchInput, Side } from "./types";
-import { plural } from "../../format";
+import { fixed, plural } from "../../format";
 
 // The key-stats box: desk-made lines with figures, never written by the model. xG and xA print here and the prose stays
 // in words. No line says what a man failed to do.
@@ -22,12 +22,23 @@ export function surname(name: string): string {
 }
 
 const { mostShots: MOST_SHOTS, chances: CHANCES, expectedAssists: EXPECTED_ASSISTS, saves: SAVES } = REPORTS.stats;
-const { topMen: TOP_MEN, expectedGoals: TOP_XG, expectedAssists: TOP_XA } = KEY_STATS;
 
 /** The men who lead one count, and the count, or null when nobody reaches `least`. */
 function leaders(men: readonly ReportMan[], value: (m: ReportMan) => number, least: number): { men: ReportMan[]; value: number } | null {
   const best = Math.max(0, ...men.map(value));
   return best < least ? null : { men: men.filter((m) => value(m) === best), value: best };
+}
+
+/** "Top xG" and "Top xA": the men who got into the best positions and made the best chances, whether or not they
+ *  scored, the first few past `KEY_STATS`' bar. A line nobody reaches is left out. */
+export function topLines(men: readonly { name: string; expectedGoals: number; expectedAssists: number }[]): KeyStat[] {
+  const top = (value: (man: (typeof men)[number]) => number, least: number) =>
+    [...men].filter((man) => value(man) >= least).sort((a, b) => value(b) - value(a)).slice(0, KEY_STATS.topMen)
+      .map((man) => `${surname(man.name)} ${fixed(value(man), "expected")}`).join(", ");
+  return [
+    { label: "Top xG", value: top((man) => man.expectedGoals, KEY_STATS.expectedGoals) },
+    { label: "Top xA", value: top((man) => man.expectedAssists, KEY_STATS.expectedAssists) },
+  ].filter((line) => line.value !== "");
 }
 
 export function keyStats(
@@ -45,7 +56,7 @@ export function keyStats(
   const out: KeyStat[] = [];
 
   const xg = (side: Side) => men.filter((m) => m.side === side).reduce((sum, m) => sum + m.expectedGoals, 0);
-  if (men.some((m) => m.expectedGoals > 0)) out.push({ label: "xG", value: `${short("home")} ${xg("home").toFixed(2)}, ${short("away")} ${xg("away").toFixed(2)}` });
+  if (men.some((m) => m.expectedGoals > 0)) out.push({ label: "xG", value: `${short("home")} ${fixed(xg("home"), "expected")}, ${short("away")} ${fixed(xg("away"), "expected")}` });
   if (match.figures !== null) {
     const { home, away } = match.figures;
     out.push({ label: "Shots", value: `${home.shots} (${home.onTarget} on target) - ${away.shots} (${away.onTarget}); corners ${home.corners}-${away.corners}` });
@@ -62,13 +73,7 @@ export function keyStats(
     const made = chances.men.map((m) => `${surname(m.name)}${assists(m) > 0 ? ` (${assists(m)} ${plural(assists(m), "assist")})` : ""}`).join(", ");
     out.push({ label: "Chances created", value: `${made} ${chances.value}` });
   }
-  // The men who got into the best positions and made the best chances, whether or not they scored.
-  const top = (value: (m: ReportMan) => number, least: number) =>
-    [...men].filter((m) => value(m) >= least).sort((a, b) => value(b) - value(a)).slice(0, TOP_MEN).map((m) => `${surname(m.name)} ${value(m).toFixed(2)}`).join(", ");
-  const xgMen = top((m) => m.expectedGoals, TOP_XG);
-  if (xgMen !== "") out.push({ label: "Top xG", value: xgMen });
-  const xaMen = top((m) => m.expectedAssists, TOP_XA);
-  if (xaMen !== "") out.push({ label: "Top xA", value: xaMen });
+  out.push(...topLines(men));
   const keepers = men.filter((m) => m.saves >= SAVES || events.some((e) => e.kind === "penalty-saved" && e.side !== m.side && m.line === "G"));
   if (keepers.length > 0) out.push({ label: "Saves", value: keepers.map((m) => `${surname(m.name)} ${m.saves}`).join(", ") });
   const woodwork = events.filter((e) => e.kind === "woodwork" && e.man !== null).map((e) => e.man!);
