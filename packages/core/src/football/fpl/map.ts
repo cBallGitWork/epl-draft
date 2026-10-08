@@ -120,9 +120,10 @@ export function mapLiveStats(live: RawLive): PlayerMatchStats[] {
   return out;
 }
 
+/** A block's values by identifier; one that is not a number is left out, so it reads as the identifier's absence. */
 function valuesOf(stats: { identifier: string; value: number }[]): Record<string, number> {
   const m: Record<string, number> = {};
-  for (const s of stats ?? []) m[s.identifier] = s.value;
+  for (const s of stats ?? []) if (Number.isFinite(s.value)) m[s.identifier] = s.value;
   return m;
 }
 
