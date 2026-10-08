@@ -9,7 +9,7 @@ import type { Arrival, PlayerMove } from "./dossier";
 // CM's transfer status panel, for our league (Craig, 25 Sep 2026: "improve this page so its more
 // CM like"): who holds him, how and when he got there, and what his draft pick cost.
 
-const HOW: Readonly<Record<string, string>> = { claim: "Claimed", trade: "Traded", drop: "Dropped" };
+const HOW: Readonly<Record<string, string>> = { claim: "Claimed", trade: "Traded" };
 
 export default function TransferStatus({
   holder,
