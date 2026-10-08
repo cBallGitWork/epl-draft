@@ -14,7 +14,7 @@ import {
   type StoryThread,
   type ThreadUpdate,
 } from "@epl/core";
-import { presserEdition } from "./presserWeek";
+import { presserEdition, withStillOut } from "./presserWeek";
 import { faceOf, type FaceContext } from "./faces";
 import type { DeskFacts } from "./facts";
 import type { PredictionsDesk } from "./predictions";
@@ -108,9 +108,12 @@ export function file(
       ? {
           ...column,
           headline: presserHeadline(assignment.day ?? ""),
-          // The fixture is the desk's, joined on the club code the writer echoed, never recalled by a model. It joins at the
-          // column's top level: `storyOfColumn` folds `teamNews` into `extras` only afterwards.
-          teamNews: withTies(column.teamNews, ctx.presserTies, ctx.presserClubs),
+          // The fixture and the still-out list are the desk's, joined on the club code the writer echoed, never recalled by
+          // a model. They join at the column's top level: `storyOfColumn` folds `teamNews` into `extras` only afterwards.
+          teamNews: withStillOut(
+            withTies(column.teamNews, ctx.presserTies, ctx.presserClubs),
+            edition(ctx, assignment).lines,
+          ),
         }
       : column;
 

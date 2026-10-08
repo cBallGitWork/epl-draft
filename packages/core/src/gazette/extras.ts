@@ -32,6 +32,13 @@ interface StoryTeamNewsMan {
   note: string;
 }
 
+/** One man still out, from the export and never the column. */
+interface StoryStillOut {
+  name: string;
+  /** Our manager who holds him; absent means he can be claimed. */
+  owner?: string;
+}
+
 /** One club's team news: the crest, a line of context, its men, and at most one
  *  thing its manager actually said. */
 interface StoryTeamNews {
@@ -41,8 +48,10 @@ interface StoryTeamNews {
   /** One sentence of context. Never a retelling of the bullets. */
   line: string;
   men?: StoryTeamNewsMan[];
-  /** Men whose absence is unchanged, as one tail line so they do not bury the bullets that are news. */
+  /** Men whose absence is unchanged, as the column named them until 8 Oct 2026: names alone. */
   alsoOut?: string[];
+  /** Men whose absence is unchanged, from the desk with who holds each, so they do not bury the bullets that are news. */
+  stillOut?: StoryStillOut[];
   /** Who they play this gameweek, attached by the desk from the fixture list, never written by the column. */
   fixture?: StoryFixture;
   /** Carried from the source article, never composed — see `voice/house.ts`. */
@@ -130,6 +139,14 @@ function fixture(raw: unknown): StoryFixture | undefined {
   if (typeof tie.opponent !== "string" || tie.opponent === "") return undefined;
   if (typeof tie.home !== "boolean" || typeof tie.kickoff !== "string") return undefined;
   return { opponent: tie.opponent, home: tie.home, kickoff: tie.kickoff };
+}
+
+function stillOut(raw: unknown): StoryStillOut[] | undefined {
+  if (!Array.isArray(raw)) return undefined;
+  const rows = raw
+    .filter((man): man is StoryStillOut => typeof man?.name === "string" && man.name.trim() !== "")
+    .map((man) => ({ name: man.name, ...(typeof man.owner === "string" && man.owner.trim() !== "" ? { owner: man.owner } : {}) }));
+  return rows.length > 0 ? once(rows, (man) => man.name) : undefined;
 }
 
 function names(raw: unknown): string[] | undefined {
@@ -221,6 +238,7 @@ export function normalizeExtras(raw: unknown): StoryExtras | undefined {
       line: row.line,
       men: men(row.men),
       alsoOut: names(row.alsoOut),
+      stillOut: stillOut(row.stillOut),
       quote: quote(row.quote),
       fixture: fixture(row.fixture),
     }));

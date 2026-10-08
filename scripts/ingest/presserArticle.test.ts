@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { conferenceArticle, conferenceTimes } from "./presserArticle";
-import { classify, clauses } from "./presserSignals";
+import { classify, clauses, troubles } from "./presserSignals";
 
 // The parser decides whether a real footballer is reported as out. Every case
 // here is a sentence the 17 Sep 2026 article actually contains, or the shape
@@ -116,5 +116,53 @@ describe("conferenceArticle", () => {
       "3pm-team-news-ndiaye-garner-start-awoniyi-in-for-simms.html",
     ];
     expect(conferenceArticle(names)).toBeUndefined();
+  });
+});
+
+describe("classify — 8 Oct's misses", () => {
+  // Each sentence is from Scout's Gameweek 6 Thursday article; the column printed every one of these men wrongly.
+  it("reads 'returned to training' as available", () => {
+    expect(classify("Harry Wilson (quad) returned to training over the international break.")).toBe("available");
+    const said =
+      "Milan van Ewijk (hamstring) has returned to training and should feature, while Kaine Kesler-Hayden (hamstring) is also back on the grass – although he’s been unavailable for a longer period.";
+    const parts = clauses(said);
+    expect(classify(parts[0])).toBe("available");
+    // Lampard: "Kaine is back training with us". Scout put it as back on the grass.
+    expect(classify(parts[1])).toBe("available");
+  });
+
+  it("leaves men back on the grass a doubt when they are not yet back", () => {
+    const said = "Justin Kluivert (muscle), Amine Adli (calf) and Julian Araujo (thigh) are all back on the grass and could return in the next week or two.";
+    expect(classify(said)).toBeNull();
+  });
+
+  it("reads 'will be out' as out, and not 'out of contract'", () => {
+    const said = "Jaissle added that goalkeeper Ewen Jaouen will be out for “a couple of months” with a hamstring injury.";
+    expect(clauses(said).map(classify).find((t) => t !== null)).toBe("ruled_out");
+    expect(classify("He will be out of contract next summer.")).toBeNull();
+  });
+
+  it("reads a ban already served as available, and a ban still running as suspended", () => {
+    expect(classify("Reinildo is back, having served a one-match ban after his dismissal in Gameweek 4.")).toBe("available");
+    expect(classify("Taiwo Awoniyi serves the final game of a three-match domestic ban.")).toBe("suspended");
+    expect(classify("He has served two games of a three-match ban.")).toBe("suspended");
+  });
+});
+
+describe("troubles — a man named only in the prose", () => {
+  const squad = [
+    { name: "Jaouen", fullName: "Ewen Jaouen" },
+    { name: "Pope", fullName: "Nick Pope" },
+  ];
+
+  it("files him out with the complaint the sentence names", () => {
+    const body =
+      "Jaissle added that goalkeeper Ewen Jaouen will be out for “a couple of months” with a hamstring injury. Everyone else has returned from international duty pretty much unscathed.";
+    expect(troubles(body, squad)).toEqual([{ player: squad[0], tag: "ruled_out", condition: "hamstring" }]);
+  });
+
+  it("lends that complaint to nobody when the sentence names two men", () => {
+    const body = "Ewen Jaouen and Nick Pope will be out for a month with a hamstring injury between them.";
+    expect(troubles(body, squad).map((each) => each.condition)).toEqual([undefined, undefined]);
   });
 });

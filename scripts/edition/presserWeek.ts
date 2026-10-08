@@ -92,3 +92,19 @@ function onDay<T>(rows: readonly T[], day: string, when: (row: T) => string | un
 export function presserDays(lines: readonly PresserLine[]): string[] {
   return [...new Set(lines.flatMap((line) => londonDayOf(line.said) ?? []))].sort();
 }
+
+/** Each team-news row given its club's standing absences from the export, with who holds each, in place of any the
+ *  column listed; a man the column bulleted is news, so he is not also still out. */
+export function withStillOut(rows: unknown, lines: readonly PresserLine[]): unknown {
+  if (!Array.isArray(rows)) return rows;
+  return rows.map((row) => {
+    const { alsoOut, stillOut, ...rest } = row as { alsoOut?: unknown; stillOut?: unknown; code?: unknown; men?: unknown };
+    void alsoOut;
+    void stillOut;
+    const bulleted = new Set(Array.isArray(rest.men) ? rest.men.map((man) => (man as { name?: unknown }).name) : []);
+    const still = lines
+      .filter((line) => !line.fresh && line.club === rest.code && !bulleted.has(line.playerName))
+      .map((line) => (line.ownerName === null ? { name: line.playerName } : { name: line.playerName, owner: line.ownerName }));
+    return still.length === 0 ? rest : { ...rest, stillOut: still };
+  });
+}

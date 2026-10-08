@@ -70,7 +70,9 @@ export function display(player: { name: string; fullName?: string }): string {
 
   // "Caicedo" of "Moisés Caicedo Corozo", "N.Gonzalez" of "Nico González
   // Iglesias" — find his surname in the full name and pair it with his first.
-  const surname = key(web[web.length - 1].replace(/^[A-Za-zÀ-Ÿ]\./, ""));
+  // "N.Gonzalez" and "Kroupi.Jr": an initial or a suffix beside the dot is never his surname.
+  const last = web[web.length - 1];
+  const surname = key(last.split(".").filter((part) => part.length > 2).pop() ?? last);
   const at = f.indexOf(surname);
   if (at > 0) return `${full[0]} ${full[at]}`;
   // "O.Dango" of "Dango Ouattara" — the match IS his first name, so the surname
@@ -122,7 +124,7 @@ export function presserLines(
       // Null when nobody in the league holds him, which is no longer a reason
       // to drop him — it is the difference between "start him" and "claim him".
       ownerName: held.get(signal.code) ?? null,
-      fresh: changed(player.newsAdded, signal.said),
+      fresh: isNews(signal.tag, player.newsAdded, signal.said),
     }];
   });
 }
@@ -184,6 +186,11 @@ export function presserQuotes(clubs: ReadonlyMap<number, Club>): (PresserQuote &
  *  days: a note from the day before is the same story, one from last week is the
  *  standing condition a reader already knows. */
 const FRESH_DAYS = 2;
+
+/** Whether a man is news at this conference: declared fit, which no standing absence can be, or his note moved. */
+export function isNews(tag: string, newsAdded: string | null, said: string): boolean {
+  return tag === "available" || changed(newsAdded, said);
+}
 
 /** Whether his availability CHANGED around this conference. A man with no note
  *  at all counts as fresh — he is being discussed and FPL has not caught up. */
