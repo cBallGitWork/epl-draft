@@ -1,4 +1,4 @@
-import { capital, listed, plural } from "../../format";
+import { capital, listed, plural, spelled } from "../../format";
 import type { StorySheet, StorySheetMan, StorySheetSide } from "./cargo";
 import type { TeamFacts, TieFacts } from "./facts";
 import { printName, type SheetMan } from "./sheet";
@@ -66,11 +66,9 @@ export function plainLine(team: TeamFacts): string {
   return `${name} make ${counted(changes.count, "change")}: ${listed(came)} ${plural(came.length, "comes", "come")} in.${absent}`;
 }
 
-const WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
-
 /** Newspaper style: words to ten, figures after. */
 function inWords(n: number): string {
-  return WORDS[n] ?? String(n);
+  return n === 0 ? "no" : n <= 10 ? spelled(n) : String(n);
 }
 
 /** "two changes", "one debut". */

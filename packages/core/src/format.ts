@@ -13,6 +13,19 @@ export function howMany(n: number, word: string, many = `${word}s`): string {
   return `${n} ${plural(n, word, many)}`;
 }
 
+const ONES = ["nought", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve",
+  "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
+const TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+
+/** A whole count in words, as a prompt spells a limit: "six", "twenty", "a hundred and twenty"; figures past 999. */
+export function spelled(n: number): string {
+  if (!Number.isInteger(n) || n < 0 || n > 999) return String(n);
+  if (n < 20) return ONES[n];
+  if (n < 100) return `${TENS[Math.floor(n / 10)]}${n % 10 === 0 ? "" : `-${ONES[n % 10]}`}`;
+  const rest = n % 100;
+  return `${n < 200 ? "a" : ONES[Math.floor(n / 100)]} hundred${rest === 0 ? "" : ` and ${spelled(rest)}`}`;
+}
+
 /** The first letter a capital, for text that opens a sentence: "two changes" is "Two changes". */
 export function capital(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1);

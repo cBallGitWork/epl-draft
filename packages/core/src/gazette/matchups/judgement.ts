@@ -94,7 +94,8 @@ export const DRAFT_WRITING = {
   /** Words a match-up runs to, lede included; the lead match-up may run to `leadWords`. */
   matchupWords: [50, 120],
   leadWords: 170,
-  /** Headline candidates the pun writer offers. */
+  /** Headline candidates the writer offers with its report, and the pun writer after it. */
+  headlines: 6,
   puns: 10,
   /** Filed draft reports read back, so a story, a phrase or a headline is not told the same way twice. */
   pastReports: 4,

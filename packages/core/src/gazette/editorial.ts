@@ -1,5 +1,8 @@
 // The paper's tuning: when each column files, how long it runs, and what is news enough to go in it.
 
+/** The paper's name, printed after the league's on its masthead. */
+export const PAPER_TITLE = "Gazetta";
+
 /** The predicted elevens: Friday from 16:00 London, an hour after the press conferences end; a lock
  *  earlier than Tuesday's files the day before (Sunday = 0). */
 export const PREDICTED_XI = { filing: { weekday: 5, hour: 16, maxLeadDays: 3 } } as const;
@@ -37,9 +40,23 @@ export const PREDICTIONS = {
   factsPerTie: 11,
 } as const;
 
-/** What the editor holds Lawro to in both his columns: words a sentence; sentences and words for his opening, a tie
- *  and a gut call; words a column; the phrase lengths that echo a recent column or another tie; men a tie; questions. */
-export const LAWRO_LIMITS = { sentence: 20, intro: [1, 4, 40], tie: [2, 8, 120], gut: [2, 9, 130], column: 680, repeat: 5, echo: 4, men: 4, questions: 2 } as const;
+/** What the editor holds Lawro to in both his columns, and what his voice tells him. */
+export const LAWRO_LIMITS = {
+  /** Words a sentence; sentences and words for his opening, a tie and a gut call; words a column. */
+  sentence: 20,
+  intro: [1, 4, 40],
+  tie: [2, 8, 120],
+  gut: [2, 9, 130],
+  column: 680,
+  /** A run of this many words from a recent column is a repeat, and of this many from another tie an echo. */
+  repeat: 5,
+  echo: 4,
+  /** Men a tie names, and question marks a column carries, at most. */
+  men: 4,
+  questions: 2,
+  /** The skit writer's rewrite: words at most, words longer than the sentence it replaces, and a kicker's words. */
+  skit: { words: 20, longer: 6, kicker: 3 },
+} as const;
 
 /** Lawro's power rankings: the squads as drafted, ordered by the season played out, once, before the first lock. */
 export const SEASON_RANKINGS = {

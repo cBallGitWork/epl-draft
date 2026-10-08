@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { capital, fixed, howMany, initialled, PLACES, rounded, withoutAccents } from "./format";
+import { capital, fixed, howMany, initialled, PLACES, rounded, spelled, withoutAccents } from "./format";
 
 describe("fixed", () => {
   it("prints a column of points per game at one precision", () => {
@@ -84,5 +84,18 @@ describe("withoutAccents", () => {
     expect(withoutAccents("Sávio")).toBe("Savio");
     expect(withoutAccents("Yéremy Pino")).toBe("Yeremy Pino");
     expect(withoutAccents("Ødegaard")).toBe("Ødegaard");
+  });
+});
+
+describe("spelled", () => {
+  it("spells a count the way a limit is written out", () => {
+    expect([0, 6, 10, 13, 20, 35, 120, 130, 200, 999].map(spelled)).toEqual([
+      "nought", "six", "ten", "thirteen", "twenty", "thirty-five", "a hundred and twenty", "a hundred and thirty", "two hundred",
+      "nine hundred and ninety-nine",
+    ]);
+  });
+
+  it("leaves a figure it cannot spell as a figure", () => {
+    expect([1000, -1, 2.5].map(spelled)).toEqual(["1000", "-1", "2.5"]);
   });
 });
