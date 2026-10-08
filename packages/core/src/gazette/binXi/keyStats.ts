@@ -1,4 +1,4 @@
-import { BIN_XI } from "../../config";
+import { KEY_STATS } from "../../config";
 import { surname } from "../reports/keyStats";
 import type { StoryBinStat } from "./cargo";
 import type { BinMan, BinXi } from "./select";
@@ -6,7 +6,7 @@ import type { BinMan, BinXi } from "./select";
 // The desk's key stats for the Bin XI, over the men printed on the page and nobody else. xG and xA
 // print here as figures and never in the prose; a line whose leader has nought is left out.
 
-const { topMen: TOP_MEN, expectedGoals: TOP_XG, expectedAssists: TOP_XA } = BIN_XI.stats;
+const { topMen: TOP_MEN, expectedGoals: TOP_XG, expectedAssists: TOP_XA } = KEY_STATS;
 
 export function binKeyStats(side: BinXi): StoryBinStat[] {
   const men = [...side.xi, ...side.bench];
