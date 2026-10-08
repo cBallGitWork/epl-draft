@@ -10,7 +10,7 @@ import PlayerShell from "../PlayerShell";
 import TransferStatus from "../TransferStatus";
 import { playerPedigree } from "../draft";
 import { fantraxExit } from "../fantraxExit";
-import { joinedBy, playerMoves } from "../dossier";
+import { arrival, playerMoves } from "../dossier";
 import { subject } from "../subject";
 import type { Subject } from "../subject";
 
@@ -49,7 +49,7 @@ async function Business({ found, fantraxId }: { found: Subject; fantraxId: strin
 
   return (
     <>
-      <TransferStatus holder={holder} joined={joinedBy(moves, owner, whole)} pedigree={pedigree} />
+      <TransferStatus holder={holder} arrival={arrival(moves, owner, whole)} pedigree={pedigree} />
       <Moves moves={moves} />
       <DraftLine pedigree={pedigree} drafterName={drafterName} />
       <OutLink href={exit.href}>{exit.label}</OutLink>

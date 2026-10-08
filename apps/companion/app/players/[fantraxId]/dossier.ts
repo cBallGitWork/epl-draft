@@ -75,10 +75,18 @@ export function movesOf(
   return keyed.sort((a, b) => b.key - a.key).map((entry) => entry.move);
 }
 
-/** How he came to his holder: the latest executed move that put him there, or null (a draft pick); "unknown" when the
- *  log was not read whole, as a move it lacks would read as the draft. */
-export function joinedBy(moves: readonly PlayerMove[], ownerTeamId: string | null, whole: boolean): PlayerMove | null | "unknown" {
-  if (ownerTeamId === null) return null;
+/** How he came to be where he is: the latest executed move that put him with his holder (null: none, so the draft),
+ *  or for a man nobody holds, the drop that let him go (null: none). "unknown" when a holder's log was not read
+ *  whole, as a move it lacks would read as the draft. */
+export type Arrival = { joined: PlayerMove | null } | { dropped: PlayerMove | null } | "unknown";
+
+export function arrival(moves: readonly PlayerMove[], ownerTeamId: string | null, whole: boolean): Arrival {
+  if (ownerTeamId === null) {
+    // A drop is on the claim view, so a lost trade view cannot hide one; a later claim means the rosters are behind.
+    const latest = moves.find((move) => move.transaction.executed);
+    return { dropped: latest?.transaction.kind === "drop" ? latest : null };
+  }
   if (!whole) return "unknown";
-  return moves.find((move) => move.transaction.executed && move.transaction.toTeamId === ownerTeamId) ?? null;
+  const joined = moves.find((move) => move.transaction.executed && move.transaction.toTeamId === ownerTeamId);
+  return { joined: joined ?? null };
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { LeagueTransaction } from "@epl/core";
-import { joinedBy, movesOf } from "./dossier";
+import { arrival, movesOf } from "./dossier";
 
 const move = (over: Partial<LeagueTransaction> = {}): LeagueTransaction => ({
   setId: "s1", kind: "claim", fantraxId: "03gu4", playerName: "Harry Maguire",
@@ -75,7 +75,11 @@ describe("movesOf", () => {
   });
 });
 
-describe("joinedBy", () => {
+describe("arrival", () => {
+  const drop = (over: Partial<LeagueTransaction> = {}) =>
+    move({ setId: "drop", kind: "drop", fromTeamId: "t1", toTeamId: null, processedAt: "Wed Oct 7, 2026, 4:36PM",
+      ...over });
+
   it("is the latest executed move that put him with his holder", () => {
     const moves = movesOf(
       [
@@ -86,18 +90,34 @@ describe("joinedBy", () => {
       "03gu4",
       NAMES,
     );
-    expect(joinedBy(moves, "t1", true)).toMatchObject({ transaction: { setId: "new" } });
+    expect(arrival(moves, "t1", true)).toMatchObject({ joined: { transaction: { setId: "new" } } });
   });
 
-  it("has none for a free agent, or a holder no move names", () => {
+  it("names no move for a holder none put there, which is the draft", () => {
     const moves = movesOf([move({ toTeamId: "t1" })], "03gu4", NAMES);
-    expect(joinedBy(moves, null, true)).toBeNull();
-    expect(joinedBy(moves, "t2", true)).toBeNull();
+    expect(arrival(moves, "t2", true)).toEqual({ joined: null });
   });
 
-  it("does not know when the log was not read whole, so a claim it lacks cannot read as the draft", () => {
+  it("does not know when a holder's log was not read whole, so a claim it lacks cannot read as the draft", () => {
     const moves = movesOf([move({ toTeamId: "t1" })], "03gu4", NAMES);
-    expect(joinedBy(moves, "t1", false)).toBe("unknown");
-    expect(joinedBy([], "t2", false)).toBe("unknown");
+    expect(arrival(moves, "t1", false)).toBe("unknown");
+    expect(arrival([], "t2", false)).toBe("unknown");
+  });
+
+  it("gives a man nobody holds the drop that let him go, never the draft", () => {
+    // Porro, drafted and then dropped on 7 Oct, read "Joined: In the draft" on a free agent's page.
+    const moves = movesOf([drop()], "03gu4", NAMES);
+    expect(arrival(moves, null, true)).toMatchObject({
+      dropped: { fromName: "test3", transaction: { setId: "drop" } },
+    });
+    // A drop is on the claim view, so losing the trade view does not hide it.
+    expect(arrival(moves, null, false)).toMatchObject({ dropped: { transaction: { setId: "drop" } } });
+  });
+
+  it("has no drop for a man nobody holds whom none let go", () => {
+    expect(arrival([], null, true)).toEqual({ dropped: null });
+    // A claim newer than the rosters read, or a drop still pending, let nobody go.
+    expect(arrival(movesOf([move({ toTeamId: "t1" })], "03gu4", NAMES), null, true)).toEqual({ dropped: null });
+    expect(arrival(movesOf([drop({ executed: false })], "03gu4", NAMES), null, true)).toEqual({ dropped: null });
   });
 });
