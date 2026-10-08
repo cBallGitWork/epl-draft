@@ -48,8 +48,10 @@ export default function TeamSheet({
   /** Who came on or went off in his real match, by `fantraxId`. */
   subs?: Record<string, SubMark>;
 }) {
-  const [open, setOpen] = useState<SquadPlayerDetail | null>(null);
-
+  // The open card is held by id and read from each poll's rows: holding the tapped man froze his total.
+  const [openId, setOpenId] = useState<string | null>(null);
+  const open = openId === null ? undefined : [...rows.flatMap((line) => line.players), ...bench].find((p) => p.rostered.slot.fantraxId === openId);
+  const setOpen = (player: SquadPlayerDetail) => setOpenId(player.rostered.slot.fantraxId);
 
   // The bench counts as a line, so a reserve is drawn as wide as the man he would replace.
   const widest = agreed ?? widestLine([...rows, { players: bench }]);
@@ -121,7 +123,7 @@ export default function TeamSheet({
           story={news?.[open.rostered.slot.fantraxId] ?? null}
           // The live table lists only the active eleven; without this a reserve reads as having no football.
           reserve={bench.some((p) => p.rostered.slot.fantraxId === open.rostered.slot.fantraxId)}
-          onClose={() => setOpen(null)}
+          onClose={() => setOpenId(null)}
         />
       ) : null}
     </div>
