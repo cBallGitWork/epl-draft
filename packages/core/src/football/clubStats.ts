@@ -1,5 +1,5 @@
 import { NO_SEASON } from "./noSeason";
-import { byKickoff } from "./selectors";
+import { byKickoffUndatedFirst } from "./selectors";
 import type { Club, Fixture, FootballPlayer, SeasonTotals } from "./types";
 
 // A club's season beyond its table row: home and away records, its run, clean sheets and its squad's totals.
@@ -55,7 +55,7 @@ export function clubStats(
   const played = [...fixtures]
     .filter((fixture) => fixture.status === "finished")
     .filter((fixture) => fixture.homeScore !== null && fixture.awayScore !== null)
-    .sort(byKickoff);
+    .sort(byKickoffUndatedFirst);
 
   for (const fixture of played) {
     const home = rows.get(fixture.homeClubId);

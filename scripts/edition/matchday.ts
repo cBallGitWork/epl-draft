@@ -12,6 +12,7 @@ import {
   fullClubName,
   highlightFor,
   isDated,
+  clubById,
   londonDayOf,
   mapFixtures,
   mapLiveStats,
@@ -102,7 +103,7 @@ export async function matchdayInput(opts: {
   const round = await fetchPlRound(gameweek).catch(() => null);
   if (round === null) return say("The Premier League's round would not load."), null;
 
-  const clubs = new Map(snapshot.clubs.map((c) => [c.id, c]));
+  const clubs = clubById(snapshot);
   const clubOfCode = new Map(snapshot.players.map((p) => [p.code, p.clubId]));
   const optaToCode = new Map(snapshot.players.flatMap((p) => (p.optaCode === null ? [] : [[p.optaCode, p.code] as const])));
   const league = leagueJoin(facts, season.filter((f) => f.gameweek !== null && opts.periodGameweeks.includes(f.gameweek)), clubOfCode);

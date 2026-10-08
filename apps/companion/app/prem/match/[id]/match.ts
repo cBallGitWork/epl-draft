@@ -9,7 +9,7 @@ import type {
   PlayerMatchStats,
   PlayerOwner,
 } from "@epl/core";
-import { clubById } from "@epl/core";
+import { clubById, playerByCode } from "@epl/core";
 import { footballNow, gameweekLive, gameweekSheets, seasonFixtures, speaksForNow } from "../../../football";
 import { intelMatches } from "../../../intel";
 import { marks } from "../../../involvement";
@@ -64,7 +64,7 @@ export async function readMatch(id: string): Promise<Match> {
     figures: new Map(
       figures.filter((row) => row.fixtureId === fixture.id).map((row) => [row.playerId, row]),
     ),
-    byCode: new Map(snapshot.players.map((player) => [player.code, player])),
+    byCode: playerByCode(snapshot),
     logged: intelMatches.get(fixture.id),
     live: fixture.status === "live" && speaksForNow(snapshot),
     finished: fixture.status === "finished",

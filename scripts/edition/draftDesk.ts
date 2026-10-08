@@ -10,6 +10,7 @@ import {
   headToHead,
   isSaturday,
   isDated,
+  clubById,
   judgePage,
   getFootballSnapshot,
   londonDayOf,
@@ -97,7 +98,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   const min = minimums(FANTRAX_LEAGUE_ID);
   const limits = { min: min ?? {}, max: info.roster.maxActiveByPosition };
   const projections = projectionIntel(readIntel<IntelProjections>("projections", `${INTEL_SEASON}.json`));
-  const clubs = new Map(snapshot.clubs.map((c) => [c.id, c]));
+  const clubs = clubById(snapshot);
 
   const dayTallies = reads.map((r) => ({ day: r.date, byMan: tallies([r.raw], ids) }));
   const cutoffs = new Map<Cutoff, MatchupContext[]>();
