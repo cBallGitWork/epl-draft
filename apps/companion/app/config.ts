@@ -33,6 +33,9 @@ export const LEADERS_SHOWN = 5;
 /** How many gameweeks of xMins a player card prints, the screen's own first. */
 export const XMINS_WEEKS = 5;
 
+/** How many results a form guide shows, oldest first: both tables' Form column and a match preview's. */
+export const FORM_GAMES = 5;
+
 
 /** How many filed stories run beside the lead, at the second rank. */
 export const SHOULDER_STORIES = 2;

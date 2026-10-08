@@ -6,6 +6,7 @@ import { yoursEdge, yoursInk } from "../mine";
 import { FIGURE, FIGURE_CELL, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
 import Absent from "@/app/components/shell/Absent";
 import TeamName from "@/app/components/league/TeamName";
+import { FORM_GAMES } from "../config";
 import { teamHref } from "@/app/squad/routes";
 
 // One team's line in the table: a row on the ground with a rule under it (`cm9900/24.jpg`), every figure ink, rank
@@ -74,7 +75,7 @@ export default function TableRow({
   );
 }
 
-/** The last five gameweeks, oldest first, each titled with its score: a win green, a loss red, a draw quiet. */
+/** The last `FORM_GAMES` gameweeks, oldest first, each titled with its score: a win green, a loss red, a draw quiet. */
 function Form({ run }: { run: readonly FormGame[] }) {
   if (run.length === 0) return <Absent />;
 
@@ -92,6 +93,4 @@ function Form({ run }: { run: readonly FormGame[] }) {
     </span>
   );
 }
-
-const FORM_GAMES = 5;
 
