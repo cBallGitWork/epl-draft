@@ -603,8 +603,9 @@ draft, and 15/11/5.
   the brief, quotation marks, a decimal, a score in the prose, arguing for the other side, a career claim
   nobody gave him, the never list) leaves the tie printing its prediction alone; a send-back goes back once.
   **Names are a hard fault for this kind only**; the house `strangers` check stays a warning.
-- **Due** Thursday from 18:00 London for a lock Friday to Monday, the evening before an earlier lock, once
-  the last round is finished, once a round. The cron's Thursday band runs to 20:30 UTC.
+- **Due** Thursday from 20:00 London for a lock Friday to Monday, the evening before an earlier lock, once
+  the last round is finished, once a round (20:00 since 8 Oct; 18:00 before). The cron's Thursday band runs to
+  20:30 UTC, so a winter Thursday looks twice; Friday's band catches a missed evening.
 - **His record is recomputed every firing** from the archive and Fantrax's settled results; nothing is stored
   but the calls and each tie's instinct. `round-preview` went on the same day, never having filed (#93).
 - **No narrative twice** (Craig: *"try avoid repeated narratives… draft is 15 man squads"*). A man named in his
