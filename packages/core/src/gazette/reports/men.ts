@@ -23,13 +23,15 @@ export interface SeasonLine {
 
 export interface MenExtras {
   live: ReadonlyMap<number, LiveLine>;
-  season: ReadonlyMap<number, SeasonLine>;
+  /** Null when a past gameweek could not be read: no man's season is then told. */
+  season: ReadonlyMap<number, SeasonLine> | null;
   holders: ReadonlyMap<number, NonNullable<ReportMan["holder"]>>;
   points: ReadonlyMap<number, number>;
   fitness: ReadonlyMap<number, string>;
 }
 
 const NO_SEASON: SeasonLine = { startsBefore: 0, matchesBefore: 0, yellowsBefore: 0, goalsSeason: 0 };
+const UNREAD: Pick<ReportMan, keyof SeasonLine> = { startsBefore: null, matchesBefore: 0, yellowsBefore: null, goalsSeason: null };
 
 /** Both sheets, starters then substitutes; a man the bridge could not place has no code and is left out. */
 export function reportMen(
@@ -53,7 +55,7 @@ export function reportMen(
     const code = squad.code;
     if (code === null) return [];
     const live = extras.live.get(code);
-    const season = extras.season.get(code) ?? NO_SEASON;
+    const season = extras.season === null ? UNREAD : (extras.season.get(code) ?? NO_SEASON);
     const left = off.get(code);
     return [
       {

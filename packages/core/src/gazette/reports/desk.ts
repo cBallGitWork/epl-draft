@@ -114,7 +114,7 @@ function nominees(match: ReportMatchInput, events: readonly MatchEvent[], counts
     add(m, `${m.holder!.team} has him, ${pts(m.points ?? 0)}${h2h(m)}`);
   }
   for (const m of men.filter((x) => x.holder === null && scored(x) + made(x) >= 2)) {
-    add(m, `a free agent; ${m.goalsSeason} league ${plural(m.goalsSeason, "goal")} this season`);
+    add(m, m.goalsSeason === null ? "a free agent" : `a free agent; ${m.goalsSeason} league ${plural(m.goalsSeason, "goal")} this season`);
   }
   // When the stakes run short, the men whose figures stand out, so a match never has fewer candidates than sections.
   const stood = (x: ReportMan) => scored(x) + made(x) > 0 || (counts.get(x.code)?.chancesMade ?? 0) >= 3 || (counts.get(x.code)?.shots ?? 0) >= 4 || x.saves >= 5;

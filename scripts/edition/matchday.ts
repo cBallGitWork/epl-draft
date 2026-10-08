@@ -45,17 +45,23 @@ import { dayMarks } from "./matchdayRatings";
 // and our marks. Script-side: about four requests a match, one per past gameweek and six for the marks, made only when a
 // report is being written.
 
-/** FPL's live figures for every gameweek before this one. */
-function pastRounds(gameweek: number): Promise<PlayerMatchStats[][]> {
-  return Promise.all(Array.from({ length: gameweek - 1 }, (_, i) => fetchLive(i + 1).then(mapLiveStats).catch(() => [])));
+/** FPL's live figures for every gameweek before this one; null for a gameweek that would not load. */
+function pastRounds(gameweek: number): Promise<(PlayerMatchStats[] | null)[]> {
+  return Promise.all(Array.from({ length: gameweek - 1 }, (_, i) => fetchLive(i + 1).then(mapLiveStats).catch(() => null)));
 }
 
-/** Each man's season before this gameweek, from FPL's live figures per past gameweek, by code. */
-function seasonLines(past: readonly PlayerMatchStats[][], snapshot: FootballSnapshot): Map<number, SeasonLine> {
+/** Each man's season before this gameweek, from FPL's live figures per past gameweek, by code; null when a gameweek is
+ *  missing, since a start or a goal in it would go uncounted. */
+export function seasonLines(
+  past: readonly (readonly PlayerMatchStats[] | null)[],
+  snapshot: { players: readonly { id: number; code: number }[]; stats: readonly PlayerMatchStats[] },
+): Map<number, SeasonLine> | null {
+  const rounds = past.filter((rows) => rows !== null);
+  if (rounds.length < past.length) return null;
   const codeOf = new Map(snapshot.players.map((p) => [p.id, p.code]));
   const lines = new Map<number, SeasonLine>();
   const line = (code: number) => lines.get(code) ?? lines.set(code, { startsBefore: 0, matchesBefore: 0, yellowsBefore: 0, goalsSeason: 0 }).get(code)!;
-  for (const rows of past) {
+  for (const rows of rounds) {
     for (const row of rows) {
       const code = codeOf.get(row.playerId);
       if (code === undefined) continue;
@@ -100,11 +106,12 @@ export async function matchdayInput(opts: {
   const league = leagueJoin(facts, season.filter((f) => f.gameweek !== null && opts.periodGameweeks.includes(f.gameweek)), clubOfCode);
   const past = await pastRounds(gameweek);
   const seasons = seasonLines(past, snapshot);
+  if (seasons === null) say("  FPL would not give every past gameweek: no man's starts or goals this season are told.");
   const codeOfId = new Map(snapshot.players.map((p) => [p.id, p.code]));
   const liveLines = new Map(snapshot.stats.map((s) => [codeOfId.get(s.playerId) ?? -1, { minutes: s.minutes, saves: s.saves, expectedGoals: s.expectedGoals, expectedAssists: s.expectedAssists }]));
   const markFor = await dayMarks({
     day,
-    results: clubResults(season, [...past, snapshot.stats], new Map(snapshot.players.map((p) => [p.id, p.clubId]))),
+    results: clubResults(season, [...past.filter((rows) => rows !== null), snapshot.stats], new Map(snapshot.players.map((p) => [p.id, p.clubId]))),
     fantraxIds: league.fantraxIds,
     minutesOf: (code) => liveLines.get(code)?.minutes ?? 0,
     say,
