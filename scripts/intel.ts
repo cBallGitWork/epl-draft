@@ -3,14 +3,9 @@ import { dirname, join } from "node:path";
 import { SEASON, projectionIntel, type Bridge, type IntelManifest, type IntelProjections, type ProjectedPlayer } from "@epl/core";
 import { INTEL_ROOT, MAPPINGS_ROOT } from "./paths";
 
-// Reading the sister repo's export and the bridge off disk, and the manifest every export written here carries.
-//
-// Absent is the ordinary state and every caller treats it as one. A file that
-// will not PARSE is not absent and throws: a corrupt export is a broken
-// pipeline rather than an empty one.
-//
-// `intel-check.ts` deliberately keeps its own reader, which catches instead —
-// saying "xi/26-27.json will not parse" rather than dying is that script's whole job.
+// The intel exports on disk, read and written, the bridge read, and the manifest every export written here carries.
+// Absent is ordinary; a file that will not parse throws, since a corrupt export is a broken pipeline, not an empty one.
+// `intel-check.ts` keeps its own reader, which catches: saying a file will not parse is that script's whole job.
 
 /** The season as the export's filenames spell it — `26-27`, from `2026/27`. */
 export const INTEL_SEASON = SEASON.slice(2).replace("/", "-");

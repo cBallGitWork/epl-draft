@@ -12,15 +12,9 @@ import { intelManifest, readBridge, readIntel, sameApartFromManifest, writeIntel
 import { STATS_LEAGUE } from "./leagues";
 import { buildStats } from "./stats/build";
 
-// The stats league's season-to-date counts for every man who has played, into `data/intel/stats/`
-// (Craig, 25 Sep 2026: every category enabled at no points, so `getPlayerStats` answers them all).
-// Run daily by `ingest-stats.yml`; the file is rewritten only when a figure changed.
-//
-//   npm run stats                    # or, once the vocabulary covers a changed league:
-//   npm run stats -- --accept-drift
-//
-// Exits 1 without writing on a projection, or when the league's columns changed: a changed scoring
-// must never quietly reshape the file.
+// The stats league's season-to-date counts for every man who has played into `data/intel/stats/`, daily on
+// `ingest-stats.yml`, rewritten only when a figure changed. Exits 1 without writing on a projection or changed columns;
+// `npm run stats -- --accept-drift` takes a change once the vocabulary covers it.
 
 async function main(): Promise<void> {
   // One group after the other, never both at once: Fantrax throttles a burst.

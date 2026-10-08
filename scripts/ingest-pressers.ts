@@ -7,11 +7,8 @@ import { intelManifest, intelPath, readIntel, sameApartFromManifest, writeIntel 
 import { SISTER_ROOT } from "./paths";
 import { fullClubName } from "@epl/core";
 
-// Thursday's and Friday's press conferences, from Fantasy Football Scout's own
-// team-news article into `data/intel/pressers/<season>.json`.
-//
-// Belongs in the sister repo (`intel-export.md` §5) and lives here until that
-// repo grows the exporter. Name-matching happens HERE and never at runtime.
+// Thursday's and Friday's press conferences, from Fantasy Football Scout's team-news article into `data/intel/pressers/`.
+// The sister repo's job (`intel-export.md` §5) until it grows the exporter; name-matching happens HERE, never at runtime.
 
 /** Where the sister repo keeps its scrape. `FFS_SCRAPE_DIR` first, then the sister repo's own folder. */
 const SCRAPE = process.env.FFS_SCRAPE_DIR ?? join(SISTER_ROOT, "data", "raw", "fantasy_football_scout", "daily");
