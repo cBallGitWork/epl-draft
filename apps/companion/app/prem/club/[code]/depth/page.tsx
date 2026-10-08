@@ -7,7 +7,7 @@ import { poolHref } from "../../../poolHref";
 import { clubOr404 } from "../club";
 import DepthList from "./DepthList";
 import DepthPitch from "./DepthPitch";
-import DepthViews from "./DepthViews";
+import ListAndPitch from "../../../../components/league/ListAndPitch";
 
 // Who is in line for each shirt at a club: the sister repo's depth chart (Craig, 25 Sep 2026),
 // dealt for the round it names.
@@ -34,7 +34,8 @@ export default async function DepthPage({ params }: { params: Promise<{ code: st
             Depth chart{intelDepthManifest.gameweek === null ? "" : ` for GW${intelDepthManifest.gameweek}`} · {chart.formation}{" "}
             (last updated {londonDayAndDate(intelDepthManifest.exportedAt)})
           </p>
-          <DepthViews
+          <ListAndPitch
+            opens="pitch"
             list={<DepthList lines={lines} playerOf={playerOf} hrefOf={hrefOf} />}
             pitch={<DepthPitch lines={lines} playerOf={playerOf} hrefOf={hrefOf} />}
           />
