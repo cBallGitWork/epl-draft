@@ -1,14 +1,13 @@
 import {
+  AMERICAN,
   FAN_TAGS,
   REPORTS,
   REPORT_ADVICE,
-  REPORT_AMERICAN,
   REPORT_CAPPED_DAY,
   REPORT_CAPPED_MATCH,
   REPORT_FANTASY,
   REPORT_FPL,
   REPORT_NEVER,
-  SHEETS_AMERICAN,
   type Fault,
   writerOf,
 } from "@epl/core";
@@ -47,7 +46,7 @@ THE PAGE:
 - You never name a source. Never: ${REPORT_FPL.join(", ")}.
 - Draft words, only ever in a stake: ${REPORT_FANTASY.join(", ")}.
 - Never advice: ${REPORT_ADVICE.join(", ")}.
-- Never American: ${[...SHEETS_AMERICAN, ...REPORT_AMERICAN].join(", ")}.
+- Never American: ${AMERICAN.join(", ")}.
 - Never these, which are cliché, verdict, invention or a machine's tell: ${REPORT_NEVER.join(", ")}.
 - At most this many times in one match: ${capped(REPORT_CAPPED_MATCH)}.
 - At most this many times on the whole page: ${capped(REPORT_CAPPED_DAY)}.
@@ -80,7 +79,7 @@ THE WORDS:
 - You never name a source. Never: ${REPORT_FPL.join(", ")}.
 - Draft words only ever in a stake: ${REPORT_FANTASY.join(", ")}.
 - Never advice: ${REPORT_ADVICE.join(", ")}.
-- Never American: ${[...SHEETS_AMERICAN, ...REPORT_AMERICAN].join(", ")}.
+- Never American: ${AMERICAN.join(", ")}.
 - Never these: ${REPORT_NEVER.join(", ")}.
 
 Return JSON only, every match as filed, in the same order: { "matches": [{ "fixture": the MATCH number, "standfirst": "...", "account": ["paragraph", "..."], "sections": [{ "head": "...", "pitch": "the football", "stake": "what it means in the league" }] }] }`;

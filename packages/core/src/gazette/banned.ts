@@ -1,4 +1,6 @@
 import { escapeRegExp } from "../regExp";
+import { REPORT_AMERICAN } from "./reports/words";
+import { AMERICAN_IZE, SHEETS_AMERICAN } from "./sheets/words";
 
 // The phrases the paper does not print, and the check that finds them: the prompt's list is generated from these.
 
@@ -43,4 +45,13 @@ export function banned(prose: string, list: readonly string[] = BANNED): string[
   return list.filter((phrase) =>
     new RegExp(`(?<![\\p{L}])${escapeRegExp(phrase)}(?![\\p{L}])`, "iu").test(prose),
   );
+}
+
+/** Not British English: the team sheets' American words, then the match report's. */
+export const AMERICAN: readonly string[] = [...SHEETS_AMERICAN, ...REPORT_AMERICAN];
+
+/** The words on `list` the prose uses, then its first American -ize spelling. */
+export function americanisms(prose: string, list: readonly string[] = AMERICAN): string[] {
+  const ize = prose.match(AMERICAN_IZE)?.[0];
+  return ize === undefined ? banned(prose, list) : [...banned(prose, list), ize];
 }

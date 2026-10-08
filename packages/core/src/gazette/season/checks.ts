@@ -1,8 +1,7 @@
-import { banned } from "../banned";
+import { americanisms, banned } from "../banned";
 import { columnRules, faultLog, lawroProse, type CheckContext, type Fault, type Report } from "../predictions/checks";
 import { masked, mentionAt, sentences, wordCount } from "../predictions/prose";
-import { REPORT_AMERICAN, REPORT_FPL } from "../reports/words";
-import { AMERICAN_IZE, SHEETS_AMERICAN } from "../sheets/words";
+import { REPORT_FPL } from "../reports/words";
 import type { SeasonCalls } from "./calls";
 
 // The editor on Lawro's power rankings: every rule his weekly column answers to, and the rankings' own. A hard fault
@@ -69,8 +68,7 @@ export function checkSeason(draft: SeasonDraft, calls: SeasonCalls, squads: Read
     const plain = masked(text, ctx.names);
     for (const word of banned(plain, SEASON_BANNED)) fault(section, "banned", "send-back", word);
     if (DRAFT_ROUND.test(plain)) fault(section, "banned", "send-back", plain.match(DRAFT_ROUND)?.[0] ?? "");
-    for (const word of banned(plain, [...SHEETS_AMERICAN, ...REPORT_AMERICAN])) fault(section, "not British football English", "send-back", word);
-    if (AMERICAN_IZE.test(plain)) fault(section, "not British football English", "send-back", plain.match(AMERICAN_IZE)?.[0] ?? "");
+    for (const word of americanisms(plain)) fault(section, "not British football English", "send-back", word);
     // A place beside one side must be the place the desk gave it.
     const own = section.startsWith("table:") ? sides.get(section.slice("table:".length)) : undefined;
     for (const sentence of sentences(text)) {

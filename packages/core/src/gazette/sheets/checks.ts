@@ -1,5 +1,5 @@
 import { SHEETS } from "../../config";
-import { BANNED, banned } from "../banned";
+import { BANNED, americanisms, banned } from "../banned";
 import { escapeRegExp } from "../../regExp";
 import { faultLog, type Fault, type Report } from "../predictions/checks";
 import { masked, ngrams, numbersIn, sentences, wordCount } from "../predictions/prose";
@@ -8,7 +8,7 @@ import { strangers } from "../strangers";
 import type { SheetsDraft } from "./column";
 import type { TeamFacts, TieFacts } from "./facts";
 import { printName } from "./sheet";
-import { AMERICAN_IZE, SHEETS_AMERICAN, SHEETS_CAPPED, SHEETS_ELSEWHERE, SHEETS_HOUSE, SHEETS_LEXICON, SHEETS_STOCK } from "./words";
+import { SHEETS_AMERICAN, SHEETS_CAPPED, SHEETS_ELSEWHERE, SHEETS_HOUSE, SHEETS_LEXICON, SHEETS_STOCK } from "./words";
 
 // The editor for team news: every paragraph read against the facts it was written from. A hard
 // fault never prints (the side takes the desk's plain line); a send-back goes back once, quoted,
@@ -74,8 +74,7 @@ export function checkSheets(draft: SheetsDraft, ctx: SheetsCheck): Fault[] {
     // Names blanked first: a side called "123" is a name, not a figure.
     for (const figure of numbersIn(plain)) if (!known.has(figure)) fault(section, "a figure not in the brief", "hard", String(figure));
     for (const word of banned(plain, [...BANNED, ...DESK_BANNED, ...SHEETS_OPINION])) fault(section, "opinion or banned phrasing", "send-back", word);
-    for (const word of banned(plain, SHEETS_AMERICAN)) fault(section, "not British football English", "send-back", word);
-    if (AMERICAN_IZE.test(plain)) fault(section, "not British football English", "send-back", plain.match(AMERICAN_IZE)?.[0] ?? "");
+    for (const word of americanisms(plain, SHEETS_AMERICAN)) fault(section, "not British football English", "send-back", word);
     for (const phrase of banned(plain, SHEETS_STOCK)) fault(section, "a stock phrase no reporter uses", "send-back", phrase);
     for (const word of banned(plain, SHEETS_ELSEWHERE)) fault(section, "not this gameweek's news", "send-back", word);
     for (const [not, say] of SHEETS_HOUSE) if (banned(plain, [not]).length > 0) fault(section, `say ${say}, not ${not}`, "send-back", not);
