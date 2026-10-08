@@ -7,15 +7,15 @@ export const PAPER_TITLE = "Gazetta";
  *  earlier than Tuesday's files the day before (Sunday = 0). */
 export const PREDICTED_XI = { filing: { weekday: 5, hour: 16, maxLeadDays: 3 } } as const;
 
-/** The Team Sheet: a column per press-conference day, from 16:30 London that day, once the Mac's 16:00 import has
- *  merged, until the lock (Craig, 8 Oct 2026). */
-export const TEAM_SHEET = { hour: 16, minute: 30 } as const;
+/** The Team Sheet: a column per press-conference day until the lock, from 16:30 London that day once the Mac's 16:00
+ *  import has merged, and Thursday's from 18:00 (Craig, 8 Oct 2026). */
+export const TEAM_SHEET = { from: { hour: 16, minute: 30 }, thursday: { weekday: "Thu", hour: 18 } } as const;
 
 /** Lawro's predictions: when the column files and how a tie is called. Set before any league was drafted, so
  *  retune after gameweek 9 by counting the gut calls in the archive. */
 export const PREDICTIONS = {
-  /** Thursday from 18:00 London; a lock earlier in the week files the evening before (Sunday = 0). */
-  filing: { weekday: 4, hour: 18, maxLeadDays: 4 },
+  /** Thursday from 20:00 London; a lock earlier in the week files the evening before (Sunday = 0). */
+  filing: { weekday: 4, hour: 20, maxLeadDays: 4 },
   /** A tie is close when the gap is at most this share of the favourite's total: 3 points on 40. */
   closeShare: 0.08,
   /** FPL publishes 0/25/50/75/100; at or below this the favourite's best man is a doubt. */

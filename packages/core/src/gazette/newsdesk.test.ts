@@ -100,16 +100,17 @@ describe("newsdesk", () => {
   });
 
   describe("the Team Sheet", () => {
-    // GW6 locks Sat 10 Oct at 12:15 London. Each conference day is its own column, from 16:30 London that day, once
-    // the Mac's 16:00 import has merged (Craig, 8 Oct 2026).
+    // GW6 locks Sat 10 Oct at 12:15 London. Each conference day is its own column: Thursday's from 18:00 London, any
+    // other day's from 16:30, once the Mac's 16:00 import has merged (Craig, 8 Oct 2026).
     const next = { period: 6, gameweek: 6, locksAt: "2026-10-10T11:15:00.000Z" };
     const thursday = (key: string) => key === "presser:gw6:2026-10-08";
     const sheet = (over: Partial<DeskState>, now: string, covered: (key: string) => boolean = none) =>
       newsdesk(desk({ pressers: ["2026-10-08", "2026-10-09"], next, ...over }), covered, now).filter((a) => a.kind === "presser");
 
-    it("files Thursday's conferences on Thursday and Friday's on Friday, each from 16:30 London", () => {
-      expect(sheet({}, "2026-10-08T15:29:00.000Z")).toEqual([]);
-      expect(sheet({}, "2026-10-08T15:30:00.000Z").map((a) => [a.key, a.slug, a.day])).toEqual([
+    it("files Thursday's conferences on Thursday from 18:00 London, and Friday's on Friday from 16:30", () => {
+      expect(sheet({}, "2026-10-08T15:30:00.000Z")).toEqual([]);
+      expect(sheet({}, "2026-10-08T16:59:00.000Z")).toEqual([]);
+      expect(sheet({}, "2026-10-08T17:00:00.000Z").map((a) => [a.key, a.slug, a.day])).toEqual([
         ["presser:gw6:2026-10-08", "gw6-presser-2026-10-08", "2026-10-08"],
       ]);
       // Friday's waits for the 16:00 import, not the 12:30 one.
@@ -131,7 +132,7 @@ describe("newsdesk", () => {
 
     it("files even while the last round is still 'finished'", () => {
       // `desk.finished` stays true for four or five days of seven, so a column gated on it would never fire.
-      expect(sheet({ finished: true }, "2026-10-08T15:30:00.000Z")).toHaveLength(1);
+      expect(sheet({ finished: true }, "2026-10-08T17:00:00.000Z")).toHaveLength(1);
     });
 
     it("files nothing without the round's press conferences or its lock", () => {
@@ -141,19 +142,19 @@ describe("newsdesk", () => {
   });
 
   it("files Lawro on the Thursday evening before the round, about the round ahead", () => {
-    // GW6 locks Sat 10 Oct at 12:15 London; the column is due from Thu 8 Oct, 18:00 London.
+    // GW6 locks Sat 10 Oct at 12:15 London; the column is due from Thu 8 Oct, 20:00 London.
     const next = { period: 6, gameweek: 6, locksAt: "2026-10-10T11:15:00.000Z" };
-    const lawro = newsdesk(desk({ gameweek: 5, period: 5, finished: true, next }), none, "2026-10-08T17:00:00.000Z");
+    const lawro = newsdesk(desk({ gameweek: 5, period: 5, finished: true, next }), none, "2026-10-08T19:00:00.000Z");
     expect(lawro.find((a) => a.kind === "predictions")).toEqual({
       kind: "predictions",
       key: "predictions:gw6",
       slug: "gw6-predictions",
       round: { period: 6, gameweek: 6 },
     });
-    // Not before six, not while the last round is still being played, not twice.
-    expect(newsdesk(desk({ finished: true, next }), none, "2026-10-08T16:30:00.000Z").map((a) => a.kind)).not.toContain("predictions");
-    expect(newsdesk(desk({ finished: false, next }), none, "2026-10-08T17:00:00.000Z").map((a) => a.kind)).not.toContain("predictions");
-    expect(newsdesk(desk({ finished: true, next }), (key) => key === "predictions:gw6", "2026-10-08T17:00:00.000Z").map((a) => a.kind)).not.toContain("predictions");
+    // Not before eight, not while the last round is still being played, not twice.
+    expect(newsdesk(desk({ finished: true, next }), none, "2026-10-08T18:59:00.000Z").map((a) => a.kind)).not.toContain("predictions");
+    expect(newsdesk(desk({ finished: false, next }), none, "2026-10-08T19:00:00.000Z").map((a) => a.kind)).not.toContain("predictions");
+    expect(newsdesk(desk({ finished: true, next }), (key) => key === "predictions:gw6", "2026-10-08T19:00:00.000Z").map((a) => a.kind)).not.toContain("predictions");
     // Nothing in a break week, and nothing without a next round.
     expect(newsdesk(desk({ finished: true, next }), none, "2026-10-01T17:00:00.000Z").map((a) => a.kind)).not.toContain("predictions");
     expect(newsdesk(desk({ finished: true, next: null }), none, "2026-10-08T17:00:00.000Z").map((a) => a.kind)).not.toContain("predictions");
@@ -216,7 +217,7 @@ describe("newsdesk", () => {
       ahead,
       next: { ...ahead, locksAt: "2026-10-10T11:15:00.000Z" },
     });
-    expect(newsdesk(unplayed, none, "2026-10-08T17:00:00.000Z").map((a) => a.key)).toEqual([
+    expect(newsdesk(unplayed, none, "2026-10-08T19:00:00.000Z").map((a) => a.key)).toEqual([
       "presser:gw6:2026-10-08",
       "predictions:gw6",
     ]);
@@ -255,7 +256,7 @@ describe("Lawro's season predictions", () => {
       round: { period: 6, gameweek: 6 },
     });
     // The weekly column keeps its own evening: Thursday's firing has both.
-    expect(newsdesk(week, none, "2026-10-08T17:30:00.000Z").map((a) => a.kind)).toEqual(["predictions", "season-rankings"]);
+    expect(newsdesk(week, none, "2026-10-08T19:30:00.000Z").map((a) => a.kind)).toEqual(["predictions", "season-rankings"]);
   });
 
   it("is not due before the draft is done, once filed, or from the first lock", () => {

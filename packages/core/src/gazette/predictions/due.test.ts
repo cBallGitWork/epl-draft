@@ -24,13 +24,13 @@ describe("filingDay", () => {
 });
 
 describe("predictionsDue", () => {
-  it("opens at 18:00 London on the filing day, in summer time and in winter", () => {
-    expect(predictionsDue(GW6_LOCK, "2026-10-08T16:59:00.000Z")).toBe(false);
-    expect(predictionsDue(GW6_LOCK, "2026-10-08T17:00:00.000Z")).toBe(true);
-    // After the clocks go back, 18:00 London is 18:00 UTC.
+  it("opens at 20:00 London on the filing day, in summer time and in winter", () => {
+    expect(predictionsDue(GW6_LOCK, "2026-10-08T18:59:00.000Z")).toBe(false);
+    expect(predictionsDue(GW6_LOCK, "2026-10-08T19:00:00.000Z")).toBe(true);
+    // After the clocks go back, 20:00 London is 20:00 UTC.
     const november = "2026-11-07T12:15:00.000Z";
-    expect(predictionsDue(november, "2026-11-05T17:59:00.000Z")).toBe(false);
-    expect(predictionsDue(november, "2026-11-05T18:00:00.000Z")).toBe(true);
+    expect(predictionsDue(november, "2026-11-05T19:59:00.000Z")).toBe(false);
+    expect(predictionsDue(november, "2026-11-05T20:00:00.000Z")).toBe(true);
   });
 
   it("catches up after a skipped evening and closes at the lock", () => {
@@ -48,7 +48,8 @@ describe("predictionsDue", () => {
   it("files a midweek round the evening before", () => {
     const tuesday = "2026-12-01T19:15:00.000Z";
     expect(predictionsDue(tuesday, "2026-11-26T18:30:00.000Z")).toBe(false);
-    expect(predictionsDue(tuesday, "2026-11-30T18:00:00.000Z")).toBe(true);
+    expect(predictionsDue(tuesday, "2026-11-30T19:59:00.000Z")).toBe(false);
+    expect(predictionsDue(tuesday, "2026-11-30T20:00:00.000Z")).toBe(true);
   });
 
   it("refuses an instant it cannot read", () => {

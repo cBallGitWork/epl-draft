@@ -1,6 +1,7 @@
 import { binXiDue } from "./binXi/due";
 import { PREDICTED_XI, TEAM_SHEET } from "../config";
 import { dueBeforeLock, dueFrom, predictionsDue } from "./predictions/due";
+import { weekdayOfDay } from "../time";
 import type { StoryKind } from "./story";
 import type { TieState } from "./tieState";
 
@@ -98,7 +99,8 @@ export function newsdesk(
   if (next !== null) {
     const slot = roundSlot("presser", next.gameweek);
     for (const day of desk.pressers) {
-      if (dueFrom(day, TEAM_SHEET, next.locksAt, now)) {
+      const from = weekdayOfDay(day) === TEAM_SHEET.thursday.weekday ? TEAM_SHEET.thursday : TEAM_SHEET.from;
+      if (dueFrom(day, from, next.locksAt, now)) {
         want({ kind: "presser", key: `${slot.key}:${day}`, slug: `${slot.slug}-${day}`, day, ...about });
       }
     }

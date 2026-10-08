@@ -150,16 +150,18 @@ this and not on a guess about when things happen:
 | **Sun/Mon** | the round ends, either night | The Monday Club | `eleven` (Crooks), `power-ranking`, `dodgers` |
 | **Tue** | **nothing at all** | Bins Out | `bin-xi`, "Top Bins": the best eleven nobody has — SHIPPED 30 Sep, see below |
 | **Wed 17:00** | waivers process, free agency opens | The Mercato Wire | `wire`, on **detection** of a claim batch |
-| **Thu 16:30** | Thursday's press conferences in | The Team Sheet | `presser`: Thursday's conferences, once the Mac's 16:00 import has merged |
-| **Thu 18:00** | the evening before the round | The Form Guide | `predictions`, Lawro's calls on every tie — SHIPPED 24 Sep (the evening before an earlier lock) |
+| **Thu 18:00** | Thursday's press conferences in | The Team Sheet | `presser`: Thursday's conferences, from the Mac's 16:00 import |
+| **Thu 20:00** | the evening before the round | The Form Guide | `predictions`, Lawro's calls on every tie — SHIPPED 24 Sep (the evening before an earlier lock) |
 | **Fri 16:00 / 16:30** | predicted elevens out; Friday's pressers in | The Form Guide | `predicted-xi` **16:00**, then `presser` **16:30**: Friday's conferences |
 | **Fri night / Sat noon** | deadline closes, gameweek begins | The Pink 'Un | `sheets` at the lock (every side as locked, SHIPPED 26 Sep), `tie-call`, `fixture-preview`, the Classified |
 | **Sat/Sun** | matches | The Sunday Edition | `tie-report` as the football stops |
 
 **The Team Sheet is a column per conference day (Craig, 8 Oct 2026).** Thursday's conferences file on Thursday and
-Friday's on Friday, each from 16:30 London once the Mac's 16:00 import has merged, until the lock (`TEAM_SHEET` in
-`gazette/editorial.ts`). From 7 Oct one Friday column carried both days, on *"team sheet Friday"*; the next evening Craig
-wanted Thursday's back, at 16:30. Thursday's cron band opens at 15:00 UTC to reach 16:30 London in either clock.
+Friday's on Friday, until the lock: Thursday's from 18:00 London and any other day's from 16:30, once the Mac's 16:00
+import has merged (`TEAM_SHEET` in `gazette/editorial.ts`). From 7 Oct one Friday column carried both days, on
+*"team sheet Friday"*; the next evening Craig wanted Thursday's back, at 16:30, and then at 18:00 with Lawro moved to
+20:00 (*"put the presser article for 6pm thursdays, lawro 8pm thursdays"*). Thursday's cron band, 15:00 to 20:30 UTC,
+reaches both in either clock.
 
 **Tuesday is the only day with no league event, which is what makes it the right
 day for the evergreen piece** — the form table, `player` articles, the
