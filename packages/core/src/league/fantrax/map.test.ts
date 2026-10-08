@@ -118,6 +118,10 @@ describe("mapLeagueInfo", () => {
     expect(empty.rosterPeriods).toEqual([]);
     expect(empty.roster.maxActiveByPosition).toEqual({});
   });
+
+  it("keeps a player whose entry arrives null, with no positions and no status", () => {
+    expect(mapLeagueInfo({ playerInfo: { x: null } }).players).toEqual([{ fantraxId: "x", eligiblePositions: [], status: "" }]);
+  });
 });
 
 describe("mapLeagueInfo, on a league that has drafted", () => {

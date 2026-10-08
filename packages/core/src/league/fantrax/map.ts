@@ -91,14 +91,12 @@ function mapRosterLimits(info: RawRosterInfo | undefined): RosterLimits {
   };
 }
 
-function mapPlayerStates(
-  playerInfo: Record<string, { eligiblePos?: string; status?: string }> | undefined,
-): LeaguePlayerState[] {
+function mapPlayerStates(playerInfo: RawLeagueInfo["playerInfo"]): LeaguePlayerState[] {
   if (!playerInfo) return [];
   return Object.entries(playerInfo).map(([fantraxId, state]) => ({
     fantraxId,
-    eligiblePositions: eligiblePositions(state.eligiblePos),
-    status: state.status ?? "",
+    eligiblePositions: eligiblePositions(state?.eligiblePos),
+    status: state?.status ?? "",
   }));
 }
 

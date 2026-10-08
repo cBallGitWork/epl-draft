@@ -42,6 +42,10 @@ async function fxeaGet<T>(method: string, params: Record<string, string>): Promi
   if (error) {
     throw new FantraxError(method, error.code ?? "UNKNOWN", error.message ?? "no message");
   }
+  // Every fxea answer is an object or an array: a JSON null would reach a mapper as a TypeError.
+  if (typeof body !== "object" || body === null) {
+    throw new FantraxError(method, "NO_DATA", "fxea answered with neither an object nor an error", "malformed");
+  }
   return body as T;
 }
 

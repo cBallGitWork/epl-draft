@@ -80,7 +80,7 @@ export interface RawLeagueInfo {
   rosterInfo?: RawRosterInfo;
   scoringPeriods?: RawPeriod[];
   rosterPeriods?: RawPeriod[];
-  playerInfo?: Record<string, RawPlayerInfo>;
+  playerInfo?: Record<string, RawPlayerInfo | null>;
   /** Keyed by team id, which the value repeats. Empty until teams join. */
   teamInfo?: Record<string, RawTeamInfo>;
   matchups?: RawPeriodMatchups[];
