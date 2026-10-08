@@ -13,15 +13,18 @@ export interface GameweekKickoff {
   kickoff: string;
 }
 
-/** A period's gameweeks: none for a blank, two for a double. */
+/** A period's gameweeks, ascending: none for a blank, two for a double. */
 export interface PeriodGameweeks {
   period: number;
   gameweeks: number[];
+  /** The gameweek the period is for: the most matches, the earliest first kickoff on a tie; null for a blank. */
+  own: number | null;
 }
 
-/** A period's first gameweek, the one that opens a double; undefined for a period the calendar lacks or a blank. */
+/** The gameweek a period is for (`own`), never a replayed postponement's; undefined for a blank or a period the
+ *  calendar lacks. */
 export function openingGameweek(calendar: readonly PeriodGameweeks[], period: number | undefined): number | undefined {
-  return calendar.find((entry) => entry.period === period)?.gameweeks[0];
+  return calendar.find((entry) => entry.period === period)?.own ?? undefined;
 }
 
 export function periodGameweeks(
@@ -36,14 +39,17 @@ export function periodGameweeks(
   return periods.map((period) => {
     const start = Date.parse(period.start);
     const end = Date.parse(period.end);
-    const gameweeks = new Set<number>();
+    const held = new Map<number, { matches: number; first: number }>();
 
     // Inclusive at both ends: consecutive periods end at :59 and start at the next :00.
     for (const { gameweek, at } of instants) {
-      if (at >= start && at <= end) gameweeks.add(gameweek);
+      if (at < start || at > end) continue;
+      const seen = held.get(gameweek);
+      held.set(gameweek, { matches: (seen?.matches ?? 0) + 1, first: Math.min(seen?.first ?? at, at) });
     }
 
-    return { period: period.number, gameweeks: [...gameweeks].sort((a, b) => a - b) };
+    const own = [...held].sort(([gwA, a], [gwB, b]) => b.matches - a.matches || a.first - b.first || gwA - gwB)[0];
+    return { period: period.number, gameweeks: [...held.keys()].sort((a, b) => a - b), own: own?.[0] ?? null };
   });
 }
 
