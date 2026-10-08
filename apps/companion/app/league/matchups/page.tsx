@@ -56,7 +56,7 @@ export default async function MatchupPage() {
   if (pairings.length === 0) {
     return (
       <LeagueShell current="matchups">
-        <Nothing title="No pairings this gameweek" code={`gameweek ${period}`}>
+        <Nothing title="No pairings this gameweek" code={`gameweek ${squads.snapshot.gameweek}`}>
         The schedule does not cover this gameweek — a bye week, or a season that has not reached its
         first head-to-head yet. Nobody is hiding anything; there is nothing to pair.
         </Nothing>

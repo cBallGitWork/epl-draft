@@ -1,5 +1,5 @@
 import Link from "@/app/components/shell/Link";
-import { ordinal, type FormGame, type SortKey, type StandingsRow } from "@epl/core";
+import { openingGameweek, ordinal, type FormGame, type PeriodGameweeks, type SortKey, type StandingsRow } from "@epl/core";
 import { PointsCell, TIGHT_ROW } from "../components/league/TableCells";
 import { COPY, cellAlign, deskOnly } from "./Columns";
 import { yoursEdge, yoursInk } from "../mine";
@@ -19,6 +19,7 @@ export default function TableRow({
   form,
   sort,
   tint,
+  calendar,
 }: {
   row: StandingsRow;
   mine: boolean;
@@ -28,6 +29,8 @@ export default function TableRow({
   form: readonly FormGame[];
   /** What the table is ordered by: a column the phone stands down still shows when it orders the table. */
   sort: SortKey;
+  /** Fantrax's periods with their gameweeks, so each result is titled with its gameweek. */
+  calendar: readonly PeriodGameweeks[];
 }) {
   return (
     <tr className={`${ROW_RULE} ${mine ? "bg-raised" : "hover:bg-surface"}`}>
@@ -69,14 +72,14 @@ export default function TableRow({
 
       {/* Form after the points, where a modern table prints it. */}
       <td className={`${FIGURE_CELL} ${deskOnly("form", sort)}`}>
-        <Form run={form} />
+        <Form run={form} calendar={calendar} />
       </td>
     </tr>
   );
 }
 
 /** The last `FORM_GAMES` gameweeks, oldest first, each titled with its score: a win green, a loss red, a draw quiet. */
-function Form({ run }: { run: readonly FormGame[] }) {
+function Form({ run, calendar }: { run: readonly FormGame[]; calendar: readonly PeriodGameweeks[] }) {
   if (run.length === 0) return <Absent />;
 
   return (
@@ -84,7 +87,7 @@ function Form({ run }: { run: readonly FormGame[] }) {
       {run.slice(-FORM_GAMES).map((game) => (
         <span
           key={game.period}
-          title={`Gameweek ${game.period} · ${game.pointsFor}-${game.pointsAgainst}`}
+          title={titleOf(game, openingGameweek(calendar, game.period))}
           className={`font-bold ${TONE[game.result]}`}
         >
           {game.result}
@@ -94,3 +97,8 @@ function Form({ run }: { run: readonly FormGame[] }) {
   );
 }
 
+/** A result's title: its gameweek and score, or the score alone where the calendar cannot place its period. */
+function titleOf(game: FormGame, gameweek: number | undefined): string {
+  const score = `${game.pointsFor}-${game.pointsAgainst}`;
+  return gameweek === undefined ? score : `Gameweek ${gameweek} · ${score}`;
+}

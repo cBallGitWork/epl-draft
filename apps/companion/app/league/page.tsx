@@ -9,7 +9,7 @@ import { leagueTable } from "../standings";
 import Nothing from "../components/shell/Nothing";
 import LeagueShell from "./Shell";
 import { readerTeamId } from "../squads";
-import { leagueInfo } from "../round";
+import { leagueInfo, readCalendar } from "../round";
 import { CutRow } from "../components/league/TableCells";
 import { BOARD } from "@/app/desk";
 import FantraxSilent from "../components/shell/FantraxSilent";
@@ -27,12 +27,13 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
   const sort = isSortKey(query.sort) ? query.sort : "rank";
   const descending = query.dir === undefined ? defaultDescending(sort) : query.dir === "desc";
 
-  const [rows, mine, info, results] = await Promise.all([
+  const [rows, mine, info, results, calendar] = await Promise.all([
     leagueTable(),
     readerTeamId(),
     leagueInfo(),
     // The season's results, for the form guide: a record is a total, a run is an order.
     getSeasonResults(),
+    readCalendar(),
   ]);
 
   // Empty until Fantrax settles a round, and for a run that does not reproduce its record (`league/form.ts`).
@@ -82,6 +83,7 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
                   row={row}
                   mine={row.teamId === mine}
                   form={form.get(row.teamId) ?? []}
+                  calendar={calendar}
                 />
                 {/* Dashed yellow rules after `cm9900/24.jpg` (Craig, 31 Aug), only in Fantrax's order. */}
                 {sort === "rank" && !descending

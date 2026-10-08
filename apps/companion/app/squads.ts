@@ -31,7 +31,7 @@ export const bridge = mapping as Bridge;
 
 /** Everything a squad view needs. */
 export interface ReadableSquads {
-  /** The season's kickoffs, for the gate: lineups lock fifteen minutes before a period's first ball. */
+  /** The season's kickoffs, for the gate: lineups lock `LINEUP_LOCK_LEAD_MINUTES` before a period's first ball. */
   kickoffs: GameweekKickoff[];
   period: RosteredPeriod;
   snapshot: FootballSnapshot;

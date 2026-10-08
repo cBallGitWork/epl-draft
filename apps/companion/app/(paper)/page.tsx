@@ -1,4 +1,4 @@
-import { clubById, londonDayAndTime } from "@epl/core";
+import { LINEUP_LOCK_LEAD_MINUTES, clubById, londonDayAndTime, openingGameweek } from "@epl/core";
 import { named } from "../components/gazette/named";
 import Teaser from "../components/gazette/Teaser";
 import Brief from "../components/gazette/Brief";
@@ -17,6 +17,7 @@ import Silence from "../components/gazette/Silence";
 import PaperTable from "../components/gazette/PaperTable";
 import { edition } from "../edition";
 import { readerTeamId } from "../squads";
+import { readCalendar } from "../round";
 import { draftRows, footballRows, scorerRows } from "../tables";
 
 // The Gazetta's front page: the stories, the eleven, the tables, the business and the lock.
@@ -25,14 +26,18 @@ import { draftRows, footballRows, scorerRows } from "../tables";
 export default async function GazettePage() {
   const mine = await readerTeamId();
   const paper = await edition(mine);
-  // The three tables, from reads the page already makes.
-  const [draft, football, scorers] = await Promise.all([
+  // The three tables, from reads the page already makes, and the calendar that names the lock's gameweek.
+  const [draft, football, scorers, calendar] = await Promise.all([
     draftRows(mine),
     footballRows(),
     scorerRows(),
+    readCalendar(),
   ]);
   // One club lookup for the whole page.
   const clubs = paper.snapshot ? clubById(paper.snapshot) : new Map();
+  // Fantrax's lock is by period: the reader gets the gameweek it opens, or no number where the calendar cannot say.
+  const lockGameweek = paper.deadline ? openingGameweek(calendar, paper.deadline.period) : undefined;
+  const beforeIt = `, ${inWords(LINEUP_LOCK_LEAD_MINUTES)} before ${lockGameweek === undefined ? "the gameweek" : "gameweek "}`;
   // A deal with no other side came off the wire.
   const byId = named(paper.teams);
   const who = (teamId: string | null) => (teamId === null ? "the wire" : byId(teamId));
@@ -149,7 +154,8 @@ export default async function GazettePage() {
                 <span className="numeric font-semibold text-ink">
                   {londonDayAndTime(paper.deadline.locksAt)}
                 </span>
-                , a quarter of an hour before gameweek {paper.deadline.period}{" "}
+                {beforeIt}
+                {lockGameweek}{" "}
                 kicks off at{" "}
                 <span className="numeric text-ink">
                   {londonDayAndTime(paper.deadline.at)}
@@ -162,4 +168,9 @@ export default async function GazettePage() {
       </div>
     </>
   );
+}
+
+/** The lock's lead as the paper says it: a quarter of an hour while the house rule is fifteen minutes. */
+function inWords(minutes: number): string {
+  return minutes === 15 ? "a quarter of an hour" : `${minutes} minutes`;
 }
