@@ -34,6 +34,7 @@ import limits from "../../data/leagues/roster-limits.json";
 import { readIntel, readProjections } from "../intel";
 import { EDITIONS_ROOT } from "../paths";
 import { rosteredPeriod } from "./bridge";
+import type { Say } from "./newsroom";
 
 const KIND: StoryKind = "season-rankings";
 
@@ -60,7 +61,7 @@ export async function seasonDesk(input: {
   snapshot: FootballSnapshot;
   kickoffs: readonly GameweekKickoff[];
   pedigree: ReadonlyMap<string, DraftPick>;
-  say: (message: string) => void;
+  say: Say;
 }): Promise<SeasonDesk | null> {
   const round = input.assignments.find((each) => each.kind === KIND)?.round;
   if (round === undefined) return null;

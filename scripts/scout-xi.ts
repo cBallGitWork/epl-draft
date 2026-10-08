@@ -26,10 +26,13 @@ import { intelManifest, intelPath, readIntel } from "./intel";
 // Exits 1 without writing when the page will not parse into every club's eleven: a broken
 // fetch must never replace a good file.
 
+/** How long Scout's page may take to arrive: twice a provider read's FETCH_TIMEOUT_MS. */
+const SCOUT_PAGE_TIMEOUT_MS = 30_000;
+
 async function main(): Promise<void> {
   const now = new Date().toISOString();
   const [page, fixtures] = await Promise.all([
-    politeFetch(SCOUT_TEAM_NEWS_URL, { signal: AbortSignal.timeout(30_000) }),
+    politeFetch(SCOUT_TEAM_NEWS_URL, { signal: AbortSignal.timeout(SCOUT_PAGE_TIMEOUT_MS) }),
     fetchFixtures().then(mapFixtures),
   ]);
   if (!page.ok) throw new Error(`Scout's team news answered ${page.status}`);

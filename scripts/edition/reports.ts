@@ -1,6 +1,7 @@
 import { buildReportsBrief, deskDay, onLondonDay, type Assignment, type FootballSnapshot, type MatchDesk } from "@epl/core";
 import type { DeskFacts } from "./facts";
 import { matchdayInput } from "./matchday";
+import type { Say } from "./newsroom";
 
 // The reads behind each match-day report a firing commissions, made only when one is assigned (a dozen requests a day).
 
@@ -16,7 +17,7 @@ export async function reportsDesk(input: {
   snapshot: FootballSnapshot;
   facts: DeskFacts;
   gameweeks: readonly number[];
-  say: (message: string) => void;
+  say: Say;
 }): Promise<Map<string, ReportsJob>> {
   const jobs = new Map<string, ReportsJob>();
   for (const assignment of input.assignments) {

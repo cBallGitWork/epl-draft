@@ -38,6 +38,7 @@ import {
 } from "@epl/core";
 import { readIntel, readProjections } from "../intel";
 import { rosteredPeriod } from "./bridge";
+import type { Say } from "./newsroom";
 import { readArchive } from "./persist";
 import { recentGames } from "./recent";
 
@@ -67,7 +68,7 @@ export async function predictionsDesk(input: {
   kickoffs: readonly GameweekKickoff[];
   table: readonly StandingsRow[];
   business: readonly Deal[];
-  say: (message: string) => void;
+  say: Say;
 }): Promise<PredictionsDesk | null> {
   const round = input.assignments.find((each) => each.kind === "predictions")?.round;
   if (round === undefined) return null;

@@ -3,6 +3,7 @@ import { binXiDesk } from "./binXi";
 import type { DeskContext } from "./dispatch";
 import { dodgersDesk } from "./dodgers";
 import type { DeskFacts } from "./facts";
+import type { Say } from "./newsroom";
 import { predictionsDesk } from "./predictions";
 import { seasonDesk } from "./season";
 import { draftsDesk } from "./drafts";
@@ -32,7 +33,7 @@ export async function deskContext(input: {
   assignments: readonly Assignment[];
   /** The firing's one instant. */
   now: string;
-  say: (message: string) => void;
+  say: Say;
 }): Promise<DeskContext> {
   const { snapshot, facts, clubs, byCode, info, period, gameweeks, ledger, sheet, xi, season, kickoffs, assignments, now, say } = input;
   return {

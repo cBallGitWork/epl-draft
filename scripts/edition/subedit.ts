@@ -1,5 +1,5 @@
 import { banned } from "@epl/core";
-import { writeColumn } from "./newsroom";
+import { writeColumn, type Say } from "./newsroom";
 import { sendBack } from "./voice/house";
 
 // The sub-editor's pass: write the column, read it back against the register,
@@ -40,7 +40,7 @@ export async function writeSubedited(
   brief: string,
   /** How the desk reports sending one back. Injected so this file does no I/O
    *  of its own and the orchestrator keeps one voice for its log. */
-  say: (message: string) => void,
+  say: Say,
   kind: string,
 ): Promise<Record<string, unknown>> {
   const column = await writeColumn(system, brief);

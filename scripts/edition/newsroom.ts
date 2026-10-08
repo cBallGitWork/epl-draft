@@ -12,6 +12,9 @@ const MODEL = process.env.GAZETTA_MODEL ?? "claude-opus-5-5";
 /** The model for the calls that read rather than write: a judge, a fan's read-back, a line edit. */
 const HELPER_MODEL = process.env.GAZETTA_HELPER_MODEL ?? "claude-sonnet-5";
 
+/** How a desk reports as it works: the firing's log, a line at a time. */
+export type Say = (message: string) => void;
+
 /** What a call is for: the writer's prose, or a helper's reading of it. */
 export type Tier = "writer" | "helper";
 
@@ -73,16 +76,8 @@ export async function writeColumn(
   try {
     return JSON.parse(fenced) as Record<string, unknown>;
   } catch {
-    // **A real newline inside a JSON string is not JSON.** The house style asks
-    // for paragraphs separated by blank lines and the model occasionally
-    // obliges literally, inside the quotes, where the spec requires `\n`. Two
-    // of ten columns died that way on 2 Sep — good prose, thrown away on a
-    // control character.
-    //
-    // So one repair and only one: escape the control characters that appear
-    // INSIDE string literals, then parse again. It is deliberately not a
-    // tolerant parser — a column whose braces are wrong is still a failure, and
-    // a second exception here is the honest outcome.
+    // A raw newline inside a JSON string is not JSON, and the house style's blank lines put some there: one repair only,
+    // escaping control characters inside string literals; a column whose braces are wrong still fails.
     return JSON.parse(__escapeControlsInStrings(fenced)) as Record<string, unknown>;
   }
 }
@@ -135,10 +130,7 @@ export interface ColumnMeta {
   reporter?: string;
   /** The covered-key this filing spends — also its one subject. */
   subject: string;
-  /** The man the page prints a picture of, picked by the desk from the facts
-   *  (`assemble.faceOf`). Null for a kind with no man in it. It sits in the meta
-   *  and not in the column deliberately: everything the model returned is read
-   *  off `column` below, and the photograph is not the model's to choose. */
+  /** The man the page pictures, picked by the desk (`assemble.faceOf`), never the model; null for a kind with no man. */
   face: StoryFace | null;
 }
 
@@ -167,13 +159,8 @@ export function storyOfColumn(
     face: meta.face,
     // The calls, for the kinds that make them.
     ties: column.ties,
-    // **The cargo, nested.** Every column prompt asks for its structured part
-    // at the TOP level — `quotes`, `ranks`, `quiz` — because that
-    // is the shape a model reliably returns, and `PublishedStory` keeps them
-    // under `extras`. Without this fold the sketches file a scene-setting
-    // paragraph and no sketch, the rankings file an overview and no ranked list,
-    // and the page renders exactly nothing of it — silently, since every
-    // reader of `extras` treats absence as ordinary.
+    // The cargo, nested: each prompt asks for its structured part at the top level, the shape a model returns reliably,
+    // and `PublishedStory` keeps it under `extras`; without the fold the page silently renders none of it.
     extras: {
       quotes: column.quotes,
       ranks: column.ranks,

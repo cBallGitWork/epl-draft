@@ -10,10 +10,11 @@ import {
   type Fault,
   type SeasonDraft,
 } from "@epl/core";
-import { writeColumn } from "./newsroom";
+import type { Say } from "./newsroom";
 import { readArchive } from "./persist";
 import { proseOf } from "./predictions";
 import type { SeasonDesk } from "./season";
+import { sendBackOnce, serious } from "./sendBack";
 import { lawroSendBack } from "./voice/lawro";
 import { LAWRO_SEASON } from "./voice/lawroSeason";
 
@@ -23,7 +24,7 @@ import { LAWRO_SEASON } from "./voice/lawroSeason";
 const HEADLINE = "Lawro's Power Rankings";
 
 /** The column ready to file. Throws only when the first call cannot be made at all, which leaves the key unspent. */
-export async function writeSeason(desk: SeasonDesk, brief: string, say: (message: string) => void): Promise<Record<string, unknown>> {
+export async function writeSeason(desk: SeasonDesk, brief: string, say: Say): Promise<Record<string, unknown>> {
   const named = new Map(desk.calls.sides.map((side) => [side.teamId, side.name]));
   const ctx: CheckContext = {
     calls: [],
@@ -40,13 +41,7 @@ export async function writeSeason(desk: SeasonDesk, brief: string, say: (message
   };
   const label = (section: string) => (section.startsWith("table:") ? `the line for ${named.get(section.slice("table:".length)) ?? section}` : `the ${section}`);
 
-  const attempts = [attempt(await writeColumn(LAWRO_SEASON, brief))];
-  const faults = serious(attempts[0].faults);
-  if (faults.length > 0) {
-    say(`  ↩ lawro season: ${faults.length} faults, sent back once: ${summary(faults)}`);
-    const second = await writeColumn(LAWRO_SEASON, `${brief}\n\n${lawroSendBack(faults, label)}`).catch(() => null);
-    if (second !== null) attempts.push(attempt(second));
-  }
+  const attempts = await sendBackOnce({ desk: "lawro season", voice: LAWRO_SEASON, brief, read: attempt, sendBack: (faults) => lawroSendBack(faults, label), summary }, say);
   const draft = mergeSeason(attempts, desk.calls);
   const left = serious(checkSeason(draft, desk.calls, desk.squads, ctx));
   say(left.length === 0 ? "  ✓ lawro season: the editor passes every section" : `  ⚠ lawro season files with ${left.length} faults the rewrite kept: ${summary(left)}`);
@@ -56,10 +51,6 @@ export async function writeSeason(desk: SeasonDesk, brief: string, say: (message
 }
 
 const EMPTY: SeasonDraft = { deck: "", opening: "", table: new Map() };
-
-function serious(faults: readonly Fault[]): Fault[] {
-  return faults.filter((fault) => fault.severity !== "warn");
-}
 
 function summary(faults: readonly Fault[]): string {
   return faults.slice(0, 8).map((fault) => `${fault.section} ${fault.check} (${fault.evidence})`).join(", ");
