@@ -13,7 +13,7 @@ import {
 } from "@epl/core";
 import { speaksForNow } from "../../football";
 import LeagueCrest from "../shell/LeagueCrest";
-import { GAMEWEEK, LIVE } from "../shell/sections";
+import { LIVE, gameweekHref } from "../shell/sections";
 import MatchList from "./MatchList";
 import { GAMEWEEK_HEAD, GAMEWEEK_TITLE } from "@/app/desk";
 import { SQUAD } from "../../squad/routes";
@@ -114,7 +114,7 @@ function GameweekLink({
   // The bevel owns its ink, so no `text-*` here: `--muted` on the grey plate is 1.5:1.
   return (
     <Link
-      href={`${GAMEWEEK}/${gameweek}`}
+      href={gameweekHref(gameweek)}
       className={`cm-bevel ${classes} font-medium hover:brightness-110`}
     >
       {label}

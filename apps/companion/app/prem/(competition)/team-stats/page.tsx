@@ -5,7 +5,7 @@ import Nothing from "../../../components/shell/Nothing";
 import { Head, HeadRow, NameHead, PRESSED_PLATE } from "../../../components/league/TableHeads";
 import { IndexCell, ROW_LINK } from "../../../components/league/TableCells";
 import PremShell from "../../Shell";
-import { CLUB } from "../../routes";
+import { clubHref } from "../../routes";
 import { TEAM_STATS } from "../../PremNav";
 import QuerySelect from "../../../components/shell/QuerySelect";
 import { CATEGORIES, categoryFor, printed, type Club } from "./categories";
@@ -87,7 +87,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                 <IndexCell>{ordinal(at + 1)}</IndexCell>
                 <td className="pl-2">
                   <Link
-                    href={`${CLUB}/${club.table.code}`}
+                    href={clubHref(club.table.code)}
                     className={ROW_LINK}
                   >
                     <ClubLabel club={club.table} />

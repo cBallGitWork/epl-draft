@@ -28,16 +28,16 @@ export function playerNewsHref(fantraxId: string, story?: string): string {
 }
 
 /** Two players side by side, `?a=&b=`. */
-export const ANALYSIS = "/players/analysis";
+export const ANALYSIS = `${POOL}/analysis`;
 
 /** Data's club board: every real club as a fantasy manager reads it. */
-export const TEAMS = "/players/teams";
+export const TEAMS = `${POOL}/teams`;
 
 /** The sister model's projected points for the next six gameweeks. */
-export const PROJECTIONS = "/players/projections";
+export const PROJECTIONS = `${POOL}/projections`;
 
 /** Off while the projections are bad data (Craig, 7 Oct 2026): no tab, and the page 404s. */
 export const PROJECTIONS_SHOWN = false;
 
 /** The fixture planner: every club's next six opponents, ranked by our strength model. */
-export const PLANNER = "/players/planner";
+export const PLANNER = `${POOL}/planner`;

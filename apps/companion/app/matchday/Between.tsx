@@ -4,7 +4,7 @@ import PageHeader from "../components/shell/PageHeader";
 import Skeleton from "../components/shell/Skeleton";
 import { londonDayAndTime } from "@epl/core";
 import { MATCHUPS } from "@/app/league/routes";
-import { GAMEWEEK } from "../components/shell/sections";
+import { gameweekHref } from "../components/shell/sections";
 
 // What the Live tab draws without live football: the card held while the scoreboard loads, and the between-rounds screen.
 
@@ -63,11 +63,11 @@ export function BetweenGameweeks({
 
       <div className="flex gap-2">
         {/* The finished round keeps its button: on a Tuesday a reader wants Monday night's result. */}
-        <ButtonLink href={`${GAMEWEEK}/${snapshot.gameweek}`} fill>
+        <ButtonLink href={gameweekHref(snapshot.gameweek)} fill>
           {over ? `GW${snapshot.gameweek} results` : "The fixtures"}
         </ButtonLink>
         {over && up !== null ? (
-          <ButtonLink href={`${GAMEWEEK}/${up.gameweek}`} fill>
+          <ButtonLink href={gameweekHref(up.gameweek)} fill>
             {`GW${up.gameweek} fixtures`}
           </ButtonLink>
         ) : (

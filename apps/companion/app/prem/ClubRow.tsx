@@ -1,7 +1,7 @@
 import Link from "@/app/components/shell/Link";
 import { type Result, type TableRow, type TableSortKey, ordinal, signed } from "@epl/core";
 import { cellAlign, deskOnly } from "./Columns";
-import { CLUB } from "./routes";
+import { clubHref } from "./routes";
 import { PointsCell, ROW_LINK } from "../components/league/TableCells";
 import { FIGURE, FIGURE_CELL, ROW_HOVER, TONE } from "@/app/desk";
 import Absent from "@/app/components/shell/Absent";
@@ -35,7 +35,7 @@ export default function ClubRow({
       <td className="pl-2">
         <Link
           // The season-stable code, never `clubId`: a shared URL persists and FPL recycles ids.
-          href={`${CLUB}/${row.code}`}
+          href={clubHref(row.code)}
           className={ROW_LINK}
         >
           <ClubLabel club={row} title={row.name} />

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "@/app/components/shell/Link";
 import type { ReactNode } from "react";
-import { FANTRAX_HOME_PATH, FANTRAX_LEAGUE_PAGE } from "@epl/core";
+import { FANTRAX_HOME_PATH } from "@epl/core";
+import { fantraxPage } from "../fantraxPages";
 import { BUTTON } from "../components/shell/ButtonLink";
 import OutLink from "../components/shell/OutLink";
 import PageHeader from "../components/shell/PageHeader";
@@ -52,7 +53,7 @@ export default async function MorePage() {
         </Row>
       </nav>
       <div className={PANEL}>
-        <OutLink href={`${FANTRAX_LEAGUE_PAGE}/${FANTRAX_HOME_PATH}`} className={`${BUTTON} lg:self-start`}>
+        <OutLink href={fantraxPage(FANTRAX_HOME_PATH)} className={`${BUTTON} lg:self-start`}>
           Open the league on Fantrax
         </OutLink>
       </div>

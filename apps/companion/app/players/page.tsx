@@ -23,11 +23,12 @@ import { defconPricing, poolPositions } from "../defcon";
 import { attributeStats } from "./attributeColumns";
 import { divisionGrids } from "./[fantraxId]/grid";
 import { cutsFor } from "./standout";
-import { FANTRAX_LEAGUE_PAGE, FANTRAX_PLAYERS_PATH, playerByCode } from "@epl/core";
+import { FANTRAX_PLAYERS_PATH, playerByCode } from "@epl/core";
 import { footballNow } from "../football";
 import OutLink from "../components/shell/OutLink";
 import FantraxSilent from "../components/shell/FantraxSilent";
 import { QUIET_NOTE } from "@/app/desk";
+import { fantraxPage } from "../fantraxPages";
 
 // Every player Fantrax knows, who holds him in our league, and what Fantrax scores him under our scoring.
 
@@ -175,7 +176,7 @@ export default async function PlayersPage({
       ) : null}
 
       {/* Claims happen on Fantrax: their players list, on the path taken off a real session. */}
-      <OutLink href={`${FANTRAX_LEAGUE_PAGE}/${FANTRAX_PLAYERS_PATH}`}>
+      <OutLink href={fantraxPage(FANTRAX_PLAYERS_PATH)}>
         Claim on Fantrax
       </OutLink>
     </ScoutShell>
