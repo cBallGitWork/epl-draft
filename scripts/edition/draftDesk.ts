@@ -72,7 +72,7 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
   if (covering === undefined) throw new Error(`No Fantrax period covers gameweek ${gameweek}.`);
   const period = covering.period;
   const [facts, history, rawResults, scoring] = await Promise.all([gatherRoundFacts(info, snapshot, period), earlierSheets(info, snapshot, period), fetchSeasonResults(FANTRAX_LEAGUE_ID).catch(() => null), readScoring()]);
-  const results = rawResults === null ? [] : mapSeasonResults(rawResults);
+  const results = rawResults === null ? null : mapSeasonResults(rawResults);
   const season = await draftSeason(info, facts.table, results, facts.pedigree, period);
 
   const fixtures = schedule.filter((f) => f.gameweek === gameweek && f.kickoff !== null);
