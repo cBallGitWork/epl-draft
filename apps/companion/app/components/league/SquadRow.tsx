@@ -2,7 +2,6 @@ import Image from "next/image";
 import {
   type SquadPlayerDetail,
   crestUrl,
-  fixtureLabel,
   isResolved,
   fullPlayerName,
   DASH,
@@ -10,6 +9,7 @@ import {
 import StateBox from "../football/StateBox";
 import { doubtRow } from "../football/doubtRow";
 import PositionTile from "./PositionTile";
+import { rowFixture } from "./rowFixture";
 import PlayerName from "../shell/PlayerName";
 import { ROW_NAME } from "@/app/desk";
 
@@ -32,7 +32,7 @@ export default function SquadRow({
   const footballer = resolved?.player ?? null;
 
   // Who his club plays, in the app's one spelling of a fixture — `BRE (H)`.
-  const fixture = fixtureLabel(player.opposition);
+  const fixture = rowFixture(player);
 
   const inside = (
     <>
@@ -70,8 +70,8 @@ export default function SquadRow({
       </span>
 
       {/* His fixture this week; his own club is not repeated beside it, or it reads as two unrelated clubs. */}
-      <span className="numeric w-[5.5rem] shrink-0 truncate text-xs text-muted">
-        {fixture ?? <span className="text-faint">unmapped</span>}
+      <span className={`numeric w-[5.5rem] shrink-0 truncate text-xs ${fixture.quiet ? "text-faint" : "text-muted"}`}>
+        {fixture.text}
       </span>
 
       {/* The model's xMins for the gameweek on screen, in the derived reading's cyan; no run, no cell. */}
