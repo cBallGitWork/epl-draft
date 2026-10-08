@@ -38,7 +38,7 @@ export function assembleSheets(input: {
 }
 
 /** What the piece is, said plainly. */
-export function standfirst(): string {
+function standfirst(): string {
   return "The deadline has passed. The line-ups, by head-to-head.";
 }
 

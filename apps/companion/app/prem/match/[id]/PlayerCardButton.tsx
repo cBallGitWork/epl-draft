@@ -6,7 +6,7 @@ import PlayerCard from "../../../components/league/PlayerCard";
 
 // A name on a match screen, opening the app's one player card, the squad board's own (Craig, 23 Sep 2026).
 
-export default function PlayerCardButton({
+function PlayerCardButton({
   player,
   className,
   children,

@@ -417,14 +417,9 @@ a client component and has to be — a transparent PNG cannot be layered over a
 fallback and left to cover it, so a fallback can only appear once an image has
 actually failed, and only the browser knows that.
 
-Four rungs: **this season's photograph → one of ours → the club's kit →
+Four rungs: **this season's large photograph → its small one → the club's kit →
 initials.**
 
-- **Ours** live in `apps/companion/public/portraits/{code}.png`, keyed on the FPL
-  season-stable player code, dropped in by hand. A missing one costs a local 404.
-  **Not `public/players/`** — that path is the player-profile route, so a miss
-  there resolves to a page rather than a 404 and asks Fantrax about an id that is
-  not a player.
 - The set *before* the current one still answers and is deliberately never used:
   it would put those players back in the shirts they wore two clubs ago, and a
   wrong photograph is worse than none because only one of the two looks like an
@@ -432,8 +427,8 @@ initials.**
 
 The case that still slips through is a photograph taken *within* the current set
 and overtaken by a January transfer — undetectable from the asset, and nothing
-marks it. A file in `public/portraits/` overrides it. **A kit never has this
-problem**, which is the second reason a pitch does not want a photograph.
+marks it. **A kit never has this problem**, which is the second reason a pitch
+does not want a photograph.
 
 **The points band, and the one rule under it: a card says one thing at a time.**
 The third band of a player on the grass is his fixture until he kicks off and his

@@ -125,7 +125,7 @@ business, and when lineups lock.
    prose and a model cannot name its way into the photograph. Null for a kind
    with no man in it, which is ordinary: a power ranking is about ten managers.
    It is stamped into `PublishedStory.face` at file time, and `PlayerImage`'s
-   four rungs (this season's photograph, one of ours, his club's kit, his
+   four rungs (this season's photograph, large then small, his club's kit, his
    initials) mean a man with no picture never borrows a wrong one.
 
    **The twin shoulders carry pictures together or not at all.** One card with a

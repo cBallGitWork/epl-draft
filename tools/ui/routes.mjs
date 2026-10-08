@@ -34,20 +34,20 @@ export const DESK_ROUTES = [
 ];
 
 /** The competition's front page: on `sweep` and `tapfit`, not yet on `groundfit`. */
-export const PREM_ROUTE = "/prem";
+const PREM_ROUTE = "/prem";
 
 /** The front page as an instrument opens it: a signed-in cold open of a bare `/` lands on Mail or Live. */
 export const FRONT_PAGE = "/?paper";
 
 /** Newsprint, with no photograph under it, so `groundfit` has nothing to measure here. */
-export const PAPER_ROUTES = [FRONT_PAGE];
+const PAPER_ROUTES = [FRONT_PAGE];
 
 /** Every route worth measuring for contrast, overflow and tap targets. */
 export const ALL_ROUTES = [...PAPER_ROUTES, ...DESK_ROUTES, PREM_ROUTE];
 
 /** A match's tabs, read off the app's own `prem/match/[id]/` folders so the list cannot drift. */
 const MATCH_DIR = new URL("../../apps/companion/app/prem/match/[id]/", import.meta.url);
-export const MATCH_TABS = readdirSync(MATCH_DIR, { withFileTypes: true })
+const MATCH_TABS = readdirSync(MATCH_DIR, { withFileTypes: true })
   .filter((entry) => entry.isDirectory() && existsSync(new URL(`${entry.name}/page.tsx`, MATCH_DIR)))
   .map((entry) => entry.name)
   .sort();
@@ -56,7 +56,7 @@ export const MATCH_TABS = readdirSync(MATCH_DIR, { withFileTypes: true })
 const MATCH_VIEWS = ["stats?view=home", "stats?view=fantasy", "players?view=pitch"];
 
 /** One match's overview, every tab under it, and the views its foot rows switch to. */
-export function matchRoutes(match) {
+function matchRoutes(match) {
   return [match, ...[...MATCH_TABS, ...MATCH_VIEWS].map((tab) => `${match}/${tab}`)];
 }
 

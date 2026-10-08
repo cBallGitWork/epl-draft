@@ -47,7 +47,7 @@ export function Carried({
 /** The geometry every control on this row shares (Craig, 10 Sep 2026: *"all buttons different sizes, we can CM
  *  this now"*): one recipe, the plates differing only in colour. Two pixels tighter a side under a thumb, so the
  *  status chips, Filter and the search share a 390 phone's row. Local to `players/`, where all its sites are. */
-export const PLATE =
+const PLATE =
   `flex shrink-0 items-center justify-center gap-1 whitespace-nowrap min-h-11 px-2 ${SMALL_CAPS} lg:min-h-9 lg:px-2.5`;
 
 /** A plate you press, at rest: the `Filter` link, an unpressed `Chip` and the pick field's button. Not the pressed

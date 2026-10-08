@@ -16,19 +16,12 @@ export interface Trouble {
 /** A club heading, comparable: "&" spelled out and punctuation dropped, so
  *  FFS's "BRIGHTON AND HOVE ALBION" meets FPL's "Brighton & Hove Albion". */
 
-/** Comparable, through the bridge's own normaliser — so "Milenković" meets
- *  "Milenkovic" and, unlike the local fold this replaced, "Groß" meets "Gross"
- *  rather than collapsing to "gro". */
-function fold(name: string): string {
-  return normalizeName(name);
-}
-
 /** Every name one man answers to: FPL's two, and each whole-token run of his
  *  full name — which is what catches "Berg" for Sepp van den Berg and "Moises
  *  Caicedo" for Moisés Caicedo Corozo without a loose substring match. */
 function names(player: { name: string; fullName: string }): Set<string> {
-  const keys = new Set([fold(player.name), fold(player.fullName)]);
-  const tokens = fold(player.fullName).split(" ");
+  const keys = new Set([normalizeName(player.name), normalizeName(player.fullName)]);
+  const tokens = normalizeName(player.fullName).split(" ");
   for (let i = 0; i < tokens.length; i += 1) {
     keys.add(tokens.slice(i).join(" "));
     keys.add(tokens.slice(0, i + 1).join(" "));
@@ -108,7 +101,7 @@ export function troubles(
   // (head), Jacob Ramsey (thigh)". A complaint in brackets is a doubt by
   // itself, and the list carries men the prose below never returns to.
   for (const m of body.matchAll(/([A-ZÀ-Ÿ][\wÀ-ÿ'’-]+(?: [A-ZÀ-Ÿ][\wÀ-ÿ'’-]+){0,2}) \(([a-z][a-z ]{2,20})\)/g)) {
-    const whole = fold(m[1]);
+    const whole = normalizeName(m[1]);
     const surname = whole.split(" ").pop() ?? whole;
     const hits = squad.filter((player) => names(player).has(whole));
     if (hits.length === 0) hits.push(...squad.filter((player) => names(player).has(surname)));
@@ -124,7 +117,7 @@ export function troubles(
     for (const clause of clauses(sentence)) {
       const tag = classify(clause);
       if (tag === null) continue;
-      const words = fold(clause).split(" ");
+      const words = normalizeName(clause).split(" ");
       const mentioned = squad
         .map((player) => ({ player, span: best(words, player) }))
         .filter((each): each is { player: typeof each.player; span: { at: number; len: number } } => each.span !== null);

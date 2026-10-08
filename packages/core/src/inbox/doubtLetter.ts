@@ -8,7 +8,7 @@ import { ailment, readNote } from "./notes";
 export type Side = "mine" | "opponent" | "league";
 
 /** One of a few ways of saying a thing, fixed by `key` so a refresh never rewords a letter. */
-export function choose<T>(key: string, options: readonly T[]): T {
+function choose<T>(key: string, options: readonly T[]): T {
   let hash = 0;
   for (const character of key) hash = (hash * 31 + character.charCodeAt(0)) >>> 0;
   return options[hash % options.length];

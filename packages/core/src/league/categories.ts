@@ -66,7 +66,7 @@ export function statCategory(of: FantraxCategory, group: GroupKey, lowIsGood?: t
 }
 
 /** Every category, in the order each group lists them; never alphabetical. */
-export const CATEGORIES: readonly StatCategory[] = [
+const CATEGORIES: readonly StatCategory[] = [
   statCategory(MINUTES, "appearances"),
   statCategory(GOALS, "attacking"),
   statCategory(ASSISTS_TOTAL, "attacking"),

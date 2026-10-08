@@ -11,7 +11,7 @@
 
 import { readFileSync } from "node:fs";
 
-export const CDP_PORT = process.env.CDP_PORT ?? "9261";
+const CDP_PORT = process.env.CDP_PORT ?? "9261";
 export const BASE_URL = process.env.BASE_URL ?? "http://localhost:3000";
 
 /** The largest capture headless Chrome hands back: past about 4 Mpx (width x height x scale squared, not either side)
@@ -21,7 +21,7 @@ export const CAPTURE_CEILING = 3_500_000;
 const megapixels = (width, height, scale) => ((width * scale * height * scale) / 1e6).toFixed(2);
 
 /** The requested scale, or the largest under the ceiling: stepping down keeps the same screenshot, cropping does not. */
-export function fittedScale(width, height, scale) {
+function fittedScale(width, height, scale) {
   let fitted = scale;
   while (fitted > 1 && width * fitted * height * fitted > CAPTURE_CEILING) fitted -= 1;
   return fitted;
