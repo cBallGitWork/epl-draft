@@ -45,18 +45,23 @@ export function mapStandings(raw: RawStandingsPage): StandingsRow[] {
   return placeTable(rows);
 }
 
-/** The table in the league's order: points, then fantasy points for, then name, as Fantrax re-deals ranks for teams
- *  level on both on every read. */
+/** The table in the league's order: points, then fantasy points for. Teams level on both share a place (1, 1, 3) and
+ *  are listed by name, as Fantrax re-deals its own ranks for them on every read. */
 export function placeTable(rows: readonly StandingsRow[]): StandingsRow[] {
-  return [...rows]
-    .sort(
-      (a, b) =>
-        b.points - a.points ||
-        b.pointsFor - a.pointsFor ||
-        a.teamName.localeCompare(b.teamName, "en") ||
-        a.teamId.localeCompare(b.teamId),
-    )
-    .map((row, at) => ({ ...row, rank: at + 1 }));
+  const ordered = [...rows].sort(
+    (a, b) =>
+      b.points - a.points ||
+      b.pointsFor - a.pointsFor ||
+      a.teamName.localeCompare(b.teamName, "en") ||
+      a.teamId.localeCompare(b.teamId),
+  );
+  const placed: StandingsRow[] = [];
+  ordered.forEach((row, at) => {
+    const above = placed[at - 1];
+    const level = above !== undefined && above.points === row.points && above.pointsFor === row.pointsFor;
+    placed.push({ ...row, rank: level ? above.rank : at + 1 });
+  });
+  return placed;
 }
 
 /** The standings table among the per-round ones: the only one with a pinned TEAM column, never found by caption. */

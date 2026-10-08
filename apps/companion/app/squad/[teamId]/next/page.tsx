@@ -1,5 +1,5 @@
 import TabEmpty from "../../../components/league/TabEmpty";
-import { headToHead, inkOn, ordinal } from "@epl/core";
+import { headToHead, inkOn } from "@epl/core";
 import TeamShell from "../Shell";
 import { SQUAD } from "../../routes";
 import { identify, whoseTeam } from "../team";
@@ -56,11 +56,11 @@ export default async function NextMatchPage({
       ) : (
         <Fixture
           gameweek={squads.snapshot.gameweek}
-          home={{ teamId: tie.team.teamId, name: shortName(tie.team.teamId, tie.team.name), rank: placing.get(tie.team.teamId) }}
+          home={{ teamId: tie.team.teamId, name: shortName(tie.team.teamId, tie.team.name), place: placing.get(tie.team.teamId) }}
           away={{
             teamId: tie.opponent.teamId,
             name: shortName(tie.opponent.teamId, tie.opponent.name),
-            rank: placing.get(tie.opponent.teamId),
+            place: placing.get(tie.opponent.teamId),
           }}
         />
       )}
@@ -99,8 +99,8 @@ function Fixture({
 interface SideTeam {
   teamId: string;
   name: string;
-  /** Where he stands in the league. Undefined when the table would not answer. */
-  rank: number | undefined;
+  /** Where he stands in the league, printed (`3rd`, `=1st`). Undefined when the table would not answer. */
+  place: string | undefined;
 }
 
 function Side({ team, linked = false }: { team: SideTeam; linked?: boolean }) {
@@ -112,8 +112,8 @@ function Side({ team, linked = false }: { team: SideTeam; linked?: boolean }) {
     >
       <span className="text-sm font-bold uppercase">{team.name}</span>
       {/* His placing under his name, on his own plate (Craig, 2 Sep; `cm9900/25.jpg`). */}
-      {team.rank === undefined ? null : (
-        <span className="numeric text-3xs font-bold opacity-80">({ordinal(team.rank)})</span>
+      {team.place === undefined ? null : (
+        <span className="numeric text-3xs font-bold opacity-80">({team.place})</span>
       )}
     </span>
   );

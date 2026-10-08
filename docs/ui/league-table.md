@@ -180,6 +180,13 @@ does; the prize, the play-in and the Plate are declared. A league with no
 playoff draws none, and none is drawn under the last row — a line beneath the
 bottom of a table announces a cut nobody missed.
 
+**Teams level on points and points for share a place** (8 Oct 2026). `placeTable`
+gives them one rank (1, 1, 3) and lists them by name, and the blue block prints
+it `=1st` (`printedPlaces`), as the results rows and a squad's next fixture do. A
+cut never parts them: `linesAfter` draws it under the last of the tied group, and
+a cut that falls inside a tie reaching the bottom row is not drawn, so a table
+with all ten level on nought, before a ball is kicked, draws no line at all.
+
 **A cut is its label's height and a hair** (Craig, 6 Oct 2026: *"the dotted line is
 good, but the rows are too far apart"*): `CutRow` pads 2px a side, so a cut is
 16.5px at 390 and 17.5 at 1440. At 6px a side it was 24.5 and 25.5, nearly a desk

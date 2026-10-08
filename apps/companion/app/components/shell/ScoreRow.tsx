@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "@/app/components/shell/Link";
 import type { ReactNode } from "react";
 import { INDEX_WIDTH, ROW_NAME } from "@/app/desk";
-import { ordinal } from "@epl/core";
 import { yoursMark } from "@/app/mine";
 
 // Championship Manager's results row: an index block at each end holding the side's league position, and the
@@ -17,8 +16,9 @@ export interface ScoreSide {
   short?: string;
   /** A club's crest, beside the name. Undefined draws nothing: a Fantrax team has none. */
   crest?: string;
-  /** His ordinal in his own competition, for CM's blue block; absent for a cup placeholder or a club before a game. */
-  place?: number | null;
+  /** His place in his own competition as CM's blue block prints it (`3rd`, `=1st`); absent for a cup placeholder or a
+   *  club before a game. */
+  place?: string | null;
   /** The reader's own team — the accent, and the only thing it means here. */
   mine?: boolean;
   /** Settled and behind: both scores print in one cyan, so the dimmed name says who lost. */
@@ -100,7 +100,7 @@ function Block({ side }: { side: ScoreSide }) {
       className={`cm-index numeric ${INDEX_WIDTH} flex shrink-0 items-center justify-center lg:-my-0.5`}
     >
       {/* An ordinal, as CM prints; empty, not a dash, for a side with no place, as a dash would read as a figure. */}
-      {side.place === null || side.place === undefined ? "" : ordinal(side.place)}
+      {side.place ?? ""}
     </span>
   );
 }
