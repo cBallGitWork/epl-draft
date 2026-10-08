@@ -96,7 +96,7 @@ export default function SheetRow({
       </td>
       {/* Cyan: a fantasy score is a reading derived from events (Craig, 4 Sep 2026). */}
       <td className={`numeric w-9 px-1 text-center font-bold text-info ${SHEET_FIGURE}`}>
-        {played ? join.points(man.code) : DASH}
+        {(played ? join.points(man.code) : null) ?? DASH}
       </td>
     </tr>
   );
