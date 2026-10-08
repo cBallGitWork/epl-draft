@@ -1,11 +1,10 @@
 import { byPositionDepth, clubById, isGoalkeeper, playerByCode, surname, type FootballSnapshot, type PublishedStory } from "@epl/core";
 import PitchMarker from "../league/PitchMarker";
 import PitchRows from "../league/PitchRows";
+import { STANDING_HEAD } from "./heads";
 
 // The Bin XI as the desk printed it: the eleven nobody has, on the grass with Fantrax's points, then the
 // bench and the key stats. The pitch block is Sheets.tsx's and the stats list the report sidebar's: two uses each.
-
-const HEAD = "font-sans text-3xs font-semibold uppercase tracking-[0.16em] text-muted";
 
 export default function BinXi({ story, snapshot }: { story: PublishedStory; snapshot: FootballSnapshot | null }) {
   const bin = story.extras?.bin;
@@ -18,7 +17,7 @@ export default function BinXi({ story, snapshot }: { story: PublishedStory; snap
 
   return (
     <div className="flex flex-col gap-3 pt-4">
-      <p className={HEAD}>
+      <p className={STANDING_HEAD}>
         The Bin XI · {bin.shape} · <span className="numeric">{bin.total}</span> pts
       </p>
       {/* Stacked on a phone; the pitch beside its bench and stats at a desk, where it would fill the sheet. */}
@@ -49,7 +48,7 @@ export default function BinXi({ story, snapshot }: { story: PublishedStory; snap
           )}
           {bin.keyStats.length === 0 ? null : (
             <section className="flex flex-col gap-1.5 border-t pt-2" style={{ borderColor: "var(--paper-rule)" }}>
-              <h4 className={HEAD}>Key stats</h4>
+              <h4 className={STANDING_HEAD}>Key stats</h4>
               <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs leading-snug text-ink">
                 {bin.keyStats.map((stat) => (
                   <div key={stat.label} className="contents">

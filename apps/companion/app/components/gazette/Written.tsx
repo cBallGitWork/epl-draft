@@ -6,6 +6,7 @@ import { columnistOf } from "@/app/config";
 import Paragraphs from "./Paragraphs";
 import Dateline from "./Dateline";
 import { named } from "./named";
+import StoryHead, { KICKER } from "./StoryHead";
 
 // A filed story as written: headline, plain deck, dateline (it can be days older than the scores) and prose.
 // Team names are joined here from the ids the writer returned, so a renamed team never goes stale.
@@ -36,20 +37,10 @@ export default function Written({
       {/* The column's standing title, in the same inverted chip as the lead's kicker. */}
       {story.byline !== "" ? (
         <p>
-          <span className="inline-block bg-ink px-2 py-1 font-sans text-2xs font-bold uppercase tracking-[0.15em] text-bg">
-            {story.byline}
-          </span>
+          <span className={KICKER}>{story.byline}</span>
         </p>
       ) : null}
-
-      <h2 className="paper-display text-balance pt-2.5 text-4xl font-black leading-[1.02] text-ink @3xl:text-5xl">
-        {story.headline}
-      </h2>
-      {story.deck ? (
-        <p className="pt-2 text-lg italic leading-snug text-muted">{story.deck}</p>
-      ) : null}
-
-      <span className="mt-3 block h-px w-6 bg-ink" />
+      <StoryHead headline={story.headline} standfirst={story.deck} rank="article" />
 
       {/* When and under which edition it was filed; a columnist's banner, as the BBC ran his, carries his credit instead. */}
       <Dateline story={story} turn={false} byline={columnist === null} className="pt-2.5" />
