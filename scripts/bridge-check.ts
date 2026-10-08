@@ -3,35 +3,45 @@ import { join } from "node:path";
 import {
   type Bridge,
   ProviderError,
+  fetchBootstrap,
   fetchPlayerPool,
   fetchTeamRosters,
-  isAssumed,
-  isUnmapped,
   mapPlayerPool,
   mapTeamRosters,
 } from "@epl/core";
+import { type HoleReason, holeIn } from "./bridge/holes";
 import { RECORDED_LEAGUES } from "./leagues";
 import { MAPPINGS_ROOT, leagueCaptureRoot } from "./paths";
 import { drafted, excused } from "./snapshots";
 
-// Is anybody's actual squad missing a footballer? Each rostered man we cannot resolve is a hole in a squad view.
-// Unbridged (the bridge is stale) and assumed-unmapped (the matcher's guess) fail; a person's verdict stands. A league
-// whose squads do not arrive fails too, unless it refused NO_TEAMS before its draft.   npm run bridge:check
+// Is anybody's actual squad missing a footballer? Each rostered man we cannot resolve is a hole in a squad view, and
+// fails: unbridged, assumed-unmapped or absent from FPL. A person's verdict stands. A league whose squads do not
+// arrive fails too, unless it refused NO_TEAMS before its draft.   npm run bridge:check
+
+/** What a person does about each kind of hole: `npm run bridge` never revises a mapped row, so absent is by hand. */
+const ADVICE: Record<HoleReason, string> = {
+  unbridged: "the bridge is stale — run `npm run bridge`",
+  "assumed-unmapped": "the matcher found nobody; look, and if it is right, say so in the file",
+  absent:
+    "FPL no longer lists the code the bridge gives him: he has left the Premier League, or the row is wrong; " +
+    "look, and correct it by hand",
+};
 
 interface Hole {
   league: string;
   teamName: string;
   fantraxId: string;
   name: string;
-  why: "unbridged" | "assumed-unmapped";
+  why: HoleReason;
 }
 
 async function main() {
   const bridge = JSON.parse(
     await readFile(join(MAPPINGS_ROOT, "fantrax.json"), "utf8"),
   ) as Bridge;
-  const pool = mapPlayerPool(await fetchPlayerPool());
-  const names = new Map(pool.map((player) => [player.fantraxId, player.displayName]));
+  const [pool, fpl] = await Promise.all([fetchPlayerPool(), fetchBootstrap()]);
+  const names = new Map(mapPlayerPool(pool).map((player) => [player.fantraxId, player.displayName]));
+  const fplCodes = new Set(fpl.elements.map((element) => element.code));
 
   const holes: Hole[] = [];
   const unread: string[] = [];
@@ -56,20 +66,15 @@ async function main() {
     for (const team of teams) {
       for (const slot of team.slots) {
         rostered += 1;
-        const entry = bridge[slot.fantraxId];
-        const name = names.get(slot.fantraxId) ?? slot.fantraxId;
-
-        if (entry === undefined) {
-          holes.push({ league: league.key, teamName: team.teamName, fantraxId: slot.fantraxId, name, why: "unbridged" });
-          continue;
-        }
-        if (!isUnmapped(entry)) continue;
-        if (isAssumed(entry)) {
-          holes.push({ league: league.key, teamName: team.teamName, fantraxId: slot.fantraxId, name, why: "assumed-unmapped" });
-          continue;
-        }
+        const why = holeIn(slot.fantraxId, bridge, fplCodes);
+        if (why === null) continue;
         // A person's absence, standing: counted so the number is seen rather than silently passed.
-        audited += 1;
+        if (why === "audited") {
+          audited += 1;
+          continue;
+        }
+        const name = names.get(slot.fantraxId) ?? slot.fantraxId;
+        holes.push({ league: league.key, teamName: team.teamName, fantraxId: slot.fantraxId, name, why });
       }
     }
     console.log(`  ${league.key}: ${teams.length} squads`);
@@ -85,10 +90,8 @@ async function main() {
     for (const hole of holes) {
       console.log(`  ${hole.why.padEnd(17)} ${hole.name.padEnd(24)} ${hole.teamName} (${hole.league}) [${hole.fantraxId}]`);
     }
-    console.log(
-      `\nUnbridged means the bridge is stale — run \`npm run bridge\`. Assumed-unmapped` +
-        ` means the matcher found nobody; look, and if it is right, say so in the file.`,
-    );
+    console.log("");
+    for (const why of new Set(holes.map((hole) => hole.why))) console.log(`${why}: ${ADVICE[why]}.`);
     process.exitCode = 1;
   } else if (rostered > 0) {
     console.log(
