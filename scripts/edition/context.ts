@@ -36,6 +36,8 @@ export async function deskContext(input: {
   say: Say;
 }): Promise<DeskContext> {
   const { snapshot, facts, clubs, byCode, info, period, gameweeks, ledger, sheet, xi, season, kickoffs, assignments, now, say } = input;
+  // The period's dates choose its matches: FPL files a replayed postponement under its old gameweek.
+  const scoring = info.scoringPeriods.find((each) => each.number === period);
   return {
     leagueId: FANTRAX_LEAGUE_ID,
     snapshot,
@@ -50,9 +52,9 @@ export async function deskContext(input: {
     // His season column's reads too: every squad as drafted, played out over the schedule.
     season: await seasonDesk({ assignments, info, snapshot, kickoffs, pedigree: facts.pedigree, say }),
     // The team sheets' reads are their own too, and every earlier period's rosters are among them.
-    sheets: await sheetsDesk({ assignments, info, snapshot, facts, period, gameweeks, season, clubs, now, say }),
+    sheets: await sheetsDesk({ assignments, info, snapshot, facts, period, scoring, season, clubs, now, say }),
     // A match-day report's reads are its own, made only when one is assigned.
-    reports: await reportsDesk({ assignments, snapshot, facts, gameweeks, say }),
+    reports: await reportsDesk({ assignments, snapshot, facts, scoring, say }),
     // The Bin XI's reads are its own, made only on the Tuesday it is assigned.
     bin: await binXiDesk({ assignments, info, snapshot, facts, period, gameweeks, season, kickoffs, clubs, threads: ledger[FANTRAX_LEAGUE_ID]?.threads ?? [], say }),
     // A draft report's reads likewise: the gameweek's day reads, rosters and results, only when one is assigned.

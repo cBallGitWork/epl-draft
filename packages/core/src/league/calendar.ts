@@ -58,6 +58,18 @@ export function periodGameweeks(
   });
 }
 
+/** The fixtures a period scores, by kickoff and never by FPL's gameweek: a replayed postponement is in the period it is
+ *  played in, and its gameweek's other matches are not. An undated fixture, or a period not given, is in none. */
+export function periodFixtures<F extends { kickoff: string | null }>(period: LeaguePeriod | undefined, fixtures: readonly F[]): F[] {
+  if (period === undefined) return [];
+  const start = Date.parse(period.start);
+  const end = Date.parse(period.end);
+  return fixtures.filter((fixture) => {
+    const at = Date.parse(fixture.kickoff ?? "");
+    return at >= start && at <= end;
+  });
+}
+
 // The league's lock is a set time before the period's first kickoff, never its boundary; Fantrax publishes the
 // setting through no API, so the lead lives in `config.ts`. FPL's own deadline is never read here.
 

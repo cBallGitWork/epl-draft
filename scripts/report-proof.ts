@@ -52,7 +52,7 @@ async function main(): Promise<void> {
   const input = await matchdayInput({
     snapshot,
     facts,
-    periodGameweeks: round.gameweeks,
+    scoring: info.scoringPeriods.find((each) => each.number === round.period),
     pick: (f) => (ids.length > 0 ? ids.includes(f.id) : onLondonDay(f.kickoff, day)),
     say,
   });

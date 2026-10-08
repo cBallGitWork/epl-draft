@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { firstKickoff, openingGameweek, periodDays, periodGameweeks, periodLock, periodOfGameweek, saveOpen } from "./calendar";
+import { firstKickoff, openingGameweek, periodDays, periodFixtures, periodGameweeks, periodLock, periodOfGameweek, saveOpen } from "./calendar";
 import type { GameweekKickoff } from "./calendar";
 import type { LeaguePeriod } from "./types";
 import alignment from "./__fixtures__/periodAlignment.json";
@@ -182,5 +182,30 @@ describe("openingGameweek", () => {
     expect(periodGameweeks([P6], [])).toEqual([{ period: 6, gameweeks: [], own: null }]);
     expect(opening([])).toBeUndefined();
     expect(openingGameweek(periodGameweeks([P6], GW6), 7)).toBeUndefined();
+  });
+});
+
+describe("periodFixtures", () => {
+  // Period 6 holds GW6 and a GW3 match replayed in it; GW3's other matches were played in period 3.
+  const P6 = period(6, "2026-10-09T06:00:00.0-0400", "2026-10-16T05:59:59.0-0400");
+  const season = [
+    { id: 21, gameweek: 3, kickoff: "2026-09-05T14:00:00Z" },
+    { id: 22, gameweek: 3, kickoff: "2026-09-06T15:30:00Z" },
+    { id: 23, gameweek: 3, kickoff: "2026-10-14T18:30:00Z" },
+    { id: 61, gameweek: 6, kickoff: "2026-10-10T11:30:00Z" },
+    { id: 62, gameweek: 6, kickoff: "2026-10-11T15:30:00Z" },
+    { id: 63, gameweek: 6, kickoff: null },
+    { id: 71, gameweek: 7, kickoff: "2026-10-17T14:00:00Z" },
+  ];
+
+  it("reads the replayed match and the period's own gameweek, never the replay's gameweek's other matches", () => {
+    const kickoffs = season.flatMap(({ gameweek, kickoff }) => (kickoff === null ? [] : [{ gameweek, kickoff }]));
+    expect(periodGameweeks([P6], kickoffs)[0]?.gameweeks).toEqual([3, 6]);
+    expect(periodFixtures(P6, season).map((fixture) => fixture.id)).toEqual([23, 61, 62]);
+  });
+
+  it("holds no undated match, and nothing for a period the league does not have", () => {
+    expect(periodFixtures(P6, season).some((fixture) => fixture.kickoff === null)).toBe(false);
+    expect(periodFixtures(undefined, season)).toEqual([]);
   });
 });

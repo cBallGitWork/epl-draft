@@ -1,4 +1,4 @@
-import { buildReportsBrief, deskDay, onLondonDay, type Assignment, type FootballSnapshot, type MatchDesk } from "@epl/core";
+import { buildReportsBrief, deskDay, onLondonDay, type Assignment, type FootballSnapshot, type LeaguePeriod, type MatchDesk } from "@epl/core";
 import type { DeskFacts } from "./facts";
 import { matchdayInput } from "./matchday";
 import type { Say } from "./newsroom";
@@ -16,7 +16,7 @@ export async function reportsDesk(input: {
   assignments: readonly Assignment[];
   snapshot: FootballSnapshot;
   facts: DeskFacts;
-  gameweeks: readonly number[];
+  scoring: LeaguePeriod | undefined;
   say: Say;
 }): Promise<Map<string, ReportsJob>> {
   const jobs = new Map<string, ReportsJob>();
@@ -26,7 +26,7 @@ export async function reportsDesk(input: {
     const read = await matchdayInput({
       snapshot: input.snapshot,
       facts: input.facts,
-      periodGameweeks: input.gameweeks,
+      scoring: input.scoring,
       pick: (fixture) => onLondonDay(fixture.kickoff, day),
       say: input.say,
     });
