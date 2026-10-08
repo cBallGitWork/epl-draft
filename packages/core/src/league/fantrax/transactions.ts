@@ -39,7 +39,8 @@ export interface RawTransactionHistory {
     caption?: string;
     rows?: RawTxRow[];
   };
-  paginatedResultSet?: { totalNumResults?: number; totalNumPages?: number };
+  /** A result is a transaction, not a row: a claim and the drop that paid for it are one. */
+  paginatedResultSet?: { totalNumResults?: number; totalNumPages?: number; pageNumber?: number };
 }
 
 /** A row's cells, inheriting any a previous row still spans: a fresh map per row, with `carried` updated in place. */

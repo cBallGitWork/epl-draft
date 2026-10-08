@@ -38,8 +38,8 @@ export interface PlayerMove {
   toName: string | null;
 }
 
-/** Every claim, drop and trade this league has made involving him, newest first. */
-export async function playerMoves(fantraxId: string): Promise<PlayerMove[]> {
+/** Every claim, drop and trade this league has made involving him, newest first, and whether the log was read whole. */
+export async function playerMoves(fantraxId: string): Promise<{ moves: PlayerMove[]; whole: boolean }> {
   const [deals, squads] = await Promise.all([readDeals(), getLeagueSquads()]);
   // A league we cannot read costs the moves their names, not the moves.
   const names = new Map(
@@ -47,7 +47,7 @@ export async function playerMoves(fantraxId: string): Promise<PlayerMove[]> {
       ? squads.period.teams.map((team) => [team.teamId, team.teamName] as const)
       : [],
   );
-  return movesOf(deals.rows, fantraxId, names);
+  return { moves: movesOf(deals.rows, fantraxId, names), whole: deals.whole };
 }
 
 /** The filter and the name join, pure, so the populated path is held up by a test. */
@@ -76,8 +76,10 @@ export function movesOf(
   return keyed.sort((a, b) => b.key - a.key).map((entry) => entry.move);
 }
 
-/** How he came to his holder: the latest executed move that put him there, or null (a draft pick). */
-export function joinedBy(moves: readonly PlayerMove[], ownerTeamId: string | null): PlayerMove | null {
+/** How he came to his holder: the latest executed move that put him there, or null (a draft pick); "unknown" when the
+ *  log was not read whole, as a move it lacks would read as the draft. */
+export function joinedBy(moves: readonly PlayerMove[], ownerTeamId: string | null, whole: boolean): PlayerMove | null | "unknown" {
   if (ownerTeamId === null) return null;
+  if (!whole) return "unknown";
   return moves.find((move) => move.transaction.executed && move.transaction.toTeamId === ownerTeamId) ?? null;
 }

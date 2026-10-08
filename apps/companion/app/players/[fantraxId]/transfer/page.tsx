@@ -37,7 +37,7 @@ export default async function PlayerTransfer({ params }: { params: Promise<{ fan
 
 /** Everything under the strip, behind one boundary: the panel needs both reads the table and the line do. */
 async function Business({ found, fantraxId }: { found: Subject; fantraxId: string }) {
-  const [{ pedigree, drafterName }, moves, reader] = await Promise.all([
+  const [{ pedigree, drafterName }, { moves, whole }, reader] = await Promise.all([
     playerPedigree(fantraxId),
     playerMoves(fantraxId),
     readerTeamId(),
@@ -49,7 +49,7 @@ async function Business({ found, fantraxId }: { found: Subject; fantraxId: strin
 
   return (
     <>
-      <TransferStatus holder={holder} joined={joinedBy(moves, owner)} pedigree={pedigree} />
+      <TransferStatus holder={holder} joined={joinedBy(moves, owner, whole)} pedigree={pedigree} />
       <Moves moves={moves} />
       <DraftLine pedigree={pedigree} drafterName={drafterName} />
       <OutLink href={exit.href}>{exit.label}</OutLink>
