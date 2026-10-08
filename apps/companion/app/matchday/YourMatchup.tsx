@@ -1,5 +1,5 @@
 import Link from "@/app/components/shell/Link";
-import { headToHead, type LeagueTeam, type LiveTeamScore, inkOn, teamColours } from "@epl/core";
+import { DASH, headToHead, type LeagueTeam, type LiveTeamScore, inkOn, teamColours } from "@epl/core";
 import { liveScores } from "../scoreboard";
 import { getLeagueSquads } from "../squads";
 import { myTeamId } from "../session";
@@ -71,7 +71,7 @@ function Half({
       {/* The plate owns its ink: no `text-*` or `ScoreFigure` here (ink on the bevel is 2.27:1), so the dash is by hand. */}
       {/* `w-14` holds a four-character total (`61.4`); any wider clips the away name at 390. */}
       <span className="cm-bevel numeric flex min-h-16 w-14 shrink-0 items-center justify-center text-xl font-bold lg:min-h-20 lg:w-24 lg:text-4xl">
-        {points === null ? "\u2014" : points}
+        {points === null ? DASH : points}
       </span>
     </div>
   );

@@ -1,5 +1,5 @@
 import type { Pedigree } from "@epl/core";
-import { signed } from "@epl/core";
+import { DASH, signed } from "@epl/core";
 import { MINOR_LABEL } from "@/app/desk";
 
 // What the draft paid for him: the cyan line across the foot of Transfer, and the figure beside
@@ -35,7 +35,7 @@ function sentence(
 /** Picks better than he cost, signed: red below, green above, a dash where Fantrax has no ranking for him. */
 export function Value({ against }: { against: number | null }) {
   if (against === null)
-    return <span className="numeric text-sm text-faint">—</span>;
+    return <span className="numeric text-sm text-faint">{DASH}</span>;
 
   return (
     <span

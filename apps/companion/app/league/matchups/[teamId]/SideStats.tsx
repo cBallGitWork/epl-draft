@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
-import { type LeagueTeam, type LineupDetail, type ScoringCategory, type SquadPlayerDetail, crestUrl, inkOn, playerName, teamColours, wordsOf, DASH } from "@epl/core";
+import { type LeagueTeam, type LineupDetail, type ScoringCategory, type SquadPlayerDetail, crestUrl, inkOn, playerName, teamColours, wordsOf } from "@epl/core";
 import Section from "../../../components/shell/Section";
 import PositionTile from "../../../components/league/PositionTile";
 import { ROW_LINK } from "../../../components/league/TableCells";
@@ -11,6 +11,7 @@ import { MaybeCard } from "../../../prem/match/[id]/PlayerCardButton";
 import { MATCH_ROW } from "../../../prem/match/[id]/matchRow";
 import { figureOf, paidIn, sideRows, type Breakdowns, type Counts } from "./sideRows";
 import { DEFAULT_SIDE_SORT } from "./views";
+import Absent from "@/app/components/shell/Absent";
 
 // One manager's fifteen in the match page's club board (`prem/match/[id]/ClubStats`): his colours on the
 // position tiles, each man's club crest, Fantrax's points, then what he did in each of the league's categories.
@@ -119,7 +120,7 @@ function SideRow({
         const ink = `${bold} ${gainOrLoss(paid)}`;
         return (
           <td key={head.code} className={`${FIGURE_CELL} ${ink}`}>
-            {value === null ? <span className="text-faint">{DASH}</span> : value}
+            {value === null ? <Absent /> : value}
           </td>
         );
       })}

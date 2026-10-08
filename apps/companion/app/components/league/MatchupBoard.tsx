@@ -2,6 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import {
+  DASH,
   type LeagueTeam,
   type LiveTeamScore,
   inkOn,
@@ -108,7 +109,7 @@ function Side({
       </span>
 
       <span className="cm-bevel numeric flex min-h-16 w-14 shrink-0 items-center justify-center text-xl font-bold lg:min-h-20 lg:w-24 lg:text-4xl">
-        {points === null ? "\u2014" : points}
+        {points === null ? DASH : points}
       </span>
 
       {/* The open half's bar, below `lg` only: on the desk both sides are on screen. */}
