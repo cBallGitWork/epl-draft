@@ -1,4 +1,4 @@
-import { DRAFT_FRAMES, DRAFT_NEVER, DRAFT_WRITING, REPORT_AMERICAN, REPORT_FPL, SHEETS_AMERICAN, type Fault } from "@epl/core";
+import { AMERICAN, DRAFT_FRAMES, DRAFT_NEVER, DRAFT_WRITING, REPORT_FPL, type Fault } from "@epl/core";
 import { PAPER } from "./house";
 
 // The draft report: a reporter who plays in the league, telling each match-up's story as the desk chose it, in the plain
@@ -53,7 +53,7 @@ THE WORDS:
 - A club by its name as the brief gives it. Never a slot letter or a club's three-letter code.
 - Never a question, a colon, an exclamation mark or a quotation mark. No sentence over 30 words.
 - You never name a source. Never: ${REPORT_FPL.join(", ")}.
-- Never American: ${[...SHEETS_AMERICAN, ...REPORT_AMERICAN].join(", ")}.
+- Never American: ${AMERICAN.join(", ")}.
 - Never these: ${DRAFT_NEVER.join(", ")}.
 
 HEADLINES, in two steps. FIRST write "headlineStory": the lead match-up's STORY in plain words, one short line. THEN offer six "headlines", in sentence case as the paper prints them (a capital for the first word and for names only), each a pun on that story in the register of James Richardson on Football Italia and Football Weekly: the groan-and-grin line, turning a side's name, a man's surname or the score, straight-faced and never explained. A pun is a word carrying two meanings at once, both true here: for each, name that word ("playsOn") and its two meanings ("twoMeanings"). Eight words or fewer, a single clause, no "as", no tabloid verb.

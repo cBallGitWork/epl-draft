@@ -1,13 +1,10 @@
-import { banned } from "../banned";
+import { americanisms, banned } from "../banned";
 import { masked, numbersIn, sentences } from "../predictions/prose";
 import type { ReportPiece, ReportsDraft } from "./draft";
-import { AMERICAN_IZE, SHEETS_AMERICAN } from "../sheets/words";
 import { repeatsIn } from "./repeats";
 import { REPORT_NEVER } from "./style";
-import { REPORT_AMERICAN } from "./words";
 
-const NEVER = [...REPORT_NEVER, ...SHEETS_AMERICAN, ...REPORT_AMERICAN];
-const broken = (text: string) => [...banned(text, NEVER), ...(text.match(AMERICAN_IZE) ?? [])];
+const broken = (text: string) => [...banned(text, REPORT_NEVER), ...americanisms(text)];
 
 // The sub-editor's last pass: a sentence that still carries a banned phrase after the rewrite goes back ALONE with the words it
 // broke, and a fix is kept only when it clears the words and states the same figures. Cheaper and surer than a third draft.

@@ -24,7 +24,7 @@ export type { WireFacts } from "./wire";
 export { buildTieCallBrief } from "./briefs/tieCall";
 export { buildTieReportBrief } from "./briefs/tieReport";
 export { standingHeadlines } from "./briefs/standing";
-export { BANNED, banned } from "./banned";
+export { AMERICAN, BANNED, banned } from "./banned";
 export { MAX_PAPER_STORIES, composePaper, frontPage } from "./frontPage";
 export { isCovered, normalizeLedger, recordCoverage } from "./ledger";
 export { newsdesk, roundSlot } from "./newsdesk";

@@ -1,11 +1,10 @@
-import { FILLER, GROUNDS, REGISTER, banned } from "../banned";
+import { FILLER, GROUNDS, REGISTER, americanisms, banned } from "../banned";
 import { escapeRegExp } from "../../regExp";
 import type { Report } from "../predictions/checks";
 import { masked, ngrams, sentences, wordCount } from "../predictions/prose";
 import { DESK_BANNED } from "../predictions/words";
-import { AMERICAN_IZE, SHEETS_AMERICAN } from "../sheets/words";
 import {
-  REPORT_ADVICE, REPORT_AMERICAN, REPORT_CAPPED_DAY, REPORT_CAPPED_MATCH, REPORT_CLICHES, REPORT_CROWD, REPORT_DEPTH_CHART,
+  REPORT_ADVICE, REPORT_CAPPED_DAY, REPORT_CAPPED_MATCH, REPORT_CLICHES, REPORT_CROWD, REPORT_DEPTH_CHART,
   REPORT_FANTASY, REPORT_FPL, REPORT_GROUNDS, REPORT_NOT_HIS_NAME, REPORT_SHOTS, REPORT_TELLS, REPORT_VERDICTS,
 } from "./words";
 
@@ -34,9 +33,7 @@ export function wordFaults(section: string, text: string, football: boolean, nam
   if (SOURCE.test(plain)) fault(section, "names a source or a percentage", "hard", plain.match(SOURCE)?.[0] ?? "");
   for (const word of banned(plain, REPORT_FPL)) fault(section, "a fantasy game's term", "hard", word);
   for (const word of banned(plain, REPORT_NEVER)) fault(section, "a phrase this paper does not print", "send-back", word);
-  for (const word of [...banned(plain, [...SHEETS_AMERICAN, ...REPORT_AMERICAN]), ...(plain.match(AMERICAN_IZE) ?? [])]) {
-    fault(section, "American, not British", "send-back", word);
-  }
+  for (const word of americanisms(plain)) fault(section, "American, not British", "send-back", word);
   for (const word of banned(plain, REPORT_ADVICE)) fault(section, "advice; set the facts side by side instead", "send-back", word);
   if (football) for (const word of banned(plain, REPORT_FANTASY)) fault(section, "a draft word in the football", "send-back", word);
   if (REPORT_NOT_HIS_NAME.test(text)) fault(section, "a man called anything but his name", "send-back", text.match(REPORT_NOT_HIS_NAME)?.[0] ?? "");

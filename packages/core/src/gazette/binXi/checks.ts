@@ -1,11 +1,11 @@
 import { BIN_XI } from "../../config";
-import { BANNED, banned } from "../banned";
+import { BANNED, americanisms, banned } from "../banned";
 import { faultLog, type Fault } from "../predictions/checks";
 import { masked, numbersIn, wordCount } from "../predictions/prose";
 import { DESK_BANNED } from "../predictions/words";
 import { REPORT_ADVICE, REPORT_FPL } from "../reports/words";
 import { COUNTED, SOURCE } from "../sheets/checks";
-import { AMERICAN_IZE, SHEETS_AMERICAN, SHEETS_STOCK } from "../sheets/words";
+import { SHEETS_AMERICAN, SHEETS_STOCK } from "../sheets/words";
 import { strangers } from "../strangers";
 import { BIN_MARKET, BIN_NEGLECT, BIN_OWNERSHIP, BIN_ROLES, BIN_WORKINGS } from "./words";
 
@@ -35,8 +35,7 @@ export function checkBin(column: Record<string, unknown>, ctx: BinCheck): Fault[
     for (const word of banned(plain, BIN_ROLES)) fault(section, "a role the brief does not give", "send-back", word);
     for (const word of banned(plain, BIN_OWNERSHIP)) fault(section, "a man is in a squad, never owned or held", "send-back", word);
     for (const word of banned(plain, [...BANNED, ...DESK_BANNED, ...SHEETS_STOCK])) fault(section, "banned or stock phrasing", "send-back", word);
-    for (const word of banned(plain, SHEETS_AMERICAN)) fault(section, "not British football English", "send-back", word);
-    if (AMERICAN_IZE.test(plain)) fault(section, "not British football English", "send-back", plain.match(AMERICAN_IZE)?.[0] ?? "");
+    for (const word of americanisms(plain, SHEETS_AMERICAN)) fault(section, "not British football English", "send-back", word);
     if (COUNTED.test(written)) fault(section, "counts the weeks", "send-back", written.match(COUNTED)?.[0] ?? "");
     if (section === "headline") continue;
     for (const figure of numbersIn(plain)) if (!figures.has(figure)) fault(section, "a figure not in the brief", "hard", String(figure));
