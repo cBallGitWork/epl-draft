@@ -1,5 +1,6 @@
 import {
   LAWRO_CORE,
+  PAPER_TITLE,
   applySkit,
   assembleLawro,
   checkLawro,
@@ -13,7 +14,7 @@ import {
 import { writeColumn, type Say } from "./newsroom";
 import type { PredictionsDesk } from "./predictions";
 import { faultSummary, sendBackOnce, serious } from "./sendBack";
-import { LAWRO, SKIT, lawroSendBack } from "./voice/lawro";
+import { SKIT, lawroSendBack, predictionsVoice } from "./voice/lawro";
 
 // The newsroom behind Lawro's column: he writes, the editor reads him, he writes again once if he
 // has to, the skit writer looks for a groaner, and the desk files his words beside its own calls.
@@ -30,7 +31,7 @@ export async function writeLawro(desk: PredictionsDesk, brief: string, facts: st
     calls,
     name,
     // His ground and his paper are his to name: the voice sends Liverpool's visitors to Anfield.
-    facts: [facts, LAWRO_CORE, ...desk.past.map((line) => line.line), ...desk.clubs, "Lawro", "Anfield", "Gazetta"].join("\n"),
+    facts: [facts, LAWRO_CORE, ...desk.past.map((line) => line.line), ...desk.clubs, "Lawro", "Anfield", PAPER_TITLE].join("\n"),
     offered: desk.past,
     names: desk.names,
     past: desk.archive.prose,
@@ -39,8 +40,9 @@ export async function writeLawro(desk: PredictionsDesk, brief: string, facts: st
     const call = calls.find((each) => tieKey(each.homeTeamId, each.awayTeamId) === section);
     return call === undefined ? `the ${section}` : `the tie ${name(call.homeTeamId)} v ${name(call.awayTeamId)}`;
   };
+  const voice = predictionsVoice(desk.ties.length);
 
-  const attempts = await sendBackOnce({ desk: "lawro", voice: LAWRO, brief, read: (raw) => attempt(raw, ctx), sendBack: (faults) => lawroSendBack(faults, label) }, say);
+  const attempts = await sendBackOnce({ desk: "lawro", voice, brief, read: (raw) => attempt(raw, ctx), sendBack: (faults) => lawroSendBack(faults, label) }, say);
   let draft = mergeAttempts(attempts, calls);
   const left = serious(checkLawro(draft, ctx));
   if (left.length > 0) say(`  ⚠ lawro files with ${left.length} faults the rewrite kept: ${faultSummary(left)}`);

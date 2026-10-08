@@ -2,7 +2,7 @@ import { assembleSheets, checkSheets, mergeSheets, readSheetsDraft, type Fault, 
 import type { Say } from "./newsroom";
 import { sendBackOnce } from "./sendBack";
 import type { SheetsDesk } from "./sheets";
-import { SHEETS_VOICE, sheetsSendBack } from "./voice/sheets";
+import { sheetsSendBack, sheetsVoice } from "./voice/sheets";
 
 // The newsroom behind team news: the desk writes, the editor reads every paragraph against the
 // facts, it goes back once if it has to, and a paragraph that fails twice prints the desk's plain line.
@@ -17,8 +17,9 @@ export async function writeSheets(desk: SheetsDesk, brief: string, say: Say): Pr
   };
   const names = new Map(desk.ties.flatMap((tie) => [tie.home.sheet, tie.away.sheet]).map((sheet) => [sheet.teamId, sheet.teamName]));
   const label = (section: string) => names.get(section) ?? `the meeting line ${section}`;
+  const voice = sheetsVoice(desk.ties.length * 2);
 
-  const attempts = await sendBackOnce({ desk: "sheets", voice: SHEETS_VOICE, brief, read: attempt, sendBack: (faults) => sheetsSendBack(faults, label) }, say);
+  const attempts = await sendBackOnce({ desk: "sheets", voice, brief, read: attempt, sendBack: (faults) => sheetsSendBack(faults, label) }, say);
 
   const draft = mergeSheets(attempts);
   const plain = desk.ties.flatMap((tie) => [tie.home.sheet, tie.away.sheet]).filter((sheet) => !draft.has(sheet.teamId));

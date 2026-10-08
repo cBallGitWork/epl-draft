@@ -9,8 +9,8 @@ import { columnBrief } from "./columns";
 import { newsBrief } from "./news";
 import { FIXTURE_PREVIEW, TIE_CALL, TIE_REPORT } from "./voice/matches";
 import { DODGERS, ELEVEN, POWER_RANKING, WIRE } from "./voice/columns";
-import { LAWRO } from "./voice/lawro";
-import { LAWRO_SEASON } from "./voice/lawroSeason";
+import { predictionsVoice } from "./voice/lawro";
+import { seasonRankingsVoice } from "./voice/lawroSeason";
 import type { PredictionsDesk } from "./predictions";
 import type { SeasonDesk } from "./season";
 import type { DraftJob } from "./draftWriter";
@@ -20,7 +20,7 @@ import { DRAFT_VOICE } from "./voice/draft";
 import { REPORTS_VOICE } from "./voice/reports";
 import { BIN_XI_VOICE } from "./voice/binXi";
 import type { BinDesk } from "./binXi";
-import { SHEETS_VOICE } from "./voice/sheets";
+import { sheetsVoice } from "./voice/sheets";
 import { NEWS } from "./voice/news";
 import { PRESSER } from "./voice/pressers";
 import { faceCtx, type DeskContext } from "./dispatch";
@@ -46,14 +46,14 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
     const desk = ctx.predictions;
     if (desk === null) return null;
     const brief = buildLawroBrief({ ...desk, teams: ctx.info.teams.map(({ teamId, name }) => ({ teamId, name })) });
-    return brief === null ? null : { system: LAWRO, brief, lawro: desk };
+    return brief === null ? null : { system: predictionsVoice(desk.ties.length), brief, lawro: desk };
   }
 
   // His power rankings likewise, with the order and every side's facts already made.
   if (assignment.kind === "season-rankings") {
     const desk = ctx.season;
     if (desk === null) return null;
-    return { system: LAWRO_SEASON, brief: buildSeasonBrief({ calls: desk.calls, locksAt: desk.locksAt, slotName: desk.slotName }), season: desk };
+    return { system: seasonRankingsVoice(desk.calls.sides.length), brief: buildSeasonBrief({ calls: desk.calls, locksAt: desk.locksAt, slotName: desk.slotName }), season: desk };
   }
 
   // A match-day report is written, checked and read back through its own newsroom, from the day's joined facts.
@@ -73,7 +73,7 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
 
   // Team news is written a paragraph a side through its own editor, from facts the desk already joined.
   if (assignment.kind === "sheets") {
-    return ctx.sheets === null ? null : { system: SHEETS_VOICE, brief: ctx.sheets.brief, sheets: ctx.sheets };
+    return ctx.sheets === null ? null : { system: sheetsVoice(ctx.sheets.ties.length * 2), brief: ctx.sheets.brief, sheets: ctx.sheets };
   }
 
   const scoped =

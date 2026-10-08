@@ -1,14 +1,17 @@
-import { BANNED, type StoryKind, writerOf } from "@epl/core";
+import { BANNED, LEAGUE_NAME, PAPER_TITLE, type StoryKind, writerOf } from "@epl/core";
 
 // The paper's editorial voice: the league it covers, its staff writers, and the rules every byline obeys. COPY, so
 // it lives with the writer; the staff and the banned list come from core, where the page and the check read the same
 // arrays, so the prompt cannot drift from either. Almost every rule below is a lie a model told when nobody stopped it.
 
+/** The paper's masthead, the league's name and its own. */
+export const MASTHEAD = `${LEAGUE_NAME} ${PAPER_TITLE}`;
+
 /** The league the paper is about, whoever is writing in it. */
 export const PAPER = `It is the paper of a Fantrax Premier League draft league: friends who know football, talk to each other, and do not need anything explained to them. The brief names every manager in the league, and there are no others.`;
 
 /** The staff writer for a kind, named from the table the page's byline reads (`gazette/staff.ts`). */
-const writer = (kind: StoryKind) => `You are ${writerOf({ kind })}, a football writer on the Tim Hortons Pro League Gazetta, and every word under your byline is yours. ${PAPER}
+const writer = (kind: StoryKind) => `You are ${writerOf({ kind })}, a football writer on the ${MASTHEAD}, and every word under your byline is yours. ${PAPER}
 
 You are a serious football writer FIRST — the Athletic or a Times sports desk, not a comedian and not a personality. The wit is in the knowing turn of phrase and in the headline, never in a gag you stop to make. You are the man who has watched all of it and is unimpressed by most of it.
 
@@ -43,25 +46,7 @@ ${DESK}
 
 FANTASY VERNACULAR is welcome where it fits and never forced: a haul, blanked, a return, a differential, nailed on.`;
 
-/** What the desk says when it sends a column back over the banned list.
- *
- *  **The check was warn-only until 17 Sep 2026 and the argument for that has
- *  been overtaken.** The comment in `write-edition.ts` said refusing "would
- *  throw away a good story over a surname" — a real fear when it was written,
- *  and one `banned.ts` has since answered: the match is whole-word with Unicode
- *  letter boundaries, so "bank" cannot fire on "Bankole". What was left was a
- *  warning nobody reads, and two headlines built on "Banks" are published
- *  because of it.
- *
- *  So the desk sends it back ONCE rather than refusing or shrugging, which is
- *  what a sub-editor does. A retry costs one call when it fires and nothing when
- *  it does not; a refusal costs the story. If the rewrite offends again it files
- *  with the warning, because a good column is still worth printing and the
- *  second failure is the writer's answer rather than a hung firing.
- *
- *  The phrases are quoted back rather than described: the writer is given the
- *  list in `house` already, so naming the one it reached for is the only new
- *  information the second attempt has. */
+/** What the desk says when it sends a column back, once, over the banned list: the phrases it reached for, quoted. */
 export function sendBack(phrases: readonly string[]): string {
   return `YOUR LAST ATTEMPT PRINTED BANNED PHRASING: ${phrases.map((phrase) => `"${phrase}"`).join(", ")}. Write it again without ${phrases.length === 1 ? "that phrase" : "those phrases"}, in any form — not a synonym of the same tic, and not the same sentence with the word swapped. Keep everything true; only the wording is wrong.`;
 }
