@@ -58,6 +58,8 @@ export const LAWRO_LIMITS = {
   sameFrame: 1,
   dullMoan: 1,
   paragraphFrom: 3,
+  /** Times one tie may name a side; past that, the reader knows whose men they are. */
+  sideNamed: 3,
   /** The skit writer's rewrite: words at most, words longer than the sentence it replaces, and a kicker's words. */
   skit: { words: 20, longer: 6, kicker: 3 },
 } as const;
