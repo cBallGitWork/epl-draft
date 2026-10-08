@@ -45,8 +45,8 @@ export const LAWRO_LIMITS = {
   /** Words a sentence; sentences and words for his opening, a tie and a gut call; words a column. */
   sentence: 20,
   intro: [1, 4, 40],
-  tie: [2, 8, 120],
-  gut: [2, 9, 130],
+  tie: [3, 8, 120],
+  gut: [3, 9, 130],
   column: 680,
   /** A run of this many words from a recent column is a repeat, and of this many from another tie an echo. */
   repeat: 5,
@@ -54,10 +54,12 @@ export const LAWRO_LIMITS = {
   /** Men a tie names, and question marks a column carries, at most. */
   men: 4,
   questions: 2,
-  /** Ties that may share an opening or an ending frame, or carry the dull-game moan; a tie of this many sentences is two paragraphs. */
+  /** Ties that may share an opening or an ending frame, or carry the dull-game moan. */
   sameFrame: 1,
   dullMoan: 1,
-  paragraphFrom: 3,
+  /** A called tie's paragraphs, one side, the other and the call (Craig, 8 Oct 2026), and the call's words at least. */
+  paragraphs: 3,
+  callWords: 5,
   /** Times one tie may name a side; past that, the reader knows whose men they are. */
   sideNamed: 3,
   /** The skit writer's rewrite: words at most, words longer than the sentence it replaces, and a kicker's words. */

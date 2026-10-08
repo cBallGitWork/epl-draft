@@ -150,9 +150,29 @@ describe("checkLawro, the column's shape", () => {
     expect(found(faults, "a side's name over and over")).toEqual(["rs-bn"]);
   });
 
-  it("sends back a tie of three sentences or more filed as one block", () => {
-    const faults = checks([["rs-bn", "I've no argument with Real Sociable. They have won all three. Oduya has Leeds. They'll need more than two."]]);
-    expect(found(faults, "a tie in one block")).toEqual(["rs-bn"]);
+  it("sends back a tie that is not one side, the other side and the call", () => {
+    const block = checks([["rs-bn", "I've no argument with Real Sociable. They have won all three. Oduya has Leeds. They'll need more than two."]]);
+    expect(found(block, "not one side, the other, then the call")).toEqual(["rs-bn"]);
+    // 8 Oct: the Cowthenbeef tie ran both sides together, with the break owed at The Truffle Pigs.
+    const same = checks([["rs-bn", "I've no argument with Real Sociable. They have won all three.\n\nReal Sociable have Oduya, and he has Leeds.\n\nReal Sociable, because Oduya has Leeds."]]);
+    expect(found(same, "the second paragraph not on the other side")).toEqual(["rs-bn"]);
+  });
+
+  it("sends back a call that is a side's name and nothing more", () => {
+    // 8 Oct: "The Raccoons." stood as a paragraph of its own.
+    const bare = checks([["rs-bn", "I've no argument with Real Sociable. They have won all three.\n\nBayer Neverlusen signed Pym and Kettle on Wednesday.\n\nReal Sociable."]]);
+    expect(found(bare, "a call with no reason")).toEqual(["rs-bn"]);
+    expect(found(checks([]), "a call with no reason")).toEqual([]);
+  });
+
+  it("sends back a derby tie that never names its derby, and men he never names", () => {
+    const derbies = new Map([["rs-bn", ["Steve Clarke Classic"]]]);
+    expect(found(checks([], { derbies }), "the derby not named")).toEqual(["rs-bn"]);
+    const named = SAMPLE[0][1].replace("I've no argument with Real Sociable.", "It's the Steve Clarke Classic, and I've no argument with Real Sociable.");
+    expect(found(checks([["rs-bn", named]], { derbies }), "the derby not named")).toEqual([]);
+    // 8 Oct: "The Truffle Pigs have both of theirs off to Sunderland", and both of what?
+    const theirs = SAMPLE[0][1].replace("Bayer Neverlusen signed Pym and Kettle on Wednesday.", "Bayer Neverlusen have both of theirs away.");
+    expect(found(checks([["rs-bn", theirs]]), "men he never names")).toEqual(["rs-bn"]);
   });
 });
 

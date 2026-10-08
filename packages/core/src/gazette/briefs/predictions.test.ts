@@ -196,6 +196,35 @@ describe("a derby in Lawro's brief", () => {
     const lines = brief([{ ...tie(home, away), derby }])?.split("\n") ?? [];
     const heading = lines.findIndex((line) => line.startsWith("TIE 1 of 1"));
     expect(lines[heading + 1]).toMatch(/^THE DERBY: this meeting is the Tim Hortons Derby\./u);
+    expect(lines[heading + 2]).toBe("Name the derby in this tie's first paragraph, once, exactly as written.");
     expect(brief([tie(home, away)])).not.toContain("THE DERBY");
+  });
+});
+
+describe("the champions in Lawro's brief", () => {
+  const [home, away] = [side("cp", "Cold Palmer", 60, [man("Saka", 9)]), side("hg", "Haaland Globetrotters", 50, [man("Rice", 8)])];
+  const withChampions = (team: string) =>
+    buildLawroBrief({
+      gameweek: 7,
+      locksAt: "2026-10-17T11:15:00.000Z",
+      teams: [
+        { teamId: "cp", name: "Cold Palmer" },
+        { teamId: "hg", name: "Haaland Globetrotters" },
+      ],
+      ties: [tie(home, away)],
+      record: FIRST,
+      past: [],
+      champions: [{ season: "25/26", team }],
+    }) ?? "";
+
+  it("says who holds the title, and says it again in their tie", () => {
+    // Craig, 8 Oct 2026: "remember the raccoons are the current champions".
+    const text = withChampions("hg");
+    expect(text).toContain("THE CHAMPIONS: Haaland Globetrotters won this league in 25/26");
+    expect(text).toContain("Haaland Globetrotters are the champions.");
+  });
+
+  it("says nothing for a champion who is not in this league", () => {
+    expect(withChampions("elsewhere")).not.toContain("champions");
   });
 });

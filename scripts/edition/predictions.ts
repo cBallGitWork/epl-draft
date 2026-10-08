@@ -38,6 +38,7 @@ import {
   type SideForm,
   type StandingsRow,
 } from "@epl/core";
+import champions from "../../data/leagues/champions.json";
 import derbies from "../../data/leagues/derbies.json";
 import { readIntel, readProjections } from "../intel";
 import { rosteredPeriod } from "./bridge";
@@ -61,6 +62,8 @@ export interface PredictionsDesk {
   /** Every club by FPL's own name, "Spurs" among them, which he may write as the BBC did. */
   clubs: string[];
   doubts: string[];
+  /** Who won the league, newest first, by team id; the brief names a holder only when he is in this league. */
+  champions: { season: string; team: string }[];
 }
 
 export async function predictionsDesk(input: {
@@ -159,6 +162,7 @@ export async function predictionsDesk(input: {
     names: [...new Set([...named.values(), ...ties.flatMap((tie) => derbyNames(tie.derby)), ...squads.flatMap((team) => team.players.flatMap((man) => ("player" in man ? [man.player.name] : [])))])],
     clubs: clubs.map((club) => club.name),
     doubts: [...new Set(men.filter((man) => man.availability.state !== "fit").map((man) => man.name))],
+    champions: champions.champions,
   };
 }
 
