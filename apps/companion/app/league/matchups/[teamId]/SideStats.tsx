@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
-import { type LeagueTeam, type LineupDetail, type ScoringCategory, type SquadPlayerDetail, crestUrl, inkOn, playerName, teamColours, wordsOf } from "@epl/core";
+import { type LeagueTeam, type LineupDetail, type ScoringCategory, type SquadPlayerDetail, crestUrl, inkOn, playerName, wordsOf } from "@epl/core";
+import { teamColours } from "@/app/teamColours";
 import Section from "../../../components/shell/Section";
 import PositionTile from "../../../components/league/PositionTile";
 import { ROW_LINK } from "../../../components/league/TableCells";

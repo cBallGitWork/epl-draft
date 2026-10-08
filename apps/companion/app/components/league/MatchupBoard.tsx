@@ -6,8 +6,8 @@ import {
   type LeagueTeam,
   type LiveTeamScore,
   inkOn,
-  teamColours,
 } from "@epl/core";
+import { teamColours } from "@/app/teamColours";
 import { MATCHUPS } from "../../league/routes";
 import BackPlate from "../shell/BackPlate";
 import TabStrip, { type Tab } from "../shell/TabStrip";

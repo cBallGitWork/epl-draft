@@ -171,7 +171,7 @@ export type { PlayerStatLine, RawPlayerStats } from "./fantrax/playerStats";
 export { PLAYER_CATEGORIES } from "./playerCategories";
 export { ordinal } from "./ordinal";
 export { signed } from "./signed";
-export { teamColours } from "./teamColours";
+export { coloursOf, type TeamColours } from "./teamColours";
 export { rankBy } from "./categoryBoard";
 export type { CategoryLine } from "./fantrax/seasonStats";
 export {
