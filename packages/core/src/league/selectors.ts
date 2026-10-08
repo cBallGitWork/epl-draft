@@ -11,7 +11,7 @@ import type {
 // Pure read-side selectors over league state.
 
 /** A footballer in Fantrax's global pool, seen through our competition: `player` is Fantrax-wide and stays nested,
- *  apart from our commissioner's `eligiblePositions` and `status` and this week's `ownerTeamId`. */
+ *  apart from our commissioner's `eligiblePositions` and `status` and this week's `ownerTeamId` and `slot`. */
 export interface PoolPlayer {
   player: LeaguePlayer;
   /** What this league deems him eligible to play as; empty when unsaid, never a guess from `player.position`. */
@@ -20,6 +20,8 @@ export interface PoolPlayer {
   status: string;
   /** Null when nobody holds him, which is not the same statement as `status`. */
   ownerTeamId: string | null;
+  /** The slot his manager has him in; null when nobody holds him. */
+  slot: string | null;
 }
 
 /** Whether a manager has a stake in this pairing; a reader not signed in (null) has a stake in none. */
@@ -57,20 +59,22 @@ export function leaguePool(
   rosters: PeriodRosters,
 ): PoolPlayer[] {
   const byId = new Map(states.map((state) => [state.fantraxId, state]));
-  const owners = new Map<string, string>();
+  const owners = new Map<string, { teamId: string; slot: string | null }>();
   for (const team of rosters.teams) {
-    for (const slot of team.slots) owners.set(slot.fantraxId, team.teamId);
+    for (const slot of team.slots) owners.set(slot.fantraxId, { teamId: team.teamId, slot: slot.position });
   }
 
   return pool
     .map((player) => {
       // A pool entry with no league state is listed with nothing claimed about him, never dropped.
       const state = byId.get(player.fantraxId);
+      const owner = owners.get(player.fantraxId);
       return {
         player,
         eligiblePositions: state?.eligiblePositions ?? [],
         status: state?.status ?? "",
-        ownerTeamId: owners.get(player.fantraxId) ?? null,
+        ownerTeamId: owner?.teamId ?? null,
+        slot: owner?.slot ?? null,
       };
     })
     .sort((a, b) => a.player.displayName.localeCompare(b.player.displayName));

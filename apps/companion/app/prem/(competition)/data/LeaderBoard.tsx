@@ -28,12 +28,12 @@ export default function LeaderBoard({
   more: { href: string; label: string };
   className?: string;
 }) {
-  // A mark is a derived reading, which DESIGN §3 inks cyan; a recorded figure alone beside a name is amber.
-  const ink = list.source === "rating" ? "text-info" : "text-mid";
+  // A mark or our DefCon points is a derived reading, which DESIGN §3 inks cyan; a recorded figure alone beside a name is amber.
+  const ink = list.source === "rating" || list.source === "defcon" ? "text-info" : "text-mid";
   return (
     <section className={`${PANEL_FLUSH} ${className}`}>
       {/* On a phone the picker above already names the one list it shows. */}
-      <h2 className={`${SECTION_BAR} max-lg:sr-only`}>{list.title}</h2>
+      <h3 className={`${SECTION_BAR} max-lg:sr-only`}>{list.title}</h3>
       {rows.length === 0 ? (
         <p className="px-2 py-3 text-sm text-muted">Nothing to rank yet.</p>
       ) : (

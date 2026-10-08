@@ -34,7 +34,7 @@ nothing.**
 | `/prem/results` | [prem.md](prem.md) | Every finished round of football, newest first. |
 | `/prem/fixtures` | [prem.md](prem.md) | Every round still to come, soonest first. |
 | `/prem/team-stats` | [prem.md](prem.md) | The twenty ranked by one measure at a time. |
-| `/prem/data` | [prem.md](prem.md) | The season's leaders: eight lists, the top ten each and fifty on asking. |
+| `/prem/data` | [prem.md](prem.md) | The season's leaders: eight lists in three sections, the top twenty each and fifty on asking. |
 | `/prem/club/[code]` | [prem.md](prem.md) | One club's squad, with the real position and Fantrax's eligibility side by side. |
 | `/prem/club/[code]/set-pieces` | [prem.md](prem.md) | Who takes that club's penalties, free kicks and corners. |
 | `/prem/club/[code]/fixtures` | [prem.md](prem.md) | That club's season, oldest first. Premier League only. |

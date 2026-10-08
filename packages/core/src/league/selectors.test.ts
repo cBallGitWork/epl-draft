@@ -41,6 +41,7 @@ describe("leaguePool", () => {
       eligiblePositions: ["F", "M"],
       status: "T",
       ownerTeamId: "t1",
+      slot: "M",
     });
   });
 

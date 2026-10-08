@@ -91,7 +91,8 @@ export default function Cell({
   const text = column.kind === "percent" ? `${printed}%` : printed;
   // Zero is a stat, and a quiet one.
   if (figure === 0) return <td className={`${FIGURE} text-faint`}>{text}</td>;
-  return <td className={`${FIGURE} ${column.mark ? standoutInk(figure, cut, column.mark) : ""}`}>{text}</td>;
+  const ink = column.derived ? "text-info" : column.mark ? standoutInk(figure, cut, column.mark) : "";
+  return <td className={`${FIGURE} ${ink}`}>{text}</td>;
 }
 
 /** Which way ownership moved, said in the sign as well as the colour. Nought is drawn quiet. */

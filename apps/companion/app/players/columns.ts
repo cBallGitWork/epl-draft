@@ -54,7 +54,12 @@ export interface PoolColumn {
   stat?: string;
   /** The kind of figure, where it prints at fixed places rather than as it arrives. */
   places?: FigureKind;
+  /** Ours rather than recorded, in the derived reading's ink and never marked. */
+  derived?: true;
 }
+
+/** Our DefCon points in the stats bag, beside Fantrax's counts. */
+export const DEFCON_POINTS = "DCP";
 
 /** A raw count read out of the grouped payload by its Fantrax abbreviation, rated under the toggle. */
 function byAbbreviation(key: string, title: string, group: PoolGroup, mark: Mark = "high"): PoolColumn {
@@ -123,6 +128,18 @@ export const COLUMNS: PoolColumn[] = [
   count(ASSISTS_FANTASY, "attacking"),
   count(CLEAN_SHEETS, "defensive"),
   ...DEFCON.map((category) => count(category, "defensive")),
+  {
+    key: "dcp",
+    label: "DCP",
+    title: "DefCon points, worked out per match, at his slot or a free agent's best position",
+    kind: "number",
+    group: "defensive",
+    derived: true,
+    rate: true,
+    ascending: false,
+    value: (_row, stats) => stats?.[DEFCON_POINTS] ?? null,
+    stat: DEFCON_POINTS,
+  },
   count(GOALS_AGAINST_OUTFIELD, "defensive", "low"),
   count(GOALS_AGAINST, "defensive", "low"),
   count(SAVES, "defensive"),

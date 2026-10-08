@@ -1,13 +1,11 @@
 import TabEmpty from "../../../components/league/TabEmpty";
-import { defConScored, isResolved, playerName, type FootballPlayer } from "@epl/core";
+import { isResolved, playerName, type FootballPlayer } from "@epl/core";
 import TeamShell from "../Shell";
 import { leagueTeams } from "../team";
-import { now } from "../../../clock";
 import { getPlayerStats } from "../../../players/playerStats";
-import { leagueScoring } from "../../../scoring";
-import { statsLeaguePeriods, statsLeagueSeason } from "../../../statsLeague";
+import { statsLeagueSeason } from "../../../statsLeague";
 import StatBoard from "./StatBoard";
-import { squadDefcon } from "./defcon";
+import { defconPricing } from "../../../defcon";
 import { STATS_LEAGUE_KEYS } from "./statViews";
 
 // Every man this manager owns and what each has done: the served league's counts off the Player Stats board's warm
@@ -23,11 +21,11 @@ export default async function StatsPage({
   params: Promise<{ teamId: string }>;
 }) {
   const { teamId: slug } = await params;
-  const [{ team, squad }, all, statsLeague, defconRead] = await Promise.all([
+  const [{ team, squad }, all, statsLeague, pricing] = await Promise.all([
     leagueTeams(slug),
     getPlayerStats(),
     statsLeagueSeason(STATS_LEAGUE_KEYS),
-    defconInputs(),
+    defconPricing(),
   ]);
 
   // `team.teamId` and not the slug, which on the front door is the word `me`.
@@ -42,12 +40,11 @@ export default async function StatsPage({
 
   // The roster's spelling, by id: Fantrax's stat rows say "Schade, Kevin". And the slot each fills, which DefCon prices.
   const names: Record<string, string> = {};
-  const slots: Record<string, string | null> = {};
+  const slots: Record<string, string[]> = {};
   for (const rostered of squad.players) {
     names[rostered.slot.fantraxId] = playerName(rostered);
-    slots[rostered.slot.fantraxId] = rostered.slot.position;
+    slots[rostered.slot.fantraxId] = rostered.slot.position === null ? [] : [rostered.slot.position];
   }
-  const { scoring, codes, periods } = defconRead;
 
   return (
     <TeamShell
@@ -65,16 +62,10 @@ export default async function StatsPage({
           served={[...new Set(all.flatMap((line) => Object.keys(line.stats)))]}
           statsLeague={Object.fromEntries(statsLeague.filter(([id]) => ids.has(id)))}
           statsColumns={[...new Set(statsLeague.flatMap(([, counts]) => Object.keys(counts)))]}
-          defcon={scoring === null || codes.length === 0 ? null : squadDefcon(scoring.rules, codes, slots, periods)}
+          defcon={pricing === null ? null : pricing(slots)}
         />
       )}
     </TeamShell>
   );
 }
 
-/** The league's scoring, the DefCon categories it prices by meaning, and the stats league's periods when it prices any. */
-async function defconInputs() {
-  const scoring = await leagueScoring();
-  const codes = scoring === null ? [] : defConScored(scoring.categories).map((category) => category.short);
-  return { scoring, codes, periods: codes.length === 0 ? null : await statsLeaguePeriods(codes, now()) };
-}

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ATTRIBUTE_ROWS } from "@epl/core";
-import { COLUMNS, DEFAULT_SORT, columnFor } from "./columns";
+import { COLUMNS, DEFAULT_SORT, DEFCON_POINTS, columnFor } from "./columns";
 import { attributeStats } from "./attributeColumns";
 import { columnsIn } from "./groups";
 import { figureOf } from "./figure";
@@ -24,7 +24,7 @@ describe("COLUMNS", () => {
   it("runs phone-first, so the figures a thumb sees first are the ones worth seeing", () => {
     // Craig, 24 Sep 2026: seven figures fit beside a name at 390, and these are the seven.
     expect(COLUMNS.filter((column) => column.group !== "attributes").map((column) => column.label)).toEqual([
-      "Player", "FPts", "FP/G", "Min", "GP", "G", "AT", "A", "AF", "CS", "DC", "DC+", "GAO", "GA", "Sv", "GKP", "PKS", "YC", "RC", "PKM", "OG", "Ros", "+/-",
+      "Player", "FPts", "FP/G", "Min", "GP", "G", "AT", "A", "AF", "CS", "DC", "DC+", "DCP", "GAO", "GA", "Sv", "GKP", "PKS", "YC", "RC", "PKM", "OG", "Ros", "+/-",
     ]);
   });
 
@@ -66,6 +66,11 @@ describe("the columns a league scores", () => {
 
   it("draws the real league's AT, GKP and both DefCon counts, and not the A, AF and Sv it no longer scores", () => {
     expect(counts(real)).toEqual(["Min", "GP", "G", "AT", "CS", "DC", "DC+", "GAO", "GA", "GKP", "PKS", "YC", "RC", "PKM", "OG"]);
+  });
+
+  it("draws our DefCon points after the counts once the page says the league prices them", () => {
+    expect(counts(new Set([...real, DEFCON_POINTS]))).toEqual(expect.arrayContaining(["DC+", "DCP"]));
+    expect(columnFor("dcp")?.value({} as never, { [DEFCON_POINTS]: 4 })).toBe(4);
   });
 
   it("draws the rehearsal league's, with the one DefCon count it scores", () => {
