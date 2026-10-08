@@ -78,7 +78,8 @@ can file.
 *`intel/pressers/` landed 21 Sep with the Team Sheet.*
 
 *`GAZETTA_MODEL` is `claude-opus-5-5` from 1 Oct (Craig).* $4/$20 per MTok, below 4.8's $5/$25. It always
-thinks, so the writer sends `effort: "medium"` explicitly and `max_tokens` is 16,000. The helper stays Sonnet 5.
+thinks, so the writer sends `effort: "medium"` explicitly and `max_tokens` is 16,000. The helper stays Sonnet 5,
+and from 8 Oct writes the puns too; proofs run one match-up with no send-back unless `GAZETTA_FULL=1` (PLATFORM_NOTES).
 
 **The column follows whatever league production serves** (Craig, 17 Sep: *"keep
 the 10 team rehearsal league for now"*; 23 Sep: *"We shouldn't be hard coding any

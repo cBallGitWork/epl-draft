@@ -914,6 +914,11 @@ anyway.
 - **`GAZETTA_MODEL` defaults to `claude-opus-5-5` (Craig, 1 Oct 2026)**, at $4/$20 per MTok. It always thinks
   and its default effort is `medium`, so the writer sets `effort: "medium"` explicitly and `max_tokens` rose from
   8,000 to 16,000 so the thinking cannot truncate a column. The helper stays `claude-sonnet-5`.
+  **From 8 Oct the puns run on the helper, and both proofs default to test mode** (Craig chose this over cutting an
+  article). Measured 7–8 Oct: the filed paper is about $3 a week, local proof runs on Opus about $12. `draft:proof` and
+  `report:proof` now write one match-up or match with no send-back unless `GAZETTA_FULL=1`. Tried and dropped:
+  `effort: "low"` billed more output than medium on GW5's draft report (23.5k against 20.7k), and Sonnet as the proof
+  writer thought past 16,000 tokens and failed.
 
 ## How CI pushes, and what it may touch — decided 23 Sep 2026
 

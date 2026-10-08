@@ -25,6 +25,7 @@ import { STORY_BYLINE, editionName } from "./edition/voice/bylines";
 
 // A match-day report for a past gameweek, written to scratch and never to the paper, so Craig can read it before anything files.
 // GAZETTA_GAMEWEEK=5 with GAZETTA_FIXTURES=48 (FPL fixture ids) or GAZETTA_DAY=2026-09-19; DRY_RUN=1 prints the brief only.
+// Test mode unless GAZETTA_FULL=1: the first match alone and no send-back, since Opus bills every call (8 Oct 2026).
 
 const say = (message: string) => console.log(message);
 
@@ -55,7 +56,8 @@ async function main(): Promise<void> {
     say,
   });
   if (input === null || input.matches.length === 0) return say("Nothing to report for that choice.");
-  const desks = deskDay(input);
+  const full = process.env.GAZETTA_FULL === "1";
+  const desks = full ? deskDay(input) : deskDay(input).slice(0, 1);
   const brief = buildReportsBrief(input.day, gameweek, desks);
 
   if (process.env.DRY_RUN === "1") {
@@ -69,7 +71,7 @@ async function main(): Promise<void> {
   }
   const out = process.env.GAZETTA_PROOF_OUT ?? "";
   if (out === "") throw new Error("GAZETTA_PROOF_OUT names the scratch folder the proof is written to.");
-  const { draft, log } = await writeReports(input.day, gameweek, desks, [], say);
+  const { draft, log } = await writeReports(input.day, gameweek, desks, [], say, { sendBack: full });
   mkdirSync(out, { recursive: true });
   const slug = `proof-gw${gameweek}-${input.day}`;
   writeFileSync(join(out, `${slug}.brief.txt`), brief);
