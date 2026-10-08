@@ -1,4 +1,4 @@
-import { DRAFT_DESK, DRAFT_NEWS } from "../../config";
+import { DRAFT_DESK, DRAFT_NEWS, LATE_GOAL_MINUTE } from "../../config";
 import { blank } from "./autoSubs";
 import type { Cutoff, MatchupContext } from "./brief";
 import { counted } from "./state";
@@ -11,7 +11,7 @@ import type { DraftMan, GoalTime, SlotWorth } from "./types";
 // clean sheet lost late, a late goal, a bench score, a blank nobody covered, a star's blank, a start off the bench, an
 // old boy, a signing, a debut, an early exit, club-mates, a double. Pure.
 
-const late = (t: GoalTime) => t.minute >= DRAFT_DESK.lateGoal;
+const late = (t: GoalTime) => t.minute >= LATE_GOAL_MINUTE;
 const same = (a: GoalTime, b: GoalTime) => a.kickoff === b.kickoff && a.minute === b.minute && a.added === b.added;
 const named = (m: DraftMan, text: string) => `${m.name} ${text}`;
 

@@ -2,7 +2,7 @@
 
 /** The draft match-up desk's talking points. */
 export const DRAFT_DESK = {
-  /** A man off before this many minutes, with his match done; and the hour a clean sheet needs. */
+  /** A man off before this many minutes, with his match done, went off early. */
   earlyOff: 60,
   /** A clean sheet is told, won or lost late, only where the slot pays at least this for one: a midfielder's 1 is not. */
   cleanSheetStory: 4,
@@ -13,8 +13,6 @@ export const DRAFT_DESK = {
   /** The sums of what the side behind needs are worked only when this few men are left across both sides; with more,
    *  half the gameweek is unplayed and the report tells what happened. */
   chaseWhenLeft: 3,
-  /** A goal from this minute is late: a scorer's late goal, or the one that took a clean sheet. */
-  lateGoal: 80,
   /** Wins or defeats in a row that make a streak; results unbeaten or without a win, a draw among them, that make a run. */
   streak: 3,
   unbeaten: 4,
