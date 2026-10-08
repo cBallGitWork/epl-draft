@@ -126,6 +126,7 @@ export {
   mapLineupState,
   readBenchAnswer,
   readLineupAnswer,
+  stillHeld,
 } from "./fantrax/lineupWrite";
 export type { WriteAnswer } from "./fantrax/lineupWrite";
 export { mapTeamRosters } from "./fantrax/rosters";

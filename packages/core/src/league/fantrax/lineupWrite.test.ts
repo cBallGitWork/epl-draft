@@ -11,6 +11,7 @@ import {
   mapLineupState,
   readBenchAnswer,
   readLineupAnswer,
+  stillHeld,
   type LineupState,
 } from "./lineupWrite";
 
@@ -107,6 +108,28 @@ describe("benchToWrite", () => {
 
   it("treats a bench numbered only with noughts as unnumbered", () => {
     expect(benchToWrite(["a", "b"], false, { a: 0, c: 0 })).toBeNull();
+  });
+});
+
+describe("stillHeld", () => {
+  const reserves = read.rows.filter((row) => row.statusId === "2").map((row) => row.scorerId);
+
+  it("passes a page planned from what Fantrax still holds", () => {
+    expect(stillHeld(read, { slots: asIs(), bench: reserves })).toBe(true);
+  });
+
+  it("refuses a page planned before a lineup change made in Fantrax", () => {
+    const before = move(move(asIs(), "04qfz", { status: "RESERVE" }), "05l27", { status: "ACTIVE" });
+    expect(stillHeld(read, { slots: before, bench: reserves })).toBe(false);
+    expect(stillHeld(read, { slots: asIs().slice(1), bench: reserves })).toBe(false);
+  });
+
+  it("refuses a page planned before the bench was renumbered in Fantrax, and ignores an unnumbered man's place", () => {
+    const [a, b, c] = reserves;
+    const numbered = { ...read, autoSubOrder: { [b!]: 1, [a!]: 2 } };
+    expect(stillHeld(numbered, { slots: asIs(), bench: [a!, b!, c!] })).toBe(false);
+    expect(stillHeld(numbered, { slots: asIs(), bench: [b!, a!, c!] })).toBe(true);
+    expect(stillHeld(numbered, { slots: asIs(), bench: [c!, b!, a!] })).toBe(true);
   });
 });
 

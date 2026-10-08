@@ -13,6 +13,7 @@ import {
   mapLineupState,
   readBenchAnswer,
   readLineupAnswer,
+  stillHeld,
   saveOpen,
   sendBenchOrder,
   sendLineup,
@@ -39,26 +40,34 @@ export interface Plan {
   bench: string[];
   /** Whether the manager reordered the bench; an unnumbered one is otherwise left to Fantrax. */
   reordered: boolean;
+  /** What the page loaded as Fantrax's: the save is refused if Fantrax has moved on since. */
+  held: { slots: RosterSlot[]; bench: string[] };
 }
 
 const SWITCHED_OFF = "Saving to Fantrax is switched off. Set this lineup in Fantrax instead.";
 const RELOAD = "Your squad has changed since this page loaded. Reload and try again.";
 const REFUSED = "Fantrax would not take the save. Set this lineup in Fantrax instead.";
+const CHANGED = "Your lineup has changed in Fantrax since this page loaded. Reload to see it, then save again.";
 
 const refuse = (message: string): WriteAnswer => ({ ok: false, messages: [message] });
+
+const isSlots = (slots: unknown): slots is RosterSlot[] =>
+  Array.isArray(slots) &&
+  slots.every(
+    (s: RosterSlot | null) => typeof s?.fantraxId === "string" && typeof s.status === "string" && (s.position === null || typeof s.position === "string"),
+  );
+const isBench = (bench: unknown): bench is string[] =>
+  Array.isArray(bench) && bench.every((id) => typeof id === "string") && new Set(bench).size === bench.length;
 
 function isPlan(value: unknown): value is Plan {
   const plan = value as Plan | null;
   return (
     Number.isInteger(plan?.period) &&
-    Array.isArray(plan?.slots) &&
-    plan.slots.every(
-      (s) => typeof s?.fantraxId === "string" && typeof s.status === "string" && (s.position === null || typeof s.position === "string"),
-    ) &&
-    Array.isArray(plan.bench) &&
-    plan.bench.every((id) => typeof id === "string") &&
-    new Set(plan.bench).size === plan.bench.length &&
-    typeof plan.reordered === "boolean"
+    isSlots(plan?.slots) &&
+    isBench(plan?.bench) &&
+    typeof plan?.reordered === "boolean" &&
+    isSlots(plan?.held?.slots) &&
+    isBench(plan?.held?.bench)
   );
 }
 
@@ -100,6 +109,11 @@ export async function saveLineup(input: unknown): Promise<WriteAnswer> {
 async function write(teamId: string, period: number, plan: Plan, session: string): Promise<WriteAnswer> {
   const state = mapLineupState(await fetchLineupState(FANTRAX_LEAGUE_ID, teamId, period, session));
   if (state === null || state.period !== period) return refuse(REFUSED);
+  if (!stillHeld(state, plan.held)) {
+    // The page's copy is behind Fantrax: expire it so the reload shows what Fantrax now holds.
+    updateTag(leagueTag(SQUADS_KEY));
+    return refuse(CHANGED);
+  }
   const fieldMap = fieldMapFor(state, plan.slots);
   if (typeof fieldMap === "string") return refuse(RELOAD);
 
