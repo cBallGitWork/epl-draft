@@ -51,6 +51,7 @@ export default function Figures({
   );
 }
 
+/** A step above the row default: DESIGN §6's fifth recorded exception, a ledger of two men's figures and nothing else. */
 const FIGURE = "numeric cm-row py-1 text-base lg:text-lg";
 
 /** The measures where the lower figure is the better one: a defender wants his xGC low. */
