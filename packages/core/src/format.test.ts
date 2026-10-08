@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fixed, initialled, PLACES, rounded } from "./format";
+import { capital, fixed, howMany, initialled, PLACES, rounded, withoutAccents } from "./format";
 
 describe("fixed", () => {
   it("prints a column of points per game at one precision", () => {
@@ -61,5 +61,28 @@ describe("initialled", () => {
 
   it("keeps an accented initial whole", () => {
     expect(initialled("Łukasz Fabiański")).toBe("Ł. Fabiański");
+  });
+});
+
+describe("howMany", () => {
+  it("counts a noun, one alone and the rest plural", () => {
+    expect([0, 1, 6].map((n) => howMany(n, "point"))).toEqual(["0 points", "1 point", "6 points"]);
+    expect(howMany(2, "match", "matches")).toBe("2 matches");
+  });
+});
+
+describe("capital", () => {
+  it("raises the first letter and leaves the rest", () => {
+    expect(capital("two changes")).toBe("Two changes");
+    expect(capital("van Hecke")).toBe("Van Hecke");
+    expect(capital("")).toBe("");
+  });
+});
+
+describe("withoutAccents", () => {
+  it("takes the accents off and leaves every letter", () => {
+    expect(withoutAccents("Sávio")).toBe("Savio");
+    expect(withoutAccents("Yéremy Pino")).toBe("Yeremy Pino");
+    expect(withoutAccents("Ødegaard")).toBe("Ødegaard");
   });
 });

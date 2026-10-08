@@ -1,3 +1,4 @@
+import { capital, listed } from "../../format";
 import { storylinesBlock } from "../briefs/storylines";
 import { numeral } from "../reports/minutes";
 import type { StoryThread } from "../ledger";
@@ -135,6 +136,5 @@ function shots(man: BinMan): string | null {
 }
 
 function sentence(parts: readonly string[]): string {
-  const text = parts.length === 1 ? parts[0] : `${parts.slice(0, -1).join(", ")} and ${parts.at(-1)}`;
-  return text.charAt(0).toUpperCase() + text.slice(1);
+  return capital(listed(parts));
 }

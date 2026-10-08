@@ -1,4 +1,5 @@
 import { playerByCode } from "../football/selectors";
+import { withoutAccents } from "../format";
 import { groupedBy } from "../grouped";
 import type { FootballPlayer, FootballSnapshot, PlayerMatchStats } from "../football/types";
 import { type Bridge, type BridgeEntry, isUnmapped } from "../identity/bridge";
@@ -95,11 +96,6 @@ export function playerName(rostered: RosteredPlayer): string {
   return isResolved(rostered) ? rostered.player.name : rostered.slot.fantraxId;
 }
 
-/** A name with its accents removed, only for comparing FPL's two spellings of one man; never printed. */
-function fold(value: string): string {
-  return value.normalize("NFD").replace(/\p{Diacritic}/gu, "");
-}
-
 /** His name in full, for a list with the width for one: `Bruno Fernandes`; an unresolved slot answers its id. */
 export function fullPlayerName(rostered: RosteredPlayer): string {
   return isResolved(rostered) ? fullFootballerName(rostered.player) : rostered.slot.fantraxId;
@@ -113,7 +109,7 @@ export function fullFootballerName({ fullName, name }: FootballPlayer): string {
 
   const first = fullName.split(" ")[0];
   // One-word players (Rodri) stand alone; accents are folded, or "Yéremy" with the shirt "Yeremy" reads "Yéremy Yeremy".
-  if (!first || fold(name) === fold(first) || fullName === name) return name;
+  if (!first || withoutAccents(name) === withoutAccents(first) || fullName === name) return name;
 
   return `${first} ${name}`;
 }

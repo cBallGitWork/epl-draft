@@ -2,7 +2,7 @@ import { KEY_STATS, REPORTS } from "../../config";
 import { played } from "./men";
 import { assistsBy, goalsBy, type ManCounts, type MatchEvent } from "./timeline";
 import type { ReportMan, ReportMatchInput, Side } from "./types";
-import { fixed, plural } from "../../format";
+import { fixed, howMany } from "../../format";
 
 // The key-stats box: desk-made lines with figures, never written by the model. xG and xA print here and the prose stays
 // in words. No line says what a man failed to do.
@@ -65,12 +65,12 @@ export function keyStats(
   if (shots !== null && shots.men.length === 1) {
     const [man] = shots.men;
     const goals = scored(man);
-    out.push({ label: "Most shots", value: `${surname(man.name)} ${shots.value} (${c(man)?.onTarget ?? 0} on target${goals > 0 ? `, ${goals} ${plural(goals, "goal")}` : ""})` });
+    out.push({ label: "Most shots", value: `${surname(man.name)} ${shots.value} (${c(man)?.onTarget ?? 0} on target${goals > 0 ? `, ${howMany(goals, "goal")}` : ""})` });
   }
   const chances = leaders(men, (m) => c(m)?.chancesMade ?? 0, 1);
   const byXa = [...men].sort((a, b) => b.expectedAssists - a.expectedAssists)[0];
   if (chances !== null && (chances.value >= CHANCES || (byXa?.expectedAssists ?? 0) >= EXPECTED_ASSISTS)) {
-    const made = chances.men.map((m) => `${surname(m.name)}${assists(m) > 0 ? ` (${assists(m)} ${plural(assists(m), "assist")})` : ""}`).join(", ");
+    const made = chances.men.map((m) => `${surname(m.name)}${assists(m) > 0 ? ` (${howMany(assists(m), "assist")})` : ""}`).join(", ");
     out.push({ label: "Chances created", value: `${made} ${chances.value}` });
   }
   out.push(...topLines(men));

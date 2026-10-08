@@ -1,3 +1,4 @@
+import { howMany } from "../../format";
 import type { Angle } from "./angle";
 import { matchupBlock } from "./block";
 import type { SeasonFact } from "./form";
@@ -44,5 +45,5 @@ export function draftBlocks(cutoff: Cutoff, contexts: readonly MatchupContext[])
 
 export function buildDraftBrief(cutoff: Cutoff, gameweek: number, contexts: readonly MatchupContext[]): string {
   const when = cutoff === "saturday" ? "after Saturday's matches, with the rest of the gameweek to come" : "at the end of the gameweek";
-  return [`DRAFT REPORT, gameweek ${gameweek}, ${when}. ${contexts.length} match-up${contexts.length === 1 ? "" : "s"}, the lead first.`, ...draftBlocks(cutoff, contexts)].join("\n\n=====\n\n");
+  return [`DRAFT REPORT, gameweek ${gameweek}, ${when}. ${howMany(contexts.length, "match-up")}, the lead first.`, ...draftBlocks(cutoff, contexts)].join("\n\n=====\n\n");
 }

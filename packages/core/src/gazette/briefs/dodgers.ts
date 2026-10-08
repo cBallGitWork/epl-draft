@@ -1,3 +1,4 @@
+import { howMany } from "../../format";
 import type { Dodger, NearMiss } from "../dodgers";
 import type { StoryThread } from "../ledger";
 import { storylinesBlock } from "./storylines";
@@ -39,17 +40,13 @@ function nearly(man: Dodger): string {
   if (man.goals === 0 && man.shots > 0) {
     const close = man.close > 0 ? `, ${man.close} of them from close range` : "";
     const box = man.inBox > 0 ? `, ${man.inBox} from inside the box${close}` : "";
-    parts.push(`${count(man.shots, "shot")}${box}, ${man.onTarget} on target, no goal`);
+    parts.push(`${howMany(man.shots, "shot")}${box}, ${man.onTarget} on target, no goal`);
   }
   if (man.assists === 0 && man.chancesMade > 0) {
     const box = man.chancesInBox > 0 ? `, ${man.chancesInBox} from inside the box` : "";
-    parts.push(`set up ${count(man.chancesMade, "shot")} for others${box}, no assist`);
+    parts.push(`set up ${howMany(man.chancesMade, "shot")} for others${box}, no assist`);
   }
-  const got = [man.goals > 0 ? count(man.goals, "goal") : "", man.assists > 0 ? count(man.assists, "assist") : "", man.cleanSheet ? "a clean sheet" : ""].filter(Boolean);
+  const got = [man.goals > 0 ? howMany(man.goals, "goal") : "", man.assists > 0 ? howMany(man.assists, "assist") : "", man.cleanSheet ? "a clean sheet" : ""].filter(Boolean);
   if (got.length > 0) parts.push(`he did get ${got.join(" and ")}`);
   return `${parts.join("; ")}; ${man.minutes} min played`;
-}
-
-function count(n: number, noun: string): string {
-  return `${n} ${noun}${n === 1 ? "" : "s"}`;
 }

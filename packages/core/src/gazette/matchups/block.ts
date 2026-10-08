@@ -1,4 +1,4 @@
-import { listed } from "../../format";
+import { capital, listed } from "../../format";
 import { ordinal } from "../../league/ordinal";
 import { londonDayOf, londonWeekdayLong } from "../../time";
 import type { Cutoff, MatchupContext, NextOpponent } from "./brief";
@@ -83,7 +83,7 @@ function beatLine(ctx: MatchupContext, b: Beat, before: { home: number; away: nu
   // A day with no returns is its score and nothing more: explaining its points came back as filler every time.
   const none = "no returns";
   const label = beatLabel(b.day);
-  return `- ${label[0].toUpperCase()}${label.slice(1)}: ${home.side.name} ${b.points.home}, ${away.side.name} ${b.points.away}, making it ${score}; ${scored.length === 0 ? none : `returns: ${listed(scored, "and")}`}`;
+  return `- ${capital(label)}: ${home.side.name} ${b.points.home}, ${away.side.name} ${b.points.away}, making it ${score}; ${scored.length === 0 ? none : `returns: ${listed(scored, "and")}`}`;
 }
 
 /** After Saturday, what is still to come, fixtures only: the story's men, any reserve waiting on his match and each
