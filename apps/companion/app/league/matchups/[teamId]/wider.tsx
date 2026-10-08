@@ -12,7 +12,7 @@ import Columns from "../../Columns";
 import TableRow from "../../TableRow";
 import { getSeasonResults } from "../../schedule/schedule";
 import { leagueTable } from "../../../standings";
-import { leagueInfo } from "../../../round";
+import { leagueInfo, readCalendar } from "../../../round";
 import Nothing from "../../../components/shell/Nothing";
 import { BOARD, PANEL } from "@/app/desk";
 import { matchHref } from "../../../prem/match/[id]/matchRoutes";
@@ -23,10 +23,11 @@ import { matchHref } from "../../../prem/match/[id]/matchRoutes";
 /** The league table itself (Craig, 11 Sep 2026), both sides of the tie edged in their own colours, as on the scoreline;
  *  `mine` keeps its one meaning. */
 export async function TableTab({ tie, mine }: { tie: readonly string[]; mine: string | null }) {
-  const [rows, info, results] = await Promise.all([
+  const [rows, info, results, calendar] = await Promise.all([
     leagueTable(),
     leagueInfo(),
     getSeasonResults(),
+    readCalendar(),
   ]);
 
   if ("unavailable" in rows || rows.length === 0) {
@@ -57,6 +58,7 @@ export async function TableTab({ tie, mine }: { tie: readonly string[]; mine: st
                 mine={row.teamId === mine}
                 form={form.get(row.teamId) ?? []}
                 tint={tie.includes(row.teamId) ? teamColours(row.teamId).primary : undefined}
+                calendar={calendar}
               />
             ))}
           </tbody>
