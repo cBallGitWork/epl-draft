@@ -181,6 +181,6 @@ export function usePlanner(
     place,
     reset,
     markSaved,
-    plan: { slots, bench: benchIds, reordered },
+    plan: { slots, bench: benchIds, reordered, held: { slots: baseline, bench: savedOrder } },
   };
 }

@@ -5057,6 +5057,9 @@ Craig asked for a Save button on the planner and chose a real write over a save 
   a second write, `setAutoSubsOrder`, sent only when the manager reordered the bench or Fantrax already numbers
   it (`benchToWrite`): an unnumbered bench is left to the deadline's points order, which the planner shows.
 - **No save while `REPLAY_AT` is set**: the replayed clock plans a week long locked, and `adminMode` would write it.
+- **No save over a newer Fantrax lineup** (Craig, 8 Oct: "should be checking beforehand to see if its upto date"): the
+  page sends what it loaded as Fantrax's, and `stillHeld` refuses the save when Fantrax's lineup or the manager's bench
+  numbers have changed since, expiring the squads cache so the reload shows them.
 - **A session may carry three methods and no others** (`fxpa.ts`), because the same cookie reaches
   `deleteLeague`.
 - **Switched on per team**: `FANTRAX_COOKIE` plus `LINEUP_SAVE`, `on` for every team or comma-separated Fantrax

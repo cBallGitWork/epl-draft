@@ -122,6 +122,16 @@ export function benchToWrite(bench: readonly string[], reordered: boolean, previ
   return (reordered || numbered) && changesBenchOrder(bench, previous) ? benchOrderMap(bench, previous) : null;
 }
 
+/** Whether Fantrax still holds the lineup and bench numbers a page planned from; a change made in Fantrax since
+ *  the page loaded would otherwise be overwritten by its save. Unnumbered men's places are Fantrax's to move. */
+export function stillHeld(state: LineupState, held: { slots: readonly RosterSlot[]; bench: readonly string[] }): boolean {
+  const map = fieldMapFor(state, held.slots);
+  if (typeof map === "string" || changesLineup(state, map)) return false;
+  const numbered = Object.entries(state.autoSubOrder).filter(([, n]) => n > 0).sort((a, b) => a[1] - b[1]).map(([id]) => id);
+  const onBoth = (order: readonly string[], other: readonly string[]) => order.filter((id) => other.includes(id)).join();
+  return onBoth(numbered, held.bench) === onBoth(held.bench, numbered);
+}
+
 const plain = (text: string): string => text.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 
 /** A lineup write's answer: legal and done (or legal on a dry run), or the messages that refused it. */
