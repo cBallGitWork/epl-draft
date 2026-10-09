@@ -1,3 +1,4 @@
+import { FULL_MATCH_MINUTES } from "../config";
 import { PROJECTION_PARTS, type ProjectedGameweek, type ProjectedPlayer } from "../football/intel/projections";
 import { FPL_ASSIST, FPL_CLEAN_SHEET, FPL_FULL_APPEARANCE, FPL_GOAL, fplConceded } from "../fpl-entry/prices";
 import { isFplKeeper } from "../fpl-entry/types";
@@ -79,7 +80,7 @@ export function leagueWeek(
   if (week.points === null || week.parts === null) return null;
   const fpl = (part: (typeof PROJECTION_PARTS)[number]) => week.parts?.[part] ?? 0;
   const flat = (code: string | null) => (code === null ? 0 : (categoryPoints(rules, code, slot) ?? 0));
-  const ninety = (week.minutes ?? 0) / 90;
+  const ninety = (week.minutes ?? 0) / FULL_MATCH_MINUTES;
   const sheets = FPL_CLEAN_SHEET[line]
     ? fpl("cleanSheets") / FPL_CLEAN_SHEET[line]
     : (cleanSheet ?? 0) * (week.start ?? 0) * week.fixtures;
@@ -90,7 +91,7 @@ export function leagueWeek(
     goals: FPL_GOAL[line] ? (fpl("goals") / FPL_GOAL[line]) * flat(codes.goals) : 0,
     assists: (fpl("assists") / FPL_ASSIST) * flat(codes.assists),
     cleanSheets: sheets * flat(codes.cleanSheets),
-    appearance: codes.minutes === null ? 0 : (fpl("appearance") * (pointsFor(rules, codes.minutes, slot, 90) ?? 0)) / FPL_FULL_APPEARANCE,
+    appearance: codes.minutes === null ? 0 : (fpl("appearance") * (pointsFor(rules, codes.minutes, slot, FULL_MATCH_MINUTES) ?? 0)) / FPL_FULL_APPEARANCE,
     conceded: negatives + shift * ninety,
     defcon: rates.defcon * ninety,
     keeper: rates.keeper * ninety,
@@ -161,10 +162,10 @@ export function observedAt(rules: ScoringRules, codes: readonly string[], slot: 
 /** A cohort's points per 90; nought when nobody in it played. */
 export function cohortRate(cohort: readonly Observed[]): number {
   const minutes = sumOf(cohort, (one) => one.minutes);
-  return minutes === 0 ? 0 : (90 * sumOf(cohort, (one) => one.points)) / minutes;
+  return minutes === 0 ? 0 : (FULL_MATCH_MINUTES * sumOf(cohort, (one) => one.points)) / minutes;
 }
 
 /** His points per 90, drawn toward `prior` as if he had also played `weight` minutes at it. */
 export function shrunkRate(own: Observed, prior: number, weight: number): number {
-  return own.minutes + weight === 0 ? prior : (90 * own.points + prior * weight) / (own.minutes + weight);
+  return own.minutes + weight === 0 ? prior : (FULL_MATCH_MINUTES * own.points + prior * weight) / (own.minutes + weight);
 }
