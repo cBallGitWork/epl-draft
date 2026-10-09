@@ -14,8 +14,9 @@ export async function withFitness(side: DraftSide, fixtures: readonly Fixture[],
     side.eleven.map(async (m) => {
       const kickoff = fixtures.filter(isDated).filter((f) => m.matches.some((x) => x.code === f.code)).map((f) => f.kickoff).sort().at(-1);
       if (kickoff === undefined || !worthAsking(m)) return m;
-      if (!cache.has(m.fantraxId)) cache.set(m.fantraxId, storiesOn(m.fantraxId));
-      return { ...m, fitness: firstStoryAfter(await cache.get(m.fantraxId)!, kickoff, until) };
+      const stories = cache.get(m.fantraxId) ?? storiesOn(m.fantraxId);
+      cache.set(m.fantraxId, stories);
+      return { ...m, fitness: firstStoryAfter(await stories, kickoff, until) };
     }),
   );
   return { ...side, eleven };

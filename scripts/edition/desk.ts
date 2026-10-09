@@ -15,12 +15,7 @@ import {
 import { presserDays } from "./presserWeek";
 import type { DeskFacts } from "./facts";
 
-// What state the desk is in, as one answer.
-//
-// Lifted out of `write-edition.ts` when that file crossed §4's hard ceiling a
-// second time. It is a seam rather than a line count: this says what is TRUE of
-// the round right now, while the file it left runs a firing — reads the ledger,
-// asks the newsdesk, spends the cap, persists.
+// What is true of the round right now, as one answer for the newsdesk.
 
 export function deskState(input: {
   snapshot: FootballSnapshot;

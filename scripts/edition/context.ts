@@ -38,12 +38,13 @@ export async function deskContext(input: {
   const { snapshot, facts, clubs, byCode, info, period, gameweeks, ledger, sheet, xi, season, kickoffs, assignments, now, say } = input;
   // The period's dates choose its matches: FPL files a replayed postponement under its old gameweek.
   const scoring = info.scoringPeriods.find((each) => each.number === period);
+  const threads = ledger[FANTRAX_LEAGUE_ID]?.threads ?? [];
   return {
     leagueId: FANTRAX_LEAGUE_ID,
     snapshot,
     facts,
     clubs,
-    threads: ledger[FANTRAX_LEAGUE_ID]?.threads ?? [],
+    threads,
     info,
     table: facts.table,
     period,
@@ -56,7 +57,7 @@ export async function deskContext(input: {
     // A match-day report's reads are its own, made only when one is assigned.
     reports: await reportsDesk({ assignments, snapshot, facts, scoring, say }),
     // The Bin XI's reads are its own, made only on the Tuesday it is assigned.
-    bin: await binXiDesk({ assignments, info, snapshot, facts, period, gameweeks, season, kickoffs, clubs, threads: ledger[FANTRAX_LEAGUE_ID]?.threads ?? [], say }),
+    bin: await binXiDesk({ assignments, info, snapshot, facts, period, gameweeks, season, kickoffs, clubs, threads, say }),
     // A draft report's reads likewise: the gameweek's day reads, rosters and results, only when one is assigned.
     drafts: await draftsDesk({ assignments, gameweek: snapshot.gameweek, say }),
     presserLines: sheet.lines,

@@ -101,7 +101,7 @@ THEN THE REPORTS. Quote, word for word, anything a supporter of either club woul
 - said twice: it repeats a fact an earlier part of the same report already told.
 - draft: a stake that tells a manager nothing, advises him, lists fixtures, names a second player, or treats a substitute as the injured man's heir. That a man is a free agent is itself draft news; never flag it for that alone.
 
-Never flag a name, a figure, a minute, the length or a single banned word: the desk checks those. Never suggest a replacement. At most three quotes for any one part. Most reports have nothing wrong with them, and an empty list is the ordinary answer.
+Never flag a name, a figure, a minute, the length or a single banned word: the desk checks those. Never suggest a replacement. At most ${spelled(REPORTS.fanFlags)} quotes for any one part. Most reports have nothing wrong with them, and an empty list is the ordinary answer.
 
 Return JSON only: { "headline": the number of the candidate you choose, or null, "flags": [{ "fixture": the MATCH number, "part": "standfirst" | "account" | "s1" | "s2" | "s3", "quote": "the exact words", "tag": ${FAN_TAGS.map((t) => `"${t}"`).join(" | ")}, "why": "a few words" }] }`;
 

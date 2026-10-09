@@ -52,23 +52,18 @@ export interface DeskContext {
   /** The Bin XI's side, brief and cargo; null unless it is due this firing. */
   bin: BinDesk | null;
   drafts: ReadonlyMap<"saturday" | "gameweek", DraftJob>;
-  /** This week's press-conference signals, for men the league holds. Empty until
-   *  the intel export lands, which files no Team Sheet and spends nothing. */
+  /** This week's press-conference signals, for men the league holds; empty until the intel export lands. */
   presserLines: PresserLine[];
   presserQuotes: (PresserQuote & { clubName: string })[];
   /** Who each club plays in the round the pressers preview, by FPL club code. */
   presserTies: Map<number, StoryFixture>;
-  /** The round's clubs by FPL CODE, for checking the code a column echoed back
-   *  against the club it named beside it. */
+  /** The round's clubs by FPL CODE, for checking the code a column echoed back against the club it named. */
   presserClubs: ReadonlyMap<number, Club>;
-  /** The round the pressers PREVIEW, which between gameweeks is not the one the
-   *  snapshot is focused on. The brief printed "TEAM NEWS, gameweek 4" beside
-   *  gameweek 5's fixtures, off an article titled "Gameweek 5 team news". */
+  /** The round the pressers PREVIEW, which between gameweeks is not the snapshot's. */
   presserGameweek: number;
   /** Clubs that held a conference, so one with no news still gets a row. */
   presserSpoke: { clubName: string; manager: string | null; at: string }[];
-  /** The predicted elevens, composed from facts rather than written — the one
-   *  column with no voice and no brief. Null when it is not this firing's. */
+  /** The predicted elevens, composed from facts with no voice and no brief; null when not this firing's. */
   elevens: Record<string, unknown> | null;
   /** The gameweek's near misses by the league's men; null unless the Points Dodgers are due this firing. */
   dodgers: readonly Dodger[] | null;
@@ -125,8 +120,7 @@ export function file(
     period: assignment.round?.period ?? ctx.period,
     gameweek: assignment.round?.gameweek ?? ctx.snapshot.gameweek,
     filedAt,
-    // A preview piece dies at its kickoff; everything else leaves by
-    // supersession or the cap.
+    // A preview piece dies at its kickoff; everything else leaves by supersession or the cap.
     expiresAt:
       assignment.kind === "fixture-preview"
         ? (ctx.snapshot.fixtures.find((each) => each.id === assignment.fixtureId)?.kickoff ?? null)
@@ -137,9 +131,7 @@ export function file(
     byline: STORY_BYLINE[assignment.kind] ?? "",
     reporter: COLUMNIST[assignment.kind],
     subject: assignment.key,
-    // The picture, chosen HERE from the facts and not from the prose. A model
-    // that named the man would be a model choosing the photograph, which is the
-    // one thing `strangers()` exists to catch it doing.
+    // The picture is chosen here from the facts, never from the prose, so a model cannot choose the photograph.
     face: assignment.kind === "bin-xi" ? (ctx.bin?.face ?? null) : faceOf(assignment, faceCtx(ctx, assignment)),
   });
 }
@@ -156,16 +148,9 @@ function withTies(
     const { fixture: theirs, ...rest } = row as { fixture?: unknown; club?: unknown; code?: unknown };
     void theirs;
     const code = typeof rest.code === "number" ? rest.code : null;
-    // The club it NAMED must be the club that code belongs to, or the code is
-    // not usable for a crest or a fixture and the row prints without either.
     const named = code === null ? undefined : clubs.get(code);
-    const agrees =
-      named !== undefined &&
-      typeof rest.club === "string" &&
-      // `fullClubName`, because that is the spelling the BRIEF gave it — FPL's
-      // own `name` is "Nott'm Forest" and comparing against that would refuse
-      // every Forest row and cost it its crest.
-      fullClubName(named.name) === rest.club;
+    // The brief's spelling: FPL's own `name` is "Nott'm Forest" and would refuse every Forest row.
+    const agrees = named !== undefined && typeof rest.club === "string" && fullClubName(named.name) === rest.club;
     if (!agrees) return { ...rest, code: null };
     const tie = ties.get(code as number);
     return tie === undefined ? rest : { ...rest, fixture: tie };

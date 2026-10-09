@@ -32,14 +32,14 @@ import {
 } from "@epl/core";
 import { writeColumn, type Say, type Usage } from "./newsroom";
 import { serious } from "./sendBack";
-import { DRAFT_FACTS_VOICE, DRAFT_JUDGE_VOICE, DRAFT_VOICE, draftSendBack } from "./voice/draft";
+import { DRAFT_FACTS_VOICE, DRAFT_JUDGE_VOICE, DRAFT_VOICE, JUDGE_QUOTES, draftSendBack } from "./voice/draft";
 import { LINE_EDIT_VOICE, PUN_VOICE } from "./voice/reports";
-
-const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 // The draft report's newsroom, the Prem report's in miniature: the reporter writes the gameweek's match-ups, the editor
 // checks each against its block, the pun writer offers headlines, a manager in the league picks one and flags what no
 // manager would say, it goes back once, and each match-up keeps its better attempt.
+
+const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 export interface DraftJob {
   cutoff: Cutoff;
@@ -53,8 +53,6 @@ export interface DraftJob {
   pastProse: PastProse[];
 }
 
-
-
 /** The judge's quotes, capped per match-up; a quote not in the writing is dropped. */
 function judgeFlags(raw: Record<string, unknown>, prose: ReadonlyMap<number, string>): Fault[] {
   const flags = Array.isArray(raw.flags) ? raw.flags : [];
@@ -63,7 +61,7 @@ function judgeFlags(raw: Record<string, unknown>, prose: ReadonlyMap<number, str
     const r = recordOrEmpty(f);
     const n = Number(r.number);
     const quote = stringOrEmpty(r.quote).trim();
-    if (quote === "" || !(prose.get(n) ?? "").includes(quote) || (kept.get(n) ?? 0) >= 3) return [];
+    if (quote === "" || !(prose.get(n) ?? "").includes(quote) || (kept.get(n) ?? 0) >= JUDGE_QUOTES) return [];
     kept.set(n, (kept.get(n) ?? 0) + 1);
     return [{ section: `${n}:matchup`, check: "a manager in the league would not say this", severity: "send-back", evidence: `${quote} (${stringOrEmpty(r.why)})` }];
   });

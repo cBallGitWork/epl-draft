@@ -48,6 +48,7 @@ import { BRIDGE } from "./bridge";
 import type { DeskFacts } from "./facts";
 import type { Say } from "./newsroom";
 import { readArchive } from "./persist";
+import { involves } from "./round";
 
 // The reads behind the Bin XI, made only when it is assigned: the league's free agents and their
 // points over the period's days, the stats league's shots and chances over the same days, and FPL's
@@ -156,7 +157,7 @@ export async function binXiDesk(input: {
     undrafted: undrafted(facts.pedigree),
     status: (man) => STATUS[availabilityOf(byCode.get(man.code) ?? null).state] ?? null,
     lastWeek: new Set(lastWeek.map((man) => man.code)),
-    blanked: [...clubs.values()].filter((each) => !played.some((f) => f.homeClubId === each.id || f.awayClubId === each.id)).map((each) => fullClubName(each.name)),
+    blanked: [...clubs.values()].filter((each) => !played.some((f) => involves(f, each.id))).map((each) => fullClubName(each.name)),
     threads: input.threads,
   });
 

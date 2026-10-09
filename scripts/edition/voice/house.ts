@@ -62,6 +62,9 @@ A pun that does not land cleanly is worse than none, so if none lands, a sharp t
 
 The banned phrases above are banned in the headline too, and "bank" hardest of all. A front page went out with five of them.`;
 
+/** The most storyline beats a column may report; the newsroom keeps no more than this. */
+export const MOST_THREADS = 3;
+
 /** The JSON contract for the prose kinds: one story, one body. */
 export const STORY_SHAPE = `Return JSON only, matching this shape exactly:
 {
@@ -73,4 +76,4 @@ export const STORY_SHAPE = `Return JSON only, matching this shape exactly:
 
 ${HEADLINE}
 
-THREADS: report 0 to 3 running storylines, ONLY where today's facts genuinely open or advance one, and set "status" to "retired" when one is finished. An empty array is the ordinary answer.`;
+THREADS: report 0 to ${MOST_THREADS} running storylines, ONLY where today's facts genuinely open or advance one, and set "status" to "retired" when one is finished. An empty array is the ordinary answer.`;

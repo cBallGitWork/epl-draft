@@ -66,12 +66,11 @@ async function main(): Promise<void> {
   const now = Number.isNaN(Date.parse(wanted)) ? new Date().toISOString() : new Date(wanted).toISOString();
 
   // A past gameweek, for a local rehearsal of a firing (never CI); GAZETTA_ONLY keeps one kind.
-  const pinned = Number(process.env.GAZETTA_GAMEWEEK ?? "");
-  if (Number.isInteger(pinned) && pinned > 0 && process.env.CI) throw new Error("GAZETTA_GAMEWEEK is a local rehearsal and never runs in CI.");
-  const snapshot = await getFootballSnapshot(Number.isInteger(pinned) && pinned > 0 ? pinned : undefined);
-  // `roundState` and not `roundFinished`, which core deliberately does not
-  // export: it cannot say "live", and half an answer is exactly the wrong shape
-  // for a guard whose job is to keep a report off a round still being played.
+  const wantedGameweek = Number(process.env.GAZETTA_GAMEWEEK ?? "");
+  const pinned = Number.isInteger(wantedGameweek) && wantedGameweek > 0 ? wantedGameweek : undefined;
+  if (pinned !== undefined && process.env.CI) throw new Error("GAZETTA_GAMEWEEK is a local rehearsal and never runs in CI.");
+  const snapshot = await getFootballSnapshot(pinned);
+  // `roundState`, which can say "live": the guard keeps a report off a round still being played.
   const state = roundState(snapshot);
   const finished = state !== null && state !== "live";
 
@@ -97,8 +96,7 @@ async function main(): Promise<void> {
   const paper = readPaperStories();
   const facts = await gatherRoundFacts(info, snapshot, round.period);
   const clubs = clubById(snapshot);
-  // Clubs by FPL CODE, which is what a presser signal carries and what a crest
-  // keys off — `clubById` keys by the per-season id.
+  // Clubs by FPL CODE, which a presser signal carries and a crest keys off; `clubById` keys by the per-season id.
   const byCode = new Map([...clubs.values()].map((club) => [club.code, club]));
 
   const sheet = presserDesk({ facts, snapshot, byCode, now, lock, locked, season, say });

@@ -1,4 +1,4 @@
-import { type Assignment, buildLawroBrief, buildPresserBrief, buildSeasonBrief } from "@epl/core";
+import { type Assignment, buildDraftBrief, buildLawroBrief, buildPresserBrief, buildSeasonBrief } from "@epl/core";
 import { faceOf } from "./faces";
 import {
   fixturePreviewBrief,
@@ -59,7 +59,7 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
   // A match-day report is written, checked and read back through its own newsroom, from the day's joined facts.
   if (assignment.kind === "draft-report") {
     const job = assignment.cutoff === undefined ? undefined : ctx.drafts.get(assignment.cutoff);
-    return job === undefined ? null : { system: DRAFT_VOICE, brief: "", draft: job };
+    return job === undefined ? null : { system: DRAFT_VOICE, brief: buildDraftBrief(job.cutoff, job.gameweek, job.contexts), draft: job };
   }
   if (assignment.kind === "match-report") {
     const job = assignment.day === undefined ? undefined : ctx.reports.get(assignment.day);

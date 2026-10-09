@@ -60,7 +60,8 @@ function man(
   xi: IntelXi,
 ): (code: number) => StoryLineupMan | null {
   const byCode = new Map(players.map((player) => [player.code, player]));
-  const squads = squadIntel(readSquads(xi.manifest.season));
+  // The squads for the season the XI itself names, so the two exports cannot be read from different years.
+  const squads = squadIntel(readIntel<IntelSquads>("squads", xi.manifest.season));
   const held = owners(teams);
 
   return (code) => {
@@ -74,11 +75,5 @@ function man(
       ...(owner === undefined ? {} : { owner }),
     };
   };
-}
-
-/** The squads for the season the XI itself names, so the two exports cannot be
- *  read from different years. */
-function readSquads(season: string): IntelSquads | null {
-  return readIntel<IntelSquads>("squads", season);
 }
 

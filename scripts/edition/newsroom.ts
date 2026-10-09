@@ -5,6 +5,7 @@ import type {
   ThreadUpdate,
 } from "@epl/core";
 import { ANTHROPIC_MESSAGES_URL, MODEL_TIMEOUT_MS, normalizeStory } from "@epl/core";
+import { MOST_THREADS } from "./voice/house";
 
 // The one API call, and the shape a filed column takes in the rolling paper.
 
@@ -130,7 +131,7 @@ export interface ColumnMeta {
   reporter?: string;
   /** The covered-key this filing spends — also its one subject. */
   subject: string;
-  /** The man the page pictures, picked by the desk (`assemble.faceOf`), never the model; null for a kind with no man. */
+  /** The man the page pictures, picked by the desk (`faces.faceOf`), never the model; null for a kind with no man. */
   face: StoryFace | null;
 }
 
@@ -194,5 +195,5 @@ function threadUpdates(raw: unknown): ThreadUpdate[] {
         (beat.status === undefined || beat.status === "open" || beat.status === "retired")
       );
     })
-    .slice(0, 3);
+    .slice(0, MOST_THREADS);
 }

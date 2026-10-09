@@ -45,6 +45,8 @@ import type { DeskFacts } from "./facts";
 import { fitnessAfter, leagueJoin } from "./matchdayLeague";
 import { dayMarks } from "./matchdayRatings";
 import type { Say } from "./newsroom";
+import { codesByOpta } from "./opta";
+import { involves } from "./round";
 
 // The reads behind one match-day report: the Premier League's own account of each match, FPL's per-man figures, the league's,
 // and our marks. Script-side: about four requests a match, one per past gameweek and six for the marks, made only when a
@@ -109,7 +111,7 @@ export async function matchdayInput(opts: {
 
   const clubs = clubById(snapshot);
   const clubOfCode = new Map(snapshot.players.map((p) => [p.code, p.clubId]));
-  const optaToCode = new Map(snapshot.players.flatMap((p) => (p.optaCode === null ? [] : [[p.optaCode, p.code] as const])));
+  const optaToCode = codesByOpta(snapshot.players);
   const league = leagueJoin(facts, periodFixtures(opts.scoring, season), clubOfCode);
   const past = await pastRounds(gameweek);
   const seasons = seasonLines(past, snapshot);
@@ -169,7 +171,7 @@ export async function matchdayInput(opts: {
   for (const match of matches) {
     for (const man of match.men) {
       const clubId = clubOfCode.get(man.code);
-      man.matchesBefore = season.filter((f) => f.status === "finished" && (f.homeClubId === clubId || f.awayClubId === clubId) && (londonDayOf(f.kickoff) ?? "") < day).length;
+      man.matchesBefore = season.filter((f) => f.status === "finished" && clubId !== undefined && involves(f, clubId) && (londonDayOf(f.kickoff) ?? "") < day).length;
     }
   }
 
