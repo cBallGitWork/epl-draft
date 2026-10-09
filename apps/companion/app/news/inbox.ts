@@ -11,7 +11,7 @@ import {
   blockNews,
   dealNews,
   deals,
-  headToHead,
+  headToHeads,
   inboxItems,
   isResolved,
   lastLockedPeriod,
@@ -44,15 +44,15 @@ export interface Inbox {
   mine: string | null;
 }
 
-/** Who he plays in the period the NEXT deadline locks: his doubts and that opponent's are the inbox's. */
-function nextOpponent(
-  matchups: Parameters<typeof headToHead>[0],
-  teams: Parameters<typeof headToHead>[1],
+/** Who he plays in the period the NEXT deadline locks, both in a double header: his doubts and theirs are the inbox's. */
+function nextOpponents(
+  matchups: Parameters<typeof headToHeads>[0],
+  teams: Parameters<typeof headToHeads>[1],
   period: number | null,
   mine: string | null,
-): string | null {
-  if (period === null || mine === null) return null;
-  return headToHead(matchups, teams, period, mine)?.opponent.teamId ?? null;
+): string[] {
+  if (period === null || mine === null) return [];
+  return headToHeads(matchups, teams, period, mine).map((tie) => tie.opponent.teamId);
 }
 
 export async function readInbox(): Promise<Inbox> {
@@ -83,20 +83,19 @@ export async function readInbox(): Promise<Inbox> {
 
   // The next lock says when the gameweek closes and which gameweek the doubts are about.
   const next = drafted?.info == null ? null : lock(drafted.info.rosterPeriods, kickoffs);
-  const opponent =
+  const opponents =
     drafted?.info == null
-      ? null
-      : nextOpponent(drafted.info.matchups, drafted.info.teams, next?.period ?? null, mine);
+      ? []
+      : nextOpponents(drafted.info.matchups, drafted.info.teams, next?.period ?? null, mine);
 
-  // His own tie only; the rest are on Results.
-  const tie =
+  // His own ties only, two in a double header; the rest are on Results.
+  const yours =
     board === null || drafted?.info == null || mine === null || period === null
-      ? undefined
-      : headToHead(drafted.info.matchups, drafted.info.teams, period, mine);
-  const yours = tie === undefined || board === null ? null : finishedTie(board, tie);
+      ? []
+      : headToHeads(drafted.info.matchups, drafted.info.teams, period, mine).flatMap((tie) => finishedTie(board, tie) ?? []);
 
   // The scout's minutes: what each xMins export moved on his side and his next opponent's.
-  const sides = [mine, opponent].flatMap((teamId) => {
+  const sides = [mine, ...opponents].flatMap((teamId) => {
     const team = drafted?.period.teams.find((each) => each.teamId === teamId);
     if (team === undefined) return [];
     const men = team.players.flatMap((man) => (isResolved(man) ? [{ code: man.player.code, name: man.player.name }] : []));
@@ -136,7 +135,7 @@ export async function readInbox(): Promise<Inbox> {
       availabilityNews(
         doubts,
         next?.gameweek ?? null,
-        { mine, opponent, name: nameOf },
+        { mine, opponents, name: nameOf },
         drafted?.info == null ? null : lastLock(drafted.info.rosterPeriods, kickoffs),
       ),
     ),

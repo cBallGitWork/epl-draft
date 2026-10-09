@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { headToHead, leaguePool, leagueSeason, nextPairedPeriod, pairingInvolves, periodPairings } from "./selectors";
+import { headToHeads, leaguePool, leagueSeason, nextPairedPeriod, pairingInvolves, periodPairings } from "./selectors";
 import type {
   LeagueMatchup,
   LeaguePlayer,
@@ -117,45 +117,53 @@ describe("periodPairings", () => {
   });
 });
 
-describe("headToHead", () => {
+describe("headToHeads", () => {
   it("puts the team asked about first, whichever side of the schedule it is on", () => {
     // t1 is home in period 1 and the same team is away in nothing — but t2 is
     // away, and both must read as "you, then them".
-    expect(headToHead(schedule, leagueTeams, 1, "t1")).toEqual({
+    expect(headToHeads(schedule, leagueTeams, 1, "t1")).toEqual([{
       team: leagueTeams[0],
       opponent: leagueTeams[1],
       home: leagueTeams[0],
-    });
-    expect(headToHead(schedule, leagueTeams, 1, "t2")).toEqual({
+    }]);
+    expect(headToHeads(schedule, leagueTeams, 1, "t2")).toEqual([{
       team: leagueTeams[1],
       opponent: leagueTeams[0],
       home: leagueTeams[0],
-    });
+    }]);
   });
 
   it("keeps the side Fantrax's schedule puts at home, whichever side is asked about", () => {
-    expect(headToHead(schedule, leagueTeams, 1, "t2")?.home.teamId).toBe("t1");
+    expect(headToHeads(schedule, leagueTeams, 1, "t2")[0]?.home.teamId).toBe("t1");
   });
 
   it("selects the period, not just the team", () => {
     // t1 plays t2 in period 1 and t3 in period 2. Reading the wrong one names
     // the wrong opponent on a squad screen, which is the bug this prevents.
-    expect(headToHead(schedule, leagueTeams, 2, "t1")?.opponent).toEqual(leagueTeams[2]);
+    expect(headToHeads(schedule, leagueTeams, 2, "t1").map((tie) => tie.opponent)).toEqual([leagueTeams[2]]);
   });
 
-  it("has no answer for a team with no pairing this period", () => {
+  it("gives both ties of a double header, in the schedule's order", () => {
+    const double: LeagueMatchup[] = [
+      { period: 34, homeTeamId: "t1", awayTeamId: "t2" },
+      { period: 34, homeTeamId: "t3", awayTeamId: "t1" },
+    ];
+    expect(headToHeads(double, leagueTeams, 34, "t1").map((tie) => [tie.opponent.teamId, tie.home.teamId])).toEqual([["t2", "t1"], ["t3", "t3"]]);
+  });
+
+  it("has none for a team with no pairing this period", () => {
     // A bye, a period the schedule does not cover, and a team id from another
     // league all land here — none of them is a fault.
-    expect(headToHead(schedule, leagueTeams, 2, "t2")).toBeUndefined();
-    expect(headToHead(schedule, leagueTeams, 3, "t1")).toBeUndefined();
-    expect(headToHead(schedule, leagueTeams, 1, "t9")).toBeUndefined();
+    expect(headToHeads(schedule, leagueTeams, 2, "t2")).toEqual([]);
+    expect(headToHeads(schedule, leagueTeams, 3, "t1")).toEqual([]);
+    expect(headToHeads(schedule, leagueTeams, 1, "t9")).toEqual([]);
   });
 
-  it("has no answer when the pairing names a team the league does not carry", () => {
+  it("has none when the pairing names a team the league does not carry", () => {
     // Half a head-to-head is not one. `periodPairings` drops the pairing whole
     // and this inherits that rather than rendering a side against nobody.
     const stranger: LeagueMatchup[] = [{ period: 1, homeTeamId: "t1", awayTeamId: "t9" }];
-    expect(headToHead(stranger, leagueTeams, 1, "t1")).toBeUndefined();
+    expect(headToHeads(stranger, leagueTeams, 1, "t1")).toEqual([]);
   });
 });
 

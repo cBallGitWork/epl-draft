@@ -98,12 +98,16 @@ function misses(events: readonly MatchEvent[]): MatchEvent[] {
 function nominees(match: ReportMatchInput, events: readonly MatchEvent[], counts: ReadonlyMap<number, ManCounts>): Nominee[] {
   const goals = events.filter(isGoal);
   const involved = (m: ReportMan) => involvedIn(goals, m.code);
+  // Said once a report for each tie, so neither side's men repeat it.
+  const told = new Set<string>();
   const h2h = (m: Held) => {
     const h = m.holder.h2h;
-    if (h === null || h.us === null || h.them === null) return "";
     const team = m.holder.team;
-    const said = h.us > h.them ? `${team} leads ${h.opponent} ${h.us}-${h.them}` : h.us < h.them ? `${h.opponent} leads ${team} ${h.them}-${h.us}` : `${team} and ${h.opponent} are level at ${h.us}-${h.them}`;
-    return `; in their head-to-head this period, ${said}`;
+    if (h === null || h.us === null || h.them === null || told.has(team) || told.has(h.opponent)) return "";
+    told.add(team).add(h.opponent);
+    const [ahead, behind, high, low] = h.us >= h.them ? [team, h.opponent, h.us, h.them] : [h.opponent, team, h.them, h.us];
+    const said = high > low ? `${ahead} ${h.over ? "beat" : "leads"} ${behind}` : `${team} and ${h.opponent} ${h.over ? "drew" : "are level at"}`;
+    return `; in their head-to-head this gameweek, ${said} ${high}-${low}`;
   };
   const out: Nominee[] = [];
   const add = (m: ReportMan, stake: string) => {

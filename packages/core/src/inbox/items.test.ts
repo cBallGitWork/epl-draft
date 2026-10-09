@@ -9,7 +9,7 @@ describe("roundNews", () => {
     const items = roundNews({
       gameweek: 3,
       deadline: { gameweek: 3, locksAt: "2026-09-04T18:45:00Z" },
-      yours: { opponent: "Dave's XI", points: 61.4, against: 58.9 },
+      yours: [{ opponent: "Dave's XI", points: 61.4, against: 58.9 }],
     });
     expect(items.map((item) => item.headline)).toEqual([
       "Gameweek 3 lineups lock",
@@ -19,7 +19,7 @@ describe("roundNews", () => {
 
   it("says when lineups lock the way the commissioner would, in London time", () => {
     // The time and day are the lock's own.
-    const [lock] = roundNews({ gameweek: 6, deadline: { gameweek: 6, locksAt: "2026-10-10T11:15:00Z" }, yours: null });
+    const [lock] = roundNews({ gameweek: 6, deadline: { gameweek: 6, locksAt: "2026-10-10T11:15:00Z" }, yours: [] });
     expect(lock.body).toBe(
       "Lineups lock at 12:15 on Saturday 10 October. Anyone left on your bench won't score, so get your team sorted before then.",
     );
@@ -27,18 +27,30 @@ describe("roundNews", () => {
 
   it("goes red for a defeat and not for a win or a draw", () => {
     const result = (points: number, against: number) =>
-      roundNews({ gameweek: 3, deadline: null, yours: { opponent: "D", points, against } })[0];
+      roundNews({ gameweek: 3, deadline: null, yours: [{ opponent: "D", points, against }] })[0];
     expect(result(1, 2).urgent).toBe(true);
     expect(result(2, 1).urgent).toBe(false);
     expect(result(2, 2).urgent).toBe(false);
     expect(result(2, 2).headline).toBe("You drew with D in gameweek 3");
   });
 
+  it("files both results of a double header, each under its own id", () => {
+    const items = roundNews({
+      gameweek: 34,
+      deadline: null,
+      yours: [{ opponent: "A", points: 50, against: 40 }, { opponent: "B", points: 50, against: 60 }],
+    });
+    expect(items.map((item) => [item.id, item.headline])).toEqual([
+      ["result:34", "You beat A in gameweek 34"],
+      ["result:34:B", "B beat you in gameweek 34"],
+    ]);
+  });
+
   it("files nothing for a tie with no score", () => {
     // A round nobody has played is not a nil-nil. `points` is null exactly when
     // Fantrax gave no total (DESIGN §7).
     expect(
-      roundNews({ gameweek: 3, deadline: null, yours: { opponent: "D", points: null, against: 0 } }),
+      roundNews({ gameweek: 3, deadline: null, yours: [{ opponent: "D", points: null, against: 0 }] }),
     ).toEqual([]);
   });
 });
@@ -56,7 +68,7 @@ describe("inboxItems", () => {
     chance: 0,
   });
 
-  const squads = { mine: "t1", opponent: "t2", name: () => "Mine" };
+  const squads = { mine: "t1", opponents: ["t2"], name: () => "Mine" };
 
   it("puts dated items first, newest first, and undated ones after", () => {
     const items = inboxItems(
@@ -67,7 +79,7 @@ describe("inboxItems", () => {
       roundNews({
         gameweek: 3,
         deadline: { gameweek: 3, locksAt: "2026-09-04T18:45:00Z" },
-        yours: null,
+        yours: [],
       }),
       // Fantrax's own stamp, as `Deal.processedAt` carries it: 9AM Eastern on the 5th is after the 4th's deadline.
       dealNews(
@@ -100,7 +112,7 @@ describe("inboxItems", () => {
       roundNews({
         gameweek: 3,
         deadline: { gameweek: 3, locksAt: "2026-09-04T18:45:00Z" },
-        yours: null,
+        yours: [],
       }),
     );
     expect(items.map((item) => item.id)).toEqual([

@@ -37,6 +37,7 @@ export default function PairingCard({
       <div className="flex items-stretch">
         <Side
           team={pairing.home}
+          vs={pairing.away.teamId}
           score={home}
           against={away}
           mine={pairing.home.teamId === mine}
@@ -46,6 +47,7 @@ export default function PairingCard({
         </span>
         <Side
           team={pairing.away}
+          vs={pairing.home.teamId}
           score={away}
           against={home}
           mine={pairing.away.teamId === mine}
@@ -69,12 +71,15 @@ export default function PairingCard({
 /** One half of the scoreline and the way into that side's board; `mirrored` puts the away name on the outside edge. */
 function Side({
   team,
+  vs,
   score,
   against,
   mine,
   mirrored = false,
 }: {
   team: LeagueTeam;
+  /** The other side, so a double header's second tie opens on itself. */
+  vs: string;
   score: LiveTeamScore | undefined;
   against: LiveTeamScore | undefined;
   mine: boolean;
@@ -86,7 +91,7 @@ function Side({
   return (
     // Into the pairing's board, opened on the tapped side; each squad is a tap further.
     <Link
-      href={matchupHref(team.teamId)}
+      href={matchupHref(team.teamId, undefined, undefined, vs)}
       className={`cm-row flex min-h-11 min-w-0 flex-1 items-center gap-2 px-3 py-2 hover:bg-raised ${
         mirrored ? "flex-row-reverse" : ""
       }`}

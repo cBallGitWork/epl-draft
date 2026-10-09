@@ -1,5 +1,5 @@
 import Link from "@/app/components/shell/Link";
-import { DASH, headToHead, type LeagueTeam, type LiveTeamScore, inkOn } from "@epl/core";
+import { DASH, headToHeads, type LeagueTeam, type LiveTeamScore, inkOn } from "@epl/core";
 import { teamColours } from "@/app/teamColours";
 import { liveScores } from "../scoreboard";
 import { getLeagueSquads } from "../squads";
@@ -8,7 +8,7 @@ import { yoursMark } from "../mine";
 import { matchupHref } from "@/app/league/routes";
 import { BAR_TITLE, PANEL } from "@/app/desk";
 
-// Your head-to-head in CM's match header; renders nothing when signed out or before the draft.
+// Your head-to-head in CM's match header, both of a double header's; renders nothing when signed out or before the draft.
 
 export default async function YourMatchup() {
   const squads = await getLeagueSquads();
@@ -19,30 +19,36 @@ export default async function YourMatchup() {
   if (mine === null) return null;
 
   // You on the left: Fantrax's home and away mean nothing here.
-  const pairing = headToHead(squads.info.matchups, squads.info.teams, period, mine);
-  if (!pairing) return null;
+  const ties = headToHeads(squads.info.matchups, squads.info.teams, period, mine);
+  if (ties.length === 0) return null;
 
   const { scores } = await liveScores(period);
-  const yours = scores.get(pairing.team.teamId);
-  const theirs = scores.get(pairing.opponent.teamId);
 
   return (
     <section className={PANEL}>
-      <div className="flex items-stretch">
-        <Half team={pairing.team} score={yours} mine />
-        <Half team={pairing.opponent} score={theirs} />
-      </div>
-
+      {ties.map((pairing) => {
+        // Only a double header names the tie each side's page opens on.
+        const double = ties.length > 1;
+        return (
+          <div key={pairing.opponent.teamId} className="flex items-stretch">
+            <Half team={pairing.team} vs={double ? pairing.opponent.teamId : undefined} score={scores.get(pairing.team.teamId)} mine />
+            <Half team={pairing.opponent} vs={double ? pairing.team.teamId : undefined} score={scores.get(pairing.opponent.teamId)} />
+          </div>
+        );
+      })}
     </section>
   );
 }
 
 function Half({
   team,
+  vs,
   score,
   mine = false,
 }: {
   team: LeagueTeam;
+  /** The other side, when his page must be told which of two ties to open on. */
+  vs: string | undefined;
   score: LiveTeamScore | undefined;
   mine?: boolean;
 }) {
@@ -58,7 +64,7 @@ function Half({
       style={{ background: colours.primary }}
     >
       <Link
-        href={matchupHref(team.teamId)}
+        href={matchupHref(team.teamId, undefined, undefined, vs)}
         className="flex min-w-0 flex-1 items-center self-stretch px-2"
       >
         {/* No accent ink on a colour plate, so the left edge marks yours. */}

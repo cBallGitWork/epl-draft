@@ -14,12 +14,13 @@ interface LeagueJoin {
 /** Holders from every slot, fielded from the active ones; points only where his club plays once in the period. */
 export function leagueJoin(facts: DeskFacts, periodFixtures: readonly Fixture[], clubOfCode: ReadonlyMap<number, number>): LeagueJoin {
   const holders = new Map<number, NonNullable<ReportMan["holder"]>>();
-  // Each side's head-to-head this period, by team name: the stake a mate in the league would give.
-  const h2h = new Map<string, { opponent: string; us: number | null; them: number | null }>();
+  // Each side's head-to-head this gameweek, by team name: the stake a mate in the league would give.
+  const h2h = new Map<string, NonNullable<NonNullable<ReportMan["holder"]>["h2h"]>>();
+  const over = periodFixtures.length > 0 && periodFixtures.every((f) => f.status === "finished");
   for (const { home, away } of facts.pairings) {
     const score = (id: string) => facts.scores.get(id)?.points ?? null;
-    h2h.set(home.name, { opponent: away.name, us: score(home.teamId), them: score(away.teamId) });
-    h2h.set(away.name, { opponent: home.name, us: score(away.teamId), them: score(home.teamId) });
+    h2h.set(home.name, { opponent: away.name, us: score(home.teamId), them: score(away.teamId), over });
+    h2h.set(away.name, { opponent: home.name, us: score(away.teamId), them: score(home.teamId), over });
   }
   const points = new Map<number, number>();
   const fantraxIds = new Map<number, string>();

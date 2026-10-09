@@ -12,8 +12,8 @@ export function roundNews({
   gameweek: number | null;
   /** The NEXT lock with the round it belongs to, which is often not the round in view. */
   deadline: { gameweek: number; locksAt: string } | null;
-  /** The reader's own finished tie, or null while it is unplayed or he has none. */
-  yours: { opponent: string; points: number | null; against: number | null } | null;
+  /** The reader's own finished ties: none while unplayed or for a bye, two in a double header. */
+  yours: readonly { opponent: string; points: number | null; against: number | null }[];
 }): InboxItem[] {
   const items: InboxItem[] = [];
 
@@ -35,26 +35,28 @@ export function roundNews({
     });
   }
 
-  if (gameweek !== null && yours !== null && yours.points !== null && yours.against !== null) {
-    const won = yours.points > yours.against;
-    const drawn = yours.points === yours.against;
+  for (const [at, tie] of yours.entries()) {
+    if (gameweek === null || tie.points === null || tie.against === null) continue;
+    const won = tie.points > tie.against;
+    const drawn = tie.points === tie.against;
     items.push({
-      id: `result:${gameweek}`,
+      // The first keeps the id a single tie always had, so a read result stays read.
+      id: at === 0 ? `result:${gameweek}` : `result:${gameweek}:${tie.opponent}`,
       category: "competition",
       at: null,
       gameweek,
       // A sentence, never a results-table row.
       headline: won
-        ? `You beat ${yours.opponent} in gameweek ${gameweek}`
+        ? `You beat ${tie.opponent} in gameweek ${gameweek}`
         : drawn
-          ? `You drew with ${yours.opponent} in gameweek ${gameweek}`
-          : `${yours.opponent} beat you in gameweek ${gameweek}`,
+          ? `You drew with ${tie.opponent} in gameweek ${gameweek}`
+          : `${tie.opponent} beat you in gameweek ${gameweek}`,
       // The score as a letter says it.
       body: won
-        ? `You won it ${yours.points} to ${yours.against}.`
+        ? `You won it ${tie.points} to ${tie.against}.`
         : drawn
-          ? `${yours.points} apiece.`
-          : `${yours.against} to ${yours.points}.`,
+          ? `${tie.points} apiece.`
+          : `${tie.against} to ${tie.points}.`,
       from: "The league",
       about: null,
       teamId: null,

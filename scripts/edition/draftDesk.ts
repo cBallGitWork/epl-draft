@@ -9,7 +9,7 @@ import {
   fetchSeasonResults,
   fetchTeamRosterInfo,
   draftReportsDue,
-  headToHead,
+  headToHeads,
   isSaturday,
   isDated,
   clubById,
@@ -145,7 +145,8 @@ export async function draftDesk(gameweek: number): Promise<DraftDesk> {
     if (cutoff === "gameweek") rankAfter = ranksAfter(season, states);
     const boys = (men: DraftSide, them: DraftSide) => oldBoys(men.eleven, { teamId: them.teamId, name: them.name }, season.formerly);
     const nextOf = (teamId: string): NextOpponent | null => {
-      const h2h = headToHead(info.matchups, info.teams, period + 1, teamId);
+      // A double header names the first of his two: the column has room for one next opponent.
+      const h2h = headToHeads(info.matchups, info.teams, period + 1, teamId)[0];
       return h2h === undefined ? null : { name: h2h.opponent.name, rank: rankAfter.get(h2h.opponent.teamId) ?? null };
     };
     const contexts = states.map((state): MatchupContext => ({

@@ -18,7 +18,7 @@ const PARTICLES = new Set(["van", "de", "da", "dos", "der", "den", "di", "le", "
 /** "Jan Paul van Hecke" → "van Hecke"; "Sávio" → "Sávio". */
 export function surname(name: string): string {
   const parts = name.trim().split(/\s+/);
-  const at = parts.findIndex((part, i) => i > 0 && PARTICLES.has(part));
+  const at = parts.findIndex((part, i) => i > 0 && PARTICLES.has(part.toLowerCase()));
   return at > 0 ? parts.slice(at).join(" ") : (parts.at(-1) ?? name);
 }
 
@@ -71,8 +71,8 @@ export function keyStats(
   const chances = leaders(men, (m) => c(m)?.chancesMade ?? 0, 1);
   const byXa = [...men].sort((a, b) => b.expectedAssists - a.expectedAssists)[0];
   if (chances !== null && (chances.value >= CHANCES || (byXa?.expectedAssists ?? 0) >= EXPECTED_ASSISTS)) {
-    const made = chances.men.map((m) => `${surname(m.name)}${assists(m) > 0 ? ` (${howMany(assists(m), "assist")})` : ""}`).join(", ");
-    out.push({ label: "Chances created", value: `${made} ${chances.value}` });
+    const made = chances.men.map((m) => `${surname(m.name)} ${chances.value}${assists(m) > 0 ? ` (${howMany(assists(m), "assist")})` : ""}`);
+    out.push({ label: "Chances created", value: made.join(", ") });
   }
   out.push(...topLines(men));
   const keepers = men.filter((m) => m.saves >= SAVES || events.some((e) => e.kind === "penalty-saved" && e.side !== m.side && m.line === "G"));

@@ -51,7 +51,7 @@ export default function Season({
 
             {/* The score opens the matchup and the name opens his squad: a link cannot hold a link. */}
             <Link
-              href={matchupHref(teamId, row.round.gameweek)}
+              href={matchupHref(teamId, row.round.gameweek, undefined, row.opponent.team?.teamId)}
               className="cm-row inline-flex min-h-11 shrink-0 items-center hover:underline"
             >
               <Score row={row} />

@@ -184,6 +184,14 @@ describe("openingGameweek", () => {
     expect(periodOfGameweek(calendar, 7)).toBeUndefined();
   });
 
+  it("finds a gameweek's own period when one of its matches was brought forward into an earlier one", () => {
+    const P5 = period(5, "2026-10-02T06:00:00.0-0400", "2026-10-09T05:59:59.0-0400");
+    const early = [{ gameweek: 5, kickoff: "2026-10-03T14:00:00Z" }, { gameweek: 5, kickoff: "2026-10-04T14:00:00Z" }, { gameweek: 6, kickoff: "2026-10-07T18:30:00Z" }];
+    const calendar = periodGameweeks([P5, P6], [...early, ...GW6]);
+    expect(periodOfGameweek(calendar, 6)?.period).toBe(6);
+    expect(periodOfGameweek(calendar, 5)?.period).toBe(5);
+  });
+
   it("has none for a blank, or a period the calendar lacks", () => {
     expect(periodGameweeks([P6], [])).toEqual([{ period: 6, gameweeks: [], own: null }]);
     expect(opening([])).toBeUndefined();

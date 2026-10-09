@@ -3,6 +3,8 @@ import type { PlMoment } from "../../football/premierleague/moments";
 import { ENZO, HAVERTZ, PALMER, SAKA, deskOf, matchInput, moment, reportMan, shot } from "./__fixtures__/built";
 import { matchBlock } from "./brief";
 import { punBrief } from "./headline";
+import { SPURS, VILLA, codeOf, fixture, spursVilla } from "./__fixtures__/spursVilla";
+import { deskDay } from "./desk";
 
 const desk = (moments: PlMoment[], score: [number, number]) => deskOf(matchInput([SAKA, HAVERTZ, PALMER, ENZO], moments, score));
 
@@ -39,5 +41,27 @@ describe("own goals in the briefs", () => {
   it("tells the pun writer an own goal is the other club's goal", () => {
     const goals = punBrief(deskOf(match), "").split("\n").find((line) => line.startsWith("THE GOALS"));
     expect(goals).toBe("THE GOALS: an own goal by Reece James (Chelsea), for Arsenal, in the 70th minute.");
+  });
+});
+
+describe("the head-to-head stake", () => {
+  const held = (team: string, opponent: string, us: number, them: number, over: boolean) => ({ team, fielded: true, round: null, h2h: { opponent, us, them, over } });
+  const stakes = (over: boolean) => {
+    const holders = new Map([
+      [codeOf("Buendía"), held("Notemail", "test2", 38, 34, over)],
+      [codeOf("McGinn"), held("Notemail", "test2", 38, 34, over)],
+      [codeOf("Gallagher"), held("test2", "Notemail", 34, 38, over)],
+    ]);
+    const points = new Map([[codeOf("Buendía"), 7], [codeOf("McGinn"), 6], [codeOf("Gallagher"), 6]]);
+    const [made] = deskDay({ day: "2026-09-19", gameweek: 5, matches: [spursVilla({ holders, points })], season: [fixture], clubs: [SPURS, VILLA] });
+    return made.nominees.map((n) => n.stake).filter((s) => s.includes("head-to-head"));
+  };
+
+  it("is said once a report, in the league's word, while the gameweek runs", () => {
+    expect(stakes(false)).toEqual(["Notemail has him, 7 points; in their head-to-head this gameweek, Notemail leads test2 38-34"]);
+  });
+
+  it("is told in the past once the gameweek is over", () => {
+    expect(stakes(true)).toEqual(["Notemail has him, 7 points; in their head-to-head this gameweek, Notemail beat test2 38-34"]);
   });
 });

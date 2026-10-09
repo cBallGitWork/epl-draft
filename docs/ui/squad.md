@@ -371,7 +371,7 @@ this section, and it goes on doing it — `owns()` prefix-matches `/squad/`.
 |---|---|---|---|
 | Squad | `/squad/[teamId]` | The list and the pitch, side by side on the desk | the rosters read this page already makes |
 | Transfers | `…/transfers` | His business, as `cm0102/23.jpg`'s ledger: one row a deal, a With column only once he has traded | `readDeals`, filtered to him — the same feed the paper's business column reads |
-| Match | `…/next` | Who he plays, both sides on their own colours (`21.jpg`) | `headToHead`, already on the page |
+| Match | `…/next` | Who he plays, both sides on their own colours (`21.jpg`) | `headToHeads`, already on the page; two panels for a double header |
 | Fixtures | `…/fixtures` | The whole season, played and to come | `seasonRows` + `Season`, imported from `/league/schedule` rather than copied |
 | Stats | `…/stats` | Every man he owns, filtered by category | `getPlayerStats` filtered on `ownerTeamId`, off a warm cache; the stats league's season beneath each group (`statsLeague.ts`); DefCon points of ours on Scoring, off its periods |
 

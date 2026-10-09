@@ -80,8 +80,8 @@ export function leaguePool(
     .sort((a, b) => a.player.displayName.localeCompare(b.player.displayName));
 }
 
-/** One team's pairing this period, told from that team's side; undefined (a bye, an unscheduled period) is ordinary. */
-interface HeadToHead {
+/** One of a team's pairings this period, told from that team's side. */
+export interface HeadToHead {
   /** The team asked about. */
   team: LeagueTeam;
   opponent: LeagueTeam;
@@ -89,20 +89,20 @@ interface HeadToHead {
   home: LeagueTeam;
 }
 
-export function headToHead(
+/** A team's ties this period in the schedule's order: none for a bye or an unscheduled period, two for a double header. */
+export function headToHeads(
   matchups: readonly LeagueMatchup[],
   teams: readonly LeagueTeam[],
   period: number,
   teamId: string,
-): HeadToHead | undefined {
-  const pairing = periodPairings(matchups, teams, period).find(
-    (p) => p.home.teamId === teamId || p.away.teamId === teamId,
+): HeadToHead[] {
+  return periodPairings(matchups, teams, period).flatMap((pairing) =>
+    pairing.home.teamId === teamId
+      ? [{ team: pairing.home, opponent: pairing.away, home: pairing.home }]
+      : pairing.away.teamId === teamId
+        ? [{ team: pairing.away, opponent: pairing.home, home: pairing.home }]
+        : [],
   );
-  if (pairing === undefined) return undefined;
-
-  return pairing.home.teamId === teamId
-    ? { team: pairing.home, opponent: pairing.away, home: pairing.home }
-    : { team: pairing.away, opponent: pairing.home, home: pairing.home };
 }
 
 /** The first period after `after` in which this team has a head-to-head; undefined when the schedule has none left. */
@@ -113,7 +113,7 @@ export function nextPairedPeriod(
   teamId: string,
 ): number | undefined {
   const periods = [...new Set(matchups.map((m) => m.period))].filter((p) => p > after).sort((a, b) => a - b);
-  return periods.find((p) => headToHead(matchups, teams, p, teamId) !== undefined);
+  return periods.find((p) => headToHeads(matchups, teams, p, teamId).length > 0);
 }
 
 /** The league's own season: its first paired period, and the days Fantrax's date range covers from it to the end. */

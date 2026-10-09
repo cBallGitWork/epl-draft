@@ -518,7 +518,7 @@ men are in the sheet's one print red.
 
 **A tie prints both elevens or neither.** `predictedLineups` refuses rather than
 repairs: a side `xiFault` rejects, or one naming a man the snapshot cannot, is
-dropped and takes its fixture with it. The body says how many of the round's
+dropped and takes its fixture with it. The body says how many of the gameweek's
 matches survived, so an absence is stated and never silent.
 
 **Under the team-news writer's byline**, like the rest of team news (Craig, 30 Sep
