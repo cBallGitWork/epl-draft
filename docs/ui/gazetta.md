@@ -149,8 +149,8 @@ business, and when lineups lock.
    ui"*). A Team Sheet printed "Team news" as a page title, "The Team Sheet" as its
    kicker and again in its dateline, over the headline "Friday Pressers". The
    kicker is now `kickers.kickerOf`, the column's name else the edition's, at
-   every rank; the folio prints no title; a dateline drops the edition when the
-   kicker has said it.
+   every rank; the folio prints no title; a dateline is the writer and the
+   filing time, never the edition's name.
 
    *The paper had numbered pages from 2 Sep to 30 Sep 2026*: a strip of ink
    chips (`Pages`), "turn to page 2" on every dateline, a page number on every

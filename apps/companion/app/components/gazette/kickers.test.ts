@@ -14,15 +14,15 @@ describe("one name per story", () => {
     expect(kickerOf({ byline: "", edition: "" })).toBe("");
   });
 
-  it("drops the edition from a dateline whose kicker has already said it", () => {
+  it("never names the edition in a dateline: the kicker is the story's one name", () => {
     const html = renderToStaticMarkup(createElement(Dateline, { story: presser, byline: false, turn: false }));
     expect(html).not.toContain("The Team Sheet");
     expect(html).toContain("Filed");
   });
 
-  it("keeps an edition the kicker does not name", () => {
-    const report = { ...presser, byline: "The Back Page", edition: "Saturday Prem Report" } as PublishedStory;
-    const html = renderToStaticMarkup(createElement(Dateline, { story: report, byline: false, turn: false }));
-    expect(html).toContain("Saturday Prem Report");
+  it("names no second column under a kicker, as the Line-Ups did with The Form Guide", () => {
+    const lineups = { ...presser, byline: "The Line-Ups", edition: "The Form Guide" } as PublishedStory;
+    const html = renderToStaticMarkup(createElement(Dateline, { story: lineups, byline: false, turn: false }));
+    expect(html).not.toContain("The Form Guide");
   });
 });
