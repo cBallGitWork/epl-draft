@@ -13,9 +13,7 @@ import {
 } from "@epl/core";
 import type { DeskFacts } from "./facts";
 
-// The opinion columns' wiring: what each one is told, out of the facts the
-// firing already gathered. The joins live here rather than in core for the
-// same reason `assemble.ts` does — core is pure and a script does the wiring.
+// The opinion columns' wiring: what each one is told, out of the facts the firing already gathered.
 
 export interface ColumnContext {
   gameweek: number;
@@ -51,10 +49,7 @@ export function columnBrief(assignment: Assignment, ctx: ColumnContext): string 
   }
 
   if (assignment.kind === "eleven") {
-    // The eleven is only written about when the arrangement it was read from
-    // is the one that was actually fielded — the same rule the front page
-    // keeps, because "benched" is the column's best line and it is a claim
-    // about a side somebody picked.
+    // Only when the arrangement it was read from is the one fielded: "benched" is a claim about a side somebody picked.
     if (ctx.facts.eleven === null || !ctx.facts.fielded) return null;
     return buildElevenBrief({
       gameweek: ctx.gameweek,

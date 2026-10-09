@@ -8,16 +8,16 @@ import type { Say } from "./newsroom";
 
 export async function draftsDesk(input: { assignments: readonly Assignment[]; gameweek: number; say: Say }): Promise<Map<Cutoff, DraftJob>> {
   const jobs = new Map<Cutoff, DraftJob>();
-  const wanted = input.assignments.filter((a) => a.kind === "draft-report" && a.cutoff !== undefined);
+  const wanted = input.assignments.flatMap((a) => (a.kind === "draft-report" && a.cutoff !== undefined ? [a.cutoff] : []));
   if (wanted.length === 0) return jobs;
   const desk = await draftDesk(input.gameweek);
-  for (const a of wanted) {
-    const contexts = desk.cutoffs.get(a.cutoff!);
+  for (const cutoff of wanted) {
+    const contexts = desk.cutoffs.get(cutoff);
     if (contexts === undefined || contexts.length === 0) {
-      input.say(`  draft report: nothing due for ${a.cutoff} in gameweek ${input.gameweek}. ${desk.notes.at(-1) ?? ""}`);
+      input.say(`  draft report: nothing due for ${cutoff} in gameweek ${input.gameweek}. ${desk.notes.at(-1) ?? ""}`);
       continue;
     }
-    jobs.set(a.cutoff!, { cutoff: a.cutoff!, gameweek: input.gameweek, contexts, rankAfter: desk.rankAfter, pastHeadlines: desk.pastHeadlines.get(a.cutoff!) ?? [], pastProse: desk.pastProse.get(a.cutoff!) ?? [] });
+    jobs.set(cutoff, { cutoff, gameweek: input.gameweek, contexts, rankAfter: desk.rankAfter, pastHeadlines: desk.pastHeadlines.get(cutoff) ?? [], pastProse: desk.pastProse.get(cutoff) ?? [] });
   }
   return jobs;
 }

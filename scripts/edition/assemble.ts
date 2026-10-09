@@ -17,9 +17,7 @@ import {
 import { fielded, menIn } from "./lineups";
 import type { DeskFacts } from "./facts";
 
-// The wiring between what was gathered and what one scoped brief may know —
-// the "script does the wiring" clause made literal. Everything joined here
-// went through the bridge in `resolveRosters`; nothing matches a name.
+// The wiring between what was gathered and what one scoped brief may know; every join here went through the bridge.
 
 export function fixturePreviewBrief(
   assignment: Assignment,
@@ -105,22 +103,13 @@ export function tieCallBrief(
   });
 }
 
-/** One side of a finished tie: his total, and the men who made it.
- *
- *  **The slot he was filed in, and never a position off the player.** Fantrax
- *  scores the roster slot — Saka is `F,M`, filed at M, and paid at midfield
- *  rates — so `man.slot.position` is the honest letter here and the pool's
- *  default would be a different, wrong number. `playerPoints` is already priced
- *  the same way: it is what the man was worth to THIS manager.
- *
- *  Active slots only. A reserve cannot score, and a bench listed among the
- *  scorers would have the writer explaining a nought nobody was owed. */
+/** One side of a finished tie: his total, and the fielded men who made it, each at the SLOT he was filed in,
+ *  which is what Fantrax scores and what `playerPoints` is priced at. */
 function sideOf(team: RosteredTeam | undefined, facts: DeskFacts) {
   const scorers = fielded(team)
     .flatMap((man) => {
       const points = facts.playerPoints.get(man.slot.fantraxId);
-      // Absent rather than nought: a man Fantrax has not priced is withheld,
-      // the way every other brief withholds him.
+      // A man Fantrax has not priced is withheld, never a nought.
       return points === undefined
         ? []
         : [{ name: man.player.name, position: man.slot.position, points }];

@@ -35,11 +35,11 @@ import { serious } from "./sendBack";
 import { DRAFT_FACTS_VOICE, DRAFT_JUDGE_VOICE, DRAFT_VOICE, draftSendBack } from "./voice/draft";
 import { LINE_EDIT_VOICE, PUN_VOICE } from "./voice/reports";
 
-const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-
 // The draft report's newsroom, the Prem report's in miniature: the reporter writes the gameweek's match-ups, the editor
 // checks each against its block, the pun writer offers headlines, a manager in the league picks one and flags what no
 // manager would say, it goes back once, and each match-up keeps its better attempt.
+
+const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 export interface DraftJob {
   cutoff: Cutoff;
@@ -52,8 +52,6 @@ export interface DraftJob {
   /** Those reports' words by match-up, which this one may not echo. */
   pastProse: PastProse[];
 }
-
-
 
 /** The judge's quotes, capped per match-up; a quote not in the writing is dropped. */
 function judgeFlags(raw: Record<string, unknown>, prose: ReadonlyMap<number, string>): Fault[] {

@@ -37,17 +37,13 @@ export function presserDesk(input: {
 } {
   const { facts, snapshot, byCode, now, lock, locked, say } = input;
 
-  // The window opens at the last lock that has PASSED. `lock ?? now` was wrong:
-  // `lock` is the current period's, which before that round locks is in the
-  // FUTURE, so every signal was filtered and the column silently never fired.
+  // The window opens at the last lock that has PASSED; before this round locks, its lock is in the future.
   const since = locked && lock !== null ? lock : new Date(Date.parse(now) - WEEK).toISOString();
 
-  // LOCKED, not finished: once a round has locked every conference is about the
-  // next one, and `finished` is a later and different moment.
+  // LOCKED, not finished: once a round has locked every conference is about the next one.
   const gameweek = locked ? snapshot.gameweek + 1 : snapshot.gameweek;
 
-  // Scout writes one article per gameweek and the export records which; a stale
-  // file, or one from a European week, is not this round's team news.
+  // The export records the gameweek its article covers; a stale file is not this round's team news.
   const covers = presserGameweek();
   const wrongRound = covers !== null && covers !== gameweek;
   if (wrongRound) {
@@ -63,7 +59,6 @@ export function presserDesk(input: {
     gameweek,
   };
 }
-
 
 /** One edition of the Team Sheet: everything said on one London day, so Friday's column carries none of Thursday's. */
 export function presserEdition<
