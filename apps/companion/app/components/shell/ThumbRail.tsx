@@ -55,7 +55,7 @@ export default function ThumbRail({
     <>
       <nav
         aria-label="Sections"
-        className="cm-thumbrail fixed inset-x-0 bottom-0 z-50 grid auto-cols-fr grid-flow-col pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] lg:hidden"
+        className="cm-thumbrail fixed inset-x-0 bottom-0 z-50 grid auto-cols-fr grid-flow-col pb-[var(--safe-bottom)] pl-[var(--safe-left)] pr-[var(--safe-right)] lg:hidden"
       >
         {tabs.map((tab) =>
           tab.kind === "group" ? (

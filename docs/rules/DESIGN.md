@@ -94,10 +94,12 @@ app's config is where the picture goes, and until one lands the ground is drawn 
 the round's own portraits.
 
 **In the installed iPhone app the ground runs under the status bar** (Craig, 7 Oct 2026: *"can the background extend
-over on iPhone"*). `black-translucent` gives the app the clock's strip, and `.cm-statusbar` blurs and darkens what
-passes under it, as iOS's own bars do, so the white clock reads over the photograph and over a page scrolled beneath.
-The paper takes a band of its own ink there. A browser tab and Android show no change: the strip is the status bar's
-height, which only the installed iPhone app has.
+over on iPhone"*). `black-translucent` gives the app the clock's strip, and `.cm-statusbar` is iOS 26's scroll-edge effect
+there: a light blur and a shade that fade to nothing, never a bar (Craig, 9 Oct: *"I still want the app to expand the
+background to the iPhone safe area"*; the first version darkened the strip to a band). The ground is `html`'s, so it
+fills every inset and the overscroll; on a phone the paper puts its stock there and shades in its own ink. In a Safari
+tab on iOS 26 the browser paints the status area and its bars itself, from `html`'s colour: navy on the desk, rosa on
+the paper. `theme-color` no longer steers it, and a fixed layer, the photograph included, is not drawn under it.
 
 **A signed-in manager stands on his own team's ground** (Craig, 8 Oct 2026: *"use the home team background for
 whoever is logged in"*): the shell's photograph is his venue (`data/leagues/venues.json`, Bannan's Hillsborough), and a

@@ -931,6 +931,11 @@ the design; these are the facts it rests on.
   inherit `core/inbox/when`'s two vocabularies. A device with no record starts at nought.
 - **`viewportFit: "cover"` was missing.** Without it iOS reports every safe-area inset as nought, so
   the old bar's `pb-[env(safe-area-inset-bottom)]` never did anything on an iPhone.
+- **iOS 26 Safari tints its status area and floating bars from the page, not `theme-color`** (community-measured; Apple
+  documents none of it): a fixed element at the top edge with a `background-color`, else `html`/`body`'s colour. So
+  the ground's colour lives on `html`, `body` is clear (an opaque body would paint over the `-z-10` photograph), and
+  `.cm-statusbar` carries no `background-color`. Insets are read once into `--safe-*` on `:root`, so a Chrome shot can
+  set them; Chrome reports every inset as nought.
 
 ## Why an open live page froze, and the cache rules that stop it — 23 Sep 2026
 

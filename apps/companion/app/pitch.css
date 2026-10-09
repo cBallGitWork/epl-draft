@@ -9,7 +9,7 @@
   --pitch-ratio: 0.62;
   /* The screen a pitch budgets against, less the home bar the thumb rail sits over; floored so a short phone
      (SE, landscape) scrolls rather than clips. 52rem kept a 759px iPhone app's bench under the fold (7 Oct 2026). */
-  --pitch-screen: max(calc(100svh - env(safe-area-inset-bottom)), 44rem);
+  --pitch-screen: max(calc(100svh - var(--safe-bottom)), 44rem);
 }
 
 @media (min-width: 64rem) {
