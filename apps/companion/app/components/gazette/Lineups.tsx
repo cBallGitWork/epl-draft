@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { crestUrl, type PublishedStory, type StoryLineupSide, londonDayAndTime, DASH } from "@epl/core";
 import { yoursInk } from "../../mine";
+import { shortName } from "../../teamNames";
 import { HAIRLINES } from "./rules";
 import { CAPTION } from "./heads";
 
@@ -68,7 +69,7 @@ function Side({
             {/* His REAL position, in a gutter of its own so eleven names line
                 up — the whole of what makes a team sheet scannable. A dash
                 where the export had only FPL's fantasy letter to go on. */}
-            <span className="w-6 shrink-0 pt-0.5 font-sans text-3xs tracking-wide text-faint uppercase sm:w-9 sm:pt-1 sm:text-2xs sm:tracking-widest">
+            <span className="w-6 shrink-0 pt-0.5 font-sans text-3xs font-bold tracking-wide text-muted uppercase sm:w-9 sm:pt-1 sm:text-2xs sm:tracking-widest">
               {man.position ?? DASH}
             </span>
             <p className="min-w-0 flex-1">
@@ -79,7 +80,7 @@ function Side({
                   two hundred and twenty names is noise, and the question this
                   list answers is which of them somebody holds. */}
               {man.owner === undefined ? null : (
-                <span className="text-muted"> ({named(man.owner)})</span>
+                <span className="text-muted"> ({shortName(man.owner, named(man.owner))})</span>
               )}
             </p>
           </li>
