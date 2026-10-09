@@ -45,6 +45,17 @@ describe("pressers", () => {
     expect(out.map((r) => r.said)).toEqual([later, THURSDAY]);
   });
 
+  it("sorts newest first around a signal whose instant cannot be read, which goes last", () => {
+    const later = "2026-09-17T14:30:00.000Z";
+    const out = pressers(intel([row(), row({ said: "not a date" }), row({ said: later })]), LAST_WEEK);
+    expect(out.map((r) => r.said)).toEqual([later, THURSDAY, "not a date"]);
+  });
+
+  it("reads a file with no rows as no signals, rather than throwing", () => {
+    const file = { manifest: intel([]).manifest } as unknown as IntelPressers;
+    expect(pressers(file, THURSDAY)).toEqual([]);
+  });
+
   it("is empty when there is no file, rather than throwing", () => {
     // Until the sister repo writes the export, the column must refuse quietly, not break a firing.
     expect(pressers(null, THURSDAY)).toEqual([]);

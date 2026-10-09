@@ -116,7 +116,7 @@ export type { ExpectedMinutes } from "./intel/minutes";
 export { minuteMovesIntel, minutesUpdate } from "./intel/minuteMoves";
 export { historyOf, slimSummary } from "./intel/history";
 export type { IntelHistory } from "./intel/history";
-export type { IntelMinuteMoves, MinutesMove, MinutesUpdate } from "./intel/minuteMoves";
+export type { IntelMinuteMoves, MinutesUpdate } from "./intel/minuteMoves";
 export type { IntelProjections, ProjectedPlace, ProjectedPlayer, ProjectedGameweek } from "./intel/projections";
 export type { MatchSheet, MatchSheetLine, SheetRow } from "./matchSheet";
 // His completed seasons before this one.

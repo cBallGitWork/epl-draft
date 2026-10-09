@@ -1,11 +1,12 @@
 import { mean } from "../../mean";
 import type { Club, Fixture } from "../types";
+import { byCode } from "./byCode";
 import type { IntelManifest } from "./types";
 
 // Each club's Dixon-Coles strength from the sister repo, and the 1–20 ease ranks the fixture planner draws.
 // 1.0 is league average at both ends; a higher defence concedes less.
 
-export interface Venues {
+interface Venues {
   home: number;
   away: number;
 }
@@ -45,13 +46,9 @@ export interface PlannerRow {
 
 /** Every rated club by code; a rating that is not a positive number drops the club rather than ranking it. */
 export function strengthIntel(file: IntelStrength | null): Map<number, ClubStrength> {
-  const byCode = new Map<number, ClubStrength>();
-  for (const club of file?.clubs ?? []) {
-    if (!Number.isInteger(club?.code)) continue;
-    if (![club.attack, club.defence].every((venues) => rated(venues?.home) && rated(venues?.away))) continue;
-    byCode.set(club.code, club);
-  }
-  return byCode;
+  return byCode(file?.clubs, (club) =>
+    [club.attack, club.defence].every((venues) => rated(venues?.home) && rated(venues?.away)) ? club : null,
+  );
 }
 
 /** Each club ranked as an OPPONENT playing at `venue`, 1 the easiest; ties share a rank. */
@@ -60,7 +57,7 @@ export function easeRanks(
   view: PlannerView,
   venue: Venue,
 ): Map<number, number> {
-  return competitionRanks(strengths, (club) => (view === "attack" ? club.defence : club.attack)[venue], "ascending");
+  return competitionRanks(strengths, (club) => (view === "attack" ? club.defence : club.attack)[venue]);
 }
 
 /** Two ranks to a step, onto the planner's ten-step ease ramp. */
@@ -78,7 +75,7 @@ export interface StrengthRank {
 
 /** Every rated club by its own attack or defence at both venues, the weakest (easiest to face) first; ties share a rank. */
 export function strengthTable(strengths: Map<number, ClubStrength>, measure: "attack" | "defence"): StrengthRank[] {
-  const rank = (venue: Venue) => competitionRanks(strengths, (club) => club[measure][venue], "ascending");
+  const rank = (venue: Venue) => competitionRanks(strengths, (club) => club[measure][venue]);
   const home = rank("home");
   const away = rank("away");
   return [...strengths.values()]
@@ -98,14 +95,12 @@ export function strengthPlaces(strengths: Map<number, ClubStrength>, measure: "a
   return new Map(table.map((row, at) => [row.code, table.length - at]));
 }
 
-/** Each club's place by `rating`, 1 first in the given direction; a tie shares the higher place (1, 2, 2, 4). */
+/** Each club's place by `rating`, 1 the lowest; a tie shares the higher place (1, 2, 2, 4). */
 function competitionRanks(
   strengths: Map<number, ClubStrength>,
   rating: (club: ClubStrength) => number,
-  direction: "ascending" | "descending",
 ): Map<number, number> {
-  const sign = direction === "ascending" ? 1 : -1;
-  const ordered = [...strengths.values()].sort((a, b) => sign * (rating(a) - rating(b)));
+  const ordered = [...strengths.values()].sort((a, b) => rating(a) - rating(b));
   const ranks = new Map<number, number>();
   ordered.forEach((club, index) => {
     const previous = ordered[index - 1];

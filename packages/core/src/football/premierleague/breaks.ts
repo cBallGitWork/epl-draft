@@ -1,5 +1,5 @@
 import type { RawPlFixture } from "./raw";
-import { plFixtureCode } from "./map";
+import { plFixtureCode, wallClock } from "./map";
 
 // Full time off the gameweek read the wire already holds; half time is not drawn.
 
@@ -25,12 +25,11 @@ export function mapRoundBreaks(fixtures: readonly RawPlFixture[]): RoundBreak[] 
 
     // The final clock, or the nominal ninety: a break sorted to kick-off would land before the goals.
     const seconds = fixture.clock?.secs ?? NINETY_MINUTES;
-    const kickoff = fixture.kickoff?.millis;
     breaks.push({
       fixtureCode,
       kind: "full-time",
       seconds,
-      absolute: kickoff === undefined ? null : kickoff + seconds * 1000,
+      absolute: wallClock(fixture.kickoff?.millis, seconds),
     });
   }
 

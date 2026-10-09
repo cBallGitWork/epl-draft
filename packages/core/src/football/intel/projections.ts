@@ -1,4 +1,5 @@
 import { finiteOrNull } from "../../untrusted";
+import { byCode } from "./byCode";
 import type { IntelManifest } from "./types";
 
 // The sister model's projected FPL points per player per gameweek: FPL's scoring, not Fantrax's.
@@ -39,9 +40,7 @@ export interface IntelProjections {
 
 /** Every projected player by code; a row with no code, or a gameweek with no number, is dropped. */
 export function projectionIntel(file: IntelProjections | null): Map<number, ProjectedPlayer> {
-  const byCode = new Map<number, ProjectedPlayer>();
-  for (const player of file?.players ?? []) {
-    if (!Number.isInteger(player?.code)) continue;
+  return byCode(file?.players, (player) => {
     const gameweeks = (player.gameweeks ?? [])
       .filter((week) => Number.isInteger(week?.gw))
       .map((week) => ({
@@ -53,13 +52,12 @@ export function projectionIntel(file: IntelProjections | null): Map<number, Proj
         start: finiteOrNull(week.start),
         parts: week.parts == null ? null : parts(week.parts),
       }));
-    byCode.set(player.code, { ...player, gameweeks });
-  }
-  return byCode;
+    return { ...player, gameweeks };
+  });
 }
 
 /** Any projection's run of weeks, in FPL points or a league's: what the helpers below read. */
-export interface PointsRun {
+interface PointsRun {
   gameweeks: readonly { gw: number; points: number | null }[];
 }
 

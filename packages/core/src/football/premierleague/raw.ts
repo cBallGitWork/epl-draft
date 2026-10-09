@@ -2,7 +2,7 @@
 
 /** A scalar wrapped with the string to print. `secs` is elapsed time in its own fixture and orders one match;
  *  only `kickoff.millis + secs × 1000` interleaves a gameweek, and `"90+2"` sorts as neither. */
-export interface RawPlLabel {
+interface RawPlLabel {
   label: string;
   secs?: number;
   /** Epoch ms, on a kick-off: the only wall clock in the payload. */
@@ -10,17 +10,17 @@ export interface RawPlLabel {
 }
 
 /** `{secs: 5760, label: "90+6'00"}`. Absent before kick-off, which answers "has this started" without a status letter. */
-export interface RawPlClock {
+interface RawPlClock {
   secs: number;
   label: string;
 }
 
-export interface RawPlAltIds {
+interface RawPlAltIds {
   /** `"p531442"` for a player, `"t14"` for a club, `"g2645221"` for a fixture. */
   opta: string;
 }
 
-export interface RawPlClub {
+interface RawPlClub {
   name: string;
   shortName: string;
   abbr: string;
@@ -36,12 +36,12 @@ export interface RawPlTeam {
 }
 
 /** One side of a fixture. `score` is null until the match starts. */
-export interface RawPlTeamScore {
+interface RawPlTeamScore {
   team: RawPlTeam;
   score: number | null;
 }
 
-export interface RawPlName {
+interface RawPlName {
   display: string;
   first?: string;
   last?: string;
@@ -59,7 +59,7 @@ export interface RawPlSquadPlayer {
 }
 
 /** A side's shape: `players` is the `label` formation drawn as lines of player ids, keeper first. */
-export interface RawPlFormation {
+interface RawPlFormation {
   label: string;
   players: number[][];
 }
@@ -71,7 +71,7 @@ interface RawPlTeamList {
   formation?: RawPlFormation;
 }
 
-export interface RawPlOfficial {
+interface RawPlOfficial {
   /** `"MAIN"`, `"FOURTH_OFFICIAL"`, `"VAR"`, `"ASSISTANT_VAR"`; absent on the two assistants, so only MAIN is read. */
   role?: string;
   name: RawPlName;
@@ -113,12 +113,12 @@ export interface RawPlFixtureEvent {
   phase?: string;
 }
 
-export interface RawPlScore {
+interface RawPlScore {
   homeScore: number;
   awayScore: number;
 }
 
-export interface RawPlGround {
+interface RawPlGround {
   name: string;
   city: string;
 }
@@ -162,7 +162,7 @@ export interface RawPlEvent {
   playerIds?: number[];
 }
 
-export interface RawPlPage {
+interface RawPlPage {
   numPages: number;
   numEntries: number;
 }

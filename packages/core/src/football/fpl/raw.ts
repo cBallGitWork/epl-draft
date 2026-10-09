@@ -77,7 +77,7 @@ export interface RawBootstrap {
 }
 
 /** One player's figure under one identifier; `element` is the per-season id, so never persist it. */
-export interface RawStatEntry {
+interface RawStatEntry {
   value: number;
   element: number;
 }

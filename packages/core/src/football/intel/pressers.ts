@@ -62,11 +62,12 @@ export function pressers(
 ): PresserSignal[] {
   if (intel === null) return [];
   const floor = instantOf(since);
-  return intel.rows
+  return (intel.rows ?? [])
     .filter((row) => {
       const at = instantOf(row.said);
       // An unreadable instant is kept: dropping it would hide a real absence.
       return at === null || floor === null || at >= floor;
     })
-    .sort((a, b) => Date.parse(b.said) - Date.parse(a.said));
+    // An unreadable instant sorts last: a NaN comparison would scramble the readable ones around it.
+    .sort((a, b) => (instantOf(b.said) ?? -Infinity) - (instantOf(a.said) ?? -Infinity) || 0);
 }

@@ -1,6 +1,6 @@
 import type { MatchEvent, MatchEventKind } from "../types";
 import type { RawPlEvent, RawPlFixture } from "./raw";
-import type { RawPlMatchStats } from "./rawStats";
+import type { RawPlMatchStats, RawPlMetric } from "./rawStats";
 import { codeOf } from "./teamSheet";
 
 // Pure raw → domain, joined to FPL on ids only: `altIds.opta` is FPL's `opta_code`, or `g` + its `fixture.code`.
@@ -87,7 +87,7 @@ export function mapMatchEvents(
       kind,
       minute,
       seconds,
-      absolute: kickoffMillis === null ? null : kickoffMillis + seconds * 1000,
+      absolute: wallClock(kickoffMillis, seconds),
       text: event.text,
       players: (event.playerIds ?? []).map((id) => codes.get(id) ?? null),
     });
@@ -104,7 +104,6 @@ export function mapRoundGoals(
   const goals: MatchEvent[] = [];
   for (const fixture of fixtures) {
     const fixtureCode = plFixtureCode(fixture);
-    const kickoff = fixture.kickoff?.millis;
     if (fixtureCode === null) continue;
 
     for (const goal of fixture.goals ?? []) {
@@ -119,7 +118,7 @@ export function mapRoundGoals(
         kind,
         minute: minute.split("'")[0],
         seconds: secs,
-        absolute: kickoff === undefined ? null : kickoff + secs * 1000,
+        absolute: wallClock(fixture.kickoff?.millis, secs),
         // The assist slot is always present, null when nobody assisted.
         players: [
           codes.get(goal.personId) ?? null,
@@ -142,16 +141,23 @@ const GOAL_KINDS: Record<string, MatchEventKind> = {
   O: "own-goal",
 };
 
-/** One side's Opta metrics by name, nought for any omitted: `/stats/match` says nought by leaving the metric out.
- *  Null when the fixture has no stats for that side at all, which IS an absence and never a board of noughts. */
+/** Opta's metrics by name, nought for any omitted: every `/stats/*` read says nought by leaving the metric out. */
+export function optaMetrics(metrics: readonly RawPlMetric[]): (metric: string) => number {
+  const byName = new Map(metrics.map((m) => [m.name, m.value]));
+  return (metric: string) => byName.get(metric) ?? 0;
+}
+
+/** One side's Opta metrics by name. Null when the fixture has no stats for that side at all, which IS an absence
+ *  and never a board of noughts. */
 export function plMatchMetrics(
   stats: RawPlMatchStats,
   teamId: number,
 ): ((metric: string) => number) | null {
   const side = stats.data[String(teamId)];
-  if (side === undefined) return null;
-
-  const byName = new Map(side.M.map((m) => [m.name, m.value]));
-  return (metric: string) => byName.get(metric) ?? 0;
+  return side === undefined ? null : optaMetrics(side.M);
 }
 
+/** A moment `secs` into a match as epoch ms, the only order across fixtures; null without a kick-off time. */
+export function wallClock(kickoffMillis: number | null | undefined, secs: number): number | null {
+  return kickoffMillis == null ? null : kickoffMillis + secs * 1000;
+}
