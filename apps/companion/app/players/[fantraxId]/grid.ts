@@ -17,7 +17,7 @@ import {
   shotLine,
   squadOf,
 } from "@epl/core";
-import type { Attribute, FootballPlayer, IntelPlayer, PastSeason, ProjectedPlace, Ranked, Scouted, Tallied } from "@epl/core";
+import type { Attribute, FootballPlayer, PastSeason, ProjectedPlace, Ranked, Scouted, Tallied } from "@epl/core";
 import { unstable_cache } from "next/cache";
 import { orDegraded } from "../../refusals";
 import { heldHistory } from "./scouting";
@@ -178,11 +178,6 @@ export async function playerPieces(player: FootballPlayer) {
   const club = clubById(snapshot).get(player.clubId);
   const present = new Set(squadOf(snapshot, player.clubId).map((man) => man.code));
   return setPieceRanks(intelSetPieces.clubs[club?.shortName ?? ""], SET_PIECES, player.code, present);
-}
-
-/** What he actually plays, as the sister repo settled it; null where it has no row for him. */
-export function realPosition(code: number): IntelPlayer | null {
-  return intelSquads.get(code) ?? null;
 }
 
 /** His completed seasons, most recent first: read by FPL's `id`, cached by the `code` that survives August. FPL first,

@@ -14,10 +14,6 @@ export interface TeamIdentity {
   slug: string;
 }
 
-export async function teamOr404(slug: string): Promise<TeamIdentity> {
-  return (await leagueTeams(slug)).team;
-}
-
 /** A team as its screens want it: the id for reads, the name for the bar, the slug for the tabs. */
 export function identify(team: { teamId: string; teamName: string }, slug: string): TeamIdentity {
   return { teamId: team.teamId, teamName: team.teamName, slug };

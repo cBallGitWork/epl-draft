@@ -1,7 +1,6 @@
 import type { Club, Fixture } from "@epl/core";
 import Match from "./Match";
 import RoundHead from "../components/shell/RoundHead";
-import { PANEL_ROWS } from "./Shell";
 
 // The season as rounds, each under its own head; Results and Fixtures pick the rounds and the order.
 
@@ -54,11 +53,4 @@ export function byRound(fixtures: readonly Fixture[]): Round[] {
       // Kick-off order; an undated fixture sorts last, not first as an empty string would.
       fixtures: list.sort((a, b) => (a.kickoff ?? "￿").localeCompare(b.kickoff ?? "￿")),
     }));
-}
-
-/** Rows the rounds draw, a match each plus a head apiece; capped at the table's panel, so the section's screens open
- *  at one height and a season is not 400 rows tall. */
-export function panelRows(rounds: readonly Round[]): number {
-  const rows = rounds.reduce((total, round) => total + round.fixtures.length + 1, 0);
-  return Math.min(rows, PANEL_ROWS);
 }

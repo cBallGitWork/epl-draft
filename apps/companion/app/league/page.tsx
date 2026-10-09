@@ -14,7 +14,7 @@ import { CutRow } from "../components/league/TableCells";
 import { BOARD } from "@/app/desk";
 import FantraxSilent from "../components/shell/FantraxSilent";
 
-// The table, Fantrax's: the record, the points and the order are theirs, never added up here.
+// The table: Fantrax's record and points, never added up here, placed by the league's rule (`placeTable`).
 
 export const revalidate = 30;
 

@@ -1,6 +1,23 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import type { LeagueTransaction } from "@epl/core";
-import { arrival, movesOf } from "./dossier";
+import { arrival, footballYearFrom, movesOf } from "./dossier";
+
+describe("footballYearFrom", () => {
+  afterEach(() => vi.unstubAllEnvs());
+
+  // Vercel's clock is UTC: 00:30 on 1 July in London is still 30 June there.
+  it("starts the football year at midnight on 1 July in London, whatever the server's zone", () => {
+    vi.stubEnv("TZ", "UTC");
+    const july = Date.parse("2026-06-30T23:00:00Z");
+    expect(footballYearFrom(new Date("2026-06-30T23:30:00Z"))).toBe(july);
+    expect(footballYearFrom(new Date("2026-10-09T12:00:00Z"))).toBe(july);
+  });
+
+  it("reads June in London as last year's", () => {
+    vi.stubEnv("TZ", "America/New_York");
+    expect(footballYearFrom(new Date("2026-06-30T22:30:00Z"))).toBe(Date.parse("2025-06-30T23:00:00Z"));
+  });
+});
 
 const move = (over: Partial<LeagueTransaction> = {}): LeagueTransaction => ({
   setId: "s1", kind: "claim", fantraxId: "03gu4", playerName: "Harry Maguire",

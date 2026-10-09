@@ -3,6 +3,7 @@ import PageHeader from "../components/shell/PageHeader";
 import { LABEL, PANEL, ROW_RULE } from "@/app/desk";
 import { COLUMNISTS, DESK_GROUND_CREDIT } from "../config";
 import { venueCredits } from "../venues";
+import { sourceLabel } from "./sourceLabel";
 
 // Who took the photographs: each Creative Commons licence requires the author and a link to the terms.
 // Prints `football/grounds.ts` and `data/leagues/venues.json`, so an uncredited picture shows here.
@@ -64,7 +65,7 @@ export default function CreditsPage() {
                   rel="noreferrer"
                   target="_blank"
                 >
-                  Wikimedia Commons
+                  {sourceLabel(photo.source)}
                 </a>
               </div>
             </li>

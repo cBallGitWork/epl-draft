@@ -31,4 +31,11 @@ describe("clubPlaces", () => {
     expect(places.get(2)).toBe(1);
     expect(places.get(3)).toBe(3);
   });
+
+  it("places nobody before a ball is kicked, rather than the twenty in alphabetical order", () => {
+    expect(clubPlaces([], clubs).size).toBe(0);
+    expect(clubPlaces([{ ...win, status: "upcoming", homeScore: null, awayScore: null }], clubs).size).toBe(0);
+    // A match in play is not a result.
+    expect(clubPlaces([{ ...win, status: "live" }], clubs).size).toBe(0);
+  });
 });

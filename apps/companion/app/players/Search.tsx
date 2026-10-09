@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { formHref } from "../components/shell/formHref";
+import { heldText } from "./heldText";
 
 // The board's search box, narrowing as you type (Craig, 10 Sep 2026). A GET form first: without a script Enter submits
 // it; with one, a settled keystroke becomes a URL and the server answers, so the pool never ships to the phone.
@@ -24,13 +25,14 @@ export default function Search({
   const router = useRouter();
   const [text, setText] = useState(query);
   const [rendered, setRendered] = useState(query);
+  const [sent, setSent] = useState<string | null>(null);
   const form = useRef<HTMLFormElement>(null);
 
   // The URL is the authority: reset during render (not an effect, which flashes the old text; not `key`, which drops
-  // the caret).
+  // the caret), but never over keystrokes typed while the server answered this box's own search.
   if (query !== rendered) {
     setRendered(query);
-    setText(query);
+    setText(heldText(query, sent, text));
   }
 
   useEffect(() => {
@@ -38,6 +40,7 @@ export default function Search({
     const timer = setTimeout(() => {
       const target = form.current;
       if (target === null) return;
+      setSent(text.trim());
       // From the form, so the hidden fields keep the rest of the query; `replace`, so a search is one history entry;
       // `scroll: false`, so the board under the box stays put.
       router.replace(formHref(action, new FormData(target)), { scroll: false });

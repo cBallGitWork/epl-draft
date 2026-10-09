@@ -1,14 +1,14 @@
 import { leagueTable as footballTable, signed } from "@epl/core";
 import type { PaperTableRow } from "./components/gazette/PaperTable";
-import { seasonFixtures } from "./football";
+import { footballNow, seasonFixtures } from "./football";
 import { leagueTable as draftTable } from "./standings";
 import { getLeaguePool } from "./players/pool";
-import { getLeagueSquads } from "./squads";
+import { SCORERS_SHOWN } from "./config";
 
 // The paper's two tables as rows, off reads the page already makes, kept apart: Fantrax's we quote, the Premier
 // League's we compute under fixed rules.
 
-/** The draft league, in Fantrax's own order: names and points (Craig, 1 Oct 2026). */
+/** The draft league as its table places it: names and points (Craig, 1 Oct 2026). */
 export async function draftRows(mine: string | null): Promise<PaperTableRow[]> {
   const table = await draftTable();
   if ("unavailable" in table) return [];
@@ -22,10 +22,6 @@ export async function draftRows(mine: string | null): Promise<PaperTableRow[]> {
     yours: row.teamId === mine,
   }));
 }
-
-/** How many of the season's scorers the paper prints. A chart, not a database:
- *  ten is what a back page has room for and what a reader scans. */
-const SCORERS_SHOWN = 10;
 
 /** What the chart calls a man nobody holds. */
 const UNOWNED = "free agent";
@@ -58,13 +54,12 @@ export async function scorerRows(): Promise<PaperTableRow[]> {
     }));
 }
 
-/** The Premier League, computed from finished fixtures. */
+/** The Premier League, computed from finished fixtures: FPL's alone, so a silent Fantrax costs it nothing. */
 export async function footballRows(): Promise<PaperTableRow[]> {
-  const squads = await getLeagueSquads();
-  const clubs = "period" in squads ? squads.snapshot.clubs : [];
+  const [{ clubs }, fixtures] = await Promise.all([footballNow(), seasonFixtures()]);
   if (clubs.length === 0) return [];
 
-  return footballTable(await seasonFixtures(), clubs).map((row, at) => ({
+  return footballTable(fixtures, clubs).map((row, at) => ({
     key: String(row.clubId),
     // This table's own rank: it is the authority.
     rank: at + 1,

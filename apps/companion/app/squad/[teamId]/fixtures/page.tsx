@@ -1,7 +1,7 @@
 import TabEmpty from "../../../components/league/TabEmpty";
 import { type CompetitionTie, leagueTies, periodPairings } from "@epl/core";
 import TeamShell from "../Shell";
-import { teamOr404 } from "../team";
+import { leagueTeams } from "../team";
 import Season from "../../../league/schedule/Season";
 import { getSchedule, getSeasonResults, type ScheduleRound } from "../../../league/schedule/schedule";
 import { seasonRows } from "../../../league/schedule/teamSeason";
@@ -18,7 +18,7 @@ export default async function FixturesPage({
   params: Promise<{ teamId: string }>;
 }) {
   const { teamId: slug } = await params;
-  const [team, read] = await Promise.all([teamOr404(slug), getSchedule()]);
+  const [{ team }, read] = await Promise.all([leagueTeams(slug), getSchedule()]);
   // The id the slug resolved to: `me` is a front door and not a team.
   const teamId = team.teamId;
 

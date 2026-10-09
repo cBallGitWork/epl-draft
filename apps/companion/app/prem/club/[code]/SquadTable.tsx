@@ -1,6 +1,6 @@
 import ScrollBoard from "../../../components/league/ScrollBoard";
 import type { FootballPlayer } from "@epl/core";
-import { availabilityOf, byPositionDepth, fullFootballerName, positionDepth, DASH } from "@epl/core";
+import { availabilityOf, fullFootballerName, DASH } from "@epl/core";
 import PlayerName from "../../../components/shell/PlayerName";
 import { Head, HeadRow, NameHead, PLATE } from "../../../components/league/TableHeads";
 import PositionTile, { TILE_WIDTH } from "../../../components/league/PositionTile";
@@ -118,11 +118,5 @@ export default function SquadTable({
 function owner(opinion: LeagueOpinion | undefined): string | null {
   if (opinion === undefined) return null;
   return opinion.owner ?? (opinion.status || null);
-}
-
-/** Our league's position for a man as a sort key; a man it has no opinion about sorts last. */
-export function fantasyDepth(opinion: LeagueOpinion | undefined): number {
-  const first = [...(opinion?.positions ?? [])].sort(byPositionDepth)[0];
-  return first === undefined ? Number.MAX_SAFE_INTEGER : positionDepth(first);
 }
 

@@ -6,13 +6,12 @@ import MatchStats from "../MatchStats";
 import ClubStats from "../ClubStats";
 import Fantasy from "../Fantasy";
 import { readMatch } from "../match";
-import { matchCards, namedOn } from "../matchCards";
-import { leagueOpinions } from "../../../leagueOpinions";
+import { sheetReads } from "../sheetReads";
 import type { Match } from "../match";
 import { DEFAULT_SORT, isStatSort } from "../statColumns";
 import { statsView, viewHref, type StatsView } from "../statsSort";
 import { matchStatsBoard } from "../../../../matchFeed";
-import { matchInjuries, matchManEvents, teamSheets } from "../../../../matchDetail";
+import { teamSheets } from "../../../../matchDetail";
 import { leagueScoring } from "../../../../scoring";
 import { scoringDay } from "../../../../scoringDay";
 
@@ -89,14 +88,7 @@ async function OneClub({
   sort: Parameters<typeof ClubStats>[0]["sort"];
   descending: boolean;
 }) {
-  const { gameweek, code } = match.fixture;
-  // One cached fixture detail behind the three reads.
-  const [sheets, events, injured, league] = await Promise.all([
-    teamSheets(gameweek, code, match.snapshot.players),
-    matchManEvents(gameweek, code, match.snapshot.players),
-    matchInjuries(gameweek, code, match.snapshot.players),
-    leagueOpinions(),
-  ]);
+  const { sheets, events, injured, league, cards } = await sheetReads(match);
   if (sheets === null) return <NoSheet />;
   return (
     <ClubStats
@@ -107,7 +99,7 @@ async function OneClub({
       events={events}
       injured={injured}
       league={league}
-      cards={matchCards(match, namedOn(sheets), league)}
+      cards={cards}
       sort={sort}
       descending={descending}
     />

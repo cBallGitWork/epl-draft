@@ -14,9 +14,9 @@ import {
 import { roundGoals } from "./commentary";
 import {
   highlightsFeed,
+  ofFixture,
   plStats,
   plStream,
-  theirFixture,
 } from "./plFeed";
 
 
@@ -29,11 +29,7 @@ export async function matchReport(
   gameweek: number | null,
   fixtureCode: number,
 ): Promise<PlCommentaryLine[]> {
-  if (gameweek === null) return [];
-  try {
-    const fixture = await theirFixture(gameweek, fixtureCode);
-    if (fixture === null) return [];
-
+  return ofFixture(gameweek, fixtureCode, [] as PlCommentaryLine[], async (fixture) => {
     // Long club name → abbreviation: `shortProse` drops a bracketed club and shortens scorelines.
     const names = new Map<string, string>();
     for (const side of fixture.teams ?? []) {
@@ -44,9 +40,7 @@ export async function matchReport(
 
     const lines = plCommentary((await plStream(fixture.id)).events.content);
     return lines.map((line) => ({ ...line, text: shortProse(line.text, names) }));
-  } catch {
-    return [];
-  }
+  });
 }
 
 /** Every goal's minute in one fixture, by FPL player code, merged into the sister repo's log, which
@@ -84,15 +78,11 @@ export async function matchStatsBoard(
   gameweek: number | null,
   fixtureCode: number,
 ): Promise<MatchStatRow[] | null> {
-  if (gameweek === null) return null;
-  try {
-    const fixture = await theirFixture(gameweek, fixtureCode);
-    const [home, away] = fixture?.teams ?? [];
-    if (fixture === null || home === undefined || away === undefined) return null;
+  return ofFixture(gameweek, fixtureCode, null, async (fixture) => {
+    const [home, away] = fixture.teams ?? [];
+    if (home === undefined || away === undefined) return null;
     return plMatchBoard(await plStats(fixture.id), home.team.id, away.team.id);
-  } catch {
-    return null;
-  }
+  });
 }
 
 /** The highlights video for one fixture (both clubs and the score must agree), or null. */

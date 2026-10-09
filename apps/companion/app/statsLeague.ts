@@ -13,7 +13,7 @@ import {
 } from "@epl/core";
 import { FINAL_REVALIDATE, STATS_PERIODS_REVALIDATE } from "./config";
 import { leagueCache } from "./leagueCache";
-import { orRefusal, refusedAs } from "./refusals";
+import { orDegraded, orRefusal, refusedAs } from "./refusals";
 import recorded from "../../../data/leagues/recorded.json";
 
 /** The league recorded under the `stats` role, listing every column at no points so the served
@@ -80,7 +80,10 @@ export async function statsLeaguePeriods(keys: readonly string[], now: Date): Pr
   const league = STATS_LEAGUE;
   if (league === null) return null;
   const at = now.getTime();
-  const begun = (await periodsOf(league)).filter((period) => Date.parse(period.start) <= at);
+  // A calendar Fantrax did not answer for is a period not read: a plain cache, so an outage would throw.
+  const periods = await orDegraded(periodsOf(league), () => null);
+  if (periods === null) return null;
+  const begun = periods.filter((period) => Date.parse(period.start) <= at);
   const read = await Promise.all(
     begun.map((period) => (Date.parse(period.end) < at ? settledPeriod : openPeriod)(league, period.number, keys)),
   );

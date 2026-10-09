@@ -1,5 +1,5 @@
 import type { FootballPlayer, FootballSnapshot, PlayerMatchStats, PlayerOwner, RatingStore } from "@epl/core";
-import { clubById, crestUrl, mean, playerByCode, playerById, rounded } from "@epl/core";
+import { PLACES, clubById, crestUrl, mean, playerByCode, playerById, rounded } from "@epl/core";
 
 // This gameweek's leaders: Fantrax's points for the men it priced, our marks as filed, and FPL's
 // per-match measures for everyone who played, each joined to whoever holds him. Pure; the page reads.
@@ -68,7 +68,7 @@ export function gameweekLeaders(opts: {
   for (const [code, matches] of Object.entries(opts.marks)) {
     const player = byCode.get(Number(code));
     const average = mean(Object.entries(matches).flatMap(([fixture, mark]) => (thisRound.has(fixture) && mark !== null ? [mark] : [])));
-    if (player !== undefined && average !== null) rating.set(player, rounded(average, 1));
+    if (player !== undefined && average !== null) rating.set(player, rounded(average, PLACES.rating));
   }
 
   return {

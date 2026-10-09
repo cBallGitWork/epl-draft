@@ -66,8 +66,9 @@ describe("the squad board's columns", () => {
   });
 
   it("puts the stats league's counts beneath each group, and never in Scoring", () => {
-    expect(heads("attacking", realKeys)).toEqual(["G", "AT", "A", "AF", "PKM", "S", "SOT", "KP", "BCC"]);
-    expect(heads("defensive", realKeys)).toEqual(["CS", "DC", "DC+", "Sv", "GKP", "PKS", "GA", "OG", "TkW", "Int", "CLR", "BR"]);
+    // Headed as League › Team Stats and a player's Data page head them, never Fantrax's S, SOT and CLR.
+    expect(heads("attacking", realKeys)).toEqual(["G", "AT", "A", "AF", "PKM", "Sh", "SoT", "KP", "BCC"]);
+    expect(heads("defensive", realKeys)).toEqual(["CS", "DC", "DC+", "Sv", "GKP", "PKS", "GA", "OG", "TkW", "Int", "Clr", "BR"]);
     expect(heads("discipline", realKeys)).toEqual(["YC", "RC", "FC"]);
     expect(heads("appearances", realKeys)).toEqual(["Min", "GP", "GS"]);
   });

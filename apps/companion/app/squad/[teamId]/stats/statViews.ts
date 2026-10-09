@@ -20,17 +20,18 @@ export const VIEWS = [
 
 export type ViewKey = (typeof VIEWS)[number]["key"];
 
-/** What the stats league counts under the scored categories, in its own abbreviations. No league scores these. */
-const BENEATH: readonly { key: string; group: GroupKey; label: string; lowIsGood?: boolean }[] = [
+/** What the stats league counts under the scored categories, read by its own abbreviations and headed in the house's
+ *  where they differ. No league scores these. */
+const BENEATH: readonly { key: string; head?: string; group: GroupKey; label: string; lowIsGood?: boolean }[] = [
   { key: "GP", group: "appearances", label: "Games played" },
   { key: "GS", group: "appearances", label: "Games started" },
-  { key: "S", group: "attacking", label: "Shots" },
-  { key: "SOT", group: "attacking", label: "Shots on target" },
+  { key: "S", head: "Sh", group: "attacking", label: "Shots" },
+  { key: "SOT", head: "SoT", group: "attacking", label: "Shots on target" },
   { key: "KP", group: "attacking", label: "Key passes" },
   { key: "BCC", group: "attacking", label: "Big chances created" },
   { key: "TkW", group: "defensive", label: "Tackles won" },
   { key: "Int", group: "defensive", label: "Interceptions" },
-  { key: "CLR", group: "defensive", label: "Clearances" },
+  { key: "CLR", head: "Clr", group: "defensive", label: "Clearances" },
   { key: "BR", group: "defensive", label: "Ball recoveries" },
   { key: "FC", group: "discipline", label: "Fouls committed", lowIsGood: true },
 ];

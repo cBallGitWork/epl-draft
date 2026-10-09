@@ -17,11 +17,10 @@ export const revalidate = 30;
 
 export default async function DepthPage({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
-  const { club, snapshot } = await clubOr404(code);
+  const [{ club, snapshot }, league] = await Promise.all([clubOr404(code), leagueOpinions()]);
   const chart = intelDepth.get(club.shortName);
   const players = new Map(squadOf(snapshot, club.id).map((player) => [player.code, player]));
   const playerOf = (code: number) => players.get(code) ?? null;
-  const league = await leagueOpinions();
   const hrefOf = (code: number) => poolHref(league, code);
   const lines = chart === undefined ? [] : depthLines(chart);
 

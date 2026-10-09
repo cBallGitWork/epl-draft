@@ -22,9 +22,8 @@ export const revalidate = 30;
 
 export default async function SetPiecesPage({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
-  const { club, snapshot } = await clubOr404(code);
+  const [{ club, snapshot }, league] = await Promise.all([clubOr404(code), leagueOpinions()]);
   const colours = clubColours(club.shortName);
-  const league = await leagueOpinions();
 
   const byCode = new Map(squadOf(snapshot, club.id).map((p) => [p.code, p]));
   // Departed takers drop before numbering, so the order still counts from 1.

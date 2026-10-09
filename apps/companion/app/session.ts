@@ -42,12 +42,8 @@ export async function sign(teamId: string): Promise<string | null> {
 
 /** Whose team this browser is in the league served (else the demo team), or null. */
 export async function myTeamId(teams: readonly { teamId: string }[]): Promise<string | null> {
-  // Read the cookie before any return: `cookies()` is what keeps these pages from being prerendered at build time.
-  const signed = await cookieTeam();
-  if (signed !== null && teams.some((team) => team.teamId === signed)) return signed;
-
-  // A cookie for a team this league lacks counts as no cookie.
-  return demoTeam(teams);
+  // The cookie first, always: `cookies()` keeps these pages from being prerendered; one for another league is none.
+  return (await signedTeamId(teams)) ?? lentTeam(teams, DEMO_TEAM_ID);
 }
 
 /** The verified team in this browser's cookie, or null, with no league check and never the demo team. */
@@ -67,9 +63,4 @@ export async function signedTeamId(teams: readonly { teamId: string }[]): Promis
 /** Whether this browser holds a real code rather than the lent demo team. */
 export async function signedIn(): Promise<boolean> {
   return (await cookieTeam()) !== null;
-}
-
-/** The environment's demo team, if it is really in this league (`lentTeam`). */
-function demoTeam(teams: readonly { teamId: string }[]): string | null {
-  return lentTeam(teams, DEMO_TEAM_ID);
 }

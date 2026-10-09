@@ -20,12 +20,15 @@ export const PAPER_NAME = "The Gazetta";
 /** The name under the icon on a phone's home screen, where twelve characters is about all that fits. */
 export const APP_SHORT_NAME = "Pro League";
 
-/** Three colours of tokens.css as sRGB, for what cannot read a CSS variable: the theme-colour meta,
- *  the web-app manifest and its icon. Change with the tokens. */
-export const TOKEN_SRGB = { bg: "#091227", league: "#c8102e", cream: "#f3eadd" } as const;
+/** Colours of tokens.css, and the paper's stock from paper.css, as sRGB, for what cannot read a CSS variable: the
+ *  theme-colour meta, the web-app manifest, its icon and a shared story's card. Change with the stylesheets. */
+export const TOKEN_SRGB = { bg: "#091227", league: "#c8102e", cream: "#f3eadd", paper: "#f6ddd2" } as const;
 
 /** How many deals the front page prints; the heading says the true total. */
 export const DEALS_SHOWN = 6;
+
+/** How many of the season's scorers the paper's chart prints: what a back page has room for and a reader scans. */
+export const SCORERS_SHOWN = 10;
 
 /** How many men each of the Live tab's gameweek leaders lists. */
 export const LEADERS_SHOWN = 5;

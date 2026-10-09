@@ -4,7 +4,8 @@ import ClubShell from "../Shell";
 import { clubOr404 } from "../club";
 import { leagueOpinions } from "../../../leagueOpinions";
 import { poolHref } from "../../../poolHref";
-import { fantasyDepth } from "../SquadTable";
+import { squadOrder } from "../squadOrder";
+import { intelSquads } from "../../../../intel";
 import PlayerBoard from "./PlayerBoard";
 import type { Row } from "./PlayerBoard";
 
@@ -16,16 +17,10 @@ export const revalidate = 30;
 
 export default async function ClubStatsPage({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
-  const { club, snapshot } = await clubOr404(code);
-  const league = await leagueOpinions();
+  const [{ club, snapshot }, league] = await Promise.all([clubOr404(code), leagueOpinions()]);
 
   const rows: Row[] = squadOf(snapshot, club.id)
-    .sort(
-      (a, b) =>
-        fantasyDepth(league.get(a.code)) - fantasyDepth(league.get(b.code)) ||
-        b.season.minutes - a.season.minutes ||
-        a.name.localeCompare(b.name),
-    )
+    .sort(squadOrder(league, (code) => intelSquads.get(code)?.depthTier))
     .map((player) => ({
       player,
       positions: league.get(player.code)?.positions ?? [],

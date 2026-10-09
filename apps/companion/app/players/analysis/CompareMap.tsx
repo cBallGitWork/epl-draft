@@ -32,7 +32,9 @@ export default function CompareMap({
   const sides = men.map((man, index) => {
     const plate = plateOn(clubColoursOf(man.club));
     const turned = men.length === 2 && index === 0;
-    return { ...man, colour: plate.background, ink: plate.ink, shots: turned ? man.shots.map(turn) : man.shots };
+    // Keyed by side, never by name: web names repeat.
+    const side = index === 0 ? "a" : "b";
+    return { ...man, side, colour: plate.background, ink: plate.ink, shots: turned ? man.shots.map(turn) : man.shots };
   });
   const noun = passes ? "key passes" : "shots";
 
@@ -41,7 +43,7 @@ export default function CompareMap({
       <div className={`grid ${SMALL_CAPS} ${sides.length === 2 ? "grid-cols-2" : "grid-cols-1"}`}>
         {sides.map((side, index) => (
           <span
-            key={side.name}
+            key={side.side}
             className={`flex justify-between gap-2 px-2 py-1 ${index === 1 ? "flex-row-reverse" : ""}`}
             style={{ background: side.colour, color: side.ink }}
           >
@@ -58,11 +60,11 @@ export default function CompareMap({
       >
         <Pitch />
         {/* Pass lines under the marks, their origins over them. */}
-        {passes ? sides.map((side) => <KeyPassLines key={side.name} shots={side.shots} colour={side.colour} />) : null}
+        {passes ? sides.map((side) => <KeyPassLines key={side.side} shots={side.shots} colour={side.colour} />) : null}
         {sides.map((side) => (
-          <Marks key={side.name} shots={side.shots} ink={side.colour} />
+          <Marks key={side.side} shots={side.shots} ink={side.colour} />
         ))}
-        {passes ? sides.map((side) => <KeyPassOrigins key={side.name} shots={side.shots} colour={side.colour} />) : null}
+        {passes ? sides.map((side) => <KeyPassOrigins key={side.side} shots={side.shots} colour={side.colour} />) : null}
       </svg>
       <MarksKey>{passes ? <KeyPassKey /> : null}</MarksKey>
     </figure>

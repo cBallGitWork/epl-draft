@@ -14,6 +14,7 @@ import { footballNow, gameweekLive, gameweekSheets, seasonFixtures, speaksForNow
 import { intelMatches } from "../../../intel";
 import { marks } from "../../../involvement";
 import { forCode } from "./sheetJoin";
+import { wholeNumber } from "../../../wholeNumber";
 
 // The one read every match tab makes, so none assembles it twice and they cannot disagree about a field.
 
@@ -40,8 +41,8 @@ export interface Match {
 
 /** Everything about one fixture, or a 404; score and sheet each come from one cache, never crossed. */
 export async function readMatch(id: string): Promise<Match> {
-  const wanted = Number(id);
-  if (!Number.isInteger(wanted)) notFound();
+  const wanted = wholeNumber(id);
+  if (wanted === null) notFound();
 
   const [snapshot, fixtures] = await Promise.all([footballNow(), seasonFixtures()]);
   const fixture = fixtures.find((entry) => entry.id === wanted);

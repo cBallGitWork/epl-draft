@@ -16,9 +16,9 @@ import Nothing from "../../components/shell/Nothing";
 import { Head, HeadRow, NameHead, SortHead } from "../../components/league/TableHeads";
 import { IndexCell, TIGHT_ROW } from "../../components/league/TableCells";
 import GroupNav from "../../components/league/GroupNav";
-import { TEAM_STATS } from "../SectionNav";
 import LeagueShell from "../Shell";
 import Measures, { viewFor, type View } from "./Measures";
+import { boardHref } from "./boardHref";
 import { getSeasonStats } from "./seasonStats";
 import { getSquadStats } from "./squadStats";
 import { squadColumnsIn } from "./squadColumns";
@@ -61,7 +61,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
     );
   }
 
-  const { info, rounds, table } = schedule;
+  const { info, rounds } = schedule;
 
   // The league's own gameweeks that have kicked off: the calendar's weeks before its first pairing are not its own.
   const season = leagueSeason(info);
@@ -72,7 +72,8 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
   const category = columns.find((entry) => entry.key === query.cat) ?? columns[0] ?? categoryFor(undefined);
 
   const board = rankBy(columns, lines, category, measure);
-  const named = new Map(table.map((row) => [row.teamId, row.teamName]));
+  // The league's own names, which stand when the standings do not.
+  const named = new Map(info.teams.map((team) => [team.teamId, team.name]));
   const groupLabel = columns.map((entry) => entry.label).join(", ");
 
   return (
@@ -158,17 +159,10 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
       )}
       {/* Air between the last row and the foot row (Craig, 1 Sep). */}
       <div className="pt-2">
-        <GroupNav group={group} href={(key) => `${TEAM_STATS}?group=${key}`} />
+        <GroupNav group={group} href={(key) => boardHref(view, key)} />
       </div>
     </LeagueShell>
   );
-}
-
-/** Where a head or a measure plate leads; the default measure is spelled as no parameter, one URL rather than two. */
-function boardHref(by: View, group: string, category: string): string {
-  const query = new URLSearchParams({ group, cat: category });
-  if (by !== "points") query.set("by", by);
-  return `${TEAM_STATS}?${query.toString()}`;
 }
 
 /** Which way the board runs ordered by this column: `rankBy`'s call, said by the arrow. */

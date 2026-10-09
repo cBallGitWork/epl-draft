@@ -3,7 +3,7 @@ import PickField from "./PickField";
 import { candidates } from "./pick";
 import type { Candidate } from "./pick";
 import type { PoolRow } from "../pool";
-import { ANALYSIS } from "../routes";
+import { ANALYSIS, compareHref } from "../routes";
 import { QUIET_NOTE, ROW_NAME } from "../../desk";
 import { ROW_LINK } from "../../components/league/TableCells";
 
@@ -111,11 +111,8 @@ function Found({
 
 /** Where picking a name goes: this side becomes him and its search is spent; the other side, and its search, are kept. */
 function pickHref(side: "a" | "b", fantraxId: string, other: Side): string {
-  const next = new URLSearchParams();
-  next.set(side, fantraxId);
-  if (other.chosen !== undefined) next.set(side === "a" ? "b" : "a", other.chosen);
-  if (other.typed.trim() !== "") next.set(side === "a" ? "qb" : "qa", other.typed.trim());
-  return `${ANALYSIS}?${next.toString()}`;
+  const [otherSide, otherSearch] = side === "a" ? (["b", "qb"] as const) : (["a", "qa"] as const);
+  return compareHref({ [side]: fantraxId, [otherSide]: other.chosen, [otherSearch]: other.typed.trim() });
 }
 
 /** One field of the query the form does not own, or nothing: an empty one would post `a=`, an id of "". */

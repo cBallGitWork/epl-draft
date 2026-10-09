@@ -113,11 +113,12 @@ export default async function MatchdayPage({
   const places = placings(table);
 
   // The hour before the first kickoff (Craig, 8 Oct 2026: "build the hype"): the minutes to go, and the lock if ahead.
-  const first = fixturesInOrder(snapshot).find((fixture) => fixture.kickoff !== null)?.kickoff ?? null;
+  const first = round.find((fixture) => fixture.kickoff !== null)?.kickoff ?? null;
   const toGo = during && first !== null ? Date.parse(first) - now().getTime() : 0;
   const lock = drafted?.info == null ? null : nextDeadline(drafted.info.rosterPeriods, datedKickoffs(season), now().toISOString());
   const locksAt = lock !== null && first !== null && Date.parse(lock.locksAt) < Date.parse(first) ? lock.locksAt : null;
   const buildUp = toGo > 0 ? <BuildUp ms={toGo} locksAt={locksAt} /> : null;
+  const state = roundState(snapshot);
 
   // Every tie this week: the league's pairings and our cups (Craig, 5 Sep 2026).
   const ties: CompetitionTie[] =
@@ -148,13 +149,8 @@ export default async function MatchdayPage({
       {/* The round and its state are the page's title (Craig, 5 Sep 2026: "gameweek 3 LIVE as the
           title"); the sub line carries "Full time" or "Final", never LIVE twice. */}
       <PageHeader
-        title={`Draft Gameweek ${snapshot.gameweek}${roundState(snapshot) === "live" ? " LIVE" : ""}`}
-        sub={
-          buildUp ??
-          (roundState(snapshot) === null || roundState(snapshot) === "live" ? undefined : (
-            <RoundWord state={roundState(snapshot)} />
-          ))
-        }
+        title={`Draft Gameweek ${snapshot.gameweek}${state === "live" ? " LIVE" : ""}`}
+        sub={buildUp ?? (state === null || state === "live" ? undefined : <RoundWord state={state} />)}
         competition
       />
       {/* First in the document, streamed: Fantrax's scoreboard is the one read nothing waits on. */}

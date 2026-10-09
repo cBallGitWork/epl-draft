@@ -87,9 +87,10 @@ function Form({ run, calendar }: { run: readonly FormGame[]; calendar: readonly 
 
   return (
     <span className="flex justify-center gap-0.5">
-      {run.slice(-FORM_GAMES).map((game) => (
+      {run.slice(-FORM_GAMES).map((game, at) => (
         <span
-          key={game.period}
+          // The place too: a double header is two results in one period.
+          key={`${game.period}-${at}`}
           title={titleOf(game, openingGameweek(calendar, game.period))}
           className={`font-bold ${TONE[game.result]}`}
         >

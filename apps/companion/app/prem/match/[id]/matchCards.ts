@@ -1,4 +1,4 @@
-import type { Opposition, PlTeamSheet, SquadPlayerDetail } from "@epl/core";
+import { squadOf, type Club, type Opposition, type PlTeamSheet, type SquadPlayerDetail } from "@epl/core";
 import type { LeagueOpinion } from "../../leagueOpinions";
 import { backToFront } from "../../../positions";
 import type { Match } from "./match";
@@ -19,11 +19,10 @@ export function namedOn(sheets: { home: PlTeamSheet; away: PlTeamSheet }): SideC
   return { home: codes(sheets.home), away: codes(sheets.away) };
 }
 
-/** Both clubs' whole squads, for a match nobody has named a side for yet. */
+/** Both clubs' books, for a match nobody has named a side for yet: `squadOf`, so never a man who has left. */
 export function squadsOf(match: Match): SideCodes {
-  const codes = (clubId: number | undefined) =>
-    match.snapshot.players.filter((player) => player.clubId === clubId).map((player) => player.code);
-  return { home: codes(match.home?.id), away: codes(match.away?.id) };
+  const codes = (club: Club | undefined) => (club === undefined ? [] : squadOf(match.snapshot, club.id).map((player) => player.code));
+  return { home: codes(match.home), away: codes(match.away) };
 }
 
 /** Every man's card, by FPL code. One our league does not list has no Fantrax profile and no card. */

@@ -8,14 +8,13 @@ import Scoresheet from "./Scoresheet";
 import Preview from "./Preview";
 import MatchReport from "./MatchReport";
 import { matchOwners, readMatch } from "./match";
-import { matchCards, namedOn } from "./matchCards";
+import { sheetReads } from "./sheetReads";
 import { side } from "./scoreLines";
 import { stateLine } from "./matchState";
 import type { Match } from "./match";
-import { leagueOpinions } from "../../leagueOpinions";
 import { roundAssistKinds } from "../../../assistKinds";
 import { matchGoalMinutes } from "../../../matchFeed";
-import { matchFacts, matchGoals, matchInjuries, matchManEvents, matchStreamCredits, teamSheets } from "../../../matchDetail";
+import { matchFacts, matchGoals, matchStreamCredits } from "../../../matchDetail";
 
 // One match on CM's Match Overview (`cm0102/02.jpg`): a dated strip, who scored and when, then the report.
 
@@ -63,18 +62,14 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
 async function Sheet({ match }: { match: Match }) {
   const { gameweek, code } = match.fixture;
   const players = match.snapshot.players;
-  const [owners, minutes, goals, credits, did, injured, sheets, league, kinds] = await Promise.all([
+  const [owners, minutes, goals, credits, { events: did, injured, cards }, kinds] = await Promise.all([
     matchOwners(match.fixture),
     matchGoalMinutes(gameweek, code, players, goalMinutes(match.logged)),
     matchGoals(gameweek, code, players),
     // The commentary's word on the assists Opta does not place; `side` uses it only where FPL's counts agree.
     matchStreamCredits(gameweek, code, players),
-    // The minute of a sending off, which FPL's line does not carry.
-    matchManEvents(gameweek, code, players),
-    matchInjuries(gameweek, code, players),
-    teamSheets(gameweek, code, players),
-    // Each named man's Fantrax id, for his card.
-    leagueOpinions(),
+    // The minute of a sending off, which FPL's line does not carry, and each named man's card.
+    sheetReads(match),
     roundAssistKinds(gameweek),
   ]);
   const { home, away } = sides(match);
@@ -91,7 +86,7 @@ async function Sheet({ match }: { match: Match }) {
       byCode={match.byCode}
       did={did}
       injured={injured}
-      cards={sheets === null ? new Map() : matchCards(match, namedOn(sheets), league)}
+      cards={cards}
     />
   );
 }

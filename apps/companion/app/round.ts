@@ -1,6 +1,7 @@
 import {
   FANTRAX_LEAGUE_ID,
   type LeagueInfo,
+  type PeriodGameweeks,
   fetchLeagueInfo,
   mapLeagueInfo,
   openingGameweek,
@@ -30,15 +31,12 @@ export interface Round {
   period: number;
 }
 
-/** Each Fantrax period with the gameweeks it scores. Read, never assumed: a postponement is how the
- *  two come apart. */
-export const readCalendar = leagueCache("league-calendar",
-  async () => {
-    const [info, kickoffs] = await Promise.all([leagueInfo(), seasonKickoffs()]);
-    return info === null ? [] : periodGameweeks(info.scoringPeriods, kickoffs);
-  },
-  () => [],
-);
+/** Each Fantrax period with the gameweeks it scores. Read, never assumed: a postponement is how the two come apart.
+ *  Worked out from two cached reads, never cached itself: one nested inside a cache skips its own and goes live. */
+export async function readCalendar(): Promise<PeriodGameweeks[]> {
+  const [info, kickoffs] = await Promise.all([leagueInfo(), seasonKickoffs()]);
+  return info === null ? [] : periodGameweeks(info.scoringPeriods, kickoffs);
+}
 
 /** The first round whose lineups have not locked (mid-weekend, next week's), for the squad screens.
  *  The boards and the paper want the round being played, `getLeagueSquads()`'s default.

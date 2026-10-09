@@ -8,7 +8,7 @@ import type {
   RoundBreak,
   Fixture,
 } from "@epl/core";
-import { crestUrl, playerByCode } from "@epl/core";
+import { clubById, crestUrl, playerByCode } from "@epl/core";
 
 // The ownership join: each event's men, and who in the league holds them.
 // At the app edge, not in core: the football and league layers may not import each other.
@@ -86,7 +86,7 @@ export function wireLines(
   mine: string | null,
 ): Wire {
   const players = playerByCode(snapshot);
-  const clubs = new Map<number, Club>(snapshot.clubs.map((c) => [c.id, c]));
+  const clubs = clubById(snapshot);
   const fixtures = new Map<number, Fixture>(snapshot.fixtures.map((f) => [f.code, f]));
 
   /** One slot of an event, joined to the man and his holder; an empty slot and an unplaced man are both null. */
@@ -106,7 +106,7 @@ export function wireLines(
       // The feed's clock pads the minute ("09"); football prints it bare.
       minute: event.minute.replace(/^0(?=\d)/, ""),
       kind: event.kind,
-      club: man === null ? clubOf(undefined) : clubOf(clubs.get(man.player.clubId)),
+      club: man === null ? null : clubOf(clubs.get(man.player.clubId)),
       man,
       second: SECOND[event.kind] === true ? manAt(event, 1) : null,
       at: event.absolute,

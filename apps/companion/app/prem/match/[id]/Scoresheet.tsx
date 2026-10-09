@@ -69,9 +69,10 @@ function Column({
 }) {
   return (
     <ul className="flex max-w-[26rem] flex-col gap-1">
-      {goalGroups(goals).map((group) => (
+      {goalGroups(goals).map((group, at) => (
         <Goal
-          key={`${group.scorer ?? "?"}-${group.own}-${group.minutes[0]}`}
+          // The index too: two goals nobody can place, in one minute, are two rows.
+          key={`${group.scorer ?? "?"}-${group.own}-${group.minutes[0]}-${at}`}
           group={group}
           owners={owners}
           byCode={byCode}

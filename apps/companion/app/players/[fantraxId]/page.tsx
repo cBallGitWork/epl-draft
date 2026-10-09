@@ -7,7 +7,7 @@ import Nothing from "../../components/shell/Nothing";
 import { PANEL } from "@/app/desk";
 import ButtonLink from "../../components/shell/ButtonLink";
 import { POOL, PROJECTIONS_SHOWN } from "../routes";
-import { intelMinutes } from "../../intel";
+import { intelMinutes, intelSquads } from "../../intel";
 import { FPL_SILENT } from "../../config";
 import AttributeGrid from "./AttributeGrid";
 import BornLine from "./BornLine";
@@ -22,10 +22,9 @@ import RealPosition from "./RealPosition";
 import SeasonTable from "./SeasonTable";
 import HeldNote from "./HeldNote";
 import SetPieces from "./SetPieces";
-import { playerGrid, playerPieces, playerStanding, projectedWeeks, realPosition } from "./grid";
+import { playerGrid, playerPieces, playerStanding, projectedWeeks } from "./grid";
 import { joinMatches } from "./matchRows";
-import { gameLog } from "./scouting";
-import { scouting } from "./scouting";
+import { gameLog, scouting } from "./scouting";
 import { subject } from "./subject";
 
 // One player on Championship Manager's profile screen (`cm9900/11.jpg`): the bar, four tabs, his birth line, the
@@ -45,7 +44,8 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
     football === null
       ? [null, null, null]
       : await Promise.all([playerGrid(football.player), playerStanding(football.player), playerPieces(football.player)]);
-  const position = football === null ? null : realPosition(football.player.code);
+  // What he actually plays, as the sister repo settled it; null where it has no row for him.
+  const position = football === null ? null : (intelSquads.get(football.player.code) ?? null);
   // His run to come, off the snapshot and calendar every screen holds, so outside any boundary.
   const run = football === null ? null : await scouting(football.player);
   // Projected points only while Craig trusts them; xMins always.

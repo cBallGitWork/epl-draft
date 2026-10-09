@@ -1,5 +1,5 @@
 import type { Club, FootballPlayer, PlayerOwner, SquadPlayerDetail } from "@epl/core";
-import { clubColoursOf, inkOn, DASH } from "@epl/core";
+import { clubColoursOf, inkOn, onTheBooks, DASH } from "@epl/core";
 import PositionTile from "../../../components/league/PositionTile";
 import { clubIndex } from "../../../components/football/clubIndex";
 import { intelSquads } from "../../../intel";
@@ -66,7 +66,7 @@ function Side({
     club === undefined
       ? []
       : players
-          .filter((player) => player.clubId === club.id)
+          .filter((player) => player.clubId === club.id && onTheBooks(player))
           .sort((a, b) => depth(a) - depth(b) || a.name.localeCompare(b.name));
 
   return (

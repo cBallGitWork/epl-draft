@@ -11,7 +11,7 @@ import {
 import { Match, Pairing } from "./Rows";
 import { headToHeadQuiet } from "./headToHead";
 import RoundWord from "../../components/league/RoundWord";
-import { footballNow } from "../../football";
+import { footballNow, speaksForNow } from "../../football";
 import { liveScores } from "../../scoreboard";
 import { getLeagueSquads, readable, readerTeamId } from "../../squads";
 import { marksFor } from "../../involvement";
@@ -91,6 +91,7 @@ export default async function DeskPage() {
               fixture={fixture}
               clubs={clubs}
               yours={involved?.get(fixture.id)}
+              now={speaksForNow(snapshot)}
             />
           ))
         )}

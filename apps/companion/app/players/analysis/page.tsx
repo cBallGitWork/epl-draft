@@ -2,12 +2,9 @@ import { Suspense } from "react";
 import {
   FANTRAX_LEAGUE_ID,
   FANTRAX_PLAYER_BASE,
-  assistsOf,
   fixtureGameweeks,
   gameweekSpan,
-  inGameweeks,
   lastPlayed,
-  totalsOver,
   touchFixtures,
   touchesOf,
 } from "@epl/core";
@@ -18,18 +15,17 @@ import OutLink from "../../components/shell/OutLink";
 import CompareBar from "./CompareBar";
 import CompareMap from "./CompareMap";
 import Figures from "./Figures";
-import Measures from "./Measures";
+import Grids from "./Grids";
 import PickBar from "./PickBar";
 import PlayerMap from "./PlayerMap";
-import type { Played } from "./rates";
+import { manOver } from "./overWindow";
+import { sides } from "./pick";
+import { windowWords } from "./window";
 import { Chip } from "../BoardControls";
 import { StackWaiting } from "../[fantraxId]/Waiting";
-import { playerGrid } from "../[fantraxId]/grid";
 import { subject } from "../[fantraxId]/subject";
-import { gameLog } from "../[fantraxId]/scouting";
 import { getLeaguePool } from "../pool";
-import { ANALYSIS, lastValue } from "../routes";
-import { intelShots, intelTouches } from "../../intel";
+import { compareHref, lastValue } from "../routes";
 import { seasonFixtures } from "../../football";
 
 // Two players side by side (Craig, 6 Sep 2026). Two profile reads a view and never more; the search boxes read the
@@ -56,12 +52,12 @@ export default async function ComparePage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const asked = await searchParams;
-  const a = lastValue(asked.a);
-  // A man is never set against himself: `?a=X&b=X` collapses to the one-man screen.
-  const wanted = lastValue(asked.b);
-  const b = wanted === a ? undefined : wanted;
-  const qa = lastValue(asked.qa) ?? "";
-  const qb = lastValue(asked.qb) ?? "";
+  const { a, b, qa, qb } = sides({
+    a: lastValue(asked.a),
+    b: lastValue(asked.b),
+    qa: lastValue(asked.qa) ?? "",
+    qb: lastValue(asked.qb) ?? "",
+  });
   const view: View = VIEWS.find((entry) => entry.key === lastValue(asked.view))?.key ?? "figures";
   const recent = lastValue(asked.range) === String(RECENT);
 
@@ -123,7 +119,7 @@ export default async function ComparePage({
   const played = lastPlayed(fixtures, Number.POSITIVE_INFINITY);
   const window = recent ? lastPlayed(fixtures, RECENT) : played;
   const span = gameweekSpan(window) || "no gameweeks yet";
-  const told = recent ? `gameweeks ${window[0]} to ${window[window.length - 1]}` : "this season";
+  const told = windowWords(recent, window);
   const gameweekOf = fixtureGameweeks(fixtures);
   const inWindow = new Set(window);
 
@@ -131,19 +127,18 @@ export default async function ComparePage({
     [
       { side: one_, name: names.a },
       ...(solo || two === null || names.b === null ? [] : [{ side: two, name: names.b }]),
-    ].map(({ side, name }) => man(side, name, { recent, inWindow, gameweekOf })),
+    ].map(({ side, name }) => manOver(side, name, { recent, inWindow, gameweekOf })),
   );
   const [first, second] = [men[0], men[1] ?? null];
 
   const href = (changes: { view?: View; range?: string }) => {
-    const next = new URLSearchParams();
-    if (a !== undefined) next.set("a", a);
-    if (!solo && b !== undefined) next.set("b", b);
     const nextView = changes.view ?? view;
-    if (nextView !== "figures") next.set("view", nextView);
-    const nextRange = "range" in changes ? changes.range : recent ? String(RECENT) : undefined;
-    if (nextRange !== undefined) next.set("range", nextRange);
-    return `${ANALYSIS}?${next.toString()}`;
+    return compareHref({
+      a,
+      b: solo ? undefined : b,
+      view: nextView === "figures" ? undefined : nextView,
+      range: "range" in changes ? changes.range : recent ? String(RECENT) : undefined,
+    });
   };
   const has = {
     shots: men.some((each) => each.shots.length > 0),
@@ -248,50 +243,4 @@ export default async function ComparePage({
 /** The tell from a side that refused, or null. */
 function refusal(side: Awaited<ReturnType<typeof subject>> | null): string | null {
   return side !== null && "unavailable" in side ? side.unavailable : null;
-}
-
-type Found = Extract<Awaited<ReturnType<typeof subject>>, { intel: unknown }>;
-
-/** One man over the window: FPL's totals (the season's, or his game log's added up), and the export's marks.
- *  A man the export never bridged has no touches, and his three export counts are a dash rather than nought. */
-async function man(
-  side: Found,
-  name: string,
-  { recent, inWindow, gameweekOf }: { recent: boolean; inWindow: ReadonlySet<number>; gameweekOf: ReadonlyMap<number, number> },
-) {
-  const player = side.football?.player;
-  const code = player?.code ?? -1;
-  const keep = <Row extends { fplFixtureId: number }>(rows: readonly Row[]) =>
-    recent ? inGameweeks(rows, gameweekOf, inWindow) : [...rows];
-  const all = intelTouches.get(code);
-  const touches = all === undefined ? undefined : { ...all, fixtures: keep(all.fixtures) };
-  const shots = keep(intelShots.get(code) ?? []);
-  const keyPasses = keep(assistsOf(intelShots, code));
-  // The window is his game log: with FPL not answering it has no figures, rather than a window of noughts.
-  const log = player !== undefined && recent ? await gameLog(player) : null;
-  const totals =
-    player === undefined
-      ? null
-      : recent
-        ? log === null ? null : totalsOver(log.rows.map((row) => row.match), inWindow)
-        : player.season;
-  const played: Played | null =
-    totals === null
-      ? null
-      : {
-          ...totals,
-          touches: touches === undefined ? null : touchesOf(touches, null).length,
-          shots: touches === undefined ? null : shots.length,
-          keyPasses: touches === undefined ? null : keyPasses.length,
-        };
-  return { name, club: side.football?.club, touches, shots, keyPasses, played };
-}
-
-/** The two attribute grids, read behind the boundary above. */
-async function Grids({ left, right, names }: { left: Found; right: Found | null; names: { a: string; b: string | null } }) {
-  const [gridA, gridB] = await Promise.all([
-    left.football ? playerGrid(left.football.player).then((grid) => grid.attributes) : Promise.resolve([]),
-    right?.football ? playerGrid(right.football.player).then((grid) => grid.attributes) : Promise.resolve([]),
-  ]);
-  return <Measures a={gridA} b={gridB} names={names} />;
 }

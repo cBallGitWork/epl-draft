@@ -24,7 +24,7 @@ export default async function NextMatchPage({
   params: Promise<{ teamId: string }>;
 }) {
   const { teamId: slug } = await params;
-  // The whole read, not `teamOr404`: this screen needs the matchups and the period too.
+  // The whole read, not `leagueTeams`: this screen needs the matchups and the period too.
   const [read, table] = await Promise.all([
     getLeagueSquads(await planningRound()),
     leagueTable(),

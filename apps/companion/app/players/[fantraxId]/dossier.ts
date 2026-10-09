@@ -1,4 +1,4 @@
-import { FANTRAX_LEAGUE_ID, fetchPlayerStories, mapPlayerStories } from "@epl/core";
+import { FANTRAX_LEAGUE_ID, LEAGUE_TIMEZONE, fetchPlayerStories, londonDay, mapPlayerStories, wallClockInstant } from "@epl/core";
 import { orderKey } from "@epl/core";
 import type { LeagueTransaction, PlayerStory } from "@epl/core";
 import { unstable_cache } from "next/cache";
@@ -24,10 +24,10 @@ export function playerStories(fantraxId: string, now: Date): Promise<PlayerStory
 }
 
 /** Midnight on 1 July of the football year `now` falls in (Craig, 4 Sep 2026: "Just show from 1 July this year"). */
-function footballYearFrom(now: Date): number {
-  const JULY = 6; // `getMonth` is zero-based, and this is the one place that bites.
-  const year = now.getMonth() >= JULY ? now.getFullYear() : now.getFullYear() - 1;
-  return new Date(year, JULY, 1).getTime();
+export function footballYearFrom(now: Date): number {
+  const JULY = 7;
+  const [year, month] = londonDay(now).split("-").map(Number);
+  return wallClockInstant(Date.UTC(month >= JULY ? year : year - 1, JULY - 1, 1), LEAGUE_TIMEZONE);
 }
 
 /** One move in this league, with the sides named rather than left as ids. */

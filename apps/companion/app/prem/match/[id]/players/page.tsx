@@ -7,8 +7,8 @@ import MatchPitch from "../MatchPitch";
 import TeamSheet from "../TeamSheet";
 import { matchOwners, readMatch } from "../match";
 import { leagueOpinions } from "../../../leagueOpinions";
-import { matchCards, namedOn, squadsOf } from "../matchCards";
-import { matchInjuries, matchManEvents, teamSheets } from "../../../../matchDetail";
+import { matchCards, squadsOf } from "../matchCards";
+import { sheetReads } from "../sheetReads";
 import { matchHref } from "../matchRoutes";
 import { MATCH_ROW } from "../matchRow";
 import type { Match } from "../match";
@@ -124,19 +124,10 @@ async function BothSquads({ match, side }: { match: Match; side: Side }) {
 }
 
 async function Board({ match, view, side }: { match: Match; view: View; side: Side }) {
-  // `teamSheets` and `matchManEvents` are one cached fixture detail, so the pair is one request.
-  const { gameweek, code } = match.fixture;
-  const [owners, sheets, events, injured, league] = await Promise.all([
-    matchOwners(match.fixture),
-    teamSheets(gameweek, code, match.snapshot.players),
-    matchManEvents(gameweek, code, match.snapshot.players),
-    matchInjuries(gameweek, code, match.snapshot.players),
-    leagueOpinions(),
-  ]);
+  const [owners, { sheets, events, injured, league, cards }] = await Promise.all([matchOwners(match.fixture), sheetReads(match)]);
 
   // Their sheet is the only source of a bench; without it, both squads is the honest fallback.
   if (sheets === null) return <BothSquads match={match} side={side} />;
-  const cards = matchCards(match, namedOn(sheets), league);
   if (view === "pitch")
     return (
       <MatchPitch

@@ -94,7 +94,8 @@ const COLUMNS: readonly Column[] = [
   { head: "Yel", title: "Yellow cards", of: (s) => s.yellowCards },
   { head: "Red", title: "Red cards", of: (s) => s.redCards },
   {
-    head: "Pts",
+    // FPL's own points, headed as FPL's, as this season's table above heads them: never `FPts`, which is Fantrax's.
+    head: "FPL",
     title: "FPL's points, under FPL's rules — not this league's",
     of: (s) => s.fplPoints,
   },

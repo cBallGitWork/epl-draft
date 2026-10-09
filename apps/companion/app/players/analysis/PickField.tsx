@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PRESSABLE } from "../BoardControls";
 import { formHref } from "../../components/shell/formHref";
+import { heldText } from "../heldText";
 
 // One of Compare's two search boxes, narrowing the list beside it as you type. `Search.tsx`'s shape, copied: the second
 // occurrence, and it differs in what it narrows.
@@ -33,12 +34,13 @@ export default function PickField({
   const router = useRouter();
   const [text, setText] = useState(query);
   const [rendered, setRendered] = useState(query);
+  const [sent, setSent] = useState<string | null>(null);
   const form = useRef<HTMLFormElement>(null);
 
   // The URL is the authority: reset during render, as `Search.tsx` does.
   if (query !== rendered) {
     setRendered(query);
-    setText(query);
+    setText(heldText(query, sent, text));
   }
 
   useEffect(() => {
@@ -46,6 +48,7 @@ export default function PickField({
     const timer = setTimeout(() => {
       const target = form.current;
       if (target === null) return;
+      setSent(text.trim());
       // `replace`, so a search is one history entry; `scroll: false`, so the list under the box stays put.
       router.replace(formHref(action, new FormData(target)), { scroll: false });
     }, SETTLE);

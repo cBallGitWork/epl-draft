@@ -15,6 +15,12 @@ describe("COLUMNS", () => {
     expect(new Set(keys).size).toBe(keys.length);
   });
 
+  it("gives every column its own label, so Sort by never offers one name twice", () => {
+    // Crosses (#413) took Crossing's "Crs".
+    const labels = COLUMNS.map((column) => column.label);
+    expect(labels.filter((label, at) => labels.indexOf(label) !== at)).toEqual([]);
+  });
+
   it("keeps a key the address bar can carry", () => {
     for (const key of COLUMNS.map((column) => column.key)) {
       expect(key, key).toMatch(/^[a-z0-9]+$/);

@@ -1,14 +1,15 @@
 import type { ReactNode } from "react";
 import type { Viewport } from "next";
 import { paperFontVariables } from "../paperFonts";
+import { TOKEN_SRGB } from "../config";
 
 // The paper's register, put on once for every route in the group: `.paper`, the two serifs, cream browser chrome.
 
 // Must match `PAGE_REVALIDATE` in the app's config: Next reads this statically, so it cannot be imported.
 export const revalidate = 30;
 
-// `--paper` in paper.css, as a literal because it is serialised into a <meta> tag: change both together.
-export const viewport: Viewport = { themeColor: "#f6ddd2" };
+// `--paper` in paper.css, serialised into a <meta> tag.
+export const viewport: Viewport = { themeColor: TOKEN_SRGB.paper };
 
 export default function PaperLayout({ children }: { children: ReactNode }) {
   return (

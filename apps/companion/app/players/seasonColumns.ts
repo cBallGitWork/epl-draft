@@ -5,7 +5,7 @@ import type { PoolColumn } from "./columns";
 // crosses"). The served league carries none, so they ride in the stats bag under their own keys, never as a `stat`.
 
 interface SeasonStat {
-  /** The address bar's key: Crossing's grid column already holds `crs`. */
+  /** The address bar's key. */
   key: string;
   from: StatKey;
   label: string;

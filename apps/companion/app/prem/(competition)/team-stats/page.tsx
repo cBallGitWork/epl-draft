@@ -72,7 +72,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
             <HeadRow>
               <Head width="w-8 lg:w-14" />
               <NameHead label="Club" />
-              <Head width="w-20 lg:w-32" title={category.title} sorted="descending">
+              <Head width="w-20 lg:w-32" title={category.title} sorted={category.descending ? "descending" : "ascending"}>
                 {/* A plain plate, not a link: the picker is what changes the order. */}
                 <span className={PRESSED_PLATE}>
                   {category.label}

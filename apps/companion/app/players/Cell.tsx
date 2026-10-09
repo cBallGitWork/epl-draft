@@ -5,7 +5,7 @@ import type { PoolRow } from "./pool";
 import type { PoolColumn, RawStats } from "./columns";
 import { figureOf } from "./figure";
 import { standoutInk, type StandoutCut } from "../components/league/standout";
-import { ANALYSIS, playerHref } from "./routes";
+import { compareHref, playerHref } from "./routes";
 import type { PlayersQuery } from "./query";
 import { ROW_LINK } from "../components/league/TableCells";
 import { Holder, LEAD_WIDTH, LeadFace, TIGHT_FIGURE } from "./BoardRow";
@@ -37,7 +37,7 @@ export function Lead({
   // With a first man chosen (`?compare=`) the board is the picker, and a row completes the pair.
   const href =
     query.compare && query.compare !== player.fantraxId
-      ? `${ANALYSIS}?a=${query.compare}&b=${player.fantraxId}`
+      ? compareHref({ a: query.compare, b: player.fantraxId })
       : playerHref(player.fantraxId);
 
   return (

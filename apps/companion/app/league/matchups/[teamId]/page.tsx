@@ -3,7 +3,7 @@ import {
   type LeagueTeam,
   bandCategories,
   clubById,
-  roundStarted,
+  gameweekStarted,
   headToHead,
   nextPairedPeriod,
   openingGameweek,
@@ -27,6 +27,7 @@ import { liveScores, squadLivePoints } from "../../../scoreboard";
 import { newsFor, readPoolNews } from "../../../poolNews";
 import { myTeamId } from "../../../session";
 import { MATCHUPS, matchupHref } from "../../routes";
+import { wholeNumber } from "../../../wholeNumber";
 import { sheetEvents } from "./events";
 import { STATS_OF, DEFAULT_SIDE_SORT, matchupTabs, matchupView, statsHref, statsOf } from "./views";
 import { boardCategories, boardColumns } from "./sideRows";
@@ -55,8 +56,8 @@ export default async function HeadToHeadPage({
   const sort = { head: query.sort ?? DEFAULT_SIDE_SORT, descending: query.dir !== "asc" };
 
   // Through the calendar seam: the period is Fantrax's question, the gameweek FPL's.
-  const asked = Number(gw);
-  const round = Number.isInteger(asked) ? await roundOf(asked) : null;
+  const asked = wholeNumber(gw);
+  const round = asked === null ? null : await roundOf(asked);
   const squads = readableOr404(await getLeagueSquads(round), MATCHUPS);
 
   // Undrafted is a 404; the other two states go to the board, which describes them.
@@ -69,9 +70,9 @@ export default async function HeadToHeadPage({
   // `settled`: true at all three finished rungs, and only `data_checked` licenses "final".
   const played = state !== null && state !== "live";
 
-  // A round nobody has kicked off is two squad lists (Craig, 11 Sep 2026). `roundStarted`, not `roundState`, which is
-  // null between two Saturday kickoffs too.
-  const started = roundStarted(squads.snapshot, squads.snapshot.gameweek);
+  // A round nobody has kicked off is two squad lists (Craig, 11 Sep 2026). `gameweekStarted`, not `roundState`, which
+  // is null between two Saturday kickoffs too.
+  const started = gameweekStarted(squads.snapshot.fixtures, squads.snapshot.gameweek);
 
   const rostered = new Map(squads.period.teams.map((team) => [team.teamId, team]));
   const named = rostered.get(teamId);
@@ -163,7 +164,7 @@ export default async function HeadToHeadPage({
 
   const both = sharedSides({ pairing, rostered, shows, arranged, squads, mine, calendar });
   const withheld = withheldNotice(both);
-  const gameweek = Number.isInteger(asked) ? asked : undefined;
+  const gameweek = asked ?? undefined;
   const stat = both[of === "opponent" ? 1 : 0];
 
   return (

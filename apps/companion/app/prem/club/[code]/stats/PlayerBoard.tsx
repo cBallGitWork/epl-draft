@@ -32,7 +32,8 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
     null,
   );
 
-  const measures = VIEWS.find((entry) => entry.key === view)?.measures ?? [];
+  const shown = VIEWS.find((entry) => entry.key === view);
+  const measures = shown?.measures ?? [];
   // Each column's standouts among the men who have played, as a match board lights them.
   const played = rows.filter((row) => row.player.season.minutes > 0).length;
   const cuts = new Map(
@@ -80,7 +81,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
 
       <ScrollBoard className="bg-surface">
         <table className="w-full border-collapse whitespace-nowrap">
-          <caption className="sr-only">Every player, by {view}</caption>
+          <caption className="sr-only">Every player&apos;s {shown?.label.toLowerCase()} figures</caption>
           <thead>
             <HeadRow>
               <LeadHeads tile={PINNED_TILE} name={PINNED_BESIDE_TILE} />

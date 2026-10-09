@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { PoolRow } from "../pool";
-import { candidates } from "./pick";
+import { candidates, sides, type Sides } from "./pick";
 
 /** Just enough of a pool row for the picker, which reads two fields of it. */
 function pool(names: [string, string][]): PoolRow[] {
@@ -64,5 +64,29 @@ describe("candidates", () => {
       "7",
       "8",
     ]);
+  });
+});
+
+describe("sides", () => {
+  const link = (over: Partial<Sides>): Sides => ({ a: undefined, b: undefined, qa: "", qb: "", ...over });
+
+  it("keeps two different men, and both searches, where the link put them", () => {
+    expect(sides(link({ a: "1", b: "2", qa: "sal" }))).toEqual(link({ a: "1", b: "2", qa: "sal" }));
+  });
+
+  it("reads a lone man in box B as the one man on screen, not nobody", () => {
+    expect(sides(link({ b: "2" }))).toEqual(link({ a: "2" }));
+  });
+
+  it("moves the empty box's search with him, so picking from it still compares the two", () => {
+    expect(sides(link({ b: "2", qa: "sal" }))).toEqual(link({ a: "2", qb: "sal" }));
+  });
+
+  it("never sets a man against himself", () => {
+    expect(sides(link({ a: "1", b: "1" }))).toEqual(link({ a: "1" }));
+  });
+
+  it("leaves a search where it was typed while nobody is chosen", () => {
+    expect(sides(link({ qa: "sal" }))).toEqual(link({ qa: "sal" }));
   });
 });
