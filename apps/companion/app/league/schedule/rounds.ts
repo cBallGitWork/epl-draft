@@ -10,7 +10,8 @@ import {
 } from "@epl/core";
 import type { ScheduleRound } from "./schedule";
 
-/** The league's rounds, ascending: Fantrax's periods as gameweeks (`periodGameweeks`, the one-way seam). */
+/** The league's rounds, ascending: one per period, for the gameweek it is for (`own`), so a period's ties are listed
+ *  once and a rearranged match never moves its gameweek; a break, which holds none, is not on it. */
 export function scheduleRounds(info: LeagueInfo, season: readonly Fixture[]): ScheduleRound[] {
   const kickoffs = datedKickoffs(season);
 
@@ -20,18 +21,17 @@ export function scheduleRounds(info: LeagueInfo, season: readonly Fixture[]): Sc
   );
 
   return periodGameweeks(info.scoringPeriods, kickoffs)
-    // A double holds two gameweeks and a break none; flattened, the page is a list of gameweeks.
-    .flatMap((period) =>
-      period.gameweeks.map((gameweek) => ({
-        gameweek,
-        period: period.period,
-        deadline: opens.get(period.period)?.deadline ?? null,
-        kickoff: opens.get(period.period)?.kickoff ?? null,
-        status: gameweekStatus(season, gameweek),
-        started: gameweekStarted(season, gameweek),
-      })),
+    .flatMap(({ period, own }) =>
+      own === null
+        ? []
+        : [{
+            gameweek: own,
+            period,
+            deadline: opens.get(period)?.deadline ?? null,
+            kickoff: opens.get(period)?.kickoff ?? null,
+            status: gameweekStatus(season, own),
+            started: gameweekStarted(season, own),
+          }],
     )
-    .sort((a, b) => a.gameweek - b.gameweek)
-    // One round per gameweek: a postponed fixture puts its gameweek in two periods, and the lower is its own week.
-    .filter((round, at, all) => all.findIndex((e) => e.gameweek === round.gameweek) === at);
+    .sort((a, b) => a.gameweek - b.gameweek);
 }

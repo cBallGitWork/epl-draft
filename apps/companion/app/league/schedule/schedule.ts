@@ -36,7 +36,7 @@ export interface ScheduleRound {
 
 export interface Schedule {
   info: LeagueInfo;
-  /** Ascending; a gameweek no period covers is not on it. */
+  /** Ascending, one per period, for the gameweek it is for (`scheduleRounds`). */
   rounds: ScheduleRound[];
   /** Fantrax's table, for each side's place. Empty is ordinary: nobody has played, or nobody has joined. */
   table: StandingsRow[];
