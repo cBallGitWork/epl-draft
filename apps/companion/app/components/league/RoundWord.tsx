@@ -1,6 +1,6 @@
 import type { RoundState } from "@epl/core";
 
-// Where the round on screen stands, in one word; each caller sets its own size and weight.
+// Where the gameweek on screen stands, in one word; each caller sets its own size and weight.
 
 export default function RoundWord({ state }: { state: RoundState }) {
   if (state === null) return null;

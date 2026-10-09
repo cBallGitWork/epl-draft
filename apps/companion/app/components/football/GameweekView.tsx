@@ -18,7 +18,7 @@ import MatchList from "./MatchList";
 import { GAMEWEEK_HEAD, GAMEWEEK_TITLE } from "@/app/desk";
 import { SQUAD } from "../../squad/routes";
 
-// One round of football: the /gw/[gameweek] page.
+// One gameweek of football: the /gw/[gameweek] page.
 
 export default function GameweekView({
   snapshot,
@@ -90,7 +90,7 @@ export default function GameweekView({
   );
 }
 
-/** A round's link, or an inert placeholder at either end of the season so the other keeps its place. */
+/** A gameweek's link, or an inert placeholder at either end of the season so the other keeps its place. */
 function GameweekLink({
   gameweek,
   label,
@@ -104,7 +104,7 @@ function GameweekLink({
     align === "end" ? "text-right" : ""
   }`;
 
-  // A flat outline, not a plate: only a round you can reach looks pressable.
+  // A flat outline, not a plate: only a gameweek you can reach looks pressable.
   if (gameweek === null) {
     return (
       <span className={`${classes} border border-line text-faint opacity-40`}>{label}</span>

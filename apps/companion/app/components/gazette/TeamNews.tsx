@@ -11,7 +11,6 @@ const STATUS: Record<string, string> = {
   FIT: "text-muted",
 };
 
-
 export default function TeamNews({ story }: { story: PublishedStory }) {
   const rows = story.extras?.teamNews ?? [];
   if (rows.length === 0) return null;

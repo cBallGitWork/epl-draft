@@ -51,7 +51,7 @@ export default function Face({
   rank,
 }: {
   face: StoryFace;
-  /** The round's clubs, keyed by FPL id. Empty costs the picture its kit and
+  /** The gameweek's clubs, keyed by FPL id. Empty costs the picture its kit and
    *  its crest, never the story. */
   clubs: Map<number, Club>;
   rank: Rank;

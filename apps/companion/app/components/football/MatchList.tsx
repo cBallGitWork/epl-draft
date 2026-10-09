@@ -4,6 +4,7 @@ import {
   type Fixture,
   type FootballPlayer,
   type FootballSnapshot,
+  type MatchContribution,
   type PlayerOwner,
   clubById,
   clubColoursOf,
@@ -42,7 +43,7 @@ export default function MatchList({
 
   if (fixtures.length === 0) {
     return (
-      <p className=" border border-line bg-surface px-4 py-6 text-center text-sm text-muted">
+      <p className="border border-line bg-surface px-4 py-6 text-center text-sm text-muted">
         No fixtures scheduled for this gameweek yet.
       </p>
     );
@@ -219,7 +220,7 @@ function ScoreBlock({ fixture, now }: { fixture: Fixture; now: boolean }) {
 }
 
 /** What he did, as `chipsFor`'s chips; only the size and padding are this caller's. */
-function Events({ c }: { c: import("@epl/core").MatchContribution }) {
+function Events({ c }: { c: MatchContribution }) {
   return (
     <span className="flex shrink-0 items-center gap-1">
       {chipsFor(c).map((chip) => (

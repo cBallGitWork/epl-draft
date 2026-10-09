@@ -71,7 +71,6 @@ export default function LineupPlanner({
   const { saving, answer, save, clear } = useSave(period, plan, markSaved);
   const [view, setView] = useState<View>("pitch");
 
-
   return (
     <div className="flex flex-col gap-3">
       {/* The Pitch/List toggle spans the page on a phone and keeps the 44px tap floor. */}
@@ -93,44 +92,44 @@ export default function LineupPlanner({
 
       {/* One panel round list and pitch, as on a rival's squad. */}
       <section className={PANEL}>
-      <BothReadings
-        view={view}
-        list={
-          <div className="flex flex-col gap-2">
-          <SquadRows
-            lines={rows.map((line) => ({ position: line.label, players: line.players }))}
-            projected={false}
-            eligibility={eligibleBy}
-            onOpen={setCard}
-          />
-          {bench.length === 0 ? null : (
-            <>
-              {/* Nothing prints on the bare ground (DESIGN §2), so the heading draws its own plate. */}
-              <p className={HEADING_PLATE}>Bench</p>
+        <BothReadings
+          view={view}
+          list={
+            <div className="flex flex-col gap-2">
               <SquadRows
-                lines={[{ position: "", players: bench }]}
+                lines={rows.map((line) => ({ position: line.label, players: line.players }))}
                 projected={false}
                 eligibility={eligibleBy}
-                head={false}
-                reserve
                 onOpen={setCard}
               />
-            </>
-          )}
-          </div>
-        }
-        pitch={
-          <LineupPitch
-            inColumn
-            rows={rows}
-            bench={bench}
-            pickStateOf={pickStateOf}
-            onPick={pick}
-            openings={openings}
-            onPlace={place}
-          />
-        }
-      />
+              {bench.length === 0 ? null : (
+                <>
+                  {/* Nothing prints on the bare ground (DESIGN §2), so the heading draws its own plate. */}
+                  <p className={HEADING_PLATE}>Bench</p>
+                  <SquadRows
+                    lines={[{ position: "", players: bench }]}
+                    projected={false}
+                    eligibility={eligibleBy}
+                    head={false}
+                    reserve
+                    onOpen={setCard}
+                  />
+                </>
+              )}
+            </div>
+          }
+          pitch={
+            <LineupPitch
+              inColumn
+              rows={rows}
+              bench={bench}
+              pickStateOf={pickStateOf}
+              onPick={pick}
+              openings={openings}
+              onPlace={place}
+            />
+          }
+        />
       </section>
 
       {card !== null ? (

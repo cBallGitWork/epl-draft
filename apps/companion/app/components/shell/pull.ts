@@ -1,7 +1,7 @@
 // The pull-to-refresh gesture as numbers: how far the plate has come down, whether letting go refreshes, and whether
 // a drag is a pull at all or a sideways swipe across a wide table.
 
-export interface PullRules {
+interface PullRules {
   /** The plate's travel, in px, at which letting go refreshes. */
   arm: number;
   /** The furthest the plate comes down, in px. */

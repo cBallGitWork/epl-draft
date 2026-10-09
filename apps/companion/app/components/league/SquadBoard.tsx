@@ -31,7 +31,6 @@ export default function SquadBoard({
   projected: boolean;
   /** Eligible positions by Fantrax id; a record, not a `Map`, as it crosses to the browser. */
   eligibility?: Record<string, string[]>;
-
 }) {
   const [open, setOpen] = useState<SquadPlayerDetail | null>(null);
 
@@ -40,7 +39,7 @@ export default function SquadBoard({
   return (
     <div className="flex flex-col gap-2">
       {explanation ? (
-        <p className=" border border-line bg-surface px-3 py-2 text-2xs text-muted">
+        <p className="border border-line bg-surface px-3 py-2 text-2xs text-muted">
           {explanation}
         </p>
       ) : null}

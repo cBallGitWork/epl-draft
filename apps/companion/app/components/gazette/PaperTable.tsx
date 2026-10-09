@@ -50,10 +50,10 @@ export default function PaperTable({
           {played ? (
             <span className="numeric w-6 shrink-0 text-center text-muted">{row.played ?? DASH}</span>
           ) : null}
-          {/* Not `.numeric` on the chart: there this cell is a manager's name. */}
+          {/* Not `.numeric` on the chart: there this cell is a manager's name. One width only, as `w-20` beat `w-12`. */}
           {detail ? (
             <span
-              className={`w-20 shrink-0 truncate text-muted ${played ? "numeric w-12 text-center" : ""}`}
+              className={`shrink-0 truncate text-muted ${played ? "numeric w-12 text-center" : "w-20"}`}
             >
               {row.detail ?? DASH}
             </span>

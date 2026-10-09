@@ -14,7 +14,7 @@ const TONES = {
 } as const;
 
 /** The events a chip is drawn from; structural, so both callers' shapes fit. */
-export interface Countable {
+interface Countable {
   goals: number;
   assists: number;
   saves: number;

@@ -15,7 +15,7 @@ export default function Skeleton({
   return (
     <span
       aria-hidden
-      className={`block shrink-0 animate-pulse bg-current/15 ${circle ?"rounded-full":""}`}
+      className={`block shrink-0 animate-pulse bg-current/15 ${circle ? "rounded-full" : ""}`}
       style={{ width, height }}
     />
   );

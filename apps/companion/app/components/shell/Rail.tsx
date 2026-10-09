@@ -9,7 +9,7 @@ import { CREDITS, owns, sectionsFor } from "./sections";
 import { SMALL_CAPS } from "@/app/desk";
 
 // Championship Manager's rail: down the side of a desk, and laid along the foot of a phone (`ThumbRail`).
-// It decides the section list once, from the round; client only because `usePathname` says where you are.
+// It decides the section list once, from the gameweek; client only because `usePathname` says where you are.
 
 /** CM's back and forward arrows, desk only, in ink: the accent means yours or selected, and an arrow is neither.
  *  Forward is never greyed, because `history` cannot say whether there is anywhere forward. */

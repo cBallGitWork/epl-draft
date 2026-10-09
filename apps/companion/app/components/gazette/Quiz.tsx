@@ -19,8 +19,7 @@ export default function Quiz({ story }: { story: PublishedStory }) {
       <p className="pt-3 font-sans text-3xs uppercase tracking-[0.16em] text-faint">Answers</p>
       <ol
         className="flex list-decimal flex-col gap-0.5 pl-4 pt-1 text-2xs text-faint"
-        // The gag itself. `inline-size` keeps the rotated block inside the
-        // column rather than spilling into the gutter.
+        // The gag itself.
         style={{ transform: "rotate(180deg)", transformOrigin: "center" }}
       >
         {quiz.map((item, at) => (

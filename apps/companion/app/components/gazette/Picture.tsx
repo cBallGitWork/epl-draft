@@ -12,7 +12,7 @@ export default function Picture({
 }: {
   lead: Story;
   who: (teamId: string | null) => string;
-  /** The round's clubs, keyed by FPL id, for the one story that has a face in
+  /** The gameweek's clubs, keyed by FPL id, for the one story that has a face in
    *  it. Empty is ordinary and costs the cut-out its kit, not the lead. */
   clubs: Map<number, Club>;
 }) {
