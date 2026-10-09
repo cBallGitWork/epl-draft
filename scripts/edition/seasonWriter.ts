@@ -3,7 +3,6 @@ import {
   PAPER_TITLE,
   assembleSeason,
   checkSeason,
-  lineKey,
   mergeSeason,
   readSeasonDraft,
   type CheckContext,
@@ -46,8 +45,8 @@ export async function writeSeason(desk: SeasonDesk, brief: string, say: Say): Pr
   const draft = mergeSeason(attempts, desk.calls);
   const left = serious(checkSeason(draft, desk.calls, desk.squads, ctx));
   say(left.length === 0 ? "  ✓ lawro season: the editor passes every section" : `  ⚠ lawro season files with ${left.length} faults the rewrite kept: ${summary(left)}`);
-  const empty = desk.calls.sides.filter((side) => draft.table.get(side.teamId) === "").map((side) => lineKey(side.teamId));
-  if (empty.length > 0) say(`  ⚠ lawro season: ${empty.length} sides print their place alone; their line failed twice.`);
+  const empty = desk.calls.sides.filter((side) => draft.table.get(side.teamId) === "").length;
+  if (empty > 0) say(`  ⚠ lawro season: ${empty} sides print their place alone; their line failed twice.`);
   return assembleSeason(draft, desk.calls, HEADLINE);
 }
 

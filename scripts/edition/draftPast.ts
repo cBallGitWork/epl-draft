@@ -4,7 +4,7 @@ import { readArchive } from "./persist";
 // The draft reports filed before this one, newest first: the last few, and at the end of a gameweek its own Saturday's,
 // so a side's story, a phrase or a headline is not told the same way twice (Craig, 29 Sep 2026: no repeated narratives).
 
-export interface PastDraft {
+interface PastDraft {
   headline: string;
   draft: StoryDraftReport;
 }

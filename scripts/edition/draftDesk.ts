@@ -54,7 +54,7 @@ import { earlierSheets } from "./sheets";
 // points by London day, bench orders and fitness news, the football layer's goals and minutes, the table, runs, meetings
 // and stories told before, and a projection that weighs a star's blank and never prints.
 
-export interface DraftDesk {
+interface DraftDesk {
   gameweek: number;
   period: number;
   days: string[];

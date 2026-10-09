@@ -1,9 +1,7 @@
 import { londonWeekday, londonWeekdayLong, type StoryKind } from "@epl/core";
 
-// Who each story runs under, and which named edition it goes out in. COPY,
-// all of it, and Craig's to change: homage names ship as strings precisely so
-// changing one costs nothing. A kind missing from a table gets the honest
-// empty, which the page renders as nothing.
+// Who each story runs under, and which named edition it goes out in: Craig's copy, as strings. A kind missing from a
+// table gets the empty string, which the page renders as nothing.
 
 export const STORY_BYLINE: Partial<Record<StoryKind, string>> = {
   "match-report": "The Back Page",
@@ -28,10 +26,8 @@ export const COLUMNIST: Partial<Record<StoryKind, string>> = {
   "season-rankings": "Mark Lawrenson",
 };
 
-/** The edition a filing goes out under — the paper's names for its own
- *  rhythms, stamped from the kind and the day it filed. The reporting kinds
- *  take the day's paper: Saturday's is the Pink 'Un because the stock has
- *  been rosa since 29 Aug and finally earns it. */
+/** The edition a filing goes out under, from its kind and the day it filed; the reporting kinds take the day's paper,
+ *  Saturday's the Pink 'Un. */
 export function editionName(kind: StoryKind, filedAt: string, playedOn?: string): string {
   // Named for the day the matches were played, not the day it filed, and no real paper's name (Craig, 28 Sep 2026):
   // Saturday's matches are the "Saturday Prem Report" even when it files on Sunday morning.

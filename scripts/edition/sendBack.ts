@@ -14,7 +14,7 @@ export function faultSummary(faults: readonly Fault[]): string {
 }
 
 /** One desk's column: what it is written from, how its faults are read, and what the writer is told on a send-back. */
-export interface SendBack<A> {
+interface SendBack<A> {
   /** The desk as the log names it: `sheets`, `lawro`. */
   desk: string;
   voice: string;

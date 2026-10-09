@@ -113,7 +113,7 @@ export function __escapeControlsInStrings(json: string): string {
 }
 
 /** Everything ours about a filing; the model's part is only the words. */
-export interface ColumnMeta {
+interface ColumnMeta {
   slug: string;
   kind: StoryKind;
   leagueId: string;

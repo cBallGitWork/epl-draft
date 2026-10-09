@@ -27,7 +27,7 @@ import {
 // side's settled results before the gameweek, the table rebuilt from them, the meetings of any two sides, and where a man
 // used to be. Read once; the gameweek's facts are then worked from it at each cut-off.
 
-export interface DraftSeason {
+interface DraftSeason {
   period: number;
   /** Each side's settled results before this gameweek, oldest first. */
   runs: Map<string, FormGame[]>;

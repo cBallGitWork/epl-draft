@@ -13,15 +13,8 @@ ${STORY_SHAPE}
 
 For this piece, two paragraphs is plenty. Set the stakes, name the men either side of each duel, and let the tension carry it — a preview that calls the match is a preview that can be wrong by ten o'clock.`;
 
-/** A head-to-head at full time. One tie, two managers, and never the league.
- *
- *  **This is what replaced the round-report on 3 Sep 2026.** That column's own
- *  prompt read "Then SPREAD ACROSS THE LEAGUE: name several different managers,
- *  not one. A paper about a whole league that only mentions two managers has
- *  failed" — and Craig's ruling is the reverse: *"the back page is a league
- *  summary, dont do that, not the whole league in 1 article"*. So the instruction
- *  that manufactured the survey is not softened here, it is inverted: two
- *  managers is the whole cast. */
+/** A head-to-head at full time: one tie, two managers, and never the league (Craig, 3 Sep 2026, replacing the
+ *  round report: "not the whole league in 1 article"). */
 export const TIE_REPORT = `${house("tie-report")}
 
 You are reporting ONE head-to-head, at full time. The round is over and both totals are final. Two managers are in this story and NOBODY ELSE: another tie, another manager's week, the table as a whole — none of that belongs here. This is not a round-up.

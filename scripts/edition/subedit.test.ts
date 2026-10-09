@@ -2,17 +2,11 @@ import { describe, expect, it } from "vitest";
 import { banned } from "@epl/core";
 import { written } from "./subedit";
 
-// The fix's whole claim is that a banned phrase in the HEADLINE gets the column
-// sent back. `checks.prose()` deliberately omits the headline — right for the
-// stranger check, wrong for this one — so the surface this reads is the
-// regression worth guarding.
+// A banned phrase in the HEADLINE sends the column back, though `checks.prose()` leaves the headline out.
 
 describe("what the sub-editor reads", () => {
   it("catches a banned phrase in the headline", () => {
-    // Verbatim from `data/editions/paper.json`. It is published, it was filed
-    // while the check warned and filed anyway, and it is why this exists.
-    // `banned()` returns the BANNED entry it matched, lower case, not the text
-    // as printed — the match is case-insensitive, so "Banks" reports "banks".
+    // A published headline, verbatim; `banned()` reports the entry it matched, lower case.
     expect(banned(written({ headline: "test3 Banks a City Slicker" }))).toContain("banks");
   });
 
