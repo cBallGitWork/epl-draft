@@ -225,7 +225,7 @@ describe("a derby in Lawro's brief", () => {
 
 describe("the champions in Lawro's brief", () => {
   const [home, away] = [side("cp", "Cold Palmer", 60, [man("Saka", 9)]), side("hg", "Haaland Globetrotters", 50, [man("Rice", 8)])];
-  const withChampions = (team: string) =>
+  const withChampions = (team: string, ...before: { season: string; team: string }[]) =>
     buildLawroBrief({
       gameweek: 7,
       locksAt: "2026-10-17T11:15:00.000Z",
@@ -236,7 +236,7 @@ describe("the champions in Lawro's brief", () => {
       ties: [tie(home, away)],
       record: FIRST,
       past: [],
-      champions: [{ season: "25/26", team }],
+      champions: [{ season: "25/26", team }, ...before],
     }) ?? "";
 
   it("says who holds the title, and says it again in their tie", () => {
@@ -248,6 +248,8 @@ describe("the champions in Lawro's brief", () => {
 
   it("says nothing for a champion who is not in this league", () => {
     expect(withChampions("elsewhere")).not.toContain("champions");
+    // An older champion holds nothing once somebody else has won it.
+    expect(withChampions("elsewhere", { season: "24/25", team: "cp" })).not.toContain("champions");
   });
 });
 

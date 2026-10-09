@@ -39,7 +39,9 @@ export function buildLawroBrief(brief: {
   if (!brief.ties.some((tie) => tie.call.callsTeamId !== null)) return null;
   const named = new Map(brief.teams.map((team) => [team.teamId, team.name]));
   const name = (teamId: string) => named.get(teamId) ?? teamId;
-  const holders = brief.champions?.find((each) => named.has(each.team)) ?? null;
+  // The newest champion holds it; an older one, still in the league, holds nothing.
+  const newest = brief.champions?.[0];
+  const holders = newest !== undefined && named.has(newest.team) ? newest : null;
 
   return [
     `LAWRO'S PREDICTIONS, gameweek ${brief.gameweek}. Filed before line-ups lock at ${londonTime(brief.locksAt)} on ${londonDate(brief.locksAt)}, and nobody has kicked a ball. Every call below is already made: you write the reasoning, never the call. Never change a call, hedge it or predict a draw.`,
