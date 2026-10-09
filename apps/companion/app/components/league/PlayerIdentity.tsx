@@ -54,7 +54,8 @@ export default function PlayerIdentity({
           {[club?.name, positionLabel(rostered.slot.position)].filter(Boolean).join(" · ") || DASH}
         </p>
         <Fixture club={club} opposition={opposition} />
-        {started ? null : (
+        {/* Nothing to come for a man with no fixture: "No fixture" above already says so. */}
+        {started || opposition === undefined || opposition.length === 0 ? null : (
           <p className={QUIET_FIGURE}>
             {kickoff ? `Kicks off ${londonDayAndTime(kickoff)}` : "Yet to play"}
           </p>
