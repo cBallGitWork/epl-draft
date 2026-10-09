@@ -2,17 +2,21 @@
   "manifest": {
     "season": "26-27",
     "gameweek": 6,
-    "exportedAt": "2026-10-09T13:57:09.352Z",
+    "exportedAt": "2026-10-09T17:24:07.718Z",
     "rows": 20,
     "sources": [
+      {
+        "path": "https://www.rotowire.com/soccer/lineups.php?league=EPL",
+        "mtime": null
+      },
       {
         "path": "https://www.fantasyfootballscout.co.uk/team-news",
         "mtime": null
       }
     ]
   },
-  "fetchedAt": "2026-10-09T13:57:09.352Z",
-  "source": "ffscout",
+  "fetchedAt": "2026-10-09T17:24:07.718Z",
+  "source": "rotowire+ffscout",
   "clubs": {
     "ARS": {
       "formation": "4-2-3-1",
@@ -29,11 +33,7 @@
           "prob": 0.9
         },
         {
-          "code": 445122,
-          "prob": 0.9
-        },
-        {
-          "code": 500040,
+          "code": 466075,
           "prob": 0.9
         },
         {
@@ -41,7 +41,11 @@
           "prob": 0.9
         },
         {
-          "code": 466075,
+          "code": 500040,
+          "prob": 0.9
+        },
+        {
+          "code": 445122,
           "prob": 0.9
         },
         {
@@ -49,15 +53,7 @@
           "prob": 0.9
         },
         {
-          "code": 499169,
-          "prob": 0.9
-        },
-        {
-          "code": 223340,
-          "prob": 0.9
-        },
-        {
-          "code": 184029,
+          "code": 208706,
           "prob": 0.9
         },
         {
@@ -65,12 +61,134 @@
           "prob": 0.9
         },
         {
+          "code": 184029,
+          "prob": 0.9
+        },
+        {
+          "code": 223340,
+          "prob": 0.9
+        },
+        {
           "code": 224117,
           "prob": 0.9
         }
+      ],
+      "lineup": "predicted",
+      "absent": [
+        {
+          "code": 500040,
+          "status": "QUES"
+        },
+        {
+          "code": 204480,
+          "status": "QUES"
+        },
+        {
+          "code": 616077,
+          "status": "QUES"
+        },
+        {
+          "code": 219847,
+          "status": "QUES"
+        },
+        {
+          "code": 448104,
+          "status": "QUES"
+        },
+        {
+          "code": 199798,
+          "status": "QUES"
+        },
+        {
+          "code": 198869,
+          "status": "QUES"
+        },
+        {
+          "code": 462424,
+          "status": "OUT"
+        },
+        {
+          "code": 439509,
+          "status": "OUT"
+        }
       ]
     },
-    "AVL": {
+    "LEE": {
+      "formation": "3-4-2-1",
+      "slots": {
+        "1": 1,
+        "2": 3,
+        "3": 4,
+        "4": 2,
+        "5": 1
+      },
+      "starters": [
+        {
+          "code": 432720,
+          "prob": 0.9
+        },
+        {
+          "code": 220627,
+          "prob": 0.9
+        },
+        {
+          "code": 173774,
+          "prob": 0.9
+        },
+        {
+          "code": 522047,
+          "prob": 0.9
+        },
+        {
+          "code": 243526,
+          "prob": 0.9
+        },
+        {
+          "code": 199598,
+          "prob": 0.9
+        },
+        {
+          "code": 248056,
+          "prob": 0.9
+        },
+        {
+          "code": 226182,
+          "prob": 0.9
+        },
+        {
+          "code": 435997,
+          "prob": 0.9
+        },
+        {
+          "code": 466525,
+          "prob": 0.9
+        },
+        {
+          "code": 177815,
+          "prob": 0.9
+        }
+      ],
+      "lineup": "predicted",
+      "absent": [
+        {
+          "code": 587982,
+          "status": "QUES"
+        },
+        {
+          "code": 153682,
+          "status": "QUES"
+        },
+        {
+          "code": 200617,
+          "status": "OUT"
+        },
+        {
+          "code": 214225,
+          "status": "OUT"
+        }
+      ]
+    },
+    "SUN": {
       "formation": "4-2-3-1",
       "slots": {
         "1": 1,
@@ -81,48 +199,391 @@
       },
       "starters": [
         {
-          "code": 433969,
+          "code": 498016,
           "prob": 0.9
         },
         {
-          "code": 214590,
+          "code": 434399,
           "prob": 0.9
         },
         {
-          "code": 184667,
+          "code": 135720,
           "prob": 0.9
         },
         {
-          "code": 149484,
+          "code": 201895,
           "prob": 0.9
         },
         {
-          "code": 487992,
+          "code": 200834,
           "prob": 0.9
         },
         {
-          "code": 226944,
+          "code": 84450,
           "prob": 0.9
         },
         {
-          "code": 448089,
+          "code": 577669,
           "prob": 0.9
         },
         {
-          "code": 122806,
+          "code": 536661,
           "prob": 0.9
         },
         {
-          "code": 614071,
+          "code": 484420,
           "prob": 0.9
         },
         {
-          "code": 195546,
+          "code": 93605,
           "prob": 0.9
         },
         {
-          "code": 517052,
+          "code": 437505,
           "prob": 0.9
+        }
+      ],
+      "lineup": "predicted",
+      "absent": [
+        {
+          "code": 223827,
+          "status": "OUT"
+        },
+        {
+          "code": 441264,
+          "status": "OUT"
+        },
+        {
+          "code": 547027,
+          "status": "OUT"
+        },
+        {
+          "code": 461199,
+          "status": "OUT"
+        }
+      ]
+    },
+    "BHA": {
+      "formation": "4-2-3-1",
+      "slots": {
+        "1": 1,
+        "2": 4,
+        "3": 2,
+        "4": 3,
+        "5": 1
+      },
+      "starters": [
+        {
+          "code": 489639,
+          "prob": 0.9
+        },
+        {
+          "code": 204120,
+          "prob": 0.9
+        },
+        {
+          "code": 83299,
+          "prob": 0.9
+        },
+        {
+          "code": 610799,
+          "prob": 0.9
+        },
+        {
+          "code": 231416,
+          "prob": 0.9
+        },
+        {
+          "code": 60307,
+          "prob": 0.9
+        },
+        {
+          "code": 509416,
+          "prob": 0.9
+        },
+        {
+          "code": 465730,
+          "prob": 0.9
+        },
+        {
+          "code": 611695,
+          "prob": 0.9
+        },
+        {
+          "code": 514254,
+          "prob": 0.9
+        },
+        {
+          "code": 647850,
+          "prob": 0.9
+        }
+      ],
+      "lineup": "predicted",
+      "absent": [
+        {
+          "code": 83299,
+          "status": "QUES"
+        },
+        {
+          "code": 532529,
+          "status": "QUES"
+        },
+        {
+          "code": 222694,
+          "status": "QUES"
+        },
+        {
+          "code": 471551,
+          "status": "OUT"
+        },
+        {
+          "code": 487117,
+          "status": "OUT"
+        },
+        {
+          "code": 592031,
+          "status": "OUT"
+        },
+        {
+          "code": 451340,
+          "status": "OUT"
+        },
+        {
+          "code": 608181,
+          "status": "OUT"
+        },
+        {
+          "code": 467779,
+          "status": "OUT"
+        },
+        {
+          "code": 700308,
+          "status": "OUT"
+        }
+      ]
+    },
+    "IPS": {
+      "formation": "4-2-3-1",
+      "slots": {
+        "1": 1,
+        "2": 4,
+        "3": 2,
+        "4": 3,
+        "5": 1
+      },
+      "starters": [
+        {
+          "code": 108813,
+          "prob": 0.9
+        },
+        {
+          "code": 455084,
+          "prob": 0.9
+        },
+        {
+          "code": 216616,
+          "prob": 0.9
+        },
+        {
+          "code": 219924,
+          "prob": 0.9
+        },
+        {
+          "code": 572584,
+          "prob": 0.9
+        },
+        {
+          "code": 212314,
+          "prob": 0.9
+        },
+        {
+          "code": 218543,
+          "prob": 0.9
+        },
+        {
+          "code": 481624,
+          "prob": 0.9
+        },
+        {
+          "code": 474120,
+          "prob": 0.9
+        },
+        {
+          "code": 443261,
+          "prob": 0.9
+        },
+        {
+          "code": 543968,
+          "prob": 0.9
+        }
+      ],
+      "lineup": "predicted",
+      "absent": [
+        {
+          "code": 231899,
+          "status": "QUES"
+        },
+        {
+          "code": 531442,
+          "status": "OUT"
+        }
+      ]
+    },
+    "FUL": {
+      "formation": "4-2-3-1",
+      "slots": {
+        "1": 1,
+        "2": 4,
+        "3": 2,
+        "4": 3,
+        "5": 1
+      },
+      "starters": [
+        {
+          "code": 80201,
+          "prob": 0.9
+        },
+        {
+          "code": 184349,
+          "prob": 0.9
+        },
+        {
+          "code": 232892,
+          "prob": 0.9
+        },
+        {
+          "code": 442299,
+          "prob": 0.9
+        },
+        {
+          "code": 166477,
+          "prob": 0.9
+        },
+        {
+          "code": 207189,
+          "prob": 0.9
+        },
+        {
+          "code": 463210,
+          "prob": 0.9
+        },
+        {
+          "code": 153133,
+          "prob": 0.9
+        },
+        {
+          "code": 577725,
+          "prob": 0.9
+        },
+        {
+          "code": 477555,
+          "prob": 0.9
+        },
+        {
+          "code": 551466,
+          "prob": 0.9
+        }
+      ],
+      "lineup": "predicted",
+      "absent": [
+        {
+          "code": 76357,
+          "status": "QUES"
+        },
+        {
+          "code": 169528,
+          "status": "QUES"
+        },
+        {
+          "code": 167074,
+          "status": "QUES"
+        }
+      ]
+    },
+    "CHE": {
+      "formation": "3-4-2-1",
+      "slots": {
+        "1": 1,
+        "2": 3,
+        "3": 4,
+        "4": 2,
+        "5": 1
+      },
+      "starters": [
+        {
+          "code": 98980,
+          "prob": 0.9
+        },
+        {
+          "code": 444463,
+          "prob": 0.9
+        },
+        {
+          "code": 437499,
+          "prob": 0.9
+        },
+        {
+          "code": 460028,
+          "prob": 0.9
+        },
+        {
+          "code": 498444,
+          "prob": 0.9
+        },
+        {
+          "code": 486672,
+          "prob": 0.9
+        },
+        {
+          "code": 225796,
+          "prob": 0.9
+        },
+        {
+          "code": 247632,
+          "prob": 0.9
+        },
+        {
+          "code": 244851,
+          "prob": 0.9
+        },
+        {
+          "code": 244850,
+          "prob": 0.9
+        },
+        {
+          "code": 50175,
+          "prob": 0.9
+        }
+      ],
+      "lineup": "predicted",
+      "absent": [
+        {
+          "code": 486672,
+          "status": "QUES"
+        },
+        {
+          "code": 225796,
+          "status": "QUES"
+        },
+        {
+          "code": 244851,
+          "status": "QUES"
+        },
+        {
+          "code": 503037,
+          "status": "QUES"
+        },
+        {
+          "code": 475168,
+          "status": "QUES"
+        },
+        {
+          "code": 620109,
+          "status": "QUES"
+        },
+        {
+          "code": 463936,
+          "status": "OUT"
         }
       ]
     },
@@ -141,7 +602,7 @@
           "prob": 0.9
         },
         {
-          "code": 54469,
+          "code": 494521,
           "prob": 0.9
         },
         {
@@ -153,11 +614,7 @@
           "prob": 0.9
         },
         {
-          "code": 494521,
-          "prob": 0.9
-        },
-        {
-          "code": 155408,
+          "code": 54469,
           "prob": 0.9
         },
         {
@@ -165,11 +622,7 @@
           "prob": 0.9
         },
         {
-          "code": 499604,
-          "prob": 0.9
-        },
-        {
-          "code": 158499,
+          "code": 155408,
           "prob": 0.9
         },
         {
@@ -177,8 +630,971 @@
           "prob": 0.9
         },
         {
+          "code": 158499,
+          "prob": 0.9
+        },
+        {
+          "code": 499604,
+          "prob": 0.9
+        },
+        {
           "code": 444102,
           "prob": 0.9
+        }
+      ],
+      "lineup": "predicted",
+      "absent": [
+        {
+          "code": 111317,
+          "status": "QUES"
+        },
+        {
+          "code": 489888,
+          "status": "OUT"
+        },
+        {
+          "code": 436893,
+          "status": "OUT"
+        },
+        {
+          "code": 222683,
+          "status": "OUT"
+        },
+        {
+          "code": 560262,
+          "status": "OUT"
+        },
+        {
+          "code": 620487,
+          "status": "OUT"
+        },
+        {
+          "code": 503139,
+          "status": "OUT"
+        }
+      ]
+    },
+    "AVL": {
+      "formation": "4-2-3-1",
+      "slots": {
+        "1": 1,
+        "2": 4,
+        "3": 2,
+        "4": 3,
+        "5": 1
+      },
+      "starters": [
+        {
+          "code": 433969,
+          "prob": 0.9
+        },
+        {
+          "code": 487992,
+          "prob": 0.9
+        },
+        {
+          "code": 184667,
+          "prob": 0.9
+        },
+        {
+          "code": 149484,
+          "prob": 0.9
+        },
+        {
+          "code": 214590,
+          "prob": 0.9
+        },
+        {
+          "code": 226944,
+          "prob": 0.9
+        },
+        {
+          "code": 448089,
+          "prob": 0.9
+        },
+        {
+          "code": 195546,
+          "prob": 0.9
+        },
+        {
+          "code": 614071,
+          "prob": 0.9
+        },
+        {
+          "code": 122806,
+          "prob": 0.9
+        },
+        {
+          "code": 517052,
+          "prob": 0.9
+        }
+      ],
+      "lineup": "predicted",
+      "absent": [
+        {
+          "code": 199796,
+          "status": "QUES"
+        },
+        {
+          "code": 119090,
+          "status": "QUES"
+        },
+        {
+          "code": 441302,
+          "status": "OUT"
+        },
+        {
+          "code": 449871,
+          "status": "OUT"
+        }
+      ]
+    },
+    "MUN": {
+      "formation": "4-2-3-1",
+      "slots": {
+        "1": 1,
+        "2": 4,
+        "3": 2,
+        "4": 3,
+        "5": 1
+      },
+      "starters": [
+        {
+          "code": 465247,
+          "prob": 0.9
+        },
+        {
+          "code": 106760,
+          "prob": 0.9
+        },
+        {
+          "code": 95658,
+          "prob": 0.9
+        },
+        {
+          "code": 221820,
+          "prob": 0.9
+        },
+        {
+          "code": 216051,
+          "prob": 0.9
+        },
+        {
+          "code": 166989,
+          "prob": 0.9
+        },
+        {
+          "code": 516895,
+          "prob": 0.9
+        },
+        {
+          "code": 176297,
+          "prob": 0.9
+        },
+        {
+          "code": 141746,
+          "prob": 0.9
+        },
+        {
+          "code": 446008,
+          "prob": 0.9
+        },
+        {
+          "code": 430871,
+          "prob": 0.9
+        }
+      ],
+      "lineup": "predicted",
+      "absent": [
+        {
+          "code": 516895,
+          "status": "QUES"
+        },
+        {
+          "code": 176297,
+          "status": "QUES"
+        },
+        {
+          "code": 209365,
+          "status": "QUES"
+        },
+        {
+          "code": 493250,
+          "status": "QUES"
+        },
+        {
+          "code": 59735,
+          "status": "OUT"
+        },
+        {
+          "code": 596777,
+          "status": "OUT"
+        },
+        {
+          "code": 21205,
+          "status": "OUT"
+        },
+        {
+          "code": 230001,
+          "status": "OUT"
+        },
+        {
+          "code": 485711,
+          "status": "OUT"
+        },
+        {
+          "code": 232112,
+          "status": "OUT"
+        }
+      ]
+    },
+    "TOT": {
+      "formation": "4-2-3-1",
+      "slots": {
+        "1": 1,
+        "2": 4,
+        "3": 2,
+        "4": 3,
+        "5": 1
+      },
+      "starters": [
+        {
+          "code": 485055,
+          "prob": 0.9
+        },
+        {
+          "code": 487053,
+          "prob": 0.9
+        },
+        {
+          "code": 469142,
+          "prob": 0.9
+        },
+        {
+          "code": 491279,
+          "prob": 0.9
+        },
+        {
+          "code": 547701,
+          "prob": 0.9
+        },
+        {
+          "code": 551226,
+          "prob": 0.9
+        },
+        {
+          "code": 432422,
+          "prob": 0.9
+        },
+        {
+          "code": 438234,
+          "prob": 0.9
+        },
+        {
+          "code": 460842,
+          "prob": 0.9
+        },
+        {
+          "code": 510281,
+          "prob": 0.9
+        },
+        {
+          "code": 154566,
+          "prob": 0.9
+        }
+      ],
+      "lineup": "predicted",
+      "absent": [
+        {
+          "code": 469142,
+          "status": "QUES"
+        },
+        {
+          "code": 491279,
+          "status": "QUES"
+        },
+        {
+          "code": 445044,
+          "status": "QUES"
+        },
+        {
+          "code": 465920,
+          "status": "OUT"
+        },
+        {
+          "code": 550839,
+          "status": "OUT"
+        },
+        {
+          "code": 441164,
+          "status": "OUT"
+        },
+        {
+          "code": 493362,
+          "status": "OUT"
+        }
+      ]
+    },
+    "HUL": {
+      "formation": "5-4-1",
+      "slots": {
+        "1": 1,
+        "2": 5,
+        "3": 4,
+        "4": 1
+      },
+      "starters": [
+        {
+          "code": 473284,
+          "prob": 0.9
+        },
+        {
+          "code": 232351,
+          "prob": 0.9
+        },
+        {
+          "code": 146426,
+          "prob": 0.9
+        },
+        {
+          "code": 108416,
+          "prob": 0.9
+        },
+        {
+          "code": 606930,
+          "prob": 0.9
+        },
+        {
+          "code": 193278,
+          "prob": 0.9
+        },
+        {
+          "code": 243951,
+          "prob": 0.9
+        },
+        {
+          "code": 243413,
+          "prob": 0.9
+        },
+        {
+          "code": 101282,
+          "prob": 0.9
+        },
+        {
+          "code": 540324,
+          "prob": 0.9
+        },
+        {
+          "code": 169432,
+          "prob": 0.9
+        }
+      ],
+      "lineup": "predicted",
+      "absent": [
+        {
+          "code": 490094,
+          "status": "QUES"
+        },
+        {
+          "code": 445028,
+          "status": "QUES"
+        },
+        {
+          "code": 496181,
+          "status": "QUES"
+        },
+        {
+          "code": 608227,
+          "status": "QUES"
+        },
+        {
+          "code": 626751,
+          "status": "OUT"
+        },
+        {
+          "code": 105666,
+          "status": "OUT"
+        },
+        {
+          "code": 470294,
+          "status": "OUT"
+        },
+        {
+          "code": 501902,
+          "status": "OUT"
+        },
+        {
+          "code": 465525,
+          "status": "OUT"
+        },
+        {
+          "code": 169359,
+          "status": "OUT"
+        }
+      ]
+    },
+    "EVE": {
+      "formation": "4-2-3-1",
+      "slots": {
+        "1": 1,
+        "2": 4,
+        "3": 2,
+        "4": 3,
+        "5": 1
+      },
+      "starters": [
+        {
+          "code": 111234,
+          "prob": 0.9
+        },
+        {
+          "code": 224967,
+          "prob": 0.9
+        },
+        {
+          "code": 480455,
+          "prob": 0.9
+        },
+        {
+          "code": 17761,
+          "prob": 0.9
+        },
+        {
+          "code": 154043,
+          "prob": 0.9
+        },
+        {
+          "code": 232928,
+          "prob": 0.9
+        },
+        {
+          "code": 609873,
+          "prob": 0.9
+        },
+        {
+          "code": 114283,
+          "prob": 0.9
+        },
+        {
+          "code": 215413,
+          "prob": 0.9
+        },
+        {
+          "code": 242898,
+          "prob": 0.9
+        },
+        {
+          "code": 586309,
+          "prob": 0.9
+        }
+      ],
+      "lineup": "predicted",
+      "absent": [
+        {
+          "code": 224967,
+          "status": "QUES"
+        },
+        {
+          "code": 128295,
+          "status": "QUES"
+        },
+        {
+          "code": 513466,
+          "status": "QUES"
+        }
+      ]
+    },
+    "CRY": {
+      "formation": "3-4-2-1",
+      "slots": {
+        "1": 1,
+        "2": 3,
+        "3": 4,
+        "4": 2,
+        "5": 1
+      },
+      "starters": [
+        {
+          "code": 121709,
+          "prob": 0.9
+        },
+        {
+          "code": 427623,
+          "prob": 0.9
+        },
+        {
+          "code": 651426,
+          "prob": 0.9
+        },
+        {
+          "code": 605972,
+          "prob": 0.9
+        },
+        {
+          "code": 244723,
+          "prob": 0.9
+        },
+        {
+          "code": 450063,
+          "prob": 0.9
+        },
+        {
+          "code": 496221,
+          "prob": 0.9
+        },
+        {
+          "code": 570794,
+          "prob": 0.9
+        },
+        {
+          "code": 209400,
+          "prob": 0.9
+        },
+        {
+          "code": 232185,
+          "prob": 0.9
+        },
+        {
+          "code": 247412,
+          "prob": 0.9
+        }
+      ],
+      "lineup": "predicted",
+      "absent": [
+        {
+          "code": 220362,
+          "status": "OUT"
+        },
+        {
+          "code": 172649,
+          "status": "OUT"
+        },
+        {
+          "code": 231747,
+          "status": "OUT"
+        },
+        {
+          "code": 515621,
+          "status": "OUT"
+        },
+        {
+          "code": 223723,
+          "status": "OUT"
+        }
+      ]
+    },
+    "NFO": {
+      "formation": "3-4-2-1",
+      "slots": {
+        "1": 1,
+        "2": 3,
+        "3": 4,
+        "4": 2,
+        "5": 1
+      },
+      "starters": [
+        {
+          "code": 85633,
+          "prob": 0.9
+        },
+        {
+          "code": 575476,
+          "prob": 0.9
+        },
+        {
+          "code": 575458,
+          "prob": 0.9
+        },
+        {
+          "code": 568420,
+          "prob": 0.9
+        },
+        {
+          "code": 215136,
+          "prob": 0.9
+        },
+        {
+          "code": 204561,
+          "prob": 0.9
+        },
+        {
+          "code": 432714,
+          "prob": 0.9
+        },
+        {
+          "code": 247348,
+          "prob": 0.9
+        },
+        {
+          "code": 222531,
+          "prob": 0.9
+        },
+        {
+          "code": 456512,
+          "prob": 0.9
+        },
+        {
+          "code": 463034,
+          "prob": 0.9
+        }
+      ],
+      "lineup": "predicted",
+      "absent": [
+        {
+          "code": 215136,
+          "status": "QUES"
+        },
+        {
+          "code": 482973,
+          "status": "OUT"
+        },
+        {
+          "code": 227444,
+          "status": "OUT"
+        },
+        {
+          "code": 500151,
+          "status": "OUT"
+        }
+      ]
+    },
+    "LIV": {
+      "formation": "4-2-3-1",
+      "slots": {
+        "1": 1,
+        "2": 4,
+        "3": 2,
+        "4": 3,
+        "5": 1
+      },
+      "starters": [
+        {
+          "code": 116535,
+          "prob": 0.9
+        },
+        {
+          "code": 544877,
+          "prob": 0.9
+        },
+        {
+          "code": 97032,
+          "prob": 0.9
+        },
+        {
+          "code": 606702,
+          "prob": 0.9
+        },
+        {
+          "code": 445087,
+          "prob": 0.9
+        },
+        {
+          "code": 441266,
+          "prob": 0.9
+        },
+        {
+          "code": 243016,
+          "prob": 0.9
+        },
+        {
+          "code": 482616,
+          "prob": 0.9
+        },
+        {
+          "code": 424876,
+          "prob": 0.9
+        },
+        {
+          "code": 551499,
+          "prob": 0.9
+        },
+        {
+          "code": 494595,
+          "prob": 0.9
+        }
+      ],
+      "lineup": "predicted",
+      "absent": [
+        {
+          "code": 606702,
+          "status": "QUES"
+        },
+        {
+          "code": 223541,
+          "status": "QUES"
+        },
+        {
+          "code": 492777,
+          "status": "OUT"
+        },
+        {
+          "code": 510663,
+          "status": "OUT"
+        },
+        {
+          "code": 243298,
+          "status": "OUT"
+        },
+        {
+          "code": 219168,
+          "status": "OUT"
+        },
+        {
+          "code": 647681,
+          "status": "OUT"
+        }
+      ]
+    },
+    "MCI": {
+      "formation": "4-2-3-1",
+      "slots": {
+        "1": 1,
+        "2": 4,
+        "3": 2,
+        "4": 3,
+        "5": 1
+      },
+      "starters": [
+        {
+          "code": 204936,
+          "prob": 0.9
+        },
+        {
+          "code": 477424,
+          "prob": 0.9
+        },
+        {
+          "code": 209036,
+          "prob": 0.9
+        },
+        {
+          "code": 171314,
+          "prob": 0.9
+        },
+        {
+          "code": 465351,
+          "prob": 0.9
+        },
+        {
+          "code": 448047,
+          "prob": 0.9
+        },
+        {
+          "code": 215379,
+          "prob": 0.9
+        },
+        {
+          "code": 248875,
+          "prob": 0.9
+        },
+        {
+          "code": 466052,
+          "prob": 0.9
+        },
+        {
+          "code": 437730,
+          "prob": 0.9
+        },
+        {
+          "code": 223094,
+          "prob": 0.9
+        }
+      ],
+      "lineup": "predicted",
+      "absent": [
+        {
+          "code": 437730,
+          "status": "QUES"
+        },
+        {
+          "code": 472769,
+          "status": "QUES"
+        },
+        {
+          "code": 209244,
+          "status": "OUT"
+        }
+      ]
+    },
+    "COV": {
+      "formation": "3-4-2-1",
+      "slots": {
+        "1": 1,
+        "2": 3,
+        "3": 4,
+        "4": 2,
+        "5": 1
+      },
+      "starters": [
+        {
+          "code": 472739,
+          "prob": 0.9
+        },
+        {
+          "code": 566213,
+          "prob": 0.9
+        },
+        {
+          "code": 461102,
+          "prob": 0.9
+        },
+        {
+          "code": 231065,
+          "prob": 0.9
+        },
+        {
+          "code": 173878,
+          "prob": 0.9
+        },
+        {
+          "code": 428580,
+          "prob": 0.9
+        },
+        {
+          "code": 168144,
+          "prob": 0.9
+        },
+        {
+          "code": 451284,
+          "prob": 0.9
+        },
+        {
+          "code": 480457,
+          "prob": 0.9
+        },
+        {
+          "code": 469272,
+          "prob": 0.9
+        },
+        {
+          "code": 230730,
+          "prob": 0.9
+        }
+      ],
+      "lineup": "predicted",
+      "absent": [
+        {
+          "code": 451284,
+          "status": "QUES"
+        },
+        {
+          "code": 204813,
+          "status": "QUES"
+        },
+        {
+          "code": 210156,
+          "status": "OUT"
+        },
+        {
+          "code": 539142,
+          "status": "OUT"
+        },
+        {
+          "code": 439668,
+          "status": "OUT"
+        },
+        {
+          "code": 220583,
+          "status": "OUT"
+        },
+        {
+          "code": 176412,
+          "status": "OUT"
+        }
+      ]
+    },
+    "NEW": {
+      "formation": "4-2-3-1",
+      "slots": {
+        "1": 1,
+        "2": 4,
+        "3": 2,
+        "4": 3,
+        "5": 1
+      },
+      "starters": [
+        {
+          "code": 470551,
+          "prob": 0.9
+        },
+        {
+          "code": 487838,
+          "prob": 0.9
+        },
+        {
+          "code": 465642,
+          "prob": 0.9
+        },
+        {
+          "code": 220237,
+          "prob": 0.9
+        },
+        {
+          "code": 463726,
+          "prob": 0.9
+        },
+        {
+          "code": 465694,
+          "prob": 0.9
+        },
+        {
+          "code": 547719,
+          "prob": 0.9
+        },
+        {
+          "code": 201666,
+          "prob": 0.9
+        },
+        {
+          "code": 216646,
+          "prob": 0.9
+        },
+        {
+          "code": 114243,
+          "prob": 0.9
+        },
+        {
+          "code": 613221,
+          "prob": 0.9
+        }
+      ],
+      "lineup": "predicted",
+      "absent": [
+        {
+          "code": 463726,
+          "status": "QUES"
+        },
+        {
+          "code": 547719,
+          "status": "QUES"
+        },
+        {
+          "code": 78916,
+          "status": "QUES"
+        },
+        {
+          "code": 180974,
+          "status": "QUES"
+        },
+        {
+          "code": 441191,
+          "status": "QUES"
+        },
+        {
+          "code": 538207,
+          "status": "QUES"
+        },
+        {
+          "code": 232653,
+          "status": "QUES"
+        },
+        {
+          "code": 449434,
+          "status": "OUT"
+        },
+        {
+          "code": 554578,
+          "status": "OUT"
         }
       ]
     },
@@ -234,899 +1650,6 @@
         },
         {
           "code": 502500,
-          "prob": 0.9
-        }
-      ]
-    },
-    "BHA": {
-      "formation": "4-2-3-1",
-      "slots": {
-        "1": 1,
-        "2": 4,
-        "3": 2,
-        "4": 3,
-        "5": 1
-      },
-      "starters": [
-        {
-          "code": 489639,
-          "prob": 0.9
-        },
-        {
-          "code": 231416,
-          "prob": 0.9
-        },
-        {
-          "code": 610799,
-          "prob": 0.9
-        },
-        {
-          "code": 83299,
-          "prob": 0.9
-        },
-        {
-          "code": 204120,
-          "prob": 0.9
-        },
-        {
-          "code": 592984,
-          "prob": 0.9
-        },
-        {
-          "code": 60307,
-          "prob": 0.9
-        },
-        {
-          "code": 514254,
-          "prob": 0.9
-        },
-        {
-          "code": 509416,
-          "prob": 0.9
-        },
-        {
-          "code": 465730,
-          "prob": 0.9
-        },
-        {
-          "code": 647850,
-          "prob": 0.9
-        }
-      ]
-    },
-    "CHE": {
-      "formation": "3-4-3",
-      "slots": {
-        "1": 1,
-        "2": 3,
-        "3": 4,
-        "4": 3
-      },
-      "starters": [
-        {
-          "code": 98980,
-          "prob": 0.9
-        },
-        {
-          "code": 444463,
-          "prob": 0.9
-        },
-        {
-          "code": 437499,
-          "prob": 0.9
-        },
-        {
-          "code": 460028,
-          "prob": 0.9
-        },
-        {
-          "code": 247632,
-          "prob": 0.9
-        },
-        {
-          "code": 514356,
-          "prob": 0.9
-        },
-        {
-          "code": 56979,
-          "prob": 0.9
-        },
-        {
-          "code": 498444,
-          "prob": 0.9
-        },
-        {
-          "code": 244851,
-          "prob": 0.9
-        },
-        {
-          "code": 50175,
-          "prob": 0.9
-        },
-        {
-          "code": 244850,
-          "prob": 0.9
-        }
-      ]
-    },
-    "COV": {
-      "formation": "3-4-2-1",
-      "slots": {
-        "1": 1,
-        "2": 3,
-        "3": 4,
-        "4": 2,
-        "5": 1
-      },
-      "starters": [
-        {
-          "code": 472739,
-          "prob": 0.9
-        },
-        {
-          "code": 566213,
-          "prob": 0.9
-        },
-        {
-          "code": 461102,
-          "prob": 0.9
-        },
-        {
-          "code": 231065,
-          "prob": 0.9
-        },
-        {
-          "code": 451284,
-          "prob": 0.9
-        },
-        {
-          "code": 428580,
-          "prob": 0.9
-        },
-        {
-          "code": 168144,
-          "prob": 0.9
-        },
-        {
-          "code": 173878,
-          "prob": 0.9
-        },
-        {
-          "code": 480457,
-          "prob": 0.9
-        },
-        {
-          "code": 241293,
-          "prob": 0.9
-        },
-        {
-          "code": 230730,
-          "prob": 0.9
-        }
-      ]
-    },
-    "CRY": {
-      "formation": "3-4-2-1",
-      "slots": {
-        "1": 1,
-        "2": 3,
-        "3": 4,
-        "4": 2,
-        "5": 1
-      },
-      "starters": [
-        {
-          "code": 172649,
-          "prob": 0.9
-        },
-        {
-          "code": 427623,
-          "prob": 0.9
-        },
-        {
-          "code": 152551,
-          "prob": 0.9
-        },
-        {
-          "code": 651426,
-          "prob": 0.9
-        },
-        {
-          "code": 570794,
-          "prob": 0.9
-        },
-        {
-          "code": 496221,
-          "prob": 0.9
-        },
-        {
-          "code": 450063,
-          "prob": 0.9
-        },
-        {
-          "code": 244723,
-          "prob": 0.9
-        },
-        {
-          "code": 209400,
-          "prob": 0.9
-        },
-        {
-          "code": 488024,
-          "prob": 0.9
-        },
-        {
-          "code": 247412,
-          "prob": 0.9
-        }
-      ]
-    },
-    "EVE": {
-      "formation": "4-2-3-1",
-      "slots": {
-        "1": 1,
-        "2": 4,
-        "3": 2,
-        "4": 3,
-        "5": 1
-      },
-      "starters": [
-        {
-          "code": 111234,
-          "prob": 0.9
-        },
-        {
-          "code": 154043,
-          "prob": 0.9
-        },
-        {
-          "code": 17761,
-          "prob": 0.9
-        },
-        {
-          "code": 480455,
-          "prob": 0.9
-        },
-        {
-          "code": 224967,
-          "prob": 0.9
-        },
-        {
-          "code": 609873,
-          "prob": 0.9
-        },
-        {
-          "code": 232928,
-          "prob": 0.9
-        },
-        {
-          "code": 496661,
-          "prob": 0.9
-        },
-        {
-          "code": 215413,
-          "prob": 0.9
-        },
-        {
-          "code": 114283,
-          "prob": 0.9
-        },
-        {
-          "code": 586309,
-          "prob": 0.9
-        }
-      ]
-    },
-    "FUL": {
-      "formation": "4-2-3-1",
-      "slots": {
-        "1": 1,
-        "2": 4,
-        "3": 2,
-        "4": 3,
-        "5": 1
-      },
-      "starters": [
-        {
-          "code": 80201,
-          "prob": 0.9
-        },
-        {
-          "code": 166477,
-          "prob": 0.9
-        },
-        {
-          "code": 442299,
-          "prob": 0.9
-        },
-        {
-          "code": 232892,
-          "prob": 0.9
-        },
-        {
-          "code": 169528,
-          "prob": 0.9
-        },
-        {
-          "code": 207189,
-          "prob": 0.9
-        },
-        {
-          "code": 463210,
-          "prob": 0.9
-        },
-        {
-          "code": 477555,
-          "prob": 0.9
-        },
-        {
-          "code": 577725,
-          "prob": 0.9
-        },
-        {
-          "code": 153133,
-          "prob": 0.9
-        },
-        {
-          "code": 551466,
-          "prob": 0.9
-        }
-      ]
-    },
-    "HUL": {
-      "formation": "3-4-3",
-      "slots": {
-        "1": 1,
-        "2": 3,
-        "3": 4,
-        "4": 3
-      },
-      "starters": [
-        {
-          "code": 473284,
-          "prob": 0.9
-        },
-        {
-          "code": 146426,
-          "prob": 0.9
-        },
-        {
-          "code": 108416,
-          "prob": 0.9
-        },
-        {
-          "code": 606930,
-          "prob": 0.9
-        },
-        {
-          "code": 193278,
-          "prob": 0.9
-        },
-        {
-          "code": 101282,
-          "prob": 0.9
-        },
-        {
-          "code": 243413,
-          "prob": 0.9
-        },
-        {
-          "code": 232351,
-          "prob": 0.9
-        },
-        {
-          "code": 540324,
-          "prob": 0.9
-        },
-        {
-          "code": 169432,
-          "prob": 0.9
-        },
-        {
-          "code": 243951,
-          "prob": 0.9
-        }
-      ]
-    },
-    "IPS": {
-      "formation": "4-2-3-1",
-      "slots": {
-        "1": 1,
-        "2": 4,
-        "3": 2,
-        "4": 3,
-        "5": 1
-      },
-      "starters": [
-        {
-          "code": 240514,
-          "prob": 0.9
-        },
-        {
-          "code": 216616,
-          "prob": 0.9
-        },
-        {
-          "code": 219924,
-          "prob": 0.9
-        },
-        {
-          "code": 449429,
-          "prob": 0.9
-        },
-        {
-          "code": 455084,
-          "prob": 0.9
-        },
-        {
-          "code": 212314,
-          "prob": 0.9
-        },
-        {
-          "code": 218543,
-          "prob": 0.9
-        },
-        {
-          "code": 572584,
-          "prob": 0.9
-        },
-        {
-          "code": 474120,
-          "prob": 0.9
-        },
-        {
-          "code": 443261,
-          "prob": 0.9
-        },
-        {
-          "code": 543968,
-          "prob": 0.9
-        }
-      ]
-    },
-    "LEE": {
-      "formation": "3-4-3",
-      "slots": {
-        "1": 1,
-        "2": 3,
-        "3": 4,
-        "4": 3
-      },
-      "starters": [
-        {
-          "code": 432720,
-          "prob": 0.9
-        },
-        {
-          "code": 220627,
-          "prob": 0.9
-        },
-        {
-          "code": 173774,
-          "prob": 0.9
-        },
-        {
-          "code": 522047,
-          "prob": 0.9
-        },
-        {
-          "code": 226182,
-          "prob": 0.9
-        },
-        {
-          "code": 199598,
-          "prob": 0.9
-        },
-        {
-          "code": 248056,
-          "prob": 0.9
-        },
-        {
-          "code": 243526,
-          "prob": 0.9
-        },
-        {
-          "code": 466525,
-          "prob": 0.9
-        },
-        {
-          "code": 177815,
-          "prob": 0.9
-        },
-        {
-          "code": 435997,
-          "prob": 0.9
-        }
-      ]
-    },
-    "LIV": {
-      "formation": "4-2-3-1",
-      "slots": {
-        "1": 1,
-        "2": 4,
-        "3": 2,
-        "4": 3,
-        "5": 1
-      },
-      "starters": [
-        {
-          "code": 116535,
-          "prob": 0.9
-        },
-        {
-          "code": 445087,
-          "prob": 0.9
-        },
-        {
-          "code": 606702,
-          "prob": 0.9
-        },
-        {
-          "code": 97032,
-          "prob": 0.9
-        },
-        {
-          "code": 544877,
-          "prob": 0.9
-        },
-        {
-          "code": 441266,
-          "prob": 0.9
-        },
-        {
-          "code": 243016,
-          "prob": 0.9
-        },
-        {
-          "code": 424876,
-          "prob": 0.9
-        },
-        {
-          "code": 494595,
-          "prob": 0.9
-        },
-        {
-          "code": 482616,
-          "prob": 0.9
-        },
-        {
-          "code": 219168,
-          "prob": 0.9
-        }
-      ]
-    },
-    "MCI": {
-      "formation": "4-2-3-1",
-      "slots": {
-        "1": 1,
-        "2": 4,
-        "3": 2,
-        "4": 3,
-        "5": 1
-      },
-      "starters": [
-        {
-          "code": 204936,
-          "prob": 0.9
-        },
-        {
-          "code": 465351,
-          "prob": 0.9
-        },
-        {
-          "code": 171314,
-          "prob": 0.9
-        },
-        {
-          "code": 209036,
-          "prob": 0.9
-        },
-        {
-          "code": 477424,
-          "prob": 0.9
-        },
-        {
-          "code": 637238,
-          "prob": 0.9
-        },
-        {
-          "code": 215379,
-          "prob": 0.9
-        },
-        {
-          "code": 440993,
-          "prob": 0.9
-        },
-        {
-          "code": 448047,
-          "prob": 0.9
-        },
-        {
-          "code": 437730,
-          "prob": 0.9
-        },
-        {
-          "code": 223094,
-          "prob": 0.9
-        }
-      ]
-    },
-    "MUN": {
-      "formation": "4-2-3-1",
-      "slots": {
-        "1": 1,
-        "2": 4,
-        "3": 2,
-        "4": 3,
-        "5": 1
-      },
-      "starters": [
-        {
-          "code": 465247,
-          "prob": 0.9
-        },
-        {
-          "code": 216051,
-          "prob": 0.9
-        },
-        {
-          "code": 95658,
-          "prob": 0.9
-        },
-        {
-          "code": 221820,
-          "prob": 0.9
-        },
-        {
-          "code": 106760,
-          "prob": 0.9
-        },
-        {
-          "code": 166989,
-          "prob": 0.9
-        },
-        {
-          "code": 516895,
-          "prob": 0.9
-        },
-        {
-          "code": 446008,
-          "prob": 0.9
-        },
-        {
-          "code": 141746,
-          "prob": 0.9
-        },
-        {
-          "code": 176297,
-          "prob": 0.9
-        },
-        {
-          "code": 430871,
-          "prob": 0.9
-        }
-      ]
-    },
-    "NEW": {
-      "formation": "4-2-3-1",
-      "slots": {
-        "1": 1,
-        "2": 4,
-        "3": 2,
-        "4": 3,
-        "5": 1
-      },
-      "starters": [
-        {
-          "code": 470551,
-          "prob": 0.9
-        },
-        {
-          "code": 547719,
-          "prob": 0.9
-        },
-        {
-          "code": 465642,
-          "prob": 0.9
-        },
-        {
-          "code": 220237,
-          "prob": 0.9
-        },
-        {
-          "code": 487838,
-          "prob": 0.9
-        },
-        {
-          "code": 465694,
-          "prob": 0.9
-        },
-        {
-          "code": 636852,
-          "prob": 0.9
-        },
-        {
-          "code": 114243,
-          "prob": 0.9
-        },
-        {
-          "code": 216646,
-          "prob": 0.9
-        },
-        {
-          "code": 201666,
-          "prob": 0.9
-        },
-        {
-          "code": 613221,
-          "prob": 0.9
-        }
-      ]
-    },
-    "NFO": {
-      "formation": "3-4-2-1",
-      "slots": {
-        "1": 1,
-        "2": 3,
-        "3": 4,
-        "4": 2,
-        "5": 1
-      },
-      "starters": [
-        {
-          "code": 85633,
-          "prob": 0.9
-        },
-        {
-          "code": 575458,
-          "prob": 0.9
-        },
-        {
-          "code": 227444,
-          "prob": 0.9
-        },
-        {
-          "code": 575476,
-          "prob": 0.9
-        },
-        {
-          "code": 247348,
-          "prob": 0.9
-        },
-        {
-          "code": 432714,
-          "prob": 0.9
-        },
-        {
-          "code": 204561,
-          "prob": 0.9
-        },
-        {
-          "code": 215136,
-          "prob": 0.9
-        },
-        {
-          "code": 222531,
-          "prob": 0.9
-        },
-        {
-          "code": 456512,
-          "prob": 0.9
-        },
-        {
-          "code": 463034,
-          "prob": 0.9
-        }
-      ]
-    },
-    "SUN": {
-      "formation": "4-2-3-1",
-      "slots": {
-        "1": 1,
-        "2": 4,
-        "3": 2,
-        "4": 3,
-        "5": 1
-      },
-      "starters": [
-        {
-          "code": 498016,
-          "prob": 0.9
-        },
-        {
-          "code": 200834,
-          "prob": 0.9
-        },
-        {
-          "code": 135720,
-          "prob": 0.9
-        },
-        {
-          "code": 201895,
-          "prob": 0.9
-        },
-        {
-          "code": 434399,
-          "prob": 0.9
-        },
-        {
-          "code": 84450,
-          "prob": 0.9
-        },
-        {
-          "code": 577669,
-          "prob": 0.9
-        },
-        {
-          "code": 93605,
-          "prob": 0.9
-        },
-        {
-          "code": 484420,
-          "prob": 0.9
-        },
-        {
-          "code": 536661,
-          "prob": 0.9
-        },
-        {
-          "code": 437505,
-          "prob": 0.9
-        }
-      ]
-    },
-    "TOT": {
-      "formation": "4-2-3-1",
-      "slots": {
-        "1": 1,
-        "2": 4,
-        "3": 2,
-        "4": 3,
-        "5": 1
-      },
-      "starters": [
-        {
-          "code": 485055,
-          "prob": 0.9
-        },
-        {
-          "code": 547701,
-          "prob": 0.9
-        },
-        {
-          "code": 469142,
-          "prob": 0.9
-        },
-        {
-          "code": 491279,
-          "prob": 0.9
-        },
-        {
-          "code": 122798,
-          "prob": 0.9
-        },
-        {
-          "code": 202993,
-          "prob": 0.9
-        },
-        {
-          "code": 432422,
-          "prob": 0.9
-        },
-        {
-          "code": 460842,
-          "prob": 0.9
-        },
-        {
-          "code": 232787,
-          "prob": 0.9
-        },
-        {
-          "code": 510281,
-          "prob": 0.9
-        },
-        {
-          "code": 438234,
           "prob": 0.9
         }
       ]
