@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { checkLawro, pencil } from "./checks";
-import { SAMPLE, TEAMS, ctx, draft } from "./__fixtures__/column";
+import { CALLS, SAMPLE, TEAMS, call, ctx, draft } from "./__fixtures__/column";
 
 const serious = (faults: ReturnType<typeof checkLawro>) => faults.filter((each) => each.severity !== "warn");
 
@@ -45,6 +45,16 @@ describe("checkLawro", () => {
     expect(argues("I don’t think Bayer Neverlusen will win.")).toBe(0);
     expect(argues("Bayer Neverlusen’ll win it.")).toBe(1);
     expect(argues("I’m backing Bayer Neverlusen, mind.")).toBe(1);
+  });
+
+  it("holds a tie the desk could not call to the two or three sentences its brief asks for", () => {
+    const calls = [...CALLS.slice(0, 4), call("st", "rr", "rr", { callsTeamId: null, score: null })];
+    const length = (line: string) => {
+      const ties = new Map(draft().ties).set("st-rr", { line, backs: null });
+      return checkLawro({ ...draft(), ties }, ctx({ calls })).filter((each) => each.section === "st-rr" && each.check === "length").map((each) => each.evidence);
+    };
+    expect(length("Sheffield Thursday are without Mullan, who is suspended. I can't split them and Rovers Return.")).toEqual([]);
+    expect(length("Sheffield Thursday are without Mullan. He is suspended. I can't split them. Nor can Rovers Return.")).toEqual(["4 sentences, 16 words"]);
   });
 
   it("refuses a missing tie, a score in the prose and a career nobody gave him", () => {

@@ -181,7 +181,7 @@ export function faultLog(): { faults: Fault[]; fault: Report } {
 }
 
 function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckContext, sides: ReadonlySet<string>, fault: Report): void {
-  const [least, most, words] = call.instinct === null ? LIMITS.tie : LIMITS.gut;
+  const [least, most, words] = call.callsTeamId === null ? LIMITS.noCall : call.instinct === null ? LIMITS.tie : LIMITS.gut;
   const count = sentences(line).length;
   if (count < least || count > most || wordCount(line) > words) fault(key, "length", "send-back", `${count} sentences, ${wordCount(line)} words`);
   if (SCORELINE.test(line)) fault(key, "a score in the prose", "hard", line.match(SCORELINE)?.[0] ?? "");

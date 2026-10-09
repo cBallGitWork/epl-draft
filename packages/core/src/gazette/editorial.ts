@@ -74,6 +74,8 @@ export const LAWRO_LIMITS = {
   intro: [1, 4, 40],
   tie: [3, 8, 120],
   gut: [3, 9, 130],
+  /** A tie the desk could not call: no sides and no call, so sentences and words at most. */
+  noCall: [2, 3, 120],
   column: 680,
   /** A run of this many words from a recent column is a repeat, and of this many from another tie an echo. */
   repeat: 5,

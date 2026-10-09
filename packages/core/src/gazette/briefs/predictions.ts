@@ -1,3 +1,5 @@
+import { LAWRO_LIMITS } from "../../config";
+import { spelled } from "../../format";
 import { derbyBrief, type DerbyName } from "../../league/derbies";
 import { londonDate, londonTime } from "../../time";
 import type { PastLine } from "../predictions/past";
@@ -66,7 +68,8 @@ function tieBlock(index: number, count: number, tie: PredictionsTie, name: (team
   ].join("\n");
   const shape = `Write it in "ties" with homeTeamId "${home.teamId}" and awayTeamId "${away.teamId}"`;
   if (call.callsTeamId === null) {
-    return [heading, "NO CALL: the desk cannot call this tie. Write two or three sentences and back nobody.", ...tieFacts(index, home, away, call), `${shape}, and "backs" null.`].join("\n");
+    const [least, most] = LAWRO_LIMITS.noCall;
+    return [heading, `NO CALL: the desk cannot call this tie. Write ${spelled(least)} or ${spelled(most)} sentences and back nobody.`, ...tieFacts(index, home, away, call), `${shape}, and "backs" null.`].join("\n");
   }
   const backing = name(call.callsTeamId);
   const favourite = call.instinct === null ? backing : name(call.callsTeamId === home.teamId ? away.teamId : home.teamId);

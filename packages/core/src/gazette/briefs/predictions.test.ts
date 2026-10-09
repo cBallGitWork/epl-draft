@@ -186,6 +186,8 @@ describe("buildLawroBrief", () => {
     expect(withPast).toContain(`- ${PAST[3].line}`);
     const uncalled = tie(side("cp", "Cold Palmer", null, []), side("hg", "Haaland Globetrotters", 40, []));
     expect(brief([uncalled])).toBeNull();
+    // The sentences the editor holds a tie with no call to.
+    expect(brief([clear, uncalled])).toContain("NO CALL: the desk cannot call this tie. Write two or three sentences and back nobody.");
   });
 });
 
