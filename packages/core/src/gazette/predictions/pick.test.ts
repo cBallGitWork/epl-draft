@@ -22,6 +22,10 @@ describe("callTie", () => {
     expect(callTie(side("h", 40.4), side("a", 40.2)).score).toEqual({ home: 40, away: 39 });
   });
 
+  it("prints no score below nought for a favourite projected under a point", () => {
+    expect(callTie(side("h", 0.4), side("a", 0.1)).score).toEqual({ home: 1, away: 0 });
+  });
+
   it("gives level totals to the home side", () => {
     expect(callTie(side("h", 40), side("a", 40)).callsTeamId).toBe("h");
   });
