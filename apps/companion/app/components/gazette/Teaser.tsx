@@ -4,6 +4,7 @@ import Dateline from "./Dateline";
 import type { Club, PublishedStory } from "@epl/core";
 import { KICKER } from "./kickers";
 import { storyHref } from "./paperPages";
+import { KICKER_CAPS } from "./heads";
 
 // A shoulder: a story at the second rank, as a card: picture, standing head, headline, deck and
 // dateline. Two abreast under the splash on a phone; on a desk, the column beside the lead.
@@ -33,7 +34,7 @@ export default function Teaser({
         ) : null}
         {/* Ink, not the accent: the sheet's one red is spent on what is live and what is yours. */}
         {kicker !== undefined ? (
-          <span className="font-sans text-3xs font-bold uppercase tracking-[0.16em] text-ink">
+          <span className={`${KICKER_CAPS} text-ink`}>
             {kicker}
           </span>
         ) : null}

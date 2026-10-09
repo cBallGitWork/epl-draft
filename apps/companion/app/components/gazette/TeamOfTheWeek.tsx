@@ -1,5 +1,6 @@
 import { DASH, type Pick, type TeamOfTheWeek as Eleven } from "@epl/core";
 import Column from "./Column";
+import { STANDING_CAPS } from "./heads";
 
 // The best eleven anyone owned this week, as a sidebar column grouped by line;
 // each man prints his owner and his Fantrax points (Craig, 1 Oct 2026: "just put points").
@@ -21,7 +22,7 @@ export default function TeamOfTheWeek({
     <Column title={partial ? "Team of the week so far" : "Team of the week"}>
       {eleven.lines.map((line) => (
         <div key={line.position} className="py-1.5">
-          <p className="font-sans text-3xs font-semibold uppercase tracking-[0.16em] text-faint">
+          <p className={`${STANDING_CAPS} text-faint`}>
             {line.position}
           </p>
           <ul>

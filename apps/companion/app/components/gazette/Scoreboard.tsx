@@ -5,6 +5,7 @@ import Changed from "../shell/Changed";
 import ScoreFigure from "../league/ScoreFigure";
 import { matchupHref } from "@/app/league/routes";
 import { LIVE } from "../shell/sections";
+import { QUIET_CAPS, STANDING_CAPS } from "./heads";
 
 // The gameweek's scores as a strip under the masthead; while a ball is in the air your own tie stands above it at full size.
 // The caller draws it only once the gameweek is under way: before kickoff every total is a nought.
@@ -34,7 +35,7 @@ export default function Scoreboard({
       <div
         className={`flex items-stretch overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] snap-x [&::-webkit-scrollbar]:hidden ${promoted ? "border-t border-line" : ""}`}
       >
-        <span className="flex shrink-0 items-center gap-1.5 py-1.5 pr-3 font-sans text-3xs font-semibold uppercase tracking-[0.16em]">
+        <span className={`${STANDING_CAPS} flex shrink-0 items-center gap-1.5 py-1.5 pr-3`}>
           {live ? (
             <>
               <span className="live-dot" />
@@ -72,7 +73,7 @@ function Yours({
       <ScoreLine name={team.name} score={yours} other={theirs} yours />
       <ScoreLine name={opponent.name} score={theirs} other={yours} />
       {/* Who is still to come; absence is "Fantrax did not say", never "nobody left". */}
-      <span className="pt-1 font-sans text-3xs uppercase tracking-[0.16em] text-faint">
+      <span className={`${QUIET_CAPS} pt-1`}>
         {toPlayLine(team.name, yours?.toPlay ?? null, opponent.name, theirs?.toPlay ?? null)}
       </span>
     </Link>

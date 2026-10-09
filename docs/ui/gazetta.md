@@ -593,6 +593,10 @@ appended second ink loses on stylesheet order.
 |---|---|---|---|
 | `RULE` | `gazette/rules.ts` | a faint rule's colour, `--paper-rule`; the caller names the side | 10 |
 | `HAIRLINES` | `gazette/rules.ts` | the faint hairline between a list's rows: `divide-y` alone rules them in each row's own ink | 7 |
+| `STANDING_CAPS` | `gazette/heads.ts` | `3xs` semibold tracked capitals, no ink: a standing head, the masthead's and folio's dateline rows | 5 (and `(paper)/not-found` writes it out) |
+| `STANDING_HEAD` | `gazette/heads.ts` | `STANDING_CAPS` in muted ink: a label over a list, a panel or a line of figures | 15 |
+| `KICKER_CAPS` | `gazette/heads.ts` | the same capitals in bold, no ink: a card's standing head, the quiz's | 3 |
+| `QUIET_CAPS` | `gazette/heads.ts` | the same at the body's weight in faint ink: a dateline, who is left to play, the quiz's answers | 3 |
 | `CAPTION_CAPS` | `gazette/heads.ts` | a caption's capitals, `2xs` and `tracking-widest`, no weight and no ink | 8 (2 inked by the caller) |
 | `CAPTION` | `gazette/heads.ts` | `CAPTION_CAPS` in muted ink: a kickoff, a club's fixture, a quote's credit, the line over a side's eleven | 6 |
 
@@ -656,12 +660,10 @@ splash's dateline is a block and a teaser's is the last line inside a
 unnesting; and the turn-line, which `Written` declines because it IS the
 article, so "read on" there would point at the page you are on.
 
-The class string itself is deliberately NOT extracted with it. It reads
-`font-sans text-3xs uppercase tracking-[0.16em]` at fifteen sites in three
-weights — 8 `font-semibold`, 5 bare, 2 `font-bold` — and the weights are not
-noise: bare is a dateline, bold is a standing head. One constant would be
-followed by eight sites and overridden by seven, which is the DASH failure
-CODE_RULES §4 names. It stays duplicated until the roles it serves are split.
+The class string is named by weight, not once, because the weights are not noise: one constant over all three
+would be followed by some sites and overridden by the rest, the DASH failure CODE_RULES §4 names. The three weights
+of `font-sans text-3xs uppercase tracking-[0.16em]` are `STANDING_CAPS`, `KICKER_CAPS` and `QUIET_CAPS` in
+`gazette/heads.ts`, counted in the table under "The sheet's class strings" (9 Oct 2026).
 
 **The display block is one component across three renderers** (8 Oct 2026). `Splash`, the desk's own lead
 (`Stories`) and `Written` each set the same headline, standfirst and 24px rule under the same inverted chip;

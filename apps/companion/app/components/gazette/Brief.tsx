@@ -4,6 +4,7 @@ import Dateline from "./Dateline";
 import type { Club, PublishedStory } from "@epl/core";
 import { KICKER } from "./kickers";
 import { storyHref } from "./paperPages";
+import { KICKER_CAPS } from "./heads";
 
 // A story in the tail, the sheet's third rank. On a phone, a row: thumbnail, standing head, headline.
 // On a desk, a card in the grid: the same picture full width over the headline, and its dateline.
@@ -30,7 +31,7 @@ export default function Brief({
         ) : null}
         <span className="flex min-w-0 flex-1 flex-col justify-center gap-0.5 @md/stories:gap-1">
           {kicker !== undefined ? (
-            <span className="font-sans text-3xs font-bold uppercase tracking-[0.16em] text-muted">{kicker}</span>
+            <span className={`${KICKER_CAPS} text-muted`}>{kicker}</span>
           ) : null}
           <h3 className="paper-display text-pretty text-base font-bold leading-snug text-ink @md/stories:text-lg">
             {story.headline}
