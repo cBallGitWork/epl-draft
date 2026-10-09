@@ -61,7 +61,6 @@ export type { Violation } from "./violations";
 
 export { isActive } from "./rosterStatus";
 export { recordedRole } from "./recorded";
-export type { RecordedLeagues } from "./recorded";
 export { fetchSeasonCodes } from "./fantrax/playerClient";
 
 // The shape differ, for `scripts/shape-diff.ts`: does the league still answer in the shape the mappers expect.

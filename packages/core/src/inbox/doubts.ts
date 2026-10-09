@@ -39,21 +39,19 @@ export function availabilityNews(
   opened: string | null = null,
 ): InboxItem[] {
   return notes.flatMap((note) => {
+    // Never a man nobody holds: a free agent's news belongs on the pool.
+    if (note.teamId === null) return [];
     // A signed-out reader keeps the whole league's: he has no team to filter to, and the list is public news.
     const anonymous = squads.mine === null;
     const side: Side | null =
-      note.teamId === null
-        ? null
-        : note.teamId === squads.mine
-          ? "mine"
-          : note.teamId === squads.opponent
-            ? "opponent"
-            : anonymous
-              ? "league"
-              : null;
+      note.teamId === squads.mine
+        ? "mine"
+        : note.teamId === squads.opponent
+          ? "opponent"
+          : anonymous
+            ? "league"
+            : null;
     if (side === null) return [];
-    // Never a man nobody holds: a free agent's news belongs on the pool.
-    if (note.teamId === null) return [];
 
     const who = squads.name(note.teamId) ?? "Another manager";
     // A note filed before the last lock was written for an earlier gameweek, so its letter names none.

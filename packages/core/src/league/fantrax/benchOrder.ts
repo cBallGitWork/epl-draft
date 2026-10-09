@@ -28,9 +28,11 @@ export interface BenchOrder {
 export function mapBenchOrder(raw: RawTeamRosterInfo): BenchOrder {
   const reserves = (raw.tables ?? []).flatMap((table) => {
     const at = (table.header?.cells ?? []).findIndex((c) => c.key === "fpts");
-    return (table.rows ?? [])
-      .filter((r) => r.statusId === "2" && typeof r.scorer?.scorerId === "string")
-      .map((r) => ({ id: r.scorer!.scorerId!, fpts: at < 0 ? 0 : Number(r.cells?.[at]?.content) || 0 }));
+    return (table.rows ?? []).flatMap((r) => {
+      const id = r.scorer?.scorerId;
+      if (r.statusId !== "2" || typeof id !== "string") return [];
+      return [{ id, fpts: at < 0 ? 0 : Number(r.cells?.[at]?.content) || 0 }];
+    });
   });
   const numbers = Object.entries(raw.miscData?.autoSubOrderMap ?? {})
     .map(([id, n]) => ({ id, n: Number(n) }))
