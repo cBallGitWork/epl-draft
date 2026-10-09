@@ -16,7 +16,7 @@ export interface RawTeamRosterInfo {
 export interface RawRosterRow {
   /** "1" in the eleven, "2" on the bench. A row with no scorer is an empty slot. */
   statusId?: string;
-  scorer?: { scorerId?: string; posShortNames?: string };
+  scorer?: { scorerId?: string; shortName?: string; posShortNames?: string };
   cells?: { content?: string }[];
 }
 
