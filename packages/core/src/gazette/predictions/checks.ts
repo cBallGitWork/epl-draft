@@ -61,9 +61,9 @@ const TICS: readonly (readonly [check: string, pattern: RegExp])[] = [
 /** What only a real club does: "Liverpool host City" is his to write, a league side hosting nobody's. */
 const AT_HOME = String.raw`\s+(?:hosts?|hosted|hosting|visits?|visited|visiting|travels?|travelled|travelling)\b`;
 const QUOTES = /["“”«»]|‘[^’]*’/u;
-const WIN = /\b(?:will|'ll|to|should|can|could|might|going to) (?:win|beat|edge|nick|take it|do it)\b/iu;
-const BACKING = /\b(?:I fancy|I'm backing|I'll go with|I'm going with|I'll have|backing)\b/iu;
-const NEGATION = /\b(?:not|never|no)\b|n't/iu;
+const WIN = /\b(?:will|['’]ll|to|should|can|could|might|going to) (?:win|beat|edge|nick|take it|do it)\b/giu;
+const BACKING = /\b(?:I fancy|I['’]m backing|I['’]ll go with|I['’]m going with|I['’]ll have|backing)\b/iu;
+const NEGATION = /\b(?:not|never|no)\b|n['’]t/iu;
 const SCORELINE = /\b(?!50-50\b)\d{1,3}\s*[-–]\s*\d{1,3}\b/u;
 const ADMISSION = ["Liverpool man", "Liverpool men", "Liverpool player", "Liverpool players", "Liverpool lad", "Liverpool lads", "Anfield man", "in red"];
 /** His verdict is his: a tie with no "I", "me" or "my" in it is a list of facts, not an opinion. */
@@ -222,13 +222,19 @@ function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckCon
   // He never admits the bias: on a Liverpool call, their club is not the reason.
   if (call.instinct === "liverpool") for (const word of banned(line, ADMISSION)) fault(key, "gives Liverpool as the reason", "send-back", word);
   if (call.callsTeamId === null) return;
+  const backed = ctx.name(call.callsTeamId);
   const other = ctx.name(call.callsTeamId === call.homeTeamId ? call.awayTeamId : call.homeTeamId);
   for (const sentence of sentences(line)) {
     if (!sentence.includes(other) || NEGATION.test(sentence)) continue;
-    if (WIN.test(sentence) || new RegExp(`${BACKING.source}\\s+${escapeRegExp(other)}`, "iu").test(sentence)) {
+    if (winsFor(sentence, other, backed) || new RegExp(`${BACKING.source}\\s+${escapeRegExp(other)}`, "iu").test(sentence)) {
       fault(key, "argues for the other side", "hard", sentence);
     }
   }
+}
+
+/** Whether a win the sentence speaks of is `side`'s: the side named nearest before it, so "X to beat Y" is X's. */
+function winsFor(sentence: string, side: string, rival: string): boolean {
+  return [...sentence.matchAll(WIN)].some(({ index }) => sentence.lastIndexOf(side, index) > sentence.lastIndexOf(rival, index));
 }
 
 /** A called tie is one side, the other side, then the call: a sentence with its reason, never a name alone. */

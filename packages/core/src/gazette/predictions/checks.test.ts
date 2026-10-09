@@ -28,6 +28,25 @@ describe("checkLawro", () => {
     expect(checkLawro(argued, ctx()).find((each) => each.check === "argues for the other side")?.severity).toBe("hard");
   });
 
+  it("reads a win as the side named before it, so the call may name the side it beats", () => {
+    const argues = (call: string) =>
+      checkLawro(draft([["rs-bn", `I've no argument with Real Sociable.\n\nBayer Neverlusen signed Pym and Kettle on Wednesday.\n\n${call}`], ...SAMPLE.slice(1)]), ctx())
+        .filter((each) => each.check === "argues for the other side")
+        .map((each) => each.evidence);
+    expect(argues("I fancy Real Sociable to beat Bayer Neverlusen, because Oduya has Leeds.")).toEqual([]);
+    expect(argues("Bayer Neverlusen have Pym, but Real Sociable will win it because of Oduya.")).toEqual([]);
+    expect(argues("Bayer Neverlusen have Pym, and they could nick it.")).toEqual(["Bayer Neverlusen have Pym, and they could nick it."]);
+  });
+
+  it("reads a curly apostrophe as a straight one in a negation, a win and a backing", () => {
+    const argues = (sentence: string) =>
+      checkLawro(draft([["rs-bn", `I've no argument with Real Sociable.\n\nBayer Neverlusen signed Pym. ${sentence}\n\nReal Sociable, because Oduya has Leeds.`], ...SAMPLE.slice(1)]), ctx())
+        .filter((each) => each.check === "argues for the other side").length;
+    expect(argues("I don’t think Bayer Neverlusen will win.")).toBe(0);
+    expect(argues("Bayer Neverlusen’ll win it.")).toBe(1);
+    expect(argues("I’m backing Bayer Neverlusen, mind.")).toBe(1);
+  });
+
   it("refuses a missing tie, a score in the prose and a career nobody gave him", () => {
     const faults = checkLawro(
       draft([["rs-bn", "Real Sociable win 52-42. I managed Oxford once."], ...SAMPLE.slice(2)], {}),
