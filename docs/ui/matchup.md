@@ -8,6 +8,15 @@ anywhere in the app arrives on that name's team. Which side Fantrax calls home
 decides only the ground: the page is drawn over the home team's venue
 (`data/leagues/venues.json`, the desk's own photograph for a team it does not list).
 
+**`?vs=` names the other side.** A double header (two ties for a team in one period, GW34) means the team alone
+does not say which tie, so a link into a matchup carries the opponent in `matchupHref`'s `vs` (`tieHref` for a tie
+opened on one of its sides). The pairing cards, the schedule and the paper's scoreboard always name it; YourMatchup
+names it on a double header, and the live strip on a double header's second tie. `pickTie` (`views.ts`) opens the tie `vs` names, else the schedule's first, so a stale or missing `vs` still
+lands on a tie. On the page the view, Stats and sub-view links keep `vs` only for the second tie, so a single tie's
+URLs read as they always did. A double header draws a **tie strip** above the scoreline: a `TabStrip` labelled
+"Ties this gameweek", one plate per tie reading `v <opponent>`, on the same round and view (`tieTabs`). A single tie
+draws none.
+
 ## On the page
 
 1. **One scoreline row** — `123 · 59.1 · v · 63.2 · test3`, read the way a score
