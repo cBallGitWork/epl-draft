@@ -18,7 +18,7 @@ const snapshot = { players: [{ id: 7, code: 700 }], stats: [row(7, 1, 1)] };
 
 describe("seasonLines", () => {
   it("counts a man's starts and goals over every past gameweek, and this one's goals, by code", () => {
-    expect(seasonLines([[row(7, 1, 2)], [row(7, 0, 0)]], snapshot)?.get(700)).toEqual({ startsBefore: 1, matchesBefore: 0, yellowsBefore: 0, goalsSeason: 3 });
+    expect(seasonLines([[row(7, 1, 2)], [row(7, 0, 0)]], snapshot)?.get(700)).toEqual({ startsBefore: 1, matchesBefore: 0, goalsSeason: 3 });
   });
 
   it("tells nobody's season when a past gameweek would not load", () => {

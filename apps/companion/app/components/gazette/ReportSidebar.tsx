@@ -43,26 +43,41 @@ const markText = (mark: number | null | undefined) => (mark === undefined ? "" :
 
 const rated = (lineup: StoryLineup | null) => lineup?.lines.flat().some((m) => m.mark !== undefined) ?? false;
 
-/** "Porro 4.5 (Gray 19, 6.1)": the man, his mark, his replacement with the minute and mark, half-time as "h-t". */
-function Man({ man }: { man: StoryLineup["lines"][number][number] }) {
-  const minute = (m: string) => (m === "46" ? "h-t" : m);
-  const on = man.replacedBy;
+type Starter = StoryLineup["lines"][number][number];
+type Sub = NonNullable<Starter["replacedBy"]>;
+
+/** Every man who came on in a starter's place, in order: his replacement, and whoever replaced him. */
+function subsOf(man: Starter): Sub[] {
+  const out: Sub[] = [];
+  for (let on = man.replacedBy ?? undefined; on !== undefined; on = on.replacedBy) out.push(on);
+  return out;
+}
+
+/** "(Gray 19, 6.1 (Kudus 80))": a replacement with the minute and mark, half-time as "h-t", and his own replacement inside. */
+function On({ on }: { on: Sub }) {
+  const minute = on.minute === "46" ? "h-t" : on.minute;
+  return (
+    <>
+      {` (${on.name} ${minute}`}
+      {on.mark === undefined ? null : <span className="numeric">,{markText(on.mark)}</span>}
+      {on.replacedBy === undefined ? null : <On on={on.replacedBy} />})
+    </>
+  );
+}
+
+/** "Porro 4.5 (Gray 19, 6.1)": the man, his mark, and the chain of men who came on for him. */
+function Man({ man }: { man: Starter }) {
   return (
     <>
       {man.name}
       <span className="numeric">{markText(man.mark)}</span>
-      {on === null ? null : (
-        <>
-          {` (${on.name} ${minute(on.minute)}`}
-          {on.mark === undefined ? null : <span className="numeric">,{markText(on.mark)}</span>})
-        </>
-      )}
+      {man.replacedBy === null ? null : <On on={man.replacedBy} />}
     </>
   );
 }
 
 function Lineup({ club, lineup }: { club: string; lineup: StoryLineup }) {
-  const booked = lineup.lines.flat().flatMap((m) => [...(m.booked ? [m.name] : []), ...(m.replacedBy?.booked ? [m.replacedBy.name] : [])]);
+  const booked = lineup.lines.flat().flatMap((m) => [m, ...subsOf(m)].filter((each) => each.booked).map((each) => each.name));
   const off = lineup.lines.flat().filter((m) => m.sentOff).map((m) => m.name);
   return (
     <p className="text-2xs leading-snug text-ink">

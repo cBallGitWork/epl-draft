@@ -11,7 +11,7 @@ export { buildFixturePreviewBrief } from "./briefs/fixturePreview";
 export { buildElevenBrief, buildPowerBrief, buildWireBrief } from "./briefs/columns";
 export { buildDodgersBrief } from "./briefs/dodgers";
 export { buildNewsBrief } from "./briefs/news";
-export { buildPresserBrief } from "./briefs/presser";
+export { buildPresserBrief, stillOut } from "./briefs/presser";
 export type { PresserLine } from "./briefs/presser";
 export { affectedBy } from "./newsTriage";
 export type { Affected } from "./newsTriage";

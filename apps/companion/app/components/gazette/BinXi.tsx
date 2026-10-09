@@ -1,4 +1,4 @@
-import { byPositionDepth, clubById, isGoalkeeper, playerByCode, surname, type FootballSnapshot, type PublishedStory } from "@epl/core";
+import { byPositionDepth, clubById, isGoalkeeper, playerByCode, plural, surname, type FootballSnapshot, type PublishedStory } from "@epl/core";
 import PitchMarker from "../league/PitchMarker";
 import PitchRows from "../league/PitchRows";
 import { STANDING_HEAD } from "./heads";
@@ -19,7 +19,7 @@ export default function BinXi({ story, snapshot }: { story: PublishedStory; snap
   return (
     <div className="flex flex-col gap-3 pt-4">
       <p className={STANDING_HEAD}>
-        The Bin XI · {bin.shape} · <span className="numeric">{bin.total}</span> pts
+        The Bin XI · {bin.shape} · <span className="numeric">{bin.total}</span> {plural(bin.total, "pt")}
       </p>
       {/* Stacked on a phone; the pitch beside its bench and stats at a desk, where it would fill the sheet. */}
       <div className="grid gap-3 @3xl:grid-cols-2 @3xl:gap-x-8">
@@ -34,7 +34,7 @@ export default function BinXi({ story, snapshot }: { story: PublishedStory; snap
                 keeper={isGoalkeeper(man.slot)}
                 club={player === null ? undefined : clubs.get(player.clubId)}
                 // Fantrax's points for the week, as filed: the marker only prints points once a match is live.
-                band={`${man.points} pts`}
+                band={`${man.points} ${plural(man.points, "pt")}`}
                 face={player ?? undefined}
               />
             );

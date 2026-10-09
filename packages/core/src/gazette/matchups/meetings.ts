@@ -25,7 +25,7 @@ type Named = { teamId: string; name: string };
 export function meetingsWon(home: Named, away: Named, meetings: readonly Meeting[]): SeasonFact | null {
   if (meetings.length < DRAFT_DESK.sweepFrom) return null;
   const swept = meetings.every((m) => m.for > m.against) ? [home, away] : meetings.every((m) => m.for < m.against) ? [away, home] : null;
-  return swept === null ? null : { teamId: swept[0].teamId, kind: "meetings-won", text: `${swept[0].name} have won all ${meetings.length} meetings with ${swept[1].name}` };
+  return swept === null ? null : { teamId: swept[0].teamId, kind: "meetings-won", text: `${swept[0].name} have won ${meetings.length === 2 ? "both" : `all ${meetings.length}`} meetings with ${swept[1].name}` };
 }
 
 /** A man facing a side he once belonged to, and the line that says so. */

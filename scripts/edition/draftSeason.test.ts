@@ -30,7 +30,7 @@ describe("draftSeason", () => {
     const season = await draftSeason(info, table, results, new Map(), 5);
     expect(placeOf(season, "Zeta")).toEqual({ rank: 1, won: 4, drawn: 0, lost: 0, run: "WWWW" });
     expect(gameweekFacts(season, states, "gameweek").get("Zeta")?.map((f) => f.text)).toEqual(["Zeta have won 5 in a row", "Zeta stayed top"]);
-    expect(sweepOf(season, side("Zeta"), side("Bravo"), { for: 70, against: 50 })?.text).toBe("Zeta have won all 2 meetings with Bravo");
+    expect(sweepOf(season, side("Zeta"), side("Bravo"), { for: 70, against: 50 })?.text).toBe("Zeta have won both meetings with Bravo");
   });
 
   it("tells no place, table, form or meeting when Fantrax would not give the season's results", async () => {

@@ -28,19 +28,15 @@ import {
   reportMen,
   shortClubNames,
   sideFigures,
-  strengthIntel,
-  strengthPlaces,
   type Club,
   type FootballSnapshot,
   type Fixture,
-  type IntelStrength,
   type LeaguePeriod,
   type PlayerMatchStats,
   type ReportDayInput,
   type ReportMatchInput,
   type SeasonLine,
 } from "@epl/core";
-import { readIntel } from "../intel";
 import type { DeskFacts } from "./facts";
 import { fitnessAfter, leagueJoin } from "./matchdayLeague";
 import { dayMarks } from "./matchdayRatings";
@@ -67,14 +63,13 @@ export function seasonLines(
   if (rounds.length < past.length) return null;
   const codeOf = new Map(snapshot.players.map((p) => [p.id, p.code]));
   const lines = new Map<number, SeasonLine>();
-  const line = (code: number) => lines.get(code) ?? lines.set(code, { startsBefore: 0, matchesBefore: 0, yellowsBefore: 0, goalsSeason: 0 }).get(code)!;
+  const line = (code: number) => lines.get(code) ?? lines.set(code, { startsBefore: 0, matchesBefore: 0, goalsSeason: 0 }).get(code)!;
   for (const rows of rounds) {
     for (const row of rows) {
       const code = codeOf.get(row.playerId);
       if (code === undefined) continue;
       const l = line(code);
       l.startsBefore += row.starts;
-      l.yellowsBefore += row.yellowCards;
       l.goalsSeason += row.goals;
     }
   }
@@ -175,13 +170,11 @@ export async function matchdayInput(opts: {
     }
   }
 
-  const strengths = strengthIntel(readIntel<IntelStrength>("strength"));
   return {
     day,
     gameweek,
     matches,
     season,
     clubs: snapshot.clubs,
-    standing: { attack: strengthPlaces(strengths, "attack"), defence: strengthPlaces(strengths, "defence") },
   };
 }

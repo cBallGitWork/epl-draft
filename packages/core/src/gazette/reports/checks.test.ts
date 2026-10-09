@@ -9,14 +9,12 @@ import type { ReportMatchInput } from "./types";
 
 // A clean piece written for this test from the brief's own facts; the mutations below each break one rule.
 
-const places = new Map([[6, 18], [7, 9]]);
 const desks = deskDay({
   day: "2026-09-19",
   gameweek: 5,
   matches: [spursVilla({ holders: new Map([[codeOf("Buendía"), { team: "Notemail", fielded: true, round: null, h2h: null }]]), points: new Map([[codeOf("Buendía"), 7]]) })],
   season: [fixture],
   clubs: [SPURS, VILLA],
-  standing: { attack: places, defence: places },
   // The clean piece below is written to this length; the config's budget moves as the paper's does.
 }).map((d) => ({ ...d, budget: { ...d.budget, account: [90, 130] as const } }));
 const blocks = new Map([[2645244, matchBlock(desks[0])]]);
@@ -185,7 +183,7 @@ describe("checkReports", () => {
 
   it("lets a stake give the holder's head-to-head score, which is the league's and not the match's", () => {
     const withH2h = deskDay({
-      day: "2026-09-19", gameweek: 5, season: [fixture], clubs: [SPURS, VILLA], standing: { attack: places, defence: places },
+      day: "2026-09-19", gameweek: 5, season: [fixture], clubs: [SPURS, VILLA],
       matches: [spursVilla({ holders: new Map([[codeOf("Buendía"), { team: "Notemail", fielded: true, round: 2, h2h: { opponent: "test2", us: 38, them: 34 } }]]), points: new Map([[codeOf("Buendía"), 7]]) })],
     });
     const piece = { ...CLEAN, sections: [CLEAN.sections[0], { ...CLEAN.sections[1], stake: "His seven points have Notemail 38-34 up on test2." }, CLEAN.sections[2]] };

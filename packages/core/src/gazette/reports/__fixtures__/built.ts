@@ -17,7 +17,7 @@ export function moment(minute: string, kind: PlMoment["kind"], men: [number | nu
 
 export const reportMan = (code: number, name: string, side: "home" | "away", over: Partial<ReportMan> = {}): ReportMan => ({
   code, name, side, started: true, onAt: null, offAt: null, injuredOff: false, sentOff: false, line: "M", minutes: 90, saves: 0, expectedGoals: 0, expectedAssists: 0,
-  startsBefore: 3, matchesBefore: 4, yellowsBefore: 0, goalsSeason: null, holder: null, points: null, fitness: null, ...over,
+  startsBefore: 3, matchesBefore: 4, goalsSeason: null, holder: null, points: null, fitness: null, ...over,
 });
 
 export const figures = (over: Partial<SideFigures> = {}): SideFigures => ({
@@ -37,7 +37,7 @@ export function matchInput(men: ReportMan[], moments: PlMoment[], score: [number
 }
 
 export const deskOf = (match: ReportMatchInput): MatchDesk =>
-  deskDay({ day: "2026-10-03", gameweek: 7, matches: [match], season: [match.fixture], clubs: [ARSENAL, CHELSEA], standing: { attack: new Map(), defence: new Map() } })[0];
+  deskDay({ day: "2026-10-03", gameweek: 7, matches: [match], season: [match.fixture], clubs: [ARSENAL, CHELSEA] })[0];
 
 export const SAKA = reportMan(1, "Bukayo Saka", "home");
 export const HAVERTZ = reportMan(2, "Kai Havertz", "home");

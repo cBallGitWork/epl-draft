@@ -1,4 +1,4 @@
-import { MS_PER_DAY, TEAM_SHEET, londonDayOf, onLondonDay, type Club, type Fixture, type PresserLine, type RosteredTeam } from "@epl/core";
+import { MS_PER_DAY, TEAM_SHEET, londonDayOf, onLondonDay, stillOut, type Club, type Fixture, type PresserLine, type RosteredTeam } from "@epl/core";
 import type { Say } from "./newsroom";
 import {
   presserFixtures,
@@ -84,20 +84,17 @@ export function presserDays(lines: readonly PresserLine[]): string[] {
   return [...new Set(lines.flatMap((line) => londonDayOf(line.said) ?? []))].sort();
 }
 
-/** An absence: ruled out or suspended. A standing doubt or rotation risk is not still out. */
-const ABSENT = new Set(["ruled_out", "suspended"]);
-
 /** Each team-news row given its club's standing absences from the export, with who holds each, in place of any the
  *  column listed; a man the column bulleted is news, so he is not also still out. */
 export function withStillOut(rows: unknown, lines: readonly PresserLine[]): unknown {
   if (!Array.isArray(rows)) return rows;
   return rows.map((row) => {
-    const { alsoOut, stillOut, ...rest } = row as { alsoOut?: unknown; stillOut?: unknown; code?: unknown; men?: unknown };
+    const { alsoOut, stillOut: listed, ...rest } = row as { alsoOut?: unknown; stillOut?: unknown; code?: unknown; men?: unknown };
     void alsoOut;
-    void stillOut;
+    void listed;
     const bulleted = new Set(Array.isArray(rest.men) ? rest.men.map((man) => (man as { name?: unknown }).name) : []);
     const still = lines
-      .filter((line) => !line.fresh && ABSENT.has(line.tag) && line.club === rest.code && !bulleted.has(line.playerName))
+      .filter((line) => stillOut(line) && line.club === rest.code && !bulleted.has(line.playerName))
       .map((line) => (line.ownerName === null ? { name: line.playerName } : { name: line.playerName, owner: line.ownerName }));
     return still.length === 0 ? rest : { ...rest, stillOut: still };
   });
