@@ -1,6 +1,7 @@
 import type { MinutesUpdate } from "../football/intel/minuteMoves";
 import { listed } from "../format";
 import { londonWeekdayLong } from "../time";
+import { NAMES_IN_HEADLINE } from "./messages";
 import type { InboxItem } from "./types";
 
 // The scout's minutes: one letter per xMins export that moved a man on the reader's side or his next opponent's by
@@ -12,9 +13,6 @@ export interface MinutesSide {
   teamId: string;
   men: readonly { code: number; name: string }[];
 }
-
-/** How many moves a headline names. */
-const MOVES_IN_HEADLINE = 2;
 
 export function minutesNews(
   updates: readonly MinutesUpdate[],
@@ -55,7 +53,7 @@ function letter(
   if (all.length === 0) return [];
 
   const way = (move: { before: number; after: number }) => (move.after > move.before ? "up" : "down");
-  const shown = all.slice(0, MOVES_IN_HEADLINE).map((move) => `${move.name} ${way(move)}`);
+  const shown = all.slice(0, NAMES_IN_HEADLINE).map((move) => `${move.name} ${way(move)}`);
   const more = all.length - shown.length;
   const lines = moved
     .filter(({ moves }) => moves.length > 0)

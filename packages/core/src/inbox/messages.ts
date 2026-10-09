@@ -6,9 +6,8 @@ import { fantraxInstant } from "./when";
 // The league's business, as CM's Messages: who signed, who released, who traded. A headline is a bare fact; the
 // body a letter from your assistant about your business, the commissioner about anyone else's. Never advice.
 
-/** How many names a headline carries: two fill one line on a 390 phone; the rest go in the body. */
-const NAMES_IN_HEADLINE = 2;
-
+/** How many names any inbox headline carries: two fill one line on a 390 phone; the rest go in the body. */
+export const NAMES_IN_HEADLINE = 2;
 
 /** A side's name for a headline: `Brian Brobbey (SUN)`, where the feed gave a club. */
 function named(side: DealSide): string {
