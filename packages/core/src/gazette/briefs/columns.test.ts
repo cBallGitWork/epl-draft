@@ -64,6 +64,13 @@ describe("buildWireBrief", () => {
   });
 });
 
+describe("the column briefs' counts", () => {
+  it("says one deal and one save, not one deals and one saves", () => {
+    expect(buildWireBrief({ gameweek: 3, facts: { teams: [], passedAround: [], binned: [], deals: 1 }, named: (id) => id, threads: [] })).toContain("1 deal in the window");
+    expect(buildElevenBrief({ gameweek: 3, picks: [pick({ position: "G", goals: 0, saves: 1, minutes: 90 })], shape: "1-0-0-0", threads: [] })).toContain("1 save in 90 min");
+  });
+});
+
 describe("buildElevenBrief", () => {
   it("marks the benched man as the story, and asks for a column rather than a list", () => {
     const brief = buildElevenBrief({

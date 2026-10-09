@@ -47,6 +47,7 @@ describe("americanisms", () => {
   it("names the listed American words in list order, then the first -ize, and spares size and prize", () => {
     expect(americanisms("The defense realized it and organized a lineup.")).toEqual(["lineup", "defense", "realized"]);
     expect(americanisms("A prize for the size of the squad.")).toEqual([]);
+    expect(americanisms("Two prizes and an oversized squad, and the season may capsize.")).toEqual([]);
     expect(americanisms("The defense realized it.", [])).toEqual(["realized"]);
   });
 });

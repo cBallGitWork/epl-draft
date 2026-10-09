@@ -1,3 +1,4 @@
+import { howMany } from "../../format";
 import type { StoryThread } from "../ledger";
 import type { PowerRow } from "../powerRanking";
 import type { Pick } from "../types";
@@ -45,7 +46,7 @@ export function buildWireBrief(brief: {
   );
 
   return [
-    `THE BIN, gameweek ${brief.gameweek}. The waiver column: who has been busy, who is churning, and which men the league keeps passing around. ${brief.facts.deals} deals in the window — if that is a quiet week, say so plainly rather than inflating it.`,
+    `THE BIN, gameweek ${brief.gameweek}. The waiver column: who has been busy, who is churning, and which men the league keeps passing around. ${howMany(brief.facts.deals, "deal")} in the window — if that is a quiet week, say so plainly rather than inflating it.`,
     teams.length > 0 ? ["ACTIVITY, by manager:", ...teams].join("\n") : null,
     passed.length > 0 ? ["PASSED AROUND, men moved more than once:", ...passed].join("\n") : null,
     brief.facts.binned.length > 0
@@ -89,6 +90,6 @@ function did(pick: Pick): string {
   if (pick.goals > 0) parts.push(`${pick.goals}G`);
   if (pick.assists > 0) parts.push(`${pick.assists}A`);
   if (pick.cleanSheet) parts.push("clean sheet");
-  if (pick.saves > 0) parts.push(`${pick.saves} saves`);
+  if (pick.saves > 0) parts.push(howMany(pick.saves, "save"));
   return parts.length === 0 ? `${pick.minutes} min` : `${parts.join(", ")} in ${pick.minutes} min`;
 }

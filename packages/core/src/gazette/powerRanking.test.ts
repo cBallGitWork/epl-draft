@@ -38,6 +38,10 @@ describe("powerRows", () => {
     expect(rows[1].round).toBe("lost to a by 26.4");
   });
 
+  it("never says a side won by nought", () => {
+    expect(powerRows([row({ teamId: "a", teamName: "a" })], [result("a", "b", 0.04)])[0].round).toBe("beat b by 0.04");
+  });
+
   it("says nothing about a tie that has not been decided", () => {
     expect(powerRows([row()], [])[0].round).toBeNull();
   });

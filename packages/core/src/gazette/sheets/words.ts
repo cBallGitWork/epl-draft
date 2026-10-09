@@ -64,5 +64,6 @@ export const SHEETS_AMERICAN: readonly string[] = [
   "traveled", "traveling", "canceled", "fulfill", "skillful", "gray", "toward", "afterward", "meters", "kilometers",
 ];
 
-/** An American -ize, where The Times prints -ise; "size", "prize" and "seize" are not verbs of the kind. */
-export const AMERICAN_IZE = /\b(?!(?:size|sized|prize|prized|seize|seized|seizes|seizing)\b)\p{L}{2,}(?:ize|izes|ized|izing|ization)\b/iu;
+/** An American -ize, where The Times prints -ise; "size", "prize", "seize" and "capsize" in any form, and a size compound
+ *  ("oversized"), are not verbs of the kind. */
+export const AMERICAN_IZE = /\b(?!(?:(?:over|under|down|super|up|mid|full|king|life|bite)?-?size[ds]?|sizing|prize[ds]?|prizing|seize[ds]?|seizing|capsize[ds]?|capsizing|maize|baize)\b)\p{L}{2,}(?:ize|izes|ized|izing|ization)\b/iu;
