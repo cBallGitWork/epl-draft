@@ -34,14 +34,18 @@ export function presserFaults(column: Record<string, unknown>, expected: TeamShe
 const NOTHING_OWED: TeamSheetExpect = { reported: [], quoted: [], noted: [] };
 const faulted = (faults: PresserFaults) => Object.values(faults).some((each) => each.length > 0);
 
+/** One part of a send-back: its words around the names, or nothing when there are none. */
+const ask = (names: readonly string[], words: (list: string) => string) => (names.length === 0 ? [] : [words(names.join(", "))]);
+
 /** The Team Sheet's send-back in the writer's terms, or "" when there is nothing to send back. */
 export function sendBackPresser(faults: PresserFaults): string {
-  const gaps = faults.phrases.length === 0 ? null : `YOUR LAST ATTEMPT WROTE ABOUT WHO DID NOT SPEAK OR WHAT WAS NOT SAID: ${faults.phrases.map((phrase) => `"${phrase}"`).join(", ")}. A reader wants who is out and who is back. Say that plainly, and never forecast who starts.`;
-  const fit = faults.fit.length === 0 ? null : `THESE FIT MEN CARRY A BARE COMPLAINT AS THEIR NOTE, which reads as if they still have it: ${faults.fit.join(", ")}. Write "back from a muscle injury", and what was said of him where you were given it.`;
-  const lines = faults.lines.length === 0 ? null : `THESE CLUBS HAD NEWS AND NO LINE: ${faults.lines.join(", ")}. Give each one sentence of what its manager said — what was decided, the timescale, the reason.`;
-  const quotes = faults.quotes.length === 0 ? null : `THESE CLUBS WERE GIVEN A QUOTE WITH A FACT AND PRINTED NONE: ${faults.quotes.join(", ")}. Print one each, verbatim, trimmed to the sentence that carries the fact.`;
-  const notes = faults.notes.length === 0 ? null : `THESE MEN HAVE AN EMPTY NOTE: ${faults.notes.join(", ")}. The brief gave each a complaint or his manager's words; put it in a few words.`;
-  return [gaps, fit, lines, quotes, notes].filter((part) => part !== null).join("\n\n");
+  return [
+    ...ask(faults.phrases.map((phrase) => `"${phrase}"`), (list) => `YOUR LAST ATTEMPT WROTE ABOUT WHO DID NOT SPEAK OR WHAT WAS NOT SAID: ${list}. A reader wants who is out and who is back. Say that plainly, and never forecast who starts.`),
+    ...ask(faults.fit, (list) => `THESE FIT MEN CARRY A BARE COMPLAINT AS THEIR NOTE, which reads as if they still have it: ${list}. Write "back from a muscle injury", and what was said of him where you were given it.`),
+    ...ask(faults.lines, (list) => `THESE CLUBS HAD NEWS AND NO LINE: ${list}. Give each one sentence of what its manager said — what was decided, the timescale, the reason.`),
+    ...ask(faults.quotes, (list) => `THESE CLUBS WERE GIVEN A QUOTE WITH A FACT AND PRINTED NONE: ${list}. Print one each, verbatim, trimmed to the sentence that carries the fact.`),
+    ...ask(faults.notes, (list) => `THESE MEN HAVE AN EMPTY NOTE: ${list}. The brief gave each a complaint or his manager's words; put it in a few words.`),
+  ].join("\n\n");
 }
 
 export async function writeSubedited(
