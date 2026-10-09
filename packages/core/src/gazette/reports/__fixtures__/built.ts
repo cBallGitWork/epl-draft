@@ -16,7 +16,7 @@ export function moment(minute: string, kind: PlMoment["kind"], men: [number | nu
 }
 
 export const reportMan = (code: number, name: string, side: "home" | "away", over: Partial<ReportMan> = {}): ReportMan => ({
-  code, name, side, started: true, onAt: null, offAt: null, injuredOff: false, line: "M", minutes: 90, saves: 0, expectedGoals: 0, expectedAssists: 0,
+  code, name, side, started: true, onAt: null, offAt: null, injuredOff: false, sentOff: false, line: "M", minutes: 90, saves: 0, expectedGoals: 0, expectedAssists: 0,
   startsBefore: 3, matchesBefore: 4, yellowsBefore: 0, goalsSeason: null, holder: null, points: null, fitness: null, ...over,
 });
 

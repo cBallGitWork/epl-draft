@@ -69,7 +69,7 @@ export function manLine(man: ReportMan, counts: ManCounts | undefined, events: r
   const parts: string[] = [];
   if (man.started) parts.push(man.startsBefore === 0 && man.matchesBefore > 0 ? "his first league start this season" : "started");
   else if (man.onAt !== null) parts.push("came on");
-  if (man.offAt !== null) parts.push(man.injuredOff ? "went off injured" : "was taken off");
+  if (man.offAt !== null) parts.push(man.injuredOff ? "went off injured" : man.sentOff ? "was sent off" : "was taken off");
   if (scored > 0) parts.push(`${numeral(scored)} ${plural(scored, "goal")}${man.goalsSeason !== null && man.goalsSeason > scored ? `, ${numeral(man.goalsSeason)} in the league this season` : ""}`);
   if (madeOnes > 0) parts.push(`made ${numeral(madeOnes)}`);
   if (counts !== undefined && counts.shots >= 3) parts.push(`${numeral(counts.shots)} shots`);

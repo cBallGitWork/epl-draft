@@ -77,7 +77,7 @@ export function keyStats(
   out.push(...topLines(men));
   const keepers = men.filter((m) => m.saves >= SAVES || events.some((e) => e.kind === "penalty-saved" && e.side !== m.side && m.line === "G"));
   if (keepers.length > 0) out.push({ label: "Saves", value: keepers.map((m) => `${surname(m.name)} ${m.saves}`).join(", ") });
-  const woodwork = events.flatMap((e) => (e.kind === "woodwork" && e.man !== null ? [e.man] : []));
+  const woodwork = [...new Set(events.flatMap((e) => (e.kind === "woodwork" && e.man !== null ? [e.man] : [])))];
   if (woodwork.length > 0) out.push({ label: "Hit the woodwork", value: names(woodwork) });
   const { figures } = match;
   if (figures !== null) {

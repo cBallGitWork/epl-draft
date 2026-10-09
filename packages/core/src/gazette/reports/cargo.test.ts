@@ -50,6 +50,13 @@ describe("normalizeReports", () => {
     expect("mark" in read.home.lineup!.lines[0][0]).toBe(false);
   });
 
+  it("round-trips a substitute replaced in turn", () => {
+    const chained = { ...report };
+    const first = report.home.lineup!.lines[0][0];
+    chained.home = { ...report.home, lineup: { ...report.home.lineup!, lines: [[{ ...first, replacedBy: { name: "Gray", minute: "19", booked: false, replacedBy: { name: "Kudus", minute: "80", booked: true } } }]] } };
+    expect(normalizeReports(JSON.parse(JSON.stringify([chained])))).toEqual([chained]);
+  });
+
   it("refuses a match with one side, and a row of a kind it does not know", () => {
     expect(normalizeReports([{ ...report, away: null }])).toBeUndefined();
     const odd = normalizeReports([{ ...report, rows: [{ minute: "9", kind: "Tackle", side: "home", text: "x" }], video: "not a video id!" }]);

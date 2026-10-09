@@ -41,15 +41,15 @@ export function reportMen(
   extras: MenExtras,
 ): ReportMan[] {
   const on = new Map<number, string>();
-  const off = new Map<number, { at: string; injured: boolean }>();
+  const off = new Map<number, { at: string; injured: boolean; sentOff: boolean }>();
   for (const moment of moments) {
     const [first, second] = moment.men;
     if (moment.kind === "substitution") {
       if (first !== null) on.set(first, moment.minute);
-      if (second !== null) off.set(second, { at: moment.minute, injured: moment.injury });
+      if (second !== null) off.set(second, { at: moment.minute, injured: moment.injury, sentOff: false });
     }
-    if (moment.kind === "injured-off" && first !== null) off.set(first, { at: moment.minute, injured: true });
-    if (isDismissal(moment.kind) && first !== null) off.set(first, { at: moment.minute, injured: false });
+    if (moment.kind === "injured-off" && first !== null) off.set(first, { at: moment.minute, injured: true, sentOff: false });
+    if (isDismissal(moment.kind) && first !== null) off.set(first, { at: moment.minute, injured: false, sentOff: true });
   }
 
   const man = (squad: PlSquadMan, side: Side, started: boolean): ReportMan[] => {
@@ -67,6 +67,7 @@ export function reportMen(
         onAt: started ? null : (on.get(code) ?? null),
         offAt: left?.at ?? null,
         injuredOff: left?.injured ?? false,
+        sentOff: left?.sentOff ?? false,
         line: squad.position,
         minutes: live?.minutes ?? 0,
         saves: live?.saves ?? 0,
