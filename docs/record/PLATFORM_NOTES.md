@@ -76,7 +76,7 @@ GitHub mails a failed cron only to whoever last edited its line, and the Mac sho
 is in Europe (Craig). #303 set `regions: ["lhr1"]` in `apps/companion/vercel.json`, and
 `experimental.staleTimes.dynamic: 30` in `next.config.ts`, matching the server's revalidate. AutoRefresh's
 `router.refresh` bypasses that client cache; sign-in, sign-out and the FPL entry call `revalidatePath`, and the lineup
-save already calls `updateTag`.
+save calls `markStale` (`revalidateTag(tag, "max")`).
 
 - **Measured, RSC medians before → after**: `/prem` 222 → 166ms, `/prem/club/43` 225 → 134, `/prem/match/41`
   303 → 205, `/players` 430 → 261, `/matchday` 279 → 183. Returning to a tab on a throttled phone: 316–1258ms → 13–116ms.
@@ -871,8 +871,17 @@ Read against the installed Next 16.2.7 source. Standing rules for anything that 
   we should bypass cache"). `readLeague` read `footballNow` inside itself, so
   each league revalidation refetched the 1.3 MB bootstrap and kept a frozen copy
   of the round in the league's entry. `liveTie` asked that copy whether a match
-  was on. The snapshot is now read outside, in `getLeagueSquads`. `leagueInfo`
-  and `seasonKickoffs` are still nested there, and moving them is not done yet.
+  was on. The snapshot is now read outside, in `getLeagueSquads`, and since
+  9 Oct `leagueInfo`, `seasonKickoffs` and `roundOf` are too: nested, they sent
+  every squads refresh to FPL live, and FPL's 403 to Vercel read as "Fantrax is
+  not answering". `readCalendar` and `getSchedule` still nest theirs; warm, they
+  serve their last good answer.
+- **A write marks a read stale, never expires it** (9 Oct). `updateTag` leaves
+  no stale entry, so a lineup save that Fantrax took sent its manager to "Fantrax
+  is not answering" when the refetch timed out. `markStale` keeps the last good
+  answer; the planner holds the saved lineup in its own state, so the stale
+  render straight after a save does not undo it. `leagueCache.test.ts` fails on
+  any `updateTag` call in `app/`.
 - **The poll rate is decided on the client.** The server sends `liveIn` (seconds
   to live, from `secondsToLive`) and `AutoRefresh` counts it down
   (`cadence.ts`). Before this, a tab opened before kickoff polled every 300s

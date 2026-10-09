@@ -114,8 +114,8 @@ Every provider read the app makes at request time sits in one of these 44, in 26
 meant (`kind: "refused"`) is caught by `orRefusal` inside the cache and held for the window like an
 answer. Any other `ProviderError` passes through: a warm key serves its last good answer (Next keeps
 a stale entry whose refresh threw) and a cold one returns the call site's `degrade`, never stored.
-**Except when nested**: a degrade inside another cache (`leagueInfo` in `readLeague` and
-`readCalendar`, the standings read in `getSchedule`) is stored by the outer entry for its window.
+**Except when nested**: a degrade inside another cache (`leagueInfo` in `readCalendar`, the
+standings read in `getSchedule`) is stored by the outer entry for its window.
 All targets are `apps/companion/app/_reads/<provider>.ts`, one leaf read each.
 
 | Function | File | Key | Revalidate (s) | Provider read | Target |
@@ -141,7 +141,7 @@ All targets are `apps/companion/app/_reads/<provider>.ts`, one leaf read each.
 | `leagueInfo` | `apps/companion/app/round.ts` | `league-info` | 30 | fxea `getLeagueInfo` | `_reads/fantrax.ts` |
 | `leagueScoring` | `apps/companion/app/scoring.ts` | `league-scoring` | 30 | fxea `getLeagueInfo` of the league `recorded.json` names `scoring`, its scoring only | `_reads/fantrax.ts` |
 | `readCalendar` | `apps/companion/app/round.ts` | `league-calendar` | 30 | none of its own; nests `leagueInfo` and `seasonFixtures` | composer, outside any cache |
-| `readLeague` | `apps/companion/app/squads.ts` | `league-squads` | 30 | fxea `getTeamRosters`, once or twice; nests `leagueInfo` and `seasonFixtures`; reads the clock | leaf read + composer |
+| `readRosters` | `apps/companion/app/squads.ts` | `league-squads` | 30 | fxea `getTeamRosters` for one period (null: the open one); nests nothing, and `getLeagueSquads` picks the period outside | `_reads/fantrax.ts` |
 | `read` | `apps/companion/app/standings.ts` | `standings-page` | 30 | fxpa `getStandings` | `_reads/fantrax.ts` |
 | `readScores` | `apps/companion/app/scoreboard.ts` | `live-scores` | 30 | fxpa `getLiveScoringStats` | `_reads/fantrax.ts` |
 | `readDeals` | `apps/companion/app/business.ts` | `gazette-deals` | 30 | fxpa `getTransactionDetailsHistory`, two views | `_reads/fantrax.ts` |

@@ -52,7 +52,7 @@ export function readable(squads: LeagueSquads): ReadableSquads | null {
   return "period" in squads ? squads : null;
 }
 
-/** The squads read's cache key, which a lineup save expires. */
+/** The squads read's cache key, which a lineup save marks stale. */
 export const SQUADS_KEY = "league-squads";
 
 /** The squads, or the page a refusal belongs on: undrafted is a 404, unavailable goes `home`, where it is described. */
