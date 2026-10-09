@@ -11,8 +11,8 @@ export const LEAF =
   "57l-423-454-105 247a65 65 0 0 1-73 38l-542-115 186 572a65 65 0 0 1-34 79l-212 99 941 762a65 " +
   "65 0 0 1 20 73l-116 320 859-151a95 95 0 0 1 111 98l-45 863z";
 
-/** "2026/27" as the league writes it on a crest. */
-const shortSeason = SEASON.slice(2).replace("/20", "/");
+/** "26/27", as the league writes it on a crest. */
+const shortSeason = SEASON.slice(2);
 
 function Leaf({ x, y, size }: { x: number; y: number; size: number }) {
   return (

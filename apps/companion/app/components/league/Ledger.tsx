@@ -3,7 +3,7 @@ import ScrollBoard from "./ScrollBoard";
 import type { Deal, DealSide } from "@epl/core";
 import { crestForShortName, fantraxDay, inkOn, kindOf, moverOf, movement, toFplClubCode, DASH } from "@epl/core";
 import { LABEL, PANEL_FLUSH, SMALL_CAPS } from "@/app/desk";
-import { shortName } from "@/app/teamNames";
+import TeamName from "./TeamName";
 import { teamColours } from "@/app/teamColours";
 
 // One manager's business as CM's Transfers screen (`cm0102/23.jpg`): a blue date block, the type in
@@ -149,14 +149,7 @@ function TeamPlate({ teamId, name }: { teamId: string; name: string | undefined 
     >
       {/* A manager who has left the league still has an id on the row. The league's short name under a thumb, where
           the full one ran out of plate ("DOMEITALYC…"); the desk has the room. */}
-      {name === undefined ? (
-        "Unknown"
-      ) : (
-        <>
-          <span className="lg:hidden">{shortName(teamId, name)}</span>
-          <span className="max-lg:hidden">{name}</span>
-        </>
-      )}
+      {name === undefined ? "Unknown" : <TeamName teamId={teamId} name={name} />}
     </span>
   );
 }

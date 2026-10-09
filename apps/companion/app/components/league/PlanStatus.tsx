@@ -35,7 +35,7 @@ export default function PlanStatus({
           {sentence(violation, nameOf)}
         </li>
       ))}
-      {/* Not a violation: Fantrax publishes no minimum per position, so an under-filled XI breaks no rule. */}
+      {/* Not a violation: an empty place in the XI is allowed; a position short of its minimum is listed above. */}
       {empty !== null && empty > 0 ? (
         <li className="text-2xs text-muted">
           {empty} empty {empty === 1 ? "place" : "places"} in the XI — allowed, and nothing scores from them.
