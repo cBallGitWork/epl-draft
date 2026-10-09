@@ -7,7 +7,7 @@ import Nothing from "../../components/shell/Nothing";
 import { PANEL } from "@/app/desk";
 import ButtonLink from "../../components/shell/ButtonLink";
 import { POOL, PROJECTIONS_SHOWN } from "../routes";
-import { intelMinutes, intelSquads } from "../../intel";
+import { intelMinutes, intelShots, intelSquads, intelTouches } from "../../intel";
 import { FPL_SILENT } from "../../config";
 import AttributeGrid from "./AttributeGrid";
 import BornLine from "./BornLine";
@@ -22,7 +22,9 @@ import RealPosition from "./RealPosition";
 import SeasonTable from "./SeasonTable";
 import HeldNote from "./HeldNote";
 import SetPieces from "./SetPieces";
+import SeasonMaps from "./SeasonMaps";
 import { playerGrid, playerPieces, playerStanding, projectedWeeks } from "./grid";
+import { seasonMaps } from "./maps";
 import { joinMatches } from "./matchRows";
 import { gameLog, scouting } from "./scouting";
 import { subject } from "./subject";
@@ -107,6 +109,14 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
         <Suspense fallback={null}>
           <Season player={football.player} paid={intel.matches} season={intel.season} />
         </Suspense>
+      )}
+
+      {/* Where his season happened: shots, chances created and touches (Craig, 9 Oct 2026). */}
+      {football === null ? null : (
+        <SeasonMaps
+          maps={seasonMaps(football.player.code, intelShots, intelTouches, grid?.keeper ?? false)}
+          club={football.club}
+        />
       )}
 
       {/* The run to come, not the round just gone (Craig, 4 Sep 2026). */}

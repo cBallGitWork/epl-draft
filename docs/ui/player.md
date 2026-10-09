@@ -81,7 +81,21 @@ derived the same four from the same object.
    appearances table on the profile and so does this; a summary belongs on the
    overview as well as above the detail, which is not the duplication that moved
    the match LOG off History — that was twenty rows of detail rendering twice.
-6. **Player** — birthplace, height, weight, as Fantrax files them. Birthdate and
+6. **Season maps** (Craig, 9 Oct 2026: *"Put shot map and pass map and touch map into the player profile section"*),
+   under the Season table, each map under a strip in his club's colours carrying a word and a count and nothing else:
+   - **Shots** — every shot this season on the attacking half, the house's marks (`ShotMarks`): size is the xG by
+     its square root, a goal filled, on target a ring, off target or blocked a faint ring.
+   - **Chances created** — every shot in the file whose `assistCode` is his, drawn where it was struck, with Compare's
+     dashed key-pass line from where his pass began (a square); an assist is the filled mark. A chance the file
+     places no pass for is the mark alone.
+   - **Touches** — every touch this season, merged across fixtures, as Compare's heat (`analysis/HeatPitch`).
+
+   A half pitch is drawn reaching back only for a shot or pass that began in his own half (5 of 1,363 shots and 8 of
+   695 passes in the export of 7 Oct). Two halves and one whole pitch share one height: on a phone the halves pair across
+   the row and the touch map takes the next, ~520px for all three; on a desk the three run across in 1:1:2. A map with
+   no rows is not drawn, no rows at all is no panel, and a keeper gets the touch map only. Picked in `maps.ts`
+   (`seasonMaps`, `attackingSpan`), tested.
+7. **Player** — birthplace, height, weight, as Fantrax files them. Birthdate and
    Age are dropped: the box under the tabs already says `Born 5.3.93 (Age 33).`,
    and a screen stating a fact twice invites a reader to check whether the two
    agree.
@@ -271,11 +285,6 @@ from FPL's fantasy classification.
   (`getPlayerStats` with `positionOrGroup`) needs its own probe first. **The Data
   tab shows those five numbers already** — displaying one man's needs only his own
   profile. It is the RANKING that needs a population.
-- **Data is this season and only this season.** "As default" is the word Craig
-  used, and what it wants next is a season picker and the shot and pass maps.
-  Neither is here: FPL publishes no shot LOCATION at all, and the sister repo's
-  Understat shot data has not been exported for it. That is a pipeline job
-  upstream before it is a screen job here.
 - **`getPlayerProfile`'s deeper sections are open, and three are unread.** The
   parameter is **`tab`**, taking the `code` off the payload's own `sections` list —
   found on 4 Sep 2026 after eleven other names were tried and ignored. `NEWS_NOTES`
