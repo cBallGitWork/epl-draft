@@ -13,7 +13,7 @@ const SHORT: Readonly<Record<string, string>> = {
   Anticipation: "Ant",
   Consistency: "Cns",
   Creativity: "Cre",
-  Crossing: "Crs",
+  Crossing: "Cro",
   Dribbling: "Dri",
   Finishing: "Fin",
   Handling: "Han",
