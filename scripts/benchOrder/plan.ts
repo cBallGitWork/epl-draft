@@ -1,43 +1,30 @@
 import {
   BENCH_ORDER_LEAD_MINUTES,
-  LEAGUE_TIMEZONE,
-  MS_PER_DAY,
   MS_PER_MINUTE,
   benchByPoints,
   benchOrderMap,
-  londonDay,
   mapLineupState,
   numberedOrder,
-  wallClockInstant,
   type RawTeamRosterInfo,
 } from "@epl/core";
 
 // The deadline job's decisions, pure: when to write, and what each team's bench gets. `run.ts` does the waiting and I/O.
 
-/** London wall clock past which today's run leaves a lock to tomorrow's: `install-intel-jobs.sh` starts it at 07:00. */
-export const HORIZON = "08:00";
-
 export type Moment =
   /** No period ahead has a lock: the season is over, or FPL has dated nothing. */
   | { kind: "no-lock" }
   | { kind: "locked"; lock: string }
-  /** The lock is after tomorrow's 08:00: the next morning's run has it. */
+  /** The lock is beyond the run's window: a later run has it. */
   | { kind: "not-due"; lock: string }
   | { kind: "wait"; lock: string; ms: number }
   | { kind: "now"; lock: string };
 
-/** The next London day's 08:00 after `now`, as an instant. */
-export function horizonAfter(now: number): number {
-  const tomorrow = londonDay(new Date(now + MS_PER_DAY));
-  return wallClockInstant(Date.parse(`${tomorrow}T${HORIZON}:00Z`), LEAGUE_TIMEZONE);
-}
-
-/** Where `now` stands against a lock: the write goes `BENCH_ORDER_LEAD_MINUTES` before it, and never at or after it. */
-export function momentOf(lock: string | null, now: number): Moment {
+/** Where `now` stands against a lock due within `within` minutes: the write goes `BENCH_ORDER_LEAD_MINUTES` before it, never at or after it. */
+export function momentOf(lock: string | null, now: number, within: number): Moment {
   const at = lock === null ? NaN : Date.parse(lock);
   if (lock === null || Number.isNaN(at)) return { kind: "no-lock" };
   if (now >= at) return { kind: "locked", lock };
-  if (at > horizonAfter(now)) return { kind: "not-due", lock };
+  if (at > now + within * MS_PER_MINUTE) return { kind: "not-due", lock };
   const writeAt = at - BENCH_ORDER_LEAD_MINUTES * MS_PER_MINUTE;
   return now < writeAt ? { kind: "wait", lock, ms: writeAt - now } : { kind: "now", lock };
 }

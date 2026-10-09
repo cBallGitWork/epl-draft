@@ -16,8 +16,8 @@ import { setTimeout as sleep } from "node:timers/promises";
 import { benchOrderRun } from "./benchOrder/run";
 
 // The deadline's bench order (Craig, 9 Oct 2026): five minutes before the lock, every bench its manager left unnumbered
-// is numbered by total points with the commissioner's session. A dry run unless --write; --wait sleeps until the moment
-// when the lock is before tomorrow's 08:00. `scripts/bench-order.sh` runs it from launchd every morning.
+// is numbered by total points with the commissioner's session. A dry run unless --write; --wait --within <minutes>
+// sleeps until the moment when the lock is that close. `.github/workflows/bench-order.yml` runs it every hour.
 // By hand: --team <fantraxTeamId> for one team, --now to write before the last minutes (never after the lock).
 
 async function calendar() {
@@ -39,6 +39,11 @@ async function main(): Promise<void> {
   requireLeague(FANTRAX_LEAGUE_ID);
   const write = process.argv.includes("--write");
   const session = process.env.FANTRAX_COOKIE || undefined;
+  const wait = process.argv.includes("--wait");
+  // Without a window a run never waits, so any lock ahead is its to write in the last minutes.
+  const within = Number(flagValue("--within") ?? Infinity);
+  if (!(within > 0)) throw new Error("--within needs a number of minutes");
+  if (wait && within === Infinity) throw new Error("--wait needs --within <minutes>");
   if (write && session === undefined) throw new Error("FANTRAX_COOKIE is not set: --write needs the commissioner's session");
 
   const first = await calendar();
@@ -57,7 +62,7 @@ async function main(): Promise<void> {
         readBenchAnswer(await sendBenchOrder(FANTRAX_LEAGUE_ID, { teamId, period, order }, session ?? "")),
       log: (line) => console.log(line),
     },
-    { write, wait: process.argv.includes("--wait"), early: process.argv.includes("--now"), team: flagValue("--team") },
+    { write, wait, within, early: process.argv.includes("--now"), team: flagValue("--team") },
   );
 }
 

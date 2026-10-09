@@ -20,8 +20,10 @@ export interface Deps {
 export interface Options {
   /** Send the writes; without it the run prints what it would send. */
   write: boolean;
-  /** Sleep until the write moment when the lock is before tomorrow's horizon. */
+  /** Sleep until the write moment when the lock is within `within` minutes. */
   wait: boolean;
+  /** Minutes ahead a lock is this run's to wait for; a later one is left to a later run. */
+  within: number;
   /** Write before the last minutes, for a test by hand; never at or after the lock. */
   early?: boolean;
   /** Only this Fantrax team id, for a test by hand. */
@@ -39,11 +41,11 @@ export async function benchOrderRun(deps: Deps, options: Options): Promise<numbe
     return 0;
   }
   const { period } = next;
-  let moment = momentOf(next.lock, deps.now());
+  let moment = momentOf(next.lock, deps.now(), options.within);
   for (let waits = 0; options.wait && moment.kind === "wait" && waits < MAX_WAITS; waits++) {
     deps.log(`Period ${period} locks at ${moment.lock}; waiting ${Math.round(moment.ms / MS_PER_MINUTE)} minutes to write.`);
     await deps.sleep(moment.ms);
-    moment = momentOf(await deps.lockOf(period), deps.now());
+    moment = momentOf(await deps.lockOf(period), deps.now(), options.within);
   }
 
   // A lock gone or passed by now was read again after a wait: the write it was waiting for never went.
@@ -54,7 +56,7 @@ export async function benchOrderRun(deps: Deps, options: Options): Promise<numbe
   if (moment.kind !== "now") {
     deps.log(
       moment.kind === "not-due"
-        ? `Period ${period} locks at ${moment.lock}, after 08:00 tomorrow: the next morning's run writes it.`
+        ? `Period ${period} locks at ${moment.lock}, beyond the next ${options.within} minutes: a later run writes it.`
         : `Period ${period} locks at ${moment.lock}: benches are written only in its last minutes.`,
     );
     // A dry run goes on to print what it would write.
