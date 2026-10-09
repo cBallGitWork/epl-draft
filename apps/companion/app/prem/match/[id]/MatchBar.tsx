@@ -83,10 +83,7 @@ function Side({ club, score }: { club: Club | undefined; score: number | null })
         </Link>
       )}
 
-      {/* CM's score box, at this club's own right edge. `cm-bevel` rather than a
-          flat white block: it is the same raised plate the tab strip and the
-          column heads are cut from, and a match header is not the place to
-          invent a second one. */}
+      {/* CM's score box at this club's own right edge, on the raised plate the tab strip and heads are cut from. */}
       {score === null ? null : (
         <span className="cm-bevel numeric flex min-h-16 w-10 shrink-0 items-center justify-center text-xl font-bold lg:min-h-24 lg:w-16 lg:text-4xl">
           {score}

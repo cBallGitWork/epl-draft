@@ -161,12 +161,9 @@
   opacity: 0.35;
 }
 
-/* --- The page turn ------------------------------------------------------
-   200ms ease-out (DESIGN §7), the paper's only animation. The leaf is the SHEET, not the window:
-   `.paper` gets its own view-transition name and the root is pinned, or the rail and the ground slide
-   too. Both snapshots sit at natural size, anchored top, so sheets of different heights slide
-   rather than squash. The reduced-motion rule at the foot is owed: `globals.css`'s blanket rule does
-   not reach view-transition pseudo-elements. */
+/* --- The page turn: 200ms ease-out (DESIGN §7). The leaf is the sheet, so the root is pinned or the rail slides
+   too; snapshots sit at natural size, anchored top. The reduced-motion rule at the foot is owed: `globals.css`'s
+   blanket rule does not reach view-transition pseudo-elements. */
 
 .paper {
   view-transition-name: paper-leaf;

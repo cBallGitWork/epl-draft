@@ -107,7 +107,7 @@ export const intelDepthManifest = (depthFile as unknown as IntelDepth).manifest;
 
 /** The stats league's season counts by FPL code, for every man who has played (`npm run stats`). */
 export const intelStats: Map<number, StatsRow> = statIntel(statsFile as unknown as IntelStats);
-export const intelStatsManifest = (statsFile as unknown as IntelStats).manifest;
+const intelStatsManifest = (statsFile as unknown as IntelStats).manifest;
 /** The London day the stats league's counts run to, as every "Season to" line prints it. */
 export const intelStatsDay = londonDayAndDate(intelStatsManifest.exportedAt);
 /** Each man's league season in totals by FPL code, last season's and this one's: what the attribute grid rates. */
