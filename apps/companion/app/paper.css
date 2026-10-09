@@ -53,7 +53,7 @@
   z-index: 61;
   inset-inline: 0;
   top: 0;
-  height: env(safe-area-inset-top, 0px);
+  height: var(--safe-top);
   pointer-events: none;
   background: var(--paper-ink);
 }

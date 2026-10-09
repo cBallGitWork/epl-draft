@@ -209,7 +209,7 @@ select.cm-bevel {
   z-index: 60;
   inset-inline: 0;
   top: 0;
-  height: env(safe-area-inset-top, 0px);
+  height: var(--safe-top);
   pointer-events: none;
   background: color-mix(in oklch, var(--color-bg) 45%, transparent);
   -webkit-backdrop-filter: blur(12px) brightness(0.4);
@@ -223,7 +223,7 @@ select.cm-bevel {
 .cm-pull {
   position: fixed;
   z-index: 60;
-  top: env(safe-area-inset-top, 0px);
+  top: var(--safe-top);
   left: 50%;
   translate: -50% calc(var(--pull) - 100%);
   pointer-events: none;

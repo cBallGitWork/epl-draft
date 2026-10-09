@@ -59,7 +59,7 @@ export default function Rail({
       {/* The rail, from `lg`, on its own opaque ground: the fixed `PhotoGround` would run up behind the labels. */}
       <nav
         aria-label="Sections"
-        className="sticky top-0 z-50 hidden h-dvh w-[8.125rem] shrink-0 flex-col self-start overflow-y-auto border-r border-line bg-bg pl-[env(safe-area-inset-left)] lg:flex"
+        className="sticky top-0 z-50 hidden h-dvh w-[8.125rem] shrink-0 flex-col self-start overflow-y-auto border-r border-line bg-bg pl-[var(--safe-left)] lg:flex"
       >
         <Steppers />
         <ul className="flex flex-col">
