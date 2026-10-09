@@ -1,4 +1,4 @@
-import { MS_PER_DAY, TEAM_SHEET, type PlayerOwner, availabilityOf, type FootballPlayer, fullClubName, instantOf, normalizeName, owners, pressers, type Club, type Fixture, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
+import { FIT_AGAIN, MS_PER_DAY, TEAM_SHEET, type PlayerOwner, availabilityOf, type FootballPlayer, fullClubName, instantOf, normalizeName, owners, pressers, type Club, type Fixture, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
 import type { RosteredTeam, StoryFixture } from "@epl/core";
 import { roundTies } from "./round";
 import { readIntel } from "../intel";
@@ -180,7 +180,7 @@ export function tagOf(tag: string, player: PresserSquadMan): string {
 }
 
 /** What the conference's prose stated today; a bracket alone or "remains out" never reads as one. */
-const STATED: ReadonlySet<string> = new Set(["ruled_out", "suspended", "available"]);
+const STATED: ReadonlySet<string> = new Set(["ruled_out", "suspended", FIT_AGAIN]);
 
 /** Whether a man is news at this conference: ruled out, banned or declared fit today, or his FPL note moved. Read
  *  the article's own tag, before `tagOf`, or a doubt FPL has out passes for a man ruled out today. */
