@@ -65,6 +65,18 @@ export const PREDICTIONS = {
   wornTargets: 10,
   /** His call's budget, thinking included: five three-paragraph ties under every rule spent 16,000 thinking on 8 Oct 2026. */
   tokens: 32_000,
+  /** Clubs at each end of the strength ratings worth a word: "a dangerous attack", "a soft defence". */
+  extremes: 3,
+  /** Minutes in each of his last games that make a man with no goal and no assist gone quiet, and the goals and
+   *  assists together that make his form a line. */
+  quietMinutes: 60,
+  involvements: 2,
+  /** Men a gut fact names for a side: its Liverpool men, or its kindest-drawn back men. */
+  gutMen: 2,
+  /** His past lines: columns an instinct's line rests after use, and a rotation line; a rotation line every this
+   *  many columns. */
+  pastRest: { instinct: 4, rotation: 12 },
+  rotationEvery: 4,
 } as const;
 
 /** What the editor holds Lawro to in both his columns, and what his voice tells him. */
@@ -74,6 +86,8 @@ export const LAWRO_LIMITS = {
   intro: [1, 4, 40],
   tie: [3, 8, 120],
   gut: [3, 9, 130],
+  /** A tie the desk could not call: no sides and no call, so sentences and words at most. */
+  noCall: [2, 3, 120],
   column: 680,
   /** A run of this many words from a recent column is a repeat, and of this many from another tie an echo. */
   repeat: 5,
@@ -89,8 +103,14 @@ export const LAWRO_LIMITS = {
   callWords: 5,
   /** Times one tie may name a side; past that, the reader knows whose men they are. */
   sideNamed: 3,
-  /** The skit writer's rewrite: words at most, words longer than the sentence it replaces, and a kicker's words. */
-  skit: { words: 20, longer: 6, kicker: 3 },
+  /** Characters of a section a fault quotes when no one sentence of it broke the rule. */
+  quote: 60,
+  /** The skit writer's rewrite: words at most, words longer than the sentence it replaces, and a kicker's words; edits
+   *  a column, and a run of words from one of his recent last lines that makes a line he has used. */
+  skit: { words: 20, longer: 6, kicker: 3, edits: 2, used: 4 },
+  /** His last columns a phrase may not repeat from, and the words a sentence on average past which the editor warns. */
+  recentColumns: 6,
+  averageWords: 12,
 } as const;
 
 /** Lawro's power rankings: the squads as drafted, ordered by the season played out, once, before the first lock. */

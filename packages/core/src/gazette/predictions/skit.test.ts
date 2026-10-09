@@ -57,5 +57,9 @@ describe("applySkit", () => {
   it("drops an edit that brings a banned word or a second question into the column", () => {
     const hype = { ...pun, shape: "picture", target: null, after: "Borussia Teeth, in a massive upset." };
     expect(applySkit({ edits: [hype] }, draft(PLAIN), skitCtx()).refused[0]).toContain("adds");
+    // Two questions elsewhere already: a third is the column's fault, filed under no tie.
+    const asked = PLAIN.map(([key, line]): [string, string] => [key, key === "rs-bn" ? line.replace("They have won all three", "Have they won all three? They have").replace("They'll need more than two.", "Will two do? They'll need more.") : line]);
+    const question = { where: "av-pa", shape: "shrug", target: null, before: "Plymouth Argos win this.", after: "Who else but Plymouth Argos wins this?" };
+    expect(applySkit({ edits: [question] }, draft(asked), skitCtx()).refused).toEqual(["av-pa: adds more than two questions"]);
   });
 });

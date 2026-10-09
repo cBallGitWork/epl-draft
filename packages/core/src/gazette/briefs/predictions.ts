@@ -1,3 +1,5 @@
+import { LAWRO_LIMITS } from "../../config";
+import { plural, spelled } from "../../format";
 import { derbyBrief, type DerbyName } from "../../league/derbies";
 import { londonDate, londonTime } from "../../time";
 import type { PastLine } from "../predictions/past";
@@ -37,7 +39,9 @@ export function buildLawroBrief(brief: {
   if (!brief.ties.some((tie) => tie.call.callsTeamId !== null)) return null;
   const named = new Map(brief.teams.map((team) => [team.teamId, team.name]));
   const name = (teamId: string) => named.get(teamId) ?? teamId;
-  const holders = brief.champions?.find((each) => named.has(each.team)) ?? null;
+  // The newest champion holds it; an older one, still in the league, holds nothing.
+  const newest = brief.champions?.[0];
+  const holders = newest !== undefined && named.has(newest.team) ? newest : null;
 
   return [
     `LAWRO'S PREDICTIONS, gameweek ${brief.gameweek}. Filed before line-ups lock at ${londonTime(brief.locksAt)} on ${londonDate(brief.locksAt)}, and nobody has kicked a ball. Every call below is already made: you write the reasoning, never the call. Never change a call, hedge it or predict a draw.`,
@@ -66,7 +70,8 @@ function tieBlock(index: number, count: number, tie: PredictionsTie, name: (team
   ].join("\n");
   const shape = `Write it in "ties" with homeTeamId "${home.teamId}" and awayTeamId "${away.teamId}"`;
   if (call.callsTeamId === null) {
-    return [heading, "NO CALL: the desk cannot call this tie. Write two or three sentences and back nobody.", ...tieFacts(index, home, away, call), `${shape}, and "backs" null.`].join("\n");
+    const [least, most] = LAWRO_LIMITS.noCall;
+    return [heading, `NO CALL: the desk cannot call this tie. Write ${spelled(least)} or ${spelled(most)} sentences and back nobody.`, ...tieFacts(index, home, away, call), `${shape}, and "backs" null.`].join("\n");
   }
   const backing = name(call.callsTeamId);
   const favourite = call.instinct === null ? backing : name(call.callsTeamId === home.teamId ? away.teamId : home.teamId);
@@ -84,7 +89,13 @@ function recordBlock(record: PredictionRecord, name: (teamId: string) => string)
   if (record.last === null) return "YOUR RECORD: this is your first column in this league, so there is no record to own yet. Do not invent one, and do not introduce yourself: everybody reading knows who you are. Open on the round itself, in a line, before your fall.";
   const { gameweek, marks } = record.last;
   if (marks === null) return `YOUR RECORD: gameweek ${gameweek} is not settled, so there is nothing to own this week. Say nothing about your record.`;
-  const gut = marks.gut === null ? "You made no gut calls." : `Your gut calls: ${marks.gut.right} from ${marks.gut.called}.`;
+  if (marks.all.called === 0) return `YOUR RECORD: every tie you called in gameweek ${gameweek} ended level, so there is nothing to own this week. Say nothing about your record.`;
+  const gut =
+    marks.gut !== null
+      ? `Your gut calls: ${marks.gut.right} from ${marks.gut.called}.`
+      : marks.level.gut > 0
+        ? `Your gut ${plural(marks.level.gut, "call")} ended level.`
+        : "You made no gut calls.";
   const misses = marks.misses.map(
     (miss) => `- You had ${name(miss.calledTeamId)}${miss.gut ? " on a gut call" : ""}. ${name(miss.winnerTeamId)} beat ${name(miss.loserTeamId)} ${miss.winnerPoints}-${miss.loserPoints}.`,
   );

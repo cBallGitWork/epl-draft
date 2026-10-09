@@ -37,6 +37,11 @@ describe("simulateSeason", () => {
     expect(outcome.map((each) => each.teamId)).toEqual(["b", "a", "c"]);
   });
 
+  it("gives nobody the win when two totals are level, as two sides with no reading are", () => {
+    const outcome = simulateSeason({ teams: teams.slice(0, 2), matchups: [{ period: 1, homeTeamId: "a", awayTeamId: "b" }], scores: new Map(), runs: 100, seed: 1 });
+    expect(outcome.map((each) => [each.teamId, each.meanPlace])).toEqual([["a", 1], ["b", 1]]);
+  });
+
   it("breaks a level number of wins on fantasy points for", () => {
     // One win each; A scored 100 to B's 95.
     const two = [{ period: 1, homeTeamId: "b", awayTeamId: "a" }, { period: 2, homeTeamId: "a", awayTeamId: "b" }];

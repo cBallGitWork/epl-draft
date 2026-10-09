@@ -48,7 +48,8 @@ export function simulateSeason(input: SeasonInput): SeasonOutcome[] {
         const [home, away] = [drawn.get(tie.homeTeamId) ?? 0, drawn.get(tie.awayTeamId) ?? 0];
         scored.set(tie.homeTeamId, (scored.get(tie.homeTeamId) ?? 0) + home);
         scored.set(tie.awayTeamId, (scored.get(tie.awayTeamId) ?? 0) + away);
-        // Two drawn totals are never equal, so there is no draw and wins order the table whatever a win pays.
+        // Wins order the table whatever a win pays; level totals, two sides with no reading among them, win nobody anything.
+        if (home === away) continue;
         const winner = home > away ? tie.homeTeamId : tie.awayTeamId;
         wins.set(winner, (wins.get(winner) ?? 0) + 1);
       }

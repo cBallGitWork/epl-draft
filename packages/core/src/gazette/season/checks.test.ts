@@ -4,7 +4,7 @@ import { LAWRO_CORE } from "../predictions/past";
 import { buildSeasonBrief } from "./brief";
 import { seasonCalls, type SeasonCalls } from "./calls";
 import { checkSeason, lineKey, type SeasonDraft } from "./checks";
-import { PLAYED, SQUADS } from "./__fixtures__/season";
+import { PLAYED, SQUADS, man } from "./__fixtures__/season";
 
 const calls = seasonCalls(PLAYED, SQUADS, []) as SeasonCalls;
 const slotName = (slot: string) => ({ G: "the goalkeeper", D: "the defenders", M: "the midfielders", F: "the forwards" })[slot] ?? slot;
@@ -46,6 +46,14 @@ describe("checkSeason", () => {
     expect(faults(line("u", "The second-best squad, with Fernandes injured."))).not.toContainEqual(expect.objectContaining({ check: "a place the desk did not give" }));
   });
 
+  it("reads a place denied, or one counted from another, as no place", () => {
+    const place = (text: string) => faults(line("u", text)).filter((fault) => fault.check === "a place the desk did not give");
+    for (const text of ["Not the strongest squad, but Palmer gives them a chance.", "The next best side, and Palmer gives them a chance.", "They aren't the strongest squad, and Palmer knows it."]) {
+      expect(place(text)).toEqual([]);
+    }
+    expect(place("The strongest side, and Palmer gives them a chance.")).toContainEqual(expect.objectContaining({ evidence: "United: strongest side" }));
+  });
+
   it("checks every place against the printed order, the editor's moves included", () => {
     const moved = seasonCalls(PLAYED, SQUADS, [{ teamId: "r", place: 3, by: "Craig", on: "2026-10-05", said: "put Rovers 3rd" }]) as SeasonCalls;
     const printed = { ...clean, opening: "I did twenty-two years of this on the BBC, and now it is draft squads. Albion are strongest and City the weakest." };
@@ -69,9 +77,24 @@ describe("checkSeason", () => {
     expect(faults(line("a", "Haaland and Salah would be a side."))).toContainEqual(expect.objectContaining({ section: lineKey("a"), check: "a man from another squad", severity: "hard" }));
   });
 
+  it("reads a man's own name whole, so his first name is not another squad's surname", () => {
+    const spoken = (name: string) => [name, name.split(" ").at(-1) ?? name];
+    const held = new Map(SQUADS).set("u", [man("u1", "James Maddison", "Tottenham Hotspur", 180, 1), man("u2", "Cole Palmer", "Chelsea", 170, 6)]).set("c", [man("c1", "Reece James", "Chelsea", 190, 3)]);
+    const named = new Map([...held].map(([teamId, men]) => [teamId, men.flatMap((each) => spoken(each.name))]));
+    const strangers = (text: string) => checkSeason(line("u", text), calls, named, ctx).filter((fault) => fault.check === "a man from another squad").map((fault) => fault.evidence);
+    expect(strangers("James Maddison carries them, and I have seen worse.")).toEqual([]);
+    expect(strangers("Reece James would help them.")).toEqual(["Reece James", "James"]);
+  });
+
   it("keeps the opening to two or three sentences, naming only the strongest and the weakest", () => {
     expect(faults({ ...clean, opening: "Twenty-two years on the BBC, and now this." })).toContainEqual(expect.objectContaining({ section: "opening", check: "length" }));
     expect(faults({ ...clean, opening: "Twenty-two years on the BBC, and now this. City are the ones I would watch." })).toContainEqual(expect.objectContaining({ section: "opening", check: "names a side the desk did not put here", evidence: "City" }));
+  });
+
+  it("files the opening's word cap under the opening, the section he wrote", () => {
+    const opening = "I did twenty-two years of this on the BBC, and now it is draft squads in a paper nobody buys, which is about right for me. Albion have the strongest squad of them all and Rovers have the weakest one of the lot by a distance. That is my lot.";
+    const length = faults({ ...clean, opening }).filter((fault) => fault.check === "length").map((fault) => `${fault.section}: ${fault.evidence}`);
+    expect(length).toEqual(["opening: 3 sentences, 50 words"]);
   });
 
   it("sends back the source, the machine, the draft's rounds and American English", () => {

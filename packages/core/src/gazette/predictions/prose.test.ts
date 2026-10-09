@@ -12,6 +12,11 @@ describe("prose", () => {
     expect(numbersIn("Nought from two, and 3rd in the table with fifty-one points").sort((a, b) => a - b)).toEqual([0, 2, 3, 51]);
   });
 
+  it("reads a hundred and a thousand as what they multiply", () => {
+    expect(numbersIn("eight thousand predictions, two hundred guests, a hundred thousand pounds")).toEqual([8000, 200, 100000]);
+    expect(numbersIn("twenty-two thousand, and a thousand times no")).toEqual([22000]);
+  });
+
   it("blanks names before it counts phrases", () => {
     expect(masked("Hammer Time hammer", ["Hammer Time"])).toBe("\u0000 hammer");
     const grams = ngrams("Rovers Return have three Brentford men today", 3, ["Rovers Return"]);

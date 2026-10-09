@@ -9,7 +9,7 @@ export interface ElevenMan {
   slots: Readonly<Record<string, number>>;
 }
 
-export interface Eleven {
+interface Eleven {
   total: number;
   picks: { id: string; slot: string }[];
 }

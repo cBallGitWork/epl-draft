@@ -48,7 +48,8 @@ export function callTie(home: PickSide, away: PickSide): PredictionCall {
   const reach = (each: Instinct) => (each === "liverpool" ? PREDICTIONS.liverpoolShare : PREDICTIONS.closeShare);
   const instinct = INSTINCTS.find((each) => gap <= reach(each) && fires(each, favourite, underdog)) ?? null;
   const winner = instinct === null ? favourite : underdog;
-  const favouriteScore = Math.round(top);
+  // At least a point, so the side held a point below it never prints under nought.
+  const favouriteScore = Math.max(1, Math.round(top));
   // A gut call wins by the one point the numbers would not give him.
   const winnerScore = instinct === null ? favouriteScore : favouriteScore + 1;
   const loserScore =

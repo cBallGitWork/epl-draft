@@ -15,6 +15,12 @@ describe("editorsOrder", () => {
     expect(editorsOrder(order, [move("a", 2), move("d", 1)]).order.map((each) => each.teamId)).toEqual(["d", "b", "a", "c"]);
   });
 
+  it("records the place each side printed at, where a later move shifted an earlier one", () => {
+    const { order: printed, applied } = editorsOrder(order, [move("c", 1), move("d", 1)]);
+    expect(printed.map((each) => each.teamId)).toEqual(["d", "c", "a", "b"]);
+    expect(applied.map((each) => [each.teamId, each.from, each.place])).toEqual([["c", 3, 2], ["d", 4, 1]]);
+  });
+
   it("skips a move naming no side in the order or a place off its end, and records neither", () => {
     const { order: printed, applied } = editorsOrder(order, [move("zz", 2), move("a", 9), move("b", 0)]);
     expect(printed).toEqual(order);

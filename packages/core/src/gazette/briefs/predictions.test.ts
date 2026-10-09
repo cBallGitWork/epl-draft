@@ -120,6 +120,26 @@ describe("buildLawroBrief", () => {
     expect(brief([clear])).not.toMatch(/-club:|-meet:/u);
   });
 
+  it("names three men from one club as a list, and all of them", () => {
+    const three = tie(side("cp", "Cold Palmer", 52.1, [man("Saka", 20), man("Rice", 19), man("Odegaard", 18)]), side("hg", "Haaland Globetrotters", 41.6, [man("Haaland", 25, { club: "Manchester City" })]));
+    expect(brief([three])).toContain("T1-club: Cold Palmer's Saka, Rice and Odegaard all play for Arsenal.");
+  });
+
+  it("states a gut call's doubt once, as the reason, and never again as the tie's extra line", () => {
+    const injured: Availability = { state: "injured", label: "Inj", out: true, chance: 0, news: "Hamstring injury - 0% chance of playing" };
+    const doubt = tie(side("cp", "Cold Palmer", 50, [man("Saka", 30, { availability: injured }), man("Rice", 9, { club: "West Ham United" })]), side("hg", "Haaland Globetrotters", 48, [man("Isak", 6, { club: "Newcastle United" })]));
+    expect(doubt.call.instinct).toBe("doubt");
+    const facts = (brief([doubt]) ?? "").split("\n").filter((line) => line.startsWith("- T1"));
+    expect(facts.filter((line) => line.includes("Saka"))).toEqual(["- T1-gut: Cold Palmer's best man, Saka (M, Arsenal, home to Leeds United), is injured. FPL's note: Hamstring injury."]);
+  });
+
+  it("gives a side on one point its point in the singular", () => {
+    const one = { rank: 4, won: 0, drawn: 1, lost: 0, points: 1, last: null, run: "D" };
+    const text = brief([tie({ ...side("cp", "Cold Palmer", 52.1, [man("Saka", 20)]), form: one }, side("hg", "Haaland Globetrotters", 41.6, [man("Haaland", 25)]))]) ?? "";
+    expect(text).toContain("- T1H-form: Cold Palmer are 4th: won 0, drawn 1, lost 0, 1 point.");
+    expect(text).toContain("- T1A-form: Haaland Globetrotters are 2nd: won 2, drawn 0, lost 0, 6 points.");
+  });
+
   it("says how likely a man is to play in words, by FPL's chance or its status", () => {
     const at = (chance: number | null, state: Availability["state"] = "doubt"): Availability => ({ state, label: "", out: state !== "doubt" || chance === 0, chance, news: "" });
     const alone = (name: string, availability: Availability) =>
@@ -154,6 +174,7 @@ describe("buildLawroBrief", () => {
         marks: {
           all: { right: 3, called: 5 },
           gut: { right: 0, called: 1 },
+          level: { all: 0, gut: 0 },
           misses: [{ gameweek: 6, calledTeamId: "cp", winnerTeamId: "hg", loserTeamId: "cp", winnerPoints: 49, loserPoints: 41, gut: true }],
         },
       },
@@ -163,6 +184,18 @@ describe("buildLawroBrief", () => {
     expect(text).toContain("Gameweek 6: 3 right from 5. Your gut calls: 0 from 1.");
     expect(text).toContain("You had Cold Palmer on a gut call. Haaland Globetrotters beat Cold Palmer 49-41.");
     expect(text).toContain("never recite it");
+  });
+
+  it("says a gut call that ended level ended level, and a week that ended level in every call is no unsettled week", () => {
+    const marked = (all: { right: number; called: number }, gut: { right: number; called: number } | null, level: { all: number; gut: number }): PredictionRecord => ({
+      last: { gameweek: 6, marks: { all, gut, level, misses: [] } },
+      season: { all: null, gut: null },
+    });
+    expect(brief([clear], marked({ right: 3, called: 4 }, null, { all: 1, gut: 1 }))).toContain("Gameweek 6: 3 right from 4. Your gut call ended level.");
+    expect(brief([clear], marked({ right: 3, called: 5 }, null, { all: 0, gut: 0 }))).toContain("Gameweek 6: 3 right from 5. You made no gut calls.");
+    const level = brief([clear], marked({ right: 0, called: 0 }, null, { all: 2, gut: 0 })) ?? "";
+    expect(level).toContain("YOUR RECORD: every tie you called in gameweek 6 ended level, so there is nothing to own this week. Say nothing about your record.");
+    expect(level).not.toContain("not settled");
   });
 
   it("leaves out a man he has already written about, unless something is new for him", () => {
@@ -186,6 +219,8 @@ describe("buildLawroBrief", () => {
     expect(withPast).toContain(`- ${PAST[3].line}`);
     const uncalled = tie(side("cp", "Cold Palmer", null, []), side("hg", "Haaland Globetrotters", 40, []));
     expect(brief([uncalled])).toBeNull();
+    // The sentences the editor holds a tie with no call to.
+    expect(brief([clear, uncalled])).toContain("NO CALL: the desk cannot call this tie. Write two or three sentences and back nobody.");
   });
 });
 
@@ -203,7 +238,7 @@ describe("a derby in Lawro's brief", () => {
 
 describe("the champions in Lawro's brief", () => {
   const [home, away] = [side("cp", "Cold Palmer", 60, [man("Saka", 9)]), side("hg", "Haaland Globetrotters", 50, [man("Rice", 8)])];
-  const withChampions = (team: string) =>
+  const withChampions = (team: string, ...before: { season: string; team: string }[]) =>
     buildLawroBrief({
       gameweek: 7,
       locksAt: "2026-10-17T11:15:00.000Z",
@@ -214,7 +249,7 @@ describe("the champions in Lawro's brief", () => {
       ties: [tie(home, away)],
       record: FIRST,
       past: [],
-      champions: [{ season: "25/26", team }],
+      champions: [{ season: "25/26", team }, ...before],
     }) ?? "";
 
   it("says who holds the title, and says it again in their tie", () => {
@@ -226,6 +261,8 @@ describe("the champions in Lawro's brief", () => {
 
   it("says nothing for a champion who is not in this league", () => {
     expect(withChampions("elsewhere")).not.toContain("champions");
+    // An older champion holds nothing once somebody else has won it.
+    expect(withChampions("elsewhere", { season: "24/25", team: "cp" })).not.toContain("champions");
   });
 });
 

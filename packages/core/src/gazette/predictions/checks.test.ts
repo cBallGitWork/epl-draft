@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { checkLawro, pencil } from "./checks";
-import { SAMPLE, TEAMS, ctx, draft } from "./__fixtures__/column";
+import { CALLS, SAMPLE, TEAMS, call, ctx, draft } from "./__fixtures__/column";
 
 const serious = (faults: ReturnType<typeof checkLawro>) => faults.filter((each) => each.severity !== "warn");
 
@@ -26,6 +26,49 @@ describe("checkLawro", () => {
     expect(checkLawro(turned, ctx()).map((each) => each.check)).toContain("backs another side");
     const argued = draft([["rs-bn", "Bayer Neverlusen will win this. Real Sociable have won all three."], ...SAMPLE.slice(1)]);
     expect(checkLawro(argued, ctx()).find((each) => each.check === "argues for the other side")?.severity).toBe("hard");
+  });
+
+  it("reads a win as the side named before it, so the call may name the side it beats", () => {
+    const argues = (call: string) =>
+      checkLawro(draft([["rs-bn", `I've no argument with Real Sociable.\n\nBayer Neverlusen signed Pym and Kettle on Wednesday.\n\n${call}`], ...SAMPLE.slice(1)]), ctx())
+        .filter((each) => each.check === "argues for the other side")
+        .map((each) => each.evidence);
+    expect(argues("I fancy Real Sociable to beat Bayer Neverlusen, because Oduya has Leeds.")).toEqual([]);
+    expect(argues("Bayer Neverlusen have Pym, but Real Sociable will win it because of Oduya.")).toEqual([]);
+    expect(argues("Bayer Neverlusen have Pym, and they could nick it.")).toEqual(["Bayer Neverlusen have Pym, and they could nick it."]);
+  });
+
+  it("reads a curly apostrophe as a straight one in a negation, a win and a backing", () => {
+    const argues = (sentence: string) =>
+      checkLawro(draft([["rs-bn", `I've no argument with Real Sociable.\n\nBayer Neverlusen signed Pym. ${sentence}\n\nReal Sociable, because Oduya has Leeds.`], ...SAMPLE.slice(1)]), ctx())
+        .filter((each) => each.check === "argues for the other side").length;
+    expect(argues("I don’t think Bayer Neverlusen will win.")).toBe(0);
+    expect(argues("Bayer Neverlusen’ll win it.")).toBe(1);
+    expect(argues("I’m backing Bayer Neverlusen, mind.")).toBe(1);
+  });
+
+  it("holds a tie the desk could not call to the two or three sentences its brief asks for", () => {
+    const calls = [...CALLS.slice(0, 4), call("st", "rr", "rr", { callsTeamId: null, score: null })];
+    const length = (line: string) => {
+      const ties = new Map(draft().ties).set("st-rr", { line, backs: null });
+      return checkLawro({ ...draft(), ties }, ctx({ calls })).filter((each) => each.section === "st-rr" && each.check === "length").map((each) => each.evidence);
+    };
+    expect(length("Sheffield Thursday are without Mullan, who is suspended. I can't split them and Rovers Return.")).toEqual([]);
+    expect(length("Sheffield Thursday are without Mullan. He is suspended. I can't split them. Nor can Rovers Return.")).toEqual(["4 sentences, 16 words"]);
+  });
+
+  it("reads his verdict in a sentence that opens on My", () => {
+    const verdict = (call: string) =>
+      checkLawro(draft([["rs-bn", `Real Sociable have won all three and Oduya has Leeds.\n\nBayer Neverlusen signed Pym and Kettle on Wednesday.\n\n${call}`], ...SAMPLE.slice(1)]), ctx())
+        .filter((each) => each.check === "no verdict of his own").length;
+    expect(verdict("My money is on Real Sociable, because Oduya has Leeds.")).toBe(0);
+    expect(verdict("Real Sociable, because Oduya has Leeds.")).toBe(1);
+  });
+
+  it("reads eight thousand in words as the 8,000 his past line gives him", () => {
+    const figures = (intro: string) => checkLawro(draft(SAMPLE, { intro }), ctx()).filter((each) => each.check === "a figure not in the brief");
+    expect(figures("Two from five. I made eight thousand predictions for the BBC.")).toEqual([]);
+    expect(figures("Two from five. I made nine thousand predictions for the BBC.").map((each) => each.evidence)).toEqual(["9000"]);
   });
 
   it("refuses a missing tie, a score in the prose and a career nobody gave him", () => {

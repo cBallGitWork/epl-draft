@@ -29,7 +29,6 @@ export interface SkitContext {
 }
 
 const NEGATIONS = /\b(?:not|no|never|nothing|nobody|none|without)\b|n['’]t/giu;
-const MOST_EDITS = 2;
 
 export function applySkit(raw: unknown, draft: LawroDraft, ctx: SkitContext): { draft: LawroDraft; applied: SkitEdit[]; refused: string[] } {
   const edits = Array.isArray((raw as { edits?: unknown } | null)?.edits) ? ((raw as { edits: unknown[] }).edits) : [];
@@ -38,13 +37,13 @@ export function applySkit(raw: unknown, draft: LawroDraft, ctx: SkitContext): { 
   let current = draft;
   for (const candidate of edits) {
     const edit = read(candidate);
-    const why = edit === null ? "not an edit" : applied.length >= MOST_EDITS ? "a third edit" : applied.some((each) => each.where === edit.where) ? "a second edit in one section" : refusal(edit, current, ctx);
+    const why = edit === null ? "not an edit" : applied.length >= LAWRO_LIMITS.skit.edits ? "a third edit" : applied.some((each) => each.where === edit.where) ? "a second edit in one section" : refusal(edit, current, ctx);
     if (why !== null || edit === null) {
       refused.push(`${edit?.where ?? "?"}: ${why}`);
       continue;
     }
     const next = replaced(current, edit);
-    const added = newFaults(checkLawro(current, ctx.check), checkLawro(next, ctx.check), edit.where);
+    const added = newFaults(checkLawro(current, ctx.check), checkLawro(next, ctx.check));
     if (added.length > 0) {
       refused.push(`${edit.where}: adds ${added.map((fault) => fault.check).join(", ")}`);
       continue;
@@ -75,7 +74,7 @@ function refusal(edit: SkitEdit, draft: LawroDraft, ctx: SkitContext): string | 
   if (CORE_MARK.test(edit.before) || PAST.some((line) => line.mark.test(edit.before))) return "his career is not a joke";
   const words = wordCount(edit.after);
   const said = sentences(edit.after);
-  const { words: most, longer, kicker } = LAWRO_LIMITS.skit;
+  const { words: most, longer, kicker, used } = LAWRO_LIMITS.skit;
   // One sentence, a question and its one-word answer, or a sentence and a kicker: "Old habits."
   const oneLine = said.length === 1 || (said.length === 2 && wordCount(said[1]) <= (said[0].endsWith("?") ? 1 : kicker));
   if (!oneLine || words > most || words > wordCount(edit.before) + longer) return "not one short sentence";
@@ -84,8 +83,8 @@ function refusal(edit: SkitEdit, draft: LawroDraft, ctx: SkitContext): string | 
   if ((edit.before.match(NEGATIONS) ?? []).length !== (edit.after.match(NEGATIONS) ?? []).length) return "the meaning turned";
   if (ctx.wornShapes.includes(edit.shape)) return "a shape he used last week";
   if (edit.shape === "pun" && (edit.target === null || !edit.after.includes(edit.target) || ctx.wornTargets.includes(edit.target))) return "a worn or missing target";
-  const recent = new Set(ctx.lastLines.flatMap((line) => [...ngrams(line, 4, ctx.check.names)]));
-  if ([...ngrams(edit.after, 4, ctx.check.names)].some((gram) => recent.has(gram))) return "a line he has used";
+  const recent = new Set(ctx.lastLines.flatMap((line) => [...ngrams(line, used, ctx.check.names)]));
+  if ([...ngrams(edit.after, used, ctx.check.names)].some((gram) => recent.has(gram))) return "a line he has used";
   return null;
 }
 
@@ -102,8 +101,9 @@ function replaced(draft: LawroDraft, edit: SkitEdit): LawroDraft {
   return { ...draft, ties };
 }
 
-/** Faults the edit brought into its own section. */
-function newFaults(before: readonly Fault[], after: readonly Fault[], section: string): Fault[] {
-  const seen = new Set(before.filter((fault) => fault.section === section).map((fault) => `${fault.check}|${fault.evidence}`));
-  return after.filter((fault) => fault.section === section && fault.severity !== "warn" && !seen.has(`${fault.check}|${fault.evidence}`));
+/** Faults the edit brought anywhere: its own section, another tie's echo, or the column's count of questions. */
+function newFaults(before: readonly Fault[], after: readonly Fault[]): Fault[] {
+  const key = (fault: Fault) => `${fault.section}|${fault.check}|${fault.evidence}`;
+  const seen = new Set(before.map(key));
+  return after.filter((fault) => fault.severity !== "warn" && !seen.has(key(fault)));
 }

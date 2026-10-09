@@ -96,7 +96,7 @@ export function predictionSide(input: {
     keyMen: fresh.slice(0, PREDICTIONS.keyMen),
     best,
     doubts: ranked.slice(0, PREDICTIONS.doubtDepth).filter((man) => man.availability.state !== "fit"),
-    hard: ranked.find((man) => man.ease !== null && man.ease > input.hardest - PREDICTIONS.hardFixtures) ?? null,
+    hard: ranked.find((man) => man.ease !== null && man.fixtures.length > 0 && man.ease > input.hardest - PREDICTIONS.hardFixtures) ?? null,
     kind: ranked.find((man) => man.ease !== null && man.fixtures.length > 0 && man.ease <= PREDICTIONS.kindFixtures) ?? null,
     backLine,
     arrivals: input.arrivals,
