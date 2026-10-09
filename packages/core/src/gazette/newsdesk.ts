@@ -1,6 +1,6 @@
 import { binXiDue } from "./binXi/due";
 import { TEAM_SHEET } from "../config";
-import { dueBeforeLock, dueFrom, predictionsDue, lineupsDue } from "./predictions/due";
+import { dueFrom, predictionsDue, lineupsDue } from "./predictions/due";
 import { weekdayOfDay } from "../time";
 import type { StoryKind } from "./story";
 
