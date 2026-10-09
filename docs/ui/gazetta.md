@@ -537,8 +537,10 @@ men are in the sheet's one print red.
 
 **A tie prints both elevens or neither.** `predictedLineups` refuses rather than
 repairs: a side `xiFault` rejects, or one naming a man the snapshot cannot, is
-dropped and takes its fixture with it. The body says how many of the gameweek's
-matches survived, so an absence is stated and never silent.
+dropped and takes its fixture with it. **There is no body**: headline, deck,
+dateline, then the elevens (Craig, 9 Oct 2026: a line counting the matches "with
+both sides named" was *"just repeated ai slip"*), so a dropped tie is simply not
+on the page.
 
 **Under the team-news writer's byline**, like the rest of team news (Craig, 30 Sep
 2026: "yes bylines"). It had none from 21 Sep, when the house name over a listing

@@ -53,11 +53,6 @@ export function xiColumn(input: {
   const lineups = predictedLineups(ties, xi, man(players, teams, xi));
   if (lineups.length === 0) return null;
 
-  const printed =
-    lineups.length === ties.length
-      ? `All ${ties.length} of the gameweek's matches`
-      : `${lineups.length} of the gameweek's ${ties.length} matches`;
-
   // Read back off the export by each printed side's club, so a club whose tie did not print starts nobody.
   const starters = lineups
     .flatMap((tie) => [tie.home, tie.away])
@@ -68,7 +63,6 @@ export function xiColumn(input: {
     column: {
       headline: `Predicted Line-Ups: Gameweek ${gameweek}`,
       deck: `Every club's expected starting eleven for the gameweek.`,
-      body: `${printed}, with both sides named.`,
       lineups,
     },
     starters: new Set(starters),
