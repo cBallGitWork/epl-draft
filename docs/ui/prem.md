@@ -124,7 +124,8 @@ is on the paper's front page.
 `/prem` itself — the table, results, fixtures, team stats — still costs no
 provider request. **Data does**: its Fantrax points list reads the pool
 (`getLeaguePool`, the Data board's own cache entry) and its names link through
-`leagueOpinions`, as a club page's do.
+`leagueOpinions`, as a club page's do. Its Chances and Crossing lists read the
+committed stats export, which costs none.
 
 ## Results and Fixtures
 
@@ -176,14 +177,18 @@ places, as FPL publishes them.
 ## Data — the season's leaders
 
 Craig, 1 Oct 2026: *"simple list like top scorer, top xg, top fantasy ratings etc
-in a list, not a link to data section, with a top 50 for each"*. Eight lists,
-each the top twenty with a `Top 50` plate under it (`?list=…&n=50`), in three sections
+in a list, not a link to data section, with a top 50 for each"*. Thirteen lists,
+each the top twenty with a `Top 50` plate under it (`?list=…&n=50`), in five sections
 (Craig, 8 Oct 2026: *"show a top 20 as default, and organise it better"*): Attacking
 (top scorers, assists, expected goals, expected assists), Fantasy (Fantrax points,
 match ratings) and Defending (DefCon points, saves). Clean sheets went the same day:
-too many men share a place. On the desk Attacking stands four across and the other
-two share the row beneath, and the one asked for runs to fifty. A phone gets a picker
-and one list at a time.
+too many men share a place. Chances (shots, chances created, big chances created, big
+chances missed) and Crossing (crosses) came on 9 Oct (Craig: *"We are missing a lot of
+stats like shots, chances created, maybe even big chances"*). A row on the desk holds
+four lists, so a section holds four at most: Attacking stands four across, Fantasy and
+Defending share the row beneath, Chances stands four across under them and Crossing
+alone at the foot. The one asked for runs to fifty. A phone gets a picker and one list
+at a time.
 
 - **One figure per list, and a list that is not FPL's says whose it is**: *Match
   ratings* in cyan, the derived slot (the average of his marks
@@ -194,6 +199,14 @@ and one list at a time.
 - **A list ranks on the figure it prints**, so two marks that both read 6.3
   share a place, and a nought earns none.
 - A man who has left the division is off every list (`onTheBooks`).
+- **Chances and Crossing are the stats league's season counts** (`intelStats`, the
+  daily export in `data/intel/stats/26-27.json`), joined on FPL's code; a man the file
+  does not carry, or carries with no reading, is on none of them. Each section is
+  dated `Season to …`, the export's day, because the FPL lists above move the night a
+  match ends. Amber, being recorded counts, and no byline: nothing else here counts
+  shots, chances or crosses, so none can be taken for another's (DESIGN §7). `KP` is
+  titled *Chances created*; Crosses counts every cross, accurate or not, because the
+  accurate count tied too many men to rank.
 
 ## The club — a spine, not a page
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { SeasonTotals } from "@epl/core";
-import { LISTS, asPrinted, leadersOf, listFor, printed, ranked, seasonRatings } from "./leaders";
+import { LISTS, SECTIONS, asPrinted, leadersOf, listFor, printed, ranked, seasonRatings } from "./leaders";
 
 const man = (code: number, name: string, figure: number) => ({ code, name, figure });
 const footballer = (code: number, name: string, goals: number) => ({ code, name, season: { goals } as SeasonTotals });
@@ -52,7 +52,7 @@ describe("the lists' figures", () => {
 
 describe("leadersOf", () => {
   const players = [footballer(1, "Saka", 3), footballer(2, "Palmer", 0)];
-  const held = { rating: new Map([[1, 7.46]]), points: new Map([[2, 120], [9, 400]]), defcon: new Map<number, number>() };
+  const held = { rating: new Map([[1, 7.46]]), points: new Map([[2, 120], [9, 400]]), defcon: new Map<number, number>(), stats: new Map() };
 
   it("reads FPL's count for every man on the books, his nought included", () => {
     expect(leadersOf(listFor("goals"), players, held)).toEqual([man(1, "Saka", 3), man(2, "Palmer", 0)]);
@@ -62,6 +62,46 @@ describe("leadersOf", () => {
     expect(leadersOf(listFor("rating"), players, held)).toEqual([man(1, "Saka", 7.5)]);
     expect(leadersOf(listFor("points"), players, held)).toEqual([man(2, "Palmer", 120)]);
     expect(leadersOf(listFor("defcon"), players, held)).toEqual([]);
+  });
+
+  it("reads the stats league's count by code, and lists nobody the file leaves out or holds no reading for", () => {
+    const stats = new Map([[1, { shots: 12 }], [2, { shots: null }], [9, { shots: 30 }]]);
+    const more = [...players, footballer(3, "Isak", 2)];
+    expect(leadersOf(listFor("shots"), more, { ...held, stats })).toEqual([man(1, "Saka", 12)]);
+  });
+
+  it("keeps a man who played and made none, whom the ranking then leaves off", () => {
+    const stats = new Map([[1, { bigChancesCreated: 0 }], [2, { bigChancesCreated: 3 }]]);
+    const list = listFor("bcc");
+    expect(leadersOf(list, players, { ...held, stats })).toEqual([man(1, "Saka", 0), man(2, "Palmer", 3)]);
+    expect(ranked(leadersOf(list, players, { ...held, stats }), 10).map((row) => row.name)).toEqual(["Palmer"]);
+  });
+});
+
+describe("the stats league's lists", () => {
+  const stats = new Map([[1, { keyPasses: 9 }], [2, { keyPasses: 13 }], [3, { keyPasses: 9 }]]);
+  const men = [footballer(1, "Saka", 0), footballer(2, "Groß", 0), footballer(3, "Ødegaard", 0)];
+  const empty = { rating: new Map(), points: new Map(), defcon: new Map(), stats };
+
+  it("ranks chances created best first, level men sharing a place", () => {
+    const list = ranked(leadersOf(listFor("chances"), men, empty), 10);
+    expect(list.map((row) => [row.rank, row.name])).toEqual([[1, "Groß"], [2, "Ødegaard"], [2, "Saka"]]);
+  });
+
+  it("calls a key pass a chance created, under a short head", () => {
+    expect([listFor("chances").title, listFor("chances").head]).toEqual(["Chances created", "KP"]);
+  });
+
+  it("prints each count whole", () => {
+    expect(["shots", "chances", "bcc", "bcm", "crosses"].map((key) => printed(listFor(key), 43))).toEqual(Array(5).fill("43"));
+  });
+});
+
+describe("the sections", () => {
+  // The desk stands at most four lists in a row (page.tsx's SPAN); a fifth would fall out of its grid.
+  it("hold between one and four lists each", () => {
+    const counts = SECTIONS.map((section) => LISTS.filter((list) => list.section === section.key).length);
+    expect(counts.every((count) => count >= 1 && count <= 4)).toBe(true);
   });
 });
 
