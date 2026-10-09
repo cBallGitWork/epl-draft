@@ -16,7 +16,7 @@ export interface StoryThread {
 }
 
 /** One league's memory, keyed by league so a test league's never reaches the real paper. */
-export interface LedgerBook {
+interface LedgerBook {
   covered: string[];
   threads: StoryThread[];
 }

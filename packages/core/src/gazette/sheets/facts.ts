@@ -29,7 +29,7 @@ export interface TieFacts {
   meets: Crossover[];
 }
 
-export interface SheetsInput extends FlagInput {
+interface SheetsInput extends FlagInput {
   pairings: readonly { home: { teamId: string }; away: { teamId: string } }[];
   /** This round's sheets, and each side's earlier fielded ones, oldest first. */
   sheets: ReadonlyMap<string, Sheet>;

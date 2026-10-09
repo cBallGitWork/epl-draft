@@ -15,7 +15,8 @@ export const pts = (n: number) => howMany(n, "point");
 /** His returns: goals, assists and clean sheets. */
 export const returnCount = (m: DraftMan) => m.goals + m.assists + m.cleanSheets;
 const done = (m: DraftMan) => m.left === 0 && m.minutes > 0;
-const late = (t: GoalTime) => t.minute >= LATE_GOAL_MINUTE;
+/** A goal from the late minute on. */
+export const isLate = (t: GoalTime) => t.minute >= LATE_GOAL_MINUTE;
 
 /** Goals in the order they went in: by their match's kickoff, then the clock. */
 export const byClock = (a: GoalTime, b: GoalTime) => a.kickoff.localeCompare(b.kickoff) || a.minute - b.minute || (a.added ?? 0) - (b.added ?? 0);
@@ -25,7 +26,7 @@ export const whenScored = (t: GoalTime) => (t.added !== undefined ? `in added ti
 
 /** "a goal in the 89th minute and an assist": a late goal carries its time. A man's gameweek, or one day of it. */
 export function returnWords(m: Pick<DraftMan, "goals" | "assists" | "cleanSheets" | "scoredAt">): string {
-  const lateGoal = m.goals === 1 ? m.scoredAt.find(late) : undefined;
+  const lateGoal = m.goals === 1 ? m.scoredAt.find(isLate) : undefined;
   const goals = m.goals === 0 ? null : m.goals === 1 ? `a goal${lateGoal === undefined ? "" : ` ${whenScored(lateGoal)}`}` : `${m.goals} goals`;
   const assists = m.assists === 0 ? null : m.assists === 1 ? "an assist" : `${m.assists} assists`;
   return listed([goals, assists, m.cleanSheets > 0 ? "a clean sheet" : null].filter((x): x is string => x !== null), "and");
@@ -47,7 +48,7 @@ export const scoredLine = (m: DraftMan, worth: SlotWorth) => (keeperHauled(m, wo
 export function lostCleanLine(m: DraftMan, worth: SlotWorth): string | null {
   const clean = priceOf(worth, m.slot, "clean sheet");
   const lost = m.concededFirstAt[0];
-  const told = lost !== undefined && late(lost) && m.cleanSheets === 0 && m.minutes >= CLEAN_SHEET_MINUTES && clean >= DRAFT_DESK.cleanSheetStory;
+  const told = lost !== undefined && isLate(lost) && m.cleanSheets === 0 && m.minutes >= CLEAN_SHEET_MINUTES && clean >= DRAFT_DESK.cleanSheetStory;
   return told ? `lost a clean sheet worth ${pts(clean)} to a goal ${whenScored(lost)}` : null;
 }
 

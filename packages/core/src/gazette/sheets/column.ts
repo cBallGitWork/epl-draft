@@ -9,6 +9,9 @@ import { printName, type SheetMan } from "./sheet";
 /** A side's paragraph by team id. */
 export type SheetsDraft = ReadonlyMap<string, string>;
 
+/** What the piece is, said plainly. */
+const STANDFIRST = "The deadline has passed. The line-ups, by head-to-head.";
+
 export function assembleSheets(input: {
   gameweek: number;
   ties: readonly TieFacts[];
@@ -32,14 +35,9 @@ export function assembleSheets(input: {
   return {
     headline: `Team news: Gameweek ${input.gameweek}`,
     deck: sheetsDeck(ties),
-    body: standfirst(),
+    body: STANDFIRST,
     sheets,
   };
-}
-
-/** What the piece is, said plainly. */
-function standfirst(): string {
-  return "The deadline has passed. The line-ups, by head-to-head.";
 }
 
 /** "23 changes and two debuts"; "Every side unchanged"; on the first gameweek, that it is the first. */

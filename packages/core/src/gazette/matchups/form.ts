@@ -6,9 +6,9 @@ import { possessive } from "./words";
 // The gameweek in the season's terms, for the draft report's Football Manager register: streaks, runs ended, a return to
 // form, the season's records, a side's own high and low. Each fact carries its kind and states only what results show.
 
-export type FormKind = "streak" | "streak-ended" | "return-to-form" | "record" | "season-high" | "season-low";
+type FormKind = "streak" | "streak-ended" | "return-to-form" | "record" | "season-high" | "season-low";
 
-export interface FormFact {
+interface FormFact {
   teamId: string;
   kind: FormKind;
   text: string;
@@ -65,6 +65,9 @@ export function gameweekForm(sides: readonly SideResult[], runs: ReadonlyMap<str
   const facts: FormFact[] = [];
   const earlier = [...runs.values()].flat();
   const played = Math.max(0, ...[...runs.values()].map((run) => run.length));
+  // A record is the gameweek's best too: two sides past the old high cannot both hold it.
+  const topScore = Math.max(...sides.map((s) => s.for));
+  const topWin = Math.max(...sides.map((s) => s.for - s.against));
   for (const side of sides) {
     const before = (runs.get(side.teamId) ?? []).map((g) => g.result);
     const after = [...before, resultOf(side)];
@@ -82,10 +85,10 @@ export function gameweekForm(sides: readonly SideResult[], runs: ReadonlyMap<str
     // Records need a season behind them: from the league's fourth gameweek on.
     if (played + 1 < DRAFT_DESK.recordsFrom) continue;
     const high = earlier.reduce<FormGame | null>((best, g) => (best === null || g.pointsFor > best.pointsFor ? g : best), null);
-    if (high !== null && side.for > high.pointsFor) push("record", `${side.for} is the season's highest score`);
+    if (high !== null && side.for > high.pointsFor && side.for === topScore) push("record", `${side.for} is the season's highest score`);
     const margin = side.for - side.against;
     const widest = Math.max(0, ...earlier.map((g) => g.pointsFor - g.pointsAgainst));
-    if (margin > 0 && margin > widest) push("record", `${possessive(side.name)} ${margin}-point win is the season's biggest`);
+    if (margin > 0 && margin > widest && margin === topWin) push("record", `${possessive(side.name)} ${margin}-point win is the season's biggest`);
     const own = runs.get(side.teamId) ?? [];
     if (own.length >= DRAFT_DESK.formReturn && side.for > Math.max(...own.map((g) => g.pointsFor))) push("season-high", `${side.for} is ${possessive(side.name)} highest score this season`);
     if (own.length >= DRAFT_DESK.formReturn && side.for < Math.min(...own.map((g) => g.pointsFor))) push("season-low", `${side.for} is ${possessive(side.name)} lowest score this season`);

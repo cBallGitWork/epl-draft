@@ -5,14 +5,14 @@ import { storylinesBlock } from "./storylines";
 // The facts behind one finished head-to-head: the tie call's full-time twin, adding the men who did it.
 
 /** One side of a finished tie: his total, and the men who made it. */
-export interface TieReportSide {
+interface TieReportSide {
   name: string;
   points: number | null;
   /** His scorers this period, best first, priced at the roster slot each was filed in. */
   scorers: readonly { name: string; position: string | null; points: number }[];
 }
 
-export interface TieReportBrief {
+interface TieReportBrief {
   gameweek: number;
   home: TieReportSide;
   away: TieReportSide;

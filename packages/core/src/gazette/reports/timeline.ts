@@ -1,7 +1,8 @@
 import type { MomentKind } from "../../football/premierleague/moments";
 import type { PlShot } from "../../football/premierleague/momentWords";
 import { clock, minutePhrases } from "./minutes";
-import type { ReportMan, ReportMatchInput, Side } from "./types";
+import type { ReportMan, ReportMatchInput } from "./types";
+import { otherSide, type Side } from "../side";
 
 // One match's moments with their men resolved, their side known and the score carried: the spine of every fact after it.
 
@@ -37,7 +38,6 @@ export const goalsBy = (events: readonly MatchEvent[], code: number) =>
 export const assistsBy = (events: readonly MatchEvent[], code: number) => events.filter((e) => isGoal(e) && e.other?.code === code).length;
 /** A red card, straight or a second yellow. */
 export const isDismissal = (kind: MomentKind) => kind === "sent-off" || kind === "second-yellow";
-const other = (side: Side): Side => (side === "home" ? "away" : "home");
 
 /** The match in order. A moment about a man we cannot place is kept only when it is about nobody (added time, the whistles). */
 export function matchEvents(match: ReportMatchInput): MatchEvent[] {
@@ -49,7 +49,7 @@ export function matchEvents(match: ReportMatchInput): MatchEvent[] {
     const man = find(moment.men[0]);
     const nobody = moment.kind === "added-time" || moment.kind === "half-time" || moment.kind === "full-time";
     if (man === null && !nobody) continue;
-    const side = man === null ? null : moment.kind === "own-goal" || moment.kind === "penalty-conceded" ? other(man.side) : man.side;
+    const side = man === null ? null : moment.kind === "own-goal" || moment.kind === "penalty-conceded" ? otherSide(man.side) : man.side;
     let after: MatchEvent["score"] = null;
     if (GOALS.has(moment.kind) && side !== null) {
       score[side] += 1;

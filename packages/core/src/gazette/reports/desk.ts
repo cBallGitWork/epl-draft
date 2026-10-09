@@ -116,7 +116,8 @@ function nominees(match: ReportMatchInput, events: readonly MatchEvent[], counts
     add(m, m.goalsSeason === null ? "a free agent" : `a free agent; ${m.goalsSeason} league ${plural(m.goalsSeason, "goal")} this season`);
   }
   // When the stakes run short, the men whose figures stand out, so a match never has fewer candidates than sections.
-  const stood = (x: ReportMan) => scored(x) + made(x) > 0 || (counts.get(x.code)?.chancesMade ?? 0) >= 3 || (counts.get(x.code)?.shots ?? 0) >= 4 || x.saves >= 5;
+  const { chances, mostShots, saves } = REPORTS.stats;
+  const stood = (x: ReportMan) => scored(x) + made(x) > 0 || (counts.get(x.code)?.chancesMade ?? 0) >= chances || (counts.get(x.code)?.shots ?? 0) >= mostShots || x.saves >= saves;
   for (const m of men.filter(stood)) add(m, m.holder === null ? "a free agent" : m.holder.fielded ? `${m.holder.team} has him` : `${m.holder.team} has him on the bench`);
   return out;
 }

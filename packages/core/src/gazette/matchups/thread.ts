@@ -24,7 +24,7 @@ const FAMILY: Record<ThreadKind, Family> = {
 };
 
 /** The match's shape outranks a man's, and a man's the season's, when two threads score alike. */
-export type Scope = "match" | "man" | "season";
+type Scope = "match" | "man" | "season";
 const MATCH: readonly ThreadKind[] = ["bench-turned", "late-decider", "comeback", "one-man-show", "level", "close", "lead-lost", "fightback-short", "upset", "rout", "turning-point", "chase", "subs-waiting", "to-play-gap", "saturday-lead", "both-to-come", "days-won", "same-match"];
 
 export interface Thread {

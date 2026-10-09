@@ -5,7 +5,7 @@ import { londonDayOf } from "../../time";
 // When a match-day report is due: once every match that London day has settled (FPL has added the bonus, so the figures
 // have stopped moving). One per day, keyed on the day; a day still being played files nothing and spends nothing.
 
-export interface ReportDay {
+interface ReportDay {
   key: string;
   slug: string;
   /** London calendar day, `2026-09-19`. */

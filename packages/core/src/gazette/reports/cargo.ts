@@ -7,7 +7,7 @@ import { surname } from "./keyStats";
 import type { StoryLineup } from "./lineups";
 import type { StarMan } from "./star";
 import { isGoal, type MatchEvent } from "./timeline";
-import type { Side } from "./types";
+import type { Side } from "../side";
 
 // What a match-day report carries beside its prose, per match, laid out as BBC Sport sets a match: the
 // header (crests, score, FT and HT, goals and assists by side, venue and attendance), the pieces, and a sidebar of the line-ups
@@ -15,14 +15,14 @@ import type { Side } from "./types";
 
 export type ReportRowKind = "Goal" | "Pen" | "OG" | "VAR" | "Pen missed" | "Pen saved" | "Post" | "Booked" | "Sent off" | "Sub";
 
-export interface StoryReportRow {
+interface StoryReportRow {
   minute: string;
   kind: ReportRowKind;
   side: Side | null;
   text: string;
 }
 
-export interface StoryReportSection {
+interface StoryReportSection {
   head: string;
   pitch: string;
   stake: string;

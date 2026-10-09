@@ -5,6 +5,7 @@ import type { StoryFace } from "../face";
 import { draftFace } from "./cover";
 import { draftBench, draftReturns, draftRows, type StoryDraftReturns, type StoryDraftRow } from "./elevens";
 import type { DraftPiece } from "./writing";
+import type { Side } from "../side";
 
 // A draft report as the page draws it: per match-up, the score and how it ran by day, each side's returns, place and run
 // (the FM form strip), the writer's lede and paragraphs, and both elevens. Its one photograph is the story's cover (`cover.ts`).
@@ -55,7 +56,7 @@ export function draftCargo(cutoff: Cutoff, gameweek: number, contexts: readonly 
     gameweek,
     matchups: contexts.map((ctx, at) => {
       const piece = pieces.get(at + 1) ?? { paragraphs: [] };
-      const side = (which: "home" | "away"): StoryDraftSide => ({
+      const side = (which: Side): StoryDraftSide => ({
         teamId: ctx.state[which].side.teamId,
         name: ctx.state[which].side.name,
         score: ctx.state[which].total,

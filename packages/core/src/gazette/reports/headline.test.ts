@@ -14,6 +14,8 @@ describe("strike", () => {
 
   it("strikes a name the facts do not carry, and lets a clean one through", () => {
     expect(strike("Villa hold on for Emery", names)).toMatch(/a name the facts do not carry/);
+    expect(strike("Villa undone by Šeško", names)).toBe("a name the facts do not carry: Šeško");
+    expect(strike("Spurs stopped by Ødegaard", names)).toBe("a name the facts do not carry: Ødegaard");
     expect(strike("Manzambi marks the day for Villa", names)).toBeNull();
     expect(survivors(["Villa hold on, just", "Manzambi makes it Villa's day"], names)).toEqual(["Manzambi makes it Villa's day"]);
   });

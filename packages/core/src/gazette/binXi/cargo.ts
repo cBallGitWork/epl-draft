@@ -2,7 +2,7 @@
 // and its key stats, refused field by field at the edge like every other story's cargo.
 
 /** One man as printed: his name, his FPL code for the face, the slot, his club, his Fantrax points. */
-export interface StoryBinMan {
+interface StoryBinMan {
   name: string;
   code: number;
   slot: string;

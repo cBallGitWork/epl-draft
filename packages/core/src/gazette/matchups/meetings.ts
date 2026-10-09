@@ -4,7 +4,7 @@ import type { SeasonFact } from "./form";
 // Two sides' history, and the men who once belonged to the other: a clean sweep of their meetings, and the old boy.
 
 /** One earlier meeting, from the first side's point of view. */
-export interface Meeting {
+interface Meeting {
   period: number;
   for: number;
   against: number;

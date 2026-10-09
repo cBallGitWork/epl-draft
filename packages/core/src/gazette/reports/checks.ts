@@ -16,7 +16,7 @@ import { sectionKey } from "./parts";
 // The editor reads every match against its own facts: names, figures, scorelines, the order of the goals, what must be
 // covered and how long it runs. Pure; the writer sends back once on these and never on taste.
 
-export interface ReportsCheck {
+interface ReportsCheck {
   desks: readonly MatchDesk[];
   /** Each match's brief block, by fixture code: every figure and name it may use. */
   blocks: ReadonlyMap<number, string>;

@@ -1,7 +1,8 @@
 import { KEY_STATS, REPORTS } from "../../config";
 import { played } from "./men";
 import { assistsBy, goalsBy, type ManCounts, type MatchEvent } from "./timeline";
-import type { ReportMan, ReportMatchInput, Side } from "./types";
+import type { ReportMan, ReportMatchInput } from "./types";
+import { SIDES, type Side } from "../side";
 import { fixed, howMany } from "../../format";
 
 // The key-stats box: desk-made lines with figures, never written by the model. xG and xA print here and the prose stays
@@ -79,7 +80,7 @@ export function keyStats(
   const woodwork = events.filter((e) => e.kind === "woodwork" && e.man !== null).map((e) => e.man!);
   if (woodwork.length > 0) out.push({ label: "Hit the woodwork", value: names(woodwork) });
   if (match.figures !== null) {
-    const errors = (["home", "away"] as const).filter((s) => match.figures![s].errorsToGoal > 0).map((s) => `${short(s)} ${match.figures![s].errorsToGoal}`);
+    const errors = SIDES.filter((s) => match.figures![s].errorsToGoal > 0).map((s) => `${short(s)} ${match.figures![s].errorsToGoal}`);
     if (errors.length > 0) out.push({ label: "Errors leading to a goal", value: errors.join(", ") });
   }
   return out.slice(0, budget);

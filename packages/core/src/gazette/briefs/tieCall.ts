@@ -6,7 +6,7 @@ import { storylinesBlock } from "./storylines";
 // The facts behind a mid-round call. Short on purpose: a call is a paragraph
 // with a spine, not a report — the report comes when the round ends.
 
-export interface TieCallBrief {
+interface TieCallBrief {
   gameweek: number;
   homeName: string;
   awayName: string;

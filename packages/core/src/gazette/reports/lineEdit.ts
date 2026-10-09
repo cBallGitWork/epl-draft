@@ -9,7 +9,7 @@ const broken = (text: string) => [...banned(text, REPORT_NEVER), ...americanisms
 // The sub-editor's last pass: a sentence that still carries a banned phrase after the rewrite goes back ALONE with the words it
 // broke, and a fix is kept only when it clears the words and states the same figures. Cheaper and surer than a third draft.
 
-export interface LineFix {
+interface LineFix {
   code: number;
   sentence: string;
   words: string[];
@@ -46,7 +46,10 @@ export function applyFixes(draft: ReportsDraft, fixes: readonly LineFix[], rewri
   fixes.forEach((fix, i) => {
     const next = rewritten[i]?.trim() ?? "";
     const lost = fix.words.every((word) => !next.toLowerCase().includes(word.toLowerCase()));
-    if (next !== "" && lost && broken(next).length === 0 && same(fix.sentence, next)) swap.set(fix.sentence, next);
+    // What the sentence broke unmasked and not masked is a name ("Gray"), which the rewrite may keep.
+    const named = broken(fix.sentence).filter((word) => !fix.words.includes(word));
+    const clean = broken(next).every((word) => named.includes(word));
+    if (next !== "" && lost && clean && same(fix.sentence, next)) swap.set(fix.sentence, next);
   });
   const fix = (text: string) => [...swap].reduce((out, [from, to]) => out.split(from).join(to), text);
   const matches = new Map(

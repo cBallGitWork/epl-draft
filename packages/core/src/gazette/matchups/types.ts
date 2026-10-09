@@ -50,7 +50,7 @@ export interface DraftMan {
 }
 
 /** A man's Fantrax points, minutes and returns on one London day: a clean sheet only where it is worth telling. */
-export interface ManDay {
+interface ManDay {
   day: string;
   points: number;
   minutes: number;

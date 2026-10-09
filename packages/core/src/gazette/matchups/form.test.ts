@@ -29,4 +29,10 @@ describe("gameweekForm", () => {
     ]);
     expect(kinds(gameweekForm([side("Dons", 50, 20)], new Map([["Dons", games("WL", 30)]])))).toEqual([]);
   });
+
+  it("gives the season's highest score and biggest win to one side only, when two in one gameweek pass the old best", () => {
+    const season = new Map([["Dons", games("WLW", 30)], ["Reds", games("LWL", 30)]]);
+    const records = gameweekForm([side("Dons", 50, 20), side("Reds", 60, 25)], season).filter((f) => f.kind === "record");
+    expect(records.map((f) => `${f.teamId}: ${f.text}`)).toEqual(["Reds: 60 is the season's highest score", "Reds: Reds' 35-point win is the season's biggest"]);
+  });
 });

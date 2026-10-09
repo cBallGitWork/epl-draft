@@ -7,7 +7,7 @@ const NOT_A_NAME = new Set([
   // Sentence openers and connectives that appear capitalised mid-prose.
   "A", "An", "And", "As", "At", "Across", "After", "All", "Already", "Also",
   "Another", "Any", "Are", "Around", "Away",
-  "Back", "Beating", "Best", "Both", "Both", "But", "By",
+  "Back", "Beating", "Best", "Both", "But", "By",
   "Down", "Dropping", "During",
   "Each", "Elsewhere", "Even", "Every", "Everything",
   "First", "For", "Four", "From", "Full",
@@ -27,7 +27,7 @@ const NOT_A_NAME = new Set([
   "West", "What", "When", "Where", "Which", "While", "Who", "Whose", "With",
   "Watching", "Winning", "Yet", "You", "Your",
   // Football furniture that is capitalised but is not a person.
-  "Full", "Premier", "League", "Saturday", "Sunday", "Monday", "Tuesday",
+  "Premier", "League", "Saturday", "Sunday", "Monday", "Tuesday",
   "Wednesday", "Thursday", "Friday",
 ]);
 

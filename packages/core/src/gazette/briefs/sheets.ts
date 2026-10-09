@@ -11,7 +11,7 @@ import { isBack, printName, type SheetMan } from "../sheets/sheet";
 // may print is already a line here; what a block may not be turned into is said beside it. No
 // provider's sentence is carried: the writer copied them, their credits and their tense.
 
-export interface SheetsBrief {
+interface SheetsBrief {
   gameweek: number;
   ties: readonly TieFacts[];
   /** A club's name as the paper prints it, by FPL club id. */

@@ -14,21 +14,20 @@ import type { DraftPiece } from "./writing";
 // right. A correction is kept only if it passes the writer's own checks; otherwise the claim is cut, since a wrong fact
 // is worse than a shorter report. Pure.
 
-export interface FactFix {
+interface FactFix {
   matchup: number;
   quote: string;
   /** The quote put right from the block; empty when it cannot be, and it is cut. */
   correction: string;
 }
 
-/** The words a paper may put before a man for his position, by slot. */
+/** The words a paper may put before a man for his position, by slot, the plain one first. */
 const POSITIONS: Record<string, readonly string[]> = {
   G: ["goalkeeper", "keeper"],
   D: ["defender", "centre-back", "full-back", "left-back", "right-back", "wing-back"],
   M: ["midfielder", "winger"],
   F: ["forward", "striker", "winger"],
 };
-const PLAIN: Record<string, string> = { G: "goalkeeper", D: "defender", M: "midfielder", F: "forward" };
 const WEEKDAYS = /\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/gu;
 
 /** The fixes the desk can make without a model: a position word that is not a man's is put right ("Everton defender
@@ -45,7 +44,7 @@ export function knownFixes(pieces: ReadonlyMap<number, DraftPiece>, contexts: re
       const surname = names.at(-1) ?? man.name;
       for (const hit of prose.matchAll(new RegExp(`\\b(${words})\\s+((?:\\p{Lu}[\\p{L}'.-]*\\s+)?${escapeRegExp(surname)})\\b`, "gu"))) {
         const allowed = POSITIONS[man.slot];
-        if (allowed !== undefined && !allowed.includes(hit[1].toLowerCase())) out.push({ matchup, quote: hit[0], correction: `${PLAIN[man.slot]} ${hit[2]}` });
+        if (allowed !== undefined && !allowed.includes(hit[1].toLowerCase())) out.push({ matchup, quote: hit[0], correction: `${allowed[0]} ${hit[2]}` });
       }
     }
     for (const sentence of sentences(prose)) {

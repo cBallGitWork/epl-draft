@@ -34,7 +34,7 @@ export const fixture: Fixture = {
   homeScore: 2, awayScore: 3, status: "finished", settled: true, minutes: 90, homeDifficulty: null, awayDifficulty: null,
 };
 
-export const noExtras: MenExtras = { live: new Map(), season: new Map(), holders: new Map(), points: new Map(), fitness: new Map() };
+const noExtras: MenExtras = { live: new Map(), season: new Map(), holders: new Map(), points: new Map(), fitness: new Map() };
 
 export function spursVilla(extras: Partial<MenExtras> = {}): ReportMatchInput {
   return {

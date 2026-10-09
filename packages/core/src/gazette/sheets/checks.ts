@@ -43,14 +43,13 @@ const SOFT_WORDS = /\b(?:doubt|doubtful|carrying|awaits?|awaiting|scan|MRI|fitne
 const COUNT = /\b([\p{L}\d]+) changes?\b/iu;
 const WORDS: Record<string, number> = { no: 0, one: 1, a: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11 };
 
-export interface SheetsCheck {
+interface SheetsCheck {
   ties: readonly TieFacts[];
   /** The brief: every name a paragraph may use. */
   facts: string;
   /** Every club's name as the paper prints it, so a man is never written as owning one. */
   clubs: readonly string[];
 }
-
 
 export function checkSheets(draft: SheetsDraft, ctx: SheetsCheck): Fault[] {
   const { faults, fault } = faultLog();

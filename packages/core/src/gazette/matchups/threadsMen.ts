@@ -1,17 +1,16 @@
-import { DRAFT_DESK, DRAFT_NEWS, LATE_GOAL_MINUTE } from "../../config";
+import { DRAFT_DESK, DRAFT_NEWS } from "../../config";
 import { blank } from "./autoSubs";
 import type { Cutoff, MatchupContext } from "./brief";
 import { counted } from "./state";
-import { benchLines, clubLines, fitnessLine, keeperHauled, lostCleanLine, minutesLine, newLine, returnCount, scoredLine, uncoveredLine, whenScored } from "./stories";
+import { benchLines, clubLines, fitnessLine, isLate, keeperHauled, lostCleanLine, minutesLine, newLine, returnCount, scoredLine, uncoveredLine, whenScored } from "./stories";
 import { thread, type Thread, type ThreadKind } from "./thread";
-import { SIDES } from "./timeline";
+import { SIDES, otherSide } from "../side";
 import type { DraftMan, GoalTime, SlotWorth } from "./types";
 
 // Each man's gameweek as a thread: a haul, a keeper's haul, an injury, his goal taking the other side's clean sheet, a
 // clean sheet lost late, a late goal, a bench score, a blank nobody covered, a star's blank, a start off the bench, an
 // old boy, a signing, a debut, an early exit, club-mates, a double. Pure.
 
-const late = (t: GoalTime) => t.minute >= LATE_GOAL_MINUTE;
 const same = (a: GoalTime, b: GoalTime) => a.kickoff === b.kickoff && a.minute === b.minute && a.added === b.added;
 const named = (m: DraftMan, text: string) => `${m.name} ${text}`;
 
@@ -37,7 +36,7 @@ export function manThreads(ctx: MatchupContext, cutoff: Cutoff, worth: SlotWorth
   const stars = gameweek >= DRAFT_NEWS.starBlankFrom ? starBlanks(ctx) : [];
   for (const w of SIDES) {
     const s = ctx.state[w];
-    const them = ctx.state[w === "home" ? "away" : "home"];
+    const them = ctx.state[otherSide(w)];
     const add = (kind: ThreadKind, men: DraftMan[], facts: string[], bigger = false, weight?: number) => out.push(thread(kind, { teamId: s.side.teamId, men, beat: place(men[0]), facts, bigger, weight }));
     // The men whose points count, and the men they replaced, whose word from the club is still news.
     for (const m of [...new Set([...counted(s), ...s.side.eleven])]) {
@@ -49,7 +48,7 @@ export function manThreads(ctx: MatchupContext, cutoff: Cutoff, worth: SlotWorth
       } else if (returnCount(m) > 1) add("haul", [m], [named(m, scoredLine(m, worth)!)]);
       const hit = crossfire(m, counted(them));
       if (hit !== null) add("crossfire", [m, hit.victim], [named(m, `scored ${whenScored(hit.t)}, the goal that cost ${hit.victim.name} his clean sheet for ${them.side.name}`)]);
-      for (const t of m.scoredAt.filter(late)) add("late-goal", [m], [named(m, `scored ${whenScored(t)}`)], t.added !== undefined);
+      for (const t of m.scoredAt.filter(isLate)) add("late-goal", [m], [named(m, `scored ${whenScored(t)}`)], t.added !== undefined);
       const lost = lostCleanLine(m, worth);
       if (lost !== null) add("clean-lost-late", [m], [named(m, lost)]);
       const minutes = minutesLine(m);

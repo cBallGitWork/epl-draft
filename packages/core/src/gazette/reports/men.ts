@@ -1,12 +1,13 @@
 import type { PlMoment } from "../../football/premierleague/moments";
 import type { PlSquadMan, PlTeamSheet } from "../../football/premierleague/teamSheet";
-import type { ReportMan, Side } from "./types";
+import type { ReportMan } from "./types";
+import type { Side } from "../side";
 import { isDismissal } from "./timeline";
 
 // Every man in the match sheet as the desk reads him: started or came on, when he left and why, and what the script joined.
 
 /** FPL's per-man figures for this match, by code. */
-export interface LiveLine {
+interface LiveLine {
   minutes: number;
   saves: number;
   expectedGoals: number;

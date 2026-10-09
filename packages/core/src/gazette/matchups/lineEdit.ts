@@ -5,7 +5,7 @@ import type { DraftPiece } from "./writing";
 // The sub-editor's last pass on a draft report: each sentence still carrying a phrase the paper does not print goes back
 // alone, and a rewrite is kept only if it loses the phrase and keeps every figure. Pure; the call is the writer's.
 
-export interface SentenceFix {
+interface SentenceFix {
   matchup: number;
   sentence: string;
   words: string[];

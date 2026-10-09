@@ -18,7 +18,8 @@ export function strike(headline: string, names: readonly string[]): string | nul
   if (/\bas\b/iu.test(headline)) return "an 'as' clause";
   if (TABLOID.test(headline)) return "a tabloid verb";
   if (banned(headline, [...REPORT_NEVER, ...REPORT_FPL]).length > 0) return "a banned phrase";
-  const proper = (headline.match(/(?<!^)\b\p{Lu}[\p{L}'’-]+/gu) ?? [])
+  // A letter before is no word start; `\b` is ASCII and would miss "Šeško".
+  const proper = (headline.match(/(?<!^)(?<![\p{L}\p{N}'’-])\p{Lu}[\p{L}'’-]+/gu) ?? [])
     .map((word) => word.replace(/['’]s$/u, ""))
     .filter((word) => !names.some((name) => name.includes(word)));
   if (proper.length > 0) return `a name the facts do not carry: ${proper[0]}`;

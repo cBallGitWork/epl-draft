@@ -1,4 +1,5 @@
 import { weekdayLongOfDay } from "../../time";
+import { SIDES, otherSide, type Side } from "../side";
 import type { MatchupState, SideState } from "./state";
 import type { DraftMan } from "./types";
 
@@ -6,11 +7,8 @@ import type { DraftMan } from "./types";
 // the substitutions when they changed the score, each with its points, the running score at its end and the men who
 // returned in it. Pure.
 
-export type Which = "home" | "away";
-export const SIDES: readonly Which[] = ["home", "away"];
-
-export interface BeatReturn {
-  side: Which;
+interface BeatReturn {
+  side: Side;
   man: DraftMan;
   points: number;
   goals: number;
@@ -21,9 +19,9 @@ export interface BeatReturn {
 export interface Beat {
   /** The London day; null for the substitutions. */
   day: string | null;
-  points: Record<Which, number>;
+  points: Record<Side, number>;
   /** The running score at the beat's end. */
-  score: Record<Which, number>;
+  score: Record<Side, number>;
   returns: BeatReturn[];
 }
 
@@ -61,8 +59,8 @@ export function timeline(state: MatchupState): Beat[] {
 }
 
 /** The index of the first beat of `side`'s last unbroken lead; the beats' length when it did not finish ahead. */
-export function ledForGood(beats: readonly Beat[], side: Which): number {
-  const them: Which = side === "home" ? "away" : "home";
+export function ledForGood(beats: readonly Beat[], side: Side): number {
+  const them = otherSide(side);
   let from = beats.length;
   while (from > 0 && beats[from - 1].score[side] > beats[from - 1].score[them]) from--;
   return from;
