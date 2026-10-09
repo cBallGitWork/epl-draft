@@ -7,6 +7,7 @@ import Paragraphs from "./Paragraphs";
 import Dateline from "./Dateline";
 import { named } from "./named";
 import StoryHead, { KICKER } from "./StoryHead";
+import { CAPTION_CAPS } from "./heads";
 
 // A filed story as written: headline, plain deck, dateline (it can be days older than the scores) and prose.
 // Team names are joined here from the ids the writer returned, so a renamed team never goes stale.
@@ -71,7 +72,7 @@ export default function Written({
           {/* Capped when stacked, or the portrait fills the sheet's width. */}
           <figure className="order-first max-w-[15rem] @3xl:order-none @3xl:max-w-none @3xl:pt-10">
             <Face face={story.face} clubs={clubs} rank="portrait" />
-            <figcaption className="pt-1.5 font-sans text-2xs uppercase tracking-widest text-faint">
+            <figcaption className={`${CAPTION_CAPS} pt-1.5 text-faint`}>
               {story.face.name}
             </figcaption>
           </figure>

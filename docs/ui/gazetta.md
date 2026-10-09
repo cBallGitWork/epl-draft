@@ -593,6 +593,8 @@ appended second ink loses on stylesheet order.
 |---|---|---|---|
 | `RULE` | `gazette/rules.ts` | a faint rule's colour, `--paper-rule`; the caller names the side | 10 |
 | `HAIRLINES` | `gazette/rules.ts` | the faint hairline between a list's rows: `divide-y` alone rules them in each row's own ink | 7 |
+| `CAPTION_CAPS` | `gazette/heads.ts` | a caption's capitals, `2xs` and `tracking-widest`, no weight and no ink | 8 (2 inked by the caller) |
+| `CAPTION` | `gazette/heads.ts` | `CAPTION_CAPS` in muted ink: a kickoff, a club's fixture, a quote's credit, the line over a side's eleven | 6 |
 
 ## States
 

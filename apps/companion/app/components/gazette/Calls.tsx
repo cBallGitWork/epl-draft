@@ -4,7 +4,7 @@ import { derbyBetween } from "@/app/derbies";
 import Column from "./Column";
 import Face from "./Face";
 import Paragraphs from "./Paragraphs";
-import { STANDING_HEAD } from "./heads";
+import { CAPTION, STANDING_HEAD } from "./heads";
 
 // Lawro's calls as the page prints them, the way the BBC ran them: each tie, the man his line names
 // first beside his words, and under them the desk's prediction. Figures sit in their own span
@@ -50,7 +50,7 @@ export default function Calls({
               </div>
             ) : null}
             {tie.line !== "" ? <Paragraphs text={tie.line} className="pt-1 text-base leading-relaxed text-ink" /> : null}
-            <p className="clear-left pt-1.5 font-sans text-2xs uppercase tracking-widest text-muted">
+            <p className={`${CAPTION} clear-left pt-1.5`}>
               Lawro&apos;s prediction: <span className="font-bold text-ink">{prediction(tie, named)}</span>
             </p>
           </li>

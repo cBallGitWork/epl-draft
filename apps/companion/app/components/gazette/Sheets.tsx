@@ -3,6 +3,7 @@ import PitchMarker from "../league/PitchMarker";
 import PitchRows from "../league/PitchRows";
 import { yoursInk } from "../../mine";
 import { HAIRLINES } from "./rules";
+import { CAPTION } from "./heads";
 
 // Team news at the lock, a head-to-head at a time: each side's paragraph, then its eleven on the
 // grass and its bench, as the BBC prints a side before kickoff. The names are printed, not written;
@@ -64,7 +65,7 @@ function Side({
   return (
     <div className="flex flex-col gap-2 pt-3">
       <p className="text-base leading-snug text-ink">{side.line}</p>
-      <p className="font-sans text-2xs tracking-widest text-muted uppercase">
+      <p className={CAPTION}>
         <span className={yoursInk(side.teamId === mine)}>{named(side.teamId)}</span> XI{side.formation === null ? "" : ` · ${side.formation}`}
       </p>
       <PitchRows rows={rows} keyOf={(man) => String(man.code)} inColumn>

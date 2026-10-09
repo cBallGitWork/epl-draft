@@ -2,6 +2,7 @@ import Image from "next/image";
 import { crestUrl, type PublishedStory, type StoryLineupSide, londonDayAndTime, DASH } from "@epl/core";
 import { yoursInk } from "../../mine";
 import { HAIRLINES } from "./rules";
+import { CAPTION } from "./heads";
 
 // The gameweek's predicted elevens by match: a listing printed from the export, which no writer sees.
 
@@ -21,7 +22,7 @@ export default function Lineups({
     <div className={`flex flex-col pt-4 ${HAIRLINES}`}>
       {ties.map((tie) => (
         <section key={`${tie.home.code}-${tie.away.code}`} className="py-4">
-          <p className="font-sans text-2xs tracking-widest text-muted uppercase">
+          <p className={CAPTION}>
             {londonDayAndTime(tie.kickoff)}
           </p>
           {/* Side by side at every width: a match is two teams facing each
