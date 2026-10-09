@@ -2,7 +2,7 @@
   "manifest": {
     "season": "26-27",
     "gameweek": 6,
-    "exportedAt": "2026-10-08T11:55:24.674Z",
+    "exportedAt": "2026-10-09T13:57:09.352Z",
     "rows": 20,
     "sources": [
       {
@@ -11,7 +11,7 @@
       }
     ]
   },
-  "fetchedAt": "2026-10-08T11:55:24.674Z",
+  "fetchedAt": "2026-10-09T13:57:09.352Z",
   "source": "ffscout",
   "clubs": {
     "ARS": {
@@ -157,11 +157,11 @@
           "prob": 0.9
         },
         {
-          "code": 200785,
+          "code": 155408,
           "prob": 0.9
         },
         {
-          "code": 155408,
+          "code": 200785,
           "prob": 0.9
         },
         {
