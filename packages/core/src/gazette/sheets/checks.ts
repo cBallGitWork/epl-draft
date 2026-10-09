@@ -41,6 +41,8 @@ const STARTS = /(?<!not |n't )\bstarts? (?:for|against)\b/iu;
 const OUT_WORDS = /\b(?:out|ruled out|injured|sidelined|suspended|banned|serving a ban|unavailable|misses|miss|absent)\b/iu;
 const SOFT_WORDS = /\b(?:doubt|doubtful|carrying|awaits?|awaiting|scan|MRI|fitness test|might not|worry)\b/iu;
 const COUNT = /\b([\p{L}\d]+) changes?\b/iu;
+/** A side said to be unchanged, in any of the forms a reporter uses. */
+const UNCHANGED = /\bunchanged\b|\bsame (?:starting )?(?:line-up|eleven|side|xi)\b/iu;
 const WORDS: Record<string, number> = { no: 0, one: 1, a: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11 };
 
 interface SheetsCheck {
@@ -92,7 +94,7 @@ export function checkSheets(draft: SheetsDraft, ctx: SheetsCheck): Fault[] {
     claims(section, text, team, fault);
     const count = sentences(text).length;
     if (count > SHEETS.sentences || wordCount(text) > SHEETS.words) fault(section, "length", "send-back", `${count} sentences, ${wordCount(text)} words`);
-    if (/\bunchanged\b|\bsame (?:starting )?(?:line-up|eleven|side|xi)\b/iu.test(sentences(text)[0] ?? "") && ++unchangedLeads > 1) {
+    if (UNCHANGED.test(sentences(text)[0] ?? "") && ++unchangedLeads > 1) {
       fault(section, "leads on unchanged, as another side does", "send-back", sentences(text)[0] ?? "");
     }
     // Two sides may both lead on a man who is out; a third opening the same way is a template.
@@ -123,7 +125,7 @@ function claims(section: string, text: string, team: TeamFacts, fault: Report): 
     else if (figure !== team.changes.count) fault(section, "the wrong number of changes", "hard", `${stated[0]}, not ${team.changes.count}`);
   }
   if (/\bdebut/iu.test(text) && (team.debuts ?? []).length === 0) fault(section, "a debut the brief does not give", "hard", "debut");
-  if (/\bunchanged\b|\bsame (?:eleven|side|xi)\b/iu.test(text) && team.changes?.count !== 0) fault(section, "unchanged when it changed", "hard", "unchanged");
+  if (UNCHANGED.test(text) && team.changes?.count !== 0) fault(section, "unchanged when it changed", "hard", "unchanged");
   // Dropped is a man who started last gameweek and is on the bench now; the facts say who, if anyone.
   const dropped = (team.changes?.out ?? []).some((each) => each.to === "bench") || team.benchings.some((each) => each.dropped);
   if (/\bdrop(?:s|ped|ping)?\b/iu.test(text) && !dropped) fault(section, "a man dropped the brief does not give", "hard", "dropped");

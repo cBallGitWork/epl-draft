@@ -46,7 +46,8 @@ export function sheetsDeck(ties: readonly TieFacts[]): string {
   if (teams.every((team) => team.changes === null)) return "The first line-ups of the season.";
   const changes = teams.reduce((sum, team) => sum + (team.changes?.count ?? 0), 0);
   const debuts = teams.reduce((sum, team) => sum + (team.debuts?.length ?? 0), 0);
-  if (changes === 0) return "Every side unchanged.";
+  // A side on its first sheet is not unchanged.
+  if (changes === 0) return teams.some((team) => team.changes === null) ? "No changes." : "Every side unchanged.";
   return `${capital(counted(changes, "change"))}${debuts === 0 ? "" : ` and ${counted(debuts, "debut")}`}.`;
 }
 
@@ -61,7 +62,10 @@ export function plainLine(team: TeamFacts): string {
   if (changes === null) return `${name} name their first sheet${shape}.${absent}`;
   if (changes.count === 0) return absent === "" ? `${name} name the same eleven as last gameweek${shape}.` : `${name} are unchanged.${absent}`;
   const came = changes.in.map((each) => printName(each.man.player));
-  return `${name} make ${counted(changes.count, "change")}: ${listed(came)} ${plural(came.length, "comes", "come")} in.${absent}`;
+  // A side starting fewer men than last time has a change with nobody coming in.
+  const left = changes.out.map((each) => printName(each.man.player));
+  const moved = came.length > 0 ? `${listed(came)} ${plural(came.length, "comes", "come")} in` : `${listed(left)} ${plural(left.length, "is", "are")} left out`;
+  return `${name} make ${counted(changes.count, "change")}: ${moved}.${absent}`;
 }
 
 /** Newspaper style: words to ten, figures after. */

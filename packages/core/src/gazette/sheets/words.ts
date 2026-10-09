@@ -19,8 +19,9 @@ export const SHEETS_CAPPED: readonly (readonly [phrase: string, most: number])[]
   ["while", 1], ["both", 1], ["also", 1], ["meanwhile", 0],
 ];
 
-/** The house's own word for a thing, sent back when another is used. */
-export const SHEETS_HOUSE: readonly (readonly [not: string, say: string])[] = [["rounds", "gameweeks"], ["round", "gameweek"]];
+/** The house's own word for a thing, sent back when another is used. "round" alone is idiom too ("the other way round"),
+ *  so the pencil below corrects it where it means the week. */
+export const SHEETS_HOUSE: readonly (readonly [not: string, say: string])[] = [["rounds", "gameweeks"]];
 
 /** Stock phrases a model reaches for and a reporter does not, sent back wherever they appear. */
 export const SHEETS_STOCK: readonly string[] = [
@@ -39,7 +40,8 @@ export const SHEETS_PENCIL: readonly (readonly [wrong: RegExp, right: string])[]
   [/\bsit (on|among)\b/giu, "are $1"],
   [/\bof late\b/giu, "recently"],
   [/\bawaits\b/giu, "is awaiting"],
-  [/\bround\b/giu, "gameweek"],
+  [/\b(this|last|next|previous|each|every|that) round\b/giu, "$1 gameweek"],
+  [/\bround (\d{1,2})\b/giu, "gameweek $1"],
 ];
 
 /** Not this gameweek's news: an international story names the country, and it is the wrong match. */

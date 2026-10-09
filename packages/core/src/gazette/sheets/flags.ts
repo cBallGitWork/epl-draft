@@ -60,8 +60,11 @@ export function injuryIn(story: PlayerStory | null): string | null {
   const bracketed = story.content.match(/\(([^)]{2,30})\)/u)?.[1] ?? "";
   const opening = story.content.split(/(?<=[.?!])\s/u)[0] ?? "";
   for (const text of [bracketed, opening]) {
-    const found = INJURIES.find((word) => new RegExp(`\\b${word}\\b`, "iu").test(text));
-    if (found !== undefined) return found;
+    // The complaint the text names first, wherever it sits on the list.
+    const found = INJURIES.map((word) => ({ word, at: text.search(new RegExp(`\\b${word}\\b`, "iu")) }))
+      .filter((each) => each.at >= 0)
+      .sort((a, b) => a.at - b.at)[0];
+    if (found !== undefined) return found.word;
   }
   return null;
 }
