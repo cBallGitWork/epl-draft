@@ -1,7 +1,7 @@
 #!/bin/bash
 # The Mac's half of the week: the sister repo's exports into a PR that merges once CI passes.
 #   sync-intel.sh weekly    Tuesday, the round settled: every sister file, cups, careers and league projections
-#   sync-intel.sh pressers  Thursday 16:00 and 17:15, Friday 12:30, 15:45 and 17:45: the press conferences, squads, depth and xMins
+#   sync-intel.sh pressers  Thursday 16:00 and 17:15, Friday 12:30, 14:00, 15:45 and 17:45: the press conferences, squads, depth and xMins
 # Every run ends in an alert.yml dispatch, intel-<mode> ok or fail, which the watchdog reads. DRY_RUN=1 stops before the push.
 # launchd starts with a bare PATH; node comes from the newest nvm install. Then the token, before anything can fail.
 NODE_BIN=$(ls -d "$HOME"/.nvm/versions/node/*/bin 2>/dev/null | sort -V | tail -1)
