@@ -15,7 +15,7 @@ import type { DeskFacts } from "./facts";
 
 // The opinion columns' wiring: what each one is told, out of the facts the firing already gathered.
 
-export interface ColumnContext {
+interface ColumnContext {
   gameweek: number;
   facts: DeskFacts;
   /** Fantrax's table, for the rankings to argue with. Empty when the standings

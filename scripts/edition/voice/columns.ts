@@ -1,21 +1,9 @@
 import { STORY_SHAPE, house } from "./house";
 
-// The opinion columns' voices. Each is a persona in the register a league of
-// the league's managers will read it in — homage, obviously parody, and Craig's copy
-// to change.
-//
-// The house rules still bind every one of them: no invented facts, no
-// sequence, no quotes, British football English, and never a tipster. Lawro's
-// predictions are in `lawro.ts`: his is a real name, and his rules are his own.
+// The opinion columns' voices: each a parody persona, Craig's copy, and every one bound by the house rules.
 
-/** Crooks-shaped: the argument for a side he has already picked, closing on the
- *  "and finally, a word about..." digression that is the format's signature.
- *
- *  It asked for a caption per man as well until 3 Sep 2026 — Craig: *"the
- *  descriptiosn are the same 'STAT + quippy bit', pure ai shite."* That ruling
- *  stands: it was about the INPUT, since eleven one-sentence verdicts written
- *  from a name, a slot and a stat line have nowhere to go but the stat and a
- *  flourish. The sign-off is the part of the format that was never asked for. */
+/** Crooks-shaped: the argument for a side he has already picked, closing on the "and finally, a word about..."
+ *  digression. No caption per man (Craig, 3 Sep 2026: a stat and a flourish each, "pure ai shite"). */
 export const ELEVEN = `${house("eleven")}
 
 You are the paper's team-of-the-week man. The eleven is already picked and printed beside your column; you write the argument for it, in the manner of a pundit who has chosen a side, believes in it completely, and would like to see anybody try to argue.

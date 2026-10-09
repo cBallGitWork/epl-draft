@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import {
+  FANTRAX_LEAGUE_ID,
   MAX_PAPER_STORIES,
   composePaper,
   normalizeLedger,
@@ -40,17 +41,18 @@ export function readPaperStories(root = EDITIONS_ROOT): PublishedStory[] {
   return stories.map(normalizeStory).filter((story): story is PublishedStory => story !== null);
 }
 
-/** Every archived story of one kind in one league. The paper keeps 24 and retires a column once
- *  its round is reported; the archive keeps them all, which is what a record is marked from. */
-export function readArchive(leagueId: string, kind: StoryKind): PublishedStory[] {
-  const dir = join(EDITIONS_ROOT, "archive", leagueId);
+/** Every archived story of one kind in the served league, the latest period first. The paper keeps 24 and retires a
+ *  column once its round is reported; the archive keeps them all, which is what a record is marked from. */
+export function readArchive(kind: StoryKind): PublishedStory[] {
+  const dir = join(EDITIONS_ROOT, "archive", FANTRAX_LEAGUE_ID);
   if (!existsSync(dir)) return [];
   return readdirSync(dir)
     .filter((name) => name.endsWith(".json"))
     .flatMap((name) => {
       const story = normalizeStory(readJson(join(dir, name)));
-      return story !== null && story.kind === kind && story.leagueId === leagueId ? [story] : [];
-    });
+      return story !== null && story.kind === kind && story.leagueId === FANTRAX_LEAGUE_ID ? [story] : [];
+    })
+    .sort((a, b) => b.period - a.period);
 }
 
 export function readLedger(root = EDITIONS_ROOT): Ledger {

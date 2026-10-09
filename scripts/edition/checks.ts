@@ -24,9 +24,9 @@ export function prose(story: PublishedStory): string {
     story.deck,
     story.body,
     ...(story.ties ?? []).map((tie) => tie.line),
-    ...sentences(extras.ranks, "line"),
+    ...lines(extras.ranks),
     // The Team Sheet's rows are the article: the club's line, each man's note and the quote it carries.
-    ...sentences(extras.teamNews, "line"),
+    ...lines(extras.teamNews),
     ...(extras.teamNews ?? []).flatMap((row) => (row.men ?? []).map((man) => man.note)),
     ...(extras.teamNews ?? []).map((row) => row.quote?.text),
     // Team news is its paragraphs; the elevens under them are printed from Fantrax.
@@ -43,14 +43,13 @@ export function headlineAndProse(story: PublishedStory): string {
   return `${story.headline}\n${prose(story)}`;
 }
 
-/** The written sentence out of each cargo row, by whichever key holds it.
- *  Anything that is not a string is dropped rather than stringified. */
-function sentences(rows: unknown, ...keys: string[]): string[] {
+/** Each cargo row's written `line`, or the row itself where it is a string; anything else is dropped, not stringified. */
+function lines(rows: unknown): string[] {
   if (!Array.isArray(rows)) return [];
   return rows.flatMap((row) => {
     if (typeof row === "string") return [row];
     if (row === null || typeof row !== "object") return [];
-    const record = row as Record<string, unknown>;
-    return keys.map((key) => record[key]).filter((value): value is string => typeof value === "string");
+    const line = (row as Record<string, unknown>).line;
+    return typeof line === "string" ? [line] : [];
   });
 }

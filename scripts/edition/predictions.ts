@@ -119,9 +119,7 @@ export async function predictionsDesk(input: {
   const projected = new Map(mapProjectedTotals(live).map((guess) => [guess.teamId, guess.points]));
   const form = seasonForm(input.table, info.matchups, results === null ? [] : mapSeasonResults(results));
   const named = new Map(info.teams.map((team) => [team.teamId, team.name]));
-  const columns = readArchive(FANTRAX_LEAGUE_ID, "predictions")
-    .filter((story) => story.period < round.period)
-    .sort((a, b) => b.period - a.period);
+  const columns = readArchive("predictions").filter((story) => story.period < round.period);
   const prose = columns.map(proseOf);
   // A man he wrote about lately is old news, unless the week gives him something new.
   const recent = prose.slice(0, PREDICTIONS.wornColumns).join("\n");
@@ -155,9 +153,9 @@ export async function predictionsDesk(input: {
     past: pastOffered(ties.flatMap((tie) => (tie.call.instinct === null ? [] : [tie.call.instinct])), prose),
     archive: {
       prose,
-      lastLines: columns.slice(0, 12).flatMap((story) => (story.ties ?? []).map((tie) => tie.line.split(/(?<=[.?!])\s+/u).at(-1) ?? "")),
+      lastLines: columns.slice(0, PREDICTIONS.wornEndings).flatMap((story) => (story.ties ?? []).map((tie) => tie.line.split(/(?<=[.?!])\s+/u).at(-1) ?? "")),
       shapes: (columns[0]?.extras?.skit ?? []).map((edit) => edit.shape),
-      targets: columns.slice(0, 10).flatMap((story) => (story.extras?.skit ?? []).flatMap((edit) => (edit.target === null ? [] : [edit.target]))),
+      targets: columns.slice(0, PREDICTIONS.wornTargets).flatMap((story) => (story.extras?.skit ?? []).flatMap((edit) => (edit.target === null ? [] : [edit.target]))),
     },
     names: [...new Set([...named.values(), ...ties.flatMap((tie) => derbyNames(tie.derby)), ...squads.flatMap((team) => team.players.flatMap((man) => ("player" in man ? [man.player.name] : [])))])],
     clubs: clubs.map((club) => club.name),

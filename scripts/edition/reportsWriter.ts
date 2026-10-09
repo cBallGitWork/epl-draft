@@ -24,7 +24,7 @@ import {
   type MatchDesk,
   type ReportsDraft,
 } from "@epl/core";
-import { FANTRAX_LEAGUE_ID, plainStandfirst, reportsCargo } from "@epl/core";
+import { plainStandfirst, reportsCargo } from "@epl/core";
 import { writeColumn, type Say } from "./newsroom";
 import { serious } from "./sendBack";
 import { readArchive } from "./persist";
@@ -172,7 +172,7 @@ async function weave(
 
 /** The prose of the last few report days, newest first, so a new day does not echo them. */
 function pastReports(): string[] {
-  return readArchive(FANTRAX_LEAGUE_ID, "match-report")
+  return readArchive("match-report")
     .sort((a, b) => b.filedAt.localeCompare(a.filedAt))
     .slice(0, REPORTS.pastDays)
     .map((story) => (story.extras?.reports ?? []).flatMap((r) => [r.standfirst, r.account, ...r.sections.map((x) => `${x.pitch} ${x.stake}`)]).join("\n"));

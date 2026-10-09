@@ -135,7 +135,7 @@ export async function binXiDesk(input: {
   const gameweek = openingGameweek(calendar, period) ?? snapshot.gameweek;
   const club = (clubId: number) => fullClubName(clubs.get(clubId)?.name ?? "an unknown club");
   const teamName = (teamId: string) => info.teams.find((team) => team.teamId === teamId)?.name ?? teamId;
-  const lastWeek = readArchive(FANTRAX_LEAGUE_ID, "bin-xi").find((story) => story.gameweek === gameweek - 1)?.extras?.bin?.xi ?? [];
+  const lastWeek = readArchive("bin-xi").find((story) => story.gameweek === gameweek - 1)?.extras?.bin?.xi ?? [];
   const sides = [...facts.scores.values()].map((score) => score.points);
   const brief = buildBinBrief({
     gameweek,

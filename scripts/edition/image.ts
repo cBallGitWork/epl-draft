@@ -1,13 +1,13 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
-import { MODEL_TIMEOUT_MS, OPENAI_IMAGES_URL, type PublishedStory } from "@epl/core";
+import { MODEL_TIMEOUT_MS, NEWSROOM, OPENAI_IMAGES_URL, type PublishedStory } from "@epl/core";
 
 // The splash picture for the paper's lead, drawn in CI: an editorial cartoon, never a photograph and never a likeness
 // of a real footballer. Any failure (no key, a refusal, a bad payload) returns null and costs the picture, never the
 // paper: the column is already written and paid for.
 
-const MODEL = process.env.GAZETTA_IMAGE_MODEL ?? "gpt-image-1";
+const MODEL = process.env.GAZETTA_IMAGE_MODEL ?? NEWSROOM.illustrator;
 
 /** Where the app serves it from. `public/` and not `data/`: Next serves this
  *  directory statically, and `data/` is not reachable from a browser. */

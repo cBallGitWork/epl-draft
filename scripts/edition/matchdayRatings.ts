@@ -28,7 +28,7 @@ import type { Say } from "./newsroom";
 type Counts = Record<string, number | null>;
 
 /** One day's figures from both leagues, by Fantrax id. */
-export interface DayFigures {
+interface DayFigures {
   points: Map<string, PoolStatRow>;
   /** The scoring league's own columns by short name: `G`, `AT`, `CS`, `Min`. */
   shorts: Map<string, Counts>;
@@ -88,7 +88,7 @@ export function markOf(
   ).rating;
 }
 
-export type MarkFor = (code: number, opponentClubId: number, kickoff: string) => number | null;
+type MarkFor = (code: number, opponentClubId: number, kickoff: string) => number | null;
 
 /** The report's view: a mark by player code, or null when the day could not be read and it files without marks. */
 export async function dayMarks(opts: {

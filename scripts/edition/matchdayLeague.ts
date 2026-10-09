@@ -1,4 +1,4 @@
-import { FANTRAX_LEAGUE_ID, MS_PER_DAY, fetchPlayerStories, fplCodeOf, isActive, isResolved, mapPlayerStories, type Fixture, type PlayerStory, type ReportMan } from "@epl/core";
+import { FANTRAX_LEAGUE_ID, FITNESS_DAYS, MS_PER_DAY, fetchPlayerStories, fplCodeOf, isActive, isResolved, mapPlayerStories, type Fixture, type PlayerStory, type ReportMan } from "@epl/core";
 import { BRIDGE } from "./bridge";
 import type { DeskFacts } from "./facts";
 import { involves } from "./round";
@@ -38,8 +38,6 @@ export function leagueJoin(facts: DeskFacts, periodFixtures: readonly Fixture[],
   }
   return { holders, points, fantraxIds };
 }
-
-const FITNESS_DAYS = 5;
 
 /** Fantrax's stories on one man, none when they cannot be read. */
 export const storiesOn = (fantraxId: string): Promise<PlayerStory[]> => fetchPlayerStories(FANTRAX_LEAGUE_ID, fantraxId).then(mapPlayerStories).catch(() => []);

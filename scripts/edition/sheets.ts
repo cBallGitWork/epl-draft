@@ -51,9 +51,6 @@ export interface SheetsDesk {
   sides: number;
 }
 
-/** Earlier periods read at a time: a late-season round asks Fantrax for thirty-odd. */
-const HISTORY_BATCH = 5;
-
 export async function sheetsDesk(input: {
   assignments: readonly Assignment[];
   info: LeagueInfo;
@@ -141,8 +138,8 @@ export async function sheetsDesk(input: {
 export async function earlierSheets(info: LeagueInfo, snapshot: FootballSnapshot, period: number): Promise<Map<string, Sheet[]>> {
   const periods = info.rosterPeriods.map((each) => each.number).filter((number) => number < period).sort((a, b) => a - b);
   const read: Sheet[][] = [];
-  for (let at = 0; at < periods.length; at += HISTORY_BATCH) {
-    const batch = periods.slice(at, at + HISTORY_BATCH);
+  for (let at = 0; at < periods.length; at += SHEETS.batch) {
+    const batch = periods.slice(at, at + SHEETS.batch);
     const rosters = await Promise.all(batch.map((number) => fetchTeamRosters(FANTRAX_LEAGUE_ID, number)));
     read.push(...rosters.map((raw) => rosteredPeriod(snapshot, raw).teams.map(sheetOf)));
   }
@@ -169,8 +166,8 @@ async function newsFor(facts: DeskFacts, now: string): Promise<Map<string, Playe
   const doubts = facts.teams
     .flatMap((team) => sheetOf(team).starters)
     .filter((man) => man.player.status !== "a");
-  for (let at = 0; at < doubts.length; at += HISTORY_BATCH) {
-    const batch = doubts.slice(at, at + HISTORY_BATCH);
+  for (let at = 0; at < doubts.length; at += SHEETS.batch) {
+    const batch = doubts.slice(at, at + SHEETS.batch);
     const reads = await Promise.all(batch.map((man) => fetchPlayerStories(FANTRAX_LEAGUE_ID, man.fantraxId).then(mapPlayerStories).catch(() => [])));
     batch.forEach((man, index) => {
       const story = reads[index][0];
@@ -182,8 +179,6 @@ async function newsFor(facts: DeskFacts, now: string): Promise<Map<string, Playe
 
 /** Each side's paragraph from the latest earlier team-news article, by team id. */
 function lastWrote(period: number): Map<string, string> {
-  const last = readArchive(FANTRAX_LEAGUE_ID, "sheets")
-    .filter((story) => story.period < period)
-    .sort((a, b) => b.period - a.period)[0];
+  const last = readArchive("sheets").find((story) => story.period < period);
   return new Map((last?.extras?.sheets ?? []).flatMap((tie) => [[tie.home.teamId, tie.home.line], [tie.away.teamId, tie.away.line]] as const));
 }

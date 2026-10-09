@@ -3,13 +3,35 @@
 /** The paper's name, printed after the league's on its masthead. */
 export const PAPER_TITLE = "Gazetta";
 
+/** The paper's model calls: the writer's model, the helpers' that read rather than write, and the illustrator's, each
+ *  overridden from the environment; the API version spoken; a call's budget, which Opus 5.5's thinking spends first; and
+ *  the writer's effort, its default, set so a change of default never moves the bill unseen. */
+export const NEWSROOM = {
+  writer: "claude-opus-5-5",
+  helper: "claude-sonnet-5",
+  illustrator: "gpt-image-1",
+  apiVersion: "2023-06-01",
+  maxTokens: 16_000,
+  effort: "medium",
+} as const;
+
+/** The most storyline beats a column may report; the newsroom keeps no more than this. */
+export const MOST_THREADS = 3;
+
 /** The predicted elevens: Friday from 17:00 London, after that day's Team Sheet at 16:30 (Craig, 8 Oct 2026: "pressers
  *  first, team sheet later"); a lock earlier than Tuesday's files the day before (Sunday = 0). */
 export const PREDICTED_XI = { filing: { weekday: 5, hour: 17, maxLeadDays: 3 } } as const;
 
 /** The Team Sheet: a column per press-conference day until the lock, from 16:30 London that day once the Mac's import
  *  has merged (Thursday 16:00, Friday 15:45), and Thursday's from 18:00 (Craig, 8 Oct 2026). */
-export const TEAM_SHEET = { from: { hour: 16, minute: 30 }, thursday: { weekday: "Thu", hour: 18 } } as const;
+export const TEAM_SHEET = {
+  from: { hour: 16, minute: 30 },
+  thursday: { weekday: "Thu", hour: 18 },
+  /** No round is longer than this many days, so an older conference is about a round already played. */
+  windowDays: 7,
+  /** FPL's availability note this many days before a conference is the same story; older, a standing absence. */
+  freshDays: 2,
+} as const;
 
 /** Lawro's predictions: when the column files and how a tie is called. Set before any league was drafted, so
  *  retune after gameweek 9 by counting the gut calls in the archive. */
@@ -38,6 +60,11 @@ export const PREDICTIONS = {
   recentGames: 2,
   /** The most facts one tie's brief carries. */
   factsPerTie: 11,
+  /** His last columns the skit writer may not repeat: the endings of this many, and the pun targets of this many. */
+  wornEndings: 12,
+  wornTargets: 10,
+  /** His call's budget, thinking included: five three-paragraph ties under every rule spent 16,000 thinking on 8 Oct 2026. */
+  tokens: 32_000,
 } as const;
 
 /** What the editor holds Lawro to in both his columns, and what his voice tells him. */
@@ -107,6 +134,8 @@ export const SHEETS = {
   echo: 5,
   /** Paragraphs that may open with the same three words, a name blanked. */
   openers: 2,
+  /** Fantrax reads made at once, earlier periods' rosters or the doubts' stories: a late-season round asks for thirty-odd. */
+  batch: 5,
 } as const;
 
 /** The Points Dodgers: men who came close to points and got none. */
@@ -154,6 +183,12 @@ export const REPORTS = {
 /** A goal from this minute is late: a late winner, a scorer's late goal, the one that took a clean sheet. */
 export const LATE_GOAL_MINUTE = 80;
 
+/** Days after a match in which Fantrax's first story on a man who went off or missed it is about that match. */
+export const FITNESS_DAYS = 5;
+
+/** The draft report's judge: the quotes kept for any one match-up. */
+export const DRAFT_JUDGE_QUOTES = 3;
+
 /** A match report's key stats and the Bin XI's: how many men a top-xG or top-xA line names, and the least that earns
  *  a place in it. */
 export const KEY_STATS = { topMen: 3, expectedGoals: 0.2, expectedAssists: 0.15 } as const;
@@ -164,7 +199,8 @@ export const BIN_XI = {
   weekday: "Tue",
   /** How far the chances a man made or missed move his points when picking: a 9 still beats a 5. */
   luck: 0.5,
-  /** The column's length, in words, and its paragraphs; the check's most is past the prompt's 200, so a near-miss is not sent back. */
+  /** The column's length, in words, and its paragraphs; the check's most is past the `asked` most, so a near-miss is not sent back. */
   words: [150, 220],
+  asked: 200,
   paragraphs: 3,
 } as const;

@@ -1,4 +1,4 @@
-import { MS_PER_DAY, availabilityOf, type FootballPlayer, fullClubName, instantOf, normalizeName, owners, pressers, type Club, type Fixture, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
+import { MS_PER_DAY, TEAM_SHEET, availabilityOf, type FootballPlayer, fullClubName, instantOf, normalizeName, owners, pressers, type Club, type Fixture, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
 import type { RosteredTeam, StoryFixture } from "@epl/core";
 import { roundTies } from "./round";
 import { readIntel } from "../intel";
@@ -162,11 +162,6 @@ export function presserQuotes(clubs: ReadonlyMap<number, Club>): (PresserQuote &
   });
 }
 
-/** How recently FPL attached his availability note, against the conference. Two
- *  days: a note from the day before is the same story, one from last week is the
- *  standing condition a reader already knows. */
-const FRESH_DAYS = 2;
-
 /** The article's doubt, unless FPL already has him out: "Daniel James will miss the Arsenal game" was a quote the
  *  import does not read, and FPL had him injured until 18 Oct. */
 export function tagOf(tag: string, player: PresserSquadMan): string {
@@ -185,5 +180,5 @@ function changed(newsAdded: string | null, said: string): boolean {
   const added = instantOf(newsAdded);
   const at = instantOf(said);
   if (added === null || at === null) return true;
-  return (at - added) / MS_PER_DAY <= FRESH_DAYS;
+  return (at - added) / MS_PER_DAY <= TEAM_SHEET.freshDays;
 }

@@ -9,29 +9,28 @@ import { columnBrief } from "./columns";
 import { newsBrief } from "./news";
 import { FIXTURE_PREVIEW, TIE_CALL, TIE_REPORT } from "./voice/matches";
 import { DODGERS, ELEVEN, POWER_RANKING, WIRE } from "./voice/columns";
-import { predictionsVoice } from "./voice/lawro";
-import { seasonRankingsVoice } from "./voice/lawroSeason";
 import type { PredictionsDesk } from "./predictions";
 import type { SeasonDesk } from "./season";
 import type { DraftJob } from "./draftWriter";
 import type { ReportsJob } from "./reports";
 import type { SheetsDesk } from "./sheets";
-import { DRAFT_VOICE } from "./voice/draft";
-import { REPORTS_VOICE } from "./voice/reports";
-import { BIN_XI_VOICE } from "./voice/binXi";
 import type { BinDesk } from "./binXi";
-import { sheetsVoice } from "./voice/sheets";
 import { NEWS } from "./voice/news";
 import { PRESSER } from "./voice/pressers";
 import { edition, faceCtx, type DeskContext } from "./dispatch";
 
 // What a firing commissions: each assignment turned into the voice and brief a writer is handed.
 
-/** How a column comes to exist: a voice and a brief for a writer, or a set of
- *  facts the desk prints itself. */
+/** How a column comes to exist: a voice and a brief for a writer, a brief and a desk whose newsroom holds its own
+ *  voice, or a set of facts the desk prints itself. */
 type Commission =
-  | { system: string; brief: string; lawro?: PredictionsDesk; season?: SeasonDesk; sheets?: SheetsDesk; reports?: ReportsJob; draft?: DraftJob }
-  | { system: string; brief: string; bin: BinDesk }
+  | { system: string; brief: string }
+  | { brief: string; lawro: PredictionsDesk }
+  | { brief: string; season: SeasonDesk }
+  | { brief: string; sheets: SheetsDesk }
+  | { brief: string; reports: ReportsJob }
+  | { brief: string; draft: DraftJob }
+  | { brief: string; bin: BinDesk }
   | { printed: Record<string, unknown> };
 
 export function prepare(assignment: Assignment, ctx: DeskContext): Commission | null {
@@ -46,34 +45,34 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
     const desk = ctx.predictions;
     if (desk === null) return null;
     const brief = buildLawroBrief({ ...desk, teams: ctx.info.teams.map(({ teamId, name }) => ({ teamId, name })) });
-    return brief === null ? null : { system: predictionsVoice(desk.ties.length), brief, lawro: desk };
+    return brief === null ? null : { brief, lawro: desk };
   }
 
   // His power rankings likewise, with the order and every side's facts already made.
   if (assignment.kind === "season-rankings") {
     const desk = ctx.season;
     if (desk === null) return null;
-    return { system: seasonRankingsVoice(desk.calls.sides.length), brief: buildSeasonBrief({ calls: desk.calls, locksAt: desk.locksAt, slotName: desk.slotName }), season: desk };
+    return { brief: buildSeasonBrief({ calls: desk.calls, locksAt: desk.locksAt, slotName: desk.slotName }), season: desk };
   }
 
   // A match-day report is written, checked and read back through its own newsroom, from the day's joined facts.
   if (assignment.kind === "draft-report") {
     const job = assignment.cutoff === undefined ? undefined : ctx.drafts.get(assignment.cutoff);
-    return job === undefined ? null : { system: DRAFT_VOICE, brief: buildDraftBrief(job.cutoff, job.gameweek, job.contexts), draft: job };
+    return job === undefined ? null : { brief: buildDraftBrief(job.cutoff, job.gameweek, job.contexts), draft: job };
   }
   if (assignment.kind === "match-report") {
     const job = assignment.day === undefined ? undefined : ctx.reports.get(assignment.day);
-    return job === undefined ? null : { system: REPORTS_VOICE, brief: job.brief, reports: job };
+    return job === undefined ? null : { brief: job.brief, reports: job };
   }
 
   // The Bin XI is written and checked through its own editor, from the side the desk picked.
   if (assignment.kind === "bin-xi") {
-    return ctx.bin === null ? null : { system: BIN_XI_VOICE, brief: ctx.bin.brief, bin: ctx.bin };
+    return ctx.bin === null ? null : { brief: ctx.bin.brief, bin: ctx.bin };
   }
 
   // Team news is written a paragraph a side through its own editor, from facts the desk already joined.
   if (assignment.kind === "sheets") {
-    return ctx.sheets === null ? null : { system: sheetsVoice(ctx.sheets.ties.length * 2), brief: ctx.sheets.brief, sheets: ctx.sheets };
+    return ctx.sheets === null ? null : { brief: ctx.sheets.brief, sheets: ctx.sheets };
   }
 
   const scoped =

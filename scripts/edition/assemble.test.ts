@@ -4,11 +4,7 @@ import type { MatchupContext } from "@epl/core";
 import { faceOf, weight } from "./faces";
 import type { DeskFacts } from "./facts";
 
-// **The picture is the desk's choice and not the writer's.** These assert who
-// gets photographed, which is a selection rule with a wrong answer: a face that
-// disagrees with the prose reads as an error nobody can see is one, and a face
-// picked by naming a man is a model choosing the photograph — the one thing
-// `gazette/strangers.ts` exists to catch it doing.
+// Who gets photographed: the desk's choice from the facts, never a man the model named.
 
 const man = (
   fantraxId: string,
