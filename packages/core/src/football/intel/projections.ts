@@ -1,3 +1,4 @@
+import { sumOf } from "../../sum";
 import { finiteOrNull } from "../../untrusted";
 import { byCode } from "./byCode";
 import type { IntelManifest } from "./types";
@@ -69,7 +70,7 @@ export function nextGameweeks<W extends { gw: number }>(player: { gameweeks: rea
 /** The points over the window's rounds that have a reading; null when none does. */
 export function projectedTotal(player: PointsRun, gameweeks: readonly number[]): number | null {
   const points = nextGameweeks(player, gameweeks).flatMap((week) => (week?.points == null ? [] : [week.points]));
-  return points.length === 0 ? null : points.reduce((sum, value) => sum + value, 0);
+  return points.length === 0 ? null : sumOf(points, (value) => value);
 }
 
 /** One man's projected points in one gameweek, or null where the model has none. */

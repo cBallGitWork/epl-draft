@@ -1,3 +1,4 @@
+import { sumOf } from "../../sum";
 import { optaMetrics } from "./map";
 import type { RawPlFixture } from "./raw";
 import type { RawPlPlayerStats } from "./rawStats";
@@ -88,7 +89,7 @@ export function plMatchParts(raw: RawPlPlayerStats): MatchParts | null {
 /** His matches added up; null when there are none. */
 export function sumParts(matches: readonly MatchParts[]): MatchParts | null {
   if (matches.length === 0) return null;
-  return partsOf((part) => matches.reduce((sum, match) => sum + match[part], 0));
+  return partsOf((part) => sumOf(matches, (match) => match[part]));
 }
 
 /** The Premier League's id for a man either side named, found by his Opta code; null when neither did. */

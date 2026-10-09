@@ -1,3 +1,4 @@
+import { sumOf } from "../../sum";
 import { plMatchMetrics } from "./map";
 import type { RawPlMatchStats } from "./rawStats";
 
@@ -55,7 +56,7 @@ function share(of: number, over: number): number {
 
 function figure(metric: (name: string) => number, source: Source): number {
   if (typeof source === "string") return Math.round(metric(source));
-  const over = source.over.reduce((sum, name) => sum + metric(name), 0);
+  const over = sumOf(source.over, metric);
   return share(metric(source.of), over);
 }
 

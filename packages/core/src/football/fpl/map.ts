@@ -1,3 +1,4 @@
+import { sumOf } from "../../sum";
 import type {
   Club,
   Fixture,
@@ -113,7 +114,7 @@ export function mapLiveStats(live: RawLive): PlayerMatchStats[] {
     const single = (el.explain ?? []).length === 1;
     for (const block of el.explain ?? []) {
       // Summed per block: `el.stats.total_points` is the gameweek's and would print whole against both of a double.
-      const points = (block.stats ?? []).reduce((total, stat) => total + (stat.points ?? 0), 0);
+      const points = sumOf(block.stats ?? [], (stat) => stat.points ?? 0);
       out.push(statsFor(el, block.fixture, valuesOf(block.stats), single, points));
     }
   }

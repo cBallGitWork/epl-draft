@@ -1,3 +1,4 @@
+import { sumOf } from "../../sum";
 import type {
   IntelClubPieces,
   IntelClubXi,
@@ -24,7 +25,7 @@ export function xiFault(club: IntelClubXi | undefined): string | null {
   if (starters.length !== ON_THE_PITCH) return `${starters.length} starters, not ${ON_THE_PITCH}`;
   if (!club.formation) return "no formation";
   if (club.slots === null) return `unknown formation ${club.formation}`;
-  const slots = Object.values(club.slots).reduce((total, n) => total + n, 0);
+  const slots = sumOf(Object.values(club.slots), (n) => n);
   if (slots !== ON_THE_PITCH) return `${club.formation} fills ${slots} places, not ${ON_THE_PITCH}`;
   return null;
 }
@@ -57,7 +58,7 @@ function outfieldShape(formation: string | null | undefined): number[] | null {
   if (!formation) return null;
   const parts = formation.split("-").map((part) => Number(part.trim()));
   if (parts.length < 2 || parts.some((n) => !Number.isInteger(n) || n < 1)) return null;
-  return parts.reduce((total, n) => total + n, 0) === ON_THE_PITCH - 1 ? parts : null;
+  return sumOf(parts, (n) => n) === ON_THE_PITCH - 1 ? parts : null;
 }
 
 /** One club's set-piece orders, biggest share first, pieces in the order asked; one nobody takes comes back empty. */

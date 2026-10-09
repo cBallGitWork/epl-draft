@@ -1,3 +1,4 @@
+import { sumOf } from "../../sum";
 import { optaMetrics } from "./map";
 import type { RawPlTeamStats } from "./rawStats";
 
@@ -42,7 +43,7 @@ export function plClubSeason(raw: RawPlTeamStats): PlClubSeason | null {
 
   const metric = optaMetrics(raw.stats);
   // Opta's names; a figure of two names is their sum.
-  const sum = (...names: string[]) => names.reduce((total, name) => total + metric(name), 0);
+  const sum = (...names: string[]) => sumOf(names, metric);
   return {
     clubCode,
     goals: sum("goals"),
