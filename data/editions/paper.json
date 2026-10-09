@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T18:57:04.213Z",
+  "updatedAt": "2026-10-09T21:17:57.629Z",
   "stories": [
     {
       "slug": "gw5-presser-2026-09-18",
@@ -7371,7 +7371,7 @@
       "leagueId": "mqsjd23smsgbiqzr",
       "period": 6,
       "gameweek": 6,
-      "filedAt": "2026-10-09T18:57:04.213Z",
+      "filedAt": "2026-10-09T21:17:57.629Z",
       "expiresAt": "2026-10-10T11:30:00Z",
       "leadsUntil": "2026-10-10T11:15:00.000Z",
       "edition": "The Form Guide",
@@ -7380,7 +7380,7 @@
       "deck": "Every club's expected starting eleven for the gameweek.",
       "body": "",
       "subjects": [
-        "predicted-xi:gw6:ce733cf2"
+        "predicted-xi:gw6:bda982d8"
       ],
       "image": null,
       "face": {
@@ -7531,11 +7531,11 @@
                   "position": "RB"
                 },
                 {
-                  "name": "Tyrone Mings",
+                  "name": "Victor Lindelöf",
                   "position": "CB"
                 },
                 {
-                  "name": "Victor Lindelöf",
+                  "name": "Pau",
                   "position": "CB"
                 },
                 {
@@ -7706,13 +7706,13 @@
                   "position": "RB"
                 },
                 {
-                  "name": "António Silva",
-                  "position": "CB"
-                },
-                {
                   "name": "James Hill",
                   "position": "CB",
                   "owner": "syjkob6cmuobagfu"
+                },
+                {
+                  "name": "António Silva",
+                  "position": "CB"
                 },
                 {
                   "name": "Adrien Truffert",
@@ -7933,17 +7933,17 @@
                   "position": "CB"
                 },
                 {
-                  "name": "Jair Cunha",
-                  "position": "CB"
-                },
-                {
                   "name": "Murillo",
                   "position": "CB"
                 },
                 {
-                  "name": "Daniel Muñoz",
+                  "name": "Jair Cunha",
+                  "position": "CB"
+                },
+                {
+                  "name": "Ola Aina",
                   "position": "RWB",
-                  "owner": "7z8fy0pnmuogbtdw"
+                  "owner": "qgucu9dgmufwva1x"
                 },
                 {
                   "name": "James McAtee",
