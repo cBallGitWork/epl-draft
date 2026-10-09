@@ -39,7 +39,7 @@ export interface ReportMan {
   /** This season including this match; null when a past gameweek could not be read. */
   goalsSeason: number | null;
   /** The league side that holds him, whether he was in its eleven, and where its head-to-head stands this period. */
-  holder: { team: string; fielded: boolean; round: number | null; h2h: { opponent: string; us: number | null; them: number | null } | null } | null;
+  holder: { team: string; fielded: boolean; round: number | null; h2h: { opponent: string; us: number | null; them: number | null; over: boolean } | null } | null;
   /** His league points for this match; null when the period holds two of his matches or none were priced. */
   points: number | null;
   /** The club's own word on his fitness, published after the match. */

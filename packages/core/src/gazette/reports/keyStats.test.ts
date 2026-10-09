@@ -12,8 +12,7 @@ describe("surname", () => {
 
 describe("keyStats", () => {
   it("sets Chances created as Most shots is set: the man, the count, then the bracket", () => {
-    const places = new Map([[6, 18], [7, 9]]);
-    const desks = deskDay({ day: "2026-09-19", gameweek: 5, matches: [spursVilla()], season: [fixture], clubs: [SPURS, VILLA], standing: { attack: places, defence: places } });
+    const desks = deskDay({ day: "2026-09-19", gameweek: 5, matches: [spursVilla()], season: [fixture], clubs: [SPURS, VILLA] });
     const [report] = reportsCargo(desks, { headline: "h", headlines: [], matches: new Map() });
     expect(report.keyStats.find((k) => k.label === "Chances created")?.value).toBe("Sávio 4, Robertson 4 (1 assist)");
   });
