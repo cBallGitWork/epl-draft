@@ -75,8 +75,8 @@ const DATE = new Intl.DateTimeFormat("en-GB", {
 /** A provider's ISO string in London, or the string itself when it is not a date: these run in
  *  render, and `Intl.format` throws on an invalid date. */
 function readable(iso: string, format: Intl.DateTimeFormat): string {
-  const at = new Date(iso);
-  return Number.isNaN(at.getTime()) ? iso : format.format(at);
+  const at = instantOf(iso);
+  return at === null ? iso : format.format(at);
 }
 
 /** `Saturday 10 October`. */

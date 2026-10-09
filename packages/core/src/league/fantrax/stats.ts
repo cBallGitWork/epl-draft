@@ -186,7 +186,7 @@ function latestSeason(seasons: readonly RawSeason[], timeframe: string): string 
 }
 
 /** A column by Fantrax's key for it; -1 where the header lacks it. */
-function keyed(header: readonly RawHeaderCell[], key: string): number {
+export function keyed(header: readonly { key?: string }[], key: string): number {
   return header.findIndex((cell) => cell.key === key);
 }
 

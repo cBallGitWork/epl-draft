@@ -1,4 +1,4 @@
-import { numeric } from "./stats";
+import { keyed, numeric } from "./stats";
 import { GOALS_AGAINST, GOALS_AGAINST_OUTFIELD } from "../categoryNames";
 
 // `getStandings` with `view: "SEASON_STATS"` → every team's season totals per category, in one cookieless request.
@@ -106,10 +106,10 @@ const SEASON_OFFSETS = { points: -2, value: 1 };
 
 /** Where FPts and the figure sit relative to the team cell, by the table's own header. */
 function offsets(table: RawStatTable): { points: number; value: number } {
-  const keys = (table.header?.cells ?? []).map((cell) => cell.key);
-  const team = keys.indexOf("team");
-  const points = keys.indexOf("fpts");
-  const value = keys.indexOf("pos");
+  const header = table.header?.cells ?? [];
+  const team = keyed(header, "team");
+  const points = keyed(header, "fpts");
+  const value = keyed(header, "pos");
   if (team === -1 || points === -1 || value === -1) return SEASON_OFFSETS;
   return { points: points - team, value: value - team };
 }

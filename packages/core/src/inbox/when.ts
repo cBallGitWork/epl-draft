@@ -1,6 +1,6 @@
 import { FANTRAX_TIMEZONE } from "../config";
 import { fantraxWall, hourOfDay, monthIndex } from "../league/fantrax/stamp";
-import { MS_PER_DAY, MS_PER_MINUTE, londonDayAndDate, londonTime, wallClockInstant } from "../time";
+import { MS_PER_DAY, MS_PER_MINUTE, instantOf, londonDayAndDate, londonTime, wallClockInstant } from "../time";
 
 // Fantrax stamps its business `"Wed Sep 2, 2026, 6:11AM"`, in US Eastern with no offset, and a pending trade
 // `"Oct 8, 11:53 AM BST"`, in the session's zone and named. Read as instants, they print in London like every other time.
@@ -24,8 +24,8 @@ export function proposedInstant(stamp: string, now: string): string | null {
   const [, month = "", day = "", hour = "", minute = "", meridiem = "", zone = ""] = parts;
   const index = monthIndex(month);
   const offset = STAMP_OFFSETS[zone.toUpperCase()];
-  const at = Date.parse(now);
-  if (index < 0 || offset === undefined || Number.isNaN(at)) return null;
+  const at = instantOf(now);
+  if (index < 0 || offset === undefined || at === null) return null;
   const inYear = (year: number) => Date.UTC(year, index, Number(day), hourOfDay(hour, meridiem), Number(minute)) - offset * MS_PER_MINUTE;
   const year = new Date(at).getUTCFullYear();
   // A proposal is never in the future: a stamp past `now`, a day's slack for the zones, is last year's.
