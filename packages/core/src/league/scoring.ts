@@ -1,5 +1,5 @@
-// What the commissioner set a category to be worth, read from `getLeagueInfo` and never assumed.
-// Fantrax's own points are what the app prints; these price only what the app works out itself.
+import { ASSISTS_FANTASY, ASSISTS_OFFICIAL, ASSISTS_TOTAL, CLEAN_SHEETS, GOALS } from "./categoryNames";
+// What the commissioner set a category to be worth, read from `getLeagueInfo`: priced only where the app sums its own.
 
 /** What a scoring category is called, in the league's own words: read, never written down, since leagues differ. */
 export interface ScoringCategory {
@@ -47,7 +47,7 @@ export interface LeagueScoring {
 }
 
 /** The clean-sheet category's short name in Fantrax's own scoring table. */
-export const CLEAN_SHEET = "CS";
+export const CLEAN_SHEET = CLEAN_SHEETS.short;
 
 /** The wire's fallback column, in its own spelling. */
 const DEFAULT_POSITION = "Default";
@@ -82,8 +82,8 @@ export function categoryPoints(rules: ScoringRules, category: string, position: 
   return typeof price === "number" ? price : null;
 }
 
-/** The categories a goal, an assist and a clean sheet arrive under; a league prices only its own (`AT`, or `A` and `AF`). */
-const ATTACKING = ["G", "AT", "A", "AF"];
+/** The categories a goal and an assist arrive under; a league prices only its own (`AT`, or `A` and `AF`). */
+const ATTACKING = [GOALS, ASSISTS_TOTAL, ASSISTS_OFFICIAL, ASSISTS_FANTASY].map((category) => category.short);
 
 /** What his goals and assists, and his clean sheet, were worth to him; a category the league does not price adds nothing. */
 export function returnPoints(
