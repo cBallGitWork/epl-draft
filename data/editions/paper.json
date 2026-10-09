@@ -1,66 +1,6 @@
 {
-  "updatedAt": "2026-10-08T20:24:33.059Z",
+  "updatedAt": "2026-10-09T15:40:04.739Z",
   "stories": [
-    {
-      "slug": "news-cmrr48zqz1jno",
-      "kind": "news",
-      "leagueId": "w05aib75mtj36y1g",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-22T22:11:13.737Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "Ballard of a Busy Autumn for test31",
-      "deck": "test31's Ballard talks up Northern Ireland's four-game Nations League run",
-      "body": "test31's Ballard is talking up Northern Ireland's Nations League block, four matches at short notice, and by his own account a squad with \"a lot of talent and hunger\". That is a defender happy to be involved, which is more minutes and more exposure over a compressed international window.\n\nWhat it does to test31 is unstated. The wire gives no fitness line and no risk, only that the schedule is heavy. For now he is a defender in demand for his country and nothing more can be read into it.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/cmrr48zqz1jno"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "news-cgjq1x0wj7qo",
-      "kind": "news",
-      "leagueId": "w05aib75mtj36y1g",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-22T08:32:15.993Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "Egan the Hull of the Matter for test1",
-      "deck": "test1's John Egan the subject of a BBC feature on his return to the Premier League with Hull City",
-      "body": "The wire has John Egan back in the top flight with Hull City, and back in Heimir Hallgrimsson's Ireland set-up with it. For everyone else it reads as a nice career note. For test1 it is a name on the sheet climbing back into games that count.\n\nWhat it does for the return is another matter, and the copy does not say. A defender in a promoted side is a defender in a promoted side. test1 have the ownership; they wait on the minutes.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/articles/cgjq1x0wj7qo"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "news-c3qjkpgengn7o",
-      "kind": "news",
-      "leagueId": "w05aib75mtj36y1g",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-21T17:10:18.731Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "testf Left Waiting on a Certificate Check",
-      "deck": "Xhaka, owned by testf, under investigation over his Covid-19 vaccination certificate; no line on availability.",
-      "body": "The wire has Granit Xhaka under investigation over an issue with his Covid-19 vaccination certificate. He is testf's, and that is the whole of the draft stake: the league leaders in points scored have a captain in the headlines for something no one has yet attached a timescale to.\n\nWhat it costs testf, nobody can say. The report offers no ban, no missed fixture, no line on availability. Until it does, Xhaka is a name in an investigation and not a name out of a line-up, and testf plan around him as before.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/c3qjkpgengn7o"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
     {
       "slug": "gw5-presser-2026-09-18",
       "kind": "presser",
@@ -1994,146 +1934,6 @@
           ]
         }
       }
-    },
-    {
-      "slug": "news-c6kg0gkjngzmo",
-      "kind": "news",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-10-01T14:40:57.237Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "O'Reilly Called Off For test3331",
-      "deck": "O'Reilly, owned by test3331, withdraws injured from the England squad for the final two Nations League fixtures.",
-      "body": "O'Reilly has pulled out of the England squad for England's last two Nations League games of the break, injured. For test3331 it is the second fitness flag on the asset in a week, the doubt against the Czech Republic now hardened into a withdrawal.\n\nNo timeline came with it, and none is invented here. What is known is that he does not feature for the rest of the international window, and test3331 waits on what comes back.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/c6kg0gkjngzmo"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "news-cm89j90gv57vo",
-      "kind": "news",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-10-01T14:11:30.928Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "Thomas Meets A Second Hull Bend",
-      "deck": "Sorba Thomas, owned by test3331, in a crash near Hull's training ground, the second such incident",
-      "body": "A second Hull City player has crashed near the training ground, and for this league the name that matters is Sorba Thomas, who belongs to test3331. The first involved Lucas Gourna-Douath; this one, test3331's man.\n\nWhat it costs the squad is not yet known. No injury has been flagged and no absence confirmed, so test3331 is left with the same asset and a reason to watch the next team sheet closely.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/news/articles/cm89j90gv57vo"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "news-c3ew9vv7444xo",
-      "kind": "news",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-30T20:22:17.275Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "123's Continental Drift",
-      "deck": "Europe circles 123's Haaland and Schade; Foden draws interest, hitting test4",
-      "body": "The gossip pages do 123 no favours this morning. Haaland and Schade both sit on his roster, and both feature in the same wave of interest from Europe's top clubs. Liverpool are named as suitors for Schade; Haaland is folded into the wider run on City's forwards. Nothing is signed, nothing is dated, and neither man is going anywhere this window on the strength of a Thursday column.\n\ntest4 has his own reason to read on. Foden is named among the City players drawing looks from the continent. As with the rest, it is interest and nothing firmer, no fee, no timeline, no departure. The assets stay where they are for now, but two of the league's cornerstones have Europe's eyes on them.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/c3ew9vv7444xo"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "news-cr1e5ep101wdo",
-      "kind": "news",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-30T19:39:51.636Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "Tuchel Rates Thomas Priceless, test3331 Nods Along",
-      "deck": "Tuchel calls Kane irreplaceable; test3331 owns the England captain in this league.",
-      "body": "Thomas Tuchel has called Harry Kane irreplaceable, the England manager conceding another captain of his kind cannot be found. For test3331, none of that is abstract. The name over the byline is the name on his sheet.\n\nNothing here moves a line-up or a return. It is a manager rating the asset test3331 already holds, and the verdict is the one every owner wants read aloud. What it is worth on a Saturday is a separate matter, and the wire does not touch it.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/cr1e5ep101wdo"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "news-ckge43e8nqdwo",
-      "kind": "news",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-30T18:25:07.967Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "123 Get The Haaland Reassurance",
-      "deck": "Norway say Haaland, owned by 123, is unbothered by the Man City verdict",
-      "body": "The noise around City reached Norway, and Haaland's colleagues there report a man untouched by it. For 123 that is the only line that matters. The cornerstone of the squad plays on, a City verdict overhead and a striker who, by every account around the camp, has not so much as blinked at it.\n\nWhat it does to 123's returns is unwritten. The Wales fixture comes first, the asset is fit and present, and the headlines stay headlines. Nothing here moves him.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/ckge43e8nqdwo"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "news-p0pd5x19",
-      "kind": "news",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-30T17:19:08.694Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "Maguire In The Dock For test3",
-      "deck": "test3's Maguire caught up in the Man City verdict fallout; no draft consequence stated.",
-      "body": "The wire has Kieran Maguire, owned by test3, fielding listener questions on the Man City verdict alongside Dale Johnson. That is the sum of it: a name test3 holds, attached to the story the whole league already knows.\n\nNothing in the copy touches minutes, fitness or return. test3 reads it as we do and takes nothing from it beyond the reminder that the asset is his.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sounds/play/p0pd5x19"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "news-ckq5xp9p1v31o",
-      "kind": "news",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-30T17:19:08.694Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "Hall And Dewsbury-Hall Hit The Books",
-      "deck": "Hall (test2) and Dewsbury-Hall (Notemail) are studying to be sporting directors alongside playing.",
-      "body": "test2 and Notemail own two men filing coursework from the team bus. Hall, on test2's books, and Dewsbury-Hall, on Notemail's, feature among the Premier League players reading for the sporting director trade while they play.\n\nNothing in the wire touches availability, and neither should this. No absence, no timeline, no minutes lost. Both remain what they were to their managers, only now they carry a textbook on the away trips.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/ckq5xp9p1v31o"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
     },
     {
       "slug": "gw5-prem-report-2026-09-20",
@@ -6378,206 +6178,6 @@
       }
     },
     {
-      "slug": "news-c68048pynj94o",
-      "kind": "news",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-29T17:11:29.492Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "Palmer Called A Victim, test1 Left Watching",
-      "deck": "PFA chief Molango calls Palmer a victim of a sick schedule; the player is test1's asset, no timeline given.",
-      "body": "PFA chief executive Maheta Molango has called Cole Palmer a \"victim\" of a \"sick\" schedule that asks too much of players. Palmer is test1's, and words of that weight from that office are not the kind test1 ignores over morning coffee.\n\nNothing in the wire names a match missed or a spell out. So the alarm is the register, not a date: no timeline, no absence flagged, only a warning that the load is heavier than the men carrying it. test1 watches and waits with the rest.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/c68048pynj94o"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "news-cked73ppgql3o",
-      "kind": "news",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-28T21:37:10.943Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "Norwegian Would, If City Went Down",
-      "deck": "Transfer gossip drags 123's Haaland into relegation talk; City would not sell cheap.",
-      "body": "The gossip columns circle Erling Haaland, and it is 123 who reads them closest. City, the wire has it, would not part with him on the cheap were relegation to come to pass. That is a long chain of conditionals, but every link runs through 123's forward line.\n\nNothing is confirmed and no move is on the table. The cornerstone of the league's heaviest attack stays a City player, under a cloud faint enough that only the owner is squinting at it.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/cked73ppgql3o"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "news-cj62eyx9grzxo",
-      "kind": "news",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-28T17:12:18.444Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "O'Reilly Leaves test3331 In Doubt",
-      "deck": "test3331's O'Reilly a doubt for England against the Czech Republic on Tuesday",
-      "body": "Another of test3331's men joins the international worry list. Nico O'Reilly is a doubt for England's Nations League tie with the Czech Republic on Tuesday, and for test3331 that is one more asset whose Tuesday is now a question rather than a certainty.\n\nNo timeline is attached and none is claimed. He is a doubt, not ruled out, and that is where the matter rests until England name a side. For test3331, watching Thomas and McBurnie already framed around the same fixture, the Czech Republic has become the night his squad turns on.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/cj62eyx9grzxo"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "news-c6vgy934nvq4o",
-      "kind": "news",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-28T17:12:18.444Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "Bellamy Braces For The Norse Menace",
-      "deck": "Bellamy says Wales belong in Nations League A but expects Norway and Haaland to threaten for years; Haaland is 123's asset.",
-      "body": "Craig Bellamy has made his peace with Norway as a coming force, Haaland the point of the spear, and that is 123's concern before it is Wales's. The cornerstone of the league's top-scoring side keeps drawing eyes, this time from a manager reckoning with him rather than for him.\n\nNothing here changes an ownership or a fixture. Haaland remains 123's, fit enough to loom over an international week, and the only fresh detail is the respect a rival coach is paying him. For this league, that is confirmation, not news.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/c6vgy934nvq4o"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "news-cm74kp52d3xko",
-      "kind": "news",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-28T08:42:27.494Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "123 Left To Sweat On Haaland's Future",
-      "deck": "City uncertainty puts 123's Haaland in the transfer gossip as Barcelona eye Estevao",
-      "body": "The gossip column names 123's most valuable asset, and it names him in the wrong context. Erling Haaland, the forward 123 holds, is drawn into the uncertainty at City in Monday's wire, the sort of paragraph an owner reads twice and then reads again.\n\nNothing is confirmed and nothing is imminent. The copy monitors interest, no more, and no timeline attaches to any of it. For 123 the material fact is unchanged: Haaland remains his player and remains in the line-up until something firmer than a gossip column says otherwise.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/cm74kp52d3xko"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "news-cm0qxknzpn8jo",
-      "kind": "news",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-28T08:42:27.494Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "Gakpo Cut Short, test211 In The Dark",
-      "deck": "Cody Gakpo, owned by test211, hurt on international duty; no timeline given.",
-      "body": "Add Cody Gakpo to the international break's casualty list, and add test211 to the managers left waiting on it. His Nations League involvement was curtailed by injury, alongside Bruno Fernandes and Patrick Dorgu, and that is as far as the wire will take us.\n\nWhat it costs test211, and for how long, nobody has said. No return date has been put on Gakpo. Until one is, test211 plans a Gameweek 6 line-up around a forward whose fitness is another country's business.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/cm0qxknzpn8jo"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "news-ckeq8vq7rwe7o",
-      "kind": "news",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-25T14:21:15.715Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "Gabriel Takes A New Testament",
-      "deck": "BBC reports the rise of schoolboy transfers; JJ Gabriel, owned by test31121, is among the assets in play.",
-      "body": "The trade in academy footballers is the wire's subject this week, and it lands on one desk in this league. JJ Gabriel, an asset test31121 holds, sits inside the story the BBC has been telling about how the top of the English game now moves its youngest players.\n\nWhat that means for the footballer, and for test31121's hold on him, the copy does not say. Gabriel is named; a length of absence, a destination, a return date, none of it is on the wire. What is known is that he is in the frame and that test31121 owns him. The rest is for another edition.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/ckeq8vq7rwe7o"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "news-c6eq8eygy4e5o",
-      "kind": "news",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-24T20:38:51.610Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "Scott Free No Longer For test3331",
-      "deck": "Chelsea lead the race for Bournemouth's Alex Scott, owned by test3331",
-      "body": "Chelsea are said to lead the chase for Alex Scott, and the name matters here because Scott is test3331's. Bournemouth are the sellers in the gossip column; nothing is settled, and a move to Chelsea would not itself change the squad he plays for.\n\nWhat it flags for test3331 is the shape of an asset whose minutes and role could shift under a bigger club. For now Scott stays where he is, and the interest is noted rather than acted upon.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/c6eq8eygy4e5o"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "news-cmwyzjedq51lo",
-      "kind": "news",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-24T07:30:21.865Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "Trafford Buys Nothing But A Slice Of Nothing",
-      "deck": "United sell pitch cubes at £125 as debt tops £1bn; test2's Trafford unaffected on the pitch.",
-      "body": "United are cutting the ground into squares and asking £125 a piece for them, the same day the club confirmed a debt still north of a billion. None of it lands on test2's team sheet, where the only Trafford that concerns him is the one on the roster and the one worth points.\n\nThat name aside, this is a story with no draft consequence: no minutes lost, no return threatened, nothing that touches a scoreline. test2 reads the wire like the rest of us and moves on, his forwards a more pressing matter than a plot of turf.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/cmwyzjedq51lo"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "news-c6qjk1122e9jo",
-      "kind": "news",
-      "leagueId": "zbn1z3ukmsgb36sz",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-24T07:30:21.865Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "McBurnie Recalled, test3331 Recouped",
-      "deck": "Oli McBurnie back in the Scotland fold, a lift for test3331's forward stock; Clarke, the man who left him out, belongs to test211.",
-      "body": "test3331 owns McBurnie, and the forward is back in Scotland's reckoning after being overlooked and written off. He returns with something to prove, which for this league means minutes and the goals that follow them.\n\nThe man who left him out, Steve Clarke, sits on test211's books. Two managers on either side of the same selection call. Nothing here is settled, and nothing on the pitch has happened yet.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/c6qjk1122e9jo"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
       "slug": "gw6-predicted-xi",
       "kind": "predicted-xi",
       "leagueId": "zbn1z3ukmsgb36sz",
@@ -7761,6 +7361,452 @@
               ]
             },
             "kickoff": "2026-10-10T14:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "gw6-presser-2026-10-09",
+      "kind": "presser",
+      "leagueId": "mqsjd23smsgbiqzr",
+      "period": 6,
+      "gameweek": 6,
+      "filedAt": "2026-10-09T15:40:04.739Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Team Sheet",
+      "headline": "Friday Pressers",
+      "deck": "Nobel Mendy back in contention for Hull City",
+      "body": "Nobel Mendy is back in contention for Hull City, and that is all that was said about him. No complaint was named and no manager was attached to the update, so whether he starts is left open.",
+      "subjects": [
+        "presser:gw6:2026-10-09"
+      ],
+      "image": null,
+      "face": {
+        "code": 606930,
+        "name": "Nobel Mendy",
+        "clubId": 11,
+        "position": null
+      },
+      "ties": [],
+      "extras": {
+        "teamNews": [
+          {
+            "club": "Arsenal",
+            "code": 3,
+            "line": "William Saliba and Christos Tzolis stay sidelined, with no manager attached to the update.",
+            "men": [
+              {
+                "name": "Cristhian Mosquera",
+                "status": "FIT",
+                "note": "muscle"
+              },
+              {
+                "name": "Benjamin White",
+                "owner": "Hazza Maguazza's Redempshazza",
+                "status": "FIT",
+                "note": "groin"
+              },
+              {
+                "name": "Piero Hincapié",
+                "status": "FIT",
+                "note": "muscle"
+              }
+            ],
+            "stillOut": [
+              {
+                "name": "Christos Tzolis"
+              },
+              {
+                "name": "William Saliba",
+                "owner": "If anyone can, Bannan can"
+              }
+            ],
+            "fixture": {
+              "opponent": "Leeds United",
+              "home": true,
+              "kickoff": "2026-10-10T11:30:00Z"
+            }
+          },
+          {
+            "club": "Tottenham Hotspur",
+            "code": 6,
+            "line": "Pedro Porro and the rest of the sidelined five gain no fresh word before the deadline.",
+            "stillOut": [
+              {
+                "name": "Pedro Porro",
+                "owner": "domeitalycoach"
+              },
+              {
+                "name": "Mykhailo Mudryk"
+              },
+              {
+                "name": "Xavi"
+              },
+              {
+                "name": "Wilson Odobert"
+              },
+              {
+                "name": "Dejan Kulusevski"
+              }
+            ],
+            "fixture": {
+              "opponent": "Manchester United",
+              "home": false,
+              "kickoff": "2026-10-10T16:30:00Z"
+            }
+          },
+          {
+            "club": "Nottingham Forest",
+            "code": 17,
+            "line": "Nicolò Savona remains out, and no manager put his name to the news.",
+            "men": [
+              {
+                "name": "Igor Jesus",
+                "status": "OUT",
+                "note": "calf"
+              },
+              {
+                "name": "Nikola Milenković",
+                "status": "FIT",
+                "note": ""
+              }
+            ],
+            "stillOut": [
+              {
+                "name": "Nicolò Savona"
+              }
+            ],
+            "fixture": {
+              "opponent": "Crystal Palace",
+              "home": false,
+              "kickoff": "2026-10-11T13:00:00Z"
+            }
+          },
+          {
+            "club": "Aston Villa",
+            "code": 7,
+            "line": "Unai Emery had one return to report and no change on the absentees.",
+            "men": [
+              {
+                "name": "Leon Goretzka",
+                "status": "FIT",
+                "note": "knee"
+              }
+            ],
+            "stillOut": [
+              {
+                "name": "Amadou Onana"
+              },
+              {
+                "name": "Ian Maatsen"
+              },
+              {
+                "name": "Brian Madjo"
+              },
+              {
+                "name": "Marco Bizot"
+              }
+            ],
+            "fixture": {
+              "opponent": "Brentford",
+              "home": true,
+              "kickoff": "2026-10-10T14:00:00Z"
+            }
+          },
+          {
+            "club": "Hull City",
+            "code": 88,
+            "line": "Jack Butland heads six men still unavailable, with no manager named on the returns.",
+            "men": [
+              {
+                "name": "Brooke Norton-Cuffy",
+                "status": "FIT",
+                "note": "hamstring"
+              },
+              {
+                "name": "Tim Iroegbunam",
+                "status": "FIT",
+                "note": "groin"
+              },
+              {
+                "name": "Hidemasa Morita",
+                "status": "FIT",
+                "note": "adductor"
+              },
+              {
+                "name": "Nobel Mendy",
+                "status": "FIT",
+                "note": ""
+              }
+            ],
+            "stillOut": [
+              {
+                "name": "Jack Butland"
+              },
+              {
+                "name": "Matt Targett"
+              },
+              {
+                "name": "Ilyas Ansah"
+              },
+              {
+                "name": "Darko Gyabi"
+              },
+              {
+                "name": "Eliot Matazo"
+              },
+              {
+                "name": "Charlie Hughes"
+              }
+            ],
+            "fixture": {
+              "opponent": "Everton",
+              "home": true,
+              "kickoff": "2026-10-11T13:00:00Z"
+            }
+          },
+          {
+            "club": "Ipswich Town",
+            "code": 40,
+            "line": "Abdul Fatawu is still the lone absentee, with nothing added.",
+            "stillOut": [
+              {
+                "name": "Abdul Fatawu"
+              }
+            ],
+            "fixture": {
+              "opponent": "Fulham",
+              "home": true,
+              "kickoff": "2026-10-10T14:00:00Z"
+            }
+          },
+          {
+            "club": "Chelsea",
+            "code": 8,
+            "line": "Joao Pedro, Cole Palmer and Reece James are all declared available.",
+            "stillOut": [
+              {
+                "name": "Gittens"
+              }
+            ],
+            "quote": {
+              "text": "For the next block of games to the next international games, we have five Premier League games and and hopefully they will be available as long [as possible], but for tomorrow they will be good.",
+              "said": "Xabi Alonso"
+            },
+            "fixture": {
+              "opponent": "AFC Bournemouth",
+              "home": true,
+              "kickoff": "2026-10-10T14:00:00Z"
+            }
+          },
+          {
+            "club": "Liverpool",
+            "code": 14,
+            "line": "Jeremy Jacquet is passed fit, with a training session still to come.",
+            "stillOut": [
+              {
+                "name": "Cody Gakpo",
+                "owner": "Hazza Maguazza's Redempshazza"
+              },
+              {
+                "name": "Alexander Isak",
+                "owner": "GlengarryHearts"
+              }
+            ],
+            "quote": {
+              "text": "He’s fit. He’s ready to go.",
+              "said": "Andoni Iraola"
+            },
+            "fixture": {
+              "opponent": "Manchester City",
+              "home": true,
+              "kickoff": "2026-10-11T15:30:00Z"
+            }
+          },
+          {
+            "club": "Manchester United",
+            "code": 1,
+            "line": "No new name joins the four already sidelined, and no return is close for one of them.",
+            "stillOut": [
+              {
+                "name": "Benjamin Sesko",
+                "owner": "Hazza Maguazza's Redempshazza"
+              },
+              {
+                "name": "Patrick Dorgu",
+                "owner": "domeitalycoach"
+              },
+              {
+                "name": "Amad",
+                "owner": "Hazza Maguazza's Redempshazza"
+              },
+              {
+                "name": "Manuel Ugarte"
+              }
+            ],
+            "quote": {
+              "text": "Ben is further away, with the issue he has got. He won’t be ready.",
+              "said": "Michael Carrick"
+            },
+            "fixture": {
+              "opponent": "Tottenham Hotspur",
+              "home": true,
+              "kickoff": "2026-10-10T16:30:00Z"
+            }
+          },
+          {
+            "club": "Everton",
+            "code": 11,
+            "line": "No player was mentioned, either as a return or an absence.",
+            "fixture": {
+              "opponent": "Hull City",
+              "home": false,
+              "kickoff": "2026-10-11T13:00:00Z"
+            }
+          },
+          {
+            "club": "Brentford",
+            "code": 94,
+            "line": "Keith Andrews struck an upbeat note without adding to the five already out.",
+            "stillOut": [
+              {
+                "name": "Sepp van den Berg"
+              },
+              {
+                "name": "Nathan Collins"
+              },
+              {
+                "name": "Mathias Jensen"
+              },
+              {
+                "name": "Antoni Milambo"
+              },
+              {
+                "name": "Josh Dasilva"
+              }
+            ],
+            "fixture": {
+              "opponent": "Aston Villa",
+              "home": false,
+              "kickoff": "2026-10-10T14:00:00Z"
+            }
+          },
+          {
+            "club": "Crystal Palace",
+            "code": 31,
+            "line": "Pierre Sage welcomed three back, with Chadi Riad and Axel Disasi still missing.",
+            "men": [
+              {
+                "name": "Dean Henderson",
+                "status": "FIT",
+                "note": "ankle"
+              },
+              {
+                "name": "Jean-Philippe Mateta",
+                "owner": "If anyone can, Bannan can",
+                "status": "FIT",
+                "note": "hamstring"
+              },
+              {
+                "name": "Takehiro Tomiyasu",
+                "status": "FIT",
+                "note": "calf"
+              }
+            ],
+            "stillOut": [
+              {
+                "name": "Chadi Riad"
+              },
+              {
+                "name": "Axel Disasi"
+              }
+            ],
+            "fixture": {
+              "opponent": "Nottingham Forest",
+              "home": true,
+              "kickoff": "2026-10-11T13:00:00Z"
+            }
+          },
+          {
+            "club": "Manchester City",
+            "code": 43,
+            "line": "Enzo Maresca reported Erling Haaland ready after a few days off, with Phil Foden still out.",
+            "stillOut": [
+              {
+                "name": "Phil Foden",
+                "owner": "AtleticoTimHortons"
+              }
+            ],
+            "fixture": {
+              "opponent": "Liverpool",
+              "home": false,
+              "kickoff": "2026-10-11T15:30:00Z"
+            }
+          },
+          {
+            "club": "Fulham",
+            "code": 54,
+            "line": "Alvaro Arbeloa had one return to announce, Tom Cairney still unavailable.",
+            "men": [
+              {
+                "name": "Kenny Tete",
+                "status": "FIT",
+                "note": ""
+              }
+            ],
+            "stillOut": [
+              {
+                "name": "Tom Cairney"
+              }
+            ],
+            "fixture": {
+              "opponent": "Ipswich Town",
+              "home": false,
+              "kickoff": "2026-10-10T14:00:00Z"
+            }
+          },
+          {
+            "club": "Brighton & Hove Albion",
+            "code": 36,
+            "line": "Fabian Hurzeler gained one forward option back while seven stay sidelined.",
+            "men": [
+              {
+                "name": "Charalampos Kostoulas",
+                "owner": "The Truffle Pigs",
+                "status": "FIT",
+                "note": ""
+              }
+            ],
+            "stillOut": [
+              {
+                "name": "Evan Ferguson"
+              },
+              {
+                "name": "Yankuba Minteh",
+                "owner": "AtleticoTimHortons"
+              },
+              {
+                "name": "Mats Wieffer"
+              },
+              {
+                "name": "Mitoma"
+              },
+              {
+                "name": "Stefanos Tzimas"
+              },
+              {
+                "name": "Femi Azeez"
+              },
+              {
+                "name": "Yasin Ayari"
+              }
+            ],
+            "fixture": {
+              "opponent": "Sunderland",
+              "home": false,
+              "kickoff": "2026-10-10T14:00:00Z"
+            }
           }
         ]
       }
