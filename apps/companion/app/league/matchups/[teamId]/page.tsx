@@ -3,7 +3,7 @@ import {
   type LeagueTeam,
   bandCategories,
   clubById,
-  roundStarted,
+  gameweekStarted,
   headToHead,
   nextPairedPeriod,
   openingGameweek,
@@ -70,9 +70,9 @@ export default async function HeadToHeadPage({
   // `settled`: true at all three finished rungs, and only `data_checked` licenses "final".
   const played = state !== null && state !== "live";
 
-  // A round nobody has kicked off is two squad lists (Craig, 11 Sep 2026). `roundStarted`, not `roundState`, which is
-  // null between two Saturday kickoffs too.
-  const started = roundStarted(squads.snapshot, squads.snapshot.gameweek);
+  // A round nobody has kicked off is two squad lists (Craig, 11 Sep 2026). `gameweekStarted`, not `roundState`, which
+  // is null between two Saturday kickoffs too.
+  const started = gameweekStarted(squads.snapshot.fixtures, squads.snapshot.gameweek);
 
   const rostered = new Map(squads.period.teams.map((team) => [team.teamId, team]));
   const named = rostered.get(teamId);
