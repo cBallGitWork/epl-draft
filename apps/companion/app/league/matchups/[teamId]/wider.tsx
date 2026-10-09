@@ -2,7 +2,7 @@ import ScrollBoard from "../../../components/league/ScrollBoard";
 import type { ReactNode } from "react";
 import { seasonForm, sortRows, londonDayAndTime, ordinal, playerName, printedPlaces, DASH } from "@epl/core";
 import type { Club, Fixture, LineupDetail, RosteredTeam } from "@epl/core";
-import { fixtureInvolvement, leagueTable as realTable } from "@epl/core";
+import { fixtureInvolvement } from "@epl/core";
 import { teamColours } from "@/app/teamColours";
 import { seasonFixtures } from "../../../football";
 import ScoreRow from "../../../components/shell/ScoreRow";
@@ -16,6 +16,7 @@ import { leagueInfo, readCalendar } from "../../../round";
 import Nothing from "../../../components/shell/Nothing";
 import { BOARD, PANEL } from "@/app/desk";
 import { matchHref } from "../../../prem/match/[id]/matchRoutes";
+import { clubPlaces } from "../../../prem/places";
 
 // The two boards that place this tie rather than explain it: the league it sits in, and the football it is
 // being played out in.
@@ -86,9 +87,7 @@ export async function FixturesTab({
 }) {
   const clubs = new Map(snapshotClubs.map((club) => [club.id, club]));
   // A club's place in the real table, for each row's blue blocks, as the Live tab sets them.
-  const places = new Map(
-    realTable(await seasonFixtures(), snapshotClubs).map((row, at) => [row.clubId, at + 1]),
-  );
+  const places = clubPlaces(await seasonFixtures(), snapshotClubs);
   const involved = sides.map(({ roster }) => (roster === undefined ? new Map() : fixtureInvolvement(roster, fixtures)));
   const ours = byKickoff(fixtures.filter((f) => involved.some((byFixture) => (byFixture.get(f.id) ?? []).length > 0)));
 
