@@ -35,7 +35,7 @@ export function dueFrom(day: string, from: { hour: number; minute?: number }, lo
   return today > day || (today === day && minutes >= from.hour * 60 + (from.minute ?? 0));
 }
 
-/** Whether the predicted elevens are due: a Friday lock's from 17:30 that day, any other from 20:00 the evening before. */
+/** Whether the predicted elevens are due: a Friday lock's from 17:30 that day, any other from 18:00 the evening before. */
 export function lineupsDue(locksAt: string, now: string): boolean {
   const lockDay = londonDayOf(locksAt);
   if (lockDay === null) return false;

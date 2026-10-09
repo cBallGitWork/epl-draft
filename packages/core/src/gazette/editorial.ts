@@ -19,8 +19,8 @@ export const NEWSROOM = {
 export const MOST_THREADS = 3;
 
 /** The predicted elevens, London time (Craig, 9 Oct 2026): a Friday lock's from 17:30 that day; any other lock's from
- *  20:00 the evening before, late enough for Scout's elevens to catch Friday's conferences. */
-export const PREDICTED_XI = { lockDay: { hour: 17, minute: 30 }, eveBefore: { hour: 20 } } as const;
+ *  18:00 the evening before, after Friday's conferences. */
+export const PREDICTED_XI = { lockDay: { hour: 17, minute: 30 }, eveBefore: { hour: 18 } } as const;
 
 /** The Team Sheet: a column per press-conference day until the lock, from 16:30 London that day once the Mac's import
  *  has merged (Thursday 16:00, Friday 15:45), and Thursday's from 18:00 (Craig, 8 Oct 2026). */
