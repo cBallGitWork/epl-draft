@@ -50,7 +50,6 @@ describe("mapPastSeasons", () => {
           yellow_cards: 0,
           red_cards: 0,
           saves: 0,
-          bonus: 0,
         },
       ],
     };

@@ -22,6 +22,13 @@ describe("slimSummary", () => {
     expect(slim).not.toHaveProperty("fixtures");
     expect(Object.keys((slim.history as object[])[0])).not.toContain("influence");
   });
+
+  it("drops FPL's bonus and BPS, which no mapper has read since the player pages stopped printing them", () => {
+    const slim = slimSummary(saka as unknown as RawElementSummary) as unknown as Record<string, object[]>;
+    expect(Object.keys(slim.history[0])).not.toContain("bonus");
+    expect(Object.keys(slim.history[0])).not.toContain("bps");
+    expect(Object.keys(slim.history_past[0])).not.toContain("bonus");
+  });
 });
 
 describe("historyOf", () => {
