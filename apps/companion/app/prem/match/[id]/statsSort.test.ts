@@ -54,4 +54,9 @@ describe("sorted", () => {
   it("sinks a man with no figure in both directions", () => {
     expect(sorted(rows, "Pts", false).map((row) => row.name)).toEqual(["a", "c", "b", "sat"]);
   });
+
+  it("reads a man FPL has no figures for as no clean sheet reading, not as none kept", () => {
+    const kept = { ...man("kept", 1), stats: { cleanSheet: false } as PlayerMatchStats };
+    expect(sorted([man("unread", null), kept], "CS", false).map((row) => row.name)).toEqual(["kept", "unread"]);
+  });
 });

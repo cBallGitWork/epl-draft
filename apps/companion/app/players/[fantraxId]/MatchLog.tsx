@@ -90,7 +90,7 @@ export default function MatchLog({ rows }: { rows: readonly MatchRow[] }) {
           <tbody>
             {rows.map((row) => (
               <tr key={`${row.fpl.match.gameweek}-${row.fpl.match.fixtureId}`} className={ROW_HOVER_ON_SURFACE}>
-                <IndexCell className={PINNED_TILE}>{row.fpl.match.gameweek ?? DASH}</IndexCell>
+                <IndexCell className={PINNED_TILE}>{row.fpl.match.gameweek}</IndexCell>
                 <td className={`${PINNED_BESIDE_INDEX} px-1.5`}>
                   <span className="flex items-center gap-1.5 whitespace-nowrap">
                     {row.fpl.opponent ? <ClubLabel club={row.fpl.opponent} /> : DASH}

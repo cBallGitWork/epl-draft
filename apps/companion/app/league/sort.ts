@@ -7,5 +7,7 @@ import { LEAGUE } from "./routes";
 export function sortHref(key: SortKey, current: SortKey, descending: boolean): string {
   const next = key === current ? !descending : defaultDescending(key);
   if (key === "rank" && next === false) return LEAGUE;
-  return `${LEAGUE}?sort=${key}${next ? "&dir=desc" : ""}`;
+  // A bare query reads as the column's own way, so a flip against it has to say so.
+  const dir = next ? "&dir=desc" : defaultDescending(key) ? "&dir=asc" : "";
+  return `${LEAGUE}?sort=${key}${dir}`;
 }

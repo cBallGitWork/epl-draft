@@ -7,12 +7,11 @@ import { totalsOf } from "./matchRows";
 import { IndexCell } from "../../components/league/TableCells";
 import { DASH, fixed, thousands } from "@epl/core";
 import { RATING_TITLE } from "../../ratings";
-import Absent from "@/app/components/shell/Absent";
 
 // What the season adds up to, on CM's appearances table (`cm9900/11.jpg`, Craig, 4 Sep 2026). One row, League, because
 // FPL publishes one competition; CM's columns with no source are left off for what we do measure.
 
-const whole = (value: number | null) => (value === null ? <Absent /> : String(value));
+const whole = (value: number) => String(value);
 
 export default function SeasonTable({
   rows,
