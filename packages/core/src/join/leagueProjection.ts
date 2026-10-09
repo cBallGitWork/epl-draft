@@ -14,6 +14,7 @@ import {
 } from "../league/categoryNames";
 import { defConScored } from "../league/defcon";
 import { categoryPoints, pointsFor, type LeagueScoring, type ScoringRules } from "../league/scoring";
+import { sumOf } from "../sum";
 
 // The sister model's FPL-point projection repriced at one of our slots: FPL's parts turned back into counts at FPL's
 // prices, then priced by the league's rules. Bonus goes; DefCon and a keeper's work come from his own matches in ours.
@@ -82,8 +83,8 @@ export function leagueWeek(
   const sheets = FPL_CLEAN_SHEET[line]
     ? fpl("cleanSheets") / FPL_CLEAN_SHEET[line]
     : (cleanSheet ?? 0) * (week.start ?? 0) * week.fixtures;
-  const negatives = week.points - PROJECTION_PARTS.reduce((sum, part) => sum + fpl(part), 0);
-  const ours = (conceded: number) => codes.conceded.reduce((sum, code) => sum + (pointsFor(rules, code, slot, conceded) ?? 0), 0);
+  const negatives = week.points - sumOf(PROJECTION_PARTS, fpl);
+  const ours = (conceded: number) => sumOf(codes.conceded, (code) => pointsFor(rules, code, slot, conceded) ?? 0);
   const shift = cleanSheet === null ? 0 : expectedOver(cleanSheet, ours) - expectedOver(cleanSheet, (n) => fplConceded(line, n));
   const parts = {
     goals: FPL_GOAL[line] ? (fpl("goals") / FPL_GOAL[line]) * flat(codes.goals) : 0,
@@ -94,7 +95,7 @@ export function leagueWeek(
     defcon: rates.defcon * ninety,
     keeper: rates.keeper * ninety,
   };
-  return { gw: week.gw, points: LEAGUE_PROJECTION_PARTS.reduce((sum, part) => sum + parts[part], 0), parts };
+  return { gw: week.gw, points: sumOf(LEAGUE_PROJECTION_PARTS, (part) => parts[part]), parts };
 }
 
 /** The most goals a match is costed out to; past it the chance is negligible. */
@@ -151,7 +152,7 @@ export function observedAt(rules: ScoringRules, codes: readonly string[], slot: 
   let minutes = 0;
   for (const match of matches) {
     if (match.minutes <= 0 || codes.some((code) => match.counts[code] == null)) continue;
-    points += codes.reduce((sum, code) => sum + (pointsFor(rules, code, slot, match.counts[code] ?? 0) ?? 0), 0);
+    points += sumOf(codes, (code) => pointsFor(rules, code, slot, match.counts[code] ?? 0) ?? 0);
     minutes += match.minutes;
   }
   return { points, minutes };
@@ -159,8 +160,8 @@ export function observedAt(rules: ScoringRules, codes: readonly string[], slot: 
 
 /** A cohort's points per 90; nought when nobody in it played. */
 export function cohortRate(cohort: readonly Observed[]): number {
-  const minutes = cohort.reduce((sum, one) => sum + one.minutes, 0);
-  return minutes === 0 ? 0 : (90 * cohort.reduce((sum, one) => sum + one.points, 0)) / minutes;
+  const minutes = sumOf(cohort, (one) => one.minutes);
+  return minutes === 0 ? 0 : (90 * sumOf(cohort, (one) => one.points)) / minutes;
 }
 
 /** His points per 90, drawn toward `prior` as if he had also played `weight` minutes at it. */

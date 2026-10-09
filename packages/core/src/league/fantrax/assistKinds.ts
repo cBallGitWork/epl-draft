@@ -1,3 +1,4 @@
+import { sumOf } from "../../sum";
 import type { PlayerStatLine } from "./playerStats";
 
 // Fantrax's typed fantasy-assist columns, which a league's pool read carries only when its scoring lists them.
@@ -23,7 +24,7 @@ export function mapAssistKinds(
   lines: readonly PlayerStatLine[],
 ): { fantraxId: string; kinds: FantraxAssistKinds }[] {
   return lines.flatMap((line) => {
-    const sum = (columns: readonly string[]) => columns.reduce((total, c) => total + (line.stats[c] ?? 0), 0);
+    const sum = (columns: readonly string[]) => sumOf(columns, (column) => line.stats[column] ?? 0);
     const kinds: FantraxAssistKinds = {
       penaltyWon: sum(COLUMNS.penaltyWon),
       ownGoalForced: sum(COLUMNS.ownGoalForced),

@@ -2,6 +2,7 @@
 // what the league does not score, then read off one table. Pure; the scale lives in `weights.ts`.
 
 import { rounded } from "../../format";
+import { sumOf } from "../../sum";
 import type { PartName, RatingWeights } from "./weights";
 
 /** One man's match. League figures arrive as plain numbers so neither layer is imported here. */
@@ -68,7 +69,7 @@ export function rateMatch(match: RatedMatch, w: RatingWeights): MatchRating {
   }
   const happened = w.ratedAnyway.some((stat) => (stats[stat] ?? 0) > 0);
   const rated = points != null && (match.minutes >= w.minMinutes || happened);
-  const adjusted = rated ? parts.reduce((sum, p) => sum + (p.points ?? 0), 0) : null;
+  const adjusted = rated ? sumOf(parts, (p) => p.points ?? 0) : null;
   const e = match.expected;
   return {
     rating: adjusted == null ? null : rounded(markFor(adjusted, w.marks), 1),
