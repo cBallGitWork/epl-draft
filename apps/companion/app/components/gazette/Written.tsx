@@ -5,6 +5,7 @@ import ColumnistPhoto from "./ColumnistPhoto";
 import { columnistOf } from "@/app/config";
 import Paragraphs from "./Paragraphs";
 import Dateline from "./Dateline";
+import Share from "./Share";
 import { named } from "./named";
 import StoryHead, { KICKER } from "./StoryHead";
 import { CAPTION_CAPS } from "./heads";
@@ -34,7 +35,7 @@ export default function Written({
   const footballers = (story.extras?.teamNews ?? []).flatMap((row) => (row.men ?? []).map((man) => man.name));
   const portrait = intro && story.face !== undefined && story.face !== null && clubs !== undefined;
 
-  // The head: kicker, headline, deck, rule, dateline; a columnist's banner, as the BBC ran his, carries his credit.
+  // The head: kicker, headline, deck, rule, dateline and share; a columnist's banner, as the BBC ran his, carries his credit.
   const head = (
     // A reading measure on a desk: a deck run across the whole sheet is one line too long to read.
     <div className="flex min-w-0 max-w-[42rem] flex-col">
@@ -44,7 +45,10 @@ export default function Written({
         </p>
       ) : null}
       <StoryHead headline={story.headline} standfirst={story.deck} rank="article" />
-      <Dateline story={story} turn={false} byline={columnist === null} className="pt-2.5" />
+      <div className="flex items-baseline justify-between gap-3 pt-2.5">
+        <Dateline story={story} turn={false} byline={columnist === null} />
+        <Share slug={story.slug} headline={story.headline} />
+      </div>
       {columnist !== null ? (
         <div className="mt-3 flex items-center justify-between gap-3 bg-raised pl-3 @xl:pl-4">
           <p className="flex flex-col gap-0.5 font-sans uppercase">

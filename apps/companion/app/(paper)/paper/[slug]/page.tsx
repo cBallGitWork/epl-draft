@@ -8,6 +8,7 @@ import Extras from "../../../components/gazette/Extras";
 import Folio from "../../../components/gazette/Folio";
 import { named } from "../../../components/gazette/named";
 import Written from "../../../components/gazette/Written";
+import { articleMetadata } from "../../../components/gazette/shareLink";
 
 // One story, printed whole, off the uncomposed `filed`: a story the front page has dropped keeps its address.
 // The archive is not read, so a slug that falls off `paper.json` 404s.
@@ -27,13 +28,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const story = find((await params).slug);
   if (story === null) return { title: "Not in this edition" };
-  // The deck, never the punning headline; the picture is `opengraph-image.tsx`.
-  return {
-    title: story.headline,
-    description: story.deck,
-    openGraph: { type: "article", title: story.headline, description: story.deck },
-    twitter: { card: "summary_large_image", title: story.headline, description: story.deck },
-  };
+  return articleMetadata(story, process.env.VERCEL_PROJECT_PRODUCTION_URL);
 }
 
 export default async function StoryPage({ params }: { params: Promise<{ slug: string }> }) {

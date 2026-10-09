@@ -146,6 +146,14 @@ business, and when lineups lock.
    kicker, headline, deck, dateline; a pictured man prints under that head on a
    phone and in a column beside it on a desk.
 
+   **The dateline carries the article's Share**, a word at its right in the
+   standing head's capitals (Craig, 9 Oct 2026: *"add a share link to these
+   articles"*). `gazette/Share` opens the phone's own share sheet with the
+   headline and the address, else copies the address and reads "Link copied"
+   for two seconds. A shared link previews off `shareLink.articleMetadata`:
+   headline, deck, the production domain's address, and `opengraph-image.tsx`'s
+   card with the story's picture.
+
    **One name per story, one name per level** (Craig, 9 Oct 2026: *"clean up the
    ui"*). A Team Sheet printed "Team news" as a page title, "The Team Sheet" as its
    kicker and again in its dateline, over the headline "Friday Pressers". The
@@ -615,7 +623,7 @@ appended second ink loses on stylesheet order.
 | `RULE` | `gazette/rules.ts` | a faint rule's colour, `--paper-rule`; the caller names the side | 10 |
 | `HAIRLINES` | `gazette/rules.ts` | the faint hairline between a list's rows: `divide-y` alone rules them in each row's own ink | 7 |
 | `STANDING_CAPS` | `gazette/heads.ts` | `3xs` semibold tracked capitals, no ink: a standing head, the masthead's and folio's dateline rows | 5 (and `(paper)/not-found` writes it out) |
-| `STANDING_HEAD` | `gazette/heads.ts` | `STANDING_CAPS` in muted ink: a label over a list, a panel or a line of figures | 15 |
+| `STANDING_HEAD` | `gazette/heads.ts` | `STANDING_CAPS` in muted ink: a label over a list, a panel or a line of figures; an article's Share | 16 |
 | `KICKER_CAPS` | `gazette/heads.ts` | the same capitals in bold, no ink: a card's standing head | 3 |
 | `QUIET_CAPS` | `gazette/heads.ts` | the same at the body's weight in faint ink: a dateline, who is left to play | 3 |
 | `CAPTION_CAPS` | `gazette/heads.ts` | a caption's capitals, `2xs` and `tracking-widest`, no weight and no ink | 8 (3 inked by the caller) |
