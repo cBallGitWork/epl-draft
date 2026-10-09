@@ -13,11 +13,11 @@ import {
 /** Echoes quoted back per match: past three, a rewrite is told the pattern, not drowned in it. */
 const ECHOES_QUOTED = 3;
 
-/** Everything sent back wherever it appears. SEQUENCE is lifted: this desk is handed the order of the match. No ground is. */
-export const REPORT_NEVER: readonly string[] = [
+/** Everything sent back wherever it appears, each phrase once. SEQUENCE is lifted: this desk is handed the order of the match. No ground is. */
+export const REPORT_NEVER: readonly string[] = [...new Set([
   ...REGISTER, ...FILLER, ...GROUNDS, ...REPORT_GROUNDS, ...DESK_BANNED, ...REPORT_CLICHES, ...REPORT_SHOTS, ...REPORT_VERDICTS, ...REPORT_CROWD,
   ...REPORT_TELLS, ...REPORT_DEPTH_CHART,
-];
+])];
 
 const SOURCE = /%|\bper ?cent\b|\b(?:projected|projections?|predicted|predictions?|model|Fantrax|according to)\b/iu;
 const CLOCK = /\b\d{1,3}(?:\+\d{1,2})?['’](?!s\b)|\b\d{2}\+\d{1,2}\b/u;

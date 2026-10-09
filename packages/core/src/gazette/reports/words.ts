@@ -139,7 +139,7 @@ export const REPORT_CAPPED_DAY: readonly (readonly [phrase: string, most: number
 
 /** Calling a man anything but his name. */
 export const REPORT_NOT_HIS_NAME =
-  /\b[Tt]he (?:\d+-year-old|youngster|veteran|summer signing|loanee|former [\p{L} ]{2,30} man|(?:Dutch|French|Engl|Irish|Welsh|Scots)man|Dane|Swede|Pole|Scot|Swiss|Czech|Serb|Croat|Spaniard|Norwegian|Brazilian|Argentine|Argentinian|Portuguese|German|Belgian|Italian|Ghanaian|Nigerian|Senegalese|Ivorian|Moroccan|Egyptian|Japanese|Korean|Uruguayan|Colombian|Austrian|Ukrainian|Hungarian|Slovakian|Slovenian|Albanian|Cameroonian|Malian|Jamaican|American|Canadian|Australian)\b/u;
+  /\b[Tt]he (?:\d+-year-old|youngster|veteran|summer signing|loanee|former [\p{L} ]{2,30} man|(?:Dutch|French|English|Irish|Welsh|Scots)man|Dane|Swede|Pole|Scot|Swiss|Czech|Serb|Croat|Spaniard|Norwegian|Brazilian|Argentine|Argentinian|Portuguese|German|Belgian|Italian|Ghanaian|Nigerian|Senegalese|Ivorian|Moroccan|Egyptian|Japanese|Korean|Uruguayan|Colombian|Austrian|Ukrainian|Hungarian|Slovakian|Slovenian|Albanian|Cameroonian|Malian|Jamaican|American|Canadian|Australian)\b/u;
 
 /** The sub-editor's pencil: slips with one right answer are corrected, not sent back. */
 export const REPORT_PENCIL: readonly (readonly [wrong: RegExp, right: string])[] = [

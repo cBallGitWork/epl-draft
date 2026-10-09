@@ -3,6 +3,7 @@ import { capital } from "../../format";
 import { escapeRegExp } from "../../regExp";
 import { recordOrEmpty, stringOrEmpty } from "../../untrusted";
 import { pencil } from "../predictions/checks";
+import { wordCount } from "../predictions/prose";
 import { numeral } from "./minutes";
 import { REPORT_PENCIL } from "./words";
 
@@ -35,13 +36,16 @@ export interface ReportsDraft {
 /** House corrections with one right answer. */
 export function correct(prose: string): string {
   const fixed = REPORT_PENCIL.reduce((out, [wrong, right]) => out.replace(wrong, right), pencil(prose));
-  // One to nine are words outside a score or a formation: "for 5 points" is "for five points".
-  return fixed.replace(/(?<![\d-])\b([1-9]) (points?|goals?|shots?|saves?|assists?|chances?|minutes?|matches|games|changes)\b/gu, (_, n: string, noun: string) => `${numeral(Number(n))} ${noun}`);
+  // One to nine are words outside a score, a formation or a decimal: "for 5 points" is "for five points".
+  return fixed.replace(/(?<![\d.,-])\b([1-9]) (points?|goals?|shots?|saves?|assists?|chances?|minutes?|matches|games|changes)\b/gu, (_, n: string, noun: string) => `${numeral(Number(n))} ${noun}`);
 }
+
+/** The most words a section's head may run to. */
+export const HEAD_WORDS = 4;
 
 /** A head that breaks the rules twice prints as the man it is about: his surname, named first in the section's football. */
 export function plainHead(head: string, pitch: string, surnames: readonly string[], never: (text: string) => boolean): string {
-  const clean = head !== "" && head.split(/\s+/u).length <= 5 && !never(head) && surnames.some((name) => head.includes(name));
+  const clean = head !== "" && wordCount(head) <= HEAD_WORDS && !never(head) && surnames.some((name) => head.includes(name));
   if (clean) return head;
   const named = surnames
     .map((name) => ({ name, at: pitch.indexOf(name) }))
