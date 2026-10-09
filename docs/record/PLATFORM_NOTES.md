@@ -486,6 +486,20 @@ Retired 1 Oct and deleted 9 Oct 2026 with the other weekly kinds; kept as the re
 - **Open: the rehearsal league's GW5 results carry no auto-subs.** test2 finished on 34 with Millar blank and Meunier's
   3 on the bench; test4 beat test3 26-24, where the order by points would make it 28-33 to test3. So the deadline's
   ordering did not run for GW5 in this league. The proof prints Fantrax's score beside the substituted one.
+- **So the order by points is ours to write** (Craig, 9 Oct: "if the bench is null, assign by Fantrax points"; "it's
+  an automated script"). `npm run bench-order` (`scripts/bench-order.ts`) writes it with `setAutoSubsOrder` and the
+  commissioner's session, once per deadline, five minutes before our computed lock (`BENCH_ORDER_LEAD_MINUTES`), from
+  a daily 07:00 launchd job that waits for a lock before 08:00 the next day (`scripts/bench-order.sh`). It touches
+  only a bench with no number on it: a manager's numbers, even on part of his bench, are left alone, so a second run
+  reads its own write as numbered and sends nothing. A dry run unless `--write`. A reserve with no FPts reading goes
+  last. It never writes at or after the lock (adminMode would override it) and re-reads the lock after its wait;
+  a lock that passed, a read that failed or a write Fantrax refused (a stale cookie) exits 1 and reports
+  `bench-order fail` to `alert.yml`.
+- **Numbers are per period** (probed 9 Oct, real league, read-only): six teams had numbered period 6, and each one's
+  period 7 read `{}`. So a write does not carry into the next week, and the job starts afresh at each deadline. The
+  public read (no cookie) returns the same map.
+- A manager who swaps a reserve into his eleven in the five minutes after the write leaves a stale number on that
+  man and none on the reserve who replaced him. What Fantrax does with that bench is not probed.
 
 ## Opta's commentary describes every shot, and says what VAR decided — probed 28 Sep 2026
 
@@ -5139,7 +5153,8 @@ Craig asked for a Save button on the planner and chose a real write over a save 
   rolls. Our lock (first kickoff less `LINEUP_LOCK_LEAD_MINUTES`) matched its 7:15 AM EDT on 10 Oct.
 - **Every write is a dry run first**; only a `CONFIRM` with no illegal message is executed. The bench order is
   a second write, `setAutoSubsOrder`, sent only when the manager reordered the bench or Fantrax already numbers
-  it (`benchToWrite`): an unnumbered bench is left to the deadline's points order, which the planner shows.
+  it (`benchToWrite`): an unnumbered bench is left to the deadline's points order, which the planner shows and
+  `npm run bench-order` writes five minutes before the lock.
 - **No save while `REPLAY_AT` is set**: the replayed clock plans a week long locked, and `adminMode` would write it.
 - **No save over a newer Fantrax lineup** (Craig, 8 Oct: "should be checking beforehand to see if its upto date"): the
   page sends what it loaded as Fantrax's, and `stillHeld` refuses the save when Fantrax's lineup or the manager's bench
