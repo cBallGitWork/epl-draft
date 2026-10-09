@@ -2,7 +2,7 @@
 // scroll on a phone, the grass and the bench may not. A withheld squad draws no pitch, and the run says so.
 //   node tools/ui/pitchfit.mjs [--team-cookie <file>]
 
-import { DESK, PHONE, connect, parseArgs, teamCookie } from "./cdp.mjs";
+import { DESK, PHONE, connect, discover, parseArgs, teamCookie } from "./cdp.mjs";
 
 /** The reference phone, and the two desk sizes either side of the `lg` where the season grid moves beside the board. */
 const SIZES = [
@@ -53,21 +53,14 @@ const teams = JSON.parse(
 if (teams.length === 0) throw new Error("no squads on /squad — is the league drafted?");
 
 // The club pitch: a predicted eleven on the same grass and the same fold.
-await cdp.open("/prem", 2200);
-const club = await cdp.js(
-  `(document.querySelector('a[href^="/prem/club/"]')||{}).getAttribute
-     ? document.querySelector('a[href^="/prem/club/"]').getAttribute("href") : ""`,
-);
+const club = await discover(cdp, "/prem", 'a[href^="/prem/club/"]');
 if (club) teams.push(club);
 
 // `/fpl`, the one pitch with no column beside it; without the `fpl` cookie it is a form and reports "no pitch".
 teams.push("/fpl");
 
 // The head-to-head board, the reference page for the grass (DESIGN §9), discovered off the matchups board.
-await cdp.open("/league/matchups", 2500);
-const tie = await cdp.js(
-  `(function(a){return a?a.getAttribute("href"):""})(document.querySelector('a[href^="/league/matchups/"]'))`,
-);
+const tie = await discover(cdp, "/league/matchups", 'a[href^="/league/matchups/"]', 2500);
 if (tie) teams.push(tie);
 
 let failures = 0;

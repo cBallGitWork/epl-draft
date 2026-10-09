@@ -71,11 +71,7 @@ await cdp.setViewport(PHONE.width, DESK.height);
 const team = await discover(cdp, "/squad", 'a[href^="/squad/"]');
 if (team) ROUTES.push(team, ...["transfers", "next", "fixtures", "stats"].map((tab) => `${team}/${tab}`));
 
-await cdp.open(FRONT_PAGE, 2200);
-const article = await cdp.js(
-  `(document.querySelector('a[href^="/paper/"]')||{}).getAttribute
-     ? document.querySelector('a[href^="/paper/"]').getAttribute("href") : ""`,
-);
+const article = await discover(cdp, FRONT_PAGE, 'a[href^="/paper/"]');
 if (article) ROUTES.push(article);
 
 const club = await discover(cdp, "/prem", 'a[href^="/prem/club/"]');
