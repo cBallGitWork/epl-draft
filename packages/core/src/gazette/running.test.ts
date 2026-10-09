@@ -14,28 +14,28 @@ function filed(order: readonly string[], cap: number, refuses: (kind: string) =>
 
 /** A finished gameweek, in the order the newsdesk emits it. */
 const ROUND = [
-  "tie-report:avb",
-  "eleven",
-  "power-ranking",
-  "dodgers",
+  "draft-report:gw5",
+  "bin-xi",
+  "predictions",
+  "sheets",
   "match-report:MUNvARS",
   "match-report:LIVvEVE",
 ];
 
 /** Two kinds that refuse every firing. */
-const wedged = (kind: string) => kind === "eleven" || kind === "dodgers";
+const wedged = (kind: string) => kind === "bin-xi" || kind === "sheets";
 
 describe("the running order", () => {
   it("fills the cap with stories rather than with refusals", () => {
-    // Slicing the order to the cap first would give [report, eleven], then [eleven, dodgers] for ever.
-    expect(filed(ROUND, 2, wedged)).toEqual(["tie-report:avb", "power-ranking"]);
+    // Slicing the order to the cap first would give [report, bin-xi], then [bin-xi, sheets] for ever.
+    expect(filed(ROUND, 2, wedged)).toEqual(["draft-report:gw5", "predictions"]);
   });
 
   it("reaches the match reports queued behind the columns", () => {
     const got = filed(ROUND, 10, wedged);
     expect(got).toContain("match-report:MUNvARS");
     expect(got).toContain("match-report:LIVvEVE");
-    expect(got).not.toContain("eleven");
+    expect(got).not.toContain("bin-xi");
     // Everything in the order except the two wedged kinds.
     expect(got).toHaveLength(ROUND.length - 2);
   });

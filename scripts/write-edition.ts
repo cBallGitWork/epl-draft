@@ -124,7 +124,12 @@ async function main(): Promise<void> {
   if (process.env.GAZETTA_QUEUE) return say(assignments.map((a) => a.key).join("\n"));
   if (assignments.length === 0) return say("Nothing new to report.");
 
-  const ctx = await deskContext({ snapshot, facts, clubs, byCode, info, period: round.period, gameweeks: round.gameweeks, ledger, sheet, xi, season, kickoffs, assignments, now, say });
+  const { ctx, lost } = await deskContext({ snapshot, facts, clubs, byCode, info, period: round.period, gameweeks: round.gameweeks, ledger, sheet, xi, season, kickoffs, assignments, now, say });
+  // The other desks still file; the job ends red so `alert:` opens, and the lost kinds' keys wait for the next firing.
+  if (lost.length > 0) {
+    console.error(`Lost the reads of ${lost.length} desk(s): ${lost.join(", ")}.`);
+    process.exitCode = 1;
+  }
 
   const { filings, failed } = await fire(assignments, ledger, {
     cap: STORY_CAP,

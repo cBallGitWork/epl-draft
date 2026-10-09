@@ -8,7 +8,6 @@ import type { Assignment, PublishedStory } from "@epl/core";
 export const CARGO: Partial<Record<Assignment["kind"], "ranks" | "teamNews" | "sheets" | "reports" | "draft">> = {
   "match-report": "reports",
   "draft-report": "draft",
-  "power-ranking": "ranks",
   "season-rankings": "ranks",
   // The Team Sheet IS its rows; the body only introduces them.
   presser: "teamNews",

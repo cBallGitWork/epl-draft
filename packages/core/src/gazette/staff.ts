@@ -9,12 +9,9 @@ const PAPER_CORRESPONDENT = "Hendry Wimter";
 /** Each staff writer and his beat. Lawro's predictions are not here: his column carries his own name, stamped at filing. */
 const STAFF: readonly (readonly [writer: string, beat: readonly StoryKind[]])[] = [
   ["Phill McLunty", ["match-report"]],
-  ["Danial Talyor", ["tie-report", "tie-call", "fixture-preview", "draft-report"]],
-  ["Garf Crookes", ["eleven", "bin-xi"]],
-  ["Martyn Masuel", ["power-ranking"]],
-  ["Donny Kaber", ["dodgers"]],
-  ["Fabrizzio Morano", ["wire"]],
-  ["Davide Onrstein", ["news", "presser", "sheets", "predicted-xi"]],
+  ["Danial Talyor", ["draft-report"]],
+  ["Garf Crookes", ["bin-xi"]],
+  ["Davide Onrstein", ["presser", "sheets", "predicted-xi"]],
 ];
 
 /** The staff writer each kind runs under. */

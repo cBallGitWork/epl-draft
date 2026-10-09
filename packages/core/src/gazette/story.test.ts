@@ -6,7 +6,7 @@ const LEAGUE = "zbn1z3ukmsgb36sz";
 
 const story = (over: Partial<PublishedStory> = {}): PublishedStory => ({
   slug: "gw3-report",
-  kind: "tie-report",
+  kind: "match-report",
   leagueId: LEAGUE,
   period: 3,
   gameweek: 3,
@@ -17,7 +17,7 @@ const story = (over: Partial<PublishedStory> = {}): PublishedStory => ({
   headline: "Something clever",
   deck: "Something plain.",
   body: "A paragraph.\n\nAnother.",
-  subjects: ["tie-report:p3:a-v-b"],
+  subjects: ["match-report:gw3:2026-08-30"],
   image: null,
   face: null,
   ties: [],
@@ -34,6 +34,8 @@ describe("normalizeStory", () => {
     // payload was written with a model's help, so the schema is a request.
     expect(normalizeStory({ ...story(), slug: "" })).toBeNull();
     expect(normalizeStory({ ...story(), kind: "editorial-cartoon" })).toBeNull();
+    // A kind the paper retired on 1 Oct 2026, as the archive still holds it.
+    expect(normalizeStory({ ...story(), kind: "tie-report" })).toBeNull();
     expect(normalizeStory({ ...story(), leagueId: "" })).toBeNull();
     expect(normalizeStory({ ...story(), period: "3" })).toBeNull();
     expect(normalizeStory({ ...story(), headline: "" })).toBeNull();
@@ -45,7 +47,7 @@ describe("normalizeStory", () => {
 
   it("coerces the optional cargo and preserves absence as absence", () => {
     const survived = normalizeStory({
-      slug: "s", kind: "news", leagueId: LEAGUE, period: 3, gameweek: 3,
+      slug: "s", kind: "presser", leagueId: LEAGUE, period: 3, gameweek: 3,
       headline: "H", filedAt: "2026-08-31T09:00:00.000Z",
     });
     expect(survived).not.toBeNull();
@@ -63,37 +65,30 @@ describe("normalizeStory", () => {
       .toEqual({ src: "/paper/gw3.webp", alt: "The rout" });
   });
 
-  it("dedupes a power ranking's rows but never the quiz", () => {
+  it("dedupes a power ranking's rows", () => {
     const survived = normalizeStory(
       story({
-        kind: "power-ranking",
+        kind: "season-rankings",
         extras: {
           ranks: [
-            { teamId: "a", move: 1, line: "Up." },
-            { teamId: "a", move: -1, line: "Down." },
-          ],
-          quiz: [
-            { q: "Who?", a: "Him." },
-            { q: "Who?", a: "Him again." },
+            { teamId: "a", line: "Up." },
+            { teamId: "a", line: "Down." },
           ],
         },
       }),
     );
     // One rank per team — a model listing a side twice is a retry, not a view.
     expect(survived?.extras?.ranks).toHaveLength(1);
-    // Two identical questions are a bad quiz, not a collision; the page keys
-    // quiz rows by position.
-    expect(survived?.extras?.quiz).toHaveLength(2);
   });
 
-  it("keeps a rank with no movement, which a first power ranking has none of, and refuses one that is not a number", () => {
+  it("keeps a rank's team and line, and nothing a writer added beside them", () => {
     const survived = normalizeStory(
       story({
         kind: "season-rankings",
-        extras: { ranks: [{ teamId: "a", line: "Top." }, { teamId: "b", move: "up" as unknown as number, line: "Second." }, { teamId: "c", move: 0, line: "Third." }] },
+        extras: { ranks: [{ teamId: "a", line: "Top." }, { teamId: "b", move: 1, line: "Second." } as never, { teamId: "", line: "Nobody." }] },
       }),
     );
-    expect(survived?.extras?.ranks).toEqual([{ teamId: "a", line: "Top." }, { teamId: "c", move: 0, line: "Third." }]);
+    expect(survived?.extras?.ranks).toEqual([{ teamId: "a", line: "Top." }, { teamId: "b", line: "Second." }]);
   });
 
   it("keeps the editor's moves on the record, each with the place the code gave it", () => {

@@ -7,10 +7,10 @@ export const STANDING_CAPS = "font-sans text-3xs font-semibold uppercase trackin
 /** The paper's standing head: a label over a list, a panel or a line of figures, in small tracked capitals and muted ink. */
 export const STANDING_HEAD = `${STANDING_CAPS} text-muted`;
 
-/** A kicker's capitals off its chip, bold and with no ink: a card's standing head, the quiz's. */
+/** A kicker's capitals off its chip, bold and with no ink: a card's standing head. */
 export const KICKER_CAPS = "font-sans text-3xs font-bold uppercase tracking-[0.16em]";
 
-/** A line to read past, at the body's weight in faint ink: a dateline, who is left to play, the quiz's answers. */
+/** A line to read past, at the body's weight in faint ink: a dateline, who is left to play. */
 export const QUIET_CAPS = "font-sans text-3xs uppercase tracking-[0.16em] text-faint";
 
 /** A caption's small capitals, a step up from the standing head's and tracked wider, with no ink, for a caller that

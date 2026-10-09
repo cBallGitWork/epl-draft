@@ -101,13 +101,15 @@ function nominees(match: ReportMatchInput, events: readonly MatchEvent[], counts
   // Said once a report for each tie, so neither side's men repeat it.
   const told = new Set<string>();
   const h2h = (m: Held) => {
-    const h = m.holder.h2h;
     const team = m.holder.team;
-    if (h === null || h.us === null || h.them === null || told.has(team) || told.has(h.opponent)) return "";
-    told.add(team).add(h.opponent);
-    const [ahead, behind, high, low] = h.us >= h.them ? [team, h.opponent, h.us, h.them] : [h.opponent, team, h.them, h.us];
-    const said = high > low ? `${ahead} ${h.over ? "beat" : "leads"} ${behind}` : `${team} and ${h.opponent} ${h.over ? "drew" : "are level at"}`;
-    return `; in their head-to-head this gameweek, ${said} ${high}-${low}`;
+    const said = m.holder.h2h.flatMap((h) => {
+      const tie = [team, h.opponent].sort().join("\u0000");
+      if (h.us === null || h.them === null || told.has(tie)) return [];
+      told.add(tie);
+      const [ahead, behind, high, low] = h.us >= h.them ? [team, h.opponent, h.us, h.them] : [h.opponent, team, h.them, h.us];
+      return [`${high > low ? `${ahead} ${h.over ? "beat" : "leads"} ${behind}` : `${team} and ${h.opponent} ${h.over ? "drew" : "are level at"}`} ${high}-${low}`];
+    });
+    return said.length === 0 ? "" : `; in their ${plural(said.length, "head-to-head")} this gameweek, ${said.join(" and ")}`;
   };
   const out: Nominee[] = [];
   const add = (m: ReportMan, stake: string) => {

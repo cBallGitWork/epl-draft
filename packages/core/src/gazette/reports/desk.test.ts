@@ -45,7 +45,7 @@ describe("own goals in the briefs", () => {
 });
 
 describe("the head-to-head stake", () => {
-  const held = (team: string, opponent: string, us: number, them: number, over: boolean) => ({ team, fielded: true, round: null, h2h: { opponent, us, them, over } });
+  const held = (team: string, opponent: string, us: number, them: number, over: boolean) => ({ team, fielded: true, round: null, h2h: [{ opponent, us, them, over }] });
   const stakes = (over: boolean) => {
     const holders = new Map([
       [codeOf("Buendía"), held("Notemail", "test2", 38, 34, over)],
@@ -63,5 +63,13 @@ describe("the head-to-head stake", () => {
 
   it("is told in the past once the gameweek is over", () => {
     expect(stakes(true)).toEqual(["Notemail has him, 7 points; in their head-to-head this gameweek, Notemail beat test2 38-34"]);
+  });
+
+  it("names both ties of a double header", () => {
+    const both = { team: "Notemail", fielded: true, round: null, h2h: [{ opponent: "test2", us: 38, them: 34, over: false }, { opponent: "test3", us: 38, them: 40, over: false }] };
+    const [made] = deskDay({ day: "2026-09-19", gameweek: 5, matches: [spursVilla({ holders: new Map([[codeOf("Buendía"), both]]), points: new Map([[codeOf("Buendía"), 7]]) })], season: [fixture], clubs: [SPURS, VILLA] });
+    expect(made.nominees.map((n) => n.stake).filter((s) => s.includes("head-to-head"))).toEqual([
+      "Notemail has him, 7 points; in their head-to-heads this gameweek, Notemail leads test2 38-34 and test3 leads Notemail 40-38",
+    ]);
   });
 });

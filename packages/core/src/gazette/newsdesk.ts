@@ -3,7 +3,6 @@ import { PREDICTED_XI, TEAM_SHEET } from "../config";
 import { dueBeforeLock, dueFrom, predictionsDue } from "./predictions/due";
 import { weekdayOfDay } from "../time";
 import type { StoryKind } from "./story";
-import type { TieState } from "./tieState";
 
 // What is due this firing: whatever is new since its covered-key was spent, so a re-fired cron files nothing.
 // The paper files seven weekly kinds: match and draft reports, Bin XI, the Team Sheet, the elevens, the draft sheets at
@@ -15,21 +14,12 @@ export interface Assignment {
   key: string;
   /** The story's slug — addressable, ours, never the model's. */
   slug: string;
-  /** Join handle back to the round's fixtures, this session only. */
-  fixtureId?: number;
-  tie?: { homeTeamId: string; awayTeamId: string };
   /** The London day a match-day report, a draft report or a Team Sheet is about. */
   day?: string;
   /** A draft report's cut-off: after Saturday's matches, or the end of the gameweek. */
   cutoff?: "saturday" | "gameweek";
   /** The round a look-ahead story is about, which between rounds is not FPL's current one. */
   round?: { period: number; gameweek: number };
-}
-
-interface DeskTie {
-  homeTeamId: string;
-  awayTeamId: string;
-  state: TieState;
 }
 
 export interface DeskState {
@@ -40,7 +30,7 @@ export interface DeskState {
   /** The round's lineup deadline has passed, so every sheet in it is fixed and may be printed. */
   locked: boolean;
   /** The period's pairings; none is a period the league has no fixtures in, which has no round to write up. */
-  ties: readonly DeskTie[];
+  ties: readonly { homeTeamId: string; awayTeamId: string }[];
   /** The London days of the round ahead's press conferences; empty until the export lands. */
   pressers: readonly string[];
   /** The predicted elevens, when the export holds the round ahead; keyed by the caller. */

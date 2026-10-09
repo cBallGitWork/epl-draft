@@ -3,11 +3,9 @@ import {
   textOrNull,
   type Assignment,
   type Club,
-  type Dodger,
   type FootballSnapshot,
   type LeagueInfo,
   type PublishedStory,
-  type StandingsRow,
   type StoryFixture,
   type PresserLine,
   type PresserQuote,
@@ -34,12 +32,9 @@ export interface DeskContext {
   leagueId: string;
   snapshot: FootballSnapshot;
   facts: DeskFacts;
-  clubs: Map<number, Club>;
   /** The league's running storylines, for every scoped brief's memory block. */
   threads: readonly StoryThread[];
   info: LeagueInfo;
-  /** Fantrax's table, for the rankings to argue with. */
-  table: readonly StandingsRow[];
   period: number;
   /** The round ahead as Lawro may know it; null unless his column is due this firing. */
   predictions: PredictionsDesk | null;
@@ -65,8 +60,6 @@ export interface DeskContext {
   presserSpoke: { clubName: string; manager: string | null; at: string }[];
   /** The predicted elevens, composed from facts with no voice and no brief; null when not this firing's. */
   elevens: Record<string, unknown> | null;
-  /** The gameweek's near misses by the league's men; null unless the Points Dodgers are due this firing. */
-  dodgers: readonly Dodger[] | null;
 }
 
 /** One edition of the Team Sheet — the day's conferences, and nothing else.
@@ -83,8 +76,6 @@ export function edition(ctx: DeskContext, assignment: Assignment) {
  *  DAY, or the picture and the lead are chosen from the whole week. */
 export function faceCtx(ctx: DeskContext, assignment: Assignment): FaceContext {
   return {
-    facts: ctx.facts,
-    fixtures: ctx.snapshot.fixtures,
     presserLines: assignment.kind === "presser" ? edition(ctx, assignment).lines : ctx.presserLines,
     players: ctx.snapshot.players,
     drafts: ctx.drafts,
@@ -120,13 +111,8 @@ export function file(
     period: assignment.round?.period ?? ctx.period,
     gameweek: assignment.round?.gameweek ?? ctx.snapshot.gameweek,
     filedAt,
-    // A preview piece dies at its kickoff; everything else leaves by supersession or the cap.
-    expiresAt:
-      assignment.kind === "fixture-preview"
-        ? (ctx.snapshot.fixtures.find((each) => each.id === assignment.fixtureId)?.kickoff ?? null)
-        : assignment.kind === "predicted-xi"
-          ? firstKickoff(copy.lineups)
-          : null,
+    // The elevens die at the round's first kickoff; everything else leaves by supersession or the cap.
+    expiresAt: assignment.kind === "predicted-xi" ? firstKickoff(copy.lineups) : null,
     edition: editionName(assignment.kind, filedAt, assignment.day),
     byline: STORY_BYLINE[assignment.kind] ?? "",
     reporter: COLUMNIST[assignment.kind],

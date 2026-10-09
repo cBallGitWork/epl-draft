@@ -15,6 +15,14 @@ interface ReportClub {
   manager: string | null;
 }
 
+/** One head-to-head this period, from the holder's side; a score is null when the live read refused. */
+export interface HeadToHeadStake {
+  opponent: string;
+  us: number | null;
+  them: number | null;
+  over: boolean;
+}
+
 /** One man in the match, with his club always. */
 export interface ReportMan {
   code: number;
@@ -38,8 +46,9 @@ export interface ReportMan {
   matchesBefore: number;
   /** This season including this match; null when a past gameweek could not be read. */
   goalsSeason: number | null;
-  /** The league side that holds him, whether he was in its eleven, and where its head-to-head stands this period. */
-  holder: { team: string; fielded: boolean; round: number | null; h2h: { opponent: string; us: number | null; them: number | null; over: boolean } | null } | null;
+  /** The league side that holds him, whether he was in its eleven, and where its head-to-heads stand this period: none
+   *  for a bye, two for a double header. */
+  holder: { team: string; fielded: boolean; round: number | null; h2h: readonly HeadToHeadStake[] } | null;
   /** His league points for this match; null when the period holds two of his matches or none were priced. */
   points: number | null;
   /** The club's own word on his fitness, published after the match. */

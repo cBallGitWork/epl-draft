@@ -73,9 +73,10 @@ business, and when lineups lock.
    the splash rather than one. `HEADLINES_SHOWN` caps the whole tail at eight so
    a busy round does not turn the front page into an index of itself.
 
-   **News (bylined The Wire) and the bin are left off** (`frontPage`, Craig, 1 Oct
-   2026: *"remove 'the wire' and news"*). The desk stopped filing both that day;
-   the ones already filed keep their article pages.
+   **News (bylined The Wire) and the bin are gone** (Craig, 1 Oct 2026: *"remove 'the
+   wire' and news"*). The desk stopped filing both that day and their kinds were
+   deleted on 9 Oct with the other retired columns; `normalizeStory` refuses a
+   filed one, so it prints nowhere.
 
    The splash's own picture is `gazette/Drawing` when CI drew one and
    `gazette/Face` otherwise; it was `Splash.tsx` until 3 Sep 2026, which is the
@@ -118,12 +119,12 @@ business, and when lineups lock.
    handed over — a news site's front page on a phone — pictures the hero, both
    sub-heads and every list item, and reads as three ranks anyway.
 
-   **The man is chosen by the desk, never by the writer.** `assemble.faceOf`
-   takes the highest-scoring rostered man off the same numbers the brief was
-   built from — across both sides of a tie, across everyone with a man in a
-   fixture, or the best of the eleven — so the picture cannot contradict the
-   prose and a model cannot name its way into the photograph. Null for a kind
-   with no man in it, which is ordinary: a power ranking is about ten managers.
+   **The man is chosen by the desk, never by the writer.** `faces.faceOf` takes
+   him off the facts the brief was built from — the draft report's lead
+   match-up's key man, the Team Sheet's biggest name in the day's news — and the
+   Bin XI's desk picks its own, so the picture cannot contradict the prose and a
+   model cannot name its way into the photograph. Null for a kind with no man in
+   it, which is ordinary: Lawro's power rankings are about ten managers.
    It is stamped into `PublishedStory.face` at file time, and `PlayerImage`'s
    four rungs (this season's photograph, large then small, his club's kit, his
    initials) mean a man with no picture never borrows a wrong one.
@@ -377,8 +378,8 @@ name of its own outranks the group's.
 
 **Lawro's power rankings** (`season-rankings`) file once, between the end of the draft and the season's first
 lock, under the desk's headline "Lawro's Power Rankings" and the same banner. His short opening comes first, then
-the ten squads through `Ranks`: the number, the side, his line, and no movement mark, since a first ranking has no
-last time.
+the ten squads through `Ranks`: the number, the side and his line. The weekly power ranking's movement mark went
+with that column on 9 Oct 2026.
 
 **The round-report was deleted on 3 Sep 2026.** It was the preview's twin — one
 article filed once the football stopped, about the whole round — and Craig's
@@ -388,7 +389,8 @@ whole league in 1 article"*. Its own prompt was the cause rather than the model:
 paper about a whole league that only mentions two managers has failed."* It was
 obeying.
 
-What reports a finished round now is a **`tie-report` per tie** — a kind that had
+*Retired 1 Oct and deleted 9 Oct 2026, with the eleven, the rankings and the dodgers below; the match and draft
+reports cover a round now.* What reported a finished round was a **`tie-report` per tie** — a kind that had
 a weight, a supersession row, a kicker and a page since it was declared, and that
 nothing had ever assigned. Five ties, five stories, each about the two managers
 in it and told to name no others. It is handed both totals, the margin, and each
@@ -595,8 +597,8 @@ appended second ink loses on stylesheet order.
 | `HAIRLINES` | `gazette/rules.ts` | the faint hairline between a list's rows: `divide-y` alone rules them in each row's own ink | 7 |
 | `STANDING_CAPS` | `gazette/heads.ts` | `3xs` semibold tracked capitals, no ink: a standing head, the masthead's and folio's dateline rows | 5 (and `(paper)/not-found` writes it out) |
 | `STANDING_HEAD` | `gazette/heads.ts` | `STANDING_CAPS` in muted ink: a label over a list, a panel or a line of figures | 15 |
-| `KICKER_CAPS` | `gazette/heads.ts` | the same capitals in bold, no ink: a card's standing head, the quiz's | 3 |
-| `QUIET_CAPS` | `gazette/heads.ts` | the same at the body's weight in faint ink: a dateline, who is left to play, the quiz's answers | 3 |
+| `KICKER_CAPS` | `gazette/heads.ts` | the same capitals in bold, no ink: a card's standing head | 3 |
+| `QUIET_CAPS` | `gazette/heads.ts` | the same at the body's weight in faint ink: a dateline, who is left to play | 3 |
 | `CAPTION_CAPS` | `gazette/heads.ts` | a caption's capitals, `2xs` and `tracking-widest`, no weight and no ink | 8 (2 inked by the caller) |
 | `CAPTION` | `gazette/heads.ts` | `CAPTION_CAPS` in muted ink: a kickoff, a club's fixture, a quote's credit, the line over a side's eleven | 6 |
 

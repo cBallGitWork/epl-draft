@@ -4,7 +4,6 @@ import {
   periodLock,
   reportDays,
   roundSlot,
-  tieState,
   type DeskState,
   type FootballSnapshot,
   type GameweekKickoff,
@@ -49,7 +48,6 @@ export function deskState(input: {
     ties: facts.pairings.map((pairing) => ({
       homeTeamId: pairing.home.teamId,
       awayTeamId: pairing.away.teamId,
-      state: tieState(facts.scores.get(pairing.home.teamId), facts.scores.get(pairing.away.teamId)),
     })),
   };
 }

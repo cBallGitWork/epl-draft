@@ -158,16 +158,6 @@ export const SHEETS = {
   batch: 5,
 } as const;
 
-/** The Points Dodgers: men who came close to points and got none. */
-export const DODGERS = {
-  /** Men the column names, and how near a man must come: expected goals, or expected assists, plus the weights
-   *  below. An assist side is scaled to the goal bar. */
-  shown: 5,
-  from: { goal: 0.6, assist: 0.4 },
-  /** What each moment adds to his nearness; a shot's own expected goals already counts once. */
-  weight: { "ruled-out": 1, "penalty-missed": 0.5, "penalty-saved": 0.5, woodwork: 0.5, "set-up-woodwork": 0.3, "clean-sheet-lost": 1 },
-} as const;
-
 /** The match-day report's editorial thresholds. */
 export const REPORTS = {
   budget: {

@@ -13,7 +13,7 @@ const FILED = "2026-08-31T09:00:00.000Z";
 
 describe("recordCoverage", () => {
   it("spends keys once and answers isCovered", () => {
-    const key = "tie-report:p3:avb";
+    const key = "match-report:gw3:2026-08-30";
     const ledger = recordCoverage({}, LEAGUE, [key, key], [], FILED);
     expect(ledger[LEAGUE].covered).toEqual([key]);
     expect(isCovered(ledger, LEAGUE, key)).toBe(true);

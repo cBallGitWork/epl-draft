@@ -1,21 +1,11 @@
 import { type Assignment, buildDraftBrief, buildLawroBrief, buildPresserBrief, buildSeasonBrief } from "@epl/core";
 import { faceOf } from "./faces";
-import {
-  fixturePreviewBrief,
-  tieCallBrief,
-  tieReportBrief,
-} from "./assemble";
-import { columnBrief } from "./columns";
-import { newsBrief } from "./news";
-import { FIXTURE_PREVIEW, TIE_CALL, TIE_REPORT } from "./voice/matches";
-import { DODGERS, ELEVEN, POWER_RANKING, WIRE } from "./voice/columns";
 import type { PredictionsDesk } from "./predictions";
 import type { SeasonDesk } from "./season";
 import type { DraftJob } from "./draftWriter";
 import type { ReportsJob } from "./reports";
 import type { SheetsDesk } from "./sheets";
 import type { BinDesk } from "./binXi";
-import { NEWS } from "./voice/news";
 import { PRESSER } from "./voice/pressers";
 import { edition, faceCtx, type DeskContext } from "./dispatch";
 
@@ -75,49 +65,15 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
     return ctx.sheets === null ? null : { brief: ctx.sheets.brief, sheets: ctx.sheets };
   }
 
-  const scoped =
-    assignment.kind === "fixture-preview"
-        ? fixturePreviewBrief(assignment, ctx.snapshot, ctx.facts, ctx.clubs, ctx.threads)
-        : assignment.kind === "tie-call"
-          ? tieCallBrief(assignment, ctx.snapshot.gameweek, ctx.facts, ctx.threads)
-          : assignment.kind === "tie-report"
-            ? tieReportBrief(assignment, ctx.snapshot.gameweek, ctx.facts, ctx.threads)
-          : assignment.kind === "news"
-            ? newsBrief(assignment, ctx.facts, ctx.threads)
-          : assignment.kind === "presser"
-            ? buildPresserBrief({
-                gameweek: ctx.presserGameweek,
-                ...edition(ctx, assignment),
-                lead: faceOf(assignment, faceCtx(ctx, assignment))?.name ?? null,
-                threads: ctx.threads,
-              })
-          : columnBrief(assignment, {
-              gameweek: ctx.snapshot.gameweek,
-              facts: ctx.facts,
-              table: ctx.table,
-              dodgers: ctx.dodgers,
-              threads: ctx.threads,
-              named: (teamId) =>
-                ctx.info.teams.find((team) => team.teamId === teamId)?.name ?? teamId,
-            });
-  if (scoped === null) return null;
-
-  const system = VOICE[assignment.kind];
-  if (system === undefined) return null;
-  return { system, brief: scoped };
+  // The Team Sheet is the one kind written in the house voice from a brief alone.
+  if (assignment.kind === "presser") {
+    const brief = buildPresserBrief({
+      gameweek: ctx.presserGameweek,
+      ...edition(ctx, assignment),
+      lead: faceOf(assignment, faceCtx(ctx, assignment))?.name ?? null,
+      threads: ctx.threads,
+    });
+    return { system: PRESSER, brief };
+  }
+  return null;
 }
-
-/** Which voice writes which kind. A kind with no voice has no desk yet and
- *  files nothing — the newsdesk may learn about a column before the paper can
- *  write it. */
-const VOICE: Partial<Record<Assignment["kind"], string>> = {
-  "fixture-preview": FIXTURE_PREVIEW,
-  "tie-call": TIE_CALL,
-  "tie-report": TIE_REPORT,
-  eleven: ELEVEN,
-  "power-ranking": POWER_RANKING,
-  dodgers: DODGERS,
-  wire: WIRE,
-  news: NEWS,
-  presser: PRESSER,
-};

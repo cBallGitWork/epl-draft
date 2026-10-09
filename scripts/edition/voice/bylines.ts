@@ -6,13 +6,6 @@ import { londonWeekday, londonWeekdayLong, type StoryKind } from "@epl/core";
 export const STORY_BYLINE: Partial<Record<StoryKind, string>> = {
   "match-report": "The Back Page",
   "draft-report": "The Dugout",
-  "fixture-preview": "The Form Guide",
-  "tie-call": "The Back Page",
-  eleven: "The Selector",
-  "power-ranking": "The Pecking Order",
-  dodgers: "Own Goals & Gaffs",
-  wire: "The Bin",
-  news: "The Wire",
   presser: "The Team Sheet",
   "predicted-xi": "The Line-Ups",
   sheets: "The Team Sheets",
@@ -34,9 +27,7 @@ export function editionName(kind: StoryKind, filedAt: string, playedOn?: string)
   if (kind === "match-report") return `${londonWeekdayLong(playedOn ?? filedAt)} Prem Report`;
   if (kind === "draft-report") return `${londonWeekdayLong(playedOn ?? filedAt)} Draft Report`;
   if (kind === "predictions" || kind === "season-rankings" || kind === "predicted-xi") return "The Form Guide";
-  if (kind === "fixture-preview" || kind === "news" || kind === "presser") return "The Team Sheet";
-  if (kind === "wire" || kind === "dodgers") return "The Mercato Wire";
-  if (kind === "eleven" || kind === "power-ranking") return "The Monday Club";
+  if (kind === "presser") return "The Team Sheet";
   // The night the bins go out: waivers are collected on Wednesday.
   if (kind === "bin-xi") return "Bins Out";
 

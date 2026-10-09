@@ -12,11 +12,9 @@ import { stringOrEmpty, textOrNull } from "../untrusted";
 
 // The structured cargo a story carries beside its prose, and its normaliser: everything that is not paragraphs.
 
-/** One team's entry in a power ranking. */
+/** One team's entry in Lawro's power rankings. */
 interface StoryRank {
   teamId: string;
-  /** Places moved since last time; 0 is held, negative is fell, absent where there was no last time. */
-  move?: number;
   line: string;
 }
 
@@ -91,15 +89,9 @@ export interface StoryLineup {
   kickoff: string;
 }
 
-interface StoryQuizItem {
-  q: string;
-  a: string;
-}
-
 /** Each member optional: a story carries only the cargo its kind has. */
 export interface StoryExtras {
   ranks?: StoryRank[];
-  quiz?: StoryQuizItem[];
   teamNews?: StoryTeamNews[];
   lineups?: StoryLineup[];
   /** Team news at the lock: each head-to-head's two sides as printed. */
@@ -207,20 +199,11 @@ export function normalizeExtras(raw: unknown): StoryExtras | undefined {
 
   const ranks = Array.isArray(extras.ranks)
     ? extras.ranks.filter(
-        (r): r is StoryRank =>
-          typeof r?.teamId === "string" && r.teamId !== "" &&
-          (r.move === undefined || typeof r.move === "number") && typeof r.line === "string",
+        (r): r is StoryRank => typeof r?.teamId === "string" && r.teamId !== "" && typeof r.line === "string",
       )
     : [];
-  if (ranks.length > 0) out.ranks = once(ranks, (r) => r.teamId);
-
-  const quiz = Array.isArray(extras.quiz)
-    ? extras.quiz.filter(
-        (item): item is StoryQuizItem =>
-          typeof item?.q === "string" && item.q !== "" && typeof item.a === "string" && item.a !== "",
-      )
-    : [];
-  if (quiz.length > 0) out.quiz = quiz;
+  // Built field by field, never spread: a spread publishes whatever the writer invented beside the shape.
+  if (ranks.length > 0) out.ranks = once(ranks, (r) => r.teamId).map((r) => ({ teamId: r.teamId, line: r.line }));
 
   const teamNews = Array.isArray(extras.teamNews)
     ? extras.teamNews.filter(

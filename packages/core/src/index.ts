@@ -25,7 +25,6 @@ export type { RatingStore } from "./join/rating/store";
 export * from "./fpl-entry";
 export * from "./gazette";
 export * from "./inbox";
-export * from "./news";
 export * from "./join/roster";
 export * from "./join/squadDetail";
 export * from "./join/squadStats";

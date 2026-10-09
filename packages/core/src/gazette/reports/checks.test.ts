@@ -12,7 +12,7 @@ import type { ReportMatchInput } from "./types";
 const desks = deskDay({
   day: "2026-09-19",
   gameweek: 5,
-  matches: [spursVilla({ holders: new Map([[codeOf("Buendía"), { team: "Notemail", fielded: true, round: null, h2h: null }]]), points: new Map([[codeOf("Buendía"), 7]]) })],
+  matches: [spursVilla({ holders: new Map([[codeOf("Buendía"), { team: "Notemail", fielded: true, round: null, h2h: [] }]]), points: new Map([[codeOf("Buendía"), 7]]) })],
   season: [fixture],
   clubs: [SPURS, VILLA],
   // The clean piece below is written to this length; the config's budget moves as the paper's does.
@@ -184,7 +184,7 @@ describe("checkReports", () => {
   it("lets a stake give the holder's head-to-head score, which is the league's and not the match's", () => {
     const withH2h = deskDay({
       day: "2026-09-19", gameweek: 5, season: [fixture], clubs: [SPURS, VILLA],
-      matches: [spursVilla({ holders: new Map([[codeOf("Buendía"), { team: "Notemail", fielded: true, round: 2, h2h: { opponent: "test2", us: 38, them: 34, over: false } }]]), points: new Map([[codeOf("Buendía"), 7]]) })],
+      matches: [spursVilla({ holders: new Map([[codeOf("Buendía"), { team: "Notemail", fielded: true, round: 2, h2h: [{ opponent: "test2", us: 38, them: 34, over: false }] }]]), points: new Map([[codeOf("Buendía"), 7]]) })],
     });
     const piece = { ...CLEAN, sections: [CLEAN.sections[0], { ...CLEAN.sections[1], stake: "His seven points have Notemail 38-34 up on test2." }, CLEAN.sections[2]] };
     const faults = checkReports({ headline: "", headlines: [], matches: new Map([[2645244, piece]]) }, { ...ctx, desks: withH2h, blocks: new Map([[2645244, matchBlock(withH2h[0])]]) });

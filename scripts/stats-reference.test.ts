@@ -60,13 +60,10 @@ const STAT_TYPES: readonly { file: string; types: readonly string[] }[] = [
   { file: "packages/core/src/league/fantrax/draft.ts", types: ["DraftPick"] },
   { file: "packages/core/src/join/cleanSheets.ts", types: ["PendingCleanSheets"] },
   { file: "packages/core/src/join/contribution.ts", types: ["Contribution"] },
-  { file: "packages/core/src/gazette/powerRanking.ts", types: ["PowerRow"] },
   { file: "packages/core/src/gazette/predictions/record.ts", types: ["Marked", "Miss"] },
   { file: "packages/core/src/gazette/predictions/pick.ts", types: ["PickSide", "PredictionCall"] },
   { file: "packages/core/src/gazette/predictions/sides.ts", types: ["RecentGame", "SideForm", "SquadMan"] },
   { file: "packages/core/src/gazette/types.ts", types: ["Pick", "StorySide", "StoryResult"] },
-  { file: "packages/core/src/gazette/extras.ts", types: ["StoryRank"] },
-  { file: "packages/core/src/gazette/wire.ts", types: ["WireTeam", "WirePlayer", "WireFacts"] },
   { file: "packages/core/src/football/premierleague/clubSeason.ts", types: ["PlClubSeason"] },
   { file: "apps/companion/app/scoringDay.ts", types: ["LeagueDayLine"] },
 ];

@@ -240,7 +240,7 @@ the served league's rules: the rehearsal's in production and the dummy's, every 
   live totals, a man's breakdown) stay the served league's. From go-live the two are one league.
 - **Not a rule exception.** The rules still come from `getLeagueInfo` (CODE_RULES §3); data says whose.
 - **What it prices:** only what we work out ourselves: the clean sheets Fantrax has not credited yet (head-to-head
-  board, squad sheet); the paper's prices (the Bin XI's goal and assist, the Points Dodgers' clean sheet, the draft
+  board, squad sheet); the paper's prices (the Bin XI's goal and assist, the draft
   desk's returns and a full match's minutes); and our marks, read off the scoring league's points for the day
   (`scripts/scoring.ts`, `readScoring()`). The draft desk's DefCon and keeper bonus stay what Fantrax paid this week.
 - **DefCon points on a squad's Stats tab** (`DCP`, 1 Oct): DefCon pays per match, so each stats-league period begun
@@ -304,8 +304,11 @@ Craig, 1 Oct, on the Anthropic bill (3.8M tokens in, 0.9M out over 30 days, much
 match reports, the draft report (once, when the gameweek ends; no Saturday edition), the Bin XI, the Team
 Sheet, the predicted elevens, the draft sheets at the deadline and Lawro. `newsdesk()` no longer queues news, the wire, the eleven, the power ranking, the dodgers, tie
 reports, tie calls or fixture previews, and `DeskState` lost the fields only they read (`started`, `stakes`,
-`dealsInWindow`, `news`). Their writers, briefs and prompts stay in the tree until they are deleted after GW6.
-The front page leaves the news and the wire already filed off as well (`frontPage`, same day); their articles keep their pages.
+`dealsInWindow`, `news`). **Deleted 9 Oct 2026** (Craig: *"Get the work done"*): the eight kinds left `StoryKind`, and
+their briefs, voices, desks, readers, staff beats, kickers and renderers went with them (the wire's quiz, the power
+ranking's moves, `frontPage`'s off-the-front list, `kindRetires`, `tieState`, the BBC feed only the news read). A
+filed story of one is refused by `normalizeStory`; the served league had none, and the test leagues' twenty `news`
+stories drop off `paper.json` at its next rewrite. The archive keeps them on disk; nothing reads them.
 
 ## The paper's staff write under ISS names, one per kind of story — decided 30 Sep 2026
 
@@ -314,7 +317,8 @@ journalists, find the most famous journalist names"*, and on the first draft, *"
 letter difference"*. So each kind runs under the famous journalist known for that kind of piece, mangled the way ISS
 Pro Evolution printed "Roberto Larcos": letters swapped or changed in **both** names, recognisable at a glance, and
 **never the real name**. Phill McLunty, Danial Talyor, Garf Crookes, Martyn Masuel, Donny Kaber, Fabrizzio Morano,
-Davide Onrstein, and Hendry Wimter for a kind with none. One table, `gazette/staff.ts`, feeds both the byline and the
+Davide Onrstein, and Hendry Wimter for a kind with none. Masuel, Kaber and Morano lost their beats with the retired
+kinds and left the table on 9 Oct 2026. One table, `gazette/staff.ts`, feeds both the byline and the
 writer's "You are" line; the byline is resolved from the kind at render, so the archive reads the new names, and a
 `reporter` stamped at filing wins. Lawro is not staff: his column keeps his real name. Craig's *"yes bylines"* put
 the line-ups under the team-news writer, the front page's lead under its writer, and the writer's name at the head of
@@ -394,6 +398,8 @@ the match-report and team-sheet prompts.
   News, and the row's headline now wraps to two lines on both rather than clipping on a phone.
 
 ## The Points Dodgers are the real football's near misses, not a manager's bench — decided 30 Sep 2026
+
+Retired 1 Oct and deleted 9 Oct 2026 with the other weekly kinds; kept as the record of the decision.
 
 - Craig: *"points dodgers are players IRL who came close to points but didnt get any, not players on the bench"*.
   The column had named five men who returned while benched; that is now nobody's column.

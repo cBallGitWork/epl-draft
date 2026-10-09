@@ -27,7 +27,7 @@ async function rowRule(html: string): Promise<string | null> {
 
 type Extras = NonNullable<PublishedStory["extras"]>;
 
-const story = (extras: Extras) => ({ kind: "news", extras }) as PublishedStory;
+const story = (extras: Extras) => ({ kind: "presser", extras }) as PublishedStory;
 const named = (teamId: string) => teamId;
 const side = (teamId: string) => ({ teamId, formation: null, line: "", xi: [], bench: [] });
 const lineup = (club: string) => ({ club, code: 3, formation: "4-3-3", men: [] });
