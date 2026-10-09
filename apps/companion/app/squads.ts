@@ -52,7 +52,7 @@ export function readable(squads: LeagueSquads): ReadableSquads | null {
   return "period" in squads ? squads : null;
 }
 
-/** The squads read's cache key, which a lineup save expires. */
+/** The squads read's cache key, which a lineup save marks stale. */
 export const SQUADS_KEY = "league-squads";
 
 /** The squads, or the page a refusal belongs on: undrafted is a 404, unavailable goes `home`, where it is described. */
@@ -63,55 +63,42 @@ export function readableOr404(squads: LeagueSquads, home: string): ReadableSquad
 }
 
 /** What the cache holds: plain data, since a `FantraxError` comes back from a round trip as a lookalike. */
-interface CachedLeague {
+interface CachedRosters {
   rosters: RawTeamRosters | null;
   refusal: { code: string; tell: string } | null;
-  info: LeagueInfo | null;
-  /** The period the round in view is scored in, or null; sent to `getTeamRosters` only through `periodToRead`. */
-  roundPeriod: number | null;
 }
 
-/** The provider reads every squad view shares, cached across requests; nothing about who is asking may cross in. */
-const readLeague = leagueCache(SQUADS_KEY,
-  async (round: Round | null, currentGameweek: number): Promise<CachedLeague> => {
-    // The round in view's period, which every per-period read wants; `periodToRead` decides whether Fantrax is asked it.
-    const roundPeriod = round?.period ?? (await roundOf(currentGameweek))?.period ?? null;
-
-    const [open, info, kickoffs] = await Promise.all([
-      orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID)),
-      leagueInfo(),
-      seasonKickoffs(),
-    ]);
-
-    // A second read for any round but the one Fantrax hands over unasked, whose label only the first read knows.
-    const asked =
-      open instanceof FantraxError
-        ? null
-        : periodToRead(
-            roundPeriod,
-            open.period ?? null,
-            info?.rosterPeriods ?? [],
-            kickoffs,
-            now().toISOString(),
-          );
-    const rosters =
-      asked === null ? open : await orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID, asked));
-
+/** One period's rosters, Fantrax's open one's for null, cached across requests; nothing about who is asking may cross
+ *  in. Fantrax alone: a cached read nested in here skips its own cache, so one FPL refusal would take the squads down. */
+const readRosters = leagueCache(SQUADS_KEY,
+  async (period: number | null): Promise<CachedRosters> => {
+    const rosters = await orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID, period ?? undefined));
     return rosters instanceof FantraxError
-      ? { rosters: null, refusal: { code: rosters.code, tell: tell(rosters) }, info, roundPeriod }
-      : { rosters, refusal: null, info, roundPeriod };
+      ? { rosters: null, refusal: { code: rosters.code, tell: tell(rosters) } }
+      : { rosters, refusal: null };
   },
-  (error) => ({ rosters: null, refusal: { code: error.code, tell: tell(error) }, info: null, roundPeriod: null }),
+  (error) => ({ rosters: null, refusal: { code: error.code, tell: tell(error) } }),
 );
 
 export async function getLeagueSquads(round: Round | null = null): Promise<LeagueSquads> {
-  // Kickoffs from their own cache, and the football snapshot read out here: a nested `unstable_cache` bypasses its own.
+  // Every read from its own cache, out here: a nested `unstable_cache` bypasses its own.
   const current = await footballNow();
-  const [{ rosters, refusal, info, roundPeriod }, snapshot, kickoffs] = await Promise.all([
-    readLeague(round, current.gameweek),
-    round === null || round.gameweek === current.gameweek ? current : gameweekSnapshot(round.gameweek),
+  const [open, info, kickoffs, snapshot, inView] = await Promise.all([
+    readRosters(null),
+    leagueInfo(),
     seasonKickoffs(),
+    round === null || round.gameweek === current.gameweek ? current : gameweekSnapshot(round.gameweek),
+    round ?? roundOf(current.gameweek),
   ]);
+  // The period the round in view is scored in, or null; sent to `getTeamRosters` only through `periodToRead`.
+  const roundPeriod = inView?.period ?? null;
+
+  // A second read for any round but the one Fantrax hands over unasked, whose label only the first read knows.
+  const asked =
+    open.rosters === null
+      ? null
+      : periodToRead(roundPeriod, open.rosters.period ?? null, info?.rosterPeriods ?? [], kickoffs, now().toISOString());
+  const { rosters, refusal } = asked === null ? open : await readRosters(asked);
 
   // Branching on one code, safe because it fails toward hedging: anything unrecognised is "not answering".
   if (refusal !== null || rosters === null) {

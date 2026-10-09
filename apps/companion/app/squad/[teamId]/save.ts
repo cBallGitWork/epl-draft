@@ -1,6 +1,5 @@
 "use server";
 
-import { updateTag } from "next/cache";
 import {
   FANTRAX_LEAGUE_ID,
   benchToWrite,
@@ -23,7 +22,7 @@ import {
   type WriteAnswer,
 } from "@epl/core";
 import { now, replayAt } from "../../clock";
-import { leagueTag } from "../../leagueCache";
+import { markStale } from "../../leagueCache";
 import { planningRound } from "../../round";
 import { rosterMinimums } from "../../rosterMinimums";
 import { signedTeamId } from "../../session";
@@ -111,8 +110,8 @@ async function write(teamId: string, period: number, plan: Plan, session: string
   const state = mapLineupState(await fetchLineupState(FANTRAX_LEAGUE_ID, teamId, period, session));
   if (state === null || state.period !== period) return refuse(REFUSED);
   if (!stillHeld(state, plan.held)) {
-    // The page's copy is behind Fantrax: expire it so the reload shows what Fantrax now holds.
-    updateTag(leagueTag(SQUADS_KEY));
+    // The page's copy is behind Fantrax: mark it stale so the reload fetches what Fantrax now holds.
+    markStale(SQUADS_KEY);
     return refuse(CHANGED);
   }
   const fieldMap = fieldMapFor(state, plan.slots);
@@ -144,10 +143,10 @@ async function write(teamId: string, period: number, plan: Plan, session: string
     audit(done, "bench");
     if (!done.ok) {
       // The lineup above may have gone through, and the page must show it.
-      if (lineup) updateTag(leagueTag(SQUADS_KEY));
+      if (lineup) markStale(SQUADS_KEY);
       return done;
     }
   }
-  updateTag(leagueTag(SQUADS_KEY));
+  markStale(SQUADS_KEY);
   return { ok: true };
 }

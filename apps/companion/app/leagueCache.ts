@@ -1,4 +1,4 @@
-import { unstable_cache } from "next/cache";
+import { revalidateTag, unstable_cache } from "next/cache";
 import { FANTRAX_LEAGUE_ID, type ProviderError } from "@epl/core";
 import { PAGE_REVALIDATE } from "./config";
 import { orDegraded } from "./refusals";
@@ -24,7 +24,13 @@ export function leagueCache<A extends unknown[], R>(
   return (...args) => orDegraded(cached(...args), (error) => degrade(error, ...args));
 }
 
-/** The tag a `leagueCache` read is filed under, for a write to expire it. */
-export function leagueTag(key: string): string {
+/** The tag a `leagueCache` read is filed under, which `markStale` marks. */
+function leagueTag(key: string): string {
   return `${key}:${FANTRAX_LEAGUE_ID}`;
+}
+
+/** After a write: the next read refetches, and one that fails serves the last good answer. `updateTag` would drop
+ *  it, and a page whose refetch failed would have nothing left to show. */
+export function markStale(key: string): void {
+  revalidateTag(leagueTag(key), "max");
 }

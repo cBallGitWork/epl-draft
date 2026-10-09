@@ -1,3 +1,5 @@
+import { readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { FantraxError, ProviderError } from "@epl/core";
 import { leagueCache } from "./leagueCache";
@@ -47,5 +49,22 @@ describe("leagueCache", () => {
   it("throws a bug of our own rather than dressing it as an outage", async () => {
     const cached = leagueCache("squads", failing(new TypeError("cannot read teams of undefined")), unavailable);
     await expect(cached(6)).rejects.toThrow(TypeError);
+  });
+});
+
+/** Every source file under `app/`, found by walking it; tests excepted. */
+function sources(dir: string): string[] {
+  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) return sources(path);
+    return /\.tsx?$/.test(entry.name) && !entry.name.endsWith(".test.ts") ? [path] : [];
+  });
+}
+
+describe("a write", () => {
+  // 9 Oct: a save Fantrax took expired the squads outright, the refetch failed, and the page had nothing left to show.
+  it("never expires a read outright: `updateTag` drops the last good answer that `markStale` keeps", () => {
+    const callers = sources(import.meta.dirname).filter((path) => /\bupdateTag\(/.test(readFileSync(path, "utf8")));
+    expect(callers).toEqual([]);
   });
 });
