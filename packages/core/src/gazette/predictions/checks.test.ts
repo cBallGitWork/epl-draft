@@ -65,6 +65,12 @@ describe("checkLawro", () => {
     expect(verdict("Real Sociable, because Oduya has Leeds.")).toBe(1);
   });
 
+  it("reads eight thousand in words as the 8,000 his past line gives him", () => {
+    const figures = (intro: string) => checkLawro(draft(SAMPLE, { intro }), ctx()).filter((each) => each.check === "a figure not in the brief");
+    expect(figures("Two from five. I made eight thousand predictions for the BBC.")).toEqual([]);
+    expect(figures("Two from five. I made nine thousand predictions for the BBC.").map((each) => each.evidence)).toEqual(["9000"]);
+  });
+
   it("refuses a missing tie, a score in the prose and a career nobody gave him", () => {
     const faults = checkLawro(
       draft([["rs-bn", "Real Sociable win 52-42. I managed Oxford once."], ...SAMPLE.slice(2)], {}),

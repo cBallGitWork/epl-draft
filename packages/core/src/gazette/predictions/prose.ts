@@ -20,24 +20,24 @@ const UNITS: Record<string, number> = {
   nineteen: 19, third: 3, fourth: 4, fifth: 5, sixth: 6, seventh: 7, eighth: 8, ninth: 9, tenth: 10,
 };
 const TENS: Record<string, number> = { twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90 };
+const SCALES: Record<string, number> = { hundred: 100, thousand: 1000 };
+/** A number in words: tens and a digit, a unit, or a bare "hundred", each times any hundred or thousand after it. */
+const IN_WORDS = new RegExp(
+  String.raw`\b(?:(${Object.keys(TENS).join("|")})(?:[- ](one|two|three|four|five|six|seven|eight|nine))?|(${Object.keys(UNITS).join("|")})|(hundred))((?:[- ](?:hundred|thousand))*)\b`,
+  "gu",
+);
 
-/** Every figure the text states: digits (with their commas), and number words from two upward.
- *  "one", "a", "first" and "second" are idiom far more often than they are figures. */
+/** Every figure the text states: digits (with their commas), and number words from two upward, "eight thousand"
+ *  whole. "one", "a", "first", "second" and a bare "thousand" are idiom far more often than they are figures. */
 export function numbersIn(text: string): number[] {
   const out: number[] = [];
   for (const match of text.matchAll(/\d[\d,]*(?:\.\d+)?/gu)) {
     const value = Number(match[0].replace(/,/g, ""));
     if (Number.isFinite(value)) out.push(value);
   }
-  for (const match of text.toLowerCase().matchAll(/\b(twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(?:[- ](one|two|three|four|five|six|seven|eight|nine))?\b|\b([a-z]+)\b/gu)) {
-    if (match[1] !== undefined) {
-      const unit = match[2] === undefined ? 0 : match[2] === "one" ? 1 : UNITS[match[2]];
-      out.push(TENS[match[1]] + unit);
-    } else if (match[3] !== undefined && match[3] in UNITS) {
-      out.push(UNITS[match[3]]);
-    } else if (match[3] === "hundred") {
-      out.push(100);
-    }
+  for (const [, tens, digit, unit, hundred, scales] of text.toLowerCase().matchAll(IN_WORDS)) {
+    const base = tens !== undefined ? TENS[tens] + (digit === undefined ? 0 : digit === "one" ? 1 : UNITS[digit]) : unit !== undefined ? UNITS[unit] : SCALES[hundred];
+    out.push((scales.match(/[a-z]+/gu) ?? []).reduce((value, scale) => value * SCALES[scale], base));
   }
   return out;
 }
