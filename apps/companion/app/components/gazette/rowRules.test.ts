@@ -46,8 +46,6 @@ const lists: [string, () => Promise<ReactNode>][] = [
     createElement(PaperTable, { title: "The draft table", rows: [row("a"), row("b")] })],
   ["the power rankings", async () =>
     createElement(Ranks, { story: story({ ranks: [{ teamId: "a", line: "" }, { teamId: "b", line: "" }] }), named, mine: null })],
-  ["the team news thread", async () =>
-    createElement(TeamNews, { story: story({ teamNews: [{ club: "Chelsea", code: null, line: "" }, { club: "Arsenal", code: null, line: "" }] }) })],
   ["the predicted elevens", async () =>
     createElement(Lineups, { story: story({ lineups: [{ home: lineup("A"), away: lineup("B"), kickoff: "2026-10-10T14:00:00Z" }, { home: lineup("C"), away: lineup("D"), kickoff: "2026-10-10T14:00:00Z" }] }), named, mine: null })],
   ["the team sheets", async () =>
@@ -61,5 +59,13 @@ const lists: [string, () => Promise<ReactNode>][] = [
 describe("the rule between a paper list's rows", () => {
   it.each(lists)("is the sheet's faint hairline on %s, not the rows' own ink", async (_, render) => {
     expect(await rowRule(renderToStaticMarkup(await render()))).toBe("var(--paper-rule)");
+  });
+
+  // Set in newspaper columns, the team news rules each club rather than the list: `divide-y` cannot cross a column.
+  it("is the sheet's faint hairline under each club of the team news thread", () => {
+    const html = renderToStaticMarkup(
+      createElement(TeamNews, { story: story({ teamNews: [{ club: "Chelsea", code: null, line: "" }, { club: "Arsenal", code: null, line: "" }] }) }),
+    );
+    expect(html.match(/<section class="[^"]*border-\[var\(--paper-rule\)\]/g)).toHaveLength(2);
   });
 });

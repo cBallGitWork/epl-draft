@@ -3,15 +3,11 @@ import { PAPER_NAME } from "../../config";
 import { londonDate } from "@epl/core";
 import { STANDING_CAPS } from "./heads";
 
-// The head of an article: the paper's name, the date, then the story's standing head under them,
-// so a section never displaces the masthead. Small capitals throughout: furniture is Archivo (DESIGN §6).
+// The head of an article: the paper's name and the date in small capitals. The story's kicker is the article's own.
 
 export default function Folio({
-  section,
   at,
 }: {
-  /** The story's standing head. A kind without one prints none. */
-  section: string | undefined;
   /** When the story was filed. */
   at: string;
 }) {
@@ -29,10 +25,6 @@ export default function Folio({
         </TurnLink>
         <span className="text-faint">{londonDate(at)}</span>
       </div>
-
-      {section === undefined ? null : (
-        <p className="paper-display pt-3 text-3xl font-black leading-none text-ink">{section}</p>
-      )}
     </header>
   );
 }

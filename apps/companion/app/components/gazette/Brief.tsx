@@ -2,7 +2,7 @@ import TurnLink from "./TurnLink";
 import StoryFace, { hasPicture } from "./StoryFace";
 import Dateline from "./Dateline";
 import type { Club, PublishedStory } from "@epl/core";
-import { KICKER } from "./kickers";
+import { kickerOf } from "./kickers";
 import { storyHref } from "./paperPages";
 import { KICKER_CAPS } from "./heads";
 
@@ -16,7 +16,7 @@ export default function Brief({
   story: PublishedStory;
   clubs: Map<number, Club>;
 }) {
-  const kicker = KICKER[story.kind];
+  const kicker = kickerOf(story);
 
   return (
     <li id={story.slug} className="scroll-mt-4 border-t border-line @md/stories:pt-3">
@@ -30,7 +30,7 @@ export default function Brief({
           </span>
         ) : null}
         <span className="flex min-w-0 flex-1 flex-col justify-center gap-0.5 @md/stories:gap-1">
-          {kicker !== undefined ? (
+          {kicker !== "" ? (
             <span className={`${KICKER_CAPS} text-muted`}>{kicker}</span>
           ) : null}
           <h3 className="paper-display text-pretty text-base font-bold leading-snug text-ink @md/stories:text-lg">

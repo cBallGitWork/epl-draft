@@ -2,7 +2,7 @@ import TurnLink from "./TurnLink";
 import StoryFace, { hasPicture } from "./StoryFace";
 import Dateline from "./Dateline";
 import type { Club, PublishedStory } from "@epl/core";
-import { KICKER } from "./kickers";
+import { kickerOf } from "./kickers";
 import { storyHref } from "./paperPages";
 import { KICKER_CAPS } from "./heads";
 
@@ -22,7 +22,7 @@ export default function Teaser({
    *  so the caller decides and not the story. */
   pictured: boolean;
 }) {
-  const kicker = KICKER[story.kind];
+  const kicker = kickerOf(story);
 
   return (
     <article id={story.slug} className="scroll-mt-4 border-t border-line pt-3">
@@ -33,7 +33,7 @@ export default function Teaser({
           </span>
         ) : null}
         {/* Ink, not the accent: the sheet's one red is spent on what is live and what is yours. */}
-        {kicker !== undefined ? (
+        {kicker !== "" ? (
           <span className={`${KICKER_CAPS} text-ink`}>
             {kicker}
           </span>
