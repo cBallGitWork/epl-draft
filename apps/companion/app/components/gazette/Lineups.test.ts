@@ -15,8 +15,8 @@ const story = { extras: { lineups: [{ home: side("Everton"), away: side("Hull Ci
 describe("the predicted line-ups", () => {
   it("prints an owner by the league's short name, as the Team Sheet does", () => {
     const html = renderToStaticMarkup(createElement(Lineups, { story, named: () => entry.team, mine: null }));
-    expect(html).toContain(`(${entry.short})`);
-    expect(html).not.toContain(`(${entry.team})`);
+    expect(html).toContain(`(<em>${entry.short}</em>)`);
+    expect(html).not.toContain(`<em>${entry.team}</em>`);
   });
 
   it("marks a predicted starter the football has out, and keeps him in the eleven", () => {

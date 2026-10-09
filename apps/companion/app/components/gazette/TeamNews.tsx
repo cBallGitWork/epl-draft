@@ -51,7 +51,7 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
                   <p className="min-w-0 text-ink">
                     <strong className="font-bold">{man.name}</strong>
                     {/* Unowned is marked, not left blank, in ink: `.paper` does not re-point `--color-info`. */}
-                    <span className="text-muted"> ({man.owner ?? "FA"})</span>
+                    <span className="text-muted"> (<em>{man.owner ?? "FA"}</em>)</span>
                     {man.note === "" ? null : <span className="text-muted"> — {man.note}</span>}
                   </p>
                 </li>
@@ -90,7 +90,7 @@ function StillOut({ men, owned }: { men: readonly { name: string; owner?: string
         <span key={man.name}>
           {at > 0 ? " · " : null}
           {man.name}
-          {owned ? ` (${man.owner ?? "FA"})` : null}
+          {owned ? <> (<em>{man.owner ?? "FA"}</em>)</> : null}
         </span>
       ))}
     </p>
