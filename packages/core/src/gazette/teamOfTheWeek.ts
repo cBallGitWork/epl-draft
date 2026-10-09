@@ -20,22 +20,26 @@ export function teamOfTheWeek(
   if (limits.maxActivePlayers === null) return { picks: [], lines: [], shape: "" };
 
   const candidates = rosteredPicks(teams, points);
+  const most = limits.maxActivePlayers;
 
-  const taken: Pick[] = [];
+  const chosen = new Set<Pick>();
   const perPosition = new Map<string, number>();
-
-  for (const pick of candidates) {
+  const take = (pick: Pick, upTo: number) => {
     // The total is its own cap, not the sum of the position caps.
-    if (taken.length >= limits.maxActivePlayers) break;
+    if (chosen.size >= most || chosen.has(pick)) return;
     const cap = limits.maxActiveByPosition[pick.position];
     // A position with no cap is never filled: how many may play would be invented.
-    if (cap === undefined) continue;
+    if (cap === undefined) return;
     const used = perPosition.get(pick.position) ?? 0;
-    if (used >= cap) continue;
-
-    taken.push(pick);
+    if (used >= Math.min(cap, upTo)) return;
+    chosen.add(pick);
     perPosition.set(pick.position, used + 1);
-  }
+  };
+
+  // Each line's floor first, so a keeper is never crowded out: the league's minimum, or one where none is published.
+  for (const pick of candidates) take(pick, limits.minActiveByPosition[pick.position] ?? 1);
+  for (const pick of candidates) take(pick, Infinity);
+  const taken = candidates.filter((pick) => chosen.has(pick));
 
   const lines = linesOf(taken, limits);
   return { picks: taken, lines, shape: lines.map((line) => line.picks.length).join("-") };
