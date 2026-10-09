@@ -63,12 +63,19 @@ describe("linesAfter", () => {
     });
   });
 
-  it("draws nothing under the bottom row, so a table all level draws no line", () => {
-    expect(linesAfter(tableLines(4, 10), table(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)).size).toBe(0);
+  it("draws each line in its place when the tie it falls in runs to the bottom row", () => {
+    // 9 Oct 2026: before GW6 all ten stood level at nought, and every line vanished from /league.
+    expect(labels(linesAfter(tableLines(4, 10), table(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)))).toEqual({
+      t1: ["£30 · picks semi opponent"],
+      t3: ["Playoffs"],
+      t5: ["Play-in"],
+      t8: ["Plate"],
+    });
     expect(labels(linesAfter(tableLines(4, 10), table(1, 2, 3, 4, 5, 6, 7, 8, 8, 8)))).toEqual({
       t1: ["£30 · picks semi opponent"],
       t3: ["Playoffs"],
       t5: ["Play-in"],
+      t8: ["Plate"],
     });
   });
 });
