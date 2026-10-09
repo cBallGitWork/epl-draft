@@ -10,6 +10,7 @@ import {
 } from "@epl/core";
 import { RECORDED_LEAGUES } from "./leagues";
 import { leagueCaptureDir, leagueCaptureRoot } from "./paths";
+import { holdsOnlyItsOwn } from "./periods/aligned";
 import { newestCapture } from "./snapshots";
 
 // Does each recorded league's scoring period still contain exactly its own FPL gameweek, against the LIVE fixture
@@ -41,8 +42,9 @@ async function main(): Promise<void> {
     const info = mapLeagueInfo(await newestLeagueInfo(league.key));
     const aligned = periodGameweeks(info.scoringPeriods, kickoffs);
 
-    for (const { period, gameweeks } of aligned) {
-      const matches = gameweeks.length === 1 && gameweeks[0] === period;
+    for (const entry of aligned) {
+      const { period, gameweeks } = entry;
+      const matches = holdsOnlyItsOwn(entry);
       if (!matches) mismatched += 1;
       const label = gameweeks.length === 0 ? "—" : gameweeks.join(", ");
       console.log(`  period ${String(period).padStart(2)}  gw ${label}${matches ? "" : "   MISMATCH"}`);
