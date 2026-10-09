@@ -178,7 +178,7 @@ like"), in four blocks:
    the date in the index block, then the move, from and to ("The pool" for no team), a step
    above a row's type (Craig, 1 Oct 2026: "make text bigger in business"). Neither panel says
    "This league" any more (Craig: "remove 'This league' twice"); the tab is only ever ours.
-3. **The cyan line**, how he arrived: `Taken by 123 with pick 21 of round 3.`
+3. **The cyan line**, how he arrived: `Taken by 123 with the 21st pick, in round 3.`
 4. **The way out**, worded for what the reader can do: "Claim him on Fantrax" for a man
    nobody holds and "Open on Fantrax" for his own, both to his Fantrax page in the league;
    "Offer a trade on Fantrax" for a rival's, to the owner's roster with Fantrax's trade panel
@@ -323,7 +323,7 @@ inherited ink and the utility was silently dropped. Found by reading the rendere
 colour rather than the source. `desk.css` records it.
 
 **The appearances table is CM's**, not FPL's: competition rows down the left
-against plated heads, `Apps Min Gls Asts Con CS Sv Yel Red FPL`. One row, because
+against plated heads, `Apps Min Gls Ast Con CS Sv Yel Red FPL`. One row, because
 FPL publishes one competition — five rows of dashes would be five confident
 statements that he has played no cup football.
 
@@ -331,7 +331,7 @@ statements that he has played no cup football.
 one table, the completed ones under it. Two tables with the same heads, one above
 the other, is a reader checking whether they agree.
 
-**Transfer closes with a sentence** — `Taken by 123 with pick 1 of round 1.` in
+**Transfer closes with a sentence** — `Taken by 123 with the 1st pick, in round 1.` in
 cyan, under the business, the position line's shape doing the same job. The
 whole-of-Fantrax demand block is gone.
 
