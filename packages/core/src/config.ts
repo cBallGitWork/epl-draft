@@ -156,6 +156,9 @@ export const LINEUP_LOCK_LEAD_MINUTES = 15;
  *  locked team, so a save must fail short of the lock. */
 export const SAVE_MARGIN_MINUTES = 10;
 
+/** Minutes before the lock that `npm run bench-order` numbers each bench nobody numbered, by total points. */
+export const BENCH_ORDER_LEAD_MINUTES = 5;
+
 /** Where the Premier League serves its crests. `next.config.ts` builds its image allow-list from the image bases here. */
 export const PL_ASSET_BASE = "https://resources.premierleague.com/premierleague";
 

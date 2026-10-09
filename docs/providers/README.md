@@ -93,14 +93,24 @@ opens the issue `alert: <workflow>`, assigned to the owner, and the next green r
 | `.github/workflows/warm.yml` | `*/30 11-22 * * 6,0`<br>`*/30 17-22 * * 1,5` | curls `/` and `/matchday` | nothing | `warm`, cancels in progress | stays |
 | `.github/workflows/verify.yml` | none: push, pull_request | the four gates, smoke per recorded league, `npm run bridge:check` | nothing | none | stays |
 | `.github/workflows/claude.yml` | none: PR and issue comments | the `@claude` review | nothing | per PR | stays |
-| `.github/workflows/alert.yml` | none: dispatched by `scripts/sync-intel.sh` | `scripts/ci/alert.sh`, run named `alert <source> <state>` | nothing; opens or closes an issue | per source | stays |
+| `.github/workflows/alert.yml` | none: dispatched by `scripts/sync-intel.sh` and `scripts/bench-order.sh` | `scripts/ci/alert.sh`, run named `alert <source> <state>` | nothing; opens or closes an issue | per source | stays |
 
 
-On Craig's Mac (launchd, London time; `scripts/install-intel-jobs.sh` installs both): `com.epl-draft.intel-weekly` Tue 08:00 runs
+On Craig's Mac (launchd, London time; `scripts/install-intel-jobs.sh` installs all three): `com.epl-draft.intel-weekly` Tue 08:00 runs
 `scripts/sync-intel.sh weekly`, `com.epl-draft.intel-pressers` Thu 16:00, Fri 12:30, 14:00 and 15:45 (the conferences) and Thu 17:15
 and Fri 17:45 (the sister's 16:30 sweeps) runs `pressers`. Each restores the GitHub sweep's data from R2 through `scripts/sister-export.py`,
 writes a `chore/intel-<mode>-<date>-<time>` PR that merges itself once `verify` passes, logs to
 `~/Library/Logs/epl-draft-intel.log`, and ends in an `alert.yml` dispatch, `intel-<mode> ok` or `fail`.
+
+`com.epl-draft.bench-order`, every day at 07:00, runs `scripts/bench-order.sh`: it asks production for the league
+(`GET /api/league`), reads the next lock off `getLeagueInfo` and FPL's kickoffs, and when that lock is before 08:00
+tomorrow holds the Mac awake (`caffeinate -i`) until five minutes before it (`BENCH_ORDER_LEAD_MINUTES`). Then
+`scripts/bench-order.ts --wait --write` reads every team's `getTeamRosterInfo` for that period and sends
+`setAutoSubsOrder` (adminMode, `FANTRAX_COOKIE` from the main folder's `.env.local`) for each bench with no number
+on it, ordered by total FPts. Writes in Fantrax, nothing in the repo; logs to
+`~/Library/Logs/epl-draft-bench-order.log`. A run that reaches the teams dispatches `bench-order ok`; a refused write,
+a failed read or a lock passed before the write dispatches `bench-order fail`; a day with no lock due logs one line.
+No watchdog slot: the report lands at the lock, which moves.
 
 Slots shared today: warm shares every :00 and :30 with editions in the match windows. Editions'
 own lines no longer overlap; until 1 Oct 2026 24 of its firings a week ran twice.

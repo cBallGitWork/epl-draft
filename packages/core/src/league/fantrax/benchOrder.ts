@@ -16,7 +16,7 @@ export interface RawTeamRosterInfo {
 export interface RawRosterRow {
   /** "1" in the eleven, "2" on the bench. A row with no scorer is an empty slot. */
   statusId?: string;
-  scorer?: { scorerId?: string; posShortNames?: string };
+  scorer?: { scorerId?: string; shortName?: string; posShortNames?: string };
   cells?: { content?: string }[];
 }
 
@@ -28,17 +28,32 @@ export interface BenchOrder {
 }
 
 export function mapBenchOrder(raw: RawTeamRosterInfo): BenchOrder {
-  const reserves = (raw.tables ?? []).flatMap((table) => {
-    const at = keyed(table.header?.cells ?? [], "fpts");
-    return (table.rows ?? []).flatMap((r) => {
-      const id = r.scorer?.scorerId;
-      if (r.statusId !== "2" || typeof id !== "string") return [];
-      return [{ id, fpts: at < 0 ? 0 : Number(r.cells?.[at]?.content) || 0 }];
-    });
-  });
+  const reserves = reservesOf(raw);
   const numbers = Object.entries(raw.miscData?.autoSubOrderMap ?? {})
     .map(([id, n]) => ({ id, n: Number(n) }))
     .filter((x) => x.n > 0 && reserves.some((r) => r.id === x.id));
   if (numbers.length > 0) return { order: numbers.sort((a, b) => a.n - b.n).map((x) => x.id), by: "manager" };
-  return { order: [...reserves].sort((a, b) => b.fpts - a.fpts).map((r) => r.id), by: "points" };
+  return { order: byPoints(reserves), by: "points" };
+}
+
+/** The deadline's order for this bench, whatever the manager numbered: total fantasy points, highest first. */
+export function benchByPoints(raw: RawTeamRosterInfo): string[] {
+  return byPoints(reservesOf(raw));
+}
+
+/** A man with no points reading goes after every man with one, a negative total included; ties keep the page's order. */
+const byPoints = (reserves: readonly { id: string; fpts: number | null }[]): string[] =>
+  [...reserves].sort((a, b) => (b.fpts ?? -Infinity) - (a.fpts ?? -Infinity) || 0).map((r) => r.id);
+
+function reservesOf(raw: RawTeamRosterInfo): { id: string; fpts: number | null }[] {
+  return (raw.tables ?? []).flatMap((table) => {
+    const at = keyed(table.header?.cells ?? [], "fpts");
+    return (table.rows ?? []).flatMap((r) => {
+      const id = r.scorer?.scorerId;
+      if (r.statusId !== "2" || typeof id !== "string") return [];
+      const text = at < 0 ? "" : (r.cells?.[at]?.content ?? "").trim();
+      const fpts = text === "" ? NaN : Number(text);
+      return [{ id, fpts: Number.isFinite(fpts) ? fpts : null }];
+    });
+  });
 }

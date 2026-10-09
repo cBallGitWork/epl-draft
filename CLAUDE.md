@@ -75,6 +75,8 @@ npm run bridge          # regenerate the Fantrax→FPL mapping
 npm run roster-limits   # position MIN/MAX off the commissioner's setup page; needs
                         # FANTRAX_COOKIE; re-run after the draft
 npm run team-codes      # one sign-in code per team, printed once
+npm run bench-order     # number each unnumbered bench by total FPts; dry run unless --write;
+                        # launchd runs it at each deadline (scripts/bench-order.sh)
 npm run rotowire-xi     # predicted elevens, RotoWire then Scout; CI runs it hourly Thu to Sat's lock
 npm run stats           # the stats league's counts into data/intel/stats/; CI runs it daily
 npm run edition         # file the paper's due stories; needs ANTHROPIC_API_KEY
