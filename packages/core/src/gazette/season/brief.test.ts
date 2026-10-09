@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildSeasonBrief } from "./brief";
-import { seasonCalls, type SeasonCalls } from "./calls";
-import { PLAYED, SQUADS } from "./__fixtures__/season";
+import { seasonCalls, type CallMan, type SeasonCalls } from "./calls";
+import { FIT, PLAYED, SQUADS, man } from "./__fixtures__/season";
 
 const calls = seasonCalls(PLAYED, SQUADS, []) as SeasonCalls;
 const slotName = (slot: string) => ({ G: "the goalkeeper", D: "the defenders", M: "the midfielders", F: "the forwards" })[slot] ?? slot;
@@ -27,6 +27,17 @@ describe("buildSeasonBrief", () => {
     expect(table).toContain("- Weak spot: the goalkeeper, the weakest in the league.");
     expect(table).toContain("- Weak spot: Bruno Fernandes is injured.");
     expect(table).toContain("- Open the line on the weak spot.");
+  });
+
+  it("offers the best man otherwise only when the man they are built round is the doubt", () => {
+    const injured = { state: "injured" as const, label: "Injured", out: true, chance: 0, news: "Hamstring" };
+    const albion = (first: CallMan["availability"], best: CallMan["availability"]) => {
+      const squads = new Map(SQUADS).set("a", [man("a1", "Erling Haaland", "Manchester City", 100, 2, first), man("a2", "Bukayo Saka", "Arsenal", 200, 7, best)]);
+      return buildSeasonBrief({ calls: seasonCalls(PLAYED, squads, []) as SeasonCalls, locksAt: "2026-10-10T11:15:00.000Z", slotName });
+    };
+    expect(albion(injured, FIT)).toContain("- Weak spot: Erling Haaland is injured.\n- Their best man otherwise: Bukayo Saka (Arsenal).");
+    expect(albion(FIT, injured)).toContain("- Weak spot: Bukayo Saka is injured.");
+    expect(albion(FIT, injured)).not.toContain("Their best man otherwise");
   });
 
   it("says nothing of how a season ends, prints no figure of ours and no draft round", () => {

@@ -27,7 +27,7 @@ function sideBlock(side: SeasonSide, of: number, slotName: (slot: string) => str
   const facts = [
     built === null ? null : `- Built round: ${man(built)}${side.first === null ? "" : `, the first man they took, ${ordinal(side.first.overall ?? 0)} in the whole draft`}.`,
     side.weakness === null ? null : `- Weak spot: ${side.weakness.kind === "doubt" ? `${side.weakness.man.name} ${availabilityWord(side.weakness.man.availability)}` : `${slotName(side.weakness.slot)}, ${rankWords(side.weakness, of, false)}`}.`,
-    side.weakness?.kind === "doubt" && side.best !== null && side.first !== null ? `- Their best man otherwise: ${man(side.best)}.` : null,
+    side.weakness?.kind === "doubt" && side.weakness.man === side.first && side.best !== null ? `- Their best man otherwise: ${man(side.best)}.` : null,
     `- Open the line on ${side.lead === "man" || side.weakness === null ? "the man they are built round" : "the weak spot"}.`,
   ];
   return [`${side.place}. ${side.name} [${side.teamId}]`, ...facts.filter((fact): fact is string => fact !== null)].join("\n");
