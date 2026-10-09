@@ -54,6 +54,9 @@ export interface IntelPressers {
  *  its explicit ones ("not risked", "managing his minutes") sit at 0.65. */
 export const FIRM = 0.65;
 
+/** The export's tag for a man declared fit again: back from injury, in contention. */
+export const FIT_AGAIN = "available";
+
 /** The signals for one gameweek's pressers, newest first, for every man: ownership annotates, never filters. */
 export function pressers(
   intel: IntelPressers | null,

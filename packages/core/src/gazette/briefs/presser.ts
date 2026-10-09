@@ -1,5 +1,5 @@
 import type { PresserSignal } from "../../football/intel/pressers";
-import { FIRM } from "../../football/intel/pressers";
+import { FIRM, FIT_AGAIN } from "../../football/intel/pressers";
 import { presserClubs, type ClubQuote } from "./presserClubs";
 import { storylinesBlock } from "./storylines";
 import type { StoryThread } from "../ledger";
@@ -59,7 +59,7 @@ export function buildPresserBrief(brief: {
       // An absent complaint is stated, or the model borrows the one above; a fit man is back FROM his, never still in it.
       const known = line.condition !== undefined && line.condition !== "";
       const what =
-        line.tag === "available"
+        line.tag === FIT_AGAIN
           ? known ? `FIT again — back from ${line.condition}` : MEANS.available
           : `${MEANS[line.tag] ?? line.tag}${known ? ` (${line.condition})` : " (COMPLAINT NOT STATED — you may not name one)"}`;
       // The export writes "" or null for a conference with no named speaker: offer nobody rather than a gap.

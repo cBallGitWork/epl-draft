@@ -20,6 +20,8 @@ export interface Assignment {
   cutoff?: "saturday" | "gameweek";
   /** The round a look-ahead story is about, which between rounds is not FPL's current one. */
   round?: { period: number; gameweek: number };
+  /** Until when its story leads the paper whatever files after it: the elevens', their round's lock. */
+  leadsUntil?: string;
 }
 
 export interface DeskState {
@@ -98,9 +100,10 @@ export function newsdesk(
   }
 
   // The elevens predict the round ahead, so they sit outside the gates above, wait for Friday's pressers, and refile
-  // each time they change until the lock.
+  // each time they change until the lock, leading the paper until then (Craig, 9 Oct 2026).
   if (desk.lineups !== null && desk.next !== null && lineupsDue(desk.next.locksAt, now)) {
-    want({ kind: "predicted-xi", key: desk.lineups.key, slug: desk.lineups.slug, ...about });
+    const leadsUntil = desk.next.locksAt;
+    want({ kind: "predicted-xi", key: desk.lineups.key, slug: desk.lineups.slug, ...about, leadsUntil });
   }
 
   // Lawro's predictions: the evening before the gameweek, and only once the last one is done.

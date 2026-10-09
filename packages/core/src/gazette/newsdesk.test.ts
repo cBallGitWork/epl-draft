@@ -204,6 +204,10 @@ describe("newsdesk", () => {
       expect(elevens({ next: midweek }, "2026-11-30T18:00:00.000Z")).toHaveLength(1);
     });
 
+    it("carry the round's lock, until which they lead the paper", () => {
+      expect(elevens({}, "2026-10-09T17:00:00.000Z").map((a) => a.leadsUntil)).toEqual([next.locksAt]);
+    });
+
     it("file nothing without the round ahead's export or its lock", () => {
       expect(elevens({ lineups: null }, "2026-10-09T16:00:00.000Z")).toEqual([]);
       expect(elevens({ next: null }, "2026-10-09T16:00:00.000Z")).toEqual([]);

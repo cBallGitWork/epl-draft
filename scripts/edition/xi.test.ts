@@ -22,7 +22,7 @@ const season = [
 // A season no export is held for, so no squads file is read.
 const xiOf = (elevens: Record<string, ReturnType<typeof eleven>>) =>
   ({ manifest: { season: "none", gameweek: 6, exportedAt: "", rows: 4, sources: [] }, fetchedAt: null, source: null, clubs: elevens }) as IntelXi;
-const column = (xi: IntelXi) => xiColumn({ xi, gameweek: 6, clubs, teams: [], players, season });
+const column = (xi: IntelXi) => xiColumn({ xi, gameweek: 6, clubs, teams: [], players, season })?.column;
 
 describe("xiColumn", () => {
   it("calls the week a gameweek in its deck and body, never a round", () => {
@@ -43,6 +43,11 @@ describe("xiColumn", () => {
 
   it("says how many of the gameweek's matches it printed when one is missing", () => {
     expect(column(xiOf({ ARS: eleven(1), LEE: eleven(2), CHE: eleven(3) }))?.body).toBe("1 of the gameweek's 2 matches, with both sides named.");
+  });
+
+  it("starts only the men of the ties it printed, for the picture", () => {
+    const filed = xiColumn({ xi: xiOf({ ARS: eleven(1), LEE: eleven(2), CHE: eleven(3) }), gameweek: 6, clubs, teams: [], players, season });
+    expect([...(filed?.starters ?? [])].sort((a, b) => a - b)).toEqual([...squad(1), ...squad(2)]);
   });
 });
 

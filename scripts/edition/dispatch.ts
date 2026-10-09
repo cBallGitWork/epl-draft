@@ -58,8 +58,9 @@ export interface DeskContext {
   presserGameweek: number;
   /** Clubs that held a conference, so one with no news still gets a row. */
   presserSpoke: { clubName: string; manager: string | null; at: string }[];
-  /** The predicted elevens, composed from facts with no voice and no brief; null when not this firing's. */
-  elevens: Record<string, unknown> | null;
+  /** The predicted elevens, composed from facts with no voice and no brief, and who they start; null when not this
+   *  firing's. */
+  elevens: { column: Record<string, unknown>; starters: ReadonlySet<number> } | null;
 }
 
 /** One edition of the Team Sheet — the day's conferences, and nothing else.
@@ -77,6 +78,7 @@ export function edition(ctx: DeskContext, assignment: Assignment) {
 export function faceCtx(ctx: DeskContext, assignment: Assignment): FaceContext {
   return {
     presserLines: assignment.kind === "presser" ? edition(ctx, assignment).lines : ctx.presserLines,
+    starters: ctx.elevens?.starters,
     players: ctx.snapshot.players,
     drafts: ctx.drafts,
   };
@@ -113,6 +115,8 @@ export function file(
     filedAt,
     // The elevens die at the round's first kickoff; everything else leaves by supersession or the cap.
     expiresAt: assignment.kind === "predicted-xi" ? firstKickoff(copy.lineups) : null,
+    // The newsdesk's: the elevens lead until their round's lock.
+    leadsUntil: assignment.leadsUntil,
     edition: editionName(assignment.kind, filedAt, assignment.day),
     byline: STORY_BYLINE[assignment.kind] ?? "",
     reporter: COLUMNIST[assignment.kind],
@@ -143,10 +147,12 @@ function withTies(
   });
 }
 
-/** When the round the elevens predict begins — the moment a prediction is spent
- *  and the real sheets exist. The cargo is already in kickoff order. */
-function firstKickoff(lineups: unknown): string | null {
+/** When the round the elevens predict begins — the moment a prediction is spent and the real sheets exist. The cargo
+ *  is in home-club order, so the earliest is searched for; an unreadable kickoff is skipped. */
+export function firstKickoff(lineups: unknown): string | null {
   if (!Array.isArray(lineups)) return null;
-  const kickoff = (lineups[0] as { kickoff?: unknown } | undefined)?.kickoff;
-  return textOrNull(kickoff);
+  const kickoffs = lineups
+    .map((tie) => textOrNull((tie as { kickoff?: unknown } | null)?.kickoff))
+    .filter((kickoff): kickoff is string => kickoff !== null && !Number.isNaN(Date.parse(kickoff)));
+  return kickoffs.reduce<string | null>((first, at) => (first === null || Date.parse(at) < Date.parse(first) ? at : first), null);
 }

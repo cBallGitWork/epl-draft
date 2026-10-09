@@ -24,8 +24,8 @@ const KIND_WEIGHT: Record<StoryKind, number> = {
   "bin-xi": 45,
 };
 
-/** The paper in print order: expired dropped, superseded retired, the rest newest filed first. First story is the
- *  splash. */
+/** The paper in print order: expired dropped, superseded retired, a story still leading first, the rest newest filed
+ *  first. First story is the splash. */
 export function composePaper(stories: readonly PublishedStory[], now: string): PublishedStory[] {
   const current = stories.filter((story) => !expired(story, now));
 
@@ -36,11 +36,23 @@ export function composePaper(stories: readonly PublishedStory[], now: string): P
     return !retiredBy;
   });
 
-  // The most recent filing leads (Craig, 9 Oct 2026); one run stamps every story with one instant, so kind breaks
-  // that tie, and dated slugs (`gw5-presser-2026-09-18`) then sort newest first.
+  // The Line-Ups lead until the lock, then the most recent filing does (Craig, 9 Oct 2026); one run stamps every story
+  // with one instant, so kind breaks that tie, and dated slugs (`gw5-presser-2026-09-18`) then sort newest first.
   return [...alive].sort(
-    (a, b) => compareFiled(b, a) || KIND_WEIGHT[b.kind] - KIND_WEIGHT[a.kind] || b.slug.localeCompare(a.slug),
+    (a, b) =>
+      Number(leads(b, now)) - Number(leads(a, now)) ||
+      compareFiled(b, a) ||
+      KIND_WEIGHT[b.kind] - KIND_WEIGHT[a.kind] ||
+      b.slug.localeCompare(a.slug),
   );
+}
+
+/** Whether a story still holds the lead it was filed with; an unreadable instant on either side holds none. */
+function leads(story: PublishedStory, now: string): boolean {
+  if (story.leadsUntil === undefined) return false;
+  const until = Date.parse(story.leadsUntil);
+  const clock = Date.parse(now);
+  return !Number.isNaN(until) && !Number.isNaN(clock) && clock < until;
 }
 
 function expired(story: PublishedStory, now: string): boolean {

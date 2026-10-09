@@ -27,7 +27,7 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
   // The elevens are a list of two hundred and twenty footballers, so they are
   // printed from the export and never written from it.
   if (assignment.kind === "predicted-xi") {
-    return ctx.elevens === null ? null : { printed: ctx.elevens };
+    return ctx.elevens === null ? null : { printed: ctx.elevens.column };
   }
 
   // Lawro's column goes through his own newsroom, with every call already made.
