@@ -21,7 +21,8 @@ export default function Season({
     // CM's visible scroll bar on a desk; a phone scrolls the page, or the list's foot sits under the rail.
     <ul className="cm-rows cm-scroll cm-scroll-y flex flex-col lg:max-h-[34rem] lg:overflow-y-auto">
       {rows.map((row) => (
-        <li key={`${row.round.period}-${row.tie.competition.id}-${row.tie.round ?? ""}`}>
+        // The opponent too: a double header pairs a team twice in one period.
+        <li key={`${row.round.period}-${row.tie.competition.id}-${row.tie.round ?? ""}-${row.opponent.team?.teamId ?? row.opponent.label}`}>
           <div className="cm-row flex min-h-11 items-center gap-2 px-1.5">
             {/* The gameweek always; its date only on a desk, where the opponent still has room. */}
             <span className="cm-index numeric flex shrink-0 items-baseline gap-1 px-1.5 py-0.5">
