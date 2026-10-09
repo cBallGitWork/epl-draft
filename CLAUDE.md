@@ -75,7 +75,7 @@ npm run bridge          # regenerate the Fantrax→FPL mapping
 npm run roster-limits   # position MIN/MAX off the commissioner's setup page; needs
                         # FANTRAX_COOKIE; re-run after the draft
 npm run team-codes      # one sign-in code per team, printed once
-npm run rotowire-xi     # predicted elevens, RotoWire then Scout; CI runs it every two hours
+npm run rotowire-xi     # predicted elevens, RotoWire then Scout; CI runs it hourly Thu to Sat's lock
 npm run stats           # the stats league's counts into data/intel/stats/; CI runs it daily
 npm run edition         # file the paper's due stories; needs ANTHROPIC_API_KEY
 npm run intel-check     # is the intel export fresh and whole

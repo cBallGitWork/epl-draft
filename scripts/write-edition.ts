@@ -39,7 +39,7 @@ import { writeBin } from "./edition/binWriter";
 import { draftColumn } from "./edition/draftWriter";
 import { reportsColumn } from "./edition/reportsWriter";
 import { presserDesk } from "./edition/presserWeek";
-import { readXi } from "./edition/xi";
+import { lineupsSlot, readXi } from "./edition/xi";
 import { deskState, seasonOpening } from "./edition/desk";
 import { deskContext } from "./edition/context";
 import { fire, type Run } from "./edition/firing";
@@ -113,7 +113,7 @@ async function main(): Promise<void> {
       finished,
       locked,
       lines: sheet.lines,
-      xiGameweek: xi === null ? null : sheet.gameweek,
+      lineups: xi === null ? null : lineupsSlot(sheet.gameweek, xi),
       ahead: ahead === undefined ? null : { period: ahead.period, gameweek: sheet.gameweek },
       next: deadline === null || nextRound === undefined ? null : { period: deadline.period, gameweek: nextRound, locksAt: deadline.locksAt },
       season: seasonOpening(info, calendar, kickoffs, facts.pedigree.size > 0),

@@ -62,9 +62,16 @@ cannot fill.
 - **The file carries more:** each RotoWire club's `lineup` (predicted or confirmed) and `absent`
   (`{code, status: OUT|QUES}`). The Line-Ups print one mark per man, FPL's or RotoWire's, whichever was said
   later (`newsAdded` against the file's `fetchedAt`); a QUES man reads Doubt.
-- **Terms:** a commercial page, read as Scout's was: once per run, the shared browser user agent, every two
-  hours Thursday to Saturday and once a day otherwise, and nothing re-published but names and positions. If
-  RotoWire objects or blocks, Scout fills every club and nothing else changes.
+- **Terms:** a commercial page, read as Scout's was: once per run, the shared browser user agent, hourly from
+  Thursday morning to Saturday's lock, every two hours on Saturday after it and once a day otherwise, and nothing
+  re-published but names and positions. If RotoWire objects or blocks, Scout fills every club and nothing else changes.
+- **Fresher, and the Line-Ups refile** (Craig, 9 Oct: *"Pressers and line ups need to be pushed up a little quicker
+  to be more up to date"*). The run went hourly Thursday 07:40 to Saturday 12:40 UTC. The Line-Ups' covered-key is
+  the round plus a hash of the file's `fetchedAt` and its elevens and absences (`lineupsSlot`, `scripts/edition/xi.ts`),
+  under the round's one slug: from the filing time to the lock, a changed export files again and replaces the story
+  by slug in the paper and the archive, leading as the newest; an unchanged one files nothing. Printed from facts, so a
+  refile costs no model call. FPL's own fitness news moving while the export does not refiles nothing. The Mac's
+  pressers job gained Friday 14:00 London, between the 12:30 and 15:45 imports (`scripts/install-intel-jobs.sh`).
 
 ## Alerts are issues assigned to the owner — decided 7 Oct 2026
 
@@ -133,7 +140,7 @@ A failing job can report itself; one that never starts cannot. `watchdog.yml` ru
   late), 26h for scout-xi, 96h for warm (Monday night to Friday), and ratings one between 07:00 and 10:00 UTC.
   A latest run that ended `startup_failure` is a finding too.
 - **The Mac's jobs owe a report**: an `alert.yml` run named `alert intel-<mode> ok|fail`, created after the slot
-  opened. Deadlines, London: weekly Tue 12:00; pressers Thu 18:00 and 18:15, Fri 14:00 and Fri 18:30. A fail counts as ran,
+  opened. Deadlines, London: weekly Tue 12:00; pressers Thu 18:00 and 18:15, Fri 14:00, 15:00, 16:30 and 18:30. A fail counts as ran,
   because it has been reported.
 - **A finding files under the late job's own source**, so the job's next green run closes it. A `gh` error turns
   the watchdog red rather than skipping, and no shared setup action stands between it and its own alert.
@@ -4346,7 +4353,7 @@ minutes cross: `minutesIntel` drops the points, which stay behind `PROJECTIONS_S
 
 - **Flat after next week**: GW7–17 are one repeated figure for 289 of 537 men (Haaland 85, then 85.7 to GW17).
   The card prints them as they are; it is the model saying it knows nothing new, not a fault.
-- **Freshness**: the pressers runs (Thu 16:00 and 17:15, Fri 12:30, 15:45, 17:45) take projections too since 7 Oct,
+- **Freshness**: the pressers runs (Thu 16:00 and 17:15, Fri 12:30, 14:00, 15:45, 17:45) take projections too since 7 Oct,
   from the sister's Thu and Fri 16:30 full sweeps ("after the pressers"): the 17:15 Thursday run (from 8 Oct) carries
   Thursday's to Lawro at 20:00, and the 17:45 Friday run Friday's.
 - **The scout's letter** (Craig: *"the xmins up/down mail when it's more than 10"*, *"just report the mins"*,
