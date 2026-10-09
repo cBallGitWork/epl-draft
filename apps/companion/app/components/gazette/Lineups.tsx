@@ -1,9 +1,15 @@
 import Image from "next/image";
-import { crestUrl, type PublishedStory, type StoryLineupSide, londonDayAndTime, DASH } from "@epl/core";
+import { crestUrl, type PublishedStory, type StoryLineupMan, type StoryLineupSide, londonDayAndTime, DASH } from "@epl/core";
 import { yoursInk } from "../../mine";
 import { shortName } from "../../teamNames";
 import { HAIRLINES } from "./rules";
-import { CAPTION } from "./heads";
+import { CAPTION, CAPTION_CAPS } from "./heads";
+
+/** OUT is the loud one, as on the Team Sheet: ranked in scale, never in hue (DESIGN §4). */
+const STATUS: Record<NonNullable<StoryLineupMan["status"]>, string> = {
+  OUT: "font-semibold text-ink",
+  Doubt: "text-muted",
+};
 
 // The gameweek's predicted elevens by match: a listing printed from the export, which no writer sees.
 
@@ -81,6 +87,10 @@ function Side({
                   list answers is which of them somebody holds. */}
               {man.owner === undefined ? null : (
                 <span className="text-muted"> ({shortName(man.owner, named(man.owner))})</span>
+              )}
+              {/* Printed as predicted, never replaced: the mark says the football has him out or in doubt. */}
+              {man.status === undefined ? null : (
+                <span className={`${CAPTION_CAPS} pl-1.5 ${STATUS[man.status]}`}>{man.status}</span>
               )}
             </p>
           </li>

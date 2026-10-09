@@ -19,6 +19,13 @@ describe("the predicted line-ups", () => {
     expect(html).not.toContain(`(${entry.team})`);
   });
 
+  it("marks a predicted starter the football has out, and keeps him in the eleven", () => {
+    const out = { name: "Isak", position: "CF", status: "OUT" as const };
+    const marked = { extras: { lineups: [{ home: { ...side("Liverpool"), men: [out] }, away: side("Man City"), kickoff: "2026-10-10T14:00:00Z" }] } } as PublishedStory;
+    const html = renderToStaticMarkup(createElement(Lineups, { story: marked, named: () => entry.team, mine: null }));
+    expect(html.replace(/<[^>]+>/g, "")).toContain("IsakOUT");
+  });
+
   it("sets each man's position in bold", () => {
     const html = renderToStaticMarkup(createElement(Lineups, { story, named: () => entry.team, mine: null }));
     expect(html).toMatch(/<span class="[^"]*font-bold[^"]*">CB<\/span>/);

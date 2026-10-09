@@ -13,6 +13,15 @@ describe("normalizeExtras — teamNews", () => {
     expect(normalizeExtras({ teamNews: [{ club: "Chelsea", code: 8, line: "" }] })).toBeUndefined();
   });
 
+  it("keeps a predicted starter's OUT or Doubt mark, and drops any other word", () => {
+    const side = (status: unknown) => ({ club: "Liverpool", code: 14, formation: "4-3-3", men: [{ name: "Isak", position: "CF", status }] });
+    const marked = (status: unknown) =>
+      normalizeExtras({ lineups: [{ home: side(status), away: side(undefined), kickoff: "2026-10-10T14:00:00Z" }] })?.lineups?.[0].home.men[0];
+    expect(marked("OUT")?.status).toBe("OUT");
+    expect(marked("Doubt")?.status).toBe("Doubt");
+    expect(marked("Starting")?.status).toBeUndefined();
+  });
+
   it("keeps a club whose only news is its list, with no line to repeat it", () => {
     const out = normalizeExtras({ teamNews: [{ club: "Spurs", code: 6, line: "", stillOut: [{ name: "Porro" }] }] })?.teamNews?.[0];
     expect(out?.stillOut).toEqual([{ name: "Porro" }]);
