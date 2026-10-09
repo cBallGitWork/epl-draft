@@ -16,7 +16,8 @@ import { fantasyDepth } from "./SquadTable";
 import { TABLE } from "../../PremNav";
 import { intelSquads, intelXi } from "../../../intel";
 import { PANEL } from "@/app/desk";
-import { clubOr404, standing } from "./club";
+import { clubOr404 } from "./club";
+import { clubPlaces } from "../../places";
 import { leagueOpinions } from "../../leagueOpinions";
 import { weekMinutes } from "../../../xmins";
 
@@ -31,7 +32,7 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
   const { club, snapshot, fixtures } = await clubOr404(code);
   const league = await leagueOpinions();
 
-  const place = standing(fixtures, snapshot.clubs, club);
+  const place = clubPlaces(fixtures, snapshot.clubs).get(club.id);
 
   // `squadOf` drops the departed and leaves the order to the caller.
   const squad = squadOf(snapshot, club.id)
@@ -89,7 +90,7 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
 
       {/* The club's standing as a button, as `cm9900/25.jpg`'s foot row draws it. */}
       <ButtonLink href={TABLE}>
-        {place === null ? "Back to the table" : `${ordinal(place.place)} in the Premiership`}
+        {place === undefined ? "Back to the table" : `${ordinal(place)} in the Premiership`}
       </ButtonLink>
     </ClubShell>
   );
