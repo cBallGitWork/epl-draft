@@ -31,7 +31,7 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
             {/* Who they play, and when, off the fixture list. */}
             {row.fixture === undefined ? null : (
               <span className="font-sans text-2xs tracking-widest text-muted uppercase">
-                vs {row.fixture.opponent} ({row.fixture.home ? "H" : "A"}) · {londonDayAndTime(row.fixture.kickoff)}
+                v {row.fixture.opponent} ({row.fixture.home ? "H" : "A"}) · {londonDayAndTime(row.fixture.kickoff)}
               </span>
             )}
           </h3>
