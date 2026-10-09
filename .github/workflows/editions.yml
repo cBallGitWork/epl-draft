@@ -95,10 +95,9 @@ jobs:
       # asks production which one it serves and can never file about another.
       - name: Ask production which league it serves
         id: league
-        run: |
-          league=$(curl -sf --max-time 30 "${{ vars.WARM_BASE_URL }}/api/league" | jq -r '.leagueId // empty')
-          if [ -z "$league" ]; then echo "::error::production did not say which league it serves"; exit 1; fi
-          echo "id=$league" >> "$GITHUB_OUTPUT"
+        uses: ./.github/actions/league
+        with:
+          base: ${{ vars.WARM_BASE_URL }}
 
       - name: File the column, if one is due
         env:

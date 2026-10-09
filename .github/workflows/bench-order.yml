@@ -44,10 +44,9 @@ jobs:
 
       - name: Ask production which league it serves
         id: league
-        run: |
-          league=$(curl -sf --max-time 30 "${{ vars.WARM_BASE_URL }}/api/league" | jq -r '.leagueId // empty')
-          if [ -z "$league" ]; then echo "::error::production did not say which league it serves"; exit 1; fi
-          echo "id=$league" >> "$GITHUB_OUTPUT"
+        uses: ./.github/actions/league
+        with:
+          base: ${{ vars.WARM_BASE_URL }}
 
       # The hourly cron leaves a 150-minute window: a run up to 90 minutes late still starts before the write.
       - name: Order the benches
