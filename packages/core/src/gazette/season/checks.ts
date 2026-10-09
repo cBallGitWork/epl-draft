@@ -31,11 +31,13 @@ const SEASON_BANNED: readonly string[] = [
 const ORDINALS = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth"];
 /** A draft has rounds and the paper never prints one (a round is a gameweek here); "built round" is not one. */
 const DRAFT_ROUND = new RegExp(String.raw`\b(?:${ORDINALS.join("|")}|\d{1,2}(?:st|nd|rd|th)|this|the|a|next|late|early|later|earlier) round\b|\brounds\b`, "iu");
-/** A place claimed for a side: "ranked third", "in at number four", "fifth place", "top of the pile", "the weakest squad"; a shirt number is not one. */
+/** A place claimed for a side: "ranked third", "in at number four", "fifth place", "top of the pile", "the weakest squad"; a shirt number,
+ *  "not the strongest" and "the next best" are not one. */
 const RANKED = `${ORDINALS.join("|")}|\\d{1,2}(?:st|nd|rd|th)`;
 const NUMBERS = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+const DENIED = String.raw`(?:\bnot|\bnever|n['’]t|\bfar from|\bnowhere near)\s+(?:quite\s+)?(?:the\s+)?`;
 const PLACE = new RegExp(
-  String.raw`\branked\s+(?:at\s+)?(?:number\s+)?(${RANKED}|\d{1,2}|${NUMBERS.join("|")})\b|\bin\s+at\s+number\s+(\d{1,2}|${NUMBERS.join("|")})\b|\b(${RANKED})\s+place\b|\b(top|bottom) of the (?:pile|heap|list|rankings|pecking order|tree)\b|(?<!(?:${RANKED})[-\s])\b(strongest|best|weakest|worst|poorest|feeblest)\s+(?:squad|side|team)\b(?!\s+(?:bar|but|save|except)\b)`,
+  String.raw`\branked\s+(?:at\s+)?(?:number\s+)?(${RANKED}|\d{1,2}|${NUMBERS.join("|")})\b|\bin\s+at\s+number\s+(\d{1,2}|${NUMBERS.join("|")})\b|\b(${RANKED})\s+place\b|\b(top|bottom) of the (?:pile|heap|list|rankings|pecking order|tree)\b|(?<!(?:${RANKED}|next)[-\s])(?<!${DENIED})\b(strongest|best|weakest|worst|poorest|feeblest)\s+(?:squad|side|team)\b(?!\s+(?:bar|but|save|except)\b)`,
   "giu",
 );
 
@@ -96,10 +98,12 @@ function lineRules(draft: SeasonDraft, calls: SeasonCalls, squads: ReadonlyMap<s
     if (openings.has(opening)) fault(key, "opens like another side's line", "send-back", opening);
     else openings.set(opening, side.teamId);
     for (const other of calls.sides) if (other.teamId !== side.teamId && mentionAt(line, other.name) !== -1) fault(key, "names another side", "send-back", other.name);
-    const mine = new Set(squads.get(side.teamId) ?? []);
+    const mine = squads.get(side.teamId) ?? [];
+    // His own man's whole name blanked first: "James" in "James Maddison" is not Reece James.
+    const named = (man: string) => mentionAt(masked(line, mine.filter((own) => own !== man && own.includes(man))), man) !== -1;
     for (const [teamId, men] of squads) {
       if (teamId === side.teamId) continue;
-      for (const man of men) if (!mine.has(man) && mentionAt(line, man) !== -1) fault(key, "a man from another squad", "hard", man);
+      for (const man of men) if (!mine.includes(man) && named(man)) fault(key, "a man from another squad", "hard", man);
     }
   }
 }
