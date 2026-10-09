@@ -4,14 +4,13 @@ import type {
   StoryKind,
   ThreadUpdate,
 } from "@epl/core";
-import { ANTHROPIC_MESSAGES_URL, MODEL_TIMEOUT_MS, normalizeStory } from "@epl/core";
-import { MOST_THREADS } from "./voice/house";
+import { ANTHROPIC_MESSAGES_URL, MODEL_TIMEOUT_MS, MOST_THREADS, NEWSROOM, normalizeStory } from "@epl/core";
 
 // The one API call, and the shape a filed column takes in the rolling paper.
 
-const MODEL = process.env.GAZETTA_MODEL ?? "claude-opus-5-5";
+const MODEL = process.env.GAZETTA_MODEL ?? NEWSROOM.writer;
 /** The model for the calls that read rather than write: a judge, a fan's read-back, a line edit. */
-const HELPER_MODEL = process.env.GAZETTA_HELPER_MODEL ?? "claude-sonnet-5";
+const HELPER_MODEL = process.env.GAZETTA_HELPER_MODEL ?? NEWSROOM.helper;
 
 /** How a desk reports as it works: the firing's log, a line at a time. */
 export type Say = (message: string) => void;
@@ -26,8 +25,6 @@ export interface Usage {
   cache_read_input_tokens?: number;
   cache_creation_input_tokens?: number;
 }
-/** Opus 5.5 always thinks, and its thinking spends this budget before the column does. */
-const MAX_TOKENS = 16000;
 
 /** One call, by fetch. No SDK: CODE_RULES §2 says no dependency a small local
  *  function would cover, and this is twenty lines. `maxTokens` is for a call that
@@ -37,7 +34,7 @@ export async function writeColumn(
   brief: string,
   onUsage?: (usage: Usage) => void,
   tier: Tier = "writer",
-  maxTokens = MAX_TOKENS,
+  maxTokens: number = NEWSROOM.maxTokens,
 ): Promise<Record<string, unknown>> {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) throw new Error("ANTHROPIC_API_KEY is not set. The column is written in CI, never on Vercel.");
@@ -46,14 +43,13 @@ export async function writeColumn(
     method: "POST",
     headers: {
       "x-api-key": key,
-      "anthropic-version": "2023-06-01",
+      "anthropic-version": NEWSROOM.apiVersion,
       "content-type": "application/json",
     },
     body: JSON.stringify({
       model: tier === "helper" ? HELPER_MODEL : MODEL,
       max_tokens: maxTokens,
-      // Opus 5.5's default; set so a change of default never moves the bill unseen.
-      ...(tier === "writer" ? { output_config: { effort: "medium" } } : {}),
+      ...(tier === "writer" ? { output_config: { effort: NEWSROOM.effort } } : {}),
       // The voice is long and the same on every call of a firing, so it is cached: a repeat reads it at a fraction of the price.
       system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
       messages: [{ role: "user", content: brief }],

@@ -1,4 +1,4 @@
-import { BANNED, LEAGUE_NAME, PAPER_TITLE, type StoryKind, writerOf } from "@epl/core";
+import { BANNED, LEAGUE_NAME, MOST_THREADS, PAPER_TITLE, type StoryKind, writerOf } from "@epl/core";
 
 // The paper's editorial voice: the league it covers, its staff writers, and the rules every byline obeys. COPY, so
 // it lives with the writer; the staff and the banned list come from core, where the page and the check read the same
@@ -61,9 +61,6 @@ The register is James Richardson reading out a Gazzetta headline on Football Ita
 A pun that does not land cleanly is worse than none, so if none lands, a sharp turn of phrase beats a bad one. Eight words or fewer.
 
 The banned phrases above are banned in the headline too, and "bank" hardest of all. A front page went out with five of them.`;
-
-/** The most storyline beats a column may report; the newsroom keeps no more than this. */
-export const MOST_THREADS = 3;
 
 /** The JSON contract for the prose kinds: one story, one body. */
 export const STORY_SHAPE = `Return JSON only, matching this shape exactly:

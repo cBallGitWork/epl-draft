@@ -1,6 +1,7 @@
 import {
   LAWRO_CORE,
   PAPER_TITLE,
+  PREDICTIONS,
   applySkit,
   assembleLawro,
   checkLawro,
@@ -21,8 +22,6 @@ import { SKIT, lawroSendBack, predictionsVoice } from "./voice/lawro";
 // has to, the skit writer looks for a groaner, and the desk files his words beside its own calls.
 
 const EMPTY: LawroDraft = { deck: "", intro: "", ties: new Map() };
-/** His call's budget, thinking included: five three-paragraph ties under every rule spent 16,000 thinking on 8 Oct 2026. */
-const LAWRO_TOKENS = 32000;
 
 /** The column ready to file. Throws only when the first call cannot be made at all, which leaves
  *  the key unspent for the next firing; every later failure files what was checked. */
@@ -53,7 +52,7 @@ export async function writeLawro(desk: PredictionsDesk, brief: string, facts: st
   };
   const voice = predictionsVoice(desk.ties.length);
 
-  const attempts = await sendBackOnce({ desk: "lawro", voice, brief, read: (raw) => attempt(raw, ctx), sendBack: (faults) => lawroSendBack(faults, label), maxTokens: LAWRO_TOKENS }, say);
+  const attempts = await sendBackOnce({ desk: "lawro", voice, brief, read: (raw) => attempt(raw, ctx), sendBack: (faults) => lawroSendBack(faults, label), maxTokens: PREDICTIONS.tokens }, say);
   let draft = mergeAttempts(attempts, calls);
   const left = serious(checkLawro(draft, ctx));
   if (left.length > 0) say(`  ⚠ lawro files with ${left.length} faults the rewrite kept: ${faultSummary(left)}`);

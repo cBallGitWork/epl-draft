@@ -155,9 +155,9 @@ export async function predictionsDesk(input: {
     past: pastOffered(ties.flatMap((tie) => (tie.call.instinct === null ? [] : [tie.call.instinct])), prose),
     archive: {
       prose,
-      lastLines: columns.slice(0, 12).flatMap((story) => (story.ties ?? []).map((tie) => tie.line.split(/(?<=[.?!])\s+/u).at(-1) ?? "")),
+      lastLines: columns.slice(0, PREDICTIONS.wornEndings).flatMap((story) => (story.ties ?? []).map((tie) => tie.line.split(/(?<=[.?!])\s+/u).at(-1) ?? "")),
       shapes: (columns[0]?.extras?.skit ?? []).map((edit) => edit.shape),
-      targets: columns.slice(0, 10).flatMap((story) => (story.extras?.skit ?? []).flatMap((edit) => (edit.target === null ? [] : [edit.target]))),
+      targets: columns.slice(0, PREDICTIONS.wornTargets).flatMap((story) => (story.extras?.skit ?? []).flatMap((edit) => (edit.target === null ? [] : [edit.target]))),
     },
     names: [...new Set([...named.values(), ...ties.flatMap((tie) => derbyNames(tie.derby)), ...squads.flatMap((team) => team.players.flatMap((man) => ("player" in man ? [man.player.name] : [])))])],
     clubs: clubs.map((club) => club.name),

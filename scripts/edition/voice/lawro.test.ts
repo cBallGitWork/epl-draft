@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MOST_THREADS } from "./house";
+import { MOST_THREADS } from "@epl/core";
 import { predictionsVoice } from "./lawro";
 
 // His prompt's storyline line, word for word as filed: a line in a prompt is a line in the paper.

@@ -1,4 +1,4 @@
-import { MS_PER_DAY, londonDayOf, onLondonDay, type Club, type Fixture, type PresserLine, type RosteredTeam } from "@epl/core";
+import { MS_PER_DAY, TEAM_SHEET, londonDayOf, onLondonDay, type Club, type Fixture, type PresserLine, type RosteredTeam } from "@epl/core";
 import type { Say } from "./newsroom";
 import {
   presserFixtures,
@@ -11,10 +11,6 @@ import {
 
 // WHICH round and WHICH day the Team Sheet is about: `pressers.ts` reads the export, this decides the window, the
 // round it previews, and the day each edition carries.
-
-/** No round is longer than one, so a presser older than this is about a round
- *  already played. */
-const WEEK = 7 * MS_PER_DAY;
 
 /** Everything the Team Sheet needs, in one place: the window, the round it previews, the guard that the export is
  *  about that round, and the three files keyed on it. */
@@ -38,7 +34,7 @@ export function presserDesk(input: {
   const { facts, snapshot, byCode, now, lock, locked, say } = input;
 
   // The window opens at the last lock that has PASSED; before this round locks, its lock is in the future.
-  const since = locked && lock !== null ? lock : new Date(Date.parse(now) - WEEK).toISOString();
+  const since = locked && lock !== null ? lock : new Date(Date.parse(now) - TEAM_SHEET.windowDays * MS_PER_DAY).toISOString();
 
   // LOCKED, not finished: once a round has locked every conference is about the next one.
   const gameweek = locked ? snapshot.gameweek + 1 : snapshot.gameweek;

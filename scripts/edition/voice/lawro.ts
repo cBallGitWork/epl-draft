@@ -1,4 +1,4 @@
-import { LAWRO_BANNED, LAWRO_CAPPED, LAWRO_CORE, LAWRO_LIMITS, NEVER_CATEGORIES, SHAPES, capital, spelled, type Fault } from "@epl/core";
+import { LAWRO_BANNED, LAWRO_CAPPED, LAWRO_CORE, LAWRO_LIMITS, MOST_THREADS, NEVER_CATEGORIES, SHAPES, capital, spelled, type Fault } from "@epl/core";
 import { DESK, MASTHEAD, PAPER } from "./house";
 
 // Lawro's column, under Mark Lawrenson's own name by Craig's decision of 24 Sep 2026. Built from
@@ -18,7 +18,7 @@ const SHAPE = `Return JSON only, matching this shape exactly:
 
 THE DECK is the sub-editor's and not yours, so it is written about you in the third person, and you are "Lawro" in it. The desk sets the headline. The deck's story is the ties where you go against the favourites, and if there are none, the closest tie of the week, in plain words and never a pun.
 
-THREADS: report 0 to 3 running storylines, only where the facts open or advance one. An empty array is the ordinary answer.`;
+THREADS: report 0 to ${MOST_THREADS} running storylines, only where the facts open or advance one. An empty array is the ordinary answer.`;
 
 /** His voice whatever the column: how he sounds, who he is, and the rules the editor checks him on. */
 export const LAWRO_VOICE = {

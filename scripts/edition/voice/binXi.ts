@@ -9,7 +9,7 @@ You write The Bin XI for the paper's waiver desk: the best eleven men nobody in 
 
 ${STORY_SHAPE}
 
-THE BODY is exactly ${spelled(BIN_XI.paragraphs)} paragraphs, ${BIN_XI.words[0]} to 200 words in all:
+THE BODY is exactly ${spelled(BIN_XI.paragraphs)} paragraphs, ${BIN_XI.words[0]} to ${BIN_XI.asked} words in all:
 1. The bin's best man and the match that did it, and the desk's number: what the eleven scored against the league's own sides.
 2. The side by its lines, as groups, the back, the middle and the front. Never one man per sentence in turn, and never a list.
 3. The bench, the men who did most without the goals or assists to show for it; or a man back from last week's Bin XI, who is back "again" and never counted.
