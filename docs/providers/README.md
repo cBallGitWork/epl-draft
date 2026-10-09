@@ -91,26 +91,17 @@ opens the issue `alert: <workflow>`, assigned to the owner, and the next green r
 | `.github/workflows/ratings.yml` | `20 21,23 * * 5,6,0,1`<br>`20 7 * * *` | `npm run ratings`, priced by the league `recorded.json` names `scoring` | `data/ratings`, "data: ratings, {time}" | `ratings` | stays |
 | `.github/workflows/editions.yml` | `0,30 14-23 * * 5`<br>`0,30 10-22 * * 6`<br>`0,30 11-22 * * 0`<br>`0,30 17-22 * * 1,2`<br>`15 6-9 * * 0,1,2`<br>`0,30 17-22 * * 3`<br>`15 6-9 * * 4`<br>`0,30 17-20 * * 4` | asks production `GET /api/league`, then `npm run edition` | `data/editions`, `apps/companion/public/paper`, "data: the paper for {date}" | `editions` | stays |
 | `.github/workflows/warm.yml` | `*/30 11-22 * * 6,0`<br>`*/30 17-22 * * 1,5` | curls `/` and `/matchday` | nothing | `warm`, cancels in progress | stays |
+| `.github/workflows/bench-order.yml` | `23 * * * *` | asks production `GET /api/league`, then `scripts/bench-order.ts --wait --within 150 --write`: a run with a lock inside 150 minutes sleeps to five minutes before it (`BENCH_ORDER_LEAD_MINUTES`) and sends `setAutoSubsOrder` (adminMode, the `FANTRAX_COOKIE` secret) for each bench with no number, ordered by total FPts off `getTeamRosterInfo`; any other run exits in a line | nothing in the repo; writes in Fantrax | `bench-order`, queues | stays |
 | `.github/workflows/verify.yml` | none: push, pull_request | the four gates, smoke per recorded league, `npm run bridge:check` | nothing | none | stays |
 | `.github/workflows/claude.yml` | none: PR and issue comments | the `@claude` review | nothing | per PR | stays |
-| `.github/workflows/alert.yml` | none: dispatched by `scripts/sync-intel.sh` and `scripts/bench-order.sh` | `scripts/ci/alert.sh`, run named `alert <source> <state>` | nothing; opens or closes an issue | per source | stays |
+| `.github/workflows/alert.yml` | none: dispatched by `scripts/sync-intel.sh` | `scripts/ci/alert.sh`, run named `alert <source> <state>` | nothing; opens or closes an issue | per source | stays |
 
 
-On Craig's Mac (launchd, London time; `scripts/install-intel-jobs.sh` installs all three): `com.epl-draft.intel-weekly` Tue 08:00 runs
+On Craig's Mac (launchd, London time; `scripts/install-intel-jobs.sh` installs both): `com.epl-draft.intel-weekly` Tue 08:00 runs
 `scripts/sync-intel.sh weekly`, `com.epl-draft.intel-pressers` Thu 16:00, Fri 12:30, 14:00 and 15:45 (the conferences) and Thu 17:15
 and Fri 17:45 (the sister's 16:30 sweeps) runs `pressers`. Each restores the GitHub sweep's data from R2 through `scripts/sister-export.py`,
 writes a `chore/intel-<mode>-<date>-<time>` PR that merges itself once `verify` passes, logs to
 `~/Library/Logs/epl-draft-intel.log`, and ends in an `alert.yml` dispatch, `intel-<mode> ok` or `fail`.
-
-`com.epl-draft.bench-order`, every day at 07:00, runs `scripts/bench-order.sh`: it asks production for the league
-(`GET /api/league`), reads the next lock off `getLeagueInfo` and FPL's kickoffs, and when that lock is before 08:00
-tomorrow holds the Mac awake (`caffeinate -i`) until five minutes before it (`BENCH_ORDER_LEAD_MINUTES`). Then
-`scripts/bench-order.ts --wait --write` reads every team's `getTeamRosterInfo` for that period and sends
-`setAutoSubsOrder` (adminMode, `FANTRAX_COOKIE` from the main folder's `.env.local`) for each bench with no number
-on it, ordered by total FPts. Writes in Fantrax, nothing in the repo; logs to
-`~/Library/Logs/epl-draft-bench-order.log`. A run that reaches the teams dispatches `bench-order ok`; a refused write,
-a failed read or a lock passed before the write dispatches `bench-order fail`; a day with no lock due logs one line.
-No watchdog slot: the report lands at the lock, which moves.
 
 Slots shared today: warm shares every :00 and :30 with editions in the match windows. Editions'
 own lines no longer overlap; until 1 Oct 2026 24 of its firings a week ran twice.

@@ -1,7 +1,7 @@
 #!/bin/bash
 # Installs the launchd jobs, London time. sync-intel.sh: Tuesday 08:00 weekly; pressers Thursday 16:00 and Friday 12:30,
 # 14:00 and 15:45 for the conferences, and Thursday 17:15 and Friday 17:45 for the squads, depth and xMins the sister's
-# 16:30 sweeps leave (Thursday's before Lawro at 20:00). bench-order.sh: every day at 07:00, for a lock by 08:00 tomorrow.
+# 16:30 sweeps leave (Thursday's before Lawro at 20:00).
 # Each run executes origin/main's copy, so an update lands without reinstalling; a copy it cannot read is a banner.
 set -euo pipefail
 MAIN=${EPL_DRAFT:-$HOME/epl-draft-1}
@@ -39,8 +39,6 @@ PLIST
 }
 
 at() { printf '<dict><key>Weekday</key><integer>%s</integer><key>Hour</key><integer>%s</integer><key>Minute</key><integer>%s</integer></dict>' "$1" "$2" "$3"; }
-daily() { printf '<dict><key>Hour</key><integer>%s</integer><key>Minute</key><integer>%s</integer></dict>' "$1" "$2"; }
 
 job com.epl-draft.intel-weekly sync-intel weekly "$(at 2 8 0)" epl-draft-intel
 job com.epl-draft.intel-pressers sync-intel pressers "$(at 4 16 0)$(at 4 17 15)$(at 5 12 30)$(at 5 14 0)$(at 5 15 45)$(at 5 17 45)" epl-draft-intel
-job com.epl-draft.bench-order bench-order "" "$(daily 7 0)" epl-draft-bench-order
