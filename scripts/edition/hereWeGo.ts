@@ -57,7 +57,7 @@ export async function hereWeGoDesk(input: {
   for (const assignment of due) {
     const trade = trades.find((each) => tradeSlot(each).key === assignment.key);
     if (trade === undefined) continue;
-    const story = tradeStory({ trade, teamName, figures, gameweek: assignment.round?.gameweek ?? null });
+    const story = tradeStory({ trade, teamName, figures });
     const man = footballer(story.lead.fantraxId);
     const face = man === undefined ? null : { code: man.code, name: story.lead.playerName, clubId: man.clubId, position: story.lead.position?.split(",")[0] ?? null };
     jobs.set(assignment.key, { ...story, face });
