@@ -2,6 +2,7 @@ import { LATE_GOAL_MINUTE, REPORTS } from "../../config";
 import { minutesLeft, numeral } from "./minutes";
 import { finalScore, goalsBy, isGoal, type MatchEvent } from "./timeline";
 import type { ReportMatchInput } from "./types";
+import { withClub } from "./men";
 import { plural } from "../../format";
 import { SIDES, otherSide, type Side } from "../side";
 
@@ -72,7 +73,7 @@ export function derivedFacts(match: ReportMatchInput, events: readonly MatchEven
   // A man whose chances added up to a goal and more, with none scored, in words (the paper never prints the figure).
   for (const man of match.men) {
     const scored = goalsBy(goals, man.code) > 0;
-    if (!scored && man.expectedGoals >= REPORTS.missed.expectedGoals) facts.push(`${man.name} (${name(man.side)}) had chances good enough to score and did not`);
+    if (!scored && man.expectedGoals >= REPORTS.missed.expectedGoals) facts.push(`${withClub(match, man)} had chances good enough to score and did not`);
   }
 
   const figures = match.figures;

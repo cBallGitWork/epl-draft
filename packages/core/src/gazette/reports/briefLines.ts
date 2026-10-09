@@ -1,20 +1,20 @@
 import { numeral } from "./minutes";
 import { assistsBy, goalsBy, isGoal, type ManCounts, type MatchEvent } from "./timeline";
 import { higherFirst } from "./derived";
+import { withClub } from "./men";
 import type { ReportMan, ReportMatchInput } from "./types";
 import { plural } from "../../format";
 
 // The account's moments and the section candidates' football, in a reporter's words; the labels name no provider, because
 // the writer copies labels. Bookings and routine changes are the timeline's, so they never reach the brief.
 
-const who = (match: ReportMatchInput, man: ReportMan | null) => (man === null ? "someone" : `${man.name} (${match[man.side].name})`);
 const phrases = (event: MatchEvent) => (event.phrases.length === 0 ? "" : ` [${event.phrases.join(" | ")}]`);
 const SUPPLY: Record<string, string> = { cross: "a cross", "through ball": "a through ball", "headed pass": "a header", pass: "a pass" };
 
 function made(match: ReportMatchInput, event: MatchEvent): string {
   const s = event.shot;
   const from = s?.situation === "corner" ? " from a corner" : s?.situation === "set piece" ? " from a set piece" : s?.situation === "fast break" ? " on the break" : "";
-  return event.other === null ? from : `, made by ${who(match, event.other)} with ${SUPPLY[s?.supply ?? "pass"] ?? "a pass"}${from}`;
+  return event.other === null ? from : `, made by ${withClub(match, event.other)} with ${SUPPLY[s?.supply ?? "pass"] ?? "a pass"}${from}`;
 }
 
 /** The one goal the desk marks gets its whole description; the rest a scorer, a maker and how it was made. */
@@ -27,7 +27,7 @@ function describe(event: MatchEvent): string {
 /** A moment the account may tell, or null for one that belongs to the timeline alone. `misses` are the chances not taken
  *  worth a sentence where they happened. */
 export function eventLine(match: ReportMatchInput, event: MatchEvent, full: boolean, decisiveSubs: ReadonlySet<number>, misses: ReadonlySet<MatchEvent>): string | null {
-  const man = who(match, event.man);
+  const man = withClub(match, event.man);
   const score = event.score === null ? "" : ` ${higherFirst(event.score.home, event.score.away)} to ${event.score.home > event.score.away ? match.home.name : event.score.home < event.score.away ? match.away.name : "neither"}`;
   const level = event.score !== null && event.score.home === event.score.away ? ` ${event.score.home}-${event.score.away}` : score;
   switch (event.kind) {
@@ -37,7 +37,7 @@ export function eventLine(match: ReportMatchInput, event: MatchEvent, full: bool
     case "own-goal":
       return `OWN GOAL:${level}. ${man} put it into his own net.${phrases(event)}`;
     case "ruled-out":
-      return `GOAL RULED OUT after a video review: ${man} had scored${event.other === null ? "" : `, made by ${who(match, event.other)}`}.${phrases(event)}`;
+      return `GOAL RULED OUT after a video review: ${man} had scored${event.other === null ? "" : `, made by ${withClub(match, event.other)}`}.${phrases(event)}`;
     case "penalty-missed":
     case "penalty-saved":
       return `PENALTY ${event.kind === "penalty-missed" ? "MISSED" : "SAVED"}: ${man}'s kick.${phrases(event)}`;
@@ -52,7 +52,7 @@ export function eventLine(match: ReportMatchInput, event: MatchEvent, full: bool
       return `HIT THE WOODWORK: ${man}.${phrases(event)}`;
     case "substitution":
       // An injury is news; a change is news only when the man who came on scored or made one. Neither is the other's heir.
-      if (event.injury) return `INJURY: ${who(match, event.other)} went off injured.${phrases(event)}`;
+      if (event.injury) return `INJURY: ${withClub(match, event.other)} went off injured.${phrases(event)}`;
       return event.man !== null && decisiveSubs.has(event.man.code) ? `ON: ${man} came on, and went on to score or make a goal.${phrases(event)}` : null;
     case "injured-off":
       return `INJURY: ${man} went off injured with no changes left.${phrases(event)}`;

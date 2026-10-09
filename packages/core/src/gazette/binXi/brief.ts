@@ -5,6 +5,7 @@ import { numeral } from "../reports/minutes";
 import type { StoryThread } from "../ledger";
 import type { BinMan, BinXi } from "./select";
 import { briefOf } from "../briefs/briefOf";
+import { aCount } from "../counted";
 
 // What the Bin XI's writer is told: the eleven and the bench grouped by club, each man's week in
 // words, how he came to be unowned, and the one comparison the desk makes. xG and xA stay out: the
@@ -106,17 +107,17 @@ function result(match: BinMatch): string {
 function line(man: BinMan, input: BinBriefInput): string {
   const extras = input.extras(man);
   const did = [
-    counted(man.goals, "a goal", "goals"),
-    counted(man.assists, "an assist", "assists"),
+    aCount(man.goals, "a goal", "goals"),
+    aCount(man.assists, "an assist", "assists"),
     extras.cleanSheet ? "a clean sheet" : null,
-    counted(extras.saves, "a save", "saves"),
+    aCount(extras.saves, "a save", "saves"),
   ].filter((part): part is string => part !== null);
   const play = [
     shots(man),
-    counted(man.chancesCreated, "a chance created", "chances created"),
-    counted(extras.tacklesWon, "a tackle won", "tackles won"),
-    counted(extras.interceptions, "an interception", "interceptions"),
-    counted(extras.clearances, "a clearance", "clearances"),
+    aCount(man.chancesCreated, "a chance created", "chances created"),
+    aCount(extras.tacklesWon, "a tackle won", "tackles won"),
+    aCount(extras.interceptions, "an interception", "interceptions"),
+    aCount(extras.clearances, "a clearance", "clearances"),
   ].filter((part): part is string => part !== null);
   const status = input.status(man);
   return [
@@ -131,13 +132,8 @@ function line(man: BinMan, input: BinBriefInput): string {
     .join(" ");
 }
 
-/** "a goal", "2 goals"; nothing for none, and nothing where the read did not carry it. */
-function counted(value: number | null, one: string, many: string): string | null {
-  return value === null || value === 0 ? null : value === 1 ? one : `${value} ${many}`;
-}
-
 function shots(man: BinMan): string | null {
-  const taken = counted(man.shots, "a shot", "shots");
+  const taken = aCount(man.shots, "a shot", "shots");
   return taken === null || !man.shotsOnTarget ? taken : `${taken}, ${man.shotsOnTarget} on target`;
 }
 

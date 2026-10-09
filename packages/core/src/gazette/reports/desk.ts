@@ -8,7 +8,7 @@ import { keyStats, type KeyStat } from "./keyStats";
 import { pts } from "../matchups/stories";
 import { played } from "./men";
 import { clubStandings, type ClubStanding } from "./standing";
-import { assistsBy, goalsBy, isGoal, manCounts, matchEvents, type ManCounts, type MatchEvent } from "./timeline";
+import { goalsBy, involvedIn, isGoal, manCounts, matchEvents, type ManCounts, type MatchEvent } from "./timeline";
 import type { ReportDayInput, ReportMan, ReportMatchInput } from "./types";
 import { plural } from "../../format";
 import { SIDES, otherSide } from "../side";
@@ -97,8 +97,7 @@ function misses(events: readonly MatchEvent[]): MatchEvent[] {
 /** The men a section could be about, each with the league stake that earns it, most newsworthy first. */
 function nominees(match: ReportMatchInput, events: readonly MatchEvent[], counts: ReadonlyMap<number, ManCounts>): Nominee[] {
   const goals = events.filter(isGoal);
-  const scored = (m: ReportMan) => goalsBy(goals, m.code);
-  const made = (m: ReportMan) => assistsBy(goals, m.code);
+  const involved = (m: ReportMan) => involvedIn(goals, m.code);
   const h2h = (m: Held) => {
     const h = m.holder.h2h;
     if (h === null || h.us === null || h.them === null) return "";
@@ -112,22 +111,22 @@ function nominees(match: ReportMatchInput, events: readonly MatchEvent[], counts
   };
   const men = match.men.filter(played);
   const owned = men.filter(isHeld);
-  for (const m of owned.filter((x) => !x.holder.fielded && (scored(x) + made(x) > 0 || (x.points ?? 0) >= 4))) {
+  for (const m of owned.filter((x) => !x.holder.fielded && (involved(x) > 0 || (x.points ?? 0) >= 4))) {
     add(m, `${m.holder.team} has him on the bench, so ${m.points === null ? "his points" : pts(m.points)} did not count`);
   }
   for (const m of owned.filter((x) => x.injuredOff)) add(m, `${m.holder.team} has him; went off injured${m.fitness === null ? "" : `; since: ${m.fitness}`}`);
   const held = owned.filter((x) => x.holder.fielded && x.points !== null).sort((a, b) => (b.points ?? 0) - (a.points ?? 0));
-  for (const m of held.filter((x) => (x.points ?? 0) >= 5 || scored(x) + made(x) > 0)) add(m, `${m.holder.team} has him, ${pts(m.points ?? 0)}${h2h(m)}`);
+  for (const m of held.filter((x) => (x.points ?? 0) >= 5 || involved(x) > 0)) add(m, `${m.holder.team} has him, ${pts(m.points ?? 0)}${h2h(m)}`);
   // A high pick who gave his manager little is the other side of the week.
   for (const m of owned.filter((x) => x.started && x.holder.fielded && (x.points ?? 99) <= 1 && (x.holder.round ?? 99) <= 3)) {
     add(m, `${m.holder.team} has him, ${pts(m.points ?? 0)}${h2h(m)}`);
   }
-  for (const m of men.filter((x) => x.holder === null && scored(x) + made(x) >= 2)) {
+  for (const m of men.filter((x) => x.holder === null && involved(x) >= 2)) {
     add(m, m.goalsSeason === null ? "a free agent" : `a free agent; ${m.goalsSeason} league ${plural(m.goalsSeason, "goal")} this season`);
   }
   // When the stakes run short, the men whose figures stand out, so a match never has fewer candidates than sections.
   const { chances, mostShots, saves } = REPORTS.stats;
-  const stood = (x: ReportMan) => scored(x) + made(x) > 0 || (counts.get(x.code)?.chancesMade ?? 0) >= chances || (counts.get(x.code)?.shots ?? 0) >= mostShots || x.saves >= saves;
+  const stood = (x: ReportMan) => involved(x) > 0 || (counts.get(x.code)?.chancesMade ?? 0) >= chances || (counts.get(x.code)?.shots ?? 0) >= mostShots || x.saves >= saves;
   for (const m of men.filter(stood)) add(m, m.holder === null ? "a free agent" : m.holder.fielded ? `${m.holder.team} has him` : `${m.holder.team} has him on the bench`);
   return out;
 }

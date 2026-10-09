@@ -5,6 +5,7 @@ import type { AutoSub } from "./autoSubs";
 import type { Cutoff } from "./brief";
 import type { DraftMan, DraftSide, GoalTime, SlotWorth } from "./types";
 import { howMany, listed } from "../../format";
+import { aCount } from "../counted";
 import { priceOf } from "./worth";
 
 // Each fact about a draft man in the game's own words, for the threads and the brief: a return is a goal, an assist or a
@@ -27,10 +28,9 @@ export const whenScored = (t: GoalTime) => (t.added !== undefined ? `in added ti
 /** "a goal in the 89th minute and an assist": a late goal carries its time. A man's gameweek, or one day of it. */
 export function returnWords(m: Pick<DraftMan, "goals" | "assists" | "cleanSheets" | "scoredAt">): string {
   const lateGoal = m.goals === 1 ? m.scoredAt.find(isLate) : undefined;
-  const goals = m.goals === 0 ? null : m.goals === 1 ? `a goal${lateGoal === undefined ? "" : ` ${whenScored(lateGoal)}`}` : `${m.goals} goals`;
-  const assists = m.assists === 0 ? null : m.assists === 1 ? "an assist" : `${m.assists} assists`;
-  const clean = m.cleanSheets === 0 ? null : m.cleanSheets === 1 ? "a clean sheet" : `${m.cleanSheets} clean sheets`;
-  return listed([goals, assists, clean].filter((x): x is string => x !== null), "and");
+  const goals = aCount(m.goals, `a goal${lateGoal === undefined ? "" : ` ${whenScored(lateGoal)}`}`, "goals");
+  const said = [goals, aCount(m.assists, "an assist", "assists"), aCount(m.cleanSheets, "a clean sheet", "clean sheets")];
+  return listed(said.filter((x): x is string => x !== null), "and");
 }
 
 /** "got 6: a clean sheet", "hauled 11: a goal, an assist and a clean sheet"; null for a blank. */

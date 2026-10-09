@@ -1,6 +1,6 @@
 import type { PlMoment } from "../../football/premierleague/moments";
 import type { PlSquadMan, PlTeamSheet } from "../../football/premierleague/teamSheet";
-import type { ReportMan } from "./types";
+import type { ReportMan, ReportMatchInput } from "./types";
 import type { Side } from "../side";
 import { isDismissal } from "./timeline";
 
@@ -89,3 +89,6 @@ export function reportMen(
 
 /** Whether he played at all: started, or came on. */
 export const played = (man: ReportMan) => man.started || man.onAt !== null;
+
+/** "Bukayo Saka (Arsenal)", as every brief names a man; "someone" for a man nobody could place. */
+export const withClub = (match: ReportMatchInput, man: ReportMan | null) => (man === null ? "someone" : `${man.name} (${match[man.side].name})`);

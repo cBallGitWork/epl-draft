@@ -34,6 +34,8 @@ export const goalsBy = (events: readonly MatchEvent[], code: number) =>
   events.filter((e) => isGoal(e) && e.kind !== "own-goal" && e.man?.code === code).length;
 /** Goals he set up. */
 export const assistsBy = (events: readonly MatchEvent[], code: number) => events.filter((e) => isGoal(e) && e.other?.code === code).length;
+/** Goals he scored or set up. */
+export const involvedIn = (events: readonly MatchEvent[], code: number) => goalsBy(events, code) + assistsBy(events, code);
 /** A red card, straight or a second yellow. */
 export const isDismissal = (kind: MomentKind) => kind === "sent-off" || kind === "second-yellow";
 

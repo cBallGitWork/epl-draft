@@ -7,6 +7,7 @@ import type { StarterFlag } from "../sheets/flags";
 import type { InForm } from "../sheets/form";
 import { isBack, printName, type SheetMan } from "../sheets/sheet";
 import { briefOf } from "./briefOf";
+import { tally } from "../counted";
 
 // The facts behind the team-news article, per head-to-head and per side. Every sentence the writer
 // may print is already a line here; what a block may not be turned into is said beside it. No
@@ -118,8 +119,7 @@ function benched(benching: Benching, unchanged: boolean): string {
 
 /** "2 goals, 1 assist, 1 clean sheet"; empty when there is nothing to count. */
 function returns(goals: number, assists: number, cleanSheets: number): string {
-  const count = (n: number, one: string, many: string) => (n > 0 ? `${n} ${n === 1 ? one : many}` : null);
-  return [count(goals, "goal", "goals"), count(assists, "assist", "assists"), count(cleanSheets, "clean sheet", "clean sheets")].filter((each) => each !== null).join(", ");
+  return tally([[goals, "goal"], [assists, "assist"], [cleanSheets, "clean sheet"]]);
 }
 
 function inForm(form: InForm): string {

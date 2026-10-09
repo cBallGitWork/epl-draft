@@ -2,6 +2,7 @@ import { banned } from "../banned";
 import { REPORT_FPL } from "./words";
 import type { MatchDesk } from "./desk";
 import { REPORT_NEVER } from "./style";
+import { withClub } from "./men";
 import { isGoal, type MatchEvent } from "./timeline";
 
 // The day's headline: the writer offers several, the desk strikes those that break a rule, and the fan picks one or none.
@@ -33,7 +34,7 @@ export function survivors(candidates: readonly string[], names: readonly string[
 
 /** "Bukayo Saka (Arsenal)", or for an own goal the man, his club and the club it counted for. */
 function scorer({ match }: MatchDesk, goal: MatchEvent): string {
-  const man = goal.man === null ? "someone" : `${goal.man.name} (${match[goal.man.side].name})`;
+  const man = withClub(match, goal.man);
   return goal.kind === "own-goal" && goal.side !== null ? `an own goal by ${man}, for ${match[goal.side].name},` : man;
 }
 
@@ -46,6 +47,6 @@ export function punBrief(desk: MatchDesk, story: string): string {
     `THE RESULT: ${match.home.name} ${match.fixture.homeScore}-${match.fixture.awayScore} ${match.away.name}. What decided it: ${opening}.`,
     `THE CLUBS: ${[match.home, match.away].map((c) => [c.name, ...c.shorts].join(" / ")).join("; ")}.`,
     `THE GOALS: ${goals.map((g) => `${scorer(desk, g)} ${g.phrases[0] ?? g.minute}${g.other === null ? "" : `, made by ${g.other.name}`}`).join("; ") || "none"}.`,
-    `THE OTHER MEN IN THE STORY: ${desk.nominees.map((n) => `${n.man.name} (${match[n.man.side].name})`).join("; ")}.`,
+    `THE OTHER MEN IN THE STORY: ${desk.nominees.map((n) => withClub(match, n.man)).join("; ")}.`,
   ].join("\n");
 }
