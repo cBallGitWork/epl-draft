@@ -4,13 +4,13 @@
   "leagueId": "mqsjd23smsgbiqzr",
   "period": 6,
   "gameweek": 6,
-  "filedAt": "2026-10-05T21:47:02.922Z",
+  "filedAt": "2026-10-09T16:01:48.110Z",
   "expiresAt": "2026-10-10T11:30:00Z",
   "edition": "The Form Guide",
   "byline": "The Line-Ups",
   "headline": "Predicted Line-Ups: Gameweek 6",
-  "deck": "Every club's expected starting eleven for the round, match by match.",
-  "body": "All 10 of the round's matches, with both sides named.",
+  "deck": "Every club's expected starting eleven for the gameweek, match by match.",
+  "body": "All 10 of the gameweek's matches, with both sides named.",
   "subjects": [
     "predicted-xi:gw6"
   ],
@@ -36,9 +36,8 @@
               "owner": "7z8fy0pnmuogbtdw"
             },
             {
-              "name": "Ezri Konsa",
-              "position": "CB",
-              "owner": "qgucu9dgmufwva1x"
+              "name": "Cristhian Mosquera",
+              "position": "CB"
             },
             {
               "name": "Gabriel",
@@ -70,8 +69,9 @@
               "owner": "kpj0z744muh1qwtd"
             },
             {
-              "name": "Christos Tzolis",
-              "position": "LW"
+              "name": "Eberechi Eze",
+              "position": "CAM",
+              "owner": "7z8fy0pnmuogbtdw"
             },
             {
               "name": "Viktor Gyökeres",
@@ -151,9 +151,8 @@
               "position": "GK"
             },
             {
-              "name": "Matty Cash",
-              "position": "RB",
-              "owner": "qgucu9dgmufwva1x"
+              "name": "Aaron Wan-Bissaka",
+              "position": "RB"
             },
             {
               "name": "Victor Lindelöf",
@@ -225,8 +224,8 @@
               "owner": "kpj0z744muh1qwtd"
             },
             {
-              "name": "Yehor Yarmoliuk",
-              "position": "AM"
+              "name": "Mamadou Sangaré",
+              "position": "DM"
             },
             {
               "name": "Vitaly Janelt",
@@ -238,7 +237,7 @@
               "position": "RW"
             },
             {
-              "name": "Mikkel Damsgaard",
+              "name": "Yehor Yarmoliuk",
               "position": "AM"
             },
             {
@@ -285,14 +284,12 @@
               "owner": "kpj0z744muh1qwtd"
             },
             {
-              "name": "Reece James",
-              "position": "CM",
-              "owner": "kpj0z744muh1qwtd"
+              "name": "Roméo Lavia",
+              "position": "DM"
             },
             {
-              "name": "Moisés Caicedo",
-              "position": "DM",
-              "owner": "aekx2715mtzgcl3f"
+              "name": "Jordan Henderson",
+              "position": "CM"
             },
             {
               "name": "Pep Chavarría",
@@ -304,9 +301,8 @@
               "owner": "l5kunst8msgbirdf"
             },
             {
-              "name": "João Pedro",
-              "position": "CF",
-              "owner": "7z8fy0pnmuogbtdw"
+              "name": "Danny Welbeck",
+              "position": "CF"
             },
             {
               "name": "Morgan Rogers",
@@ -343,13 +339,12 @@
               "owner": "7to6xosimu8hyyw5"
             },
             {
-              "name": "Tyler Adams",
+              "name": "Lewis Cook",
               "position": "DM"
             },
             {
-              "name": "Alex Scott",
-              "position": "DM",
-              "owner": "qgucu9dgmufwva1x"
+              "name": "Tyler Adams",
+              "position": "DM"
             },
             {
               "name": "Rayan",
@@ -453,8 +448,8 @@
               "owner": "0g0j5mkomuqqwsbu"
             },
             {
-              "name": "Joe Willock",
-              "position": "AM"
+              "name": "Nico González",
+              "position": "DM"
             },
             {
               "name": "Sean Steur",
@@ -585,8 +580,9 @@
               "owner": "7to6xosimu8hyyw5"
             },
             {
-              "name": "Igor Jesus",
-              "position": "CF"
+              "name": "Dan Ndoye",
+              "position": "AM",
+              "owner": "uexqrijomu8l5asi"
             },
             {
               "name": "Liam Delap",
@@ -858,9 +854,8 @@
               "owner": "l5kunst8msgbirdf"
             },
             {
-              "name": "Dominik Szoboszlai",
-              "position": "DM",
-              "owner": "0g0j5mkomuqqwsbu"
+              "name": "Ryan Gravenberch",
+              "position": "DM"
             },
             {
               "name": "Alexis Mac Allister",
@@ -868,9 +863,9 @@
               "owner": "qgucu9dgmufwva1x"
             },
             {
-              "name": "Cody Gakpo",
-              "position": "LW",
-              "owner": "ipnp5y4mmu9j7kop"
+              "name": "Dominik Szoboszlai",
+              "position": "DM",
+              "owner": "0g0j5mkomuqqwsbu"
             },
             {
               "name": "Florian Wirtz",
@@ -920,9 +915,8 @@
               "owner": "7to6xosimu8hyyw5"
             },
             {
-              "name": "Enzo",
-              "position": "CM",
-              "owner": "ipnp5y4mmu9j7kop"
+              "name": "Ayyoub Bouaddi",
+              "position": "CM"
             },
             {
               "name": "Elliot Anderson",
@@ -935,9 +929,9 @@
               "owner": "7z8fy0pnmuogbtdw"
             },
             {
-              "name": "Rayan Cherki",
-              "position": "AM",
-              "owner": "7z8fy0pnmuogbtdw"
+              "name": "Enzo",
+              "position": "CM",
+              "owner": "ipnp5y4mmu9j7kop"
             },
             {
               "name": "Antoine Semenyo",
@@ -1024,9 +1018,8 @@
               "position": "GK"
             },
             {
-              "name": "Pedro Porro",
-              "position": "RB",
-              "owner": "0g0j5mkomuqqwsbu"
+              "name": "Archie Gray",
+              "position": "RB"
             },
             {
               "name": "Jan van Hecke",
@@ -1121,9 +1114,8 @@
               "position": "LW"
             },
             {
-              "name": "Brian Brobbey",
-              "position": "ST",
-              "owner": "qgucu9dgmufwva1x"
+              "name": "Wilson Isidor",
+              "position": "ST"
             }
           ]
         },
