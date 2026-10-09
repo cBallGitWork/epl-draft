@@ -6,18 +6,18 @@ import type { MatchupContext, TablePlace } from "./brief";
 import { counted, lateDecider } from "./state";
 import { returnCount, returnWords, whenScored } from "./stories";
 import { thread, type Thread } from "./thread";
-import { SIDES, beatLabel, beatOf, ledForGood, type Beat, type Which } from "./timeline";
+import { SIDES, otherSide, type Side } from "../side";
+import { beatLabel, beatOf, ledForGood, type Beat } from "./timeline";
 import type { DraftMan, SlotWorth } from "./types";
 import { possessive } from "./words";
 
 // The match's shape at the end of the gameweek: turned by the bench, decided late, a comeback, a lead lost, a fightback
 // that fell short, one man's result, level, close, an upset, a rout. Each from the running score, never the model. Pure.
 
-const other = (w: Which): Which => (w === "home" ? "away" : "home");
-const lead = (b: Beat, w: Which) => b.score[w] - b.score[other(w)];
+const lead = (b: Beat, w: Side) => b.score[w] - b.score[otherSide(w)];
 
 /** The beat of a side's biggest lead (`sign` 1) or biggest deficit (`sign` -1) at a beat's end. */
-const extreme = (beats: readonly Beat[], w: Which, sign: 1 | -1) => beats.reduce<Beat | null>((best, b) => (best === null || sign * lead(b, w) > sign * lead(best, w) ? b : best), null);
+const extreme = (beats: readonly Beat[], w: Side, sign: 1 | -1) => beats.reduce<Beat | null>((best, b) => (best === null || sign * lead(b, w) > sign * lead(best, w) ? b : best), null);
 
 /** A man with most of his side's points: 10 or more and over a third of its total. */
 function oneManShows(ctx: MatchupContext): Thread[] {
@@ -58,7 +58,7 @@ const leagueWeek = (p: TablePlace) => p.won + p.drawn + p.lost + 1;
 export function matchThreads(ctx: MatchupContext, beats: readonly Beat[], worth: SlotWorth): Thread[] {
   const { margin } = ctx.state;
   if (margin === 0) return [...levelThreads(ctx, beats), ...oneManShows(ctx), ...sameMatch(ctx)];
-  const [w, l]: [Which, Which] = margin > 0 ? ["home", "away"] : ["away", "home"];
+  const [w, l]: [Side, Side] = margin > 0 ? ["home", "away"] : ["away", "home"];
   const [W, L, m] = [ctx.state[w], ctx.state[l], Math.abs(margin)];
   const out = [...oneManShows(ctx), ...sameMatch(ctx)];
   // Turned by the bench: the side that lost led on the eleven's points alone.
@@ -84,7 +84,7 @@ export function matchThreads(ctx: MatchupContext, beats: readonly Beat[], worth:
     out.push(thread("fightback-short", { teamId: L.side.teamId, beat: behind.day, facts: [`${L.side.name} were ${-lead(behind, l)} behind after ${beatLabel(behind.day)} and lost by ${m}`] }));
   }
   // The irony of a side that won more of the gameweek's stages and still lost.
-  const won = (w: Which) => beats.filter((b) => b.points[w] > b.points[other(w)]);
+  const won = (w: Side) => beats.filter((b) => b.points[w] > b.points[otherSide(w)]);
   if (won(l).length > won(w).length) {
     out.push(thread("days-won", { teamId: L.side.teamId, facts: [`${L.side.name} won ${listed(won(l).map((b) => beatLabel(b.day)), "and")}, ${won(l).length} of the gameweek's ${beats.length} stages, and still lost by ${m}`] }));
   }

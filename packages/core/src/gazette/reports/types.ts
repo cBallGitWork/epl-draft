@@ -2,10 +2,9 @@ import type { StrengthPlaces } from "../../football/intel/strength";
 import type { PlMoment } from "../../football/premierleague/moments";
 import type { StoryLineup } from "./lineups";
 import type { Club, Fixture } from "../../football/types";
+import type { Side } from "../side";
 
 // What the match-day desk is handed: plain data, joined by the script, read by the pure builders beside this file.
-
-export type Side = "home" | "away";
 
 export interface ReportClub {
   code: number;

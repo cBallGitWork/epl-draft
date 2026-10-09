@@ -6,7 +6,8 @@ import { masked, mentionAt, ngrams, numbersIn, sentences } from "../predictions/
 import { surname } from "../reports/keyStats";
 import type { Cutoff, MatchupContext } from "./brief";
 import { everyMan } from "./state";
-import { SIDES, beatLabel, beatOf, timeline } from "./timeline";
+import { SIDES } from "../side";
+import { beatLabel, beatOf, timeline } from "./timeline";
 import { DRAFT_FORECAST } from "./words";
 import type { DraftMan } from "./types";
 import type { DraftPiece } from "./writing";

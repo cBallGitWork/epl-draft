@@ -6,7 +6,8 @@ import type { Cutoff, MatchupContext, NextOpponent } from "./brief";
 import { counted, everyMan, type SideState } from "./state";
 import { fitnessLine, minutesLine, newLine, pts, returnWords } from "./stories";
 import type { Thread } from "./thread";
-import { SIDES, beatLabel, beatOf, timeline, type Beat } from "./timeline";
+import { SIDES } from "../side";
+import { beatLabel, beatOf, timeline, type Beat } from "./timeline";
 import { possessive } from "./words";
 import type { DraftMan } from "./types";
 

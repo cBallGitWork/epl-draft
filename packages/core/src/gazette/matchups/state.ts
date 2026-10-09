@@ -1,8 +1,7 @@
-import { LATE_GOAL_MINUTE } from "../../config";
 import { listed } from "../../format";
 import { autoSubs, type AutoSub } from "./autoSubs";
 import type { Cutoff } from "./brief";
-import { byClock } from "./stories";
+import { byClock, isLate } from "./stories";
 import type { DraftMan, DraftMatchupInput, DraftSide, GoalTime, PositionLimits, SlotWorth } from "./types";
 import { priceOf } from "./worth";
 
@@ -49,7 +48,7 @@ function sideState(side: DraftSide, limits: PositionLimits): SideState {
 export function lateDecider(winner: SideState, margin: number, worth: SlotWorth): { m: DraftMan; t: GoalTime } | null {
   const goals = winner.side.eleven.flatMap((m) => m.scoredAt.map((t) => ({ m, t }))).filter(({ m }) => priceOf(worth, m.slot, "goal") > margin);
   const last = goals.sort((x, y) => byClock(x.t, y.t)).at(-1);
-  return last === undefined || last.t.minute < LATE_GOAL_MINUTE ? null : last;
+  return last === undefined || !isLate(last.t) ? null : last;
 }
 
 /** The score as the page prints it, the side ahead first, the substitutions counted: Saturday's as it stands, the

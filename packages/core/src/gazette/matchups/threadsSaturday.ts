@@ -6,6 +6,7 @@ import { subLine } from "./stories";
 import { chaseLines } from "./swing";
 import { thread, type Thread } from "./thread";
 import { beatLabel, timeline } from "./timeline";
+import { otherSide, type Side } from "../side";
 import type { SlotWorth } from "./types";
 
 // After Saturday, with the gameweek to finish: how it stands and what keeps it open. Men still to come are the fixture
@@ -26,8 +27,8 @@ export function saturdayThreads(ctx: MatchupContext, worth: SlotWorth): Thread[]
     if (doubles.length > 0) out.push(thread("double-to-come", { teamId: s.side.teamId, men: doubles, facts: doubles.map((x) => `${x.name} has two matches this gameweek, ${x.left === 1 ? "one" : "both"} still to come`) }));
   }
   // How the lead was built, stage by stage, so the writer need not invent a cause.
-  const leader: "home" | "away" = margin >= 0 ? "home" : "away";
-  const trailer: "home" | "away" = leader === "home" ? "away" : "home";
+  const leader: Side = margin >= 0 ? "home" : "away";
+  const trailer = otherSide(leader);
   const built = timeline(ctx.state).map((b) => `${b.points[leader]}-${b.points[trailer]} ${b.day === null ? "in" : "on"} ${beatLabel(b.day)}`);
   const how = built.length === 0 ? "" : `, ${listed(built, "and")}`;
   if (m <= DRAFT_NEWS.closeWithin) out.push(thread("close", { teamId: margin === 0 ? null : ahead.side.teamId, bigger: m <= 1, facts: [margin === 0 ? `${home.side.name} and ${away.side.name} are level` : `${ahead.side.name} lead by ${m}${how}`] }));
