@@ -57,6 +57,14 @@ describe("checkLawro", () => {
     expect(length("Sheffield Thursday are without Mullan. He is suspended. I can't split them. Nor can Rovers Return.")).toEqual(["4 sentences, 16 words"]);
   });
 
+  it("reads his verdict in a sentence that opens on My", () => {
+    const verdict = (call: string) =>
+      checkLawro(draft([["rs-bn", `Real Sociable have won all three and Oduya has Leeds.\n\nBayer Neverlusen signed Pym and Kettle on Wednesday.\n\n${call}`], ...SAMPLE.slice(1)]), ctx())
+        .filter((each) => each.check === "no verdict of his own").length;
+    expect(verdict("My money is on Real Sociable, because Oduya has Leeds.")).toBe(0);
+    expect(verdict("Real Sociable, because Oduya has Leeds.")).toBe(1);
+  });
+
   it("refuses a missing tie, a score in the prose and a career nobody gave him", () => {
     const faults = checkLawro(
       draft([["rs-bn", "Real Sociable win 52-42. I managed Oxford once."], ...SAMPLE.slice(2)], {}),

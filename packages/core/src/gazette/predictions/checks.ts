@@ -67,7 +67,7 @@ const NEGATION = /\b(?:not|never|no)\b|n['’]t/iu;
 const SCORELINE = /\b(?!50-50\b)\d{1,3}\s*[-–]\s*\d{1,3}\b/u;
 const ADMISSION = ["Liverpool man", "Liverpool men", "Liverpool player", "Liverpool players", "Liverpool lad", "Liverpool lads", "Anfield man", "in red"];
 /** His verdict is his: a tie with no "I", "me" or "my" in it is a list of facts, not an opinion. */
-const VERDICT = /\b(?:I|me|my)\b|\bI['’]/u;
+const VERDICT = /\b(?:I|me|my)\b|\bI['’]/iu;
 /** "Both of theirs": men he never names, which a reader without the brief cannot place. */
 const UNNAMED = /\btheirs\b/iu;
 /** A back line is four or five men: a sentence about one names at least one of them. */
