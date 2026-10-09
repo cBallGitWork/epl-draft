@@ -24,7 +24,7 @@ describe("COLUMNS", () => {
   it("runs phone-first, so the figures a thumb sees first are the ones worth seeing", () => {
     // Craig, 24 Sep 2026: seven figures fit beside a name at 390, and these are the seven.
     expect(COLUMNS.filter((column) => column.group !== "attributes").map((column) => column.label)).toEqual([
-      "Player", "FPts", "FP/G", "Min", "GP", "G", "AT", "A", "AF", "CS", "DC", "DC+", "DCP", "GAO", "GA", "Sv", "GKP", "PKS", "YC", "RC", "PKM", "OG", "Ros", "+/-",
+      "Player", "FPts", "FP/G", "Min", "GP", "G", "AT", "A", "AF", "Sh", "SoT", "KP", "BCC", "BCM", "Crs", "AC", "CS", "DC", "DC+", "DCP", "GAO", "GA", "Sv", "GKP", "PKS", "YC", "RC", "PKM", "OG", "Ros", "+/-",
     ]);
   });
 

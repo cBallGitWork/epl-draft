@@ -14,5 +14,5 @@ export function figureOf(
 ): number | string | null {
   const value = column.value(row, stats);
   if (!rated || column.rate !== true || typeof value !== "number") return value;
-  return per90(value, stats?.[MINUTES.short] ?? null);
+  return per90(value, stats?.[column.minutes ?? MINUTES.short] ?? null);
 }

@@ -21,9 +21,11 @@ import { figureOf } from "./figure";
 import { DEFCON_POINTS } from "./columns";
 import { defconPricing, poolPositions } from "../defcon";
 import { attributeStats } from "./attributeColumns";
+import { SEASON_COLUMNS, SEASON_STATS, seasonStats } from "./seasonColumns";
+import { intelStats, intelStatsManifest } from "../intel";
 import { divisionGrids } from "./[fantraxId]/grid";
 import { cutsFor } from "./standout";
-import { FANTRAX_PLAYERS_PATH, playerByCode } from "@epl/core";
+import { FANTRAX_PLAYERS_PATH, londonDayAndDate, playerByCode } from "@epl/core";
 import { footballNow } from "../football";
 import OutLink from "../components/shell/OutLink";
 import FantraxSilent from "../components/shell/FantraxSilent";
@@ -64,12 +66,17 @@ export default async function PlayersPage({
     );
   }
 
-  // Our attribute ratings and DefCon points ride in the same bag, so they sort and filter like any count.
+  // Our ratings, our DefCon points and the stats league's season ride in the same bag, so they sort like any count.
   const defcon = pricing?.(poolPositions(pool.rows));
   for (const row of pool.rows) {
     const id = row.entry.player.fantraxId;
-    const grid = row.fplCode === null ? undefined : grids.get(row.fplCode);
-    const ours = { ...(grid === undefined ? {} : attributeStats(grid)), ...(defcon === undefined ? {} : { [DEFCON_POINTS]: defcon[id] }) };
+    const code = row.fplCode;
+    const grid = code === null ? undefined : grids.get(code);
+    const ours = {
+      ...(grid === undefined ? {} : attributeStats(grid)),
+      ...(defcon === undefined ? {} : { [DEFCON_POINTS]: defcon[id] }),
+      ...seasonStats(code === null ? undefined : intelStats.get(code)),
+    };
     if (Object.keys(ours).length > 0) raw.set(id, { ...raw.get(id), ...ours });
   }
 
@@ -160,6 +167,14 @@ export default async function PlayersPage({
         </p>
       ) : null}
       {shown.length === 0 ? null : <BoardKey entries={columns.filter((column) => column.key !== "name")} />}
+
+      {/* The stats league's file is daily, so a gameweek in play runs ahead of it. */}
+      {shown.length > 0 && columns.some((column) => SEASON_COLUMNS.includes(column)) ? (
+        <p className={QUIET_NOTE}>
+          {SEASON_STATS[0].label} to {SEASON_STATS[SEASON_STATS.length - 1].label}: season to{" "}
+          {londonDayAndDate(intelStatsManifest.exportedAt)}.
+        </p>
+      ) : null}
 
       {/* Why a number is missing: a read that did not answer, then one that answered short. */}
       {pool.statsRefused ? (

@@ -99,6 +99,10 @@ is gone as a tab** and `/history` redirects to `?season=all`; the strip is four 
   bevelled plates over the figures, the round in CM's blue index block and the opponent's
   crest pinned beside it, and each column's best in CM's orange and its top quarter in
   yellow, as the pool board lights them. The score links to `/prem/match/[id]`.
+- **Attacking**, under this season's table (9 Oct 2026, Craig: *"shots, chances created, maybe even big
+  chances"*): the pool board's seven, `Sh SoT KP BCC BCM Crs AC`, `KP` titled "Chances created", off the stats
+  league's daily file (`intelStats`) and dated "Season to Tue 6 Oct". A table of its own, apart from FPL's, so
+  each figure has one source; a man the file does not hold dashes on all seven (`data/SeasonCounts.tsx`).
 - **A past season** — FPL's line for that season, with the club.
 - **All seasons** — every season with the **club he was at** ("mention what clubs he
   played for"), from the sister's identity store (`intel/careers`). A club is printed only
