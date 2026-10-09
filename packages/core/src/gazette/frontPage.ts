@@ -1,12 +1,11 @@
 import type { PublishedStory, StoryKind } from "./story";
-import { londonDayOf } from "../time";
 
 // The rolling paper's running order and the ways a story leaves it; the writer and the app both compose with it.
 
 /** How many stories the paper carries before the oldest fall off: about two gameweeks of coverage. */
 export const MAX_PAPER_STORIES = 24;
 
-/** The kind's standing within one day of one period, higher first: reporting, then team news, then columns. */
+/** The kind's standing among stories filed at one instant, higher first: reporting, then team news, then columns. */
 const KIND_WEIGHT: Record<StoryKind, number> = {
   // Team news sits with the top reports: the one thing on the page a reader can still act on.
   // Safe without a clock: a presser's window closes at the next lock, so report day has none to lead with.
@@ -25,8 +24,8 @@ const KIND_WEIGHT: Record<StoryKind, number> = {
   "bin-xi": 45,
 };
 
-/** The paper in print order: expired dropped, superseded retired, the rest
- *  ranked. First story is the splash. */
+/** The paper in print order: expired dropped, superseded retired, the rest newest filed first. First story is the
+ *  splash. */
 export function composePaper(stories: readonly PublishedStory[], now: string): PublishedStory[] {
   const current = stories.filter((story) => !expired(story, now));
 
@@ -37,26 +36,11 @@ export function composePaper(stories: readonly PublishedStory[], now: string): P
     return !retiredBy;
   });
 
+  // The most recent filing leads (Craig, 9 Oct 2026); one run stamps every story with one instant, so kind breaks
+  // that tie, and dated slugs (`gw5-presser-2026-09-18`) then sort newest first.
   return [...alive].sort(
-    (a, b) =>
-      b.period - a.period ||
-      // Today's paper first; kind weight ranks only within a day.
-      compareDay(b, a) ||
-      KIND_WEIGHT[b.kind] - KIND_WEIGHT[a.kind] ||
-      compareFiled(b, a) ||
-      // One run stamps every story with one instant; dated slugs (`gw5-presser-2026-09-18`) then sort newest first.
-      b.slug.localeCompare(a.slug),
+    (a, b) => compareFiled(b, a) || KIND_WEIGHT[b.kind] - KIND_WEIGHT[a.kind] || b.slug.localeCompare(a.slug),
   );
-}
-
-/** The London day a story was filed on, `""` when unreadable so it sorts last. */
-function dayKey(iso: string): string {
-  return londonDayOf(iso) ?? "";
-}
-
-// An unreadable instant sorts oldest, as it does in `compareFiled`.
-function compareDay(a: PublishedStory, b: PublishedStory): number {
-  return dayKey(a.filedAt).localeCompare(dayKey(b.filedAt));
 }
 
 function expired(story: PublishedStory, now: string): boolean {

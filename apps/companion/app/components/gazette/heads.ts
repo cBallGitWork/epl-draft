@@ -19,3 +19,6 @@ export const CAPTION_CAPS = "font-sans text-2xs uppercase tracking-widest";
 
 /** A caption in muted ink: a kickoff, a club's fixture, a quote's credit, the line over a side's eleven. */
 export const CAPTION = `${CAPTION_CAPS} text-muted`;
+
+/** An article's section head, a club or a tie: the display serif a step under a teaser's headline. */
+export const SUBHEAD = "paper-display text-xl leading-tight font-semibold text-ink";

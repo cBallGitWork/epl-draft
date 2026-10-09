@@ -1,9 +1,11 @@
 import {
+  availabilityOf,
   owners,
   predictedLineups,
   squadIntel,
   type Club,
   type Fixture,
+  type FootballPlayer,
   type IntelSquads,
   type IntelXi,
   type RosteredTeam,
@@ -30,7 +32,7 @@ export function xiColumn(input: {
   gameweek: number;
   clubs: ReadonlyMap<number, Club>;
   teams: readonly RosteredTeam[];
-  players: readonly { code: number; name: string; fullName: string }[];
+  players: readonly XiPlayer[];
   season: readonly Fixture[];
 }): Record<string, unknown> | null {
   const { xi, gameweek, clubs, teams, players, season } = input;
@@ -52,10 +54,13 @@ export function xiColumn(input: {
   };
 }
 
-/** One starter as printed: his name, who holds him, and his real position off the SQUADS export, nothing where that
- *  had only FPL's `element_type`, which is a fantasy letter, not a fact about a footballer. */
+/** What the desk reads of a footballer: his names, and his fitness. */
+type XiPlayer = Pick<FootballPlayer, "code" | "name" | "fullName" | "status" | "news" | "chanceOfPlaying">;
+
+/** One starter as printed: his name, who holds him, his real position off the SQUADS export (nothing where that had
+ *  only FPL's `element_type`), and OUT or Doubt where the football says so. The eleven is never changed. */
 function man(
-  players: readonly { code: number; name: string; fullName: string }[],
+  players: readonly XiPlayer[],
   teams: readonly RosteredTeam[],
   xi: IntelXi,
 ): (code: number) => StoryLineupMan | null {
@@ -69,10 +74,12 @@ function man(
     if (player === undefined) return null;
     // The id, never the name, which goes stale the day a manager renames.
     const owner = held.get(code)?.teamId;
+    const fitness = availabilityOf(player);
     return {
       name: display(player),
       position: squads.get(code)?.position ?? null,
       ...(owner === undefined ? {} : { owner }),
+      ...(fitness.out ? { status: "OUT" } : fitness.state === "doubt" ? { status: "Doubt" } : {}),
     };
   };
 }

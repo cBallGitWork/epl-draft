@@ -141,8 +141,16 @@ business, and when lineups lock.
 
    **Each opens its article**, on a `<Link>`: the article prints whole at
    `/paper/{slug}`, under `Folio` — THE GAZETTA, a link back to the front page
-   (`← THE GAZETTA` on a phone), and the date, then the story's standing head, so
-   a masthead is never displaced by a section name.
+   (`← THE GAZETTA` on a phone), and the date. Then the article's own head:
+   kicker, headline, deck, dateline; a pictured man prints under that head on a
+   phone and in a column beside it on a desk.
+
+   **One name per story, one name per level** (Craig, 9 Oct 2026: *"clean up the
+   ui"*). A Team Sheet printed "Team news" as a page title, "The Team Sheet" as its
+   kicker and again in its dateline, over the headline "Friday Pressers". The
+   kicker is now `kickers.kickerOf`, the column's name else the edition's, at
+   every rank; the folio prints no title; a dateline is the writer and the
+   filing time, never the edition's name.
 
    *The paper had numbered pages from 2 Sep to 30 Sep 2026*: a strip of ink
    chips (`Pages`), "turn to page 2" on every dateline, a page number on every
@@ -447,8 +455,10 @@ Two mechanisms replaced the old one-column-a-round gate, and neither is
 `editionMatches` (which went with `latest.json` on 31 Aug). `normalizePaper`
 in `app/paper.ts` drops every story filed about another league, which is what
 keeps rehearsal prose off the real front page. `composePaper` then drops what
-has expired and retires what a later story superseded — so what leads is
-always the newest period's biggest word, and an old opinion still standing is
+has expired and retires what a later story superseded, and orders the rest
+newest filed first (Craig, 9 Oct 2026: *"always lead with the most recent
+article"*); a story's kind only breaks a tie between stories filed at one
+instant. So what leads is always the latest filing, and an old opinion still standing is
 one nothing has answered yet, printed under its own filed date.
 
 The filing time prints. Every other figure on the page is thirty seconds old and
@@ -599,8 +609,9 @@ appended second ink loses on stylesheet order.
 | `STANDING_HEAD` | `gazette/heads.ts` | `STANDING_CAPS` in muted ink: a label over a list, a panel or a line of figures | 15 |
 | `KICKER_CAPS` | `gazette/heads.ts` | the same capitals in bold, no ink: a card's standing head | 3 |
 | `QUIET_CAPS` | `gazette/heads.ts` | the same at the body's weight in faint ink: a dateline, who is left to play | 3 |
-| `CAPTION_CAPS` | `gazette/heads.ts` | a caption's capitals, `2xs` and `tracking-widest`, no weight and no ink | 8 (2 inked by the caller) |
-| `CAPTION` | `gazette/heads.ts` | `CAPTION_CAPS` in muted ink: a kickoff, a club's fixture, a quote's credit, the line over a side's eleven | 6 |
+| `CAPTION_CAPS` | `gazette/heads.ts` | a caption's capitals, `2xs` and `tracking-widest`, no weight and no ink | 8 (3 inked by the caller) |
+| `CAPTION` | `gazette/heads.ts` | `CAPTION_CAPS` in muted ink: a kickoff, a club's fixture, a quote's credit, the line over a side's eleven | 5 |
+| `SUBHEAD` | `gazette/heads.ts` | an article's section head, a club or a tie, in the display serif at `xl`: never tracked capitals | 3 |
 
 ## States
 

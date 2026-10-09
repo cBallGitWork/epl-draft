@@ -1,11 +1,6 @@
-import type { StoryKind } from "@epl/core";
+import type { PublishedStory } from "@epl/core";
 
-// The standing head each kind runs under, shared by the teaser and the article; a kind missing here prints none.
-
-export const KICKER: Partial<Record<StoryKind, string>> = {
-  "match-report": "Match report",
-  "draft-report": "Draft report",
-  presser: "Team news",
-  sheets: "Line-ups",
-  "bin-xi": "Top Bins",
-};
+/** The one name a story runs under at every rank: its column's, else its edition's; empty prints none. */
+export function kickerOf(story: Pick<PublishedStory, "byline" | "edition">): string {
+  return story.byline !== "" ? story.byline : story.edition;
+}

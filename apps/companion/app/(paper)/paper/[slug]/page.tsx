@@ -8,7 +8,6 @@ import Extras from "../../../components/gazette/Extras";
 import Folio from "../../../components/gazette/Folio";
 import { named } from "../../../components/gazette/named";
 import Written from "../../../components/gazette/Written";
-import { KICKER } from "../../../components/gazette/kickers";
 
 // One story, printed whole, off the uncomposed `filed`: a story the front page has dropped keeps its address.
 // The archive is not read, so a slug that falls off `paper.json` 404s.
@@ -48,7 +47,7 @@ export default async function StoryPage({ params }: { params: Promise<{ slug: st
 
   return (
     <>
-      <Folio section={KICKER[story.kind]} at={story.filedAt} />
+      <Folio at={story.filedAt} />
       <article className="pt-4">
         <Written story={story} teams={paper.teams} clubs={paper.snapshot ? clubById(paper.snapshot) : undefined} />
         <Extras story={story} named={who} mine={paper.mine} snapshot={paper.snapshot} />

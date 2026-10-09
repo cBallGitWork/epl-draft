@@ -50,6 +50,13 @@ describe("buildPresserBrief", () => {
       expect(brief).not.toContain("(muscle)");
     });
 
+    // "Pedro Porro, Mykhailo Mudryk, Xavi, Wilson Odobert and Dejan Kulusevski are all still absent." over the same five.
+    it("asks for no line where a club has nothing beyond its lists, never a line that repeats them", () => {
+      expect(brief).toContain('leave "line" empty');
+      expect(brief).not.toContain("who is still out, plainly");
+      expect(brief).not.toContain("its line is who is still out");
+    });
+
     it("never itself uses a phrase the send-back refuses", () => {
       expect(banned(brief, NEWS_GAPS)).toEqual([]);
     });

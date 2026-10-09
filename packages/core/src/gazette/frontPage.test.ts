@@ -57,18 +57,18 @@ describe("composePaper", () => {
     expect(paper.map((s) => s.slug)).toEqual(["second", "unrelated"]);
   });
 
-  it("leads with the newest period, then reporting over columns, then recency", () => {
+  it("leads with the most recently filed, whatever its kind or period", () => {
     const paper = composePaper(
       [
-        story({ slug: "old-report", kind: "match-report", period: 2, gameweek: 2, subjects: ["match:gw2:1v2"] }),
+        story({ slug: "old-report", kind: "match-report", period: 2, gameweek: 2, subjects: ["match:gw2:1v2"], filedAt: "2026-08-24T09:00:00.000Z" }),
         story({ slug: "column", kind: "bin-xi", period: 3, filedAt: "2026-08-31T10:00:00.000Z" }),
         story({ slug: "match", kind: "match-report", period: 3, subjects: ["match:gw3:1v2"], filedAt: "2026-08-30T21:00:00.000Z" }),
         story({ slug: "later-match", kind: "match-report", period: 3, subjects: ["match:gw3:3v7"], filedAt: "2026-08-31T09:00:00.000Z" }),
       ],
       NOW,
     );
-    // Period first, then day, then kind: the 31st's report, the 31st's column, then the 30th's.
-    expect(paper.map((s) => s.slug)).toEqual(["later-match", "column", "match", "old-report"]);
+    // Craig, 9 Oct 2026: "always lead with the most recent article".
+    expect(paper.map((s) => s.slug)).toEqual(["column", "later-match", "match", "old-report"]);
   });
 
   it("puts a fresh column above a heavier story filed yesterday", () => {
@@ -83,16 +83,15 @@ describe("composePaper", () => {
     expect(paper.map((s) => s.slug)).toEqual(["tuesday-column", "sunday-report"]);
   });
 
-  it("reads the day in London, not UTC", () => {
-    // 23:30 UTC on a summer Sunday is already Monday in London.
+  it("leads with a column filed a minute after a report on the same day", () => {
     const paper = composePaper(
       [
-        story({ slug: "sunday-report", kind: "match-report", period: 3, filedAt: "2026-08-30T18:00:00.000Z" }),
-        story({ slug: "monday-column", kind: "bin-xi", period: 3, filedAt: "2026-08-30T23:30:00.000Z" }),
+        story({ slug: "report", kind: "match-report", period: 3, filedAt: "2026-08-30T18:00:00.000Z" }),
+        story({ slug: "column", kind: "bin-xi", period: 3, filedAt: "2026-08-30T18:01:00.000Z" }),
       ],
       NOW,
     );
-    expect(paper.map((s) => s.slug)).toEqual(["monday-column", "sunday-report"]);
+    expect(paper.map((s) => s.slug)).toEqual(["column", "report"]);
   });
 });
 

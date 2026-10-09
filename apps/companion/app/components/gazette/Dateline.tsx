@@ -1,8 +1,8 @@
 import { type PublishedStory, londonDayAndTime, writerOf } from "@epl/core";
 import { QUIET_CAPS } from "./heads";
 
-// Which edition filed a story, when, and where the rest of it is: "by <name>" (a person, never the standing head),
-// the edition, the filing time, and "read on" unless this is the article (`turn`).
+// Who filed a story, when, and where the rest of it is: "by <name>" (a person, never the standing head), the filing
+// time, and "read on" unless this is the article (`turn`). The edition's name is the kicker's, never repeated here.
 
 export default function Dateline({
   story,
@@ -28,7 +28,6 @@ export default function Dateline({
   return (
     <Tag className={`${QUIET_CAPS} ${className}`}>
       {byline ? `by ${writerOf(story)} · ` : ""}
-      {story.edition !== "" ? `${story.edition} · ` : ""}
       Filed {londonDayAndTime(story.filedAt)}
       {/* The affordance, in words rather than a chevron. */}
       {turn ? <span className="text-muted">{" · read on"}</span> : null}

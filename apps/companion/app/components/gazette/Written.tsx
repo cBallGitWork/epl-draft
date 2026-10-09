@@ -8,6 +8,7 @@ import Dateline from "./Dateline";
 import { named } from "./named";
 import StoryHead, { KICKER } from "./StoryHead";
 import { CAPTION_CAPS } from "./heads";
+import { kickerOf } from "./kickers";
 
 // A filed story as written: headline, plain deck, dateline (it can be days older than the scores) and prose.
 // Team names are joined here from the ids the writer returned, so a renamed team never goes stale.
@@ -24,6 +25,7 @@ export default function Written({
 }) {
   const nameOf = named(teams);
   const columnist = columnistOf(story);
+  const kicker = kickerOf(story);
 
   // A standfirst is not set in columns; it is one when the story's substance is the block below its prose.
   const intro = hasBlockBelow(story);
@@ -32,18 +34,16 @@ export default function Written({
   const footballers = (story.extras?.teamNews ?? []).flatMap((row) => (row.men ?? []).map((man) => man.name));
   const portrait = intro && story.face !== undefined && story.face !== null && clubs !== undefined;
 
-  // The opening: chip, headline, deck, rule, dateline, prose; beside a picture, all of it is the left column.
-  const opening = (
-    <>
-      {/* The column's standing title, in the same inverted chip as the lead's kicker. */}
-      {story.byline !== "" ? (
+  // The head: kicker, headline, deck, rule, dateline; a columnist's banner, as the BBC ran his, carries his credit.
+  const head = (
+    // A reading measure on a desk: a deck run across the whole sheet is one line too long to read.
+    <div className="flex min-w-0 max-w-[42rem] flex-col">
+      {kicker !== "" ? (
         <p>
-          <span className={KICKER}>{story.byline}</span>
+          <span className={KICKER}>{kicker}</span>
         </p>
       ) : null}
       <StoryHead headline={story.headline} standfirst={story.deck} rank="article" />
-
-      {/* When and under which edition it was filed; a columnist's banner, as the BBC ran his, carries his credit instead. */}
       <Dateline story={story} turn={false} byline={columnist === null} className="pt-2.5" />
       {columnist !== null ? (
         <div className="mt-3 flex items-center justify-between gap-3 bg-raised pl-3 @xl:pl-4">
@@ -54,31 +54,40 @@ export default function Written({
           <ColumnistPhoto photo={{ ...columnist.photo, ...columnist.portrait }} rank="banner" />
         </div>
       ) : null}
+    </div>
+  );
 
-      <Paragraphs
-        text={story.body}
-        dropcap
-        names={footballers}
-        className={`pt-3 text-base leading-relaxed text-ink ${intro || portrait ? "" : "paper-columns"}`}
-      />
-    </>
+  const prose = (
+    <Paragraphs
+      text={story.body}
+      dropcap
+      names={footballers}
+      className={`min-w-0 pt-3 text-base leading-relaxed text-ink ${intro || portrait ? "max-w-[42rem]" : "paper-columns"}`}
+    />
   );
 
   return (
     <section className="flex flex-col">
       {portrait && story.face ? (
-        <div className="grid gap-4 @3xl:grid-cols-[1fr_16rem] @3xl:gap-6">
-          <div className="flex min-w-0 flex-col">{opening}</div>
-          {/* Capped when stacked, or the portrait fills the sheet's width. */}
-          <figure className="order-first max-w-[15rem] @3xl:order-none @3xl:max-w-none @3xl:pt-10">
-            <Face face={story.face} clubs={clubs} rank="portrait" />
+        // A phone reads head, picture, prose; a desk gives the picture a column of its own beside both.
+        <div className="grid gap-x-6 @3xl:grid-cols-[minmax(0,42rem)_16rem] @3xl:grid-rows-[auto_1fr] @3xl:justify-between">
+          {head}
+          <figure className="pt-4 @3xl:col-start-2 @3xl:row-span-2 @3xl:row-start-1 @3xl:pt-0">
+            {/* Cropped to the frame's ratio under a phone's head, his head kept; whole in the desk's column. */}
+            <div className="aspect-video overflow-hidden @3xl:aspect-auto">
+              <Face face={story.face} clubs={clubs} rank="portrait" />
+            </div>
             <figcaption className={`${CAPTION_CAPS} pt-1.5 text-faint`}>
               {story.face.name}
             </figcaption>
           </figure>
+          {prose}
         </div>
       ) : (
-        opening
+        <>
+          {head}
+          {prose}
+        </>
       )}
 
       {story.kind === "predictions" && story.ties !== undefined && story.ties.length > 0 ? (
