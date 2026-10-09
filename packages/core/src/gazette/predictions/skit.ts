@@ -44,7 +44,7 @@ export function applySkit(raw: unknown, draft: LawroDraft, ctx: SkitContext): { 
       continue;
     }
     const next = replaced(current, edit);
-    const added = newFaults(checkLawro(current, ctx.check), checkLawro(next, ctx.check), edit.where);
+    const added = newFaults(checkLawro(current, ctx.check), checkLawro(next, ctx.check));
     if (added.length > 0) {
       refused.push(`${edit.where}: adds ${added.map((fault) => fault.check).join(", ")}`);
       continue;
@@ -102,8 +102,9 @@ function replaced(draft: LawroDraft, edit: SkitEdit): LawroDraft {
   return { ...draft, ties };
 }
 
-/** Faults the edit brought into its own section. */
-function newFaults(before: readonly Fault[], after: readonly Fault[], section: string): Fault[] {
-  const seen = new Set(before.filter((fault) => fault.section === section).map((fault) => `${fault.check}|${fault.evidence}`));
-  return after.filter((fault) => fault.section === section && fault.severity !== "warn" && !seen.has(`${fault.check}|${fault.evidence}`));
+/** Faults the edit brought anywhere: its own section, another tie's echo, or the column's count of questions. */
+function newFaults(before: readonly Fault[], after: readonly Fault[]): Fault[] {
+  const key = (fault: Fault) => `${fault.section}|${fault.check}|${fault.evidence}`;
+  const seen = new Set(before.map(key));
+  return after.filter((fault) => fault.severity !== "warn" && !seen.has(key(fault)));
 }
