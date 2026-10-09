@@ -1,4 +1,5 @@
 import { STAT_COLUMNS, type StatKey } from "./statKeys";
+import { byCode } from "./byCode";
 import type { IntelManifest } from "./types";
 
 // `data/intel/stats/26-27.json`: every man who has played, by FPL code, with his season's counts.
@@ -23,14 +24,9 @@ const KIND = new Map<string, string>(STAT_COLUMNS.map((column) => [column.key, c
 
 /** Each man's counts by FPL code; empty when there is no file. Unknown columns are dropped. */
 export function statIntel(file: IntelStats | null): Map<number, StatsRow> {
-  const rows = new Map<number, StatsRow>();
-  if (file === null) return rows;
+  if (file === null) return new Map();
   const known = file.columns.flatMap((key, at) => (KIND.has(key) ? [[key, at] as const] : []));
-  for (const player of file.players ?? []) {
-    if (!Number.isInteger(player?.code)) continue;
-    rows.set(player.code, Object.fromEntries(known.map(([key, at]) => [key, player.values[at] ?? null])));
-  }
-  return rows;
+  return byCode(file.players, (player) => Object.fromEntries(known.map(([key, at]) => [key, player.values[at] ?? null])));
 }
 
 /** His count, or null when we hold none. */

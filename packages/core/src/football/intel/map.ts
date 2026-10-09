@@ -7,19 +7,14 @@ import type {
   IntelTaker,
 } from "./types";
 import { ON_THE_PITCH } from "../types";
+import { byCode } from "./byCode";
 
 // Reads the sister repo's already-parsed export and refuses what is wrong. A null position must stay null:
 // filling it would put FPL's fantasy classification on a football screen.
 
 /** Every player the export carries by FPL code; a row without one is dropped, never kept under `NaN`. */
 export function squadIntel(squads: IntelSquads | null): Map<number, IntelPlayer> {
-  const byCode = new Map<number, IntelPlayer>();
-  if (squads === null) return byCode;
-  for (const player of squads.players ?? []) {
-    if (!Number.isInteger(player?.code)) continue;
-    byCode.set(player.code, player);
-  }
-  return byCode;
+  return byCode(squads?.players, (player) => player);
 }
 
 /** What is wrong with a club's predicted eleven, or null when nothing is: reported, never repaired. */

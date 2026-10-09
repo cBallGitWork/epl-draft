@@ -1,3 +1,4 @@
+import { byCode } from "./byCode";
 import type { IntelManifest } from "./types";
 
 // The Premier League club a man was at in each season the sister repo's identity store holds.
@@ -11,16 +12,13 @@ export interface IntelCareers {
 
 /** Each man's clubs by season, `"25-26"` → `"Sunderland"`, keyed on FPL's season-stable code. */
 export function careerIntel(careers: IntelCareers | null): Map<number, Map<string, string>> {
-  const byCode = new Map<number, Map<string, string>>();
-  for (const player of careers?.players ?? []) {
-    if (!Number.isInteger(player?.code)) continue;
+  return byCode(careers?.players, (player) => {
     const seasons = new Map<string, string>();
     for (const row of player.seasons ?? []) {
       if (typeof row?.season === "string" && typeof row?.club === "string" && row.club !== "") seasons.set(row.season, row.club);
     }
-    byCode.set(player.code, seasons);
-  }
-  return byCode;
+    return seasons;
+  });
 }
 
 /** FPL's `"2025/26"` or Fantrax's `"2025-26"` as the store's `"25-26"`; null for anything else. */

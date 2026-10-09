@@ -1,3 +1,4 @@
+import { byCode } from "./byCode";
 import type { IntelManifest } from "./types";
 
 // Where a man played, as the raw cloud of touch points; untrusted provider data, parsed rather than asserted.
@@ -29,10 +30,7 @@ export interface Touch {
 
 /** Every man's touches by code, corrupt rows dropped: a cloud keyed on `NaN` merges several men into one map. */
 export function touchIntel(touches: IntelTouches | null): Map<number, TouchPlayer> {
-  const byCode = new Map<number, TouchPlayer>();
-  if (touches === null) return byCode;
-  for (const player of touches.players ?? []) {
-    if (!Number.isInteger(player?.code)) continue;
+  return byCode(touches?.players, (player) => {
     const fixtures = (player.fixtures ?? []).filter(
       (fixture) =>
         Number.isInteger(fixture?.fplFixtureId) &&
@@ -41,10 +39,8 @@ export function touchIntel(touches: IntelTouches | null): Map<number, TouchPlaye
         // An odd length lost a coordinate, so every pair after it has x and y swapped.
         fixture.p.length % 2 === 0,
     );
-    if (fixtures.length === 0) continue;
-    byCode.set(player.code, { code: player.code, fixtures });
-  }
-  return byCode;
+    return fixtures.length === 0 ? null : { code: player.code, fixtures };
+  });
 }
 
 /** One man's touches as points, in one fixture or, with `fixture` null, the season. */

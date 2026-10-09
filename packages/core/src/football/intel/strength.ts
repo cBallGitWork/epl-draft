@@ -1,5 +1,6 @@
 import { mean } from "../../mean";
 import type { Club, Fixture } from "../types";
+import { byCode } from "./byCode";
 import type { IntelManifest } from "./types";
 
 // Each club's Dixon-Coles strength from the sister repo, and the 1–20 ease ranks the fixture planner draws.
@@ -45,13 +46,9 @@ export interface PlannerRow {
 
 /** Every rated club by code; a rating that is not a positive number drops the club rather than ranking it. */
 export function strengthIntel(file: IntelStrength | null): Map<number, ClubStrength> {
-  const byCode = new Map<number, ClubStrength>();
-  for (const club of file?.clubs ?? []) {
-    if (!Number.isInteger(club?.code)) continue;
-    if (![club.attack, club.defence].every((venues) => rated(venues?.home) && rated(venues?.away))) continue;
-    byCode.set(club.code, club);
-  }
-  return byCode;
+  return byCode(file?.clubs, (club) =>
+    [club.attack, club.defence].every((venues) => rated(venues?.home) && rated(venues?.away)) ? club : null,
+  );
 }
 
 /** Each club ranked as an OPPONENT playing at `venue`, 1 the easiest; ties share a rank. */
