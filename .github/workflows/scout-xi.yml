@@ -7,9 +7,12 @@ name: Predicted XI
 
 on:
   schedule:
-    # Every two hours Thursday to Saturday, while pressers and team news move the elevens; once a
-    # day otherwise (Craig, 7 Oct 2026: 84 runs a week had committed nothing in seven days).
-    - cron: "40 7-21/2 * * 4,5,6"
+    # Hourly from Thursday morning to Saturday's lock, while pressers and team news move the elevens
+    # and each change refiles the Line-Ups (Craig, 9 Oct 2026); every two hours on Saturday after it;
+    # once a day otherwise (Craig, 7 Oct 2026: 84 runs a week had committed nothing in seven days).
+    - cron: "40 7-22 * * 4,5"
+    - cron: "40 7-12 * * 6"
+    - cron: "40 13-21/2 * * 6"
     - cron: "40 6 * * 0,1,2,3"
   workflow_dispatch: {}
 
