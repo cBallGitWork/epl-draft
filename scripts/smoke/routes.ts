@@ -7,7 +7,7 @@ import { ANALYSIS, PROJECTIONS, PROJECTIONS_SHOWN } from "../../apps/companion/a
 const CUP_ROUTES = CUPS.slice(1).map((cup) => `/league/cups?cup=${cup.id}`);
 
 /** Every route that needs no id. `/paper/[slug]` is left out because a slug exists only once a story is filed. */
-export const ROUTES = [
+const ROUTES = [
   "/",
   "/league",
   "/league/schedule",

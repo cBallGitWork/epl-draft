@@ -1,11 +1,10 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { FIRM, LEAGUE_TIMEZONE, getFootballSnapshot, wallClockInstant, type FootballSnapshot } from "@epl/core";
+import { FIRM, LEAGUE_TIMEZONE, fullClubName, getFootballSnapshot, wallClockInstant, type FootballSnapshot } from "@epl/core";
 import { articleGameweek, clubKey, conferenceArticle, conferenceTimes, isLeagueArticle, manager, quotes, sections, text } from "./ingest/presserArticle";
 import { troubles } from "./ingest/presserSignals";
 import { intelManifest, intelPath, readIntel, sameApartFromManifest, writeIntel } from "./intel";
 import { SISTER_ROOT } from "./paths";
-import { fullClubName } from "@epl/core";
 
 // Thursday's and Friday's press conferences, from Fantasy Football Scout's team-news article into `data/intel/pressers/`.
 // The sister repo's job (`intel-export.md` §5) until it grows the exporter; name-matching happens HERE, never at runtime.

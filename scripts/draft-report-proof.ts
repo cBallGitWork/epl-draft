@@ -22,10 +22,9 @@ import { draftColumn } from "./edition/draftWriter";
 import { storyOfColumn } from "./edition/newsroom";
 import { STORY_BYLINE, editionName } from "./edition/voice/bylines";
 
-// The draft report for a past gameweek, never filed to the paper. With no GAZETTA_PROOF_OUT it prints the brief and calls no
-// model. With one it writes each due cut-off (or GAZETTA_CUTOFF's) to that folder: the brief, a plain read and a story
-// file a preview can splice in. Test mode is the default: the lead match-up only (GAZETTA_TEST_MATCHUPS for more) and
-// no send-back, the cheapest honest read of the writing; GAZETTA_FULL=1 writes it whole.
+// The draft report for a past gameweek, never filed. No GAZETTA_PROOF_OUT prints the brief and calls no model; with one,
+// each due cut-off (or GAZETTA_CUTOFF's) is written there as brief, plain read and story file. Test mode unless
+// GAZETTA_FULL=1: the lead match-up only (GAZETTA_TEST_MATCHUPS for more) and no send-back.
 
 const say = (line: string) => process.stdout.write(`${line}\n`);
 
