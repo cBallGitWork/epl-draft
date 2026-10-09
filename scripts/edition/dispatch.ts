@@ -147,10 +147,12 @@ function withTies(
   });
 }
 
-/** When the round the elevens predict begins — the moment a prediction is spent
- *  and the real sheets exist. The cargo is already in kickoff order. */
-function firstKickoff(lineups: unknown): string | null {
+/** When the round the elevens predict begins — the moment a prediction is spent and the real sheets exist. The cargo
+ *  is in home-club order, so the earliest is searched for; an unreadable kickoff is skipped. */
+export function firstKickoff(lineups: unknown): string | null {
   if (!Array.isArray(lineups)) return null;
-  const kickoff = (lineups[0] as { kickoff?: unknown } | undefined)?.kickoff;
-  return textOrNull(kickoff);
+  const kickoffs = lineups
+    .map((tie) => textOrNull((tie as { kickoff?: unknown } | null)?.kickoff))
+    .filter((kickoff): kickoff is string => kickoff !== null && !Number.isNaN(Date.parse(kickoff)));
+  return kickoffs.reduce<string | null>((first, at) => (first === null || Date.parse(at) < Date.parse(first) ? at : first), null);
 }
