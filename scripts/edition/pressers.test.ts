@@ -122,9 +122,9 @@ describe("isNews", () => {
 
 describe("withStillOut", () => {
   // Leeds on 8 Oct: James is news, Rodon and Joseph are standing absences, one held and one not.
-  const line = (playerName: string, ownerName: string | null, fresh: boolean) =>
-    ({ playerName, ownerName, fresh, club: 2 }) as PresserLine;
-  const lines = [line("Daniel James", null, true), line("Joe Rodon", "Craig", false), line("Mateo Joseph", null, false)];
+  const line = (playerName: string, ownerName: string | null, fresh: boolean, tag = "ruled_out") =>
+    ({ playerName, ownerName, fresh, club: 2, tag }) as PresserLine;
+  const lines = [line("Daniel James", null, true, "injury_scare"), line("Joe Rodon", "Craig", false), line("Mateo Joseph", null, false)];
 
   it("lists the club's standing absences with who holds each, in place of the column's", () => {
     const rows = [{ club: "Leeds United", code: 2, men: [{ name: "Daniel James" }], alsoOut: ["Daniel James"], stillOut: [{ name: "Pope" }] }];
@@ -142,6 +142,20 @@ describe("withStillOut", () => {
     const bulleted = withStillOut([{ club: "Leeds United", code: 2, men: [{ name: "Joe Rodon" }] }], lines) as { stillOut: unknown }[];
     expect(bulleted[0].stillOut).toEqual([{ name: "Mateo Joseph" }]);
     expect(withStillOut([{ club: "Leeds United", code: null }], lines)).toEqual([{ club: "Leeds United", code: null }]);
+  });
+
+  it("lists only an absence: a standing doubt, rotation risk or managed load is not still out", () => {
+    const standing = [
+      line("Joe Rodon", "Craig", false, "suspended"),
+      line("Ao Tanaka", null, false, "rotation_risk"),
+      line("Ethan Ampadu", "Craig", false, "injury_scare"),
+      line("Lukas Nmecha", null, false, "managed_load"),
+      line("Mateo Joseph", null, false, "ruled_out"),
+    ];
+    expect(withStillOut([{ club: "Leeds United", code: 2, men: [] }], standing)).toEqual([
+      { club: "Leeds United", code: 2, men: [], stillOut: [{ name: "Joe Rodon", owner: "Craig" }, { name: "Mateo Joseph" }] },
+    ]);
+    expect(withStillOut([{ club: "Leeds United", code: 2, men: [] }], standing.slice(1, 4))).toEqual([{ club: "Leeds United", code: 2, men: [] }]);
   });
 });
 

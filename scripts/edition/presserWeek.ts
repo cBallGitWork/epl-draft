@@ -84,6 +84,9 @@ export function presserDays(lines: readonly PresserLine[]): string[] {
   return [...new Set(lines.flatMap((line) => londonDayOf(line.said) ?? []))].sort();
 }
 
+/** An absence: ruled out or suspended. A standing doubt or rotation risk is not still out. */
+const ABSENT = new Set(["ruled_out", "suspended"]);
+
 /** Each team-news row given its club's standing absences from the export, with who holds each, in place of any the
  *  column listed; a man the column bulleted is news, so he is not also still out. */
 export function withStillOut(rows: unknown, lines: readonly PresserLine[]): unknown {
@@ -94,7 +97,7 @@ export function withStillOut(rows: unknown, lines: readonly PresserLine[]): unkn
     void stillOut;
     const bulleted = new Set(Array.isArray(rest.men) ? rest.men.map((man) => (man as { name?: unknown }).name) : []);
     const still = lines
-      .filter((line) => !line.fresh && line.club === rest.code && !bulleted.has(line.playerName))
+      .filter((line) => !line.fresh && ABSENT.has(line.tag) && line.club === rest.code && !bulleted.has(line.playerName))
       .map((line) => (line.ownerName === null ? { name: line.playerName } : { name: line.playerName, owner: line.ownerName }));
     return still.length === 0 ? rest : { ...rest, stillOut: still };
   });
