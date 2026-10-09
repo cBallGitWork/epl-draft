@@ -5,9 +5,12 @@ import { numeric } from "./stats";
 // The league table, off the page Fantrax draws for its own site: the only read carrying league points. Pure.
 // Points are READ, never computed, as what a win is worth is a commissioner setting.
 
-/** Columns are read by Fantrax's key, never position: a manager can reorder them on their site. */
-const RANK = "rank";
+/** Columns are read by Fantrax's key, never position: a manager can reorder them on their site. Its rank is not
+ *  read: `placeTable` places teams by the league's rule. */
 const TEAM = "team";
+
+/** A row before the table places it. */
+type Unplaced = Omit<StandingsRow, "rank">;
 
 export function mapStandings(raw: RawStandingsPage): StandingsRow[] {
   const table = standingsTable(raw);
@@ -16,7 +19,7 @@ export function mapStandings(raw: RawStandingsPage): StandingsRow[] {
   const fixed = columns(table.fixedHeader?.cells);
   const scrolling = columns(table.header?.cells);
 
-  const rows: StandingsRow[] = [];
+  const rows: Unplaced[] = [];
   for (const row of table.rows ?? []) {
     // The team is the pinned columns' only cell with an id; a row naming no team is skipped.
     const team = at(row.fixedCells, fixed.get(TEAM));
@@ -31,7 +34,6 @@ export function mapStandings(raw: RawStandingsPage): StandingsRow[] {
     rows.push({
       teamId: team.teamId,
       teamName: team.content ?? "",
-      rank: number(at(row.fixedCells, fixed.get(RANK))?.content),
       won,
       drawn,
       lost,
@@ -47,7 +49,7 @@ export function mapStandings(raw: RawStandingsPage): StandingsRow[] {
 
 /** The table in the league's order: points, then fantasy points for. Teams level on both share a place (1, 1, 3) and
  *  are listed by name, as Fantrax re-deals its own ranks for them on every read. */
-export function placeTable(rows: readonly StandingsRow[]): StandingsRow[] {
+export function placeTable(rows: readonly Unplaced[]): StandingsRow[] {
   const ordered = [...rows].sort(
     (a, b) =>
       b.points - a.points ||

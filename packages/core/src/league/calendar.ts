@@ -46,9 +46,9 @@ export function periodGameweeks(
     const end = Date.parse(period.end);
     const held = new Map<number, { matches: number; first: number }>();
 
-    // Inclusive at both ends: consecutive periods end at :59 and start at the next :00.
+    // Inclusive at both ends: consecutive periods end at :59 and start at the next :00. An unread bound holds nothing.
     for (const { gameweek, at } of instants) {
-      if (at < start || at > end) continue;
+      if (!(at >= start && at <= end)) continue;
       const seen = held.get(gameweek);
       held.set(gameweek, { matches: (seen?.matches ?? 0) + 1, first: Math.min(seen?.first ?? at, at) });
     }

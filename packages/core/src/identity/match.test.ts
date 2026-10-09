@@ -165,6 +165,33 @@ describe("matchPlayers", () => {
     expect(result.proposals[0]?.reason).toBe("no-candidates");
   });
 
+  it("asks a person when a second id names exactly the footballer another already holds", () => {
+    // Two Fantrax ids for one man: assumed unmapped, the second would vanish from review.
+    const result = matchPlayers(
+      [fantrax("a2", "Saka, Bukayo", "ARS")],
+      [fpl(1, "Bukayo", "Saka", "Saka", "ARS")],
+      {},
+      { a1: { fplCode: 1, matchedBy: "manual", confidence: 100 } },
+    );
+    expect(result.matches.a2).toBeUndefined();
+    expect(result.proposals).toEqual([
+      expect.objectContaining({
+        fantraxId: "a2",
+        reason: "identity-taken",
+        candidates: [{ fplCode: 1, name: "Bukayo Saka", score: 100 }],
+      }),
+    ]);
+  });
+
+  it("asks a person when two ids in one run name the same footballer, the first keeping him", () => {
+    const result = matchPlayers(
+      [fantrax("a1", "Saka, Bukayo", "ARS"), fantrax("a2", "Saka, Bukayo", "ARS")],
+      [fpl(1, "Bukayo", "Saka", "Saka", "ARS")],
+    );
+    expect(result.matches.a1?.fplCode).toBe(1);
+    expect(result.proposals.map((p) => [p.fantraxId, p.reason])).toEqual([["a2", "identity-taken"]]);
+  });
+
   it("frees a code held only by an unmapped entry", () => {
     // Unmapped players hold no code, so nothing should be reserved on their
     // behalf.

@@ -1,3 +1,4 @@
+import { recordOrEmpty as record } from "../../untrusted";
 import type { RosterSlot } from "../types";
 
 // A planned lineup as Fantrax's write wants it, and Fantrax's answers read back. Pure: the I/O is
@@ -28,8 +29,7 @@ type PlanRefusal = "squad-changed" | "unknown-status" | "not-eligible";
 
 export type WriteAnswer = { ok: true } | { ok: false; messages: string[] };
 
-const record = (value: unknown): Record<string, unknown> =>
-  typeof value === "object" && value !== null ? (value as Record<string, unknown>) : {};
+/** An array's strings, "" kept: an empty position id still lines up with its short name. */
 const strings = (value: unknown): string[] =>
   Array.isArray(value) ? value.filter((v): v is string => typeof v === "string") : [];
 

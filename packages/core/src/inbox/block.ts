@@ -1,12 +1,10 @@
 import { listed } from "../format";
 import type { BlockPlayer, TradeBlock } from "../league/types";
+import { NAMES_IN_HEADLINE } from "./messages";
 import type { InboxItem } from "./types";
 
 // The trade block, as the transfer desk would put it: who has been transfer-listed, who is in the market for what.
 // One letter per team's block, dated by its last save, so a change reaches every manager's mail as new.
-
-/** How many names a headline carries, as `dealNews` holds it. */
-const NAMES_IN_HEADLINE = 2;
 
 /** `Erling Haaland (MCI)`, for a headline. */
 function named(man: BlockPlayer): string {

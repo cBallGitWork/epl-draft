@@ -115,8 +115,8 @@ function mapGroup(table: RawStatTable): StatGroup {
     columnAt.push(index);
   });
 
-  const pointsAt = header.findIndex((cell) => cell.key === "fpts");
-  const perGameAt = header.findIndex((cell) => cell.key === "fptsPerGame");
+  const pointsAt = keyed(header, "fpts");
+  const perGameAt = keyed(header, "fptsPerGame");
 
   const lines = (table.rows ?? []).flatMap((row): StatLine[] => {
     const scorer = row.scorer;
@@ -125,10 +125,10 @@ function mapGroup(table: RawStatTable): StatGroup {
     return [
       {
         fantraxId: scorer.scorerId,
-        points: pointsAt < 0 ? null : numeric(cells[pointsAt]?.content),
-        perGame: perGameAt < 0 ? null : numeric(cells[perGameAt]?.content),
+        points: figureAt(cells, pointsAt),
+        perGame: figureAt(cells, perGameAt),
         // Indexed by header column, so a short row cannot slide a keeper's saves under his goals against.
-        values: columnAt.map((index) => numeric(cells[index]?.content)),
+        values: columnAt.map((index) => figureAt(cells, index)),
       },
     ];
   });
@@ -139,11 +139,10 @@ function mapGroup(table: RawStatTable): StatGroup {
 /** The whole pool, ranked. One page — ask for all of it at once. */
 export function mapPoolStats(raw: RawPoolStats): PoolStats {
   const header = raw.tableHeader?.cells ?? [];
-  const at = (key: string) => header.findIndex((cell) => cell.key === key);
-  const rankAt = at("rankOv");
-  const pointsAt = at("fpts");
-  const perGameAt = at("fptsPerGame");
-  const opponentAt = at("opponent");
+  const rankAt = keyed(header, "rankOv");
+  const pointsAt = keyed(header, "fpts");
+  const perGameAt = keyed(header, "fptsPerGame");
+  const opponentAt = keyed(header, "opponent");
   // The ownership pair has no `key`, only a `shortName`, so it is matched on label; a lost label reads as absent.
   const rosteredAt = labelled(header, "Ros");
   const trendAt = labelled(header, "+/-");
@@ -151,15 +150,14 @@ export function mapPoolStats(raw: RawPoolStats): PoolStats {
   const rows = (raw.statsTable ?? []).flatMap((row): PoolStatRow[] => {
     if (!row.scorer?.scorerId) return [];
     const cells = row.cells ?? [];
-    const cell = (index: number) => (index < 0 ? null : numeric(cells[index]?.content));
     return [
       {
         fantraxId: row.scorer.scorerId,
-        rank: cell(rankAt),
-        points: cell(pointsAt),
-        perGame: cell(perGameAt),
-        rostered: cell(rosteredAt),
-        trend: cell(trendAt),
+        rank: figureAt(cells, rankAt),
+        points: figureAt(cells, pointsAt),
+        perGame: figureAt(cells, perGameAt),
+        rostered: figureAt(cells, rosteredAt),
+        trend: figureAt(cells, trendAt),
         opponent: opponentAt < 0 ? null : plainText(cells[opponentAt]?.content),
         position: row.scorer.posShortNames?.split(",").at(-1)?.trim() || null,
       },
@@ -187,7 +185,17 @@ function latestSeason(seasons: readonly RawSeason[], timeframe: string): string 
   return best?.code ?? null;
 }
 
+/** A column by Fantrax's key for it; -1 where the header lacks it. */
+function keyed(header: readonly RawHeaderCell[], key: string): number {
+  return header.findIndex((cell) => cell.key === key);
+}
+
 /** A column Fantrax heads but does not key. */
 function labelled(header: readonly { shortName?: string }[], shortName: string): number {
   return header.findIndex((cell) => cell.shortName === shortName);
+}
+
+/** The figure in a row under a header column; null where the header lacks the column, as `numeric` reads a blank. */
+function figureAt(cells: readonly RawCell[], index: number): number | null {
+  return index < 0 ? null : numeric(cells[index]?.content);
 }

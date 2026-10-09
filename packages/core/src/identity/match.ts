@@ -56,11 +56,11 @@ export function matchPlayers(
   const clubOf = (player: LeaguePlayer) =>
     player.clubCode === null ? null : toFplClubCode(player.clubCode);
 
-  const poolFor = (player: LeaguePlayer): FplCandidate[] => {
+  const clubPool = (player: LeaguePlayer): FplCandidate[] => {
     const club = clubOf(player);
-    const pool = club === null ? fplPlayers : (byClub.get(club) ?? []);
-    return pool.filter((candidate) => !taken.has(candidate.code));
+    return club === null ? fplPlayers : (byClub.get(club) ?? []);
   };
+  const poolFor = (player: LeaguePlayer): FplCandidate[] => clubPool(player).filter((candidate) => !taken.has(candidate.code));
 
   const deferred: LeaguePlayer[] = [];
 
@@ -78,7 +78,15 @@ export function matchPlayers(
         fplCode: hits[0].code,
         matchedBy: alias === undefined ? "exact" : "alias",
         confidence: 100,
-        };
+      };
+      continue;
+    }
+
+    // An exact hit on a man another id holds is one footballer with two ids: a person's question, never an absence.
+    const held =
+      hits.length === 0 ? clubPool(player).filter((candidate) => taken.has(candidate.code) && isExactHit(wanted, candidate)) : [];
+    if (held.length > 0) {
+      proposals.push(proposalFor(player, held.map((candidate) => ({ candidate, score: 100 })), "identity-taken"));
       continue;
     }
 

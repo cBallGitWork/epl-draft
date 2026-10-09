@@ -98,7 +98,6 @@ function goaliePosition(groups: RawScoringGroup[] | undefined): string | null {
   return goalie?.group?.shortName ?? null;
 }
 
-
 /** Each category's name, one entry per category, keyed `{groupId}#{categoryId}` as live scoring keys it.
  *  No position segment: live rows always say `#-1`, a row outfield Goals and Clean Sheets lack here.
  *  Empty, never null, for a league that described nothing; a Record because it crosses a cache. */
