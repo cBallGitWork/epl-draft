@@ -163,7 +163,11 @@ only question is *why* he is on the number he is on.
   "Full match stats" and a chevron, open it is his counts in the categories the
   league prices at his slot, DefCon's parts and keeper actions from Opta. A
   different provider answering a different question, so it is the panel under
-  ours and never a column in it.
+  ours and never a column in it. Below them an outfielder gets Opta's attacking
+  figures on a plate headed **Attacking**, priced or not: shots, shots on target,
+  big chances missed, touches in the box, chances created, big chances created,
+  and accurate crosses and dribbles won as made of tried ("1/4"). A keeper gets
+  no such plate, and nor does a man Opta has no line for.
 - **Before he kicks off** there is no table: the fixture line under his name says
   when, and an empty breakdown under a live score would read as a score of
   nought.

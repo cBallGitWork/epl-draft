@@ -2,9 +2,9 @@ import { optaMetrics } from "./map";
 import type { RawPlFixture } from "./raw";
 import type { RawPlPlayerStats } from "./rawStats";
 
-// One man's match in the Opta counts FPL's live feed does not split, which are the counts Fantrax scores.
+// One man's match in Opta's counts: those FPL's live feed does not split, which Fantrax scores, and his attacking.
 
-/** What his DefCon, his keeping and his extra assists are made of, in one match or added over a gameweek. */
+/** What his DefCon, his keeping, his extra assists and his attacking are made of, in one match or over a gameweek. */
 export interface MatchParts {
   tacklesWon: number;
   interceptions: number;
@@ -15,6 +15,17 @@ export interface MatchParts {
   smothers: number;
   punches: number;
   highClaims: number;
+  shots: number;
+  shotsOnTarget: number;
+  chancesCreated: number;
+  bigChancesCreated: number;
+  bigChancesMissed: number;
+  crosses: number;
+  accurateCrosses: number;
+  touchesInBox: number;
+  /** Take-ons tried; `contestsWon` the ones he beat his man in. */
+  contests: number;
+  contestsWon: number;
 }
 
 type Part = keyof MatchParts;
@@ -30,6 +41,16 @@ const METRIC: Record<Part, string> = {
   smothers: "gk_smother",
   punches: "punches",
   highClaims: "good_high_claim",
+  shots: "total_scoring_att",
+  shotsOnTarget: "ontarget_scoring_att",
+  chancesCreated: "total_att_assist",
+  bigChancesCreated: "big_chance_created",
+  bigChancesMissed: "big_chance_missed",
+  crosses: "total_cross",
+  accurateCrosses: "accurate_cross",
+  touchesInBox: "touches_in_opp_box",
+  contests: "total_contest",
+  contestsWon: "won_contest",
 };
 
 function partsOf(read: (part: Part) => number): MatchParts {
@@ -43,6 +64,16 @@ function partsOf(read: (part: Part) => number): MatchParts {
     smothers: read("smothers"),
     punches: read("punches"),
     highClaims: read("highClaims"),
+    shots: read("shots"),
+    shotsOnTarget: read("shotsOnTarget"),
+    chancesCreated: read("chancesCreated"),
+    bigChancesCreated: read("bigChancesCreated"),
+    bigChancesMissed: read("bigChancesMissed"),
+    crosses: read("crosses"),
+    accurateCrosses: read("accurateCrosses"),
+    touchesInBox: read("touchesInBox"),
+    contests: read("contests"),
+    contestsWon: read("contestsWon"),
   };
 }
 

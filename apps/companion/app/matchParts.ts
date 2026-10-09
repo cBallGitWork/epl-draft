@@ -18,7 +18,7 @@ interface MatchAsk {
 }
 
 export interface MatchRead {
-  /** Null when Opta would not say; a dash on every part, never a nought. */
+  /** Null when Opta would not say: a dash on every priced part, never a nought, and no attacking block. */
   parts: MatchParts | null;
   /** Null when the league's scoring is unread, so every row shows. */
   scored: string[] | null;
