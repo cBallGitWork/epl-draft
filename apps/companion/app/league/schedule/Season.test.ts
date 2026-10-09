@@ -1,25 +1,15 @@
-import { isValidElement, type ReactNode } from "react";
+import { createElement } from "react";
 import { describe, expect, it, vi } from "vitest";
+import { repeatedKeys } from "../../repeatedKeys";
 import { LEAGUE_COMPETITION, type LeagueTeam } from "@epl/core";
 import Season from "./Season";
 import type { SeasonRow } from "./teamSeason";
 
-// The app's `@/` alias is Next's, not vitest's: each is the real module by its relative path.
+// The app's `@/` alias is Next's, not vitest's: each is the real module by its relative path, or a stand-in.
 vi.mock("@/app/desk", () => import("../../desk"));
-vi.mock("@/app/components/shell/Link", () => import("../../components/shell/Link"));
+vi.mock("@/app/components/shell/Link", () => ({ default: (props: object) => createElement("a", props) }));
 vi.mock("@/app/squad/routes", () => import("../../squad/routes"));
 vi.mock("@/app/components/league/TeamName", () => ({ default: () => null }));
-
-/** Every list of siblings in a tree that repeats a key: React drops or doubles one of each pair. */
-function repeatedKeys(node: ReactNode): string[] {
-  if (Array.isArray(node)) {
-    const keys = node.flatMap((child) => (isValidElement(child) && child.key !== null ? [child.key] : []));
-    const repeated = keys.filter((key, at) => keys.indexOf(key) !== at);
-    return [...repeated, ...node.flatMap(repeatedKeys)];
-  }
-  if (!isValidElement(node)) return [];
-  return repeatedKeys((node.props as { children?: ReactNode }).children);
-}
 
 const team = (teamId: string): LeagueTeam => ({ teamId, name: teamId });
 
