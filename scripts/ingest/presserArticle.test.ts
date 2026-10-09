@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { conferenceArticle, conferenceTimes } from "./presserArticle";
+import { conferenceArticle, conferenceTimes, quotes } from "./presserArticle";
 import { classify, clauses, troubles } from "./presserSignals";
 
 // The parser decides whether a real footballer is reported as out. Every case
@@ -197,4 +197,13 @@ describe("9 Oct: a man the conference ruled out is not a standing absence", () =
     expect(classify("He will remain out of favour until he signs.")).toBeNull();
   });
 
+  it("carries a quote of several paragraphs whole, as one quote", () => {
+    expect(quotes(liverpool)).toEqual([
+      {
+        text: "Alex Isak and Cody Gakpo will not play the game. They are not ready. Unfortunately for us, both got injuries during the international break. Cody has an ankle injury. He has had some before in his career and it is a matter of him dealing with the pain. They both don’t look long term. We will be analysing day to day but they are not going to arrive on Sunday.",
+        said: "Andoni Iraola",
+      },
+      { text: "He’s fit. He’s ready to go. Still we need to train tomorrow, but he’s fine, yes.", said: "Andoni Iraola", about: "Jeremy Jacquet" },
+    ]);
+  });
 });
