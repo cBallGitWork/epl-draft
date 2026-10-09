@@ -27,9 +27,10 @@ export function openingGameweek(calendar: readonly PeriodGameweeks[], period: nu
   return calendar.find((entry) => entry.period === period)?.own ?? undefined;
 }
 
-/** The period that scores a gameweek: the first holding it, as a replayed postponement's period holds it too. */
+/** The period that scores a gameweek: the one it is `own` to, else the first holding it, as a replayed or
+ *  brought-forward match's period holds it too. */
 export function periodOfGameweek(calendar: readonly PeriodGameweeks[], gameweek: number): PeriodGameweeks | undefined {
-  return calendar.find((entry) => entry.gameweeks.includes(gameweek));
+  return calendar.find((entry) => entry.own === gameweek) ?? calendar.find((entry) => entry.gameweeks.includes(gameweek));
 }
 
 export function periodGameweeks(
