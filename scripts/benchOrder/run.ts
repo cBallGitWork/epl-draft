@@ -1,5 +1,5 @@
 import { MS_PER_MINUTE, type WriteAnswer } from "@epl/core";
-import { labelsOf, momentOf, teamPlan, type Moment, type TeamPlan } from "./plan";
+import { labelsOf, momentOf, teamPlan, type TeamPlan } from "./plan";
 
 // One deadline's pass: wait for the write moment if asked, then number every bench nobody numbered, by total points.
 // Every read and write is injected, so a test can stand at any minute and hold Fantrax's answers.
@@ -42,12 +42,20 @@ export async function benchOrderRun(deps: Deps, options: Options): Promise<numbe
     moment = momentOf(await deps.lockOf(period), deps.now());
   }
 
-  const refusal = refusalOf(moment, period, options);
-  if (refusal !== null) {
-    deps.log(refusal.line);
-    if (refusal.stop) return refusal.code;
+  // A lock gone or passed by now was read again after a wait: the write it was waiting for never went.
+  if (moment.kind === "no-lock" || moment.kind === "locked") {
+    deps.log(moment.kind === "locked" ? `Period ${period} locked at ${moment.lock} before its benches were ordered.` : `Period ${period} has no lock now.`);
+    return moment.kind === "locked" && options.write ? 1 : 0;
   }
-  if (moment.kind === "no-lock" || moment.kind === "locked") return 0;
+  if (moment.kind !== "now") {
+    deps.log(
+      moment.kind === "not-due"
+        ? `Period ${period} locks at ${moment.lock}, after 08:00 tomorrow: the next morning's run writes it.`
+        : `Period ${period} locks at ${moment.lock}: benches are written only in its last minutes.`,
+    );
+    // A dry run goes on to print what it would write.
+    if (options.write) return 0;
+  }
   const lock = Date.parse(moment.lock);
 
   let failed = 0;
@@ -78,22 +86,6 @@ export async function benchOrderRun(deps: Deps, options: Options): Promise<numbe
   }
   deps.log(`Period ${period}: ${options.write ? `${written} written` : "dry run, nothing written"}, ${failed} failed.`);
   return failed > 0 ? 1 : 0;
-}
-
-/** Why the run does not write now, and whether it stops there; a dry run goes on to print the plans. */
-function refusalOf(moment: Moment, period: number, options: Options): { line: string; stop: boolean; code: number } | null {
-  switch (moment.kind) {
-    case "no-lock":
-      return { line: `Period ${period} has no lock to write before.`, stop: true, code: 0 };
-    case "locked":
-      return { line: `Period ${period} locked at ${moment.lock} before its benches were ordered.`, stop: true, code: options.write ? 1 : 0 };
-    case "not-due":
-      return { line: `Period ${period} locks at ${moment.lock}, after 08:00 tomorrow: the next morning's run writes it.`, stop: options.write, code: 0 };
-    case "wait":
-      return { line: `Period ${period} locks at ${moment.lock}: benches are written only in its last minutes.`, stop: options.write, code: 0 };
-    case "now":
-      return null;
-  }
 }
 
 function describe(plan: TeamPlan, labels: ReadonlyMap<string, string>, write: boolean): string {

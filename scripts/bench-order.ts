@@ -21,7 +21,8 @@ import { benchOrderRun } from "./benchOrder/run";
 
 async function calendar() {
   const [info, fixtures] = await Promise.all([fetchLeagueInfo(FANTRAX_LEAGUE_ID).then(mapLeagueInfo), fetchFixtures().then(mapFixtures)]);
-  return { info, kickoffs: datedKickoffs(fixtures) };
+  const kickoffs = datedKickoffs(fixtures);
+  return { info, kickoffs, lockOf: (period: number) => periodLock(info.rosterPeriods.find((p) => p.number === period), kickoffs) };
 }
 
 async function main(): Promise<void> {
@@ -37,13 +38,9 @@ async function main(): Promise<void> {
       sleep: (ms) => sleep(ms),
       next: async () => {
         const period = planningPeriod(first.info.rosterPeriods, first.kickoffs, new Date().toISOString());
-        const found = first.info.rosterPeriods.find((p) => p.number === period);
-        return period === null ? null : { period, lock: periodLock(found, first.kickoffs) };
+        return period === null ? null : { period, lock: first.lockOf(period) };
       },
-      lockOf: async (period) => {
-        const { info, kickoffs } = await calendar();
-        return periodLock(info.rosterPeriods.find((p) => p.number === period), kickoffs);
-      },
+      lockOf: async (period) => (await calendar()).lockOf(period),
       teams: async () => first.info.teams.map((t) => ({ teamId: t.teamId, name: t.name })),
       roster: (teamId, period) => fetchLineupState(FANTRAX_LEAGUE_ID, teamId, period, session),
       write: async (teamId, period, order) =>
