@@ -71,7 +71,13 @@ export interface StoryLineupMan {
   position: string | null;
   /** The Fantrax team that holds him, named at render; absent is a free agent. */
   owner?: string;
+  /** Whether the football says he cannot or may not play, stamped by the desk; absent is fit. */
+  status?: LineupStatus;
 }
+
+/** A predicted starter's fitness in the Team Sheet's words: out, or a doubt. */
+export type LineupStatus = "OUT" | "Doubt";
+const LINEUP_STATUS: readonly LineupStatus[] = ["OUT", "Doubt"];
 
 /** One club's predicted eleven, in the source's own order. */
 export interface StoryLineupSide {
@@ -165,6 +171,7 @@ function lineupMan(raw: unknown): StoryLineupMan[] {
       name: man.name,
       position: textOrNull(man.position),
       ...(typeof man.owner === "string" && man.owner !== "" ? { owner: man.owner } : {}),
+      ...(LINEUP_STATUS.includes(man.status as LineupStatus) ? { status: man.status } : {}),
     },
   ];
 }

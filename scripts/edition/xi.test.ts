@@ -6,7 +6,14 @@ import { xiColumn } from "./xi";
 const SHORT = ["ARS", "LEE", "CHE", "BOU"];
 const clubs = new Map<number, Club>(SHORT.map((shortName, at) => [at + 1, { id: at + 1, code: at + 1, name: shortName, shortName } as Club]));
 const squad = (club: number) => Array.from({ length: 11 }, (_, at) => club * 100 + at);
-const players = SHORT.flatMap((_, at) => squad(at + 1)).map((code) => ({ code, name: `Man${code}`, fullName: `First Man${code}` }));
+// Man100 is out (Isak on 9 Oct: `i`, 0%, "Thigh injury"), Man101 a doubt at 50%, the rest fit.
+const fitness = (code: number) =>
+  code === 100
+    ? { status: "i", news: "Thigh injury - Unknown return date", chanceOfPlaying: 0 }
+    : code === 101
+      ? { status: "d", news: "Knock - 50% chance of playing", chanceOfPlaying: 50 }
+      : { status: "a", news: "", chanceOfPlaying: null };
+const players = SHORT.flatMap((_, at) => squad(at + 1)).map((code) => ({ code, name: `Man${code}`, fullName: `First Man${code}`, ...fitness(code) }));
 const eleven = (club: number) => ({ formation: "4-4-2", slots: { "1": 1, "2": 4, "3": 4, "4": 2 }, starters: squad(club).map((code) => ({ code, prob: 0.9 })) });
 const season = [
   { gameweek: 6, homeClubId: 1, awayClubId: 2, kickoff: "2026-10-10T11:30:00Z" },
@@ -22,6 +29,16 @@ describe("xiColumn", () => {
     const filed = column(xiOf({ ARS: eleven(1), LEE: eleven(2), CHE: eleven(3), BOU: eleven(4) }));
     expect(filed?.deck).toBe("Every club's expected starting eleven for the gameweek, match by match.");
     expect(filed?.body).toBe("All 2 of the gameweek's matches, with both sides named.");
+  });
+
+  // Craig, 9 Oct: "Showing Isak as starting when he's out". Scout's eleven is printed as given, and marked.
+  it("marks a man the football says is out, and a doubt, never replacing either", () => {
+    const filed = column(xiOf({ ARS: eleven(1), LEE: eleven(2), CHE: eleven(3), BOU: eleven(4) }));
+    const men = (filed?.lineups as { home: { men: { name: string; status?: string }[] } }[])[0].home.men;
+    expect(men).toHaveLength(11);
+    expect(men[0]).toMatchObject({ name: "First Man100", status: "OUT" });
+    expect(men[1]).toMatchObject({ name: "First Man101", status: "Doubt" });
+    expect(men[2].status).toBeUndefined();
   });
 
   it("says how many of the gameweek's matches it printed when one is missing", () => {
