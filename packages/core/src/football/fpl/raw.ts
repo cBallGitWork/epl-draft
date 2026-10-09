@@ -127,7 +127,7 @@ export interface RawLive {
   elements: RawLiveElement[];
 }
 
-/** One match of his season from `element-summary`: bps, expected goals and defensive contribution per fixture.
+/** One match of his season from `element-summary`: expected goals and defensive contribution per fixture.
  *  An unplayed match has an all-zero row too; only its null `team_h_score` tells it from an unused sub's.
  *  The expected family arrive as decimal strings ("0.64"). */
 export interface RawHistoryEntry {
@@ -147,8 +147,6 @@ export interface RawHistoryEntry {
   yellow_cards: number;
   red_cards: number;
   saves: number;
-  bonus: number;
-  bps: number;
   defensive_contribution?: number;
   expected_goals?: string;
   expected_assists?: string;
@@ -173,7 +171,6 @@ export interface RawPastSeason {
   yellow_cards: number;
   red_cards: number;
   saves: number;
-  bonus: number;
 }
 
 /** `element-summary/{id}/`. Its `fixtures` list is read by nobody, so it stays untyped. */

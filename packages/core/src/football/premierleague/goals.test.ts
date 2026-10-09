@@ -132,6 +132,14 @@ describe("goalGroups", () => {
     expect(groups.map((group) => group.minutes)).toEqual([[6], [9]]);
   });
 
+  it("keeps two unplaced scorers apart in the same minute, as two goals in added time are", () => {
+    const groups = goalGroups([
+      goal({ minute: 90, added: 2, scorer: null }),
+      goal({ minute: 90, added: 5, scorer: null }),
+    ]);
+    expect(groups.map((group) => group.minutes)).toEqual([[90], [90]]);
+  });
+
   it("credits nobody where Opta did not", () => {
     expect(goalGroups([goal({ minute: 6, scorer: 50 })])[0].assisters).toEqual([]);
   });

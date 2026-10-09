@@ -1,6 +1,7 @@
 // A club's attack and defence as this season has gone so far: goals and xG per game against the
 // league's, eased in over the first few games. 1.0 is average; a higher defence concedes less.
 
+import { sumOf } from "../sum";
 import type { Fixture, PlayerMatchStats } from "./types";
 
 export interface ClubResult {
@@ -36,11 +37,11 @@ export function strengthBefore(
   const blend = (goals: number, xg: number) => config.goalsShare * goals + (1 - config.goalsShare) * xg;
   const earlier = results.filter((r) => r.kickoff < before);
   if (earlier.length === 0) return { attack: 1, defence: 1 };
-  const league = earlier.reduce((sum, r) => sum + blend(r.goalsFor, r.xgFor), 0) / earlier.length;
+  const league = sumOf(earlier, (r) => blend(r.goalsFor, r.xgFor)) / earlier.length;
   const own = earlier.filter((r) => r.club === club);
   const settled = (total: number) => (total + config.settleGames * league) / (own.length + config.settleGames);
-  const scored = settled(own.reduce((sum, r) => sum + blend(r.goalsFor, r.xgFor), 0));
-  const conceded = settled(own.reduce((sum, r) => sum + blend(r.goalsAgainst, r.xgAgainst), 0));
+  const scored = settled(sumOf(own, (r) => blend(r.goalsFor, r.xgFor)));
+  const conceded = settled(sumOf(own, (r) => blend(r.goalsAgainst, r.xgAgainst)));
   return { attack: scored / league, defence: league / conceded };
 }
 

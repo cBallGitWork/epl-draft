@@ -8,14 +8,14 @@ import type { IntelManifest } from "./types";
 const HISTORY_KEYS = [
   "fixture", "round", "opponent_team", "was_home", "kickoff_time", "team_h_score", "team_a_score", "total_points",
   "minutes", "goals_scored", "assists", "clean_sheets", "goals_conceded", "yellow_cards", "red_cards", "saves",
-  "bonus", "bps", "defensive_contribution", "expected_goals", "expected_assists", "starts", "tackles",
+  "defensive_contribution", "expected_goals", "expected_assists", "starts", "tackles",
   "clearances_blocks_interceptions", "recoveries", "expected_goals_conceded",
 ] as const satisfies readonly (keyof RawHistoryEntry)[];
 
 /** Every field `RawPastSeason` types, which `mapPastSeasons` reads. */
 const PAST_KEYS = [
   "season_name", "total_points", "minutes", "goals_scored", "assists", "clean_sheets", "goals_conceded",
-  "yellow_cards", "red_cards", "saves", "bonus",
+  "yellow_cards", "red_cards", "saves",
 ] as const satisfies readonly (keyof RawPastSeason)[];
 
 export interface IntelHistory {

@@ -96,9 +96,9 @@ export function goalGroups(goals: readonly PlGoal[]): PlGoalGroup[] {
   const groups: PlGoalGroup[] = [];
   const at = new Map<string, PlGoalGroup>();
 
-  for (const goal of goals) {
-    // A null scorer keys on the goal's minute so two unknowns stay two rows; a coded one on the man and the net.
-    const key = goal.scorer === null ? `?${goal.minute}` : `${goal.scorer}:${goal.own}`;
+  for (const [index, goal] of goals.entries()) {
+    // A null scorer keys on the goal itself so two unknowns stay two rows, even in one minute; a coded one on the man and the net.
+    const key = goal.scorer === null ? `?${index}` : `${goal.scorer}:${goal.own}`;
     let group = at.get(key);
     if (group === undefined) {
       group = { scorer: goal.scorer, own: goal.own, minutes: [], assisters: [] };

@@ -9,16 +9,18 @@ export function plPlayerCodes(
   optaToCode: Map<string, number>,
 ): Map<number, number> {
   const codes = new Map<number, number>();
-  for (const list of fixture.teamLists ?? []) {
-    // A side nobody has named yet is a null entry: reading `list.lineup` throws on every unstarted fixture.
-    if (list === null || list === undefined) continue;
-    for (const player of [...list.lineup, ...list.substitutes]) {
-      const opta = player.altIds?.opta;
-      const code = opta === undefined ? undefined : optaToCode.get(opta);
-      if (code !== undefined) codes.set(player.id, code);
-    }
+  for (const player of namedMen(fixture)) {
+    const opta = player.altIds?.opta;
+    const code = opta === undefined ? undefined : optaToCode.get(opta);
+    if (code !== undefined) codes.set(player.id, code);
   }
   return codes;
+}
+
+/** Every man either side named, starters then substitutes. A side nobody has named yet is a null entry, and
+ *  reading its `lineup` throws on every unstarted fixture. */
+export function namedMen(fixture: RawPlFixture): RawPlSquadPlayer[] {
+  return (fixture.teamLists ?? []).flatMap((list) => (list == null ? [] : [...list.lineup, ...list.substitutes]));
 }
 
 /** A man's FPL code from his Premier League id, or null when the feed names nobody or the bridge cannot place him. */

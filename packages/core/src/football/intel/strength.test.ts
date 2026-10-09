@@ -147,6 +147,27 @@ describe("plannerGameweeks", () => {
   it("is empty once the season has no match left", () => {
     expect(plannerGameweeks([fixture(1, 38, ARS, BUR, "finished")], 6)).toEqual([]);
   });
+
+  it("is not dragged back by a rearranged match, which FPL keeps in its original round", () => {
+    const fixtures = [
+      fixture(1, 3, ARS, BUR),
+      fixture(2, 3, CHE, HUL, "finished"),
+      fixture(3, 4, ARS, CHE, "finished"),
+      fixture(4, 5, BUR, HUL),
+      fixture(5, 6, CHE, ARS),
+    ];
+    expect(plannerGameweeks(fixtures, 2)).toEqual([5, 6]);
+  });
+
+  it("keeps a round in play, and one with a match brought forward from it", () => {
+    const fixtures = [
+      fixture(1, 5, ARS, BUR, "finished"),
+      fixture(2, 5, CHE, HUL),
+      fixture(3, 7, ARS, CHE, "finished"),
+      fixture(4, 7, BUR, HUL),
+    ];
+    expect(plannerGameweeks(fixtures, 3)).toEqual([5, 6, 7]);
+  });
 });
 
 describe("plannerRows", () => {
