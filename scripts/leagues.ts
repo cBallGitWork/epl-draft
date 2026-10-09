@@ -2,7 +2,7 @@ import { recordedRole } from "@epl/core";
 import recorded from "../data/leagues/recorded.json";
 
 // The leagues the archive records: data, read by scripts. The app serves one league, the
-// environment's `FANTRAX_LEAGUE_ID`, and reads the `stats` and `scoring` roles from the file (`assistKinds.ts`, `scoring.ts`).
+// environment's `FANTRAX_LEAGUE_ID`, and reads the `stats` and `scoring` roles from the file (`statsLeague.ts`, `scoring.ts`).
 
 /** A league we capture. `key` is its directory under `data/snapshots/fantrax/leagues/`. */
 export interface RecordedLeague {
