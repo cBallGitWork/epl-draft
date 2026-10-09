@@ -41,16 +41,19 @@ export function benchByPoints(raw: RawTeamRosterInfo): string[] {
   return byPoints(reservesOf(raw));
 }
 
-const byPoints = (reserves: readonly { id: string; fpts: number }[]): string[] =>
-  [...reserves].sort((a, b) => b.fpts - a.fpts).map((r) => r.id);
+/** A man with no points reading goes after every man with one, a negative total included; ties keep the page's order. */
+const byPoints = (reserves: readonly { id: string; fpts: number | null }[]): string[] =>
+  [...reserves].sort((a, b) => (b.fpts ?? -Infinity) - (a.fpts ?? -Infinity) || 0).map((r) => r.id);
 
-function reservesOf(raw: RawTeamRosterInfo): { id: string; fpts: number }[] {
+function reservesOf(raw: RawTeamRosterInfo): { id: string; fpts: number | null }[] {
   return (raw.tables ?? []).flatMap((table) => {
     const at = keyed(table.header?.cells ?? [], "fpts");
     return (table.rows ?? []).flatMap((r) => {
       const id = r.scorer?.scorerId;
       if (r.statusId !== "2" || typeof id !== "string") return [];
-      return [{ id, fpts: at < 0 ? 0 : Number(r.cells?.[at]?.content) || 0 }];
+      const text = at < 0 ? "" : (r.cells?.[at]?.content ?? "").trim();
+      const fpts = text === "" ? NaN : Number(text);
+      return [{ id, fpts: Number.isFinite(fpts) ? fpts : null }];
     });
   });
 }
