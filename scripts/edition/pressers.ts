@@ -1,7 +1,8 @@
-import { MS_PER_DAY, TEAM_SHEET, availabilityOf, type FootballPlayer, fullClubName, instantOf, normalizeName, owners, pressers, type Club, type Fixture, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
+import { MS_PER_DAY, TEAM_SHEET, type PlayerOwner, availabilityOf, type FootballPlayer, fullClubName, instantOf, normalizeName, owners, pressers, type Club, type Fixture, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
 import type { RosteredTeam, StoryFixture } from "@epl/core";
 import { roundTies } from "./round";
 import { readIntel } from "../intel";
+import shortNames from "../../data/leagues/short-names.json";
 
 // The Team Sheet's facts, read off the intel export the sister repo writes.
 //
@@ -68,6 +69,15 @@ function key(token: string): string {
   return normalizeName(token).replace(/ /g, "");
 }
 
+/** The holder as the desk prints him, by the league's short name (`data/leagues/short-names.json`, keyed by team
+ *  id), else the Fantrax name; null when nobody holds the man. The app's `teamNames.ts` reads the same file. */
+export function ownerShort(
+  owner: PlayerOwner | undefined,
+  shorts: Readonly<Record<string, { short: string }>> = shortNames.shortNames,
+): string | null {
+  return owner === undefined ? null : shorts[owner.teamId]?.short || owner.teamName;
+}
+
 /** The signals for this week's pressers, as the brief wants them. */
 export function presserLines(
   teams: readonly RosteredTeam[],
@@ -103,7 +113,7 @@ export function presserLines(
       clubName: fullClubName(club.name),
       // Null when nobody in the league holds him, which is no longer a reason
       // to drop him — it is the difference between "start him" and "claim him".
-      ownerName: held.get(signal.code)?.teamName ?? null,
+      ownerName: ownerShort(held.get(signal.code)),
       fresh: isNews(signal.tag, player.newsAdded, signal.said),
     }];
   });

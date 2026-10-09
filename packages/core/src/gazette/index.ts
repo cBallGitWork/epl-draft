@@ -11,6 +11,7 @@ export { buildPresserBrief, stillOut } from "./briefs/presser";
 export type { PresserLine } from "./briefs/presser";
 export { standingHeadlines } from "./briefs/standing";
 export { AMERICAN, BANNED, banned } from "./banned";
+export { NEWS_GAPS, unbackedFit } from "./teamSheetChecks";
 export { MAX_PAPER_STORIES, composePaper } from "./frontPage";
 export { isCovered, normalizeLedger, recordCoverage } from "./ledger";
 export { newsdesk, roundSlot } from "./newsdesk";

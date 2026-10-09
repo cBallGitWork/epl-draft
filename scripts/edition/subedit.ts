@@ -1,4 +1,4 @@
-import { banned, recordOrEmpty } from "@epl/core";
+import { NEWS_GAPS, banned, recordOrEmpty, unbackedFit } from "@epl/core";
 import { writeColumn, type Say } from "./newsroom";
 import { sendBack } from "./voice/house";
 
@@ -23,6 +23,18 @@ function rowWords(rows: unknown): unknown[] {
   });
 }
 
+/** What the Team Sheet printed about absent managers or absent news, and the FIT men whose note is a bare complaint. */
+export function presserFaults(column: Record<string, unknown>): { phrases: string[]; fit: string[] } {
+  return { phrases: banned(written(column), NEWS_GAPS), fit: unbackedFit(column.teamNews) };
+}
+
+/** The Team Sheet's send-back in the writer's terms, or "" when there is nothing to send back. */
+export function sendBackPresser(faults: { phrases: string[]; fit: string[] }): string {
+  const gaps = faults.phrases.length === 0 ? null : `YOUR LAST ATTEMPT WROTE ABOUT WHO DID NOT SPEAK OR WHAT WAS NOT SAID: ${faults.phrases.map((phrase) => `"${phrase}"`).join(", ")}. A reader wants who is out and who is back. Say that plainly, and never forecast who starts.`;
+  const fit = faults.fit.length === 0 ? null : `THESE FIT MEN CARRY A BARE COMPLAINT AS THEIR NOTE, which reads as if they still have it: ${faults.fit.join(", ")}. Write "back from a muscle injury", or leave the note empty.`;
+  return [gaps, fit].filter((part) => part !== null).join("\n\n");
+}
+
 export async function writeSubedited(
   system: string,
   brief: string,
@@ -33,8 +45,10 @@ export async function writeSubedited(
 ): Promise<Record<string, unknown>> {
   const column = await writeColumn(system, brief);
   const offended = banned(written(column));
-  if (offended.length === 0) return column;
+  const faults = kind === "presser" ? presserFaults(column) : { phrases: [], fit: [] };
+  if (offended.length === 0 && faults.phrases.length === 0 && faults.fit.length === 0) return column;
 
-  say(`  ↩ ${kind} printed ${offended.join(", ")} — sending it back once.`);
-  return writeColumn(system, `${brief}\n\n${sendBack(offended)}`);
+  say(`  ↩ ${kind} printed ${[...offended, ...faults.phrases, ...faults.fit.map((name) => `${name} FIT with a complaint`)].join(", ")} — sending it back once.`);
+  const notes = [offended.length === 0 ? "" : sendBack(offended), sendBackPresser(faults)].filter((part) => part !== "");
+  return writeColumn(system, `${brief}\n\n${notes.join("\n\n")}`);
 }
