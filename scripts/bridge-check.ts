@@ -1,7 +1,4 @@
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 import {
-  type Bridge,
   ProviderError,
   fetchBootstrap,
   fetchPlayerPool,
@@ -10,8 +7,9 @@ import {
   mapTeamRosters,
 } from "@epl/core";
 import { type HoleReason, holeIn } from "./bridge/holes";
+import { readBridge } from "./intel";
 import { RECORDED_LEAGUES } from "./leagues";
-import { MAPPINGS_ROOT, leagueCaptureRoot } from "./paths";
+import { leagueCaptureRoot } from "./paths";
 import { drafted, excused } from "./snapshots";
 
 // Is anybody's actual squad missing a footballer? Each rostered man we cannot resolve is a hole in a squad view, and
@@ -36,9 +34,7 @@ interface Hole {
 }
 
 async function main() {
-  const bridge = JSON.parse(
-    await readFile(join(MAPPINGS_ROOT, "fantrax.json"), "utf8"),
-  ) as Bridge;
+  const bridge = readBridge();
   const [pool, fpl] = await Promise.all([fetchPlayerPool(), fetchBootstrap()]);
   const names = new Map(mapPlayerPool(pool).map((player) => [player.fantraxId, player.displayName]));
   const fplCodes = new Set(fpl.elements.map((element) => element.code));
