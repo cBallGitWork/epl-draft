@@ -1,4 +1,4 @@
-import { banned } from "@epl/core";
+import { banned, recordOrEmpty } from "@epl/core";
 import { writeColumn, type Say } from "./newsroom";
 import { sendBack } from "./voice/house";
 
@@ -7,12 +7,20 @@ import { sendBack } from "./voice/house";
 // stamps two `filedAt` instants on one story.
 
 /** The written surfaces of a column as one string, the headline IN it (unlike `checks.prose()`): it is where a
- *  banned word did its damage, five times on one front page. */
+ *  banned word did its damage, five times on one front page. A team-news row's line and notes are the Team Sheet. */
 export function written(column: Record<string, unknown>): string {
-  return ["headline", "deck", "body"]
-    .map((key) => column[key])
+  return [...["headline", "deck", "body"].map((key) => column[key]), ...rowWords(column.teamNews)]
     .filter((value): value is string => typeof value === "string")
     .join("\n");
+}
+
+/** Each team-news row's own words, its line and each man's note; never the quote, which is a manager's and is carried. */
+function rowWords(rows: unknown): unknown[] {
+  if (!Array.isArray(rows)) return [];
+  return rows.flatMap((row) => {
+    const { line, men } = recordOrEmpty(row);
+    return [line, ...(Array.isArray(men) ? men.map((man) => recordOrEmpty(man).note) : [])];
+  });
 }
 
 export async function writeSubedited(

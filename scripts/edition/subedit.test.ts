@@ -30,4 +30,12 @@ describe("what the sub-editor reads", () => {
     // an object in would put "[object Object]" into the checked text.
     expect(written({ headline: "A Clean Line", ranks: [{ line: "x" }], extras: null })).toBe("A Clean Line");
   });
+
+  it("catches one in a team-news row, which is the Team Sheet's substance, and never in a manager's own words", () => {
+    // "knock" is banned outright, and a club's line and a man's note are where team news would reach for it.
+    const row = { club: "Leeds United", code: 2, line: "Farke has a knock to manage.", men: [{ name: "Daniel James", status: "Doubt", note: "a knock" }] };
+    expect(banned(written({ headline: "Thursday Pressers", teamNews: [row] }))).toContain("knock");
+    expect(banned(written({ teamNews: [{ ...row, line: "James is a doubt.", men: [{ name: "Daniel James", status: "Doubt", note: "back" }], quote: { text: "He has a knock.", said: "Daniel Farke" } }] }))).toEqual([]);
+  });
 });
+
