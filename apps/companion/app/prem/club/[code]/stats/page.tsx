@@ -4,7 +4,7 @@ import ClubShell from "../Shell";
 import { clubOr404 } from "../club";
 import { leagueOpinions } from "../../../leagueOpinions";
 import { poolHref } from "../../../poolHref";
-import { fantasyDepth } from "../SquadTable";
+import { fantasyDepth } from "../squadOrder";
 import PlayerBoard from "./PlayerBoard";
 import type { Row } from "./PlayerBoard";
 

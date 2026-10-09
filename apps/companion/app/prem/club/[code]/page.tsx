@@ -12,7 +12,7 @@ import TabEmpty from "../../../components/league/TabEmpty";
 import ButtonLink from "../../../components/shell/ButtonLink";
 import ClubShell from "./Shell";
 import Squad from "./Squad";
-import { fantasyDepth } from "./SquadTable";
+import { squadOrder } from "./squadOrder";
 import { TABLE } from "../../PremNav";
 import { intelSquads, intelXi } from "../../../intel";
 import { PANEL } from "@/app/desk";
@@ -35,18 +35,7 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
   const place = clubPlaces(fixtures, snapshot.clubs).get(club.id);
 
   // `squadOf` drops the departed and leaves the order to the caller.
-  const squad = squadOf(snapshot, club.id)
-    // Our league's position first, then what he has actually done inside it —
-    // so each block reads as a depth chart rather than an alphabet.
-    .sort(
-      (a, b) =>
-        fantasyDepth(league.get(a.code)) - fantasyDepth(league.get(b.code)) ||
-        // The sister's depth chart before minutes, which get a returning first choice wrong.
-        depth(intelSquads.get(a.code)?.depthTier) - depth(intelSquads.get(b.code)?.depthTier) ||
-        b.season.minutes - a.season.minutes ||
-        b.season.starts - a.season.starts ||
-        a.name.localeCompare(b.name),
-    );
+  const squad = squadOf(snapshot, club.id).sort(squadOrder(league, (code) => intelSquads.get(code)?.depthTier));
 
   // The season's fixtures, not the round in view: a blank gameweek can put the next match weeks off.
   const [next] = nextFixtures(fixtures, clubById(snapshot), club.id, 1);
@@ -94,9 +83,4 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
       </ButtonLink>
     </ClubShell>
   );
-}
-
-/** A man's depth-chart tier to sort on; no tier, or tier 0 (unavailable), sorts last. */
-function depth(tier: number | null | undefined): number {
-  return tier === null || tier === undefined || tier === 0 ? Number.MAX_SAFE_INTEGER : tier;
 }
