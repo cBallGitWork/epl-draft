@@ -128,12 +128,12 @@ function MatchRow({
         ) : null}
         {rows.length === 0 ? (
           <p className="py-1 text-center text-xs text-faint">
-            {/* "Yet" only while the match can still change. */}
-            {fixture.status === "finished"
-              ? "Nothing to report."
+            {/* "Yet" only while the match can still change; a stale copy's live match has kicked off all the same. */}
+            {fixture.status === "upcoming"
+              ? `Kicks off ${fixture.kickoff === null ? "TBC" : londonDayAndTime(fixture.kickoff)}`
               : live
                 ? "Nothing to report yet."
-                : `Kicks off ${fixture.kickoff === null ? "TBC" : londonDayAndTime(fixture.kickoff)}`}
+                : "Nothing to report."}
           </p>
         ) : (
           <ul className="cm-rows flex flex-col">
