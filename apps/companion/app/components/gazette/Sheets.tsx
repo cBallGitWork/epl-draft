@@ -3,7 +3,7 @@ import PitchMarker from "../league/PitchMarker";
 import PitchRows from "../league/PitchRows";
 import { yoursInk } from "../../mine";
 import { HAIRLINES } from "./rules";
-import { CAPTION } from "./heads";
+import { CAPTION, SUBHEAD } from "./heads";
 
 // Team news at the lock, a head-to-head at a time: each side's paragraph, then its eleven on the
 // grass and its bench, as the BBC prints a side before kickoff. The names are printed, not written;
@@ -31,7 +31,7 @@ export default function Sheets({
     <div className={`flex flex-col pt-4 ${HAIRLINES}`}>
       {ties.map((tie) => (
         <section key={`${tie.home.teamId}-${tie.away.teamId}`} className="py-4">
-          <h3 className="paper-display text-xl leading-tight font-semibold text-ink">
+          <h3 className={SUBHEAD}>
             <span className={yoursInk(tie.home.teamId === mine)}>{named(tie.home.teamId)}</span>
             <span className="text-muted"> v </span>
             <span className={yoursInk(tie.away.teamId === mine)}>{named(tie.away.teamId)}</span>

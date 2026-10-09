@@ -18,4 +18,12 @@ describe("the team news thread", () => {
     expect(html).toContain("v Arsenal (H)");
     expect(html).not.toContain("vs ");
   });
+
+  it("runs the still-out men in after their label, each with his owner or FA", () => {
+    const out = {
+      extras: { teamNews: [{ club: "Chelsea", code: null, line: "", stillOut: [{ name: "Palmer", owner: "Craig" }, { name: "James" }] }] },
+    } as PublishedStory;
+    const html = renderToStaticMarkup(createElement(TeamNews, { story: out }));
+    expect(html.replace(/<[^>]+>/g, "")).toContain("Still outPalmer (Craig) · James (FA)");
+  });
 });

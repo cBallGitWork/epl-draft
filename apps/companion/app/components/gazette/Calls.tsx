@@ -4,7 +4,7 @@ import { derbyBetween } from "@/app/derbies";
 import Column from "./Column";
 import Face from "./Face";
 import Paragraphs from "./Paragraphs";
-import { CAPTION, STANDING_HEAD } from "./heads";
+import { CAPTION, STANDING_HEAD, SUBHEAD } from "./heads";
 
 // Lawro's calls as the page prints them, the way the BBC ran them: each tie, the man his line names
 // first beside his words, and under them the desk's prediction. Figures sit in their own span
@@ -41,9 +41,9 @@ export default function Calls({
         {ties.map((tie) => (
           <li key={`${tie.homeTeamId}-${tie.awayTeamId}`} className="flow-root break-inside-avoid border-b border-line py-5 last:border-b-0">
             <Derby home={tie.homeTeamId} away={tie.awayTeamId} />
-            <p className="font-sans text-xs font-bold uppercase tracking-widest text-ink">
-              {named(tie.homeTeamId)} v {named(tie.awayTeamId)}
-            </p>
+            <h3 className={SUBHEAD}>
+              {named(tie.homeTeamId)} <span className="text-muted">v</span> {named(tie.awayTeamId)}
+            </h3>
             {tie.face !== undefined && clubs !== undefined ? (
               <div className="float-left mr-3 mt-2">
                 <Face face={tie.face} clubs={clubs} rank="tie" />
