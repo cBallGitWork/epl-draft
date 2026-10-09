@@ -1,4 +1,3 @@
-import { writeFileSync } from "node:fs";
 import {
   SCOUT_TEAM_NEWS_URL,
   fetchFixtures,
@@ -10,7 +9,7 @@ import {
   xiToWrite,
   type IntelXi,
 } from "@epl/core";
-import { intelManifest, intelPath, readIntel } from "./intel";
+import { intelManifest, readIntel, writeIntel } from "./intel";
 
 // Scout's predicted elevens from their team-news page into `data/intel/xi/`, on `scout-xi.yml`'s schedule. Rewritten only
 // when an eleven changes, `fetchedAt` that moment (the page dates no eleven); exits 1 without writing unless every club
@@ -56,7 +55,7 @@ async function main(): Promise<void> {
     source: "ffscout",
     clubs,
   };
-  writeFileSync(intelPath("xi"), `${JSON.stringify(xi, null, 2)}\n`);
+  writeIntel("xi", `${JSON.stringify(xi, null, 2)}\n`);
   console.log(`scout-xi: ${xi.manifest.rows} elevens for GW${xi.manifest.gameweek ?? "?"} written.`);
 }
 

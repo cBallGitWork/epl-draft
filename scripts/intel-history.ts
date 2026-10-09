@@ -1,9 +1,9 @@
-import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { slimSummary } from "@epl/core";
 import type { IntelHistory } from "@epl/core";
-import { INTEL_ROOT, SISTER_ROOT } from "./paths";
-import { INTEL_SEASON, intelManifest } from "./intel";
+import { SISTER_ROOT } from "./paths";
+import { intelManifest, writeIntel } from "./intel";
 
 // The sister repo's copy of FPL's element-summaries, by FPL code and cut to what our mappers read: a player's season
 // for the page when FPL will not answer Vercel and nothing is cached for him. Run by `scripts/sync-intel.sh`, which
@@ -49,6 +49,5 @@ const file: IntelHistory = {
   ),
   players,
 };
-mkdirSync(join(INTEL_ROOT, "history"), { recursive: true });
-writeFileSync(join(INTEL_ROOT, "history", `${INTEL_SEASON}.json`), `${JSON.stringify(file)}\n`);
+writeIntel("history", `${JSON.stringify(file)}\n`);
 console.log(`intel-history: ${rows} players through GW${latestRound}, fetched ${new Date(newest).toISOString()}${skipped ? `; ${skipped} ids not in the bootstrap` : ""}`);

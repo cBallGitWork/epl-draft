@@ -43,9 +43,10 @@ async function main(): Promise<void> {
   const players: IntelCareers["players"] = [];
   for (const person of season(join(PLAYERS, INTEL_SEASON)).values() as Iterable<PersonFile>) {
     const code = codeOf.get(person.source_mappings?.fpl ?? "");
-    if (code === undefined || person.root_id === undefined) continue;
+    const root = person.root_id;
+    if (code === undefined || root === undefined) continue;
     const rows = seasons.flatMap((label) => {
-      const club = clubs.get(label)?.get(person.root_id!);
+      const club = clubs.get(label)?.get(root);
       return club === undefined ? [] : [{ season: label, club }];
     });
     if (rows.length > 0) players.push({ code, seasons: rows });

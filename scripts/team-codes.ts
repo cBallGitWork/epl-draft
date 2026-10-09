@@ -5,18 +5,14 @@ import { FANTRAX_LEAGUE_ID, fetchLeagueInfo, mapLeagueInfo, requireLeague } from
 // a leaked TEAM_CODES gives nobody a code, but a leaked SESSION_SECRET signs in as anyone, so rotate it and reissue.
 // Run by hand, never in capture or CI: it prints secrets to a terminal.
 
-/** Crockford-ish base32, without the letters that get misread aloud or in a
- *  handwritten note: no I, L, O, U. */
+/** Crockford-ish base32, without the letters misread aloud or in a note: no I, L, O, U. */
 const ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 
-/** Eight characters of this alphabet is forty bits. There is no rate limiter in
- *  front of the sign-in, so length is most of the defence — at one guess per
- *  round trip, ten targets in a trillion is a long afternoon. */
+/** Forty bits: with no rate limiter in front of the sign-in, length is most of the defence. */
 const CODE_LENGTH = 8;
 
 function code(): string {
-  // Rejection-free because 256 is a multiple of 32: every byte maps to exactly
-  // one symbol with no modulo bias.
+  // 256 is a multiple of 32, so the modulo has no bias.
   return [...randomBytes(CODE_LENGTH)].map((byte) => ALPHABET[byte % ALPHABET.length]).join("");
 }
 
@@ -24,8 +20,6 @@ async function main(): Promise<void> {
   requireLeague(FANTRAX_LEAGUE_ID);
   const secret = process.env.SESSION_SECRET;
   if (!secret) {
-    // Names the file, since only one of the two is the one the app verifies against; the last line stops a
-    // new secret going over one that already signs every code issued.
     console.error(
       "SESSION_SECRET is not in apps/companion/.env.local, which is the file the app\n" +
         "verifies codes against. Add it there, and the same value in the deployment:\n" +
@@ -57,6 +51,5 @@ async function main(): Promise<void> {
   console.log("\nThe codes above are not recoverable from it. Re-run to reissue.\n");
 }
 
-// Not awaited at the top level: these scripts transpile to CJS, and a rejection
-// here should crash the run loudly rather than be caught and softened.
+// Not awaited: these scripts transpile to CJS, and a rejection should crash loudly.
 void main();

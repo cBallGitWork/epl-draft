@@ -53,10 +53,11 @@ async function main(): Promise<void> {
   if (scoring === null) throw new Error("the scoring league described no scoring");
 
   const snapshot = await getFootballSnapshot();
-  const gameweeks = [...new Set(fixtures.filter((f) => f.status === "finished" && f.gameweek !== null).map((f) => f.gameweek!))];
+  const gameweeks = [...new Set(fixtures.flatMap((f) => (f.status === "finished" && f.gameweek !== null ? [f.gameweek] : [])))];
   const rounds = new Map<number, PlayerMatchStats[]>();
   for (const gw of gameweeks) rounds.set(gw, mapLiveStats(await fetchLive(gw)));
   const results = clubResults(fixtures, [...rounds.values()], new Map(snapshot.players.map((p) => [p.id, p.clubId])));
+  const rows = [...rounds.values()].flat();
   const bridge = readBridge();
   const idOfCode = new Map(snapshot.players.map((p) => [p.code, p.id]));
   const bridged = new Set(Object.values(bridge).flatMap((entry) => (isUnmapped(entry) || entry.fplCode == null ? [] : [entry.fplCode])));
@@ -70,7 +71,7 @@ async function main(): Promise<void> {
       const code = entry === undefined || isUnmapped(entry) ? undefined : entry.fplCode;
       const playerId = code == null ? undefined : idOfCode.get(code);
       // His match that day from FPL's own row.
-      const row = playerId === undefined ? undefined : [...rounds.values()].flat().find((r) => r.playerId === playerId && on.some((f) => f.id === r.fixtureId));
+      const row = playerId === undefined ? undefined : rows.find((r) => r.playerId === playerId && on.some((f) => f.id === r.fixtureId));
       const fixture = row === undefined ? undefined : on.find((f) => f.id === row.fixtureId);
       const club = snapshot.players.find((p) => p.code === code)?.clubId;
       // A man whose club now is neither side moved since; his opponent is unknown, so he is left unrated.
@@ -85,7 +86,7 @@ async function main(): Promise<void> {
       rated.add(code);
     }
     // A day Fantrax answered short is asked again next run, until every man FPL says played it has his mark.
-    const owed = menOwed(on, [...rounds.values()].flat(), snapshot.players, bridged);
+    const owed = menOwed(on, rows, snapshot.players, bridged);
     if (dayDone(rated, owed, day, today)) {
       store.manifest.days.push(day);
       console.log(`ratings: ${day}, ${rated.size} men rated across ${on.length} matches.`);

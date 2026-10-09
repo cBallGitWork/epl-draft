@@ -1,5 +1,6 @@
 import { readFile, readdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
+import { isAbsent } from "./absent";
 
 // Which capture days exist on disk, and what each recorded. Where captures go is `paths.ts`.
 
@@ -8,10 +9,6 @@ const CAPTURE_DAY = /^\d{4}-\d{2}-\d{2}$/;
 
 /** Fantrax's refusal for a league nobody has joined: a true answer about it until its draft, and a failure after. */
 const NO_TEAMS = "NO_TEAMS";
-
-function isMissingDirectory(error: unknown): boolean {
-  return error instanceof Error && "code" in error && error.code === "ENOENT";
-}
 
 /** Every capture day under `root`, oldest first. An absent directory is `[]`; any other failure is rethrown, as
  *  a permissions problem reported as "no captures" would surface as "overdue" and hide the cause. */
@@ -23,7 +20,7 @@ export async function captureDates(root: string): Promise<string[]> {
       .map((entry) => entry.name)
       .sort();
   } catch (error) {
-    if (isMissingDirectory(error)) return [];
+    if (isAbsent(error)) return [];
     throw error;
   }
 }
