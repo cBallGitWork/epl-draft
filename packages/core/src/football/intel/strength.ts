@@ -110,9 +110,13 @@ function competitionRanks(
   return ranks;
 }
 
-/** `count` gameweeks from the first with a match still to finish, stopping at the season's last. */
+/** `count` gameweeks from the first with a match still to finish, stopping at the season's last. A round behind
+ *  one already over is skipped: FPL keeps a rearranged match in its original round. */
 export function plannerGameweeks(fixtures: readonly Fixture[], count: number): number[] {
-  const open = fixtures.filter((f) => f.status !== "finished" && f.gameweek !== null).map((f) => f.gameweek as number);
+  const unfinished = (gameweek: number) => fixtures.some((f) => f.gameweek === gameweek && f.status !== "finished");
+  const rounds = new Set(fixtures.flatMap((f) => (f.gameweek === null ? [] : [f.gameweek])));
+  const lastOver = Math.max(0, ...[...rounds].filter((gameweek) => !unfinished(gameweek)));
+  const open = [...rounds].filter((gameweek) => gameweek > lastOver && unfinished(gameweek));
   if (open.length === 0) return [];
   const first = Math.min(...open);
   const last = Math.max(...fixtures.map((f) => f.gameweek ?? 0));
