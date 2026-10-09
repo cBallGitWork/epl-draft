@@ -60,8 +60,8 @@ function side(abbr: string, list: string): RotowireSide {
     // The keeper is no part of a formation.
     formation: counts.slice(1).join("-"),
     slots: lines.every((row) => row >= 0) && lines[0] === 0 ? slots : null,
-    // Goal first, then row by row; within a row, the page's own order.
-    starters: [...drawn].sort((a, b) => a.row - b.row).map((man) => man.id),
+    // Goal first, then row by row; within a row right to left, as Scout ran them: RotoWire lists left to right.
+    starters: lines.flatMap((row) => drawn.filter((man) => man.row === row).reverse()).map((man) => man.id),
     absent: [...absent].map(([rotowireId, status]) => ({ rotowireId, status })),
   };
 }
