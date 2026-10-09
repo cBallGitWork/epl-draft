@@ -1,0 +1,21 @@
+name: League
+description: Asks production which Fantrax league it serves (`GET /api/league`); fails when it names none.
+inputs:
+  base:
+    description: The production app's base URL, vars.WARM_BASE_URL
+    required: true
+outputs:
+  id:
+    description: The served league's Fantrax id
+    value: ${{ steps.league.outputs.id }}
+runs:
+  using: composite
+  steps:
+    - id: league
+      shell: bash
+      env:
+        BASE: ${{ inputs.base }}
+      run: |
+        league=$(curl -sf --max-time 30 "$BASE/api/league" | jq -r '.leagueId // empty')
+        if [ -z "$league" ]; then echo "::error::production did not say which league it serves"; exit 1; fi
+        echo "id=$league" >> "$GITHUB_OUTPUT"

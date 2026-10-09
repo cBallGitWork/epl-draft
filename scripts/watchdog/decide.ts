@@ -51,6 +51,8 @@ export const WORKFLOW_RULES: readonly WorkflowRule[] = [
   { workflow: "warm.yml", within: 96 },
   // Every two hours from 06:25 UTC; its longest gap is 22:25 to 06:25.
   { workflow: "health.yml", within: 9 },
+  // Hourly; a run waiting for a lock holds the queue up to three hours.
+  { workflow: "bench-order.yml", within: 6 },
 ];
 
 /** The watchdog itself, checked from capture-status.yml so it is not its own only witness. */

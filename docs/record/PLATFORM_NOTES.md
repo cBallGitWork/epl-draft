@@ -489,12 +489,13 @@ Retired 1 Oct and deleted 9 Oct 2026 with the other weekly kinds; kept as the re
 - **So the order by points is ours to write** (Craig, 9 Oct: "if the bench is null, assign by Fantrax points"; "it's
   an automated script"). `npm run bench-order` (`scripts/bench-order.ts`) writes it with `setAutoSubsOrder` and the
   commissioner's session, once per deadline, five minutes before our computed lock (`BENCH_ORDER_LEAD_MINUTES`), from
-  a daily 07:00 launchd job that waits for a lock before 08:00 the next day (`scripts/bench-order.sh`). It touches
+  an hourly workflow (`bench-order.yml`) whose run waits only for a lock within 150 minutes (`--within`), since
+  GitHub's cron runs up to an hour late; it moved off launchd on 9 Oct so it runs with the Mac off. It touches
   only a bench with no number on it: a manager's numbers, even on part of his bench, are left alone, so a second run
   reads its own write as numbered and sends nothing. A dry run unless `--write`. A reserve with no FPts reading goes
   last. It never writes at or after the lock (adminMode would override it) and re-reads the lock after its wait;
-  a lock that passed, a read that failed or a write Fantrax refused (a stale cookie) exits 1 and reports
-  `bench-order fail` to `alert.yml`.
+  a lock that passed, a read that failed or a write Fantrax refused (a stale cookie) exits 1 and opens
+  `alert: bench-order`. The cookie is the `FANTRAX_COOKIE` repository secret: renew it there when it expires.
 - **Numbers are per period** (probed 9 Oct, real league, read-only): six teams had numbered period 6, and each one's
   period 7 read `{}`. So a write does not carry into the next week, and the job starts afresh at each deadline. The
   public read (no cookie) returns the same map.

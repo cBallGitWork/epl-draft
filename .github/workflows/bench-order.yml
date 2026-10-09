@@ -1,0 +1,75 @@
+name: Bench order
+
+# Five minutes before each lineup lock, every bench its manager left unnumbered is numbered by total points with the
+# commissioner's session (`scripts/bench-order.ts`, Craig, 9 Oct 2026). GitHub's cron runs late, so it fires hourly
+# and a run waits only for a lock inside its window; any other run exits in a line. A numbered bench is left alone.
+
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Print each team's plan and write nothing
+        type: boolean
+        default: true
+      team:
+        description: Only this Fantrax team id (blank for every team)
+        type: string
+        default: ""
+      now:
+        description: Write now rather than in the last minutes (never after the lock)
+        type: boolean
+        default: false
+
+# An hourly firing queues behind a run already waiting for a lock instead of starting a second waiter.
+concurrency:
+  group: bench-order
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  order:
+    runs-on: ubuntu-latest
+    # Above the longest wait: the window less the five minutes, plus the setup.
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/node
+
+      - name: Ask production which league it serves
+        id: league
+        uses: ./.github/actions/league
+        with:
+          base: ${{ vars.WARM_BASE_URL }}
+
+      # The hourly cron leaves a 150-minute window: a run up to 90 minutes late still starts before the write.
+      - name: Order the benches
+        env:
+          FANTRAX_LEAGUE_ID: ${{ steps.league.outputs.id }}
+          FANTRAX_COOKIE: ${{ secrets.FANTRAX_COOKIE }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          TEAM: ${{ inputs.team }}
+          NOW: ${{ inputs.now }}
+        run: |
+          args=()
+          if [ "${{ github.event_name }}" = schedule ]; then
+            args=(--wait --within 150 --write)
+          else
+            [ "$DRY_RUN" = true ] || args+=(--write)
+            [ "$NOW" = true ] && args+=(--now)
+            [ -n "$TEAM" ] && args+=(--team "$TEAM")
+          fi
+          npx tsx scripts/bench-order.ts "${args[@]}"
+
+      # A red or timed-out run opens or updates the issue "alert: bench-order"; the next green one closes it.
+      - uses: ./.github/actions/alert
+        if: ${{ always() }}
+        with:
+          source: bench-order
+          status: ${{ job.status }}
