@@ -2,10 +2,8 @@ import { existsSync } from "node:fs";
 import { LEAGUES_ROOT, LEAGUE_LIMITS, leagueCaptureRoot } from "../paths";
 import { leagueKeys, replayLeague } from "./fingerprints";
 
-// Every captured Fantrax read through its core mapper, one sha256 per file. Run it on main and
-// on a refactor branch and diff: identical output is proof no mapper's output moved.
-//
-//   npm run check:replay > main.txt   (then again on the branch, and diff the two)
+// Every captured Fantrax read through its core mapper, one sha256 per file: identical output on main and a branch is
+// proof no mapper's output moved.   npm run check:replay > main.txt, again on the branch, then diff the two
 
 async function main(): Promise<void> {
   const missing = [LEAGUES_ROOT, LEAGUE_LIMITS].filter((path) => !existsSync(path));

@@ -25,8 +25,8 @@ export const SHAPE_BASELINE_PATH = join(REPO_ROOT, "data", "shape", "baseline.js
 /** The written columns. Outside `data/snapshots` and `data/probes`, so a new edition redeploys the app that bakes it in. */
 export const EDITIONS_ROOT = join(REPO_ROOT, "data", "editions");
 
-/** The sister repo's export plus what scout-xi, stats, intel-cups, draft-pack and ingest-pressers file beside it.
- *  Outside `data/snapshots` and `data/probes`, which `vercel.json` keeps from redeploying: the app bakes this in. */
+/** The sister repo's export plus what our own exporters file beside it. Outside `data/snapshots` and `data/probes`,
+ *  which `vercel.json` keeps from redeploying: the app bakes this in. */
 export const INTEL_ROOT = join(REPO_ROOT, "data", "intel");
 
 /** The sister repo, checked out beside this one unless `SISTER_REPO` says where; read, never written. */

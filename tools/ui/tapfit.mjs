@@ -61,11 +61,7 @@ ROUTES.push(...played);
 const coming = await discover(cdp, "/prem/fixtures", 'a[href^="/prem/match/"]');
 if (coming && coming !== played[0]) ROUTES.push(coming);
 
-await cdp.open(FRONT_PAGE, 2200);
-const article = await cdp.js(
-  `(document.querySelector('a[href^="/paper/"]')||{}).getAttribute
-     ? document.querySelector('a[href^="/paper/"]').getAttribute("href") : ""`,
-);
+const article = await discover(cdp, FRONT_PAGE, 'a[href^="/paper/"]');
 if (article) ROUTES.push(article);
 
 ROUTES.push(...(await playerRoutes(cdp)));

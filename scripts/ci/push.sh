@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
-# Commit what the caller staged and push it to main, rebasing over whatever the other crons pushed meanwhile.
-#
+# Commit what the caller staged and push it to main, rebasing (never merging: Vercel reads HEAD^..HEAD) over the other
+# crons' pushes, five tries with jitter. GITHUB_TOKEN comes from the step, as checkout persists no credentials.
 #   scripts/ci/push.sh "<commit message>" "<what to say when nothing is staged>"
-#
-# Needs GITHUB_TOKEN in the environment: checkout runs with persist-credentials: false, so no
-# earlier step (npm ci, a script) ever holds a token that can push. Rebase, never merge: Vercel's
-# ignoreCommand reads HEAD^..HEAD. Five tries with jitter, because four workflows push to one branch.
 set -euo pipefail
 
 message="$1"

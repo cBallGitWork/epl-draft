@@ -1,7 +1,5 @@
-// Fantasy Football Scout's team-news article, read as facts.
-//
-// Knows the ARTICLE's shape and nothing about our export; `ingest-pressers.ts`
-// knows the export and nothing about HTML.
+// Fantasy Football Scout's team-news article, read as facts: this knows the ARTICLE's shape and nothing about our
+// export; `ingest-pressers.ts` knows the export and nothing about HTML.
 
 /** One thing a manager said, verbatim. Carried from the source, never composed
  *  — `voice/house.ts` forbids writing one. */

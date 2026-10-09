@@ -11,6 +11,14 @@ const PROJECTIONS_SHOWN = (() => {
   return flag[1] === "true";
 })();
 
+/** Each declared cup but the first, which the bare `/league/cups` draws, by the ids core's `CUPS` declares. */
+const CUP_ROUTES = (() => {
+  const declared = readFileSync(new URL("../../packages/core/src/league/cups/declared.ts", import.meta.url), "utf8");
+  const ids = [...declared.matchAll(/^ {4}id: "([^"]+)",$/gm)].map((match) => match[1]);
+  if (ids.length === 0) throw new Error("tools/ui/routes.mjs: cannot read the cups' ids from cups/declared.ts");
+  return ids.slice(1).map((id) => `/league/cups?cup=${id}`);
+})();
+
 /** Everything the desk draws, and so everything with the photographic ground behind it. */
 export const DESK_ROUTES = [
   "/league",
@@ -19,12 +27,10 @@ export const DESK_ROUTES = [
   "/league/team-stats",
   "/league/cups",
   "/league/scoring",
-  "/league/cups?cup=davy-propper",
+  ...CUP_ROUTES,
   "/league/matchups",
   "/squad",
   "/players",
-  // Scout's second view: its ids are in the query, so nothing on the board links a crawler here.
-  "/players/analysis?a=05gcr&b=03ksl",
   // The fixture planner's phone view is a query, so the defence board is named too.
   "/players/teams",
   "/players/planner",
@@ -74,8 +80,11 @@ export async function playedMatchRoutes(cdp) {
   return match ? matchRoutes(match) : [];
 }
 
-/** One player's screens, discovered off the directory's BODY: a bare selector finds Find's own tab strip first. */
+/** One player's screens, discovered off the directory's BODY: a bare selector finds Find's own tab strip first. Then
+ *  Compare, off the link the board gives the next man once he is chosen (`?compare=`), as no link reaches it bare. */
 export async function playerRoutes(cdp) {
   const man = await discover(cdp, "/players", 'tbody a[href^="/players/"]');
-  return man ? [man, ...["data", "news", "transfer", "data?season=all"].map((tab) => `${man}/${tab}`)] : [];
+  if (!man) return [];
+  const pair = await discover(cdp, `/players?compare=${man.split("/").pop()}`, 'tbody a[href^="/players/analysis?"]');
+  return [man, ...["data", "news", "transfer", "data?season=all"].map((tab) => `${man}/${tab}`), ...(pair ? [pair] : [])];
 }

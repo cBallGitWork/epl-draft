@@ -12,13 +12,9 @@ import { walkLeague, type WalkLeague } from "./smoke/league";
 import { serverError } from "./smoke/broken";
 import { skipped, walkPaths } from "./smoke/routes";
 
-// Walks every route against the league the server is serving, asserting the empty states for a
-// league with no teams and their absence once somebody holds a player (a drafted league once rendered
-// "has not drafted"). Teams with empty squads assert neither. Works before and after draft night.
-//
-//   npm run build && npm run start &
-//   npm run smoke
-//   SMOKE_BASE=https://timproleague.vercel.app npm run smoke
+// Every route against the league the server serves: a league with no teams must print its empty states, and one where
+// somebody holds a player must print none of them; teams with empty squads assert neither.
+//   npm run build && npm run start &   then   npm run smoke   (SMOKE_BASE names another server)
 
 const BASE = process.env.SMOKE_BASE ?? "http://localhost:3000";
 
@@ -90,10 +86,10 @@ async function matchId(): Promise<number | null> {
 
 async function main() {
   requireLeague(FANTRAX_LEAGUE_ID);
-  const { state, teamId, teamName, playerId } = await league();
+  const { state, teamId, teamName, playerId, rivalId } = await league();
   const club = await clubCode();
   const match = await matchId();
-  const ids = { teamId, playerId, club, match };
+  const ids = { teamId, playerId, rivalId, club, match };
   const paths = walkPaths(ids);
 
   console.log(

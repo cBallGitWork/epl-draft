@@ -1,9 +1,13 @@
-import { PROJECTIONS, PROJECTIONS_SHOWN } from "../../apps/companion/app/players/routes";
+import { CUPS } from "@epl/core";
+import { ANALYSIS, PROJECTIONS, PROJECTIONS_SHOWN } from "../../apps/companion/app/players/routes";
 
 // The routes a smoke walk visits: those that need no id, then each id-scoped family once a read has named an id.
 
+/** Each declared cup but the first, which the bare `/league/cups` draws. */
+const CUP_ROUTES = CUPS.slice(1).map((cup) => `/league/cups?cup=${cup.id}`);
+
 /** Every route that needs no id. `/paper/[slug]` is left out because a slug exists only once a story is filed. */
-export const ROUTES = [
+const ROUTES = [
   "/",
   "/league",
   "/league/schedule",
@@ -12,13 +16,13 @@ export const ROUTES = [
   "/league/team-stats",
   "/league/cups",
   "/league/scoring",
-  "/league/cups?cup=davy-propper",
+  ...CUP_ROUTES,
   // A link from before the cups lost their views still answers.
-  "/league/cups?cup=davy-propper&view=bracket",
+  ...CUP_ROUTES.slice(-1).map((route) => `${route}&view=bracket`),
   "/squad",
   "/players",
-  // Data's Compare: its ids are in the query, so no link off the board reaches it.
-  "/players/analysis?a=05gcr&b=03ksl",
+  // Compare with nobody chosen; the pair is walked once a read names two held men.
+  ANALYSIS,
   "/players/teams",
   "/players/planner",
   "/players/planner?view=defence",
@@ -43,6 +47,8 @@ export const ROUTES = [
 export interface WalkIds {
   teamId: string | null;
   playerId: string | null;
+  /** A second held man, named only beside `playerId`. */
+  rivalId: string | null;
   club: number | null;
   match: number | null;
 }
@@ -59,7 +65,7 @@ interface Family {
   id: keyof WalkIds;
   route: string;
   unnamed: string;
-  paths: (id: string) => string[];
+  paths: (id: string, ids: WalkIds) => string[];
 }
 
 const FAMILIES: readonly Family[] = [
@@ -76,6 +82,13 @@ const FAMILIES: readonly Family[] = [
     route: "/players/[fantraxId]",
     unnamed: "nobody holds a player yet",
     paths: (id) => [`/players/${id}`, `/players/${id}/data`, `/players/${id}/history`, `/players/${id}/news`, `/players/${id}/transfer`],
+  },
+  {
+    // Data's Compare: its ids are in the query, so no link off the board reaches it.
+    id: "rivalId",
+    route: `${ANALYSIS}?a=[fantraxId]&b=[fantraxId]`,
+    unnamed: "nobody holds two players yet",
+    paths: (rival, { playerId }) => (playerId === null ? [] : [`${ANALYSIS}?a=${playerId}&b=${rival}`]),
   },
   {
     id: "club",
@@ -106,7 +119,7 @@ export function walkPaths(ids: WalkIds): string[] {
     ...ROUTES,
     ...FAMILIES.flatMap((family) => {
       const id = ids[family.id];
-      return id === null ? [] : family.paths(String(id));
+      return id === null ? [] : family.paths(String(id), ids);
     }),
   ];
 }

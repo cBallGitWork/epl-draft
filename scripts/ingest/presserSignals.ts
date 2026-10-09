@@ -145,7 +145,7 @@ export function troubles(
         if (already !== undefined && already.tag !== "injury_scare") continue;
         // WHY=1 prints the sentence behind every tag, which is how a claim in the
         // paper is traced back to the article that made it.
-          if (process.env.WHY) console.log(`  ${player.name} <- [${tag}] ${clause.slice(0, 130)}`);
+        if (process.env.WHY) console.log(`  ${player.name} <- [${tag}] ${clause.slice(0, 130)}`);
         found.set(player.name, {
           player,
           tag,

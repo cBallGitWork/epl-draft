@@ -1,22 +1,21 @@
-// The shared client's pure parts, by node's own runner: vitest's include list does not reach tools/.
-//
-//   node --test "tools/ui/*.test.mjs"
-
-import assert from "node:assert/strict";
-import { test } from "node:test";
+import { describe, expect, it } from "vitest";
 import { teamCookieFor } from "./cdp.mjs";
 
-test("the team cookie is set on the host the instruments open, not always on localhost", () => {
-  assert.equal(teamCookieFor("signed", "http://localhost:3000").domain, "localhost");
-  assert.equal(teamCookieFor("signed", "http://127.0.0.1:3000").domain, "127.0.0.1");
-  assert.equal(teamCookieFor("signed", "https://epl-draft.vercel.app").domain, "epl-draft.vercel.app");
-});
+// The shared client's pure parts; opening the module connects to nothing.
 
-test("the team cookie covers every route", () => {
-  assert.deepEqual(teamCookieFor("signed", "http://127.0.0.1:3000"), {
-    name: "team",
-    value: "signed",
-    domain: "127.0.0.1",
-    path: "/",
+describe("teamCookieFor", () => {
+  it("sets the team cookie on the host the instruments open, not always on localhost", () => {
+    expect(teamCookieFor("signed", "http://localhost:3000").domain).toBe("localhost");
+    expect(teamCookieFor("signed", "http://127.0.0.1:3000").domain).toBe("127.0.0.1");
+    expect(teamCookieFor("signed", "https://epl-draft.vercel.app").domain).toBe("epl-draft.vercel.app");
+  });
+
+  it("covers every route", () => {
+    expect(teamCookieFor("signed", "http://127.0.0.1:3000")).toEqual({
+      name: "team",
+      value: "signed",
+      domain: "127.0.0.1",
+      path: "/",
+    });
   });
 });

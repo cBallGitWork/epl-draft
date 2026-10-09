@@ -9,7 +9,7 @@ const team = (teamId: string, teamName: string, players: string[]): TeamRoster =
 
 describe("walkLeague", () => {
   it("names no team when there are none", () => {
-    expect(walkLeague([])).toEqual({ state: "no teams", teamId: null, teamName: null, playerId: null });
+    expect(walkLeague([])).toEqual({ state: "no teams", teamId: null, teamName: null, playerId: null, rivalId: null });
   });
 
   // The real league on 25 Sep: seven managers, a draft order, nobody picked.
@@ -22,6 +22,11 @@ describe("walkLeague", () => {
 
   it("is drafted once any team holds a player, and takes the player from that team", () => {
     const walk = walkLeague([team("a", "its_ohi", []), team("b", "RichyN", ["06qsd"])]);
-    expect(walk).toEqual({ state: "drafted", teamId: "a", teamName: "its_ohi", playerId: "06qsd" });
+    expect(walk).toEqual({ state: "drafted", teamId: "a", teamName: "its_ohi", playerId: "06qsd", rivalId: null });
+  });
+
+  it("names a second held man for Compare, from any team", () => {
+    expect(walkLeague([team("a", "its_ohi", ["06qsd"]), team("b", "RichyN", ["04xyz"])]).rivalId).toBe("04xyz");
+    expect(walkLeague([team("a", "its_ohi", ["06qsd", "05abc"])]).rivalId).toBe("05abc");
   });
 });

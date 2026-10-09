@@ -1,6 +1,7 @@
 import { readdirSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 import { describe, expect, it } from "vitest";
+import { CUPS } from "@epl/core";
 import { NEVER_WALKED, skipped, walkPaths } from "./routes";
 
 // Holds the smoke walk to the app's route table, found by walking `app/` for its pages, never from a list.
@@ -24,7 +25,7 @@ function instanceOf(route: string, path: string): boolean {
   return new RegExp(`^${pattern}$`).test(path.split("?")[0]);
 }
 
-const ALL_IDS = { teamId: "t1", playerId: "p1", club: 3, match: 4 };
+const ALL_IDS = { teamId: "t1", playerId: "p1", rivalId: "p2", club: 3, match: 4 };
 const ROUTES = pages(APP);
 
 describe("the smoke walk", () => {
@@ -48,5 +49,16 @@ describe("the smoke walk", () => {
     expect(lines).toHaveLength(2);
     expect(lines[0]).toMatch(/^\/prem\/club\/\[code\] /);
     expect(lines[1]).toMatch(/^\/prem\/match\/\[id\] /);
+  });
+
+  it("compares the two held men the read named, and says so when it named one", () => {
+    expect(walkPaths(ALL_IDS)).toContain("/players/analysis?a=p1&b=p2");
+    expect(walkPaths({ ...ALL_IDS, rivalId: null }).filter((path) => path.startsWith("/players/analysis?"))).toEqual([]);
+    expect(skipped({ ...ALL_IDS, rivalId: null })).toEqual([expect.stringMatching(/^\/players\/analysis\?a=\[fantraxId\]&b=\[fantraxId\] /)]);
+  });
+
+  it("walks each declared cup by its id, and no other", () => {
+    const cups = walkPaths(ALL_IDS).flatMap((path) => /^\/league\/cups\?cup=([^&]+)$/.exec(path)?.[1] ?? []);
+    expect(cups).toEqual(CUPS.slice(1).map((cup) => cup.id));
   });
 });
