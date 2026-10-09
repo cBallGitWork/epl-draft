@@ -1,4 +1,4 @@
-import { NEWS_GAPS, banned, recordOrEmpty, unbackedFit } from "@epl/core";
+import { NEWS_GAPS, banned, recordOrEmpty, teamSheetGaps, unbackedFit, type TeamSheetExpect } from "@epl/core";
 import { writeColumn, type Say } from "./newsroom";
 import { sendBack } from "./voice/house";
 
@@ -23,16 +23,25 @@ function rowWords(rows: unknown): unknown[] {
   });
 }
 
-/** What the Team Sheet printed about absent managers or absent news, and the FIT men whose note is a bare complaint. */
-export function presserFaults(column: Record<string, unknown>): { phrases: string[]; fit: string[] } {
-  return { phrases: banned(written(column), NEWS_GAPS), fit: unbackedFit(column.teamNews) };
+type PresserFaults = { phrases: string[]; fit: string[]; lines: string[]; quotes: string[]; notes: string[] };
+
+/** What the Team Sheet printed about absent managers or absent news, the FIT men whose note is a bare complaint, and
+ *  what it left out that its brief gave it (`teamSheetGaps`). */
+export function presserFaults(column: Record<string, unknown>, expected: TeamSheetExpect = NOTHING_OWED): PresserFaults {
+  return { phrases: banned(written(column), NEWS_GAPS), fit: unbackedFit(column.teamNews), ...teamSheetGaps(column.teamNews, expected) };
 }
 
+const NOTHING_OWED: TeamSheetExpect = { reported: [], quoted: [], noted: [] };
+const faulted = (faults: PresserFaults) => Object.values(faults).some((each) => each.length > 0);
+
 /** The Team Sheet's send-back in the writer's terms, or "" when there is nothing to send back. */
-export function sendBackPresser(faults: { phrases: string[]; fit: string[] }): string {
+export function sendBackPresser(faults: PresserFaults): string {
   const gaps = faults.phrases.length === 0 ? null : `YOUR LAST ATTEMPT WROTE ABOUT WHO DID NOT SPEAK OR WHAT WAS NOT SAID: ${faults.phrases.map((phrase) => `"${phrase}"`).join(", ")}. A reader wants who is out and who is back. Say that plainly, and never forecast who starts.`;
-  const fit = faults.fit.length === 0 ? null : `THESE FIT MEN CARRY A BARE COMPLAINT AS THEIR NOTE, which reads as if they still have it: ${faults.fit.join(", ")}. Write "back from a muscle injury", or leave the note empty.`;
-  return [gaps, fit].filter((part) => part !== null).join("\n\n");
+  const fit = faults.fit.length === 0 ? null : `THESE FIT MEN CARRY A BARE COMPLAINT AS THEIR NOTE, which reads as if they still have it: ${faults.fit.join(", ")}. Write "back from a muscle injury", and what was said of him where you were given it.`;
+  const lines = faults.lines.length === 0 ? null : `THESE CLUBS HAD NEWS AND NO LINE: ${faults.lines.join(", ")}. Give each one sentence of what its manager said — what was decided, the timescale, the reason.`;
+  const quotes = faults.quotes.length === 0 ? null : `THESE CLUBS WERE GIVEN A QUOTE WITH A FACT AND PRINTED NONE: ${faults.quotes.join(", ")}. Print one each, verbatim, trimmed to the sentence that carries the fact.`;
+  const notes = faults.notes.length === 0 ? null : `THESE MEN HAVE AN EMPTY NOTE: ${faults.notes.join(", ")}. The brief gave each a complaint or his manager's words; put it in a few words.`;
+  return [gaps, fit, lines, quotes, notes].filter((part) => part !== null).join("\n\n");
 }
 
 export async function writeSubedited(
@@ -42,13 +51,16 @@ export async function writeSubedited(
    *  of its own and the orchestrator keeps one voice for its log. */
   say: Say,
   kind: string,
+  /** What the Team Sheet's brief gave it, so a column that drops it is sent back. */
+  expected?: TeamSheetExpect,
 ): Promise<Record<string, unknown>> {
   const column = await writeColumn(system, brief);
   const offended = banned(written(column));
-  const faults = kind === "presser" ? presserFaults(column) : { phrases: [], fit: [] };
-  if (offended.length === 0 && faults.phrases.length === 0 && faults.fit.length === 0) return column;
+  const faults = kind === "presser" ? presserFaults(column, expected) : presserFaults({});
+  if (offended.length === 0 && !faulted(faults)) return column;
 
-  say(`  ↩ ${kind} printed ${[...offended, ...faults.phrases, ...faults.fit.map((name) => `${name} FIT with a complaint`)].join(", ")} — sending it back once.`);
+  const gaps = [...faults.lines.map((club) => `${club} with no line`), ...faults.quotes.map((club) => `${club} with no quote`), ...faults.notes.map((name) => `${name} with no note`)];
+  say(`  ↩ ${kind} printed ${[...offended, ...faults.phrases, ...faults.fit.map((name) => `${name} FIT with a complaint`), ...gaps].join(", ")} — sending it back once.`);
   const notes = [offended.length === 0 ? "" : sendBack(offended), sendBackPresser(faults)].filter((part) => part !== "");
   return writeColumn(system, `${brief}\n\n${notes.join("\n\n")}`);
 }

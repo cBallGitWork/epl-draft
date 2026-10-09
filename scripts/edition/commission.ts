@@ -1,4 +1,4 @@
-import { type Assignment, buildDraftBrief, buildLawroBrief, buildPresserBrief, buildSeasonBrief } from "@epl/core";
+import { type Assignment, type TeamSheetExpect, buildDraftBrief, buildLawroBrief, buildPresserBrief, buildSeasonBrief, presserClubs, teamSheetExpect } from "@epl/core";
 import { faceOf } from "./faces";
 import type { PredictionsDesk } from "./predictions";
 import type { SeasonDesk } from "./season";
@@ -14,7 +14,7 @@ import { edition, faceCtx, type DeskContext } from "./dispatch";
 /** How a column comes to exist: a voice and a brief for a writer, a brief and a desk whose newsroom holds its own
  *  voice, or a set of facts the desk prints itself. */
 type Commission =
-  | { system: string; brief: string }
+  | { system: string; brief: string; expected?: TeamSheetExpect }
   | { brief: string; lawro: PredictionsDesk }
   | { brief: string; season: SeasonDesk }
   | { brief: string; sheets: SheetsDesk }
@@ -67,13 +67,14 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
 
   // The Team Sheet is the one kind written in the house voice from a brief alone.
   if (assignment.kind === "presser") {
+    const day = edition(ctx, assignment);
     const brief = buildPresserBrief({
       gameweek: ctx.presserGameweek,
-      ...edition(ctx, assignment),
+      ...day,
       lead: faceOf(assignment, faceCtx(ctx, assignment))?.name ?? null,
       threads: ctx.threads,
     });
-    return { system: PRESSER, brief };
+    return { system: PRESSER, brief, expected: teamSheetExpect(presserClubs(day.lines, day.quotes)) };
   }
   return null;
 }
