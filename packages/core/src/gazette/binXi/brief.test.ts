@@ -73,4 +73,19 @@ describe("binStandfirst", () => {
     expect(binStandfirst(5, 50, [90, 70])).toBe("The best eleven nobody in the league has scored 50 points in gameweek 5, fewer than every side in the league.");
     expect(binStandfirst(5, 50, [null])).toBe("The best eleven nobody in the league has scored 50 points in gameweek 5.");
   });
+
+  it("never calls a total level with the lowest side fewer than every side", () => {
+    expect(binStandfirst(7, 50, [50, 60, 70])).toBe("The best eleven nobody in the league has scored 50 points in gameweek 7, level with the league's lowest side.");
+  });
+});
+
+describe("buildBinBrief's counts", () => {
+  const one = man("Smith", 1, "F", 1, { minutes: 1, started: false });
+  const brief = buildBinBrief({ ...input, side: { shape: "4-4-2", xi: [one], bench: [], total: 1 }, sides: [null, null] });
+
+  it("says 1 point and 1 minute, and no comparison when no side was scored", () => {
+    expect(brief).toContain("Smith, Coventry City, F: 1 point. 1 minute off the bench.");
+    expect(brief).toContain("THE DESK'S NUMBER: the eleven scored 1 point between them.\n");
+    expect(brief).not.toContain("of the league's 0 sides");
+  });
 });

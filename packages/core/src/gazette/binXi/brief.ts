@@ -1,5 +1,6 @@
-import { capital, listed } from "../../format";
+import { capital, howMany, listed } from "../../format";
 import { storylinesBlock } from "../briefs/storylines";
+import { pts } from "../matchups/stories";
 import { numeral } from "../reports/minutes";
 import type { StoryThread } from "../ledger";
 import type { BinMan, BinXi } from "./select";
@@ -48,23 +49,29 @@ export interface BinBriefInput {
 
 /** The desk's standfirst: what the piece is, and the one comparison, in the house's numerals. */
 export function binStandfirst(gameweek: number, total: number, sides: readonly (number | null)[]): string {
-  const { fewer, scored } = beaten(total, sides);
+  const { fewer, more, scored } = beaten(total, sides);
   const against =
-    scored === 0 ? "" : fewer === scored ? ", more than any side in the league" : fewer === 0 ? ", fewer than every side in the league" : `, more than ${numeral(fewer)} of the league's ${numeral(scored)} sides`;
-  return `The best eleven nobody in the league has scored ${total} points in gameweek ${gameweek}${against}.`;
+    scored === 0 ? ""
+    : fewer === scored ? ", more than any side in the league"
+    : more === scored ? ", fewer than every side in the league"
+    : fewer === 0 ? ", level with the league's lowest side"
+    : `, more than ${numeral(fewer)} of the league's ${numeral(scored)} sides`;
+  return `The best eleven nobody in the league has scored ${pts(total)} in gameweek ${gameweek}${against}.`;
 }
 
-function beaten(total: number, sides: readonly (number | null)[]): { fewer: number; scored: number } {
+/** How many of the sides Fantrax scored finished below the total, and how many above it. */
+function beaten(total: number, sides: readonly (number | null)[]): { fewer: number; more: number; scored: number } {
   const scored = sides.filter((points): points is number => points !== null);
-  return { fewer: scored.filter((points) => points < total).length, scored: scored.length };
+  return { fewer: scored.filter((points) => points < total).length, more: scored.filter((points) => points > total).length, scored: scored.length };
 }
 
 export function buildBinBrief(input: BinBriefInput): string {
   const { side } = input;
   const { fewer, scored } = beaten(side.total, input.sides);
+  const comparison = scored === 0 ? "" : ` ${fewer} of the league's ${howMany(scored, "side")} scored fewer.`;
   return [
     `THE BIN XI, gameweek ${input.gameweek}: the best eleven men nobody in the league has, lining up ${side.shape}. The side, each man's points and the key stats are printed beside your column. You write the case for it.`,
-    `THE DESK'S NUMBER: the eleven scored ${side.total} points between them. ${fewer} of the league's ${scored} sides scored fewer.`,
+    `THE DESK'S NUMBER: the eleven scored ${pts(side.total)} between them.${comparison}`,
     ["THE ELEVEN, by club:", ...byClub(side.xi, input)].join("\n"),
     side.bench.length === 0
       ? null
@@ -114,7 +121,7 @@ function line(man: BinMan, input: BinBriefInput): string {
   ].filter((part): part is string => part !== null);
   const status = input.status(man);
   return [
-    `${man.name}, ${input.club(man.clubId)}, ${man.position}: ${man.points} points. ${man.minutes} minutes${man.started ? "" : " off the bench"}.`,
+    `${man.name}, ${input.club(man.clubId)}, ${man.position}: ${pts(man.points)}. ${howMany(man.minutes, "minute")}${man.started ? "" : " off the bench"}.`,
     did.length === 0 ? null : `${sentence(did)}.`,
     play.length === 0 ? null : `${sentence(play)}.`,
     ...input.history(man).map((fact) => `${fact}.`),
