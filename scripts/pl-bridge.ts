@@ -1,7 +1,8 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { SEASON, fetchPlFixture, fetchPlRound } from "@epl/core";
 import { MAPPINGS_ROOT } from "./paths";
+import { heldBridge } from "./plBridge/held";
 
 // Builds the Premier League player id → Opta code map that the Live tab's wire
 // joins through. Run it after a round: `npm run pl-bridge`.
@@ -27,27 +28,9 @@ import { MAPPINGS_ROOT } from "./paths";
 
 const PATH = join(MAPPINGS_ROOT, "premierleague.json");
 
-interface PlBridge {
-  season: string;
-  /** Premier League player id → Opta code. */
-  players: Record<string, string>;
-}
-
-async function existing(): Promise<PlBridge> {
-  try {
-    const parsed = JSON.parse(await readFile(PATH, "utf8")) as PlBridge;
-    // A file from a previous season is not a file to add to: the ids are the
-    // Premier League's own and we have not probed whether they survive a summer.
-    return parsed.season === SEASON ? parsed : { season: SEASON, players: {} };
-  } catch {
-    // No file yet is the ordinary first run, not a failure to swallow.
-    return { season: SEASON, players: {} };
-  }
-}
-
 async function main(): Promise<void> {
   const rounds = Number(process.argv[2] ?? 38);
-  const bridge = await existing();
+  const bridge = await heldBridge(PATH, SEASON);
   const before = Object.keys(bridge.players).length;
   let sheets = 0;
 

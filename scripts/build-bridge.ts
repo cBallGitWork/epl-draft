@@ -12,6 +12,7 @@ import {
   matchPlayers,
   mergeBridge,
 } from "@epl/core";
+import { readJsonOr } from "./absent";
 import { MAPPINGS_ROOT, POOL_ROOT, REVIEW_ROOT } from "./paths";
 import { newestCapture } from "./snapshots";
 
@@ -52,27 +53,6 @@ async function fplCandidates(): Promise<FplCandidate[]> {
     }));
 }
 
-/** A mapping file, or the fallback when there is genuinely no file.
- *
- *  **Only absence is tolerated.** This used to swallow every failure and return
- *  the fallback, on the reasoning that "any other read failure would resurface on
- *  write" — it does not: nothing re-reads, and the run writes the rebuilt result
- *  straight back over the original. So one malformed byte in `fantrax.json`
- *  rebuilt the bridge from nothing and destroyed the audited half of it, which is
- *  the half a person made by hand and the only half that cannot be regenerated.
- *
- *  `snapshots.ts` already makes this argument for capture directories, in the
- *  same words: reporting a permissions problem as "nothing here" hides the actual
- *  cause behind a plausible one. */
-async function readJson<T>(path: string, fallback: T): Promise<T> {
-  try {
-    return JSON.parse(await readFile(path, "utf8")) as T;
-  } catch (error) {
-    if (error instanceof Error && "code" in error && error.code === "ENOENT") return fallback;
-    throw error;
-  }
-}
-
 async function main(): Promise<void> {
   const [pool, candidates] = await Promise.all([newestPoolSnapshot(), fplCandidates()]);
   const fantraxPlayers = mapPlayerPool(pool as Parameters<typeof mapPlayerPool>[0]);
@@ -80,8 +60,9 @@ async function main(): Promise<void> {
 
   const bridgePath = join(MAPPINGS_ROOT, "fantrax.json");
   const aliasPath = join(MAPPINGS_ROOT, "fantrax-aliases.json");
-  const existing = await readJson<Bridge>(bridgePath, {});
-  const aliases = await readJson<Record<string, string>>(aliasPath, {});
+  // Only absence is a fresh start: a malformed bridge rebuilt from nothing would lose its audited half.
+  const existing = readJsonOr<Bridge>(bridgePath, {});
+  const aliases = readJsonOr<Record<string, string>>(aliasPath, {});
 
   const { matches, proposals } = matchPlayers(fantraxPlayers, candidates, aliases, existing);
   const { assumed, forReview } = assumeUnmapped(proposals);

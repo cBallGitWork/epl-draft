@@ -1,8 +1,9 @@
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { asyncBufferFromFile, parquetReadObjects } from "hyparquet";
 import { cupName, tmlCupTies, fetchBootstrap } from "@epl/core";
 import type { IntelCups, TmlRow } from "@epl/core";
+import { readJsonOr } from "./absent";
 import { SISTER_ROOT } from "./paths";
 import { INTEL_SEASON, intelManifest, writeIntel } from "./intel";
 
@@ -133,12 +134,7 @@ function jsonIn(path: string): Record<string, unknown>[] {
 
 /** A JSON object off disk, or null when the file is not there. */
 function readJson(path: string): Record<string, unknown> | null {
-  try {
-    return record(JSON.parse(readFileSync(path, "utf8")));
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
-    throw error;
-  }
+  return record(readJsonOr<unknown>(path, null));
 }
 
 function record(value: unknown): Record<string, unknown> | null {
