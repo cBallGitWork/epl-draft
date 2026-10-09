@@ -58,6 +58,12 @@ describe("periodGameweeks", () => {
     expect(periodGameweeks(period, atTheBound)).toEqual([{ period: 1, gameweeks: [1], own: 1 }]);
   });
 
+  it("holds nothing in a period whose bounds do not read, as `firstKickoff` and `periodFixtures` hold nothing", () => {
+    // NaN compares false both ways, so an unread bound once let every kickoff of the season in.
+    const unread: LeaguePeriod[] = [{ number: 1, start: "not a date", end: "" }];
+    expect(periodGameweeks(unread, kickoffs)).toEqual([{ period: 1, gameweeks: [], own: null }]);
+  });
+
   it("degrades to nothing rather than throwing", () => {
     expect(periodGameweeks([], [])).toEqual([]);
     expect(periodGameweeks(periods, [])).toHaveLength(38);
