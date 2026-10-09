@@ -455,8 +455,10 @@ Two mechanisms replaced the old one-column-a-round gate, and neither is
 `editionMatches` (which went with `latest.json` on 31 Aug). `normalizePaper`
 in `app/paper.ts` drops every story filed about another league, which is what
 keeps rehearsal prose off the real front page. `composePaper` then drops what
-has expired and retires what a later story superseded — so what leads is
-always the newest period's biggest word, and an old opinion still standing is
+has expired and retires what a later story superseded, and orders the rest
+newest filed first (Craig, 9 Oct 2026: *"always lead with the most recent
+article"*); a story's kind only breaks a tie between stories filed at one
+instant. So what leads is always the latest filing, and an old opinion still standing is
 one nothing has answered yet, printed under its own filed date.
 
 The filing time prints. Every other figure on the page is thirty seconds old and
