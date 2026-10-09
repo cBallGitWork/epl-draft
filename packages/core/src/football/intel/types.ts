@@ -54,17 +54,27 @@ export interface IntelStarter {
 export interface IntelClubXi {
   /** `4-2-3-1`, `3-4-3`, `3-4-2-1`, `4-3-3`. */
   formation: string;
-  /** How many men Scout draws in each pitch row (`"1"` is the keeper); `xiFault` checks they sum to eleven. */
+  /** How many men the source draws in each pitch row (`"1"` is the keeper); `xiFault` checks they sum to eleven. */
   slots: Record<string, number> | null;
   starters: IntelStarter[];
+  /** RotoWire's word on the eleven; absent from Scout, which says neither. */
+  lineup?: "predicted" | "confirmed";
+  /** RotoWire's injured and suspended for the club, by FPL code; absent from Scout, which lists none. */
+  absent?: IntelAbsence[];
+}
+
+/** A man RotoWire tags out (suspended included) or questionable. */
+export interface IntelAbsence {
+  code: number;
+  status: "OUT" | "QUES";
 }
 
 export interface IntelXi {
   manifest: IntelManifest;
-  /** When `scout-xi` first saw this prediction, within one two-hour run of Scout changing it; the page has no time. */
+  /** When `rotowire-xi` first saw these elevens, within one run of the source changing them; neither page dates them. */
   fetchedAt: string | null;
   source: string | null;
-  /** By FPL club short name — `ARS` — which is Scout's own club code upper-cased. */
+  /** By FPL club short name — `ARS`. */
   clubs: Record<string, IntelClubXi>;
 }
 

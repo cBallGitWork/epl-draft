@@ -28,13 +28,16 @@ export function parseScoutXi(html: string): Record<string, IntelClubXi> {
   return clubs;
 }
 
-/** Whether two sets of elevens name the same men in the same shapes, club for club. */
+/** Whether two sets of elevens name the same men in the same shapes, with the same absences, club for club. */
 export function sameElevens(a: Record<string, IntelClubXi>, b: Record<string, IntelClubXi>): boolean {
   const key = (clubs: Record<string, IntelClubXi>) =>
     JSON.stringify(
       Object.keys(clubs)
         .sort()
-        .map((club) => [club, clubs[club].formation, clubs[club].starters.map((man) => man.code)]),
+        .map((club) => {
+          const { formation, starters, lineup = null, absent = [] } = clubs[club];
+          return [club, formation, starters.map((man) => man.code), lineup, absent];
+        }),
     );
   return key(a) === key(b);
 }

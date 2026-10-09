@@ -170,17 +170,17 @@ describe("newsdesk", () => {
   });
 
   describe("the elevens", () => {
-    // GW6 locks Sat 10 Oct at 12:15 London: the elevens file from 20:00 the evening before (Craig, 9 Oct 2026).
+    // GW6 locks Sat 10 Oct at 12:15 London: the elevens file from 18:00 the evening before (Craig, 9 Oct 2026).
     const lineups = { key: "predicted-xi:gw6", slug: "gw6-predicted-xi" };
     const next = { period: 6, gameweek: 6, locksAt: "2026-10-10T11:15:00.000Z" };
     const elevens = (over: Partial<DeskState>, now: string, covered: (key: string) => boolean = none) =>
       newsdesk(desk({ lineups, next, ...over }), covered, now).filter((a) => a.kind === "predicted-xi");
 
-    it("wait for 20:00 London the evening before a Saturday lock", () => {
+    it("wait for 18:00 London the evening before a Saturday lock", () => {
       expect(elevens({}, "2026-10-05T21:30:00.000Z")).toEqual([]);
       expect(elevens({}, "2026-10-09T16:00:00.000Z")).toEqual([]);
-      expect(elevens({}, "2026-10-09T18:59:00.000Z")).toEqual([]);
-      expect(elevens({}, "2026-10-09T19:00:00.000Z").map((a) => a.slug)).toEqual([lineups.slug]);
+      expect(elevens({}, "2026-10-09T16:59:00.000Z")).toEqual([]);
+      expect(elevens({}, "2026-10-09T17:00:00.000Z").map((a) => a.slug)).toEqual([lineups.slug]);
     });
 
     it("file from 17:30 London on the day of a Friday lock", () => {
@@ -194,14 +194,14 @@ describe("newsdesk", () => {
     it("catch up after a missed evening, close at the lock, and never file twice", () => {
       expect(elevens({}, "2026-10-10T08:15:00.000Z").map((a) => a.slug)).toEqual([lineups.slug]);
       expect(elevens({}, next.locksAt)).toEqual([]);
-      expect(elevens({}, "2026-10-09T19:00:00.000Z", (key) => key === lineups.key)).toEqual([]);
+      expect(elevens({}, "2026-10-09T17:00:00.000Z", (key) => key === lineups.key)).toEqual([]);
     });
 
     it("file the evening before a midweek lock", () => {
-      // GW13 locks Tue 1 Dec: Monday from 20:00, which in winter is 20:00 UTC.
+      // GW13 locks Tue 1 Dec: Monday from 18:00, which in winter is 18:00 UTC.
       const midweek = { period: 13, gameweek: 13, locksAt: "2026-12-01T19:15:00.000Z" };
-      expect(elevens({ next: midweek }, "2026-11-30T19:59:00.000Z")).toEqual([]);
-      expect(elevens({ next: midweek }, "2026-11-30T20:00:00.000Z")).toHaveLength(1);
+      expect(elevens({ next: midweek }, "2026-11-30T17:59:00.000Z")).toEqual([]);
+      expect(elevens({ next: midweek }, "2026-11-30T18:00:00.000Z")).toHaveLength(1);
     });
 
     it("file nothing without the round ahead's export or its lock", () => {

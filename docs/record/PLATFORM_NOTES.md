@@ -44,6 +44,28 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## The predicted XI comes from RotoWire, Scout only as its fallback — decided 9 Oct 2026
+
+Craig, 9 Oct: *"Maybe we swap with https://www.rotowire.com/soccer/lineups.php?"* Scout's page had not moved
+and still started Isak, who was out. `scout-xi.yml` (name kept, so the watchdog and `alert: scout-xi` keep
+theirs) now runs `npm run rotowire-xi`: RotoWire's lineups page first, Scout's team news for any club it
+cannot fill.
+
+- **Probed 9 Oct:** server-rendered HTML, 200, no login; 10 matches, each side a "Predicted Lineup" (Confirmed
+  near kickoff) with position labels (`GK` `DL` `DC` `DMC` `AML` `FW`) and an injuries list tagged `OUT`,
+  `QUES` or `SUS` (read as out). 330 distinct RotoWire ids on the page.
+- **Identity:** every man is a link ending in his RotoWire id. Fantrax's `getPlayerIds` carries `rotowireId`,
+  and the committed bridge gives his FPL code: 325 of 330 joined. That is the only join; a man it cannot join
+  is left out and logged, so a starter missing leaves his side short and that club goes to Scout (Brentford on
+  9 Oct, Yarmolyuk unjoined). A side is filed under the club most of its starters play for in FPL, so
+  RotoWire's labels (`NOT`) need no table, and a match outside the gameweek's fixtures is refused.
+- **The file carries more:** each RotoWire club's `lineup` (predicted or confirmed) and `absent`
+  (`{code, status: OUT|QUES}`). The Line-Ups print one mark per man, FPL's or RotoWire's, whichever was said
+  later (`newsAdded` against the file's `fetchedAt`); a QUES man reads Doubt.
+- **Terms:** a commercial page, read as Scout's was: once per run, the shared browser user agent, every two
+  hours Thursday to Saturday and once a day otherwise, and nothing re-published but names and positions. If
+  RotoWire objects or blocks, Scout fills every club and nothing else changes.
+
 ## Alerts are issues assigned to the owner — decided 7 Oct 2026
 
 Craig, 7 Oct: "silent not acceptable". intel-check had been red 10 of 17 days, capture failed 26–28 Sep, the

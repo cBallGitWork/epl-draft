@@ -8,6 +8,7 @@ import {
   type FootballPlayer,
   type IntelSquads,
   type IntelXi,
+  type LineupStatus,
   type RosteredTeam,
   type StoryLineupMan,
 } from "@epl/core";
@@ -55,7 +56,30 @@ export function xiColumn(input: {
 }
 
 /** What the desk reads of a footballer: his names, and his fitness. */
-type XiPlayer = Pick<FootballPlayer, "code" | "name" | "fullName" | "status" | "news" | "chanceOfPlaying">;
+type XiPlayer = Pick<FootballPlayer, "code" | "name" | "fullName" | "status" | "news" | "newsAdded" | "chanceOfPlaying">;
+
+/** One source's word on a man: a mark or none (fit), and when it was said; null when it says nothing of him. */
+type Signal = { mark: LineupStatus | null; at: string | null } | null;
+
+/** One mark from FPL's and RotoWire's words: the fresher wins where both speak, an undated word losing. */
+export function freshestMark(fpl: Signal, rotowire: Signal): LineupStatus | null {
+  if (fpl === null || rotowire === null) return (fpl ?? rotowire)?.mark ?? null;
+  const [fplAt, rotowireAt] = [Date.parse(fpl.at ?? ""), Date.parse(rotowire.at ?? "")];
+  if (Number.isNaN(fplAt)) return rotowire.mark ?? fpl.mark;
+  if (Number.isNaN(rotowireAt)) return fpl.mark ?? rotowire.mark;
+  return rotowireAt > fplAt ? rotowire.mark : fpl.mark;
+}
+
+/** RotoWire's word on each man of a club it covered, dated when the file first held it; Scout's clubs say nothing. */
+function rotowireSignals(xi: IntelXi): (code: number) => Signal {
+  const said = new Map<number, Signal>();
+  for (const club of Object.values(xi.clubs ?? {})) {
+    if (club.absent === undefined) continue;
+    for (const man of club.starters) said.set(man.code, { mark: null, at: xi.fetchedAt });
+    for (const man of club.absent) said.set(man.code, { mark: man.status === "OUT" ? "OUT" : "Doubt", at: xi.fetchedAt });
+  }
+  return (code) => said.get(code) ?? null;
+}
 
 /** One starter as printed: his name, who holds him, his real position off the SQUADS export (nothing where that had
  *  only FPL's `element_type`), and OUT or Doubt where the football says so. The eleven is never changed. */
@@ -68,6 +92,7 @@ function man(
   // The squads for the season the XI itself names, so the two exports cannot be read from different years.
   const squads = squadIntel(readIntel<IntelSquads>("squads", xi.manifest.season));
   const held = owners(teams);
+  const rotowire = rotowireSignals(xi);
 
   return (code) => {
     const player = byCode.get(code);
@@ -75,11 +100,13 @@ function man(
     // The id, never the name, which goes stale the day a manager renames.
     const owner = held.get(code)?.teamId;
     const fitness = availabilityOf(player);
+    const fpl = fitness.out ? "OUT" : fitness.state === "doubt" ? "Doubt" : null;
+    const status = freshestMark({ mark: fpl, at: player.newsAdded }, rotowire(code));
     return {
       name: display(player),
       position: squads.get(code)?.position ?? null,
       ...(owner === undefined ? {} : { owner }),
-      ...(fitness.out ? { status: "OUT" } : fitness.state === "doubt" ? { status: "Doubt" } : {}),
+      ...(status === null ? {} : { status }),
     };
   };
 }
