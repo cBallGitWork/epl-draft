@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Club, FootballSnapshot, Fixture } from "@epl/core";
 import { footballNow, seasonFixtures } from "../../../football";
+import { wholeNumber } from "../../../wholeNumber";
 
 // What every club tab reads, in one place; `squad/[teamId]/team.ts` is the fantasy twin.
 
@@ -8,10 +9,9 @@ import { footballNow, seasonFixtures } from "../../../football";
 export async function clubOr404(
   code: string,
 ): Promise<{ club: Club; snapshot: FootballSnapshot; fixtures: Fixture[] }> {
-  const wanted = Number(code);
-  // Reject anything that is not a plain club code before asking FPL for it —
-  // "3.5" and "3abc" both coerce to something `Number` will happily accept.
-  if (!Number.isInteger(wanted)) notFound();
+  // Refused before FPL is asked for it.
+  const wanted = wholeNumber(code);
+  if (wanted === null) notFound();
 
   const [snapshot, fixtures] = await Promise.all([footballNow(), seasonFixtures()]);
   const club = snapshot.clubs.find((entry) => entry.code === wanted);

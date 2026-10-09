@@ -26,7 +26,8 @@ import { readCalendar, roundOf } from "../../../round";
 import { liveScores, squadLivePoints } from "../../../scoreboard";
 import { newsFor, readPoolNews } from "../../../poolNews";
 import { myTeamId } from "../../../session";
-import { MATCHUPS, askedGameweek, matchupHref } from "../../routes";
+import { MATCHUPS, matchupHref } from "../../routes";
+import { wholeNumber } from "../../../wholeNumber";
 import { sheetEvents } from "./events";
 import { STATS_OF, DEFAULT_SIDE_SORT, matchupTabs, matchupView, statsHref, statsOf } from "./views";
 import { boardCategories, boardColumns } from "./sideRows";
@@ -55,7 +56,7 @@ export default async function HeadToHeadPage({
   const sort = { head: query.sort ?? DEFAULT_SIDE_SORT, descending: query.dir !== "asc" };
 
   // Through the calendar seam: the period is Fantrax's question, the gameweek FPL's.
-  const asked = askedGameweek(gw);
+  const asked = wholeNumber(gw);
   const round = asked === null ? null : await roundOf(asked);
   const squads = readableOr404(await getLeagueSquads(round), MATCHUPS);
 

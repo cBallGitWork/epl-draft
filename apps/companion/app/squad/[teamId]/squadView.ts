@@ -17,7 +17,7 @@ import { leagueScoring } from "../../scoring";
 import { squadSeason } from "../../teamStats";
 import { myTeamId } from "../../session";
 import { OWN, SQUAD } from "../routes";
-import { askedGameweek } from "../../league/routes";
+import { wholeNumber } from "../../wholeNumber";
 import { plannable } from "./plannable";
 import { gameweekPicker, weekStanding } from "./weeks";
 import { whoseTeam } from "./team";
@@ -28,7 +28,7 @@ import { minutesFrom } from "../../xmins";
 
 export async function squadView(slug: string, gw: string | undefined) {
   // Through the calendar seam: the period is Fantrax's question, the gameweek FPL's.
-  const asked = askedGameweek(gw);
+  const asked = wholeNumber(gw);
   // Your own squad is about the week you can still change; a rival's about the last locked one, the latest with an
   // arrangement to show (Craig, 2 Sep 2026); `?gw=` beats both. Asked off the league's own list: `mine` below is the
   // authority, but the roster read cannot choose its own week.

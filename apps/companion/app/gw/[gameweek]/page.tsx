@@ -3,6 +3,7 @@ import { hasGameweek } from "@epl/core";
 import GameweekView from "../../components/football/GameweekView";
 import { footballNow, gameweekSnapshot } from "../../football";
 import { marks } from "../../involvement";
+import { wholeNumber } from "../../wholeNumber";
 
 // Any round of the season, addressable. Last week's results on Monday morning is
 // the second thing anyone wants after this week's score.
@@ -17,11 +18,9 @@ export default async function GameweekPage({
   params: Promise<{ gameweek: string }>;
 }) {
   const { gameweek } = await params;
-  const requested = Number(gameweek);
-
-  // Reject anything that is not a plain round number before asking FPL for it —
-  // "3.5" and "3abc" both coerce to something Number will happily accept.
-  if (!Number.isInteger(requested)) notFound();
+  // Refused before FPL is asked for it.
+  const requested = wholeNumber(gameweek);
+  if (requested === null) notFound();
 
   // The current round from `footballNow`, which every screen keeps warm: `gameweekSnapshot` is warmed
   // only here, so a live round read through it would serve a stale score in the present tense.

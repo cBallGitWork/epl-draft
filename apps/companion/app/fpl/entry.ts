@@ -13,13 +13,12 @@ import {
 } from "@epl/core";
 import { ENTRY_COOKIE, PAGE_REVALIDATE } from "../config";
 import { footballNow } from "../football";
+import { wholeNumber } from "../wholeNumber";
 
 // A manager's FPL side, from the public entry id in a plain unsigned cookie: claiming another's authorises nothing.
 
 export async function myEntryId(): Promise<number | null> {
-  const raw = (await cookies()).get(ENTRY_COOKIE)?.value;
-  const id = Number(raw);
-  return Number.isInteger(id) && id > 0 ? id : null;
+  return wholeNumber((await cookies()).get(ENTRY_COOKIE)?.value);
 }
 
 export interface FplSide {
