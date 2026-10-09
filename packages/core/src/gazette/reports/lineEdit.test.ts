@@ -24,4 +24,11 @@ describe("the line edit", () => {
     expect(applyFixes(draft, fixes, ["Kudus had one chalked off, twice."]).matches.get(1)?.account).toContain("chalked off on the hour");
     expect(applyFixes(draft, fixes, ["Kudus had two ruled out on the hour."]).matches.get(1)?.account).toContain("chalked off on the hour");
   });
+
+  it("keeps a fix that names a man whose name is a word the paper bans: Archie Gray is no American spelling", () => {
+    const gray: ReportsDraft = { ...draft, matches: new Map([[1, { standfirst: "Spurs won 1-0.", account: "Archie Gray scored a dramatic winner.", sections: [] }]]) };
+    const fixes = faultySentences(gray, ["Archie Gray"]);
+    expect(fixes.map((fix) => fix.words)).toEqual([["dramatic"]]);
+    expect(applyFixes(gray, fixes, ["Archie Gray scored the winner."]).matches.get(1)?.account).toBe("Archie Gray scored the winner.");
+  });
 });
