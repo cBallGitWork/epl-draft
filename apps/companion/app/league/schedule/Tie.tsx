@@ -18,7 +18,7 @@ export default function Tie({
   tie: CompetitionTie;
   /** Each side's Fantrax total for the gameweek, by team id. */
   points: Map<string, number | null>;
-  /** Each team's place in the table, for CM's blue block. Fantrax's own rank. */
+  /** Each team's place in the table, for CM's blue block (`placings`). */
   places: Map<string, string>;
   round: ScheduleRound;
   mine: string | null;

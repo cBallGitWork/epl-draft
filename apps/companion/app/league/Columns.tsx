@@ -28,7 +28,7 @@ export const COPY = { phone: "lg:hidden", desk: DESK_ONLY } as const;
 
 /** A football table's row (`cm9900/24.jpg`) plus form; the list is what `colSpan` counts, a hidden cell spanning zero. */
 export const COLUMNS: readonly Column[] = [
-  { key: "rank", label: "Placing", title: "Fantrax's own order", align: "center", width: "w-8 lg:w-14", mute: true },
+  { key: "rank", label: "Placing", title: "Points, then fantasy points scored; level on both shares the place", align: "center", width: "w-8 lg:w-14", mute: true },
   { key: "team", label: "Team", title: undefined, align: "left", width: "" },
   { key: "played", label: "Pld", title: "Played — won, drawn and lost added up", align: "center", width: "w-8 lg:w-20" },
   { key: "pts", label: "Pts", title: PTS_TITLE, align: "center", width: "w-10", copy: "phone" },
