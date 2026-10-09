@@ -1,0 +1,444 @@
+{
+  "slug": "gw6-presser-2026-10-09",
+  "kind": "presser",
+  "leagueId": "mqsjd23smsgbiqzr",
+  "period": 6,
+  "gameweek": 6,
+  "filedAt": "2026-10-09T16:38:59.142Z",
+  "expiresAt": null,
+  "edition": "The Team Sheet",
+  "byline": "The Team Sheet",
+  "headline": "Friday Pressers",
+  "deck": "Isak out for Liverpool with a quad injury, Gakpo also ruled out",
+  "body": "Alexander Isak will not play for Liverpool on Sunday after injuring his quad during the international break.\n\nAndoni Iraola called it a small muscle injury that does not look long term, with Isak back whenever he feels ready.",
+  "subjects": [
+    "presser:gw6:2026-10-09"
+  ],
+  "image": null,
+  "face": {
+    "code": 219168,
+    "name": "Alexander Isak",
+    "clubId": 14,
+    "position": null
+  },
+  "ties": [],
+  "extras": {
+    "teamNews": [
+      {
+        "club": "Arsenal",
+        "code": 3,
+        "men": [
+          {
+            "name": "Christos Tzolis",
+            "status": "OUT",
+            "note": "hamstring"
+          },
+          {
+            "name": "Cristhian Mosquera",
+            "status": "FIT",
+            "note": "back from a muscle injury"
+          },
+          {
+            "name": "Benjamin White",
+            "owner": "Hazza",
+            "status": "FIT",
+            "note": "back from a groin injury"
+          },
+          {
+            "name": "Piero Hincapié",
+            "status": "FIT",
+            "note": "back from a muscle injury"
+          }
+        ],
+        "stillOut": [
+          {
+            "name": "William Saliba",
+            "owner": "Bannan"
+          }
+        ],
+        "fixture": {
+          "opponent": "Leeds United",
+          "home": true,
+          "kickoff": "2026-10-10T11:30:00Z"
+        }
+      },
+      {
+        "club": "Tottenham Hotspur",
+        "code": 6,
+        "stillOut": [
+          {
+            "name": "Pedro Porro",
+            "owner": "Dome"
+          },
+          {
+            "name": "Mykhailo Mudryk"
+          },
+          {
+            "name": "Xavi"
+          },
+          {
+            "name": "Wilson Odobert"
+          },
+          {
+            "name": "Dejan Kulusevski"
+          }
+        ],
+        "fixture": {
+          "opponent": "Manchester United",
+          "home": false,
+          "kickoff": "2026-10-10T16:30:00Z"
+        }
+      },
+      {
+        "club": "Nottingham Forest",
+        "code": 17,
+        "men": [
+          {
+            "name": "Igor Jesus",
+            "status": "OUT",
+            "note": "calf"
+          },
+          {
+            "name": "Nikola Milenković",
+            "status": "FIT",
+            "note": ""
+          }
+        ],
+        "stillOut": [
+          {
+            "name": "Nicolò Savona"
+          }
+        ],
+        "fixture": {
+          "opponent": "Crystal Palace",
+          "home": false,
+          "kickoff": "2026-10-11T13:00:00Z"
+        }
+      },
+      {
+        "club": "Aston Villa",
+        "code": 7,
+        "men": [
+          {
+            "name": "Leon Goretzka",
+            "status": "FIT",
+            "note": "back from a knee injury"
+          }
+        ],
+        "stillOut": [
+          {
+            "name": "Amadou Onana"
+          },
+          {
+            "name": "Ian Maatsen"
+          },
+          {
+            "name": "Marco Bizot"
+          }
+        ],
+        "fixture": {
+          "opponent": "Brentford",
+          "home": true,
+          "kickoff": "2026-10-10T14:00:00Z"
+        }
+      },
+      {
+        "club": "Hull City",
+        "code": 88,
+        "men": [
+          {
+            "name": "Brooke Norton-Cuffy",
+            "status": "FIT",
+            "note": "back from a hamstring injury"
+          },
+          {
+            "name": "Tim Iroegbunam",
+            "status": "FIT",
+            "note": "back from a groin injury"
+          },
+          {
+            "name": "Hidemasa Morita",
+            "status": "FIT",
+            "note": "back from an adductor injury"
+          },
+          {
+            "name": "Nobel Mendy",
+            "status": "FIT",
+            "note": ""
+          }
+        ],
+        "stillOut": [
+          {
+            "name": "Jack Butland"
+          },
+          {
+            "name": "Matt Targett"
+          },
+          {
+            "name": "Ilyas Ansah"
+          },
+          {
+            "name": "Darko Gyabi"
+          },
+          {
+            "name": "Eliot Matazo"
+          },
+          {
+            "name": "Charlie Hughes"
+          }
+        ],
+        "fixture": {
+          "opponent": "Everton",
+          "home": true,
+          "kickoff": "2026-10-11T13:00:00Z"
+        }
+      },
+      {
+        "club": "Ipswich Town",
+        "code": 40,
+        "men": [
+          {
+            "name": "Abdul Fatawu",
+            "status": "Suspended",
+            "note": ""
+          }
+        ],
+        "fixture": {
+          "opponent": "Fulham",
+          "home": true,
+          "kickoff": "2026-10-10T14:00:00Z"
+        }
+      },
+      {
+        "club": "Chelsea",
+        "code": 8,
+        "line": "Moises Caicedo, Joao Pedro, Cole Palmer and Reece James have all trained and are ready, Xabi Alonso says.",
+        "men": [
+          {
+            "name": "Gittens",
+            "status": "OUT",
+            "note": "ankle"
+          }
+        ],
+        "fixture": {
+          "opponent": "AFC Bournemouth",
+          "home": true,
+          "kickoff": "2026-10-10T14:00:00Z"
+        }
+      },
+      {
+        "club": "Liverpool",
+        "code": 14,
+        "line": "Alexander Isak and Cody Gakpo were both injured during the international break, and Jeremy Jacquet still has to train tomorrow.",
+        "men": [
+          {
+            "name": "Cody Gakpo",
+            "owner": "Hazza",
+            "status": "OUT",
+            "note": "ankle; hurt in a bad tackle, working individually"
+          },
+          {
+            "name": "Alexander Isak",
+            "owner": "Glengarry",
+            "status": "OUT",
+            "note": "quad; small muscle injury, not long term"
+          },
+          {
+            "name": "Jeremy Jacquet",
+            "owner": "Truffles",
+            "status": "FIT",
+            "note": "back from a hamstring injury; rested by his national side"
+          }
+        ],
+        "quote": {
+          "text": "They both don’t look long term.",
+          "said": "Andoni Iraola"
+        },
+        "fixture": {
+          "opponent": "Manchester City",
+          "home": true,
+          "kickoff": "2026-10-11T15:30:00Z"
+        }
+      },
+      {
+        "club": "Manchester United",
+        "code": 1,
+        "stillOut": [
+          {
+            "name": "Benjamin Sesko",
+            "owner": "Hazza"
+          },
+          {
+            "name": "Patrick Dorgu",
+            "owner": "Dome"
+          },
+          {
+            "name": "Amad",
+            "owner": "Hazza"
+          },
+          {
+            "name": "Manuel Ugarte"
+          }
+        ],
+        "quote": {
+          "text": "Patrick came off and it looks like he will be out for probably a number of weeks.",
+          "said": "Michael Carrick"
+        },
+        "fixture": {
+          "opponent": "Tottenham Hotspur",
+          "home": true,
+          "kickoff": "2026-10-10T16:30:00Z"
+        }
+      },
+      {
+        "club": "Brentford",
+        "code": 94,
+        "stillOut": [
+          {
+            "name": "Sepp van den Berg"
+          },
+          {
+            "name": "Nathan Collins"
+          },
+          {
+            "name": "Mathias Jensen"
+          },
+          {
+            "name": "Antoni Milambo"
+          },
+          {
+            "name": "Josh Dasilva"
+          }
+        ],
+        "quote": {
+          "text": "The one benefit of the last few weeks has been players like Nathan, Sepp, Matty [Jensen] getting back up to speed and getting close to a return.",
+          "said": "Keith Andrews"
+        },
+        "fixture": {
+          "opponent": "Aston Villa",
+          "home": false,
+          "kickoff": "2026-10-10T14:00:00Z"
+        }
+      },
+      {
+        "club": "Crystal Palace",
+        "code": 31,
+        "men": [
+          {
+            "name": "Dean Henderson",
+            "status": "FIT",
+            "note": "back from an ankle injury"
+          },
+          {
+            "name": "Jean-Philippe Mateta",
+            "owner": "Bannan",
+            "status": "FIT",
+            "note": "back from a hamstring injury"
+          },
+          {
+            "name": "Takehiro Tomiyasu",
+            "status": "FIT",
+            "note": "back from a calf injury"
+          },
+          {
+            "name": "Axel Disasi",
+            "status": "Suspended",
+            "note": ""
+          }
+        ],
+        "stillOut": [
+          {
+            "name": "Chadi Riad"
+          }
+        ],
+        "fixture": {
+          "opponent": "Nottingham Forest",
+          "home": true,
+          "kickoff": "2026-10-11T13:00:00Z"
+        }
+      },
+      {
+        "club": "Manchester City",
+        "code": 43,
+        "line": "Erling Haaland is ready after a few days off, Enzo Maresca says.",
+        "men": [
+          {
+            "name": "Phil Foden",
+            "owner": "Atletico",
+            "status": "Suspended",
+            "note": ""
+          }
+        ],
+        "fixture": {
+          "opponent": "Liverpool",
+          "home": false,
+          "kickoff": "2026-10-11T15:30:00Z"
+        }
+      },
+      {
+        "club": "Fulham",
+        "code": 54,
+        "men": [
+          {
+            "name": "Kenny Tete",
+            "status": "FIT",
+            "note": ""
+          }
+        ],
+        "stillOut": [
+          {
+            "name": "Tom Cairney"
+          }
+        ],
+        "fixture": {
+          "opponent": "Ipswich Town",
+          "home": false,
+          "kickoff": "2026-10-10T14:00:00Z"
+        }
+      },
+      {
+        "club": "Brighton & Hove Albion",
+        "code": 36,
+        "men": [
+          {
+            "name": "Yasin Ayari",
+            "status": "OUT",
+            "note": ""
+          },
+          {
+            "name": "Charalampos Kostoulas",
+            "owner": "Truffles",
+            "status": "FIT",
+            "note": ""
+          }
+        ],
+        "stillOut": [
+          {
+            "name": "Evan Ferguson"
+          },
+          {
+            "name": "Yankuba Minteh",
+            "owner": "Atletico"
+          },
+          {
+            "name": "Mats Wieffer"
+          },
+          {
+            "name": "Mitoma"
+          },
+          {
+            "name": "Stefanos Tzimas"
+          },
+          {
+            "name": "Femi Azeez"
+          }
+        ],
+        "fixture": {
+          "opponent": "Sunderland",
+          "home": false,
+          "kickoff": "2026-10-10T14:00:00Z"
+        }
+      }
+    ]
+  }
+}

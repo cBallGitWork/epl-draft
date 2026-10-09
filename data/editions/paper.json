@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T16:05:51.047Z",
+  "updatedAt": "2026-10-09T16:38:59.142Z",
   "stories": [
     {
       "slug": "gw5-presser-2026-09-18",
@@ -7371,36 +7371,148 @@
       "leagueId": "mqsjd23smsgbiqzr",
       "period": 6,
       "gameweek": 6,
-      "filedAt": "2026-10-09T16:05:51.047Z",
+      "filedAt": "2026-10-09T16:38:59.142Z",
       "expiresAt": null,
       "edition": "The Team Sheet",
       "byline": "The Team Sheet",
       "headline": "Friday Pressers",
-      "deck": "Nobel Mendy fit again and back in contention for Hull City",
-      "body": "Nobel Mendy is fit again and back in contention for Hull City.",
+      "deck": "Isak out for Liverpool with a quad injury, Gakpo also ruled out",
+      "body": "Alexander Isak will not play for Liverpool on Sunday after injuring his quad during the international break.\n\nAndoni Iraola called it a small muscle injury that does not look long term, with Isak back whenever he feels ready.",
       "subjects": [
         "presser:gw6:2026-10-09"
       ],
       "image": null,
       "face": {
-        "code": 606930,
-        "name": "Nobel Mendy",
-        "clubId": 11,
+        "code": 219168,
+        "name": "Alexander Isak",
+        "clubId": 14,
         "position": null
       },
       "ties": [],
       "extras": {
         "teamNews": [
           {
-            "club": "Hull City",
-            "code": 88,
-            "line": "Jack Butland, Matt Targett, Ilyas Ansah, Darko Gyabi, Eliot Matazo and Charlie Hughes stay out.",
+            "club": "Arsenal",
+            "code": 3,
             "men": [
               {
-                "name": "Nobel Mendy",
+                "name": "Christos Tzolis",
+                "status": "OUT",
+                "note": "hamstring"
+              },
+              {
+                "name": "Cristhian Mosquera",
+                "status": "FIT",
+                "note": "back from a muscle injury"
+              },
+              {
+                "name": "Benjamin White",
+                "owner": "Hazza",
+                "status": "FIT",
+                "note": "back from a groin injury"
+              },
+              {
+                "name": "Piero Hincapié",
+                "status": "FIT",
+                "note": "back from a muscle injury"
+              }
+            ],
+            "stillOut": [
+              {
+                "name": "William Saliba",
+                "owner": "Bannan"
+              }
+            ],
+            "fixture": {
+              "opponent": "Leeds United",
+              "home": true,
+              "kickoff": "2026-10-10T11:30:00Z"
+            }
+          },
+          {
+            "club": "Tottenham Hotspur",
+            "code": 6,
+            "stillOut": [
+              {
+                "name": "Pedro Porro",
+                "owner": "Dome"
+              },
+              {
+                "name": "Mykhailo Mudryk"
+              },
+              {
+                "name": "Xavi"
+              },
+              {
+                "name": "Wilson Odobert"
+              },
+              {
+                "name": "Dejan Kulusevski"
+              }
+            ],
+            "fixture": {
+              "opponent": "Manchester United",
+              "home": false,
+              "kickoff": "2026-10-10T16:30:00Z"
+            }
+          },
+          {
+            "club": "Nottingham Forest",
+            "code": 17,
+            "men": [
+              {
+                "name": "Igor Jesus",
+                "status": "OUT",
+                "note": "calf"
+              },
+              {
+                "name": "Nikola Milenković",
                 "status": "FIT",
                 "note": ""
+              }
+            ],
+            "stillOut": [
+              {
+                "name": "Nicolò Savona"
+              }
+            ],
+            "fixture": {
+              "opponent": "Crystal Palace",
+              "home": false,
+              "kickoff": "2026-10-11T13:00:00Z"
+            }
+          },
+          {
+            "club": "Aston Villa",
+            "code": 7,
+            "men": [
+              {
+                "name": "Leon Goretzka",
+                "status": "FIT",
+                "note": "back from a knee injury"
+              }
+            ],
+            "stillOut": [
+              {
+                "name": "Amadou Onana"
               },
+              {
+                "name": "Ian Maatsen"
+              },
+              {
+                "name": "Marco Bizot"
+              }
+            ],
+            "fixture": {
+              "opponent": "Brentford",
+              "home": true,
+              "kickoff": "2026-10-10T14:00:00Z"
+            }
+          },
+          {
+            "club": "Hull City",
+            "code": 88,
+            "men": [
               {
                 "name": "Brooke Norton-Cuffy",
                 "status": "FIT",
@@ -7415,6 +7527,11 @@
                 "name": "Hidemasa Morita",
                 "status": "FIT",
                 "note": "back from an adductor injury"
+              },
+              {
+                "name": "Nobel Mendy",
+                "status": "FIT",
+                "note": ""
               }
             ],
             "stillOut": [
@@ -7444,132 +7561,13 @@
             }
           },
           {
-            "club": "Arsenal",
-            "code": 3,
-            "line": "William Saliba and Christos Tzolis remain out.",
-            "men": [
-              {
-                "name": "Cristhian Mosquera",
-                "status": "FIT",
-                "note": "back from a muscle injury"
-              },
-              {
-                "name": "Benjamin White",
-                "owner": "Hazza",
-                "status": "FIT",
-                "note": "back from a groin injury"
-              },
-              {
-                "name": "Piero Hincapié",
-                "status": "FIT",
-                "note": "back from a muscle injury"
-              }
-            ],
-            "stillOut": [
-              {
-                "name": "Christos Tzolis"
-              },
-              {
-                "name": "William Saliba",
-                "owner": "Bannan"
-              }
-            ],
-            "fixture": {
-              "opponent": "Leeds United",
-              "home": true,
-              "kickoff": "2026-10-10T11:30:00Z"
-            }
-          },
-          {
-            "club": "Tottenham Hotspur",
-            "code": 6,
-            "line": "Pedro Porro, Mykhailo Mudryk, Xavi, Wilson Odobert and Dejan Kulusevski are all still absent.",
-            "stillOut": [
-              {
-                "name": "Pedro Porro",
-                "owner": "Dome"
-              },
-              {
-                "name": "Mykhailo Mudryk"
-              },
-              {
-                "name": "Xavi"
-              },
-              {
-                "name": "Wilson Odobert"
-              },
-              {
-                "name": "Dejan Kulusevski"
-              }
-            ],
-            "fixture": {
-              "opponent": "Manchester United",
-              "home": false,
-              "kickoff": "2026-10-10T16:30:00Z"
-            }
-          },
-          {
-            "club": "Nottingham Forest",
-            "code": 17,
-            "line": "Nicolò Savona is still sidelined.",
-            "men": [
-              {
-                "name": "Igor Jesus",
-                "status": "OUT",
-                "note": "calf"
-              },
-              {
-                "name": "Nikola Milenković",
-                "status": "FIT",
-                "note": ""
-              }
-            ],
-            "stillOut": [
-              {
-                "name": "Nicolò Savona"
-              }
-            ],
-            "fixture": {
-              "opponent": "Crystal Palace",
-              "home": false,
-              "kickoff": "2026-10-11T13:00:00Z"
-            }
-          },
-          {
-            "club": "Aston Villa",
-            "code": 7,
-            "line": "Unai Emery is still without Amadou Onana, Ian Maatsen and Marco Bizot.",
-            "men": [
-              {
-                "name": "Leon Goretzka",
-                "status": "FIT",
-                "note": "back from a knee injury"
-              }
-            ],
-            "stillOut": [
-              {
-                "name": "Amadou Onana"
-              },
-              {
-                "name": "Ian Maatsen"
-              },
-              {
-                "name": "Marco Bizot"
-              }
-            ],
-            "fixture": {
-              "opponent": "Brentford",
-              "home": true,
-              "kickoff": "2026-10-10T14:00:00Z"
-            }
-          },
-          {
             "club": "Ipswich Town",
             "code": 40,
-            "line": "Abdul Fatawu is out.",
-            "stillOut": [
+            "men": [
               {
-                "name": "Abdul Fatawu"
+                "name": "Abdul Fatawu",
+                "status": "Suspended",
+                "note": ""
               }
             ],
             "fixture": {
@@ -7581,10 +7579,12 @@
           {
             "club": "Chelsea",
             "code": 8,
-            "line": "Gittens is unavailable.",
-            "stillOut": [
+            "line": "Moises Caicedo, Joao Pedro, Cole Palmer and Reece James have all trained and are ready, Xabi Alonso says.",
+            "men": [
               {
-                "name": "Gittens"
+                "name": "Gittens",
+                "status": "OUT",
+                "note": "ankle"
               }
             ],
             "fixture": {
@@ -7596,17 +7596,31 @@
           {
             "club": "Liverpool",
             "code": 14,
-            "line": "Cody Gakpo and Alexander Isak are both missing.",
-            "stillOut": [
+            "line": "Alexander Isak and Cody Gakpo were both injured during the international break, and Jeremy Jacquet still has to train tomorrow.",
+            "men": [
               {
                 "name": "Cody Gakpo",
-                "owner": "Hazza"
+                "owner": "Hazza",
+                "status": "OUT",
+                "note": "ankle; hurt in a bad tackle, working individually"
               },
               {
                 "name": "Alexander Isak",
-                "owner": "Glengarry"
+                "owner": "Glengarry",
+                "status": "OUT",
+                "note": "quad; small muscle injury, not long term"
+              },
+              {
+                "name": "Jeremy Jacquet",
+                "owner": "Truffles",
+                "status": "FIT",
+                "note": "back from a hamstring injury; rested by his national side"
               }
             ],
+            "quote": {
+              "text": "They both don’t look long term.",
+              "said": "Andoni Iraola"
+            },
             "fixture": {
               "opponent": "Manchester City",
               "home": true,
@@ -7616,7 +7630,6 @@
           {
             "club": "Manchester United",
             "code": 1,
-            "line": "Benjamin Sesko, Patrick Dorgu, Amad and Manuel Ugarte are all listed out.",
             "stillOut": [
               {
                 "name": "Benjamin Sesko",
@@ -7635,7 +7648,7 @@
               }
             ],
             "quote": {
-              "text": "Ben is further away, with the issue he has got. He won’t be ready.",
+              "text": "Patrick came off and it looks like he will be out for probably a number of weeks.",
               "said": "Michael Carrick"
             },
             "fixture": {
@@ -7645,19 +7658,8 @@
             }
           },
           {
-            "club": "Everton",
-            "code": 11,
-            "line": "Everton have nobody listed out.",
-            "fixture": {
-              "opponent": "Hull City",
-              "home": false,
-              "kickoff": "2026-10-11T13:00:00Z"
-            }
-          },
-          {
             "club": "Brentford",
             "code": 94,
-            "line": "Sepp van den Berg, Nathan Collins, Mathias Jensen, Antoni Milambo and Josh Dasilva are absent.",
             "stillOut": [
               {
                 "name": "Sepp van den Berg"
@@ -7675,6 +7677,10 @@
                 "name": "Josh Dasilva"
               }
             ],
+            "quote": {
+              "text": "The one benefit of the last few weeks has been players like Nathan, Sepp, Matty [Jensen] getting back up to speed and getting close to a return.",
+              "said": "Keith Andrews"
+            },
             "fixture": {
               "opponent": "Aston Villa",
               "home": false,
@@ -7684,7 +7690,6 @@
           {
             "club": "Crystal Palace",
             "code": 31,
-            "line": "Pierre Sage remains without Chadi Riad and Axel Disasi.",
             "men": [
               {
                 "name": "Dean Henderson",
@@ -7701,14 +7706,16 @@
                 "name": "Takehiro Tomiyasu",
                 "status": "FIT",
                 "note": "back from a calf injury"
+              },
+              {
+                "name": "Axel Disasi",
+                "status": "Suspended",
+                "note": ""
               }
             ],
             "stillOut": [
               {
                 "name": "Chadi Riad"
-              },
-              {
-                "name": "Axel Disasi"
               }
             ],
             "fixture": {
@@ -7720,11 +7727,13 @@
           {
             "club": "Manchester City",
             "code": 43,
-            "line": "Phil Foden misses out.",
-            "stillOut": [
+            "line": "Erling Haaland is ready after a few days off, Enzo Maresca says.",
+            "men": [
               {
                 "name": "Phil Foden",
-                "owner": "Atletico"
+                "owner": "Atletico",
+                "status": "Suspended",
+                "note": ""
               }
             ],
             "fixture": {
@@ -7736,7 +7745,6 @@
           {
             "club": "Fulham",
             "code": 54,
-            "line": "Alvaro Arbeloa is still without Tom Cairney.",
             "men": [
               {
                 "name": "Kenny Tete",
@@ -7758,8 +7766,12 @@
           {
             "club": "Brighton & Hove Albion",
             "code": 36,
-            "line": "Fabian Hurzeler has Evan Ferguson, Yankuba Minteh, Mats Wieffer, Mitoma, Stefanos Tzimas, Femi Azeez and Yasin Ayari unavailable.",
             "men": [
+              {
+                "name": "Yasin Ayari",
+                "status": "OUT",
+                "note": ""
+              },
               {
                 "name": "Charalampos Kostoulas",
                 "owner": "Truffles",
@@ -7786,9 +7798,6 @@
               },
               {
                 "name": "Femi Azeez"
-              },
-              {
-                "name": "Yasin Ayari"
               }
             ],
             "fixture": {
@@ -7799,6 +7808,110 @@
           }
         ]
       }
+    },
+    {
+      "slug": "gw6-predictions",
+      "kind": "predictions",
+      "leagueId": "mqsjd23smsgbiqzr",
+      "period": 6,
+      "gameweek": 6,
+      "filedAt": "2026-10-08T20:24:33.059Z",
+      "expiresAt": null,
+      "edition": "The Form Guide",
+      "byline": "",
+      "reporter": "Mark Lawrenson",
+      "headline": "Lawro's Predictions: GW6",
+      "deck": "In his first column for the league, Lawro backs Cowthenbeef in the War of Cowdenbeath and GlengarryHearts over Bayern Bru, both against the favourites.",
+      "body": "Five ties, not a ball kicked, and I've seen enough already. Twenty-two years doing this on the BBC, and now it's a draft league's paper named after a doughnut shop.",
+      "subjects": [
+        "predictions:gw6"
+      ],
+      "image": null,
+      "face": null,
+      "ties": [
+        {
+          "homeTeamId": "qgucu9dgmufwva1x",
+          "awayTeamId": "7to6xosimu8hyyw5",
+          "line": "If anyone can, Bannan can is a team name with a comma in it, and I don't trust that. Gibbs-White is the one who matters, and he goes to Crystal Palace. Will he make it count? No. Every gentle fixture gets wasted in the end.\n\nits_ohi are steadier, which isn't saying much. B.Fernandes and Cunha both play for Manchester United, who have Tottenham at home. B.Fernandes has gone two games without a goal or an assist, and I'm meant to be impressed.\n\nits_ohi, because two Manchester United men beat one man at Crystal Palace.",
+          "callsTeamId": "qgucu9dgmufwva1x",
+          "score": {
+            "home": 31,
+            "away": 30
+          },
+          "face": {
+            "code": 222531,
+            "name": "Gibbs-White",
+            "clubId": 18,
+            "position": null
+          }
+        },
+        {
+          "homeTeamId": "l5kunst8msgbirdf",
+          "awayTeamId": "0g0j5mkomuqqwsbu",
+          "line": "Ipswich Town defend like a garden gate in the wind, and Gonzalo goes there for The Raccoons. The champions are reliable, which is the most annoying thing a side can be. They have Haaland too, and he has scored twice running for Manchester City.\n\ndomeitalycoach look like a side still unpacking. Zian Flemming came in off the waiver list, which means somebody else didn't want him. domeitalycoach also have N.Williams, who goes to Crystal Palace with Nottingham Forest.\n\nThe Raccoons win it, because Gonzalo gets Ipswich Town to aim at.",
+          "callsTeamId": "l5kunst8msgbirdf",
+          "score": {
+            "home": 33,
+            "away": 27
+          },
+          "face": {
+            "code": 551466,
+            "name": "Gonzalo",
+            "clubId": 10,
+            "position": null
+          }
+        },
+        {
+          "homeTeamId": "uexqrijomu8l5asi",
+          "awayTeamId": "ipnp5y4mmu9j7kop",
+          "line": "Tarkowski is the one hard man Hazza Maguazza's Redempshazza have, and he goes to Hull City. Hull City don't score many, and I'll be the poor soul sat watching them not score. A defender should enjoy that.\n\nAtleticoTimHortons are the better side, and it pains me to say so. Groß has found the net in both his recent outings for Brighton & Hove Albion. Semenyo is a slight doubt for AtleticoTimHortons with an ankle injury.\n\nAtleticoTimHortons, because goals beat clean sheets.",
+          "callsTeamId": "uexqrijomu8l5asi",
+          "score": {
+            "home": 33,
+            "away": 27
+          },
+          "face": {
+            "code": 17761,
+            "name": "Tarkowski",
+            "clubId": 9,
+            "position": null
+          }
+        },
+        {
+          "homeTeamId": "aekx2715mtzgcl3f",
+          "awayTeamId": "7z8fy0pnmuogbtdw",
+          "line": "Rice is touch and go for The Truffle Pigs. This is the War of Cowdenbeath, which sounds grander than anything either side will produce. Vuskovic and F.Kadıoğlu both go to Sunderland for The Truffle Pigs, and I've got to sit through it.\n\nI played centre-half, so the back line is where I look first. Cowthenbeef have Bassey away at Ipswich Town, and Ipswich have nothing up front.\n\nI'm going against the favourites, because Ipswich Town can't score.",
+          "callsTeamId": "7z8fy0pnmuogbtdw",
+          "instinct": "defence",
+          "score": {
+            "home": 34,
+            "away": 35
+          },
+          "face": {
+            "code": 204480,
+            "name": "Rice",
+            "clubId": 1,
+            "position": null
+          }
+        },
+        {
+          "homeTeamId": "kpj0z744muh1qwtd",
+          "awayTeamId": "syjkob6cmuobagfu",
+          "line": "I've never trusted Bayern Bru, and Mbeumo won't change my mind. He's done nothing for a couple of matches for Manchester United, and big names going quiet bore me stiff. It's a side with no leaders.\n\nBayern Bru are favoured, and I'm with the other lot. GlengarryHearts have Isak and Virgil, and Manchester City coming bothers neither of them. Isak finishes properly and Virgil defends like a grown-up. Schade has two goals and two assists in his previous two for GlengarryHearts, so that'll stop soon.\n\nGlengarryHearts, because proper finishing and proper defending never go out of fashion.",
+          "callsTeamId": "syjkob6cmuobagfu",
+          "instinct": "liverpool",
+          "score": {
+            "home": 35,
+            "away": 36
+          },
+          "face": {
+            "code": 446008,
+            "name": "Mbeumo",
+            "clubId": 16,
+            "position": null
+          }
+        }
+      ]
     },
     {
       "slug": "gw6-presser-2026-10-08",
@@ -7943,110 +8056,6 @@
           }
         ]
       }
-    },
-    {
-      "slug": "gw6-predictions",
-      "kind": "predictions",
-      "leagueId": "mqsjd23smsgbiqzr",
-      "period": 6,
-      "gameweek": 6,
-      "filedAt": "2026-10-08T20:24:33.059Z",
-      "expiresAt": null,
-      "edition": "The Form Guide",
-      "byline": "",
-      "reporter": "Mark Lawrenson",
-      "headline": "Lawro's Predictions: GW6",
-      "deck": "In his first column for the league, Lawro backs Cowthenbeef in the War of Cowdenbeath and GlengarryHearts over Bayern Bru, both against the favourites.",
-      "body": "Five ties, not a ball kicked, and I've seen enough already. Twenty-two years doing this on the BBC, and now it's a draft league's paper named after a doughnut shop.",
-      "subjects": [
-        "predictions:gw6"
-      ],
-      "image": null,
-      "face": null,
-      "ties": [
-        {
-          "homeTeamId": "qgucu9dgmufwva1x",
-          "awayTeamId": "7to6xosimu8hyyw5",
-          "line": "If anyone can, Bannan can is a team name with a comma in it, and I don't trust that. Gibbs-White is the one who matters, and he goes to Crystal Palace. Will he make it count? No. Every gentle fixture gets wasted in the end.\n\nits_ohi are steadier, which isn't saying much. B.Fernandes and Cunha both play for Manchester United, who have Tottenham at home. B.Fernandes has gone two games without a goal or an assist, and I'm meant to be impressed.\n\nits_ohi, because two Manchester United men beat one man at Crystal Palace.",
-          "callsTeamId": "qgucu9dgmufwva1x",
-          "score": {
-            "home": 31,
-            "away": 30
-          },
-          "face": {
-            "code": 222531,
-            "name": "Gibbs-White",
-            "clubId": 18,
-            "position": null
-          }
-        },
-        {
-          "homeTeamId": "l5kunst8msgbirdf",
-          "awayTeamId": "0g0j5mkomuqqwsbu",
-          "line": "Ipswich Town defend like a garden gate in the wind, and Gonzalo goes there for The Raccoons. The champions are reliable, which is the most annoying thing a side can be. They have Haaland too, and he has scored twice running for Manchester City.\n\ndomeitalycoach look like a side still unpacking. Zian Flemming came in off the waiver list, which means somebody else didn't want him. domeitalycoach also have N.Williams, who goes to Crystal Palace with Nottingham Forest.\n\nThe Raccoons win it, because Gonzalo gets Ipswich Town to aim at.",
-          "callsTeamId": "l5kunst8msgbirdf",
-          "score": {
-            "home": 33,
-            "away": 27
-          },
-          "face": {
-            "code": 551466,
-            "name": "Gonzalo",
-            "clubId": 10,
-            "position": null
-          }
-        },
-        {
-          "homeTeamId": "uexqrijomu8l5asi",
-          "awayTeamId": "ipnp5y4mmu9j7kop",
-          "line": "Tarkowski is the one hard man Hazza Maguazza's Redempshazza have, and he goes to Hull City. Hull City don't score many, and I'll be the poor soul sat watching them not score. A defender should enjoy that.\n\nAtleticoTimHortons are the better side, and it pains me to say so. Groß has found the net in both his recent outings for Brighton & Hove Albion. Semenyo is a slight doubt for AtleticoTimHortons with an ankle injury.\n\nAtleticoTimHortons, because goals beat clean sheets.",
-          "callsTeamId": "uexqrijomu8l5asi",
-          "score": {
-            "home": 33,
-            "away": 27
-          },
-          "face": {
-            "code": 17761,
-            "name": "Tarkowski",
-            "clubId": 9,
-            "position": null
-          }
-        },
-        {
-          "homeTeamId": "aekx2715mtzgcl3f",
-          "awayTeamId": "7z8fy0pnmuogbtdw",
-          "line": "Rice is touch and go for The Truffle Pigs. This is the War of Cowdenbeath, which sounds grander than anything either side will produce. Vuskovic and F.Kadıoğlu both go to Sunderland for The Truffle Pigs, and I've got to sit through it.\n\nI played centre-half, so the back line is where I look first. Cowthenbeef have Bassey away at Ipswich Town, and Ipswich have nothing up front.\n\nI'm going against the favourites, because Ipswich Town can't score.",
-          "callsTeamId": "7z8fy0pnmuogbtdw",
-          "instinct": "defence",
-          "score": {
-            "home": 34,
-            "away": 35
-          },
-          "face": {
-            "code": 204480,
-            "name": "Rice",
-            "clubId": 1,
-            "position": null
-          }
-        },
-        {
-          "homeTeamId": "kpj0z744muh1qwtd",
-          "awayTeamId": "syjkob6cmuobagfu",
-          "line": "I've never trusted Bayern Bru, and Mbeumo won't change my mind. He's done nothing for a couple of matches for Manchester United, and big names going quiet bore me stiff. It's a side with no leaders.\n\nBayern Bru are favoured, and I'm with the other lot. GlengarryHearts have Isak and Virgil, and Manchester City coming bothers neither of them. Isak finishes properly and Virgil defends like a grown-up. Schade has two goals and two assists in his previous two for GlengarryHearts, so that'll stop soon.\n\nGlengarryHearts, because proper finishing and proper defending never go out of fashion.",
-          "callsTeamId": "syjkob6cmuobagfu",
-          "instinct": "liverpool",
-          "score": {
-            "home": 35,
-            "away": 36
-          },
-          "face": {
-            "code": 446008,
-            "name": "Mbeumo",
-            "clubId": 16,
-            "position": null
-          }
-        }
-      ]
     },
     {
       "slug": "gw6-season-rankings",

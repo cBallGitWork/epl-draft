@@ -384,8 +384,17 @@
       "season-predictions:gw6",
       "season-rankings:gw6",
       "presser:gw6:2026-10-08",
-      "predictions:gw6"
+      "predictions:gw6",
+      "presser:gw6:2026-10-09"
     ],
-    "threads": []
+    "threads": [
+      {
+        "subject": "Isak's quad",
+        "beat": "Ruled out for Sunday, described as small and not long term",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-10-09T16:38:59.142Z"
+      }
+    ]
   }
 }
