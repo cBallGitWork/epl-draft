@@ -45,7 +45,7 @@ export const MAIL = "/news";
 /** The Live section, there from an hour before a gameweek's first kickoff to its last whistle. */
 export const LIVE = "/matchday";
 
-/** A gameweek's own page, `/gw/[n]`: Live's, though it outlasts the round. */
+/** A gameweek's own page, `/gw/[n]`: Live's, though it outlasts the gameweek. */
 export const GAMEWEEK = "/gw";
 
 /** One gameweek's page. */
@@ -80,7 +80,7 @@ export const SECTIONS: Section[] = [
   { href: FPL, label: "FPL", routes: [FPL], overflow: true },
 ];
 
-/** The sections this round has: Live only while football is on, when My Team gives it its tab. */
+/** The sections this gameweek has: Live only while football is on, when My Team gives it its tab. */
 export function sectionsFor(matchday: boolean): Section[] {
   return SECTIONS.filter((section) => matchday || !section.onlyDuringGameweek).map((section) =>
     matchday && section.overflowDuringGameweek ? { ...section, overflow: true } : section,

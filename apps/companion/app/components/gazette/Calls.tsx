@@ -19,10 +19,10 @@ export default function Calls({
   clubs,
 }: {
   ties: readonly Tie[];
-  /** His season so far; absent before his first round is settled. */
+  /** His season so far; absent before his first gameweek is settled. */
   record: { right: number; called: number } | undefined;
   named: (teamId: string) => string;
-  /** The round's clubs, for each picture's kit; absent prints the ties without pictures. */
+  /** The gameweek's clubs, for each picture's kit; absent prints the ties without pictures. */
   clubs?: Map<number, Club>;
 }) {
   return (

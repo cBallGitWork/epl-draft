@@ -17,7 +17,7 @@ export default function ThumbRail({
   live,
   mail,
 }: {
-  /** Already filtered for the round, so Live is absent between gameweeks. */
+  /** Already filtered for the gameweek, so Live is absent between gameweeks. */
   sections: readonly Section[];
   pathname: string;
   /** Your live score, or the match clock, for the Live tab's glyph slot. */

@@ -14,7 +14,7 @@ export default function Teaser({
   pictured,
 }: {
   story: PublishedStory;
-  /** The round's clubs, for the picture. Empty is ordinary and costs the
+  /** The gameweek's clubs, for the picture. Empty is ordinary and costs the
    *  card its kit, not its headline. */
   clubs: Map<number, Club>;
   /** Whether this row of shoulders runs pictures: twin shoulders carry them together or not at all,

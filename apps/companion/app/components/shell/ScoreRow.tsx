@@ -9,7 +9,7 @@ import { yoursMark } from "@/app/mine";
 // its own: its rows are 26px with no tap floor.
 
 /** One side of a scoreline. */
-export interface ScoreSide {
+interface ScoreSide {
   /** The full name, which is what the desk prints. */
   name: string;
   /** The three or four letters a phone prints; without one (every Fantrax manager) the full name stands. */

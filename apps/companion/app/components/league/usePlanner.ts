@@ -16,6 +16,7 @@ import {
   playerName,
   violations,
 } from "@epl/core";
+import type { PickState } from "./LineupPitch";
 import type { PitchRow } from "./PitchRows";
 import { benchFrom, orderBench, swapInOrder } from "./benchOrder";
 import { freeMoves } from "./openings";
@@ -133,7 +134,7 @@ export function usePlanner(
   const benchSwap = (id: string) => picked !== null && benchIds.includes(picked) && benchIds.includes(id);
 
   /** A pitch card's state while a pick is in progress. */
-  function pickStateOf(player: SquadPlayerDetail): "idle" | "picked" | "swappable" | "blocked" {
+  function pickStateOf(player: SquadPlayerDetail): PickState {
     const id = player.rostered.slot.fantraxId;
     if (picked === null) return "idle";
     if (picked === id) return "picked";

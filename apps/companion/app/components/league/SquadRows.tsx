@@ -41,27 +41,27 @@ export default function SquadRows({
     <ScrollBoard className={bare ? "" : "cm-panel"}>
       <div className="flex flex-col lg:min-w-max">
         {head ? (
-        // `px-1` plus the bevel's 2px border is the row's `px-1.5`, so every head sits over its column.
-        <div className={`cm-bevel flex min-h-7 items-center gap-1.5 px-1 ${SMALL_CAPS}`}>
-          {/* Centred, as the tile's letters are. */}
-          <span className="w-10 shrink-0 text-center">Pos</span>
-          <span className="w-7 shrink-0" />
-          {/* A basis, not a min-width: the name is the elastic column, and without a floor it renders 0px wide. */}
-          <span className="min-w-0 flex-[1_1_5rem]">Player</span>
+          // `px-1` plus the bevel's 2px border is the row's `px-1.5`, so every head sits over its column.
+          <div className={`cm-bevel flex min-h-7 items-center gap-1.5 px-1 ${SMALL_CAPS}`}>
+            {/* Centred, as the tile's letters are. */}
+            <span className="w-10 shrink-0 text-center">Pos</span>
+            <span className="w-7 shrink-0" />
+            {/* A basis, not a min-width: the name is the elastic column, and without a floor it renders 0px wide. */}
+            <span className="min-w-0 flex-[1_1_5rem]">Player</span>
 
-          {/* Who his CLUB plays this week — the football fixture, not ours. */}
-          <span className="w-[5.5rem] shrink-0">Opponent</span>
-          {xMins ? (
-            <span className="w-9 shrink-0 text-center" title="Expected minutes this gameweek, by our model">
-              xMins
-            </span>
-          ) : null}
-          {scored ? (
-            <span className="w-9 shrink-0 text-center">
-              {projected ? "Proj" : "FPts"}
-            </span>
-          ) : null}
-        </div>
+            {/* Who his CLUB plays this week — the football fixture, not ours. */}
+            <span className="w-[5.5rem] shrink-0">Opponent</span>
+            {xMins ? (
+              <span className="w-9 shrink-0 text-center" title="Expected minutes this gameweek, by our model">
+                xMins
+              </span>
+            ) : null}
+            {scored ? (
+              <span className="w-9 shrink-0 text-center">
+                {projected ? "Proj" : "FPts"}
+              </span>
+            ) : null}
+          </div>
         ) : null}
 
         {/* One list, no group bars: flattening the lines keeps their order without printing the grouping. */}

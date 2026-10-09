@@ -11,4 +11,3 @@ export function FootFrame({ foot, children }: { foot?: ReactNode; children: Reac
     </div>
   );
 }
-

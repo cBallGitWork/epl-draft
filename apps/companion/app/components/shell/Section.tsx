@@ -19,15 +19,15 @@ export default function Section({
   return (
     <section className={PANEL}>
       {!heads ? null : (
-      <div className="flex items-baseline justify-between gap-3 border-b border-line pb-1">
-        {/* `font-chrome`, not `font-display`, which is reserved for figures. */}
-        {title === undefined ? (
-          <span />
-        ) : (
-          <h2 className={`font-chrome ${SMALL_CAPS} text-muted`}>{title}</h2>
-        )}
-        {aside ? <span className={QUIET_NOTE}>{aside}</span> : null}
-      </div>
+        <div className="flex items-baseline justify-between gap-3 border-b border-line pb-1">
+          {/* `font-chrome`, not `font-display`, which is reserved for figures. */}
+          {title === undefined ? (
+            <span />
+          ) : (
+            <h2 className={`font-chrome ${SMALL_CAPS} text-muted`}>{title}</h2>
+          )}
+          {aside ? <span className={QUIET_NOTE}>{aside}</span> : null}
+        </div>
       )}
       {children}
     </section>
