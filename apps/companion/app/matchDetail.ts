@@ -15,32 +15,16 @@ import {
   streamCredits,
 } from "@epl/core";
 import {
+  ofFixture,
   optaToCode,
   plFixture,
   plStream,
-  theirFixture,
 } from "./plFeed";
 
 
-// One match's detail read (`/fixtures/{id}`), resolved from our fixture code by `ofFixture`: the
+// One match's detail read (`/fixtures/{id}`), resolved from our fixture code by `ofFixture` (`plFeed.ts`): the
 // facts, the team sheets, the men's events and names, the injuries, the goals and the stream's
 // assist credits. The match's other reads are in `matchFeed.ts`.
-
-/** Resolve their fixture id, read it and map it, answering `absent` at every step that can fail. */
-async function ofFixture<T>(
-  gameweek: number | null,
-  fixtureCode: number,
-  absent: T,
-  read: (id: number) => Promise<T>,
-): Promise<T> {
-  if (gameweek === null) return absent;
-  try {
-    const fixture = await theirFixture(gameweek, fixtureCode);
-    return fixture === null ? absent : await read(fixture.id);
-  } catch {
-    return absent;
-  }
-}
 
 /** Where a match was played, how many watched and who refereed, off the detail read: the round read
  *  carries no officials. Null when they will not answer, and the caller falls back to `clubGround`. */
@@ -48,7 +32,7 @@ export async function matchFacts(
   gameweek: number | null,
   fixtureCode: number,
 ): Promise<PlMatchFacts | null> {
-  return ofFixture(gameweek, fixtureCode, null, async (id) => plMatchFacts(await plFixture(id)));
+  return ofFixture(gameweek, fixtureCode, null, async ({ id }) => plMatchFacts(await plFixture(id)));
 }
 
 /** Both sides' team sheets for one of our fixtures, or null at any step that fails. */
@@ -57,7 +41,7 @@ export async function teamSheets(
   fixtureCode: number,
   players: readonly FootballPlayer[],
 ): Promise<ReturnType<typeof plTeamSheets>> {
-  return ofFixture(gameweek, fixtureCode, null, async (id) =>
+  return ofFixture(gameweek, fixtureCode, null, async ({ id }) =>
     plTeamSheets(await plFixture(id), optaToCode(players)),
   );
 }
@@ -69,7 +53,7 @@ export async function matchManEvents(
   fixtureCode: number,
   players: readonly FootballPlayer[],
 ): Promise<Map<number, PlManMatch>> {
-  return ofFixture(gameweek, fixtureCode, new Map<number, PlManMatch>(), async (id) =>
+  return ofFixture(gameweek, fixtureCode, new Map<number, PlManMatch>(), async ({ id }) =>
     plManMatches(await plFixture(id), optaToCode(players)),
   );
 }
@@ -81,7 +65,7 @@ export async function matchStreamCredits(
   fixtureCode: number,
   players: readonly FootballPlayer[],
 ): Promise<StreamCredit[]> {
-  return ofFixture(gameweek, fixtureCode, [] as StreamCredit[], async (id) => {
+  return ofFixture(gameweek, fixtureCode, [] as StreamCredit[], async ({ id }) => {
     const [fixture, stream] = await Promise.all([plFixture(id), plStream(id)]);
     return streamCredits(stream.events.content, plPlayerCodes(fixture, optaToCode(players)));
   });
@@ -93,7 +77,7 @@ export async function matchPlayerNames(
   gameweek: number | null,
   fixtureCode: number,
 ): Promise<string[]> {
-  return ofFixture(gameweek, fixtureCode, [] as string[], async (id) => {
+  return ofFixture(gameweek, fixtureCode, [] as string[], async ({ id }) => {
     const fixture = await plFixture(id);
     return (fixture.teamLists ?? []).flatMap((list) =>
       list === null ? [] : [...list.lineup, ...list.substitutes].map((man) => man.name.display),
@@ -108,7 +92,7 @@ export async function matchInjuries(
   fixtureCode: number,
   players: readonly FootballPlayer[],
 ): Promise<Map<number, number>> {
-  return ofFixture(gameweek, fixtureCode, new Map<number, number>(), async (id) => {
+  return ofFixture(gameweek, fixtureCode, new Map<number, number>(), async ({ id }) => {
     const [fixture, stream] = await Promise.all([plFixture(id), plStream(id)]);
     return injuryMinutes(stream.events.content, plPlayerCodes(fixture, optaToCode(players)));
   });
@@ -119,7 +103,7 @@ export async function matchGoals(
   fixtureCode: number,
   players: readonly FootballPlayer[],
 ): Promise<PlGoal[]> {
-  return ofFixture(gameweek, fixtureCode, [] as PlGoal[], async (id) =>
+  return ofFixture(gameweek, fixtureCode, [] as PlGoal[], async ({ id }) =>
     plGoals(await plFixture(id), optaToCode(players)),
   );
 }

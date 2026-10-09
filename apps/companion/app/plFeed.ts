@@ -82,6 +82,23 @@ export async function theirFixture(
   return round.content.find((fixture) => plFixtureCode(fixture) === fixtureCode) ?? null;
 }
 
+/** Their fixture for one of ours, read through `read`, answering `absent` at every step that can fail: a null
+ *  gameweek (a postponement loses its round), no such fixture, or their API down. */
+export async function ofFixture<T>(
+  gameweek: number | null,
+  fixtureCode: number,
+  absent: T,
+  read: (fixture: RawPlFixture) => Promise<T>,
+): Promise<T> {
+  if (gameweek === null) return absent;
+  try {
+    const fixture = await theirFixture(gameweek, fixtureCode);
+    return fixture === null ? absent : await read(fixture);
+  } catch {
+    return absent;
+  }
+}
+
 /** The highlights playlist as raw XML, one cache key for every match page; throws on a bad response. */
 export const highlightsFeed = unstable_cache(
   async () => fetchHighlightsFeed(),
