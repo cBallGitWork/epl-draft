@@ -1,4 +1,5 @@
 import { PREDICTIONS } from "../../config";
+import { howMany, listed } from "../../format";
 import { ordinal } from "../../league/ordinal";
 import { groupedBy } from "../../grouped";
 import type { PredictionCall } from "../predictions/pick";
@@ -22,6 +23,8 @@ export function tieFacts(index: number, home: PredictionSide, away: PredictionSi
   // The sides the story or the gut reason already speaks for: a doubt is the favourite's alone.
   const covered = new Set<PredictionSide>(story !== null ? [story.side] : call.instinct === "doubt" ? [favourite] : call.instinct === null ? [] : [home, away]);
   const used = new Set(story === null ? [] : [story.man.name]);
+  // The doubt's gut reason names the favourite's best man: no later line names him again.
+  if (call.instinct === "doubt" && favourite.best !== null) used.add(favourite.best.name);
   const fresh = (men: readonly (SquadMan | null)[]) => men.find((man): man is SquadMan => man !== null && !used.has(man.name)) ?? null;
   const take = (man: SquadMan | null) => {
     if (man !== null) used.add(man.name);
@@ -111,7 +114,7 @@ function together(index: number, home: PredictionSide, away: PredictionSide): (s
   const clubmates = [home, away].map((side) => {
     const byClub = groupedBy(side.keyMen.filter((man) => man.club !== ""), (man) => man.club);
     const shared = [...byClub].find(([, men]) => men.length > 1);
-    return shared === undefined ? null : `- T${index}-club: ${side.name}'s ${shared[1].map((man) => man.name).join(" and ")} both play for ${shared[0]}.`;
+    return shared === undefined ? null : `- T${index}-club: ${side.name}'s ${listed(shared[1].map((man) => man.name))} ${shared[1].length === 2 ? "both" : "all"} play for ${shared[0]}.`;
   });
   // A big game when each man's club is at an extreme in the other's view.
   const meeting = home.keyMen.flatMap((ours) =>
@@ -180,7 +183,7 @@ export function played(side: PredictionSide): boolean {
 
 function form(side: PredictionSide): string {
   const f = side.form as NonNullable<PredictionSide["form"]>;
-  const record = `${side.name} are ${ordinal(f.rank)}: won ${f.won}, drawn ${f.drawn}, lost ${f.lost}, ${f.points} points.`;
+  const record = `${side.name} are ${ordinal(f.rank)}: won ${f.won}, drawn ${f.drawn}, lost ${f.lost}, ${howMany(f.points, "point")}.`;
   const last =
     f.last === null
       ? ""

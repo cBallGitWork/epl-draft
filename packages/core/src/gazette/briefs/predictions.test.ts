@@ -120,6 +120,26 @@ describe("buildLawroBrief", () => {
     expect(brief([clear])).not.toMatch(/-club:|-meet:/u);
   });
 
+  it("names three men from one club as a list, and all of them", () => {
+    const three = tie(side("cp", "Cold Palmer", 52.1, [man("Saka", 20), man("Rice", 19), man("Odegaard", 18)]), side("hg", "Haaland Globetrotters", 41.6, [man("Haaland", 25, { club: "Manchester City" })]));
+    expect(brief([three])).toContain("T1-club: Cold Palmer's Saka, Rice and Odegaard all play for Arsenal.");
+  });
+
+  it("states a gut call's doubt once, as the reason, and never again as the tie's extra line", () => {
+    const injured: Availability = { state: "injured", label: "Inj", out: true, chance: 0, news: "Hamstring injury - 0% chance of playing" };
+    const doubt = tie(side("cp", "Cold Palmer", 50, [man("Saka", 30, { availability: injured }), man("Rice", 9, { club: "West Ham United" })]), side("hg", "Haaland Globetrotters", 48, [man("Isak", 6, { club: "Newcastle United" })]));
+    expect(doubt.call.instinct).toBe("doubt");
+    const facts = (brief([doubt]) ?? "").split("\n").filter((line) => line.startsWith("- T1"));
+    expect(facts.filter((line) => line.includes("Saka"))).toEqual(["- T1-gut: Cold Palmer's best man, Saka (M, Arsenal, home to Leeds United), is injured. FPL's note: Hamstring injury."]);
+  });
+
+  it("gives a side on one point its point in the singular", () => {
+    const one = { rank: 4, won: 0, drawn: 1, lost: 0, points: 1, last: null, run: "D" };
+    const text = brief([tie({ ...side("cp", "Cold Palmer", 52.1, [man("Saka", 20)]), form: one }, side("hg", "Haaland Globetrotters", 41.6, [man("Haaland", 25)]))]) ?? "";
+    expect(text).toContain("- T1H-form: Cold Palmer are 4th: won 0, drawn 1, lost 0, 1 point.");
+    expect(text).toContain("- T1A-form: Haaland Globetrotters are 2nd: won 2, drawn 0, lost 0, 6 points.");
+  });
+
   it("says how likely a man is to play in words, by FPL's chance or its status", () => {
     const at = (chance: number | null, state: Availability["state"] = "doubt"): Availability => ({ state, label: "", out: state !== "doubt" || chance === 0, chance, news: "" });
     const alone = (name: string, availability: Availability) =>
