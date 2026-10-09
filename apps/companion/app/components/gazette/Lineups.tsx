@@ -86,7 +86,7 @@ function Side({
                   two hundred and twenty names is noise, and the question this
                   list answers is which of them somebody holds. */}
               {man.owner === undefined ? null : (
-                <span className="text-muted"> ({shortName(man.owner, named(man.owner))})</span>
+                <span className="text-muted"> (<em>{shortName(man.owner, named(man.owner))}</em>)</span>
               )}
               {/* Printed as predicted, never replaced: the mark says the football has him out or in doubt. */}
               {man.status === undefined ? null : (
