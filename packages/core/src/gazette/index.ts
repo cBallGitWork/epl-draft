@@ -119,7 +119,7 @@ export { reportMen } from "./reports/men";
 export type { SeasonLine } from "./reports/men";
 export { sideFigures } from "./reports/figures";
 export { surname } from "./reports/keyStats";
-export type { ReportDayInput, ReportMan, ReportMatchInput } from "./reports/types";
+export type { HeadToHeadStake, ReportDayInput, ReportMan, ReportMatchInput } from "./reports/types";
 export { checkReports } from "./reports/checks";
 export { correct, matchOf, mergeReports, plainHead, readReportsDraft } from "./reports/draft";
 export type { ReportsDraft } from "./reports/draft";

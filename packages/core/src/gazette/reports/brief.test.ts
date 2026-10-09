@@ -8,7 +8,7 @@ import type { ReportDayInput } from "./types";
 const input = (over: Partial<ReportDayInput> = {}): ReportDayInput => ({
   day: "2026-09-19",
   gameweek: 5,
-  matches: [spursVilla({ holders: new Map([[codeOf("Porro"), { team: "Dave's Dons", fielded: true, round: null, h2h: { opponent: "Notemail", us: 49, them: 40, over: false } }]]), points: new Map([[codeOf("Porro"), 2]]) })],
+  matches: [spursVilla({ holders: new Map([[codeOf("Porro"), { team: "Dave's Dons", fielded: true, round: null, h2h: [{ opponent: "Notemail", us: 49, them: 40, over: false }] }]]), points: new Map([[codeOf("Porro"), 2]]) })],
   season: [fixture],
   clubs: [SPURS, VILLA],
   ...over,
@@ -60,7 +60,7 @@ describe("buildReportsBrief on Tottenham 2-3 Aston Villa", () => {
   });
 
     it("gives a head-to-head as who leads whom, the higher figure first", () => {
-    const buendia = input({ matches: [spursVilla({ holders: new Map([[codeOf("Buendía"), { team: "Notemail", fielded: true, round: null, h2h: { opponent: "test2", us: 34, them: 38, over: false } }]]), points: new Map([[codeOf("Buendía"), 7]]) })] });
+    const buendia = input({ matches: [spursVilla({ holders: new Map([[codeOf("Buendía"), { team: "Notemail", fielded: true, round: null, h2h: [{ opponent: "test2", us: 34, them: 38, over: false }] }]]), points: new Map([[codeOf("Buendía"), 7]]) })] });
     expect(buildReportsBrief("2026-09-19", 5, deskDay(buendia))).toContain("in their head-to-head this gameweek, test2 leads Notemail 38-34");
   });
 
