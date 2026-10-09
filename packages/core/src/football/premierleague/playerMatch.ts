@@ -1,6 +1,7 @@
 import { optaMetrics } from "./map";
 import type { RawPlFixture } from "./raw";
 import type { RawPlPlayerStats } from "./rawStats";
+import { namedMen } from "./teamSheet";
 
 // One man's match in Opta's counts: those FPL's live feed does not split, which Fantrax scores, and his attacking.
 
@@ -92,9 +93,5 @@ export function sumParts(matches: readonly MatchParts[]): MatchParts | null {
 
 /** The Premier League's id for a man either side named, found by his Opta code; null when neither did. */
 export function plPlayerId(fixture: RawPlFixture, opta: string): number | null {
-  for (const list of fixture.teamLists ?? []) {
-    const man = list === null ? undefined : [...list.lineup, ...list.substitutes].find((p) => p.altIds?.opta === opta);
-    if (man !== undefined) return man.id;
-  }
-  return null;
+  return namedMen(fixture).find((man) => man.altIds?.opta === opta)?.id ?? null;
 }
