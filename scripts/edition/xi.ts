@@ -16,8 +16,8 @@ import { display } from "./pressers";
 // The predicted elevens, printed from the export and never written from it: no model call, since every word is a name,
 // a position or a count, and a writer handed two hundred and twenty footballers can only mis-transcribe them.
 
-/** Scout's latest elevens when they were made for this round, else null: the column is filed as
- *  that round's predictions, so an older eleven would print a wrong fact. The app draws it anyway. */
+/** Scout's latest elevens when they were made for this gameweek, else null: the column is filed as
+ *  that gameweek's predictions, so an older eleven would print a wrong fact. The app draws it anyway. */
 export function readXi(gameweek: number): IntelXi | null {
   const xi = readIntel<IntelXi>("xi");
   return xi?.manifest?.gameweek === gameweek ? xi : null;
@@ -41,12 +41,12 @@ export function xiColumn(input: {
 
   const printed =
     lineups.length === ties.length
-      ? `All ${ties.length} of the round's matches`
-      : `${lineups.length} of the round's ${ties.length} matches`;
+      ? `All ${ties.length} of the gameweek's matches`
+      : `${lineups.length} of the gameweek's ${ties.length} matches`;
 
   return {
     headline: `Predicted Line-Ups: Gameweek ${gameweek}`,
-    deck: `Every club's expected starting eleven for the round, match by match.`,
+    deck: `Every club's expected starting eleven for the gameweek, match by match.`,
     body: `${printed}, with both sides named.`,
     lineups,
   };
