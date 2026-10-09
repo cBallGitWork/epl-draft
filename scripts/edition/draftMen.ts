@@ -22,6 +22,10 @@ export interface ManReads {
   arrivals: ReadonlyMap<string, { teamId: string; how: "claim" | "trade" }>;
 }
 
+/** His surname as a report prints it: FPL's web name without the initial it tells a squad apart by, "Fernandes" for
+ *  "B.Fernandes", as the team sheets' `printName` does. */
+const reportName = (name: string) => name.replace(/^(?:\p{Lu}\.\s*)+/u, "") || name;
+
 export function draftManOf(m: SheetMan, sheet: Sheet, r: ManReads): DraftMan {
   const club = m.player.clubId;
   const games = r.fixtures.filter((f) => involves(f, club));
@@ -40,7 +44,7 @@ export function draftManOf(m: SheetMan, sheet: Sheet, r: ManReads): DraftMan {
     code: m.player.code,
     clubCode: r.clubs.get(club)?.code ?? 0,
     clubId: club,
-    name: ukSpelling(m.player.name),
+    name: ukSpelling(reportName(m.player.name)),
     fullName: ukSpelling(fullPrintName(m.player)),
     club: r.clubs.get(club)?.name ?? "?",
     slot: m.slot,
