@@ -12,7 +12,7 @@ import { refusedAs } from "../../refusals";
 // An ARRAY crosses the cache and a Map is built after it: `unstable_cache` round-trips JSON, and a Map comes back `{}`.
 
 /** One category's lines, in a shape that survives JSON. */
-export interface CategoryEntry {
+interface CategoryEntry {
   category: string;
   lines: CategoryLine[];
 }

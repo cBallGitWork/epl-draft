@@ -2,7 +2,7 @@ import { clubById } from "@epl/core";
 import Nothing from "../../../components/shell/Nothing";
 import PremShell from "../../Shell";
 import { clubPlaces } from "../../places";
-import Rounds, { byRound, panelRows } from "../../Rounds";
+import Rounds, { byRound } from "../../Rounds";
 import { footballNow, seasonFixtures } from "../../../football";
 
 // Every finished match by round, newest first; FPL scores a match in play, and that belongs on Live.
@@ -29,9 +29,7 @@ export default async function ResultsPage() {
   }
 
   return (
-    <PremShell current="results"
-      rows={panelRows(played)}
-    >
+    <PremShell current="results">
       <Rounds rounds={played} clubs={clubById(snapshot)} places={places} />
     </PremShell>
   );

@@ -2,7 +2,7 @@ import { clubById } from "@epl/core";
 import Nothing from "../../../components/shell/Nothing";
 import PremShell from "../../Shell";
 import { clubPlaces } from "../../places";
-import Rounds, { byRound, panelRows } from "../../Rounds";
+import Rounds, { byRound } from "../../Rounds";
 import { footballNow, seasonFixtures } from "../../../football";
 
 // Every upcoming fixture by round, soonest first; a match in play is on Live, not here or Results.
@@ -29,9 +29,7 @@ export default async function FixturesPage() {
   }
 
   return (
-    <PremShell current="fixtures"
-      rows={panelRows(ahead)}
-    >
+    <PremShell current="fixtures">
       <Rounds rounds={ahead} clubs={clubById(snapshot)} places={places} />
     </PremShell>
   );

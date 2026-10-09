@@ -140,7 +140,7 @@ export default async function PlayersPage({
       ) : null}
 
       {shown.length === 0 ? (
-        <p className=" border border-line bg-surface px-3 py-2.5 text-sm text-muted">
+        <p className="border border-line bg-surface px-3 py-2.5 text-sm text-muted">
           Nobody in the pool matches that. Tap a filter again to clear it.
         </p>
       ) : (
