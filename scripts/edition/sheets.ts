@@ -179,8 +179,6 @@ async function newsFor(facts: DeskFacts, now: string): Promise<Map<string, Playe
 
 /** Each side's paragraph from the latest earlier team-news article, by team id. */
 function lastWrote(period: number): Map<string, string> {
-  const last = readArchive(FANTRAX_LEAGUE_ID, "sheets")
-    .filter((story) => story.period < period)
-    .sort((a, b) => b.period - a.period)[0];
+  const last = readArchive("sheets").find((story) => story.period < period);
   return new Map((last?.extras?.sheets ?? []).flatMap((tie) => [[tie.home.teamId, tie.home.line], [tie.away.teamId, tie.away.line]] as const));
 }

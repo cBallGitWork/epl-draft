@@ -1,5 +1,4 @@
 import {
-  FANTRAX_LEAGUE_ID,
   LAWRO_CORE,
   PAPER_TITLE,
   assembleSeason,
@@ -34,7 +33,7 @@ export async function writeSeason(desk: SeasonDesk, brief: string, say: Say): Pr
     facts: [brief, LAWRO_CORE, ...desk.clubs, "Lawro", "Anfield", PAPER_TITLE].join("\n"),
     offered: [],
     names: desk.names,
-    past: readArchive(FANTRAX_LEAGUE_ID, "predictions").sort((a, b) => b.period - a.period).map(proseOf),
+    past: readArchive("predictions").map(proseOf),
   };
   const attempt = (raw: Record<string, unknown>) => {
     const draft = readSeasonDraft(raw, desk.calls);

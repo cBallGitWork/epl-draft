@@ -119,9 +119,7 @@ export async function predictionsDesk(input: {
   const projected = new Map(mapProjectedTotals(live).map((guess) => [guess.teamId, guess.points]));
   const form = seasonForm(input.table, info.matchups, results === null ? [] : mapSeasonResults(results));
   const named = new Map(info.teams.map((team) => [team.teamId, team.name]));
-  const columns = readArchive(FANTRAX_LEAGUE_ID, "predictions")
-    .filter((story) => story.period < round.period)
-    .sort((a, b) => b.period - a.period);
+  const columns = readArchive("predictions").filter((story) => story.period < round.period);
   const prose = columns.map(proseOf);
   // A man he wrote about lately is old news, unless the week gives him something new.
   const recent = prose.slice(0, PREDICTIONS.wornColumns).join("\n");
