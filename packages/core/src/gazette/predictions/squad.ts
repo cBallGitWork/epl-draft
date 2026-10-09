@@ -48,12 +48,19 @@ export function squadMen(team: RosteredTeam, join: SquadJoin): SquadMan[] {
         home: cell.home,
         standing: standing(cell.opponent.code, back ? "attack" : "defence", join.standing),
       })),
-      ease: row?.mean ?? null,
+      ease: easeOf(row, join.standing.attack.size > 0),
       liverpool: club?.code === PREDICTIONS.liverpoolCode,
       recent: join.recent.get(player.id) ?? [],
       face: { code: player.code, name: player.name, clubId: player.clubId, position: positions.includes("G") ? "G" : null },
     };
   });
+}
+
+/** His line's ease this round: null when nobody he plays is rated, and a blank's the hardest only when clubs are. */
+function easeOf(row: PlannerRow | undefined, rated: boolean): number | null {
+  const round = row?.cells[0];
+  if (row === undefined || round === undefined) return null;
+  return (round.length === 0 ? rated : round.some((cell) => cell.rank !== null)) ? row.mean : null;
 }
 
 /** An opponent's standing at what this man faces, in an old man's words, and only at the extremes. */

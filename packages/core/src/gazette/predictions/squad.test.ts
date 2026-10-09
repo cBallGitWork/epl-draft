@@ -69,6 +69,16 @@ describe("squadMen", () => {
     // No projection is no reading, which is not nought.
     expect(nobody).toMatchObject({ horizon: null, ease: 18 });
   });
+
+  it("gives no ease where nobody he plays is rated, and a blank the hardest only when the clubs are", () => {
+    // What plannerRows makes of an opponent with no rating: no rank, and the run's mean the hardest, nought with no ratings.
+    const unrated = (clubOf: Club, opponent: Club, mean: number): PlannerRow => ({ club: clubOf, cells: [[{ opponent, home: true, rank: null }]], mean });
+    const blank = (clubOf: Club, mean: number): PlannerRow => ({ club: clubOf, cells: [[]], mean });
+    const none = { attack: new Map<number, number>(), defence: new Map<number, number>() };
+    const ease = (join: Partial<SquadJoin>) => squadMen(team(["ACTIVE", "ACTIVE", "ACTIVE", "RESERVE"], ["F", "M", "D", "G"]), { ...JOIN, ...join }).map((man) => man.ease);
+    expect(ease({ attack: new Map([[1, unrated(ARSENAL, HULL, 0)], [12, blank(LIVERPOOL, 0)]]), defence: new Map([[1, unrated(ARSENAL, HULL, 0)], [20, blank(HULL, 0)]]), standing: none })).toEqual([null, null, null, null]);
+    expect(ease({ attack: new Map([[1, unrated(ARSENAL, HULL, 20)], [12, blank(LIVERPOOL, 20)]]) }).slice(0, 2)).toEqual([null, 20]);
+  });
 });
 
 describe("predictionSide", () => {
@@ -88,6 +98,12 @@ describe("predictionSide", () => {
     expect(side.backLine.map((man) => man.name)).toEqual(["Gabriel", "Nobody"]);
     expect(side.backLineEase).toBe((1 + 18) / 2);
     expect(side.hard?.name).toBe("Nobody");
+  });
+
+  it("takes the hard fixture from a man who has a game, never a blank", () => {
+    const blanker = { ...men[0], name: "Blanker", horizon: 99, fixtures: [], ease: 20 };
+    const withBlank = predictionSide({ teamId: "cp", name: "Cold Palmer", projected: 44, men: [blanker, ...men], hardest: 20, arrivals: [], form: null, worn: new Set() });
+    expect(withBlank.hard?.name).toBe("Nobody");
   });
 });
 

@@ -63,7 +63,7 @@ function storyOf(sides: readonly PredictionSide[]): { side: PredictionSide; man:
   const stories: [pick: (side: PredictionSide) => SquadMan | null, text: (side: PredictionSide, man: SquadMan) => string][] = [
     [(side) => main(side, side.kind), (side, man) => `${lead(side, man.name)}, has an easy one: ${fixture(man)}.`],
     [(side) => side.keyMen.find((each) => streak(each) !== null) ?? null, (side, man) => `${lead(side, `${man.name} (${man.club})`)}, ${streak(man)}.`],
-    [(side) => main(side, side.hard?.fixtures.length === 0 ? null : side.hard), (side, man) => `${lead(side, man.name)}, has a difficult one: ${fixture(man)}.`],
+    [(side) => main(side, side.hard), (side, man) => `${lead(side, man.name)}, has a difficult one: ${fixture(man)}.`],
     [(side) => main(side, side.doubts[0]), (side, man) => `${doubt(man, side.name)} One of their main men.`],
   ];
   for (const [pick, text] of stories) {
