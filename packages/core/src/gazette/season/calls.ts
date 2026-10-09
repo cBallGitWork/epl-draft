@@ -71,9 +71,17 @@ export function seasonCalls(played: PlayedSeason, squads: ReadonlyMap<string, re
       lead: at % 2 === 0 ? "man" : "weakness",
     };
   });
-  const [top, second, third] = table;
-  const gap = SEASON_RANKINGS.clear;
-  return { sides, moved: applied, clear: second.meanPlace - top.meanPlace >= gap ? 1 : third.meanPlace - second.meanPlace >= gap ? 2 : 0 };
+  return { sides, moved: applied, clear: clearAtTop(played.table, table) };
+}
+
+/** How many squads are clear at the top by the season's places, 1 or 2, while the editor prints those same squads
+ *  there; 0 when none are. */
+function clearAtTop(code: PlayedSeason["table"], printed: readonly { teamId: string }[]): number {
+  const leaders = [1, 2].find((count) => {
+    const top = new Set(code.slice(0, count).map((row) => row.teamId));
+    return code[count].meanPlace - code[count - 1].meanPlace >= SEASON_RANKINGS.clear && printed.slice(0, count).every((row) => top.has(row.teamId));
+  });
+  return leaders ?? 0;
 }
 
 /** Out, or no better than an even chance by FPL's own figure: a slight doubt is not a weakness. */

@@ -17,8 +17,8 @@ export interface AppliedMove extends EditorMove {
   from: number;
 }
 
-/** The order with each move applied in turn, the sides between shifting one place; a move naming no side in the
- *  order, or a place off its end, is skipped and not recorded. */
+/** The order with each move applied in turn, the sides between shifting one place, and each recorded at the place it
+ *  printed; a move naming no side in the order, or a place off its end, is skipped and not recorded. */
 export function editorsOrder<T extends { teamId: string }>(order: readonly T[], moves: readonly EditorMove[]): { order: T[]; applied: AppliedMove[] } {
   const printed = [...order];
   const applied: AppliedMove[] = [];
@@ -29,7 +29,8 @@ export function editorsOrder<T extends { teamId: string }>(order: readonly T[], 
     printed.splice(move.place - 1, 0, side);
     applied.push({ ...move, from: order.findIndex((each) => each.teamId === move.teamId) + 1 });
   }
-  return { order: printed, applied };
+  // A later move can shift a side an earlier one placed.
+  return { order: printed, applied: applied.map((move) => ({ ...move, place: printed.findIndex((each) => each.teamId === move.teamId) + 1 })) };
 }
 
 /** An editor's moves read field by field from the file; anything malformed is dropped. */

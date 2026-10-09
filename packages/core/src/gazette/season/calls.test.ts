@@ -39,6 +39,15 @@ describe("seasonCalls", () => {
     expect(calls?.moved).toEqual([]);
   });
 
+  it("finds a squad clear only on the code's places, and only while the editor leaves it there", () => {
+    const table = [["a", 1.0], ["u", 1.5], ["c", 3.0], ["r", 3.2]].map(([teamId, meanPlace]) => ({ teamId: String(teamId), name: String(teamId), meanPlace: Number(meanPlace), placed: [] }));
+    const played = { ...PLAYED, table };
+    expect(seasonCalls(played, SQUADS, [])?.clear).toBe(2);
+    // Rovers moved second are not clear of anybody, and Albion alone never were.
+    expect(seasonCalls(played, SQUADS, [{ teamId: "r", place: 2, by: "Craig", on: "2026-10-05", said: "" }])?.clear).toBe(0);
+    expect(seasonCalls(played, SQUADS, [{ teamId: "u", place: 1, by: "Craig", on: "2026-10-05", said: "" }])?.clear).toBe(2);
+  });
+
   it("ranks nothing for a league too small to rank", () => {
     expect(seasonCalls({ ...PLAYED, table: PLAYED.table.slice(0, 2) }, SQUADS, [])).toBeNull();
   });
