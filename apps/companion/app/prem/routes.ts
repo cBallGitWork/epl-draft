@@ -4,6 +4,9 @@
 /** The competition itself — the table. */
 export const PREM = "/prem";
 
+/** Where the Prem section opens from the nav (Craig, 24 Sep 2026: "default should land on results"). */
+export const PREM_RESULTS = `${PREM}/results`;
+
 /** The route the club pages hang off. */
 export const CLUB = `${PREM}/club`;
 
