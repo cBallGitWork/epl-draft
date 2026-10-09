@@ -176,7 +176,7 @@ export {
 export type { SetPieceRank } from "./intel/map";
 export { parseScoutXi, xiToWrite } from "./intel/scout";
 export { joinRotowireSide, parseRotowireXi } from "./intel/rotowire";
-export type { RotowireSide, RotowireTie } from "./intel/rotowire";
+export type { RotowireTie } from "./intel/rotowire";
 export {
   defaultDescendingTable,
   isTableSortKey,

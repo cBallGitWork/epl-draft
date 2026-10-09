@@ -46,16 +46,14 @@ export function parseRotowireXi(html: string): RotowireTie[] {
 
 function side(abbr: string, list: string): RotowireSide {
   const [eleven, injuries = ""] = list.split(INJURIES);
-  const drawn = [...eleven.matchAll(PLAYER)].map(([, pos, id, tag]) => ({ row: rowOf(pos.trim()), id: Number(id), tag }));
+  const drawn = men(eleven);
   // Rows numbered as Scout numbers them, keeper "1" and each line drawn after it, so an empty line takes no number.
   const lines = [...new Set(drawn.map((man) => man.row))].sort((a, b) => a - b);
   const counts = lines.map((row) => drawn.filter((man) => man.row === row).length);
   const slots = Object.fromEntries(counts.map((count, at) => [String(at + 1), count]));
 
   const absent = new Map<number, IntelAbsence["status"]>();
-  for (const [, , id, tag] of [...eleven.matchAll(PLAYER), ...injuries.matchAll(PLAYER)]) {
-    if (tag !== undefined && TAGS[tag] !== undefined) absent.set(Number(id), TAGS[tag]);
-  }
+  for (const man of [...drawn, ...men(injuries)]) if (TAGS[man.tag] !== undefined) absent.set(man.id, TAGS[man.tag]);
   return {
     abbr,
     confirmed: /Confirmed/i.test(eleven.split(/<li class="lineup__player">/)[0]),
@@ -68,8 +66,13 @@ function side(abbr: string, list: string): RotowireSide {
   };
 }
 
-function rowOf(pos: string): number {
-  return ROWS.findIndex((row) => row.test(pos));
+/** Each man listed: his pitch row (-1 for a label no row takes), his RotoWire id and his tag, "" for none. */
+function men(list: string): { row: number; id: number; tag: string }[] {
+  return [...list.matchAll(PLAYER)].map(([, pos, id, tag = ""]) => ({
+    row: ROWS.findIndex((row) => row.test(pos.trim())),
+    id: Number(id),
+    tag,
+  }));
 }
 
 /** How sure a RotoWire eleven is taken to be: Scout's 0.9 for a prediction, certain once confirmed. */

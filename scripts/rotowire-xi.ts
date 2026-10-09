@@ -36,7 +36,7 @@ async function main(): Promise<void> {
   const [fixtures, bootstrap] = await Promise.all([fetchFixtures().then(mapFixtures), fetchBootstrap()]);
   const gameweek = nextRound(fixtures, now)?.gameweek ?? null;
   const shortName = new Map(bootstrap.teams.map((team) => [team.id, team.short_name]));
-  const league = new Set(fixtures.map((fixture) => shortName.get(fixture.homeClubId)));
+  const league = [...new Set(fixtures.flatMap((fixture) => shortName.get(fixture.homeClubId) ?? []))];
   const ties = fixtures
     .filter((fixture) => fixture.gameweek === gameweek)
     .map((fixture) => ({ home: shortName.get(fixture.homeClubId) ?? "", away: shortName.get(fixture.awayClubId) ?? "" }));
@@ -68,18 +68,18 @@ async function main(): Promise<void> {
     console.error(`rotowire-xi: RotoWire unread (${error instanceof Error ? error.message : String(error)}); Scout instead.`);
   }
 
-  const missing = [...league].filter((club) => club !== undefined && clubs[club] === undefined);
+  const missing = league.filter((club) => clubs[club] === undefined);
   if (missing.length > 0) {
     const scout = parseScoutXi(await page(SCOUT_TEAM_NEWS_URL));
-    for (const club of missing) if (club !== undefined && xiFault(scout[club]) === null) clubs[club] = scout[club];
+    for (const club of missing) if (xiFault(scout[club]) === null) clubs[club] = scout[club];
     used.push(SCOUT_TEAM_NEWS_URL);
     console.log(`rotowire-xi: Scout asked for ${missing.join(", ")}.`);
   }
 
-  const short = [...league].filter((club) => club === undefined || clubs[club] === undefined);
+  const short = league.filter((club) => clubs[club] === undefined);
   if (short.length > 0) {
-    console.error(`rotowire-xi: ${league.size - short.length} of ${league.size} clubs read; nothing written.`);
-    for (const club of short) console.error(`  ✗ ${club ?? "an unnamed club"}: no full eleven`);
+    console.error(`rotowire-xi: ${league.length - short.length} of ${league.length} clubs read; nothing written.`);
+    for (const club of short) console.error(`  ✗ ${club}: no full eleven`);
     process.exitCode = 1;
     return;
   }
