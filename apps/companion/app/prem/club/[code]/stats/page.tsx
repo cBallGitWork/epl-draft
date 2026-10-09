@@ -17,8 +17,7 @@ export const revalidate = 30;
 
 export default async function ClubStatsPage({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
-  const { club, snapshot } = await clubOr404(code);
-  const league = await leagueOpinions();
+  const [{ club, snapshot }, league] = await Promise.all([clubOr404(code), leagueOpinions()]);
 
   const rows: Row[] = squadOf(snapshot, club.id)
     .sort(squadOrder(league, (code) => intelSquads.get(code)?.depthTier))

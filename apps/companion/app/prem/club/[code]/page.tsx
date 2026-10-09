@@ -29,8 +29,7 @@ export const revalidate = 30;
 
 export default async function ClubSquadPage({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
-  const { club, snapshot, fixtures } = await clubOr404(code);
-  const league = await leagueOpinions();
+  const [{ club, snapshot, fixtures }, league] = await Promise.all([clubOr404(code), leagueOpinions()]);
 
   const place = clubPlaces(fixtures, snapshot.clubs).get(club.id);
 
