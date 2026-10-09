@@ -1,4 +1,4 @@
-import { clubById, londonDayAndDate, onTheBooks, playerByCode, type FootballPlayer } from "@epl/core";
+import { clubById, onTheBooks, playerByCode, type FootballPlayer } from "@epl/core";
 import PremShell from "../../Shell";
 import { DATA } from "../../PremNav";
 import { leagueOpinions } from "../../leagueOpinions";
@@ -6,7 +6,7 @@ import { poolHref } from "../../poolHref";
 import { footballNow } from "../../../football";
 import { getLeaguePool } from "../../../players/pool";
 import { seasonMarks } from "../../../ratings";
-import { intelStats, intelStatsManifest } from "../../../intel";
+import { intelStats, intelStatsDay } from "../../../intel";
 import LeaderBoard, { type Row } from "./LeaderBoard";
 import QuerySelect from "../../../components/shell/QuerySelect";
 import { defconPricing, poolPositions } from "../../../defcon";
@@ -84,7 +84,7 @@ export default async function DataPage({ searchParams }: { searchParams: Search 
                 {section.title}
               </h2>
               {held.some(({ source }) => typeof source === "object" && "stats" in source) ? (
-                <p className={`${MINOR_LABEL} col-span-full px-2`}>Season to {londonDayAndDate(intelStatsManifest.exportedAt)}</p>
+                <p className={`${MINOR_LABEL} col-span-full px-2`}>Season to {intelStatsDay}</p>
               ) : null}
               {held.map((list) => {
                 const open = list.key === asked.key && longest;

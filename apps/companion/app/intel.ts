@@ -29,7 +29,7 @@ import type {
   Shot,
   TouchPlayer,
 } from "@epl/core";
-import { careerIntel, cupIntel, depthIntel, leagueProjectionIntel, lineIntel, matchIntel, minuteMovesIntel, minutesIntel, playedFloor, shotIntel, squadIntel, statIntel, strengthIntel, touchIntel } from "@epl/core";
+import { londonDayAndDate, careerIntel, cupIntel, depthIntel, leagueProjectionIntel, lineIntel, matchIntel, minuteMovesIntel, minutesIntel, playedFloor, shotIntel, squadIntel, statIntel, strengthIntel, touchIntel } from "@epl/core";
 import squadsFile from "../../../data/intel/squads/26-27.json";
 import xiFile from "../../../data/intel/xi/26-27.json";
 import piecesFile from "../../../data/intel/set-pieces/26-27.json";
@@ -108,6 +108,8 @@ export const intelDepthManifest = (depthFile as unknown as IntelDepth).manifest;
 /** The stats league's season counts by FPL code, for every man who has played (`npm run stats`). */
 export const intelStats: Map<number, StatsRow> = statIntel(statsFile as unknown as IntelStats);
 export const intelStatsManifest = (statsFile as unknown as IntelStats).manifest;
+/** The London day the stats league's counts run to, as every "Season to" line prints it. */
+export const intelStatsDay = londonDayAndDate(intelStatsManifest.exportedAt);
 /** Each man's league season in totals by FPL code, last season's and this one's: what the attribute grid rates. */
 export const intelLines: { last: Map<number, PlayerLine>; now: Map<number, PlayerLine> } = {
   last: lineIntel(linesLastFile as unknown as IntelLines),

@@ -4,7 +4,6 @@ import {
   categoryFor,
   groupFor,
   leagueSeason,
-  londonDayAndDate,
   offeredIn,
   ordinal,
   rankBy,
@@ -23,7 +22,7 @@ import Measures, { viewFor, type View } from "./Measures";
 import { getSeasonStats } from "./seasonStats";
 import { getSquadStats } from "./squadStats";
 import { squadColumnsIn } from "./squadColumns";
-import { intelStatsManifest } from "../../intel";
+import { intelStatsDay } from "../../intel";
 import { getSchedule } from "../schedule/schedule";
 import { readerTeamId } from "../../squads";
 import { yoursInk } from "../../mine";
@@ -80,7 +79,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
     <LeagueShell current="teamStats" teams={info.teams.length}>
       <div className="flex items-center justify-between gap-2">
         <Measures view={view} href={(by) => boardHref(by, group, category.key)} />
-        {squad ? <p className={MINOR_LABEL}>Season to {londonDayAndDate(intelStatsManifest.exportedAt)}</p> : null}
+        {squad ? <p className={MINOR_LABEL}>Season to {intelStatsDay}</p> : null}
       </div>
 
       {!squad && begun.length === 0 ? (
