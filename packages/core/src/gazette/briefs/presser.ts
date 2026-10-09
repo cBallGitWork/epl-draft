@@ -27,6 +27,12 @@ const MEANS: Record<string, string> = {
   injury_scare: "a doubt",
 };
 
+/** The tags that keep a man out of the side; a standing doubt or rotation risk is not an absence. */
+const ABSENT: ReadonlySet<string> = new Set(["ruled_out", "suspended"]);
+
+/** A standing absence: out, and nothing new said about it. Neither a bullet nor still out is a standing doubt. */
+export const stillOut = (line: PresserLine) => !line.fresh && ABSENT.has(line.tag);
+
 export function buildPresserBrief(brief: {
   gameweek: number;
   /** Newest first, and every man mentioned — not only the ones we hold. */
@@ -48,8 +54,8 @@ export function buildPresserBrief(brief: {
   }
 
   const clubs = [...byClub.entries()].map(([club, row]) => {
-    // The men whose availability CHANGED get bullets; the rest are a tail line.
-    const standing = row.lines.filter((line) => !line.fresh);
+    // The men whose availability CHANGED get bullets; a standing absence is a tail line.
+    const standing = row.lines.filter(stillOut);
     const men = row.lines.filter((line) => line.fresh).map((line) => {
       // The owner in brackets after the name, never a clause.
       const who = line.ownerName === null ? "" : ` (${line.ownerName})`;
