@@ -22,9 +22,22 @@ describe("the table after the round", () => {
     expect(tableMoves(before, climb).map((f) => f.text)).toContain("test4 rose from 5th to 3rd");
   });
 
+  it("leaves the table unmoved by a draw before any draw has said what one is worth", () => {
+    const won = (teamName: string, rank: number, w: number, l: number, pointsFor: number) => row(teamName, rank, w, 0, l, pointsFor);
+    const noDraws = [won("A", 1, 1, 0, 100), won("B", 2, 1, 0, 90), won("C", 3, 0, 1, 80), won("D", 4, 0, 1, 70)];
+    expect(tableAfter(noDraws, [side("A", 50, 50), side("B", 50, 50), side("C", 60, 40), side("D", 40, 60)])).toBeNull();
+    expect(tableAfter(noDraws, [side("A", 60, 50), side("B", 50, 60), side("C", 60, 40), side("D", 40, 60)])).not.toBeNull();
+  });
+
   it("says a leader stayed top", () => {
     const held = tableAfter(before, [side("Dons", 40, 20), side("123", 20, 40), side("Notemail", 30, 31), side("test4", 10, 50), side("test2", 50, 10)])!;
     expect(tableMoves(before, held)).toContainEqual({ teamId: "Dons", kind: "stayed-top", text: "Dons stayed top" });
+  });
+
+  it("never says a side rose when it is still bottom, level with another", () => {
+    const r = (teamName: string, rank: number) => row(teamName, rank, 0, 0, 0, 0);
+    const moves = tableMoves([r("A", 1), r("B", 2), r("C", 3), r("D", 4)], [r("B", 1), r("A", 2), r("D", 3), r("C", 3)]);
+    expect(moves.map((f) => f.text)).not.toContain("D rose from 4th to 3rd");
   });
 });
 

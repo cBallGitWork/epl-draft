@@ -88,6 +88,17 @@ describe("teamOfTheWeek", () => {
     expect(picked.picks.map((p) => p.playerName)).toEqual(["Keeper A"]);
   });
 
+  it("fields a keeper and every line, however well the outfield did, when the league publishes no minimum", () => {
+    const outfield = [..."DDDDD"].map((p, i) => performer(`D${i}`, p, { goals: 1 }, `d${i}`))
+      .concat([..."MMMMM"].map((p, i) => performer(`M${i}`, p, { goals: 1 }, `m${i}`)))
+      .concat([..."FFF"].map((p, i) => performer(`F${i}`, p, { goals: 1 }, `f${i}`)));
+    const squads = [...outfield, performer("Keeper", "G", { saves: 1 }, "g")];
+    const picked = teamOfTheWeek(squads, limits, UNPRICED);
+    expect(picked.picks.map((p) => p.position).filter((p) => p === "G")).toEqual(["G"]);
+    expect(picked.shape).toBe("1-5-4-1");
+    expect(teamOfTheWeek(squads, { ...limits, minActiveByPosition: { G: 1, D: 3, M: 2, F: 1 } }, UNPRICED).shape).toBe("1-5-4-1");
+  });
+
   it("never picks more than may take the field", () => {
     const squads = Array.from({ length: 14 }, (_, i) =>
       performer(`M${i}`, "M", { assists: 1 }, `t${i}`),

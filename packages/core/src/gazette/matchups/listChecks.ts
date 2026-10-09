@@ -2,7 +2,8 @@ import { DRAFT_WRITING } from "../../config";
 import { banned } from "../banned";
 import { escapeRegExp } from "../../regExp";
 import type { Fault } from "../predictions/checks";
-import { masked, mentionAt, ngrams, numbersIn, sentences } from "../predictions/prose";
+import { mentionAt, ngrams, numbersIn, sentences } from "../predictions/prose";
+import { blanked } from "../proofing";
 import { surname } from "../reports/keyStats";
 import type { Cutoff, MatchupContext } from "./brief";
 import { everyMan } from "./state";
@@ -26,10 +27,17 @@ type Named = { man: DraftMan; names: string[] };
 const SCORE = /\b(\d{1,3})-(\d{1,3})\b/gu;
 /** "a single point", "seven points", "11 points": a figure given as a man's points. */
 const POINTS = /\b(a single|one|[\p{L}\d]+)\s+points?\b/giu;
-/** Words before a figure that make it a gap, not a man's points. */
-const GAP = /\b(?:to|by|deficit|gap|lead|margin|behind|ahead|clear|of)\s+(?:\S+\s+){0,2}$/iu;
+/** Words before a figure that make it a gap or a price, not a man's points: "a clean sheet worth 4 points". */
+const GAP = /\b(?:to|by|deficit|gap|lead|margin|behind|ahead|clear|of|worth)\s+(?:\S+\s+){0,2}$/iu;
 /** Capitalised words that open a sentence or a clause, never a first name. */
-const CAPS = new Set(["The", "A", "An", "And", "But", "Then", "When", "While", "After", "Before", "As", "With", "For", "So", "Yet", "Only", "Even", "Both", "Neither", "Nor", "Or", "If", "Though", "Although", "That", "This", "It", "His", "Their", "Its", "Once", "Until", "Since", "Where", "Not", "No", "All", "Each", "Every", "By", "In", "On", "At", "From", "To", "Of", "Still", "Now", "There", "Here"]);
+const CAPS = new Set([
+  "The", "A", "An", "And", "But", "Then", "When", "While", "After", "Before", "As", "With", "For", "So", "Yet", "Only", "Even", "Both", "Neither",
+  "Nor", "Or", "If", "Though", "Although", "That", "This", "It", "His", "Their", "Its", "Once", "Until", "Since", "Where", "Not", "No", "All",
+  "Each", "Every", "By", "In", "On", "At", "From", "To", "Of", "Still", "Now", "There", "Here",
+  // A reporter's sentence-opening adverbs.
+  "Twice", "Late", "Later", "Early", "Earlier", "Finally", "Again", "Also", "Instead", "Meanwhile", "First", "Next", "Last", "Just", "Already",
+  "Never", "Soon", "Eventually", "Elsewhere", "Otherwise",
+]);
 const WEEKDAY = /\b(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/u;
 const opening = (text: string) => text.split(/\s+/u).slice(0, DRAFT_WRITING.openerWords).join(" ");
 
@@ -80,7 +88,7 @@ export function listFaults(piece: DraftPiece, ctx: MatchupContext, at: number, c
   const men = menOf(ctx);
   // A side's name is no figure, even one spelt in digits.
   const names = [...men.flatMap((m) => m.names), ctx.state.home.side.name, ctx.state.away.side.name, ...sides];
-  const figures = (text: string) => numbersIn(masked(text.replace(SCORE, " "), names).replace(/\u0000/gu, " "));
+  const figures = (text: string) => numbersIn(blanked(text.replace(SCORE, " "), names));
   const prose = piece.paragraphs.join("\n");
   const all = sentences(prose);
 
@@ -104,20 +112,27 @@ export function listFaults(piece: DraftPiece, ctx: MatchupContext, at: number, c
       if (n !== undefined && n !== who[0].man.points && !GAP.test(s.slice(0, hit.index))) flag("a man's points misstated", `${who[0].man.name}: ${hit[0]}, not ${who[0].man.points}`);
     }
   }
-  // A man keeps other clubs out, never his own.
+  // A man keeps other clubs out, never his own: the man named nearest before the words, in their sentence.
   for (const m of men) {
     const own = new RegExp(`(?:kept|keeping|keeps|keep|shut|shutting|shuts)\\s+(?:the\\s+)?${escapeRegExp(m.man.club)}\\s+out|shut(?:ting|s)?\\s+out\\s+(?:the\\s+)?${escapeRegExp(m.man.club)}\\b`, "iu");
-    if (m.names.some((n) => mentionAt(prose, n) >= 0) && own.test(prose)) flag("a man keeping his own club out", `${m.man.name} of ${m.man.club}`, "hard");
+    const kept = all.some((s) => {
+      const hit = own.exec(s);
+      if (hit === null) return false;
+      const before = s.slice(0, hit.index);
+      const nearest = men.map((x) => ({ x, at: Math.max(-1, ...x.names.map((n) => mentionAt(before, n))) })).filter((y) => y.at >= 0).sort((a, b) => b.at - a.at)[0];
+      return nearest?.x === m;
+    });
+    if (kept) flag("a man keeping his own club out", `${m.man.name} of ${m.man.club}`, "hard");
   }
   // A first name the brief never gave is memory, and memory is wrong.
   for (const name of unbriefedNames(prose, ctx, block)) flag("a name the brief does not give", name, "hard");
   const most = at === 0 ? DRAFT_WRITING.leadMen : DRAFT_WRITING.men;
   const everyone = named(prose, men);
   if (everyone.length > most) flag(`more than ${most} men in one match-up`, everyone.map((m) => m.man.name).join(", "));
-  // A haul is more than one return.
+  // A haul is more than one return, or a keeper's haul the brief itself calls one.
   for (const s of all.filter((x) => /\bhaul/iu.test(x))) {
     const who = named(s, men);
-    if (who.length === 1 && who[0].man.goals + who[0].man.assists + who[0].man.cleanSheets < 2) flag("a haul is more than one return", s);
+    if (who.length === 1 && who[0].man.goals + who[0].man.assists + who[0].man.cleanSheets < 2 && !block.includes(`${who[0].man.name} hauled`)) flag("a haul is more than one return", s);
   }
   // Each fact once: a score told twice is the tell.
   const scores = [...prose.matchAll(SCORE)].map((m) => m[0]);

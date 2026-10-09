@@ -6,6 +6,8 @@ import type { TeamFacts, TieFacts } from "../sheets/facts";
 import type { StarterFlag } from "../sheets/flags";
 import type { InForm } from "../sheets/form";
 import { isBack, printName, type SheetMan } from "../sheets/sheet";
+import { briefOf } from "./briefOf";
+import { tally } from "../counted";
 
 // The facts behind the team-news article, per head-to-head and per side. Every sentence the writer
 // may print is already a line here; what a block may not be turned into is said beside it. No
@@ -24,25 +26,21 @@ export function buildSheetsBrief(brief: SheetsBrief): string {
   const sides = brief.ties.flatMap((tie) => [tie.home, tie.away]);
   const names = sides.map((team) => `${team.sheet.teamName} [${team.sheet.teamId}]`).join(", ");
   const allUnchanged = sides.every((team) => team.changes?.count === 0);
-  return [
+  return briefOf([
     `TEAM NEWS, gameweek ${brief.gameweek}. The line-up deadline has passed.`,
     `THE SIDES (use these names EXACTLY; the id in brackets is what you return, never the name): ${names}`,
     allUnchanged ? "EVERY SIDE IS UNCHANGED from last gameweek, and the desk says so above the article. Do not say it again." : null,
     ...brief.ties.map((tie) => fixture(tie, brief, allUnchanged)),
-  ]
-    .filter((block) => block !== null)
-    .join("\n\n");
+  ]);
 }
 
 function fixture(tie: TieFacts, brief: SheetsBrief, allUnchanged: boolean): string {
-  return [
+  return briefOf([
     `HEAD-TO-HEAD: ${tie.home.sheet.teamName} [${tie.home.sheet.teamId}] v ${tie.away.sheet.teamName} [${tie.away.sheet.teamId}]`,
     side(tie.home, brief, allUnchanged),
     side(tie.away, brief, allUnchanged),
     meets(tie, brief),
-  ]
-    .filter((block) => block !== null)
-    .join("\n\n");
+  ]);
 }
 
 function side(team: TeamFacts, brief: SheetsBrief, allUnchanged: boolean): string {
@@ -121,8 +119,7 @@ function benched(benching: Benching, unchanged: boolean): string {
 
 /** "2 goals, 1 assist, 1 clean sheet"; empty when there is nothing to count. */
 function returns(goals: number, assists: number, cleanSheets: number): string {
-  const count = (n: number, one: string, many: string) => (n > 0 ? `${n} ${n === 1 ? one : many}` : null);
-  return [count(goals, "goal", "goals"), count(assists, "assist", "assists"), count(cleanSheets, "clean sheet", "clean sheets")].filter((each) => each !== null).join(", ");
+  return tally([[goals, "goal"], [assists, "assist"], [cleanSheets, "clean sheet"]]);
 }
 
 function inForm(form: InForm): string {

@@ -17,28 +17,31 @@ interface TableFact {
   text: string;
 }
 
+/** What a win and a draw are worth; a draw null until one is in the table to say. */
+type Pay = { win: number; draw: number | null };
+
 /** What the table pays for a win and a draw, solved from its own rows; null when the rows cannot say. */
-export function tablePoints(rows: readonly StandingsRow[]): { win: number; draw: number } | null {
+export function tablePoints(rows: readonly StandingsRow[]): Pay | null {
   const winners = rows.filter((r) => r.won > 0 && r.drawn === 0);
   if (winners.length === 0) return null;
   const win = winners[0].points / winners[0].won;
   if (winners.some((r) => r.points !== win * r.won)) return null;
   const drawers = rows.filter((r) => r.drawn > 0);
-  const draw = drawers.length === 0 ? null : (drawers[0].points - win * drawers[0].won) / drawers[0].drawn;
-  if (draw === null) return rows.some((r) => r.drawn > 0) ? null : { win, draw: 0 };
+  if (drawers.length === 0) return { win, draw: null };
+  const draw = (drawers[0].points - win * drawers[0].won) / drawers[0].drawn;
   return drawers.every((r) => r.points === win * r.won + draw * r.drawn) ? { win, draw } : null;
 }
 
 /** The table as it stood before `period`, rebuilt from each side's settled results: Fantrax's own table may already
- *  hold the gameweek, or not yet, depending on when it is read. */
-export function tableBefore(rows: readonly StandingsRow[], runs: ReadonlyMap<string, readonly FormGame[]>, period: number, pay: { win: number; draw: number }): StandingsRow[] {
+ *  hold the gameweek, or not yet, depending on when it is read. A table with no draw yet has none to count. */
+export function tableBefore(rows: readonly StandingsRow[], runs: ReadonlyMap<string, readonly FormGame[]>, period: number, pay: Pay): StandingsRow[] {
   return placeTable(
     rows.map((row) => {
       const games = (runs.get(row.teamId) ?? []).filter((g) => g.period < period);
       const count = (r: FormGame["result"]) => games.filter((g) => g.result === r).length;
       const [won, drawn, lost] = [count("W"), count("D"), count("L")];
       const sum = (pick: (g: FormGame) => number) => games.reduce((total, g) => total + pick(g), 0);
-      return { ...row, won, drawn, lost, played: games.length, points: won * pay.win + drawn * pay.draw, pointsFor: sum((g) => g.pointsFor), pointsAgainst: sum((g) => g.pointsAgainst) };
+      return { ...row, won, drawn, lost, played: games.length, points: won * pay.win + drawn * (pay.draw ?? 0), pointsFor: sum((g) => g.pointsFor), pointsAgainst: sum((g) => g.pointsAgainst) };
     }),
   );
 }
@@ -46,7 +49,8 @@ export function tableBefore(rows: readonly StandingsRow[], runs: ReadonlyMap<str
 /** The table with the gameweek added, in the league's order; null when what a result is worth cannot be read. */
 export function tableAfter(before: readonly StandingsRow[], results: readonly SideResult[]): StandingsRow[] | null {
   const pay = tablePoints(before);
-  if (pay === null) return null;
+  if (pay === null || (pay.draw === null && results.some((s) => s.for === s.against))) return null;
+  const draw = pay.draw ?? 0;
   return placeTable(
     before.map((row) => {
       const side = results.find((s) => s.teamId === row.teamId);
@@ -58,7 +62,7 @@ export function tableAfter(before: readonly StandingsRow[], results: readonly Si
         drawn: row.drawn + drawn,
         lost: row.lost + lost,
         played: row.played + 1,
-        points: row.points + won * pay.win + drawn * pay.draw,
+        points: row.points + won * pay.win + drawn * draw,
         pointsFor: row.pointsFor + side.for,
         pointsAgainst: row.pointsAgainst + side.against,
       };
@@ -75,11 +79,13 @@ export function tableMoves(before: readonly StandingsRow[], after: readonly Stan
   if (oldTop !== undefined && newTop !== undefined && oldTop.teamId === newTop.teamId) facts.push({ teamId: newTop.teamId, kind: "stayed-top", text: `${newTop.teamName} stayed top` });
   const [oldBottom, newBottom] = [before.find((r) => r.rank === before.length), after.find((r) => r.rank === after.length)];
   if (oldBottom !== undefined && newBottom !== undefined && oldBottom.teamId !== newBottom.teamId) facts.push({ teamId: newBottom.teamId, kind: "bottom", text: `${newBottom.teamName} went bottom` });
+  // A shared place takes the higher number, so a side joint bottom is still bottom and has not risen.
+  const lowest = Math.max(0, ...after.map((r) => r.rank));
   for (const row of after) {
     const was = rankIn(before, row.teamId);
     if (was === null || [newTop?.teamId, newBottom?.teamId].includes(row.teamId)) continue;
     const moved = was - row.rank;
-    if (moved >= DRAFT_DESK.tableMove) facts.push({ teamId: row.teamId, kind: "climb", text: `${row.teamName} rose from ${ordinal(was)} to ${ordinal(row.rank)}` });
+    if (moved >= DRAFT_DESK.tableMove && row.rank !== lowest) facts.push({ teamId: row.teamId, kind: "climb", text: `${row.teamName} rose from ${ordinal(was)} to ${ordinal(row.rank)}` });
     if (-moved >= DRAFT_DESK.tableMove) facts.push({ teamId: row.teamId, kind: "fall", text: `${row.teamName} fell from ${ordinal(was)} to ${ordinal(row.rank)}` });
   }
   return facts;

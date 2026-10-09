@@ -109,6 +109,10 @@ describe("injuryIn and a stale story", () => {
     expect(injuryIn(report("Wissa has started all five matches."))).toBeNull();
   });
 
+  it("names the complaint the sentence gives first, not the first on its own list", () => {
+    expect(injuryIn(report("Saka has a calf strain and will have his knee checked. More later."))).toBe("calf");
+  });
+
   it("drops a report older than his listing, so a loan is not told as last month's goal", () => {
     const loaned = { ...side("a", []), starters: [man("Millar:M:1", { status: "u", newsAdded: "2026-09-10T00:00:00Z" })] };
     const flags = (at: number) => starterFlags(loaned, { playing: new Set([1]), news: () => report("Millar (knee) scored.", at), predicted: () => null });
@@ -179,6 +183,16 @@ describe("sheetsFacts and the column", () => {
     const ties = facts(new Map([["h", [side("h", []), side("h", XI.slice(0, 10))]], ["w", [side("w", ["Pickford:G:12", "Haaland:F:11"])]]]));
     expect(sheetsDeck(ties)).toBe("One change and one debut.");
     expect(plainLine(ties[0].home)).toBe("Team h make one change: Watkins comes in.");
+  });
+
+  it("names the man left out when a side starts fewer men than last time, and nobody comes in", () => {
+    const ties = facts(new Map([["h", [side("h", [...XI, "Eze:M:8"])]], ["w", [side("w", ["Pickford:G:12", "Haaland:F:11"])]]]));
+    expect(plainLine(ties[0].home)).toBe("Team h make one change: Eze is left out.");
+  });
+
+  it("never calls every side unchanged while one is on its first sheet", () => {
+    const ties = facts(new Map([["w", [side("w", ["Pickford:G:12", "Haaland:F:11"])]]]));
+    expect(sheetsDeck(ties)).toBe("No changes.");
   });
 
   it("prints the eleven and the bench from the facts and the desk's line where a paragraph failed", () => {

@@ -18,8 +18,9 @@ export function saturdayThreads(ctx: MatchupContext, worth: SlotWorth): Thread[]
   const m = Math.abs(margin);
   const out: Thread[] = [];
   const left = home.toPlay.length + away.toPlay.length;
-  // The sums of what the side behind needs, only once three or fewer are left.
-  if (left > 0 && left <= DRAFT_DESK.chaseWhenLeft && margin !== 0) out.push(thread("chase", { teamId: behind.side.teamId, men: behind.toPlay, facts: chaseLines(behind, ahead, m, worth) }));
+  // The sums of what the side behind needs, only once three or fewer are left, and only when minutes alone do not close it.
+  const chase = left > 0 && left <= DRAFT_DESK.chaseWhenLeft && margin !== 0 ? chaseLines(behind, ahead, m, worth) : [];
+  if (chase.length > 0) out.push(thread("chase", { teamId: behind.side.teamId, men: behind.toPlay, facts: chase }));
   for (const s of [home, away]) {
     const waiting = s.subs.filter((x) => x.provisional);
     if (waiting.length > 0) out.push(thread("subs-waiting", { teamId: s.side.teamId, men: waiting.map((x) => x.in), facts: waiting.map((x) => subLine(x, "saturday")) }));

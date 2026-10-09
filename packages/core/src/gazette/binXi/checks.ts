@@ -3,6 +3,7 @@ import { BANNED, americanisms, banned } from "../banned";
 import { faultLog, type Fault } from "../predictions/checks";
 import { masked, numbersIn, wordCount } from "../predictions/prose";
 import { DESK_BANNED } from "../predictions/words";
+import { faultOn, strayFigures } from "../proofing";
 import { REPORT_ADVICE, REPORT_FPL } from "../reports/words";
 import { COUNTED, SOURCE } from "../sheets/checks";
 import { SHEETS_AMERICAN, SHEETS_STOCK } from "../sheets/words";
@@ -28,7 +29,7 @@ export function checkBin(column: Record<string, unknown>, ctx: BinCheck): Fault[
   for (const section of ["headline", "body"]) {
     const written = text(section);
     const plain = masked(written, ctx.names);
-    if (SOURCE.test(written)) fault(section, "names a source or a percentage", "hard", written.match(SOURCE)?.[0] ?? "");
+    faultOn(fault, section, "names a source or a percentage", "hard", SOURCE, written);
     for (const word of banned(plain, [...BIN_MARKET, ...REPORT_ADVICE])) fault(section, "the market is the wire's, and never advice", "hard", word);
     for (const word of banned(plain, [...BIN_WORKINGS, ...REPORT_FPL])) fault(section, "the desk's figures and the draft's round stay off the page", "hard", word);
     for (const word of banned(plain, BIN_NEGLECT)) fault(section, "why nobody has him is a verdict the facts cannot give", "hard", word);
@@ -36,9 +37,9 @@ export function checkBin(column: Record<string, unknown>, ctx: BinCheck): Fault[
     for (const word of banned(plain, BIN_OWNERSHIP)) fault(section, "a man is in a squad, never owned or held", "send-back", word);
     for (const word of banned(plain, [...BANNED, ...DESK_BANNED, ...SHEETS_STOCK])) fault(section, "banned or stock phrasing", "send-back", word);
     for (const word of americanisms(plain, SHEETS_AMERICAN)) fault(section, "not British football English", "send-back", word);
-    if (COUNTED.test(written)) fault(section, "counts the weeks", "send-back", written.match(COUNTED)?.[0] ?? "");
+    faultOn(fault, section, "counts the weeks", "send-back", COUNTED, written);
     if (section === "headline") continue;
-    for (const figure of numbersIn(plain)) if (!figures.has(figure)) fault(section, "a figure not in the brief", "hard", String(figure));
+    for (const figure of strayFigures(plain, figures)) fault(section, "a figure not in the brief", "hard", String(figure));
     for (const name of strangers(written, ctx.brief)) fault(section, "a name not in the brief", "hard", name);
   }
 

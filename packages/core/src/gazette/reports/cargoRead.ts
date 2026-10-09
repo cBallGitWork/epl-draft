@@ -1,7 +1,7 @@
 import type { ReportRowKind, StoryReport, StoryReportSide } from "./cargo";
 import type { FantasyMan, FantasyPanel } from "./fantasy";
 import type { KeyStat } from "./keyStats";
-import type { LineupMan, StoryLineup } from "./lineups";
+import type { LineupMan, LineupSub, StoryLineup } from "./lineups";
 import type { StarMan } from "./star";
 import { finiteOrNull as num, recordOrEmpty as obj, stringOrEmpty as str, stringsOrEmpty as strs, textOrNull as strOrNull } from "../../untrusted";
 
@@ -16,16 +16,15 @@ const KINDS: readonly ReportRowKind[] = ["Goal", "Pen", "OG", "VAR", "Pen missed
 /** A mark as filed: absent on a report filed before marks, null when he was too brief to rate. */
 const mark = (r: Raw) => ("mark" in r ? { mark: num(r.mark) } : {});
 
+function lineupSub(r: Raw): LineupSub | null {
+  if (str(r.name) === "") return null;
+  const next = lineupSub(obj(r.replacedBy));
+  return { name: str(r.name), minute: str(r.minute), booked: r.booked === true, ...mark(r), ...(next === null ? {} : { replacedBy: next }) };
+}
+
 function lineupMan(r: Raw): LineupMan | null {
   if (str(r.name) === "") return null;
-  const by = obj(r.replacedBy);
-  return {
-    name: str(r.name),
-    booked: r.booked === true,
-    sentOff: r.sentOff === true,
-    replacedBy: str(by.name) === "" ? null : { name: str(by.name), minute: str(by.minute), booked: by.booked === true, ...mark(by) },
-    ...mark(r),
-  };
+  return { name: str(r.name), booked: r.booked === true, sentOff: r.sentOff === true, replacedBy: lineupSub(obj(r.replacedBy)), ...mark(r) };
 }
 
 function star(v: unknown): StarMan | null | undefined {

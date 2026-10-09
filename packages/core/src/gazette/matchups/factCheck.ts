@@ -1,7 +1,8 @@
 import { DRAFT_WRITING } from "../../config";
 import { banned } from "../banned";
 import { escapeRegExp } from "../../regExp";
-import { masked, numbersIn, sentences } from "../predictions/prose";
+import { sentences } from "../predictions/prose";
+import { blanked, strayFigures } from "../proofing";
 import { londonWeekdayLong, weekdayLongOfDay } from "../../time";
 import { recordOrEmpty, stringOrEmpty } from "../../untrusted";
 import type { MatchupContext } from "./brief";
@@ -42,7 +43,8 @@ export function knownFixes(pieces: ReadonlyMap<number, DraftPiece>, contexts: re
     const prose = piece.paragraphs.join("\n");
     for (const { man, names } of men) {
       const surname = names.at(-1) ?? man.name;
-      for (const hit of prose.matchAll(new RegExp(`\\b(${words})\\s+((?:\\p{Lu}[\\p{L}'.-]*\\s+)?${escapeRegExp(surname)})\\b`, "gu"))) {
+      // No letter after the surname, where `\b` would miss one ending "ß" or "ć".
+      for (const hit of prose.matchAll(new RegExp(`\\b(${words})\\s+((?:\\p{Lu}[\\p{L}'.-]*\\s+)?${escapeRegExp(surname)})(?![\\p{L}\\p{N}])`, "gu"))) {
         const allowed = POSITIONS[man.slot];
         if (allowed !== undefined && !allowed.includes(hit[1].toLowerCase())) out.push({ matchup, quote: hit[0], correction: `${allowed[0]} ${hit[2]}` });
       }
@@ -50,11 +52,12 @@ export function knownFixes(pieces: ReadonlyMap<number, DraftPiece>, contexts: re
     for (const sentence of sentences(prose)) {
       const days = [...new Set([...sentence.matchAll(WEEKDAYS)].map((d) => d[1]))];
       if (days.length !== 1) continue;
-      const wrong = named(sentence, men).some(({ man }) => {
+      // Cut only when the day is none of its dated men's: "Haaland answered Saka on Sunday" is Haaland's Sunday.
+      const dated = named(sentence, men).flatMap(({ man }) => {
         const his = [...man.byDay.map((d) => weekdayLongOfDay(d.day)), ...(man.next === null ? [] : [londonWeekdayLong(man.next.kickoff)])];
-        return his.length > 0 && !his.includes(days[0]) && !ctx.state.home.subs.concat(ctx.state.away.subs).some((s) => s.in === man);
+        return his.length === 0 || ctx.state.home.subs.concat(ctx.state.away.subs).some((s) => s.in === man) ? [] : [his];
       });
-      if (wrong) out.push({ matchup, quote: sentence, correction: "" });
+      if (dated.length > 0 && dated.every((his) => !his.includes(days[0]))) out.push({ matchup, quote: sentence, correction: "" });
     }
     return out;
   });
@@ -74,9 +77,9 @@ export function readFactFixes(raw: Record<string, unknown>): FactFix[] {
 function sound(text: string, ctx: MatchupContext, block: string): boolean {
   // Men and sides are names, never words or figures: "test2" is no 2.
   const sides = [ctx.state.home.side.name, ctx.state.away.side.name, ...[ctx.next.home, ctx.next.away].flatMap((x) => x?.name ?? [])];
-  const plain = masked(text, [...menOf(ctx).flatMap((m) => m.names), ...sides]).replace(/\u0000/gu, " ");
+  const plain = blanked(text, [...menOf(ctx).flatMap((m) => m.names), ...sides]);
   const allowed = allowedFigures(ctx, block);
-  return banned(plain, DRAFT_NEVER).length === 0 && numbersIn(plain).every((n) => allowed.has(n)) && unbriefedNames(text, ctx, block).length === 0;
+  return banned(plain, DRAFT_NEVER).length === 0 && strayFigures(plain, allowed).length === 0 && unbriefedNames(text, ctx, block).length === 0;
 }
 
 /** The writing with each fix made, `factFixes` at most a match-up: a sound correction in place of its quote, or the quote

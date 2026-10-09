@@ -1,6 +1,7 @@
 import type { NewsItem } from "../../news/map";
 import type { StoryThread } from "../ledger";
 import { storylinesBlock } from "./storylines";
+import { briefOf } from "./briefOf";
 
 // The one brief carrying copy somebody else wrote, quarantined in its own block; the story is the manager it hits.
 
@@ -17,7 +18,7 @@ export function buildNewsBrief(brief: {
 }): string {
   const { item, affected } = brief.angle;
 
-  return [
+  return briefOf([
     "A NEWS STORY, from the wire, with a draft angle.",
     [
       "EXTERNAL COPY — the BBC's, not ours. Real reporting by somebody else, handed to you ONLY so you know what happened. Distil it; never reproduce it, never quote it as though we obtained it, and never add a detail it does not contain:",
@@ -32,7 +33,5 @@ export function buildNewsBrief(brief: {
     ].join("\n"),
     "Two short paragraphs. If the wire copy does not actually say what it means for these players — and it usually will not — say what is known and stop. You do not know how long anybody is out for unless you were told.",
     storylinesBlock(brief.threads),
-  ]
-    .filter((block) => block !== null)
-    .join("\n\n");
+  ]);
 }

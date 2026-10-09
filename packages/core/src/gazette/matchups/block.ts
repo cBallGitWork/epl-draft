@@ -3,13 +3,15 @@ import { derbyBrief } from "../../league/derbies";
 import { ordinal } from "../../league/ordinal";
 import { londonDayOf, londonWeekdayLong } from "../../time";
 import type { Cutoff, MatchupContext, NextOpponent } from "./brief";
-import { counted, everyMan, type SideState } from "./state";
-import { fitnessLine, minutesLine, newLine, pts, returnWords } from "./stories";
+import { blank } from "./autoSubs";
+import { everyMan, type SideState } from "./state";
+import { aheadWords, fitnessLine, minutesLine, newLine, pts, returnWords } from "./stories";
 import type { Thread } from "./thread";
 import { SIDES } from "../side";
 import { beatLabel, beatOf, timeline, type Beat } from "./timeline";
 import { possessive } from "./words";
 import type { DraftMan } from "./types";
+import { briefOf } from "../briefs/briefOf";
 
 // One match-up's block of the brief, built on the story the desk chose (`angle.ts`): the result, THE STORY and its twist,
 // the cast, how it unfolded a day at a time, the threads in their beats, the season for the close, what comes next and
@@ -37,18 +39,23 @@ const POSITION: Record<string, string> = { G: "goalkeeper", D: "defender", M: "m
 function castLine(ctx: MatchupContext, m: DraftMan): string {
   const s = sideOf(ctx, m);
   const sub = s?.subs.find((x) => x.in === m);
-  const bench = s !== undefined && sub === undefined && !counted(s).includes(m);
-  const points = m.points === null || (m.minutes === 0 && m.left > 0) ? "yet to play" : `${pts(m.points)}${m.goals + m.assists + m.cleanSheets > 0 ? `: ${returnWords(m)}` : ""}`;
+  // A reserve left on the bench; a starter a reserve replaces is neither.
+  const bench = s !== undefined && sub === undefined && s.side.bench.includes(m);
+  const replaced = s?.subs.find((x) => x.out === m && x.ahead === null);
+  const points = m.minutes === 0 && m.left > 0 ? "yet to play" : m.points === null ? null : `${pts(m.points)}${m.goals + m.assists + m.cleanSheets > 0 ? `: ${returnWords(m)}` : ""}`;
   const next = m.left > 0 && m.next !== null ? `plays ${m.next.home ? "at home to" : "away to"} ${m.next.opponent} on ${londonWeekdayLong(m.next.kickoff)}` : null;
   const parts = [
     points,
-    sub === undefined ? null : sub.ahead !== null ? "comes on at the end of the gameweek for a man who did not play" : `${sub.out.name} did not play, so he ${sub.provisional ? "comes on if he plays" : "came on"}`,
+    sub === undefined ? null : sub.ahead !== null ? aheadWords(sub) : `${sub.out.name} did not play, so he ${sub.provisional ? "comes on if he plays" : "came on"}`,
     // A reserve played his own match, on its own day, before the substitutions counted it.
     sub !== undefined && m.minutes > 0 && m.byDay[0] !== undefined ? `played for ${m.club} on ${beatLabel(m.byDay[0].day)}` : null,
     bench ? "on the bench, where his points count for nobody" : null,
     minutesLine(m),
     s === undefined ? null : newLine(m, s.side),
+    // The club's word says he did not play; without one, the line does.
+    blank(m) && m.fitness === null ? "did not play" : null,
     fitnessLine(m),
+    replaced === undefined ? null : `${replaced.in.name} ${replaced.provisional ? "comes on for him if he plays" : "came on for him"}`,
     next,
   ];
   // The day comes with the man, not after his figures, or a writer moves them to another day.
@@ -117,7 +124,8 @@ function lastLines(ctx: MatchupContext): string[] {
   return (ctx.angle?.past ?? []).map((p) => {
     const sides = SIDES.map((w) => ctx.state[w].side).filter((s) => p.teamIds.includes(s.teamId)).map((s) => s.name);
     const cast = p.cast.flatMap((id) => men.find((m) => m.fantraxId === id)?.name ?? []);
-    return `- ${listed(sides, "and")}: a ${p.kind.replace(/-/gu, " ")}${cast.length === 0 ? "" : `, told through ${listed(cast, "and")}`}`;
+    const kind = p.kind.replace(/-/gu, " ");
+    return `- ${listed(sides, "and")}: ${/^[aeiou]/iu.test(kind) ? "an" : "a"} ${kind}${cast.length === 0 ? "" : `, told through ${listed(cast, "and")}`}`;
   });
 }
 
@@ -126,7 +134,7 @@ export function matchupBlock(ctx: MatchupContext, cutoff: Cutoff, n: number): st
   const cast = new Set(angle?.cast ?? []);
   const saturday = cutoff === "saturday";
   const line = (t: Thread) => `- ${told(ctx, t)}`;
-  return [
+  return briefOf([
     `MATCH-UP ${n}: ${ctx.state.home.side.name} v ${ctx.state.away.side.name}${n === 1 ? ", THE LEAD" : ""}`,
     ctx.derby ? derbyBrief(ctx.derby) : null,
     `${saturday ? "THE SCORE after Saturday's matches" : "THE RESULT"}, printed above your words, never in them: ${ctx.state.score}.`,
@@ -140,7 +148,5 @@ export function matchupBlock(ctx: MatchupContext, cutoff: Cutoff, n: number): st
     block("FORM AND THE TABLE, for the close:", ctx.form.filter((f) => !angle?.story.facts.includes(f.text)).map((f) => `- ${f.text} [${f.kind}]`)),
     saturday ? null : block("NEXT GAMEWEEK, for a last line that looks out:", nextLines(ctx)),
     block("LAST TIME, not to be told the same way again:", lastLines(ctx)),
-  ]
-    .filter((b) => b !== null)
-    .join("\n\n");
+  ]);
 }

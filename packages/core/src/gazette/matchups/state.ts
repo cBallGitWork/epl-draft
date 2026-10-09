@@ -1,4 +1,4 @@
-import { listed } from "../../format";
+import { DASH, listed } from "../../format";
 import { autoSubs, type AutoSub } from "./autoSubs";
 import type { Cutoff } from "./brief";
 import { byClock, isLate } from "./stories";
@@ -54,6 +54,11 @@ export function lateDecider(winner: SideState, margin: number, worth: SlotWorth)
 /** The score as the page prints it, the side ahead first, the substitutions counted: Saturday's as it stands, the
  *  gameweek's as a result. What turned it and what decided it are the story's (`threads.ts`), never the score's. */
 function scoreLine(home: SideState, away: SideState, cutoff: Cutoff): string {
+  // A side Fantrax gave no total has no score to win or lose by.
+  if (home.side.total === null || away.side.total === null) {
+    const shown = (s: SideState) => `${s.side.name} ${s.side.total === null ? DASH : s.total}`;
+    return `${shown(home)}, ${shown(away)}`;
+  }
   const [lead, trail] = home.total >= away.total ? [home, away] : [away, home];
   if (lead.total === trail.total) return `${home.side.name} and ${away.side.name} ${cutoff === "saturday" ? "are level at" : "drew"} ${home.total}-${away.total}`;
   return `${lead.side.name} ${cutoff === "saturday" ? "lead" : "beat"} ${trail.side.name} ${lead.total}-${trail.total}`;

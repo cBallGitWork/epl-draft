@@ -40,6 +40,8 @@ describe("checkSheets", () => {
     expect(check({ ...GOOD, h: "Team h make two changes." })).toContainEqual(["h", "the wrong number of changes", "hard"]);
     expect(check({ ...GOOD, w: "Saka makes his debut for Team w." })).toContainEqual(["w", "a debut the brief does not give", "hard"]);
     expect(check({ ...GOOD, h: "Team h are unchanged." })).toContainEqual(["h", "unchanged when it changed", "hard"]);
+    expect(check({ ...GOOD, h: "Team h name the same line-up." })).toContainEqual(["h", "unchanged when it changed", "hard"]);
+    expect(check({ ...GOOD, h: "Team h name the same starting eleven." })).toContainEqual(["h", "unchanged when it changed", "hard"]);
     expect(check({ ...GOOD, w: "Team w are unchanged, and Saka drops to the bench." })).toContainEqual(["w", "a man dropped the brief does not give", "hard"]);
     expect(check({ ...GOOD, h: "Team h make one change, with Eze dropped to the bench for Haaland." }).map((fault) => fault[1])).not.toContain("a man dropped the brief does not give");
   });
@@ -109,6 +111,13 @@ describe("the draft", () => {
     const draft = readSheetsDraft({ ties: [{ homeTeamId: "h", awayTeamId: "w", home: "Eze sits on the bench, and Saka awaits a scan.", away: "Isak has scored of late." }] }, round());
     expect(draft.get("h")).toBe("Eze is on the bench, and Saka is awaiting a scan.");
     expect(draft.get("w")).toBe("Isak has scored recently.");
+  });
+
+  it("pencils round to gameweek only where it means the league's week", () => {
+    const draft = readSheetsDraft({ ties: [{ homeTeamId: "h", awayTeamId: "w", home: "Rice played it the other way round last round.", away: "An all-round display in round 5." }] }, round());
+    expect(draft.get("h")).toBe("Rice played it the other way round last gameweek.");
+    expect(draft.get("w")).toBe("An all-round display in gameweek 5.");
+    expect(check({ ...GOOD, h: `${GOOD.h} Rice played it the other way round.` }).map((fault) => fault[1])).not.toContain("say gameweek, not round");
   });
 
   it("treats a fact send-back that survived the rewrite as hard", () => {

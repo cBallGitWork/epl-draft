@@ -1,8 +1,8 @@
-import { DRAFT_DESK, DRAFT_NEWS } from "../../config";
+import { CLEAN_SHEET_MINUTES, DRAFT_DESK, DRAFT_NEWS } from "../../config";
 import { blank } from "./autoSubs";
 import type { Cutoff, MatchupContext } from "./brief";
 import { counted } from "./state";
-import { benchLines, clubLines, fitnessLine, isLate, keeperHauled, lostCleanLine, minutesLine, newLine, returnCount, scoredLine, uncoveredLine, whenScored } from "./stories";
+import { benchLines, clubLines, fitnessLine, isLate, keeperHauled, lostCleanLine, minutesLine, newLine, pts, returnCount, scoredLine, uncoveredLine, whenScored } from "./stories";
 import { thread, type Thread, type ThreadKind } from "./thread";
 import { SIDES, otherSide } from "../side";
 import type { DraftMan, GoalTime, SlotWorth } from "./types";
@@ -14,10 +14,11 @@ import type { DraftMan, GoalTime, SlotWorth } from "./types";
 const same = (a: GoalTime, b: GoalTime) => a.kickoff === b.kickoff && a.minute === b.minute && a.added === b.added;
 const named = (m: DraftMan, text: string) => `${m.name} ${text}`;
 
-/** A goal by one side's man that took the clean sheet of the other side's man, in the match they played against each other. */
+/** A goal by one side's man that took the clean sheet of the other side's man, in the match they played against each other;
+ *  a man on for less than a clean sheet's minutes never had one to lose. */
 function crossfire(scorer: DraftMan, victims: readonly DraftMan[]): { victim: DraftMan; t: GoalTime } | null {
   for (const victim of victims) {
-    if (victim.club === scorer.club || !victim.matches.some((x) => scorer.matches.some((y) => y.code === x.code))) continue;
+    if (victim.club === scorer.club || victim.minutes < CLEAN_SHEET_MINUTES || !victim.matches.some((x) => scorer.matches.some((y) => y.code === x.code))) continue;
     const t = scorer.scoredAt.find((g) => victim.concededFirstAt.some((c) => same(g, c)));
     if (t !== undefined) return { victim, t };
   }
@@ -59,7 +60,7 @@ export function manThreads(ctx: MatchupContext, cutoff: Cutoff, worth: SlotWorth
       const fresh = newLine(m, s.side);
       if (fresh !== null && involved) add(m.arrived !== null ? "new-arrival" : "debut", [m], [named(m, fresh)], returned);
       for (const o of ctx.oldBoys.filter((x) => x.fantraxId === m.fantraxId && involved)) add("old-boy", [m], [o.line], returned);
-      if (cutoff === "gameweek" && m.played > 1 && m.minutes > 0) add("double", [m], [named(m, `had two matches this gameweek, for ${m.points ?? 0} points`)]);
+      if (cutoff === "gameweek" && m.played > 1 && m.minutes > 0) add("double", [m], [named(m, `had two matches this gameweek${m.points === null ? "" : `, for ${pts(m.points)}`}`)]);
       if (stars.includes(m)) add("star-blank", [m], [named(m, "blanked")]);
     }
     const uncovered = s.side.eleven.filter((x) => blank(x) && !s.subs.some((sub) => sub.out === x));

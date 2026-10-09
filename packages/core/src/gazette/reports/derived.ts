@@ -2,6 +2,7 @@ import { LATE_GOAL_MINUTE, REPORTS } from "../../config";
 import { minutesLeft, numeral } from "./minutes";
 import { finalScore, goalsBy, isGoal, type MatchEvent } from "./timeline";
 import type { ReportMatchInput } from "./types";
+import { withClub } from "./men";
 import { plural } from "../../format";
 import { SIDES, otherSide, type Side } from "../side";
 
@@ -12,11 +13,14 @@ const { most: MOST, more: MORE } = REPORTS.ball;
 
 export const higherFirst = (a: number, b: number) => `${Math.max(a, b)}-${Math.min(a, b)}`;
 
-/** A goal's minute as a report says it: "with 11 minutes left", or its first phrase. */
+/** A goal's minute as a report says it: "with 11 minutes left", or its first phrase (the 90th has none left). */
 function when(event: MatchEvent): string {
   const left = minutesLeft(event.minute);
-  return left !== null && event.at >= 60 ? `with ${numeral(left)} ${plural(left, "minute")} left` : (event.phrases[0] ?? "");
+  return left !== null && left > 0 && event.at >= 60 ? `with ${numeral(left)} ${plural(left, "minute")} left` : (event.phrases[0] ?? "");
 }
+
+/** "once", "twice", "three times". */
+export const times = (n: number) => (n === 1 ? "once" : n === 2 ? "twice" : `${numeral(n)} times`);
 
 export function derivedFacts(match: ReportMatchInput, events: readonly MatchEvent[]): string[] {
   const name = (side: Side) => match[side].name;
@@ -38,12 +42,14 @@ export function derivedFacts(match: ReportMatchInput, events: readonly MatchEven
     }
   }
 
-  // Two goals by one side close together, in one half: first-half added time runs into the second half's clock.
-  for (let i = 1; i < goals.length; i++) {
-    const [a, b] = [goals[i - 1], goals[i]];
-    if (a.side !== null && a.side === b.side && a.half === b.half && b.at - a.at <= BURST && b.at > a.at) {
-      facts.push(`${name(a.side)} scored twice in ${numeral(b.at - a.at)} minutes`);
-    }
+  // Goals by one side close together, in one half, told once per run: first-half added time runs into the second half's clock.
+  for (let i = 0; i < goals.length; ) {
+    const a = goals[i];
+    let j = i;
+    while (j + 1 < goals.length && a.side !== null && goals[j + 1].side === a.side && goals[j + 1].half === a.half && goals[j + 1].at > goals[j].at && goals[j + 1].at - a.at <= BURST) j++;
+    const span = goals[j].at - a.at;
+    if (a.side !== null && j > i) facts.push(`${name(a.side)} scored ${times(j - i + 1)} in ${numeral(span)} ${plural(span, "minute")}`);
+    i = j + 1;
   }
 
   // Who came from behind, and a late winner.
@@ -67,14 +73,16 @@ export function derivedFacts(match: ReportMatchInput, events: readonly MatchEven
   // A man whose chances added up to a goal and more, with none scored, in words (the paper never prints the figure).
   for (const man of match.men) {
     const scored = goalsBy(goals, man.code) > 0;
-    if (!scored && man.expectedGoals >= REPORTS.missed.expectedGoals) facts.push(`${man.name} (${name(man.side)}) had chances good enough to score and did not`);
+    if (!scored && man.expectedGoals >= REPORTS.missed.expectedGoals) facts.push(`${withClub(match, man)} had chances good enough to score and did not`);
   }
 
   const figures = match.figures;
   if (figures !== null) {
     for (const side of SIDES) {
       const f = figures[side];
-      if (final[side] > 0 && f.onTarget >= final[side]) facts.push(`${name(side)} scored ${numeral(final[side])} from ${numeral(f.onTarget)} on target`);
+      // An own goal is no shot of theirs.
+      const shotIn = goals.filter((g) => g.side === side && g.kind !== "own-goal").length;
+      if (shotIn > 0 && f.onTarget >= shotIn) facts.push(`${name(side)} scored ${numeral(shotIn)} from ${numeral(f.onTarget)} on target`);
       if (f.clearChances > 0) facts.push(`${name(side)} made ${numeral(f.clearChances)} clear ${plural(f.clearChances, "chance")} and took ${numeral(f.clearChancesScored)}`);
       if (f.possession >= MOST) facts.push(`${name(side)} had most of the ball`);
       else if (f.possession >= MORE) facts.push(`${name(side)} had more of the ball`);

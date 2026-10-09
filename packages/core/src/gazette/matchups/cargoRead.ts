@@ -49,7 +49,8 @@ const FAMILIES: readonly Family[] = ["turn", "decider", "margin", "star", "setba
 function angle(v: unknown): AngleRecord | null {
   const r = obj(v);
   const [kind, family] = [str(r.kind), str(r.family)];
-  if (!(kind in DRAFT_NEWS.weight) || !FAMILIES.includes(family as Family)) return null;
+  // `Object.hasOwn`, not `in`: a filed "constructor" is no story kind.
+  if (!Object.hasOwn(DRAFT_NEWS.weight, kind) || !FAMILIES.includes(family as Family)) return null;
   return { kind: kind as ThreadKind, family: family as Family, teamIds: strings(r.teamIds), cast: strings(r.cast) };
 }
 

@@ -2,10 +2,11 @@ import { REPORTS } from "../../config";
 import { londonDayAndDate } from "../../time";
 import { eventLine, manLine } from "./briefLines";
 import type { MatchDesk } from "./desk";
-import { played } from "./men";
-import { isGoal } from "./timeline";
+import { played, withClub } from "./men";
+import { involvedIn, isGoal } from "./timeline";
 import { SIDES, type Side } from "../side";
 import { howMany } from "../../format";
+import { briefOf } from "../briefs/briefOf";
 
 // The facts one match-day report may use and nothing else, one block per match keyed by its fixture code. Each fact is
 // handed once and marked with the part it belongs to, so the standfirst, the account and the sections cannot repeat each other.
@@ -19,14 +20,14 @@ export function matchBlock(desk: MatchDesk): string {
   };
   const goals = events.filter(isGoal);
   const missed = new Set(misses);
-  const decisiveSubs = new Set(match.men.filter((m) => !m.started && goals.some((g) => g.man?.code === m.code || g.other?.code === m.code)).map((m) => m.code));
+  const decisiveSubs = new Set(match.men.filter((m) => !m.started && involvedIn(goals, m.code) > 0).map((m) => m.code));
   const table = SIDES.flatMap((side) => {
     const club = standing[side];
     return club === null ? [] : [`- ${match[side].name}: ${club.lines.join("; ")}`];
   });
   const [least, most] = budget.account;
   const [sectionLeast, sectionMost] = REPORTS.sectionWords;
-  return [
+  return briefOf([
     `MATCH ${f.code}${lead ? ", THE LEAD" : ""}: ${match.home.name} ${f.homeScore}-${f.awayScore} ${match.away.name}${match.halfTime === null ? "" : `, ${match.halfTime.home}-${match.halfTime.away} at half-time`}.`,
     `The clubs: ${club("home")}; ${club("away")}.`,
     [`THE TABLE, for the standfirst and nowhere else in this match:`, ...table].join("\n"),
@@ -42,12 +43,10 @@ export function matchBlock(desk: MatchDesk): string {
     facts.length === 0 ? null : ["WORKED OUT FOR YOU, true as written:", ...facts.map((fact) => `- ${fact}`)].join("\n"),
     [
       `THE SECTIONS: choose ${budget.sections} of these men. For each, tell what he did that the account does not, then his STAKE in your own words:`,
-      ...nominees.slice(0, budget.sections + REPORTS.spareNominees).map((n) => `- ${n.man.name} (${match[n.man.side].name}): ${manLine(n.man, counts.get(n.man.code), events)}. STAKE: ${n.stake}.`),
+      ...nominees.slice(0, budget.sections + REPORTS.spareNominees).map((n) => `- ${withClub(match, n.man)}: ${manLine(n.man, counts.get(n.man.code), events)}. STAKE: ${n.stake}.`),
     ].join("\n"),
     `EVERY MAN YOU MAY NAME, by club: ${SIDES.map((side) => `${match[side].name}: ${match.men.filter((m) => m.side === side && played(m)).map((m) => m.name).join(", ")}`).join(". ")}.`,
-  ]
-    .filter((block) => block !== null)
-    .join("\n\n");
+  ]);
 }
 
 export function buildReportsBrief(day: string, gameweek: number, desks: readonly MatchDesk[]): string {

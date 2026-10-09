@@ -37,6 +37,8 @@ describe("the draft cargo", () => {
     expect(normalizeDraftReport(read)).toEqual(filed);
     read.matchups[0].story.kind = "a feeling";
     expect(normalizeDraftReport(read)?.matchups[0].story).toBeNull();
+    read.matchups[0].story.kind = "constructor";
+    expect(normalizeDraftReport(read)?.matchups[0].story).toBeNull();
   });
 
   it("reads back whole, and refuses a cut-off it does not know", () => {

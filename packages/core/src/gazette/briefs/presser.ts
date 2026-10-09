@@ -3,6 +3,7 @@ import { FIRM } from "../../football/intel/pressers";
 import { groupedBy } from "../../grouped";
 import { storylinesBlock } from "./storylines";
 import type { StoryThread } from "../ledger";
+import { briefOf } from "./briefOf";
 
 // The team news brief: what managers said about availability, by club, owned or not.
 
@@ -27,6 +28,12 @@ const MEANS: Record<string, string> = {
   injury_scare: "a doubt",
 };
 
+/** The tags that keep a man out of the side; a standing doubt or rotation risk is not an absence. */
+const ABSENT: ReadonlySet<string> = new Set(["ruled_out", "suspended"]);
+
+/** A standing absence: out, and nothing new said about it. Neither a bullet nor still out is a standing doubt. */
+export const stillOut = (line: PresserLine) => !line.fresh && ABSENT.has(line.tag);
+
 export function buildPresserBrief(brief: {
   gameweek: number;
   /** Newest first, and every man mentioned — not only the ones we hold. */
@@ -48,8 +55,8 @@ export function buildPresserBrief(brief: {
   }
 
   const clubs = [...byClub.entries()].map(([club, row]) => {
-    // The men whose availability CHANGED get bullets; the rest are a tail line.
-    const standing = row.lines.filter((line) => !line.fresh);
+    // The men whose availability CHANGED get bullets; a standing absence is a tail line.
+    const standing = row.lines.filter(stillOut);
     const men = row.lines.filter((line) => line.fresh).map((line) => {
       // The owner in brackets after the name, never a clause.
       const who = line.ownerName === null ? "" : ` (${line.ownerName})`;
@@ -81,7 +88,7 @@ export function buildPresserBrief(brief: {
   const line = (quote: PresserQuote) => `  "${quote.text}" — ${quote.said}${quote.about === undefined ? "" : ` on ${quote.about}`}`;
   const said = [...groupedBy(brief.quotes ?? [], (quote) => quote.clubName)].map(([club, quotes]) => [`- ${club}:`, ...quotes.map(line)].join("\n"));
 
-  return [
+  return briefOf([
     `TEAM NEWS, gameweek ${brief.gameweek}. What the managers said before the deadline. A draft manager reads this to decide who to start AND who to claim, so it covers every man mentioned, not only the ones somebody owns.`,
     [`WHAT WAS SAID, by club — ${brief.lines.length} men across ${byClub.size} clubs, ${owned} of them owned in this league. The code is the club's and you must echo it back exactly:`, ...clubs].join("\n"),
     quiet.length === 0
@@ -126,7 +133,5 @@ export function buildPresserBrief(brief: {
     "A HINT IS A HINT. Where a line is marked HINT, write it as one — 'suggested', 'did not rule out', 'stopped short of'. Never promote it to a fact.",
     "NO ADVICE, and no narrative about our managers. Name the owner; do not tell him what to do, or discuss his week.",
     storylinesBlock(brief.threads),
-  ]
-    .filter((block) => block !== null)
-    .join("\n\n");
+  ]);
 }

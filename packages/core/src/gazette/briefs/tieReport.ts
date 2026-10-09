@@ -1,6 +1,7 @@
 import type { StoryThread } from "../ledger";
 import { figure } from "./figure";
 import { storylinesBlock } from "./storylines";
+import { briefOf } from "./briefOf";
 
 // The facts behind one finished head-to-head: the tie call's full-time twin, adding the men who did it.
 
@@ -41,7 +42,7 @@ export function buildTieReportBrief(brief: TieReportBrief): string {
       ? null
       : Math.abs(home.points - away.points);
 
-  return [
+  return briefOf([
     `THE TIE, gameweek ${gameweek}. ${home.name} ${figure(home.points)}, ${away.name} ${figure(away.points)}.${
       margin === null ? "" : ` ${margin === 0 ? "Level." : `Margin ${margin}.`}`
     }`,
@@ -49,7 +50,5 @@ export function buildTieReportBrief(brief: TieReportBrief): string {
     side(away),
     "The round is over and these are final. Write the TIE: what settled it, which men did it, and what the manager on the wrong end has to be annoyed about. Two managers, and no others — this is one head-to-head and not a round-up of the league.",
     storylinesBlock(brief.threads),
-  ]
-    .filter((block) => block !== null)
-    .join("\n\n");
+  ]);
 }

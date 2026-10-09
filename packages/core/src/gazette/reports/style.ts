@@ -3,6 +3,7 @@ import { FILLER, GROUNDS, QUOTE_MARKS, REGISTER, americanisms, banned, overused 
 import type { Report } from "../predictions/checks";
 import { masked, ngrams, sentences, wordCount } from "../predictions/prose";
 import { DESK_BANNED } from "../predictions/words";
+import { blanked, faultOn } from "../proofing";
 import {
   REPORT_ADVICE, REPORT_CAPPED_DAY, REPORT_CAPPED_MATCH, REPORT_CLICHES, REPORT_CROWD, REPORT_DEPTH_CHART,
   REPORT_FANTASY, REPORT_FPL, REPORT_GROUNDS, REPORT_NOT_HIS_NAME, REPORT_SHOTS, REPORT_TELLS, REPORT_VERDICTS,
@@ -13,11 +14,11 @@ import {
 /** Echoes quoted back per match: past three, a rewrite is told the pattern, not drowned in it. */
 const ECHOES_QUOTED = 3;
 
-/** Everything sent back wherever it appears. SEQUENCE is lifted: this desk is handed the order of the match. No ground is. */
-export const REPORT_NEVER: readonly string[] = [
+/** Everything sent back wherever it appears, each phrase once. SEQUENCE is lifted: this desk is handed the order of the match. No ground is. */
+export const REPORT_NEVER: readonly string[] = [...new Set([
   ...REGISTER, ...FILLER, ...GROUNDS, ...REPORT_GROUNDS, ...DESK_BANNED, ...REPORT_CLICHES, ...REPORT_SHOTS, ...REPORT_VERDICTS, ...REPORT_CROWD,
   ...REPORT_TELLS, ...REPORT_DEPTH_CHART,
-];
+])];
 
 const SOURCE = /%|\bper ?cent\b|\b(?:projected|projections?|predicted|predictions?|model|Fantrax|according to)\b/iu;
 const CLOCK = /\b\d{1,3}(?:\+\d{1,2})?['’](?!s\b)|\b\d{2}\+\d{1,2}\b/u;
@@ -26,20 +27,20 @@ const FORECAST = /\b(?:will|should|is (?:likely|expected|set) to|could|may|might
 
 /** One piece of prose, marked by the part of the piece it is: football parts carry no draft words. */
 export function wordFaults(section: string, text: string, football: boolean, names: readonly string[], fault: Report): void {
-  const plain = masked(text, names).replace(/\u0000/gu, "X");
-  if (QUOTE_MARKS.test(text)) fault(section, "quotation marks: no quotes were given", "hard", text.match(QUOTE_MARKS)?.[0] ?? "");
-  if (SOURCE.test(plain)) fault(section, "names a source or a percentage", "hard", plain.match(SOURCE)?.[0] ?? "");
+  const plain = blanked(text, names, "X");
+  faultOn(fault, section, "quotation marks: no quotes were given", "hard", QUOTE_MARKS, text);
+  faultOn(fault, section, "names a source or a percentage", "hard", SOURCE, plain);
   for (const word of banned(plain, REPORT_FPL)) fault(section, "a fantasy game's term", "hard", word);
   for (const word of banned(plain, REPORT_NEVER)) fault(section, "a phrase this paper does not print", "send-back", word);
   for (const word of americanisms(plain)) fault(section, "American, not British", "send-back", word);
   for (const word of banned(plain, REPORT_ADVICE)) fault(section, "advice; set the facts side by side instead", "send-back", word);
   if (football) for (const word of banned(plain, REPORT_FANTASY)) fault(section, "a draft word in the football", "send-back", word);
-  if (REPORT_NOT_HIS_NAME.test(text)) fault(section, "a man called anything but his name", "send-back", text.match(REPORT_NOT_HIS_NAME)?.[0] ?? "");
-  if (CLOCK.test(text)) fault(section, "a minute as a clock; use the phrases given", "send-back", text.match(CLOCK)?.[0] ?? "");
+  faultOn(fault, section, "a man called anything but his name", "send-back", REPORT_NOT_HIS_NAME, text);
+  faultOn(fault, section, "a minute as a clock; use the phrases given", "send-back", CLOCK, text);
   if (text.includes("?")) fault(section, "a question", "send-back", "?");
   if (text.includes(":")) fault(section, "a colon in prose", "send-back", ":");
-  if (NOT_BUT.test(text)) fault(section, "not this but that", "send-back", text.match(NOT_BUT)?.[0] ?? "");
-  if (FORECAST.test(text)) fault(section, "a forecast of selection", "send-back", text.match(FORECAST)?.[0] ?? "");
+  faultOn(fault, section, "not this but that", "send-back", NOT_BUT, text);
+  faultOn(fault, section, "a forecast of selection", "send-back", FORECAST, text);
   const longest = REPORTS.sentenceWords;
   for (const sentence of sentences(text)) if (wordCount(sentence) > longest) fault(section, `a sentence over ${longest} words`, "warn", sentence.slice(0, 60));
 }

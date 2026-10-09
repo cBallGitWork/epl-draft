@@ -1,5 +1,6 @@
 import type { Report } from "../predictions/checks";
 import { masked, ngrams, sentences } from "../predictions/prose";
+import { faultOn } from "../proofing";
 import type { MatchDesk } from "./desk";
 import type { ReportPiece } from "./draft";
 import { surname } from "./keyStats";
@@ -8,7 +9,8 @@ import { isDismissal, isGoal } from "./timeline";
 // Each part of a piece owns its facts: the table is the standfirst's, the account tells what
 // decided the match and not the bookings, a section says what the account did not, and a stake is about its own man.
 
-const TABLE = /\b\d{1,2}(?:st|nd|rd|th)\b(?! minute)|\bbottom three\b|\brelegation zone\b|\bwithout a win\b|\bunbeaten\b|\btop of the table\b|\btop place\b|\bfirst (?:win|defeat|victory)\b/iu;
+// A place, never an ordinal with its noun: "the 80th minute", "an 85th-minute shot", "his 12th goal".
+const TABLE = /\b\d{1,2}(?:st|nd|rd|th)\b(?![- ](?:minute|goal|league|start|appearance|match|game|assist|save|shot|chance|time)s?\b)|\bbottom three\b|\brelegation zone\b|\bwithout a win\b|\bunbeaten\b|\btop of the table\b|\btop place\b|\bfirst (?:win|defeat|victory)\b/iu;
 const FIXTURE = /\bnext\b|\bhost(?:s|ing)?\b|\btravel(?:s|ling)? to\b|\bgo(?:es)? to\b|\baway to\b|\bat home to\b|\bvisit(?:s)?\b/iu;
 const BOOKED = /\bbooked\b|\bcautioned\b|\byellow card\b/iu;
 const CHANGE = /\bcame on\b|\bsent on\b|\bmaking way\b|\bmade way\b|\breplaced\b|\bintroduced\b/iu;
@@ -41,7 +43,7 @@ export function partFaults(code: number, piece: ReportPiece, desk: MatchDesk, fa
 
   // A stake is about its own man and the manager who picked him: no fixtures, no second player.
   piece.sections.forEach((s, i) => {
-    if (FIXTURE.test(s.stake)) fault(sectionKey(code, i), "a fixture in a stake", "send-back", s.stake.match(FIXTURE)?.[0] ?? "");
+    faultOn(fault, sectionKey(code, i), "a fixture in a stake", "send-back", FIXTURE, s.stake);
     const own = match.men.filter((m) => s.head.includes(surname(m.name)) || s.pitch.includes(surname(m.name)));
     const others = match.men.filter((m) => !own.includes(m) && s.stake.includes(surname(m.name)));
     if (others.length > 0) fault(sectionKey(code, i), "a stake names only its own man", "send-back", surname(others[0].name));

@@ -18,8 +18,6 @@ export interface MatchEvent {
   other: ReportMan | null;
   shot: PlShot | null;
   injury: boolean;
-  varCall: string | null;
-  addedMinutes: number | null;
   /** The score after a goal; null on every other moment. */
   score: { home: number; away: number } | null;
   phrases: string[];
@@ -36,6 +34,8 @@ export const goalsBy = (events: readonly MatchEvent[], code: number) =>
   events.filter((e) => isGoal(e) && e.kind !== "own-goal" && e.man?.code === code).length;
 /** Goals he set up. */
 export const assistsBy = (events: readonly MatchEvent[], code: number) => events.filter((e) => isGoal(e) && e.other?.code === code).length;
+/** Goals he scored or set up. */
+export const involvedIn = (events: readonly MatchEvent[], code: number) => goalsBy(events, code) + assistsBy(events, code);
 /** A red card, straight or a second yellow. */
 export const isDismissal = (kind: MomentKind) => kind === "sent-off" || kind === "second-yellow";
 
@@ -66,8 +66,6 @@ export function matchEvents(match: ReportMatchInput): MatchEvent[] {
       other: find(moment.men[1]),
       shot: moment.shot,
       injury: moment.injury,
-      varCall: moment.varCall,
-      addedMinutes: moment.addedMinutes,
       score: after,
       phrases: minutePhrases(moment.minute, CHANGES.has(moment.kind)),
     });
@@ -80,12 +78,9 @@ export interface ManCounts {
   onTarget: number;
   /** Shots he set up, the "Assisted by" on any attempt that was not a penalty. */
   chancesMade: number;
-  woodwork: number;
-  /** Corners and set pieces he delivered that ended in a shot. */
-  deliveries: number;
 }
 
-const zero = (): ManCounts => ({ shots: 0, onTarget: 0, chancesMade: 0, woodwork: 0, deliveries: 0 });
+const zero = (): ManCounts => ({ shots: 0, onTarget: 0, chancesMade: 0 });
 
 /** Each man's counts in this match, by FPL code; a man who played and did none of it is all noughts. */
 export function manCounts(events: readonly MatchEvent[], men: readonly ReportMan[]): Map<number, ManCounts> {
@@ -96,13 +91,9 @@ export function manCounts(events: readonly MatchEvent[], men: readonly ReportMan
     if (shooter !== undefined) {
       shooter.shots += 1;
       if (ON_TARGET.has(event.kind)) shooter.onTarget += 1;
-      if (event.kind === "woodwork") shooter.woodwork += 1;
     }
     const maker = event.other === null ? undefined : counts.get(event.other.code);
-    if (maker !== undefined && event.shot?.situation !== "penalty") {
-      maker.chancesMade += 1;
-      if (event.shot?.situation === "corner" || event.shot?.situation === "set piece") maker.deliveries += 1;
-    }
+    if (maker !== undefined && event.shot?.situation !== "penalty") maker.chancesMade += 1;
   }
   return counts;
 }

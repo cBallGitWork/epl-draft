@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { draftMan, goalAt } from "./__fixtures__/draftMan";
 import { draftSide } from "./__fixtures__/draftSide";
 import { worthOf } from "./__fixtures__/worth";
-import { benchLines, clubLines, fitnessLine, lostCleanLine, minutesLine, newLine, scoredLine, subLine, uncoveredLine } from "./stories";
+import { benchLines, clubLines, fitnessLine, lostCleanLine, minutesLine, newLine, returnWords, scoredLine, subLine, uncoveredLine } from "./stories";
 import type { DraftMan } from "./types";
 
 const worth = worthOf();
@@ -54,6 +54,16 @@ describe("a draft man's facts, each in its own line", () => {
     expect(benchLines(side([], bench), [], 5).map((b) => b.line)).toEqual(["Star got 9 points on the bench"]);
     expect(benchLines(side([], bench), [], -5).map((b) => b.line)).toEqual(["Star got 9 points on the bench, more than the margin"]);
     expect(uncoveredLine(draftMan("Foden", "M", null, 0, 0, { club: "Man City" }), side([]), "saturday")).toBe("Foden did not play and Dons have no reserve to come on for him");
+  });
+
+  it("says one minute, not one minutes", () => {
+    expect(minutesLine(draftMan("Isak", "F", 1, 1, 0, { started: false }))).toBe("did not start and played 1 minute off the bench, 1 point for the appearance");
+    expect(minutesLine(draftMan("Saka", "M", 1, 1, 0, { started: true }))).toBe("went off after 1 minute");
+  });
+
+  it("counts two clean sheets in a double gameweek as two", () => {
+    expect(returnWords(draftMan("Gabriel", "D", 10, 180, 0, { cleanSheets: 2, played: 2 }))).toBe("2 clean sheets");
+    expect(scoredLine(draftMan("Gabriel", "D", 10, 180, 0, { cleanSheets: 2, played: 2 }), worth)).toBe("hauled 10: 2 clean sheets");
   });
 
   it("says one club's men all blanked or all kept clean sheets, and keeps no split line", () => {

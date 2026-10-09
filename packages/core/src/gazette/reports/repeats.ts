@@ -1,4 +1,5 @@
-import { masked, sentences } from "../predictions/prose";
+import { sentences } from "../predictions/prose";
+import { blanked } from "../proofing";
 
 // The sub-editor's ear for repetition: a phrase said twice in one match, a word leaned on across a match or the page,
 // and sentences that open the same way.
@@ -38,7 +39,7 @@ export function repeatsIn(pieces: readonly { code: number; prose: string }[], na
     const counts = new Map<string, string[]>();
     const openers = new Map<string, string[]>();
     for (const line of originals) {
-      const w = words(masked(line, names).replace(/\u0000/gu, " "));
+      const w = words(blanked(line, names));
       const seen = new Set<string>();
       for (let i = 0; i + PHRASE <= w.length; i++) {
         const gram = w.slice(i, i + PHRASE);

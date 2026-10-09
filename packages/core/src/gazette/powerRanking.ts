@@ -42,7 +42,8 @@ function roundLine(teamId: string, results: readonly StoryResult[]): string | nu
     : `lost to ${result.winner.name} by ${round(result.margin)}`;
 }
 
-/** A margin to one decimal place. */
+/** A margin to one decimal place, or two where one would round a win to nought. */
 function round(margin: number): string {
-  return String(rounded(margin, 1));
+  const one = rounded(margin, 1);
+  return String(one === 0 ? rounded(margin, 2) : one);
 }

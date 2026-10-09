@@ -4,6 +4,8 @@ import { matchBlock } from "./brief";
 import { checkReports } from "./checks";
 import { deskDay } from "./desk";
 import type { ReportPiece, ReportsDraft } from "./draft";
+import { PALMER, SAKA, deskOf, matchInput, moment, reportMan } from "./__fixtures__/built";
+import type { ReportMatchInput } from "./types";
 
 // A clean piece written for this test from the brief's own facts; the mutations below each break one rule.
 
@@ -189,5 +191,27 @@ describe("checkReports", () => {
     const piece = { ...CLEAN, sections: [CLEAN.sections[0], { ...CLEAN.sections[1], stake: "His seven points have Notemail 38-34 up on test2." }, CLEAN.sections[2]] };
     const faults = checkReports({ headline: "", headlines: [], matches: new Map([[2645244, piece]]) }, { ...ctx, desks: withH2h, blocks: new Map([[2645244, matchBlock(withH2h[0])]]) });
     expect(faults.filter((f) => f.check === "a scoreline the match never had")).toEqual([]);
+  });
+});
+
+describe("checkReports on a made-up match", () => {
+  const faultsOn = (match: ReportMatchInput, account: string) => {
+    const desk = deskOf(match);
+    const piece = { standfirst: "Arsenal beat Chelsea.", account, sections: [] };
+    return checkReports({ headline: "", headlines: [], matches: new Map([[9001, piece]]) }, { desks: [desk], blocks: new Map([[9001, matchBlock(desk)]]), gameweek: 7, past: [] });
+  };
+
+  it("lets a man who scored twice be named once", () => {
+    const match = matchInput([SAKA, PALMER], [moment("10", "goal", [1, null]), moment("20", "goal", [1, null])], [2, 0]);
+    expect(faultsOn(match, "Saka scored twice before half-time.").filter((f) => f.check === "the goals out of order")).toEqual([]);
+  });
+
+  it("finds an injury, a penalty and an own goal told at the start of a sentence", () => {
+    const james = reportMan(5, "Reece James", "away", { started: false, onAt: "60" });
+    const match = matchInput([SAKA, PALMER, james], [
+      moment("30", "penalty-goal", [1, null]), moment("60", "substitution", [5, 3], { injury: true }), moment("70", "own-goal", [5, null]),
+    ], [2, 0]);
+    const account = "Penalty taken by Saka went in. Injury ended Palmer's match. Own goal by James made it two.";
+    expect(faultsOn(match, account).filter((f) => f.check.startsWith("leaves out"))).toEqual([]);
   });
 });

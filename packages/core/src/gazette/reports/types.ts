@@ -26,6 +26,7 @@ export interface ReportMan {
   onAt: string | null;
   offAt: string | null;
   injuredOff: boolean;
+  sentOff: boolean;
   /** The line he was named in: G, D, M or F. */
   line: string | null;
   minutes: number;
@@ -55,7 +56,6 @@ export interface SideFigures {
   clearChancesScored: number;
   possession: number;
   errorsToGoal: number;
-  errorsToShot: number;
 }
 
 export interface ReportMatchInput {

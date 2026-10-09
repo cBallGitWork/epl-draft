@@ -69,4 +69,14 @@ describe("plainHead", () => {
   it("prints a broken head as the first man its football names", () => {
     expect(plainHead("Delap off the mark denied", "Liam Delap had four shots while Murillo headed over.", ["Delap", "Murillo"], never)).toBe("Delap");
   });
+  it("prints a five-word head, which the check sends back, as its man", () => {
+    expect(plainHead("Saka twice for Arteta's side", "Saka scored twice.", ["Saka"], never)).toBe("Saka");
+  });
+});
+
+describe("correct", () => {
+  it("leaves a decimal alone: 1.5 points is no one-to-nine count", () => {
+    expect(correct("He averages 1.5 points a match.")).toBe("He averages 1.5 points a match.");
+    expect(correct("He scored for 5 points.")).toBe("He scored for five points.");
+  });
 });

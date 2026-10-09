@@ -1,17 +1,17 @@
 import { REPORTS } from "../../config";
-import { capital, withoutAccents } from "../../format";
+import { capital, spelled, withoutAccents } from "../../format";
 import { ON_THE_PITCH } from "../../football/types";
 import { faultLog, type Fault, type Report } from "../predictions/checks";
 import { mentionAt as mentionExact, numbersIn, sentences, wordCount } from "../predictions/prose";
+import { faultOn, strayFigures } from "../proofing";
 import type { MatchDesk } from "./desk";
-import type { ReportPiece, ReportsDraft } from "./draft";
+import { HEAD_WORDS, type ReportPiece, type ReportsDraft } from "./draft";
 import { surname } from "./keyStats";
-import { partFaults } from "./parts";
+import { partFaults, sectionKey } from "./parts";
 import { repeatsIn } from "./repeats";
 import { dayFaults, wordFaults } from "./style";
 import { isDismissal, isGoal } from "./timeline";
 import { higherFirst } from "./derived";
-import { sectionKey } from "./parts";
 
 // The editor reads every match against its own facts: names, figures, scorelines, the order of the goals, what must be
 // covered and how long it runs. Pure; the writer sends back once on these and never on taste.
@@ -113,7 +113,7 @@ function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx:
   const total = (desk.match.fixture.homeScore ?? 0) + (desk.match.fixture.awayScore ?? 0);
   const reds = desk.events.filter((e) => isDismissal(e.kind)).length;
   const allowed = new Set([...numbersIn(block), 0, 90, 45, ctx.gameweek, total, ...(reds > 0 ? [ON_THE_PITCH - 1, ON_THE_PITCH - reds] : [])]);
-  for (const n of numbersIn(prose.replace(SCORE, " "))) if (!allowed.has(n)) fault(section, "a figure the facts do not give", "hard", String(n));
+  for (const n of strayFigures(prose.replace(SCORE, " "), allowed)) fault(section, "a figure the facts do not give", "hard", String(n));
 
   const events = desk.events.filter(isGoal);
   const scores = new Set([
@@ -128,7 +128,7 @@ function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx:
     else if (Number(a) < Number(b)) fault(section, "a score in prose goes higher first", "send-back", said);
   }
   for (const [said] of prose.matchAll(RECORD)) if (!block.toLowerCase().includes(said.toLowerCase())) fault(section, "a record the facts do not give", "send-back", said);
-  if (COMEBACK.test(prose) && !desk.facts.some((f) => f.includes("came from behind"))) fault(section, "a comeback that did not finish level or ahead", "send-back", prose.match(COMEBACK)?.[0] ?? "");
+  if (!desk.facts.some((f) => f.includes("came from behind"))) faultOn(fault, section, "a comeback that did not finish level or ahead", "send-back", COMEBACK, prose);
 
   // A man is who the sheet says: a starter is never the man who came on, and a name keeps its accents.
   const starters = desk.match.men.filter((m) => m.started);
@@ -150,15 +150,15 @@ function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx:
   // Everything that decided or changed the match is named somewhere in its piece.
   const musts = desk.events.filter((e) => ["goal", "penalty-goal", "own-goal", "ruled-out", "penalty-missed", "penalty-saved", "sent-off", "second-yellow", "injured-off"].includes(e.kind) || (e.kind === "substitution" && e.injury));
   const said: Record<string, RegExp> = {
-    "ruled-out": /\bruled out\b|\bdisallowed\b|\bvideo review\b|\bVAR\b/u,
-    "injured-off": /\binjur/u,
-    substitution: /\binjur/u,
-    "sent-off": /\bsent off\b|\bred card\b|\bdismissed\b/u,
-    "second-yellow": /\bsent off\b|\bsecond booking\b|\bsecond yellow\b|\bdismissed\b/u,
-    "penalty-goal": /\bpenalt|\bspot\b/u,
-    "penalty-missed": /\bpenalt|\bspot\b/u,
-    "penalty-saved": /\bpenalt|\bspot\b/u,
-    "own-goal": /\bown goal\b|\bown net\b/u,
+    "ruled-out": /\bruled out\b|\bdisallowed\b|\bvideo review\b|\bVAR\b/iu,
+    "injured-off": /\binjur/iu,
+    substitution: /\binjur/iu,
+    "sent-off": /\bsent off\b|\bred card\b|\bdismissed\b/iu,
+    "second-yellow": /\bsent off\b|\bsecond booking\b|\bsecond yellow\b|\bdismissed\b/iu,
+    "penalty-goal": /\bpenalt|\bspot\b/iu,
+    "penalty-missed": /\bpenalt|\bspot\b/iu,
+    "penalty-saved": /\bpenalt|\bspot\b/iu,
+    "own-goal": /\bown goal\b|\bown net\b/iu,
   };
   for (const e of musts) {
     const man = e.kind === "substitution" ? e.other : e.man;
@@ -180,7 +180,8 @@ function shape(code: number, piece: ReportPiece, desk: MatchDesk, fault: Report)
   if (!sf.includes(higherFirst(h, a))) fault(`${code}:standfirst`, "gives the score, higher first", "send-back", sf);
   if (desk.events.some((e) => e.phrases.some((p) => sf.includes(p)))) fault(`${code}:standfirst`, "a minute in the standfirst", "send-back", sf);
 
-  const scorers = desk.events.flatMap((e) => (isGoal(e) && e.kind !== "own-goal" && e.man !== null ? [surname(e.man.name)] : []));
+  // A man who scored twice may be named once ("Saka scored twice"), so the order is his first goal's.
+  const scorers = [...new Set(desk.events.flatMap((e) => (isGoal(e) && e.kind !== "own-goal" && e.man !== null ? [surname(e.man.name)] : [])))];
   // Each scorer must be named after the one before him; an earlier mention (a booking) does not count against the order.
   let last = 0;
   for (const name of scorers) {
@@ -194,7 +195,7 @@ function shape(code: number, piece: ReportPiece, desk: MatchDesk, fault: Report)
   else if (piece.sections.length !== budget.sections) fault(`${code}:match`, `${budget.sections} sections, not ${piece.sections.length}`, "send-back", String(piece.sections.length));
   const mine = [...match.men.map((m) => surname(m.name)), match.home.name, match.away.name, ...match.home.shorts, ...match.away.shorts];
   piece.sections.forEach((s, i) => {
-    if (wordCount(s.head) > 4 || s.head === "") fault(sectionKey(code, i), "a head of four words or fewer", "send-back", s.head);
+    if (wordCount(s.head) > HEAD_WORDS || s.head === "") fault(sectionKey(code, i), `a head of ${spelled(HEAD_WORDS)} words or fewer`, "send-back", s.head);
     if (!mine.some((n) => mentionAt(s.head, n) >= 0)) fault(sectionKey(code, i), "a head names a man or club from this match", "send-back", s.head);
     if (s.pitch === "" || s.stake === "") fault(sectionKey(code, i), "a section needs its football and its stake", "hard", s.head);
   });

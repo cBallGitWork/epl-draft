@@ -16,6 +16,11 @@ describe("matchupState", () => {
     expect(matchupState({ home: draftSide("Home", 33, eleven("h")), away }, LIMITS, "gameweek").score).toBe("Home and Away drew 33-33");
   });
 
+  it("prints a side Fantrax gave no total as a dash, never a nought it lost by", () => {
+    const unscored = { ...draftSide("Dons", 0, eleven("h")), total: null };
+    expect(matchupState({ home: unscored, away: draftSide("Rovers", 30, eleven("a")) }, LIMITS, "gameweek").score).toBe("Dons —, Rovers 30");
+  });
+
   it("finds the late goal worth more than the margin that decided it, the last in time, not the latest minute", () => {
     const decider = (men: Record<number, ReturnType<typeof man>>) => lateDecider(matchupState({ home: draftSide("Home", 38, eleven("h", men)), away: draftSide("Away", 37, eleven("a")) }, LIMITS, "gameweek").home, 1, worth);
     expect(decider({ 9: man("Haaland", "F", 6, 90, 0, { goals: 1, scoredAt: [goalAt(81)] }) })?.m.name).toBe("Haaland");
