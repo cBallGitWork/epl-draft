@@ -15,6 +15,7 @@ import { liveTie } from "./components/shell/liveTie";
 import { aheadOf, sectionsFor } from "./components/shell/sections";
 import { readInbox } from "./news/inbox";
 import { readerTeamId } from "./squads";
+import { orDegraded } from "./refusals";
 import { venueOf } from "./venues";
 import { deskFontVariables } from "./deskFonts";
 import { APP_SHORT_NAME, TOKEN_SRGB } from "./config";
@@ -60,7 +61,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     .then((inbox) => inbox.items.map((item) => item.id))
     .catch(() => []);
 
-  const [faces, reader] = await Promise.all([groundFaces(), readerTeamId()]);
+  // The reader's ground reads FPL through the squads: an outage on a cold cache is Anfield, never the whole app down.
+  const [faces, reader] = await Promise.all([groundFaces(), orDegraded(readerTeamId(), () => null)]);
 
   return (
     <html lang="en-GB" className={deskFontVariables}>
