@@ -18,7 +18,6 @@ interface LiveLine {
 export interface SeasonLine {
   startsBefore: number;
   matchesBefore: number;
-  yellowsBefore: number;
   goalsSeason: number;
 }
 
@@ -31,8 +30,8 @@ export interface MenExtras {
   fitness: ReadonlyMap<number, string>;
 }
 
-const NO_SEASON: SeasonLine = { startsBefore: 0, matchesBefore: 0, yellowsBefore: 0, goalsSeason: 0 };
-const UNREAD: Pick<ReportMan, keyof SeasonLine> = { startsBefore: null, matchesBefore: 0, yellowsBefore: null, goalsSeason: null };
+const NO_SEASON: SeasonLine = { startsBefore: 0, matchesBefore: 0, goalsSeason: 0 };
+const UNREAD: Pick<ReportMan, keyof SeasonLine> = { startsBefore: null, matchesBefore: 0, goalsSeason: null };
 
 /** Both sheets, starters then substitutes; a man the bridge could not place has no code and is left out. */
 export function reportMen(

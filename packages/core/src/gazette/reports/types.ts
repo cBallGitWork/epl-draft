@@ -1,4 +1,3 @@
-import type { StrengthPlaces } from "../../football/intel/strength";
 import type { PlMoment } from "../../football/premierleague/moments";
 import type { StoryLineup } from "./lineups";
 import type { Club, Fixture } from "../../football/types";
@@ -37,7 +36,6 @@ export interface ReportMan {
   /** Before this match, this season; null when a past gameweek could not be read. */
   startsBefore: number | null;
   matchesBefore: number;
-  yellowsBefore: number | null;
   /** This season including this match; null when a past gameweek could not be read. */
   goalsSeason: number | null;
   /** The league side that holds him, whether he was in its eleven, and where its head-to-head stands this period. */
@@ -84,5 +82,4 @@ export interface ReportDayInput {
   /** Every fixture of the season, for the table and what comes next. */
   season: readonly Fixture[];
   clubs: readonly Club[];
-  standing: StrengthPlaces;
 }
