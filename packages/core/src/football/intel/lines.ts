@@ -1,4 +1,4 @@
-import { finiteOrNull as count } from "../../untrusted";
+import { finiteOrNull as count, recordOrEmpty } from "../../untrusted";
 import type { IntelManifest } from "./types";
 
 // Each man's league season in totals, off the sister repo's player log: the sample the attribute
@@ -65,7 +65,7 @@ const PLAYED_SHARE = 1 / 3;
 export function lineIntel(file: IntelLines | null): Map<number, PlayerLine> {
   const byCode = new Map<number, PlayerLine>();
   for (const raw of file?.players ?? []) {
-    const row = (raw ?? {}) as Record<string, unknown>;
+    const row = recordOrEmpty(raw);
     const code = count(row.code);
     const minutes = count(row.minutes);
     if (code === null || !Number.isInteger(code) || minutes === null) continue;
@@ -84,7 +84,7 @@ export function lineIntel(file: IntelLines | null): Map<number, PlayerLine> {
 }
 
 function running(raw: unknown): Running | null {
-  const row = (raw ?? {}) as Record<string, unknown>;
+  const row = recordOrEmpty(raw);
   const [minutes, km, sprints, topSpeed] = [row.minutes, row.km, row.sprints, row.topSpeed].map(count);
   return minutes === null || km === null || sprints === null || topSpeed === null ? null : { minutes, km, sprints, topSpeed };
 }
