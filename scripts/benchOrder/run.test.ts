@@ -163,6 +163,12 @@ describe("benchOrderRun", () => {
     expect(run.writes).toEqual([]);
   });
 
+  it("fails and writes nothing when the period's lock is gone when it wakes", async () => {
+    const run = league("2026-10-10T06:00:00.000Z", rosters(), { lockOf: async () => null });
+    expect(await benchOrderRun(run.deps, { write: true, wait: true })).toBe(1);
+    expect(run.writes).toEqual([]);
+  });
+
   it("waits again for a lock moved later while it slept", async () => {
     const later = "2026-10-10T13:15:00.000Z";
     const run = league("2026-10-10T06:00:00.000Z", rosters(), { lockOf: async () => later });

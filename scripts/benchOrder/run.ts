@@ -45,7 +45,7 @@ export async function benchOrderRun(deps: Deps, options: Options): Promise<numbe
   // A lock gone or passed by now was read again after a wait: the write it was waiting for never went.
   if (moment.kind === "no-lock" || moment.kind === "locked") {
     deps.log(moment.kind === "locked" ? `Period ${period} locked at ${moment.lock} before its benches were ordered.` : `Period ${period} has no lock now.`);
-    return moment.kind === "locked" && options.write ? 1 : 0;
+    return options.write ? 1 : 0;
   }
   if (moment.kind !== "now") {
     deps.log(
