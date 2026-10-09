@@ -84,14 +84,14 @@ export function buildPresserBrief(brief: {
   return [
     `TEAM NEWS, gameweek ${brief.gameweek}. What the managers said before the deadline. A draft manager reads this to decide who to start AND who to claim, so it covers every man mentioned, not only the ones somebody owns.`,
     [`WHAT WAS SAID, by club — ${brief.lines.length} men across ${byClub.size} clubs, ${owned} of them owned in this league. The code is the club's and you must echo it back exactly:`, ...clubs].join("\n"),
-    [
-      quiet.length === 0
+    quiet.length === 0
       ? null
       : [
           "THESE CLUBS SPOKE AND REPORTED NOTHING. Each gets a row with an empty \"men\" list and a line saying so in his manager's own terms — no fresh injuries, everyone available. Do NOT invent a player for them, and do not leave them out:",
           ...quiet,
         ].join("\n"),
-    'RETURN A ROW PER CLUB in "teamNews", in this shape:',
+    [
+      'RETURN A ROW PER CLUB in "teamNews", in this shape:',
       '  { "club": the club name exactly as given,',
       '    "code": the number given on that line,',
       '    "line": ONE sentence of context — what the manager did or would not do, and nothing that repeats a bullet,',
