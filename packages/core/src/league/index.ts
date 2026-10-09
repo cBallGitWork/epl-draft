@@ -65,9 +65,9 @@ export { fetchSeasonCodes } from "./fantrax/playerClient";
 // The shape differ, for `scripts/shape-diff.ts`: does the league still answer in the shape the mappers expect.
 export { diffShapes, shapeOf } from "./fantrax/shape";
 
-export { headToHead, leaguePool, leagueSeason, nextPairedPeriod, pairingInvolves, periodPairings, scoringOf } from "./selectors";
+export { headToHeads, leaguePool, leagueSeason, nextPairedPeriod, pairingInvolves, periodPairings, scoringOf } from "./selectors";
 export { leads, trails } from "./scoreline";
-export type { LeagueSeason, PeriodPairing, PoolPlayer } from "./selectors";
+export type { HeadToHead, LeagueSeason, PeriodPairing, PoolPlayer } from "./selectors";
 
 export { LEAGUE_COMPETITION, cupTies, groupTies, leagueTies, seededIn } from "./competitions";
 export type { CompetitionTie, TieSide } from "./competitions";

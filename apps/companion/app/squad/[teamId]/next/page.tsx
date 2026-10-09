@@ -1,5 +1,5 @@
 import TabEmpty from "../../../components/league/TabEmpty";
-import { headToHead, inkOn } from "@epl/core";
+import { headToHeads, inkOn } from "@epl/core";
 import TeamShell from "../Shell";
 import { SQUAD } from "../../routes";
 import { identify, whoseTeam } from "../team";
@@ -34,10 +34,11 @@ export default async function NextMatchPage({
   const { team } = await whoseTeam(slug, squads.period.teams);
   const teamId = team.teamId;
 
-  const tie =
+  // Two in a double header, one under the other.
+  const ties =
     squads.info !== null && squads.roundPeriod !== null
-      ? headToHead(squads.info.matchups, squads.info.teams, squads.roundPeriod, teamId)
-      : undefined;
+      ? headToHeads(squads.info.matchups, squads.info.teams, squads.roundPeriod, teamId)
+      : [];
 
   // Where each side stands, for the bracket under his name; no bracket when the table would not answer.
   const placing = placings(table);
@@ -46,23 +47,26 @@ export default async function NextMatchPage({
     <TeamShell
       team={identify(team, slug)}
       current="next"
-      empty={tie === undefined ? ["next"] : []}
+      empty={ties.length === 0 ? ["next"] : []}
     >
-      {tie === undefined ? (
+      {ties.length === 0 ? (
         <TabEmpty>{/* An outage and an ordinary bye are different absences. */}
             {squads.info === null
               ? "We cannot read the league's own description of itself right now."
               : `${team.teamName} has no fixture this gameweek.`}</TabEmpty>
       ) : (
-        <Fixture
-          gameweek={squads.snapshot.gameweek}
-          home={{ teamId: tie.team.teamId, name: shortName(tie.team.teamId, tie.team.name), place: placing.get(tie.team.teamId) }}
-          away={{
-            teamId: tie.opponent.teamId,
-            name: shortName(tie.opponent.teamId, tie.opponent.name),
-            place: placing.get(tie.opponent.teamId),
-          }}
-        />
+        ties.map((tie) => (
+          <Fixture
+            key={tie.opponent.teamId}
+            gameweek={squads.snapshot.gameweek}
+            home={{ teamId: tie.team.teamId, name: shortName(tie.team.teamId, tie.team.name), place: placing.get(tie.team.teamId) }}
+            away={{
+              teamId: tie.opponent.teamId,
+              name: shortName(tie.opponent.teamId, tie.opponent.name),
+              place: placing.get(tie.opponent.teamId),
+            }}
+          />
+        ))
       )}
     </TeamShell>
   );

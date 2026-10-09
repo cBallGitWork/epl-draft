@@ -69,7 +69,7 @@ function Yours({
   const theirs = scores.get(opponent.teamId);
 
   return (
-    <Link href={matchupHref(team.teamId)} className="flex flex-col py-2">
+    <Link href={matchupHref(team.teamId, undefined, undefined, opponent.teamId)} className="flex flex-col py-2">
       <ScoreLine name={team.name} score={yours} other={theirs} yours />
       <ScoreLine name={opponent.name} score={theirs} other={yours} />
       {/* Who is still to come; absence is "Fantrax did not say", never "nobody left". */}

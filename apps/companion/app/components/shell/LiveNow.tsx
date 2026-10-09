@@ -1,10 +1,10 @@
 import type { LiveTie } from "./liveTie";
 import LiveStrip from "./LiveStrip";
 
-// Awaits the live tie on the server and hands it to `LiveStrip`, or draws nothing when there is none.
+// Awaits the live ties on the server and hands them to `LiveStrip`, or draws nothing when there are none.
 
-export default async function LiveNow({ tie }: { tie: Promise<LiveTie | null> }) {
-  const live = await tie;
-  if (live === null) return null;
-  return <LiveStrip {...live} />;
+export default async function LiveNow({ tie }: { tie: Promise<LiveTie[]> }) {
+  const ties = await tie;
+  if (ties.length === 0) return null;
+  return <LiveStrip ties={ties} />;
 }

@@ -1,5 +1,5 @@
 import Link from "@/app/components/shell/Link";
-import { LEAGUE_NAME, type RosteredTeam, headToHead, isResolved } from "@epl/core";
+import { LEAGUE_NAME, type RosteredTeam, headToHeads, isResolved } from "@epl/core";
 import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
 import SignIn from "./SignIn";
@@ -56,13 +56,10 @@ export default async function SquadsPage() {
 
   // Who each plays this week, off the schedule already in the payload; no line when it does not say.
   const period = squads.roundPeriod;
-  const opponentOf = (teamId: string) =>
-    squads.info === null || period === null
-      ? null
-      : (headToHead(squads.info.matchups, squads.info.teams, period, teamId)?.opponent ?? null);
+  // Both of a double header's, joined.
   const opponentName = (teamId: string) => {
-    const opponent = opponentOf(teamId);
-    return opponent === null ? null : shortName(opponent.teamId, opponent.name);
+    const ties = squads.info === null || period === null ? [] : headToHeads(squads.info.matchups, squads.info.teams, period, teamId);
+    return ties.length === 0 ? null : ties.map((tie) => shortName(tie.opponent.teamId, tie.opponent.name)).join(" & ");
   };
 
   return (

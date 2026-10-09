@@ -12,7 +12,7 @@ import ScoreRow from "../components/shell/ScoreRow";
 import Section from "../components/shell/Section";
 import FootballRow from "./FootballRow";
 import Absent from "@/app/components/shell/Absent";
-import { matchupHref } from "@/app/league/routes";
+import { tieHref } from "@/app/league/routes";
 
 // Both competitions in Championship Manager's results row, the football first (Craig, 21 Sep 2026).
 
@@ -46,7 +46,7 @@ function DraftRow({
       // No `pending`: a fantasy total has no kick-off, and a missing one prints the dash.
       score={{ home: figure(home), away: figure(away) }}
       // No tail: a fantasy tie has no minute, and the accent edge and name already mark yours.
-      href={opens ? matchupHref(opensOn, gameweek) : undefined}
+      href={opens ? tieHref(opensOn, gameweek, tie.home.team?.teamId, tie.away.team?.teamId) : undefined}
     />
   );
 }

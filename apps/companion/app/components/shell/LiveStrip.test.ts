@@ -9,7 +9,7 @@ vi.mock("@/app/desk", () => ({ SMALL_CAPS: "" }));
 
 /** The strip's two figures in order, each with whether it is dimmed. */
 function figures(yours: number | null, theirs: number | null): { text: string; dim: boolean }[] {
-  const html = renderToStaticMarkup(createElement(LiveStrip, { yours, theirs, opponent: "test2", href: "/league/matchups/a" }));
+  const html = renderToStaticMarkup(createElement(LiveStrip, { ties: [{ yours, theirs, opponent: "test2", href: "/league/matchups/a" }] }));
   return [...html.matchAll(/<span( class="opacity-70")?>([^<]*)<\/span>/g)].map((match) => ({ text: match[2], dim: match[1] !== undefined }));
 }
 
@@ -25,5 +25,12 @@ describe("the live strip's score", () => {
 
   it("dims neither figure beside a dash, as a missing total neither leads nor trails", () => {
     expect(figures(null, 38)).toEqual([{ text: "—", dim: false }, { text: "38", dim: false }]);
+  });
+
+  it("carries both ties of a double header, each to its own board", () => {
+    const tie = (opponent: string, href: string) => ({ yours: 40, theirs: 31, opponent, href });
+    const html = renderToStaticMarkup(createElement(LiveStrip, { ties: [tie("Two", "/league/matchups/a"), tie("Three", "/league/matchups/a?vs=c")] }));
+    expect([...html.matchAll(/href="([^"]*)"/g)].map((match) => match[1])).toEqual(["/league/matchups/a", "/league/matchups/a?vs=c"]);
+    expect(html).toMatch(/Two[\s\S]*Three/);
   });
 });

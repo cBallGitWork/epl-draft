@@ -1130,7 +1130,7 @@ Sixteen top-level keys. The four worth building on:
 - **`miscData.maxActions` = 1** in both drafted leagues, `null` in real. The
   league's cap on transactions, which no screen shows.
 - **`periodOppnentTeamIds`** — the opponent, keyed by period. A second source for
-  what `headToHead` already answers.
+  what `headToHeads` already answers.
 - **`tables[].rows[]`** — the roster as Fantrax draws it, per player:
   `cells[0]` is the fixture WITH kickoff (`"@COV<br/>Mon 3:00PM"`) and an
   `eventId`; `scorer.icons[].tooltip` is a dated news line (*"Sep 20, 4:17 PM:

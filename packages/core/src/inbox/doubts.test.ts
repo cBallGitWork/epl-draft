@@ -26,7 +26,7 @@ describe("availabilityNews", () => {
   const injured = { state: "injured", label: "Inj", out: true, chance: 0 } as const;
 
   /** The reader is `t1` and he plays `t2` next. */
-  const squads = { mine: "t1", opponent: "t2", name: (id: string) => ({ t1: "Mine", t2: "Theirs" })[id] ?? null };
+  const squads = { mine: "t1", opponents: ["t2"], name: (id: string) => ({ t1: "Mine", t2: "Theirs" })[id] ?? null };
 
   it("files the reader's own squad and his next opponent, and nobody else", () => {
     // A third manager's doubt is somebody else's problem.
@@ -38,7 +38,7 @@ describe("availabilityNews", () => {
     // "Only mine" is a sentence about a reader who HAS one. The league's injury
     // list is public football news; all he loses is the ink and the word "you".
     const notes = [note(), note({ teamId: "t2" }), note({ teamId: "t3" })];
-    const items = availabilityNews(notes, 5, { ...squads, mine: null, opponent: null });
+    const items = availabilityNews(notes, 5, { ...squads, mine: null, opponents: [] });
     expect(items).toHaveLength(3);
     expect(items[0].from).toBe("Mine's physio");
     expect(items[0].about).toBeNull();
@@ -66,7 +66,7 @@ describe("availabilityNews", () => {
     expect(ban.from).toBe("Your scout");
     expect(ban.about).toBe("Theirs, your gameweek 5 opponent");
     // Signed out, the man's own club desk signs it; "Theirs" ends in s, so the apostrophe stands alone.
-    const [league] = availabilityNews([note({ teamId: "t2" })], 5, { ...squads, mine: null, opponent: null });
+    const [league] = availabilityNews([note({ teamId: "t2" })], 5, { ...squads, mine: null, opponents: [] });
     expect(league.from).toBe("Theirs' physio");
   });
 
@@ -142,6 +142,11 @@ describe("availabilityNews", () => {
     );
   });
 
+  it("files both opponents' doubts in a double header", () => {
+    const items = availabilityNews([note({ teamId: "t2" }), note({ teamId: "t3" }), note({ teamId: "t4" })], 5, { ...squads, opponents: ["t2", "t3"] });
+    expect(items.map((item) => item.teamId)).toEqual(["t2", "t3"]);
+  });
+
   it("puts the opponent's loss in his name, not in yours", () => {
     const [item] = availabilityNews([banned({ teamId: "t2", news: "Suspended until 10 Oct" })], 5, squads);
     expect(item.body).toBe("Theirs will be without Alexander Isak for gameweek 5. He is suspended until 10 Oct.");
@@ -212,7 +217,7 @@ describe("availabilityNews", () => {
     // a free agent's news belongs on the pool, where somebody can act on it.
     expect(availabilityNews([note({ teamId: null })], 5, squads)).toEqual([]);
     expect(
-      availabilityNews([note({ teamId: null })], 5, { ...squads, mine: null, opponent: null }),
+      availabilityNews([note({ teamId: null })], 5, { ...squads, mine: null, opponents: [] }),
     ).toEqual([]);
   });
 
@@ -221,7 +226,7 @@ describe("availabilityNews", () => {
     // and nothing else rather than the whole league back again.
     const notes = [note(), note({ teamId: "t2" })];
     expect(
-      availabilityNews(notes, 5, { ...squads, opponent: null }).map((i) => i.teamId),
+      availabilityNews(notes, 5, { ...squads, opponents: [] }).map((i) => i.teamId),
     ).toEqual(["t1"]);
   });
 });

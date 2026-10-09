@@ -4,7 +4,7 @@ import {
   bandCategories,
   clubById,
   gameweekStarted,
-  headToHead,
+  headToHeads,
   nextPairedPeriod,
   openingGameweek,
   oppositionByClub,
@@ -29,7 +29,7 @@ import { myTeamId } from "../../../session";
 import { MATCHUPS, matchupHref } from "../../routes";
 import { wholeNumber } from "../../../wholeNumber";
 import { sheetEvents } from "./events";
-import { STATS_OF, DEFAULT_SIDE_SORT, matchupTabs, matchupView, statsHref, statsOf } from "./views";
+import { STATS_OF, DEFAULT_SIDE_SORT, matchupTabs, matchupView, pickTie, statsHref, statsOf, tieTabs } from "./views";
 import { boardCategories, boardColumns } from "./sideRows";
 import { FootFrame } from "../../../components/shell/FootFrame";
 import TabStrip from "../../../components/shell/TabStrip";
@@ -47,7 +47,7 @@ export default async function HeadToHeadPage({
 }: {
   params: Promise<{ teamId: string }>;
   /** No `gw` is the round Fantrax points at; the schedule sends one, so a played round opens on its own week. */
-  searchParams: Promise<{ gw?: string; view?: string; of?: string; sort?: string; dir?: string }>;
+  searchParams: Promise<{ gw?: string; view?: string; of?: string; sort?: string; dir?: string; vs?: string }>;
 }) {
   const [{ teamId }, query] = await Promise.all([params, searchParams]);
   const { gw } = query;
@@ -78,7 +78,9 @@ export default async function HeadToHeadPage({
   const named = rostered.get(teamId);
   if (named === undefined) notFound();
 
-  const pairing = headToHead(squads.info.matchups, squads.info.teams, period, teamId);
+  // A double header is two ties: `vs` names the one on screen, and a strip switches between them.
+  const ties = headToHeads(squads.info.matchups, squads.info.teams, period, teamId);
+  const pairing = pickTie(ties, query.vs);
   const heading = <>Gameweek {squads.snapshot.gameweek}</>;
 
   if (pairing === undefined) {
@@ -165,6 +167,8 @@ export default async function HeadToHeadPage({
   const both = sharedSides({ pairing, rostered, shows, arranged, squads, mine, calendar });
   const withheld = withheldNotice(both);
   const gameweek = asked ?? undefined;
+  const vs = pairing === ties[0] ? undefined : pairing.opponent.teamId;
+  const switcher = tieTabs(teamId, gameweek, view, ties);
   const stat = both[of === "opponent" ? 1 : 0];
 
   return (
@@ -178,7 +182,7 @@ export default async function HeadToHeadPage({
             tabs={STATS_OF.map((key) => ({
               key,
               label: key === "fantasy" ? "Fantasy" : both[key === "team" ? 0 : 1].team.name,
-              href: statsHref(teamId, gameweek, key),
+              href: statsHref(teamId, gameweek, key, undefined, vs),
             }))}
           />
         ) : undefined
@@ -186,12 +190,13 @@ export default async function HeadToHeadPage({
     >
       <PhotoGround photo={venueOf(pairing.home.teamId)} />
       {refused === null ? null : <ScoreboardDown refused={refused} />}
+      {switcher.length === 0 ? null : <TabStrip label="Ties this gameweek" current={pairing.opponent.teamId} tabs={switcher} />}
       {listed === null ? (
         <MatchupBoard
           team={side(both[0])}
           opponent={side(both[1])}
           view={view}
-          tabs={matchupTabs(teamId, gameweek)}
+          tabs={matchupTabs(teamId, gameweek, vs)}
           body={
             view === "stats" && of !== "fantasy" ? (
               <SideTab
@@ -201,7 +206,7 @@ export default async function HeadToHeadPage({
                 breakdown={(of === "team" ? yours : theirs)?.breakdown ?? {}}
                 sort={sort}
                 hrefFor={(head: string) =>
-                  statsHref(teamId, gameweek, of, { head, descending: head === sort.head ? !sort.descending : true })
+                  statsHref(teamId, gameweek, of, { head, descending: head === sort.head ? !sort.descending : true }, vs)
                 }
               />
             ) : view === "stats" ? (

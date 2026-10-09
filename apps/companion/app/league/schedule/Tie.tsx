@@ -3,7 +3,7 @@ import type { ScheduleRound } from "./schedule";
 import ScoreRow from "../../components/shell/ScoreRow";
 import { LABEL } from "@/app/desk";
 import Absent from "@/app/components/shell/Absent";
-import { matchupHref } from "../routes";
+import { tieHref } from "../routes";
 
 // One tie as CM's results row (`shell/ScoreRow`): a fixture to come prints its code, never 0:0, and the whole row is one
 // link. Only the league's own ties open a board: the head-to-head route knows nothing of cups.
@@ -44,7 +44,7 @@ export default function Tie({
       away={side(tie.away, places, mine, settled && leads(home, away))}
       score={round.started ? { home: figure(home), away: figure(away) } : null}
       pending={<span className={LABEL}>{tie.code ?? "v"}</span>}
-      href={opens && opensOn !== undefined ? matchupHref(opensOn, round.gameweek) : undefined}
+      href={opens && opensOn !== undefined ? tieHref(opensOn, round.gameweek, tie.home.team?.teamId, tie.away.team?.teamId) : undefined}
     />
   );
 }

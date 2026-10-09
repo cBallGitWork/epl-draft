@@ -30,8 +30,8 @@ export function availabilityNews(
   squads: {
     /** The reader's own team, or null for a reader who has not signed in. */
     mine: string | null;
-    /** Who he plays next, or null when the fixture is not known. */
-    opponent: string | null;
+    /** Who he plays next: none when the fixture is not known, two in a double header. */
+    opponents: readonly string[];
     /** A team's name by id, injected because this module may not hold the league. */
     name: (teamId: string) => string | null;
   },
@@ -46,7 +46,7 @@ export function availabilityNews(
     const side: Side | null =
       note.teamId === squads.mine
         ? "mine"
-        : note.teamId === squads.opponent
+        : squads.opponents.includes(note.teamId)
           ? "opponent"
           : anonymous
             ? "league"
