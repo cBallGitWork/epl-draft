@@ -25,10 +25,15 @@ const xiOf = (elevens: Record<string, ReturnType<typeof eleven>>) =>
 const column = (xi: IntelXi) => xiColumn({ xi, gameweek: 6, clubs, teams: [], players, season })?.column;
 
 describe("xiColumn", () => {
-  it("calls the week a gameweek in its deck and body, never a round", () => {
+  it("calls the week a gameweek in its deck, never a round", () => {
     const filed = column(xiOf({ ARS: eleven(1), LEE: eleven(2), CHE: eleven(3), BOU: eleven(4) }));
     expect(filed?.deck).toBe("Every club's expected starting eleven for the gameweek.");
-    expect(filed?.body).toBe("All 2 of the gameweek's matches, with both sides named.");
+  });
+
+  // Craig, 9 Oct: "with both sides named and that line too, just repeated ai slip". Headline, deck and the elevens.
+  it("files no body, whole or short of a match", () => {
+    expect(column(xiOf({ ARS: eleven(1), LEE: eleven(2), CHE: eleven(3), BOU: eleven(4) }))).not.toHaveProperty("body");
+    expect(column(xiOf({ ARS: eleven(1), LEE: eleven(2), CHE: eleven(3) }))).not.toHaveProperty("body");
   });
 
   // Craig, 9 Oct: "Showing Isak as starting when he's out". Scout's eleven is printed as given, and marked.
@@ -39,10 +44,6 @@ describe("xiColumn", () => {
     expect(men[0]).toMatchObject({ name: "First Man100", status: "OUT" });
     expect(men[1]).toMatchObject({ name: "First Man101", status: "Doubt" });
     expect(men[2].status).toBeUndefined();
-  });
-
-  it("says how many of the gameweek's matches it printed when one is missing", () => {
-    expect(column(xiOf({ ARS: eleven(1), LEE: eleven(2), CHE: eleven(3) }))?.body).toBe("1 of the gameweek's 2 matches, with both sides named.");
   });
 
   it("starts only the men of the ties it printed, for the picture", () => {
