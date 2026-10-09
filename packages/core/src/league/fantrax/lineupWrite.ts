@@ -119,6 +119,11 @@ export function benchOrderMap(bench: readonly string[], previous: Readonly<Recor
   return map;
 }
 
+/** The reserves Fantrax holds numbers for, first to come on first; empty for a bench nobody numbered. */
+export function numberedOrder(order: Readonly<Record<string, number>>): string[] {
+  return Object.entries(order).filter(([, n]) => n > 0).sort((a, b) => a[1] - b[1]).map(([id]) => id);
+}
+
 /** Whether the bench order differs from what Fantrax holds. */
 export function changesBenchOrder(bench: readonly string[], previous: Readonly<Record<string, number>>): boolean {
   return bench.some((id, i) => previous[id] !== i + 1);
@@ -127,7 +132,7 @@ export function changesBenchOrder(bench: readonly string[], previous: Readonly<R
 /** The bench order a save sends, or null to leave Fantrax's: an unnumbered bench comes on by points at the deadline,
  *  so it is numbered only when the manager reordered it. */
 export function benchToWrite(bench: readonly string[], reordered: boolean, previous: Readonly<Record<string, number>>): Record<string, number> | null {
-  const numbered = Object.values(previous).some((n) => n > 0);
+  const numbered = numberedOrder(previous).length > 0;
   return (reordered || numbered) && changesBenchOrder(bench, previous) ? benchOrderMap(bench, previous) : null;
 }
 
@@ -136,7 +141,7 @@ export function benchToWrite(bench: readonly string[], reordered: boolean, previ
 export function stillHeld(state: LineupState, held: { slots: readonly RosterSlot[]; bench: readonly string[] }): boolean {
   const map = fieldMapFor(state, held.slots);
   if (typeof map === "string" || changesLineup(state, map)) return false;
-  const numbered = Object.entries(state.autoSubOrder).filter(([, n]) => n > 0).sort((a, b) => a[1] - b[1]).map(([id]) => id);
+  const numbered = numberedOrder(state.autoSubOrder);
   const onBoth = (order: readonly string[], other: readonly string[]) => order.filter((id) => other.includes(id)).join();
   return onBoth(numbered, held.bench) === onBoth(held.bench, numbered);
 }

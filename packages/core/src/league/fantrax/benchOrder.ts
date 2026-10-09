@@ -28,7 +28,24 @@ export interface BenchOrder {
 }
 
 export function mapBenchOrder(raw: RawTeamRosterInfo): BenchOrder {
-  const reserves = (raw.tables ?? []).flatMap((table) => {
+  const reserves = reservesOf(raw);
+  const numbers = Object.entries(raw.miscData?.autoSubOrderMap ?? {})
+    .map(([id, n]) => ({ id, n: Number(n) }))
+    .filter((x) => x.n > 0 && reserves.some((r) => r.id === x.id));
+  if (numbers.length > 0) return { order: numbers.sort((a, b) => a.n - b.n).map((x) => x.id), by: "manager" };
+  return { order: byPoints(reserves), by: "points" };
+}
+
+/** The deadline's order for this bench, whatever the manager numbered: total fantasy points, highest first. */
+export function benchByPoints(raw: RawTeamRosterInfo): string[] {
+  return byPoints(reservesOf(raw));
+}
+
+const byPoints = (reserves: readonly { id: string; fpts: number }[]): string[] =>
+  [...reserves].sort((a, b) => b.fpts - a.fpts).map((r) => r.id);
+
+function reservesOf(raw: RawTeamRosterInfo): { id: string; fpts: number }[] {
+  return (raw.tables ?? []).flatMap((table) => {
     const at = keyed(table.header?.cells ?? [], "fpts");
     return (table.rows ?? []).flatMap((r) => {
       const id = r.scorer?.scorerId;
@@ -36,9 +53,4 @@ export function mapBenchOrder(raw: RawTeamRosterInfo): BenchOrder {
       return [{ id, fpts: at < 0 ? 0 : Number(r.cells?.[at]?.content) || 0 }];
     });
   });
-  const numbers = Object.entries(raw.miscData?.autoSubOrderMap ?? {})
-    .map(([id, n]) => ({ id, n: Number(n) }))
-    .filter((x) => x.n > 0 && reserves.some((r) => r.id === x.id));
-  if (numbers.length > 0) return { order: numbers.sort((a, b) => a.n - b.n).map((x) => x.id), by: "manager" };
-  return { order: [...reserves].sort((a, b) => b.fpts - a.fpts).map((r) => r.id), by: "points" };
 }
