@@ -192,7 +192,7 @@ export default async function HeadToHeadPage({
           view={view}
           tabs={matchupTabs(teamId, gameweek)}
           body={
-            view === "stats" && of !== "fantasy" && stat !== undefined ? (
+            view === "stats" && of !== "fantasy" ? (
               <SideTab
                 side={stat}
                 columns={columns}

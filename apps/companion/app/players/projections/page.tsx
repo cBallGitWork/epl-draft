@@ -129,7 +129,7 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
         <BoardKey
           entries={projectionHeads(categoryLabel, gameweeks)
             .slice(0, 2)
-            .concat(gameweeks.length === 0 ? [] : [{ key: "gw", label: "GW", title: `Each gameweek: ${categoryLabel}, projected` }])}
+            .concat([{ key: "gw", label: "GW", title: `Each gameweek: ${categoryLabel}, projected` }])}
         />
       )}
     </ScoutShell>
