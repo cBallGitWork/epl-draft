@@ -27,7 +27,7 @@ export const INTEL_AGE_LIMIT_DAYS = {
 
 export type IntelKind = keyof typeof INTEL_AGE_LIMIT_DAYS;
 
-export interface IntelFreshness {
+interface IntelFreshness {
   /** Whole days since the export ran; null when it does not say. */
   ageDays: number | null;
   limitDays: number | null;

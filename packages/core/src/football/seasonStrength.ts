@@ -12,7 +12,7 @@ export interface ClubResult {
   xgAgainst: number;
 }
 
-export interface SeasonStrengthConfig {
+interface SeasonStrengthConfig {
   /** How much of each game's reading is goals rather than xG. */
   goalsShare: number;
   /** Games of league average a club starts with, so its first results move it gently. */

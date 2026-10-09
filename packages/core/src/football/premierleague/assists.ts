@@ -23,11 +23,6 @@ export interface StreamCredit {
   assister: number | null;
 }
 
-/** A textstream label's minute (`"56"`, `"90+1"`), added time dropped as `plGoals` drops it. */
-function minuteOf(event: RawPlEvent): number | null {
-  return clockMinute(event.time?.label);
-}
-
 /** Every goal in the commentary with the assister FPL's rules imply. An own goal or rebound takes the attempt
  *  IMMEDIATELY before it; a penalty takes the most recent `penalty won`, however far back. */
 export function streamCredits(
@@ -59,7 +54,8 @@ export function streamCredits(
       continue;
     }
 
-    const minute = minuteOf(event);
+    // Added time dropped (`"90+1"` is 90), as `plGoals` drops it.
+    const minute = clockMinute(event.time?.label);
     const [first, second] = event.playerIds ?? [];
     if (minute !== null) {
       credits.push({

@@ -57,7 +57,7 @@ export function projectionIntel(file: IntelProjections | null): Map<number, Proj
 }
 
 /** Any projection's run of weeks, in FPL points or a league's: what the helpers below read. */
-export interface PointsRun {
+interface PointsRun {
   gameweeks: readonly { gw: number; points: number | null }[];
 }
 

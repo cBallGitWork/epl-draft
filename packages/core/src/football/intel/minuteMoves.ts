@@ -7,7 +7,7 @@ import type { IntelManifest } from "./types";
 // than a bar, against the export it replaced. Written by `scripts/xmins-moves.ts` whatever run took the export.
 
 /** One man's xMins for the update's gameweek, before and after. */
-export interface MinutesMove {
+interface MinutesMove {
   code: number;
   before: number;
   after: number;
