@@ -1,6 +1,6 @@
 import { LATE_GOAL_MINUTE, REPORTS } from "../../config";
 import { ordinal } from "../../league/ordinal";
-import { nextThree, type NextMatch } from "./ahead";
+import { nextMatch, type NextMatch } from "./ahead";
 import { derivedFacts, times } from "./derived";
 import { fantasyPanel, type FantasyPanel } from "./fantasy";
 import { starMan, type StarMan } from "./star";
@@ -154,7 +154,7 @@ export function deskDay(input: ReportDayInput): MatchDesk[] {
     const counts = manCounts(events, match.men);
     const dead = !events.some((e) => isGoal(e) || ["woodwork", ...DECISIONS].includes(e.kind));
     const size = dead ? BUDGET.dead : i === 0 ? BUDGET.lead : BUDGET.ordinary;
-    const next = (code: number) => nextThree(input.season, input.clubs, code, input.day, input.standing)[0] ?? null;
+    const next = (code: number) => nextMatch(input.season, input.clubs, code, input.day);
     return {
       match,
       events,

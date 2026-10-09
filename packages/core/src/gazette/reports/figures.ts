@@ -12,7 +12,6 @@ const METRICS = {
   clearChancesScored: "big_chance_scored",
   possession: "possession_percentage",
   errorsToGoal: "error_lead_to_goal",
-  errorsToShot: "error_lead_to_shot",
 } as const;
 
 /** Null when the stats carry nothing for this side at all. */
@@ -27,6 +26,5 @@ export function sideFigures(stats: RawPlMatchStats, teamId: number): SideFigures
     clearChancesScored: metric(METRICS.clearChancesScored),
     possession: Math.round(metric(METRICS.possession)),
     errorsToGoal: metric(METRICS.errorsToGoal),
-    errorsToShot: metric(METRICS.errorsToShot),
   };
 }

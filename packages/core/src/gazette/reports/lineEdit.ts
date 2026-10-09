@@ -10,7 +10,6 @@ const broken = (text: string) => [...banned(text, REPORT_NEVER), ...americanisms
 // broke, and a fix is kept only when it clears the words and states the same figures. Cheaper and surer than a third draft.
 
 interface LineFix {
-  code: number;
   sentence: string;
   words: string[];
 }
@@ -22,16 +21,16 @@ const parts = (piece: ReportPiece) => [piece.standfirst, piece.account, ...piece
 export function faultySentences(draft: ReportsDraft, names: readonly string[]): LineFix[] {
   const blank = (text: string) => masked(text, names).replace(/\u0000/gu, "X");
   const fixes = new Map<string, LineFix>();
-  for (const [code, piece] of draft.matches) {
+  for (const piece of draft.matches.values()) {
     for (const sentence of parts(piece).flatMap(sentences)) {
       const words = broken(blank(sentence));
-      if (words.length > 0) fixes.set(sentence, { code, sentence, words });
+      if (words.length > 0) fixes.set(sentence, { sentence, words });
     }
   }
   const pieces = [...draft.matches].map(([code, piece]) => ({ code, prose: parts(piece).join("\n") }));
   for (const r of repeatsIn(pieces, names)) {
     for (const sentence of r.later) {
-      const fix = fixes.get(sentence) ?? { code: r.code ?? 0, sentence, words: [] };
+      const fix = fixes.get(sentence) ?? { sentence, words: [] };
       fixes.set(sentence, { ...fix, words: [...fix.words, r.said] });
     }
   }

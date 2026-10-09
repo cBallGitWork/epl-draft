@@ -53,12 +53,11 @@ describe("manCounts", () => {
     expect(counts.get(codeOf("Manzambi"))).toMatchObject({ shots: 4 });
   });
 
-  it("counts the chances a man made, and his set-piece deliveries", () => {
+  it("counts the chances a man made", () => {
     expect(counts.get(codeOf("Robertson"))?.chancesMade).toBe(4);
-    expect(counts.get(codeOf("Robertson"))?.deliveries).toBeGreaterThanOrEqual(1);
   });
 
   it("gives a man who played and did none of it noughts, not nothing", () => {
-    expect(counts.get(codeOf("Wan-Bissaka"))).toEqual({ shots: 0, onTarget: 0, chancesMade: 0, woodwork: 0, deliveries: 0 });
+    expect(counts.get(codeOf("Wan-Bissaka"))).toEqual({ shots: 0, onTarget: 0, chancesMade: 0 });
   });
 });

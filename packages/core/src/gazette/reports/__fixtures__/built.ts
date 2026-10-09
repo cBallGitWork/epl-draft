@@ -21,7 +21,7 @@ export const reportMan = (code: number, name: string, side: "home" | "away", ove
 });
 
 export const figures = (over: Partial<SideFigures> = {}): SideFigures => ({
-  shots: 10, onTarget: 2, corners: 3, clearChances: 0, clearChancesScored: 0, possession: 50, errorsToGoal: 0, errorsToShot: 0, ...over,
+  shots: 10, onTarget: 2, corners: 3, clearChances: 0, clearChancesScored: 0, possession: 50, errorsToGoal: 0, ...over,
 });
 
 export const ARSENAL: Club = { id: 1, code: 11, name: "Arsenal", shortName: "ARS" };

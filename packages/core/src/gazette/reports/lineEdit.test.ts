@@ -10,7 +10,7 @@ const draft: ReportsDraft = {
 
 describe("the line edit", () => {
   it("finds the sentence still breaking the words, and names them", () => {
-    expect(faultySentences(draft, [])).toEqual([{ code: 1, sentence: "Kudus had one chalked off on the hour.", words: ["chalked off"] }]);
+    expect(faultySentences(draft, [])).toEqual([{ sentence: "Kudus had one chalked off on the hour.", words: ["chalked off"] }]);
   });
 
   it("keeps a fix that clears the words and states the same figures", () => {

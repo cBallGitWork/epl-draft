@@ -1,40 +1,25 @@
-import type { StrengthPlaces } from "../../football/intel/strength";
 import { byKickoffUndatedFirst } from "../../football/selectors";
 import type { Club, Fixture } from "../../football/types";
 import { londonDayOf } from "../../time";
 import { fullClubName } from "../clubNames";
-import { standing } from "../predictions/squad";
 
-// A club's next three matches after the report's day, the opponent in words only when it sits at an end of the ratings.
+// A club's next match after the report's day, for the sidebar.
 
 export interface NextMatch {
   opponent: string;
   home: boolean;
-  /** "a dangerous attack", "a soft defence"…; empty when the opponent is ordinary at both. */
-  words: string[];
 }
 
-const COUNT = 3;
-
-export function nextThree(
-  season: readonly Fixture[],
-  clubs: readonly Club[],
-  clubCode: number,
-  day: string,
-  table: StrengthPlaces,
-): NextMatch[] {
+/** The first match after `day` against a club we can name; null when there is none. */
+export function nextMatch(season: readonly Fixture[], clubs: readonly Club[], clubCode: number, day: string): NextMatch | null {
   const club = clubs.find((c) => c.code === clubCode);
-  if (club === undefined) return [];
+  if (club === undefined) return null;
   const byId = new Map(clubs.map((c) => [c.id, c]));
-  return season
-    .filter((f) => (f.homeClubId === club.id || f.awayClubId === club.id) && (londonDayOf(f.kickoff) ?? "") > day)
-    .sort(byKickoffUndatedFirst)
-    .slice(0, COUNT)
-    .flatMap((f) => {
-      const home = f.homeClubId === club.id;
-      const opponent = byId.get(home ? f.awayClubId : f.homeClubId);
-      if (opponent === undefined) return [];
-      const words = [standing(opponent.code, "attack", table), standing(opponent.code, "defence", table)].filter((w): w is string => w !== null);
-      return [{ opponent: fullClubName(opponent.name), home, words }];
-    });
+  const upcoming = season.filter((f) => (f.homeClubId === club.id || f.awayClubId === club.id) && (londonDayOf(f.kickoff) ?? "") > day).sort(byKickoffUndatedFirst);
+  for (const f of upcoming) {
+    const home = f.homeClubId === club.id;
+    const opponent = byId.get(home ? f.awayClubId : f.homeClubId);
+    if (opponent !== undefined) return { opponent: fullClubName(opponent.name), home };
+  }
+  return null;
 }
