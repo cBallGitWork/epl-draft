@@ -29,7 +29,8 @@ export function returnWords(m: Pick<DraftMan, "goals" | "assists" | "cleanSheets
   const lateGoal = m.goals === 1 ? m.scoredAt.find(isLate) : undefined;
   const goals = m.goals === 0 ? null : m.goals === 1 ? `a goal${lateGoal === undefined ? "" : ` ${whenScored(lateGoal)}`}` : `${m.goals} goals`;
   const assists = m.assists === 0 ? null : m.assists === 1 ? "an assist" : `${m.assists} assists`;
-  return listed([goals, assists, m.cleanSheets > 0 ? "a clean sheet" : null].filter((x): x is string => x !== null), "and");
+  const clean = m.cleanSheets === 0 ? null : m.cleanSheets === 1 ? "a clean sheet" : `${m.cleanSheets} clean sheets`;
+  return listed([goals, assists, clean].filter((x): x is string => x !== null), "and");
 }
 
 /** "got 6: a clean sheet", "hauled 11: a goal, an assist and a clean sheet"; null for a blank. */
@@ -55,8 +56,9 @@ export function lostCleanLine(m: DraftMan, worth: SlotWorth): string | null {
 /** His minutes when they are the story: off the bench for the lesser appearance point, or off before the hour; null
  *  otherwise. */
 export function minutesLine(m: DraftMan): string | null {
-  if (m.started === false && m.minutes > 0) return `did not start and played ${m.minutes} minutes off the bench${returnCount(m) === 0 ? `, ${pts(m.points ?? 0)} for the appearance` : ""}`;
-  if (m.minutes > 0 && m.minutes < DRAFT_DESK.earlyOff && m.left === 0) return m.started === true ? `went off after ${m.minutes} minutes` : `played ${m.minutes} minutes`;
+  const minutes = howMany(m.minutes, "minute");
+  if (m.started === false && m.minutes > 0) return `did not start and played ${minutes} off the bench${returnCount(m) === 0 ? `, ${pts(m.points ?? 0)} for the appearance` : ""}`;
+  if (m.minutes > 0 && m.minutes < DRAFT_DESK.earlyOff && m.left === 0) return m.started === true ? `went off after ${minutes}` : `played ${minutes}`;
   return null;
 }
 
@@ -69,12 +71,15 @@ export function newLine(m: DraftMan, side: DraftSide): string | null {
 /** Fantrax's word after his match. */
 export const fitnessLine = (m: DraftMan) => (m.fitness === null ? null : `${m.minutes === 0 ? "did not play; " : ""}since: ${m.fitness}`);
 
+/** A reserve with a man ahead still to play: whom he replaces is not yet known, and whether he comes on at all. */
+export const aheadWords = (s: AutoSub) => `comes on at the end of the gameweek for a man who did not play${s.provisional ? ", if he plays" : ""}`;
+
 /** The automatic substitution as a league member says it ("Millar did not play, so Meunier will come on"), with what
  *  the man coming on did. */
 export function subLine(s: AutoSub, cutoff: Cutoff): string {
-  if (s.provisional) return `${s.out.name} did not play, so ${s.in.name} comes on if he plays`;
   // Whom he replaces is not settled until the man ahead has played, so it is never named.
-  if (s.ahead !== null) return `${s.in.name} comes on at the end of the gameweek for a man who did not play, and his ${pts(s.in.points ?? 0)} count either way`;
+  if (s.ahead !== null) return `${s.in.name} ${aheadWords(s)}${s.provisional ? "" : `, and his ${pts(s.in.points ?? 0)} count either way`}`;
+  if (s.provisional) return `${s.out.name} did not play, so ${s.in.name} comes on if he plays`;
   const got = gotLine(s.in);
   if (cutoff === "gameweek") return `${s.out.name} did not play, so ${s.in.name} came on and ${got ?? `got ${pts(s.in.points ?? 0)}`}`;
   return `${s.out.name} did not play, so ${s.in.name} comes on with ${got === null ? pts(s.in.points ?? 0) : `${pts(s.in.points ?? 0)}: ${returnWords(s.in)}`}`;
