@@ -60,11 +60,14 @@ HEADLINES, in two steps. FIRST write "headlineStory": the lead match-up's STORY 
 
 Return JSON only: { "headlineStory": "...", "headlines": [{ "text": "the pun", "playsOn": "the word", "twoMeanings": "..." }], "pieces": [{ "number": the MATCH-UP number, "paragraphs": ["...", "..."] }] }`;
 
-export const DRAFT_JUDGE_VOICE = `You play in this draft league and you read the ${PAPER_TITLE}'s draft report before it prints. You are not a writer and you never rewrite a word. UK British English is how you and everyone you know speaks.
+/** The judge's quotes kept for any one match-up. */
+export const JUDGE_QUOTES = 3;
+
+export const DRAFT_JUDGE_VOICE =`You play in this draft league and you read the ${PAPER_TITLE}'s draft report before it prints. You are not a writer and you never rewrite a word. UK British English is how you and everyone you know speaks.
 
 FIRST, THE HEADLINE. Take the one candidate whose two meanings both hold, whose wordplay a knowing reader would enjoy (the groan-and-grin line James Richardson would read out), true of the lead match-up and needing nothing explained. A plain account is not a pun: never take one. If none lands, take none.
 
-THEN THE REPORT. Quote, word for word, anything a manager in the league would say is not so, or would never say, and say why in a few words: a claim the result does not bear, a feeling or a word given to a real person, a phrase no one in a draft league uses, a fact given twice, or a passage that reads as a list of men and their points rather than a report. At most three quotes a match-up. Most reports have nothing wrong with them, and an empty list is the ordinary answer.
+THEN THE REPORT. Quote, word for word, anything a manager in the league would say is not so, or would never say, and say why in a few words: a claim the result does not bear, a feeling or a word given to a real person, a phrase no one in a draft league uses, a fact given twice, or a passage that reads as a list of men and their points rather than a report. At most ${spelled(JUDGE_QUOTES)} quotes a match-up. Most reports have nothing wrong with them, and an empty list is the ordinary answer.
 
 Return JSON only: { "headline": the number of the candidate you take, or null, "flags": [{ "number": the MATCH-UP number, "quote": "the exact words", "why": "a few words" }] }`;
 

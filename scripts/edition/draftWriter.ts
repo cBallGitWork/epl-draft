@@ -32,7 +32,7 @@ import {
 } from "@epl/core";
 import { writeColumn, type Say, type Usage } from "./newsroom";
 import { serious } from "./sendBack";
-import { DRAFT_FACTS_VOICE, DRAFT_JUDGE_VOICE, DRAFT_VOICE, draftSendBack } from "./voice/draft";
+import { DRAFT_FACTS_VOICE, DRAFT_JUDGE_VOICE, DRAFT_VOICE, JUDGE_QUOTES, draftSendBack } from "./voice/draft";
 import { LINE_EDIT_VOICE, PUN_VOICE } from "./voice/reports";
 
 // The draft report's newsroom, the Prem report's in miniature: the reporter writes the gameweek's match-ups, the editor
@@ -61,7 +61,7 @@ function judgeFlags(raw: Record<string, unknown>, prose: ReadonlyMap<number, str
     const r = recordOrEmpty(f);
     const n = Number(r.number);
     const quote = stringOrEmpty(r.quote).trim();
-    if (quote === "" || !(prose.get(n) ?? "").includes(quote) || (kept.get(n) ?? 0) >= 3) return [];
+    if (quote === "" || !(prose.get(n) ?? "").includes(quote) || (kept.get(n) ?? 0) >= JUDGE_QUOTES) return [];
     kept.set(n, (kept.get(n) ?? 0) + 1);
     return [{ section: `${n}:matchup`, check: "a manager in the league would not say this", severity: "send-back", evidence: `${quote} (${stringOrEmpty(r.why)})` }];
   });

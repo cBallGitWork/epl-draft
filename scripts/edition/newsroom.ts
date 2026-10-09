@@ -5,6 +5,7 @@ import type {
   ThreadUpdate,
 } from "@epl/core";
 import { ANTHROPIC_MESSAGES_URL, MODEL_TIMEOUT_MS, normalizeStory } from "@epl/core";
+import { MOST_THREADS } from "./voice/house";
 
 // The one API call, and the shape a filed column takes in the rolling paper.
 
@@ -194,5 +195,5 @@ function threadUpdates(raw: unknown): ThreadUpdate[] {
         (beat.status === undefined || beat.status === "open" || beat.status === "retired")
       );
     })
-    .slice(0, 3);
+    .slice(0, MOST_THREADS);
 }
