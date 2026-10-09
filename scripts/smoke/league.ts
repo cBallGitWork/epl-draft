@@ -12,16 +12,20 @@ export interface WalkLeague {
   teamName: string | null;
   /** A player somebody holds: an invented id would test a 404. */
   playerId: string | null;
+  /** Another held man, for Compare beside `playerId`. */
+  rivalId: string | null;
 }
 
 /** What a walk may expect of a league, from ONE roster read so the answers cannot disagree. */
 export function walkLeague(teams: readonly TeamRoster[]): WalkLeague {
   const [first] = teams;
-  const holder = teams.find((team) => team.slots.length > 0);
+  const held = teams.flatMap((team) => team.slots.map((slot) => slot.fantraxId));
+  const [playerId = null] = held;
   return {
-    state: first === undefined ? "no teams" : holder === undefined ? "no squads" : "drafted",
+    state: first === undefined ? "no teams" : playerId === null ? "no squads" : "drafted",
     teamId: first?.teamId ?? null,
     teamName: first?.teamName || null,
-    playerId: holder?.slots[0]?.fantraxId ?? null,
+    playerId,
+    rivalId: held.find((id) => id !== playerId) ?? null,
   };
 }

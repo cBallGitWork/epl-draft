@@ -90,10 +90,10 @@ async function matchId(): Promise<number | null> {
 
 async function main() {
   requireLeague(FANTRAX_LEAGUE_ID);
-  const { state, teamId, teamName, playerId } = await league();
+  const { state, teamId, teamName, playerId, rivalId } = await league();
   const club = await clubCode();
   const match = await matchId();
-  const ids = { teamId, playerId, club, match };
+  const ids = { teamId, playerId, rivalId, club, match };
   const paths = walkPaths(ids);
 
   console.log(
