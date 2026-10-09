@@ -26,4 +26,9 @@ describe("the team news thread", () => {
     const html = renderToStaticMarkup(createElement(TeamNews, { story: out }));
     expect(html.replace(/<[^>]+>/g, "")).toContain("Still outPalmer (Craig) · James (FA)");
   });
+
+  it("prints no empty line over a club whose only news is its list", () => {
+    const out = { extras: { teamNews: [{ club: "Spurs", code: null, stillOut: [{ name: "Porro" }] }] } } as PublishedStory;
+    expect(renderToStaticMarkup(createElement(TeamNews, { story: out }))).not.toContain("text-base leading-snug text-muted\"></p>");
+  });
 });

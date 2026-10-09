@@ -43,8 +43,8 @@ interface StoryTeamNews {
   club: string;
   /** FPL's club code for the crest, echoed from the brief and never looked up by name; null prints no crest. */
   code: number | null;
-  /** One sentence of context. Never a retelling of the bullets. */
-  line: string;
+  /** One sentence of context, absent where the club has nothing beyond its lists. Never a retelling of them. */
+  line?: string;
   men?: StoryTeamNewsMan[];
   /** Men whose absence is unchanged, as the column named them until 8 Oct 2026: names alone. */
   alsoOut?: string[];
@@ -205,27 +205,25 @@ export function normalizeExtras(raw: unknown): StoryExtras | undefined {
   // Built field by field, never spread: a spread publishes whatever the writer invented beside the shape.
   if (ranks.length > 0) out.ranks = once(ranks, (r) => r.teamId).map((r) => ({ teamId: r.teamId, line: r.line }));
 
-  const teamNews = Array.isArray(extras.teamNews)
-    ? extras.teamNews.filter(
-        (row): row is StoryTeamNews =>
-          typeof row?.club === "string" && row.club.trim() !== "" &&
-          typeof row.line === "string" && row.line.trim() !== "",
-      )
+  const clubs = Array.isArray(extras.teamNews)
+    ? extras.teamNews.filter((row): row is StoryTeamNews => typeof row?.club === "string" && row.club.trim() !== "")
     : [];
-  if (teamNews.length > 0) {
-    // Built field by field, never spread: a spread publishes whatever the writer invented beside the shape.
-    out.teamNews = once(teamNews, (row) => row.club).map((row) => ({
+  // Built field by field, never spread: a spread publishes whatever the writer invented beside the shape.
+  const printed = clubs
+    .map((row): StoryTeamNews => ({
       club: row.club,
       // A club code must be a real FPL one: it draws the crest and joins the fixture.
       code: typeof row.code === "number" && Number.isInteger(row.code) && row.code > 0 ? row.code : null,
-      line: row.line,
+      ...(typeof row.line === "string" && row.line.trim() !== "" ? { line: row.line } : {}),
       men: men(row.men),
       alsoOut: names(row.alsoOut),
       stillOut: stillOut(row.stillOut),
       quote: quote(row.quote),
       fixture: fixture(row.fixture),
-    }));
-  }
+    }))
+    // A crest alone says nothing: a club prints with a line or a list.
+    .filter((row) => row.line !== undefined || row.men !== undefined || row.stillOut !== undefined || row.alsoOut !== undefined);
+  if (printed.length > 0) out.teamNews = once(printed, (row) => row.club);
 
   const lineups = Array.isArray(extras.lineups) ? extras.lineups.flatMap(lineupTie) : [];
   if (lineups.length > 0) out.lineups = lineups;

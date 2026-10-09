@@ -40,7 +40,7 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
             </span>
           </h3>
 
-          <p className="pt-2.5 text-base leading-snug text-muted">{row.line}</p>
+          {row.line === undefined ? null : <p className="pt-2.5 text-base leading-snug text-muted">{row.line}</p>}
 
           {/* The status is the row's mark, in a column of its own, so the men line up under one another. */}
           {row.men === undefined ? null : (

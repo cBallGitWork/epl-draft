@@ -9,8 +9,14 @@ describe("normalizeExtras — teamNews", () => {
     expect(normalizeExtras({ teamNews: [row] })?.teamNews?.[0].men).toBeUndefined();
   });
 
-  it("drops a club with no line, because the crest alone says nothing", () => {
+  it("drops a club with no line and no list, because the crest alone says nothing", () => {
     expect(normalizeExtras({ teamNews: [{ club: "Chelsea", code: 8, line: "" }] })).toBeUndefined();
+  });
+
+  it("keeps a club whose only news is its list, with no line to repeat it", () => {
+    const out = normalizeExtras({ teamNews: [{ club: "Spurs", code: 6, line: "", stillOut: [{ name: "Porro" }] }] })?.teamNews?.[0];
+    expect(out?.stillOut).toEqual([{ name: "Porro" }]);
+    expect(out?.line).toBeUndefined();
   });
 
   it("prints no crest rather than a wrong one", () => {
