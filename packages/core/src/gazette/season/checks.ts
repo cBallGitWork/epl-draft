@@ -62,7 +62,7 @@ export function checkSeason(draft: SeasonDraft, calls: SeasonCalls, squads: Read
     rules.section(section, text);
     rankingRules(section, text);
   }
-  columnRules(draft.opening, prose, ctx, fault);
+  columnRules(draft.opening, prose, ctx, fault, "opening");
   lineRules(draft, calls, squads, fault);
   openingRules(draft.opening, calls, fault);
   return faults;

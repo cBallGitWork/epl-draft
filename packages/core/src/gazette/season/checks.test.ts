@@ -91,6 +91,12 @@ describe("checkSeason", () => {
     expect(faults({ ...clean, opening: "Twenty-two years on the BBC, and now this. City are the ones I would watch." })).toContainEqual(expect.objectContaining({ section: "opening", check: "names a side the desk did not put here", evidence: "City" }));
   });
 
+  it("files the opening's word cap under the opening, the section he wrote", () => {
+    const opening = "I did twenty-two years of this on the BBC, and now it is draft squads in a paper nobody buys, which is about right for me. Albion have the strongest squad of them all and Rovers have the weakest one of the lot by a distance. That is my lot.";
+    const length = faults({ ...clean, opening }).filter((fault) => fault.check === "length").map((fault) => `${fault.section}: ${fault.evidence}`);
+    expect(length).toEqual(["opening: 3 sentences, 50 words"]);
+  });
+
   it("sends back the source, the machine, the draft's rounds and American English", () => {
     const found = faults(line("c", "The FPL simulation rates Salah, taken in the third round, my favorite."));
     for (const word of ["FPL", "simulation", "round"]) expect(found.some((fault) => fault.check === "banned" && fault.evidence.toLowerCase().includes(word.toLowerCase()))).toBe(true);

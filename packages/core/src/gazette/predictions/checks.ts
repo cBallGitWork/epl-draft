@@ -251,10 +251,11 @@ function shapeRules(key: string, line: string, sides: ReadonlySet<string>, fault
   if (wordCount(verdict) < LIMITS.callWords) fault(key, "a call with no reason", "send-back", verdict);
 }
 
-export function columnRules(intro: string, prose: readonly [string, string][], ctx: CheckContext, fault: Report): void {
+/** `opening` names the section his opening is filed under: the predictions' intro, the rankings' opening. */
+export function columnRules(intro: string, prose: readonly [string, string][], ctx: CheckContext, fault: Report, opening = "intro"): void {
   const [least, most, words] = LIMITS.intro;
   const count = sentences(intro).length;
-  if (count < least || count > most || wordCount(intro) > words) fault("intro", "length", "send-back", `${count} sentences, ${wordCount(intro)} words`);
+  if (count < least || count > most || wordCount(intro) > words) fault(opening, "length", "send-back", `${count} sentences, ${wordCount(intro)} words`);
   const all = prose.map(([, text]) => text).join(" ");
   if (wordCount(all) > LIMITS.column) fault("column", "length", "send-back", `${wordCount(all)} words`);
   if ((all.match(/\?/gu) ?? []).length > LIMITS.questions) fault("column", "more than two questions", "send-back", "?");
