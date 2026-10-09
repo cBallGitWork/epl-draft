@@ -38,7 +38,6 @@ export {
   fetchPlTextstream,
 } from "./premierleague/client";
 export {
-  mapMatchEvents,
   mapRoundGoals,
   plFixtureCode,
   plCommentary,
@@ -126,7 +125,6 @@ export type { PastSeason } from "./seasons";
 export { ATTRIBUTE_ROWS, attributes, divisionAttributes, ratedLine, ratedRunning } from "./attributes";
 export type { Attribute, Floors, Scouted } from "./attributes";
 export { preferredFoot, shotLine } from "./shotLine";
-export type { ShotLine } from "./shotLine";
 export { lineIntel, playedFloor } from "./intel/lines";
 export type { IntelLines, PlayerLine } from "./intel/lines";
 export { KEEPER_RANKINGS, OUTFIELD_RANKINGS, rankings } from "./rankings";
@@ -187,7 +185,6 @@ export type { TableSortKey } from "./tableOrder";
 export type { ClubRecord, ClubStats, Result } from "./clubStats";
 export type {
   IntelClubPieces,
-  IntelClubXi,
   IntelManifest,
   IntelMatch,
   IntelMatchPlayer,
@@ -196,7 +193,6 @@ export type {
   IntelSquads,
   IntelSetPieces,
   IntelStarter,
-  IntelTaker,
   IntelXi,
 } from "./intel/types";
 export type { Opposition } from "./opposition";
