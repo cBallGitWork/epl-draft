@@ -153,7 +153,7 @@ this and not on a guess about when things happen:
 | **Wed 17:00** | waivers process, free agency opens | | nothing: `wire` was retired 1 Oct and deleted 9 Oct |
 | **Thu 18:00** | Thursday's press conferences in | The Team Sheet | `presser`: Thursday's conferences, from the Mac's 16:00 import |
 | **Thu 20:00** | the evening before the round | The Form Guide | `predictions`, Lawro's calls on every tie, off the Mac's 17:15 import (the sister's 16:30 sweep) — SHIPPED 24 Sep (the evening before an earlier lock) |
-| **Fri 16:30 / 18:00** | Friday's pressers in; predicted elevens out | The Form Guide | `presser` **16:30**: Friday's conferences, off the Mac's 15:45 import; then `predicted-xi` from **18:00** the evening before a Saturday lock, or **17:30** on the day of a Friday lock (Craig, 9 Oct 2026), so RotoWire's elevens have caught the conferences |
+| **Fri 16:30 / 18:00** | Friday's pressers in; predicted elevens out | The Form Guide | `presser` **16:30**: Friday's conferences, off the Mac's 14:00 and 15:45 imports; then `predicted-xi` from **18:00** the evening before a Saturday lock, or **17:30** on the day of a Friday lock (Craig, 9 Oct 2026), so RotoWire's elevens have caught the conferences; it refiles under the same slug whenever the elevens or RotoWire's absences change, until the lock |
 | **Fri night / Sat noon** | deadline closes, gameweek begins | The Pink 'Un | `sheets` at the lock (every side as locked, SHIPPED 26 Sep), the Classified |
 | **Sat/Sun** | matches | the day's Prem Report | `match-report` as each day's football settles |
 
