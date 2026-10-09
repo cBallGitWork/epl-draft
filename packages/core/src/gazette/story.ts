@@ -31,9 +31,6 @@ export const STORY_KINDS: readonly StoryKind[] = [
   "wire", "dodgers", "presser", "predicted-xi", "sheets", "news", "bin-xi",
 ];
 
-export type { StoryExtras } from "./extras";
-export type { StoryFace } from "./face";
-
 /** One filed story, as committed; a model helped write it, so `normalizeStory` keeps what survives. */
 export interface PublishedStory {
   /** The writer's, never the model's: the dedupe key, the archive filename and the page anchor. */

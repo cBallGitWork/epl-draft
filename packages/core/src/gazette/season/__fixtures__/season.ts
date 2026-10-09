@@ -6,7 +6,7 @@ import type { SeasonOutcome } from "../simulate";
 // A four-side season the desk has already played: Albion top, Rovers last, every side two men deep.
 
 export const FIT: Availability = { state: "fit", label: "", out: false, chance: null, news: "" };
-export const INJURED: Availability = { state: "injured", label: "Injured", out: true, chance: 0, news: "Hamstring" };
+const INJURED: Availability = { state: "injured", label: "Injured", out: true, chance: 0, news: "Hamstring" };
 
 export const man = (fantraxId: string, name: string, club: string, season: number, overall: number | null, availability = FIT): CallMan => ({
   fantraxId,

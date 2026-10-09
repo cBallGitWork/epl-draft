@@ -47,6 +47,15 @@ describe("affectedBy", () => {
     expect(affectedBy(item("Coventry sign a goalkeeper"), teams)).toEqual([]);
   });
 
+  it("finds a surname that opens or closes on an accented letter", () => {
+    // A plain \b counts only ASCII as a word, so "Ødegaard" and "Sangaré" never matched as written.
+    const accented: RosteredTeam[] = [{ teamId: "t3", teamName: "test4", players: [man("Ødegaard"), man("Sangaré")] }];
+    expect(affectedBy(item("Ødegaard out for a month", "Sangaré is back in training"), accented)).toEqual([
+      { playerName: "Ødegaard", ownerName: "test4" },
+      { playerName: "Sangaré", ownerName: "test4" },
+    ]);
+  });
+
   it("reads the summary as well as the headline", () => {
     expect(affectedBy(item("Injury latest", "Fernandes is a doubt"), teams)).toHaveLength(1);
   });

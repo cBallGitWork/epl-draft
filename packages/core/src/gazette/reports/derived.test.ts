@@ -28,6 +28,15 @@ describe("derivedFacts on Tottenham 2-3 Aston Villa", () => {
     expect(facts.join(" ")).not.toMatch(/%|\b64\b/);
   });
 
+  it("never calls two goals either side of half-time a burst", () => {
+    // 45+3 and 50 are two minutes apart on the clock and twenty in the match.
+    const events = matchEvents(match);
+    const [first, second] = events.filter((event) => isGoal(event) && event.side === "home");
+    const moved = events.map((event) =>
+      event === first ? { ...event, minute: "45+3", at: 48, half: 1 as const } : event === second ? { ...event, minute: "50", at: 50, half: 2 as const } : event);
+    expect(derivedFacts(match, moved).filter((fact) => fact.startsWith("Tottenham Hotspur scored twice"))).toEqual([]);
+  });
+
   it("tells a clean sheet as lost late from the minute a goal is late, never earlier", () => {
     const events = matchEvents(match);
     const first = events.find((event) => isGoal(event) && event.side === "home");

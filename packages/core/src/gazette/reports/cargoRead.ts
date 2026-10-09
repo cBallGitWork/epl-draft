@@ -65,12 +65,13 @@ export function normalizeReports(raw: unknown): StoryReport[] | undefined {
     const fixture = code(r.fixtureCode);
     if (home === null || away === null || fixture === null || str(r.standfirst) === "") return null;
     const ht = obj(r.halfTime);
+    const [htHome, htAway] = [num(ht.home), num(ht.away)];
     return {
       fixtureCode: fixture,
       kickoff: str(r.kickoff),
       home,
       away,
-      halfTime: num(ht.home) !== null && num(ht.away) !== null ? { home: num(ht.home)!, away: num(ht.away)! } : null,
+      halfTime: htHome !== null && htAway !== null ? { home: htHome, away: htAway } : null,
       venue: strOrNull(r.venue),
       attendance: num(r.attendance),
       referee: strOrNull(r.referee),

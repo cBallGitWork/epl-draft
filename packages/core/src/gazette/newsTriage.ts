@@ -24,8 +24,8 @@ export function affectedBy(item: NewsItem, teams: readonly RosteredTeam[]): Affe
       if (!isResolved(rostered)) continue;
       const surname = lastWord(rostered.player.name);
       if (surname.length < SHORTEST_SURNAME) continue;
-      // Whole words only.
-      if (!new RegExp(`\\b${escapeRegExp(surname)}\\b`).test(text)) continue;
+      // Whole words only, a letter being any script's: "Ødegaard" opens on one.
+      if (!new RegExp(`(?<![\\p{L}\\p{N}_])${escapeRegExp(surname)}(?![\\p{L}\\p{N}_])`, "u").test(text)) continue;
       found.push({ playerName: rostered.player.name, ownerName: team.teamName });
     }
   }

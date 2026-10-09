@@ -77,10 +77,11 @@ export function keyStats(
   out.push(...topLines(men));
   const keepers = men.filter((m) => m.saves >= SAVES || events.some((e) => e.kind === "penalty-saved" && e.side !== m.side && m.line === "G"));
   if (keepers.length > 0) out.push({ label: "Saves", value: keepers.map((m) => `${surname(m.name)} ${m.saves}`).join(", ") });
-  const woodwork = events.filter((e) => e.kind === "woodwork" && e.man !== null).map((e) => e.man!);
+  const woodwork = events.flatMap((e) => (e.kind === "woodwork" && e.man !== null ? [e.man] : []));
   if (woodwork.length > 0) out.push({ label: "Hit the woodwork", value: names(woodwork) });
-  if (match.figures !== null) {
-    const errors = SIDES.filter((s) => match.figures![s].errorsToGoal > 0).map((s) => `${short(s)} ${match.figures![s].errorsToGoal}`);
+  const { figures } = match;
+  if (figures !== null) {
+    const errors = SIDES.filter((s) => figures[s].errorsToGoal > 0).map((s) => `${short(s)} ${figures[s].errorsToGoal}`);
     if (errors.length > 0) out.push({ label: "Errors leading to a goal", value: errors.join(", ") });
   }
   return out.slice(0, budget);

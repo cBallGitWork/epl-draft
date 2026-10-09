@@ -10,7 +10,7 @@ import { ngrams, numbersIn, sentences, wordCount } from "./prose";
 
 export const SHAPES = ["pun", "same-thing-twice", "one-word", "picture", "own-record", "consolation", "shrug"] as const;
 
-export interface SkitEdit {
+interface SkitEdit {
   where: string;
   shape: string;
   target: string | null;

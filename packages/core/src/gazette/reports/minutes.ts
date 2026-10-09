@@ -3,21 +3,17 @@
 
 import { HALF_MINUTES } from "../../config";
 import { ordinal } from "../../league/ordinal";
-import { plural } from "../../format";
+import { plural, spelled } from "../../format";
 
 /** Normal time, both halves. */
 const NORMAL_TIME = 2 * HALF_MINUTES;
 
-const WORDS = ["nought", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
-
 /** A count as the paper prints it. */
 export function numeral(n: number): string {
-  return n >= 0 && n < 10 ? WORDS[n] : String(n);
+  return n < 10 ? spelled(n) : String(n);
 }
 
 const counted = (n: number, word: string) => `${numeral(n)} ${plural(n, word)}`;
-
-export { ordinal };
 
 /** `"45+4"` → 45 and 4; `"67"` → 67 and 0. Null for a label with no clock. */
 export function clock(label: string): { minute: number; added: number } | null {

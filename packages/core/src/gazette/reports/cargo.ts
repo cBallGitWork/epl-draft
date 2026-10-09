@@ -95,15 +95,18 @@ export function reportsCargo(desks: readonly MatchDesk[], draft: ReportsDraft): 
     const { match, events } = desk;
     const piece = draft.matches.get(match.fixture.code);
     const goals = events.filter(isGoal);
-    const side = (s: Side): StoryReportSide => ({
-      code: match[s].code,
-      score: (s === "home" ? match.fixture.homeScore : match.fixture.awayScore) ?? 0,
-      goals: goals.filter((g) => g.side === s).map((g) => `${who(g)} ${g.minute}${g.kind === "own-goal" ? " og" : g.kind === "penalty-goal" ? " pen" : ""}`),
-      assists: goals.filter((g) => g.side === s && g.other !== null && g.kind !== "own-goal").map((g) => `${surname(g.other!.name)} ${g.minute}`),
-      manager: match[s].manager,
-      lineup: match.lineups?.[s] ?? null,
-      next: desk.next[s] === null ? null : `${desk.next[s]!.opponent} (${desk.next[s]!.home ? "h" : "a"})`,
-    });
+    const side = (s: Side): StoryReportSide => {
+      const next = desk.next[s];
+      return {
+        code: match[s].code,
+        score: (s === "home" ? match.fixture.homeScore : match.fixture.awayScore) ?? 0,
+        goals: goals.filter((g) => g.side === s).map((g) => `${who(g)} ${g.minute}${g.kind === "own-goal" ? " og" : g.kind === "penalty-goal" ? " pen" : ""}`),
+        assists: goals.flatMap((g) => (g.side === s && g.other !== null && g.kind !== "own-goal" ? [`${surname(g.other.name)} ${g.minute}`] : [])),
+        manager: match[s].manager,
+        lineup: match.lineups?.[s] ?? null,
+        next: next === null ? null : `${next.opponent} (${next.home ? "h" : "a"})`,
+      };
+    };
     return {
       fixtureCode: match.fixture.code,
       kickoff: match.fixture.kickoff ?? "",

@@ -80,4 +80,10 @@ describe("strangers", () => {
     const prose = "Losing to test4 by 11 is no disgrace. Elsewhere the margins were tighter.";
     expect(strangers(prose, BRIEF)).toEqual([]);
   });
+
+  it("does not report a columnist's I'm, I've, I'll and I'd, or the BBC, mid-sentence", () => {
+    // Lawro's column, in both apostrophes: every filing warned on these.
+    const prose = "Groß scored, and I'm told I've seen worse; I'll say it, and I’d say it on the BBC, I’ve no doubt.";
+    expect(strangers(prose, BRIEF)).toEqual([]);
+  });
 });

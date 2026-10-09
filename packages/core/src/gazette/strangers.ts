@@ -28,7 +28,9 @@ const NOT_A_NAME = new Set([
   "Watching", "Winning", "Yet", "You", "Your",
   // Football furniture that is capitalised but is not a person.
   "Premier", "League", "Saturday", "Sunday", "Monday", "Tuesday",
-  "Wednesday", "Thursday", "Friday",
+  "Wednesday", "Thursday", "Friday", "BBC",
+  // A columnist's first person: "I" alone is under two letters and never reported.
+  "I'm", "I've", "I'll", "I'd",
 ]);
 
 /** A capitalised word, whole through accents, hyphens and apostrophes: "Gibbs-White", "João", "O'Riley". */
@@ -62,7 +64,7 @@ export function strangers(prose: string, brief: string): string[] {
   const found = new Set<string>();
   for (const word of words(prose)) {
     if (word.length < 2) continue;
-    if (NOT_A_NAME.has(word)) continue;
+    if (NOT_A_NAME.has(word.replace(/’/gu, "'"))) continue;
     if (known.has(word)) continue;
     // A hyphenated name is known if every part of it is.
     const parts = word.split(/[-–]/);
