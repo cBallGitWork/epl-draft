@@ -91,4 +91,28 @@ describe("threadsOf", () => {
     expect(kinds(ctx).find((t) => t.kind === "keeper-haul")?.weight).toBe(55);
     expect(kinds(ctx).find((t) => t.kind === "non-starter")?.weight).toBe(45);
   });
+
+  it("gives a double gameweek's points in the house's words, and none when Fantrax has none", () => {
+    const twice = (points: number | null) => draftMan("Wissa", "F", points, 1, 0, { played: 2, club: "Newcastle" });
+    const double = (points: number | null) => kinds(contextOf(draftSide("Dons", 21, eleven("h", { 10: twice(points) })), draftSide("Rovers", 22, eleven("a")))).find((t) => t.kind === "double")?.facts;
+    expect(double(1)).toEqual(["Wissa had two matches this gameweek, for 1 point"]);
+    expect(double(null)).toEqual(["Wissa had two matches this gameweek"]);
+  });
+
+  it("costs nobody a clean sheet he was not on long enough to keep", () => {
+    const kickoff = "2026-09-26T14:00:00Z";
+    const match = [{ code: 1, label: "Man City v Sunderland" }];
+    const haaland = draftMan("Haaland", "F", 6, 90, 0, { club: "Man City", goals: 1, scoredAt: [goalAt(10, undefined, kickoff)], matches: match });
+    const late = draftMan("Mukiele", "D", 1, 20, 0, { club: "Sunderland", concededFirstAt: [goalAt(10, undefined, kickoff)], matches: match });
+    const ctx = contextOf(draftSide("Dons", 26, eleven("h", { 10: haaland })), draftSide("Rovers", 21, eleven("a", { 2: late })));
+    expect(kinds(ctx).map((t) => t.kind)).not.toContain("crossfire");
+  });
+
+  it("files no chase when minutes alone close the gap, so an empty thread never becomes the story", () => {
+    const kickoff = "2026-09-27T15:30:00Z";
+    const toCome = draftMan("Isak", "F", null, 0, 1, { club: "Liverpool", next: { opponent: "Bournemouth", home: false, kickoff } });
+    const ctx = contextOf(draftSide("Dons", 22, eleven("h")), draftSide("Rovers", 20, eleven("a", { 10: toCome })), { angle: null }, "saturday");
+    const threads = threadsOf(ctx, "saturday", worthOf(2), 5);
+    expect(threads.filter((t) => t.facts.length === 0)).toEqual([]);
+  });
 });
