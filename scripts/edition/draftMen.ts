@@ -26,6 +26,10 @@ export interface ManReads {
  *  "B.Fernandes", as the team sheets' `printName` does. */
 const reportName = (name: string) => name.replace(/^(?:\p{Lu}\.\s*)+/u, "") || name;
 
+/** A side's earlier sheets with anybody in them: before the draft Fantrax answers every period with empty rosters, and
+ *  against those every man in a first gameweek read as a debut. */
+const fieldedBefore = (history: ManReads["history"], teamId: string) => (history.get(teamId) ?? []).filter((each) => each.starters.length > 0);
+
 export function draftManOf(m: SheetMan, sheet: Sheet, r: ManReads): DraftMan {
   const club = m.player.clubId;
   const games = r.fixtures.filter((f) => involves(f, club));
@@ -52,7 +56,7 @@ export function draftManOf(m: SheetMan, sheet: Sheet, r: ManReads): DraftMan {
     minutes: got?.minutes ?? 0,
     played: done.length,
     left: games.length - done.length,
-    debut: (debuts(sheet, r.history.get(sheet.teamId) ?? []) ?? []).some((d) => d.fantraxId === m.fantraxId),
+    debut: (debuts(sheet, fieldedBefore(r.history, sheet.teamId)) ?? []).some((d) => d.fantraxId === m.fantraxId),
     arrived: arrival?.teamId === sheet.teamId ? arrival.how : null,
     projected: r.projections.get(m.player.code)?.gameweeks.find((g) => g.gw === r.gameweek)?.points ?? null,
     next: opponent === undefined || coming === undefined ? null : { opponent: opponent.name, home, kickoff: coming.kickoff },
