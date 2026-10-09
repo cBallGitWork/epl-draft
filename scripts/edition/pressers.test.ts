@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { PresserLine, PresserQuote } from "@epl/core";
-import { display, isNews, tagOf, type PresserSquadMan } from "./pressers";
+import shortNames from "../../data/leagues/short-names.json";
+import { display, isNews, ownerShort, tagOf, type PresserSquadMan } from "./pressers";
 import { presserDays, presserEdition, withStillOut } from "./presserWeek";
 
 // Every row is a real 26/27 player, read out of the FPL snapshot on 18 Sep 2026.
@@ -171,5 +172,22 @@ describe("tagOf", () => {
   it("leaves a real doubt, and every other reading, as the article had it", () => {
     expect(tagOf("injury_scare", man("d", 75))).toBe("injury_scare");
     expect(tagOf("available", man("i", 0))).toBe("available");
+  });
+});
+
+// Craig, 9 Oct 2026: "just use short manager names here" — the Team Sheet printed "(Hazza Maguazza's Redempshazza)".
+describe("ownerShort", () => {
+  it("names the holder by the league's short name, as the desk does", () => {
+    expect(ownerShort({ teamId: "t1", teamName: "Hazza Maguazza's Redempshazza" }, { t1: { short: "Hazza" } })).toBe("Hazza");
+  });
+
+  it("falls back to the Fantrax name for a team the file does not know, and to null for nobody", () => {
+    expect(ownerShort({ teamId: "t2", teamName: "The Raccoons" }, { t1: { short: "Hazza" } })).toBe("The Raccoons");
+    expect(ownerShort(undefined)).toBeNull();
+  });
+
+  it("reads the league's own file by default", () => {
+    const [teamId, entry] = Object.entries(shortNames.shortNames)[0];
+    expect(ownerShort({ teamId, teamName: entry.team })).toBe(entry.short);
   });
 });
