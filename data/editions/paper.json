@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T18:00:38.864Z",
+  "updatedAt": "2026-10-09T18:14:04.932Z",
   "stories": [
     {
       "slug": "gw5-presser-2026-09-18",
@@ -7371,13 +7371,13 @@
       "leagueId": "mqsjd23smsgbiqzr",
       "period": 6,
       "gameweek": 6,
-      "filedAt": "2026-10-09T18:00:38.864Z",
+      "filedAt": "2026-10-09T18:14:04.932Z",
       "expiresAt": "2026-10-10T11:30:00Z",
       "leadsUntil": "2026-10-10T11:15:00.000Z",
       "edition": "The Form Guide",
       "byline": "The Line-Ups",
       "headline": "Predicted Line-Ups: Gameweek 6",
-      "deck": "Every club's expected starting eleven for the gameweek, match by match.",
+      "deck": "Every club's expected starting eleven for the gameweek.",
       "body": "All 10 of the gameweek's matches, with both sides named.",
       "subjects": [
         "predicted-xi:gw6:a2658381"
