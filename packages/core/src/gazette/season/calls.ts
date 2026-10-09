@@ -1,4 +1,4 @@
-import { SEASON_RANKINGS } from "../../config";
+import { PREDICTIONS, SEASON_RANKINGS } from "../../config";
 import type { Availability } from "../../football/playerState";
 import { editorsOrder, type AppliedMove, type EditorMove } from "./editor";
 import type { PlayedSeason } from "./play";
@@ -86,7 +86,7 @@ function clearAtTop(code: PlayedSeason["table"], printed: readonly { teamId: str
 
 /** Out, or no better than an even chance by FPL's own figure: a slight doubt is not a weakness. */
 function serious(availability: Availability): boolean {
-  return availability.state !== "fit" && (availability.out || availability.state !== "doubt" || availability.chance === null || availability.chance <= 50);
+  return availability.state !== "fit" && (availability.out || availability.state !== "doubt" || availability.chance === null || availability.chance <= PREDICTIONS.doubtChance);
 }
 
 /** Each slot's season points against the other sides', best slot first; ties keep the slot order. */

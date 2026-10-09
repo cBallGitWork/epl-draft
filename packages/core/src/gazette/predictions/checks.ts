@@ -278,14 +278,14 @@ export function columnRules(intro: string, prose: readonly [string, string][], c
     if (echo !== undefined) fault(section, "the same phrase as another tie", "send-back", echo);
     for (const gram of ngrams(text, LIMITS.echo, ctx.names)) if (!said.has(gram)) said.set(gram, section);
   }
-  const before = new Set(ctx.past.slice(0, 6).flatMap((text) => [...ngrams(text, LIMITS.repeat, ctx.names)]));
+  const before = new Set(ctx.past.slice(0, LIMITS.recentColumns).flatMap((text) => [...ngrams(text, LIMITS.repeat, ctx.names)]));
   for (const [section, text] of prose) {
     const repeated = [...ngrams(text, LIMITS.repeat, ctx.names)].find((gram) => before.has(gram));
     if (repeated !== undefined) fault(section, "a phrase from a recent column", "send-back", repeated);
   }
   const lengths = sentences(all).map(wordCount);
   const average = mean(lengths) ?? 0;
-  if (average > 12) fault("column", "long sentences on average", "warn", `${average.toFixed(1)} words`);
+  if (average > LIMITS.averageWords) fault("column", "long sentences on average", "warn", `${average.toFixed(1)} words`);
 }
 
 /** The sub-editor's pencil: the trivial slips fixed rather than sent back. */

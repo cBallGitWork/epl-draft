@@ -1,4 +1,4 @@
-import { SEASON_RANKINGS } from "../../config";
+import { LAWRO_LIMITS, SEASON_RANKINGS } from "../../config";
 import { americanisms, banned } from "../banned";
 import { columnRules, faultLog, faultOnMatch, lawroProse, type CheckContext, type Fault, type Report } from "../predictions/checks";
 import { lengthOf, masked, mentionAt, sentences, wordCount } from "../predictions/prose";
@@ -122,7 +122,7 @@ function openingRules(opening: string, calls: SeasonCalls, fault: Report): void 
 
 /** Sentences that count towards a length: his kicker, or a one-word answer to his own question, of three words at most does not. */
 function counted(text: string): number {
-  return sentences(text).filter((sentence) => wordCount(sentence) > 3).length;
+  return sentences(text).filter((sentence) => wordCount(sentence) > LAWRO_LIMITS.skit.kicker).length;
 }
 
 /** The place a claim states: an ordinal or a number, the top or bottom of the pile, or the strongest or weakest squad. */

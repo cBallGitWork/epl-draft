@@ -27,9 +27,6 @@ export interface SquadJoin {
   recent: ReadonlyMap<number, readonly RecentGame[]>;
 }
 
-/** How many at each end of the ratings are worth a word. */
-const EXTREME = 3;
-
 export function squadMen(team: RosteredTeam, join: SquadJoin): SquadMan[] {
   return team.players.filter(isResolved).map(({ slot, player }) => {
     const positions = join.eligible.get(slot.fantraxId) ?? [];
@@ -69,7 +66,7 @@ export function standing(code: number, measure: "attack" | "defence", table: Squ
   const size = table[measure].size;
   if (place === undefined) return null;
   const words = measure === "attack" ? ["a dangerous attack", "a weak attack"] : ["a tough defence to score against", "a soft defence"];
-  if (place <= EXTREME) return words[0];
-  if (place > size - EXTREME) return words[1];
+  if (place <= PREDICTIONS.extremes) return words[0];
+  if (place > size - PREDICTIONS.extremes) return words[1];
   return null;
 }

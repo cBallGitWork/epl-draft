@@ -81,14 +81,14 @@ function streak(man: SquadMan): string | null {
   if (games.length < PREDICTIONS.recentGames) return null;
   const last = games[games.length - 1];
   const sum = (key: "goals" | "assists" | "cleanSheets" | "minutes") => games.reduce((total, game) => total + game[key], 0);
-  const played = games.every((game) => game.minutes >= 60);
+  const played = games.every((game) => game.minutes >= PREDICTIONS.quietMinutes);
   const span = `his last ${spelled(PREDICTIONS.recentGames)} games`;
   if (games.every((game) => game.minutes === 0)) return man.availability.state === "fit" ? `is fit again after missing ${span}` : null;
   if (last.minutes === 0 && man.availability.state === "fit") return "missed last week and is fit again";
   if (games.every((game) => game.goals > 0)) return `scored in each of ${span}`;
   const back = man.positions.some(isBack);
   if (back && games.every((game) => game.cleanSheets > 0)) return `kept a clean sheet in each of ${span}`;
-  if (sum("goals") + sum("assists") >= 2) return `has ${count(sum("goals"), "goal")} and ${count(sum("assists"), "assist")} in ${span}`;
+  if (sum("goals") + sum("assists") >= PREDICTIONS.involvements) return `has ${count(sum("goals"), "goal")} and ${count(sum("assists"), "assist")} in ${span}`;
   if (played && !back && sum("goals") + sum("assists") === 0) return `has gone quiet, no goal and no assist in ${span}`;
   return null;
 }
@@ -134,10 +134,10 @@ function gutFact(instinct: NonNullable<PredictionCall["instinct"]>, favourite: P
   if (instinct === "doubt" && favourite.best !== null) return `${favourite.name}'s best man, ${described(favourite.best)}, ${state(favourite.best)}.`;
   if (instinct === "liverpool") {
     // With their fixtures, so he praises their football: given names alone, he gave their club as the reason.
-    const theirs = underdog.squad.filter((man) => man.liverpool).slice(0, 2).map(described).join("; ");
+    const theirs = underdog.squad.filter((man) => man.liverpool).slice(0, PREDICTIONS.gutMen).map(described).join("; ");
     return `Liverpool men in the squad: ${underdog.name} ${underdog.liverpool}, ${favourite.name} ${favourite.liverpool}. ${underdog.name}'s: ${theirs}. You back the side with more of them. Never admit a bias and never give their club as the reason: praise their football, as if it were obvious.`;
   }
-  const line = (side: PredictionSide) => [...side.backLine].sort((a, b) => (a.ease ?? 99) - (b.ease ?? 99)).slice(0, 2).map((man) => `${man.name} ${fixture(man)}`).join(", ");
+  const line = (side: PredictionSide) => [...side.backLine].sort((a, b) => (a.ease ?? Infinity) - (b.ease ?? Infinity)).slice(0, PREDICTIONS.gutMen).map((man) => `${man.name} ${fixture(man)}`).join(", ");
   return `${underdog.name}'s back line has the kinder round: ${line(underdog)}. ${favourite.name}'s: ${line(favourite)}.`;
 }
 

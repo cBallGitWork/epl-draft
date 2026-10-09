@@ -1,3 +1,4 @@
+import { PREDICTIONS } from "../../config";
 import { INSTINCTS, type Instinct } from "./pick";
 
 // Lawro's own past: the core he always has, and the verified lines the desk offers him in turn.
@@ -42,25 +43,18 @@ export const PAST: readonly PastLine[] = [
   { id: "newcastle", line: "You were a defensive coach at Newcastle, and you have always said you did nothing there.", mark: /defensive coach|did nothing/i },
 ];
 
-/** How many of his last columns rest an instinct's line, and a rotation line; and how often a
- *  rotation line is offered at all, because everybody reading knows who he is. */
-const INSTINCT_REST = 4;
-const ROTATION_REST = 12;
-const ROTATION_EVERY = 4;
-
-/** This week's lines: the first instinct's own, and every fourth column the rotation line least
- *  recently used.
- *  `past` is the prose of his earlier columns, newest first. */
+/** This week's lines: the first instinct's own, and every `rotationEvery` columns the rotation line least recently
+ *  used. `past` is the prose of his earlier columns, newest first. */
 export function pastOffered(instincts: readonly Instinct[], past: readonly string[]): PastLine[] {
   const lastUse = (line: PastLine) => {
     const at = past.findIndex((prose) => line.mark.test(prose));
     return at === -1 ? Number.POSITIVE_INFINITY : at;
   };
   const fired = INSTINCTS.find((each) => instincts.includes(each));
-  const own = PAST.find((line) => line.instinct !== undefined && line.instinct === fired && lastUse(line) >= INSTINCT_REST);
+  const own = PAST.find((line) => line.instinct !== undefined && line.instinct === fired && lastUse(line) >= PREDICTIONS.pastRest.instinct);
+  const due = (past.length + 1) % PREDICTIONS.rotationEvery === 0;
   // Oldest use first; never used is oldest of all, and ties keep the pool's order.
-  const due = (past.length + 1) % ROTATION_EVERY === 0;
-  const turn = PAST.filter((line) => due && line.instinct === undefined && lastUse(line) >= ROTATION_REST).sort((a, b) =>
+  const turn = PAST.filter((line) => due && line.instinct === undefined && lastUse(line) >= PREDICTIONS.pastRest.rotation).sort((a, b) =>
     lastUse(a) === lastUse(b) ? 0 : lastUse(a) < lastUse(b) ? 1 : -1,
   )[0];
   return [own, turn].filter((line): line is PastLine => line !== undefined);
