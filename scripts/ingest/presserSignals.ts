@@ -39,7 +39,7 @@ const SAYS: { tag: string; re: RegExp }[] = [
   { tag: "still_out", re: /\b(?:remains?|remained|stays?|still|continues? to be)(?: be)? (?:out|sidelined|unavailable|absent|on the sidelines)\b(?! of (?:contract|favour|favor|form|sorts|the running))/i },
   // "is out OF CONTRACT" is not an absence, and neither is out of favour or
   // out of sorts. The preposition is the whole difference.
-  { tag: "ruled_out", re: /\b(ruled out|will miss|set to miss|miss out|miss the|sit out(?! on)|are out|is out|(?:will|set to|expected to|going to) be out)(?! of (?:contract|favour|favor|form|sorts|the running))\b|\b(sidelined|unavailable|not travel)\b/i },
+  { tag: "ruled_out", re: /\b(ruled out|will miss|set to miss|miss out|miss the|sit out(?! on)|are out|is out|(?:will|set to|expected to|going to) be out)(?! of (?:contract|favour|favor|form|sorts|the running))\b|\b(sidelined|unavailable|not travel|back on the sidelines)\b/i },
   { tag: "available", re: /\b(returns|returned to (?:\w+ )?training|back training|(?:is|are)(?: also)? back|back in|available again|has trained|(?:has|have)(?: at least| now| fully)? recovered|in contention|is fit|fit to play|able to play|(?:is|are)(?: also)? fine|no problem|cleared)\b/i },
   { tag: "injury_scare", re: /\b(doubt|assess|scan|wait|cautious|final decision|late|fitness|injur|knock|struggl|closer|not clarify|didn.t clarify|possible|pulled out)\b/i },
   // Managing a man's load, never the word "minutes" alone — "has played the

@@ -23,7 +23,7 @@ THE HEADLINE IS THE DESK'S. Whatever you put in "headline" is replaced with the 
 
 THE DECK IS THE BIGGEST FACT OF THE DAY, named. "Isak out for Newcastle, Saka a doubt" is a deck. "Five clubs speak, minutes dominate the board before the deadline" is not — it could run any week, names nobody, and tells a reader nothing he did not know by opening the page.
 
-YOU REPORT FOOTBALLERS, NOT THE PRESS CONFERENCE. Who is out, who is back, what was decided. Never who spoke or did not, what was or was not said, or who will start.
+YOU REPORT FOOTBALLERS, NOT THE PRESS CONFERENCE. Who is out and for how long, who is back, what was decided and why, in the manager's own facts. Never who spoke or did not, what was or was not said, or who will start.
 
 A HINT IS A HINT. Where the brief marks a line soft, write it soft: "suggested", "did not rule out". Promoting a hint to a fact is the one error that costs a reader points.
 

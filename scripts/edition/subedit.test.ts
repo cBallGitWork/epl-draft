@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { banned } from "@epl/core";
+import { NEWS_GAPS, banned } from "@epl/core";
 import { presserFaults, sendBackPresser, written } from "./subedit";
 
 // A banned phrase in the HEADLINE sends the column back, though `checks.prose()` leaves the headline out.
@@ -65,8 +65,31 @@ describe("the Team Sheet's send-back", () => {
       body: "Nobel Mendy is back in contention for Hull City.",
       teamNews: [{ club: "Arsenal", code: 3, line: "William Saliba and Christos Tzolis are out.", men: [{ name: "Cristhian Mosquera", status: "FIT", note: "back from a muscle injury" }] }],
     });
-    expect(clean).toEqual({ phrases: [], fit: [] });
+    expect(clean).toEqual({ phrases: [], fit: [], lines: [], quotes: [], notes: [] });
     expect(sendBackPresser(clean)).toBe("");
+  });
+
+  // Friday 9 Oct 2026, verbatim: Arsenal printed four men and no line, no quote of the three offered, and Forest's
+  // Milenković went out with no note though his manager said he would miss the game.
+  it("sends back a club with news but no line, a quote offered and not printed, and a man with no note", () => {
+    const friday = {
+      teamNews: [
+        { club: "Arsenal", code: 3, men: [{ name: "Christos Tzolis", status: "OUT", note: "hamstring" }] },
+        { club: "Nottingham Forest", code: 17, men: [{ name: "Igor Jesus", status: "OUT", note: "calf" }, { name: "Nikola Milenković", status: "FIT", note: "" }] },
+      ],
+    };
+    const expected = {
+      reported: [{ code: 3, club: "Arsenal" }, { code: 17, club: "Nottingham Forest" }],
+      quoted: [{ code: 3, club: "Arsenal" }],
+      noted: ["Christos Tzolis", "Nikola Milenković"],
+    };
+    const faults = presserFaults(friday, expected);
+    expect(faults).toMatchObject({ lines: ["Arsenal", "Nottingham Forest"], quotes: ["Arsenal"], notes: ["Nikola Milenković"] });
+    const words = sendBackPresser(faults);
+    expect(words).toContain("THESE CLUBS HAD NEWS AND NO LINE: Arsenal, Nottingham Forest");
+    expect(words).toContain("THESE CLUBS WERE GIVEN A QUOTE WITH A FACT AND PRINTED NONE: Arsenal");
+    expect(words).toContain("THESE MEN HAVE AN EMPTY NOTE: Nikola Milenković");
+    expect(banned(words, NEWS_GAPS)).toEqual([]);
   });
 });
 

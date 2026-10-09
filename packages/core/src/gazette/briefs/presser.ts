@@ -1,6 +1,6 @@
-import type { PresserQuote, PresserSignal } from "../../football/intel/pressers";
+import type { PresserSignal } from "../../football/intel/pressers";
 import { FIRM } from "../../football/intel/pressers";
-import { groupedBy } from "../../grouped";
+import { presserClubs, type ClubQuote } from "./presserClubs";
 import { storylinesBlock } from "./storylines";
 import type { StoryThread } from "../ledger";
 import { briefOf } from "./briefOf";
@@ -28,11 +28,7 @@ const MEANS: Record<string, string> = {
   injury_scare: "a doubt",
 };
 
-/** The tags that keep a man out of the side; a standing doubt or rotation risk is not an absence. */
-const ABSENT: ReadonlySet<string> = new Set(["ruled_out", "suspended"]);
-
-/** A standing absence: out, and nothing new said about it. Neither a bullet nor still out is a standing doubt. */
-export const stillOut = (line: PresserLine) => !line.fresh && ABSENT.has(line.tag);
+export { stillOut } from "./presserClubs";
 
 /** The speaker's name, or null where the export named nobody ("" on a row, null on a conference). */
 const speaker = (manager: string | null) => (manager === null || manager.trim() === "" ? null : manager);
@@ -42,25 +38,21 @@ export function buildPresserBrief(brief: {
   /** Newest first, and every man mentioned — not only the ones we hold. */
   lines: readonly PresserLine[];
   /** What the managers said, verbatim; absent on an older export, and the column runs without them. */
-  quotes?: readonly (PresserQuote & { clubName: string })[];
+  quotes?: readonly ClubQuote[];
   /** The man the desk has chosen to print, so the prose and the picture agree. */
   lead?: string | null;
   /** Every club that held a conference, including those with nothing to report. */
   spoke?: readonly { clubName: string; manager: string | null }[];
   threads: readonly StoryThread[];
 }): string {
-  // By club: the unit the news arrives in and a reader scans.
-  const byClub = new Map<string, { code: number; lines: PresserLine[] }>();
-  for (const line of brief.lines) {
-    const row = byClub.get(line.clubName) ?? { code: line.club, lines: [] };
-    row.lines.push(line);
-    byClub.set(line.clubName, row);
-  }
+  // By club: the unit the news arrives in and a reader scans, with its manager's words beside its men.
+  const byClub = presserClubs(brief.lines, brief.quotes ?? []);
+  const said = (quote: ClubQuote, fact: boolean) =>
+    `    ${fact ? "QUOTE WITH A FACT" : "quote, no fact"}: "${quote.text}" — ${quote.said}${quote.about === undefined ? "" : ` on ${quote.about}`}`;
 
-  const clubs = [...byClub.entries()].map(([club, row]) => {
+  const clubs = byClub.map((row) => {
     // The men whose availability CHANGED get bullets; a standing absence is a tail line.
-    const standing = row.lines.filter(stillOut);
-    const men = row.lines.filter((line) => line.fresh).map((line) => {
+    const men = row.men.map((line) => {
       // The owner in brackets after the name, never a clause.
       const who = line.ownerName === null ? "" : ` (${line.ownerName})`;
       const soft = line.confidence >= FIRM ? "" : " [HINT, not a fact]";
@@ -72,48 +64,46 @@ export function buildPresserBrief(brief: {
           : `${MEANS[line.tag] ?? line.tag}${known ? ` (${line.condition})` : " (COMPLAINT NOT STATED — you may not name one)"}`;
       // The export writes "" or null for a conference with no named speaker: offer nobody rather than a gap.
       const by = speaker(line.manager) === null ? "" : `, said by ${line.manager}`;
-      return `${line.playerName}${who} — ${what}${by}${soft}`;
+      const named = row.named.has(line.playerName) ? " [NAMED IN A QUOTE BELOW]" : "";
+      return `${line.playerName}${who} — ${what}${by}${soft}${named}`;
     });
-    const also =
-      standing.length === 0
-        ? ""
-        : `\n  STILL OUT: ${standing.map((line) => line.playerName).join(", ")}`;
-    return `- ${club} (code ${row.code}):${men.length === 0 ? "" : ` ${men.join(" · ")}`}${also}`;
+    const also = row.standing.length === 0 ? [] : [`  STILL OUT: ${row.standing.map((line) => line.playerName).join(", ")}`];
+    const quotes = row.quotes.map(({ quote, fact }) => said(quote, fact));
+    return [`- ${row.name} (code ${row.code}):${men.length === 0 ? "" : ` ${men.join(" · ")}`}`, ...also, ...quotes].join("\n");
   });
 
   const owned = brief.lines.filter((line) => line.ownerName !== null).length;
 
   // Clubs that held a conference and named nobody still get a row, so they are not an apparent oversight.
+  const listed = new Set(byClub.map((row) => row.name));
   const quiet = (brief.spoke ?? [])
-    .filter((each) => !byClub.has(each.clubName))
+    .filter((each) => !listed.has(each.clubName))
     .map((each) => `- ${each.clubName}${speaker(each.manager) === null ? "" : ` (${each.manager})`}`);
 
-  // Grouped by club so the writer sees a club's words beside its players.
-  const line = (quote: PresserQuote) => `  "${quote.text}" — ${quote.said}${quote.about === undefined ? "" : ` on ${quote.about}`}`;
-  const said = [...groupedBy(brief.quotes ?? [], (quote) => quote.clubName)].map(([club, quotes]) => [`- ${club}:`, ...quotes.map(line)].join("\n"));
+  const quoted = (brief.quotes ?? []).length > 0;
 
   return briefOf([
     `TEAM NEWS, gameweek ${brief.gameweek}. What the managers said before the deadline. A draft manager reads this to decide who to start AND who to claim, so it covers every man mentioned, not only the ones somebody owns.`,
-    [`WHAT WAS SAID, by club — ${brief.lines.length} men across ${byClub.size} clubs, ${owned} of them owned in this league. The code is the club's and you must echo it back exactly:`, ...clubs].join("\n"),
+    [`WHAT WAS SAID, by club — ${brief.lines.length} men across ${new Set(brief.lines.map((line) => line.clubName)).size} clubs, ${owned} of them owned in this league. The code is the club's and you must echo it back exactly. Under each club are its manager's words, verbatim, the ones carrying a fact first:`, ...clubs].join("\n"),
     quiet.length === 0
       ? null
       : [
-          "THESE CLUBS NAMED NO MAN AS OUT, DOUBTFUL OR BACK. Each gets a row with an empty \"men\" list and a line of football: \"No injury concerns.\", or the fact its quote below carries. Do NOT invent a player for them, and do not leave them out:",
+          "THESE CLUBS NAMED NO MAN AS OUT, DOUBTFUL OR BACK. Each gets a row with an empty \"men\" list and a line of football: \"No injury concerns.\" Do NOT invent a player for them, and do not leave them out:",
           ...quiet,
         ].join("\n"),
     [
       'RETURN A ROW PER CLUB in "teamNews", in this shape:',
       '  { "club": the club name exactly as given,',
       '    "code": the number given on that line,',
-      '    "line": ONE sentence of football — who is out, who is back, what was decided — and nothing that repeats a bullet or the STILL OUT list, which the page prints under it; where the club has nothing beyond those lists, leave "line" empty (""),',
-      '    "men": [ { "name": his name as given, "owner": our manager who holds him or omit it, "status": one of OUT | Doubt | Suspended | FIT, "note": the complaint and what was said, a few words — and where a ban or an absence has a KNOWN LENGTH, that length is the most useful thing you can put here } ],',
-      '    "quote": { "text": his words EXACTLY as given below, "said": who said them } — or omit it when the club has none }',
+      '    "line": ONE sentence of reporting, in the manager\'s facts — what was decided, the timescale, the reason. Every club with a man in its list or a QUOTE WITH A FACT gets one. It may name the men the bullets name; it must not copy a note word for word. Only a club whose sole content is a STILL OUT list, with nothing said about anyone, may leave "line" empty (""),',
+      '    "men": [ { "name": his name as given, "owner": our manager who holds him or omit it, "status": one of OUT | Doubt | Suspended | FIT, "note": the complaint AND what was said about him, in a few words — "thigh; small, not long term", "ankle; working on his own", "decision tomorrow", "scan due"; where an absence has a KNOWN LENGTH, that length leads } ],',
+      '    "quote": { "text": his words EXACTLY as given under the club, "said": who said them } — omit it only when the club has no QUOTE WITH A FACT }',
     ].join("\n"),
-    "A FIT MAN'S NOTE BEGINS \"back from\": \"back from a muscle injury\". A bare \"muscle\" under FIT reads as if he still has it. Where you were given nothing he is back from, leave the note empty; never a note about the brief.",
-    "WRITE FOOTBALL, NEVER THE PRESS CONFERENCE. A club's line and the body say who is out, who is back and what was decided. Never write about who spoke or who did not, whose name is on the news, what was or was not said, or that a club has nothing to add: where a club named nobody new, leave \"line\" empty, as its lists say it. And never forecast who starts.",
+    "A FIT MAN'S NOTE SAYS WHAT HAS CHANGED, and begins \"back from\" where he had a complaint: \"back from a groin injury; trained all week\". A bare \"muscle\" under FIT reads as if he still has it. Where his manager's words name him, the note carries what they say — \"trained all week\", \"ready after a few days off\". Leave a note empty only where you were given nothing about him at all; never a note about the brief.",
+    "REPORT WHAT THE MANAGER SAID ABOUT HIS PLAYERS, NEVER THE PRESS CONFERENCE ITSELF. A club's line and the body carry his facts — who is out and for how long, who is back, what was decided and why. Never write about who spoke or who did not, whose name is on the news, what was or was not said, or that a club has nothing to add. And never forecast who starts.",
     "NEVER NAME AN INJURY YOU WERE NOT GIVEN. Where a man's line says COMPLAINT NOT STATED, his note says what was said about him and nothing about his body — \"a doubt\", \"not cleared\", \"decision Friday\". Borrowing the complaint from the man above him is the worst error this column can make, and it has made it.",
     "NEVER RESTATE THE STATUS IN THE NOTE. \"OUT — not able to play\", \"FIT — back in contention\", \"Suspended — banned, not injured\" are the tag written twice; the second half is deleted by any sub who sees it. The note carries the COMPLAINT and anything the tag cannot say — how long, since when, what happens next. Where there is nothing to add, leave the note empty.",
-    "A QUOTE THAT SAYS NOTHING GETS NO SPACE. \"More or less the same as the other night, yeah, nothing has really changed\" is a man declining to give you news, and printing it gives six lines to an absence. Use a quote only where it carries a fact the bullets do not — a timescale, a reason, a decision. Otherwise omit it.",
+    "EVERY CLUB WITH A QUOTE WITH A FACT PRINTS ONE: the manager's own words on a timescale, a decision or a reason are the column's best evidence. Trim it to the sentence or two that carry the fact. A \"quote, no fact\" gets no space — \"More or less the same as the other night, yeah, nothing has really changed\" is a man declining to give you news.",
     'THE MEN UNDER "STILL OUT" GET NO BULLET. They are a standing condition a reader already knows — out for weeks, nothing said today — and the desk lists them under the club itself, so leave them out of your row. 86% of a day\'s men are these; bulleting them buries the seven that are news.',
     "ONE BULLET PER MAN who changed, and every one of them gets one. The note is a FEW WORDS, not a sentence: \"calf; closer to a return\", \"hamstring; out until after the break\", \"injury unconfirmed, could still feature\". No verb of attribution in a bullet — the club\'s line carries the manager, the bullets carry the facts.",
     "NAME THE COMPLAINT. Where a man's trouble is given in brackets — calf, ankle, concussion — say it. 'Carrying a knock' when the brief told you it is a hamstring is the column throwing away the one fact a reader came for.",
@@ -129,12 +119,9 @@ export function buildPresserBrief(brief: {
     "NO SCENE-SETTING, IN THE BODY OR IN A CLUB'S LINE. \"Elsewhere the picture is harder\", \"long absence lists\", \"reads heaviest\", \"a mixed bag\" describe the SHAPE OF YOUR OWN COLUMN to a reader looking straight at it. Every sentence starts on a footballer or a manager.",
     "NO VERDICT ON THE DAY, AND NO WEATHER REPORT. Never rank clubs by how good or bad their news was. \"Forest bring the day's better news\", \"Newcastle carry the heaviest load\", \"the one clear gain\", \"reads heaviest\" — all of that is you editorialising about a list you were handed, and it is the first thing a reader skips. Say who is out and who is back. The reader decides whether that is good news.",
     "DO NOT NAME THE MANAGER TWICE. If the club's quote carries his name, the club's line must not also open with it — write what was established, not who established it. Name him in the line only where that club has no quote.",
-    said.length === 0
-      ? "YOU HAVE NO QUOTES AND MUST NOT WRITE ONE. Report the meaning; never a sentence in quotation marks."
-      : [
-          "WHAT THEY ACTUALLY SAID — verbatim, and you may print these. Use ONE per club at most, in double quotation marks, with the manager's name after it. Copy the words EXACTLY; never tidy, shorten or join two quotes. Trim to a sentence if it is long, and never change a word of what is left. A club with no quote below simply has none, and you must NOT write one for it:",
-          ...said,
-        ].join("\n"),
+    quoted
+      ? "THE QUOTES UNDER EACH CLUB ARE VERBATIM. Use ONE per club, with the manager's name after it. Copy the words EXACTLY; never tidy or join two quotes. Trim to a sentence if it is long, and never change a word of what is left. A club with no quote under it has none, and you must NOT write one for it."
+      : "YOU HAVE NO QUOTES AND MUST NOT WRITE ONE. Report the meaning; never a sentence in quotation marks.",
     "A HINT IS A HINT. Where a line is marked HINT, write it as one — 'suggested', 'did not rule out', 'stopped short of'. Never promote it to a fact.",
     "NO ADVICE, and no narrative about our managers. Name the owner; do not tell him what to do, or discuss his week.",
     storylinesBlock(brief.threads),

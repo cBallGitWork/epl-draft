@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { NEWS_GAPS, unbackedFit } from "./teamSheetChecks";
+import { NEWS_GAPS, teamSheetGaps, unbackedFit } from "./teamSheetChecks";
 import { banned } from "./banned";
 
 // The Team Sheet of 9 Oct 2026, verbatim: clubs written up as who did not speak and what was not said.
@@ -41,8 +41,57 @@ describe("unbackedFit", () => {
     expect(unbackedFit(rows)).toEqual(["Cristhian Mosquera"]);
   });
 
+  it("lets a FIT man's note say what has changed without a complaint", () => {
+    const rows = [{ men: [{ name: "Jeremy Jacquet", status: "FIT", note: "trained this week; rested by his country" }, { name: "Erling Haaland", status: "FIT", note: "ready after a few days off" }] }];
+    expect(unbackedFit(rows)).toEqual([]);
+  });
+
   it("reads nothing into a row that is not one", () => {
     expect(unbackedFit(undefined)).toEqual([]);
     expect(unbackedFit([null, { men: "x" }, { men: [null, { status: "FIT" }] }])).toEqual([]);
+  });
+});
+
+// The Team Sheet of 9 Oct 2026: 13 of 14 clubs with no line, 3 quotes of the 18 offered, men with no note.
+describe("teamSheetGaps", () => {
+  const expected = {
+    reported: [{ code: 3, club: "Arsenal" }, { code: 17, club: "Nottingham Forest" }],
+    quoted: [{ code: 3, club: "Arsenal" }, { code: 17, club: "Nottingham Forest" }],
+    noted: ["Christos Tzolis", "Igor Jesus", "Nikola Milenković"],
+  };
+  const filed = [
+    { club: "Arsenal", code: 3, men: [{ name: "Christos Tzolis", status: "OUT", note: "hamstring" }] },
+    { club: "Nottingham Forest", code: 17, line: "", men: [{ name: "Igor Jesus", status: "OUT", note: "calf" }, { name: "Nikola Milenković", status: "OUT", note: "" }] },
+  ];
+
+  it("names the clubs with news but no line, the clubs offered a quote that printed none, and the men with no note", () => {
+    expect(teamSheetGaps(filed, expected)).toEqual({
+      lines: ["Arsenal", "Nottingham Forest"],
+      quotes: ["Arsenal", "Nottingham Forest"],
+      notes: ["Nikola Milenković"],
+    });
+  });
+
+  it("counts a club the column left out as a gap, and finds a row by its name when the code is lost", () => {
+    const gaps = teamSheetGaps([{ club: "Arsenal", line: "Tzolis is out for a few weeks.", quote: { text: "He’s not available.", said: "Mikel Arteta" } }], expected);
+    expect(gaps.lines).toEqual(["Nottingham Forest"]);
+    expect(gaps.quotes).toEqual(["Nottingham Forest"]);
+  });
+
+  it("never asks a note of a suspended man or one the brief gave nothing", () => {
+    const rows = [{ code: 40, men: [{ name: "Abdul Fatawu", status: "Suspended", note: "" }, { name: "Kenny Tete", status: "FIT", note: "" }] }];
+    expect(teamSheetGaps(rows, { reported: [], quoted: [], noted: ["Abdul Fatawu"] }).notes).toEqual([]);
+  });
+
+  it("passes a column that reports, quotes and notes", () => {
+    const clean = [
+      { code: 3, line: "Tzolis is out for a few weeks with a muscle injury.", quote: { text: "He’s not available.", said: "Mikel Arteta" }, men: [{ name: "Christos Tzolis", status: "OUT", note: "hamstring; a few weeks" }] },
+      { code: 17, line: "Milenković has a bone bruise.", quote: { text: "He will miss the game.", said: "Oliver Glasner" }, men: [{ name: "Igor Jesus", status: "OUT", note: "calf; a few weeks" }, { name: "Nikola Milenković", status: "OUT", note: "bone bruise; cannot train" }] },
+    ];
+    expect(teamSheetGaps(clean, expected)).toEqual({ lines: [], quotes: [], notes: [] });
+  });
+
+  it("reads nothing into a row that is not one", () => {
+    expect(teamSheetGaps(undefined, { reported: [], quoted: [], noted: [] })).toEqual({ lines: [], quotes: [], notes: [] });
   });
 });

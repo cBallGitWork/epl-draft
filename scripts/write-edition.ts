@@ -214,7 +214,7 @@ function commissioner(ctx: DeskContext, paper: readonly PublishedStory[], now: s
           ? await writeSeason(desk.season, brief, say)
           : "lawro" in desk
             ? await writeLawro(desk.lawro, brief, desk.brief, say)
-            : await writeSubedited(desk.system, brief, say, assignment.kind);
+            : await writeSubedited(desk.system, brief, say, assignment.kind, desk.expected);
       const filed = file(assignment, column, ctx, now);
       // Every name in the prose against every name in the brief; it warns rather than refuses.
       const unknown = strangers(prose(filed.story), brief);
