@@ -4,6 +4,7 @@ import { seasonFixtures } from "../../football";
 import { matchHighlight } from "../../matchFeed";
 import { matchHref } from "../../prem/match/[id]/matchRoutes";
 import { STANDING_HEAD } from "./heads";
+import { listMarks } from "./listMarks";
 import ReportMatch from "./ReportMatch";
 
 // A match-day report: the day's scores as a list, lead first, then each match. A phone shows one match at a time, chosen from
@@ -23,12 +24,10 @@ export default async function Reports({ story, snapshot }: { story: PublishedSto
     reports.map(async (r) => r.video ?? (await matchHighlight({ home: clubs.get(r.home.code)?.name ?? "", away: clubs.get(r.away.code)?.name ?? "", homeScore: r.home.score, awayScore: r.away.score }))?.id ?? null),
   );
 
-  // The chosen match's row set in reverse ink; the lead's when none is chosen. One rule per match, because CSS cannot
-  // carry a code from the target to the link.
-  const marked = [
-    `.rpt:not(:has(section:target)) .rpt-list a:first-child{background:var(--color-ink);color:var(--color-bg)}`,
-    ...reports.map((r) => `.rpt:has(#m-${r.fixtureCode}:target) .rpt-list a[href="#m-${r.fixtureCode}"]{background:var(--color-ink);color:var(--color-bg)}`),
-  ].join("");
+  const marked = listMarks(
+    "rpt",
+    reports.map((r) => `m-${r.fixtureCode}`),
+  );
 
   return (
     <div className="rpt flex flex-col pt-4">
