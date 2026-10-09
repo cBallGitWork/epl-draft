@@ -29,6 +29,7 @@ export default defineConfig({
       // Widening is not permission to put domain logic in the app. It removes
       // the excuse for the logic that is already there being untested.
       "apps/*/app/**/*.test.ts",
+      "tools/ui/**/*.test.mjs",
     ],
   },
 });
