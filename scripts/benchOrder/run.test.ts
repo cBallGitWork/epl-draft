@@ -169,6 +169,17 @@ describe("benchOrderRun", () => {
     expect(run.writes).toEqual([]);
   });
 
+  it("writes early for one named team when asked by hand, and never once the period has locked", async () => {
+    const early = league("2026-10-09T20:00:00.000Z", { ...rosters(), other: roster(6, [["x", "1"], ["y", "9"]]) });
+    expect(await benchOrderRun(early.deps, { write: true, wait: false, early: true, team: "other" })).toBe(0);
+    expect(early.writes).toEqual([{ teamId: "other", map: { y: 1, x: 2 } }]);
+    const late = league(LOCK, rosters());
+    expect(await benchOrderRun(late.deps, { write: true, wait: false, early: true, team: "none" })).toBe(1);
+    expect(late.writes).toEqual([]);
+    const missing = league(FIVE_TO, rosters());
+    expect(await benchOrderRun(missing.deps, { write: true, wait: false, team: "nobody" })).toBe(1);
+  });
+
   it("waits again for a lock moved later while it slept", async () => {
     const later = "2026-10-10T13:15:00.000Z";
     const run = league("2026-10-10T06:00:00.000Z", rosters(), { lockOf: async () => later });

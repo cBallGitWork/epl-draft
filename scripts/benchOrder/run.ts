@@ -22,6 +22,10 @@ export interface Options {
   write: boolean;
   /** Sleep until the write moment when the lock is before tomorrow's horizon. */
   wait: boolean;
+  /** Write before the last minutes, for a test by hand; never at or after the lock. */
+  early?: boolean;
+  /** Only this Fantrax team id, for a test by hand. */
+  team?: string;
 }
 
 /** A lock moved later while the run slept is waited for again, this many times at most. */
@@ -54,13 +58,18 @@ export async function benchOrderRun(deps: Deps, options: Options): Promise<numbe
         : `Period ${period} locks at ${moment.lock}: benches are written only in its last minutes.`,
     );
     // A dry run goes on to print what it would write.
-    if (options.write) return 0;
+    if (options.write && !options.early) return 0;
   }
   const lock = Date.parse(moment.lock);
 
   let failed = 0;
   let written = 0;
-  for (const team of await deps.teams()) {
+  const teams = (await deps.teams()).filter((t) => options.team === undefined || t.teamId === options.team);
+  if (teams.length === 0) {
+    deps.log(`No team ${options.team ?? ""} in this league.`);
+    return 1;
+  }
+  for (const team of teams) {
     try {
       const raw = await deps.roster(team.teamId, period);
       const plan = teamPlan(raw, period);
