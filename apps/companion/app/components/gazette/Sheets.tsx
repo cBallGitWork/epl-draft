@@ -26,7 +26,7 @@ export default function Sheets({
   const side = (each: StorySheetSide) => <Side side={each} named={named} mine={mine} players={players} clubs={clubs} />;
 
   return (
-    <div className="flex flex-col divide-y pt-4" style={{ borderColor: "var(--paper-rule)" }}>
+    <div className="flex flex-col divide-y divide-[var(--paper-rule)] pt-4">
       {ties.map((tie) => (
         <section key={`${tie.home.teamId}-${tie.away.teamId}`} className="py-4">
           <h3 className="paper-display text-xl leading-tight font-semibold text-ink">

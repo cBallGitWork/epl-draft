@@ -34,10 +34,7 @@ export default function DraftReport({ story, snapshot }: { story: PublishedStory
         </nav>
       )}
       {/* On a phone one match-up shows: the one the list's anchor targets, or the lead. A desk shows every match-up. */}
-      <div
-        className="flex flex-col divide-y max-lg:[&:has(>section:target)>section:not(:target)]:hidden max-lg:[&:not(:has(>section:target))>section:not(:first-child)]:hidden"
-        style={{ borderColor: "var(--paper-rule)" }}
-      >
+      <div className="flex flex-col divide-y divide-[var(--paper-rule)] max-lg:[&:has(>section:target)>section:not(:target)]:hidden max-lg:[&:not(:has(>section:target))>section:not(:first-child)]:hidden">
         {draft.matchups.map((m, i) => (
           <DraftMatchup key={i} matchup={m} n={i + 1} saturday={draft.cutoff === "saturday"} clubs={clubs} />
         ))}

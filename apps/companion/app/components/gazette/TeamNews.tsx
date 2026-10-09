@@ -16,7 +16,7 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
   if (rows.length === 0) return null;
 
   return (
-    <div className="flex flex-col divide-y pt-4" style={{ borderColor: "var(--paper-rule)" }}>
+    <div className="flex flex-col divide-y divide-[var(--paper-rule)] pt-4">
       {rows.map((row) => (
         <section key={row.club} className="py-4">
           <h3 className="flex items-center gap-2.5">

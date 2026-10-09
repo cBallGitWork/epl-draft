@@ -23,7 +23,7 @@ export default function Column({
         </h2>
         {aside ? <span className="font-sans text-2xs text-muted">{aside}</span> : null}
       </div>
-      <div className="divide-y" style={{ borderColor: "var(--paper-rule)" }}>
+      <div className="divide-y divide-[var(--paper-rule)]">
         {children}
       </div>
     </section>

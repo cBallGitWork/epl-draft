@@ -58,10 +58,7 @@ export default async function Reports({ story, snapshot }: { story: PublishedSto
         </nav>
       )}
       {/* On a phone one match shows: the one the list's anchor targets, or the lead. A desk shows every match. */}
-      <div
-        className="flex flex-col divide-y max-lg:[&:has(>section:target)>section:not(:target)]:hidden max-lg:[&:not(:has(>section:target))>section:not(:first-child)]:hidden"
-        style={{ borderColor: "var(--paper-rule)" }}
-      >
+      <div className="flex flex-col divide-y divide-[var(--paper-rule)] max-lg:[&:has(>section:target)>section:not(:target)]:hidden max-lg:[&:not(:has(>section:target))>section:not(:first-child)]:hidden">
         {reports.map((r, i) => {
           const id = idOf(r.fixtureCode);
           return (

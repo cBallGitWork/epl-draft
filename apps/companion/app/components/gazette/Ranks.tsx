@@ -16,7 +16,7 @@ export default function Ranks({
   if (ranks.length === 0) return null;
 
   return (
-    <ol className="flex flex-col divide-y pt-3" style={{ borderColor: "var(--paper-rule)" }}>
+    <ol className="flex flex-col divide-y divide-[var(--paper-rule)] pt-3">
       {ranks.map((rank, at) => (
         <li key={rank.teamId} className="py-2">
           <p className="flex items-baseline gap-2">
