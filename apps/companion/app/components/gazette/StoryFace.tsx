@@ -1,11 +1,13 @@
-import type { Club, PublishedStory } from "@epl/core";
+import { type Club, type PublishedStory, writerOf } from "@epl/core";
 import { columnistOf } from "@/app/config";
 import Face from "./Face";
 import ColumnistPhoto from "./ColumnistPhoto";
+import HereWeGo from "./HereWeGo";
 
-// A story's own picture: the man it is about, else its columnist's photograph, else nothing.
+// A story's own picture: the man it is about (a trade's on its Here We Go plate), else its columnist's photograph, else
+// nothing.
 
-type Rank = "splash" | "card";
+type Rank = "splash" | "card" | "portrait";
 
 /** Whether a story has a picture of its own to print. */
 export function hasPicture(story: PublishedStory): boolean {
@@ -22,9 +24,12 @@ export default function StoryFace({
   rank: Rank;
 }) {
   const columnist = columnistOf(story);
-  return story.face ? (
+  const transfer = story.kind === "trade" ? story.extras?.transfer : undefined;
+  return story.face && transfer ? (
+    <HereWeGo face={story.face} transfer={transfer} credit={writerOf(story)} clubs={clubs} rank={rank} />
+  ) : story.face ? (
     <Face face={story.face} clubs={clubs} rank={rank} />
-  ) : columnist ? (
+  ) : columnist && rank !== "portrait" ? (
     <ColumnistPhoto photo={columnist.photo} rank={rank} />
   ) : null;
 }

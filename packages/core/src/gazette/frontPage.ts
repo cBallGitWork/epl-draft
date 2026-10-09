@@ -20,6 +20,8 @@ const KIND_WEIGHT: Record<StoryKind, number> = {
   predictions: 55,
   // Once a season, the week before the first lock: above the weekly column it comes before.
   "season-rankings": 60,
+  // A trade is news: below the reports and team news, above the columns.
+  trade: 90,
   // Tuesday's one column, below anything that happened.
   "bin-xi": 45,
 };

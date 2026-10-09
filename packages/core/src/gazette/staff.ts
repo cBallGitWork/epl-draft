@@ -12,6 +12,7 @@ const STAFF: readonly (readonly [writer: string, beat: readonly StoryKind[]])[] 
   ["Danial Talyor", ["draft-report"]],
   ["Garf Crookes", ["bin-xi"]],
   ["Davide Onrstein", ["presser", "sheets", "predicted-xi"]],
+  ["Fabrisio Romeno", ["trade"]],
 ];
 
 /** The staff writer each kind runs under. */

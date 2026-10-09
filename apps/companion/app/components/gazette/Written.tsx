@@ -1,5 +1,5 @@
 import type { Club, LeagueTeam, PublishedStory } from "@epl/core";
-import Face from "./Face";
+import StoryFace from "./StoryFace";
 import Calls from "./Calls";
 import ColumnistPhoto from "./ColumnistPhoto";
 import { columnistOf } from "@/app/config";
@@ -33,7 +33,8 @@ export default function Written({
 
   // The men named in the rows below, bold in the standfirst too.
   const footballers = (story.extras?.teamNews ?? []).flatMap((row) => (row.men ?? []).map((man) => man.name));
-  const portrait = intro && story.face !== undefined && story.face !== null && clubs !== undefined;
+  // A trade is its picture as much as its words, so it prints one with no block below.
+  const portrait = (intro || story.kind === "trade") && story.face !== undefined && story.face !== null && clubs !== undefined;
 
   // The head: kicker, headline, deck, rule, dateline and share; a columnist's banner, as the BBC ran his, carries his credit.
   const head = (
@@ -77,9 +78,10 @@ export default function Written({
         <div className="grid gap-x-6 @3xl:grid-cols-[minmax(0,42rem)_16rem] @3xl:grid-rows-[auto_1fr] @3xl:justify-between">
           {head}
           <figure className="pt-4 @3xl:col-start-2 @3xl:row-span-2 @3xl:row-start-1 @3xl:pt-0">
-            {/* Cropped to the frame's ratio under a phone's head, his head kept; whole in the desk's column. */}
-            <div className="aspect-video overflow-hidden @3xl:aspect-auto">
-              <Face face={story.face} clubs={clubs} rank="portrait" />
+            {/* Cropped to the frame's ratio under a phone's head, his head kept; whole in the desk's column. A trade's
+                plate is printed whole: its words are at the foot. */}
+            <div className={story.kind === "trade" ? "" : "aspect-video overflow-hidden @3xl:aspect-auto"}>
+              <StoryFace story={story} clubs={clubs} rank="portrait" />
             </div>
             <figcaption className={`${CAPTION_CAPS} pt-1.5 text-faint`}>
               {story.face.name}

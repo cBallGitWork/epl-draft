@@ -1,12 +1,12 @@
 import { binXiDue } from "./binXi/due";
-import { TEAM_SHEET } from "../config";
+import { HERE_WE_GO, TEAM_SHEET } from "../config";
 import { dueFrom, lineupsDue, predictionsDue } from "./predictions/due";
 import { weekdayOfDay } from "../time";
 import type { StoryKind } from "./story";
 
 // What is due this firing: whatever is new since its covered-key was spent, so a re-fired cron files nothing.
 // The paper files seven weekly kinds: match and draft reports, Bin XI, the Team Sheet, the elevens, the draft sheets at
-// the deadline, and Lawro.
+// the deadline, and Lawro; and Here We Go, a completed trade, on detection.
 
 export interface Assignment {
   kind: StoryKind;
@@ -48,6 +48,8 @@ export interface DeskState {
   reportDays: readonly { key: string; slug: string; day: string }[];
   /** The draft reports due: after Saturday, and at the end of the gameweek (`matchups/due.ts`). */
   draftReports: readonly { key: string; slug: string; cutoff: "saturday" | "gameweek"; day: string }[];
+  /** The season's completed trades, newest first, each keyed by its own id and placed in the round it takes effect in. */
+  trades: readonly { key: string; slug: string; round: { period: number; gameweek: number } | null }[];
 }
 
 /** A once-a-round story's covered-key and slug: filed once per gameweek, and its URL says which. */
@@ -117,6 +119,10 @@ export function newsdesk(
     const { period, gameweek } = desk.season;
     want({ kind: "season-rankings", ...roundSlot("season-rankings", gameweek), round: { period, gameweek } });
   }
+
+  // A completed trade files on detection, any day, newest first and a few a firing (Craig, 9 Oct 2026).
+  const trades = desk.trades.filter((trade) => !covered(trade.key)).slice(0, HERE_WE_GO.perFiring);
+  for (const { key, slug, round } of trades) want({ kind: "trade", key, slug, ...(round === null ? {} : { round }) });
 
   return out;
 }

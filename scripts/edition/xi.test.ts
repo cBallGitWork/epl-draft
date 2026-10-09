@@ -100,7 +100,7 @@ describe("the Line-Ups refile when the elevens change", () => {
   const benched = { ...xiOf({ ARS: { ...eleven(1), starters: [...eleven(1).starters.slice(1), { code: 111, prob: 0.9 }] }, LEE: eleven(2), CHE: eleven(3), BOU: eleven(4) }), fetchedAt: "2026-10-10T07:40:00Z" };
   const desk = (xi: IntelXi): DeskState => ({
     gameweek: 5, period: 5, finished: true, locked: false, ties: [], pressers: [], lineups: lineupsSlot(6, xi),
-    ahead: { period: 6, gameweek: 6 }, next, season: null, reportDays: [], draftReports: [],
+    ahead: { period: 6, gameweek: 6 }, next, season: null, reportDays: [], draftReports: [], trades: [],
   });
   const spent = new Set([lineupsSlot(6, filed).key]);
   const due = (xi: IntelXi, now: string) =>

@@ -17,14 +17,15 @@ const desk = (over: Partial<DeskState> = {}): DeskState => ({
   season: null,
   reportDays: [],
   draftReports: [],
+  trades: [],
   ...over,
 });
 
 const none = () => false;
 
 describe("newsdesk", () => {
-  it("files only the seven weekly kinds, whatever the desk holds", () => {
-    // Match and draft reports, Bin XI, the Team Sheet, the elevens, the sheets and Lawro; nothing else.
+  it("files only the seven weekly kinds and a trade, whatever the desk holds", () => {
+    // Match and draft reports, Bin XI, the Team Sheet, the elevens, the sheets, Lawro and Here We Go; nothing else.
     const ahead = { period: 4, gameweek: 4 };
     const full = desk({
       finished: true,
@@ -35,6 +36,7 @@ describe("newsdesk", () => {
       lineups: { key: "predicted-xi:gw4", slug: "gw4-predicted-xi" },
       ahead,
       next: { ...ahead, locksAt: "2026-10-03T11:15:00.000Z" },
+      trades: [{ key: "trade:t1", slug: "here-we-go-t1", round: null }],
     });
     const kinds = new Set([
       ...newsdesk(full, none, "2026-09-29T08:15:00.000Z").map((a) => a.kind),
@@ -42,7 +44,7 @@ describe("newsdesk", () => {
       ...newsdesk(full, none, "2026-10-02T19:00:00.000Z").map((a) => a.kind),
     ]);
     for (const a of newsdesk({ ...full, finished: false, locked: true }, none, NOW)) kinds.add(a.kind);
-    expect([...kinds].sort()).toEqual(["bin-xi", "draft-report", "match-report", "predicted-xi", "predictions", "presser", "sheets"]);
+    expect([...kinds].sort()).toEqual(["bin-xi", "draft-report", "match-report", "predicted-xi", "predictions", "presser", "sheets", "trade"]);
   });
 
   it("files the Bin XI on a Tuesday in London once the round is over, and on no other day", () => {
@@ -97,6 +99,34 @@ describe("newsdesk", () => {
     const filed = newsdesk(desk({ draftReports: [saturday, gameweek] }), none, NOW).filter((a) => a.kind === "draft-report");
     expect(filed).toEqual([{ kind: "draft-report", key: gameweek.key, slug: gameweek.slug, cutoff: "gameweek", day: "2026-08-31" }]);
     expect(newsdesk(desk({ draftReports: [gameweek] }), (key) => key === gameweek.key, NOW).some((a) => a.kind === "draft-report")).toBe(false);
+  });
+
+  describe("Here We Go", () => {
+    const trade = (id: string) => ({ key: `trade:${id}`, slug: `here-we-go-${id}`, round: { period: 7, gameweek: 7 } });
+    const trades = (over: Partial<DeskState>, covered: (key: string) => boolean = none) =>
+      newsdesk(desk(over), covered, NOW).filter((a) => a.kind === "trade");
+
+    it("files a completed trade on detection, on any day and in any state of the round, in the round it takes effect", () => {
+      for (const state of [{}, { finished: true }, { locked: true }, { ties: [] }]) {
+        expect(trades({ ...state, trades: [trade("t1")] })).toEqual([
+          { kind: "trade", key: "trade:t1", slug: "here-we-go-t1", round: { period: 7, gameweek: 7 } },
+        ]);
+      }
+    });
+
+    it("files each trade once", () => {
+      expect(trades({ trades: [trade("t1")] }, (key) => key === "trade:t1")).toEqual([]);
+    });
+
+    it("assigns at most the two newest unfiled trades a firing, so a first run never files the season", () => {
+      const season = { trades: [trade("t4"), trade("t3"), trade("t2"), trade("t1")] };
+      expect(trades(season).map((a) => a.key)).toEqual(["trade:t4", "trade:t3"]);
+      expect(trades(season, (key) => key === "trade:t4").map((a) => a.key)).toEqual(["trade:t3", "trade:t2"]);
+    });
+
+    it("leaves a trade the calendar cannot place in the desk's own round", () => {
+      expect(trades({ trades: [{ ...trade("t1"), round: null }] })[0]).not.toHaveProperty("round");
+    });
   });
 
   describe("the Team Sheet", () => {

@@ -147,3 +147,9 @@ export type { CallMan, SeasonCalls } from "./season/calls";
 export type { EditorMove } from "./season/editor";
 export type { SeasonDraft } from "./season/checks";
 export type { PlayedSeason, SeasonSquad } from "./season/play";
+
+// Here We Go: a completed trade, filed on detection.
+export { completedTrades, tradeSlot, type Trade } from "./trades/trades";
+export { HERE_WE_GO_SIGN_OFF, tradeStory, type TradeFigures, type TradeStory } from "./trades/brief";
+export { checkTrade } from "./trades/checks";
+export type { StoryTransfer } from "./trades/cargo";

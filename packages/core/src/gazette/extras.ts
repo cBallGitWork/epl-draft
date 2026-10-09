@@ -8,6 +8,7 @@ import { normalizeReports } from "./reports/cargoRead";
 import { normalizeSheets, type StorySheet } from "./sheets/cargo";
 import { normalizeBin, type StoryBin } from "./binXi/cargo";
 import { normalizeApplied, type AppliedMove } from "./season/editor";
+import { normalizeTransfer, type StoryTransfer } from "./trades/cargo";
 import { stringOrEmpty, textOrNull } from "../untrusted";
 
 // The structured cargo a story carries beside its prose, and its normaliser: everything that is not paragraphs.
@@ -113,6 +114,8 @@ export interface StoryExtras {
   draft?: StoryDraftReport;
   /** Lawro's power rankings: the editor's moves over the code's order, each with the place it had. */
   moves?: AppliedMove[];
+  /** Here We Go: the side the lead man joined, for the picture. */
+  transfer?: StoryTransfer;
 }
 
 /** A closed set, so the column cannot invent a fifth state; anything else reads as a doubt, the claim that says least. */
@@ -249,6 +252,8 @@ export function normalizeExtras(raw: unknown): StoryExtras | undefined {
   if (draft !== undefined) out.draft = draft;
   const moves = normalizeApplied(extras.moves);
   if (moves !== undefined) out.moves = moves;
+  const transfer = normalizeTransfer(extras.transfer);
+  if (transfer !== undefined) out.transfer = transfer;
 
   return Object.keys(out).length > 0 ? out : undefined;
 }

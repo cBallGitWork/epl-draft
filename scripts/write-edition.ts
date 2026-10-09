@@ -1,9 +1,11 @@
+import { readFileSync } from "node:fs";
 import {
   EDITION_BUDGET_MS,
   FANTRAX_LEAGUE_ID,
   requireLeague,
   FantraxError,
   clubById,
+  completedTrades,
   composePaper,
   datedKickoffs,
   fetchFixtures,
@@ -12,6 +14,7 @@ import {
   isCovered,
   mapFixtures,
   mapLeagueInfo,
+  mapTransactions,
   newsdesk,
   nextDeadline,
   openingGameweek,
@@ -38,6 +41,7 @@ import { writeSheets } from "./edition/sheetsWriter";
 import { writeBin } from "./edition/binWriter";
 import { draftColumn } from "./edition/draftWriter";
 import { reportsColumn } from "./edition/reportsWriter";
+import { writeTrade } from "./edition/hereWeGoWriter";
 import { presserDesk } from "./edition/presserWeek";
 import { lineupsSlot, readXi } from "./edition/xi";
 import { deskState, seasonOpening } from "./edition/desk";
@@ -95,6 +99,12 @@ async function main(): Promise<void> {
   const ledger = readLedger();
   const paper = readPaperStories();
   const facts = await gatherRoundFacts(info, snapshot, round.period);
+  // A trade feed from a file, shaped as Fantrax's, for a local rehearsal of Here We Go (never CI).
+  const rehearsed = process.env.GAZETTA_TRADES ?? "";
+  if (rehearsed !== "") {
+    if (process.env.CI) throw new Error("GAZETTA_TRADES is a local rehearsal and never runs in CI.");
+    facts.trades = completedTrades(mapTransactions(JSON.parse(readFileSync(rehearsed, "utf8")), "TRADE"));
+  }
   const clubs = clubById(snapshot);
   // Clubs by FPL CODE, which a presser signal carries and a crest keys off; `clubById` keys by the per-season id.
   const byCode = new Map([...clubs.values()].map((club) => [club.code, club]));
@@ -117,6 +127,7 @@ async function main(): Promise<void> {
       ahead: ahead === undefined ? null : { period: ahead.period, gameweek: sheet.gameweek },
       next: deadline === null || nextRound === undefined ? null : { period: deadline.period, gameweek: nextRound, locksAt: deadline.locksAt },
       season: seasonOpening(info, calendar, kickoffs, facts.pedigree.size > 0),
+      calendar,
     }),
     (key) => isCovered(ledger, FANTRAX_LEAGUE_ID, key),
     now,
@@ -156,8 +167,8 @@ async function main(): Promise<void> {
     now,
   )[0];
   const filing = filings.find((each) => each.story.slug === lead?.slug);
-  // A columnist's own column runs his photograph, never a drawing over it.
-  if (filing !== undefined && filing.story.image === null && filing.story.reporter === undefined) {
+  // A columnist's own column runs his photograph, and a trade its Here We Go plate, never a drawing over either.
+  if (filing !== undefined && filing.story.image === null && filing.story.reporter === undefined && filing.story.kind !== "trade") {
     const image = await drawSplash(filing.story);
     if (image !== null) {
       filing.story = { ...filing.story, image };
@@ -208,6 +219,8 @@ function commissioner(ctx: DeskContext, paper: readonly PublishedStory[], now: s
           ? await draftColumn(desk.draft, say)
           : "reports" in desk
           ? await reportsColumn(desk.reports, say)
+          : "trade" in desk
+          ? await writeTrade(desk.trade, say)
           : "sheets" in desk
           ? await writeSheets(desk.sheets, brief, say)
           : "season" in desk
