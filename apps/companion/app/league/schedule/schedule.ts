@@ -42,25 +42,26 @@ export interface Schedule {
   table: StandingsRow[];
 }
 
-/** The league, its rounds and its table, cached together; only the league's own description is fatal. */
-export const getSchedule = leagueCache("schedule-season",
-  async (): Promise<Schedule | Unavailable> => {
-    const [raw, season, standings] = await Promise.all([
-      orRefusal(fetchLeagueInfo(FANTRAX_LEAGUE_ID)),
-      seasonFixtures(),
-      leagueTable(),
-    ]);
-    if (raw instanceof FantraxError) return unavailable(raw);
-
-    const info = mapLeagueInfo(raw);
-    return {
-      info,
-      rounds: scheduleRounds(info, season),
-      table: "unavailable" in standings ? [] : standings,
-    };
+/** The league's own description, or its refusal. Fantrax alone: a cached read nested in here skips its own cache, so
+ *  one FPL refusal would read as Fantrax silent. A new key, as the old one held the whole schedule. */
+const readInfo = leagueCache("schedule-info",
+  async (): Promise<LeagueInfo | Unavailable> => {
+    const raw = await orRefusal(fetchLeagueInfo(FANTRAX_LEAGUE_ID));
+    return raw instanceof FantraxError ? unavailable(raw) : mapLeagueInfo(raw);
   },
   unavailable,
 );
+
+/** The league, its rounds and its table, each read from its own cache; only the league's own description is fatal. */
+export async function getSchedule(): Promise<Schedule | Unavailable> {
+  const [info, season, standings] = await Promise.all([readInfo(), seasonFixtures(), leagueTable()]);
+  if ("unavailable" in info) return info;
+  return {
+    info,
+    rounds: scheduleRounds(info, season),
+    table: "unavailable" in standings ? [] : standings,
+  };
+}
 
 /** Every team's total in every period, one request for the season; empty on failure, which prints dashes. */
 export const getSeasonResults = leagueCache("schedule-results",
