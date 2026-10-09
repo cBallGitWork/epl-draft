@@ -33,7 +33,8 @@ export interface DeskState {
   ties: readonly { homeTeamId: string; awayTeamId: string }[];
   /** The London days of the round ahead's press conferences; empty until the export lands. */
   pressers: readonly string[];
-  /** The predicted elevens, when the export holds the round ahead; keyed by the caller. */
+  /** The predicted elevens, when the export holds the round ahead; keyed by the caller on their content, so a changed
+   *  export spends a new key and refiles under the round's one slug. */
   lineups: { key: string; slug: string } | null;
   /** The round the Team Sheet and the elevens preview, when the calendar places it. */
   ahead: { period: number; gameweek: number } | null;
@@ -96,7 +97,8 @@ export function newsdesk(
     }
   }
 
-  // The elevens predict the round ahead, so they sit outside the gates above, and wait for Friday's pressers.
+  // The elevens predict the round ahead, so they sit outside the gates above, wait for Friday's pressers, and refile
+  // each time they change until the lock.
   if (desk.lineups !== null && desk.next !== null && lineupsDue(desk.next.locksAt, now)) {
     want({ kind: "predicted-xi", key: desk.lineups.key, slug: desk.lineups.slug, ...about });
   }

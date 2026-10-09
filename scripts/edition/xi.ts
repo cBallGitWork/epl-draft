@@ -1,7 +1,10 @@
+import { createHash } from "node:crypto";
 import {
   availabilityOf,
+  elevensKey,
   owners,
   predictedLineups,
+  roundSlot,
   squadIntel,
   type Club,
   type Fixture,
@@ -24,6 +27,14 @@ import { display } from "./pressers";
 export function readXi(gameweek: number): IntelXi | null {
   const xi = readIntel<IntelXi>("xi");
   return xi?.manifest?.gameweek === gameweek ? xi : null;
+}
+
+/** The Line-Ups' covered-key, one per telling: a changed export spends a new key and refiles under the round's slug.
+ *  `fetchedAt` moves only when the elevens do, so elevens that change and change back still refile. */
+export function lineupsSlot(gameweek: number, xi: IntelXi): { key: string; slug: string } {
+  const slot = roundSlot("predicted-xi", gameweek);
+  const telling = createHash("sha256").update(`${xi.fetchedAt ?? ""}\n${elevensKey(xi.clubs)}`).digest("hex").slice(0, 8);
+  return { key: `${slot.key}:${telling}`, slug: slot.slug };
 }
 
 /** The whole column, ready to file. Null when the ties or the elevens will not

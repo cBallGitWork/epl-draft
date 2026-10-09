@@ -3,7 +3,6 @@ import {
   openingGameweek,
   periodLock,
   reportDays,
-  roundSlot,
   type DeskState,
   type FootballSnapshot,
   type GameweekKickoff,
@@ -23,8 +22,8 @@ export function deskState(input: {
   finished: boolean;
   locked: boolean;
   lines: readonly PresserLine[];
-  /** The round the predicted elevens are for, or null when we do not hold it. */
-  xiGameweek: number | null;
+  /** The predicted elevens' covered-key and slug (`lineupsSlot`), or null when we do not hold the round ahead's. */
+  lineups: DeskState["lineups"];
   ahead: DeskState["ahead"];
   next: DeskState["next"];
   season: DeskState["season"];
@@ -36,10 +35,7 @@ export function deskState(input: {
     finished: input.finished,
     locked: input.locked,
     pressers: presserDays(input.lines),
-    lineups:
-      input.xiGameweek === null
-        ? null
-        : roundSlot("predicted-xi", input.xiGameweek),
+    lineups: input.lineups,
     ahead: input.ahead,
     next: input.next,
     season: input.season,

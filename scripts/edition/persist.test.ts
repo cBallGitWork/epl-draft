@@ -72,4 +72,21 @@ describe("a firing's save point", () => {
     expect(batch.map((each) => each.slug)).toContain("yesterday");
     expect(readLedger(root)[LEAGUE]?.covered).toEqual(["key:new", "key:report"]);
   });
+
+  it("a refiled slug replaces its earlier telling, in print and in the archive, and leads", () => {
+    // The Line-Ups refile under one slug as the elevens change; each telling spends its own key.
+    const root = tempRoot();
+    const first = { story: { ...story("gw6-predicted-xi", "predicted-xi", EARLIER), headline: "First" }, spentKeys: ["predicted-xi:gw6:aaaa"], threads: [] };
+    const ledger = saveFiling([story("sheet", "presser", EARLIER)], [first], {}, EARLIER, root);
+    const found = readPaperStories(root);
+    const again = { story: { ...story("gw6-predicted-xi", "predicted-xi", NOW), headline: "Again" }, spentKeys: ["predicted-xi:gw6:bbbb"], threads: [] };
+    saveFiling(found, [again], ledger, NOW, root);
+
+    const paper = readPaperStories(root);
+    expect(paper.map((each) => each.slug)).toEqual(["gw6-predicted-xi", "sheet"]);
+    expect(paper[0].headline).toBe("Again");
+    const archived = JSON.parse(readFileSync(join(root, "archive", LEAGUE, "gw6-predicted-xi.json"), "utf8")) as PublishedStory;
+    expect(archived.headline).toBe("Again");
+    expect(readLedger(root)[LEAGUE]?.covered).toEqual(["predicted-xi:gw6:aaaa", "predicted-xi:gw6:bbbb"]);
+  });
 });

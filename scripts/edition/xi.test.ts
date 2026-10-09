@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { Club, Fixture, IntelXi } from "@epl/core";
-import { freshestMark, xiColumn } from "./xi";
+import { newsdesk, type Club, type DeskState, type Fixture, type IntelXi } from "@epl/core";
+import { freshestMark, lineupsSlot, xiColumn } from "./xi";
 
 // Four clubs in two matches, eleven men each: a gameweek small enough to read.
 const SHORT = ["ARS", "LEE", "CHE", "BOU"];
@@ -82,5 +82,47 @@ describe("xiColumn with RotoWire's absences", () => {
 
   it("keeps FPL's fresher OUT over RotoWire's older clean bill, one mark each", () => {
     expect(ties[0].home.men[0].status).toBe("OUT");
+  });
+});
+
+describe("the Line-Ups refile when the elevens change", () => {
+  // GW6 locks Sat 10 Oct at 12:15 London; the elevens are due from 18:00 the evening before.
+  const next = { period: 6, gameweek: 6, locksAt: "2026-10-10T11:15:00.000Z" };
+  const FRIDAY = "2026-10-09T18:00:00.000Z";
+  const SATURDAY = "2026-10-10T09:00:00.000Z";
+  const filed = { ...xiOf({ ARS: eleven(1), LEE: eleven(2), CHE: eleven(3), BOU: eleven(4) }), fetchedAt: "2026-10-09T16:40:00Z" };
+  const benched = { ...xiOf({ ARS: { ...eleven(1), starters: [...eleven(1).starters.slice(1), { code: 111, prob: 0.9 }] }, LEE: eleven(2), CHE: eleven(3), BOU: eleven(4) }), fetchedAt: "2026-10-10T07:40:00Z" };
+  const desk = (xi: IntelXi): DeskState => ({
+    gameweek: 5, period: 5, finished: true, locked: false, ties: [], pressers: [], lineups: lineupsSlot(6, xi),
+    ahead: { period: 6, gameweek: 6 }, next, season: null, reportDays: [], draftReports: [],
+  });
+  const spent = new Set([lineupsSlot(6, filed).key]);
+  const due = (xi: IntelXi, now: string) =>
+    newsdesk(desk(xi), (key) => spent.has(key), now).filter((each) => each.kind === "predicted-xi");
+
+  it("keys each telling of the elevens, under the round's one slug", () => {
+    expect(lineupsSlot(6, filed)).toEqual(lineupsSlot(6, { ...filed }));
+    expect(lineupsSlot(6, filed).key).toMatch(/^predicted-xi:gw6:[0-9a-f]{8}$/);
+    expect(lineupsSlot(6, benched).key).not.toBe(lineupsSlot(6, filed).key);
+    expect(lineupsSlot(6, benched).slug).toBe("gw6-predicted-xi");
+  });
+
+  it("files nothing when the export is unchanged since the last filing", () => {
+    expect(due(filed, SATURDAY)).toEqual([]);
+  });
+
+  it("refiles under the same slug when an eleven changes", () => {
+    expect(due(benched, SATURDAY).map((each) => each.slug)).toEqual(["gw6-predicted-xi"]);
+  });
+
+  it("refiles when RotoWire's absences change and the men do not", () => {
+    const doubt = { ...filed, clubs: { ...filed.clubs, ARS: { ...eleven(1), absent: [{ code: 111, status: "QUES" as const }] } } };
+    expect(due(doubt, SATURDAY)).toHaveLength(1);
+  });
+
+  it("refiles nothing after the lock, nor before the filing time", () => {
+    expect(due(benched, next.locksAt)).toEqual([]);
+    expect(due(benched, "2026-10-09T16:59:00.000Z")).toEqual([]);
+    expect(due(benched, FRIDAY)).toHaveLength(1);
   });
 });
