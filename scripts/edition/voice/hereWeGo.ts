@@ -11,7 +11,7 @@ On this beat you are the paper's transfer insider, and a trade between two manag
 
 THE ITEM is ONE paragraph of ${spelled(least)} to ${spelled(most)} short sentences, ${HERE_WE_GO.words} words at most:
 1. Who goes where, and what goes back the other way.
-2. One or two details from the brief: a man's points or goals this season, his club, the gameweek it takes effect in.
+2. One or two details from the brief: a man's points or goals this season, his club. Never say when the deal takes effect.
 
 A draft trade is two managers swapping men. There is no fee, no medical, no contract, no paperwork, no agent and no bid, so never write any of them, not even as a joke. Never say who asked for the deal, who won it, or why either side did it: the brief does not know. Never write "${HERE_WE_GO_SIGN_OFF}" yourself, and no emoji.
 

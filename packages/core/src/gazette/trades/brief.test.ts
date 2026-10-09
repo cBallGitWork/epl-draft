@@ -18,8 +18,8 @@ const trade = (moves: [name: string, from: string, to: string][]): Trade => ({
   })),
 });
 
-const story = (t: Trade, figures: Record<string, TradeFigures>, gameweek: number | null = 8) =>
-  tradeStory({ trade: t, teamName: (id) => SHORT[id] ?? id, figures: (id) => figures[id] ?? { points: null, goals: null }, gameweek });
+const story = (t: Trade, figures: Record<string, TradeFigures>) =>
+  tradeStory({ trade: t, teamName: (id) => SHORT[id] ?? id, figures: (id) => figures[id] ?? { points: null, goals: null } });
 
 describe("tradeStory", () => {
   const swap = trade([["Gabriel Magalhaes", "b", "a"], ["Adrien Truffert", "a", "b"]]);
@@ -31,20 +31,19 @@ describe("tradeStory", () => {
     expect(told.transfer).toEqual({ teamId: "b", team: "Beef" });
   });
 
-  it("briefs every man with his club, his season and both sides, and the gameweek it takes effect", () => {
+  it("briefs every man with his club, his season and both sides, and never the gameweek it takes effect", () => {
     const { brief } = story(swap, { p0: { points: 34, goals: 2 }, p1: { points: 21, goals: 0 } });
     expect(brief).toContain("- Truffles get Gabriel Magalhaes (D, Arsenal) from Beef. His season: 34 points, 2 goals.");
     // Zero is a stat: a man who has not scored has no goals, never a missing figure.
     expect(brief).toContain("- Beef get Adrien Truffert (D, Bournemouth) from Truffles. His season: 21 points, no goals.");
-    expect(brief).toContain("It takes effect in gameweek 8.");
+    expect(brief).not.toMatch(/takes effect|gameweek/u);
     expect(brief).toContain("THE MANAGERS IN IT: Truffles and Beef.");
   });
 
-  it("says nothing of a figure it does not hold, nor of a gameweek the calendar cannot place", () => {
-    const { brief } = story(swap, {}, null);
+  it("says nothing of a figure it does not hold", () => {
+    const { brief } = story(swap, {});
     expect(brief).toContain("- Truffles get Gabriel Magalhaes (D, Arsenal) from Beef.\n");
     expect(brief).not.toContain("His season");
-    expect(brief).not.toContain("takes effect");
   });
 
   it("tells a three-way trade man by man, by where each went", () => {

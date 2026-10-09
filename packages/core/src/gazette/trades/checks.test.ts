@@ -5,12 +5,11 @@ const BRIEF = [
   "THE DEAL",
   "- Truffles get Gabriel Magalhaes (D, Arsenal) from Beef. His season: 34 points, 2 goals.",
   "- Beef get Adrien Truffert (D, Bournemouth) from Truffles. His season: 21 points, no goals.",
-  "It takes effect in gameweek 8.",
 ].join("\n");
 const NAMES = ["Gabriel Magalhaes", "Adrien Truffert", "Truffles", "Beef", "Arsenal", "Bournemouth"];
 
 const GOOD =
-  "Gabriel Magalhaes joins Truffles, deal done. Adrien Truffert goes the other way to Beef. The Arsenal man has 34 points and two goals so far. It takes effect in gameweek eight.";
+  "Gabriel Magalhaes joins Truffles, deal done. Adrien Truffert goes the other way to Beef. The Arsenal man has 34 points and two goals so far.";
 
 const faults = (body: string) => checkTrade({ body }, { brief: BRIEF, names: NAMES }).map((f) => `${f.severity}: ${f.check} (${f.evidence})`);
 
@@ -29,6 +28,14 @@ describe("checkTrade", () => {
     );
   });
 
+  it("refuses the gameweek the trade takes effect from", () => {
+    const told = (line: string) => faults(`Gabriel Magalhaes joins Truffles. Adrien Truffert goes to Beef. ${line}`);
+    expect(told("It takes effect in gameweek eight.")).toContain("hard: never says when the trade takes effect (takes effect)");
+    expect(told("He plays for them from gameweek eight.")).toContain("hard: never says when the trade takes effect (from gameweek)");
+    expect(told("Live from GW8.")).toContain("hard: never says when the trade takes effect (from GW)");
+    expect(told("Gameweek eight onwards, he is theirs.")).toContain("hard: never says when the trade takes effect (Gameweek eight onwards)");
+  });
+
   it("refuses a figure or a man the brief does not hold", () => {
     expect(faults("Gabriel Magalhaes joins Truffles. He has 40 points and Saka is next.")).toEqual([
       "hard: a figure not in the brief (40)",
@@ -38,7 +45,7 @@ describe("checkTrade", () => {
 
   it("sends back an item that is too long, too short, prints an emoji or writes the desk's sign-off", () => {
     expect(faults("Gabriel Magalhaes joins Truffles.")).toEqual(["send-back: length (1 sentences, 4 words)"]);
-    expect(faults(`${GOOD} ${GOOD}`)).toEqual([expect.stringMatching(/^send-back: length \(8 sentences/u)]);
+    expect(faults(`${GOOD} ${GOOD}`)).toEqual([expect.stringMatching(/^send-back: length \(6 sentences/u)]);
     expect(faults("Gabriel Magalhaes joins Truffles ✅. Adrien Truffert to Beef.")).toEqual(["send-back: no emoji: the paper prints words (✅)"]);
     expect(faults("Gabriel Magalhaes to Truffles, here we go. Adrien Truffert to Beef.")).toEqual([
       "send-back: the desk prints the sign-off (here we go)",

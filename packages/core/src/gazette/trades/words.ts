@@ -9,3 +9,6 @@ export const TRADE_INVENTED: readonly string[] = [
 
 /** The desk prints the sign-off under the item; written into it, it would print twice. */
 export const TRADE_SIGN_OFF: readonly string[] = ["here we go"];
+
+/** When the trade takes effect: the brief never gives it, so the item must not say it. */
+export const TRADE_WHEN = /\b(?:tak(?:es|e|ing) effect|into effect|effective from|from (?:gameweek|gw)|(?:gameweek|gw)\s*\w+\s+onwards)/iu;

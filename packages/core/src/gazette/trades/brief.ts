@@ -19,8 +19,6 @@ export interface TradeStoryInput {
   /** A manager's side as the Team Sheet prints it: the league's short name. */
   teamName: (teamId: string) => string;
   figures: (fantraxId: string) => TradeFigures;
-  /** The gameweek the trade takes effect in; null when the calendar cannot place its period. */
-  gameweek: number | null;
 }
 
 export interface TradeStory {
@@ -35,7 +33,7 @@ export interface TradeStory {
   transfer: StoryTransfer;
 }
 
-export function tradeStory({ trade, teamName, figures, gameweek }: TradeStoryInput): TradeStory {
+export function tradeStory({ trade, teamName, figures }: TradeStoryInput): TradeStory {
   const points = (move: TradeMove) => figures(move.fantraxId).points ?? -Infinity;
   const goals = (move: TradeMove) => figures(move.fantraxId).goals ?? -Infinity;
   // Stable: level men keep the feed's order.
@@ -58,7 +56,6 @@ export function tradeStory({ trade, teamName, figures, gameweek }: TradeStoryInp
     "",
     "THE DEAL",
     ...trade.moves.map(line),
-    ...(gameweek === null ? [] : [`It takes effect in gameweek ${gameweek}.`]),
     "",
     `THE HEADLINE, which the desk prints: ${headline}`,
     `THE MANAGERS IN IT: ${listed(sides.map(teamName))}.`,
