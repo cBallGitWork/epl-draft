@@ -23,7 +23,8 @@ describe("parseRotowireXi", () => {
     expect(liverpool.confirmed).toBe(false);
     expect(liverpool.formation).toBe("4-2-3-1");
     expect(liverpool.slots).toEqual({ "1": 1, "2": 4, "3": 2, "4": 3, "5": 1 });
-    expect(liverpool.starters).toEqual([21124, 35296, 19194, JACQUET, 30591, 30875, 29041, 35762, 29729, 44878, 32412]);
+    // Right to left within each row, as Scout ran them and the pitch draws them: Araujo (DR) before Kerkez (DL).
+    expect(liverpool.starters).toEqual([21124, 30591, JACQUET, 19194, 35296, 29041, 30875, 44878, 29729, 35762, 32412]);
     expect(liverpool.starters).not.toContain(ISAK);
   });
 
