@@ -27,7 +27,7 @@ const column = (xi: IntelXi) => xiColumn({ xi, gameweek: 6, clubs, teams: [], pl
 describe("xiColumn", () => {
   it("calls the week a gameweek in its deck and body, never a round", () => {
     const filed = column(xiOf({ ARS: eleven(1), LEE: eleven(2), CHE: eleven(3), BOU: eleven(4) }));
-    expect(filed?.deck).toBe("Every club's expected starting eleven for the gameweek, match by match.");
+    expect(filed?.deck).toBe("Every club's expected starting eleven for the gameweek.");
     expect(filed?.body).toBe("All 2 of the gameweek's matches, with both sides named.");
   });
 

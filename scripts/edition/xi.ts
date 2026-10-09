@@ -67,7 +67,7 @@ export function xiColumn(input: {
   return {
     column: {
       headline: `Predicted Line-Ups: Gameweek ${gameweek}`,
-      deck: `Every club's expected starting eleven for the gameweek, match by match.`,
+      deck: `Every club's expected starting eleven for the gameweek.`,
       body: `${printed}, with both sides named.`,
       lineups,
     },
