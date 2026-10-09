@@ -21,6 +21,7 @@ import {
   type SlotWorth,
   sheetOf,
 } from "@epl/core";
+import { codesByOpta } from "./opta";
 
 // The draft desk's readings of one gameweek's payloads: each goal's minute and club from the PL feed, each man's points
 // and counts from Fantrax's day reads, and what a slot is paid from the scoring league's rules.
@@ -44,7 +45,7 @@ export async function matchReads(gameweek: number, fixtures: readonly DatedFixtu
   const starters = new Map<number, Set<number>>();
   const page = await fetchPlRound(gameweek).catch(() => null);
   if (page === null) return { goals: out, starters };
-  const optaToCode = new Map(players.flatMap((p) => (p.optaCode === null ? [] : [[p.optaCode, p.code] as const])));
+  const optaToCode = codesByOpta(players);
   for (const summary of page.content) {
     const code = plFixtureCode(summary);
     const ours = fixtures.find((f) => f.code === code);

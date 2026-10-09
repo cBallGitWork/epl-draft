@@ -13,6 +13,7 @@ import {
 } from "@epl/core";
 import { readScoring } from "../scoring";
 import type { DeskFacts } from "./facts";
+import { codesByOpta } from "./opta";
 import type { Say } from "./newsroom";
 
 // The Points Dodgers' reads: every finished match's commentary this gameweek, two requests a match, only when the column is due.
@@ -28,7 +29,7 @@ export async function dodgersDesk(input: {
   const round = await fetchPlRound(snapshot.gameweek).catch(() => null);
   if (round === null) return say("  dodgers: the Premier League's round would not load"), null;
 
-  const optaToCode = new Map(snapshot.players.flatMap((p) => (p.optaCode === null ? [] : [[p.optaCode, p.code] as const])));
+  const optaToCode = codesByOpta(snapshot.players);
   const matches: DodgerMatch[] = [];
   for (const fixture of snapshot.fixtures.filter((f) => f.status === "finished")) {
     const pl = round.content.find((each) => plFixtureCode(each) === fixture.code);

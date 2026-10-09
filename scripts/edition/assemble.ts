@@ -11,12 +11,10 @@ import {
   buildTieCallBrief,
   buildTieReportBrief,
   bothSides,
-  isActive,
-  isResolved,
   londonDayAndTime,
   tieState,
 } from "@epl/core";
-import { menIn } from "./lineups";
+import { fielded, menIn } from "./lineups";
 import type { DeskFacts } from "./facts";
 
 // The wiring between what was gathered and what one scoped brief may know —
@@ -118,9 +116,7 @@ export function tieCallBrief(
  *  Active slots only. A reserve cannot score, and a bench listed among the
  *  scorers would have the writer explaining a nought nobody was owed. */
 function sideOf(team: RosteredTeam | undefined, facts: DeskFacts) {
-  const scorers = (team?.players ?? [])
-    .filter(isResolved)
-    .filter((man) => isActive(man.slot))
+  const scorers = fielded(team)
     .flatMap((man) => {
       const points = facts.playerPoints.get(man.slot.fantraxId);
       // Absent rather than nought: a man Fantrax has not priced is withheld,

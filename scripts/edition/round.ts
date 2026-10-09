@@ -3,6 +3,11 @@ import type { Club, Fixture } from "@epl/core";
 // The round's fixtures as club pairs, for the columns that print a match rather
 // than report one.
 
+/** Whether a club plays in a fixture, home or away. Club ids are FPL's per-season ids. */
+export function involves(fixture: Pick<Fixture, "homeClubId" | "awayClubId">, clubId: number): boolean {
+  return fixture.homeClubId === clubId || fixture.awayClubId === clubId;
+}
+
 /** Two clubs and when they play. */
 interface RoundTie {
   home: Club;

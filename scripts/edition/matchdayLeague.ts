@@ -1,6 +1,7 @@
 import { FANTRAX_LEAGUE_ID, MS_PER_DAY, fetchPlayerStories, fplCodeOf, isActive, isResolved, mapPlayerStories, type Fixture, type PlayerStory, type ReportMan } from "@epl/core";
 import { BRIDGE } from "./bridge";
 import type { DeskFacts } from "./facts";
+import { involves } from "./round";
 
 // The league's side of a match report: who holds each footballer at the match's period, his points, and the club's word on him.
 
@@ -26,7 +27,7 @@ export function leagueJoin(facts: DeskFacts, periodFixtures: readonly Fixture[],
     const code = fplCodeOf(BRIDGE, fantraxId);
     if (code !== null) fantraxIds.set(code, fantraxId);
   }
-  const matchesOf = (clubId: number) => periodFixtures.filter((f) => f.homeClubId === clubId || f.awayClubId === clubId).length;
+  const matchesOf = (clubId: number) => periodFixtures.filter((f) => involves(f, clubId)).length;
   for (const team of facts.teams) {
     for (const man of team.players.filter(isResolved)) {
       holders.set(man.player.code, { team: team.teamName, fielded: isActive(man.slot), round: facts.pedigree.get(man.slot.fantraxId)?.round ?? null, h2h: h2h.get(team.teamName) ?? null });
