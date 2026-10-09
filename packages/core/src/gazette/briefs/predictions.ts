@@ -19,7 +19,7 @@ export interface PredictionsTie {
 }
 
 /** Who won the league, and when: `data/leagues/champions.json`, newest first. */
-export interface Champion {
+interface Champion {
   season: string;
   team: string;
 }

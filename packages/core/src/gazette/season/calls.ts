@@ -24,7 +24,7 @@ export interface LineRank {
 }
 
 /** What a side's line holds against it: the man it is built round in doubt, or its weakest slot. */
-export type Weakness = { kind: "doubt"; man: CallMan } | ({ kind: "line" } & LineRank);
+type Weakness = { kind: "doubt"; man: CallMan } | ({ kind: "line" } & LineRank);
 
 export interface SeasonSide {
   teamId: string;

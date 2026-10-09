@@ -11,7 +11,7 @@ import { COMFORTABLE, DESK_BANNED, LAWRO_BANNED, LAWRO_CAPPED, LAWRO_FAMOUS, LAW
 // The editor: every rule Lawro is given, checked after he files. A hard fault never prints; a
 // send-back goes back to him once, quoted; a warning is a line in the log.
 
-export type Severity = "hard" | "send-back" | "warn";
+type Severity = "hard" | "send-back" | "warn";
 
 export interface Fault {
   /** "intro", "deck", "column", or a tie's key. */

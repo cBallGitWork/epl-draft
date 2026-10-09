@@ -9,7 +9,7 @@ export interface PeriodScore {
   sd: number;
 }
 
-export interface SeasonInput {
+interface SeasonInput {
   teams: readonly { teamId: string; name: string }[];
   /** Every head-to-head pairing; a period with two per side is a double header. */
   matchups: readonly { period: number; homeTeamId: string; awayTeamId: string }[];
@@ -56,7 +56,7 @@ export function simulateSeason(input: SeasonInput): SeasonOutcome[] {
     const table = placeTable(
       input.teams.map((team) => {
         const won = wins.get(team.teamId) ?? 0;
-        return { teamId: team.teamId, teamName: team.name, rank: 0, won, drawn: 0, lost: 0, played: 0, points: won, pointsFor: scored.get(team.teamId) ?? 0, pointsAgainst: 0 };
+        return { teamId: team.teamId, teamName: team.name, won, drawn: 0, lost: 0, played: 0, points: won, pointsFor: scored.get(team.teamId) ?? 0, pointsAgainst: 0 };
       }),
     );
     for (const row of table) {
