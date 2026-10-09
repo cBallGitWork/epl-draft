@@ -4,7 +4,7 @@
   "leagueId": "mqsjd23smsgbiqzr",
   "period": 6,
   "gameweek": 6,
-  "filedAt": "2026-10-09T18:30:26.030Z",
+  "filedAt": "2026-10-09T18:57:04.213Z",
   "expiresAt": "2026-10-10T11:30:00Z",
   "leadsUntil": "2026-10-10T11:15:00.000Z",
   "edition": "The Form Guide",
@@ -13,7 +13,7 @@
   "deck": "Every club's expected starting eleven for the gameweek.",
   "body": "",
   "subjects": [
-    "predicted-xi:gw6:a2658381"
+    "predicted-xi:gw6:ce733cf2"
   ],
   "image": null,
   "face": {
@@ -37,14 +37,9 @@
               "owner": "7to6xosimu8hyyw5"
             },
             {
-              "name": "Riccardo Calafiori",
-              "position": "LB",
-              "owner": "uexqrijomu8l5asi"
-            },
-            {
-              "name": "Gabriel",
-              "position": "CB",
-              "owner": "ipnp5y4mmu9j7kop"
+              "name": "Jurriën Timber",
+              "position": "RB",
+              "owner": "7z8fy0pnmuogbtdw"
             },
             {
               "name": "Cristhian Mosquera",
@@ -52,8 +47,18 @@
               "status": "Doubt"
             },
             {
-              "name": "Jurriën Timber",
-              "position": "RB",
+              "name": "Gabriel",
+              "position": "CB",
+              "owner": "ipnp5y4mmu9j7kop"
+            },
+            {
+              "name": "Riccardo Calafiori",
+              "position": "LB",
+              "owner": "uexqrijomu8l5asi"
+            },
+            {
+              "name": "Bruno G.",
+              "position": "DM",
               "owner": "7z8fy0pnmuogbtdw"
             },
             {
@@ -63,14 +68,9 @@
               "status": "Doubt"
             },
             {
-              "name": "Bruno G.",
-              "position": "DM",
-              "owner": "7z8fy0pnmuogbtdw"
-            },
-            {
-              "name": "Eberechi Eze",
-              "position": "CAM",
-              "owner": "7z8fy0pnmuogbtdw"
+              "name": "Bukayo Saka",
+              "position": "RW",
+              "owner": "ipnp5y4mmu9j7kop"
             },
             {
               "name": "Martin Ødegaard",
@@ -78,9 +78,9 @@
               "owner": "kpj0z744muh1qwtd"
             },
             {
-              "name": "Bukayo Saka",
-              "position": "RW",
-              "owner": "ipnp5y4mmu9j7kop"
+              "name": "Eberechi Eze",
+              "position": "CAM",
+              "owner": "7z8fy0pnmuogbtdw"
             },
             {
               "name": "Viktor Gyökeres",
@@ -100,31 +100,18 @@
               "owner": "uexqrijomu8l5asi"
             },
             {
-              "name": "James Justin",
+              "name": "Tarik Muharemović",
               "position": "CB",
-              "owner": "7z8fy0pnmuogbtdw"
+              "owner": "7to6xosimu8hyyw5"
             },
             {
               "name": "Nico Elvedi",
               "position": "CB"
             },
             {
-              "name": "Tarik Muharemović",
+              "name": "James Justin",
               "position": "CB",
-              "owner": "7to6xosimu8hyyw5"
-            },
-            {
-              "name": "Gabriel Gudmundsson",
-              "position": "LWB"
-            },
-            {
-              "name": "Ethan Ampadu",
-              "position": "CM",
-              "owner": "syjkob6cmuobagfu"
-            },
-            {
-              "name": "Tanaka",
-              "position": "CM"
+              "owner": "7z8fy0pnmuogbtdw"
             },
             {
               "name": "Jayden Bogle",
@@ -132,13 +119,26 @@
               "owner": "ipnp5y4mmu9j7kop"
             },
             {
-              "name": "Noah Okafor",
-              "position": "CF"
+              "name": "Tanaka",
+              "position": "CM"
+            },
+            {
+              "name": "Ethan Ampadu",
+              "position": "CM",
+              "owner": "syjkob6cmuobagfu"
+            },
+            {
+              "name": "Gabriel Gudmundsson",
+              "position": "LWB"
             },
             {
               "name": "Anton Stach",
               "position": "CM",
               "owner": "aekx2715mtzgcl3f"
+            },
+            {
+              "name": "Noah Okafor",
+              "position": "CF"
             },
             {
               "name": "Dominic Calvert-Lewin",
@@ -160,33 +160,32 @@
               "position": "GK"
             },
             {
-              "name": "Matteo Ruggeri",
-              "position": "LB"
-            },
-            {
-              "name": "Victor Lindelöf",
-              "position": "CB"
+              "name": "Aaron Wan-Bissaka",
+              "position": "RB"
             },
             {
               "name": "Tyrone Mings",
               "position": "CB"
             },
             {
-              "name": "Aaron Wan-Bissaka",
-              "position": "RB"
+              "name": "Victor Lindelöf",
+              "position": "CB"
             },
             {
-              "name": "Boubacar Kamara",
-              "position": "DM"
+              "name": "Matteo Ruggeri",
+              "position": "LB"
             },
             {
               "name": "Joao Gomes",
               "position": "DM"
             },
             {
-              "name": "Emiliano Buendía",
-              "position": "AM",
-              "owner": "qgucu9dgmufwva1x"
+              "name": "Boubacar Kamara",
+              "position": "DM"
+            },
+            {
+              "name": "John McGinn",
+              "position": "RW"
             },
             {
               "name": "Johan Manzambi",
@@ -194,8 +193,9 @@
               "owner": "7z8fy0pnmuogbtdw"
             },
             {
-              "name": "John McGinn",
-              "position": "RW"
+              "name": "Emiliano Buendía",
+              "position": "AM",
+              "owner": "qgucu9dgmufwva1x"
             },
             {
               "name": "Nicolas Jackson",
@@ -275,7 +275,7 @@
               "owner": "qgucu9dgmufwva1x"
             },
             {
-              "name": "Wesley Fofana",
+              "name": "Levi Colwill",
               "position": "CB"
             },
             {
@@ -284,18 +284,13 @@
               "owner": "uexqrijomu8l5asi"
             },
             {
-              "name": "Levi Colwill",
+              "name": "Wesley Fofana",
               "position": "CB"
             },
             {
-              "name": "Pep Chavarría",
-              "position": "LWB"
-            },
-            {
-              "name": "Moisés Caicedo",
-              "position": "DM",
-              "owner": "aekx2715mtzgcl3f",
-              "status": "Doubt"
+              "name": "Pedro Neto",
+              "position": "RWB",
+              "owner": "kpj0z744muh1qwtd"
             },
             {
               "name": "Reece James",
@@ -304,20 +299,25 @@
               "status": "Doubt"
             },
             {
-              "name": "Pedro Neto",
-              "position": "RWB",
-              "owner": "kpj0z744muh1qwtd"
+              "name": "Moisés Caicedo",
+              "position": "DM",
+              "owner": "aekx2715mtzgcl3f",
+              "status": "Doubt"
+            },
+            {
+              "name": "Pep Chavarría",
+              "position": "LWB"
+            },
+            {
+              "name": "Morgan Rogers",
+              "position": "AM",
+              "owner": "7to6xosimu8hyyw5"
             },
             {
               "name": "Cole Palmer",
               "position": "AM",
               "owner": "l5kunst8msgbirdf",
               "status": "Doubt"
-            },
-            {
-              "name": "Morgan Rogers",
-              "position": "AM",
-              "owner": "7to6xosimu8hyyw5"
             },
             {
               "name": "Danny Welbeck",
@@ -335,9 +335,12 @@
               "position": "GK"
             },
             {
-              "name": "Adrien Truffert",
-              "position": "LB",
-              "owner": "7to6xosimu8hyyw5"
+              "name": "Adam Smith",
+              "position": "RB"
+            },
+            {
+              "name": "António Silva",
+              "position": "CB"
             },
             {
               "name": "James Hill",
@@ -345,34 +348,31 @@
               "owner": "syjkob6cmuobagfu"
             },
             {
-              "name": "António Silva",
-              "position": "CB"
-            },
-            {
-              "name": "Adam Smith",
-              "position": "RB"
-            },
-            {
-              "name": "Tyler Adams",
-              "position": "DM"
+              "name": "Adrien Truffert",
+              "position": "LB",
+              "owner": "7to6xosimu8hyyw5"
             },
             {
               "name": "Lewis Cook",
               "position": "DM"
             },
             {
-              "name": "Marcus Tavernier",
-              "position": "LW",
-              "owner": "uexqrijomu8l5asi"
+              "name": "Tyler Adams",
+              "position": "DM"
+            },
+            {
+              "name": "Rayan",
+              "position": "RW",
+              "owner": "qgucu9dgmufwva1x"
             },
             {
               "name": "Ryan Christie",
               "position": "AM"
             },
             {
-              "name": "Rayan",
-              "position": "RW",
-              "owner": "qgucu9dgmufwva1x"
+              "name": "Marcus Tavernier",
+              "position": "LW",
+              "owner": "uexqrijomu8l5asi"
             },
             {
               "name": "Francisco Evanilson",
@@ -394,7 +394,7 @@
               "position": "GK"
             },
             {
-              "name": "Stephen Mfuni",
+              "name": "Ethan Pinnock",
               "position": "CB"
             },
             {
@@ -402,20 +402,8 @@
               "position": "CB"
             },
             {
-              "name": "Ethan Pinnock",
+              "name": "Stephen Mfuni",
               "position": "CB"
-            },
-            {
-              "name": "Jay Dasilva",
-              "position": "LWB"
-            },
-            {
-              "name": "Frank Onyeka",
-              "position": "CM"
-            },
-            {
-              "name": "Matt Grimes",
-              "position": "CM"
             },
             {
               "name": "Milan van Ewijk",
@@ -423,12 +411,24 @@
               "status": "Doubt"
             },
             {
-              "name": "Jack Rudoni",
-              "position": "AM"
+              "name": "Matt Grimes",
+              "position": "CM"
+            },
+            {
+              "name": "Frank Onyeka",
+              "position": "CM"
+            },
+            {
+              "name": "Jay Dasilva",
+              "position": "LWB"
             },
             {
               "name": "Loum Tchaouna",
               "position": "RW"
+            },
+            {
+              "name": "Jack Rudoni",
+              "position": "AM"
             },
             {
               "name": "Brandon Thomas-Asante",
@@ -446,26 +446,22 @@
               "position": "GK"
             },
             {
-              "name": "Lewis Hall",
-              "position": "LB",
-              "owner": "0g0j5mkomuqqwsbu"
-            },
-            {
-              "name": "Malick Thiaw",
-              "position": "CB"
+              "name": "Amar Dedic",
+              "position": "RB",
+              "status": "Doubt"
             },
             {
               "name": "Sven Botman",
               "position": "CB"
             },
             {
-              "name": "Amar Dedic",
-              "position": "RB",
-              "status": "Doubt"
+              "name": "Malick Thiaw",
+              "position": "CB"
             },
             {
-              "name": "Nico González",
-              "position": "DM"
+              "name": "Lewis Hall",
+              "position": "LB",
+              "owner": "0g0j5mkomuqqwsbu"
             },
             {
               "name": "Lewis Miley",
@@ -473,9 +469,12 @@
               "status": "Doubt"
             },
             {
-              "name": "Harvey Barnes",
-              "position": "LW",
-              "owner": "syjkob6cmuobagfu"
+              "name": "Nico González",
+              "position": "DM"
+            },
+            {
+              "name": "Jacob Murphy",
+              "position": "RW"
             },
             {
               "name": "Yoane Wissa",
@@ -483,8 +482,9 @@
               "owner": "7to6xosimu8hyyw5"
             },
             {
-              "name": "Jacob Murphy",
-              "position": "RW"
+              "name": "Harvey Barnes",
+              "position": "LW",
+              "owner": "syjkob6cmuobagfu"
             },
             {
               "name": "Matias Fernandez-Pardo",
@@ -506,7 +506,7 @@
               "position": "GK"
             },
             {
-              "name": "Chris Richards",
+              "name": "Honest Ahanor",
               "position": "CB"
             },
             {
@@ -514,22 +514,8 @@
               "position": "CB"
             },
             {
-              "name": "Honest Ahanor",
+              "name": "Chris Richards",
               "position": "CB"
-            },
-            {
-              "name": "Tyrick Mitchell",
-              "position": "LWB",
-              "owner": "qgucu9dgmufwva1x"
-            },
-            {
-              "name": "Quinten Timber",
-              "position": "CM"
-            },
-            {
-              "name": "Adam Wharton",
-              "position": "CM",
-              "owner": "kpj0z744muh1qwtd"
             },
             {
               "name": "Anan Khalaili",
@@ -537,14 +523,28 @@
               "owner": "l5kunst8msgbirdf"
             },
             {
-              "name": "Daichi Kamada",
-              "position": "AM",
-              "owner": "aekx2715mtzgcl3f"
+              "name": "Adam Wharton",
+              "position": "CM",
+              "owner": "kpj0z744muh1qwtd"
+            },
+            {
+              "name": "Quinten Timber",
+              "position": "CM"
+            },
+            {
+              "name": "Tyrick Mitchell",
+              "position": "LWB",
+              "owner": "qgucu9dgmufwva1x"
             },
             {
               "name": "Ismaïla Sarr",
               "position": "RAM",
               "owner": "l5kunst8msgbirdf"
+            },
+            {
+              "name": "Daichi Kamada",
+              "position": "AM",
+              "owner": "aekx2715mtzgcl3f"
             },
             {
               "name": "Jørgen Strand Larsen",
@@ -562,7 +562,7 @@
               "position": "GK"
             },
             {
-              "name": "Murillo",
+              "name": "Ousmane Diomande",
               "position": "CB"
             },
             {
@@ -570,8 +570,21 @@
               "position": "CB"
             },
             {
-              "name": "Ousmane Diomande",
+              "name": "Murillo",
               "position": "CB"
+            },
+            {
+              "name": "Daniel Muñoz",
+              "position": "RWB",
+              "owner": "7z8fy0pnmuogbtdw"
+            },
+            {
+              "name": "James McAtee",
+              "position": "CM"
+            },
+            {
+              "name": "Xaver Schlager",
+              "position": "DM"
             },
             {
               "name": "Neco Williams",
@@ -580,27 +593,14 @@
               "status": "Doubt"
             },
             {
-              "name": "Xaver Schlager",
-              "position": "DM"
-            },
-            {
-              "name": "James McAtee",
-              "position": "CM"
-            },
-            {
-              "name": "Daniel Muñoz",
-              "position": "RWB",
-              "owner": "7z8fy0pnmuogbtdw"
+              "name": "Dan Ndoye",
+              "position": "AM",
+              "owner": "uexqrijomu8l5asi"
             },
             {
               "name": "Morgan Gibbs-White",
               "position": "AM",
               "owner": "7to6xosimu8hyyw5"
-            },
-            {
-              "name": "Dan Ndoye",
-              "position": "AM",
-              "owner": "uexqrijomu8l5asi"
             },
             {
               "name": "Liam Delap",
@@ -622,11 +622,11 @@
               "position": "GK"
             },
             {
-              "name": "Ryan Giles",
-              "position": "LB"
+              "name": "Lewie Coyle",
+              "position": "RB"
             },
             {
-              "name": "Semi Ajayi",
+              "name": "Nobel Mendy",
               "position": "CB"
             },
             {
@@ -634,29 +634,29 @@
               "position": "CB"
             },
             {
-              "name": "Nobel Mendy",
+              "name": "Semi Ajayi",
               "position": "CB"
             },
             {
-              "name": "Lewie Coyle",
-              "position": "RB"
+              "name": "Ryan Giles",
+              "position": "LB"
             },
             {
-              "name": "Sorba Thomas",
-              "position": "LM"
-            },
-            {
-              "name": "Regan Slater",
-              "position": "CM"
+              "name": "Mohamed Belloumi",
+              "position": "RM",
+              "owner": "syjkob6cmuobagfu"
             },
             {
               "name": "Matt Crooks",
               "position": "CM"
             },
             {
-              "name": "Mohamed Belloumi",
-              "position": "RM",
-              "owner": "syjkob6cmuobagfu"
+              "name": "Regan Slater",
+              "position": "CM"
+            },
+            {
+              "name": "Sorba Thomas",
+              "position": "LM"
             },
             {
               "name": "Oli McBurnie",
@@ -676,15 +676,8 @@
               "owner": "ipnp5y4mmu9j7kop"
             },
             {
-              "name": "Vitalii Mykolenko",
-              "position": "LB",
-              "owner": "uexqrijomu8l5asi",
-              "status": "Doubt"
-            },
-            {
-              "name": "Jarrad Branthwaite",
-              "position": "CB",
-              "owner": "uexqrijomu8l5asi"
+              "name": "Ainsley Maitland-Niles",
+              "position": "RB"
             },
             {
               "name": "James Tarkowski",
@@ -692,8 +685,19 @@
               "owner": "ipnp5y4mmu9j7kop"
             },
             {
-              "name": "Ainsley Maitland-Niles",
-              "position": "RB"
+              "name": "Jarrad Branthwaite",
+              "position": "CB",
+              "owner": "uexqrijomu8l5asi"
+            },
+            {
+              "name": "Vitalii Mykolenko",
+              "position": "LB",
+              "owner": "uexqrijomu8l5asi",
+              "status": "Doubt"
+            },
+            {
+              "name": "Harrison Armstrong",
+              "position": "DM"
             },
             {
               "name": "James Garner",
@@ -701,13 +705,8 @@
               "owner": "l5kunst8msgbirdf"
             },
             {
-              "name": "Harrison Armstrong",
-              "position": "DM"
-            },
-            {
-              "name": "Jack Grealish",
-              "position": "LW",
-              "owner": "kpj0z744muh1qwtd"
+              "name": "Brennan Johnson",
+              "position": "RW"
             },
             {
               "name": "Kiernan Dewsbury-Hall",
@@ -715,8 +714,9 @@
               "owner": "l5kunst8msgbirdf"
             },
             {
-              "name": "Brennan Johnson",
-              "position": "RW"
+              "name": "Jack Grealish",
+              "position": "LW",
+              "owner": "kpj0z744muh1qwtd"
             },
             {
               "name": "Thierno Barry",
@@ -738,12 +738,7 @@
               "position": "GK"
             },
             {
-              "name": "Leif Davis",
-              "position": "LB",
-              "owner": "l5kunst8msgbirdf"
-            },
-            {
-              "name": "Dara O'Shea",
+              "name": "Abdoul Ouattara",
               "position": "RB"
             },
             {
@@ -751,19 +746,24 @@
               "position": "CB"
             },
             {
-              "name": "Abdoul Ouattara",
+              "name": "Dara O'Shea",
               "position": "RB"
             },
             {
-              "name": "Saša Lukić",
-              "position": "DM"
+              "name": "Leif Davis",
+              "position": "LB",
+              "owner": "l5kunst8msgbirdf"
             },
             {
               "name": "Exequiel Palacios",
               "position": "DM"
             },
             {
-              "name": "Jaden Philogene",
+              "name": "Saša Lukić",
+              "position": "DM"
+            },
+            {
+              "name": "Jack Clarke",
               "position": "LW"
             },
             {
@@ -772,7 +772,7 @@
               "owner": "7to6xosimu8hyyw5"
             },
             {
-              "name": "Jack Clarke",
+              "name": "Jaden Philogene",
               "position": "LW"
             },
             {
@@ -792,8 +792,13 @@
               "position": "GK"
             },
             {
-              "name": "Ryan Sessegnon",
-              "position": "LB"
+              "name": "Timothy Castagne",
+              "position": "RB",
+              "owner": "7to6xosimu8hyyw5"
+            },
+            {
+              "name": "David Affengruber",
+              "position": "CB"
             },
             {
               "name": "Calvin Bassey",
@@ -801,26 +806,20 @@
               "owner": "7z8fy0pnmuogbtdw"
             },
             {
-              "name": "David Affengruber",
-              "position": "CB"
-            },
-            {
-              "name": "Timothy Castagne",
-              "position": "RB",
-              "owner": "7to6xosimu8hyyw5"
-            },
-            {
-              "name": "Sander Berge",
-              "position": "DM"
+              "name": "Ryan Sessegnon",
+              "position": "LB"
             },
             {
               "name": "Shea Charles",
               "position": "DM"
             },
             {
-              "name": "Alex Iwobi",
-              "position": "DM",
-              "owner": "syjkob6cmuobagfu"
+              "name": "Sander Berge",
+              "position": "DM"
+            },
+            {
+              "name": "Oscar Bobb",
+              "position": "RW"
             },
             {
               "name": "Josh King",
@@ -828,8 +827,9 @@
               "owner": "7to6xosimu8hyyw5"
             },
             {
-              "name": "Oscar Bobb",
-              "position": "RW"
+              "name": "Alex Iwobi",
+              "position": "DM",
+              "owner": "syjkob6cmuobagfu"
             },
             {
               "name": "Gonzalo",
@@ -852,14 +852,9 @@
               "owner": "aekx2715mtzgcl3f"
             },
             {
-              "name": "Milos Kerkez",
-              "position": "LB",
-              "owner": "l5kunst8msgbirdf"
-            },
-            {
-              "name": "Virgil",
-              "position": "CB",
-              "owner": "syjkob6cmuobagfu"
+              "name": "Ronald Araujo",
+              "position": "RB",
+              "owner": "aekx2715mtzgcl3f"
             },
             {
               "name": "Jeremy Jacquet",
@@ -868,13 +863,14 @@
               "status": "Doubt"
             },
             {
-              "name": "Ronald Araujo",
-              "position": "RB",
-              "owner": "aekx2715mtzgcl3f"
+              "name": "Virgil",
+              "position": "CB",
+              "owner": "syjkob6cmuobagfu"
             },
             {
-              "name": "Ryan Gravenberch",
-              "position": "DM"
+              "name": "Milos Kerkez",
+              "position": "LB",
+              "owner": "l5kunst8msgbirdf"
             },
             {
               "name": "Alexis Mac Allister",
@@ -882,9 +878,12 @@
               "owner": "qgucu9dgmufwva1x"
             },
             {
-              "name": "Bradley Barcola",
-              "position": "LW",
-              "owner": "kpj0z744muh1qwtd"
+              "name": "Ryan Gravenberch",
+              "position": "DM"
+            },
+            {
+              "name": "Victor Munoz",
+              "position": "RW"
             },
             {
               "name": "Dominik Szoboszlai",
@@ -892,8 +891,9 @@
               "owner": "0g0j5mkomuqqwsbu"
             },
             {
-              "name": "Victor Munoz",
-              "position": "RW"
+              "name": "Bradley Barcola",
+              "position": "LW",
+              "owner": "kpj0z744muh1qwtd"
             },
             {
               "name": "Florian Wirtz",
@@ -913,14 +913,9 @@
               "owner": "0g0j5mkomuqqwsbu"
             },
             {
-              "name": "Joško Gvardiol",
-              "position": "LB",
-              "owner": "7to6xosimu8hyyw5"
-            },
-            {
-              "name": "Marc Guéhi",
-              "position": "CB",
-              "owner": "kpj0z744muh1qwtd"
+              "name": "Matheus N.",
+              "position": "RB",
+              "owner": "l5kunst8msgbirdf"
             },
             {
               "name": "Rúben",
@@ -928,14 +923,14 @@
               "owner": "syjkob6cmuobagfu"
             },
             {
-              "name": "Matheus N.",
-              "position": "RB",
-              "owner": "l5kunst8msgbirdf"
+              "name": "Marc Guéhi",
+              "position": "CB",
+              "owner": "kpj0z744muh1qwtd"
             },
             {
-              "name": "Enzo",
-              "position": "CM",
-              "owner": "ipnp5y4mmu9j7kop"
+              "name": "Joško Gvardiol",
+              "position": "LB",
+              "owner": "7to6xosimu8hyyw5"
             },
             {
               "name": "Elliot Anderson",
@@ -943,9 +938,15 @@
               "owner": "syjkob6cmuobagfu"
             },
             {
-              "name": "Jérémy Doku",
+              "name": "Enzo",
+              "position": "CM",
+              "owner": "ipnp5y4mmu9j7kop"
+            },
+            {
+              "name": "Antoine Semenyo",
               "position": "LW",
-              "owner": "0g0j5mkomuqqwsbu"
+              "owner": "uexqrijomu8l5asi",
+              "status": "Doubt"
             },
             {
               "name": "Rayan Cherki",
@@ -953,10 +954,9 @@
               "owner": "7z8fy0pnmuogbtdw"
             },
             {
-              "name": "Antoine Semenyo",
+              "name": "Jérémy Doku",
               "position": "LW",
-              "owner": "uexqrijomu8l5asi",
-              "status": "Doubt"
+              "owner": "0g0j5mkomuqqwsbu"
             },
             {
               "name": "Erling Haaland",
@@ -979,9 +979,12 @@
               "owner": "l5kunst8msgbirdf"
             },
             {
-              "name": "Luke Shaw",
-              "position": "LB",
-              "owner": "kpj0z744muh1qwtd"
+              "name": "Diogo Dalot",
+              "position": "RB"
+            },
+            {
+              "name": "Lisandro Martínez",
+              "position": "CB"
             },
             {
               "name": "Harry Maguire",
@@ -989,17 +992,9 @@
               "owner": "kpj0z744muh1qwtd"
             },
             {
-              "name": "Lisandro Martínez",
-              "position": "CB"
-            },
-            {
-              "name": "Diogo Dalot",
-              "position": "RB"
-            },
-            {
-              "name": "Youri Tielemans",
-              "position": "DM",
-              "owner": "qgucu9dgmufwva1x"
+              "name": "Luke Shaw",
+              "position": "LB",
+              "owner": "kpj0z744muh1qwtd"
             },
             {
               "name": "Kobbie Mainoo",
@@ -1008,10 +1003,14 @@
               "status": "Doubt"
             },
             {
-              "name": "Marcus Rashford",
-              "position": "LW",
-              "owner": "ipnp5y4mmu9j7kop",
-              "status": "Doubt"
+              "name": "Youri Tielemans",
+              "position": "DM",
+              "owner": "qgucu9dgmufwva1x"
+            },
+            {
+              "name": "Bryan Mbeumo",
+              "position": "RW",
+              "owner": "kpj0z744muh1qwtd"
             },
             {
               "name": "Bruno Fernandes",
@@ -1019,9 +1018,10 @@
               "owner": "qgucu9dgmufwva1x"
             },
             {
-              "name": "Bryan Mbeumo",
-              "position": "RW",
-              "owner": "kpj0z744muh1qwtd"
+              "name": "Marcus Rashford",
+              "position": "LW",
+              "owner": "ipnp5y4mmu9j7kop",
+              "status": "Doubt"
             },
             {
               "name": "Matheus Cunha",
@@ -1040,13 +1040,8 @@
               "position": "GK"
             },
             {
-              "name": "Destiny Udogie",
-              "position": "LB"
-            },
-            {
-              "name": "Jan van Hecke",
-              "position": "CB",
-              "status": "Doubt"
+              "name": "Archie Gray",
+              "position": "RB"
             },
             {
               "name": "Micky van de Ven",
@@ -1054,12 +1049,13 @@
               "status": "Doubt"
             },
             {
-              "name": "Archie Gray",
-              "position": "RB"
+              "name": "Jan van Hecke",
+              "position": "CB",
+              "status": "Doubt"
             },
             {
-              "name": "Mateus Fernandes",
-              "position": "AM"
+              "name": "Destiny Udogie",
+              "position": "LB"
             },
             {
               "name": "Sandro Tonali",
@@ -1067,8 +1063,12 @@
               "owner": "0g0j5mkomuqqwsbu"
             },
             {
-              "name": "Omar Marmoush",
-              "position": "LW"
+              "name": "Mateus Fernandes",
+              "position": "AM"
+            },
+            {
+              "name": "Sávio",
+              "position": "RW"
             },
             {
               "name": "Mohammed Kudus",
@@ -1076,8 +1076,8 @@
               "owner": "l5kunst8msgbirdf"
             },
             {
-              "name": "Sávio",
-              "position": "RW"
+              "name": "Omar Marmoush",
+              "position": "LW"
             },
             {
               "name": "Solanke",
@@ -1099,21 +1099,25 @@
               "owner": "kpj0z744muh1qwtd"
             },
             {
-              "name": "Reinildo",
-              "position": "LB"
-            },
-            {
-              "name": "Kevin Danso",
-              "position": "CB"
+              "name": "Nordi Mukiele",
+              "position": "RB",
+              "owner": "syjkob6cmuobagfu"
             },
             {
               "name": "Omar Alderete",
               "position": "LCB"
             },
             {
-              "name": "Nordi Mukiele",
-              "position": "RB",
-              "owner": "syjkob6cmuobagfu"
+              "name": "Kevin Danso",
+              "position": "CB"
+            },
+            {
+              "name": "Reinildo",
+              "position": "LB"
+            },
+            {
+              "name": "Noah Sadiki",
+              "position": "DM"
             },
             {
               "name": "Granit Xhaka",
@@ -1121,12 +1125,8 @@
               "owner": "7to6xosimu8hyyw5"
             },
             {
-              "name": "Noah Sadiki",
-              "position": "DM"
-            },
-            {
-              "name": "Nilson Angulo",
-              "position": "LW"
+              "name": "Thomas Meunier",
+              "position": "RW"
             },
             {
               "name": "Enzo Fée",
@@ -1134,8 +1134,8 @@
               "owner": "syjkob6cmuobagfu"
             },
             {
-              "name": "Thomas Meunier",
-              "position": "RW"
+              "name": "Nilson Angulo",
+              "position": "LW"
             },
             {
               "name": "Wilson Isidor",
@@ -1154,8 +1154,14 @@
               "owner": "7z8fy0pnmuogbtdw"
             },
             {
-              "name": "Olivier Boscagli",
-              "position": "LB"
+              "name": "Ferdi Kadıoğlu",
+              "position": "RB",
+              "owner": "aekx2715mtzgcl3f"
+            },
+            {
+              "name": "Luka Vušković",
+              "position": "CB",
+              "owner": "aekx2715mtzgcl3f"
             },
             {
               "name": "Lewis Dunk",
@@ -1164,14 +1170,12 @@
               "status": "Doubt"
             },
             {
-              "name": "Luka Vušković",
-              "position": "CB",
-              "owner": "aekx2715mtzgcl3f"
+              "name": "Olivier Boscagli",
+              "position": "LB"
             },
             {
-              "name": "Ferdi Kadıoğlu",
-              "position": "RB",
-              "owner": "aekx2715mtzgcl3f"
+              "name": "Yasin Ayari",
+              "position": "DM"
             },
             {
               "name": "Pascal Groß",
@@ -1179,22 +1183,18 @@
               "owner": "uexqrijomu8l5asi"
             },
             {
-              "name": "Yasin Ayari",
-              "position": "DM"
-            },
-            {
-              "name": "Maxim De Cuyper",
-              "position": "LW",
-              "owner": "uexqrijomu8l5asi"
+              "name": "Diego Gómez",
+              "position": "RW",
+              "owner": "7z8fy0pnmuogbtdw"
             },
             {
               "name": "Malick Yalcouyé",
               "position": "AM"
             },
             {
-              "name": "Diego Gómez",
-              "position": "RW",
-              "owner": "7z8fy0pnmuogbtdw"
+              "name": "Maxim De Cuyper",
+              "position": "LW",
+              "owner": "uexqrijomu8l5asi"
             },
             {
               "name": "Charalampos Kostoulas",
