@@ -22,6 +22,8 @@ import Measures from "./Measures";
 import PickBar from "./PickBar";
 import PlayerMap from "./PlayerMap";
 import type { Played } from "./rates";
+import { sides } from "./pick";
+import { windowWords } from "./window";
 import { Chip } from "../BoardControls";
 import { StackWaiting } from "../[fantraxId]/Waiting";
 import { playerGrid } from "../[fantraxId]/grid";
@@ -56,12 +58,12 @@ export default async function ComparePage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const asked = await searchParams;
-  const a = lastValue(asked.a);
-  // A man is never set against himself: `?a=X&b=X` collapses to the one-man screen.
-  const wanted = lastValue(asked.b);
-  const b = wanted === a ? undefined : wanted;
-  const qa = lastValue(asked.qa) ?? "";
-  const qb = lastValue(asked.qb) ?? "";
+  const { a, b, qa, qb } = sides({
+    a: lastValue(asked.a),
+    b: lastValue(asked.b),
+    qa: lastValue(asked.qa) ?? "",
+    qb: lastValue(asked.qb) ?? "",
+  });
   const view: View = VIEWS.find((entry) => entry.key === lastValue(asked.view))?.key ?? "figures";
   const recent = lastValue(asked.range) === String(RECENT);
 
@@ -123,7 +125,7 @@ export default async function ComparePage({
   const played = lastPlayed(fixtures, Number.POSITIVE_INFINITY);
   const window = recent ? lastPlayed(fixtures, RECENT) : played;
   const span = gameweekSpan(window) || "no gameweeks yet";
-  const told = recent ? `gameweeks ${window[0]} to ${window[window.length - 1]}` : "this season";
+  const told = windowWords(recent, window);
   const gameweekOf = fixtureGameweeks(fixtures);
   const inWindow = new Set(window);
 

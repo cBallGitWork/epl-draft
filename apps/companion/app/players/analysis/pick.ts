@@ -12,6 +12,21 @@ export interface Candidate {
   name: string;
 }
 
+/** Each side's man and what its box holds, as the URL names them (`a`, `b`, `qa`, `qb`). */
+export interface Sides {
+  a: string | undefined;
+  b: string | undefined;
+  qa: string;
+  qb: string;
+}
+
+/** The sides as the screen reads them: a lone man is A, whichever box chose him, with the empty box's search moved
+ *  to B; and `?a=X&b=X` is the one-man screen. */
+export function sides({ a, b, qa, qb }: Sides): Sides {
+  if (a === undefined && b !== undefined) return { a: b, b: undefined, qa: qb, qb: qa };
+  return { a, b: b === a ? undefined : b, qa, qb };
+}
+
 /** The names matching what was typed, minus the man already on the other side; an empty box offers nothing. */
 export function candidates(rows: readonly PoolRow[], typed: string, taken: string | undefined): Candidate[] {
   const needle = typed.trim().toLowerCase();
