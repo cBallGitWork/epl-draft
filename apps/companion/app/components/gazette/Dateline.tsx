@@ -1,8 +1,8 @@
 import { type PublishedStory, londonDayAndTime, writerOf } from "@epl/core";
+import { QUIET_CAPS } from "./heads";
 
 // Which edition filed a story, when, and where the rest of it is: "by <name>" (a person, never the standing head),
-// the edition, the filing time, and "read on" unless this is the article (`turn`). The
-// small-caps class stays written out: sixteen sites in three weights that mean three different things.
+// the edition, the filing time, and "read on" unless this is the article (`turn`).
 
 export default function Dateline({
   story,
@@ -26,7 +26,7 @@ export default function Dateline({
   if (story.filedAt === "") return null;
 
   return (
-    <Tag className={`font-sans text-3xs uppercase tracking-[0.16em] text-faint ${className}`}>
+    <Tag className={`${QUIET_CAPS} ${className}`}>
       {byline ? `by ${writerOf(story)} · ` : ""}
       {story.edition !== "" ? `${story.edition} · ` : ""}
       Filed {londonDayAndTime(story.filedAt)}

@@ -128,12 +128,12 @@ function MatchRow({
         ) : null}
         {rows.length === 0 ? (
           <p className="py-1 text-center text-xs text-faint">
-            {/* "Yet" only while the match can still change. */}
-            {fixture.status === "finished"
-              ? "Nothing to report."
+            {/* "Yet" only while the match can still change; a stale copy's live match has kicked off all the same. */}
+            {fixture.status === "upcoming"
+              ? `Kicks off ${fixture.kickoff === null ? "TBC" : londonDayAndTime(fixture.kickoff)}`
               : live
                 ? "Nothing to report yet."
-                : `Kicks off ${fixture.kickoff === null ? "TBC" : londonDayAndTime(fixture.kickoff)}`}
+                : "Nothing to report."}
           </p>
         ) : (
           <ul className="cm-rows flex flex-col">
@@ -192,6 +192,9 @@ function ClubSide({ club, align }: { club: Club | undefined; align: "start" | "e
   );
 }
 
+/** The line under a score: Live and its minute, FT, or the day. Ink is each state's own. */
+const STATE = "text-2xs font-semibold uppercase";
+
 function ScoreBlock({ fixture, now }: { fixture: Fixture; now: boolean }) {
   const live = now && fixture.status === "live";
   const played = fixture.homeScore != null && fixture.awayScore != null;
@@ -203,15 +206,15 @@ function ScoreBlock({ fixture, now }: { fixture: Fixture; now: boolean }) {
       </span>
       {/* State never rides on colour alone — the dot is always paired with a word. */}
       {live ? (
-        <span className="flex items-center gap-1 text-2xs font-semibold uppercase text-live">
+        <span className={`${STATE} flex items-center gap-1 text-live`}>
           <span className="live-dot" />
           Live {fixture.minutes}′
         </span>
       ) : fixture.status === "finished" ? (
-        <span className="text-2xs font-semibold uppercase text-faint">FT</span>
+        <span className={`${STATE} text-faint`}>FT</span>
       ) : fixture.kickoff !== null ? (
         /* The day, in FT's line: a gameweek runs Friday to Monday, so the times alone read out of order. */
-        <span className="text-2xs font-semibold uppercase text-faint">
+        <span className={`${STATE} text-faint`}>
           {londonWeekday(fixture.kickoff)}
         </span>
       ) : null}

@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { crestUrl, type PublishedStory, londonDayAndTime } from "@epl/core";
+import { HAIRLINES, RULE } from "./rules";
+import { CAPTION, CAPTION_CAPS } from "./heads";
 
 // The team-news thread: a club, its crest, a line of context, one bullet per man, and at most one quote.
 
@@ -16,7 +18,7 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
   if (rows.length === 0) return null;
 
   return (
-    <div className="flex flex-col divide-y pt-4" style={{ borderColor: "var(--paper-rule)" }}>
+    <div className={`flex flex-col pt-4 ${HAIRLINES}`}>
       {rows.map((row) => (
         <section key={row.club} className="py-4">
           <h3 className="flex items-center gap-2.5">
@@ -30,8 +32,8 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
             <span className="paper-display text-xl leading-none font-semibold text-ink">{row.club}</span>
             {/* Who they play, and when, off the fixture list. */}
             {row.fixture === undefined ? null : (
-              <span className="font-sans text-2xs tracking-widest text-muted uppercase">
-                vs {row.fixture.opponent} ({row.fixture.home ? "H" : "A"}) · {londonDayAndTime(row.fixture.kickoff)}
+              <span className={CAPTION}>
+                v {row.fixture.opponent} ({row.fixture.home ? "H" : "A"}) · {londonDayAndTime(row.fixture.kickoff)}
               </span>
             )}
           </h3>
@@ -52,7 +54,7 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
                       {" "}
                       ({man.owner ?? "FA"})
                     </span>
-                    <span className={`pl-1.5 font-sans text-2xs tracking-widest uppercase ${STATUS[man.status] ?? "text-muted"}`}>
+                    <span className={`${CAPTION_CAPS} pl-1.5 ${STATUS[man.status] ?? "text-muted"}`}>
                       {man.status}
                     </span>
                     {man.note === "" ? null : <span className="text-muted"> — {man.note}</span>}
@@ -70,12 +72,9 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
 
           {/* Carried from the source article, never composed. */}
           {row.quote === undefined ? null : (
-            <blockquote
-              className="mt-3 border-l-2 pl-3 text-base leading-snug"
-              style={{ borderColor: "var(--paper-rule)" }}
-            >
+            <blockquote className={`mt-3 border-l-2 pl-3 text-base leading-snug ${RULE}`}>
               <p className="text-ink italic">&ldquo;{row.quote.text}&rdquo;</p>
-              <cite className="pt-1 block font-sans text-2xs tracking-widest text-muted uppercase not-italic">
+              <cite className={`${CAPTION} block pt-1 not-italic`}>
                 {row.quote.said}
               </cite>
             </blockquote>
@@ -90,7 +89,7 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
 function StillOut({ men, owned }: { men: readonly { name: string; owner?: string }[]; owned: boolean }) {
   return (
     <div className="pt-2.5">
-      <p className="font-sans text-2xs tracking-widest text-muted uppercase">Still out</p>
+      <p className={CAPTION}>Still out</p>
       <ul className="flex flex-col gap-0.5 pt-1">
         {men.map((man) => (
           <li key={man.name} className="text-base leading-snug text-muted">

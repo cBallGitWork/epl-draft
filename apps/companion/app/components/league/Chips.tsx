@@ -24,7 +24,7 @@ interface Countable {
   cleanSheet?: boolean;
 }
 
-export interface Chip {
+interface Chip {
   label: string;
   /** Ground and ink. Size and padding are the caller's. */
   className: string;

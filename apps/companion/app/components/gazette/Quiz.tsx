@@ -1,4 +1,5 @@
 import type { PublishedStory } from "@epl/core";
+import { KICKER_CAPS, QUIET_CAPS } from "./heads";
 
 // The week's quiz, the answers printed upside down: a visual joke, so a screen reader reads them in order.
 
@@ -8,7 +9,7 @@ export default function Quiz({ story }: { story: PublishedStory }) {
 
   return (
     <section className="pt-3">
-      <p className="border-b border-line pb-1 font-sans text-3xs font-bold uppercase tracking-[0.16em] text-faint">
+      <p className={`${KICKER_CAPS} border-b border-line pb-1 text-faint`}>
         The quiz
       </p>
       <ol className="flex list-decimal flex-col gap-1 pl-4 pt-2 text-sm text-ink">
@@ -16,7 +17,7 @@ export default function Quiz({ story }: { story: PublishedStory }) {
           <li key={at}>{item.q}</li>
         ))}
       </ol>
-      <p className="pt-3 font-sans text-3xs uppercase tracking-[0.16em] text-faint">Answers</p>
+      <p className={`${QUIET_CAPS} pt-3`}>Answers</p>
       <ol
         className="flex list-decimal flex-col gap-0.5 pl-4 pt-1 text-2xs text-faint"
         // The gag itself.
