@@ -18,9 +18,9 @@ export const NEWSROOM = {
 /** The most storyline beats a column may report; the newsroom keeps no more than this. */
 export const MOST_THREADS = 3;
 
-/** The predicted elevens: Friday from 17:00 London, after that day's Team Sheet at 16:30 (Craig, 8 Oct 2026: "pressers
- *  first, team sheet later"); a lock earlier than Tuesday's files the day before (Sunday = 0). */
-export const PREDICTED_XI = { filing: { weekday: 5, hour: 17, maxLeadDays: 3 } } as const;
+/** The predicted elevens, London time (Craig, 9 Oct 2026): a Friday lock's from 17:30 that day; any other lock's from
+ *  20:00 the evening before, late enough for Scout's elevens to catch Friday's conferences. */
+export const PREDICTED_XI = { lockDay: { hour: 17, minute: 30 }, eveBefore: { hour: 20 } } as const;
 
 /** The Team Sheet: a column per press-conference day until the lock, from 16:30 London that day once the Mac's import
  *  has merged (Thursday 16:00, Friday 15:45), and Thursday's from 18:00 (Craig, 8 Oct 2026). */
