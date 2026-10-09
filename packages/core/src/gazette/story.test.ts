@@ -57,6 +57,10 @@ describe("normalizeStory", () => {
     expect(survived?.extras).toBeUndefined();
     // An empty expiry string is "does not expire", not an instant.
     expect(normalizeStory(story({ expiresAt: "" }))?.expiresAt).toBeNull();
+    // A story filed before the Line-Ups led carries no lead, and an empty one is none.
+    expect(survived).not.toHaveProperty("leadsUntil");
+    expect(normalizeStory(story({ leadsUntil: "" }))).not.toHaveProperty("leadsUntil");
+    expect(normalizeStory(story({ leadsUntil: "2026-10-10T11:15:00.000Z" }))?.leadsUntil).toBe("2026-10-10T11:15:00.000Z");
   });
 
   it("refuses an image without a source and keeps one with", () => {

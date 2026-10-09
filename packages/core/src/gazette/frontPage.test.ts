@@ -178,3 +178,35 @@ describe("the match report on the day it files", () => {
     expect(paper[0].slug).toBe("report");
   });
 });
+
+// Craig, 9 Oct 2026: "Predicted line up becomes the headline article until deadline".
+describe("the Line-Ups until the lock", () => {
+  const LOCK = "2026-10-10T11:15:00.000Z";
+  const paper = (now: string, leadsUntil: string | null = LOCK) =>
+    composePaper(
+      [
+        story({
+          slug: "gw6-predicted-xi", kind: "predicted-xi", period: 6, gameweek: 6, subjects: ["predicted-xi:gw6"],
+          filedAt: "2026-10-09T17:25:00.000Z", expiresAt: "2026-10-10T11:30:00Z", ...(leadsUntil === null ? {} : { leadsUntil }),
+        }),
+        story({
+          slug: "gw6-presser-2026-10-10", kind: "presser", period: 6, gameweek: 6, subjects: ["presser:gw6:2026-10-10"],
+          filedAt: "2026-10-10T08:00:00.000Z",
+        }),
+      ],
+      now,
+    ).map((s) => s.slug);
+
+  it("lead above a Team Sheet filed after them, until the lock", () => {
+    expect(paper("2026-10-10T09:00:00.000Z")).toEqual(["gw6-predicted-xi", "gw6-presser-2026-10-10"]);
+  });
+
+  it("give the lead back to the newest filing at the lock", () => {
+    expect(paper(LOCK)).toEqual(["gw6-presser-2026-10-10", "gw6-predicted-xi"]);
+  });
+
+  it("order by filing when filed without a lead, or with one that cannot be read", () => {
+    expect(paper("2026-10-10T09:00:00.000Z", null)[0]).toBe("gw6-presser-2026-10-10");
+    expect(paper("2026-10-10T09:00:00.000Z", "not-a-date")[0]).toBe("gw6-presser-2026-10-10");
+  });
+});

@@ -34,6 +34,8 @@ export interface PublishedStory {
   filedAt: string;
   /** ISO instant after which it is not printed (a preview dies at its kickoff); null leaves by supersession or the cap. */
   expiresAt: string | null;
+  /** ISO instant until which it leads whatever files after it (the Line-Ups, until the lock); absent orders by filing. */
+  leadsUntil?: string;
   /** Which named edition it went out under — "The Pink 'Un" — display copy. */
   edition: string;
   byline: string;
@@ -93,6 +95,7 @@ export function normalizeStory(parsed: unknown): PublishedStory | null {
     gameweek: raw.gameweek,
     filedAt: raw.filedAt,
     expiresAt: textOrNull(raw.expiresAt),
+    ...(typeof raw.leadsUntil === "string" && raw.leadsUntil !== "" ? { leadsUntil: raw.leadsUntil } : {}),
     edition: stringOrEmpty(raw.edition),
     byline: stringOrEmpty(raw.byline),
     ...(typeof raw.reporter === "string" && raw.reporter !== "" ? { reporter: raw.reporter } : {}),

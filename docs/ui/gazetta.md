@@ -121,8 +121,9 @@ business, and when lineups lock.
 
    **The man is chosen by the desk, never by the writer.** `faces.faceOf` takes
    him off the facts the brief was built from — the draft report's lead
-   match-up's key man, the Team Sheet's biggest name in the day's news — and the
-   Bin XI's desk picks its own, so the picture cannot contradict the prose and a
+   match-up's key man, the Team Sheet's biggest name in the day's news, the
+   Line-Ups' starter the league holds and the round's pressers named, one declared
+   fit again first (Craig, 9 Oct 2026) — and the Bin XI's desk picks its own, so the picture cannot contradict the prose and a
    model cannot name its way into the photograph. Null for a kind with no man in
    it, which is ordinary: Lawro's power rankings are about ten managers.
    It is stamped into `PublishedStory.face` at file time, and `PlayerImage`'s
@@ -458,8 +459,14 @@ keeps rehearsal prose off the real front page. `composePaper` then drops what
 has expired and retires what a later story superseded, and orders the rest
 newest filed first (Craig, 9 Oct 2026: *"always lead with the most recent
 article"*); a story's kind only breaks a tie between stories filed at one
-instant. So what leads is always the latest filing, and an old opinion still standing is
+instant. So what leads is the latest filing, and an old opinion still standing is
 one nothing has answered yet, printed under its own filed date.
+
+**The one exception is the Line-Ups, which lead until the lock** (Craig, 9 Oct
+2026: *"Predicted line up becomes the headline article until deadline"*). The
+newsdesk stamps the round's lock on the assignment and the filing carries it as
+`leadsUntil`; until then they lead whatever files after them, and from the lock
+the paper is newest first again. A story filed without one orders by filing.
 
 The filing time prints. Every other figure on the page is thirty seconds old and
 this could be three days old and still be the current edition; a reader is

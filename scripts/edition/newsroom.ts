@@ -121,6 +121,8 @@ interface ColumnMeta {
   gameweek: number;
   filedAt: string;
   expiresAt: string | null;
+  /** Until when it leads the paper whatever files after it; absent orders it by filing. */
+  leadsUntil?: string;
   edition: string;
   byline: string;
   /** The columnist's own name, where it is not the kind's staff writer's. */
@@ -145,6 +147,7 @@ export function storyOfColumn(
     gameweek: meta.gameweek,
     filedAt: meta.filedAt,
     expiresAt: meta.expiresAt,
+    leadsUntil: meta.leadsUntil,
     edition: meta.edition,
     byline: meta.byline,
     reporter: meta.reporter,

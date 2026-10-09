@@ -200,7 +200,7 @@ export type {
   IntelXi,
 } from "./intel/types";
 export type { Opposition } from "./opposition";
-export { FIRM, pressers } from "./intel/pressers";
+export { FIRM, FIT_AGAIN, pressers } from "./intel/pressers";
 export type { IntelPressers, PresserQuote, PresserSignal } from "./intel/pressers";
 export { intelFreshness } from "./intel/freshness";
 export type { IntelKind } from "./intel/freshness";

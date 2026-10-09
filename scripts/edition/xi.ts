@@ -37,8 +37,8 @@ export function lineupsSlot(gameweek: number, xi: IntelXi): { key: string; slug:
   return { key: `${slot.key}:${telling}`, slug: slot.slug };
 }
 
-/** The whole column, ready to file. Null when the ties or the elevens will not
- *  come, which files nothing and spends nothing. */
+/** The whole column, ready to file, and who it starts by code for its picture. Null when the ties or the elevens will
+ *  not come, which files nothing and spends nothing. */
 export function xiColumn(input: {
   xi: IntelXi;
   gameweek: number;
@@ -46,7 +46,7 @@ export function xiColumn(input: {
   teams: readonly RosteredTeam[];
   players: readonly XiPlayer[];
   season: readonly Fixture[];
-}): Record<string, unknown> | null {
+}): { column: Record<string, unknown>; starters: ReadonlySet<number> } | null {
   const { xi, gameweek, clubs, teams, players, season } = input;
 
   const ties = roundTies(gameweek, clubs, season);
@@ -58,11 +58,20 @@ export function xiColumn(input: {
       ? `All ${ties.length} of the gameweek's matches`
       : `${lineups.length} of the gameweek's ${ties.length} matches`;
 
+  // Read back off the export by each printed side's club, so a club whose tie did not print starts nobody.
+  const starters = lineups
+    .flatMap((tie) => [tie.home, tie.away])
+    .flatMap((side) => xi.clubs?.[clubs.get(side.code)?.shortName ?? ""]?.starters ?? [])
+    .map((starter) => starter.code);
+
   return {
-    headline: `Predicted Line-Ups: Gameweek ${gameweek}`,
-    deck: `Every club's expected starting eleven for the gameweek, match by match.`,
-    body: `${printed}, with both sides named.`,
-    lineups,
+    column: {
+      headline: `Predicted Line-Ups: Gameweek ${gameweek}`,
+      deck: `Every club's expected starting eleven for the gameweek, match by match.`,
+      body: `${printed}, with both sides named.`,
+      lineups,
+    },
+    starters: new Set(starters),
   };
 }
 
