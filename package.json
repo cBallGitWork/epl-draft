@@ -31,7 +31,7 @@
     "intel-cups": "tsx scripts/intel-cups.ts",
     "intel-careers": "tsx scripts/intel-careers.ts",
     "intel-history": "tsx scripts/intel-history.ts",
-    "scout-xi": "tsx scripts/scout-xi.ts",
+    "rotowire-xi": "tsx scripts/rotowire-xi.ts",
     "ratings": "tsx scripts/ratings.ts",
     "draft-pack": "tsx scripts/draft-pack.ts",
     "xmins-moves": "tsx scripts/xmins-moves.ts",

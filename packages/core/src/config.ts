@@ -46,6 +46,9 @@ export const YOUTUBE_THUMB_BASE = "https://i.ytimg.com/vi";
 /** Scout's team-news page, every club's predicted eleven. No trailing slash: with one, the site 301s. */
 export const SCOUT_TEAM_NEWS_URL = "https://www.fantasyfootballscout.co.uk/team-news";
 
+/** RotoWire's Premier League lineups: every club's eleven, predicted or confirmed, and its injured. */
+export const ROTOWIRE_LINEUPS_URL = "https://www.rotowire.com/soccer/lineups.php?league=EPL";
+
 /** The paper's writer and its illustrator. Scripts only: the app calls neither. */
 export const ANTHROPIC_MESSAGES_URL = "https://api.anthropic.com/v1/messages";
 export const OPENAI_IMAGES_URL = "https://api.openai.com/v1/images/generations";

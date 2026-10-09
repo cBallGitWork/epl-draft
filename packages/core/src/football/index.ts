@@ -175,6 +175,8 @@ export {
 } from "./intel/map";
 export type { SetPieceRank } from "./intel/map";
 export { parseScoutXi, xiToWrite } from "./intel/scout";
+export { joinRotowireSide, parseRotowireXi } from "./intel/rotowire";
+export type { RotowireSide, RotowireTie } from "./intel/rotowire";
 export {
   defaultDescendingTable,
   isTableSortKey,
@@ -184,6 +186,8 @@ export {
 export type { TableSortKey } from "./tableOrder";
 export type { ClubRecord, ClubStats, Result } from "./clubStats";
 export type {
+  IntelAbsence,
+  IntelClubXi,
   IntelClubPieces,
   IntelManifest,
   IntelMatch,

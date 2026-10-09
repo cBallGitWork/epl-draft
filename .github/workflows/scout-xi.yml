@@ -1,10 +1,9 @@
-name: Scout XI
+name: Predicted XI
 
-# Scout's predicted elevens into `data/intel/xi/26-27.json`, so the club pages show the
-# latest one without anybody exporting it by hand (Craig, 23 Sep 2026: "It should just
-# always be live, and it's updated when scout updates it"). `npm run scout-xi` writes only
-# when an eleven changed, so most runs commit nothing; a commit that does land redeploys,
-# because `vercel.json` does not exclude `data/intel`.
+# The predicted elevens into `data/intel/xi/26-27.json`: RotoWire's lineups page since 9 Oct 2026, Scout's
+# team news for any club RotoWire cannot fill. `npm run rotowire-xi` writes only when an eleven or an
+# absence changed, so most runs commit nothing; a commit that does land redeploys, because `vercel.json`
+# does not exclude `data/intel`. The file keeps its name so the watchdog and the alert issue keep theirs.
 
 on:
   schedule:
@@ -37,15 +36,15 @@ jobs:
           persist-credentials: false
       - uses: ./.github/actions/node
 
-      - name: Read Scout's elevens
-        run: npm run scout-xi
+      - name: Read the elevens
+        run: npm run rotowire-xi
 
       - name: Commit them, if they changed
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git add data/intel/xi
-          scripts/ci/push.sh "data: Scout's predicted elevens, $(date -u +%Y-%m-%dT%H:%MZ)" "Scout's elevens have not changed."
+          scripts/ci/push.sh "data: the predicted elevens, $(date -u +%Y-%m-%dT%H:%MZ)" "The elevens have not changed."
 
       # A red or timed-out run opens or updates the issue "alert: scout-xi"; the next green one closes it.
       - uses: ./.github/actions/alert

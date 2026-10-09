@@ -467,7 +467,7 @@ by hand (the season is closed); 26-27 rides `export-epl-draft`. ~200 KB each, de
 
 ## The XI is fetched here, not exported
 
-Since 23 Sep 2026 this repo reads Scout's page itself. `npm run scout-xi` (every
+Since 23 Sep 2026 this repo reads Scout's page itself. `npm run rotowire-xi`, Scout only as RotoWire's fallback since 9 Oct (every
 two hours in `scout-xi.yml`) parses https://www.fantasyfootballscout.co.uk/team-news
 with `parseScoutXi`, a port of the sister's `parse_ffscout`, and rewrites
 `data/intel/xi/26-27.json` only when an eleven changed. `fetchedAt` is the run that

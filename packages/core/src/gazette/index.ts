@@ -16,7 +16,7 @@ export { MAX_PAPER_STORIES, composePaper } from "./frontPage";
 export { isCovered, normalizeLedger, recordCoverage } from "./ledger";
 export { newsdesk, roundSlot } from "./newsdesk";
 export { predictedLineups } from "./predictedXi";
-export type { StoryFixture, StoryLineupMan, StoryLineupSide } from "./extras";
+export type { LineupStatus, StoryFixture, StoryLineupMan, StoryLineupSide } from "./extras";
 export type { Assignment, DeskState } from "./newsdesk";
 export { normalizePaper, normalizeStory } from "./story";
 export { stories } from "./stories";

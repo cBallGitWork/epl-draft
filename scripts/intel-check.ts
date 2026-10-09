@@ -115,7 +115,7 @@ async function xiFaults(): Promise<string[]> {
     return ["xi names no gameweek"];
   }
 
-  // Checked here as well as in `scout-xi`, because the club page and the paper both draw it.
+  // Checked here as well as in `rotowire-xi`, because the club page and the paper both draw it.
   const faults = Object.entries(xi.clubs ?? {})
     .map(([club, entry]) => [club, xiFault(entry)] as const)
     .filter(([, fault]) => fault !== null);
