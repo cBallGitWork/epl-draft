@@ -9,26 +9,16 @@ import { stringOrEmpty, stringsOrEmpty, textOrNull } from "../untrusted";
 export type StoryKind =
   | "match-report"
   | "draft-report"
-  | "fixture-preview"
-  | "tie-call"
-  | "tie-report"
   | "predictions"
   | "season-rankings"
-  | "eleven"
-  | "power-ranking"
-  | "wire"
-  | "dodgers"
   | "presser"
   | "predicted-xi"
   | "sheets"
-  | "news"
   | "bin-xi";
 
 /** Every kind, as data: `normalizeStory` refuses any other, and a kind missing here fails silently. */
 export const STORY_KINDS: readonly StoryKind[] = [
-  "match-report", "draft-report", "fixture-preview",
-  "tie-call", "tie-report", "predictions", "season-rankings", "eleven", "power-ranking",
-  "wire", "dodgers", "presser", "predicted-xi", "sheets", "news", "bin-xi",
+  "match-report", "draft-report", "predictions", "season-rankings", "presser", "predicted-xi", "sheets", "bin-xi",
 ];
 
 /** One filed story, as committed; a model helped write it, so `normalizeStory` keeps what survives. */

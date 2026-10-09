@@ -9,7 +9,6 @@ vi.mock("./predictions", () => ({ predictionsDesk: async () => ({ lawro: true })
 vi.mock("./season", () => ({ seasonDesk: async () => null }));
 vi.mock("./sheets", () => ({ sheetsDesk: async () => null }));
 vi.mock("./drafts", () => ({ draftsDesk: async () => new Map() }));
-vi.mock("./dodgers", () => ({ dodgersDesk: async () => null }));
 
 const assignments: Assignment[] = [
   { kind: "bin-xi", key: "bin", slug: "bin" },

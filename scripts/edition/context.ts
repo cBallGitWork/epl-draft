@@ -1,7 +1,6 @@
 import { FANTRAX_LEAGUE_ID, type Assignment, type Club, type Fixture, type FootballSnapshot, type GameweekKickoff, type LeagueInfo } from "@epl/core";
 import { binXiDesk } from "./binXi";
 import type { DeskContext } from "./dispatch";
-import { dodgersDesk } from "./dodgers";
 import type { DeskFacts } from "./facts";
 import type { Say } from "./newsroom";
 import { predictionsDesk } from "./predictions";
@@ -65,16 +64,12 @@ export async function deskContext(input: {
   const bin = await readDesk("bin-xi", () => binXiDesk({ assignments, info, snapshot, facts, period, gameweeks, season, kickoffs, clubs, threads, say }), null, lost, say);
   // A draft report's reads likewise: the gameweek's day reads, rosters and results, only when one is assigned.
   const drafts = await readDesk("draft-report", () => draftsDesk({ assignments, gameweek: snapshot.gameweek, say }), new Map(), lost, say);
-  // The Points Dodgers read every finished match's commentary, only when the column is due.
-  const dodgers = await readDesk("dodgers", () => dodgersDesk({ assignments, snapshot, facts, say }), null, lost, say);
   const ctx: DeskContext = {
     leagueId: FANTRAX_LEAGUE_ID,
     snapshot,
     facts,
-    clubs,
     threads,
     info,
-    table: facts.table,
     period,
     predictions,
     season: seasonColumn,
@@ -100,7 +95,6 @@ export async function deskContext(input: {
             players: snapshot.players,
             season,
           }),
-    dodgers,
   };
   return { ctx, lost };
 }

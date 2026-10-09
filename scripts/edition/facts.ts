@@ -1,6 +1,5 @@
 import {
   FANTRAX_LEAGUE_ID,
-  type AvailabilityNote,
   type Deal,
   type DraftPick,
   type FootballSnapshot,
@@ -9,8 +8,6 @@ import {
   type PeriodPairing,
   type RosteredTeam,
   type StandingsRow,
-  type TeamOfTheWeek,
-  availability,
   deals,
   fetchDraftResults,
   fetchLiveScoring,
@@ -23,15 +20,13 @@ import {
   mapStandings,
   mapTransactions,
   periodPairings,
-  teamOfTheWeek,
   wasFielded,
 } from "@epl/core";
-import { BBC_FOOTBALL, affectedBy, fetchFeed, mapNews, type Affected, type NewsItem } from "@epl/core";
 import { rosteredPeriod } from "./bridge";
 
 // Everything the writer is allowed to know, read here at the edge so the brief
-// builders stay pure. One read per surface, each caught on its own: a feed we
-// cannot read costs the brief a block, never the filing.
+// builders stay pure. One read per surface, each caught on its own: a read we
+// cannot make costs the brief a block, never the filing.
 
 /** Everything the desk and the briefs decide from, read once per firing. */
 export interface DeskFacts {
@@ -45,18 +40,11 @@ export interface DeskFacts {
    *  filed in — Fantrax's own number, and the only points this league has.
    *  Absent rather than nought for a man Fantrax has not priced. */
   playerPoints: Map<string, number>;
-  eleven: TeamOfTheWeek | null;
   fielded: boolean;
   business: Deal[];
-  doubts: AvailabilityNote[];
   pedigree: Map<string, DraftPick>;
-  /** Fantrax's table, verbatim — the power rankings argue with it and nothing
-   *  else reads it. Empty when the standings read refused, which costs that
-   *  column and no other. */
+  /** Fantrax's table, verbatim, for Lawro and the draft report. Empty when the standings read refused. */
   table: StandingsRow[];
-  /** Wire items that name a man somebody in this league holds, freshest
-   *  first. Triaged here so the newsdesk sees only what has a stake in it. */
-  news: { item: NewsItem; affected: Affected[] }[];
 }
 
 export async function gatherRoundFacts(
@@ -64,7 +52,7 @@ export async function gatherRoundFacts(
   snapshot: FootballSnapshot,
   period: number,
 ): Promise<DeskFacts> {
-  const [live, rosters, claims, trades, draft, standingsPage, wire] = await Promise.all([
+  const [live, rosters, claims, trades, draft, standingsPage] = await Promise.all([
     // Refused for a period the league never played; the scores go empty and Lawro and the Team Sheet still file.
     fetchLiveScoring(FANTRAX_LEAGUE_ID, period).catch(() => null),
     // The ROUND's period, not today's: unasked, Fantrax rolls its label the moment a round's last fixture ends, and
@@ -75,16 +63,10 @@ export async function gatherRoundFacts(
     fetchDraftResults(FANTRAX_LEAGUE_ID).catch(() => null),
     // The page, not the fxea array: it carries every column the table is drawn from, as `/league` reads it.
     fetchStandingsPage(FANTRAX_LEAGUE_ID).catch(() => null),
-    // The wire is the one read that is nobody's provider: a feed we cannot
-    // fetch costs the paper its news section and nothing else.
-    fetchFeed(BBC_FOOTBALL).catch(() => null),
   ]);
 
-  // The squads, and with them the two things only a join can say: who was in the
-  // week's eleven, and whether the arrangement we hold is the one that was
-  // actually fielded.
+  // The squads, and with them what only a join can say: whether the arrangement we hold is the one that was fielded.
   const squads = rosters === null ? null : rosteredPeriod(snapshot, rosters);
-  const eleven = squads === null ? null : teamOfTheWeek(squads.teams, info.roster, new Map());
 
   return {
     pairings: periodPairings(info.matchups, info.teams, period),
@@ -95,22 +77,12 @@ export async function gatherRoundFacts(
         squad.players.map((player) => [player.fantraxId, player.points] as const),
       ),
     ),
-    eleven: eleven !== null && eleven.picks.length > 0 ? eleven : null,
     fielded: squads !== null && wasFielded(squads, period),
     business: deals([
       ...(claims === null ? [] : mapTransactions(claims, "CLAIM_DROP")),
       ...(trades === null ? [] : mapTransactions(trades, "TRADE")),
     ]),
-    doubts: squads === null ? [] : availability(squads.teams),
     table: standingsPage === null ? [] : mapStandings(standingsPage),
-    news:
-      wire === null || squads === null
-        ? []
-        : mapNews(wire)
-            .map((item) => ({ item, affected: affectedBy(item, squads.teams) }))
-            // An item about nobody we hold is not our story, and filing it
-            // would be the paper reprinting the BBC.
-            .filter((story) => story.affected.length > 0),
     // Where each man was taken; empty before a draft, so no brief calls every squad undrafted.
     pedigree: new Map(
       (draft === null ? [] : mapDraftPicks(draft)).map((taken) => [taken.fantraxId, taken]),

@@ -9,7 +9,7 @@ const desk = (over: Partial<DeskState> = {}): DeskState => ({
   finished: false,
   locked: false,
   // An ordinary round has fixtures; an open tie files nothing of its own.
-  ties: [{ homeTeamId: "x", awayTeamId: "y", state: "open" }],
+  ties: [{ homeTeamId: "x", awayTeamId: "y" }],
   pressers: [],
   lineups: null,
   ahead: null,
@@ -28,7 +28,7 @@ describe("newsdesk", () => {
     const ahead = { period: 4, gameweek: 4 };
     const full = desk({
       finished: true,
-      ties: [{ homeTeamId: "a", awayTeamId: "b", state: "settled" }],
+      ties: [{ homeTeamId: "a", awayTeamId: "b" }],
       reportDays: [{ key: "match-report:gw3:2026-09-26", slug: "gw3-prem-report-2026-09-26", day: "2026-09-26" }],
       draftReports: [{ key: "draft-report:gw3:gameweek", slug: "gw3-draft-report-gameweek", cutoff: "gameweek", day: "2026-09-28" }],
       pressers: ["2026-10-01"],
@@ -63,7 +63,7 @@ describe("newsdesk", () => {
     const state = desk({
       finished: true,
       reportDays: [{ key: "match-report:gw3:2026-08-29", slug: "gw3-prem-report-2026-08-29", day: "2026-08-29" }],
-      ties: [{ homeTeamId: "a", awayTeamId: "b", state: "probable" }],
+      ties: [{ homeTeamId: "a", awayTeamId: "b" }],
     });
     const keys = newsdesk(state, none, NOW).map((a) => a.key);
     expect(new Set(keys).size).toBe(keys.length);

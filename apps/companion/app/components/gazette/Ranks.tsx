@@ -1,8 +1,8 @@
-import { DASH, type PublishedStory } from "@epl/core";
+import type { PublishedStory } from "@epl/core";
 import { yoursInk } from "../../mine";
 import { HAIRLINES } from "./rules";
 
-// A column's ten in its own order (the power rankings, Lawro's predicted table): an argument, not a table of figures.
+// Lawro's power rankings, ten in his own order: an argument, not a table of figures.
 
 export default function Ranks({
   story,
@@ -29,7 +29,6 @@ export default function Ranks({
             >
               {named(rank.teamId)}
             </span>
-            <Move places={rank.move} />
           </p>
           <p className="pl-7 pt-0.5 text-sm leading-snug text-muted">{rank.line}</p>
         </li>
@@ -38,18 +37,3 @@ export default function Ranks({
   );
 }
 
-/** Movement since the last ranking. Held is a dash and not a nought — the
- *  paper's own absence rule, and a nought here would read as a score. A table with no last time prints none. */
-function Move({ places }: { places: number | undefined }) {
-  if (places === undefined) return null;
-  if (places === 0) {
-    return <span className="numeric shrink-0 text-2xs text-faint">{DASH}</span>;
-  }
-  // Direction in the mark rather than in colour: green up and red down would
-  // spend the sheet's one red on an opinion about a fantasy team.
-  return (
-    <span className="numeric shrink-0 text-2xs text-muted">
-      {places > 0 ? `▲ ${places}` : `▼ ${Math.abs(places)}`}
-    </span>
-  );
-}

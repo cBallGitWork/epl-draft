@@ -46,9 +46,6 @@ export const YOUTUBE_THUMB_BASE = "https://i.ytimg.com/vi";
 /** Scout's team-news page, every club's predicted eleven. No trailing slash: with one, the site 301s. */
 export const SCOUT_TEAM_NEWS_URL = "https://www.fantasyfootballscout.co.uk/team-news";
 
-/** The BBC's football wire, which the paper's writer reads for angles. */
-export const BBC_FOOTBALL = "https://feeds.bbci.co.uk/sport/football/rss.xml";
-
 /** The paper's writer and its illustrator. Scripts only: the app calls neither. */
 export const ANTHROPIC_MESSAGES_URL = "https://api.anthropic.com/v1/messages";
 export const OPENAI_IMAGES_URL = "https://api.openai.com/v1/images/generations";

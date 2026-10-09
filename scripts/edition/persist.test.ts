@@ -20,15 +20,15 @@ afterEach(() => {
   for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true });
 });
 
-function story(slug: string, kind: StoryKind = "news", filedAt = NOW): PublishedStory {
+function story(slug: string, kind: StoryKind = "match-report", filedAt = NOW, period = 1): PublishedStory {
   return {
-    slug, kind, leagueId: LEAGUE, period: 1, gameweek: 6, filedAt, expiresAt: null,
+    slug, kind, leagueId: LEAGUE, period, gameweek: 6, filedAt, expiresAt: null,
     edition: "", byline: "", headline: `Headline ${slug}`, deck: "", body: "", subjects: [slug], image: null, face: null,
   };
 }
 
-function filing(slug: string, kind?: StoryKind): Filing {
-  return { story: story(slug, kind), spentKeys: [`key:${slug}`], threads: [] };
+function filing(slug: string, kind?: StoryKind, period?: number): Filing {
+  return { story: story(slug, kind, NOW, period), spentKeys: [`key:${slug}`], threads: [] };
 }
 
 describe("a firing's save point", () => {
@@ -54,16 +54,16 @@ describe("a firing's save point", () => {
   });
 
   it("saving story by story writes the bytes one save of the lot did", () => {
-    // A full paper: a tie report filed second retires two stories, so the one the first save pushed
+    // A full paper: the next round's Bin XI filed second retires two stories, so the one the first save pushed
     // off the back is still in print — as it was when the firing saved once, at the end.
     const found = [
-      story("call", "tie-call", EARLIER),
-      story("lawro", "predictions", EARLIER),
-      ...Array.from({ length: MAX_PAPER_STORIES - 3 }, (_, n) => story(`old-${n}`, "news", EARLIER)),
-      story("yesterday", "news", YESTERDAY),
+      story("bin-a", "bin-xi", EARLIER),
+      story("bin-b", "bin-xi", EARLIER),
+      ...Array.from({ length: MAX_PAPER_STORIES - 3 }, (_, n) => story(`old-${n}`, "match-report", EARLIER)),
+      story("yesterday", "match-report", YESTERDAY),
     ];
     const root = tempRoot();
-    const filings = [filing("new"), filing("report", "tie-report")];
+    const filings = [filing("new"), filing("report", "bin-xi", 2)];
     const ledger = saveFiling(found, filings.slice(0, 1), {}, NOW, root);
     saveFiling(found, filings, ledger, NOW, root);
 

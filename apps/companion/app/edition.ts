@@ -9,7 +9,7 @@ import {
   type LeagueTeam,
   type TeamOfTheWeek,
   deals,
-  frontPage,
+  composePaper,
   isMatchdayLive,
   nextDeadline,
   stories,
@@ -49,7 +49,7 @@ export interface Edition {
   partial: boolean;
   /** The lineup on hand is the one fielded (Fantrax rolls its period forward early); false withholds who STARTED. */
   fielded: boolean;
-  /** The rolling paper in print order; `frontPage` owns expiry, supersession and order. */
+  /** The rolling paper in print order; `composePaper` owns expiry, supersession and order. */
   filed: PublishedStory[];
   /** The desk's own stories for the week, strongest first; empty most of the week. */
   stories: Story[];
@@ -100,7 +100,7 @@ export async function edition(mine: string | null): Promise<Edition> {
     fielded,
     stories: told,
     // Composed here because the clock is the app edge's to read.
-    filed: frontPage(filed, at),
+    filed: composePaper(filed, at),
     board,
     mine,
   };

@@ -20,12 +20,8 @@ const writerOfFiled = (kind: string, reporter?: string) => {
 describe("writerOf", () => {
   it("names a filed story with no reporter after its kind's staff writer", () => {
     expect(writerOfFiled("match-report")).toBe("Phill McLunty");
-    expect(writerOfFiled("tie-report")).toBe("Danial Talyor");
-    expect(writerOfFiled("eleven")).toBe("Garf Crookes");
-    expect(writerOfFiled("power-ranking")).toBe("Martyn Masuel");
-    expect(writerOfFiled("dodgers")).toBe("Donny Kaber");
-    expect(writerOfFiled("wire")).toBe("Fabrizzio Morano");
-    expect(writerOfFiled("news")).toBe("Davide Onrstein");
+    expect(writerOfFiled("draft-report")).toBe("Danial Talyor");
+    expect(writerOfFiled("bin-xi")).toBe("Garf Crookes");
     expect(writerOfFiled("predicted-xi")).toBe("Davide Onrstein");
   });
 
@@ -35,8 +31,7 @@ describe("writerOf", () => {
 
   it("mangles both names of the journalist each writer is after, and never prints the real one", () => {
     const after = {
-      "match-report": "Phil McNulty", "tie-report": "Daniel Taylor", eleven: "Garth Crooks", "power-ranking": "Martin Samuel",
-      dodgers: "Danny Baker", wire: "Fabrizio Romano", news: "David Ornstein",
+      "match-report": "Phil McNulty", "draft-report": "Daniel Taylor", "bin-xi": "Garth Crooks", presser: "David Ornstein",
     } as const;
     for (const [kind, real] of Object.entries(after)) {
       const staff = STAFF_WRITERS[kind as keyof typeof after];

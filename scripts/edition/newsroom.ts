@@ -161,7 +161,6 @@ export function storyOfColumn(
     extras: {
       quotes: column.quotes,
       ranks: column.ranks,
-      quiz: column.quiz,
       teamNews: column.teamNews,
       lineups: column.lineups,
       sheets: column.sheets,

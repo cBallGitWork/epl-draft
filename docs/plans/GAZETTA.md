@@ -16,8 +16,9 @@ pages at the back.
 **The paper files seven weekly kinds (Craig, 1 Oct 2026), to keep the bill down:** the Prem match reports, the
 draft report (once, when the gameweek ends), the Bin XI, the Team Sheet (pressers), the predicted elevens, the draft sheets at the deadline and
 Lawro. News, the wire, the eleven, the power ranking, the dodgers, tie reports, tie calls and fixture previews no
-longer file; the
-newsdesk does not queue them. Their writers are still in the tree until the clean-up after GW6.
+longer file. Their kinds, briefs, voices, desks and readers, and the BBC feed only the news read, were deleted on
+9 Oct 2026 (Craig: *"Get the work done"*); `normalizeStory` now refuses the eight, so a filed one drops off the page.
+None was in the served league's paper; the test leagues' and the archive's stay on disk as data.
 
 ---
 
@@ -147,14 +148,14 @@ this and not on a guess about when things happen:
 
 | Day | What the LEAGUE does | Edition | Files |
 |---|---|---|---|
-| **Sun/Mon** | the round ends, either night | The Monday Club | `eleven` (Crooks), `power-ranking`, `dodgers` |
+| **Sun/Mon** | the round ends, either night | | the draft report at the gameweek's end; the Monday set (`eleven`, `power-ranking`, `dodgers`) was retired 1 Oct and deleted 9 Oct |
 | **Tue** | **nothing at all** | Bins Out | `bin-xi`, "Top Bins": the best eleven nobody has — SHIPPED 30 Sep, see below |
-| **Wed 17:00** | waivers process, free agency opens | The Mercato Wire | `wire`, on **detection** of a claim batch |
+| **Wed 17:00** | waivers process, free agency opens | | nothing: `wire` was retired 1 Oct and deleted 9 Oct |
 | **Thu 18:00** | Thursday's press conferences in | The Team Sheet | `presser`: Thursday's conferences, from the Mac's 16:00 import |
 | **Thu 20:00** | the evening before the round | The Form Guide | `predictions`, Lawro's calls on every tie, off the Mac's 17:15 import (the sister's 16:30 sweep) — SHIPPED 24 Sep (the evening before an earlier lock) |
 | **Fri 16:30 / 17:00** | Friday's pressers in; predicted elevens out | The Form Guide | `presser` **16:30**: Friday's conferences, off the Mac's 15:45 import; then `predicted-xi` **17:00** (Craig, 8 Oct 2026: *"pressers first, team sheet later"*) |
-| **Fri night / Sat noon** | deadline closes, gameweek begins | The Pink 'Un | `sheets` at the lock (every side as locked, SHIPPED 26 Sep), `tie-call`, `fixture-preview`, the Classified |
-| **Sat/Sun** | matches | The Sunday Edition | `tie-report` as the football stops |
+| **Fri night / Sat noon** | deadline closes, gameweek begins | The Pink 'Un | `sheets` at the lock (every side as locked, SHIPPED 26 Sep), the Classified |
+| **Sat/Sun** | matches | the day's Prem Report | `match-report` as each day's football settles |
 
 **The Team Sheet is a column per conference day (Craig, 8 Oct 2026).** Thursday's conferences file on Thursday and
 Friday's on Friday, until the lock: Thursday's from 18:00 London and any other day's from 16:30, once the Mac's import
@@ -229,8 +230,8 @@ the schedule and improves the paper as it stands today.**
 
 ### Crooks and Lawro already exist
 
-Both columns Craig named are already in the tree. `ELEVEN` is *"Crooks-shaped"*
-(`voice/columns.ts`). **Lawro is Lawro** — SHIPPED 24 Sep 2026: the predictions
+Both columns Craig named were in the tree. `ELEVEN` was *"Crooks-shaped"*
+(`voice/columns.ts`, deleted 9 Oct 2026 with the other retired kinds). **Lawro is Lawro** — SHIPPED 24 Sep 2026: the predictions
 column files on Thursday evening under Mark Lawrenson's own name, in his voice
 (`voice/lawro.ts`), with every call and score made by code and his record marked
 from the archive. PLATFORM_NOTES carries the decisions.
@@ -395,8 +396,7 @@ A sports editor, a draft-league writer and an engineer reviewed the plan before 
   that fails twice on a hard fault is not filed, and the next Tuesday firing tries again.
 
 Left deliberately: a midweek round still being played on Tuesday has no Bin XI that week; a man's
-waiver status and next fixture are not printed (the wire owns the market, and a fixture is a tip);
-the wire does not yet say who was claimed out of Tuesday's eleven.
+waiver status and next fixture are not printed (the market is not the paper's, and a fixture is a tip).
 
 ### The Team Sheets at the lock — 26 Sep 2026
 

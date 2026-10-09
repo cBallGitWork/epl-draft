@@ -16,13 +16,13 @@ afterEach(() => {
 });
 
 function assignment(key: string): Assignment {
-  return { kind: "news", key, slug: key };
+  return { kind: "match-report", key, slug: key };
 }
 
 function filing(key: string): Filing {
   return {
     story: {
-      slug: key, kind: "news", leagueId: LEAGUE, period: 1, gameweek: 6, filedAt: NOW, expiresAt: null,
+      slug: key, kind: "match-report", leagueId: LEAGUE, period: 1, gameweek: 6, filedAt: NOW, expiresAt: null,
       edition: "", byline: "", headline: `Headline ${key}`, deck: "", body: "", subjects: [key], image: null, face: null,
     },
     spentKeys: [key],
