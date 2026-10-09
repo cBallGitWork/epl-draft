@@ -20,6 +20,9 @@ const RAMP = ["#f2e05a", "#f0a93c", "#e2622c", "#c8281c"] as const;
  *  (heat.ts) reddens a quarter of the pitch. */
 const RAMP_CURVE = 2;
 
+/** Two places, far under a pixel: a cell's raw float is ~16 digits, and a busy man draws 200+ cells twice over. */
+const near = (value: number) => Math.round(value * 100) / 100;
+
 export default function HeatPitch({
   touches,
   id,
@@ -50,17 +53,21 @@ export default function HeatPitch({
         under={
           <g clipPath={`url(#inside-${id})`}>
             <g filter={`url(#blur-${id})`}>
-              {cells.map((cell) => (
-                <rect
-                  key={`${cell.x}-${cell.y}`}
-                  x={cell.x * PITCH_BOX.width}
-                  y={cell.y * PITCH_BOX.height}
-                  width={CELL.width * PITCH_BOX.width}
-                  height={CELL.height * PITCH_BOX.height}
-                  fill={RAMP[Math.min(RAMP.length - 1, Math.floor(cell.density ** RAMP_CURVE * RAMP.length))]}
-                  opacity={shade(cell.density)}
-                />
-              ))}
+              {cells.map((cell) => {
+                const x = near(cell.x * PITCH_BOX.width);
+                const y = near(cell.y * PITCH_BOX.height);
+                return (
+                  <rect
+                    key={`${x}-${y}`}
+                    x={x}
+                    y={y}
+                    width={near(CELL.width * PITCH_BOX.width)}
+                    height={near(CELL.height * PITCH_BOX.height)}
+                    fill={RAMP[Math.min(RAMP.length - 1, Math.floor(cell.density ** RAMP_CURVE * RAMP.length))]}
+                    opacity={near(shade(cell.density))}
+                  />
+                );
+              })}
             </g>
           </g>
         }
