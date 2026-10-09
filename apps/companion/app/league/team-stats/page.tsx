@@ -61,7 +61,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
     );
   }
 
-  const { info, rounds, table } = schedule;
+  const { info, rounds } = schedule;
 
   // The league's own gameweeks that have kicked off: the calendar's weeks before its first pairing are not its own.
   const season = leagueSeason(info);
@@ -72,7 +72,8 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
   const category = columns.find((entry) => entry.key === query.cat) ?? columns[0] ?? categoryFor(undefined);
 
   const board = rankBy(columns, lines, category, measure);
-  const named = new Map(table.map((row) => [row.teamId, row.teamName]));
+  // The league's own names, which stand when the standings do not.
+  const named = new Map(info.teams.map((team) => [team.teamId, team.name]));
   const groupLabel = columns.map((entry) => entry.label).join(", ");
 
   return (
