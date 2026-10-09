@@ -1,8 +1,8 @@
+import { groupedBy } from "../../grouped";
 import type { TeamForm } from "../../league/form";
 import type { EditionTie } from "../published";
 
-// How Lawro's calls turned out: his archived columns marked against the rounds Fantrax has settled,
-// recomputed every time, so nothing about his record is stored but the calls themselves.
+// How Lawro's calls turned out, marked afresh against the rounds Fantrax has settled: only the calls are stored.
 
 export interface Marked {
   right: number;
@@ -45,8 +45,9 @@ type Settled = TeamForm["run"][number];
 /** Every column marked; a dead heat and an unsettled tie count for nothing, and so does a tie
  *  he declined, or silence would be the cheapest way to look right. */
 export function predictionRecord(columns: readonly CalledColumn[], form: readonly TeamForm[]): PredictionRecord {
-  const settled = new Map<string, Settled>();
-  for (const team of form) for (const game of team.run) settled.set(`${game.period}:${team.teamId}`, game);
+  // A double header is two games in one period, so a team's period holds a list.
+  const settled = new Map<string, Settled[]>();
+  for (const team of form) for (const [period, games] of groupedBy(team.run, (game) => game.period)) settled.set(`${period}:${team.teamId}`, games);
 
   const marked = [...columns]
     .sort((a, b) => a.gameweek - b.gameweek)
@@ -61,13 +62,13 @@ export function predictionRecord(columns: readonly CalledColumn[], form: readonl
   };
 }
 
-function markColumn(column: CalledColumn, settled: ReadonlyMap<string, Settled>): Marks | null {
+function markColumn(column: CalledColumn, settled: ReadonlyMap<string, readonly Settled[]>): Marks | null {
   const all: Marked = { right: 0, called: 0 };
   const gut: Marked = { right: 0, called: 0 };
   const misses: Miss[] = [];
   for (const tie of column.ties) {
     const call = tie.callsTeamId;
-    const home = settled.get(`${column.period}:${tie.homeTeamId}`);
+    const home = gameOf(column.period, tie, settled);
     if (typeof call !== "string" || home === undefined || home.result === "D") continue;
 
     const homeWon = home.result === "W";
@@ -89,6 +90,14 @@ function markColumn(column: CalledColumn, settled: ReadonlyMap<string, Settled>)
     });
   }
   return all.called === 0 ? null : { all, gut: gut.called === 0 ? null : gut, misses };
+}
+
+/** The home side's game in this tie; in a double header, the one whose other total is the away side's own. */
+function gameOf(period: number, tie: EditionTie, settled: ReadonlyMap<string, readonly Settled[]>): Settled | undefined {
+  const games = settled.get(`${period}:${tie.homeTeamId}`) ?? [];
+  if (games.length <= 1) return games[0];
+  const away = settled.get(`${period}:${tie.awayTeamId}`)?.[0]?.pointsFor;
+  return games.find((game) => game.pointsAgainst === away);
 }
 
 function total(marks: readonly (Marked | null)[]): Marked | null {

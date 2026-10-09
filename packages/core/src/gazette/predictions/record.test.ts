@@ -62,6 +62,15 @@ describe("predictionRecord", () => {
     expect(record.season.gut).toEqual({ right: 0, called: 1 });
   });
 
+  it("marks a double header's tie against its own opponent, never the period's other game", () => {
+    // h beat a1 50-40 and lost to a2 50-60 in one period: Fantrax gives h one total for both.
+    const column: CalledColumn = { period: 29, gameweek: 34, ties: [tie("h", "a1", "h"), tie("a2", "x", "x")] };
+    const double = [form("h", [[29, "W", 50, 40], [29, "L", 50, 60]]), form("a1", [[29, "L", 40, 50]]), form("a2", [[29, "W", 60, 50], [29, "W", 60, 30]]), form("x", [[29, "L", 30, 60]])];
+    const record = predictionRecord([column], double);
+    expect(record.last?.marks?.all).toEqual({ right: 1, called: 2 });
+    expect(record.last?.marks?.misses).toEqual([{ gameweek: 34, calledTeamId: "x", winnerTeamId: "a2", loserTeamId: "x", winnerPoints: 60, loserPoints: 30, gut: false }]);
+  });
+
   it("has no record before his first column", () => {
     expect(predictionRecord([], settled)).toEqual({ last: null, season: { all: null, gut: null } });
   });
