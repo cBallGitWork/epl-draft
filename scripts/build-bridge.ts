@@ -16,33 +16,24 @@ import { readJsonOr } from "./absent";
 import { MAPPINGS_ROOT, POOL_ROOT, REVIEW_ROOT } from "./paths";
 import { newestCapture } from "./snapshots";
 
-// Builds the Fantrax→FPL player mapping. Run it, then read the review files and
-// decide the residue by hand — the script proposes, a person disposes. Nothing
-// downstream ever name-matches at runtime; it reads the file this writes.
+// Builds the Fantrax→FPL player mapping; a person reads the review files and decides the residue by hand.
 
 async function newestPoolSnapshot(): Promise<unknown> {
   const newest = await newestCapture(POOL_ROOT);
   if (newest === null) throw new Error("No captures yet — run `npm run capture` first.");
 
-  // Deliberately the checked-in snapshot rather than a live fetch: the same
-  // inputs must produce the same mapping, and the inputs are in git.
+  // The checked-in snapshot, not a live read: the same inputs must produce the same mapping.
   console.log(`Fantrax pool from snapshot ${newest}`);
   return JSON.parse(await readFile(join(POOL_ROOT, newest, "getPlayerIds.json"), "utf8"));
 }
 
-/** FPL's side of the match, in the shape `identity/` asks for.
- *
- *  Unlike the Fantrax pool this is fetched live, because FPL adds players
- *  mid-window and a stale candidate list produces a stale bridge. The wiring
- *  lives here rather than in either layer: `identity/` declares `FplCandidate`
- *  precisely so it never has to import the football adapter. */
+/** FPL's side of the match, live because FPL adds players mid-window, in the shape `identity/` declares. */
 async function fplCandidates(): Promise<FplCandidate[]> {
   const body = await fetchBootstrap();
 
   const clubs = new Map(body.teams.map((team) => [team.id, team.short_name]));
   return body.elements
-    // element_type 5 is managers, who are not footballers and are not in
-    // Fantrax's pool.
+    // element_type 5 is managers, who are not in Fantrax's pool.
     .filter((element) => element.element_type <= 4)
     .map((element) => ({
       code: element.code,
@@ -79,9 +70,7 @@ async function main(): Promise<void> {
   report(matches, { assumed, forReview }, merged);
 }
 
-/** What the run did, counted off the file it wrote rather than off this run's
- *  work: once the residue is recorded, later runs match almost nobody new, and a
- *  percentage of "considered" would fall to zero while the bridge stayed whole. */
+/** What the run did, with the totals counted off the file it wrote: later runs match almost nobody new. */
 function report(
   matches: Record<string, MappedEntry>,
   split: UnmappedSplit,

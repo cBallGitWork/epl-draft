@@ -3,31 +3,9 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { ARTICLE_REVALIDATE, PAGE_REVALIDATE } from "../apps/companion/app/config";
 
-// The one rule in this repo that a compiler cannot hold.
-//
-// `PAGE_REVALIDATE` says every route segment must repeat it as a LITERAL,
-// because Next analyses `revalidate` statically and will not read an import.
-// That is a real constraint and it has a real cost: twenty-one hand-written
-// copies of one number, and until now nothing checked they agreed. A rule with
-// no instrument is a hope, which is the same argument `groundfit.mjs` makes for
-// the pitch and `bridge-check.ts` for the mapping.
-//
-// **Discovered by walking, never from a checked-in list.** PLATFORM_NOTES
-// records a route list going stale as exactly the failure to avoid, and a
-// parallel session is adding and removing paper routes as this runs.
-//
-// **`layout.tsx` as well as `page.tsx`.** `(paper)/layout.tsx` carries one of
-// the copies, so a page-only glob would pass while missing it — the quiet kind
-// of green that makes a test worse than none.
-//
-// **Two numbers since 17 Sep 2026, and which one a route takes is DERIVED.** An
-// article is published by a deploy rather than by a revalidation — its prose is
-// static-imported and baked into the bundle — so `(paper)/paper/**` takes
-// `ARTICLE_REVALIDATE` and everything else, the front page included, takes
-// `PAGE_REVALIDATE`. The split is read off the PATH and never off a list: a
-// checked-in list of article routes is the staleness this file's own docblock
-// warns about, and a new page under `(paper)/paper/` should be held to the
-// article rule the moment it exists rather than when somebody remembers.
+// Next reads `revalidate` statically, so every route segment repeats its constant as a literal; this holds each copy,
+// pages and layouts both, found by walking `app/`. `(paper)/paper/**` takes ARTICLE_REVALIDATE (an article ships with
+// a deploy), everything else PAGE_REVALIDATE, decided by the path and never by a list.
 
 const APP = join(import.meta.dirname, "..", "apps", "companion", "app");
 const DECLARES = /export const revalidate = (\d+)/;

@@ -12,21 +12,11 @@ import { RECORDED_LEAGUES } from "./leagues";
 import { leagueCaptureDir, leagueCaptureRoot } from "./paths";
 import { newestCapture } from "./snapshots";
 
-// Does each Fantrax scoring period still contain exactly its own FPL gameweek?
-//
-// `calendar.test.ts` answers that against a recorded season and is the assertion
-// that gates a commit. This asks the same question of the LIVE fixture list, which
-// the recorded one cannot: the Premier League reschedules, and a postponed fixture
-// is the known way the two calendars come apart — FPL keeps a rearranged match in
-// its original `event`, Fantrax scores it in the period it was actually played.
-//
-// Run it per league, because scoring periods are league state. Both leagues carry
-// byte-identical periods today, but that is default settings rather than a rule.
+// Does each recorded league's scoring period still contain exactly its own FPL gameweek, against the LIVE fixture
+// list? A rearranged match stays in FPL's original gameweek and is scored in the period it is played in.
+// `calendar.test.ts` asks the same of a recorded season.
 
-// The raw shape is deliberately not on core's public surface — the whole point of
-// `league/index.ts` is that nothing outside the adapter knows Fantrax's field
-// names. A script reading captured JSON off disk is the one place that has to,
-// and naming it through the mapper keeps the two in step.
+/** Fantrax's raw shape, named through the mapper: core keeps it off its public surface. */
 type RawLeagueInfo = Parameters<typeof mapLeagueInfo>[0];
 
 async function newestLeagueInfo(leagueKey: string): Promise<RawLeagueInfo> {

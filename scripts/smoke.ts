@@ -102,9 +102,7 @@ async function main() {
 
   for (const line of skipped(ids)) console.log(`~ ${line}\n`);
 
-  // Is this server serving the league these expectations came from? Checked by a manager's own team
-  // name on `/league`: unique to the league, and `/league` cannot render without it. (It used to look
-  // for a subtitle that was later deleted, and the check failed on every run.)
+  // Is this server serving the league these expectations came from? A manager's team name on `/league` says so.
   const name = teamName;
   if (name === null) {
     // Skipped, and SAID so: until the draft there is no team to check by.
