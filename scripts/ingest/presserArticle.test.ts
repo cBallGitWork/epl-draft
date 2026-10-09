@@ -35,6 +35,14 @@ describe("classify", () => {
     expect(classify("So no one is ruled out for us for Friday.")).toBe("injury_scare");
   });
 
+  // 9 Oct 2026: "is also back" read Milenković FIT, and the Team Sheet printed him FIT with no note.
+  it("reads a man back on the sidelines as out, never as back", () => {
+    const said = "Nikola Milenkovic, who only just returned from a hamstring injury in a mid-season friendly against Swansea City, is also back on the sidelines with a bone bruise.";
+    expect(classify(clauses(said)[0])).toBe("ruled_out");
+    const [milenkovic] = troubles(said, [{ name: "Milenković", fullName: "Nikola Milenković" }]);
+    expect(milenkovic.tag).toBe("ruled_out");
+  });
+
   it("says nothing about a sentence that reports no availability", () => {
     expect(classify("He scored twice at Elland Road on Monday.")).toBeNull();
   });

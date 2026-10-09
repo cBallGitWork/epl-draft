@@ -13,10 +13,9 @@ import { SISTER_ROOT } from "./paths";
 const SCRAPE = process.env.FFS_SCRAPE_DIR ?? join(SISTER_ROOT, "data", "raw", "fantasy_football_scout", "daily");
 const OUT = intelPath("pressers");
 
-/** How many of a club's quotes the brief is offered. The column prints ONE, and
- *  a whole press conference in the brief is the writer's budget spent on
- *  filler — a choice of three is a choice. */
-const QUOTES_PER_CLUB = 3;
+/** How many of a club's quotes the brief is offered; the column prints one. Three cut Chelsea's fourth on 9 Oct, the
+ *  only one ruling Gittens out; five is the most one club gave. */
+const QUOTES_PER_CLUB = 5;
 
 /** The stand-in when a day publishes no conference times at all. The one figure
  *  in this file nobody printed, and it is named so it reads as the guess it is. */
