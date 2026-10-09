@@ -56,10 +56,13 @@ export function Match({
   fixture,
   clubs,
   yours,
+  now,
 }: {
   fixture: Fixture;
   clubs: Map<number, Club>;
   yours?: FootballPlayer[];
+  /** Whether the snapshot is fresh enough to speak in the present tense (`speaksForNow`), as Live asks. */
+  now: boolean;
 }) {
   const home = clubs.get(fixture.homeClubId)?.shortName ?? DASH;
   const away = clubs.get(fixture.awayClubId)?.shortName ?? DASH;
@@ -85,7 +88,7 @@ export function Match({
       </span>
       {/* No HT: FPL gives a minute and a finished flag, and a clock on 45 may still be running. */}
       <span className={`w-9 shrink-0 text-right ${SMALL_CAPS}`}>
-        {fixture.status === "live" ? (
+        {now && fixture.status === "live" ? (
           <span className="text-live">{fixture.minutes}′</span>
         ) : fixture.status === "finished" ? (
           <span className="text-faint">FT</span>
