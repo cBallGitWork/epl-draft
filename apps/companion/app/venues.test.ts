@@ -18,6 +18,10 @@ describe("venueFor", () => {
   it("has none for a team the table does not list, so the desk's ground stands", () => {
     expect(venueFor(venues, "elsewhere")).toBeNull();
   });
+
+  it("has none for a URL segment every object answers to", () => {
+    for (const segment of ["constructor", "toString", "__proto__"]) expect(venueFor(venues, segment), segment).toBeNull();
+  });
 });
 
 describe("creditsIn", () => {
