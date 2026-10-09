@@ -100,9 +100,9 @@ describe("availabilityNews", () => {
     expect(knee).toMatch(/no (date|word) yet/);
     expect(body({ ...injured, news: "Hamstring injury - Expected back 11 Oct" })).toMatch(/back (by|on) 11 Oct\.$/);
     expect(body({ news: "Unspecified injury - 75% chance of playing" })).toContain("has an injury");
-    expect(body({ news: "Knock", chance: null })).toBe("Alexander Isak has a knock and is a doubt for gameweek 6.");
+    expect(body({ news: "Knock - Unknown return date", chance: null })).toBe("Alexander Isak has a knock and is a doubt for gameweek 6.");
     // The league's word, never "round", when no gameweek is known.
-    expect(body({ news: "Knock", chance: null }, null)).toBe(
+    expect(body({ news: "Knock - Unknown return date", chance: null }, null)).toBe(
       "Alexander Isak has a knock and is a doubt for the next gameweek.",
     );
   });
@@ -152,6 +152,9 @@ describe("availabilityNews", () => {
     expect(availabilityNews([note({ news: "Knock - Game-time decision" })], 5, squads)[0].body).toBe(
       'Alexander Isak is a doubt for gameweek 5. The latest update says "Knock - Game-time decision".',
     );
+    // Read as a complaint, this was "Alexander Isak has a not included in squad and misses gameweek 5".
+    const [left] = availabilityNews([banned({ state: "unavailable", label: "Unav", news: "not included in squad." })], 5, squads);
+    expect(left.body).toBe('Alexander Isak is out for gameweek 5. The latest update says "not included in squad".');
   });
 
   it("carries FPL's own stamp rather than the round it was read in", () => {

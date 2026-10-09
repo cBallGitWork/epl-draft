@@ -31,6 +31,11 @@ describe("readNote", () => {
   it("carries a shape it does not know whole", () => {
     expect(readNote("Knock - Game-time decision")).toEqual({ kind: "other", text: "Knock - Game-time decision" });
   });
+
+  it("carries a note with no outlook whole, never as a complaint", () => {
+    // FPL's own on 9 Oct 2026, the one bare note among 223.
+    expect(readNote("not included in squad.")).toEqual({ kind: "other", text: "not included in squad" });
+  });
 });
 
 describe("ailment", () => {

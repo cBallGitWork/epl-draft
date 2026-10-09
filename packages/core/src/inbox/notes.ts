@@ -19,7 +19,7 @@ export function readNote(news: string): NoteReading {
     return { kind: "move", clause: text.charAt(0).toLowerCase() + text.slice(1) };
   }
   const parts = /^(.+?) - (.+)$/.exec(text);
-  if (parts === null) return text === "" ? { kind: "other", text } : { kind: "injury", complaint: text, outlook: null };
+  if (parts === null) return { kind: "other", text };
   const [, complaint, rest] = parts;
   const back = /^expected back (.+)$/i.exec(rest);
   const chance = /^(\d+)% chance of playing$/i.exec(rest);
