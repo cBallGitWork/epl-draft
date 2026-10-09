@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import type { PublishedStory } from "@epl/core";
-import { PAPER_NAME } from "./config";
+import { PAPER_NAME, TOKEN_SRGB } from "./config";
 import { sharePicture } from "./sharePicture";
 
 // The picture a shared article link previews with: the masthead, the headline and the byline on the paper's
@@ -11,7 +11,7 @@ import { sharePicture } from "./sharePicture";
 export const SHARE_CARD = { width: 1200, height: 630 } as const;
 
 /** `.paper`'s stock, ink and print red, as paper.css sets them. Change with it. */
-const STOCK = { paper: "#f6ddd2", ink: "#2a2018", red: "#8f2318", muted: "rgba(42, 32, 24, 0.7)" } as const;
+const STOCK = { paper: TOKEN_SRGB.paper, ink: "#2a2018", red: "#8f2318", muted: "rgba(42, 32, 24, 0.7)" } as const;
 
 const PICTURE_WIDTH = 470;
 

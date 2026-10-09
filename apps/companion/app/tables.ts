@@ -3,6 +3,7 @@ import type { PaperTableRow } from "./components/gazette/PaperTable";
 import { footballNow, seasonFixtures } from "./football";
 import { leagueTable as draftTable } from "./standings";
 import { getLeaguePool } from "./players/pool";
+import { SCORERS_SHOWN } from "./config";
 
 // The paper's two tables as rows, off reads the page already makes, kept apart: Fantrax's we quote, the Premier
 // League's we compute under fixed rules.
@@ -21,10 +22,6 @@ export async function draftRows(mine: string | null): Promise<PaperTableRow[]> {
     yours: row.teamId === mine,
   }));
 }
-
-/** How many of the season's scorers the paper prints. A chart, not a database:
- *  ten is what a back page has room for and what a reader scans. */
-const SCORERS_SHOWN = 10;
 
 /** What the chart calls a man nobody holds. */
 const UNOWNED = "free agent";
