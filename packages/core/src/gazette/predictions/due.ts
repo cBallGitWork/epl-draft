@@ -1,4 +1,4 @@
-import { PREDICTIONS } from "../../config";
+import { PREDICTED_XI, PREDICTIONS } from "../../config";
 import { MS_PER_DAY, instantOf, londonDayOf, londonTime, londonWeekday } from "../../time";
 
 // When Lawro's column is due: the Thursday evening before the round, or the evening before a lock
@@ -33,6 +33,15 @@ export function dueFrom(day: string, from: { hour: number; minute?: number }, lo
   const clock = londonTime(now);
   const minutes = Number(clock.slice(0, 2)) * 60 + Number(clock.slice(3, 5));
   return today > day || (today === day && minutes >= from.hour * 60 + (from.minute ?? 0));
+}
+
+/** Whether the predicted elevens are due: a Friday lock's from 17:30 that day, any other from 20:00 the evening before. */
+export function lineupsDue(locksAt: string, now: string): boolean {
+  const lockDay = londonDayOf(locksAt);
+  if (lockDay === null) return false;
+  return londonWeekday(locksAt) === "Fri"
+    ? dueFrom(lockDay, PREDICTED_XI.lockDay, locksAt, now)
+    : dueFrom(dayBefore(lockDay, 1), PREDICTED_XI.eveBefore, locksAt, now);
 }
 
 /** Whether Lawro's column is due at `now` for a round locking at `locksAt`. */
