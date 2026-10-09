@@ -10,7 +10,7 @@ export interface Marked {
 }
 
 /** A call he got wrong, and the score that proved it. */
-export interface Miss {
+interface Miss {
   gameweek: number;
   calledTeamId: string;
   winnerTeamId: string;
@@ -20,7 +20,7 @@ export interface Miss {
   gut: boolean;
 }
 
-export interface Marks {
+interface Marks {
   all: Marked;
   /** His calls against the favourite; null when none of them had a winner. */
   gut: Marked | null;

@@ -7,7 +7,7 @@ import { MS_PER_DAY, instantOf, londonDayOf, londonTime, londonWeekday } from ".
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 /** A weekday and London hour a look-ahead files at, and how many days before the lock that weekday may fall. */
-export type Filing = { weekday: number; hour: number; maxLeadDays: number };
+type Filing = { weekday: number; hour: number; maxLeadDays: number };
 
 /** The London day a column files for a round locking at `locksAt`, as `YYYY-MM-DD`. */
 export function filingDay(locksAt: string, filing: Filing = PREDICTIONS.filing): string | null {
