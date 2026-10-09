@@ -1,7 +1,7 @@
 import { LATE_GOAL_MINUTE, REPORTS } from "../../config";
 import { ordinal } from "../../league/ordinal";
 import { nextThree, type NextMatch } from "./ahead";
-import { derivedFacts } from "./derived";
+import { derivedFacts, times } from "./derived";
 import { fantasyPanel, type FantasyPanel } from "./fantasy";
 import { starMan, type StarMan } from "./star";
 import { keyStats, type KeyStat } from "./keyStats";
@@ -11,6 +11,7 @@ import { clubStandings, type ClubStanding } from "./standing";
 import { assistsBy, goalsBy, isGoal, manCounts, matchEvents, type ManCounts, type MatchEvent } from "./timeline";
 import type { ReportDayInput, ReportMan, ReportMatchInput } from "./types";
 import { plural } from "../../format";
+import { SIDES, otherSide } from "../side";
 
 // The editor's calls for a match-day, made in code: which match leads, the moment each account opens on, the one goal worth
 // describing, who gets a section and why it matters in the league, how long. The model writes prose around these.
@@ -52,9 +53,12 @@ const DECISIONS = ["sent-off", "second-yellow", "ruled-out", "penalty-saved", "p
 /** The moment that decided the match, from the timeline and the worked-out facts, in order of weight. */
 function opening(match: ReportMatchInput, events: readonly MatchEvent[], facts: readonly string[]): string {
   const goals = events.filter(isGoal);
-  const late = goals.filter((g) => g.at >= LATE_GOAL_MINUTE);
-  const collapse = facts.find((f) => / were \d+-\d+ up /u.test(f));
-  if (collapse !== undefined && late.length > 0) return `${collapse}, and the other side scored ${late.length === 1 ? "once" : `${late.length} times`} from the ${ordinal(LATE_GOAL_MINUTE)} minute on`;
+  // A lead given up late: the side that was up, and the other side's goals from the late minute on.
+  for (const side of SIDES) {
+    const collapse = facts.find((f) => f.startsWith(`${match[side].name} were `) && / were \d+-\d+ up /u.test(f));
+    const late = goals.filter((g) => g.side === otherSide(side) && g.at >= LATE_GOAL_MINUTE).length;
+    if (collapse !== undefined && late > 0) return `${collapse}, and the other side scored ${times(late)} from the ${ordinal(LATE_GOAL_MINUTE)} minute on`;
+  }
   const winner = facts.find((f) => f.startsWith("the winner came"));
   if (winner !== undefined) return winner;
   const hat = match.men.find((m) => goalsBy(goals, m.code) >= 3);
@@ -63,11 +67,13 @@ function opening(match: ReportMatchInput, events: readonly MatchEvent[], facts: 
   return goals.length === 0 ? "a goalless match: the first line of WHAT HAPPENED, then in order" : "the first line of WHAT HAPPENED, then in order";
 }
 
+const DISTANCE = new Set(["from outside the box", "from long range", "from long range, at an angle", "from more than 35 yards"]);
+
 /** The goal worth a full description: from distance, from a keeper's pass, a substitute's, a header, or one in added time. */
 function described(events: readonly MatchEvent[]): MatchEvent | null {
   const goals = events.filter((e) => isGoal(e) && e.kind !== "own-goal" && e.shot !== null);
   return (
-    goals.find((g) => ["from outside the box", "from long range", "from more than 35 yards"].includes(g.shot?.from ?? "")) ??
+    goals.find((g) => DISTANCE.has(g.shot?.from ?? "")) ??
     goals.find((g) => g.other?.line === "G") ??
     goals.find((g) => g.man !== null && !g.man.started) ??
     goals.find((g) => g.shot?.foot === "header") ??

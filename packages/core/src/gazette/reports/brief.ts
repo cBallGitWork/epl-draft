@@ -3,7 +3,7 @@ import { londonDayAndDate } from "../../time";
 import { eventLine, manLine } from "./briefLines";
 import type { MatchDesk } from "./desk";
 import { played } from "./men";
-import { isGoal } from "./timeline";
+import { assistsBy, goalsBy, isGoal } from "./timeline";
 import { SIDES, type Side } from "../side";
 import { howMany } from "../../format";
 
@@ -19,7 +19,7 @@ export function matchBlock(desk: MatchDesk): string {
   };
   const goals = events.filter(isGoal);
   const missed = new Set(misses);
-  const decisiveSubs = new Set(match.men.filter((m) => !m.started && goals.some((g) => g.man?.code === m.code || g.other?.code === m.code)).map((m) => m.code));
+  const decisiveSubs = new Set(match.men.filter((m) => !m.started && goalsBy(goals, m.code) + assistsBy(goals, m.code) > 0).map((m) => m.code));
   const table = SIDES.flatMap((side) => {
     const club = standing[side];
     return club === null ? [] : [`- ${match[side].name}: ${club.lines.join("; ")}`];

@@ -18,7 +18,8 @@ function when(event: MatchEvent): string {
   return left !== null && left > 0 && event.at >= 60 ? `with ${numeral(left)} ${plural(left, "minute")} left` : (event.phrases[0] ?? "");
 }
 
-const times = (n: number) => (n === 2 ? "twice" : `${numeral(n)} times`);
+/** "once", "twice", "three times". */
+export const times = (n: number) => (n === 1 ? "once" : n === 2 ? "twice" : `${numeral(n)} times`);
 
 export function derivedFacts(match: ReportMatchInput, events: readonly MatchEvent[]): string[] {
   const name = (side: Side) => match[side].name;
