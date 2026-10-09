@@ -22,8 +22,10 @@ export interface Miss {
 
 export interface Marks {
   all: Marked;
-  /** His calls against the favourite; null when he made none. */
+  /** His calls against the favourite; null when none of them had a winner. */
   gut: Marked | null;
+  /** His calls, and his gut calls among them, that ended level: marked in neither. */
+  level: { all: number; gut: number };
   misses: Miss[];
 }
 
@@ -65,11 +67,17 @@ export function predictionRecord(columns: readonly CalledColumn[], form: readonl
 function markColumn(column: CalledColumn, settled: ReadonlyMap<string, readonly Settled[]>): Marks | null {
   const all: Marked = { right: 0, called: 0 };
   const gut: Marked = { right: 0, called: 0 };
+  const level = { all: 0, gut: 0 };
   const misses: Miss[] = [];
   for (const tie of column.ties) {
     const call = tie.callsTeamId;
     const home = gameOf(column.period, tie, settled);
-    if (typeof call !== "string" || home === undefined || home.result === "D") continue;
+    if (typeof call !== "string" || home === undefined) continue;
+    if (home.result === "D") {
+      level.all += 1;
+      if (tie.instinct !== undefined) level.gut += 1;
+      continue;
+    }
 
     const homeWon = home.result === "W";
     const winner = homeWon ? tie.homeTeamId : tie.awayTeamId;
@@ -89,7 +97,7 @@ function markColumn(column: CalledColumn, settled: ReadonlyMap<string, readonly 
       gut: tie.instinct !== undefined,
     });
   }
-  return all.called === 0 ? null : { all, gut: gut.called === 0 ? null : gut, misses };
+  return all.called + level.all === 0 ? null : { all, gut: gut.called === 0 ? null : gut, level, misses };
 }
 
 /** The home side's game in this tie; in a double header, the one whose other total is the away side's own. */
@@ -101,7 +109,7 @@ function gameOf(period: number, tie: EditionTie, settled: ReadonlyMap<string, re
 }
 
 function total(marks: readonly (Marked | null)[]): Marked | null {
-  const counted = marks.filter((each): each is Marked => each !== null);
+  const counted = marks.filter((each): each is Marked => each !== null && each.called > 0);
   if (counted.length === 0) return null;
   return {
     right: counted.reduce((sum, each) => sum + each.right, 0),

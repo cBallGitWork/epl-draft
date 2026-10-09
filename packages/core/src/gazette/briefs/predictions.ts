@@ -1,5 +1,5 @@
 import { LAWRO_LIMITS } from "../../config";
-import { spelled } from "../../format";
+import { plural, spelled } from "../../format";
 import { derbyBrief, type DerbyName } from "../../league/derbies";
 import { londonDate, londonTime } from "../../time";
 import type { PastLine } from "../predictions/past";
@@ -89,7 +89,13 @@ function recordBlock(record: PredictionRecord, name: (teamId: string) => string)
   if (record.last === null) return "YOUR RECORD: this is your first column in this league, so there is no record to own yet. Do not invent one, and do not introduce yourself: everybody reading knows who you are. Open on the round itself, in a line, before your fall.";
   const { gameweek, marks } = record.last;
   if (marks === null) return `YOUR RECORD: gameweek ${gameweek} is not settled, so there is nothing to own this week. Say nothing about your record.`;
-  const gut = marks.gut === null ? "You made no gut calls." : `Your gut calls: ${marks.gut.right} from ${marks.gut.called}.`;
+  if (marks.all.called === 0) return `YOUR RECORD: every tie you called in gameweek ${gameweek} ended level, so there is nothing to own this week. Say nothing about your record.`;
+  const gut =
+    marks.gut !== null
+      ? `Your gut calls: ${marks.gut.right} from ${marks.gut.called}.`
+      : marks.level.gut > 0
+        ? `Your gut ${plural(marks.level.gut, "call")} ended level.`
+        : "You made no gut calls.";
   const misses = marks.misses.map(
     (miss) => `- You had ${name(miss.calledTeamId)}${miss.gut ? " on a gut call" : ""}. ${name(miss.winnerTeamId)} beat ${name(miss.loserTeamId)} ${miss.winnerPoints}-${miss.loserPoints}.`,
   );

@@ -174,6 +174,7 @@ describe("buildLawroBrief", () => {
         marks: {
           all: { right: 3, called: 5 },
           gut: { right: 0, called: 1 },
+          level: { all: 0, gut: 0 },
           misses: [{ gameweek: 6, calledTeamId: "cp", winnerTeamId: "hg", loserTeamId: "cp", winnerPoints: 49, loserPoints: 41, gut: true }],
         },
       },
@@ -183,6 +184,18 @@ describe("buildLawroBrief", () => {
     expect(text).toContain("Gameweek 6: 3 right from 5. Your gut calls: 0 from 1.");
     expect(text).toContain("You had Cold Palmer on a gut call. Haaland Globetrotters beat Cold Palmer 49-41.");
     expect(text).toContain("never recite it");
+  });
+
+  it("says a gut call that ended level ended level, and a week that ended level in every call is no unsettled week", () => {
+    const marked = (all: { right: number; called: number }, gut: { right: number; called: number } | null, level: { all: number; gut: number }): PredictionRecord => ({
+      last: { gameweek: 6, marks: { all, gut, level, misses: [] } },
+      season: { all: null, gut: null },
+    });
+    expect(brief([clear], marked({ right: 3, called: 4 }, null, { all: 1, gut: 1 }))).toContain("Gameweek 6: 3 right from 4. Your gut call ended level.");
+    expect(brief([clear], marked({ right: 3, called: 5 }, null, { all: 0, gut: 0 }))).toContain("Gameweek 6: 3 right from 5. You made no gut calls.");
+    const level = brief([clear], marked({ right: 0, called: 0 }, null, { all: 2, gut: 0 })) ?? "";
+    expect(level).toContain("YOUR RECORD: every tie you called in gameweek 6 ended level, so there is nothing to own this week. Say nothing about your record.");
+    expect(level).not.toContain("not settled");
   });
 
   it("leaves out a man he has already written about, unless something is new for him", () => {
