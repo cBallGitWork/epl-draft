@@ -1,4 +1,4 @@
-import { londonDayAndDate, type StatsRow } from "@epl/core";
+import type { StatsRow } from "@epl/core";
 import { BOARD, FIGURE_CELL, ROW_RULE } from "@/app/desk";
 import BoardKey from "../../../components/league/BoardKey";
 import ScrollBoard from "../../../components/league/ScrollBoard";
@@ -11,16 +11,16 @@ import { seasonLine } from "../../seasonColumns";
 
 export default function SeasonCounts({
   row,
-  at,
+  day,
 }: {
   /** His line in the stats league's file; undefined where it holds none. */
   row: StatsRow | undefined;
-  /** When the file was written, for how far the season runs. */
-  at: string;
+  /** The day the counts run to, already printed. */
+  day: string;
 }) {
   const line = seasonLine(row);
   return (
-    <Section title="Attacking" aside={`Season to ${londonDayAndDate(at)}`}>
+    <Section title="Attacking" aside={`Season to ${day}`}>
       <ScrollBoard>
         <table className={BOARD}>
           <thead>

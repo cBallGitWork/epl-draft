@@ -206,6 +206,8 @@ played, against the stats league's day sheets (Fantrax's own counts):
 - **What shows**: a row only where the scoring league prices its category at his slot (`join/fullMatchStats.ts`), so
   a defender sees tackles won, interceptions and blocks, a midfielder or forward clearances and recoveries too, and a
   keeper saves, smothers, punches and high claims. FPL's bps, defensive contribution and expected goals left the card.
+  The one exception, since 9 Oct 2026 (#414): an outfielder's *Attacking* plate (shots, on target, big chances missed,
+  touches in the box, chances created, big chances created, accurate crosses, dribbles won) shows whatever is priced.
 
 ## A fantasy team is its name: no Fantrax logo is drawn — decided 5 Oct 2026
 

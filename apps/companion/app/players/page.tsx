@@ -22,10 +22,10 @@ import { DEFCON_POINTS } from "./columns";
 import { defconPricing, poolPositions } from "../defcon";
 import { attributeStats } from "./attributeColumns";
 import { SEASON_COLUMNS, SEASON_STATS, seasonStats } from "./seasonColumns";
-import { intelStats, intelStatsManifest } from "../intel";
+import { intelStats, intelStatsDay } from "../intel";
 import { divisionGrids } from "./[fantraxId]/grid";
 import { cutsFor } from "./standout";
-import { FANTRAX_PLAYERS_PATH, londonDayAndDate, playerByCode } from "@epl/core";
+import { FANTRAX_PLAYERS_PATH, playerByCode } from "@epl/core";
 import { footballNow } from "../football";
 import OutLink from "../components/shell/OutLink";
 import FantraxSilent from "../components/shell/FantraxSilent";
@@ -172,7 +172,7 @@ export default async function PlayersPage({
       {shown.length > 0 && columns.some((column) => SEASON_COLUMNS.includes(column)) ? (
         <p className={QUIET_NOTE}>
           {SEASON_STATS[0].label} to {SEASON_STATS[SEASON_STATS.length - 1].label}: season to{" "}
-          {londonDayAndDate(intelStatsManifest.exportedAt)}.
+          {intelStatsDay}.
         </p>
       ) : null}
 

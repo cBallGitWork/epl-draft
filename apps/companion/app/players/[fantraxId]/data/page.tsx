@@ -5,7 +5,7 @@ import Nothing from "../../../components/shell/Nothing";
 import { LABEL, PANEL } from "@/app/desk";
 import { footballNow, seasonFixtures } from "../../../football";
 import { playerMarks } from "../../../ratings";
-import { intelCareers, intelStats, intelStatsManifest } from "../../../intel";
+import { intelCareers, intelStats, intelStatsDay } from "../../../intel";
 import { FPL_SILENT } from "../../../config";
 import QuerySelect from "../../../components/shell/QuerySelect";
 import { ALL_SEASONS, playerDataHref } from "../../routes";
@@ -110,7 +110,7 @@ async function Record({
         <>
           <SeasonTable rows={joined} season={season} club={clubs.get(seasonKey(label) ?? "") ?? null} />
           {log.heldAt === null ? null : <HeldNote at={log.heldAt} />}
-          <SeasonCounts row={intelStats.get(player.code)} at={intelStatsManifest.exportedAt} />
+          <SeasonCounts row={intelStats.get(player.code)} day={intelStatsDay} />
           <MatchLog rows={joined} />
         </>
       )}
