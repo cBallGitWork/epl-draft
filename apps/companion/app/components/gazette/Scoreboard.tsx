@@ -28,7 +28,7 @@ export default function Scoreboard({
   const promoted = live && yours !== null;
 
   return (
-    <nav aria-label="The round's scores" className="border-y border-line">
+    <nav aria-label="The gameweek's scores" className="border-y border-line">
       {promoted && yours !== null ? <Yours pairing={yours} scores={scores} mine={mine} /> : null}
       {/* No scrollbar: the snap points and the cut-off next cell say "more". */}
       <div
@@ -41,7 +41,7 @@ export default function Scoreboard({
               <span className="text-live">Live</span>
             </>
           ) : (
-            <span className="text-muted">The round</span>
+            <span className="text-muted">The gameweek</span>
           )}
         </span>
         {(promoted ? ordered.slice(1) : ordered).map((pairing) => (
