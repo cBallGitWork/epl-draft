@@ -14,6 +14,7 @@ import {
   sectionsFor,
   tabOwns,
 } from "./sections";
+import { PREM, PREM_RESULTS } from "../../prem/routes";
 import { MY_TEAM, SQUAD } from "../../squad/routes";
 
 // A rival's squad and the reader's own share a folder and differ by one segment,
@@ -145,10 +146,25 @@ describe("who draws the ground", () => {
 describe("the tabs fetched ahead", () => {
   // AutoRefresh fetches these pages, so a tap on a tab draws at once.
   it("are the bar's tabs and More on every tick, and Data's ~100KB board once, never a section behind More", () => {
-    expect(aheadOf(sectionsFor(false))).toEqual({ each: ["/", MY_TEAM, "/league", "/prem", "/news", MORE], once: ["/players"] });
+    expect(aheadOf(sectionsFor(false))).toEqual({ each: ["/", MY_TEAM, "/league", PREM_RESULTS, "/news", MORE], once: ["/players"] });
   });
 
   it("swap My Team for Live while football is on, as the bar does", () => {
-    expect(aheadOf(sectionsFor(true)).each).toEqual(["/", "/matchday", "/league", "/prem", "/news", MORE]);
+    expect(aheadOf(sectionsFor(true)).each).toEqual(["/", "/matchday", "/league", PREM_RESULTS, "/news", MORE]);
+  });
+});
+
+describe("the Prem entry", () => {
+  const prem = SECTIONS.find((section) => section.label === "Prem");
+
+  // Craig, 24 Sep 2026: "clicking prem tab, default should land on results".
+  it("lands on the results", () => {
+    expect(prem?.href).toBe(PREM_RESULTS);
+  });
+
+  it("stays current across the whole section, the table included", () => {
+    for (const path of [PREM, PREM_RESULTS, `${PREM}/fixtures`, `${PREM}/club/43`]) {
+      expect(owns(prem?.routes ?? [], path)).toBe(true);
+    }
   });
 });

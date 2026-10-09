@@ -3,7 +3,7 @@
 
 import { LEAGUE, MATCHUPS } from "../../league/routes";
 import { POOL } from "../../players/routes";
-import { CLUB, MATCH, PREM } from "../../prem/routes";
+import { CLUB, MATCH, PREM, PREM_RESULTS } from "../../prem/routes";
 import { MY_TEAM, SQUAD } from "../../squad/routes";
 import type { GlyphName } from "./glyphs";
 
@@ -72,7 +72,8 @@ export const SECTIONS: Section[] = [
   { href: LIVE, label: "Live", glyph: "live", routes: [LIVE, GAMEWEEK], onlyDuringGameweek: true },
   // "Draft" on the bar; the URL stays `/league`.
   { href: LEAGUE, label: "Draft", glyph: "league", routes: [LEAGUE], group: "comps" },
-  { href: PREM, label: "Prem", glyph: "prem", routes: [PREM], group: "comps" },
+  // Opens on the results, and stays lit across the section, the table included.
+  { href: PREM_RESULTS, label: "Prem", glyph: "prem", routes: [PREM], group: "comps" },
   // "Data" on the bar; the URL stays `/players`, because a shared URL outlives a label.
   { href: POOL, label: "Data", glyph: "data", routes: [POOL], heavy: true },
   // "Mail" on the bar; the route stays `/news`.
