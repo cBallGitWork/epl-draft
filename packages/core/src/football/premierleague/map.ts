@@ -87,7 +87,7 @@ export function mapMatchEvents(
       kind,
       minute,
       seconds,
-      absolute: kickoffMillis === null ? null : kickoffMillis + seconds * 1000,
+      absolute: wallClock(kickoffMillis, seconds),
       text: event.text,
       players: (event.playerIds ?? []).map((id) => codes.get(id) ?? null),
     });
@@ -104,7 +104,6 @@ export function mapRoundGoals(
   const goals: MatchEvent[] = [];
   for (const fixture of fixtures) {
     const fixtureCode = plFixtureCode(fixture);
-    const kickoff = fixture.kickoff?.millis;
     if (fixtureCode === null) continue;
 
     for (const goal of fixture.goals ?? []) {
@@ -119,7 +118,7 @@ export function mapRoundGoals(
         kind,
         minute: minute.split("'")[0],
         seconds: secs,
-        absolute: kickoff === undefined ? null : kickoff + secs * 1000,
+        absolute: wallClock(fixture.kickoff?.millis, secs),
         // The assist slot is always present, null when nobody assisted.
         players: [
           codes.get(goal.personId) ?? null,
@@ -158,3 +157,7 @@ export function plMatchMetrics(
   return side === undefined ? null : optaMetrics(side.M);
 }
 
+/** A moment `secs` into a match as epoch ms, the only order across fixtures; null without a kick-off time. */
+export function wallClock(kickoffMillis: number | null | undefined, secs: number): number | null {
+  return kickoffMillis == null ? null : kickoffMillis + secs * 1000;
+}
