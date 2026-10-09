@@ -31,6 +31,13 @@ describe("checkDraft", () => {
     expect(checks(`${clean} "We won," said nobody.`)).toEqual(expect.arrayContaining([expect.stringMatching(/^hard: a quotation mark/), expect.stringMatching(/send-back: a phrase this paper does not print \(said\)/)]));
   });
 
+  it("refuses a score the brief does not give even when it sits inside one the brief does", () => {
+    const block = draftBlocks("gameweek", [lateDecider()])[0];
+    expect(block).toContain("38-34");
+    const told = checkDraft(writing(`${clean} It stood at 8-3 at one stage.`), [lateDecider()], [block]).filter((f) => f.check === "a score the brief does not give");
+    expect(told.map((f) => f.evidence)).toEqual(["8-3"]);
+  });
+
   it("reads a side's eleven as a side, not as the figure 11", () => {
     expect(checks(`${clean} Every man in test2's eleven started, and the eleven's form held.`).filter((f) => f.includes("figure"))).toEqual([]);
     expect(checks(`${clean} It finished with eleven points between them.`)).toEqual(expect.arrayContaining([expect.stringMatching(/figure the brief does not give \(11\)/)]));

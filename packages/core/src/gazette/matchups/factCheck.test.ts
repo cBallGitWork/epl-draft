@@ -37,4 +37,17 @@ describe("the draft report's fact check", () => {
       { matchup: 1, quote: "Friday belonged to Pickford.", correction: "" },
     ]);
   });
+
+  it("puts right a position before a surname that ends in a letter past ASCII", () => {
+    const gross = contextOf(draftSide("A", 10, eleven("h", { 8: draftMan("Groß", "M", 7, 90, 0, { club: "Brighton" }) })), draftSide("B", 5, eleven("a")));
+    expect(knownFixes(new Map([[1, { paragraphs: ["Brighton defender Groß scored on Saturday."] }]]), [gross])).toEqual([{ matchup: 1, quote: "defender Groß", correction: "midfielder Groß" }]);
+  });
+
+  it("keeps a sentence whose day belongs to one of its two men", () => {
+    const haaland = draftMan("Haaland", "F", 6, 90, 0, { club: "Man City", goals: 1, byDay: [{ day: "2026-09-27", points: 6, minutes: 90, goals: 1, assists: 0, cleanSheets: 0 }] });
+    const saka = draftMan("Saka", "M", 7, 90, 0, { club: "Arsenal", goals: 1 });
+    const both = contextOf(draftSide("Dons", 26, eleven("h", { 10: haaland })), draftSide("Rovers", 27, eleven("a", { 5: saka })));
+    expect(knownFixes(new Map([[1, { paragraphs: ["Haaland answered Saka with a goal of his own on Sunday."] }]]), [both])).toEqual([]);
+    expect(knownFixes(new Map([[1, { paragraphs: ["Haaland and Saka both scored on Friday."] }]]), [both])).toHaveLength(1);
+  });
 });

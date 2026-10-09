@@ -51,9 +51,10 @@ export function checkDraft(writing: DraftWriting, contexts: readonly MatchupCont
     }
     const allowed = allowedFigures(ctx, block);
     for (const x of numbersIn(prose.replace(SCORE, " ").replace(SIDE_ELEVEN, " "))) if (!allowed.has(x)) fault(`${n}:matchup`, "a figure the brief does not give", "hard", String(x));
-    // A stage's own score is given too, as its two sides' points.
+    // A stage's own score is given too, as its two sides' points. Whole scores only: "8-3" is not in "38-34".
     const stages = timeline(ctx.state).flatMap((b) => [`${b.points.home}-${b.points.away}`, `${b.points.away}-${b.points.home}`]);
-    for (const [said, a, b] of prose.matchAll(SCORE)) if (!block.includes(said) && !block.includes(`${b}-${a}`) && !stages.includes(said)) fault(`${n}:matchup`, "a score the brief does not give", "hard", said);
+    const given = new Set([...block.matchAll(SCORE)].flatMap(([, a, b]) => [`${a}-${b}`, `${b}-${a}`]));
+    for (const [said] of prose.matchAll(SCORE)) if (!given.has(said) && !stages.includes(said)) fault(`${n}:matchup`, "a score the brief does not give", "hard", said);
     if (QUOTE_MARKS.test(prose)) fault(`${n}:matchup`, "a quotation mark: the paper prints nobody's words", "hard", prose.match(QUOTE_MARKS)?.[0] ?? "");
     // A man's name is never a banned word: Archie Gray is not American spelling.
     const plain = masked(prose, [...everyone.flat(), ctx.state.home.side.name, ctx.state.away.side.name, ...derbyNames(ctx.derby)]).replace(/\u0000/gu, " ");

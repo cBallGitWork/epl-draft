@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { contextOf } from "./__fixtures__/context";
-import { draftMan } from "./__fixtures__/draftMan";
+import { draftMan, goalAt } from "./__fixtures__/draftMan";
 import { draftSide, eleven } from "./__fixtures__/draftSide";
 import { lateDecider, saturdayLead } from "./__fixtures__/gw5";
 import { matchupBlock } from "./block";
-import { listFaults, type PastProse } from "./listChecks";
+import { listFaults, unbriefedNames, type PastProse } from "./listChecks";
 
 const ctx = lateDecider();
 const LEDE = "Haaland's goal nine minutes from time broke test2 on Sunday.";
@@ -84,6 +84,31 @@ describe("listFaults", () => {
   it("reads next gameweek's opponents as sides, not figures", () => {
     const page = listFaults({ paragraphs: [LEDE, "test2 fall to third and face test3 on Sunday; 123 go to test4."] }, ctx, 1, "gameweek", matchupBlock(ctx, "gameweek", 2), [], ["test3", "test4"]).map((f) => f.check);
     expect(page).not.toContain("a roll-call of men and points in one sentence");
+  });
+
+  it("reads a man keeping his own club out in one sentence, about him", () => {
+    const pickford = draftMan("Pickford", "G", 6, 90, 0, { club: "Everton", cleanSheets: 1 });
+    const saka = draftMan("Saka", "M", 2, 90, 0, { club: "Arsenal" });
+    const ctx2 = contextOf(draftSide("Dons", 26, eleven("h", { 0: pickford })), draftSide("Rovers", 22, eleven("a", { 5: saka })));
+    const own = (line: string) => listFaults({ paragraphs: [line] }, ctx2, 0, "gameweek", "", []).filter((f) => f.check === "a man keeping his own club out");
+    expect(own("Pickford kept Arsenal out on Saturday. Saka blanked for Rovers on Saturday.")).toEqual([]);
+    expect(own("Saka kept Arsenal out on Saturday.")).toHaveLength(1);
+  });
+
+  it("lets the brief's own keeper's haul and lost clean sheet stand", () => {
+    const pickford = (points: number, over = {}) => draftMan("Pickford", "G", points, 90, 0, { club: "Everton", ...over });
+    const told = (man: ReturnType<typeof draftMan>, line: string) => {
+      const keeper = contextOf(draftSide("Dons", 20 + (man.points ?? 0), eleven("h", { 0: man })), draftSide("Rovers", 22, eleven("a")));
+      return listFaults({ paragraphs: [line] }, keeper, 0, "gameweek", matchupBlock(keeper, "gameweek", 1), []).map((f) => f.check);
+    };
+    expect(told(pickford(9, { cleanSheets: 1 }), "Pickford hauled 9 in goal on Saturday.")).not.toContain("a haul is more than one return");
+    expect(told(pickford(3, { concededFirstAt: [goalAt(88)] }), "Pickford lost a clean sheet worth 4 points to a goal in the 88th minute on Saturday.")).not.toContain("a man's points misstated");
+  });
+
+  it("never reads an adverb opening a sentence as a first name from memory", () => {
+    const block = matchupBlock(ctx, "gameweek", 1);
+    for (const line of ["Twice Haaland went close on Sunday.", "Late Haaland struck on Sunday.", "Finally Haaland scored on Sunday."]) expect(unbriefedNames(line, ctx, block)).toEqual([]);
+    expect(unbriefedNames("Erling Haaland struck on Sunday.", ctx, block)).toEqual(["Erling"]);
   });
 
   it("sends back a report that leaves out automatic substitutions that changed the score", () => {
