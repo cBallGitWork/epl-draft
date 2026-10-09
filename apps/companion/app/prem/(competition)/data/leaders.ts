@@ -1,4 +1,4 @@
-import { type FigureKind, type SeasonTotals, PLACES, fixed, mean, rounded } from "@epl/core";
+import { type FigureKind, type FootballPlayer, type SeasonTotals, PLACES, fixed, mean, rounded } from "@epl/core";
 
 // The Data tab's lists: one season figure per man, best first, the top twenty and the top fifty on asking.
 
@@ -59,6 +59,18 @@ export function printed(list: LeaderList, figure: number): string {
 /** A figure held to the places its list prints, so the ranking agrees with what the reader sees. */
 export function asPrinted(list: LeaderList, figure: number): number {
   return rounded(figure, PLACES[list.kind]);
+}
+
+/** The figures a list reads besides FPL's, each by FPL code; a man with none is off that list. */
+export type Held = Readonly<Record<Exclude<Source, object>, ReadonlyMap<number, number>>>;
+
+/** Each man on the books with a figure for the list, held to the places it prints. */
+export function leadersOf(list: LeaderList, players: readonly Pick<FootballPlayer, "code" | "name" | "season">[], held: Held): Leader[] {
+  const { source } = list;
+  return players.flatMap(({ code, name, season }) => {
+    const figure = typeof source === "object" ? source.fpl(season) : held[source].get(code);
+    return figure === undefined ? [] : [{ code, name, figure: asPrinted(list, figure) }];
+  });
 }
 
 /** The list asked for among those offered, or the first: a stale key in a shared link still shows a list. */

@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { LISTS, asPrinted, listFor, printed, ranked, seasonRatings } from "./leaders";
+import type { SeasonTotals } from "@epl/core";
+import { LISTS, asPrinted, leadersOf, listFor, printed, ranked, seasonRatings } from "./leaders";
 
 const man = (code: number, name: string, figure: number) => ({ code, name, figure });
+const footballer = (code: number, name: string, goals: number) => ({ code, name, season: { goals } as SeasonTotals });
 
 describe("ranked", () => {
   it("puts the biggest first and lets level men share a place", () => {
@@ -45,6 +47,21 @@ describe("the lists' figures", () => {
 
   it("falls back to the top scorers for a key it does not know", () => {
     expect(listFor("nonsense").key).toBe("goals");
+  });
+});
+
+describe("leadersOf", () => {
+  const players = [footballer(1, "Saka", 3), footballer(2, "Palmer", 0)];
+  const held = { rating: new Map([[1, 7.46]]), points: new Map([[2, 120], [9, 400]]), defcon: new Map<number, number>() };
+
+  it("reads FPL's count for every man on the books, his nought included", () => {
+    expect(leadersOf(listFor("goals"), players, held)).toEqual([man(1, "Saka", 3), man(2, "Palmer", 0)]);
+  });
+
+  it("reads a held figure only for a man on the books who has one, held to the places it prints", () => {
+    expect(leadersOf(listFor("rating"), players, held)).toEqual([man(1, "Saka", 7.5)]);
+    expect(leadersOf(listFor("points"), players, held)).toEqual([man(2, "Palmer", 120)]);
+    expect(leadersOf(listFor("defcon"), players, held)).toEqual([]);
   });
 });
 

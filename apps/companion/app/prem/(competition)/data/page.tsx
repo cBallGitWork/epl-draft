@@ -10,7 +10,7 @@ import LeaderBoard, { type Row } from "./LeaderBoard";
 import QuerySelect from "../../../components/shell/QuerySelect";
 import { defconPricing, poolPositions } from "../../../defcon";
 import { HEADING_PLATE } from "@/app/desk";
-import { LISTS, MOST, SECTIONS, TOP, asPrinted, listFor, ranked, seasonRatings, type Leader, type LeaderList } from "./leaders";
+import { LISTS, MOST, SECTIONS, TOP, leadersOf, listFor, ranked, seasonRatings, type LeaderList } from "./leaders";
 
 // The season's leaders as plain lists, each to fifty on asking (Craig, 1 Oct 2026).
 // A phone shows the list its picker names; the desk shows every list by section, the asked one to fifty.
@@ -53,22 +53,10 @@ export default async function DataPage({ searchParams }: { searchParams: Search 
       if (ours !== null) defcon.set(row.fplCode, ours);
     }
   }
-  const ratings = seasonRatings(seasonMarks());
-
-  const leadersOf = (list: LeaderList): Leader[] => {
-    const { source } = list;
-    if (typeof source === "object") {
-      return players.map((p) => ({ code: p.code, name: p.name, figure: asPrinted(list, source.fpl(p.season)) }));
-    }
-    const figures = source === "rating" ? ratings : source === "points" ? points : defcon;
-    return [...figures].flatMap(([code, figure]) => {
-      const player = byCode.get(code);
-      return player === undefined || !onTheBooks(player) ? [] : [{ code, name: player.name, figure: asPrinted(list, figure) }];
-    });
-  };
+  const held = { rating: seasonRatings(seasonMarks()), points, defcon };
 
   const rowsOf = (list: LeaderList, n: number): Row[] =>
-    ranked(leadersOf(list), n).map((leader) => {
+    ranked(leadersOf(list, players, held), n).map((leader) => {
       const player: FootballPlayer | undefined = byCode.get(leader.code);
       return { ...leader, club: player === undefined ? undefined : clubs.get(player.clubId), href: poolHref(league, leader.code) };
     });
