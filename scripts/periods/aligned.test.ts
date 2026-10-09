@@ -21,4 +21,8 @@ describe("holdsOnlyItsOwn", () => {
   it("fails a blank period", () => {
     expect(aligned(6, [])).toBe(false);
   });
+
+  it("passes a league whose periods are not numbered as FPL's gameweeks", () => {
+    expect(aligned(1, GW6)).toBe(true);
+  });
 });
