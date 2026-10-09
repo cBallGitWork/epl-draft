@@ -201,9 +201,9 @@ select.cm-bevel {
   }
 }
 
-/* Under the installed iPhone app's status bar: the ground runs on beneath, blurred and darkened as iOS's own bars are,
-   so the white clock reads over the photograph and over a page scrolled under it. As tall as the status bar, which is
-   nothing anywhere else. */
+/* Under the installed iPhone app's white clock, iOS 26's scroll-edge effect: a blur and a shade that fade to nothing,
+   so the ground runs on to the top and a page scrolled beneath goes soft under the clock. No background-color, which
+   would read as a bar. As tall as the status bar, which is nothing anywhere else. */
 .cm-statusbar {
   position: fixed;
   z-index: 60;
@@ -211,11 +211,20 @@ select.cm-bevel {
   top: 0;
   height: var(--safe-top);
   pointer-events: none;
-  background: color-mix(in oklch, var(--color-bg) 45%, transparent);
-  -webkit-backdrop-filter: blur(12px) brightness(0.4);
-  backdrop-filter: blur(12px) brightness(0.4);
-  /* Full under the clock, fading out below it, so the band has no hard edge against the photograph. */
-  mask-image: linear-gradient(to bottom, black 65%, transparent);
+  background-image: linear-gradient(
+    to bottom,
+    rgb(var(--shade) / 0.5),
+    rgb(var(--shade) / 0.3) 55%,
+    transparent
+  );
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  mask-image: linear-gradient(to bottom, black 60%, transparent);
+}
+
+/* The shade's ink, as RGB channels: black over the photograph. */
+:root {
+  --shade: 0 0 0;
 }
 
 /* Pull to refresh (shell/PullToRefresh): a plate that comes down from the top with the finger, its arrow turning,

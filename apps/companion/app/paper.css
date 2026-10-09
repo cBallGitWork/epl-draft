@@ -4,8 +4,11 @@
 /* ---- The paper --------------------------------------------------------------
    Ink on La Gazzetta's rosa, plus one print red shared by the masthead rules and the LIVE mark.
    Every other mark is ink at an opacity: that discipline is what reads as newsprint. */
-.paper {
+:root {
   --paper: #f6ddd2;
+}
+
+.paper {
   --paper-ink: #2a2018;
   --paper-rule: rgb(42 32 24 / 0.18);
   /* Deeper than the league's brand red, which glowed on this stock; 7.4:1, so it carries small caps. */
@@ -46,16 +49,13 @@
   font-optical-sizing: auto;
 }
 
-/* Under the installed iPhone app's status bar, a band of the paper's ink for its white clock, over the desk's fade.
-   It wears `.paper` for the ink, which is defined there. */
-.paper-statusbar {
-  position: fixed;
-  z-index: 61;
-  inset-inline: 0;
-  top: 0;
-  height: var(--safe-top);
-  pointer-events: none;
-  background: var(--paper-ink);
+/* On a phone the paper is the root's ground, so the stock runs under the clock, the home indicator and a landscape
+   notch, and Safari 26 tints its bars rosa; the status bar's shade takes the paper's ink. From `lg` the desk frames it. */
+@media (width < 64rem) {
+  html:has(.paper-page) {
+    background: var(--paper);
+    --shade: 42 32 24;
+  }
 }
 
 /* A colour plate printed on the sheet: the pitch and the league crest keep the desk's tokens.

@@ -63,8 +63,13 @@
   margin-inline: calc(var(--page-gutter) * -1);
 }
 
-body {
+/* The ground on the root, which paints the whole screen, insets and overscroll included, and is the colour iOS 26
+   Safari tints its status area and bars with. `body` stays clear, or it would paint over the fixed photograph. */
+html {
   background: var(--color-bg);
+}
+
+body {
   color: var(--color-ink);
   font-family: var(--font-sans);
   /* Keeps the foot of the page clear of the thumb rail's inset; the rail carries its own, being fixed. */
