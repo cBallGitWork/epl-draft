@@ -1,3 +1,4 @@
+import { optaMetrics } from "./map";
 import type { RawPlTeamStats } from "./rawStats";
 
 // One club's season in Opta's counting, off `/stats/team`. Pure: no clock, no network (CODE_RULES §5).
@@ -39,9 +40,9 @@ export function plClubSeason(raw: RawPlTeamStats): PlClubSeason | null {
   const clubCode = opta?.startsWith("t") ? Number(opta.slice(1)) : NaN;
   if (!Number.isInteger(clubCode) || raw.stats.length === 0) return null;
 
-  const byName = new Map(raw.stats.map((metric) => [metric.name, metric.value]));
+  const metric = optaMetrics(raw.stats);
   // Opta's names; a figure of two names is their sum.
-  const sum = (...names: string[]) => names.reduce((total, name) => total + (byName.get(name) ?? 0), 0);
+  const sum = (...names: string[]) => names.reduce((total, name) => total + metric(name), 0);
   return {
     clubCode,
     goals: sum("goals"),

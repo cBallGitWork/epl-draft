@@ -1,3 +1,4 @@
+import { optaMetrics } from "./map";
 import type { RawPlFixture } from "./raw";
 import type { RawPlPlayerStats } from "./rawStats";
 
@@ -47,9 +48,9 @@ function partsOf(read: (part: Part) => number): MatchParts {
 
 /** His parts in one match; null when he was not on the pitch in it. Opta omits a nought, so an absent metric is 0. */
 export function plMatchParts(raw: RawPlPlayerStats): MatchParts | null {
-  const byName = new Map((raw.stats ?? []).map((metric) => [metric.name, metric.value]));
-  if ((byName.get("mins_played") ?? 0) <= 0) return null;
-  return partsOf((part) => byName.get(METRIC[part]) ?? 0);
+  const metric = optaMetrics(raw.stats ?? []);
+  if (metric("mins_played") <= 0) return null;
+  return partsOf((part) => metric(METRIC[part]));
 }
 
 /** His matches added up; null when there are none. */
