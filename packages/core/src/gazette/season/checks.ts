@@ -1,7 +1,7 @@
 import { SEASON_RANKINGS } from "../../config";
 import { americanisms, banned } from "../banned";
-import { columnRules, faultLog, lawroProse, type CheckContext, type Fault, type Report } from "../predictions/checks";
-import { masked, mentionAt, sentences, wordCount } from "../predictions/prose";
+import { columnRules, faultLog, faultOnMatch, lawroProse, type CheckContext, type Fault, type Report } from "../predictions/checks";
+import { lengthOf, masked, mentionAt, sentences, wordCount } from "../predictions/prose";
 import { REPORT_FPL } from "../reports/words";
 import type { SeasonCalls } from "./calls";
 
@@ -70,7 +70,7 @@ export function checkSeason(draft: SeasonDraft, calls: SeasonCalls, squads: Read
   function rankingRules(section: string, text: string): void {
     const plain = masked(text, ctx.names);
     for (const word of banned(plain, SEASON_BANNED)) fault(section, "banned", "send-back", word);
-    if (DRAFT_ROUND.test(plain)) fault(section, "banned", "send-back", plain.match(DRAFT_ROUND)?.[0] ?? "");
+    faultOnMatch(fault, section, "banned", "send-back", plain, DRAFT_ROUND);
     for (const word of americanisms(plain)) fault(section, "not British football English", "send-back", word);
     // A place beside one side must be the place the desk gave it.
     const own = section.startsWith("table:") ? sides.get(section.slice("table:".length)) : undefined;
@@ -93,7 +93,7 @@ function lineRules(draft: SeasonDraft, calls: SeasonCalls, squads: ReadonlyMap<s
     const line = draft.table.get(side.teamId) ?? "";
     if (line.trim() === "") continue;
     const key = lineKey(side.teamId);
-    if (counted(line) > most || wordCount(line) > words) fault(key, "length", "send-back", `${sentences(line).length} sentences, ${wordCount(line)} words`);
+    if (counted(line) > most || wordCount(line) > words) fault(key, "length", "send-back", lengthOf(line));
     const opening = (line.toLowerCase().match(/[\p{L}'’]+/gu) ?? []).slice(0, 2).join(" ");
     if (openings.has(opening)) fault(key, "opens like another side's line", "send-back", opening);
     else openings.set(opening, side.teamId);
@@ -113,7 +113,7 @@ function openingRules(opening: string, calls: SeasonCalls, fault: Report): void 
   if (opening.trim() === "") return;
   const said = counted(opening);
   const [least, most] = SEASON_RANKINGS.opening;
-  if (said < least || said > most) fault("opening", "length", "send-back", `${sentences(opening).length} sentences, ${wordCount(opening)} words`);
+  if (said < least || said > most) fault("opening", "length", "send-back", lengthOf(opening));
   const may = [calls.sides[0].teamId, calls.sides[calls.sides.length - 1].teamId];
   for (const side of calls.sides) {
     if (!may.includes(side.teamId) && mentionAt(opening, side.name) !== -1) fault("opening", "names a side the desk did not put here", "send-back", side.name);

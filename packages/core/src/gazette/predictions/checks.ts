@@ -5,7 +5,7 @@ import { escapeRegExp } from "../../regExp";
 import { strangers } from "../strangers";
 import { CORE_MARK, type PastLine } from "./past";
 import type { PredictionCall } from "./pick";
-import { masked, mentionAt, ngrams, numbersIn, sentences, wordCount } from "./prose";
+import { lengthOf, masked, mentionAt, ngrams, numbersIn, sentences, wordCount } from "./prose";
 import { COMFORTABLE, DESK_BANNED, LAWRO_BANNED, LAWRO_CAPPED, LAWRO_FAMOUS, LAWRO_NEVER, LINEUP_CLAIMS } from "./words";
 
 // The editor: every rule Lawro is given, checked after he files. A hard fault never prints; a
@@ -128,7 +128,7 @@ function frameRules(ties: readonly [string, string][], sides: ReadonlySet<string
   ];
   for (const [check, max, hit] of frames) {
     const hits = ties.filter(([, text]) => hit(text));
-    for (const [section, text] of hits.slice(max)) fault(section, check, "send-back", sentences(text).at(-1) ?? text.slice(0, 60));
+    for (const [section, text] of hits.slice(max)) fault(section, check, "send-back", sentences(text).at(-1) ?? excerpt(text));
   }
 }
 
@@ -140,9 +140,9 @@ export function lawroProse(ctx: CheckContext, sides: ReadonlySet<string>, fault:
   const known = new Set(numbersIn(ctx.facts));
 
   const everywhere = (section: string, text: string, words: readonly string[]) => {
-    for (const pattern of LINEUP_CLAIMS) if (pattern.test(text)) fault(section, "line-up", "hard", text.match(pattern)?.[0] ?? "");
-    if (QUOTES.test(text)) fault(section, "quotation marks", "hard", text.match(QUOTES)?.[0] ?? "");
-    if (/\d\.\d/u.test(text)) fault(section, "a decimal", "hard", text.match(/\d+\.\d+/u)?.[0] ?? "");
+    for (const pattern of LINEUP_CLAIMS) faultOnMatch(fault, section, "line-up", "hard", text, pattern);
+    faultOnMatch(fault, section, "quotation marks", "hard", text, QUOTES);
+    faultOnMatch(fault, section, "a decimal", "hard", text, /\d+\.\d+/u);
     for (const word of banned(text, never)) fault(section, "never", "hard", word);
     // "I'll" is a capital that is nobody, and so is a word standing as its own sentence: "Lovely."
     const alone = new Set(sentences(text).map((sentence) => sentence.replace(/[.?!]+$/u, "")));
@@ -156,7 +156,7 @@ export function lawroProse(ctx: CheckContext, sides: ReadonlySet<string>, fault:
     deck: (text) => everywhere("deck", text, DESK_BANNED),
     section: (section, text) => {
       everywhere(section, text, exempt([...LAWRO_BANNED, ...LAWRO_FAMOUS]));
-      for (const [check, pattern] of TICS) if (pattern.test(text)) fault(section, check, "send-back", text.match(pattern)?.[0] ?? "");
+      for (const [check, pattern] of TICS) faultOnMatch(fault, section, check, "send-back", text, pattern);
       for (const side of sides) {
         const hosting = text.match(new RegExp(`${escapeRegExp(side)}${AT_HOME}`, "iu"));
         if (hosting !== null) fault(section, "a league side at home", "send-back", hosting[0]);
@@ -174,6 +174,17 @@ export function lawroProse(ctx: CheckContext, sides: ReadonlySet<string>, fault:
 /** Where a check files a fault: the section it is in, the rule, how hard, and the words that broke it. */
 export type Report = (section: string, check: string, severity: Severity, evidence: string) => void;
 
+/** Files a fault quoting the words `pattern` finds in `text`, when it finds any. */
+export function faultOnMatch(fault: Report, section: string, check: string, severity: Severity, text: string, pattern: RegExp): void {
+  const found = text.match(pattern);
+  if (found !== null) fault(section, check, severity, found[0]);
+}
+
+/** The opening of a section, quoted when no one sentence of it broke the rule. */
+function excerpt(text: string): string {
+  return text.slice(0, LIMITS.quote);
+}
+
 /** A fresh fault list and the `Report` that files into it. */
 export function faultLog(): { faults: Fault[]; fault: Report } {
   const faults: Fault[] = [];
@@ -183,9 +194,9 @@ export function faultLog(): { faults: Fault[]; fault: Report } {
 function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckContext, sides: ReadonlySet<string>, fault: Report): void {
   const [least, most, words] = call.callsTeamId === null ? LIMITS.noCall : call.instinct === null ? LIMITS.tie : LIMITS.gut;
   const count = sentences(line).length;
-  if (count < least || count > most || wordCount(line) > words) fault(key, "length", "send-back", `${count} sentences, ${wordCount(line)} words`);
-  if (SCORELINE.test(line)) fault(key, "a score in the prose", "hard", line.match(SCORELINE)?.[0] ?? "");
-  if (!VERDICT.test(line)) fault(key, "no verdict of his own", "send-back", line.slice(0, 60));
+  if (count < least || count > most || wordCount(line) > words) fault(key, "length", "send-back", lengthOf(line));
+  faultOnMatch(fault, key, "a score in the prose", "hard", line, SCORELINE);
+  if (!VERDICT.test(line)) fault(key, "no verdict of his own", "send-back", excerpt(line));
   if (UNNAMED.test(line)) fault(key, "men he never names", "send-back", sentences(line).find((sentence) => UNNAMED.test(sentence)) ?? "theirs");
   const derby = ctx.derbies?.get(key) ?? [];
   if (derby.length > 0 && !derby.some((name) => mentionAt(line, name) !== -1)) fault(key, "the derby not named", "send-back", derby[0]);
@@ -247,7 +258,7 @@ function shapeRules(key: string, line: string, sides: ReadonlySet<string>, fault
   const opensOn = (paragraph: string) =>
     [...sides].map((side) => ({ side, at: mentionAt(paragraph, side) })).filter(({ at }) => at !== -1).sort((a, b) => a.at - b.at)[0]?.side ?? null;
   const [first, second, verdict] = paragraphs;
-  if (opensOn(first) === null || opensOn(first) === opensOn(second)) fault(key, "the second paragraph not on the other side", "send-back", second.slice(0, 60));
+  if (opensOn(first) === null || opensOn(first) === opensOn(second)) fault(key, "the second paragraph not on the other side", "send-back", excerpt(second));
   if (wordCount(verdict) < LIMITS.callWords) fault(key, "a call with no reason", "send-back", verdict);
 }
 
@@ -255,7 +266,7 @@ function shapeRules(key: string, line: string, sides: ReadonlySet<string>, fault
 export function columnRules(intro: string, prose: readonly [string, string][], ctx: CheckContext, fault: Report, opening = "intro"): void {
   const [least, most, words] = LIMITS.intro;
   const count = sentences(intro).length;
-  if (count < least || count > most || wordCount(intro) > words) fault(opening, "length", "send-back", `${count} sentences, ${wordCount(intro)} words`);
+  if (count < least || count > most || wordCount(intro) > words) fault(opening, "length", "send-back", lengthOf(intro));
   const all = prose.map(([, text]) => text).join(" ");
   if (wordCount(all) > LIMITS.column) fault("column", "length", "send-back", `${wordCount(all)} words`);
   if ((all.match(/\?/gu) ?? []).length > LIMITS.questions) fault("column", "more than two questions", "send-back", "?");

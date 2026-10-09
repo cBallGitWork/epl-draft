@@ -1,5 +1,5 @@
 import { PREDICTIONS } from "../../config";
-import { howMany, listed } from "../../format";
+import { howMany, listed, spelled } from "../../format";
 import { ordinal } from "../../league/ordinal";
 import { groupedBy } from "../../grouped";
 import type { PredictionCall } from "../predictions/pick";
@@ -82,13 +82,14 @@ function streak(man: SquadMan): string | null {
   const last = games[games.length - 1];
   const sum = (key: "goals" | "assists" | "cleanSheets" | "minutes") => games.reduce((total, game) => total + game[key], 0);
   const played = games.every((game) => game.minutes >= 60);
-  if (games.every((game) => game.minutes === 0)) return man.availability.state === "fit" ? "is fit again after missing his last two games" : null;
+  const span = `his last ${spelled(PREDICTIONS.recentGames)} games`;
+  if (games.every((game) => game.minutes === 0)) return man.availability.state === "fit" ? `is fit again after missing ${span}` : null;
   if (last.minutes === 0 && man.availability.state === "fit") return "missed last week and is fit again";
-  if (games.every((game) => game.goals > 0)) return "scored in each of his last two games";
+  if (games.every((game) => game.goals > 0)) return `scored in each of ${span}`;
   const back = man.positions.some(isBack);
-  if (back && games.every((game) => game.cleanSheets > 0)) return "kept a clean sheet in each of his last two games";
-  if (sum("goals") + sum("assists") >= 2) return `has ${count(sum("goals"), "goal")} and ${count(sum("assists"), "assist")} in his last two games`;
-  if (played && !back && sum("goals") + sum("assists") === 0) return "has gone quiet, no goal and no assist in his last two games";
+  if (back && games.every((game) => game.cleanSheets > 0)) return `kept a clean sheet in each of ${span}`;
+  if (sum("goals") + sum("assists") >= 2) return `has ${count(sum("goals"), "goal")} and ${count(sum("assists"), "assist")} in ${span}`;
+  if (played && !back && sum("goals") + sum("assists") === 0) return `has gone quiet, no goal and no assist in ${span}`;
   return null;
 }
 

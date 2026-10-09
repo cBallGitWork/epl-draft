@@ -14,6 +14,11 @@ export function wordCount(text: string): number {
   return text.split(/\s+/u).filter((word) => /[\p{L}\p{N}]/u.test(word)).length;
 }
 
+/** How long the text runs, as a length fault quotes it: "3 sentences, 41 words". */
+export function lengthOf(text: string): string {
+  return `${sentences(text).length} sentences, ${wordCount(text)} words`;
+}
+
 const UNITS: Record<string, number> = {
   nought: 0, zero: 0, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
   eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18,

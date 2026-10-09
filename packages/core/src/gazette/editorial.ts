@@ -91,6 +91,8 @@ export const LAWRO_LIMITS = {
   callWords: 5,
   /** Times one tie may name a side; past that, the reader knows whose men they are. */
   sideNamed: 3,
+  /** Characters of a section a fault quotes when no one sentence of it broke the rule. */
+  quote: 60,
   /** The skit writer's rewrite: words at most, words longer than the sentence it replaces, and a kicker's words. */
   skit: { words: 20, longer: 6, kicker: 3 },
 } as const;
