@@ -7,7 +7,6 @@ export type {
   LeaguePlayerState,
   LeagueTeam,
   LeagueTransaction,
-  BlockPlayer,
   TradeBlock,
   PeriodRosters,
   RosterLimits,
@@ -55,7 +54,7 @@ export type { Eligibility, Move } from "./moves";
 export { violations } from "./violations";
 export { formations } from "./formations";
 export { leagueLimits, minimumsOf } from "./minimums";
-export { derbyBrief, derbyNames, derbyOf } from "./derbies";
+export { derbyNames, derbyOf } from "./derbies";
 export type { Derby, DerbyName } from "./derbies";
 export type { Violation } from "./violations";
 
@@ -79,12 +78,10 @@ export { cupGroups, cupPlan } from "./cups/plan";
 export type { CupStage } from "./cups/plan";
 
 export { FantraxError } from "./fantrax/errors";
-export { categoryPoints, returnPoints } from "./scoring";
-export type { ScoringCategory, ScoringRules } from "./scoring";
+export { categoryPoints, pointsFor, returnPoints } from "./scoring";
+export type { LeagueScoring, ScoringCategory, ScoringRules } from "./scoring";
 export { orphaned, unacknowledged } from "./fantrax/baseline";
 export type { AcknowledgedDifference } from "./fantrax/baseline";
-export { pointsFor } from "./scoring";
-export type { LeagueScoring } from "./scoring";
 export { rulesCard, scoredSlots } from "./rulesCard";
 export {
   mapBenchPlayerPoints,
@@ -92,8 +89,7 @@ export {
   mapLiveScores,
   mapProjectedTotals,
 } from "./fantrax/livescoring";
-export { mapPoolStats, mapTeamStats } from "./fantrax/stats";
-export { numeric } from "./fantrax/stats";
+export { mapPoolStats, mapTeamStats, numeric } from "./fantrax/stats";
 export { mapStatSheet } from "./fantrax/statSheet";
 export type { StatSheet } from "./fantrax/statSheet";
 export { mapBenchOrder } from "./fantrax/benchOrder";
@@ -104,7 +100,7 @@ export { mapTransactions, orderKey } from "./fantrax/transactions";
 export { mapPositionNames, mapTradeBlocks } from "./fantrax/tradeBlock";
 export { fetchPendingTrades, fetchPositionRefs, fetchTradeBlocks } from "./fantrax/tradeClient";
 export { mapPendingTrades } from "./fantrax/pendingTrades";
-export type { ProposedMove, TradeProposal } from "./proposals";
+export type { TradeProposal } from "./proposals";
 // Everything written about one player.
 export { fetchPlayerProfile, fetchPlayerStories, fetchPoolNews, fetchPoolStats } from "./fantrax/playerClient";
 export { mapPlayerStories, mapPoolNews } from "./fantrax/playerNews";

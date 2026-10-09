@@ -1,5 +1,5 @@
 import { LINEUP_LOCK_LEAD_MINUTES, SAVE_MARGIN_MINUTES } from "../config";
-import { MS_PER_DAY, MS_PER_MINUTE } from "../time";
+import { MS_PER_DAY, MS_PER_MINUTE, instantOf } from "../time";
 import type { LeaguePeriod } from "./types";
 
 // Which FPL gameweek falls in which Fantrax period, by kickoff (FPL's deadline lands a period early); kickoffs are
@@ -36,19 +36,17 @@ export function periodGameweeks(
   periods: LeaguePeriod[],
   kickoffs: GameweekKickoff[],
 ): PeriodGameweeks[] {
-  // Instants, never strings: Fantrax's "-0400" and FPL's "Z" sort the wrong way lexically.
-  const instants = kickoffs
-    .map((k) => ({ gameweek: k.gameweek, at: Date.parse(k.kickoff) }))
-    .filter((k) => Number.isFinite(k.at));
+  const instants = kickoffs.flatMap((k) => {
+    const at = instantOf(k.kickoff);
+    return at === null ? [] : [{ gameweek: k.gameweek, at }];
+  });
 
   return periods.map((period) => {
-    const start = Date.parse(period.start);
-    const end = Date.parse(period.end);
+    const holds = periodHolds(period);
     const held = new Map<number, { matches: number; first: number }>();
 
-    // Inclusive at both ends: consecutive periods end at :59 and start at the next :00. An unread bound holds nothing.
     for (const { gameweek, at } of instants) {
-      if (!(at >= start && at <= end)) continue;
+      if (!holds(at)) continue;
       const seen = held.get(gameweek);
       held.set(gameweek, { matches: (seen?.matches ?? 0) + 1, first: Math.min(seen?.first ?? at, at) });
     }
@@ -62,12 +60,16 @@ export function periodGameweeks(
  *  played in, and its gameweek's other matches are not. An undated fixture, or a period not given, is in none. */
 export function periodFixtures<F extends { kickoff: string | null }>(period: LeaguePeriod | undefined, fixtures: readonly F[]): F[] {
   if (period === undefined) return [];
-  const start = Date.parse(period.start);
-  const end = Date.parse(period.end);
-  return fixtures.filter((fixture) => {
-    const at = Date.parse(fixture.kickoff ?? "");
-    return at >= start && at <= end;
-  });
+  const holds = periodHolds(period);
+  return fixtures.filter((fixture) => holds(instantOf(fixture.kickoff ?? "")));
+}
+
+/** Whether a period holds an instant, inclusive at both ends: consecutive periods end at :59 and start at the next :00.
+ *  Instants, never strings, as Fantrax's "-0400" and FPL's "Z" sort wrong lexically; an unread bound holds nothing. */
+function periodHolds(period: LeaguePeriod): (at: number | null) => boolean {
+  const start = instantOf(period.start);
+  const end = instantOf(period.end);
+  return (at) => at !== null && start !== null && end !== null && at >= start && at <= end;
 }
 
 // The league's lock is a set time before the period's first kickoff, never its boundary; Fantrax publishes the
@@ -75,17 +77,15 @@ export function periodFixtures<F extends { kickoff: string | null }>(period: Lea
 
 /** The lineup lock for a period whose first ball is at `firstKickoffIso`; null for an unparseable instant. */
 export function locksAt(firstKickoffIso: string): string | null {
-  const kickoff = Date.parse(firstKickoffIso);
-  return Number.isNaN(kickoff)
-    ? null
-    : new Date(kickoff - LINEUP_LOCK_LEAD_MINUTES * MS_PER_MINUTE).toISOString();
+  const kickoff = instantOf(firstKickoffIso);
+  return kickoff === null ? null : new Date(kickoff - LINEUP_LOCK_LEAD_MINUTES * MS_PER_MINUTE).toISOString();
 }
 
 /** Whether a lineup save may still be sent: until `SAVE_MARGIN_MINUTES` before the lock, never without one. */
 export function saveOpen(locksAtIso: string | null, nowIso: string): boolean {
-  const locks = locksAtIso === null ? NaN : Date.parse(locksAtIso);
-  const now = Date.parse(nowIso);
-  return !Number.isNaN(locks) && !Number.isNaN(now) && now < locks - SAVE_MARGIN_MINUTES * MS_PER_MINUTE;
+  const locks = locksAtIso === null ? null : instantOf(locksAtIso);
+  const now = instantOf(nowIso);
+  return locks !== null && now !== null && now < locks - SAVE_MARGIN_MINUTES * MS_PER_MINUTE;
 }
 
 /** The first ball kicked inside a period, or null for an international break or a period FPL has not dated. */
@@ -93,15 +93,11 @@ export function firstKickoff(
   period: LeaguePeriod,
   kickoffs: readonly GameweekKickoff[],
 ): string | null {
-  // Instants, never strings: the league's -0400 and FPL's Z sort the wrong way lexically.
-  const start = Date.parse(period.start);
-  const end = Date.parse(period.end);
-  if (Number.isNaN(start) || Number.isNaN(end)) return null;
-
+  const holds = periodHolds(period);
   let earliest: { iso: string; at: number } | null = null;
   for (const kickoff of kickoffs) {
-    const at = Date.parse(kickoff.kickoff);
-    if (Number.isNaN(at) || at < start || at > end) continue;
+    const at = instantOf(kickoff.kickoff);
+    if (at === null || !holds(at)) continue;
     if (earliest === null || at < earliest.at) earliest = { iso: kickoff.kickoff, at };
   }
   return earliest?.iso ?? null;

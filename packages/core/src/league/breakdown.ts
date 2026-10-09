@@ -1,7 +1,7 @@
+import { sumOf } from "../sum";
 import type { ScoringCategory } from "./scoring";
 import { wordsOf } from "./categoryWords";
 import type { LivePlayerCategory } from "./points";
-
 // Why a player is on his number, by the league's own scoring categories: read from Fantrax, never computed.
 
 /** One category's contribution to a player's total. */
@@ -73,7 +73,7 @@ function menByCategory(
 
 /** A side's figure in one band, or null where it registered nothing: a sum of no men is not 0. */
 function total(men: readonly CategoryMan[]): number | null {
-  return men.length === 0 ? null : men.reduce((sum, man) => sum + man.points, 0);
+  return men.length === 0 ? null : sumOf(men, (man) => man.points);
 }
 
 /** Both squads' scoring by category, the union of the two, largest combined magnitude first; men by points,

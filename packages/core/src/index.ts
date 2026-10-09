@@ -6,6 +6,7 @@ export * from "./time";
 export * from "./format";
 export * from "./grouped";
 export * from "./mean";
+export * from "./sum";
 export * from "./untrusted";
 export * from "./regExp";
 export * from "./football";

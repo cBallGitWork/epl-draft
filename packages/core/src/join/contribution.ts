@@ -1,5 +1,5 @@
 import type { PlayerMatchStats } from "../football/types";
-
+import { sumOf } from "../sum";
 // What one player has done this gameweek, added up across his matches in it: FPL's counts, never Fantrax's points.
 // There is no `played` flag: FPL carries a zero row for every man from the first whistle, so `kickedOff` answers that.
 
@@ -21,22 +21,21 @@ export interface Contribution {
 }
 
 export function contribution(stats: readonly PlayerMatchStats[]): Contribution {
-  const sum = (pick: (s: PlayerMatchStats) => number) => stats.reduce((n, s) => n + pick(s), 0);
   // His appearances: the zero row for a match not yet played must not take Saturday's clean sheet away.
   const appearances = stats.filter((s) => s.minutes > 0);
 
   return {
-    minutes: sum((s) => s.minutes),
-    goals: sum((s) => s.goals),
-    assists: sum((s) => s.assists),
+    minutes: sumOf(stats, (s) => s.minutes),
+    goals: sumOf(stats, (s) => s.goals),
+    assists: sumOf(stats, (s) => s.assists),
     cleanSheet: appearances.length > 0 && appearances.every((s) => s.cleanSheet),
     cleanSheets: appearances.filter((s) => s.cleanSheet).length,
-    goalsConceded: sum((s) => s.goalsConceded),
-    ownGoals: sum((s) => s.ownGoals),
-    saves: sum((s) => s.saves),
-    penaltiesSaved: sum((s) => s.penaltiesSaved),
-    penaltiesMissed: sum((s) => s.penaltiesMissed),
-    yellowCards: sum((s) => s.yellowCards),
-    redCards: sum((s) => s.redCards),
+    goalsConceded: sumOf(stats, (s) => s.goalsConceded),
+    ownGoals: sumOf(stats, (s) => s.ownGoals),
+    saves: sumOf(stats, (s) => s.saves),
+    penaltiesSaved: sumOf(stats, (s) => s.penaltiesSaved),
+    penaltiesMissed: sumOf(stats, (s) => s.penaltiesMissed),
+    yellowCards: sumOf(stats, (s) => s.yellowCards),
+    redCards: sumOf(stats, (s) => s.redCards),
   };
 }

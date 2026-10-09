@@ -1,6 +1,7 @@
 // When to try again and when to stop, shared by both layers; the sleeping and the randomness live in `fetch.ts`.
 
 import { HTTP_RETRY_AFTER_MAX_MS } from "../config";
+import { MS_PER_SECOND } from "../time";
 
 /** A busy (429) or failing (5xx) provider; never a 404, which is an answer and fails the same again. */
 export function worthRetrying(status: number): boolean {
@@ -40,7 +41,7 @@ function statedDelay(retryAfter: string | null, now: number): number | null {
   if (stated === "") return null;
 
   const seconds = Number(stated);
-  if (Number.isFinite(seconds) && seconds >= 0) return Math.round(seconds * 1000);
+  if (Number.isFinite(seconds) && seconds >= 0) return Math.round(seconds * MS_PER_SECOND);
 
   const at = Date.parse(stated);
   if (Number.isNaN(at)) return null;

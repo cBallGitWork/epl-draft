@@ -116,6 +116,9 @@ export const CLEAN_SHEET_MINUTES = 60;
 /** Minutes in a half: the clock's first half reads this or less, added time aside. */
 export const HALF_MINUTES = 45;
 
+/** Minutes in a whole match, added time aside: what a per-90 rate and a full appearance are measured over. */
+export const FULL_MATCH_MINUTES = 2 * HALF_MINUTES;
+
 /** Minutes past its kickoff that a match FPL still has as not started counts as called off: FPL leaves a postponed
  *  fixture dated, which held the round under way, and the live poll rate, for days. */
 export const POSTPONED_AFTER_MINUTES = 180;

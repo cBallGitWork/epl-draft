@@ -1,6 +1,6 @@
+import { sumOf } from "../sum";
 import type { RawClassicLeague, RawEntry, RawLiveExplain, RawPicks } from "./raw";
 import type { FplEntry, FplMiniLeague, FplPick, FplScoreLine, FplSquad } from "./types";
-
 // A manager's entry, cleaned but not interpreted: a pre-season null stays null, since it is not "scored nothing".
 
 export function mapEntry(raw: RawEntry): FplEntry {
@@ -48,7 +48,7 @@ export function mapSquad(
 
     const multiplier = pick.multiplier ?? 0;
     const lines = linesFor(pick.element);
-    const scored = lines.reduce((sum, line) => sum + line.points, 0);
+    const scored = sumOf(lines, (line) => line.points);
     return [
       {
         code,

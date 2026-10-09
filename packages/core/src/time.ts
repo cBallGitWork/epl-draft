@@ -6,6 +6,9 @@ export const MS_PER_DAY = 86_400_000;
 /** A minute in milliseconds. */
 export const MS_PER_MINUTE = 60_000;
 
+/** A second in milliseconds. */
+export const MS_PER_SECOND = 1_000;
+
 // Instants and the league's calendar: every date the app, the paper and the scripts print or file
 // by is read here, in London, whatever the reader's own zone.
 
@@ -75,8 +78,8 @@ const DATE = new Intl.DateTimeFormat("en-GB", {
 /** A provider's ISO string in London, or the string itself when it is not a date: these run in
  *  render, and `Intl.format` throws on an invalid date. */
 function readable(iso: string, format: Intl.DateTimeFormat): string {
-  const at = new Date(iso);
-  return Number.isNaN(at.getTime()) ? iso : format.format(at);
+  const at = instantOf(iso);
+  return at === null ? iso : format.format(at);
 }
 
 /** `Saturday 10 October`. */

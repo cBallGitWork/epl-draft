@@ -2,7 +2,7 @@
 // would without adding anything. A note in none of the five shapes is carried whole as `other`.
 
 /** What FPL expects of an injury: a return date, a chance of playing, or no date yet. */
-export type Outlook = { back: string } | { chance: number } | "unknown" | null;
+export type Outlook = { back: string } | { chance: number } | "unknown";
 
 export type NoteReading =
   | { kind: "injury"; complaint: string; outlook: Outlook }
@@ -19,11 +19,11 @@ export function readNote(news: string): NoteReading {
     return { kind: "move", clause: text.charAt(0).toLowerCase() + text.slice(1) };
   }
   const parts = /^(.+?) - (.+)$/.exec(text);
-  if (parts === null) return text === "" ? { kind: "other", text } : { kind: "injury", complaint: text, outlook: null };
+  if (parts === null) return { kind: "other", text };
   const [, complaint, rest] = parts;
   const back = /^expected back (.+)$/i.exec(rest);
   const chance = /^(\d+)% chance of playing$/i.exec(rest);
-  const outlook: Outlook = back
+  const outlook: Outlook | null = back
     ? { back: back[1] }
     : chance
       ? { chance: Number(chance[1]) }
@@ -37,7 +37,7 @@ export function readNote(news: string): NoteReading {
  *  playing" under a 75% heading is "Ankle injury". Any other note, or a different figure, is whole. */
 export function noteBesideChance(news: string, chance: number | null): string {
   const reading = readNote(news);
-  if (reading.kind !== "injury" || reading.outlook === null || typeof reading.outlook !== "object") return news;
+  if (reading.kind !== "injury" || reading.outlook === "unknown") return news;
   return "chance" in reading.outlook && reading.outlook.chance === chance ? reading.complaint : news;
 }
 
