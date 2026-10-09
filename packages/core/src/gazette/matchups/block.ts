@@ -94,9 +94,11 @@ function beatLine(ctx: MatchupContext, b: Beat, before: { home: number; away: nu
 function toCome(ctx: MatchupContext, cast: ReadonlySet<DraftMan>): string[] {
   const waiting = new Set([ctx.state.home, ctx.state.away].flatMap((s) => s.subs.filter((x) => x.provisional).map((x) => x.in)));
   const lines = [ctx.state.home, ctx.state.away].flatMap((s) =>
-    s.toPlay
-      .filter((m, i) => m.next !== null && (i === 0 || cast.has(m) || waiting.has(m)))
-      .map((m) => `- ${m.fullName} for ${s.side.name}${waiting.has(m) ? ", if he plays" : ""}: ${m.next!.home ? "at home to" : "away to"} ${m.next!.opponent} on ${londonWeekdayLong(m.next!.kickoff)}`),
+    s.toPlay.flatMap((m, i) => {
+      const next = m.next;
+      if (next === null || !(i === 0 || cast.has(m) || waiting.has(m))) return [];
+      return [`- ${m.fullName} for ${s.side.name}${waiting.has(m) ? ", if he plays" : ""}: ${next.home ? "at home to" : "away to"} ${next.opponent} on ${londonWeekdayLong(next.kickoff)}`];
+    }),
   );
   const left = [ctx.state.home, ctx.state.away].map((s) => `${s.side.name} ${s.toPlay.length}`);
   return [...lines, `- Men still to play: ${listed(left, "and")}`];

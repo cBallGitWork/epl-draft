@@ -147,8 +147,8 @@ export function listFaults(piece: DraftPiece, ctx: MatchupContext, at: number, c
   });
   order.sort((x, y) => x.first - y.first);
   const back = order.find((x, i) => order.slice(0, i).some((y) => y.key > x.key));
-  if (back !== undefined) {
-    const later = order.find((y) => y.key > back.key)!;
+  const later = back === undefined ? undefined : order.find((y) => y.key > back.key);
+  if (back !== undefined && later !== undefined) {
     const label = (key: string) => beatLabel(key === "~" ? null : key);
     flag("goes back to an earlier day", `${back.m.man.name} (${label(back.key)}) after ${later.m.man.name} (${label(later.key)})`);
   }

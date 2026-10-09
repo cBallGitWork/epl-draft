@@ -42,10 +42,11 @@ export function manThreads(ctx: MatchupContext, cutoff: Cutoff, worth: SlotWorth
     for (const m of [...new Set([...counted(s), ...s.side.eleven])]) {
       const returned = returnCount(m) > 0;
       const involved = m.minutes > 0 || m.left > 0;
-      if (keeperHauled(m, worth)) {
+      const scored = scoredLine(m, worth);
+      if (scored !== null && keeperHauled(m, worth)) {
         const [base, cap] = DRAFT_NEWS.weight["keeper-haul"];
-        add("keeper-haul", [m], [named(m, scoredLine(m, worth)!)], false, Math.min(cap, base + DRAFT_NEWS.keeperHaulPerPoint * ((m.points ?? 0) - DRAFT_DESK.keeperHaul)));
-      } else if (returnCount(m) > 1) add("haul", [m], [named(m, scoredLine(m, worth)!)]);
+        add("keeper-haul", [m], [named(m, scored)], false, Math.min(cap, base + DRAFT_NEWS.keeperHaulPerPoint * ((m.points ?? 0) - DRAFT_DESK.keeperHaul)));
+      } else if (scored !== null && returnCount(m) > 1) add("haul", [m], [named(m, scored)]);
       const hit = crossfire(m, counted(them));
       if (hit !== null) add("crossfire", [m, hit.victim], [named(m, `scored ${whenScored(hit.t)}, the goal that cost ${hit.victim.name} his clean sheet for ${them.side.name}`)]);
       for (const t of m.scoredAt.filter(isLate)) add("late-goal", [m], [named(m, `scored ${whenScored(t)}`)], t.added !== undefined);

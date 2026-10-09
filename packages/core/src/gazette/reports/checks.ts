@@ -180,7 +180,7 @@ function shape(code: number, piece: ReportPiece, desk: MatchDesk, fault: Report)
   if (!sf.includes(higherFirst(h, a))) fault(`${code}:standfirst`, "gives the score, higher first", "send-back", sf);
   if (desk.events.some((e) => e.phrases.some((p) => sf.includes(p)))) fault(`${code}:standfirst`, "a minute in the standfirst", "send-back", sf);
 
-  const scorers = desk.events.filter((e) => isGoal(e) && e.kind !== "own-goal" && e.man !== null).map((e) => surname(e.man!.name));
+  const scorers = desk.events.flatMap((e) => (isGoal(e) && e.kind !== "own-goal" && e.man !== null ? [surname(e.man.name)] : []));
   // Each scorer must be named after the one before him; an earlier mention (a booking) does not count against the order.
   let last = 0;
   for (const name of scorers) {

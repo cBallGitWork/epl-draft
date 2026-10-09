@@ -20,7 +20,10 @@ export function matchBlock(desk: MatchDesk): string {
   const goals = events.filter(isGoal);
   const missed = new Set(misses);
   const decisiveSubs = new Set(match.men.filter((m) => !m.started && goals.some((g) => g.man?.code === m.code || g.other?.code === m.code)).map((m) => m.code));
-  const table = SIDES.flatMap((side) => (standing[side] === null ? [] : [`- ${match[side].name}: ${standing[side]!.lines.join("; ")}`]));
+  const table = SIDES.flatMap((side) => {
+    const club = standing[side];
+    return club === null ? [] : [`- ${match[side].name}: ${club.lines.join("; ")}`];
+  });
   const [least, most] = budget.account;
   const [sectionLeast, sectionMost] = REPORTS.sectionWords;
   return [

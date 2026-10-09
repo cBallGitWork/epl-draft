@@ -43,6 +43,9 @@ export interface MatchDesk {
   lead: boolean;
 }
 
+type Held = ReportMan & { holder: NonNullable<ReportMan["holder"]> };
+const isHeld = (m: ReportMan): m is Held => m.holder !== null;
+
 const BUDGET = REPORTS.budget;
 const DECISIONS = ["sent-off", "second-yellow", "ruled-out", "penalty-saved", "penalty-missed"];
 
@@ -90,10 +93,10 @@ function nominees(match: ReportMatchInput, events: readonly MatchEvent[], counts
   const goals = events.filter(isGoal);
   const scored = (m: ReportMan) => goalsBy(goals, m.code);
   const made = (m: ReportMan) => assistsBy(goals, m.code);
-  const h2h = (m: ReportMan) => {
-    const h = m.holder?.h2h;
-    if (h == null || h.us === null || h.them === null) return "";
-    const team = m.holder!.team;
+  const h2h = (m: Held) => {
+    const h = m.holder.h2h;
+    if (h === null || h.us === null || h.them === null) return "";
+    const team = m.holder.team;
     const said = h.us > h.them ? `${team} leads ${h.opponent} ${h.us}-${h.them}` : h.us < h.them ? `${h.opponent} leads ${team} ${h.them}-${h.us}` : `${team} and ${h.opponent} are level at ${h.us}-${h.them}`;
     return `; in their head-to-head this period, ${said}`;
   };
@@ -102,15 +105,16 @@ function nominees(match: ReportMatchInput, events: readonly MatchEvent[], counts
     if (!out.some((n) => n.man.code === m.code)) out.push({ man: m, stake });
   };
   const men = match.men.filter(played);
-  for (const m of men.filter((x) => x.holder !== null && !x.holder.fielded && (scored(x) + made(x) > 0 || (x.points ?? 0) >= 4))) {
-    add(m, `${m.holder!.team} has him on the bench, so ${m.points === null ? "his points" : pts(m.points)} did not count`);
+  const owned = men.filter(isHeld);
+  for (const m of owned.filter((x) => !x.holder.fielded && (scored(x) + made(x) > 0 || (x.points ?? 0) >= 4))) {
+    add(m, `${m.holder.team} has him on the bench, so ${m.points === null ? "his points" : pts(m.points)} did not count`);
   }
-  for (const m of men.filter((x) => x.injuredOff && x.holder !== null)) add(m, `${m.holder!.team} has him; went off injured${m.fitness === null ? "" : `; since: ${m.fitness}`}`);
-  const held = men.filter((x) => x.holder?.fielded === true && x.points !== null).sort((a, b) => (b.points ?? 0) - (a.points ?? 0));
-  for (const m of held.filter((x) => (x.points ?? 0) >= 5 || scored(x) + made(x) > 0)) add(m, `${m.holder!.team} has him, ${pts(m.points ?? 0)}${h2h(m)}`);
+  for (const m of owned.filter((x) => x.injuredOff)) add(m, `${m.holder.team} has him; went off injured${m.fitness === null ? "" : `; since: ${m.fitness}`}`);
+  const held = owned.filter((x) => x.holder.fielded && x.points !== null).sort((a, b) => (b.points ?? 0) - (a.points ?? 0));
+  for (const m of held.filter((x) => (x.points ?? 0) >= 5 || scored(x) + made(x) > 0)) add(m, `${m.holder.team} has him, ${pts(m.points ?? 0)}${h2h(m)}`);
   // A high pick who gave his manager little is the other side of the week.
-  for (const m of men.filter((x) => x.started && x.holder?.fielded === true && (x.points ?? 99) <= 1 && (x.holder.round ?? 99) <= 3)) {
-    add(m, `${m.holder!.team} has him, ${pts(m.points ?? 0)}${h2h(m)}`);
+  for (const m of owned.filter((x) => x.started && x.holder.fielded && (x.points ?? 99) <= 1 && (x.holder.round ?? 99) <= 3)) {
+    add(m, `${m.holder.team} has him, ${pts(m.points ?? 0)}${h2h(m)}`);
   }
   for (const m of men.filter((x) => x.holder === null && scored(x) + made(x) >= 2)) {
     add(m, m.goalsSeason === null ? "a free agent" : `a free agent; ${m.goalsSeason} league ${plural(m.goalsSeason, "goal")} this season`);
