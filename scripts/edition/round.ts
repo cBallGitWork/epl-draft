@@ -1,7 +1,7 @@
 import type { Club, Fixture } from "@epl/core";
 
-// The round's fixtures as club pairs, for the columns that print a match rather
-// than report one.
+// A round's fixtures as club pairs, for the columns that print a match rather than report one, and whether a club
+// plays in a fixture.
 
 /** Whether a club plays in a fixture, home or away. Club ids are FPL's per-season ids. */
 export function involves(fixture: Pick<Fixture, "homeClubId" | "awayClubId">, clubId: number): boolean {

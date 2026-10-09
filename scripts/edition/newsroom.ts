@@ -131,7 +131,7 @@ export interface ColumnMeta {
   reporter?: string;
   /** The covered-key this filing spends — also its one subject. */
   subject: string;
-  /** The man the page pictures, picked by the desk (`assemble.faceOf`), never the model; null for a kind with no man. */
+  /** The man the page pictures, picked by the desk (`faces.faceOf`), never the model; null for a kind with no man. */
   face: StoryFace | null;
 }
 
