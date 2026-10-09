@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { type Opposition, type PlayerMatchStats, DASH, contribution, fullMatchStats } from "@epl/core";
+import { type Opposition, type PlayerMatchStats, DASH, attackingStats, contribution, fullMatchStats } from "@epl/core";
 import { readMatchParts, type MatchRead } from "../../matchParts";
-import { FACT_LABEL, LABEL } from "@/app/desk";
+import { BLOCK_PLATE, FACT_LABEL, LABEL } from "@/app/desk";
 
 // What he did in the match or gameweek shown, under a drop-down: FPL's counts, Opta's for what FPL does not
-// split, and only what this league scores at his slot.
+// split, and only what this league scores at his slot; then Opta's attacking figures, priced or not.
 
 const UNREAD: MatchRead = { parts: null, scored: null };
 
@@ -42,6 +42,7 @@ export default function FullMatchStats({
   }, [opta, position, startedKey]);
 
   const rows = read === null ? [] : fullMatchStats(contribution(stats), read.parts, read.scored);
+  const attacking = read === null ? [] : attackingStats(read.parts, position);
   return (
     <details className="group cm-panel">
       <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 px-2 [&::-webkit-details-marker]:hidden">
@@ -58,15 +59,34 @@ export default function FullMatchStats({
         </svg>
       </summary>
 
-      {/* Read down the left column, then the right. */}
-      <dl className="cm-rows columns-2 gap-0 border-t border-line [column-rule:1px_solid_var(--color-bg)]">
-        {rows.map((row) => (
-          <div key={row.key} className="flex min-h-8 break-inside-avoid items-center gap-2 px-2">
-            <dt className={FACT_LABEL}>{row.label}</dt>
-            <dd className="numeric shrink-0 text-sm font-bold">{row.value ?? DASH}</dd>
-          </div>
-        ))}
-      </dl>
+      <Figures rows={rows.map((row) => ({ key: row.key, label: row.label, figure: row.value ?? DASH }))} />
+
+      {attacking.length === 0 ? null : (
+        <>
+          <h3 className={BLOCK_PLATE}>Attacking</h3>
+          <Figures
+            rows={attacking.map((row) => ({
+              key: row.key,
+              label: row.label,
+              figure: row.of === null ? row.value : `${row.value}/${row.of}`,
+            }))}
+          />
+        </>
+      )}
     </details>
+  );
+}
+
+/** Label and figure in two columns, read down the left column, then the right. */
+function Figures({ rows }: { rows: { key: string; label: string; figure: number | string }[] }) {
+  return (
+    <dl className="cm-rows columns-2 gap-0 border-t border-line [column-rule:1px_solid_var(--color-bg)]">
+      {rows.map((row) => (
+        <div key={row.key} className="flex min-h-8 break-inside-avoid items-center gap-2 px-2">
+          <dt className={FACT_LABEL}>{row.label}</dt>
+          <dd className="numeric shrink-0 text-sm font-bold">{row.figure}</dd>
+        </div>
+      ))}
+    </dl>
   );
 }

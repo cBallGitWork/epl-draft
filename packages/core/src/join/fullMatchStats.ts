@@ -24,8 +24,9 @@ import {
 import { wordsFor } from "../league/categoryWords";
 import { priceOf, type LeagueScoring } from "../league/scoring";
 import type { Contribution } from "./contribution";
+import { isGoalkeeper } from "./lineup";
 
-// A player card's "Full match stats": what he did, grouped by the category it counts toward, where this league scores it.
+// A player card's "Full match stats": what he did where this league scores it, by category, then his attacking.
 
 /** One figure on the card: null where nobody measured it. */
 interface StatRow {
@@ -114,4 +115,32 @@ export function fullMatchStats(
   const shown = STATS.filter((stat) => scored === null || scored.includes(stat.key));
   const played = done.minutes > 0 ? shown : shown.filter((stat) => stat.key === MINUTES.short);
   return played.map((stat) => ({ key: stat.key, label: stat.label, value: stat.of(done, parts) }));
+}
+
+/** One attacking figure; `of` is what he tried where the figure is what came off, "2/3". */
+interface AttackingRow {
+  key: keyof MatchParts;
+  label: string;
+  value: number;
+  of: number | null;
+}
+
+/** Read down the left column, his shooting, then the right, his making. */
+const ATTACKING: readonly { key: keyof MatchParts; label: string; made?: keyof MatchParts }[] = [
+  { key: "shots", label: "Shots" },
+  { key: "shotsOnTarget", label: "Shots on target" },
+  { key: "bigChancesMissed", label: "Big chances missed" },
+  { key: "touchesInBox", label: "Touches in the box" },
+  { key: "chancesCreated", label: "Chances created" },
+  { key: "bigChancesCreated", label: "Big chances created" },
+  { key: "crosses", label: "Accurate crosses", made: "accurateCrosses" },
+  { key: "contests", label: "Dribbles won", made: "contestsWon" },
+];
+
+/** His attacking off Opta's line, priced or not; none for a keeper or a man Opta has no line for. */
+export function attackingStats(parts: MatchParts | null, position: string | null): AttackingRow[] {
+  if (parts === null || isGoalkeeper(position)) return [];
+  return ATTACKING.map(({ key, label, made }) =>
+    made === undefined ? { key, label, value: parts[key], of: null } : { key, label, value: parts[made], of: parts[key] },
+  );
 }

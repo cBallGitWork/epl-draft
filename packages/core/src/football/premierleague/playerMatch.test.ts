@@ -24,6 +24,22 @@ describe("plMatchParts", () => {
     expect(plMatchParts(MURPHY)).toMatchObject({ interceptions: 0, blocks: 0, smothers: 0 });
   });
 
+  it("reads an outfielder's shots, chances, crosses, touches in the box and take-ons", () => {
+    expect(plMatchParts(MURPHY)).toMatchObject({
+      shots: 2,
+      chancesCreated: 1,
+      crosses: 4,
+      accurateCrosses: 1,
+      touchesInBox: 1,
+      contests: 1,
+      contestsWon: 1,
+    });
+  });
+
+  it("reads an attacking metric Opta omitted as nought", () => {
+    expect(plMatchParts(MURPHY)).toMatchObject({ shotsOnTarget: 0, bigChancesCreated: 0, bigChancesMissed: 0 });
+  });
+
   it("reads a keeper's smothers, punches and high claims", () => {
     expect(plMatchParts(ALISSON)).toMatchObject({ smothers: 1, punches: 2, highClaims: 3 });
   });
@@ -39,7 +55,7 @@ describe("sumParts", () => {
     const one = plMatchParts(MURPHY);
     expect(one).not.toBeNull();
     if (one === null) return;
-    expect(sumParts([one, one])).toMatchObject({ tacklesWon: 4, penaltiesWon: 2 });
+    expect(sumParts([one, one])).toMatchObject({ tacklesWon: 4, penaltiesWon: 2, crosses: 8, accurateCrosses: 2 });
   });
 
   it("is null with no match to add", () => {
