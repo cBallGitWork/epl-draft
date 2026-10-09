@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { banned } from "@epl/core";
-import { written } from "./subedit";
+import { presserFaults, sendBackPresser, written } from "./subedit";
 
 // A banned phrase in the HEADLINE sends the column back, though `checks.prose()` leaves the headline out.
 
@@ -36,6 +36,37 @@ describe("what the sub-editor reads", () => {
     const row = { club: "Leeds United", code: 2, line: "Farke has a knock to manage.", men: [{ name: "Daniel James", status: "Doubt", note: "a knock" }] };
     expect(banned(written({ headline: "Thursday Pressers", teamNews: [row] }))).toContain("knock");
     expect(banned(written({ teamNews: [{ ...row, line: "James is a doubt.", men: [{ name: "Daniel James", status: "Doubt", note: "back" }], quote: { text: "He has a knock.", said: "Daniel Farke" } }] }))).toEqual([]);
+  });
+});
+
+describe("the Team Sheet's send-back", () => {
+  // The Team Sheet of 9 Oct 2026, verbatim.
+  const filed = {
+    deck: "Nobel Mendy back in contention for Hull City",
+    body: "Nobel Mendy is back in contention for Hull City, and that is all that was said about him. No complaint was named and no manager was attached to the update, so whether he starts is left open.",
+    teamNews: [
+      { club: "Arsenal", code: 3, line: "William Saliba and Christos Tzolis stay sidelined, with no manager attached to the update.", men: [{ name: "Cristhian Mosquera", status: "FIT", note: "muscle" }] },
+      { club: "Tottenham Hotspur", code: 6, line: "Pedro Porro and the rest of the sidelined five gain no fresh word before the deadline." },
+    ],
+  };
+
+  it("sends back a column written about absent managers and absent news, and a fit man's bare complaint", () => {
+    const faults = presserFaults(filed);
+    expect(faults.phrases).toEqual(expect.arrayContaining(["no manager", "attached to the update", "no fresh", "all that was said", "no complaint", "left open", "whether he starts"]));
+    expect(faults.fit).toEqual(["Cristhian Mosquera"]);
+    const words = sendBackPresser(faults);
+    expect(words).toContain("Cristhian Mosquera");
+    expect(words).toContain('"no manager"');
+  });
+
+  it("passes a column that says who is out and who is back", () => {
+    const clean = presserFaults({
+      deck: "Nobel Mendy back for Hull City",
+      body: "Nobel Mendy is back in contention for Hull City.",
+      teamNews: [{ club: "Arsenal", code: 3, line: "William Saliba and Christos Tzolis are out.", men: [{ name: "Cristhian Mosquera", status: "FIT", note: "back from a muscle injury" }] }],
+    });
+    expect(clean).toEqual({ phrases: [], fit: [] });
+    expect(sendBackPresser(clean)).toBe("");
   });
 });
 
