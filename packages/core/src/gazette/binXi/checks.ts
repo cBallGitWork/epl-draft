@@ -12,7 +12,7 @@ import { BIN_MARKET, BIN_NEGLECT, BIN_OWNERSHIP, BIN_ROLES, BIN_WORKINGS } from 
 // The editor for the Bin XI: the column read against the facts it was written from. A hard fault
 // or a send-back goes back once, quoted; what survives the rewrite files with a warning.
 
-export interface BinCheck {
+interface BinCheck {
   /** The brief: every name and figure the column may use. */
   brief: string;
   /** Every name in the brief, blanked before figures are read: a side called "123" is a name. */

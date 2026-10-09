@@ -4,8 +4,6 @@ import type { Deal } from "./types";
 
 // The week's business as stories: Fantrax files each half of a transaction as its own row, joined by `setId`.
 
-
-
 /** Newest first, all or nothing: one undatable story leaves the feed's own order untouched. */
 function newestFirst(told: Deal[]): Deal[] {
   const keyed: { deal: Deal; key: number }[] = [];

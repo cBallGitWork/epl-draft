@@ -6,9 +6,9 @@ import { possessive } from "./words";
 // The gameweek in the season's terms, for the draft report's Football Manager register: streaks, runs ended, a return to
 // form, the season's records, a side's own high and low. Each fact carries its kind and states only what results show.
 
-export type FormKind = "streak" | "streak-ended" | "return-to-form" | "record" | "season-high" | "season-low";
+type FormKind = "streak" | "streak-ended" | "return-to-form" | "record" | "season-high" | "season-low";
 
-export interface FormFact {
+interface FormFact {
   teamId: string;
   kind: FormKind;
   text: string;

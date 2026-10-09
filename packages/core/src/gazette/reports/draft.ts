@@ -8,7 +8,7 @@ import { REPORT_PENCIL } from "./words";
 
 // What the writer files for a match-day, read field by field; a match whose pieces fail twice prints the desk's plain line.
 
-export interface ReportSection {
+interface ReportSection {
   head: string;
   pitch: string;
   stake: string;
@@ -31,7 +31,6 @@ export interface ReportsDraft {
   /** By fixture code. */
   matches: Map<number, ReportPiece>;
 }
-
 
 /** House corrections with one right answer. */
 export function correct(prose: string): string {

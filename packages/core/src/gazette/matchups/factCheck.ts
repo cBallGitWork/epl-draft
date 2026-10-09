@@ -14,7 +14,7 @@ import type { DraftPiece } from "./writing";
 // right. A correction is kept only if it passes the writer's own checks; otherwise the claim is cut, since a wrong fact
 // is worse than a shorter report. Pure.
 
-export interface FactFix {
+interface FactFix {
   matchup: number;
   quote: string;
   /** The quote put right from the block; empty when it cannot be, and it is cut. */

@@ -13,7 +13,6 @@ import {
 /** Echoes quoted back per match: past three, a rewrite is told the pattern, not drowned in it. */
 const ECHOES_QUOTED = 3;
 
-
 /** Everything sent back wherever it appears. SEQUENCE is lifted: this desk is handed the order of the match. No ground is. */
 export const REPORT_NEVER: readonly string[] = [
   ...REGISTER, ...FILLER, ...GROUNDS, ...REPORT_GROUNDS, ...DESK_BANNED, ...REPORT_CLICHES, ...REPORT_SHOTS, ...REPORT_VERDICTS, ...REPORT_CROWD,

@@ -7,7 +7,7 @@ import type { DraftMan } from "./types";
 // the substitutions when they changed the score, each with its points, the running score at its end and the men who
 // returned in it. Pure.
 
-export interface BeatReturn {
+interface BeatReturn {
   side: Side;
   man: DraftMan;
   points: number;

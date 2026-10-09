@@ -6,7 +6,7 @@ import { storylinesBlock } from "./storylines";
 // here on purpose: the piece exists because an open head-to-head has men on
 // both sides of tonight's game, and the stakes ARE the story.
 
-export interface PreviewDuel {
+interface PreviewDuel {
   homeName: string;
   awayName: string;
   homePoints: number | null;
@@ -16,7 +16,7 @@ export interface PreviewDuel {
   awayMen: string[];
 }
 
-export interface FixturePreviewBrief {
+interface FixturePreviewBrief {
   gameweek: number;
   home: string;
   away: string;

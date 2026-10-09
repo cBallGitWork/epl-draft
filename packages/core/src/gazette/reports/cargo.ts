@@ -15,14 +15,14 @@ import type { Side } from "../side";
 
 export type ReportRowKind = "Goal" | "Pen" | "OG" | "VAR" | "Pen missed" | "Pen saved" | "Post" | "Booked" | "Sent off" | "Sub";
 
-export interface StoryReportRow {
+interface StoryReportRow {
   minute: string;
   kind: ReportRowKind;
   side: Side | null;
   text: string;
 }
 
-export interface StoryReportSection {
+interface StoryReportSection {
   head: string;
   pitch: string;
   stake: string;

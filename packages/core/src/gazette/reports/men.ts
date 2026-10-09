@@ -7,7 +7,7 @@ import { isDismissal } from "./timeline";
 // Every man in the match sheet as the desk reads him: started or came on, when he left and why, and what the script joined.
 
 /** FPL's per-man figures for this match, by code. */
-export interface LiveLine {
+interface LiveLine {
   minutes: number;
   saves: number;
   expectedGoals: number;

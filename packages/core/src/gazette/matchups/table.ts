@@ -11,7 +11,7 @@ import type { SideResult } from "./form";
 
 export type TableKind = "top" | "stayed-top" | "bottom" | "climb" | "fall";
 
-export interface TableFact {
+interface TableFact {
   teamId: string;
   kind: TableKind;
   text: string;

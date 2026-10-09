@@ -7,7 +7,7 @@ import type { BinMan } from "./select";
 // FPL through the bridge, and his shots and chances from the stats league. Never a name match.
 
 /** One man's matches in the window, from FPL's per-fixture rows. */
-export interface FplWeek {
+interface FplWeek {
   minutes: number;
   started: boolean;
   goals: number;
@@ -38,7 +38,7 @@ export function fplWeeks(rows: readonly PlayerMatchStats[], inWindow: (fixtureId
   return weeks;
 }
 
-export interface BinPool {
+interface BinPool {
   /** The served league's free agents over the window, with its points. */
   pool: readonly PlayerStatLine[];
   /** The stats league's lines over the same window, by Fantrax id. */

@@ -6,7 +6,7 @@ import type { Side } from "../side";
 
 // What the match-day desk is handed: plain data, joined by the script, read by the pure builders beside this file.
 
-export interface ReportClub {
+interface ReportClub {
   code: number;
   /** The name the paper prints, e.g. "Tottenham Hotspur". */
   name: string;

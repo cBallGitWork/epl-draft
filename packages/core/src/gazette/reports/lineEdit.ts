@@ -9,7 +9,7 @@ const broken = (text: string) => [...banned(text, REPORT_NEVER), ...americanisms
 // The sub-editor's last pass: a sentence that still carries a banned phrase after the rewrite goes back ALONE with the words it
 // broke, and a fix is kept only when it clears the words and states the same figures. Cheaper and surer than a third draft.
 
-export interface LineFix {
+interface LineFix {
   code: number;
   sentence: string;
   words: string[];
