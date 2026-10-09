@@ -30,7 +30,7 @@ export const COLUMNS = [
   { head: "A", title: "Assists", of: (r) => r.line?.assists ?? null, rank: "high" },
   { head: "xG", title: "Expected goals", of: (r) => r.stats?.expectedGoals ?? null, kind: "expected", rank: "high" },
   { head: "xA", title: "Expected assists", of: (r) => r.stats?.expectedAssists ?? null, kind: "expected", rank: "high" },
-  { head: "CS", title: "Clean sheet", of: (r) => (r.stats?.cleanSheet === true ? 1 : 0), rank: "high" },
+  { head: "CS", title: "Clean sheet", of: (r) => (r.stats === undefined ? null : r.stats.cleanSheet ? 1 : 0), rank: "high" },
   { head: "GC", title: "Goals conceded", of: (r) => r.stats?.goalsConceded ?? null, rank: "low" },
   { head: "Sv", title: "Saves", of: (r) => r.line?.saves ?? null, rank: "high" },
   {
