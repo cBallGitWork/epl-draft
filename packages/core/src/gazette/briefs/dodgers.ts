@@ -2,6 +2,7 @@ import { howMany } from "../../format";
 import type { Dodger, NearMiss } from "../dodgers";
 import type { StoryThread } from "../ledger";
 import { storylinesBlock } from "./storylines";
+import { briefOf } from "./briefOf";
 
 // The Points Dodgers' brief: each man's near misses in the real football, as counted facts with their minutes.
 
@@ -22,14 +23,12 @@ export function buildDodgersBrief(brief: {
 }): string {
   const men = brief.dodgers.map((man) => `- ${man.playerName} (${man.position}), owned by ${man.ownerName}: ${nearly(man)}`);
 
-  return [
+  return briefOf([
     `THE POINTS DODGERS, gameweek ${brief.gameweek}. The league's men who came closest to points in the real football and did not get them: the post, the save, the goal chalked off, the chances a teammate wasted, the clean sheet lost late. Name the man, name whose he is, and enjoy it.`,
     ["THE NEAR MISSES. A minute is the match clock. Where a man did get other points, his line says so: never deny them.", ...men].join("\n"),
     "Two or three short paragraphs. Never say what any of them would have scored, never add a chance you were not given, and never tell anybody what to do next week.",
     storylinesBlock(brief.threads),
-  ]
-    .filter((block) => block !== null)
-    .join("\n\n");
+  ]);
 }
 
 function nearly(man: Dodger): string {

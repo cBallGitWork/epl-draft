@@ -2,7 +2,8 @@ import { SHEETS } from "../../config";
 import { BANNED, QUOTE_MARKS, americanisms, banned, overused } from "../banned";
 import { escapeRegExp } from "../../regExp";
 import { faultLog, type Fault, type Report } from "../predictions/checks";
-import { masked, ngrams, numbersIn, sentences, wordCount } from "../predictions/prose";
+import { masked, ngrams, sentences, wordCount } from "../predictions/prose";
+import { faultOn, strayFigures } from "../proofing";
 import { DESK_BANNED } from "../predictions/words";
 import { strangers } from "../strangers";
 import type { SheetsDraft } from "./column";
@@ -64,15 +65,15 @@ export function checkSheets(draft: SheetsDraft, ctx: SheetsCheck): Fault[] {
 
   const common = (section: string, text: string) => {
     const plain = masked(text, names);
-    if (QUOTE_MARKS.test(text)) fault(section, "quotation marks", "hard", text.match(QUOTE_MARKS)?.[0] ?? "");
-    if (SOURCE.test(text)) fault(section, "names a source or a percentage", "hard", text.match(SOURCE)?.[0] ?? "");
-    if (PAST.test(text)) fault(section, "the wrong tense: the match is still to come", "send-back", text.match(PAST)?.[0] ?? "");
-    if (COUNTED.test(text)) fault(section, "counts the gameweeks", "send-back", text.match(COUNTED)?.[0] ?? "");
-    if (STARTS.test(text)) fault(section, "a manager names, a club starts", "send-back", text.match(STARTS)?.[0] ?? "");
+    faultOn(fault, section, "quotation marks", "hard", QUOTE_MARKS, text);
+    faultOn(fault, section, "names a source or a percentage", "hard", SOURCE, text);
+    faultOn(fault, section, "the wrong tense: the match is still to come", "send-back", PAST, text);
+    faultOn(fault, section, "counts the gameweeks", "send-back", COUNTED, text);
+    faultOn(fault, section, "a manager names, a club starts", "send-back", STARTS, text);
     if (owns !== null && owns.test(masked(text, men))) fault(section, "a man owns no club", "send-back", "a player's name before a club's");
     for (const name of strangers(text, ctx.facts)) fault(section, "a name not in the brief", "hard", name);
     // Names blanked first: a side called "123" is a name, not a figure.
-    for (const figure of numbersIn(plain)) if (!known.has(figure)) fault(section, "a figure not in the brief", "hard", String(figure));
+    for (const figure of strayFigures(plain, known)) fault(section, "a figure not in the brief", "hard", String(figure));
     for (const word of banned(plain, [...BANNED, ...DESK_BANNED, ...SHEETS_OPINION])) fault(section, "opinion or banned phrasing", "send-back", word);
     for (const word of americanisms(plain, SHEETS_AMERICAN)) fault(section, "not British football English", "send-back", word);
     for (const phrase of banned(plain, SHEETS_STOCK)) fault(section, "a stock phrase no reporter uses", "send-back", phrase);

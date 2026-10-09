@@ -11,6 +11,7 @@ import { SIDES } from "../side";
 import { beatLabel, beatOf, timeline, type Beat } from "./timeline";
 import { possessive } from "./words";
 import type { DraftMan } from "./types";
+import { briefOf } from "../briefs/briefOf";
 
 // One match-up's block of the brief, built on the story the desk chose (`angle.ts`): the result, THE STORY and its twist,
 // the cast, how it unfolded a day at a time, the threads in their beats, the season for the close, what comes next and
@@ -133,7 +134,7 @@ export function matchupBlock(ctx: MatchupContext, cutoff: Cutoff, n: number): st
   const cast = new Set(angle?.cast ?? []);
   const saturday = cutoff === "saturday";
   const line = (t: Thread) => `- ${told(ctx, t)}`;
-  return [
+  return briefOf([
     `MATCH-UP ${n}: ${ctx.state.home.side.name} v ${ctx.state.away.side.name}${n === 1 ? ", THE LEAD" : ""}`,
     ctx.derby ? derbyBrief(ctx.derby) : null,
     `${saturday ? "THE SCORE after Saturday's matches" : "THE RESULT"}, printed above your words, never in them: ${ctx.state.score}.`,
@@ -147,7 +148,5 @@ export function matchupBlock(ctx: MatchupContext, cutoff: Cutoff, n: number): st
     block("FORM AND THE TABLE, for the close:", ctx.form.filter((f) => !angle?.story.facts.includes(f.text)).map((f) => `- ${f.text} [${f.kind}]`)),
     saturday ? null : block("NEXT GAMEWEEK, for a last line that looks out:", nextLines(ctx)),
     block("LAST TIME, not to be told the same way again:", lastLines(ctx)),
-  ]
-    .filter((b) => b !== null)
-    .join("\n\n");
+  ]);
 }

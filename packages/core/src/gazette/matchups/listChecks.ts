@@ -2,7 +2,8 @@ import { DRAFT_WRITING } from "../../config";
 import { banned } from "../banned";
 import { escapeRegExp } from "../../regExp";
 import type { Fault } from "../predictions/checks";
-import { masked, mentionAt, ngrams, numbersIn, sentences } from "../predictions/prose";
+import { mentionAt, ngrams, numbersIn, sentences } from "../predictions/prose";
+import { blanked } from "../proofing";
 import { surname } from "../reports/keyStats";
 import type { Cutoff, MatchupContext } from "./brief";
 import { everyMan } from "./state";
@@ -87,7 +88,7 @@ export function listFaults(piece: DraftPiece, ctx: MatchupContext, at: number, c
   const men = menOf(ctx);
   // A side's name is no figure, even one spelt in digits.
   const names = [...men.flatMap((m) => m.names), ctx.state.home.side.name, ctx.state.away.side.name, ...sides];
-  const figures = (text: string) => numbersIn(masked(text.replace(SCORE, " "), names).replace(/\u0000/gu, " "));
+  const figures = (text: string) => numbersIn(blanked(text.replace(SCORE, " "), names));
   const prose = piece.paragraphs.join("\n");
   const all = sentences(prose);
 

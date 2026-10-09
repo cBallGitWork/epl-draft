@@ -4,6 +4,7 @@ import { pts } from "../matchups/stories";
 import { numeral } from "../reports/minutes";
 import type { StoryThread } from "../ledger";
 import type { BinMan, BinXi } from "./select";
+import { briefOf } from "../briefs/briefOf";
 
 // What the Bin XI's writer is told: the eleven and the bench grouped by club, each man's week in
 // words, how he came to be unowned, and the one comparison the desk makes. xG and xA stay out: the
@@ -69,7 +70,7 @@ export function buildBinBrief(input: BinBriefInput): string {
   const { side } = input;
   const { fewer, scored } = beaten(side.total, input.sides);
   const comparison = scored === 0 ? "" : ` ${fewer} of the league's ${howMany(scored, "side")} scored fewer.`;
-  return [
+  return briefOf([
     `THE BIN XI, gameweek ${input.gameweek}: the best eleven men nobody in the league has, lining up ${side.shape}. The side, each man's points and the key stats are printed beside your column. You write the case for it.`,
     `THE DESK'S NUMBER: the eleven scored ${pts(side.total)} between them.${comparison}`,
     ["THE ELEVEN, by club:", ...byClub(side.xi, input)].join("\n"),
@@ -79,9 +80,7 @@ export function buildBinBrief(input: BinBriefInput): string {
     undraftedLine([...side.xi, ...side.bench], input.undrafted),
     input.blanked.length === 0 ? null : `NO MATCH THIS GAMEWEEK: ${input.blanked.join(", ")}.`,
     storylinesBlock(input.threads),
-  ]
-    .filter((block): block is string => block !== null)
-    .join("\n\n");
+  ]);
 }
 
 /** Said once rather than on every man, or the column repeats it. */

@@ -1,6 +1,7 @@
 import type { StoryThread } from "../ledger";
 import { figure } from "./figure";
 import { storylinesBlock } from "./storylines";
+import { briefOf } from "./briefOf";
 
 // The facts a preview piece may use. There is no result and no projection in
 // here on purpose: the piece exists because an open head-to-head has men on
@@ -39,7 +40,7 @@ export function buildFixturePreviewBrief(brief: FixturePreviewBrief): string {
 
   const watching = brief.watching.map((squad) => `- ${squad.owner}: ${squad.men.join(", ")}`);
 
-  return [
+  return briefOf([
     `PREVIEW, gameweek ${brief.gameweek}: ${brief.home} v ${brief.away}, kick-off ${brief.kickoff}. The match has not been played. You know nothing about how it will go and you must not predict a result — the stakes are the story.`,
     [
       "THE DUELS. Each of these head-to-heads is still open and has men on BOTH sides of this fixture — ninety minutes that can swing a tie on its own. Current head-to-head scores are given; frame what tonight can do to them:",
@@ -49,7 +50,5 @@ export function buildFixturePreviewBrief(brief: FixturePreviewBrief): string {
       ? ["ALSO WATCHING, with men in the fixture but no duel in it:", ...watching].join("\n")
       : null,
     storylinesBlock(brief.threads),
-  ]
-    .filter((block) => block !== null)
-    .join("\n\n");
+  ]);
 }

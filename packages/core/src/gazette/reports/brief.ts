@@ -6,6 +6,7 @@ import { played } from "./men";
 import { assistsBy, goalsBy, isGoal } from "./timeline";
 import { SIDES, type Side } from "../side";
 import { howMany } from "../../format";
+import { briefOf } from "../briefs/briefOf";
 
 // The facts one match-day report may use and nothing else, one block per match keyed by its fixture code. Each fact is
 // handed once and marked with the part it belongs to, so the standfirst, the account and the sections cannot repeat each other.
@@ -26,7 +27,7 @@ export function matchBlock(desk: MatchDesk): string {
   });
   const [least, most] = budget.account;
   const [sectionLeast, sectionMost] = REPORTS.sectionWords;
-  return [
+  return briefOf([
     `MATCH ${f.code}${lead ? ", THE LEAD" : ""}: ${match.home.name} ${f.homeScore}-${f.awayScore} ${match.away.name}${match.halfTime === null ? "" : `, ${match.halfTime.home}-${match.halfTime.away} at half-time`}.`,
     `The clubs: ${club("home")}; ${club("away")}.`,
     [`THE TABLE, for the standfirst and nowhere else in this match:`, ...table].join("\n"),
@@ -45,9 +46,7 @@ export function matchBlock(desk: MatchDesk): string {
       ...nominees.slice(0, budget.sections + REPORTS.spareNominees).map((n) => `- ${n.man.name} (${match[n.man.side].name}): ${manLine(n.man, counts.get(n.man.code), events)}. STAKE: ${n.stake}.`),
     ].join("\n"),
     `EVERY MAN YOU MAY NAME, by club: ${SIDES.map((side) => `${match[side].name}: ${match.men.filter((m) => m.side === side && played(m)).map((m) => m.name).join(", ")}`).join(". ")}.`,
-  ]
-    .filter((block) => block !== null)
-    .join("\n\n");
+  ]);
 }
 
 export function buildReportsBrief(day: string, gameweek: number, desks: readonly MatchDesk[]): string {

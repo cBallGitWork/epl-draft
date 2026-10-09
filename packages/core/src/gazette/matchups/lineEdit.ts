@@ -1,5 +1,6 @@
 import { americanisms, banned } from "../banned";
-import { masked, numbersIn, sentences } from "../predictions/prose";
+import { numbersIn, sentences } from "../predictions/prose";
+import { blanked } from "../proofing";
 import type { DraftPiece } from "./writing";
 
 // The sub-editor's last pass on a draft report: each sentence still carrying a phrase the paper does not print goes back
@@ -11,12 +12,10 @@ interface SentenceFix {
   words: string[];
 }
 
-/** A sentence with its men and sides blanked: Archie Gray is no American spelling. */
-const plain = (text: string, names: readonly string[]) => masked(text, names).replace(/\u0000/gu, " ");
-
-/** The phrases on `never` a sentence uses, then its American -ize: no list can name every one. */
+/** The phrases on `never` a sentence uses, then its American -ize: no list can name every one. Its men and sides are
+ *  blanked first: Archie Gray is no American spelling. */
 function broken(text: string, never: readonly string[], names: readonly string[]): string[] {
-  const blank = plain(text, names);
+  const blank = blanked(text, names);
   return [...banned(blank, never), ...americanisms(blank, [])];
 }
 

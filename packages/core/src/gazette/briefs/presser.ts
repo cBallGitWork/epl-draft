@@ -3,6 +3,7 @@ import { FIRM } from "../../football/intel/pressers";
 import { groupedBy } from "../../grouped";
 import { storylinesBlock } from "./storylines";
 import type { StoryThread } from "../ledger";
+import { briefOf } from "./briefOf";
 
 // The team news brief: what managers said about availability, by club, owned or not.
 
@@ -87,7 +88,7 @@ export function buildPresserBrief(brief: {
   const line = (quote: PresserQuote) => `  "${quote.text}" — ${quote.said}${quote.about === undefined ? "" : ` on ${quote.about}`}`;
   const said = [...groupedBy(brief.quotes ?? [], (quote) => quote.clubName)].map(([club, quotes]) => [`- ${club}:`, ...quotes.map(line)].join("\n"));
 
-  return [
+  return briefOf([
     `TEAM NEWS, gameweek ${brief.gameweek}. What the managers said before the deadline. A draft manager reads this to decide who to start AND who to claim, so it covers every man mentioned, not only the ones somebody owns.`,
     [`WHAT WAS SAID, by club — ${brief.lines.length} men across ${byClub.size} clubs, ${owned} of them owned in this league. The code is the club's and you must echo it back exactly:`, ...clubs].join("\n"),
     quiet.length === 0
@@ -132,7 +133,5 @@ export function buildPresserBrief(brief: {
     "A HINT IS A HINT. Where a line is marked HINT, write it as one — 'suggested', 'did not rule out', 'stopped short of'. Never promote it to a fact.",
     "NO ADVICE, and no narrative about our managers. Name the owner; do not tell him what to do, or discuss his week.",
     storylinesBlock(brief.threads),
-  ]
-    .filter((block) => block !== null)
-    .join("\n\n");
+  ]);
 }

@@ -2,7 +2,8 @@ import { DRAFT_WRITING } from "../../config";
 import { derbyNames } from "../../league/derbies";
 import { QUOTE_MARKS, americanisms, banned } from "../banned";
 import { faultLog, type Fault } from "../predictions/checks";
-import { masked, mentionAt, numbersIn, sentences, wordCount } from "../predictions/prose";
+import { mentionAt, numbersIn, sentences, wordCount } from "../predictions/prose";
+import { blanked, faultOn, strayFigures } from "../proofing";
 import { repeatsIn } from "../reports/repeats";
 import { REPORT_FPL } from "../reports/words";
 import type { Cutoff, MatchupContext } from "./brief";
@@ -50,19 +51,19 @@ export function checkDraft(writing: DraftWriting, contexts: readonly MatchupCont
       if (!mine.has(other) && other.length > 3 && mentionAt(prose, other) >= 0) fault(`${n}:matchup`, "a man from another match-up", "hard", other);
     }
     const allowed = allowedFigures(ctx, block);
-    for (const x of numbersIn(prose.replace(SCORE, " ").replace(SIDE_ELEVEN, " "))) if (!allowed.has(x)) fault(`${n}:matchup`, "a figure the brief does not give", "hard", String(x));
+    for (const x of strayFigures(prose.replace(SCORE, " ").replace(SIDE_ELEVEN, " "), allowed)) fault(`${n}:matchup`, "a figure the brief does not give", "hard", String(x));
     // A stage's own score is given too, as its two sides' points. Whole scores only: "8-3" is not in "38-34".
     const stages = timeline(ctx.state).flatMap((b) => [`${b.points.home}-${b.points.away}`, `${b.points.away}-${b.points.home}`]);
     const given = new Set([...block.matchAll(SCORE)].flatMap(([, a, b]) => [`${a}-${b}`, `${b}-${a}`]));
     for (const [said] of prose.matchAll(SCORE)) if (!given.has(said) && !stages.includes(said)) fault(`${n}:matchup`, "a score the brief does not give", "hard", said);
-    if (QUOTE_MARKS.test(prose)) fault(`${n}:matchup`, "a quotation mark: the paper prints nobody's words", "hard", prose.match(QUOTE_MARKS)?.[0] ?? "");
+    faultOn(fault, `${n}:matchup`, "a quotation mark: the paper prints nobody's words", "hard", QUOTE_MARKS, prose);
     // A man's name is never a banned word: Archie Gray is not American spelling.
-    const plain = masked(prose, [...everyone.flat(), ctx.state.home.side.name, ctx.state.away.side.name, ...derbyNames(ctx.derby)]).replace(/\u0000/gu, " ");
+    const plain = blanked(prose, [...everyone.flat(), ctx.state.home.side.name, ctx.state.away.side.name, ...derbyNames(ctx.derby)]);
     for (const phrase of banned(plain, REPORT_FPL)) fault(`${n}:matchup`, "names a source", "hard", phrase);
     for (const phrase of banned(plain, DRAFT_NEVER)) fault(`${n}:matchup`, "a phrase this paper does not print", "send-back", phrase);
     for (const phrase of americanisms(plain)) fault(`${n}:matchup`, "American, not British", "send-back", phrase);
-    if (MARKS.test(prose)) fault(`${n}:matchup`, "a colon, a question or an exclamation mark", "send-back", prose.match(MARKS)?.[0] ?? "");
-    if (FEELING.test(prose)) fault(`${n}:matchup`, "a named person's feeling", "send-back", prose.match(FEELING)?.[0] ?? "");
+    faultOn(fault, `${n}:matchup`, "a colon, a question or an exclamation mark", "send-back", MARKS, prose);
+    faultOn(fault, `${n}:matchup`, "a named person's feeling", "send-back", FEELING, prose);
     // The score prints above the lede, so the lede never gives it again.
     if (sentences(prose)[0]?.includes(ctx.state.score) === true) fault(`${n}:matchup`, "opens on the result the page already prints", "send-back", sentences(prose)[0] ?? "");
     faults.push(...listFaults(piece, ctx, at, cutoff, block, past, sides));

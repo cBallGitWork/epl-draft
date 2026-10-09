@@ -1,5 +1,6 @@
 import { americanisms, banned } from "../banned";
-import { masked, numbersIn, sentences } from "../predictions/prose";
+import { numbersIn, sentences } from "../predictions/prose";
+import { blanked } from "../proofing";
 import type { ReportPiece, ReportsDraft } from "./draft";
 import { repeatsIn } from "./repeats";
 import { REPORT_NEVER } from "./style";
@@ -19,7 +20,7 @@ const parts = (piece: ReportPiece) => [piece.standfirst, piece.account, ...piece
 /** Every sentence of the kept pieces still breaking the word lists, or repeating what an earlier sentence said, with the
  *  words it must lose. */
 export function faultySentences(draft: ReportsDraft, names: readonly string[]): LineFix[] {
-  const blank = (text: string) => masked(text, names).replace(/\u0000/gu, "X");
+  const blank = (text: string) => blanked(text, names, "X");
   const fixes = new Map<string, LineFix>();
   for (const piece of draft.matches.values()) {
     for (const sentence of parts(piece).flatMap(sentences)) {

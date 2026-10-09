@@ -3,15 +3,15 @@ import { capital, spelled, withoutAccents } from "../../format";
 import { ON_THE_PITCH } from "../../football/types";
 import { faultLog, type Fault, type Report } from "../predictions/checks";
 import { mentionAt as mentionExact, numbersIn, sentences, wordCount } from "../predictions/prose";
+import { faultOn, strayFigures } from "../proofing";
 import type { MatchDesk } from "./desk";
 import { HEAD_WORDS, type ReportPiece, type ReportsDraft } from "./draft";
 import { surname } from "./keyStats";
-import { partFaults } from "./parts";
+import { partFaults, sectionKey } from "./parts";
 import { repeatsIn } from "./repeats";
 import { dayFaults, wordFaults } from "./style";
 import { isDismissal, isGoal } from "./timeline";
 import { higherFirst } from "./derived";
-import { sectionKey } from "./parts";
 
 // The editor reads every match against its own facts: names, figures, scorelines, the order of the goals, what must be
 // covered and how long it runs. Pure; the writer sends back once on these and never on taste.
@@ -113,7 +113,7 @@ function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx:
   const total = (desk.match.fixture.homeScore ?? 0) + (desk.match.fixture.awayScore ?? 0);
   const reds = desk.events.filter((e) => isDismissal(e.kind)).length;
   const allowed = new Set([...numbersIn(block), 0, 90, 45, ctx.gameweek, total, ...(reds > 0 ? [ON_THE_PITCH - 1, ON_THE_PITCH - reds] : [])]);
-  for (const n of numbersIn(prose.replace(SCORE, " "))) if (!allowed.has(n)) fault(section, "a figure the facts do not give", "hard", String(n));
+  for (const n of strayFigures(prose.replace(SCORE, " "), allowed)) fault(section, "a figure the facts do not give", "hard", String(n));
 
   const events = desk.events.filter(isGoal);
   const scores = new Set([
@@ -128,7 +128,7 @@ function facts(code: number, prose: string, desk: MatchDesk, block: string, ctx:
     else if (Number(a) < Number(b)) fault(section, "a score in prose goes higher first", "send-back", said);
   }
   for (const [said] of prose.matchAll(RECORD)) if (!block.toLowerCase().includes(said.toLowerCase())) fault(section, "a record the facts do not give", "send-back", said);
-  if (COMEBACK.test(prose) && !desk.facts.some((f) => f.includes("came from behind"))) fault(section, "a comeback that did not finish level or ahead", "send-back", prose.match(COMEBACK)?.[0] ?? "");
+  if (!desk.facts.some((f) => f.includes("came from behind"))) faultOn(fault, section, "a comeback that did not finish level or ahead", "send-back", COMEBACK, prose);
 
   // A man is who the sheet says: a starter is never the man who came on, and a name keeps its accents.
   const starters = desk.match.men.filter((m) => m.started);

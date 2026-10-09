@@ -1,5 +1,6 @@
 import type { Report } from "../predictions/checks";
 import { masked, ngrams, sentences } from "../predictions/prose";
+import { faultOn } from "../proofing";
 import type { MatchDesk } from "./desk";
 import type { ReportPiece } from "./draft";
 import { surname } from "./keyStats";
@@ -42,7 +43,7 @@ export function partFaults(code: number, piece: ReportPiece, desk: MatchDesk, fa
 
   // A stake is about its own man and the manager who picked him: no fixtures, no second player.
   piece.sections.forEach((s, i) => {
-    if (FIXTURE.test(s.stake)) fault(sectionKey(code, i), "a fixture in a stake", "send-back", s.stake.match(FIXTURE)?.[0] ?? "");
+    faultOn(fault, sectionKey(code, i), "a fixture in a stake", "send-back", FIXTURE, s.stake);
     const own = match.men.filter((m) => s.head.includes(surname(m.name)) || s.pitch.includes(surname(m.name)));
     const others = match.men.filter((m) => !own.includes(m) && s.stake.includes(surname(m.name)));
     if (others.length > 0) fault(sectionKey(code, i), "a stake names only its own man", "send-back", surname(others[0].name));

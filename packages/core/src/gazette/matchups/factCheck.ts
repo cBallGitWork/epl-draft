@@ -1,7 +1,8 @@
 import { DRAFT_WRITING } from "../../config";
 import { banned } from "../banned";
 import { escapeRegExp } from "../../regExp";
-import { masked, numbersIn, sentences } from "../predictions/prose";
+import { sentences } from "../predictions/prose";
+import { blanked, strayFigures } from "../proofing";
 import { londonWeekdayLong, weekdayLongOfDay } from "../../time";
 import { recordOrEmpty, stringOrEmpty } from "../../untrusted";
 import type { MatchupContext } from "./brief";
@@ -76,9 +77,9 @@ export function readFactFixes(raw: Record<string, unknown>): FactFix[] {
 function sound(text: string, ctx: MatchupContext, block: string): boolean {
   // Men and sides are names, never words or figures: "test2" is no 2.
   const sides = [ctx.state.home.side.name, ctx.state.away.side.name, ...[ctx.next.home, ctx.next.away].flatMap((x) => x?.name ?? [])];
-  const plain = masked(text, [...menOf(ctx).flatMap((m) => m.names), ...sides]).replace(/\u0000/gu, " ");
+  const plain = blanked(text, [...menOf(ctx).flatMap((m) => m.names), ...sides]);
   const allowed = allowedFigures(ctx, block);
-  return banned(plain, DRAFT_NEVER).length === 0 && numbersIn(plain).every((n) => allowed.has(n)) && unbriefedNames(text, ctx, block).length === 0;
+  return banned(plain, DRAFT_NEVER).length === 0 && strayFigures(plain, allowed).length === 0 && unbriefedNames(text, ctx, block).length === 0;
 }
 
 /** The writing with each fix made, `factFixes` at most a match-up: a sound correction in place of its quote, or the quote
