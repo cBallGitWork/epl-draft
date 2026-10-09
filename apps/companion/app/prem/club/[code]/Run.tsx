@@ -91,12 +91,12 @@ function leagueCells(fixture: Fixture, club: Club, clubs: Map<number, Club>): Ce
         href={matchHref(fixture.id, "overview")}
         className="cm-row flex min-h-11 items-center justify-center hover:underline"
       >
-        {fixture.status === "live" ? (
-          <span className="text-live">{mine}–{theirs}</span>
-        ) : played ? (
-          `${mine}–${theirs}`
-        ) : (
+        {!played ? (
           <Absent />
+        ) : fixture.status === "live" ? (
+          <span className="text-live">{mine}–{theirs}</span>
+        ) : (
+          `${mine}–${theirs}`
         )}
       </Link>
     ),
