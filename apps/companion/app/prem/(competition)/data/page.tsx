@@ -1,4 +1,4 @@
-import { clubById, onTheBooks, playerByCode, type FootballPlayer } from "@epl/core";
+import { clubById, londonDayAndDate, onTheBooks, playerByCode, type FootballPlayer } from "@epl/core";
 import PremShell from "../../Shell";
 import { DATA } from "../../PremNav";
 import { leagueOpinions } from "../../leagueOpinions";
@@ -6,11 +6,12 @@ import { poolHref } from "../../poolHref";
 import { footballNow } from "../../../football";
 import { getLeaguePool } from "../../../players/pool";
 import { seasonMarks } from "../../../ratings";
+import { intelStats, intelStatsManifest } from "../../../intel";
 import LeaderBoard, { type Row } from "./LeaderBoard";
 import QuerySelect from "../../../components/shell/QuerySelect";
 import { defconPricing, poolPositions } from "../../../defcon";
-import { HEADING_PLATE } from "@/app/desk";
-import { LISTS, MOST, SECTIONS, TOP, asPrinted, listFor, ranked, seasonRatings, type Leader, type LeaderList } from "./leaders";
+import { HEADING_PLATE, MINOR_LABEL } from "@/app/desk";
+import { LISTS, MOST, SECTIONS, TOP, leadersOf, listFor, ranked, seasonRatings, type LeaderList } from "./leaders";
 
 // The season's leaders as plain lists, each to fifty on asking (Craig, 1 Oct 2026).
 // A phone shows the list its picker names; the desk shows every list by section, the asked one to fifty.
@@ -53,22 +54,10 @@ export default async function DataPage({ searchParams }: { searchParams: Search 
       if (ours !== null) defcon.set(row.fplCode, ours);
     }
   }
-  const ratings = seasonRatings(seasonMarks());
-
-  const leadersOf = (list: LeaderList): Leader[] => {
-    const { source } = list;
-    if (typeof source === "object") {
-      return players.map((p) => ({ code: p.code, name: p.name, figure: asPrinted(list, source.fpl(p.season)) }));
-    }
-    const figures = source === "rating" ? ratings : source === "points" ? points : defcon;
-    return [...figures].flatMap(([code, figure]) => {
-      const player = byCode.get(code);
-      return player === undefined || !onTheBooks(player) ? [] : [{ code, name: player.name, figure: asPrinted(list, figure) }];
-    });
-  };
+  const figures = { rating: seasonRatings(seasonMarks()), points, defcon, stats: intelStats };
 
   const rowsOf = (list: LeaderList, n: number): Row[] =>
-    ranked(leadersOf(list), n).map((leader) => {
+    ranked(leadersOf(list, players, figures), n).map((leader) => {
       const player: FootballPlayer | undefined = byCode.get(leader.code);
       return { ...leader, club: player === undefined ? undefined : clubs.get(player.clubId), href: poolHref(league, leader.code) };
     });
@@ -94,6 +83,9 @@ export default async function DataPage({ searchParams }: { searchParams: Search 
               <h2 id={`data-${section.key}`} className={`${HEADING_PLATE} col-span-full max-lg:sr-only`}>
                 {section.title}
               </h2>
+              {held.some(({ source }) => typeof source === "object" && "stats" in source) ? (
+                <p className={`${MINOR_LABEL} col-span-full px-2`}>Season to {londonDayAndDate(intelStatsManifest.exportedAt)}</p>
+              ) : null}
               {held.map((list) => {
                 const open = list.key === asked.key && longest;
                 return (

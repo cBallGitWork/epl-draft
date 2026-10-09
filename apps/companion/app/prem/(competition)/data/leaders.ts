@@ -1,4 +1,4 @@
-import { type FigureKind, type SeasonTotals, PLACES, fixed, mean, rounded } from "@epl/core";
+import { type FigureKind, type FootballPlayer, type SeasonTotals, type StatKey, type StatsRow, PLACES, fixed, mean, rounded, stat } from "@epl/core";
 
 // The Data tab's lists: one season figure per man, best first, the top twenty and the top fifty on asking.
 
@@ -16,15 +16,17 @@ export interface Ranked extends Leader {
   rank: number;
 }
 
-/** Where a list's figure comes from: FPL's season counts, our marks, the served league's Fantrax points, or our
- *  DefCon points. */
-export type Source = { fpl: (season: SeasonTotals) => number } | "rating" | "points" | "defcon";
+/** Where a list's figure comes from: FPL's season counts, the stats league's, our marks, the served league's Fantrax
+ *  points, or our DefCon points. */
+export type Source = { fpl: (season: SeasonTotals) => number } | { stats: StatKey } | "rating" | "points" | "defcon";
 
 /** The desk's rows of lists, each under its own plate. */
 export const SECTIONS = [
   { key: "attacking", title: "Attacking" },
   { key: "fantasy", title: "Fantasy" },
   { key: "defending", title: "Defending" },
+  { key: "chances", title: "Chances" },
+  { key: "crossing", title: "Crossing" },
 ] as const;
 
 export interface LeaderList {
@@ -49,6 +51,11 @@ export const LISTS: readonly LeaderList[] = [
   { key: "rating", title: "Match ratings", head: "Rtg", explain: "His average mark", source: "rating", kind: "rating", section: "fantasy" },
   { key: "defcon", title: "DefCon points", head: "DCP", explain: "DefCon points, worked out per match, at his slot or a free agent's best position", source: "defcon", kind: "count", section: "defending" },
   { key: "saves", title: "Saves", head: "Sv", explain: "Saves", source: { fpl: (s) => s.saves }, kind: "count", section: "defending" },
+  { key: "shots", title: "Shots", head: "Sh", explain: "Shots", source: { stats: "shots" }, kind: "count", section: "chances" },
+  { key: "chances", title: "Chances created", head: "KP", explain: "Chances created", source: { stats: "keyPasses" }, kind: "count", section: "chances" },
+  { key: "bcc", title: "Big chances created", head: "BCC", explain: "Big chances created", source: { stats: "bigChancesCreated" }, kind: "count", section: "chances" },
+  { key: "bcm", title: "Big chances missed", head: "BCM", explain: "Big chances missed", source: { stats: "bigChancesMissed" }, kind: "count", section: "chances" },
+  { key: "crosses", title: "Crosses", head: "Crs", explain: "Crosses, accurate or not", source: { stats: "crosses" }, kind: "count", section: "crossing" },
 ];
 
 /** A figure as its list prints it, the British way: `1,234`, `4.42`, `7.2`. */
@@ -59,6 +66,23 @@ export function printed(list: LeaderList, figure: number): string {
 /** A figure held to the places its list prints, so the ranking agrees with what the reader sees. */
 export function asPrinted(list: LeaderList, figure: number): number {
   return rounded(figure, PLACES[list.kind]);
+}
+
+/** The figures a list reads besides FPL's, each by FPL code; a man with none is off that list. */
+interface Held extends Readonly<Record<Exclude<Source, object>, ReadonlyMap<number, number>>> {
+  readonly stats: ReadonlyMap<number, StatsRow>;
+}
+
+/** Each man on the books with a figure for the list, held to the places it prints. */
+export function leadersOf(list: LeaderList, players: readonly Pick<FootballPlayer, "code" | "name" | "season">[], held: Held): Leader[] {
+  const { source } = list;
+  return players.flatMap(({ code, name, season }) => {
+    const figure =
+      typeof source === "string" ? (held[source].get(code) ?? null)
+      : "fpl" in source ? source.fpl(season)
+      : stat(held.stats.get(code), source.stats);
+    return figure === null ? [] : [{ code, name, figure: asPrinted(list, figure) }];
+  });
 }
 
 /** The list asked for among those offered, or the first: a stale key in a shared link still shows a list. */
