@@ -30,6 +30,14 @@ export function playerNewsHref(fantraxId: string, story?: string): string {
 /** Two players side by side, `?a=&b=`. */
 export const ANALYSIS = `${POOL}/analysis`;
 
+/** Compare, carrying each field given a value in the order given: the men, the boxes' searches, the view and range. */
+export function compareHref(fields: Partial<Record<"a" | "b" | "qa" | "qb" | "view" | "range", string>>): string {
+  const query = new URLSearchParams();
+  for (const [name, value] of Object.entries(fields)) if (value !== undefined && value !== "") query.set(name, value);
+  const search = query.toString();
+  return search === "" ? ANALYSIS : `${ANALYSIS}?${search}`;
+}
+
 /** Data's club board: every real club as a fantasy manager reads it. */
 export const TEAMS = `${POOL}/teams`;
 

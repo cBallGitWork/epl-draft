@@ -25,7 +25,7 @@ import { Chip } from "../BoardControls";
 import { StackWaiting } from "../[fantraxId]/Waiting";
 import { subject } from "../[fantraxId]/subject";
 import { getLeaguePool } from "../pool";
-import { ANALYSIS, lastValue } from "../routes";
+import { compareHref, lastValue } from "../routes";
 import { seasonFixtures } from "../../football";
 
 // Two players side by side (Craig, 6 Sep 2026). Two profile reads a view and never more; the search boxes read the
@@ -132,14 +132,13 @@ export default async function ComparePage({
   const [first, second] = [men[0], men[1] ?? null];
 
   const href = (changes: { view?: View; range?: string }) => {
-    const next = new URLSearchParams();
-    if (a !== undefined) next.set("a", a);
-    if (!solo && b !== undefined) next.set("b", b);
     const nextView = changes.view ?? view;
-    if (nextView !== "figures") next.set("view", nextView);
-    const nextRange = "range" in changes ? changes.range : recent ? String(RECENT) : undefined;
-    if (nextRange !== undefined) next.set("range", nextRange);
-    return `${ANALYSIS}?${next.toString()}`;
+    return compareHref({
+      a,
+      b: solo ? undefined : b,
+      view: nextView === "figures" ? undefined : nextView,
+      range: "range" in changes ? changes.range : recent ? String(RECENT) : undefined,
+    });
   };
   const has = {
     shots: men.some((each) => each.shots.length > 0),
