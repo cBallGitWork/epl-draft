@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { crestUrl, type PublishedStory, type StoryLineupSide, londonDayAndTime, DASH } from "@epl/core";
 import { yoursInk } from "../../mine";
+import { HAIRLINES } from "./rules";
 
 // The gameweek's predicted elevens by match: a listing printed from the export, which no writer sees.
 
@@ -17,7 +18,7 @@ export default function Lineups({
   if (ties.length === 0) return null;
 
   return (
-    <div className="flex flex-col divide-y divide-[var(--paper-rule)] pt-4">
+    <div className={`flex flex-col pt-4 ${HAIRLINES}`}>
       {ties.map((tie) => (
         <section key={`${tie.home.code}-${tie.away.code}`} className="py-4">
           <p className="font-sans text-2xs tracking-widest text-muted uppercase">

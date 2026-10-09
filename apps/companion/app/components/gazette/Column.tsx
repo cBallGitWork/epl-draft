@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { HAIRLINES } from "./rules";
 
 // A column of the paper: a small-capital head over an ink rule, and rows split by hairlines, not cards.
 // Not `shell/Section`, which is the desk's headed block; the head is ink, since rank on the sheet is set in scale.
@@ -23,7 +24,7 @@ export default function Column({
         </h2>
         {aside ? <span className="font-sans text-2xs text-muted">{aside}</span> : null}
       </div>
-      <div className="divide-y divide-[var(--paper-rule)]">
+      <div className={HAIRLINES}>
         {children}
       </div>
     </section>

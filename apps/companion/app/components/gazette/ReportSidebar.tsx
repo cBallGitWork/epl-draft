@@ -2,6 +2,7 @@ import Link from "@/app/components/shell/Link";
 import type { FantasyMan, StoryLineup, StoryReport } from "@epl/core";
 import { DASH, fixed, plural } from "@epl/core";
 import { STANDING_CAPS, STANDING_HEAD as HEAD } from "./heads";
+import { RULE } from "./rules";
 
 // The sidebar beside a match's report: the line-ups first as a paper prints them, each man with our mark, then the Star man,
 // the league's side (top scorers, free agents who scored) and the key stats. A phone reads it after the report.
@@ -9,11 +10,9 @@ import { STANDING_CAPS, STANDING_HEAD as HEAD } from "./heads";
 /** Fantasy points as the sidebar prints them: "1 pt", "7 pts". */
 const pts = (n: number) => `${n} ${plural(n, "pt")}`;
 
-const RULE = { borderColor: "var(--paper-rule)" };
-
 function Panel({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
   return (
-    <section className="flex flex-col gap-1.5 border-t pt-2" style={RULE}>
+    <section className={`flex flex-col gap-1.5 border-t pt-2 ${RULE}`}>
       <h4 className={HEAD} title={hint}>{title}</h4>
       {children}
     </section>

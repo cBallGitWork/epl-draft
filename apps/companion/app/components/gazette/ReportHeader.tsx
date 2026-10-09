@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { crestUrl, londonDayAndDate, thousands, type StoryReport, type StoryReportSide } from "@epl/core";
 import { STANDING_HEAD as SMALL } from "./heads";
+import { RULE } from "./rules";
 
 // A match's header as BBC Sport sets one (Craig, 28 Sep 2026): date and competition, each club with its crest either side of
 // the score, full time and half-time, the goals and the men who made them under their own side, then the ground and the crowd.
@@ -31,7 +32,7 @@ function Events({ side, align }: { side: StoryReportSide; align: "start" | "end"
 export default function ReportHeader({ report, names }: { report: StoryReport; names: (code: number) => string }) {
   const assists = (side: StoryReportSide) => side.assists.map((a) => a.replace(/ (\d+(?:\+\d+)?)$/u, " ($1')")).join(", ");
   return (
-    <header className="flex flex-col gap-3 border-y py-3" style={{ borderColor: "var(--paper-rule)" }}>
+    <header className={`flex flex-col gap-3 border-y py-3 ${RULE}`}>
       <p className={SMALL}>{report.kickoff === "" ? "Premier League" : `${londonDayAndDate(report.kickoff)} · Premier League`}</p>
       <div className="grid grid-cols-[1fr_auto_1fr] items-start gap-3">
         <Club side={report.home} name={names(report.home.code)} align="start" />

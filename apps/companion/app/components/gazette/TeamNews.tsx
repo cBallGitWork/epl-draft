@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { crestUrl, type PublishedStory, londonDayAndTime } from "@epl/core";
+import { HAIRLINES, RULE } from "./rules";
 
 // The team-news thread: a club, its crest, a line of context, one bullet per man, and at most one quote.
 
@@ -16,7 +17,7 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
   if (rows.length === 0) return null;
 
   return (
-    <div className="flex flex-col divide-y divide-[var(--paper-rule)] pt-4">
+    <div className={`flex flex-col pt-4 ${HAIRLINES}`}>
       {rows.map((row) => (
         <section key={row.club} className="py-4">
           <h3 className="flex items-center gap-2.5">
@@ -70,10 +71,7 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
 
           {/* Carried from the source article, never composed. */}
           {row.quote === undefined ? null : (
-            <blockquote
-              className="mt-3 border-l-2 pl-3 text-base leading-snug"
-              style={{ borderColor: "var(--paper-rule)" }}
-            >
+            <blockquote className={`mt-3 border-l-2 pl-3 text-base leading-snug ${RULE}`}>
               <p className="text-ink italic">&ldquo;{row.quote.text}&rdquo;</p>
               <cite className="pt-1 block font-sans text-2xs tracking-widest text-muted uppercase not-italic">
                 {row.quote.said}

@@ -584,6 +584,16 @@ print red for exactly that reason, and `.crest` restores it.
 
 `shell/Section` is unchanged and still right on the four screens that use it.
 
+## The sheet's class strings
+
+Named at the third site, as the desk's are in `desk.ts`; ink is the caller's wherever two inks are in use, since an
+appended second ink loses on stylesheet order.
+
+| Name | File | What it is | Sites (9 Oct 2026) |
+|---|---|---|---|
+| `RULE` | `gazette/rules.ts` | a faint rule's colour, `--paper-rule`; the caller names the side | 10 |
+| `HAIRLINES` | `gazette/rules.ts` | the faint hairline between a list's rows: `divide-y` alone rules them in each row's own ink | 7 |
+
 ## States
 
 **Sections with nothing to say do not appear.** An edition padded out with "no

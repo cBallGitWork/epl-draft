@@ -1,5 +1,6 @@
 import { DASH, type PublishedStory } from "@epl/core";
 import { yoursInk } from "../../mine";
+import { HAIRLINES } from "./rules";
 
 // A column's ten in its own order (the power rankings, Lawro's predicted table): an argument, not a table of figures.
 
@@ -16,7 +17,7 @@ export default function Ranks({
   if (ranks.length === 0) return null;
 
   return (
-    <ol className="flex flex-col divide-y divide-[var(--paper-rule)] pt-3">
+    <ol className={`flex flex-col pt-3 ${HAIRLINES}`}>
       {ranks.map((rank, at) => (
         <li key={rank.teamId} className="py-2">
           <p className="flex items-baseline gap-2">

@@ -2,6 +2,7 @@ import { byPositionDepth, clubById, isGoalkeeper, playerByCode, surname, type Fo
 import PitchMarker from "../league/PitchMarker";
 import PitchRows from "../league/PitchRows";
 import { STANDING_HEAD } from "./heads";
+import { RULE } from "./rules";
 
 // The Bin XI as the desk printed it: the eleven nobody has, on the grass with Fantrax's points, then the
 // bench and the key stats. The pitch block is Sheets.tsx's and the stats list the report sidebar's: two uses each.
@@ -47,7 +48,7 @@ export default function BinXi({ story, snapshot }: { story: PublishedStory; snap
             </p>
           )}
           {bin.keyStats.length === 0 ? null : (
-            <section className="flex flex-col gap-1.5 border-t pt-2" style={{ borderColor: "var(--paper-rule)" }}>
+            <section className={`flex flex-col gap-1.5 border-t pt-2 ${RULE}`}>
               <h4 className={STANDING_HEAD}>Key stats</h4>
               <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs leading-snug text-ink">
                 {bin.keyStats.map((stat) => (

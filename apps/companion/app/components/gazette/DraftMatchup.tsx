@@ -2,12 +2,11 @@ import { benchText, lineupText, returnText, stepLabel, type Club, type StoryDraf
 import { derbyBetween } from "@/app/derbies";
 import Face from "./Face";
 import { STANDING_HEAD as SMALL } from "./heads";
+import { RULE } from "./rules";
 
 // One match-up of a draft report, set as a newspaper match report is: the score with each side's goals under it, the
 // assists and clean sheets, and how the score ran by day; then the story, its own photograph set into the text, and the
 // line-ups with the bench under each side, after the story on a phone and beside it on a desk.
-
-const RULE = { borderColor: "var(--paper-rule)" };
 
 /** A side's scorers under its name, one a line. */
 function Goals({ goals, align }: { goals: StoryDraftReturn[]; align: "start" | "end" }) {
@@ -54,7 +53,7 @@ export default function DraftMatchup({ matchup, n, saturday, clubs }: { matchup:
   const derby = derbyBetween(home.teamId, away.teamId);
   return (
     <section id={`d-${n}`} className="flex scroll-mt-4 flex-col gap-3 py-5">
-      <header className="flex flex-col gap-2 border-y py-3" style={RULE}>
+      <header className={`flex flex-col gap-2 border-y py-3 ${RULE}`}>
         <p className={SMALL}>
           {saturday ? "After Saturday" : "Full time"}
           {derby === null ? null : ` · ${derby.name}`}
@@ -102,7 +101,7 @@ export default function DraftMatchup({ matchup, n, saturday, clubs }: { matchup:
 function Lineups({ sides }: { sides: StoryDraftSide[] }) {
   if (sides.every((s) => s.eleven.length === 0)) return null;
   return (
-    <aside className="flex flex-col gap-2 border-t pt-2" style={RULE}>
+    <aside className={`flex flex-col gap-2 border-t pt-2 ${RULE}`}>
       <h4 className={SMALL}>Line-ups</h4>
       {sides.map((side) => (
         <p key={side.teamId} className="text-2xs leading-snug text-ink">
