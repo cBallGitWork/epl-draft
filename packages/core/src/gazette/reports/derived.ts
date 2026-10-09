@@ -38,10 +38,10 @@ export function derivedFacts(match: ReportMatchInput, events: readonly MatchEven
     }
   }
 
-  // Two goals by one side close together.
+  // Two goals by one side close together, in one half: first-half added time runs into the second half's clock.
   for (let i = 1; i < goals.length; i++) {
     const [a, b] = [goals[i - 1], goals[i]];
-    if (a.side !== null && a.side === b.side && b.at - a.at <= BURST && b.at > a.at) {
+    if (a.side !== null && a.side === b.side && a.half === b.half && b.at - a.at <= BURST && b.at > a.at) {
       facts.push(`${name(a.side)} scored twice in ${numeral(b.at - a.at)} minutes`);
     }
   }
