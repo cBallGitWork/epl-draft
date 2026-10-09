@@ -8,6 +8,8 @@ import {
   type PeriodPairing,
   type RosteredTeam,
   type StandingsRow,
+  type Trade,
+  completedTrades,
   deals,
   fetchDraftResults,
   fetchLiveScoring,
@@ -42,6 +44,8 @@ export interface DeskFacts {
   playerPoints: Map<string, number>;
   fielded: boolean;
   business: Deal[];
+  /** The season's completed trades, newest first: Here We Go files each on detection. */
+  trades: Trade[];
   pedigree: Map<string, DraftPick>;
   /** Fantrax's table, verbatim, for Lawro and the draft report. Empty when the standings read refused. */
   table: StandingsRow[];
@@ -67,6 +71,7 @@ export async function gatherRoundFacts(
 
   // The squads, and with them what only a join can say: whether the arrangement we hold is the one that was fielded.
   const squads = rosters === null ? null : rosteredPeriod(snapshot, rosters);
+  const traded = trades === null ? [] : mapTransactions(trades, "TRADE");
 
   return {
     pairings: periodPairings(info.matchups, info.teams, period),
@@ -80,8 +85,9 @@ export async function gatherRoundFacts(
     fielded: squads !== null && wasFielded(squads, period),
     business: deals([
       ...(claims === null ? [] : mapTransactions(claims, "CLAIM_DROP")),
-      ...(trades === null ? [] : mapTransactions(trades, "TRADE")),
+      ...traded,
     ]),
+    trades: completedTrades(traded),
     table: standingsPage === null ? [] : mapStandings(standingsPage),
     // Where each man was taken; empty before a draft, so no brief calls every squad undrafted.
     pedigree: new Map(

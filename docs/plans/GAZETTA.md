@@ -20,6 +20,11 @@ longer file. Their kinds, briefs, voices, desks and readers, and the BBC feed on
 9 Oct 2026 (Craig: *"Get the work done"*); `normalizeStory` now refuses the eight, so a filed one drops off the page.
 None was in the served league's paper; the test leagues' and the archive's stay on disk as data.
 
+**Here We Go files on detection, any day (Craig, 9 Oct 2026):** a completed trade, one short item each, keyed by the
+trade's own id, at most two a firing. PLATFORM_NOTES has the rule. The editions crons are the only clock: a trade
+completed after the Tuesday 22:30 UTC firing waits for Wednesday's 17:00, about 18 hours, and one after Thursday's
+20:30 waits for Friday's 14:00; on match days it is half an hour.
+
 ---
 
 ## Where we are — 17 Sep 2026
@@ -151,6 +156,7 @@ this and not on a guess about when things happen:
 | **Sun/Mon** | the round ends, either night | | the draft report at the gameweek's end; the Monday set (`eleven`, `power-ranking`, `dodgers`) was retired 1 Oct and deleted 9 Oct |
 | **Tue** | **nothing at all** | Bins Out | `bin-xi`, "Top Bins": the best eleven nobody has — SHIPPED 30 Sep, see below |
 | **Wed 17:00** | waivers process, free agency opens | | nothing: `wire` was retired 1 Oct and deleted 9 Oct |
+| **Any day** | a trade completes | The Mercato Wire | `trade`, "Here We Go": the next firing files it — SHIPPED 9 Oct |
 | **Thu 18:00** | Thursday's press conferences in | The Team Sheet | `presser`: Thursday's conferences, from the Mac's 16:00 import |
 | **Thu 20:00** | the evening before the round | The Form Guide | `predictions`, Lawro's calls on every tie, off the Mac's 17:15 import (the sister's 16:30 sweep) — SHIPPED 24 Sep (the evening before an earlier lock) |
 | **Fri 16:30 / 18:00** | Friday's pressers in; predicted elevens out | The Form Guide | `presser` **16:30**: Friday's conferences, off the Mac's 14:00 and 15:45 imports; then `predicted-xi` from **18:00** the evening before a Saturday lock, or **17:30** on the day of a Friday lock (Craig, 9 Oct 2026), so RotoWire's elevens have caught the conferences; it refiles under the same slug whenever the elevens or RotoWire's absences change, until the lock |

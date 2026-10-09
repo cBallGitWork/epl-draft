@@ -593,6 +593,18 @@ xG and xA print as figures in the key stats and never in the column (Craig, 28 S
 **The bench is the hard-luck men**, the ones whose chances were worth most against what they
 scored, as many as the league has reserves. It is where the real-life numbers show on the page.
 
+## Here We Go is a completed trade, told by the insider
+
+Added 9 Oct 2026. `trade` files once per completed trade, on detection and on any day (PLATFORM_NOTES, 9 Oct): kicker
+"Here We Go", edition "The Mercato Wire", by Fabrisio Romeno. The headline and deck are the desk's, the item is two to
+four sentences, and "Here we go!" closes it as its own paragraph. It prints as an ordinary written story, newest first
+with the rest; the Line-Ups still lead until the lock.
+
+**Its picture is a plate, `HereWeGo`**, in place of the ordinary face: the man stands on the receiving side's colours
+with its short name large and faint behind him, "HERE WE GO!" in the display face across his feet, and the credit in
+the top corner except on a card, where it would sit on the name. 16:9 in the front page's frames; 4:5 and printed whole
+in the article, where a trade takes the portrait column though it has no block below.
+
 ## The columns
 
 The three columns are `components/gazette/`, under `Column` rather than the

@@ -6,6 +6,7 @@ import type { DraftJob } from "./draftWriter";
 import type { ReportsJob } from "./reports";
 import type { SheetsDesk } from "./sheets";
 import type { BinDesk } from "./binXi";
+import type { TradeJob } from "./hereWeGo";
 import { PRESSER } from "./voice/pressers";
 import { edition, faceCtx, type DeskContext } from "./dispatch";
 
@@ -21,6 +22,7 @@ type Commission =
   | { brief: string; reports: ReportsJob }
   | { brief: string; draft: DraftJob }
   | { brief: string; bin: BinDesk }
+  | { brief: string; trade: TradeJob }
   | { printed: Record<string, unknown> };
 
 export function prepare(assignment: Assignment, ctx: DeskContext): Commission | null {
@@ -58,6 +60,12 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
   // The Bin XI is written and checked through its own editor, from the side the desk picked.
   if (assignment.kind === "bin-xi") {
     return ctx.bin === null ? null : { brief: ctx.bin.brief, bin: ctx.bin };
+  }
+
+  // A trade is told from the desk's facts by the helper model, through its own editor.
+  if (assignment.kind === "trade") {
+    const job = ctx.trades.get(assignment.key);
+    return job === undefined ? null : { brief: job.brief, trade: job };
   }
 
   // Team news is written a paragraph a side through its own editor, from facts the desk already joined.

@@ -173,6 +173,7 @@ export function storyOfColumn(
       bin: column.bin,
       draft: column.draft,
       moves: column.moves,
+      transfer: column.transfer,
     },
   });
   if (story === null) throw new Error(`The ${meta.kind} did not come back in a printable shape.`);

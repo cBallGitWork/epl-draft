@@ -10,6 +10,7 @@ export const STORY_BYLINE: Partial<Record<StoryKind, string>> = {
   "predicted-xi": "The Line-Ups",
   sheets: "The Team Sheets",
   "bin-xi": "Top Bins",
+  trade: "Here We Go",
 };
 
 /** The columnists who write under their own name, stamped at filing, rather than a staff writer's (`gazette/staff.ts`).
@@ -30,6 +31,7 @@ export function editionName(kind: StoryKind, filedAt: string, playedOn?: string)
   if (kind === "presser") return "The Team Sheet";
   // The night the bins go out: waivers are collected on Wednesday.
   if (kind === "bin-xi") return "Bins Out";
+  if (kind === "trade") return "The Mercato Wire";
 
   const day = londonWeekday(filedAt);
   if (day === "Sat") return "The Pink 'Un";

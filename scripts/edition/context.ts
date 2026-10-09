@@ -1,5 +1,6 @@
 import { FANTRAX_LEAGUE_ID, type Assignment, type Club, type Fixture, type FootballSnapshot, type GameweekKickoff, type LeagueInfo } from "@epl/core";
 import { binXiDesk } from "./binXi";
+import { hereWeGoDesk } from "./hereWeGo";
 import type { DeskContext } from "./dispatch";
 import type { DeskFacts } from "./facts";
 import type { Say } from "./newsroom";
@@ -64,6 +65,8 @@ export async function deskContext(input: {
   const bin = await readDesk("bin-xi", () => binXiDesk({ assignments, info, snapshot, facts, period, gameweeks, season, kickoffs, clubs, threads, say }), null, lost, say);
   // A draft report's reads likewise: the gameweek's day reads, rosters and results, only when one is assigned.
   const drafts = await readDesk("draft-report", () => draftsDesk({ assignments, gameweek: snapshot.gameweek, say }), new Map(), lost, say);
+  // Here We Go's reads, made only when a trade is assigned.
+  const trades = await readDesk("trade", () => hereWeGoDesk({ assignments, trades: facts.trades, info, snapshot, say }), new Map(), lost, say);
   const ctx: DeskContext = {
     leagueId: FANTRAX_LEAGUE_ID,
     snapshot,
@@ -77,6 +80,7 @@ export async function deskContext(input: {
     reports,
     bin,
     drafts,
+    trades,
     presserLines: sheet.lines,
     presserQuotes: sheet.quotes,
     presserTies: sheet.ties,

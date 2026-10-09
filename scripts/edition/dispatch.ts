@@ -24,6 +24,7 @@ import { presserHeadline } from "./voice/pressers";
 import type { DraftJob } from "./draftWriter";
 import type { ReportsJob } from "./reports";
 import type { BinDesk } from "./binXi";
+import type { TradeJob } from "./hereWeGo";
 
 // One assignment in, one prepared desk out: which voice writes it, from which brief, and how the words come back as a
 // story. A kind with no desk yet returns null and spends nothing.
@@ -47,6 +48,8 @@ export interface DeskContext {
   /** The Bin XI's side, brief and cargo; null unless it is due this firing. */
   bin: BinDesk | null;
   drafts: ReadonlyMap<"saturday" | "gameweek", DraftJob>;
+  /** Each trade this firing commissioned, by its covered-key. */
+  trades: ReadonlyMap<string, TradeJob>;
   /** This week's press-conference signals, for men the league holds; empty until the intel export lands. */
   presserLines: PresserLine[];
   presserQuotes: (PresserQuote & { clubName: string })[];
@@ -122,8 +125,15 @@ export function file(
     reporter: COLUMNIST[assignment.kind],
     subject: assignment.key,
     // The picture is chosen here from the facts, never from the prose, so a model cannot choose the photograph.
-    face: assignment.kind === "bin-xi" ? (ctx.bin?.face ?? null) : faceOf(assignment, faceCtx(ctx, assignment)),
+    face: deskFace(assignment, ctx),
   });
+}
+
+/** The man a story pictures: the Bin XI's and a trade's are their desks' own, every other kind's `faceOf`'s. */
+function deskFace(assignment: Assignment, ctx: DeskContext) {
+  if (assignment.kind === "bin-xi") return ctx.bin?.face ?? null;
+  if (assignment.kind === "trade") return ctx.trades.get(assignment.key)?.face ?? null;
+  return faceOf(assignment, faceCtx(ctx, assignment));
 }
 
 /** Each team-news row given its club's fixture from the desk and stripped of any the column wrote; a club code that is

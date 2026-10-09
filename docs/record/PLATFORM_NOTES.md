@@ -353,6 +353,32 @@ writer's "You are" line; the byline is resolved from the kind at render, so the 
 the line-ups under the team-news writer, the front page's lead under its writer, and the writer's name at the head of
 the match-report and team-sheet prompts.
 
+## A completed trade files as Here We Go, under Fabrisio Romeno — decided 9 Oct 2026
+
+Craig: *"Do trades get a Gazetta?"*, then *"Maybe we need a fabrizio Romano here we go! Very short article for one"*,
+and on the byline, *"Use a pro evo Romano name"*. So a completed trade in the served league files one short item
+(`trade`, kicker "Here We Go", edition "The Mercato Wire") under **Fabrisio Romeno**: Fabrizio Romano with a letter
+changed in each name, as Pro Evolution printed its unlicensed players, and never the real name. He joins
+`gazette/staff.ts` like the rest; Lawro stays the one real name.
+
+- **Detection.** `completedTrades` reads the TRADE view the facts already fetch: executed rows only, grouped by
+  Fantrax's `txSetId`, newest first; a row with no set id, or with no team on one side, is no story. The covered-key is
+  `trade:<txSetId>` and the slug `here-we-go-<txSetId>`, so a trade files once however many firings see it. The newsdesk
+  assigns at most `HERE_WE_GO.perFiring` (2) unfiled trades a firing, newest first, on any day and in any state of the
+  round; a first run therefore files the season's latest two, and older ones follow two a firing. The real league had
+  no trade on 9 Oct, so nothing back-files.
+- **The desk writes the headline and deck** ("Here we go! Ezri Konsa to Truffles"; "Truffles get Ezri Konsa from its_ohi
+  for Igor Thiago"), headed by the man with the most Fantrax points, and prints "Here we go!" as the sign-off under the
+  item, in words: the paper prints no emoji. The helper model writes only the item, two to four sentences and at most
+  seventy words, from each man's club, Fantrax season points and goals, and the gameweek the trade takes effect in.
+- **Checks** (`trades/checks.ts`) refuse a fee, a medical, a contract, an agent or any figure or name not in the brief,
+  and send back length, stock phrasing, American English, an emoji or the sign-off written in; a hard fault that
+  survives the one rewrite is not filed, and the next firing tries again.
+- **The picture** is the transfer graphic Craig sent: the man's cut-out on the receiving side's colours
+  (`team-colours.json`), its short name large and faint behind him, the house credit in the corner and "HERE WE GO!"
+  across his feet. It prints through the ink like every face (`.paper-face`), and is never drawn over.
+- `GAZETTA_TRADES=<file>` replaces the TRADE read with a file shaped as Fantrax's, for a local rehearsal; CI refuses it.
+
 ## The Prem match report prints our marks in its line-ups, and a Star man — decided 1 Oct 2026
 
 - **Craig**: "put all the ratings in the prem match report", one decimal, and the Star man replaces the Draft Man of the

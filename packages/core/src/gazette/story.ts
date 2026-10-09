@@ -14,11 +14,12 @@ export type StoryKind =
   | "presser"
   | "predicted-xi"
   | "sheets"
-  | "bin-xi";
+  | "bin-xi"
+  | "trade";
 
 /** Every kind, as data: `normalizeStory` refuses any other, and a kind missing here fails silently. */
 export const STORY_KINDS: readonly StoryKind[] = [
-  "match-report", "draft-report", "predictions", "season-rankings", "presser", "predicted-xi", "sheets", "bin-xi",
+  "match-report", "draft-report", "predictions", "season-rankings", "presser", "predicted-xi", "sheets", "bin-xi", "trade",
 ];
 
 /** One filed story, as committed; a model helped write it, so `normalizeStory` keeps what survives. */

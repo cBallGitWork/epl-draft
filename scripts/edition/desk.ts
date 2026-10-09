@@ -1,5 +1,6 @@
 import {
   draftReportsDue,
+  tradeSlot,
   openingGameweek,
   periodLock,
   reportDays,
@@ -27,6 +28,8 @@ export function deskState(input: {
   ahead: DeskState["ahead"];
   next: DeskState["next"];
   season: DeskState["season"];
+  /** The season's periods and their gameweeks, which place a trade in the round it takes effect in. */
+  calendar: readonly PeriodGameweeks[];
 }): DeskState {
   const { snapshot, facts } = input;
   return {
@@ -41,6 +44,10 @@ export function deskState(input: {
     season: input.season,
     reportDays: reportDays(snapshot.fixtures, snapshot.gameweek),
     draftReports: draftReportsDue(snapshot.fixtures, snapshot.gameweek),
+    trades: facts.trades.map((trade) => {
+      const gameweek = trade.period === null ? undefined : openingGameweek(input.calendar, trade.period);
+      return { ...tradeSlot(trade), round: trade.period === null || gameweek === undefined ? null : { period: trade.period, gameweek } };
+    }),
     ties: facts.pairings.map((pairing) => ({
       homeTeamId: pairing.home.teamId,
       awayTeamId: pairing.away.teamId,

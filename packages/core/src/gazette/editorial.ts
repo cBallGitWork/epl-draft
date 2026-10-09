@@ -214,3 +214,12 @@ export const BIN_XI = {
   asked: 200,
   paragraphs: 3,
 } as const;
+
+/** Here We Go: a completed trade as a transfer insider's item, filed on detection, any day (Craig, 9 Oct 2026). */
+export const HERE_WE_GO = {
+  /** Trades one firing may assign, newest first, so a first run files the latest two and not the season's. */
+  perFiring: 2,
+  /** The item's sentences and most words, the desk's sign-off not counted. */
+  sentences: [2, 4],
+  words: 70,
+} as const;
