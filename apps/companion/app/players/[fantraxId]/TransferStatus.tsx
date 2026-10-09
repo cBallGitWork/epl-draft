@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { Pedigree } from "@epl/core";
-import { DASH, fantraxDay } from "@epl/core";
+import { DASH, fantraxDay, ordinal } from "@epl/core";
 import Section from "../../components/shell/Section";
 import Absent from "@/app/components/shell/Absent";
 import { Value } from "./Pedigree";
@@ -33,7 +33,7 @@ export default function TransferStatus({
             pedigree.origin === "unknown" ? null : "Undrafted"
           ) : (
             <span className="flex items-baseline gap-2">
-              Round {drafted.round}, pick {drafted.overall}
+              Round {drafted.round}, {ordinal(drafted.overall)} overall
               <Value against={drafted.against} />
             </span>
           )}

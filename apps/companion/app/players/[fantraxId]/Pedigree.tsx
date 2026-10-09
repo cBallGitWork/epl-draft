@@ -1,5 +1,5 @@
 import type { Pedigree } from "@epl/core";
-import { DASH, signed } from "@epl/core";
+import { DASH, ordinal, signed } from "@epl/core";
 import { MINOR_LABEL } from "@/app/desk";
 
 // What the draft paid for him: the cyan line across the foot of Transfer, and the figure beside
@@ -21,12 +21,12 @@ export function DraftLine({
   );
 }
 
-/** `Taken by Raccoons with pick 2 of round 1.`; a drafter nobody can name loses the clause. */
+/** `Taken by Raccoons with the 11th pick, in round 2.`: the pick is overall; a drafter nobody can name loses the clause. */
 function sentence(
   pedigree: Extract<Pedigree, { origin: "draft" }>,
   drafterName: string | null,
 ): string {
-  const pick = `pick ${pedigree.overall} of round ${pedigree.round}`;
+  const pick = `the ${ordinal(pedigree.overall)} pick, in round ${pedigree.round}`;
   return drafterName === null
     ? `Taken with ${pick}.`
     : `Taken by ${drafterName} with ${pick}.`;
