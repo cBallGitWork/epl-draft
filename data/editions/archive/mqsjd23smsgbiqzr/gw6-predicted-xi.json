@@ -4,7 +4,7 @@
   "leagueId": "mqsjd23smsgbiqzr",
   "period": 6,
   "gameweek": 6,
-  "filedAt": "2026-10-09T17:25:01.296Z",
+  "filedAt": "2026-10-09T17:43:36.641Z",
   "expiresAt": "2026-10-10T11:30:00Z",
   "edition": "The Form Guide",
   "byline": "The Line-Ups",
@@ -12,7 +12,7 @@
   "deck": "Every club's expected starting eleven for the gameweek, match by match.",
   "body": "All 10 of the gameweek's matches, with both sides named.",
   "subjects": [
-    "predicted-xi:gw6"
+    "predicted-xi:gw6:a2658381"
   ],
   "image": null,
   "face": null,
