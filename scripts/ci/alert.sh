@@ -4,8 +4,9 @@
 # The repo is public: a message is a run URL or a sentence, never a cookie or a token.
 set -euo pipefail
 
-REPO=cBallGitWork/epl-draft
-OWNER=cBallGitWork
+# Actions sets both on every runner; outside Actions this stops rather than filing against a guess.
+REPO=${GITHUB_REPOSITORY:?alert.sh runs in Actions, which names the repository}
+OWNER=${GITHUB_REPOSITORY_OWNER:?alert.sh runs in Actions, which names the owner}
 QUIET_HOURS=6
 
 source=${1:-}
