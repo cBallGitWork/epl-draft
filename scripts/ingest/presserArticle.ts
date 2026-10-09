@@ -121,8 +121,10 @@ export function conferenceTimes(body: string): Map<string, { hour: number; minut
  *  as `"…" – Xabi Alonso on the Chelsea team news`. */
 export function quotes(body: string): Quote[] {
   const out: Quote[] = [];
-  for (const m of body.matchAll(/[“"]([^“”"]{20,400})[”"] ?[-–—] ?([^¶]{3,200})/g)) {
-    const text = m[1].trim();
+  // A quote of several paragraphs opens each with a mark and closes only the last, so a paragraph break followed by
+  // an opening mark continues it; reading to the nearest mark kept only Iraola's last paragraph.
+  for (const m of body.matchAll(/[“"]((?:¶ ?[“"]|[^“”"]){20,1000})[”"] ?[-–—] ?([^¶]{3,200})/g)) {
+    const text = m[1].replace(/\s*¶\s*[“"]?\s*/g, " ").trim();
     const credit = m[2].trim().replace(/[.,;]$/, "");
     const split = credit.match(/^(.+?) on (.+)$/);
     const said = (split === null ? credit : split[1]).trim();

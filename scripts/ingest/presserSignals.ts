@@ -34,10 +34,13 @@ const SAYS: { tag: string; re: RegExp }[] = [
   // A BAN, not any ban: "the club's ticket ban for away fans" ruled a fit man
   // out. A footballing suspension always names its kind or its cause.
   { tag: "suspended", re: /\b(suspended|suspension|red card|(?:three|two|four|match|domestic)[- ]match ban|(?:match|domestic)[- ]ban|serves? [^.]{0,40}\bban\b)/i },
+  // A standing absence the article mentions in passing ("will remain out"), which is not news of itself. Read before
+  // "ruled_out", which "remain unavailable" and "still sidelined" would otherwise match.
+  { tag: "still_out", re: /\b(?:remains?|remained|stays?|still|continues? to be)(?: be)? (?:out|sidelined|unavailable|absent|on the sidelines)\b(?! of (?:contract|favour|favor|form|sorts|the running))/i },
   // "is out OF CONTRACT" is not an absence, and neither is out of favour or
   // out of sorts. The preposition is the whole difference.
-  { tag: "ruled_out", re: /\b(ruled out|will miss|set to miss|miss out|miss the|sit out(?! on)|remain out|are out|is out|(?:will|set to|expected to|going to) be out)(?! of (?:contract|favour|favor|form|sorts|the running))\b|\b(sidelined|unavailable|not travel)\b/i },
-  { tag: "available", re: /\b(returns|returned to (?:\w+ )?training|back training|(?:is|are)(?: also)? back|back in|available again|has trained|in contention|is fit|fit to play|able to play|(?:is|are)(?: also)? fine|no problem|cleared)\b/i },
+  { tag: "ruled_out", re: /\b(ruled out|will miss|set to miss|miss out|miss the|sit out(?! on)|are out|is out|(?:will|set to|expected to|going to) be out)(?! of (?:contract|favour|favor|form|sorts|the running))\b|\b(sidelined|unavailable|not travel)\b/i },
+  { tag: "available", re: /\b(returns|returned to (?:\w+ )?training|back training|(?:is|are)(?: also)? back|back in|available again|has trained|(?:has|have)(?: at least| now| fully)? recovered|in contention|is fit|fit to play|able to play|(?:is|are)(?: also)? fine|no problem|cleared)\b/i },
   { tag: "injury_scare", re: /\b(doubt|assess|scan|wait|cautious|final decision|late|fitness|injur|knock|struggl|closer|not clarify|didn.t clarify|possible|pulled out)\b/i },
   // Managing a man's load, never the word "minutes" alone — "has played the
   // most minutes of any Chelsea midfielder" is praise, not a rotation warning.
@@ -53,10 +56,13 @@ const DENIED =
 /** "Reinildo is back, having served a one-match ban": a ban that is over leaves a man available. */
 const SERVED = /\b(?:is|are) back\b|\bback from (?:a |his |their )?(?:ban|suspension)\b|\bban is over\b/i;
 
+/** The readings a denial turns into a doubt. */
+const ABSENCE = new Set(["ruled_out", "still_out"]);
+
 export function classify(sentence: string): string | null {
   for (const each of SAYS) {
     if (!each.re.test(sentence)) continue;
-    if (each.tag === "ruled_out" && DENIED.test(sentence)) return "injury_scare";
+    if (ABSENCE.has(each.tag) && DENIED.test(sentence)) return "injury_scare";
     if (each.tag === "suspended" && SERVED.test(sentence)) return "available";
     return each.tag;
   }

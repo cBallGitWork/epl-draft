@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { conferenceArticle, conferenceTimes } from "./presserArticle";
+import { conferenceArticle, conferenceTimes, quotes } from "./presserArticle";
 import { classify, clauses, troubles } from "./presserSignals";
 
 // The parser decides whether a real footballer is reported as out. Every case
@@ -164,5 +164,46 @@ describe("troubles — a man named only in the prose", () => {
   it("lends that complaint to nobody when the sentence names two men", () => {
     const body = "Ewen Jaouen and Nick Pope will be out for a month with a hamstring injury between them.";
     expect(troubles(body, squad).map((each) => each.condition)).toEqual([undefined, undefined]);
+  });
+});
+
+describe("9 Oct: a man the conference ruled out is not a standing absence", () => {
+  // Scout's Friday Liverpool section, cut; the column filed both men as still out with no bullet and no quote.
+  const liverpool =
+    " ¶ Cody Gakpo (ankle) and Alexander Isak (quad) will both miss the clash with Manchester City. ¶ “Alex Isak and Cody Gakpo will not play the game. They are not ready. Unfortunately for us, both got injuries during the international break. ¶ “Cody has an ankle injury. He has had some before in his career and it is a matter of him dealing with the pain. ¶ “They both don’t look long term. We will be analysing day to day but they are not going to arrive on Sunday.” – Andoni Iraola ¶ Jeremy Jacquet (hamstring), another casualty of the last fortnight, has at least recovered and trained. ¶ “He’s fit. He’s ready to go. Still we need to train tomorrow, but he’s fine, yes.” – Andoni Iraola on Jeremy Jacquet ¶ More to follow ¶ ";
+  const squad = [
+    { name: "Gakpo", fullName: "Cody Gakpo" },
+    { name: "Isak", fullName: "Alexander Isak" },
+    { name: "Jacquet", fullName: "Jeremy Jacquet" },
+  ];
+
+  it("reads 'will both miss' as out, and 'has recovered and trained' as fit", () => {
+    expect(troubles(liverpool, squad)).toEqual([
+      { player: squad[0], tag: "ruled_out", condition: "ankle" },
+      { player: squad[1], tag: "ruled_out", condition: "quad" },
+      { player: squad[2], tag: "available", condition: "hamstring" },
+    ]);
+  });
+
+  it("reads 'remain out' and 'remain on the sidelines' as still out, never as news", () => {
+    // Coventry and Leeds, 8 Oct: men out for weeks, mentioned in passing.
+    const coventry = clauses(
+      "Haji Wright (quad), Luke Woolfenden (knee), Josh Eccles (calf) and Aurele Amenda (calf) will remain out, while Taiwo Awoniyi serves the final game of a three-match domestic ban.",
+    );
+    expect(coventry.map(classify)).toEqual(["still_out", "suspended"]);
+    expect(classify("Joe Rodon (hamstring) and forgotten man Mateo Joseph (knee) remain on the sidelines for the Whites.")).toBe("still_out");
+    expect(classify("Saliba is still out, and so is Tzolis.")).toBe("still_out");
+    expect(classify("Nobody remains out from the international break.")).toBe("injury_scare");
+    expect(classify("He will remain out of favour until he signs.")).toBeNull();
+  });
+
+  it("carries a quote of several paragraphs whole, as one quote", () => {
+    expect(quotes(liverpool)).toEqual([
+      {
+        text: "Alex Isak and Cody Gakpo will not play the game. They are not ready. Unfortunately for us, both got injuries during the international break. Cody has an ankle injury. He has had some before in his career and it is a matter of him dealing with the pain. They both don’t look long term. We will be analysing day to day but they are not going to arrive on Sunday.",
+        said: "Andoni Iraola",
+      },
+      { text: "He’s fit. He’s ready to go. Still we need to train tomorrow, but he’s fine, yes.", said: "Andoni Iraola", about: "Jeremy Jacquet" },
+    ]);
   });
 });

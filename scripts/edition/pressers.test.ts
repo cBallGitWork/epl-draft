@@ -119,6 +119,24 @@ describe("isNews", () => {
     expect(isNews("injury_scare", "2026-08-30T16:00:08.564Z", said)).toBe(false);
     expect(isNews("injury_scare", "2026-10-08T14:00:11.803Z", said)).toBe(true);
   });
+
+  it("makes a man the conference ruled out or banned news, however old his FPL note", () => {
+    // Liverpool, 9 Oct: Iraola ruled out Gakpo and Isak under notes from 27 Sep, and the column filed them as still out.
+    const friday = "2026-10-09T12:30:00.000Z";
+    expect(isNews("ruled_out", "2026-09-27T21:30:07.786Z", friday)).toBe(true);
+    expect(isNews("ruled_out", "2026-09-27T10:30:09.051Z", friday)).toBe(true);
+    expect(isNews("suspended", "2026-09-27T10:30:09.051Z", friday)).toBe(true);
+  });
+
+  it("leaves a man the article says remains out standing, and still out", () => {
+    // Coventry, 8 Oct: "Haji Wright (quad)… will remain out".
+    const fresh = isNews("still_out", "2026-09-20T10:00:00.000Z", said);
+    expect(fresh).toBe(false);
+    const wright = { playerName: "Haji Wright", ownerName: null, fresh, club: 9, tag: tagOf("still_out", { status: "i", chanceOfPlaying: 0 } as PresserSquadMan) } as PresserLine;
+    expect(withStillOut([{ club: "Coventry City", code: 9, men: [] }], [wright])).toEqual([
+      { club: "Coventry City", code: 9, men: [], stillOut: [{ name: "Haji Wright" }] },
+    ]);
+  });
 });
 
 describe("withStillOut", () => {

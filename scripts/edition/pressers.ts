@@ -173,14 +173,19 @@ export function presserQuotes(clubs: ReadonlyMap<number, Club>): (PresserQuote &
 }
 
 /** The article's doubt, unless FPL already has him out: "Daniel James will miss the Arsenal game" was a quote the
- *  import does not read, and FPL had him injured until 18 Oct. */
+ *  import does not read, and FPL had him injured until 18 Oct. A man the article says remains out is out. */
 export function tagOf(tag: string, player: PresserSquadMan): string {
+  if (tag === "still_out") return "ruled_out";
   return tag === "injury_scare" && availabilityOf(player).out ? "ruled_out" : tag;
 }
 
-/** Whether a man is news at this conference: declared fit, which no standing absence can be, or his note moved. */
+/** What the conference's prose stated today; a bracket alone or "remains out" never reads as one. */
+const STATED: ReadonlySet<string> = new Set(["ruled_out", "suspended", "available"]);
+
+/** Whether a man is news at this conference: ruled out, banned or declared fit today, or his FPL note moved. Read
+ *  the article's own tag, before `tagOf`, or a doubt FPL has out passes for a man ruled out today. */
 export function isNews(tag: string, newsAdded: string | null, said: string): boolean {
-  return tag === "available" || changed(newsAdded, said);
+  return STATED.has(tag) || changed(newsAdded, said);
 }
 
 /** Whether his availability CHANGED around this conference. A man with no note
