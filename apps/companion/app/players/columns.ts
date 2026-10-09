@@ -22,11 +22,12 @@ import {
 import type { PoolRow } from "./pool";
 import type { PoolGroup } from "./groups";
 import { ATTRIBUTE_COLUMNS } from "./attributeColumns";
+import { SEASON_COLUMNS } from "./seasonColumns";
 
-// Every column the Data board draws, phone-first. The fantasy figures come off `PoolRow`, the raw counts off the
-// grouped read's bag; a count a man's half does not carry (a keeper's GAO, an outfielder's Sv) is a dash, never 0.
+// Every column the Data board draws, phone-first. The fantasy figures come off `PoolRow`, the counts off the stats
+// bag; a count a man's half does not carry (a keeper's GAO, an outfielder's Sv) is a dash, never 0.
 
-/** The raw counts for one man, keyed by Fantrax's column abbreviation; undefined where the grouped read missed him. */
+/** One man's counts: the grouped read's by Fantrax's abbreviation, ours and the stats league's under their own keys. */
 export type RawStats = Record<string, number | null> | undefined;
 
 /** The shape of a value; the table owns the ink. */
@@ -47,6 +48,8 @@ export interface PoolColumn {
   mark?: Mark;
   /** A count, which the per-90 toggle divides by minutes. A rate, a share or a denominator never is. */
   rate?: true;
+  /** The bag key of the minutes a rate divides by, where not the served league's `Min`. */
+  minutes?: string;
   /** Which way it runs when first tapped. */
   ascending: boolean;
   value: (row: PoolRow, stats: RawStats) => number | string | null;
@@ -126,6 +129,7 @@ export const COLUMNS: PoolColumn[] = [
   count(ASSISTS_TOTAL, "attacking"),
   count(ASSISTS_OFFICIAL, "attacking"),
   count(ASSISTS_FANTASY, "attacking"),
+  ...SEASON_COLUMNS,
   count(CLEAN_SHEETS, "defensive"),
   ...DEFCON.map((category) => count(category, "defensive")),
   {

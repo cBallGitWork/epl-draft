@@ -31,7 +31,8 @@ on the phone: *"remove the yellow title for space"*, *"Mobile needs more room fo
 position title on the left here. Put position elsewhere"*, *"Remove opponent as well"*, *"Tighten the column
 headers too?"*. Where the sections below disagree with this one, this one is current.
 
-- **Phone-first order**: `FPts FP/G Min GP G AT A AF CS DC DC+ DCP GAO GA Sv PKS YC RC PKM OG Ros +/-`. `DC` and `DC+`
+- **Phone-first order**: `FPts FP/G Min GP G AT A AF Sh SoT KP BCC BCM Crs AC CS DC DC+ DCP GAO GA Sv PKS YC RC PKM OG
+  Ros +/-` (`Sh` to `AC` are the stats league's season, below). `DC` and `DC+`
   are the league's DefCon counts, Fantrax's `DFP` and `DFP3` (Craig, 6 Oct 2026: *"data page needs our dfp and dfp3
   stats"*); `DCP` is our DefCon points beside them, in cyan and never marked, drawn only where the league prices DefCon
   (Craig, 8 Oct 2026). Six figures sit
@@ -61,6 +62,24 @@ headers too?"*. Where the sections below disagree with this one, this one is cur
   chips between `lg` and `xl` (the row carries them at every other width), Club and **Sort by** selects side by side (`QuerySelect`, one component for every Data
   select), the stat groups (which a phone could not reach
   before: the old drawer never drew them), Per 90, then Reset and `Show N`. A tap outside closes it.
+
+## Shots, chances and crosses (9 Oct 2026)
+
+Craig: *"We are missing a lot of stats like shots, chances created, maybe even big chances … Key passes, crosses
+etc."* Seven columns follow `AF` under **Attacking** and on **All**: `Sh` shots, `SoT` on target, `KP` (titled
+"Chances created"), `BCC` big chances created, `BCM` big chances missed, `Crs` crosses, `AC` accurate crosses
+(`seasonColumns.ts`).
+
+- **The stats league's season, not the served league's.** The served league scores none of the seven, so they come
+  off `data/intel/stats/26-27.json` (`intelStats`, `npm run stats`, daily), joined by FPL code into the stats bag
+  under their own keys. They carry no `stat`, so a league that lacks the column cannot drop them.
+- **A quiet line under the board dates them** ("Sh to AC: season to Tue 6 Oct"): the file is daily, so a gameweek in
+  play runs ahead of it while `G` and `AT` are live.
+- **Per 90 divides by the file's own minutes**, never the served league's `Min`, which can be a match ahead.
+- A man the file does not hold (no minutes, or no bridge) dashes on all seven. A keeper's half of the read carries
+  only `KP` of them (24 keepers on 6 Oct), so his other six dash and his `KP` prints, nought or not. `BCM` is lit at
+  the bad end, as `PKM` is.
+- The address bar's keys are `sh sot kp bcc bcm cr ac`: `crs` is the attribute grid's Crossing.
 
 ## On the page — the Board
 
