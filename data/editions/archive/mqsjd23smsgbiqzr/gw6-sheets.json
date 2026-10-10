@@ -1,0 +1,964 @@
+{
+  "slug": "gw6-sheets",
+  "kind": "sheets",
+  "leagueId": "mqsjd23smsgbiqzr",
+  "period": 6,
+  "gameweek": 6,
+  "filedAt": "2026-10-10T11:38:28.377Z",
+  "expiresAt": null,
+  "edition": "The Pink 'Un",
+  "byline": "The Team Sheets",
+  "headline": "Team news: Gameweek 6",
+  "deck": "28 changes and 28 debuts.",
+  "body": "The deadline has passed. The line-ups, by head-to-head.",
+  "subjects": [
+    "sheets:gw6"
+  ],
+  "image": null,
+  "face": null,
+  "ties": [],
+  "extras": {
+    "sheets": [
+      {
+        "home": {
+          "teamId": "qgucu9dgmufwva1x",
+          "formation": "3-5-2",
+          "line": "Konsa, McGinn and Tielemans come into the side for its_ohi, who line up 3-5-2. Cash and Rayan drop to the bench. Brobbey is on the bench despite a hat-trick last time out.",
+          "xi": [
+            {
+              "name": "Martinez",
+              "code": 98980,
+              "slot": "G",
+              "against": "BOU (H)"
+            },
+            {
+              "name": "Mitchell",
+              "code": 244723,
+              "slot": "D",
+              "against": "NFO (H)"
+            },
+            {
+              "name": "Konsa",
+              "code": 199798,
+              "slot": "D",
+              "against": "LEE (H)"
+            },
+            {
+              "name": "Aina",
+              "code": 159506,
+              "slot": "D",
+              "against": "CRY (A)"
+            },
+            {
+              "name": "McGinn",
+              "code": 122806,
+              "slot": "M",
+              "against": "BRE (H)"
+            },
+            {
+              "name": "Buendía",
+              "code": 195546,
+              "slot": "M",
+              "against": "BRE (H)"
+            },
+            {
+              "name": "Mac Allister",
+              "code": 243016,
+              "slot": "M",
+              "against": "MCI (H)"
+            },
+            {
+              "name": "B.Fernandes",
+              "code": 141746,
+              "slot": "M",
+              "against": "TOT (H)"
+            },
+            {
+              "name": "Tielemans",
+              "code": 166989,
+              "slot": "M",
+              "against": "TOT (H)"
+            },
+            {
+              "name": "McBurnie",
+              "code": 169432,
+              "slot": "F",
+              "against": "EVE (H)"
+            },
+            {
+              "name": "Cunha",
+              "code": 430871,
+              "slot": "F",
+              "against": "TOT (H)"
+            }
+          ],
+          "bench": [
+            {
+              "name": "Cash",
+              "code": 199796,
+              "slot": "D",
+              "against": "BRE (H)"
+            },
+            {
+              "name": "Rayan",
+              "code": 499604,
+              "slot": "M",
+              "against": "CHE (A)"
+            },
+            {
+              "name": "Brobbey",
+              "code": 441264,
+              "slot": "F",
+              "against": "BHA (H)"
+            }
+          ]
+        },
+        "away": {
+          "teamId": "7to6xosimu8hyyw5",
+          "formation": "3-5-2",
+          "line": "Castagne and Enciso come in for Saliba and Muharemović. Muharemović goes to the bench despite an assist and a clean sheet recently. Evanilson goes up against its_ohi's Martinez in Chelsea v AFC Bournemouth.",
+          "xi": [
+            {
+              "name": "Raya",
+              "code": 154561,
+              "slot": "G",
+              "against": "LEE (H)"
+            },
+            {
+              "name": "Gvardiol",
+              "code": 477424,
+              "slot": "D",
+              "against": "LIV (A)"
+            },
+            {
+              "name": "Castagne",
+              "code": 166477,
+              "slot": "D",
+              "against": "IPS (A)"
+            },
+            {
+              "name": "Truffert",
+              "code": 494521,
+              "slot": "D",
+              "against": "CHE (A)"
+            },
+            {
+              "name": "King",
+              "code": 577725,
+              "slot": "M",
+              "against": "IPS (A)"
+            },
+            {
+              "name": "Enciso",
+              "code": 474120,
+              "slot": "M",
+              "against": "FUL (H)"
+            },
+            {
+              "name": "Rogers",
+              "code": 244850,
+              "slot": "M",
+              "against": "BOU (H)"
+            },
+            {
+              "name": "Xhaka",
+              "code": 84450,
+              "slot": "M",
+              "against": "BHA (H)"
+            },
+            {
+              "name": "Gibbs-White",
+              "code": 222531,
+              "slot": "M",
+              "against": "CRY (A)"
+            },
+            {
+              "name": "Wissa",
+              "code": 216646,
+              "slot": "F",
+              "against": "COV (A)"
+            },
+            {
+              "name": "Evanilson",
+              "code": 444102,
+              "slot": "F",
+              "against": "CHE (A)"
+            }
+          ],
+          "bench": [
+            {
+              "name": "Muharemović",
+              "code": 522047,
+              "slot": "D",
+              "against": "ARS (A)"
+            },
+            {
+              "name": "Saliba",
+              "code": 462424,
+              "slot": "D",
+              "against": "LEE (H)"
+            },
+            {
+              "name": "Mateta",
+              "code": 231747,
+              "slot": "F",
+              "against": "NFO (H)"
+            }
+          ]
+        }
+      },
+      {
+        "home": {
+          "teamId": "l5kunst8msgbirdf",
+          "formation": "3-5-2",
+          "line": "Davis and Sangaré replace Kerkez and Kudus. Kerkez is benched despite two clean sheets recently. Kudus is dropped despite an assist last time out.",
+          "xi": [
+            {
+              "name": "Lammens",
+              "code": 465247,
+              "slot": "G",
+              "against": "TOT (H)"
+            },
+            {
+              "name": "Davis",
+              "code": 455084,
+              "slot": "D",
+              "against": "FUL (H)"
+            },
+            {
+              "name": "Khalaili",
+              "code": 570794,
+              "slot": "D",
+              "against": "NFO (H)"
+            },
+            {
+              "name": "Matheus N.",
+              "code": 465351,
+              "slot": "D",
+              "against": "LIV (A)"
+            },
+            {
+              "name": "Sarr",
+              "code": 232185,
+              "slot": "M",
+              "against": "NFO (H)"
+            },
+            {
+              "name": "Dewsbury-Hall",
+              "code": 215413,
+              "slot": "M",
+              "against": "HUL (A)"
+            },
+            {
+              "name": "Garner",
+              "code": 232928,
+              "slot": "M",
+              "against": "HUL (A)"
+            },
+            {
+              "name": "M.Sangaré",
+              "code": 513545,
+              "slot": "M",
+              "against": "AVL (A)"
+            },
+            {
+              "name": "Palmer",
+              "code": 244851,
+              "slot": "M",
+              "against": "BOU (H)"
+            },
+            {
+              "name": "Haaland",
+              "code": 223094,
+              "slot": "F",
+              "against": "LIV (A)"
+            },
+            {
+              "name": "Gonzalo",
+              "code": 551466,
+              "slot": "F",
+              "against": "IPS (A)"
+            }
+          ],
+          "bench": [
+            {
+              "name": "Kerkez",
+              "code": 544877,
+              "slot": "D",
+              "against": "MCI (H)"
+            },
+            {
+              "name": "Hinshelwood",
+              "code": 532529,
+              "slot": "M",
+              "against": "SUN (A)"
+            },
+            {
+              "name": "Kudus",
+              "code": 460842,
+              "slot": "M",
+              "against": "MUN (A)"
+            }
+          ]
+        },
+        "away": {
+          "teamId": "0g0j5mkomuqqwsbu",
+          "formation": "4-4-2",
+          "line": "Kayode, Thiaw, Palestra, Maitland-Niles and Anthony are all named for the first time in a 4-4-2. Palestra is named but might not start for his club. Tonali meets The Raccoons's Lammens in Manchester United v Tottenham Hotspur.",
+          "xi": [
+            {
+              "name": "Donnarumma",
+              "code": 204936,
+              "slot": "G",
+              "against": "LIV (A)"
+            },
+            {
+              "name": "Hall",
+              "code": 487838,
+              "slot": "D",
+              "against": "COV (A)"
+            },
+            {
+              "name": "Kayode",
+              "code": 607464,
+              "slot": "D",
+              "against": "AVL (A)"
+            },
+            {
+              "name": "Thiaw",
+              "code": 465642,
+              "slot": "D",
+              "against": "COV (A)"
+            },
+            {
+              "name": "Palestra",
+              "code": 620109,
+              "slot": "D",
+              "against": "BOU (H)"
+            },
+            {
+              "name": "Szoboszlai",
+              "code": 424876,
+              "slot": "M",
+              "against": "MCI (H)"
+            },
+            {
+              "name": "Maitland-Niles",
+              "code": 154043,
+              "slot": "M",
+              "against": "HUL (A)"
+            },
+            {
+              "name": "Wirtz",
+              "code": 494595,
+              "slot": "M",
+              "against": "MCI (H)"
+            },
+            {
+              "name": "Tonali",
+              "code": 432422,
+              "slot": "M",
+              "against": "MUN (A)"
+            },
+            {
+              "name": "Anthony",
+              "code": 444180,
+              "slot": "F",
+              "against": "AVL (A)"
+            },
+            {
+              "name": "Havertz",
+              "code": 219847,
+              "slot": "F",
+              "against": "LEE (H)"
+            }
+          ],
+          "bench": [
+            {
+              "name": "Ruggeri",
+              "code": 487992,
+              "slot": "D",
+              "against": "BRE (H)"
+            },
+            {
+              "name": "Yeremy",
+              "code": 488024,
+              "slot": "M",
+              "against": "NFO (H)"
+            },
+            {
+              "name": "Marmoush",
+              "code": 438234,
+              "slot": "F",
+              "against": "MUN (A)"
+            }
+          ]
+        }
+      },
+      {
+        "home": {
+          "teamId": "uexqrijomu8l5asi",
+          "formation": "4-4-2",
+          "line": "Doubts hang over Mykolenko, Mainoo and Semenyo. Semenyo has an ankle problem. Mainoo and Ndoye come in for Elanga and Minteh.",
+          "xi": [
+            {
+              "name": "Trafford",
+              "code": 432720,
+              "slot": "G",
+              "against": "ARS (A)"
+            },
+            {
+              "name": "Branthwaite",
+              "code": 480455,
+              "slot": "D",
+              "against": "HUL (A)"
+            },
+            {
+              "name": "Mykolenko",
+              "code": 224967,
+              "slot": "D",
+              "against": "HUL (A)"
+            },
+            {
+              "name": "Lacroix",
+              "code": 437499,
+              "slot": "D",
+              "against": "BOU (H)"
+            },
+            {
+              "name": "Calafiori",
+              "code": 466075,
+              "slot": "D",
+              "against": "LEE (H)"
+            },
+            {
+              "name": "De Cuyper",
+              "code": 465730,
+              "slot": "M",
+              "against": "SUN (A)"
+            },
+            {
+              "name": "Mainoo",
+              "code": 516895,
+              "slot": "M",
+              "against": "TOT (H)"
+            },
+            {
+              "name": "Groß",
+              "code": 60307,
+              "slot": "M",
+              "against": "SUN (A)"
+            },
+            {
+              "name": "Tavernier",
+              "code": 201658,
+              "slot": "M",
+              "against": "CHE (A)"
+            },
+            {
+              "name": "Ndoye",
+              "code": 456512,
+              "slot": "F",
+              "against": "CRY (A)"
+            },
+            {
+              "name": "Semenyo",
+              "code": 437730,
+              "slot": "F",
+              "against": "LIV (A)"
+            }
+          ],
+          "bench": [
+            {
+              "name": "Foden",
+              "code": 209244,
+              "slot": "M",
+              "against": "LIV (A)"
+            },
+            {
+              "name": "Elanga",
+              "code": 449434,
+              "slot": "M",
+              "against": "COV (A)"
+            },
+            {
+              "name": "Minteh",
+              "code": 592031,
+              "slot": "F",
+              "against": "SUN (A)"
+            }
+          ]
+        },
+        "away": {
+          "teamId": "ipnp5y4mmu9j7kop",
+          "formation": "5-3-2",
+          "line": "Rashford is an injury doubt with a strain. Gakpo misses out despite two assists in recent games. Saka faces AtleticoTimHortons's Trafford in Arsenal v Leeds United.",
+          "xi": [
+            {
+              "name": "Pickford",
+              "code": 111234,
+              "slot": "G",
+              "against": "HUL (A)"
+            },
+            {
+              "name": "Tarkowski",
+              "code": 17761,
+              "slot": "D",
+              "against": "HUL (A)"
+            },
+            {
+              "name": "Bogle",
+              "code": 226182,
+              "slot": "D",
+              "against": "ARS (A)"
+            },
+            {
+              "name": "Gabriel",
+              "code": 226597,
+              "slot": "D",
+              "against": "LEE (H)"
+            },
+            {
+              "name": "White",
+              "code": 198869,
+              "slot": "D",
+              "against": "LEE (H)"
+            },
+            {
+              "name": "Dunk",
+              "code": 83299,
+              "slot": "D",
+              "against": "SUN (A)"
+            },
+            {
+              "name": "Enzo",
+              "code": 448047,
+              "slot": "M",
+              "against": "LIV (A)"
+            },
+            {
+              "name": "Bobb",
+              "code": 477555,
+              "slot": "M",
+              "against": "IPS (A)"
+            },
+            {
+              "name": "Saka",
+              "code": 223340,
+              "slot": "M",
+              "against": "LEE (H)"
+            },
+            {
+              "name": "Rashford",
+              "code": 176297,
+              "slot": "F",
+              "against": "TOT (H)"
+            },
+            {
+              "name": "Delap",
+              "code": 463034,
+              "slot": "F",
+              "against": "CRY (A)"
+            }
+          ],
+          "bench": [
+            {
+              "name": "Gakpo",
+              "code": 243298,
+              "slot": "M",
+              "against": "MCI (H)"
+            },
+            {
+              "name": "Amad",
+              "code": 493250,
+              "slot": "F",
+              "against": "TOT (H)"
+            },
+            {
+              "name": "Šeško",
+              "code": 485711,
+              "slot": "F",
+              "against": "TOT (H)"
+            }
+          ]
+        }
+      },
+      {
+        "home": {
+          "teamId": "aekx2715mtzgcl3f",
+          "formation": "3-4-3",
+          "line": "Jackson is left out despite scoring last gameweek. Kadıoğlu and Barry are named for the first time. Becker and Araujo line up against Cowthenbeef's Cherki in Liverpool v Manchester City.",
+          "xi": [
+            {
+              "name": "A.Becker",
+              "code": 116535,
+              "slot": "G",
+              "against": "MCI (H)"
+            },
+            {
+              "name": "F.Kadıoğlu",
+              "code": 231416,
+              "slot": "D",
+              "against": "SUN (A)"
+            },
+            {
+              "name": "Vuskovic",
+              "code": 610799,
+              "slot": "D",
+              "against": "SUN (A)"
+            },
+            {
+              "name": "Araujo",
+              "code": 445087,
+              "slot": "D",
+              "against": "MCI (H)"
+            },
+            {
+              "name": "Stach",
+              "code": 466525,
+              "slot": "M",
+              "against": "ARS (A)"
+            },
+            {
+              "name": "Rice",
+              "code": 204480,
+              "slot": "M",
+              "against": "LEE (H)"
+            },
+            {
+              "name": "Janelt",
+              "code": 204580,
+              "slot": "M",
+              "against": "AVL (A)"
+            },
+            {
+              "name": "Caicedo",
+              "code": 486672,
+              "slot": "M",
+              "against": "BOU (H)"
+            },
+            {
+              "name": "Thiago",
+              "code": 502500,
+              "slot": "F",
+              "against": "AVL (A)"
+            },
+            {
+              "name": "Barry",
+              "code": 586309,
+              "slot": "F",
+              "against": "HUL (A)"
+            },
+            {
+              "name": "Kostoulas",
+              "code": 647850,
+              "slot": "F",
+              "against": "SUN (A)"
+            }
+          ],
+          "bench": [
+            {
+              "name": "Jacquet",
+              "code": 606702,
+              "slot": "D",
+              "against": "MCI (H)"
+            },
+            {
+              "name": "Kamada",
+              "code": 209400,
+              "slot": "M",
+              "against": "NFO (H)"
+            },
+            {
+              "name": "N.Jackson",
+              "code": 517052,
+              "slot": "F",
+              "against": "BRE (H)"
+            }
+          ]
+        },
+        "away": {
+          "teamId": "7z8fy0pnmuogbtdw",
+          "formation": "3-4-3",
+          "line": "Ndiaye loses his place despite an assist last time out. Bassey, Lewis-Skelly, Madueke and Fernandez-Pardo all come into the eleven. Muñoz and João Pedro are named, though their clubs might not start either.",
+          "xi": [
+            {
+              "name": "Verbruggen",
+              "code": 489639,
+              "slot": "G",
+              "against": "SUN (A)"
+            },
+            {
+              "name": "Bassey",
+              "code": 232892,
+              "slot": "D",
+              "against": "IPS (A)"
+            },
+            {
+              "name": "Muñoz",
+              "code": 247348,
+              "slot": "D",
+              "against": "CRY (A)"
+            },
+            {
+              "name": "Lewis-Skelly",
+              "code": 499169,
+              "slot": "D",
+              "against": "LEE (H)"
+            },
+            {
+              "name": "Gomez",
+              "code": 514254,
+              "slot": "M",
+              "against": "SUN (A)"
+            },
+            {
+              "name": "Cherki",
+              "code": 466052,
+              "slot": "M",
+              "against": "LIV (A)"
+            },
+            {
+              "name": "Madueke",
+              "code": 248857,
+              "slot": "M",
+              "against": "LEE (H)"
+            },
+            {
+              "name": "Manzambi",
+              "code": 614071,
+              "slot": "M",
+              "against": "BRE (H)"
+            },
+            {
+              "name": "Calvert-Lewin",
+              "code": 177815,
+              "slot": "F",
+              "against": "ARS (A)"
+            },
+            {
+              "name": "João Pedro",
+              "code": 475168,
+              "slot": "F",
+              "against": "BOU (H)"
+            },
+            {
+              "name": "Fernandez-Pardo",
+              "code": 613221,
+              "slot": "F",
+              "against": "COV (A)"
+            }
+          ],
+          "bench": [
+            {
+              "name": "J.Timber",
+              "code": 445122,
+              "slot": "D",
+              "against": "LEE (H)"
+            },
+            {
+              "name": "Ndiaye",
+              "code": 440993,
+              "slot": "M",
+              "against": "LIV (A)"
+            },
+            {
+              "name": "Bruno G.",
+              "code": 208706,
+              "slot": "M",
+              "against": "LEE (H)"
+            }
+          ]
+        }
+      },
+      {
+        "home": {
+          "teamId": "kpj0z744muh1qwtd",
+          "formation": "3-5-2",
+          "line": "Ødegaard is up against GlengarryHearts's Ampadu in Arsenal v Leeds United. Shaw, Wharton and Lewis-Potter replace Robinson, James and Maeda.",
+          "xi": [
+            {
+              "name": "Roefs",
+              "code": 498016,
+              "slot": "G",
+              "against": "BHA (H)"
+            },
+            {
+              "name": "Maguire",
+              "code": 95658,
+              "slot": "D",
+              "against": "TOT (H)"
+            },
+            {
+              "name": "Guéhi",
+              "code": 209036,
+              "slot": "D",
+              "against": "LIV (A)"
+            },
+            {
+              "name": "Shaw",
+              "code": 106760,
+              "slot": "D",
+              "against": "TOT (H)"
+            },
+            {
+              "name": "Neto",
+              "code": 247632,
+              "slot": "M",
+              "against": "BOU (H)"
+            },
+            {
+              "name": "Ødegaard",
+              "code": 184029,
+              "slot": "M",
+              "against": "LEE (H)"
+            },
+            {
+              "name": "Wharton",
+              "code": 496221,
+              "slot": "M",
+              "against": "NFO (H)"
+            },
+            {
+              "name": "Mbeumo",
+              "code": 446008,
+              "slot": "M",
+              "against": "TOT (H)"
+            },
+            {
+              "name": "Grealish",
+              "code": 114283,
+              "slot": "M",
+              "against": "HUL (A)"
+            },
+            {
+              "name": "Barcola",
+              "code": 482616,
+              "slot": "F",
+              "against": "MCI (H)"
+            },
+            {
+              "name": "Lewis-Potter",
+              "code": 249231,
+              "slot": "F",
+              "against": "AVL (A)"
+            }
+          ],
+          "bench": [
+            {
+              "name": "Robinson",
+              "code": 169528,
+              "slot": "D",
+              "against": "IPS (A)"
+            },
+            {
+              "name": "James",
+              "code": 225796,
+              "slot": "D",
+              "against": "BOU (H)"
+            },
+            {
+              "name": "Maeda",
+              "code": 442967,
+              "slot": "M",
+              "against": "FUL (H)"
+            }
+          ]
+        },
+        "away": {
+          "teamId": "syjkob6cmuobagfu",
+          "formation": "4-4-2",
+          "line": "Isak misses out despite finding the net last gameweek. Schade has scored twice and provided two assists lately. Mukiele and Belloumi are promoted from the bench.",
+          "xi": [
+            {
+              "name": "Kelleher",
+              "code": 200720,
+              "slot": "G",
+              "against": "AVL (A)"
+            },
+            {
+              "name": "Ampadu",
+              "code": 199598,
+              "slot": "D",
+              "against": "ARS (A)"
+            },
+            {
+              "name": "Mukiele",
+              "code": 200834,
+              "slot": "D",
+              "against": "BHA (H)"
+            },
+            {
+              "name": "Rúben",
+              "code": 171314,
+              "slot": "D",
+              "against": "LIV (A)"
+            },
+            {
+              "name": "Virgil",
+              "code": 97032,
+              "slot": "D",
+              "against": "MCI (H)"
+            },
+            {
+              "name": "E.Le Fée",
+              "code": 484420,
+              "slot": "M",
+              "against": "BHA (H)"
+            },
+            {
+              "name": "Barnes",
+              "code": 201666,
+              "slot": "M",
+              "against": "COV (A)"
+            },
+            {
+              "name": "Anderson",
+              "code": 215379,
+              "slot": "M",
+              "against": "LIV (A)"
+            },
+            {
+              "name": "Schade",
+              "code": 513418,
+              "slot": "M",
+              "against": "AVL (A)"
+            },
+            {
+              "name": "Belloumi",
+              "code": 540324,
+              "slot": "F",
+              "against": "EVE (H)"
+            },
+            {
+              "name": "Iwobi",
+              "code": 153133,
+              "slot": "F",
+              "against": "IPS (A)"
+            }
+          ],
+          "bench": [
+            {
+              "name": "Hill",
+              "code": 463981,
+              "slot": "D",
+              "against": "CHE (A)"
+            },
+            {
+              "name": "Gyökeres",
+              "code": 224117,
+              "slot": "F",
+              "against": "LEE (H)"
+            },
+            {
+              "name": "Isak",
+              "code": 219168,
+              "slot": "F",
+              "against": "MCI (H)"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
