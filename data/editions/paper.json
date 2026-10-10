@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-09T22:17:58.034Z",
+  "updatedAt": "2026-10-10T11:03:32.212Z",
   "stories": [
     {
       "slug": "gw5-presser-2026-09-18",
@@ -7371,7 +7371,7 @@
       "leagueId": "mqsjd23smsgbiqzr",
       "period": 6,
       "gameweek": 6,
-      "filedAt": "2026-10-09T22:17:58.034Z",
+      "filedAt": "2026-10-10T11:03:32.212Z",
       "expiresAt": "2026-10-10T11:30:00Z",
       "leadsUntil": "2026-10-10T11:15:00.000Z",
       "edition": "The Form Guide",
@@ -7380,7 +7380,7 @@
       "deck": "Every club's expected starting eleven for the gameweek.",
       "body": "",
       "subjects": [
-        "predicted-xi:gw6:f3d841c2"
+        "predicted-xi:gw6:5478a2ad"
       ],
       "image": null,
       "face": {
@@ -7404,14 +7404,9 @@
                   "owner": "7to6xosimu8hyyw5"
                 },
                 {
-                  "name": "Jurriën Timber",
+                  "name": "Benjamin White",
                   "position": "RB",
-                  "owner": "7z8fy0pnmuogbtdw"
-                },
-                {
-                  "name": "Cristhian Mosquera",
-                  "position": "CB",
-                  "status": "Doubt"
+                  "owner": "ipnp5y4mmu9j7kop"
                 },
                 {
                   "name": "Gabriel",
@@ -7419,20 +7414,24 @@
                   "owner": "ipnp5y4mmu9j7kop"
                 },
                 {
+                  "name": "Ezri Konsa",
+                  "position": "CB",
+                  "owner": "qgucu9dgmufwva1x"
+                },
+                {
                   "name": "Riccardo Calafiori",
                   "position": "LB",
                   "owner": "uexqrijomu8l5asi"
                 },
                 {
-                  "name": "Bruno G.",
+                  "name": "Myles Lewis-Skelly",
                   "position": "DM",
                   "owner": "7z8fy0pnmuogbtdw"
                 },
                 {
                   "name": "Declan Rice",
                   "position": "DM",
-                  "owner": "aekx2715mtzgcl3f",
-                  "status": "Doubt"
+                  "owner": "aekx2715mtzgcl3f"
                 },
                 {
                   "name": "Bukayo Saka",
@@ -7445,14 +7444,14 @@
                   "owner": "kpj0z744muh1qwtd"
                 },
                 {
-                  "name": "Eberechi Eze",
-                  "position": "CAM",
+                  "name": "Noni Madueke",
+                  "position": "RW",
                   "owner": "7z8fy0pnmuogbtdw"
                 },
                 {
-                  "name": "Viktor Gyökeres",
+                  "name": "Kai Havertz",
                   "position": "ST",
-                  "owner": "syjkob6cmuobagfu"
+                  "owner": "0g0j5mkomuqqwsbu"
                 }
               ]
             },
@@ -7477,8 +7476,7 @@
                 },
                 {
                   "name": "James Justin",
-                  "position": "CB",
-                  "owner": "7z8fy0pnmuogbtdw"
+                  "position": "CB"
                 },
                 {
                   "name": "Jayden Bogle",
@@ -7540,7 +7538,8 @@
                 },
                 {
                   "name": "Matteo Ruggeri",
-                  "position": "LB"
+                  "position": "LB",
+                  "owner": "0g0j5mkomuqqwsbu"
                 },
                 {
                   "name": "Joao Gomes",
@@ -7552,7 +7551,8 @@
                 },
                 {
                   "name": "John McGinn",
-                  "position": "RW"
+                  "position": "RW",
+                  "owner": "qgucu9dgmufwva1x"
                 },
                 {
                   "name": "Johan Manzambi",
@@ -7601,7 +7601,8 @@
                 },
                 {
                   "name": "Mamadou Sangaré",
-                  "position": "DM"
+                  "position": "DM",
+                  "owner": "l5kunst8msgbirdf"
                 },
                 {
                   "name": "Vitaly Janelt",
@@ -7610,7 +7611,8 @@
                 },
                 {
                   "name": "Jaidon Anthony",
-                  "position": "RW"
+                  "position": "RW",
+                  "owner": "0g0j5mkomuqqwsbu"
                 },
                 {
                   "name": "Yehor Yarmoliuk",
@@ -7761,11 +7763,11 @@
                   "position": "GK"
                 },
                 {
-                  "name": "Ethan Pinnock",
+                  "name": "Bobby Thomas",
                   "position": "CB"
                 },
                 {
-                  "name": "Bobby Thomas",
+                  "name": "Ethan Pinnock",
                   "position": "CB"
                 },
                 {
@@ -7778,11 +7780,11 @@
                   "status": "Doubt"
                 },
                 {
-                  "name": "Matt Grimes",
+                  "name": "Frank Onyeka",
                   "position": "CM"
                 },
                 {
-                  "name": "Frank Onyeka",
+                  "name": "Matt Grimes",
                   "position": "CM"
                 },
                 {
@@ -7790,12 +7792,12 @@
                   "position": "LWB"
                 },
                 {
-                  "name": "Loum Tchaouna",
-                  "position": "RW"
-                },
-                {
                   "name": "Jack Rudoni",
                   "position": "AM"
+                },
+                {
+                  "name": "Loum Tchaouna",
+                  "position": "RW"
                 },
                 {
                   "name": "Brandon Thomas-Asante",
@@ -7823,7 +7825,8 @@
                 },
                 {
                   "name": "Malick Thiaw",
-                  "position": "CB"
+                  "position": "CB",
+                  "owner": "0g0j5mkomuqqwsbu"
                 },
                 {
                   "name": "Lewis Hall",
@@ -7956,7 +7959,6 @@
                 {
                   "name": "Neco Williams",
                   "position": "LWB",
-                  "owner": "0g0j5mkomuqqwsbu",
                   "status": "Doubt"
                 },
                 {
@@ -8044,7 +8046,8 @@
                 },
                 {
                   "name": "Ainsley Maitland-Niles",
-                  "position": "RB"
+                  "position": "RB",
+                  "owner": "0g0j5mkomuqqwsbu"
                 },
                 {
                   "name": "James Tarkowski",
@@ -8144,8 +8147,7 @@
                 },
                 {
                   "name": "Emersonn",
-                  "position": "ST",
-                  "owner": "l5kunst8msgbirdf"
+                  "position": "ST"
                 }
               ]
             },
@@ -8186,7 +8188,8 @@
                 },
                 {
                   "name": "Oscar Bobb",
-                  "position": "RW"
+                  "position": "RW",
+                  "owner": "ipnp5y4mmu9j7kop"
                 },
                 {
                   "name": "Josh King",
@@ -8322,8 +8325,7 @@
                 },
                 {
                   "name": "Jérémy Doku",
-                  "position": "LW",
-                  "owner": "0g0j5mkomuqqwsbu"
+                  "position": "LW"
                 },
                 {
                   "name": "Erling Haaland",
@@ -8444,7 +8446,8 @@
                 },
                 {
                   "name": "Omar Marmoush",
-                  "position": "LW"
+                  "position": "LW",
+                  "owner": "0g0j5mkomuqqwsbu"
                 },
                 {
                   "name": "Solanke",
