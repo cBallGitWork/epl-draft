@@ -2,7 +2,7 @@
   "manifest": {
     "season": "26-27",
     "gameweek": 6,
-    "exportedAt": "2026-10-10T12:55:18.460Z",
+    "exportedAt": "2026-10-10T13:48:40.941Z",
     "rows": 20,
     "sources": [
       {
@@ -15,7 +15,7 @@
       }
     ]
   },
-  "fetchedAt": "2026-10-10T12:55:18.460Z",
+  "fetchedAt": "2026-10-10T13:48:40.941Z",
   "source": "rotowire+ffscout",
   "clubs": {
     "ARS": {
@@ -289,23 +289,15 @@
       "lineup": "confirmed",
       "absent": [
         {
-          "code": 222694,
-          "status": "QUES"
-        },
-        {
-          "code": 83299,
-          "status": "QUES"
-        },
-        {
-          "code": 532529,
-          "status": "QUES"
-        },
-        {
           "code": 471551,
           "status": "OUT"
         },
         {
           "code": 487117,
+          "status": "OUT"
+        },
+        {
+          "code": 532529,
           "status": "OUT"
         },
         {
@@ -388,11 +380,11 @@
       "lineup": "confirmed",
       "absent": [
         {
-          "code": 231899,
-          "status": "QUES"
+          "code": 531442,
+          "status": "OUT"
         },
         {
-          "code": 531442,
+          "code": 231899,
           "status": "OUT"
         }
       ]
@@ -455,16 +447,12 @@
       "lineup": "confirmed",
       "absent": [
         {
-          "code": 167074,
-          "status": "QUES"
-        },
-        {
           "code": 76357,
-          "status": "QUES"
+          "status": "OUT"
         },
         {
           "code": 169528,
-          "status": "QUES"
+          "status": "OUT"
         }
       ]
     },
@@ -526,31 +514,15 @@
       "lineup": "confirmed",
       "absent": [
         {
-          "code": 486672,
-          "status": "QUES"
-        },
-        {
-          "code": 244851,
-          "status": "QUES"
-        },
-        {
-          "code": 475168,
-          "status": "QUES"
-        },
-        {
           "code": 503037,
-          "status": "QUES"
-        },
-        {
-          "code": 225796,
-          "status": "QUES"
-        },
-        {
-          "code": 620109,
-          "status": "QUES"
+          "status": "OUT"
         },
         {
           "code": 463936,
+          "status": "OUT"
+        },
+        {
+          "code": 225796,
           "status": "OUT"
         }
       ]
@@ -612,10 +584,6 @@
       ],
       "lineup": "confirmed",
       "absent": [
-        {
-          "code": 111317,
-          "status": "QUES"
-        },
         {
           "code": 489888,
           "status": "OUT"
@@ -700,12 +668,8 @@
       "lineup": "confirmed",
       "absent": [
         {
-          "code": 199796,
-          "status": "QUES"
-        },
-        {
           "code": 119090,
-          "status": "QUES"
+          "status": "OUT"
         },
         {
           "code": 441302,
