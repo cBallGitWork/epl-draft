@@ -1,0 +1,723 @@
+{
+  "paginatedResultSet": {
+    "totalNumPages": 1,
+    "pageNumber": 1,
+    "maxResultsPerPage": 100,
+    "totalNumResults": 4
+  },
+  "filterSettings": {
+    "positionOrGroup": "ALL",
+    "view": "CLAIM_DROP",
+    "adminMode": false,
+    "includeDeleted": false,
+    "team": "ALL",
+    "executedOnly": true
+  },
+  "displayedSelections": {
+    "positionOrGroup": "ALL",
+    "view": "CLAIM_DROP",
+    "adminMode": false,
+    "includeDeleted": false,
+    "team": "ALL",
+    "executedOnly": true
+  },
+  "miscData": {
+    "deleteTransactionExecutedDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "Yes"
+        },
+        {
+          "id": "option1",
+          "label": "No"
+        }
+      ],
+      "text": "This will only delete the transaction record - <b style=\"color:#8B0000\">it will not undo it - it will not move any players</b>. Are you sure you want to permanently delete this?"
+    },
+    "deleteTransactionNotExecutedDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "Yes"
+        },
+        {
+          "id": "option1",
+          "label": "No"
+        }
+      ],
+      "text": "Are you sure you want to permanently delete this?"
+    },
+    "heading": "2026 ALLPOINTS",
+    "undoTransactionDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "Yes"
+        },
+        {
+          "id": "option1",
+          "label": "No"
+        }
+      ],
+      "text": "Are you sure you want to undo this transaction?"
+    },
+    "undoTooltip": "Undo transaction",
+    "executeTooltip": "Execute transaction if team was not updated with players",
+    "deleteTooltip": "Delete transaction from view",
+    "editTransactionDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "OK"
+        },
+        {
+          "id": "option1",
+          "label": "Cancel"
+        }
+      ],
+      "text": "# of periods to move transaction forward:"
+    },
+    "editTooltip": "Edit Transaction",
+    "editTransactionSuccessDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "OK"
+        }
+      ],
+      "text": "Transaction successfully edited and re-executed."
+    },
+    "executeTransactionSuccessDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "OK"
+        }
+      ],
+      "text": "Transaction successfully executed."
+    },
+    "executeTransactionDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "???word.Ok: en_US???"
+        },
+        {
+          "id": "option1",
+          "label": "Cancel"
+        }
+      ],
+      "text": "Please confirm that you want to executed the highlighted transaction since the system has detected that it was not executed."
+    },
+    "editTransactionMaximumForward": 200
+  },
+  "displayedLists": {
+    "teams": [
+      {
+        "name": "All Teams",
+        "id": "ALL"
+      },
+      {
+        "name": "123",
+        "id": "98yx3o50mtj36y3g"
+      },
+      {
+        "name": "test1",
+        "id": "hy0w28p5mtj36y3g"
+      },
+      {
+        "name": "test2",
+        "id": "1b6gp5utmtj36y3g"
+      },
+      {
+        "name": "test211",
+        "id": "fq5omv5kmtj36y3g"
+      },
+      {
+        "name": "test3",
+        "id": "y6viv6jfmtj36y3g"
+      },
+      {
+        "name": "test31",
+        "id": "dpdkp2bbmtj36y3g"
+      },
+      {
+        "name": "test31121",
+        "id": "g80h3bf5mtj36y3g"
+      },
+      {
+        "name": "test3331",
+        "id": "kg18w2cvmtj36y3g"
+      },
+      {
+        "name": "test4",
+        "id": "deo9ljvtmtj36y3g"
+      },
+      {
+        "name": "testf",
+        "id": "pzmd243ymtj36y3g"
+      }
+    ],
+    "tabs": [
+      {
+        "name": "Claim/Drop",
+        "id": "CLAIM_DROP"
+      },
+      {
+        "name": "Trade",
+        "id": "TRADE"
+      },
+      {
+        "name": "Lineup",
+        "id": "LINEUP_CHANGE"
+      }
+    ],
+    "positions": [
+      {
+        "name": "All",
+        "id": "ALL"
+      },
+      {
+        "name": "Outfielders",
+        "id": "SOCCER_NON_GOALIE"
+      },
+      {
+        "name": "Defender",
+        "id": "POS_703"
+      },
+      {
+        "name": "Midfielder",
+        "id": "POS_702"
+      },
+      {
+        "name": "Forward",
+        "id": "POS_701"
+      },
+      {
+        "name": "Goalkeeper",
+        "id": "POS_704"
+      }
+    ]
+  },
+  "table": {
+    "caption": "Claims / Drops",
+    "header": {
+      "cells": [
+        {
+          "align": "LEFT",
+          "sortDirection": 1,
+          "name": "Team",
+          "shortName": "Team",
+          "key": "team"
+        },
+        {
+          "align": "LEFT",
+          "sortDirection": 1,
+          "name": "Date Processed (EDT)",
+          "shortName": "Date (EDT)",
+          "key": "date"
+        },
+        {
+          "sortDirection": 1,
+          "name": "Gameweek",
+          "shortName": "Gameweek",
+          "key": "week"
+        }
+      ]
+    },
+    "rows": [
+      {
+        "scorer": {
+          "teamName": "Crystal Palace",
+          "urlName": "tyrick-mitchell",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Crystal_Palace.png",
+          "scorerId": "05akv",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "703"
+          ],
+          "defaultPosId": "703",
+          "posShortNames": "D",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Expected to play in upcoming/current game",
+              "typeId": "32"
+            },
+            {
+              "tooltip": "Sep 21, 1:54 AM: Mitchell registered one cross (zero...",
+              "typeId": "8"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "703"
+          ],
+          "teamId": "110045",
+          "name": "Tyrick Mitchell",
+          "teamShortName": "CRY",
+          "shortName": "T. Mitchell"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "WW",
+        "numInGroup": 2,
+        "txSetId": "5xic2wfhmul48y4c",
+        "feesUsed": false,
+        "transactionCode": "CLAIM",
+        "transactionType": "Claim",
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "test2",
+            "leagueId": "w05aib75mtj36y1g",
+            "rowspan": 2,
+            "key": "team",
+            "teamId": "1b6gp5utmtj36y3g"
+          },
+          {
+            "align": "LEFT",
+            "content": "Fri Oct 2, 2026, 5:00AM",
+            "rowspan": 2,
+            "key": "date"
+          },
+          {
+            "content": "6",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Hull City",
+          "urlName": "ryan-giles",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Hull_City_3.png",
+          "scorerId": "04sjv",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "703"
+          ],
+          "defaultPosId": "703",
+          "posShortNames": "D",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Expected to play in upcoming/current game",
+              "typeId": "32"
+            },
+            {
+              "tooltip": "Sep 20, 3:45 PM: Giles generated 15 crosses (four...",
+              "typeId": "8"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "703"
+          ],
+          "teamId": "110067",
+          "name": "Ryan Giles",
+          "teamShortName": "HUL",
+          "shortName": "R. Giles"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "",
+        "txSetId": "5xic2wfhmul48y4c",
+        "feesUsed": false,
+        "transactionCode": "DROP",
+        "transactionType": "Drop",
+        "deleted": false,
+        "cells": [
+          {
+            "content": "6",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Liverpool",
+          "urlName": "jeremy-jacquet",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Liverpool.png",
+          "scorerId": "0784z",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "703"
+          ],
+          "defaultPosId": "703",
+          "posShortNames": "D",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Expected to play in upcoming/current game",
+              "typeId": "32"
+            },
+            {
+              "tooltip": "Hamstring - Late fitness test (Game-time decision)",
+              "typeId": "1"
+            },
+            {
+              "tooltip": "Oct 9, 8:47 AM: Jacquet (hamstring) is fit and...",
+              "typeId": "14"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "703"
+          ],
+          "teamId": "110070",
+          "name": "Jeremy Jacquet",
+          "teamShortName": "LIV",
+          "shortName": "J. Jacquet"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "WW",
+        "disabled": true,
+        "numInGroup": 2,
+        "txSetId": "hffvhd84mul4407y",
+        "feesUsed": false,
+        "transactionCode": "CLAIM",
+        "transactionType": "Claim",
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "test2",
+            "leagueId": "w05aib75mtj36y1g",
+            "rowspan": 2,
+            "key": "team",
+            "teamId": "1b6gp5utmtj36y3g"
+          },
+          {
+            "align": "LEFT",
+            "content": "Fri Oct 2, 2026, 5:00AM",
+            "rowspan": 2,
+            "key": "date"
+          },
+          {
+            "content": "6",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Hull City",
+          "urlName": "semi-ajayi",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Hull_City_3.png",
+          "scorerId": "03ksl",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "703"
+          ],
+          "defaultPosId": "703",
+          "posShortNames": "D",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Expected to play in upcoming/current game",
+              "typeId": "32"
+            },
+            {
+              "tooltip": "Sep 13, 9:23 AM: Ajayi had one shot (zero on goal) in...",
+              "typeId": "8"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "703"
+          ],
+          "teamId": "110067",
+          "name": "Semi Ajayi",
+          "teamShortName": "HUL",
+          "shortName": "S. Ajayi"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "",
+        "disabled": true,
+        "txSetId": "hffvhd84mul4407y",
+        "feesUsed": false,
+        "transactionCode": "DROP",
+        "transactionType": "Drop",
+        "deleted": false,
+        "cells": [
+          {
+            "content": "6",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Crystal Palace",
+          "urlName": "daichi-kamada",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Crystal_Palace.png",
+          "scorerId": "06mnc",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "702"
+          ],
+          "defaultPosId": "702",
+          "posShortNames": "M",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Expected to play in upcoming/current game",
+              "typeId": "32"
+            },
+            {
+              "tooltip": "Sep 21, 1:54 AM: Kamada generated three shots (one on...",
+              "typeId": "8"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "702"
+          ],
+          "teamId": "110045",
+          "name": "Daichi Kamada",
+          "teamShortName": "CRY",
+          "shortName": "D. Kamada"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "WW",
+        "numInGroup": 2,
+        "txSetId": "pghmjpymmul43jgc",
+        "feesUsed": false,
+        "transactionCode": "CLAIM",
+        "transactionType": "Claim",
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "test2",
+            "leagueId": "w05aib75mtj36y1g",
+            "rowspan": 2,
+            "key": "team",
+            "teamId": "1b6gp5utmtj36y3g"
+          },
+          {
+            "align": "LEFT",
+            "content": "Fri Oct 2, 2026, 5:00AM",
+            "rowspan": 2,
+            "key": "date"
+          },
+          {
+            "content": "6",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Leeds United",
+          "urlName": "james-trafford",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Leeds_United2.png",
+          "scorerId": "05oz3",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "704"
+          ],
+          "defaultPosId": "704",
+          "posShortNames": "G",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Expected to play in upcoming/current game",
+              "typeId": "32"
+            },
+            {
+              "tooltip": "Sep 21, 1:49 AM: Trafford had five saves and allowed...",
+              "typeId": "8"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "704"
+          ],
+          "teamId": "110261",
+          "name": "James Trafford",
+          "teamShortName": "LEE",
+          "shortName": "J. Trafford"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "",
+        "txSetId": "pghmjpymmul43jgc",
+        "feesUsed": false,
+        "transactionCode": "DROP",
+        "transactionType": "Drop",
+        "deleted": false,
+        "cells": [
+          {
+            "content": "6",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Aston Villa",
+          "urlName": "zion-suzuki",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Aston_Villa.png",
+          "scorerId": "078wl",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "704"
+          ],
+          "defaultPosId": "704",
+          "posShortNames": "G",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Expected to play in upcoming/current game",
+              "typeId": "32"
+            },
+            {
+              "tooltip": "Oct 1, 9:59 AM: Suzuki kept a clean sheet in Japan's...",
+              "typeId": "8"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "704"
+          ],
+          "teamId": "110011",
+          "name": "Zion Suzuki",
+          "teamShortName": "AVL",
+          "shortName": "Z. Suzuki"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "FA",
+        "disabled": true,
+        "numInGroup": 2,
+        "txSetId": "8zz5gpx9mtjxrhdh",
+        "feesUsed": false,
+        "transactionCode": "CLAIM",
+        "transactionType": "Claim",
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "test4",
+            "leagueId": "w05aib75mtj36y1g",
+            "rowspan": 2,
+            "key": "team",
+            "teamId": "deo9ljvtmtj36y3g"
+          },
+          {
+            "align": "LEFT",
+            "content": "Wed Sep 2, 2026, 6:11AM",
+            "rowspan": 2,
+            "key": "date"
+          },
+          {
+            "content": "3",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Arsenal",
+          "urlName": "david-raya",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Arsenal.png",
+          "scorerId": "05tqx",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "704"
+          ],
+          "defaultPosId": "704",
+          "posShortNames": "G",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Expected to play in upcoming/current game",
+              "typeId": "32"
+            },
+            {
+              "tooltip": "Sep 20, 4:53 AM: Raya had two saves and allowed three...",
+              "typeId": "8"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "704"
+          ],
+          "teamId": "110000",
+          "name": "David Raya",
+          "teamShortName": "ARS",
+          "shortName": "D. Raya"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "",
+        "disabled": true,
+        "txSetId": "8zz5gpx9mtjxrhdh",
+        "feesUsed": false,
+        "transactionCode": "DROP",
+        "transactionType": "Drop",
+        "deleted": false,
+        "cells": [
+          {
+            "content": "3",
+            "key": "week"
+          }
+        ]
+      }
+    ]
+  }
+}
