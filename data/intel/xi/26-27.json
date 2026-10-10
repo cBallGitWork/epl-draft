@@ -2,7 +2,7 @@
   "manifest": {
     "season": "26-27",
     "gameweek": 6,
-    "exportedAt": "2026-10-10T19:47:44.233Z",
+    "exportedAt": "2026-10-10T21:48:41.421Z",
     "rows": 20,
     "sources": [
       {
@@ -15,7 +15,7 @@
       }
     ]
   },
-  "fetchedAt": "2026-10-10T19:47:44.233Z",
+  "fetchedAt": "2026-10-10T21:48:41.421Z",
   "source": "rotowire+ffscout",
   "clubs": {
     "ARS": {
@@ -75,6 +75,10 @@
       ],
       "lineup": "confirmed",
       "absent": [
+        {
+          "code": 448104,
+          "status": "QUES"
+        },
         {
           "code": 500040,
           "status": "QUES"
